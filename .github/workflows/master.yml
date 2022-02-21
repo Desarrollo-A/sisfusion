@@ -14,7 +14,7 @@ jobs:
     - name: 📂 Sync files
       uses: SamKirkland/FTP-Deploy-Action@4.2.0
       with:
-        server: 104.198.134.0
+        server: ${{ secrets.server }}
         username: ${{ secrets.ftp_username }}
         password: ${{ secrets.ftp_password }}
         server-dir: /mnt/data/aplicaciones/Prueba/sisfusionRepo/
