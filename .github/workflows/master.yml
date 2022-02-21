@@ -17,4 +17,4 @@ jobs:
         server: 104.198.134.0
         username: ${{ secrets.ftp_username }}
         password: ${{ secrets.ftp_password }}
-        server-dir: /mnt/data/aplicaciones/Prueba/sisfusionRepo/
+        server-dir: /mnt/data/aplicaciones/Prueba/sisfusionRepo
