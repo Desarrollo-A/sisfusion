@@ -1,0 +1,153 @@
+<?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+/**
+ *
+ */
+class Cobranza_model extends CI_Model {
+
+    function __construct()
+    {
+        parent::__construct();
+    }
+
+    public function getInformation($typeTransaction, $beginDate, $endDate, $where) {
+        if ($typeTransaction == 1 || $typeTransaction == 3) {  // FIRST LOAD || SEARCH BY DATE RANGE
+            $filter = " AND cl.fechaApartado BETWEEN '$beginDate 00:00:00' AND '$endDate 23:59:59'";
+            $filterTwo = "";
+        } else if($typeTransaction == 2) { // SEARCH BY LOTE
+            $filter = "";
+            $filterTwo = " AND l.idLote = $where";
+        }
+
+        if ($this->session->userdata('id_rol') == 19) { // SUBDIRECTOR MKTD
+            $id_sede = explode(", ", $this->session->userdata('id_sede'));
+            $result = "'" . implode("', '", $id_sede) . "'";
+        } else { // COBRANZA
+            if ($this->session->userdata('id_usuario') == 2042)
+                $result = "'2', '3', '4', '6'";
+            else if ($this->session->userdata('id_usuario') == 5363)
+                $result = "'1', '5', '8', '9'";
+        }
+
+        return $this->db->query("SELECT r.nombreResidencial, UPPER(cn.nombre) nombreCondominio, UPPER(l.nombreLote) nombreLote, l.idLote,
+        FORMAT(ISNULL(l.totalNeto2, '0.00'), 'C') precioTotalLote, FORMAT(l.total, 'C') total_sindesc, cl.fechaApartado, UPPER(s.nombre) plaza,
+        ISNULL(ec.estatus, 0) estatusEvidencia, 
+        (CASE l.idStatusContratacion WHEN '1' THEN '01' WHEN '2' THEN '02' WHEN '3' THEN '03' WHEN '4' THEN '04' WHEN '5' THEN '05' WHEN '6' THEN '06' 
+		 WHEN '7' THEN '07' WHEN '8' THEN '08' WHEN '9' THEN '09' WHEN '10' THEN '10' WHEN '11' THEN '11' WHEN '12' THEN '12' 
+		 WHEN '13' THEN '13' WHEN '14' THEN '14' WHEN '15' THEN '15' END) 
+        idStatusContratacion, idStatusLote, pc.bandera estatusComision,
+        FORMAT(ISNULL(cm.comision_total, '0.00'), 'C') comisionTotal, 
+        FORMAT(ISNULL(pci3.abonoDispersado, '0.00'), 'C') abonoDispersado, 
+        FORMAT(ISNULL(pci2.abonoPagado, '0.00'), 'C') abonoPagado, l.registro_comision registroComision, cm.estatus as rec, cl.descuento_mdb,
+        REPLACE(oxc.nombre, ' (especificar)', '') lugar_prospeccion
+        FROM lotes l
+        INNER JOIN condominios cn ON cn.idCondominio = l.idCondominio
+        INNER JOIN residenciales r ON r.idResidencial = cn.idResidencial
+        INNER JOIN clientes cl ON cl.id_cliente = l.idCliente AND cl.status = 1 AND (cl.lugar_prospeccion = 6 OR cl.descuento_mdb = 1) $filter
+        INNER JOIN usuarios u ON u.id_usuario = cl.id_asesor AND u.id_sede IN ($result) 
+        INNER JOIN sedes s ON CAST(s.id_sede AS VARCHAR(15)) = CAST(u.id_sede AS VARCHAR(15))
+        LEFT JOIN evidencia_cliente ec ON ec.idLote = cl.idLote AND ec.idCliente = l.idCliente
+        LEFT JOIN comisiones cm ON cm.id_lote = l.idLote AND cm.rol_generado = 38
+        LEFT JOIN pago_comision pc ON pc.id_lote = l.idLote    
+        LEFT JOIN (SELECT SUM(abono_neodata) abonoPagado, id_comision FROM pago_comision_ind WHERE estatus IN (11) GROUP BY id_comision) pci2 ON cm.id_comision = pci2.id_comision
+        LEFT JOIN (SELECT SUM(abono_neodata) abonoDispersado, id_comision FROM pago_comision_ind GROUP BY id_comision) pci3 ON cm.id_comision = pci3.id_comision
+        LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = cl.lugar_prospeccion AND oxc.id_catalogo = 9
+        WHERE l.status = 1 $filterTwo
+        GROUP BY r.nombreResidencial, cn.nombre, l.nombreLote, l.idLote, l.totalNeto2, cl.fechaApartado, s.nombre,
+        ec.estatus, (CASE l.idStatusContratacion WHEN '1' THEN '01' WHEN '2' THEN '02' WHEN '3' THEN '03' WHEN '4' THEN '04' WHEN '5' THEN '05' WHEN '6' THEN '06' 
+		 WHEN '7' THEN '07' WHEN '8' THEN '08' WHEN '9' THEN '09' WHEN '10' THEN '10' WHEN '11' THEN '11' WHEN '12' THEN '12' 
+		 WHEN '13' THEN '13' WHEN '14' THEN '14' WHEN '15' THEN '15' END), idStatusLote, pc.bandera, cm.comision_total, 
+        pci3.abonoDispersado, pci2.abonoPagado, l.registro_comision, cm.estatus, l.total, cl.descuento_mdb, REPLACE(oxc.nombre, ' (especificar)', '')
+        ORDER BY r.nombreResidencial, cn.nombre, l.nombreLote");
+    }
+
+    public function updateRecord($table, $data, $key, $value) // MJ: ACTUALIZA LA INFORMACIÓN DE UN REGISTRO EN PARTICULAR, RECIBE 4 PARÁMETROS. TABLA, DATA A ACTUALIZAR, LLAVE (WHERE) Y EL VALOR DE LA LLAVE
+    {
+        $response = $this->db->update($table, $data, "$key = '$value'");
+        if (!$response) {
+            return 0; // MJ: SOMETHING HAPPENDS
+        } else {
+            return 1; // MJ: EVERYTHING RUNS FINE
+        }
+    }
+
+        /*********************/
+    function getClientsByAsesor($asesor){
+        return $this->db->query("SELECT c.id_cliente, CONCAT(c.nombre, ' ', c.apellido_paterno, ' ', c.apellido_materno) nombre, c.telefono1, c.correo, l.nombreLote, c.fechaApartado, 
+        c.idLote, CONCAT(u.nombre,  ' ', u.apellido_paterno, ' ', u.apellido_materno) gerente, c.lugar_prospeccion, 
+        ISNULL (oxc.nombre, 'Sin especificar') nombre_lp, oxc2.id_opcion tipo_controversia
+        FROM clientes c
+                INNER JOIN lotes l ON l.idLote=c.idLote
+                INNER JOIN usuarios u ON u.id_usuario = c.id_gerente
+                LEFT JOIN opcs_x_cats oxc ON c.lugar_prospeccion = oxc.id_opcion AND oxc.id_catalogo = 9
+                LEFT JOIN controversias con ON con.id_lote = l.idLote AND con.id_cliente = l.idCliente
+                LEFT JOIN opcs_x_cats oxc2 ON oxc2.id_opcion = con.tipo AND oxc2.id_catalogo = 58
+                LEFT JOIN evidencia_cliente ec ON ec.idLote = l.idLote
+                WHERE c.id_asesor = $asesor AND ec.id_evidencia IS NULL AND c.status = 1");
+    }
+    function getDetails($id, $checks, $beginDate, $endDate, $sede){
+        $query["data"] = $this->db->query("SELECT * FROM clientes WHERE id_cliente = $id")->row();
+
+        $name = str_replace(array(' ', '.'),'',$query["data"]->nombre);
+        $correo = $query["data"]->correo;
+        $telefono = $query["data"]->telefono1;
+        $string = "";
+
+        foreach($checks as $check){
+            if( $check["value"] == "on" && $check["key"] == 'nombre'){
+                $string .= " AND REPLACE(REPLACE(p.nombre, ' ', ''),'.', '') LIKE '%$name%'";
+            } else if( $check["value"] == "on" && $check["key"] == 'telefono'){
+                $string .= " AND p.telefono LIKE '%$telefono%'";
+            } else if( $check["value"] == "on" && $check["key"] == 'correo'){
+                $string .= " AND p.correo LIKE '%$correo%'";
+            } else if( $check["value"] == "on" && $check["key"] == 'sedes'){
+                $string .= " AND p.id_sede =  $sede";
+            } else if ( $check["value"] == "on" && $check["key"] == 'date'){
+                $string .= " AND p.fecha_creacion BETWEEN '$beginDate 00:00:00' AND '$endDate 23:59:59'";
+            }
+        }
+
+        $WHERE = substr($string, 4);
+
+        $query2["data"] = $this->db->query("SELECT CONCAT(p.nombre, ' ', p.apellido_paterno, ' ', p.apellido_materno) nombre, oxc.nombre namePros, p.correo, p.telefono, p.fecha_creacion, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombreAsesor, 
+        CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) nombreGerente
+        FROM prospectos p 
+        INNER JOIN usuarios u ON u.id_usuario = p.id_asesor
+        INNER JOIN usuarios us ON us.id_usuario = p.id_gerente
+        INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = p.lugar_prospeccion WHERE $WHERE AND oxc.id_catalogo = 9");
+
+        return $query2["data"];
+    }
+
+    function getAsesores(){
+        return $this->db->query("SELECT id_usuario, CONCAT(nombre, ' ', apellido_paterno, ' ', ISNULL(apellido_materno, '')) nombre, id_sede FROM usuarios WHERE 
+                                id_rol = 7 AND estatus = 1 ORDER BY nombre");
+    }
+
+    function getSedes(){
+        return $this->db->query("SELECT * FROM sedes WHERE estatus != 0");
+    }
+    //Se verifica si el lote ya tiene una controversia
+    public function verificarControversia($idLote){
+        $query = $this->db->query("SELECT * FROM controversias WHERE id_lote = $idLote");
+        return $query->result_array();
+    }
+
+    public function insertControversia($data){
+        $a = 0;
+        $this->db->insert('controversias',$data);
+        return $this->db->affected_rows();
+    }
+
+    public function insertEvidencia($data)
+    {
+        $this->db->insert('evidencia_cliente',$data);
+        return $this->db->affected_rows();
+    }
+
+    public function insertHistorialEvidencia($data)
+    {
+        $this->db->insert('historial_evidencias',$data);
+        return $this->db->affected_rows();
+    }
+
+}

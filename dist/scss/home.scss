@@ -1,0 +1,70 @@
+@import "_base";
+
+.navbar{
+    color: #eaeaea;
+}
+
+#boxHome{
+    height: 100vh;
+    padding: 0;
+    margin: 0;
+    #banner{
+        #clock {
+            color: white;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+            user-select: none;
+            animation: fadeIn 1s ease-in-out;
+            cursor: pointer;
+            border-radius: 2em;
+            padding: 4em 1em;
+            backface-visibility: hidden;
+            transition: all 0.5s;
+            height: fit-content;background: #eaeaea30;
+            #info{
+                #time {
+                    font-size: 8em;
+                    display: inline-block;
+                    @media #{$smartphone}{
+                        font-size: 3em;
+                    }
+                    @media #{$tablets}{
+                        font-size: 4.5em;
+                    }
+                }
+                #date {
+                    margin-top: 1.8em;
+                    margin-bottom: 0.2em;
+                    font-size: 2em;
+                    display: inline-block;
+                    @media #{$smartphone}{
+                        font-size: 1em;
+                    }
+                    @media #{$tablets}{
+                        font-size: 1.5em;
+                    }
+                }
+            }
+        }
+    }
+}
+.footer{
+    margin-top: -117px;
+    border: none!important;
+    color: white;
+    a{
+        color: white;
+        font-weight: bold;
+    }
+}
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}

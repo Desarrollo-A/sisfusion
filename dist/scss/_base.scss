@@ -1,0 +1,566 @@
+/* Margin and padding generales */
+.m-0  { margin: 0!important; }
+.m-1  { margin: 10px; }
+.m-2  { margin: 20px; }
+.m-3  { margin: 30px; }
+.m-4  { margin: 40px; }
+.mb-0 { margin-bottom: 0px; }
+.mb-1 { margin-bottom: 10px; }
+.mb-2 { margin-bottom: 20px; }
+.mb-3 { margin-bottom: 30px; }
+.mb-4 { margin-bottom: 40px; }
+.mt-0 { margin-top: 0px; }
+.mt-1 { margin-top: 10px; }
+.mt-2 { margin-top: 20px; }
+.mt-3 { margin-top: 30px; }
+.mt-4 { margin-top: 40px; }
+.mr-1{ margin-right: 10px; }
+.mr-2{ margin-right: 20px!important; }
+.p-0  { padding: 0!important; }
+.p-1  { padding: 10px; }
+.p-2  { padding: 20px; }
+.p-3  { padding: 30px; }
+.p-4  { padding: 40px; }
+.pr-0 { padding-right: 0; }
+.pr-1 { padding-right: 10px; }
+.pr-2 { padding-right: 20px; }
+.pr-3 { padding-right: 30px; }
+.pl-0 { padding-left: 0!important; }
+.pl-1 { padding-left: 10px; }
+.pl-2 { padding-left: 20px; }
+.pl-3 { padding-left: 30px; }
+.pl-4 { padding-left: 40px; }
+.pt-1 { padding-top:10px; }
+.pt-2 { padding-top:20px; }
+.pb-1 { padding-bottom:10px; }
+.pb-2 { padding-bottom:20px; }
+/* END Margin and padding generales */
+
+/* Utilities */
+.min-w100 { min-width: 100%!important; }
+.w-100{ width: 100% };
+.w-90{ width: 90% };
+.w-80{ width: 80% };
+.w-70{ width: 70% };
+.w-60{ width: 60% };
+.w-50{ width: 50% };
+.w-40{ width: 40% };
+.w-30{ width: 30% };
+.w-20{ width: 20% };
+.w-10{ width: 10% };
+.h-100{ height: 100% };
+.vh-100 { height: 100vh; };
+.border-none { border:none; }
+.bkcolor-trans { background-color: transparent;}
+.no-shadow{ box-shadow: none!important; }
+.order-1{ order:1 }
+.order-2{ order:2 }
+.hide { display: none; }
+.cursor-point { cursor: pointer;}
+.m-auto{ margin: auto!important; }
+.list-none{
+    list-style-type: none;
+    li{
+        margin: 8px 0;
+    }
+}
+/* END utilities */
+
+/* Flexbox */
+.d-none         { display: none; }
+.d-flex         { display: flex; }
+.align-end      { align-items: flex-end; }
+.align-center   { align-items: center;}
+.justify-end    { justify-content: flex-end; }
+.justify-center { justify-content: center; }
+.justify-evenly { justify-content: space-evenly; }
+.text-center    { text-align: center; }
+/* END Flexbox */
+
+/* Vrbls colores */
+$white         : #ffffff;
+$platinumLight : #eeeeee;
+$platinum      : #eaeaea;
+$platinumScroll: #c1c1c1;
+$deepGray      : #929292;
+$grayDisabled  : #353535;
+$gray          : #333333;
+$grey9         : #999999;
+$goldMaderas   : #96843D;
+$azure         : #4382EF;
+$blueLight     : #5DADE2;
+$sky           : #00bcd4;
+$aqua          : #54d2d2;
+$blueMaderas   : #0a548b;
+$blueIndigo    : #103f75;
+$blueIndigoDeep: #143860;
+$violetChin    : #8E6C88;
+$violetLight   : #9392e8;
+$redLight      : #f44336;
+$red           : #c01313;
+$orangeYellow  : #ff9800;
+$orangeLight   : #f8aa4b;
+$greenExcel    : #209E63;
+$green         : #28B463;
+$acidGreen     : #AFB42B;
+
+/* END vrbls coloress */
+
+/* size devices */
+$smartphone         : "(min-device-width : 320px) and (max-device-width : 480px)";
+$smartphoneLandscape: "(min-width : 321px)";
+$tablets            : "(min-width: 480px) and (max-width: 991px)";
+$minidesktop        : "(min-width: 992px) and (max-width: 1199px)";
+$desktop            : "(min-width: 1024px)";
+$tv                 : "(min-width : 1824px)";
+/* END size devices */
+
+/* Estilos generales encabezado, datetime picker, calendar, input filtros, selects */
+.form-group.label-floating label.control-label, .form-group.label-placeholder label.control-label {
+    top: -3px;
+    font-size: 14px;
+    line-height: 1.42857;
+}
+.form-group label.control-label {
+    color: $deepGray!important;
+}
+/* END Estilos generales encabezado, datetime picker, calendar, input filtros, selects */
+
+
+.btn-a {
+    border-radius: 25px !important;
+    height: 37px !important;
+    width: 37px !important;
+    padding: 5px 6px !important;
+}
+
+/* END Estilos generales datatable */
+
+/* Btns fuera de datatable */
+.btn-azure {
+    box-shadow: none;
+    padding: 7px 25px;
+    color: $azure;
+    background-color: transparent;
+    border: 1px solid $azure;
+    border-radius: 27px;
+    margin: 0;
+}
+.btn-azure:hover {
+    background-color: $azure;
+    color: $white;
+}
+.btn-large{
+    border-radius: 27px;
+    padding: 6px 25px;
+    background-color: transparent;
+}
+.buttons-pdf {
+    box-shadow: none;
+    padding: 7px 25px;
+    color: $redLight;
+    background-color: $white !important;
+    border: 1px solid $redLight;
+    border-radius: 27px;
+    margin: 0;
+  }
+.buttons-pdf:hover {
+    background-color: $redLight !important;
+    border: 1px solid $redLight;
+    color: $white;
+}
+.buttons-pdf:hover i {
+    color: $white;
+}
+.buttons-excel {
+    box-shadow: none;
+    padding: 7px 25px;
+    color: $greenExcel;
+    background-color: $white !important;
+    border: 1px solid $greenExcel;
+    border-radius: 27px;
+    margin: 0;
+}
+.buttons-excel i {
+    color: $greenExcel;
+}
+.buttons-excel:hover {
+    background-color: $greenExcel !important;
+    border: 1px solid $greenExcel;
+}
+.buttons-excel:hover i {
+    color: $white;
+}
+.btn-data-gral{
+    width: 100%;
+    border-radius: 27px;
+    border: none;
+    padding: 10px 0;
+    box-shadow: 0px 8px 15px RGB(0, 0, 0, 0.3);
+}
+.btn-data-gral:hover{
+    box-shadow: none!important;
+}
+.btn-gral-data{
+    width: 100%;
+    border-radius: 27px;
+    border: none;
+    padding: 10px 0;
+    background-color: $blueIndigo;
+    color: $white;
+    box-shadow: 0px 8px 15px RGB(0, 0, 0, 0.3);
+}
+
+.btn-gral-data:hover{
+    box-shadow: none;
+}
+.btn-s-deepGray{
+    background-color: $deepGray;
+    color: $white;
+}
+.btn-s-blue{
+    background-color: $blueIndigo;
+    color: $white;
+}
+.btn-s-violetLight{
+    background-color: $violetLight;
+    color: $white;
+}
+.btn-s-orangeLight{
+    background-color: $orangeLight;
+    color: $white;
+}
+.btn-s-aqua{
+    background-color: $aqua;
+    color: $white;
+}
+.btn-s-acidGreen{
+    background-color: $acidGreen;
+    color: $white;
+}
+.btn-s-red{
+    background-color: $red;
+    color: $white;
+}
+.btn-s-blueLight {
+    background-color: $blueLight;
+    color: $white;
+  }
+  
+  .btn-s-greenLight {
+    background-color: $green;
+    color: $white;
+  }
+  
+  .btn-rounded {
+    border-radius: 50%;
+    width: 38px;
+    height: 38px;
+    border: none;
+  }
+/* END Btns fuera de datatable */
+
+/* Btns accioón dentro de datatable */
+.btn-data{
+    background-color: transparent;
+    border-radius: 50%;
+    font-size: 18px;
+    height: 40px;
+    width: 40px;
+    min-width: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 5px;
+    box-shadow: none;
+    &:disabled{
+        opacity: 0.6;
+        cursor: not-allowed;
+    }
+}
+.datepicker:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+.btn-green{
+    color: $green;
+    border: 1px solid $green;
+}
+.btn-green:hover{
+    background-color: $green;
+    color: $white!important;
+}
+.btn-green-excel{
+    color: $greenExcel;
+    border: 1px solid $greenExcel;
+}
+.btn-green-excel:hover{
+    background-color: $greenExcel;
+    color: $white!important;
+}
+.btn-gray{
+    color: $gray;  
+    border: 1px solid $gray;
+}
+.btn-gray:hover{
+    background-color: $gray;
+    color: $white!important;
+}
+.btn-deepGray{
+    color: $deepGray;  
+    border: 1px solid $deepGray;
+}
+.btn-deepGray:hover{
+    background-color: $deepGray;
+    color: $white!important;
+}
+.btn-blueMaderas{
+    color: $blueMaderas;
+    border: 1px solid $blueMaderas;
+}
+.btn-blueMaderas:hover{
+    background-color: $blueMaderas;
+    color: $white;
+}
+.btn-violetChin{
+    color:$violetChin;
+    border: 1px solid $violetChin;
+}
+.btn-violetChin:hover {
+    background-color: $violetChin;
+    color: $white;
+}
+.btn-orangeYellow{
+    color: $orangeYellow;
+    border: 1px solid $orangeYellow;
+}
+.btn-orangeYellow:hover {
+    background-color: $orangeYellow;
+    color: $white !important;
+}
+.btn-sky{
+    color: $sky;
+    border: 1px solid $sky;
+}
+.btn-sky:hover {
+    background-color: $sky;
+    color: $white !important;
+}
+.btn-warning{
+    color:$red;
+    border: 1px solid $red;
+}
+.btn-warning:hover, .btn-warning:focus{
+    background-color: $red!important;
+    color: $white !important;
+}
+.btn-acidGreen{
+    color:$acidGreen;
+    border: 1px solid $acidGreen;
+}
+.btn-acidGreen:hover {
+    background-color: $acidGreen;
+    color: $white !important;
+}
+.btn-details-grey{
+    color:$grey9;
+    border:1px solid $grey9 !important;
+}
+.btn-details-grey:hover{
+    background:$grey9;
+    color:$white !important;
+}
+
+/* Btns acción dentro de datatable */
+
+/* Estilo del scroll en DIVS */
+/* El background del scroll */
+.scroll-styles::-webkit-scrollbar-track{
+    border-radius: 10px;
+    background-color: transparent;
+}
+/* El background del scroll (border)*/
+.scroll-styles::-webkit-scrollbar{
+    width: 9px;
+    background-color: transparent;
+}
+/* Color de la barra de desplazamiento */
+.scroll-styles::-webkit-scrollbar-thumb{
+    border-radius: 10px;
+    background-color: $platinumScroll;
+}
+/* Color del HOVER de barra de desplazamiento */
+.scroll-styles::-webkit-scrollbar-thumb:hover{
+    background-color: $deepGray;
+}
+/* END de estilos del scroll en DIVS */
+
+.file-gph{
+    background-color: $platinum;
+    border-radius: 30px;
+    padding: 7px 10px;
+    display: flex;
+    .upload-btn{
+        width: 19%;
+        padding: 5px 0;
+        border-radius: 30px;
+        background: $white;
+        color: $deepGray;
+        box-shadow: 0px 4px 4px RGB(0, 0, 0, 0.1);
+        text-align: center;
+        &:hover{
+            box-shadow: none;
+        }
+    }
+    .file-name{
+        width: 80%;
+        background-color: transparent;
+        border: none; 
+    }
+}
+
+.file-gph input[type="file"] {
+    display: none;
+  }
+
+.check-style{
+    cursor: pointer;
+    user-select: none;
+    display: block;
+    span{
+        font-size: 12px;
+        position: relative;
+        border-radius: 27px;
+        transition: 0.4s;
+        padding: 0 15px;
+        height: 46px;
+        color: $deepGray;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 1px 3px rgba(10, 10, 10, 0.12), 0 1px 2px rgba(39, 39, 39, 0.24);
+    }
+    span:hover{
+        box-shadow: none;
+    }
+    input{
+        pointer-events: none;
+        display: none;
+    }
+    input:checked + span{
+        border-color: $goldMaderas;
+        color: $goldMaderas;
+        box-shadow: none;
+        border: 1px solid $goldMaderas;
+    }
+}
+
+.fade{
+    content: '';
+    backdrop-filter: blur(8px) !important;
+    background-color: RGB(0 0 0 / 30%);
+  }
+
+/*STYLE SPINNER*/
+.spiner-loader{
+    position:absolute;
+    top: 0%;
+    left: 0%;
+    width: 100%;
+    height:100%;
+    z-index: 99999;
+    backdrop-filter: blur(7px)!important;
+    .backgroundLS{
+        width: 100%;
+        height: 100%;
+        background: #3333335e;
+        opacity: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        .contentLS{
+            height: 200px;
+            .center-align{
+                color: $white;
+                font-size: 2em;
+                text-align: center;
+                @media #{$smartphone}{
+                    line-height: 32px;
+                    padding: 0px 13px;
+                }
+            }
+            .loader,
+            .loader:before,
+            .loader:after {
+                background: $white;
+                -webkit-animation: load1 1s infinite ease-in-out;
+                animation: load1 1s infinite ease-in-out;
+                width: 1em;
+                height: 4em;
+            }
+            .loader {
+                color: $white;
+                text-indent: -9999em;
+                margin: 88px auto;
+                position: relative;
+                font-size: 11px;
+                -webkit-transform: translateZ(0);
+                -ms-transform: translateZ(0);
+                transform: translateZ(0);
+                -webkit-animation-delay: -0.16s;
+                animation-delay: -0.16s;
+                &:before,
+                &:after {
+                    position: absolute;
+                    top: 0;
+                    content: '';
+                }
+                &:before {
+                    left: -1.5em;
+                    -webkit-animation-delay: -0.32s;
+                    animation-delay: -0.32s;
+                }
+                &:after {
+                    left: 1.5em;
+                }
+            }
+
+        }
+    }
+
+}
+
+/*animaciones*/
+@-webkit-keyframes load1 {
+    0%,
+    80%,
+    100% {
+        box-shadow: 0 0;
+        height: 4em;
+    }
+    40% {
+        box-shadow: 0 -2em;
+        height: 5em;
+    }
+}
+@keyframes load1 {
+    0%,
+    80%,
+    100% {
+        box-shadow: 0 0;
+        height: 4em;
+    }
+    40% {
+        box-shadow: 0 -2em;
+        height: 5em;
+    }
+}
+
+/* Same height row */
+.aligned-row {
+    display: flex;
+    flex-flow: row wrap;
+    &::before {
+      display: block;
+    }
+}
