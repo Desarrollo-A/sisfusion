@@ -83,6 +83,29 @@
                 </div>
             </div>
         </div>
+        <div class="modal fade modal-alertas"  id="addEmpresa" style="overflow:auto !important;" role="dialog">
+            <div class="modal-dialog modal-md">
+                <div class="modal-content">
+                    <div class="modal-header bg-red">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                    <form method="post" id="form_empresa">
+                        <div class="modal-body">
+                            <input type="hidden" name="idLoteE" readonly="true" id="idLoteE" >
+                            <input type="hidden" name="idClienteE" readonly="true" id="idClienteE" >
+                            <input type="hidden" name="PrecioLoteE" readonly="true" id="PrecioLoteE" >
+                            <h4>¿Esta seguro que desea agregar empresa?</h4>
+                        </div>
+                        <div class="modal-footer">
+                                <center>
+                                    <button type="submit" id="btn_add" class="btn btn-primary">GUARDAR</button>
+                                    <button class="btn btn-danger" type="button" data-dismiss="modal" >CANCELAR</button>
+                                </center>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
 
         <div class="modal fade" id="seeInformationModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog modal-lg">
@@ -675,6 +698,9 @@
                             let id_l = parent.split(',');
                             console.log(id_l);
                             $.post('getLideres/'+id_l[1], function(data) {
+
+                                console.log(data[1]);
+                                console.log(data[1][0][0]['name_user']);
                                 $('#usuarioid6 option').remove(); 
                                 $('#usuarioid7 option').remove(); 
                                 $('#usuarioid8 option').remove(); 
@@ -691,16 +717,19 @@
                                 $("#usuarioid7").append($('<option>').val("0").text("Seleccione una opción"));
                                 $("#usuarioid8").append($('<option>').val("0").text("Seleccione una opción"));
                                 var len = data.length;
-                                if(len == 1){
-                                    var id = data[0]['id_usuario1'];
-                                    var name = data[0]['name_user'];
-                                    var id2 = data[0]['id_usuario2'];
-                                    var name2 = data[0]['name_user2'];
-                                    var id3 = data[0]['id_usuario3'];
-                                    var name3 = data[0]['name_user3'];
+                                if(len > 0){
+                                    var id = data[0][0][0]['id_usuario1'];
+                                    var name = data[0][0][0]['name_user'];
+                                    var id2 = data[0][0][0]['id_usuario2'];
+                                    var name2 = data[0][0][0]['name_user2'];
+                                    var id3 = data[0][0][0]['id_usuario3'];
+                                    var name3 = data[0][0][0]['name_user3'];
                                     $("#usuarioid6").append($('<option>').val(id).attr('data-value', id).text(name));
                                     $("#usuarioid7").append($('<option>').val(id2).attr('data-value', id2).text(name2));
-                                    $("#usuarioid8").append($('<option>').val(id3).attr('data-value', id3).text(name3));
+                                    for (let s = 0; s < data[1][0].length; s++) {
+                                        $("#usuarioid8").append($('<option>').val(data[1][0][s]['id_usuario']).attr('data-value', data[1][0][s]['id_usuario']).text(data[1][0][s]['name_user']));
+
+                                    }
                                 }
                                 if(len<=0){
                                     $("#usuarioid6").append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
@@ -1135,7 +1164,7 @@
                 }
             }
             else{
-                if(parseFloat(nuevoPorce) > 3 || parseFloat(nuevoPorce) < 0){
+                if(parseFloat(nuevoPorce) > 4 || parseFloat(nuevoPorce) < 0){
                     $('#porcentaje_'+i).val(3);
                     nuevoPorce=3;
                     document.getElementById('msj_'+i).innerHTML = '';
@@ -1210,6 +1239,7 @@
         }
 
         function SaveAjuste(i){
+         //   alert(i);
             $('#spiner-loader').removeClass('hidden');
             $('#btn_'+i).removeClass('btn-success');
             $('#btn_'+i).addClass('btn-default');
@@ -1464,16 +1494,22 @@
                             else if(data.registro_comision == 7 ) {
                                 BtnStats = '<button class="btn-data btn-sky cambiar_precio" title="Cambiar precio" value="' + data.idLote +'"  data-precioAnt="'+data.totalNeto2+'"><i class="fas fa-pencil-alt"></i></button><button class="btn-data btn-orangeYellow update_bandera" title="Cambiar estatus" value="' + data.idLote +'" data-nombre="'+data.nombreLote+'"><i class="fas fa-sync-alt"></i></button>';
                                 BtnStats += '<button class="btn-data btn-green inventario"  title="Cambiar usuarios" value="' + data.idLote +'" data-registro="'+data.registro_comision+'" data-cliente="'+data.id_cliente+'" data-precioAnt="'+data.totalNeto2+'"><i class="fas fa-user-plus"></i></button>';
+                                BtnStats += '<button class="btn-data btn-blueMaderas addEmpresa"  title="Agregar empresa" value="' + data.idLote +'" data-registro="'+data.registro_comision+'" data-cliente="'+data.id_cliente+'" data-precioAnt="'+data.totalNeto2+'"><i class="fas fa-building"></i></button>';
+
                             }
                             else if(data.registro_comision == 1 ) {
                                 BtnStats = '<button href="#" value="'+data.idLote+'" data-estatus="'+data.idStatusContratacion+'" data-tipo="I" data-precioAnt="'+data.totalNeto2+'"  data-value="'+data.registro_comision+'" data-code="'+data.cbbtton+'" ' +
                                 'class="btn-data btn-gray verify_neodata" title="Ajustes"><i class="fas fa-wrench"></i></button><button class="btn-data btn-sky cambiar_precio" title="Cambiar precio" value="' + data.idLote +'"  data-precioAnt="'+data.totalNeto2+'"><i class="fas fa-pencil-alt"></i></button>';
                                 BtnStats += '<button class="btn-data btn-green inventario"  title="Cambiar usuarios" value="' + data.idLote +'" data-registro="'+data.registro_comision+'" data-cliente="'+data.id_cliente+'" data-precioAnt="'+data.totalNeto2+'"><i class="fas fa-user-plus"></i></button>';
+                                BtnStats += '<button class="btn-data btn-blueMaderas addEmpresa"  title="Agregar empresa" value="' + data.idLote +'" data-registro="'+data.registro_comision+'" data-cliente="'+data.id_cliente+'" data-precioAnt="'+data.totalNeto2+'"><i class="fas fa-building"></i></button>';
+
                             }
                             else {
                                 BtnStats = '<button href="#" value="'+data.idLote+'" data-estatus="'+data.idStatusContratacion+'" data-tipo="I" data-precioAnt="'+data.totalNeto2+'"  data-value="'+data.registro_comision+'" data-code="'+data.cbbtton+'" ' +
                                 'class="btn-data btn-gray verify_neodata" title="Ajustes"><i class="fas fa-wrench"></i></button><button class="btn-data btn-sky cambiar_precio" title="Cambiar precio" value="' + data.idLote +'" data-precioAnt="'+data.totalNeto2+'"><i class="fas fa-pencil-alt"></i></button><button class="btn-data btn-orangeYellow update_bandera" title="Cambiar estatus" value="' + data.idLote +'" data-nombre="'+data.nombreLote+'"><i class="fas fa-sync-alt"></i></button>';
                                 BtnStats += '<button class="btn-data btn-green inventario"  title="Cambiar usuarios" value="' + data.idLote +'" data-registro="'+data.registro_comision+'" data-cliente="'+data.id_cliente+'" data-precioAnt="'+data.totalNeto2+'"><i class="fas fa-user-plus"></i></button>';  
+                                BtnStats += '<button class="btn-data btn-blueMaderas addEmpresa"  title="Agregar empresa" value="' + data.idLote +'" data-registro="'+data.registro_comision+'" data-cliente="'+data.id_cliente+'" data-precioAnt="'+data.totalNeto2+'"><i class="fas fa-building"></i></button>';
+
                             }
                         }
                         return '<div class="d-flex justify-center">'+BtnStats+'</div>';
@@ -1561,6 +1597,30 @@
                     $("#modal_avisitos").modal();
                 }                      
             }); 
+
+            /**--------------------------AGREGAR EMPRESA---------------------------- */
+            $("#tabla_inventario_contraloria tbody").on("click", ".addEmpresa", function(e){
+                e.preventDefault();
+                e.stopImmediatePropagation();
+
+                var tr = $(this).closest('tr');
+                var row = tabla_inventario.row( tr );
+                idLote = $(this).val();
+
+                $('#idLoteE').val(idLote);
+                id_cliente = $(this).attr("data-cliente");
+                precioAnt = $(this).attr("data-precioAnt");
+                $('#idClienteE').val(id_cliente);
+                $('#PrecioLoteE').val(precioAnt);
+
+                $("#addEmpresa").modal();
+
+
+
+
+                                 
+            }); 
+            /**--------------------------------------------------------------------- */
     
             $("#tabla_inventario_contraloria tbody").on("click", ".verify_neodata", function(e){
                 e.preventDefault();
@@ -1578,7 +1638,7 @@
                 $("#modal_NEODATA .modal-body").html("");
                 $("#modal_NEODATA .modal-footer").html("");
                 
-                $.getJSON( url + "ComisionesNeo/getStatusNeodata/"+idLote).done( function( data ){
+                $.getJSON( url + "ComisionesNeo/getStatusNeodata/"+idLote).done( function(data){
                     if(data.length > 0){
                         switch (data[0].Marca) {
                             case 0:
@@ -1599,8 +1659,7 @@
                                         }
 
                                         var counts=0;
-                                        /*<div class="col-md-6">Aplicado: '+formatMoney(total0)+'</div>*/ 
-                                        $("#modal_NEODATA .modal-body").append('<div class="row"><div class="col-md-6"><h4><b>Precio lote: $'+formatMoney(data1[0].totalNeto2)+'</b></h4></div></div>');
+                                        $("#modal_NEODATA .modal-body").append('<div class="row"><div class="col-md-12"><h4><b>Precio lote: $'+formatMoney(data1[0].totalNeto2)+'</b></h4></div></div>');
                                         if(parseFloat(data[0].Bonificado) > 0){
                                             cadena = '<h4>Bonificación: <b style="color:#D84B16;">$'+formatMoney(data[0].Bonificado)+'</b></h4>';
                                         }
@@ -1714,7 +1773,7 @@
                                                 <div class="col-md-2"><input id="id_disparador" type="hidden" name="id_disparador" value="1"><input type="hidden" name="pago_neo" id="pago_neo" value="${total.toFixed(3)}"><input type="hidden" name="id_rol" id="id_rol_${i}" value="${v.rol_generado}"><input type="hidden" name="pending" id="pending" value="${pending}">
                                                 <input type="hidden" name="idLote" id="idLote" value="${idLote}"><input id="id_comision_${i}" type="hidden" name="id_comision_${i}" value="${v.id_comision}"><input id="id_usuario_${i}" type="hidden" name="id_usuario_${i}" value="${v.id_usuario}">
                                                 <input class="form-control ng-invalid ng-invalid-required" required readonly="true" value="${v.colaborador}" style="font-size:12px; ${v.descuento == 1 ? 'color:red;' : ''} "><b><p style="font-size:12px; ${v.descuento == 1 ? 'color:red;' : ''} ">${ v.descuento == "1" ? v.rol+' Incorrecto' : v.rol}</b> <b style="color:${v.descuento > 1 && v.observaciones != 'COMISIÓN CEDIDA'  ? 'red' : 'green'};font-size:10px;">${v.observaciones == 'COMISIÓN CEDIDA' ? '(COMISIÓN CEDIDA)' : ''} ${v.descuento > 1 && v.observaciones != 'COMISIÓN CEDIDA'  ? '(CEDIÓ COMISIÓN)' : ''}<b></p></div>
-                                                <div class="col-md-1"><input class="form-control ng-invalid ng-invalid-required" style="${v.descuento == 1 ? 'color:red;' : ''}" ${v.descuento == 1 || v.descuento > 1 ? 'disabled' : ''} id="porcentaje_${i}" ${(v.rol_generado == 1 || v.rol_generado == 2 || v.rol_generado == 3 || v.rol_generado == 9 || v.rol_generado == 45 || v.rol_generado == 38) ? 'max="1"' : 'max="3"'}   onblur="Editar(${i},${precioAnt},${v.id_usuario})" value="${parseFloat(v.porcentaje_decimal)}"><br>
+                                                <div class="col-md-1"><input class="form-control ng-invalid ng-invalid-required" style="${v.descuento == 1 ? 'color:red;' : ''}" ${v.descuento == 1 || v.descuento > 1 ? 'disabled' : ''} id="porcentaje_${i}" ${(v.rol_generado == 1 || v.rol_generado == 2 || v.rol_generado == 3 || v.rol_generado == 9 || v.rol_generado == 45 || v.rol_generado == 38) ? 'max="1"' : 'max="4"'}   onblur="Editar(${i},${precioAnt},${v.id_usuario})" value="${parseFloat(v.porcentaje_decimal)}"><input type="hidden" id="porcentaje_ant_${i}" name="porcentaje_ant_${i}" value="${v.porcentaje_decimal}"><br>
                                                 <b id="msj_${i}" style="color:red;"></b>
                                                 </div>
                                                 <div class="col-md-2"><input class="form-control ng-invalid ng-invalid-required" style="${v.descuento == 1 ? 'color:red;' : ''}" readonly="true" id="comision_total_${i}" value="${formatMoney(v.comision_total)}"></div>
@@ -2173,12 +2232,9 @@
         function verifica_pago(precio){
             let precioAnt = parseFloat(precio);
             let  precioAct =  replaceAll($('#monotAdd').val(), ',','');
-         
 
             if(rol == 13 || rol == 32 || rol == 8){
-                console.log(parseFloat(precioAct).toFixed(2));
-            console.log(parseFloat(precioAnt).toFixed(2));
-                if(parseFloat(precioAct) <= parseFloat(precioAnt)){
+                if(parseFloat(precioAct).toFixed(2) <= parseFloat(precioAnt).toFixed(2)){
                     document.getElementById('btn-save2').disabled = false;
                     document.getElementById('msj2').innerHTML = '';
                 }
@@ -2262,11 +2318,17 @@
             $('#modal_avisos .modal-body').html('');
             $('#modal_avisos .modal-footer').html('');
 
+           // alert($('#idLote').val());
+           
+           var formData = new FormData();
+          formData.append("comentario", $('#comentario_topa').val());
+            let idLote = $('#idLote').val();
             let id_comision = $('#id_comision_'+i).val();
             let abonado = replaceAll($('#abonado_'+i).val(), ',','');
             $.ajax({
-                url: '<?=base_url()?>Comisiones/ToparComision/'+id_comision,
+                url: '<?=base_url()?>Comisiones/ToparComision/'+id_comision+'/'+idLote,
                 type: 'post',
+                data: formData,
                 dataType: 'json',
                 success:function(response){
                     var len = response.length;
@@ -2393,7 +2455,9 @@
             });
         }
 
+//ESTA ES LA FUNCIÓN LA BUENA
         function Editar(i,precio,id_usuario){
+            //alert(1);
             $('#modal_avisos .modal-body').html('');
             let precioLote = parseFloat(precio);
             let nuevoPorce1 = replaceAll($('#porcentaje_'+i).val(), ',',''); 
@@ -2401,19 +2465,12 @@
             let  abonado =  replaceAll($('#abonado_'+i).val(), ',','');
             let id_comision = $('#id_comision_'+i).val();
             let id_rol = $('#id_rol_'+i).val();
+            let porcentaje_ant = $('#porcentaje_ant_'+i).val();
             let pendiente = replaceAll($('#pendiente_'+i).val(), ',',''); 
-console.log('ENTRO AQUI');
-console.log(id_usuario);
-console.log(id_rol);
-console.log(nuevoPorce);
-console.log(parseFloat(nuevoPorce));
-
 
             if(id_rol == 1 || id_rol == 2 || id_rol == 3 || id_rol == 9 || id_rol == 38 || id_rol == 45){
-                if(id_usuario == "7689" || id_usuario == 7689 || id_usuario == "6739" || id_usuario == 6739){
-                    console.log('ENTRO AQUI');
-                    console.log(parseFloat(nuevoPorce));
-                    if( parseFloat(nuevoPorce) > 20){
+                if(id_usuario == "7689" || id_usuario == 7689){
+                    if(parseFloat(nuevoPorce) > 19 || parseFloat(nuevoPorce) < 0){
                         $('#porcentaje_'+i).val(1);
                         nuevoPorce=1;
                         document.getElementById('msj_'+i).innerHTML = 'Debe ingresar un número entre 0 y 1';
@@ -2443,7 +2500,7 @@ console.log(parseFloat(nuevoPorce));
                 }
             }
             else{
-                if(parseFloat(nuevoPorce) > 3 || parseFloat(nuevoPorce) < 0){
+                if(parseFloat(nuevoPorce) > 4 || parseFloat(nuevoPorce) < 0){
                     $('#porcentaje_'+i).val(3);
                     nuevoPorce=3;
                     document.getElementById('msj_'+i).innerHTML = '';
@@ -2520,11 +2577,11 @@ console.log(parseFloat(nuevoPorce));
         function SaveAjuste(i){
             $('#btn_'+i).removeClass('btn-success');
             $('#btn_'+i).addClass('btn-default');
-
             let id_comision = $('#id_comision_'+i).val();
             let id_usuario = $('#id_usuario_'+i).val();
             let id_lote = $('#idLote').val();
             let porcentaje = $('#porcentaje_'+i).val();
+            let porcentaje_ant = $('#porcentaje_ant_'+i).val();
             let comision_total = $('#comision_total_'+i).val();
 
             var formData = new FormData;
@@ -2532,6 +2589,7 @@ console.log(parseFloat(nuevoPorce));
             formData.append("id_usuario", id_usuario);
             formData.append("id_lote", id_lote);
             formData.append("porcentaje", porcentaje);
+            formData.append("porcentaje_ant", porcentaje_ant);
             formData.append("comision_total", comision_total);
 
             $.ajax({
@@ -2727,6 +2785,54 @@ console.log(parseFloat(nuevoPorce));
                     $('#miModalVcNew').modal('toggle');
                     document.getElementById('btn_vc').disabled=false;
                     $('#miModalVcNew').modal('hide');
+                    alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+                }
+            });
+        });
+
+        $("#form_empresa").on('submit', function(e){ 
+            e.preventDefault();
+            document.getElementById('btn_add').disabled=true;
+
+            let formData = new FormData(document.getElementById("form_empresa"));
+            $.ajax({
+                url: 'AddEmpresa',
+                data: formData,
+                method: 'POST',
+                contentType: false,
+                cache: false,
+                processData:false,
+                success: function(data) {
+                    console.log(data);
+                    if (data == 1) {
+                        $('#form_empresa')[0].reset();
+                        $('#tabla_inventario_contraloria').DataTable().ajax.reload();
+
+                        $('#addEmpresa').modal('toggle');
+                        alerts.showNotification("top", "right", "El registro se guardo correctamente.", "success");
+                        document.getElementById('btn_add').disabled=false;
+
+                    }if (data == 2) {
+                        $('#form_empresa')[0].reset();
+                        $('#tabla_inventario_contraloria').DataTable().ajax.reload();
+
+                        $('#addEmpresa').modal('toggle');
+                        alerts.showNotification("top", "right", "EMPRESA YA SE ENCUENTRA REGISTRADA.", "warning");
+                        document.getElementById('btn_add').disabled=false;
+
+                    } else if (data == 0){
+                        alerts.showNotification("top", "right", "Ocurrio un error.", "warning");
+                        $('#addEmpresa').modal('toggle');
+                        document.getElementById('btn_add').disabled=false;
+                        $('#form_empresa')[0].reset();
+
+                    }
+                },
+                error: function(){
+                    $('#form_empresa')[0].reset();
+                    $('#addEmpresa').modal('toggle');
+                    document.getElementById('btn_add').disabled=false;
+                    $('#addEmpresa').modal('hide');
                     alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
                 }
             });
