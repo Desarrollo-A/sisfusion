@@ -3246,7 +3246,7 @@ $pdf->Output(utf8_decode($namePDF), 'I');
  $mail->Host     = 'smtp.gmail.com';
  $mail->SMTPAuth = true;
  $mail->Username = 'noreply@ciudadmaderas.com';
- $mail->Password = 'En3r02021@M';
+ $mail->Password = 'euTan4&9';
  $mail->SMTPSecure = 'ssl';
  $mail->Port     = 465;
 
@@ -3504,7 +3504,7 @@ public function get_sol_aut()
 		$mail->Host     = 'smtp.gmail.com';
 		$mail->SMTPAuth = true;
 		$mail->Username = 'noreply@ciudadmaderas.com';
-		$mail->Password = 'En3r02021@M';
+		$mail->Password = 'euTan4&9';
 		$mail->SMTPSecure = 'ssl';
 		$mail->Port     = 465;
 		$mail->setFrom('noreply@ciudadmaderas.com', 'Ciudad Maderas');
@@ -5307,7 +5307,7 @@ public function getInfoCarpeta($id_carpeta){
         $mail->Host     = 'smtp.gmail.com';
         $mail->SMTPAuth = true;
         $mail->Username = 'noreply@ciudadmaderas.com';
-        $mail->Password = 'En3r02021@M';
+        $mail->Password = 'euTan4&9';
         $mail->SMTPSecure = 'ssl';
         $mail->Port     = 465;
         $mail->setFrom('noreply@ciudadmaderas.com', 'Ciudad Maderas');

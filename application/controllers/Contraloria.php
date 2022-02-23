@@ -402,7 +402,7 @@ class Contraloria extends CI_Controller {
 		$mail->Host     = 'smtp.gmail.com';
 		$mail->SMTPAuth = true;
 		$mail->Username = 'noreply@ciudadmaderas.com';
-		$mail->Password = 'En3r02021@M';
+		$mail->Password = 'euTan4&9';
 		$mail->SMTPSecure = 'ssl';
 		$mail->Port     = 465;
 
@@ -684,7 +684,7 @@ class Contraloria extends CI_Controller {
 		$mail->Host     = 'smtp.gmail.com';
 		$mail->SMTPAuth = true;
 		$mail->Username = 'noreply@ciudadmaderas.com';
-		$mail->Password = 'En3r02021@M';
+		$mail->Password = 'euTan4&9';
 		$mail->SMTPSecure = 'ssl';
 		$mail->Port     = 465;
 
@@ -1195,7 +1195,7 @@ public function get_sede(){
   $mail->Host     = 'smtp.gmail.com';
   $mail->SMTPAuth = true;
   $mail->Username = 'noreply@ciudadmaderas.com';
-  $mail->Password = 'En3r02021@M';
+  $mail->Password = 'euTan4&9';
   $mail->SMTPSecure = 'ssl';
   $mail->Port     = 465;
   
@@ -1571,7 +1571,7 @@ public function editar_registro_loteRechazo_contraloria_proceceso6(){
   $mail->Host     = 'smtp.gmail.com';
   $mail->SMTPAuth = true;
   $mail->Username = 'noreply@ciudadmaderas.com';
-  $mail->Password = 'En3r02021@M';
+  $mail->Password = 'euTan4&9';
   $mail->SMTPSecure = 'ssl';
   $mail->Port     = 465;
   
@@ -1976,7 +1976,7 @@ $i = 0;
   $mail->Host     = 'smtp.gmail.com';
   $mail->SMTPAuth = true;
   $mail->Username = 'noreply@ciudadmaderas.com';
-  $mail->Password = 'En3r02021@M';
+  $mail->Password = 'euTan4&9';
   $mail->SMTPSecure = 'ssl';
   $mail->Port     = 465;
   
