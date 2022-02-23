@@ -11,12 +11,11 @@ class Documentacion extends CI_Controller
         $this->load->helper(array('url', 'form'));
         $this->load->database('default');
         date_default_timezone_set('America/Mexico_City');
-        //$this->validateSession();
+        $this->validateSession();
     }
 
     public function index()
     {
-        echo "fgyfgy";
     }
 
     public function validateSession()
@@ -35,6 +34,7 @@ class Documentacion extends CI_Controller
         $this->load->view('template/header');
         $this->load->view("documentacion/mainDocumentTreeView", $datos);
     }
+
     function mainDocumentTreeViewTest()
     {
         if ($this->session->userdata('id_rol') == FALSE) {
@@ -220,6 +220,8 @@ class Documentacion extends CI_Controller
                     'estatus' => 0
                 );
             }
+            //echo json_encode($updateArrayData);
+            //exit;
             $this->db->update_batch("motivos_rechazo_x_documento", $updateArrayData, "id_mrxdoc");
         }
             $updateData = array("estatus_validacion" => $action == 4 ? 2 : 1, "validado_por" => $this->session->userdata('id_usuario'));
@@ -250,4 +252,5 @@ class Documentacion extends CI_Controller
             echo json_encode($updateResponse == 1 ? 1 : 0);
         }
     }
+
 }
