@@ -28,31 +28,32 @@ class General extends CI_Controller
     function getResidencialesList()
     {
         $data = $this->General_model->getResidencialesList();
-        if ($data != null) {
+        if ($data != null)
             echo json_encode($data);
-        } else {
+        else
             echo json_encode(array());
-        }
     }
 
-    function getCondominiosList($idResidencial)
+    function getCondominiosList()
     {
-        $data = $this->General_model->getCondominiosList($idResidencial);
-        if ($data != null) {
+        $data = $this->General_model->getCondominiosList($this->input->post("idResidencial"));
+        if ($data != null)
             echo json_encode($data);
-        } else {
+        else
             echo json_encode(array());
-        }
     }
 
-    function getLotesList($idCondominio)
+    function getLotesList()
     {
+        if ($this->input->post("typeTransaction") == 1) // MJ: LA BÚSQUEDA SERÁ POR MULTI CONDOMINIO
+            $idCondominio = implode(", ", $this->input->post("idCondominio"));
+            else
+            $idCondominio = $this->input->post("idCondominio");
+        
         $data = $this->General_model->getLotesList($idCondominio);
-        if ($data != null) {
+        if ($data != null)
             echo json_encode($data);
-        } else {
+        else
             echo json_encode(array());
-        }
     }
-
 }
