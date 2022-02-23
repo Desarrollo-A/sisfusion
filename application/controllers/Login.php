@@ -98,6 +98,11 @@ class Login extends CI_Controller
          case '31':
              redirect(base_url().'Internomex');
          break;
+		case '55': // POSTVENTA
+		case '56': // COMITÉ TÉCNICO
+		case '57': // TITULACIÓN
+			redirect(base_url() . 'Postventa');
+		break;
 
          default:
              $data['titulo'] = 'Login con roles de usuario en codeigniter';
