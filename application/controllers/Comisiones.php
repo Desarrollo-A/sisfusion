@@ -5205,11 +5205,19 @@ public function getPagosByComision($id_comision)
 public function ToparComision($id_comision,$idLote = '')
 {
   $respuesta = $this->Comisiones_model->ToparComision($id_comision);
+<<<<<<< Updated upstream
   if($idLote != '' ){
      $this->Comisiones_model->RecalcularMontos($idLote);
   }
 
   echo json_encode($respuesta); 
+=======
+    if($idLote != '' ){
+    $this->Comisiones_model->RecalcularMontos($idLote);
+ }
+
+ echo json_encode($respuesta); 
+>>>>>>> Stashed changes
 }
 
 
@@ -5445,7 +5453,11 @@ public function getUsuariosByrol($rol,$user)
   public function getLideres($lider)
   {
 
+<<<<<<< Updated upstream
   $result = $this->Comisiones_model->getLideres($lider);
+=======
+    $result = $this->Comisiones_model->getLideres($lider);
+>>>>>>> Stashed changes
     echo json_encode($result);
   }
   public function AddVentaCompartida(){
@@ -6243,6 +6255,51 @@ for ($d=0; $d <count($dos) ; $d++) {
     $idLote = $this->input->post("idLoteE");
     $Precio = $this->input->post("PrecioLoteE");
     $idCliente = $this->input->post("idClienteE");
+<<<<<<< Updated upstream
+=======
+
+    $respuesta = $this->Comisiones_model->AddEmpresa($idLote,($Precio*(1/100)),$idCliente);
+  echo json_encode($respuesta);
+  }
+
+
+  /**--------------------COMISIONES ESPECIALES------------ */
+  public function dispersar_pago_especial()
+  {
+    $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
+    $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
+    $datos = array();
+    $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
+    $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
+    $val = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
+    $salida = str_replace('' . base_url() . '', '', $val);
+    $datos["datos4"] = $this->Asesor_model->getActiveBtn($salida, $this->session->userdata('id_rol'))->result();
+    $this->load->view('template/header');
+    $this->load->view("ventas/dispersar_pago_especial", $datos);
+  }
+  
+  public function getDataDispersionPagoEspecial($val = '')
+  {
+    //echo $val;
+    $datos = array();
+    if(empty($val)){
+      $datos = $this->Comisiones_model->getDataDispersionPagoEspecial();
+    }else{
+      $datos = $this->Comisiones_model->getDataDispersionPagoEspecial($val);
+    }
+    
+    if ($datos != null) {
+      echo json_encode($datos);
+    } else {
+      echo json_encode(array());
+    }
+  }
+  public function porcentajesEspecial($idCliente){
+    echo json_encode($this->Comisiones_model->porcentajesEspecial($idCliente));
+  }
+  /**----------------------------------------------------- */
+
+>>>>>>> Stashed changes
 
     $respuesta = $this->Comisiones_model->AddEmpresa($idLote,($Precio*(1/100)),$idCliente);
   echo json_encode($respuesta);
