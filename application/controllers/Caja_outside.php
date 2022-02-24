@@ -503,6 +503,7 @@ public function addClient()
             'id_prospecto' => $id_prospecto,
             'fecha_modificacion' => date('Y-m-d H:i:s'),
             'id_subdirector' => $data['lider'][0]['id_subdirector'],
+            'id_regional' => $data['lider'][0]['id_regional']
 
         );
         /*Inserta cliente*/
@@ -1902,8 +1903,6 @@ public function validar_login_asesor(){
             //$recibo_pago = "CONFPAGO".date('dmYHis');
             $recibo_pago = "CONFPAGO".date('dmYHis').rand ( 0, 999 );
 
-            // 'id_subdirector' => $data['lider'][0]['id_subdirector'],
-
             $dataLider = $this->caja_model_outside->getLider($data->asesores[0]->idGerente);
 
             if ($data->asesores[0]->idCoordinador == $data->asesores[0]->idAsesor) {
@@ -1942,6 +1941,7 @@ public function validar_login_asesor(){
               $arreglo["fechaApartado"] = date('Y-m-d H:i:s');
               $arreglo["id_sede"] = 0;      
               $arreglo['id_subdirector'] = $dataLider[0]['id_subdirector'];
+              $arreglo['id_regional'] = $dataLider[0]['id_regional'];
 
               //SE OBTIENEN LAS FECHAS PARA EL TIEMPO QUE TIENE PARA CUMPLIR LOS ESTATUS EN CADA FASE EN EL SISTEMA
               $fechaAccion = date("Y-m-d H:i:s");
@@ -2278,11 +2278,14 @@ public function saveSalesPartner()
             "id_coordinador" => $voBoCoord,
             "id_gerente" => $data->id_gerente,
             "id_subdirector" => $dataLider[0]['id_subdirector'],
+            
             "estatus" => 1,
             "fecha_creacion" => date("Y-m-d H:i:s"),
             "creado_por" => $data->id_usuario, 
             "fecha_modificacion" => date("Y-m-d H:i:s"),
-            "modificado_por" => $data->id_usuario
+            "modificado_por" => $data->id_usuario,
+            
+            "id_regional" => $dataLider[0]['id_regional']
         );
 
         $clientInformation = $this->caja_model_outside->getClientInformation($data->id_cliente)->row();
