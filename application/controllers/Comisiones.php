@@ -5358,25 +5358,13 @@ public function getPagosByComision($id_comision)
   $respuesta = $this->Comisiones_model->getPagosByComision($id_comision);
   echo json_encode($respuesta); 
 }
-public function ToparComision($id_comision)
+public function ToparComision($id_comision,$idLote = '')
 {
   $respuesta = $this->Comisiones_model->ToparComision($id_comision);
-<<<<<<< HEAD
-<<<<<<< Updated upstream
   if($idLote != '' ){
-     $this->Comisiones_model->RecalcularMontos($idLote);
-  }
-
-=======
->>>>>>> master
-  echo json_encode($respuesta); 
-=======
-    if($idLote != '' ){
     $this->Comisiones_model->RecalcularMontos($idLote);
  }
-
- echo json_encode($respuesta); 
->>>>>>> Stashed changes
+  echo json_encode($respuesta); 
 }
 
 
@@ -5398,9 +5386,10 @@ public function SaveAjuste($opc = '')
  $id_usuario = $this->input->post('id_usuario');
  $id_lote =    $this->input->post('id_lote');
  $porcentaje = $pesos=str_replace("%", "", $this->input->post('porcentaje'));
+ $porcentaje_ant = $this->input->post('porcentaje_ant');
  $comision_total = $pesos=str_replace(",", "", $this->input->post('comision_total'));
 
- $respuesta = $this->Comisiones_model->SaveAjuste($id_comision,$id_lote,$id_usuario,$porcentaje,$comision_total,$opc);
+ $respuesta = $this->Comisiones_model->SaveAjuste($id_comision,$id_lote,$id_usuario,$porcentaje,$porcentaje_ant,$comision_total,$opc);
  echo json_encode($respuesta); 
 }
 
@@ -5607,17 +5596,8 @@ public function getUsuariosByrol($rol,$user)
   }
   public function getLideres($lider)
   {
-<<<<<<< HEAD
-
-<<<<<<< Updated upstream
-  $result = $this->Comisiones_model->getLideres($lider);
-=======
     $result = $this->Comisiones_model->getLideres($lider);
->>>>>>> Stashed changes
     echo json_encode($result);
-=======
-    echo json_encode($this->Comisiones_model->getLideres($lider)->result_array());
->>>>>>> master
   }
   public function AddVentaCompartida(){
     $datosAse = explode(",",$this->input->post('usuarioid5'));
@@ -6436,28 +6416,20 @@ for ($d=0; $d <count($dos) ; $d++) {
    echo json_encode( array( "data" => $dat));
   }*/
   
-
-
-  public function getPagosByUser($user,$mes,$anio){
-    $dat =  $this->Comisiones_model->getPagosByUser($user,$mes,$anio)->result_array();
-   echo json_encode( $dat);
-  }
-
-
-<<<<<<< HEAD
   public function AddEmpresa(){
     $idLote = $this->input->post("idLoteE");
     $Precio = $this->input->post("PrecioLoteE");
     $idCliente = $this->input->post("idClienteE");
-<<<<<<< Updated upstream
-=======
 
     $respuesta = $this->Comisiones_model->AddEmpresa($idLote,($Precio*(1/100)),$idCliente);
-  echo json_encode($respuesta);
+    echo json_encode($respuesta);
   }
 
-
-  /**--------------------COMISIONES ESPECIALES------------ */
+  public function getPagosByUser($user,$mes,$anio){
+    $dat =  $this->Comisiones_model->getPagosByUser($user,$mes,$anio)->result_array();
+   echo json_encode( $dat);
+   
+  }
   public function dispersar_pago_especial()
   {
     $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
@@ -6471,7 +6443,7 @@ for ($d=0; $d <count($dos) ; $d++) {
     $this->load->view('template/header');
     $this->load->view("ventas/dispersar_pago_especial", $datos);
   }
-  
+
   public function getDataDispersionPagoEspecial($val = '')
   {
     //echo $val;
@@ -6488,19 +6460,12 @@ for ($d=0; $d <count($dos) ; $d++) {
       echo json_encode(array());
     }
   }
+
   public function porcentajesEspecial($idCliente){
     echo json_encode($this->Comisiones_model->porcentajesEspecial($idCliente));
   }
-  /**----------------------------------------------------- */
 
->>>>>>> Stashed changes
 
-    $respuesta = $this->Comisiones_model->AddEmpresa($idLote,($Precio*(1/100)),$idCliente);
-  echo json_encode($respuesta);
-  }
-
-=======
->>>>>>> master
 
   public function liquidadosDescuentos()
     {
