@@ -291,7 +291,6 @@ function readFileAsync(selectedFile) {
                 jsonProspectos = JSON.stringify(rowObject, null);
             });
             resolve(jsonProspectos);
-            console.log("el json", jsonProspectos);
         };
         fileReader.onerror = reject;
         fileReader.readAsArrayBuffer(selectedFile);
