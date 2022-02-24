@@ -54,6 +54,7 @@ class General_model extends CI_Model
 
     public function getLotesList($idCondominio)
     {
+        $a = 0;
         return $this->db->query("SELECT idLote, UPPER(nombreLote) nombreLote, idStatusLote FROM lotes WHERE status = 1 AND idCondominio IN( $idCondominio)")->result_array();
     }
 
