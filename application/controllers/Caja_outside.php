@@ -453,6 +453,11 @@ public function addClient()
         $data['condominio'] = $this->caja_model_outside->getCondominioByIdLote($id_lote);
         $data['lider'] = $this->caja_model_outside->getLider($datosView->id_gerente);
 
+        // echo 'id gerente data '.$datosView->id_gerente;
+        // echo 'id regional data '.$data['lider'][0]['id_regional'];
+
+        // exit;
+
         $dataInsertCliente = array(
             'id_asesor' => $datosView->id_asesor,/* $data['prospecto'][0]['id_asesor']*/
             'id_coordinador' => $voBoCoord,
