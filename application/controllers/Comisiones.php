@@ -5942,7 +5942,9 @@ public function getUsersClient($lote,$compartida,$TipoVenta,$LupgarP,$mdb,$ismkt
                 $replace = [",","$"];
                 for($i=0;$i<sizeof($id_comision);$i++){
                   $var_n = str_replace($replace,"",$abono_nuevo[$i]);
-                  $respuesta = $this->Comisiones_model->insert_dispersion_individual($id_comision[$i], $rol[$i], $var_n, $pago);
+                  if($var_n != 0){
+                    $respuesta = $this->Comisiones_model->insert_dispersion_individual($id_comision[$i], $rol[$i], $var_n, $pago);
+                  }
                   }
                 for($i=0;$i<sizeof($abono_nuevo);$i++){
                   $var_n = str_replace($replace,"",$abono_nuevo[$i]);

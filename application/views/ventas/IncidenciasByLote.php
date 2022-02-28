@@ -498,6 +498,7 @@
                             <div class="form-group" id="users7">
                                 <label class="label">Subdirector</label>
                                 <select id="usuarioid8" name="usuarioid8" class="form-control ger ng-invalid ng-invalid-required" required data-live-search="true" ></select>
+                                <p><b>Si deseas agregar un subdirector regional, favor de subir ticket a sistemas.</b></p>
                             </div>
                             <div class="form-group">
                                 <center>
@@ -2469,8 +2470,10 @@
             let pendiente = replaceAll($('#pendiente_'+i).val(), ',',''); 
 
             if(id_rol == 1 || id_rol == 2 || id_rol == 3 || id_rol == 9 || id_rol == 38 || id_rol == 45){
-                if(id_usuario == "7689" || id_usuario == 7689){
-                    if(parseFloat(nuevoPorce) > 19 || parseFloat(nuevoPorce) < 0){
+                if(id_usuario == "7689" || id_usuario == 7689 || id_usuario == "6739" || id_usuario == 6739 ){
+                    console.log('ENTRO AQUI');
+                    console.log(parseFloat(nuevoPorce));
+                    if( parseFloat(nuevoPorce) > 20){
                         $('#porcentaje_'+i).val(1);
                         nuevoPorce=1;
                         document.getElementById('msj_'+i).innerHTML = 'Debe ingresar un número entre 0 y 1';
@@ -2478,7 +2481,7 @@
                         document.getElementById('msj_'+i).innerHTML = '';
                     }
                 }
-                if(id_usuario == "4824" || id_usuario == 4824){
+                else if(id_usuario == "4824" || id_usuario == 4824){
                     if(parseFloat(nuevoPorce) > 2 || parseFloat(nuevoPorce) < 0){
                         $('#porcentaje_'+i).val(1);
                         nuevoPorce=1;

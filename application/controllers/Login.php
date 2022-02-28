@@ -267,6 +267,7 @@ class Login extends CI_Controller
 							'id_lider_2' 		    => 		$check_user[0]->id_lider_2,
 							'id_lider_3' 		    => 		$check_user[0]->id_lider_3,
 							'id_lider_4' 		    => 		$check_user[0]->id_lider_4,
+							'id_lider_5' 		    => 		$check_user[0]->id_lider_5,
 							'imagen_perfil' 		=> 		$check_user[0]->imagen_perfil,
 							'jerarquia_user' 		=> 		$check_user[0]->jerarquia_user,
 							'ubicacion'			    =>	    $dataUbicacion[0]->abreviacion,
