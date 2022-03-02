@@ -827,135 +827,154 @@
 }
 
 /* tooltip styles */
-@font-face {
-  font-family: Montserrat-Black;
-  src: url(../css/fonts/Montserrat/Montserrat-Black.ttf);
+.cardDocument {
+  height: calc(100vh - 125px);
 }
 
-@font-face {
-  font-family: Montserrat-BlackItalic;
-  src: url(../css/fonts/Montserrat/Montserrat-BlackItalic.ttf);
+.cardDocument .realBox #documentsList {
+  height: 60vh;
+  overflow: auto;
 }
 
-@font-face {
-  font-family: Montserrat-Bold;
-  src: url(../css/fonts/Montserrat/Montserrat-Bold.ttf);
+.cardDocument .realBox #documentsList .activeSB {
+  border-radius: 8px !important;
+  background-color: #143860 !important;
 }
 
-@font-face {
-  font-family: Montserrat-BoldItalic;
-  src: url(../css/fonts/Montserrat/Montserrat-BoldItalic.ttf);
+.cardDocument .realBox #documentsList .activeSB h4, .cardDocument .realBox #documentsList .activeSB i {
+  color: #ffffff !important;
 }
 
-@font-face {
-  font-family: Montserrat-ExtraBold;
-  src: url(../css/fonts/Montserrat/Montserrat-ExtraBold.ttf);
+@media (min-device-width: 320px) and (max-device-width: 480px), (min-width: 480px) and (max-width: 991px) {
+  .cardDocument .realBox #documentsList {
+    height: initial;
+  }
 }
 
-@font-face {
-  font-family: Montserrat-ExtraBoldItalic;
-  src: url(../css/fonts/Montserrat/Montserrat-ExtraBoldItalic.ttf);
-}
-
-@font-face {
-  font-family: Montserrat-ExtraLight;
-  src: url(../css/fonts/Montserrat/Montserrat-ExtraLight.ttf);
-}
-
-@font-face {
-  font-family: Montserrat-ExtraLightItalic;
-  src: url(../css/fonts/Montserrat/Montserrat-ExtraLightItalic.ttf);
-}
-
-@font-face {
-  font-family: Montserrat-Italic;
-  src: url(../css/fonts/Montserrat/Montserrat-Italic.ttf);
-}
-
-@font-face {
-  font-family: Montserrat-Light;
-  src: url(../css/fonts/Montserrat/Montserrat-Light.ttf);
-}
-
-@font-face {
-  font-family: Montserrat-LightItalic;
-  src: url(../css/fonts/Montserrat/Montserrat-LightItalic.ttf);
-}
-
-@font-face {
-  font-family: Montserrat-Medium;
-  src: url(../css/fonts/Montserrat/Montserrat-Medium.ttf);
-}
-
-@font-face {
-  font-family: Montserrat-MediumItalic;
-  src: url(../css/fonts/Montserrat/Montserrat-MediumItalic.ttf);
-}
-
-@font-face {
-  font-family: Montserrat-Regular;
-  src: url(../css/fonts/Montserrat/Montserrat-Regular.ttf);
-}
-
-@font-face {
-  font-family: Montserrat-SemiBold;
-  src: url(../css/fonts/Montserrat/Montserrat-SemiBold.ttf);
-}
-
-@font-face {
-  font-family: Montserrat-SemiBoldItalic;
-  src: url(../css/fonts/Montserrat/Montserrat-SemiBoldItalic.ttf);
-}
-
-@font-face {
-  font-family: Montserrat-Thin;
-  src: url(../css/fonts/Montserrat/Montserrat-Thin.ttf);
-}
-
-@font-face {
-  font-family: Montserrat-ThinItalic;
-  src: url(../css/fonts/Montserrat/Montserrat-ThinItalic.ttf);
-}
-
-@font-face {
-  font-family: Exo-ExtraBold;
-  src: url(../css/fonts/Montserrat/Exo-ExtraBold.ttf);
-}
-
-@font-face {
-  font-family: Bahnschrift;
-  src: url(../css/fonts/Montserrat/Bahnschrift.TTF);
-}
-
-@font-face {
-  font-family: JMHTypewriter;
-  src: url(../css/fonts/Montserrat/JMHTypewriter.ttf);
-}
-
-/* END import fonts */
-/* fonts vrbls */
-/* END fonts vrbls */
-.boxHome {
-  background-image: linear-gradient(RGB(0 0 0/80%), RGB(0 0 0/80%)), url(https://maderascrm.gphsis.com/assets/img/img_4.jpeg);
-  background-position: center;
-  background-size: cover;
-  background-repeat: no-repeat;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+.cardDocument .realBox .boxDocument {
+  background-color: #333333;
+  border-radius: 8px;
+  margin: 0 15px;
   color: #ffffff;
 }
 
-.boxHome h2 {
-  font-family: "Montserrat-ExtraLight";
+.cardDocument .realBox .boxDocument .btnDocuments {
+  background-color: #191B1C;
+  border-radius: 25px;
+  height: 38px;
+  width: 38px;
+  border: none;
+  box-shadow: -1px -1px 3px RGB(0 0 0/12%), 0 1px 2px RGB(0 0 0/24%);
+  margin: 0 3px;
 }
 
-.boxHome .enfasis {
-  color: #96843D;
-  font-weight: 700;
-  font-family: "Montserrat-SemiBold" !important;
+.cardDocument .realBox .boxDocument #documentFile {
+  height: calc(60vh - 50px);
+  position: relative;
+  top: 6px;
+  border-radius: 0 0 6px 6px;
 }
 
-.boxHome p {
-  font-family: "Montserrat-Light";
+@media (min-device-width: 320px) and (max-device-width: 480px), (min-width: 480px) and (max-width: 991px) {
+  .cardDocument .realBox .boxDocument #documentFile {
+    height: 100vh;
+  }
+}
+
+.cardDocument .realBox .boxDocument .stylesEmpty {
+  height: calc(60vh - 50px);
+}
+
+.cardDocument .realBox .boxDocument .stylesEmpty .boxDocumentEmptyD {
+  background-color: #eaeaea;
+}
+
+.cardDocument .realBox .boxDocument .stylesEmpty .boxDocumentEmptyD i {
+  font-size: 200px;
+  color: #c1c1c1;
+}
+
+.cardDocument .realBox .boxDocument .stylesEmpty .boxDocumentEmptyD p {
+  font-size: 25px;
+  color: #c1c1c1;
+}
+
+.cardDocument .realBox .boxDocumentEmpty {
+  background-color: #eaeaea;
+  border-radius: 10px;
+  height: 60vh;
+}
+
+.cardDocument .realBox .boxDocumentEmpty i {
+  font-size: 200px;
+  color: #c1c1c1;
+}
+
+.cardDocument .realBox .boxDocumentEmpty p {
+  font-size: 25px;
+  color: #c1c1c1;
+}
+
+.cardDocument .realBox .scrollDocumentTree::-webkit-scrollbar-track {
+  background-color: transparent;
+  border-radius: none;
+}
+
+.cardDocument .realBox .scrollDocumentTree::-webkit-scrollbar {
+  width: 5px;
+  background-color: transparent;
+  border-right: 2px solid #c1c1c1;
+}
+
+.cardDocument .realBox .scrollDocumentTree::-webkit-scrollbar-thumb {
+  background-color: #c1c1c1;
+  border-radius: none;
+  border-radius: 0;
+}
+
+.cardDocument .realBox .scrollDocumentTree::-webkit-scrollbar-thumb:hover {
+  background-color: #929292;
+  width: 10px !important;
+  border-radius: none;
+}
+
+@media (min-device-width: 320px) and (max-device-width: 480px), (min-width: 480px) and (max-width: 991px) {
+  .cardDocument {
+    height: initial;
+  }
+}
+
+.cardDocument .fakeBox {
+  height: 60vh;
+}
+
+.cardDocument .fakeBox .documentsList i {
+  color: #eaeaea;
+  font-size: 34px;
+}
+
+.cardDocument .fakeBox .documentsList .col-9.col-md-9 {
+  background-color: #eaeaea;
+  border-radius: 5px;
+}
+
+.cardDocument .fakeBox .boxContentDoc {
+  background-color: #eaeaea;
+  border-radius: 10px;
+}
+
+.cardDocument .fakeBox .boxContentDoc i {
+  font-size: 200px;
+  color: #c1c1c1;
+}
+
+.cardDocument .fakeBox .boxContentDoc p {
+  font-size: 25px;
+  color: #c1c1c1;
+}
+
+@media (min-width: 768px) {
+  .modal-sm {
+    width: 350px;
+  }
 }

@@ -16,6 +16,8 @@
 .mt-4 { margin-top: 40px; }
 .mr-1{ margin-right: 10px; }
 .mr-2{ margin-right: 20px!important; }
+.ml-1{ margin-left: 10px; }
+.ml-2{ margin-left: 20px!important; }
 .p-0  { padding: 0!important; }
 .p-1  { padding: 10px; }
 .p-2  { padding: 20px; }
@@ -75,6 +77,8 @@
 .justify-center { justify-content: center; }
 .justify-evenly { justify-content: space-evenly; }
 .text-center    { text-align: center; }
+.text-left      { text-align: start; }
+
 /* END Flexbox */
 
 /* Vrbls colores */
@@ -86,6 +90,8 @@ $deepGray      : #929292;
 $grayDisabled  : #353535;
 $gray          : #333333;
 $grey9         : #999999;
+$grayOxford    : #4e4e4e;
+$grayDark      : #191B1C;
 $goldMaderas   : #96843D;
 $azure         : #4382EF;
 $blueLight     : #5DADE2;
@@ -370,8 +376,18 @@ $tv                 : "(min-width : 1824px)";
     background:$grey9;
     color:$white !important;
 }
-
+.lbl-gray{
+    background-color: $grayOxford;
+    color: $white; 
+}
 /* Btns acción dentro de datatable */
+
+/* Etiquetas */
+.lbl-gral{
+    border-radius: 25px;
+    padding: 7px 10px;
+}
+/* END Etiquetas */
 
 /* Estilo del scroll en DIVS */
 /* El background del scroll */
@@ -455,7 +471,7 @@ $tv                 : "(min-width : 1824px)";
     }
 }
 
-.fade{
+.modal.fade{
     content: '';
     backdrop-filter: blur(8px) !important;
     background-color: RGB(0 0 0 / 30%);
@@ -564,3 +580,22 @@ $tv                 : "(min-width : 1824px)";
       display: block;
     }
 }
+
+.overflow-text{
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* tooltip styles */
+.tooltip{
+    .tooltip-inner {
+        padding: 5px 10px;
+        color: white;
+        background-color: $gray;
+    }
+}
+.tooltip.top .tooltip-arrow {
+    border-top-color: $gray;
+}
+/* tooltip styles */
