@@ -214,6 +214,7 @@
 <script src="<?= base_url() ?>dist/js/bootstrap-datetimepicker.js"></script>
 <!--  Full Calendar Plugin    -->
 <script src="<?= base_url() ?>dist/js/fullcalendar.min.js"></script>
+<script src="<?=base_url()?>dist/js/moment.min.js"></script>
 
 <script>
 	userType = <?= $this->session->userdata('id_rol') ?> ;
@@ -520,7 +521,7 @@ if($this->session->userdata('id_rol') == 2 || $this->session->userdata('id_rol')
 				?>
 				,
 				{ data: function (d) {
-                        if(userType != 7 && d.lugar_prospeccion == 6) { // NO ES ASESOR Y EL REGISTRO ES DE MKTD QUITO EL BOTÓN DE VER
+                        if(userType != 7 && d.lugar_prospeccion == 6 && compareDates(d.fecha_vencimiento) == true) { // NO ES ASESOR Y EL REGISTRO ES DE MKTD QUITO EL BOTÓN DE VER
                             return '';
                         } else { // ES ASESOR Y EL REGISTRO ES DE MKTD - DEJO EL BOTÓN DE VER
                             return '<button class="btn-data btn-details-grey see-information" data-id-prospecto="' + d.id_prospecto + '" style="margin-right: 3px;"><i class="material-icons">remove_red_eye</i></button>';
@@ -596,6 +597,16 @@ if($this->session->userdata('id_rol') == 2 || $this->session->userdata('id_rol')
         $("#beginDate").val(convertDate(beginDate));
         $("#endDate").val(convertDate(endDate));
         // fillTable(1, finalBeginDate, finalEndDate, 0);
+    }
+
+    function compareDates(fecha_creacion){
+        let date1 = new Date(fecha_creacion);
+        let date2 = new Date('2022-01-01');
+        var isBefore = moment(fecha_creacion).isBefore('2022-01-20T00:00:00Z');
+
+        console.log('isBefore',isBefore);
+        console.log('date2',date2);
+        return isBefore;
     }
 </script>
 <script src="<?=base_url()?>static/yadcf/jquery.dataTables.yadcf.js"></script>

@@ -97,6 +97,7 @@
 
     <!-- MODAL WIZARD -->
     <script src="<?=base_url()?>dist/js/modal-steps.min.js"></script>
+    <script src="<?=base_url()?>dist/js/moment.min.js"></script>
     <script src="<?=base_url()?>dist/js/controllers/consultaProspectos.js"></script>
     <script src="<?=base_url()?>dist/js/controllers/global_functions.js"></script>
 </body>
