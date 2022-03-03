@@ -113,7 +113,9 @@ $(document).on('change', '#cliente2', function () {
 });
 
 $(document).on('change', '#notaria', function () {
+    $('#spiner-loader').removeClass('hide');
     $.post('getNotaria',{idNotaria: $(this).val()}, function(data) {
+        $('#spiner-loader').addClass('hide');
         $('#information').html(`<p><b>Nombre de la notaria:</b> ${data[0].nombre_notaria}</p>
         <p><b>Nombre del notario:</b> ${data[0].nombre_notario}</p>
         <p><b>Direccíon de la notaria:</b> ${data[0].direccion}</p>
@@ -122,7 +124,9 @@ $(document).on('change', '#notaria', function () {
 });
 
 $(document).on('change', '#valuador', function () {
+    $('#spiner-loader').removeClass('hide');
     $.post('getValuador',{idValuador: $(this).val()}, function(data) {
+        $('#spiner-loader').addClass('hide');
         $('#information2').html(`<p><b>Nombre del perito:</b> ${data[0].perito}</p>
         <p><b>Direccíon del valuador:</b> ${data[0].direccion}</p>
         <p><b>Correo del valuador:</b> ${data[0].correo}</p>
@@ -233,6 +237,7 @@ $(document).on("click", "#dateSubmit", function () {
     let idSolicitud = $("#idSolicitud").val();
     let signDateFinal = formatDate2(signDate);
     let type = $("#type").val();
+    $('#spiner-loader').removeClass('hide');
     $.post('saveDate', {
         signDate: signDateFinal,
         idSolicitud: idSolicitud
@@ -241,6 +246,7 @@ $(document).on("click", "#dateSubmit", function () {
         if (data == true) {
             changeStatus(idSolicitud, 3, 'cambio de fecha', type);
         }
+        $('#spiner-loader').addClass('hide');
     }, 'json');
 });
 
@@ -288,8 +294,10 @@ $(document).on("click", "#sendRequestButton", function (e) {
     let sendRequestPermission = 0;
     if (action == 1) { // UPLOAD FILE
         let uploadedDocument = $("#uploadedDocument")[0].files[0];
-        let validateUploadedDocument = (uploadedDocument == undefined) ? 0 : 1;
+        let allowedExtensions = /(\.xls|\.xlsx|\.pdf|\.jpg|\.jpeg|\.png|\.doc|\.docx|\.csv)$/i;
+        let validateUploadedDocument = (uploadedDocument == undefined) || !allowedExtensions.exec(uploadedDocument.name) ? 0 : 1;
         // SE VALIDA QUE HAYA SELECCIONADO UN ARCHIVO ANTES DE LLEVAR A CABO EL REQUEST
+
         if (validateUploadedDocument == 0) alerts.showNotification("top", "right", "Asegúrate de haber seleccionado un archivo antes de guardar.", "warning");
         else sendRequestPermission = 1; // PUEDE MANDAR EL REQUEST PORQUE SÍ HAY ARCHIVO SELECCIONADO
     }
@@ -315,6 +323,7 @@ $(document).on("click", "#sendRequestButton", function (e) {
         data.append("action", action);
         let documentName = $("#docName").val();
         $('#uploadFileButton').prop('disabled', true);
+        $('#spiner-loader').removeClass('hide');
         $.ajax({
             url: action == 1 ? "uploadFile" : action == 2 ? "deleteFile" : "validateFile",
             data: data,
@@ -332,9 +341,11 @@ $(document).on("click", "#sendRequestButton", function (e) {
                 } else if (response == 0) alerts.showNotification("top", "right", "Oops, algo salió mal.", "warning");
                 else if (response == 2) alerts.showNotification("top", "right", "No fue posible almacenar el archivo en el servidor.", "warning");
                 else if (response == 3) alerts.showNotification("top", "right", "El archivo que se intenta subir no cuenta con la extención .xlsx", "warning");
+                $('#spiner-loader').addClass('hide');
             }, error: function () {
                 $("#sendRequestButton").prop("disabled", false);
                 alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+                $('#spiner-loader').addClass('hide');
             }
         });
     }
@@ -346,7 +357,7 @@ $(document).on("submit", "#formPresupuesto", function (e) {
     data.append('nombreT', $('#nombreT').val() == '' ? null : $('#nombreT').val());
     data.append('fechaCA', $('#fechaCA').val() == '' ? null : $('#fechaCA').val());
     // data.append('cliente', $('#cliente').val() == '' ? null:$('#cliente').val());
-
+    $('#spiner-loader').removeClass('hide');
     $.ajax({
         url: "savePresupuesto",
         data: data,
@@ -360,8 +371,10 @@ $(document).on("submit", "#formPresupuesto", function (e) {
                 $("#presupuestoModal").modal("hide");
                 prospectsTable.ajax.reload();
             }
+            $('#spiner-loader').addClass('hide');
         }, error: function () {
             alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+            $('#spiner-loader').addClass('hide');
         }
     });
 });
@@ -473,6 +486,7 @@ $(document).on('click', '#notariaSubmit', function (e) {
 })
 
 $(document).on("click", "#sendRequestButton2", function (e) {
+    $('#spiner-loader').removeClass('hide');
     let uploadedDocument = $("#uploadedDocument2")[0].files[0];
     let validateUploadedDocument = (uploadedDocument == undefined) ? 0 : 1;
     // SE VALIDA QUE HAYA SELECCIONADO UN ARCHIVO ANTES DE LLEVAR A CABO EL REQUEST
@@ -501,9 +515,11 @@ $(document).on("click", "#sendRequestButton2", function (e) {
                 } else if (response == 0) alerts.showNotification("top", "right", "Oops, algo salió mal.", "warning");
                 else if (response == 2) alerts.showNotification("top", "right", "No fue posible almacenar el archivo en el servidor.", "warning");
                 else if (response == 3) alerts.showNotification("top", "right", "El archivo que se intenta subir no cuenta con la extención .xlsx", "warning");
+                $('#spiner-loader').addClass('hide');
             }, error: function () {
                 $("#sendRequestButton2").prop("disabled", false);
                 alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+                $('#spiner-loader').addClass('hide');
             }
         });
     }
@@ -511,6 +527,7 @@ $(document).on("click", "#sendRequestButton2", function (e) {
 
 var detailRows = [];
 $(document).on('click', '.details-control', function () {
+    $('#spiner-loader').removeClass('hide');
     var tr = $(this).closest('tr');
     var row = prospectsTable.row(tr);
     var idx = $.inArray(tr.attr('id'), detailRows);
@@ -533,6 +550,7 @@ $(document).on('click', '.details-control', function () {
             row.child(buildTableDetail(row.data().solicitudes, $('#trees').attr('data-permisos'))).show();
             tr.addClass('shown');
             $(this).parent().find('.animacion').removeClass("fa-caret-right").addClass("fa-caret-down");
+            $('#spiner-loader').addClass('hide');
         });
 
         // Add to the 'open' array
@@ -878,6 +896,7 @@ function fillTable(beginDate, endDate) {
 };
 
 function email(idSolicitud, action, notaria = null, valuador= null) {
+    $('#spiner-loader').removeClass('hide');
     let obj;
     switch (action) {
         case '1':
@@ -900,6 +919,7 @@ function email(idSolicitud, action, notaria = null, valuador= null) {
         if(data == true){//cambiar a true
             changeStatus(idSolicitud, action == 1 ? 4:0, 'correo enviado', 1);
         }
+        $('#spiner-loader').addClass('hide');
     }, 'json');
 }
 
@@ -918,6 +938,7 @@ function setInitialValues() {
 }
 
 function getMotivosRechazos(tipo_documento) {
+    $('#spiner-loader').removeClass('hide');
     $("#motivos_rechazo").find("option").remove();
     $("#motivos_rechazo").append($('<option disabled>').val("0").text("Seleccione una opción"));
     $.post('getMotivosRechazos', {
@@ -934,10 +955,12 @@ function getMotivosRechazos(tipo_documento) {
             $("#motivos_rechazo").append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
         }
         $("#motivos_rechazo").selectpicker('refresh');
+        $('#spiner-loader').addClass('hide');
     }, 'json');
 }
 
 function getDocumentsClient(idEscritura) {
+    $('#spiner-loader').removeClass('hide');
     $("#documents").find("option").remove();
     $("#documents").append($('<option disabled>').val("0").text("Seleccione una opción"));
     $.post('getDocumentsClient', {
@@ -954,10 +977,12 @@ function getDocumentsClient(idEscritura) {
             $("#documents").append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
         }
         $("#documents").selectpicker('refresh');
+        $('#spiner-loader').addClass('hide');
     }, 'json');
 }
 
 function getNotarias() {
+    $('#spiner-loader').removeClass('hide');
     $("#notaria").find("option").remove();
     $("#notaria").append($('<option disabled>').val("0").text("Seleccione una opción"));
     $.post('getNotarias', function (data) {
@@ -972,10 +997,12 @@ function getNotarias() {
             $("#notaria").append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
         }
         $("#notaria").selectpicker('refresh');
+        $('#spiner-loader').addClass('hide');
     }, 'json');
 }
 
     function getValuadores() {
+        $('#spiner-loader').removeClass('hide');
         $("#valuador").find("option").remove();
         $("#valuador").append($('<option disabled>').val("0").text("Seleccione una opción"));
         $.post('getValuadores', function(data) {
@@ -990,10 +1017,12 @@ function getNotarias() {
                 $("#valuador").append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
             }
             $("#valuador").selectpicker('refresh');
+            $('#spiner-loader').addClass('hide');
         }, 'json');
     }
 
     function getBudgetInfo(idSolicitud){
+        $('#spiner-loader').removeClass('hide');
         $.post('getBudgetInfo',{
             idSolicitud:idSolicitud
         }, function(data) {
@@ -1008,10 +1037,12 @@ function getNotarias() {
         //    $('#catastral').val(data.estatus);
         $('#construccion').val(1);
         $('#cliente').val(1);
+        $('#spiner-loader').addClass('hide');
     }, 'json');
 }
 
 function checkBudgetInfo(idSolicitud) {
+    $('#spiner-loader').removeClass('hide');
     $.post('checkBudgetInfo', {
         idSolicitud: idSolicitud
     }, function (data) {
@@ -1029,6 +1060,7 @@ function checkBudgetInfo(idSolicitud) {
         $('#nombreT2').val(data.nombre_anterior);
         $('#fechaCA2').val(data.fecha_anterior);
         $('#rfcDatos2').val(data.RFC);
+        $('#spiner-loader').addClass('hide');
     }, 'json');
 }
 
@@ -1216,6 +1248,7 @@ function getSignDate() {
 }
 
 function changeStatus(id_solicitud, action, comentarios, type) {
+    $('#spiner-loader').removeClass('hide');
     $.post('changeStatus', {
         id_solicitud: id_solicitud,
         type: type,
@@ -1239,6 +1272,7 @@ function changeStatus(id_solicitud, action, comentarios, type) {
                 break;
         }
         prospectsTable.ajax.reload();
+        $('#spiner-loader').addClass('hide');
     }, 'json');
 }
      

@@ -24,8 +24,8 @@
                             <h3 class="card-title center-align">Listado general de prospectos</h3>
                             <div class="toolbar">
                                 <div class="row">
-                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                                        <div class="col-md-4 form-group">
+                                    <div id="filterContainer" class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                        <!-- <div class="col-md-4 form-group">
                                             <div class="form-group label-floating select-is-empty">
                                                 <label class="control-label">GERENTE</label>
                                                 <select name="gerente" id="gerente" class="selectpicker select-gral m-0"
@@ -48,7 +48,7 @@
                                                         data-style="btn" data-show-subtext="true"  title="Selecciona asesor" data-size="7" required>
                                                 </select>
                                             </div>
-                                        </div>
+                                        </div> -->
                                     </div>
                                     <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-lg-offset-6 col-md-offset-6 col-sm-offset-6">
                                         <div class="container-fluid p-0">
@@ -251,35 +251,28 @@ if($this->session->userdata('id_rol') == 2 || $this->session->userdata('id_rol')
 
 <script>
 	$(document).ready(function () {
+        var subdir = '<?=$this->session->userdata("id_usuario")?>';
+
 		var url_interna;
 		/*primera carga*/
-		<?php
-			if($this->session->userdata('id_rol')==2)
-			{?>
-				var subdir = '<?=$this->session->userdata("id_usuario")?>';
-				 url_interna = '<?=base_url()?>index.php/Clientes/getGerentesBySubdir/'+subdir;
-			<?php }
-			else{?>
-				 url_interna = '<?=base_url()?>index.php/Clientes/getGerentesBySubdir_ASB/';
-			<?php }
+		// <?php
+		// 	if($this->session->userdata('id_rol')==2)
+		// 	{?>
+		// 		var subdir = '<?=$this->session->userdata("id_usuario")?>';
+		// 		 url_interna = '<?=base_url()?>index.php/Clientes/getGerentesBySubdir/'+subdir;
+		// 	<?php
+        // }
+		// 	else{?>
+		// 		 url_interna = '<?=base_url()?>index.php/Clientes/getGerentesBySubdir_ASB/';
+		
+        // <?php 
+        //}
 		?>
-
+        //funcion para validar si tiene multirol
+       multirol();
+       
 		//gerente
-		$("#gerente").empty().selectpicker('refresh');
-		$.post(url_interna, function(data) {
-			var len = data.length;
-			for( var i = 0; i<len; i++)
-			{
-				var id = data[i]['id_usuario'];
-				var name = data[i]['nombre'] + ' ' + data[i]['apellido_paterno'] + ' ' + data[i]['apellido_materno'];
-				$("#gerente").append($('<option>').val(id).text(name));
-			}
-			if(len<=0)
-			{
-				$("#gerente").append('<option selected="selected" disabled>NINGUN GERENTE</option>');
-			}
-			$("#gerente").selectpicker('refresh');
-		}, 'json');
+		
 
 
 
@@ -290,17 +283,235 @@ if($this->session->userdata('id_rol') == 2 || $this->session->userdata('id_rol')
 
 
 
+    function multirol(){
+        $.post('../General/multirol', function(data){
+            let unique = [...new Set(data.map(item => item.idRol))]; //los roles unicos del usuario
+            if(unique.includes(58) || unique.includes(59)){
+                createFilters(58);
+                getFirstFilter(58, 2);
+            }else{
+                createFilters(2);
+                getFirstFilter(2, 3);
+            }
+        },'json');
+    }
+
+    function createFilters(rol){
+        if(rol == 58){
+            let div = '<div class="col-md-3 form-group"><div id="div1" class="form-group label-floating select-is-empty"><label class="control-label">SUBDIRECTOR</label></div></div>';
+            div += '<div class="col-md-3 form-group"><div id="div2" class="form-group label-floating select-is-empty"><label class="control-label">GERENTE</label></div></div>';
+            div += '<div class="col-md-3 form-group"><div id="div3" class="form-group label-floating select-is-empty"><label class="control-label">COORDINADOR</label></div></div>';
+            div += '<div class="col-md-3 form-group"><div id="div4" class="form-group label-floating select-is-empty"><label class="control-label">ASESOR</label></div></div>';
+            var $selectSub = $('<select/>', {
+                'class':"selectpicker select-gral m-0",
+                'id': 'subdirector',
+                'name': 'subdirector',
+                'data-style':"btn",
+                'data-show-subtext':"true",
+                'data-live-search':"true"
+            }).append($('<option/>',{
+            'value': 'default',
+            'text': 'Selecciona el subdirector',
+            'selected': true,
+            'disabled': true
+        }));
+            var $selectGer = $('<select/>', {
+                'class':"selectpicker select-gral m-0",
+                'id': 'gerente',
+                'name': 'gerente',
+                'data-style':"btn",
+                'data-show-subtext':"true",
+                'data-live-search':"true"
+            }).append($('<option/>',{
+            'value': 'default',
+            'text': 'Selecciona el gerente',
+            'selected': true,
+            'disabled': true
+        }));
+            var $selectCoord = $('<select/>', {
+                'class':"selectpicker select-gral m-0",
+                'id': 'coordinador',
+                'name': 'coordinador',
+                'data-style':"btn",
+                'data-show-subtext':"true",
+                'data-live-search':"true"
+            }).append($('<option/>',{
+            'value': 'default',
+            'text': 'Selecciona el coordinador',
+            'selected': true,
+            'disabled': true
+        }));
+            var $selectAse = $('<select/>', {
+                'class':"selectpicker select-gral m-0",
+                'id': 'asesores',
+                'name': 'asesores',
+                'data-style':"btn",
+                'data-show-subtext':"true",
+                'data-live-search':"true"
+            }).append($('<option/>',{
+            'value': 'default',
+            'text': 'Selecciona el asesor',
+            'selected': true,
+            'disabled': true
+        }));
+            $('#filterContainer').append(div);
+            $selectSub.appendTo('#div1').selectpicker('refresh');
+            $selectGer.appendTo('#div2').selectpicker('refresh');
+            $selectCoord.appendTo('#div3').selectpicker('refresh');
+            $selectAse.appendTo('#div4').selectpicker('refresh');
+            // $option.appendTo('#asesores');
+
+        }else if(2){ 
+            let div = '<div class="col-md-3 form-group"><div id="div2" class="form-group label-floating select-is-empty"><label class="control-label">GERENTE</label></div></div>';
+            div += '<div class="col-md-3 form-group"><div id="div3" class="form-group label-floating select-is-empty"><label class="control-label">COORDINADOR</label></div></div>';
+            div += '<div class="col-md-3 form-group"><div id="div4" class="form-group label-floating select-is-empty"><label class="control-label">ASESOR</label></div></div>';
+            
+            var $selectGer = $('<select/>', {
+                'class':"selectpicker select-gral m-0",
+                'id': 'gerente',
+                'name': 'gerente',
+                'data-style':"btn",
+                'data-show-subtext':"true",
+                'data-live-search':"true"
+            }).append($('<option/>',{
+            'value': 'default',
+            'text': 'Selecciona el gerente',
+            'selected': true,
+            'disabled': true
+        }));
+            var $selectCoord = $('<select/>', {
+                'class':"selectpicker select-gral m-0",
+                'id': 'coordinador',
+                'name': 'coordinador',
+                'data-style':"btn",
+                'data-show-subtext':"true",
+                'data-live-search':"true"
+            }).append($('<option/>',{
+            'value': 'default',
+            'text': 'Selecciona el coordinador',
+            'selected': true,
+            'disabled': true
+        }));
+            var $selectAse = $('<select/>', {
+                'class':"selectpicker select-gral m-0",
+                'id': 'asesores',
+                'name': 'asesores',
+                'data-style':"btn",
+                'data-show-subtext':"true",
+                'data-live-search':"true"
+            }).append($('<option/>',{
+            'value': 'default',
+            'text': 'Selecciona el asesor',
+            'selected': true,
+            'disabled': true
+        }));
+            $('#filterContainer').append(div);
+            $selectGer.appendTo('#div2').selectpicker('refresh');
+            $selectCoord.appendTo('#div3').selectpicker('refresh');
+            $selectAse.appendTo('#div4').selectpicker('refresh');
+        }
+    }
+
+    function getFirstFilter(rol, secondRol){
+        $(`#${rol == 58 ? 'subdirector':'gerente'}`).empty().selectpicker('refresh');
+        // rol == 58 ? `Clientes/getGerentesBySubdir/${idUsuario}` : `General`
+        var $option = $('<option/>',{
+            'value': 'default',
+            'text': 'Selecciona el subdirector',
+            'selected': true,
+            'disabled': true
+        });
+        $(`#${rol == 58 ? 'subdirector':'gerente'}`).append($option);
+		$.post('../General/getUsersByLeader', {rol: rol, secondRol:secondRol},function(data) {
+			var len = data.length;
+            // console.log('users', data);
+			for( var i = 0; i<len; i++)
+			{
+				var id = data[i]['id_usuario'];
+				var name = data[i]['nombre'] + ' ' + data[i]['apellido_paterno'] + ' ' + data[i]['apellido_materno'];
+				$(`#${rol == 58 ? 'subdirector':'gerente'}`).append($('<option>').val(id).text(name));
+			}
+			if(len<=0){
+				$(`#${rol == 58 ? 'subdirector':'gerente'}`).append('<option selected="selected" disabled>NINGUN GERENTE</option>');
+			}
+			$(`#${rol == 58 ? 'subdirector':'gerente'}`).selectpicker('refresh');
+		}, 'json');
+    }
+    
+    $(document).on('change', '#subdirector',function () {
+        /**/
+        var subdirector = $("#subdirector").val();
+        console.log('Elegiste: ', subdirector);
+
+        $("#gerente").empty().selectpicker('refresh');
+        $("#coordinador").empty().selectpicker('refresh');
+       
+        $(`#gerente`).append($('<option/>',{
+            'value': 'default',
+            'text': 'Selecciona el gerente',
+            'selected': true,
+            'disabled': true
+        }));
+        $(`#coordinador`).append($('<option/>',{
+            'value': 'default',
+            'text': 'Selecciona el coordinador',
+            'selected': true,
+            'disabled': true
+        }));
+        $(`#asesores`).append($('<option/>',{
+            'value': 'default',
+            'text': 'Selecciona el asesor',
+            'selected': true,
+            'disabled': true
+        }));
+        $("#coordinador").selectpicker('refresh');
+        $("#asesores").selectpicker('refresh');
+
+        $.post('<?=base_url()?>index.php/Clientes/getGrsBySub/' + subdirector, function (data) {
+            var len = data.length;
+            for (var i = 0; i < len; i++) {
+                var id = data[i]['id_usuario'];
+                var name = data[i]['nombre'] + ' ' + data[i]['apellido_paterno'] + ' ' + data[i]['apellido_materno'];
+                $("#gerente").append($('<option>').val(id).text(name));
+            }
+            if (len <= 0) {
+                $("#gerente").append('<option selected="selected" disabled>NINGUN SUBDIRECTOR</option>');
+            }
+            $("#gerente").selectpicker('refresh');
+        }, 'json');
+
+        /**/ //carga tabla
+        var url = "<?=base_url()?>index.php/Clientes/getProspectsListBySubdirector/" + subdirector;
+        /*console.log("TypeTRans: " + typeTransaction);
+        updateTable(url, typeTransaction);*/
+        let finalBeginDate = $("#beginDate").val();
+        let finalEndDate = $("#endDate").val();
+        updateTable(url, 1, finalBeginDate, finalEndDate, 0)
+    });
 
 
-
-
-	$('#gerente').on('change', function () {
+	$(document).on('change','#gerente', function () {
 
 		/**/var gerente = $("#gerente").val();
 		console.log('Elegiste: ' + gerente);
 
 		$("#coordinador").empty().selectpicker('refresh');
 		$("#asesores").empty().selectpicker('refresh');
+       
+        $(`#coordinador`).append($('<option/>',{
+            'value': 'default',
+            'text': 'Selecciona el coordinador',
+            'selected': true,
+            'disabled': true
+        }));
+        $(`#asesores`).append($('<option/>',{
+            'value': 'default',
+            'text': 'Selecciona el asesor',
+            'selected': true,
+            'disabled': true
+        }));
+        $("#asesores").selectpicker('refresh');
+
 		$.post('<?=base_url()?>index.php/Clientes/getCoordsByGrs/'+gerente, function(data) {
 			var len = data.length;
 			for( var i = 0; i<len; i++)
@@ -327,12 +538,19 @@ if($this->session->userdata('id_rol') == 2 || $this->session->userdata('id_rol')
         updateTable(url, 1, finalBeginDate, finalEndDate, 0)
 	});
 
-	$('#coordinador').on('change', function () {
+	$(document).on('change', '#coordinador', function () {
 		var coordinador = $("#coordinador").val();
 		console.log('Elegiste: ' + coordinador);
 
 		//gerente
 		$("#asesores").empty().selectpicker('refresh');
+        var $option = $('<option/>',{
+            'value': 'default',
+            'text': 'Selecciona el coordinador',
+            'selected': true,
+            'disabled': true
+        });
+        $(`#asesores`).append($option);
 		$.post('<?=base_url()?>index.php/Clientes/getAsesorByCoords/'+coordinador, function(data) {
 			var len = data.length;
 			for( var i = 0; i<len; i++)
@@ -358,7 +576,7 @@ if($this->session->userdata('id_rol') == 2 || $this->session->userdata('id_rol')
 	});
 
 	//asesor
-	$('#asesores').on('change', function () {
+	$(document).on('change', '#asesores',function () {
 		var asesor = $("#asesores").val();
 		console.log('Elegiste: ' + asesor);
 

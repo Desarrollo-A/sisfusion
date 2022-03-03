@@ -40,18 +40,20 @@ function loading() {
 function complete() {
     $(".fa-spinner").hide();
     $(".btn-text").html("Completado");
+    $('#spiner-loader').removeClass('hide');
 }
 
 function aportaciones() {
     let idLote = $('#lotes').val();
     let idCliente = $('#idCliente').val();
-
+    $('#spiner-loader').removeClass('hide');
     $.post('aportaciones', {
         idLote: idLote,
         idCliente: idCliente
     }, function (data) {
         console.log(data);
         complete();
+        
     }, 'json');
 }
 
@@ -126,6 +128,7 @@ function getProyectos() {
 }
 
 function getCondominios(idResidencial) {
+    $('#spiner-loader').removeClass('hide');
     $('#check').hide();
     $("#condominio").find("option").remove();
     $("#condominio").append($('<option disabled selected>').val(null).text("Seleccione una opción"));
@@ -142,10 +145,12 @@ function getCondominios(idResidencial) {
             $("#condominio").append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
         }
         $("#condominio").selectpicker('refresh');
+        $('#spiner-loader').addClass('hide');
     }, 'json');
 }
 
 function getLotes(idCondominio) {
+    $('#spiner-loader').removeClass('hide');
     $('#check').hide();
     $("#lotes").find("option").remove();
     $("#lotes").append($('<option disabled selected>').val(null).text("Seleccione una opción"));
@@ -162,5 +167,6 @@ function getLotes(idCondominio) {
             $("#lotes").append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
         }
         $("#lotes").selectpicker('refresh');
+        $('#spiner-loader').addClass('hide');
     }, 'json');
 }   
