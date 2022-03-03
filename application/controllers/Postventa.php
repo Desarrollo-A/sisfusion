@@ -7,7 +7,7 @@ class Postventa extends CI_Controller
     public function __construct()
     {
         parent::__construct();
-        $this->load->model(array('Postventa_model'));
+        $this->load->model(array('Postventa_model', 'Documentacion_model', 'General_model'));
         $this->load->library(array('session', 'form_validation', 'get_menu'));
         $this->validateSession();
         date_default_timezone_set('America/Mexico_City');
@@ -19,7 +19,7 @@ class Postventa extends CI_Controller
             redirect(base_url() . 'login');
         $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
         $this->load->view('template/header');
-        $this->load->view('template/home',$datos);
+        $this->load->view('template/home', $datos);
         $this->load->view('template/footer');
     }
 
@@ -816,7 +816,6 @@ class Postventa extends CI_Controller
     }
 
 
-
     public function getBudgetInfo()
     {
         $idSolicitud = $this->input->post('idSolicitud');
@@ -1304,10 +1303,11 @@ class Postventa extends CI_Controller
         $document = $this->Postventa_model->getFileNameByDoctype($idSolicitud, $docType)->row();
         return $document;
     }
+
     public function validateFile()
     {
         $idDocumento = $this->input->post('idDocumento');
-        $idLote = $this->input->post('idLote');
+        $idSolicitud = $this->input->post('idSolicitud');
         $documentType = $this->input->post('documentType');
         $action = $this->input->post('action');
         if ($action == 4) {
@@ -1317,11 +1317,12 @@ class Postventa extends CI_Controller
                     "id_motivo" => $rejectionReasons[$i],
                     "id_documento" => $idDocumento,
                     "tipo" => $documentType,
+                    "tipo_proceso" => 2,
                     "creado_por" => $this->session->userdata('id_usuario')
                 );
             }
         }
-        $rejectionReasonsList = $this->Documentacion_model->getRejectReasons($idDocumento, $idLote, $documentType)->result_array();
+        $rejectionReasonsList = $this->Documentacion_model->getRejectReasonsTwo($idDocumento, $idSolicitud, $documentType)->result_array(); // MJ: LLEVA 3 PARÁMETROS $idDocumento, $idSolicitud, $documentType
         if (count($rejectionReasonsList) >= 1) { // SÍ ENCONTRÓ REGISTROS
             for ($r = 0; $r < count($rejectionReasonsList); $r++) {
                 $updateArrayData[] = array(
@@ -1329,17 +1330,15 @@ class Postventa extends CI_Controller
                     'estatus' => 0
                 );
             }
-            $this->db->update_batch("motivos_rechazo_x_documento", $updateArrayData, "id_mrxdoc");
+            $this->General_model->updateBatch("motivos_rechazo_x_documento", $updateArrayData, "id_mrxdoc"); // MJ: SE MANDA CORRER EL UPDATE BATCH
         }
         $updateData = array("estatus_validacion" => $action == 4 ? 2 : 1, "validado_por" => $this->session->userdata('id_usuario'));
-        $updateResponse = $this->Documentacion_model->updateRecord("documentos_escrituracion", $updateData, "idDocumento", $idDocumento); // MJ: LLEVA 4 PARÁMETROS $table, $data, $key, $value
+        $updateResponse = $this->General_model->updateRecord("documentos_escrituracion", $updateData, "idDocumento", $idDocumento); // MJ: LLEVA 4 PARÁMETROS $table, $data, $key, $value
         if ($action == 4) {
-            $insertResponse = $this->Documentacion_model->saveRejectionReasons($insertData);
+            $insertResponse = $this->General_model->insertBatch("motivos_rechazo_x_documento", $insertData);
             echo json_encode(($updateResponse == 1 && $insertResponse == 1) == TRUE ? 1 : 0);
-        } else {
+        } else
             echo json_encode($updateResponse == 1 ? 1 : 0);
-        }
     }
-
 }
 

@@ -42,7 +42,7 @@ class Cobranza_model extends CI_Model {
         FROM lotes l
         INNER JOIN condominios cn ON cn.idCondominio = l.idCondominio
         INNER JOIN residenciales r ON r.idResidencial = cn.idResidencial
-        INNER JOIN clientes cl ON cl.id_cliente = l.idCliente AND cl.status = 1 AND (cl.lugar_prospeccion = 6 OR cl.descuento_mdb = 1) $filter
+        INNER JOIN clientes cl ON cl.id_cliente = l.idCliente AND cl.status = 1 AND (cl.lugar_prospeccion IN(6, 29) OR cl.descuento_mdb = 1) $filter
         INNER JOIN usuarios u ON u.id_usuario = cl.id_asesor AND u.id_sede IN ($result) 
         INNER JOIN sedes s ON CAST(s.id_sede AS VARCHAR(15)) = CAST(u.id_sede AS VARCHAR(15))
         LEFT JOIN evidencia_cliente ec ON ec.idLote = cl.idLote AND ec.idCliente = l.idCliente

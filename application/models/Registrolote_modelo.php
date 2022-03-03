@@ -5371,8 +5371,8 @@ WHERE idLote IN ('".$row['idLote']."') and nombreLote = '".$insert_csv['nombreLo
                                 LEFT JOIN condominios as cond on lotes.idCondominio=cond.idCondominio
                                 LEFT JOIN residenciales as residencial on cond.idResidencial=residencial.idResidencial
                                 LEFT JOIN tipopago as tp on cl.idTipoPago=tp.idTipoPago
-                                LEFT JOIN opcs_x_cats as oc ON cl.lugar_prospeccion = oc.id_opcion
-                                where CONCAT (cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno) LIKE '%".$name_client."%' AND cl.status = 1 AND oc.id_catalogo=9  order by cl.id_cliente desc");
+                                LEFT JOIN opcs_x_cats as oc ON cl.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9
+                                where CONCAT (cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno) LIKE '%".$name_client."%' AND cl.status = 1 order by cl.id_cliente desc");
 
         return $query->result();
     }
@@ -5394,8 +5394,8 @@ WHERE idLote IN ('".$row['idLote']."') and nombreLote = '".$insert_csv['nombreLo
                                 LEFT JOIN condominios as cond on lotes.idCondominio=cond.idCondominio
                                 LEFT JOIN residenciales as residencial on cond.idResidencial=residencial.idResidencial
                                 LEFT JOIN tipopago as tp on cl.idTipoPago=tp.idTipoPago
-                                LEFT JOIN opcs_x_cats as oc ON cl.lugar_prospeccion = oc.id_opcion
-                                where cl.correo ='%".$correo_client."%' OR cl.correo LIKE '%".$correo_client."%' AND cl.status = 1 AND oc.id_catalogo=9  order by cl.id_cliente desc");
+                                LEFT JOIN opcs_x_cats as oc ON cl.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9
+                                where cl.correo ='%".$correo_client."%' AND cl.correo LIKE '%".$correo_client."%' AND cl.status = 1  order by cl.id_cliente desc");
 
         return $query->result();
     }
@@ -5417,9 +5417,9 @@ WHERE idLote IN ('".$row['idLote']."') and nombreLote = '".$insert_csv['nombreLo
                                 LEFT JOIN condominios as cond on lotes.idCondominio=cond.idCondominio
                                 LEFT JOIN residenciales as residencial on cond.idResidencial=residencial.idResidencial
                                 LEFT JOIN tipopago as tp on cl.idTipoPago=tp.idTipoPago
-                                LEFT JOIN opcs_x_cats as oc ON cl.lugar_prospeccion = oc.id_opcion
+                                LEFT JOIN opcs_x_cats as oc ON cl.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9
                                 where cl.telefono1 ='".$telefono_client."' 
-                                 AND cl.status = 1 AND oc.id_catalogo=9  order by cl.id_cliente desc");
+                                 AND cl.status = 1 order by cl.id_cliente desc");
 
         return $query->result();
     }
@@ -5441,10 +5441,9 @@ WHERE idLote IN ('".$row['idLote']."') and nombreLote = '".$insert_csv['nombreLo
                                 LEFT JOIN condominios as cond on lotes.idCondominio=cond.idCondominio
                                 LEFT JOIN residenciales as residencial on cond.idResidencial=residencial.idResidencial
                                 LEFT JOIN tipopago as tp on cl.idTipoPago=tp.idTipoPago
-                                LEFT JOIN opcs_x_cats as oc ON cl.lugar_prospeccion = oc.id_opcion
-                                where CONCAT (cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno) LIKE '%".$name_client."%' OR
-                                cl.correo LIKE '%".$correo_client."%'
-                                 AND cl.status = 1 AND oc.id_catalogo=9  order by cl.id_cliente desc");
+                                LEFT JOIN opcs_x_cats as oc ON cl.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9
+                                where CONCAT (cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno) LIKE '%".$name_client."%' AND
+                                cl.correo LIKE '%".$correo_client."%' AND cl.status = 1 order by cl.id_cliente desc");
 
         return $query->result();
     }
@@ -5466,10 +5465,10 @@ WHERE idLote IN ('".$row['idLote']."') and nombreLote = '".$insert_csv['nombreLo
                                 LEFT JOIN condominios as cond on lotes.idCondominio=cond.idCondominio
                                 LEFT JOIN residenciales as residencial on cond.idResidencial=residencial.idResidencial
                                 LEFT JOIN tipopago as tp on cl.idTipoPago=tp.idTipoPago
-                                LEFT JOIN opcs_x_cats as oc ON cl.lugar_prospeccion = oc.id_opcion
-                                where CONCAT (cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno) LIKE '%".$name_client."%' OR
+                                LEFT JOIN opcs_x_cats as oc ON cl.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9
+                                where CONCAT (cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno) LIKE '%".$name_client."%' AND
                                 cl.telefono1 LIKE '%".$telefono_client."%'
-                                 AND cl.status = 1 AND oc.id_catalogo=9  order by cl.id_cliente desc");
+                                 AND cl.status = 1 order by cl.id_cliente desc");
 
         return $query->result();
     }
@@ -5492,9 +5491,9 @@ WHERE idLote IN ('".$row['idLote']."') and nombreLote = '".$insert_csv['nombreLo
                                 LEFT JOIN condominios as cond on lotes.idCondominio=cond.idCondominio
                                 LEFT JOIN residenciales as residencial on cond.idResidencial=residencial.idResidencial
                                 LEFT JOIN tipopago as tp on cl.idTipoPago=tp.idTipoPago
-                                LEFT JOIN opcs_x_cats as oc ON cl.lugar_prospeccion = oc.id_opcion
+                                LEFT JOIN opcs_x_cats as oc ON cl.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9
                                 where cl.correo LIKE '%".$correo_client."%' OR cl.telefono1= '".$telefono_client."'
-                                 AND cl.status = 1 AND oc.id_catalogo=9  order by cl.id_cliente desc");
+                                 AND cl.status = 1 order by cl.id_cliente desc");
 
         return $query->result();
     }
@@ -5516,10 +5515,10 @@ WHERE idLote IN ('".$row['idLote']."') and nombreLote = '".$insert_csv['nombreLo
                                 LEFT JOIN condominios as cond on lotes.idCondominio=cond.idCondominio
                                 LEFT JOIN residenciales as residencial on cond.idResidencial=residencial.idResidencial
                                 LEFT JOIN tipopago as tp on cl.idTipoPago=tp.idTipoPago
-                                LEFT JOIN opcs_x_cats as oc ON cl.lugar_prospeccion = oc.id_opcion
-                                where  CONCAT (cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno) LIKE '%".$name_client."%' OR
-                                cl.correo LIKE '%".$correo_client."%' OR cl.telefono1= '".$telefono_client."' OR cl.apellido_paterno LIKE '%".$apellido_paterno."%' OR
-                                 cl.apellido_materno LIKE '%".$apellido_materno."%' AND cl.status = 1 AND oc.id_catalogo=9  order by cl.id_cliente desc");
+                                LEFT JOIN opcs_x_cats as oc ON cl.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9
+                                where  CONCAT (cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno) LIKE '%".$name_client."%' AND
+                                cl.correo LIKE '%".$correo_client."%' AND cl.telefono1= '".$telefono_client."' AND cl.apellido_paterno LIKE '%".$apellido_paterno."%' AND
+                                 cl.apellido_materno LIKE '%".$apellido_materno."%' AND cl.status = 1 order by cl.id_cliente desc");
 
         return $query->result();
     }
@@ -5542,9 +5541,9 @@ WHERE idLote IN ('".$row['idLote']."') and nombreLote = '".$insert_csv['nombreLo
                                 LEFT JOIN condominios as cond on lotes.idCondominio=cond.idCondominio
                                 LEFT JOIN residenciales as residencial on cond.idResidencial=residencial.idResidencial
                                 LEFT JOIN tipopago as tp on cl.idTipoPago=tp.idTipoPago
-                                LEFT JOIN opcs_x_cats as oc ON cl.lugar_prospeccion = oc.id_opcion
+                                LEFT JOIN opcs_x_cats as oc ON cl.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9
                                 where cl.apellido_paterno LIKE '%".$apellido_paterno."%' 
-                                 AND cl.status = 1 AND oc.id_catalogo=9  order by cl.id_cliente desc");
+                                 AND cl.status = 1 order by cl.id_cliente desc");
 
         return $query->result();
     }
@@ -5565,9 +5564,9 @@ WHERE idLote IN ('".$row['idLote']."') and nombreLote = '".$insert_csv['nombreLo
                                 LEFT JOIN condominios as cond on lotes.idCondominio=cond.idCondominio
                                 LEFT JOIN residenciales as residencial on cond.idResidencial=residencial.idResidencial
                                 LEFT JOIN tipopago as tp on cl.idTipoPago=tp.idTipoPago
-                                LEFT JOIN opcs_x_cats as oc ON cl.lugar_prospeccion = oc.id_opcion
+                                LEFT JOIN opcs_x_cats as oc ON cl.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9
                                 where cl.apellido_materno LIKE '%".$apellido_materno."%' 
-                                 AND cl.status = 1 AND oc.id_catalogo=9  order by cl.id_cliente desc");
+                                 AND cl.status = 1 order by cl.id_cliente desc");
 
         return $query->result();
     }
@@ -5588,9 +5587,9 @@ WHERE idLote IN ('".$row['idLote']."') and nombreLote = '".$insert_csv['nombreLo
                                 LEFT JOIN condominios as cond on lotes.idCondominio=cond.idCondominio
                                 LEFT JOIN residenciales as residencial on cond.idResidencial=residencial.idResidencial
                                 LEFT JOIN tipopago as tp on cl.idTipoPago=tp.idTipoPago
-                                LEFT JOIN opcs_x_cats as oc ON cl.lugar_prospeccion = oc.id_opcion
-                                where cl.nombre LIKE '%".$name_client."%' OR cl.apellido_paterno LIKE '%".$apellido_paterno."%'
-                                 AND cl.status = 1 AND oc.id_catalogo=9  order by cl.id_cliente desc");
+                                LEFT JOIN opcs_x_cats as oc ON cl.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9
+                                where cl.nombre LIKE '%".$name_client."%' AND cl.apellido_paterno LIKE '%".$apellido_paterno."%'
+                                 AND cl.status = 1 order by cl.id_cliente desc");
 
         return $query->result();
     }
@@ -5611,9 +5610,9 @@ WHERE idLote IN ('".$row['idLote']."') and nombreLote = '".$insert_csv['nombreLo
                                 LEFT JOIN condominios as cond on lotes.idCondominio=cond.idCondominio
                                 LEFT JOIN residenciales as residencial on cond.idResidencial=residencial.idResidencial
                                 LEFT JOIN tipopago as tp on cl.idTipoPago=tp.idTipoPago
-                                LEFT JOIN opcs_x_cats as oc ON cl.lugar_prospeccion = oc.id_opcion
-                                where cl.nombre LIKE '%".$name_client."%' OR cl.apellido_materno LIKE '%".$apellido_materno."%'
-                                 AND cl.status = 1 AND oc.id_catalogo=9  order by cl.id_cliente desc");
+                                LEFT JOIN opcs_x_cats as oc ON cl.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9
+                                where cl.nombre LIKE '%".$name_client."%' AND cl.apellido_materno LIKE '%".$apellido_materno."%'
+                                 AND cl.status = 1 order by cl.id_cliente desc");
 
         return $query->result();
     }
@@ -5634,9 +5633,9 @@ WHERE idLote IN ('".$row['idLote']."') and nombreLote = '".$insert_csv['nombreLo
                                 LEFT JOIN condominios as cond on lotes.idCondominio=cond.idCondominio
                                 LEFT JOIN residenciales as residencial on cond.idResidencial=residencial.idResidencial
                                 LEFT JOIN tipopago as tp on cl.idTipoPago=tp.idTipoPago
-                                LEFT JOIN opcs_x_cats as oc ON cl.lugar_prospeccion = oc.id_opcion
-                                where cl.correo LIKE '%".$correo_client."%' OR cl.apellido_paterno LIKE '%".$apellido_paterno."%'
-                                 AND cl.status = 1 AND oc.id_catalogo=9  order by cl.id_cliente desc");
+                                LEFT JOIN opcs_x_cats as oc ON cl.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9
+                                where cl.correo LIKE '%".$correo_client."%' AND cl.apellido_paterno LIKE '%".$apellido_paterno."%'
+                                 AND cl.status = 1 order by cl.id_cliente desc");
         return $query->result();
     }
     function getClientsByMailApMaterno($correo_client, $apellido_materno)
@@ -5656,9 +5655,9 @@ WHERE idLote IN ('".$row['idLote']."') and nombreLote = '".$insert_csv['nombreLo
                                 LEFT JOIN condominios as cond on lotes.idCondominio=cond.idCondominio
                                 LEFT JOIN residenciales as residencial on cond.idResidencial=residencial.idResidencial
                                 LEFT JOIN tipopago as tp on cl.idTipoPago=tp.idTipoPago
-                                LEFT JOIN opcs_x_cats as oc ON cl.lugar_prospeccion = oc.id_opcion
-                                where cl.correo LIKE '%".$correo_client."%' OR cl.apellido_materno LIKE '%".$apellido_materno."%'
-                                 AND cl.status = 1 AND oc.id_catalogo=9  order by cl.id_cliente desc");
+                                LEFT JOIN opcs_x_cats as oc ON cl.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9
+                                where cl.correo LIKE '%".$correo_client."%' AND cl.apellido_materno LIKE '%".$apellido_materno."%'
+                                 AND cl.status = 1 order by cl.id_cliente desc");
         return $query->result();
     }
     function getClientsByApPaternoTel($apellido_paterno, $telefono_client)
@@ -5678,10 +5677,10 @@ WHERE idLote IN ('".$row['idLote']."') and nombreLote = '".$insert_csv['nombreLo
                                 LEFT JOIN condominios as cond on lotes.idCondominio=cond.idCondominio
                                 LEFT JOIN residenciales as residencial on cond.idResidencial=residencial.idResidencial
                                 LEFT JOIN tipopago as tp on cl.idTipoPago=tp.idTipoPago
-                                LEFT JOIN opcs_x_cats as oc ON cl.lugar_prospeccion = oc.id_opcion
-                                where cl.apellido_paterno LIKE '%".$apellido_paterno."%' OR
+                                LEFT JOIN opcs_x_cats as oc ON cl.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9
+                                where cl.apellido_paterno LIKE '%".$apellido_paterno."%' AND
                                 cl.telefono1 LIKE '%".$telefono_client."%'
-                                 AND cl.status = 1 AND oc.id_catalogo=9  order by cl.id_cliente desc");
+                                 AND cl.status = 1 order by cl.id_cliente desc");
 
         return $query->result();
     }
@@ -5702,10 +5701,10 @@ WHERE idLote IN ('".$row['idLote']."') and nombreLote = '".$insert_csv['nombreLo
                                 LEFT JOIN condominios as cond on lotes.idCondominio=cond.idCondominio
                                 LEFT JOIN residenciales as residencial on cond.idResidencial=residencial.idResidencial
                                 LEFT JOIN tipopago as tp on cl.idTipoPago=tp.idTipoPago
-                                LEFT JOIN opcs_x_cats as oc ON cl.lugar_prospeccion = oc.id_opcion
-                                where cl.apellido_materno LIKE '%".$apellido_materno."%' OR
+                                LEFT JOIN opcs_x_cats as oc ON cl.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9
+                                where cl.apellido_materno LIKE '%".$apellido_materno."%' AND
                                 cl.telefono1 LIKE '%".$telefono_client."%'
-                                 AND cl.status = 1 AND oc.id_catalogo=9  order by cl.id_cliente desc");
+                                 AND cl.status = 1 order by cl.id_cliente desc");
 
         return $query->result();
     }
@@ -5726,10 +5725,10 @@ WHERE idLote IN ('".$row['idLote']."') and nombreLote = '".$insert_csv['nombreLo
                                 LEFT JOIN condominios as cond on lotes.idCondominio=cond.idCondominio
                                 LEFT JOIN residenciales as residencial on cond.idResidencial=residencial.idResidencial
                                 LEFT JOIN tipopago as tp on cl.idTipoPago=tp.idTipoPago
-                                LEFT JOIN opcs_x_cats as oc ON cl.lugar_prospeccion = oc.id_opcion
-                                where cl.nombre LIKE '%".$name_client."%' OR cl.apellido_paterno LIKE '%".$apellido_paterno."%' OR
+                                LEFT JOIN opcs_x_cats as oc ON cl.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9
+                                where cl.nombre LIKE '%".$name_client."%' AND cl.apellido_paterno LIKE '%".$apellido_paterno."%' AND
                                 cl.apellido_materno LIKE '%".$apellido_materno."%'
-                                 AND cl.status = 1 AND oc.id_catalogo=9  order by cl.id_cliente desc");
+                                 AND cl.status = 1 order by cl.id_cliente desc");
         return $query->result();
     }
     function getClientsByNameApPaternoMail($name_client, $apellido_paterno, $correo_client)
@@ -5749,10 +5748,10 @@ WHERE idLote IN ('".$row['idLote']."') and nombreLote = '".$insert_csv['nombreLo
                                 LEFT JOIN condominios as cond on lotes.idCondominio=cond.idCondominio
                                 LEFT JOIN residenciales as residencial on cond.idResidencial=residencial.idResidencial
                                 LEFT JOIN tipopago as tp on cl.idTipoPago=tp.idTipoPago
-                                LEFT JOIN opcs_x_cats as oc ON cl.lugar_prospeccion = oc.id_opcion
-                                where cl.nombre LIKE '%".$name_client."%' OR cl.apellido_paterno LIKE '%".$apellido_paterno."%' OR
+                                LEFT JOIN opcs_x_cats as oc ON cl.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9
+                                where cl.nombre LIKE '%".$name_client."%' AND cl.apellido_paterno LIKE '%".$apellido_paterno."%' AND
                                 cl.correo LIKE '%".$correo_client."%'
-                                 AND cl.status = 1 AND oc.id_catalogo=9  order by cl.id_cliente desc");
+                                 AND cl.status = 1 order by cl.id_cliente desc");
 
         return $query->result();
     }
@@ -5773,10 +5772,10 @@ WHERE idLote IN ('".$row['idLote']."') and nombreLote = '".$insert_csv['nombreLo
                                 LEFT JOIN condominios as cond on lotes.idCondominio=cond.idCondominio
                                 LEFT JOIN residenciales as residencial on cond.idResidencial=residencial.idResidencial
                                 LEFT JOIN tipopago as tp on cl.idTipoPago=tp.idTipoPago
-                                LEFT JOIN opcs_x_cats as oc ON cl.lugar_prospeccion = oc.id_opcion
-                                where cl.nombre LIKE '%".$name_client."%' OR cl.apellido_paterno LIKE '%".$apellido_paterno."%' OR
+                                LEFT JOIN opcs_x_cats as oc ON cl.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9
+                                where cl.nombre LIKE '%".$name_client."%' AND cl.apellido_paterno LIKE '%".$apellido_paterno."%' AND
                                 cl.telefono1 LIKE '%".$telefono_client."%'
-                                 AND cl.status = 1 AND oc.id_catalogo=9  order by cl.id_cliente desc");
+                                 AND cl.status = 1 order by cl.id_cliente desc");
 
         return $query->result();
     }
@@ -5797,10 +5796,10 @@ WHERE idLote IN ('".$row['idLote']."') and nombreLote = '".$insert_csv['nombreLo
                                 LEFT JOIN condominios as cond on lotes.idCondominio=cond.idCondominio
                                 LEFT JOIN residenciales as residencial on cond.idResidencial=residencial.idResidencial
                                 LEFT JOIN tipopago as tp on cl.idTipoPago=tp.idTipoPago
-                                LEFT JOIN opcs_x_cats as oc ON cl.lugar_prospeccion = oc.id_opcion
-                                where cl.nombre LIKE '%".$name_client."%' OR cl.apellido_paterno LIKE '%".$apellido_paterno."%' OR
-                                cl.apellido_materno LIKE '%".$apellido_materno."%' OR cl.correo LIKE '%".$correo_client."%'
-                                 AND cl.status = 1 AND oc.id_catalogo=9  order by cl.id_cliente desc");
+                                LEFT JOIN opcs_x_cats as oc ON cl.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9
+                                where cl.nombre LIKE '%".$name_client."%' AND cl.apellido_paterno LIKE '%".$apellido_paterno."%' AND
+                                cl.apellido_materno LIKE '%".$apellido_materno."%' AND cl.correo LIKE '%".$correo_client."%'
+                                 AND cl.status = 1 order by cl.id_cliente desc");
         return $query->result();
     }
     function getClientsByNameApPaternoApMaternoTel($name_client, $apellido_paterno, $apellido_materno, $telefono_client)
@@ -5820,10 +5819,10 @@ WHERE idLote IN ('".$row['idLote']."') and nombreLote = '".$insert_csv['nombreLo
                                 LEFT JOIN condominios as cond on lotes.idCondominio=cond.idCondominio
                                 LEFT JOIN residenciales as residencial on cond.idResidencial=residencial.idResidencial
                                 LEFT JOIN tipopago as tp on cl.idTipoPago=tp.idTipoPago
-                                LEFT JOIN opcs_x_cats as oc ON cl.lugar_prospeccion = oc.id_opcion
-                                where cl.nombre LIKE '%".$name_client."%' OR cl.apellido_paterno LIKE '%".$apellido_paterno."%' OR
-                                cl.apellido_materno LIKE '%".$apellido_materno."%' OR cl.telefono1 LIKE '%".$telefono_client."%'
-                                 AND cl.status = 1 AND oc.id_catalogo=9  order by cl.id_cliente desc");
+                                LEFT JOIN opcs_x_cats as oc ON cl.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9
+                                where cl.nombre LIKE '%".$name_client."%' AND cl.apellido_paterno LIKE '%".$apellido_paterno."%' AND
+                                cl.apellido_materno LIKE '%".$apellido_materno."%' AND cl.telefono1 LIKE '%".$telefono_client."%'
+                                 AND cl.status = 1 order by cl.id_cliente desc");
         return $query->result();
     }
     function getClientsByApPaternoApMaterno($apellido_paterno, $apellido_materno)
@@ -5843,10 +5842,10 @@ WHERE idLote IN ('".$row['idLote']."') and nombreLote = '".$insert_csv['nombreLo
                                 LEFT JOIN condominios as cond on lotes.idCondominio=cond.idCondominio
                                 LEFT JOIN residenciales as residencial on cond.idResidencial=residencial.idResidencial
                                 LEFT JOIN tipopago as tp on cl.idTipoPago=tp.idTipoPago
-                                LEFT JOIN opcs_x_cats as oc ON cl.lugar_prospeccion = oc.id_opcion
-                                where cl.apellido_paterno LIKE '%".$apellido_paterno."%' OR
+                                LEFT JOIN opcs_x_cats as oc ON cl.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9
+                                where cl.apellido_paterno LIKE '%".$apellido_paterno."%' AND
                                 cl.apellido_materno LIKE '%".$apellido_materno."%'
-                                 AND cl.status = 1 AND oc.id_catalogo=9  order by cl.id_cliente desc");
+                                 AND cl.status = 1 order by cl.id_cliente desc");
         return $query->result();
     }
     function getClientsByApPaternoApMaternoMail($apellido_paterno, $apellido_materno, $correo_client)
@@ -5866,10 +5865,10 @@ WHERE idLote IN ('".$row['idLote']."') and nombreLote = '".$insert_csv['nombreLo
                                 LEFT JOIN condominios as cond on lotes.idCondominio=cond.idCondominio
                                 LEFT JOIN residenciales as residencial on cond.idResidencial=residencial.idResidencial
                                 LEFT JOIN tipopago as tp on cl.idTipoPago=tp.idTipoPago
-                                LEFT JOIN opcs_x_cats as oc ON cl.lugar_prospeccion = oc.id_opcion
-                                where cl.apellido_paterno LIKE '%".$apellido_paterno."%' OR
-                                cl.apellido_materno LIKE '%".$apellido_materno."%' OR cl.correo LIKE '%".$correo_client."%'
-                                 AND cl.status = 1 AND oc.id_catalogo=9  order by cl.id_cliente desc");
+                                LEFT JOIN opcs_x_cats as oc ON cl.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9
+                                where cl.apellido_paterno LIKE '%".$apellido_paterno."%' AND
+                                cl.apellido_materno LIKE '%".$apellido_materno."%' AND cl.correo LIKE '%".$correo_client."%'
+                                 AND cl.status = 1 order by cl.id_cliente desc");
         return $query->result();
     }
     function getClientsByApPaternoApMaternoTel($apellido_paterno, $apellido_materno, $telefono_client)
@@ -5889,10 +5888,10 @@ WHERE idLote IN ('".$row['idLote']."') and nombreLote = '".$insert_csv['nombreLo
                                 LEFT JOIN condominios as cond on lotes.idCondominio=cond.idCondominio
                                 LEFT JOIN residenciales as residencial on cond.idResidencial=residencial.idResidencial
                                 LEFT JOIN tipopago as tp on cl.idTipoPago=tp.idTipoPago
-                                LEFT JOIN opcs_x_cats as oc ON cl.lugar_prospeccion = oc.id_opcion
-                                where cl.apellido_paterno LIKE '%".$apellido_paterno."%' OR
-                                cl.apellido_materno LIKE '%".$apellido_materno."%' OR cl.telefono1 LIKE '%".$telefono_client."%'
-                                 AND cl.status = 1 AND oc.id_catalogo=9  order by cl.id_cliente desc");
+                                LEFT JOIN opcs_x_cats as oc ON cl.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9
+                                where cl.apellido_paterno LIKE '%".$apellido_paterno."%' AND
+                                cl.apellido_materno LIKE '%".$apellido_materno."%' AND cl.telefono1 LIKE '%".$telefono_client."%'
+                                 AND cl.status = 1 order by cl.id_cliente desc");
         return $query->result();
     }
     function getClientsByNombreApMaternoTel($name_client, $apellido_materno, $telefono_client)
@@ -5912,10 +5911,10 @@ WHERE idLote IN ('".$row['idLote']."') and nombreLote = '".$insert_csv['nombreLo
                                 LEFT JOIN condominios as cond on lotes.idCondominio=cond.idCondominio
                                 LEFT JOIN residenciales as residencial on cond.idResidencial=residencial.idResidencial
                                 LEFT JOIN tipopago as tp on cl.idTipoPago=tp.idTipoPago
-                                LEFT JOIN opcs_x_cats as oc ON cl.lugar_prospeccion = oc.id_opcion
-                                where cl.nombre LIKE '%".$name_client."%' OR
-                                cl.apellido_materno LIKE '%".$apellido_materno."%' OR cl.telefono1 LIKE '%".$telefono_client."%'
-                                 AND cl.status = 1 AND oc.id_catalogo=9  order by cl.id_cliente desc");
+                                LEFT JOIN opcs_x_cats as oc ON cl.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9
+                                where cl.nombre LIKE '%".$name_client."%' AND
+                                cl.apellido_materno LIKE '%".$apellido_materno."%' AND cl.telefono1 LIKE '%".$telefono_client."%'
+                                 AND cl.status = 1 order by cl.id_cliente desc");
         return $query->result();
     }
     function getClientsByNombreApMaternoMail($name_client, $apellido_materno, $correo_client)
@@ -5935,10 +5934,10 @@ WHERE idLote IN ('".$row['idLote']."') and nombreLote = '".$insert_csv['nombreLo
                                 LEFT JOIN condominios as cond on lotes.idCondominio=cond.idCondominio
                                 LEFT JOIN residenciales as residencial on cond.idResidencial=residencial.idResidencial
                                 LEFT JOIN tipopago as tp on cl.idTipoPago=tp.idTipoPago
-                                LEFT JOIN opcs_x_cats as oc ON cl.lugar_prospeccion = oc.id_opcion
-                                where cl.nombre LIKE '%".$name_client."%' OR
-                                cl.apellido_materno LIKE '%".$apellido_materno."%' OR cl.correo LIKE '%".$correo_client."%'
-                                 AND cl.status = 1 AND oc.id_catalogo=9  order by cl.id_cliente desc");
+                                LEFT JOIN opcs_x_cats as oc ON cl.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9
+                                where cl.nombre LIKE '%".$name_client."%' AND
+                                cl.apellido_materno LIKE '%".$apellido_materno."%' AND cl.correo LIKE '%".$correo_client."%'
+                                 AND cl.status = 1 order by cl.id_cliente desc");
         return $query->result();
     }
     function getClientsByNombreTelMail($name_client, $telefono_client, $correo_client)
@@ -5958,10 +5957,10 @@ WHERE idLote IN ('".$row['idLote']."') and nombreLote = '".$insert_csv['nombreLo
                                 LEFT JOIN condominios as cond on lotes.idCondominio=cond.idCondominio
                                 LEFT JOIN residenciales as residencial on cond.idResidencial=residencial.idResidencial
                                 LEFT JOIN tipopago as tp on cl.idTipoPago=tp.idTipoPago
-                                LEFT JOIN opcs_x_cats as oc ON cl.lugar_prospeccion = oc.id_opcion
-                                where cl.nombre LIKE '%".$name_client."%' OR
-                                cl.telefono1 LIKE '%".$telefono_client."%' OR cl.correo LIKE '%".$correo_client."%'
-                                 AND cl.status = 1 AND oc.id_catalogo=9  order by cl.id_cliente desc");
+                                LEFT JOIN opcs_x_cats as oc ON cl.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9
+                                where cl.nombre LIKE '%".$name_client."%' AND
+                                cl.telefono1 LIKE '%".$telefono_client."%' AND cl.correo LIKE '%".$correo_client."%'
+                                 AND cl.status = 1 order by cl.id_cliente desc");
         return $query->result();
     }
     function getClientsByNombreTelMailApMaterno($name_client, $telefono_client, $correo_client, $apellido_materno)
@@ -5981,10 +5980,10 @@ WHERE idLote IN ('".$row['idLote']."') and nombreLote = '".$insert_csv['nombreLo
                                 LEFT JOIN condominios as cond on lotes.idCondominio=cond.idCondominio
                                 LEFT JOIN residenciales as residencial on cond.idResidencial=residencial.idResidencial
                                 LEFT JOIN tipopago as tp on cl.idTipoPago=tp.idTipoPago
-                                LEFT JOIN opcs_x_cats as oc ON cl.lugar_prospeccion = oc.id_opcion
-                                where cl.nombre LIKE '%".$name_client."%' OR
-                                cl.telefono1 LIKE '%".$telefono_client."%' OR cl.correo LIKE '%".$correo_client."%' OR cl.apellido_materno LIKE '%".$apellido_materno."%'
-                                 AND cl.status = 1 AND oc.id_catalogo=9  order by cl.id_cliente desc");
+                                LEFT JOIN opcs_x_cats as oc ON cl.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9
+                                where cl.nombre LIKE '%".$name_client."%' AND
+                                cl.telefono1 LIKE '%".$telefono_client."%' AND cl.correo LIKE '%".$correo_client."%' AND cl.apellido_materno LIKE '%".$apellido_materno."%'
+                                 AND cl.status = 1 order by cl.id_cliente desc");
         return $query->result();
     }
     function getClientsByNombreTelMailApPaterno($name_client, $telefono_client, $correo_client, $apellido_paterno)
@@ -6004,11 +6003,11 @@ WHERE idLote IN ('".$row['idLote']."') and nombreLote = '".$insert_csv['nombreLo
                                 LEFT JOIN condominios as cond on lotes.idCondominio=cond.idCondominio
                                 LEFT JOIN residenciales as residencial on cond.idResidencial=residencial.idResidencial
                                 LEFT JOIN tipopago as tp on cl.idTipoPago=tp.idTipoPago
-                                LEFT JOIN opcs_x_cats as oc ON cl.lugar_prospeccion = oc.id_opcion
-                                where cl.nombre LIKE '%".$name_client."%' OR
-                                cl.telefono1 LIKE '%".$telefono_client."%' OR cl.correo LIKE '%".$correo_client."%' OR
+                                LEFT JOIN opcs_x_cats as oc ON cl.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9
+                                where cl.nombre LIKE '%".$name_client."%' AND
+                                cl.telefono1 LIKE '%".$telefono_client."%' AND cl.correo LIKE '%".$correo_client."%' AND
                                  cl.apellido_paterno LIKE '%".$apellido_paterno."%'
-                                 AND cl.status = 1 AND oc.id_catalogo=9  order by cl.id_cliente desc");
+                                 AND cl.status = 1 order by cl.id_cliente desc");
         return $query->result();
     }
     function getClientsByTelMailApPaterno($telefono_client, $correo_client, $apellido_paterno)
@@ -6028,10 +6027,10 @@ WHERE idLote IN ('".$row['idLote']."') and nombreLote = '".$insert_csv['nombreLo
                                 LEFT JOIN condominios as cond on lotes.idCondominio=cond.idCondominio
                                 LEFT JOIN residenciales as residencial on cond.idResidencial=residencial.idResidencial
                                 LEFT JOIN tipopago as tp on cl.idTipoPago=tp.idTipoPago
-                                LEFT JOIN opcs_x_cats as oc ON cl.lugar_prospeccion = oc.id_opcion
-                                where cl.telefono1 LIKE '%".$telefono_client."%' OR cl.correo LIKE '%".$correo_client."%' OR
+                                LEFT JOIN opcs_x_cats as oc ON cl.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9
+                                where cl.telefono1 LIKE '%".$telefono_client."%' AND cl.correo LIKE '%".$correo_client."%' AND
                                  cl.apellido_paterno LIKE '%".$apellido_paterno."%'
-                                 AND cl.status = 1 AND oc.id_catalogo=9  order by cl.id_cliente desc");
+                                 AND cl.status = 1 order by cl.id_cliente desc");
         return $query->result();
     }
     function getClientsByTelMailApMaterno($telefono_client, $correo_client, $apellido_materno)
@@ -6051,10 +6050,10 @@ WHERE idLote IN ('".$row['idLote']."') and nombreLote = '".$insert_csv['nombreLo
                                 LEFT JOIN condominios as cond on lotes.idCondominio=cond.idCondominio
                                 LEFT JOIN residenciales as residencial on cond.idResidencial=residencial.idResidencial
                                 LEFT JOIN tipopago as tp on cl.idTipoPago=tp.idTipoPago
-                                LEFT JOIN opcs_x_cats as oc ON cl.lugar_prospeccion = oc.id_opcion
-                                where cl.telefono1 LIKE '%".$telefono_client."%' OR cl.correo LIKE '%".$correo_client."%' OR
+                                LEFT JOIN opcs_x_cats as oc ON cl.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9
+                                where cl.telefono1 LIKE '%".$telefono_client."%' AND cl.correo LIKE '%".$correo_client."%' AND
                                  cl.apellido_materno LIKE '%".$apellido_materno."%'
-                                 AND cl.status = 1 AND oc.id_catalogo=9  order by cl.id_cliente desc");
+                                 AND cl.status = 1 order by cl.id_cliente desc");
         return $query->result();
     }
     function getClientsByTelMailApPaternoApMaterno($telefono_client, $correo_client, $apellido_paterno, $apellido_materno)
@@ -6074,10 +6073,10 @@ WHERE idLote IN ('".$row['idLote']."') and nombreLote = '".$insert_csv['nombreLo
                                 LEFT JOIN condominios as cond on lotes.idCondominio=cond.idCondominio
                                 LEFT JOIN residenciales as residencial on cond.idResidencial=residencial.idResidencial
                                 LEFT JOIN tipopago as tp on cl.idTipoPago=tp.idTipoPago
-                                LEFT JOIN opcs_x_cats as oc ON cl.lugar_prospeccion = oc.id_opcion
-                                where cl.telefono1 LIKE '%".$telefono_client."%' OR cl.correo LIKE '%".$correo_client."%' OR
-                                 cl.apellido_materno LIKE '%".$apellido_materno."%' OR cl.apellido_paterno LIKE '%".$apellido_paterno."%'
-                                 AND cl.status = 1 AND oc.id_catalogo=9  order by cl.id_cliente desc");
+                                LEFT JOIN opcs_x_cats as oc ON cl.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9
+                                where cl.telefono1 LIKE '%".$telefono_client."%' AND cl.correo LIKE '%".$correo_client."%' AND
+                                 cl.apellido_materno LIKE '%".$apellido_materno."%' AND cl.apellido_paterno LIKE '%".$apellido_paterno."%'
+                                 AND cl.status = 1 order by cl.id_cliente desc");
         return $query->result();
     }
     function getClientsByNameMailTel($telefono_client, $correo_client, $name_client)
@@ -6097,10 +6096,10 @@ WHERE idLote IN ('".$row['idLote']."') and nombreLote = '".$insert_csv['nombreLo
                                 LEFT JOIN condominios as cond on lotes.idCondominio=cond.idCondominio
                                 LEFT JOIN residenciales as residencial on cond.idResidencial=residencial.idResidencial
                                 LEFT JOIN tipopago as tp on cl.idTipoPago=tp.idTipoPago
-                                LEFT JOIN opcs_x_cats as oc ON cl.lugar_prospeccion = oc.id_opcion
-                                where cl.telefono1 LIKE '%".$telefono_client."%' OR cl.correo LIKE '%".$correo_client."%' OR
+                                LEFT JOIN opcs_x_cats as oc ON cl.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9
+                                where cl.telefono1 LIKE '%".$telefono_client."%' AND cl.correo LIKE '%".$correo_client."%' AND
                                  cl.nombre LIKE '%".$name_client."%' 
-                                 AND cl.status = 1 AND oc.id_catalogo=9  order by cl.id_cliente desc");
+                                 AND cl.status = 1 order by cl.id_cliente desc");
         return $query->result();
     }
     /***************/

@@ -1,34 +1,37 @@
-<?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
-class Caja_outside extends CI_Controller {
-	public function __construct() {
-		parent::__construct();
-		header('Access-Control-Allow-Origin: *');
-		header('Access-Control-Allow-Headers: Content-Type');
+<?php if (!defined('BASEPATH')) exit('No direct script access allowed');
+
+class Caja_outside extends CI_Controller
+{
+    public function __construct()
+    {
+        parent::__construct();
+        header('Access-Control-Allow-Origin: *');
+        header('Access-Control-Allow-Headers: Content-Type');
 
 
-		//$this->load->model('caja_model_outside');
-    $this->load->model(array('Clientes_model', 'caja_model_outside'));
-		$this->load->library(array('session','form_validation'));
-		$this->load->helper(array('url','form'));
-		$this->load->database('default');
-	}
+        //$this->load->model('caja_model_outside');
+        $this->load->model(array('Clientes_model', 'caja_model_outside'));
+        $this->load->library(array('session', 'form_validation'));
+        $this->load->helper(array('url', 'form'));
+        $this->load->database('default');
+    }
 
-	public function index()
-	{
-		if($this->session->userdata('id_rol') == FALSE || $this->session->userdata('id_rol') != '12')
-		{
-			redirect(base_url().'login');
-		}
-		$this->load->view('template/header');
-		$this->load->view('caja/inicio_caja_view');
-		$this->load->view('template/footer');
-	}
- 
+    public function index()
+    {
+        if ($this->session->userdata('id_rol') == FALSE || $this->session->userdata('id_rol') != '12') {
+            redirect(base_url() . 'login');
+        }
+        $this->load->view('template/header');
+        $this->load->view('caja/inicio_caja_view');
+        $this->load->view('template/footer');
+    }
 
-    public function getResidencialDisponible() {
+
+    public function getResidencialDisponible()
+    {
         $datos["residenciales"] = $this->caja_model_outside->getResidencialDis();
         $datos["asesor"] = $this->caja_model_outside->allAsesor();
-        if($datos != null) {
+        if ($datos != null) {
             echo json_encode($datos);
         } else {
             echo json_encode(array());
@@ -36,131 +39,139 @@ class Caja_outside extends CI_Controller {
     }
 
 
-    public function getResidencialDisponible2() {
-            $proyecto = json_decode(file_get_contents("php://input"));
-    	
-            $recidenciales = $this->caja_model_outside->getResidencialDis2($proyecto->id_rol);
-            if($recidenciales != null) {
-              echo json_encode($recidenciales);
-            } else {
-              echo json_encode(array());
-            }
+    public function getResidencialDisponible2()
+    {
+        $proyecto = json_decode(file_get_contents("php://input"));
+
+        $recidenciales = $this->caja_model_outside->getResidencialDis2($proyecto->id_rol);
+        if ($recidenciales != null) {
+            echo json_encode($recidenciales);
+        } else {
+            echo json_encode(array());
+        }
     }
 
 
-
-    public function getCondominioDisponible() {
+    public function getCondominioDisponible()
+    {
         $proyecto = json_decode(file_get_contents("php://input"));
 
         $condominio = $this->caja_model_outside->getCondominioDis($proyecto->idResidencial);
-        if($condominio != null) {
-          echo json_encode($condominio);
+        if ($condominio != null) {
+            echo json_encode($condominio);
         } else {
-          echo json_encode(array());
+            echo json_encode(array());
         }
-      }
+    }
 
 
-    public function getCondominioDisponible2() {
+    public function getCondominioDisponible2()
+    {
         $proyecto = json_decode(file_get_contents("php://input"));
 
         $condominio = $this->caja_model_outside->getCondominioDis2($proyecto->idResidencial, $proyecto->id_rol);
-        if($condominio != null) {
-          echo json_encode($condominio);
+        if ($condominio != null) {
+            echo json_encode($condominio);
         } else {
-          echo json_encode(array());
+            echo json_encode(array());
         }
-      }
-
-
-  public function getLoteDisponible() {
-    $condominio = json_decode(file_get_contents("php://input"));
-    $lotes = $this->caja_model_outside->getLotesDis($condominio->idCondominio);
-    for($i = 0; $i < count($lotes); $i++) {
-        $lotes[$i]['casasDetail'] = json_decode(str_replace("'", '"', $lotes[$i]['casasDetail']));
     }
-    if($lotes != null) {
-      echo json_encode($lotes);
-    } else {
-      echo json_encode(array());
-    }
-  }
 
+
+    public function getLoteDisponible()
+    {
+        $condominio = json_decode(file_get_contents("php://input"));
+        $lotes = $this->caja_model_outside->getLotesDis($condominio->idCondominio);
+        for ($i = 0; $i < count($lotes); $i++) {
+            $lotes[$i]['casasDetail'] = json_decode(str_replace("'", '"', $lotes[$i]['casasDetail']));
+        }
+        if ($lotes != null) {
+            echo json_encode($lotes);
+        } else {
+            echo json_encode(array());
+        }
+    }
 
 
 ////////////////
-  public function getLoteDisponible2() {
-    $condominio = json_decode(file_get_contents("php://input"));
-    $lotes = $this->caja_model_outside->getLotesDis2($condominio->idCondominio, $condominio->id_rol);
-    for($i = 0; $i < count($lotes); $i++) {
-        $lotes[$i]['casasDetail'] = json_decode(str_replace("'", '"', $lotes[$i]['casasDetail']));
+    public function getLoteDisponible2()
+    {
+        $condominio = json_decode(file_get_contents("php://input"));
+        $lotes = $this->caja_model_outside->getLotesDis2($condominio->idCondominio, $condominio->id_rol);
+        for ($i = 0; $i < count($lotes); $i++) {
+            $lotes[$i]['casasDetail'] = json_decode(str_replace("'", '"', $lotes[$i]['casasDetail']));
+        }
+        if ($lotes != null) {
+            echo json_encode($lotes);
+        } else {
+            echo json_encode(array());
+        }
     }
-    if($lotes != null) {
-      echo json_encode($lotes);
-    } else {
-      echo json_encode(array());
-    }
-  }
 
 ///////////////
 
 
-public function getResidencial() {
-    $residenciales = $this->caja_model_outside->getResidencial();
-    if($residenciales != null) {
-      echo json_encode($residenciales);
-    } else {
-      echo json_encode(array());
+    public function getResidencial()
+    {
+        $residenciales = $this->caja_model_outside->getResidencial();
+        if ($residenciales != null) {
+            echo json_encode($residenciales);
+        } else {
+            echo json_encode(array());
+        }
     }
-}
 
 
-public function getCondominio() {
-	$proyecto = json_decode(file_get_contents("php://input"));
+    public function getCondominio()
+    {
+        $proyecto = json_decode(file_get_contents("php://input"));
 
-    $condominio = $this->caja_model_outside->getCondominio($proyecto->idResidencial);
-    if($condominio != null) {
-    echo json_encode($condominio);
-    } else {
-    echo json_encode(array());
+        $condominio = $this->caja_model_outside->getCondominio($proyecto->idResidencial);
+        if ($condominio != null) {
+            echo json_encode($condominio);
+        } else {
+            echo json_encode(array());
+        }
     }
-}
 
 
-public function getLotee() {
-    $condominio = json_decode(file_get_contents("php://input"));
+    public function getLotee()
+    {
+        $condominio = json_decode(file_get_contents("php://input"));
 
-    $lotes = $this->caja_model_outside->getLotes($condominio->idCondominio);
-    if($lotes != null) {
-    echo json_encode($lotes);
-    } else {
-    echo json_encode(array());
+        $lotes = $this->caja_model_outside->getLotes($condominio->idCondominio);
+        if ($lotes != null) {
+            echo json_encode($lotes);
+        } else {
+            echo json_encode(array());
+        }
     }
-}
 
 
+    public function getdbanco()
+    {
+        $datos["banco"] = $this->caja_model_outside->table_datosBancarios();
+        echo json_encode($datos);
 
-public function getdbanco(){
-    $datos["banco"]= $this->caja_model_outside->table_datosBancarios();
-    echo json_encode($datos);
+    }
 
-}
-
-public function getEtapa(){
-    $datos["etapa"]= $this->caja_model_outside->table_etapa();
-    echo json_encode($datos);
-}
+    public function getEtapa()
+    {
+        $datos["etapa"] = $this->caja_model_outside->table_etapa();
+        echo json_encode($datos);
+    }
 
 
-function caja_modules() {
+    function caja_modules()
+    {
 
-$data = json_decode( file_get_contents('php://input') );
+        $data = json_decode(file_get_contents('php://input'));
 
-$datos = array();
+        $datos = array();
 
-    if ($data->accion == 0){
+        if ($data->accion == 0) {
 
-            foreach($data->lotes as $value) {
+            foreach ($data->lotes as $value) {
 
                 $datos["nombreLote"] = $value->nombreLote;
                 $datos["sup"] = $value->sup;
@@ -171,8 +182,6 @@ $datos = array();
                 $datos["idStatusContratacion"] = 0;
                 $datos["idMovimiento"] = 0;
                 $datos["ubicacion"] = 0;
-
-
 
 
                 if ($value->idStatusLote == 'DISPONIBLE') {
@@ -197,200 +206,207 @@ $datos = array();
                 $datos["saldo"] = ($datos["total"] - ($datos["enganche"]));
 
                 $insert = $this->caja_model_outside->loadLotes($datos);
-				
-					if($insert == TRUE) {
-					$response['message'] = 'SUCCESS';
-					echo json_encode($response);
-				    } else {
-					$response['message'] = 'ERROR';
-					echo json_encode($response);
-				    }
+
+                if ($insert == TRUE) {
+                    $response['message'] = 'SUCCESS';
+                    echo json_encode($response);
+                } else {
+                    $response['message'] = 'ERROR';
+                    echo json_encode($response);
+                }
 
 
             }
 
-    }else if ($data->accion == 1){
+        } else if ($data->accion == 1) {
 
-        foreach($data->lotes as $value) {
+            foreach ($data->lotes as $value) {
 
-            $datos["idCondominio"] = $data->idCondominio;
+                $datos["idCondominio"] = $data->idCondominio;
 
-            $datos["nombreLote"] = $value->nombreLote;
-            $datos["precio"] = $value->precio;
+                $datos["nombreLote"] = $value->nombreLote;
+                $datos["precio"] = $value->precio;
 
-            $update = $this->caja_model_outside->uploadPrecio($datos);
-			
-					if($update == TRUE) {
-					$response['message'] = 'SUCCESS';
-					echo json_encode($response);
-				    } else {
-					$response['message'] = 'ERROR';
-					echo json_encode($response);
-				    }
+                $update = $this->caja_model_outside->uploadPrecio($datos);
 
-        }
+                if ($update == TRUE) {
+                    $response['message'] = 'SUCCESS';
+                    echo json_encode($response);
+                } else {
+                    $response['message'] = 'ERROR';
+                    echo json_encode($response);
+                }
 
-
-    } else if ($data->accion == 2){
-
-        foreach($data->lotes as $value) {
-
-            $datos["idCondominio"] = $data->idCondominio;
-
-            $datos["nombreLote"] = $value->nombreLote;
-            $datos["referencia"] = $value->referencia;
-
-            $update = $this->caja_model_outside->uploadReferencias($datos);
-			
-					if($update == TRUE) {
-					$response['message'] = 'SUCCESS';
-					echo json_encode($response);
-				    } else {
-					$response['message'] = 'ERROR';
-					echo json_encode($response);
-				    }
-
-        }
+            }
 
 
-    } else if ($data->accion == 3){
+        } else if ($data->accion == 2) {
 
-        foreach($data->lotes as $value) {
+            foreach ($data->lotes as $value) {
 
-            $datos["idCondominio"] = $data->idCondominio;
+                $datos["idCondominio"] = $data->idCondominio;
 
-            $datos["nombreLote"] = $value->nombreLote;
-            $datos["precio"] = $value->precio;
-            $datos["activeLE"] = $data->activeLE;
-			
-			$datos["activeLP"] = $data->activeLP;
+                $datos["nombreLote"] = $value->nombreLote;
+                $datos["referencia"] = $value->referencia;
 
-			
-            $datos["comentarioLiberacion"] = 'LIBERADO';
-            $datos["observacionLiberacion"] = 'LIBERADO POR CORREO';
-            $datos["fechaLiberacion"] = date('Y-m-d H:i:s');
-            $datos["modificado"] = date('Y-m-d H:i:s');
-            $datos["status"] = 1;
-            $datos["userLiberacion"] = $data->id_usuario;
+                $update = $this->caja_model_outside->uploadReferencias($datos);
 
-            $datos["tipo"] = $data->tipo;
+                if ($update == TRUE) {
+                    $response['message'] = 'SUCCESS';
+                    echo json_encode($response);
+                } else {
+                    $response['message'] = 'ERROR';
+                    echo json_encode($response);
+                }
 
-            if ($data->activeLP == true)
-            $datos["clausulas"] = $value->clausulas;
-
-            $update = $this->caja_model_outside->aplicaLiberacion($datos);  
-			
-					if($update == TRUE) {
-					$response['message'] = 'SUCCESS';
-					echo json_encode($response);
-				    } else {
-					$response['message'] = 'ERROR';
-					echo json_encode($response);
-				    }
+            }
 
 
-        }
-    } else if ($data->accion == 6){
+        } else if ($data->accion == 3) {
 
-        foreach($data->lotes as $value) {
+            foreach ($data->lotes as $value) {
 
-            $datos["idCondominio"] = $data->idCondominio;
+                $datos["idCondominio"] = $data->idCondominio;
 
-            $datos["nombreLote"] = $value->nombreLote;
-            $datos["sup"] = $value->sup;
+                $datos["nombreLote"] = $value->nombreLote;
+                $datos["precio"] = $value->precio;
+                $datos["activeLE"] = $data->activeLE;
 
-            $update = $this->caja_model_outside->uploadSup($datos);
-			
-					if($update == TRUE) {
-					$response['message'] = 'SUCCESS';
-					echo json_encode($response);
-				    } else {
-					$response['message'] = 'ERROR';
-					echo json_encode($response);
-				    }
+                $datos["activeLP"] = $data->activeLP;
 
 
+                $datos["comentarioLiberacion"] = 'LIBERADO';
+                $datos["observacionLiberacion"] = 'LIBERADO POR CORREO';
+                $datos["fechaLiberacion"] = date('Y-m-d H:i:s');
+                $datos["modificado"] = date('Y-m-d H:i:s');
+                $datos["status"] = 1;
+                $datos["userLiberacion"] = $data->id_usuario;
+
+                $datos["tipo"] = $data->tipo;
+
+                if ($data->activeLP == true)
+                    $datos["clausulas"] = $value->clausulas;
+
+                $update = $this->caja_model_outside->aplicaLiberacion($datos);
+
+                if ($update == TRUE) {
+                    $response['message'] = 'SUCCESS';
+                    echo json_encode($response);
+                } else {
+                    $response['message'] = 'ERROR';
+                    echo json_encode($response);
+                }
+
+
+            }
+        } else if ($data->accion == 6) {
+
+            foreach ($data->lotes as $value) {
+
+                $datos["idCondominio"] = $data->idCondominio;
+
+                $datos["nombreLote"] = $value->nombreLote;
+                $datos["sup"] = $value->sup;
+
+                $update = $this->caja_model_outside->uploadSup($datos);
+
+                if ($update == TRUE) {
+                    $response['message'] = 'SUCCESS';
+                    echo json_encode($response);
+                } else {
+                    $response['message'] = 'ERROR';
+                    echo json_encode($response);
+                }
+
+
+            }
         }
     }
-}
 
 
-public function getAllAsesor(){
-    $datos["asesor"]= $this->caja_model_outside->allAsesor();
-    echo json_encode($datos);
-}
-
-public function getProspectoXAsesor(){
-    $asesor = json_decode(file_get_contents("php://input"));
-
-    $datos["prospecto"]= $this->caja_model_outside->prospectoXAsesor($asesor->id_asesor);
-    echo json_encode($datos);
-}
-
-public function insertProyecto() {
-
-	$data = json_decode(file_get_contents("php://input"));
-
-	$dato =array();
-    $dato["nombreResidencial"]= $data->nProyecto;
-    $dato["descripcion"]= $data->descripcion;
-
-    $this->caja_model_outside->insert_proyecto($dato);
-
-}
-
-function aplicaLiberacion() {
-  $valida = ($this->input->post('checkls') == NULL) ? 0 : 1 ; 
-  $this->caja_model_outside->aplicaLiberaciones($this->input->post('filtro4'), $valida);
-}
-public function insertCluster() {
-
-	$data = json_decode(file_get_contents("php://input"));
-
-	$dato =array();
-    $dato["idResidencial"]= $data->idResidencial;
-    $dato["nombre"]= $data->nombre;
-    $dato["msni"]= 36;
-    $dato["idEtapa"]= $data->idEtapa;
-    $dato["idDBanco"]= $data->idDBanco;
-    $dato["tipo_lote"]= $data->tipo_lote;
-
-    $insert = $this->caja_model_outside->insert_cluster($dato);
-	
-	if($insert == TRUE) {
-		$response['message'] = 'SUCCESS';
-		echo json_encode($response);
-	 } else {
-		$response['message'] = 'ERROR';
-		echo json_encode($response);
-	}
-
-
-}
-
-	public function EnganchEstatusOnline(){
-		echo json_encode( array( "resultado" => $this->db->query("SELECT * FROM lotes WHERE lotes.referencia = ".$this->input->post("referencia"))->num_rows() > 0 ) );
-	}
-
-
-public function actualizaProspecto($id_prospecto){
-
-    $data_update = array(
-        'tipo' => 1,
-        'becameClient' => date('Y-m-d H:i:s'),
-        'estatus_particular' => 7
-    );
-
-    $return = $this->caja_model_outside->updateProspecto($id_prospecto, $data_update);
-
-    if($return>0)
+    public function getAllAsesor()
     {
-        return 'Prospecto actualizado correctamente';
+        $datos["asesor"] = $this->caja_model_outside->allAsesor();
+        echo json_encode($datos);
     }
 
-}
+    public function getProspectoXAsesor()
+    {
+        $asesor = json_decode(file_get_contents("php://input"));
 
-public function addClient()
+        $datos["prospecto"] = $this->caja_model_outside->prospectoXAsesor($asesor->id_asesor);
+        echo json_encode($datos);
+    }
+
+    public function insertProyecto()
+    {
+
+        $data = json_decode(file_get_contents("php://input"));
+
+        $dato = array();
+        $dato["nombreResidencial"] = $data->nProyecto;
+        $dato["descripcion"] = $data->descripcion;
+
+        $this->caja_model_outside->insert_proyecto($dato);
+
+    }
+
+    function aplicaLiberacion()
+    {
+        $valida = ($this->input->post('checkls') == NULL) ? 0 : 1;
+        $this->caja_model_outside->aplicaLiberaciones($this->input->post('filtro4'), $valida);
+    }
+
+    public function insertCluster()
+    {
+
+        $data = json_decode(file_get_contents("php://input"));
+
+        $dato = array();
+        $dato["idResidencial"] = $data->idResidencial;
+        $dato["nombre"] = $data->nombre;
+        $dato["msni"] = 36;
+        $dato["idEtapa"] = $data->idEtapa;
+        $dato["idDBanco"] = $data->idDBanco;
+        $dato["tipo_lote"] = $data->tipo_lote;
+
+        $insert = $this->caja_model_outside->insert_cluster($dato);
+
+        if ($insert == TRUE) {
+            $response['message'] = 'SUCCESS';
+            echo json_encode($response);
+        } else {
+            $response['message'] = 'ERROR';
+            echo json_encode($response);
+        }
+
+
+    }
+
+    public function EnganchEstatusOnline()
+    {
+        echo json_encode(array("resultado" => $this->db->query("SELECT * FROM lotes WHERE lotes.referencia = " . $this->input->post("referencia"))->num_rows() > 0));
+    }
+
+
+    public function actualizaProspecto($id_prospecto)
+    {
+
+        $data_update = array(
+            'tipo' => 1,
+            'becameClient' => date('Y-m-d H:i:s'),
+            'estatus_particular' => 7
+        );
+
+        $return = $this->caja_model_outside->updateProspecto($id_prospecto, $data_update);
+
+        if ($return > 0) {
+            return 'Prospecto actualizado correctamente';
+        }
+
+    }
+
+    public function addClient()
     {
         $dataPost = file_get_contents("php://input");
         //$response['resultado'] = FALSE;
@@ -440,13 +456,13 @@ public function addClient()
 
         if ($datosView->id_coordinador == $datosView->id_asesor) {
             $voBoCoord = 0;
-        } else if($datosView->id_coordinador == $datosView->id_gerente) {
+        } else if ($datosView->id_coordinador == $datosView->id_gerente) {
             $voBoCoord = 0;
-        }else{
+        } else {
             $voBoCoord = $datosView->id_coordinador;
         }
 
-            // 'id_coordinador' => $datosView->id_coordinador == $datosView->id_asesor ? 0 : $datosView->id_coordinador == $datosView->id_gerente ? 0 : $datosView->id_coordinador,
+        // 'id_coordinador' => $datosView->id_coordinador == $datosView->id_asesor ? 0 : $datosView->id_coordinador == $datosView->id_gerente ? 0 : $datosView->id_coordinador,
 
 
         $data['lote'] = $id_lote;
@@ -678,14 +694,14 @@ public function addClient()
             if ($datosView->lotes[0]->tipo_lote == 'STELLA') {
                 $nl = $datosView->lotes[0]->nombre;
                 $total_construccion = 0; // MJ: AQUÍ VAMOS A GUARDAR EL TOTAL DE LA CONSTRUCCIÓN + LOS EXRTAS
-                    foreach($cd->tipo_casa as $value) {
-                        if($value->nombre == 'Stella') {
-                            $total_construccion = $value->total_const;
-                            foreach($value->extras as $v) { // MJ: SE LEEN LAS CARACTERÍSTICAS EXTRAS QUE LLEGUE A TENER LA CASA
-                                $total_construccion += $v->techado;
-                            }
+                foreach ($cd->tipo_casa as $value) {
+                    if ($value->nombre == 'Stella') {
+                        $total_construccion = $value->total_const;
+                        foreach ($value->extras as $v) { // MJ: SE LEEN LAS CARACTERÍSTICAS EXTRAS QUE LLEGUE A TENER LA CASA
+                            $total_construccion += $v->techado;
                         }
                     }
+                }
                 $total = $info->total_t;
                 $dataUpdateLote2 = array(
                     'total' => ($total + $total_construccion),
@@ -696,14 +712,14 @@ public function addClient()
             } else if ($datosView->lotes[0]->tipo_lote == 'AURA') {
                 $nl = $datosView->lotes[0]->nombre;
                 $total_construccion = 0; // MJ: AQUÍ VAMOS A GUARDAR EL TOTAL DE LA CONSTRUCCIÓN + LOS EXRTAS
-                    foreach($cd->tipo_casa as $value) {
-                        if($value->nombre == 'Aura') {
-                            $total_construccion = $value->total_const;
-                            foreach($value->extras as $v) { // MJ: SE LEEN LAS CARACTERÍSTICAS EXTRAS QUE LLEGUE A TENER LA CASA
-                                $total_construccion += $v->techado;
-                            }
+                foreach ($cd->tipo_casa as $value) {
+                    if ($value->nombre == 'Aura') {
+                        $total_construccion = $value->total_const;
+                        foreach ($value->extras as $v) { // MJ: SE LEEN LAS CARACTERÍSTICAS EXTRAS QUE LLEGUE A TENER LA CASA
+                            $total_construccion += $v->techado;
                         }
                     }
+                }
                 $total = $info->total_t;
                 $dataUpdateLote2 = array(
                     'total' => ($total + $total_construccion),
@@ -711,8 +727,7 @@ public function addClient()
                     'saldo' => ($total + $total_construccion) - (($total + $total_construccion) * 0.1),
                     'nombreLote' => $nl
                 );
-            }
-            /*if ($datosView->lotes[0]->tipo_lote == 'STELLA') {
+            } /*if ($datosView->lotes[0]->tipo_lote == 'STELLA') {
                 $nl = $datosView->lotes[0]->nombre;
                 if (
                     $datosView->lotes[0]->nombre2 == 'CCMP-LAMAY-011' || $datosView->lotes[0]->nombre2 == 'CCMP-LAMAY-021' || $datosView->lotes[0]->nombre2 == 'CCMP-LAMAY-030' ||
@@ -930,7 +945,7 @@ public function addClient()
         }
         /*jala la evidencia si viene del LP 6*/
         /**/
-        
+
         /*$rspns = '';
         if ($data['prospecto'][0]['lugar_prospeccion'] == 6) //no activada hasta 12 04 21
         {
@@ -946,29 +961,27 @@ public function addClient()
         echo json_encode($response);
     }
 
-function addEvidenceToEvidencia_cliente($id_cliente, $id_prospecto)
+    function addEvidenceToEvidencia_cliente($id_cliente, $id_prospecto)
     {
         $id_lote = $this->Asesor_model->getidLoteByClient($id_cliente);
-        $id_lote = (count($id_lote)> 0) ? $id_lote[0]['idLote'] : 0 ;
+        $id_lote = (count($id_lote) > 0) ? $id_lote[0]['idLote'] : 0;
         $data_evidencia_chat = $this->Asesor_model->getEvidenciasProspectosChat($id_prospecto);
 
-        if(count($data_evidencia_chat) > 0)
-        {
-            $path = FCPATH.'static/documentos/cliente/evidencia/';
+        if (count($data_evidencia_chat) > 0) {
+            $path = FCPATH . 'static/documentos/cliente/evidencia/';
             $img = $data_evidencia_chat[0]['nombre'];
             $path = str_replace('\\', '/', $path);
-            if (file_exists($path.$img)) {
+            if (file_exists($path . $img)) {
                 //copiar el archivo
                 //unlink($path_to.$img);
-                $original_path = FCPATH.'static/documentos/cliente/evidencia/';
+                $original_path = FCPATH . 'static/documentos/cliente/evidencia/';
                 $original_path = str_replace('\\', '/', $original_path);
-                $destino_path = FCPATH.'static/documentos/evidencia_mktd/';
+                $destino_path = FCPATH . 'static/documentos/evidencia_mktd/';
                 $destino_path = str_replace('\\', '/', $destino_path);
 
-                if (!copy($original_path.$img, $destino_path.$img)) {
-                    $resp= "Error al copiar $img...\n";
-                }
-                else{
+                if (!copy($original_path . $img, $destino_path . $img)) {
+                    $resp = "Error al copiar $img...\n";
+                } else {
                     //$resp = 'El archivo '.$img.' existe y ha sido copiado exitosamente.';
 
                     //insertar evidencia_mktd e historial
@@ -996,665 +1009,647 @@ function addEvidenceToEvidencia_cliente($id_cliente, $id_prospecto)
                     );
                     $data_histInsert = $this->Asesor_model->insertHistorialEvidencia($data_insert_histEv);
 
-                    if($data_insert > 0 AND $data_histInsert > 0)
-                    {
+                    if ($data_insert > 0 AND $data_histInsert > 0) {
                         $resp = 'Se ha añadido la evidencia correctamente';
                     }
                 }
 
 
             } else {
-                $resp = 'El archivo '.$img.' no existe';
+                $resp = 'El archivo ' . $img . ' no existe';
                 //insertar evidencia_mktd e historial SIN IMAGEN
-                    $data_insert_evidencia = array(
-                        'idCliente' => $id_cliente,
-                        'idLote' => $id_lote,
-                        'id_sol' => $this->session->userdata('id_usuario'),
-                        'id_rolAut' => 0,
-                        'estatus' => 3,
-                        'evidencia' => $img,
-                        'comentario_autorizacion' => 'Se ha ingresado la evidencia desde caja_outside.',
-                        'fecha_creacion' => date('Y-m-d H:i:s'),
-                        'estatus_particular' => 1,
-                        'fecha_modificado' => date('Y-m-d H:i:s'),
-                    );
-                    $data_insert = $this->Asesor_model->insertEvidencia($data_insert_evidencia);
-                    $last_id = $this->db->insert_id();
-                    $data_insert_histEv = array(
-                        'id_evidencia' => $last_id,
-                        'fecha_creacion' => date('Y-m-d H:i:s'),
-                        'estatus' => 3,
-                        'creado_por' => $this->session->userdata('id_usuario'),
-                        'evidencia' => $img,
-                        "comentario_autorizacion" => 'Se ha ingresado la evidencia desde caja_outside.'
-                    );
-                    $data_histInsert = $this->Asesor_model->insertHistorialEvidencia($data_insert_histEv);
+                $data_insert_evidencia = array(
+                    'idCliente' => $id_cliente,
+                    'idLote' => $id_lote,
+                    'id_sol' => $this->session->userdata('id_usuario'),
+                    'id_rolAut' => 0,
+                    'estatus' => 3,
+                    'evidencia' => $img,
+                    'comentario_autorizacion' => 'Se ha ingresado la evidencia desde caja_outside.',
+                    'fecha_creacion' => date('Y-m-d H:i:s'),
+                    'estatus_particular' => 1,
+                    'fecha_modificado' => date('Y-m-d H:i:s'),
+                );
+                $data_insert = $this->Asesor_model->insertEvidencia($data_insert_evidencia);
+                $last_id = $this->db->insert_id();
+                $data_insert_histEv = array(
+                    'id_evidencia' => $last_id,
+                    'fecha_creacion' => date('Y-m-d H:i:s'),
+                    'estatus' => 3,
+                    'creado_por' => $this->session->userdata('id_usuario'),
+                    'evidencia' => $img,
+                    "comentario_autorizacion" => 'Se ha ingresado la evidencia desde caja_outside.'
+                );
+                $data_histInsert = $this->Asesor_model->insertHistorialEvidencia($data_insert_histEv);
 
-                    if($data_insert > 0 AND $data_histInsert > 0)
-                    {
-                        $resp = 'Se ha añadido la evidencia correctamente';
-                    }
+                if ($data_insert > 0 AND $data_histInsert > 0) {
+                    $resp = 'Se ha añadido la evidencia correctamente';
+                }
             }
             /*print_r($data_evidencia_chat);*/
-        }
-        else{
+        } else {
             $resp = 'No hay evidencias para este prospecto/cliente';
         }
         return $resp;
     }
 
 
+    public function updateProyecto()
+    {
+        $data = json_decode(file_get_contents("php://input"));
+        $id = $data->idProyecto;
+        $dato = array();
+        $dato["nombreResidencial"] = $data->nProyecto;
+        $dato["descripcion"] = $data->descripcion;
+        $this->caja_model_outside->update_proyecto($id, $dato);
+    }
 
 
-public function updateProyecto() {
-    $data = json_decode(file_get_contents("php://input"));
-    $id= $data->idProyecto;
-    $dato =array();
-    $dato["nombreResidencial"]= $data->nProyecto;
-    $dato["descripcion"]= $data->descripcion;
-    $this->caja_model_outside->update_proyecto($id,$dato);
-}
+    public function updateCluster()
+    {
+        $data = json_decode(file_get_contents("php://input"));
+        $id = $data->idCondominio;
+        $dato = array();
+        $dato["nombre"] = $data->nombre;
+        $dato["idResidencial"] = $data->idProyecto;
+        $dato["msni"] = $data->msni;
+        $dato["idEtapa"] = $data->idEtapa;
+        $dato["idDBanco"] = $data->idBanco;
+        $dato["tipo_lote"] = $data->tipoLote;
+        $this->caja_model_outside->update_cluster($id, $dato);
+    }
+
+    public function getReferencesList()
+    {
+        $data['data'] = $this->caja_model_outside->getReferencesList()->result_array();
+        echo json_encode($data);
+    }
 
 
-public function updateCluster() {
-	$data = json_decode(file_get_contents("php://input"));
-    $id= $data->idCondominio;
-	$dato =array();
-    $dato["nombre"]= $data->nombre;
-    $dato["idResidencial"]= $data->idProyecto;
-    $dato["msni"]= $data->msni;
-    $dato["idEtapa"]= $data->idEtapa;
-    $dato["idDBanco"]= $data->idBanco;
-    $dato["tipo_lote"]= $data->tipoLote;
-    $this->caja_model_outside->update_cluster($id,$dato);
-}
-
-public function getReferencesList(){
-    $data['data'] = $this->caja_model_outside->getReferencesList()->result_array();
-    echo json_encode($data);
-}
+    public function changeReferenceStatus()
+    {
+        $data = json_decode(file_get_contents("php://input"));
+        if (isset($data) && !empty($data)) {
+            $dato = array(
+                "estatus" => $data->estatus,
+                "fecha_modificacion" => date("Y-m-d H:i:s"),
+                "modificado_por" => $data->id_usuario
+            );
+            $response = $this->caja_model_outside->changeReferenceStatus($dato, $data->id_referencia);
+            echo json_encode($response);
+        }
+    }
 
 
-public function changeReferenceStatus(){
-    $data = json_decode(file_get_contents("php://input"));    
-    if(isset($data) && !empty($data)){
+    public function saveReference()
+    {
+
+        $data = json_decode(file_get_contents("php://input"));
+
+        if (isset($data) && !empty($data)) {
+            $dato = array(
+                "id_cliente" => $data->cliente,
+                "nombre" => $data->name,
+                "telefono" => $data->phone_number,
+                "parentesco" => $data->kinship,
+                "estatus" => 1,
+                "fecha_creacion" => date("Y-m-d H:i:s"),
+                "creado_por" => $data->id_usuario,
+                "fecha_modificacion" => date("Y-m-d H:i:s"),
+                "modificado_por" => $data->id_usuario,
+            );
+            $response = $this->caja_model_outside->saveReference($dato);
+            echo json_encode($response);
+        }
+    }
+
+
+    public function updateReference()
+    {
+
+        $data = json_decode(file_get_contents("php://input"));
+
         $dato = array(
-            "estatus" => $data->estatus,
+            "id_cliente" => $data->id_cliente,
+            "parentesco" => $data->kinship_ed,
+            "nombre" => $data->name_ed,
+            "telefono" => $data->phone_number_ed,
             "fecha_modificacion" => date("Y-m-d H:i:s"),
             "modificado_por" => $data->id_usuario
         );
-        $response = $this->caja_model_outside->changeReferenceStatus($dato, $data->id_referencia);
+        $response = $this->caja_model_outside->updateReference($dato, $data->id_referencia);
         echo json_encode($response);
     }
-}
 
 
-public function saveReference(){
+    public function insertarCliente()
+    {
 
-    $data = json_decode(file_get_contents("php://input"));    
+        $data = json_decode(file_get_contents("php://input"));
 
-    if(isset($data) && !empty($data)){
-        $dato = array(
-            "id_cliente" => $data->cliente,
-            "nombre" => $data->name,
-            "telefono" => $data->phone_number,
-            "parentesco" => $data->kinship,
-            "estatus" => 1,
-            "fecha_creacion" => date("Y-m-d H:i:s"),
-            "creado_por" => $data->id_usuario,
-            "fecha_modificacion" => date("Y-m-d H:i:s"),
-            "modificado_por" => $data->id_usuario,
-        );
-        $response = $this->caja_model_outside->saveReference($dato);
-        echo json_encode($response);
-    }
-}
+        $counter = 0;
+        $res1 = array(); // SUCESS TRANSACTION
+        $res2 = array(); // LOTE NO DISPONIBLE
+        $res3 = array(); // ERROR AL INSERTAR EL CLIENTE
 
+        foreach ($data->lotes as $value) {
 
-public function updateReference(){
+            $arreglo = array();
 
-    $data = json_decode(file_get_contents("php://input"));    
 
-    $dato = array(
-        "id_cliente" => $data->id_cliente,
-        "parentesco" => $data->kinship_ed,
-        "nombre" => $data->name_ed,
-        "telefono" => $data->phone_number_ed,
-        "fecha_modificacion" => date("Y-m-d H:i:s"),
-        "modificado_por" => $data->id_usuario
-    );
-    $response = $this->caja_model_outside->updateReference($dato, $data->id_referencia);
-    echo json_encode($response);
-}
+            $arreglo["idLote"] = $value->idLote;
+            $arreglo["idCondominio"] = $value->idCondominio;
 
 
+            $arreglo["engancheCliente"] = $value->pago;
+            $arreglo["noRecibo"] = $data->pago->recibo;
+            $arreglo["concepto"] = $data->concepto;
+            $arreglo["fechaEnganche"] = date('Y-m-d H:i:s');
+            $arreglo["usuario"] = $data->id_usuario;
 
 
+            if ($data->personalidad_juridica == 1) {
 
+                $arreglo["nombre"] = $data->propietarios[0]->nombre;
+                $arreglo["rfc"] = $data->propietarios[0]->rfc;
 
+            } else if ($data->personalidad_juridica == 2) {
 
-public function insertarCliente(){
+                $arreglo["nombre"] = $data->propietarios[0]->nombre;
+                $arreglo["apellido_paterno"] = $data->propietarios[0]->apellido_paterno;
+                $arreglo["apellido_materno"] = $data->propietarios[0]->apellido_materno;
 
-$data = json_decode(file_get_contents("php://input"));   
-
-$counter = 0;
-$res1 = array(); // SUCESS TRANSACTION
-$res2 = array(); // LOTE NO DISPONIBLE
-$res3 = array(); // ERROR AL INSERTAR EL CLIENTE
-
- foreach($data->lotes as $value) {
-
-$arreglo=array();
-    
-
-
-$arreglo["idLote"]=$value->idLote;
-$arreglo["idCondominio"]=$value->idCondominio;
-
-
-$arreglo["engancheCliente"]=$value->pago;
-$arreglo["noRecibo"]=$data->pago->recibo;
-$arreglo["concepto"]=$data->concepto;
-$arreglo["fechaEnganche"]=date('Y-m-d H:i:s');
-$arreglo["usuario"]=$data->id_usuario;
-
-
-
-    if($data->personalidad_juridica == 1){
-
-        $arreglo["nombre"]=$data->propietarios[0]->nombre;
-        $arreglo["rfc"]=$data->propietarios[0]->rfc;
-        
-    } else if ($data->personalidad_juridica == 2){
-    
-        $arreglo["nombre"]=$data->propietarios[0]->nombre;
-        $arreglo["apellido_paterno"]=$data->propietarios[0]->apellido_paterno;
-        $arreglo["apellido_materno"]=$data->propietarios[0]->apellido_materno;
-            
-    }
-        
-    
-
-$arreglo["id_gerente"]=$data->asesores[0]->idGerente;
-$arreglo["id_coordinador"]=$data->asesores[0]->idCoordinador;
-$arreglo["id_asesor"]=$data->asesores[0]->idAsesor;
-    
-
-$arreglo["fechaApartado"] = date('Y-m-d H:i:s');
-$arreglo["personalidad_juridica"]=$data->personalidad_juridica;
-$arreglo["id_sede"]=$data->id_sede;
-
-
-$fechaAccion = date("Y-m-d H:i:s");
-$hoy_strtotime2 = strtotime($fechaAccion);
-$sig_fecha_dia2 = date('D', $hoy_strtotime2);
-$sig_fecha_feriado2 = date('d-m', $hoy_strtotime2);
-
-if($sig_fecha_dia2 == "Sat" || $sig_fecha_dia2 == "Sun" || 
- $sig_fecha_feriado2 == "01-01" || $sig_fecha_feriado2 == "06-02" ||
- $sig_fecha_feriado2 == "20-03" || $sig_fecha_feriado2 == "01-05" ||
- $sig_fecha_feriado2 == "16-09" || $sig_fecha_feriado2 == "20-11" || $sig_fecha_feriado2 == "19-11" ||
- $sig_fecha_feriado2 == "25-12") {
-
-
-$fecha = $fechaAccion;
-
-$i = 0;
-while($i <= 46) {
-$hoy_strtotime = strtotime($fecha);
-$sig_strtotime = strtotime('+1 days', $hoy_strtotime);
-$sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
-$sig_fecha_dia = date('D', $sig_strtotime);
-$sig_fecha_feriado = date('d-m', $sig_strtotime);
-
-if( $sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" || 
- $sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
- $sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
- $sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" || $sig_fecha_feriado == "19-11" ||
- $sig_fecha_feriado == "25-12") {
-   }
-     else {
-            $fecha= $sig_fecha;
-             $i++;
-          } 
-$fecha = $sig_fecha;
-       }
-
-
-   $arreglo["fechaVencimiento"]= $fecha;
-
-   }else{
-
-$fecha = $fechaAccion;
-
-$i = 0;
-while($i <= 45) {
-$hoy_strtotime = strtotime($fecha);
-$sig_strtotime = strtotime('+1 days', $hoy_strtotime);
-$sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
-$sig_fecha_dia = date('D', $sig_strtotime);
-$sig_fecha_feriado = date('d-m', $sig_strtotime);
-
-if( $sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" || 
- $sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
- $sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
- $sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" || $sig_fecha_feriado == "19-11" ||
- $sig_fecha_feriado == "25-12") {
-   }
-     else {
-            $fecha= $sig_fecha;
-             $i++;
-          } 
-$fecha = $sig_fecha;
-       }
-
-
-   $arreglo["fechaVencimiento"]= $fecha;
-  
-
-   }
-
-
-
-
-$validateLote = $this->caja_model_outside->validate($value->idLote);
-$disponibilidad =  ($validateLote==1) ? TRUE : FALSE;
-
-
-if($disponibilidad == TRUE)
-{
-      $idClienteInsert = $this->caja_model_outside->insertClient($arreglo);
-
-
-      if ($idClienteInsert){
-		  
-		  
-		  ////////////////// VENTA DE PARTICULARES 
-		  
-		 $vp = $this->caja_model_outside->validatep($value->idLote);
-		 $vp_v =  ($vp == 1) ? TRUE : FALSE;
-			
-			if($vp_v == TRUE){
-              $updateLote["tipo_venta"] = 1;
-			} else {
-			
-			}
-
-		  /////////////////
-
-        $updateLote=array();
-        $updateLote["idStatusContratacion"]= 1;
-        $updateLote["idStatusLote"]=3;
-        $updateLote["idMovimiento"]=31;
-        $updateLote["idCliente"]= $idClienteInsert[0]["lastId"];
-        $updateLote["comentario"]= 'OK';
-        $updateLote["usuario"]=$data->id_usuario;
-        $updateLote["perfil"]='caja';
-        $updateLote["modificado"]=date("Y-m-d H:i:s");
-		if (!isset($value->tipo_lote)) {
-			
-		} else {
-			
-			$info = $this->caja_model_outside->getDatosLote($value->idLote);
-
-			
-			if($value->tipo_lote == 'STELLA'){
-					
-
-				
-				if(
-					$value->nombre2 == 'CCMP-LAMAY-011' || $value->nombre2 == 'CCMP-LAMAY-021' || $value->nombre2 == 'CCMP-LAMAY-030' ||
-					$value->nombre2 == 'CCMP-LAMAY-031' || $value->nombre2 == 'CCMP-LAMAY-032' || $value->nombre2 == 'CCMP-LAMAY-045' ||
-					$value->nombre2 == 'CCMP-LAMAY-046' || $value->nombre2 == 'CCMP-LAMAY-047' || $value->nombre2 == 'CCMP-LAMAY-054' || 
-					$value->nombre2 == 'CCMP-LAMAY-064' || $value->nombre2 == 'CCMP-LAMAY-079' || $value->nombre2 == 'CCMP-LAMAY-080' ||
-					$value->nombre2 == 'CCMP-LAMAY-090' || $value->nombre2 == 'CCMP-LIRIO-010' ||
-					
-					$value->nombre2 == 'CCMP-LIRIO-10' ||
-					$value->nombre2 == 'CCMP-LIRIO-033' || $value->nombre2 == 'CCMP-LIRIO-048' || $value->nombre2 == 'CCMP-LIRIO-049' ||
-					$value->nombre2 == 'CCMP-LIRIO-067' || $value->nombre2 == 'CCMP-LIRIO-089' || $value->nombre2 == 'CCMP-LIRIO-091' ||
-					$value->nombre2 == 'CCMP-LIRIO-098' || $value->nombre2 == 'CCMP-LIRIO-100'
-				
-				){
-					$total = $info->total;
-					$updateLote["total"]= ($total + 2029185.00);
-					$updateLote["enganche"]= ($updateLote["total"] * 0.1);
-					$updateLote["saldo"]= ($updateLote["total"] - $updateLote["enganche"]);
-					$updateLote["precio"]= ($updateLote["total"] / $info->sup);
-
-				
-				} else {
-					
-					$total = $info->total;
-					$updateLote["total"]= ($total + 2104340.00);
-					$updateLote["enganche"]= ($updateLote["total"] * 0.1);
-					$updateLote["saldo"]= ($updateLote["total"] - $updateLote["enganche"]);
-					$updateLote["precio"]= ($updateLote["total"] / $info->sup);
-
-				
-				}
-				
-				$updateLote["nombreLote"]=$value->nombre;
-
-
-			} else if($value->tipo_lote == 'AURA'){
-								
-				if(
-
-					$value->nombre2 == 'CCMP-LAMAY-011' || $value->nombre2 == 'CCMP-LAMAY-021' || $value->nombre2 == 'CCMP-LAMAY-030' ||
-					$value->nombre2 == 'CCMP-LAMAY-031' || $value->nombre2 == 'CCMP-LAMAY-032' || $value->nombre2 == 'CCMP-LAMAY-045' ||
-					$value->nombre2 == 'CCMP-LAMAY-046' || $value->nombre2 == 'CCMP-LAMAY-047' || $value->nombre2 == 'CCMP-LAMAY-054' || 
-					$value->nombre2 == 'CCMP-LAMAY-064' || $value->nombre2 == 'CCMP-LAMAY-079' || $value->nombre2 == 'CCMP-LAMAY-080' ||
-					$value->nombre2 == 'CCMP-LAMAY-090' || $value->nombre2 == 'CCMP-LIRIO-010' ||
-					
-					$value->nombre2 == 'CCMP-LIRIO-10' ||
-					$value->nombre2 == 'CCMP-LIRIO-033' || $value->nombre2 == 'CCMP-LIRIO-048' || $value->nombre2 == 'CCMP-LIRIO-049' ||
-					$value->nombre2 == 'CCMP-LIRIO-067' || $value->nombre2 == 'CCMP-LIRIO-089' || $value->nombre2 == 'CCMP-LIRIO-091' ||
-					$value->nombre2 == 'CCMP-LIRIO-098' || $value->nombre2 == 'CCMP-LIRIO-100'
-				
-				){
-					$total = $info->total;
-					$updateLote["total"]= ($total + 1037340.00);
-					$updateLote["enganche"]= ($updateLote["total"] * 0.1);
-					$updateLote["saldo"]= ($updateLote["total"] - $updateLote["enganche"]);
-					$updateLote["precio"]= ($updateLote["total"] / $info->sup);
-
-				} else {
-								
-					$total = $info->total;
-					$updateLote["total"]= ($total + 1075760.00);
-					$updateLote["enganche"]= ($updateLote["total"] * 0.1);
-					$updateLote["saldo"]= ($updateLote["total"] - $updateLote["enganche"]);
-					$updateLote["precio"]= ($updateLote["total"] / $info->sup);
-
-				}
-				
-				
-				$updateLote["nombreLote"]=$value->nombre;
-
-
-			} else if($value->tipo_lote == 'TERRENO'){
-				
-					$t= (($info->precio + 500) * $info->sup);
-					$e= ($t * 0.1);
-					$s= ($t - $e);
-					$m2= ($t / $info->sup);
-
-					
-					$updateLote["total"]= $t;
-					$updateLote["enganche"]= $e;
-					$updateLote["saldo"]= $s;
-					$updateLote["precio"]= $m2;
-                
-			}
-	        
-		
-		}
-    
-    date_default_timezone_set('America/Mexico_City');
-    $horaActual = date('H:i:s');
-    $horaInicio = date("08:00:00");
-    $horaFin = date("16:00:00");
-    
-    if ($horaActual > $horaInicio and $horaActual < $horaFin) {
-    
-    $fechaAccion = date("Y-m-d H:i:s");
-    $hoy_strtotime2 = strtotime($fechaAccion);
-    $sig_fecha_dia2 = date('D', $hoy_strtotime2);
-      $sig_fecha_feriado2 = date('d-m', $hoy_strtotime2);
-    
-    if($sig_fecha_dia2 == "Sat" || $sig_fecha_dia2 == "Sun" || 
-         $sig_fecha_feriado2 == "01-01" || $sig_fecha_feriado2 == "06-02" ||
-         $sig_fecha_feriado2 == "20-03" || $sig_fecha_feriado2 == "01-05" ||
-         $sig_fecha_feriado2 == "16-09" || $sig_fecha_feriado2 == "20-11" || $sig_fecha_feriado2 == "19-11" ||
-         $sig_fecha_feriado2 == "25-12") {
-    
-    
-    
-    $fecha = $fechaAccion;
-    $i = 0;
-        while($i <= 6) {
-      $hoy_strtotime = strtotime($fecha);
-      $sig_strtotime = strtotime('+1 days', $hoy_strtotime);
-      $sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
-      $sig_fecha_dia = date('D', $sig_strtotime);
-        $sig_fecha_feriado = date('d-m', $sig_strtotime);
-    
-      if( $sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" || 
-         $sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
-         $sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
-         $sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" || $sig_fecha_feriado == "19-11" ||
-         $sig_fecha_feriado == "25-12") {
-           }
-             else {
-                    $fecha= $sig_fecha;
-                     $i++;
-                  } 
-        $fecha = $sig_fecha;
-               }
-           $updateLote["fechaVenc"]= $fecha;
-
-           }else{
-    
-    $fecha = $fechaAccion;
-    
-    $i = 0;
-    
-        while($i <= 5) {
-    
-      $hoy_strtotime = strtotime($fecha);
-      $sig_strtotime = strtotime('+1 days', $hoy_strtotime);
-      $sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
-      $sig_fecha_dia = date('D', $sig_strtotime);
-        $sig_fecha_feriado = date('d-m', $sig_strtotime);
-    
-      if( $sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" || 
-         $sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
-         $sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
-         $sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" || $sig_fecha_feriado == "19-11" ||
-         $sig_fecha_feriado == "25-12") {
-           }
-             else {
-                    $fecha= $sig_fecha;
-                     $i++;
-                  } 
-    
-        $fecha = $sig_fecha;
-    
-               }
-    
-           $updateLote["fechaVenc"]= $fecha;
-    
-           }
-    
-    } elseif ($horaActual < $horaInicio || $horaActual > $horaFin) {
-    
-    $fechaAccion = date("Y-m-d H:i:s");
-    $hoy_strtotime2 = strtotime($fechaAccion);
-    $sig_fecha_dia2 = date('D', $hoy_strtotime2);
-      $sig_fecha_feriado2 = date('d-m', $hoy_strtotime2);
-    
-    
-    if($sig_fecha_dia2 == "Sat" || $sig_fecha_dia2 == "Sun" || 
-         $sig_fecha_feriado2 == "01-01" || $sig_fecha_feriado2 == "06-02" ||
-         $sig_fecha_feriado2 == "20-03" || $sig_fecha_feriado2 == "01-05" ||
-         $sig_fecha_feriado2 == "16-09" || $sig_fecha_feriado2 == "20-11" || $sig_fecha_feriado2 == "19-11" ||
-         $sig_fecha_feriado2 == "25-12") {
-    
-    $fecha = $fechaAccion;
-    
-    $i = 0;
-    
-        while($i <= 6) {
-      $hoy_strtotime = strtotime($fecha);
-      $sig_strtotime = strtotime('+1 days', $hoy_strtotime);
-      $sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
-      $sig_fecha_dia = date('D', $sig_strtotime);
-        $sig_fecha_feriado = date('d-m', $sig_strtotime);
-    
-      if($sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" || 
-         $sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
-         $sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
-         $sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" || $sig_fecha_feriado == "19-11" ||
-         $sig_fecha_feriado == "25-12") {
-           }
-             else {
-                    $fecha= $sig_fecha;
-                     $i++;
-                  } 
-    
-        $fecha = $sig_fecha;
-    
-               }
-    
-           $updateLote["fechaVenc"]= $fecha;
-    
-           }else{
-    
-    $fecha = $fechaAccion;
-    
-    $i = 0;
-    
-        while($i <= 6) {
-      $hoy_strtotime = strtotime($fecha);
-      $sig_strtotime = strtotime('+1 days', $hoy_strtotime);
-      $sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
-      $sig_fecha_dia = date('D', $sig_strtotime);
-        $sig_fecha_feriado = date('d-m', $sig_strtotime);
-    
-      if($sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" || 
-         $sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
-         $sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
-         $sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" || $sig_fecha_feriado == "19-11" ||
-         $sig_fecha_feriado == "25-12") {
-           }
-             else {
-                    $fecha= $sig_fecha;
-                     $i++;
-                  } 
-        $fecha = $sig_fecha;
-               }
-
-         $updateLote["fechaVenc"]= $fecha;
-    
-           }
-    
-    }
-
-
-    $nomLote = $this->caja_model_outside->getNameLote($value->idLote);
-
-    
-        $arreglo2=array();
-        $arreglo2["idStatusContratacion"]= 1;
-        $arreglo2["idMovimiento"]=31;
-        $arreglo2["nombreLote"]= $nomLote->nombreLote;
-        $arreglo2["comentario"]= 'OK';
-        $arreglo2["usuario"]= $data->id_usuario;
-        $arreglo2["perfil"]= 'caja';
-        $arreglo2["modificado"]=date("Y-m-d H:i:s");
-        $arreglo2["fechaVenc"]= date('Y-m-d H:i:s');
-        $arreglo2["idLote"]= $value->idLote;  
-        $arreglo2["idCondominio"]= $value->idCondominio;          
-        $arreglo2["idCliente"]= $idClienteInsert[0]["lastId"];          
-
-
-        if($data->personalidad_juridica == 1){
-
-            $tipoDoc = $this->caja_model_outside->getDocsByType(32);
-            foreach ($tipoDoc AS $arrayDocs){
-                  $arrayDocs = array(
-                    'movimiento' => $arrayDocs["nombre"],
-                    'idCliente' => $idClienteInsert[0]["lastId"],
-                    'idCondominio' => $value->idCondominio,
-                    'idLote' => $value->idLote,
-                    'tipo_doc' => $arrayDocs["id_opcion"]
-                  );
-                  $this->caja_model_outside->insertDocToHist($arrayDocs);
             }
 
-            
-        } else if ($data->personalidad_juridica == 2){
-        
-            $tipoDoc = $this->caja_model_outside->getDocsByType(31);
-            foreach ($tipoDoc AS $arrayDocs){
-                  $arrayDocs = array(
-                    'movimiento' => $arrayDocs["nombre"],
-                    'idCliente' => $idClienteInsert[0]["lastId"],
-                    'idCondominio' => $value->idCondominio,
-                    'idLote' => $value->idLote,
-                    'tipo_doc' => $arrayDocs["id_opcion"]
-                  );
-                  $this->caja_model_outside->insertDocToHist($arrayDocs);
+
+            $arreglo["id_gerente"] = $data->asesores[0]->idGerente;
+            $arreglo["id_coordinador"] = $data->asesores[0]->idCoordinador;
+            $arreglo["id_asesor"] = $data->asesores[0]->idAsesor;
+
+
+            $arreglo["fechaApartado"] = date('Y-m-d H:i:s');
+            $arreglo["personalidad_juridica"] = $data->personalidad_juridica;
+            $arreglo["id_sede"] = $data->id_sede;
+
+
+            $fechaAccion = date("Y-m-d H:i:s");
+            $hoy_strtotime2 = strtotime($fechaAccion);
+            $sig_fecha_dia2 = date('D', $hoy_strtotime2);
+            $sig_fecha_feriado2 = date('d-m', $hoy_strtotime2);
+
+            if ($sig_fecha_dia2 == "Sat" || $sig_fecha_dia2 == "Sun" ||
+                $sig_fecha_feriado2 == "01-01" || $sig_fecha_feriado2 == "06-02" ||
+                $sig_fecha_feriado2 == "20-03" || $sig_fecha_feriado2 == "01-05" ||
+                $sig_fecha_feriado2 == "16-09" || $sig_fecha_feriado2 == "20-11" || $sig_fecha_feriado2 == "19-11" ||
+                $sig_fecha_feriado2 == "25-12") {
+
+
+                $fecha = $fechaAccion;
+
+                $i = 0;
+                while ($i <= 46) {
+                    $hoy_strtotime = strtotime($fecha);
+                    $sig_strtotime = strtotime('+1 days', $hoy_strtotime);
+                    $sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
+                    $sig_fecha_dia = date('D', $sig_strtotime);
+                    $sig_fecha_feriado = date('d-m', $sig_strtotime);
+
+                    if ($sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" ||
+                        $sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
+                        $sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
+                        $sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" || $sig_fecha_feriado == "19-11" ||
+                        $sig_fecha_feriado == "25-12") {
+                    } else {
+                        $fecha = $sig_fecha;
+                        $i++;
+                    }
+                    $fecha = $sig_fecha;
+                }
+
+
+                $arreglo["fechaVencimiento"] = $fecha;
+
+            } else {
+
+                $fecha = $fechaAccion;
+
+                $i = 0;
+                while ($i <= 45) {
+                    $hoy_strtotime = strtotime($fecha);
+                    $sig_strtotime = strtotime('+1 days', $hoy_strtotime);
+                    $sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
+                    $sig_fecha_dia = date('D', $sig_strtotime);
+                    $sig_fecha_feriado = date('d-m', $sig_strtotime);
+
+                    if ($sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" ||
+                        $sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
+                        $sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
+                        $sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" || $sig_fecha_feriado == "19-11" ||
+                        $sig_fecha_feriado == "25-12") {
+                    } else {
+                        $fecha = $sig_fecha;
+                        $i++;
+                    }
+                    $fecha = $sig_fecha;
+                }
+
+
+                $arreglo["fechaVencimiento"] = $fecha;
+
 
             }
-                
+
+
+            $validateLote = $this->caja_model_outside->validate($value->idLote);
+            $disponibilidad = ($validateLote == 1) ? TRUE : FALSE;
+
+
+            if ($disponibilidad == TRUE) {
+                $idClienteInsert = $this->caja_model_outside->insertClient($arreglo);
+
+
+                if ($idClienteInsert) {
+
+
+                    ////////////////// VENTA DE PARTICULARES
+
+                    $vp = $this->caja_model_outside->validatep($value->idLote);
+                    $vp_v = ($vp == 1) ? TRUE : FALSE;
+
+                    if ($vp_v == TRUE) {
+                        $updateLote["tipo_venta"] = 1;
+                    } else {
+
+                    }
+
+                    /////////////////
+
+                    $updateLote = array();
+                    $updateLote["idStatusContratacion"] = 1;
+                    $updateLote["idStatusLote"] = 3;
+                    $updateLote["idMovimiento"] = 31;
+                    $updateLote["idCliente"] = $idClienteInsert[0]["lastId"];
+                    $updateLote["comentario"] = 'OK';
+                    $updateLote["usuario"] = $data->id_usuario;
+                    $updateLote["perfil"] = 'caja';
+                    $updateLote["modificado"] = date("Y-m-d H:i:s");
+                    if (!isset($value->tipo_lote)) {
+
+                    } else {
+
+                        $info = $this->caja_model_outside->getDatosLote($value->idLote);
+
+
+                        if ($value->tipo_lote == 'STELLA') {
+
+
+                            if (
+                                $value->nombre2 == 'CCMP-LAMAY-011' || $value->nombre2 == 'CCMP-LAMAY-021' || $value->nombre2 == 'CCMP-LAMAY-030' ||
+                                $value->nombre2 == 'CCMP-LAMAY-031' || $value->nombre2 == 'CCMP-LAMAY-032' || $value->nombre2 == 'CCMP-LAMAY-045' ||
+                                $value->nombre2 == 'CCMP-LAMAY-046' || $value->nombre2 == 'CCMP-LAMAY-047' || $value->nombre2 == 'CCMP-LAMAY-054' ||
+                                $value->nombre2 == 'CCMP-LAMAY-064' || $value->nombre2 == 'CCMP-LAMAY-079' || $value->nombre2 == 'CCMP-LAMAY-080' ||
+                                $value->nombre2 == 'CCMP-LAMAY-090' || $value->nombre2 == 'CCMP-LIRIO-010' ||
+
+                                $value->nombre2 == 'CCMP-LIRIO-10' ||
+                                $value->nombre2 == 'CCMP-LIRIO-033' || $value->nombre2 == 'CCMP-LIRIO-048' || $value->nombre2 == 'CCMP-LIRIO-049' ||
+                                $value->nombre2 == 'CCMP-LIRIO-067' || $value->nombre2 == 'CCMP-LIRIO-089' || $value->nombre2 == 'CCMP-LIRIO-091' ||
+                                $value->nombre2 == 'CCMP-LIRIO-098' || $value->nombre2 == 'CCMP-LIRIO-100'
+
+                            ) {
+                                $total = $info->total;
+                                $updateLote["total"] = ($total + 2029185.00);
+                                $updateLote["enganche"] = ($updateLote["total"] * 0.1);
+                                $updateLote["saldo"] = ($updateLote["total"] - $updateLote["enganche"]);
+                                $updateLote["precio"] = ($updateLote["total"] / $info->sup);
+
+
+                            } else {
+
+                                $total = $info->total;
+                                $updateLote["total"] = ($total + 2104340.00);
+                                $updateLote["enganche"] = ($updateLote["total"] * 0.1);
+                                $updateLote["saldo"] = ($updateLote["total"] - $updateLote["enganche"]);
+                                $updateLote["precio"] = ($updateLote["total"] / $info->sup);
+
+
+                            }
+
+                            $updateLote["nombreLote"] = $value->nombre;
+
+
+                        } else if ($value->tipo_lote == 'AURA') {
+
+                            if (
+
+                                $value->nombre2 == 'CCMP-LAMAY-011' || $value->nombre2 == 'CCMP-LAMAY-021' || $value->nombre2 == 'CCMP-LAMAY-030' ||
+                                $value->nombre2 == 'CCMP-LAMAY-031' || $value->nombre2 == 'CCMP-LAMAY-032' || $value->nombre2 == 'CCMP-LAMAY-045' ||
+                                $value->nombre2 == 'CCMP-LAMAY-046' || $value->nombre2 == 'CCMP-LAMAY-047' || $value->nombre2 == 'CCMP-LAMAY-054' ||
+                                $value->nombre2 == 'CCMP-LAMAY-064' || $value->nombre2 == 'CCMP-LAMAY-079' || $value->nombre2 == 'CCMP-LAMAY-080' ||
+                                $value->nombre2 == 'CCMP-LAMAY-090' || $value->nombre2 == 'CCMP-LIRIO-010' ||
+
+                                $value->nombre2 == 'CCMP-LIRIO-10' ||
+                                $value->nombre2 == 'CCMP-LIRIO-033' || $value->nombre2 == 'CCMP-LIRIO-048' || $value->nombre2 == 'CCMP-LIRIO-049' ||
+                                $value->nombre2 == 'CCMP-LIRIO-067' || $value->nombre2 == 'CCMP-LIRIO-089' || $value->nombre2 == 'CCMP-LIRIO-091' ||
+                                $value->nombre2 == 'CCMP-LIRIO-098' || $value->nombre2 == 'CCMP-LIRIO-100'
+
+                            ) {
+                                $total = $info->total;
+                                $updateLote["total"] = ($total + 1037340.00);
+                                $updateLote["enganche"] = ($updateLote["total"] * 0.1);
+                                $updateLote["saldo"] = ($updateLote["total"] - $updateLote["enganche"]);
+                                $updateLote["precio"] = ($updateLote["total"] / $info->sup);
+
+                            } else {
+
+                                $total = $info->total;
+                                $updateLote["total"] = ($total + 1075760.00);
+                                $updateLote["enganche"] = ($updateLote["total"] * 0.1);
+                                $updateLote["saldo"] = ($updateLote["total"] - $updateLote["enganche"]);
+                                $updateLote["precio"] = ($updateLote["total"] / $info->sup);
+
+                            }
+
+
+                            $updateLote["nombreLote"] = $value->nombre;
+
+
+                        } else if ($value->tipo_lote == 'TERRENO') {
+
+                            $t = (($info->precio + 500) * $info->sup);
+                            $e = ($t * 0.1);
+                            $s = ($t - $e);
+                            $m2 = ($t / $info->sup);
+
+
+                            $updateLote["total"] = $t;
+                            $updateLote["enganche"] = $e;
+                            $updateLote["saldo"] = $s;
+                            $updateLote["precio"] = $m2;
+
+                        }
+
+
+                    }
+
+                    date_default_timezone_set('America/Mexico_City');
+                    $horaActual = date('H:i:s');
+                    $horaInicio = date("08:00:00");
+                    $horaFin = date("16:00:00");
+
+                    if ($horaActual > $horaInicio and $horaActual < $horaFin) {
+
+                        $fechaAccion = date("Y-m-d H:i:s");
+                        $hoy_strtotime2 = strtotime($fechaAccion);
+                        $sig_fecha_dia2 = date('D', $hoy_strtotime2);
+                        $sig_fecha_feriado2 = date('d-m', $hoy_strtotime2);
+
+                        if ($sig_fecha_dia2 == "Sat" || $sig_fecha_dia2 == "Sun" ||
+                            $sig_fecha_feriado2 == "01-01" || $sig_fecha_feriado2 == "06-02" ||
+                            $sig_fecha_feriado2 == "20-03" || $sig_fecha_feriado2 == "01-05" ||
+                            $sig_fecha_feriado2 == "16-09" || $sig_fecha_feriado2 == "20-11" || $sig_fecha_feriado2 == "19-11" ||
+                            $sig_fecha_feriado2 == "25-12") {
+
+
+                            $fecha = $fechaAccion;
+                            $i = 0;
+                            while ($i <= 6) {
+                                $hoy_strtotime = strtotime($fecha);
+                                $sig_strtotime = strtotime('+1 days', $hoy_strtotime);
+                                $sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
+                                $sig_fecha_dia = date('D', $sig_strtotime);
+                                $sig_fecha_feriado = date('d-m', $sig_strtotime);
+
+                                if ($sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" ||
+                                    $sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
+                                    $sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
+                                    $sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" || $sig_fecha_feriado == "19-11" ||
+                                    $sig_fecha_feriado == "25-12") {
+                                } else {
+                                    $fecha = $sig_fecha;
+                                    $i++;
+                                }
+                                $fecha = $sig_fecha;
+                            }
+                            $updateLote["fechaVenc"] = $fecha;
+
+                        } else {
+
+                            $fecha = $fechaAccion;
+
+                            $i = 0;
+
+                            while ($i <= 5) {
+
+                                $hoy_strtotime = strtotime($fecha);
+                                $sig_strtotime = strtotime('+1 days', $hoy_strtotime);
+                                $sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
+                                $sig_fecha_dia = date('D', $sig_strtotime);
+                                $sig_fecha_feriado = date('d-m', $sig_strtotime);
+
+                                if ($sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" ||
+                                    $sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
+                                    $sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
+                                    $sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" || $sig_fecha_feriado == "19-11" ||
+                                    $sig_fecha_feriado == "25-12") {
+                                } else {
+                                    $fecha = $sig_fecha;
+                                    $i++;
+                                }
+
+                                $fecha = $sig_fecha;
+
+                            }
+
+                            $updateLote["fechaVenc"] = $fecha;
+
+                        }
+
+                    } elseif ($horaActual < $horaInicio || $horaActual > $horaFin) {
+
+                        $fechaAccion = date("Y-m-d H:i:s");
+                        $hoy_strtotime2 = strtotime($fechaAccion);
+                        $sig_fecha_dia2 = date('D', $hoy_strtotime2);
+                        $sig_fecha_feriado2 = date('d-m', $hoy_strtotime2);
+
+
+                        if ($sig_fecha_dia2 == "Sat" || $sig_fecha_dia2 == "Sun" ||
+                            $sig_fecha_feriado2 == "01-01" || $sig_fecha_feriado2 == "06-02" ||
+                            $sig_fecha_feriado2 == "20-03" || $sig_fecha_feriado2 == "01-05" ||
+                            $sig_fecha_feriado2 == "16-09" || $sig_fecha_feriado2 == "20-11" || $sig_fecha_feriado2 == "19-11" ||
+                            $sig_fecha_feriado2 == "25-12") {
+
+                            $fecha = $fechaAccion;
+
+                            $i = 0;
+
+                            while ($i <= 6) {
+                                $hoy_strtotime = strtotime($fecha);
+                                $sig_strtotime = strtotime('+1 days', $hoy_strtotime);
+                                $sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
+                                $sig_fecha_dia = date('D', $sig_strtotime);
+                                $sig_fecha_feriado = date('d-m', $sig_strtotime);
+
+                                if ($sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" ||
+                                    $sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
+                                    $sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
+                                    $sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" || $sig_fecha_feriado == "19-11" ||
+                                    $sig_fecha_feriado == "25-12") {
+                                } else {
+                                    $fecha = $sig_fecha;
+                                    $i++;
+                                }
+
+                                $fecha = $sig_fecha;
+
+                            }
+
+                            $updateLote["fechaVenc"] = $fecha;
+
+                        } else {
+
+                            $fecha = $fechaAccion;
+
+                            $i = 0;
+
+                            while ($i <= 6) {
+                                $hoy_strtotime = strtotime($fecha);
+                                $sig_strtotime = strtotime('+1 days', $hoy_strtotime);
+                                $sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
+                                $sig_fecha_dia = date('D', $sig_strtotime);
+                                $sig_fecha_feriado = date('d-m', $sig_strtotime);
+
+                                if ($sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" ||
+                                    $sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
+                                    $sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
+                                    $sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" || $sig_fecha_feriado == "19-11" ||
+                                    $sig_fecha_feriado == "25-12") {
+                                } else {
+                                    $fecha = $sig_fecha;
+                                    $i++;
+                                }
+                                $fecha = $sig_fecha;
+                            }
+
+                            $updateLote["fechaVenc"] = $fecha;
+
+                        }
+
+                    }
+
+
+                    $nomLote = $this->caja_model_outside->getNameLote($value->idLote);
+
+
+                    $arreglo2 = array();
+                    $arreglo2["idStatusContratacion"] = 1;
+                    $arreglo2["idMovimiento"] = 31;
+                    $arreglo2["nombreLote"] = $nomLote->nombreLote;
+                    $arreglo2["comentario"] = 'OK';
+                    $arreglo2["usuario"] = $data->id_usuario;
+                    $arreglo2["perfil"] = 'caja';
+                    $arreglo2["modificado"] = date("Y-m-d H:i:s");
+                    $arreglo2["fechaVenc"] = date('Y-m-d H:i:s');
+                    $arreglo2["idLote"] = $value->idLote;
+                    $arreglo2["idCondominio"] = $value->idCondominio;
+                    $arreglo2["idCliente"] = $idClienteInsert[0]["lastId"];
+
+
+                    if ($data->personalidad_juridica == 1) {
+
+                        $tipoDoc = $this->caja_model_outside->getDocsByType(32);
+                        foreach ($tipoDoc AS $arrayDocs) {
+                            $arrayDocs = array(
+                                'movimiento' => $arrayDocs["nombre"],
+                                'idCliente' => $idClienteInsert[0]["lastId"],
+                                'idCondominio' => $value->idCondominio,
+                                'idLote' => $value->idLote,
+                                'tipo_doc' => $arrayDocs["id_opcion"]
+                            );
+                            $this->caja_model_outside->insertDocToHist($arrayDocs);
+                        }
+
+
+                    } else if ($data->personalidad_juridica == 2) {
+
+                        $tipoDoc = $this->caja_model_outside->getDocsByType(31);
+                        foreach ($tipoDoc AS $arrayDocs) {
+                            $arrayDocs = array(
+                                'movimiento' => $arrayDocs["nombre"],
+                                'idCliente' => $idClienteInsert[0]["lastId"],
+                                'idCondominio' => $value->idCondominio,
+                                'idLote' => $value->idLote,
+                                'tipo_doc' => $arrayDocs["id_opcion"]
+                            );
+                            $this->caja_model_outside->insertDocToHist($arrayDocs);
+
+                        }
+
+                    }
+
+
+                    $this->caja_model_outside->addClientToLote($value->idLote, $updateLote);
+                    $this->caja_model_outside->insertLotToHist($arreglo2);
+
+                    $count = count($data->propietarios);
+                    $propietarios = array_slice($data->propietarios, 1, $count);
+                    foreach ($propietarios as $value) {
+                        $arreglo_propietarios = array();
+                        if ($data->personalidad_juridica == 1) {
+                            $arreglo_propietarios["nombre"] = $value->nombre;
+                            $arreglo_propietarios["rfc"] = $value->rfc;
+
+                            $arreglo_propietarios["id_cliente"] = $idClienteInsert[0]["lastId"];
+
+                        } else if ($data->personalidad_juridica == 2) {
+                            $arreglo_propietarios["nombre"] = $value->nombre;
+                            $arreglo_propietarios["apellido_paterno"] = $value->apellido_paterno;
+                            $arreglo_propietarios["apellido_materno"] = $value->apellido_materno;
+
+
+                            $arreglo_propietarios["id_cliente"] = $idClienteInsert[0]["lastId"];
+                            $arreglo_propietarios["estatus"] = 1;
+                            $arreglo_propietarios["creado_por"] = $data->id_usuario;
+
+                        }
+
+                        $this->caja_model_outside->insert_coopropietarios($arreglo_propietarios);
+
+                    }
+
+                    $countAs = count($data->asesores);
+                    $asesores = array_slice($data->asesores, 1, $countAs);
+
+                    foreach ($asesores as $value) {
+
+                        $arreglo_asesores = array();
+                        $arreglo_asesores["id_gerente"] = $value->idGerente;
+                        $arreglo_asesores["id_coordinador"] = $value->idCoordinador == $value->idAsesor ? 0 : $value->idCoordinador;
+                        $arreglo_asesores["id_asesor"] = $value->idAsesor;
+                        $arreglo_asesores["id_cliente"] = $idClienteInsert[0]["lastId"];
+                        $arreglo_asesores["estatus"] = 1;
+                        $arreglo_asesores["creado_por"] = $data->id_usuario;
+
+                        $this->caja_model_outside->insert_vcompartidas($arreglo_asesores);
+
+                    }
+
+                    $res1[$counter] = 1;
+                    /*$response['message'] = 'OK';
+                    echo json_encode($response);  */
+                } else {
+                    $res3[$counter] = 1;
+                    /*$response['message'] = 'ERROR';
+                    echo json_encode($response);*/
+                }
+
+            } else {
+                $res2[$counter] = 1;
+                /*$response['message'] = 'ERROR';
+                echo json_encode($response);*/
+            }
+            $counter++;
         }
-
-
-        $this->caja_model_outside->addClientToLote($value->idLote, $updateLote);
-        $this->caja_model_outside->insertLotToHist($arreglo2);
- 
-        $count = count($data->propietarios);
-        $propietarios = array_slice($data->propietarios, 1, $count);
-            foreach($propietarios as $value) {
-                $arreglo_propietarios=array();
-                if($data->personalidad_juridica == 1){
-                    $arreglo_propietarios["nombre"]=$value->nombre;
-                    $arreglo_propietarios["rfc"]=$value->rfc;
-
-                    $arreglo_propietarios["id_cliente"]=$idClienteInsert[0]["lastId"];
-
-                } else if ($data->personalidad_juridica == 2){
-                    $arreglo_propietarios["nombre"]=$value->nombre;
-                    $arreglo_propietarios["apellido_paterno"]=$value->apellido_paterno;
-                    $arreglo_propietarios["apellido_materno"]=$value->apellido_materno;
-
-
-                    $arreglo_propietarios["id_cliente"]=$idClienteInsert[0]["lastId"];
-                    $arreglo_propietarios["estatus"]=1;
-                    $arreglo_propietarios["creado_por"]=$data->id_usuario;
-
-                }
-            
-              $this->caja_model_outside->insert_coopropietarios($arreglo_propietarios);
-
-            }
-
-            $countAs = count($data->asesores);
-            $asesores = array_slice($data->asesores, 1, $countAs);
-            
-                foreach($asesores as $value) {
-            
-                    $arreglo_asesores=array();
-                    $arreglo_asesores["id_gerente"]=$value->idGerente;
-                    $arreglo_asesores["id_coordinador"]= $value->idCoordinador == $value->idAsesor ? 0 : $value->idCoordinador;
-                    $arreglo_asesores["id_asesor"]=$value->idAsesor;
-                    $arreglo_asesores["id_cliente"]=$idClienteInsert[0]["lastId"];
-					$arreglo_asesores["estatus"]=1;
-                    $arreglo_asesores["creado_por"]=$data->id_usuario;
-
-                    $this->caja_model_outside->insert_vcompartidas($arreglo_asesores);
-            
-                }
-        
-        $res1[$counter] = 1;
-        /*$response['message'] = 'OK';
-        echo json_encode($response);  */      
-      }
-            else {
-                $res3[$counter] = 1;
-              /*$response['message'] = 'ERROR';
-              echo json_encode($response);*/
-            }
-
-        } else {
-            $res2[$counter] = 1;
-        /*$response['message'] = 'ERROR';
-        echo json_encode($response);*/
-      }
-      $counter ++;
-    }
-    if (count($res1) == count($data->lotes)) { // MJ: TODOS LOS LOTES SE APARTARON BIEN
+        if (count($res1) == count($data->lotes)) { // MJ: TODOS LOS LOTES SE APARTARON BIEN
             $response['Titulo'] = 'Apartado';
             $response['resultado'] = TRUE;
             $response['message'] = 'Proceso realizado correctamente ' . date('y-m-d H:i:s');
@@ -1673,8 +1668,7 @@ if($disponibilidad == TRUE)
                 'message' => 'Error, lotes no disponibles a la hora de apartar.'
             );
             echo json_encode($dataError);
-        }
-        else if (count($res3) == count($data->lotes)) { // MJ: ERROR AL INSERTAR EL CLIENTE
+        } else if (count($res3) == count($data->lotes)) { // MJ: ERROR AL INSERTAR EL CLIENTE
             $dataError['ERROR'] = array(
                 'titulo' => 'ERROR',
                 'resultado' => FALSE,
@@ -1682,432 +1676,435 @@ if($disponibilidad == TRUE)
             );
             echo json_encode($dataError);
         }
-}
+    }
 
 // FIN DE  REGISTRO DE CLIENTES TODOS LOS CLIENTES EXCEPTO DE SAN LUIS Y DE CIUDAD MADERAS SUR
 
-public function get_tablec(){
- $residencial = json_decode(file_get_contents("php://input"));
- $data = $this->caja_model_outside->table_condominio($residencial->idResidencial);
+    public function get_tablec()
+    {
+        $residencial = json_decode(file_get_contents("php://input"));
+        $data = $this->caja_model_outside->table_condominio($residencial->idResidencial);
 
- if($data != null) {
-	   echo json_encode($data);
-	 } else {
-		   echo json_encode(array());
- }
-}
-
-
-public function getInventario(){
-    $condominio = json_decode(file_get_contents("php://input"));
-    $datos = $this->caja_model_outside->getInventario($condominio->idCondominio);
-    echo json_encode($datos);
-}
-
-
-
-public function getEstatus(){
-    $datos = $this->caja_model_outside->getEstatus();
-    echo json_encode($datos);
-}
-
-
-
-
-public function changeEstatusLote(){
-
-  $lote = json_decode(file_get_contents("php://input"));
-
-  $idLote= $lote->idLote;
-  $idStatusLote= $lote->idStatusLote;
-  $idAsesor= $lote->idAsesor;
-  $idAsesor2= $lote->idAsesor2;
-  $motivo_change_status= $lote->motivo_change_status;
-  $usuario = $lote->id_usuario;
-
-
-  $idInvolucrados=$lote->idInvolucrados;
-
-
-if ($idStatusLote == 9 || $idStatusLote == 10 || $idStatusLote == 7 || $idStatusLote == 6 || $idStatusLote == 11  || $idStatusLote == 12){ // 12 INTERCAMBIO ESCRITURADO
-
-$arreglo=array();
-$arreglo["idStatusLote"]=$idStatusLote;
-$arreglo["idAsesor"]=$idAsesor;
-$arreglo["idAsesor2"]=$idAsesor2;
-$arreglo["fecha_modst"]= date("Y-m-d H:i:s");
-$arreglo["userstatus"]= $usuario;
-$arreglo["usuario"]= $usuario;
-$arreglo["motivo_change_status"]= $motivo_change_status;
-
-	
-	$update = $this->caja_model_outside->editaEstatus($idLote,$arreglo);
-	
-	if($update == TRUE) {
-		$response['message'] = 'SUCCESS';
-		echo json_encode($response);
-	 } else {
-		$response['message'] = 'ERROR';
-		echo json_encode($response);
-	}
-
-
-}
-
-
-
-   else if ($idStatusLote == 8){
-
-
-  $arreglo=array();
-  $arreglo["idStatusLote"]=$idStatusLote;
-  $arreglo["idAsesor"]=$idAsesor;
-  $arreglo["idAsesor2"]=$idAsesor2;
-  $arreglo["fecha_modst"]= date("Y-m-d H:i:s");
-  $arreglo["userstatus"]= $usuario;
-  $arreglo["usuario"]= $usuario;
-  $arreglo["motivo_change_status"]= $motivo_change_status;
-
-  $datos["lote"]= $this->caja_model_outside->infoBloqueos($idLote);
-          
-  $data=array();
-
-  $data["idResidencial"]= $datos["lote"]->idResidencial;
-  $data["idCondominio"]= $datos["lote"]->idCondominio;
-  $data["idLote"]= $datos["lote"]->idLoteL;
-  $data["usuario"]= $usuario;
-  $data["idAsesor"]= $idAsesor;
-  $data["idAsesor2"]= $idAsesor2;
-  
-  	$update = $this->caja_model_outside->editaEstatus($idLote,$arreglo);
-	
-	if($update == TRUE) {
-	    $this->caja_model_outside->insert_bloqueos($data);
-		$response['message'] = 'SUCCESS';
-		echo json_encode($response);
-	 } else {
-		$response['message'] = 'ERROR';
-		echo json_encode($response);
-	}
-  
-  
-  
-
-} else if ($idStatusLote == 1){ // 1 DISPONIBLE
-
-
- 
- $arreglo=array();
- $arreglo["idStatusLote"]=$idStatusLote;
- $arreglo["idAsesor"]= NULL;
- $arreglo["idAsesor2"]= NULL;
- $arreglo["fecha_modst"]= date("Y-m-d H:i:s");
- $arreglo["userstatus"]= $usuario;
- $arreglo["usuario"]= $usuario;
- $arreglo["motivo_change_status"]= $motivo_change_status;
-
-
-   	$update = $this->caja_model_outside->editaEstatus($idLote,$arreglo);
-
-	if($update == TRUE) {
-		$response['message'] = 'SUCCESS';
-		echo json_encode($response);
-	 } else {
-		$response['message'] = 'ERROR';
-		echo json_encode($response);
-	}
-
-
-}  else if ($idStatusLote == 2){ // 2 CONTRATADO
-
-
- 
- $arreglo=array();
- $arreglo["idStatusLote"]=$idStatusLote;
- $arreglo["fecha_modst"]= date("Y-m-d H:i:s");
- $arreglo["userstatus"]= $usuario;
- $arreglo["usuario"]= $usuario;
- $arreglo["motivo_change_status"]= $motivo_change_status;
-
-
-   	$update = $this->caja_model_outside->editaEstatus($idLote,$arreglo);
-
-	if($update == TRUE) {
-		$response['message'] = 'SUCCESS';
-		echo json_encode($response);
-	 } else {
-		$response['message'] = 'ERROR';
-		echo json_encode($response);
-	}
-
-
-}
-	else {
-		$response['message'] = 'ERROR';
-		echo json_encode($response);
-	}
-}
-
-public function getGerente(){
-    $datos = $this->caja_model_outside->getGerente();
-    echo json_encode($datos);
-}
-
-public function getCoordinador(){
-	$gerente = json_decode(file_get_contents("php://input"));
-    $datos = $this->caja_model_outside->getCoordinador($gerente->id_gerente);
-    echo json_encode($datos);
-}
-
-public function getAsesor(){
-	$coordinador = json_decode(file_get_contents("php://input"));
-    $datos = $this->caja_model_outside->getAsesor($coordinador->id_coordinador);
-    echo json_encode($datos);
-}
-
-public function getAsesorSpecial(){
-    $datos = $this->caja_model_outside->getAsesorSpecial();
-    echo json_encode($datos);
-}
-
-//VERIFICAMOS EL ACCESO AL ASESOR MEDIANTE SU ID Y CONTRASEÑA
-public function validar_login_asesor(){
-  $data = json_decode(file_get_contents("php://input"));
-  $resultado = false;
-
-  if(isset( $data )){
-    $resultado = $this->db->query("SELECT * FROM usuarios WHERE id_usuario = ".$data->idAsesor." AND contrasena = '".encriptar( $data->name )."'")->num_rows() > 0;
-  }
-
-  echo json_encode ( array( "resultado" => $resultado ) );
-}    
-
-    //APARTADO EN LINEA
-    function validaOnLine(){
-          
-      $data = json_decode(file_get_contents("php://input"));
-      if( $data ){
-
-        $resultado = FALSE;
-        $recibo_pago = NULL;
-        $mensaje_error = NULL;
-
-        //VERIFICAMOS LA IDENTIDAD DEL ASESOR
-        if( $this->db->query("SELECT * FROM usuarios WHERE id_usuario = ".$data->idAsesor." AND contrasena = '".encriptar( $data->name )."'")->num_rows() > 0 ){        
-          //VERIFICAMOS SI TODOS LOS LOTES INTERESADOS ESTAN LIBRES
-          if( $this->db->query("SELECT COUNT( idLote ) disponibles FROM lotes WHERE status = 1 AND idStatusLote = 1 AND idLote IN ( ".implode(",", $data->idlotes)." )")->row()->disponibles == COUNT( $data->idlotes ) ){  
-            $this->db->update( "lotes", array( "idStatusLote" => 99, "modificado" => date('Y-m-d H:i:s') ), "idLote IN ( ".implode(",", $data->idlotes)." )");
-            //INSERCION DEL JSON DE APARTADOS A EJECUTAR.
-            $this->db->insert("json_apartado", array(
-              "id_asesor" => $data->idAsesor,
-              "id_lote" => implode(",", $data->idlotes),
-              "json" => json_encode( $data )   
-            ) );
-            //EL MAXIMO EN UNA REFERENCIA ES ESTA 34 CARACTERES CON EL FORMATO ACTUAL QUE TENEMOS ESTAMOS LLEGANDO A LOS 21 CARACTERES
-            //EJEMPLO: ACM-12-11042021203652 (21 CARACTERES)
-            //$recibo_pago = "CONFPAGO".date('dmYHis');
-            $recibo_pago = "CONFPAGO".date('dmYHis').rand ( 0, 999 );
-
-            $dataLider = $this->caja_model_outside->getLider($data->asesores[0]->idGerente);
-
-            if ($data->asesores[0]->idCoordinador == $data->asesores[0]->idAsesor) {
-                    $voBoCoord = 0;
-                } else if($data->asesores[0]->idCoordinador == $data->asesores[0]->idGerente) {
-                    $voBoCoord = 0;
-                }else{
-                    $voBoCoord = $data->asesores[0]->idCoordinador;
-                }
-
-            foreach($data->lotes as $value) {
-              $arreglo=array();
-
-               
-
-              $arreglo["idLote"] = $value->idLote;
-              $arreglo["idCondominio"] = $value->idCondominio;
-              $arreglo["engancheCliente"]= $value->pago;
-              $arreglo["noRecibo"] = $recibo_pago;
-              $arreglo["concepto"] = "APARTADO DESDE LA PAGINA DE CIUDAD MADERAS";
-              $arreglo["fechaEnganche"]=date('Y-m-d H:i:s');
-              //PAGOS EN LINEA SIEMPRE MADARA PERSONAL _JURIDICA == 2
-              $arreglo["nombre"]=$data->propietarios->nombre;
-              $arreglo["apellido_paterno"]=$data->propietarios->apellido_paterno;
-              $arreglo["apellido_materno"]=$data->propietarios->apellido_materno;
-
-              $arreglo["correo"]=$data->propietarios->correo_electronico;
-              $arreglo["telefono2"]=$data->propietarios->telefono;
-              
-              $arreglo["personalidad_juridica"] = 2;      
-              //INFORMACION DEL ASESOR
-              $arreglo["id_gerente"]=$data->asesores[0]->idGerente;
-              $arreglo["id_coordinador"]= $voBoCoord;
-              $arreglo["id_asesor"]=$data->asesores[0]->idAsesor;      
-              //INFORMACION DEL APARTADO
-              $arreglo["fechaApartado"] = date('Y-m-d H:i:s');
-              $arreglo["id_sede"] = 0;      
-              $arreglo['id_subdirector'] = $dataLider[0]['id_subdirector'];
-              $arreglo['id_regional'] = $dataLider[0]['id_regional'];
-
-              //SE OBTIENEN LAS FECHAS PARA EL TIEMPO QUE TIENE PARA CUMPLIR LOS ESTATUS EN CADA FASE EN EL SISTEMA
-              $fechaAccion = date("Y-m-d H:i:s");
-              $hoy_strtotime2 = strtotime($fechaAccion);
-              $sig_fecha_dia2 = date('D', $hoy_strtotime2);
-              $sig_fecha_feriado2 = date('d-m', $hoy_strtotime2);      
-              //CALCULAMOS LA FECHA DE VENCIMIENTO
-              $fecha = $fechaAccion;
-
-              $i = 0;
-              $vueltas = in_array( $sig_fecha_dia2, array( "Sat", "Sun" ) ) || in_array( $sig_fecha_feriado2, array( "01-01", "06-02", "20-03", "01-05", "16-09", "20-11", "19-11", "25-12" ) ) ? 46 : 45;
-              while( $i <= $vueltas ) {
-                  $hoy_strtotime = strtotime($fecha);
-                  $sig_strtotime = strtotime('+1 days', $hoy_strtotime);
-                  $sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
-                  $sig_fecha_dia = date('D', $sig_strtotime);
-                  $sig_fecha_feriado = date('d-m', $sig_strtotime);
-
-                  if( !in_array( $sig_fecha_dia, array( "Sat", "Sun" ) ) || !in_array( $sig_fecha_feriado, array( "01-01", "06-02", "20-03", "01-05", "16-09", "20-11", "19-11", "25-12" ) ) ) {
-                      $fecha= $sig_fecha;
-                      $i++;
-                  }
-                  $fecha = $sig_fecha;
-              }
-
-              $arreglo["fechaVencimiento"]= $fecha;
-              /*********************************************************************************************/
-                
-              if( $this->caja_model_outside->validar_aOnline( $value->idLote ) == 1) {
-                $trans = $this->caja_model_outside->trasns_vo( $arreglo, $data->asesores, (!isset($data->lote_casa)) ? [] : $data->lote_casa, $value->idLote);
-                if($trans == true){
-                  $resultado = TRUE;
-                } else {
-                  $resultado = FALSE;
-                  $mensaje_error = "¡Disculpe! Algún terreno se encuentra en proceso de ser apartado.";
-                  break;
-                }
-              }else{
-                $resultado = FALSE;
-                $mensaje_error = "¡Disculpe! Algún terreno se encuentra en proceso de ser apartado.";
-                break;
-              }
-            } // END FOREACH
-          }else{
-            $resultado = FALSE;
-            $mensaje_error = "¡Disculpe! Algún terreno se encuentra en proceso de ser apartado.";
-          }
-        }else{
-            $resultado = FALSE;
-            $mensaje_error = "Contraseña incorrecta. Verifique que este correcta.";
+        if ($data != null) {
+            echo json_encode($data);
+        } else {
+            echo json_encode(array());
         }
-        echo json_encode ( array( "resultado" => $resultado, "mensaje" => $mensaje_error, "folio" => $recibo_pago ) );
-      }
     }
 
-    function confirmarPago(){
-		  //VERIFICAMOS QUE RECIBAMOS EL PARAMETRO CORRECTO PARA REALIZAR EL APARTADO.
-      $data = json_decode(file_get_contents("php://input"));
-    
-      var_dump( $data );
 
-      if( $data ){
-        //MOVEMOS EL LOTE AL ESTATUS DE CONTRATADO ESTATUS 99
-          $this->db->query("UPDATE lt 
+    public function getInventario()
+    {
+        $condominio = json_decode(file_get_contents("php://input"));
+        $datos = $this->caja_model_outside->getInventario($condominio->idCondominio);
+        echo json_encode($datos);
+    }
+
+
+    public function getEstatus()
+    {
+        $datos = $this->caja_model_outside->getEstatus();
+        echo json_encode($datos);
+    }
+
+
+    public function changeEstatusLote()
+    {
+
+        $lote = json_decode(file_get_contents("php://input"));
+
+        $idLote = $lote->idLote;
+        $idStatusLote = $lote->idStatusLote;
+        $idAsesor = $lote->idAsesor;
+        $idAsesor2 = $lote->idAsesor2;
+        $motivo_change_status = $lote->motivo_change_status;
+        $usuario = $lote->id_usuario;
+
+
+        $idInvolucrados = $lote->idInvolucrados;
+
+
+        if ($idStatusLote == 9 || $idStatusLote == 10 || $idStatusLote == 7 || $idStatusLote == 6 || $idStatusLote == 11 || $idStatusLote == 12) { // 12 INTERCAMBIO ESCRITURADO
+
+            $arreglo = array();
+            $arreglo["idStatusLote"] = $idStatusLote;
+            $arreglo["idAsesor"] = $idAsesor;
+            $arreglo["idAsesor2"] = $idAsesor2;
+            $arreglo["fecha_modst"] = date("Y-m-d H:i:s");
+            $arreglo["userstatus"] = $usuario;
+            $arreglo["usuario"] = $usuario;
+            $arreglo["motivo_change_status"] = $motivo_change_status;
+
+
+            $update = $this->caja_model_outside->editaEstatus($idLote, $arreglo);
+
+            if ($update == TRUE) {
+                $response['message'] = 'SUCCESS';
+                echo json_encode($response);
+            } else {
+                $response['message'] = 'ERROR';
+                echo json_encode($response);
+            }
+
+
+        } else if ($idStatusLote == 8) {
+
+
+            $arreglo = array();
+            $arreglo["idStatusLote"] = $idStatusLote;
+            $arreglo["idAsesor"] = $idAsesor;
+            $arreglo["idAsesor2"] = $idAsesor2;
+            $arreglo["fecha_modst"] = date("Y-m-d H:i:s");
+            $arreglo["userstatus"] = $usuario;
+            $arreglo["usuario"] = $usuario;
+            $arreglo["motivo_change_status"] = $motivo_change_status;
+
+            $datos["lote"] = $this->caja_model_outside->infoBloqueos($idLote);
+
+            $data = array();
+
+            $data["idResidencial"] = $datos["lote"]->idResidencial;
+            $data["idCondominio"] = $datos["lote"]->idCondominio;
+            $data["idLote"] = $datos["lote"]->idLoteL;
+            $data["usuario"] = $usuario;
+            $data["idAsesor"] = $idAsesor;
+            $data["idAsesor2"] = $idAsesor2;
+
+            $update = $this->caja_model_outside->editaEstatus($idLote, $arreglo);
+
+            if ($update == TRUE) {
+                $this->caja_model_outside->insert_bloqueos($data);
+                $response['message'] = 'SUCCESS';
+                echo json_encode($response);
+            } else {
+                $response['message'] = 'ERROR';
+                echo json_encode($response);
+            }
+
+
+        } else if ($idStatusLote == 1) { // 1 DISPONIBLE
+
+
+            $arreglo = array();
+            $arreglo["idStatusLote"] = $idStatusLote;
+            $arreglo["idAsesor"] = NULL;
+            $arreglo["idAsesor2"] = NULL;
+            $arreglo["fecha_modst"] = date("Y-m-d H:i:s");
+            $arreglo["userstatus"] = $usuario;
+            $arreglo["usuario"] = $usuario;
+            $arreglo["motivo_change_status"] = $motivo_change_status;
+
+
+            $update = $this->caja_model_outside->editaEstatus($idLote, $arreglo);
+
+            if ($update == TRUE) {
+                $response['message'] = 'SUCCESS';
+                echo json_encode($response);
+            } else {
+                $response['message'] = 'ERROR';
+                echo json_encode($response);
+            }
+
+
+        } else if ($idStatusLote == 2) { // 2 CONTRATADO
+
+
+            $arreglo = array();
+            $arreglo["idStatusLote"] = $idStatusLote;
+            $arreglo["fecha_modst"] = date("Y-m-d H:i:s");
+            $arreglo["userstatus"] = $usuario;
+            $arreglo["usuario"] = $usuario;
+            $arreglo["motivo_change_status"] = $motivo_change_status;
+
+
+            $update = $this->caja_model_outside->editaEstatus($idLote, $arreglo);
+
+            if ($update == TRUE) {
+                $response['message'] = 'SUCCESS';
+                echo json_encode($response);
+            } else {
+                $response['message'] = 'ERROR';
+                echo json_encode($response);
+            }
+
+
+        } else {
+            $response['message'] = 'ERROR';
+            echo json_encode($response);
+        }
+    }
+
+    public function getGerente()
+    {
+        $datos = $this->caja_model_outside->getGerente();
+        echo json_encode($datos);
+    }
+
+    public function getCoordinador()
+    {
+        $gerente = json_decode(file_get_contents("php://input"));
+        $datos = $this->caja_model_outside->getCoordinador($gerente->id_gerente);
+        echo json_encode($datos);
+    }
+
+    public function getAsesor()
+    {
+        $coordinador = json_decode(file_get_contents("php://input"));
+        $datos = $this->caja_model_outside->getAsesor($coordinador->id_coordinador);
+        echo json_encode($datos);
+    }
+
+    public function getAsesorSpecial()
+    {
+        $datos = $this->caja_model_outside->getAsesorSpecial();
+        echo json_encode($datos);
+    }
+
+//VERIFICAMOS EL ACCESO AL ASESOR MEDIANTE SU ID Y CONTRASEÑA
+    public function validar_login_asesor()
+    {
+        $data = json_decode(file_get_contents("php://input"));
+        $resultado = false;
+
+        if (isset($data)) {
+            $resultado = $this->db->query("SELECT * FROM usuarios WHERE id_usuario = " . $data->idAsesor . " AND contrasena = '" . encriptar($data->name) . "'")->num_rows() > 0;
+        }
+
+        echo json_encode(array("resultado" => $resultado));
+    }
+
+    //APARTADO EN LINEA
+    function validaOnLine()
+    {
+
+        $data = json_decode(file_get_contents("php://input"));
+        if ($data) {
+
+            $resultado = FALSE;
+            $recibo_pago = NULL;
+            $mensaje_error = NULL;
+
+            //VERIFICAMOS LA IDENTIDAD DEL ASESOR
+            if ($this->db->query("SELECT * FROM usuarios WHERE id_usuario = " . $data->idAsesor . " AND contrasena = '" . encriptar($data->name) . "'")->num_rows() > 0) {
+                //VERIFICAMOS SI TODOS LOS LOTES INTERESADOS ESTAN LIBRES
+                if ($this->db->query("SELECT COUNT( idLote ) disponibles FROM lotes WHERE status = 1 AND idStatusLote = 1 AND idLote IN ( " . implode(",", $data->idlotes) . " )")->row()->disponibles == COUNT($data->idlotes)) {
+                    $this->db->update("lotes", array("idStatusLote" => 99, "modificado" => date('Y-m-d H:i:s')), "idLote IN ( " . implode(",", $data->idlotes) . " )");
+                    //INSERCION DEL JSON DE APARTADOS A EJECUTAR.
+                    $this->db->insert("json_apartado", array(
+                        "id_asesor" => $data->idAsesor,
+                        "id_lote" => implode(",", $data->idlotes),
+                        "json" => json_encode($data)
+                    ));
+                    //EL MAXIMO EN UNA REFERENCIA ES ESTA 34 CARACTERES CON EL FORMATO ACTUAL QUE TENEMOS ESTAMOS LLEGANDO A LOS 21 CARACTERES
+                    //EJEMPLO: ACM-12-11042021203652 (21 CARACTERES)
+                    //$recibo_pago = "CONFPAGO".date('dmYHis');
+                    $recibo_pago = "CONFPAGO" . date('dmYHis') . rand(0, 999);
+
+                    $dataLider = $this->caja_model_outside->getLider($data->asesores[0]->idGerente);
+
+                    if ($data->asesores[0]->idCoordinador == $data->asesores[0]->idAsesor) {
+                        $voBoCoord = 0;
+                    } else if ($data->asesores[0]->idCoordinador == $data->asesores[0]->idGerente) {
+                        $voBoCoord = 0;
+                    } else {
+                        $voBoCoord = $data->asesores[0]->idCoordinador;
+                    }
+
+                    foreach ($data->lotes as $value) {
+                        $arreglo = array();
+
+
+                        $arreglo["idLote"] = $value->idLote;
+                        $arreglo["idCondominio"] = $value->idCondominio;
+                        $arreglo["engancheCliente"] = $value->pago;
+                        $arreglo["noRecibo"] = $recibo_pago;
+                        $arreglo["concepto"] = "APARTADO DESDE LA PAGINA DE CIUDAD MADERAS";
+                        $arreglo["fechaEnganche"] = date('Y-m-d H:i:s');
+                        //PAGOS EN LINEA SIEMPRE MADARA PERSONAL _JURIDICA == 2
+                        $arreglo["nombre"] = $data->propietarios->nombre;
+                        $arreglo["apellido_paterno"] = $data->propietarios->apellido_paterno;
+                        $arreglo["apellido_materno"] = $data->propietarios->apellido_materno;
+
+                        $arreglo["correo"] = $data->propietarios->correo_electronico;
+                        $arreglo["telefono2"] = $data->propietarios->telefono;
+
+                        $arreglo["personalidad_juridica"] = 2;
+                        //INFORMACION DEL ASESOR
+                        $arreglo["id_gerente"] = $data->asesores[0]->idGerente;
+                        $arreglo["id_coordinador"] = $voBoCoord;
+                        $arreglo["id_asesor"] = $data->asesores[0]->idAsesor;
+                        //INFORMACION DEL APARTADO
+                        $arreglo["fechaApartado"] = date('Y-m-d H:i:s');
+                        $arreglo["id_sede"] = 0;
+                        $arreglo['id_subdirector'] = $dataLider[0]['id_subdirector'];
+                        $arreglo['id_regional'] = $dataLider[0]['id_regional'];
+
+                        //SE OBTIENEN LAS FECHAS PARA EL TIEMPO QUE TIENE PARA CUMPLIR LOS ESTATUS EN CADA FASE EN EL SISTEMA
+                        $fechaAccion = date("Y-m-d H:i:s");
+                        $hoy_strtotime2 = strtotime($fechaAccion);
+                        $sig_fecha_dia2 = date('D', $hoy_strtotime2);
+                        $sig_fecha_feriado2 = date('d-m', $hoy_strtotime2);
+                        //CALCULAMOS LA FECHA DE VENCIMIENTO
+                        $fecha = $fechaAccion;
+
+                        $i = 0;
+                        $vueltas = in_array($sig_fecha_dia2, array("Sat", "Sun")) || in_array($sig_fecha_feriado2, array("01-01", "06-02", "20-03", "01-05", "16-09", "20-11", "19-11", "25-12")) ? 46 : 45;
+                        while ($i <= $vueltas) {
+                            $hoy_strtotime = strtotime($fecha);
+                            $sig_strtotime = strtotime('+1 days', $hoy_strtotime);
+                            $sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
+                            $sig_fecha_dia = date('D', $sig_strtotime);
+                            $sig_fecha_feriado = date('d-m', $sig_strtotime);
+
+                            if (!in_array($sig_fecha_dia, array("Sat", "Sun")) || !in_array($sig_fecha_feriado, array("01-01", "06-02", "20-03", "01-05", "16-09", "20-11", "19-11", "25-12"))) {
+                                $fecha = $sig_fecha;
+                                $i++;
+                            }
+                            $fecha = $sig_fecha;
+                        }
+
+                        $arreglo["fechaVencimiento"] = $fecha;
+                        /*********************************************************************************************/
+
+                        if ($this->caja_model_outside->validar_aOnline($value->idLote) == 1) {
+                            $trans = $this->caja_model_outside->trasns_vo($arreglo, $data->asesores, (!isset($data->lote_casa)) ? [] : $data->lote_casa, $value->idLote);
+                            if ($trans == true) {
+                                $resultado = TRUE;
+                            } else {
+                                $resultado = FALSE;
+                                $mensaje_error = "¡Disculpe! Algún terreno se encuentra en proceso de ser apartado.";
+                                break;
+                            }
+                        } else {
+                            $resultado = FALSE;
+                            $mensaje_error = "¡Disculpe! Algún terreno se encuentra en proceso de ser apartado.";
+                            break;
+                        }
+                    } // END FOREACH
+                } else {
+                    $resultado = FALSE;
+                    $mensaje_error = "¡Disculpe! Algún terreno se encuentra en proceso de ser apartado.";
+                }
+            } else {
+                $resultado = FALSE;
+                $mensaje_error = "Contraseña incorrecta. Verifique que este correcta.";
+            }
+            echo json_encode(array("resultado" => $resultado, "mensaje" => $mensaje_error, "folio" => $recibo_pago));
+        }
+    }
+
+    function confirmarPago()
+    {
+        //VERIFICAMOS QUE RECIBAMOS EL PARAMETRO CORRECTO PARA REALIZAR EL APARTADO.
+        $data = json_decode(file_get_contents("php://input"));
+
+        var_dump($data);
+
+        if ($data) {
+            //MOVEMOS EL LOTE AL ESTATUS DE CONTRATADO ESTATUS 99
+            $this->db->query("UPDATE lt 
         SET lt.idStatusLote = 3,
         lt.precio = (lt.total / lt.sup)
         FROM lotes lt INNER JOIN
         ( SELECT idLote FROM clientes
-        WHERE clientes.noRecibo LIKE 'CONFPAGO%' AND clientes.noRecibo LIKE '%".$data->num_operacion."') clientes
+        WHERE clientes.noRecibo LIKE 'CONFPAGO%' AND clientes.noRecibo LIKE '%" . $data->num_operacion . "') clientes
         ON clientes.idLote = lt.idLote WHERE idStatusLote IN (99)");
-        
-        //ACTUALIZAMOS EL NUMERO DE RECIBO DEL CLIENTE PARA EL CONTROL
-        $this->db->query("  UPDATE cl
+
+            //ACTUALIZAMOS EL NUMERO DE RECIBO DEL CLIENTE PARA EL CONTROL
+            $this->db->query("  UPDATE cl
         SET cl.noRecibo = '$data->folio'
         FROM clientes cl INNER JOIN ( SELECT lot.idLote, res.idResidencial FROM ( SELECT idLote, idCondominio FROM lotes ) lot
         INNER JOIN ( SELECT idCondominio, idResidencial FROM condominios ) con ON con.idCondominio = lot.idCondominio
         INNER JOIN ( SELECT idResidencial FROM residenciales ) res ON res.idResidencial = con.idResidencial ) res ON res.idLote = cl.idLote
-        WHERE cl.noRecibo LIKE 'CONFPAGO%' AND cl.noRecibo LIKE '%".$data->num_operacion."'");
-      }
+        WHERE cl.noRecibo LIKE 'CONFPAGO%' AND cl.noRecibo LIKE '%" . $data->num_operacion . "'");
+        }
 
     }
+
     /****************************************************************/
 
-public function getCoOwnersList(){
-	
-		$data = json_decode(file_get_contents("php://input"));
-	    $id_cliente = $data->id_cliente;
+    public function getCoOwnersList()
+    {
+
+        $data = json_decode(file_get_contents("php://input"));
+        $id_cliente = $data->id_cliente;
 
 
         $data = $this->caja_model_outside->getCoOwnersList($id_cliente)->result_array();
         echo json_encode($data);
     }
-	
-	
-public function getCoOwnerInformation($id_copropietario){
+
+
+    public function getCoOwnerInformation($id_copropietario)
+    {
 
         echo json_encode($this->caja_model_outside->getCoOwnerInformation($id_copropietario)->result_array());
     }
-	
-	
-	public function saveCoOwner(){
-		
-		$data = json_decode(file_get_contents("php://input"));
 
-		
-            $data = array(
-                "id_cliente" => $data->id_cliente,
-                "personalidad_juridica" => $data->personalidad_juridica,
-                "nombre" => $data->nombre,
-                "apellido_paterno" => $data->apellido_paterno,
-                "apellido_materno" => $data->apellido_materno,
-				"creado_por" => $data->id_usuario
 
-            );
-			
-			
-            $res = $this->caja_model_outside->saveCoOwner($data);
-			
-			if($res == 1) {
-				$response['message'] = 'SUCCESS';
-				echo json_encode($response);
-			 } else {
-				$response['message'] = 'ERROR';
-				echo json_encode($response);
-			}	
-        
-    }
-	
-	
-	public function updateCoOwner(){
-		
-		    $data = json_decode(file_get_contents("php://input"));
+    public function saveCoOwner()
+    {
 
-            $id_copropietario = $data->id_copropietario;
-			
-			
-			$dato = array(
-                "nombre" => $data->nombre,
-                "apellido_paterno" => $data->apellido_paterno,
-                "apellido_materno" => $data->apellido_materno,
-				"estatus" => $data->estatus
-				);
-			
-			
-            $res = $this->caja_model_outside->updateCoOwner($dato, $id_copropietario);			
-			
-			if($res == 1) {
-				$response['message'] = 'SUCCESS';
-				echo json_encode($response);
-			 } else {
-				$response['message'] = 'ERROR';
-				echo json_encode($response);
-			}
-			
-			
-			
+        $data = json_decode(file_get_contents("php://input"));
+
+
+        $data = array(
+            "id_cliente" => $data->id_cliente,
+            "personalidad_juridica" => $data->personalidad_juridica,
+            "nombre" => $data->nombre,
+            "apellido_paterno" => $data->apellido_paterno,
+            "apellido_materno" => $data->apellido_materno,
+            "creado_por" => $data->id_usuario
+
+        );
+
+
+        $res = $this->caja_model_outside->saveCoOwner($data);
+
+        if ($res == 1) {
+            $response['message'] = 'SUCCESS';
+            echo json_encode($response);
+        } else {
+            $response['message'] = 'ERROR';
+            echo json_encode($response);
+        }
+
     }
 
 
-public function changeCoOwnerStatus(){
-        if(isset($_POST) && !empty($_POST)){
+    public function updateCoOwner()
+    {
+
+        $data = json_decode(file_get_contents("php://input"));
+
+        $id_copropietario = $data->id_copropietario;
+
+
+        $dato = array(
+            "nombre" => $data->nombre,
+            "apellido_paterno" => $data->apellido_paterno,
+            "apellido_materno" => $data->apellido_materno,
+            "estatus" => $data->estatus
+        );
+
+
+        $res = $this->caja_model_outside->updateCoOwner($dato, $id_copropietario);
+
+        if ($res == 1) {
+            $response['message'] = 'SUCCESS';
+            echo json_encode($response);
+        } else {
+            $response['message'] = 'ERROR';
+            echo json_encode($response);
+        }
+
+
+    }
+
+
+    public function changeCoOwnerStatus()
+    {
+        if (isset($_POST) && !empty($_POST)) {
             $data = array(
                 "estatus" => $this->input->post("estatus"),
                 "fecha_modificacion" => date("Y-m-d H:i:s"),
@@ -2116,163 +2113,164 @@ public function changeCoOwnerStatus(){
             $response = $this->caja_model_outside->changeCoOwnerStatus($data, $this->input->post("id_copropietario"));
             echo json_encode($response);
         }
-}
+    }
 
 
-public function get_sede(){
-	echo json_encode($this->caja_model_outside->get_sede()->result_array());
-}
+    public function get_sede()
+    {
+        echo json_encode($this->caja_model_outside->get_sede()->result_array());
+    }
 
 
-function getregistrosClientes() {
+    function getregistrosClientes()
+    {
 
-		$dato= $this->caja_model_outside->data_cliente();
+        $dato = $this->caja_model_outside->data_cliente();
 
-		for($i=0; $i<count($dato); $i++)
-		{
-			$data[$i]['id_cliente'] = $dato[$i]->id_cliente;
-			$data[$i]['id_asesor'] = $dato[$i]->id_asesor;
-			$data[$i]['id_coordinador'] = $dato[$i]->id_coordinador;
-			$data[$i]['id_gerente'] = $dato[$i]->id_gerente;
-			$data[$i]['id_sede'] = $dato[$i]->id_sede;
-			$data[$i]['nombre'] = $dato[$i]->nombre;
-			$data[$i]['apellido_paterno'] = $dato[$i]->apellido_paterno;
-			$data[$i]['apellido_materno'] = $dato[$i]->apellido_materno;
-			$data[$i]['personalidad_juridica'] = ($dato[$i]->personalidad_juridica =="") ? "N/A" : $dato[$i]->personalidad_juridica;
-			$data[$i]['nacionalidad'] = ($dato[$i]->nacionalidad =="") ? "N/A" : $dato[$i]->nacionalidad;
-			$data[$i]['rfc'] = ($dato[$i]->rfc =="") ? "N/A" : $dato[$i]->rfc;
-			$data[$i]['curp'] = ($dato[$i]->curp =="") ? "N/A" : $dato[$i]->curp;
-			$data[$i]['correo'] = ($dato[$i]->correo =="") ? "N/A" : $dato[$i]->correo;
-			$data[$i]['telefono1'] = ($dato[$i]->telefono1 =="") ? "N/A" : $dato[$i]->telefono1;
-			$data[$i]['telefono2'] = ($dato[$i]->telefono2 =="") ? "N/A" : $dato[$i]->telefono2;
-			$data[$i]['telefono3'] = ($dato[$i]->telefono3 =="") ? "N/A" : $dato[$i]->telefono3;
-			$data[$i]['fecha_nacimiento'] = ($dato[$i]->fecha_nacimiento =="") ? "N/A" : $dato[$i]->fecha_nacimiento;
-			$data[$i]['lugar_prospeccion'] = ($dato[$i]->lugar_prospeccion =="") ? "N/A" : $dato[$i]->lugar_prospeccion;
-			$data[$i]['medio_publicitario'] = ($dato[$i]->medio_publicitario =="") ? "N/A" : $dato[$i]->medio_publicitario;
-			$data[$i]['otro_lugar'] = ($dato[$i]->otro_lugar =="") ? "N/A" : $dato[$i]->otro_lugar;
-			$data[$i]['plaza_venta'] = ($dato[$i]->plaza_venta =="") ? "N/A" : $dato[$i]->plaza_venta;
-			$data[$i]['tipo'] = ($dato[$i]->tipo =="") ? "N/A" : $dato[$i]->tipo;
-			$data[$i]['estado_civil'] = ($dato[$i]->estado_civil =="") ? "N/A" : $dato[$i]->estado_civil;
-			$data[$i]['regimen_matrimonial'] = ($dato[$i]->regimen_matrimonial =="") ? "N/A" : $dato[$i]->regimen_matrimonial;
-			$data[$i]['nombre_conyuge'] = ($dato[$i]->nombre_conyuge =="") ? "N/A" : $dato[$i]->nombre_conyuge;
+        for ($i = 0; $i < count($dato); $i++) {
+            $data[$i]['id_cliente'] = $dato[$i]->id_cliente;
+            $data[$i]['id_asesor'] = $dato[$i]->id_asesor;
+            $data[$i]['id_coordinador'] = $dato[$i]->id_coordinador;
+            $data[$i]['id_gerente'] = $dato[$i]->id_gerente;
+            $data[$i]['id_sede'] = $dato[$i]->id_sede;
+            $data[$i]['nombre'] = $dato[$i]->nombre;
+            $data[$i]['apellido_paterno'] = $dato[$i]->apellido_paterno;
+            $data[$i]['apellido_materno'] = $dato[$i]->apellido_materno;
+            $data[$i]['personalidad_juridica'] = ($dato[$i]->personalidad_juridica == "") ? "N/A" : $dato[$i]->personalidad_juridica;
+            $data[$i]['nacionalidad'] = ($dato[$i]->nacionalidad == "") ? "N/A" : $dato[$i]->nacionalidad;
+            $data[$i]['rfc'] = ($dato[$i]->rfc == "") ? "N/A" : $dato[$i]->rfc;
+            $data[$i]['curp'] = ($dato[$i]->curp == "") ? "N/A" : $dato[$i]->curp;
+            $data[$i]['correo'] = ($dato[$i]->correo == "") ? "N/A" : $dato[$i]->correo;
+            $data[$i]['telefono1'] = ($dato[$i]->telefono1 == "") ? "N/A" : $dato[$i]->telefono1;
+            $data[$i]['telefono2'] = ($dato[$i]->telefono2 == "") ? "N/A" : $dato[$i]->telefono2;
+            $data[$i]['telefono3'] = ($dato[$i]->telefono3 == "") ? "N/A" : $dato[$i]->telefono3;
+            $data[$i]['fecha_nacimiento'] = ($dato[$i]->fecha_nacimiento == "") ? "N/A" : $dato[$i]->fecha_nacimiento;
+            $data[$i]['lugar_prospeccion'] = ($dato[$i]->lugar_prospeccion == "") ? "N/A" : $dato[$i]->lugar_prospeccion;
+            $data[$i]['medio_publicitario'] = ($dato[$i]->medio_publicitario == "") ? "N/A" : $dato[$i]->medio_publicitario;
+            $data[$i]['otro_lugar'] = ($dato[$i]->otro_lugar == "") ? "N/A" : $dato[$i]->otro_lugar;
+            $data[$i]['plaza_venta'] = ($dato[$i]->plaza_venta == "") ? "N/A" : $dato[$i]->plaza_venta;
+            $data[$i]['tipo'] = ($dato[$i]->tipo == "") ? "N/A" : $dato[$i]->tipo;
+            $data[$i]['estado_civil'] = ($dato[$i]->estado_civil == "") ? "N/A" : $dato[$i]->estado_civil;
+            $data[$i]['regimen_matrimonial'] = ($dato[$i]->regimen_matrimonial == "") ? "N/A" : $dato[$i]->regimen_matrimonial;
+            $data[$i]['nombre_conyuge'] = ($dato[$i]->nombre_conyuge == "") ? "N/A" : $dato[$i]->nombre_conyuge;
 
-			$data[$i]['domicilio_particular'] = ($dato[$i]->domicilio_particular =="") ? "N/A" : $dato[$i]->domicilio_particular;
-			$data[$i]['tipo_vivienda'] = ($dato[$i]->tipo_vivienda =="") ? "N/A" : $dato[$i]->tipo_vivienda;
-			$data[$i]['ocupacion'] = ($dato[$i]->ocupacion =="") ? "N/A" : $dato[$i]->ocupacion;
-			$data[$i]['empresa'] = ($dato[$i]->empresa =="") ? "N/A" : $dato[$i]->empresa;
-			$data[$i]['puesto'] = ($dato[$i]->puesto =="") ? "N/A" : $dato[$i]->puesto;
-			$data[$i]['edadFirma'] = ($dato[$i]->edadFirma =="") ? "N/A" : $dato[$i]->edadFirma;
-			$data[$i]['antiguedad'] = ($dato[$i]->antiguedad =="") ? "N/A" : $dato[$i]->antiguedad;
-			$data[$i]['domicilio_empresa'] = ($dato[$i]->domicilio_empresa =="") ? "N/A" : $dato[$i]->domicilio_empresa;
-			$data[$i]['telefono_empresa'] = ($dato[$i]->telefono_empresa =="") ? "N/A" : $dato[$i]->telefono_empresa;
-			$data[$i]['noRecibo'] = ($dato[$i]->noRecibo =="") ? "N/A" : $dato[$i]->noRecibo;
-			$data[$i]['engancheCliente'] = ($dato[$i]->engancheCliente =="") ? "N/A" : $dato[$i]->engancheCliente;
-			$data[$i]['concepto'] = ($dato[$i]->concepto =="") ? "N/A" : $dato[$i]->concepto;
-			$data[$i]['fechaEnganche'] = ($dato[$i]->fechaEnganche =="") ? "N/A" : $dato[$i]->fechaEnganche;
-			$data[$i]['idTipoPago'] = ($dato[$i]->idTipoPago =="") ? "N/A" : $dato[$i]->idTipoPago;
-			$data[$i]['expediente'] = ($dato[$i]->expediente =="") ? "N/A" : $dato[$i]->expediente;
-			$data[$i]['status'] = ($dato[$i]->status =="") ? "N/A" : $dato[$i]->status;
-			$data[$i]['idLote'] = ($dato[$i]->idLote =="") ? "N/A" : $dato[$i]->idLote;
-			$data[$i]['fechaApartado'] = ($dato[$i]->fechaApartado =="") ? "N/A" : $dato[$i]->fechaApartado;
-			$data[$i]['fechaVencimiento'] = ($dato[$i]->fechaVencimiento =="") ? "N/A" : $dato[$i]->fechaVencimiento;
-			$data[$i]['usuario'] = ($dato[$i]->usuario =="") ? "N/A" : $dato[$i]->usuario;
-			$data[$i]['idCondominio'] = ($dato[$i]->idCondominio =="") ? "N/A" : $dato[$i]->idCondominio;
-			$data[$i]['fecha_creacion'] = ($dato[$i]->fecha_creacion =="") ? "N/A" : $dato[$i]->fecha_creacion;
-			$data[$i]['creado_por'] = ($dato[$i]->creado_por =="") ? "N/A" : $dato[$i]->creado_por;
-			$data[$i]['fecha_modificacion'] = ($dato[$i]->fecha_modificacion =="") ? "N/A" : $dato[$i]->fecha_modificacion;
-			$data[$i]['modificado_por'] = ($dato[$i]->modificado_por=="") ? "N/A" : $dato[$i]->modificado_por;
-			$data[$i]['nombreCondominio'] = ($dato[$i]->nombreCondominio=="") ? "N/A" : $dato[$i]->nombreCondominio;
-			$data[$i]['nombreResidencial'] = ($dato[$i]->nombreResidencial=="") ? "N/A" : $dato[$i]->nombreResidencial;
-			$data[$i]['nombreLote'] = ($dato[$i]->nombreLote=="") ? "N/A" : $dato[$i]->nombreLote;
-			$data[$i]['asesor'] = ($dato[$i]->asesor=="") ? "N/A" : $dato[$i]->asesor;
-			$data[$i]['gerente'] = ($dato[$i]->gerente=="") ? "N/A" : $dato[$i]->gerente;
-			$data[$i]['coordinador'] = ($dato[$i]->coordinador=="") ? "N/A" : $dato[$i]->coordinador;
+            $data[$i]['domicilio_particular'] = ($dato[$i]->domicilio_particular == "") ? "N/A" : $dato[$i]->domicilio_particular;
+            $data[$i]['tipo_vivienda'] = ($dato[$i]->tipo_vivienda == "") ? "N/A" : $dato[$i]->tipo_vivienda;
+            $data[$i]['ocupacion'] = ($dato[$i]->ocupacion == "") ? "N/A" : $dato[$i]->ocupacion;
+            $data[$i]['empresa'] = ($dato[$i]->empresa == "") ? "N/A" : $dato[$i]->empresa;
+            $data[$i]['puesto'] = ($dato[$i]->puesto == "") ? "N/A" : $dato[$i]->puesto;
+            $data[$i]['edadFirma'] = ($dato[$i]->edadFirma == "") ? "N/A" : $dato[$i]->edadFirma;
+            $data[$i]['antiguedad'] = ($dato[$i]->antiguedad == "") ? "N/A" : $dato[$i]->antiguedad;
+            $data[$i]['domicilio_empresa'] = ($dato[$i]->domicilio_empresa == "") ? "N/A" : $dato[$i]->domicilio_empresa;
+            $data[$i]['telefono_empresa'] = ($dato[$i]->telefono_empresa == "") ? "N/A" : $dato[$i]->telefono_empresa;
+            $data[$i]['noRecibo'] = ($dato[$i]->noRecibo == "") ? "N/A" : $dato[$i]->noRecibo;
+            $data[$i]['engancheCliente'] = ($dato[$i]->engancheCliente == "") ? "N/A" : $dato[$i]->engancheCliente;
+            $data[$i]['concepto'] = ($dato[$i]->concepto == "") ? "N/A" : $dato[$i]->concepto;
+            $data[$i]['fechaEnganche'] = ($dato[$i]->fechaEnganche == "") ? "N/A" : $dato[$i]->fechaEnganche;
+            $data[$i]['idTipoPago'] = ($dato[$i]->idTipoPago == "") ? "N/A" : $dato[$i]->idTipoPago;
+            $data[$i]['expediente'] = ($dato[$i]->expediente == "") ? "N/A" : $dato[$i]->expediente;
+            $data[$i]['status'] = ($dato[$i]->status == "") ? "N/A" : $dato[$i]->status;
+            $data[$i]['idLote'] = ($dato[$i]->idLote == "") ? "N/A" : $dato[$i]->idLote;
+            $data[$i]['fechaApartado'] = ($dato[$i]->fechaApartado == "") ? "N/A" : $dato[$i]->fechaApartado;
+            $data[$i]['fechaVencimiento'] = ($dato[$i]->fechaVencimiento == "") ? "N/A" : $dato[$i]->fechaVencimiento;
+            $data[$i]['usuario'] = ($dato[$i]->usuario == "") ? "N/A" : $dato[$i]->usuario;
+            $data[$i]['idCondominio'] = ($dato[$i]->idCondominio == "") ? "N/A" : $dato[$i]->idCondominio;
+            $data[$i]['fecha_creacion'] = ($dato[$i]->fecha_creacion == "") ? "N/A" : $dato[$i]->fecha_creacion;
+            $data[$i]['creado_por'] = ($dato[$i]->creado_por == "") ? "N/A" : $dato[$i]->creado_por;
+            $data[$i]['fecha_modificacion'] = ($dato[$i]->fecha_modificacion == "") ? "N/A" : $dato[$i]->fecha_modificacion;
+            $data[$i]['modificado_por'] = ($dato[$i]->modificado_por == "") ? "N/A" : $dato[$i]->modificado_por;
+            $data[$i]['nombreCondominio'] = ($dato[$i]->nombreCondominio == "") ? "N/A" : $dato[$i]->nombreCondominio;
+            $data[$i]['nombreResidencial'] = ($dato[$i]->nombreResidencial == "") ? "N/A" : $dato[$i]->nombreResidencial;
+            $data[$i]['nombreLote'] = ($dato[$i]->nombreLote == "") ? "N/A" : $dato[$i]->nombreLote;
+            $data[$i]['asesor'] = ($dato[$i]->asesor == "") ? "N/A" : $dato[$i]->asesor;
+            $data[$i]['gerente'] = ($dato[$i]->gerente == "") ? "N/A" : $dato[$i]->gerente;
+            $data[$i]['coordinador'] = ($dato[$i]->coordinador == "") ? "N/A" : $dato[$i]->coordinador;
 
-			$data[$i]['descripcion'] = $dato[$i]->descripcion;
-			$data[$i]['referencia'] = $dato[$i]->referencia;
-
-
-		}
-			if($data != null) {
-			   echo json_encode($data);
-			}
-			else {
-				echo json_encode(array());
-			}
-	}
+            $data[$i]['descripcion'] = $dato[$i]->descripcion;
+            $data[$i]['referencia'] = $dato[$i]->referencia;
 
 
-
-public function eddPago(){
-
-	$data = json_decode(file_get_contents("php://input"));
-
-
-    $id_cliente= $data->id_cliente;
- 	$noRecibo=$data->noRecibo;
- 	$engancheCliente=$data->engancheCliente;
- 	$concepto=$data->concepto;
- 	$fechaEnganche=date('Y-m-d H:i:s');
- 	$idTipoPago=$data->idTipoPago;
- 	$user=$data->usuario;
- 	$idLote=$data->idLote;
-
-
-    $arreglo=array();
- 	$arreglo["engancheCliente"]=$engancheCliente;
- 	$arreglo["noRecibo"]=$noRecibo;
- 	$arreglo["idTipoPago"]=$idTipoPago;
-  	$arreglo["fechaEnganche"]=date('Y-m-d H:i:s');
- 	$arreglo["concepto"]=$concepto;
-
-    $arregloEditaEnganche=array();
- 	$arregloEditaEnganche["noRecibo"]=$noRecibo;
- 	$arregloEditaEnganche["engancheCliente"]=$engancheCliente;
- 	$arregloEditaEnganche["concepto"]=$concepto;
-  	$arregloEditaEnganche["fechaEnganche"]=$fechaEnganche;
-  	$arregloEditaEnganche["idTipoPago"]=$idTipoPago;
-  	$arregloEditaEnganche["idCliente"]=$id_cliente;
-  	$arregloEditaEnganche["idLote"]=$idLote;
-  	$arregloEditaEnganche["usuario"]=$user;
-  	$arregloEditaEnganche["idLote"]=$idLote;
-
- 	$this->caja_model_outside->historial_Enganche($arregloEditaEnganche);
-	$respuesta = $this->caja_model_outside->payment($id_cliente,$arreglo);
- 
-
-			if($respuesta == TRUE) {
-				$response['message'] = 'SUCCESS';
-				echo json_encode($response);
-			 } else {
-				$response['message'] = 'ERROR';
-				echo json_encode($response);
-			}
-
-}
-
-public function getSharedSalesList(){
-
-		$data = json_decode(file_get_contents("php://input"));
-
-	    $vcompartida = $this->caja_model_outside->getSharedSalesList($data->id_cliente);
-		
-        if($vcompartida != null) {
-          echo json_encode($vcompartida);
-        } else {
-          echo json_encode(array());
         }
-}
+        if ($data != null) {
+            echo json_encode($data);
+        } else {
+            echo json_encode(array());
+        }
+    }
 
-public function saveSalesPartner()
+
+    public function eddPago()
+    {
+
+        $data = json_decode(file_get_contents("php://input"));
+
+
+        $id_cliente = $data->id_cliente;
+        $noRecibo = $data->noRecibo;
+        $engancheCliente = $data->engancheCliente;
+        $concepto = $data->concepto;
+        $fechaEnganche = date('Y-m-d H:i:s');
+        $idTipoPago = $data->idTipoPago;
+        $user = $data->usuario;
+        $idLote = $data->idLote;
+
+
+        $arreglo = array();
+        $arreglo["engancheCliente"] = $engancheCliente;
+        $arreglo["noRecibo"] = $noRecibo;
+        $arreglo["idTipoPago"] = $idTipoPago;
+        $arreglo["fechaEnganche"] = date('Y-m-d H:i:s');
+        $arreglo["concepto"] = $concepto;
+
+        $arregloEditaEnganche = array();
+        $arregloEditaEnganche["noRecibo"] = $noRecibo;
+        $arregloEditaEnganche["engancheCliente"] = $engancheCliente;
+        $arregloEditaEnganche["concepto"] = $concepto;
+        $arregloEditaEnganche["fechaEnganche"] = $fechaEnganche;
+        $arregloEditaEnganche["idTipoPago"] = $idTipoPago;
+        $arregloEditaEnganche["idCliente"] = $id_cliente;
+        $arregloEditaEnganche["idLote"] = $idLote;
+        $arregloEditaEnganche["usuario"] = $user;
+        $arregloEditaEnganche["idLote"] = $idLote;
+
+        $this->caja_model_outside->historial_Enganche($arregloEditaEnganche);
+        $respuesta = $this->caja_model_outside->payment($id_cliente, $arreglo);
+
+
+        if ($respuesta == TRUE) {
+            $response['message'] = 'SUCCESS';
+            echo json_encode($response);
+        } else {
+            $response['message'] = 'ERROR';
+            echo json_encode($response);
+        }
+
+    }
+
+    public function getSharedSalesList()
+    {
+
+        $data = json_decode(file_get_contents("php://input"));
+
+        $vcompartida = $this->caja_model_outside->getSharedSalesList($data->id_cliente);
+
+        if ($vcompartida != null) {
+            echo json_encode($vcompartida);
+        } else {
+            echo json_encode(array());
+        }
+    }
+
+    public function saveSalesPartner()
     {
         $data = json_decode(file_get_contents("php://input"));
         $dataLider = $this->caja_model_outside->getLider($data->id_gerente);
 
-          if ($data->id_coordinador == $data->id_asesor) {
+        if ($data->id_coordinador == $data->id_asesor) {
             $voBoCoord = 0;
-        } else if($data->id_coordinador == $data->id_gerente) {
+        } else if ($data->id_coordinador == $data->id_gerente) {
             $voBoCoord = 0;
-        }else{
+        } else {
             $voBoCoord = $data->id_coordinador;
         }
 
@@ -2283,13 +2281,13 @@ public function saveSalesPartner()
             "id_coordinador" => $voBoCoord,
             "id_gerente" => $data->id_gerente,
             "id_subdirector" => $dataLider[0]['id_subdirector'],
-            
+
             "estatus" => 1,
             "fecha_creacion" => date("Y-m-d H:i:s"),
-            "creado_por" => $data->id_usuario, 
+            "creado_por" => $data->id_usuario,
             "fecha_modificacion" => date("Y-m-d H:i:s"),
             "modificado_por" => $data->id_usuario,
-            
+
             "id_regional" => $dataLider[0]['id_regional']
         );
 
@@ -2299,9 +2297,9 @@ public function saveSalesPartner()
         if (COUNT($salesPartnerInformation) >= 1) { // SÍ EXISTEN REGISTROS EN VENTAS COMPARTIDAS
             echo 'ENTRA IF DE SÍ HAY REGISTROS <br>';
             if ($clientInformation->id_asesor == $data->id_asesor) { // LOS REGISTROS SON IGUALES (ASESOR)
-                    $response['message'] = 'ERROR';
+                $response['message'] = 'ERROR';
             } else {
-                for ($i = 0; $i < COUNT($salesPartnerInformation); $i ++) {
+                for ($i = 0; $i < COUNT($salesPartnerInformation); $i++) {
                     if ($salesPartnerInformation[$i]['id_asesor'] == $data->id_asesor) { // LOS REGISTROS SON IGUALES (ASESOR)
                         $response['message'] = 'ERROR';
                     } else {
@@ -2317,7 +2315,7 @@ public function saveSalesPartner()
         } else { // NO EXISTEN REGISTROS EN VENTAS COMPARTIDAS
             echo 'ENTRA ELSE DE NO HAY REGISTROS<br>';
             if ($clientInformation->id_asesor == $data->id_asesor) { // LOS REGISTROS SON IGUALES (ASESOR)
-                    $response['message'] = 'ERROR';
+                $response['message'] = 'ERROR';
             } else {
                 $answer = $this->caja_model_outside->saveSalesPartner($updateArrayData);
                 if ($answer == 1) {
@@ -2331,71 +2329,73 @@ public function saveSalesPartner()
         echo json_encode($response);
     }
 
-    public function changeSalesPartnerStatus(){
-		 	$data = json_decode(file_get_contents("php://input"));
-			
-			$id_vcompartida = $data->id_vcompartida;
+    public function changeSalesPartnerStatus()
+    {
+        $data = json_decode(file_get_contents("php://input"));
 
-            $data = array(
-                "estatus" => $data->estatus,
-                "creado_por" =>$data->id_usuario
-            ); 
-            $res = $this->caja_model_outside->changeSalesPartnerStatus($data, $id_vcompartida);
-			
-			if($res == 1) {
-				$response['message'] = 'SUCCESS';
-				echo json_encode($response);
-			 } else {
-				$response['message'] = 'ERROR';
-				echo json_encode($response);
-			}
-			
-			
+        $id_vcompartida = $data->id_vcompartida;
+
+        $data = array(
+            "estatus" => $data->estatus,
+            "creado_por" => $data->id_usuario
+        );
+        $res = $this->caja_model_outside->changeSalesPartnerStatus($data, $id_vcompartida);
+
+        if ($res == 1) {
+            $response['message'] = 'SUCCESS';
+            echo json_encode($response);
+        } else {
+            $response['message'] = 'ERROR';
+            echo json_encode($response);
+        }
+
+
     }
 
 
-	public function changeTitular(){
-		
-			$data = json_decode(file_get_contents("php://input"));
-			$id_cliente = $data->id_cliente;
+    public function changeTitular()
+    {
 
-            if($data->id_gerente != null){
-				
-				$data = array(
-					"id_asesor" => $data->id_asesor,
-					"id_coordinador" => $data->id_coordinador == $data->id_asesor ? 0 : $data->id_coordinador,
-					"id_gerente" => $data->id_gerente,
-					"fecha_modificacion" => date("Y-m-d H:i:s"),
-					"modificado_por" =>$data->id_usuario
-				);
-				$res = $this->caja_model_outside->changeTitular($data, $id_cliente);
-				
-				if($res == 1) {
-					$response['message'] = 'SUCCESS';
-					echo json_encode($response);
-				} else {
-					$response['message'] = 'ERROR';
-					echo json_encode($response);
-				}
-				
-			} else {
-					$response['message'] = 'ERROR';
-					echo json_encode($response);
-			}			
-				
-	}
+        $data = json_decode(file_get_contents("php://input"));
+        $id_cliente = $data->id_cliente;
+
+        if ($data->id_gerente != null) {
+
+            $data = array(
+                "id_asesor" => $data->id_asesor,
+                "id_coordinador" => $data->id_coordinador == $data->id_asesor ? 0 : $data->id_coordinador,
+                "id_gerente" => $data->id_gerente,
+                "fecha_modificacion" => date("Y-m-d H:i:s"),
+                "modificado_por" => $data->id_usuario
+            );
+            $res = $this->caja_model_outside->changeTitular($data, $id_cliente);
+
+            if ($res == 1) {
+                $response['message'] = 'SUCCESS';
+                echo json_encode($response);
+            } else {
+                $response['message'] = 'ERROR';
+                echo json_encode($response);
+            }
+
+        } else {
+            $response['message'] = 'ERROR';
+            echo json_encode($response);
+        }
+
+    }
 
 
+    public function changeTitularName()
+    {
 
-    public function changeTitularName(){
-        
-            $data = json_decode(file_get_contents("php://input"));
-            $id_cliente = $data->id_cliente;
-            $personalidad_juridica = $data->personalidad_juridica;
+        $data = json_decode(file_get_contents("php://input"));
+        $id_cliente = $data->id_cliente;
+        $personalidad_juridica = $data->personalidad_juridica;
 
-                
-            if($personalidad_juridica != NULL){
-                
+
+        if ($personalidad_juridica != NULL) {
+
             $dato = array(
                 "nombre" => $data->nombre,
                 "apellido_paterno" => $data->apellido_paterno,
@@ -2405,159 +2405,207 @@ public function saveSalesPartner()
             );
 
             //aplicar el mismo cambios en prospecto
-                $res = $this->caja_model_outside->changeTitularAll($dato, $id_cliente, $personalidad_juridica);
+            $res = $this->caja_model_outside->changeTitularAll($dato, $id_cliente, $personalidad_juridica);
 
-                /*new functions 22072021*/
-                $data_request_prospecto = $this->caja_model_outside->getProspectByIdClient($id_cliente);
-                $id_prospecto = $data_request_prospecto[0]['id_prospecto'];
+            /*new functions 22072021*/
+            $data_request_prospecto = $this->caja_model_outside->getProspectByIdClient($id_cliente);
+            $id_prospecto = $data_request_prospecto[0]['id_prospecto'];
 
-                $request_update_prospecto = $this->caja_model_outside->updateProspectoCTN($id_prospecto, $dato);
-                if($request_update_prospecto >= 1){
-                    $response['message_upd_prospecto'] = 'Se actualizó correctamente el prospecto.';
-                }
-                /*end new function*/
-            } else {
-            
+            $request_update_prospecto = $this->caja_model_outside->updateProspectoCTN($id_prospecto, $dato);
+            if ($request_update_prospecto >= 1) {
+                $response['message_upd_prospecto'] = 'Se actualizó correctamente el prospecto.';
+            }
+            /*end new function*/
+        } else {
+
             $dato = array(
                 "nombre" => $data->nombre,
                 "apellido_paterno" => $data->apellido_paterno,
                 "apellido_materno" => $data->apellido_materno,
                 "modificado_por" => $data->creado_por
             );
-                
-                $res = $this->caja_model_outside->changeTitular($dato, $id_cliente);
 
-                /*new functions 22072021*/
-                $data_request_prospecto = $this->caja_model_outside->getProspectByIdClient($id_cliente);
-                $id_prospecto = $data_request_prospecto[0]['id_prospecto'];
+            $res = $this->caja_model_outside->changeTitular($dato, $id_cliente);
 
-                $request_update_prospecto = updateProspectoCTN($id_prospecto, $dato);
-                if($request_update_prospecto >= 1){
-                    $response['message_upd_prospecto'] = 'Se actualizó correctamente el prospecto.';
-                }
-                /*end new function*/
+            /*new functions 22072021*/
+            $data_request_prospecto = $this->caja_model_outside->getProspectByIdClient($id_cliente);
+            $id_prospecto = $data_request_prospecto[0]['id_prospecto'];
+
+            $request_update_prospecto = updateProspectoCTN($id_prospecto, $dato);
+            if ($request_update_prospecto >= 1) {
+                $response['message_upd_prospecto'] = 'Se actualizó correctamente el prospecto.';
             }
-                if($res == 1) {
-                    $response['message'] = 'SUCCESS';
-                    echo json_encode($response);
-                 } else {
-                    $response['message'] = 'ERROR';
-                    echo json_encode($response);
-                }
+            /*end new function*/
+        }
+        if ($res == 1) {
+            $response['message'] = 'SUCCESS';
+            echo json_encode($response);
+        } else {
+            $response['message'] = 'ERROR';
+            echo json_encode($response);
+        }
     }
-    
-
-	public function cancela_pago() {
-
-		$data = json_decode(file_get_contents("php://input"));
-		$idEnganche = $data->idEnganche;
 
 
-		$dato =array();
-		$dato["comentarioCancelacion"]= $data->comentarioCancelacion;
-		$dato["fechaCancelacion"]= date('Y-m-d H:i:s');
-		$dato["status"]= 0;
-		$dato["usuario"]= $data->id_usuario;
+    public function cancela_pago()
+    {
 
-		$res = $this->caja_model_outside->cancelaPago($idEnganche, $dato);
-		
-		if($res == TRUE) {
-			$response['message'] = 'SUCCESS';
-			echo json_encode($response);
-		} else {
-			$response['message'] = 'ERROR';
-			echo json_encode($response);
-		}
-
-	}
-	
-	
-	
-	public function hist_liberacion() {
-
-		$data = json_decode(file_get_contents("php://input"));
-		$idLote = $data->idLote;
-
-		$response = $this->caja_model_outside->getHistLib($idLote);
-		
-		echo json_encode($response);
-
-	}	
+        $data = json_decode(file_get_contents("php://input"));
+        $idEnganche = $data->idEnganche;
 
 
-	public function hist_pago() {
+        $dato = array();
+        $dato["comentarioCancelacion"] = $data->comentarioCancelacion;
+        $dato["fechaCancelacion"] = date('Y-m-d H:i:s');
+        $dato["status"] = 0;
+        $dato["usuario"] = $data->id_usuario;
 
-		$data = json_decode(file_get_contents("php://input"));
-		$idLote = $data->idLote;
+        $res = $this->caja_model_outside->cancelaPago($idEnganche, $dato);
 
-		$response = $this->caja_model_outside->getHistPago($idLote);
-		
-		echo json_encode($response);
+        if ($res == TRUE) {
+            $response['message'] = 'SUCCESS';
+            echo json_encode($response);
+        } else {
+            $response['message'] = 'ERROR';
+            echo json_encode($response);
+        }
 
-	}		
-	
-	
-
-
-function getregistrosClientes2() {
-	
-	    $data = json_decode(file_get_contents("php://input"));
-
-		$dato= $this->caja_model_outside->data_cliente2($data->idCondominio);
-
-			if($dato != null) {
-			   echo json_encode($dato);
-			}
-			else {
-				echo json_encode(array());
-			}
-}
+    }
 
 
-public function getInventario2(){
-    $condominio = json_decode(file_get_contents("php://input"));
-    $datos = $this->caja_model_outside->getInventario2($condominio->idCondominio);
-    echo json_encode($datos);
-}
+    public function hist_liberacion()
+    {
+
+        $data = json_decode(file_get_contents("php://input"));
+        $idLote = $data->idLote;
+
+        $response = $this->caja_model_outside->getHistLib($idLote);
+
+        echo json_encode($response);
+
+    }
 
 
-public function getInventario3(){
-    $condominio = json_decode(file_get_contents("php://input"));
-    $datos = $this->caja_model_outside->getInventario3($condominio->idCondominio, $condominio->idResidencial);
-    echo json_encode($datos);
-}
+    public function hist_pago()
+    {
 
-	
-public function getDocumentosByLote() {
-     $data = json_decode(file_get_contents("php://input"));
-	 $id_lote = $data->idLote;
+        $data = json_decode(file_get_contents("php://input"));
+        $idLote = $data->idLote;
 
-	 $data = $this->caja_model_outside->getExpedienteAll($id_lote);
+        $response = $this->caja_model_outside->getHistPago($idLote);
 
-	 if ($data != null) {
-		 echo json_encode($data);
-	 } else {
-		 echo json_encode(array());
-	 }
-}
+        echo json_encode($response);
 
-public function getProspectInformationByReference() {
+    }
+
+
+    function getregistrosClientes2()
+    {
+
+        $data = json_decode(file_get_contents("php://input"));
+
+        $dato = $this->caja_model_outside->data_cliente2($data->idCondominio);
+
+        if ($dato != null) {
+            echo json_encode($dato);
+        } else {
+            echo json_encode(array());
+        }
+    }
+
+
+    public function getInventario2()
+    {
+        $condominio = json_decode(file_get_contents("php://input"));
+        $datos = $this->caja_model_outside->getInventario2($condominio->idCondominio);
+        echo json_encode($datos);
+    }
+
+
+    public function getInventario3()
+    {
+        $condominio = json_decode(file_get_contents("php://input"));
+        $datos = $this->caja_model_outside->getInventario3($condominio->idCondominio, $condominio->idResidencial);
+        echo json_encode($datos);
+    }
+
+
+    public function getDocumentosByLote()
+    {
+        $data = json_decode(file_get_contents("php://input"));
+        $id_lote = $data->idLote;
+
+        $data = $this->caja_model_outside->getExpedienteAll($id_lote);
+
+        if ($data != null) {
+            echo json_encode($data);
+        } else {
+            echo json_encode(array());
+        }
+    }
+
+    public function getProspectInformationByReference()
+    {
         $reference = json_decode(file_get_contents("php://input"));
         $information = $this->Clientes_model->getProspectInformationByReference($reference->referencia);
-        if($information != null) {
+        if ($information != null) {
             echo json_encode($information);
         } else {
             echo json_encode(array());
         }
     }
 
-    public function getReasons(){
+    public function getReasons()
+    {
         $datos = $this->caja_model_outside->getReasons();
         echo json_encode($datos);
     }
 
+    public function insertResidencial()
+    {
+        $data = json_decode(file_get_contents("php://input"));
+        if (!isset($data->abreviacion) || !isset($data->nombre) || !isset($data->empresa))
+            echo json_encode(array("status" => 400, "error" => "Algún parámetro no tiene un valor especificado o no viene informado."));
+        else {
+            if ($data->abreviacion == "" || $data->nombre == "" || $data->empresa == "")
+                echo json_encode(array("status" => 400, "error" => "Algún parámetro no tiene un valor especificado o no viene informado."));
+            else {
+                $insertData = array("nombreResidencial" => $data->abreviacion, "descripcion" => $data->nombre, "empresa" => $data->empresa);
+                $reuslt = $this->caja_model_outside->insertResidencial($insertData);
+                if ($reuslt == true)
+                    echo json_encode(array("status" => 200, "error" => "El registro se ha ingresado de manera exitosa."));
+                else
+                    echo json_encode(array("status" => 400, "error" => "Oops, algo salió mal. Inténtalo más tarde."));
+            }
+        }
+    }
 
-	
-	
+    public function getEmpresasList()
+    {
+        echo json_encode($this->caja_model_outside->getEmpresasList());
+    }
 
+    public function updateResidencial()
+    {
+        $data = json_decode(file_get_contents("php://input"));
+        if (!isset($data->idResidencial) || !isset($data->abreviacion) || !isset($data->nombre) || !isset($data->empresa) || !isset($data->servicio_bajio))
+            echo json_encode(array("status" => 400, "error" => "Algún parámetro no tiene un valor especificado o no viene informado."));
+        else {
+            if ($data->idResidencial == "" || $data->abreviacion == "" || $data->nombre == "" || $data->empresa == "" || $data->servicio_bajio == "")
+                echo json_encode(array("status" => 400, "error" => "Algún parámetro no tiene un valor especificado o no viene informado."));
+            else {
+                $updateData = array(
+                    "nombreResidencial" => $data->abreviacion,
+                    "descripcion" => $data->nombre,
+                    "empresa" => $data->empresa,
+                    "servicio_bajio" => $data->servicio_bajio
+                );
+                $reuslt = $this->caja_model_outside->updateResidencial($updateData, $data->idResidencial);
+                if ($reuslt == true)
+                    echo json_encode(array("status" => 200, "error" => "El registro se ha actualizado de manera exitosa."));
+                else
+                    echo json_encode(array("status" => 400, "error" => "Oops, algo salió mal. Inténtalo más tarde."));
+            }
+        }
+    }
 }

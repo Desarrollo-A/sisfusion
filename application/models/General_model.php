@@ -121,4 +121,9 @@ class General_model extends CI_Model
         return $this->db->query("SELECT COLUMN_NAME column_name, DATA_TYPE data_type FROM Information_Schema.Columns WHERE TABLE_NAME = '$table';")->result_array();
     }
 
+    function getCatalogOptions($id_catalogo)
+    {
+        return $this->db->query("SELECT id_opcion, id_catalogo, nombre FROM opcs_x_cats WHERE id_catalogo = $id_catalogo AND estatus = 1");
+    }
+
 }
