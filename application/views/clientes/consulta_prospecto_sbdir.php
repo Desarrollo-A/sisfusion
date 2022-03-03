@@ -521,7 +521,7 @@ if($this->session->userdata('id_rol') == 2 || $this->session->userdata('id_rol')
 				?>
 				,
 				{ data: function (d) {
-                        if(userType != 7 && d.lugar_prospeccion == 6 && compareDates(d.fecha_vencimiento) == true) { // NO ES ASESOR Y EL REGISTRO ES DE MKTD QUITO EL BOTÓN DE VER
+                        if(userType != 7 && d.lugar_prospeccion == 6 && compareDates(d.fecha_creacion) == true) { // NO ES ASESOR Y EL REGISTRO ES DE MKTD QUITO EL BOTÓN DE VER
                             return '';
                         } else { // ES ASESOR Y EL REGISTRO ES DE MKTD - DEJO EL BOTÓN DE VER
                             return '<button class="btn-data btn-details-grey see-information" data-id-prospecto="' + d.id_prospecto + '" style="margin-right: 3px;"><i class="material-icons">remove_red_eye</i></button>';
