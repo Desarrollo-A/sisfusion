@@ -115,6 +115,7 @@ $datos = array();
 <script src="<?= base_url() ?>dist/js/bootstrap-datetimepicker.js"></script>
 <!-- <script src="<?=base_url()?>dist/js/controllers/general-1.1.0.js"></script> -->
 <script src="<?=base_url()?>static/yadcf/jquery.dataTables.yadcf.js"></script>
+<script src="<?=base_url()?>dist/js/controllers/general/main_services.js"></script>
 <script src="<?=base_url()?>dist/js/controllers/postventa/solicitudes_escrituracion.js"></script>
 
 </html>

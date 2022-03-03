@@ -1005,6 +1005,7 @@ public function get_info_tabla($datos){
                 ec.id_evidencia, '1' rowType, s.nombre sedeAsesor, ISNULL(oxc.nombre, 'Sin especificar') lugarProspeccion FROM lotes l
                 INNER JOIN clientes cl ON l.idLote = cl.idLote
                 INNER JOIN usuarios asesor ON cl.id_asesor = asesor.id_usuario $condicion
+                INNER JOIN prospectos p ON p.id_prospecto = cl.id_prospecto AND p.fecha_creacion <= '2022-01-20 00:00:00.000'
                 LEFT JOIN evidencia_cliente ec ON ec.idCliente = cl.id_cliente 
                 INNER JOIN sedes s ON s.id_sede = asesor.id_sede
                 LEFT JOIN comentariosMktd cm ON cm.idLote = l.idLote AND cm.id_cliente=cl.id_cliente
@@ -1168,7 +1169,8 @@ public function get_info_tabla($datos){
                 THEN 'Comentario no especificado' ELSE ec.comentario_autorizacion END lastComment, ISNULL(oxc.nombre, 'Sin especificar') lugarProspeccion
                 FROM lotes l
                 INNER JOIN clientes cl ON l.idCliente = cl.id_cliente AND cl.lugar_prospeccion IN (6, 29) AND cl.status = 1
-                INNER JOIN usuarios asesor ON cl.id_asesor = asesor.id_usuario ".$where."
+                INNER JOIN usuarios asesor ON cl.id_asesor = asesor.id_usuario $where
+                LEFT JOIN prospectos p ON p.id_prospecto = cl.id_prospecto AND p.fecha_creacion <= '2022-01-20 00:00:00.000'
                 INNER JOIN sedes s ON s.id_sede = asesor.id_sede
                 INNER JOIN evidencia_cliente ec ON l.idLote=ec.idLote AND ec.idCliente = cl.id_cliente
                 INNER JOIN usuarios solicitante ON solicitante.id_usuario = ec.id_sol
@@ -1483,6 +1485,7 @@ public function get_info_tabla($datos){
         FROM evidencia_cliente ec
         INNER JOIN clientes cl ON ec.idCliente = cl.id_cliente AND cl.lugar_prospeccion IN (6, 29) AND cl.status = 1
         INNER JOIN usuarios asesor ON cl.id_asesor = asesor.id_usuario
+        LEFT JOIN prospectos p ON p.id_prospecto = cl.id_prospecto AND p.fecha_creacion <= '2022-01-20 00:00:00.000'
         INNER JOIN sedes s ON CONVERT(VARCHAR(12), s.id_sede) = CONVERT(VARCHAR(12), asesor.id_sede)
         INNER JOIN usuarios solicitante ON solicitante.id_usuario = ec.id_sol
         INNER JOIN opcs_x_cats opxc ON opxc.id_opcion = ec.id_rolAut
