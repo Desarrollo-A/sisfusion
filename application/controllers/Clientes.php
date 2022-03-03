@@ -2043,7 +2043,7 @@ public function getStatusMktdPreventa(){
         $where = $this->input->post("where");
 
 
-        $data['data'] = $this->Clientes_model->getProspectsListByAsesor($id_asesor, $typeTransaction, $beginDate, $endDate, $where);
+        $data = $this->Clientes_model->getProspectsListByAsesor($id_asesor, $typeTransaction, $beginDate, $endDate, $where);
         if($data != null) {
             echo json_encode($data);
         } else {
