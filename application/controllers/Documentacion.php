@@ -45,35 +45,35 @@ class Documentacion extends CI_Controller
         $this->load->view("documentacion/mainDocumentTreeView_Test", $datos);
     }
 
-    function getResidencialesList()
-    {
-        $data = $this->Documentacion_model->getResidencialesList();
-        if ($data != null) {
-            echo json_encode($data);
-        } else {
-            echo json_encode(array());
-        }
-    }
+    // function getResidencialesList()
+    // {
+    //     $data = $this->Documentacion_model->getResidencialesList();
+    //     if ($data != null) {
+    //         echo json_encode($data);
+    //     } else {
+    //         echo json_encode(array());
+    //     }
+    // }
 
-    function getCondominiosList()
-    {
-        $data = $this->Documentacion_model->getCondominiosList($this->input->post("idResidencial"));
-        if ($data != null) {
-            echo json_encode($data);
-        } else {
-            echo json_encode(array());
-        }
-    }
+    // function getCondominiosList()
+    // {
+    //     $data = $this->Documentacion_model->getCondominiosList($this->input->post("idResidencial"));
+    //     if ($data != null) {
+    //         echo json_encode($data);
+    //     } else {
+    //         echo json_encode(array());
+    //     }
+    // }
 
-    function getLotesList()
-    {
-        $data = $this->Documentacion_model->getLotesList($this->input->post("idCondominio"));
-        if ($data != null) {
-            echo json_encode($data);
-        } else {
-            echo json_encode(array());
-        }
-    }
+    // function getLotesList()
+    // {
+    //     $data = $this->Documentacion_model->getLotesList($this->input->post("idCondominio"));
+    //     if ($data != null) {
+    //         echo json_encode($data);
+    //     } else {
+    //         echo json_encode(array());
+    //     }
+    // }
 
     function getDocumentsInformation()
     {

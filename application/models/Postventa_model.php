@@ -190,7 +190,7 @@ class Postventa_model extends CI_Model
         LEFT JOIN usuarios us2 ON us2.id_usuario = de.validado_por
         --LEFT JOIN motivos_rechazo_x_documento mrxd ON mrxd.id_documento = de.idDocumento AND mrxd.estatus = 1 
         --LEFT JOIN motivos_rechazo mr ON mr.id_motivo = mrxd.id_motivo
-        WHERE de.idSolicitud = 2 AND de.tipo_documento NOT IN (7, 11, 12, 13, 14, 15, 16, 17)");
+        WHERE de.idSolicitud = $idSolicitud AND de.tipo_documento NOT IN (7, 11, 12, 13, 14, 15, 16, 17)");
         return $query->result();
     }
 
