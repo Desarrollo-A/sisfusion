@@ -814,6 +814,52 @@
     </div>
 </div>
 
+<div class="modal fade" id="agendaInsert" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true" onclick="cleanSelects()">
+                    <i class="material-icons">clear</i>
+                </button>
+                <h4 class="modal-title">Detalles de la cita:</h4>
+            </div>
+            <form id="estatus_recordatorio_form" name="estatus_recordatorio_form" method="post">
+                <div class="col-lg-12 form-group">
+                    <label>Titulo</label>
+                    <input id="evtTitle" name="evtTitle" type="text" class="form-control">
+                </div>
+                <div class="col-lg-12 form-group" id="select">
+                    <label>Tipo de cita</label>
+                    <select class="selectpicker" name="estatus_recordatorio" id="estatus_recordatorio" data-style="select-with-transition" title="Seleccione una opción" data-size="7" <!--onchange="validateParticularStatus(this)"-->></select>
+                </div>
+                <div class="col-lg-12 form-group" id="comodinDIV">
+                </div>
+                <div class="col-lg-6 form-group">
+                    <label>Inicio</label>
+                    <input id="dateStart" name="dateStart" type="datetime-local" class="form-control">
+                </div> 
+                <div class="col-lg-6 form-group">
+                    <label>Final</label>
+                    <input id="dateEnd" name="dateEnd" type="datetime-local" class="form-control">
+                </div>
+                <div class="col-lg-12 form-group">
+                    <label>Descripción</label>
+                    <textarea class="form-control" type="text" name="description" id="description" onkeyup="javascript:this.value=this.value.toUpperCase();"></textarea>
+                </div>
+
+                <!-- <input type="hidden" name="id_prospecto_estatus_recordatorio" id="id_prospecto_estatus_recordatorio"> -->
+
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary" id="finishS">Aceptar</button>
+                    <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" onclick="cleanSelects()">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
 
 
 

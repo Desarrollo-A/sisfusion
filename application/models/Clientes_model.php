@@ -1794,7 +1794,7 @@ function getStatusMktdPreventa(){
                 LEFT JOIN usuarios u ON u.id_usuario = c.id_asesor
                 LEFT JOIN usuarios us ON us.id_usuario = c.id_coordinador
                 LEFT JOIN usuarios uss ON uss.id_usuario = c.id_gerente
-                LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = c.lugar_prospeccion AND oxc.id_catalogo = 9
+                LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = c.lugar_prospeccion
                 WHERE c.estatus_vigencia = 1 AND c.id_gerente = ".$id_gerente." AND c.tipo = 0 ".$filter." ORDER BY c.fecha_creacion DESC");
             break;
         }
@@ -4362,7 +4362,6 @@ function getStatusMktdPreventa(){
 
         return $query;
     }
-
     function getGrsBySub($idSubdir)
     {
         $this->db->select("*");
