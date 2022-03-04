@@ -57,6 +57,24 @@ class General extends CI_Controller
             echo json_encode(array());
     }
 
+    public function multirol(){ //chriscrosspapas
+        $usuario = $this->session->userdata('id_usuario');
+        $data = $this->General_model->getMultirol($usuario)->result_array();
+        if ($data != null)
+            echo json_encode($data);
+        else
+            echo json_encode(array());
+    }
+
+    public function getUsersByLeader(){
+        $rol = $this->input->post("rol");
+        $secondRol = $this->input->post("secondRol");
+        $data = $this->General_model->getUsersByLeader($rol, $secondRol)->result_array();
+        if ($data != null)
+            echo json_encode($data);
+        else
+            echo json_encode(array());
+    }
     public function getCatalogOptions(){
         if ($this->input->post("id_catalogo") == '' || $this->input->post("id_catalogo") == undefined)
             echo json_encode(array("status" => 400, "error" => "Algún parámetro no tiene un valor especificado o no viene informado."));

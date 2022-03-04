@@ -124,7 +124,7 @@ $(document).ready(function() {
                                 if (d.estatus == 1) {
                                     var actions = '';
                                     var group_buttons = '';
-                                    if (idUser != d.id_asesor && d.lugar_prospeccion == 6 && compareDates(d.fecha_vencimiento) == true) { // NO ES ASESOR Y EL REGISTRO ES DE MKTD QUITO EL BOTÓN DE VER
+                                    if (idUser != d.id_asesor && d.lugar_prospeccion == 6 && compareDates(d.fecha_creacion) == true) { // NO ES ASESOR Y EL REGISTRO ES DE MKTD QUITO EL BOTÓN DE VER
                                         actions = '';
                                     } else { // ES ASESOR Y EL REGISTRO ES DE MKTD - DEJO EL BOTÓN DE VER
                                         group_buttons = '<button class="btn-data btn-orangeYellow to-comment" data-id-prospecto="' + d.id_prospecto + '" rel="tooltip" data-placement="left" title="Ingresar comentario"><i class="far fa-comments"></i></button>' +
@@ -139,7 +139,7 @@ $(document).ready(function() {
                                 } else {
                                     var actions = '';
                                     var group_buttons = '';
-                                    if (idUser != d.id_asesor && d.lugar_prospeccion == 6 && compareDates(d.fecha_vencimiento) == true) { // NO ES ASESOR Y EL REGISTRO ES DE MKTD QUITO EL BOTÓN DE VER
+                                    if (idUser != d.id_asesor && d.lugar_prospeccion == 6 && compareDates(d.fecha_creacion) == true) { // NO ES ASESOR Y EL REGISTRO ES DE MKTD QUITO EL BOTÓN DE VER
                                         actions = '';
                                     } else { // ES ASESOR Y EL REGISTRO ES DE MKTD - DEJO EL BOTÓN DE VER
                                         group_buttons = '<button class="btn-data btn-orangeYellow to-comment" data-id-prospecto="' + d.id_prospecto + '" rel="tooltip" data-placement="left" title="Ingresar comentario"><i class="far fa-comments"></i></button>' +
@@ -157,7 +157,7 @@ $(document).ready(function() {
                                 if (d.estatus == 1) {
                                     var actions = '';
                                     var group_buttons = '';
-                                    if (idUser != d.id_asesor && d.lugar_prospeccion == 6 && compareDates(d.fecha_vencimiento) == true) { // NO ES ASESOR Y EL REGISTRO ES DE MKTD QUITÓ EL BOTÓN DE VER
+                                    if (idUser != d.id_asesor && d.lugar_prospeccion == 6 && compareDates(d.fecha_creacion) == true) { // NO ES ASESOR Y EL REGISTRO ES DE MKTD QUITÓ EL BOTÓN DE VER
                                         actions = '';
                                     } else { // ES ASESOR Y EL REGISTRO ES DE MKTD - DEJO EL BOTÓN DE VER
                                         group_buttons = '<button class="btn-data btn-orangeYellow to-comment" data-id-prospecto="' + d.id_prospecto + '" rel="tooltip" data-placement="left" title="Ingresar comentario"><i class="far fa-comments"></i></button>' +
@@ -171,7 +171,7 @@ $(document).ready(function() {
                                 } else {
                                     var actions = '';
                                     var group_buttons = '';
-                                    if (idUser != d.id_asesor && d.lugar_prospeccion == 6 && compareDates(d.fecha_vencimiento) == true) { // NO ES ASESOR Y EL REGISTRO ES DE MKTD QUITO EL BOTÓN DE VER
+                                    if (idUser != d.id_asesor && d.lugar_prospeccion == 6 && compareDates(d.fecha_creacion) == true) { // NO ES ASESOR Y EL REGISTRO ES DE MKTD QUITO EL BOTÓN DE VER
                                         actions = '';
                                     } else { // ES ASESOR Y EL REGISTRO ES DE MKTD - DEJO EL BOTÓN DE VER
                                         group_buttons = '<button class="btn-data btn-orangeYellow to-comment" data-id-prospecto="' + d.id_prospecto + '" rel="tooltip" data-placement="left" title="Ingresar comentario"><i class="far fa-comments"></i></button>' +
@@ -1274,12 +1274,8 @@ $(document).on('click', '.change-pl', function () { // MJ: FUNCIÓN CAMBIO DE ES
 });
 
 function compareDates(fecha_creacion){
-    let date1 = new Date(fecha_creacion);
-    let date2 = new Date('2022-01-01');
     var isBefore = moment(fecha_creacion).isBefore('2022-01-20T00:00:00Z');
-
-    console.log('isBefore',isBefore);
-    console.log('date2',date2);
+    console.log(isBefore);
     return isBefore;
 }
 

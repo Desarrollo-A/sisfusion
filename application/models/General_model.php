@@ -121,6 +121,18 @@ class General_model extends CI_Model
         return $this->db->query("SELECT COLUMN_NAME column_name, DATA_TYPE data_type FROM Information_Schema.Columns WHERE TABLE_NAME = '$table';")->result_array();
     }
 
+    public function getMultirol($usuario){
+        return $this->db->query("SELECT * FROM roles_x_usuario WHERE idUsuario = $usuario");
+    }
+
+    public function getUsersByLeader($rol, $secondRol){
+        return $this->db->query("(SELECT DISTINCT(u.id_usuario),u.* FROM roles_x_usuario rxu
+        INNER JOIN usuarios u  ON u.id_lider = rxu.idUsuario  
+        WHERE rxu.idRol = $rol AND rxu.idUsuario = 3 AND u.id_rol =$secondRol)
+        UNION (SELECT DISTINCT(u.id_usuario), u.* FROM roles_x_usuario rxu
+        INNER JOIN usuarios u  ON u.id_usuario = rxu.idUsuario  
+        WHERE rxu.idRol = $rol AND rxu.idUsuario = 3 AND u.id_rol =$secondRol)");
+    }
     function getCatalogOptions($id_catalogo)
     {
         return $this->db->query("SELECT id_opcion, id_catalogo, nombre FROM opcs_x_cats WHERE id_catalogo = $id_catalogo AND estatus = 1");

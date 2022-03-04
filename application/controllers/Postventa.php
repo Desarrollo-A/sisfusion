@@ -388,6 +388,18 @@ class Postventa extends CI_Controller
                                         <br><br>
                                         <table width="100%" style="padding:10px 0px; text-align: center;height: 45px; border: 1px solid #ddd;" width="690">
                                             <tr>
+                                                <td colspan="2" style="padding: 3px 6px; ">
+                                                    <b style="font-size: .8em; ">
+                                                        Estimado ' . $data['nombre'] . '<br>
+                                                        En seguimiento a su visita en oficina de Ciudad Maderas Querétaro, envio la informacion para iniciar con el proceso de escrituración
+                                                        como primer paso es la solicitud del presupuesto para conocer el monto a pagar por la escritura y asignar notaria<br>
+                                                        El presupuesto que envió es informativo, sin valor avalúo por parte del perito y es con el costo estimado, tambien aprovecho y envió el check list
+                                                        en solicitud a la recepción de todos los documentos al momento de escriturar, estos documentos deben ser necesarios para efectuar la entrega del proyecto de escrituración 
+                                                        con la notaria:
+                                                    </b>
+                                                </td>
+                                            </tr>
+                                            <tr>
                                                 <td colspan="2" style="background-color: #15578B;color: #fff;padding: 3px 6px; "><b style="font-size: 2em; ">Datos del comprador – Persona Física</b>
                                                 </td>
                                             </tr>
@@ -564,7 +576,8 @@ class Postventa extends CI_Controller
             </html>';
 
         $mail->message($mailContent);
-        $mail->send();
+        $response = $mail->send();
+        echo json_encode($response);
     }
 
     public function aportaciones()
