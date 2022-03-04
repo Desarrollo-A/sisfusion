@@ -135,6 +135,13 @@
 
 <script src="<?= base_url() ?>dist/js/controllers/general/main_services.js"></script>
 <script>
+    $(document).on('change', "#residenciales", function() {
+        getCondominios($(this).val());
+    });
+
+    $(document).on('change', "#condominios", function() {
+        getLotes($(this).val());
+    });
 
     function toggleSelect2() {
         var isChecked = document.getElementById("dates").checked;
