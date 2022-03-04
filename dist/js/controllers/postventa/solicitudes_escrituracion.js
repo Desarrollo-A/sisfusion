@@ -68,7 +68,7 @@ sp = { // MJ: SELECT PICKER
 
 sp2 = { // CHRIS: SELECT PICKER
     initFormExtendedDatetimepickers: function () {
-        $('.datepicker').datetimepicker({
+        $('.datepicker2').datetimepicker({
             format: 'DD/MM/YYYY LT',
             icons: {
                 time: "fa fa-clock-o",
