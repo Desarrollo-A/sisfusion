@@ -75,4 +75,11 @@ class General extends CI_Controller
         else
             echo json_encode(array());
     }
+    public function getCatalogOptions(){
+        if ($this->input->post("id_catalogo") == '' || $this->input->post("id_catalogo") == undefined)
+            echo json_encode(array("status" => 400, "error" => "Algún parámetro no tiene un valor especificado o no viene informado."));
+        else
+            echo json_encode($this->General_model->getCatalogOptions($this->input->post("id_catalogo"))->result_array());
+    }
+
 }

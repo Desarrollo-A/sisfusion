@@ -291,7 +291,6 @@ function readFileAsync(selectedFile) {
                 jsonProspectos = JSON.stringify(rowObject, null);
             });
             resolve(jsonProspectos);
-            console.log("el json", jsonProspectos);
         };
         fileReader.onerror = reject;
         fileReader.readAsArrayBuffer(selectedFile);
@@ -334,12 +333,12 @@ $(document).on('click', '#uploadFile', function () {
 });
 
 $(document).on('change', "#residenciales", function () {
-    getCondominios($(this).val());
+    //getCondominios($(this).val());
     cleanSelects(1);
 });
 
 $(document).on('change', "#condominios", function () {
-    getLotes($(this).val());
+    //getLotes($(this).val());
     cleanSelects(2);
 });
 

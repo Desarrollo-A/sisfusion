@@ -1,0 +1,127 @@
+@import "_base";
+
+.cardDocument{
+    height: calc(100vh - 125px);
+    .realBox{
+        #documentsList{
+            height: 60vh;
+            overflow: auto;
+            .activeSB{
+                border-radius: 8px!important;
+                background-color: $blueIndigoDeep!important;
+                h4, i{
+                    color: $white!important;
+                }
+            }
+            @media #{$smartphone}, #{$tablets}{
+                height: initial;
+            }
+        }
+        .boxDocument{
+            background-color: $gray;
+            border-radius: 8px;
+            margin: 0 15px;
+            color: $white;
+            .btnDocuments{
+                background-color: $grayDark;
+                border-radius: 25px;
+                height: 38px;
+                width: 38px;
+                border: none;
+                box-shadow: -1px -1px 3px RGB(0 0 0 / 12%), 0 1px 2px RGB(0 0 0 / 24%);
+                margin: 0 3px;
+            }
+            #documentFile {
+                height: calc(60vh - 50px);
+                position: relative;
+                top: 6px;
+                border-radius: 0 0 6px 6px;
+                @media #{$smartphone}, #{$tablets}{
+                    height: 100vh;
+                }
+            }
+            .stylesEmpty{
+                height: calc(60vh - 50px);
+                .boxDocumentEmptyD{
+                    background-color: $platinum;
+                    i{
+                        font-size: 200px;
+                        color: $platinumScroll ;
+                    }
+                    p{
+                        font-size: 25px;
+                        color: $platinumScroll;
+                    }
+                }
+            }
+                 
+        }
+        .boxDocumentEmpty{
+            background-color: $platinum;
+            border-radius: 10px;
+            height: 60vh;
+            i{
+                font-size: 200px;
+                color: $platinumScroll ;
+            }
+            p{
+                font-size: 25px;
+                color: $platinumScroll;
+            }
+        }
+        .scrollDocumentTree::-webkit-scrollbar-track{
+            background-color: transparent;
+            border-radius: none;
+        }
+        .scrollDocumentTree::-webkit-scrollbar{
+            width: 5px;
+            background-color: transparent;
+            border-right: 2px solid $platinumScroll;
+        }
+        .scrollDocumentTree::-webkit-scrollbar-thumb{
+            background-color: $platinumScroll;
+            border-radius: none;
+            border-radius: 0;
+        }
+        .scrollDocumentTree::-webkit-scrollbar-thumb:hover{
+            background-color: $deepGray;
+            width: 10px!important;
+            border-radius: none;
+        } 
+    }
+    @media #{$smartphone}, #{$tablets}{
+        height: initial;
+    }
+    .fakeBox{
+        height: 60vh;
+        .documentsList{
+            i{
+                color: $platinum;
+                font-size:34px;
+            }
+            .col-9.col-md-9{
+                background-color: $platinum;
+                border-radius:5px
+            }
+        }
+        .boxContentDoc{
+            background-color: $platinum;
+            border-radius: 10px;
+            i{
+                font-size: 200px;
+                color: $platinumScroll;
+            }
+            p{
+                font-size: 25px;
+                color: $platinumScroll;
+            }
+        }
+    }
+}
+
+@media (min-width: 768px){
+    .modal-sm {
+        width: 350px;
+        
+    }
+}

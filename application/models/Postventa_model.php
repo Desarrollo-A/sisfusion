@@ -64,7 +64,7 @@ class Postventa_model extends CI_Model
 
         return $this->db->query("SELECT oxc2.nombre area, se.idSolicitud, oxc.nombre estatus, se.fecha_creacion, l.nombreLote, se.estatus idEstatus,
         CONCAT(c.nombre, ' ', c.apellido_paterno, ' ', c.apellido_materno) nombre, cond.nombre nombreCondominio, r.nombreResidencial, de.expediente,
-        ctrl.tipo_documento, de.idDocumento, ctrl.permisos, de2.result, ce.tipo, ce.comentarios, mr.motivo motivos_rechazo
+        ctrl.tipo_documento, de.idDocumento, ctrl.permisos, de2.result, ce.tipo, ce.comentarios, mr.motivo motivos_rechazo, de2.estatusValidacion
         FROM solicitud_escrituracion se 
         INNER JOIN clientes c ON c.id_cliente = se.idCliente AND c.status = 1
         INNER JOIN lotes l ON se.idLote = l.idLote 
@@ -75,7 +75,9 @@ class Postventa_model extends CI_Model
         INNER JOIN control_procesos ctrl ON ctrl.estatus = se.estatus AND ctrl.idRol = $rol
         LEFT JOIN documentos_escrituracion de ON de.idSolicitud=se.idSolicitud AND de.tipo_documento = ctrl.tipo_documento
         LEFT JOIN (SELECT idSolicitud, CASE WHEN COUNT(*) != COUNT(CASE WHEN expediente IS NOT NULL THEN 1 END) 
-		THEN 0 ELSE 1 END result FROM documentos_escrituracion WHERE tipo_documento NOT IN (7, 11, 12, 13,14,15,16,17) GROUP BY idSolicitud) de2 ON de2.idSolicitud = se.idSolicitud
+		THEN 0 ELSE 1 END result, 
+		CASE WHEN COUNT(*) != COUNT(CASE WHEN estatus_validacion = 1 THEN 1 END) THEN 0 ELSE 1 END estatusValidacion 
+		FROM documentos_escrituracion WHERE tipo_documento NOT IN (7, 11, 12, 13,14,15,16,17) GROUP BY idSolicitud) de2 ON de2.idSolicitud = se.idSolicitud
         LEFT JOIN control_estatus ce ON ce.fecha_creacion = (SELECT max(fecha_creacion) FROM control_estatus WHERE ce.idEscrituracion = se.idSolicitud AND ce.newStatus = se.estatus)
         LEFT JOIN motivos_rechazo mr ON mr.id_motivo = ce.motivos_rechazo
         LEFT JOIN usuarios us ON us.id_usuario = de.validado_por
@@ -181,16 +183,28 @@ class Postventa_model extends CI_Model
         $query = $this->db->query("SELECT de.idDocumento, oxc.nombre, de.expediente, de.tipo_documento, de.idSolicitud,
         CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) creado_por, de.fecha_creacion, se.estatus estatusActual,
         (CASE WHEN de.estatus_validacion IS NULL THEN 'Sin validar' WHEN de.estatus_validacion = 1 THEN 'Validado OK' WHEN de.estatus_validacion = 2 THEN 'Rechazado' END) estatus_validacion,
+        (CASE WHEN de.estatus_validacion IS NULL THEN '#566573' WHEN de.estatus_validacion = 1 THEN '#239B56' WHEN de.estatus_validacion = 2 THEN '#C0392B' END) colour,
         (CASE WHEN CONCAT(us2.nombre, ' ', us2.apellido_paterno, ' ', us2.apellido_materno) = '' THEN 'Sin especificar' ELSE CONCAT(us2.nombre, ' ', us2.apellido_paterno, ' ', us2.apellido_materno) END) validado_por,
-        de.estatus_validacion ev
+        de.estatus_validacion ev,
+		(CASE 
+		WHEN de.estatus_validacion = 2 THEN STRING_AGG (CONCAT('<span class=\"label\" style=\"background:#A569BD\">', mr.motivo, '</span><br><br>'), '')
+		ELSE '<span class=\"label\" style=\"background:#5499C7\">SIN  MOTIVOS DE RECHAZO</span>'
+		END) motivos_rechazo
         FROM documentos_escrituracion de 
         INNER JOIN solicitud_escrituracion se ON se.idSolicitud = de.idSolicitud
         INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = de.tipo_documento AND oxc.id_catalogo = 60
         LEFT JOIN usuarios us ON us.id_usuario = de.creado_por
         LEFT JOIN usuarios us2 ON us2.id_usuario = de.validado_por
-        --LEFT JOIN motivos_rechazo_x_documento mrxd ON mrxd.id_documento = de.idDocumento AND mrxd.estatus = 1 
-        --LEFT JOIN motivos_rechazo mr ON mr.id_motivo = mrxd.id_motivo
-        WHERE de.idSolicitud = 2 AND de.tipo_documento NOT IN (7, 11, 12, 13, 14, 15, 16, 17)");
+        LEFT JOIN motivos_rechazo_x_documento mrxd ON mrxd.id_documento = de.idDocumento AND mrxd.estatus = 1 
+        LEFT JOIN motivos_rechazo mr ON mr.id_motivo = mrxd.id_motivo
+        WHERE de.idSolicitud = $idSolicitud AND de.tipo_documento NOT IN (7, 11, 12, 13, 14, 15, 16, 17)
+        GROUP BY
+        de.idDocumento, oxc.nombre, de.expediente, de.tipo_documento, de.idSolicitud,
+        CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno), de.fecha_creacion, se.estatus,
+        (CASE WHEN de.estatus_validacion IS NULL THEN 'Sin validar' WHEN de.estatus_validacion = 1 THEN 'Validado OK' WHEN de.estatus_validacion = 2 THEN 'Rechazado' END),
+        (CASE WHEN de.estatus_validacion IS NULL THEN '#566573' WHEN de.estatus_validacion = 1 THEN '#239B56' WHEN de.estatus_validacion = 2 THEN '#C0392B' END) ,
+        (CASE WHEN CONCAT(us2.nombre, ' ', us2.apellido_paterno, ' ', us2.apellido_materno) = '' THEN 'Sin especificar' ELSE CONCAT(us2.nombre, ' ', us2.apellido_paterno, ' ', us2.apellido_materno) END),
+        de.estatus_validacion");
         return $query->result();
     }
 

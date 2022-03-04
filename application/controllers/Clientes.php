@@ -1315,11 +1315,14 @@ public function getStatusMktdPreventa(){
                 $data["id_coordinador"] = $this->session->userdata('id_lider');
                 $data["id_gerente"] = $this->session->userdata('id_lider');
                 $data["id_subdirector"] = $this->session->userdata('id_lider_3');
+                $data["id_regional"] = $this->session->userdata('id_lider_5');
             }else{
                 $data["id_asesor"] = $this->session->userdata('id_usuario');
                 $data["id_coordinador"] = $this->session->userdata('id_lider');
                 $data["id_gerente"] = $this->session->userdata('id_lider_2');
                 $data["id_subdirector"] = $this->session->userdata('id_lider_4');
+                $data["id_regional"] = $this->session->userdata('id_lider_5');
+
             }
         }else if($this->session->userdata('id_rol') == 9){
             //COORDIDADOR
@@ -1327,18 +1330,24 @@ public function getStatusMktdPreventa(){
             $data["id_coordinador"] = $this->session->userdata('id_usuario');
             $data["id_gerente"] = $this->session->userdata('id_lider');
             $data["id_subdirector"] = $this->session->userdata('id_lider_3');
+            $data["id_regional"] = $this->session->userdata('id_lider_5');
+
         }else if($this->session->userdata('id_rol') == 3){
             //GERENTE
             $data["id_asesor"] = $this->session->userdata('id_usuario');
             $data["id_coordinador"] = $this->session->userdata('id_usuario');
             $data["id_gerente"] = $this->session->userdata('id_usuario');
             $data["id_subdirector"] = $this->session->userdata('id_lider');
+            $data["id_regional"] = $this->session->userdata('id_lider_5');
+
         }else if($this->session->userdata('id_rol') == 6){
             //ASISTENTE DE GERENTE
             $data["id_asesor"] = $this->session->userdata('id_usuario');
             $data["id_coordinador"] = $this->session->userdata('id_usuario');
             $data["id_gerente"] = $this->session->userdata('id_lider');
             $data["id_subdirector"] = $this->session->userdata('id_lider_2');
+            $data["id_regional"] = $this->session->userdata('id_lider_5');
+
         }
            
            
