@@ -61,7 +61,7 @@ class General extends CI_Controller
         $usuario = $this->session->userdata('id_usuario');
         $data = $this->General_model->getMultirol($usuario)->result_array();
         if ($data != null)
-            echo json_encode($data);
+            echo json_encode($data,  JSON_NUMERIC_CHECK);
         else
             echo json_encode(array());
     }
