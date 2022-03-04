@@ -1,10 +1,12 @@
 function getResidenciales() {
+    $('#spiner-loader').removeClass('hide');
     $("#residenciales").empty().selectpicker('refresh');
     $.ajax({
         url: url + 'General/getResidencialesList',
         type: 'post',
         dataType: 'json',
         success: function (response) {
+            $('#spiner-loader').addClass('hide');
             var len = response.length;
             for (var i = 0; i < len; i++) {
                 $("#residenciales").append($('<option>').val(response[i]['idResidencial']).attr('data-empresa', response[i]['empresa']).text(response[i]['descripcion']));
@@ -37,6 +39,7 @@ $(document).on("click", "#residenciales", function (e) { // MJ: SE OBTIENE EL CH
 });
 
 function getCondominios(idResidencial) {
+    $('#spiner-loader').removeClass('hide');
     $("#condominios").empty().selectpicker('refresh');
     $.ajax({
         url: url + 'General/getCondominiosList',
@@ -46,6 +49,7 @@ function getCondominios(idResidencial) {
             "idResidencial": idResidencial
         },
         success: function (response) {
+            $('#spiner-loader').addClass('hide');
             var len = response.length;
             for (var i = 0; i < len; i++) {
                 $("#condominios").append($('<option>').val(response[i]['idCondominio']).text(response[i]['nombre']));
@@ -98,21 +102,15 @@ function getLotes(idCondominio) {
     });
 }
 
-$(document).on('change', "#residenciales", function (e) {
-    getCondominios($(this).val());
-});
-
-$(document).on('change', "#condominios", function () {
-    getLotes($(this).val());
-});
-
 function getEmpresasList() {
+    $('#spiner-loader').removeClass('hide');
     $("#empresas").empty().selectpicker('refresh');
     $.ajax({
         url: 'getEmpresasList',
         type: 'post',
         dataType: 'json',
         success: function (response) {
+            $('#spiner-loader').addClass('hide');
             var len = response.length;
             for (var i = 0; i < len; i++) {
                 $("#empresas").append($('<option>').val(response[i]['empresa']).text(response[i]['empresa']));
@@ -123,6 +121,7 @@ function getEmpresasList() {
 }
 
 function getProyectosList(empresa) {
+    $('#spiner-loader').removeClass('hide');
     $("#proyectos").empty().selectpicker('refresh');
     $.ajax({
         url: 'getProyectosList',
@@ -132,6 +131,7 @@ function getProyectosList(empresa) {
             "empresa": empresa
         },
         success: function (response) {
+            $('#spiner-loader').addClass('hide');
             var len = response.length;
             for (var i = 0; i < len; i++) {
                 $("#proyectos").append($('<option>').val(response[i]['IdProyecto']).text(response[i]['Nombre']));
