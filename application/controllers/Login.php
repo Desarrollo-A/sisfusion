@@ -41,7 +41,8 @@ class Login extends CI_Controller
           break;
 
           case '11': // ADMINISTRACIÓN
-          case '23': // SUBDIRECTOR CLUB MADERAS
+		  case '12': // CAJA
+		  case '23': // SUBDIRECTOR CLUB MADERAS
           case '34': // FACTURACIÓN
           case '35': // ATENCIÓN A CLIENTES
           case '26': // MERCADÓLOGO
