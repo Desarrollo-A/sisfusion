@@ -241,7 +241,7 @@ $comisiones = $this->db->query("SELECT id_comision,id_lote,comision_total FROM c
 
     }
     //$this->db->query("UPDATE lotes set registro_comision=8  where idLote=".$row['idLote']." ");
-      $this->db->query("UPDATE pago_comision set bandera=0  where id_lote=".$row['idLote']." ");
+      $this->db->query("UPDATE pago_comision set bandera=0,total_comision=0,abonado=0,pendiente=0,ultimo_pago=0 where id_lote=".$row['idLote']." ");
 /**----------------------------------------------- */
 
 
