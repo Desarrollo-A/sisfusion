@@ -237,62 +237,65 @@
             /**------------------------------------------------- */
             $comisiones = $this->db->query("SELECT id_comision,id_lote,comision_total FROM comisiones where id_lote=" . $row['idLote'] . "")->result_array();
 
-            for ($i = 0; $i < count($comisiones); $i++) {
-                $sumaxcomision = 0;
-                $pagos_ind = $this->db->query("select * from pago_comision_ind where id_comision=" . $comisiones[$i]['id_comision'] . "")->result_array();
-                for ($j = 0; $j < count($pagos_ind); $j++) {
-                    $sumaxcomision = $sumaxcomision + $pagos_ind[$j]['abono_neodata'];
+    for ($i=0; $i <count($comisiones) ; $i++) {
+        $sumaxcomision=0;
+        $pagos_ind = $this->db->query("select * from pago_comision_ind where id_comision=".$comisiones[$i]['id_comision']."")->result_array();
+        for ($j=0; $j <count($pagos_ind) ; $j++) { 
+            $sumaxcomision = $sumaxcomision + $pagos_ind[$j]['abono_neodata'];
+        
+        }
+        $this->db->query("UPDATE comisiones set comision_total=$sumaxcomision,estatus=8 where id_comision=".$comisiones[$i]['id_comision']." ");
 
-                }
-                $this->db->query("UPDATE comisiones set comision_total=$sumaxcomision,estatus=8 where id_comision=" . $comisiones[$i]['id_comision'] . " ");
-
-            }
-            //$this->db->query("UPDATE lotes set registro_comision=8  where idLote=".$row['idLote']." ");
-            $this->db->query("UPDATE pago_comision set bandera=0  where id_lote=" . $row['idLote'] . " ");
-            /**----------------------------------------------- */
-
-
-            $data_l = array(
-                'nombreLote' => $datos['nombreLote'],
-                'comentarioLiberacion' => $datos['comentarioLiberacion'],
-                'observacionLiberacion' => $datos['observacionLiberacion'],
-                'precio' => $datos['precio'],
-                'fechaLiberacion' => $datos['fechaLiberacion'],
-                'modificado' => $datos['modificado'],
-                'status' => $datos['status'],
-                'idLote' => $row['idLote'],
-                'tipo' => $datos['tipo'],
-                'userLiberacion' => $datos['userLiberacion']
-            );
-
-            $this->db->insert('historial_liberacion', $data_l);
+    }
+    //$this->db->query("UPDATE lotes set registro_comision=8  where idLote=".$row['idLote']." ");
+      $this->db->query("UPDATE pago_comision set bandera=0,total_comision=0,abonado=0,pendiente=0,ultimo_pago=0 where id_lote=".$row['idLote']." ");
+/**----------------------------------------------- */
 
 
-            if ($datos['activeLE'] == 0) {
+					  $data_l = array(
+						'nombreLote'=> $datos['nombreLote'],
+						'comentarioLiberacion'=> $datos['comentarioLiberacion'],
+						'observacionLiberacion'=> $datos['observacionLiberacion'],
+						'precio'=> $datos['precio'],
+						'fechaLiberacion'=> $datos['fechaLiberacion'],
+						'modificado'=> $datos['modificado'],
+						'status'=> $datos['status'],
+						'idLote'=> $row['idLote'],
+                        'tipo'=> $datos['tipo'],
+						'userLiberacion'=> $datos['userLiberacion']
+						);
 
-                $st = ($datos['activeLP'] == 1) ? 1 : 1;
-                $tv = ($datos['activeLP'] == 1) ? 1 : 0;
+			    	$this->db->insert('historial_liberacion',$data_l);
 
-                if ($tv == 1) { // LIBERACIÓN VENTA DE PARTICULAES
-                    $data_lp = array(
-                        'id_lote' => $row['idLote'],
-                        'nombre' => $datos['clausulas'],
-                        'estatus' => 1,
-                        "fecha_creacion" => date("Y-m-d H:i:s"),
-                        "creado_por" => $datos['userLiberacion']
-                    );
-                    $clauses_data = $this->db->query("SELECT * FROM clausulas WHERE id_lote = " . $row['idLote'] . " AND estatus = 1")->result_array();
-                    if (COUNT($clauses_data) > 0) {
-                        for ($i = 0; $i < COUNT($clauses_data); $i++) {
-                            $this->db->query("UPDATE clausulas SET estatus = 0 WHERE id_clausula = " . $clauses_data[$i]['id_clausula'] . " AND estatus = 1");
-                        }
-                    }
-                    $this->db->insert('clausulas', $data_lp);
-                } else {
-                    $clauses_data = $this->db->query("SELECT * FROM clausulas WHERE id_lote = " . $row['idLote'] . " AND estatus = 1")->result_array();
-                    if (COUNT($clauses_data) > 0) {
-                        for ($i = 0; $i < COUNT($clauses_data); $i++) {
-                            $this->db->query("UPDATE clausulas SET estatus = 0 WHERE id_clausula = " . $clauses_data[$i]['id_clausula'] . " AND estatus = 1");
+
+
+                        if ($datos['activeLE'] == 0){
+						
+						$st = ($datos['activeLP'] == 1) ? 1 : 1;
+						$tv = ($datos['activeLP'] == 1) ? 1 : 0;
+
+                        if ($tv == 1) { // LIBERACIÓN VENTA DE PARTICULAES
+                            $data_lp = array(
+                                'id_lote'=> $row['idLote'],
+                                'nombre'=> $datos['clausulas'],
+                                'estatus'=> 1,
+                                "fecha_creacion" => date("Y-m-d H:i:s"),
+                                "creado_por" => $datos['userLiberacion']
+                            );
+                            $clauses_data =  $this->db->query("SELECT * FROM clausulas WHERE id_lote = ". $row['idLote'] ." AND estatus = 1")->result_array();
+                            if (COUNT($clauses_data) > 0) {
+                                for ($i = 0; $i < COUNT($clauses_data); $i++) {
+                                    $this->db->query("UPDATE clausulas SET estatus = 0 WHERE id_clausula = ". $clauses_data[$i]['id_clausula'] ." AND estatus = 1");
+                                }
+                            }
+                            $this->db->insert('clausulas', $data_lp);
+                        } else {
+                            $clauses_data =  $this->db->query("SELECT * FROM clausulas WHERE id_lote = ". $row['idLote'] ." AND estatus = 1")->result_array();
+                            if (COUNT($clauses_data) > 0) {
+                                for ($i = 0; $i < COUNT($clauses_data); $i++) {
+                                    $this->db->query("UPDATE clausulas SET estatus = 0 WHERE id_clausula = ". $clauses_data[$i]['id_clausula'] ." AND estatus = 1");
+                                }
+                            }
                         }
                     }
                 }
