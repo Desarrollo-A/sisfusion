@@ -362,7 +362,7 @@
                 
                 <div class="input-group" >
                     <div class="col-12 col-sm-12 col-md-12 col-lg-12 pr-0">
-                        <input type="text" class="form-control datepicker" id="signDate" value="" />
+                        <input type="text" class="form-control datepicker2" id="signDate" value="" />
                         <label>*(fecha sugerida para firma de escrituras)</label>
                     </div>
                 </div>

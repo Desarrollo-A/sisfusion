@@ -68,7 +68,7 @@ sp = { // MJ: SELECT PICKER
 
 sp2 = { // CHRIS: SELECT PICKER
     initFormExtendedDatetimepickers: function () {
-        $('.datepicker').datetimepicker({
+        $('.datepicker2').datetimepicker({
             format: 'DD/MM/YYYY LT',
             icons: {
                 time: "fa fa-clock-o",
@@ -913,7 +913,7 @@ function email(idSolicitud, action, notaria = null, valuador= null) {
             break;
     }
     $.post(action == 1 ? 'mailPresupuesto' : action == 2 ? 'presupuestoCliente' : action == 3 ? 'mailNotaria' : action == 4 ? 'mailFecha' : 'mailPresupuesto', obj, function (data) {
-        if (data == true) {//cambiar a true
+        if (data == false) {//cambiar a true
             changeStatus(idSolicitud, action == 1 ? 4 : 0, 'correo enviado', 1);
         }
         $('#spiner-loader').addClass('hide');
