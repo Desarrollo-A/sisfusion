@@ -75,13 +75,13 @@
                                     <div class="container-fluid">
                                         <div class="row">
                                             <div class="col-12 col-sm-12 col-md-4 col-lg-4">
-                                                <select class="selectpicker select-gral" data-style="btn btn-primary btn-round" title="Selecciona un proyecto" data-size="7" id="selectResidenciales" data-live-search="true"></select>
+                                                <select class="selectpicker select-gral" data-style="btn btn-primary btn-round" title="Selecciona un proyecto" data-size="7" id="residenciales" data-live-search="true"></select>
                                             </div>
                                             <div class="col-12 col-sm-12 col-md-4 col-lg-4">
-                                                <select class="selectpicker select-gral" data-style="btn btn-primary btn-round" title="Selecciona un condominio" data-size="7" id="selectCondominios" data-live-search="true"></select>
+                                                <select class="selectpicker select-gral" data-style="btn btn-primary btn-round" title="Selecciona un condominio" data-size="7" id="condominios" data-live-search="true"></select>
                                             </div>
                                             <div class="col-12 col-sm-12 col-md-4 col-lg-4">
-                                                <select class="selectpicker select-gral" data-style="btn btn-primary btn-round" title="Selecciona un lote" data-size="7" id="selectLotes" data-live-search="true"></select>
+                                                <select class="selectpicker select-gral" data-style="btn btn-primary btn-round" title="Selecciona un lote" data-size="7" id="lotes" data-live-search="true"></select>
                                             </div>
                                         </div>
                                     </div>
@@ -208,7 +208,11 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
+    <script src="<?= base_url() ?>dist/js/controllers/general/main_services.js"></script>
+    <script src="<?= base_url() ?>dist/js/controllers/general/main_services_dr.js"></script>
     <script>
+        let url = "<?=base_url()?>";
+        let typeTransaction = 1; // MJ: SELECTS MULTIPLES
         var allDocuments = [];
         $(document).ready(function () {
             var allDocuments = [];
@@ -231,81 +235,27 @@
             getResidenciales();
             //getRejectionReasons();
 
-            // $("#mainBody").addClass("sidebar-mini");
-            // $("#sidebarWrapper").removeClass("ps-container ps-theme-default ps-active-x");
-            // $("#mainPanel").removeClass("ps-container ps-theme-default ps-active-y");
+            $("#mainBody").addClass("sidebar-mini");
+            $("#sidebarWrapper").removeClass("ps-container ps-theme-default ps-active-x");
+            $("#mainPanel").removeClass("ps-container ps-theme-default ps-active-y");
         });
 
-        $('#selectResidenciales').change(function () {
-            cleanElement("documentsList");
-            $('#spiner-loader').removeClass('hide');
-            let idResidencial = $(this).val();
-            $("#selectCondominios").empty().selectpicker('refresh');
-            $("#selectLotes").empty().selectpicker('refresh');
-            $.ajax({
-                url: 'getCondominiosList',
-                data: {
-                    'idResidencial': idResidencial
-                },
-                type: 'post',
-                dataType: 'json',
-                success: function (response) {
-                    $('#spiner-loader').addClass('hide');
-                    var len = response.length;
-                    for (var i = 0; i < len; i++) {
-                        var id = response[i]['idCondominio'];
-                        var name = response[i]['nombre'];
-                        $("#selectCondominios").append($('<option>').val(id).text(name));
-                    }
-                    $("#selectCondominios").selectpicker('refresh');
-                }
-            });
+        $(document).on('change', "#residenciales", function() {
+            getCondominios($(this).val());
+            $(".boxDocument").removeClass("hide");
         });
 
-        $('#selectCondominios').change(function () {
-            $('#spiner-loader').removeClass('hide');
-            cleanElement("documentsList");
-            let idCondominio = $(this).val();
-            $("#selectLotes").empty().selectpicker('refresh');
-            $.ajax({
-                url: 'getLotesList',
-                data: {
-                    'idCondominio': idCondominio
-                },
-                type: 'post',
-                dataType: 'json',
-                success: function (response) {
-                    $('#spiner-loader').addClass('hide');
-                    var len = response.length;
-                    for (var i = 0; i < len; i++) {
-                        var id = response[i]['idLote'];
-                        var name = response[i]['nombreLote'];
-                        $("#selectLotes").append($('<option>').val(id).text(name));
-                    }
-                    $("#selectLotes").selectpicker('refresh');
-                }
-            });
+        $(document).on('change', "#condominios", function() {
+            getLotes($(this).val());
+            $(".boxDocument").addClass("hide");
+            $(".boxDocumentEmpty").removeClass("hide");
         });
 
-        function getResidenciales() {
-            $("#selectResidenciales").empty().selectpicker('refresh');
-            $('#spiner-loader').removeClass('hide');
-            $.ajax({
-                url: 'getResidencialesList',
-                type: 'post',
-                dataType: 'json',
-                success: function (response) {
-                    $('#spiner-loader').addClass('hide');
-                    var len = response.length;
-                    for (var i = 0; i < len; i++) {
-                        var id = response[i]['idResidencial'];
-                        var name = response[i]['descripcion'];
-                        $("#selectResidenciales").append($('<option>').val(id).text(name));
-                    }
-                    $("#selectResidenciales").selectpicker('refresh');
-                }
-            });
-        }
+        $('#lotes').change(function (e) {
+            e.preventDefault();
+            getDocumentsInformation($(this).val());
+            $(".boxDocument").addClass("hide");
+        });
 
         function getRejectionReasons() {
             alert("IN");
@@ -328,15 +278,11 @@
             });
         }
 
-        $('#selectLotes').change(function (e) {
-            e.preventDefault();
-            getDocumentsInformation($(this).val());
-        });
-
         function getDocumentsInformation(idLote) {
             cleanElement("documentsList");
             $(".fakeBox").addClass("hide");
             $(".realBox").removeClass("hide");
+            $('#spiner-loader').removeClass('hide');
             $.ajax({
                 type: 'POST',
                 url: 'getDocumentsInformation',
@@ -348,9 +294,11 @@
                     $.each(data['documentation'], function (i, v) {
                         fillDocumentsList(v, i);
                         allDocuments.push(v);
+                        $('#spiner-loader').addClass('hide');
                     });
                 }, error: function () {
                     alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+                    $('#spiner-loader').addClass('hide');
                 }
             });
         }
@@ -439,11 +387,6 @@
             let folder = "";
             let url = "";
             let mainPath = "<?=base_url()?>";
-            console.log("type", type);
-            console.log("file", file );
-            console.log("idDocumento", idDocumento);
-            console.log("idCliente", idCliente);
-            console.log("prospecting_place", prospecting_place);
 
             if (type == 7) folder = "static/documentos/cliente/corrida/"; // CORRIDA
             else if (type == 8) folder = "static/documentos/cliente/contrato/"; // CONTRATO

@@ -15,7 +15,7 @@ class Postventa extends CI_Controller
 
     public function index()
     {
-        if ($this->session->userdata('id_rol') == FALSE || $this->session->userdata('id_rol') != '55' && $this->session->userdata('id_rol') != '56' && $this->session->userdata('id_rol') != '57')
+        if ($this->session->userdata('id_rol') == FALSE || $this->session->userdata('id_rol') != '55' && $this->session->userdata('id_rol') != '56' && $this->session->userdata('id_rol') != '57' || $this->session->userdata('id_rol') != '13')
             redirect(base_url() . 'login');
         $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
         $this->load->view('template/header');
@@ -58,13 +58,14 @@ class Postventa extends CI_Controller
         $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
         switch ($this->session->userdata('id_rol')) {
             case '11': // ADMON
+            case '13': // CONTRALORÏa
             case '55': // POSTVENTA
             case '56': // COMITÉ TÉCNICO
             case '57': // TITULACIÓN
                 $this->load->view('template/header');
                 $this->load->view("postventa/solicitudes_escrituracion", $datos);
                 break;
-
+            
             default:
                 echo '<script>alert("ACCESSO DENEGADO"); window.location.href="' . base_url() . '";</script>';
                 break;

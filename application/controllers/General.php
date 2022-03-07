@@ -27,7 +27,6 @@ class General extends CI_Controller
 
     function getResidencialesList()
     {
-        $a = 0;
         $data = $this->General_model->getResidencialesList();
         if ($data != null)
             echo json_encode($data);
