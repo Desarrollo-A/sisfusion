@@ -182,16 +182,17 @@
                                                 <thead>
                                                     <tr>
                                                         <th></th>
-                                                        <th>ID LOTE</th>
+                                                        <th>ID</th>
                                                         <th>PROYECTO</th>
                                                         <th>CONDOMINIO</th>
                                                         <th>LOTE</th>
                                                         <th>CLIENTE</th>
                                                         <th>TIPO VENTA</th>
                                                         <th>MODALIDAD</th>
-                                                        <th>EST. CONTRATACIÓN</th>
-                                                        <th>ENT. VENTA</th>
-                                                        <th>ÚLTIMA ACT.</th>
+                                                        <th>CONTRATACIÓN</th>
+                                                        <th>F. APARTADO</th>
+                                                        <th>PLAN VENTA</th>
+                                                        <th>F. NEODATA</th>
                                                         <th>MÁS</th>
                                                     </tr>
                                                 </thead>
@@ -237,7 +238,7 @@
     $("#tabla_ingresar_9").ready( function(){
         let titulos = [];
         $('#tabla_ingresar_9 thead tr:eq(0) th').each( function (i) {
-            if(i != 0 && i != 11){
+            if(i != 0 && i != 12){
                 var title = $(this).text();
                 titulos.push(title);
 
@@ -293,7 +294,7 @@
             destroy: true,
             ordering: false,
             columns: [{
-                "width": "3%",
+                "width": "2%",
                 "className": 'details-control',
                 "orderable": false,
                 "data" : null,
@@ -320,19 +321,19 @@
                 }
             },
             {
-                "width": "11%",
+                "width": "12%",
                 "data": function( d ){
                     return '<p class="m-0">'+d.nombreLote+'</p>';
                 }
             }, 
             {
-                "width": "11%",
+                "width": "12%",
                 "data": function( d ){
                     return '<p class="m-0"><b>'+d.nombre_cliente+'</b></p>';
                 }
             }, 
             {
-                "width": "8%",
+                "width": "7%",
                 "data": function( d ){
                     var lblType;
                     if(d.tipo_venta==1) {
@@ -347,7 +348,7 @@
                 }
             }, 
             {
-                "width": "8%",
+                "width": "7%",
                 "data": function( d ){
                     var lblStats;
                     if(d.compartida==null) {
@@ -359,7 +360,7 @@
                 }
             }, 
             {
-                "width": "8%",
+                "width": "7%",
                 "data": function( d ){
                     var lblStats;
                     if(d.idStatusContratacion==15) {
@@ -369,6 +370,12 @@
                     }
                     return lblStats;
                 }
+            },
+            {
+                "width": "8%",
+                "data": function( d ){
+                    return '<span class="label label-success" style="background:#69C1A2;">'+d.fechaApartado+'</span>';
+                 }
             },
             {
                 "width": "8%",
@@ -430,35 +437,35 @@
                 }
             },
              { 
-                "width": "14%",
+                "width": "8%",
                 "orderable": false,
                 "data": function( data ){
                     var BtnStats;
                     if(data.totalNeto2==null) {
                         BtnStats = '';
                     }else {
-                        if(data.compartida==null) {
-                            if(data.fecha_modificacion <= '2021-01-01' || data.fecha_modificacion == null ) {
-                                BtnStats = '<button href="#" value="'+data.idLote+'" data-estatus="'+data.idStatusContratacion+'" data-totalNeto2="'+data.totalNeto2+'" data-compartida="'+0+'" data-tipov="'+data.tipo_venta+'" data-subdirector="'+data.sub+'" data-regis="'+data.registro_comision+'" data-idResidencial="'+data.idResidencial+'" data-ismktd="'+data.ismktd+'" data-mdb="'+data.descuento_mdb+'" data-lugarP="'+data.lugar_prospeccion+'" data-value="'+data.registro_comision+'" data-code="'+data.cbbtton+'" ' +'class="btn-data btn-sky verify_neodata" title="Verificar en NEODATA">' +'<span class="material-icons">verified_user</span></button> ';
-                            }else {
-                                BtnStats = '<button href="#" value="'+data.idLote+'" data-estatus="'+data.idStatusContratacion+'"  data-value="'+data.registro_comision+'"   data-estatus="'+data.idStatusContratacion+'" data-totalNeto2="'+data.totalNeto2+'" data-compartida="'+0+'" data-tipov="'+data.tipo_venta+'" data-subdirector="'+data.sub+'" data-regis="'+data.registro_comision+'" data-idResidencial="'+data.idResidencial+'" data-ismktd="'+data.ismktd+'" data-mdb="'+data.descuento_mdb+'" data-lugarP="'+data.lugar_prospeccion+'"  data-code="'+data.cbbtton+'" ' +'class="btn-data btn-sky verify_neodata" title="Verificar en NEODATA">' +'<span class="material-icons">verified_user</span></button> <button href="#" data-param="1" data-idpagoc="' + data.idLote + '" ' +'class="btn-data btn-deepGray update_bandera" title="Regresar a activas">' +'<i class="fas fa-undo-alt"></i></button>'
-                                ;
+                        // if(data.compartida==null) {
+                        //     if(data.fecha_modificacion <= '2021-01-01' || data.fecha_modificacion == null ) {
+                        //         BtnStats = '<button href="#" value="'+data.idLote+'" data-estatus="'+data.idStatusContratacion+'" data-totalNeto2="'+data.totalNeto2+'" data-compartida="'+0+'" data-tipov="'+data.tipo_venta+'" data-subdirector="'+data.sub+'" data-regis="'+data.registro_comision+'" data-idResidencial="'+data.idResidencial+'" data-ismktd="'+data.ismktd+'" data-mdb="'+data.descuento_mdb+'" data-lugarP="'+data.lugar_prospeccion+'" data-value="'+data.registro_comision+'" data-code="'+data.cbbtton+'" ' +'class="btn-data btn-sky verify_neodata" title="Verificar en NEODATA">' +'<span class="material-icons">verified_user</span></button> ';
+                        //     }else {
+                        //         BtnStats = '<button href="#" value="'+data.idLote+'" data-estatus="'+data.idStatusContratacion+'"  data-value="'+data.registro_comision+'"   data-estatus="'+data.idStatusContratacion+'" data-totalNeto2="'+data.totalNeto2+'" data-compartida="'+0+'" data-tipov="'+data.tipo_venta+'" data-subdirector="'+data.sub+'" data-regis="'+data.registro_comision+'" data-idResidencial="'+data.idResidencial+'" data-ismktd="'+data.ismktd+'" data-mdb="'+data.descuento_mdb+'" data-lugarP="'+data.lugar_prospeccion+'"  data-code="'+data.cbbtton+'" ' +'class="btn-data btn-sky verify_neodata" title="Verificar en NEODATA">' +'<span class="material-icons">verified_user</span></button> <button href="#" data-param="1" data-idpagoc="' + data.idLote + '" ' +'class="btn-data btn-deepGray update_bandera" title="Regresar a activas">' +'<i class="fas fa-undo-alt"></i></button>'
+                        //         ;
 
 
-                                // +'<button class="btn-data btn-orangeYellow marcar_pagada" title="Marcar como liquidada" value="' + data.idLote +'"><i class="material-icons">how_to_reg</i></button>';
-                            }
-                        }else {
-                                if(data.fecha_modificacion <= '2021-01-01' || data.fecha_modificacion == null ) {
-                                BtnStats = '<button href="#" value="'+data.idLote+'" data-estatus="'+data.idStatusContratacion+'" data-totalNeto2="'+data.totalNeto2+'" data-compartida="'+1+'" data-tipov="'+data.tipo_venta+'" data-subdirector="'+data.sub+'" data-regis="'+data.registro_comision+'" data-idResidencial="'+data.idResidencial+'" data-ismktd="'+data.ismktd+'" data-mdb="'+data.descuento_mdb+'" data-lugarP="'+data.lugar_prospeccion+'"  data-value="'+data.registro_comision+'" data-code="'+data.cbbtton+'" ' +'class="btn-data btn-green verify_neodata" title="Verificar en NEODATA">' +'<span class="material-icons">verified_user</span></button> ';
-                            }else {
-                                // <button class="btn-data btn-orangeYellow marcar_pagada" title="Marcar como liquidada" value="' + data.idLote +'"><i class="material-icons">how_to_reg</i></button>
-                                BtnStats = '<button href="#" value="'+data.idLote+'" data-estatus="'+data.idStatusContratacion+'"  data-value="'+data.registro_comision+'" data-estatus="'+data.idStatusContratacion+'" data-totalNeto2="'+data.totalNeto2+'" data-compartida="'+0+'" data-tipov="'+data.tipo_venta+'" data-subdirector="'+data.sub+'" data-regis="'+data.registro_comision+'" data-idResidencial="'+data.idResidencial+'" data-ismktd="'+data.ismktd+'" data-mdb="'+data.descuento_mdb+'" data-lugarP="'+data.lugar_prospeccion+'"  data-code="'+data.cbbtton+'" ' +'class="btn-data btn-green verify_neodata" title="Verificar en NEODATA">' +'<span class="material-icons">verified_user</span></button> <button href="#" data-param="1" data-idpagoc="' + data.idLote + '" ' +'class="btn-data btn-deepGray update_bandera" title="Regresar a activas">' +'<i class="fas fa-undo-alt"></i></button>'
-                                 ;
+                        //         // +'<button class="btn-data btn-orangeYellow marcar_pagada" title="Marcar como liquidada" value="' + data.idLote +'"><i class="material-icons">how_to_reg</i></button>';
+                        //     }
+                        // }else {
+                        //         if(data.fecha_modificacion <= '2021-01-01' || data.fecha_modificacion == null ) {
+                        //         BtnStats = '<button href="#" value="'+data.idLote+'" data-estatus="'+data.idStatusContratacion+'" data-totalNeto2="'+data.totalNeto2+'" data-compartida="'+1+'" data-tipov="'+data.tipo_venta+'" data-subdirector="'+data.sub+'" data-regis="'+data.registro_comision+'" data-idResidencial="'+data.idResidencial+'" data-ismktd="'+data.ismktd+'" data-mdb="'+data.descuento_mdb+'" data-lugarP="'+data.lugar_prospeccion+'"  data-value="'+data.registro_comision+'" data-code="'+data.cbbtton+'" ' +'class="btn-data btn-green verify_neodata" title="Verificar en NEODATA">' +'<span class="material-icons">verified_user</span></button> ';
+                        //     }else {
+                        //         // <button class="btn-data btn-orangeYellow marcar_pagada" title="Marcar como liquidada" value="' + data.idLote +'"><i class="material-icons">how_to_reg</i></button>
+                        //         BtnStats = '<button href="#" value="'+data.idLote+'" data-estatus="'+data.idStatusContratacion+'"  data-value="'+data.registro_comision+'" data-estatus="'+data.idStatusContratacion+'" data-totalNeto2="'+data.totalNeto2+'" data-compartida="'+0+'" data-tipov="'+data.tipo_venta+'" data-subdirector="'+data.sub+'" data-regis="'+data.registro_comision+'" data-idResidencial="'+data.idResidencial+'" data-ismktd="'+data.ismktd+'" data-mdb="'+data.descuento_mdb+'" data-lugarP="'+data.lugar_prospeccion+'"  data-code="'+data.cbbtton+'" ' +'class="btn-data btn-green verify_neodata" title="Verificar en NEODATA">' +'<span class="material-icons">verified_user</span></button> <button href="#" data-param="1" data-idpagoc="' + data.idLote + '" ' +'class="btn-data btn-deepGray update_bandera" title="Regresar a activas">' +'<i class="fas fa-undo-alt"></i></button>'
+                        //          ;
 
 
-                                // +'<button class="btn-data btn-orangeYellow marcar_pagada" title="Marcar como liquidada" value="' + data.idLote +'"><i class="material-icons">how_to_reg</i></button>';
-                            }
-                        }
+                        //         // +'<button class="btn-data btn-orangeYellow marcar_pagada" title="Marcar como liquidada" value="' + data.idLote +'"><i class="material-icons">how_to_reg</i></button>';
+                        //     }
+                        // }
                     }
                     return '<div class="d-flex justify-center">'+BtnStats+'</div>';
                 }
@@ -487,25 +494,13 @@
                 $(this).parent().find('.animacion').removeClass("fas fa-chevron-up").addClass("fas fa-chevron-down");
             } 
             else {
-                var status;
-                var fechaVenc;
-                if (row.data().idStatusContratacion == 8 && row.data().idMovimiento == 38) {
-                    status = 'Status 8 listo (Asistentes de Gerentes)';
-                } 
-                else if (row.data().idStatusContratacion == 8 && row.data().idMovimiento == 65 ) {
-                    status = 'Status 8 enviado a Revisión (Asistentes de Gerentes)';
-                }
-                else {
-                    status='N/A';
-                }
-                if (row.data().idStatusContratacion == 8 && row.data().idMovimiento == 38 ||
-                    row.data().idStatusContratacion == 8 && row.data().idMovimiento == 65) {
-                    fechaVenc = row.data().fechaVenc;
-                }else {
-                    fechaVenc='N/A';
-                }
-
-                var informacion_adicional = '<div class="container subBoxDetail"><div class="row"><div class="col-12 col-sm-12 col-sm-12 col-lg-12" style="border-bottom: 2px solid #fff; color: #4b4b4b; margin-bottom: 7px"><label><b>Información colaboradores</b></label></div><div class="col-12 col-sm-12 col-md-12 col-lg-12"><label><b>Subdirector: </b>' + row.data().subdirector + '</label></div><div class="col-12 col-sm-12 col-md-12 col-lg-12"><label><b>Gerente: </b>' + row.data().gerente + '</label></div><div class="col-12 col-sm-12 col-md-12 col-lg-12"><label><b>Coordinador: </b>' + row.data().coordinador + '</label></div><div class="col-12 col-sm-12 col-md-12 col-lg-12"><label><b>Asesor: </b>' + row.data().asesor + '</label></div></div></div>';
+ 
+                var informacion_adicional = `<div class="container subBoxDetail"><div class="row"><div class="col-12 col-sm-12 col-sm-12 col-lg-12" style="border-bottom: 2px solid #fff; color: #4b4b4b; margin-bottom: 7px"><label><b>Información colaboradores</b></label></div>
+                <div class="col-2 col-sm-2 col-md-2 col-lg-2"><label><b>Director: </b>` + row.data().director + `</label></div>
+                <div class="col-2 col-sm-2 col-md-2 col-lg-2"><label><b>Regional: </b>` + row.data().regional + `</label></div>
+                <div class="col-2 col-sm-2 col-md-2 col-lg-2"><label><b>Subdirector: </b>` + row.data().subdirector + `</label></div><div class="col-2 col-sm-2 col-md-2 col-lg-2"><label><b>Gerente: </b>` + row.data().gerente + `</label></div>
+                <div class="col-2 col-sm-2 col-md-2 col-lg-2"><label><b>Coordinador: </b>` + row.data().coordinador + `</label></div><div class="col-2 col-sm-2 col-md-2 col-lg-2"><label><b>Asesor: </b>` + row.data().asesor + `</label></div>
+                </div></div>`;
 
                 row.child(informacion_adicional).show();
                 tr.addClass('shown');

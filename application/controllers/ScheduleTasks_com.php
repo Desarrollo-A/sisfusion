@@ -34,24 +34,24 @@ class ScheduleTasks_com extends CI_Controller
  
 
 
-  public function topar_bandera_neo(){
+    public function topar_bandera_neo(){
 
-    $this->db->query("UPDATE lotes SET registro_comision = 7 WHERE idLote IN (SELECT id_lote FROM pago_comision WHERE pendiente = 0 AND bandera NOT IN (7))");
-    $this->db->query("UPDATE pago_comision SET bandera = 7 WHERE id_lote IN (SELECT id_lote FROM pago_comision WHERE pendiente = 0 AND bandera NOT IN (7))");
-    $this->db->query("UPDATE pago_comision set bandera = 7 where id_lote in (select idLote from lotes where idLote in (select id_lote from pago_comision where pendiente < 1 and bandera not in (7) and bandera  = 0) and registro_comision = 7)");
-    }
-    
-
-
-  public function limpiar_bandera_neo(){
-//limpiar liquidas y pasar de 55 a 1
-    $this->db->query("UPDATE lotes SET registro_comision = 7 WHERE idLote IN (SELECT id_lote FROM pago_comision WHERE pendiente = 0 AND bandera NOT IN (7))");
-    $this->db->query("UPDATE pago_comision SET bandera = 7 WHERE id_lote IN (SELECT id_lote FROM pago_comision WHERE pendiente = 0 AND bandera NOT IN (7))");
-    $this->db->query("UPDATE pago_comision set bandera = 7 where id_lote in (select idLote from lotes where idLote in (select id_lote from pago_comision where pendiente < 1 and bandera not in (7) and bandera  = 0) and registro_comision = 7)");
-    $this->db->query("UPDATE pago_comision SET bandera = 0 WHERE id_lote in (select idLote from lotes where registro_comision = 1 and idStatusContratacion = 15) and bandera = 55 and abonado<(total_comision-100) and abonado < (ultimo_pago-100)");
-    $this->db->query("UPDATE pago_comision SET bandera = 1 WHERE bandera IN (55)");
-
-}
+      $this->db->query("UPDATE lotes SET registro_comision = 7 WHERE idLote IN (SELECT id_lote FROM pago_comision WHERE pendiente = 0 AND bandera NOT IN (7) AND registro_comision not in (8) )");
+      $this->db->query("UPDATE pago_comision SET bandera = 7 WHERE id_lote IN (SELECT id_lote FROM pago_comision WHERE pendiente = 0 AND bandera NOT IN (7))");
+      $this->db->query("UPDATE pago_comision set bandera = 7 where id_lote in (select idLote from lotes where idLote in (select id_lote from pago_comision where pendiente < 1 and bandera not in (7) and bandera  = 0) and registro_comision = 7)");
+      }
+      
+  
+  
+    public function limpiar_bandera_neo(){
+  //limpiar liquidas y pasar de 55 a 1
+      $this->db->query("UPDATE lotes SET registro_comision = 7 WHERE idLote IN (SELECT id_lote FROM pago_comision WHERE pendiente = 0 AND bandera NOT IN (7)) AND registro_comision not in (8) ");
+      $this->db->query("UPDATE pago_comision SET bandera = 7 WHERE id_lote IN (SELECT id_lote FROM pago_comision WHERE pendiente = 0 AND bandera NOT IN (7))");
+      $this->db->query("UPDATE pago_comision set bandera = 7 where id_lote in (select idLote from lotes where idLote in (select id_lote from pago_comision where pendiente < 1 and bandera not in (7) and bandera  = 0) and registro_comision = 7)");
+      $this->db->query("UPDATE pago_comision SET bandera = 0 WHERE id_lote in (select idLote from lotes where registro_comision = 1 and idStatusContratacion = 15) and bandera = 55 and abonado<(total_comision-100) and abonado < (ultimo_pago-100)");
+      $this->db->query("UPDATE pago_comision SET bandera = 1 WHERE bandera IN (55)");
+  
+  }
 
 // ScheduleTasks_com/activar_bandera_neo
 public function activar_bandera_neo(){

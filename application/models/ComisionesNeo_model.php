@@ -8,14 +8,14 @@ class ComisionesNeo_model extends CI_Model {
         $this->gphsis = $this->load->database('GPHSIS', TRUE);
     }
 
-        public function getStatusNeodata($lote){
+    public function getStatusNeodata($lote){
 
         $pre_validate = $this->db->query("SELECT l.id_estado FROM lotes l WHERE l.status = 1 AND l.idLote = $lote");
 
         $var = $pre_validate->row()->id_estado;
 
         if($var == 1){
-            $filter = " l.id_desarrollo_n AS idResidencial";
+            $filter = " l.id_desarrollo_n AS idResidencial ";
         }else{
             $filter = " r.idResidencial ";
         }
@@ -37,10 +37,6 @@ class ComisionesNeo_model extends CI_Model {
         return $this->gphsis->query("EXEC [GPHSIS].[dbo].[004VerificaconNeoB] @referencia = $referencia, @iddesarrollo = $desarrollo")->row();
     }
     
-
-     
-
-      
 
     function getLotesByAdviser($proyecto, $condominio)
     {
@@ -354,6 +350,29 @@ public function getLotesPagados($res){
 
 
 
+    public function getPrioridad($prioridad){
+        return $this->db->query("SELECT id_plan, CONCAT(where_principal,' ', fecha_inicio, ' ', fecha_fin, ' ', lugar_prospeccion, ' ', regional, ' ', otro) cadena FROM plan_comision WHERE prioridad = $prioridad");
+    }
 
+    public function updatePlan($prioridad, $plan){
+        $whereData =  $this->db->query("SELECT CONCAT(where_principal,' ', fecha_inicio, ' ', fecha_fin, ' ', lugar_prospeccion, ' ', regional, ' ', otro) cadena FROM plan_comision WHERE id_plan = $plan AND prioridad = $prioridad");
+
+        $whereRes = $whereData->row()->cadena;
+ 
+        return $this->db->query("UPDATE clientes set plan_comision = $plan where id_cliente in (
+            SELECT cl.id_cliente FROM clientes cl
+            INNER JOIN lotes l on l.idCliente = cl.id_cliente AND l.status = 1 AND l.registro_comision in (8,0) AND l.idStatusContratacion BETWEEN 8 AND 15
+            INNER JOIN condominios c on c.idCondominio = l.idCondominio
+            INNER JOIN residenciales r on r.idResidencial = c.idResidencial
+            INNER JOIN usuarios ae on ae.id_usuario = cl.id_asesor
+            INNER JOIN prospectos ps on ps.id_prospecto = cl.id_prospecto 
+            $whereRes AND l.tipo_venta IS NOT NULL AND l.tipo_venta IN (1,2,7) AND cl.status = 1 AND cl.fechaApartado >= '2020-03-01' and cl.id_sede not in (0) and cl.plan_comision is null)");
+
+ 
+    }
+
+
+
+      
 
 }
