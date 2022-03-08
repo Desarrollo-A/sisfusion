@@ -96,11 +96,11 @@ public function getPuestosDescuentos(){
   {
     //echo $val;
     $datos = array();
-    if(empty($val)){
+    // if(empty($val)){
       $datos = $this->Comisiones_model->getDataDispersionPago();
-    }else{
-      $datos = $this->Comisiones_model->getDataDispersionPago($val);
-    }
+    // }else{
+    //   $datos = $this->Comisiones_model->getDataDispersionPago($val);
+    // }
     
     if ($datos != null) {
       echo json_encode($datos);

@@ -208,7 +208,7 @@
                     titleAttr: 'DESCUENTOS UNIVERSIDAD LIQUIDADOS',
                     title: 'DESCUENTOS UNIVERSIDAD LIQUIDADOS',
                     exportOptions: {
-                        columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+                        columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10,11],
                         format: {
                             header: function (d, columnIdx) {
                                 switch (columnIdx) {
