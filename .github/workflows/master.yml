@@ -16,5 +16,5 @@ jobs:
       with:
         server: ${{ secrets.ftp_server }}
         username: ${{ secrets.ftp_username }}
-        ssh_private_key: ${{ secrets.ftp_ssh_private_key }}
+        password: ${{ secrets.ftp_password }}
         server-dir: /mnt/data/aplicaciones/Prueba/sisfusionRepo/
