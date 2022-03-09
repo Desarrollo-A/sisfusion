@@ -102,6 +102,7 @@ $blueIndigo    : #103f75;
 $blueIndigoDeep: #143860;
 $violetChin    : #8E6C88;
 $violetLight   : #9392e8;
+$violetBoots   : #563D7C;
 $redLight      : #f44336;
 $red           : #c01313;
 $orangeYellow  : #ff9800;
@@ -185,7 +186,7 @@ $tv                 : "(min-width : 1824px)";
     background-color: $white !important;
     border: 1px solid $greenExcel;
     border-radius: 27px;
-    margin: 0;
+    margin-bottom: 0;
 }
 .buttons-excel i {
     color: $greenExcel;
@@ -336,6 +337,15 @@ $tv                 : "(min-width : 1824px)";
     background-color: $violetChin;
     color: $white;
 }
+.btn-violetBoots{
+    color:$violetBoots;
+    border: 1px solid $violetBoots;
+}
+.btn-violetBoots:hover {
+    background-color: $violetBoots;
+    color: $white;
+}
+
 .btn-orangeYellow{
     color: $orangeYellow;
     border: 1px solid $orangeYellow;
@@ -414,7 +424,7 @@ $tv                 : "(min-width : 1824px)";
 .file-gph{
     background-color: $platinum;
     border-radius: 30px;
-    padding: 7px 10px;
+    padding: 7px 3px 7px 15px;
     display: flex;
     .upload-btn{
         width: 19%;
@@ -599,3 +609,38 @@ $tv                 : "(min-width : 1824px)";
     border-top-color: $gray;
 }
 /* tooltip styles */
+
+.radio_container {
+    display: flex;
+    justify-content: space-around;
+    background-color: $platinum;
+    border-radius: 9999px;
+    box-shadow: inset 0.5px 0.5px 2px 0 rgba(0, 0, 0, 0.15);
+    padding: 5px;
+    label {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 35px;
+        border-radius: 9999px;
+        overflow: hidden;
+        transition: linear 0.3s;
+        margin: 0;
+    }
+    input[type="radio"]:checked + label {
+        background-color: $blueIndigo;
+        color: $white;
+        transition: 0.3s;
+    }
+}
+
+.text-modal{
+    border: 1px solid $platinumScroll;
+    border-radius: 10px;
+    padding: 10px;
+    resize: none;
+    width: 100%;
+    height: 120px;
+    overflow: auto;
+    font-size: 12px;
+}

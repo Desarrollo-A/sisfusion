@@ -354,7 +354,7 @@
   background-color: #ffffff !important;
   border: 1px solid #209E63;
   border-radius: 27px;
-  margin: 0;
+  margin-bottom: 0;
 }
 
 .buttons-excel i {
@@ -534,6 +534,16 @@
   color: #ffffff;
 }
 
+.btn-violetBoots {
+  color: #563D7C;
+  border: 1px solid #563D7C;
+}
+
+.btn-violetBoots:hover {
+  background-color: #563D7C;
+  color: #ffffff;
+}
+
 .btn-orangeYellow {
   color: #ff9800;
   border: 1px solid #ff9800;
@@ -625,7 +635,7 @@
 .file-gph {
   background-color: #eaeaea;
   border-radius: 30px;
-  padding: 7px 10px;
+  padding: 7px 3px 7px 15px;
   display: flex;
 }
 
@@ -827,6 +837,43 @@
 }
 
 /* tooltip styles */
+.radio_container {
+  display: flex;
+  justify-content: space-around;
+  background-color: #eaeaea;
+  border-radius: 9999px;
+  box-shadow: inset 0.5px 0.5px 2px 0 rgba(0, 0, 0, 0.15);
+  padding: 5px;
+}
+
+.radio_container label {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 35px;
+  border-radius: 9999px;
+  overflow: hidden;
+  transition: linear 0.3s;
+  margin: 0;
+}
+
+.radio_container input[type="radio"]:checked + label {
+  background-color: #103f75;
+  color: #ffffff;
+  transition: 0.3s;
+}
+
+.text-modal {
+  border: 1px solid #c1c1c1;
+  border-radius: 10px;
+  padding: 10px;
+  resize: none;
+  width: 100%;
+  height: 120px;
+  overflow: auto;
+  font-size: 12px;
+}
+
 .cardDocument {
   height: calc(100vh - 125px);
 }
@@ -854,7 +901,6 @@
 .cardDocument .realBox .boxDocument {
   background-color: #333333;
   border-radius: 8px;
-  margin: 0 15px;
   color: #ffffff;
 }
 
