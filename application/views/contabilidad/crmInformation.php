@@ -1,36 +1,6 @@
 <link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet"/>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
 
-
-<style>
-    .radio_container {
-        display: flex;
-        justify-content: space-around;
-        background-color: #EAEAEA;
-        border-radius: 9999px;
-        box-shadow: inset 0.5px 0.5px 2px 0 rgba(0, 0, 0, 0.15);
-        padding: 5px;
-    }
-
-    label {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 35px;
-        border-radius: 9999px;
-        overflow: hidden;
-        transition: linear 0.3s;
-        color: #6e6e6edd;
-        margin: 0;
-    }
-
-    input[type="radio"]:checked + label {
-        background-color: #103f75;
-        color: white;
-        transition: 0.3s;
-    }
-</style>
-
 <body class="">
 <div class="wrapper">
 

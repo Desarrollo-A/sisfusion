@@ -4,14 +4,14 @@
 <body>
     <div class="wrapper">
         <?php //include 'sidebarParams_prospectsList.php'
-/*-------------------------------------------------------*/
-$datos = array();
-    $datos = $datos4;
-    $datos = $datos2;
-    $datos = $datos3;  
+            /*-------------------------------------------------------*/
+            $datos = array();
+            $datos = $datos4;
+            $datos = $datos2;
+            $datos = $datos3;  
             $this->load->view('template/sidebar', $datos);
- /*--------------------------------------------------------*/
-     ?>
+            /*--------------------------------------------------------*/
+        ?>
 
         <div class="content boxContent">
             <div class="container-fluid">
@@ -55,7 +55,7 @@ $datos = array();
                                                 name="prospects-datatable">
                                                 <thead>
                                                     <tr>
-                                                        <th>id Solicitud</th>
+                                                        <th>ID SOLICITUD</th>
                                                         <th>PROYECTO</th>
                                                         <th>CONDOMINIO</th>
                                                         <th>LOTE</th>

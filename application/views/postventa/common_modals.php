@@ -5,11 +5,11 @@
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
                     <i class="material-icons">clear</i>
                 </button>
-                <h4 class="modal-title">Ingresa tus comentarios</h4>
+                <h4 class="modal-title card-title">Ingrese su comentario</h4>
             </div>
             <form id="approveForm" name="approveForm" method="post">
                 <div class="modal-body">
-                    <textarea class="form-control" type="text" name="observations" id="observations" autofocus="true" onkeyup="javascript:this.value=this.value.toUpperCase();"></textarea>
+                    <textarea class="text-modal scroll-styles" type="text" name="observations" id="observations" autofocus="true" onkeyup="javascript:this.value=this.value.toUpperCase();" placeholder="Escriba aqui su comentario"></textarea>
                     <input type="hidden" name="id_solicitud" id="id_solicitud">
                 </div>
                 <div class="modal-footer">
@@ -52,21 +52,30 @@
         <div class="modal-content">
             <div class="modal-header"></div>
             <div class="modal-body text-center">
-                <h5 id="mainLabelText"></h5>
-                <p style="font-size: 0.8em" id="secondaryLabelDetail"></p>
-                <div class="input-group hide" id="selectFileSection">
+                <h4 class="card-title" id="mainLabelText"></h4>
+                <p id="secondaryLabelDetail"></p>
+                <!-- <div class="input-group hide" id="selectFileSection">
                     <label class="input-group-btn">
                         <span class="btn btn-primary btn-file">
-                            Seleccionar archivo&hellip;<input type="file" name="uploadedDocument" id="uploadedDocument" style="display: none;">
+                            Seleccionar archivo&hellip;
+                            <input type="file" name="uploadedDocument" id="uploadedDocument" style="display: none;">
                         </span>
                     </label>
                     <input type="text" class="form-control" id="txtexp" readonly>
+                </div> -->
+
+                <div class="file-gph" id="selectFileSection">
+                    <input class="d-none" type="file" name="uploadedDocument" id="uploadedDocument">
+                    <input class="file-name" id="file-name" type="text" placeholder="No has seleccionada nada aún" readonly="">
+                    <label class="upload-btn m-0" for="uploadedDocument">
+                        <span>Seleccionar</span>
+                        <i class="fas fa-folder-open"></i>
+                    </label>
                 </div>
+
                 <div class="input-group hide" id="rejectReasonsSection">
                     <div class="col-12 col-sm-12 col-md-12 col-lg-12 pr-0">
-                        <select class="selectpicker" data-style="btn btn-primary btn-round"
-                                title="Selecciona un motivo de rechazo" data-size="7" id="rejectionReasons"
-                                data-live-search="true" multiple></select>
+                        <select class="selectpicker" data-style="btn btn-primary btn-round" title="Selecciona un motivo de rechazo" data-size="7" id="rejectionReasons" data-live-search="true" multiple></select>
                     </div>
                 </div>
                 <input type="text" class="hide" id="idSolicitud">
@@ -84,95 +93,100 @@
 </div>
 
 <div class="modal fade" id="presupuestoModal" data-keyboard="false" data-backdrop="static">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header"></div>
-            <form id="formPresupuesto" name="formPresupuesto" method="post">
+    <div class="modal-dialog boxContent">
+        <div class="modal-content card">
+            <form class="card-content" id="formPresupuesto" name="formPresupuesto" method="post">
             <input type="hidden" name="id_solicitud3" id="id_solicitud3">
-                <div class="modal-body text-center">
-                <h5 id="mainLabelText"></h5>
-                <p style="font-size: 0.8em" id="secondaryLabelDetail"><b>Desarrollo / Condominio / Lote</b></p>
-                    <div class="col-md-12">
-                        <div class="form-group label-floating is-focused">
-                            <label class="control-label label-gral">Nombre Completo</label>
-                            <input id="nombrePresupuesto" name="nombrePresupuesto" class="form-control input-gral" type="text" disabled>
-                        </div>
-                    </div>
-                    <div class="col-md-12">
-                        <div class="form-group label-floating is-focused">
-                            <label class="control-label label-gral">Nombre a quien escritura</label>
-                            <input id="nombrePresupuesto2" name="nombrePresupuesto2" class="form-control input-gral" type="text" required>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="form-group label-floating is-focused">
-                            <label class="control-label label-gral">Estatus de pago</label>
-                            <input id="estatusPago" name="estatusPago" class="form-control input-gral" type="text" required>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="form-group label-floating is-focused">
-                            <label class="control-label label-gral">Superficie</label>
-                            <input id="superficie" name="superficie" class="form-control input-gral" value="" type="number" required>
-                        </div>
-                    </div>    
-                    <div class="col-md-4">
-                        <div class="form-group label-floating is-focused">
-                            <label class="control-label label-gral">Fecha de contrato</label>
-                            <input type="text" class="form-control datepicker"
-                            id="fContrato" name="fContrato" disabled/>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="form-group label-floating is-focused">
-                            <label class="control-label label-gral">Clave catastral</label>
-                            <input id="catastral" name="catastral" value="" class="form-control input-gral" type="number" required>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="form-group label-floating is-focused">
-                            <label class="control-label label-gral">Estatus construcción</label>
-                            <input id="construccion" name="construccion" class="form-control input-gral" type="text" required>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="form-group label-floating is-focused">
-                            <label class="control-label label-gral">¿Tenemos cliente anterior?</label>
-                            <select class="selectpicker" data-style="btn btn-primary btn-round"
-                                    title="¿Tenemos cliente anterior?" data-size="7" id="cliente" name="cliente"
-                                    data-live-search="true" required>
-                                    <option value ="default" selected disabled>aquino</option>
-                                    <option value="1">Si</option>
-                                    <option value="2">No</option>
-                            </select>
-                        </div>
-                    </div>
-                    <!-- estos input solo se muestran si es si el select anterior -->
-                    <div id="ifClient" style="display:none">
-                        <div class="col-md-12">
-                            <div class="form-group label-floating is-focused">
-                                <label class="control-label label-gral">Nombre del titular anterior</label>
-                                <input id="nombreT" name="nombreT" class="form-control input-gral" type="text" disabled>
+                <div class="modal-body text-center toolbar m-0">
+                    <h3 id="mainLabelText"></h3>
+                    <h4 id="secondaryLabelDetail">Desarrollo / Condominio / Lote</h4>
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-12 pl-0 pr-0">
+                                <div class="form-group text-left m-0">
+                                    <label class="control-label label-gral">Nombre Completo</label>
+                                    <input id="nombrePresupuesto" name="nombrePresupuesto" class="form-control input-gral" type="text" disabled>
+                                </div>
+                            </div>
+                            <div class="col-md-12 pl-0 pr-0">
+                                <div class="form-group text-left m-0">
+                                    <label class="control-label label-gral m-0">Nombre a quien escritura</label>
+                                    <input id="nombrePresupuesto2" name="nombrePresupuesto2" class="form-control input-gral" type="text" required>
+                                </div>
+                            </div>
+                            <div class="col-md-4 pl-0">
+                                <div class="form-group text-left m-0">
+                                    <label class="control-label label-gral m-0">Estatus de pago</label>
+                                    <input id="estatusPago" name="estatusPago" class="form-control input-gral" type="text" required>
+                                </div>
+                            </div>
+                            <div class="col-md-4 p-0">
+                                <div class="form-group text-left m-0">
+                                    <label class="control-label label-gral m-0">Superficie</label>
+                                    <input id="superficie" name="superficie" class="form-control input-gral" value="" type="number" required>
+                                </div>
+                            </div>    
+                            <div class="col-md-4 pr-0">
+                                <div class="form-group text-left m-0">
+                                    <label class="control-label label-gral m-0">Fecha de contrato</label>
+                                    <input type="text" class="form-control datepicker input-gral"
+                                    id="fContrato" name="fContrato" disabled/>
+                                </div>
+                            </div>
+                            <div class="col-md-4 pl-0">
+                                <div class="form-group text-left m-0">
+                                    <label class="control-label label-gral m-0">Clave catastral</label>
+                                    <input id="catastral" name="catastral" value="" class="form-control input-gral" type="number" required>
+                                </div>
+                            </div>
+                            <div class="col-md-4 p-0">
+                                <div class="form-group text-left m-0">
+                                    <label class="control-label label-gral m-0">Estatus construcción</label>
+                                    <input id="construccion" name="construccion" class="form-control input-gral" type="text" required>
+                                </div>
+                            </div>
+                            <div class="col-md-4 pr-0">
+                                <div class="form-group text-left m-0">
+                                    <label class="control-label label-gral m-0">¿Tenemos cliente anterior?</label>
+                                    <select class="selectpicker m-0" data-style="btn btn-primary btn-round"
+                                            title="¿Tenemos cliente anterior?" data-size="7" id="cliente" name="cliente"
+                                            data-live-search="true" required>
+                                            <option value ="default" selected disabled>aquino</option>
+                                            <option value="1">Si</option>
+                                            <option value="2">No</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <!-- estos input solo se muestran si es si el select anterior -->
+                            <div id="ifClient" style="display:none">
+                                <div class="col-md-12 pl-0 pr-0">
+                                    <div class="form-group label-floating is-focused">
+                                        <label class="control-label label-gral">Nombre del titular anterior</label>
+                                        <input id="nombreT" name="nombreT" class="form-control input-gral" type="text" disabled>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 pl-0">
+                                    <div class="form-group label-floating is-focused">
+                                        <label class="control-label label-gral">Fecha del contrato anterior</label>
+                                        <input type="text" class="form-control datepicker"
+                                        id="fechaCA" name="fechaCA" disabled/>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 pr-0">
+                                    <div class="form-group label-floating is-focused">
+                                        <label class="control-label label-gral">RFC / Datos personales</label>
+                                        <input id="rfcDatos" name="rfcDatos" value="N/A" class="form-control input-gral" type="text">
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        <div class="col-md-6">
-                            <div class="form-group label-floating is-focused">
-                                <label class="control-label label-gral">Fecha del contrato anterior</label>
-                                <input type="text" class="form-control datepicker"
-                                id="fechaCA" name="fechaCA" disabled/>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group label-floating is-focused">
-                                <label class="control-label label-gral">RFC / Datos personales</label>
-                                <input id="rfcDatos" name="rfcDatos" value="N/A" class="form-control input-gral" type="text">
+                        <div class="row">
+                            <div class="col-md-12 d-flex justify-end p-0">
+                                <button type="button" class="btn btn-danger btn-simple mt-2" data-dismiss="modal">Cancelar</button>
+                                <button type="submit" id="RequestPresupuesto" class="btn btn-primary mt-2">Guardar</button>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
-                    <button type="submit" id="RequestPresupuesto" class="btn btn-primary">Guardar</button>
                 </div>
             </form>
         </div>
@@ -180,94 +194,99 @@
 </div>
 
 <div class="modal fade" id="checkPresupuestoModal" data-keyboard="false" data-backdrop="static">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header"></div>
-            <form id="formPresupuesto" name="formPresupuesto" method="post">
+    <div class="modal-dialog boxContent">
+        <div class="modal-content card">
+            <form class="card-content" id="formPresupuesto" name="formPresupuesto" method="post">
             <input type="hidden" name="id_solicitud3" id="id_solicitud3">
-                <div class="modal-body text-center">
-                <h5 id="mainLabelText"></h5>
-                <p style="font-size: 0.8em" id="secondaryLabelDetail"><b>Desarrollo / Condominio / Lote</b></p>
-                    <div class="col-md-12">
-                        <div class="form-group label-floating is-focused">
-                            <label class="control-label label-gral">Nombre Completo</label>
-                            <input id="nombrePresupuesto3" name="nombrePresupuesto3" class="form-control input-gral" type="text" disabled>
-                        </div>
-                    </div>
-                    <div class="col-md-12">
-                        <div class="form-group label-floating is-focused">
-                            <label class="control-label label-gral">Nombre a quien escritura</label>
-                            <input id="nombrePresupuesto4" name="nombrePresupuesto4" class="form-control input-gral" type="text" disabled>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="form-group label-floating is-focused">
-                            <label class="control-label label-gral">Estatus de pago</label>
-                            <input id="estatusPago2" name="estatusPago2" class="form-control input-gral" type="text" disabled>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="form-group label-floating is-focused">
-                            <label class="control-label label-gral">Superficie</label>
-                            <input id="superficie2" name="superficie2" class="form-control input-gral" value="" type="number" disabled>
-                        </div>
-                    </div>    
-                    <div class="col-md-4">
-                        <div class="form-group label-floating is-focused">
-                            <label class="control-label label-gral">Fecha de contrato</label>
-                            <input type="text" class="form-control datepicker"
-                            id="fContrato2" name="fContrato2" disabled/>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="form-group label-floating is-focused">
-                            <label class="control-label label-gral">Clave catastral</label>
-                            <input id="catastral2" name="catastral2" value="" class="form-control input-gral" type="number" disabled>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="form-group label-floating is-focused">
-                            <label class="control-label label-gral">Estatus construcción</label>
-                            <input id="construccion2" name="construccion2" class="form-control input-gral" type="text" disabled>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="form-group label-floating is-focused">
-                            <label class="control-label label-gral">¿Tenemos cliente anterior?</label>
-                            <select class="selectpicker" data-style="btn btn-primary btn-round"
-                                    title="¿Tenemos cliente anterior?" data-size="7" id="cliente2" name="cliente2"
-                                    data-live-search="true" disabled>
-                                    <option value ="default" selected disabled>aquino</option>
-                                    <option value="1">Si</option>
-                                    <option value="2">No</option>
-                            </select>
-                        </div>
-                    </div>
-                    <!-- estos input solo se muestran si es si el select anterior -->
-                    <div id="ifClient2" style="display:none">
-                        <div class="col-md-12">
-                            <div class="form-group label-floating is-focused">
-                                <label class="control-label label-gral">Nombre del titular anterior</label>
-                                <input id="nombreT2" name="nombreT2" class="form-control input-gral" type="text" disabled>
+                <div class="modal-body text-center toolbar m-0 p-0">
+                    <h5 id="mainLabelText"></h5>
+                    <h4 id="secondaryLabelDetail">Desarrollo / Condominio / Lote</h4>
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-12 pl-0 pr-0">
+                                <div class="form-group label-floating is-focused">
+                                    <label class="control-label label-gral">Nombre Completo</label>
+                                    <input id="nombrePresupuesto3" name="nombrePresupuesto3" class="form-control input-gral" type="text" disabled>
+                                </div>
+                            </div>
+                            <div class="col-md-12 pl-0 pr-0">
+                                <div class="form-group label-floating is-focused">
+                                    <label class="control-label label-gral">Nombre a quien escritura</label>
+                                    <input id="nombrePresupuesto4" name="nombrePresupuesto4" class="form-control input-gral" type="text" disabled>
+                                </div>
+                            </div>
+                            <div class="col-md-4 pl-0">
+                                <div class="form-group label-floating is-focused">
+                                    <label class="control-label label-gral">Estatus de pago</label>
+                                    <input id="estatusPago2" name="estatusPago2" class="form-control input-gral" type="text" disabled>
+                                </div>
+                            </div>
+                            <div class="col-md-4 p-0">
+                                <div class="form-group label-floating is-focused">
+                                    <label class="control-label label-gral">Superficie</label>
+                                    <input id="superficie2" name="superficie2" class="form-control input-gral" value="" type="number" disabled>
+                                </div>
+                            </div>    
+                            <div class="col-md-4 pr-0">
+                                <div class="form-group label-floating is-focused">
+                                    <label class="control-label label-gral">Fecha de contrato</label>
+                                    <input type="text" class="form-control datepicker input-gral"
+                                    id="fContrato2" name="fContrato2" disabled/>
+                                </div>
+                            </div>
+                            <div class="col-md-4 pl-0">
+                                <div class="form-group label-floating is-focused">
+                                    <label class="control-label label-gral">Clave catastral</label>
+                                    <input id="catastral2" name="catastral2" value="" class="form-control input-gral" type="number" disabled>
+                                </div>
+                            </div>
+                            <div class="col-md-4 p-0">
+                                <div class="form-group label-floating is-focused">
+                                    <label class="control-label label-gral">Estatus construcción</label>
+                                    <input id="construccion2" name="construccion2" class="form-control input-gral" type="text" disabled>
+                                </div>
+                            </div>
+                            <div class="col-md-4 pr-0">
+                                <div class="form-group label-floating is-focused">
+                                    <label class="control-label label-gral">¿Tenemos cliente anterior?</label>
+                                    <select class="selectpicker" data-style="btn btn-primary btn-round"
+                                            title="¿Tenemos cliente anterior?" data-size="7" id="cliente2" name="cliente2"
+                                            data-live-search="true" disabled>
+                                            <option value ="default" selected disabled>aquino</option>
+                                            <option value="1">Si</option>
+                                            <option value="2">No</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <!-- estos input solo se muestran si es si el select anterior -->
+                            <div id="ifClient2" style="display:none">
+                                <div class="col-md-12 pl-0 pr-0">
+                                    <div class="form-group label-floating is-focused">
+                                        <label class="control-label label-gral">Nombre del titular anterior</label>
+                                        <input id="nombreT2" name="nombreT2" class="form-control input-gral" type="text" disabled>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 pl-0">
+                                    <div class="form-group label-floating is-focused">
+                                        <label class="control-label label-gral">Fecha del contrato anterior</label>
+                                        <input type="text" class="form-control datepicker"
+                                        id="fechaCA2" name="fechaCA2" disabled/>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 pr-0">
+                                    <div class="form-group label-floating is-focused">
+                                        <label class="control-label label-gral">RFC / Datos personales</label>
+                                        <input id="rfcDatos2" name="rfcDatos2" value="N/A" class="form-control input-gral" type="text" disabled>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        <div class="col-md-6">
-                            <div class="form-group label-floating is-focused">
-                                <label class="control-label label-gral">Fecha del contrato anterior</label>
-                                <input type="text" class="form-control datepicker"
-                                id="fechaCA2" name="fechaCA2" disabled/>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group label-floating is-focused">
-                                <label class="control-label label-gral">RFC / Datos personales</label>
-                                <input id="rfcDatos2" name="rfcDatos2" value="N/A" class="form-control input-gral" type="text" disabled>
+                        <div class="row">
+                            <div class="col-md-12 d-flex justify-end p-0">
+                                <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cerrar</button>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cerrar</button>
                 </div>
             </form>
         </div>
@@ -335,14 +354,6 @@
 
                 <input type="text" class="hide" id="idSolicitud">
                 <input type="text" class="hide" id="action">
-                <!-- <div class="input-group hide" id="documentsSection">
-                    <label class="input-group-btn">
-                        <span class="btn btn-primary btn-file">
-                            Seleccionar archivo&hellip;<input type="file" name="uploadedDocument2" id="uploadedDocument2" style="display: none;">
-                        </span>
-                    </label>
-                    <input type="text" class="form-control" id="txtexp" readonly>
-                </div> -->
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>

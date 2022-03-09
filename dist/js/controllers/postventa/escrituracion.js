@@ -107,7 +107,7 @@ function getClient(idLote) {
         $('#cel').val(data.telefono2);
         $('#idCliente').val(data.id_cliente);
     }, 'json');
-    $('#check').show();
+    $('#check').removeClass("d-none");
 }
 
 function getProyectos() {
@@ -129,7 +129,7 @@ function getProyectos() {
 
 function getCondominios(idResidencial) {
     $('#spiner-loader').removeClass('hide');
-    $('#check').hide();
+    $('#check').addClass("d-none");
     $("#condominio").find("option").remove();
     $("#condominio").append($('<option disabled selected>').val(null).text("Seleccione una opción"));
     $.post('getCondominios', {
@@ -151,7 +151,7 @@ function getCondominios(idResidencial) {
 
 function getLotes(idCondominio) {
     $('#spiner-loader').removeClass('hide');
-    $('#check').hide();
+    $('#check').addClass("d-none");
     $("#lotes").find("option").remove();
     $("#lotes").append($('<option disabled selected>').val(null).text("Seleccione una opción"));
     $.post('getLotes', {
