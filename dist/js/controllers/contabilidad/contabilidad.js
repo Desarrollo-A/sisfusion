@@ -271,6 +271,7 @@ $(document).ready(function () {
 async function processFile(selectedFile) {
     try {
         let arrayBuffer = await readFileAsync(selectedFile);
+        console.log(arrayBuffer);
         return arrayBuffer;
     } catch (err) {
         console.log(err);

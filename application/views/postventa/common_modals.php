@@ -349,9 +349,6 @@
                     <div class="col-12 col-sm-12 col-md-6 col-lg-6"><div id="information"></div></div>
                     <div class="col-12 col-sm-12 col-md-6 col-lg-6"><div id="information2"></div></div>
                 </div>
-
-
-
                 <input type="text" class="hide" id="idSolicitud">
                 <input type="text" class="hide" id="action">
             </div>
@@ -364,17 +361,20 @@
 </div>
 
 <div class="modal fade" id="dateModal" data-keyboard="false" data-backdrop="static">
-    <div class="modal-dialog">
-        <div class="modal-content">
+    <div class="modal-dialog boxContent">
+        <div class="modal-content card">
             <div class="modal-header"></div>
-            <div class="modal-body text-center">
+            <div class="modal-body text-center card-content">
                 <h5 id="mainLabelText">Fecha para firma de escrituras</h5>
-                <p style="font-size: 0.8em"></p>
-                
-                <div class="input-group" >
-                    <div class="col-12 col-sm-12 col-md-12 col-lg-12 pr-0">
-                        <input type="text" class="form-control datepicker2" id="signDate" value="" />
-                        <label>*(fecha sugerida para firma de escrituras)</label>
+                <div class="toolbar" >
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-12 col-sm-12 col-md-12 col-lg-12 pr-0">
+                                <input type="text" class="form-control datepicker2 input-gral" id="signDate" value="" />
+                <p>*(fecha sugerida para firma de escrituras)</p>
+                                
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <input type="text" class="hide" id="idSolicitud">

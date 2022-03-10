@@ -29,3 +29,17 @@
 #Config & Database files.
 application/config/config.php
 application/config/database.php
+
+#dist/files
+dist/build
+
+#Libraries and plugs
+static/angular
+static/yadcf
+
+#System & Core
+system
+system/*
+
+#User
+user_guide

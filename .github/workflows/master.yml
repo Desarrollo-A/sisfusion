@@ -12,9 +12,10 @@ jobs:
       uses: actions/checkout@v2
 
     - name: 📂 Sync files
-      uses: SamKirkland/FTP-Deploy-Action@4.2.0
+      uses: wlixcc/SFTP-Deploy-Action@v1.2.1
       with:
-        server: ${{ secrets.ftp_server }}
-        username: ${{ secrets.ftp_username }}
-        ssh_private_key: ${{ secrets.ftp_ssh_private_key }}
-        server-dir: /mnt/data/aplicaciones/Prueba/sisfusionRepo/
+        server: 104.198.134.0
+        port: 22
+        username: prohab
+        ssh_private_key: ${{secrets.SFTP_SSH_PRIVATE_KEY}}
+        remote_path: /mnt/data/aplicaciones/Prueba/sisfusionRepo/
