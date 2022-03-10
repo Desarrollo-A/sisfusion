@@ -1,14 +1,14 @@
 <body>
 <div class="wrapper">
-    <?php //include 'sidebarParams_prospectsList.php'
-/*-------------------------------------------------------*/
-$datos = array();
+    <?php
+    /*-------------------------------------------------------*/
+    $datos = array();
     $datos = $datos4;
     $datos = $datos2;
     $datos = $datos3;  
-            $this->load->view('template/sidebar', $datos);
- /*--------------------------------------------------------*/
-     ?>
+    $this->load->view('template/sidebar', $datos);
+    /*--------------------------------------------------------*/
+    ?>
 
     <link href="https://cdn.datatables.net/select/1.3.0/css/select.bootstrap.css" rel="stylesheet">
     <link href="https://cdn.datatables.net/select/1.3.0/css/select.bootstrap.min.css" rel="stylesheet">
@@ -18,11 +18,6 @@ $datos = array();
         .label-inf {
             color: #333;
         }
-        /*.modal-body-scroll{
-            height: 100px;
-            width: 100%;
-            overflow-y: auto;
-        }*/
 
     </style>
 
@@ -58,6 +53,9 @@ $datos = array();
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
 <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
+<script src="<?=base_url()?>dist/js/fullcalendar/main.js"></script>
+<script src="<?=base_url()?>dist/js/fullcalendar/locales/es.js"></script>
+
 <!--<script src="--><?php //base_url()?><!--dist/js/jquery.validate.js"></script>-->
 
 <script>
@@ -76,7 +74,6 @@ $datos = array();
 <script src="<?= base_url() ?>dist/assets/js/es.js"></script>
 <!-- DateTimePicker Plugin -->
 <script src="<?= base_url() ?>dist/assets/js/bootstrap-datetimepicker.js"></script>
-<!-- <script src="<?=base_url()?>dist/js/controllers/general-1.1.0.js"></script> -->
 <script src="<?=base_url()?>static/yadcf/jquery.dataTables.yadcf.js"></script>
 <script src='<?=base_url()?>dist/js/fullcalendar/main.js'></script>
 <script src="<?=base_url()?>dist/js/controllers/calendar.js"></script>
