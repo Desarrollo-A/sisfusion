@@ -1035,7 +1035,8 @@ class Contraloria_model extends CI_Model {
         FROM lotes l
         INNER JOIN clientes cl ON cl.id_cliente = l.idCliente AND cl.status = 1
         INNER JOIN statuslote sl ON sl.idStatusLote = l.idStatusLote
-        WHERE l.status = 1 AND l.idCondominio = $idCondominio
+		INNER JOIN condominios con ON con.idCondominio=l.idCondominio
+        WHERE l.status = 1 AND con.idResidencial = $idCondominio
         UNION ALL
         SELECT l.idLote, UPPER(l.nombreLote) nombreLote, l.referencia, 
         'N/A' nombreCliente,
@@ -1044,7 +1045,8 @@ class Contraloria_model extends CI_Model {
         (CASE l.observacionContratoUrgente WHEN '1' THEN '28B463' ELSE '566573' END) colorEstatusLiberacion
         FROM lotes l
         INNER JOIN statuslote sl ON sl.idStatusLote = l.idStatusLote
-		WHERE l.status = 1 AND (l.idCliente IS NULL OR l.idCliente = 0) AND l.idCondominio = $idCondominio ORDER BY l.idLote");
+		INNER JOIN condominios con ON con.idCondominio=l.idCondominio
+		WHERE l.status = 1 AND (l.idCliente IS NULL OR l.idCliente = 0) AND con.idResidencial = $idCondominio ORDER BY l.idLote");
     }
 
     public function getInformation($beginDate, $endDate) {

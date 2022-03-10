@@ -791,18 +791,18 @@ console.log(resulq.data[0].vigencia);
                                                 <div class="col-md-2"><input class="form-control ng-invalid ng-invalid-required decimals" name="comision_dar[]"  data-old="" id="comision_dar_${i}" onblur="DarComision(${i},${resultArr.length},${total0})"   value="0"></div></div>`);
                                                 if(i == resultArr.length -1){
                                                     $("#modal_NEODATA .modal-body").append(`
-                                                    <input type="text" name="pago_neo" id="pago_neo" value="${formatMoney(data[0].Aplicado)}">
-                                                    <input type="text" name="idLote" id="idLote" value="${idLote}">
-                                                    <input type="text" name="porcentaje_abono" id="porcentaje_abono" value="">
-                                                    <input type="text" name="abonado" id="abonado" value="">
-                                                    <input type="text" name="total_comision" id="total_comision" value="">
-                                                    <input type="text" name="bonificacion" id="bonificacion" value="${data[0].Bonificado}">
-                                                    <input type="text" name="pendiente" id="pendiente" value="">
-                                                    <input type="text" name="idCliente" id="idCliente" value="${idCliente}">
-                                                    <input type="tetx" name="id_disparador" id="id_disparador" value="0">
-                                                    <input type="text" name="lugar_p" id="lugar_p" value="${lugar_prospeccionLote}">
-                                                    <input type="text" name="tipo_venta_insert" id="tipo_venta_insert" value="7">
-                                                    <input type="text" name="totalNeto2" id="totalNeto2" value="${totalNeto2}">
+                                                    <input type="hidden" name="pago_neo" id="pago_neo" value="${formatMoney(data[0].Aplicado)}">
+                                                    <input type="hidden" name="idLote" id="idLote" value="${idLote}">
+                                                    <input type="hidden" name="porcentaje_abono" id="porcentaje_abono" value="">
+                                                    <input type="hidden" name="abonado" id="abonado" value="">
+                                                    <input type="hidden" name="total_comision" id="total_comision" value="">
+                                                    <input type="hidden" name="bonificacion" id="bonificacion" value="${data[0].Bonificado}">
+                                                    <input type="hidden" name="pendiente" id="pendiente" value="">
+                                                    <input type="hidden" name="idCliente" id="idCliente" value="${idCliente}">
+                                                    <input type="hidden" name="id_disparador" id="id_disparador" value="0">
+                                                    <input type="hidden" name="lugar_p" id="lugar_p" value="${lugar_prospeccionLote}">
+                                                    <input type="hidden" name="tipo_venta_insert" id="tipo_venta_insert" value="7">
+                                                    <input type="hidden" name="totalNeto2" id="totalNeto2" value="${totalNeto2}">
                                                     `);
                                                 }
                                             });

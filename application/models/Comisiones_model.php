@@ -318,70 +318,45 @@ function getDatosComisionesHistorialRigel($proyecto,$condominio){
 
          }
 
-            $this->db->query("SET LANGUAGE Español;");
-        $query = $this->db->query("(SELECT DISTINCT(l.idLote), l.idStatusContratacion, l.registro_comision, cl.id_cliente, 
- CONCAT(cl.nombre,' ',cl.apellido_paterno,' ',cl.apellido_materno) nombre_cliente, l.nombreLote, l.idStatusContratacion, 
-                res.nombreResidencial, cond.nombre as nombreCondominio, l.tipo_venta, l.referencia, vc.id_cliente AS compartida, l.totalNeto, 
-                l.totalNeto2, l.plan_enganche, plane.nombre as enganche_tipo, cl.lugar_prospeccion,
-                      ae.id_usuario as id_asesor, CONCAT(ae.nombre, ' ', ae.apellido_paterno, ' ', ae.apellido_paterno) as asesor,
-                      co.id_usuario as id_coordinador, CONCAT(co.nombre, ' ', co.apellido_paterno, ' ', co.apellido_paterno) as coordinador,
-                      ge.id_usuario as id_gerente, CONCAT(ge.nombre, ' ', ge.apellido_paterno, ' ', ge.apellido_paterno) as gerente,
-                      su.id_usuario as id_subdirector, CONCAT(su.nombre, ' ', su.apellido_paterno, ' ', su.apellido_paterno) as subdirector,
-                      di.id_usuario as id_director, CONCAT(di.nombre, ' ', di.apellido_paterno, ' ', di.apellido_paterno) as director, pc.fecha_modificacion,
-                      convert(nvarchar, pc.fecha_modificacion, 6) date_final, ae.ismktd, cl.descuento_mdb, cl.id_subdirector as sub,res.idResidencial
-                      FROM  lotes l
-
-                      INNER JOIN  clientes cl ON cl.id_cliente = l.idCliente
-                      INNER JOIN  condominios cond ON l.idCondominio=cond.idCondominio
-                      INNER JOIN  residenciales res ON cond.idResidencial = res.idResidencial
-                      LEFT JOIN  pago_comision pc ON pc.id_lote = l.idLote AND pc.bandera in (0)
-                      LEFT JOIN  opcs_x_cats plane ON plane.id_opcion= l.plan_enganche AND plane.id_catalogo = 39
-                      LEFT JOIN (SELECT id_cliente FROM ventas_compartidas WHERE estatus = 1) AS vc ON vc.id_cliente = cl.id_cliente
-                      INNER JOIN  usuarios ae ON ae.id_usuario = cl.id_asesor
-                      LEFT JOIN  usuarios co ON co.id_usuario = ae.id_lider
-                      LEFT JOIN  usuarios ge ON ge.id_usuario = cl.id_gerente
-                      LEFT JOIN  usuarios su ON su.id_usuario = ge.id_lider
-                      LEFT JOIN  usuarios di ON di.id_usuario = su.id_lider
-                      WHERE l.idStatusContratacion BETWEEN 9 AND 15 AND cl.status = 1 AND l.status = 1 
-                      $filtro
-                      AND tipo_venta IS NOT NULL AND tipo_venta IN (1,2,7) 
-
-
-
-
-                      )UNION
-                      ( SELECT DISTINCT(l.idLote), l.idStatusContratacion, l.registro_comision, cl.id_cliente, CONCAT(cl.nombre,' ',cl.apellido_paterno,' ',
-                      cl.apellido_materno) nombre_cliente, l.nombreLote, l.idStatusContratacion, 
-                      res.nombreResidencial, cond.nombre as nombreCondominio, l.tipo_venta, l.referencia, vc.id_cliente AS compartida, l.totalNeto, 
-                      l.totalNeto2, l.plan_enganche, plane.nombre as enganche_tipo, cl.lugar_prospeccion,
-                            ae.id_usuario as id_asesor, CONCAT(ae.nombre, ' ', ae.apellido_paterno, ' ', ae.apellido_paterno) as asesor,
-                            co.id_usuario as id_coordinador, CONCAT(co.nombre, ' ', co.apellido_paterno, ' ', co.apellido_paterno) as coordinador,
-                            ge.id_usuario as id_gerente, CONCAT(ge.nombre, ' ', ge.apellido_paterno, ' ', ge.apellido_paterno) as gerente,
-                            su.id_usuario as id_subdirector, CONCAT(su.nombre, ' ', su.apellido_paterno, ' ', su.apellido_paterno) as subdirector,
-                            di.id_usuario as id_director, CONCAT(di.nombre, ' ', di.apellido_paterno, ' ', di.apellido_paterno) as director, 
-                            pc.fecha_modificacion, convert(nvarchar, pc.fecha_modificacion, 6) date_final, ae.ismktd, cl.descuento_mdb, cl.id_subdirector as sub,res.idResidencial
-                            FROM  lotes l
-                            INNER JOIN  clientes cl ON cl.id_cliente = l.idCliente
-                            INNER JOIN  condominios cond ON l.idCondominio=cond.idCondominio
-                            INNER JOIN  residenciales res ON cond.idResidencial = res.idResidencial
-                            LEFT JOIN  pago_comision pc ON pc.id_lote = l.idLote AND pc.bandera in (0)
-                            LEFT JOIN  opcs_x_cats plane ON plane.id_opcion= l.plan_enganche AND plane.id_catalogo = 39
-                            LEFT JOIN (SELECT id_cliente FROM ventas_compartidas WHERE estatus = 1) AS vc ON vc.id_cliente = cl.id_cliente
-                            INNER JOIN  usuarios ae ON ae.id_usuario = cl.id_asesor
-                            LEFT JOIN  usuarios co ON co.id_usuario = ae.id_lider
-                            LEFT JOIN  usuarios ge ON ge.id_usuario = cl.id_gerente
-                            LEFT JOIN  usuarios su ON su.id_usuario = ge.id_lider
-                            LEFT JOIN  usuarios di ON di.id_usuario = su.id_lider
-                            WHERE l.idStatusContratacion BETWEEN 9 AND 15 AND cl.status = 1 AND l.status = 1 
-                            AND l.registro_comision in (0,8,2)
-                            AND tipo_venta IS NOT NULL AND tipo_venta IN (1, 2,7) 
-                            AND (cl.fechaApartado >= '2020-03-01' OR l.idLote in(19196,31907, 35863, 36603, 36603, 32575,45694,22741, 28434, 24576, 24577,35697,25218,31684,41032,34191,34141, 40635,36483,38927, 33931, 19523, 32101, 16406, 36617, 36618, 13334, 13615, 32793, 28405, 28406) )
-
-                            )
-
-                            
-
-                            ORDER BY l.idLote");
+           // 
+              $this->db->query("SET LANGUAGE Español;");
+        $query = $this->db->query("
+        SELECT DISTINCT(l.idLote), res.nombreResidencial, cond.nombre as nombreCondominio, l.nombreLote,  
+        CONCAT(cl.nombre,' ',cl.apellido_paterno,' ',cl.apellido_materno) nombre_cliente, l.tipo_venta, 
+        vc.id_cliente AS compartida, l.idStatusContratacion, l.totalNeto2, pc.fecha_modificacion, 
+        convert(nvarchar, pc.fecha_modificacion, 6) date_final,
+        convert(nvarchar, cl.fechaApartado, 6) fechaApartado, se.nombre as sede,
+        l.registro_comision, l.referencia, cl.id_cliente,            
+        CONCAT(ae.nombre, ' ', ae.apellido_paterno, ' ', ae.apellido_materno) as asesor,
+        CONCAT(co.nombre, ' ', co.apellido_paterno, ' ', co.apellido_materno) as coordinador,
+        CONCAT(ge.nombre, ' ', ge.apellido_paterno, ' ', ge.apellido_materno) as gerente,
+        CONCAT(su.nombre, ' ', su.apellido_paterno, ' ', su.apellido_materno) as subdirector,
+        (CASE WHEN re.id_usuario IN (0) OR re.id_usuario IS NULL THEN 'NA' ELSE CONCAT(re.nombre, ' ', re.apellido_paterno, ' ', re.apellido_materno) END) regional,
+        CONCAT(di.nombre, ' ', di.apellido_paterno, ' ', di.apellido_materno) as director
+        --(CASE WHEN cl.plan_comision IN (0) OR cl.plan_comision IS NULL THEN '-' ELSE pl.descripcion END) AS plan_comision, cl.plan_comision
+        /* l.totalNeto, l.plan_enganche, plane.nombre as enganche_tipo, cl.lugar_prospeccion, ae.ismktd, cl.descuento_mdb, cl.id_subdirector as sub,res.idResidencial*/
+        FROM lotes l
+        INNER JOIN clientes cl ON cl.id_cliente = l.idCliente
+        INNER JOIN condominios cond ON l.idCondominio=cond.idCondominio
+        INNER JOIN residenciales res ON cond.idResidencial = res.idResidencial
+        INNER JOIN usuarios ae ON ae.id_usuario = cl.id_asesor
+        LEFT JOIN pago_comision pc ON pc.id_lote = l.idLote AND pc.bandera in (0)
+        LEFT JOIN (SELECT id_cliente FROM ventas_compartidas WHERE estatus = 1) AS vc ON vc.id_cliente = cl.id_cliente
+        LEFT JOIN usuarios co ON co.id_usuario = cl.id_coordinador
+        LEFT JOIN usuarios ge ON ge.id_usuario = cl.id_gerente
+        LEFT JOIN usuarios su ON su.id_usuario = cl.id_subdirector
+        LEFT JOIN usuarios re ON re.id_usuario = cl.id_regional
+        LEFT JOIN usuarios di ON di.id_usuario = 2
+        --LEFT JOIN plan_comision pl ON pl.id_plan = cl.plan_comision
+        LEFT JOIN sedes se ON se.id_sede = cl.id_sede
+        
+        WHERE l.idStatusContratacion BETWEEN 11 AND 15 AND cl.status = 1 AND l.status = 1
+        AND l.registro_comision in (0) AND cl.fechaApartado >= '2020-03-01'
+        AND tipo_venta IS NOT NULL AND tipo_venta IN (1,2,7) 
+      
+        
+        ORDER BY l.idLote");
+  
     return $query->result();
     }
 
@@ -4477,9 +4452,11 @@ function getHistorialDescuentos($proyecto,$condominio){
     INNER JOIN lotes lo ON lo.idLote = co.id_lote
     INNER JOIN condominios con ON con.idCondominio = lo.idCondominio
     INNER JOIN residenciales re ON re.idResidencial = con.idResidencial
-    INNER JOIN historial_comisiones hc ON hc.id_pago_i = pci.id_pago_i AND hc.comentario like '%MOTIVO DESCUENTO%'
+    INNER JOIN historial_comisiones hc ON hc.id_pago_i = pci.id_pago_i  
     INNER JOIN usuarios us2 ON us2.id_usuario = pci.modificado_por
-    WHERE pci.estatus IN(0,11,16) AND pci.descuento_aplicado = 1 AND re.idResidencial = $proyecto");
+    WHERE pci.estatus IN(0,11,16) and pci.comentario='DESCUENTO' AND pci.descuento_aplicado IN(1) AND re.idResidencial = $proyecto AND (hc.comentario like 'MOTIVO DESCUENTO%' OR hc.comentario like 'MÓTIVO DESCUENTO%')
+	group by pci.id_pago_i,us.nombre,us.apellido_paterno,us.apellido_materno,pci.abono_neodata,lo.nombreLote, hc.comentario,us2.nombre,us2.apellido_paterno,us2.apellido_materno,pci.fecha_abono, pci.estatus
+");
 }
 else{
     return $this->db->query("SELECT pci.id_pago_i, CONCAT(us.nombre,' ',us.apellido_paterno,' ',us.apellido_materno) AS usuario, pci.abono_neodata as monto, lo.nombreLote, hc.comentario AS motivo, CONCAT(us2.nombre,' ',us2.apellido_paterno,' ',us2.apellido_materno) AS modificado_por, pci.fecha_abono, pci.estatus
@@ -4489,9 +4466,11 @@ else{
     INNER JOIN lotes lo ON lo.idLote = co.id_lote
     INNER JOIN condominios con ON con.idCondominio = lo.idCondominio
     INNER JOIN residenciales re ON re.idResidencial = con.idResidencial
-    INNER JOIN historial_comisiones hc ON hc.id_pago_i = pci.id_pago_i AND hc.comentario like '%MOTIVO DESCUENTO%'
+    INNER JOIN historial_comisiones hc ON hc.id_pago_i = pci.id_pago_i 
     INNER JOIN usuarios us2 ON us2.id_usuario = pci.modificado_por
-    WHERE pci.estatus IN(0,11,16,17) AND pci.descuento_aplicado = 1 AND con.idCondominio = $condominio");
+     WHERE pci.estatus IN(0,11,16) and pci.comentario='DESCUENTO' AND pci.descuento_aplicado IN(1) AND con.idCondominio = $condominio AND (hc.comentario like 'MOTIVO DESCUENTO%' OR hc.comentario like 'MÓTIVO DESCUENTO%')
+	group by pci.id_pago_i,us.nombre,us.apellido_paterno,us.apellido_materno,pci.abono_neodata,lo.nombreLote, hc.comentario,us2.nombre,us2.apellido_paterno,us2.apellido_materno,pci.fecha_abono, pci.estatus
+");
 
 }
 }
@@ -6190,7 +6169,7 @@ public function GuardarPago($id_comision, $comentario_topa, $monotAdd){
         if($opc == ''){
             $Abonado = $this->db-> query("SELECT SUM(pci.abono_neodata) abonado FROM pago_comision_ind pci WHERE pci.id_comision IN  ($id_comision)")->result_array();
             $pagos = $this->db-> query("SELECT * FROM pago_comision_ind WHERE id_comision=$id_comision and estatus in(1,6) and id_usuario=$id_usuario;")->result_array();
-            if($porcentaje < $porcentaje_ant  && $Abonado[0]['abonado'] < $comision_total){
+            if($porcentaje <= $porcentaje_ant  && $Abonado[0]['abonado'] < $comision_total){
                 for ($i=0; $i <count($pagos) ; $i++) { 
                     $comentario2='Se cancelo el pago por cambio de porcentaje';
                     $respuesta =  $this->db->query("UPDATE pago_comision_ind SET abono_neodata=0,estatus=0 WHERE id_pago_i=".$pagos[$i]['id_pago_i']." AND id_usuario=".$id_usuario.";");
