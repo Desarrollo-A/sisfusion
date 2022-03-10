@@ -2,6 +2,14 @@ on:
   push:
     branches:
       - master
+    paths-ignore:
+      - 'dist/build/'
+      - 'dist/js/controllers/dist/'
+      - 'static/angular/'
+      - 'static/yadcf/'
+      - 'system/'
+      - 'user_guide/'
+
 name:  Deploy website on push
 jobs:
   web-deploy:
