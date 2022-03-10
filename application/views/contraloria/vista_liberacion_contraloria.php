@@ -291,10 +291,13 @@ function validateExtension(extension, allowedExtensions) {
     $('#selectResidenciales').change(function () {
         let idResidencial = $(this).val();
         $("#selectCondominios").empty().selectpicker('refresh');
+
+       var postData = "idResidencial=" + idResidencial;
         $.ajax({
-            url: url + 'General/getCondominiosList/' + idResidencial,
+            url: url + 'General/getCondominiosList',
             type: 'post',
-            dataType: 'json',
+            data:postData,
+            dataType: 'html',
             success: function (response) {
                 var len = response.length;
                 for (var i = 0; i < len; i++) {
