@@ -3,6 +3,10 @@ on:
     branches:
       - master
     paths:
+      - 'application/**'
+      - 'dist/**'
+      - 'static/**'
+
       - '!application/cache/**'
       - '!application/config/**'
       - '!application/core/**'
