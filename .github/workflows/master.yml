@@ -3,21 +3,21 @@ on:
     branches:
       - master
     paths-ignore:
-      - 'application/cache/**'
-      - 'application/config/**'
-      - 'application/core/**'
-      - 'application/helpers/**'
-      - 'application/hooks/**'
-      - 'application/libraries/**'
-      - 'application/logs/**'
-      - 'application/migrations/**'
-      - 'application/third_party/**'
-      - 'dist/build/**'
-      - 'dist/js/controllers/dist/**'
-      - 'static/angular/**'
-      - 'static/yadcf/**'
-      - 'system/**'
-      - 'user_guide/**'
+      - 'application/cache/*'
+      - 'application/config/*'
+      - 'application/core/*'
+      - 'application/helpers/*'
+      - 'application/hooks/*'
+      - 'application/libraries/*'
+      - 'application/logs/*'
+      - 'application/migrations/*'
+      - 'application/third_party/*'
+      - 'dist/build/*'
+      - 'dist/js/controllers/dist/*'
+      - 'static/angular/*'
+      - 'static/yadcf/*'
+      - 'system/*'
+      - 'user_guide/*'
 
 name:  Deploy website on push
 jobs:
