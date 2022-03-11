@@ -88,7 +88,8 @@ class Usuarios_modelo extends CI_Model {
                                         LEFT JOIN (SELECT id_usuario, id_lider AS id_lider3, CONCAT(apellido_paterno, ' ', apellido_materno, ' ', usuarios.nombre) lider_coord  
                                         FROM usuarios) AS lider_3 ON lider_3.id_usuario = lider_2.id_lid
                                         INNER JOIN sedes s ON CAST(s.id_sede AS VARCHAR(45)) = CAST(usuarios.id_sede AS VARCHAR(45))
-                                        WHERE ((id_lider = ".$this->session->userdata('id_lider')." OR id_lider_2 = ".$this->session->userdata('id_lider').") AND id_rol IN (7, 9) AND rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%') OR usuarios.id_usuario = ".$this->session->userdata('id_lider')."
+                                        WHERE ((id_lider = ".$this->session->userdata('id_lider')." OR id_lider_2 = ".$this->session->userdata('id_lider').") 
+                                        AND id_rol IN (7, 9) AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%') OR usuarios.id_usuario IN (9359, 9827)) OR usuarios.id_usuario = ".$this->session->userdata('id_lider')."
                                         ORDER BY nombre");
                 }
                 break;
@@ -119,8 +120,9 @@ class Usuarios_modelo extends CI_Model {
                 INNER JOIN sedes s ON s.id_sede = (CASE WHEN LEN (u.id_sede) > 1 THEN 2 ELSE u.id_sede END)
                 LEFT JOIN (SELECT SUM(abono_neodata) abono_pendiente, id_usuario FROM pago_comision_ind WHERE estatus=1 and ( descuento_aplicado is null or descuento_aplicado=0) 
                  GROUP BY id_usuario) pci2 ON pci2.id_usuario = us.id_usuario
-                WHERE  u.id_rol IN (1, 2, 3, 7, 9, 18, 19, 20, 25, 26, 27, 28, 29, 30, 36) AND u.rfc
-                NOT LIKE '%TSTDD%' AND u.correo NOT LIKE '%test_%' AND u.id_usuario NOT IN (821, 1366, 1923, 4340, 9623, 9624, 9625, 9626, 9627, 9628, 9629) ORDER BY nombre");
+                WHERE  u.id_rol IN (1, 2, 3, 7, 9, 18, 19, 20, 25, 26, 27, 28, 29, 30, 36) 
+                AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%') OR usuarios.id_usuario IN (9359, 9827))
+                AND u.id_usuario NOT IN (821, 1366, 1923, 4340, 9623, 9624, 9625, 9626, 9627, 9628, 9629) ORDER BY nombre");
                 break;
             case '26': // MERCADÓLOGO
                 return $this->db->query("SELECT u.estatus, u.id_usuario, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombre, u.correo,
@@ -162,7 +164,7 @@ class Usuarios_modelo extends CI_Model {
                                         LEFT JOIN usuarios us ON us.id_usuario = u.id_lider
                                         INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = u.id_rol
                                         LEFT JOIN sedes s ON CAST(s.id_sede AS VARCHAR(45)) = CAST(u.id_sede AS VARCHAR(45))
-                                        WHERE u.rfc NOT LIKE '%TSTDD%' AND ISNULL(u.correo, '' ) NOT LIKE '%test_%' AND oxc.id_catalogo = 1 $id_rol ORDER BY nombre");
+                                        WHERE AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%') OR usuarios.id_usuario IN (9359, 9827)) AND oxc.id_catalogo = 1 $id_rol ORDER BY nombre");
                 break;
         }
     }
