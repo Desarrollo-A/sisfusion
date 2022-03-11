@@ -1023,8 +1023,8 @@ public function get_info_tabla($datos){
                 LEFT JOIN evidencia_cliente ec ON ec.idCliente = cl.id_cliente 
                 INNER JOIN sedes s ON s.id_sede = asesor.id_sede
                 LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = cl.lugar_prospeccion AND oxc.id_catalogo = 9
-                LEFT JOIN comentariosMktd cm ON cm.idLote = l.idLote AND cm.id_cliente=cl.id_cliente
-                WHERE l.status = 1 AND ec.id_evidencia IS NULL AND cm.id_coment IS NULL");
+                /*LEFT JOIN comentariosMktd cm ON cm.idLote = l.idLote AND cm.id_cliente=cl.id_cliente*/
+                WHERE l.status = 1 AND ec.id_evidencia IS NULL/* AND cm.id_coment IS NULL*/");
 
 
 
@@ -1673,8 +1673,8 @@ public function getControversy(){
         INNER JOIN clientes c ON c.idLote = l.idLote AND c.status = 1
         INNER JOIN usuarios u ON u.id_usuario = c.id_asesor AND u.id_sede IN ($region1)
         INNER JOIN sedes s ON s.id_sede = u.id_sede
-        LEFT JOIN comentariosMktd cm ON cm.idLote = l.idLote AND cm.id_cliente=c.id_cliente
-        WHERE cm.id_coment IS NULL");
+        /*LEFT JOIN comentariosMktd cm ON cm.idLote = l.idLote AND cm.id_cliente=c.id_cliente
+        WHERE cm.id_coment IS NULL*/");
         }else if($this->session->userdata('id_usuario') == 5363 || $this->session->userdata('id_usuario') == 1988)
         {
             $query = $this->db->query("SELECT l.idLote, l.nombreLote, c.fechaApartado, s.nombre plaza,
