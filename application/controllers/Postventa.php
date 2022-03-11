@@ -1107,7 +1107,7 @@ class Postventa extends CI_Controller
 
         $pdf->writeHTMLCell(0, 0, $x = '', $y = '', $html, $border = 0, $ln = 1, $fill = 0, $reseth = true, $align = '', $autopadding = true);
 
-        $pdf->Output(__DIR__ . "/../../static/documentos/postventa/escrituracion/SOLICITUD_PRESUPUESTO/Hola.pdf", 'F');
+        $pdf->Output(__DIR__ . "/../../static/documentos/postventa/escrituracion/SOLICITUD_PRESUPUESTO/solicitud_".$data->nombre_escrituras."_presupuesto.pdf", 'F');
 
         // $pdf->Output(utf8_decode('Hola.pdf'), 'I');
     }
@@ -1209,7 +1209,7 @@ class Postventa extends CI_Controller
                                     <table width="100%" style="height: 100px; border: 1px solid #ddd;" width="690">
                                         <tr>
                                             <td colspan="2" align="left"><img src="https://www.ciudadmaderas.com/assets/img/logo.png" style=" max-width: 70%; height: auto;"></td>
-                                            <td colspan="2" align="right"><b style="font-size: 1.7em; "> Checklist<BR></b>
+                                            <td colspan="2" align="right"><b style="font-size: 1.7em; "> Solicitud de presupuesto<BR></b>
                                             </td>
                                         </tr>
                                     </table>
@@ -1269,17 +1269,6 @@ class Postventa extends CI_Controller
                                                 
                                             </tr>
                                         </table>
-                                        <br>
-                                        <br>
-                                        <br>
-                                        <table width="100%" style="text-align: center;padding:10px;height: 45px; border-top: 1px solid #ddd;border-left: 1px solid #ddd;border-right: 1px solid #ddd;" width="690">
-                                            <tr>
-                                                <td colspan="2" style="background-color: #15578B;color: #fff;padding: 3px 6px; "><b style="font-size: 2em; ">Checklist</b>
-                                                </td>
-                                            </tr>
-                                        </table>                            
-                                        <br><br>
-                                        
                                     </div>
                                 </div>
                             </div>
