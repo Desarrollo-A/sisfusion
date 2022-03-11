@@ -190,7 +190,7 @@ class Postventa_model extends CI_Model
         LEFT JOIN usuarios us2 ON us2.id_usuario = de.validado_por
         --LEFT JOIN motivos_rechazo_x_documento mrxd ON mrxd.id_documento = de.idDocumento AND mrxd.estatus = 1 
         --LEFT JOIN motivos_rechazo mr ON mr.id_motivo = mrxd.id_motivo
-        WHERE de.idSolicitud = 2 AND de.tipo_documento NOT IN (7, 11, 12, 13, 14, 15, 16, 17)");
+        WHERE de.idSolicitud = $idSolicitud AND de.tipo_documento NOT IN (7, 11, 12, 13, 14, 15, 16, 17)");
         return $query->result();
     }
 
@@ -284,4 +284,28 @@ function checkBudgetInfo($idSolicitud){
     function insertNotariaValuador($idNotaria, $idValuador, $idSolicitud){
         return $this->db->query("UPDATE solicitud_escrituracion SET idNotaria= $idNotaria, idValuador = $idValuador WHERE idSolicitud = $idSolicitud;");
     }
+
+    //INSERT NUEVA NOTARIA
+    function insertNewNotaria($nombre_notaria, $nombre_notario, $direccion, $correo, $telefono){
+        $this->db->query("INSERT INTO Notarias(nombre_notaria, nombre_notario, direccion, correo, telefono, sede, pertenece)
+        VALUES('$nombre_notaria', '$nombre_notario', '$direccion', '$correo', '$telefono', 0, 2);");
+        $insert_id = $this->db->insert_id();
+        $idSolicitud = $_POST['idSolicitud'];
+        //print_r("UPDATE solicitud_escrituracion SET idNotaria= $insert_id WHERE idSolicitud = $idSolicitud;");
+        $this->db->query("UPDATE solicitud_escrituracion SET idNotaria= $insert_id WHERE idSolicitud = $idSolicitud;");
+    }
+
+    //GESTION NOTARIA CLIENTE
+    function getNotariaClient($idSolicitud)
+    {
+        $idSolicitud = $_GET['idSolicitud'];
+        //print_r("SELECT n.idNotaria, n.nombre_notaria, n.nombre_notario, n.direccion, n.correo, n.telefono FROM Notarias n INNER JOIN solicitud_escrituracion se ON se.idNotaria = n.idNotaria WHERE se.idSolicitud = $idSolicitud");
+        return $this->db->query("SELECT n.idNotaria, n.nombre_notaria, n.nombre_notario, n.direccion, n.correo, n.telefono FROM Notarias n INNER JOIN solicitud_escrituracion se ON se.idNotaria = n.idNotaria WHERE se.idSolicitud = '$idSolicitud'");
+        
+    }
+
+    function updateObservacionesPostventa($idSolicitud){
+        $this->db->query("UPDATE solicitud_escrituracion SET estatus= 10 WHERE idSolicitud = $idSolicitud;");
+    }
+
 }
