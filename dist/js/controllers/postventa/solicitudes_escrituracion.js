@@ -688,7 +688,8 @@ function fillTable(beginDate, endDate) {
                                 exp = 2;
 
                             newBtn += `<button id="trees" data-idSolicitud=${d.idSolicitud} class="btn-data btn-details-grey details-control" data-permisos="2" data-id-prospecto="" data-toggle="tooltip" data-placement="top" title="Desglose documentos"><i class="fas fa-chevron-down"></i></button>`;
-                            if (userType == 57 && d.estatusValidacion == 0 && exp != null) { // MJ: ANTES 55
+                            newBtn += `<button id="notaria" data-idSolicitud=${d.idSolicitud} class="btn-data btn-green details-control" data-permisos="2" data-id-prospecto="" data-toggle="tooltip" data-placement="top" title="Notaria"><i class="fas fa-user-tie"></i></button>`;
+                            if (userType == 57 && d.estatusValidacion == 0 && exp != null && d.no_rechazos != 0) { // MJ: ANTES 55
                                 newBtn += `<button id="reject"  class="btn-data btn-warning" data-toggle="tooltip" data-placement="top" title="Rechazar"><i class="fas fa-ban"></i></button>`;
                             }
                             group_buttons += permisos(d.permisos, exp, d.idDocumento, d.tipo_documento, d.idSolicitud, 1, newBtn);
@@ -709,7 +710,9 @@ function fillTable(beginDate, endDate) {
                             //Declaraciones ejecutadas cuando el resultado de expresión coincide con valorN
                             break;
                         case 13:
-                            group_buttons += permisos(d.permisos, d.expediente, d.idDocumento, d.tipo_documento, d.idSolicitud, 2, newBtn);
+                            newBtn += `<button id="observaciones" data-idSolicitud=${d.idSolicitud} class="btn-data btn-green" data-permisos="2" data-id-prospecto="" rel="tooltip" data-placement="left" title="Observaciones"><i class="fas fa-envelope"></i></button>`;    
+                            newBtn += `<button id="upload" data-idSolicitud=${d.idSolicitud} class="btn-data btn-green" data-action="2" data-id-prospecto="" rel="tooltip" data-placement="left" title="Upload/Delte"><i class="far fa-trash-alt"></i></button>`;
+                            group_buttons += permisos(d.permisos, d.expediente, d.idDocumento, d.tipo_documento, d.idSolicitud, 1, newBtn);
                             //Declaraciones ejecutadas cuando el resultado de expresión coincide con valorN
                             break;
                         case 14:
@@ -839,9 +842,9 @@ function email(idSolicitud, action, notaria = null, valuador= null) {
             obj = {idSolicitud: idSolicitud};
             break;
     }
-    $.post(action == 1 ? 'mailPresupuesto' : action == 2 ? 'presupuestoCliente' : action == 3 ? 'mailNotaria' : action == 4 ? 'mailFecha' : 'mailPresupuesto', obj, function (data) {
-        if (data == false) {//cambiar a true
-            changeStatus(idSolicitud, action == 1 ? 4 : 0, 'correo enviado', 1);
+    $.post(action == 1 ? 'mailPresupuesto': action == 2 ? 'presupuestoCliente': action  == 3 ? 'mailNotaria': action  == 4 ? 'mailFecha':'mailPresupuesto', obj, function (data) {
+        if(data == true){//cambiar a true
+            changeStatus(idSolicitud, action == 1 ? 4:0, 'correo enviado', 1);
         }
         $('#spiner-loader').addClass('hide');
     }, 'json');
@@ -1181,6 +1184,96 @@ function changeStatus(id_solicitud, action, comentarios, type) {
     }, 'json');
 }
 
+//INSERTAR NUEVA NOTARIA
+$(document).on("submit", "#newNotario", function (e) {
+    e.preventDefault();
+    let idSolicitud = $("#idSolicitud").val();
+    let data = new FormData($(this)[0]);
+    data.append('nombre_notaria', $('#nombre_notaria').val() == '' ? null : $('#nombre_notaria').val());
+    data.append('nombre_notario', $('#nombre_notario').val() == '' ? null : $('#nombre_notario').val());
+    data.append('direccion', $('#direccion').val() == '' ? null : $('#direccion').val());
+    data.append('correo', $('#correo').val() == '' ? null : $('#correo').val());
+    data.append('telefono', $('#telefono').val() == '' ? null : $('#telefono').val());
+    data.append("idSolicitud", idSolicitud);
+    //data.append('idSolicitud', $('#idSolicitud').val() == '' ? null : $('#idSolicitud').val());
+
+    $.ajax({
+        url: "nuevoNotario",
+        data: data,
+        cache: false,
+        contentType: false,
+        processData: false, 
+        type: 'POST',
+        success: function (response) {
+            $("#altaNotario").modal("hide");
+            prospectsTable.ajax.reload();
+        }
+    });
+});
+
+//MOSTRAR INFORMACION DE LA NOTARIA
+$(document).on('click', '#notaria', function () {
+    var data = prospectsTable.row($(this).parents('tr')).data();
+    getBudgetNotaria(data.idSolicitud);
+    $('#idSolicitud').val(data.idSolicitud);
+    ;
+    $("#gestionNotaria").modal();
+});
+
+function getBudgetNotaria(idSolicitud){
+    $.get('getBudgetNotaria',{
+        idSolicitud:idSolicitud
+    }, function(data) {
+        $('#nombreNotaria').val(data.nombre_notaria);
+        $('#nombreNotario').val(data.nombre_notario);
+        $('#direccionN').val(data.direccion);
+        $('#correoN').val(data.correo);
+        $('#telefonoN').val(data.telefono);
+    }, 'json');
+}
+
+//ENVIO OBSERVACIONES
+$(document).on('click', '#observaciones', function () {
+    var data = prospectsTable.row($(this).parents('tr')).data();
+    $('#idSolicitud').val(data.idSolicitud);
+    $('#viewObservaciones').modal();
+});
+
+$(document).on('change', '#pertenece', function () {
+    if ($(this).val() == 'Postventa') {
+        $('#postventa').show();
+    }else {
+        $('#postventa').hide();
+    }
+});
+
+$(document).on('change', '#pertenece', function () {
+    if ($(this).val() == 'Proyectos') {
+        $('#proyectos').show();
+    }else {
+        $('#proyectos').hide();
+    }
+});
+
+$(document).on("submit", "#observaciones", function (e) {
+    e.preventDefault();
+    let idSolicitud = $("#idSolicitud").val();
+    let data = new FormData($(this)[0]);
+    data.append("idSolicitud", idSolicitud);
+
+    $.ajax({
+        url: "observacionesPostventa",
+        data: data, 
+        cache: false,
+        contentType: false,
+        processData: false,
+        type: 'POST',
+        success: function (response) {
+            $("#viewObservaciones").modal("hide");
+            prospectsTable.ajax.reload();
+        }
+    });
+});
 function filterSelectOptions(documentType) {
     $("#rejectionReasons option").each(function () {
         if ($(this).attr("data-type") === documentType) {

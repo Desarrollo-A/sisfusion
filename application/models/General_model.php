@@ -10,7 +10,7 @@ class General_model extends CI_Model
 
     function get_menu($id_rol)
     {
-        if ($this->session->userdata('id_usuario') == 4415) // ES GREENHAM
+        if ($this->session->userdata('id_usuario') == 4415 || $this->session->userdata('id_usuario') == 6578 || $this->session->userdata('id_usuario') == 9942 || $this->session->userdata('id_usuario') == 9911) // ES GREENHAM
             return $this->db->query("SELECT * FROM Menu2 WHERE rol=" . $id_rol . " AND nombre IN ('Inicio', 'Comisiones') AND estatus = 1 order by orden asc");
         else {
             if ($id_rol == 33) { // ES UN USUARIO DE CONSULTA
@@ -51,7 +51,7 @@ class General_model extends CI_Model
     {
         return $this->db->query("SELECT idCondominio, UPPER(nombre) nombre FROM condominios WHERE status = 1 AND idResidencial = $idResidencial ORDER BY nombre ASC")->result_array();
     }
-
+ 
     public function getLotesList($idCondominio)
     {
         $a = 0;
