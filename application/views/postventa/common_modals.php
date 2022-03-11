@@ -1,4 +1,4 @@
-<div class="modal fade" id="approveModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+<div class="modal   ade" id="approveModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -394,17 +394,18 @@
             <div class="modal-header"><h5 id="mainLabelText">Fecha para firma de escrituras</h5></div>
             <div class="modal-body text-center">
                <form id="newNotario" name="newNotario" method="post">
+                    <input type="text" class="hide" id="idSolicitud" name="idSolicitud">
                     <div class="modal-body">
                         <div class="col-md-4">
                             <div class="form-group label-floating is-focused">
                                 <label class="control-label label-gral">Nombre de la notaria</label>
-                                <input type="text" id="nombreNotaria" name="nombreNotaria" class="form-control input-gral">
+                                <input type="text" id="nombre_notaria" name="nombre_notaria" class="form-control input-gral">
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-group label-floating is-focused">
                                 <label class="control-label label-gral">Nombre del notario</label>
-                                <input type="text" id="nombreNotario" name="nombreNotario" class="form-control input-gral">
+                                <input type="text" id="nombre_notario" name="nombre_notario" class="form-control input-gral">
                             </div>
                         </div>    
                         <div class="col-md-4">
@@ -425,13 +426,114 @@
                                 <input type="text" id="telefono" name="telefono" class="form-control input-gral">
                             </div>
                         </div>    
-                        <input type="text" class="hide" id="idSolicitud" name="idSolicitud">
                     </div>
                     <div class="modal-footer">
                         <button type="submit" class="btn btn-primary">Aceptar</button>
                         <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
                     </div>
                 </form> 
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="gestionNotaria" data-keyboard="false" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header"><h5 id="mainLabelText" aling="center"><b>Información Notaria</b></h5></div>
+            <div class="modal-body text-center">
+               <form method="post">
+                    <input type="text" class="hide" id="idSolicitud" name="idSolicitud">
+                    <div class="modal-body">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="control-label label-gral">Nombre de la notaria</label>
+                                <input type="text" id="nombreNotaria" name="nombreNotaria" class="form-control input-gral" value="" style="text-align:center" disabled>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="control-label label-gral">Nombre del notario</label>
+                                <input type="text" id="nombreNotario" name="nombre_notario" class="form-control input-gral" value="" style="text-align:center" disabled>
+                            </div>
+                        </div>    
+                        <div class="col-md-2"></div>
+                        <div class="col-md-8">
+                            <div class="form-group">
+                                <label class="control-label label-gral">Direccion</label>
+                                <input type="text" id="direccionN" name="direccion" class="form-control input-gral" value="" style="text-align:center" disabled>
+                            </div>
+                        </div> 
+                        <div class="col-md-2"></div>  
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="control-label label-gral">Correo</label>
+                                <input type="text" id="correoN" name="correo" class="form-control input-gral" value="" style="text-align:center" disabled>
+                            </div>
+                        </div>    
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="control-label label-gral">Teléfono</label>
+                                <input type="text" id="telefonoN" name="telefono" class="form-control input-gral" value="" style="text-align:center" disabled>
+                            </div>
+                        </div>    
+                    </div>
+                    <div class="modal-footer">
+                        <div class="col-md-4"></div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                            </div>
+                        </div>    
+                        <div class="col-md-4"></div>
+                    </div>
+                </form> 
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="viewObservaciones" data-keyboard="false" data-backdrop="static">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="text-center m-0">Envío de Observaciones</h5>
+            </div>
+            <form methos="post" name="observaciones" id="observaciones">
+                <input type="text" class="hide" id="idSolicitud" name="idSolicitud">
+                <input type="text" class="hide" id="action" name="action">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-6">
+                            <select id="pertenece" class="selectpicker" data-style="btn btn-primary btn-round" title="¿Para qién es la observación?" data-size="7" data-live-search="true">
+                                <option value="Postventa">Postventa</option>
+                                <option value="Proyectos">Proyectos</option>
+                            </select>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-6">
+                            <select id="observaciones" class="selectpicker" data-style="btn btn-primary btn-round" title="Observación" data-size="7" data-live-search="true">
+                                <option value="Corrección Documentos">Corrección Documentos</option>
+                                <option value="Documentación Correcta">Documentación Correcta</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    
+                </div>
+
+                <div class="modal-footer">
+                    <div id="postventa" style="display:none">
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                        <button type="submit" id="observacionesSubmit" class="btn btn-primary">Enviar</button>    
+                    </div>
+                </div>
+            </form>
+            <div class="modal-footer">
+                <div id="proyectos" style="display:none">
+                    <input type="text" class="hide" id="idSolicitud" name="idSolicitud">
+                    <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                    <button type="button" id="observacionesSubmit" class="btn btn-primary">Enviar</button>    
+                </div>
             </div>
         </div>
     </div>

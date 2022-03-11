@@ -300,4 +300,28 @@ function checkBudgetInfo($idSolicitud){
     function insertNotariaValuador($idNotaria, $idValuador, $idSolicitud){
         return $this->db->query("UPDATE solicitud_escrituracion SET idNotaria= $idNotaria, idValuador = $idValuador WHERE idSolicitud = $idSolicitud;");
     }
+
+    //INSERT NUEVA NOTARIA
+    function insertNewNotaria($nombre_notaria, $nombre_notario, $direccion, $correo, $telefono){
+        $this->db->query("INSERT INTO Notarias(nombre_notaria, nombre_notario, direccion, correo, telefono, sede, pertenece)
+        VALUES('$nombre_notaria', '$nombre_notario', '$direccion', '$correo', '$telefono', 0, 2);");
+        $insert_id = $this->db->insert_id();
+        $idSolicitud = $_POST['idSolicitud'];
+        //print_r("UPDATE solicitud_escrituracion SET idNotaria= $insert_id WHERE idSolicitud = $idSolicitud;");
+        $this->db->query("UPDATE solicitud_escrituracion SET idNotaria= $insert_id WHERE idSolicitud = $idSolicitud;");
+    }
+
+    //GESTION NOTARIA CLIENTE
+    function getNotariaClient($idSolicitud)
+    {
+        $idSolicitud = $_GET['idSolicitud'];
+        //print_r("SELECT n.idNotaria, n.nombre_notaria, n.nombre_notario, n.direccion, n.correo, n.telefono FROM Notarias n INNER JOIN solicitud_escrituracion se ON se.idNotaria = n.idNotaria WHERE se.idSolicitud = $idSolicitud");
+        return $this->db->query("SELECT n.idNotaria, n.nombre_notaria, n.nombre_notario, n.direccion, n.correo, n.telefono FROM Notarias n INNER JOIN solicitud_escrituracion se ON se.idNotaria = n.idNotaria WHERE se.idSolicitud = '$idSolicitud'");
+        
+    }
+
+    function updateObservacionesPostventa($idSolicitud){
+        $this->db->query("UPDATE solicitud_escrituracion SET estatus= 10 WHERE idSolicitud = $idSolicitud;");
+    }
+
 }
