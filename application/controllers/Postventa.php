@@ -829,10 +829,7 @@ class Postventa extends CI_Controller
             echo json_encode(array());
     }
 
-<<<<<<< HEAD
-=======
 
->>>>>>> f633b8c41f3686fa60e93c2f61db37011b53af88
     public function getBudgetInfo()
     {
         $idSolicitud = $this->input->post('idSolicitud');
@@ -976,7 +973,7 @@ class Postventa extends CI_Controller
                                 <div class="box-body">
                                     <table width="100%" style="height: 80px; border: 1px solid #ddd;" width="690">
                                         <tr>
-                                            <td colspan="2" align="left"></td>
+                                            <td colspan="2" align="left"><img src="https://www.ciudadmaderas.com/assets/img/logo.png" style=" max-width: 70%; height: auto;"></td>
                                             <td colspan="2" align="right"><b style="font-size: 1.7em; "> Solicitud de presupuesto<BR></b>
                                             </td>
                                         </tr>
@@ -1348,43 +1345,3 @@ class Postventa extends CI_Controller
     }
 }
 
-        return $this->Postventa_model->insertNewNotaria($idSolicitud);
-    }
-
-    public function getBudgetNotaria()
-    {
-        $idSolicitud = $_GET['idSolicitud'];
-        //$idSolicitud = $this->input->get('idSolicitud');
-        $data = $this->Postventa_model->getNotariaClient($idSolicitud)->row();
-        if ($data != null)
-            echo json_encode($data);
-        else
-            echo json_encode(array());
-    }
-
-    public function observacionesPostventa()
-    {
-        $idSolicitud = $_POST['idSolicitud'];
-        $usuario = $_POST['usuario'];
-        $observaciones = $_POTS['observaciones'];
-
-        return $this->Postventa_model->updateObservacionesPostventa($idSolicitud);
-    }
-
-    public function mailObservacionesProyectos()
-    {
-        $idSolicitud = $_GET['idSolicitud'];
-
-        $info = $this->Postventa_model->getInfoSolicitud($idSolicitud)->row();
-
-        $this->load->library('email');
-        $mail = $this->email;
-        $mail->from('noreply@ciudadmaderas.com', 'Ciudad Maderas');
-        $mail->to('programador.analista21@gmail.com');
-        $mail->Subject(utf8_decode("Observaciones Notaria"));
-
-        $mail->message('Buen día, la Notaria notifico que la documentación que pertenece al lote a nombre de ' . $info->nombre_escritura . ' es correcta. Saludos cordiales.');
-        $response = $mail->send();
-        echo json_encode($response);
-    }
-}
