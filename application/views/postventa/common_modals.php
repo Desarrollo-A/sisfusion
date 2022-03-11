@@ -151,7 +151,7 @@
                                     <select class="selectpicker m-0" data-style="btn btn-primary btn-round"
                                             title="¿Tenemos cliente anterior?" data-size="7" id="cliente" name="cliente"
                                             data-live-search="true" required>
-                                            <option value ="default" selected disabled>aquino</option>
+                                            <option value ="default" selected disabled>Selecciona una opción</option>
                                             <option value="1">Si</option>
                                             <option value="2">No</option>
                                     </select>
@@ -252,7 +252,7 @@
                                     <select class="selectpicker" data-style="btn btn-primary btn-round"
                                             title="¿Tenemos cliente anterior?" data-size="7" id="cliente2" name="cliente2"
                                             data-live-search="true" disabled>
-                                            <option value ="default" selected disabled>aquino</option>
+                                            <option value ="default" selected disabled>Selecciona una opción</option>
                                             <option value="1">Si</option>
                                             <option value="2">No</option>
                                     </select>
