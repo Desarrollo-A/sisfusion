@@ -96,11 +96,11 @@ public function getPuestosDescuentos(){
   {
     //echo $val;
     $datos = array();
-    if(empty($val)){
+    // if(empty($val)){
       $datos = $this->Comisiones_model->getDataDispersionPago();
-    }else{
-      $datos = $this->Comisiones_model->getDataDispersionPago($val);
-    }
+    // }else{
+    //   $datos = $this->Comisiones_model->getDataDispersionPago($val);
+    // }
     
     if ($datos != null) {
       echo json_encode($datos);
@@ -545,7 +545,17 @@ function despausar_solicitud(){
         break;
 
         case 3:
+
+        $validate =  $this->db->query("SELECT registro_comision from lotes l where l.idLote in (select c.id_lote from comisiones c WHERE c.id_comision IN (SELECT p.id_comision FROM pago_comision_ind p WHERE p.id_pago_i = ".$this->input->post("id_pago_i")."))");
+
+        // echo $validate->row()->registro_comision.' *COMISION'.$validate->row()->registro_comision;
+        if($validate->row()->registro_comision == 7){
+          $respuesta = FALSE;
+           // echo 'no entra';
+        }else{
+          // echo 'si entra';
          $respuesta = array($this->Comisiones_model->update_estatus_edit($this->input->post("id_pago_i"), $this->input->post("observaciones")));
+       }
         break;
     }  
   }
@@ -1060,32 +1070,57 @@ function update_estatus(){
     date_default_timezone_set('America/Mexico_City');       
     $fecha_actual = strtotime(date("d-m-Y H:i:00"));
       //fecha inicio
-      $fecha_entrada7 = strtotime("12-07-2021 00:00:00");
-      $fecha_entrada8 = strtotime("09-08-2021 00:00:00");
-      $fecha_entrada9 = strtotime("06-09-2021 00:00:00");
-      $fecha_entrada10 = strtotime("11-10-2021 00:00:00");
-      $fecha_entrada11 = strtotime("08-11-2021 00:00:00");
-      $fecha_entrada12 = strtotime("06-12-2021 00:00:00");
+      $fecha_entrada2 = strtotime("01-02-2022 00:00:00");
+      $fecha_entrada3 = strtotime("07-03-2022 00:00:00");
+      $fecha_entrada4 = strtotime("11-04-2022 00:00:00");
+      $fecha_entrada5 = strtotime("09-05-2022 00:00:00");
+      $fecha_entrada6 = strtotime("13-06-2022 00:00:00");
+      $fecha_entrada7 = strtotime("11-07-2022 00:00:00");
+      $fecha_entrada8 = strtotime("08-08-2022 00:00:00");
+      $fecha_entrada9 = strtotime("12-09-2022 00:00:00");
+      $fecha_entrada10 = strtotime("10-10-2022 00:00:00");
+      $fecha_entrada11 = strtotime("07-11-2022 00:00:00");
+      $fecha_entrada12 = strtotime("12-12-2022 00:00:00");
       //fecha fin
-      $fecha_entrada77 = strtotime("13-07-2021 13:59:00");
-      $fecha_entrada88 = strtotime("10-08-2021 13:59:00");
-      $fecha_entrada99 = strtotime("07-09-2021 13:59:00");
-      $fecha_entrada100 = strtotime("12-10-2021 13:59:00");
-      $fecha_entrada111 = strtotime("09-11-2021 13:59:00");
-
-            $fecha_entrada111 = strtotime("09-12-2021 21:59:00");
-
-
-
+      
       if($validar_sede == 8){
-        $fecha_entrada122 = strtotime("07-12-2021 15:59:00");
+        $fecha_entrada22 = strtotime("08-02-2022 15:59:00");
+        $fecha_entrada33 = strtotime("08-03-2022 15:59:00");
+        $fecha_entrada44 = strtotime("12-04-2022 15:59:00");
+        $fecha_entrada55 = strtotime("10-05-2022 15:59:00");
+        $fecha_entrada66 = strtotime("14-06-2022 15:59:00");
+        $fecha_entrada77 = strtotime("12-07-2022 15:59:00");
+        $fecha_entrada88 = strtotime("09-08-2022 15:59:00");
+        $fecha_entrada99 = strtotime("13-09-2022 15:59:00");
+        $fecha_entrada100 = strtotime("11-10-2022 15:59:00");
+        $fecha_entrada111 = strtotime("08-11-2022 15:59:00");
+        $fecha_entrada122 = strtotime("13-12-2022 15:59:00");
       }else{
-        $fecha_entrada122 = strtotime("07-12-2021 13:59:00");
+        $fecha_entrada22 = strtotime("08-02-2022 13:59:00");
+        $fecha_entrada33 = strtotime("08-03-2022 13:59:00");
+        $fecha_entrada44 = strtotime("12-04-2022 13:59:00");
+        $fecha_entrada55 = strtotime("10-05-2022 13:59:00");
+        $fecha_entrada66 = strtotime("14-06-2022 13:59:00");
+        $fecha_entrada77 = strtotime("12-07-2022 13:59:00");
+        $fecha_entrada88 = strtotime("09-08-2022 13:59:00");
+        $fecha_entrada99 = strtotime("13-09-2022 13:59:00");
+        $fecha_entrada100 = strtotime("11-10-2022 13:59:00");
+        $fecha_entrada111 = strtotime("08-11-2022 13:59:00");
+        $fecha_entrada122 = strtotime("13-12-2022 13:59:00");
+
       }
       //$resultado = array("resultado" => 3);
-      if(($fecha_actual >= $fecha_entrada7 && $fecha_actual <= $fecha_entrada77) || ($fecha_actual >= $fecha_entrada8 && $fecha_actual <= $fecha_entrada88) ||
-      ($fecha_actual >= $fecha_entrada9 && $fecha_actual <= $fecha_entrada99) || ($fecha_actual >= $fecha_entrada10 && $fecha_actual <= $fecha_entrada100) || 
-      ($fecha_actual >= $fecha_entrada11 && $fecha_actual <= $fecha_entrada111) || ($fecha_actual >= $fecha_entrada12 && $fecha_actual <= $fecha_entrada122) ){
+      if(($fecha_actual >= $fecha_entrada2 && $fecha_actual <= $fecha_entrada22) ||
+        ($fecha_actual >= $fecha_entrada3 && $fecha_actual <= $fecha_entrada33) ||
+        ($fecha_actual >= $fecha_entrada4 && $fecha_actual <= $fecha_entrada44) || 
+        ($fecha_actual >= $fecha_entrada5 && $fecha_actual <= $fecha_entrada55) ||
+        ($fecha_actual >= $fecha_entrada6 && $fecha_actual <= $fecha_entrada66) ||
+        ($fecha_actual >= $fecha_entrada7 && $fecha_actual <= $fecha_entrada77) ||
+        ($fecha_actual >= $fecha_entrada8 && $fecha_actual <= $fecha_entrada88) ||
+        ($fecha_actual >= $fecha_entrada9 && $fecha_actual <= $fecha_entrada99) || 
+        ($fecha_actual >= $fecha_entrada10 && $fecha_actual <=$fecha_entrada100) ||
+        ($fecha_actual >= $fecha_entrada11 && $fecha_actual <=$fecha_entrada111) ||
+        ($fecha_actual >= $fecha_entrada12 && $fecha_actual <=$fecha_entrada122)){
       
 
 
@@ -1175,6 +1210,87 @@ function update_estatus(){
   }
 
   
+// public function cargaxml2($id_user = ''){
+
+//   $user =   $usuarioid =$this->session->userdata('id_usuario');
+//   $this->load->model('Usuarios_modelo');
+
+//   if(empty($id_user)){
+//     $RFC = $this->Usuarios_modelo->getPersonalInformation()->result_array();
+
+//   }else{
+//     $RFC = $this->Usuarios_modelo->getPersonalInformation2($id_user)->result_array();
+
+//   }
+
+ 
+// $respuesta = array( "respuesta" => array( FALSE, "HA OCURRIDO UN ERROR") );
+// if( isset( $_FILES ) && !empty($_FILES) ){
+//     $config['upload_path'] = './UPLOADS/XMLS/';
+//     $config['allowed_types'] = 'xml';
+//     //CARGAMOS LA LIBRERIA CON LAS CONFIGURACIONES PREVIAS -----$this->upload->display_errors()
+//     $this->load->library('upload', $config);
+//     if( $this->upload->do_upload("xmlfile") ){
+//         $xml_subido = $this->upload->data()['full_path'];
+//         $datos_xml = $this->Comisiones_model->leerxml( $xml_subido, TRUE );
+//         if( $datos_xml['version'] >= 3.3){
+//           $responsable_factura = $this->Comisiones_model->verificar_uuid( $datos_xml['uuidV'] );
+//           if($responsable_factura->num_rows()>=1){
+//             $respuesta['respuesta'] = array( FALSE, "ESTA FACTURA YA SE SUBIÓ ANTERIORMENTE AL SISTEMA");
+//           }
+//           else{          
+//             if($datos_xml['claveProdServ'][0]=='80131600' || ($user == 6578 && $datos_xml['claveProdServ'][0]=='83121703')){//VALIDAR UNIDAD
+//               $diasxmes = date('t');
+//                $fecha1 = date('Y-m-').'0'.(($diasxmes - $diasxmes) +1);
+//                $fecha2 = date('Y-m-').$diasxmes;
+//               if($datos_xml['fecha'][0] >= $fecha1 && $datos_xml['fecha'][0] <= $fecha2){
+
+//             if($datos_xml['rfcemisor'][0] == $RFC[0]['rfc']){
+//             if($datos_xml['regimenFiscal'][0]=='612' || ($user == 6578 && $datos_xml['regimenFiscal'][0]=='601')){//VALIDAR REGIMEN FISCAL
+//             if($datos_xml['formaPago'][0]=='03' || $datos_xml['formaPago'][0]=='003'){//VALIDAR FORMA DE PAGO Transferencia electrónica de fondos
+//             if($datos_xml['usocfdi'][0]=='G03'){//VALIDAR USO DEL CFDI
+//             if($datos_xml['metodoPago'][0]=='PUE'){//VALIDAR METODO DE PAGO
+//             if($datos_xml['claveUnidad'][0]=='E48'){//VALIDAR UNIDAD
+//               $respuesta['respuesta'] = array( TRUE );
+//               $respuesta['datos_xml'] = $datos_xml;
+//             }else{
+//               $respuesta['respuesta'] = array( FALSE, "LA UNIDAD NO ES 'E48 (UNIDAD DE SERVICIO)', VERIFIQUE SU FACTURA.");
+//             }//FINAL DE UNIDAD
+//             }else{
+//               $respuesta['respuesta'] = array( FALSE, "EL METODO DE PAGO NO ES 'PAGO EN UNA SOLA EXHIBICIÓN (PUE)', VERIFIQUE SU FACTURA.");
+//             }//FINAL DE METODO DE PAGO
+//             }else{
+//               $respuesta['respuesta'] = array( FALSE, "EL USO DEL CFDI NO ES 'GASTOS EN GENERAL (G03)', VERIFIQUE SU FACTURA.");
+//             }//FINAL DE USO DEL CFDI
+//             }else{
+//               $respuesta['respuesta'] = array( FALSE, "LA FORMA DE PAGO NO ES 'TRANSFERENCIA ELECTRÓNICA DE FONDOS (03)', VERIFIQUE SU FACTURA.");
+//             }//FINAL DE FORMA DE PAGO
+//             }else{
+//               $respuesta['respuesta'] = array( FALSE, "EL REGIMEN NO ES, 'PERSONAS FÍSICAS CON ACTIVIDADES EMPRESARIALES (612)");
+//             }//FINAL DE REGIMEN FISCAL
+//             }else{
+//             $respuesta['respuesta'] = array( FALSE, "ESTA FACTURA NO CORRESPONDE A TU RFC.");
+//             }//FINAL DE RFC VALIDO
+//           }else{
+//             $respuesta['respuesta'] = array( FALSE, "FECHA INVALIDA, SOLO SE ACEPTAN FACTURAS CON FECHA DE ESTE MES, VERIFICA TU XML");
+//           }          
+//             }else{
+//             $respuesta['respuesta'] = array( FALSE, "LA CLAVE DE TU FACTURA NO CORRESPONDE A 'VENTA DE PROPIEDADES Y EDIFICIOS' (80131600).");
+//           }
+//         }
+//         }else{
+//           $respuesta['respuesta'] = array( FALSE, "LA VERSION DE LA FACTURA ES INFERIOR A LA 3.3, SOLICITE UNA REFACTURACIÓN");
+//         }
+//         unlink( $xml_subido );
+//       }
+//       else{
+//         $respuesta['respuesta'] = array( FALSE, $this->upload->display_errors());
+//       }
+//     }
+//     echo json_encode( $respuesta );
+//   }
+
+
 public function cargaxml2($id_user = ''){
 
   $user =   $usuarioid =$this->session->userdata('id_usuario');
@@ -1187,7 +1303,6 @@ public function cargaxml2($id_user = ''){
     $RFC = $this->Usuarios_modelo->getPersonalInformation2($id_user)->result_array();
 
   }
-
  
 $respuesta = array( "respuesta" => array( FALSE, "HA OCURRIDO UN ERROR") );
 if( isset( $_FILES ) && !empty($_FILES) ){
@@ -1203,7 +1318,10 @@ if( isset( $_FILES ) && !empty($_FILES) ){
           if($responsable_factura->num_rows()>=1){
             $respuesta['respuesta'] = array( FALSE, "ESTA FACTURA YA SE SUBIÓ ANTERIORMENTE AL SISTEMA");
           }
-          else{          
+          else{
+
+            if($datos_xml['rfcreceptor'][0]=='ICE211215685'){//VALIDAR UNIDAD
+       
             if($datos_xml['claveProdServ'][0]=='80131600' || ($user == 6578 && $datos_xml['claveProdServ'][0]=='83121703')){//VALIDAR UNIDAD
               $diasxmes = date('t');
                $fecha1 = date('Y-m-').'0'.(($diasxmes - $diasxmes) +1);
@@ -1242,6 +1360,11 @@ if( isset( $_FILES ) && !empty($_FILES) ){
             }else{
             $respuesta['respuesta'] = array( FALSE, "LA CLAVE DE TU FACTURA NO CORRESPONDE A 'VENTA DE PROPIEDADES Y EDIFICIOS' (80131600).");
           }
+
+          }else{
+            $respuesta['respuesta'] = array( FALSE, "EL RFC NO CORRESPONDE A INTERNOMEX, DEBE SER ICE211215685");
+          }
+
         }
         }else{
           $respuesta['respuesta'] = array( FALSE, "LA VERSION DE LA FACTURA ES INFERIOR A LA 3.3, SOLICITE UNA REFACTURACIÓN");
@@ -1302,31 +1425,60 @@ if( isset( $_FILES ) && !empty($_FILES) ){
       $fecha_actual = strtotime(date("d-m-Y H:i:00"));
 
       //fecha inicio
-      $fecha_entrada7 = strtotime("12-07-2021 00:00:00");
-      $fecha_entrada8 = strtotime("09-08-2021 00:00:00");
-      $fecha_entrada9 = strtotime("06-09-2021 00:00:00");
-      $fecha_entrada10 = strtotime("11-10-2021 00:00:00");
-      $fecha_entrada11 = strtotime("08-11-2021 00:00:00");
-      $fecha_entrada12 = strtotime("06-12-2021 00:00:00");
+     $fecha_entrada2 = strtotime("07-02-2022 00:00:00");
+      $fecha_entrada3 = strtotime("07-03-2022 00:00:00");
+      $fecha_entrada4 = strtotime("11-04-2022 00:00:00");
+      $fecha_entrada5 = strtotime("09-05-2022 00:00:00");
+      $fecha_entrada6 = strtotime("13-06-2022 00:00:00");
+      $fecha_entrada7 = strtotime("11-07-2022 00:00:00");
+      $fecha_entrada8 = strtotime("08-08-2022 00:00:00");
+      $fecha_entrada9 = strtotime("12-09-2022 00:00:00");
+      $fecha_entrada10 = strtotime("10-10-2022 00:00:00");
+      $fecha_entrada11 = strtotime("07-11-2022 00:00:00");
+      $fecha_entrada12 = strtotime("12-12-2022 00:00:00");
       //fecha fin
-      $fecha_entrada77 = strtotime("13-07-2021 13:59:00");
-      $fecha_entrada88 = strtotime("10-08-2021 13:59:00");
-      $fecha_entrada99 = strtotime("07-09-2021 13:59:00");
-      $fecha_entrada100 = strtotime("12-10-2021 13:59:00");
-      $fecha_entrada111 = strtotime("09-11-2021 13:59:00");
-
-                  $fecha_entrada111 = strtotime("09-12-2021 21:59:00");
-
-
+      
       if($validar_sede == 8){
-        $fecha_entrada122 = strtotime("07-12-2021 15:59:00");
+        $fecha_entrada22 = strtotime("08-02-2022 15:59:00");
+        $fecha_entrada33 = strtotime("08-03-2022 15:59:00");
+        $fecha_entrada44 = strtotime("12-04-2022 15:59:00");
+        $fecha_entrada55 = strtotime("10-05-2022 15:59:00");
+        $fecha_entrada66 = strtotime("14-06-2022 15:59:00");
+        $fecha_entrada77 = strtotime("12-07-2022 15:59:00");
+        $fecha_entrada88 = strtotime("09-08-2022 15:59:00");
+        $fecha_entrada99 = strtotime("13-09-2022 15:59:00");
+        $fecha_entrada100 = strtotime("11-10-2022 15:59:00");
+        $fecha_entrada111 = strtotime("08-11-2022 15:59:00");
+        $fecha_entrada122 = strtotime("13-12-2022 15:59:00");
       }else{
-        $fecha_entrada122 = strtotime("07-12-2021 13:59:00");
+        $fecha_entrada22 = strtotime("08-02-2022 13:59:00");
+        $fecha_entrada33 = strtotime("08-03-2022 13:59:00");
+        $fecha_entrada44 = strtotime("12-04-2022 13:59:00");
+        $fecha_entrada55 = strtotime("10-05-2022 13:59:00");
+        $fecha_entrada66 = strtotime("14-06-2022 13:59:00");
+        $fecha_entrada77 = strtotime("12-07-2022 13:59:00");
+        $fecha_entrada88 = strtotime("09-08-2022 13:59:00");
+        $fecha_entrada99 = strtotime("13-09-2022 13:59:00");
+        $fecha_entrada100 = strtotime("11-10-2022 13:59:00");
+        $fecha_entrada111 = strtotime("08-11-2022 13:59:00");
+        $fecha_entrada122 = strtotime("13-12-2022 13:59:00");
+
       }
+
+
       $resultado = array("resultado" => 3);
-      if(($fecha_actual >= $fecha_entrada7 && $fecha_actual <= $fecha_entrada77) || ($fecha_actual >= $fecha_entrada8 && $fecha_actual <= $fecha_entrada88) ||
-      ($fecha_actual >= $fecha_entrada9 && $fecha_actual <= $fecha_entrada99) || ($fecha_actual >= $fecha_entrada10 && $fecha_actual <= $fecha_entrada100) || 
-      ($fecha_actual >= $fecha_entrada11 && $fecha_actual <= $fecha_entrada111) || ($fecha_actual >= $fecha_entrada12 && $fecha_actual <= $fecha_entrada122)   ){
+
+      if(($fecha_actual >= $fecha_entrada2 && $fecha_actual <= $fecha_entrada22) ||
+        ($fecha_actual >= $fecha_entrada3 && $fecha_actual <= $fecha_entrada33) ||
+        ($fecha_actual >= $fecha_entrada4 && $fecha_actual <= $fecha_entrada44) || 
+        ($fecha_actual >= $fecha_entrada5 && $fecha_actual <= $fecha_entrada55) ||
+        ($fecha_actual >= $fecha_entrada6 && $fecha_actual <= $fecha_entrada66) ||
+        ($fecha_actual >= $fecha_entrada7 && $fecha_actual <= $fecha_entrada77) ||
+        ($fecha_actual >= $fecha_entrada8 && $fecha_actual <= $fecha_entrada88) ||
+        ($fecha_actual >= $fecha_entrada9 && $fecha_actual <= $fecha_entrada99) || 
+        ($fecha_actual >= $fecha_entrada10 && $fecha_actual <=$fecha_entrada100) ||
+        ($fecha_actual >= $fecha_entrada11 && $fecha_actual <=$fecha_entrada111) ||
+        ($fecha_actual >= $fecha_entrada12 && $fecha_actual <=$fecha_entrada122) ){
       
       if($usuario != ''){
         $usuarioid = $usuario;
@@ -1738,6 +1890,7 @@ echo json_encode( $respuesta );
 
 
 public function liquidar_comision(){
+  
  $respuesta = array( FALSE );
  if($this->input->post("ideLotep")){
    $ideLotep = $this->input->post("ideLotep");
@@ -4388,11 +4541,12 @@ echo json_encode($respuesta);
         $type_transaction = $this->input->post("type_transaction");
         $comments = $this->input->post("comments");
         $id_lote = $this->input->post("id_lote");
+        $id_cliente = $this->input->post("id_cliente");
         $clientes_data = array(
             "fecha_modificacion" => date("Y-m-d H:i:s"),
             "modificado_por" => $this->session->userdata('id_usuario')
         );
- 
+
         $lote_data = $this->Comisiones_model->getLoteInformation($id_lote);
         $insert_comisiones_data = array(
             "id_lote" => $lote_data[0]['idLote'],
@@ -4466,6 +4620,7 @@ echo json_encode($respuesta);
           $flag=0;
           $hoy = date('Y-m-d H:i:s');
           $controversia = $this->Comisiones_model->getEvidenceInformation($id_lote,$lote_data[0]['idCliente']);
+
             $commission_data = $this->Comisiones_model->getCommisionInformation($id_lote); // MJ: SE OBTIENEN TODOS LOS REGISTROS DE COMISIÓN
             if (COUNT($commission_data) > 0) { // MJ: SE ENCONTRARON REGISTROS EN pago_comision_ind CON ESTATUS PAGADO
               //MO - SI SE ENCONTRO REGISTRO EN COMISIONES SE TOPA LA COMISIÓN 
@@ -4483,7 +4638,11 @@ echo json_encode($respuesta);
                 }
 
                 //ACTUALIZAR CLIENTES Y PROSPECTOS
-                
+                if(count($controversia) > 0)  
+            {
+              $this->Comisiones_model->updateControversia($id_lote,$lote_data[0]['idCliente']);
+            }
+             
                 $update_client_data = array(
                   "lugar_prospeccion" => 11,
                   "modificado_por" => 1,
@@ -4495,14 +4654,12 @@ echo json_encode($respuesta);
                 // MJ: SE TOPA LA COMISIÓN DE MKTD TOMANDO EN CUANTO EL TOTAL DE ABONOS EN ESTATUS 11
             } else{ // MJ: NO SE ENCONTRARON REGISTROS EN pago_comision_ind CON ESTATUS PAGADO
              
-            //   
+            //     
             if(count($controversia) > 0)  
             {
               $this->Comisiones_model->updateControversia($id_lote,$lote_data[0]['idCliente']);
             }
-             
-
-
+                        
               $update_client_data = array(
                 "lugar_prospeccion" => 11,
                 "modificado_por" => 1,
@@ -4516,7 +4673,7 @@ echo json_encode($respuesta);
 
             // MJ: SE CAMBIA LUGAR DE PROSPECCIÓN DEL CLIENTE DE 6 A 11
             if ($this->session->userdata('id_rol') == 19 || $this->session->userdata('id_rol') == 20 || $this->session->userdata('id_rol') == 28) {
-              $insert_comentariosMktd_data = array('idLote' => $id_lote, 'observacion' => $comments, 'fecha_creacion' => date('Y-m-d H:i:s'), 'creado_por' => $this->session->userdata('id_usuario'));
+              $insert_comentariosMktd_data = array('idLote' => $id_lote, 'observacion' => $comments, 'fecha_creacion' => date('Y-m-d H:i:s'), 'creado_por' => $this->session->userdata('id_usuario'), 'id_cliente' => $id_cliente);
               $this->Comisiones_model->addRecord("comentariosMktd", $insert_comentariosMktd_data); // MJ: LLEVA 2 PARÁMETROS $table, $data
             }
 
@@ -4682,7 +4839,7 @@ echo json_encode($respuesta);
    }else{
 $row = 3;
    }
- 
+
 
    echo json_encode($row);
  }
@@ -4880,8 +5037,7 @@ public function save_new_mktd(){
       $this->db->query("INSERT INTO porcentajes_mktd(numero_plan, id_sede, id_plaza, id_usuario, porcentaje, fecha_inicio, estatus, activo, fecha_creacion, rol) VALUES (".$id.", ".$arraysede[$i].", ".$arrayplaza[$i].", ".$arrayuser[$i].", ".$arrayporc[$i].", '".$fecha_inicio."', 1, 1, GETDATE(),'".$puesto[$i]."')");
      }
 
-    //  $this->db->query("UPDATE [sisfusion].[dbo].[porcentajes_mktd] SET FE(".$new_max.", ".$arraysede[$i].", ".$arrayplaza[$i].", ".$arrayuser[$i].", ".$arrayporc[$i].", '".$fecha_inicio."', 1, 1, GETDATE(),'".$puesto[$i]."')");
-     
+ 
   }
  
  
@@ -5206,9 +5362,8 @@ public function ToparComision($id_comision,$idLote = '')
 {
   $respuesta = $this->Comisiones_model->ToparComision($id_comision);
   if($idLote != '' ){
-     $this->Comisiones_model->RecalcularMontos($idLote);
-  }
-
+    $this->Comisiones_model->RecalcularMontos($idLote);
+ }
   echo json_encode($respuesta); 
 }
 
@@ -5232,12 +5387,9 @@ public function SaveAjuste($opc = '')
  $id_lote =    $this->input->post('id_lote');
  $porcentaje = $pesos=str_replace("%", "", $this->input->post('porcentaje'));
  $porcentaje_ant = $this->input->post('porcentaje_ant');
-
  $comision_total = $pesos=str_replace(",", "", $this->input->post('comision_total'));
 
  $respuesta = $this->Comisiones_model->SaveAjuste($id_comision,$id_lote,$id_usuario,$porcentaje,$porcentaje_ant,$comision_total,$opc);
-
- 
  echo json_encode($respuesta); 
 }
 
@@ -5444,8 +5596,7 @@ public function getUsuariosByrol($rol,$user)
   }
   public function getLideres($lider)
   {
-
-  $result = $this->Comisiones_model->getLideres($lider);
+    $result = $this->Comisiones_model->getLideres($lider);
     echo json_encode($result);
   }
   public function AddVentaCompartida(){
@@ -5766,6 +5917,10 @@ public function getUsersClient($lote,$compartida,$TipoVenta,$LupgarP,$mdb,$ismkt
 {
   echo json_encode($this->Comisiones_model->getUsersClient($lote,$compartida,$TipoVenta,$LupgarP,$mdb,$ismktd,$IdResidencial),JSON_NUMERIC_CHECK);
 }
+    /*public function getUsersClient($lote,$compartida)
+    {
+      echo json_encode($this->Comisiones_model->getUsersClient($lote,$compartida),JSON_NUMERIC_CHECK);
+    }*/
 
     public function InsertNeo(){
       $lote_1 =  $this->input->post("idLote");
@@ -5787,7 +5942,9 @@ public function getUsersClient($lote,$compartida,$TipoVenta,$LupgarP,$mdb,$ismkt
                 $replace = [",","$"];
                 for($i=0;$i<sizeof($id_comision);$i++){
                   $var_n = str_replace($replace,"",$abono_nuevo[$i]);
-                  $respuesta = $this->Comisiones_model->insert_dispersion_individual($id_comision[$i], $rol[$i], $var_n, $pago);
+                  if($var_n != 0){
+                    $respuesta = $this->Comisiones_model->insert_dispersion_individual($id_comision[$i], $rol[$i], $var_n, $pago);
+                  }
                   }
                 for($i=0;$i<sizeof($abono_nuevo);$i++){
                   $var_n = str_replace($replace,"",$abono_nuevo[$i]);
@@ -5863,10 +6020,12 @@ public function getUsersClient($lote,$compartida,$TipoVenta,$LupgarP,$mdb,$ismkt
     echo json_encode( $respuesta );
     }
 
-
     public function porcentajes($cliente,$tipo,$vigencia){
+      echo json_encode($this->Comisiones_model->porcentajes($cliente,$tipo,$vigencia)->result_array(),JSON_NUMERIC_CHECK);
+    }
+    /*public function porcentajes($cliente,$tipo,$vigencia){
         echo json_encode($this->Comisiones_model->porcentajes($cliente,$tipo,$vigencia)->result_array());
-      }
+      }*/
 
       public function ReporteTotalMktd($mes,$anio){
         $resultado = array();
@@ -6230,26 +6389,49 @@ for ($d=0; $d <count($dos) ; $d++) {
    }
    echo json_encode( array( "data" => $dat));
   }
+  /*public function getDatosRevisionMktd2(){
+    $dat =  $this->Comisiones_model->getDatosRevisionMktd2()->result_array();
+   for( $i = 0; $i < count($dat); $i++ ){
+    $comentario='BONO NUSKAH - MKTD 5 MENSUALIDADES';
+    $BonoPagado2 = $this->Comisiones_model->getBonoXUser2($dat[$i]['id_usuario'],$comentario)->result_array();
+   if(count($BonoPagado2) == 0){
+    $dat[$i]['nus'] = 0;
+
+   }else{
+    $dat[$i]['nus'] = $BonoPagado2[0]['impuesto1'];
+
+   }
+
+    $comentario2='BONO MARKETING - COMISIONES SIN EVIDENCIA DISPERSADO A 12 MESES ENTRE TODOS LOS INVOLUCRADOS';
+    $BonoPagado3 = $this->Comisiones_model->getBonoXUser2($dat[$i]['id_usuario'],$comentario2)->result_array();
+
+    if(count($BonoPagado3) == 0){
+      $dat[$i]['mktd'] = 0;
   
-
-
-  public function getPagosByUser($user,$mes,$anio){
-    $dat =  $this->Comisiones_model->getPagosByUser($user,$mes,$anio)->result_array();
-   echo json_encode( $dat);
-  }
-
-
+     }else{
+      $dat[$i]['mktd'] = $BonoPagado3[0]['impuesto1'];
+  
+     }
+    //$dat[$i]['mktd'] = $BonoPagado3[0]['impuesto1'];
+       $dat[$i]['pa'] = 0;
+   }
+   echo json_encode( array( "data" => $dat));
+  }*/
+  
   public function AddEmpresa(){
     $idLote = $this->input->post("idLoteE");
     $Precio = $this->input->post("PrecioLoteE");
     $idCliente = $this->input->post("idClienteE");
 
     $respuesta = $this->Comisiones_model->AddEmpresa($idLote,($Precio*(1/100)),$idCliente);
-  echo json_encode($respuesta);
+    echo json_encode($respuesta);
   }
 
-
-  /**--------------------COMISIONES ESPECIALES------------ */
+  public function getPagosByUser($user,$mes,$anio){
+    $dat =  $this->Comisiones_model->getPagosByUser($user,$mes,$anio)->result_array();
+   echo json_encode( $dat);
+   
+  }
   public function dispersar_pago_especial()
   {
     $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
@@ -6280,11 +6462,32 @@ for ($d=0; $d <count($dos) ; $d++) {
       echo json_encode(array());
     }
   }
+
   public function porcentajesEspecial($idCliente){
     echo json_encode($this->Comisiones_model->porcentajesEspecial($idCliente));
   }
-  /**----------------------------------------------------- */
 
+
+
+  public function liquidadosDescuentos()
+    {
+      $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
+      $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
+      $datos = array();
+      $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
+      $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
+      $val = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
+      $salida = str_replace('' . base_url() . '', '', $val);
+      $datos["datos4"] = $this->Asesor_model->getActiveBtn($salida, $this->session->userdata('id_rol'))->result();
+      $this->load->view('template/header');
+      $this->load->view("ventas/liquidadosDescuentos", $datos);
+    }
+
+  public function getDescuentosLiquidados()
+    {
+      $res["data"] = $this->Comisiones_model->getDescuentosLiquidados()->result_array();
+      echo json_encode($res);
+    }
 
     
 }

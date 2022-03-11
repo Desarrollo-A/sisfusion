@@ -341,7 +341,7 @@
 			$mail->Host = 'smtp.gmail.com';
 			$mail->SMTPAuth = true;
 			$mail->Username = 'noreply@ciudadmaderas.com';
-			$mail->Password = 'En3r02021@M';
+			$mail->Password = 'euTan4&9';
 			$mail->SMTPSecure = 'ssl';
 			$mail->Port = 465;
 
@@ -18216,7 +18216,7 @@ tr td:hover { background: #666; color: #FFF; }
 		$mail->Host = 'smtp.gmail.com';
 		$mail->SMTPAuth = true;
 		$mail->Username = 'noreply@ciudadmaderas.com';
-		$mail->Password = 'En3r02021@M';
+		$mail->Password = 'euTan4&9';
 		$mail->SMTPSecure = 'ssl';
 		$mail->Port = 465;
 

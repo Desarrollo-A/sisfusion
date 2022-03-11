@@ -7,7 +7,7 @@ class Postventa extends CI_Controller
     public function __construct()
     {
         parent::__construct();
-        $this->load->model(array('Postventa_model'));
+        $this->load->model(array('Postventa_model', 'Documentacion_model', 'General_model'));
         $this->load->library(array('session', 'form_validation', 'get_menu'));
         $this->validateSession();
         date_default_timezone_set('America/Mexico_City');
@@ -15,11 +15,11 @@ class Postventa extends CI_Controller
 
     public function index()
     {
-        if ($this->session->userdata('id_rol') == FALSE || $this->session->userdata('id_rol') != '55' && $this->session->userdata('id_rol') != '56' && $this->session->userdata('id_rol') != '57')
+        if ($this->session->userdata('id_rol') == FALSE || $this->session->userdata('id_rol') != '55' && $this->session->userdata('id_rol') != '56' && $this->session->userdata('id_rol') != '57' && $this->session->userdata('id_rol') != '13')
             redirect(base_url() . 'login');
         $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
         $this->load->view('template/header');
-        $this->load->view('template/home',$datos);
+        $this->load->view('template/home', $datos);
         $this->load->view('template/footer');
     }
 
@@ -58,13 +58,14 @@ class Postventa extends CI_Controller
         $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
         switch ($this->session->userdata('id_rol')) {
             case '11': // ADMON
+            case '13': // CONTRALORÏa
             case '55': // POSTVENTA
             case '56': // COMITÉ TÉCNICO
             case '57': // TITULACIÓN
                 $this->load->view('template/header');
                 $this->load->view("postventa/solicitudes_escrituracion", $datos);
                 break;
-
+            
             default:
                 echo '<script>alert("ACCESSO DENEGADO"); window.location.href="' . base_url() . '";</script>';
                 break;
@@ -388,6 +389,18 @@ class Postventa extends CI_Controller
                                         <br><br>
                                         <table width="100%" style="padding:10px 0px; text-align: center;height: 45px; border: 1px solid #ddd;" width="690">
                                             <tr>
+                                                <td colspan="2" style="padding: 3px 6px; ">
+                                                    <b style="font-size: .8em; ">
+                                                        Estimado ' . $data['nombre'] . '<br>
+                                                        En seguimiento a su visita en oficina de Ciudad Maderas Querétaro, envio la informacion para iniciar con el proceso de escrituración
+                                                        como primer paso es la solicitud del presupuesto para conocer el monto a pagar por la escritura y asignar notaria<br>
+                                                        El presupuesto que envió es informativo, sin valor avalúo por parte del perito y es con el costo estimado, tambien aprovecho y envió el check list
+                                                        en solicitud a la recepción de todos los documentos al momento de escriturar, estos documentos deben ser necesarios para efectuar la entrega del proyecto de escrituración 
+                                                        con la notaria:
+                                                    </b>
+                                                </td>
+                                            </tr>
+                                            <tr>
                                                 <td colspan="2" style="background-color: #15578B;color: #fff;padding: 3px 6px; "><b style="font-size: 2em; ">Datos del comprador – Persona Física</b>
                                                 </td>
                                             </tr>
@@ -564,7 +577,8 @@ class Postventa extends CI_Controller
             </html>';
 
         $mail->message($mailContent);
-        $mail->send();
+        $response = $mail->send();
+        echo json_encode($response);
     }
 
     public function aportaciones()
@@ -815,6 +829,10 @@ class Postventa extends CI_Controller
             echo json_encode(array());
     }
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> f633b8c41f3686fa60e93c2f61db37011b53af88
     public function getBudgetInfo()
     {
         $idSolicitud = $this->input->post('idSolicitud');
@@ -1092,7 +1110,7 @@ class Postventa extends CI_Controller
 
         $pdf->writeHTMLCell(0, 0, $x = '', $y = '', $html, $border = 0, $ln = 1, $fill = 0, $reseth = true, $align = '', $autopadding = true);
 
-        $pdf->Output(__DIR__ . "/../../static/documentos/postventa/escrituracion/SOLICITUD_PRESUPUESTO/Hola.pdf", 'F');
+        $pdf->Output(__DIR__ . "/../../static/documentos/postventa/escrituracion/SOLICITUD_PRESUPUESTO/solicitud_".$data->nombre_escrituras."_presupuesto.pdf", 'F');
 
         // $pdf->Output(utf8_decode('Hola.pdf'), 'I');
     }
@@ -1194,7 +1212,7 @@ class Postventa extends CI_Controller
                                     <table width="100%" style="height: 100px; border: 1px solid #ddd;" width="690">
                                         <tr>
                                             <td colspan="2" align="left"><img src="https://www.ciudadmaderas.com/assets/img/logo.png" style=" max-width: 70%; height: auto;"></td>
-                                            <td colspan="2" align="right"><b style="font-size: 1.7em; "> Checklist<BR></b>
+                                            <td colspan="2" align="right"><b style="font-size: 1.7em; "> Solicitud de presupuesto<BR></b>
                                             </td>
                                         </tr>
                                     </table>
@@ -1254,17 +1272,6 @@ class Postventa extends CI_Controller
                                                 
                                             </tr>
                                         </table>
-                                        <br>
-                                        <br>
-                                        <br>
-                                        <table width="100%" style="text-align: center;padding:10px;height: 45px; border-top: 1px solid #ddd;border-left: 1px solid #ddd;border-right: 1px solid #ddd;" width="690">
-                                            <tr>
-                                                <td colspan="2" style="background-color: #15578B;color: #fff;padding: 3px 6px; "><b style="font-size: 2em; ">Checklist</b>
-                                                </td>
-                                            </tr>
-                                        </table>                            
-                                        <br><br>
-                                        
                                     </div>
                                 </div>
                             </div>
@@ -1302,10 +1309,11 @@ class Postventa extends CI_Controller
         $document = $this->Postventa_model->getFileNameByDoctype($idSolicitud, $docType)->row();
         return $document;
     }
+
     public function validateFile()
     {
         $idDocumento = $this->input->post('idDocumento');
-        $idLote = $this->input->post('idLote');
+        $idSolicitud = $this->input->post('idSolicitud');
         $documentType = $this->input->post('documentType');
         $action = $this->input->post('action');
         if ($action == 4) {
@@ -1315,11 +1323,12 @@ class Postventa extends CI_Controller
                     "id_motivo" => $rejectionReasons[$i],
                     "id_documento" => $idDocumento,
                     "tipo" => $documentType,
+                    "tipo_proceso" => 2,
                     "creado_por" => $this->session->userdata('id_usuario')
                 );
             }
         }
-        $rejectionReasonsList = $this->Documentacion_model->getRejectReasons($idDocumento, $idLote, $documentType)->result_array();
+        $rejectionReasonsList = $this->Documentacion_model->getRejectReasonsTwo($idDocumento, $idSolicitud, $documentType)->result_array(); // MJ: LLEVA 3 PARÁMETROS $idDocumento, $idSolicitud, $documentType
         if (count($rejectionReasonsList) >= 1) { // SÍ ENCONTRÓ REGISTROS
             for ($r = 0; $r < count($rejectionReasonsList); $r++) {
                 $updateArrayData[] = array(
@@ -1327,30 +1336,17 @@ class Postventa extends CI_Controller
                     'estatus' => 0
                 );
             }
-            $this->db->update_batch("motivos_rechazo_x_documento", $updateArrayData, "id_mrxdoc");
+            $this->General_model->updateBatch("motivos_rechazo_x_documento", $updateArrayData, "id_mrxdoc"); // MJ: SE MANDA CORRER EL UPDATE BATCH
         }
         $updateData = array("estatus_validacion" => $action == 4 ? 2 : 1, "validado_por" => $this->session->userdata('id_usuario'));
-        $updateResponse = $this->Documentacion_model->updateRecord("documentos_escrituracion", $updateData, "idDocumento", $idDocumento); // MJ: LLEVA 4 PARÁMETROS $table, $data, $key, $value
+        $updateResponse = $this->General_model->updateRecord("documentos_escrituracion", $updateData, "idDocumento", $idDocumento); // MJ: LLEVA 4 PARÁMETROS $table, $data, $key, $value
         if ($action == 4) {
-            $insertResponse = $this->Documentacion_model->saveRejectionReasons($insertData);
+            $insertResponse = $this->General_model->insertBatch("motivos_rechazo_x_documento", $insertData);
             echo json_encode(($updateResponse == 1 && $insertResponse == 1) == TRUE ? 1 : 0);
-        } else {
+        } else
             echo json_encode($updateResponse == 1 ? 1 : 0);
-        }
     }
-
-    //INSERT NUEVA NOTARIA
-    public function nuevoNotario()
-    {
-        $idSolicitud = $_POST['idSolicitud'];
-        $nombre_notaria = $_POST['nombre_notaria'];
-        $nombre_notario = $_POST['nombre_notario'];
-        $direccion = $_POST['direccion'];
-        $correo = $_POST['correo'];
-        $telefono = $_POST['telefono'];
-        
-        $informacion = $this->Postventa_model->insertNewNotaria($nombre_notaria, $nombre_notario, $direccion, $correo, $telefono, 0, 2);
-        return $informacion;
+}
 
         return $this->Postventa_model->insertNewNotaria($idSolicitud);
     }

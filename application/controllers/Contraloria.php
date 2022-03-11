@@ -402,7 +402,7 @@ class Contraloria extends CI_Controller {
 		$mail->Host     = 'smtp.gmail.com';
 		$mail->SMTPAuth = true;
 		$mail->Username = 'noreply@ciudadmaderas.com';
-		$mail->Password = 'En3r02021@M';
+		$mail->Password = 'euTan4&9';
 		$mail->SMTPSecure = 'ssl';
 		$mail->Port     = 465;
 
@@ -684,7 +684,7 @@ class Contraloria extends CI_Controller {
 		$mail->Host     = 'smtp.gmail.com';
 		$mail->SMTPAuth = true;
 		$mail->Username = 'noreply@ciudadmaderas.com';
-		$mail->Password = 'En3r02021@M';
+		$mail->Password = 'euTan4&9';
 		$mail->SMTPSecure = 'ssl';
 		$mail->Port     = 465;
 
@@ -1195,7 +1195,7 @@ public function get_sede(){
   $mail->Host     = 'smtp.gmail.com';
   $mail->SMTPAuth = true;
   $mail->Username = 'noreply@ciudadmaderas.com';
-  $mail->Password = 'En3r02021@M';
+  $mail->Password = 'euTan4&9';
   $mail->SMTPSecure = 'ssl';
   $mail->Port     = 465;
   
@@ -1571,7 +1571,7 @@ public function editar_registro_loteRechazo_contraloria_proceceso6(){
   $mail->Host     = 'smtp.gmail.com';
   $mail->SMTPAuth = true;
   $mail->Username = 'noreply@ciudadmaderas.com';
-  $mail->Password = 'En3r02021@M';
+  $mail->Password = 'euTan4&9';
   $mail->SMTPSecure = 'ssl';
   $mail->Port     = 465;
   
@@ -1976,7 +1976,7 @@ $i = 0;
   $mail->Host     = 'smtp.gmail.com';
   $mail->SMTPAuth = true;
   $mail->Username = 'noreply@ciudadmaderas.com';
-  $mail->Password = 'En3r02021@M';
+  $mail->Password = 'euTan4&9';
   $mail->SMTPSecure = 'ssl';
   $mail->Port     = 465;
   
@@ -3323,7 +3323,7 @@ public function return1(){
         } else {
             echo json_encode(array());
         }
-    }
+    } 
 
     public function getLiberacionesInformation()
     {
@@ -3335,27 +3335,7 @@ public function return1(){
         }
     }
 
-    public function updateLotesStatusLiberacion(){
-        for ($i = 0; $i < count($this->input->post("idLote")); $i++) {
-            $updateArrayData[] = array(
-                'idLote' => $_POST['idLote'][$i],
-                'observacionContratoUrgente' => 1,
-                'usuario' => $this->session->userdata('id_usuario')
-            );
-            $insertArray[$i] = array(
-            	'id_parametro' => $_POST['idLote'][$i],
-                'tipo' => 'update',
-                'anterior' => '',
-                'nuevo' => '1',
-                'col_afect' => 'observacionContratoUrgente',
-                'tabla' => 'lotes',
-                'creado_por' => $this->session->userdata('id_usuario')
-            );
-        }
-        $response = $this->db->update_batch('lotes', $updateArrayData, 'idLote');
-        $this->db->insert_batch('auditoria',$insertArray);
-        echo json_encode($response);
-    }
+   
 
     public function status9Report()
     {
@@ -3399,4 +3379,91 @@ public function return1(){
         $this->load->view('template/header');
         $this->load->view("contraloria/vista_documentacion_contraloria_cl_lote", $datos);
     }
+
+
+	public function updateLotesStatusLiberacion(){
+        for ($i = 0; $i < count($this->input->post("idLote")); $i++) {
+            $updateArrayData[] = array(
+                'idLote' => $_POST['idLote'][$i],
+                'observacionContratoUrgente' => 1,
+                'usuario' => $this->session->userdata('id_usuario')
+            );
+            $insertArray[$i] = array(
+            	'id_parametro' => $_POST['idLote'][$i],
+                'tipo' => 'update',
+                'anterior' => '',
+                'nuevo' => '1',
+                'col_afect' => 'observacionContratoUrgente',
+                'tabla' => 'lotes',
+                'creado_por' => $this->session->userdata('id_usuario')
+            );
+        }
+        $response = $this->db->update_batch('lotes', $updateArrayData, 'idLote');
+        $this->db->insert_batch('auditoria',$insertArray);
+        echo json_encode($response);
+    }
+
+
+    public function setData()
+    {
+
+				$json = json_decode($this->input->post("jsonInfo"));
+
+			//print_r($json);
+			//echo "---------";
+			//print_r($json[1]->ID_LOTE);
+
+			$insertArrayData = array();
+			$updateArrayData = array();
+                $updateArrayData = array();
+
+			
+			//	$updateAuditoriaData = array("fecha_modificacion" => date("Y-m-d H:i:s"), "modificado_por" => $this->session->userdata('id_usuario'));
+             //   $insertAuditoriaData = array("fecha_creacion" => date("Y-m-d H:i:s"), "creado_por" => $this->session->userdata('id_usuario'));
+
+                for ($i = 0; $i < count($json); $i++) { // MJ: SE ARMAN ARRAYS PARA INSERTAR | ACTUALIZAR SEGÚN SEA EL CASO
+					$commonData = array();
+					$commonData2 = array();
+
+                        $commonData +=  array("idLote" => $json[$i]->ID_LOTE);
+                        $commonData +=  array("observacionContratoUrgente" => 1);
+                        $commonData +=  array("usuario" => $this->session->userdata('id_usuario'));
+
+						
+                        $commonData2 +=  array("id_parametro" => $json[$i]->ID_LOTE);
+                        $commonData2 +=  array("tipo" => 'update');
+                        $commonData2 +=  array("anterior" => '');
+                        $commonData2 +=  array("nuevo" => 1);
+                        $commonData2 +=  array("col_afect" => 'observacionContratoUrgente');
+						$commonData2 +=  array("tabla" => 'lotes');
+						$commonData2 +=  array("creado_por" => $this->session->userdata('id_usuario'));
+						
+                        array_push($insertArrayData, $commonData2);
+						array_push($updateArrayData, $commonData); 
+                }
+              
+
+				//print_r($insertArrayData);
+
+				$response = $this->db->update_batch('lotes', $updateArrayData, 'idLote');
+       			 $this->db->insert_batch('auditoria',$insertArrayData);
+
+					echo json_encode($response);
+
+
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
 }

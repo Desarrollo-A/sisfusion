@@ -2,47 +2,11 @@ table.dataTable thead tr {
 	background-color: #103f75;
 	color: white;
 }
-.back404
-{
-	padding-top: 250px;
-	padding-left: 40px;
-	padding-right: 40px;
-	text-align: center;
-}
-.back404 h1, h2
-{
-	color: white;
-}
-.error404
-{
-	font-family: 'Source Sans Pro', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-}
-.error404 b
-{
-	color: #FFF;
-	font-size: 2.5em;
-}
 .backgroundWhite
 {
 	background-color: #F2F2F2 !important;
-	/*background-image: url('../../../static/images/istockphoto-471777606-612x612.jpg');*/
-	background: linear-gradient(
-			to bottom,
-			rgba(0,0,0, 0.4),
-			rgba(0,0,0, 1)
-	),url('../../../static/images/istockphoto-471777606-612x612.jpg');
+	background: linear-gradient( to bottom,rgba(0,0,0, 0.4), rgba(0,0,0, 1)),url('../../static/images/istockphoto-471777606-612x612.jpg');
 	background-size: cover;
-
-	/*background: url('../../../static/images/istockphoto-471777606-612x612.jpg') center center no-repeat, -moz-linear-gradient(top, #7B7B7B, #0b3e6f); /* FF 3.6+*/
-	/*background: url('../../../static/images/istockphoto-471777606-612x612.jpg') center center no-repeat, -webkit-gradient(linear, 0 0, 0 100%, from(#7B7B7B), to(#0b3e6f)); /* Safari 4+, Chrome 2+*/
-	/*background: url('../../../static/images/istockphoto-471777606-612x612.jpg') center center no-repeat, -webkit-linear-gradient(top, #7B7B7B,  #0b3e6f); /* Safari 5.1+, Chrome 10+*/
-	/*background: url('../../../static/images/istockphoto-471777606-612x612.jpg') center center no-repeat, -o-linear-gradient(top, #7B7B7B,  #0b3e6f); /* Opera 11.10*/
-	/*background: url('../../../static/images/istockphoto-471777606-612x612.jpg') center center no-repeat, linear-gradient(to bottom, #7B7B7B,  #0b3e6f);*//* Standard, IE10*/
-}
-.back404 a{
-	color: #795c31;
-	font-size: 1.5em;
-	font-weight: 800;
 }
 .frmDivCliente
 {

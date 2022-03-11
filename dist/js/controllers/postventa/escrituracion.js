@@ -40,18 +40,20 @@ function loading() {
 function complete() {
     $(".fa-spinner").hide();
     $(".btn-text").html("Completado");
+    $('#spiner-loader').removeClass('hide');
 }
 
 function aportaciones() {
     let idLote = $('#lotes').val();
     let idCliente = $('#idCliente').val();
-
+    $('#spiner-loader').removeClass('hide');
     $.post('aportaciones', {
         idLote: idLote,
         idCliente: idCliente
     }, function (data) {
         console.log(data);
         complete();
+        
     }, 'json');
 }
 
@@ -105,7 +107,7 @@ function getClient(idLote) {
         $('#cel').val(data.telefono2);
         $('#idCliente').val(data.id_cliente);
     }, 'json');
-    $('#check').show();
+    $('#check').removeClass("d-none");
 }
 
 function getProyectos() {
@@ -126,7 +128,8 @@ function getProyectos() {
 }
 
 function getCondominios(idResidencial) {
-    $('#check').hide();
+    $('#spiner-loader').removeClass('hide');
+    $('#check').addClass("d-none");
     $("#condominio").find("option").remove();
     $("#condominio").append($('<option disabled selected>').val(null).text("Seleccione una opción"));
     $.post('getCondominios', {
@@ -142,11 +145,13 @@ function getCondominios(idResidencial) {
             $("#condominio").append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
         }
         $("#condominio").selectpicker('refresh');
+        $('#spiner-loader').addClass('hide');
     }, 'json');
 }
 
 function getLotes(idCondominio) {
-    $('#check').hide();
+    $('#spiner-loader').removeClass('hide');
+    $('#check').addClass("d-none");
     $("#lotes").find("option").remove();
     $("#lotes").append($('<option disabled selected>').val(null).text("Seleccione una opción"));
     $.post('getLotes', {
@@ -162,5 +167,6 @@ function getLotes(idCondominio) {
             $("#lotes").append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
         }
         $("#lotes").selectpicker('refresh');
+        $('#spiner-loader').addClass('hide');
     }, 'json');
 }   

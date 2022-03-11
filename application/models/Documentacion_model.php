@@ -142,9 +142,9 @@ class Documentacion_model extends CI_Model
         return $this->db->query("SELECT * FROM historial_documento WHERE idDocumento = $idDocumento");
     }
 
-    function getRejectionReasons()
+    function getRejectionReasons($tipo_proceso)
     {
-        return $this->db->query("SELECT id_motivo, tipo_documento, motivo FROM motivos_rechazo WHERE estatus = 1")->result_array();
+        return $this->db->query("SELECT id_motivo, tipo_documento, motivo, tipo_proceso FROM motivos_rechazo WHERE estatus = 1 AND tipo_proceso = $tipo_proceso")->result_array();
     }
 
     function saveRejectionReasons($data)
@@ -154,16 +154,6 @@ class Documentacion_model extends CI_Model
             return 0;
         } else {
             return 1;
-        }
-    }
-
-    public function updateRecord($table, $data, $key, $value) // MJ: ACTUALIZA LA INFORMACIÓN DE UN REGISTRO EN PARTICULAR, RECIBE 4 PARÁMETROS. TABLA, DATA A ACTUALIZAR, LLAVE (WHERE) Y EL VALOR DE LA LLAVE
-    {
-        $response = $this->db->update($table, $data, "$key = '$value'");
-        if (!$response) {
-            return 0; // MJ: SOMETHING HAPPENDS
-        } else {
-            return 1; // MJ: EVERYTHING RUNS FINE
         }
     }
 
@@ -186,6 +176,27 @@ class Documentacion_model extends CI_Model
         INNER JOIN motivos_rechazo_x_documento mrxd ON mrxd.id_documento = $idDocumento AND mrxd.estatus = 1 $and
         INNER JOIN motivos_rechazo mr ON mr.id_motivo = mrxd.id_motivo
         WHERE l.status = 1 AND l.idLote = $idLote");
+    }
+
+    function getRejectReasonsTwo($idDocumento, $idSolicitud, $documentType)
+    {
+        return $this->db->query("SELECT mrxd.id_mrxdoc, mr.motivo, UPPER(CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno)) userValidacion 
+        FROM solicitud_escrituracion se      
+        INNER JOIN documentos_escrituracion de ON de.idSolicitud = se.idSolicitud
+        INNER JOIN usuarios u ON u.id_usuario = de.validado_por
+        INNER JOIN motivos_rechazo_x_documento mrxd ON mrxd.id_documento = $idDocumento AND mrxd.estatus = 1 AND mrxd.tipo = $documentType
+        INNER JOIN motivos_rechazo mr ON mr.id_motivo = mrxd.id_motivo
+        WHERE se.idSolicitud = $idSolicitud");
+    }
+
+    function getReasonsForRejectionByDocument($id_documento, $tipo_proceso)
+    {
+        return $this->db->query("SELECT id_motivo, oxc.nombre nombre_documento, mr.motivo, mr.estatus,
+        CASE mr.estatus WHEN 1 THEN '<span class=\"label\" style=\"background:#81C784\">ACTIVO</span>'
+        ELSE '<span class=\"label\" style=\"background:#E57373\">INACTIVO</span>' END estatus_motivo
+        FROM motivos_rechazo mr 
+        INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = mr.tipo_documento AND oxc.id_catalogo = 60
+        WHERE mr.tipo_documento = $id_documento AND mr.tipo_proceso = $tipo_proceso");
     }
 
 }

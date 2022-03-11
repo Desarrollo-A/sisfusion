@@ -6,7 +6,7 @@ class Documentacion extends CI_Controller
     public function __construct()
     {
         parent::__construct();
-        $this->load->model(array('Documentacion_model'));
+        $this->load->model(array('Documentacion_model', 'General_model'));
         $this->load->library(array('session', 'form_validation', 'get_menu'));
         $this->load->helper(array('url', 'form'));
         $this->load->database('default');
@@ -43,36 +43,6 @@ class Documentacion extends CI_Controller
         $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
         $this->load->view('template/header');
         $this->load->view("documentacion/mainDocumentTreeView_Test", $datos);
-    }
-
-    function getResidencialesList()
-    {
-        $data = $this->Documentacion_model->getResidencialesList();
-        if ($data != null) {
-            echo json_encode($data);
-        } else {
-            echo json_encode(array());
-        }
-    }
-
-    function getCondominiosList()
-    {
-        $data = $this->Documentacion_model->getCondominiosList($this->input->post("idResidencial"));
-        if ($data != null) {
-            echo json_encode($data);
-        } else {
-            echo json_encode(array());
-        }
-    }
-
-    function getLotesList()
-    {
-        $data = $this->Documentacion_model->getLotesList($this->input->post("idCondominio"));
-        if ($data != null) {
-            echo json_encode($data);
-        } else {
-            echo json_encode(array());
-        }
     }
 
     function getDocumentsInformation()
@@ -187,12 +157,11 @@ class Documentacion extends CI_Controller
 
     function getRejectionReasons()
     {
-        $data = $this->Documentacion_model->getRejectionReasons();
-        if ($data != null) {
+        $data = $this->Documentacion_model->getRejectionReasons($this->input->post('tipo_proceso'));
+        if ($data != null)
             echo json_encode($data);
-        } else {
+        else
             echo json_encode(array());
-        }
     }
 
     public function validateFile()
@@ -224,7 +193,7 @@ class Documentacion extends CI_Controller
             //exit;
             $this->db->update_batch("motivos_rechazo_x_documento", $updateArrayData, "id_mrxdoc");
         }
-            $updateData = array("estatus_validacion" => $action == 4 ? 2 : 1, "validado_por" => $this->session->userdata('id_usuario'));
+        $updateData = array("estatus_validacion" => $action == 4 ? 2 : 1, "validado_por" => $this->session->userdata('id_usuario'));
         if ($documentType == 30) { //  DEPÓSITO DE SERIEDAD
             $table = "deposito_seriedad";
             $key = "id";
@@ -244,7 +213,7 @@ class Documentacion extends CI_Controller
             $table = "historial_documento";
             $key = "idDocumento";
         }
-        $updateResponse = $this->Documentacion_model->updateRecord($table, $updateData, $key, $idDocumento); // MJ: LLEVA 4 PARÁMETROS $table, $data, $key, $value
+        $updateResponse = $this->General_model->updateRecord($table, $updateData, $key, $idDocumento); // MJ: LLEVA 4 PARÁMETROS $table, $data, $key, $value
         if ($action == 4) {
             $insertResponse = $this->Documentacion_model->saveRejectionReasons($insertData);
             echo json_encode(($updateResponse == 1 && $insertResponse == 1) == TRUE ? 1 : 0);
@@ -253,4 +222,87 @@ class Documentacion extends CI_Controller
         }
     }
 
+    function reasonsForRejectionByDocument()
+    {
+        if ($this->session->userdata('id_rol') == FALSE)
+            redirect(base_url());
+        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
+        $this->load->view('template/header');
+        $this->load->view("documentacion/reasonsForRejectionByDocument", $datos);
+    }
+
+    function getReasonsForRejectionByDocument()
+    {
+        if ($this->input->post("id_documento") == '' || $this->input->post("id_documento") == undefined || $this->input->post("tipo_proceso") == '' || $this->input->post("tipo_proceso") == undefined)
+            echo json_encode(array());
+        else {
+            $data['data'] = $this->Documentacion_model->getReasonsForRejectionByDocument($this->input->post("id_documento"), $this->input->post('tipo_proceso'))->result_array();
+            if ($data != null)
+                echo json_encode($data);
+            else
+                echo json_encode(array());
+        }
+    }
+
+    function saveRejectReason()
+    {
+        if($this->input->post("action") == '' || $this->input->post("reject_reason") == '')
+            echo json_encode(array("status" => 400, "message" => "Algún parámetro no tiene un valor especificado o no viene informado."));
+        else {
+            if ($this->input->post("action") == 0) {
+                if ($this->input->post("id_documento") == '')
+                    echo json_encode(array("status" => 400, "message" => "Algún parámetro no tiene un valor especificado o no viene informado."));
+                else {
+                    $insertData = array(
+                        "tipo_documento" => $this->input->post("id_documento"),
+                        "motivo" => $this->input->post("reject_reason"),
+                        "estatus" => 1,
+                        "tipo_proceso" => 2,
+                        "creado_por" => $this->session->userdata('id_usuario'),
+                        "fecha_creacion" => date('Y-m-d H:i:s'),
+                        "modificado_por" => $this->session->userdata('id_usuario'),
+                        "fecha_modificacion" => date('Y-m-d H:i:s')
+                    );
+                    $response = $this->General_model->addRecord("motivos_rechazo", $insertData);
+                    if ($response)
+                        echo json_encode(array("status" => 200, "message" => "El registro se ha ingresado de manera exitosa."));
+                    else
+                        echo json_encode(array("status" => 500, "message" => "Oops, algo salió mal. Inténtalo más tarde."));
+                }
+            } else {
+                if ($this->input->post("id_motivo") == '')
+                    echo json_encode(array("status" => 400, "message" => "Algún parámetro no tiene un valor especificado o no viene informado."));
+                else {
+                    $updateData = array(
+                        "motivo" => $this->input->post("reject_reason"),
+                        "modificado_por" => $this->session->userdata('id_usuario'),
+                        "fecha_modificacion" => date('Y-m-d H:i:s')
+                    );
+                    $response = $this->General_model->updateRecord("motivos_rechazo", $updateData, "id_motivo", $this->input->post("id_motivo"));
+                    if ($response)
+                        echo json_encode(array("status" => 200, "message" => "El registro se ha actualizado de manera exitosa."));
+                    else
+                        echo json_encode(array("status" => 500, "message" => "Oops, algo salió mal. Inténtalo más tarde."));
+                }
+            }
+        }
+    }
+
+    function changeStatus()
+    {
+        if ($this->input->post("action") == '' || $this->input->post("id_motivo") == '')
+            echo json_encode(array("status" => 400, "message" => "Algún parámetro no tiene un valor especificado o no viene informado."));
+        else {
+            $updateData = array(
+                "estatus" => $this->input->post("action") == 2 ? 0 : 1,
+                "modificado_por" => $this->session->userdata('id_usuario'),
+                "fecha_modificacion" => date('Y-m-d H:i:s')
+            );
+            $response = $this->General_model->updateRecord("motivos_rechazo", $updateData, "id_motivo", $this->input->post("id_motivo"));
+            if ($response)
+                echo json_encode(array("status" => 200, "message" => "El registro se ha actualizado de manera exitosa."));
+            else
+                echo json_encode(array("status" => 500, "message" => "Oops, algo salió mal. Inténtalo más tarde."));
+        }
+    }
 }

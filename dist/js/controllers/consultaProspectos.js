@@ -2,6 +2,7 @@ $(document).ready(function() {
     sp.initFormExtendedDatetimepickers();
     $('.datepicker').datetimepicker({locale: 'es'});
     setInitialValues();
+    getStatusRecordatorio();
 });
     /*---INPUT SEARCH-----*/
 
@@ -124,7 +125,7 @@ $(document).ready(function() {
                                 if (d.estatus == 1) {
                                     var actions = '';
                                     var group_buttons = '';
-                                    if (idUser != d.id_asesor && d.lugar_prospeccion == 6) { // NO ES ASESOR Y EL REGISTRO ES DE MKTD QUITO EL BOTÓN DE VER
+                                    if (idUser != d.id_asesor && d.lugar_prospeccion == 6 && compareDates(d.fecha_creacion) == true) { // NO ES ASESOR Y EL REGISTRO ES DE MKTD QUITO EL BOTÓN DE VER
                                         actions = '';
                                     } else { // ES ASESOR Y EL REGISTRO ES DE MKTD - DEJO EL BOTÓN DE VER
                                         group_buttons = '<button class="btn-data btn-orangeYellow to-comment" data-id-prospecto="' + d.id_prospecto + '" rel="tooltip" data-placement="left" title="Ingresar comentario"><i class="far fa-comments"></i></button>' +
@@ -139,7 +140,7 @@ $(document).ready(function() {
                                 } else {
                                     var actions = '';
                                     var group_buttons = '';
-                                    if (idUser != d.id_asesor && d.lugar_prospeccion == 6) { // NO ES ASESOR Y EL REGISTRO ES DE MKTD QUITO EL BOTÓN DE VER
+                                    if (idUser != d.id_asesor && d.lugar_prospeccion == 6 && compareDates(d.fecha_creacion) == true) { // NO ES ASESOR Y EL REGISTRO ES DE MKTD QUITO EL BOTÓN DE VER
                                         actions = '';
                                     } else { // ES ASESOR Y EL REGISTRO ES DE MKTD - DEJO EL BOTÓN DE VER
                                         group_buttons = '<button class="btn-data btn-orangeYellow to-comment" data-id-prospecto="' + d.id_prospecto + '" rel="tooltip" data-placement="left" title="Ingresar comentario"><i class="far fa-comments"></i></button>' +
@@ -157,7 +158,7 @@ $(document).ready(function() {
                                 if (d.estatus == 1) {
                                     var actions = '';
                                     var group_buttons = '';
-                                    if (idUser != d.id_asesor && d.lugar_prospeccion == 6) { // NO ES ASESOR Y EL REGISTRO ES DE MKTD QUITÓ EL BOTÓN DE VER
+                                    if (idUser != d.id_asesor && d.lugar_prospeccion == 6 && compareDates(d.fecha_creacion) == true) { // NO ES ASESOR Y EL REGISTRO ES DE MKTD QUITÓ EL BOTÓN DE VER
                                         actions = '';
                                     } else { // ES ASESOR Y EL REGISTRO ES DE MKTD - DEJO EL BOTÓN DE VER
                                         group_buttons = '<button class="btn-data btn-orangeYellow to-comment" data-id-prospecto="' + d.id_prospecto + '" rel="tooltip" data-placement="left" title="Ingresar comentario"><i class="far fa-comments"></i></button>' +
@@ -171,7 +172,7 @@ $(document).ready(function() {
                                 } else {
                                     var actions = '';
                                     var group_buttons = '';
-                                    if (idUser != d.id_asesor && d.lugar_prospeccion == 6) { // NO ES ASESOR Y EL REGISTRO ES DE MKTD QUITO EL BOTÓN DE VER
+                                    if (idUser != d.id_asesor && d.lugar_prospeccion == 6 && compareDates(d.fecha_creacion) == true) { // NO ES ASESOR Y EL REGISTRO ES DE MKTD QUITO EL BOTÓN DE VER
                                         actions = '';
                                     } else { // ES ASESOR Y EL REGISTRO ES DE MKTD - DEJO EL BOTÓN DE VER
                                         group_buttons = '<button class="btn-data btn-orangeYellow to-comment" data-id-prospecto="' + d.id_prospecto + '" rel="tooltip" data-placement="left" title="Ingresar comentario"><i class="far fa-comments"></i></button>' +
@@ -1077,7 +1078,10 @@ $(document).on('click', '.update-status', function(e) {
 
 $("#my_update_status_form").on('submit', function(e) {
     e.preventDefault();
-    $.ajax({
+    if($('#estatus_particular').val() == 3){
+        $("#agendaInsert").modal();
+
+    }else{$.ajax({
         type: 'POST',
         url: 'updateStatus',
         data: new FormData(this),
@@ -1114,7 +1118,7 @@ $("#my_update_status_form").on('submit', function(e) {
             document.getElementById("finishS").disabled = false;
             alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
         }
-    });
+    });}
 });
 
 function cleanSelects() {
@@ -1272,6 +1276,105 @@ $(document).on('click', '.change-pl', function () { // MJ: FUNCIÓN CAMBIO DE ES
         }
     });
 });
+
+function compareDates(fecha_creacion){
+    var isBefore = moment(fecha_creacion).isBefore('2022-01-20T00:00:00Z');
+    console.log(isBefore);
+    return isBefore;
+}
+$("#estatus_recordatorio").on('change', function(e){
+    let medio =  $(this).val();
+    console.log('medio', medio);
+    if(medio == 2 || medio == 4 || medio == 5){
+        $("#comodinDIV").empty();
+        $("#comodinDIV").append(`<label>Dirección</label>`+
+        `<input id="comodin" name="comodin" type="text" class="form-control">`);
+      }else{
+        $("#comodinDIV").empty();
+
+      }
+  })
+
+$("#estatus_recordatorio_form").on('submit', function(e) {
+    e.preventDefault();
+    var formData = new FormData(this);
+    console.log('estatus: ', $("#id_prospecto_estatus_particular").val());
+    formData.append('estatus_particular',$('#estatus_particular').val());
+    formData.append('id_prospecto_estatus_particular',  $("#id_prospecto_estatus_particular").val());
+    $.ajax({
+        type: 'POST',
+        url: '../Calendar/insertRecordatorio',
+        data: formData,
+        contentType: false,
+        cache: false,
+        processData: false,
+        beforeSend: function() {
+            // Actions before send post
+            document.getElementById("finishS").disabled = true;
+        },
+        success: function(data) {
+            $.ajax({
+                type: 'POST',
+                url: 'updateStatus',
+                data: formData,
+                contentType: false,
+                cache: false,
+                processData: false,
+                beforeSend: function() {
+                    // Actions before send post
+                    document.getElementById("finishS").disabled = true;
+                },
+                success: function(data) {
+                    /*$("#proyecto").val("");
+                    $("#proyecto").selectpicker('refresh');
+                    $("#condominio").empty().selectpicker('refresh');
+                    $("#lote").empty().selectpicker('refresh');
+                    document.getElementById("datatoassign").style.display = "none";
+                    document.getElementById("housesDetail").style.display = "none";*/
+                    if (data == 1) { // SUCCESS RESPONSE
+                        document.getElementById("finishS").disabled = false;
+                        $('#myUpdateStatusModal').modal("hide");
+                        $('#agendaInsert').modal("hide");
+                        $('#estatus_particular').val("0");
+                        $("#estatus_particular").selectpicker("refresh");
+                        $('#prospects-datatable').DataTable().ajax.reload(null, false);
+                        alerts.showNotification("top", "right", "La actualización se ha llevado a cabo correctamente.", "success");
+                    } else if (data == 2) { // LOTE APARTADO
+                        document.getElementById("finishS").disabled = false;
+                        alerts.showNotification("top", "right", "La asignación no se ha podido llevar a cabo debido a que el lote seleccionado ya se encuentra apartado.", "warning");
+                    } else { // ALGO LE FALTÓ
+                        document.getElementById("finishS").disabled = false;
+                        alerts.showNotification("top", "right", "Asegúrate de haber llenado todos los campos mínimos requeridos.", "warning");
+                    }
+                },
+                error: function() {
+                    document.getElementById("finishS").disabled = false;
+                    alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+                }
+            });
+        },
+        error: function() {
+            document.getElementById("finishS").disabled = false;
+            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+        }
+    });
+});
+
+function getStatusRecordatorio(){
+    $.post('../Calendar/getStatusRecordatorio', function(data) {
+        $("#estatus_recordatorio").append($('<option disabled selected>').val("0").text("Seleccione una opción"));
+        var len = data.length;
+        for (var i = 0; i < len; i++) {
+            var id = data[i]['id_opcion'];
+            var name = data[i]['nombre'];
+            $("#estatus_recordatorio").append($('<option>').val(id).text(name));
+        }
+        if (len <= 0) {
+            $("#estatus_recordatorio").append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
+        }
+        $("#estatus_recordatorio").selectpicker('refresh');
+    }, 'json'); 
+}
 
 /*
     $.post('getStatusMktd', function(data) {

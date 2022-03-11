@@ -2,11 +2,9 @@
 class Clientes extends CI_Controller {
 	public function __construct() {
 		parent::__construct();
-        $this->load->model(array('Clientes_model', 'Statistics_model', 'asesor/Asesor_model', 'Caja_model_outside'));
-                //$this->load->model('asesor/Asesor_model');
+        $this->load->model(array('Clientes_model', 'Statistics_model', 'asesor/Asesor_model', 'Caja_model_outside')); 
         $this->load->library(array('session','form_validation'));
-              //LIBRERIA PARA LLAMAR OBTENER LAS CONSULTAS DE LAS  DEL MENÚ
-              $this->load->library(array('session','form_validation', 'get_menu'));
+        $this->load->library(array('session','form_validation', 'get_menu'));
 		$this->load->helper(array('url','form'));
 		$this->load->database('default');
         date_default_timezone_set('America/Mexico_City');
@@ -1315,11 +1313,14 @@ public function getStatusMktdPreventa(){
                 $data["id_coordinador"] = $this->session->userdata('id_lider');
                 $data["id_gerente"] = $this->session->userdata('id_lider');
                 $data["id_subdirector"] = $this->session->userdata('id_lider_3');
+                $data["id_regional"] = $this->session->userdata('id_lider_5');
             }else{
                 $data["id_asesor"] = $this->session->userdata('id_usuario');
                 $data["id_coordinador"] = $this->session->userdata('id_lider');
                 $data["id_gerente"] = $this->session->userdata('id_lider_2');
                 $data["id_subdirector"] = $this->session->userdata('id_lider_4');
+                $data["id_regional"] = $this->session->userdata('id_lider_5');
+
             }
         }else if($this->session->userdata('id_rol') == 9){
             //COORDIDADOR
@@ -1327,18 +1328,24 @@ public function getStatusMktdPreventa(){
             $data["id_coordinador"] = $this->session->userdata('id_usuario');
             $data["id_gerente"] = $this->session->userdata('id_lider');
             $data["id_subdirector"] = $this->session->userdata('id_lider_3');
+            $data["id_regional"] = $this->session->userdata('id_lider_5');
+
         }else if($this->session->userdata('id_rol') == 3){
             //GERENTE
             $data["id_asesor"] = $this->session->userdata('id_usuario');
             $data["id_coordinador"] = $this->session->userdata('id_usuario');
             $data["id_gerente"] = $this->session->userdata('id_usuario');
             $data["id_subdirector"] = $this->session->userdata('id_lider');
+            $data["id_regional"] = $this->session->userdata('id_lider_5');
+
         }else if($this->session->userdata('id_rol') == 6){
             //ASISTENTE DE GERENTE
             $data["id_asesor"] = $this->session->userdata('id_usuario');
             $data["id_coordinador"] = $this->session->userdata('id_usuario');
             $data["id_gerente"] = $this->session->userdata('id_lider');
             $data["id_subdirector"] = $this->session->userdata('id_lider_2');
+            $data["id_regional"] = $this->session->userdata('id_lider_5');
+
         }
            
            
@@ -2034,7 +2041,7 @@ public function getStatusMktdPreventa(){
         $where = $this->input->post("where");
 
 
-        $data['data'] = $this->Clientes_model->getProspectsListByAsesor($id_asesor, $typeTransaction, $beginDate, $endDate, $where);
+        $data = $this->Clientes_model->getProspectsListByAsesor($id_asesor, $typeTransaction, $beginDate, $endDate, $where);
         if($data != null) {
             echo json_encode($data);
         } else {
@@ -2897,6 +2904,42 @@ public function getStatusMktdPreventa(){
     {
         $normalize = intval(preg_replace('/[^0-9]+/', '', $string), 10);
         return $normalize;
+    }
+
+    public function getGrsBySub($idSubdir)
+    {
+        $data = $this->Clientes_model->getGrsBySub($idSubdir);
+        if($data != null) {
+            echo json_encode($data);
+        } else {
+            echo json_encode(array());
+        }
+        exit;
+    }
+
+    public function getProspectsListBySubdirector($idSubdir)
+    {
+        if ($this->session->userdata('id_rol') == 19) {
+            $dato = $this->Clientes_model->getSedeByUser($idSubdir);
+            $typeTransaction = $this->input->post("typeTransaction");
+            $beginDate = date("Y-m-d", strtotime($this->input->post("beginDate")));
+            $endDate = date("Y-m-d", strtotime($this->input->post("endDate")));
+            $where = $this->input->post("where");
+            $data = $this->Clientes_model->getProspectsListBySubdirector($dato[0]['id_sede'], $typeTransaction, $beginDate, $endDate, $where);
+        } else {
+            $typeTransaction = $this->input->post("typeTransaction");
+            $beginDate = date("Y-m-d", strtotime($this->input->post("beginDate")));
+            $endDate = date("Y-m-d", strtotime($this->input->post("endDate")));
+            $where = $this->input->post("where");
+            $data = $this->Clientes_model->getProspectsListBySubdirector($idSubdir, $typeTransaction, $beginDate, $endDate, $where);
+        }
+        
+        if($data != null) {
+            echo json_encode($data);
+        } else {
+            echo json_encode(array());
+        }
+        exit;
     }
     
 }

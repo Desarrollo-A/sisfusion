@@ -182,16 +182,17 @@
                                                 <thead>
                                                     <tr>
                                                         <th></th>
-                                                        <th>ID LOTE</th>
+                                                        <th>ID</th>
                                                         <th>PROYECTO</th>
                                                         <th>CONDOMINIO</th>
                                                         <th>LOTE</th>
                                                         <th>CLIENTE</th>
                                                         <th>TIPO VENTA</th>
                                                         <th>MODALIDAD</th>
-                                                        <th>EST. CONTRATACIÓN</th>
-                                                        <th>ENT. VENTA</th>
-                                                        <th>ÚLTIMA ACT.</th>
+                                                        <th>CONTRATACIÓN</th>
+                                                        <th>F. APARTADO</th>
+                                                        <th>PLAN VENTA</th>
+                                                        <th>F. NEODATA</th>
                                                         <th>MÁS</th>
                                                     </tr>
                                                 </thead>
@@ -237,7 +238,7 @@
     $("#tabla_ingresar_9").ready( function(){
         let titulos = [];
         $('#tabla_ingresar_9 thead tr:eq(0) th').each( function (i) {
-            if(i != 0 && i != 11){
+            if(i != 0 && i != 12){
                 var title = $(this).text();
                 titulos.push(title);
 
@@ -293,7 +294,7 @@
             destroy: true,
             ordering: false,
             columns: [{
-                "width": "3%",
+                "width": "2%",
                 "className": 'details-control',
                 "orderable": false,
                 "data" : null,
@@ -320,19 +321,19 @@
                 }
             },
             {
-                "width": "11%",
+                "width": "12%",
                 "data": function( d ){
                     return '<p class="m-0">'+d.nombreLote+'</p>';
                 }
             }, 
             {
-                "width": "11%",
+                "width": "12%",
                 "data": function( d ){
                     return '<p class="m-0"><b>'+d.nombre_cliente+'</b></p>';
                 }
             }, 
             {
-                "width": "8%",
+                "width": "7%",
                 "data": function( d ){
                     var lblType;
                     if(d.tipo_venta==1) {
@@ -347,7 +348,7 @@
                 }
             }, 
             {
-                "width": "8%",
+                "width": "7%",
                 "data": function( d ){
                     var lblStats;
                     if(d.compartida==null) {
@@ -359,7 +360,7 @@
                 }
             }, 
             {
-                "width": "8%",
+                "width": "7%",
                 "data": function( d ){
                     var lblStats;
                     if(d.idStatusContratacion==15) {
@@ -369,6 +370,12 @@
                     }
                     return lblStats;
                 }
+            },
+            {
+                "width": "8%",
+                "data": function( d ){
+                    return '<span class="label label-success" style="background:#69C1A2;">'+d.fechaApartado+'</span>';
+                 }
             },
             {
                 "width": "8%",
@@ -430,35 +437,35 @@
                 }
             },
              { 
-                "width": "14%",
+                "width": "8%",
                 "orderable": false,
                 "data": function( data ){
                     var BtnStats;
                     if(data.totalNeto2==null) {
                         BtnStats = '';
                     }else {
-                        if(data.compartida==null) {
-                            if(data.fecha_modificacion <= '2021-01-01' || data.fecha_modificacion == null ) {
-                                BtnStats = '<button href="#" value="'+data.idLote+'" data-estatus="'+data.idStatusContratacion+'" data-totalNeto2="'+data.totalNeto2+'" data-compartida="'+0+'" data-tipov="'+data.tipo_venta+'" data-subdirector="'+data.sub+'" data-regis="'+data.registro_comision+'" data-ismktd="'+data.ismktd+'" data-mdb="'+data.descuento_mdb+'" data-lugarP="'+data.lugar_prospeccion+'" data-value="'+data.registro_comision+'" data-code="'+data.cbbtton+'" ' +'class="btn-data btn-sky verify_neodata" title="Verificar en NEODATA">' +'<span class="material-icons">verified_user</span></button> ';
-                            }else {
-                                BtnStats = '<button href="#" value="'+data.idLote+'" data-estatus="'+data.idStatusContratacion+'"  data-value="'+data.registro_comision+'"   data-estatus="'+data.idStatusContratacion+'" data-totalNeto2="'+data.totalNeto2+'" data-compartida="'+0+'" data-tipov="'+data.tipo_venta+'" data-subdirector="'+data.sub+'" data-regis="'+data.registro_comision+'" data-ismktd="'+data.ismktd+'" data-mdb="'+data.descuento_mdb+'" data-lugarP="'+data.lugar_prospeccion+'"  data-code="'+data.cbbtton+'" ' +'class="btn-data btn-sky verify_neodata" title="Verificar en NEODATA">' +'<span class="material-icons">verified_user</span></button> <button href="#" data-param="1" data-idpagoc="' + data.idLote + '" ' +'class="btn-data btn-deepGray update_bandera" title="Regresar a activas">' +'<i class="fas fa-undo-alt"></i></button>'
-                                ;
+                        // if(data.compartida==null) {
+                        //     if(data.fecha_modificacion <= '2021-01-01' || data.fecha_modificacion == null ) {
+                        //         BtnStats = '<button href="#" value="'+data.idLote+'" data-estatus="'+data.idStatusContratacion+'" data-totalNeto2="'+data.totalNeto2+'" data-compartida="'+0+'" data-tipov="'+data.tipo_venta+'" data-subdirector="'+data.sub+'" data-regis="'+data.registro_comision+'" data-idResidencial="'+data.idResidencial+'" data-ismktd="'+data.ismktd+'" data-mdb="'+data.descuento_mdb+'" data-lugarP="'+data.lugar_prospeccion+'" data-value="'+data.registro_comision+'" data-code="'+data.cbbtton+'" ' +'class="btn-data btn-sky verify_neodata" title="Verificar en NEODATA">' +'<span class="material-icons">verified_user</span></button> ';
+                        //     }else {
+                        //         BtnStats = '<button href="#" value="'+data.idLote+'" data-estatus="'+data.idStatusContratacion+'"  data-value="'+data.registro_comision+'"   data-estatus="'+data.idStatusContratacion+'" data-totalNeto2="'+data.totalNeto2+'" data-compartida="'+0+'" data-tipov="'+data.tipo_venta+'" data-subdirector="'+data.sub+'" data-regis="'+data.registro_comision+'" data-idResidencial="'+data.idResidencial+'" data-ismktd="'+data.ismktd+'" data-mdb="'+data.descuento_mdb+'" data-lugarP="'+data.lugar_prospeccion+'"  data-code="'+data.cbbtton+'" ' +'class="btn-data btn-sky verify_neodata" title="Verificar en NEODATA">' +'<span class="material-icons">verified_user</span></button> <button href="#" data-param="1" data-idpagoc="' + data.idLote + '" ' +'class="btn-data btn-deepGray update_bandera" title="Regresar a activas">' +'<i class="fas fa-undo-alt"></i></button>'
+                        //         ;
 
 
-                                // +'<button class="btn-data btn-orangeYellow marcar_pagada" title="Marcar como liquidada" value="' + data.idLote +'"><i class="material-icons">how_to_reg</i></button>';
-                            }
-                        }else {
-                                if(data.fecha_modificacion <= '2021-01-01' || data.fecha_modificacion == null ) {
-                                BtnStats = '<button href="#" value="'+data.idLote+'" data-estatus="'+data.idStatusContratacion+'" data-totalNeto2="'+data.totalNeto2+'" data-compartida="'+1+'" data-tipov="'+data.tipo_venta+'" data-subdirector="'+data.sub+'" data-regis="'+data.registro_comision+'" data-ismktd="'+data.ismktd+'" data-mdb="'+data.descuento_mdb+'" data-lugarP="'+data.lugar_prospeccion+'"  data-value="'+data.registro_comision+'" data-code="'+data.cbbtton+'" ' +'class="btn-data btn-green verify_neodata" title="Verificar en NEODATA">' +'<span class="material-icons">verified_user</span></button> ';
-                            }else {
-                                // <button class="btn-data btn-orangeYellow marcar_pagada" title="Marcar como liquidada" value="' + data.idLote +'"><i class="material-icons">how_to_reg</i></button>
-                                BtnStats = '<button href="#" value="'+data.idLote+'" data-estatus="'+data.idStatusContratacion+'"  data-value="'+data.registro_comision+'" data-estatus="'+data.idStatusContratacion+'" data-totalNeto2="'+data.totalNeto2+'" data-compartida="'+0+'" data-tipov="'+data.tipo_venta+'" data-subdirector="'+data.sub+'" data-regis="'+data.registro_comision+'" data-ismktd="'+data.ismktd+'" data-mdb="'+data.descuento_mdb+'" data-lugarP="'+data.lugar_prospeccion+'"  data-code="'+data.cbbtton+'" ' +'class="btn-data btn-green verify_neodata" title="Verificar en NEODATA">' +'<span class="material-icons">verified_user</span></button> <button href="#" data-param="1" data-idpagoc="' + data.idLote + '" ' +'class="btn-data btn-deepGray update_bandera" title="Regresar a activas">' +'<i class="fas fa-undo-alt"></i></button>'
-                                 ;
+                        //         // +'<button class="btn-data btn-orangeYellow marcar_pagada" title="Marcar como liquidada" value="' + data.idLote +'"><i class="material-icons">how_to_reg</i></button>';
+                        //     }
+                        // }else {
+                        //         if(data.fecha_modificacion <= '2021-01-01' || data.fecha_modificacion == null ) {
+                        //         BtnStats = '<button href="#" value="'+data.idLote+'" data-estatus="'+data.idStatusContratacion+'" data-totalNeto2="'+data.totalNeto2+'" data-compartida="'+1+'" data-tipov="'+data.tipo_venta+'" data-subdirector="'+data.sub+'" data-regis="'+data.registro_comision+'" data-idResidencial="'+data.idResidencial+'" data-ismktd="'+data.ismktd+'" data-mdb="'+data.descuento_mdb+'" data-lugarP="'+data.lugar_prospeccion+'"  data-value="'+data.registro_comision+'" data-code="'+data.cbbtton+'" ' +'class="btn-data btn-green verify_neodata" title="Verificar en NEODATA">' +'<span class="material-icons">verified_user</span></button> ';
+                        //     }else {
+                        //         // <button class="btn-data btn-orangeYellow marcar_pagada" title="Marcar como liquidada" value="' + data.idLote +'"><i class="material-icons">how_to_reg</i></button>
+                        //         BtnStats = '<button href="#" value="'+data.idLote+'" data-estatus="'+data.idStatusContratacion+'"  data-value="'+data.registro_comision+'" data-estatus="'+data.idStatusContratacion+'" data-totalNeto2="'+data.totalNeto2+'" data-compartida="'+0+'" data-tipov="'+data.tipo_venta+'" data-subdirector="'+data.sub+'" data-regis="'+data.registro_comision+'" data-idResidencial="'+data.idResidencial+'" data-ismktd="'+data.ismktd+'" data-mdb="'+data.descuento_mdb+'" data-lugarP="'+data.lugar_prospeccion+'"  data-code="'+data.cbbtton+'" ' +'class="btn-data btn-green verify_neodata" title="Verificar en NEODATA">' +'<span class="material-icons">verified_user</span></button> <button href="#" data-param="1" data-idpagoc="' + data.idLote + '" ' +'class="btn-data btn-deepGray update_bandera" title="Regresar a activas">' +'<i class="fas fa-undo-alt"></i></button>'
+                        //          ;
 
 
-                                // +'<button class="btn-data btn-orangeYellow marcar_pagada" title="Marcar como liquidada" value="' + data.idLote +'"><i class="material-icons">how_to_reg</i></button>';
-                            }
-                        }
+                        //         // +'<button class="btn-data btn-orangeYellow marcar_pagada" title="Marcar como liquidada" value="' + data.idLote +'"><i class="material-icons">how_to_reg</i></button>';
+                        //     }
+                        // }
                     }
                     return '<div class="d-flex justify-center">'+BtnStats+'</div>';
                 }
@@ -487,25 +494,13 @@
                 $(this).parent().find('.animacion').removeClass("fas fa-chevron-up").addClass("fas fa-chevron-down");
             } 
             else {
-                var status;
-                var fechaVenc;
-                if (row.data().idStatusContratacion == 8 && row.data().idMovimiento == 38) {
-                    status = 'Status 8 listo (Asistentes de Gerentes)';
-                } 
-                else if (row.data().idStatusContratacion == 8 && row.data().idMovimiento == 65 ) {
-                    status = 'Status 8 enviado a Revisión (Asistentes de Gerentes)';
-                }
-                else {
-                    status='N/A';
-                }
-                if (row.data().idStatusContratacion == 8 && row.data().idMovimiento == 38 ||
-                    row.data().idStatusContratacion == 8 && row.data().idMovimiento == 65) {
-                    fechaVenc = row.data().fechaVenc;
-                }else {
-                    fechaVenc='N/A';
-                }
-
-                var informacion_adicional = '<div class="container subBoxDetail"><div class="row"><div class="col-12 col-sm-12 col-sm-12 col-lg-12" style="border-bottom: 2px solid #fff; color: #4b4b4b; margin-bottom: 7px"><label><b>Información colaboradores</b></label></div><div class="col-12 col-sm-12 col-md-12 col-lg-12"><label><b>Subdirector: </b>' + row.data().subdirector + '</label></div><div class="col-12 col-sm-12 col-md-12 col-lg-12"><label><b>Gerente: </b>' + row.data().gerente + '</label></div><div class="col-12 col-sm-12 col-md-12 col-lg-12"><label><b>Coordinador: </b>' + row.data().coordinador + '</label></div><div class="col-12 col-sm-12 col-md-12 col-lg-12"><label><b>Asesor: </b>' + row.data().asesor + '</label></div></div></div>';
+ 
+                var informacion_adicional = `<div class="container subBoxDetail"><div class="row"><div class="col-12 col-sm-12 col-sm-12 col-lg-12" style="border-bottom: 2px solid #fff; color: #4b4b4b; margin-bottom: 7px"><label><b>Información colaboradores</b></label></div>
+                <div class="col-2 col-sm-2 col-md-2 col-lg-2"><label><b>Director: </b>` + row.data().director + `</label></div>
+                <div class="col-2 col-sm-2 col-md-2 col-lg-2"><label><b>Regional: </b>` + row.data().regional + `</label></div>
+                <div class="col-2 col-sm-2 col-md-2 col-lg-2"><label><b>Subdirector: </b>` + row.data().subdirector + `</label></div><div class="col-2 col-sm-2 col-md-2 col-lg-2"><label><b>Gerente: </b>` + row.data().gerente + `</label></div>
+                <div class="col-2 col-sm-2 col-md-2 col-lg-2"><label><b>Coordinador: </b>` + row.data().coordinador + `</label></div><div class="col-2 col-sm-2 col-md-2 col-lg-2"><label><b>Asesor: </b>` + row.data().asesor + `</label></div>
+                </div></div>`;
 
                 row.child(informacion_adicional).show();
                 tr.addClass('shown');
@@ -566,9 +561,9 @@
             });
         });
 
-        async function VerificarUsers(idLote,compartida){
+        async function VerificarUsers(idLote,compartida,tipo_venta,lugar_prospeccionLote,mdb,ismktd,IdResidencial){
             return new Promise(resolve => {
-                $.getJSON( url + "Comisiones/getUsersClient/"+idLote+"/"+compartida).done( function( data ){
+                $.getJSON( url + "Comisiones/getUsersClient/"+idLote+"/"+compartida+"/"+tipo_venta+"/"+lugar_prospeccionLote+"/"+mdb+"/"+ismktd+"/"+IdResidencial).done( function( data ){
                     resolve({data:data});
                 });
             });
@@ -579,9 +574,7 @@
             subdirector = $(this).attr("data-subdirector");
             if(subdirector == 0){
                         alerts.showNotification("top", "right", "SIN SUBDIRECTOR ASIGNADO, FAVOR DE REVISARLO CON SISTEMAS VIA TICKET INDICANDO LOS DATOS DEL USUARIO FALTANTE (NOMBRE Y EL ID)", "warning");
-
             }else{
-
 
                 // $("#tabla_ingresar_9 tbody").on("click", ".verify_neodata", async function(){ 
             $("#modal_NEODATA .modal-header").html("");
@@ -597,20 +590,27 @@
             tipo_venta = $(this).attr("data-tipov");
             lugar_prospeccionLote = $(this).attr("data-lugarP");
             totalNeto2 = $(this).attr("data-totalNeto2");
+            
+            IdResidencial = $(this).attr("data-idResidencial");
 
             ismktd = $(this).attr("data-ismktd");
-            mdb = $(this).attr("data-mdb");
+            console.log($(this).attr("data-mdb"));
+            let martha = $(this).attr("data-mdb");
+        
+          let mdb = ( martha == 'null' || martha == undefined) ? 0 : martha;
 
             var bandera_anticipo = 0;
 
 
-            let VentaTipo = 0;
-            let vigencia=0;
-            let resulq = await VerificarUsers(idLote,compartida);
+            let resulq = await VerificarUsers(idLote,compartida,tipo_venta,lugar_prospeccionLote,mdb,ismktd,IdResidencial);
+            console.log(resulq);
 
             if(parseFloat(totalNeto2) > 0){
                 if(resulq.data == 0){
                     alerts.showNotification("top", "right", "Venta mal capturada", "warning");
+                }else if(resulq.data == 5){
+                    alerts.showNotification("top", "right", "NO HAY SEDE REGISTRADA EN SISTEMA, REPORTAR A SISTEMAS INDICANDO LA SEDE CORRECTA, POR FAVOR.", "warning");
+
                 }
                 else{
                     console.log('datos de la consulta ');
@@ -618,142 +618,16 @@
                     let gerente = resulq.data[0].id_gerente;
                     let asesor = resulq.data[0].id_asesor;
                     let idCliente = resulq.data[0].id_cliente;
+                    let id_sede_cl = resulq.data[0].sede_cl;
                     var fecha_inicio = new Date('2021-09-10');  
                     var fecha_fin = new Date('2029-12-31'); 
-                    var fechaApar = resulq.data[0].fechaApartado.split(' ');
-                    var fecha_apartado = new Date(fechaApar[0]);
-                    if(tipo_venta == 7){
-                        console.log('VENTA ESPACIAL 2');
-                        //venta Especial
-                        if(resulq.data[0].id_coordinador != 0 || resulq.data[0].id_coordinador != ''){
-                            //CON 3 USUARIOS
-                            VentaTipo=8;
-                        }else{
-                            //SOLO GASTON
-                            console.log('VENTA ESPACIAL ');
-                            VentaTipo=7;
-                        }
-                    }
-                    else if(tipo_venta == 1 || tipo_venta == 2){
-                        //venta normal o particular
+                    let VentaTipo = resulq.data[0].esquema;
+                    let vigencia=resulq.data[0].vigencia;
 
+console.log(resulq.data[0].esquema);
+console.log(resulq.data[0].vigencia);
 
-                        if(mdb == 1){//inicia MARTHA DEBAYLE
-
-                            if(ismktd == 1){
-
-                                // validar si es CDMX o NO
-                                if(resulq.data[0].id_lider == 7092 && (fecha_apartado >= fecha_inicio && fecha_apartado <= fecha_fin)){
-                                    //REGIONAL MKTD
-                                    console.log('13 - VENTA REGIONAL-MARTHA-DEBAYLE-MKTD');
-                                    VentaTipo=13;
-                                }else {
-                                    console.log('14 - VENTA OTRAS-MARTHA-DEBAYLE-MKTD');
-                                    VentaTipo=14;
-                                    vigencia=1;
-
-
-                                }
-
-                            }else{
-
-                                if(resulq.data[0].id_lider == 7092 && (fecha_apartado >= fecha_inicio && fecha_apartado <= fecha_fin)){
-                                    //REGIONAL MKTD
-                                    console.log('11 - VENTA REGIONAL-MARTHA-DEBAYLE-NORMAL');
-                                    VentaTipo=11;
-                                }else {
-
-                                    console.log('12 - VENTA OTRAS-MARTHA-DEBAYLE-NORMAL');
-                                    VentaTipo=12;
-                                    vigencia=1;
-
-
-                                }
-
-                                // validar si es CDMX o NO
-
-                            }
-
-                        }//fin MARTHA DEBAYLE
-                        else{ //INICIA else NO ES MARTHA DEBAYLE
-
-
-                        if(lugar_prospeccionLote == 6 ){//inicia IF MARSHALL
-                            console.log('VENTA MKTD');
-                            //MKTD
-                                console.log(fecha_inicio);
-                                console.log(fecha_fin);
-                                console.log(fecha_apartado);
-                                if(resulq.data[0].id_lider == 7092 && (fecha_apartado >= fecha_inicio && fecha_apartado <= fecha_fin)){
-                                    //REGIONAL MKTD
-                                    console.log('VENTA REGIONAL MKTD');
-                                    VentaTipo=6;
-                                }else if(resulq.data[0].id_lider == 7092 && (fecha_apartado < fecha_inicio || fecha_apartado > fecha_fin)){
-                                    //REGIONAL MKTD
-                                    VentaTipo=2;
-                                    vigencia=1;
-                                }
-                                else{
-                                    console.log('VENTA SOLO MKTD');
-                                    //MKTD
-                                    VentaTipo=2;
-                                } 
-                        }//fin IF MARSHALL
-                        else if(lugar_prospeccionLote != 6 &&  lugar_prospeccionLote != 26 &&  lugar_prospeccionLote != 32 &&  lugar_prospeccionLote != 29){
-                            //SIN ESPECIFICAR
-                            if(gerente == 832){
-                                console.log('VENTA SERGIO');
-                                //SERGIO MUÑOZ
-                                VentaTipo=3;
-                            }
-                            else{
-                                if(asesor == 2595){
-                                    console.log('VENTA VIKY');
-                                    //VIKY PAULIN
-                                    VentaTipo=9;
-                                }
-                                else{
-                                    if(resulq.data[0].id_lider == 7092 && (fecha_apartado >= fecha_inicio && fecha_apartado <= fecha_fin)){
-                                        //REGIONAL
-                                        console.log('VENTA REGIONAL');
-                                        VentaTipo=5;
-                                    }
-                                    else if(resulq.data[0].id_lider == 7092 && (fecha_apartado < fecha_inicio || fecha_apartado > fecha_fin)){
-                                        VentaTipo=1;
-                                        vigencia=1;
-                                    }
-                                    else{
-                                        //NORMAL
-                                        console.log('VENTA NORMAL');
-                                        VentaTipo=1;
-                                    }
-                                }
-                            }
-                        }
-                        else if(lugar_prospeccionLote == 26){
-                            //COREANO
-                            console.log('VENTA COREANO');
-                            VentaTipo=4;
-                        }
-
-                        else if(lugar_prospeccionLote == 32){
-                            //COREANO
-                            console.log('VENTA YO AMO SLP');
-                            VentaTipo=10;
-                        }
-
-                        else if(lugar_prospeccionLote == 29){
-                            //COREANO
-                            console.log('VENTA COREANO + MKTD');
-                            VentaTipo=15;
-                        }
-
-
-
-                         }//fin else NO ES MARTHA DEBAYLE
-
-                    }
-
+                    var fecha_fin_mktd = new Date('2022-01-19'); 
                     console.log('tipo venta:'+VentaTipo)
                     $("#modal_NEODATA .modal-body").html("");
                     $("#modal_NEODATA .modal-footer").html("");

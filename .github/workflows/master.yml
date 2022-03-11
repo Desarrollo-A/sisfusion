@@ -1,0 +1,38 @@
+on:
+  push:
+    branches:
+      - master
+    paths-ignore:
+      - './application/cache/'
+      - './application/config/'
+      - './application/core/'
+      - './application/helpers/'
+      - './application/hooks/'
+      - './application/libraries/'
+      - './application/logs/'
+      - './application/migrations/'
+      - './application/third_party/'
+      - './dist/build/'
+      - './dist/js/controllers/dist/'
+      - './static/angular/'
+      - './static/yadcf/'
+      - './system/'
+      - './user_guide/'
+
+name:  Deploy website on push
+jobs:
+  web-deploy:
+    name: 🎉 Deploy
+    runs-on: ubuntu-latest
+    steps:
+    - name: 🚚 Get latest code
+      uses: actions/checkout@v2
+
+    - name: 📂 Sync files
+      uses: wlixcc/SFTP-Deploy-Action@v1.2.1
+      with:
+        server: 104.198.134.0
+        port: 22
+        username: prohab
+        ssh_private_key: ${{secrets.SFTP_SSH_PRIVATE_KEY}}
+        remote_path: /mnt/data/aplicaciones/Prueba/sisfusionRepo/
