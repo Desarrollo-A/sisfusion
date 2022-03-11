@@ -4512,9 +4512,11 @@ function getHistorialDescuentos($proyecto,$condominio){
     INNER JOIN lotes lo ON lo.idLote = co.id_lote
     INNER JOIN condominios con ON con.idCondominio = lo.idCondominio
     INNER JOIN residenciales re ON re.idResidencial = con.idResidencial
-    INNER JOIN historial_comisiones hc ON hc.id_pago_i = pci.id_pago_i AND hc.comentario like '%MOTIVO DESCUENTO%'
+    INNER JOIN historial_comisiones hc ON hc.id_pago_i = pci.id_pago_i  
     INNER JOIN usuarios us2 ON us2.id_usuario = pci.modificado_por
-    WHERE pci.estatus IN(0,11,16) AND pci.descuento_aplicado = 1 AND re.idResidencial = $proyecto");
+    WHERE pci.estatus IN(0,11,16) and pci.comentario='DESCUENTO' AND pci.descuento_aplicado IN(1) AND re.idResidencial = $proyecto AND (hc.comentario like 'MOTIVO DESCUENTO%' OR hc.comentario like 'MÓTIVO DESCUENTO%')
+	group by pci.id_pago_i,us.nombre,us.apellido_paterno,us.apellido_materno,pci.abono_neodata,lo.nombreLote, hc.comentario,us2.nombre,us2.apellido_paterno,us2.apellido_materno,pci.fecha_abono, pci.estatus
+");
 }
 else{
     return $this->db->query("SELECT pci.id_pago_i, CONCAT(us.nombre,' ',us.apellido_paterno,' ',us.apellido_materno) AS usuario, pci.abono_neodata as monto, lo.nombreLote, hc.comentario AS motivo, CONCAT(us2.nombre,' ',us2.apellido_paterno,' ',us2.apellido_materno) AS modificado_por, pci.fecha_abono, pci.estatus
@@ -4524,9 +4526,11 @@ else{
     INNER JOIN lotes lo ON lo.idLote = co.id_lote
     INNER JOIN condominios con ON con.idCondominio = lo.idCondominio
     INNER JOIN residenciales re ON re.idResidencial = con.idResidencial
-    INNER JOIN historial_comisiones hc ON hc.id_pago_i = pci.id_pago_i AND hc.comentario like '%MOTIVO DESCUENTO%'
+    INNER JOIN historial_comisiones hc ON hc.id_pago_i = pci.id_pago_i 
     INNER JOIN usuarios us2 ON us2.id_usuario = pci.modificado_por
-    WHERE pci.estatus IN(0,11,16,17) AND pci.descuento_aplicado = 1 AND con.idCondominio = $condominio");
+     WHERE pci.estatus IN(0,11,16) and pci.comentario='DESCUENTO' AND pci.descuento_aplicado IN(1) AND con.idCondominio = $condominio AND (hc.comentario like 'MOTIVO DESCUENTO%' OR hc.comentario like 'MÓTIVO DESCUENTO%')
+	group by pci.id_pago_i,us.nombre,us.apellido_paterno,us.apellido_materno,pci.abono_neodata,lo.nombreLote, hc.comentario,us2.nombre,us2.apellido_paterno,us2.apellido_materno,pci.fecha_abono, pci.estatus
+");
 
 }
 }
@@ -6225,7 +6229,7 @@ public function GuardarPago($id_comision, $comentario_topa, $monotAdd){
         if($opc == ''){
             $Abonado = $this->db-> query("SELECT SUM(pci.abono_neodata) abonado FROM pago_comision_ind pci WHERE pci.id_comision IN  ($id_comision)")->result_array();
             $pagos = $this->db-> query("SELECT * FROM pago_comision_ind WHERE id_comision=$id_comision and estatus in(1,6) and id_usuario=$id_usuario;")->result_array();
-            if($porcentaje < $porcentaje_ant  && $Abonado[0]['abonado'] < $comision_total){
+            if($porcentaje <= $porcentaje_ant  && $Abonado[0]['abonado'] < $comision_total){
                 for ($i=0; $i <count($pagos) ; $i++) { 
                     $comentario2='Se cancelo el pago por cambio de porcentaje';
                     $respuesta =  $this->db->query("UPDATE pago_comision_ind SET abono_neodata=0,estatus=0 WHERE id_pago_i=".$pagos[$i]['id_pago_i']." AND id_usuario=".$id_usuario.";");

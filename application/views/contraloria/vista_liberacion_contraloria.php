@@ -1,3 +1,6 @@
+<link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
+
 <body class="">
 <div class="wrapper ">
     <?php
@@ -66,6 +69,47 @@
                                         </div>
                                     </div>
                                 </div>
+                                <!------->
+                                <div class="row pt-2 row-load ">
+                                    <div class="col col-xs-12 col-sm-12 col-md-10 col-lg-10">
+                                        <div class="form-group label-floating select-is-empty m-0 p-0">
+                                           
+                                        </div>
+                                    </div>
+                                    <div class="col col-xs-12 col-sm-12 col-md-2 col-lg-2 d-flex align-center justify-evenly">
+                                       
+                                        <button class="btn-rounded btn-s-blueLight" name="uploadFile" id="uploadFile" title="Upload" data-toggle="modal" data-target="#uploadModal">
+                                            <i class="fas fa-upload"></i>
+                                        </button> <!-- UPLOAD -->
+                                    </div>
+                                </div>
+
+
+
+                                <div class="modal" tabindex="-1" role="dialog" id="uploadModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <h5 class="text-center">Selección de archivo a cargar</h5>
+                    <div class="file-gph">
+                        <input class="d-none" type="file" id="fileElm">
+                        <input class="file-name" id="file-name"  type="text" placeholder="No has seleccionada nada aún" readonly="">
+                        <label class="upload-btn m-0" for="fileElm">
+                            <span>Seleccionar</span>
+                            <i class="fas fa-folder-open"></i>
+                        </label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" id="cargaCoincidencias" data-toggle="modal">Cargar</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- END Modals -->
+
+                                <!------->
                             </div>
                             <div class="material-datatables" id="box-liberacionesTable">
                                 <div class="form-group">
@@ -87,6 +131,7 @@
                                             </thead>
                                         </table>
                                     </div>
+
                                 </div>
                             </div>
                         </div>
@@ -111,7 +156,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
 <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
-
+<script type="text/javascript" src="//unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
 <script src="<?= base_url() ?>dist/js/dataTables.select.js"></script>
 <script src="<?= base_url() ?>dist/js/dataTables.select.min.js"></script>
 
@@ -121,6 +166,109 @@
     $(document).ready(function () {
         getResidenciales();
     });
+
+
+
+
+
+    $(document).on('click', '#uploadFile', function () {
+    document.getElementById("fileElm").value = "";
+    document.getElementById("file-name").value = "";
+});
+
+$(document).ready(function () {
+    $("input:file").on("change", function () {
+        var target = $(this);
+        var relatedTarget = target.siblings(".file-name");
+        var fileName = target[0].files[0].name;
+        relatedTarget.val(fileName);
+    });
+});
+function readFileAsync(selectedFile) {
+    return new Promise((resolve, reject) => {
+        let fileReader = new FileReader();
+        fileReader.onload = function (event) {
+            var data = event.target.result;
+            var workbook = XLSX.read(data, {
+                type: "binary",
+                cellDates:true,
+
+
+            });
+            //workbook.deleteData(wb, sheet = 1, cols = LETTERS, rows = 18, gridExpand = TRUE)
+            workbook.SheetNames.forEach(sheet => {
+                rowObject = XLSX.utils.sheet_to_row_object_array(workbook.Sheets[sheet], {defval: ''});
+                console.log(rowObject);
+                jsonProspectos = JSON.stringify(rowObject, null);
+            });
+            resolve(jsonProspectos);
+        };
+        fileReader.onerror = reject;
+        fileReader.readAsArrayBuffer(selectedFile);
+    })
+}
+async function processFile(selectedFile) {
+    try {
+        let arrayBuffer = await readFileAsync(selectedFile);
+        console.log(arrayBuffer);
+        return arrayBuffer;
+    } catch (err) {
+        console.log(err);
+    }
+}
+$(document).on('click', '#cargaCoincidencias', function () {
+    fileElm = document.getElementById("fileElm");
+    file = fileElm.value;
+               // console.log(processFile(fileElm.files[0]));
+
+     if (file == '')
+         alerts.showNotification("top", "right", "Asegúrate de seleccionar un archivo para llevar a cabo la carga de la información.", "warning");
+     else {
+         let extension = file.substring(file.lastIndexOf("."));
+         let statusValidateExtension = validateExtension(extension, ".xlsx");
+         if (statusValidateExtension == true) { // MJ: ARCHIVO VÁLIDO PARA CARGAR
+             //let lotes = $("#lotes").val();
+             processFile(fileElm.files[0]).then(jsonInfo => {
+                 console.log(processFile(fileElm.files[0]));
+                $.ajax({
+                     url: 'setData',
+                     type: 'post',
+                     dataType: 'json',
+                     data: {
+                         "jsonInfo": jsonInfo
+                         //"lotes": lotes
+                     },
+                     success: function (response) {
+
+                        if (response == 0) {
+                    alerts.showNotification("top", "right", "Los registros han sido actualizados de manera éxitosa.", "success");
+                    $('#uploadModal').modal('toggle');
+
+                    $("#modalConfirmRequest").modal("hide");
+                    $("#liberacionesTable").DataTable().ajax.reload();
+                } else {
+                    alerts.showNotification("top", "right", "Oops, algo salió mal.", "warning");
+                }
+
+
+
+                     }
+                 });
+             });
+         } else // MJ: EL ARCHIVO QUE SE INTENTA CARGAR TIENE UNA EXTENSIÓN INVÁLIDA
+             alerts.showNotification("top", "right", "El archivo que has intentado cargar con la extensión <b>" + extension + "</b> no es válido. Recuera seleccionar un archivo <b>.xlsx</b>.", "warning");
+     }
+});
+
+function validateExtension(extension, allowedExtensions) {
+    if (extension == allowedExtensions)
+        return true;
+    else
+        return false;
+}
+
+
+
 
     function getResidenciales() {
         $("#selectResidenciales").empty().selectpicker('refresh');
@@ -143,10 +291,13 @@
     $('#selectResidenciales').change(function () {
         let idResidencial = $(this).val();
         $("#selectCondominios").empty().selectpicker('refresh');
+
+       var postData = "idResidencial=" + idResidencial;
         $.ajax({
-            url: url + 'General/getCondominiosList/' + idResidencial,
+            url: url + 'General/getCondominiosList',
             type: 'post',
-            dataType: 'json',
+            data:postData,
+            dataType: 'html',
             success: function (response) {
                 var len = response.length;
                 for (var i = 0; i < len; i++) {
@@ -154,6 +305,7 @@
                     var name = response[i]['nombre'];
                     $("#selectCondominios").append($('<option>').val(id).text(name));
                 }
+                fillTable(idResidencial);
                 $("#selectCondominios").selectpicker('refresh');
             }
         });
@@ -161,7 +313,7 @@
 
     $('#selectCondominios').change(function () {
         let idCondominio = $(this).val();
-        fillTable(idCondominio);
+       // fillTable(idCondominio);
     });
 
     $('#liberacionesTable thead tr:eq(0) th').each(function (i) {
@@ -188,6 +340,7 @@
             buttons: [
                 {
                     extend: 'excelHtml5',
+                    title:'',
                     text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
                     className: 'btn btn-success buttons-excel',
                     titleAttr: 'Descargar archivo de Excel',
@@ -197,7 +350,7 @@
                             header: function (d, columnIdx) {
                                 switch (columnIdx) {
                                     case 1:
-                                        return 'ID LOTE';
+                                        return 'ID_LOTE';
                                         break;
                                     case 2:
                                         return 'NOMBRE'
