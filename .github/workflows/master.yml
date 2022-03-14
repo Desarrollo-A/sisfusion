@@ -18,5 +18,5 @@ jobs:
         port: 22
         username: prohab
         ssh_private_key: ${{secrets.SFTP_SSH_PRIVATE_KEY}}
-        local_path: './application/*'
+        local_path: './*'
         remote_path: /mnt/data/aplicaciones/Prueba/sisfusionRepo/
