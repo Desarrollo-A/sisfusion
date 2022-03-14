@@ -1,0 +1,2 @@
+Archivo que funciona para que .git
+no elimine este directorio (la carpeta 'staticfiles')

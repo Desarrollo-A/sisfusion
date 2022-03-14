@@ -235,9 +235,9 @@
             getResidenciales();
             //getRejectionReasons();
 
-            $("#mainBody").addClass("sidebar-mini");
-            $("#sidebarWrapper").removeClass("ps-container ps-theme-default ps-active-x");
-            $("#mainPanel").removeClass("ps-container ps-theme-default ps-active-y");
+            // $("#mainBody").addClass("sidebar-mini");
+            // $("#sidebarWrapper").removeClass("ps-container ps-theme-default ps-active-x");
+            // $("#mainPanel").removeClass("ps-container ps-theme-default ps-active-y");
         });
 
         $(document).on('change', "#residenciales", function() {

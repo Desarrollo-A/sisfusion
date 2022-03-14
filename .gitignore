@@ -26,6 +26,9 @@
 .history
 .ionide
 
+#Omitir imagenes
+static/documentos/.img
+
 ##
 application/config/config.php
 application/config/database.php
