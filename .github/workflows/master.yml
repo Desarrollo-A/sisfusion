@@ -2,10 +2,6 @@ on:
   push:
     branches:
       - master
-    paths:
-      - 'application/controllers/**'
-      - 'application/models/'
-      - 'application/views/'
 name:  Deploy website on push
 jobs:
   web-deploy:
