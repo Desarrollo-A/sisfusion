@@ -1137,9 +1137,9 @@ class Postventa extends CI_Controller
         $this->email->attach(__DIR__ . "/../../static/documentos/postventa/escrituracion/SOLICITUD_PRESUPUESTO/".$documentName->expediente);
 
         $response = $mail->send();
-        echo $this->email->print_debugger();
+        // echo $this->email->print_debugger();
 
-        // echo json_encode($response);
+        echo json_encode($response);
     }
 
     public function presupuestoCliente()
