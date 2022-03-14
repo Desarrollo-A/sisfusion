@@ -233,9 +233,15 @@ class Postventa_model extends CI_Model
     }
 
     function getBudgetInfo($idSolicitud){
-        return $this->db->query("SELECT se.*, CONCAT(c.nombre, ' ', c.apellido_paterno, ' ', c.apellido_materno) nombre, hl.modificado FROM solicitud_escrituracion se 
+        return $this->db->query("SELECT se.*, CONCAT(c.nombre, ' ', c.apellido_paterno, ' ', c.apellido_materno) nombre, hl.modificado,
+        cond.nombre nombreCondominio, r.nombreResidencial, l.nombreLote, oxc2.nombre nombreConst, oxc.nombre nombrePago FROM solicitud_escrituracion se 
         INNER JOIN clientes c ON c.id_cliente = se.idCliente
         INNER JOIN (SELECT idLote, MAX(modificado) modificado FROM historial_lotes WHERE idStatusContratacion = 15 AND idMovimiento = 45 GROUP BY idLote) hl ON hl.idLote=se.idLote
+        INNER JOIN lotes l ON se.idLote = l.idLote 
+        INNER JOIN condominios cond ON cond.idCondominio = l.idCondominio 
+        INNER JOIN residenciales r ON r.idResidencial = cond.idResidencial
+		INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = se.estatus_pago AND oxc.id_catalogo = 63
+		INNER JOIN opcs_x_cats oxc2 ON oxc2.id_opcion = se.estatus_pago AND oxc2.id_catalogo = 62
         WHERE se.idSolicitud = $idSolicitud");
     }
 
@@ -323,6 +329,18 @@ function checkBudgetInfo($idSolicitud){
 
     function updateObservacionesPostventa($idSolicitud){
         $this->db->query("UPDATE solicitud_escrituracion SET estatus= 10 WHERE idSolicitud = $idSolicitud;");
+    }
+
+    function getEstatusConstruccion()
+    {
+        $query = $this->db->query("SELECT * FROM opcs_x_cats WHERE id_catalogo = 62");
+        return $query->result_array();
+    }
+
+    function getEstatusPago()
+    {
+        $query = $this->db->query("SELECT * FROM opcs_x_cats WHERE id_catalogo = 63");
+        return $query->result_array();
     }
 
 }

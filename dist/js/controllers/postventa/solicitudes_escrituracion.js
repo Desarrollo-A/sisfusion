@@ -78,7 +78,7 @@ sp2 = { // CHRIS: SELECT PICKER
 
 //eventos jquery
 $(document).on('change', '#cliente', function () {
-    if ($(this).val() == '1') {
+    if ($(this).val() == 'uno') {
         $('#ifClient').show();
     } else {
         $('#ifClient').hide();
@@ -87,7 +87,7 @@ $(document).on('change', '#cliente', function () {
 });
 
 $(document).on('change', '#cliente2', function () {
-    if ($(this).val() == '1') {
+    if ($(this).val() == 'uno') {
         $('#ifClient2').show();
     } else {
         $('#ifClient2').hide();
@@ -946,20 +946,26 @@ function getNotarias() {
 
     function getBudgetInfo(idSolicitud){
         $('#spiner-loader').removeClass('hide');
+        getEstatusConstruccion();
+        getEstatusPago();
         $.post('getBudgetInfo',{
             idSolicitud:idSolicitud
         }, function(data) {
-           $('#nombrePresupuesto').val(data.nombre);
-           $('#nombrePresupuesto2').val(data.nombre);
-           $('#estatusPago').val(1);
-        //    $('#superficie').val(d);
-        var str = (data.modificado).split(" ")[0].split("-");
-        var strM = `${str[2]}-${str[1]}-${str[0]}`;
-        $('#fContrato').val(strM);
-        //    $('#catastral').val(data.estatus);
-        $('#construccion').val(1);
-        $('#cliente').val(1);
-        $('#spiner-loader').addClass('hide');
+            $('#nombrePresupuesto').val(data.nombre);
+            $('#nombrePresupuesto2').val(data.nombre);
+            $('#estatusPago').val(data.estatus_pago).trigger('change');
+            $("#estatusPago").selectpicker('refresh');
+            $('#superficie').val(data.superficie);
+            var str = (data.modificado).split(" ")[0].split("-");
+            var strM = `${str[2]}-${str[1]}-${str[0]}`;
+            $('#fContrato').val(strM);
+            $('#catastral').val(data.clave_catastral);
+            $('#construccion').val(data.estatus_construccion).trigger('change');
+            $("#construccion").selectpicker('refresh');
+            $('#cliente').val(data.cliente_anterior == 1 ? 'uno':'dos').trigger('change');
+            $("#cliente").selectpicker('refresh');
+            $("#encabezado").html(`${data.nombreResidencial} / ${data.nombreCondominio} / ${data.nombreLote}`);
+            $('#spiner-loader').addClass('hide');
     }, 'json');
 }
 
@@ -975,8 +981,7 @@ function checkBudgetInfo(idSolicitud) {
         $('#fContrato2').val(data.modificado);
         $('#catastral2').val(data.clave_catastral);
         $('#construccion2').val(data.estatus_construccion);
-        $('#cliente2').val(data.cliente_anterior).trigger('change');
-        ;
+        $('#cliente2').val(data.cliente_anterior == 1 ? 'uno':'dos').trigger('change');
         $("#cliente2").selectpicker('refresh');
         $('#nombreT2').val(data.nombre_anterior);
         $('#fechaCA2').val(data.fecha_anterior);
@@ -1288,5 +1293,41 @@ function filterSelectOptions(documentType) {
     $("#rejectionReasons").selectpicker('refresh');
 }
 
+function getEstatusConstruccion() {
+    $('#spiner-loader').removeClass('hide');
+    $("#construccion").find("option").remove();
+    $("#construccion").append($('<option disabled selected>').val("0").text("Seleccione una opción"));
+    $.post('getEstatusConstruccion', function(data) {
+        var len = data.length;
+        for (var i = 0; i < len; i++) {
+            var id = data[i]['id_opcion'];
+            var name = data[i]['nombre'];
+            $("#construccion").append($('<option>').val(id).text(name));
+        }
+        if (len <= 0) {
+            $("#construccion").append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
+        }
+        $("#construccion").selectpicker('refresh');
+        $('#spiner-loader').addClass('hide');
+    }, 'json');
+}
 
+function getEstatusPago() {
+    $('#spiner-loader').removeClass('hide');
+    $("#estatusPago").find("option").remove();
+    $("#estatusPago").append($('<option disabled selected>').val("0").text("Seleccione una opción"));
+    $.post('getEstatusPago', function(data) {
+        var len = data.length;
+        for (var i = 0; i < len; i++) {
+            var id = data[i]['id_opcion'];
+            var name = data[i]['nombre'];
+            $("#estatusPago").append($('<option>').val(id).text(name));
+        }
+        if (len <= 0) {
+            $("#estatusPago").append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
+        }
+        $("#estatusPago").selectpicker('refresh');
+        $('#spiner-loader').addClass('hide');
+    }, 'json');
+}
      
