@@ -27,7 +27,14 @@
 .ionide
 
 #Omitir imagenes
-static/documentos/.img
+static/documentos/.jpg
+static/documentos/.jpeg
+static/documentos/.pdf
+static/documentos/.xlsx
+static/documentos/.xls
+static/documentos/.csv
+static/documentos/.jfif
+static/documentos/.mp4
 
 ##
 application/config/config.php
