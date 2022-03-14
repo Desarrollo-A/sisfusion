@@ -6,6 +6,7 @@ class Comisiones_model extends CI_Model {
     {
         parent::__construct();
         // $this->gphsis = $this->load->database('GPHSIS', TRUE);
+    
     }
 
 
@@ -141,7 +142,7 @@ class Comisiones_model extends CI_Model {
 
 
     function update_acepta_resguardo($idsol) {
-        $query = $this->db->query("UPDATE pago_comision_ind SET estatus = 3, fecha_pago_intmex = GETDATE() WHERE id_pago_i IN (".$idsol.")");
+        $query = $this->db->query("UPDATE pago_comision_ind SET estatus = 3,modificado_por='".$this->session->userdata('id_usuario')."' fecha_pago_intmex = GETDATE() WHERE id_pago_i IN (".$idsol.")");
         return true;
     }
 
@@ -1034,8 +1035,8 @@ WHERE oxc.id_catalogo = 1 AND pcm.estatus = 11 AND pcm.id_usuario =  ".$this->se
 
      
         function update_acepta_solicitante($idsol) {
-          $query = $this->db->query("UPDATE pago_comision_ind SET estatus = 4, fecha_pago_intmex = GETDATE() WHERE id_pago_i IN (".$idsol.")");
-          return true;
+            $query = $this->db->query("UPDATE pago_comision_ind SET estatus = 4,modificado_por='".$this->session->userdata('id_usuario')."', fecha_pago_intmex = GETDATE() WHERE id_pago_i IN (".$idsol.")");
+            return true;
         }
 
 
@@ -1048,10 +1049,10 @@ WHERE oxc.id_catalogo = 1 AND pcm.estatus = 11 AND pcm.id_usuario =  ".$this->se
           
         
         function update_acepta_solicitante_uno($idsol) {
-            return $this->db->query("UPDATE pago_comision_ind SET estatus = 42 WHERE id_pago_i IN (".$idsol.")");
+            return $this->db->query("UPDATE pago_comision_ind SET estatus = 42,modificado_por='".$this->session->userdata('id_usuario')."' WHERE id_pago_i IN (".$idsol.")");
           }
         function update_acepta_solicitante_dos($idsol) {
-            return $this->db->query("UPDATE pago_comision_ind SET estatus = 41 WHERE id_pago_i IN (".$idsol.")");
+            return $this->db->query("UPDATE pago_comision_ind SET estatus = 41,modificado_por='".$this->session->userdata('id_usuario')."' WHERE id_pago_i IN (".$idsol.")");
           }
 
 
@@ -1325,7 +1326,7 @@ function nueva_mktd_comision($values_send,$id_usuario,$abono_mktd,$pago_mktd,$us
  
 function updatePagoInd($pago_id){
       
-    $respuesta =  $this->db->query("UPDATE pago_comision_ind SET estatus = 13,fecha_pago_intmex=GETDATE() WHERE id_pago_i = ".$pago_id."");
+    $respuesta =  $this->db->query("UPDATE pago_comision_ind SET estatus = 13,modificado_por='".$this->session->userdata('id_usuario')."',fecha_pago_intmex=GETDATE() WHERE id_pago_i = ".$pago_id."");
     if (! $respuesta ) {
      return false;
  } else {
@@ -1591,7 +1592,7 @@ function updatePagoInd($pago_id){
      }
 
  function nueva_club_comision($com_value,$id_usuario,$abono_mktd,$pago_mktd,$user){
-        $respuesta = $this->db->query("INSERT INTO pago_comision_ind (id_comision, id_usuario, abono_neodata, fecha_abono, fecha_pago_intmex, estatus, pago_neodata, modificado_por, comentario) VALUES (".$com_value.", ".$id_usuario.", ".$abono_mktd.", GETDATE(), GETDATE(), 2, ".$pago_mktd.", ".$user.", 'DISPERSION CLUB')");
+    $respuesta = $this->db->query("INSERT INTO pago_comision_ind (id_comision, id_usuario, abono_neodata, fecha_abono, fecha_pago_intmex, estatus, pago_neodata, creado_por, comentario,modificado_por) VALUES (".$com_value.", ".$id_usuario.", ".$abono_mktd.", GETDATE(), GETDATE(), 2, ".$pago_mktd.", ".$user.", 'DISPERSION CLUB','".$this->session->userdata('id_usuario')."')");
 
         $insert_id_2 = $this->db->insert_id();
     $respuesta = $this->db->query("INSERT INTO  historial_comisiones VALUES ($insert_id_2, ".$this->session->userdata('id_usuario').", GETDATE(), 1, 'DISPERSÓ CLUB MADERAS')");
@@ -2028,12 +2029,12 @@ function getUserMk(){
 function update_comisionesDir($ideLote, $directorSelect, $abonadoDir, $totalDir, $porcentajeDir){
 
     $this->db->query("INSERT INTO comisiones
-   ([id_lote], [id_usuario], [comision_total], [estatus], [observaciones], [evidencia], [factura], [creado_por], [fecha_creacion], [porcentaje_decimal], [fecha_autorizacion], [rol_generado]) VALUES (".$ideLote.", ".$directorSelect.", ".$totalDir.", 1, 'IMPORTACION', NULL, NULL, ".$this->session->userdata('id_usuario').", GETDATE(), ".$porcentajeDir.", GETDATE(), 1)");
+   ([id_lote], [id_usuario], [comision_total], [estatus], [observaciones], [evidencia], [factura], [creado_por], [fecha_creacion], [porcentaje_decimal], [fecha_autorizacion], [rol_generado],[modificado_por]) VALUES (".$ideLote.", ".$directorSelect.", ".$totalDir.", 1, 'IMPORTACION', NULL, NULL, ".$this->session->userdata('id_usuario').", GETDATE(), ".$porcentajeDir.", GETDATE(), 1,'".$this->session->userdata('id_usuario')."')");
 
     $id = $this->db->insert_id();
 
     return $this->db->query("INSERT INTO pago_comision_ind
-   ([id_comision], [id_usuario], [abono_neodata], [fecha_abono], [fecha_pago_intmex], [pago_neodata], [estatus], [modificado_por], [comentario]) VALUES (".$id.", ".$directorSelect.", ".$abonadoDir.", GETDATE(), NULL, NULL, 11, ".$this->session->userdata('id_usuario').", 'IMPORTACIÓN CONTRALORIA')");
+   ([id_comision], [id_usuario], [abono_neodata], [fecha_abono], [fecha_pago_intmex], [pago_neodata], [estatus], [creado_por], [comentario],[modificado_por]) VALUES (".$id.", ".$directorSelect.", ".$abonadoDir.", GETDATE(), NULL, NULL, 11, ".$this->session->userdata('id_usuario').", 'IMPORTACIÓN CONTRALORIA','".$this->session->userdata('id_usuario')."')");
    
  }
 
@@ -2042,24 +2043,24 @@ function update_comisionesDir($ideLote, $directorSelect, $abonadoDir, $totalDir,
  function update_comisionessubDir($ideLote, $subdirectorSelect, $abonadosubDir, $totalsubDir, $porcentajesubDir){
 
     $this->db->query("INSERT INTO comisiones
-   ([id_lote], [id_usuario], [comision_total], [estatus], [observaciones], [evidencia], [factura], [creado_por], [fecha_creacion], [porcentaje_decimal], [fecha_autorizacion], [rol_generado]) VALUES (".$ideLote.", ".$subdirectorSelect.", ".$totalsubDir.", 1, 'IMPORTACION', NULL, NULL, ".$this->session->userdata('id_usuario').", GETDATE(), ".$porcentajesubDir.", GETDATE(), 2)");
+   ([id_lote], [id_usuario], [comision_total], [estatus], [observaciones], [evidencia], [factura], [creado_por], [fecha_creacion], [porcentaje_decimal], [fecha_autorizacion], [rol_generado],[modificado_por]) VALUES (".$ideLote.", ".$subdirectorSelect.", ".$totalsubDir.", 1, 'IMPORTACION', NULL, NULL, ".$this->session->userdata('id_usuario').", GETDATE(), ".$porcentajesubDir.", GETDATE(), 2,'".$this->session->userdata('id_usuario')."')");
 
     $id = $this->db->insert_id();
 
     return $this->db->query("INSERT INTO pago_comision_ind
-   ([id_comision], [id_usuario], [abono_neodata], [fecha_abono], [fecha_pago_intmex], [pago_neodata], [estatus], [modificado_por], [comentario]) VALUES (".$id.", ".$subdirectorSelect.", ".$abonadosubDir.", GETDATE(), NULL, NULL, 11, ".$this->session->userdata('id_usuario').", 'IMPORTACIÓN CONTRALORIA')");
+   ([id_comision], [id_usuario], [abono_neodata], [fecha_abono], [fecha_pago_intmex], [pago_neodata], [estatus], [creado_por], [comentario],[modificado_por]) VALUES (".$id.", ".$subdirectorSelect.", ".$abonadosubDir.", GETDATE(), NULL, NULL, 11, ".$this->session->userdata('id_usuario').", 'IMPORTACIÓN CONTRALORIA','".$this->session->userdata('id_usuario')."')");
  }
 
 
  function update_comisionesGer($ideLote, $gerenteSelect, $abonadoGerente, $totalGerente, $porcentajeGerente){
 
     $this->db->query("INSERT INTO comisiones
-   ([id_lote], [id_usuario], [comision_total], [estatus], [observaciones], [evidencia], [factura], [creado_por], [fecha_creacion], [porcentaje_decimal], [fecha_autorizacion], [rol_generado]) VALUES (".$ideLote.", ".$gerenteSelect.", ".$totalGerente.", 1, 'IMPORTACION', NULL, NULL, ".$this->session->userdata('id_usuario').", GETDATE(), ".$porcentajeGerente.", GETDATE(), 3)");
+   ([id_lote], [id_usuario], [comision_total], [estatus], [observaciones], [evidencia], [factura], [creado_por], [fecha_creacion], [porcentaje_decimal], [fecha_autorizacion], [rol_generado],[modificado_por]) VALUES (".$ideLote.", ".$gerenteSelect.", ".$totalGerente.", 1, 'IMPORTACION', NULL, NULL, ".$this->session->userdata('id_usuario').", GETDATE(), ".$porcentajeGerente.", GETDATE(), 3,'".$this->session->userdata('id_usuario')."')");
 
     $id = $this->db->insert_id();
 
     return $this->db->query("INSERT INTO pago_comision_ind
-   ([id_comision], [id_usuario], [abono_neodata], [fecha_abono], [fecha_pago_intmex], [pago_neodata], [estatus], [modificado_por], [comentario]) VALUES (".$id.", ".$gerenteSelect.", ".$abonadoGerente.", GETDATE(), NULL, NULL, 11, ".$this->session->userdata('id_usuario').", 'IMPORTACIÓN CONTRALORIA')");
+   ([id_comision], [id_usuario], [abono_neodata], [fecha_abono], [fecha_pago_intmex], [pago_neodata], [estatus], [creado_por], [comentario],[modificado_por]) VALUES (".$id.", ".$gerenteSelect.", ".$abonadoGerente.", GETDATE(), NULL, NULL, 11, ".$this->session->userdata('id_usuario').", 'IMPORTACIÓN CONTRALORIA','".$this->session->userdata('id_usuario')."')");
  }
 
 
@@ -2068,12 +2069,12 @@ function update_comisionesDir($ideLote, $directorSelect, $abonadoDir, $totalDir,
     // if(coordinadorSelect==null || coordinadorSelect=='' || coordinadorSelect==0)
 
     $this->db->query("INSERT INTO comisiones
-   ([id_lote], [id_usuario], [comision_total], [estatus], [observaciones], [evidencia], [factura], [creado_por], [fecha_creacion], [porcentaje_decimal], [fecha_autorizacion], [rol_generado]) VALUES (".$ideLote.", ".$coordinadorSelect.", ".$totalCoordinador.", 1, 'IMPORTACION', NULL, NULL, ".$this->session->userdata('id_usuario').", GETDATE(), ".$porcentajeCoordinador.", GETDATE(), 9)");
+   ([id_lote], [id_usuario], [comision_total], [estatus], [observaciones], [evidencia], [factura], [creado_por], [fecha_creacion], [porcentaje_decimal], [fecha_autorizacion], [rol_generado],[modificado_por]) VALUES (".$ideLote.", ".$coordinadorSelect.", ".$totalCoordinador.", 1, 'IMPORTACION', NULL, NULL, ".$this->session->userdata('id_usuario').", GETDATE(), ".$porcentajeCoordinador.", GETDATE(), 9,'".$this->session->userdata('id_usuario')."')");
 
     $id = $this->db->insert_id();
 
     return $this->db->query("INSERT INTO pago_comision_ind
-   ([id_comision], [id_usuario], [abono_neodata], [fecha_abono], [fecha_pago_intmex], [pago_neodata], [estatus], [modificado_por], [comentario]) VALUES (".$id.", ".$coordinadorSelect.", ".$abonadoCoordinador.", GETDATE(), NULL, NULL, 11, ".$this->session->userdata('id_usuario').", 'IMPORTACIÓN CONTRALORIA')");
+   ([id_comision], [id_usuario], [abono_neodata], [fecha_abono], [fecha_pago_intmex], [pago_neodata], [estatus], [creado_por], [comentario],[modificado_por]) VALUES (".$id.", ".$coordinadorSelect.", ".$abonadoCoordinador.", GETDATE(), NULL, NULL, 11, ".$this->session->userdata('id_usuario').", 'IMPORTACIÓN CONTRALORIA','".$this->session->userdata('id_usuario')."')");
  }
 
 
@@ -2081,12 +2082,12 @@ function update_comisionesDir($ideLote, $directorSelect, $abonadoDir, $totalDir,
 
 
     $this->db->query("INSERT INTO comisiones
-   ([id_lote], [id_usuario], [comision_total], [estatus], [observaciones], [evidencia], [factura], [creado_por], [fecha_creacion], [porcentaje_decimal], [fecha_autorizacion], [rol_generado]) VALUES (".$ideLote.", ".$asesorSelect.", ".$totalAsesor.", 1, 'IMPORTACION', NULL, NULL, ".$this->session->userdata('id_usuario').", GETDATE(), ".$porcentajeAsesor.", GETDATE(), 7)");
+   ([id_lote], [id_usuario], [comision_total], [estatus], [observaciones], [evidencia], [factura], [creado_por], [fecha_creacion], [porcentaje_decimal], [fecha_autorizacion], [rol_generado],[modificado_por]) VALUES (".$ideLote.", ".$asesorSelect.", ".$totalAsesor.", 1, 'IMPORTACION', NULL, NULL, ".$this->session->userdata('id_usuario').", GETDATE(), ".$porcentajeAsesor.", GETDATE(), 7,'".$this->session->userdata('id_usuario')."')");
 
     $id = $this->db->insert_id();
 
    return  $this->db->query("INSERT INTO pago_comision_ind
-   ([id_comision], [id_usuario], [abono_neodata], [fecha_abono], [fecha_pago_intmex], [pago_neodata], [estatus], [modificado_por], [comentario]) VALUES (".$id.", ".$asesorSelect.", ".$abonadoAsesor.", GETDATE(), NULL, NULL, 11, ".$this->session->userdata('id_usuario').", 'IMPORTACIÓN CONTRALORIA')");
+   ([id_comision], [id_usuario], [abono_neodata], [fecha_abono], [fecha_pago_intmex], [pago_neodata], [estatus], [creado_por], [comentario],[modificado_por]) VALUES (".$id.", ".$asesorSelect.", ".$abonadoAsesor.", GETDATE(), NULL, NULL, 11, ".$this->session->userdata('id_usuario').", 'IMPORTACIÓN CONTRALORIA','".$this->session->userdata('id_usuario')."')");
  }
 
 
@@ -2094,36 +2095,36 @@ function update_comisionesDir($ideLote, $directorSelect, $abonadoDir, $totalDir,
 
 
     $this->db->query("INSERT INTO comisiones
-   ([id_lote], [id_usuario], [comision_total], [estatus], [observaciones], [evidencia], [factura], [creado_por], [fecha_creacion], [porcentaje_decimal], [fecha_autorizacion], [rol_generado]) VALUES (".$ideLote.", ".$MKTDSelect.", ".$totalMKTD.", 1, 'IMPORTACION', NULL, NULL, ".$this->session->userdata('id_usuario').", GETDATE(), ".$porcentajeMKTD.", GETDATE(), 38)");
+   ([id_lote], [id_usuario], [comision_total], [estatus], [observaciones], [evidencia], [factura], [creado_por], [fecha_creacion], [porcentaje_decimal], [fecha_autorizacion], [rol_generado],[modificado_por]) VALUES (".$ideLote.", ".$MKTDSelect.", ".$totalMKTD.", 1, 'IMPORTACION', NULL, NULL, ".$this->session->userdata('id_usuario').", GETDATE(), ".$porcentajeMKTD.", GETDATE(), 38,'".$this->session->userdata('id_usuario')."')");
 
     $id = $this->db->insert_id();
 
    return  $this->db->query("INSERT INTO pago_comision_ind
-   ([id_comision], [id_usuario], [abono_neodata], [fecha_abono], [fecha_pago_intmex], [pago_neodata], [estatus], [modificado_por], [comentario]) VALUES (".$id.", ".$MKTDSelect.", ".$abonadoMKTD.", GETDATE(), NULL, NULL, 11, ".$this->session->userdata('id_usuario').", 'IMPORTACIÓN CONTRALORIA')");
+   ([id_comision], [id_usuario], [abono_neodata], [fecha_abono], [fecha_pago_intmex], [pago_neodata], [estatus], [creado_por], [comentario],[modificado_por]) VALUES (".$id.", ".$MKTDSelect.", ".$abonadoMKTD.", GETDATE(), NULL, NULL, 11, ".$this->session->userdata('id_usuario').", 'IMPORTACIÓN CONTRALORIA','".$this->session->userdata('id_usuario')."')");
  }
 
  function update_comisionesSUBCLUB($ideLote, $SubClubSelect, $abonadoSubClub, $totalSubClub, $porcentajeSubClub){
 
 
     $this->db->query("INSERT INTO comisiones
-   ([id_lote], [id_usuario], [comision_total], [estatus], [observaciones], [evidencia], [factura], [creado_por], [fecha_creacion], [porcentaje_decimal], [fecha_autorizacion], [rol_generado]) VALUES (".$ideLote.", ".$SubClubSelect.", ".$totalSubClub.", 1, 'IMPORTACION', NULL, NULL, ".$this->session->userdata('id_usuario').", GETDATE(), ".$porcentajeSubClub.", GETDATE(), 42)");
+   ([id_lote], [id_usuario], [comision_total], [estatus], [observaciones], [evidencia], [factura], [creado_por], [fecha_creacion], [porcentaje_decimal], [fecha_autorizacion], [rol_generado],[modificado_por]) VALUES (".$ideLote.", ".$SubClubSelect.", ".$totalSubClub.", 1, 'IMPORTACION', NULL, NULL, ".$this->session->userdata('id_usuario').", GETDATE(), ".$porcentajeSubClub.", GETDATE(), 42,'".$this->session->userdata('id_usuario')."')");
 
     $id = $this->db->insert_id();
 
    return  $this->db->query("INSERT INTO pago_comision_ind
-   ([id_comision], [id_usuario], [abono_neodata], [fecha_abono], [fecha_pago_intmex], [pago_neodata], [estatus], [modificado_por], [comentario]) VALUES (".$id.", ".$SubClubSelect.", ".$abonadoSubClub.", GETDATE(), NULL, NULL, 11, ".$this->session->userdata('id_usuario').", 'IMPORTACIÓN CONTRALORIA')");
+   ([id_comision], [id_usuario], [abono_neodata], [fecha_abono], [fecha_pago_intmex], [pago_neodata], [estatus], [creado_por], [comentario],[modificado_por]) VALUES (".$id.", ".$SubClubSelect.", ".$abonadoSubClub.", GETDATE(), NULL, NULL, 11, ".$this->session->userdata('id_usuario').", 'IMPORTACIÓN CONTRALORIA','".$this->session->userdata('id_usuario')."')");
  }
 
  function update_comisionesEJECTCLUB($ideLote, $EjectClubSelect, $abonadoEjectClub, $totalEjectClub, $porcentajeEjectClub){
 
 
     $this->db->query("INSERT INTO comisiones
-   ([id_lote], [id_usuario], [comision_total], [estatus], [observaciones], [evidencia], [factura], [creado_por], [fecha_creacion], [porcentaje_decimal], [fecha_autorizacion], [rol_generado]) VALUES (".$ideLote.", ".$EjectClubSelect.", ".$totalEjectClub.", 1, 'IMPORTACION', NULL, NULL, ".$this->session->userdata('id_usuario').", GETDATE(), ".$porcentajeEjectClub.", GETDATE() ,42)");
+   ([id_lote], [id_usuario], [comision_total], [estatus], [observaciones], [evidencia], [factura], [creado_por], [fecha_creacion], [porcentaje_decimal], [fecha_autorizacion], [rol_generado],[modificado_por]) VALUES (".$ideLote.", ".$EjectClubSelect.", ".$totalEjectClub.", 1, 'IMPORTACION', NULL, NULL, ".$this->session->userdata('id_usuario').", GETDATE(), ".$porcentajeEjectClub.", GETDATE() ,42,'".$this->session->userdata('id_usuario')."')");
 
     $id = $this->db->insert_id();
 
    return  $this->db->query("INSERT INTO pago_comision_ind
-   ([id_comision], [id_usuario], [abono_neodata], [fecha_abono], [fecha_pago_intmex], [pago_neodata], [estatus], [modificado_por], [comentario]) VALUES (".$id.", ".$EjectClubSelect.", ".$abonadoEjectClub.", GETDATE(), NULL, NULL, 11, ".$this->session->userdata('id_usuario').", 'IMPORTACIÓN CONTRALORIA')");
+   ([id_comision], [id_usuario], [abono_neodata], [fecha_abono], [fecha_pago_intmex], [pago_neodata], [estatus], [creado_por], [comentario],[modificado_por]) VALUES (".$id.", ".$EjectClubSelect.", ".$abonadoEjectClub.", GETDATE(), NULL, NULL, 11, ".$this->session->userdata('id_usuario').", 'IMPORTACIÓN CONTRALORIA','".$this->session->userdata('id_usuario')."')");
  }
 
 
@@ -2134,12 +2135,12 @@ function update_comisionesDir($ideLote, $directorSelect, $abonadoDir, $totalDir,
 
 
     $this->db->query("INSERT INTO comisiones
-   ([id_lote], [id_usuario], [comision_total], [estatus], [observaciones], [evidencia], [factura], [creado_por], [fecha_creacion], [porcentaje_decimal], [fecha_autorizacion], [rol_generado]) VALUES (".$ideLote.", ".$GreenSelect.", ".$totalGreenham.", 1, 'IMPORTACION', NULL, NULL, ".$this->session->userdata('id_usuario').", GETDATE(), ".$porcentajeGreenham.", GETDATE(), 7)");
+   ([id_lote], [id_usuario], [comision_total], [estatus], [observaciones], [evidencia], [factura], [creado_por], [fecha_creacion], [porcentaje_decimal], [fecha_autorizacion], [rol_generado],[modificado_por]) VALUES (".$ideLote.", ".$GreenSelect.", ".$totalGreenham.", 1, 'IMPORTACION', NULL, NULL, ".$this->session->userdata('id_usuario').", GETDATE(), ".$porcentajeGreenham.", GETDATE(), 7,'".$this->session->userdata('id_usuario')."')");
 
     $id = $this->db->insert_id();
 
    return  $this->db->query("INSERT INTO pago_comision_ind
-   ([id_comision], [id_usuario], [abono_neodata], [fecha_abono], [fecha_pago_intmex], [pago_neodata], [estatus], [modificado_por], [comentario]) VALUES (".$id.", ".$GreenSelect.", ".$abonadoGreenham.", GETDATE(), NULL, NULL, 11, ".$this->session->userdata('id_usuario').", 'IMPORTACIÓN CONTRALORIA')");
+   ([id_comision], [id_usuario], [abono_neodata], [fecha_abono], [fecha_pago_intmex], [pago_neodata], [estatus], [creado_por], [comentario],[modificado_por]) VALUES (".$id.", ".$GreenSelect.", ".$abonadoGreenham.", GETDATE(), NULL, NULL, 11, ".$this->session->userdata('id_usuario').", 'IMPORTACIÓN CONTRALORIA','".$this->session->userdata('id_usuario')."')");
  }
 
 
@@ -2204,25 +2205,25 @@ ORDER BY pci.fecha_abono DESC");
 
 
 function update_acepta_contraloria($idsol) {
-    return $this->db->query("UPDATE pago_comision_ind SET estatus = 8 WHERE id_pago_i IN (".$idsol.")");
+    return $this->db->query("UPDATE pago_comision_ind SET estatus = 8,modificado_por='".$this->session->userdata('id_usuario')."' WHERE id_pago_i IN (".$idsol.")");
 }
 
 function update_mktd_contraloria($idsol) {
-    return $this->db->query("UPDATE pago_comision_mktd SET estatus = 8 WHERE estatus = 1");
+    return $this->db->query("UPDATE pago_comision_mktd SET estatus = 8,modificado_por='".$this->session->userdata('id_usuario')."' WHERE estatus = 1");
 }
 
  
 
 function update_acepta_INTMEX($idsol) {
-    return $this->db->query("UPDATE pago_comision_ind SET estatus = 11, aply_pago_intmex = GETDATE() WHERE id_pago_i IN (".$idsol.")");
+    return $this->db->query("UPDATE pago_comision_ind SET estatus = 11,modificado_por='".$this->session->userdata('id_usuario')."' aply_pago_intmex = GETDATE() WHERE id_pago_i IN (".$idsol.")");
 }
 
 function update_mktd_INTMEX($idsol) {
-    return $this->db->query("UPDATE pago_comision_mktd SET estatus = 11 WHERE estatus = 8");
+    return $this->db->query("UPDATE pago_comision_mktd SET estatus = 11,modificado_por='".$this->session->userdata('id_usuario')."' WHERE estatus = 8");
 }
 
 function update_acepta_PAUSADA($idsol) {
-    return $this->db->query("UPDATE pago_comision_ind SET estatus = 1 WHERE id_pago_i IN (".$idsol.")");
+    return $this->db->query("UPDATE pago_comision_ind SET estatus = 1,modificado_por='".$this->session->userdata('id_usuario')."' WHERE id_pago_i IN (".$idsol.")");
 }
  
 
@@ -2516,7 +2517,7 @@ function getDatosRevisionFactura($proyecto,$condominio){
     $id_user_Vl = $this->session->userdata('id_usuario');
     $this->db->query("INSERT INTO  historial_comisiones VALUES ($idcom, $id_user_Vl, GETDATE(), 1, 'SE ACTIVÓ NUEVAMENTE COMISIÓN')");
 
-    $this->db->query("UPDATE pago_comision_ind set estatus = 8 FROM pago_comision_ind pci
+    $this->db->query("UPDATE pago_comision_ind set estatus = 8,modificado_por='".$this->session->userdata('id_usuario')."' FROM pago_comision_ind pci
     INNER JOIN comisiones com ON com.id_comision = pci.id_comision
     INNER JOIN lotes lo ON lo.idLote = com.id_lote
     INNER JOIN condominios cod ON cod.idCondominio = lo.idCondominio
@@ -2530,7 +2531,7 @@ function getDatosRevisionFactura($proyecto,$condominio){
    function update_estatus_pausa($id_pago_i, $obs, $estatus) {
     $id_user_Vl = $this->session->userdata('id_usuario');
     $this->db->query("INSERT INTO  historial_comisiones VALUES ($id_pago_i, ".$id_user_Vl.", GETDATE(), 1, 'SE PAUSÓ COMISIÓN, MOTIVO: ".$obs."')");
-    return $this->db->query("UPDATE pago_comision_ind SET estatus = ".$estatus.", comentario = '".$obs."' WHERE id_pago_i IN (".$id_pago_i.")");
+    return $this->db->query("UPDATE pago_comision_ind SET estatus = ".$estatus.", comentario = '".$obs."',modificado_por='".$this->session->userdata('id_usuario')."' WHERE id_pago_i IN (".$id_pago_i.")");
   }
 
 
@@ -2538,7 +2539,7 @@ function getDatosRevisionFactura($proyecto,$condominio){
  function update_estatus_despausa($id_pago_i, $obs, $estatus) {
     $id_user_Vl = $this->session->userdata('id_usuario');
     $this->db->query("INSERT INTO  historial_comisiones VALUES ($id_pago_i, ".$id_user_Vl.", GETDATE(), 1, 'SE ACTIVÓ COMISIÓN, MOTIVO: ".$obs."')");
-    return $this->db->query("UPDATE pago_comision_ind SET estatus = ".$estatus.", comentario = '".$obs."' WHERE id_pago_i IN (".$id_pago_i.")");
+    return $this->db->query("UPDATE pago_comision_ind SET estatus = ".$estatus.", comentario = '".$obs."',modificado_por='".$this->session->userdata('id_usuario')."' WHERE id_pago_i IN (".$id_pago_i.")");
   }
 
 
@@ -2547,7 +2548,7 @@ function getDatosRevisionFactura($proyecto,$condominio){
   function update_estatus_refresh($idcom) {
     $id_user_Vl = $this->session->userdata('id_usuario');
     $this->db->query("INSERT INTO  historial_comisiones VALUES ($idcom, $id_user_Vl, GETDATE(), 1, 'SE ACTIVÓ NUEVAMENTE COMISIÓN')");
-    return $this->db->query("UPDATE pago_comision_ind SET estatus = 4 WHERE id_pago_i IN (".$idcom.")");
+    return $this->db->query("UPDATE pago_comision_ind SET estatus = 4,modificado_por='".$this->session->userdata('id_usuario')."' WHERE id_pago_i IN (".$idcom.")");
 } 
  
 
@@ -2576,8 +2577,8 @@ function getDatosRevisionFactura($proyecto,$condominio){
 }
 
 public function UpdateLoteLiquidar($lote){
-    $respuesta =  $this->db->query("UPDATE pago_comision_ind SET estatus = 0 WHERE abono_neodata = 0");
-    $respuesta =  $this->db->query("UPDATE comisiones SET estatus = 0 WHERE comision_total = 0");
+    $respuesta =  $this->db->query("UPDATE pago_comision_ind SET estatus = 0,modificado_por='".$this->session->userdata('id_usuario')."' WHERE abono_neodata = 0");
+    $respuesta =  $this->db->query("UPDATE comisiones SET estatus = 0,modificado_por='".$this->session->userdata('id_usuario')."' WHERE comision_total = 0");
     $respuesta =  $this->db->query("UPDATE pago_comision SET pendiente = 0 WHERE id_lote = $lote");
     $respuesta =  $this->db->query("UPDATE lotes SET registro_comision = 7 WHERE idLote = $lote");
     if (! $respuesta ) {
@@ -2589,8 +2590,8 @@ public function UpdateLoteLiquidar($lote){
 
 public function UpdateLoteDisponible($lote){
     $respuesta =  $this->db->query("UPDATE pago_comision SET bandera = 1 WHERE id_lote = $lote");
-    $respuesta =  $this->db->query("UPDATE pago_comision_ind SET estatus = 0 WHERE abono_neodata = 0");
-    $respuesta =  $this->db->query("UPDATE comisiones SET estatus = 0 WHERE comision_total = 0");
+    $respuesta =  $this->db->query("UPDATE pago_comision_ind SET estatus = 0,modificado_por='".$this->session->userdata('id_usuario')."' WHERE abono_neodata = 0");
+    $respuesta =  $this->db->query("UPDATE comisiones SET estatus = 0,modificado_por='".$this->session->userdata('id_usuario')."' WHERE comision_total = 0");
     $respuesta =  $this->db->query("UPDATE lotes SET registro_comision = 1 WHERE idLote = $lote");
     if (! $respuesta ) {
     return 0;
@@ -2625,7 +2626,7 @@ public function getDatosDispersarCompartidas($idlote){
 
 
 function insert_pago_individual($id_comision, $id_usuario, $abono_nuevo){
-    $this->db->query("INSERT INTO pago_comision_ind (id_comision, id_usuario, abono_neodata, fecha_abono, fecha_pago_intmex, estatus, pago_neodata, modificado_por, comentario) VALUES (".$id_comision.", ".$id_usuario.", ".$abono_nuevo.", GETDATE(), GETDATE(), 11, 0, ".$this->session->userdata('id_usuario').", 'IMPORTACION NUEVO ABONO')");
+    $this->db->query("INSERT INTO pago_comision_ind (id_comision, id_usuario, abono_neodata, fecha_abono, fecha_pago_intmex, estatus, pago_neodata, creado_por, comentario,modificado_por) VALUES (".$id_comision.", ".$id_usuario.", ".$abono_nuevo.", GETDATE(), GETDATE(), 11, 0, ".$this->session->userdata('id_usuario').", 'IMPORTACION NUEVO ABONO','".$this->session->userdata('id_usuario')."')");
 }
 
 
@@ -2635,7 +2636,7 @@ function update_pago_general($suma, $ideLote){
 
 
 function insert_dispersion_individual($id_comision, $id_usuario, $abono_nuevo, $pago){
-    $respuesta = $this->db->query("INSERT INTO pago_comision_ind (id_comision, id_usuario, abono_neodata, fecha_abono, fecha_pago_intmex, estatus, pago_neodata, modificado_por, comentario) VALUES (".$id_comision.", ".$id_usuario.", ".$abono_nuevo.", GETDATE(), GETDATE(), 1, ".$pago.", ".$this->session->userdata('id_usuario').", 'NUEVO PAGO')");
+    $respuesta = $this->db->query("INSERT INTO pago_comision_ind (id_comision, id_usuario, abono_neodata, fecha_abono, fecha_pago_intmex, estatus, pago_neodata, creado_por, comentario,modificado_por) VALUES (".$id_comision.", ".$id_usuario.", ".$abono_nuevo.", GETDATE(), GETDATE(), 1, ".$pago.", ".$this->session->userdata('id_usuario').", 'NUEVO PAGO','".$this->session->userdata('id_usuario')."')");
 
     $insert_id_2 = $this->db->insert_id();
     $respuesta = $this->db->query("INSERT INTO  historial_comisiones VALUES ($insert_id_2, ".$this->session->userdata('id_usuario').", GETDATE(), 1, 'DISPERSÓ PAGO DE COMISIÓN')");
@@ -3365,7 +3366,7 @@ public function validateDispersionCommissions($idlote){
 
 
         $this->db->query("INSERT INTO historial_comisiones VALUES (".$id_pago.", ".$v1_user.", GETDATE(), 1, 'MKTD APROBÓ ESTE PAGO')");
-        return $this->db->query("UPDATE pago_comision_ind SET estatus = 12 WHERE id_pago_i= $id_pago AND id_comision = $id_comision");
+        return $this->db->query("UPDATE pago_comision_ind SET estatus = 12,modificado_por='".$this->session->userdata('id_usuario')."' WHERE id_pago_i= $id_pago AND id_comision = $id_comision");
     }
     
     
@@ -3603,7 +3604,7 @@ public function validateDispersionCommissions($idlote){
         }
 
     function updateIndividualCommission($idsol, $estatus) {
-        return $this->db->query("UPDATE pago_comision_ind SET estatus = $estatus WHERE id_pago_i IN (".$idsol.")");
+        return $this->db->query("UPDATE pago_comision_ind SET modificado_por='".$this->session->userdata('id_usuario')."',estatus = $estatus WHERE id_pago_i IN (".$idsol.")");
     }
 
     function updateLotes($idLote, $plaza) {
@@ -3653,8 +3654,8 @@ for($i=0;$i < count($consulta); $i++){
  
  }
 
-$respuesta = $this->db->query(" UPDATE pago_comision_ind set estatus = 4
-FROM pago_comision_ind pci
+ $respuesta = $this->db->query(" UPDATE pago_comision_ind set estatus = 4,modificado_por='".$this->session->userdata('id_usuario')."'
+ FROM pago_comision_ind pci
 INNER JOIN comisiones com ON com.id_comision = pci.id_comision
 INNER JOIN lotes lo ON lo.idLote = com.id_lote
 INNER JOIN condominios cod ON cod.idCondominio = lo.idCondominio
@@ -3694,8 +3695,8 @@ echo print_r($consulta);
      }
 
 
-$respuesta = $this->db->query(" UPDATE pago_comision_ind set estatus = 4
-FROM pago_comision_ind pci
+     $respuesta = $this->db->query(" UPDATE pago_comision_ind set estatus = 4,modificado_por='".$this->session->userdata('id_usuario')."'
+     FROM pago_comision_ind pci
 INNER JOIN comisiones com ON com.id_comision = pci.id_comision
 INNER JOIN lotes lo ON lo.idLote = com.id_lote
 INNER JOIN condominios cod ON cod.idCondominio = lo.idCondominio
@@ -3734,7 +3735,7 @@ $this->db->query("INSERT INTO historial_comisiones VALUES (".$consulta[$i]['id_p
 }
 
 
-$respuesta = $this->db->query(" UPDATE pago_comision_ind set estatus = 4
+$respuesta = $this->db->query(" UPDATE pago_comision_ind set estatus = 4,modificado_por='".$this->session->userdata('id_usuario')."'
 FROM pago_comision_ind pci
 INNER JOIN comisiones com ON com.id_comision = pci.id_comision
 INNER JOIN lotes lo ON lo.idLote = com.id_lote
@@ -3777,8 +3778,8 @@ for($i=0;$i < count($consulta); $i++){
 
 
 
-$respuesta = $this->db->query("UPDATE pago_comision_ind set estatus = 4
-FROM pago_comision_ind pci
+ $respuesta = $this->db->query("UPDATE pago_comision_ind set estatus = 4,modificado_por='".$this->session->userdata('id_usuario')."'
+ FROM pago_comision_ind pci
 INNER JOIN comisiones com ON com.id_comision = pci.id_comision
 INNER JOIN lotes lo ON lo.idLote = com.id_lote
 INNER JOIN condominios cod ON cod.idCondominio = lo.idCondominio
@@ -4296,8 +4297,8 @@ function insertar_descuentoEsp($usuarioid,$monto,$ide_comision,$comentario,$usua
     
     $estatus = 16;
     
-        $respuesta = $this->db->query("INSERT INTO pago_comision_ind(id_comision, id_usuario, abono_neodata, fecha_abono, fecha_pago_intmex, pago_neodata, estatus, modificado_por, comentario, descuento_aplicado,abono_final,aply_pago_intmex) VALUES ($ide_comision, $usuarioid, $monto, GETDATE(), GETDATE(), $pago_neodata, $estatus, $usuario, 'DESCUENTO ', 1 ,null, null)");
-        $insert_id = $this->db->insert_id();
+    $respuesta = $this->db->query("INSERT INTO pago_comision_ind(id_comision, id_usuario, abono_neodata, fecha_abono, fecha_pago_intmex, pago_neodata, estatus, creado_por, comentario, descuento_aplicado,abono_final,aply_pago_intmex,modificado_por) VALUES ($ide_comision, $usuarioid, $monto, GETDATE(), GETDATE(), $pago_neodata, $estatus, $usuario, 'DESCUENTO ', 1 ,null, null,'".$this->session->userdata('id_usuario')."')");
+    $insert_id = $this->db->insert_id();
     
         $respuesta = $this->db->query("INSERT INTO historial_comisiones VALUES ($insert_id, $usuario, GETDATE(), 1, 'A ESTA COMISION SE LE APLICO UN DESCUENTO QUEDANDO ESTA CANTIDAD RESTANTE, MOTIVO DESCUENTO: ".$comentario."')");
     
@@ -4313,11 +4314,11 @@ function insertar_descuentoEsp($usuarioid,$monto,$ide_comision,$comentario,$usua
         $estatus =4;
             
             if($monto == 0){
-                $respuesta = $this->db->query("UPDATE pago_comision_ind SET estatus = 16, modificado_por= $usuario, fecha_pago_intmex = GETDATE(), fecha_abono = GETDATE(), comentario='DESCUENTO' WHERE id_pago_i=$id_pago_i");
+                $respuesta = $this->db->query("UPDATE pago_comision_ind SET estatus = 16, modificado_por='$usuario', fecha_pago_intmex = GETDATE(), fecha_abono = GETDATE(), comentario='DESCUENTO' WHERE id_pago_i=$id_pago_i");
                 $respuesta = $this->db->query("INSERT INTO historial_comisiones VALUES ($id_pago_i, $usuario, GETDATE(), 1, 'MOTIVO DESCUENTO: ".$comentario."')");
     
             }else{
-                $respuesta = $this->db->query("UPDATE pago_comision_ind SET estatus = $estatus, modificado_por= $usuario, fecha_pago_intmex = GETDATE(), fecha_abono = GETDATE(), abono_neodata = $monto, comentario='NUEVO PAGO DESCUENTO' WHERE id_pago_i=$id_pago_i");
+                $respuesta = $this->db->query("UPDATE pago_comision_ind SET estatus = $estatus, modificado_por='$usuario', fecha_pago_intmex = GETDATE(), fecha_abono = GETDATE(), abono_neodata = $monto, comentario='NUEVO PAGO DESCUENTO' WHERE id_pago_i=$id_pago_i");
                 $respuesta = $this->db->query("INSERT INTO historial_comisiones VALUES ($id_pago_i, $usuario, GETDATE(), 1, 'SE ACTUALIZÓ NUEVO PAGO. MOTIVO: ".$comentario."')");
     
             }
@@ -4343,8 +4344,8 @@ function insertar_descuento($usuarioid,$monto,$ide_comision,$comentario,$usuario
     }
 
 
-        $respuesta = $this->db->query("INSERT INTO pago_comision_ind(id_comision, id_usuario, abono_neodata, fecha_abono, fecha_pago_intmex, pago_neodata, estatus, modificado_por, comentario, descuento_aplicado,abono_final,aply_pago_intmex) VALUES ($ide_comision, $usuarioid, $monto, GETDATE(), GETDATE(), $pago_neodata, $estatus, $usuario, 'DESCUENTO NUEVO PAGO', 0 ,null, null)");
-        $insert_id = $this->db->insert_id();
+    $respuesta = $this->db->query("INSERT INTO pago_comision_ind(id_comision, id_usuario, abono_neodata, fecha_abono, fecha_pago_intmex, pago_neodata, estatus, creado_por, comentario, descuento_aplicado,abono_final,aply_pago_intmex,modificado_por) VALUES ($ide_comision, $usuarioid, $monto, GETDATE(), GETDATE(), $pago_neodata, $estatus, $usuario, 'DESCUENTO NUEVO PAGO', 0 ,null, null,'".$this->session->userdata('id_usuario')."')");
+    $insert_id = $this->db->insert_id();
     
         $respuesta = $this->db->query("INSERT INTO historial_comisiones VALUES ($insert_id, $usuario, GETDATE(), 1, 'A ESTA COMISION SE LE APLICO UN DESCUENTO QUEDANDO ESTA CANTIDAD RESTANTE, MOTIVO DESCUENTO: ".$comentario."')");
     
@@ -4390,10 +4391,10 @@ function insertar_descuento($usuarioid,$monto,$ide_comision,$comentario,$usuario
        
            }
            if($monto == 0){
-               $respuesta = $this->db->query("UPDATE pago_comision_ind SET estatus = $estatus, descuento_aplicado=1, modificado_por= $usuario, fecha_pago_intmex = GETDATE(), fecha_abono = GETDATE(), comentario='DESCUENTO' WHERE id_pago_i=$id_pago_i");
-           }else{
-               $respuesta = $this->db->query("UPDATE pago_comision_ind SET estatus = $estatus, descuento_aplicado=1, modificado_por= $usuario, fecha_pago_intmex = GETDATE(), fecha_abono = GETDATE(), abono_neodata = $monto, comentario='DESCUENTO' WHERE id_pago_i=$id_pago_i");
-           }
+            $respuesta = $this->db->query("UPDATE pago_comision_ind SET estatus = $estatus, descuento_aplicado=1, modificado_por='$usuario', fecha_pago_intmex = GETDATE(), fecha_abono = GETDATE(), comentario='DESCUENTO' WHERE id_pago_i=$id_pago_i");
+        }else{
+            $respuesta = $this->db->query("UPDATE pago_comision_ind SET estatus = $estatus, descuento_aplicado=1, modificado_por='$usuario', fecha_pago_intmex = GETDATE(), fecha_abono = GETDATE(), abono_neodata = $monto, comentario='DESCUENTO' WHERE id_pago_i=$id_pago_i");
+        }
        
                $respuesta = $this->db->query("INSERT INTO historial_comisiones VALUES ($id_pago_i, $usuario, GETDATE(), 1, 'MOTIVO DESCUENTO: ".$comentario."')");
        
@@ -4410,9 +4411,9 @@ function insertar_descuento($usuarioid,$monto,$ide_comision,$comentario,$usuario
 function update_retiro($id_pago_i,$monto, $comentario, $usuario){
     
     if($monto == 0){
-        $respuesta = $this->db->query("UPDATE pago_comision_ind SET estatus = 100, descuento_aplicado=1, modificado_por= $usuario, fecha_pago_intmex = GETDATE(), fecha_abono = GETDATE(), comentario='DESCUENTO' WHERE id_pago_i=$id_pago_i");
+        $respuesta = $this->db->query("UPDATE pago_comision_ind SET estatus = 100, descuento_aplicado=1, modificado_por='$usuario', fecha_pago_intmex = GETDATE(), fecha_abono = GETDATE(), comentario='DESCUENTO' WHERE id_pago_i=$id_pago_i");
     }else{
-        $respuesta = $this->db->query("UPDATE pago_comision_ind SET estatus = 100, descuento_aplicado=1, modificado_por= $usuario, fecha_pago_intmex = GETDATE(), fecha_abono = GETDATE(), abono_neodata = $monto, comentario='DESCUENTO' WHERE id_pago_i=$id_pago_i");
+        $respuesta = $this->db->query("UPDATE pago_comision_ind SET estatus = 100, descuento_aplicado=1, modificado_por='$usuario', fecha_pago_intmex = GETDATE(), fecha_abono = GETDATE(), abono_neodata = $monto, comentario='DESCUENTO' WHERE id_pago_i=$id_pago_i");
     }
 
         $respuesta = $this->db->query("INSERT INTO historial_comisiones VALUES ($id_pago_i, $usuario, GETDATE(), 1, 'MOTIVO DESCUENTO: ".$comentario."')");
@@ -4565,8 +4566,8 @@ function getHistorialRetiros($proyecto,$condominio){
 
  
 function BorrarDescuento($id_bono){
-$respuesta = $this->db->query("UPDATE pago_comision_ind SET comentario = CONCAT(id_comision, '-', 'BAJA BONO'), id_comision = 0 WHERE estatus = 0 AND descuento_aplicado = 1 AND id_pago_i = $id_bono");
-if (! $respuesta ) {
+    $respuesta = $this->db->query("UPDATE pago_comision_ind SET comentario = CONCAT(id_comision, '-', 'BAJA BONO'), id_comision = 0,modificado_por='".$this->session->userdata('id_usuario')."' WHERE estatus = 0 AND descuento_aplicado = 1 AND id_pago_i = $id_bono");
+    if (! $respuesta ) {
 return 0;
 } else {
 return 1;
@@ -4574,8 +4575,8 @@ return 1;
 }
 
 function UpdateDescuento($id_bono){
-$respuesta = $this->db->query("UPDATE pago_comision_ind SET estatus = 11 WHERE estatus = 0 AND descuento_aplicado = 1 AND id_pago_i = $id_bono");
-if (! $respuesta ) {
+    $respuesta = $this->db->query("UPDATE pago_comision_ind SET estatus = 11,modificado_por='".$this->session->userdata('id_usuario')."' WHERE estatus = 0 AND descuento_aplicado = 1 AND id_pago_i = $id_bono");
+    if (! $respuesta ) {
 return 0;
 } else {
 return 1;
@@ -5197,7 +5198,7 @@ function TieneAbonos($id){
     function insert_nuevo_pago($comision,$user,$monto){
     $id_user_Vl = $this->session->userdata('id_usuario');
 
-    $respuesta = $this->db->query("INSERT INTO pago_comision_ind VALUES ($comision, $user, $monto, GETDATE(), GETDATE(), 0, 11, $id_user_Vl, 'IMPORTACIÓN EXTERNA CONTRALORÍA', NULL, NULL, NULL)");
+    $respuesta = $this->db->query("INSERT INTO pago_comision_ind VALUES ($comision, $user, $monto, GETDATE(), GETDATE(), 0, 11, $id_user_Vl, 'IMPORTACIÓN EXTERNA CONTRALORÍA', NULL, NULL, NULL,'".$this->session->userdata('id_usuario')."')");
     
     $id = $this->db->insert_id();
     $respuesta = $this->db->query("INSERT INTO historial_comisiones VALUES ($id, 1, GETDATE(), 1, 'CONTRALORIA AGREGO UN NUEVO ABONO YA PAGADO')");
@@ -5398,7 +5399,7 @@ function TieneAbonos($id){
 
         $id_user_Vl = $this->session->userdata('id_usuario');
         $this->db->query("INSERT INTO historial_comisiones VALUES ($id_pago_i, $id_user_Vl, GETDATE(), 1, 'ACTUALIZÓ CONTRALORIA CON NUEVO MONTO: ".$obs."')");
-        return $this->db->query("UPDATE pago_comision_ind SET abono_neodata = '".$obs."' WHERE id_pago_i IN (".$id_pago_i.")");
+        return $this->db->query("UPDATE pago_comision_ind SET abono_neodata = '".$obs."',modificado_por='".$this->session->userdata('id_usuario')."' WHERE id_pago_i IN (".$id_pago_i.")");
       }
     
 
@@ -5406,7 +5407,7 @@ function TieneAbonos($id){
 
         $id_user_Vl = $this->session->userdata('id_usuario');
         $this->db->query("INSERT INTO historial_comisiones VALUES ($id_pago_i, $id_user_Vl, GETDATE(), 1, 'ACTUALIZÓ CONTRALORIA CON NUEVO MONTO: ".$obs."')");
-        return $this->db->query("UPDATE pago_comision_ind SET abono_neodata = '".$obs."' WHERE id_pago_i IN (".$id_pago_i.")");
+        return $this->db->query("UPDATE pago_comision_ind SET abono_neodata = '".$obs."',modificado_por='".$this->session->userdata('id_usuario')."' WHERE id_pago_i IN (".$id_pago_i.")");
       }
     
 
@@ -5424,7 +5425,7 @@ function TieneAbonos($id){
         $user_com = $QUERY_VAL->row()->id_usuario;
     
         // echo $comision.'<br>';
-        return $this->db->query( "INSERT INTO pago_comision_ind VALUES (".$comision.", ".$user_com.", ".$obs.", GETDATE(), GETDATE(), 0, 11, 1, 'IMPORTACIÓN EXTEMPORANEA', NULL, NULL, NULL)");
+        return $this->db->query( "INSERT INTO pago_comision_ind VALUES (".$comision.", ".$user_com.", ".$obs.", GETDATE(), GETDATE(), 0, 11, 1, 'IMPORTACIÓN EXTEMPORANEA', NULL, NULL, NULL,'".$this->session->userdata('id_usuario')."')");
     
         $insert_id = $this->db->insert_id();
     
@@ -5667,7 +5668,8 @@ public function Update_MKTD_precioL($lote,$precio,$user)
 
 public function Update_lote_reubicacion($idloteNuevo,$idloteAnterior,$precioNuevo,$user,$comentario)
 {
-    $respuesta = $this->db->query("UPDATE comisiones set comision_total=((porcentaje_decimal/100)*$precioNuevo),id_lote=$idloteNuevo  where id_lote=$idloteAnterior");
+    $respuesta = $this->db->query("UPDATE comisiones set comision_total=((porcentaje_decimal/100)*$precioNuevo),id_lote=$idloteNuevo,modificado_por='".$this->session->userdata('id_usuario')."'  where id_lote=$idloteAnterior");
+
     $respuesta = $this->db->query("UPDATE lotes set registro_comision=0  where idLote=$idloteAnterior");
     $respuesta = $this->db->query("UPDATE lotes set registro_comision=1  where idLote=$idloteNuevo");
 
@@ -5976,7 +5978,7 @@ function update_estatus_pausaM($id_pago_i, $obs) {
 
     $id_user_Vl = $this->session->userdata('id_usuario');
     $this->db->query("INSERT INTO  historial_comisiones VALUES ($id_pago_i, $id_user_Vl, GETDATE(), 1, 'SE PAUSÓ COMISIÓN, MOTIVO: ".$obs."')");
-    $respuesta =  $this->db->query("UPDATE pago_comision_ind SET estatus = 6, comentario = '".$obs."' WHERE id_pago_i IN (".$id_pago_i.")");
+    $respuesta =  $this->db->query("UPDATE pago_comision_ind SET estatus = 6, comentario = '".$obs."',modificado_por='".$this->session->userdata('id_usuario')."' WHERE id_pago_i IN (".$id_pago_i.")");
 
      $row = $this->db->query("SELECT uuid FROM facturas WHERE id_comision = ".$id_pago_i.";")->result_array();
      if(count($row) > 0){
@@ -6100,7 +6102,7 @@ function update_refactura( $id_comision, $datos_factura,$id_usuario,$id_factura)
                 for ($i=0; $i <count($comisiones) ; $i++) { 
                     $comisionTotal =$precio *($comisiones[$i]['porcentaje_decimal']/100);
                     $comentario2='Se actualizó la comision total por cambio de precio del lote de'.$comisiones[$i]['comision_total'].' a '.$comisionTotal;
-                    $respuesta =  $this->db->query("UPDATE comisiones SET comision_total=$comisionTotal WHERE id_comision=".$comisiones[$i]['id_comision']." AND id_lote=".$idLote.";");
+                    $respuesta =  $this->db->query("UPDATE comisiones SET comision_total=$comisionTotal,modificado_por='".$this->session->userdata('id_usuario')."' WHERE id_comision=".$comisiones[$i]['id_comision']." AND id_lote=".$idLote.";");
                     $respuesta = $this->db->query("INSERT INTO historial_log VALUES(".$comisiones[$i]['id_comision'].",".$this->session->userdata('id_usuario').",GETDATE(),1,'$comentario2','comisiones')");   
                 }
             }
@@ -6139,16 +6141,16 @@ function update_refactura( $id_comision, $datos_factura,$id_usuario,$id_factura)
             $sumaxcomision = $pagos_ind[0]['suma'];
             for ($j=0; $j <count($pagos) ; $j++) { 
                 $comentario= 'Se eliminó el pago';
-                $respuesta =  $this->db->query("UPDATE pago_comision_ind SET estatus=0,abono_neodata=0 WHERE id_pago_i=".$pagos[$j]['id_pago_i']." AND id_usuario=".$pagos[$j]['id_usuario'].";");
+                $respuesta =  $this->db->query("UPDATE pago_comision_ind SET modificado_por='".$this->session->userdata('id_usuario')."',estatus=0,abono_neodata=0 WHERE id_pago_i=".$pagos[$j]['id_pago_i']." AND id_usuario=".$pagos[$j]['id_usuario'].";");
                 $respuesta = $this->db->query("INSERT INTO  historial_comisiones VALUES (".$pagos[$j]['id_pago_i'].", ".$this->session->userdata('id_usuario').", GETDATE(), 1, '".$comentario."')");
             
             }
             $respuesta = $this->db->query("INSERT INTO  historial_log VALUES ($id_comision,".$this->session->userdata('id_usuario').",'".$hoy."',1,'SE TOPO COMISIÓN','comisiones')");
             if($sumaxcomision == 0  || $sumaxcomision == null || $sumaxcomision == 'null' ){
-                $this->db->query("UPDATE comisiones set comision_total=0,descuento=1 $complemento where id_comision=".$id_comision." ");
+                $this->db->query("UPDATE comisiones set comision_total=0,descuento=1,modificado_por='".$this->session->userdata('id_usuario')."' $complemento where id_comision=".$id_comision." ");
 
             }else{
-                $this->db->query("UPDATE comisiones set comision_total=$sumaxcomision,descuento=1 $complemento where id_comision=".$id_comision." ");
+                $this->db->query("UPDATE comisiones set comision_total=$sumaxcomision,descuento=1,modificado_por='".$this->session->userdata('id_usuario')."' $complemento where id_comision=".$id_comision." ");
 
             }
     return $pagos;
@@ -6196,8 +6198,8 @@ public function GuardarPago($id_comision, $comentario_topa, $monotAdd){
             $pagos = $this->db->query("SELECT id_usuario FROM comisiones com WHERE id_comision = $id_comision");
             $user = $pagos->row()->id_usuario;
             
-                $respuesta =  $this->db->query("INSERT INTO pago_comision_ind VALUES ($id_comision, $user, $monotAdd , GETDATE(), GETDATE(), 0, 11, ".$this->session->userdata('id_usuario').", 'IMPORTACION EXTEMPORANEA', NULL, NULL, NULL )");
-                $insert_id = $this->db->insert_id();
+            $respuesta =  $this->db->query("INSERT INTO pago_comision_ind VALUES ($id_comision, $user, $monotAdd , GETDATE(), GETDATE(), 0, 11, ".$this->session->userdata('id_usuario').", 'IMPORTACION EXTEMPORANEA', NULL, NULL, NULL,'".$this->session->userdata('id_usuario')."')");
+            $insert_id = $this->db->insert_id();
                $this->db->query("INSERT INTO historial_comisiones VALUES (".$insert_id.", ".$this->session->userdata('id_usuario').", GETDATE(), 1, '".$comentario_topa."')");
 
 
@@ -6221,7 +6223,7 @@ public function GuardarPago($id_comision, $comentario_topa, $monotAdd){
             if($opc != ''){
                      $q=',descuento=0';
             }
-            $respuesta =  $this->db->query("UPDATE comisiones set comision_total=$comision_total,observaciones='SE MODIFICÓ PORCENTAJE',creado_por=".$this->session->userdata('id_usuario').",porcentaje_decimal=$porcentaje $q WHERE id_comision=$id_comision AND id_lote=$id_lote and id_usuario=$id_usuario");
+            $respuesta =  $this->db->query("UPDATE comisiones set modificado_por='".$this->session->userdata('id_usuario')."',comision_total=$comision_total,observaciones='SE MODIFICÓ PORCENTAJE',creado_por=".$this->session->userdata('id_usuario').",porcentaje_decimal=$porcentaje $q WHERE id_comision=$id_comision AND id_lote=$id_lote and id_usuario=$id_usuario");
 
        //  $respuesta =  $this->db->query("UPDATE comisiones set comision_total=$comision_total,porcentaje_decimal=$porcentaje $q WHERE id_comision=$id_comision AND id_lote=$id_lote and id_usuario=$id_usuario");
          //$respuesta =  $this->db->query("UPDATE pago_comision_ind set estatus=5 WHERE id_comision=$id_comision AND estatus in(1,6,3) and id_usuario=$usuario");
@@ -6229,10 +6231,10 @@ public function GuardarPago($id_comision, $comentario_topa, $monotAdd){
         if($opc == ''){
             $Abonado = $this->db-> query("SELECT SUM(pci.abono_neodata) abonado FROM pago_comision_ind pci WHERE pci.id_comision IN  ($id_comision)")->result_array();
             $pagos = $this->db-> query("SELECT * FROM pago_comision_ind WHERE id_comision=$id_comision and estatus in(1,6) and id_usuario=$id_usuario;")->result_array();
-            if($porcentaje <= $porcentaje_ant  && $Abonado[0]['abonado'] < $comision_total){
+            if($porcentaje < $porcentaje_ant  && $Abonado[0]['abonado'] < $comision_total){
                 for ($i=0; $i <count($pagos) ; $i++) { 
                     $comentario2='Se cancelo el pago por cambio de porcentaje';
-                    $respuesta =  $this->db->query("UPDATE pago_comision_ind SET abono_neodata=0,estatus=0 WHERE id_pago_i=".$pagos[$i]['id_pago_i']." AND id_usuario=".$id_usuario.";");
+                    $respuesta =  $this->db->query("UPDATE pago_comision_ind SET abono_neodata=0,estatus=0,modificado_por='".$this->session->userdata('id_usuario')."' WHERE id_pago_i=".$pagos[$i]['id_pago_i']." AND id_usuario=".$id_usuario.";");
                     $respuesta = $this->db->query("INSERT INTO  historial_comisiones VALUES (".$pagos[$i]['id_pago_i'].", ".$this->session->userdata('id_usuario').", GETDATE(), 1, '".$comentario2."')");
                 }
             }
@@ -6350,7 +6352,7 @@ public function getAsesoresBaja(){
 
 public function CederComisiones($usuarioold,$newUser,$rol){
     ini_set('max_execution_time', 0);
-    $comisiones =  $this->db->query("select com.id_comision,com.id_lote,com.id_usuario,l.totalNeto2,l.nombreLote,com.comision_total,com.porcentaje_decimal 
+    $comisiones =  $this->db->query("select l.idCliente,com.id_comision,com.id_lote,com.id_usuario,l.totalNeto2,l.nombreLote,com.comision_total,com.porcentaje_decimal 
     from comisiones com 
     inner join lotes l on l.idLote=com.id_lote 
     where com.id_usuario=".$usuarioold."")->result_array();
@@ -6378,7 +6380,7 @@ $cc=0;
             if(count($pagosElimnar) > 0){
                 for ($j=0; $j <count($pagosElimnar) ; $j++) { 
                     $comentario= 'Se eliminó pago';
-                    $respuesta =  $this->db->query("UPDATE pago_comision_ind SET estatus=0,abono_neodata=0 WHERE id_pago_i=".$pagosElimnar[$j]['id_pago_i']." AND id_usuario=".$pagosElimnar[$j]['id_usuario'].";");
+                    $respuesta =  $this->db->query("UPDATE pago_comision_ind SET estatus=0,abono_neodata=0,modificado_por='".$this->session->userdata('id_usuario')."' WHERE id_pago_i=".$pagosElimnar[$j]['id_pago_i']." AND id_usuario=".$pagosElimnar[$j]['id_usuario'].";");
                     $respuesta = $this->db->query("INSERT INTO  historial_comisiones VALUES (".$pagosElimnar[$j]['id_pago_i'].", ".$this->session->userdata('id_usuario').", GETDATE(), 1, '".$comentario."')");
                 
                 }
@@ -6386,8 +6388,8 @@ $cc=0;
 
             if($sumaxcomision < ($comisiones[$i]['comision_total'] - 0.5)){
                 $Restante = $comisiones[$i]['comision_total'] - $sumaxcomision;
-                $this->db->query("UPDATE comisiones set comision_total=$sumaxcomision,descuento=$newUser where id_comision=".$comisiones[$i]['id_comision']." ");
-                $this->db->query("INSERT INTO comisiones VALUES (".$comisiones[$i]['id_lote'].",".$newUser.",".$Restante.",1,'COMISIÓN CEDIDA',NULL,NULL,".$this->session->userdata('id_usuario').",GETDATE(),".$comisiones[$i]['porcentaje_decimal'].",GETDATE(),".$rol.",$usuarioold)");
+                $this->db->query("UPDATE comisiones set modificado_por='".$this->session->userdata('id_usuario')."',comision_total=$sumaxcomision,descuento=$newUser where id_comision=".$comisiones[$i]['id_comision']." ");
+                $this->db->query("INSERT INTO comisiones VALUES (".$comisiones[$i]['id_lote'].",".$newUser.",".$Restante.",1,'COMISIÓN CEDIDA',NULL,NULL,".$this->session->userdata('id_usuario').",GETDATE(),".$comisiones[$i]['porcentaje_decimal'].",GETDATE(),".$rol.",$usuarioold,".$comisiones[$i]['idCliente'].",'".$this->session->userdata('id_usuario')."')");
               
               $infoCedida[$cc] = array(
                 "id_lote" => $comisiones[$i]['id_lote'],
@@ -6673,7 +6675,7 @@ $sumaxcomision=0;
             if(count($pagos) > 0){
                 for ($j=0; $j <count($pagos) ; $j++){
                     $comentario= 'Se eliminó el pago';
-                    $respuesta =  $this->db->query("UPDATE pago_comision_ind SET estatus=0,abono_neodata=0 WHERE id_pago_i=".$pagos[$j]['id_pago_i']." AND id_usuario=".$pagos[$j]['id_usuario'].";");
+                    $respuesta =  $this->db->query("UPDATE pago_comision_ind SET estatus=0,abono_neodata=0,modificado_por='".$this->session->userdata('id_usuario')."' WHERE id_pago_i=".$pagos[$j]['id_pago_i']." AND id_usuario=".$pagos[$j]['id_usuario'].";");
                     $respuesta = $this->db->query("INSERT INTO  historial_comisiones VALUES (".$pagos[$j]['id_pago_i'].", ".$this->session->userdata('id_usuario').", GETDATE(), 1, '".$comentario."')");
                 }
             }    
@@ -6681,10 +6683,10 @@ $sumaxcomision=0;
                 $sumaxcomision = 0;
                 //$this->db->query("delete from comisiones where id_comision=".$comision[0]['id_comision']." and id_usuario=".$usuarioOld." ");
                 //si la suma de sis pagos pagados es igual a 0 solo cambiar el usuario
-                $respuesta =   $this->db->query("UPDATE comisiones set comision_total=$sumaxcomision,descuento=1 where id_comision=".$comision[0]['id_comision']." ");
+                $respuesta =  $this->db->query("UPDATE pago_comision_ind SET estatus=0,abono_neodata=0,modificado_por='".$this->session->userdata('id_usuario')."' WHERE id_pago_i=".$pagos[$j]['id_pago_i']." AND id_usuario=".$pagos[$j]['id_usuario'].";");
 
             }else{
-                $respuesta =   $this->db->query("UPDATE comisiones set comision_total=$sumaxcomision,descuento=1 where id_comision=".$comision[0]['id_comision']." ");
+                $respuesta =   $this->db->query("UPDATE comisiones set modificado_por='".$this->session->userdata('id_usuario')."',comision_total=$sumaxcomision,descuento=1 where id_comision=".$comision[0]['id_comision']." ");
             }  
 
         }
@@ -6737,8 +6739,8 @@ $sumaxcomision=0;
         $comision_total=$precio_lote * ($por /100);
 
         if(empty($validate->row()->id_usuario)){
-        $response = $this->db->query("INSERT INTO comisiones VALUES (".$idLote.",$newColab,$comision_total,1,'SE MODIFICÓ INVENTARIO',NULL,NULL,1,GETDATE(),$por,GETDATE(),$rolSelect,0,NULL)");
-        if($response){
+            $response = $this->db->query("INSERT INTO comisiones VALUES (".$idLote.",$newColab,$comision_total,1,'SE MODIFICÓ INVENTARIO',NULL,NULL,1,GETDATE(),$por,GETDATE(),$rolSelect,0,NULL,'".$this->session->userdata('id_usuario')."')");
+            if($response){
             return 1;
         }else{
             return 0;
@@ -6789,7 +6791,7 @@ function UpdateVcUser($usuarioOld,$newColab,$rolSelect,$idLote,$idCliente,$comen
                 if(count($pagos) > 0){
                     for ($j=0; $j <count($pagos) ; $j++){
                         $comentario= 'Se eliminó el pago';
-                        $respuesta =  $this->db->query("UPDATE pago_comision_ind SET estatus=0,abono_neodata=0 WHERE id_pago_i=".$pagos[$j]['id_pago_i']." AND id_usuario=".$pagos[$j]['id_usuario'].";");
+                        $respuesta =  $this->db->query("UPDATE pago_comision_ind SET estatus=0,abono_neodata=0,modificado_por='".$this->session->userdata('id_usuario')."' WHERE id_pago_i=".$pagos[$j]['id_pago_i']." AND id_usuario=".$pagos[$j]['id_usuario'].";");
                         $respuesta = $this->db->query("INSERT INTO  historial_comisiones VALUES (".$pagos[$j]['id_pago_i'].", ".$this->session->userdata('id_usuario').", GETDATE(), 1, '".$comentario."')");
                     }
                 }    
@@ -6797,10 +6799,10 @@ function UpdateVcUser($usuarioOld,$newColab,$rolSelect,$idLote,$idCliente,$comen
                     $sumaxcomision = 0;
                     //$this->db->query("delete from comisiones where id_comision=".$comision[0]['id_comision']." and id_usuario=".$usuarioOld." ");
                     //si la suma de sis pagos pagados es igual a 0 solo cambiar el usuario
-                    $respuesta = $this->db->query("UPDATE comisiones set comision_total=$sumaxcomision,descuento=1 where id_comision=".$comision[0]['id_comision']." ");
+                    $respuesta = $this->db->query("UPDATE comisiones set modificado_por='".$this->session->userdata('id_usuario')."',comision_total=$sumaxcomision,descuento=1 where id_comision=".$comision[0]['id_comision']." ");
     
                 }else{
-                    $respuesta = $this->db->query("UPDATE comisiones set comision_total=$sumaxcomision,descuento=1 where id_comision=".$comision[0]['id_comision']." ");
+                    $respuesta = $this->db->query("UPDATE comisiones set modificado_por='".$this->session->userdata('id_usuario')."',comision_total=$sumaxcomision,descuento=1 where id_comision=".$comision[0]['id_comision']." ");
                 }  
     
             }
@@ -6855,8 +6857,8 @@ function UpdateVcUser($usuarioOld,$newColab,$rolSelect,$idLote,$idCliente,$comen
             $comision_total=$precio_lote * ($por /100);
     
             if(empty($validate->row()->id_usuario)){
-            $response = $this->db->query("INSERT INTO comisiones VALUES (".$idLote.",$newColab,$comision_total,1,'SE MODIFICÓ VENTA COMPARTIDA',NULL,NULL,1,GETDATE(),$por,GETDATE(),$rolSelect,0,NULL)");
-            if($response){
+                $response = $this->db->query("INSERT INTO comisiones VALUES (".$idLote.",$newColab,$comision_total,1,'SE MODIFICÓ VENTA COMPARTIDA',NULL,NULL,1,GETDATE(),$por,GETDATE(),$rolSelect,0,NULL,'".$this->session->userdata('id_usuario')."')");
+                if($response){
                 return 1;
             }else{
                 return 0;
@@ -6932,9 +6934,9 @@ function UpdateVcUser($usuarioOld,$newColab,$rolSelect,$idLote,$idCliente,$comen
         $comision_total=$precio_lote * ($porcentaje /100);
 
         if(empty($validate->row()->id_usuario)){
-            $response = $this->db->query("UPDATE comisiones set comision_total=$comision_total,porcentaje_decimal=$porcentaje where id_lote=".$id_lote." and rol_generado=$rolSelect");
-            $response = $this->db->query("INSERT INTO comisiones(id_lote,id_usuario,comision_total,estatus,observaciones,evidencia,factura,creado_por,fecha_creacion,porcentaje_decimal,fecha_autorizacion,rol_generado,descuento,idCliente) 
-            VALUES (".$id_lote.",$usuario,$comision_total,1,'SE AGREGÓ VENTA COMPARTIDA',NULL,NULL,".$this->session->userdata('id_usuario').",GETDATE(),$porcentaje,GETDATE(),$rolSelect,0,$id_cliente)");
+            $response = $this->db->query("UPDATE comisiones set modificado_por='".$this->session->userdata('id_usuario')."',comision_total=$comision_total,porcentaje_decimal=$porcentaje where id_lote=".$id_lote." and rol_generado=$rolSelect");
+            $response = $this->db->query("INSERT INTO comisiones(id_lote,id_usuario,comision_total,estatus,observaciones,evidencia,factura,creado_por,fecha_creacion,porcentaje_decimal,fecha_autorizacion,rol_generado,descuento,idCliente,modificado_por) 
+            VALUES (".$id_lote.",$usuario,$comision_total,1,'SE AGREGÓ VENTA COMPARTIDA',NULL,NULL,".$this->session->userdata('id_usuario').",GETDATE(),$porcentaje,GETDATE(),$rolSelect,0,$id_cliente,'".$this->session->userdata('id_usuario')."')");
               
         }
 
@@ -6951,7 +6953,7 @@ function UpdateVcUser($usuarioOld,$newColab,$rolSelect,$idLote,$idCliente,$comen
 /**----------------------------------------------------------------------- */ 
 public function CancelarDescuento($id_pago,$motivo)
 {
-    $respuesta = $this->db->query("UPDATE pago_comision_ind set descuento_aplicado=0,estatus=1 where id_pago_i=".$id_pago."");
+    $respuesta = $this->db->query("UPDATE pago_comision_ind set descuento_aplicado=0,estatus=1,modificado_por='".$this->session->userdata('id_usuario')."' where id_pago_i=".$id_pago."");
     $this->db->query("INSERT INTO  historial_comisiones VALUES (".$id_pago.",".$this->session->userdata('id_usuario').", GETDATE(), 1, 'CAPITAL HUMANO CANCELÓ DESCUENTO, MOTIVO: ".$motivo."')");
 
     if ($respuesta ) {
@@ -7203,10 +7205,10 @@ function obtenerIDMK($id){
     public function InsertNeo($idLote, $id_usuario, $TotComision,$user, $porcentaje,$abono,$pago,$rol,$idCliente,$tipo_venta){
     
     if($porcentaje != 0 && $porcentaje != ''){
-        $this->db->query("INSERT INTO comisiones ([id_lote], [id_usuario], [comision_total], [estatus], [observaciones], [evidencia], [factura], [creado_por], [fecha_creacion], [porcentaje_decimal], [fecha_autorizacion], [rol_generado],[idCliente]) VALUES (".$idLote.", ".$id_usuario.", ".$TotComision.", 1, 'NUEVA DISPERSIÓN - $tipo_venta ', NULL, NULL, ".$user.", GETDATE(), ".$porcentaje.", GETDATE(), ".$rol.",".$idCliente.")");
+        $this->db->query("INSERT INTO comisiones ([id_lote], [id_usuario], [comision_total], [estatus], [observaciones], [evidencia], [factura], [creado_por], [fecha_creacion], [porcentaje_decimal], [fecha_autorizacion], [rol_generado],[idCliente],[modificado_por]) VALUES (".$idLote.", ".$id_usuario.", ".$TotComision.", 1, 'NUEVA DISPERSIÓN - $tipo_venta ', NULL, NULL, ".$user.", GETDATE(), ".$porcentaje.", GETDATE(), ".$rol.",".$idCliente.",'".$this->session->userdata('id_usuario')."')");
         $insert_id = $this->db->insert_id();
         
-        $this->db->query("INSERT INTO pago_comision_ind (id_comision, id_usuario, abono_neodata, fecha_abono, fecha_pago_intmex, estatus, pago_neodata, comentario, modificado_por) VALUES (".$insert_id.", ".$id_usuario.", ".$abono.", GETDATE(), GETDATE(), 1 , ".$pago.", 'PAGO 1 - NEDOATA', $user)");
+        $this->db->query("INSERT INTO pago_comision_ind (id_comision, id_usuario, abono_neodata, fecha_abono, fecha_pago_intmex, estatus, pago_neodata, comentario, creado_por, modificado_por) VALUES (".$insert_id.", ".$id_usuario.", ".$abono.", GETDATE(), GETDATE(), 1 , ".$pago.", 'PAGO 1 - NEDOATA', $user,'".$user."')");
         
         $insert_id_2 = $this->db->insert_id();
         $this->db->query("INSERT INTO  historial_comisiones VALUES ($insert_id_2, ".$this->session->userdata('id_usuario').", GETDATE(), 1, 'DISPERSÓ PAGO DE COMISIÓN')");
@@ -8762,7 +8764,7 @@ function getDatosNuevasMontos($proyecto,$condominio){
         $respuesta=false;
         if(count($comisiones) == 0){
             $respuesta=    $this->db->query("INSERT INTO comisiones
-            ([id_lote], [id_usuario], [comision_total], [estatus], [observaciones], [evidencia], [factura], [creado_por], [fecha_creacion], [porcentaje_decimal], [fecha_autorizacion], [rol_generado],[idCliente]) VALUES (".$idLote.",4824,".$comision.", 1, 'IMPORTACIÓN', NULL, NULL, ".$this->session->userdata('id_usuario').", GETDATE(),1, GETDATE(), 45,$idCliente)");
+            ([id_lote], [id_usuario], [comision_total], [estatus], [observaciones], [evidencia], [factura], [creado_por], [fecha_creacion], [porcentaje_decimal], [fecha_autorizacion], [rol_generado],[idCliente],[modificado_por]) VALUES (".$idLote.",4824,".$comision.", 1, 'IMPORTACIÓN', NULL, NULL, ".$this->session->userdata('id_usuario').", GETDATE(),1, GETDATE(), 45,$idCliente,'".$this->session->userdata('id_usuario')."')");
 
             //$Obj = new Comisiones_model();
             $this->Comisiones_model->RecalcularMontos($idLote);

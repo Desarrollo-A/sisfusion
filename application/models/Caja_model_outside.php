@@ -244,7 +244,7 @@
             $sumaxcomision = $sumaxcomision + $pagos_ind[$j]['abono_neodata'];
         
         }
-        $this->db->query("UPDATE comisiones set comision_total=$sumaxcomision,estatus=8 where id_comision=" . $comisiones[$i]['id_comision'] . " ");
+        $this->db->query("UPDATE comisiones set modificado_por='".$datos['userLiberacion']."',comision_total=$sumaxcomision,estatus=8 where id_comision=".$comisiones[$i]['id_comision']." ");
 
     }
     //$this->db->query("UPDATE lotes set registro_comision=8  where idLote=".$row['idLote']." ");
