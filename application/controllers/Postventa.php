@@ -926,7 +926,7 @@ class Postventa extends CI_Controller
         echo json_encode($response);
     }
 
-    public function presupuestoPDF($data)
+    public function presupuestoPDF($idSolicitud, $data)
     {
         $this->load->library('Pdf');
         $pdf = new TCPDF('P', 'mm', 'LETTER', 'UTF-8', false);
@@ -1123,7 +1123,7 @@ class Postventa extends CI_Controller
         $mail = $this->email;
         $insert = $this->Postventa_model->insertNotariaValuador($idNotaria, $idValuador, $idSolicitud);
         $data = $this->Postventa_model->checkBudgetInfo($idSolicitud)->row();
-        $this->presupuestoPDF($data);
+        $this->presupuestoPDF($idSolicitud, $data);
 
         $documentName = $this->Postventa_model->getFileNameByDoctype($idSolicitud,11);
         //correos
@@ -1137,8 +1137,9 @@ class Postventa extends CI_Controller
         $this->email->attach(__DIR__ . "/../../static/documentos/postventa/escrituracion/SOLICITUD_PRESUPUESTO/".$documentName->expediente);
 
         $response = $mail->send();
+        echo $this->email->print_debugger();
 
-        echo json_encode($response);
+        // echo json_encode($response);
     }
 
     public function presupuestoCliente()
