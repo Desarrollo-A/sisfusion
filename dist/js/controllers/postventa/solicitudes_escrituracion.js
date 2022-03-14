@@ -1332,4 +1332,29 @@ function getEstatusPago() {
         $('#spiner-loader').addClass('hide');
     }, 'json');
 }
+
+
+$(document).on('click', '#observacionesSubmit', function () {
+    var data = prospectsTable.row($(this).parents('tr')).data();
+    let action = $('#observacionesSubmit').attr('data-action');
+    switch (action) {
+        case '1':
+            $('#idSolicitud').val(data.idSolicitud);
+            $('#action').val(action);
+            break;
+        case '2':
+            email(data.idSolicitud, action);
+
+            break;
+        case '3':
+            email(data.idSolicitud, action);
+            break;
+        case '4':
+            email(data.idSolicitud, action);
+            break;
+        case '5':
+            email(data.idSolicitud, action);
+            break;
+    }
+});
      

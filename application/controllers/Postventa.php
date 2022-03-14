@@ -1391,5 +1391,20 @@ class Postventa extends CI_Controller
         else
             echo json_encode(array());
     }
+
+    public function mailObservaciones()
+    {
+        $idSolicitud = $_POST['idSolicitud'];
+        $data = $this->Postventa_model->getInfoSolicitud($idSolicitud)->row();
+        $this->load->library('email');
+        $mail->from('noreply@ciudadmaderas.com', 'Ciudad Maderas');
+        $mail->to('programador.analista21@ciudadmaderas.com');
+        $mail->Subject(utf8_decode("Observaciones Notaria"));
+        $mail->message('Buen día! Se anexan las observaciones enviadas por la notaria. Saludos coordiales.');
+        $response = $mail->send();
+
+        echo json_encode($response);
+    }
+
 }
 
