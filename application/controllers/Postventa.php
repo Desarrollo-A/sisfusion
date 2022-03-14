@@ -1106,9 +1106,8 @@ class Postventa extends CI_Controller
             </html>';
 
         $pdf->writeHTMLCell(0, 0, $x = '', $y = '', $html, $border = 0, $ln = 1, $fill = 0, $reseth = true, $align = '', $autopadding = true);
-        $documentName = $this->Postventa_model->getFileNameByDoctype($idSolicitud,11);
 
-        $pdf->Output(__DIR__ . "/../../static/documentos/postventa/escrituracion/SOLICITUD_PRESUPUESTO/".$documentName->expediente.".pdf", 'F');
+        $pdf->Output(__DIR__ . "/../../static/documentos/postventa/escrituracion/SOLICITUD_PRESUPUESTO/solicitud_".$data->nombre_escrituras."_presupuesto.pdf", 'F');
 
         // $pdf->Output(utf8_decode('Hola.pdf'), 'I');
     }
@@ -1123,12 +1122,12 @@ class Postventa extends CI_Controller
         $mail = $this->email;
         $insert = $this->Postventa_model->insertNotariaValuador($idNotaria, $idValuador, $idSolicitud);
         $data = $this->Postventa_model->checkBudgetInfo($idSolicitud)->row();
-        $this->presupuestoPDF($data);
 
         $documentName = $this->Postventa_model->getFileNameByDoctype($idSolicitud,11);
         //correos
         //$data->correoN correos de la notaria
         //$data->correoV correos del valuador
+        $this->presupuestoPDF($data);
 
         $mail->from('noreply@ciudadmaderas.com', 'Ciudad Maderas');
         $mail->to('programador.analista18@ciudadmaderas.com');
@@ -1137,6 +1136,7 @@ class Postventa extends CI_Controller
         $this->email->attach(__DIR__ . "/../../static/documentos/postventa/escrituracion/SOLICITUD_PRESUPUESTO/".$documentName->expediente);
 
         $response = $mail->send();
+        // echo $this->email->print_debugger();
 
         echo json_encode($response);
     }
