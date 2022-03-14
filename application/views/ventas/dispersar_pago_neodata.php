@@ -894,24 +894,27 @@ console.log(resulq.data[0].vigencia);
                                                         saldo =  ((12.5 *(v.porcentaje_decimal / 100)) * total);
                                                     }
 
-                                                    if(v.abono_pagado>0){
+                                                    if(v.abono_pagado > 0){
                                                         console.log("OPCION 1");
                                                         evaluar = (v.comision_total-v.abono_pagado);
-                                                        if(evaluar<1){
-                                                            pending = 0;
+                                                        if(evaluar<0){
+                                                           // pending = 0;
+                                                           pending=evaluar;
                                                             saldo = 0;
                                                         }
                                                         else{
                                                             pending = evaluar;
                                                         }
+                                                        console.log('EVALUAR: '+evaluar);
+                                                        console.log('PENDDING: '+pending);
 
                                                         resta_1 = saldo-v.abono_pagado;
-                                                        console.log('resta_1'+resta_1);
+                                                        console.log('resta_1: '+resta_1);
 
-                                                        if(resta_1<1){
+                                                        if(resta_1 <= 0){
                                                             saldo = 0;
                                                         }
-                                                        else if(resta_1 >= 1){
+                                                        else if(resta_1 > 0){
                                                             if(resta_1 > pending){
                                                                 saldo = pending;
                                                             }
@@ -919,17 +922,25 @@ console.log(resulq.data[0].vigencia);
                                                                 saldo = saldo-v.abono_pagado;
                                                             }
                                                         }
+                                                        
+                                                        console.log(saldo);
                                                     }  
-                                                    else if(v.abono_pagado<=0){
+                                                    else if(v.abono_pagado < 0){
                                                         console.log("OPCION 2");
                                                         pending = (v.comision_total);
                                                         if(saldo > pending){
                                                             saldo = pending;
                                                         }
-                                                        if(pending < 1){
+                                                        if(pending < 0){
                                                             saldo = 0;
                                                         }
                                                     }
+
+
+                                                    
+                                            if( (saldo + v.abono_pagado) > v.comision_total){
+                                                saldo = 0;
+                                            }
 
                                                     $("#modal_NEODATA .modal-body").append(`<div class="row">
                                                     <div class="col-md-3"><input id="id_disparador" type="hidden" name="id_disparador" value="1"><input type="hidden" name="pago_neo" id="pago_neo" value="${total.toFixed(3)}">
@@ -940,9 +951,9 @@ console.log(resulq.data[0].vigencia);
                                                     <div class="col-md-1"><input class="form-control ng-invalid ng-invalid-required" required readonly="true" style="${v.descuento == 1 ? 'color:red;' : ''}" value="${parseFloat(v.porcentaje_decimal)}%"></div>
                                                     <div class="col-md-2"><input class="form-control ng-invalid ng-invalid-required" required readonly="true" style="${v.descuento == 1 ? 'color:red;' : ''}" value="${formatMoney(v.comision_total)}"></div>
                                                     <div class="col-md-2"><input class="form-control ng-invalid ng-invalid-required" required readonly="true" style="${v.descuento == 1 ? 'color:red;' : ''}" value="${formatMoney(v.abono_pagado)}"></div>
-                                                    <div class="col-md-2"><input class="form-control ng-invalid ng-invalid-required" required readonly="true" value="${formatMoney(pending)}"></div>
-                                                    <div class="col-md-2"><input id="abono_nuevo${counts}" onkeyup="nuevo_abono(${counts});" class="form-control ng-invalid ng-invalid-required abono_nuevo"  name="abono_nuevo[]" value="${saldo}" type="hidden">
-                                                    <input class="form-control ng-invalid ng-invalid-required decimals"  data-old="" id="inputEdit"  value="${formatMoney(saldo)}"></div></div>`);
+                                                    <div class="col-md-2"><input class="form-control ng-invalid ng-invalid-required" required style="${pending < 0 ? 'color:red' : ''}" readonly="true" value="${formatMoney(pending)}"></div>
+                                                    <div class="col-md-2"><input id="abono_nuevo${counts}" onkeyup="nuevo_abono(${counts});" class="form-control ng-invalid ng-invalid-required abono_nuevo" readonly="true"  name="abono_nuevo[]" value="${saldo}" type="hidden">
+                                                    <input class="form-control ng-invalid ng-invalid-required decimals"  data-old="" id="inputEdit" readonly="true"  value="${formatMoney(saldo)}"></div></div>`);
                                                     counts++
                                                 });
                                             });

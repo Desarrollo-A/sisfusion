@@ -59,10 +59,10 @@
                                             <div class="row d-flex align-end">
                                                 <div class="col-md-12 p-0" style="padding: 0;">
                                                     <div class="form-group d-flex justify-end" style="justify-content: flex-end;">
-                                                        <button class="btn btn-success btn-round btn-fab btn-fab-mini m-0"
+                                                        <!--<button class="btn btn-success btn-round btn-fab btn-fab-mini m-0"
                                                                 title="Aplicar cambios" style="margin: 0;">
                                                             <span class="material-icons apply-changes" data-type="1">done</span>
-                                                        </button>
+                                                        </button>-->
                                                     </div>
                                                 </div>
                                             </div>
@@ -78,7 +78,7 @@
                                     </div>
                                     <div class="col col-xs-12 col-sm-12 col-md-2 col-lg-2 d-flex align-center justify-evenly">
                                        
-                                        <button class="btn-rounded btn-s-blueLight" name="uploadFile" id="uploadFile" title="Upload" data-toggle="modal" data-target="#uploadModal">
+                                        <button class="btn-rounded btn-s-blueLight" name="uploadFile" id="uploadFile" title="Subir plantilla" data-toggle="modal" data-target="#uploadModal">
                                             <i class="fas fa-upload"></i>
                                         </button> <!-- UPLOAD -->
                                     </div>
@@ -440,7 +440,7 @@ function validateExtension(extension, allowedExtensions) {
                     if (full.estatusLiberacion == "En proceso de liberación") {
                         return '';
                     } else {
-                        return '<input type="checkbox" name="idT[]" style="width:20px; height:20px;" value="' + full.idLote + '">';
+                        return '<input type="checkbox" disabled name="idT[]" style="width:20px; height:20px;" value="' + full.idLote + '">';
                     }
                 },
                 select: {
