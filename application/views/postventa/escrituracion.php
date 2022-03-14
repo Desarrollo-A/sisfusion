@@ -183,7 +183,7 @@
                                                 <div class="w-50">
                                                     <button class="btn-gral-data find_doc" id="aportaciones" type="submit">
                                                     <i class="fas fa-spinner fa-spin" style="display: none"></i>
-                                                    <span class="btn-text">Solicitar aportaciones</span>
+                                                    <span class="btn-text">Iniciar proceso.</span>
                                                     </button>
                                                 </div>
                                             </div>

@@ -27,7 +27,7 @@ $(document).on('click', '#email', function () {
 
 $(document).on('click', '#aportaciones', function (e) {
     e.preventDefault();
-    loading();
+    // loading();
     aportaciones();
 })
 
@@ -40,7 +40,7 @@ function loading() {
 function complete() {
     $(".fa-spinner").hide();
     $(".btn-text").html("Completado");
-    $('#spiner-loader').removeClass('hide');
+    $('#spiner-loader').addClass('hide');
 }
 
 function aportaciones() {
@@ -52,8 +52,11 @@ function aportaciones() {
         idCliente: idCliente
     }, function (data) {
         console.log(data);
-        complete();
-        
+        $('#spiner-loader').addClass('hide');
+        if(data == true){
+            alerts.showNotification("top", "right", "Se ha creado la solicitud correctamente.", "success");
+        }
+        // complete();
     }, 'json');
 }
 

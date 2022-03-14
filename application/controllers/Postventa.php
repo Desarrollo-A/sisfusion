@@ -587,7 +587,7 @@ class Postventa extends CI_Controller
         $idCliente = $_POST['idCliente'];
 
         $informacion = $this->Postventa_model->setEscrituracion($idLote, $idCliente);
-        return $informacion;
+        echo json_encode($informacion);
     }
 
     public function getSolicitudes()
@@ -1122,6 +1122,7 @@ class Postventa extends CI_Controller
         $mail = $this->email;
         $insert = $this->Postventa_model->insertNotariaValuador($idNotaria, $idValuador, $idSolicitud);
         $data = $this->Postventa_model->checkBudgetInfo($idSolicitud)->row();
+        $documentName = $this->Postventa_model->getFileNameByDoctype($idSolicitud,11);
         //correos
         //$data->correoN correos de la notaria
         //$data->correoV correos del valuador
@@ -1131,7 +1132,7 @@ class Postventa extends CI_Controller
         $mail->to('programador.analista18@ciudadmaderas.com');
         $mail->Subject(utf8_decode("Solicitud de presupuesto y valores"));
         $mail->message('Buen dia me apoyan con el pre-avaluo con valor actual y referido  del lote que se menciona  en la tabla que se anexa ?');
-        $this->email->attach(__DIR__ . "/../../static/documentos/postventa/escrituracion/SOLICITUD_PRESUPUESTO/Hola.pdf");
+        $this->email->attach(__DIR__ . "/../../static/documentos/postventa/escrituracion/SOLICITUD_PRESUPUESTO/".$documentName->expediente);
 
         $response = $mail->send();
 
@@ -1344,6 +1345,23 @@ class Postventa extends CI_Controller
             echo json_encode($updateResponse == 1 ? 1 : 0);
     }
 
+    public function getEstatusConstruccion()
+    {
+        $data = $this->Postventa_model->getEstatusConstruccion();
+        if ($data != null)
+            echo json_encode($data);
+        else
+            echo json_encode(array());
+    }
+
+    public function getEstatusPago()
+    {
+        $data = $this->Postventa_model->getEstatusPago();
+        if ($data != null)
+            echo json_encode($data);
+        else
+            echo json_encode(array());
+    }
     public function nuevoNotario()
     {
         $idSolicitud = $_POST['idSolicitud'];
