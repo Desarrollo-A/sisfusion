@@ -1343,5 +1343,32 @@ class Postventa extends CI_Controller
         } else
             echo json_encode($updateResponse == 1 ? 1 : 0);
     }
+
+    public function nuevoNotario()
+    {
+        $idSolicitud = $_POST['idSolicitud'];
+        $nombre_notaria = $_POST['nombre_notaria'];
+        $nombre_notario = $_POST['nombre_notario'];
+        $direccion = $_POST['direccion'];
+        $correo = $_POST['correo'];
+        $telefono = $_POST['telefono'];
+
+        $informacion = $this->Postventa_model->insertNewNotaria($nombre_notaria, $nombre_notario, $direccion, $correo, $telefono, 0, 2);
+        return $informacion;
+
+        return $this->Postventa_model->insertNewNotaria($idSolicitud);
+    }
+
+    public function getBudgetNotaria()
+    {
+        $idSolicitud = $_GET['idSolicitud'];
+
+        $data = $this->Postventa_model->getNotariaClient($idSolicitud)->row();
+
+        if($data != null)
+            echo json_encode($data);
+        else
+            echo json_encode(array());
+    }
 }
 
