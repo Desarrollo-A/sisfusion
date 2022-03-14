@@ -1291,6 +1291,8 @@ function filterSelectOptions(documentType) {
     $("#rejectionReasons option:selected").prop("selected", false);
     $("#rejectionReasons").trigger('change');
     $("#rejectionReasons").selectpicker('refresh');
+
+    
 }
 
 function getEstatusConstruccion() {
