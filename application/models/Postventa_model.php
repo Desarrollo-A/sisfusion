@@ -64,8 +64,8 @@ class Postventa_model extends CI_Model
 
         return $this->db->query("SELECT oxc2.nombre area, se.idSolicitud, oxc.nombre estatus, se.fecha_creacion, l.nombreLote, se.estatus idEstatus,
         CONCAT(c.nombre, ' ', c.apellido_paterno, ' ', c.apellido_materno) nombre, cond.nombre nombreCondominio, r.nombreResidencial, de.expediente,
-        ctrl.tipo_documento, de.idDocumento, ctrl.permisos, de2.result, ce.tipo, ce.comentarios, mr.motivo motivos_rechazo, de2.estatusValidacion, de3.Spresupuesto
-        FROM solicitud_escrituracion se 
+        ctrl.tipo_documento, de.idDocumento, ctrl.permisos, de2.result, ce.tipo, ce.comentarios, mr.motivo motivos_rechazo, de2.estatusValidacion, de3.Spresupuesto,
+        de2.no_rechazos FROM solicitud_escrituracion se 
         INNER JOIN clientes c ON c.id_cliente = se.idCliente AND c.status = 1
         INNER JOIN lotes l ON se.idLote = l.idLote 
         INNER JOIN condominios cond ON cond.idCondominio = l.idCondominio 
@@ -76,7 +76,8 @@ class Postventa_model extends CI_Model
         LEFT JOIN documentos_escrituracion de ON de.idSolicitud=se.idSolicitud AND de.tipo_documento = ctrl.tipo_documento
         LEFT JOIN (SELECT idSolicitud, CASE WHEN COUNT(*) != COUNT(CASE WHEN expediente IS NOT NULL THEN 1 END) 
 		THEN 0 ELSE 1 END result, 
-		CASE WHEN COUNT(*) != COUNT(CASE WHEN estatus_validacion = 1 THEN 1 END) THEN 0 ELSE 1 END estatusValidacion 
+		CASE WHEN COUNT(*) != COUNT(CASE WHEN estatus_validacion = 1 THEN 1 END) THEN 0 ELSE 1 END estatusValidacion,
+        COUNT(CASE WHEN estatus_validacion = 2 THEN 1 END) no_rechazos
 		FROM documentos_escrituracion WHERE tipo_documento NOT IN (7,9,10, 11, 12, 13,14,15,16,17) GROUP BY idSolicitud) de2 ON de2.idSolicitud = se.idSolicitud
         LEFT JOIN (SELECT idSolicitud,  CASE WHEN COUNT(*) != COUNT(CASE WHEN expediente IS NOT NULL THEN 1 END) THEN 0 ELSE 1 END Spresupuesto
 		FROM documentos_escrituracion WHERE tipo_documento = 11 GROUP BY idSolicitud) de3 ON de3.idSolicitud = se.idSolicitud
@@ -176,7 +177,7 @@ class Postventa_model extends CI_Model
 
     function getMotivosRechazos($tipoDocumento)
     {
-        $query = $this->db->query("SELECT * FROM motivos_rechazo WHERE producto = 2 AND tipo_documento = $tipoDocumento");
+        $query = $this->db->query("SELECT * FROM motivos_rechazo WHERE tipo_proceso = 2 AND tipo_documento = $tipoDocumento");
         return $query->result();
     }
 
