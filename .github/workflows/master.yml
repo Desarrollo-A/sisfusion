@@ -10,7 +10,6 @@ on:
       - '!static/**'
       - '!system/**'
       - '!user_guide/**'
-      
 
 name:  Deploy website on push
 jobs:
