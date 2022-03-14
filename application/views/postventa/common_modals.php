@@ -99,28 +99,32 @@
             <input type="hidden" name="id_solicitud3" id="id_solicitud3">
                 <div class="modal-body text-center toolbar m-0">
                     <h3 id="mainLabelText"></h3>
-                    <h4 id="secondaryLabelDetail">Desarrollo / Condominio / Lote</h4>
+                    <h4 id="encabezado"></h4>
                     <div class="container-fluid">
                         <div class="row">
-                            <div class="col-md-12 pl-0 pr-0">
+                            <div class="col-md-12 pr-0 pr-0">
                                 <div class="form-group text-left m-0">
                                     <label class="control-label label-gral">Nombre Completo</label>
                                     <input id="nombrePresupuesto" name="nombrePresupuesto" class="form-control input-gral" type="text" disabled>
                                 </div>
                             </div>
-                            <div class="col-md-12 pl-0 pr-0">
+                            <div class="col-md-12 pr-0 pr-0">
                                 <div class="form-group text-left m-0">
                                     <label class="control-label label-gral m-0">Nombre a quien escritura</label>
                                     <input id="nombrePresupuesto2" name="nombrePresupuesto2" class="form-control input-gral" type="text" required>
                                 </div>
                             </div>
-                            <div class="col-md-4 pl-0">
+                            <div class="col-md-4 pr-0">
                                 <div class="form-group text-left m-0">
                                     <label class="control-label label-gral m-0">Estatus de pago</label>
-                                    <input id="estatusPago" name="estatusPago" class="form-control input-gral" type="text" required>
+                                    <select class="selectpicker m-0" data-style="btn btn-primary btn-round"
+                                            title="¿Tenemos cliente anterior?" data-size="7" id="estatusPago" name="estatusPago"
+                                            data-live-search="true" required>
+                                            <option value ="default" selected disabled>Selecciona una opción</option>
+                                    </select>
                                 </div>
                             </div>
-                            <div class="col-md-4 p-0">
+                            <div class="col-md-4 pr-0">
                                 <div class="form-group text-left m-0">
                                     <label class="control-label label-gral m-0">Superficie</label>
                                     <input id="superficie" name="superficie" class="form-control input-gral" value="" type="number" required>
@@ -133,16 +137,19 @@
                                     id="fContrato" name="fContrato" disabled/>
                                 </div>
                             </div>
-                            <div class="col-md-4 pl-0">
+                            <div class="col-md-4 pr-0">
                                 <div class="form-group text-left m-0">
                                     <label class="control-label label-gral m-0">Clave catastral</label>
                                     <input id="catastral" name="catastral" value="" class="form-control input-gral" type="number" required>
                                 </div>
                             </div>
-                            <div class="col-md-4 p-0">
+                            <div class="col-md-4 pr-0">
                                 <div class="form-group text-left m-0">
                                     <label class="control-label label-gral m-0">Estatus construcción</label>
-                                    <input id="construccion" name="construccion" class="form-control input-gral" type="text" required>
+                                    <select class="selectpicker m-0" data-style="btn btn-primary btn-round"
+                                            title="¿Tenemos cliente anterior?" data-size="7" id="construccion" name="construccion"
+                                            data-live-search="true" required>
+                                    </select>
                                 </div>
                             </div>
                             <div class="col-md-4 pr-0">
@@ -152,20 +159,20 @@
                                             title="¿Tenemos cliente anterior?" data-size="7" id="cliente" name="cliente"
                                             data-live-search="true" required>
                                             <option value ="default" selected disabled>Selecciona una opción</option>
-                                            <option value="1">Si</option>
-                                            <option value="2">No</option>
+                                            <option value="uno">Si</option>
+                                            <option value="dos">No</option>
                                     </select>
                                 </div>
                             </div>
                             <!-- estos input solo se muestran si es si el select anterior -->
                             <div id="ifClient" style="display:none">
-                                <div class="col-md-12 pl-0 pr-0">
+                                <div class="col-md-12 pr-0 pr-0">
                                     <div class="form-group label-floating is-focused">
                                         <label class="control-label label-gral">Nombre del titular anterior</label>
                                         <input id="nombreT" name="nombreT" class="form-control input-gral" type="text" disabled>
                                     </div>
                                 </div>
-                                <div class="col-md-6 pl-0">
+                                <div class="col-md-6 pr-0">
                                     <div class="form-group label-floating is-focused">
                                         <label class="control-label label-gral">Fecha del contrato anterior</label>
                                         <input type="text" class="form-control datepicker"
@@ -203,25 +210,25 @@
                     <h4 id="secondaryLabelDetail">Desarrollo / Condominio / Lote</h4>
                     <div class="container-fluid">
                         <div class="row">
-                            <div class="col-md-12 pl-0 pr-0">
+                            <div class="col-md-12 pr-0 pr-0">
                                 <div class="form-group label-floating is-focused">
                                     <label class="control-label label-gral">Nombre Completo</label>
                                     <input id="nombrePresupuesto3" name="nombrePresupuesto3" class="form-control input-gral" type="text" disabled>
                                 </div>
                             </div>
-                            <div class="col-md-12 pl-0 pr-0">
+                            <div class="col-md-12 pr-0 pr-0">
                                 <div class="form-group label-floating is-focused">
                                     <label class="control-label label-gral">Nombre a quien escritura</label>
                                     <input id="nombrePresupuesto4" name="nombrePresupuesto4" class="form-control input-gral" type="text" disabled>
                                 </div>
                             </div>
-                            <div class="col-md-4 pl-0">
+                            <div class="col-md-4 pr-0">
                                 <div class="form-group label-floating is-focused">
                                     <label class="control-label label-gral">Estatus de pago</label>
                                     <input id="estatusPago2" name="estatusPago2" class="form-control input-gral" type="text" disabled>
                                 </div>
                             </div>
-                            <div class="col-md-4 p-0">
+                            <div class="col-md-4 pr-0">
                                 <div class="form-group label-floating is-focused">
                                     <label class="control-label label-gral">Superficie</label>
                                     <input id="superficie2" name="superficie2" class="form-control input-gral" value="" type="number" disabled>
@@ -234,13 +241,13 @@
                                     id="fContrato2" name="fContrato2" disabled/>
                                 </div>
                             </div>
-                            <div class="col-md-4 pl-0">
+                            <div class="col-md-4 pr-0">
                                 <div class="form-group label-floating is-focused">
                                     <label class="control-label label-gral">Clave catastral</label>
                                     <input id="catastral2" name="catastral2" value="" class="form-control input-gral" type="number" disabled>
                                 </div>
                             </div>
-                            <div class="col-md-4 p-0">
+                            <div class="col-md-4 pr-0">
                                 <div class="form-group label-floating is-focused">
                                     <label class="control-label label-gral">Estatus construcción</label>
                                     <input id="construccion2" name="construccion2" class="form-control input-gral" type="text" disabled>
@@ -253,20 +260,20 @@
                                             title="¿Tenemos cliente anterior?" data-size="7" id="cliente2" name="cliente2"
                                             data-live-search="true" disabled>
                                             <option value ="default" selected disabled>Selecciona una opción</option>
-                                            <option value="1">Si</option>
-                                            <option value="2">No</option>
+                                            <option value="uno">Si</option>
+                                            <option value="dos">No</option>
                                     </select>
                                 </div>
                             </div>
                             <!-- estos input solo se muestran si es si el select anterior -->
                             <div id="ifClient2" style="display:none">
-                                <div class="col-md-12 pl-0 pr-0">
+                                <div class="col-md-12 pr-0 pr-0">
                                     <div class="form-group label-floating is-focused">
                                         <label class="control-label label-gral">Nombre del titular anterior</label>
                                         <input id="nombreT2" name="nombreT2" class="form-control input-gral" type="text" disabled>
                                     </div>
                                 </div>
-                                <div class="col-md-6 pl-0">
+                                <div class="col-md-6 pr-0">
                                     <div class="form-group label-floating is-focused">
                                         <label class="control-label label-gral">Fecha del contrato anterior</label>
                                         <input type="text" class="form-control datepicker"
