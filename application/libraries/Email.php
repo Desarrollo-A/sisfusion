@@ -97,7 +97,7 @@ class CI_Email {
 	 *
 	 * @var	int
 	 */
-	public $smtp_port	= 587;
+	public $smtp_port	= 465;
 
 	/**
 	 * SMTP connection timeout in seconds
