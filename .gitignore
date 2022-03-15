@@ -36,6 +36,24 @@ static/documentos/postventa/escrituracion/**/*.csv
 static/documentos/postventa/escrituracion/**/*.jfif
 static/documentos/postventa/escrituracion/**/*.mp4
 
-##
-application/config/config.php
-application/config/database.php
+# omitir base en application
+application/cache/*
+application/config/*
+application/core/*
+application/helpers/*
+application/hooks/*
+application/libraries/*
+application/logs/*
+application/migrations/*
+application/third_party/*
+
+# omitir build en dist
+dist/build/*
+
+#omitir plugs en static
+static/angular/*
+static/yadcf/*
+
+#omitimos todo core (no cambia)
+system/*
+user_guide/*
