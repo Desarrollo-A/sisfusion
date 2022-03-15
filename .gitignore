@@ -48,3 +48,6 @@ static/yadcf/*
 #omitimos todo core (no cambia)
 system/*
 user_guide/*
+
+#Omitimos carpeta uploads, contenido xml y pdf
+UPLOADS/*
