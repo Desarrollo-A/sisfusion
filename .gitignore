@@ -26,16 +26,6 @@
 .history
 .ionide
 
-#Omitir imagenes
-static/documentos/postventa/escrituracion/**/*.jpg
-static/documentos/postventa/escrituracion/**/*.jpeg
-static/documentos/postventa/escrituracion/**/*.pdf
-static/documentos/postventa/escrituracion/**/*.xlsx
-static/documentos/postventa/escrituracion/**/*.xls
-static/documentos/postventa/escrituracion/**/*.csv
-static/documentos/postventa/escrituracion/**/*.jfif
-static/documentos/postventa/escrituracion/**/*.mp4
-
 # omitir base en application
 application/cache/*
 application/config/*
@@ -52,6 +42,7 @@ dist/build/*
 
 #omitir plugs en static
 static/angular/*
+static/documentos/*
 static/yadcf/*
 
 #omitimos todo core (no cambia)
