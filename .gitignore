@@ -27,14 +27,14 @@
 .ionide
 
 #Omitir imagenes
-static/documentos/**/*/.jpg
-static/documentos/**/*/.jpeg
-static/documentos/**/*/.pdf
-static/documentos/**/*/.xlsx
-static/documentos/**/*/.xls
-static/documentos/**/*/.csv
-static/documentos/**/*/.jfif
-static/documentos/**/*/.mp4
+static/documentos/postventa/escrituracion/**/*.jpg
+static/documentos/postventa/escrituracion/**/*.jpeg
+static/documentos/postventa/escrituracion/**/*.pdf
+static/documentos/postventa/escrituracion/**/*.xlsx
+static/documentos/postventa/escrituracion/**/*.xls
+static/documentos/postventa/escrituracion/**/*.csv
+static/documentos/postventa/escrituracion/**/*.jfif
+static/documentos/postventa/escrituracion/**/*.mp4
 
 ##
 application/config/config.php
