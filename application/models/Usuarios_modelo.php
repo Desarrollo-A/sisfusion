@@ -164,7 +164,7 @@ class Usuarios_modelo extends CI_Model {
                                         LEFT JOIN usuarios us ON us.id_usuario = u.id_lider
                                         INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = u.id_rol
                                         LEFT JOIN sedes s ON CAST(s.id_sede AS VARCHAR(45)) = CAST(u.id_sede AS VARCHAR(45))
-                                        WHERE AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%') OR usuarios.id_usuario IN (9359, 9827)) AND oxc.id_catalogo = 1 $id_rol ORDER BY nombre");
+                                        WHERE u.rfc NOT LIKE '%TSTDD%' AND ISNULL(u.correo, '' ) NOT LIKE '%test_%' AND oxc.id_catalogo = 1 $id_rol ORDER BY nombre");
                 break;
         }
     }
