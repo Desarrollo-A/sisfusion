@@ -712,7 +712,7 @@ function fillTable(beginDate, endDate) {
                         case 13:
                             newBtn += `<button id="observaciones" data-idSolicitud=${d.idSolicitud} class="btn-data btn-green" data-permisos="2" data-id-prospecto="" rel="tooltip" data-placement="left" title="Observaciones"><i class="fas fa-envelope"></i></button>`;    
                             // newBtn += `<button id="upload" data-idSolicitud=${d.idSolicitud} class="btn-data btn-green" data-action="2" data-id-prospecto="" rel="tooltip" data-placement="left" title="Upload/Delte"><i class="far fa-trash-alt"></i></button>`;
-                            group_buttons += permisos(d.permisos, 1, d.idDocumento, d.tipo_documento, d.idSolicitud, 1, newBtn);
+                            group_buttons += permisos(d.permisos, d.expediente, d.idDocumento, d.tipo_documento, d.idSolicitud, 1, newBtn);
                             //Declaraciones ejecutadas cuando el resultado de expresión coincide con valorN
                             break;
                         case 14:
