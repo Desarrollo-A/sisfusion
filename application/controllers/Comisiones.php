@@ -5360,10 +5360,11 @@ public function getPagosByComision($id_comision)
 }
 public function ToparComision($id_comision,$idLote = '')
 {
-  $respuesta = $this->Comisiones_model->ToparComision($id_comision);
-  if($idLote != '' ){
-    $this->Comisiones_model->RecalcularMontos($idLote);
- }
+  $comentario = $this->input->post("comentario");
+  $respuesta = $this->Comisiones_model->ToparComision($id_comision,$comentario);
+ // if($idLote != '' ){
+  //  $this->Comisiones_model->RecalcularMontos($idLote);
+ //}
   echo json_encode($respuesta); 
 }
 
