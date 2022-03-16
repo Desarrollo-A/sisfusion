@@ -359,14 +359,14 @@ public function getLotesPagados($res){
 
         $whereRes = $whereData->row()->cadena;
  
-        return $this->db->query("UPDATE clientes set plan_comision = $plan where id_cliente in (
+        return $this->db->query("UPDATE clientes set modificado_por = 1, plan_comision = $plan where id_cliente in (
             SELECT cl.id_cliente FROM clientes cl
-            INNER JOIN lotes l on l.idCliente = cl.id_cliente AND l.status = 1 AND l.registro_comision in (8,0) AND l.idStatusContratacion BETWEEN 8 AND 15
+            INNER JOIN lotes l on l.idCliente = cl.id_cliente AND l.status = 1 AND l.registro_comision in (1) AND l.idStatusContratacion BETWEEN 9 AND 15
             INNER JOIN condominios c on c.idCondominio = l.idCondominio
             INNER JOIN residenciales r on r.idResidencial = c.idResidencial
             INNER JOIN usuarios ae on ae.id_usuario = cl.id_asesor
             INNER JOIN prospectos ps on ps.id_prospecto = cl.id_prospecto 
-            $whereRes AND l.tipo_venta IS NOT NULL AND l.tipo_venta IN (1,2,7) AND cl.status = 1 AND cl.fechaApartado >= '2020-03-01' and cl.id_sede not in (0) and cl.plan_comision is null)");
+            $whereRes AND l.tipo_venta IS NOT NULL AND l.tipo_venta IN (1,2,7) AND cl.status = 1 AND cl.fechaApartado >= '2020-03-01' and cl.id_sede not in (0) and (cl.plan_comision is null OR cl.plan_comision IN (0)) )");
 
  
     }
