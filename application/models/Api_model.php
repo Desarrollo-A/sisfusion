@@ -75,4 +75,19 @@ class Api_model extends CI_Model
         }
     }
 
+
+    public function login_user($username,$password)
+	{
+		$new_pass = encriptar($password);
+ 
+			$query = $this->db->query("SELECT u.id_usuario, u.id_lider, (CASE u.id_lider WHEN 832 THEN 832 ELSE us.id_lider END) id_lider_2, ge.id_usuario id_lider_3, sb.id_usuario id_lider_4, u.id_rol, u.id_sede, u.nombre, u.apellido_paterno, u.apellido_materno,
+            u.correo, u.usuario, u.contrasena, u.telefono, u.tiene_hijos, u.estatus, u.sesion_activa, u.imagen_perfil, u.fecha_creacion, u.creado_por, u.modificado_por, u.forma_pago, u.jerarquia_user
+            FROM usuarios u
+            LEFT JOIN usuarios us ON us.id_usuario = u.id_lider
+            LEFT JOIN usuarios ge ON ge.id_usuario = us.id_lider
+            LEFT JOIN usuarios sb ON sb.id_usuario = ge.id_lider
+            WHERE u.usuario = '$username' AND u.contrasena = '$new_pass' AND u.estatus = 1");
+            return $query->result_array();
+	}
+
 }
