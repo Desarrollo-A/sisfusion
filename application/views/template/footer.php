@@ -30,7 +30,7 @@
 <script src="<?=base_url()?>dist/js/jquery.datatables.js"></script>
 <!-- Sweet Alert 2 plugin -->
 <script src="<?=base_url()?>dist/js/sweetalert2.js"></script>
-<!--	Plugin for Fileupload, full documentation here: http://www.jasny.net/bootstrap/javascript/#fileinput -->
+
 <script src="<?=base_url()?>dist/js/jasny-bootstrap.min.js"></script>
 <!--  Full Calendar Plugin    -->
 <script src="<?=base_url()?>dist/js/fullcalendar.min.js"></script>
