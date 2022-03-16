@@ -2258,7 +2258,7 @@
 
             $("#modal_avisos .modal-header").append('<h4 class="card-title"><b></b></h4>');
             $("#modal_avisos .modal-body").append(`<div id="inputhidden"><p>¿Estás seguro de DETENER la comisión al usuario <b>${name}</b>?<br><br> <b>NOTA:</B> El cambio ya no se podrá revertir.</p><div class="form-group">
-                <textarea id="comentario_topa" name="comentario_topa" class="form-control" rows="3" required placeholder="Describe el motivo por el cual se detendrán los pagos de esta comisión"></textarea></div></div>`);
+                <textarea id="comentario_topaT_${i}" name="comentario_topaT_${i}" class="form-control" rows="3" required placeholder="Describe el motivo por el cual se detendrán los pagos de esta comisión"></textarea></div></div>`);
             $("#modal_avisos .modal-footer").append(`<div class="row"><div class="col-md-12" style="align-content: left;"><center><input type="submit"  onclick="ToparComision(${i})"  class="btn btn-primary" value="ACEPTAR" style="margin: 15px;"><button type="button" class="btn btn-danger" data-dismiss="modal">CANCELAR</button></center></div></div>`);
             $('#modal_avisos').modal('show');
         }
@@ -2316,77 +2316,91 @@
         }
 
         function ToparComision(i){
-            $('#modal_avisos .modal-body').html('');
-            $('#modal_avisos .modal-footer').html('');
 
-           // alert($('#idLote').val());
-           
-           var formData = new FormData();
-          formData.append("comentario", $('#comentario_topa').val());
-            let idLote = $('#idLote').val();
-            let id_comision = $('#id_comision_'+i).val();
-            let abonado = replaceAll($('#abonado_'+i).val(), ',','');
-            $.ajax({
-                url: '<?=base_url()?>Comisiones/ToparComision/'+id_comision+'/'+idLote,
-                type: 'post',
-                data: formData,
-                dataType: 'json',
-                success:function(response){
-                    var len = response.length;
-                    if(len == 0){
-                        document.getElementById('btnTopar_'+i).disabled = true;
-                        document.getElementById('btn_'+i).disabled = true;
-                        document.getElementById('btnAdd_'+i).disabled = true;
-                        document.getElementById('btnReload_'+i).disabled = false;
-                        document.getElementById('porcentaje_'+i).disabled = true;
+var comentario = $('#comentario_topaT_'+i).val();
+console.log(i);
 
-                        let por = document.getElementById('porcentaje_'+i);
-                        por.setAttribute('readonly','true');
-                        let btn = document.getElementById('btnTopar_'+i);
-                        btn.setAttribute('style','background:#FED2C9;');
-                        $('#comision_total_'+i).val(formatMoney(abonado));
-                        let pendiente = parseFloat(abonado - abonado);
-                        $('#pendiente_'+i).val(formatMoney(pendiente));
+console.log($('#comentario_topaT_'+i).val());
 
-                        $('#modal_avisos').modal('hide');
-                        alerts.showNotification("top", "right", "Comisión detenida con éxito.", "success");
-                    }
-                    else{
-                        let suma = 0;
-                        document.getElementById('btnTopar_'+i).disabled = true;
-                        document.getElementById('btn_'+i).disabled = true;
-                        document.getElementById('btnAdd_'+i).disabled = true;
-                        document.getElementById('btnReload_'+i).disabled = false;
-                        document.getElementById('porcentaje_'+i).disabled = true;
-                        let por = document.getElementById('porcentaje_'+i);
-                        por.setAttribute('readonly','true');
-                        let btn = document.getElementById('btnTopar_'+i);
-                        btn.setAttribute('style','background:#FED2C9;');
-            
-                        $('#modal_avisos .modal-body').append(`<h6>Pagos eliminados</h6>`);
-                        $('#modal_avisos .modal-body').append(`<table class="table table-hover">
-                        <thead><tr><th>ID pago</th><th>Monto</th><th>Usuario</th><th>Estatus</th></tr></thead><tbody>`);
 
-                        for( var j = 0; j<len; j++){
-                            suma = suma + response[j]['abono_neodata'];
-                            $('#modal_avisos .modal-body .table').append(`<tr>
-                            <td>${response[j]['id_pago_i']}</td>
-                            <td>$${formatMoney(response[j]['abono_neodata'])}</td>
-                            <td>${response[j]['usuario']}</td>
-                            <td>${response[j]['nombre']}</td></tr>`);
-                        }
+$('#modal_avisos .modal-body').html('');
+$('#modal_avisos .modal-footer').html('');
 
-                        $('#comision_total_'+i).val(formatMoney(abonado-suma));
-                        let pendiente = parseFloat((abonado-suma) - abonado);
-                        $('#pendiente_'+i).val(formatMoney(pendiente));
-                        $('#modal_avisos .modal-body').append(`</tbody></table>`);
-                        $('#modal_avisos .modal-body').append(`<div class="row"><div class="col-md-12"><center><input type="button" style="background:#003D82;" data-dismiss="modal" id="btn-save" class="btn btn-success" value="ACEPTAR"><input type="button" class="btn btn-danger"  data-dismiss="modal" value="CERRAR"></center></div></div>`);
-                    }
-                }
-            });
-            
-            $('#modal_avisos').modal('show');
+
+//  var formData = new FormData();
+// formData.append("comentario", $('#comentario_topa').val());
+let idLote = $('#idLote').val();
+
+
+let id_comision = $('#id_comision_'+i).val();
+let abonado = replaceAll($('#abonado_'+i).val(), ',','');
+var dataPost = "comentario=" + comentario;
+
+$.ajax({
+    url: '<?=base_url()?>Comisiones/ToparComision/'+id_comision+'/'+idLote,
+    data: dataPost,
+type: 'POST',
+dataType: 'html',
+    success:function(response){
+        console.log(JSON.parse(response));
+        console.log(JSON.parse(response).length)
+        var len =JSON.parse(response).length; //response.length;
+        console.log(len);
+        response = JSON.parse(response);
+        if(len == 0){
+            document.getElementById('btnTopar_'+i).disabled = true;
+            document.getElementById('btn_'+i).disabled = true;
+            document.getElementById('btnAdd_'+i).disabled = true;
+            document.getElementById('btnReload_'+i).disabled = false;
+            document.getElementById('porcentaje_'+i).disabled = true;
+
+            let por = document.getElementById('porcentaje_'+i);
+            por.setAttribute('readonly','true');
+            let btn = document.getElementById('btnTopar_'+i);
+            btn.setAttribute('style','background:#FED2C9;');
+            $('#comision_total_'+i).val(formatMoney(abonado));
+            let pendiente = parseFloat(abonado - abonado);
+            $('#pendiente_'+i).val(formatMoney(pendiente));
+
+            $('#modal_avisos').modal('hide');
+            alerts.showNotification("top", "right", "Comisión detenida con éxito.", "success");
         }
+        else{
+            let suma = 0;
+            document.getElementById('btnTopar_'+i).disabled = true;
+            document.getElementById('btn_'+i).disabled = true;
+            document.getElementById('btnAdd_'+i).disabled = true;
+            document.getElementById('btnReload_'+i).disabled = false;
+            document.getElementById('porcentaje_'+i).disabled = true;
+            let por = document.getElementById('porcentaje_'+i);
+            por.setAttribute('readonly','true');
+            let btn = document.getElementById('btnTopar_'+i);
+            btn.setAttribute('style','background:#FED2C9;');
+
+            $('#modal_avisos .modal-body').append(`<h6>Pagos eliminados</h6>`);
+            $('#modal_avisos .modal-body').append(`<table class="table table-hover">
+            <thead><tr><th>ID pago</th><th>Monto</th><th>Usuario</th><th>Estatus</th></tr></thead><tbody>`);
+
+            for( var j = 0; j<len; j++){
+                suma = suma + response[j]['abono_neodata'];
+                $('#modal_avisos .modal-body .table').append(`<tr>
+                <td>${response[j]['id_pago_i']}</td>
+                <td>$${formatMoney(response[j]['abono_neodata'])}</td>
+                <td>${response[j]['usuario']}</td>
+                <td>${response[j]['nombre']}</td></tr>`);
+            }
+
+            $('#comision_total_'+i).val(formatMoney(abonado-suma));
+            let pendiente = parseFloat((abonado-suma) - abonado);
+            $('#pendiente_'+i).val(formatMoney(pendiente));
+            $('#modal_avisos .modal-body').append(`</tbody></table>`);
+            $('#modal_avisos .modal-body').append(`<div class="row"><div class="col-md-12"><center><input type="button" style="background:#003D82;" data-dismiss="modal" id="btn-save" class="btn btn-success" value="ACEPTAR"><input type="button" class="btn btn-danger"  data-dismiss="modal" value="CERRAR"></center></div></div>`);
+        }
+    }
+});
+
+$('#modal_avisos').modal('show');
+}
 
         function GuardarPago(i){
             document.getElementById('btn-save2').disabled = true;

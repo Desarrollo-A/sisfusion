@@ -162,4 +162,49 @@ class Api extends CI_Controller
     }
 
 
+    public function verifyUser(){
+        $objDatos = json_decode(base64_decode(file_get_contents("php://input")),true);
+        $result = $this->Api_model->login_user($objDatos['username'],$objDatos['password']);
+
+
+       if(count($result) > 0){      
+             $row =  json_encode(array("resultado"=>true,
+                                        "id_usuario" => $result[0]['id_usuario']));
+        }else{
+           $row = json_encode(array('resultado'=>false));
+        }
+
+       echo base64_encode($row);
+//print_r($result);
+
+    }
+
+
+    /**------------FUNCIÓN PARA MANDAR SERVICIO PARA EL SISTEMA DE TICKETS */
+    public function ServicePostTicket(){
+        $url = 'https://dashboard.gphsis.com/back/paginainicio';
+
+        $name = $this->session->userdata('nombre').' '.$this->session->userdata('apellido_paterno').' '.$this->session->userdata('apellido_materno');
+        $data = array(
+            "idcrea" => $this->session->userdata('id_usuario'),
+             "nombre" => $name,
+              "sistema" => "CRM"   
+     );
+
+        $ch = curl_init($url);
+        # Setup request to send json via POST.
+        $payload = json_encode($data);
+        curl_setopt( $ch, CURLOPT_POSTFIELDS,$payload);
+        curl_setopt( $ch, CURLOPT_HTTPHEADER, array('Content-Type:application/json'));
+        # Return response instead of printing.
+        curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
+        # Send request.
+        $result = curl_exec($ch);
+        curl_close($ch);
+         //$row = array('html' =>$result);
+            echo json_encode($result);   
+    }
+    /**--------------------------FIN----------------------- */
+
+
 }
