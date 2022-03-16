@@ -5,8 +5,6 @@
 	 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 
 	<link rel="apple-touch-icon" sizes="76x76" href="../dist/img/apple-icon.png" />
-<!--	<link rel="icon" type="image/png" href="../dist/img/favicon.png" />-->
-	<!-- <link rel="shortcut icon" href="<?=base_url()?>static/images/arbol_cm.png" /> -->
 	<link rel='shortcut icon' type='image/x-icon' href='<?=base_url()?>static/images/img.ico' />
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 	<title>MaderasCRM | Ciudad Maderas</title>
@@ -44,17 +42,12 @@
 	<link href="<?=base_url()?>dist/css/demo.css" rel="stylesheet" />
 	<!--     Fonts and icons     -->
 	<link href="<?=base_url()?>dist/css/font-awesome.css" rel="stylesheet" />
-	<!-- <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet"> -->
 	<link href="<?=base_url()?>dist/css/google-roboto-300-700.css" rel="stylesheet" />
-	
-	<!--<link href="<?=base_url()?>dist/css/shadowbox.css" rel="stylesheet" />
-	<script type="text/javascript" src="<?=base_url()?>dist/js/shadowbox.js"></script>-->
-
-
 	<!--Ciudad Maderas Estilos-->
 	<link href="<?=base_url()?>dist/css/cdm-styles.css" rel="stylesheet">
 
 	<link href="<?=base_url()?>dist/js/controllers/select2/select2.min.css" rel="stylesheet" />
 	<link href="<?= base_url() ?>static/yadcf/jquery.datatables.yadcf.css" rel="stylesheet" type="text/css"/>
+	<link href='<?=base_url()?>dist/js/fullcalendar/main.css' rel='stylesheet' />
 </head>
 

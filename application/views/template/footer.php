@@ -33,7 +33,7 @@
 <!--	Plugin for Fileupload, full documentation here: http://www.jasny.net/bootstrap/javascript/#fileinput -->
 <script src="<?=base_url()?>dist/js/jasny-bootstrap.min.js"></script>
 <!--  Full Calendar Plugin    -->
-<script src="<?=base_url()?>dist/js/fullcalendar.min.js"></script>
+
 <!-- TagsInput Plugin -->
 <script src="<?=base_url()?>dist/js/jquery.tagsinput.js"></script>
 <!-- Material Dashboard javascript methods -->
@@ -46,87 +46,36 @@
 <script src="<?=base_url()?>dist/js/funciones-generales.js"></script>
 
 <script src="<?=base_url()?>dist/js/controllers/select2/select2.full.min.js"></script>
-
+<script src="<?=base_url()?>dist/js/fullcalendar/main.js"></script>
+<script src="<?=base_url()?>dist/js/fullcalendar/locales-all.js"></script>
 <script type="text/javascript">
     var url2 = "<?=base_url()?>index.php/";
 	$(document).ready(function() {
-        
-
-		// Javascript method's body can be found in assets/js/demos.js
 		demo.initDashboardPageCharts();
-
 		demo.initVectorMap();
 		<?php
-        /*switch ($this->session->userdata('id_rol')) {
-            case 1:
+            if($this->session->userdata('id_rol') == 7 || $this->session->userdata('id_rol') == 1
+                || $this->session->userdata('id_rol') == 2 || $this->session->userdata('id_rol') == 3
+                || $this->session->userdata('id_rol') == 4 || $this->session->userdata('id_rol') == 5
+                || $this->session->userdata('id_rol') == 6 || $this->session->userdata('id_rol') == 9)
+            {
                 if ($this->session->userdata('no_show_modal_info')==0) {
                     echo '$("#avisoNovedades").modal("toggle");';
                 }
-            break;
-            case 2:
-                if ($this->session->userdata('no_show_modal_info')==0) {
-                    echo '$("#avisoNovedades").modal("toggle");';
-                }
-            break;
-            case 3:
-                if ($this->session->userdata('no_show_modal_info')==0) {
-                    echo '$("#avisoNovedades").modal("toggle");';
-                }
-            case 4:
-                if ($this->session->userdata('no_show_modal_info')==0) {
-                echo '$("#avisoNovedades").modal("toggle");';
-                }
-            case 5:
-                if ($this->session->userdata('no_show_modal_info')==0) {
-                echo '$("#avisoNovedades").modal("toggle");';
-                }
-            case 6:
-                if ($this->session->userdata('no_show_modal_info')==0) {
-                echo '$("#avisoNovedades").modal("toggle");';
-                }
-            case 7:
-                if ($this->session->userdata('no_show_modal_info')==0) {
-                echo '$("#avisoNovedades").modal("toggle");';
-                }
-            case 9:
-                if ($this->session->userdata('no_show_modal_info')==0) {
-                echo '$("#avisoNovedades").modal("toggle");';
-                }
-            break;
-            default:
-            echo "i no es igual a 0, 1 ni 2";
-        }*/
-        /**/if($this->session->userdata('id_rol') == 7 || $this->session->userdata('id_rol') == 1
-            || $this->session->userdata('id_rol') == 2 || $this->session->userdata('id_rol') == 3
-            || $this->session->userdata('id_rol') == 4 || $this->session->userdata('id_rol') == 5
-            || $this->session->userdata('id_rol') == 6 || $this->session->userdata('id_rol') == 9)
-        {
-            if ($this->session->userdata('no_show_modal_info')==0) {
-                echo '$("#avisoNovedades").modal("toggle");';
             }
-        }
          ?>
 	});
 
-
-	/**/function validaCheckSession()
-    {
+    function validaCheckSession(){
         if($('#no_mostrar_session:checkbox:checked').length > 0)
         {
             $.post('<?=base_url()?>index.php/Login/noShowModalSession',  function(data) {
-                console.log(data);
             });
             <?php echo "console.log(".$this->session->userdata('no_show_modal_info').");";?>
-            console.log('No mostrar');
         }
     }
 
-   
-    // $.post('<?=base_url()?>index.php/Chat/checkIfIsGuarrior/<?php echo $this->session->userdata("id_usuario")?>',  function(data) {
-    //             console.log(data);
-    // });
     var id_rol_global = <?=$this->session->userdata('id_rol')?>; 
-
 </script>
 
 <?php if($this->session->userdata('id_rol') == 7 && $this->session->userdata('asesor_guardia')==1){?>
@@ -134,8 +83,6 @@
 
 <script src="<?=base_url()?>dist/js/socket.io.js"></script>
 <script>
-    //consultas al servidor con ajax
-    // let urlimg = "<?=base_url()?>";
     let perfil;
     let id;
     $.ajax({
@@ -152,8 +99,7 @@
         async: false
     })
     var mySound = new Audio('../static/tono-mensaje.mp3');
-    // mySound.load();
-
+   
     let im = '<?=base_url()?>static/images/perfil/'+perfil[0].id_usuario+'/'+perfil[0].foto;
     console.log(im);
     if ($(window).width() < 996){
@@ -286,15 +232,8 @@
 
         let currentNot = (localStorage.getItem("contadorNotificaciones") === null) ? 0 : localStorage.getItem("contadorNotificaciones");<?php #echo #$this->session->userdata('mensajes_count');?>;
         var totalData = JSON.parse((localStorage.getItem("dataNotificaciones") === null) ? 0 : localStorage.getItem("dataNotificaciones")); <?php #print_r(json_encode($this->session->userdata('msg_data')))?>;
-
-            // console.log(totalData);
-
             if(totalData.length >0)
             {
-                // console.log('llegue hasta qui alv');
-                // console.log(totalData[0]);
-                // if(totalData[totalData.length-1]['emisor'] == "0")
-                // {
                     if(currentNot > 0)
                     {
                         $('#numberMsgAllSys').append('<span class="notification">'+currentNot+'</span>');
@@ -326,13 +265,8 @@
     });
 
     $(document).on('click', '#numberMsgAllSys', function () {
-      /*
-        let currentNot2 = <?php echo $this->session->userdata('mensajes_count');?>;
-        var totalData2 = <?php print_r(json_encode($this->session->userdata('msg_data')))?>;
-    */
         /*******************************/
         $('#numberMsgAllSys').html('<i class="material-icons">chat</i>');
-        // $('#cpoNtallSys').html('');
         window.document.title = 'MaderasCRM | Ciudad Maderas';
 
         cleanVarNt();
