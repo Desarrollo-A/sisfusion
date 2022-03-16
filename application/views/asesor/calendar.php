@@ -36,13 +36,6 @@
 </body>
 <?php $this->load->view('template/footer');?>
 
-
-<!-- MODAL WIZARD -->
-<script src="<?=base_url()?>dist/js/modal-steps.min.js"></script>
-<!--  Plugin for Date Time Picker and Full Calendar Plugin-->
-<script src="<?= base_url() ?>dist/assets/js/moment.min.js"></script>
-<script src="<?= base_url() ?>dist/assets/js/es.js"></script>
-<!-- DateTimePicker Plugin -->
 <script src="<?= base_url() ?>dist/assets/js/bootstrap-datetimepicker.js"></script>
 <script src="<?=base_url()?>dist/js/controllers/calendar.js"></script>
 <script>

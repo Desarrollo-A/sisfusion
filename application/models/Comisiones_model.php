@@ -332,7 +332,7 @@ function getDatosComisionesHistorialRigel($proyecto,$condominio){
             CONCAT(su.nombre, ' ', su.apellido_paterno, ' ', su.apellido_materno) as subdirector,
             (CASE WHEN re.id_usuario IN (0) OR re.id_usuario IS NULL THEN 'NA' ELSE CONCAT(re.nombre, ' ', re.apellido_paterno, ' ', re.apellido_materno) END) regional,
             CONCAT(di.nombre, ' ', di.apellido_paterno, ' ', di.apellido_materno) as director, 
-            (CASE WHEN cl.plan_comision IN (0) OR cl.plan_comision IS NULL THEN '-' ELSE pl.descripcion END) AS plan_comision, cl.plan_comision
+            (CASE WHEN cl.plan_comision IN (0) OR cl.plan_comision IS NULL THEN '-' ELSE pl.descripcion END) AS plan_descripcion, cl.plan_comision
             /* l.totalNeto, l.plan_enganche, plane.nombre as enganche_tipo, cl.lugar_prospeccion, ae.ismktd, cl.descuento_mdb, cl.id_subdirector as sub,res.idResidencial*/
             FROM lotes l
             INNER JOIN clientes cl ON cl.id_cliente = l.idCliente

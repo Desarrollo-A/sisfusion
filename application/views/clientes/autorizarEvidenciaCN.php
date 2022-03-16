@@ -398,13 +398,16 @@
                 },
                 {
                     "data": function (d) {
-                        if (d.rowType == 1) { // MJ: EVIDENCA NATURAL: SIEMPRE HA SIDO MKTD
-                            return "<small class='label bg-green' style='background-color: #2ECC71'>MKTD</small>";
-                        } else if (d.rowType == 11) {// MJ: EVIDENCIA DE UNA CONTROVERSIA (NORMAL): NO ES VENTA
-                            return "<small class='label bg-green' style='background-color: #F1C40F'>CONTROVERSIA (NORMAL)</small>"
-                        } else if (d.rowType == 22) {// MJ: EVIDENCIA DE UNA CONTROVERSIA (PARA DESCUENTO): NO ES VENTA MKTD
-                            return "<small class='label bg-green' style='background-color: #E67E22'>CONTROVERSIA (PARA DESCUENTO)</small>"
-                        }
+                        if (d.rowType == 1) // MJ: CONTROVERSIA NORMAL
+                            return "<small class='label bg-green' style='background-color: #45B39D'>Normal</small>";
+                        else if (d.rowType == 2)// MJ: CONTROVERSIA PARA DESCUENTO
+                            return "<small class='label bg-green' style='background-color: #F4D03F'>Para descuento</small>";
+                        else if (d.rowType == 3)//Implementación Venta nueva
+                            return "<small class='label' style='background-color: #566573'>Venta nueva</small>";
+                        else if (d.rowType == 4)// MJ: CONTROVERSIA MKTD 2022
+                            return "<small class='label bg-green' style='background-color: #A569BD'>MKTD 2022</small>";
+                        else if (d.rowType == 5)// MJ: CONTROVERSIA CARGA MASIVA
+                            return "<small class='label bg-green' style='background-color: #5DADE2'>Carga masiva</small>"
                     }
                 },
                 {"data": "fechaValidacionGerente"},
