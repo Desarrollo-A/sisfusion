@@ -104,7 +104,7 @@
                                                     data-style="btn" data-show-subtext="true" data-live-search="true"
                                                     title="Selecciona las columnas que se requieran" data-size="10"
                                                     required multiple>
-                                                <option value="1" data-name="fecha_firma">Fecha de firma</option>
+                                                <!-- <option value="1" data-name="fecha_firma">Fecha de firma</option>
                                                 <option value="2" data-name="adendum">Adedum precio de venta</option>
                                                 <option value="3" data-name="superficie_postventa">Superficie de contrato</option>
                                                 <option value="4" data-name="costo_m2">Costo por m2</option>
@@ -114,7 +114,7 @@
                                                 <option value="8" data-name="deduccion">Presupuesto a plazos (deducción física)</option>
                                                 <option value="9" data-name="m2_erreno">$M2 Terreno</option>
                                                 <option value="10" data-name="costo_terreno">Costo terreno</option>
-                                                <option value="10" data-name="comentario">Observaciones</option>
+                                                <option value="10" data-name="comentario">Observaciones</option> -->
                                             </select>
                                         </div>
                                     </div>
