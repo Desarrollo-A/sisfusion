@@ -16,13 +16,9 @@
             <div class="row">
                 <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
                     <div class="card">
-                        <div class="card-header card-header-icon" data-background-color="goldMaderas">
-                            <i class="material-icons">list</i>
-                        </div>
                         <div class="card-content">
-                                <h4 class="card-title">Calendario</h4>
-
-                                <div id='calendar'></div>
+                            <h4 class="card-title">Calendario</h4>
+                            <div id='calendar'></div>
                         </div>
                     </div>
                 </div>

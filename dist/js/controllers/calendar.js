@@ -2,8 +2,17 @@ var calendar;
 document.addEventListener('DOMContentLoaded', function() {
     var calendarEl = document.getElementById('calendar');
     calendar = new FullCalendar.Calendar(calendarEl, {
+      headerToolbar:
+      {
+        start:   'timeGridDay,timeGridWeek,dayGridMonth',
+        center: 'title',
+        end: 'prev,next today'
+      },
       initialView: 'dayGridMonth',
       locale: 'es',
+      dayHeaderContent: (args) => {
+        return moment(args.date).format('ddd Do')
+    },
       eventSources: [
         // your event source
         {
