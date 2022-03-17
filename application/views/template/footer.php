@@ -362,3 +362,7 @@
 
 </script>
 <?php }?>
+
+<script>
+    let general_base_url = "<?=base_url()?>";
+</script>

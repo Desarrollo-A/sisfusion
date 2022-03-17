@@ -107,7 +107,8 @@ class Api extends CI_Controller
         }
     }
 
-    function deleteFile(){
+    function deleteFile()
+    {
         $time = time();
         $tokenResponse = $this->validateToken(apache_request_headers()["Authorization"]);
         $data = json_decode($tokenResponse);
@@ -141,25 +142,45 @@ class Api extends CI_Controller
 
     public function setStatusContratacion()
     {
-            $objDatos = json_decode(base64_decode(file_get_contents("php://input")),true);   
-            //$newDatos = json_decode($objDatos, true);
-           // echo var_dump($objDatos);
-           // echo $objDatos['idusuario'];
-            $datos = array('status_contratacion' => $objDatos['bandera'],
-                           'fecha_modificacion' => date("Y-m-d H:i:s"),
-                           'modificado_por' => $objDatos['modificado_por']);
-            $result = $this->Api_model->updateUserContratacion($datos,$objDatos['idusuario']);
+        $objDatos = json_decode(base64_decode(file_get_contents("php://input")), true);
+        //$newDatos = json_decode($objDatos, true);
+        // echo var_dump($objDatos);
+        // echo $objDatos['idusuario'];
+        $datos = array('status_contratacion' => $objDatos['bandera'],
+            'fecha_modificacion' => date("Y-m-d H:i:s"),
+            'modificado_por' => $objDatos['modificado_por']);
+        $result = $this->Api_model->updateUserContratacion($datos, $objDatos['idusuario']);
 
 
-          //  echo $result;
-        if($result == 1){
-                $row =  json_encode(array('resultado'=>true));
-         }else{
-            $row = json_encode(array('resultado'=>false));
-         }
-         
-         echo base64_encode($row);
+        //  echo $result;
+        if ($result == 1) {
+            $row = json_encode(array('resultado' => true));
+        } else {
+            $row = json_encode(array('resultado' => false));
+        }
+
+        echo base64_encode($row);
     }
 
+    function generateToken()
+    {
+        $JwtSecretKey = $this->jwt_key->getSecretKey();
+        $time = time();
+        $data = array(
+            "iat" => $time, // Tiempo en que inició el token
+            "exp" => $time + (24 * 60 * 60), // Tiempo en el que expirará el token (2 minutos)
+            "userData" => array("id_asesor" => $this->input->post("id_asesor"), "id_gerente" => $this->input->post("id_gerente")),
+        );
+        $token = JWT::encode($data, $JwtSecretKey);
+        if ($token != "") {
+            $data = array("token" => $token, "para" => $this->input->post("id_asesor"), "estatus" => 1, "creado_por" => $this->input->post("id_gerente"), "fecha_creacion" => date("Y-m-d H:i:s"));
+            $response = $this->Api_model->addRecord("tokens", $data); // MJ: LLEVA 2 PARÁMETROS $table, $data
+            if ($response == 1)
+                echo json_encode(array("status" => 200, "message" => "El token se ha generado de manera exitosa.", "id_token" => $token));
+            else
+                echo json_encode(array("status" => 500, "message" => "No se ha podido insertar el token en la base de datos."));
+        } else
+            echo json_encode(array("status" => 500, "message" => "No se ha podido generar el token."));
+    }
 
 }
