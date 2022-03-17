@@ -174,6 +174,7 @@ $(document).on('click', '.find-results', function () {
     if (result) {
         $(".row-load").addClass("hide");
         let lotes = $("#lotes").val();
+        console.log('lotes',lotes);
         fillTableLotificacion(lotes);
     } else {
         $('#notificacion').modal('show');
@@ -334,13 +335,19 @@ $(document).on('click', '#uploadFile', function () {
 });
 
 $(document).on('change', "#residenciales", function () {
-    //getCondominios($(this).val());
     cleanSelects(1);
+    getCondominios($(this).val());
+    $('.bs-select-all').html('Seleccionar todo').css({'font-size': '1.2ex'});
+    $('.bs-deselect-all').html('Deseleccionar todo').css({'font-size': '1.2ex'});
+
+    // $("#condominios").append($('<option>').val('All').text('Todos'));
 });
 
 $(document).on('change', "#condominios", function () {
-    //getLotes($(this).val());
     cleanSelects(2);
+    getLotes($(this).val());
+    $('.bs-select-all').html('Seleccionar todo').css({'font-size': '1.2ex'});
+    $('.bs-deselect-all').html('Deseleccionar todo').css({'font-size': '1.2ex'});
 });
 
 function cleanSelects(action) {

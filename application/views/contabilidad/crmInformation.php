@@ -71,6 +71,7 @@
                                                     class="selectpicker select-gral m-0"
                                                     data-style="btn" data-show-subtext="true"
                                                     data-live-search="true"
+                                                    data-actions-box="true"
                                                     title="Selecciona un condominio" data-size="7" required multiple>
                                             </select>
                                         </div>
@@ -81,6 +82,7 @@
                                                     class="selectpicker select-gral m-0"
                                                     data-style="btn" data-show-subtext="true"
                                                     data-live-search="true"
+                                                    data-actions-box="true"
                                                     title="Selecciona un lote" data-size="7" required multiple
                                                     onchange="cleanSelects(3)">
                                             </select>
@@ -179,13 +181,13 @@
     let url = "<?=base_url()?>";
     let typeTransaction = 1; // MJ: SELECTS MULTIPLES
 
-    $(document).on('change', "#residenciales", function() {
-        getCondominios($(this).val());
-    });
+    // $(document).on('change', "#residenciales", function() {
+    //     getCondominios($(this).val());
+    // });
 
-    $(document).on('change', "#condominios", function() {
-        getLotes($(this).val());
-    });
+    // $(document).on('change', "#condominios", function() {
+    //     getLotes($(this).val());
+    // });
 </script>
 <script src="<?= base_url() ?>dist/js/controllers/general/main_services.js"></script>
 <script src="<?= base_url() ?>dist/js/controllers/general/main_services_dr.js"></script>
