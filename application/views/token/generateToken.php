@@ -1,6 +1,40 @@
 <link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet"/>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
 
+<style>
+.bckSpan{
+    padding: 4px;
+    background-color: #f9f9ef;
+    border-radius: 41px;
+}
+.subSpan{
+    border: 2px dotted #d5d5d5;
+    border-radius: 39px;
+    padding: 0 10px;
+}
+.subSpan input{
+    background-image: none!important;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.subSpan input::-webkit-input-placeholder {
+   font-style: italic;
+}
+
+
+.subSpan button{
+    background-color: transparent;
+    border: none;
+}
+.subSpan button:hover i{
+    color: #333;
+}
+.subSpan i{
+    color: #999999;
+}
+</style>
+
 <body class="">
 <div class="wrapper">
 
@@ -8,8 +42,8 @@
 
     <div class="modal" tabindex="-1" role="dialog" id="generateTokenModal">
         <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-body">
+            <div class="modal-content boxContent">
+                <div class="modal-body card no-shadow">
                     <div class="card-content">
                         <div class="toolbar">
                             <h3 class="card-title center-align">Selecciona un asesor</h3>
@@ -48,20 +82,22 @@
                         <div class="card-content">
                             <div class="toolbar">
                                 <h3 class="card-title center-align">Generar token</h3>
-                                <div class="row pt-2 row-load">
-                                    <div class="col-12 col-sm-10 col-md-10 col-lg-10">
+                                <div class="row pt-2 aligned-row">
+                                    <div class="col-12 col-sm-11 col-md-11 col-lg-11">
                                         <div class="form-group d-flex">
-                                            <input class="form-control generated-token" id="generatedToken"
-                                                   placeholder="Token generado" readonly value="prueba text copy"/>
-                                            <button class="btn btn-success btn-round btn-fab btn-fab-mini"
-                                                    id="copyToken" onclick="copyToClipBoard()">
-                                                <i class="fas fa-clone"></i>
-                                            </button>
+                                            <span class="bckSpan w-100">
+                                                <span class="subSpan w-100 d-flex">
+                                                    <input class="form-control generated-token" id="generatedToken" placeholder="Aún no se ha generado ningún token" readonly/>
+                                                    <button id="copyToken" onclick="copyToClipBoard()" data-toggle="popover" data-content="Some content inside the popover">
+                                                        <i class="fas fa-clone"></i>
+                                                    </button>
+                                                </span>
+                                            </span>
                                         </div>
                                     </div>
-                                    <div class="col col-xs-12 col-sm-12 col-md-2 col-lg-2 d-flex align-center justify-evenly">
-                                        <button class="btn-rounded btn-s-greenLight" id="generateToken"
-                                                title="Generar token">
+                                    
+                                    <div class="col col-xs-1 col-sm-1 col-md-1 col-lg-1 d-flex align-center justify-evenly">
+                                        <button class="btn-rounded btn-s-greenLight" id="generateToken" title="Generar token">
                                             <i class="fas fa-plus" title="Copiar"></i>
                                         </button> <!-- GENERATE TOKEN -->
                                     </div>
@@ -112,7 +148,12 @@
         fillTokensTable();
         getAsesoresList();
     });
-</script>
 
+    $('#copyToken').popover().click(function () {
+    setTimeout(function () {
+        $('#copyToken').popover('hide');
+    }, 1000);
+});
+</script>
 
 </body>
