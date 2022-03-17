@@ -262,7 +262,6 @@
             "bAutoWidth": false,
             "fixedColumns": true,
             "language": {"url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"},
-
             "columns": [
                 {
                     "width": "3%",
@@ -270,18 +269,21 @@
                         return '<p style="font-size: 1em">' + d.id_usuario + '</p>';
                     }
                 },
+
                 {
                     "width": "10%",
                     "data": function (d) {
                         return '<p style="font-size: 1em">' + d.nombre + '</p>';
                     }
                 },
+
                 {
                     "width": "8%",
                     "data": function (d) {
                         return '<p style="font-size: 1em">' + d.puesto + '</p>';
                     }
                 },
+
                 {
                     "width": "7%",
                     "data": function (d) {
