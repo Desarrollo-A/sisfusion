@@ -190,7 +190,7 @@
                                                         <th>TIPO VENTA</th>
                                                         <th>MODALIDAD</th>
                                                         <th>CONTRATACIÓN</th>
-                                                        <th>F. APARTADO</th>
+                                                         
                                                         <th>PLAN VENTA</th>
                                                         <th>F. NEODATA</th>
                                                         <th>MÁS</th>
@@ -371,12 +371,12 @@
                     return lblStats;
                 }
             },
-            {
-                "width": "8%",
-                "data": function( d ){
-                    return '<span class="label label-success" style="background:#69C1A2;">'+d.fechaApartado+'</span>';
-                 }
-            },
+            // {
+            //     "width": "8%",
+            //     "data": function( d ){
+            //         return '<span class="label label-success" style="background:#69C1A2;">'+d.fechaApartado+'</span>';
+            //      }
+            // },
             {
                 "width": "8%",
                 "data": function( d ){
@@ -420,7 +420,8 @@
                         }
                     }
                 }
-                    return lblStats;
+                var lastlblStats = lblStats+' '+d.plan_descripcion;
+                    return lastlblStats;
                 }
             },
             {

@@ -2,8 +2,14 @@ var calendar;
 document.addEventListener('DOMContentLoaded', function() {
     var calendarEl = document.getElementById('calendar');
     calendar = new FullCalendar.Calendar(calendarEl, {
+      headerToolbar:
+      {
+        start:   'timeGridDay,timeGridWeek,dayGridMonth',
+        center: 'title',
+        end: 'prev,next today'
+      },
       initialView: 'dayGridMonth',
-      lang: 'es',
+      locale: 'es',
       eventSources: [
         // your event source
         {
@@ -17,7 +23,14 @@ document.addEventListener('DOMContentLoaded', function() {
       ],
       eventClick: function(info) {
         modalEvent(info.event.id);
-      }
+      },
+      dayClick: function (date, allDay, jsEvent, view) {
+        if (allDay) {
+            // Clicked on the day number 
+            calendar.fullCalendar('changeView', 'agendaDay'/* or 'basicDay' */)
+                .fullCalendar('gotoDate', date.getFullYear(), date.getMonth(), date.getDate());
+        }
+    },
     });
     calendar.render();
   });

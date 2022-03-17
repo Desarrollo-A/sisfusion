@@ -83,4 +83,13 @@ class General extends CI_Controller
             echo json_encode($this->General_model->getCatalogOptions($this->input->post("id_catalogo"))->result_array());
     }
 
+    public function getAsesoresList()
+    {
+        $data = $this->General_model->getAsesoresList();
+        if ($data != null)
+            echo json_encode($data);
+        else
+            echo json_encode(array());
+    }
+
 }

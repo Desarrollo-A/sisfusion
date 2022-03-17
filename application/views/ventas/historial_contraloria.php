@@ -15,7 +15,8 @@
         }
         ?>
 
-        <div class="modal fade" id="seeInformationModalAsimilados" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+        <div class="modal fade" id="seeInformationModalAsimilados" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+             aria-hidden="true" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog modal-md modal-dialog-scrollable" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -57,6 +58,38 @@
                     <form method="post" id="form_interes">
                         <div class="modal-body"></div>
                     </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade modal-alertas" id="modal_informacion" role="dialog">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                            <i class="material-icons">clear</i>
+                        </button>
+                        <h3><center>Detalle</center></h3>
+                    </div>
+                    <div class="modal-body">
+                        <div class="material-datatables">
+                            <div class="form-group">
+                                <div class="table-responsive">
+                                    <table class="table-striped table-hover" id="tabla_modal" name="tabla_modal"><thead>
+                                        <tr>
+                                            <th>ID PAGO</th>
+                                            <th>LOTE</th>
+                                            <th>MONTO</th>
+                                            <th>FECHA APLICADO</th>
+                                            <th>MONTO ANTERIOR</th>
+                                            <th>ESTATUS</th>
+                                        </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -247,11 +280,17 @@
             $("#tabla_historialGral").prop("hidden", false);
             tabla_historialGral2 = $("#tabla_historialGral").DataTable({
                 dom: 'Brt'+ "<'row'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'i><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>",
-                width: 'auto',                
-                buttons: [{
+                width: 'auto',
+                buttons: [
+                    {
+                        text: '<i class="fa fa-table" aria-hidden="true"></i>',
+                        className: 'btn buttons-general-dt ver-info-asesor',
+                        titleAttr: 'Reporte pagos UM',
+                    },
+                    {
                     extend: 'excelHtml5',
                     text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
-                    className: 'btn buttons-excel',
+                    className: 'btn buttons-excel ',
                     titleAttr: 'Descargar archivo de Excel',
                     title: 'HISTORIAL_GENERAL_SISTEMA_COMISIONES',
                     exportOptions: {
@@ -379,7 +418,7 @@
                             return '<p class="m-0">$'+formatMoney(d.restante)+'</p>';
                         }
                     }
-                }, 
+                },
                 {
                     "width": "7%",
                     "data": function( d ){
@@ -421,7 +460,7 @@
                     "width": "7%",
                     "data": function( d ){
                         var etiqueta;
-                            
+
                         if((d.id_estatus_actual == 11) && d.descuento_aplicado == 1 ){
                             etiqueta = '<p><span class="label" style="background:#ED7D72;">DESCUENTO</span></p>';
                         }else if((d.id_estatus_actual == 12) && d.descuento_aplicado == 1 ){
@@ -519,7 +558,7 @@
                         return etiqueta;
                     }
                 },
-                { 
+                {
                     "width": "2%",
                     "orderable": false,
                     "data": function( data ){
@@ -661,5 +700,98 @@
             var myFactura = document.getElementById('facturaInfo');
             myFactura.innerHTML = '';
         }
+
+
+        $(document).on('click', '.ver-info-asesor', function(){
+           $('#modal_informacion').modal();
+
+            /*tabla_modal*/
+            $("#tabla_modal").DataTable({
+                dom: 'Brt'+ "<'row'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'i><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>",
+                width: 'auto',
+                buttons: [
+                    {
+                        extend: 'excelHtml5',
+                        text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
+                        className: 'btn buttons-excel ',
+                        titleAttr: 'Descargar archivo de Excel',
+                        title: 'HISTORIAL',
+                    }],
+                pagingType: "full_numbers",
+                fixedHeader: true,
+                language: {
+                    url: "<?=base_url()?>/static/spanishLoader_v2.json",
+                    paginate: {
+                        previous: "<i class='fa fa-angle-left'>",
+                        next: "<i class='fa fa-angle-right'>"
+                    }
+                },
+                destroy: true,
+                ordering: false,
+                columns: [{
+                    "width": "5%",
+                    "data": function( d ){
+                        var lblStats;
+                        lblStats ='<p class="m-0"><b>'+d.id_pago_i+'</b></p>';
+                        return lblStats;
+                    }
+                },
+                    {
+                        "width": "5%",
+                        "data": function( d ){
+                            return '<p class="m-0">'+d.nombreLote+'</p>';
+                        }
+                    },
+                    {
+                        "width": "6%",
+                        "data": function( d ){
+                            return '<p class="m-0">$ '+formatMoney(d.abono_neodata)+'</p>';
+                        }
+                    },
+                    {
+                        "width": "7%",
+                        "data": function( d ){
+                            return '<p class="m-0">'+d.fecha_modificacion+'</p>';
+                        }
+                    },
+                    {
+                        "width": "5%",
+                        "data": function( d ){
+                            return '<p class="m-0">$'+formatMoney(d.saldo_comisiones)+'</p>';
+                        }
+                    },
+                    {
+                        "width": "7%",
+                        "data": function( d ){
+                            return '<p class="m-0"> Descuentos universidad</p>';
+                        }
+                    }
+                    ],
+                columnDefs: [{
+                    orderable: false,
+                    className: 'select-checkbox',
+                    targets:   0,
+                    'searchable':false,
+                    'className': 'dt-body-center',
+
+                    select: {
+                        style:    'os',
+                        selector: 'td:first-child'
+                    },
+                }],
+                ajax: {
+                    "url": url2 + "Comisiones/inforReporteAsesor",
+                    "type": "POST",
+                    cache: false,
+                    "data": function( d ){}
+                },
+                order: [[ 1, 'asc' ]]
+            });
+            /*TABLA MODAL END*/
+        });
+
+
+
+
     </script>
 </body>

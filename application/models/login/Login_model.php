@@ -19,7 +19,7 @@ class login_model extends CI_Model {
 			LEFT JOIN usuarios us ON us.id_usuario = u.id_lider
 			LEFT JOIN usuarios ge ON ge.id_usuario = us.id_lider
 			LEFT JOIN usuarios sb ON sb.id_usuario = ge.id_lider
-                                        WHERE u.usuario = '$username' AND u.contrasena = '$new_pass' AND u.estatus = 1");
+                                        WHERE u.usuario = '$username' AND u.contrasena = '$new_pass' AND u.estatus in(1,3)");
 
 		/*if($query->num_rows() == 1)
 		{

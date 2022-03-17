@@ -206,3 +206,21 @@ function getCatalogOptions(id_catalogo) {
     });
 }
 
+function getAsesoresList() {
+    $("#asesoresList").empty().selectpicker('refresh');
+    $.ajax({
+        url: general_base_url + 'General/getAsesoresList',
+        type: 'post',
+        dataType: 'json',
+        success: function (response) {
+            var len = response.length;
+            for (var i = 0; i < len; i++) {
+                $("#asesoresList").append($('<option>').val(response[i]['id']).attr('data-sede', response[i]['sede']).text(response[i]['nombre']));
+            }
+            $("#asesoresList").selectpicker('refresh');
+        }
+    });
+}
+
+
+

@@ -16,7 +16,6 @@ class Calendar extends CI_Controller {
     {
         if($this->session->userdata('id_usuario')=="" || $this->session->userdata('id_rol')=="")
         {
-            //echo "<script>console.log('No hay sesión iniciada');</script>";
             redirect(base_url() . "index.php/login");
         }
     }
