@@ -934,7 +934,7 @@ function getLotesInventarioGralc($residencial, $condominio){
             $data[$i]['fechaVenc'] = $query[0]->fechaVenc;
             $data[$i]['modificado'] = $query[0]->modificado;
             $data[$i]['vl'] = $query[0]->vl;
-
+            $data[$i]['flag_compartida'] = $query[0]->flag_compartida;
         }
 
 
