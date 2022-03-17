@@ -100,4 +100,10 @@ class Contabilidad_model extends CI_Model
 		@IdProyecto = $proyecto -- Obligatorio de valor entero")->result_array();
     }
 
+    public function getColumns()
+    {
+        return $this->db->query("SELECT id_opcion, UPPER(CAST(nombre AS VARCHAR(75))) nombre FROM opcs_x_cats WHERE id_catalogo = 66")->result_array();
+    }
+
+
 }
