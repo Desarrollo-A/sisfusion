@@ -1120,7 +1120,7 @@ function update_estatus(){
         ($fecha_actual >= $fecha_entrada9 && $fecha_actual <= $fecha_entrada99) || 
         ($fecha_actual >= $fecha_entrada10 && $fecha_actual <=$fecha_entrada100) ||
         ($fecha_actual >= $fecha_entrada11 && $fecha_actual <=$fecha_entrada111) ||
-        ($fecha_actual >= $fecha_entrada12 && $fecha_actual <=$fecha_entrada122)){
+        ($fecha_actual >= $fecha_entrada12 && $fecha_actual <=$fecha_entrada122) || $validar_user == 49){
       
 
 
@@ -1478,7 +1478,7 @@ if( isset( $_FILES ) && !empty($_FILES) ){
         ($fecha_actual >= $fecha_entrada9 && $fecha_actual <= $fecha_entrada99) || 
         ($fecha_actual >= $fecha_entrada10 && $fecha_actual <=$fecha_entrada100) ||
         ($fecha_actual >= $fecha_entrada11 && $fecha_actual <=$fecha_entrada111) ||
-        ($fecha_actual >= $fecha_entrada12 && $fecha_actual <=$fecha_entrada122) ){
+        ($fecha_actual >= $fecha_entrada12 && $fecha_actual <=$fecha_entrada122) || $validar_user == 49){
       
       if($usuario != ''){
         $usuarioid = $usuario;

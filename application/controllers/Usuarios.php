@@ -144,8 +144,10 @@ class Usuarios extends CI_Controller {
         date_default_timezone_set('America/Mexico_City');
         $hoy = date('Y-m-d H:i:s');
         $url='https://rh.gphsis.com/index.php/WS/baja_asesor';
+        $estatus=0;
         if(isset($_POST) && !empty($_POST)){
             if($this->input->post("estatus") == 0 && ($this->input->post("idrol") == 'Asesor' || $this->input->post("idrol") == 'Coordinador de ventas' || $this->input->post("idrol") == 'Gerente')){
+             $estatus=3;
                 $dataBaja = array(
                        "fecha_baja" => $hoy,
                         "cantidad_descuento" => "0",
@@ -160,7 +162,7 @@ class Usuarios extends CI_Controller {
             }
             // $this->input->post("estatus")
             $data = array(
-                "estatus" =>0,
+                "estatus" =>$estatus,
                 "fecha_modificacion" => date("Y-m-d H:i:s"),
                 "modificado_por" => $this->session->userdata('id_usuario'),
                 "status_contratacion" =>  0

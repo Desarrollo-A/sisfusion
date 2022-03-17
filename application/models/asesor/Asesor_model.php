@@ -57,11 +57,15 @@ class Asesor_model extends CI_Model
     }
 
 
-    /*----------------------------------CONSULTAS PARA OBTENER EL MENU------------------------*/
-    function getMenu($rol)
-    {
-        if ($this->session->userdata('id_usuario') == 4415 || $this->session->userdata('id_usuario') == 6578 || $this->session->userdata('id_usuario') == 9942 || $this->session->userdata('id_usuario') == 9911) { // ES GREENHAM , COREANO, BADABUM, CONTACT CENTER
-            return $this->db->query("SELECT * FROM Menu2 WHERE rol=" . $rol . " AND nombre IN ('Inicio', 'Comisiones') AND estatus = 1 order by orden asc");
+/*----------------------------------CONSULTAS PARA OBTENER EL MENU------------------------*/
+	function getMenu($rol)
+	{
+		if ($this->session->userdata('id_usuario') == 4415 || $this->session->userdata('id_usuario') == 6578 || $this->session->userdata('id_usuario') == 9942 || $this->session->userdata('id_usuario') == 9911 || $this->session->userdata('estatus') == 3)  { // ES GREENHAM , COREANO, BADABUM, CONTACT CENTER
+           $complemento='';
+           if($this->session->userdata('id_usuario') == 6578 || $this->session->userdata('id_usuario') == 9942 || $this->session->userdata('id_usuario') == 9911){
+               $complemento = ", 'Prospectos'";
+           }
+            return $this->db->query("SELECT * FROM Menu2 WHERE rol=".$rol." AND nombre IN ('Inicio', 'Comisiones' $complemento) AND estatus = 1 order by orden asc");
         } else {
             if ($rol == 33) { // ES UN USUARIO DE CONSULTA
                 if ($this->session->userdata('id_usuario') == 2896) { // ES PATRICIA MAYA
@@ -81,7 +85,11 @@ class Asesor_model extends CI_Model
 
     function getMenuHijos($rol)
     {
-        return $this->db->query("SELECT * FROM Menu2 WHERE rol=" . $rol . " AND padre > 0 AND estatus = 1 order by orden asc");
+        $complemento="";
+        if($this->session->userdata('id_usuario') == 6578 || $this->session->userdata('id_usuario') == 9942 || $this->session->userdata('id_usuario') == 9911){
+            $complemento = " AND idmenu in(296,307,308,879)";
+        }
+        return $this->db->query("SELECT * FROM Menu2 WHERE rol=" . $rol . " AND padre > 0 AND estatus = 1 $complemento order by orden asc");
     }
 
     function getActiveBtn($var, $rol)
