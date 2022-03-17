@@ -587,7 +587,7 @@ class Postventa extends CI_Controller
         $idCliente = $_POST['idCliente'];
 
         $informacion = $this->Postventa_model->setEscrituracion($idLote, $idCliente);
-        return $informacion;
+        echo json_encode($informacion);
     }
 
     public function getSolicitudes()
@@ -1107,7 +1107,7 @@ class Postventa extends CI_Controller
 
         $pdf->writeHTMLCell(0, 0, $x = '', $y = '', $html, $border = 0, $ln = 1, $fill = 0, $reseth = true, $align = '', $autopadding = true);
 
-        $pdf->Output(__DIR__ . "/../../static/documentos/postventa/escrituracion/SOLICITUD_PRESUPUESTO/Hola.pdf", 'F');
+        $pdf->Output(__DIR__ . "/../../static/documentos/postventa/escrituracion/SOLICITUD_PRESUPUESTO/solicitud_".$data->nombre_escrituras."_presupuesto.pdf", 'F');
 
         // $pdf->Output(utf8_decode('Hola.pdf'), 'I');
     }
@@ -1122,18 +1122,21 @@ class Postventa extends CI_Controller
         $mail = $this->email;
         $insert = $this->Postventa_model->insertNotariaValuador($idNotaria, $idValuador, $idSolicitud);
         $data = $this->Postventa_model->checkBudgetInfo($idSolicitud)->row();
+
+        $documentName = $this->Postventa_model->getFileNameByDoctype($idSolicitud,11);
         //correos
         //$data->correoN correos de la notaria
         //$data->correoV correos del valuador
-
         $this->presupuestoPDF($data);
+
         $mail->from('noreply@ciudadmaderas.com', 'Ciudad Maderas');
         $mail->to('programador.analista18@ciudadmaderas.com');
         $mail->Subject(utf8_decode("Solicitud de presupuesto y valores"));
         $mail->message('Buen dia me apoyan con el pre-avaluo con valor actual y referido  del lote que se menciona  en la tabla que se anexa ?');
-        $this->email->attach(__DIR__ . "/../../static/documentos/postventa/escrituracion/SOLICITUD_PRESUPUESTO/Hola.pdf");
+        $this->email->attach(__DIR__ . "/../../static/documentos/postventa/escrituracion/SOLICITUD_PRESUPUESTO/".$documentName->expediente);
 
         $response = $mail->send();
+        // echo $this->email->print_debugger();
 
         echo json_encode($response);
     }
@@ -1209,7 +1212,7 @@ class Postventa extends CI_Controller
                                     <table width="100%" style="height: 100px; border: 1px solid #ddd;" width="690">
                                         <tr>
                                             <td colspan="2" align="left"><img src="https://www.ciudadmaderas.com/assets/img/logo.png" style=" max-width: 70%; height: auto;"></td>
-                                            <td colspan="2" align="right"><b style="font-size: 1.7em; "> Checklist<BR></b>
+                                            <td colspan="2" align="right"><b style="font-size: 1.7em; "> Solicitud de presupuesto<BR></b>
                                             </td>
                                         </tr>
                                     </table>
@@ -1269,17 +1272,6 @@ class Postventa extends CI_Controller
                                                 
                                             </tr>
                                         </table>
-                                        <br>
-                                        <br>
-                                        <br>
-                                        <table width="100%" style="text-align: center;padding:10px;height: 45px; border-top: 1px solid #ddd;border-left: 1px solid #ddd;border-right: 1px solid #ddd;" width="690">
-                                            <tr>
-                                                <td colspan="2" style="background-color: #15578B;color: #fff;padding: 3px 6px; "><b style="font-size: 2em; ">Checklist</b>
-                                                </td>
-                                            </tr>
-                                        </table>                            
-                                        <br><br>
-                                        
                                     </div>
                                 </div>
                             </div>
@@ -1353,6 +1345,50 @@ class Postventa extends CI_Controller
             echo json_encode(($updateResponse == 1 && $insertResponse == 1) == TRUE ? 1 : 0);
         } else
             echo json_encode($updateResponse == 1 ? 1 : 0);
+    }
+
+    public function getEstatusConstruccion()
+    {
+        $data = $this->Postventa_model->getEstatusConstruccion();
+        if ($data != null)
+            echo json_encode($data);
+        else
+            echo json_encode(array());
+    }
+
+    public function getEstatusPago()
+    {
+        $data = $this->Postventa_model->getEstatusPago();
+        if ($data != null)
+            echo json_encode($data);
+        else
+            echo json_encode(array());
+    }
+    public function nuevoNotario()
+    {
+        $idSolicitud = $_POST['idSolicitud'];
+        $nombre_notaria = $_POST['nombre_notaria'];
+        $nombre_notario = $_POST['nombre_notario'];
+        $direccion = $_POST['direccion'];
+        $correo = $_POST['correo'];
+        $telefono = $_POST['telefono'];
+
+        $informacion = $this->Postventa_model->insertNewNotaria($nombre_notaria, $nombre_notario, $direccion, $correo, $telefono, 0, 2);
+        return $informacion;
+
+        return $this->Postventa_model->insertNewNotaria($idSolicitud);
+    }
+
+    public function getBudgetNotaria()
+    {
+        $idSolicitud = $_GET['idSolicitud'];
+
+        $data = $this->Postventa_model->getNotariaClient($idSolicitud)->row();
+
+        if($data != null)
+            echo json_encode($data);
+        else
+            echo json_encode(array());
     }
 }
 

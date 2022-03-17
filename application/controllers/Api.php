@@ -107,7 +107,8 @@ class Api extends CI_Controller
         }
     }
 
-    function deleteFile(){
+    function deleteFile()
+    {
         $time = time();
         $tokenResponse = $this->validateToken(apache_request_headers()["Authorization"]);
         $data = json_decode($tokenResponse);
@@ -141,25 +142,90 @@ class Api extends CI_Controller
 
     public function setStatusContratacion()
     {
-            $objDatos = json_decode(base64_decode(file_get_contents("php://input")),true);   
-            //$newDatos = json_decode($objDatos, true);
-           // echo var_dump($objDatos);
-           // echo $objDatos['idusuario'];
-            $datos = array('status_contratacion' => $objDatos['bandera'],
-                           'fecha_modificacion' => date("Y-m-d H:i:s"),
-                           'modificado_por' => $objDatos['modificado_por']);
-            $result = $this->Api_model->updateUserContratacion($datos,$objDatos['idusuario']);
+        $objDatos = json_decode(base64_decode(file_get_contents("php://input")), true);
+        //$newDatos = json_decode($objDatos, true);
+        // echo var_dump($objDatos);
+        // echo $objDatos['idusuario'];
+        $datos = array('status_contratacion' => $objDatos['bandera'],
+            'fecha_modificacion' => date("Y-m-d H:i:s"),
+            'modificado_por' => $objDatos['modificado_por']);
+        $result = $this->Api_model->updateUserContratacion($datos, $objDatos['idusuario']);
 
 
-          //  echo $result;
-        if($result == 1){
-                $row =  json_encode(array('resultado'=>true));
-         }else{
-            $row = json_encode(array('resultado'=>false));
-         }
-         
-         echo base64_encode($row);
+        //  echo $result;
+        if ($result == 1) {
+            $row = json_encode(array('resultado' => true));
+        } else {
+            $row = json_encode(array('resultado' => false));
+        }
+
+        echo base64_encode($row);
     }
+
+    function generateToken()
+    {
+        $JwtSecretKey = $this->jwt_key->getSecretKey();
+        $time = time();
+        $data = array(
+            "iat" => $time, // Tiempo en que inició el token
+            "exp" => $time + (24 * 60 * 60), // Tiempo en el que expirará el token (2 minutos)
+            "userData" => array("id_asesor" => $this->input->post("id_asesor"), "id_gerente" => $this->input->post("id_gerente")),
+        );
+        $token = JWT::encode($data, $JwtSecretKey);
+        if ($token != "") {
+            $data = array("token" => $token, "para" => $this->input->post("id_asesor"), "estatus" => 1, "creado_por" => $this->input->post("id_gerente"), "fecha_creacion" => date("Y-m-d H:i:s"));
+            $response = $this->Api_model->addRecord("tokens", $data); // MJ: LLEVA 2 PARÁMETROS $table, $data
+            if ($response == 1)
+                echo json_encode(array("status" => 200, "message" => "El token se ha generado de manera exitosa.", "id_token" => $token));
+            else
+                echo json_encode(array("status" => 500, "message" => "No se ha podido insertar el token en la base de datos."));
+        } else
+            echo json_encode(array("status" => 500, "message" => "No se ha podido generar el token."));
+    }
+
+    public function verifyUser(){
+        $objDatos = json_decode(base64_decode(file_get_contents("php://input")),true);
+        $result = $this->Api_model->login_user($objDatos['username'],$objDatos['password']);
+
+
+       if(count($result) > 0){      
+             $row =  json_encode(array("resultado"=>true,
+                                        "id_usuario" => $result[0]['id_usuario']));
+        }else{
+           $row = json_encode(array('resultado'=>false));
+        }
+
+       echo base64_encode($row);
+//print_r($result);
+
+    }
+
+
+    /**------------FUNCIÓN PARA MANDAR SERVICIO PARA EL SISTEMA DE TICKETS */
+    public function ServicePostTicket(){
+        $url = 'https://dashboard.gphsis.com/back/paginainicio';
+
+        $name = $this->session->userdata('nombre').' '.$this->session->userdata('apellido_paterno').' '.$this->session->userdata('apellido_materno');
+        $data = array(
+            "idcrea" => $this->session->userdata('id_usuario'),
+             "nombre" => $name,
+              "sistema" => "CRM"   
+     );
+
+        $ch = curl_init($url);
+        # Setup request to send json via POST.
+        $payload = json_encode($data);
+        curl_setopt( $ch, CURLOPT_POSTFIELDS,$payload);
+        curl_setopt( $ch, CURLOPT_HTTPHEADER, array('Content-Type:application/json'));
+        # Return response instead of printing.
+        curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
+        # Send request.
+        $result = curl_exec($ch);
+        curl_close($ch);
+         //$row = array('html' =>$result);
+            echo json_encode($result);   
+    }
+    /**--------------------------FIN----------------------- */
 
 
 }

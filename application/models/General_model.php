@@ -10,7 +10,7 @@ class General_model extends CI_Model
 
     function get_menu($id_rol)
     {
-        if ($this->session->userdata('id_usuario') == 4415) // ES GREENHAM
+        if ($this->session->userdata('id_usuario') == 4415 || $this->session->userdata('id_usuario') == 6578 || $this->session->userdata('id_usuario') == 9942 || $this->session->userdata('id_usuario') == 9911) // ES GREENHAM
             return $this->db->query("SELECT * FROM Menu2 WHERE rol=" . $id_rol . " AND nombre IN ('Inicio', 'Comisiones') AND estatus = 1 order by orden asc");
         else {
             if ($id_rol == 33) { // ES UN USUARIO DE CONSULTA
@@ -51,7 +51,7 @@ class General_model extends CI_Model
     {
         return $this->db->query("SELECT idCondominio, UPPER(nombre) nombre FROM condominios WHERE status = 1 AND idResidencial = $idResidencial ORDER BY nombre ASC")->result_array();
     }
-
+ 
     public function getLotesList($idCondominio)
     {
         $a = 0;
@@ -136,6 +136,17 @@ class General_model extends CI_Model
     function getCatalogOptions($id_catalogo)
     {
         return $this->db->query("SELECT id_opcion, id_catalogo, nombre FROM opcs_x_cats WHERE id_catalogo = $id_catalogo AND estatus = 1");
+    }
+
+    public function getAsesoresList()
+    {
+        return $this->db->query("SELECT id_usuario id, CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) nombre, id_sede sede, id_rol rol
+        FROM usuarios WHERE id_lider = " . $this->session->userdata('id_usuario') . " AND id_rol = 9 AND estatus = 1
+        UNION ALL
+        SELECT id_usuario id, CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) nombre, id_sede sede, id_rol rol
+        FROM usuarios 
+        WHERE id_lider IN (SELECT id_usuario FROM usuarios WHERE id_lider = " . $this->session->userdata('id_usuario') . " AND id_rol = 9 AND estatus = 1) AND estatus = 1
+        ORDER BY nombre")->result_array();
     }
 
 }

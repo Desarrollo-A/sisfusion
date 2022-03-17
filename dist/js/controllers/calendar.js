@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', function() {
     var calendarEl = document.getElementById('calendar');
     calendar = new FullCalendar.Calendar(calendarEl, {
       initialView: 'dayGridMonth',
+      locale: 'es',
       eventSources: [
         // your event source
         {
@@ -15,11 +16,9 @@ document.addEventListener('DOMContentLoaded', function() {
         },
       ],
       eventClick: function(info) {
-        console.log(info);
         modalEvent(info.event.id);
       }
     });
-    console.log(calendar);
     calendar.render();
   });
 
@@ -39,12 +38,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
 $("#estatus_recordatorio2").on('change', function(e){
   let idAgenda = $("#idAgenda2").val();
-  console.log('idAgenda',idAgenda);
   getAppointmentData(idAgenda, $(this).val());
 })
 
 $("#dateStart2").on('change', function(e){
-  console.log('fecha');
   $('#dateEnd2').val("");
   $("#dateEnd2").prop('disabled', false);
   $('#dateEnd2').prop('min', $(this).val());
@@ -80,14 +77,12 @@ $("#edit_appointment_form").on('submit', function(e) {
 });
 
   function modalEvent(idAgenda){
-    console.log(idAgenda);
     getAppointmentData(idAgenda, null);
     $('#modalEvent').modal();
   }
 
   function deleteCita(){
     let idAgenda = $("#idAgenda2").val();
-    console.log(idAgenda);
     $.ajax({
       type: 'POST',
       url: 'deleteAppointment',
@@ -112,7 +107,6 @@ $("#edit_appointment_form").on('submit', function(e) {
   }
 
   function createComodin(data, medio){
-    console.log('medio', medio);
     if(medio == 2 || medio == 4 || medio == 5 || medio == 1){
       $("#comodinDIV2").empty();
       $("#comodinDIV2").append(`<label>${medio == 1 ? 'URL':'Dirección'}</label>`+

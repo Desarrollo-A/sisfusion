@@ -22,7 +22,7 @@
                                 <i class="material-icons">list</i>
                             </div>
                             <div class="card-content">
-                                <h3 class="card-title center-align">Listado general de prospectos</h3>
+                                <h3 class="card-title center-align">Listado general de solicitudes de escrituración.</h3>
                                 <div class="toolbar">
                                     <div class="row">
                                         <div class="col-12 col-sm-6 col-md-6 col-lg-6"></div>
@@ -34,7 +34,7 @@
                                                             <input type="text" class="form-control datepicker"
                                                                 id="beginDate" value="01/01/2022" autocomplete='off'/>
                                                             <input type="text" class="form-control datepicker"
-                                                                id="endDate" value="01/01/2022" autocomplete='off' />
+                                                                id="endDate" value="28/02/2022" autocomplete='off' />
                                                             <button
                                                                 class="btn btn-success btn-round btn-fab btn-fab-mini"
                                                                 id="searchByDateRange">

@@ -87,7 +87,7 @@ $(document).on('change', '#cliente', function () {
 });
 
 $(document).on('change', '#cliente2', function () {
-    if ($(this).val() == '1') {
+    if ($(this).val() == 'uno') {
         $('#ifClient2').show();
     } else {
         $('#ifClient2').hide();
@@ -346,12 +346,15 @@ $(document).on("submit", "#formPresupuesto", function (e) {
         processData: false,
         type: 'POST',
         success: function (response) {
+            console.log('savePr', response);
             if (response == 1) {
-                window.open("pdfPresupuesto/" + $('#id_solicitud3').val(), "_blank")
+                var win =  window.open("pdfPresupuesto/" + $('#id_solicitud3').val(), "_blank");
                 $("#presupuestoModal").modal("hide");
-                prospectsTable.ajax.reload();
+                $('#spiner-loader').addClass('hide');
+                win.onload = function(){
+                    prospectsTable.ajax.reload();
+                }
             }
-            $('#spiner-loader').addClass('hide');
         }, error: function () {
             alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
             $('#spiner-loader').addClass('hide');
@@ -630,20 +633,23 @@ function fillTable(beginDate, endDate) {
                         case 4:
                             if (userType == 55) {
                                 newBtn += `<button id="presupuesto" class="btn-data btn-blueMaderas" data-toggle="tooltip" data-placement="top" title="presupuesto"><i class="fas fa-money-bill-wave"></i></button>`;
+                                newBtn += `<button id="reject" class="btn-data btn-warning" data-toggle="tooltip" data-placement="top" title="Rechazar"><i class="fas fa-ban"></i></button>`;
+                                if(d.Spresupuesto == 1){
+                                    newBtn += '<button id="request" class="btn-data btn-green" data-toggle="tooltip" data-placement="top" title="Aprobar"><i class="far fa-paper-plane"></i></button>';
+                                }
                             }
-                            group_buttons += permisos(d.permisos, d.expediente, d.idDocumento, d.tipo_documento, d.idSolicitud, 1, newBtn);
+                            group_buttons += permisos(d.permisos,d.expediente, d.idDocumento, d.tipo_documento, d.idSolicitud, 1, newBtn);
                             break;
                         case 5:
+                            newBtn += `<button id="reject" class="btn-data btn-warning" data-toggle="tooltip" data-placement="top" title="Rechazar"><i class="fas fa-ban"></i></button>`;
                             group_buttons += permisos(d.permisos, d.expediente, d.idDocumento, d.tipo_documento, d.idSolicitud, 1, newBtn);
-
-
                             break;
                         case 6:
                             //solicitud de valores (solicitud de presupuesto)
                             newBtn += `<button id="reject" class="btn-data btn-warning" data-toggle="tooltip" data-placement="top" title="Rechazar"><i class="fas fa-ban"></i></button>`;
-                            newBtn += `<button id="checkPresupuesto" data-idSolicitud=${d.idSolicitud} class="btn-data btn-details-grey" data-id-prospecto="" data-toggle="tooltip" data-placement="top" title="Revisar"><i class="fas fa-search"></i></button>`
+                            // newBtn += `<button id="checkPresupuesto" data-idSolicitud=${d.idSolicitud} class="btn-data btn-details-grey" data-id-prospecto="" data-toggle="tooltip" data-placement="top" title="Revisar"><i class="fas fa-search"></i></button>`
                             newBtn += `<button id="sendMail" data-idSolicitud=${d.idSolicitud}  data-action="1" class="btn-data btn-violetBoots" data-id-prospecto="" data-toggle="tooltip" data-placement="top" title="Correo"><i class="fas fa-envelope"></i></button>`;
-                            group_buttons += permisos(d.permisos, 1, d.idDocumento, d.tipo_documento, d.idSolicitud, 1, newBtn);
+                            group_buttons += permisos(d.permisos, d.expediente, d.idDocumento, d.tipo_documento, d.idSolicitud, 1, newBtn);
 
                             //Declaraciones ejecutadas cuando el resultado de expresión coincide con valorN
                             break;
@@ -682,7 +688,8 @@ function fillTable(beginDate, endDate) {
                                 exp = 2;
 
                             newBtn += `<button id="trees" data-idSolicitud=${d.idSolicitud} class="btn-data btn-details-grey details-control" data-permisos="2" data-id-prospecto="" data-toggle="tooltip" data-placement="top" title="Desglose documentos"><i class="fas fa-chevron-down"></i></button>`;
-                            if (userType == 57 && d.estatusValidacion == 0 && exp != null) { // MJ: ANTES 55
+                            newBtn += `<button id="notaria" data-idSolicitud=${d.idSolicitud} class="btn-data btn-green details-control" data-permisos="2" data-id-prospecto="" data-toggle="tooltip" data-placement="top" title="Notaria"><i class="fas fa-user-tie"></i></button>`;
+                            if (userType == 57 && d.estatusValidacion == 0 && exp != null && d.no_rechazos != 0) { // MJ: ANTES 55
                                 newBtn += `<button id="reject"  class="btn-data btn-warning" data-toggle="tooltip" data-placement="top" title="Rechazar"><i class="fas fa-ban"></i></button>`;
                             }
                             group_buttons += permisos(d.permisos, exp, d.idDocumento, d.tipo_documento, d.idSolicitud, 1, newBtn);
@@ -703,7 +710,9 @@ function fillTable(beginDate, endDate) {
                             //Declaraciones ejecutadas cuando el resultado de expresión coincide con valorN
                             break;
                         case 13:
-                            group_buttons += permisos(d.permisos, d.expediente, d.idDocumento, d.tipo_documento, d.idSolicitud, 2, newBtn);
+                            newBtn += `<button id="observaciones" data-idSolicitud=${d.idSolicitud} class="btn-data btn-green" data-permisos="2" data-id-prospecto="" rel="tooltip" data-placement="left" title="Observaciones"><i class="fas fa-envelope"></i></button>`;    
+                            // newBtn += `<button id="upload" data-idSolicitud=${d.idSolicitud} class="btn-data btn-green" data-action="2" data-id-prospecto="" rel="tooltip" data-placement="left" title="Upload/Delte"><i class="far fa-trash-alt"></i></button>`;
+                            group_buttons += permisos(d.permisos, d.expediente, d.idDocumento, d.tipo_documento, d.idSolicitud, 1, newBtn);
                             //Declaraciones ejecutadas cuando el resultado de expresión coincide con valorN
                             break;
                         case 14:
@@ -833,9 +842,9 @@ function email(idSolicitud, action, notaria = null, valuador= null) {
             obj = {idSolicitud: idSolicitud};
             break;
     }
-    $.post(action == 1 ? 'mailPresupuesto' : action == 2 ? 'presupuestoCliente' : action == 3 ? 'mailNotaria' : action == 4 ? 'mailFecha' : 'mailPresupuesto', obj, function (data) {
-        if (data == false) {//cambiar a true
-            changeStatus(idSolicitud, action == 1 ? 4 : 0, 'correo enviado', 1);
+    $.post(action == 1 ? 'mailPresupuesto': action == 2 ? 'presupuestoCliente': action  == 3 ? 'mailNotaria': action  == 4 ? 'mailFecha':'mailPresupuesto', obj, function (data) {
+        if(data == true){//cambiar a true
+            changeStatus(idSolicitud, action == 1 ? 4:0, 'correo enviado', 1);
         }
         $('#spiner-loader').addClass('hide');
     }, 'json');
@@ -937,20 +946,26 @@ function getNotarias() {
 
     function getBudgetInfo(idSolicitud){
         $('#spiner-loader').removeClass('hide');
+        getEstatusConstruccion();
+        getEstatusPago();
         $.post('getBudgetInfo',{
             idSolicitud:idSolicitud
         }, function(data) {
-           $('#nombrePresupuesto').val(data.nombre);
-           $('#nombrePresupuesto2').val(data.nombre);
-           $('#estatusPago').val(1);
-        //    $('#superficie').val(d);
-        var str = (data.modificado).split(" ")[0].split("-");
-        var strM = `${str[2]}-${str[1]}-${str[0]}`;
-        $('#fContrato').val(strM);
-        //    $('#catastral').val(data.estatus);
-        $('#construccion').val(1);
-        $('#cliente').val(1);
-        $('#spiner-loader').addClass('hide');
+            $('#nombrePresupuesto').val(data.nombre);
+            $('#nombrePresupuesto2').val(data.nombre);
+            $('#estatusPago').val(data.estatus_pago).trigger('change');
+            $("#estatusPago").selectpicker('refresh');
+            $('#superficie').val(data.superficie);
+            var str = (data.modificado).split(" ")[0].split("-");
+            var strM = `${str[2]}-${str[1]}-${str[0]}`;
+            $('#fContrato').val(strM);
+            $('#catastral').val(data.clave_catastral);
+            $('#construccion').val(data.estatus_construccion).trigger('change');
+            $("#construccion").selectpicker('refresh');
+            $('#cliente').val(data.cliente_anterior == 1 ? 'uno':'dos').trigger('change');
+            $("#cliente").selectpicker('refresh');
+            $("#encabezado").html(`${data.nombreResidencial} / ${data.nombreCondominio} / ${data.nombreLote}`);
+            $('#spiner-loader').addClass('hide');
     }, 'json');
 }
 
@@ -966,8 +981,7 @@ function checkBudgetInfo(idSolicitud) {
         $('#fContrato2').val(data.modificado);
         $('#catastral2').val(data.clave_catastral);
         $('#construccion2').val(data.estatus_construccion);
-        $('#cliente2').val(data.cliente_anterior).trigger('change');
-        ;
+        $('#cliente2').val(data.cliente_anterior == 1 ? 'uno':'dos').trigger('change');
         $("#cliente2").selectpicker('refresh');
         $('#nombreT2').val(data.nombre_anterior);
         $('#fechaCA2').val(data.fecha_anterior);
@@ -1023,6 +1037,7 @@ function displayInput(idDocumento) {
 }
 
 function permisos(permiso, expediente, idDocumento, tipo_documento, idSolicitud, aditional, newBtn) {
+    console.log(permiso, expediente, idDocumento, tipo_documento, idSolicitud, aditional, newBtn);
     let botones = '';
     switch (permiso) {
         case 0:
@@ -1033,12 +1048,14 @@ function permisos(permiso, expediente, idDocumento, tipo_documento, idSolicitud,
                 if (aditional == 2) {
                     botones += `<button data-idDocumento="${idDocumento}" data-documentType="${tipo_documento}" data-idSolicitud=${idSolicitud} data-action=${expediente == null || expediente == '' ? 1 : 2} class="btn-data ${expediente == null || expediente == '' ? "btn-sky" : "btn-warning"} upload" data-toggle="tooltip" data-placement="top" title="Upload/Delete">${expediente == null || expediente == '' ? '<i class="fas fa-cloud-upload-alt"></i>' : '<i class="far fa-trash-alt"></i>'}</button>`;
                 } else {
+                    botones += `<button data-idDocumento="${idDocumento}" data-documentType="${tipo_documento}" data-idSolicitud=${idSolicitud} data-action=${expediente == null || expediente == '' ? 1 : 2} class="btn-data ${expediente == null || expediente == '' ? "btn-sky" : "btn-warning"} upload" data-toggle="tooltip" data-placement="top" title="Upload/Delete">${expediente == null || expediente == '' ? '<i class="fas fa-cloud-upload-alt"></i>' : '<i class="far fa-trash-alt"></i>'}</button>`;
                     botones += newBtn;
                 }
             } else {
                 if (aditional == 2) {
                     botones += `<button data-idDocumento="${idDocumento}" data-documentType="${tipo_documento}" data-idSolicitud=${idSolicitud} data-action=${expediente == null || expediente == '' ? 1 : 2} class="btn-data ${expediente == null || expediente == '' ? "btn-sky" : "btn-warning"} upload" data-toggle="tooltip" data-placement="top" title="Upload/Delete">${expediente == null || expediente == '' ? '<i class="fas fa-cloud-upload-alt"></i>' : '<i class="far fa-trash-alt"></i>'}</button>`;
                 } else {
+                    botones += `<button data-idDocumento="${idDocumento}" data-documentType="${tipo_documento}" data-idSolicitud=${idSolicitud} data-action=${expediente == null || expediente == '' ? 1 : 2} class="btn-data ${expediente == null || expediente == '' ? "btn-sky" : "btn-warning"} upload" data-toggle="tooltip" data-placement="top" title="Upload/Delete">${expediente == null || expediente == '' ? '<i class="fas fa-cloud-upload-alt"></i>' : '<i class="far fa-trash-alt"></i>'}</button>`;
                     botones += newBtn;
                 }
                 botones += `<button id="preview" data-doc="${expediente}" data-documentType="${tipo_documento}" class="btn-data btn-details-grey" data-toggle="tooltip" data-placement="top" title="Preview"><i class="fas fa-eye"></i></button>`;
@@ -1067,6 +1084,7 @@ function permisos(permiso, expediente, idDocumento, tipo_documento, idSolicitud,
                     botones += `<button id="reject" class="btn-data btn-warning" data-toggle="tooltip" data-placement="top" title="Rechazar"><i class="fas fa-ban"></i></button>`;
                 }
                 botones += '<button id="request" class="btn-data btn-green" data-toggle="tooltip" data-placement="top" title="Enviar"><i class="far fa-paper-plane"></i></button>';
+
             }
             break;
         case 4: //especial
@@ -1173,6 +1191,96 @@ function changeStatus(id_solicitud, action, comentarios, type) {
     }, 'json');
 }
 
+//INSERTAR NUEVA NOTARIA
+$(document).on("submit", "#newNotario", function (e) {
+    e.preventDefault();
+    let idSolicitud = $("#idSolicitud").val();
+    let data = new FormData($(this)[0]);
+    data.append('nombre_notaria', $('#nombre_notaria').val() == '' ? null : $('#nombre_notaria').val());
+    data.append('nombre_notario', $('#nombre_notario').val() == '' ? null : $('#nombre_notario').val());
+    data.append('direccion', $('#direccion').val() == '' ? null : $('#direccion').val());
+    data.append('correo', $('#correo').val() == '' ? null : $('#correo').val());
+    data.append('telefono', $('#telefono').val() == '' ? null : $('#telefono').val());
+    data.append("idSolicitud", idSolicitud);
+    //data.append('idSolicitud', $('#idSolicitud').val() == '' ? null : $('#idSolicitud').val());
+
+    $.ajax({
+        url: "nuevoNotario",
+        data: data,
+        cache: false,
+        contentType: false,
+        processData: false, 
+        type: 'POST',
+        success: function (response) {
+            $("#altaNotario").modal("hide");
+            prospectsTable.ajax.reload();
+        }
+    });
+});
+
+//MOSTRAR INFORMACION DE LA NOTARIA
+$(document).on('click', '#notaria', function () {
+    var data = prospectsTable.row($(this).parents('tr')).data();
+    getBudgetNotaria(data.idSolicitud);
+    $('#idSolicitud').val(data.idSolicitud);
+    ;
+    $("#gestionNotaria").modal();
+});
+
+function getBudgetNotaria(idSolicitud){
+    $.get('getBudgetNotaria',{
+        idSolicitud:idSolicitud
+    }, function(data) {
+        $('#nombreNotaria').val(data.nombre_notaria);
+        $('#nombreNotario').val(data.nombre_notario);
+        $('#direccionN').val(data.direccion);
+        $('#correoN').val(data.correo);
+        $('#telefonoN').val(data.telefono);
+    }, 'json');
+}
+
+//ENVIO OBSERVACIONES
+$(document).on('click', '#observaciones', function () {
+    var data = prospectsTable.row($(this).parents('tr')).data();
+    $('#idSolicitud').val(data.idSolicitud);
+    $('#viewObservaciones').modal();
+});
+
+$(document).on('change', '#pertenece', function () {
+    if ($(this).val() == 'Postventa') {
+        $('#postventa').show();
+    }else {
+        $('#postventa').hide();
+    }
+});
+
+$(document).on('change', '#pertenece', function () {
+    if ($(this).val() == 'Proyectos') {
+        $('#proyectos').show();
+    }else {
+        $('#proyectos').hide();
+    }
+});
+
+$(document).on("submit", "#observaciones", function (e) {
+    e.preventDefault();
+    let idSolicitud = $("#idSolicitud").val();
+    let data = new FormData($(this)[0]);
+    data.append("idSolicitud", idSolicitud);
+
+    $.ajax({
+        url: "observacionesPostventa",
+        data: data, 
+        cache: false,
+        contentType: false,
+        processData: false,
+        type: 'POST',
+        success: function (response) {
+            $("#viewObservaciones").modal("hide");
+            prospectsTable.ajax.reload();
+        }
+    });
+});
 function filterSelectOptions(documentType) {
     $("#rejectionReasons option").each(function () {
         if ($(this).attr("data-type") === documentType) {
@@ -1185,7 +1293,45 @@ function filterSelectOptions(documentType) {
     $("#rejectionReasons option:selected").prop("selected", false);
     $("#rejectionReasons").trigger('change');
     $("#rejectionReasons").selectpicker('refresh');
+
+    
 }
 
+function getEstatusConstruccion() {
+    $('#spiner-loader').removeClass('hide');
+    $("#construccion").find("option").remove();
+    $("#construccion").append($('<option disabled selected>').val("0").text("Seleccione una opción"));
+    $.post('getEstatusConstruccion', function(data) {
+        var len = data.length;
+        for (var i = 0; i < len; i++) {
+            var id = data[i]['id_opcion'];
+            var name = data[i]['nombre'];
+            $("#construccion").append($('<option>').val(id).text(name));
+        }
+        if (len <= 0) {
+            $("#construccion").append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
+        }
+        $("#construccion").selectpicker('refresh');
+        $('#spiner-loader').addClass('hide');
+    }, 'json');
+}
 
+function getEstatusPago() {
+    $('#spiner-loader').removeClass('hide');
+    $("#estatusPago").find("option").remove();
+    $("#estatusPago").append($('<option disabled selected>').val("0").text("Seleccione una opción"));
+    $.post('getEstatusPago', function(data) {
+        var len = data.length;
+        for (var i = 0; i < len; i++) {
+            var id = data[i]['id_opcion'];
+            var name = data[i]['nombre'];
+            $("#estatusPago").append($('<option>').val(id).text(name));
+        }
+        if (len <= 0) {
+            $("#estatusPago").append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
+        }
+        $("#estatusPago").selectpicker('refresh');
+        $('#spiner-loader').addClass('hide');
+    }, 'json');
+}
      

@@ -64,8 +64,8 @@ class Postventa_model extends CI_Model
 
         return $this->db->query("SELECT oxc2.nombre area, se.idSolicitud, oxc.nombre estatus, se.fecha_creacion, l.nombreLote, se.estatus idEstatus,
         CONCAT(c.nombre, ' ', c.apellido_paterno, ' ', c.apellido_materno) nombre, cond.nombre nombreCondominio, r.nombreResidencial, de.expediente,
-        ctrl.tipo_documento, de.idDocumento, ctrl.permisos, de2.result, ce.tipo, ce.comentarios, mr.motivo motivos_rechazo, de2.estatusValidacion
-        FROM solicitud_escrituracion se 
+        ctrl.tipo_documento, de.idDocumento, ctrl.permisos, de2.result, ce.tipo, ce.comentarios, mr.motivo motivos_rechazo, de2.estatusValidacion, de3.Spresupuesto,
+        de2.no_rechazos FROM solicitud_escrituracion se 
         INNER JOIN clientes c ON c.id_cliente = se.idCliente AND c.status = 1
         INNER JOIN lotes l ON se.idLote = l.idLote 
         INNER JOIN condominios cond ON cond.idCondominio = l.idCondominio 
@@ -76,8 +76,11 @@ class Postventa_model extends CI_Model
         LEFT JOIN documentos_escrituracion de ON de.idSolicitud=se.idSolicitud AND de.tipo_documento = ctrl.tipo_documento
         LEFT JOIN (SELECT idSolicitud, CASE WHEN COUNT(*) != COUNT(CASE WHEN expediente IS NOT NULL THEN 1 END) 
 		THEN 0 ELSE 1 END result, 
-		CASE WHEN COUNT(*) != COUNT(CASE WHEN estatus_validacion = 1 THEN 1 END) THEN 0 ELSE 1 END estatusValidacion 
-		FROM documentos_escrituracion WHERE tipo_documento NOT IN (7, 11, 12, 13,14,15,16,17) GROUP BY idSolicitud) de2 ON de2.idSolicitud = se.idSolicitud
+		CASE WHEN COUNT(*) != COUNT(CASE WHEN estatus_validacion = 1 THEN 1 END) THEN 0 ELSE 1 END estatusValidacion,
+        COUNT(CASE WHEN estatus_validacion = 2 THEN 1 END) no_rechazos
+		FROM documentos_escrituracion WHERE tipo_documento NOT IN (7,9,10, 11, 12, 13,14,15,16,17) GROUP BY idSolicitud) de2 ON de2.idSolicitud = se.idSolicitud
+        LEFT JOIN (SELECT idSolicitud,  CASE WHEN COUNT(*) != COUNT(CASE WHEN expediente IS NOT NULL THEN 1 END) THEN 0 ELSE 1 END Spresupuesto
+		FROM documentos_escrituracion WHERE tipo_documento = 11 GROUP BY idSolicitud) de3 ON de3.idSolicitud = se.idSolicitud
         LEFT JOIN control_estatus ce ON ce.fecha_creacion = (SELECT max(fecha_creacion) FROM control_estatus WHERE ce.idEscrituracion = se.idSolicitud AND ce.newStatus = se.estatus)
         LEFT JOIN motivos_rechazo mr ON mr.id_motivo = ce.motivos_rechazo
         LEFT JOIN usuarios us ON us.id_usuario = de.validado_por
@@ -174,7 +177,7 @@ class Postventa_model extends CI_Model
 
     function getMotivosRechazos($tipoDocumento)
     {
-        $query = $this->db->query("SELECT * FROM motivos_rechazo WHERE producto = 2 AND tipo_documento = $tipoDocumento");
+        $query = $this->db->query("SELECT * FROM motivos_rechazo WHERE tipo_proceso = 2 AND tipo_documento = $tipoDocumento");
         return $query->result();
     }
 
@@ -230,9 +233,15 @@ class Postventa_model extends CI_Model
     }
 
     function getBudgetInfo($idSolicitud){
-        return $this->db->query("SELECT se.*, CONCAT(c.nombre, ' ', c.apellido_paterno, ' ', c.apellido_materno) nombre, hl.modificado FROM solicitud_escrituracion se 
+        return $this->db->query("SELECT se.*, CONCAT(c.nombre, ' ', c.apellido_paterno, ' ', c.apellido_materno) nombre, hl.modificado,
+        cond.nombre nombreCondominio, r.nombreResidencial, l.nombreLote, oxc2.nombre nombreConst, oxc.nombre nombrePago FROM solicitud_escrituracion se 
         INNER JOIN clientes c ON c.id_cliente = se.idCliente
         INNER JOIN (SELECT idLote, MAX(modificado) modificado FROM historial_lotes WHERE idStatusContratacion = 15 AND idMovimiento = 45 GROUP BY idLote) hl ON hl.idLote=se.idLote
+        INNER JOIN lotes l ON se.idLote = l.idLote 
+        INNER JOIN condominios cond ON cond.idCondominio = l.idCondominio 
+        INNER JOIN residenciales r ON r.idResidencial = cond.idResidencial
+		INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = se.estatus_pago AND oxc.id_catalogo = 63
+		INNER JOIN opcs_x_cats oxc2 ON oxc2.id_opcion = se.estatus_pago AND oxc2.id_catalogo = 62
         WHERE se.idSolicitud = $idSolicitud");
     }
 
@@ -298,4 +307,40 @@ function checkBudgetInfo($idSolicitud){
     function insertNotariaValuador($idNotaria, $idValuador, $idSolicitud){
         return $this->db->query("UPDATE solicitud_escrituracion SET idNotaria= $idNotaria, idValuador = $idValuador WHERE idSolicitud = $idSolicitud;");
     }
+
+    //INSERT NUEVA NOTARIA
+    function insertNewNotaria($nombre_notaria, $nombre_notario, $direccion, $correo, $telefono){
+        $this->db->query("INSERT INTO Notarias(nombre_notaria, nombre_notario, direccion, correo, telefono, sede, pertenece)
+        VALUES('$nombre_notaria', '$nombre_notario', '$direccion', '$correo', '$telefono', 0, 2);");
+        $insert_id = $this->db->insert_id();
+        $idSolicitud = $_POST['idSolicitud'];
+        //print_r("UPDATE solicitud_escrituracion SET idNotaria= $insert_id WHERE idSolicitud = $idSolicitud;");
+        $this->db->query("UPDATE solicitud_escrituracion SET idNotaria= $insert_id WHERE idSolicitud = $idSolicitud;");
+    }
+
+    //GESTION NOTARIA CLIENTE
+    function getNotariaClient($idSolicitud)
+    {
+        $idSolicitud = $_GET['idSolicitud'];
+        //print_r("SELECT n.idNotaria, n.nombre_notaria, n.nombre_notario, n.direccion, n.correo, n.telefono FROM Notarias n INNER JOIN solicitud_escrituracion se ON se.idNotaria = n.idNotaria WHERE se.idSolicitud = $idSolicitud");
+        return $this->db->query("SELECT n.idNotaria, n.nombre_notaria, n.nombre_notario, n.direccion, n.correo, n.telefono FROM Notarias n INNER JOIN solicitud_escrituracion se ON se.idNotaria = n.idNotaria WHERE se.idSolicitud = '$idSolicitud'");
+        
+    }
+
+    function updateObservacionesPostventa($idSolicitud){
+        $this->db->query("UPDATE solicitud_escrituracion SET estatus= 10 WHERE idSolicitud = $idSolicitud;");
+    }
+
+    function getEstatusConstruccion()
+    {
+        $query = $this->db->query("SELECT * FROM opcs_x_cats WHERE id_catalogo = 62");
+        return $query->result_array();
+    }
+
+    function getEstatusPago()
+    {
+        $query = $this->db->query("SELECT * FROM opcs_x_cats WHERE id_catalogo = 63");
+        return $query->result_array();
+    }
+
 }

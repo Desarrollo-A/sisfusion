@@ -1,4 +1,4 @@
-<div class="modal fade" id="approveModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+<div class="modal   ade" id="approveModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -99,28 +99,32 @@
             <input type="hidden" name="id_solicitud3" id="id_solicitud3">
                 <div class="modal-body text-center toolbar m-0">
                     <h3 id="mainLabelText"></h3>
-                    <h4 id="secondaryLabelDetail">Desarrollo / Condominio / Lote</h4>
+                    <h4 id="encabezado"></h4>
                     <div class="container-fluid">
                         <div class="row">
-                            <div class="col-md-12 pl-0 pr-0">
+                            <div class="col-md-12 pr-0 pr-0">
                                 <div class="form-group text-left m-0">
                                     <label class="control-label label-gral">Nombre Completo</label>
                                     <input id="nombrePresupuesto" name="nombrePresupuesto" class="form-control input-gral" type="text" disabled>
                                 </div>
                             </div>
-                            <div class="col-md-12 pl-0 pr-0">
+                            <div class="col-md-12 pr-0 pr-0">
                                 <div class="form-group text-left m-0">
                                     <label class="control-label label-gral m-0">Nombre a quien escritura</label>
                                     <input id="nombrePresupuesto2" name="nombrePresupuesto2" class="form-control input-gral" type="text" required>
                                 </div>
                             </div>
-                            <div class="col-md-4 pl-0">
+                            <div class="col-md-4 pr-0">
                                 <div class="form-group text-left m-0">
                                     <label class="control-label label-gral m-0">Estatus de pago</label>
-                                    <input id="estatusPago" name="estatusPago" class="form-control input-gral" type="text" required>
+                                    <select class="selectpicker m-0" data-style="btn btn-primary btn-round"
+                                            title="¿Tenemos cliente anterior?" data-size="7" id="estatusPago" name="estatusPago"
+                                            data-live-search="true" required>
+                                            <option value ="default" selected disabled>Selecciona una opción</option>
+                                    </select>
                                 </div>
                             </div>
-                            <div class="col-md-4 p-0">
+                            <div class="col-md-4 pr-0">
                                 <div class="form-group text-left m-0">
                                     <label class="control-label label-gral m-0">Superficie</label>
                                     <input id="superficie" name="superficie" class="form-control input-gral" value="" type="number" required>
@@ -133,16 +137,19 @@
                                     id="fContrato" name="fContrato" disabled/>
                                 </div>
                             </div>
-                            <div class="col-md-4 pl-0">
+                            <div class="col-md-4 pr-0">
                                 <div class="form-group text-left m-0">
                                     <label class="control-label label-gral m-0">Clave catastral</label>
                                     <input id="catastral" name="catastral" value="" class="form-control input-gral" type="number" required>
                                 </div>
                             </div>
-                            <div class="col-md-4 p-0">
+                            <div class="col-md-4 pr-0">
                                 <div class="form-group text-left m-0">
                                     <label class="control-label label-gral m-0">Estatus construcción</label>
-                                    <input id="construccion" name="construccion" class="form-control input-gral" type="text" required>
+                                    <select class="selectpicker m-0" data-style="btn btn-primary btn-round"
+                                            title="¿Tenemos cliente anterior?" data-size="7" id="construccion" name="construccion"
+                                            data-live-search="true" required>
+                                    </select>
                                 </div>
                             </div>
                             <div class="col-md-4 pr-0">
@@ -151,21 +158,21 @@
                                     <select class="selectpicker m-0" data-style="btn btn-primary btn-round"
                                             title="¿Tenemos cliente anterior?" data-size="7" id="cliente" name="cliente"
                                             data-live-search="true" required>
-                                            <option value ="default" selected disabled>aquino</option>
-                                            <option value="1">Si</option>
-                                            <option value="2">No</option>
+                                            <option value ="default" selected disabled>Selecciona una opción</option>
+                                            <option value="uno">Si</option>
+                                            <option value="dos">No</option>
                                     </select>
                                 </div>
                             </div>
                             <!-- estos input solo se muestran si es si el select anterior -->
                             <div id="ifClient" style="display:none">
-                                <div class="col-md-12 pl-0 pr-0">
+                                <div class="col-md-12 pr-0 pr-0">
                                     <div class="form-group label-floating is-focused">
                                         <label class="control-label label-gral">Nombre del titular anterior</label>
                                         <input id="nombreT" name="nombreT" class="form-control input-gral" type="text" disabled>
                                     </div>
                                 </div>
-                                <div class="col-md-6 pl-0">
+                                <div class="col-md-6 pr-0">
                                     <div class="form-group label-floating is-focused">
                                         <label class="control-label label-gral">Fecha del contrato anterior</label>
                                         <input type="text" class="form-control datepicker"
@@ -203,25 +210,25 @@
                     <h4 id="secondaryLabelDetail">Desarrollo / Condominio / Lote</h4>
                     <div class="container-fluid">
                         <div class="row">
-                            <div class="col-md-12 pl-0 pr-0">
+                            <div class="col-md-12 pr-0 pr-0">
                                 <div class="form-group label-floating is-focused">
                                     <label class="control-label label-gral">Nombre Completo</label>
                                     <input id="nombrePresupuesto3" name="nombrePresupuesto3" class="form-control input-gral" type="text" disabled>
                                 </div>
                             </div>
-                            <div class="col-md-12 pl-0 pr-0">
+                            <div class="col-md-12 pr-0 pr-0">
                                 <div class="form-group label-floating is-focused">
                                     <label class="control-label label-gral">Nombre a quien escritura</label>
                                     <input id="nombrePresupuesto4" name="nombrePresupuesto4" class="form-control input-gral" type="text" disabled>
                                 </div>
                             </div>
-                            <div class="col-md-4 pl-0">
+                            <div class="col-md-4 pr-0">
                                 <div class="form-group label-floating is-focused">
                                     <label class="control-label label-gral">Estatus de pago</label>
                                     <input id="estatusPago2" name="estatusPago2" class="form-control input-gral" type="text" disabled>
                                 </div>
                             </div>
-                            <div class="col-md-4 p-0">
+                            <div class="col-md-4 pr-0">
                                 <div class="form-group label-floating is-focused">
                                     <label class="control-label label-gral">Superficie</label>
                                     <input id="superficie2" name="superficie2" class="form-control input-gral" value="" type="number" disabled>
@@ -234,13 +241,13 @@
                                     id="fContrato2" name="fContrato2" disabled/>
                                 </div>
                             </div>
-                            <div class="col-md-4 pl-0">
+                            <div class="col-md-4 pr-0">
                                 <div class="form-group label-floating is-focused">
                                     <label class="control-label label-gral">Clave catastral</label>
                                     <input id="catastral2" name="catastral2" value="" class="form-control input-gral" type="number" disabled>
                                 </div>
                             </div>
-                            <div class="col-md-4 p-0">
+                            <div class="col-md-4 pr-0">
                                 <div class="form-group label-floating is-focused">
                                     <label class="control-label label-gral">Estatus construcción</label>
                                     <input id="construccion2" name="construccion2" class="form-control input-gral" type="text" disabled>
@@ -252,21 +259,21 @@
                                     <select class="selectpicker" data-style="btn btn-primary btn-round"
                                             title="¿Tenemos cliente anterior?" data-size="7" id="cliente2" name="cliente2"
                                             data-live-search="true" disabled>
-                                            <option value ="default" selected disabled>aquino</option>
-                                            <option value="1">Si</option>
-                                            <option value="2">No</option>
+                                            <option value ="default" selected disabled>Selecciona una opción</option>
+                                            <option value="uno">Si</option>
+                                            <option value="dos">No</option>
                                     </select>
                                 </div>
                             </div>
                             <!-- estos input solo se muestran si es si el select anterior -->
                             <div id="ifClient2" style="display:none">
-                                <div class="col-md-12 pl-0 pr-0">
+                                <div class="col-md-12 pr-0 pr-0">
                                     <div class="form-group label-floating is-focused">
                                         <label class="control-label label-gral">Nombre del titular anterior</label>
                                         <input id="nombreT2" name="nombreT2" class="form-control input-gral" type="text" disabled>
                                     </div>
                                 </div>
-                                <div class="col-md-6 pl-0">
+                                <div class="col-md-6 pr-0">
                                     <div class="form-group label-floating is-focused">
                                         <label class="control-label label-gral">Fecha del contrato anterior</label>
                                         <input type="text" class="form-control datepicker"
@@ -349,9 +356,6 @@
                     <div class="col-12 col-sm-12 col-md-6 col-lg-6"><div id="information"></div></div>
                     <div class="col-12 col-sm-12 col-md-6 col-lg-6"><div id="information2"></div></div>
                 </div>
-
-
-
                 <input type="text" class="hide" id="idSolicitud">
                 <input type="text" class="hide" id="action">
             </div>
@@ -364,17 +368,20 @@
 </div>
 
 <div class="modal fade" id="dateModal" data-keyboard="false" data-backdrop="static">
-    <div class="modal-dialog">
-        <div class="modal-content">
+    <div class="modal-dialog boxContent">
+        <div class="modal-content card">
             <div class="modal-header"></div>
-            <div class="modal-body text-center">
+            <div class="modal-body text-center card-content">
                 <h5 id="mainLabelText">Fecha para firma de escrituras</h5>
-                <p style="font-size: 0.8em"></p>
-                
-                <div class="input-group" >
-                    <div class="col-12 col-sm-12 col-md-12 col-lg-12 pr-0">
-                        <input type="text" class="form-control datepicker2" id="signDate" value="" />
-                        <label>*(fecha sugerida para firma de escrituras)</label>
+                <div class="toolbar" >
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-12 col-sm-12 col-md-12 col-lg-12 pr-0">
+                                <input type="text" class="form-control datepicker2 input-gral" id="signDate" value="" />
+                <p>*(fecha sugerida para firma de escrituras)</p>
+                                
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <input type="text" class="hide" id="idSolicitud">
@@ -394,17 +401,18 @@
             <div class="modal-header"><h5 id="mainLabelText">Fecha para firma de escrituras</h5></div>
             <div class="modal-body text-center">
                <form id="newNotario" name="newNotario" method="post">
+                    <input type="text" class="hide" id="idSolicitud" name="idSolicitud">
                     <div class="modal-body">
                         <div class="col-md-4">
                             <div class="form-group label-floating is-focused">
                                 <label class="control-label label-gral">Nombre de la notaria</label>
-                                <input type="text" id="nombreNotaria" name="nombreNotaria" class="form-control input-gral">
+                                <input type="text" id="nombre_notaria" name="nombre_notaria" class="form-control input-gral">
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-group label-floating is-focused">
                                 <label class="control-label label-gral">Nombre del notario</label>
-                                <input type="text" id="nombreNotario" name="nombreNotario" class="form-control input-gral">
+                                <input type="text" id="nombre_notario" name="nombre_notario" class="form-control input-gral">
                             </div>
                         </div>    
                         <div class="col-md-4">
@@ -425,13 +433,114 @@
                                 <input type="text" id="telefono" name="telefono" class="form-control input-gral">
                             </div>
                         </div>    
-                        <input type="text" class="hide" id="idSolicitud" name="idSolicitud">
                     </div>
                     <div class="modal-footer">
                         <button type="submit" class="btn btn-primary">Aceptar</button>
                         <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
                     </div>
                 </form> 
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="gestionNotaria" data-keyboard="false" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header"><h5 id="mainLabelText" aling="center"><b>Información Notaria</b></h5></div>
+            <div class="modal-body text-center">
+               <form method="post">
+                    <input type="text" class="hide" id="idSolicitud" name="idSolicitud">
+                    <div class="modal-body">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="control-label label-gral">Nombre de la notaria</label>
+                                <input type="text" id="nombreNotaria" name="nombreNotaria" class="form-control input-gral" value="" style="text-align:center" disabled>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="control-label label-gral">Nombre del notario</label>
+                                <input type="text" id="nombreNotario" name="nombre_notario" class="form-control input-gral" value="" style="text-align:center" disabled>
+                            </div>
+                        </div>    
+                        <div class="col-md-2"></div>
+                        <div class="col-md-8">
+                            <div class="form-group">
+                                <label class="control-label label-gral">Direccion</label>
+                                <input type="text" id="direccionN" name="direccion" class="form-control input-gral" value="" style="text-align:center" disabled>
+                            </div>
+                        </div> 
+                        <div class="col-md-2"></div>  
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="control-label label-gral">Correo</label>
+                                <input type="text" id="correoN" name="correo" class="form-control input-gral" value="" style="text-align:center" disabled>
+                            </div>
+                        </div>    
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="control-label label-gral">Teléfono</label>
+                                <input type="text" id="telefonoN" name="telefono" class="form-control input-gral" value="" style="text-align:center" disabled>
+                            </div>
+                        </div>    
+                    </div>
+                    <div class="modal-footer">
+                        <div class="col-md-4"></div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                            </div>
+                        </div>    
+                        <div class="col-md-4"></div>
+                    </div>
+                </form> 
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="viewObservaciones" data-keyboard="false" data-backdrop="static">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="text-center m-0">Envío de Observaciones</h5>
+            </div>
+            <form methos="post" name="observaciones" id="observaciones">
+                <input type="text" class="hide" id="idSolicitud" name="idSolicitud">
+                <input type="text" class="hide" id="action" name="action">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-6">
+                            <select id="pertenece" class="selectpicker" data-style="btn btn-primary btn-round" title="¿Para qién es la observación?" data-size="7" data-live-search="true">
+                                <option value="Postventa">Postventa</option>
+                                <option value="Proyectos">Proyectos</option>
+                            </select>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-6">
+                            <select id="observaciones" class="selectpicker" data-style="btn btn-primary btn-round" title="Observación" data-size="7" data-live-search="true">
+                                <option value="Corrección Documentos">Corrección Documentos</option>
+                                <option value="Documentación Correcta">Documentación Correcta</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    
+                </div>
+
+                <div class="modal-footer">
+                    <div id="postventa" style="display:none">
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                        <button type="submit" id="observacionesSubmit" class="btn btn-primary">Enviar</button>    
+                    </div>
+                </div>
+            </form>
+            <div class="modal-footer">
+                <div id="proyectos" style="display:none">
+                    <input type="text" class="hide" id="idSolicitud" name="idSolicitud">
+                    <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                    <button type="button" id="observacionesSubmit" class="btn btn-primary">Enviar</button>    
+                </div>
             </div>
         </div>
     </div>
