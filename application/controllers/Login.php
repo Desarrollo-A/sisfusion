@@ -257,6 +257,7 @@ class Login extends CI_Controller
 						$data = array(
 							'is_logued_in' 	        => 		TRUE,
 							'id_usuario' 	        => 		$check_user[0]->id_usuario,
+							'estatus'               =>      $check_user[0]->estatus,
 							'nombre' 		        => 		$check_user[0]->nombre,
 							'apellido_paterno' 		=> 		$check_user[0]->apellido_paterno,
 							'apellido_materno' 		=> 		$check_user[0]->apellido_materno,
