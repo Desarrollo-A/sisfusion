@@ -83,6 +83,7 @@
                 <input type="text" class="hide" id="documentType">
                 <input type="text" class="hide" id="docName">
                 <input type="text" class="hide" id="action">
+                <input type="text" class="hide" id="details">
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
@@ -378,8 +379,7 @@
                         <div class="row">
                             <div class="col-12 col-sm-12 col-md-12 col-lg-12 pr-0">
                                 <input type="text" class="form-control datepicker2 input-gral" id="signDate" value="" />
-                <p>*(fecha sugerida para firma de escrituras)</p>
-                                
+                                <p>*(fecha sugerida para firma de escrituras)</p>
                             </div>
                         </div>
                     </div>
