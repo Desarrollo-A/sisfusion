@@ -4,7 +4,7 @@
 <style>
 .bckSpan{
     padding: 4px;
-    background-color: #f9f9ef;
+    background-color: #ecf5ff;
     border-radius: 41px;
 }
 .subSpan{
@@ -88,7 +88,7 @@
                                             <span class="bckSpan w-100">
                                                 <span class="subSpan w-100 d-flex">
                                                     <input class="form-control generated-token" id="generatedToken" placeholder="Aún no se ha generado ningún token" readonly/>
-                                                    <button id="copyToken" onclick="copyToClipBoard()" data-toggle="popover" data-content="Some content inside the popover">
+                                                    <button id="copyToken" onclick="copyToClipBoard()" data-toggle="popover" data-content="Se ha copiado el contenido">
                                                         <i class="fas fa-clone"></i>
                                                     </button>
                                                 </span>
@@ -151,8 +151,10 @@
 
     $('#copyToken').popover().click(function () {
     setTimeout(function () {
-        $('#copyToken').popover('hide');
-    }, 1000);
+        $( "#copyToken" ).fadeOut( "slow", function() {
+            $('#copyToken').popover('hide');
+        });
+    }, 1500);
 });
 </script>
 
