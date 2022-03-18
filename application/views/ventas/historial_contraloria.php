@@ -773,7 +773,6 @@
                     targets:   0,
                     'searchable':false,
                     'className': 'dt-body-center',
-
                     select: {
                         style:    'os',
                         selector: 'td:first-child'
