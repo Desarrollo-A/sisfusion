@@ -591,7 +591,7 @@ function fillTable(beginDate, endDate) {
             },
             {
                 data: function (d) {
-                    return `<center><span class="label" style="background:${d.tipo == 1 || d.tipo == null ? '#28B463' : '#f44336'}">${d.estatus}</span><center>
+                    return `<center><span class="label" style="background:${d.tipo == 1 || d.tipo ==  null ? '#28B463' : '#f44336'}">${d.estatus}</span><center>
                     <center><span class="label" style="background:${d.tipo == 1 || d.tipo == null ? '#28B463' : '#f44336'}">(${d.area})</span><center>`;
                 }
             },
@@ -707,8 +707,12 @@ function fillTable(beginDate, endDate) {
                             //Declaraciones ejecutadas cuando el resultado de expresión coincide con valorN
                             break;
                         case 13:
+<<<<<<< HEAD
                             newBtn += `<button id="observaciones" data-idSolicitud=${d.idSolicitud} class="btn-data btn-green" data-permisos="2" data-id-prospecto="" rel="tooltip" data-placement="left" title="Observaciones"><i class="fas fa-envelope"></i></button>`;    
                             // newBtn += `<button id="upload" data-idSolicitud=${d.idSolicitud} class="btn-data btn-green" data-action="2" data-id-prospecto="" rel="tooltip" data-placement="left" title="Upload/Delte"><i class="far fa-trash-alt"></i></button>`;
+=======
+                            newBtn += `<button id="upload" data-idSolicitud=${d.idSolicitud} class="btn-data btn-green" data-action="2" data-id-prospecto="" rel="tooltip" data-placement="left" title="Upload/Delte"><i class="far fa-trash-alt"></i></button>`;
+>>>>>>> areli
                             group_buttons += permisos(d.permisos, d.expediente, d.idDocumento, d.tipo_documento, d.idSolicitud, 1, newBtn);
                             //Declaraciones ejecutadas cuando el resultado de expresión coincide con valorN
                             break;
@@ -1236,48 +1240,27 @@ function getBudgetNotaria(idSolicitud){
     }, 'json');
 }
 
-//ENVIO OBSERVACIONES
-$(document).on('click', '#observaciones', function () {
-    var data = prospectsTable.row($(this).parents('tr')).data();
-    $('#idSolicitud').val(data.idSolicitud);
-    $('#viewObservaciones').modal();
-});
-
-$(document).on('change', '#pertenece', function () {
-    if ($(this).val() == 'Postventa') {
-        $('#postventa').show();
-    }else {
-        $('#postventa').hide();
-    }
-});
-
-$(document).on('change', '#pertenece', function () {
-    if ($(this).val() == 'Proyectos') {
-        $('#proyectos').show();
-    }else {
-        $('#proyectos').hide();
-    }
-});
-
-$(document).on("submit", "#observaciones", function (e) {
+//RECHAZAR NOTARIA
+$(document).on("submit", "#rechazar", function (e) {
     e.preventDefault();
     let idSolicitud = $("#idSolicitud").val();
     let data = new FormData($(this)[0]);
     data.append("idSolicitud", idSolicitud);
 
     $.ajax({
-        url: "observacionesPostventa",
-        data: data, 
+        url: "rechazarNotaria",
+        data: data,
         cache: false,
         contentType: false,
         processData: false,
         type: 'POST',
         success: function (response) {
-            $("#viewObservaciones").modal("hide");
+            $("#gestionNotaria").modal("hide");
             prospectsTable.ajax.reload();
         }
     });
 });
+
 function filterSelectOptions(documentType) {
     $("#rejectionReasons option").each(function () {
         if ($(this).attr("data-type") === documentType) {
@@ -1290,8 +1273,6 @@ function filterSelectOptions(documentType) {
     $("#rejectionReasons option:selected").prop("selected", false);
     $("#rejectionReasons").trigger('change');
     $("#rejectionReasons").selectpicker('refresh');
-
-    
 }
 
 function getEstatusConstruccion() {
@@ -1331,6 +1312,7 @@ function getEstatusPago() {
         $('#spiner-loader').addClass('hide');
     }, 'json');
 }
+<<<<<<< HEAD
 
 function createDocRow(row, tr, thisVar){
     $.post("getDocumentsClient", {
@@ -1346,3 +1328,5 @@ function createDocRow(row, tr, thisVar){
     });
 }
      
+=======
+>>>>>>> areli
