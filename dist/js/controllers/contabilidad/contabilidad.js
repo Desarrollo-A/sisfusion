@@ -1,3 +1,6 @@
+$(document).ready(function () {
+    getColumns();
+});
 $('#tableLotificacion thead tr:eq(0) th').each(function (i) {
     const title = $(this).text();
     if (i != 13) {
@@ -174,6 +177,7 @@ $(document).on('click', '.find-results', function () {
     if (result) {
         $(".row-load").addClass("hide");
         let lotes = $("#lotes").val();
+        console.log('lotes',lotes);
         fillTableLotificacion(lotes);
     } else {
         $('#notificacion').modal('show');
@@ -334,13 +338,19 @@ $(document).on('click', '#uploadFile', function () {
 });
 
 $(document).on('change', "#residenciales", function () {
-    //getCondominios($(this).val());
     cleanSelects(1);
+    getCondominios($(this).val());
+    $('.bs-select-all').html('Seleccionar todo').css({'font-size': '1.2ex'});
+    $('.bs-deselect-all').html('Deseleccionar todo').css({'font-size': '1.2ex'});
+
+    // $("#condominios").append($('<option>').val('All').text('Todos'));
 });
 
 $(document).on('change', "#condominios", function () {
-    //getLotes($(this).val());
     cleanSelects(2);
+    getLotes($(this).val());
+    $('.bs-select-all').html('Seleccionar todo').css({'font-size': '1.2ex'});
+    $('.bs-deselect-all').html('Deseleccionar todo').css({'font-size': '1.2ex'});
 });
 
 function cleanSelects(action) {
@@ -353,4 +363,22 @@ function cleanSelects(action) {
         $("#columns").selectpicker("refresh");
     }
 
+}
+
+function getColumns() {
+    $('#spiner-loader').removeClass('hide');
+    $("#columns").empty().selectpicker('refresh');
+    $.ajax({
+        url: 'getColumns',
+        type: 'post',
+        dataType: 'json',
+        success: function (response) {
+            $('#spiner-loader').addClass('hide');
+            var len = response.length;
+            for (var i = 0; i < len; i++) {
+                $("#columns").append($('<option>').val(response[i]['id_opcion']).text(response[i]['nombre']));
+            }
+            $("#columns").selectpicker('refresh');
+        }
+    });
 }

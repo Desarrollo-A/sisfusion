@@ -689,7 +689,11 @@ function getStatusMktdPreventa(){
                                         WHERE c.estatus_vigencia = 1 $filter AND (c.id_asesor = ".$this->session->userdata('id_usuario')." OR c.id_coordinador = ".$this->session->userdata('id_usuario').") AND c.tipo = 0 ORDER BY c.fecha_creacion DESC");
                 break;
             case '7': // ASESOR
-                if($this->session->userdata('id_usuario') == 6578) {
+                if($this->session->userdata('id_usuario') == 6578 || $this->session->userdata('id_usuario') == 9942 || $this->session->userdata('id_usuario') == 9911) {
+
+                    $in = $this->session->userdata('id_usuario') == 6578 ? 26 :($this->session->userdata('id_usuario') == 9942 ? 33 : 35);
+                   // echo $in;
+
                     return $this->db->query("SELECT c.id_prospecto, CONCAT (c.nombre, ' ', c.apellido_paterno, ' ', c.apellido_materno) nombre, c.vigencia,
                                         CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) asesor, 
                                         CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) coordinador, 
@@ -700,7 +704,7 @@ function getStatusMktdPreventa(){
                                         LEFT JOIN usuarios us ON us.id_usuario = c.id_coordinador
                                         LEFT JOIN usuarios uss ON uss.id_usuario = c.id_gerente
                                         LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = c.lugar_prospeccion AND oxc.id_catalogo = 9
-                                        WHERE c.estatus_vigencia = 1 $filter AND c.lugar_prospeccion = 26 AND c.tipo = 0 ORDER BY c.fecha_creacion DESC");
+                                        WHERE c.estatus_vigencia = 1 $filter AND c.lugar_prospeccion in ($in) AND c.tipo = 0 ORDER BY c.fecha_creacion DESC");
                 } else {
                     return $this->db->query("SELECT c.id_prospecto, CONCAT (c.nombre, ' ', c.apellido_paterno, ' ', c.apellido_materno) nombre, c.vigencia,
                                         CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) asesor, 

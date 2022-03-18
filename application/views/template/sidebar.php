@@ -193,6 +193,21 @@ foreach($datos2 as $datos)
                 $c+=1; //contador para agregar a cada id de las opciones del menu
         }    
 ?>
+<!---CÓDIGO PARA ABRIR EL SITEMA DE TICKETS------------->
+<li class="nav-item ">
+ <a data-toggle="collapse" href="#componentsExamples_T">
+    <i class="material-icons">report</i>
+        <p>TICKETS<b class="caret"></b></p>
+</a>
+    <div class="collapse" id="componentsExamples_T">
+        <ul class="nav">
+            <li class="">
+              <a href="javascript: AddTicket()" >Agregar</a>
+            </li>
+        </ul>
+    </div>
+</li>
+<!----------FIN DEL CÓDIGO------------------------------>
 
 </ul>
 	</div>
@@ -283,3 +298,15 @@ foreach($datos2 as $datos)
 			</div>
 		</div>
     </nav>
+<script>
+    function AddTicket(){
+          $.post("<?=base_url()?>index.php/Api/ServicePostTicket", function (data) {
+            console.log(data);
+          //  window.open(data);
+
+          var newtab =  window.open('','Sistema de tickets', 'toolbar=0,scrollbars=0,location=0,statusbar=0,menubar=0,resizable=1,width=1000,height=400,left = 390,top = 50');
+          newtab.document.write(data);  
+
+    }, 'json');
+        }
+</script>

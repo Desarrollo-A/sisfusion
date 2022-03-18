@@ -10,9 +10,13 @@ class General_model extends CI_Model
 
     function get_menu($id_rol)
     {
-        if ($this->session->userdata('id_usuario') == 4415 || $this->session->userdata('id_usuario') == 6578 || $this->session->userdata('id_usuario') == 9942 || $this->session->userdata('id_usuario') == 9911) // ES GREENHAM
-            return $this->db->query("SELECT * FROM Menu2 WHERE rol=" . $id_rol . " AND nombre IN ('Inicio', 'Comisiones') AND estatus = 1 order by orden asc");
-        else {
+        if ($this->session->userdata('id_usuario') == 4415 || $this->session->userdata('id_usuario') == 6578 || $this->session->userdata('id_usuario') == 9942 || $this->session->userdata('id_usuario') == 9911 || $this->session->userdata('estatus') == 3){ // ES GREENHAM
+        $complemento='';
+           if($this->session->userdata('id_usuario') == 6578 || $this->session->userdata('id_usuario') == 9942 || $this->session->userdata('id_usuario') == 9911){
+               $complemento = ", 'Prospectos'";
+           }
+            return $this->db->query("SELECT * FROM Menu2 WHERE rol=" . $id_rol . " AND nombre IN ('Inicio', 'Comisiones'  ".$complemento.") AND estatus = 1 order by orden asc");
+         } else {
             if ($id_rol == 33) { // ES UN USUARIO DE CONSULTA
                 if ($this->session->userdata('id_usuario') == 2896) // ES PATRICIA MAYA
                     return $this->db->query("SELECT * FROM Menu2 WHERE rol=" . $id_rol . " AND estatus = 1 ORDER BY orden ASC");
@@ -33,7 +37,11 @@ class General_model extends CI_Model
         if ($this->session->userdata('id_usuario') == 2762) {
             return $this->db->query("SELECT * FROM Menu2 WHERE rol = " . $id_rol . " AND padre > 0 AND estatus = 1 ORDER BY orden ASC");
         } else {
-            return $this->db->query("SELECT * FROM Menu2 WHERE rol = " . $id_rol . " AND padre > 0 AND estatus = 1 AND nombre NOT IN ('Reemplazo contrato') ORDER BY orden ASC");
+            $complemento="";
+            if($this->session->userdata('id_usuario') == 6578 || $this->session->userdata('id_usuario') == 9942 || $this->session->userdata('id_usuario') == 9911){
+                $complemento = " AND idmenu in(296,307,308,879)";
+            }
+            return $this->db->query("SELECT * FROM Menu2 WHERE rol = " . $id_rol . " AND padre > 0 AND estatus = 1 AND nombre NOT IN ('Reemplazo contrato') $complemento ORDER BY orden ASC");
         }
     }
 
