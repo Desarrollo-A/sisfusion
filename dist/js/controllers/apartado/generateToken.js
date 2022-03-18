@@ -107,6 +107,7 @@ $(document).on("click", "#generateToken", function () {
 });
 
 function generateToken() {
+    $('#spiner-loader').removeClass('hide');
     $.ajax({
         url: general_base_url + 'Api/generateToken',
         type: 'post',
@@ -116,9 +117,10 @@ function generateToken() {
             "id_gerente": id_gerente
         },
         success: function (response) {
+            $('#spiner-loader').addClass('hide');
             alerts.showNotification("top", "right", response["message"], response["status"] == 500 ? "danger" : "success");
-            if(response["status"] == 200) { // MJ: TOKEN GENERADO CON EXITO
-                $(".generated-token").val(response["id_token"]);
+            if (response["status"] == 200) { // MJ: TOKEN GENERADO CON EXITO
+                $(".generated-token").val("https://ciudadmaderas.com/apartado/token.html?token=" + response["id_token"]);
                 $("#generateTokenModal").modal("hide");
                 $("#tokensTable").DataTable().ajax.reload(null, false);
             }
@@ -131,21 +133,23 @@ function cleanSelects() {
 }
 
 function copyToClipBoard() {
-    let email = document.querySelector("#generatedToken");
-    let range = document.createRange();
-    range.selectNode(email);
-    window.getSelection().addRange(range);
-    try {
-        // intentar copiar el contenido seleccionado
-        var resultado = document.execCommand('copy');
-        console.log(resultado ? "Token copiado." : "No se pudo copiar el token.");
-    } catch(err) {
-        console.log('ERROR al intentar copiar el token');
-    }
+    /* Get the text field */
+    let copyText = document.getElementById("generatedToken");
+    if (copyText.value == "")
+        alerts.showNotification("top", "right", "No hay ningún token que copiar.", "warning");
+    else {
+        /* Select the text field */
+        copyText.select();
+        copyText.setSelectionRange(0, 99999); /* For mobile devices */
 
-    // eliminar el texto seleccionado
-    window.getSelection().removeAllRanges();
-    // cuando los navegadores lo soporten, habría
-    // que utilizar: removeRange(range)
+        /* Copy the text inside the text field */
+        navigator.clipboard.writeText(copyText.value);
+
+        /*setTimeout(function () {
+            $( "#copyToken" ).fadeOut( "slow", function() {
+                $('#copyToken').popover('hide');
+            });
+        }, 1500);*/
+    }
 }
 
