@@ -857,7 +857,7 @@
                         return '<span class="label" style="background:black;">LIQUIDADO</span>';
                     }
                     else {
-                        return '<span class="label" style="background:gray">NO DETECTADO</span>';
+                        return '<span class="label" style="background:gray">DETENIDO CH</span>';
                     }
                 }
             },
@@ -3181,7 +3181,7 @@
     let titulos_combinada = [];
 
     $('#tabla_descuentos_combinada thead tr:eq(0) th').each(function (i) {
-        if (i != 0 && i!=12) {
+        if (i!=13) {
             var title = $(this).text();
             titulos_combinada.push(title);
 
@@ -3394,7 +3394,7 @@
                             return '<span class="label" style="background:black;">LIQUIDADO</span>';
                         }
                         else {
-                            return '<span class="label" style="background:gray">NO DETECTADO</span>';
+                            return '<span class="label" style="background:gray">DETENIDO CH</span>';
                         }
                     }
                     else if(d.queryType == 1){
