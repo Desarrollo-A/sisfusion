@@ -149,13 +149,6 @@
         getAsesoresList();
     });
 
-    $('#copyToken').popover().click(function () {
-    setTimeout(function () {
-        $( "#copyToken" ).fadeOut( "slow", function() {
-            $('#copyToken').popover('hide');
-        });
-    }, 1500);
-});
 </script>
 
 </body>
