@@ -48,7 +48,7 @@
                         <div class="toolbar">
                             <h3 class="card-title center-align">Selecciona un asesor</h3>
                             <div class="row aligned-row">
-                                <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12 mb-3">
                                     <div class="form-group label-floating select-is-empty m-0 p-0">
                                         <select id="asesoresList" name="asesoresList"
                                                 class="selectpicker select-gral m-0"
@@ -56,6 +56,19 @@
                                                 data-live-search="true"
                                                 title="Selecciona un asesor" data-size="7" required>
                                         </select>
+                                    </div>
+                                </div>
+
+                                <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                    <div class="form-group label-floating select-is-empty m-0 p-0">
+                                        <div class="file-gph">
+                                            <input class="d-none" type="file" id="fileElm">
+                                            <input class="file-name" id="file-name" type="text" placeholder="No has seleccionada nada aún" readonly="">
+                                            <label class="upload-btn m-0" for="fileElm">
+                                                <span>Seleccionar</span>
+                                                <i class="fas fa-folder-open"></i>
+                                            </label>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -98,7 +111,7 @@
                                     
                                     <div class="col col-xs-1 col-sm-1 col-md-1 col-lg-1 d-flex align-center justify-evenly">
                                         <button class="btn-rounded btn-s-greenLight" id="generateToken" title="Generar token">
-                                            <i class="fas fa-plus" title="Copiar"></i>
+                                            <i class="fas fa-plus" title="Generar token"></i>
                                         </button> <!-- GENERATE TOKEN -->
                                     </div>
                                 </div>
@@ -147,6 +160,15 @@
     $(document).ready(function () {
         fillTokensTable();
         getAsesoresList();
+    });
+
+    $(document).ready(function () {
+        $("input:file").on("change", function () {
+            var target = $(this);
+            var relatedTarget = target.siblings(".file-name");
+            var fileName = target[0].files[0].name;
+            relatedTarget.val(fileName);
+        });
     });
 
 </script>
