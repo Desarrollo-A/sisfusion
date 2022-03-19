@@ -162,10 +162,13 @@ function getClientesList(empresa, proyecto) {
 }
 
 function validateExtension(extension, allowedExtensions) {
-    if (extension == allowedExtensions)
-        return true;
-    else
-        return false;
+    let allowedExtensionsArray = allowedExtensions.split(", ");
+    let flag = false;
+    for (let i = 0; i < allowedExtensionsArray.length; i++) {
+        if (allowedExtensionsArray[i] == extension)
+            flag = true;
+    }
+    return flag;
 }
 
 function getRejectionReasons(tipo_proceso) {
