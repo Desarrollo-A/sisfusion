@@ -63,6 +63,7 @@ class Contabilidad extends CI_Controller
                 $insertAuditoriaData = array("fecha_creacion" => date("Y-m-d H:i:s"), "creado_por" => $this->session->userdata('id_usuario'));
                 $insertArrayData = array();
                 $updateArrayData = array();
+                $insertResponse = array();
                 for ($i = 0; $i < count($statusByLote); $i++) { // MJ: SE ARMAN ARRAYS PARA INSERTAR | ACTUALIZAR SEGÚN SEA EL CASO
                     $commonData = array();
                     if ($statusByLote[$i]['typeTransaction'] == 0) { // MJ: INSERT
