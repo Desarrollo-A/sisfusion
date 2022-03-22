@@ -1364,6 +1364,7 @@ class Postventa extends CI_Controller
         else
             echo json_encode(array());
     }
+
     public function nuevoNotario()
     {
         $idSolicitud = $_POST['idSolicitud'];
@@ -1390,5 +1391,13 @@ class Postventa extends CI_Controller
         else
             echo json_encode(array());
     }
-}
 
+    public function rechazarNotaria()
+    {
+        $idSolicitud = $_POST['idSolicitud'];
+
+        $informacion = $this->Postventa_model->rechazarNotaria($idSolicitud);
+        return $informacion;
+    }
+
+}

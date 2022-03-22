@@ -23,7 +23,9 @@ class Postventa_model extends CI_Model
 
     function getLotes($idCondominio)
     {
-        return $this->db->query("SELECT * FROM lotes WHERE idCondominio = $idCondominio AND idStatusContratacion = 15 AND idMovimiento = 45 AND idStatusLote = 2");
+        return $this->db->query("SELECT * FROM lotes l
+        WHERE idCondominio = $idCondominio AND idStatusContratacion = 15 AND idMovimiento = 45 AND idStatusLote = 2 
+        AND idLote NOT IN(SELECT idLote FROM clientes WHERE id_cliente IN (SELECT idCliente FROM solicitud_escrituracion))");
     }
 
     function getClient($idLote)
@@ -314,8 +316,11 @@ function checkBudgetInfo($idSolicitud){
         VALUES('$nombre_notaria', '$nombre_notario', '$direccion', '$correo', '$telefono', 0, 2);");
         $insert_id = $this->db->insert_id();
         $idSolicitud = $_POST['idSolicitud'];
+        $rol = $this->session->userdata('id_rol');
+        $estatus = $this->db->query("SELECT estatus FROM solicitud_escrituracion WHERE idSolicitud = $idSolicitud")->row()->estatus;
         //print_r("UPDATE solicitud_escrituracion SET idNotaria= $insert_id WHERE idSolicitud = $idSolicitud;");
-        $this->db->query("UPDATE solicitud_escrituracion SET idNotaria= $insert_id WHERE idSolicitud = $idSolicitud;");
+        $this->db->query("UPDATE solicitud_escrituracion SET idNotaria= $insert_id, estatus = 11 WHERE idSolicitud = $idSolicitud;");
+        return $this->db->query("INSERT INTO control_estatus VALUES(($estatus), 59, 1, GETDATE(), 12, $idSolicitud, $rol, 11, 'Cambio de Notaria', 0);");
     }
 
     //GESTION NOTARIA CLIENTE
@@ -327,8 +332,13 @@ function checkBudgetInfo($idSolicitud){
         
     }
 
-    function updateObservacionesPostventa($idSolicitud){
-        $this->db->query("UPDATE solicitud_escrituracion SET estatus= 10 WHERE idSolicitud = $idSolicitud;");
+    //RECHAZAR NOTARIA
+    function rechazarNotaria(){
+        $idSolicitud = $_POST['idSolicitud'];
+        $rol = $this->session->userdata('id_rol');
+        
+        $this->db->query("UPDATE solicitud_escrituracion SET idNotaria = '', estatus = 10 WHERE idSolicitud = $idSolicitud;");
+        return $this->db->query("INSERT INTO control_estatus VALUES(11, 59, 1, GETDATE(), 13, $idSolicitud, $rol, 10, 'Se rechazo la Notaria', 0);");
     }
 
     function getEstatusConstruccion()

@@ -202,7 +202,7 @@ $(document).ready( function() {
 
                 // return '<center><span class="label label-danger" style="background:#27AE60">'+d.nuevo+'</span><center>';
 
- 
+
                 if(d.nuevo == 1){
                     return '<center><span class="label label-info" >Nuevo usuario</span><center>';
 
@@ -247,7 +247,7 @@ $(document).ready( function() {
             },
             { data: function (d) {
 
-                var id_rol = id_rol_global; 
+                var id_rol = id_rol_global;
                 // localStorage.getItem('id_rol');
 //console.log(id_rol);
                 if(id_rol==53){
@@ -273,10 +273,10 @@ $(document).ready( function() {
                             '<button class="btn-data btn-warning change-user-status" id="' + d.id_usuario +'" data-estatus="1" data-id-usuario="' + d.id_usuario +'" data-name="'+d.nombre+'" data-rol="'+d.puesto+'"><i class="fas fa-lock"></i></button>'+
                             '</div>';
                         }
-                       
+
                     }
                 }
-                    
+
                 }
             }
         ],
@@ -460,7 +460,7 @@ $("#BajaConfirmForm").on('submit', function(e){
     e.preventDefault();
     document.getElementById('btnSub').disabled = true;
     //$('#btnSub').prop('disabled', true);
-    
+
     $.ajax({
         type: 'POST',
         url: 'changeUserStatus',
@@ -501,7 +501,7 @@ if(estatus == 0 && (id_rol == 'Asesor' || id_rol == 'Gerente' || id_rol == 'Coor
     document.getElementById('nameUs').innerHTML = '';
     $('#id_user').val(0);
     $('#idrol').val(0);
-    
+
 
     document.getElementById('nameUs').innerHTML = nameUser;
     $('#id_user').val(id_user);
@@ -586,14 +586,14 @@ $(document).on('change', '#sedech', function() {
             $('#sucursal').prop('required', true);
         }else{
             document.getElementById("sucursal").removeAttribute("required");
-  
+
         }
         $.each( data.data, function(i, v){
                 var option = document.createElement("option");
                 option.text = v.nom_oficina;
                 option.value = v.idsucursal;
                 select.add(option);
-            
+
         });
     });
 });
@@ -624,16 +624,16 @@ function getSedesCH(sede = 0,sucursal = 0){
                                     option.value = v.idsucursal;
                                     select.add(option);
                                     if(v.idsucursal == sucursal){
-                                        option.selected = v.idsucursal;  
+                                        option.selected = v.idsucursal;
                                     }
 
 
-                                
+
                             });
                         });
                     }
-                
-                
+
+
             }
         });
     });

@@ -43,42 +43,18 @@
                                                    style="text-align:center;">
                                                 <thead>
                                                 <tr>
-                                                    <th>
-                                                        <center>ESTATUS</center>
-                                                    </th>
-                                                    <th>
-                                                        <center>ID</center>
-                                                    </th>
-                                                    <th>
-                                                        <center>NOMBRE</center>
-                                                    </th>
-                                                    <th>
-                                                        <center>CORREO</center>
-                                                    </th>
-                                                    <th>
-                                                        <center>TELÉFONO</center>
-                                                    </th>
-                                                    <th>
-                                                        <center>TIPO</center>
-                                                    </th>
-                                                    <th>
-                                                        <center>SEDE</center>
-                                                    </th>
-                                                    <th>
-                                                        <center>FORMA PAGO</center>
-                                                    </th>
-                                                    <th>
-                                                        <center>JEFE DIRECTO</center>
-                                                    </th>
-                                                    <th>
-                                                        <center>TIPO DE USUARIO</center>
-                                                    </th>
-                                                    <th>
-                                                        <center>FECHA ALTA</center>
-                                                    </th>
-                                                    <th>
-                                                        <center></center>
-                                                    </th>
+                                                    <th><center>ESTATUS</center></th>
+                                                    <th><center>ID</center></th>
+                                                    <th><center>NOMBRE</center></th>
+                                                    <th><center>CORREO</center></th>
+                                                    <th><center>TELÉFONO</center></th>
+                                                    <th><center>TIPO</center></th>
+                                                    <th><center>SEDE</center></th>
+                                                    <th><center>FORMA PAGO</center></th>
+                                                    <th><center>JEFE DIRECTO</center></th>
+                                                    <th><center>TIPO DE USUARIO</center></th>
+                                                    <th><center>FECHA ALTA</center></th>
+                                                    <th><center></center></th>
                                                 </tr>
                                                 </thead>
                                             </table>
@@ -460,13 +436,18 @@
                         } else {
                             if (d.abono_pendiente !== undefined) {
                                 if (parseFloat(d.abono_pendiente) > 0) {
-                                    return '<center><span class="label label-danger" style="background:#E74C3C">Inactivo</span><p class="mt-1"><span class="label label-warning" style="background:#F5C54D;">$ PENDIENTES</span></p><center>';
+                                    return '<center><span class="label label-danger" style="background:#E74C3C">Inactivo</span>' +
+                                        '<p class="mt-1"><span class="label label-warning" style="background:#F5C54D;">$ PENDIENTES</span></p><center>';
                                 } else {
-                                    return '<center><span class="label label-danger" style="background:#E74C3C">Inactivo</span><center>';
+                                    // return '<center><span class="label label-danger" style="background:#E74C3C">Inactivo</span><center>';
+                                    return '<center><span class="label label-danger" style="background:#E74C3C">Inactivo </span><br>' +
+                                        'Fecha baja: <b>'+d.fecha_baja+'</b><br><center>';
                                 }
 
                             } else {
-                                return '<center><span class="label label-danger" style="background:#E74C3C">Inactivo</span><center>';
+                                // return '<center><span class="label label-danger" style="background:#E74C3C">Inactivo</span><center>';
+                                return '<center><span class="label label-danger" style="background:#E74C3C">Inactivo </span><br>' +
+                                    'Fecha baja: <b>'+d.fecha_baja+'</b><br><center>';
                             }
                         }
                     }

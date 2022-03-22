@@ -198,6 +198,27 @@ $tv                 : "(min-width : 1824px)";
 .buttons-excel:hover i {
     color: $white;
 }
+/***/
+.buttons-general-dt {
+    box-shadow: none;
+    padding: 7px 25px;
+    color: $blueIndigoDeep;
+    background-color: $white !important;
+    border: 1px solid $blueIndigoDeep;
+    border-radius: 27px;
+    margin-bottom: 0;
+}
+.buttons-general-dt i {
+    color: $blueIndigoDeep;
+}
+.buttons-general-dt:hover {
+    background-color: $blueIndigoDeep !important;
+    border: 1px solid $blueIndigoDeep;
+}
+.buttons-general-dt:hover i {
+    color: $white;
+}
+/***/
 .btn-data-gral{
     width: 100%;
     border-radius: 27px;

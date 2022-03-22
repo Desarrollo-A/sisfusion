@@ -178,6 +178,7 @@
 
                         <input class="form-control" type="hidden" id="usuarioid" name="usuarioid" value="">
                         <input class="form-control" type="hidden" id="pagos_aplicados" name="pagos_aplicados" value="">
+                        <input class="form-control" type="hidden" id="saldo_comisiones" name="saldo_comisiones">
 
 
                         <div class="form-group">
@@ -680,24 +681,28 @@
                         return '<p style="font-size: 1em">' + d.id_usuario + '</p>';
                     }
                 },
+
                 {
                     "width": "10%",
                     "data": function (d) {
                         return '<p style="font-size: 1em">' + d.nombre + '</p>';
                     }
                 },
+
                 {
                     "width": "7%",
                     "data": function (d) {
                         return '<p style="font-size: 1em">' + d.puesto + '</p>';
                     }
                 },
+
                 {
                     "width": "7%",
                     "data": function (d) {
                         return '<p style="font-size: 1em">' + d.sede + '</p>';
                     }
                 },
+
                 {
                     "width": "7%",
                     "data": function (d) {
@@ -837,7 +842,8 @@
 
                             respuesta = 0;
 
-                        } else {
+                        }
+                        else {
 
                             if (d.id_sede == 6) {
                                 if (d.abono_nuevo < 15000) {
@@ -895,7 +901,8 @@
                             return '<div class="d-flex justify-center"><button href="#" value="' + d.id_usuario + '" data-value="' + d.nombre + '" data-code="' + d.id_usuario + '" ' + 'class="btn-data btn-blueMaderas consultar_logs_asimilados" title="Detalles">' + '<i class="fas fa-info-circle"></i></button>'+
                             '<button href="#" value="' + d.id_usuario + '" data-value="' + d.nombre + '" data-code="' + d.id_usuario + '" ' + 'class="btn-data btn-darkMaderas consultar_historial_pagos" title="Historial pagos">' + '<i class="fas fa-chart-bar"></i></button></div>';
 
-                        } else {
+                        }
+                        else {
                             OK = parseFloat(d.pago_individual * d.pagos_activos);
                             OP = parseFloat(d.monto - d.aply);
 
@@ -946,7 +953,8 @@
                                 return '<div class="d-flex justify-center"><button href="#" value="' + d.id_usuario + '" data-value="' + d.nombre + '" data-code="' + d.id_usuario + '" ' + 'class="btn-data btn-blueMaderas consultar_logs_asimilados" title="Detalles">' + '<span class="fas fa-info-circle"></span></button><button href="#" value="' + d.id_usuario + '" data-value="' + d.aply + '" data-code="' + d.id_usuario + '" ' + 'class="btn-data btn-warning topar_descuentos" title="Detener descuentos">' + '<i class="fas fa-times"></i></button>'+
                             '<button href="#" value="' + d.id_usuario + '" data-value="' + d.nombre + '" data-code="' + d.id_usuario + '" ' + 'class="btn-data btn-gray consultar_historial_pagos" title="Historial pagos">' + '<i class="fas fa-chart-bar"></i></button></div>';
                             } else {
-                                return '<div class="d-flex justify-center"><button href="#" value="' + d.id_usuario + '" data-value="' + pendiente + '"  data-sede="' + d.id_sede + '" data-validate="' + validar + '" data-code="' + d.cbbtton + '" ' + 'class="btn-data btn-violetDeep agregar_nuevo_descuento"  title="Aplicar descuento">' + '<i class="fas fa-plus"></i></button>'+
+                                return '<div class="d-flex justify-center"><button href="#" value="' + d.id_usuario + '" data-value="' + pendiente + '"  ' +
+                                    'data-saldoCom="'+d.abono_nuevo+'" data-sede="' + d.id_sede + '" data-validate="' + validar + '" data-code="' + d.cbbtton + '" ' + 'class="btn-data btn-violetDeep agregar_nuevo_descuento"  title="Aplicar descuento">' + '<i class="fas fa-plus"></i></button>'+
                             '<button href="#" value="' + d.id_usuario + '" data-value="' + d.nombre + '" data-code="' + d.id_usuario + '" ' + 'class="btn-data btn-gray consultar_historial_pagos" title="Historial pagos">' + '<i class="fas fa-chart-bar"></i></button></div>';
                             }
                         }
@@ -994,8 +1002,10 @@
             monto = $(this).attr("data-value");
             sde = $(this).attr("data-sede");
             validar = $(this).attr("data-validate");
+            saldo_comisiones = $(this).attr("data-saldoCom");
 
             // alert(validar);
+            console.log('saldo_comisiones: ', saldo_comisiones);
 
             $("#miModal modal-body").html("");
             $("#miModal").modal();
@@ -1005,6 +1015,7 @@
             $("#monto").val('$' + formatMoney(monto));
             $("#usuarioid").val(id_user);
             $("#pagos_aplicados").val(validar);
+            $('#saldo_comisiones').val(saldo_comisiones);
 
             $.post('getLotesOrigen2/' + id_user + '/' + monto, function (data) {
                 var len = data.length;
@@ -1138,13 +1149,20 @@ function getPagosByUser(user,mes, anio){
             $("#seeInformationModalDU").modal();
             $("#nameLote").append('<p><h5 style="color: white;">HISTORIAL DESCUENTO: <b>' + lote + '</b></h5></p>');
             $.getJSON("getCommentsDU/" + id_user).done(function (data) {
+                let saldo_comisiones;
+
+                if(data.saldo_comisiones == 'NULL' || data.saldo_comisiones=='null' || data.saldo_comisiones==undefined){
+                    saldo_comisiones = '';
+                }else{
+                    saldo_comisiones = '<label style="font-size:small;border-radius: 13px;background: rgb(0, 122, 255);' +
+                        'color: white;padding: 0px 10px;">Monto comisionado: <b>'+data.saldo_comisiones+'</b></label>';
+                }
+
                 if (!data) {
-
                     $("#comments-list-asimilados").append('<div class="col-lg-12"><p style="color:gray;font-size:1.1em;">SIN </p></div>');
-
                 } else {
                     $.each(data, function (i, v) {
-                        $("#comments-list-asimilados").append('<div class="col-lg-12"><p style="color:gray;font-size:1.1em;">SE DESCONTÓ LA CANTIDAD DE <b>$' + formatMoney(v.comentario) + '</b><br><b style="color:#3982C0;font-size:0.9em;">' + v.date_final + '</b><b style="color:#C6C6C6;font-size:0.9em;"> - ' + v.nombre_usuario + '</b></p></div>');
+                        $("#comments-list-asimilados").append('<div class="col-lg-12"><p style="color:gray;font-size:1.1em;">SE DESCONTÓ LA CANTIDAD DE <b>$' + formatMoney(v.comentario) + '</b>'+saldo_comisiones+'<br><b style="color:#3982C0;font-size:0.9em;">' + v.date_final + '</b><b style="color:#C6C6C6;font-size:0.9em;"> - ' + v.nombre_usuario + '</b></p></div>');
                     });
                 }
             });

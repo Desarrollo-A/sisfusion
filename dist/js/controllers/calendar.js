@@ -26,7 +26,14 @@ document.addEventListener('DOMContentLoaded', function() {
       ],
       eventClick: function(info) {
         modalEvent(info.event.id);
-      }
+      },
+      dayClick: function (date, allDay, jsEvent, view) {
+        if (allDay) {
+            // Clicked on the day number 
+            calendar.fullCalendar('changeView', 'agendaDay'/* or 'basicDay' */)
+                .fullCalendar('gotoDate', date.getFullYear(), date.getMonth(), date.getDate());
+        }
+    },
     });
     calendar.render();
   });
