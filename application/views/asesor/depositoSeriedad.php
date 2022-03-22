@@ -422,7 +422,7 @@
 
         <!-- modal  Venta compartida-->
         <div class="modal fade" id="ventaCompartida" data-keyboard="false" data-backdrop="static">
-            <div class="modal-dialog boxContent">
+            <div class="modal-dialog modal-lg">
                 <div class="modal-content card">
                     <form class="card-content" id="formVentaCompartida" name="formVentaCompartida" method="post">
                         <div class="modal-body text-center toolbar m-0 p-0">
@@ -433,13 +433,19 @@
                                         <div class="form-group label-floating is-focused">
                                             <label class="control-label label-gral">¿La venta es compartida?</label>
                                             <select class="selectpicker" data-style="btn btn-primary btn-round"
-                                                    title="¿Tenemos cliente anterior?" data-size="7" id="cliente2" name="cliente2"
-                                                    data-live-search="true" disabled>
+                                                    title="¿Tenemos cliente anterior?" data-size="7" id="ventaC" name="ventaC"
+                                                    data-live-search="true">
                                                     <option value ="default" selected disabled>Selecciona una opción</option>
                                                     <option value="uno">Si</option>
                                                     <option value="dos">No</option>
                                             </select>
                                         </div>
+                                    </div>
+                                    <div id="divAsesores" class="col-md-4 pr-0">
+                                        
+                                    </div>
+                                    <div id="divAsesores2" class="col-md-4 pr-0">
+                                        
                                     </div>
                                 </div>
                                 <div class="row">
@@ -474,7 +480,6 @@
 <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
 <link rel="stylesheet" type="text/css" href="<?=base_url()?>dist/css/shadowbox.css">
 <script type="text/javascript" src="<?=base_url()?>dist/js/shadowbox.js"></script>
-
 <script type="text/javascript">
     Shadowbox.init();
 
@@ -706,7 +711,7 @@ $('#tabla_deposito_seriedad thead tr:eq(0) th').each( function (i) {
                             }
                             return buttonst;
                         }else{
-                            buttonst = '<center><a href="" id="vCompartida" data-idCliente="'+d.id_cliente+'" data-idLote="'+d.idLote+'" class="btn-data btn-green getInfo2"><i class="fas fa-users"></i></a></center>'
+                            buttonst = '<center><a href="" id="vCompartida" data-idCliente="'+d.id_cliente+'" data-idLote="'+d.idLote+'" class="btn-data btn-green"><i class="fas fa-users"></i></a></center>'
                             return buttonst;
                         }
                     }
@@ -1698,6 +1703,97 @@ $('#tabla_deposito_seriedad thead tr:eq(0) th').each( function (i) {
         e.preventDefault();
         $('#ventaCompartida').modal('show');
     });
+    
+    $(document).on('change', '#ventaC', function(e) {
+        e.preventDefault();
+        console.log($(this).val());
+        createFirstSelect($(this).val());
+    });
+
+    $(document).on('change', '#asesor1', function(e) {
+        e.preventDefault();
+        console.log($(this).val());
+        createSecondSelect($(this).val());
+    });
+
+    $(document).on('submit', '#formVentaCompartida', function(e) {
+        e.preventDefault();
+        console.log($('#ventaC').val());
+        if ($('#asesor1').val() == '') 
+            alerts.showNotification("top", "right", "El campo del primer asesor es requerido.", "warning");
+        else if($('#ventaC').val() ==  null){
+            alerts.showNotification("top", "right", "El campo de venta compartida es requerido.", "warning");
+        }else{
+            var form = $(this);        
+            $.ajax({
+                type: "POST",
+                url: 'saveVentaCompartida',
+                data: form.serialize(),
+                success: function(data){
+                    console.log(data);
+                    alerts.showNotification("top", "right", "Se ha guardado el registro correctamente.", "success");
+                }
+            });
+        }
+    });
+
+    function createSecondSelect(value){
+        $('#spiner-loader').removeClass('hide');
+        $('#divAsesores2').html(`<div class="form-group label-floating is-focused">
+                                        <label class="control-label label-gral">Asesor 2</label>
+                                        <select class="selectpicker" data-style="btn btn-primary btn-round"
+                                                title="Selecciona el segundo asesor" data-size="7" id="asesor2" name="asesor2"
+                                                data-live-search="true">
+                                        </select>
+                                    </div>`);
+        $("#asesor2").empty().selectpicker('refresh');
+        $.ajax({
+            url: 'getAsesores2',
+            type: 'post',
+            dataType: 'json',
+            data: {value: value},
+            success: function (response) {
+                var len = response.length;
+                for (var i = 0; i < len; i++) {
+                    $("#asesor2").append($('<option>').val(response[i]['id_usuario']).text(response[i]['nombre']));
+                }
+                $("#asesor2").selectpicker('refresh');
+                $('#spiner-loader').addClass('hide');
+
+            }
+        });
+    }
+
+    function createFirstSelect(value){
+        $('#spiner-loader').removeClass('hide');
+        if(value == 'uno'){
+            $('#divAsesores').html(`<div class="form-group label-floating is-focused">
+                                        <label class="control-label label-gral">Asesor 1</label>
+                                        <select class="selectpicker" data-style="btn btn-primary btn-round"
+                                                title="Selecciona el primer asesor" data-size="7" id="asesor1" name="asesor1"
+                                                data-live-search="true">
+                                        </select>
+                                    </div>`);
+        }else{
+            $('#divAsesores').html('');
+            $('#divAsesores2').html('');
+        }
+
+        $("#asesor1").empty().selectpicker('refresh');
+        $.ajax({
+            url: 'getAsesores',
+            type: 'post',
+            dataType: 'json',
+            success: function (response) {
+                $('#spiner-loader').addClass('hide');
+                var len = response.length;
+                for (var i = 0; i < len; i++) {
+                    $("#asesor1").append($('<option>').val(response[i]['id_usuario']).text(response[i]['nombre']));
+                }
+                $("#asesor1").selectpicker('refresh');
+            }
+        });
+    }
 
 </script>
 

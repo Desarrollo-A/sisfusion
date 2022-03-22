@@ -1539,4 +1539,24 @@ class Asesor_model extends CI_Model
         return $this->db->query("SELECT id_catalogo, id_opcion, nombre FROM opcs_x_cats WHERE id_catalogo IN (11, 18, 19, 26) AND estatus = 1 ORDER BY id_catalogo, id_opcion");
     }
 
+    public function getAsesores($idUsuario)
+    {
+        return $this->db->query("SELECT id_usuario,  CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) as nombre FROM usuarios WHERE id_rol IN (7,9) AND estatus IN (1,3) AND id_usuario NOT IN ($idUsuario)")->result_array();
+    }
+
+    public function getAsesores2($idUsuario, $idSegundoAsesor)
+    {
+        return $this->db->query("SELECT id_usuario,  CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) as nombre FROM usuarios WHERE id_rol IN (7,9) AND estatus IN (1,3) AND id_usuario NOT IN ($idUsuario, $idSegundoAsesor)")->result_array();
+    }
+
+    public function saveVentaCompartida($data)
+    {
+        $query = $this->db->insert('venta_compartida', $data);
+        return true;
+    }
+
+    public function getAsesorData($idUsuario)
+    {
+        return $this->db->query("SELECT * FROM ")->result();
+    }
 }

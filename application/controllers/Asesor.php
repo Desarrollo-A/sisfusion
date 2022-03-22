@@ -5414,5 +5414,52 @@ class Asesor extends CI_Controller
         }
     }
 
+    function getAsesores()
+    {
+        $data = $this->Asesor_model->getAsesores($this->session->userdata('id_usuario'));
+        if ($data != null)
+            echo json_encode($data);
+        else
+            echo json_encode(array());
+    }
 
+    function getAsesores2()
+    {
+        $data = $this->Asesor_model->getAsesores2($this->session->userdata('id_usuario'), $_POST['value']);
+        if ($data != null)
+            echo json_encode($data);
+        else
+            echo json_encode(array());
+    }
+
+    function saveVentaCompartida()
+    {
+        $asesor1 = $_POST['asesor1'];
+        $asesor2 = $_POST['asesor2'];
+
+        $arrAsesor = array($asesor1, $asesor2);
+        var_dump($asesor2);
+        for($x=0;$x < $asesor2 != '' ? 2:1;$x++){
+            $dataAsesor = $this->Asesor_model->getAsesorData($arrAsesor[$x]);
+            print_r($dataAsesor);
+            $update = array(
+                "id_cliente" => '',  
+                "id_asesor" => $this->session->userdata('id_usuario'),  
+                "id_coordinador" => '',  
+                "id_gerente" => '',  
+                "estatus" => '',  
+                "fecha_creacion" => '',  
+                "creado_por" => '',  
+                "id_regional" => '',  
+                "id_subdirector" => '',  
+            );
+            // $data = $this->Asesor_model->saveVentaCompartida($update);
+        }
+
+       
+        if ($data != null)
+            echo json_encode($data);
+        else
+            echo json_encode(array());
+    }
 }
