@@ -892,7 +892,7 @@ class Postventa extends CI_Controller
     {
         $idSolicitud = $_POST['idSolicitud'];
 
-        // $data = $this->Postventa_model->getInfoNotaria($idSolicitud, $idNotaria)->result_array();
+        $data = $this->Postventa_model->getInfoNotaria($idSolicitud)->result_array();
         $info = $this->Postventa_model->getInfoSolicitud($idSolicitud)->row();
 
         $this->load->library('email');
