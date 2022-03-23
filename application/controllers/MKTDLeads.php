@@ -14,7 +14,7 @@ class MKTDLeads extends CI_Controller
 
     public function index_post()
 	{
-		$input = $this->input->post();
+		$input =$_POST;
         print_r($input);
 		$this->db->insert('prospectos',$input);
 		$this->response(['Lead Insertado correctamente.'], REST_Controller::HTTP_OK);
