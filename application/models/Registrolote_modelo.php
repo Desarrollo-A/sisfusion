@@ -6129,7 +6129,7 @@ WHERE idLote IN ('".$row['idLote']."') and nombreLote = '".$insert_csv['nombreLo
     {
         $query = $this->db-> query("SELECT l.* FROM lotes l 
             INNER JOIN clientes c ON c.id_cliente = l.idCliente
-            INNER JOIN usuarios u ON u.id_usuario = c.id_asesor AND u.estatus = 0
+            INNER JOIN usuarios u ON u.id_usuario = c.id_asesor AND u.estatus IN (0,3)
             WHERE l.status = 1 AND (l.idStatusContratacion = 1 OR l.idMovimiento = 82) AND c.status = 1 AND c.id_gerente = ". $this->session->userdata('id_lider') ." AND l.idCondominio = $condominio");
         if($query){
             $query = $query->result_array();

@@ -200,7 +200,10 @@ foreach($datos2 as $datos)
                     <?php } 
                     }		
                 $c+=1; //contador para agregar a cada id de las opciones del menu
-        }    
+        }   
+        
+        if($this->session->userdata('estatus') == 1){
+
 ?>
 <!---CÓDIGO PARA ABRIR EL SITEMA DE TICKETS------------->
 <li class="nav-item ">
@@ -216,6 +219,8 @@ foreach($datos2 as $datos)
         </ul>
     </div>
 </li>
+<?php } ?>
+
 <!----------FIN DEL CÓDIGO------------------------------>
 
 </ul>
