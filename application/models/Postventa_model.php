@@ -283,12 +283,12 @@ function checkBudgetInfo($idSolicitud){
                 WHERE se.idSolicitud =$idSolicitud");
     }
 
-    function getInfoNotaria($idSolicitud, $idNotaria)
+    function getInfoNotaria($idSolicitud)
     {
         return $this->db->query("SELECT se.*, de.*, n.* FROM solicitud_escrituracion se
 		INNER JOIN documentos_escrituracion de ON de.idSolicitud = se.idSolicitud
-		INNER JOIN Notarias n ON n.idNotaria = $idNotaria
-		WHERE se.idSolicitud = $idSolicitud");
+		INNER JOIN Notarias n ON n.idNotaria = se.idNotaria
+		WHERE se.idSolicitud = $idSolicitud AND de.tipo_documento NOT IN (14,15,16,17)");
     }
 
     function saveDate($signDate, $idSolicitud)
