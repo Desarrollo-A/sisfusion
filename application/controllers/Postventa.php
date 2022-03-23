@@ -1123,7 +1123,7 @@ class Postventa extends CI_Controller
         $insert = $this->Postventa_model->insertNotariaValuador($idNotaria, $idValuador, $idSolicitud);
         $data = $this->Postventa_model->checkBudgetInfo($idSolicitud)->row();
 
-        $documentName = $this->Postventa_model->getFileNameByDoctype($idSolicitud,11);
+        $documentName = $this->Postventa_model->getFileNameByDoctype($idSolicitud,11)->row();
         //correos
         //$data->correoN correos de la notaria
         //$data->correoV correos del valuador
