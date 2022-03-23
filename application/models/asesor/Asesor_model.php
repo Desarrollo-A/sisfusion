@@ -104,7 +104,8 @@ class Asesor_model extends CI_Model
         $query = $this->db->query("SELECT '1' qry, '1' dsType, cl.id_cliente, id_asesor, id_coordinador, id_gerente, cl.id_sede, cl.nombre, cl.apellido_paterno, 
                                     cl.apellido_materno, cl.status ,cl.idLote, fechaApartado ,fechaVencimiento , cl.usuario, cond.idCondominio, cl.fecha_creacion, 
                                     cl.creado_por, cl.fecha_modificacion, cl.modificado_por, cond.nombre as nombreCondominio, residencial.nombreResidencial as nombreResidencial,
-                                    cl.status, nombreLote, lotes.comentario, lotes.idMovimiento, lotes.fechaVenc, lotes.modificado, lotes.observacionContratoUrgente as vl, lotes.idStatusContratacion, cl.concepto, cl.id_prospecto
+                                    cl.status, nombreLote, lotes.comentario, lotes.idMovimiento, lotes.fechaVenc, lotes.modificado, lotes.observacionContratoUrgente as vl, lotes.idStatusContratacion, cl.concepto, cl.id_prospecto,
+                                    cl.flag_compartida
 									FROM clientes as cl
                                     LEFT JOIN usuarios as us ON cl.id_asesor=us.id_usuario
                                     LEFT JOIN lotes as lotes ON lotes.idLote=cl.idLote
@@ -120,7 +121,8 @@ class Asesor_model extends CI_Model
         $query = $this->db->query("SELECT '2' qry, '2' dsType, cl.idCliente as id_cliente, cl.idAsesor id_asesor, '0' id_coordinador,cl.idGerente id_gerente, '0' id_sede, CONCAT(cl.primerNombre, ' ', cl.segundoNombre) nombre, cl.apellidoPaterno apellido_paterno, 
                                     cl.apellidoMaterno apellido_materno, cl.status ,cl.idLote, fechaApartado ,fechaVencimiento , cl.usuario, cond.idCondominio, cl.fechaApartado fecha_creacion, 
                                     cl.creado_por, cl.fechaApartado fecha_modificacion, cl.usuario modificado_por, cond.nombre as nombreCondominio, residencial.nombreResidencial as nombreResidencial,
-                                    cl.status, nombreLote, lotes.comentario, lotes.idMovimiento, lotes.fechaVenc, lotes.modificado, lotes.observacionContratoUrgente as vl, lotes.idStatusContratacion, cl.concepto, '666' as id_prospecto
+                                    cl.status, nombreLote, lotes.comentario, lotes.idMovimiento, lotes.fechaVenc, lotes.modificado, lotes.observacionContratoUrgente as vl, lotes.idStatusContratacion, cl.concepto, '666' as id_prospecto,
+                                    cl.flag_compartida
 									FROM cliente_consulta as cl
                                     LEFT JOIN lotes as lotes ON lotes.idLote=cl.idLote
                                     LEFT JOIN condominios as cond ON lotes.idCondominio=cond.idCondominio
@@ -134,7 +136,8 @@ class Asesor_model extends CI_Model
     { // DATA FROM DEPOSITO_SERIEDAD WHEN NO ENCONTRÓ NOTHING IN getDataDs1 & getDataDs2
         $query = $this->db->query("SELECT '3' qry, '1' dsType, cl.id_cliente, id_asesor, id_coordinador, id_gerente, cl.id_sede, cl.nombre, cl.apellido_paterno, 
                                     cl.apellido_materno, cl.status ,cl.idLote, fechaApartado ,fechaVencimiento , cl.usuario, cond.idCondominio, cl.fecha_creacion, 
-                                    cl.creado_por, cl.fecha_modificacion, cl.modificado_por, cond.nombre as nombreCondominio, residencial.nombreResidencial as nombreResidencial, cl.status, nombreLote, lotes.comentario, lotes.idMovimiento, lotes.fechaVenc, lotes.modificado, lotes.observacionContratoUrgente as vl, lotes.idStatusContratacion, cl.concepto, cl.id_prospecto
+                                    cl.creado_por, cl.fecha_modificacion, cl.modificado_por, cond.nombre as nombreCondominio, residencial.nombreResidencial as nombreResidencial, cl.status, nombreLote, lotes.comentario, lotes.idMovimiento, lotes.fechaVenc, lotes.modificado, lotes.observacionContratoUrgente as vl, lotes.idStatusContratacion, cl.concepto, cl.id_prospecto,
+                                    cl.flag_compartida
 									FROM clientes as cl
                                     LEFT JOIN usuarios as us ON cl.id_asesor=us.id_usuario
                                     LEFT JOIN lotes as lotes ON lotes.idLote=cl.idLote
@@ -1075,11 +1078,11 @@ class Asesor_model extends CI_Model
                 INNER JOIN prospectos p ON p.id_prospecto = cl.id_prospecto AND p.fecha_creacion <= '2022-01-20 00:00:00.000'
                 LEFT JOIN evidencia_cliente ec ON ec.idCliente = cl.id_cliente 
                 INNER JOIN sedes s ON s.id_sede = asesor.id_sede
-                LEFT JOIN comentariosMktd cm ON cm.idLote = l.idLote AND cm.id_cliente=cl.id_cliente
+                LEFT JOIN comentariosMktd cm ON cm.idLote = l.idLote AND cm.id_cliente=cl.id_cliente AND cm.bandera_estatus = 1
                 LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = cl.lugar_prospeccion AND oxc.id_catalogo = 9
                 WHERE cl.fecha_creacion > '2020-12-31 11:59:00' AND cl.lugar_prospeccion IN (6, 29) AND cl.status = 1 AND l.status = 1 
                 AND ec.id_evidencia IS NULL AND cm.id_coment IS NULL 
-                AND l.idLote NOT IN (48729, 12735, 49644, 26655, 49957, 50079, 51495, 50891, 52093, 51289, 53164, 53165, 53980, 26120, 55593, 55621, 56495, 56893, 57072, 52398, 59767, 59349, 59866, 60002, 60015, 55241, 56209, 57122, 44767, 44768, 11290, 63250, 27235, 66821, 59650, 64137, 63991, 63526)
+                AND l.idLote NOT IN (48729, 12735, 49644, 26655, 49957, 50079, 51495, 50891, 52093, 51289, 53164, 53165, 53980, 26120, 55593, 55621, 56495, 56893, 57072, 52398, 59767, 59349, 59866, 60002, 60015, 55241, 56209, 57122, 44767, 44768, 11290, 63250, 27235, 66821, 59650, 63526)
                 UNION ALL
                 SELECT CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno) as nombreCliente, l.nombreLote, cl.fechaApartado,
                 CONCAT(asesor.nombre,' ',asesor.apellido_paterno,' ', asesor.apellido_materno) as nombreAsesor, cl.id_cliente, l.idLote, cl.telefono1,
@@ -1091,9 +1094,9 @@ class Asesor_model extends CI_Model
                 LEFT JOIN evidencia_cliente ec ON ec.idCliente = cl.id_cliente 
                 INNER JOIN sedes s ON s.id_sede = asesor.id_sede
                 LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = cl.lugar_prospeccion AND oxc.id_catalogo = 9
-                /*LEFT JOIN comentariosMktd cm ON cm.idLote = l.idLote AND cm.id_cliente=cl.id_cliente*/
-                WHERE l.status = 1 AND ec.id_evidencia IS NULL/* AND cm.id_coment IS NULL*/
-                AND l.idLote NOT IN (48729, 12735, 49644, 26655, 49957, 50079, 51495, 50891, 52093, 51289, 53164, 53165, 53980, 26120, 55593, 55621, 56495, 56893, 57072, 52398, 59767, 59349, 59866, 60002, 60015, 55241, 56209, 57122, 44767, 44768, 11290, 63250, 27235, 66821, 59650, 64137, 63991, 63526)  ");
+                LEFT JOIN comentariosMktd cm ON cm.idLote = l.idLote AND cm.id_cliente=cl.id_cliente AND cm.bandera_estatus = 1
+                WHERE l.status = 1 AND ec.id_evidencia IS NULL AND cm.id_coment IS NULL
+                AND l.idLote NOT IN (48729, 12735, 49644, 26655, 49957, 50079, 51495, 50891, 52093, 51289, 53164, 53165, 53980, 26120, 55593, 55621, 56495, 56893, 57072, 52398, 59767, 59349, 59866, 60002, 60015, 55241, 56209, 57122, 44767, 44768, 11290, 63250, 27235, 66821, 59650, 63526)  ");
         return $query->result_array();
     }
 
@@ -1127,10 +1130,10 @@ class Asesor_model extends CI_Model
                 LEFT JOIN (SELECT MAX(fecha_creacion) fecha_creacion, id_evidencia, estatus FROM historial_evidencias GROUP BY id_evidencia, estatus) he10 ON he10.id_evidencia = ec.id_evidencia AND he10.estatus = 10 -- COBRANZA RECHAZA
                 LEFT JOIN (SELECT MAX(fecha_creacion) fecha_creacion, id_evidencia, estatus FROM historial_evidencias GROUP BY id_evidencia, estatus) he20 ON he20.id_evidencia = ec.id_evidencia AND he20.estatus = 20 -- CONTRALORÍA RECHAZA
                 	LEFT JOIN (SELECT id_evidencia, estatus, fecha_creacion, CAST(comentario_autorizacion AS NVARCHAR(100)) comentario_autorizacion FROM historial_evidencias) he200 ON he20.id_evidencia = he200.id_evidencia AND he200.estatus = 20 AND he200.fecha_creacion = he20.fecha_creacion -- CONTRALORÍA RECHAZA
-                LEFT JOIN comentariosMktd cm ON cm.idLote = l.idLote AND cm.id_cliente=cl.id_cliente
+                LEFT JOIN comentariosMktd cm ON cm.idLote = l.idLote AND cm.id_cliente=cl.id_cliente AND cm.bandera_estatus = 1
                 LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = cl.lugar_prospeccion AND oxc.id_catalogo = 9
                 WHERE cm.id_coment IS NULL
-                AND l.idLote NOT IN (48729, 12735, 49644, 26655, 49957, 50079, 51495, 50891, 52093, 51289, 53164, 53165, 53980, 26120, 55593, 55621, 56495, 56893, 57072, 52398, 59767, 59349, 59866, 60002, 60015, 55241, 56209, 57122, 44767, 44768, 11290, 63250, 27235, 66821, 59650, 64137, 63991, 63526)
+                AND l.idLote NOT IN (48729, 12735, 49644, 26655, 49957, 50079, 51495, 50891, 52093, 51289, 53164, 53165, 53980, 26120, 55593, 55621, 56495, 56893, 57072, 52398, 59767, 59349, 59866, 60002, 60015, 55241, 56209, 57122, 44767, 44768, 11290, 63250, 27235, 66821, 59650, 63526)
                 UNION ALL 
                 SELECT CONCAT(cl.nombre,' ', cl.apellido_paterno, ' ', cl.apellido_materno) as cliente,
                 l.idLote, l.nombreLote, CONCAT(solicitante.nombre,' ', solicitante.apellido_paterno,' ', solicitante.apellido_materno) as solicitante, ec.estatus,
@@ -1153,10 +1156,10 @@ class Asesor_model extends CI_Model
                 LEFT JOIN (SELECT MAX(fecha_creacion) fecha_creacion, id_evidencia, estatus FROM historial_evidencias GROUP BY id_evidencia, estatus) he10 ON he10.id_evidencia = ec.id_evidencia AND he10.estatus = 10 -- COBRANZA RECHAZA
                 LEFT JOIN (SELECT MAX(fecha_creacion) fecha_creacion, id_evidencia, estatus FROM historial_evidencias GROUP BY id_evidencia, estatus) he20 ON he20.id_evidencia = ec.id_evidencia AND he20.estatus = 20 -- CONTRALORÍA RECHAZA
                 	LEFT JOIN (SELECT id_evidencia, estatus, fecha_creacion, CAST(comentario_autorizacion AS NVARCHAR(100)) comentario_autorizacion FROM historial_evidencias) he200 ON he20.id_evidencia = he200.id_evidencia AND he200.estatus = 20 AND he200.fecha_creacion = he20.fecha_creacion -- CONTRALORÍA RECHAZA
-                LEFT JOIN comentariosMktd cm ON cm.idLote = l.idLote AND cm.id_cliente=cl.id_cliente
+                LEFT JOIN comentariosMktd cm ON cm.idLote = l.idLote AND cm.id_cliente=cl.id_cliente AND cm.bandera_estatus = 1
                 LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = cl.lugar_prospeccion AND oxc.id_catalogo = 9
                 WHERE cm.id_coment IS NULL
-                AND l.idLote NOT IN (48729, 12735, 49644, 26655, 49957, 50079, 51495, 50891, 52093, 51289, 53164, 53165, 53980, 26120, 55593, 55621, 56495, 56893, 57072, 52398, 59767, 59349, 59866, 60002, 60015, 55241, 56209, 57122, 44767, 44768, 11290, 63250, 27235, 66821, 59650, 64137, 63991, 63526)
+                AND l.idLote NOT IN (48729, 12735, 49644, 26655, 49957, 50079, 51495, 50891, 52093, 51289, 53164, 53165, 53980, 26120, 55593, 55621, 56495, 56893, 57072, 52398, 59767, 59349, 59866, 60002, 60015, 55241, 56209, 57122, 44767, 44768, 11290, 63250, 27235, 66821, 59650, 63526)
 
                 UNION ALL
                 
@@ -1171,11 +1174,11 @@ class Asesor_model extends CI_Model
                 INNER JOIN prospectos p ON p.id_prospecto = cl.id_prospecto AND p.fecha_creacion <= '2022-01-20 00:00:00.000'
                 LEFT JOIN evidencia_cliente ec ON ec.idCliente = cl.id_cliente 
                 INNER JOIN sedes s ON s.id_sede = asesor.id_sede
-                LEFT JOIN comentariosMktd cm ON cm.idLote = l.idLote AND cm.id_cliente=cl.id_cliente
+                LEFT JOIN comentariosMktd cm ON cm.idLote = l.idLote AND cm.id_cliente=cl.id_cliente AND cm.bandera_estatus = 1
                 LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = cl.lugar_prospeccion AND oxc.id_catalogo = 9
                 WHERE cl.fecha_creacion > '2020-12-31 11:59:00' AND cl.lugar_prospeccion IN (6, 29) AND cl.status = 1 AND l.status = 1 
                 AND ec.id_evidencia IS NULL AND cm.id_coment IS NULL 
-                AND l.idLote NOT IN (48729, 12735, 49644, 26655, 49957, 50079, 51495, 50891, 52093, 51289, 53164, 53165, 53980, 26120, 55593, 55621, 56495, 56893, 57072, 52398, 59767, 59349, 59866, 60002, 60015, 55241, 56209, 57122, 44767, 44768, 11290, 63250, 27235, 66821, 59650, 64137, 63991, 63526)
+                AND l.idLote NOT IN (48729, 12735, 49644, 26655, 49957, 50079, 51495, 50891, 52093, 51289, 53164, 53165, 53980, 26120, 55593, 55621, 56495, 56893, 57072, 52398, 59767, 59349, 59866, 60002, 60015, 55241, 56209, 57122, 44767, 44768, 11290, 63250, 27235, 66821, 59650, 63526)
                 UNION ALL
                 SELECT CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno) cliente, l.idLote, l.nombreLote, 'Sin especificar' solicitante, NULL estatus,
 				NULL id_evidencia, cl.id_cliente, NULL evidencia, NULL fecha_modificado, cl.fechaApartado, s.nombre plaza,
@@ -1191,164 +1194,8 @@ class Asesor_model extends CI_Model
                 INNER JOIN sedes s ON s.id_sede = asesor.id_sede
                 LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = cl.lugar_prospeccion AND oxc.id_catalogo = 9
                 WHERE l.status = 1 AND ec.id_evidencia IS NULL
-				AND l.idLote NOT IN (48729, 12735, 49644, 26655, 49957, 50079, 51495, 50891, 52093, 51289, 53164, 53165, 53980, 26120, 55593, 55621, 56495, 56893, 57072, 52398, 59767, 59349, 59866, 60002, 60015, 55241, 56209, 57122, 44767, 44768, 11290, 63250, 27235, 66821, 59650, 64137, 63991, 63526)
+				AND l.idLote NOT IN (48729, 12735, 49644, 26655, 49957, 50079, 51495, 50891, 52093, 51289, 53164, 53165, 53980, 26120, 55593, 55621, 56495, 56893, 57072, 52398, 59767, 59349, 59866, 60002, 60015, 55241, 56209, 57122, 44767, 44768, 11290, 63250, 27235, 66821, 59650, 63526)
                 ORDER BY l.nombreLote");
-
-
-        /*else {
-            if ($id_usuario == 1988)
-                $id_usuario = "'1988', '6245'";
-            $where = "AND asesor.id_sede IN ('$id_sede')";
-        }*/
-        /*switch ($this->session->userdata('id_rol')) {
-            case 19: // MJ: SUBDIRECCIÓN MKTD
-                if ($this->session->userdata('id_usuario') == 1981) {
-                    $query = $this->db->query("SELECT CONCAT(cl.nombre,' ', cl.apellido_paterno, ' ', cl.apellido_materno) as cliente,
-	                l.idLote, l.nombreLote, CONCAT(solicitante.nombre,' ', solicitante.apellido_paterno,' ', solicitante.apellido_materno) as solicitante, ec.estatus,
-	                ec.id_evidencia, cl.id_cliente, ec.evidencia, ec.fecha_modificado, cl.fechaApartado, s.nombre plaza,
-	                he1.fecha_creacion fechaValidacionGerente, he2.fecha_creacion fechaValidacionCobranza, he3.fecha_creacion fechaValidacionContraloria,
-	                he10.fecha_creacion fechaRechazoCobranza, he20.fecha_creacion fechaRechazoContraloria, he200.comentario_autorizacion, (CASE cn.tipo WHEN 1 THEN 11 WHEN 2 THEN 22 ELSE 1 END) rowType,
-	                cm.id_coment
-	                FROM lotes l
-	                INNER JOIN clientes cl ON cl.id_Cliente = l.idCliente AND cl.lugar_prospeccion = 6 AND cl.status = 1
-	                INNER JOIN usuarios asesor ON cl.id_asesor = asesor.id_usuario $where
-	                INNER JOIN sedes s ON s.id_sede = asesor.id_sede
-	                LEFT JOIN evidencia_cliente ec ON l.idLote=ec.idLote AND ec.idCliente = cl.id_cliente
-	                LEFT JOIN usuarios solicitante ON solicitante.id_usuario = ec.id_sol
-	                LEFT JOIN opcs_x_cats opxc ON opxc.id_opcion = ec.id_rolAut AND opxc.id_catalogo = 1
-	                LEFT JOIN controversias cn ON cn.id_lote = l.idLote AND cn.estatus = 1
-	                LEFT JOIN (SELECT MAX(fecha_creacion) fecha_creacion, id_evidencia, estatus FROM historial_evidencias GROUP BY id_evidencia, estatus) he1 ON he1.id_evidencia = ec.id_evidencia AND he1.estatus = 1 -- GERENTE ENVÍA
-	                LEFT JOIN (SELECT MAX(fecha_creacion) fecha_creacion, id_evidencia, estatus FROM historial_evidencias GROUP BY id_evidencia, estatus) he2 ON he2.id_evidencia = ec.id_evidencia AND he2.estatus = 2 -- COBRANZA VALIAD OK
-	                LEFT JOIN (SELECT MAX(fecha_creacion) fecha_creacion, id_evidencia, estatus FROM historial_evidencias GROUP BY id_evidencia, estatus) he3 ON he3.id_evidencia = ec.id_evidencia AND he3.estatus = 3 -- CONTRALORÍA VALIDA OK
-	                LEFT JOIN (SELECT MAX(fecha_creacion) fecha_creacion, id_evidencia, estatus FROM historial_evidencias GROUP BY id_evidencia, estatus) he10 ON he10.id_evidencia = ec.id_evidencia AND he10.estatus = 10 -- COBRANZA RECHAZA
-	                LEFT JOIN (SELECT MAX(fecha_creacion) fecha_creacion, id_evidencia, estatus FROM historial_evidencias GROUP BY id_evidencia, estatus) he20 ON he20.id_evidencia = ec.id_evidencia AND he20.estatus = 20 -- CONTRALORÍA RECHAZA
-                	LEFT JOIN (SELECT id_evidencia, estatus, fecha_creacion, CAST(comentario_autorizacion AS NVARCHAR(100)) comentario_autorizacion FROM historial_evidencias) he200 ON he20.id_evidencia = he200.id_evidencia AND he200.estatus = 20 AND he200.fecha_creacion = he20.fecha_creacion -- CONTRALORÍA RECHAZA
-	                LEFT JOIN comentariosMktd cm ON cm.idLote = l.idLote
-	                WHERE l.status = 1 AND cm.id_coment IS NULL
-	                UNION ALL
-	                SELECT CONCAT(cl.nombre,' ', cl.apellido_paterno, ' ', cl.apellido_materno) as cliente,
-	                l.idLote, l.nombreLote, CONCAT(solicitante.nombre,' ', solicitante.apellido_paterno,' ', solicitante.apellido_materno) as solicitante, ec.estatus,
-	                ec.id_evidencia, cl.id_cliente, ec.evidencia, ec.fecha_modificado, cl.fechaApartado, s.nombre plaza,
-	                he1.fecha_creacion fechaValidacionGerente, he2.fecha_creacion fechaValidacionCobranza, he3.fecha_creacion fechaValidacionContraloria,
-	                he10.fecha_creacion fechaRechazoCobranza, he20.fecha_creacion fechaRechazoContraloria, he200.comentario_autorizacion, (CASE cn.tipo WHEN 1 THEN 11 WHEN 2 THEN 22 END) rowType,
-	                cm.id_coment
-	                FROM lotes l
-	                INNER JOIN clientes cl ON cl.id_cliente = l.idCliente AND cl.lugar_prospeccion != 6 AND cl.status = 1
-	                INNER JOIN usuarios asesor ON cl.id_asesor = asesor.id_usuario $where
-	                INNER JOIN sedes s ON s.id_sede = asesor.id_sede
-	                LEFT JOIN evidencia_cliente ec ON l.idLote=ec.idLote AND ec.idCliente = cl.id_cliente
-	                LEFT JOIN usuarios solicitante ON solicitante.id_usuario = ec.id_sol
-	                LEFT JOIN opcs_x_cats opxc ON opxc.id_opcion = ec.id_rolAut AND opxc.id_catalogo = 1
-	                INNER JOIN controversias cn ON cn.id_lote = l.idLote AND cn.estatus = 1
-	                LEFT JOIN (SELECT MAX(fecha_creacion) fecha_creacion, id_evidencia, estatus FROM historial_evidencias GROUP BY id_evidencia, estatus) he1 ON he1.id_evidencia = ec.id_evidencia AND he1.estatus = 1 -- GERENTE ENVÍA
-	                LEFT JOIN (SELECT MAX(fecha_creacion) fecha_creacion, id_evidencia, estatus FROM historial_evidencias GROUP BY id_evidencia, estatus) he2 ON he2.id_evidencia = ec.id_evidencia AND he2.estatus = 2 -- COBRANZA VALIAD OK
-	                LEFT JOIN (SELECT MAX(fecha_creacion) fecha_creacion, id_evidencia, estatus FROM historial_evidencias GROUP BY id_evidencia, estatus) he3 ON he3.id_evidencia = ec.id_evidencia AND he3.estatus = 3 -- CONTRALORÍA VALIDA OK
-	                LEFT JOIN (SELECT MAX(fecha_creacion) fecha_creacion, id_evidencia, estatus FROM historial_evidencias GROUP BY id_evidencia, estatus) he10 ON he10.id_evidencia = ec.id_evidencia AND he10.estatus = 10 -- COBRANZA RECHAZA
-	                LEFT JOIN (SELECT MAX(fecha_creacion) fecha_creacion, id_evidencia, estatus FROM historial_evidencias GROUP BY id_evidencia, estatus) he20 ON he20.id_evidencia = ec.id_evidencia AND he20.estatus = 20 -- CONTRALORÍA RECHAZA
-                	LEFT JOIN (SELECT id_evidencia, estatus, fecha_creacion, CAST(comentario_autorizacion AS NVARCHAR(100)) comentario_autorizacion FROM historial_evidencias) he200 ON he20.id_evidencia = he200.id_evidencia AND he200.estatus = 20 AND he200.fecha_creacion = he20.fecha_creacion -- CONTRALORÍA RECHAZA
-	                LEFT JOIN comentariosMktd cm ON cm.idLote = l.idLote
-	                WHERE l.status = 1 AND cm.id_coment IS NULL ORDER BY l.nombreLote");
-                } else{
-                    $query = $this->db->query("SELECT ec.idLote, cl.fechaApartado, s.nombre plaza, CONCAT(cl.nombre,' ', cl.apellido_paterno, ' ', cl.apellido_materno) as cliente, l.nombreLote,
-	                CONCAT(solicitante.nombre,' ', solicitante.apellido_paterno,' ', solicitante.apellido_materno) as solicitante, ec.estatus,
-	                ec.id_evidencia, cl.id_cliente, ec.evidencia, ec.fecha_modificado,
-	                he1.fecha_creacion fechaValidacionGerente, he2.fecha_creacion fechaValidacionCobranza, he3.fecha_creacion fechaValidacionContraloria,
-	                he10.fecha_creacion fechaRechazoCobranza, he20.fecha_creacion fechaRechazoContraloria, he200.comentario_autorizacion, (CASE cn.tipo WHEN 1 THEN 11 WHEN 2 THEN 22 ELSE 1 END) rowType,
-	                cm.id_coment
-	                FROM lotes l
-	                INNER JOIN clientes cl ON l.idCliente = cl.id_cliente AND cl.lugar_prospeccion = 6 AND cl.status = 1
-	                INNER JOIN usuarios u ON u.id_usuario = cl.id_asesor
-	                INNER JOIN sedes s ON s.id_sede = u.id_sede
-	                INNER JOIN evidencia_cliente ec ON l.idLote = ec.idLote AND ec.id_sol IN($id_usuario) AND ec.idCliente = cl.id_cliente
-	                INNER JOIN usuarios solicitante ON solicitante.id_usuario = ec.id_sol
-	                INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = ec.id_rolAut AND oxc.id_catalogo = 1
-	                LEFT JOIN controversias cn ON cn.id_lote = l.idLote AND cn.estatus = 1
-	                LEFT JOIN (SELECT MAX(fecha_creacion) fecha_creacion, id_evidencia, estatus FROM historial_evidencias GROUP BY id_evidencia, estatus) he1 ON he1.id_evidencia = ec.id_evidencia AND he1.estatus = 1 -- GERENTE ENVÍA
-	                LEFT JOIN (SELECT MAX(fecha_creacion) fecha_creacion, id_evidencia, estatus FROM historial_evidencias GROUP BY id_evidencia, estatus) he2 ON he2.id_evidencia = ec.id_evidencia AND he2.estatus = 2 -- COBRANZA VALIAD OK
-	                LEFT JOIN (SELECT MAX(fecha_creacion) fecha_creacion, id_evidencia, estatus FROM historial_evidencias GROUP BY id_evidencia, estatus) he3 ON he3.id_evidencia = ec.id_evidencia AND he3.estatus = 3 -- CONTRALORÍA VALIDA OK
-	                LEFT JOIN (SELECT MAX(fecha_creacion) fecha_creacion, id_evidencia, estatus FROM historial_evidencias GROUP BY id_evidencia, estatus) he10 ON he10.id_evidencia = ec.id_evidencia AND he10.estatus = 10 -- COBRANZA RECHAZA
-	                LEFT JOIN (SELECT MAX(fecha_creacion) fecha_creacion, id_evidencia, estatus FROM historial_evidencias GROUP BY id_evidencia, estatus) he20 ON he20.id_evidencia = ec.id_evidencia AND he20.estatus = 20 -- CONTRALORÍA RECHAZA
-                	LEFT JOIN (SELECT id_evidencia, estatus, fecha_creacion, CAST(comentario_autorizacion AS NVARCHAR(100)) comentario_autorizacion FROM historial_evidencias) he200 ON he20.id_evidencia = he200.id_evidencia AND he200.estatus = 20 AND he200.fecha_creacion = he20.fecha_creacion -- CONTRALORÍA RECHAZA
-	                LEFT JOIN comentariosMktd cm ON cm.idLote = l.idLote
-	                WHERE l.status = 1  AND cm.id_coment IS NULL
-	                UNION ALL
-	                SELECT ec.idLote, cl.fechaApartado, s.nombre plaza, CONCAT(cl.nombre,' ', cl.apellido_paterno, ' ', cl.apellido_materno) as cliente, l.nombreLote,
-	                CONCAT(solicitante.nombre,' ', solicitante.apellido_paterno,' ', solicitante.apellido_materno) as solicitante, ec.estatus,
-	                ec.id_evidencia, cl.id_cliente, ec.evidencia, ec.fecha_modificado,
-	                he1.fecha_creacion fechaValidacionGerente, he2.fecha_creacion fechaValidacionCobranza, he3.fecha_creacion fechaValidacionContraloria,
-	                he10.fecha_creacion fechaRechazoCobranza, he20.fecha_creacion fechaRechazoContraloria, he200.comentario_autorizacion, (CASE cn.tipo WHEN 1 THEN 11 WHEN 2 THEN 22 END) rowType,
-	                cm.id_coment
-	                FROM lotes l
-	                INNER JOIN clientes cl ON l.idCliente = cl.id_cliente AND cl.lugar_prospeccion != 6 AND cl.status = 1
-	                INNER JOIN usuarios u ON u.id_usuario = cl.id_asesor
-	                INNER JOIN sedes s ON s.id_sede = u.id_sede
-	                INNER JOIN evidencia_cliente ec ON l.idLote = ec.idLote AND ec.id_sol IN ($id_usuario) AND ec.idCliente = cl.id_cliente
-	                INNER JOIN usuarios solicitante ON solicitante.id_usuario = ec.id_sol
-	                INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = ec.id_rolAut AND oxc.id_catalogo = 1
-	                INNER JOIN controversias cn ON cn.id_lote = l.idLote AND cn.estatus = 1
-	                LEFT JOIN (SELECT MAX(fecha_creacion) fecha_creacion, id_evidencia, estatus FROM historial_evidencias GROUP BY id_evidencia, estatus) he1 ON he1.id_evidencia = ec.id_evidencia AND he1.estatus = 1 -- GERENTE ENVÍA
-	                LEFT JOIN (SELECT MAX(fecha_creacion) fecha_creacion, id_evidencia, estatus FROM historial_evidencias GROUP BY id_evidencia, estatus) he2 ON he2.id_evidencia = ec.id_evidencia AND he2.estatus = 2 -- COBRANZA VALIAD OK
-	                LEFT JOIN (SELECT MAX(fecha_creacion) fecha_creacion, id_evidencia, estatus FROM historial_evidencias GROUP BY id_evidencia, estatus) he3 ON he3.id_evidencia = ec.id_evidencia AND he3.estatus = 3 -- CONTRALORÍA VALIDA OK
-	                LEFT JOIN (SELECT MAX(fecha_creacion) fecha_creacion, id_evidencia, estatus FROM historial_evidencias GROUP BY id_evidencia, estatus) he10 ON he10.id_evidencia = ec.id_evidencia AND he10.estatus = 10 -- COBRANZA RECHAZA
-	                LEFT JOIN (SELECT MAX(fecha_creacion) fecha_creacion, id_evidencia, estatus FROM historial_evidencias GROUP BY id_evidencia, estatus) he20 ON he20.id_evidencia = ec.id_evidencia AND he20.estatus = 20 -- CONTRALORÍA RECHAZA
-                	LEFT JOIN (SELECT id_evidencia, estatus, fecha_creacion, CAST(comentario_autorizacion AS NVARCHAR(100)) comentario_autorizacion FROM historial_evidencias) he200 ON he20.id_evidencia = he200.id_evidencia AND he200.estatus = 20 AND he200.fecha_creacion = he20.fecha_creacion -- CONTRALORÍA RECHAZA
-	                LEFT JOIN comentariosMktd cm ON cm.idLote = l.idLote
-	                WHERE l.status = 1 AND cm.id_coment IS NULL ORDER BY nombreLote");
-                }
-                break;
-            case 20: // MJ: GERENTE MKTD
-            case 28: // MJ: COBRANZA MKTD
-                $query = $this->db->query("SELECT CONCAT(cl.nombre,' ', cl.apellido_paterno, ' ', cl.apellido_materno) as cliente,
-                l.idLote, l.nombreLote, CONCAT(solicitante.nombre,' ', solicitante.apellido_paterno,' ', solicitante.apellido_materno) as solicitante, ec.estatus,
-                ec.id_evidencia, cl.id_cliente, ec.evidencia, ec.fecha_modificado, cl.fechaApartado, s.nombre plaza,
-                he1.fecha_creacion fechaValidacionGerente, he2.fecha_creacion fechaValidacionCobranza, he3.fecha_creacion fechaValidacionContraloria,
-                he10.fecha_creacion fechaRechazoCobranza, he20.fecha_creacion fechaRechazoContraloria, he200.comentario_autorizacion, (CASE cn.tipo WHEN 1 THEN 11 WHEN 2 THEN 22 ELSE 1 END) rowType,
-                cm.id_coment, CASE WHEN (ec.comentario_autorizacion LIKE '%null%' OR CAST(ec.comentario_autorizacion AS VARCHAR(500)) = '' OR ec.comentario_autorizacion IS NULL)
-                THEN 'Comentario no especificado' ELSE ec.comentario_autorizacion END lastComment
-                FROM lotes l
-                INNER JOIN clientes cl ON l.idCliente = cl.id_cliente AND cl.lugar_prospeccion = 6 AND cl.status = 1
-                INNER JOIN usuarios asesor ON cl.id_asesor = asesor.id_usuario $where
-                INNER JOIN sedes s ON s.id_sede = asesor.id_sede
-                INNER JOIN evidencia_cliente ec ON l.idLote=ec.idLote AND ec.idCliente = cl.id_cliente
-                INNER JOIN usuarios solicitante ON solicitante.id_usuario = ec.id_sol
-                INNER JOIN opcs_x_cats opxc ON opxc.id_opcion = ec.id_rolAut AND opxc.id_catalogo = 1
-                LEFT JOIN controversias cn ON cn.id_lote = l.idLote AND cn.estatus = 1
-                LEFT JOIN (SELECT MAX(fecha_creacion) fecha_creacion, id_evidencia, estatus FROM historial_evidencias GROUP BY id_evidencia, estatus) he1 ON he1.id_evidencia = ec.id_evidencia AND he1.estatus = 1 -- GERENTE ENVÍA
-                LEFT JOIN (SELECT MAX(fecha_creacion) fecha_creacion, id_evidencia, estatus FROM historial_evidencias GROUP BY id_evidencia, estatus) he2 ON he2.id_evidencia = ec.id_evidencia AND he2.estatus = 2 -- COBRANZA VALIAD OK
-                LEFT JOIN (SELECT MAX(fecha_creacion) fecha_creacion, id_evidencia, estatus FROM historial_evidencias GROUP BY id_evidencia, estatus) he3 ON he3.id_evidencia = ec.id_evidencia AND he3.estatus = 3 -- CONTRALORÍA VALIDA OK
-                LEFT JOIN (SELECT MAX(fecha_creacion) fecha_creacion, id_evidencia, estatus FROM historial_evidencias GROUP BY id_evidencia, estatus) he10 ON he10.id_evidencia = ec.id_evidencia AND he10.estatus = 10 -- COBRANZA RECHAZA
-                LEFT JOIN (SELECT MAX(fecha_creacion) fecha_creacion, id_evidencia, estatus FROM historial_evidencias GROUP BY id_evidencia, estatus) he20 ON he20.id_evidencia = ec.id_evidencia AND he20.estatus = 20 -- CONTRALORÍA RECHAZA
-                	LEFT JOIN (SELECT id_evidencia, estatus, fecha_creacion, CAST(comentario_autorizacion AS NVARCHAR(100)) comentario_autorizacion FROM historial_evidencias) he200 ON he20.id_evidencia = he200.id_evidencia AND he200.estatus = 20 AND he200.fecha_creacion = he20.fecha_creacion -- CONTRALORÍA RECHAZA
-                LEFT JOIN comentariosMktd cm ON cm.idLote = l.idLote
-                WHERE cm.id_coment IS NULL
-                UNION ALL
-                SELECT CONCAT(cl.nombre,' ', cl.apellido_paterno, ' ', cl.apellido_materno) as cliente,
-                l.idLote, l.nombreLote, CONCAT(solicitante.nombre,' ', solicitante.apellido_paterno,' ', solicitante.apellido_materno) as solicitante, ec.estatus,
-                ec.id_evidencia, cl.id_cliente, ec.evidencia, ec.fecha_modificado, cl.fechaApartado, s.nombre plaza,
-                he1.fecha_creacion fechaValidacionGerente, he2.fecha_creacion fechaValidacionCobranza, he3.fecha_creacion fechaValidacionContraloria,
-                he10.fecha_creacion fechaRechazoCobranza, he20.fecha_creacion fechaRechazoContraloria, he200.comentario_autorizacion, (CASE cn.tipo WHEN 1 THEN 11 WHEN 2 THEN 22 END) rowType,
-                cm.id_coment, CASE WHEN (ec.comentario_autorizacion LIKE '%null%' OR CAST(ec.comentario_autorizacion AS VARCHAR(500)) = '' OR ec.comentario_autorizacion IS NULL)
-                THEN 'Comentario no especificado' ELSE ec.comentario_autorizacion END lastComment
-                FROM lotes l
-                INNER JOIN clientes cl ON l.idCliente = cl.id_cliente AND cl.lugar_prospeccion != 6 AND cl.status = 1
-                INNER JOIN usuarios asesor ON cl.id_asesor = asesor.id_usuario $where
-                INNER JOIN sedes s ON s.id_sede = asesor.id_sede
-                INNER JOIN evidencia_cliente ec ON l.idLote=ec.idLote AND ec.idCliente = cl.id_cliente
-                INNER JOIN usuarios solicitante ON solicitante.id_usuario = ec.id_sol
-                INNER JOIN opcs_x_cats opxc ON opxc.id_opcion = ec.id_rolAut AND opxc.id_catalogo = 1
-                INNER JOIN controversias cn ON cn.id_lote = l.idLote AND cn.estatus = 1
-                LEFT JOIN (SELECT MAX(fecha_creacion) fecha_creacion, id_evidencia, estatus FROM historial_evidencias GROUP BY id_evidencia, estatus) he1 ON he1.id_evidencia = ec.id_evidencia AND he1.estatus = 1 -- GERENTE ENVÍA
-                LEFT JOIN (SELECT MAX(fecha_creacion) fecha_creacion, id_evidencia, estatus FROM historial_evidencias GROUP BY id_evidencia, estatus) he2 ON he2.id_evidencia = ec.id_evidencia AND he2.estatus = 2 -- COBRANZA VALIAD OK
-                LEFT JOIN (SELECT MAX(fecha_creacion) fecha_creacion, id_evidencia, estatus FROM historial_evidencias GROUP BY id_evidencia, estatus) he3 ON he3.id_evidencia = ec.id_evidencia AND he3.estatus = 3 -- CONTRALORÍA VALIDA OK
-                LEFT JOIN (SELECT MAX(fecha_creacion) fecha_creacion, id_evidencia, estatus FROM historial_evidencias GROUP BY id_evidencia, estatus) he10 ON he10.id_evidencia = ec.id_evidencia AND he10.estatus = 10 -- COBRANZA RECHAZA
-                LEFT JOIN (SELECT MAX(fecha_creacion) fecha_creacion, id_evidencia, estatus FROM historial_evidencias GROUP BY id_evidencia, estatus) he20 ON he20.id_evidencia = ec.id_evidencia AND he20.estatus = 20 -- CONTRALORÍA RECHAZA
-                	LEFT JOIN (SELECT id_evidencia, estatus, fecha_creacion, CAST(comentario_autorizacion AS NVARCHAR(100)) comentario_autorizacion FROM historial_evidencias) he200 ON he20.id_evidencia = he200.id_evidencia AND he200.estatus = 20 AND he200.fecha_creacion = he20.fecha_creacion -- CONTRALORÍA RECHAZA
-                LEFT JOIN comentariosMktd cm ON cm.idLote = l.idLote
-                WHERE cm.id_coment IS NULL
-                ORDER BY l.nombreLote");
-                break;
-        }*/
-
         return $query->result_array();
     }
 
@@ -1487,7 +1334,7 @@ class Asesor_model extends CI_Model
         LEFT JOIN (SELECT MAX(fecha_creacion) fecha_creacion, id_evidencia, estatus FROM historial_evidencias GROUP BY id_evidencia, estatus) he20 ON he20.id_evidencia = ec.id_evidencia AND he20.estatus = 20 -- CONTRALORÍA RECHAZA
         LEFT JOIN (SELECT id_evidencia, estatus, fecha_creacion, CAST(comentario_autorizacion AS NVARCHAR(100)) comentario_autorizacion FROM historial_evidencias) he200 ON he20.id_evidencia = he200.id_evidencia AND he200.estatus = 20 AND he200.fecha_creacion = he20.fecha_creacion -- CONTRALORÍA RECHAZA
         WHERE opxc.id_catalogo = 1 AND ec.estatus IN (2, 3, 20)
-        AND l.idLote NOT IN (48729, 12735, 49644, 26655, 49957, 50079, 51495, 50891, 52093, 51289, 53164, 53165, 53980, 26120, 55593, 55621, 56495, 56893, 57072, 52398, 59767, 59349, 59866, 60002, 60015, 55241, 56209, 57122, 44767, 44768, 11290, 63250, 27235, 66821, 59650, 64137, 63991, 63526)
+        AND l.idLote NOT IN (48729, 12735, 49644, 26655, 49957, 50079, 51495, 50891, 52093, 51289, 53164, 53165, 53980, 26120, 55593, 55621, 56495, 56893, 57072, 52398, 59767, 59349, 59866, 60002, 60015, 55241, 56209, 57122, 44767, 44768, 11290, 63250, 27235, 66821, 59650, 63526)
         UNION ALL 
         SELECT CONCAT(cl.nombre,' ', cl.apellido_paterno, ' ', cl.apellido_materno) as cliente,
         ec.idLote, l.nombreLote, CONCAT(solicitante.nombre,' ', solicitante.apellido_paterno,' ', solicitante.apellido_materno) as solicitante, ec.estatus,
@@ -1512,7 +1359,7 @@ class Asesor_model extends CI_Model
         LEFT JOIN (SELECT MAX(fecha_creacion) fecha_creacion, id_evidencia, estatus FROM historial_evidencias GROUP BY id_evidencia, estatus) he20 ON he20.id_evidencia = ec.id_evidencia AND he20.estatus = 20 -- CONTRALORÍA RECHAZA
         LEFT JOIN (SELECT id_evidencia, estatus, fecha_creacion, CAST(comentario_autorizacion AS NVARCHAR(100)) comentario_autorizacion FROM historial_evidencias) he200 ON he20.id_evidencia = he200.id_evidencia AND he200.estatus = 20 AND he200.fecha_creacion = he20.fecha_creacion -- CONTRALORÍA RECHAZA
         WHERE opxc.id_catalogo = 1 AND ec.estatus IN (2, 3, 20) 
-        AND l.idLote NOT IN (48729, 12735, 49644, 26655, 49957, 50079, 51495, 50891, 52093, 51289, 53164, 53165, 53980, 26120, 55593, 55621, 56495, 56893, 57072, 52398, 59767, 59349, 59866, 60002, 60015, 55241, 56209, 57122, 44767, 44768, 11290, 63250, 27235, 66821, 59650, 64137, 63991, 63526)
+        AND l.idLote NOT IN (48729, 12735, 49644, 26655, 49957, 50079, 51495, 50891, 52093, 51289, 53164, 53165, 53980, 26120, 55593, 55621, 56495, 56893, 57072, 52398, 59767, 59349, 59866, 60002, 60015, 55241, 56209, 57122, 44767, 44768, 11290, 63250, 27235, 66821, 59650, 63526)
         ORDER BY l.nombreLote");
         return $query->result_array();
     }
@@ -1672,19 +1519,19 @@ class Asesor_model extends CI_Model
             $region = "'1', '5', '8', '9'";
 
         return $this->db->query("SELECT l.idLote, l.nombreLote, c.fechaApartado, s.nombre plaza,
-        CONCAT(c.nombre, ' ', c.apellido_paterno, ' ', c.apellido_materno) nombreCliente,
-        cn.tipo, cn.comentario, cn.fecha_creacion,
-        CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) creado_por
-        FROM controversias cn 
-        INNER JOIN lotes l ON l.idLote = cn.id_lote AND l.status = 1
-        INNER JOIN clientes c ON c.idLote = l.idLote AND c.status = 1
-        INNER JOIN usuarios u ON u.id_usuario = c.id_asesor AND u.id_sede IN ($region)
-        INNER JOIN usuarios us ON us.id_usuario = cn.creado_por
-        INNER JOIN sedes s ON s.id_sede = u.id_sede
-        /*LEFT JOIN comentariosMktd cm ON cm.idLote = l.idLote AND cm.id_cliente=c.id_cliente
-        WHERE cm.id_coment IS NULL*/
-        WHERE l.idLote NOT IN (48729, 12735, 49644, 26655, 49957, 50079, 51495, 50891, 52093, 51289, 53164, 53165, 53980, 26120, 55593, 55621, 56495, 56893, 57072, 52398, 59767, 59349, 59866, 60002, 60015, 55241, 56209, 57122, 44767, 44768, 11290, 63250, 27235, 66821, 59650, 64137, 63991, 63526)
-        ORDER BY cn.fecha_creacion")->result_array();
+            CONCAT(c.nombre, ' ', c.apellido_paterno, ' ', c.apellido_materno) nombreCliente,
+            cn.tipo, cn.comentario, cn.fecha_creacion,
+            CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) creado_por
+            FROM controversias cn 
+            INNER JOIN lotes l ON l.idLote = cn.id_lote AND l.status = 1
+            INNER JOIN clientes c ON c.idLote = l.idLote AND c.status = 1
+            INNER JOIN usuarios u ON u.id_usuario = c.id_asesor AND u.id_sede IN ($region)
+            INNER JOIN usuarios us ON us.id_usuario = cn.creado_por
+            INNER JOIN sedes s ON s.id_sede = u.id_sede
+            /*LEFT JOIN comentariosMktd cm ON cm.idLote = l.idLote AND cm.id_cliente=c.id_cliente
+            WHERE cm.id_coment IS NULL*/
+            WHERE l.idLote NOT IN (48729, 12735, 49644, 26655, 49957, 50079, 51495, 50891, 52093, 51289, 53164, 53165, 53980, 26120, 55593, 55621, 56495, 56893, 57072, 52398, 59767, 59349, 59866, 60002, 60015, 55241, 56209, 57122, 44767, 44768, 11290, 63250, 27235, 66821, 59650, 63526)
+            ORDER BY cn.fecha_creacion")->result_array();
     }
 
     function getCatalogs()

@@ -46,10 +46,10 @@ class General extends CI_Controller
     function getLotesList()
     {
         if ($this->input->post("typeTransaction") == 1) // MJ: LA BÚSQUEDA SERÁ POR MULTI CONDOMINIO
-            if (strpos($this->input->post("idCondominio"), ',') !== false)
+            if (count($this->input->post("idCondominio"))>1)
                 $idCondominio = implode(", ", $this->input->post("idCondominio"));
             else
-                $idCondominio = $this->input->post("idCondominio");
+                $idCondominio = $this->input->post("idCondominio")[0];
         
         $data = $this->General_model->getLotesList($idCondominio);
         if ($data != null)
@@ -81,6 +81,15 @@ class General extends CI_Controller
             echo json_encode(array("status" => 400, "error" => "Algún parámetro no tiene un valor especificado o no viene informado."));
         else
             echo json_encode($this->General_model->getCatalogOptions($this->input->post("id_catalogo"))->result_array());
+    }
+
+    public function getAsesoresList()
+    {
+        $data = $this->General_model->getAsesoresList();
+        if ($data != null)
+            echo json_encode($data);
+        else
+            echo json_encode(array());
     }
 
 }

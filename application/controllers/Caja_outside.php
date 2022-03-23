@@ -11,7 +11,7 @@ class Caja_outside extends CI_Controller
 
         //$this->load->model('caja_model_outside');
         $this->load->model(array('Clientes_model', 'caja_model_outside'));
-        $this->load->library(array('session', 'form_validation'));
+        $this->load->library(array('session', 'form_validation', 'get_menu'));
         $this->load->helper(array('url', 'form'));
         $this->load->database('default');
     }
@@ -2608,4 +2608,18 @@ class Caja_outside extends CI_Controller
             }
         }
     }
+
+    public function generateToken()
+    {
+        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
+        $this->load->view('template/header');
+        $this->load->view("token/generateToken", $datos);
+    }
+
+    public function getTokensInformation()
+    {
+            $data['data'] = $this->caja_model_outside->getTokensInformation()->result_array();
+        echo json_encode($data);
+    }
+
 }

@@ -100,4 +100,42 @@ class Contabilidad_model extends CI_Model
 		@IdProyecto = $proyecto -- Obligatorio de valor entero")->result_array();
     }
 
+    public function getColumns()
+    {
+        return $this->db->query("SELECT t1.nombre_columna,
+        t2.id_opcion,
+        t2.nombre
+        FROM
+            (SELECT COLUMN_NAME nombre_columna,
+                       CASE COLUMN_NAME
+                           WHEN 'fecha_firma' THEN 1
+                           WHEN 'adendum' THEN 2
+                           WHEN 'superficie_postventa' THEN 3
+                           WHEN 'costo_m2' THEN 4
+                           WHEN 'parcela' THEN 5
+                           WHEN 'superficie_proyectos' THEN 6
+                           WHEN 'presupuesto_m2' THEN 7
+                           WHEN 'deduccion' THEN 8
+                           WHEN 'm2_terreno' THEN 9
+                           WHEN 'costo_terreno' THEN 10
+                           WHEN 'comentario' THEN 11
+                       END id_opcion
+            FROM INFORMATION_SCHEMA.COLUMNS
+            WHERE TABLE_NAME = 'detalles_x_lotes'
+            AND COLUMN_NAME NOT IN ('id_dxl',
+                                    'id_lote',
+                                    'id_cliente',
+                                    'estatus',
+                                    'fecha_creacion',
+                                    'creado_por',
+                                    'fecha_modificacion',
+                                    'modificado_por')) t1
+            LEFT JOIN
+            (SELECT id_opcion,
+           UPPER(CAST(nombre AS VARCHAR(75))) nombre
+        FROM opcs_x_cats
+        WHERE id_catalogo = 66) t2 ON (t1.id_opcion = t2.id_opcion);")->result_array();
+    }
+
+
 }

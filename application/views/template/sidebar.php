@@ -1,20 +1,11 @@
-<?php
-/*if ($this->session->userdata('no_show_modal_info')==0) {
-    $this->load->view("template/novedadesModal");
-} */?>
 <div class="sidebar" data-active-color="blue" data-background-color="white" data-image="<?=base_url()?>/dist/img/sidebar-1.jpg">
 	<div class="logo"> 
 		<a href="<?=base_url()?>#" class="simple-text">
-            <!-- <img src="<?=base_url()?>static/images/luces_navidenas.png" style=" width: 264px;left: 0%;top: -17%;position: absolute;"> -->
-			<!--<img src="<?=base_url()?>static/images/CMOF.png" width="50%">-->
             <img src="<?=base_url()?>static/images/cm_blue.png" width="70%">
 		</a>
 	</div>
 	<div class="logo logo-mini">
-		<a href="<?=base_url()?>#" class="simple-text" style="color: #0e4377;font-weight: 800;font-family: 'Times New Roman', Times, serif;">
-			<!--<img src="<?=base_url()?>dist/img/favicon.ico">-->
-			CM
-		</a>
+		<a href="<?=base_url()?>#" class="simple-text" style="color: #0e4377;font-weight: 800;font-family: 'Times New Roman', Times, serif;">CM</a>
 	</div>
 	<div class="sidebar-wrapper">
 		<div class="user hide">
@@ -230,7 +221,6 @@ foreach($datos2 as $datos)
     <div class="backgroundLS">
         <div class="contentLS">
             <div class="center-align">
-                <!--<img src="--><?//=base_url()?><!--static/images/logo_blanco_cdm.png" style="width:25%;"><br>-->
                 Este proceso puede demorar algunos segundos
             </div>
             <div class="inner">
@@ -313,10 +303,8 @@ foreach($datos2 as $datos)
 			</div>
 		</div>
     </nav>
-    
-    <script>
-
-function AddTicket(){
+<script>
+    function AddTicket(){
           $.post("<?=base_url()?>index.php/Api/ServicePostTicket", function (data) {
             console.log(data);
           //  window.open(data);
@@ -326,42 +314,4 @@ function AddTicket(){
 
     }, 'json');
         }
-
-      /* let iduser = <?=$this->session->userdata('id_rol')?>;
-       if(iduser == 7){
-       let id = document.getElementById('estatus');
-       let uri = document.getElementById("uri").value;
-       let uri2 = document.getElementById("uri2").value;
-
-       if(id.value == 1 && uri != uri2){
-
-        setInterval('llamar()',5000);
-        llamar();
-        document.getElementById("notificacionmsj").innerHTML = "4"; 
-       }
-      
-       async function llamar() {
-           const datos = await fetch('NotificacionChatSide');
-           const data = await datos.json();
-           document.getElementById("notificacionmsj").innerHTML = data.length; 
-
-           for(i = 0; i < data.length; i++){
-               if (data[i]['recibido'] == 1) {
-                let reproducir = new Audio();
-                reproducir.src= "<?=base_url()?>static/tono-mensaje.mp3";
-                reproducir.play();
-                Recibir();
-                 
-               }
-           }
-       }
-
-       async function Recibir() {
-           const datos = await fetch('UpdateRecibidoSide');
-           const data = await datos.json();
-       }
-
-    }*/
-
-    </script>
-
+</script>

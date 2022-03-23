@@ -11,14 +11,6 @@
     ?>
 
     <link href="<?= base_url() ?>dist/assets/css/general-styles.css" rel="stylesheet"/>
-    <link href='<?=base_url()?>dist/js/fullcalendar/main.css' rel='stylesheet' />
-    <style>
-        .label-inf {
-            color: #333;
-        }
-
-    </style>
-
     <div class="content">
         <div class="container-fluid">
             <div class="row">
@@ -43,20 +35,13 @@
 </div><!--main-panel close-->
 </body>
 <?php $this->load->view('template/footer');?>
-<!--DATATABLE BUTTONS DATA EXPORT-->
-<script src="<?=base_url()?>dist/js/fullcalendar/main.js"></script>
-<script src="<?=base_url()?>dist/js/fullcalendar/locales/es.js"></script>
+
+<script src="<?= base_url() ?>dist/assets/js/bootstrap-datetimepicker.js"></script>
+<script src="<?=base_url()?>dist/js/controllers/calendar.js"></script>
 <script>
     userType = <?= $this->session->userdata('id_rol') ?> ;
     idUser = <?= $this->session->userdata('id_usuario') ?> ;
     typeTransaction = 1;
     base_url = "<?=base_url()?>";
-    console.log(idUser);
 </script>
-
-<script src="<?= base_url() ?>dist/assets/js/bootstrap-datetimepicker.js"></script>
-<script src="<?=base_url()?>static/yadcf/jquery.dataTables.yadcf.js"></script>
-<script src='<?=base_url()?>dist/js/fullcalendar/main.js'></script>
-<script src="<?=base_url()?>dist/js/controllers/calendar.js"></script>
-
 </html>

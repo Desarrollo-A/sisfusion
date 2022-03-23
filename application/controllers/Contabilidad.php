@@ -63,6 +63,7 @@ class Contabilidad extends CI_Controller
                 $insertAuditoriaData = array("fecha_creacion" => date("Y-m-d H:i:s"), "creado_por" => $this->session->userdata('id_usuario'));
                 $insertArrayData = array();
                 $updateArrayData = array();
+                $insertResponse = array();
                 for ($i = 0; $i < count($statusByLote); $i++) { // MJ: SE ARMAN ARRAYS PARA INSERTAR | ACTUALIZAR SEGÚN SEA EL CASO
                     $commonData = array();
                     if ($statusByLote[$i]['typeTransaction'] == 0) { // MJ: INSERT
@@ -188,6 +189,15 @@ class Contabilidad extends CI_Controller
     public function getClientesList()
     {
         $data = $this->Contabilidad_model->getClientesList($this->input->post("empresa"), $this->input->post("proyecto"));
+        if ($data != null)
+            echo json_encode($data);
+        else
+            echo json_encode(array());
+    }
+
+    function getColumns()
+    {
+        $data = $this->Contabilidad_model->getColumns();
         if ($data != null)
             echo json_encode($data);
         else

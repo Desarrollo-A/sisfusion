@@ -26,7 +26,7 @@
                                         <table id="all_users_datatable" class="table-striped table-hover" style="text-align:center;"><!--table table-bordered table-hover -->
                                             <thead>
                                             <tr>
-                                                <th class="disabled-sorting text-right">ESTATUS</th>
+                                                <th class="disabled-sorting">ESTATUS</th>
                                                 <th class="disabled-sorting text-right"><center>ID</center></th>
                                                 <th class="disabled-sorting text-right"><center>NOMBRE</center></th>
                                                 <th class="disabled-sorting text-right"><center>CORREO</center></th>

@@ -162,10 +162,13 @@ function getClientesList(empresa, proyecto) {
 }
 
 function validateExtension(extension, allowedExtensions) {
-    if (extension == allowedExtensions)
-        return true;
-    else
-        return false;
+    let allowedExtensionsArray = allowedExtensions.split(", ");
+    let flag = false;
+    for (let i = 0; i < allowedExtensionsArray.length; i++) {
+        if (allowedExtensionsArray[i] == extension)
+            flag = true;
+    }
+    return flag;
 }
 
 function getRejectionReasons(tipo_proceso) {
@@ -205,4 +208,22 @@ function getCatalogOptions(id_catalogo) {
         }
     });
 }
+
+function getAsesoresList() {
+    $("#asesoresList").empty().selectpicker('refresh');
+    $.ajax({
+        url: general_base_url + 'General/getAsesoresList',
+        type: 'post',
+        dataType: 'json',
+        success: function (response) {
+            var len = response.length;
+            for (var i = 0; i < len; i++) {
+                $("#asesoresList").append($('<option>').val(response[i]['id']).attr('data-sede', response[i]['sede']).text(response[i]['nombre']));
+            }
+            $("#asesoresList").selectpicker('refresh');
+        }
+    });
+}
+
+
 
