@@ -1,0 +1,41 @@
+@import "_base";
+
+.input-gral{
+    background-color: $platinum!important;
+    color: $deepGray!important;
+    border-radius: 27px!important;
+    background-image: none!important;
+    padding-left: 20px;
+}
+.label-gral{
+    left: 10px;
+}
+.text-gral{
+    background-color: $platinum!important;
+    background-image: none!important;
+    border-radius: 27px!important;
+    height: 45px!important;
+    padding-left: 20px!important;
+    line-height: 1.5!important;
+    
+}
+.select-gral button{
+    background-color: $platinum !important;
+    box-shadow: none !important;
+    color: $deepGray !important;
+    border-radius: 27px;
+}
+.beginDate{
+    background-color: $platinum!important;
+    border-radius: 27px 0 0 27px!important;
+    background-image: initial!important;
+    text-align: center!important;
+    color: $deepGray!important;
+}
+.endDate{
+    background-color: $platinum!important;
+    border-radius: 0 27px 27px 0!important;
+    background-image: initial!important;
+    text-align: center!important;
+    color: $deepGray!important;
+}

@@ -277,7 +277,7 @@
 }
 
 .text-left {
-  text-align: start;
+  text-align: start !important;
 }
 
 /* END Flexbox */

@@ -8,7 +8,7 @@
                 <button type="button" class="close" aria-hidden="true" onclick="deleteCita()">
                     <i class="material-icons">delete</i>
                 </button>
-                <h4 class="modal-title">Detalles de la cita:</h4>
+                <h4 class="modal-title">Detalles de la cita</h4>
             </div>
             <form id="edit_appointment_form" name="edit_appointment_form" method="post">
                 <div class="col-lg-12 form-group">
@@ -17,7 +17,7 @@
                 </div>
                 <div class="col-lg-12 form-group" id="select">
                     <label>Tipo de cita</label>
-                    <select class="selectpicker" name="estatus_recordatorio2" id="estatus_recordatorio2" data-style="select-with-transition" title="Seleccione una opción" data-size="7" <!--onchange="validateParticularStatus(this)"-->></select>
+                    <select class="selectpicker" name="estatus_recordatorio2" id="estatus_recordatorio2" data-style="select-with-transition" title="Seleccione una opción" data-size="7"></select>
                 </div>
                 <div class="col-lg-12 form-group" id="comodinDIV2">
                 </div>
