@@ -242,8 +242,8 @@ class Postventa_model extends CI_Model
         INNER JOIN lotes l ON se.idLote = l.idLote 
         INNER JOIN condominios cond ON cond.idCondominio = l.idCondominio 
         INNER JOIN residenciales r ON r.idResidencial = cond.idResidencial
-		INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = se.estatus_pago AND oxc.id_catalogo = 63
-		INNER JOIN opcs_x_cats oxc2 ON oxc2.id_opcion = se.estatus_pago AND oxc2.id_catalogo = 62
+		LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = se.estatus_pago AND oxc.id_catalogo = 63
+		LEFT JOIN opcs_x_cats oxc2 ON oxc2.id_opcion = se.estatus_pago AND oxc2.id_catalogo = 62
         WHERE se.idSolicitud = $idSolicitud");
     }
 
