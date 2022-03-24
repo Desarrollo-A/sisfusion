@@ -8318,63 +8318,46 @@
 	}
 
 
-	public function deleteCorrida(){
-
-		$idDocumento=$this->input->post('idDocumento');
-
-		$data=array();
-		$data["expediente"]= NULL;
-		$data["modificado"]=date("Y-m-d H:i:s");
-		$data["idUser"]=$this->session->userdata('id_usuario');
-
-		$nombreExp = $this->registrolote_modelo->getNomExp($idDocumento);
-
-		$file = "./static/documentos/cliente/corrida/".$nombreExp->expediente;
-
-
-		if(file_exists($file)){
-			unlink($file);
-		}
-
-		$delete=$this->registrolote_modelo->deleteDoc($idDocumento, $data);
-		$validaDelete = $delete == TRUE ? 1 : 0;
-
-		if ($validaDelete == 1) {
-			$response['message'] = 'OK';
-			echo json_encode($response);
-			
-			
-			$validaMail = $this->registrolote_modelo->sendMailAdmin($nombreExp->idLote);
-			
-
-			    if($validaMail->idHistorialLote != NULL){
-
-
-					  $infoLote = $this->registrolote_modelo->getNameLote($nombreExp->idLote);
-					
-					
-					  $mail = $this->phpmailer_lib->load();
-					  $mail->isSMTP();
-					  $mail->Host     = 'smtp.gmail.com';
-					  $mail->SMTPAuth = true;
-					  $mail->Username = 'noreply@ciudadmaderas.com';
-					  $mail->Password = 'euTan4&9';
-					  $mail->SMTPSecure = 'ssl';
-					  $mail->Port     = 465;
-					  
-					  $mail->setFrom('noreply@ciudadmaderas.com', 'Ciudad Maderas');
-					
-					  $mail->AddAddress('coord.administrativoslp@ciudadmaderas.com');
-					  $mail->AddAddress('coord.administrativo@ciudadmaderas.com');
-                      $mail->AddAddress('coord.administrativo1@ciudadmaderas.com');
-                    $mail->AddAddress('coord.administrativo2@ciudadmaderas.com');
-                    $mail->AddAddress('coord.administrativo3@ciudadmaderas.com');
-                    $mail->AddAddress('karen.pina@ciudadmaderas.com');
-
-					  $mail->Subject = utf8_decode('MODIFICACIÓN DE CORRIDA FINANCIERA');
-					  $mail->isHTML(true);
-					
-					  $mailContent = utf8_decode( "<html><head>
+    public function deleteCorrida()
+    {
+        $idDocumento = $this->input->post('idDocumento');
+        $data = array();
+        $data["expediente"] = NULL;
+        $data["modificado"] = date("Y-m-d H:i:s");
+        $data["idUser"] = $this->session->userdata('id_usuario');
+        $nombreExp = $this->registrolote_modelo->getNomExp($idDocumento);
+        $file = "./static/documentos/cliente/corrida/" . $nombreExp->expediente;
+        if (file_exists($file)) {
+            unlink($file);
+        }
+        $delete = $this->registrolote_modelo->deleteDoc($idDocumento, $data);
+        $validaDelete = $delete == TRUE ? 1 : 0;
+        if ($validaDelete == 1) {
+            $response['message'] = 'OK';
+            echo json_encode($response);
+            $validaMail = $this->registrolote_modelo->sendMailAdmin($nombreExp->idLote);
+            if ($validaMail->idHistorialLote != NULL) {
+                $infoLote = $this->registrolote_modelo->getNameLote($nombreExp->idLote);
+                $mail = $this->phpmailer_lib->load();
+                $mail->isSMTP();
+                $mail->Host = 'smtp.gmail.com';
+                $mail->SMTPAuth = true;
+                $mail->Username = 'noreply@ciudadmaderas.com';
+                $mail->Password = 'euTan4&9';
+                $mail->SMTPSecure = 'ssl';
+                $mail->Port = 465;
+                $mail->setFrom('noreply@ciudadmaderas.com', 'Ciudad Maderas');
+                $mail->AddAddress('coord.administrativoslp@ciudadmaderas.com');
+                $mail->AddAddress('coord.administrativo@ciudadmaderas.com');
+                $mail->AddAddress('coord.administrativo1@ciudadmaderas.com');
+                $mail->AddAddress('coord.administrativo2@ciudadmaderas.com');
+                $mail->AddAddress('coord.administrativo3@ciudadmaderas.com');
+                $mail->AddAddress('karen.pina@ciudadmaderas.com');
+                $mail->AddAddress('coord.administrativo4@ciudadmaderas.com');
+                $mail->AddAddress('coord.administrativo5@ciudadmaderas.com');
+                $mail->Subject = utf8_decode('MODIFICACIÓN DE CORRIDA FINANCIERA');
+                $mail->isHTML(true);
+                $mailContent = utf8_decode("<html><head>
 					  <meta http-equiv='Content-Type' content='text/html; charset=utf-8'>
 					  <meta name='viewport' content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no'>
 					  <link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css' integrity='sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO' crossorigin='anonymous'>	
@@ -8424,33 +8407,30 @@
 							  <th>Fecha/Hora</th>   
 							</tr> 
 							<tr>   
-								   <td><center>".$infoLote->nombreResidencial."</center></td>
-								   <td><center>".$infoLote->nombre."</center></td>
-								   <td><center>".$infoLote->nombreLote."</center></td>
+								   <td><center>" . $infoLote->nombreResidencial . "</center></td>
+								   <td><center>" . $infoLote->nombre . "</center></td>
+								   <td><center>" . $infoLote->nombreLote . "</center></td>
 								   <td><center> SE MODIFICO CORRIDA FINANCIERA </center></td>
-								   <td><center>".date("Y-m-d H:i:s")."</center></td>
+								   <td><center>" . date("Y-m-d H:i:s") . "</center></td>
 							</tr>
 							</table></center>
 						  
 						  
 						  </td></tr>
 					  </table></body></html>");
-					
-				
-					  $mail->Body = $mailContent;
-					  $mail->send();
-					  
-				}
-			
-		} else if ($validaDelete == 0){
-			$response['message'] = 'ERROR';
-			echo json_encode($response);
-		} else {
-			$response['message'] = 'ERROR';
-			echo json_encode($response);
-		}
+                $mail->Body = $mailContent;
+                $mail->send();
 
-	}
+            }
+
+        } else if ($validaDelete == 0) {
+            $response['message'] = 'ERROR';
+            echo json_encode($response);
+        } else {
+            $response['message'] = 'ERROR';
+            echo json_encode($response);
+        }
+    }
 
 	public function addFileContrato(){
 
