@@ -134,7 +134,7 @@ class Contabilidad_model extends CI_Model
             (SELECT id_opcion,
            UPPER(CAST(nombre AS VARCHAR(75))) nombre
         FROM opcs_x_cats
-        WHERE id_catalogo = 66) t2 ON (t1.id_opcion = t2.id_opcion);")->result_array();
+        WHERE id_catalogo = 64) t2 ON (t1.id_opcion = t2.id_opcion);")->result_array();
     }
 
 
