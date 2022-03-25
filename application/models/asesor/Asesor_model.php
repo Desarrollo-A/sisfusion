@@ -1539,4 +1539,39 @@ class Asesor_model extends CI_Model
         return $this->db->query("SELECT id_catalogo, id_opcion, nombre FROM opcs_x_cats WHERE id_catalogo IN (11, 18, 19, 26) AND estatus = 1 ORDER BY id_catalogo, id_opcion");
     }
 
+    public function getAsesores($idUsuario)
+    {
+        return $this->db->query("SELECT id_usuario,  CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) as nombre FROM usuarios WHERE id_rol IN (7,9) AND estatus IN (1,3) AND id_usuario NOT IN ($idUsuario)")->result_array();
+    }
+
+    public function getAsesores2($idUsuario, $idSegundoAsesor)
+    {
+        return $this->db->query("SELECT id_usuario,  CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) as nombre FROM usuarios WHERE id_rol IN (7,9) AND estatus IN (1,3) AND id_usuario NOT IN ($idUsuario, $idSegundoAsesor)")->result_array();
+    }
+
+    public function saveVentaCompartida($data)
+    {
+        $query = $this->db->insert('ventas_compartidas', $data);
+        return $query;
+    }
+
+    public function getAsesorData($idUsuario)
+    {
+        return $this->db->query("SELECT u.id_usuario asesor, u.id_rol, 
+        CASE u.id_rol WHEN 7 THEN coord.id_usuario ELSE 0 END coord,
+        CASE u.id_rol WHEN 7 THEN ger.id_usuario ELSE coord.id_usuario END ger,
+        CASE u.id_rol WHEN 7 THEN subdir.id_usuario ELSE ger.id_usuario END subdir,
+        CASE WHEN u.id_sede IN ('2', '3', '5', '6') THEN 0 ELSE CASE u.id_rol WHEN 7 THEN regional.id_usuario ELSE subdir.id_usuario END END regional
+        FROM usuarios u 
+        LEFT JOIN usuarios coord ON coord.id_usuario = u.id_lider
+        LEFT JOIN usuarios ger ON ger.id_usuario = coord.id_lider
+        LEFT JOIN usuarios subdir ON subdir.id_usuario = ger.id_lider
+        LEFT JOIN usuarios regional ON regional.id_usuario = subdir.id_lider
+        WHERE u.id_usuario = $idUsuario")->row();
+    }
+
+    public function updateFlagCompartida($id_cliente)
+    {
+        return $this->db->query("UPDATE clientes SET flag_compartida = 1 WHERE id_cliente = $id_cliente");
+    }
 }
