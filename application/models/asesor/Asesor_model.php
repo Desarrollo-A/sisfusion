@@ -1551,12 +1551,27 @@ class Asesor_model extends CI_Model
 
     public function saveVentaCompartida($data)
     {
-        $query = $this->db->insert('venta_compartida', $data);
-        return true;
+        $query = $this->db->insert('ventas_compartidas', $data);
+        return $query;
     }
 
     public function getAsesorData($idUsuario)
     {
-        return $this->db->query("SELECT * FROM ")->result();
+        return $this->db->query("SELECT u.id_usuario asesor, u.id_rol, 
+        CASE u.id_rol WHEN 7 THEN coord.id_usuario ELSE 0 END coord,
+        CASE u.id_rol WHEN 7 THEN ger.id_usuario ELSE coord.id_usuario END ger,
+        CASE u.id_rol WHEN 7 THEN subdir.id_usuario ELSE ger.id_usuario END subdir,
+        CASE WHEN u.id_sede IN ('2', '3', '5', '6') THEN 0 ELSE CASE u.id_rol WHEN 7 THEN regional.id_usuario ELSE subdir.id_usuario END END regional
+        FROM usuarios u 
+        LEFT JOIN usuarios coord ON coord.id_usuario = u.id_lider
+        LEFT JOIN usuarios ger ON ger.id_usuario = coord.id_lider
+        LEFT JOIN usuarios subdir ON subdir.id_usuario = ger.id_lider
+        LEFT JOIN usuarios regional ON regional.id_usuario = subdir.id_lider
+        WHERE u.id_usuario = $idUsuario")->row();
+    }
+
+    public function updateFlagCompartida($id_cliente)
+    {
+        return $this->db->query("UPDATE clientes SET flag_compartida = 1 WHERE id_cliente = $id_cliente");
     }
 }
