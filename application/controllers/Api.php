@@ -9,6 +9,8 @@ class Api extends CI_Controller
     public function __construct()
     {
         parent::__construct();
+        header('Access-Control-Allow-Origin: *');
+        header('Access-Control-Allow-Headers: Content-Type');
         date_default_timezone_set('America/Mexico_City');
         $this->load->helper(array('form'));
         $this->load->library(array('jwt_key'));
@@ -173,12 +175,19 @@ class Api extends CI_Controller
         );
         $token = JWT::encode($data, $JwtSecretKey);
         if ($token != "") {
-            $data = array("token" => $token, "para" => $this->input->post("id_asesor"), "estatus" => 1, "creado_por" => $this->input->post("id_gerente"), "fecha_creacion" => date("Y-m-d H:i:s"));
-            $response = $this->Api_model->addRecord("tokens", $data); // MJ: LLEVA 2 PARÁMETROS $table, $data
-            if ($response == 1)
-                echo json_encode(array("status" => 200, "message" => "El token se ha generado de manera exitosa.", "id_token" => $token));
-            else
-                echo json_encode(array("status" => 500, "message" => "No se ha podido insertar el token en la base de datos."));
+
+            $file = $_FILES["uploaded_file"];
+            $documentName = $time . "_" . ($time + (24 * 60 * 60)) . "_" . $this->input->post("id_asesor") . "_" . $this->input->post("id_gerente") . "." . substr(strrchr($_FILES["uploaded_file"]["name"], "."), 1);
+            $upload_file_response = move_uploaded_file($file["tmp_name"], "static/documentos/evidence_token/" . $documentName);
+            if ($upload_file_response == true) {
+                $data = array("token" => $token, "para" => $this->input->post("id_asesor"), "estatus" => 1, "creado_por" => $this->input->post("id_gerente"), "fecha_creacion" => date("Y-m-d H:i:s"), "nombre_archivo" => $documentName);
+                $response = $this->Api_model->addRecord("tokens", $data); // MJ: LLEVA 2 PARÁMETROS $table, $data
+                if ($response == 1)
+                    echo json_encode(array("status" => 200, "message" => "El token se ha generado de manera exitosa.", "id_token" => $token));
+                else
+                    echo json_encode(array("status" => 500, "message" => "No se ha podido insertar el token en la base de datos."));
+            } else
+                echo json_encode(array("status" => 500, "message" => "No se ha podido subir el archivo."));
         } else
             echo json_encode(array("status" => 500, "message" => "No se ha podido generar el token."));
     }
@@ -200,7 +209,6 @@ class Api extends CI_Controller
 //print_r($result);
 
     }
-
 
     /**------------FUNCIÓN PARA MANDAR SERVICIO PARA EL SISTEMA DE TICKETS */
     public function ServicePostTicket()

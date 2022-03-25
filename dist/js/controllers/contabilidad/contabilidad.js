@@ -376,7 +376,7 @@ function getColumns() {
             $('#spiner-loader').addClass('hide');
             var len = response.length;
             for (var i = 0; i < len; i++) {
-                $("#columns").append($('<option>').val(response[i]['id_opcion']).text(response[i]['nombre']));
+                $("#columns").append($(`<option data-name='${response[i]['nombre_columna']}'>`).val(response[i]['id_opcion']).text(response[i]['nombre']));
             }
             $("#columns").selectpicker('refresh');
         }

@@ -119,7 +119,7 @@
                                 <div class="form-group text-left m-0">
                                     <label class="control-label label-gral m-0">Estatus de pago</label>
                                     <select class="selectpicker m-0" data-style="btn btn-primary btn-round"
-                                            title="¿Tenemos cliente anterior?" data-size="7" id="estatusPago" name="estatusPago"
+                                            title="Estatus de pago" data-size="7" id="estatusPago" name="estatusPago"
                                             data-live-search="true" required>
                                             <option value ="default" selected disabled>Selecciona una opción</option>
                                     </select>
@@ -148,7 +148,7 @@
                                 <div class="form-group text-left m-0">
                                     <label class="control-label label-gral m-0">Estatus construcción</label>
                                     <select class="selectpicker m-0" data-style="btn btn-primary btn-round"
-                                            title="¿Tenemos cliente anterior?" data-size="7" id="construccion" name="construccion"
+                                            title="Estatus construcción" data-size="7" id="construccion" name="construccion"
                                             data-live-search="true" required>
                                     </select>
                                 </div>

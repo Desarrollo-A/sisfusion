@@ -1083,7 +1083,7 @@
                         // ((mes == 11 && dia == 8) || (mes == 11 && dia == 9 && hora <= 13)) || 
                         // ((mes == 12 && dia == 6) || (mes == 12 && dia == 7 && hora <= 13))){ 
 
-                        if (((mes == 2 && dia == 7) || (mes == 2 && dia == 8 && hora <= 13)) ||
+                        if ((userID == 66 || userID == 50) || ((mes == 2 && dia == 7) || (mes == 2 && dia == 8 && hora <= 13)) ||
                         ((mes == 3 && dia == 7) || (mes == 3 && dia == 8 && hora <= 13)) ||
                         ((mes == 4 && dia == 11) || (mes == 4 && dia == 12 && hora <= 13)) ||
                         ((mes == 5 && dia == 9) || (mes == 5 && dia == 10 && hora <= 13)) ||
