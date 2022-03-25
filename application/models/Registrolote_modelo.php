@@ -5173,7 +5173,7 @@ WHERE idLote IN ('".$row['idLote']."') and nombreLote = '".$insert_csv['nombreLo
 		hd.expediente, hd.idDocumento, hd.modificado, hd.status, hd.idCliente, hd.idLote, lotes.nombreLote, 
 		cl.nombre as nomCliente, cl.apellido_paterno, cl.apellido_materno, cl.rfc, cond.nombre, res.nombreResidencial, 
 		u.nombre as primerNom, u.apellido_paterno as apellidoPa, u.apellido_materno as apellidoMa, sedes.abreviacion as ubic, 
-		hd.movimiento, hd.movimiento, cond.idCondominio, hd.tipo_doc, lotes.idMovimiento, cl.id_asesor
+		hd.movimiento, hd.movimiento, cond.idCondominio, hd.tipo_doc, lotes.idMovimiento, cl.id_asesor, cl.flag_compartida
 		FROM historial_documento hd
 		INNER JOIN lotes ON lotes.idLote = hd.idLote
 		INNER JOIN clientes cl ON  hd.idCliente = cl.id_cliente
@@ -5229,7 +5229,7 @@ WHERE idLote IN ('".$row['idLote']."') and nombreLote = '".$insert_csv['nombreLo
 		}
 		$query = $this->db-> query("SELECT TOP(1)  'Depósito de seriedad' as expediente, 'DEPÓSITO DE SERIEDAD' as movimiento,
 		'VENTAS-ASESOR' AS primerNom, 'VENTAS' AS ubic, l.nombreLote, cl.nombre as nomCliente, cl.apellido_paterno, cl.apellido_materno, cl.rfc,
-		cond.nombre, res.nombreResidencial, cl.fechaApartado, cl.id_cliente, cl.id_cliente as idDocumento, ds.fechaCrate as modificado, l.idLote
+		cond.nombre, res.nombreResidencial, cl.fechaApartado, cl.id_cliente, cl.id_cliente as idDocumento, ds.fechaCrate as modificado, l.idLote, cl.flag_compartida
 		FROM clientes cl
 		INNER JOIN lotes l ON l.idLote = cl.idLote
 		INNER JOIN deposito_seriedad ds ON ds.id_cliente = cl.id_cliente
@@ -5253,7 +5253,7 @@ WHERE idLote IN ('".$row['idLote']."') and nombreLote = '".$insert_csv['nombreLo
 		cl.nombre as nomCliente, cl.apellido_paterno, cl.apellido_materno, cl.rfc, cl.fechaApartado, cl.id_cliente, cl.id_cliente as idDocumento, cl.fechaApartado as modificado,
 		res.nombreResidencial, cond.nombre, l.nombreLote, aut.estatus, aut.autorizacion, aut.fecha_creacion, 
 		CONCAT(asesor.nombre,' ', asesor.apellido_paterno,' ', asesor.apellido_materno) as sol,
-		CONCAT(users1.nombre,' ', users1.apellido_paterno,' ', users1.apellido_materno) as aut, id_autorizacion, aut.idLote, cl.id_asesor
+		CONCAT(users1.nombre,' ', users1.apellido_paterno,' ', users1.apellido_materno) as aut, id_autorizacion, aut.idLote, cl.id_asesor, cl.flag_compartida
 		FROM autorizaciones aut
 		INNER JOIN lotes l ON l.idLote = aut.idLote
 		INNER JOIN clientes cl ON aut.idCliente = cl.id_cliente
@@ -5276,7 +5276,7 @@ WHERE idLote IN ('".$row['idLote']."') and nombreLote = '".$insert_csv['nombreLo
 		$query = $this->db->query("SELECT  'Prospecto' as expediente, 'PROSPECTO' as movimiento,
 		'VENTAS-ASESOR' AS primerNom, 'VENTAS' AS ubic, l.nombreLote, cl.nombre as nomCliente, cl.apellido_paterno, cl.apellido_materno, cl.rfc,
 		cond.nombre, res.nombreResidencial, cl.fechaApartado, cl.id_cliente, cl.id_cliente as idDocumento, ps.fecha_creacion as modificado,
-		ps.id_prospecto, cl.id_asesor, l.idLote, cl.lugar_prospeccion
+		ps.id_prospecto, cl.id_asesor, l.idLote, cl.lugar_prospeccion, cl.flag_compartida
 		FROM clientes cl
 		INNER JOIN lotes l ON l.idLote = cl.idLote
 		INNER JOIN deposito_seriedad ds ON ds.id_cliente = cl.id_cliente
@@ -5300,7 +5300,7 @@ WHERE idLote IN ('".$row['idLote']."') and nombreLote = '".$insert_csv['nombreLo
         CONCAT(asesor.nombre, ' ', asesor.apellido_paterno, ' ', asesor.apellido_materno) AS primerNom, 
         sedes.abreviacion as ubic, l.nombreLote, cl.nombre as nomCliente, cl.apellido_paterno, cl.apellido_materno, cl.rfc,
         cond.nombre, res.nombreResidencial, cl.fechaApartado, cl.id_cliente, cl.id_cliente as idDocumento, ec.fecha_creacion as modificado,
-        cl.id_prospecto, cl.id_asesor, l.idLote, cl.lugar_prospeccion, 66 as tipo_doc
+        cl.id_prospecto, cl.id_asesor, l.idLote, cl.lugar_prospeccion, 66 as tipo_doc, cl.flag_compartida
         FROM clientes cl
         INNER JOIN lotes l ON l.idLote = cl.idLote
         INNER JOIN deposito_seriedad ds ON ds.id_cliente=cl.id_cliente
