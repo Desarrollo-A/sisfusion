@@ -8005,7 +8005,7 @@
 
 	function getLotesAsesor($condominio,$residencial) {
 		$data['lotes'] = $this->registrolote_modelo->getLotesAsesor($condominio,$residencial);
-
+    $data2 = array();
 		if(count($data['lotes'])<=0)
 		{
 			$data['lotes'][0]['idLote'] = 0;
