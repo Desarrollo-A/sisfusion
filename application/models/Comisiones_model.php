@@ -36,7 +36,7 @@ class Comisiones_model extends CI_Model {
         AND l.registro_comision in (1) 
         AND l.tipo_venta IS NOT NULL AND l.tipo_venta IN (1, 2,7)
         /*AND cl.fechaApartado >= '2020-03-01'*/
-        ORDER BY l.idLote");
+        ORDER BY l.idLote"); 
         return $query->result();
 
     }
@@ -3331,7 +3331,7 @@ public function validateDispersionCommissions($idlote){
                 $filtro = " 2,3,4,6 ";
               }
               else{
-                 $filtro = " 1,5,9 ";
+                 $filtro = " 1,5,8,9 ";
               }
         
              return $this->db->query("(SELECT pci1.id_comision, pci1.id_pago_i, pci1.id_usuario, lo.nombreLote as lote, re.nombreResidencial as proyecto, sed.nombre, sed.id_sede id_ub_origen, lo.totalNeto2 precio_lote, com.comision_total, com.porcentaje_decimal, pci1.abono_neodata pago_cliente, pci1.pago_neodata, pci2.abono_pagado pagado, com.comision_total-pci2.abono_pagado restante, pci1.estatus, 0 personalidad_juridica, pac.porcentaje_abono, com.id_lote, 0 fechaApartado, sed2.nombre ubicacion_dos, lo.idLote, mk.idc_mktd,sd1.nombre as sd1,sd2.nombre as sd2, pac.bonificacion
@@ -3399,6 +3399,46 @@ public function validateDispersionCommissions($idlote){
             //SI HAY DATA
         }
         
+    }
+
+    function getDatosFlujoComisiones() {
+
+        return $this->db->query("(SELECT l.idLote,l.nombreLote,'Sin fecha' as fechaApartado ,
+        CASE WHEN s.nombre is null THEN 'SIN SEDE' ELSE s.nombre  end sede,
+        CASE WHEN ec.estatus=0 THEN 'EVIDENCIA SIN INTEGRAR' WHEN ec.estatus=1 THEN 'ENVIADA A COBRANZA' WHEN ec.estatus=2 THEN 'ENVIADA A CONTRALORÍA' WHEN ec.estatus=3 THEN 'EVIDENCIA ACEPTADA' WHEN ec.estatus=4 THEN 'SIN ESTATUS REGISTRADO' WHEN ec.estatus=5 THEN 'COBRANZA RECHAZÓ LA EVIDENCIA AL GERENTE' WHEN ec.estatus=6 THEN 'CONTRALORÍA RECHAZÓ LA EVIDENCIA' ELSE 'SIN EVIDENCIA' end  estatus_evidencia,
+        CASE WHEN l.ubicacion_dos in(2,3,4,6)  THEN 'Plaza 1' WHEN l.ubicacion_dos in(1,5,8,9) THEN 'Plaza 2' ELSE 'SIN ASIGNAR' END plaza,
+        CASE WHEN co.estatus=1 THEN 'ACTIVA' WHEN co.estatus=8 THEN 'RECISIÓN' WHEN co.estatus=0 THEN 'BORRADA' ELSE 'SIN COMISIONES' END AS estatus_com,
+        CASE WHEN pc.bandera IN(1,55,0) THEN 'ACTIVA' WHEN pc.bandera IN (7) then 'LIQUIDADA' WHEN pc.bandera in(8) THEN 'RECISIÓN' ELSE 'SIN COMISIONES' END as estatus_comision_lote,
+        co.comision_total,pci.abono_pagado,(co.comision_total-pci.abono_pagado) as pendiente,
+        CASE WHEN rm.id_lote IS NULL THEN 'MANUAL' ELSE 'AUTOMATICA'  END dispersion, co.id_comision,co.id_usuario
+        FROM lotes l 
+        left join comisiones co on co.id_lote=l.idLote
+        left join sedes s on s.id_sede=l.ubicacion_dos 
+        left join pago_comision pc on pc.id_lote=l.idLote
+        LEFT join (SELECT idLote, MAX(fecha_creacion) modificado,estatus FROM evidencia_cliente GROUP BY idLote,estatus ) ec on ec.idLote=l.idLote
+        LEFT JOIN (SELECT SUM(abono_neodata) abono_pagado,id_comision FROM pago_comision_ind GROUP BY id_comision) pci ON co.id_comision = pci.id_comision
+        LEFT JOIN (SELECT id_lote, MAX(fecha_creacion) fecha FROM reportes_marketing GROUP BY id_lote ) rm  on rm.id_lote=l.idLote
+        WHERE co.id_usuario=4394 
+        )
+        UNION
+        (SELECT l.idLote,l.nombreLote, CONVERT(varchar,C.fechaApartado,23) as fechaApartado,
+        CASE WHEN s.nombre is null THEN 'SIN SEDE' ELSE s.nombre  end sede,
+        CASE WHEN ec.estatus=0 THEN 'EVIDENCIA SIN INTEGRAR' WHEN ec.estatus=1 THEN 'ENVIADA A COBRANZA' WHEN ec.estatus=2 THEN 'ENVIADA A CONTRALORÍA' WHEN ec.estatus=3 THEN 'EVIDENCIA ACEPTADA' WHEN ec.estatus=4 THEN 'SIN ESTATUS REGISTRADO' WHEN ec.estatus=5 THEN 'COBRANZA RECHAZÓ LA EVIDENCIA AL GERENTE' WHEN ec.estatus=6 THEN 'CONTRALORÍA RECHAZÓ LA EVIDENCIA' ELSE 'SIN EVIDENCIA' end  estatus_evidencia,
+        CASE WHEN c.id_sede in(2,3,4,6)  THEN 'Plaza 1' WHEN c.id_sede in(1,5,8,9) THEN 'Plaza 2' ELSE 'SIN ASIGNAR' END plaza,
+        CASE WHEN co.estatus=1 THEN 'ACTIVA' WHEN co.estatus=8 THEN 'RECISIÓN' WHEN co.estatus=0 THEN 'BORRADA' ELSE 'SIN COMISIONES' END AS estatus_com,
+        CASE WHEN pc.bandera IN(1,55,0) THEN 'ACTIVA' WHEN pc.bandera IN (7) then 'LIQUIDADA' WHEN pc.bandera in(8) THEN 'RECISIÓN' ELSE 'SIN COMISIONES' END as estatus_comision_lote,
+        co.comision_total,pci.abono_pagado,(co.comision_total-pci.abono_pagado) as pendiente,
+        CASE WHEN rm.id_lote IS NULL THEN 'MANUAL' ELSE 'AUTOMATICA' END dispersion, co.id_comision,co.id_usuario
+        FROM lotes l 
+        inner join clientes c on c.id_cliente=l.idCliente 
+        left join sedes s on s.id_sede=l.ubicacion_dos 
+        inner join comisiones co on co.id_lote=l.idLote and co.id_usuario=4394 
+        inner join pago_comision pc on pc.id_lote=l.idLote
+        LEFT join (SELECT idLote, MAX(fecha_creacion) modificado,estatus,idCliente FROM evidencia_cliente GROUP BY idLote,estatus,idCliente ) ec on ec.idLote=l.idLote -- and ec.idCliente=c.id_cliente  --evidencia_cliente ec on ec.idLote=l.idLote and ec.idCliente=c.id_cliente
+        LEFT JOIN (SELECT SUM(abono_neodata) abono_pagado,id_comision FROM pago_comision_ind GROUP BY id_comision) pci ON co.id_comision = pci.id_comision
+        LEFT JOIN (SELECT id_lote, MAX(fecha_creacion) fecha FROM reportes_marketing GROUP BY id_lote ) rm  on rm.id_lote=l.idLote
+        WHERE  c.lugar_prospeccion NOT in(6,29) and c.descuento_mdb != 1)");
+
     }
 
 
