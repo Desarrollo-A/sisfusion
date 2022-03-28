@@ -138,9 +138,9 @@
                             var data = tabla_nuevas.rows(index).data();
 
                             $.each(data, function(i, v) {
-                                totalComision += v.comision_total;
-                                totalAbono += v.abono_pagado;
-                                totalPendiente += v.pendiente;
+                                v.comision_total == null ? totalComision += 0 : totalComision += parseFloat(v.comision_total);
+                                v.abono_pagado == null ? totalAbono += 0 : totalAbono += parseFloat(v.abono_pagado);
+                                v.pendiente == null ? totalPendiente += 0 : totalPendiente += parseFloat(v.pendiente);
                             });
                             var to1 = formatMoney(totalComision);
 
@@ -159,9 +159,9 @@
                 var totalPendiente = 0;
 
                 $.each(json.data, function(i, v) {
-                    totalComision += v.comision_total;
-                    totalAbono += v.abono_pagado;
-                    totalPendiente += v.pendiente;
+                    v.comision_total == null ? totalComision += 0 : totalComision += parseFloat(v.comision_total);
+                    v.abono_pagado == null ? totalAbono += 0 : totalAbono += parseFloat(v.abono_pagado);
+                    v.pendiente == null ? totalPendiente += 0 : totalPendiente += parseFloat(v.pendiente);
                 });
                 
                 var toCo = formatMoney(totalComision);
