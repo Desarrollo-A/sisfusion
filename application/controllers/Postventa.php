@@ -607,8 +607,6 @@ class Postventa extends CI_Controller
     {
         $id_solicitud = $_POST['id_solicitud'];
         $type = $_POST['type'];
-        $notaria['pertenece'] = $this->Postventa_model->getNotEscrituracion($id_solicitud);
-        $notaria = $this->Postventa_model->getNotEscrituracion($id_solicitud);
         if ($type == 1) {
             $comentarios = $_POST['comentarios'];
             $informacion = $this->Postventa_model->changeStatus($id_solicitud, $type, 'Cambio de Notaria', 0);
