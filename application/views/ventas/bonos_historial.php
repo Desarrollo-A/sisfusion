@@ -18,7 +18,7 @@
     ?>
 
     <!-- Modals -->
-    <div class="modal fade modal-alertas" id="myModalEspera" role="dialog">
+    <!--<div class="modal fade modal-alertas" id="myModalEspera" role="dialog">
       <div class="modal-dialog modal-sm">
         <div class="modal-content">
           <form method="post" id="form_espera_uno">
@@ -27,16 +27,16 @@
           </form>
         </div>
       </div>
-    </div>
+    </div>-->
 
-    <div class="modal fade modal-alertas" id="modal-delete" role="dialog">
+    <!--<div class="modal fade modal-alertas" id="modal-delete" role="dialog">
       <div class="modal-dialog modal-sm">
         <div class="modal-content" >
             <div class="modal-body"></div>
             <div class="modal-footer"></div>
         </div>
       </div>
-    </div>
+    </div>-->
 
     <div class="modal fade" id="modal_bonos" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
       <div class="modal-dialog modal-md modal-dialog-scrollable" role="document">
@@ -231,7 +231,7 @@
     var url = "<?=base_url()?>";
     var url2 = "<?=base_url()?>index.php/";
     var tr;
-    var tabla_bonos2 ;
+    var tabla_bonos1 ;
     var totaPen = 0;
     
     //INICIO TABLA QUERETARO*********************************************
@@ -542,7 +542,7 @@
       });
     });
 
-    function filterFloat(evt,input){
+    /*function filterFloat(evt,input){
       var key = window.Event ? evt.which : evt.keyCode;   
       var chark = String.fromCharCode(key);
       var tempValue = input.value+chark;
@@ -553,20 +553,20 @@
       }        
       
       return false;    
-    }
+    }*/
 
     function filter(__val__){
       var preg = /^([0-9]+\.?[0-9]{0,2})$/; 
       return (preg.test(__val__) === true);
     }
 
-    function closeModalEng(){
+    /*function closeModalEng(){
       document.getElementById("form_abono").reset();
       a = document.getElementById('inputhidden');
       padre = a.parentNode;
       padre.removeChild(a);
       $("#modal_abono").modal('toggle');
-    }
+    }*/
   
     // FUNCTION MORE
     $(window).resize(function(){

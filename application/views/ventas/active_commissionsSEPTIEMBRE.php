@@ -1201,7 +1201,7 @@ $("#form_pagadas").submit( function(e) {
 
 
 
-    $("#form_enganche").submit(function (e) {
+    /*$("#form_enganche").submit(function (e) {
         e.preventDefault();
     }).validate({
         submitHandler: function (form) {
@@ -1231,7 +1231,7 @@ $("#form_pagadas").submit( function(e) {
                 }
             });
         }
-    });
+    });*/
 
 
     $("#form_NEODATA2").submit(function (e) {
@@ -1280,10 +1280,10 @@ $("#form_pagadas").submit( function(e) {
             jQuery(this).find('#comentario3').val('');
         })
 
-    })
+    });
 
 
-    function SoloNumeros(evt) {
+    /*function SoloNumeros(evt) {
         if (window.event) {
             keynum = evt.keyCode;
         } else {
@@ -1296,7 +1296,7 @@ $("#form_pagadas").submit( function(e) {
             alerts.showNotification("top", "left", "Solo Numeros.", "danger");
             return false;
         }
-    }
+    }*/
 
     function closeModalEng() {
         $("#modal_enganche").modal('toggle');

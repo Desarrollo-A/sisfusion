@@ -326,7 +326,7 @@
             this.value = this.value.replace(/[^0-9,.]/g, '').replace(/,/g, '.');
         });
 
-        function SoloNumeros(evt) {
+        /*function SoloNumeros(evt) {
             if (window.event) {
                 keynum = evt.keyCode;
             }
@@ -340,7 +340,7 @@
                 alerts.showNotification("top", "left", "Solo Numeros.", "danger");
                 return false;
             }
-        }
+        }*/
 
         function formatMoney(n) {
             var c = isNaN(c = Math.abs(c)) ? 2 : c,

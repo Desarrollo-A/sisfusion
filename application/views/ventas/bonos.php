@@ -574,7 +574,7 @@
       });
     });
 
-    function getInfo(){
+    /*function getInfo(){
       return new Promise(function(resolve, reject) {
         var req = new XMLHttpRequest();
         req.open('GET', ''+url+'Comisiones/PruebaInfo');
@@ -587,7 +587,7 @@
         };
         req.send();
       })
-    }
+    }*/
     
     function filterFloat(evt,input){
       var key = window.Event ? evt.which : evt.keyCode;   
@@ -615,12 +615,12 @@
       $("#modal_abono").modal('toggle');
     }
 
-    function CloseModalDelete(){
+    /*function CloseModalDelete(){
       a = document.getElementById('borrarBono');
       padre = a.parentNode;
       padre.removeChild(a);
       $("#modal-delete").modal('toggle');
-    }
+    }*/
 
     function CloseModalDelete2(){
       document.getElementById("form-delete").reset();
@@ -698,14 +698,14 @@
         });
       });
 
-      function mandar_espera(idLote, nombre) {
+      /*function mandar_espera(idLote, nombre) {
         idLoteespera = idLote;
         link_espera1 = "Comisiones/generar comisiones/";
         $("#myModalEspera .modal-footer").html("");
         $("#myModalEspera .modal-body").html("");
         $("#myModalEspera ").modal();
         $("#myModalEspera .modal-footer").append("<div class='btn-group'><button type='submit' class='btn btn-success'>GENERAR COMISIÓN</button></div>");
-      }
+      }*/
 
       // FUNCTION MORE
       $(window).resize(function(){

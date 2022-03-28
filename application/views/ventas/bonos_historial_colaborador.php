@@ -11,7 +11,7 @@
         ?>
 
         <!-- Modals -->
-        <div class="modal fade modal-alertas" id="myModalEspera" role="dialog">
+        <!--<div class="modal fade modal-alertas" id="myModalEspera" role="dialog">
             <div class="modal-dialog modal-sm">
                 <div class="modal-content">
                     <form method="post" id="form_espera_uno">
@@ -20,7 +20,7 @@
                     </form>
                 </div>
             </div>
-        </div>
+        </div>-->
 
         <div class="modal fade modal-alertas" id="miModal" role="dialog">
             <div class="modal-dialog">
@@ -79,13 +79,13 @@
             </div>
         </div>
 
-        <div class="modal fade bd-example-modal-sm" id="myModalEnviadas" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+        <!--<div class="modal fade bd-example-modal-sm" id="myModalEnviadas" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-sm">
                 <div class="modal-content">
                     <div class="modal-body"></div>
                 </div>
             </div>
-        </div>
+        </div>-->
 
         <div class="modal fade modal-alertas" id="modal_bonos" role="dialog">
             <div class="modal-dialog modal-lg">
@@ -505,7 +505,7 @@
             });
 
             /**------------------------------------------- */
-            $("#tabla_prestamos tbody").on("click", ".abonar", function() {
+            /*$("#tabla_prestamos tbody").on("click", ".abonar", function() {
                 bono = $(this).val();
                 var dat = bono.split(",");
                 $("#modal_abono .modal-body").append(`<div id="inputhidden">
@@ -517,7 +517,7 @@
 
                 $("#modal_abono .modal-body").append(``);
                 $('#modal_abono').modal('show');
-            });
+            });*/
         });
 
 
