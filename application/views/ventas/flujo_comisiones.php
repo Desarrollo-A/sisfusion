@@ -114,19 +114,19 @@
         $("#tabla_flujo_comisiones").ready(function() {
             let titulos = [];
             $('#tabla_flujo_comisiones thead tr:eq(0) th').each( function (i) {
-                if(i != 0){
+                if(i != 2){
                     var title = $(this).text();
                     titulos.push(title);
 
                     $(this).html('<input type="text"  class="textoshead" placeholder="' + title + '"/>');
                     $('input', this).on('keyup change', function() {
 
-                        if (tabla_nuevas.column(i).search() !== this.value) {
+                        if (tabla_nuevas.column(i).search() != this.value) {
                             tabla_nuevas
                                 .column(i)
                                 .search(this.value)
                                 .draw();
-
+                        }
                             var totalComision = 0;
                             var totalAbono = 0;
                             var totalPendiente = 0;
@@ -148,7 +148,7 @@
                             document.getElementById("inputAbono").value = '$' + formatMoney(totalAbono);
                             document.getElementById("inputPendiente").value = '$' + formatMoney(totalPendiente);
 
-                        }
+                        
                     });
                 }
             });
@@ -227,9 +227,14 @@
                         "width": "9%",
                         "data": function( d ){
                             let fech = d.fechaApartado;
+                            if(fech == 'Sin fecha'){
+                                return '<p class="m-0">'+fech+'</p>';
+                            }else{
                             let fecha = fech.substr(0, 10);
                             let nuevaFecha = fecha.split('-');
                             return '<p class="m-0">'+nuevaFecha[2]+'-'+nuevaFecha[1]+'-'+nuevaFecha[0]+'</p>';
+                            }
+                         
                         }
                     },
                     {
@@ -283,7 +288,7 @@
                 ],
                 columnDefs: [{
                     orderable: false,
-                    targets: 0,
+                    targets: 2,
                     'searchable': false,
                     'className': 'dt-body-center',
                 }],
@@ -303,7 +308,7 @@
         //FIN TABLA NUEVA
 
         $(window).resize(function() {
-            tabla_nuevas.columns.adjust();
+        //    tabla_nuevas.columns.adjust();
         });
 
         function formatMoney(n) {

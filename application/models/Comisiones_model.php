@@ -3403,36 +3403,38 @@ public function validateDispersionCommissions($idlote){
 
     function getDatosFlujoComisiones() {
 
-        return $this->db->query("(SELECT l.idLote,l.nombreLote,c.fechaApartado,
+        return $this->db->query("(SELECT l.idLote,l.nombreLote,'Sin fecha' as fechaApartado ,
         CASE WHEN s.nombre is null THEN 'SIN SEDE' ELSE s.nombre  end sede,
-        CASE WHEN ec.estatus=0 THEN 'EVIDENCIA SIN INTEGRAR' WHEN ec.estatus=1 THEN 'ENVIADA A COBRANZA' WHEN ec.estatus=2 THEN 'ENVIADA A CONTRALORÍA' WHEN ec.estatus=3 THEN 'EVIDENCIA ACEPTADA' WHEN ec.estatus=4 THEN 'SIN ESTATUS REGISTRADO' WHEN ec.estatus=5 THEN 'COBRANZA RECHAZÓ LA EVIDENCIA AL GERENTE' WHEN ec.estatus=5 THEN 'CONTRALORÍA RECHAZÓ LA EVIDENCIA' ELSE 'SIN EVIDENCIA' end  estatus_evidencia,
-        CASE WHEN c.id_sede in(2,3,4,6)  THEN 'Plaza 1' WHEN c.id_sede in(1,5,8,9) THEN 'Plaza 2' ELSE 'SIN ASIGNAR' END plaza,
+        CASE WHEN ec.estatus=0 THEN 'EVIDENCIA SIN INTEGRAR' WHEN ec.estatus=1 THEN 'ENVIADA A COBRANZA' WHEN ec.estatus=2 THEN 'ENVIADA A CONTRALORÍA' WHEN ec.estatus=3 THEN 'EVIDENCIA ACEPTADA' WHEN ec.estatus=4 THEN 'SIN ESTATUS REGISTRADO' WHEN ec.estatus=5 THEN 'COBRANZA RECHAZÓ LA EVIDENCIA AL GERENTE' WHEN ec.estatus=6 THEN 'CONTRALORÍA RECHAZÓ LA EVIDENCIA' ELSE 'SIN EVIDENCIA' end  estatus_evidencia,
+        CASE WHEN l.ubicacion_dos in(2,3,4,6)  THEN 'Plaza 1' WHEN l.ubicacion_dos in(1,5,8,9) THEN 'Plaza 2' ELSE 'SIN ASIGNAR' END plaza,
         CASE WHEN co.estatus=1 THEN 'ACTIVA' WHEN co.estatus=8 THEN 'RECISIÓN' WHEN co.estatus=0 THEN 'BORRADA' ELSE 'SIN COMISIONES' END AS estatus_com,
         CASE WHEN pc.bandera IN(1,55,0) THEN 'ACTIVA' WHEN pc.bandera IN (7) then 'LIQUIDADA' WHEN pc.bandera in(8) THEN 'RECISIÓN' ELSE 'SIN COMISIONES' END as estatus_comision_lote,
         co.comision_total,pci.abono_pagado,(co.comision_total-pci.abono_pagado) as pendiente,
-        CASE WHEN rm.id_lote IS NULL THEN 'MANUAL' ELSE 'AUTOMATICA' END dispersion, co.id_comision,co.id_usuario
-        FROM lotes l inner join clientes c on c.id_cliente=l.idCliente 
+        CASE WHEN rm.id_lote IS NULL THEN 'MANUAL' ELSE 'AUTOMATICA'  END dispersion, co.id_comision,co.id_usuario
+        FROM lotes l 
+        left join comisiones co on co.id_lote=l.idLote
         left join sedes s on s.id_sede=l.ubicacion_dos 
-        left join comisiones co on co.id_lote=l.idLote and co.id_usuario=4394 
         left join pago_comision pc on pc.id_lote=l.idLote
-        LEFT join (SELECT idLote, MAX(fecha_creacion) modificado,estatus,idCliente FROM evidencia_cliente GROUP BY idLote,estatus,idCliente ) ec on ec.idLote=l.idLote and ec.idCliente=c.id_cliente  --evidencia_cliente ec on ec.idLote=l.idLote and ec.idCliente=c.id_cliente
+        LEFT join (SELECT idLote, MAX(fecha_creacion) modificado,estatus FROM evidencia_cliente GROUP BY idLote,estatus ) ec on ec.idLote=l.idLote
         LEFT JOIN (SELECT SUM(abono_neodata) abono_pagado,id_comision FROM pago_comision_ind GROUP BY id_comision) pci ON co.id_comision = pci.id_comision
         LEFT JOIN (SELECT id_lote, MAX(fecha_creacion) fecha FROM reportes_marketing GROUP BY id_lote ) rm  on rm.id_lote=l.idLote
-        WHERE  c.lugar_prospeccion in(6,29) OR c.descuento_mdb=1)
+        WHERE co.id_usuario=4394 
+        )
         UNION
-        (SELECT l.idLote,l.nombreLote,c.fechaApartado,
+        (SELECT l.idLote,l.nombreLote, CONVERT(varchar,C.fechaApartado,23) as fechaApartado,
         CASE WHEN s.nombre is null THEN 'SIN SEDE' ELSE s.nombre  end sede,
-        CASE WHEN ec.estatus=0 THEN 'EVIDENCIA SIN INTEGRAR' WHEN ec.estatus=1 THEN 'ENVIADA A COBRANZA' WHEN ec.estatus=2 THEN 'ENVIADA A CONTRALORÍA' WHEN ec.estatus=3 THEN 'EVIDENCIA ACEPTADA' WHEN ec.estatus=4 THEN 'SIN ESTATUS REGISTRADO' WHEN ec.estatus=5 THEN 'COBRANZA RECHAZÓ LA EVIDENCIA AL GERENTE' WHEN ec.estatus=5 THEN 'CONTRALORÍA RECHAZÓ LA EVIDENCIA' ELSE 'SIN EVIDENCIA' end  estatus_evidencia,
+        CASE WHEN ec.estatus=0 THEN 'EVIDENCIA SIN INTEGRAR' WHEN ec.estatus=1 THEN 'ENVIADA A COBRANZA' WHEN ec.estatus=2 THEN 'ENVIADA A CONTRALORÍA' WHEN ec.estatus=3 THEN 'EVIDENCIA ACEPTADA' WHEN ec.estatus=4 THEN 'SIN ESTATUS REGISTRADO' WHEN ec.estatus=5 THEN 'COBRANZA RECHAZÓ LA EVIDENCIA AL GERENTE' WHEN ec.estatus=6 THEN 'CONTRALORÍA RECHAZÓ LA EVIDENCIA' ELSE 'SIN EVIDENCIA' end  estatus_evidencia,
         CASE WHEN c.id_sede in(2,3,4,6)  THEN 'Plaza 1' WHEN c.id_sede in(1,5,8,9) THEN 'Plaza 2' ELSE 'SIN ASIGNAR' END plaza,
         CASE WHEN co.estatus=1 THEN 'ACTIVA' WHEN co.estatus=8 THEN 'RECISIÓN' WHEN co.estatus=0 THEN 'BORRADA' ELSE 'SIN COMISIONES' END AS estatus_com,
         CASE WHEN pc.bandera IN(1,55,0) THEN 'ACTIVA' WHEN pc.bandera IN (7) then 'LIQUIDADA' WHEN pc.bandera in(8) THEN 'RECISIÓN' ELSE 'SIN COMISIONES' END as estatus_comision_lote,
         co.comision_total,pci.abono_pagado,(co.comision_total-pci.abono_pagado) as pendiente,
         CASE WHEN rm.id_lote IS NULL THEN 'MANUAL' ELSE 'AUTOMATICA' END dispersion, co.id_comision,co.id_usuario
-        FROM lotes l inner join clientes c on c.id_cliente=l.idCliente 
+        FROM lotes l 
+        inner join clientes c on c.id_cliente=l.idCliente 
         left join sedes s on s.id_sede=l.ubicacion_dos 
         inner join comisiones co on co.id_lote=l.idLote and co.id_usuario=4394 
         inner join pago_comision pc on pc.id_lote=l.idLote
-        LEFT join (SELECT idLote, MAX(fecha_creacion) modificado,estatus,idCliente FROM evidencia_cliente GROUP BY idLote,estatus,idCliente ) ec on ec.idLote=l.idLote and ec.idCliente=c.id_cliente  --evidencia_cliente ec on ec.idLote=l.idLote and ec.idCliente=c.id_cliente
+        LEFT join (SELECT idLote, MAX(fecha_creacion) modificado,estatus,idCliente FROM evidencia_cliente GROUP BY idLote,estatus,idCliente ) ec on ec.idLote=l.idLote -- and ec.idCliente=c.id_cliente  --evidencia_cliente ec on ec.idLote=l.idLote and ec.idCliente=c.id_cliente
         LEFT JOIN (SELECT SUM(abono_neodata) abono_pagado,id_comision FROM pago_comision_ind GROUP BY id_comision) pci ON co.id_comision = pci.id_comision
         LEFT JOIN (SELECT id_lote, MAX(fecha_creacion) fecha FROM reportes_marketing GROUP BY id_lote ) rm  on rm.id_lote=l.idLote
         WHERE  c.lugar_prospeccion NOT in(6,29) and c.descuento_mdb != 1)");
