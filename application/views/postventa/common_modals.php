@@ -500,3 +500,47 @@
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="viewObservaciones" data-keyboard="false" data-backdrop="static">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="text-center m-0">Envío de Observaciones</h5>
+            </div>
+            <form method="post" name="observaciones" id="observaciones">
+                <input type="text" class="hide" id="idSolicitud" name="idSolicitud">
+                <input type="text" class="hide" id="action" name="action">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-6">
+                            <select id="pertenece" class="selectpicker" data-style="btn btn-primary btn-round" title="¿Para quién es la observación?" data-size="7" data-live-search="true">
+                                <option value="Postventa">Postventa</option>
+                                <option value="Proyectos">Proyectos</option>
+                            </select>
+                        </div>      
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-6">
+                            <select id="observaciones" class="selectpicker" data-style="btn btn-primary btn-round" title="Observaciones" data-size="7" data-live-search="true">
+                                <option value="Correccioón Documentos">Corrección Documentos</option>
+                                <option value="Documentación Correcta">Documentación Correcta</option>  
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div id="postventa" style="display:none">
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">Enviar</button>
+                    </div>
+                </div>
+            </form>
+            <div class="modal-footer">
+                <div id="proyectos" style="display:none">
+                    <input type="text" class="hide" id="idSolicitud" name="idSolicitud">
+                    <input type="text" class="hide" id="action" name="action">
+                    <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                    <button type="button" id="observacionesSubmit" class="btn btn-primary">Enviar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>              

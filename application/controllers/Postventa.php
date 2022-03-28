@@ -607,10 +607,12 @@ class Postventa extends CI_Controller
     {
         $id_solicitud = $_POST['id_solicitud'];
         $type = $_POST['type'];
+        $notaria['pertenece'] = $this->Postventa_model->getNotEscrituracion($id_solicitud);
+        $notaria = $this->Postventa_model->getNotEscrituracion($id_solicitud);
         if ($type == 1) {
             $comentarios = $_POST['comentarios'];
-            $informacion = $this->Postventa_model->changeStatus($id_solicitud, $type, $comentarios, 0);
-        } elseif ($type == 2) {
+            $informacion = $this->Postventa_model->changeStatus($id_solicitud, $type, 'Cambio de Notaria', 0);
+        }elseif ($type == 2) {
             $motivos_rechazo = $_POST['comentarios'];
             $informacion = $this->Postventa_model->changeStatus($id_solicitud, $type, 'NULL', $motivos_rechazo);
         } else {
@@ -1399,5 +1401,29 @@ class Postventa extends CI_Controller
         $informacion = $this->Postventa_model->rechazarNotaria($idSolicitud);
         return $informacion;
     }
+
+    //OBSERVACIONES
+    public function observacionesPostventa()
+    {
+        $idSolicitud = $_POST['idSolicitud'];
+
+        $informacion = $this->Postventa_model->updateObservacionesPostventa($idSolicitud);
+        return $informacion;
+    }
+
+    public function mailObservaciones()
+    {
+        $idSolicitud = $_POST['idSolicitud'];
+        $observaciones = $_POTS['observaciones'];
+
+        $this->load->library('email');
+        $mail = $this->email;
+        $mail->from('noreply@ciudadmaderas.com', 'Ciudad Maderas');
+        $mail->to('programador.analista21@ciudadmaderas.com');
+        $mail->Subject(utf8_decode("Observaciones Notaria"));
+        $mail->message('Buen día! Las observaciones que la notaria envío sobre la solicitud: ' . $idSolicitud . ' son: ' . $observaciones);
+        $response = $mail->send();
+    }
+
 
 }
