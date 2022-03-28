@@ -332,13 +332,6 @@ function checkBudgetInfo($idSolicitud){
         
     }
 
-    function getNotEscrituracion($id_solicitud)
-    {
-        $id_solicitud = $_POST['id_solicitud'];
-        //print_r("SELECT n.pertenece FROM Notarias n INNER JOIN solicitud_escrituracion se ON se.idNotaria = n.idNotaria WHERE se.idSolicitud = '$id_solicitud'");
-        $notaria = $this->db->query("SELECT n.pertenece FROM Notarias n INNER JOIN solicitud_escrituracion se ON se.idNotaria = n.idNotaria WHERE se.idSolicitud = '$id_Solicitud'")->row()->pertenece;
-    }
-
     //RECHAZAR NOTARIA
     function rechazarNotaria(){
         $idSolicitud = $_POST['idSolicitud'];
