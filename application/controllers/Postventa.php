@@ -609,7 +609,7 @@ class Postventa extends CI_Controller
         $type = $_POST['type'];
         if ($type == 1) {
             $comentarios = $_POST['comentarios'];
-            $informacion = $this->Postventa_model->changeStatus($id_solicitud, $type, 'Cambio de Notaria', 0);
+            $informacion = $this->Postventa_model->changeStatus($id_solicitud, $type, $comentarios, 0);
         }elseif ($type == 2) {
             $motivos_rechazo = $_POST['comentarios'];
             $informacion = $this->Postventa_model->changeStatus($id_solicitud, $type, 'NULL', $motivos_rechazo);
@@ -872,7 +872,7 @@ class Postventa extends CI_Controller
             "superficie" => ($data['superficie'] == '' || $data['superficie'] == null) ? null : $data['superficie'],
             "clave_catastral" => ($data['catastral'] == '' || $data['catastral'] == null) ? null : $data['catastral'],
             "estatus_construccion" => $data['construccion'],
-            "cliente_anterior" => $data['cliente'] == 'default' || $data['cliente'] == null ? 2 : $data['cliente'] == 'uno' ? 1 : 2,
+            "cliente_anterior" =>($data['cliente'] == 'default' || $data['cliente'] == null ? 2 : $data['cliente'] == 'uno') ? 1 : 2,
             "nombre_anterior" => $data['nombreT'] == '' || $data['nombreT'] == null ? null : $data['nombreT'],
             "fecha_anterior" => ($data['fechaCA'] == '' || $data['fechaCA'] == null) ? null : date("Y-m-d", strtotime($data['fechaCA'])),
             "RFC" => $data['rfcDatos'] == '' || $data['rfcDatos'] == 'N/A' ? null : $data['rfcDatos']
