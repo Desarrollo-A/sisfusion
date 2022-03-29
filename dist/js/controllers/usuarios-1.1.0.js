@@ -79,13 +79,15 @@ $(document).ready( function() {
         ordering: false,
         columns: [
             { data: function (d) {
-                    if (d.estatus == 1) {
-                        return '<center><span class="label label-danger" style="background:#27AE60">Activo</span><center>';
-                    } else {
-                        return '<center><span class="label label-danger" style="background:#E74C3C">Inactivo</span><center>';
-                    }
+                if (d.estatus == 1) {
+                    return '<center><span class="label label-danger" style="background:#27AE60">Activo</span><center>';
+                } else if (d.estatus == 3) {
+                    return '<center><span class="label label-danger" style="background:#FF7C00">Inactivo comisionando</span><center>';
+                } else {
+                    return '<center><span class="label label-danger" style="background:#E74C3C">Inactivo</span><center>';
                 }
-            },
+            }
+        },
             { data: function (d) {
                     return d.id_usuario;
                 }
@@ -199,24 +201,15 @@ $(document).ready( function() {
         destroy: true,
         columns: [
             { data: function (d) {
-
-                // return '<center><span class="label label-danger" style="background:#27AE60">'+d.nuevo+'</span><center>';
-
-
-                if(d.nuevo == 1){
-                    return '<center><span class="label label-info" >Nuevo usuario</span><center>';
-
+                if (d.estatus == 1) {
+                    return '<center><span class="label label-danger" style="background:#27AE60">Activo</span><center>';
+                } else if (d.estatus == 3) {
+                    return '<center><span class="label label-danger" style="background:#FF7C00">Inactivo comisionando</span><center>';
+                } else {
+                    return '<center><span class="label label-danger" style="background:#E74C3C">Inactivo</span><center>';
                 }
-
-                else{
-                    if (d.estatus == 1) {
-                        return '<center><span class="label label-danger" style="background:#27AE60">Activo</span><center>';
-                    } else {
-                        return '<center><span class="label label-danger" style="background:#E74C3C">Inactivo</span><center>';
-                    }
-                }
-                }
-            },
+            }
+        },
             { data: function (d) {
                     return d.id_usuario;
                 }
