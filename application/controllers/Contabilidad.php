@@ -79,6 +79,12 @@ class Contabilidad extends CI_Controller
                         $commonData += (isset($json[$i]->m2_terreno) && !empty($json[$i]->m2_terreno)) ? array("m2_terreno" => $json[$i]->m2_terreno) : array("m2_terreno" => NULL);
                         $commonData += (isset($json[$i]->costo_terreno) && !empty($json[$i]->costo_terreno)) ? array("costo_terreno" => $json[$i]->costo_terreno) : array("costo_terreno" => NULL);
                         $commonData += (isset($json[$i]->comentario) && !empty($json[$i]->comentario)) ? array("comentario" => $json[$i]->comentario) : array("comentario" => NULL);
+                        $commonData += (isset($json[$i]->unidad) && !empty($json[$i]->unidad)) ? array("unidad" => $json[$i]->unidad) : array("unidad" => NULL);
+                        $commonData += (isset($json[$i]->calle_exacta) && !empty($json[$i]->calle_exacta)) ? array("calle_exacta" => $json[$i]->calle_exacta) : array("calle_exacta" => NULL);
+                        $commonData += (isset($json[$i]->num_ext) && !empty($json[$i]->num_ext)) ? array("num_ext" => $json[$i]->num_ext) : array("num_ext" => NULL);
+                        $commonData += (isset($json[$i]->codigo_postal) && !empty($json[$i]->codigo_postal)) ? array("codigo_postal" => $json[$i]->codigo_postal) : array("codigo_postal" => NULL);
+                        $commonData += (isset($json[$i]->colonia) && !empty($json[$i]->colonia)) ? array("colonia" => $json[$i]->colonia) : array("colonia" => NULL);
+                        $commonData += (isset($json[$i]->folio_real) && !empty($json[$i]->folio_real)) ? array("folio_real" => $json[$i]->folio_real) : array("folio_real" => NULL);
 
                         $commonData += array("id_lote" => $statusByLote[$i]['idLote']);
                         $commonData += array("id_cliente" => $json[$i]->id_cliente);
@@ -108,6 +114,18 @@ class Contabilidad extends CI_Controller
                             $commonData += array("costo_terreno" => $json[$i]->costo_terreno);
                         if (isset($json[$i]->comentario) && !empty($json[$i]->comentario))
                             $commonData += array("comentario" => $json[$i]->comentario);
+                        if (isset($json[$i]->unidad) && !empty($json[$i]->unidad))
+                            $commonData += array("unidad" => $json[$i]->unidad);
+                        if (isset($json[$i]->calle_exacta) && !empty($json[$i]->calle_exacta))
+                            $commonData += array("calle_exacta" => $json[$i]->calle_exacta);
+                        if (isset($json[$i]->num_ext) && !empty($json[$i]->num_ext))
+                            $commonData += array("num_ext" => $json[$i]->num_ext);
+                        if (isset($json[$i]->codigo_postal) && !empty($json[$i]->codigo_postal))
+                            $commonData += array("codigo_postal" => $json[$i]->codigo_postal);
+                        if (isset($json[$i]->colonia) && !empty($json[$i]->colonia))
+                            $commonData += array("colonia" => $json[$i]->colonia);
+                        if (isset($json[$i]->folio_real) && !empty($json[$i]->folio_real))
+                            $commonData += array("folio_real" => $json[$i]->folio_real);
 
                         $commonData += array("id_dxl" => $statusByLote[$i]['id_dxl']);
                         $commonData += $updateAuditoriaData;

@@ -437,39 +437,32 @@
                     return lblStats;
                 }
             },
-             { 
+            {
                 "width": "8%",
                 "orderable": false,
                 "data": function( data ){
                     var BtnStats;
+                    var RegresaActiva = '';
+                    
                     if(data.totalNeto2==null) {
                         BtnStats = '';
-                    }else {
-                        // if(data.compartida==null) {
-                        //     if(data.fecha_modificacion <= '2021-01-01' || data.fecha_modificacion == null ) {
-                        //         BtnStats = '<button href="#" value="'+data.idLote+'" data-estatus="'+data.idStatusContratacion+'" data-totalNeto2="'+data.totalNeto2+'" data-compartida="'+0+'" data-tipov="'+data.tipo_venta+'" data-subdirector="'+data.sub+'" data-regis="'+data.registro_comision+'" data-idResidencial="'+data.idResidencial+'" data-ismktd="'+data.ismktd+'" data-mdb="'+data.descuento_mdb+'" data-lugarP="'+data.lugar_prospeccion+'" data-value="'+data.registro_comision+'" data-code="'+data.cbbtton+'" ' +'class="btn-data btn-sky verify_neodata" title="Verificar en NEODATA">' +'<span class="material-icons">verified_user</span></button> ';
-                        //     }else {
-                        //         BtnStats = '<button href="#" value="'+data.idLote+'" data-estatus="'+data.idStatusContratacion+'"  data-value="'+data.registro_comision+'"   data-estatus="'+data.idStatusContratacion+'" data-totalNeto2="'+data.totalNeto2+'" data-compartida="'+0+'" data-tipov="'+data.tipo_venta+'" data-subdirector="'+data.sub+'" data-regis="'+data.registro_comision+'" data-idResidencial="'+data.idResidencial+'" data-ismktd="'+data.ismktd+'" data-mdb="'+data.descuento_mdb+'" data-lugarP="'+data.lugar_prospeccion+'"  data-code="'+data.cbbtton+'" ' +'class="btn-data btn-sky verify_neodata" title="Verificar en NEODATA">' +'<span class="material-icons">verified_user</span></button> <button href="#" data-param="1" data-idpagoc="' + data.idLote + '" ' +'class="btn-data btn-deepGray update_bandera" title="Regresar a activas">' +'<i class="fas fa-undo-alt"></i></button>'
-                        //         ;
-
-
-                        //         // +'<button class="btn-data btn-orangeYellow marcar_pagada" title="Marcar como liquidada" value="' + data.idLote +'"><i class="material-icons">how_to_reg</i></button>';
-                        //     }
-                        // }else {
-                        //         if(data.fecha_modificacion <= '2021-01-01' || data.fecha_modificacion == null ) {
-                        //         BtnStats = '<button href="#" value="'+data.idLote+'" data-estatus="'+data.idStatusContratacion+'" data-totalNeto2="'+data.totalNeto2+'" data-compartida="'+1+'" data-tipov="'+data.tipo_venta+'" data-subdirector="'+data.sub+'" data-regis="'+data.registro_comision+'" data-idResidencial="'+data.idResidencial+'" data-ismktd="'+data.ismktd+'" data-mdb="'+data.descuento_mdb+'" data-lugarP="'+data.lugar_prospeccion+'"  data-value="'+data.registro_comision+'" data-code="'+data.cbbtton+'" ' +'class="btn-data btn-green verify_neodata" title="Verificar en NEODATA">' +'<span class="material-icons">verified_user</span></button> ';
-                        //     }else {
-                        //         // <button class="btn-data btn-orangeYellow marcar_pagada" title="Marcar como liquidada" value="' + data.idLote +'"><i class="material-icons">how_to_reg</i></button>
-                        //         BtnStats = '<button href="#" value="'+data.idLote+'" data-estatus="'+data.idStatusContratacion+'"  data-value="'+data.registro_comision+'" data-estatus="'+data.idStatusContratacion+'" data-totalNeto2="'+data.totalNeto2+'" data-compartida="'+0+'" data-tipov="'+data.tipo_venta+'" data-subdirector="'+data.sub+'" data-regis="'+data.registro_comision+'" data-idResidencial="'+data.idResidencial+'" data-ismktd="'+data.ismktd+'" data-mdb="'+data.descuento_mdb+'" data-lugarP="'+data.lugar_prospeccion+'"  data-code="'+data.cbbtton+'" ' +'class="btn-data btn-green verify_neodata" title="Verificar en NEODATA">' +'<span class="material-icons">verified_user</span></button> <button href="#" data-param="1" data-idpagoc="' + data.idLote + '" ' +'class="btn-data btn-deepGray update_bandera" title="Regresar a activas">' +'<i class="fas fa-undo-alt"></i></button>'
-                        //          ;
-
-
-                        //         // +'<button class="btn-data btn-orangeYellow marcar_pagada" title="Marcar como liquidada" value="' + data.idLote +'"><i class="material-icons">how_to_reg</i></button>';
-                        //     }
-                        // }
-                    }
-                    return '<div class="d-flex justify-center">'+BtnStats+'</div>';
-                }
+                    } else{
+                        
+                        if(data.compartida==null) {
+                            varColor  = 'btn-sky';
+                            } else{
+                                varColor  = 'btn-green';
+                                }
+                                
+                                if(data.fecha_modificacion != null ) {
+                                    RegresaActiva = '<button href="#" data-param="1" data-idpagoc="' + data.idLote + '" ' +'class="btn-data btn-deepGray update_bandera" title="Regresar a activas">' +'<i class="fas fa-undo-alt"></i></button>'
+                                    }
+                                    
+                                    BtnStats = '<button href="#" value="'+data.idLote+'" data-totalNeto2 = "'+data.totalNeto2+'" data-code="'+data.cbbtton+'" ' +'class="btn-data '+varColor+' verify_neodata" title="Verificar en NEODATA">'+'<span class="material-icons">verified_user</span></button> '+RegresaActiva+''+'<button href="#" value="'+data.idLote+'" data-code="'+data.cbbtton+'" ' +'class="btn-data btn-warning verify_neodata" title="Incidencias">'+'<span class = "material-icons" >stop</span></button> ';
+                                    }
+                                    return '<div class="d-flex justify-center">'+BtnStats+'</div>';
+                                    }
+                                    // +'<button class="btn-data btn-orangeYellow marcar_pagada" title="Marcar como liquidada" value="' + data.idLote +'"><i class="material-icons">how_to_reg</i></button>';
             }],
             columnDefs: [{
                 "searchable": false,
@@ -509,58 +502,7 @@
             }
         });
 
-        $("#tabla_ingresar_9 tbody").on("click", ".marcar_pagada", function(){
-            var tr = $(this).closest('tr');
-            var row = tabla_1.row( tr );
-            idLote = $(this).val();
-
-            $("#modal_pagadas .modal-body").html("");
-            $("#modal_pagadas .modal-body").append('<h4 class="modal-title">¿Ya se pago completa la comision para el lote <b>'+row.data().nombreLote+'</b>?</h4>');
-            $("#modal_pagadas .modal-body").append('<input type="hidden" name="ideLotep" id="ideLotep" value="'+idLote+'"><input type="hidden" name="estatusL" id="estatusL" value="7">');
-            $("#modal_pagadas .modal-body").append('<br><div class="row"><div class="col-md-12"><center><input type="submit" class="btn btn-success" value="ACEPTAR"></center></div></div>');
-            $("#modal_pagadas").modal();
-        });
-
-        $("#tabla_ingresar_9 tbody").on("click", ".pausar", function(){
-            var tr = $(this).closest('tr');
-            var row = tabla_1.row( tr );
-            idLote = $(this).val();
-
-            $("#modal_pagadas .modal-body").html("");
-            $("#modal_pagadas .modal-body").append('<h4 class="modal-title">¿Estás seguro de mandar a recisión este lote? <b style="color:red;" >'+row.data().nombreLote+'</b>?</h4>');
-            $("#modal_pagadas .modal-body").append(`<div class="form-group"><textarea name="Motivo" id="Motivo" class="form-control" placeholder="Describe brevemente el mótivo y detalles de fecha." cols="70" rows="3" required></textarea></div>
-                    <input type="hidden" name="ideLotep" id="ideLotep" value="${idLote}"><input type="hidden" name="estatusL" id="estatusL" value="8">`);
-            $("#modal_pagadas .modal-body").append('<br><div class="row"><div class="col-md-12"><center><input type="submit" class="btn btn-success" value="ACEPTAR"></center></div></div>');
-            $("#modal_pagadas").modal();
-        });
-
-        $("#tabla_ingresar_9 tbody").on("click", ".liquidarPago", function(){
-            var tr = $(this).closest('tr');
-            var row = tabla_1.row( tr );
-            idLote = $(this).val();
-            var parametros = {
-                "lote" : idLote
-            };
-
-            $.ajax({
-                type: 'POST',
-                url: url2+'Comisiones/LiquidarLote',
-                data: parametros,
-                beforeSend: function(){
-                },
-                success: function(data) {
-                    if (data == 1) {
-                        tabla_1.ajax.reload();
-                        alerts.showNotification("top", "right", "LIQUIDADO.", "success");
-                    } else {
-                        alerts.showNotification("top", "right", "Asegúrate de haber llenado todos los campos mínimos requeridos.", "warning");
-                    }
-                },
-                error: function(){
-                    alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
-                }
-            });
-        });
+    
 
         async function VerificarUsers(idLote,compartida,tipo_venta,lugar_prospeccionLote,mdb,ismktd,IdResidencial){
             return new Promise(resolve => {
@@ -625,8 +567,8 @@
                     let VentaTipo = resulq.data[0].esquema;
                     let vigencia=resulq.data[0].vigencia;
 
-console.log(resulq.data[0].esquema);
-console.log(resulq.data[0].vigencia);
+                    console.log(resulq.data[0].esquema);
+                    console.log(resulq.data[0].vigencia);
 
                     var fecha_fin_mktd = new Date('2022-01-19'); 
                     console.log('tipo venta:'+VentaTipo)
@@ -693,7 +635,7 @@ console.log(resulq.data[0].vigencia);
 
 
 
-                                           if(total>(new_validate+1) && (id_estatus == 9 || id_estatus == 10 || id_estatus == 11 || id_estatus == 12 || id_estatus == 13 || id_estatus == 14)){
+                                        if(total>(new_validate+1) && (id_estatus == 9 || id_estatus == 10 || id_estatus == 11 || id_estatus == 12 || id_estatus == 13 || id_estatus == 14)){
 
                                             console.log("SOLO DISPERSA LA MITAD*******");
                                             $("#modal_NEODATA .modal-body").append('<div class="row"><div class="col-md-12"><h3><i class="fa fa-info-circle" style="color:gray;"></i><b style="color:blue;"> Anticipo </b> diponible <i>'+row.data().nombreLote+'</i></h3></div></div><br><br>');
@@ -717,7 +659,8 @@ console.log(resulq.data[0].vigencia);
 
                                         // FIN BANDERA OPERACION PARA SACAR 5% ************
                                         $("#modal_NEODATA .modal-body").append(`<div class="row"><div class="col-md-3"><p style="font-zise:10px;"><b>USUARIOS</b></p></div><div class="col-md-1"><b>%</b></div><div class="col-md-2"><b>TOT. COMISIÓN</b></div><div class="col-md-2"><b><b>ABONADO</b></div><div class="col-md-2"><b>PENDIENTE</b></div><div class="col-md-2"><b>DISPONIBLE</b></div></div>`);
-                                        lugar = lugar_prospeccionLote;
+                              
+                                         lugar = lugar_prospeccionLote;
                                         var_sum = 0;
 
                                         let abonado=0;
@@ -1199,9 +1142,7 @@ console.log(resulq.data[0].vigencia);
         }
         else{
             $.getJSON( url + "Comisiones/getMontoDispersadoDates/"+fecha1+'/'+fecha2).done( function( $datos ){
-                $("#myModal .modal-body").append('<div class="row"><div class="col-md-12"><p class="category"><b>Monto</b>: <i><b>$'+formatMoney($datos['datos_monto'][0].monto)+'</b></i></p></div></div>');
-                $("#myModal .modal-body").append('<div class="row"><div class="col-md-12"><p class="category"><b>Pagos</b>: <i><b>'+formatMoney($datos['datos_pagos'][0].pagos)+'</b></i></p></div></div>');
-                $("#myModal .modal-body").append('<div class="row"><div class="col-md-12"><p class="category"><b>Lotes</b>: <i><b>'+formatMoney($datos['datos_lotes'][0].lotes)+'</b></i></p></div></div>');
+                $("#myModal .modal-body").append('<div class="row">                <div class="col-md-5"><p class="category"><b>Monto</b>: $'+formatMoney($datos['datos_monto'][0].monto)+'</p></div><div class="col-md-4"><p class="category"><b>Pagos</b>: '+formatMiles($datos['datos_pagos'][0].pagos)+'</p></div><div class="col-md-3"><p class="category"><b>Lotes</b>: '+formatMiles($datos['datos_lotes'][0].lotes)+'</p></div></div>');
             });
         }
     });
@@ -1271,6 +1212,13 @@ console.log(resulq.data[0].vigencia);
         caret_pos = updated_len - original_len + caret_pos;
         input[0].setSelectionRange(caret_pos, caret_pos);
     }
+
+
+  const formatMiles = (number) => {
+  const exp = /(\d)(?=(\d{3})+(?!\d))/g;
+  const rep = '$1,';
+  return number.toString().replace(exp,rep);
+}
 
     </script>
 </body>
