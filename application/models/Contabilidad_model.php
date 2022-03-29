@@ -18,7 +18,8 @@ class Contabilidad_model extends CI_Model
         return $this->db->query("SELECT l.idLote, UPPER(CONCAT(c.nombre, ' ', c.apellido_paterno, ' ', c.apellido_materno)) nombreCliente, l.nombreLote,
         l.sup superficie, FORMAT(precio, 'C') preciom2, FORMAT(l.totalNeto2, 'C') total, hl.modificado, dxl.id_dxl,
 		dxl.fecha_firma, dxl.adendum, dxl.superficie_postventa, dxl.costo_m2, dxl.parcela, dxl.superficie_proyectos, 
-		dxl.presupuesto_m2, dxl.deduccion, dxl.m2_terreno, dxl.costo_terreno, dxl.comentario
+		dxl.presupuesto_m2, dxl.deduccion, dxl.m2_terreno, dxl.costo_terreno, dxl.comentario, dxl.unidad, dxl.calle_exacta, 
+		dxl.num_ext, dxl.codigo_postal, dxl.colonia , dxl.folio_real
         FROM lotes l 
         INNER JOIN clientes c ON c.idLote = l.idLote AND c.status = 1
         INNER JOIN (SELECT idLote, MAX(modificado) modificado FROM historial_lotes WHERE status = 1 AND idStatusContratacion = 9 AND idMovimiento = 39 
@@ -119,6 +120,12 @@ class Contabilidad_model extends CI_Model
                            WHEN 'm2_terreno' THEN 9
                            WHEN 'costo_terreno' THEN 10
                            WHEN 'comentario' THEN 11
+                           WHEN 'unidad' THEN 12
+                           WHEN 'calle_exacta' THEN 13
+                           WHEN 'num_ext' THEN 14
+                           WHEN 'codigo_postal' THEN 15
+                           WHEN 'colonia' THEN 16
+                           WHEN 'folio_real' THEN 17
                        END id_opcion
             FROM INFORMATION_SCHEMA.COLUMNS
             WHERE TABLE_NAME = 'detalles_x_lotes'
