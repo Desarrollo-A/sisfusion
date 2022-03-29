@@ -222,5 +222,20 @@ class Contabilidad extends CI_Controller
             echo json_encode(array());
     }
 
+    function getLotesListC()
+    {
+        if ($this->input->post("typeTransaction") == 1) // MJ: LA BÚSQUEDA SERÁ POR MULTI CONDOMINIO
+            if (count($this->input->post("idCondominio"))>1)
+                $idCondominio = implode(", ", $this->input->post("idCondominio"));
+            else
+                $idCondominio = $this->input->post("idCondominio")[0];
+        
+        $data = $this->Contabilidad_model->getLotesListC($idCondominio);
+        if ($data != null)
+            echo json_encode($data);
+        else
+            echo json_encode(array());
+    }
+
 }
 

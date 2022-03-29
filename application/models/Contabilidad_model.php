@@ -144,5 +144,15 @@ class Contabilidad_model extends CI_Model
         WHERE id_catalogo = 64) t2 ON (t1.id_opcion = t2.id_opcion);")->result_array();
     }
 
+    
+    public function getLotesListC($idCondominio)
+    {
+        $a = 0;
+        return $this->db->query("SELECT l.idLote, UPPER(l.nombreLote) nombreLote, l.idStatusLote, cl.id_cliente
+        FROM lotes l 
+        INNER JOIN clientes cl ON cl.idLote = l.idLote
+        WHERE l.status = 1 AND l.idCondominio IN($idCondominio) AND cl.status = 1")->result_array();
+    }
+
 
 }
