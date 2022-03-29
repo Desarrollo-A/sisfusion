@@ -433,6 +433,8 @@
                     } else {
                         if (d.estatus == 1) {
                             return '<center><span class="label label-danger" style="background:#27AE60">Activo</span><center>';
+                        } else if (d.estatus == 3) {
+                            return '<center><span class="label label-danger" style="background:#FF7C00">Inactivo comisionando</span><center>';
                         } else {
                             if (d.abono_pendiente !== undefined) {
                                 if (parseFloat(d.abono_pendiente) > 0) {
