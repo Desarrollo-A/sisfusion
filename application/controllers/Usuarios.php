@@ -408,4 +408,17 @@ public function UpdatePDF()
         }
     }
 
+    public function usersByLeader(){
+        /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/           
+        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
+        /*-------------------------------------------------------------------------------*/
+      $this->load->view('template/header');
+      $this->load->view("usuarios/usersByLeader", $datos);
+  }
+
+    public function getUsersListByLeader(){
+        $data['data'] = $this->Usuarios_modelo->getUsersListByLeader($this->session->userdata('id_usuario'))->result_array();
+        echo json_encode($data);
+    }
+
 }
