@@ -1010,7 +1010,7 @@ class Asesor extends CI_Controller
             $data[$i]['fechaVenc'] = $query[0]->fechaVenc;
             $data[$i]['modificado'] = $query[0]->modificado;
             $data[$i]['vl'] = $query[0]->vl;
-
+            $data[$i]['flag_compartida'] = $query[0]->flag_compartida;
         }
 
 
@@ -5414,5 +5414,64 @@ class Asesor extends CI_Controller
         }
     }
 
+    function getAsesores()
+    {
+        $data = $this->Asesor_model->getAsesores($this->session->userdata('id_usuario'));
+        if ($data != null)
+            echo json_encode($data);
+        else
+            echo json_encode(array());
+    }
 
+    function getAsesores2()
+    {
+        $data = $this->Asesor_model->getAsesores2($this->session->userdata('id_usuario'), $_POST['value']);
+        if ($data != null)
+            echo json_encode($data);
+        else
+            echo json_encode(array());
+    }
+
+    function saveVentaCompartida()
+    {
+        $asesor1 = $_POST['asesor1'];
+        $asesor2 = $_POST['asesor2'];
+        $id_cliente = $_POST['id_cliente'];
+
+        $count = 0;
+        $arrAsesor = array($asesor1, $asesor2);
+
+        if($_POST['ventaC'] == 'uno'){
+            if($asesor2 != ''){
+                $count = 2;
+            }else{
+                $count = 1;
+            }
+            for($x=0;$x<$count;$x++){
+                $dataAsesor = $this->Asesor_model->getAsesorData($arrAsesor[$x]);
+                $update = array(
+                    "id_cliente" => $id_cliente,  
+                    "id_asesor" =>  $dataAsesor->asesor,  
+                    "id_coordinador" => $dataAsesor->coord,  
+                    "id_gerente" => $dataAsesor->ger,  
+                    "estatus" => 1,
+                    "fecha_creacion" => date("Y-m-d H:i:s"),  
+                    "creado_por" => $this->session->userdata('id_usuario'),  
+                    "id_regional" => $dataAsesor->regional,  
+                    "id_subdirector" => $dataAsesor->subdir 
+                );
+                $data = $this->Asesor_model->saveVentaCompartida($update);
+                if($data == true){
+                    $this->Asesor_model->updateFlagCompartida($id_cliente);
+                }
+            }
+        }else{
+            $data = $this->Asesor_model->updateFlagCompartida($id_cliente);
+        }
+        
+        if ($data != null)
+            echo json_encode($data);
+        else
+            echo json_encode(array());
+    }
 }

@@ -23,7 +23,9 @@ class Postventa_model extends CI_Model
 
     function getLotes($idCondominio)
     {
-        return $this->db->query("SELECT * FROM lotes WHERE idCondominio = $idCondominio AND idStatusContratacion = 15 AND idMovimiento = 45 AND idStatusLote = 2");
+        return $this->db->query("SELECT * FROM lotes l
+        WHERE idCondominio = $idCondominio AND idStatusContratacion = 15 AND idMovimiento = 45 AND idStatusLote = 2 
+        AND idLote NOT IN(SELECT idLote FROM clientes WHERE id_cliente IN (SELECT idCliente FROM solicitud_escrituracion))");
     }
 
     function getClient($idLote)
@@ -240,8 +242,8 @@ class Postventa_model extends CI_Model
         INNER JOIN lotes l ON se.idLote = l.idLote 
         INNER JOIN condominios cond ON cond.idCondominio = l.idCondominio 
         INNER JOIN residenciales r ON r.idResidencial = cond.idResidencial
-		INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = se.estatus_pago AND oxc.id_catalogo = 63
-		INNER JOIN opcs_x_cats oxc2 ON oxc2.id_opcion = se.estatus_pago AND oxc2.id_catalogo = 62
+		LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = se.estatus_pago AND oxc.id_catalogo = 63
+		LEFT JOIN opcs_x_cats oxc2 ON oxc2.id_opcion = se.estatus_pago AND oxc2.id_catalogo = 62
         WHERE se.idSolicitud = $idSolicitud");
     }
 
@@ -281,12 +283,12 @@ function checkBudgetInfo($idSolicitud){
                 WHERE se.idSolicitud =$idSolicitud");
     }
 
-    function getInfoNotaria($idSolicitud, $idNotaria)
+    function getInfoNotaria($idSolicitud)
     {
         return $this->db->query("SELECT se.*, de.*, n.* FROM solicitud_escrituracion se
 		INNER JOIN documentos_escrituracion de ON de.idSolicitud = se.idSolicitud
-		INNER JOIN Notarias n ON n.idNotaria = $idNotaria
-		WHERE se.idSolicitud = $idSolicitud");
+		INNER JOIN Notarias n ON n.idNotaria = se.idNotaria
+		WHERE se.idSolicitud = $idSolicitud AND de.tipo_documento NOT IN (14,15,16,17)");
     }
 
     function saveDate($signDate, $idSolicitud)
@@ -314,8 +316,11 @@ function checkBudgetInfo($idSolicitud){
         VALUES('$nombre_notaria', '$nombre_notario', '$direccion', '$correo', '$telefono', 0, 2);");
         $insert_id = $this->db->insert_id();
         $idSolicitud = $_POST['idSolicitud'];
+        $rol = $this->session->userdata('id_rol');
+        $estatus = $this->db->query("SELECT estatus FROM solicitud_escrituracion WHERE idSolicitud = $idSolicitud")->row()->estatus;
         //print_r("UPDATE solicitud_escrituracion SET idNotaria= $insert_id WHERE idSolicitud = $idSolicitud;");
-        $this->db->query("UPDATE solicitud_escrituracion SET idNotaria= $insert_id WHERE idSolicitud = $idSolicitud;");
+        $this->db->query("UPDATE solicitud_escrituracion SET idNotaria= $insert_id, estatus = 10 WHERE idSolicitud = $idSolicitud;");
+        return $this->db->query("INSERT INTO control_estatus VALUES(($estatus), 59, 1, GETDATE(), 12, $idSolicitud, $rol, 11, 'Cambio de Notaria', 0);");
     }
 
     //GESTION NOTARIA CLIENTE
@@ -327,8 +332,13 @@ function checkBudgetInfo($idSolicitud){
         
     }
 
-    function updateObservacionesPostventa($idSolicitud){
-        $this->db->query("UPDATE solicitud_escrituracion SET estatus= 10 WHERE idSolicitud = $idSolicitud;");
+    //RECHAZAR NOTARIA
+    function rechazarNotaria(){
+        $idSolicitud = $_POST['idSolicitud'];
+        $rol = $this->session->userdata('id_rol');
+        
+        $this->db->query("UPDATE solicitud_escrituracion SET idNotaria = '', estatus = 10 WHERE idSolicitud = $idSolicitud;");
+        return $this->db->query("INSERT INTO control_estatus VALUES(11, 59, 1, GETDATE(), 13, $idSolicitud, $rol, 10, 'Se rechazo la Notaria', 0);");
     }
 
     function getEstatusConstruccion()
@@ -343,4 +353,19 @@ function checkBudgetInfo($idSolicitud){
         return $query->result_array();
     }
 
+    //OBSERVACIONES
+    function updateObservacionesPostventa() {
+        $idSolicitud = $_POST['idSolicitud'];
+        $rol = $this->session->userdata('id_rol');
+
+        $this->db->query("UPDATE solicitud_escrituracion SET estatus = 10 WHERE idSolicitud = $idSolicitud");
+        return $this->db->query("INSERT INTO control_estatus VALUES(13, 59, 1, GETDATE(), 14, $idSolicitud, $rol, 10, 'Corrección Documentos', 0);");
+    }
+
+    function getSolicitudEscrituracion($idSolicitud)
+    {
+        $idSolicitud = $_POST['idSolicitud'];
+
+        return $this->db->query("SELECT * FROM solicitud_escrituracion WHERE idSolicitud = '$idSolicitud'");
+    }
 }

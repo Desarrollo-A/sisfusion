@@ -57,11 +57,15 @@ class Asesor_model extends CI_Model
     }
 
 
-    /*----------------------------------CONSULTAS PARA OBTENER EL MENU------------------------*/
-    function getMenu($rol)
-    {
-        if ($this->session->userdata('id_usuario') == 4415 || $this->session->userdata('id_usuario') == 6578 || $this->session->userdata('id_usuario') == 9942 || $this->session->userdata('id_usuario') == 9911) { // ES GREENHAM , COREANO, BADABUM, CONTACT CENTER
-            return $this->db->query("SELECT * FROM Menu2 WHERE rol=" . $rol . " AND nombre IN ('Inicio', 'Comisiones') AND estatus = 1 order by orden asc");
+/*----------------------------------CONSULTAS PARA OBTENER EL MENU------------------------*/
+	function getMenu($rol)
+	{
+		if ($this->session->userdata('id_usuario') == 4415 || $this->session->userdata('id_usuario') == 6578 || $this->session->userdata('id_usuario') == 9942 || $this->session->userdata('id_usuario') == 9911 || $this->session->userdata('estatus') == 3)  { // ES GREENHAM , COREANO, BADABUM, CONTACT CENTER
+           $complemento='';
+           if($this->session->userdata('id_usuario') == 6578 || $this->session->userdata('id_usuario') == 9942 || $this->session->userdata('id_usuario') == 9911){
+               $complemento = ", 'Prospectos'";
+           }
+            return $this->db->query("SELECT * FROM Menu2 WHERE rol=".$rol." AND nombre IN ('Inicio', 'Comisiones' $complemento) AND estatus = 1 order by orden asc");
         } else {
             if ($rol == 33) { // ES UN USUARIO DE CONSULTA
                 if ($this->session->userdata('id_usuario') == 2896) { // ES PATRICIA MAYA
@@ -81,7 +85,11 @@ class Asesor_model extends CI_Model
 
     function getMenuHijos($rol)
     {
-        return $this->db->query("SELECT * FROM Menu2 WHERE rol=" . $rol . " AND padre > 0 AND estatus = 1 order by orden asc");
+        $complemento="";
+        if($this->session->userdata('id_usuario') == 6578 || $this->session->userdata('id_usuario') == 9942 || $this->session->userdata('id_usuario') == 9911){
+            $complemento = " AND idmenu in(296,307,308,879)";
+        }
+        return $this->db->query("SELECT * FROM Menu2 WHERE rol=" . $rol . " AND padre > 0 AND estatus = 1 $complemento order by orden asc");
     }
 
     function getActiveBtn($var, $rol)
@@ -96,7 +104,8 @@ class Asesor_model extends CI_Model
         $query = $this->db->query("SELECT '1' qry, '1' dsType, cl.id_cliente, id_asesor, id_coordinador, id_gerente, cl.id_sede, cl.nombre, cl.apellido_paterno, 
                                     cl.apellido_materno, cl.status ,cl.idLote, fechaApartado ,fechaVencimiento , cl.usuario, cond.idCondominio, cl.fecha_creacion, 
                                     cl.creado_por, cl.fecha_modificacion, cl.modificado_por, cond.nombre as nombreCondominio, residencial.nombreResidencial as nombreResidencial,
-                                    cl.status, nombreLote, lotes.comentario, lotes.idMovimiento, lotes.fechaVenc, lotes.modificado, lotes.observacionContratoUrgente as vl, lotes.idStatusContratacion, cl.concepto, cl.id_prospecto
+                                    cl.status, nombreLote, lotes.comentario, lotes.idMovimiento, lotes.fechaVenc, lotes.modificado, lotes.observacionContratoUrgente as vl, lotes.idStatusContratacion, cl.concepto, cl.id_prospecto,
+                                    cl.flag_compartida
 									FROM clientes as cl
                                     LEFT JOIN usuarios as us ON cl.id_asesor=us.id_usuario
                                     LEFT JOIN lotes as lotes ON lotes.idLote=cl.idLote
@@ -112,7 +121,8 @@ class Asesor_model extends CI_Model
         $query = $this->db->query("SELECT '2' qry, '2' dsType, cl.idCliente as id_cliente, cl.idAsesor id_asesor, '0' id_coordinador,cl.idGerente id_gerente, '0' id_sede, CONCAT(cl.primerNombre, ' ', cl.segundoNombre) nombre, cl.apellidoPaterno apellido_paterno, 
                                     cl.apellidoMaterno apellido_materno, cl.status ,cl.idLote, fechaApartado ,fechaVencimiento , cl.usuario, cond.idCondominio, cl.fechaApartado fecha_creacion, 
                                     cl.creado_por, cl.fechaApartado fecha_modificacion, cl.usuario modificado_por, cond.nombre as nombreCondominio, residencial.nombreResidencial as nombreResidencial,
-                                    cl.status, nombreLote, lotes.comentario, lotes.idMovimiento, lotes.fechaVenc, lotes.modificado, lotes.observacionContratoUrgente as vl, lotes.idStatusContratacion, cl.concepto, '666' as id_prospecto
+                                    cl.status, nombreLote, lotes.comentario, lotes.idMovimiento, lotes.fechaVenc, lotes.modificado, lotes.observacionContratoUrgente as vl, lotes.idStatusContratacion, cl.concepto, '666' as id_prospecto,
+                                    cl.flag_compartida
 									FROM cliente_consulta as cl
                                     LEFT JOIN lotes as lotes ON lotes.idLote=cl.idLote
                                     LEFT JOIN condominios as cond ON lotes.idCondominio=cond.idCondominio
@@ -126,7 +136,8 @@ class Asesor_model extends CI_Model
     { // DATA FROM DEPOSITO_SERIEDAD WHEN NO ENCONTRÓ NOTHING IN getDataDs1 & getDataDs2
         $query = $this->db->query("SELECT '3' qry, '1' dsType, cl.id_cliente, id_asesor, id_coordinador, id_gerente, cl.id_sede, cl.nombre, cl.apellido_paterno, 
                                     cl.apellido_materno, cl.status ,cl.idLote, fechaApartado ,fechaVencimiento , cl.usuario, cond.idCondominio, cl.fecha_creacion, 
-                                    cl.creado_por, cl.fecha_modificacion, cl.modificado_por, cond.nombre as nombreCondominio, residencial.nombreResidencial as nombreResidencial, cl.status, nombreLote, lotes.comentario, lotes.idMovimiento, lotes.fechaVenc, lotes.modificado, lotes.observacionContratoUrgente as vl, lotes.idStatusContratacion, cl.concepto, cl.id_prospecto
+                                    cl.creado_por, cl.fecha_modificacion, cl.modificado_por, cond.nombre as nombreCondominio, residencial.nombreResidencial as nombreResidencial, cl.status, nombreLote, lotes.comentario, lotes.idMovimiento, lotes.fechaVenc, lotes.modificado, lotes.observacionContratoUrgente as vl, lotes.idStatusContratacion, cl.concepto, cl.id_prospecto,
+                                    cl.flag_compartida
 									FROM clientes as cl
                                     LEFT JOIN usuarios as us ON cl.id_asesor=us.id_usuario
                                     LEFT JOIN lotes as lotes ON lotes.idLote=cl.idLote
@@ -1067,11 +1078,11 @@ class Asesor_model extends CI_Model
                 INNER JOIN prospectos p ON p.id_prospecto = cl.id_prospecto AND p.fecha_creacion <= '2022-01-20 00:00:00.000'
                 LEFT JOIN evidencia_cliente ec ON ec.idCliente = cl.id_cliente 
                 INNER JOIN sedes s ON s.id_sede = asesor.id_sede
-                LEFT JOIN comentariosMktd cm ON cm.idLote = l.idLote AND cm.id_cliente=cl.id_cliente
+                LEFT JOIN comentariosMktd cm ON cm.idLote = l.idLote AND cm.id_cliente=cl.id_cliente AND cm.bandera_estatus = 1
                 LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = cl.lugar_prospeccion AND oxc.id_catalogo = 9
                 WHERE cl.fecha_creacion > '2020-12-31 11:59:00' AND cl.lugar_prospeccion IN (6, 29) AND cl.status = 1 AND l.status = 1 
                 AND ec.id_evidencia IS NULL AND cm.id_coment IS NULL 
-                AND l.idLote NOT IN (48729, 12735, 49644, 26655, 49957, 50079, 51495, 50891, 52093, 51289, 53164, 53165, 53980, 26120, 55593, 55621, 56495, 56893, 57072, 52398, 59767, 59349, 59866, 60002, 60015, 55241, 56209, 57122, 44767, 44768, 11290, 63250, 27235, 66821, 59650, 64137, 63991, 63526)
+                AND l.idLote NOT IN (48729, 12735, 49644, 26655, 49957, 50079, 51495, 50891, 52093, 51289, 53164, 53165, 53980, 26120, 55593, 55621, 56495, 56893, 57072, 52398, 59767, 59349, 59866, 60002, 60015, 55241, 56209, 57122, 44767, 44768, 11290, 63250, 27235, 66821, 59650, 63526)
                 UNION ALL
                 SELECT CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno) as nombreCliente, l.nombreLote, cl.fechaApartado,
                 CONCAT(asesor.nombre,' ',asesor.apellido_paterno,' ', asesor.apellido_materno) as nombreAsesor, cl.id_cliente, l.idLote, cl.telefono1,
@@ -1083,9 +1094,9 @@ class Asesor_model extends CI_Model
                 LEFT JOIN evidencia_cliente ec ON ec.idCliente = cl.id_cliente 
                 INNER JOIN sedes s ON s.id_sede = asesor.id_sede
                 LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = cl.lugar_prospeccion AND oxc.id_catalogo = 9
-                /*LEFT JOIN comentariosMktd cm ON cm.idLote = l.idLote AND cm.id_cliente=cl.id_cliente*/
-                WHERE l.status = 1 AND ec.id_evidencia IS NULL/* AND cm.id_coment IS NULL*/
-                AND l.idLote NOT IN (48729, 12735, 49644, 26655, 49957, 50079, 51495, 50891, 52093, 51289, 53164, 53165, 53980, 26120, 55593, 55621, 56495, 56893, 57072, 52398, 59767, 59349, 59866, 60002, 60015, 55241, 56209, 57122, 44767, 44768, 11290, 63250, 27235, 66821, 59650, 64137, 63991, 63526)  ");
+                LEFT JOIN comentariosMktd cm ON cm.idLote = l.idLote AND cm.id_cliente=cl.id_cliente AND cm.bandera_estatus = 1
+                WHERE l.status = 1 AND ec.id_evidencia IS NULL AND cm.id_coment IS NULL
+                AND l.idLote NOT IN (48729, 12735, 49644, 26655, 49957, 50079, 51495, 50891, 52093, 51289, 53164, 53165, 53980, 26120, 55593, 55621, 56495, 56893, 57072, 52398, 59767, 59349, 59866, 60002, 60015, 55241, 56209, 57122, 44767, 44768, 11290, 63250, 27235, 66821, 59650, 63526)  ");
         return $query->result_array();
     }
 
@@ -1119,10 +1130,10 @@ class Asesor_model extends CI_Model
                 LEFT JOIN (SELECT MAX(fecha_creacion) fecha_creacion, id_evidencia, estatus FROM historial_evidencias GROUP BY id_evidencia, estatus) he10 ON he10.id_evidencia = ec.id_evidencia AND he10.estatus = 10 -- COBRANZA RECHAZA
                 LEFT JOIN (SELECT MAX(fecha_creacion) fecha_creacion, id_evidencia, estatus FROM historial_evidencias GROUP BY id_evidencia, estatus) he20 ON he20.id_evidencia = ec.id_evidencia AND he20.estatus = 20 -- CONTRALORÍA RECHAZA
                 	LEFT JOIN (SELECT id_evidencia, estatus, fecha_creacion, CAST(comentario_autorizacion AS NVARCHAR(100)) comentario_autorizacion FROM historial_evidencias) he200 ON he20.id_evidencia = he200.id_evidencia AND he200.estatus = 20 AND he200.fecha_creacion = he20.fecha_creacion -- CONTRALORÍA RECHAZA
-                LEFT JOIN comentariosMktd cm ON cm.idLote = l.idLote AND cm.id_cliente=cl.id_cliente
+                LEFT JOIN comentariosMktd cm ON cm.idLote = l.idLote AND cm.id_cliente=cl.id_cliente AND cm.bandera_estatus = 1
                 LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = cl.lugar_prospeccion AND oxc.id_catalogo = 9
                 WHERE cm.id_coment IS NULL
-                AND l.idLote NOT IN (48729, 12735, 49644, 26655, 49957, 50079, 51495, 50891, 52093, 51289, 53164, 53165, 53980, 26120, 55593, 55621, 56495, 56893, 57072, 52398, 59767, 59349, 59866, 60002, 60015, 55241, 56209, 57122, 44767, 44768, 11290, 63250, 27235, 66821, 59650, 64137, 63991, 63526)
+                AND l.idLote NOT IN (48729, 12735, 49644, 26655, 49957, 50079, 51495, 50891, 52093, 51289, 53164, 53165, 53980, 26120, 55593, 55621, 56495, 56893, 57072, 52398, 59767, 59349, 59866, 60002, 60015, 55241, 56209, 57122, 44767, 44768, 11290, 63250, 27235, 66821, 59650, 63526)
                 UNION ALL 
                 SELECT CONCAT(cl.nombre,' ', cl.apellido_paterno, ' ', cl.apellido_materno) as cliente,
                 l.idLote, l.nombreLote, CONCAT(solicitante.nombre,' ', solicitante.apellido_paterno,' ', solicitante.apellido_materno) as solicitante, ec.estatus,
@@ -1145,10 +1156,10 @@ class Asesor_model extends CI_Model
                 LEFT JOIN (SELECT MAX(fecha_creacion) fecha_creacion, id_evidencia, estatus FROM historial_evidencias GROUP BY id_evidencia, estatus) he10 ON he10.id_evidencia = ec.id_evidencia AND he10.estatus = 10 -- COBRANZA RECHAZA
                 LEFT JOIN (SELECT MAX(fecha_creacion) fecha_creacion, id_evidencia, estatus FROM historial_evidencias GROUP BY id_evidencia, estatus) he20 ON he20.id_evidencia = ec.id_evidencia AND he20.estatus = 20 -- CONTRALORÍA RECHAZA
                 	LEFT JOIN (SELECT id_evidencia, estatus, fecha_creacion, CAST(comentario_autorizacion AS NVARCHAR(100)) comentario_autorizacion FROM historial_evidencias) he200 ON he20.id_evidencia = he200.id_evidencia AND he200.estatus = 20 AND he200.fecha_creacion = he20.fecha_creacion -- CONTRALORÍA RECHAZA
-                LEFT JOIN comentariosMktd cm ON cm.idLote = l.idLote AND cm.id_cliente=cl.id_cliente
+                LEFT JOIN comentariosMktd cm ON cm.idLote = l.idLote AND cm.id_cliente=cl.id_cliente AND cm.bandera_estatus = 1
                 LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = cl.lugar_prospeccion AND oxc.id_catalogo = 9
                 WHERE cm.id_coment IS NULL
-                AND l.idLote NOT IN (48729, 12735, 49644, 26655, 49957, 50079, 51495, 50891, 52093, 51289, 53164, 53165, 53980, 26120, 55593, 55621, 56495, 56893, 57072, 52398, 59767, 59349, 59866, 60002, 60015, 55241, 56209, 57122, 44767, 44768, 11290, 63250, 27235, 66821, 59650, 64137, 63991, 63526)
+                AND l.idLote NOT IN (48729, 12735, 49644, 26655, 49957, 50079, 51495, 50891, 52093, 51289, 53164, 53165, 53980, 26120, 55593, 55621, 56495, 56893, 57072, 52398, 59767, 59349, 59866, 60002, 60015, 55241, 56209, 57122, 44767, 44768, 11290, 63250, 27235, 66821, 59650, 63526)
 
                 UNION ALL
                 
@@ -1163,11 +1174,11 @@ class Asesor_model extends CI_Model
                 INNER JOIN prospectos p ON p.id_prospecto = cl.id_prospecto AND p.fecha_creacion <= '2022-01-20 00:00:00.000'
                 LEFT JOIN evidencia_cliente ec ON ec.idCliente = cl.id_cliente 
                 INNER JOIN sedes s ON s.id_sede = asesor.id_sede
-                LEFT JOIN comentariosMktd cm ON cm.idLote = l.idLote AND cm.id_cliente=cl.id_cliente
+                LEFT JOIN comentariosMktd cm ON cm.idLote = l.idLote AND cm.id_cliente=cl.id_cliente AND cm.bandera_estatus = 1
                 LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = cl.lugar_prospeccion AND oxc.id_catalogo = 9
                 WHERE cl.fecha_creacion > '2020-12-31 11:59:00' AND cl.lugar_prospeccion IN (6, 29) AND cl.status = 1 AND l.status = 1 
                 AND ec.id_evidencia IS NULL AND cm.id_coment IS NULL 
-                AND l.idLote NOT IN (48729, 12735, 49644, 26655, 49957, 50079, 51495, 50891, 52093, 51289, 53164, 53165, 53980, 26120, 55593, 55621, 56495, 56893, 57072, 52398, 59767, 59349, 59866, 60002, 60015, 55241, 56209, 57122, 44767, 44768, 11290, 63250, 27235, 66821, 59650, 64137, 63991, 63526)
+                AND l.idLote NOT IN (48729, 12735, 49644, 26655, 49957, 50079, 51495, 50891, 52093, 51289, 53164, 53165, 53980, 26120, 55593, 55621, 56495, 56893, 57072, 52398, 59767, 59349, 59866, 60002, 60015, 55241, 56209, 57122, 44767, 44768, 11290, 63250, 27235, 66821, 59650, 63526)
                 UNION ALL
                 SELECT CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno) cliente, l.idLote, l.nombreLote, 'Sin especificar' solicitante, NULL estatus,
 				NULL id_evidencia, cl.id_cliente, NULL evidencia, NULL fecha_modificado, cl.fechaApartado, s.nombre plaza,
@@ -1183,7 +1194,7 @@ class Asesor_model extends CI_Model
                 INNER JOIN sedes s ON s.id_sede = asesor.id_sede
                 LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = cl.lugar_prospeccion AND oxc.id_catalogo = 9
                 WHERE l.status = 1 AND ec.id_evidencia IS NULL
-				AND l.idLote NOT IN (48729, 12735, 49644, 26655, 49957, 50079, 51495, 50891, 52093, 51289, 53164, 53165, 53980, 26120, 55593, 55621, 56495, 56893, 57072, 52398, 59767, 59349, 59866, 60002, 60015, 55241, 56209, 57122, 44767, 44768, 11290, 63250, 27235, 66821, 59650, 64137, 63991, 63526)
+				AND l.idLote NOT IN (48729, 12735, 49644, 26655, 49957, 50079, 51495, 50891, 52093, 51289, 53164, 53165, 53980, 26120, 55593, 55621, 56495, 56893, 57072, 52398, 59767, 59349, 59866, 60002, 60015, 55241, 56209, 57122, 44767, 44768, 11290, 63250, 27235, 66821, 59650, 63526)
                 ORDER BY l.nombreLote");
         return $query->result_array();
     }
@@ -1323,7 +1334,7 @@ class Asesor_model extends CI_Model
         LEFT JOIN (SELECT MAX(fecha_creacion) fecha_creacion, id_evidencia, estatus FROM historial_evidencias GROUP BY id_evidencia, estatus) he20 ON he20.id_evidencia = ec.id_evidencia AND he20.estatus = 20 -- CONTRALORÍA RECHAZA
         LEFT JOIN (SELECT id_evidencia, estatus, fecha_creacion, CAST(comentario_autorizacion AS NVARCHAR(100)) comentario_autorizacion FROM historial_evidencias) he200 ON he20.id_evidencia = he200.id_evidencia AND he200.estatus = 20 AND he200.fecha_creacion = he20.fecha_creacion -- CONTRALORÍA RECHAZA
         WHERE opxc.id_catalogo = 1 AND ec.estatus IN (2, 3, 20)
-        AND l.idLote NOT IN (48729, 12735, 49644, 26655, 49957, 50079, 51495, 50891, 52093, 51289, 53164, 53165, 53980, 26120, 55593, 55621, 56495, 56893, 57072, 52398, 59767, 59349, 59866, 60002, 60015, 55241, 56209, 57122, 44767, 44768, 11290, 63250, 27235, 66821, 59650, 64137, 63991, 63526)
+        AND l.idLote NOT IN (48729, 12735, 49644, 26655, 49957, 50079, 51495, 50891, 52093, 51289, 53164, 53165, 53980, 26120, 55593, 55621, 56495, 56893, 57072, 52398, 59767, 59349, 59866, 60002, 60015, 55241, 56209, 57122, 44767, 44768, 11290, 63250, 27235, 66821, 59650, 63526)
         UNION ALL 
         SELECT CONCAT(cl.nombre,' ', cl.apellido_paterno, ' ', cl.apellido_materno) as cliente,
         ec.idLote, l.nombreLote, CONCAT(solicitante.nombre,' ', solicitante.apellido_paterno,' ', solicitante.apellido_materno) as solicitante, ec.estatus,
@@ -1348,7 +1359,7 @@ class Asesor_model extends CI_Model
         LEFT JOIN (SELECT MAX(fecha_creacion) fecha_creacion, id_evidencia, estatus FROM historial_evidencias GROUP BY id_evidencia, estatus) he20 ON he20.id_evidencia = ec.id_evidencia AND he20.estatus = 20 -- CONTRALORÍA RECHAZA
         LEFT JOIN (SELECT id_evidencia, estatus, fecha_creacion, CAST(comentario_autorizacion AS NVARCHAR(100)) comentario_autorizacion FROM historial_evidencias) he200 ON he20.id_evidencia = he200.id_evidencia AND he200.estatus = 20 AND he200.fecha_creacion = he20.fecha_creacion -- CONTRALORÍA RECHAZA
         WHERE opxc.id_catalogo = 1 AND ec.estatus IN (2, 3, 20) 
-        AND l.idLote NOT IN (48729, 12735, 49644, 26655, 49957, 50079, 51495, 50891, 52093, 51289, 53164, 53165, 53980, 26120, 55593, 55621, 56495, 56893, 57072, 52398, 59767, 59349, 59866, 60002, 60015, 55241, 56209, 57122, 44767, 44768, 11290, 63250, 27235, 66821, 59650, 64137, 63991, 63526)
+        AND l.idLote NOT IN (48729, 12735, 49644, 26655, 49957, 50079, 51495, 50891, 52093, 51289, 53164, 53165, 53980, 26120, 55593, 55621, 56495, 56893, 57072, 52398, 59767, 59349, 59866, 60002, 60015, 55241, 56209, 57122, 44767, 44768, 11290, 63250, 27235, 66821, 59650, 63526)
         ORDER BY l.nombreLote");
         return $query->result_array();
     }
@@ -1508,19 +1519,19 @@ class Asesor_model extends CI_Model
             $region = "'1', '5', '8', '9'";
 
         return $this->db->query("SELECT l.idLote, l.nombreLote, c.fechaApartado, s.nombre plaza,
-        CONCAT(c.nombre, ' ', c.apellido_paterno, ' ', c.apellido_materno) nombreCliente,
-        cn.tipo, cn.comentario, cn.fecha_creacion,
-        CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) creado_por
-        FROM controversias cn 
-        INNER JOIN lotes l ON l.idLote = cn.id_lote AND l.status = 1
-        INNER JOIN clientes c ON c.idLote = l.idLote AND c.status = 1
-        INNER JOIN usuarios u ON u.id_usuario = c.id_asesor AND u.id_sede IN ($region)
-        INNER JOIN usuarios us ON us.id_usuario = cn.creado_por
-        INNER JOIN sedes s ON s.id_sede = u.id_sede
-        /*LEFT JOIN comentariosMktd cm ON cm.idLote = l.idLote AND cm.id_cliente=c.id_cliente
-        WHERE cm.id_coment IS NULL*/
-        WHERE l.idLote NOT IN (48729, 12735, 49644, 26655, 49957, 50079, 51495, 50891, 52093, 51289, 53164, 53165, 53980, 26120, 55593, 55621, 56495, 56893, 57072, 52398, 59767, 59349, 59866, 60002, 60015, 55241, 56209, 57122, 44767, 44768, 11290, 63250, 27235, 66821, 59650, 64137, 63991, 63526)
-        ORDER BY cn.fecha_creacion")->result_array();
+            CONCAT(c.nombre, ' ', c.apellido_paterno, ' ', c.apellido_materno) nombreCliente,
+            cn.tipo, cn.comentario, cn.fecha_creacion,
+            CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) creado_por
+            FROM controversias cn 
+            INNER JOIN lotes l ON l.idLote = cn.id_lote AND l.status = 1
+            INNER JOIN clientes c ON c.idLote = l.idLote AND c.status = 1
+            INNER JOIN usuarios u ON u.id_usuario = c.id_asesor AND u.id_sede IN ($region)
+            INNER JOIN usuarios us ON us.id_usuario = cn.creado_por
+            INNER JOIN sedes s ON s.id_sede = u.id_sede
+            /*LEFT JOIN comentariosMktd cm ON cm.idLote = l.idLote AND cm.id_cliente=c.id_cliente
+            WHERE cm.id_coment IS NULL*/
+            WHERE l.idLote NOT IN (48729, 12735, 49644, 26655, 49957, 50079, 51495, 50891, 52093, 51289, 53164, 53165, 53980, 26120, 55593, 55621, 56495, 56893, 57072, 52398, 59767, 59349, 59866, 60002, 60015, 55241, 56209, 57122, 44767, 44768, 11290, 63250, 27235, 66821, 59650, 63526)
+            ORDER BY cn.fecha_creacion")->result_array();
     }
 
     function getCatalogs()
@@ -1528,4 +1539,39 @@ class Asesor_model extends CI_Model
         return $this->db->query("SELECT id_catalogo, id_opcion, nombre FROM opcs_x_cats WHERE id_catalogo IN (11, 18, 19, 26) AND estatus = 1 ORDER BY id_catalogo, id_opcion");
     }
 
+    public function getAsesores($idUsuario)
+    {
+        return $this->db->query("SELECT id_usuario,  CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) as nombre FROM usuarios WHERE id_rol IN (7,9) AND estatus IN (1,3) AND id_usuario NOT IN ($idUsuario)")->result_array();
+    }
+
+    public function getAsesores2($idUsuario, $idSegundoAsesor)
+    {
+        return $this->db->query("SELECT id_usuario,  CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) as nombre FROM usuarios WHERE id_rol IN (7,9) AND estatus IN (1,3) AND id_usuario NOT IN ($idUsuario, $idSegundoAsesor)")->result_array();
+    }
+
+    public function saveVentaCompartida($data)
+    {
+        $query = $this->db->insert('ventas_compartidas', $data);
+        return $query;
+    }
+
+    public function getAsesorData($idUsuario)
+    {
+        return $this->db->query("SELECT u.id_usuario asesor, u.id_rol, 
+        CASE u.id_rol WHEN 7 THEN coord.id_usuario ELSE 0 END coord,
+        CASE u.id_rol WHEN 7 THEN ger.id_usuario ELSE coord.id_usuario END ger,
+        CASE u.id_rol WHEN 7 THEN subdir.id_usuario ELSE ger.id_usuario END subdir,
+        CASE WHEN u.id_sede IN ('2', '3', '5', '6') THEN 0 ELSE CASE u.id_rol WHEN 7 THEN regional.id_usuario ELSE subdir.id_usuario END END regional
+        FROM usuarios u 
+        LEFT JOIN usuarios coord ON coord.id_usuario = u.id_lider
+        LEFT JOIN usuarios ger ON ger.id_usuario = coord.id_lider
+        LEFT JOIN usuarios subdir ON subdir.id_usuario = ger.id_lider
+        LEFT JOIN usuarios regional ON regional.id_usuario = subdir.id_lider
+        WHERE u.id_usuario = $idUsuario")->row();
+    }
+
+    public function updateFlagCompartida($id_cliente)
+    {
+        return $this->db->query("UPDATE clientes SET flag_compartida = 1 WHERE id_cliente = $id_cliente");
+    }
 }

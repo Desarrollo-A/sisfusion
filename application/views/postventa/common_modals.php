@@ -83,6 +83,7 @@
                 <input type="text" class="hide" id="documentType">
                 <input type="text" class="hide" id="docName">
                 <input type="text" class="hide" id="action">
+                <input type="text" class="hide" id="details">
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
@@ -118,7 +119,7 @@
                                 <div class="form-group text-left m-0">
                                     <label class="control-label label-gral m-0">Estatus de pago</label>
                                     <select class="selectpicker m-0" data-style="btn btn-primary btn-round"
-                                            title="¿Tenemos cliente anterior?" data-size="7" id="estatusPago" name="estatusPago"
+                                            title="Estatus de pago" data-size="7" id="estatusPago" name="estatusPago"
                                             data-live-search="true" required>
                                             <option value ="default" selected disabled>Selecciona una opción</option>
                                     </select>
@@ -147,7 +148,7 @@
                                 <div class="form-group text-left m-0">
                                     <label class="control-label label-gral m-0">Estatus construcción</label>
                                     <select class="selectpicker m-0" data-style="btn btn-primary btn-round"
-                                            title="¿Tenemos cliente anterior?" data-size="7" id="construccion" name="construccion"
+                                            title="Estatus construcción" data-size="7" id="construccion" name="construccion"
                                             data-live-search="true" required>
                                     </select>
                                 </div>
@@ -378,8 +379,7 @@
                         <div class="row">
                             <div class="col-12 col-sm-12 col-md-12 col-lg-12 pr-0">
                                 <input type="text" class="form-control datepicker2 input-gral" id="signDate" value="" />
-                <p>*(fecha sugerida para firma de escrituras)</p>
-                                
+                                <p>*(fecha sugerida para firma de escrituras)</p>
                             </div>
                         </div>
                     </div>
@@ -398,7 +398,7 @@
 <div class="modal fade" id="altaNotario" data-keyboard="false" data-backdrop="static">
     <div class="modal-dialog">
         <div class="modal-content">
-            <div class="modal-header"><h5 id="mainLabelText">Fecha para firma de escrituras</h5></div>
+            <div class="modal-header"><h5 id="mainLabelText">Nueva Notaria</h5></div>
             <div class="modal-body text-center">
                <form id="newNotario" name="newNotario" method="post">
                     <input type="text" class="hide" id="idSolicitud" name="idSolicitud">
@@ -449,7 +449,7 @@
         <div class="modal-content">
             <div class="modal-header"><h5 id="mainLabelText" aling="center"><b>Información Notaria</b></h5></div>
             <div class="modal-body text-center">
-               <form method="post">
+               <form method="post" id="rechazar" name="rechazar">
                     <input type="text" class="hide" id="idSolicitud" name="idSolicitud">
                     <div class="modal-body">
                         <div class="col-md-6">
@@ -489,6 +489,7 @@
                         <div class="col-md-4"></div>
                         <div class="col-md-4">
                             <div class="form-group">
+                                <button type="submit" class="btn btn-danger">Rechazar</button>
                                 <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
                             </div>
                         </div>    
@@ -506,42 +507,40 @@
             <div class="modal-header">
                 <h5 class="text-center m-0">Envío de Observaciones</h5>
             </div>
-            <form methos="post" name="observaciones" id="observaciones">
+            <form method="post" name="observaciones" id="observaciones">
                 <input type="text" class="hide" id="idSolicitud" name="idSolicitud">
                 <input type="text" class="hide" id="action" name="action">
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-12 col-sm-12 col-md-6 col-lg-6">
-                            <select id="pertenece" class="selectpicker" data-style="btn btn-primary btn-round" title="¿Para qién es la observación?" data-size="7" data-live-search="true">
+                            <select id="pertenece" class="selectpicker" data-style="btn btn-primary btn-round" title="¿Para quién es la observación?" data-size="7" data-live-search="true">
                                 <option value="Postventa">Postventa</option>
                                 <option value="Proyectos">Proyectos</option>
                             </select>
-                        </div>
+                        </div>      
                         <div class="col-12 col-sm-12 col-md-6 col-lg-6">
-                            <select id="observaciones" class="selectpicker" data-style="btn btn-primary btn-round" title="Observación" data-size="7" data-live-search="true">
-                                <option value="Corrección Documentos">Corrección Documentos</option>
-                                <option value="Documentación Correcta">Documentación Correcta</option>
+                            <select id="observaciones" class="selectpicker" data-style="btn btn-primary btn-round" title="Observaciones" data-size="7" data-live-search="true">
+                                <option value="Correccioón Documentos">Corrección Documentos</option>
+                                <option value="Documentación Correcta">Documentación Correcta</option>  
                             </select>
                         </div>
                     </div>
-
-                    
                 </div>
-
                 <div class="modal-footer">
                     <div id="postventa" style="display:none">
                         <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
-                        <button type="submit" id="observacionesSubmit" class="btn btn-primary">Enviar</button>    
+                        <button type="submit" class="btn btn-primary">Enviar</button>
                     </div>
                 </div>
             </form>
             <div class="modal-footer">
                 <div id="proyectos" style="display:none">
                     <input type="text" class="hide" id="idSolicitud" name="idSolicitud">
+                    <input type="text" class="hide" id="action" name="action">
                     <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
-                    <button type="button" id="observacionesSubmit" class="btn btn-primary">Enviar</button>    
+                    <button type="button" id="observacionesSubmit" class="btn btn-primary">Enviar</button>
                 </div>
             </div>
         </div>
     </div>
-</div>
+</div>              

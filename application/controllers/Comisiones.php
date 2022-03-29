@@ -210,7 +210,25 @@ public function getPuestosDescuentos(){
      }
      echo json_encode( array( "data" => $dat));
     }
-  
+
+    public function flujo_comisiones() {
+
+      $datos = array();
+      $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
+      $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
+      $val = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
+      $salida = str_replace('' . base_url() . '', '', $val);
+      $datos["datos4"] = $this->Asesor_model->getActiveBtn($salida, $this->session->userdata('id_rol'))->result();
+
+      $this->load->view('template/header');
+      $this->load->view('ventas/flujo_comisiones', $datos);
+
+    }
+
+    public function getDatosFlujoComisiones() {
+      $data = $this->Comisiones_model->getDatosFlujoComisiones()->result_array();
+      echo json_encode(array('data' => $data));
+    }
     
     function aprobar_comision(){
       $id_pago= $_POST['id_pago'];
@@ -1120,7 +1138,7 @@ function update_estatus(){
         ($fecha_actual >= $fecha_entrada9 && $fecha_actual <= $fecha_entrada99) || 
         ($fecha_actual >= $fecha_entrada10 && $fecha_actual <=$fecha_entrada100) ||
         ($fecha_actual >= $fecha_entrada11 && $fecha_actual <=$fecha_entrada111) ||
-        ($fecha_actual >= $fecha_entrada12 && $fecha_actual <=$fecha_entrada122)){
+        ($fecha_actual >= $fecha_entrada12 && $fecha_actual <=$fecha_entrada122) || $validar_user == 49){
       
 
 
@@ -1478,7 +1496,7 @@ if( isset( $_FILES ) && !empty($_FILES) ){
         ($fecha_actual >= $fecha_entrada9 && $fecha_actual <= $fecha_entrada99) || 
         ($fecha_actual >= $fecha_entrada10 && $fecha_actual <=$fecha_entrada100) ||
         ($fecha_actual >= $fecha_entrada11 && $fecha_actual <=$fecha_entrada111) ||
-        ($fecha_actual >= $fecha_entrada12 && $fecha_actual <=$fecha_entrada122) ){
+        ($fecha_actual >= $fecha_entrada12 && $fecha_actual <=$fecha_entrada122) || $validar_user == 49){
       
       if($usuario != ''){
         $usuarioid = $usuario;
@@ -4136,7 +4154,7 @@ public function descuentos_historial()
                         $dat = $this->Comisiones_model->insertar_descuentoEsp($usuario, $montoAinsertar, $comision[0]['id_comision'], $comentario, $this->session->userdata('id_usuario'), $pago_neodata, $valor);
 
                     } else {
-                        $dat = $this->Comisiones_model->update_descuento($id, $montoAinsertar, $comentario, $this->session->userdata('id_usuario'), $valor, $usuario, $pagos_apli);
+                        $dat = $this->Comisiones_model->update_descuento($id, $montoAinsertar, $comentario, $saldo_comisiones, $this->session->userdata('id_usuario'), $valor, $usuario, $pagos_apli);
                         $dat = $this->Comisiones_model->insertar_descuento($usuario, $Restante, $comision[0]['id_comision'], $comentario, $this->session->userdata('id_usuario'), $pago_neodata, $valor);
                     }
                 } else {
@@ -4163,10 +4181,10 @@ public function descuentos_historial()
 
             if ($valor == 2) {
 
-                $dat = $this->Comisiones_model->update_descuentoEsp($id, $montoAinsertar, $comentario, $this->session->userdata('id_usuario'), $valor, $usuario);
+                $dat = $this->Comisiones_model->update_descuentoEsp($id, $montoAinsertar, $comentario,  $this->session->userdata('id_usuario'), $valor, $usuario);
                 $dat = $this->Comisiones_model->insertar_descuentoEsp($usuario, $Restante, $comision[0]['id_comision'], $comentario, $this->session->userdata('id_usuario'), $pago_neodata, $valor);
             } else {
-                $dat = $this->Comisiones_model->update_descuento($id, $descuento, $comentario, $this->session->userdata('id_usuario'), $valor, $usuario, $pagos_apli);
+                $dat = $this->Comisiones_model->update_descuento($id, $descuento, $comentario, $saldo_comisiones, $this->session->userdata('id_usuario'), $valor, $usuario, $pagos_apli);
                 $dat = $this->Comisiones_model->insertar_descuento($usuario, $montoAinsertar, $comision[0]['id_comision'], $comentario, $this->session->userdata('id_usuario'), $pago_neodata, $valor);
 
             }

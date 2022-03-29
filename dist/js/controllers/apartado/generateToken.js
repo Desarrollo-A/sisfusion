@@ -102,28 +102,51 @@ function fillTokensTable() {
 }
 
 $(document).on("click", "#generateToken", function () {
+    document.getElementById("fileElm").value = "";
+    document.getElementById("file-name").value = "";
     $("#generateTokenModal").modal("show");
     $("#asesoresList").val("").selectpicker("refresh");
 });
 
 function generateToken() {
-    $.ajax({
-        url: general_base_url + 'Api/generateToken',
-        type: 'post',
-        dataType: 'json',
-        data: {
-            "id_asesor": $("#asesoresList").val(),
-            "id_gerente": id_gerente
-        },
-        success: function (response) {
-            alerts.showNotification("top", "right", response["message"], response["status"] == 500 ? "danger" : "success");
-            if(response["status"] == 200) { // MJ: TOKEN GENERADO CON EXITO
-                $(".generated-token").val(response["id_token"]);
-                $("#generateTokenModal").modal("hide");
-                $("#tokensTable").DataTable().ajax.reload(null, false);
-            }
+    fileElm = document.getElementById("fileElm");
+    file = fileElm.value;
+    if (file == "" || $("#asesoresList").val() == "")
+        alerts.showNotification("top", "right", "Asegúrate de seleccionar un asesor y cargar un archivo para generar el token.", "warning");
+    else {
+        let extension = file.substring(file.lastIndexOf("."));
+        let statusValidateExtension = validateExtension(extension, ".jpg, .jpeg, .png");
+        if (statusValidateExtension == false) // MJ: ARCHIVO VÁLIDO PARA CARGAR
+            alerts.showNotification("top", "right", "El archivo que has intentado cargar con la extensión <b>" + extension + "</b> no es válido. Recuerda seleccionar un archivo de imagen.", "warning");
+        else {
+            $('#spiner-loader').removeClass('hide');
+            let data = new FormData();
+            data.append("id_asesor", $("#asesoresList").val());
+            data.append("id_gerente", id_gerente);
+            data.append("uploaded_file", $("#fileElm")[0].files[0]);
+            $.ajax({
+                url: general_base_url + 'Api/generateToken',
+                data: data,
+                cache: false,
+                contentType: false,
+                processData: false,
+                type: 'POST',
+                dataType: 'json',
+                success: function (response) {
+                    $('#spiner-loader').addClass('hide');
+                    alerts.showNotification("top", "right", response["message"], response["status"] != 200 ? "danger" : "success");
+                    if (response["status"] == 200) { // MJ: TOKEN GENERADO CON EXITO
+                        $(".generated-token").val("https://ciudadmaderas.com/apartado/token.html?token=" + response["id_token"]);
+                        $("#generateTokenModal").modal("hide");
+                        $("#tokensTable").DataTable().ajax.reload(null, false);
+                    }
+                }, error: function () {
+                    $('#spiner-loader').addClass('hide');
+                    alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+                }
+            });
         }
-    });
+    }
 }
 
 function cleanSelects() {
@@ -131,21 +154,23 @@ function cleanSelects() {
 }
 
 function copyToClipBoard() {
-    let email = document.querySelector("#generatedToken");
-    let range = document.createRange();
-    range.selectNode(email);
-    window.getSelection().addRange(range);
-    try {
-        // intentar copiar el contenido seleccionado
-        var resultado = document.execCommand('copy');
-        console.log(resultado ? "Token copiado." : "No se pudo copiar el token.");
-    } catch(err) {
-        console.log('ERROR al intentar copiar el token');
-    }
+    /* Get the text field */
+    let copyText = document.getElementById("generatedToken");
+    if (copyText.value == "")
+        alerts.showNotification("top", "right", "No hay ningún token que copiar.", "warning");
+    else {
+        /* Select the text field */
+        copyText.select();
+        copyText.setSelectionRange(0, 99999); /* For mobile devices */
 
-    // eliminar el texto seleccionado
-    window.getSelection().removeAllRanges();
-    // cuando los navegadores lo soporten, habría
-    // que utilizar: removeRange(range)
+        /* Copy the text inside the text field */
+        navigator.clipboard.writeText(copyText.value);
+
+        /*setTimeout(function () {
+            $( "#copyToken" ).fadeOut( "slow", function() {
+                $('#copyToken').popover('hide');
+            });
+        }, 1500);*/
+    }
 }
 
