@@ -153,6 +153,36 @@ function fillTableLotificacion(lotes) {
             },
             {
                 data: function (d) {
+                    return d.unidad;
+                }
+            },
+            {
+                data: function (d) {
+                    return d.calle_exacta;
+                }
+            },
+            {
+                data: function (d) {
+                    return d.num_ext;
+                }
+            },
+            {
+                data: function (d) {
+                    return d.codigo_postal;
+                }
+            },
+            {
+                data: function (d) {
+                    return d.colonia;
+                }
+            },
+            {
+                data: function (d) {
+                    return d.folio_real;
+                }
+            },
+            {
+                data: function (d) {
                     return d.comentario;
                 }
             }
