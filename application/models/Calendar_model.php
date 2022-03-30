@@ -14,7 +14,7 @@ class Calendar_model extends CI_Model {
     }
 
     function getAppointmentData($idAgenda){
-        $query = $this->db->query("SELECT a.id_cita, a.idCliente, a.fecha_cita, a.estatus, a.fecha_creacion, a.medio, a.titulo, a.id_direccion, a.titulo, a.fecha_final, CONCAT(p.nombre, ' ', p.apellido_paterno, ' ', p.apellido_materno) AS nombre, p.telefono, p.telefono_2 ,
+        $query = $this->db->query("SELECT a.id_cita, a.idCliente, a.fecha_cita, a.estatus, a.fecha_creacion, a.medio, a.titulo, a.id_direccion, a.titulo, a.fecha_final, a.descripcion, CONCAT(p.nombre, ' ', p.apellido_paterno, ' ', p.apellido_materno) AS nombre, p.telefono, p.telefono_2 ,
         (CASE WHEN a.id_direccion IS NOT NULL THEN dir.nombre ELSE a.direccion END) direccion
         FROM agenda a
         INNER JOIN prospectos p ON p.id_prospecto = a.idCliente
