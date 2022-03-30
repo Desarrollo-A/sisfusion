@@ -85,6 +85,7 @@ document.addEventListener('DOMContentLoaded', function() {
   }, 'json');
 
   function setDatesToModalInsert(info){
+    appointment = '';
     $("#dateStart").val(info.startStr);
     $("#dateEnd").val(info.endStr);
     $('#agendaInsert').modal();
