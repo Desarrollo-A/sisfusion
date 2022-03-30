@@ -61,6 +61,7 @@ class Ventas extends CI_Controller {
                 $this->load->view("clientes/consult_statistics_sd2", $datos);
             break;
             case '7': // ASESOR
+            case '61': // ASESOR
                 $this->load->view("clientes/consult_statistics_as", $datos);
             break;
             case '9': // COORDINADOR
