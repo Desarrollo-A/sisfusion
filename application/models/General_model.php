@@ -135,7 +135,7 @@ class General_model extends CI_Model
 
     public function getUsersByLeader($rol, $secondRol){
         $idUsuario = $this->session->userdata('id_usuario');
-        return $this->db->query("(sSELECT DISTINCT(u.id_usuario),u.* FROM roles_x_usuario rxu
+        return $this->db->query("(SELECT DISTINCT(u.id_usuario),u.* FROM roles_x_usuario rxu
         INNER JOIN usuarios u  ON u.id_lider = rxu.idUsuario  
         WHERE rxu.idRol = $rol AND rxu.idUsuario =  $idUsuario AND u.id_rol =$secondRol)
         UNION (SELECT DISTINCT(u.id_usuario), u.* FROM roles_x_usuario rxu
