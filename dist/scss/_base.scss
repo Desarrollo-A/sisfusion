@@ -66,18 +66,20 @@
         margin: 8px 0;
     }
 }
+.overflow-hidden{ overflow: hidden;}
 /* END utilities */
 
 /* Flexbox */
-.d-none         { display: none; }
-.d-flex         { display: flex; }
-.align-end      { align-items: flex-end; }
-.align-center   { align-items: center;}
-.justify-end    { justify-content: flex-end; }
-.justify-center { justify-content: center; }
-.justify-evenly { justify-content: space-evenly; }
-.text-center    { text-align: center; }
-.text-left      { text-align: start!important; }
+.d-none          { display: none; }
+.d-flex          { display: flex; }
+.align-end       { align-items: flex-end; }
+.align-center    { align-items: center;}
+.justify-end     { justify-content: flex-end; }
+.justify-center  { justify-content: center; }
+.justify-evenly  { justify-content: space-evenly; }
+.justify-between { justify-content: space-between;}
+.text-center     { text-align: center; }
+.text-left       { text-align: start!important; }
 
 /* END Flexbox */
 
@@ -661,7 +663,7 @@ $tv                 : "(min-width : 1824px)";
     padding: 10px;
     resize: none;
     width: 100%;
-    height: 120px;
+    height: 80px;
     overflow: auto;
     font-size: 12px;
 }

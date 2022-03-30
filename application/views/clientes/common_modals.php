@@ -35,7 +35,7 @@
             <form id="my_update_status_form" name="my_update_status_form" method="post">
                 <div class="col-lg-12 form-group">
                     <label>Estatus</label>
-                    <select class="selectpicker" name="estatus_particular" id="estatus_particular" data-style="select-with-transition" title="Seleccione una opción" data-size="7" <!--onchange="validateParticularStatus(this)"-->></select>
+                    <select class="selectpicker" name="estatus_particular" id="estatus_particular" data-style="select-with-transition" title="Seleccione una opción" data-size="7"></select>
                 </div>
                 <input type="hidden" name="id_prospecto_estatus_particular" id="id_prospecto_estatus_particular">
                 <div class="modal-footer">
@@ -756,28 +756,28 @@
 <div class="modal fade" id="agendaInsert" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog modal-md">
         <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">Detalles de la cita</h4>
+            <div class="modal-header mb-1">
+                <h4 class="modal-title text-center">Detalles de la cita</h4>
             </div>
             <div class="container-fluid">
                 <form id="estatus_recordatorio_form" name="estatus_recordatorio_form" method="post">
-                    <div class="col-lg-12 form-group">
+                    <div class="col-lg-12 form-group m-0">
                         <label class="label-gral">Titulo</label>
                         <input id="evtTitle" name="evtTitle" type="text" class="form-control input-gral">
                     </div>
-                    <div class="col-lg-12 form-group" id="select">
+                    <div class="col-lg-12 form-group m-0" id="select">
                         <label class="label-gral">Tipo de cita</label>
                         <select class="selectpicker select-gral m-0" name="estatus_recordatorio" id="estatus_recordatorio" data-style="btn" data-show-subtext="true" data-live-search="true" title="Seleccione una opción" data-size="7" required></select>
                     </div>
-                    <div class="col-lg-12 form-group hide" id="comodinDIV"></div>
-                    <div class="col-lg-12 form-group">
+                    <div class="col-lg-12 form-group m-0 hide" id="comodinDIV"></div>
+                    <div class="col-lg-12 form-group m-0">
                         <label class="label-gral">Fecha de cita</label>
                         <div class="d-flex">
                             <input id="dateStart" name="dateStart" type="datetime-local" class="form-control beginDate w-50 text-left pl-1">
                             <input id="dateEnd" name="dateEnd" type="datetime-local" class="form-control endDate w-50 pr-1">
                         </div>
                     </div>
-                    <div class="col-lg-12 form-group">
+                    <div class="col-lg-12 form-group m-0">
                         <label class="label-gral">Descripción</label>
                         <textarea class="text-modal" type="text" name="description" id="description" onkeyup="javascript:this.value=this.value.toUpperCase();"></textarea>
                     </div>
@@ -790,9 +790,3 @@
         </div>
     </div>
 </div>
-
-
-
-
-
-

@@ -17,7 +17,6 @@
                 <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
                     <div class="card">
                         <div class="card-content">
-                            <h4 class="card-title">Calendario</h4>
                             <div id='calendar'></div>
                         </div>
                     </div>
@@ -25,9 +24,7 @@
             </div>
         </div>
     </div>
-	<?php $this->load->view('asesor/common_modals');?>
-	<?php $this->load->view('clientes/common_modals');?>
-	<?php $this->load->view('template/footer_legend');?>
+    <?php include 'common_modals.php' ?>
 </div>
 </div><!--main-panel close-->
 </body>
