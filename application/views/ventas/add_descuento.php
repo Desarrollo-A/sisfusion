@@ -198,7 +198,7 @@
     </div>
 
 
-    <div class="modal fade modal-alertas" id="myModalEspera" role="dialog">
+    <!--<div class="modal fade modal-alertas" id="myModalEspera" role="dialog">
         <div class="modal-dialog modal-sm">
             <div class="modal-content">
 
@@ -208,17 +208,17 @@
                 </form>
             </div>
         </div>
-    </div>
+    </div>-->
 
 
-    <div class="modal fade modal-alertas" id="modal-delete" role="dialog" data-backdrop="static">
+    <!--<div class="modal fade modal-alertas" id="modal-delete" role="dialog" data-backdrop="static">
         <div class="modal-dialog modal-sm">
             <div class="modal-content">
                 <div class="modal-body"></div>
                 <div class="modal-footer"></div>
             </div>
         </div>
-    </div>
+    </div>-->
 
 
     <div class="modal fade modal-alertas" id="ModalBonos" role="dialog">
@@ -1187,7 +1187,7 @@ function getPagosByUser(user,mes, anio){
         });
 
 
-        $('#tabla_descuentos tbody').on('click', 'td.details-control', function () {
+        /*$('#tabla_descuentos tbody').on('click', 'td.details-control', function () {
             var tr = $(this).closest('tr');
             var row = tabla_nuevas.row(tr);
 
@@ -1219,10 +1219,10 @@ function getPagosByUser(user,mes, anio){
             }
 
 
-        });
+        });*/
 
 
-        function construir_subtablas(data) {
+        /*function construir_subtablas(data) {
             var solicitudes = '<table class="table">';
             $.each(data, function (i, v) {
                 //i es el indice y v son los valores de cada fila
@@ -1247,11 +1247,11 @@ function getPagosByUser(user,mes, anio){
             });
 
             return solicitudes += '</table>';
-        }
+        }*/
 
 
         /**------------------------------------------- */
-        $("#tabla_descuentos tbody").on("click", ".abonar", function () {
+        /*$("#tabla_descuentos tbody").on("click", ".abonar", function () {
             bono = $(this).val();
             var dat = bono.split(",");
             //$("#modal_abono").html("");
@@ -1272,7 +1272,7 @@ function getPagosByUser(user,mes, anio){
             $("#modal_abono .modal-body").append(``);
             $('#modal_abono').modal('show');
             //save(bono);
-        });
+        });*/
 
 
         /*$("#tabla_descuentos tbody").on("click", ".btn-delete", function () {
@@ -1586,7 +1586,7 @@ function getPagosByUser(user,mes, anio){
     });
 
 
-    function closeModalEng() {
+    /*function closeModalEng() {
         // document.getElementById("inputhidden").innerHTML = "";
         document.getElementById("form_abono").reset();
         a = document.getElementById('inputhidden');
@@ -1595,7 +1595,7 @@ function getPagosByUser(user,mes, anio){
 
         $("#modal_abono").modal('toggle');
 
-    }
+    }*/
 
     /*function CloseModalDelete() {
         // document.getElementById("inputhidden").innerHTML = "";
@@ -1609,7 +1609,7 @@ function getPagosByUser(user,mes, anio){
 
     function CloseModalDelete2() {
         // document.getElementById("inputhidden").innerHTML = "";
-        document.getElementById("form-delete").reset();
+        // document.getElementById("form-delete").reset();
         a = document.getElementById('borrarBono');
         padre = a.parentNode;
         padre.removeChild(a);
@@ -1629,7 +1629,7 @@ function getPagosByUser(user,mes, anio){
 
     }
 
-    $(document).on('submit', '#form-delete', function (e) {
+    /*$(document).on('submit', '#form-delete', function (e) {
         e.preventDefault();
         var formData = new FormData(document.getElementById("form-delete"));
         formData.append("dato", "valor");
@@ -1661,7 +1661,7 @@ function getPagosByUser(user,mes, anio){
                 alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
             }
         });
-    });
+    });*/
 
 
     /*$("#form_aplicar").submit(function (e) {

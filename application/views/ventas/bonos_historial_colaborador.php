@@ -101,7 +101,7 @@
             </div>
         </div>
 
-        <div class="modal fade modal-alertas" id="modal_abono" data-backdrop="static" data-keyboard="false" role="dialog">
+        <!--<div class="modal fade modal-alertas" id="modal_abono" data-backdrop="static" data-keyboard="false" role="dialog">
             <div class="modal-dialog ">
                 <div class="modal-content">
                     <div class="modal-header bg-red">
@@ -113,7 +113,7 @@
                     </form>
                 </div>
             </div>
-        </div>
+        </div>-->
         <!-- END Modals -->
 
         <div class="content boxContent">

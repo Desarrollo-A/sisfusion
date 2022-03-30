@@ -1019,7 +1019,7 @@ let c=0;
 
 
 
-function cleanComments()
+/*function cleanComments()
 {
     var myCommentsList = document.getElementById('documents');
     myCommentsList.innerHTML = '';
@@ -1027,7 +1027,7 @@ function cleanComments()
     var myFactura = document.getElementById('facturaInfo');
     myFactura.innerHTML = '';
   
-}
+}*/
 
 
 /*function fillFields (v) {

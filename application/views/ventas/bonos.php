@@ -17,7 +17,7 @@
     ?>
 
     <!-- Modals -->
-    <div class="modal fade modal-alertas" id="myModalEspera" role="dialog">
+    <!--<div class="modal fade modal-alertas" id="myModalEspera" role="dialog">
       <div class="modal-dialog modal-sm">
         <div class="modal-content">
           <form method="post" id="form_espera_uno">
@@ -26,7 +26,7 @@
           </form>
         </div>
       </div>
-    </div>
+    </div>-->
 
     <div class="modal fade modal-alertas" id="modal-delete" role="dialog">
       <div class="modal-dialog modal-sm">

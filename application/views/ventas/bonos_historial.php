@@ -73,7 +73,7 @@
       </div>
     </div>
     
-    <div class="modal fade modal-alertas" id="modal_abono" data-backdrop="static" data-keyboard="false" role="dialog">
+    <!--<div class="modal fade modal-alertas" id="modal_abono" data-backdrop="static" data-keyboard="false" role="dialog">
       <div class="modal-dialog ">
         <div class="modal-content">
             <div class="modal-header"></div>
@@ -83,7 +83,7 @@
             </form>
         </div>
       </div>
-    </div>
+    </div>-->
     <!-- END Modals -->
   
     <div class="content boxContent">
@@ -508,7 +508,7 @@
   
     /**--------------------------------------------------------- */
 
-    $("#form_bonos").on('submit', function(e){ 
+    /*$("#form_bonos").on('submit', function(e){
       e.preventDefault();
       let formData = new FormData(document.getElementById("form_bonos"));
       formData.append("dato", "valor");
@@ -540,7 +540,7 @@
           alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
         }
       });
-    });
+    });*/
 
     /*function filterFloat(evt,input){
       var key = window.Event ? evt.which : evt.keyCode;   

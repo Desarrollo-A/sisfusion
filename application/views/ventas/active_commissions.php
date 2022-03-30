@@ -913,7 +913,7 @@
             }
         });
 
-        jQuery(document).ready(function () {
+        /*jQuery(document).ready(function () {
             jQuery('#editReg').on('hidden.bs.modal', function (e) {
                 jQuery(this).removeData('bs.modal');
                 jQuery(this).find('#comentario').val('');
@@ -925,7 +925,7 @@
                 jQuery(this).removeData('bs.modal');
                 jQuery(this).find('#comentario3').val('');
             })
-        });
+        });*/
 
 
         /*function SoloNumeros(evt) {
