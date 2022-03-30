@@ -707,7 +707,7 @@ function fillTable(beginDate, endDate) {
                             //Declaraciones ejecutadas cuando el resultado de expresión coincide con valorN
                             break;
                         case 13:
-                            // newBtn += `<button id="observaciones" data-idSolicitud=${d.idSolicitud} class="btn-data btn-green" data-permisos="2" data-id-prospecto="" rel="tooltip" data-placement="left" title="Observaciones"><i class="fas fa-envelope"></i></button>`;    
+                            newBtn += `<button id="observaciones" data-idSolicitud=${d.idSolicitud} data-action="3" class="btn-data btn-violetBoots" data-id-prospecto="" data-toggle="tooltip" data-placement="top" title="Envio Observaciones"><i class="far fa-envelope"></i></button>`;
                             group_buttons += permisos(d.permisos, d.expediente, d.idDocumento, d.tipo_documento, d.idSolicitud, 1, newBtn);
                             //Declaraciones ejecutadas cuando el resultado de expresión coincide con valorN
                             break;
@@ -1159,12 +1159,13 @@ function getSignDate() {
     return fecha;
 }
 
-function changeStatus(id_solicitud, action, comentarios, type) {
+function changeStatus(id_solicitud, action, comentarios, type, notaria) {
     $('#spiner-loader').removeClass('hide');
     $.post('changeStatus', {
         id_solicitud: id_solicitud,
         type: type,
-        comentarios: comentarios
+        comentarios: comentarios,
+        notaria: notaria
     }, function (data) {
         switch (action) {
             case 1:
@@ -1322,3 +1323,83 @@ function createDocRow(row, tr, thisVar){
     });
 }
      
+//ENVIO OBSERVACIONES
+$(document).on('click', '#observaciones', function () {
+    var data = prospectsTable.row($(this).parents('tr')).data();
+    $('#idSolicitud').val(data.idSolicitud);
+    ;
+    $('#viewObservaciones').modal();
+});
+
+$(document).on('change', '#pertenece', function () {
+    if($(this).val() == 'Postventa') {
+        $('#postventa').show();
+    }else {
+        $('#postventa').hide();
+    }
+});
+
+$(document).on('change', '#pertenece', function () {
+    if($(this).val() == 'Proyectos') {
+        $('#proyectos').show();
+    }else {
+        $('#proyectos').hide();
+    }
+});
+
+$(document).on("submit", '#observaciones', function (e) {
+    e.preventDefault();
+    let idSolicitud = $("#idSolicitud").val();
+    let data = new FormData($(this)[0]);
+    data.append("idSolicitud", idSolicitud);
+    
+    $.ajax({
+        url: "observacionesPostventa",
+        data: data,
+        cache: false,
+        contentType: false,
+        processData: false,
+        type: 'POST',
+        seccess: function (response) {
+            $("#viewObservaciones").modal("hide");
+            prospectsTable.ajax.reload();
+        }
+    });
+});
+
+$(document).on('click', '#observacionesSubmit', function (e) {
+    let idSolicitud = $('#idSolicitud').val();
+    let action = $('#action').val();
+    let observaciones = $('#observaciones').val();
+    emailObservaciones(idSolicitud, action, observaciones);
+});
+
+function emailObservaciones(idSolicitud, action, observaciones = null) {
+    $('#spiner-loader').removeClass('hide');
+    let obj;
+    switch (action) {
+        case '1':
+            obj = {idSolicitud: idSolicitud, observaciones: observaciones};
+            break;
+        case '2':
+            obj = {idSolicitud: idSolicitud};
+            break;
+        case '3':
+            obj = {idSolicitud: idSolicitud};
+            break;
+        case '4':
+            obj = {idSolicitud: idSolicitud};
+            break;
+        case '5':
+            obj = {idSolicitud: idSolicitud};
+            break;
+    }
+    $.post(action == 1 ? 'mailObservaciones' : 'mailObservaciones', obj, function (data) {
+        if(data == true){
+            changeStatus(idSolicitud, action == 1 ? 4:0, 'Correo Envíado a Proyectos', 1);
+        }
+        $('#spiner-loader').addClass('hide');
+        $("#viewObservaciones").modal("hide");
+        prospectsTable.ajax.reload();
+    }, 'json');
+}

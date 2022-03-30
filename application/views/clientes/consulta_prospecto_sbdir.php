@@ -287,9 +287,9 @@ if($this->session->userdata('id_rol') == 2 || $this->session->userdata('id_rol')
     function multirol(){
         $.post('../General/multirol', function(data){
             let unique = [...new Set(data.map(item => item.idRol))]; //los roles unicos del usuario
-            if(unique.includes(58) || unique.includes(59)){
-                createFilters(58);
-                getFirstFilter(58, 2);
+            if(unique.includes(59) || unique.includes(60)){
+                createFilters(59);
+                getFirstFilter(59, 2);
             }else{
                 createFilters(2);
                 getFirstFilter(2, 3);
@@ -298,7 +298,7 @@ if($this->session->userdata('id_rol') == 2 || $this->session->userdata('id_rol')
     }
 
     function createFilters(rol){
-        if(rol == 58){
+        if(rol == 59){
             let div = '<div class="col-md-3 form-group"><div id="div1" class="form-group label-floating select-is-empty"><label class="control-label">SUBDIRECTOR</label></div></div>';
             div += '<div class="col-md-3 form-group"><div id="div2" class="form-group label-floating select-is-empty"><label class="control-label">GERENTE</label></div></div>';
             div += '<div class="col-md-3 form-group"><div id="div3" class="form-group label-floating select-is-empty"><label class="control-label">COORDINADOR</label></div></div>';
@@ -414,15 +414,15 @@ if($this->session->userdata('id_rol') == 2 || $this->session->userdata('id_rol')
     }
 
     function getFirstFilter(rol, secondRol){
-        $(`#${rol == 58 ? 'subdirector':'gerente'}`).empty().selectpicker('refresh');
-        // rol == 58 ? `Clientes/getGerentesBySubdir/${idUsuario}` : `General`
+        $(`#${rol == 59 ? 'subdirector':'gerente'}`).empty().selectpicker('refresh');
+        // rol == 59 ? `Clientes/getGerentesBySubdir/${idUsuario}` : `General`
         var $option = $('<option/>',{
             'value': 'default',
             'text': 'Selecciona el subdirector',
             'selected': true,
             'disabled': true
         });
-        $(`#${rol == 58 ? 'subdirector':'gerente'}`).append($option);
+        $(`#${rol == 59 ? 'subdirector':'gerente'}`).append($option);
 		$.post('../General/getUsersByLeader', {rol: rol, secondRol:secondRol},function(data) {
 			var len = data.length;
             // console.log('users', data);
@@ -430,12 +430,12 @@ if($this->session->userdata('id_rol') == 2 || $this->session->userdata('id_rol')
 			{
 				var id = data[i]['id_usuario'];
 				var name = data[i]['nombre'] + ' ' + data[i]['apellido_paterno'] + ' ' + data[i]['apellido_materno'];
-				$(`#${rol == 58 ? 'subdirector':'gerente'}`).append($('<option>').val(id).text(name));
+				$(`#${rol == 59 ? 'subdirector':'gerente'}`).append($('<option>').val(id).text(name));
 			}
 			if(len<=0){
-				$(`#${rol == 58 ? 'subdirector':'gerente'}`).append('<option selected="selected" disabled>NINGUN GERENTE</option>');
+				$(`#${rol == 59 ? 'subdirector':'gerente'}`).append('<option selected="selected" disabled>NINGUN GERENTE</option>');
 			}
-			$(`#${rol == 58 ? 'subdirector':'gerente'}`).selectpicker('refresh');
+			$(`#${rol == 59 ? 'subdirector':'gerente'}`).selectpicker('refresh');
 		}, 'json');
     }
     

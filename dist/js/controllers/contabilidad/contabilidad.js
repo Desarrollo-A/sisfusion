@@ -153,6 +153,36 @@ function fillTableLotificacion(lotes) {
             },
             {
                 data: function (d) {
+                    return d.unidad;
+                }
+            },
+            {
+                data: function (d) {
+                    return d.calle_exacta;
+                }
+            },
+            {
+                data: function (d) {
+                    return d.num_ext;
+                }
+            },
+            {
+                data: function (d) {
+                    return d.codigo_postal;
+                }
+            },
+            {
+                data: function (d) {
+                    return d.colonia;
+                }
+            },
+            {
+                data: function (d) {
+                    return d.folio_real;
+                }
+            },
+            {
+                data: function (d) {
                     return d.comentario;
                 }
             }
@@ -348,7 +378,7 @@ $(document).on('change', "#residenciales", function () {
 
 $(document).on('change', "#condominios", function () {
     cleanSelects(2);
-    getLotes($(this).val());
+    getLotesC($(this).val());
     $('.bs-select-all').html('Seleccionar todo').css({'font-size': '1.2ex'});
     $('.bs-deselect-all').html('Deseleccionar todo').css({'font-size': '1.2ex'});
 });
@@ -382,3 +412,24 @@ function getColumns() {
         }
     });
 }
+
+function getLotesC(idCondominio) {
+    $("#lotes").empty().selectpicker('refresh');
+    $.ajax({
+        url: 'getLotesListC',
+        type: 'post',
+        dataType: 'json',
+        data: {
+            "idCondominio": idCondominio,
+            "typeTransaction": typeTransaction
+        },
+        success: function (response) {
+            var len = response.length;
+            for (var i = 0; i < len; i++) {
+                $("#lotes").append($('<option>').val(response[i]['idLote']).text(response[i]['nombreLote']));
+            }
+            $("#lotes").selectpicker('refresh');
+        }
+    });
+}
+

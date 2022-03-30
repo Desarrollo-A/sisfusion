@@ -319,7 +319,7 @@ function checkBudgetInfo($idSolicitud){
         $rol = $this->session->userdata('id_rol');
         $estatus = $this->db->query("SELECT estatus FROM solicitud_escrituracion WHERE idSolicitud = $idSolicitud")->row()->estatus;
         //print_r("UPDATE solicitud_escrituracion SET idNotaria= $insert_id WHERE idSolicitud = $idSolicitud;");
-        $this->db->query("UPDATE solicitud_escrituracion SET idNotaria= $insert_id, estatus = 11 WHERE idSolicitud = $idSolicitud;");
+        $this->db->query("UPDATE solicitud_escrituracion SET idNotaria= $insert_id, estatus = 10 WHERE idSolicitud = $idSolicitud;");
         return $this->db->query("INSERT INTO control_estatus VALUES(($estatus), 59, 1, GETDATE(), 12, $idSolicitud, $rol, 11, 'Cambio de Notaria', 0);");
     }
 
@@ -353,4 +353,19 @@ function checkBudgetInfo($idSolicitud){
         return $query->result_array();
     }
 
+    //OBSERVACIONES
+    function updateObservacionesPostventa() {
+        $idSolicitud = $_POST['idSolicitud'];
+        $rol = $this->session->userdata('id_rol');
+
+        $this->db->query("UPDATE solicitud_escrituracion SET estatus = 10 WHERE idSolicitud = $idSolicitud");
+        return $this->db->query("INSERT INTO control_estatus VALUES(13, 59, 1, GETDATE(), 14, $idSolicitud, $rol, 10, 'Corrección Documentos', 0);");
+    }
+
+    function getSolicitudEscrituracion($idSolicitud)
+    {
+        $idSolicitud = $_POST['idSolicitud'];
+
+        return $this->db->query("SELECT * FROM solicitud_escrituracion WHERE idSolicitud = '$idSolicitud'");
+    }
 }
