@@ -1,3 +1,9 @@
+<head>
+    <!-- Google API LOGIN -->
+	<meta name="google-signin-client_id" content="848186048646-ugthma1qfj0ocamf1jeju4ahdi3n7qop.apps.googleusercontent.com">
+	<script src="https://apis.google.com/js/platform.js" async defer></script>
+	
+</head>
 <body>
 <div class="wrapper">
     <?php
@@ -24,11 +30,14 @@
             </div>
         </div>
     </div>
+    <div class="g-signin2" data-onsuccess="onSignIn"></div>
     <?php include 'common_modals.php' ?>
 </div>
 </div><!--main-panel close-->
 </body>
+
 <?php $this->load->view('template/footer');?>
+
 
 <script src="<?= base_url() ?>dist/assets/js/bootstrap-datetimepicker.js"></script>
 <script src="<?=base_url()?>dist/js/controllers/calendar.js"></script>
