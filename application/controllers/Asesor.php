@@ -30,6 +30,17 @@ class Asesor extends CI_Controller
         $this->load->view('template/footer');
     }
 
+    public function homeView()
+    {
+        if ($this->session->userdata('id_rol') == FALSE || $this->session->userdata('id_rol') != '61')
+            redirect(base_url() . 'login');
+        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
+        $this->load->view('template/header');
+        $this->load->view('template/home', $datos);
+        $this->load->view('template/footer');
+    }
+
+
     public function dataPrueba($idCliente, $onlyView)
     {
         $datos["cliente"] = $this->registrolote_modelo->selectDS_ds($idCliente);

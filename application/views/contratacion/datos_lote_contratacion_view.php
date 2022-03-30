@@ -31,6 +31,7 @@
 			case "53": // Analista comisiones
 			case "47": // DIRECCIÓN FINANZAS
 			case "58": // ANALISTA DE DATOS
+			case "61": // Asesor de consulta
 				$datos = array();
 				$datos = $datos4;
 				$datos = $datos2;
