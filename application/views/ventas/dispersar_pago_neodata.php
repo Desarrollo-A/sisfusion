@@ -596,7 +596,7 @@
                                             total = 0; 
                                         }
 
-                                        // INICIO BONIFICACION *******************
+                                        // INICIO BONIFICACION *********************************
                                         if(parseFloat(data[0].Bonificado) > 0){
                                             cadena = '<h5>Bonificación: <b style="color:#D84B16;">$'+formatMoney(data[0].Bonificado)+'</b></h4></div></div>';
                                             $("#modal_NEODATA .modal-body").append(`<input type="hidden" name="bonificacion" id="bonificacion" value="${parseFloat(data[0].Bonificado)}">`);
@@ -604,37 +604,17 @@
                                             cadena = '<h5>Bonificación: <b>$'+formatMoney(0)+'</b></h4></div></div>';
                                             $("#modal_NEODATA .modal-body").append(`<input type="hidden" name="bonificacion" id="bonificacion" value="0">`);
                                         }
-
                                         // FINAL BONIFICACION *********************************
+
                                         $("#modal_NEODATA .modal-body").append(`<div class="row"><div class="col-md-12 text-center"><h3><i>${row.data().nombreLote}</i></h3></div></div><div class="row"><div class="col-md-3 p-0"><h5>Precio lote: <b>$${formatMoney(totalNeto2)}</b></h5></div><div class="col-md-3 p-0"><h5>Apl. neodata: <b style="color:${data[0].Aplicado <= 0 ? 'black' : 'blue'};">$${formatMoney(data[0].Aplicado)}</b></h5></div><div class="col-md-3 p-0"><h5>Disponible: <b style="color:green;">$${formatMoney(total0)}</b></h5></div><div class="col-md-3 p-0">${cadena}</div></div><br>`);
 
-                                        // OPERACION PARA SACAR 5% ***
+                                        
+                                        // OPERACION PARA SACAR 5% *********************************
                                         first_validate = (totalNeto2 * 0.05).toFixed(3);
                                         new_validate = parseFloat(first_validate);
                                         console.log('OP 5%: '+new_validate);
                                         console.log('OP T: '+new_validate);
-
-                                        // if(total>new_validate && (id_estatus == 9 || id_estatus == 10 || id_estatus == 11 || id_estatus == 12 || id_estatus == 13 || id_estatus == 14)){
-                                        //     console.log("SOLO DISPERSA LA MITAD*******");
-                                        //     $("#modal_NEODATA .modal-body").append('<div class="row"><div class="col-md-12"><h3><i class="fa fa-info-circle" style="color:gray;"></i><b style="color:blue;"> Anticipo </b> diponible <i>'+row.data().nombreLote+'</i></h3></div></div><br><br>');
-                                        //     bandera_anticipo = 1;
-                                        // }
-                                        // else if((total<new_validate && (id_estatus == 9 || id_estatus == 10 || id_estatus == 11 || id_estatus == 12 || id_estatus == 13 || id_estatus == 14)) || (id_estatus == 15)){
-                                        //     console.log("SOLO DISPERSA LO PROPORCIONAL*******");
-                                        //     if( lugar_prospeccionLote == 28 || lugar_prospeccionLote == '28'){
-                                        //         $("#modal_NEODATA .modal-body").append('<div class="row"><div class="col-md-12"><h3><i class="fa fa-info-circle" style="color:red;"></i> Venta E-commerce <i>'+row.data().nombreLote+'</i></h3></div></div><br><br>');
-                                        //     }
-                                        //     bandera_anticipo = 0;
-                                        // }
-                                        // else if((total==new_validate && (id_estatus == 9 || id_estatus == 10 || id_estatus == 11 || id_estatus == 12 || id_estatus == 13 || id_estatus == 14)) || (id_estatus == 15)  ){
-                                        //     console.log("SOLO DISPERSA 5% *******");
-                                        //     $("#modal_NEODATA .modal-body").append('<div class="row"><div class="col-md-12"><h3><i class="fa fa-info-circle" style="color:gray;"></i><b style="color:blue;"> Anticipo 5%</b> disponible <i>'+row.data().nombreLote+'</i></h3></div></div><br><br>');
-                                        //     bandera_anticipo = 2;
-                                        // }
-
-
-
-
+  
                                         if(total>(new_validate+1) && (id_estatus == 9 || id_estatus == 10 || id_estatus == 11 || id_estatus == 12 || id_estatus == 13 || id_estatus == 14)){
 
                                             console.log("SOLO DISPERSA LA MITAD*******");
@@ -653,14 +633,11 @@
                                             $("#modal_NEODATA .modal-body").append('<div class="row"><div class="col-md-12"><h3><i class="fa fa-info-circle" style="color:gray;"></i><b style="color:blue;"> Anticipo 5%</b> disponible <i>'+row.data().nombreLote+'</i></h3></div></div><br><br>');
                                             bandera_anticipo = 2;
                                         }
+                                        // FIN BANDERA OPERACION PARA SACAR 5% *********************************
 
-
-
-
-                                        // FIN BANDERA OPERACION PARA SACAR 5% ************
                                         $("#modal_NEODATA .modal-body").append(`<div class="row"><div class="col-md-3"><p style="font-zise:10px;"><b>USUARIOS</b></p></div><div class="col-md-1"><b>%</b></div><div class="col-md-2"><b>TOT. COMISIÓN</b></div><div class="col-md-2"><b><b>ABONADO</b></div><div class="col-md-2"><b>PENDIENTE</b></div><div class="col-md-2"><b>DISPONIBLE</b></div></div>`);
                               
-                                         lugar = lugar_prospeccionLote;
+                                        lugar = lugar_prospeccionLote;
                                         var_sum = 0;
 
                                         let abonado=0;
