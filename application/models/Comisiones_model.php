@@ -347,8 +347,9 @@ function getDatosComisionesHistorialRigel($proyecto,$condominio){
             LEFT JOIN usuarios re ON re.id_usuario = cl.id_regional
             LEFT JOIN usuarios di ON di.id_usuario = 2
             LEFT JOIN plan_comision pl ON pl.id_plan = cl.plan_comision
-            LEFT JOIN sedes se ON se.id_sede = cl.id_sede
-            
+            LEFT JOIN sedes se ON se.id_sede = cl.id_sede 
+            -- LEFT JOIN sedes sa ON sa.id_sede = ae.id_sede 
+             
             WHERE l.idStatusContratacion BETWEEN 11 AND 15 AND cl.status = 1 AND l.status = 1
             AND (l.registro_comision in (0,8,2) or (l.registro_comision in (1) AND pc.bandera in (0))) AND tipo_venta IS NOT NULL AND tipo_venta IN (1,2,7)
             AND cl.fechaApartado >= '2020-03-01'
@@ -1912,7 +1913,7 @@ function updatePagoInd($pago_id){
         INNER JOIN pago_comision pac ON pac.id_lote = lo.idLote
         WHERE lo.status = 1 AND cl.status = 1 AND c1.estatus = 1 AND lo.idLote in ($idlote)
         GROUP BY lo.idLote, lo.referencia, pac.total_comision, lo.totalNeto2, cl.lugar_prospeccion, c2.abono_pagado");
-        }
+    }
 
     
   
