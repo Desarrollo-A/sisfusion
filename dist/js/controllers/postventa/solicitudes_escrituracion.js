@@ -258,7 +258,8 @@ $(document).on("click", ".upload", function () {
             $("#selectFileSection").addClass("hide");
             $("#rejectReasonsSection").removeClass("hide");
         }
-
+        $('#uploadedDocument').val('');
+        $( "#uploadedDocument" ).trigger( "change" );
         $("#uploadModal").modal();
     } else if (action == 3) {
         $("#sendRequestButton").click();
@@ -267,7 +268,12 @@ $(document).on("click", ".upload", function () {
     $("input:file").on("change", function () {
         var target = $(this);
         var relatedTarget = target.siblings(".file-name");
-        var fileName = target[0].files[0].name;
+
+        if(target.val() == ''){
+            var fileName = 'No has seleccionada nada aún';
+        }else{
+            var fileName = target[0].files[0].name;
+        }
         relatedTarget.val(fileName);
     });
 });
@@ -1220,7 +1226,6 @@ $(document).on('click', '#notaria', function () {
     var data = prospectsTable.row($(this).parents('tr')).data();
     getBudgetNotaria(data.idSolicitud);
     $('#idSolicitud').val(data.idSolicitud);
-    ;
     $("#gestionNotaria").modal();
 });
 
@@ -1325,9 +1330,11 @@ function createDocRow(row, tr, thisVar){
      
 //ENVIO OBSERVACIONES
 $(document).on('click', '#observaciones', function () {
-    var data = prospectsTable.row($(this).parents('tr')).data();
-    $('#idSolicitud').val(data.idSolicitud);
-    ;
+    var tr = $(this).closest('tr');
+    var row = prospectsTable.row(tr);
+    var id_solicitud = row.data().idSolicitud;
+    console.log(id_solicitud);
+    $('#idSolicitud').val(id_solicitud);
     $('#viewObservaciones').modal();
 });
 
@@ -1347,7 +1354,7 @@ $(document).on('change', '#pertenece', function () {
     }
 });
 
-$(document).on("submit", '#observaciones', function (e) {
+$(document).on("submit", '#observacionesForm', function (e) {
     e.preventDefault();
     let idSolicitud = $("#idSolicitud").val();
     let data = new FormData($(this)[0]);
@@ -1370,7 +1377,7 @@ $(document).on("submit", '#observaciones', function (e) {
 $(document).on('click', '#observacionesSubmit', function (e) {
     let idSolicitud = $('#idSolicitud').val();
     let action = $('#action').val();
-    let observaciones = $('#observaciones').val();
+    let observaciones = $('#observacionesS').val();
     emailObservaciones(idSolicitud, action, observaciones);
 });
 
