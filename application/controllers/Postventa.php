@@ -1237,7 +1237,7 @@ class Postventa extends CI_Controller
                                                 </td>
                                                 <td style="font-size: 1em;">
                                                     <b>Estatus de pago:</b><br>
-                                                    ' . $data->estatus_pago . '
+                                                    ' . $data->nombrePago . '
                                                 </td>
                                             </tr>
                                             <tr>
@@ -1261,7 +1261,7 @@ class Postventa extends CI_Controller
                                                 </td>
                                                 <td style="font-size: 1em;">
                                                     <b>Estatus construcción:</b><br>
-                                                    ' . $data->estatus_construccion . '
+                                                    ' . $data->nombreConst . '
                                                 </td>
                                             </tr>
                                             <tr>
