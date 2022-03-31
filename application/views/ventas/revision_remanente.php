@@ -62,7 +62,7 @@
             </div>
         </div>
 
-        <div class="modal fade modal-alertas" id="modal_despausar" role="dialog">
+        <!--<div class="modal fade modal-alertas" id="modal_despausar" role="dialog">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <form method="post" id="form_despausar">
@@ -70,9 +70,9 @@
                     </form>
                 </div>
             </div>
-        </div>
+        </div>-->
 
-        <div class="modal fade modal-alertas" id="modal_refresh" role="dialog">
+        <!--<div class="modal fade modal-alertas" id="modal_refresh" role="dialog">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <form method="post" id="form_refresh">
@@ -80,9 +80,9 @@
                     </form>
                 </div>
             </div>
-        </div>
+        </div>-->
 
-        <div class="modal fade modal-alertas" id="modal_documentacion" role="dialog">
+        <!--<div class="modal fade modal-alertas" id="modal_documentacion" role="dialog">
             <div class="modal-dialog" style="width:800px; margin-top:20px">
                 <div class="modal-content">
                     <div class="modal-body">
@@ -91,7 +91,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div>-->
  
         <div class="modal fade modal-alertas" id="documento_preview" role="dialog">
             <div class="modal-dialog" style= "margin-top:20px;"></div>
@@ -105,13 +105,13 @@
             </div>
         </div>
 
-        <div class="modal fade bd-example-modal-sm" id="myModalTQro" tabindex="-1" role="dialog" aria-hidden="true">
+        <!--<div class="modal fade bd-example-modal-sm" id="myModalTQro" tabindex="-1" role="dialog" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-body"></div>
                 </div>
             </div>
-        </div>
+        </div>-->
         <!-- END Modals -->
 
         <div class="content boxContent">
@@ -221,7 +221,7 @@
             $("#tabla_remanente").prop("hidden", true);
 
             var url = "<?=base_url()?>/index.php/";
-            $.post("<?=base_url()?>index.php/Contratacion/lista_proyecto", function (data) {
+            /*$.post("<//?=base_url()?>index.php/Contratacion/lista_proyecto", function (data) {
                 var len = data.length;
                 for (var i = 0; i < len; i++) {
                     var id = data[i]['idResidencial'];
@@ -229,7 +229,7 @@
                     $("#filtro3").append($('<option>').val(id).text(name.toUpperCase()));
                 }
                 $("#filtro3").selectpicker('refresh');
-            }, 'json');
+            }, 'json');*/
 
             $.post("<?=base_url()?>index.php/Contratacion/lista_proyecto", function (data) {
                 var len = data.length;
@@ -242,7 +242,7 @@
             }, 'json');
 
 
-            $.post("<?=base_url()?>index.php/Contratacion/lista_proyecto", function (data) {
+            /*$.post("<?=base_url()?>index.php/Contratacion/lista_proyecto", function (data) {
                 var len = data.length;
                 for (var i = 0; i < len; i++) {
                     var id = data[i]['idResidencial'];
@@ -250,10 +250,10 @@
                     $("#filtro333").append($('<option>').val(id).text(name.toUpperCase()));
                 }
                 $("#filtro333").selectpicker('refresh');
-            }, 'json');
+            }, 'json');*/
         });
 
-        $('#filtro3').change(function(ruta){
+        /*$('#filtro3').change(function(ruta){
             residencial = $('#filtro3').val();
             $("#filtro4").empty().selectpicker('refresh');
             $.ajax({
@@ -271,7 +271,7 @@
                     $("#filtro4").selectpicker('refresh');
                 }
             });
-        });
+        });*/
 
         $('#filtro33').change(function(ruta){
             residencial = $('#filtro33').val();
@@ -293,23 +293,23 @@
             });
         });
 
-        $('#filtro3').change(function(ruta){
+        /*$('#filtro3').change(function(ruta){
             proyecto = $('#filtro3').val();
             condominio = $('#filtro4').val();
             if(condominio == '' || condominio == null || condominio == undefined){
                 condominio = 0;
             }
             getInvoiceCommissions(proyecto, condominio);
-        });
+        });*/
 
-        $('#filtro4').change(function(ruta){
+        /*$('#filtro4').change(function(ruta){
             proyecto = $('#filtro3').val();
             condominio = $('#filtro4').val();
             if(condominio == '' || condominio == null || condominio == undefined){
                 condominio = 0;
             }
             getInvoiceCommissions(proyecto, condominio);
-        });
+        });*/
 
         $('#filtro33').change(function(ruta){
             proyecto = $('#filtro33').val();
@@ -331,10 +331,10 @@
             getAssimilatedCommissions(proyecto, condominio);
         });
 
-        $('#filtro333').change(function(ruta){
+        /*$('#filtro333').change(function(ruta){
             proyecto = $('#filtro333').val();
             getHistoryCommissions(proyecto);
-        });
+        });*/
 
         var url = "<?=base_url()?>";
         var url2 = "<?=base_url()?>index.php/";
@@ -696,7 +696,7 @@
                 $("#modal_nuevas").modal();
             });
 
-            $("#tabla_remanente tbody").on("click", ".despausar_estatus", function(){
+            /*$("#tabla_remanente tbody").on("click", ".despausar_estatus", function(){
                 var tr = $(this).closest('tr');
                 var row = tabla_remanente2.row( tr );
                 id_pago_i = $(this).val();
@@ -705,9 +705,9 @@
                 $("#modal_refresh .modal-body").append('<input class="idComPau" name="id_comision" type="text" value="'+row.data().id_comision+'" hidden>');
                 $("#modal_refresh .modal-body").append('<div class="row"><div class="col-md-6"></div><div class="col-md-3"><input type="submit" class="btn btn-primary" value="CONFIRMAR"></div><div class="col-md-3"><button type="button" class="btn btn-danger" data-dismiss="modal">CANCELAR</button></div></div>');
                 $("#modal_refresh").modal();
-            });
+            });*/
 
-            $("#tabla_remanente tbody").on("click", ".consultar_documentos", function(){
+            /*$("#tabla_remanente tbody").on("click", ".consultar_documentos", function(){
                 id_com = $(this).val();
                 id_pj = $(this).attr("data-personalidad");
 
@@ -765,7 +765,7 @@
                     }
                     $("#seeInformationModal .facturaInfo").append('</div>');
                 });
-            });
+            });*/
         }
         //FIN TABLA  ****************************************************************************************
 
@@ -788,9 +788,9 @@
             return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
         };
 
-        function cancela(){
+        /*function cancela(){
             $("#modal_nuevas").modal('toggle');
-        }
+        }*/
 
         //Función para pausar la solicitud
         $("#form_interes").submit( function(e) {
@@ -829,7 +829,7 @@
         });
 
         //Función para regresar a estatus 7 la solicitud
-        $("#form_refresh").submit( function(e) {
+        /*$("#form_refresh").submit( function(e) {
             e.preventDefault();
         }).validate({
             submitHandler: function( form ) {
@@ -861,13 +861,13 @@
                     }
                 });
             }
-        });
+        });*/
 
-        $(document).on("click", ".btn-historial-lo", function(){
+        /*$(document).on("click", ".btn-historial-lo", function(){
             window.open(url+"Comisiones/getHistorialEmpresa", "_blank");
-        });
+        });*/
 
-        function preview_info(archivo){
+        /*function preview_info(archivo){
             $("#documento_preview .modal-dialog").html("");
             $("#documento_preview").css('z-index', 9999);
             archivo = url+"dist/documentos/"+archivo+"";
@@ -893,7 +893,7 @@
                 elemento += '</div>';
                 $("#documento_preview .modal-dialog").append(elemento);
             }
-        }
+        }*/
 
         function selectAll(e) {
             tota2 = 0;
@@ -908,15 +908,15 @@
             });
         }
 
-        function cleanComments(){
+        /*function cleanComments(){
             var myCommentsList = document.getElementById('documents');
             myCommentsList.innerHTML = '';
 
             var myFactura = document.getElementById('facturaInfo');
             myFactura.innerHTML = '';
-        }
+        }*/
 
-        $(document).ready( function(){
+        /*$(document).ready( function(){
             $.getJSON( url + "Comisiones/getReporteEmpresa").done( function( data ){
                 $(".report_empresa").html();
                 $.each( data, function( i, v){
@@ -925,6 +925,6 @@
                 });
             });
 
-        });
+        });*/
     </script>
 </body>

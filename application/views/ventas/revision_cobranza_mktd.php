@@ -19,9 +19,9 @@
         ?>
 
         <!-- Modals -->
-        <div class="modal fade modal-alertas" id="documento_preview" role="dialog">
+        <!--<div class="modal fade modal-alertas" id="documento_preview" role="dialog">
             <div class="modal-dialog" style="margin-top:20px;"></div>
-        </div>
+        </div>-->
 
         <div class="modal fade bd-example-modal-sm" id="myModalEnviadas" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-sm">
@@ -477,7 +477,7 @@
                 ]
             });
 
-            $("#tabla_nuevas_comisiones tbody").on("click", ".mas_opciones_8", function() {
+            /*$("#tabla_nuevas_comisiones tbody").on("click", ".mas_opciones_8", function() {
                 var tr = $(this).closest('tr');
                 var row = tabla_nuevas.row(tr);
                 $("#modal_nuevas .modal-body").html("");
@@ -486,7 +486,7 @@
                 $("#modal_nuevas .modal-body").append('<div class="row"><div class="col-lg-6"><p>VENTA:&nbsp;&nbsp;<b>' + row.data().nombreLote + '</b></p></div><div class="col-lg-6"><p>COMISIÓN $:&nbsp;&nbsp;<b>' + row.data().nombreLote + '</b></p></div></div>');
                 $("#modal_nuevas .modal-body").append('<div class="row"><div class="col-lg-12"><p>MEDIO(S) DE VENTA:&nbsp;&nbsp;<b>' + row.data().nombreLote + '</b></p></div></div>');
                 $("#modal_nuevas").modal();
-            });
+            });*/
 
 
             $("#tabla_nuevas_comisiones tbody").on("click", ".aprobar_solicitud", function(){
@@ -575,7 +575,7 @@
             return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
         };
 
-        $(document).on("click", ".subir_factura", function() {
+        /*$(document).on("click", ".subir_factura", function() {
             resear_formulario();
             id_comision = $(this).val();
             total = $(this).attr("data-total");
@@ -586,7 +586,7 @@
             });
             $("#modal_formulario_solicitud .modal-body #frmnewsol").append(`<div id="inputhidden"><input type="hidden" id="comision_xml" name="comision_xml" value="${ id_comision}">
             <input type="hidden" id="pago_cliente" name="pago_cliente" value="${ parseFloat(total).toFixed(2) }"></div>`);
-        });
+        });*/
 
 
         let c = 0;
@@ -654,28 +654,28 @@
         })
     
 
-        function cleanComments() {
+        /*function cleanComments() {
             var myCommentsList = document.getElementById('comments-list-factura');
             myCommentsList.innerHTML = '';
             var myFactura = document.getElementById('facturaInfo');
             myFactura.innerHTML = '';
-        }
+        }*/
 
-        function cleanCommentsAsimilados() {
+        /*function cleanCommentsAsimilados() {
             var myCommentsList = document.getElementById('comments-list-asimilados');
             myCommentsList.innerHTML = '';
-        }
+        }*/
 
-        function fillFields(v) {
-        }
+        /*function fillFields(v) {
+        }*/
 
-        function close_modal_xml() {
+        /*function close_modal_xml() {
             $("#modal_nuevas").modal('toggle');
-        }
+        }*/
     </script>
 
     <script>
-        $(document).ready(function() {
+        /*$(document).ready(function() {
 
             $.getJSON(url + "Comisiones/report_plazas").done(function(data) {
                 $(".report_plazas").html();
@@ -708,6 +708,6 @@
 
                 }
             });
-        });
+        });*/
     </script>
 </body>
