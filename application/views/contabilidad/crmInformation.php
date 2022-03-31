@@ -152,7 +152,7 @@
                                         <th>$ M2 TERRENO</th>
                                         <th>COSTO TERRENO</th>
                                         <th>UNIDAD</th>
-                                        <th>cALLE EXACTA</th>
+                                        <th>CALLE EXACTA</th>
                                         <th># EXTERIOR</th>
                                         <th>CODIGO POSTAL</th>
                                         <th>COLONIA</th>
