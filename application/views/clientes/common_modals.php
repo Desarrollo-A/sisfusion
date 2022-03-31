@@ -1,3 +1,5 @@
+<link href="<?= base_url() ?>dist/css/commonModals.css" rel="stylesheet"/>
+
 <div class="modal fade" id="myCommentModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -33,42 +35,8 @@
             <form id="my_update_status_form" name="my_update_status_form" method="post">
                 <div class="col-lg-12 form-group">
                     <label>Estatus</label>
-                    <select class="selectpicker" name="estatus_particular" id="estatus_particular" data-style="select-with-transition" title="Seleccione una opción" data-size="7" <!--onchange="validateParticularStatus(this)"-->></select>
+                    <select class="selectpicker" name="estatus_particular" id="estatus_particular" data-style="select-with-transition" title="Seleccione una opción" data-size="7"></select>
                 </div>
-
-                <!--<div class="col-lg-12 form-group" id="datatoassign" style="display: none;">
-                    <div class="col col-xs-12 col-sm-12 col-md-4 col-lg-4">
-                        <div class="form-group">
-                            <label>Proyecto</label>
-                            <select id="proyecto" name="proyecto" class="selectpicker" data-live-search="true" data-style="btn btn-primary btn-round" title="Proyecto" data-size="7" onchange="clean(1); getCondominioDisponible(this)"/></select>
-                        </div>
-                    </div>
-                    <div class="col col-xs-12 col-sm-12 col-md-4 col-lg-4">
-                        <div class="form-group">
-                            <label>Condominio</label>
-                            <select  id="condominio" name="condominio" class="selectpicker" data-live-search="true" data-style="btn btn-primary btn-round" title="Condominio" data-size="7" onchange="clean(2); getLoteDisponible(this)"/></select>
-                        </div>
-                    </div>
-                    <div class="col col-xs-12 col-sm-12 col-md-4 col-lg-4">
-                        <div class="form-group">
-                            <label>Lote</label>
-                            <select  id="lote" name="lote" class="selectpicker" data-live-search="true" data-style="btn btn-primary btn-round" title="Lote" data-size="7" onchange="clean(3); validateHouses();"/></select>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-lg-12" id="housesDetail" style="display: none;">
-                    <div class="col col-xs-12 col-sm-12 col-md-4 col-lg-4">
-                        <div class="form-group">
-                            <label>Tipo casa</label>
-                            <select id="houseType" name="houseType" class="selectpicker" data-style="btn btn-primary btn-round" title="Tipo de casa" data-size="7" />
-                                <option value="aura">AURA</option>
-                                <option value="stella">STELLA</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>-->
-
                 <input type="hidden" name="id_prospecto_estatus_particular" id="id_prospecto_estatus_particular">
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-primary" id="finishS">Aceptar</button>
@@ -110,19 +78,11 @@
     <div class="modal-dialog">
         <div class="modal-content"  style="height: 210px;" >
             <div class="modal-header">
-                <!--<button type="button" class="close" data-dismiss="modal" aria-hidden="true" onclick="cleanSelects()">
-                    <i class="material-icons">clear</i>
                 </button>--><br><br>
                 <center><h4 class="modal-title">¿Estás seguro que deseas cambiar este prospecto de preventa a cliente?</h4></center>
             </div>
             <form id="my_update_status_prevee" name="my_update_status_prevee" method="post">
-
-               <!-- <div class="col-lg-12 form-group">
-                    <label>Estatus</label>
-                    <select class="selectpicker" name="estatus_particular" id="estatus_particular" data-style="select-with-transition" title="Seleccione una opción" data-size="7"></select>
-                </div>-->
                 <input type="hidden" name="id_prospecto_estatus_particular3" id="id_prospecto_estatus_particular3" value="">
-               <!--<input type="text" name="idestatusPP" id="idestatusPP" value="">-->
                 <div class="modal-footer"><br>
                     <button type="submit" class="btn btn-primary">Aceptar</button>
                     <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" onclick="cleanSelects()">Cancelar</button>
@@ -150,7 +110,7 @@
                     <select class="selectpicker" name="id_asesor" id="myselectasesor" data-live-search="true" data-style="select-with-transition" title="Seleccione una opción" data-size="7" required></select>
                 </div>
                 <input type="hidden" name="id_prospecto_re_asign" id="id_prospecto_re_asign_sm">
-                <input type="hidden" name="request_type" id="request_type_sm" value="1"> <!-- 1 SUBDIRECTOR MKTD -->
+                <input type="hidden" name="request_type" id="request_type_sm" value="1"> 
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-primary">Aceptar</button>
                     <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
@@ -175,7 +135,7 @@
                     <select class="selectpicker" name="id_asesor" id="myselectasesor2" data-live-search="true" data-style="select-with-transition" title="Seleccione una opción" data-size="7" required></select>
                 </div>
                 <input type="hidden" name="id_prospecto_re_asign" id="id_prospecto_re_asign_gm">
-                <input type="hidden" name="request_type" id="request_type_gm" value="2"> <!-- 2 GERENTE MKTD -->
+                <input type="hidden" name="request_type" id="request_type_gm" value="2">
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-primary">Aceptar</button>
                     <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
@@ -208,7 +168,7 @@
                     <select class="selectpicker" name="id_asesor" id="myselectasesor3" data-live-search="true" data-style="select-with-transition" title="Seleccione una opción" data-size="7" required></select>
                 </div>
                 <input type="hidden" name="id_prospecto_re_asign" id="id_prospecto_re_asign_ve">
-                <input type="hidden" name="request_type" id="request_type_ve" value="3"> <!-- 3 ASISTENTE OR GERENTE -->
+                <input type="hidden" name="request_type" id="request_type_ve" value="3">
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-primary">Aceptar</button>
                     <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
@@ -245,8 +205,6 @@
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" onclick="cleanCombos()"><span aria-hidden="true"><i class="fa fa-times"></i></span><span class="sr-only">Cerrar</span></button>
                 <h4 class="modal-title">Mantén la información actualizada</h4>
-
-               <!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>-->
                 <h4 class="js-title-step"></h4>
             </div>
             <form id="my-edit-form" name="my-edit-form" method="post">
@@ -415,12 +373,6 @@
                     </div>
                     <div class="row hide" data-step="3" data-title="Prospección">
                         <div>
-                            <!--<div class="col-sm-6">
-                                <div class="form-group label-floating select-is-empty">
-                                    <label class="control-label">¿Cómo se enteró de nosotros?<small> (requerido)</small></label>
-                                    <select id="advertising" name="advertising" class="form-control advertising"></select>
-                                </div>
-                            </div>-->
                             <div class="col-sm-3">
                                 <div class="form-group label-floating select-is-empty">
                                     <label class="control-label">¿Cómo nos contactaste?<small> (requerido)</small></label>
@@ -461,16 +413,12 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <!--<button type="submit" class="btn btn-primary">Aceptar</button>
-                    <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>-->
-                    <!--<button type="button" class="btn btn-default js-btn-step pull-left" data-orientation="cancel" data-dismiss="modal"></button>-->
                     <div class="pull-left">
                         <button type="button" class="btn btn-default js-btn-step" data-orientation="previous"></button>
                     </div>
                     <div class="pull-right">
                         <button type="button" class="btn  js-btn-step" data-orientation="next" style="background-color: #2E86C1;"></button>
                         <button type="submit" class="btn" style="background-color: #4caf50;">Finalizar</button>
-                        <!--<button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cerrar</button>-->
                     </div>
                 </div>
             </form>
@@ -739,12 +687,6 @@
 										<input id="prospecting-place-lbl" type="text" class="form-control" disabled>
 									</div>
 								</div>
-								<!--<div class="col-sm-4">
-									<div class="form-group">
-										<label class="control-label">Medio publicitario</label>
-										<input id="advertising-lbl" type="text" class="form-control" disabled>
-									</div>
-								</div>-->
 								<div class="col-sm-6">
 									<div class="form-group">
 										<label class="control-label">Plaza de venta</label>
@@ -772,8 +714,6 @@
 									</div>
 								</div>
 							</div>
-							<!-- sfsdfsdfsdf -->
-                             
                             
                             <div class="row">
                                 <input type="hidden" id="id-prospecto-lbl" name="id_prospecto_lbl">
@@ -808,58 +748,45 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-primary" onclick="{{$('#prospecting-place-lbl').val() == 'MKT digital (especificar)' ? printProspectInfoMktd() : printProspectInfo()}}"><i class="material-icons">cloud_download</i> Descargar pdf</button>
                 <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" onclick="cleanComments()">Cerrar</button>
-                <!--<button type="button" class="btn btn-primary" data-dismiss="modal">Aceptar</button>-->
             </div>
         </div>
     </div>
 </div>
 
 <div class="modal fade" id="agendaInsert" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-md">
         <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true" onclick="cleanSelects()">
-                    <i class="material-icons">clear</i>
-                </button>
-                <h4 class="modal-title">Detalles de la cita:</h4>
+            <div class="modal-header mb-1">
+                <h4 class="modal-title text-center">Detalles de la cita</h4>
             </div>
-            <form id="estatus_recordatorio_form" name="estatus_recordatorio_form" method="post">
-                <div class="col-lg-12 form-group">
-                    <label>Titulo</label>
-                    <input id="evtTitle" name="evtTitle" type="text" class="form-control">
-                </div>
-                <div class="col-lg-12 form-group" id="select">
-                    <label>Tipo de cita</label>
-                    <select class="selectpicker" name="estatus_recordatorio" id="estatus_recordatorio" data-style="select-with-transition" title="Seleccione una opción" data-size="7" <!--onchange="validateParticularStatus(this)"-->></select>
-                </div>
-                <div class="col-lg-12 form-group" id="comodinDIV">
-                </div>
-                <div class="col-lg-6 form-group">
-                    <label>Inicio</label>
-                    <input id="dateStart" name="dateStart" type="datetime-local" class="form-control">
-                </div> 
-                <div class="col-lg-6 form-group">
-                    <label>Final</label>
-                    <input id="dateEnd" name="dateEnd" type="datetime-local" class="form-control">
-                </div>
-                <div class="col-lg-12 form-group">
-                    <label>Descripción</label>
-                    <textarea class="form-control" type="text" name="description" id="description" onkeyup="javascript:this.value=this.value.toUpperCase();"></textarea>
-                </div>
-
-                <!-- <input type="hidden" name="id_prospecto_estatus_recordatorio" id="id_prospecto_estatus_recordatorio"> -->
-
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary" id="finishS">Aceptar</button>
-                    <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" onclick="cleanSelects()">Cancelar</button>
-                </div>
-            </form>
+            <div class="container-fluid">
+                <form id="estatus_recordatorio_form" name="estatus_recordatorio_form" method="post">
+                    <div class="col-lg-12 form-group m-0">
+                        <label class="label-gral">Titulo</label>
+                        <input id="evtTitle" name="evtTitle" type="text" class="form-control input-gral">
+                    </div>
+                    <div class="col-lg-12 form-group m-0" id="select">
+                        <label class="label-gral">Tipo de cita</label>
+                        <select class="selectpicker select-gral m-0" name="estatus_recordatorio" id="estatus_recordatorio" data-style="btn" data-show-subtext="true" data-live-search="true" title="Seleccione una opción" data-size="7" required></select>
+                    </div>
+                    <div class="col-lg-12 form-group m-0 hide" id="comodinDIV"></div>
+                    <div class="col-lg-12 form-group m-0">
+                        <label class="label-gral">Fecha de cita</label>
+                        <div class="d-flex">
+                            <input id="dateStart" name="dateStart" type="datetime-local" class="form-control beginDate w-50 text-left pl-1">
+                            <input id="dateEnd" name="dateEnd" type="datetime-local" class="form-control endDate w-50 pr-1">
+                        </div>
+                    </div>
+                    <div class="col-lg-12 form-group m-0">
+                        <label class="label-gral">Descripción</label>
+                        <textarea class="text-modal" type="text" name="description" id="description" onkeyup="javascript:this.value=this.value.toUpperCase();"></textarea>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary" id="finishS">Aceptar</button>
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" onclick="cleanSelects()">Cancelar</button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 </div>
-
-
-
-
-
-

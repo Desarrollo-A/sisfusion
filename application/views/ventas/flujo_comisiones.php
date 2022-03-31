@@ -69,15 +69,19 @@
                                             <table class="table-striped table-hover" id="tabla_flujo_comisiones" name="tabla_flujo_comisiones">
                                                 <thead>
                                                     <tr>
-                                                        <th>ID LOTE</th>
+                                                    <th>ID LOTE</th>
                                                         <th>NOMBRE LOTE</th>
-                                                        <th>TOTAL COM. ($)</th>
+                                                        <th>ESTATUS CONTRATACIÓN</th>
                                                         <th>FECHA APARTADO</th>
-                                                        <th>PENDIENTE</th>
+                                                        <th>FECHA PRSPECTO</th>
+                                                        <th>TOTAL COM. ($)</th>
                                                         <th>ABONO PAG.</th>
+                                                        <th>PENDIENTE</th>
                                                         <th>DISPERSIÓN</th>
-                                                        <th>ESTATUS</th>
-                                                        <th>ESTATUS LOTE</th>
+                                                        <th>OBSERVACIONES</th>
+                                                        <th>ESTATUS COMISIÓN</th>
+                                                        <th>ESTATUS GENERAL</th>
+                                                        <th>ESTATUS MKTD</th>
                                                         <th>ESTATUS EVI.</th>
                                                         <th>PLAZA</th>
                                                         <th>SEDE</th>
@@ -183,12 +187,43 @@
                     titleAttr: 'Descargar archivo de Excel',
                     title: 'FLUJO DE COMISIONES',
                     exportOptions: {
-                        columns: [1,2,3,4,5,6,7,8,9,10,11],
+                        columns: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15],
                         format: {
                             header:  function (d, columnIdx) {
-
-                                return ' '+titulos[columnIdx-1] +' ';
-
+                                if(columnIdx == 0){
+                                    return 'ID LOTE ';
+                                }else if(columnIdx == 1){
+                                    return 'NOMBRE LOTE';
+                                }
+                                else if(columnIdx == 2){
+                                    return 'ESTATUS CONTRATACIÓN';
+                                }else if(columnIdx == 3){
+                                    return 'FECHA APARTADO';
+                                }else if(columnIdx == 4){
+                                    return 'FECHA PROSPECTO';
+                                }else if(columnIdx == 5){
+                                    return 'TOTAL COMISIÓN';
+                                }else if(columnIdx == 6){
+                                    return 'PAGADO';
+                                }else if(columnIdx == 7){
+                                    return 'PENDIENTE';
+                                }else if(columnIdx == 8){
+                                    return 'DISPERSIÓN';
+                                }else if(columnIdx == 9){
+                                    return 'OBSERVACIONES';
+                                }else if(columnIdx == 10){
+                                    return 'ESTATUS COMISIÓN';
+                                }else if(columnIdx == 11){
+                                    return 'ESTATUS LOTE';
+                                }else if(columnIdx == 12){
+                                    return 'ESTATUS MKTD';
+                                }else if(columnIdx == 13){
+                                    return 'ESTATUS EVIDENCIA';
+                                }else if(columnIdx == 14){
+                                    return 'PLAZA';
+                                }else if(columnIdx == 15){
+                                    return 'SEDE';
+                                }                            
                             }
                         }
                     },
@@ -218,41 +253,96 @@
                         }
                     },
                     {
-                        "width": "8%",
+                        "width": "5%",
                         "data": function( d ){
-                            return '<p class="m-0">$'+formatMoney(d.comision_total)+' </p>';
-                        }
+                            if(d.nombreStatus == null){
+                                return '<p class="m-0"><b></b></p>';
+                            }else{
+                                return '<p class="m-0"><b>'+d.nombreStatus+'</b></p>';
+                            }
+
+                                                  }
                     },
                     {
                         "width": "9%",
                         "data": function( d ){
                             let fech = d.fechaApartado;
-                            if(fech == 'Sin fecha'){
-                                return '<p class="m-0">'+fech+'</p>';
+                                                    
+                           // let fecha = fech.substr(0, 10);
+                          //  let nuevaFecha = fecha.split('-');
+                            //return '<p class="m-0">'+nuevaFecha[2]+'-'+nuevaFecha[1]+'-'+nuevaFecha[0]+'</p>';
+                            if(fech == null){
+                                return '<p class="m-0"></p>';
                             }else{
-                            let fecha = fech.substr(0, 10);
-                            let nuevaFecha = fecha.split('-');
-                            return '<p class="m-0">'+nuevaFecha[2]+'-'+nuevaFecha[1]+'-'+nuevaFecha[0]+'</p>';
+                                return '<p class="m-0">'+fech+'</p>';
                             }
+                         
+                        }
+                    },
+                    {
+                        "width": "9%",
+                        "data": function( d ){
+
+                            let fech = d.fechaProspecto;
+                            if(fech == null){
+                                return '<p class="m-0"></p>';
+                            }else{
+                                return '<p class="m-0">'+fech+'</p>';
+                            }
+                          //  let fecha = fech.substr(0, 10);
+                           // let nuevaFecha = fecha.split('-');
+                           // return '<p class="m-0">'+nuevaFecha[2]+'-'+nuevaFecha[1]+'-'+nuevaFecha[0]+'</p>';
+                          
+
+                            
                          
                         }
                     },
                     {
                         "width": "8%",
                         "data": function( d ){
-                            return '<p class="m-0">$'+formatMoney(d.pendiente)+' </p>';
+                            if(d.comision_total == null){
+                                return '<p class="m-0">0</p>';
+                            }else{
+                                return '<p class="m-0">$'+formatMoney(d.comision_total)+' </p>';
+                            }
+                           
                         }
                     },
                     {
                         "width": "8%",
                         "data": function( d ){
-                            return '<p class="m-0"><b>$'+formatMoney(d.abono_pagado)+'</b></p>';
+                            if(d.abono_pagado == null){
+                                return '<p class="m-0">0</p>';
+                            }else{
+                                return '<p class="m-0"><b>$'+formatMoney(d.abono_pagado)+'</b></p>';
+                            }
+                            
                         }
                     },
+                    
+                    {
+                        "width": "8%",
+                        "data": function( d ){
+                            if(d.pendiente == null){
+                                return '<p class="m-0">0</p>';
+                            }else{
+                                return '<p class="m-0">$'+formatMoney(d.pendiente)+' </p>';
+                            }
+                            
+                        }
+                    },
+                    
                     {
                         "width": "8%",
                         "data": function( d ){
                             return '<p class="m-0">'+d.dispersion+'</p>';
+                        }
+                    },
+                    {
+                        "width": "8%",
+                        "data": function( d ){
+                            return '<p class="m-0">'+d.observaciones+'</p>';
                         }
                     },
                     {
@@ -265,6 +355,12 @@
                         "width": "8%",
                         "data": function( d ){
                             return '<p class="m-0">'+d.estatus_comision_lote+'</p>';
+                        }
+                    },
+                    {
+                        "width": "8%",
+                        "data": function( d ){
+                            return '<p class="m-0">'+d.ESTATUS_MKTD+'</p>';
                         }
                     },
                     {

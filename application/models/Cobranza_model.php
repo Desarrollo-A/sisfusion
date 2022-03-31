@@ -43,6 +43,7 @@ class Cobranza_model extends CI_Model {
         INNER JOIN condominios cn ON cn.idCondominio = l.idCondominio
         INNER JOIN residenciales r ON r.idResidencial = cn.idResidencial
         INNER JOIN clientes cl ON cl.id_cliente = l.idCliente AND cl.status = 1 AND (cl.lugar_prospeccion IN(6, 29) OR cl.descuento_mdb = 1) $filter
+        INNER JOIN prospectos pr ON pr.id_prospecto = cl.id_prospecto AND pr.fecha_creacion <= '2022-01-20 00:00:00.000'
         INNER JOIN usuarios u ON u.id_usuario = cl.id_asesor AND u.id_sede IN ($result) 
         INNER JOIN sedes s ON CAST(s.id_sede AS VARCHAR(15)) = CAST(u.id_sede AS VARCHAR(15))
         LEFT JOIN evidencia_cliente ec ON ec.idLote = cl.idLote AND ec.idCliente = l.idCliente
@@ -148,6 +149,37 @@ class Cobranza_model extends CI_Model {
     {
         $this->db->insert('historial_evidencias',$data);
         return $this->db->affected_rows();
+    }
+
+    public function getReporteLiberaciones() {
+        return $this->db->query("SELECT lo.idLote, lo.nombreLote, cl.id_cliente, hl.modificado fecha_liberacion, oxc.nombre motivo_liberacion,
+        CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno) nombre_cliente_old, cl.fechaApartado fechaApartadoOld,
+        CASE WHEN oxc2.nombre LIKE '%(especificar)%' THEN ISNULL(CONCAT(REPLACE(oxc2.nombre, ' (especificar)', ''), ' - ', cl.otro_lugar), 'Sin especificar') ELSE ISNULL(REPLACE(oxc2.nombre, ' (especificar)', ''), 'Sin especificar') END lugar_prospeccion_old,
+        CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) nombre_asesor_old, ISNULL(se.nombre, se2.nombre) sede_old,
+        sc.nombreStatus ultimoEstatusContratacion, sc2.nombreStatus estatusActualContratacion, sl.nombre estatusActualLote,
+        CONCAT(cl2.nombre, ' ', cl2.apellido_paterno, ' ', cl2.apellido_materno) nombre_cliente_new, cl2.fechaApartado fechaApartadoNew,
+        CASE WHEN oxc3.nombre LIKE '%(especificar)%' THEN ISNULL(CONCAT(REPLACE(oxc3.nombre, ' (especificar)', ''), ' - ', cl2.otro_lugar), 'Sin especificar') ELSE ISNULL(REPLACE(oxc3.nombre, ' (especificar)', ''), 'Sin especificar') END lugar_prospeccion_new,
+        CONCAT(us2.nombre, ' ', us2.apellido_paterno, ' ', us2.apellido_materno) nombre_asesor_new, ISNULL(se3.nombre, se4.nombre) sede_new
+        FROM lotes lo
+        INNER JOIN (SELECT idLote, MAX(modificado) modificado FROM historial_liberacion GROUP BY idLote) hl ON hl.idLote = lo.idLote
+        INNER JOIN historial_liberacion hll ON hll.idLote =  hl.idLote AND hll.modificado = hl.modificado
+        INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = hll.tipo AND oxc.id_catalogo = 48
+        INNER JOIN clientes cl ON cl.idLote = hl.idLote AND cl.status = 0 AND cl.lugar_prospeccion = 6
+        INNER JOIN usuarios us ON us.id_usuario = cl.id_asesor
+        LEFT JOIN opcs_x_cats oxc2 ON oxc2.id_opcion = cl.lugar_prospeccion AND oxc2.id_catalogo = 9
+        LEFT JOIN sedes se ON se.id_sede = cl.id_sede
+        LEFT JOIN sedes se2 ON se2.id_sede = us.id_sede
+        INNER JOIN (SELECT idLote, idCliente, status, MAX(modificado) modificado FROM historial_lotes GROUP BY idLote, idCliente, status) hlo ON hlo.idLote = hl.idLote AND hlo.idCliente = cl.id_cliente AND hlo.status = 0
+        INNER JOIN historial_lotes hlo2 ON hlo2.idLote = hlo.idLote AND hlo2.idCliente = hlo.idCliente AND hlo2.modificado = hlo.modificado
+        INNER JOIN statuscontratacion sc ON sc.idStatusContratacion = hlo2.idStatusContratacion
+        LEFT JOIN statuscontratacion sc2 ON sc2.idStatusContratacion = lo.idStatusContratacion
+        INNER JOIN statuslote sl ON sl.idStatusLote = lo.idStatusLote
+        LEFT JOIN clientes cl2 ON cl2.id_cliente = lo.idCliente
+        LEFT JOIN opcs_x_cats oxc3 ON oxc3.id_opcion = cl2.lugar_prospeccion AND oxc3.id_catalogo = 9
+        LEFT JOIN usuarios us2 ON us2.id_usuario = cl2.id_asesor
+        LEFT JOIN sedes se3 ON se3.id_sede = cl2.id_sede
+        LEFT JOIN sedes se4 ON se4.id_sede = us2.id_sede
+        WHERE lo.status = 1 AND cl2.lugar_prospeccion NOT IN (6, 29) --AND lo.idLote IN (65874)");
     }
 
 }
