@@ -198,7 +198,7 @@
     </div>
 
 
-    <div class="modal fade modal-alertas" id="myModalEspera" role="dialog">
+    <!--<div class="modal fade modal-alertas" id="myModalEspera" role="dialog">
         <div class="modal-dialog modal-sm">
             <div class="modal-content">
 
@@ -208,17 +208,17 @@
                 </form>
             </div>
         </div>
-    </div>
+    </div>-->
 
 
-    <div class="modal fade modal-alertas" id="modal-delete" role="dialog" data-backdrop="static">
+    <!--<div class="modal fade modal-alertas" id="modal-delete" role="dialog" data-backdrop="static">
         <div class="modal-dialog modal-sm">
             <div class="modal-content">
                 <div class="modal-body"></div>
                 <div class="modal-footer"></div>
             </div>
         </div>
-    </div>
+    </div>-->
 
 
     <div class="modal fade modal-alertas" id="ModalBonos" role="dialog">
@@ -336,14 +336,14 @@
         </div>
     </div>
 
-    <div class="modal fade bd-example-modal-sm" id="myModalEnviadas" tabindex="-1" role="dialog"
+    <!--<div class="modal fade bd-example-modal-sm" id="myModalEnviadas" tabindex="-1" role="dialog"
          aria-labelledby="mySmallModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-sm">
             <div class="modal-content">
                 <div class="modal-body"></div>
             </div>
         </div>
-    </div>
+    </div>-->
 
 
 
@@ -1178,7 +1178,7 @@ function getPagosByUser(user,mes, anio){
             $("#modal_nuevas .modal-header").html("");
             $("#modal_nuevas .modal-body").html("");
 
-            $("#modal_nuevas .modal-header").append('<h4 class="card-title"><b>Detener Descuento</b></h4>');
+                $("#modal_nuevas .modal-header").append('<h4 class="card-title"><b>Detener Descuento</b></h4>');
             $("#modal_nuevas .modal-body").append('<div class="row"><div class="col-lg-12"><p style="font-size:1.1em;">¿Está seguro de detener los pagos al ' + row.data().puesto + ' <u>' + row.data().nombre + '</u> con la cantidad de <b>$' + formatMoney(row.data().aply) + '</b>?</p></div></div>');
             $("#modal_nuevas .modal-body").append('<div class="row"><div class="col-lg-12"><input type="hidden" name="value_pago" value="1"><input type="hidden" name="monto" value="' + row.data().aply + '"><br><input type="text" class="form-control observaciones" name="observaciones" required placeholder="Describe el motivo por el cual se pausa esta solicitud"></input></div></div><br>');
             $("#modal_nuevas .modal-body").append('<input type="hidden" name="id_pago" value="' + row.data().id_usuario + '">');
@@ -1187,7 +1187,7 @@ function getPagosByUser(user,mes, anio){
         });
 
 
-        $('#tabla_descuentos tbody').on('click', 'td.details-control', function () {
+        /*$('#tabla_descuentos tbody').on('click', 'td.details-control', function () {
             var tr = $(this).closest('tr');
             var row = tabla_nuevas.row(tr);
 
@@ -1219,10 +1219,10 @@ function getPagosByUser(user,mes, anio){
             }
 
 
-        });
+        });*/
 
 
-        function construir_subtablas(data) {
+        /*function construir_subtablas(data) {
             var solicitudes = '<table class="table">';
             $.each(data, function (i, v) {
                 //i es el indice y v son los valores de cada fila
@@ -1247,11 +1247,11 @@ function getPagosByUser(user,mes, anio){
             });
 
             return solicitudes += '</table>';
-        }
+        }*/
 
 
         /**------------------------------------------- */
-        $("#tabla_descuentos tbody").on("click", ".abonar", function () {
+        /*$("#tabla_descuentos tbody").on("click", ".abonar", function () {
             bono = $(this).val();
             var dat = bono.split(",");
             //$("#modal_abono").html("");
@@ -1272,10 +1272,10 @@ function getPagosByUser(user,mes, anio){
             $("#modal_abono .modal-body").append(``);
             $('#modal_abono').modal('show');
             //save(bono);
-        });
+        });*/
 
 
-        $("#tabla_descuentos tbody").on("click", ".btn-delete", function () {
+        /*$("#tabla_descuentos tbody").on("click", ".btn-delete", function () {
             id = $(this).val();
             $("#modal-delete .modal-body").append(`<div id="borrarBono"><form id="form-delete">
             <h5>¿Estas seguro que deseas eliminar este bono?</h5>
@@ -1286,10 +1286,10 @@ function getPagosByUser(user,mes, anio){
             </form></div>`);
 
             $('#modal-delete').modal('show');
-        });
+        });*/
 
 
-        $("#tabla_descuentos tbody").on("click", ".btn-update", function () {
+        /*$("#tabla_descuentos tbody").on("click", ".btn-update", function () {
             var tr = $(this).closest('tr');
             var row = tabla_nuevas.row(tr);
 
@@ -1298,7 +1298,7 @@ function getPagosByUser(user,mes, anio){
             $("#modal_nuevas .modal-body").html("");
             $("#modal_nuevas .modal-body").append('<div class="row"><div class="col-lg-12"><p><h5>¿Seguro que desea descontar a <b>' + row.data().usuario + '</b> la cantidad de <b style="color:red;">$' + formatMoney(row.data().monto) + '</b> correspondiente al lote <b>' + row.data().nombreLote + '</b> ?</h5><input type="hidden" name="id_descuento" id="id_descuento" value="' + row.data().id_pago_i + '"><br><input type="submit" class="btn btn-success" value="Aceptar"><button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button></p></div></div>');
             $("#modal_nuevas").modal();
-        });
+        });*/
 
 
         //  $("#tabla_descuentos tbody").on("click", ".btn-update", function(){
@@ -1328,9 +1328,9 @@ function getPagosByUser(user,mes, anio){
 
 
 
-    function cancela() {
+    /*function cancela() {
         $("#modal_nuevas").modal('toggle');
-    }
+    }*/
 
 
     //Función para pausar la solicitud
@@ -1586,7 +1586,7 @@ function getPagosByUser(user,mes, anio){
     });
 
 
-    function closeModalEng() {
+    /*function closeModalEng() {
         // document.getElementById("inputhidden").innerHTML = "";
         document.getElementById("form_abono").reset();
         a = document.getElementById('inputhidden');
@@ -1595,9 +1595,9 @@ function getPagosByUser(user,mes, anio){
 
         $("#modal_abono").modal('toggle');
 
-    }
+    }*/
 
-    function CloseModalDelete() {
+    /*function CloseModalDelete() {
         // document.getElementById("inputhidden").innerHTML = "";
         a = document.getElementById('borrarBono');
         padre = a.parentNode;
@@ -1605,11 +1605,11 @@ function getPagosByUser(user,mes, anio){
 
         $("#modal-delete").modal('toggle');
 
-    }
+    }*/
 
     function CloseModalDelete2() {
         // document.getElementById("inputhidden").innerHTML = "";
-        document.getElementById("form-delete").reset();
+        // document.getElementById("form-delete").reset();
         a = document.getElementById('borrarBono');
         padre = a.parentNode;
         padre.removeChild(a);
@@ -1629,7 +1629,7 @@ function getPagosByUser(user,mes, anio){
 
     }
 
-    $(document).on('submit', '#form-delete', function (e) {
+    /*$(document).on('submit', '#form-delete', function (e) {
         e.preventDefault();
         var formData = new FormData(document.getElementById("form-delete"));
         formData.append("dato", "valor");
@@ -1661,10 +1661,10 @@ function getPagosByUser(user,mes, anio){
                 alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
             }
         });
-    });
+    });*/
 
 
-    $("#form_aplicar").submit(function (e) {
+    /*$("#form_aplicar").submit(function (e) {
         e.preventDefault();
     }).validate({
         submitHandler: function (form) {
@@ -1699,13 +1699,13 @@ function getPagosByUser(user,mes, anio){
                 }
             });
         }
-    });
+    });*/
 
 
     // FIN TABLA PAGADAS
 
 
-    function mandar_espera(idLote, nombre) {
+    /*function mandar_espera(idLote, nombre) {
         idLoteespera = idLote;
         // link_post2 = "Cuentasxp/datos_para_rechazo1/";
         link_espera1 = "Comisiones/generar comisiones/";
@@ -1714,7 +1714,7 @@ function getPagosByUser(user,mes, anio){
         $("#myModalEspera ").modal();
         // $("#myModalEspera .modal-body").append("<div class='btn-group'>LOTE: "+nombre+"</div>");
         $("#myModalEspera .modal-footer").append("<div class='btn-group'><button type='submit' class='btn btn-success'>GENERAR COMISIÓN</button></div>");
-    }
+    }*/
 
 
     // FUNCTION MORE

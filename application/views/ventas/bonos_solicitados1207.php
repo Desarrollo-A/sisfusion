@@ -68,7 +68,7 @@
 
 
 
-	<div class="modal fade modal-alertas" id="myModalEspera" role="dialog">
+	<!--<div class="modal fade modal-alertas" id="myModalEspera" role="dialog">
 		<div class="modal-dialog modal-sm">
 			<div class="modal-content">
 
@@ -78,7 +78,7 @@
 				</form>
 			</div>
 		</div>
-	</div>
+	</div>-->
 
 
 
@@ -771,7 +771,7 @@ function save(datos){
 
 
 
-	function mandar_espera(idLote, nombre) {
+	/*function mandar_espera(idLote, nombre) {
 		idLoteespera = idLote;
 		// link_post2 = "Cuentasxp/datos_para_rechazo1/";
 		link_espera1 = "Comisiones/generar comisiones/";
@@ -780,7 +780,7 @@ function save(datos){
 		$("#myModalEspera ").modal();
 		// $("#myModalEspera .modal-body").append("<div class='btn-group'>LOTE: "+nombre+"</div>");
 		$("#myModalEspera .modal-footer").append("<div class='btn-group'><button type='submit' class='btn btn-success'>GENERAR COMISIÓN</button></div>");
-	}
+	}*/
 
 
 
@@ -807,7 +807,7 @@ function save(datos){
 	};
 
 
-    $("#roles").change(function() {
+    /*$("#roles").change(function() {
         var parent = $(this).val();
 
         document.getElementById("users").innerHTML ='';
@@ -835,9 +835,9 @@ function save(datos){
                            // $("#usuariosrol").val(v.id_director);
                         $("#usuarioid").selectpicker('refresh');
                     }, 'json'); 
-    });
+    });*/
 
-    $("#numeroP").change(function(){
+    /*$("#numeroP").change(function(){
         let monto = parseFloat($('#monto').val());
         let cantidad = parseFloat($('#numeroP').val());
         let resultado=0;
@@ -850,7 +850,7 @@ function save(datos){
         resultado = monto /cantidad;
 
         $('#pago').val(formatMoney(resultado));
-        }
+        }*/
      
 
 });

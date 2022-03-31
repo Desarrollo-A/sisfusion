@@ -76,7 +76,7 @@ ul.timeline > li:before {
 
 
 
-    <div class="modal fade modal-alertas" id="myModalEspera" role="dialog">
+    <!--<div class="modal fade modal-alertas" id="myModalEspera" role="dialog">
         <div class="modal-dialog modal-sm">
             <div class="modal-content">
 
@@ -86,10 +86,10 @@ ul.timeline > li:before {
                 </form>
             </div>
         </div>
-    </div>
+    </div>-->
 
 
-    <div class="modal fade modal-alertas" id="modal-delete" role="dialog" data-backdrop="static">
+    <!--<div class="modal fade modal-alertas" id="modal-delete" role="dialog" data-backdrop="static">
         <div class="modal-dialog modal-sm">
             <div class="modal-content" >
           
@@ -100,7 +100,7 @@ ul.timeline > li:before {
                 
             </div>
         </div>
-    </div>
+    </div>-->
 
 
 
@@ -135,7 +135,7 @@ ul.timeline > li:before {
 
 
 
-    <div class="modal fade modal-alertas" id="miModal" role="dialog">
+    <!--<div class="modal fade modal-alertas" id="miModal" role="dialog">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header bg-red">
@@ -159,7 +159,7 @@ ul.timeline > li:before {
            
                     <div class="form-group" id="users"><label class="label">Usuario</label>
                     <select id="usuarioid" name="usuarioid" class="form-control directorSelect ng-invalid ng-invalid-required" required data-live-search="true"></select>
-                    </div>
+                    </div>-->
 
                     <!-- <div class="form-group" id="loteorigen"><label class="label">Lote origen</label>
                     <select id="idloteorigen"  name="idloteorigen[]" multiple="multiple" class="form-control directorSelect2 js-example-theme-multiple" style="width: 100%;height:200px !important;"  required data-live-search="true"></select>
@@ -169,7 +169,7 @@ ul.timeline > li:before {
 
                     
 
-                    <div class="form-group row">
+                    <!--<div class="form-group row">
 
 
                        <div class="col-md-6">
@@ -212,30 +212,30 @@ ul.timeline > li:before {
                 </form>
             </div>
         </div>
-    </div>
+    </div>-->
 
-    <div class="modal fade modal-alertas" id="modal_descuentos" role="dialog">
+    <!--<div class="modal fade modal-alertas" id="modal_descuentos" role="dialog">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header bg-red">
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
 
-            </div>
+            </div>-->
             <!-- <form method="post" id="form_descuentos">
                 <div class="modal-body"></div>
                 <div class="modal-footer"></div>
             </form> -->
-        </div>
+        <!--</div>
     </div>
-</div>
+</div>-->
 
    
-<div class="modal fade modal-alertas" id="modal_abono" data-backdrop="static" data-keyboard="false" role="dialog">
+<!--<div class="modal fade modal-alertas" id="modal_abono" data-backdrop="static" data-keyboard="false" role="dialog">
     <div class="modal-dialog ">
         <div class="modal-content">
-            <div class="modal-header bg-red">
+            <div class="modal-header bg-red">-->
                 <!--<button type="button" class="close" data-dismiss="modal">&times;</button>-->
-                <center><img src="<?=base_url()?>static/images/preview.gif" width="250" height="200"></center>
+                <!--<center><img src="<?=base_url()?>static/images/preview.gif" width="250" height="200"></center>
 
                 
 
@@ -249,15 +249,15 @@ ul.timeline > li:before {
             
         </div>
     </div>
-</div>
+</div>-->
 
-    <div class="modal fade bd-example-modal-sm" id="myModalEnviadas" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <!--<div class="modal fade bd-example-modal-sm" id="myModalEnviadas" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-sm">
             <div class="modal-content">
                 <div class="modal-body"></div>
             </div>
         </div>
-    </div>
+    </div>-->
 
 
 
@@ -399,7 +399,7 @@ ul.timeline > li:before {
 
 
 
-    $("#form_descuentos").on('submit', function(e){ 
+    /*$("#form_descuentos").on('submit', function(e){
         e.preventDefault();
         let userid =  $('#usuarioid').val();
      
@@ -450,7 +450,7 @@ formData.append("dato", "valor");
             alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
         }
     });
-});
+});*/
 
 
 
@@ -718,7 +718,7 @@ $('#tabla_descuentos thead tr:eq(0) th').each( function (i) {
 
  
 /**------------------------------------------- */
-        $("#tabla_descuentos tbody").on("click", ".abonar", function(){    
+        /*$("#tabla_descuentos tbody").on("click", ".abonar", function(){
             bono = $(this).val();
             var dat = bono.split(",");
             //$("#modal_abono").html("");
@@ -739,7 +739,7 @@ $('#tabla_descuentos thead tr:eq(0) th').each( function (i) {
             $("#modal_abono .modal-body").append(``);
             $('#modal_abono').modal('show');
             //save(bono);
-        });
+        });*/
 
 
 
@@ -905,7 +905,7 @@ console.log(resta);
 
 
 
-    function closeModalEng(){
+    /*function closeModalEng(){
        // document.getElementById("inputhidden").innerHTML = "";
         document.getElementById("form_abono").reset();
         a = document.getElementById('inputhidden');
@@ -914,9 +914,9 @@ console.log(resta);
      
     $("#modal_abono").modal('toggle');
     
-}
+}*/
 
-function Cerrar(){
+/*function Cerrar(){
        // document.getElementById("inputhidden").innerHTML = "";
         a = document.getElementById('bod');
         padre = a.parentNode;
@@ -924,9 +924,9 @@ function Cerrar(){
      
     $("#modal_log").modal('toggle');
     
-}
+}*/
 
-function CloseModalDelete(){
+/*function CloseModalDelete(){
        // document.getElementById("inputhidden").innerHTML = "";
         a = document.getElementById('borrarBono');
         padre = a.parentNode;
@@ -934,8 +934,8 @@ function CloseModalDelete(){
      
     $("#modal-delete").modal('toggle');
     
-}
-function CloseModalDelete2(){
+}*/
+/*function CloseModalDelete2(){
        // document.getElementById("inputhidden").innerHTML = "";
         document.getElementById("form-delete").reset();
         a = document.getElementById('borrarBono');
@@ -944,9 +944,9 @@ function CloseModalDelete2(){
      
     $("#modal-delete").modal('toggle');
     
-}
+}*/
 
-function CloseModalUpdate2(){
+/*function CloseModalUpdate2(){
        // document.getElementById("inputhidden").innerHTML = "";
         document.getElementById("form-update").reset();
         a = document.getElementById('borrarUpdare');
@@ -955,8 +955,8 @@ function CloseModalUpdate2(){
      
     $("#modal-abono").modal('toggle');
     
-}
-$(document).on('submit','#form-delete', function(e){ 
+}*/
+/*$(document).on('submit','#form-delete', function(e){
   e.preventDefault();
 var formData = new FormData(document.getElementById("form-delete"));
 formData.append("dato", "valor");
@@ -990,7 +990,7 @@ contentType: false,
             alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
         }
     });
-});
+});*/
 
 
 
@@ -1081,7 +1081,7 @@ $("#form_aplicar").submit( function(e) {
 
 
 
-    function mandar_espera(idLote, nombre) {
+    /*function mandar_espera(idLote, nombre) {
         idLoteespera = idLote;
         // link_post2 = "Cuentasxp/datos_para_rechazo1/";
         link_espera1 = "Comisiones/generar comisiones/";
@@ -1090,7 +1090,7 @@ $("#form_aplicar").submit( function(e) {
         $("#myModalEspera ").modal();
         // $("#myModalEspera .modal-body").append("<div class='btn-group'>LOTE: "+nombre+"</div>");
         $("#myModalEspera .modal-footer").append("<div class='btn-group'><button type='submit' class='btn btn-success'>GENERAR COMISIÓN</button></div>");
-    }
+    }*/
 
 
 
@@ -1109,7 +1109,7 @@ $("#form_aplicar").submit( function(e) {
 
 
 
-    $("#roles").change(function() {
+    /*$("#roles").change(function() {
         var parent = $(this).val();
          document.getElementById('monto1').value = ''; 
         document.getElementById('idmontodisponible').value = ''; 
@@ -1134,11 +1134,11 @@ $("#form_aplicar").submit( function(e) {
                            // $("#usuariosrol").val(v.id_director);
                         $("#usuarioid").selectpicker('refresh');
                     }, 'json'); 
-    });
+    });*/
 
 
 
-    $("#usuarioid").change(function() {
+    /*$("#usuarioid").change(function() {
 
         document.getElementById('monto1').value = ''; 
         document.getElementById('idmontodisponible').value = 'Cargando....'; 
@@ -1155,13 +1155,13 @@ $("#form_aplicar").submit( function(e) {
 
 
                     
-    });
+    });*/
 
 
  
 
 
-    $("#numeroP").change(function(){
+    /*$("#numeroP").change(function(){
        
         let monto = parseFloat($('#monto1').val());
         let cantidad = parseFloat($('#numeroP').val());
@@ -1183,13 +1183,13 @@ $("#form_aplicar").submit( function(e) {
             $('#pago').val(formatMoney(0));
             }
         }
-    });
+    });*/
     function replaceAll( text, busca, reemplaza ){
   while (text.toString().indexOf(busca) != -1)
       text = text.toString().replace(busca,reemplaza);
   return text;
 }
-function verificar(){
+/*function verificar(){
     let valorDispo = $('#idmontodisponible').val();
     let disponible = replaceAll(valorDispo,',','');
     let monto_ingresado = replaceAll($('#monto1').val(),',','');
@@ -1212,7 +1212,7 @@ console.log('monto: '+monto);
         }
 }
         
-}
+}*/
 
 
 

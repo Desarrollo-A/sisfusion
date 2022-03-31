@@ -690,7 +690,7 @@ alerts.showNotification("top", "right", "Modificación almancenada con éxito.",
 
 
 
-$('#filtro33').change(function(ruta){
+/*$('#filtro33').change(function(ruta){
         residencial = $('#filtro33').val();
         $("#filtro44").empty().selectpicker('refresh');
             $.ajax({
@@ -710,9 +710,9 @@ $('#filtro33').change(function(ruta){
 
                 }
             });
-    });
+    });*/
 
-    $('#filtro44').change(function(ruta){
+    /*$('#filtro44').change(function(ruta){
         conodominio = $('#filtro44').val();
         $("#filtro55").empty().selectpicker('refresh');
             $.ajax({
@@ -733,7 +733,7 @@ $('#filtro33').change(function(ruta){
                 }
             });
 
-    });
+    });*/
 
    
 
@@ -764,7 +764,7 @@ $('#filtro33').change(function(ruta){
        
 
 //     }
-    $('#filtro55').change(function(ruta){
+    /*$('#filtro55').change(function(ruta){
         infolote = $('#filtro55').val();
         datos = infolote.split(',');
         idLote = datos[0];
@@ -794,7 +794,7 @@ var selected = select.options[select.selectedIndex].text;
 
 
 
-    });
+    });*/
  
 
 let titulos = [];
@@ -1296,7 +1296,7 @@ $("#tabla_inventario_contraloria tbody").on("click", ".verify_neodata", function
 });
 
 
-$(document).on("click", ".ver_historial", function(){
+/*$(document).on("click", ".ver_historial", function(){
 	var tr = $(this).closest('tr');
 	var row = tabla_inventario.row( tr );
 	idLote = $(this).val();
@@ -1335,7 +1335,7 @@ $(document).on("click", ".ver_historial", function(){
 		{
 			$("#changelog").append('<center>No hay liberaciones para este lote </center>');
 		}*/
-		urlTableFred = url+"Contratacion/obtener_liberacion/"+idLote;
+		/*urlTableFred = url+"Contratacion/obtener_liberacion/"+idLote;
 		fillFreedom(urlTableFred);
 
 
@@ -1350,14 +1350,14 @@ $(document).on("click", ".ver_historial", function(){
 				/*$.each( data, function(i, v){
 					fillProceso(i, v);
 				});*/
-				urlTableHist = url+"Contratacion/historialProcesoLoteOp/"+idLote;
+				/*urlTableHist = url+"Contratacion/historialProcesoLoteOp/"+idLote;
 				fillHistory(urlTableHist);
 			/*}
 			else
 			{
 				$("#changeproces").append('<center>No hay historial para este lote </center>');
 			}*/
-	});
+	/*});
 	
 	var urlTableCSA = '';
     $.getJSON(url+"Contratacion/getCoSallingAdvisers/"+idLote).done( function( data ){
@@ -1366,9 +1366,9 @@ $(document).on("click", ".ver_historial", function(){
     });	
 
 	fill_data_asignacion();
-});
+});*/
 
-function fillLiberacion (v) {
+/*function fillLiberacion (v) {
 	$("#changelog").append('<li class="timeline-inverted">\n' +
         '<div class="timeline-badge success"></div>\n' +
         '<div class="timeline-panel">\n' +
@@ -1383,9 +1383,9 @@ function fillLiberacion (v) {
         '</h6>\n' +
         '</div>\n' +
         '</li>');
-}
+}*/
 
-function fillProceso (i, v) {
+/*function fillProceso (i, v) {
 	$("#changeproces").append('<li class="timeline-inverted">\n' +
         '<div class="timeline-badge info">'+(i+1)+'</div>\n' +
         '<div class="timeline-panel">\n' +
@@ -1404,7 +1404,7 @@ function fillProceso (i, v) {
         '</li>');
 
 	 // comentario, perfil, modificado,
-}
+}*/
 
 
 function formatMoney( n ) {
@@ -1418,7 +1418,7 @@ function formatMoney( n ) {
         return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
     };
 
-    function fillHistory(urlTableHist)
+    /*function fillHistory(urlTableHist)
 	{
 		tableHistorial = $('#verDet').DataTable( {
 			responsive: true,
@@ -1463,21 +1463,21 @@ function formatMoney( n ) {
 
 			],
 			/*"ajax": {
-				"url": urlTableHist,//"<?=base_url()?>index.php/registroLote/historialProcesoLoteOp/"
+				"url": urlTableHist,//"<//?=base_url()?>index.php/registroLote/historialProcesoLoteOp/"
 				"type": "POST",
 				cache: false,
 				"data": function( d ){
 					d.idLote = idlote_global;
 				}
 			},*/
-			"ajax":
+			/*"ajax":
 				{
 					"url": urlTableHist,
 					"dataSrc": ""
 				},
 		});
-	}
-	function fillFreedom(urlTableFred)
+	}*/
+	/*function fillFreedom(urlTableFred)
 	{
 		tableHistorialBloqueo = $('#verDetBloqueo').DataTable( {
 			responsive: true,
@@ -1521,21 +1521,21 @@ function formatMoney( n ) {
 
 			],
 			/*"ajax": {
-				"url": urlTableFred,//<?=base_url()?>index.php/registroLote/historialBloqueos/
+				"url": urlTableFred,//<//?=base_url()?>index.php/registroLote/historialBloqueos/
 				"type": "POST",
 				cache: false,
 				"data": function( d ){
 				}
 			},*/
-			"ajax":
+			/*"ajax":
 				{
 					"url": urlTableFred,
 					"dataSrc": ""
 				},
 		});
-	}
+	}*/
 	
-	function fillCoSellingAdvisers(urlTableCSA)
+	/*function fillCoSellingAdvisers(urlTableCSA)
 {
     tableCoSellingAdvisers = $('#seeCoSellingAdvisers').DataTable( {
         responsive: true,
@@ -1589,7 +1589,7 @@ function formatMoney( n ) {
                 "dataSrc": ""
             },
     });
-}
+}*/
 
 
 function fill_data_asignacion(){
@@ -1861,7 +1861,7 @@ $("#form_pagadas").submit(function(e) {
 
 
 
-        function VlidarNuevos(i,usuario){
+        /*function VlidarNuevos(i,usuario){
      	
         $('#modal_quitar .modal-header').html(''); 
         $('#modal_quitar .modal-body').html(''); 
@@ -1915,7 +1915,7 @@ $("#form_pagadas").submit(function(e) {
           });
         $('#modal_quitar').modal('show');
   
-    }
+    }*/
 
 
         	// <input type="submit"  onclick="AgregarPago(${i})" id="btn-save2" disabled class="btn btn-primary" value="ACEPTAR" style="margin: 15px;"><button type="button" class="btn btn-danger" data-dismiss="modal">CANCELAR</button></center>

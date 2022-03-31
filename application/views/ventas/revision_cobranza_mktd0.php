@@ -90,9 +90,9 @@
         </style>
 
 
-        <div class="modal fade modal-alertas" id="documento_preview" role="dialog">
+        <!--<div class="modal fade modal-alertas" id="documento_preview" role="dialog">
             <div class="modal-dialog" style="margin-top:20px;"></div>
-        </div>
+        </div>-->
 
 
         <div class="modal fade bd-example-modal-sm" id="myModalEnviadas" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
@@ -546,7 +546,7 @@ return lblStats;
             ]
         });
 
-        $("#tabla_nuevas_comisiones tbody").on("click", ".mas_opciones_8", function() {
+        /*$("#tabla_nuevas_comisiones tbody").on("click", ".mas_opciones_8", function() {
             var tr = $(this).closest('tr');
             var row = tabla_nuevas.row(tr);
 
@@ -556,7 +556,7 @@ return lblStats;
             $("#modal_nuevas .modal-body").append('<div class="row"><div class="col-lg-6"><p>VENTA:&nbsp;&nbsp;<b>' + row.data().nombreLote + '</b></p></div><div class="col-lg-6"><p>COMISIÓN $:&nbsp;&nbsp;<b>' + row.data().nombreLote + '</b></p></div></div>');
             $("#modal_nuevas .modal-body").append('<div class="row"><div class="col-lg-12"><p>MEDIO(S) DE VENTA:&nbsp;&nbsp;<b>' + row.data().nombreLote + '</b></p></div></div>');
             $("#modal_nuevas").modal();
-        });
+        });*/
 
 
 
@@ -597,7 +597,7 @@ return lblStats;
 
 
 
-        $("#tabla_nuevas_comisiones tbody").on("click", ".pedir_parcialidad", function() {
+        /*$("#tabla_nuevas_comisiones tbody").on("click", ".pedir_parcialidad", function() {
             var tr = $(this).closest('tr');
             var row = tabla_nuevas.row(tr);
             id_pago = $(this).val();
@@ -606,11 +606,11 @@ return lblStats;
             $("#modalParcialidad .modal-body").append('<div class="row"><div class="col-lg-12"><p>Solo puede solicitar una parcialidad de pago menor al monto correpondiente a la cantidad de <b>$' + formatMoney(row.data().pago_cliente) + '<input type="hidden" id="value_pago_cliente" name="value_pago_cliente" value="' + formatMoney(row.data().pago_cliente) + '"></b>.</p></div></div>');
             $("#modalParcialidad .modal-body").append('<div class="row"><div class="col-lg-12"><input type="text" id="new_value_parcial"  id="new_value_parcial" class="form-control" onkeydown="calcularMontoParcialidad()"><div name="label_estado" name="label_estado"></div></div></div>');
             $("#modalParcialidad").modal();
-        });
+        });*/
 
         /**---------------------------------------------------------------------------------------------------------------------------------------- */
 
-        $("#tabla_nuevas_comisiones tbody").on("click", ".consultar_logs_facturas2", function() {
+        /*$("#tabla_nuevas_comisiones tbody").on("click", ".consultar_logs_facturas2", function() {
 
             id_pago = $(this).val();
             user = $(this).attr("data-usuario");
@@ -669,9 +669,9 @@ return lblStats;
                 });
             });
 
-        });
+        });*/
         /**--------------------------------------------------------- -------------------------------------------------------------------------------------------*/
-        $("#tabla_nuevas_comisiones tbody").on("click", ".consultar_logs_asimilados", function() {
+        /*$("#tabla_nuevas_comisiones tbody").on("click", ".consultar_logs_asimilados", function() {
             id_pago = $(this).val();
             user = $(this).attr("data-usuario");
 
@@ -695,11 +695,11 @@ return lblStats;
                 });
             });
 
-        });
+        });*/
 
 
 
-        $("#tabla_nuevas_comisiones tbody").on("click", ".consultar_detalles", function() {
+        /*$("#tabla_nuevas_comisiones tbody").on("click", ".consultar_detalles", function() {
             id_com = $(this).val();
             id_pj = $(this).attr("data-personalidad");
 
@@ -761,7 +761,7 @@ return lblStats;
 
             });
 
-        });
+        });*/
 
 
 
@@ -806,7 +806,7 @@ return lblStats;
         return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
     };
 
-    $(document).on("click", ".subir_factura", function() {
+    /*$(document).on("click", ".subir_factura", function() {
         resear_formulario();
         id_comision = $(this).val();
         total = $(this).attr("data-total");
@@ -817,14 +817,14 @@ return lblStats;
         });
         $("#modal_formulario_solicitud .modal-body #frmnewsol").append(`<div id="inputhidden"><input type="hidden" id="comision_xml" name="comision_xml" value="${ id_comision}">
         <input type="hidden" id="pago_cliente" name="pago_cliente" value="${ parseFloat(total).toFixed(2) }"></div>`);
-    });
+    });*/
 
 
     let c = 0;
 
-    function saveX() {
+    /*function saveX() {
         save2();
-    }
+    }*/
 
  
 
@@ -856,7 +856,7 @@ return lblStats;
     })
  
 
-    function cleanComments() {
+    /*function cleanComments() {
 
         var myCommentsList = document.getElementById('comments-list-factura');
         myCommentsList.innerHTML = '';
@@ -868,27 +868,27 @@ return lblStats;
         myFactura.innerHTML = '';
 
 
-    }
+    }*/
 
-    function cleanCommentsAsimilados() {
+    /*function cleanCommentsAsimilados() {
         var myCommentsList = document.getElementById('comments-list-asimilados');
         myCommentsList.innerHTML = '';
-    }
+    }*/
 
 
-    function fillFields(v) {
+    /*function fillFields(v) {
         // alert(v.nombre);
-    }
+    }*/
 
 
 
-    function close_modal_xml() {
+    /*function close_modal_xml() {
         $("#modal_nuevas").modal('toggle');
-    }
+    }*/
 </script>
 
 <script>
-    $(document).ready(function() {
+    /*$(document).ready(function() {
 
         $.getJSON(url + "Comisiones/report_plazas").done(function(data) {
             $(".report_plazas").html();
@@ -921,5 +921,5 @@ return lblStats;
 
             }
         });
-    });
+    });*/
 </script>

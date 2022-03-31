@@ -440,7 +440,7 @@ jQuery(document).ready(function(){
 
 
 
-function SoloNumeros(evt){
+/*function SoloNumeros(evt){
 	if(window.event){
 	keynum = evt.keyCode; 
 	}
@@ -455,7 +455,7 @@ function SoloNumeros(evt){
 		alerts.showNotification("top", "left", "Solo Numeros.", "danger");
 	return false;
 	}
-}
+}*/
 
 function closeModalEng(){
     $("#modal_confirmPay").modal('toggle');
