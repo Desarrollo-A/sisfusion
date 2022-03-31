@@ -119,26 +119,27 @@
                                 <div class="material-datatables">
                                     <div class="form-group">
                                         <div class="table-responsive">
-                                            <table class="table-striped table-hover" id="tabla_historialGral" name="tabla_historialGral"><thead>
-                                                <tr>
-                                                    <th></th>
-                                                    <th>ID</th>
-                                                    <th>PROY.</th>
-                                                    <th>CONDOMINIO</th>
-                                                    <th>LOTE</th>
-                                                    <th>REF.</th>
-                                                    <th>PRECIO LOTE</th>
-                                                    <th>TOTAL COM.</th>
-                                                    <th>PAGO CLIENTE</th>
-                                                    <th>DISPERSADO</th>
-                                                    <th>PAGADO</th>
-                                                    <th>PENDIENTE</th>
-                                                    <th>USUARIO</th>
-                                                    <th>PUESTO</th>
-                                                    <th>DETALLE</th>
-                                                    <th>ESTATUS</th>
-                                                    <th>MÁS</th>
-                                                </tr>
+                                            <table class="table-striped table-hover" id="tabla_historialGral" name="tabla_historialGral">
+                                                <thead>
+                                                    <tr>
+                                                        <th></th>
+                                                        <th>ID</th>
+                                                        <th>PROY.</th>
+                                                        <th>CONDOMINIO</th>
+                                                        <th>LOTE</th>
+                                                        <th>REF.</th>
+                                                        <th>PRECIO LOTE</th>
+                                                        <th>TOTAL COM.</th>
+                                                        <th>PAGO CLIENTE</th>
+                                                        <th>DISPERSADO</th>
+                                                        <th>PAGADO</th>
+                                                        <th>PENDIENTE</th>
+                                                        <th>USUARIO</th>
+                                                        <th>PUESTO</th>
+                                                        <th>DETALLE</th>
+                                                        <th>ESTATUS</th>
+                                                        <th>MÁS</th>
+                                                    </tr>
                                             </thead>
                                         </table>
                                     </div>
@@ -211,9 +212,10 @@
             var myCommentsLote = document.getElementById('nameLote');
             myCommentsList.innerHTML = '';
             myCommentsLote.innerHTML = '';
-        }
+        } 
 
         $('#tabla_historialGral thead tr:eq(0) th').each( function (i) {
+            let titulos = [];
             if(i != 0){
                 var title = $(this).text();
                 titulos.push(title);
@@ -600,7 +602,7 @@
                     orderable: false,
                     className: 'select-checkbox',
                     targets:   0,
-                    'searchable':false,
+                    'searchable':true,
                     'className': 'dt-body-center',
                     'render': function (d, type, full, meta){
 
