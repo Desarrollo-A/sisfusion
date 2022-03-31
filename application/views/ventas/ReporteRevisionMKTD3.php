@@ -219,12 +219,12 @@ $( document ).ajaxStop(function(){
   LlamarTable();
 });
 
-async function CambiarMes(mes){
+/*async function CambiarMes(mes){
   alert(mes)
   NewHeader[1]={'title':''+mes+''};
   console.log(NewHeader[1])
   titulos[1]=mes;
-}
+}*/
     console.log(TodosDatos);
     $('#mes').change( function(){
       mes = $('#mes').val();

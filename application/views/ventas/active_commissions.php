@@ -441,6 +441,7 @@
                 $("#modal_pagadas").modal();
             });
 
+            /*
             $("#tabla_ingresar_9 tbody").on("click", ".pausar", function(){
                 var tr = $(this).closest('tr');
                 var row = tabla_1.row( tr );
@@ -482,6 +483,7 @@
                 $("#modal_enganche .modal-body").append('<div class="row"><div class="col-md-3"></div><div class="col-md-3"><input type="submit" class="btn btn-primary" value="ACEPTAR"></div><div class="col-md-3"><input type="button" class="btn btn-danger" value="CANCELAR" onclick="closeModalEng()"></div><div class="col-md-3"></div></div>');
                 $("#modal_enganche").modal();
             });
+            */
 
             $("#tabla_ingresar_9 tbody").on("click", ".verify_neodata", function () {
                 var tr = $(this).closest('tr');
@@ -848,6 +850,7 @@
             }
         });
 
+        /*
         $("#form_enganche").submit(function (e) {
             e.preventDefault();
         }).validate({
@@ -879,6 +882,7 @@
                 });
             }
         });
+        */
 
         $("#form_NEODATA2").submit(function (e) {
             e.preventDefault();
@@ -909,7 +913,7 @@
             }
         });
 
-        jQuery(document).ready(function () {
+        /*jQuery(document).ready(function () {
             jQuery('#editReg').on('hidden.bs.modal', function (e) {
                 jQuery(this).removeData('bs.modal');
                 jQuery(this).find('#comentario').val('');
@@ -921,10 +925,10 @@
                 jQuery(this).removeData('bs.modal');
                 jQuery(this).find('#comentario3').val('');
             })
-        })
+        });*/
 
 
-        function SoloNumeros(evt) {
+        /*function SoloNumeros(evt) {
             if (window.event) {
                 keynum = evt.keyCode;
             }
@@ -939,7 +943,7 @@
                 alerts.showNotification("top", "left", "Solo Numeros.", "danger");
                 return false;
             }
-        }
+        }*/
 
         function closeModalEng() {
             $("#modal_enganche").modal('toggle');
@@ -953,6 +957,6 @@
                 i = String(parseInt(n = Math.abs(Number(n) || 0).toFixed(c))),
                 j = (j = i.length) > 3 ? j % 3 : 0;
             return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
-        };
+        }
     </script>
 </body>

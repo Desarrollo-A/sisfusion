@@ -51,7 +51,7 @@
             </div>
         </div>
 
-        <div class="modal fade modal-alertas" id="modal_mktd" role="dialog">
+        <!--<div class="modal fade modal-alertas" id="modal_mktd" role="dialog">
             <div class="modal-dialog modal-md">
                 <div class="modal-content">
                     <form method="post" id="form_mktd">
@@ -75,9 +75,9 @@
                     </form>
                 </div>
             </div>
-        </div>
+        </div>-->
 
-        <div class="modal fade modal-alertas" id="modal_nuevas" role="dialog">
+        <!--<div class="modal fade modal-alertas" id="modal_nuevas" role="dialog">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header bg-red">
@@ -89,9 +89,9 @@
                     </form>
                 </div>
             </div>
-        </div>
+        </div>-->
         
-        <div class="modal fade modal-alertas" id="modal_precio" role="dialog">
+        <!--<div class="modal fade modal-alertas" id="modal_precio" role="dialog">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header bg-red"></div>
@@ -101,9 +101,9 @@
                     </form>
                 </div>
             </div>
-        </div>
+        </div>-->
 
-        <div class="modal fade" id="seeInformationMarketing" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+        <!--<div class="modal fade" id="seeInformationMarketing" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog modal-md modal-dialog-scrollable" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -137,7 +137,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div>-->
         <!-- END Modals -->
 
 
@@ -544,7 +544,7 @@
             });
 
 
-            $("#tabla_historialGral tbody").on("click", ".bitacora_reporte_marketing", function() {
+            /*$("#tabla_historialGral tbody").on("click", ".bitacora_reporte_marketing", function() {
                 lote = $(this).val();
                 cliente = $(this).attr("data-value");
 
@@ -556,7 +556,7 @@
                         $("#comments-list-asimilados").append('<div class="col-lg-12"><p style="color:gray;"><b>COMENTARIO: </b><i style="color:gray;">' + v.comentario + '</i></p><p style="color:gray;"><b>FECHA PROSPECCIÓN: </b><i style="color:gray;">' + v.fecha_prospecion_mktd + '</i></p><p style="color:gray;"><b>CREADO POR: </b> ' + v.nombre + '<p><b style="color:#896597">' + v.fecha_creacion + '</b></p><hr></div>');
                     });
                 });
-            });
+            });*/
             
 
             $("#tabla_historialGral tbody").on("click", ".consultar_logs_asimilados", function(e){
@@ -575,7 +575,7 @@
                     });
             });
 
-            $("#form_mktd").submit( function(e) {
+            /*$("#form_mktd").submit( function(e) {
                 e.preventDefault();
                 var plaza1 = $('#plaza1').val();
                 var plaza2=$('#plaza2').val();
@@ -608,10 +608,10 @@
                         }
                     });
                 }  
-            })
+            })*/
 
 
-            $("#form_aplicar").submit(function(e) {
+            /*$("#form_aplicar").submit(function(e) {
                 e.preventDefault();
             }).validate({
                 submitHandler: function(form) {
@@ -646,7 +646,7 @@
                         }
                     });
                 }
-            });
+            });*/
 
 
 
@@ -656,7 +656,7 @@
                 return text;
             }
 
-            $("#form_precio").submit(function(e) {
+            /*$("#form_precio").submit(function(e) {
                 e.preventDefault();
             }).validate({
                 submitHandler: function(form) {
@@ -698,7 +698,7 @@
                         alerts.showNotification("top", "right", "Número invalido", "danger");
                     }
                 }
-            });
+            });*/
         }
         //FIN TABLA  ****************************************************************************************
 
@@ -727,9 +727,9 @@
             myCommentsLote.innerHTML = '';
         }
 
-        $(document).on("click", ".btn-historial-lo", function() {
+        /*$(document).on("click", ".btn-historial-lo", function() {
             window.open(url + "Comisiones/getHistorialEmpresa", "_blank");
-        });
+        });*/
 
         function cleanComments() {
             var myCommentsList = document.getElementById('documents');
@@ -741,7 +741,7 @@
     </script>
 
     <script>
-        $(document).ready(function() {
+        /*$(document).ready(function() {
             $.getJSON(url + "Comisiones/report_plazas").done(function(data) {
                 $(".report_plazas").html();
                 $(".report_plazas1").html();
@@ -773,6 +773,6 @@
 
                 }
             });
-        });
+        });*/
     </script>
 </body>

@@ -67,7 +67,7 @@
         </div>
     </div>
 
-    <div class="modal fade modal-alertas" id="modal_users" role="dialog">
+    <!--<div class="modal fade modal-alertas" id="modal_users" role="dialog">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <form method="post" id="form_interes">
@@ -75,9 +75,9 @@
                 </form>
             </div>
         </div>
-    </div>
+    </div>-->
 
-    <div class="modal fade modal-alertas" id="modal_colaboradores" role="dialog">
+    <!--<div class="modal fade modal-alertas" id="modal_colaboradores" role="dialog">
         <div class="modal-dialog modal-md">
             <div class="modal-content">
                 <form method="post" id="form_colaboradores">
@@ -86,9 +86,9 @@
                 </form>
             </div>
         </div>
-    </div>
+    </div>-->
 
-    <div class="modal fade modal-alertas" id="modal_mktd" role="dialog">
+    <!--<div class="modal fade modal-alertas" id="modal_mktd" role="dialog">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header bg-red">
@@ -101,9 +101,9 @@
                 </form>
             </div>
         </div>
-    </div>
+    </div>-->
 
-    <div class="modal fade modal-alertas" id="modalParcialidad" role="dialog">
+    <!--<div class="modal fade modal-alertas" id="modalParcialidad" role="dialog">
         <div class="modal-dialog modal-sm">
             <div class="modal-content">
                 <div class="modal-header bg-red">
@@ -115,7 +115,7 @@
                 </form>
             </div>
         </div>
-    </div>
+    </div>-->
 
     <div class="modal fade" id="seeInformationModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog modal-md modal-dialog-scrollable" role="document">
@@ -152,7 +152,7 @@
         </div>
     </div>
 
-    <div class="modal fade modal-alertas" id="modal_documentacion" role="dialog">
+    <!--<div class="modal fade modal-alertas" id="modal_documentacion" role="dialog">
         <div class="modal-dialog" style="width:800px; margin-top:20px">
             <div class="modal-content">
                 <div class="modal-body">
@@ -161,7 +161,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div>-->
 
     <div class="modal fade bd-example-modal-sm" id="myModalEnviadas" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-sm">
@@ -171,9 +171,9 @@
         </div>
     </div>
 
-    <div class="modal fade modal-alertas" id="documento_preview" role="dialog">
+    <!--<div class="modal fade modal-alertas" id="documento_preview" role="dialog">
         <div class="modal-dialog" style= "margin-top:20px;"></div>
-    </div>
+    </div>-->
     <!-- END Modals -->
 
     <div class="content boxContent">
@@ -703,7 +703,7 @@
                 }],
                 pagingType: "full_numbers",
                 language: {
-                    url: "<?=base_url()?>/static/spanishLoader_v2.json",
+                    url: "<//?=base_url()?>/static/spanishLoader_v2.json",
                     paginate: {
                         previous: "<i class='fa fa-angle-left'>",
                         next: "<i class='fa fa-angle-right'>"
@@ -933,7 +933,7 @@
             },
         });
 
-        $("#tabla_plaza_1 tbody").on("click", ".dispersar_colaboradores", function(){
+        /*$("#tabla_plaza_1 tbody").on("click", ".dispersar_colaboradores", function(){
             var tr = $(this).closest('tr');
             var row = plaza_1.row( tr );
             let c=0;
@@ -984,7 +984,7 @@
                 $("#modal_colaboradores .modal-footer").append('<br><div class="row"><div class="col-md-6"><center><input type="submit" class="btn btn-success" value="DISPERSAR"></center></div><div class="col-md-6"><center><input type="button" class="btn btn-danger"  data-dismiss="modal" value="CANCELAR"></center></div></div>');
                 $("#modal_colaboradores").modal();
             });
-        });
+        });*/
     });
     //FIN TABLA NUEVA
 
@@ -1575,7 +1575,7 @@
     // INICIO TABLA EN PROCESO
 
     // FUNCTION MORE
-    $(document).on( "click", ".nuevo_plan", function(){
+    /*$(document).on( "click", ".nuevo_plan", function(){
         $("#modal_mktd .modal-body").html("");
         $("#modal_mktd .modal-footer").html("");
 
@@ -1655,7 +1655,7 @@
 
         $("#modal_mktd .modal-footer").append('<br><div class="row"><div class="col-md-12"><center><input type="submit" id="btnsubmit" class="btn btn-success" value="GUARDAR"></center></div></div>');
         $("#modal_mktd").modal();
-    });
+    });*/
 
     function formatMoney( n ) {
         var c = isNaN(c = Math.abs(c)) ? 2 : c,
@@ -1750,7 +1750,7 @@
         $("#obse").val( ( informacion_factura.descripcion ? informacion_factura.descripcion[0] : '') ).attr('readonly',true);
     }
 
-    $("#form_colaboradores").submit( function(e) {
+    /*$("#form_colaboradores").submit( function(e) {
         e.preventDefault();
     }).validate({
         submitHandler: function( form ) {
@@ -1802,7 +1802,7 @@
             }
 
         }
-    });
+    });*/
 
     $("#frmnewsol").submit( function(e) {
         e.preventDefault();
@@ -1834,7 +1834,7 @@
         }
     });
 
-    $("#form_MKTD").submit( function(e) {
+    /*$("#form_MKTD").submit( function(e) {
         e.preventDefault();
     }).validate({
         rules: {
@@ -1870,9 +1870,9 @@
                 }
             });
         }
-    });
+    });*/
 
-    function calcularMontoParcialidad() {
+    /*function calcularMontoParcialidad() {
         $precioFinal = parseFloat($('#value_pago_cliente').val());
         $precioNuevo = parseFloat($('#new_value_parcial').val());
 
@@ -1882,9 +1882,9 @@
         else if ($precioNuevo < $precioFinal) {
             $('#label_estado').append('<label>MONTO VALIDO</label>');
         }
-    }
+    }*/
 
-    function preview_info(archivo){
+    /*function preview_info(archivo){
         $("#documento_preview .modal-dialog").html("");
         $("#documento_preview").css('z-index', 9999);
         archivo = url+"dist/documentos/"+archivo+"";
@@ -1910,7 +1910,7 @@
             elemento += '</div>';
             $("#documento_preview .modal-dialog").append(elemento);
         }
-    }
+    }*/
 
     function cleanComments() {
         var myCommentsList = document.getElementById('comments-list-asimilados');

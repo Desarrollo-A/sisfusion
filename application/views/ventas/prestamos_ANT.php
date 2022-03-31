@@ -67,7 +67,7 @@
 
 
 
-	<div class="modal fade modal-alertas" id="myModalEspera" role="dialog">
+	<!--<div class="modal fade modal-alertas" id="myModalEspera" role="dialog">
 		<div class="modal-dialog modal-sm">
 			<div class="modal-content">
 
@@ -77,7 +77,7 @@
 				</form>
 			</div>
 		</div>
-	</div>
+	</div>-->
 
 
 
@@ -151,13 +151,13 @@
 	</div>
 
 
-	<div class="modal fade bd-example-modal-sm" id="myModalEnviadas" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+	<!--<div class="modal fade bd-example-modal-sm" id="myModalEnviadas" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
 		<div class="modal-dialog modal-sm">
 			<div class="modal-content">
 				<div class="modal-body"></div>
 			</div>
 		</div>
-	</div>
+	</div>-->
 
 
 
@@ -496,7 +496,7 @@ $('#tabla_prestamos').on('xhr.dt', function ( e, settings, json, xhr ) {
 
 
 
-	function mandar_espera(idLote, nombre) {
+	/*function mandar_espera(idLote, nombre) {
 		idLoteespera = idLote;
 		// link_post2 = "Cuentasxp/datos_para_rechazo1/";
 		link_espera1 = "Comisiones/generar comisiones/";
@@ -505,7 +505,7 @@ $('#tabla_prestamos').on('xhr.dt', function ( e, settings, json, xhr ) {
 		$("#myModalEspera ").modal();
 		// $("#myModalEspera .modal-body").append("<div class='btn-group'>LOTE: "+nombre+"</div>");
 		$("#myModalEspera .modal-footer").append("<div class='btn-group'><button type='submit' class='btn btn-success'>GENERAR COMISIÓN</button></div>");
-	}
+	}*/
 
 
 

@@ -89,7 +89,7 @@ else
  
 </style>
 
-<div class="modal fade modal-alertas" id="modal_users" role="dialog">
+<!--<div class="modal fade modal-alertas" id="modal_users" role="dialog">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
        
@@ -98,7 +98,7 @@ else
             </form>
         </div>
     </div>
-</div>
+</div>-->
 
 <div class="modal fade modal-alertas" id="modal_colaboradores" role="dialog">
     <div class="modal-dialog modal-md">
@@ -113,7 +113,7 @@ else
     </div>
 </div>
 
-<div class="modal fade modal-alertas" id="modal_mktd" role="dialog">
+<!--<div class="modal fade modal-alertas" id="modal_mktd" role="dialog">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header bg-red">
@@ -126,9 +126,9 @@ else
             </form>
         </div>
     </div>
-</div>
+</div>-->
 
-<div class="modal fade modal-alertas" id="modalParcialidad" role="dialog">
+<!--<div class="modal fade modal-alertas" id="modalParcialidad" role="dialog">
     <div class="modal-dialog modal-sm">
         <div class="modal-content">
             <div class="modal-header bg-red">
@@ -140,9 +140,9 @@ else
             </form>
         </div>
     </div>
-</div>
+</div>-->
  
-<div class="modal fade" id="seeInformationModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+<!--<div class="modal fade" id="seeInformationModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog modal-md modal-dialog-scrollable" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -152,15 +152,15 @@ else
                 <h4 class="modal-title">Consulta información</h4>
             </div>
             <div class="modal-body">
-                <div role="tabpanel">
+                <div role="tabpanel">-->
                     <!-- Nav tabs -->
-                    <ul class="nav nav-tabs" role="tablist" style="background: #003d82;">
+                    <!--<ul class="nav nav-tabs" role="tablist" style="background: #003d82;">
                         <li role="presentation" class="active"><a href="#documents" aria-controls="documents" role="tab" data-toggle="tab">Documentación</a></li>
                         <li role="presentation"><a href="#facturaInfo" aria-controls="facturaInfo" role="tab" data-toggle="tab">Datos factura</a></li>
                         <li role="presentation"><a href="#changelogTab" aria-controls="changelogTab" role="tab" data-toggle="tab">Bitácora de cambios</a></li>
-                    </ul>
+                    </ul>-->
                     <!-- Tab panes -->
-                    <div class="tab-content">
+                    <!--<div class="tab-content">
                         <div role="tabpanel" class="tab-pane active documents" id="documents"></div>
                         <div role="tabpanel" class="tab-pane facturaInfo" id="facturaInfo"></div>
                         <div role="tabpanel" class="tab-pane changelogTab" id="changelogTab"></div>
@@ -172,9 +172,9 @@ else
             </div>
         </div>
     </div>
-</div>
+</div>-->
 
-<div class="modal fade modal-alertas" id="modal_documentacion" role="dialog">
+<!--<div class="modal fade modal-alertas" id="modal_documentacion" role="dialog">
         <div class="modal-dialog" style="width:800px; margin-top:20px">
             <div class="modal-content">
                 <div class="modal-body">
@@ -183,21 +183,21 @@ else
                 </div>
             </div>
         </div>
-    </div>
+    </div>-->
 
-<div class="modal fade bd-example-modal-sm" id="myModalEnviadas" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+<!--<div class="modal fade bd-example-modal-sm" id="myModalEnviadas" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-sm">
     <div class="modal-content">
       <div class="modal-body"></div>
     </div>
   </div>
-</div>
+</div>-->
 
-<div class="modal fade modal-alertas" id="documento_preview" role="dialog">
+<!--<div class="modal fade modal-alertas" id="documento_preview" role="dialog">
     <div class="modal-dialog" style= "margin-top:20px;"></div>
-</div>
+</div>-->
 
- <div id="modal_formulario_solicitud" class="modal" style="position:fixed; top:0; left:0; margin-bottom: 1%;  margin-top: -5%;">
+<!--<div id="modal_formulario_solicitud" class="modal" style="position:fixed; top:0; left:0; margin-bottom: 1%;  margin-top: -5%;">
         <div class="modal-dialog modal-md">
 
         <div class="modal-content">
@@ -291,7 +291,7 @@ else
             </div>
         </div>
     </div>
-</div>
+</div>-->
 
 
 <div class="content">
@@ -1019,7 +1019,7 @@ let c=0;
 
 
 
-function cleanComments()
+/*function cleanComments()
 {
     var myCommentsList = document.getElementById('documents');
     myCommentsList.innerHTML = '';
@@ -1027,12 +1027,12 @@ function cleanComments()
     var myFactura = document.getElementById('facturaInfo');
     myFactura.innerHTML = '';
   
-}
+}*/
 
 
-function fillFields (v) {
+/*function fillFields (v) {
     // alert(v.nombre);
-}
+}*/
 
 $(window).resize(function(){
         plaza_1.columns.adjust();

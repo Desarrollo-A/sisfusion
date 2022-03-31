@@ -59,7 +59,7 @@
             </div>
         </div>
 
-        <div class="modal fade modal-alertas" id="modal_nuevas" role="dialog">
+        <!--<div class="modal fade modal-alertas" id="modal_nuevas" role="dialog">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <form method="post" id="form_interes">
@@ -67,7 +67,7 @@
                     </form>
                 </div>
             </div>
-        </div>
+        </div>-->
 
         <div class="content boxContent">
             <div class="container-fluid">
@@ -644,7 +644,7 @@
                 });
             }); 
 
-            $("#tabla_historialGral tbody").on("click", ".cambiar_pausa", function(){
+            /*$("#tabla_historialGral tbody").on("click", ".cambiar_pausa", function(){
                 var tr = $(this).closest('tr');
                 var row = tabla_historialGral2.row( tr );
 
@@ -656,9 +656,9 @@
                 $("#modal_nuevas .modal-body").append('<input type="hidden" name="id_pago" value="'+row.data().id_pago_i+'"><input type="hidden" name="estatus" id="estatus" readonly="true" value="4">');
                 $("#modal_nuevas .modal-body").append('<div class="row"><div class="col-md-6"></div><div class="col-md-3"><input type="submit" class="btn btn-primary" value="ACTIVAR"></div><div class="col-md-3"><button type="button" class="btn btn-danger" data-dismiss="modal">CANCELAR</button></div></div>');
                 $("#modal_nuevas").modal();
-            });
+            });*/
 
-            $("#tabla_historialGral tbody").on("click", ".actualizar_pago", function(){
+            /*$("#tabla_historialGral tbody").on("click", ".actualizar_pago", function(){
                 var tr = $(this).closest('tr');
                 var row = tabla_historialGral2.row( tr );
 
@@ -670,9 +670,9 @@
                 $("#modal_nuevas .modal-body").append('<input type="hidden" name="id_pago" value="'+row.data().id_pago_i+'">');
                 $("#modal_nuevas .modal-body").append('<div class="row"><div class="col-md-6"></div><div class="col-md-3"><input type="submit" class="btn btn-primary" value="ACTIVAR"></div><div class="col-md-3"><button type="button" class="btn btn-danger" data-dismiss="modal">CANCELAR</button></div></div>');
                 $("#modal_nuevas").modal();
-            });
+            });*/
 
-            $("#tabla_historialGral tbody").on("click", ".agregar_pago", function(){
+            /*$("#tabla_historialGral tbody").on("click", ".agregar_pago", function(){
                 var tr = $(this).closest('tr');
                 var row = tabla_historialGral2.row( tr );
 
@@ -684,7 +684,7 @@
                 $("#modal_nuevas .modal-body").append('<input type="hidden" name="id_pago" value="'+row.data().id_pago_i+'">');
                 $("#modal_nuevas .modal-body").append('<div class="row"><div class="col-md-6"></div><div class="col-md-3"><input type="submit" class="btn btn-primary" value="ACTIVAR"></div><div class="col-md-3"><button type="button" class="btn btn-danger" data-dismiss="modal">CANCELAR</button></div></div>');
                 $("#modal_nuevas").modal();
-            });
+            });*/
         }
 
         //FIN TABLA  **********************************************
@@ -702,12 +702,12 @@
             return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
         };
 
-        function cancela(){
+        /*function cancela(){
             $("#modal_nuevas").modal('toggle');
-        }
+        }*/
 
         //Función para pausar la solicitud
-        $("#form_interes").submit( function(e) {
+        /*$("#form_interes").submit( function(e) {
             e.preventDefault();
         }).validate({
             submitHandler: function( form ) {
@@ -739,18 +739,18 @@
                     }
                 });
             }
-        });
+        });*/
 
-        $(document).on("click", ".btn-historial-lo", function(){
+        /*$(document).on("click", ".btn-historial-lo", function(){
             window.open(url+"Comisiones/getHistorialEmpresa", "_blank");
-        });
+        });*/
 
-        function cleanComments(){
+        /*function cleanComments(){
             var myCommentsList = document.getElementById('documents');
             myCommentsList.innerHTML = '';
 
             var myFactura = document.getElementById('facturaInfo');
             myFactura.innerHTML = '';
-        }
+        }*/
     </script>
 </body>
