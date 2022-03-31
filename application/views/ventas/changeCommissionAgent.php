@@ -304,7 +304,7 @@
             });
         });
 
-        jQuery(document).ready(function () {
+        /*jQuery(document).ready(function () {
             jQuery('#editReg').on('hidden.bs.modal', function (e) {
                 jQuery(this).removeData('bs.modal');
                 jQuery(this).find('#comentario').val('');
@@ -320,13 +320,13 @@
             function myFunctionD2() {
                 formatCurrency($('#inputEdit'));
             }
-        });
+        });*/
 
-        $('.decimals').on('input', function () {
+        /*$('.decimals').on('input', function () {
             this.value = this.value.replace(/[^0-9,.]/g, '').replace(/,/g, '.');
-        });
+        });*/
 
-        function SoloNumeros(evt) {
+        /*function SoloNumeros(evt) {
             if (window.event) {
                 keynum = evt.keyCode;
             }
@@ -340,9 +340,9 @@
                 alerts.showNotification("top", "left", "Solo Numeros.", "danger");
                 return false;
             }
-        }
+        }*/
 
-        function formatMoney(n) {
+        /*function formatMoney(n) {
             var c = isNaN(c = Math.abs(c)) ? 2 : c,
                 d = d == undefined ? "." : d,
                 t = t == undefined ? "," : t,
@@ -350,9 +350,9 @@
                 i = String(parseInt(n = Math.abs(Number(n) || 0).toFixed(c))),
                 j = (j = i.length) > 3 ? j % 3 : 0;
             return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
-        };
+        };*/
 
-        function formatCurrency(input, blur) {
+        /*function formatCurrency(input, blur) {
             // appends $ to value, validates decimal side
             // and puts cursor back in right position.
             // get input value
@@ -403,7 +403,7 @@
             var updated_len = input_val.length;
             caret_pos = updated_len - original_len + caret_pos;
             input[0].setSelectionRange(caret_pos, caret_pos);
-        }
+        }*/
 
         $(document).on('click', '#add-remove-mktd', function (e) { // MJ: FUNCIÓN PARA AGREGAR A MKTD EN UNA COMISIÓN
             document.getElementById("add-remove-mktd").disabled = true;
