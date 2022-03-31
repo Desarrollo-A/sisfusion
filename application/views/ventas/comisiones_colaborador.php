@@ -41,14 +41,14 @@
             $forma_pago = $row->forma_pago;
             if( $forma_pago  == 2 ||  $forma_pago == '2'){
                 if(count($opn_cumplimiento) == 0){
-                    $cadena = '<a href="https://maderascrm.gphsis.com/index.php/Usuarios/configureProfile"> <span class="label label-danger" style="background:red;">  SIN OPINIÓN DE CUMPLIMIENTO, CLIC AQUI PARA SUBIRLA ></span> </a>';
+                    $cadena = '<a href="'.base_url().'index.php/Usuarios/configureProfile"> <span class="label label-danger" style="background:red;">  SIN OPINIÓN DE CUMPLIMIENTO, CLIC AQUI PARA SUBIRLA ></span> </a>';
                 } 
                 else{
                     if($opn_cumplimiento[0]['estatus'] == 1){
                         $cadena = '<button type="button" class="btn btn-info subir_factura_multiple" >SUBIR FACTURAS</button>';
                     }
                     else if($opn_cumplimiento[0]['estatus'] == 0){
-                        $cadena ='<a href="https://maderascrm.gphsis.com/index.php/Usuarios/configureProfile"> <span class="label label-danger" style="background:orange;">  SIN OPINIÓN DE CUMPLIMIENTO, CLIC AQUI PARA SUBIRLA</span> </a>';
+                        $cadena ='<a href="'.base_url().'index.php/Usuarios/configureProfile"> <span class="label label-danger" style="background:orange;">  SIN OPINIÓN DE CUMPLIMIENTO, CLIC AQUI PARA SUBIRLA</span> </a>';
 
                     }
                     else if($opn_cumplimiento[0]['estatus'] == 2){
@@ -390,7 +390,7 @@
                                     <div class="tab-content p-2">
                                         <div class="tab-pane active" id="nuevas-1">
                                             <div class="encabezadoBox">
-                                                <p class="card-title pl-1">Comisiones nuevas disponibles para solicitar tu pago, si requieres ver más detalles como lo pagado y lo pendiente, podrás consultarlo en el <a href="https://maderascrm.gphsis.com/Comisiones/historial_colaborador"><b>historial</b></a>.</p>
+                                                <p class="card-title pl-1">Comisiones nuevas disponibles para solicitar tu pago, si requieres ver más detalles como lo pagado y lo pendiente, podrás consultarlo en el <a href="<?=base_url()?>Comisiones/historial_colaborador"><b>historial</b></a>.</p>
                                                 
                                                 <?php
                                                 if($this->session->userdata('forma_pago') == 3){
@@ -494,7 +494,7 @@
                                         </div>
                                         <div class="tab-pane" id="proceso-1">
                                             <div class="encabezadoBox">
-                                                <p class="card-title pl-1">Comisiones en revision,  enviadas a contraloria para aplicar tu pago, si requieres ver más detalles como lo pagado y lo pendiente, podrás consultarlo en el <a href="https://maderascrm.gphsis.com/Comisiones/historial_colaborador"><b>historial</b></a>.</p>
+                                                <p class="card-title pl-1">Comisiones en revision,  enviadas a contraloria para aplicar tu pago, si requieres ver más detalles como lo pagado y lo pendiente, podrás consultarlo en el <a href="<?=base_url()?>Comisiones/historial_colaborador"><b>historial</b></a>.</p>
                                             </div>
                                             <div class="toolbar">
                                                 <div class="container-fluid p-0">
@@ -546,7 +546,7 @@
                                         </div>
                                         <div class="tab-pane" id="proceso-2">
                                             <div class="encabezadoBox">
-                                                <p class="card-title pl-1">Comisiones en proceso de pago por parte de INTERNOMEX. Si requieres ver más detalles como lo pagado y lo pendiente, podrás consultarlo en el <a href="https://maderascrm.gphsis.com/Comisiones/historial_colaborador"><b>historial</b></a>.</p>
+                                                <p class="card-title pl-1">Comisiones en proceso de pago por parte de INTERNOMEX. Si requieres ver más detalles como lo pagado y lo pendiente, podrás consultarlo en el <a href="<?=base_url()?>Comisiones/historial_colaborador"><b>historial</b></a>.</p>
                                             </div>
                                             <div class="toolbar">
                                                 <div class="container-fluid p-0">
@@ -598,7 +598,7 @@
                                         </div>
                                         <div class="tab-pane" id="otras-1">
                                             <div class="encabezadoBox">
-                                                <p class="card-title pl-1">Comisiones pausadas, para ver el motivo puede verlo en el botón de detalles. Si requieres ver más detalles como lo pagado y lo pendiente, podrás consultarlo en el <a href="https://maderascrm.gphsis.com/Comisiones/historial_colaborador"><b>historial</b></a>.</p>
+                                                <p class="card-title pl-1">Comisiones pausadas, para ver el motivo puede verlo en el botón de detalles. Si requieres ver más detalles como lo pagado y lo pendiente, podrás consultarlo en el <a href="<?=base_url()?>Comisiones/historial_colaborador"><b>historial</b></a>.</p>
                                             </div>
                                             <div class="toolbar">
                                                 <div class="container-fluid p-0">
