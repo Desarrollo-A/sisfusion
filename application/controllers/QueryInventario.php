@@ -437,7 +437,21 @@
 			echo json_encode(array());
 		}
 	}
+    function getLotesToEdit() {
+        $objDatos = json_decode(file_get_contents("php://input"));
+        /*print_r($objDatos);
+        exit;*/
 
+
+        $lotes = $this->model_queryinventario->getLoteToEdit($objDatos->id_lote);
+
+
+        if($lotes != null) {
+            echo json_encode($lotes);
+        } else {
+            echo json_encode(array());
+        }
+    }
 
 	function getLoteDisponibleA() {
 

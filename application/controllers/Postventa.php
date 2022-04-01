@@ -613,7 +613,7 @@ class Postventa extends CI_Controller
         }elseif ($type == 2) {
             $motivos_rechazo = $_POST['comentarios'];
             $informacion = $this->Postventa_model->changeStatus($id_solicitud, $type, 'NULL', $motivos_rechazo);
-        } else {
+        }else {
             $informacion = $this->Postventa_model->changeStatus($id_solicitud, $type, 'Cambio de fecha', 0);
         }
 
@@ -1365,6 +1365,7 @@ class Postventa extends CI_Controller
             echo json_encode(array());
     }
 
+    //NOTARIA
     public function nuevoNotario()
     {
         $idSolicitud = $_POST['idSolicitud'];
@@ -1395,25 +1396,39 @@ class Postventa extends CI_Controller
     public function rechazarNotaria()
     {
         $idSolicitud = $_POST['idSolicitud'];
+        $rol = $this->session->userdata('id_rol');
 
         $informacion = $this->Postventa_model->rechazarNotaria($idSolicitud);
         return $informacion;
+
+        return $this->Postventa_model->rechazarNotaria($idSolicitud, $rol);
     }
 
     //OBSERVACIONES
     public function observacionesPostventa()
     {
-        $idSolicitud = $_POST['idSolicitud'];
+        $idSolicitud = $_GET['idSolicitud'];
+        $rol = $this->session->userdata('id_rol');
 
         $informacion = $this->Postventa_model->updateObservacionesPostventa($idSolicitud);
         return $informacion;
+
+        return $this->Postventa_model->updateObservacionesPostventa($idSolicitud, $rol);
+    }
+
+    public function observacionesProyectos()
+    {
+        $idSolicitud = $_GET['idSolicitud'];
+        $rol = $this->session->userdata('id_rol');
+
+        return $this->Postventa_model->updateObservacionesProyectos($idSolicitud, $rol);
     }
 
     public function mailObservaciones()
     {
         $idSolicitud = $_POST['idSolicitud'];
-        $observaciones = $_POTS['observaciones'];
-
+        $observaciones = $_POST['observaciones'];
+        
         $this->load->library('email');
         $mail = $this->email;
         $mail->from('noreply@ciudadmaderas.com', 'Ciudad Maderas');

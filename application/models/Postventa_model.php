@@ -340,7 +340,8 @@ function checkBudgetInfo($idSolicitud){
         $rol = $this->session->userdata('id_rol');
         
         $this->db->query("UPDATE solicitud_escrituracion SET idNotaria = '', estatus = 10 WHERE idSolicitud = $idSolicitud;");
-        return $this->db->query("INSERT INTO control_estatus VALUES(11, 59, 1, GETDATE(), 13, $idSolicitud, $rol, 10, 'Se rechazo la Notaria', 0);");
+        
+        return $this->db->query("INSERT INTO control_estatus VALUES(11, 59, 2, GETDATE(), 12, $idSolicitud, $rol, 10, 'Se rechazo la Notaria', 0);");
     }
 
     function getEstatusConstruccion()
@@ -360,10 +361,18 @@ function checkBudgetInfo($idSolicitud){
         $idSolicitud = $_POST['idSolicitud'];
         $rol = $this->session->userdata('id_rol');
 
-        $this->db->query("UPDATE solicitud_escrituracion SET estatus = 10 WHERE idSolicitud = $idSolicitud");
-        return $this->db->query("INSERT INTO control_estatus VALUES(13, 59, 1, GETDATE(), 14, $idSolicitud, $rol, 10, 'Corrección Documentos', 0);");
+        $this->db->query("UPDATE solicitud_escrituracion SET estatus = 10 WHERE idSolicitud = $idSolicitud;");
+
+        return $this->db->query("INSERT INTO control_estatus VALUES(13, 59, 3, GETDATE(), 14, $idSolicitud, $rol, 10, 'Corrección Documentos', 0);");
     }
 
+    function updateObservacionesProyectos() {
+        $idSolicitud = $_POST['idSolicitud'];
+        $rol = $this->session->userdata('id_rol');
+
+        return $this->db->query("INSERT INTO control_estatus VALUES(13, 59, 3, GETDATE(), 14, $idSolicitud, $rol, 10, 'Se envío correo a Proyectos', 0);");
+    }
+ 
     function getSolicitudEscrituracion($idSolicitud)
     {
         $idSolicitud = $_POST['idSolicitud'];

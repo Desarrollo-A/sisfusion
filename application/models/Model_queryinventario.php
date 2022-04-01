@@ -67,6 +67,16 @@
 	}
 
 	/*ALL LOTES*/
+    public function getLoteToEdit($lote){
+        $this->db->select('idLote,nombreLote, total, sup');
+        $this->db->where('idLote', $lote);
+        //$this->db->where('lotes.status','1');
+        $query = $this->db->get('sisfusion.dbo.lotes');
+        if($query){
+            $query = $query->result_array();
+            return $query;
+        }
+    }
 	public function getLotesDisCorridaAll($condominio) {
 
 		$this->db->select('idLote,nombreLote, total, sup');
