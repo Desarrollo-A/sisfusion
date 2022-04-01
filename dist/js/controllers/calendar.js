@@ -114,15 +114,19 @@ document.addEventListener('DOMContentLoaded', function() {
     $('#dateEnd2').prop('min', $(this).val());
   });
 
-  $("#insert_appointment_form").on('submit', function(e) {
-    e.preventDefault();
-    var formData = new FormData(this);
-    formData.append('estatus_particular',$('#estatus_particular').val());
-    formData.append('id_prospecto_estatus_particular',  $("#prospecto").val());
-    $.ajax({
+  document.querySelector('#insert_appointment_form')
+    .addEventListener('submit', e => {
+      e.preventDefault();
+      const data = Object.fromEntries(
+        new FormData(e.target)
+      )
+      
+      data['estatus_particular'] = $('#estatus_particular').val();
+      data['id_prospecto_estatus_particular'] = $("#prospecto").val()
+      $.ajax({
         type: 'POST',
         url: '../Calendar/insertRecordatorio',
-        data: formData,
+        data: JSON.stringify(data),
         contentType: false,
         cache: false,
         processData: false,
@@ -140,8 +144,37 @@ document.addEventListener('DOMContentLoaded', function() {
             $('#spiner-loader').addClass('hide');
             alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
         }
+      });
     });
-  });
+
+  // $("#insert_appointment_form").on('submit', function(e) {
+  //   e.preventDefault();
+  //   var formData = new FormData(this);
+  //   formData.append('estatus_particular',$('#estatus_particular').val());
+  //   formData.append('id_prospecto_estatus_particular',  $("#prospecto").val());
+  //   $.ajax({
+  //       type: 'POST',
+  //       url: '../Calendar/insertRecordatorio',
+  //       data: formData,
+  //       contentType: false,
+  //       cache: false,
+  //       processData: false,
+  //       beforeSend: function() {
+  //         $('#spiner-loader').removeClass('hide');
+  //       },
+  //       success: function(data) {
+  //         calendar.refetchEvents();
+  //         data = JSON.parse(data);
+  //         $('#spiner-loader').addClass('hide');
+  //         alerts.showNotification("top", "right", data["message"], (data["status" == 503]) ? "danger" : (data["status" == 400]) ? "warning" : "success");
+  //         $('#agendaInsert').modal('toggle');
+  //       },
+  //       error: function() {
+  //           $('#spiner-loader').addClass('hide');
+  //           alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+  //       }
+  //   });
+  // });
 
   $("#edit_appointment_form").on('submit', function(e) {
     e.preventDefault();
@@ -279,157 +312,3 @@ document.addEventListener('DOMContentLoaded', function() {
     $("#description").val('');
     $("#comodinDIV").addClass('hide');
   }
-
-
-    var CLIENT_ID = '848186048646-ugthma1qfj0ocamf1jeju4ahdi3n7qop.apps.googleusercontent.com';
-    var API_KEY = 'AIzaSyDHmkT8uTSwoVc7_US7Rz8NE30su0x3L50';
-
-    // Array of API discovery doc URLs for APIs used by the quickstart
-    var DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest"];
-
-    // Authorization scopes required by the API; multiple scopes can be
-    // included, separated by spaces.
-    var SCOPES = "https://www.googleapis.com/auth/calendar";
-
-    var authorizeButton = document.getElementById('authorize_button');
-    var signoutButton = document.getElementById('signout_button');
-
-    function handleClientLoad() {
-      gapi.load('client:auth2', initClient);
-    }
-
-    function initClient() {
-      gapi.client.init({
-        apiKey: API_KEY,
-        clientId: CLIENT_ID,
-        discoveryDocs: DISCOVERY_DOCS,
-        scope: SCOPES
-      }).then(function () {
-        // Listen for sign-in state changes.
-        gapi.auth2.getAuthInstance().isSignedIn.listen(updateSigninStatus);
-
-        // Handle the initial sign-in state.
-        updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
-        authorizeButton.onclick = handleAuthClick;
-        signoutButton.onclick = handleSignoutClick;
-      }, function(error) {
-        appendPre(JSON.stringify(error, null, 2));
-      });
-    }
-
-    function updateSigninStatus(isSignedIn) {
-      if (isSignedIn) {
-        authorizeButton.style.display = 'none';
-        signoutButton.style.display = 'block';
-        listUpcomingEvents();
-        listCalendars();
-        insertEvent();
-      } else {
-        authorizeButton.style.display = 'block';
-        signoutButton.style.display = 'none';
-      }
-    }
-
-    /**
-     *  Sign in the user upon button click.
-     */
-    function handleAuthClick(event) {
-      gapi.auth2.getAuthInstance().signIn();
-    }
-
-    /**
-     *  Sign out the user upon button click.
-     */
-    function handleSignoutClick(event) {
-      gapi.auth2.getAuthInstance().signOut();
-    }
-
-    /**
-     * Append a pre element to the body containing the given message
-     * as its text node. Used to display the results of the API call.
-     *
-     * @param {string} message Text to be placed in pre element.
-     */
-    function appendPre(message) {
-      var pre = document.getElementById('content');
-      var textContent = document.createTextNode(message + '\n');
-      pre.appendChild(textContent);
-    }
-
-    function listUpcomingEvents() {
-      gapi.client.calendar.events.list({
-        'calendarId': 'primary',
-        'timeMin': (new Date()).toISOString(),
-        'showDeleted': false,
-        'singleEvents': true,
-        'maxResults': 10,
-        'orderBy': 'startTime'
-      }).then(function(response) {
-        var events = response.result.items;
-        appendPre('Upcoming events:');
-
-        if (events.length > 0) {
-          for (i = 0; i < events.length; i++) {
-            var event = events[i];
-            var when = event.start.dateTime;
-            if (!when) {
-              when = event.start.date;
-            }
-            appendPre(event.summary + ' (' + when + ')')
-          }
-        } else {
-          appendPre('No upcoming events found.');
-        }
-      });
-    }
-
-    function listCalendars()
-{
-     var request = gapi.client.calendar.calendarList.list();
-
-     request.execute(function(resp){
-             var calendars = resp.items;
-             console.log(calendars);
-     });
-}
-
-
-var events = {
-  'summary': 'Google I/O 2015',
-  'location': '800 Howard St., San Francisco, CA 94103',
-  'description': 'A chance to hear more about Google\'s developer products.',
-  'start': {
-    'dateTime': '2022-04-28T09:00:00-07:00',
-    'timeZone': 'America/Mexico_City'
-  },
-  'end': {
-    'dateTime': '2022-04-28T17:00:00-07:00',
-    'timeZone': 'America/Mexico_City'
-  },
-  'recurrence': [
-    'RRULE:FREQ=DAILY;COUNT=2'
-  ],
-  'attendees': [
-    {'email': 'lpage@example.com'},
-    {'email': 'sbrin@example.com'}
-  ],
-  'reminders': {
-    'useDefault': false,
-    'overrides': [
-      {'method': 'email', 'minutes': 24 * 60},
-      {'method': 'popup', 'minutes': 10}
-    ]
-  }
-};
-
-function insertEvent(){
-  var request = gapi.client.calendar.events.insert({
-    'calendarId': 'primary',
-    'resource': events
-  });
-  
-  request.execute(function(events) {
-    appendPre('Event created: ' + events.htmlLink);
-  });
-}
-

@@ -24,16 +24,16 @@
                     <div class="card">
                         <div class="card-content">
                             <div id='calendar'></div>
+                            <button id="authorize_button" style="display: none;">Authorize</button>
+                            <button id="signout_button" style="display: none;">Sign Out</button>
+
+                            <pre id="content" style="white-space: pre-wrap;"></pre>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <button id="authorize_button" style="display: none;">Authorize</button>
-    <button id="signout_button" style="display: none;">Sign Out</button>
-    <pre id="content" style="white-space: pre-wrap;"></pre>
-
     <?php include 'common_modals.php' ?>
 </div>
 </div><!--main-panel close-->
@@ -44,10 +44,9 @@
 
 <script src="<?= base_url() ?>dist/assets/js/bootstrap-datetimepicker.js"></script>
 <script src="<?=base_url()?>dist/js/controllers/calendar.js"></script>
-<script async defer src="https://apis.google.com/js/api.js"
-      onload="this.onload=function(){};handleClientLoad()"
-      onreadystatechange="if (this.readyState === 'complete') this.onload()">
-    </script>
+<script async defer src="https://apis.google.com/js/api.js" onload="this.onload=function(){};handleClientLoad()" onreadystatechange="if (this.readyState === 'complete') this.onload()"></script>
+<script src="<?=base_url()?>dist/js/googleCalendarConnection.js"></script>
+
 <script>
     userType = <?= $this->session->userdata('id_rol') ?> ;
     idUser = <?= $this->session->userdata('id_usuario') ?> ;
