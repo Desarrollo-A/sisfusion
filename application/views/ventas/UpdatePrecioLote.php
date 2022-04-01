@@ -91,11 +91,11 @@ if ($this->session->userdata('id_rol') == "13"  || $this->session->userdata('id_
 </style>
 
 
-  <div id="myModal" class="modal fade" role="dialog">
-        <div class="modal-dialog">
+  <!--<div id="myModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">-->
 
             <!-- Modal content-->
-            <div class="modal-content">
+            <!--<div class="modal-content">
                 <div class="modal-header">
                     <button type="button"class="close" data-dismiss="modal">&times;</button>
                     <h4 class="modal-title">Reporte dispersion</h4>
@@ -123,7 +123,7 @@ if ($this->session->userdata('id_rol') == "13"  || $this->session->userdata('id_
             </div>
 
         </div>
-    </div>
+    </div>-->
 
 
 
@@ -143,7 +143,7 @@ if ($this->session->userdata('id_rol') == "13"  || $this->session->userdata('id_
 
 
 <!-- modal  AGREGAR PLAN DE ENGANCHE-->
-<div class="modal fade modal-alertas" id="modal_enganche" role="dialog">
+<!--<div class="modal fade modal-alertas" id="modal_enganche" role="dialog">
     <div class="modal-dialog modal-md">
         <div class="modal-content">
             <div class="modal-header bg-red">
@@ -153,7 +153,7 @@ if ($this->session->userdata('id_rol') == "13"  || $this->session->userdata('id_
             </form>
         </div>
     </div>
-</div>
+</div>-->
 <!-- modal -->
 
 
@@ -573,7 +573,7 @@ alerts.showNotification("top", "right", "Modificación almancenada con éxito.",
 
 
 
-$('#filtro33').change(function(ruta){
+/*$('#filtro33').change(function(ruta){
         residencial = $('#filtro33').val();
         $("#filtro44").empty().selectpicker('refresh');
             $.ajax({
@@ -593,13 +593,13 @@ $('#filtro33').change(function(ruta){
 
                 }
             });
-    });
+    });*/
 
-    $('#filtro44').change(function(ruta){
+    /*$('#filtro44').change(function(ruta){
         conodominio = $('#filtro44').val();
         $("#filtro55").empty().selectpicker('refresh');
             $.ajax({
-                url: '<?=base_url()?>Comisiones/lista_lote/'+conodominio,
+                url: '<//?=base_url()?>Comisiones/lista_lote/'+conodominio,
                 type: 'post',
                 dataType: 'json',
                 success:function(response){
@@ -616,7 +616,7 @@ $('#filtro33').change(function(ruta){
                 }
             });
 
-    });
+    });*/
 
    
 
@@ -647,11 +647,11 @@ document.getElementById('msj').innerHTML = '';
        
 
     }
-    $('#filtro55').change(function(ruta){
+    /*$('#filtro55').change(function(ruta){
         infolote = $('#filtro55').val();
         datos = infolote.split(',');
         idLote = datos[0];
-        $.post("<?=base_url()?>index.php/Comisiones/getComisionesLoteSelected/"+idLote, function (data) {
+        $.post("<//?=base_url()?>index.php/Comisiones/getComisionesLoteSelected/"+idLote, function (data) {
   if( data.length < 1){
     document.getElementById('msj').innerHTML = '';
     document.getElementById('btn-aceptar').disabled  = false;
@@ -677,7 +677,7 @@ var selected = select.options[select.selectedIndex].text;
 
 
 
-    });
+    });*/
 
 $("#tabla_ingresar_9").ready( function(){
 
@@ -965,9 +965,9 @@ cache: false,
 
 
 /*-----------------------------PROCESO DE REUBICACIÓN----------------------------------*/
-$("#tabla_ingresar_9 tbody").on("click", ".reubicar", function(){
+/*$("#tabla_ingresar_9 tbody").on("click", ".reubicar", function(){
 
-    $.post("<?=base_url()?>index.php/Contratacion/lista_proyecto", function (data) {
+    $.post("<//?=base_url()?>index.php/Contratacion/lista_proyecto", function (data) {
             var len = data.length;
             for (var i = 0; i < len; i++) {
                 var id = data[i]['idResidencial'];
@@ -1005,7 +1005,7 @@ $("#tabla_ingresar_9 tbody").on("click", ".reubicar", function(){
             $("#modal_reubicacion .modal-footer").append(`<br><div class="row"><div class="col-md-12"><center><input type="submit" class="btn btn-success" id="btn-aceptar" value="ACEPTAR"></center></div></div>`);
 //            $("#modal_pagadas .modal-body").append('<br><div class="row"><div class="col-md-12"><center><input type="submit" class="btn btn-success" value="ACEPTAR"></center></div></div>');
         $("#modal_reubicacion").modal();
-        });
+        });*/
 
 
 
@@ -1111,7 +1111,7 @@ $("#tabla_ingresar_9 tbody").on("click", ".cambiar_precio", function(){
  
  
 
-     $("#tabla_ingresar_9 tbody").on("click", ".liquidarPago", function(){
+     /*$("#tabla_ingresar_9 tbody").on("click", ".liquidarPago", function(){
         var tr = $(this).closest('tr');
             var row = tabla_1.row( tr );
             idLote = $(this).val();
@@ -1145,7 +1145,7 @@ console.log(parametros);
     });
 
            
-     });
+     });*/
 
     
 
@@ -1536,7 +1536,7 @@ jQuery.extend(jQuery.validator.messages, {
 
 
 
-jQuery(document).ready(function(){
+/*jQuery(document).ready(function(){
     $('[data-toggle="tooltip"]').tooltip();
 
 
@@ -1558,16 +1558,16 @@ jQuery(document).ready(function(){
     formatCurrency($('#inputEdit'));
     }
 
-})
+})*/
 
-$('.decimals').on('input', function () {
+/*$('.decimals').on('input', function () {
   this.value = this.value.replace(/[^0-9,.]/g, '').replace(/,/g, '.');
-});
+});*/
 
 
-function closeModalEng(){
+/*function closeModalEng(){
     $("#modal_enganche").modal('toggle');
-}
+}*/
 
 function formatMoney( n ) {
         var c = isNaN(c = Math.abs(c)) ? 2 : c,

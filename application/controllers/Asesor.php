@@ -30,6 +30,17 @@ class Asesor extends CI_Controller
         $this->load->view('template/footer');
     }
 
+    public function homeView()
+    {
+        if ($this->session->userdata('id_rol') == FALSE || $this->session->userdata('id_rol') != '61')
+            redirect(base_url() . 'login');
+        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
+        $this->load->view('template/header');
+        $this->load->view('template/home', $datos);
+        $this->load->view('template/footer');
+    }
+
+
     public function dataPrueba($idCliente, $onlyView)
     {
         $datos["cliente"] = $this->registrolote_modelo->selectDS_ds($idCliente);
@@ -5427,5 +5438,64 @@ class Asesor extends CI_Controller
         }
     }
 
+    function getAsesores()
+    {
+        $data = $this->Asesor_model->getAsesores($this->session->userdata('id_usuario'));
+        if ($data != null)
+            echo json_encode($data);
+        else
+            echo json_encode(array());
+    }
 
+    function getAsesores2()
+    {
+        $data = $this->Asesor_model->getAsesores2($this->session->userdata('id_usuario'), $_POST['value']);
+        if ($data != null)
+            echo json_encode($data);
+        else
+            echo json_encode(array());
+    }
+
+    function saveVentaCompartida()
+    {
+        $asesor1 = $_POST['asesor1'];
+        $asesor2 = $_POST['asesor2'];
+        $id_cliente = $_POST['id_cliente'];
+
+        $count = 0;
+        $arrAsesor = array($asesor1, $asesor2);
+
+        if($_POST['ventaC'] == 'uno'){
+            if($asesor2 != ''){
+                $count = 2;
+            }else{
+                $count = 1;
+            }
+            for($x=0;$x<$count;$x++){
+                $dataAsesor = $this->Asesor_model->getAsesorData($arrAsesor[$x]);
+                $update = array(
+                    "id_cliente" => $id_cliente,  
+                    "id_asesor" =>  $dataAsesor->asesor,  
+                    "id_coordinador" => $dataAsesor->coord,  
+                    "id_gerente" => $dataAsesor->ger,  
+                    "estatus" => 1,
+                    "fecha_creacion" => date("Y-m-d H:i:s"),  
+                    "creado_por" => $this->session->userdata('id_usuario'),  
+                    "id_regional" => $dataAsesor->regional,  
+                    "id_subdirector" => $dataAsesor->subdir 
+                );
+                $data = $this->Asesor_model->saveVentaCompartida($update);
+                if($data == true){
+                    $this->Asesor_model->updateFlagCompartida($id_cliente);
+                }
+            }
+        }else{
+            $data = $this->Asesor_model->updateFlagCompartida($id_cliente);
+        }
+        
+        if ($data != null)
+            echo json_encode($data);
+        else
+            echo json_encode(array());
+    }
 }

@@ -874,9 +874,9 @@
             }
         });
 
-        $(document).on("click", ".btn-historial-lo", function(){
+        /*$(document).on("click", ".btn-historial-lo", function(){
             window.open(url+"Comisiones/getHistorialEmpresa", "_blank");
-        });
+        });*/
 
         function preview_info(archivo){
             $("#documento_preview .modal-dialog").html("");
@@ -906,13 +906,13 @@
             }
         }
 
-        function cleanComments(){
+        /*function cleanComments(){
             var myCommentsList = document.getElementById('documents');
             myCommentsList.innerHTML = '';
 
             var myFactura = document.getElementById('facturaInfo');
             myFactura.innerHTML = '';
-        }
+        }*/
 
 
         $("#roles").change(function() {
@@ -1023,7 +1023,7 @@
             }
         });
 
-        $("#numeroP").change(function(){
+        /*$("#numeroP").change(function(){
     
             let monto = parseFloat($('#monto').val());
             let cantidad = parseFloat($('#numeroP').val());
@@ -1045,7 +1045,7 @@
                     $('#pago').val(formatMoney(0));
                 }
             }
-        });
+        });*/
 
         function verificar(){
             let disponible = parseFloat($('#valor_comision').val()).toFixed(2);

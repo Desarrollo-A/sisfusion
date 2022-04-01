@@ -2,7 +2,7 @@
     date_default_timezone_set ('America/Mexico_City');
     setlocale(LC_TIME, 'spanish');
 
-    $this->load->view('template/sidebar', $dato);
+    $this->load->view('template/sidebar', "");
     
 
 
@@ -36,41 +36,41 @@
     for ($i = 0; $i < COUNT($dataSlp); $i++) {
         $slp_name[$i] = "'".$dataSlp[$i]->month_name."'";
         $slp_number[$i] = $dataSlp[$i]->prospects_number;
-        $t1 += $slp_number[$i];
+        $t1 += intval($slp_number[$i]);
     }
 
     // QUERÉTARO
     for ($i = 0; $i < COUNT($dataQro); $i++) {
         $qro_name[$i] = "'".$dataQro[$i]->month_name."'";
         $qro_number[$i] = $dataQro[$i]->prospects_number;
-        $t2 += $qro_number[$i];
+        $t2 += intval($qro_number[$i]);
     }
 
     // PENÍNSULA
     for ($i = 0; $i < COUNT($dataPen); $i++) {
         $pen_name[$i] = "'".$dataPen[$i]->month_name."'";
         $pen_number[$i] = $dataPen[$i]->prospects_number;
-        $t3 += $pen_number[$i];
+        $t3 += intval($pen_number[$i]);
     }
 
     // CDMX
     for ($i = 0; $i < COUNT($dataCdmx); $i++) {
         $cdmx_name[$i] = "'".$dataCdmx[$i]->month_name."'";
         $cdmx_number[$i] = $dataCdmx[$i]->prospects_number;
-        $t4 += $cdmx_number[$i];
+        $t4 += intval($cdmx_number[$i]);
     }
 
     // LEÓN
     for ($i = 0; $i < COUNT($dataLeo); $i++) {
         $leo_name[$i] = "'".$dataLeo[$i]->month_name."'";
         $leo_number[$i] = $dataLeo[$i]->prospects_number;
-        $t5 += $leo_number[$i];
+        $t5 += intval($leo_number[$i]);
     }
 
     // CANCÚN
     for ($i = 0; $i < COUNT($dataCan); $i++) {
         $can_name[$i] = "'".$dataCan[$i]->month_name."'";
         $can_number[$i] = $dataCan[$i]->prospects_number;
-        $t6 += $can_number[$i];
+        $t6 += intval($can_number[$i]);
     }
 ?>

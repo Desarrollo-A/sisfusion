@@ -151,6 +151,12 @@
                                         <th>PRESUPUESTO A PLAZOS</th>
                                         <th>$ M2 TERRENO</th>
                                         <th>COSTO TERRENO</th>
+                                        <th>UNIDAD</th>
+                                        <th>CALLE EXACTA</th>
+                                        <th># EXTERIOR</th>
+                                        <th>CODIGO POSTAL</th>
+                                        <th>COLONIA</th>
+                                        <th>FOLIO REAL</th>
                                         <th>OBSERVACIONES</th>
                                     </tr>
                                     </thead>

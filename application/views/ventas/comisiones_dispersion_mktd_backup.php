@@ -146,7 +146,7 @@ else
     </div>
 </div>
 
-<div class="modal fade modal-alertas" id="modalParcialidad" role="dialog">
+<!--<div class="modal fade modal-alertas" id="modalParcialidad" role="dialog">
     <div class="modal-dialog modal-sm">
         <div class="modal-content">
             <div class="modal-header bg-red">
@@ -158,9 +158,9 @@ else
             </form>
         </div>
     </div>
-</div>
+</div>-->
  
-<div class="modal fade" id="seeInformationModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+<!--<div class="modal fade" id="seeInformationModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog modal-md modal-dialog-scrollable" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -172,13 +172,13 @@ else
             <div class="modal-body">
                 <div role="tabpanel">
                     <!-- Nav tabs -->
-                    <ul class="nav nav-tabs" role="tablist" style="background: #003d82;">
+                    <!--<ul class="nav nav-tabs" role="tablist" style="background: #003d82;">
                         <li role="presentation" class="active"><a href="#documents" aria-controls="documents" role="tab" data-toggle="tab">Documentación</a></li>
                         <li role="presentation"><a href="#facturaInfo" aria-controls="facturaInfo" role="tab" data-toggle="tab">Datos factura</a></li>
                         <li role="presentation"><a href="#changelogTab" aria-controls="changelogTab" role="tab" data-toggle="tab">Bitácora de cambios</a></li>
-                    </ul>
+                    </ul>-->
                     <!-- Tab panes -->
-                    <div class="tab-content">
+                    <!--<div class="tab-content">
                         <div role="tabpanel" class="tab-pane active documents" id="documents"></div>
                         <div role="tabpanel" class="tab-pane facturaInfo" id="facturaInfo"></div>
                         <div role="tabpanel" class="tab-pane changelogTab" id="changelogTab"></div>
@@ -190,9 +190,9 @@ else
             </div>
         </div>
     </div>
-</div>
+</div>-->
 
-<div class="modal fade modal-alertas" id="modal_documentacion" role="dialog">
+<!--<div class="modal fade modal-alertas" id="modal_documentacion" role="dialog">
         <div class="modal-dialog" style="width:800px; margin-top:20px">
             <div class="modal-content">
                 <div class="modal-body">
@@ -201,15 +201,15 @@ else
                 </div>
             </div>
         </div>
-    </div>
+    </div>-->
 
-<div class="modal fade bd-example-modal-sm" id="myModalEnviadas" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+<!--<div class="modal fade bd-example-modal-sm" id="myModalEnviadas" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-sm">
     <div class="modal-content">
       <div class="modal-body"></div>
     </div>
   </div>
-</div>
+</div>-->
 
 <div class="modal fade modal-alertas" id="documento_preview" role="dialog">
     <div class="modal-dialog" style= "margin-top:20px;"></div>
@@ -1288,12 +1288,12 @@ $('#tabla_planes').on('xhr.dt', function ( e, settings, json, xhr ) {
         return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
     };
 
-    $(document).on( "click", ".subir_factura", function(){
+    /*$(document).on( "click", ".subir_factura", function(){
         resear_formulario();
         id_comision = $(this).val();
         link_post = "Comisiones/guardar_solicitud/"+id_comision;
         $("#modal_formulario_solicitud").modal( {backdrop: 'static', keyboard: false} );
-        });
+        });*/
 
 
     //FUNCION PARA LIMPIAR EL FORMULARIO CON DE PAGOS A PROVEEDOR.
@@ -1577,7 +1577,7 @@ $('#tabla_planes').on('xhr.dt', function ( e, settings, json, xhr ) {
 
 
 
-    function calcularMontoParcialidad() {
+    /*function calcularMontoParcialidad() {
         // $('#pagoCon').val(0);
         $precioFinal = parseFloat($('#value_pago_cliente').val());
         $precioNuevo = parseFloat($('#new_value_parcial').val());
@@ -1594,14 +1594,14 @@ $('#tabla_planes').on('xhr.dt', function ( e, settings, json, xhr ) {
             $('#label_estado').append('<label>MONTO VALIDO</label>');
         }
         // validateAdvance();
-    }
+    }*/
 
 
 // location.reload();
 
 
 
-    function preview_info(archivo){
+    /*function preview_info(archivo){
     $("#documento_preview .modal-dialog").html("");
     $("#documento_preview").css('z-index', 9999);
     archivo = url+"dist/documentos/"+archivo+"";
@@ -1627,7 +1627,7 @@ $('#tabla_planes').on('xhr.dt', function ( e, settings, json, xhr ) {
         elemento += '</div>';
         $("#documento_preview .modal-dialog").append(elemento);
     }
-}
+}*/
 
 
 function cleanComments()
@@ -1641,9 +1641,9 @@ function cleanComments()
 }
 
 
-function fillFields (v) {
+/*function fillFields (v) {
     // alert(v.nombre);
-}
+}*/
 
 $(window).resize(function(){
         plaza_1.columns.adjust();

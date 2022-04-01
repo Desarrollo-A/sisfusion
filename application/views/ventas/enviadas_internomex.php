@@ -53,7 +53,7 @@
             </div>
         </div>
 
-        <div class="modal fade modal-alertas" id="modal_nuevas" role="dialog">
+        <!--<div class="modal fade modal-alertas" id="modal_nuevas" role="dialog">
             <div class="modal-dialog">
                 <div class="modal-content">
 
@@ -62,9 +62,9 @@
                     </form>
                 </div>
             </div>
-        </div>
+        </div>-->
 
-        <div class="modal fade modal-alertas" id="modal_despausar" role="dialog">
+        <!--<div class="modal fade modal-alertas" id="modal_despausar" role="dialog">
             <div class="modal-dialog">
                 <div class="modal-content">
 
@@ -73,9 +73,9 @@
                     </form>
                 </div>
             </div>
-        </div>
+        </div>-->
 
-        <div class="modal fade modal-alertas" id="modal_refresh" role="dialog">
+        <!--<div class="modal fade modal-alertas" id="modal_refresh" role="dialog">
             <div class="modal-dialog">
                 <div class="modal-content">
 
@@ -84,9 +84,9 @@
                     </form>
                 </div>
             </div>
-        </div>
+        </div>-->
 
-        <div class="modal fade modal-alertas" id="modal_documentacion" role="dialog">
+        <!--<div class="modal fade modal-alertas" id="modal_documentacion" role="dialog">
             <div class="modal-dialog" style="width:800px; margin-top:20px">
                 <div class="modal-content">
                     <div class="modal-body">
@@ -95,27 +95,27 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div>-->
     
         <div class="modal fade modal-alertas" id="documento_preview" role="dialog">
             <div class="modal-dialog" style= "margin-top:20px;"></div>
         </div>
 
-        <div class="modal fade bd-example-modal-sm" id="myModalEnviadas" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+        <!--<div class="modal fade bd-example-modal-sm" id="myModalEnviadas" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-sm">
                 <div class="modal-content">
                 <div class="modal-body"></div>
                 </div>
             </div>
-        </div>
+        </div>-->
 
-        <div class="modal fade bd-example-modal-sm" id="myModalTQro" tabindex="-1" role="dialog" aria-hidden="true">
+        <!--<div class="modal fade bd-example-modal-sm" id="myModalTQro" tabindex="-1" role="dialog" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-body"></div>
                 </div>
             </div>
-        </div>
+        </div>-->
         <!-- END Modals -->
 
         <div class="content boxContent">
@@ -638,7 +638,7 @@
                 $("#totpagarPen").html(formatMoney(totaPen));
             });
 
-            $("#tabla_asimilados tbody").on("click", ".cambiar_estatus", function(){
+            /*$("#tabla_asimilados tbody").on("click", ".cambiar_estatus", function(){
                 var tr = $(this).closest('tr');
                 var row = tabla_asimilados2.row( tr );
 
@@ -650,9 +650,9 @@
                 $("#modal_nuevas .modal-body").append('<input type="hidden" name="id_pago" value="'+row.data().id_pago_i+'">');
                 $("#modal_nuevas .modal-body").append('<div class="row"><div class="col-md-6"></div><div class="col-md-3"><input type="submit" class="btn btn-primary" value="PAUSAR"></div><div class="col-md-3"><button type="button" class="btn btn-danger" data-dismiss="modal">CANCELAR</button></div></div>');
                 $("#modal_nuevas").modal();
-            });
+            });*/
 
-            $("#tabla_asimilados tbody").on("click", ".despausar_estatus", function(){
+            /*$("#tabla_asimilados tbody").on("click", ".despausar_estatus", function(){
                 var tr = $(this).closest('tr');
                 var row = tabla_asimilados2.row( tr );
                 id_pago_i = $(this).val();
@@ -661,9 +661,9 @@
                 $("#modal_refresh .modal-body").append('<input class="idComPau" name="id_comision" type="text" value="'+row.data().id_comision+'" hidden>');
                 $("#modal_refresh .modal-body").append('<div class="row"><div class="col-md-6"></div><div class="col-md-3"><input type="submit" class="btn btn-primary" value="CONFIRMAR"></div><div class="col-md-3"><button type="button" class="btn btn-danger" data-dismiss="modal">CANCELAR</button></div></div>');
                 $("#modal_refresh").modal();
-            });
+            });*/
 
-            $("#tabla_asimilados tbody").on("click", ".consultar_documentos", function(){
+            /*$("#tabla_asimilados tbody").on("click", ".consultar_documentos", function(){
                 id_com = $(this).val();
                 id_pj = $(this).attr("data-personalidad");
                 $("#seeInformationModal").modal();
@@ -721,7 +721,7 @@
                     }
                     $("#seeInformationModal .facturaInfo").append('</div>');
                 });
-            });
+            });*/
         }
         //FIN TABLA  ****************************************************************************************
 
@@ -744,12 +744,12 @@
             return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
         };
 
-        function cancela(){
+        /*function cancela(){
             $("#modal_nuevas").modal('toggle');
-        }
+        }*/
 
         //Función para pausar la solicitud
-        $("#form_interes").submit( function(e) {
+        /*$("#form_interes").submit( function(e) {
             e.preventDefault();
         }).validate({
             submitHandler: function( form ) {
@@ -782,10 +782,10 @@
                     }
                 });
             }
-        });
+        });*/
 
         //Función para regresar a estatus 7 la solicitud
-        $("#form_refresh").submit( function(e) {
+        /*$("#form_refresh").submit( function(e) {
             e.preventDefault();
         }).validate({
             submitHandler: function( form ) {
@@ -816,9 +816,9 @@
                     }
                 });
             }
-        });
+        });*/
 
-        $("#form_despausar").submit( function(e) {
+        /*$("#form_despausar").submit( function(e) {
             e.preventDefault();
         }).validate({
             submitHandler: function( form ) {
@@ -850,13 +850,13 @@
                     }
                 });
             }
-        });
+        });*/
 
-        $(document).on("click", ".btn-historial-lo", function(){
+        /*$(document).on("click", ".btn-historial-lo", function(){
             window.open(url+"Comisiones/getHistorialEmpresa", "_blank");
-        });
+        });*/
 
-        function preview_info(archivo){
+        /*function preview_info(archivo){
             $("#documento_preview .modal-dialog").html("");
             $("#documento_preview").css('z-index', 9999);
             archivo = url+"dist/documentos/"+archivo+"";
@@ -882,14 +882,14 @@
                 elemento += '</div>';
                 $("#documento_preview .modal-dialog").append(elemento);
             }
-        }
+        }*/
 
-        function cleanComments(){
+        /*function cleanComments(){
             var myCommentsList = document.getElementById('documents');
             myCommentsList.innerHTML = '';
 
             var myFactura = document.getElementById('facturaInfo');
             myFactura.innerHTML = '';
-        }
+        }*/
     </script>    
 </body>

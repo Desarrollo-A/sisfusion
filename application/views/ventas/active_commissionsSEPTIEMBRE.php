@@ -583,7 +583,7 @@ return lblStats;
         $("#modal_pagadas").modal();
         });
 
-        $("#tabla_ingresar_9 tbody").on("click", ".pausar", function(){
+        /*$("#tabla_ingresar_9 tbody").on("click", ".pausar", function(){
             var tr = $(this).closest('tr');
             var row = tabla_1.row( tr );
             idLote = $(this).val();
@@ -598,11 +598,11 @@ return lblStats;
 
             $("#modal_pagadas .modal-body").append('<br><div class="row"><div class="col-md-12"><center><input type="submit" class="btn btn-success" value="ACEPTAR"></center></div></div>');
         $("#modal_pagadas").modal();
-        });
+        });*/
 
 
 
-        $("#tabla_ingresar_9 tbody").on("click", ".addPlanEnganche", function () {
+        /*$("#tabla_ingresar_9 tbody").on("click", ".addPlanEnganche", function () {
             var tr = $(this).closest('tr');
             var row = tabla_1.row(tr);
             idLote = $(this).val();
@@ -630,7 +630,7 @@ return lblStats;
             $("#modal_enganche .modal-body").append('<div class="row"><div class="col-md-12"><br></div></div>');
             $("#modal_enganche .modal-body").append('<div class="row"><div class="col-md-3"></div><div class="col-md-3"><input type="submit" class="btn btn-primary" value="ACEPTAR"></div><div class="col-md-3"><input type="button" class="btn btn-danger" value="CANCELAR" onclick="closeModalEng()"></div><div class="col-md-3"></div></div>');
             $("#modal_enganche").modal();
-        });
+        });*/
 
 
         $("#tabla_ingresar_9 tbody").on("click", ".verify_neodata", function () {
@@ -1201,7 +1201,7 @@ $("#form_pagadas").submit( function(e) {
 
 
 
-    $("#form_enganche").submit(function (e) {
+    /*$("#form_enganche").submit(function (e) {
         e.preventDefault();
     }).validate({
         submitHandler: function (form) {
@@ -1231,7 +1231,7 @@ $("#form_pagadas").submit( function(e) {
                 }
             });
         }
-    });
+    });*/
 
 
     $("#form_NEODATA2").submit(function (e) {
@@ -1266,7 +1266,7 @@ $("#form_pagadas").submit( function(e) {
         }
     });
 
-    jQuery(document).ready(function () {
+    /*jQuery(document).ready(function () {
 
         jQuery('#editReg').on('hidden.bs.modal', function (e) {
             jQuery(this).removeData('bs.modal');
@@ -1280,10 +1280,10 @@ $("#form_pagadas").submit( function(e) {
             jQuery(this).find('#comentario3').val('');
         })
 
-    })
+    });*/
 
 
-    function SoloNumeros(evt) {
+    /*function SoloNumeros(evt) {
         if (window.event) {
             keynum = evt.keyCode;
         } else {
@@ -1296,11 +1296,11 @@ $("#form_pagadas").submit( function(e) {
             alerts.showNotification("top", "left", "Solo Numeros.", "danger");
             return false;
         }
-    }
+    }*/
 
-    function closeModalEng() {
+    /*function closeModalEng() {
         $("#modal_enganche").modal('toggle');
-    }
+    }*/
 
 
     function formatMoney(n) {

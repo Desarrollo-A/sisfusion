@@ -63,7 +63,7 @@
             </div>
         </div>
 
-        <div class="modal fade modal-alertas" id="modal_despausar" role="dialog">
+        <!--<div class="modal fade modal-alertas" id="modal_despausar" role="dialog">
             <div class="modal-dialog">
                 <div class="modal-content">
 
@@ -72,9 +72,9 @@
                     </form>
                 </div>
             </div>
-        </div>
+        </div>-->
 
-        <div class="modal fade modal-alertas" id="modal_refresh" role="dialog">
+        <!--<div class="modal fade modal-alertas" id="modal_refresh" role="dialog">
             <div class="modal-dialog">
                 <div class="modal-content">
 
@@ -83,9 +83,9 @@
                     </form>
                 </div>
             </div>
-        </div>
+        </div>-->
 
-        <div class="modal fade modal-alertas" id="modal_documentacion" role="dialog">
+        <!--<div class="modal fade modal-alertas" id="modal_documentacion" role="dialog">
             <div class="modal-dialog" style="width:800px; margin-top:20px">
                 <div class="modal-content">
                     <div class="modal-body">
@@ -94,7 +94,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div>-->
     
         <div class="modal fade modal-alertas" id="documento_preview" role="dialog">
             <div class="modal-dialog" style= "margin-top:20px;"></div>
@@ -108,13 +108,13 @@
             </div>
         </div>
 
-        <div class="modal fade bd-example-modal-sm" id="myModalTQro" tabindex="-1" role="dialog" aria-hidden="true">
+        <!--<div class="modal fade bd-example-modal-sm" id="myModalTQro" tabindex="-1" role="dialog" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-body"></div>
                 </div>
             </div>
-        </div>
+        </div>-->
 
         <div class="content boxContent">
             <div class="container-fluid">
@@ -709,7 +709,7 @@
                 $("#modal_nuevas").modal();
             });
 
-            $("#tabla_asimilados tbody").on("click", ".consultar_documentos", function(){
+            /*$("#tabla_asimilados tbody").on("click", ".consultar_documentos", function(){
                 id_com = $(this).val();
                 id_pj = $(this).attr("data-personalidad");
 
@@ -768,7 +768,7 @@
 
                     $("#seeInformationModal .facturaInfo").append('</div>');
                 });
-            });
+            });*/
         }
 
         //FIN TABLA  ****************************************************************************************
@@ -793,9 +793,9 @@
             return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
         };
 
-        function cancela(){
+        /*function cancela(){
             $("#modal_nuevas").modal('toggle');
-        }
+        }*/
 
         //Función para pausar la solicitud
         $("#form_interes").submit( function(e) {
@@ -833,7 +833,7 @@
         });
 
         //Función para regresar a estatus 7 la solicitud
-        $("#form_refresh").submit( function(e) {
+        /*$("#form_refresh").submit( function(e) {
             e.preventDefault();
         }).validate({
             submitHandler: function( form ) {
@@ -865,13 +865,13 @@
                     }
                 });
             }
-        });
+        });*/
 
-        $(document).on("click", ".btn-historial-lo", function(){
+        /*$(document).on("click", ".btn-historial-lo", function(){
             window.open(url+"Comisiones/getHistorialEmpresa", "_blank");
-        });
+        });*/
 
-        function preview_info(archivo){
+        /*function preview_info(archivo){
             $("#documento_preview .modal-dialog").html("");
             $("#documento_preview").css('z-index', 9999);
             archivo = url+"dist/documentos/"+archivo+"";
@@ -897,15 +897,15 @@
                 elemento += '</div>';
                 $("#documento_preview .modal-dialog").append(elemento);
             }
-        }
+        }*/
 
-        function cleanComments(){
+        /*function cleanComments(){
             var myCommentsList = document.getElementById('documents');
             myCommentsList.innerHTML = '';
 
             var myFactura = document.getElementById('facturaInfo');
             myFactura.innerHTML = '';
-        }
+        }*/
 
         function selectAll(e) {
             tota2 = 0;
@@ -921,13 +921,13 @@
             });
         }
 
-        $(document).ready( function(){
+        /*$(document).ready( function(){
             $.getJSON( url + "Comisiones/getReporteEmpresa").done( function( data ){
                 $(".report_empresa").html();
                 $.each( data, function( i, v){
                     $(".report_empresa").append('<div class="col xol-xs-3 col-sm-3 col-md-3 col-lg-3"><label style="color: #00B397;">&nbsp;'+v.empresa+': $<input style="border-bottom: none; border-top: none; border-right: none;  border-left: none; background: white; color: #00B397; font-weight: bold;" value="'+formatMoney(v.porc_empresa)+'" disabled="disabled" readonly="readonly" type="text"  name="myText_FRO" id="myText_FRO"></label></div>');
                 });
             });
-        });
+        });*/
     </script>
 </body>

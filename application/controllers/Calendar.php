@@ -2,7 +2,7 @@
 class Calendar extends CI_Controller {
 	public function __construct() {
 		parent::__construct();
-        $this->load->model(array('Calendar_model'));
+        $this->load->model(array('Calendar_model', 'General_model'));
                 //$this->load->model('asesor/Asesor_model');	
 
         $this->load->library(array('session','form_validation', 'get_menu', 'Email'));
@@ -42,20 +42,40 @@ class Calendar extends CI_Controller {
             echo json_encode($data);
         } else {
             echo json_encode(array());
-        }    
+        }
     }
 
     public function updateAppointmentData(){
+        $a = 0;
         $data = array(
             "medio" => $this->input->post("estatus_recordatorio2"),
             "fecha_cita" => str_replace("T", " ", $this->input->post("dateStart")),
             "titulo" => $this->input->post("evtTitle"),
             "fecha_final" => str_replace("T", " ", $this->input->post("dateEnd")),
-            "direccion" => $this->input->post("comodin") ? $this->input->post("comodin"):null,
-            "descripcion" => $this->input->post("description") == '' ? null:$this->input->post("description")
+            "id_direccion" => $this->input->post("id_direccion") ? $this->input->post("id_direccion"):null,
+            "direccion" => $this->input->post("direccion") ? $this->input->post("direccion"):null,
+            "descripcion" => $this->input->post("description") == '' ? null:$this->input->post("description"),
         );
-        $response = $this->Calendar_model->updateAppointmentData($data, $this->input->post("idAgenda"));
-        echo json_encode($response);
+
+        $response = $this->General_model->updateRecord('agenda', $data, 'id_cita',  $this->input->post("idAgenda"));
+
+        if($response){
+            if(isset($_POST['telefono2'])){
+                $dataN = array(
+                    "telefono_2" => $this->input->post("telefono2"),
+                );
+                $responseN = $this->General_model->updateRecord('prospectos', $dataN, 'id_prospecto',  $this->input->post("prospectoE"));
+
+                if($responseN)
+                    echo json_encode(array("status" => 200, "message" => "Se ha actualizado el recordatorio y dato del prospecto correctamente."));
+                else 
+                    echo json_encode(array("status" => 400, "message" => "Oops, algo salió mal.Se ha actualizado el recordatorio pero no el dato del prospecto."));
+            }
+            else
+                echo json_encode(array("status" => 200, "message" => "Se ha actualizado el recordatorio correctamente."));
+        }
+        else 
+            echo json_encode(array("status" => 503, "message" => "Oops, no se ha podido actualizar el recordatorio ni el dato del prospecto."));
     }
 
     public function deleteAppointment(){
@@ -76,12 +96,53 @@ class Calendar extends CI_Controller {
             "estatus" => 1,
             "titulo" => $this->input->post("evtTitle"), 
             "fecha_final" =>  str_replace("T", " ", $this->input->post("dateEnd")),
-            "direccion" => $this->input->post("comodin") ? $this->input->post("comodin"):null,
+            "id_direccion" => $this->input->post("id_direccion") ? $this->input->post("id_direccion"):null,
+            "direccion" => $this->input->post("direccion") ? $this->input->post("direccion"):null,
             "descripcion" => $this->input->post("description")
         );
 
-        $response = $this->Calendar_model->insertAgenda($data);
-        echo json_encode($response);
+        $response = $this->General_model->addRecord('agenda', $data);
+
+        if ($response){
+            $dataN = array(
+                "fecha_modificacion" => date("Y-m-d H:i:s"),
+                "modificado_por" => $this->session->userdata('id_usuario'),
+                "estatus_particular" => 3
+            );
+
+            if(isset($_POST['telefono2'])){
+                $dataN['telefono_2'] = $this->input->post("telefono2");
+            }
+
+            $responseN = $this->General_model->updateRecord('prospectos', $dataN, 'id_prospecto', $this->input->post("id_prospecto_estatus_particular"));
+
+            if ($responseN)
+                echo json_encode(array("status" => 200, "message" => "El registro se ha actualizado de manera exitosa."));
+            else 
+                echo json_encode(array("status" => 400, "message" => "Oops, algo salió mal. No se ha podido actualizar el estatus del prospecto"));
+        } else 
+            echo json_encode(array("status" => 503, "message" => "Oops, no se ha podido agendar cita, ni actualizar estatus del prospecto"));
+    }
+
+    public function getProspectos(){
+        $idUser = $this->session->userdata('id_usuario');
+        $data = $this->Calendar_model->getProspectos($idUser)->result_array();
+
+        if($data != null) {
+            echo json_encode($data);
+        } else {
+            echo json_encode(array());
+        }    
+    }
+
+    public function getOfficeAddresses(){
+        $data = $this->Calendar_model->getOfficeAddresses()->result_array();
+
+        if($data != null) {
+            echo json_encode($data);
+        } else {
+            echo json_encode(array());
+        }   
     }
 }
  

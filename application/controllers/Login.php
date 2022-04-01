@@ -104,6 +104,9 @@ class Login extends CI_Controller
 		case '57': // TITULACIÓN
 			redirect(base_url() . 'Postventa');
 		break;
+		case '61': // TITULACIÓN
+			redirect(base_url() . 'Asesor/homeView');
+		break;
 
          default:
              $data['titulo'] = 'Login con roles de usuario en codeigniter';

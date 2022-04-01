@@ -261,7 +261,7 @@
 
 
 
-        <div id="modal_formulario_solicitud_multiple" class="modal" style="position:fixed; top:0; left:0; margin-bottom: 1%;  margin-top: -5%;">
+        <!--<div id="modal_formulario_solicitud_multiple" class="modal" style="position:fixed; top:0; left:0; margin-bottom: 1%;  margin-top: -5%;">
             <div class="modal-dialog modal-md">
 
                 <div class="modal-content">
@@ -269,9 +269,9 @@
                         <div class="tab-content">
                             <div class="active tab-pane" id="generar_solicitud">
                                 <div class="row">
-                                    <div class="col-lg-12">
+                                    <div class="col-lg-12">-->
                                         <!-- //poner modal -->
-                                        <div class="row">
+                                        <!--<div class="row">
                                             <div class="col-lg-5">
                                                 <div class="fileinput fileinput-new text-center" data-provides="fileinput">
                                                     <div><br>
@@ -354,7 +354,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div>-->
 
 
 
@@ -1168,7 +1168,7 @@
             ]
         });
 
-        $("#tabla_nuevas_comisiones tbody").on("click", ".mas_opciones_8", function() {
+        /*$("#tabla_nuevas_comisiones tbody").on("click", ".mas_opciones_8", function() {
             var tr = $(this).closest('tr');
             var row = tabla_nuevas.row(tr);
 
@@ -1178,7 +1178,7 @@
             $("#modal_nuevas .modal-body").append('<div class="row"><div class="col-lg-6"><p>VENTA:&nbsp;&nbsp;<b>' + row.data().nombreLote + '</b></p></div><div class="col-lg-6"><p>COMISIÓN $:&nbsp;&nbsp;<b>' + row.data().nombreLote + '</b></p></div></div>');
             $("#modal_nuevas .modal-body").append('<div class="row"><div class="col-lg-12"><p>MEDIO(S) DE VENTA:&nbsp;&nbsp;<b>' + row.data().nombreLote + '</b></p></div></div>');
             $("#modal_nuevas").modal();
-        });
+        });*/
 
 
         $('#tabla_nuevas_comisiones').on('click', 'input', function() {
@@ -1202,7 +1202,7 @@
 
 
 
-        $("#tabla_nuevas_comisiones tbody").on("click", ".pedir_parcialidad", function() {
+        /*$("#tabla_nuevas_comisiones tbody").on("click", ".pedir_parcialidad", function() {
             var tr = $(this).closest('tr');
             var row = tabla_nuevas.row(tr);
             id_pago = $(this).val();
@@ -1211,11 +1211,11 @@
             $("#modalParcialidad .modal-body").append('<div class="row"><div class="col-lg-12"><p>Solo puede solicitar una parcialidad de pago menor al monto correpondiente a la cantidad de <b>$' + formatMoney(row.data().pago_cliente) + '<input type="hidden" id="value_pago_cliente" name="value_pago_cliente" value="' + formatMoney(row.data().pago_cliente) + '"></b>.</p></div></div>');
             $("#modalParcialidad .modal-body").append('<div class="row"><div class="col-lg-12"><input type="text" id="new_value_parcial"  id="new_value_parcial" class="form-control" onkeydown="calcularMontoParcialidad()"><div name="label_estado" name="label_estado"></div></div></div>');
             $("#modalParcialidad").modal();
-        });
+        });*/
 
         /**---------------------------------------------------------------------------------------------------------------------------------------- */
 
-        $("#tabla_nuevas_comisiones tbody").on("click", ".consultar_logs_facturas2", function() {
+        /*$("#tabla_nuevas_comisiones tbody").on("click", ".consultar_logs_facturas2", function() {
 
             id_pago = $(this).val();
             user = $(this).attr("data-usuario");
@@ -1274,7 +1274,7 @@
                 });
             });
 
-        });
+        });*/
         /**--------------------------------------------------------- -------------------------------------------------------------------------------------------*/
 
 
@@ -1295,7 +1295,7 @@
 
 
 
-        $("#tabla_nuevas_comisiones tbody").on("click", ".consultar_detalles", function() {
+        /*$("#tabla_nuevas_comisiones tbody").on("click", ".consultar_detalles", function() {
             id_com = $(this).val();
             id_pj = $(this).attr("data-personalidad");
 
@@ -1313,7 +1313,7 @@
                     }
                     $("#seeInformationModal .documents").append('</div>');
                 });
-            });
+            });*/
 
 
             $.getJSON(url + "Comisiones/getDatosFactura/" + id_com).done(function(data) {
@@ -2199,7 +2199,7 @@
         return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
     };
 
-    $(document).on("click", ".subir_factura", function() {
+    /*$(document).on("click", ".subir_factura", function() {
         resear_formulario();
         id_comision = $(this).val();
         total = $(this).attr("data-total");
@@ -2210,7 +2210,7 @@
         });
         $("#modal_formulario_solicitud .modal-body #frmnewsol").append(`<div id="inputhidden"><input type="hidden" id="comision_xml" name="comision_xml" value="${ id_comision}">
         <input type="hidden" id="pago_cliente" name="pago_cliente" value="${ parseFloat(total).toFixed(2) }"></div>`);
-    });
+    });*/
 
 
     let c = 0;
@@ -2256,7 +2256,7 @@
     }
 
 
-    $(document).on("click", ".quitar_factura", function() {
+    /*$(document).on("click", ".quitar_factura", function() {
         resear_formulario();
         id_comision = $(this).val();
         // link_post = "Comisiones/borrar_factura;
@@ -2278,11 +2278,11 @@
         });
 
 
-    });
+    });*/
 
 /** ------------------------------------------------------------------------------------------------------*/
 
-$(document).on("click", ".EnviarMultiple", function() {
+/*$(document).on("click", ".EnviarMultiple", function() {
     $("#ModalEnviar .modal-body").html("");
         $("#ModalEnviar .modal-header").html("");
 
@@ -2323,10 +2323,10 @@ $(document).on("click", ".EnviarMultiple", function() {
 
         $("#ModalEnviar").modal();
 
-});
+});*/
 /** ---------------------------------------------------------------------------------------------------*/
 
-    $(document).on("click", ".subir_factura_multiple", function() {
+    /*$(document).on("click", ".subir_factura_multiple", function() {
 
         $("#modal_multiples .modal-body").html("");
         $("#modal_multiples .modal-header").html("");
@@ -2379,7 +2379,7 @@ $(document).on("click", ".EnviarMultiple", function() {
                     $("#modal_multiples .modal-body").append('<div class="row"><div class="col-lg-5"><div class="fileinput fileinput-new text-center" data-provides="fileinput"><div><br><span class="fileinput-new">Selecciona archivo</span><input type="file" name="xmlfile2" id="xmlfile2" accept="application/xml"></div></div></div><div class="col-lg-7"><center><button class="btn btn-warning" type="button" onclick="xml2()" id="cargar_xml2"><i class="fa fa-upload"></i> VERIFICAR Y CARGAR</button></center></div></div>');
 
                     /*$("#modal_multiples .modal-body").append('<button type="button" onclick="llamar(c);" class="btn" id="boton"> aver</button>');*/
-                    $("#modal_multiples .modal-body").append('<p id="cantidadSeleccionada"></p>');
+                    /*$("#modal_multiples .modal-body").append('<p id="cantidadSeleccionada"></p>');
                     $("#modal_multiples .modal-body").append('<b id="cantidadSeleccionadaMal"></b>');
                     $("#modal_multiples .modal-body").append('<form id="frmnewsol2" method="post">' +
                         '<div class="row"><div class="col-lg-8 form-group"><label for="emisor">Emisor:<span class="text-danger">*</span></label><input type="text" class="form-control" id="emisor" name="emisor" placeholder="Emisor" value="" required></div>' +
@@ -2401,7 +2401,7 @@ $(document).on("click", ".EnviarMultiple", function() {
             backdrop: 'static',
             keyboard: false
         });
-    });
+    });*/
 
 
 
@@ -2524,7 +2524,7 @@ $(document).on("click", ".EnviarMultiple", function() {
 
 
 
-    $("#eliminar_factura").submit(function(e) {
+    /*$("#eliminar_factura").submit(function(e) {
         e.preventDefault();
     }).validate({
         submitHandler: function(form) {
@@ -2558,7 +2558,7 @@ $(document).on("click", ".EnviarMultiple", function() {
                 }
             });
         }
-    });
+    });*/
 
     function closeModalEng(){
        // document.getElementById("inputhidden").innerHTML = "";
@@ -2889,9 +2889,9 @@ console.log(pago1);
     }
 
 
-    function fillFields(v) {
+    /*function fillFields(v) {
         // alert(v.nombre);
-    }
+    }*/
 
 
 

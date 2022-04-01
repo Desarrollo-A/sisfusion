@@ -48,14 +48,14 @@ $datos = array();
 </style>
  
 
-<div class="modal fade modal-alertas" id="documento_preview" role="dialog">
+<!--<div class="modal fade modal-alertas" id="documento_preview" role="dialog">
     <div class="modal-dialog" style= "margin-top:20px;"></div>
-</div>
+</div>-->
 
 
 
 
-<div class="modal fade modal-alertas" id="modal_pagadas" role="dialog">
+<!--<div class="modal fade modal-alertas" id="modal_pagadas" role="dialog">
     <div class="modal-dialog modal-md">
         <div class="modal-content">
             <div class="modal-header bg-red">
@@ -67,7 +67,7 @@ $datos = array();
             </form>
         </div>
     </div>
-</div>
+</div>-->
 
 
     <div class="modal fade" id="seeInformationModalfactura" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
@@ -93,7 +93,7 @@ $datos = array();
 
 
 
-    <div class="modal fade modal-alertas" id="modal_nuevas" role="dialog">
+    <!--<div class="modal fade modal-alertas" id="modal_nuevas" role="dialog">
     <div class="modal-dialog">
         <div class="modal-content">
 
@@ -102,12 +102,12 @@ $datos = array();
             </form>
         </div>
     </div>
-</div>
+</div>-->
 
  
 
 
-<div class="modal fade modal-alertas" id="modal_documentacion" role="dialog">
+<!--<div class="modal fade modal-alertas" id="modal_documentacion" role="dialog">
         <div class="modal-dialog" style="width:800px; margin-top:20px">
             <div class="modal-content">
                 <div class="modal-body">
@@ -116,26 +116,26 @@ $datos = array();
                 </div>
             </div>
         </div>
-    </div>
+    </div>-->
 
 
 
 
-<div class="modal fade bd-example-modal-sm" id="myModalEnviadas" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+<!--<div class="modal fade bd-example-modal-sm" id="myModalEnviadas" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-sm">
     <div class="modal-content">
       <div class="modal-body"></div>
     </div>
   </div>
-</div>
+</div>-->
 
-<div class="modal fade bd-example-modal-sm" id="myModalTQro" tabindex="-1" role="dialog" aria-hidden="true">
+<!--<div class="modal fade bd-example-modal-sm" id="myModalTQro" tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-body"></div>
     </div>
   </div>
-</div>
+</div>-->
 
 <div class="content">
     <div class="container-fluid">
@@ -248,7 +248,7 @@ $datos = array();
         $("#tabla_factura").prop("hidden", true);
 
         var url = "<?=base_url()?>/index.php/";
-        $.post("<?=base_url()?>index.php/Contratacion/lista_proyecto", function (data) {
+        /*$.post("<//?=base_url()?>index.php/Contratacion/lista_proyecto", function (data) {
             var len = data.length;
             for (var i = 0; i < len; i++) {
                 var id = data[i]['idResidencial'];
@@ -256,7 +256,7 @@ $datos = array();
                 $("#filtro3").append($('<option>').val(id).text(name.toUpperCase()));
             }
             $("#filtro3").selectpicker('refresh');
-        }, 'json');
+        }, 'json');*/
 
         $.post("<?=base_url()?>index.php/Contratacion/lista_proyecto", function (data) {
             var len = data.length;
@@ -269,7 +269,7 @@ $datos = array();
         }, 'json');
 
 
-        $.post("<?=base_url()?>index.php/Contratacion/lista_proyecto", function (data) {
+        /*$.post("<//?=base_url()?>index.php/Contratacion/lista_proyecto", function (data) {
             var len = data.length;
             for (var i = 0; i < len; i++) {
                 var id = data[i]['idResidencial'];
@@ -277,14 +277,14 @@ $datos = array();
                 $("#filtro333").append($('<option>').val(id).text(name.toUpperCase()));
             }
             $("#filtro333").selectpicker('refresh');
-        }, 'json');
+        }, 'json');*/
     });
 
-    $('#filtro3').change(function(ruta){
+    /*$('#filtro3').change(function(ruta){
         residencial = $('#filtro3').val();
         $("#filtro4").empty().selectpicker('refresh');
             $.ajax({
-                url: '<?=base_url()?>Asesor/getCondominioDesc/'+residencial,
+                url: '<//?=base_url()?>Asesor/getCondominioDesc/'+residencial,
                 type: 'post',
                 dataType: 'json',
                 success:function(response){
@@ -299,7 +299,7 @@ $datos = array();
 
                 }
             });
-    });
+    });*/
 
         $('#filtro33').change(function(ruta){
         residencial = $('#filtro33').val();
@@ -322,23 +322,23 @@ $datos = array();
             });
     });
 
-    $('#filtro3').change(function(ruta){
+    /*$('#filtro3').change(function(ruta){
         proyecto = $('#filtro3').val();
         condominio = $('#filtro4').val();
         if(condominio == '' || condominio == null || condominio == undefined){
             condominio = 0;
         }
         getInvoiceCommissions(proyecto, condominio);
-    });
+    });*/
 
-    $('#filtro4').change(function(ruta){
+    /*$('#filtro4').change(function(ruta){
         proyecto = $('#filtro3').val();
         condominio = $('#filtro4').val();
         if(condominio == '' || condominio == null || condominio == undefined){
             condominio = 0;
         }
         getInvoiceCommissions(proyecto, condominio);
-    });
+    });*/
 
 
     $('#filtro33').change(function(ruta){
@@ -361,10 +361,10 @@ $datos = array();
         getFacturaCommissions(proyecto, condominio);
     });
 
-    $('#filtro333').change(function(ruta){
+    /*$('#filtro333').change(function(ruta){
         proyecto = $('#filtro333').val();
         getHistoryCommissions(proyecto);
-    });
+    });*/
 
 
 
@@ -700,7 +700,7 @@ function construir_subtablas( data ){
 
   
 
-        $("#tabla_factura tbody").on("click", ".enviar_internomex", function(){
+        /*$("#tabla_factura tbody").on("click", ".enviar_internomex", function(){
             id_usuario = $(this).val();
             id_residencial = $(this).attr("data-value");
             user_factura = $(this).attr("data-userfactura");
@@ -712,7 +712,7 @@ function construir_subtablas( data ){
 
             $("#modal_nuevas .modal-body").append('<div class="row"><div class="col-md-6"></div><div class="col-md-3"><input type="submit" class="btn btn-primary" value="Enviar"></div><div class="col-md-3"><button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button></div></div>');
             $("#modal_nuevas").modal();
-        });
+        });*/
 
 
  
@@ -830,9 +830,9 @@ function formatMoney( n ) {
 
 
 
-function cancela(){
+/*function cancela(){
    $("#modal_nuevas").modal('toggle');
-}
+}*/
 
 
 
@@ -840,7 +840,7 @@ function cancela(){
 
 
 //Función para pausar la solicitud
-$("#form_interes").submit( function(e) {
+/*$("#form_interes").submit( function(e) {
     e.preventDefault();
 }).validate({
     submitHandler: function( form ) {
@@ -872,16 +872,16 @@ $("#form_interes").submit( function(e) {
                 }
             });
     }
-});
+});*/
  
  
-$(document).on("click", ".btn-historial-lo", function(){
+/*$(document).on("click", ".btn-historial-lo", function(){
     window.open(url+"Comisiones/getHistorialEmpresa", "_blank");
-});
+});*/
 
 
 
-    function preview_info(archivo){
+    /*function preview_info(archivo){
     $("#documento_preview .modal-dialog").html("");
     $("#documento_preview").css('z-index', 9999);
     archivo = url+"dist/documentos/"+archivo+"";
@@ -907,7 +907,7 @@ $(document).on("click", ".btn-historial-lo", function(){
         elemento += '</div>';
         $("#documento_preview .modal-dialog").append(elemento);
     }
-}
+}*/
 
 
 
@@ -915,7 +915,7 @@ $(document).on("click", ".btn-historial-lo", function(){
 
 
 
-function cleanComments()
+/*function cleanComments()
 {
 
     var myCommentsList = document.getElementById('documents');
@@ -925,7 +925,7 @@ function cleanComments()
     myFactura.innerHTML = '';
 
 
-}
+}*/
 
 
 // $(document).on('click', '.verPDF', function () {
@@ -945,7 +945,7 @@ function cleanComments()
 </script>
 
 <script>
-     $(document).ready( function()
+     /*$(document).ready( function()
    {
 
 
@@ -957,7 +957,7 @@ function cleanComments()
         });
     });
 
-});
+});*/
 
 
 $(document).on('click', '.verPDF', function () {

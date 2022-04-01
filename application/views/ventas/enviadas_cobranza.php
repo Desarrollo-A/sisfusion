@@ -18,7 +18,7 @@
         ?>
     
         <!-- Modals -->
-        <div class="modal fade modal-alertas" id="modal_users" role="dialog">
+        <!--<div class="modal fade modal-alertas" id="modal_users" role="dialog">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
             
@@ -27,7 +27,7 @@
                     </form>
                 </div>
             </div>
-        </div>
+        </div>-->
 
         <div class="modal fade modal-alertas" id="modal_colaboradores" role="dialog">
             <div class="modal-dialog modal-md">
@@ -57,7 +57,7 @@
             </div>
         </div>
 
-        <div class="modal fade modal-alertas" id="modalParcialidad" role="dialog">
+        <!--<div class="modal fade modal-alertas" id="modalParcialidad" role="dialog">
             <div class="modal-dialog modal-sm">
                 <div class="modal-content">
                     <div class="modal-header bg-red">
@@ -69,7 +69,7 @@
                     </form>
                 </div>
             </div>
-        </div>
+        </div>-->
 
 
         <div class="modal fade" id="seeInformationModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
@@ -107,7 +107,7 @@
             </div>
         </div>
 
-        <div class="modal fade modal-alertas" id="modal_documentacion" role="dialog">
+        <!--<div class="modal fade modal-alertas" id="modal_documentacion" role="dialog">
             <div class="modal-dialog" style="width:800px; margin-top:20px">
                 <div class="modal-content">
                     <div class="modal-body">
@@ -116,19 +116,19 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div>-->
 
-        <div class="modal fade bd-example-modal-sm" id="myModalEnviadas" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+        <!--<div class="modal fade bd-example-modal-sm" id="myModalEnviadas" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-sm">
                 <div class="modal-content">
                     <div class="modal-body"></div>
                 </div>
             </div>
-        </div>
+        </div>-->
 
-        <div class="modal fade modal-alertas" id="documento_preview" role="dialog">
+        <!--<div class="modal fade modal-alertas" id="documento_preview" role="dialog">
             <div class="modal-dialog" style= "margin-top:20px;"></div>
-        </div>
+        </div>-->
         <!-- END Modals -->
 
         <div class="content boxContent">
@@ -842,7 +842,7 @@
         });
  
         // FUNCTION MORE
-        $(document).on( "click", ".nuevo_plan", function(){
+        /*$(document).on( "click", ".nuevo_plan", function(){
             $("#modal_mktd .modal-body").html("");
             $("#modal_mktd .modal-footer").html("");
 
@@ -940,7 +940,7 @@
 
             $("#modal_mktd .modal-footer").append('<br><div class="row"><div class="col-md-12"><center><input type="submit" id="btnsubmit" class="btn btn-success" value="GUARDAR"></center></div></div>');
             $("#modal_mktd").modal();
-        });
+        });*/
 
         function formatMoney( n ) {
             var c = isNaN(c = Math.abs(c)) ? 2 : c,
@@ -952,12 +952,12 @@
             return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
         };
 
-        $(document).on( "click", ".subir_factura", function(){
+        /*$(document).on( "click", ".subir_factura", function(){
             resear_formulario();
             id_comision = $(this).val();
             link_post = "Comisiones/guardar_solicitud/"+id_comision;
             $("#modal_formulario_solicitud").modal( {backdrop: 'static', keyboard: false} );
-            });
+            });*/
 
         //FUNCION PARA LIMPIAR EL FORMULARIO CON DE PAGOS A PROVEEDOR.
         function resear_formulario(){
@@ -972,13 +972,13 @@
 
         }
  
-        $("#cargar_xml").click( function(){
+        /*$("#cargar_xml").click( function(){
             subir_xml( $("#xmlfile") );
-        });
+        });*/
 
         var justificacion_globla = "";
 
-        function subir_xml( input ){
+        /*function subir_xml( input ){
             var data = new FormData();
             documento_xml = input[0].files[0];
             var xml = documento_xml;
@@ -1011,9 +1011,9 @@
                     alert("ERROR INTENTE COMUNICARSE CON EL PROVEEDOR");
                 }
             });
-        }
+        }*/
 
-        function cargar_info_xml( informacion_factura ){
+        /*function cargar_info_xml( informacion_factura ){
             $("#emisor").val( ( informacion_factura.nameEmisor ? informacion_factura.nameEmisor[0] : '') ).attr('readonly',true);
             $("#rfcemisor").val( ( informacion_factura.rfcemisor ? informacion_factura.rfcemisor[0] : '') ).attr('readonly',true);
             $("#receptor").val( ( informacion_factura.namereceptor ? informacion_factura.namereceptor[0] : '') ).attr('readonly',true);
@@ -1026,7 +1026,7 @@
             $("#unidad").val( ( informacion_factura.claveUnidad ? informacion_factura.claveUnidad[0] : '') ).attr('readonly',true);
             $("#clave").val( ( informacion_factura.claveProdServ ? informacion_factura.claveProdServ[0] : '') ).attr('readonly',true);
             $("#obse").val( ( informacion_factura.descripcion ? informacion_factura.descripcion[0] : '') ).attr('readonly',true);
-        }
+        }*/
 
         $("#form_colaboradores").submit( function(e) {
             e.preventDefault();
@@ -1151,7 +1151,7 @@
             }
         });
 
-        function calcularMontoParcialidad() {
+        /*function calcularMontoParcialidad() {
             $precioFinal = parseFloat($('#value_pago_cliente').val());
             $precioNuevo = parseFloat($('#new_value_parcial').val());
             if ($precioNuevo >= $precioFinal) {
@@ -1160,9 +1160,9 @@
             else if ($precioNuevo < $precioFinal) {
                 $('#label_estado').append('<label>MONTO VALIDO</label>');
             }
-        }
+        }*/
 
-        function preview_info(archivo){
+        /*function preview_info(archivo){
             $("#documento_preview .modal-dialog").html("");
             $("#documento_preview").css('z-index', 9999);
             archivo = url+"dist/documentos/"+archivo+"";
@@ -1188,7 +1188,7 @@
                 elemento += '</div>';
                 $("#documento_preview .modal-dialog").append(elemento);
             }
-        }
+        }*/
  
         function cleanComments() {
             var myCommentsList = document.getElementById('comments-list-asimilados');

@@ -18,7 +18,8 @@ class Contabilidad_model extends CI_Model
         return $this->db->query("SELECT l.idLote, UPPER(CONCAT(c.nombre, ' ', c.apellido_paterno, ' ', c.apellido_materno)) nombreCliente, l.nombreLote,
         l.sup superficie, FORMAT(precio, 'C') preciom2, FORMAT(l.totalNeto2, 'C') total, hl.modificado, dxl.id_dxl,
 		dxl.fecha_firma, dxl.adendum, dxl.superficie_postventa, dxl.costo_m2, dxl.parcela, dxl.superficie_proyectos, 
-		dxl.presupuesto_m2, dxl.deduccion, dxl.m2_terreno, dxl.costo_terreno, dxl.comentario
+		dxl.presupuesto_m2, dxl.deduccion, dxl.m2_terreno, dxl.costo_terreno, dxl.comentario, dxl.unidad, dxl.calle_exacta, 
+		dxl.num_ext, dxl.codigo_postal, dxl.colonia , dxl.folio_real
         FROM lotes l 
         INNER JOIN clientes c ON c.idLote = l.idLote AND c.status = 1
         INNER JOIN (SELECT idLote, MAX(modificado) modificado FROM historial_lotes WHERE status = 1 AND idStatusContratacion = 9 AND idMovimiento = 39 
@@ -102,7 +103,55 @@ class Contabilidad_model extends CI_Model
 
     public function getColumns()
     {
-        return $this->db->query("SELECT id_opcion, UPPER(CAST(nombre AS VARCHAR(75))) nombre FROM opcs_x_cats WHERE id_catalogo = 66")->result_array();
+        return $this->db->query("SELECT t1.nombre_columna,
+        t2.id_opcion,
+        t2.nombre
+        FROM
+            (SELECT COLUMN_NAME nombre_columna,
+                       CASE COLUMN_NAME
+                           WHEN 'fecha_firma' THEN 1
+                           WHEN 'adendum' THEN 2
+                           WHEN 'superficie_postventa' THEN 3
+                           WHEN 'costo_m2' THEN 4
+                           WHEN 'parcela' THEN 5
+                           WHEN 'superficie_proyectos' THEN 6
+                           WHEN 'presupuesto_m2' THEN 7
+                           WHEN 'deduccion' THEN 8
+                           WHEN 'm2_terreno' THEN 9
+                           WHEN 'costo_terreno' THEN 10
+                           WHEN 'comentario' THEN 11
+                           WHEN 'unidad' THEN 12
+                           WHEN 'calle_exacta' THEN 13
+                           WHEN 'num_ext' THEN 14
+                           WHEN 'codigo_postal' THEN 15
+                           WHEN 'colonia' THEN 16
+                           WHEN 'folio_real' THEN 17
+                       END id_opcion
+            FROM INFORMATION_SCHEMA.COLUMNS
+            WHERE TABLE_NAME = 'detalles_x_lotes'
+            AND COLUMN_NAME NOT IN ('id_dxl',
+                                    'id_lote',
+                                    'id_cliente',
+                                    'estatus',
+                                    'fecha_creacion',
+                                    'creado_por',
+                                    'fecha_modificacion',
+                                    'modificado_por')) t1
+            LEFT JOIN
+            (SELECT id_opcion,
+           UPPER(CAST(nombre AS VARCHAR(75))) nombre
+        FROM opcs_x_cats
+        WHERE id_catalogo = 64) t2 ON (t1.id_opcion = t2.id_opcion);")->result_array();
+    }
+
+    
+    public function getLotesListC($idCondominio)
+    {
+        $a = 0;
+        return $this->db->query("SELECT l.idLote, UPPER(l.nombreLote) nombreLote, l.idStatusLote, cl.id_cliente
+        FROM lotes l 
+        INNER JOIN clientes cl ON cl.idLote = l.idLote
+        WHERE l.status = 1 AND l.idCondominio IN($idCondominio) AND cl.status = 1")->result_array();
     }
 
 

@@ -610,7 +610,7 @@ class Postventa extends CI_Controller
         if ($type == 1) {
             $comentarios = $_POST['comentarios'];
             $informacion = $this->Postventa_model->changeStatus($id_solicitud, $type, $comentarios, 0);
-        } elseif ($type == 2) {
+        }elseif ($type == 2) {
             $motivos_rechazo = $_POST['comentarios'];
             $informacion = $this->Postventa_model->changeStatus($id_solicitud, $type, 'NULL', $motivos_rechazo);
         } else {
@@ -872,7 +872,7 @@ class Postventa extends CI_Controller
             "superficie" => ($data['superficie'] == '' || $data['superficie'] == null) ? null : $data['superficie'],
             "clave_catastral" => ($data['catastral'] == '' || $data['catastral'] == null) ? null : $data['catastral'],
             "estatus_construccion" => $data['construccion'],
-            "cliente_anterior" => $data['cliente'] == 'default' || $data['cliente'] == null ? 2 : $data['cliente'] == 'uno' ? 1 : 2,
+            "cliente_anterior" =>($data['cliente'] == 'default' || $data['cliente'] == null ? 2 : $data['cliente'] == 'uno') ? 1 : 2,
             "nombre_anterior" => $data['nombreT'] == '' || $data['nombreT'] == null ? null : $data['nombreT'],
             "fecha_anterior" => ($data['fechaCA'] == '' || $data['fechaCA'] == null) ? null : date("Y-m-d", strtotime($data['fechaCA'])),
             "RFC" => $data['rfcDatos'] == '' || $data['rfcDatos'] == 'N/A' ? null : $data['rfcDatos']
@@ -892,7 +892,7 @@ class Postventa extends CI_Controller
     {
         $idSolicitud = $_POST['idSolicitud'];
 
-        // $data = $this->Postventa_model->getInfoNotaria($idSolicitud, $idNotaria)->result_array();
+        $data = $this->Postventa_model->getInfoNotaria($idSolicitud)->result_array();
         $info = $this->Postventa_model->getInfoSolicitud($idSolicitud)->row();
 
         $this->load->library('email');
@@ -1123,7 +1123,7 @@ class Postventa extends CI_Controller
         $insert = $this->Postventa_model->insertNotariaValuador($idNotaria, $idValuador, $idSolicitud);
         $data = $this->Postventa_model->checkBudgetInfo($idSolicitud)->row();
 
-        $documentName = $this->Postventa_model->getFileNameByDoctype($idSolicitud,11);
+        $documentName = $this->Postventa_model->getFileNameByDoctype($idSolicitud,11)->row();
         //correos
         //$data->correoN correos de la notaria
         //$data->correoV correos del valuador
@@ -1237,7 +1237,7 @@ class Postventa extends CI_Controller
                                                 </td>
                                                 <td style="font-size: 1em;">
                                                     <b>Estatus de pago:</b><br>
-                                                    ' . $data->estatus_pago . '
+                                                    ' . $data->nombrePago . '
                                                 </td>
                                             </tr>
                                             <tr>
@@ -1261,7 +1261,7 @@ class Postventa extends CI_Controller
                                                 </td>
                                                 <td style="font-size: 1em;">
                                                     <b>Estatus construcción:</b><br>
-                                                    ' . $data->estatus_construccion . '
+                                                    ' . $data->nombreConst . '
                                                 </td>
                                             </tr>
                                             <tr>
@@ -1364,6 +1364,7 @@ class Postventa extends CI_Controller
         else
             echo json_encode(array());
     }
+
     public function nuevoNotario()
     {
         $idSolicitud = $_POST['idSolicitud'];
@@ -1390,5 +1391,37 @@ class Postventa extends CI_Controller
         else
             echo json_encode(array());
     }
-}
 
+    public function rechazarNotaria()
+    {
+        $idSolicitud = $_POST['idSolicitud'];
+
+        $informacion = $this->Postventa_model->rechazarNotaria($idSolicitud);
+        return $informacion;
+    }
+
+    //OBSERVACIONES
+    public function observacionesPostventa()
+    {
+        $idSolicitud = $_POST['idSolicitud'];
+
+        $informacion = $this->Postventa_model->updateObservacionesPostventa($idSolicitud);
+        return $informacion;
+    }
+
+    public function mailObservaciones()
+    {
+        $idSolicitud = $_POST['idSolicitud'];
+        $observaciones = $_POTS['observaciones'];
+
+        $this->load->library('email');
+        $mail = $this->email;
+        $mail->from('noreply@ciudadmaderas.com', 'Ciudad Maderas');
+        $mail->to('programador.analista21@ciudadmaderas.com');
+        $mail->Subject(utf8_decode("Observaciones Notaria"));
+        $mail->message('Buen día! Las observaciones que la notaria envío sobre la solicitud: ' . $idSolicitud . ' son: ' . $observaciones);
+        $response = $mail->send();
+    }
+
+
+}
