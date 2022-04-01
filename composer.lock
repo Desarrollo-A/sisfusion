@@ -500,7 +500,7 @@
                 "psr-7",
                 "request",
                 "response"
-            ],
+            ]
             "support": {
                 "source": "https://github.com/php-fig/http-factory/tree/master"
             },
