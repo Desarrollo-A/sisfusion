@@ -180,7 +180,7 @@
             </div>
         </div>
 
-        <div class="modal fade modal-alertas" id="modal_descuentos" role="dialog">
+        <!--<div class="modal fade modal-alertas" id="modal_descuentos" role="dialog">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header bg-red">
@@ -192,7 +192,7 @@
                     </form>
                 </div>
             </div>
-        </div>
+        </div>-->
     
         <div class="modal fade modal-alertas" id="modal_abono" data-backdrop="static" data-keyboard="false" role="dialog">
             <div class="modal-dialog ">
@@ -210,13 +210,13 @@
             </div>
         </div>
 
-        <div class="modal fade bd-example-modal-sm" id="myModalEnviadas" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+        <!--<div class="modal fade bd-example-modal-sm" id="myModalEnviadas" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-sm">
                 <div class="modal-content">
                     <div class="modal-body"></div>
                 </div>
             </div>
-        </div>
+        </div>-->
 
         <div class="content boxContent">
             <div class="container-fluid">
@@ -568,7 +568,7 @@
             });
 
             /**------------------------------------------- */
-            $("#tabla_descuentos tbody").on("click", ".abonar", function(){    
+            /*$("#tabla_descuentos tbody").on("click", ".abonar", function(){
                 bono = $(this).val();
                 var dat = bono.split(",");
                 $("#modal_abono .modal-body").append(`<div id="inputhidden">
@@ -587,9 +587,9 @@
                     </div>`);
                 $("#modal_abono .modal-body").append(``);
                 $('#modal_abono').modal('show');
-            });
+            });*/
 
-            $("#tabla_descuentos tbody").on("click", ".btn-delete", function(){    
+            /*$("#tabla_descuentos tbody").on("click", ".btn-delete", function(){
                 id = $(this).val();
                 $("#modal-delete .modal-body").append(`<div id="borrarBono"><form id="form-delete">
                 <h5>¿Estas seguro que deseas eliminar este bono?</h5>
@@ -600,7 +600,7 @@
                 </form></div>`);
 
                 $('#modal-delete').modal('show');
-            });
+            });*/
 
 
             $("#tabla_descuentos tbody").on("click", ".btn-update", function(){
@@ -625,32 +625,32 @@
             $("#modal_abono").modal('toggle');
         }
 
-        function CloseModalDelete(){
+        /*function CloseModalDelete(){
             a = document.getElementById('borrarBono');
             padre = a.parentNode;
             padre.removeChild(a);
             $("#modal-delete").modal('toggle');
-        }
+        }*/
 
-        function CloseModalDelete2(){
+        /*function CloseModalDelete2(){
             document.getElementById("form-delete").reset();
             a = document.getElementById('borrarBono');
             padre = a.parentNode;
             padre.removeChild(a);
         
             $("#modal-delete").modal('toggle');
-        }
+        }*/
 
-        function CloseModalUpdate2(){
+        /*function CloseModalUpdate2(){
             document.getElementById("form-update").reset();
             a = document.getElementById('borrarUpdare');
             padre = a.parentNode;
             padre.removeChild(a);
         
             $("#modal-abono").modal('toggle');
-        }
+        }*/
 
-        $(document).on('submit','#form-delete', function(e){ 
+        /*$(document).on('submit','#form-delete', function(e){
             e.preventDefault();
             var formData = new FormData(document.getElementById("form-delete"));
             formData.append("dato", "valor");
@@ -679,7 +679,7 @@
                     alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
                 }
             });
-        });
+        });*/
 
         $("#form_aplicar").submit( function(e) {
             e.preventDefault();
@@ -714,14 +714,14 @@
             }
         });
 
-        function mandar_espera(idLote, nombre) {
+        /*function mandar_espera(idLote, nombre) {
             idLoteespera = idLote;
             link_espera1 = "Comisiones/generar comisiones/";
             $("#myModalEspera .modal-footer").html("");
             $("#myModalEspera .modal-body").html("");
             $("#myModalEspera ").modal();
             $("#myModalEspera .modal-footer").append("<div class='btn-group'><button type='submit' class='btn btn-success'>GENERAR COMISIÓN</button></div>");
-        }
+        }*/
 
         $(window).resize(function(){
             tabla_nuevas.columns.adjust();
@@ -953,7 +953,7 @@
         });
 
         /**---------------------------------------------------------------------- */
-        $("#numeroP").change(function(){
+        /*$("#numeroP").change(function(){
             let monto = parseFloat($('#monto').val());
             let cantidad = parseFloat($('#numeroP').val());
             let resultado=0;
@@ -975,9 +975,9 @@
                     $('#pago').val(formatMoney(0));
                 }
             }
-        });
+        });*/
 
-        $("#numeroP2").change(function(){
+        /*$("#numeroP2").change(function(){
         
             let monto = parseFloat($('#monto2').val());
             let cantidad = parseFloat($('#numeroP2').val());
@@ -999,7 +999,7 @@
                     $('#pago2').val(formatMoney(0));
                 }
             }
-        });
+        });*/
 
         function verificar(){
             let disponible = parseFloat($('#valor_comision').val()).toFixed(2);

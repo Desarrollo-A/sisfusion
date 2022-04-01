@@ -17,7 +17,7 @@
         ?>
 
         <!-- Modals -->
-        <div class="modal fade modal-alertas" id="modal_users" role="dialog">
+        <!--<div class="modal fade modal-alertas" id="modal_users" role="dialog">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <form method="post" id="form_interes">
@@ -25,9 +25,9 @@
                     </form>
                 </div>
             </div>
-        </div>
+        </div>-->
 
-        <div class="modal fade modal-alertas" id="modal_colaboradores" role="dialog">
+        <!--<div class="modal fade modal-alertas" id="modal_colaboradores" role="dialog">
             <div class="modal-dialog modal-md">
                 <div class="modal-content">
                     <form method="post" id="form_colaboradores">
@@ -36,9 +36,9 @@
                     </form>
                 </div>
             </div>
-        </div>
+        </div>-->
 
-        <div class="modal fade modal-alertas" id="modal_mktd" role="dialog">
+        <!--<div class="modal fade modal-alertas" id="modal_mktd" role="dialog">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header bg-red">
@@ -51,9 +51,9 @@
                     </form>
                 </div>
             </div>
-        </div>
+        </div>-->
 
-        <div class="modal fade modal-alertas" id="modalParcialidad" role="dialog">
+        <!--<div class="modal fade modal-alertas" id="modalParcialidad" role="dialog">
             <div class="modal-dialog modal-sm">
                 <div class="modal-content">
                     <div class="modal-header bg-red">
@@ -65,7 +65,7 @@
                     </form>
                 </div>
             </div>
-        </div>
+        </div>-->
 
         <div class="modal fade" id="seeInformationModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog modal-md modal-dialog-scrollable" role="document">
@@ -102,7 +102,7 @@
             </div>
         </div>
 
-        <div class="modal fade modal-alertas" id="modal_documentacion" role="dialog">
+        <!--<div class="modal fade modal-alertas" id="modal_documentacion" role="dialog">
             <div class="modal-dialog" style="width:800px; margin-top:20px">
                 <div class="modal-content">
                     <div class="modal-body">
@@ -110,7 +110,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div>-->
 
         <div class="modal fade bd-example-modal-sm" id="myModalEnviadas" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-sm">
@@ -120,9 +120,9 @@
             </div>
         </div>
 
-        <div class="modal fade modal-alertas" id="documento_preview" role="dialog">
+        <!--<div class="modal fade modal-alertas" id="documento_preview" role="dialog">
             <div class="modal-dialog" style= "margin-top:20px;"></div>
-        </div>
+        </div>-->
         <!-- END Modals -->
 
         <div class="content boxContent">
@@ -257,23 +257,23 @@
         var totaPen = 0;
         var tr;
 
-        $.post("<?=base_url()?>index.php/Comisiones/getEstatusPagosMktd", function (data) {
+        /*$.post("<//?=base_url()?>index.php/Comisiones/getEstatusPagosMktd", function (data) {
             var len = data.length;
             for (var i = 0; i < len; i++) {
                 var id = data[i]['id_opcion'];
                 var name = data[i]['nombre'];
                 $("#selectEstatus").append($('<option>').val(id).text(name.toUpperCase()));
             }
-        }, 'json');
+        }, 'json');*/
 
-        $.post("<?=base_url()?>index.php/Comisiones/getEstatusPagosMktd", function (data) {
+        /*$.post("<//?=base_url()?>index.php/Comisiones/getEstatusPagosMktd", function (data) {
             var len = data.length;
             for (var i = 0; i < len; i++) {
                 var id = data[i]['id_opcion'];
                 var name = data[i]['nombre'];
                 $("#selectEstatusR").append($('<option>').val(id).text(name.toUpperCase()));
             }
-        }, 'json');
+        }, 'json');*/
 
         $("#tabla_plaza_1").ready( function(){
             let titulos = [];
@@ -429,7 +429,7 @@
                 },
             });
 
-            $("#tabla_plaza_1 tbody").on("click", ".dispersar_colaboradores", function(){
+            /*$("#tabla_plaza_1 tbody").on("click", ".dispersar_colaboradores", function(){
                 var tr = $(this).closest('tr');
                 var row = plaza_1.row( tr );
                 let c=0;                
@@ -481,7 +481,7 @@
                     $("#modal_colaboradores .modal-footer").append('<br><div class="row"><div class="col-md-6"><center><input type="submit" class="btn btn-success" value="DISPERSAR"></center></div><div class="col-md-6"><center><input type="button" class="btn btn-danger"  data-dismiss="modal" value="CANCELAR"></center></div></div>');
                     $("#modal_colaboradores").modal();
                 });
-            });
+            });*/
         });
 
         //FIN TABLA NUEVA //
@@ -765,7 +765,7 @@
         });
 
 
-        $('#selectEstatus').change( function(){  
+        /*$('#selectEstatus').change( function(){
             estatus = $(this).val();  
             let fecha1 = $('#fecha1').val();
             let fecha2 = $('#fecha2').val();
@@ -774,7 +774,7 @@
             }else{
                 totalComisones(fecha1,fecha2,estatus);  
             }
-        });
+        });*/
 
         totalComisones(0,0,0);  
         let titulos = [];
@@ -903,17 +903,17 @@
         }
         // FIN TABLA PROCESO
 
-        $('#fechaR1').change( function(){
+        /*$('#fechaR1').change( function(){
             fecha1 = $(this).val(); 
             let fecha2 = $('#fechaR2').val();
-        });
+        });*/
 
-        $('#fechaR2').change( function(){
+        /*$('#fechaR2').change( function(){
             fecha2 = $(this).val();  
             let fecha1 = $('#fechaR1').val();   
-        });
+        });*/
 
-        $('#selectEstatusR').change( function(){
+        /*$('#selectEstatusR').change( function(){
             estatus = $(this).val();  
             let fecha1 = $('#fechaR1').val();
             let fecha2 = $('#fechaR2').val();
@@ -923,7 +923,7 @@
             else{
                 totalComisonesR(fecha1,fecha2,estatus);  
             }
-        });
+        });*/
         // INICIO TABLA EN PROCESO    
     
         function formatMoney( n ) {
@@ -936,15 +936,15 @@
             return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
         };
 
-        $(document).on( "click", ".subir_factura", function(){
+        /*$(document).on( "click", ".subir_factura", function(){
             resear_formulario();
             id_comision = $(this).val();
             link_post = "Comisiones/guardar_solicitud/"+id_comision;
             $("#modal_formulario_solicitud").modal( {backdrop: 'static', keyboard: false} );
-        });
+        });*/
 
         //FUNCION PARA LIMPIAR EL FORMULARIO CON DE PAGOS A PROVEEDOR.
-        function resear_formulario(){
+        /*function resear_formulario(){
             $("#modal_formulario_solicitud input.form-control").prop("readonly", false).val("");
             $("#modal_formulario_solicitud textarea").html('');
             $("#modal_formulario_solicitud #obse").val('');
@@ -952,15 +952,15 @@
             var validator = $( "#frmnewsol" ).validate();
             validator.resetForm();
             $( "#frmnewsol div" ).removeClass("has-error");
-        }
+        }*/
     
-        $("#cargar_xml").click( function(){
+        /*$("#cargar_xml").click( function(){
             subir_xml( $("#xmlfile") );
-        });
+        });*/
 
         var justificacion_globla = "";
 
-        function subir_xml( input ){
+        /*function subir_xml( input ){
             var data = new FormData();
             documento_xml = input[0].files[0];
             var xml = documento_xml;
@@ -994,9 +994,9 @@
                     alert("ERROR INTENTE COMUNICARSE CON EL PROVEEDOR");
                 }
             });
-        }
+        }*/
 
-        function cargar_info_xml( informacion_factura ){
+        /*function cargar_info_xml( informacion_factura ){
             $("#emisor").val( ( informacion_factura.nameEmisor ? informacion_factura.nameEmisor[0] : '') ).attr('readonly',true);
             $("#rfcemisor").val( ( informacion_factura.rfcemisor ? informacion_factura.rfcemisor[0] : '') ).attr('readonly',true);
 
@@ -1017,9 +1017,9 @@
             $("#clave").val( ( informacion_factura.claveProdServ ? informacion_factura.claveProdServ[0] : '') ).attr('readonly',true);
 
             $("#obse").val( ( informacion_factura.descripcion ? informacion_factura.descripcion[0] : '') ).attr('readonly',true);
-        }
+        }*/
 
-        $("#form_colaboradores").submit( function(e) {
+        /*$("#form_colaboradores").submit( function(e) {
             e.preventDefault();
         }).validate({
             submitHandler: function( form ) {
@@ -1071,9 +1071,9 @@
                     alerts.showNotification("top", "right", "Cantidad excedida", "danger");
                 }
             }
-        });
+        });*/
 
-        $("#frmnewsol").submit( function(e) {
+        /*$("#frmnewsol").submit( function(e) {
             e.preventDefault();
         }).validate({
             submitHandler: function( form ) {
@@ -1102,9 +1102,9 @@
                     }
                 });
             }
-        });          
+        });*/
 
-        $("#form_MKTD").submit( function(e) {
+        /*$("#form_MKTD").submit( function(e) {
             e.preventDefault();        
         }).validate({
             rules: {
@@ -1140,9 +1140,9 @@
                     }
                 });   
             }
-        });
+        });*/
 
-        function calcularMontoParcialidad() {
+        /*function calcularMontoParcialidad() {
             $precioFinal = parseFloat($('#value_pago_cliente').val());
             $precioNuevo = parseFloat($('#new_value_parcial').val());
             if ($precioNuevo >= $precioFinal) {
@@ -1151,9 +1151,9 @@
             else if ($precioNuevo < $precioFinal) {
                 $('#label_estado').append('<label>MONTO VALIDO</label>');
             }            
-        }
+        }*/
 
-        function preview_info(archivo){
+        /*function preview_info(archivo){
             $("#documento_preview .modal-dialog").html("");
             $("#documento_preview").css('z-index', 9999);
             archivo = url+"dist/documentos/"+archivo+"";
@@ -1179,7 +1179,7 @@
                 elemento += '</div>';
                 $("#documento_preview .modal-dialog").append(elemento);
             }
-        }
+        }*/
 
     
         function cleanComments() {
@@ -1203,7 +1203,7 @@
     </script>
 
     <script>
-        $(document).ready( function(){
+        /*$(document).ready( function(){
             $.getJSON( url + "Comisiones/report_plazas").done( function( data ){
                 $(".report_plazas").html();
                 $(".report_plazas1").html();
@@ -1238,6 +1238,6 @@
                 
                 }
             });
-        });                                               
+        });*/
     </script>
 </body>

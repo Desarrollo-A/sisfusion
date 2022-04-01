@@ -1019,7 +1019,7 @@
         }
 
         /**-----------------------------INVENTARIO---------------------------------------- */
-        function cambiarUsuarioInven(idCliente,idLote,ase,coor,ger,asesor,coordinador,gerente){
+        /*function cambiarUsuarioInven(idCliente,idLote,ase,coor,ger,asesor,coordinador,gerente){
             $("#miModalInventario .invent").html('');
 
             $('#miModalInventario .invent').append(`
@@ -1033,7 +1033,7 @@
             <input type="hidden" value="${idCliente}" id="idCliente" name="idCliente">
             `);
             $("#miModalInventario").modal();
-        }
+        }*/
     /**------------------------------------------------------------------------------- */
 
         var getInfo1 = new Array(6);
@@ -1273,11 +1273,11 @@
             });
         }
 
-        $('#filtro44').change(function(ruta){
+        /*$('#filtro44').change(function(ruta){
             conodominio = $('#filtro44').val();
             $("#filtro55").empty().selectpicker('refresh');
             $.ajax({
-                url: '<?=base_url()?>Comisiones/lista_lote/'+conodominio,
+                url: '<?//=base_url()?>Comisiones/lista_lote/'+conodominio,
                 type: 'post',
                 dataType: 'json',
                 success:function(response){
@@ -1291,13 +1291,13 @@
                     $("#filtro55").selectpicker('refresh');
                 }
             });
-        });
+        });*/
 
-        $('#filtro55').change(function(ruta){
+        /*$('#filtro55').change(function(ruta){
             infolote = $('#filtro55').val();
             datos = infolote.split(',');
             idLote = datos[0];
-            $.post("<?=base_url()?>index.php/Comisiones/getComisionesLoteSelected/"+idLote, function (data) {
+            $.post("<//?=base_url()?>index.php/Comisiones/getComisionesLoteSelected/"+idLote, function (data) {
                 if( data.length < 1){
                     document.getElementById('msj').innerHTML = '';
                     document.getElementById('btn-aceptar').disabled  = false;
@@ -1313,7 +1313,7 @@
                     document.getElementById('msj').innerHTML = 'El lote seleccionado tiene comisiones registradas.';
                 }    
             }, 'json');
-        });
+        });*/
 
         let titulos = [];
         function onKeyUp(event) {
@@ -1947,7 +1947,7 @@
         //         pagingType: "full_numbers",
         //         fixedHeader: true,
         //         language: {
-        //             url: "<?=base_url()?>/static/spanishLoader_v2.json",
+        //             url: "<//?=base_url()?>/static/spanishLoader_v2.json",
         //             paginate: {
         //                 previous: "<i class='fa fa-angle-left'>",
         //                 next: "<i class='fa fa-angle-right'>"
@@ -1999,7 +1999,7 @@
         //         pagingType: "full_numbers",
         //         fixedHeader: true,
         //         language: {
-        //             url: "<?=base_url()?>/static/spanishLoader_v2.json",
+        //             url: "<//?=base_url()?>/static/spanishLoader_v2.json",
         //             paginate: {
         //                 previous: "<i class='fa fa-angle-left'>",
         //                 next: "<i class='fa fa-angle-right'>"
@@ -2048,7 +2048,7 @@
         //         pagingType: "full_numbers",
         //         fixedHeader: true,
         //         language: {
-        //             url: "<?=base_url()?>/static/spanishLoader_v2.json",
+        //             url: "<//?=base_url()?>/static/spanishLoader_v2.json",
         //             paginate: {
         //                 previous: "<i class='fa fa-angle-left'>",
         //                 next: "<i class='fa fa-angle-right'>"
@@ -2285,7 +2285,7 @@
     
         }
 
-        function VlidarNuevos(i,usuario){           
+        /*function VlidarNuevos(i,usuario){
             $('#modal_quitar .modal-header').html(''); 
             $('#modal_quitar .modal-body').html(''); 
             $('#modal_quitar .modal-footer').html(''); 
@@ -2313,7 +2313,7 @@
                 }
             });
             $('#modal_quitar').modal('show');
-        }
+        }*/
 
         function ToparComision(i){
 

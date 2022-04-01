@@ -150,7 +150,7 @@ class Usuarios_modelo extends CI_Model {
                                         LEFT JOIN descuentos_universidad du ON du.id_usuario = u.id_usuario
                                         --LEFT JOIN  (SELECT id_usuario FROM descuentos_universidad GROUP BY id_usuario) du ON du.id_usuario = u.id_usuario
                                         WHERE  u.id_rol IN (3, 7, 9) AND u.rfc
-                                        NOT LIKE '%TSTDD%' AND u.correo NOT LIKE '%test_%' AND u.id_usuario NOT IN (821, 1366, 1923, 4340) ORDER BY nombre");
+                                        NOT LIKE '%TSTDD%' AND ISNULL(u.correo, '' ) NOT LIKE '%test_%' AND u.id_usuario NOT IN (821, 1366, 1923, 4340) ORDER BY nombre");
                 break;
 
 

@@ -21,7 +21,7 @@
 
 
 
-    <div class="modal fade modal-alertas" id="modal_nuevas" role="dialog">
+    <!--<div class="modal fade modal-alertas" id="modal_nuevas" role="dialog">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header"></div>
@@ -30,7 +30,7 @@
                 </form>
             </div>
         </div>
-    </div>
+    </div>-->
 
 
     <div class="modal fade" id="seeInformationModalDU" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
@@ -564,13 +564,13 @@
 
 
 
-    function cancela() {
+    /*function cancela() {
         $("#modal_nuevas").modal('toggle');
-    }
+    }*/
 
 
     //Función para pausar la solicitud
-    $("#form_interes").submit(function (e) {
+    /*$("#form_interes").submit(function (e) {
 
         $('#btn_topar').attr('disabled', 'true');
 
@@ -607,10 +607,10 @@
                 }
             });
         }
-    });
+    });*/
 
 
-    function filterFloat(evt, input) {
+    /*function filterFloat(evt, input) {
         // Backspace = 8, Enter = 13, ‘0′ = 48, ‘9′ = 57, ‘.’ = 46, ‘-’ = 43
         var key = window.Event ? evt.which : evt.keyCode;
         var chark = String.fromCharCode(key);
@@ -623,12 +623,12 @@
 
         return false;
 
-    }
+    }*/
 
-    function filter(__val__) {
+    /*function filter(__val__) {
         var preg = /^([0-9]+\.?[0-9]{0,2})$/;
         return (preg.test(__val__) === true);
-    }
+    }*/
 
 
     $("#roles").change(function () {
@@ -658,7 +658,7 @@
     });
 
 
-    $("#form_basta").submit(function (e) {
+    /*$("#form_basta").submit(function (e) {
 
         $('#idloteorigen').removeAttr('disabled');
         $('#btn_abonar').attr('disabled', 'true');
@@ -718,13 +718,13 @@
                 }
             });
         }
-    });
+    });*/
 
 
     // btn_descontar
 
 
-    $("#form_nuevo").submit(function (e) {
+    /*$("#form_nuevo").submit(function (e) {
 
         $('#btn_abonar').attr('disabled', 'true');
 
@@ -783,10 +783,10 @@
                 }
             });
         }
-    });
+    });*/
 
 
-    $("#numeroPagos").change(function () {
+    /*$("#numeroPagos").change(function () {
 
 
         let monto1 = replaceAll($('#descuento').val(), ',', '');
@@ -810,7 +810,7 @@
                 $('#pago_ind01').val(formatMoney(0));
             }
         }
-    });
+    });*/
 
 
     function closeModalEng() {
@@ -834,7 +834,7 @@
 
     }
 
-    function CloseModalDelete2() {
+    /*function CloseModalDelete2() {
         // document.getElementById("inputhidden").innerHTML = "";
         document.getElementById("form-delete").reset();
         a = document.getElementById('borrarBono');
@@ -843,9 +843,9 @@
 
         $("#modal-delete").modal('toggle');
 
-    }
+    }*/
 
-    function CloseModalUpdate2() {
+    /*function CloseModalUpdate2() {
         // document.getElementById("inputhidden").innerHTML = "";
         document.getElementById("form-update").reset();
         a = document.getElementById('borrarUpdare');
@@ -854,9 +854,9 @@
 
         $("#modal-abono").modal('toggle');
 
-    }
+    }*/
 
-    $(document).on('submit', '#form-delete', function (e) {
+    /*$(document).on('submit', '#form-delete', function (e) {
         e.preventDefault();
         var formData = new FormData(document.getElementById("form-delete"));
         formData.append("dato", "valor");
@@ -888,10 +888,10 @@
                 alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
             }
         });
-    });
+    });*/
 
 
-    $("#form_aplicar").submit(function (e) {
+    /*$("#form_aplicar").submit(function (e) {
         e.preventDefault();
     }).validate({
         submitHandler: function (form) {
@@ -926,13 +926,13 @@
                 }
             });
         }
-    });
+    });*/
 
 
     // FIN TABLA PAGADAS
 
 
-    function mandar_espera(idLote, nombre) {
+    /*function mandar_espera(idLote, nombre) {
         idLoteespera = idLote;
         // link_post2 = "Cuentasxp/datos_para_rechazo1/";
         link_espera1 = "Comisiones/generar comisiones/";
@@ -941,7 +941,7 @@
         $("#myModalEspera ").modal();
         // $("#myModalEspera .modal-body").append("<div class='btn-group'>LOTE: "+nombre+"</div>");
         $("#myModalEspera .modal-footer").append("<div class='btn-group'><button type='submit' class='btn btn-success'>GENERAR COMISIÓN</button></div>");
-    }
+    }*/
 
 
     // FUNCTION MORE
@@ -967,10 +967,10 @@
 
 
     /**----------------------------FIN ROLES------------------------------------------------------------- */
-    $("#idloteorigen").select2({dropdownParent: $('#miModal')});
-    $("#idloteorigen").select2("readonly", true);
+    /*$("#idloteorigen").select2({dropdownParent: $('#miModal')});
+    $("#idloteorigen").select2("readonly", true);*/
     /**-----------------------------LOTES----------------------- */
-    $("#idloteorigen").change(function () {
+    /*$("#idloteorigen").change(function () {
 
         let cuantos = $('#idloteorigen').val().length;
         let suma = 0;
@@ -1028,13 +1028,13 @@
                 $("#montodisponible").selectpicker('refresh');
             }, 'json');
         }
-    });
+    });*/
 
     /**--------------------------------------------------------------------------------------------------------- */
 
 
 
-    function verificar() {
+    /*function verificar() {
         // let d = $('#valor_comision').val();
         let d2 = replaceAll($('#idmontodisponible').val(), ',', '');
         let disponiblefinal = replaceAll(d2, '$', '');
@@ -1085,7 +1085,7 @@
             }
         }
 
-    }
+    }*/
 
 
     function cleanCommentsAsimilados() {
@@ -1096,14 +1096,14 @@
     }
 
 
-    function replaceAll(text, busca, reemplaza) {
+    /*function replaceAll(text, busca, reemplaza) {
         while (text.toString().indexOf(busca) != -1)
             text = text.toString().replace(busca, reemplaza);
         return text;
-    }
+    }*/
 
 
-    function open_Mb() {
+    /*function open_Mb() {
         // console.log("SI ENTRA");
         // $("ModalBonos").modal();
 
@@ -1119,7 +1119,7 @@
         $("#comentario2").val('');
 
         $('#ModalBonos').modal('show');
-    }
+    }*/
 
 </script>
    

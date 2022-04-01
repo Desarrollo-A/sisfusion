@@ -89,7 +89,7 @@ $datos = array();
     </div>
 
 
-    <div class="modal fade modal-alertas" id="modal_nuevas" role="dialog">
+    <!--<div class="modal fade modal-alertas" id="modal_nuevas" role="dialog">
     <div class="modal-dialog">
         <div class="modal-content">
 
@@ -98,9 +98,9 @@ $datos = array();
             </form>
         </div>
     </div>
-</div>
+</div>-->
 
-<div class="modal fade modal-alertas" id="modal_despausar" role="dialog">
+<!--<div class="modal fade modal-alertas" id="modal_despausar" role="dialog">
     <div class="modal-dialog">
         <div class="modal-content">
 
@@ -109,9 +109,9 @@ $datos = array();
             </form>
         </div>
     </div>
-</div>
+</div>-->
 
-<div class="modal fade modal-alertas" id="modal_refresh" role="dialog">
+<!--<div class="modal fade modal-alertas" id="modal_refresh" role="dialog">
     <div class="modal-dialog">
         <div class="modal-content">
 
@@ -120,10 +120,10 @@ $datos = array();
             </form>
         </div>
     </div>
-</div>
+</div>-->
 
 
-<div class="modal fade modal-alertas" id="modal_documentacion" role="dialog">
+<!--<div class="modal fade modal-alertas" id="modal_documentacion" role="dialog">
         <div class="modal-dialog" style="width:800px; margin-top:20px">
             <div class="modal-content">
                 <div class="modal-body">
@@ -132,7 +132,7 @@ $datos = array();
                 </div>
             </div>
         </div>
-    </div>
+    </div>-->
 
 
 
@@ -142,21 +142,21 @@ $datos = array();
 </div>
 
 
-<div class="modal fade bd-example-modal-sm" id="myModalEnviadas" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+<!--<div class="modal fade bd-example-modal-sm" id="myModalEnviadas" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-sm">
     <div class="modal-content">
       <div class="modal-body"></div>
     </div>
   </div>
-</div>
+</div>-->
 
-<div class="modal fade bd-example-modal-sm" id="myModalTQro" tabindex="-1" role="dialog" aria-hidden="true">
+<!--<div class="modal fade bd-example-modal-sm" id="myModalTQro" tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-body"></div>
     </div>
   </div>
-</div>
+</div>-->
 
 <div class="content">
     <div class="container-fluid">
@@ -805,7 +805,7 @@ return BtnStats;
 
 
 
-        $("#tabla_historialGral tbody").on("click", ".cambiar_estatus", function(){
+        /*$("#tabla_historialGral tbody").on("click", ".cambiar_estatus", function(){
     var tr = $(this).closest('tr');
     var row = tabla_historialGral2.row( tr );
 
@@ -817,12 +817,12 @@ return BtnStats;
     $("#modal_nuevas .modal-body").append('<input type="hidden" name="id_pago" value="'+row.data().id_pago_i+'">');
     $("#modal_nuevas .modal-body").append('<div class="row"><div class="col-md-6"></div><div class="col-md-3"><input type="submit" class="btn btn-primary" value="PAUSAR"></div><div class="col-md-3"><button type="button" class="btn btn-danger" data-dismiss="modal">CANCELAR</button></div></div>');
     $("#modal_nuevas").modal();
-});
+});*/
 
 
 
 
-$("#tabla_historialGral tbody").on("click", ".despausar_estatus", function(){
+/*$("#tabla_historialGral tbody").on("click", ".despausar_estatus", function(){
     var tr = $(this).closest('tr');
     var row = tabla_historialGral2.row( tr );
     id_pago_i = $(this).val();
@@ -831,7 +831,7 @@ $("#tabla_historialGral tbody").on("click", ".despausar_estatus", function(){
     $("#modal_refresh .modal-body").append('<input class="idComPau" name="id_comision" type="text" value="'+row.data().id_comision+'" hidden>');
     $("#modal_refresh .modal-body").append('<div class="row"><div class="col-md-6"></div><div class="col-md-3"><input type="submit" class="btn btn-primary" value="CONFIRMAR"></div><div class="col-md-3"><button type="button" class="btn btn-danger" data-dismiss="modal">CANCELAR</button></div></div>');
     $("#modal_refresh").modal();
-});
+});*/
 
 
 
@@ -963,9 +963,9 @@ function formatMoney( n ) {
 
 
 
-function cancela(){
+/*function cancela(){
    $("#modal_nuevas").modal('toggle');
-}
+}*/
 
 
 
@@ -973,7 +973,7 @@ function cancela(){
 
 
 //Función para pausar la solicitud
-$("#form_interes").submit( function(e) {
+/*$("#form_interes").submit( function(e) {
     e.preventDefault();
 }).validate({
     submitHandler: function( form ) {
@@ -1007,10 +1007,10 @@ $("#form_interes").submit( function(e) {
                 }
             });
     }
-});
+});*/
 
 //Función para regresar a estatus 7 la solicitud
-$("#form_refresh").submit( function(e) {
+/*$("#form_refresh").submit( function(e) {
     e.preventDefault();
 }).validate({
     submitHandler: function( form ) {
@@ -1043,9 +1043,9 @@ $("#form_refresh").submit( function(e) {
                 }
             });
     }
-});
+});*/
 
-$("#form_despausar").submit( function(e) {
+/*$("#form_despausar").submit( function(e) {
     e.preventDefault();
 }).validate({
     submitHandler: function( form ) {
@@ -1079,7 +1079,7 @@ $("#form_despausar").submit( function(e) {
                 }
             });
     }
-});
+});*/
 
 
 
@@ -1088,9 +1088,9 @@ $("#form_despausar").submit( function(e) {
 
 
 
-$(document).on("click", ".btn-historial-lo", function(){
+/*$(document).on("click", ".btn-historial-lo", function(){
     window.open(url+"Comisiones/getHistorialEmpresa", "_blank");
-});
+});*/
 
 
 
@@ -1128,7 +1128,7 @@ $(document).on("click", ".btn-historial-lo", function(){
 
 
 
-function cleanComments()
+/*function cleanComments()
 {
 
     var myCommentsList = document.getElementById('documents');
@@ -1138,14 +1138,14 @@ function cleanComments()
     myFactura.innerHTML = '';
 
 
-}
+}*/
 
 
 
 </script>
 
 <script>
-     $(document).ready( function()
+     /*$(document).ready( function()
    {
 
 
@@ -1157,7 +1157,7 @@ function cleanComments()
         });
     });
 
-});
+});*/
 
 
 </script>
