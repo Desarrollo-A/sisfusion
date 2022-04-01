@@ -1329,18 +1329,9 @@ function createDocRow(row, tr, thisVar){
 }
      
 //ENVIO OBSERVACIONES
-<<<<<<< HEAD
 $(document).on('click', '#observacionesButton', function () {
     var data = prospectsTable.row($(this).parents('tr')).data();
     $('#idSolicitud').val(data.idSolicitud);
-=======
-$(document).on('click', '#observaciones', function () {
-    var tr = $(this).closest('tr');
-    var row = prospectsTable.row(tr);
-    var id_solicitud = row.data().idSolicitud;
-    console.log(id_solicitud);
-    $('#idSolicitud').val(id_solicitud);
->>>>>>> e7a3154202402cfcfa39c87f08130a84ba66078a
     $('#viewObservaciones').modal();
 });
 
