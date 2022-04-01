@@ -1,8 +1,8 @@
 <head>
     <!-- Google API LOGIN -->
-	<meta name="google-signin-client_id" content="848186048646-ugthma1qfj0ocamf1jeju4ahdi3n7qop.apps.googleusercontent.com">
+	<!-- <meta name="google-signin-client_id" content="848186048646-ugthma1qfj0ocamf1jeju4ahdi3n7qop.apps.googleusercontent.com">
 	<script src="https://apis.google.com/js/platform.js" async defer></script>
-	
+	 -->
 </head>
 <body>
 <div class="wrapper">
@@ -30,7 +30,10 @@
             </div>
         </div>
     </div>
-    <div class="g-signin2" data-onsuccess="onSignIn"></div>
+    <button id="authorize_button" style="display: none;">Authorize</button>
+    <button id="signout_button" style="display: none;">Sign Out</button>
+    <pre id="content" style="white-space: pre-wrap;"></pre>
+
     <?php include 'common_modals.php' ?>
 </div>
 </div><!--main-panel close-->
@@ -41,6 +44,10 @@
 
 <script src="<?= base_url() ?>dist/assets/js/bootstrap-datetimepicker.js"></script>
 <script src="<?=base_url()?>dist/js/controllers/calendar.js"></script>
+<script async defer src="https://apis.google.com/js/api.js"
+      onload="this.onload=function(){};handleClientLoad()"
+      onreadystatechange="if (this.readyState === 'complete') this.onload()">
+    </script>
 <script>
     userType = <?= $this->session->userdata('id_rol') ?> ;
     idUser = <?= $this->session->userdata('id_usuario') ?> ;
