@@ -3,7 +3,7 @@
 <head>
 	<!-- <meta charset="utf-8" /> -->
 	 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-
+	
 	<link rel="apple-touch-icon" sizes="76x76" href="../dist/img/apple-icon.png" />
 	<link rel='shortcut icon' type='image/x-icon' href='<?=base_url()?>static/images/img.ico' />
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
@@ -49,5 +49,6 @@
 	<link href="<?=base_url()?>dist/js/controllers/select2/select2.min.css" rel="stylesheet" />
 	<link href="<?= base_url() ?>static/yadcf/jquery.datatables.yadcf.css" rel="stylesheet" type="text/css"/>
 	<link href='<?=base_url()?>dist/js/fullcalendar/main.css' rel='stylesheet' />
+	
 </head>
 

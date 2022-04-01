@@ -52,5 +52,5 @@ user_guide/*
 #Omitimos carpeta uploads, contenido xml y pdf
 UPLOADS/*
 
-#omitir carpeta de ilbreria
-vendor/*
+#Composer dependencies
+vendor/
