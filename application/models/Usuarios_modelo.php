@@ -150,7 +150,7 @@ class Usuarios_modelo extends CI_Model {
                                         LEFT JOIN descuentos_universidad du ON du.id_usuario = u.id_usuario
                                         --LEFT JOIN  (SELECT id_usuario FROM descuentos_universidad GROUP BY id_usuario) du ON du.id_usuario = u.id_usuario
                                         WHERE  u.id_rol IN (3, 7, 9) AND u.rfc
-                                        NOT LIKE '%TSTDD%' AND u.correo NOT LIKE '%test_%' AND u.id_usuario NOT IN (821, 1366, 1923, 4340) ORDER BY nombre");
+                                        NOT LIKE '%TSTDD%' AND ISNULL(u.correo, '' ) NOT LIKE '%test_%' AND u.id_usuario NOT IN (821, 1366, 1923, 4340) ORDER BY nombre");
                 break;
 
 
@@ -742,6 +742,21 @@ function getAllFoldersPDF()
           */   
          }
 
-
+         function getUsersListByLeader($idUsuario){
+            return $this->db->query("DECLARE @user INT 
+            SELECT @user = $idUsuario
+            SELECT u.id_usuario, u.id_rol, opcs_x_cats.nombre AS puesto, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno)
+            AS nombre, CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) AS jefe_directo, u.telefono, u.correo, u.estatus, 
+            u.id_lider, 0 nuevo, u.fecha_creacion, s.nombre sede 
+            FROM usuarios u
+            INNER JOIN opcs_x_cats ON u.id_rol = opcs_x_cats.id_opcion and id_catalogo = 1
+            INNER JOIN sedes s ON CAST(s.id_sede AS VARCHAR(45)) = CAST(u.id_sede AS VARCHAR(45))
+            INNER JOIN usuarios us ON us.id_usuario= u.id_lider
+            where u.id_rol in(1,2,3,7,9) and u.rfc NOT LIKE '%TSTDD%' AND u.correo NOT LIKE '%test_%'  AND u.estatus = 1
+            AND (u.id_lider = @user  
+            OR u.id_lider in (select u2.id_usuario from usuarios u2 where id_lider = @user )
+            OR u.id_lider in (select u2.id_usuario from usuarios u2 where id_lider in (select u2.id_usuario from usuarios u2 where id_lider = @user )))
+            ORDER BY u.id_rol");
+         }
 
 }

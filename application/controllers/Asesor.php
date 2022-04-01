@@ -30,6 +30,17 @@ class Asesor extends CI_Controller
         $this->load->view('template/footer');
     }
 
+    public function homeView()
+    {
+        if ($this->session->userdata('id_rol') == FALSE || $this->session->userdata('id_rol') != '61')
+            redirect(base_url() . 'login');
+        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
+        $this->load->view('template/header');
+        $this->load->view('template/home', $datos);
+        $this->load->view('template/footer');
+    }
+
+
     public function dataPrueba($idCliente, $onlyView)
     {
         $datos["cliente"] = $this->registrolote_modelo->selectDS_ds($idCliente);
@@ -102,26 +113,39 @@ class Asesor extends CI_Controller
         echo json_encode($this->Asesor_model->get_validar_solicitud($lote)->result_array());
     }
 
-    public function getinfoLoteDisponible()
-    {
+    public function getinfoLoteDisponible() {
         $objDatos = json_decode(file_get_contents("php://input"));
         $data = $this->Asesor_model->getLotesInfoCorrida($objDatos->lote);
+        /*print_r($data);
+        exit;*/
         $cd = json_decode(str_replace("'", '"', $data[0]['casasDetail']));
         $total_construccion = 0; // MJ: AQUÍ VAMOS A GUARDAR EL TOTAL DE LA CONSTRUCCIÓN + LOS EXRTAS
 
-
-        foreach ($cd->tipo_casa as $value) {
-            // if($value->nombre == 'Aura') {
-            $total_construccion = $value->total_const; // MJ: SE EXTRAE EL TOTAL DE LA CONSTRUCCIÓN POR TIPO DE CASA
-            foreach ($value->extras as $v) {
-                $total_construccion += $v->techado;
+        if($data[0]['casasDetail'] == 1){
+            foreach($cd->tipo_casa as $value) {
+                // if($value->nombre == 'Aura') {
+                $total_construccion = $value->total_const; // MJ: SE EXTRAE EL TOTAL DE LA CONSTRUCCIÓN POR TIPO DE CASA
+                foreach($value->extras as $v) {
+                    $total_construccion += $v->techado;
+                }
+                // }
             }
-            // }
         }
+
         $data[0]['total'] += $total_construccion;
 
 
-        if ($data != null) {
+        if($data != null) {
+            echo json_encode($data);
+        } else {
+            echo json_encode(array());
+        }
+    }
+
+    public function getinfoLoteDisponibleE() {
+        $objDatos = json_decode(file_get_contents("php://input"));
+        $data = $this->Asesor_model->getLotesInfoCorridaE($objDatos->lote);
+        if($data != null) {
             echo json_encode($data);
         } else {
             echo json_encode(array());

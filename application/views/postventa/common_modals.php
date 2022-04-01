@@ -403,36 +403,38 @@
                <form id="newNotario" name="newNotario" method="post">
                     <input type="text" class="hide" id="idSolicitud" name="idSolicitud">
                     <div class="modal-body">
-                        <div class="col-md-4">
-                            <div class="form-group label-floating is-focused">
-                                <label class="control-label label-gral">Nombre de la notaria</label>
-                                <input type="text" id="nombre_notaria" name="nombre_notaria" class="form-control input-gral">
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="form-group label-floating is-focused">
-                                <label class="control-label label-gral">Nombre del notario</label>
-                                <input type="text" id="nombre_notario" name="nombre_notario" class="form-control input-gral">
-                            </div>
-                        </div>    
-                        <div class="col-md-4">
-                            <div class="form-group label-floating is-focused">
-                                <label class="control-label label-gral">Direccion</label>
-                                <input type="text" id="direccion" name="direccion" class="form-control input-gral">
-                            </div>
-                        </div>    
-                        <div class="col-md-4">
-                            <div class="form-group label-floating is-focused">
-                                <label class="control-label label-gral">Correo</label>
-                                <input type="text" id="correo" name="correo" class="form-control input-gral">
-                            </div>
-                        </div>    
-                        <div class="col-md-4">
-                            <div class="form-group label-floating is-focused">
-                                <label class="control-label label-gral">Teléfono</label>
-                                <input type="text" id="telefono" name="telefono" class="form-control input-gral">
-                            </div>
-                        </div>    
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-md-4 pr-0 pr-0">
+                                    <div class="form-group text-left m-0">
+                                        <label class="control-label label-gral">Nombre de la notaria</label>
+                                        <input type="text" id="nombre_notaria" name="nombre_notaria" class="form-control input-gral">
+                                    </div>
+                                </div>
+                                <div class="col-md-4 pr-0 pr-0">
+                                    <div class="form-group text-left m-0">
+                                        <label class="control-label label-gral">Nombre del notario</label>
+                                        <input type="text" id="nombre_notario" name="nombre_notario" class="form-control input-gral">
+                                    </div>
+                                </div>
+                                <div class="col-md-4 pr-0 pr-0">
+                                    <div class="form-group text-left m-0">
+                                        <label class="control-label label-gral">Direccion</label>
+                                        <input type="text" id="direccion" name="direccion" class="form-control input-gral">
+                                    </div>
+                                </div>
+                                <div class="col-md-4 pr-0 pr-0">
+                                    <div class="form-group text-left m-0">
+                                        <label class="control-label label-gral">Correo</label>
+                                        <input type="text" id="correo" name="correo" class="form-control input-gral">
+                                    </div>
+                                </div>
+                                <div class="col-md-4 pr-0 pr-0">
+                                    <div class="form-group text-left m-0">
+                                        <label class="control-label label-gral">Teléfono</label>
+                                        <input type="text" id="telefono" name="telefono" class="form-control input-gral">
+                                    </div>
+                                </div>
                     </div>
                     <div class="modal-footer">
                         <button type="submit" class="btn btn-primary">Aceptar</button>
@@ -519,7 +521,7 @@
                             </select>
                         </div>      
                         <div class="col-12 col-sm-12 col-md-6 col-lg-6">
-                            <select id="observaciones" class="selectpicker" data-style="btn btn-primary btn-round" title="Observaciones" data-size="7" data-live-search="true">
+                            <select id="observacionesS" class="selectpicker" data-style="btn btn-primary btn-round" title="Observaciones" data-size="7" data-live-search="true">
                                 <option value="Correccioón Documentos">Corrección Documentos</option>
                                 <option value="Documentación Correcta">Documentación Correcta</option>  
                             </select>

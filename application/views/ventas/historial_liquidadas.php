@@ -16,7 +16,7 @@
 
         <!-- Modals -->
         <!-- modal  AGREGAR PLAN DE ENGANCHE-->
-        <div class="modal fade modal-alertas" id="modal_enganche" role="dialog">
+        <!--<div class="modal fade modal-alertas" id="modal_enganche" role="dialog">
             <div class="modal-dialog modal-md">
                 <div class="modal-content">
                     <div class="modal-header bg-red">
@@ -26,7 +26,7 @@
                     </form>
                 </div>
             </div>
-        </div>
+        </div>-->
         <!-- modal -->
 
         <!-- modal verifyNEODATA -->
@@ -492,7 +492,7 @@
             });
         });
 
-        jQuery(document).ready(function () {
+        /*jQuery(document).ready(function () {
             jQuery('#editReg').on('hidden.bs.modal', function (e) {
                 jQuery(this).removeData('bs.modal');
                 jQuery(this).find('#comentario').val('');
@@ -505,9 +505,9 @@
                 jQuery(this).find('#comentario3').val('');
             })
 
-        })
+        })*/
 
-        function SoloNumeros(evt) {
+        /*function SoloNumeros(evt) {
             if (window.event) {
                 keynum = evt.keyCode;
             } else {
@@ -520,11 +520,11 @@
                 alerts.showNotification("top", "left", "Solo Numeros.", "danger");
                 return false;
             }
-        }
+        }*/
 
-        function closeModalEng() {
+        /*function closeModalEng() {
             $("#modal_enganche").modal('toggle');
-        }
+        }*/
 
         function formatMoney(n) {
             var c = isNaN(c = Math.abs(c)) ? 2 : c,

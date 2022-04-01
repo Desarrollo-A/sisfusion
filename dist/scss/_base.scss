@@ -66,18 +66,20 @@
         margin: 8px 0;
     }
 }
+.overflow-hidden{ overflow: hidden;}
 /* END utilities */
 
 /* Flexbox */
-.d-none         { display: none; }
-.d-flex         { display: flex; }
-.align-end      { align-items: flex-end; }
-.align-center   { align-items: center;}
-.justify-end    { justify-content: flex-end; }
-.justify-center { justify-content: center; }
-.justify-evenly { justify-content: space-evenly; }
-.text-center    { text-align: center; }
-.text-left      { text-align: start; }
+.d-none          { display: none; }
+.d-flex          { display: flex; }
+.align-end       { align-items: flex-end; }
+.align-center    { align-items: center;}
+.justify-end     { justify-content: flex-end; }
+.justify-center  { justify-content: center; }
+.justify-evenly  { justify-content: space-evenly; }
+.justify-between { justify-content: space-between;}
+.text-center     { text-align: center; }
+.text-left       { text-align: start!important; }
 
 /* END Flexbox */
 
@@ -87,10 +89,10 @@ $platinumLight : #eeeeee;
 $platinum      : #eaeaea;
 $platinumScroll: #c1c1c1;
 $deepGray      : #929292;
-$grayDisabled  : #353535;
-$gray          : #333333;
 $grey9         : #999999;
 $grayOxford    : #4e4e4e;
+$grayDisabled  : #353535;
+$gray          : #333333;
 $grayDark      : #191B1C;
 $goldMaderas   : #96843D;
 $azure         : #4382EF;
@@ -110,8 +112,10 @@ $orangeLight   : #f8aa4b;
 $greenExcel    : #209E63;
 $green         : #28B463;
 $acidGreen     : #AFB42B;
+$violet        : #702497;
 
 /* END vrbls coloress */
+
 
 /* size devices */
 $smartphone         : "(min-device-width : 320px) and (max-device-width : 480px)";
@@ -286,6 +290,7 @@ $tv                 : "(min-width : 1824px)";
     height: 38px;
     border: none;
   }
+
 /* END Btns fuera de datatable */
 
 /* Btns accioón dentro de datatable */
@@ -334,12 +339,20 @@ $tv                 : "(min-width : 1824px)";
     background-color: $gray;
     color: $white!important;
 }
+.btn-violetDeep{
+    color: $violet;
+    border: 1px solid $violet;
+}
+.btn-violetDeep:hover{
+    background-color: $violet;
+    color: $white!important;
+}
 .btn-deepGray{
-    color: $deepGray;  
+    color: $deepGray;
     border: 1px solid $deepGray;
 }
 .btn-deepGray:hover{
-    background-color: $deepGray;
+    color: $deepGray;
     color: $white!important;
 }
 .btn-blueMaderas{
@@ -386,6 +399,7 @@ $tv                 : "(min-width : 1824px)";
 .btn-warning{
     color:$red;
     border: 1px solid $red;
+    background: none;
 }
 .btn-warning:hover, .btn-warning:focus{
     background-color: $red!important;
@@ -661,7 +675,7 @@ $tv                 : "(min-width : 1824px)";
     padding: 10px;
     resize: none;
     width: 100%;
-    height: 120px;
+    height: 80px;
     overflow: auto;
     font-size: 12px;
 }

@@ -26,11 +26,11 @@
         ?>
 
         <!-- END Modals -->
-        <div class="modal fade modal-alertas" id="documento_preview" role="dialog">
+        <!--<div class="modal fade modal-alertas" id="documento_preview" role="dialog">
             <div class="modal-dialog" style= "margin-top:20px;"></div>
-        </div>
+        </div>-->
 
-        <div class="modal fade modal-alertas" id="modal_pagadas" role="dialog">
+        <!--<div class="modal fade modal-alertas" id="modal_pagadas" role="dialog">
             <div class="modal-dialog modal-md">
                 <div class="modal-content">
                     <div class="modal-header bg-red">
@@ -42,7 +42,7 @@
                     </form>
                 </div>
             </div>
-        </div>
+        </div>-->
 
         <div class="modal fade" id="seeInformationModalfactura" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog modal-md modal-dialog-scrollable" role="document">
@@ -76,7 +76,7 @@
             </div>
         </div>
 
-        <div class="modal fade modal-alertas" id="modal_nuevas" role="dialog">
+        <!--<div class="modal fade modal-alertas" id="modal_nuevas" role="dialog">
             <div class="modal-dialog">
                 <div class="modal-content">
 
@@ -85,9 +85,9 @@
                     </form>
                 </div>
             </div>
-        </div>
+        </div>-->
 
-        <div class="modal fade modal-alertas" id="modal_documentacion" role="dialog">
+        <!--<div class="modal fade modal-alertas" id="modal_documentacion" role="dialog">
             <div class="modal-dialog" style="width:800px; margin-top:20px">
                 <div class="modal-content">
                     <div class="modal-body">
@@ -96,23 +96,23 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div>-->
 
-        <div class="modal fade bd-example-modal-sm" id="myModalEnviadas" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+        <!--<div class="modal fade bd-example-modal-sm" id="myModalEnviadas" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-sm">
                 <div class="modal-content">
                     <div class="modal-body"></div>
                 </div>
             </div>
-        </div>
+        </div>-->
 
-        <div class="modal fade bd-example-modal-sm" id="myModalTQro" tabindex="-1" role="dialog" aria-hidden="true">
+        <!--<div class="modal fade bd-example-modal-sm" id="myModalTQro" tabindex="-1" role="dialog" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-body"></div>
                 </div>
             </div>
-        </div>
+        </div>-->
 
         <div class="content boxContent">
             <div class="container-fluid">
@@ -266,7 +266,7 @@
             $("#tabla_factura").prop("hidden", true);
 
             var url = "<?=base_url()?>/index.php/";
-            $.post("<?=base_url()?>index.php/Contratacion/lista_proyecto", function (data) {
+            /*$.post("<//?=base_url()?>index.php/Contratacion/lista_proyecto", function (data) {
                 var len = data.length;
                 for (var i = 0; i < len; i++) {
                     var id = data[i]['idResidencial'];
@@ -274,7 +274,7 @@
                     $("#filtro3").append($('<option>').val(id).text(name.toUpperCase()));
                 }
                 $("#filtro3").selectpicker('refresh');
-            }, 'json');
+            }, 'json');*/
 
             $.post("<?=base_url()?>index.php/Contratacion/lista_proyecto", function (data) {
                 var len = data.length;
@@ -286,7 +286,7 @@
                 $("#filtro33").selectpicker('refresh');
             }, 'json');
 
-            $.post("<?=base_url()?>index.php/Contratacion/lista_proyecto", function (data) {
+            /*$.post("<//?=base_url()?>index.php/Contratacion/lista_proyecto", function (data) {
                 var len = data.length;
                 for (var i = 0; i < len; i++) {
                     var id = data[i]['idResidencial'];
@@ -294,14 +294,14 @@
                     $("#filtro333").append($('<option>').val(id).text(name.toUpperCase()));
                 }
                 $("#filtro333").selectpicker('refresh');
-            }, 'json');
+            }, 'json');*/
         });
 
-        $('#filtro3').change(function(ruta){
+        /*$('#filtro3').change(function(ruta){
             residencial = $('#filtro3').val();
             $("#filtro4").empty().selectpicker('refresh');
             $.ajax({
-                url: '<?=base_url()?>Asesor/getCondominioDesc/'+residencial,
+                url: '<//?=base_url()?>Asesor/getCondominioDesc/'+residencial,
                 type: 'post',
                 dataType: 'json',
                 success:function(response){
@@ -315,7 +315,7 @@
                     $("#filtro4").selectpicker('refresh');
                 }
             });
-        });
+        });*/
 
         $('#filtro33').change(function(ruta){
             residencial = $('#filtro33').val();
@@ -336,23 +336,23 @@
             });
         });
 
-        $('#filtro3').change(function(ruta){
+        /*$('#filtro3').change(function(ruta){
             proyecto = $('#filtro3').val();
             condominio = $('#filtro4').val();
             if(condominio == '' || condominio == null || condominio == undefined){
                 condominio = 0;
             }
             getInvoiceCommissions(proyecto, condominio);
-        });
+        });*/
 
-        $('#filtro4').change(function(ruta){
+        /*$('#filtro4').change(function(ruta){
             proyecto = $('#filtro3').val();
             condominio = $('#filtro4').val();
             if(condominio == '' || condominio == null || condominio == undefined){
                 condominio = 0;
             }
             getInvoiceCommissions(proyecto, condominio);
-        });
+        });*/
 
 
         $('#filtro33').change(function(ruta){
@@ -375,10 +375,10 @@
             getFacturaCommissions(proyecto, condominio);
         });
 
-        $('#filtro333').change(function(ruta){
+        /*$('#filtro333').change(function(ruta){
             proyecto = $('#filtro333').val();
             getHistoryCommissions(proyecto);
-        });
+        });*/
 
         var url = "<?=base_url()?>";
         var url2 = "<?=base_url()?>index.php/";
@@ -643,7 +643,7 @@
                 return solicitudes += '</table>';
             }
 
-            $("#tabla_factura tbody").on("click", ".enviar_internomex", function(){
+            /*$("#tabla_factura tbody").on("click", ".enviar_internomex", function(){
                 id_usuario = $(this).val();
                 id_residencial = $(this).attr("data-value");
                 user_factura = $(this).attr("data-userfactura");
@@ -655,7 +655,7 @@
 
                 $("#modal_nuevas .modal-body").append('<div class="row"><div class="col-md-6"></div><div class="col-md-3"><input type="submit" class="btn btn-primary" value="Enviar"></div><div class="col-md-3"><button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button></div></div>');
                 $("#modal_nuevas").modal();
-            });
+            });*/
 
             $("#tabla_factura tbody").on("click", ".subirPDF", function(e){
                 e.preventDefault();
@@ -742,7 +742,7 @@
             });
 
             /**----------------------------------------------------------------- */
-            $("#tabla_factura tbody").on("click", ".regresarPago", function(e){
+            /*$("#tabla_factura tbody").on("click", ".regresarPago", function(e){
                 e.preventDefault();
                 e.stopImmediatePropagation();
                 idpago = $(this).val();
@@ -758,7 +758,7 @@
                     <textarea id="motivo" name="motivo" class="form-control"></textarea>`);
         
                 $("#seeInformationModalPDF .modal-footer").append(`<button type="submit" id="sendFile" class="btn btn-primary"> Aceptar</button><button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" onclick="cleanCommentsPDF()"><b>Cerrar</b></button>`);
-            });
+            });*/
 
             /**--------------------------------------------------- */
             $("#tabla_factura tbody").on("click", ".consultar_documentos", function(e){
@@ -925,12 +925,12 @@
             return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
         };
 
-        function cancela(){
+        /*function cancela(){
             $("#modal_nuevas").modal('toggle');
-        }
+        }*/
 
         //Función para pausar la solicitud
-        $("#form_interes").submit( function(e) {
+        /*$("#form_interes").submit( function(e) {
             e.preventDefault();
         }).validate({
             submitHandler: function( form ) {
@@ -961,13 +961,13 @@
                     }
                 });
             }
-        });
+        });*/
     
-        $(document).on("click", ".btn-historial-lo", function(){
+        /*$(document).on("click", ".btn-historial-lo", function(){
             window.open(url+"Comisiones/getHistorialEmpresa", "_blank");
-        });
+        });*/
 
-        function preview_info(archivo){
+        /*function preview_info(archivo){
             $("#documento_preview .modal-dialog").html("");
             $("#documento_preview").css('z-index', 9999);
             archivo = url+"dist/documentos/"+archivo+"";
@@ -993,24 +993,24 @@
                 elemento += '</div>';
                 $("#documento_preview .modal-dialog").append(elemento);
             }
-        }
+        }*/
 
-        function cleanComments(){
+        /*function cleanComments(){
             var myCommentsList = document.getElementById('documents');
             myCommentsList.innerHTML = '';
 
             var myFactura = document.getElementById('facturaInfo');
             myFactura.innerHTML = '';
-        }
+        }*/
 
-        $(document).ready( function(){
+        /*$(document).ready( function(){
             $.getJSON( url + "Comisiones/getReporteEmpresa").done( function( data ){
                 $(".report_empresa").html();
                 $.each( data, function( i, v){
                     $(".report_empresa").append('<div class="col xol-xs-3 col-sm-3 col-md-3 col-lg-3"><label style="color: #00B397;">&nbsp;'+v.empresa+': $<input style="border-bottom: none; border-top: none; border-right: none;  border-left: none; background: white; color: #00B397; font-weight: bold;" value="'+formatMoney(v.porc_empresa)+'" disabled="disabled" readonly="readonly" type="text"  name="myText_FRO" id="myText_FRO"></label></div>');
                 });
             });
-        });
+        });*/
 
         $(document).on('click', '.verPDF', function () {
             var $itself = $(this);

@@ -258,7 +258,8 @@ $(document).on("click", ".upload", function () {
             $("#selectFileSection").addClass("hide");
             $("#rejectReasonsSection").removeClass("hide");
         }
-
+        $('#uploadedDocument').val('');
+        $( "#uploadedDocument" ).trigger( "change" );
         $("#uploadModal").modal();
     } else if (action == 3) {
         $("#sendRequestButton").click();
@@ -267,7 +268,12 @@ $(document).on("click", ".upload", function () {
     $("input:file").on("change", function () {
         var target = $(this);
         var relatedTarget = target.siblings(".file-name");
-        var fileName = target[0].files[0].name;
+
+        if(target.val() == ''){
+            var fileName = 'No has seleccionada nada aún';
+        }else{
+            var fileName = target[0].files[0].name;
+        }
         relatedTarget.val(fileName);
     });
 });
@@ -1323,9 +1329,18 @@ function createDocRow(row, tr, thisVar){
 }
      
 //ENVIO OBSERVACIONES
+<<<<<<< HEAD
 $(document).on('click', '#observacionesButton', function () {
     var data = prospectsTable.row($(this).parents('tr')).data();
     $('#idSolicitud').val(data.idSolicitud);
+=======
+$(document).on('click', '#observaciones', function () {
+    var tr = $(this).closest('tr');
+    var row = prospectsTable.row(tr);
+    var id_solicitud = row.data().idSolicitud;
+    console.log(id_solicitud);
+    $('#idSolicitud').val(id_solicitud);
+>>>>>>> e7a3154202402cfcfa39c87f08130a84ba66078a
     $('#viewObservaciones').modal();
 });
 
@@ -1369,7 +1384,7 @@ $(document).on('click', '#observacionesSubmit', function (e) {
     e.preventDefault();
     let idSolicitud = $('#idSolicitud').val();
     let action = $('#action').val();
-    let observaciones = $('#observaciones').val();
+    let observaciones = $('#observacionesS').val();
     emailObservaciones(idSolicitud, action, observaciones);
 });
 

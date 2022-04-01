@@ -8036,10 +8036,10 @@
 						}
 						else
 						{
-							$array_final[$k] = $data['lotes'][$k];		
+							$array_final[$k] = $data['lotes'][$k];
 						}
 					}
-					
+
 				}
 				$data['lotes'] = array_values($data['lotes']);
 				echo json_encode($data['lotes']);
@@ -8139,7 +8139,7 @@
 				$arreglo["expediente"] = $expediente.'.'.$fileExt;
 
 
-				$arreglo2=array();
+                $arreglo2=array();
 				$arreglo2["expediente"]= $expediente.'.'.$fileExt;
 				$arreglo2["modificado"]= date('Y-m-d H:i:s');
 				$arreglo2["idUser"]= $this->session->userdata('id_usuario');
@@ -8456,7 +8456,7 @@
 		$composicion = $proyecto."_".$cond.$numeroLote."_".$date;
 
 		$nombArchivo= $composicion;
-		$expediente=  $nombArchivo.'_'.$idCliente.'_'.$aleatorio.'_'.$expediente;
+		$expediente=  $nombArchivo.'_'.$idCliente.'_'.$aleatorio;
 
 		$arreglo=array();
 		$arreglo["expediente"] = $expediente;

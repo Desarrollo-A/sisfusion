@@ -449,7 +449,6 @@ function validateFile() {
     if ($('#prospecting_place').val() == '' || $('#prospecting_place').val() == null ||
         $('#sales_plaza').val() == '' || $('#sales_plaza').val() == null ||
         $('#asesor_prospecto').val() == '' || $('#asesor_prospecto').val() == null) {
-        console.log('vals 5');
         alerts.showNotification('top', 'right', 'Debes ingresar los campos requeridos', 'danger');
 
     } else {
@@ -755,7 +754,6 @@ function fillFields(v, type) {
         }
 
         pp = v.lugar_prospeccion;
-        console.log(pp);
         if (pp == 3 || pp == 7 || pp == 9 || pp == 10) { // SPECIFY OPTION
             $("#specify").val(v.otro_lugar);
         } else if (pp == 6) { // SPECIFY MKTD OPTION
@@ -1054,7 +1052,6 @@ $(document).on('click', '.see-information', function(e) {
 
 $(document).on('click', '.re-asign', function(e) {
     id_prospecto = $(this).attr("data-id-prospecto");
-    console.log(id_prospecto);
     if (userType == 3 || userType == 6) { // Gerente & asistente de ventas
         $("#myReAsignModalVentas").modal();
         $("#id_prospecto_re_asign_ve").val(id_prospecto);
@@ -1162,7 +1159,6 @@ $("#my_update_status_form_preventa").on('submit', function(e) {
 
     } else {
 
-        console.log("NADA");
 
     }
 
@@ -1279,16 +1275,15 @@ $(document).on('click', '.change-pl', function () { // MJ: FUNCIÓN CAMBIO DE ES
 
 function compareDates(fecha_creacion){
     var isBefore = moment(fecha_creacion).isBefore('2022-01-20T00:00:00Z');
-    console.log(isBefore);
     return isBefore;
 }
 $("#estatus_recordatorio").on('change', function(e){
     let medio =  $(this).val();
-    console.log('medio', medio);
     if(medio == 2 || medio == 4 || medio == 5){
         $("#comodinDIV").empty();
         $("#comodinDIV").append(`<label>Dirección</label>`+
         `<input id="comodin" name="comodin" type="text" class="form-control">`);
+        $("#comodinDIV2").removeClass('hide');
       }else{
         $("#comodinDIV").empty();
 
@@ -1298,7 +1293,6 @@ $("#estatus_recordatorio").on('change', function(e){
 $("#estatus_recordatorio_form").on('submit', function(e) {
     e.preventDefault();
     var formData = new FormData(this);
-    console.log('estatus: ', $("#id_prospecto_estatus_particular").val());
     formData.append('estatus_particular',$('#estatus_particular').val());
     formData.append('id_prospecto_estatus_particular',  $("#id_prospecto_estatus_particular").val());
     $.ajax({

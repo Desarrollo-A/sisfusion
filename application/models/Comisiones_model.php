@@ -14,11 +14,11 @@ class Comisiones_model extends CI_Model {
     {
 
         $query = $this->db-> query("SELECT DISTINCT(l.idLote), l.idStatusContratacion, l.registro_comision, cl.id_cliente, l.nombreLote, l.idStatusContratacion, res.nombreResidencial, cond.nombre as nombreCondominio, l.tipo_venta, l.referencia, vc.id_cliente AS compartida, l.totalNeto, l.totalNeto2, l.plan_enganche, plane.nombre as enganche_tipo, cl.lugar_prospeccion, pc.id_pagoc,
-        ae.id_usuario as id_asesor, CONCAT(ae.nombre, ' ', ae.apellido_paterno, ' ', ae.apellido_paterno) as asesor,
-        co.id_usuario as id_coordinador, CONCAT(co.nombre, ' ', co.apellido_paterno, ' ', co.apellido_paterno) as coordinador,
-        ge.id_usuario as id_gerente, CONCAT(ge.nombre, ' ', ge.apellido_paterno, ' ', ge.apellido_paterno) as gerente,
-        su.id_usuario as id_subdirector, CONCAT(su.nombre, ' ', su.apellido_paterno, ' ', su.apellido_paterno) as subdirector,
-        di.id_usuario as id_director, CONCAT(di.nombre, ' ', di.apellido_paterno, ' ', di.apellido_paterno) as director
+        ae.id_usuario as id_asesor, CONCAT(ae.nombre, ' ', ae.apellido_paterno, ' ', ae.apellido_materno) as asesor,
+        co.id_usuario as id_coordinador, CONCAT(co.nombre, ' ', co.apellido_paterno, ' ', co.apellido_materno) as coordinador,
+        ge.id_usuario as id_gerente, CONCAT(ge.nombre, ' ', ge.apellido_paterno, ' ', ge.apellido_materno) as gerente,
+        su.id_usuario as id_subdirector, CONCAT(su.nombre, ' ', su.apellido_paterno, ' ', su.apellido_materno) as subdirector,
+        di.id_usuario as id_director, CONCAT(di.nombre, ' ', di.apellido_paterno, ' ', di.apellido_materno) as director
         FROM lotes l
         INNER JOIN clientes cl ON cl.id_cliente = l.idCliente
         INNER JOIN condominios cond ON l.idCondominio=cond.idCondominio
@@ -155,7 +155,7 @@ class Comisiones_model extends CI_Model {
             if($opc != ''){
               $complemento = '';
             }
-          return $this->db->query("SELECT id_usuario,CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) as name_user FROM usuarios WHERE estatus in (0,1) $complemento AND id_rol=$rol");
+          return $this->db->query("SELECT id_usuario,CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) as name_user FROM usuarios WHERE estatus in (0,1,3) $complemento AND id_rol=$rol");
         }
       }
     function getUsuariosRol2($rol){
@@ -1028,7 +1028,7 @@ WHERE oxc.id_catalogo = 1 AND pcm.estatus = 11 AND pcm.id_usuario =  ".$this->se
 
 
     function getDatosComisionesAsesorBaja($estado){
-        $filtro = 'AND u.estatus = 0 AND u.id_rol IN (3,9,7,42)';
+        $filtro = 'AND u.estatus in (0,3) AND u.id_rol IN (3,9,7,42)';
         $sede = $this->session->userdata('id_sede');
         
         return $this->db->query("(SELECT pci1.id_pago_i, pci1.id_comision, lo.nombreLote as lote, re.nombreResidencial as proyecto, lo.totalNeto2 precio_lote, com.comision_total, com.porcentaje_decimal, pci1.abono_neodata pago_cliente, pci1.pago_neodata, pci1.estatus, pci1.fecha_abono fecha_creacion, pci1.id_usuario, oxcpj.nombre as pj_name, u.forma_pago, pac.porcentaje_abono, 0 as factura, 1 expediente, oxcC.nombre as estatus_actual, (CASE u.forma_pago WHEN 3 THEN (((100-sed.impuesto)/100)*pci1.abono_neodata) ELSE pci1.abono_neodata END) impuesto, pac.bonificacion, 0 lugar_prospeccion, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) as user_names, oxcrol.nombre as puesto
@@ -3400,43 +3400,64 @@ public function validateDispersionCommissions($idlote){
         }
         
     }
-
     function getDatosFlujoComisiones() {
 
-        return $this->db->query("(SELECT l.idLote,l.nombreLote,'Sin fecha' as fechaApartado ,
-        CASE WHEN s.nombre is null THEN 'SIN SEDE' ELSE s.nombre  end sede,
+        return $this->db->query("(SELECT l.idLote,l.nombreLote, l.idStatusContratacion, l.idMovimiento, sl.nombreStatus , 
+        CONVERT(varchar,c.fechaApartado,23) as fechaApartado, CONVERT(varchar,p.fecha_creacion,23) as fechaProspecto,
+        (CASE WHEN s.nombre is null and c.id_sede is not null THEN 'Sede Cliente' WHEN s.nombre is null and c.id_sede is null THEN 'Sede Asesor' ELSE 'ubicacion 2' end) sedeTOMADA,
+        (CASE WHEN s.nombre is null and c.id_sede is not null THEN sc.nombre WHEN s.nombre is null and c.id_sede is null THEN sa.nombre ELSE s.nombre end ) sede,
         CASE WHEN ec.estatus=0 THEN 'EVIDENCIA SIN INTEGRAR' WHEN ec.estatus=1 THEN 'ENVIADA A COBRANZA' WHEN ec.estatus=2 THEN 'ENVIADA A CONTRALORÍA' WHEN ec.estatus=3 THEN 'EVIDENCIA ACEPTADA' WHEN ec.estatus=4 THEN 'SIN ESTATUS REGISTRADO' WHEN ec.estatus=5 THEN 'COBRANZA RECHAZÓ LA EVIDENCIA AL GERENTE' WHEN ec.estatus=6 THEN 'CONTRALORÍA RECHAZÓ LA EVIDENCIA' ELSE 'SIN EVIDENCIA' end  estatus_evidencia,
-        CASE WHEN l.ubicacion_dos in(2,3,4,6)  THEN 'Plaza 1' WHEN l.ubicacion_dos in(1,5,8,9) THEN 'Plaza 2' ELSE 'SIN ASIGNAR' END plaza,
-        CASE WHEN co.estatus=1 THEN 'ACTIVA' WHEN co.estatus=8 THEN 'RECISIÓN' WHEN co.estatus=0 THEN 'BORRADA' ELSE 'SIN COMISIONES' END AS estatus_com,
-        CASE WHEN pc.bandera IN(1,55,0) THEN 'ACTIVA' WHEN pc.bandera IN (7) then 'LIQUIDADA' WHEN pc.bandera in(8) THEN 'RECISIÓN' ELSE 'SIN COMISIONES' END as estatus_comision_lote,
+        CASE WHEN (l.ubicacion_dos in (2,3,4,6) or c.id_sede in (2,3,4,6) or  ase.id_sede in (2,3,4,6) ) THEN 'Plaza 2' WHEN (l.ubicacion_dos in (1,5,8,9) or c.id_sede in (1,5,8,9) or  ase.id_sede in (1,5,8,9) ) THEN 'Plaza 1' ELSE 'SIN ASIGNAR' END plaza,
         co.comision_total,pci.abono_pagado,(co.comision_total-pci.abono_pagado) as pendiente,
-        CASE WHEN rm.id_lote IS NULL THEN 'MANUAL' ELSE 'AUTOMATICA'  END dispersion, co.id_comision,co.id_usuario
+        CASE WHEN co.estatus=1 AND (co.descuento not in (1) or co.descuento is null) THEN 'ACTIVA' WHEN co.estatus=8 THEN 'RECISIÓN' WHEN co.estatus=0 THEN 'BORRADA' WHEN co.descuento in (1) THEN 'TOPADA' ELSE 'SIN IDENTIFICAR' END AS estatus_com,
+        CASE WHEN pc.bandera IN (1,55,0) THEN 'LOTE ACTIVO' WHEN pc.bandera IN (7) then 'LOTE LIQUIDADO' WHEN pc.bandera in(8) THEN 'LOTE CANCELADO' ELSE 'SIN IDENTIFICAR' END as estatus_comision_lote,
+        CASE WHEN (co.comision_total-pci.abono_pagado)<1 THEN 'LIQUIDADA MKTD' WHEN (co.comision_total-pci.abono_pagado)>1 THEN 'ACTIVA MKTD' ELSE '-' END AS ESTATUS_MKTD,
+        CASE WHEN rm.id_lote IS NULL THEN 'MANUAL' ELSE 'AUTOMATICA' END dispersion, co.id_comision,co.id_usuario,
+        CASE WHEN co.observaciones like '%IMPORTACION%' THEN concat('IMPORTACION ', co.fecha_creacion) else '' END observaciones 
+        
         FROM lotes l 
-        left join comisiones co on co.id_lote=l.idLote
-        left join sedes s on s.id_sede=l.ubicacion_dos 
-        left join pago_comision pc on pc.id_lote=l.idLote
-        LEFT join (SELECT idLote, MAX(fecha_creacion) modificado,estatus FROM evidencia_cliente GROUP BY idLote,estatus ) ec on ec.idLote=l.idLote
+        LEFT JOIN clientes c on c.id_cliente=l.idCliente
+        LEFT JOIN usuarios ase on ase.id_usuario=c.id_asesor
+        LEFT JOIN comisiones co on co.id_lote=l.idLote
+        LEFT JOIN sedes s on s.id_sede=l.ubicacion_dos 
+        LEFT JOIN sedes sc on sc.id_sede= c.id_sede
+        LEFT JOIN sedes sa on sa.id_sede= ase.id_sede
+        LEFT JOIN pago_comision pc on pc.id_lote=l.idLote
+        LEFT JOIN (SELECT idLote, MAX(fecha_creacion) modificado,estatus FROM evidencia_cliente WHERE estatus_particular=1 GROUP BY idLote,estatus ) ec on ec.idLote=l.idLote
         LEFT JOIN (SELECT SUM(abono_neodata) abono_pagado,id_comision FROM pago_comision_ind GROUP BY id_comision) pci ON co.id_comision = pci.id_comision
         LEFT JOIN (SELECT id_lote, MAX(fecha_creacion) fecha FROM reportes_marketing GROUP BY id_lote ) rm  on rm.id_lote=l.idLote
-        WHERE co.id_usuario=4394 
-        )
+        LEFT JOIN prospectos p on p.id_prospecto = c.id_prospecto
+        LEFT JOIN statuscontratacion sl ON l.idStatusContratacion = sl.idStatusContratacion
+        WHERE co.id_usuario = 4394)
+        
         UNION
-        (SELECT l.idLote,l.nombreLote, CONVERT(varchar,C.fechaApartado,23) as fechaApartado,
-        CASE WHEN s.nombre is null THEN 'SIN SEDE' ELSE s.nombre  end sede,
+        
+        (SELECT l.idLote,l.nombreLote, l.idStatusContratacion, l.idMovimiento, sl.nombreStatus , 
+        CONVERT(varchar,c.fechaApartado,23) as fechaApartado,
+        CONVERT(varchar,p.fecha_creacion,23) as fechaProspecto,
+        (CASE WHEN s.nombre is null and c.id_sede is not null THEN 'Sede Cliente' WHEN s.nombre is null and c.id_sede is null THEN 'Sede Asesor' ELSE 'ubicacion 2' end ) sedeTOMADA,
+        (CASE WHEN s.nombre is null and c.id_sede is not null THEN sc.nombre WHEN s.nombre is null and c.id_sede is null THEN sa.nombre ELSE s.nombre end ) sede,
         CASE WHEN ec.estatus=0 THEN 'EVIDENCIA SIN INTEGRAR' WHEN ec.estatus=1 THEN 'ENVIADA A COBRANZA' WHEN ec.estatus=2 THEN 'ENVIADA A CONTRALORÍA' WHEN ec.estatus=3 THEN 'EVIDENCIA ACEPTADA' WHEN ec.estatus=4 THEN 'SIN ESTATUS REGISTRADO' WHEN ec.estatus=5 THEN 'COBRANZA RECHAZÓ LA EVIDENCIA AL GERENTE' WHEN ec.estatus=6 THEN 'CONTRALORÍA RECHAZÓ LA EVIDENCIA' ELSE 'SIN EVIDENCIA' end  estatus_evidencia,
-        CASE WHEN c.id_sede in(2,3,4,6)  THEN 'Plaza 1' WHEN c.id_sede in(1,5,8,9) THEN 'Plaza 2' ELSE 'SIN ASIGNAR' END plaza,
-        CASE WHEN co.estatus=1 THEN 'ACTIVA' WHEN co.estatus=8 THEN 'RECISIÓN' WHEN co.estatus=0 THEN 'BORRADA' ELSE 'SIN COMISIONES' END AS estatus_com,
-        CASE WHEN pc.bandera IN(1,55,0) THEN 'ACTIVA' WHEN pc.bandera IN (7) then 'LIQUIDADA' WHEN pc.bandera in(8) THEN 'RECISIÓN' ELSE 'SIN COMISIONES' END as estatus_comision_lote,
+        CASE WHEN (l.ubicacion_dos in (2,3,4,6) or c.id_sede in (2,3,4,6) or  ase.id_sede in (2,3,4,6) ) THEN 'Plaza 2' WHEN (l.ubicacion_dos in (1,5,8,9) or c.id_sede in (1,5,8,9) or  ase.id_sede in (1,5,8,9) ) THEN 'Plaza 1' ELSE 'SIN ASIGNAR' END plaza,
         co.comision_total,pci.abono_pagado,(co.comision_total-pci.abono_pagado) as pendiente,
-        CASE WHEN rm.id_lote IS NULL THEN 'MANUAL' ELSE 'AUTOMATICA' END dispersion, co.id_comision,co.id_usuario
+        CASE WHEN co.estatus=1 AND (co.descuento not in (1) or co.descuento is null) THEN 'ACTIVA' WHEN co.estatus=8 THEN 'RECISIÓN' WHEN co.estatus=0 THEN 'BORRADA' WHEN co.descuento in (1) THEN 'TOPADA' ELSE 'SIN IDENTIFICAR' END AS estatus_com,
+        CASE WHEN pc.bandera IN (1,55,0) THEN 'LOTE ACTIVO' WHEN pc.bandera IN (7) then 'LOTE LIQUIDADO' WHEN pc.bandera in(8) THEN 'LOTE CANCELADO' ELSE 'SIN IDENTIFICAR' END as estatus_comision_lote,
+        CASE WHEN (co.comision_total-pci.abono_pagado)<1 THEN 'LIQUIDADA MKTD' WHEN (co.comision_total-pci.abono_pagado)>1 THEN 'ACTIVA MKTD' ELSE '-' END AS ESTATUS_MKTD,
+        CASE WHEN rm.id_lote IS NULL THEN 'MANUAL' ELSE 'AUTOMATICA' END dispersion, co.id_comision,co.id_usuario,
+        CASE WHEN co.observaciones like '%IMPORTACION%' THEN concat('IMPORTACION ', co.fecha_creacion) else '' END observaciones 
         FROM lotes l 
-        inner join clientes c on c.id_cliente=l.idCliente 
-        left join sedes s on s.id_sede=l.ubicacion_dos 
-        inner join comisiones co on co.id_lote=l.idLote and co.id_usuario=4394 
-        inner join pago_comision pc on pc.id_lote=l.idLote
-        LEFT join (SELECT idLote, MAX(fecha_creacion) modificado,estatus,idCliente FROM evidencia_cliente GROUP BY idLote,estatus,idCliente ) ec on ec.idLote=l.idLote -- and ec.idCliente=c.id_cliente  --evidencia_cliente ec on ec.idLote=l.idLote and ec.idCliente=c.id_cliente
+        inner JOIN clientes c on c.id_cliente=l.idCliente 
+        LEFT JOIN usuarios ase on ase.id_usuario=c.id_asesor
+        LEFT JOIN sedes s on s.id_sede=l.ubicacion_dos 
+        LEFT JOIN sedes sc on sc.id_sede= c.id_sede
+        LEFT JOIN sedes sa on sa.id_sede= ase.id_sede
+        INNER JOIN comisiones co on co.id_lote=l.idLote and co.id_usuario=4394 
+        INNER JOIN pago_comision pc on pc.id_lote=l.idLote
+        LEFT JOIN (SELECT idLote, MAX(fecha_creacion) modificado,estatus,idCliente FROM evidencia_cliente WHERE estatus_particular=1 GROUP BY idLote,estatus,idCliente ) ec on ec.idLote=l.idLote -- and ec.idCliente=c.id_cliente  --evidencia_cliente ec on ec.idLote=l.idLote and ec.idCliente=c.id_cliente
         LEFT JOIN (SELECT SUM(abono_neodata) abono_pagado,id_comision FROM pago_comision_ind GROUP BY id_comision) pci ON co.id_comision = pci.id_comision
         LEFT JOIN (SELECT id_lote, MAX(fecha_creacion) fecha FROM reportes_marketing GROUP BY id_lote ) rm  on rm.id_lote=l.idLote
+        LEFT JOIN prospectos p on p.id_prospecto = c.id_prospecto
+        LEFT JOIN statuscontratacion sl ON l.idStatusContratacion = sl.idStatusContratacion
         WHERE  c.lugar_prospeccion NOT in(6,29) and c.descuento_mdb != 1)");
 
     }
@@ -4476,28 +4497,28 @@ function insertar_descuento($usuarioid,$monto,$ide_comision,$comentario,$usuario
    
        function update_descuento($id_pago_i,$monto, $comentario, $saldo_comisiones, $usuario,$valor,$user,$pagos_aplicados){
            $estatus = 0;
-           if($valor == 2){
-       $estatus =16;
-           }else if($valor == 3){
-               $estatus =17;
+           if ($valor == 2) {
+               $estatus = 16;
+           } else if ($valor == 3) {
+               $estatus = 17;
                // -- $respuesta = $this->db->query("UPDATE descuentos_universidad SET estatus = 2 where id_usuario=$user");
-               $respuesta = $this->db->query("UPDATE descuentos_universidad SET saldo_comisiones=".$saldo_comisiones.", pagos_activos = (pagos_activos - ".$pagos_aplicados."), estatus = 2 WHERE id_usuario = ".$user." AND estatus = 1");
-       
+               $respuesta = $this->db->query("UPDATE descuentos_universidad SET saldo_comisiones=" . $saldo_comisiones . ", pagos_activos = (pagos_activos - " . $pagos_aplicados . "), estatus = 2 WHERE id_usuario = " . $user . " AND estatus = 1");
+
            }
-           if($monto == 0){
-            $respuesta = $this->db->query("UPDATE pago_comision_ind SET estatus = $estatus, descuento_aplicado=1, modificado_por='$usuario', fecha_pago_intmex = GETDATE(), fecha_abono = GETDATE(), comentario='DESCUENTO' WHERE id_pago_i=$id_pago_i");
-        }else{
-            $respuesta = $this->db->query("UPDATE pago_comision_ind SET estatus = $estatus, descuento_aplicado=1, modificado_por='$usuario', fecha_pago_intmex = GETDATE(), fecha_abono = GETDATE(), abono_neodata = $monto, comentario='DESCUENTO' WHERE id_pago_i=$id_pago_i");
-        }
-       
-               $respuesta = $this->db->query("INSERT INTO historial_comisiones VALUES ($id_pago_i, $usuario, GETDATE(), 1, 'MOTIVO DESCUENTO: ".$comentario."')");
-       
-       
-           if (! $respuesta ) {
+           if ($monto == 0) {
+               $respuesta = $this->db->query("UPDATE pago_comision_ind SET estatus = $estatus, descuento_aplicado=1, modificado_por='$usuario', fecha_pago_intmex = GETDATE(), fecha_abono = GETDATE(), comentario='DESCUENTO' WHERE id_pago_i=$id_pago_i");
+           } else {
+               $respuesta = $this->db->query("UPDATE pago_comision_ind SET estatus = $estatus, descuento_aplicado=1, modificado_por='$usuario', fecha_pago_intmex = GETDATE(), fecha_abono = GETDATE(), abono_neodata = $monto, comentario='DESCUENTO' WHERE id_pago_i=$id_pago_i");
+           }
+
+           $respuesta = $this->db->query("INSERT INTO historial_comisiones VALUES ($id_pago_i, $usuario, GETDATE(), 1, 'MOTIVO DESCUENTO: " . $comentario . "')");
+
+
+           if (!$respuesta) {
                return 0;
-               } else {
+           } else {
                return 1;
-               }
+           }
        }
 
 
@@ -7316,10 +7337,11 @@ function obtenerIDMK($id){
 
             $EsquemaVenta=0;
             $vigencia=0;
-        $row = $this->db->query("select cl.id_cliente,cl.id_asesor,cl.id_coordinador,cl.id_gerente,cl.fechaApartado,u.id_lider,cl.id_subdirector,cl.id_sede as sede_cl
+        $row = $this->db->query("select cl.id_cliente,cl.id_asesor,cl.id_coordinador,cl.id_gerente,cl.fechaApartado,u.id_lider,cl.id_subdirector,cl.id_sede as sede_cl,p.fecha_creacion
         from lotes lo 
         inner join clientes cl on cl.id_cliente=lo.idCliente 
         inner join usuarios u on u.id_usuario=cl.id_gerente 
+        left join prospectos p on p.id_prospecto=cl.id_prospecto
         where cl.status=1 and lo.idLote=$lote; ")->result_array();
 
 if($row[0]['sede_cl'] == 0){
@@ -7327,6 +7349,12 @@ return 5;
 }else{
     $sedes1_extra = [4,1,8,3,6,5,2,9];
     $busqueda = array_search($row[0]['sede_cl'],$sedes1_extra);
+
+    
+/**--------------FECHA PROSPECTO-------------------------------- */
+$fechaMK = explode(" ",$row[0]['fecha_creacion']);
+$fechaCorrectaMKTD = strtotime($fechaMK[0]); 
+/**---------------------------------------------------------- */
 
     $FechaCl = explode(" ",$row[0]['fechaApartado']);
     $FechaNew = strtotime($FechaCl[0]); 
@@ -7399,7 +7427,11 @@ $fecha_fin_29 = strtotime('31-12-2029');
                                 if(($FechaApartado >= $fecha_1_extra_i && $FechaApartado <= $fecha_1_extra_f) && $busqueda > 0){
                                     //ESQUEMA 1 1% EXTRA
                                     $EsquemaVenta=16;
-                                    $vigencia=1;
+                                    if($busqueda == 1){
+                                        $vigencia=2;
+                                    }else{
+                                        $vigencia=1;
+                                    }
 
                                 } 
                                 elseif(($FechaApartado >= $fecha_1_extra_i && $FechaApartado <= $fecha_1_extra_f) && $busqueda == 0){
@@ -7423,6 +7455,11 @@ $fecha_fin_29 = strtotime('31-12-2029');
                                 //ESQUEMA 2 1% EXTRA
                              //   echo "aqui";
                                 $EsquemaVenta=16;
+                                if($busqueda == 1){
+                                    $vigencia=2;
+                                }else{
+                                    $vigencia=1;
+                                }
                                 }
                                 elseif(($FechaApartado >= $fecha_01_marzo ) && ($busqueda == 0 || $busqueda == 1)){
                                     //ESQUEMA 2 0.55% EXTRA
@@ -7468,8 +7505,8 @@ $fecha_fin_29 = strtotime('31-12-2029');
                         if($row[0]['sede_cl'] == 4 && ($FechaApartado >= $fecha_inicio && $FechaApartado <= $fecha_fin)){
                             //REGIONAL MKTD CDMX
                            // VENTA REGIONAL MKTD
-                            if($FechaApartado <= $fecha_fin_mktd ){
-                                $EsquemaVenta=6;
+                           if($fechaCorrectaMKTD <= $fecha_fin_mktd ){
+                            $EsquemaVenta=6;
                             }else{
                                 $EsquemaVenta=6;
                             }
@@ -7479,7 +7516,7 @@ $fecha_fin_29 = strtotime('31-12-2029');
                             $vigencia=1;
                         }
                         else{
-                            if($FechaApartado <= $fecha_fin_mktd ){
+                            if($fechaCorrectaMKTD <= $fecha_fin_mktd ){
                                 //VENTA MKTD ANTERIOR
                                 //MKTD
                                 $EsquemaVenta=2;
