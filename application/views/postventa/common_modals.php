@@ -507,7 +507,7 @@
             <div class="modal-header">
                 <h5 class="text-center m-0">Envío de Observaciones</h5>
             </div>
-            <form method="post" name="observaciones" id="observaciones">
+            <form method="post" name="observacionesForm" id="observacionesForm">
                 <input type="text" class="hide" id="idSolicitud" name="idSolicitud">
                 <input type="text" class="hide" id="action" name="action">
                 <div class="modal-body">

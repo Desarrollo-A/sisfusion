@@ -594,8 +594,8 @@ function fillTable(beginDate, endDate) {
             },
             {
                 data: function (d) {
-                    return `<center><span class="label" style="background:${d.tipo == 1 || d.tipo ==  null ? '#28B463' : '#f44336'}">${d.estatus}</span><center>
-                    <center><span class="label" style="background:${d.tipo == 1 || d.tipo == null ? '#28B463' : '#f44336'}">(${d.area})</span><center>`;
+                    return `<center><span class="label" style="background:${d.tipo == 1 || d.tipo == null ? '#28B463' : '#f44336' }">${d.estatus}</span><center>
+                    <center><span class="label" style="background:${d.tipo == 1 || d.tipo == null ? '#28B463' : '#f44336'}">(${d.area})</span><center>`;   
                 }
             },
             {
@@ -605,7 +605,7 @@ function fillTable(beginDate, endDate) {
             },
             {
                 data: function (d) {
-                    return d.tipo == 1 ? d.comentarios : d.motivos_rechazo;
+                    return d.tipo == 1 ? d.comentarios : d.motivos_rechazo || d.tipo == 2 ? d.comentarios : d.motivos_rechazo || d.tipo == 3 ? d.comentarios : d.motivos_rechazo;
                 }
             },
             {
@@ -685,8 +685,7 @@ function fillTable(beginDate, endDate) {
                             if (d.result == 1 && d.estatusValidacion != 1)
                                 exp = 1;
                             else if (d.result == 1 && d.estatusValidacion == 1)
-                                exp = 2;
-
+                                exp = 2;    
                             newBtn += `<button id="trees" data-idSolicitud=${d.idSolicitud} class="btn-data btn-details-grey details-control" data-permisos="2" data-id-prospecto="" data-toggle="tooltip" data-placement="top" title="Desglose documentos"><i class="fas fa-chevron-down"></i></button>`;
                             newBtn += `<button id="notaria" data-idSolicitud=${d.idSolicitud} class="btn-data btn-green" data-permisos="2" data-id-prospecto="" data-toggle="tooltip" data-placement="top" title="Notaria"><i class="fas fa-user-tie"></i></button>`;
                             if (userType == 57 && d.estatusValidacion == 0 && exp != null && d.no_rechazos != 0) { // MJ: ANTES 55
@@ -710,7 +709,7 @@ function fillTable(beginDate, endDate) {
                             //Declaraciones ejecutadas cuando el resultado de expresión coincide con valorN
                             break;
                         case 13:
-                            newBtn += `<button id="observaciones" data-idSolicitud=${d.idSolicitud} data-action="3" class="btn-data btn-violetBoots" data-id-prospecto="" data-toggle="tooltip" data-placement="top" title="Envio Observaciones"><i class="far fa-envelope"></i></button>`;
+                            newBtn += `<button id="observacionesButton" data-idSolicitud=${d.idSolicitud} data-action="3" class="btn-data btn-violetBoots" data-id-prospecto="" data-toggle="tooltip" data-placement="top" title="Envio Observaciones"><i class="far fa-envelope"></i></button>`;
                             group_buttons += permisos(d.permisos, d.expediente, d.idDocumento, d.tipo_documento, d.idSolicitud, 1, newBtn);
                             //Declaraciones ejecutadas cuando el resultado de expresión coincide con valorN
                             break;
@@ -1210,6 +1209,7 @@ $(document).on("submit", "#newNotario", function (e) {
         processData: false, 
         type: 'POST',
         success: function (response) {
+            alerts.showNotification("top", "right", "Se agrego una nueva notaria.", "success");
             $("#altaNotario").modal("hide");
             prospectsTable.ajax.reload();
         }
@@ -1221,7 +1221,6 @@ $(document).on('click', '#notaria', function () {
     var data = prospectsTable.row($(this).parents('tr')).data();
     getBudgetNotaria(data.idSolicitud);
     $('#idSolicitud').val(data.idSolicitud);
-    ;
     $("#gestionNotaria").modal();
 });
 
@@ -1311,10 +1310,9 @@ function getEstatusPago() {
 }
 
 //ENVIO OBSERVACIONES
-$(document).on('click', '#observaciones', function () {
+$(document).on('click', '#observacionesButton', function () {
     var data = prospectsTable.row($(this).parents('tr')).data();
     $('#idSolicitud').val(data.idSolicitud);
-    ;
     $('#viewObservaciones').modal();
 });
 
@@ -1334,12 +1332,12 @@ $(document).on('change', '#pertenece', function () {
     }
 });
 
-$(document).on("submit", '#observaciones', function (e) {
+$(document).on("submit", '#observacionesForm', function (e) {
     e.preventDefault();
     let idSolicitud = $("#idSolicitud").val();
     let data = new FormData($(this)[0]);
     data.append("idSolicitud", idSolicitud);
-    
+
     $.ajax({
         url: "observacionesPostventa",
         data: data,
@@ -1347,7 +1345,7 @@ $(document).on("submit", '#observaciones', function (e) {
         contentType: false,
         processData: false,
         type: 'POST',
-        seccess: function (response) {
+        success: function (response) {
             $("#viewObservaciones").modal("hide");
             prospectsTable.ajax.reload();
         }
@@ -1355,6 +1353,7 @@ $(document).on("submit", '#observaciones', function (e) {
 });
 
 $(document).on('click', '#observacionesSubmit', function (e) {
+    e.preventDefault();
     let idSolicitud = $('#idSolicitud').val();
     let action = $('#action').val();
     let observaciones = $('#observaciones').val();
