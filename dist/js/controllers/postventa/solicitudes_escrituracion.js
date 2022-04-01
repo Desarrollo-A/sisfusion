@@ -381,6 +381,7 @@ $(document).on('click', '#request', function () {
     var data = prospectsTable.row($(this).parents('tr')).data();
     $('#id_solicitud').val(data.idSolicitud);
     $('#status').val(data.estatus);
+    $('#observations').val('');
     $("#approveModal").modal();
 });
 

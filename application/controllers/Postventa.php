@@ -614,7 +614,8 @@ class Postventa extends CI_Controller
             $motivos_rechazo = $_POST['comentarios'];
             $informacion = $this->Postventa_model->changeStatus($id_solicitud, $type, 'NULL', $motivos_rechazo);
         }else {
-            $informacion = $this->Postventa_model->changeStatus($id_solicitud, $type, 'Cambio de fecha', 0);
+            $comentarios = $_POST['comentarios'];
+            $informacion = $this->Postventa_model->changeStatus($id_solicitud, $type, $comentarios, 0);
         }
 
         echo json_encode($informacion);
@@ -1267,7 +1268,7 @@ class Postventa extends CI_Controller
                                             <tr>
                                                 <td style="font-size: 1em;">
                                                     <b>¿Tenemos cliente anterior (traspaso, cesión o segunda venta)?:</b><br>
-                                                    ' . $data->cliente_anterior . '
+                                                    ' . ($data->cliente_anterior == 1 ? 'Si':'NO') . '
                                                 </td>
                                                 
                                             </tr>
@@ -1407,18 +1408,18 @@ class Postventa extends CI_Controller
     //OBSERVACIONES
     public function observacionesPostventa()
     {
-        $idSolicitud = $_GET['idSolicitud'];
+        $idSolicitud = $_POST['idSolicitud'];
         $rol = $this->session->userdata('id_rol');
 
-        $informacion = $this->Postventa_model->updateObservacionesPostventa($idSolicitud);
-        return $informacion;
+        // $informacion = $this->Postventa_model->updateObservacionesPostventa($idSolicitud);
+        // return $informacion;
 
         return $this->Postventa_model->updateObservacionesPostventa($idSolicitud, $rol);
     }
 
     public function observacionesProyectos()
     {
-        $idSolicitud = $_GET['idSolicitud'];
+        $idSolicitud = $_POST['idSolicitud'];
         $rol = $this->session->userdata('id_rol');
 
         return $this->Postventa_model->updateObservacionesProyectos($idSolicitud, $rol);
