@@ -5182,9 +5182,7 @@ WHERE idLote IN ('".$row['idLote']."') and nombreLote = '".$insert_csv['nombreLo
 		LEFT JOIN usuarios u ON hd.idUser = u.id_usuario
 		LEFT JOIN sedes ON lotes.ubicacion = sedes.id_sede
 		WHERE $where");
-
 		return $query->result_array();
-
 	}
 	//public function getExpedienteAll($lotes) {
 		/*SELECT historial_documento.expediente, historial_documento.idDocumento, historial_documento.modificado,

@@ -300,11 +300,29 @@ class Asesor_model extends CI_Model
                                     ON con.idResidencial = res.idResidencial LEFT JOIN datosbancarios db ON con.idDBanco = db.idDBanco 
                                     LEFT JOIN (SELECT id_lote, CONCAT( '{''total_terreno'':''', total_terreno, ''',', tipo_casa, '}') casasDetail 
             						FROM casas WHERE estatus = 1) casas ON casas.id_lote = lot.idLote
-                                    WHERE idLote = " . $lote . " AND idStatusLote IN(1)");
+                                    WHERE idLote = " . $lote . " AND idStatusLote IN(1, 2, 3)"); /*1: original*/
         }
 
 
         if ($query) {
+            $query = $query->result_array();
+            return $query;
+        }
+    }
+
+    function getLotesInfoCorridaE($lote){
+        if($this->session->userdata('id_rol') == 6){
+            $query =  $this->db->query("SELECT idLote, nombreLote, total, sup, precio, porcentaje, enganche, con.msni, descSup1, descSup2, referencia, db.banco, db.cuenta, db.empresa, db.clabe 
+                                    FROM lotes lot LEFT JOIN condominios con ON lot.idCondominio = con.idCondominio LEFT JOIN residenciales res 
+                                    ON con.idResidencial = res.idResidencial LEFT JOIN datosbancarios db ON con.idDBanco = db.idDBanco WHERE idLote = ".$lote." AND idStatusLote IN(1,3)");
+        } else {
+            $query =  $this->db->query("SELECT idLote, nombreLote, total, sup, precio, porcentaje, enganche, con.msni, descSup1, descSup2, referencia, db.banco, db.cuenta, db.empresa, db.clabe 
+                                    FROM lotes lot LEFT JOIN condominios con ON lot.idCondominio = con.idCondominio LEFT JOIN residenciales res 
+                                    ON con.idResidencial = res.idResidencial LEFT JOIN datosbancarios db ON con.idDBanco = db.idDBanco WHERE idLote = ".$lote." AND idStatusLote IN(1, 2, 3)"); /*original: 1*/
+        }
+
+
+        if($query){
             $query = $query->result_array();
             return $query;
         }

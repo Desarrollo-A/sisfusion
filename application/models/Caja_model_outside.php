@@ -707,7 +707,7 @@
                 (CASE WHEN asesor2.id_rol = 9 THEN concat(coordinador2.nombre,' ', coordinador2.apellido_paterno, ' ', coordinador2.apellido_materno) ELSE concat(gerente2.nombre,' ', gerente2.apellido_paterno, ' ', gerente2.apellido_materno) END)gerente2,
                 /*concat(gerente2.nombre,' ', gerente2.apellido_paterno, ' ', gerente2.apellido_materno) as gerente2,*/
                 cond.idCondominio, l.sup, l.precio, l.total, l.porcentaje, l.enganche, l.saldo, l.referencia, st.nombre, l.fecha_modst, l.motivo_change_status,
-                l.idAsesor
+                l.idAsesor, l.motivo_change_status, tv.tipo_venta, (CASE tv.id_tventa WHEN 1 THEN 1 ELSE 0 END) es_particular
                 FROM lotes l
                 LEFT JOIN clientes cl ON l.idLote=cl.idLote and l.idCliente = cl.id_cliente and cl.status = 1             
                 INNER JOIN condominios cond ON l.idCondominio=cond.idCondominio
@@ -719,6 +719,7 @@
                 LEFT JOIN usuarios asesor2 ON l.idAsesor = asesor2.id_usuario
                 LEFT JOIN usuarios coordinador2 ON asesor2.id_lider = coordinador2.id_usuario
                 LEFT JOIN usuarios gerente2 ON coordinador2.id_lider = gerente2.id_usuario
+                LEFT JOIN tipo_venta tv ON tv.id_tventa = l.tipo_venta /*NUEVO*/
                 WHERE l.status = 1 and l.idCondominio = " . $idCondominio . "
                 GROUP BY l.idLote, cl.id_cliente, cl.nombre, cl.apellido_paterno, cl.apellido_materno,
                 l.nombreLote, l.idStatusContratacion, l.idMovimiento, l.modificado, cl.rfc,
@@ -733,7 +734,7 @@
                 (CASE WHEN asesor2.id_rol = 9 THEN concat(coordinador2.nombre,' ', coordinador2.apellido_paterno, ' ', coordinador2.apellido_materno) ELSE concat(gerente2.nombre,' ', gerente2.apellido_paterno, ' ', gerente2.apellido_materno) END),
                 /*concat(gerente2.nombre,' ', gerente2.apellido_paterno, ' ', gerente2.apellido_materno),*/
                 cond.idCondominio, l.sup, l.precio, l.total, l.porcentaje, l.enganche, l.saldo, l.referencia, st.nombre, l.fecha_modst, l.motivo_change_status,
-                l.idAsesor order by l.idLote;");
+                l.idAsesor, tv.tipo_venta, tv.id_tventa order by l.idLote;");
 
 
         } else {
@@ -751,7 +752,7 @@
                 (CASE WHEN asesor2.id_rol = 9 THEN concat(coordinador2.nombre,' ', coordinador2.apellido_paterno, ' ', coordinador2.apellido_materno) ELSE concat(gerente2.nombre,' ', gerente2.apellido_paterno, ' ', gerente2.apellido_materno) END)gerente2,
                 /*concat(gerente2.nombre,' ', gerente2.apellido_paterno, ' ', gerente2.apellido_materno) as gerente2,*/
                 cond.idCondominio, l.sup, l.precio, l.total, l.porcentaje, l.enganche, l.saldo, l.referencia, st.nombre, l.fecha_modst, l.motivo_change_status,
-                l.idAsesor
+                l.idAsesor, l.motivo_change_status, tv.tipo_venta, (CASE tv.id_tventa WHEN 1 THEN 1 ELSE 0 END) es_particular
                 FROM lotes l
                 LEFT JOIN clientes cl ON l.idLote=cl.idLote and l.idCliente = cl.id_cliente and cl.status = 1             
                 INNER JOIN condominios cond ON l.idCondominio=cond.idCondominio
@@ -763,6 +764,7 @@
                 LEFT JOIN usuarios asesor2 ON l.idAsesor = asesor2.id_usuario
                 LEFT JOIN usuarios coordinador2 ON asesor2.id_lider = coordinador2.id_usuario
                 LEFT JOIN usuarios gerente2 ON coordinador2.id_lider = gerente2.id_usuario
+                LEFT JOIN tipo_venta tv ON tv.id_tventa = l.tipo_venta /*NUEVO*/
                 WHERE l.status = 1 and res.idResidencial = " . $idResidencial . "  
                 GROUP BY l.idLote, cl.id_cliente, cl.nombre, cl.apellido_paterno, cl.apellido_materno,
                 l.nombreLote, l.idStatusContratacion, l.idMovimiento, l.modificado, cl.rfc,
@@ -777,7 +779,7 @@
                 (CASE WHEN asesor2.id_rol = 9 THEN concat(coordinador2.nombre,' ', coordinador2.apellido_paterno, ' ', coordinador2.apellido_materno) ELSE concat(gerente2.nombre,' ', gerente2.apellido_paterno, ' ', gerente2.apellido_materno) END),
                 /*concat(gerente2.nombre,' ', gerente2.apellido_paterno, ' ', gerente2.apellido_materno),*/
                 cond.idCondominio, l.sup, l.precio, l.total, l.porcentaje, l.enganche, l.saldo, l.referencia, st.nombre, l.fecha_modst, l.motivo_change_status,
-                l.idAsesor order by l.idLote");
+                l.idAsesor, tv.tipo_venta, tv.id_tventa order by l.idLote");
 
         }
 

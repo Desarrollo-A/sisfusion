@@ -110,8 +110,10 @@ $orangeLight   : #f8aa4b;
 $greenExcel    : #209E63;
 $green         : #28B463;
 $acidGreen     : #AFB42B;
+$violet        : #702497;
 
 /* END vrbls coloress */
+
 
 /* size devices */
 $smartphone         : "(min-device-width : 320px) and (max-device-width : 480px)";
@@ -286,6 +288,7 @@ $tv                 : "(min-width : 1824px)";
     height: 38px;
     border: none;
   }
+
 /* END Btns fuera de datatable */
 
 /* Btns accioón dentro de datatable */
@@ -334,12 +337,20 @@ $tv                 : "(min-width : 1824px)";
     background-color: $gray;
     color: $white!important;
 }
+.btn-violetDeep{
+    color: $violet;
+    border: 1px solid $violet;
+}
+.btn-violetDeep:hover{
+    background-color: $violet;
+    color: $white!important;
+}
 .btn-deepGray{
-    color: $deepGray;  
+    color: $deepGray;
     border: 1px solid $deepGray;
 }
 .btn-deepGray:hover{
-    background-color: $deepGray;
+    color: $deepGray;
     color: $white!important;
 }
 .btn-blueMaderas{
@@ -386,6 +397,7 @@ $tv                 : "(min-width : 1824px)";
 .btn-warning{
     color:$red;
     border: 1px solid $red;
+    background: none;
 }
 .btn-warning:hover, .btn-warning:focus{
     background-color: $red!important;
