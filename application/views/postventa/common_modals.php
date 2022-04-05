@@ -9,7 +9,7 @@
             </div>
             <form id="approveForm" name="approveForm" method="post">
                 <div class="modal-body">
-                    <textarea class="text-modal scroll-styles" type="text" name="observations" id="observations" autofocus="true" onkeyup="javascript:this.value=this.value.toUpperCase();" placeholder="Escriba aqui su comentario"></textarea>
+                    <textarea class="text-modal scroll-styles" type="text" name="observations" id="observations" autofocus="true" onkeyup="javascript:this.value=this.value.toUpperCase();" placeholder="Escriba aquí su comentario"></textarea>
                     <input type="hidden" name="id_solicitud" id="id_solicitud">
                 </div>
                 <div class="modal-footer">
@@ -28,7 +28,7 @@
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
                     <i class="material-icons">clear</i>
                 </button>
-                <h4 class="modal-title">Ingresa tus comentarios</h4>
+                <h4 class="modal-title">Ingrese su comentario</h4>
             </div>
             <form id="rejectForm" name="rejectForm" method="post">
                 <div class="modal-body">
@@ -66,7 +66,7 @@
 
                 <div class="file-gph" id="selectFileSection">
                     <input class="d-none" type="file" name="uploadedDocument" id="uploadedDocument">
-                    <input class="file-name" id="file-name" type="text" placeholder="No has seleccionada nada aún" readonly="">
+                    <input class="file-name" id="file-name" type="text" placeholder="No ha seleccionado nada aún" readonly="">
                     <label class="upload-btn m-0" for="uploadedDocument">
                         <span>Seleccionar</span>
                         <i class="fas fa-folder-open"></i>
@@ -75,7 +75,7 @@
 
                 <div class="input-group hide" id="rejectReasonsSection">
                     <div class="col-12 col-sm-12 col-md-12 col-lg-12 pr-0">
-                        <select class="selectpicker" data-style="btn btn-primary btn-round" title="Selecciona un motivo de rechazo" data-size="7" id="rejectionReasons" data-live-search="true" multiple></select>
+                        <select class="selectpicker" data-style="btn btn-primary btn-round" title="Seleccione un motivo de rechazo" data-size="7" id="rejectionReasons" data-live-search="true" multiple></select>
                     </div>
                 </div>
                 <input type="text" class="hide" id="idSolicitud">
@@ -121,7 +121,7 @@
                                     <select class="selectpicker m-0" data-style="btn btn-primary btn-round"
                                             title="Estatus de pago" data-size="7" id="estatusPago" name="estatusPago"
                                             data-live-search="true" required>
-                                            <option value ="default" selected disabled>Selecciona una opción</option>
+                                            <option value ="default" selected disabled>Seleccione una opción</option>
                                     </select>
                                 </div>
                             </div>
@@ -159,7 +159,7 @@
                                     <select class="selectpicker m-0" data-style="btn btn-primary btn-round"
                                             title="¿Tenemos cliente anterior?" data-size="7" id="cliente" name="cliente"
                                             data-live-search="true" required>
-                                            <option value ="default" selected disabled>Selecciona una opción</option>
+                                            <option value ="default" selected disabled>Seleccione una opción</option>
                                             <option value="uno">Si</option>
                                             <option value="dos">No</option>
                                     </select>
@@ -260,7 +260,7 @@
                                     <select class="selectpicker" data-style="btn btn-primary btn-round"
                                             title="¿Tenemos cliente anterior?" data-size="7" id="cliente2" name="cliente2"
                                             data-live-search="true" disabled>
-                                            <option value ="default" selected disabled>Selecciona una opción</option>
+                                            <option value ="default" selected disabled>Seleccione una opción</option>
                                             <option value="uno">Si</option>
                                             <option value="dos">No</option>
                                     </select>
@@ -312,7 +312,7 @@
                 <div class="input-group" >
                     <div class="col-12 col-sm-12 col-md-12 col-lg-12 pr-0">
                         <select class="selectpicker" data-style="btn btn-primary btn-round"
-                            title="Selecciona un documento a subir" data-size="7" id="documents"
+                            title="Seleccione un documento a subir" data-size="7" id="documents"
                             data-live-search="true"></select>
                     </div>
                 </div>
@@ -337,19 +337,19 @@
 <div class="modal-dialog modal-lg">
         <div class="modal-content ">
             <div class="modal-header">
-            <h5 class="text-center m-0">Selecciona Notaria/Valuador</h5>
+            <h5 class="text-center m-0">Seleccione Notaría/Valuador</h5>
             </div>
             <div class="modal-body ">
                 
                     <div class="row">
                         <div class="col-12 col-sm-12 col-md-6 col-lg-6" >
                             <select class="selectpicker" data-style="btn btn-primary btn-round"
-                                title="Selecciona una notaria" data-size="7" id="notaria"
+                                title="Seleccione una Notaría" data-size="7" id="notaria"
                                 data-live-search="true"></select>
                         </div>
                         <div class="col-12 col-sm-12 col-md-6 col-lg-6" >
                             <select class="selectpicker" data-style="btn btn-primary btn-round"
-                                title="Selecciona un valuador" data-size="7" id="valuador"
+                                title="Seleccione un valuador" data-size="7" id="valuador"
                                 data-live-search="true"></select>
                         </div>
                     </div>
@@ -398,41 +398,43 @@
 <div class="modal fade" id="altaNotario" data-keyboard="false" data-backdrop="static">
     <div class="modal-dialog">
         <div class="modal-content">
-            <div class="modal-header"><h5 id="mainLabelText">Nueva Notaria</h5></div>
+            <div class="modal-header"><h5 id="mainLabelText">Nueva Notaría</h5></div>
             <div class="modal-body text-center">
                <form id="newNotario" name="newNotario" method="post">
                     <input type="text" class="hide" id="idSolicitud" name="idSolicitud">
                     <div class="modal-body">
-                        <div class="col-md-4">
-                            <div class="form-group label-floating is-focused">
-                                <label class="control-label label-gral">Nombre de la notaria</label>
-                                <input type="text" id="nombre_notaria" name="nombre_notaria" class="form-control input-gral">
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="form-group label-floating is-focused">
-                                <label class="control-label label-gral">Nombre del notario</label>
-                                <input type="text" id="nombre_notario" name="nombre_notario" class="form-control input-gral">
-                            </div>
-                        </div>    
-                        <div class="col-md-4">
-                            <div class="form-group label-floating is-focused">
-                                <label class="control-label label-gral">Direccion</label>
-                                <input type="text" id="direccion" name="direccion" class="form-control input-gral">
-                            </div>
-                        </div>    
-                        <div class="col-md-4">
-                            <div class="form-group label-floating is-focused">
-                                <label class="control-label label-gral">Correo</label>
-                                <input type="text" id="correo" name="correo" class="form-control input-gral">
-                            </div>
-                        </div>    
-                        <div class="col-md-4">
-                            <div class="form-group label-floating is-focused">
-                                <label class="control-label label-gral">Teléfono</label>
-                                <input type="text" id="telefono" name="telefono" class="form-control input-gral">
-                            </div>
-                        </div>    
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-md-4 pr-0 pr-0">
+                                    <div class="form-group text-left m-0">
+                                        <label class="control-label label-gral">Nombre de la Notaría</label>
+                                        <input type="text" id="nombre_notaria" name="nombre_notaria" class="form-control input-gral">
+                                    </div>
+                                </div>
+                                <div class="col-md-4 pr-0 pr-0">
+                                    <div class="form-group text-left m-0">
+                                        <label class="control-label label-gral">Nombre del notario</label>
+                                        <input type="text" id="nombre_notario" name="nombre_notario" class="form-control input-gral">
+                                    </div>
+                                </div>
+                                <div class="col-md-4 pr-0 pr-0">
+                                    <div class="form-group text-left m-0">
+                                        <label class="control-label label-gral">Dirección</label>
+                                        <input type="text" id="direccion" name="direccion" class="form-control input-gral">
+                                    </div>
+                                </div>
+                                <div class="col-md-4 pr-0 pr-0">
+                                    <div class="form-group text-left m-0">
+                                        <label class="control-label label-gral">Correo</label>
+                                        <input type="text" id="correo" name="correo" class="form-control input-gral">
+                                    </div>
+                                </div>
+                                <div class="col-md-4 pr-0 pr-0">
+                                    <div class="form-group text-left m-0">
+                                        <label class="control-label label-gral">Teléfono</label>
+                                        <input type="text" id="telefono" name="telefono" class="form-control input-gral">
+                                    </div>
+                                </div>
                     </div>
                     <div class="modal-footer">
                         <button type="submit" class="btn btn-primary">Aceptar</button>
@@ -447,14 +449,14 @@
 <div class="modal fade" id="gestionNotaria" data-keyboard="false" data-backdrop="static">
     <div class="modal-dialog">
         <div class="modal-content">
-            <div class="modal-header"><h5 id="mainLabelText" aling="center"><b>Información Notaria</b></h5></div>
+            <div class="modal-header"><h5 id="mainLabelText" aling="center"><b>Información Notaría</b></h5></div>
             <div class="modal-body text-center">
                <form method="post" id="rechazar" name="rechazar">
                     <input type="text" class="hide" id="idSolicitud" name="idSolicitud">
                     <div class="modal-body">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="control-label label-gral">Nombre de la notaria</label>
+                                <label class="control-label label-gral">Nombre de la Notaría</label>
                                 <input type="text" id="nombreNotaria" name="nombreNotaria" class="form-control input-gral" value="" style="text-align:center" disabled>
                             </div>
                         </div>
@@ -467,7 +469,7 @@
                         <div class="col-md-2"></div>
                         <div class="col-md-8">
                             <div class="form-group">
-                                <label class="control-label label-gral">Direccion</label>
+                                <label class="control-label label-gral">Dirección</label>
                                 <input type="text" id="direccionN" name="direccion" class="form-control input-gral" value="" style="text-align:center" disabled>
                             </div>
                         </div> 
@@ -507,7 +509,7 @@
             <div class="modal-header">
                 <h5 class="text-center m-0">Envío de Observaciones</h5>
             </div>
-            <form method="post" name="observaciones" id="observaciones">
+            <form method="post" name="observacionesForm" id="observacionesForm">
                 <input type="text" class="hide" id="idSolicitud" name="idSolicitud">
                 <input type="text" class="hide" id="action" name="action">
                 <div class="modal-body">
@@ -519,7 +521,7 @@
                             </select>
                         </div>      
                         <div class="col-12 col-sm-12 col-md-6 col-lg-6">
-                            <select id="observaciones" class="selectpicker" data-style="btn btn-primary btn-round" title="Observaciones" data-size="7" data-live-search="true">
+                            <select id="observacionesS" class="selectpicker" data-style="btn btn-primary btn-round" title="Observaciones" data-size="7" data-live-search="true">
                                 <option value="Correccioón Documentos">Corrección Documentos</option>
                                 <option value="Documentación Correcta">Documentación Correcta</option>  
                             </select>

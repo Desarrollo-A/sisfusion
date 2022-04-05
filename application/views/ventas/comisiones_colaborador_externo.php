@@ -161,7 +161,7 @@
             </div>
         </div>
 
-        <div class="modal fade modal-alertas" id="modal_documentacion" role="dialog">
+        <!--<div class="modal fade modal-alertas" id="modal_documentacion" role="dialog">
             <div class="modal-dialog" style="width:800px; margin-top:20px">
                 <div class="modal-content">
                     <div class="modal-body">
@@ -169,7 +169,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div>-->
 
         <div class="modal fade bd-example-modal-sm" id="myModalEnviadas" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-sm">
@@ -280,7 +280,7 @@
             </div>
         </div>
 
-        <div id="modal_formulario_solicitud_multiple" class="modal" style="position:fixed; top:0; left:0; margin-bottom: 1%;  margin-top: -5%;">
+        <!--<div id="modal_formulario_solicitud_multiple" class="modal" style="position:fixed; top:0; left:0; margin-bottom: 1%;  margin-top: -5%;">
             <div class="modal-dialog modal-md">
                 <div class="modal-content">
                     <div class="modal-body">
@@ -370,7 +370,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div>-->
         <!-- END Modals -->
 
         <div class="content boxContent">
@@ -1507,7 +1507,7 @@
                     {
                         "width": "5%",
                         "data": function(data) {
-                            return '<button href="#" value="'+data.id_pago_i+'" data-value="'+data.lote+'" data-code="'+data.cbbtton+'" ' +'class="btn-data btn-blueMaderasconsultar_logs_pagadas" title="Detalles">' +'<i class="fas fa-info"></i></button>';
+                            return '<button href="#" value="'+data.id_pago_i+'" data-value="'+data.lote+'" data-code="'+data.cbbtton+'" ' +'class="btn-data btn-blueMaderas consultar_logs_pagadas" title="Detalles">' +'<i class="fas fa-info"></i></button>';
                         }
                     }],
                 columnDefs: [{
@@ -2150,7 +2150,7 @@
             });
         }
 
-        $(document).on("click", ".quitar_factura", function() {
+        /*$(document).on("click", ".quitar_factura", function() {
             resear_formulario();
             id_comision = $(this).val();
             $("#modalQuitarFactura .modal-body").html('');
@@ -2162,9 +2162,9 @@
                 backdrop: 'static',
                 keyboard: false
             });
-        });
+        });*/
 
-        $(document).on("click", ".EnviarMultiple", function() {
+        /*$(document).on("click", ".EnviarMultiple", function() {
             $("#ModalEnviar .modal-body").html("");
             $("#ModalEnviar .modal-header").html("");
 
@@ -2201,7 +2201,7 @@
                 </form>
             </div></div>`);
             $("#ModalEnviar").modal();
-        });
+        });*/
 
         function todos(){
             if($(".checkdata1:checked").length == 0){
@@ -2570,7 +2570,7 @@
             }
         });
 
-        function calcularMontoParcialidad() {
+        /*function calcularMontoParcialidad() {
             $precioFinal = parseFloat($('#value_pago_cliente').val());
             $precioNuevo = parseFloat($('#new_value_parcial').val());
             if ($precioNuevo >= $precioFinal) {
@@ -2578,9 +2578,9 @@
             } else if ($precioNuevo < $precioFinal) {
                 $('#label_estado').append('<label>MONTO VALIDO</label>');
             }
-        }
+        }*/
 
-        function preview_info(archivo) {
+        /*function preview_info(archivo) {
             $("#documento_preview .modal-dialog").html("");
             $("#documento_preview").css('z-index', 9999);
             archivo = url + "dist/documentos/" + archivo + "";
@@ -2606,7 +2606,7 @@
                 elemento += '</div>';
                 $("#documento_preview .modal-dialog").append(elemento);
             }
-        }
+        }*/
 
         function cleanComments() {
             var myCommentsList = document.getElementById('comments-list-factura');
@@ -2662,7 +2662,7 @@
             }
         });
 
-        function selectAll(e) {
+        /*function selectAll(e) {
             tota2 = 0;
             $(tabla_nuevas.$('input[type="checkbox"]')).each(function (i, v) {
                 if (!$(this).prop("checked")) {
@@ -2673,6 +2673,6 @@
                 }
                 $("#totpagarPen").html(formatMoney(tota2));
             });
-        }
+        }*/
     </script>
 </body>

@@ -143,7 +143,7 @@ if ($this->session->userdata('id_rol') == "28" ) //
 
 
 
-<div class="modal fade modal-alertas" id="modal_pagadas" role="dialog">
+<!--<div class="modal fade modal-alertas" id="modal_pagadas" role="dialog">
     <div class="modal-dialog modal-md">
         <div class="modal-content">
             <div class="modal-header bg-red">
@@ -155,11 +155,11 @@ if ($this->session->userdata('id_rol') == "28" ) //
             </form>
         </div>
     </div>
-</div>
+</div>-->
 
 
 <!-- modal  AGREGAR PLAN DE ENGANCHE-->
-<div class="modal fade modal-alertas" id="modal_enganche" role="dialog">
+<!--<div class="modal fade modal-alertas" id="modal_enganche" role="dialog">
     <div class="modal-dialog modal-md">
         <div class="modal-content">
             <div class="modal-header bg-red">
@@ -169,7 +169,7 @@ if ($this->session->userdata('id_rol') == "28" ) //
             </form>
         </div>
     </div>
-</div>
+</div>-->
 <!-- modal -->
 
 
@@ -809,7 +809,7 @@ else if(v.rol_generado != 7){
 
 //INICIO COMPARTIDA
 
-$("#tabla_ingresar_9 tbody").on("click", ".verify_neodataCompartida", function(){
+/*$("#tabla_ingresar_9 tbody").on("click", ".verify_neodataCompartida", function(){
             var tr = $(this).closest('tr');
             var row = tabla_1.row( tr );
             idLote = $(this).val();
@@ -910,7 +910,7 @@ $("#tabla_ingresar_9 tbody").on("click", ".verify_neodataCompartida", function()
 
                                 /**-----SI EL COORDINADOR 1 Y/O 2 VIENEN VACIOS--------------------- */
                                 
-                                if(data2[0].id_coordinador == null && data2[0].idcoordinador2 == 0){
+                                /*if(data2[0].id_coordinador == null && data2[0].idcoordinador2 == 0){
                                     $("#modal_NEODATA2 .modal-body").append(`<div class="row">   
                                         <input type="hidden" name="idCoor" value="0"><input type="hidden" name="rolCoor" value="0"><div class="col-md-3"><b><p style="color:red;">N/A Coordinador</p></b><p>Coordinador</p><br></div>
                                         <div class="col-md-1"><input type="text" name="porCoor" readonly class="form-control ng-pristine ng-invalid ng-invalid-required ng-touched" value="0"></div>
@@ -1033,7 +1033,7 @@ $("#tabla_ingresar_9 tbody").on("click", ".verify_neodataCompartida", function()
                                                 
                                                 /**-----SI EL GERENTE 1 Y/O 2 VIENEN VACIOS--------------------- */
 
-                                                if(data2[0].id_gerente == data2[0].idgerente2){
+                                                /*if(data2[0].id_gerente == data2[0].idgerente2){
                                                     let nuevoPor3 =  data2[0].p3 ;                   
                                                     let nuevoPorsaldo3 = data2[0].ps3 ;    
                                                     let porcentaje3=0;      
@@ -1099,7 +1099,7 @@ $("#tabla_ingresar_9 tbody").on("click", ".verify_neodataCompartida", function()
                                                         
                                                         /*----------------------SUB DIRECTOR--------------------------------*/
 
-                                                        if(data2[0].id_subdirector == data2[0].idsubdirector2){
+                                                        /*if(data2[0].id_subdirector == data2[0].idsubdirector2){
                                                             let nuevoPor4 =  data2[0].p4 ;
                                                             let nuevoPorsaldo4 = data2[0].ps4 ;
                                                             let porcentaje4=0;
@@ -1162,7 +1162,7 @@ $("#tabla_ingresar_9 tbody").on("click", ".verify_neodataCompartida", function()
                                                                 /**------------------------FIN SUB DIRECTOR */
                                                                 
                                                                 /**.--------------------DIRECTOR-------------- */
-                                                                let nuevoPor5 =  data2[0].p5 ;
+                                                                /*let nuevoPor5 =  data2[0].p5 ;
                                                                 let nuevoPorsaldo5 = data2[0].ps5 ;
                                                                 let porcentaje5=0;
         
@@ -1275,7 +1275,7 @@ $("#tabla_ingresar_9 tbody").on("click", ".verify_neodataCompartida", function()
                                                                 
                                                                 
 /*----*************************--------------------------------COMPARTIDA CON 3 ASESORES----------*************************-----------------------* */
-}else
+/*}else
 
 if(data2.length == 2){
     let nuevoPor =  data2[0].p1 / 3;
@@ -1803,7 +1803,7 @@ if(data2.length == 2){
 
                                     /**---------------------GERENTE-------------------------------- */
 
-                                    if(data2[0].id_gerente == data2[0].idgerente2 && data2[0].id_gerente == data2[1].idgerente2 && data2[0].idgerente2 == data2[1].idgerente2)
+                                    /*if(data2[0].id_gerente == data2[0].idgerente2 && data2[0].id_gerente == data2[1].idgerente2 && data2[0].idgerente2 == data2[1].idgerente2)
                                     {
                                         //SI TODOS LOS ID SON IGUALES SOLO IMPRIME 1
                                         let nuevoPor3 =  data2[0].p3 ;
@@ -1993,7 +1993,7 @@ if(data2.length == 2){
 
                                                 /**-----------------------------SUB DIRECTOR------------------------- */
 
-                                                if(data2[0].id_subdirector == data2[0].idsubdirector2 && data2[0].id_subdirector == data2[1].idsubdirector2 && data2[0].idsubdirector2 == data2[1].idsubdirector2)
+                                                /*if(data2[0].id_subdirector == data2[0].idsubdirector2 && data2[0].id_subdirector == data2[1].idsubdirector2 && data2[0].idsubdirector2 == data2[1].idsubdirector2)
                                                 {
                                                     //SI TODOS LOS ID SON IGUALES SOLO IMPRIME 1
                                                     let nuevoPor4 =  data2[0].p4 ;
@@ -2181,7 +2181,7 @@ if(data2.length == 2){
                                                                     }
 
                                                                     /**-----------------DIRECTOR-------------------------------------- */
-                                                                        let nuevoPor5 =  data2[0].p5 ;
+                                                                        /*let nuevoPor5 =  data2[0].p5 ;
                                                                         let nuevoPorsaldo5 = data2[0].ps5 ;
                                                                         let porcentaje5=0;
                                                                         porcentaje5 = data2[0].totalNeto2 * (nuevoPor5 / 100);
@@ -2288,7 +2288,7 @@ if(data2.length == 2){
 
                                                                     /**----------------------------------------------------------------------------------------------------- */
 
-                                                                }
+                                                                /*}
                                                             });
                                                                 // else if(data2.length == 0){
                                                                 //     alert("NELSON")
@@ -2424,7 +2424,7 @@ console.log(v.porcentaje_saldos);
 
         }*/
 
-        console.log("saldo"+saldo);
+        /*console.log("saldo"+saldo);
 
         if(v.abono_pagado>0){
                                     console.log("OPCION 1");
@@ -2479,7 +2479,7 @@ console.log(v.porcentaje_saldos);
                                 }
         /* */
 
-        if(saldo > pending){
+        /*if(saldo > pending){
             saldo = pending;
         }
         
@@ -2546,7 +2546,7 @@ if(total < 1 ){
 
             $("#modal_NEODATA2").modal();
 
-        });
+        });*/
 
 /**----------------------------------------------------------------------------------------------------------------- */
 
@@ -2596,7 +2596,7 @@ $("#form_NEODATA").submit( function(e) {
     });   
 
 
-$("#form_enganche").submit( function(e) {
+/*$("#form_enganche").submit( function(e) {
     e.preventDefault();
 }).validate({
     submitHandler: function( form ) {
@@ -2626,12 +2626,12 @@ $("#form_enganche").submit( function(e) {
                 }
             });
     }
-});
+});*/
 
 
 
 
-$("#form_pagadas").submit( function(e) {
+/*$("#form_pagadas").submit( function(e) {
     e.preventDefault();
 }).validate({
     submitHandler: function( form ) {
@@ -2663,7 +2663,7 @@ $("#form_pagadas").submit( function(e) {
                 }
             });
     }
-});
+});*/
 
 
 
@@ -2703,7 +2703,7 @@ $("#form_NEODATA2").submit( function(e) {
         }
     });
 
-jQuery(document).ready(function(){
+/*jQuery(document).ready(function(){
 
 	jQuery('#editReg').on('hidden.bs.modal', function (e) {
 	jQuery(this).removeData('bs.modal');
@@ -2723,13 +2723,13 @@ jQuery(document).ready(function(){
     formatCurrency($('#inputEdit'));
     }
 
-})
+})*/
 
-$('.decimals').on('input', function () {
+/*$('.decimals').on('input', function () {
   this.value = this.value.replace(/[^0-9,.]/g, '').replace(/,/g, '.');
-});
+});*/
 
-function SoloNumeros(evt){
+/*function SoloNumeros(evt){
 	if(window.event){
 	keynum = evt.keyCode; 
 	}
@@ -2744,11 +2744,11 @@ function SoloNumeros(evt){
 		alerts.showNotification("top", "left", "Solo Numeros.", "danger");
 	return false;
 	}
-}
+}*/
 
-function closeModalEng(){
+/*function closeModalEng(){
     $("#modal_enganche").modal('toggle');
-}
+}*/
 
 
 

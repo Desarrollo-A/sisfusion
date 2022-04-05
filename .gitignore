@@ -51,3 +51,7 @@ user_guide/*
 
 #Omitimos carpeta uploads, contenido xml y pdf
 UPLOADS/*
+
+#Composer dependencies
+vendor/
+composer.lock

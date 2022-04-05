@@ -336,14 +336,14 @@
         </div>
     </div>
 
-    <div class="modal fade bd-example-modal-sm" id="myModalEnviadas" tabindex="-1" role="dialog"
+    <!--<div class="modal fade bd-example-modal-sm" id="myModalEnviadas" tabindex="-1" role="dialog"
          aria-labelledby="mySmallModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-sm">
             <div class="modal-content">
                 <div class="modal-body"></div>
             </div>
         </div>
-    </div>
+    </div>-->
 
 
 
@@ -1823,9 +1823,9 @@
         });
 
         /******************/
-        function cancela() {
+        /*function cancela() {
             $("#modal_nuevas").modal('toggle');
-        }
+        }*/
 
 
         //Función para pausar la solicitud
@@ -2092,7 +2092,7 @@
 
         }
 
-        function CloseModalDelete() {
+        /*function CloseModalDelete() {
             // document.getElementById("inputhidden").innerHTML = "";
             a = document.getElementById('borrarBono');
             padre = a.parentNode;
@@ -2100,7 +2100,7 @@
 
             $("#modal-delete").modal('toggle');
 
-        }
+        }*/
 
         function CloseModalDelete2() {
             // document.getElementById("inputhidden").innerHTML = "";
@@ -2159,7 +2159,7 @@
         });
 
 
-        $("#form_aplicar").submit(function (e) {
+        /*$("#form_aplicar").submit(function (e) {
             e.preventDefault();
         }).validate({
             submitHandler: function (form) {
@@ -2194,13 +2194,13 @@
                     }
                 });
             }
-        });
+        });*/
 
 
         // FIN TABLA PAGADAS
 
 
-        function mandar_espera(idLote, nombre) {
+        /*function mandar_espera(idLote, nombre) {
             idLoteespera = idLote;
             // link_post2 = "Cuentasxp/datos_para_rechazo1/";
             link_espera1 = "Comisiones/generar comisiones/";
@@ -2209,7 +2209,7 @@
             $("#myModalEspera ").modal();
             // $("#myModalEspera .modal-body").append("<div class='btn-group'>LOTE: "+nombre+"</div>");
             $("#myModalEspera .modal-footer").append("<div class='btn-group'><button type='submit' class='btn btn-success'>GENERAR COMISIÓN</button></div>");
-        }
+        }*/
 
 
         // FUNCTION MORE

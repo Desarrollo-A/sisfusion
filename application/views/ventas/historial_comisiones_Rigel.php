@@ -154,7 +154,7 @@
 
 
     <!-- modal  CONFIRMAR PAGO-->
-    <div class="modal fade modal-alertas" id="modal_confirmPay" role="dialog">
+    <!--<div class="modal fade modal-alertas" id="modal_confirmPay" role="dialog">
         <div class="modal-dialog modal-md">
             <div class="modal-content">
                 <div class="modal-header bg-red">
@@ -164,7 +164,7 @@
                 </form>
             </div>
         </div>
-    </div>
+    </div>-->
     <!-- modal -->
 
 
@@ -696,7 +696,7 @@ return BtnStats;
       });
 
 
-        $("#tabla_ingresar_9 tbody").on("click", ".confirmPayment", function () {
+        /*$("#tabla_ingresar_9 tbody").on("click", ".confirmPayment", function () {
             var tr = $(this).closest('tr');
             var row = tabla_1.row(tr);
             id_pago_i = $(this).val();
@@ -708,7 +708,7 @@ return BtnStats;
             $("#modal_confirmPay .modal-body").append('<div class="row"><div class="col-md-12"><br></div></div>');
             $("#modal_confirmPay .modal-body").append('<div class="row"><div class="col-md-3"></div><div class="col-md-3"><input type="submit" class="btn btn-primary" value="CONFIRMAR"></div><div class="col-md-3"><input type="button" class="btn btn-danger" value="CANCELAR" onclick="closeModalEng()"></div><div class="col-md-3"></div></div>');
             $("#modal_confirmPay").modal();
-        });
+        });*/
 
     });
 
@@ -730,7 +730,7 @@ return BtnStats;
     })
 
 
-    function SoloNumeros(evt) {
+    /*function SoloNumeros(evt) {
         if (window.event) {
             keynum = evt.keyCode;
         } else {
@@ -743,11 +743,11 @@ return BtnStats;
             alerts.showNotification("top", "left", "Solo Numeros.", "danger");
             return false;
         }
-    }
+    }*/
 
-    function closeModalEng() {
+    /*function closeModalEng() {
         $("#modal_confirmPay").modal('toggle');
-    }
+    }*/
 
 
     function formatMoney(n) {

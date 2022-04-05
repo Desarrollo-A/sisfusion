@@ -63,7 +63,7 @@
         </div>
 
 
-        <div class="modal fade modal-alertas" id="modal_refresh" role="dialog">
+        <!--<div class="modal fade modal-alertas" id="modal_refresh" role="dialog">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <form method="post" id="form_refresh">
@@ -71,7 +71,7 @@
                     </form>
                 </div>
             </div>
-        </div>
+        </div>-->
 
         <div class="modal fade modal-alertas" id="modal_multiples" role="dialog">
             <div class="modal-dialog modal-md">
@@ -86,9 +86,9 @@
         </div>
  
 
-        <div class="modal fade modal-alertas" id="documento_preview" role="dialog">
+        <!--<div class="modal fade modal-alertas" id="documento_preview" role="dialog">
             <div class="modal-dialog" style= "margin-top:20px;"></div>
-        </div>
+        </div>-->
 
 
         <div class="modal fade bd-example-modal-sm" id="myModalEnviadas" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
@@ -668,9 +668,9 @@
             return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
         };
 
-        function cancela(){
+        /*function cancela(){
             $("#modal_nuevas").modal('toggle');
-        }
+        }*/
 
         $("#form_interes").submit( function(e) {
             e.preventDefault();
@@ -781,7 +781,7 @@
         });
 
         //Función para regresar a estatus 7 la solicitud
-        $("#form_refresh").submit( function(e) {
+        /*$("#form_refresh").submit( function(e) {
             e.preventDefault();
         }).validate({
             submitHandler: function( form ) {
@@ -814,20 +814,20 @@
                     }
                 });
             }
-        });
+        });*/
 
-        $(document).on("click", ".btn-historial-lo", function(){
+        /*$(document).on("click", ".btn-historial-lo", function(){
             window.open(url+"Comisiones/getHistorialEmpresa", "_blank");
-        });
+        });*/
 
 
-        function cleanComments(){
+        /*function cleanComments(){
             var myCommentsList = document.getElementById('documents');
             myCommentsList.innerHTML = '';
 
             var myFactura = document.getElementById('facturaInfo');
             myFactura.innerHTML = '';
-        }
+        }*/
 
         function selectAll(e) {
             tota2 = 0;
@@ -844,14 +844,14 @@
     </script>
 
     <script>
-        $(document).ready( function(){
+        /*$(document).ready( function(){
             $.getJSON( url + "Comisiones/getReporteEmpresa").done( function( data ){
                 $(".report_empresa").html();
                 $.each( data, function( i, v){
                     $(".report_empresa").append('<div class="col xol-xs-3 col-sm-3 col-md-3 col-lg-3"><label style="color: #00B397;">&nbsp;'+v.empresa+': $<input style="border-bottom: none; border-top: none; border-right: none;  border-left: none; background: white; color: #00B397; font-weight: bold;" value="'+formatMoney(v.porc_empresa)+'" disabled="disabled" readonly="readonly" type="text"  name="myText_FRO" id="myText_FRO"></label></div>');
                 });
             });
-        });
+        });*/
 
         $("#form_multiples").submit( function(e) {
             $('#spiner-loader').removeClass('hidden');
