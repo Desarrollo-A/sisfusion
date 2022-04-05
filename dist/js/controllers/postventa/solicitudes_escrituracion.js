@@ -243,7 +243,7 @@ $(document).on("click", ".upload", function () {
     $("#action").val(action);
     $("#details").val($(this).data("details"));
     if (action == 1 || action == 2 || action == 4) {
-        document.getElementById("mainLabelText").innerHTML = action == 1 ? "Selecciona el archivo que desees asociar." : action == 2 ? "¿Estás seguro de eliminar el archivo?" : "Selecciona los motivos de rechazo que asociarás al documento.";
+        document.getElementById("mainLabelText").innerHTML = action == 1 ? "Seleccione el archivo que desees asociar." : action == 2 ? "¿Estás seguro de eliminar el archivo?" : "Seleccione los motivos de rechazo que asociarás al documento.";
         document.getElementById("secondaryLabelDetail").innerHTML = action == 1 ? "El documento que hayas elegido se almacenará de manera automática una vez que des clic en guardar." : action == 2 ? "El documento se eliminará de manera permanente una vez que des clic en Guardar." : "Los motivos de rechazo que selecciones se registrarán de manera permanente una vez que des clic en Guardar.";
         if (action == 1) { // ADD FILE
             $("#selectFileSection").removeClass("hide");
@@ -269,7 +269,7 @@ $(document).on("click", ".upload", function () {
         var relatedTarget = target.siblings(".file-name");
 
         if(target.val() == ''){
-            var fileName = 'No has seleccionada nada aún';
+            var fileName = 'No ha seleccionado nada aún';
         }else{
             var fileName = target[0].files[0].name;
         }
@@ -296,7 +296,7 @@ $(document).on("click", "#sendRequestButton", function (e) {
     else if (action == 4) { // MJ: VALIDATE NOK FILE
         let rejectionReasons = $("#rejectionReasons").val();
         if (rejectionReasons == '') { // THERE ARE NO OPTIONS
-            alerts.showNotification("top", "right", "Asegúrate de haber seleccionado al menos un motivo de rechazo", "warning");
+            alerts.showNotification("top", "right", "Asegúrese de haber seleccionado al menos un motivo de rechazo", "warning");
         } else sendRequestPermission = 1;
     }
 
@@ -485,7 +485,7 @@ $(document).on("click", "#sendRequestButton2", function (e) {
     let uploadedDocument = $("#uploadedDocument2")[0].files[0];
     let validateUploadedDocument = (uploadedDocument == undefined) ? 0 : 1;
     // SE VALIDA QUE HAYA SELECCIONADO UN ARCHIVO ANTES DE LLEVAR A CABO EL REQUEST
-    if (validateUploadedDocument == 0) alerts.showNotification("top", "right", "Asegúrate de haber seleccionado un archivo antes de guardar.", "warning");
+    if (validateUploadedDocument == 0) alerts.showNotification("top", "right", "Asegúrese de haber seleccionado un archivo antes de guardar.", "warning");
     else sendRequestPermission = 1; // PUEDE MANDAR EL REQUEST PORQUE SÍ HAY ARCHIVO SELECCIONADO
 
     if (sendRequestPermission == 1) {
@@ -596,12 +596,14 @@ function fillTable(beginDate, endDate) {
             },
             {
                 data: function (d) {
-                    return d.fecha_creacion;
+                    return d.tipo == 1 ? d.comentarios : d.motivos_rechazo || d.tipo == 2 ? d.comentarios : d.motivos_rechazo || d.tipo == 3 ? d.comentarios : d.motivos_rechazo;
                 }
             },
             {
                 data: function (d) {
-                    return d.tipo == 1 ? d.comentarios : d.motivos_rechazo || d.tipo == 2 ? d.comentarios : d.motivos_rechazo || d.tipo == 3 ? d.comentarios : d.motivos_rechazo;
+                    return `<center><span class="label">${d.idEstatus}</span></center>
+                    <center><span class="label" style="background:${d.tipo == 1 || d.tipo == null ? '#28B463' : '#f44336' }">${d.estatus}</span><center>
+                    <center><span class="label" style="background:${d.tipo == 1 || d.tipo == null ? '#28B463' : '#f44336'}">(${d.area})</span><center>`;   
                 }
             },
             {
@@ -629,7 +631,7 @@ function fillTable(beginDate, endDate) {
                             break;
                         case 4:
                             if (userType == 55) {
-                                newBtn += `<button id="presupuesto" class="btn-data btn-blueMaderas" data-toggle="tooltip" data-placement="top" title="presupuesto"><i class="fas fa-money-bill-wave"></i></button>`;
+                                newBtn += `<button id="presupuesto" class="btn-data btn-blueMaderas" data-toggle="tooltip" data-placement="top" title="Presupuesto"><i class="fas fa-money-bill-wave"></i></button>`;
                                 newBtn += `<button id="reject" class="btn-data btn-warning" data-toggle="tooltip" data-placement="top" title="Rechazar"><i class="fas fa-ban"></i></button>`;
                                 if(d.Spresupuesto == 1){
                                     newBtn += '<button id="request" class="btn-data btn-green" data-toggle="tooltip" data-placement="top" title="Aprobar"><i class="far fa-paper-plane"></i></button>';
@@ -664,7 +666,7 @@ function fillTable(beginDate, endDate) {
                                 exp = 1;
                             }
                             newBtn += `<button id="trees" data-idSolicitud=${d.idSolicitud} class="btn-data btn-details-grey details-control" data-permisos="1" data-id-prospecto="" data-toggle="tooltip" data-placement="top" title="Desglose documentos"><i class="fas fa-chevron-down"></i></button>`;
-                            newBtn += `<button id="newNotary" data-idSolicitud=${d.idSolicitud} class="btn-data btn-sky" data-permisos="1" data-id-prospecto="" data-toggle="tooltip" data-placement="top" title="Nuevo notario"><i class="fas fa-user-tie"></i></button>`;
+                            newBtn += `<button id="newNotary" data-idSolicitud=${d.idSolicitud} class="btn-data btn-sky" data-permisos="1" data-id-prospecto="" data-toggle="tooltip" data-placement="top" title="Nueva Notaría"><i class="fas fa-user-tie"></i></button>`;
                             group_buttons += permisos(d.permisos, exp, d.idDocumento, d.tipo_documento, d.idSolicitud, 1, newBtn);
                             break;
                         case 11:
@@ -672,9 +674,11 @@ function fillTable(beginDate, endDate) {
                             if (d.result == 1 && d.estatusValidacion != 1)
                                 exp = 1;
                             else if (d.result == 1 && d.estatusValidacion == 1)
-                                exp = 2;    
-                            newBtn += `<button id="trees" data-idSolicitud=${d.idSolicitud} class="btn-data btn-details-grey details-control" data-permisos="2" data-id-prospecto="" data-toggle="tooltip" data-placement="top" title="Desglose documentos"><i class="fas fa-chevron-down"></i></button>`;
-                            newBtn += `<button id="notaria" data-idSolicitud=${d.idSolicitud} class="btn-data btn-green" data-permisos="2" data-id-prospecto="" data-toggle="tooltip" data-placement="top" title="Notaria"><i class="fas fa-user-tie"></i></button>`;
+                                exp = 2;   
+                                newBtn += `<button id="trees" data-idSolicitud=${d.idSolicitud} class="btn-data btn-details-grey details-control" data-permisos="2" data-id-prospecto="" data-toggle="tooltip" data-placement="top" title="Desglose documentos"><i class="fas fa-chevron-down"></i></button>`;
+                            if (d.pertenece == 2){
+                                newBtn += `<button id="notaria" data-idSolicitud=${d.idSolicitud} class="btn-data btn-green" data-permisos="2" data-id-prospecto="" data-toggle="tooltip" data-placement="top" title="Notaría"><i class="fas fa-user-tie"></i></button>`;
+                            } 
                             if (userType == 57 && d.estatusValidacion == 0 && exp != null && d.no_rechazos != 0) { // MJ: ANTES 55
                                 newBtn += `<button id="reject"  class="btn-data btn-warning" data-toggle="tooltip" data-placement="top" title="Rechazar"><i class="fas fa-ban"></i></button>`;
                             }
@@ -693,7 +697,7 @@ function fillTable(beginDate, endDate) {
 
                             break;
                         case 13:
-                            newBtn += `<button id="observacionesButton" data-idSolicitud=${d.idSolicitud} data-action="3" class="btn-data btn-violetBoots" data-id-prospecto="" data-toggle="tooltip" data-placement="top" title="Envio Observaciones"><i class="far fa-envelope"></i></button>`;
+                            newBtn += `<button id="observacionesButton" data-idSolicitud=${d.idSolicitud} data-action="3" class="btn-data btn-violetBoots" data-id-prospecto="" data-toggle="tooltip" data-placement="top" title="Envió Observaciones"><i class="far fa-envelope"></i></button>`;
                             group_buttons += permisos(d.permisos, d.expediente, d.idDocumento, d.tipo_documento, d.idSolicitud, 1, newBtn);
                             break;
                         case 14:
@@ -1060,9 +1064,9 @@ function buildTableDetail(data, permisos) {
     solicitudes += '<td>' + '<b>' + 'DOCUMENTO ' + '</b></td>';
     solicitudes += '<td>' + '<b>' + 'CARGADO POR ' + '</b></td>';
     solicitudes += '<td>' + '<b>' + 'FECHA ' + '</b></td>';
-    solicitudes += '<td>' + '<b>' + 'ESTATUS VALIDACIÓN ' + '</b></td>';
     solicitudes += '<td>' + '<b>' + 'MOTIVOS DE RECHAZO ' + '</b></td>';
     solicitudes += '<td>' + '<b>' + 'VALIDADO POR ' + '</b></td>';
+    solicitudes += '<td>' + '<b>' + 'ESTATUS VALIDACIÓN ' + '</b></td>';
     solicitudes += '<td>' + '<b>' + 'ACCIONES ' + '</b></td>';
     solicitudes += '</tr>';
     $.each(data, function (i, v) {
@@ -1073,9 +1077,9 @@ function buildTableDetail(data, permisos) {
         solicitudes += '<td> ' + v.nombre + ' </td>';
         solicitudes += '<td> ' + v.creado_por + ' </td>';
         solicitudes += '<td> ' + v.fecha_creacion + ' </td>';
-        solicitudes += '<td> <span class="label" style="background:' + v.colour + '">' + v.estatus_validacion + '</span> </td>';
         solicitudes += '<td> ' + v.motivos_rechazo + ' </td>';
         solicitudes += '<td> ' + v.validado_por + ' </td>';
+        solicitudes += '<td> <span class="label" style="background:' + v.colour + '">' + v.estatus_validacion + '</span> </td>';
         /*data-action = 1 (UPLOAD FILE)
         data-action = 2 (DELETE FILE)*/
 
@@ -1169,7 +1173,7 @@ $(document).on("submit", "#newNotario", function (e) {
         processData: false, 
         type: 'POST',
         success: function (response) {
-            alerts.showNotification("top", "right", "Se agrego una nueva notaria.", "success");
+            alerts.showNotification("top", "right", "Se agrego una nueva Notaría.", "success");
             $("#altaNotario").modal("hide");
             prospectsTable.ajax.reload();
         }
