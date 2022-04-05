@@ -23,9 +23,7 @@ class Postventa_model extends CI_Model
 
     function getLotes($idCondominio)
     {
-        return $this->db->query("SELECT * FROM lotes l
-        WHERE idCondominio = $idCondominio AND idStatusContratacion = 15 AND idMovimiento = 45 AND idStatusLote = 2 
-        AND idLote NOT IN(SELECT idLote FROM clientes WHERE id_cliente IN (SELECT idCliente FROM solicitud_escrituracion))");
+        return $this->db->query("SELECT * FROM lotes WHERE idCondominio = $idCondominio AND idStatusContratacion = 15 AND idMovimiento = 45 AND idStatusLote = 2");
     }
 
     function getClient($idLote)
@@ -67,8 +65,9 @@ class Postventa_model extends CI_Model
         return $this->db->query("SELECT oxc2.nombre area, se.idSolicitud, oxc.nombre estatus, se.fecha_creacion, l.nombreLote, se.estatus idEstatus,
         CONCAT(c.nombre, ' ', c.apellido_paterno, ' ', c.apellido_materno) nombre, cond.nombre nombreCondominio, r.nombreResidencial, de.expediente,
         ctrl.tipo_documento, de.idDocumento, ctrl.permisos, de2.result, ce.tipo, ce.comentarios, mr.motivo motivos_rechazo, de2.estatusValidacion, de3.Spresupuesto,
-        de2.no_rechazos FROM solicitud_escrituracion se 
+        de2.no_rechazos, n.pertenece FROM solicitud_escrituracion se 
         INNER JOIN clientes c ON c.id_cliente = se.idCliente AND c.status = 1
+        INNER JOIN Notarias n ON n.idNotaria = se.idNotaria 
         INNER JOIN lotes l ON se.idLote = l.idLote 
         INNER JOIN condominios cond ON cond.idCondominio = l.idCondominio 
         INNER JOIN residenciales r ON r.idResidencial = cond.idResidencial 
@@ -242,8 +241,8 @@ class Postventa_model extends CI_Model
         INNER JOIN lotes l ON se.idLote = l.idLote 
         INNER JOIN condominios cond ON cond.idCondominio = l.idCondominio 
         INNER JOIN residenciales r ON r.idResidencial = cond.idResidencial
-		LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = se.estatus_pago AND oxc.id_catalogo = 63
-		LEFT JOIN opcs_x_cats oxc2 ON oxc2.id_opcion = se.estatus_construccion AND oxc2.id_catalogo = 62
+		INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = se.estatus_pago AND oxc.id_catalogo = 63
+		INNER JOIN opcs_x_cats oxc2 ON oxc2.id_opcion = se.estatus_pago AND oxc2.id_catalogo = 62
         WHERE se.idSolicitud = $idSolicitud");
     }
 
@@ -271,7 +270,7 @@ class Postventa_model extends CI_Model
 
 function checkBudgetInfo($idSolicitud){
         return $this->db->query("SELECT se.*, CONCAT(c.nombre, ' ', c.apellido_paterno, ' ', c.apellido_materno) nombre, hl.modificado, l.nombreLote, 
-        cond.nombre nombreCond, r.nombreResidencial, n.correo correoN, v.correo correoV, oxc2.nombre nombreConst, oxc.nombre nombrePago
+        cond.nombre nombreCond, r.nombreResidencial, n.correo correoN, v.correo correoV
                 FROM solicitud_escrituracion se 
                 INNER JOIN clientes c ON c.id_cliente = se.idCliente
                 INNER JOIN (SELECT idLote, MAX(modificado) modificado FROM historial_lotes WHERE idStatusContratacion = 15 AND idMovimiento = 45 GROUP BY idLote) hl ON hl.idLote=se.idLote
@@ -280,17 +279,15 @@ function checkBudgetInfo($idSolicitud){
                 INNER JOIN residenciales r ON r.idResidencial = cond.idResidencial
                 LEFT JOIN Notarias n ON n.idNotaria = se.idNotaria
                 LEFT JOIN Valuadores v ON v.idValuador = se.idValuador
-                LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = se.estatus_pago AND oxc.id_catalogo = 63
-		        LEFT JOIN opcs_x_cats oxc2 ON oxc2.id_opcion = se.estatus_construccion AND oxc2.id_catalogo = 62
                 WHERE se.idSolicitud =$idSolicitud");
     }
 
-    function getInfoNotaria($idSolicitud)
+    function getInfoNotaria($idSolicitud, $idNotaria)
     {
         return $this->db->query("SELECT se.*, de.*, n.* FROM solicitud_escrituracion se
 		INNER JOIN documentos_escrituracion de ON de.idSolicitud = se.idSolicitud
-		INNER JOIN Notarias n ON n.idNotaria = se.idNotaria
-		WHERE se.idSolicitud = $idSolicitud AND de.tipo_documento NOT IN (14,15,16,17)");
+		INNER JOIN Notarias n ON n.idNotaria = $idNotaria
+		WHERE se.idSolicitud = $idSolicitud");
     }
 
     function saveDate($signDate, $idSolicitud)
