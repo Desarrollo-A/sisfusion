@@ -41,6 +41,31 @@ class Comisiones_model extends CI_Model {
 
     }
 
+    public function getStoppedCommissions()
+    {
+        $query = $this->db-> query("SELECT DISTINCT(l.idLote), res.nombreResidencial, cond.nombre as nombreCondominio,
+            l.nombreLote, l.tipo_venta, vc.id_cliente AS compartida, l.idStatusContratacion,
+            hl.motivo, hl.comentario
+            FROM lotes l 
+            INNER JOIN clientes cl ON cl.id_cliente = l.idCliente 
+            INNER JOIN condominios cond ON l.idCondominio=cond.idCondominio 
+            INNER JOIN residenciales res ON cond.idResidencial = res.idResidencial 
+            INNER JOIN pago_comision pc ON pc.id_lote = l.idLote 
+            INNER JOIN historial_log hl ON hl.identificador = l.idLote 
+            LEFT JOIN opcs_x_cats plane ON plane.id_opcion = l.plan_enganche AND plane.id_catalogo = 39 
+            LEFT JOIN ventas_compartidas vc ON vc.id_cliente = cl.id_cliente AND vc.estatus = 1
+            WHERE l.idStatusContratacion BETWEEN 9 AND 15 
+            AND cl.status = 1 
+            AND l.status = 1 
+            AND pc.bandera = 6 
+            AND l.registro_comision in (1) 
+            AND l.tipo_venta IS NOT NULL 
+            AND l.tipo_venta IN (1,2,7)
+            AND hl.tabla = 'pago_comision'
+            ORDER BY l.idLote");
+        return $query->result();
+    }
+
 
 
     public function getInCommissions($idlote)
@@ -3703,15 +3728,14 @@ public function validateDispersionCommissions($idlote){
         return $this->db->query("UPDATE lotes SET ubicacion_dos = ".$plaza." WHERE idLote IN (".$idLote.")");
     }
 
-        function updateBandera($id_pagoc, $param) {
+    function updateBandera($id_pagoc, $param) {
         // $response = $this->db->update("pago_comision", $data, "id_pagoc = $id_pagoc");
-        $response = $this->db->query("UPDATE pago_comision SET bandera = ".$param.", fecha_modificacion = GETDATE() WHERE id_lote IN (".$id_pagoc.")");
+        $response = $this->db->query("UPDATE pago_comision SET bandera = $param, fecha_modificacion = GETDATE() ".
+            "WHERE id_lote IN ($id_pagoc)");
 
-        if($param == 55){
-          $response = $this->db->query("UPDATE lotes SET registro_comision = 1 WHERE idLote IN (".$id_pagoc.")");
+        if ($param == 55) {
+            $response = $this->db->query("UPDATE lotes SET registro_comision = 1 WHERE idLote IN (".$id_pagoc.")");
         }
-
-        
 
         if (! $response ) {
             return $finalAnswer = 0;
@@ -3720,8 +3744,10 @@ public function validateDispersionCommissions($idlote){
         }
     }
 
- 
-
+    function updateBanderaDetenida($idLote, $bandera)
+    {
+        return (bool)($this->db->query("UPDATE pago_comision SET bandera = $bandera WHERE id_lote = $idLote"));
+    }
 
     function ComisionesEnviar($usuario,$recidencial,$opc){
 switch ($opc) {
@@ -9041,7 +9067,9 @@ return $query->result();
 
     }
 
-
-
-
+    public function insertHistorialLog($idLote, $idUsuario, $estatus, $comentario, $tabla, $motivo)
+    {
+        return (bool)($this->db->query("INSERT INTO historial_log ".
+            "VALUES ($idLote, $idUsuario, GETDATE(), $estatus, '$comentario', '$tabla', '$motivo')"));
+    }
 }
