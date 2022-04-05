@@ -1,4 +1,7 @@
-<div class="modal   ade" id="approveModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+<link href="<?= base_url() ?>dist/css/commonModals.css" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
+
+<div class="modal fade" id="approveModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -13,8 +16,8 @@
                     <input type="hidden" name="id_solicitud" id="id_solicitud">
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary">Aceptar</button>
                     <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Aceptar</button>
                 </div>
             </form>
         </div>
@@ -32,15 +35,19 @@
             </div>
             <form id="rejectForm" name="rejectForm" method="post">
                 <div class="modal-body">
-                    <div class="col-lg-12 form-group">
-                        <label>Seleccione el motivo de rechazo.</label>
-                        <select class="selectpicker" name="motivos_rechazo" id="motivos_rechazo" data-style="select-with-transition" title="Seleccione una opción" data-size="7"></select>
-                        <input type="hidden" name="id_solicitud2" id="id_solicitud2">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-lg-12 form-group p-0 m-0">
+                                <label class="label-gral">Seleccione el motivo de rechazo.</label>
+                                <select class="selectpicker select-gral m-0" name="motivos_rechazo" id="motivos_rechazo" data-style="btn" data-show-subtext="true" data-live-search="true" title="Seleccione una opción" data-size="7" required></select>
+                                <input type="hidden" name="id_solicitud2" id="id_solicitud2">
+                            </div>
+                            <div class="col-lg-12 form-group p-0 d-flex justify-end">
+                                <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                                <button type="submit" class="btn btn-primary">Aceptar</button>
+                            </div>
+                        </div>
                     </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary">Aceptar</button>
-                    <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
                 </div>
             </form>
         </div>
@@ -98,7 +105,7 @@
         <div class="modal-content card">
             <form class="card-content" id="formPresupuesto" name="formPresupuesto" method="post">
             <input type="hidden" name="id_solicitud3" id="id_solicitud3">
-                <div class="modal-body text-center toolbar m-0">
+                <div class="modal-body text-center toolbar m-0 p-0">
                     <h3 id="mainLabelText"></h3>
                     <h4 id="encabezado"></h4>
                     <div class="container-fluid">

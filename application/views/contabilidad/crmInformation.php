@@ -186,14 +186,6 @@
 <script>
     let url = "<?=base_url()?>";
     let typeTransaction = 1; // MJ: SELECTS MULTIPLES
-
-    // $(document).on('change', "#residenciales", function() {
-    //     getCondominios($(this).val());
-    // });
-
-    // $(document).on('change', "#condominios", function() {
-    //     getLotes($(this).val());
-    // });
 </script>
 <script src="<?= base_url() ?>dist/js/controllers/general/main_services.js"></script>
 <script src="<?= base_url() ?>dist/js/controllers/general/main_services_dr.js"></script>
