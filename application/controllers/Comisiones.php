@@ -15,7 +15,7 @@ class Comisiones extends CI_Controller
     $this->load->model('Comisiones_model');
     $this->load->model('asesor/Asesor_model');
     $this->load->model('Usuarios_modelo');
-    $this->load->library(array('session', 'form_validation'));
+    $this->load->library(array('session', 'form_validation', 'get_menu'));
     $this->load->helper(array('url', 'form'));
     $this->load->database('default');
    }
@@ -3215,6 +3215,19 @@ public function LiquidarLote(){
         }
     }
 
+    public function viewDetenidas()
+    {
+        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
+        $this->load->view('template/header');
+        $this->load->view("ventas/comisiones_detenidas", $datos);
+    }
+
+    public function getStoppedCommissions()
+    {
+        $data = $this->Comisiones_model->getStoppedCommissions();
+        echo ($data !== null) ? json_encode($data) : json_encode(array());
+    }
+
     public function getAllCommissions()
     {
         $datos = array();
@@ -3299,10 +3312,22 @@ public function LiquidarLote(){
         }
     }
 
-    public function updateBandera(){
+    public function updateBandera() {
          // echo($_POST['param']);
         $response = $this->Comisiones_model->updateBandera( $_POST['id_pagoc'], $_POST['param']);
         echo json_encode($response);
+    }
+
+    public function changeLoteToStopped()
+    {
+        $response = $this->Comisiones_model
+            ->insertHistorialLog($_POST['id_pagoc'], $this->session->userdata('id_usuario'), 1, $_POST['descripcion'],
+                'pago_comision', $_POST['motivo']);
+        if ($response) {
+            $response = $this->Comisiones_model->updateBanderaDetenida( $_POST['id_pagoc'], 6);
+        }
+
+         echo json_encode($response);
     }
 
     public function asigno_region_uno($sol){
@@ -6583,9 +6608,4 @@ for ($d=0; $d <count($dos) ; $d++) {
         }
         exit;
     }
-
-
-
-
-    
 }
