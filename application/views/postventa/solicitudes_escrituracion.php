@@ -22,7 +22,7 @@
                                 <i class="material-icons">list</i>
                             </div>
                             <div class="card-content">
-                                <h3 class="card-title center-align">Listado general de solicitudes de escrituración.</h3>
+                                <h3 class="card-title center-align">Listado General de Solicitudes de Escrituración.</h3>
                                 <div class="toolbar">
                                     <div class="row">
                                         <div class="col-12 col-sm-6 col-md-6 col-lg-6"></div>
@@ -60,9 +60,9 @@
                                                         <th>CONDOMINIO</th>
                                                         <th>LOTE</th>
                                                         <th>CLIENTE</th>
-                                                        <th>ESTATUS</th>
-                                                        <th>FECHA DE CREACION</th>
+                                                        <th>FECHA DE CREACIÓN</th>
                                                         <th>COMENTARIOS</th>
+                                                        <th>ESTATUS</th>
                                                         <th>ACCIONES</th>
                                                     </tr>
                                                 </thead>
