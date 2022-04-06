@@ -8,6 +8,8 @@
   // included, separated by spaces.
   var SCOPES = "https://www.googleapis.com/auth/calendar";
 
+  var parentDOM = document.getElementById("calendar");
+  // var authorizeButton = parentDOM.getElementsByClassName("fc-googleSync-button");
   var authorizeButton = document.getElementById('authorize_button');
   var signoutButton = document.getElementById('signout_button');
 
@@ -42,7 +44,7 @@
       authorizeButton.style.display = 'none';
       signoutButton.style.display = 'block';
       listUpcomingEvents();
-      // insertEvent();
+      insertEvent();
     } else {
       authorizeButton.style.display = 'block';
       signoutButton.style.display = 'none';
@@ -51,6 +53,7 @@
 
   /* Sign in the user upon button click.*/
   function handleAuthClick(event) {
+    console.log("click");
     gapi.auth2.getAuthInstance().signIn();
   }
 

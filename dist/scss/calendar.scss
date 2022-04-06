@@ -4,6 +4,16 @@
     .fc-toolbar-title{
         text-transform: uppercase;
     }
+    .fc-googleSync-button{
+        background-color: transparent;
+        box-shadow: none;
+        border: none;
+        color: $redGoogle;
+        &:hover{
+            background-color: $redGoogle;
+            color: $white;
+        }
+    }
     #comodinDIV{
         
     }

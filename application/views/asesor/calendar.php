@@ -1,9 +1,6 @@
-<head>
-    <!-- Google API LOGIN -->
-	<!-- <meta name="google-signin-client_id" content="848186048646-ugthma1qfj0ocamf1jeju4ahdi3n7qop.apps.googleusercontent.com">
-	<script src="https://apis.google.com/js/platform.js" async defer></script>
-	 -->
-</head>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
+<link href="<?= base_url() ?>dist/css/calendar.css" rel="stylesheet"/>
+
 <body>
 <div class="wrapper">
     <?php
@@ -16,7 +13,12 @@
     /*--------------------------------------------------------*/
     ?>
 
-    <link href="<?= base_url() ?>dist/css/calendar.css" rel="stylesheet"/>
+    <style>
+        .fc-icon-fab{
+            font-family: FontAwesome!important;
+        }
+    </style>
+
     <div class="content">
         <div class="container-fluid">
             <div class="row">
@@ -24,7 +26,9 @@
                     <div class="card">
                         <div class="card-content">
                             <div id='calendar'></div>
-                            <button id="authorize_button" style="display: none;">Authorize</button>
+                            
+                            <button id="authorize_button" style="display: none;"><img src="<?= base_url() ?>dist/img/googleCalendar.png" alt="Icono google calendar">Sincronizar</button>
+                            
                             <button id="signout_button" style="display: none;">Sign Out</button>
 
                             <pre id="content" style="white-space: pre-wrap;"></pre>

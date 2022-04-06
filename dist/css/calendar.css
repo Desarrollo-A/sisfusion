@@ -537,13 +537,23 @@
   color: #ffffff !important;
 }
 
+.btn-violetDeep {
+  color: #702497;
+  border: 1px solid #702497;
+}
+
+.btn-violetDeep:hover {
+  background-color: #702497;
+  color: #ffffff !important;
+}
+
 .btn-deepGray {
   color: #929292;
   border: 1px solid #929292;
 }
 
 .btn-deepGray:hover {
-  background-color: #929292;
+  color: #929292;
   color: #ffffff !important;
 }
 
@@ -600,6 +610,7 @@
 .btn-warning {
   color: #c01313;
   border: 1px solid #c01313;
+  background: none;
 }
 
 .btn-warning:hover, .btn-warning:focus {
@@ -909,4 +920,16 @@
 
 #calendar .fc-toolbar-title {
   text-transform: uppercase;
+}
+
+#calendar .fc-googleSync-button {
+  background-color: transparent;
+  box-shadow: none;
+  border: none;
+  color: #EA4335;
+}
+
+#calendar .fc-googleSync-button:hover {
+  background-color: #EA4335;
+  color: #ffffff;
 }

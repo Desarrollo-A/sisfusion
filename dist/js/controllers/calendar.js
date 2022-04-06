@@ -3,11 +3,19 @@ var appointment = '';
 
 document.addEventListener('DOMContentLoaded', function() {
     var calendarEl = document.getElementById('calendar');
-    calendar = new FullCalendar.Calendar(calendarEl, {    
+    calendar = new FullCalendar.Calendar(calendarEl, {   
       headerToolbar: {
         start:   'timeGridDay,timeGridWeek,dayGridMonth',
         center: 'title',
-        end: 'prev,next today'
+        end: 'prev,next today googleSync'
+      },
+      customButtons: {
+        googleSync: {
+          icon: 'fab fa-google',
+          click: function() {
+            alert('clicked the custom button!');
+          }
+        }
       },
       timeZone: 'none',
       locale: 'es',
@@ -114,67 +122,37 @@ document.addEventListener('DOMContentLoaded', function() {
     $('#dateEnd2').prop('min', $(this).val());
   });
 
-  document.querySelector('#insert_appointment_form')
-    .addEventListener('submit', e => {
-      e.preventDefault();
-      const data = Object.fromEntries(
-        new FormData(e.target)
-      )
-      
-      data['estatus_particular'] = $('#estatus_particular').val();
-      data['id_prospecto_estatus_particular'] = $("#prospecto").val()
-      $.ajax({
-        type: 'POST',
-        url: '../Calendar/insertRecordatorio',
-        data: JSON.stringify(data),
-        contentType: false,
-        cache: false,
-        processData: false,
-        beforeSend: function() {
-          $('#spiner-loader').removeClass('hide');
-        },
-        success: function(data) {
-          calendar.refetchEvents();
-          data = JSON.parse(data);
+  document.querySelector('#insert_appointment_form').addEventListener('submit', e => {
+    e.preventDefault();
+    const data = Object.fromEntries(
+      new FormData(e.target)
+    )
+    
+    data['estatus_particular'] = $('#estatus_particular').val();
+    data['id_prospecto_estatus_particular'] = $("#prospecto").val()
+    $.ajax({
+      type: 'POST',
+      url: '../Calendar/insertRecordatorio',
+      data: JSON.stringify(data),
+      contentType: false,
+      cache: false,
+      processData: false,
+      beforeSend: function() {
+        $('#spiner-loader').removeClass('hide');
+      },
+      success: function(data) {
+        calendar.refetchEvents();
+        data = JSON.parse(data);
+        $('#spiner-loader').addClass('hide');
+        alerts.showNotification("top", "right", data["message"], (data["status" == 503]) ? "danger" : (data["status" == 400]) ? "warning" : "success");
+        $('#agendaInsert').modal('toggle');
+      },
+      error: function() {
           $('#spiner-loader').addClass('hide');
-          alerts.showNotification("top", "right", data["message"], (data["status" == 503]) ? "danger" : (data["status" == 400]) ? "warning" : "success");
-          $('#agendaInsert').modal('toggle');
-        },
-        error: function() {
-            $('#spiner-loader').addClass('hide');
-            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
-        }
-      });
+          alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+      }
     });
-
-  // $("#insert_appointment_form").on('submit', function(e) {
-  //   e.preventDefault();
-  //   var formData = new FormData(this);
-  //   formData.append('estatus_particular',$('#estatus_particular').val());
-  //   formData.append('id_prospecto_estatus_particular',  $("#prospecto").val());
-  //   $.ajax({
-  //       type: 'POST',
-  //       url: '../Calendar/insertRecordatorio',
-  //       data: formData,
-  //       contentType: false,
-  //       cache: false,
-  //       processData: false,
-  //       beforeSend: function() {
-  //         $('#spiner-loader').removeClass('hide');
-  //       },
-  //       success: function(data) {
-  //         calendar.refetchEvents();
-  //         data = JSON.parse(data);
-  //         $('#spiner-loader').addClass('hide');
-  //         alerts.showNotification("top", "right", data["message"], (data["status" == 503]) ? "danger" : (data["status" == 400]) ? "warning" : "success");
-  //         $('#agendaInsert').modal('toggle');
-  //       },
-  //       error: function() {
-  //           $('#spiner-loader').addClass('hide');
-  //           alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
-  //       }
-  //   });
-  // });
+  });
 
   $("#edit_appointment_form").on('submit', function(e) {
     e.preventDefault();
