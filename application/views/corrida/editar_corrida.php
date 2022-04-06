@@ -406,7 +406,7 @@
                             <button ng-click="exportcf()" class="btn btn-success">Imprimir carátula + Corrida
                                 Financiera
                             </button>-->
-                            <?php print_r($data_corrida);  ?>
+                            <?php #print_r($data_corrida);  ?>
 
                             <table align="center" width="100%" cellpadding="8" cellspacing="8">
                                 <tr>
@@ -786,6 +786,8 @@
                                                               style="color:#000;">Enganche diferido sin descontar MSI</span>
                                                         <span ng-if="descuento.msi_descuento > 0" class="animate-if pill-msi"
                                                               style="color:#000;">{{descuento.msi_descuento}} MSI adicional</span>
+                                                        <span ng-if="descuento.id_condicion == 12" style="color:#000;">  Bono de {{descuento.porcentaje | currency}} al m<sup>2</sup></span>
+
                                                     </li>
                                                 </div>
 
@@ -808,6 +810,8 @@
 
                                                             <span ng-if="descuento.id_condicion == 7" class="animate-if"
                                                                   style="color:#000;">Enganche diferido sin descontar MSI</span>
+                                                            <span ng-if="descuento.id_condicion == 12" style="color:#000;">  Bono de {{descuento.porcentaje | currency}} al m<sup>2</sup></span>
+
 
 
                                                         </li>
@@ -894,16 +898,8 @@
                                             <span ng-if="i.id_condicion == 8"> Primera Mensualidad Octubre </span>
                                             <span ng-if="i.id_condicion == 9"> Primera Mensualidad Mayo </span>
                                             <span ng-if="i.id_condicion == 10"> Primera Mensualidad Septiembre </span>
+                                            <span ng-if="i.id_condicion == 12">  Bono de {{i.porcentaje | currency}} al m<sup>2</sup></span>
 
-
-                                        </b>
-                                    </td>
-
-                                    <td style="color:#2E86C1" class="text-center">
-                                        <b>
-                                            <span ng-if="i.id_condicion == 1 || i.id_condicion == 2 || i.id_condicion == 3 || i.id_condicion == 4 || i.id_condicion == 5 || i.id_condicion == 7"> {{ i.pm | currency }} </span>
-                                            <span ng-if="i.id_condicion == 6"> </span>
-                                            <span ng-if="i.id_condicion == 8"> </span>
 
 
                                         </b>
@@ -911,19 +907,29 @@
 
                                     <td style="color:#2E86C1" class="text-center">
                                         <b>
-                                            <span ng-if="i.id_condicion == 1 || i.id_condicion == 2 || i.id_condicion == 3 || i.id_condicion == 4 || i.id_condicion == 5 || i.id_condicion == 7"> {{ i.pt | currency }} </span>
+                                            <span ng-if="i.id_condicion == 1 || i.id_condicion == 2 || i.id_condicion == 3 || i.id_condicion == 4 || i.id_condicion == 5 || i.id_condicion == 7 || i.id_condicion == 12"> {{ i.pm | currency }} </span>
                                             <span ng-if="i.id_condicion == 6"> </span>
                                             <span ng-if="i.id_condicion == 8"> </span>
+                                            <span ng-if="i.id_condicion == 12"> </span>
+                                        </b>
+                                    </td>
 
+                                    <td style="color:#2E86C1" class="text-center">
+                                        <b>
+                                            <span ng-if="i.id_condicion == 1 || i.id_condicion == 2 || i.id_condicion == 3 || i.id_condicion == 4 || i.id_condicion == 5 || i.id_condicion == 7 || i.id_condicion == 12"> {{ i.pt | currency }} </span>
+                                            <span ng-if="i.id_condicion == 6"> </span>
+                                            <span ng-if="i.id_condicion == 8"> </span>
+                                            <span ng-if="i.id_condicion == 12"> </span>
                                         </b>
                                     </td>
 
                                     <td style="color:#27AE60" class="text-center">
                                         <b>
 
-                                            <span ng-if="i.id_condicion == 1 || i.id_condicion == 2 || i.id_condicion == 3 || i.id_condicion == 4 || i.id_condicion == 5 || i.id_condicion == 7"> {{ i.ahorro | currency }} </span>
+                                            <span ng-if="i.id_condicion == 1 || i.id_condicion == 2 || i.id_condicion == 3 || i.id_condicion == 4 || i.id_condicion == 5 || i.id_condicion == 7 || i.id_condicion == 12"> {{ i.ahorro | currency }} </span>
                                             <span ng-if="i.id_condicion == 6"> </span>
                                             <span ng-if="i.id_condicion == 8"> </span>
+                                            <span ng-if="i.id_condicion == 12"> </span>
                                         </b>
                                     </td>
 
@@ -2071,12 +2077,29 @@
                             r1 -= porcentaje2;
                             msi = parseInt(msi + item.msi_descuento);
                         }
+                        //aqui se agrega la validación la operación del bono
+                        if(item.id_condicion == 12){
+                            console.log('condicion 12');
+                            // descuentoM2 = montoBono/supLote
+                            porcentaje1 = (item.porcentaje);
+                            porcentaje2 = (porcentaje1 / supLote);
+                            r1 -= porcentaje1;
+                        }
 
 
                         ///////////////////////DESCIPCION DE DESCUENTOS////////////////////////////////////////
-                        a += porcentaje2;
-                        b = (tot - a);
-                        c = (b / supLote);
+                        if(item.id_condicion==12){
+                            console.log('descuento de chuy');
+                            a +=  porcentaje1;
+                            b = (tot - porcentaje1);
+                            d = (tot - porcentaje2);
+                            c = (d/supLote) - porcentaje2;
+                        }else{
+                            console.log('logica normal');
+                            a +=  porcentaje2;
+                            b = (tot - a);
+                            c = (b/supLote);
+                        }
                         arreglo.push({
                             ahorro: a,
                             pm: c,
