@@ -2154,6 +2154,8 @@ $pdf->Output(utf8_decode($namePDF), 'I');
         return $data_response;
     }
     function listado_cf(){
+        //print_r(phpversion());
+        //exit;
         /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/
         $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
         /*-------------------------------------------------------------------------------*/
@@ -2362,7 +2364,7 @@ $pdf->Output(utf8_decode($namePDF), 'I');
                     $min_date = min($d1, $d2);
                     $max_date = max($d1, $d2);
                     $i = 0;
-                    while (($min_date = strtotime("+1 MONTH", $min_date)) <= $max_date) {
+                    while (($min_date = strtotime("+2 MONTH", $min_date)) <= $max_date) {
                         $i++;
                     }
                     if($i<=2){
@@ -2427,7 +2429,7 @@ $pdf->Output(utf8_decode($namePDF), 'I');
                     //$paquete_view[$i]['response'][$c]['estatus'] = str_replace('"', '', $paquetes_data[$i]->descuentos[$c]->estatus);
                     $paquete_view[$i]['response'][$c]['estatus'] = $paquetes_data[$i]->descuentos[$c]->estatus;
                     $paquete_view[$i]['response'][$c]['id_paquete'] = $paquetes_data[$i]->id_paquete;
-                    $paquete_view[$i]['response'][$c]['msi_descuento'] = $data_descuento->msi_descuento;
+                    $paquete_view[$i]['response'][$c]['msi_descuento'] = (int) $data_descuento->msi_descuento;
                 }
             }
         }else{
@@ -2471,37 +2473,34 @@ $pdf->Output(utf8_decode($namePDF), 'I');
 
         $data_descuentos->paquetes_array = $array_descuentos;
 
+//        print_r($array_descuentos);
+
 
         for($i=0; $i<count($array_descuentos); $i++){
             $paquete_info = $this->Corrida_model->getPaqById($array_descuentos[$i]);
             $paquete_view[$i] = array(
                 'id_paquete' => $paquete_info->id_paquete,
                 'descripcion' => $paquete_info->descripcion,
-//                'estatus' => $paquete_info->estatus,
+                //'estatus' => $paquete_info->estatus,
             );
 
-
-            //for( $c = 0; $c < count($array_descuentos); $c++ ){
-            $data_descuento = $this->Corrida_model->getDescById($paquete_info->id_descuento);
-
-            $paquete_view[$i]['response'][0]['id_descuento'] = $data_descuento->id_descuento;
-            $paquete_view[$i]['response'][0]['id_tdescuento'] = $data_descuento->id_tdescuento;
-            $paquete_view[$i]['response'][0]['inicio'] = $data_descuento->inicio;
-            $paquete_view[$i]['response'][0]['fin'] = $data_descuento->fin;
-            $paquete_view[$i]['response'][0]['id_condicion'] = $data_descuento->id_condicion;
-            $paquete_view[$i]['response'][0]['porcentaje'] = $data_descuento->porcentaje;
-            $paquete_view[$i]['response'][0]['eng_top'] = $data_descuento->eng_top;
-            $paquete_view[$i]['response'][0]['apply'] = $data_descuento->apply;
-            $paquete_view[$i]['response'][0]['leyenda'] = $data_descuento->leyenda;
-            $paquete_view[$i]['response'][0]['prioridad'] = $data_descuento->prioridad;
-            //$paquete_view[$i]['response'][0]['estatus'] = str_replace('"', '', $paquete_info->estatus);
-            $paquete_view[$i]['response'][0]['estatus'] = 0;
-            $paquete_view[$i]['response'][0]['id_paquete'] = $paquete_info->id_paquete;
-            $paquete_view[$i]['response'][0]['msi_descuento'] = $data_descuento->msi_descuento;
-            //}
-            //print_r(count((int)($paquete_info->id_descuento)));
-            //echo '<br>';
-
+            $data_desc_paq = $this->Corrida_model->getRelDescByIdPq($paquete_info->id_paquete);
+            for($q = 0; $q<count($data_desc_paq); $q++){
+                $data_descuento = $this->Corrida_model->getDescById($data_desc_paq[$q]['id_descuento']);
+                $paquete_view[$i]['response'][$q]['id_descuento'] = $data_descuento->id_descuento;
+                $paquete_view[$i]['response'][$q]['id_tdescuento'] = $data_descuento->id_tdescuento;
+                $paquete_view[$i]['response'][$q]['inicio'] = $data_descuento->inicio;
+                $paquete_view[$i]['response'][$q]['fin'] = $data_descuento->fin;
+                $paquete_view[$i]['response'][$q]['id_condicion'] = $data_descuento->id_condicion;
+                $paquete_view[$i]['response'][$q]['porcentaje'] = $data_descuento->porcentaje;
+                $paquete_view[$i]['response'][$q]['eng_top'] = $data_descuento->eng_top;
+                $paquete_view[$i]['response'][$q]['apply'] = $data_descuento->apply;
+                $paquete_view[$i]['response'][$q]['leyenda'] = $data_descuento->leyenda;
+                $paquete_view[$i]['response'][$q]['prioridad'] = $data_descuento->prioridad;
+                $paquete_view[$i]['response'][$q]['estatus'] = 0;
+                $paquete_view[$i]['response'][$q]['id_paquete'] = $paquete_info->id_paquete;
+                $paquete_view[$i]['response'][$q]['msi_descuento'] = (int)$data_descuento->msi_descuento;
+            }
         }
         print_r(json_encode($paquete_view));
 
