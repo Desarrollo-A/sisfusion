@@ -4671,91 +4671,7 @@ function TieneAbonos($id){
 
 
 
-        function TienePago($id){
-            return $this->db->query("SELECT * FROM pagos_prestamos_ind WHERE id_prestamo=$id");
-            
-            
-            }
-            function BorrarPrestamo($id_prestamo){
-                $respuesta = $this->db->query("UPDATE prestamo SET estatus = 0 WHERE id_prestamo=$id_prestamo ");
-                if (! $respuesta ) {
-                return 0;
-                } else {
-                return 1;
-                }
-                }
-            
-                function getPrestamoxUser($id){
-                    return $this->db->query("SELECT id_usuario FROM prestamo WHERE id_usuario=$id AND estatus=1");
-                }
-
-                function insertar_prestamos($usuarioid,$monto,$numeroP,$comentario,$pago){
-                    $respuesta = $this->db->query("INSERT INTO prestamo(id_usuario,monto,num_pagos,estatus,comentario,fecha_creacion,pago) VALUES (".$usuarioid.", ".$monto.",".$numeroP.",1, '".$comentario."', GETDATE(),".$pago.")");
-                    if (! $respuesta ) {
-                        return 0;
-                        } else {
-                        return 1;
-                        }
-                }
-                function getPrestamos(){
-                    return $this->db->query("SELECT CONCAT(u.nombre, ' ', u.apellido_paterno, ' ' ,u.apellido_materno) as nombre,p.id_prestamo,p.id_usuario,p.monto,p.num_pagos,p.estatus,p.comentario,p.fecha_creacion,p.pago FROM prestamo p INNER JOIN usuarios u ON u.id_usuario=p.id_usuario WHERE p.estatus=1");
-                }
-                function InsertPago($id_prestamo,$id_user,$pago,$usuario){
-                    $respuesta = $this->db->query("INSERT INTO pagos_prestamos_ind(id_prestamo,id_usuario,pago,estado,comentario,fecha_abono,fecha_abono_intmex,creado_por) VALUES(".$id_prestamo.",".$id_user." ,".$pago.",1,'ABONO A PRESTAMO', GETDATE(), GETDATE(), ".$usuario." )");
-                    if (! $respuesta ) {
-                        return 0;
-                        } else {
-                        return 1;
-                        }
-                }
-
-                function PagoCerrado($id){
-                    return $this->db->query("SELECT b.monto,b.num_pagos,SUM(p.pago) as suma FROM prestamo b INNER JOIN pagos_prestamos_ind p on p.id_prestamo=b.id_prestamo WHERE p.id_prestamo=$id GROUP BY b.monto, b.num_pagos");
-                }
-
-                function UpdatePrestamo($id_prestamo){
-                    $respuesta = $this->db->query("UPDATE prestamo SET estatus=2 WHERE id_prestamo=$id_prestamo ");
-                    if (! $respuesta ) {
-                        return 0;
-                        } else {
-                        return 1;
-                        }
-                }
-                function getHistorialPrestamo($id){
-                    return $this->db->query(" SELECT * FROM prestamo b INNER JOIN pagos_prestamos_ind p on p.id_prestamo=b.id_prestamo WHERE p.id_prestamo=$id ORDER BY p.id_prestamo DESC");
-                }
-
-                function getPrestamoPorUser($id,$estado){
-                    return $this->db->query("SELECT CONCAT(u.nombre, ' ', u.apellido_paterno, ' ' ,u.apellido_materno) as nombre,p.id_prestamo,p.id_usuario,p.monto,p.num_pagos,p.pago,p.estatus,p.comentario,b.fecha_abono,b.estado,b.id_pago_prestamo,b.pago FROM prestamo p INNER JOIN usuarios u ON u.id_usuario=p.id_usuario INNER JOIN pagos_prestamos_ind b on b.id_prestamo=p.id_prestamo WHERE p.id_usuario=$id AND b.estado=$estado");
-                }
-                
-
-                function UpdateRevisionPagos($id_prestamo){
-                    $respuesta = $this->db->query("UPDATE pagos_prestamos_ind SET estado=2 WHERE id_pago_prestamo=$id_prestamo ");
-                    if (! $respuesta ) {
-                        return 0;
-                        } else {
-                        return 1;
-                        }
-                }
-
-                function getPrestamosAllUser($estado){
-                    return $this->db->query("SELECT CONCAT(u.nombre, ' ', u.apellido_paterno, ' ' ,u.apellido_materno) as nombre,p.id_prestamo,p.id_usuario,p.monto,p.num_pagos,p.pago,p.estatus,p.comentario,b.fecha_abono,b.estado,b.id_pago_prestamo,b.pago FROM prestamo p INNER JOIN usuarios u ON u.id_usuario=p.id_usuario INNER JOIN pagos_prestamos_ind b on b.id_prestamo=p.id_prestamo WHERE  b.estado=$estado");
-                }
-
-                function getHistorialPrestamoContra($id){
-                    return $this->db->query(" SELECT * FROM pagos_prestamos_ind WHERE id_pago_prestamo=$id");
-                }
-
-                function AbonosMensuales(){
-                    return $this->db->query("select p.id_bono,b.id_usuario,b.pago from bonos b inner join pagos_bonos_ind p on b.id_bono=p.id_bono where b.estatus=1 and convert(date,p.fecha_abono)=convert(date,DATEADD(month, -1, GETDATE() ))"); 
-                }
-                function AbonoHoy($usuario){
-                    return $this->db->query(" select * from pagos_bonos_ind where id_usuario=".$usuario." and convert(date,fecha_abono) = CONVERT(date,GETDATE())"); 
-                }
-
-
-    /**----------------------------------------FIN BONOS Y PRESTAMOS------------------------------- */
+      /**----------------------------------------------- */
     public function getCommissionsByMktdUserReport($estatus,$typeTransaction, $beginDate, $endDate, $where)
     {
         if ($typeTransaction == 1 || $typeTransaction == 3) {  // FIRST LOAD || SEARCH BY DATE RANGE
@@ -7870,6 +7786,153 @@ return $query->result();
 
     }
 
+
+    /**-----------NUEVO PROCESO DE PRESTAMOS AUTOMATICOS---------------------- */
+    
+    function getPrestamoxUser($id){
+        return $this->db->query("SELECT id_usuario FROM prestamos_aut WHERE id_usuario=$id AND estatus=1");
+    }
+
+    function TienePago($id){
+        return $this->db->query("SELECT * FROM pagos_prestamos_ind WHERE id_prestamo=$id");
+        
+        
+        }
+        function BorrarPrestamo($id_prestamo){
+            $respuesta = $this->db->query("UPDATE prestamo SET estatus = 0 WHERE id_prestamo=$id_prestamo ");
+            if (! $respuesta ) {
+            return 0;
+            } else {
+            return 1;
+            }
+            }
+        
+
+            function insertar_prestamos($usuarioid,$monto,$numeroP,$comentario,$pago){
+                $respuesta = $this->db->query("INSERT INTO prestamos_aut(id_usuario,monto,num_pagos,pago_individual,comentario,estatus,pendiente,creado_por,fecha_creacion,modificado_por,fecha_modificacion) VALUES (".$usuarioid.", ".$monto.",".$numeroP.",".$pago.",'".$comentario."',1,0,".$this->session->userdata('id_usuario').",GETDATE(),".$this->session->userdata('id_usuario').",GETDATE())");
+                if (! $respuesta ) {
+                    return 0;
+                    } else {
+                    return 1;
+                    }
+            }
+            function getPrestamos(){
+                return $this->db->query("SELECT CONCAT(u.nombre, ' ', u.apellido_paterno, ' ' ,u.apellido_materno) as nombre,
+                p.id_prestamo,p.id_usuario,p.monto,p.num_pagos,p.estatus,p.comentario,p.fecha_creacion,p.pago_individual,pendiente
+                FROM prestamos_aut p 
+                INNER JOIN usuarios u ON u.id_usuario=p.id_usuario 
+                WHERE p.estatus in(1,2,3)");
+            }
+            function InsertPago($id_prestamo,$id_user,$pago,$usuario){
+                $respuesta = $this->db->query("INSERT INTO pagos_prestamos_ind(id_prestamo,id_usuario,pago,estado,comentario,fecha_abono,fecha_abono_intmex,creado_por) VALUES(".$id_prestamo.",".$id_user." ,".$pago.",1,'ABONO A PRESTAMO', GETDATE(), GETDATE(), ".$usuario." )");
+                if (! $respuesta ) {
+                    return 0;
+                    } else {
+                    return 1;
+                    }
+            }
+
+            function PagoCerrado($id){
+                return $this->db->query("SELECT b.monto,b.num_pagos,SUM(p.pago) as suma FROM prestamo b INNER JOIN pagos_prestamos_ind p on p.id_prestamo=b.id_prestamo WHERE p.id_prestamo=$id GROUP BY b.monto, b.num_pagos");
+            }
+
+            function UpdatePrestamo($id_prestamo){
+                $respuesta = $this->db->query("UPDATE prestamo SET estatus=2 WHERE id_prestamo=$id_prestamo ");
+                if (! $respuesta ) {
+                    return 0;
+                    } else {
+                    return 1;
+                    }
+            }
+            function getHistorialPrestamo($id){
+                return $this->db->query(" SELECT * FROM prestamo b INNER JOIN pagos_prestamos_ind p on p.id_prestamo=b.id_prestamo WHERE p.id_prestamo=$id ORDER BY p.id_prestamo DESC");
+            }
+
+            function getPrestamoPorUser($id,$estado){
+                return $this->db->query("SELECT CONCAT(u.nombre, ' ', u.apellido_paterno, ' ' ,u.apellido_materno) as nombre,p.id_prestamo,p.id_usuario,p.monto,p.num_pagos,p.pago,p.estatus,p.comentario,b.fecha_abono,b.estado,b.id_pago_prestamo,b.pago FROM prestamo p INNER JOIN usuarios u ON u.id_usuario=p.id_usuario INNER JOIN pagos_prestamos_ind b on b.id_prestamo=p.id_prestamo WHERE p.id_usuario=$id AND b.estado=$estado");
+            }
+            
+
+            function UpdateRevisionPagos($id_prestamo){
+                $respuesta = $this->db->query("UPDATE pagos_prestamos_ind SET estado=2 WHERE id_pago_prestamo=$id_prestamo ");
+                if (! $respuesta ) {
+                    return 0;
+                    } else {
+                    return 1;
+                    }
+            }
+
+            function getPrestamosAllUser($estado){
+                return $this->db->query("SELECT CONCAT(u.nombre, ' ', u.apellido_paterno, ' ' ,u.apellido_materno) as nombre,p.id_prestamo,p.id_usuario,p.monto,p.num_pagos,p.pago,p.estatus,p.comentario,b.fecha_abono,b.estado,b.id_pago_prestamo,b.pago FROM prestamo p INNER JOIN usuarios u ON u.id_usuario=p.id_usuario INNER JOIN pagos_prestamos_ind b on b.id_prestamo=p.id_prestamo WHERE  b.estado=$estado");
+            }
+
+            function getHistorialPrestamoContra($id){
+                return $this->db->query(" SELECT * FROM pagos_prestamos_ind WHERE id_pago_prestamo=$id");
+            }
+
+            function AbonosMensuales(){
+                return $this->db->query("select p.id_bono,b.id_usuario,b.pago from bonos b inner join pagos_bonos_ind p on b.id_bono=p.id_bono where b.estatus=1 and convert(date,p.fecha_abono)=convert(date,DATEADD(month, -1, GETDATE() ))"); 
+            }
+            function AbonoHoy($usuario){
+                return $this->db->query(" select * from pagos_bonos_ind where id_usuario=".$usuario." and convert(date,fecha_abono) = CONVERT(date,GETDATE())"); 
+            }
+
+
+            function descuentos_aut(){
+                $data = $this->db->query("select *,DATEADD(DAY,28,fecha_creacion) as fecha_suma from prestamos_aut where GETDATE() > DATEADD(DAY,28,fecha_creacion)")->result_array();
+                $updateArrayData = array();
+                $insertArrayData = array();
+                
+                for ($m=0; $m <count($data); $m++) { 
+
+                    $pagoMensual = $data[$m]['pago_individual'] + $data[$m]['pendiente'];
+                    
+                    $PagosByUSer = $this->db->query("select * from pago_comision_ind where id_usuario=".$data[$m]['id_usuario']." and estatus=1 order by abono_neodata desc")->result_array();
+                    $Suma = 0;
+                        if(count($PagosByUSer) > 0)
+                        {
+
+                            
+                            for ($n=0;$n<count($PagosByUSer);$n++) {
+                                $commonData = array();
+                                $commonData2 = array();  
+                                
+                                $Suma = $Suma + $PagosByUSer[$n]['abono_neodata']; 
+
+
+                                    if($Suma > $pagoMensual)
+                                    {
+                                        /*SI EL PAGO MENSUAL DEL PRESTAMO SE CUBRE CON LA SUMA ACTUAL DE LOS PAGOS, ESTE SE TOMARA PARA HACER EL DESCUENTO DEL PRESTAMO*/
+                                        $restante = $Suma - $pagoMensual; //ESTE PAGO SE INSERTA EN ESTATUS 1
+                                        $MontoAdescontar = $PagosByUSer[$n]['abono_neodata'] - $restante; //UPDATE PARA EL PAGO ACTUAL
+
+
+                                        $this->db->query("UPDATE pago_comision_ind SET estatus=18,descuento_aplicado=1,abono_neodata=$MontoAdescontar WHERE id_pago_i = ".$PagosByUSer[$n]['id_pago_i']." ");
+                                        $this->db->query("INSERT INTO historial_comisiones values(".$PagosByUSer[$n]['id_pago_i'].",1,GETDATE(),1,'A ESTE PAGO DE ".$PagosByUSer[$n]['abono_neodata'].", SE LE DESCONTO LA CANTIDAD DE $pagoMensual, POR MOTIVO DE PRESTAMO')");
+                                        $this->db->query("INSERT INTO pago_comision_ind (id_comision, id_usuario, abono_neodata, fecha_abono, fecha_pago_intmex, estatus, pago_neodata, creado_por, comentario,modificado_por) VALUES (".$PagosByUSer[$n]['id_comision'].", ".$PagosByUSer[$n]['id_usuario'].", ".$restante.", GETDATE(), GETDATE(), 1, ".$PagosByUSer[$n]['pago_neodata'].",1, 'ESTE PAGO ES EL RESTANTE DEL PAGO CON ID ".$PagosByUSer[$n]['id_pago_i']."')");
+                                        $insert_id = $this->db->insert_id();
+                                        $this->db->query("INSERT INTO  historial_comisiones VALUES ($insert_id, 1, GETDATE(), 1, 'ESTE PAGO ES EL RESTANTE DEL PAGO CON ID ".$PagosByUSer[$n]['id_pago_i']."')");
+                                        break;
+                                    }else{
+                                        /***/
+
+                                    }
+                                
+                                
+                            }
+                        }
+                    
+                    
+
+                    
+                }
+
+
+            }
+
+
+/**----------------------------------------FIN BONOS Y PRESTAMOS------------------------------- */
+/**---------------------------------------------- */
 
 
 
