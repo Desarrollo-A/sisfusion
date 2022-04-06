@@ -25,7 +25,7 @@
 						<div class="card-content">
 							<h4 class="card-title"></h4>
 							<div class="toolbar">
-                                <h3 class="card-title center-align">Documentación por Lote</h3>
+                                <h3 class="card-title center-align">Escrituración</h3>
                                 <div class="container-fluid">
                                     <div class="row">
                                         <div class="col col-xs-12 col-sm-12 col-md-4 col-lg-4">
