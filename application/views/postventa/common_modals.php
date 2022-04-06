@@ -160,7 +160,7 @@
                                             title="¿Tenemos cliente anterior?" data-size="7" id="cliente" name="cliente"
                                             data-live-search="true" required>
                                             <option value ="default" selected disabled>Seleccione una opción</option>
-                                            <option value="uno">Si</option>
+                                            <option value="uno">Sí</option>
                                             <option value="dos">No</option>
                                     </select>
                                 </div>
@@ -261,7 +261,7 @@
                                             title="¿Tenemos cliente anterior?" data-size="7" id="cliente2" name="cliente2"
                                             data-live-search="true" disabled>
                                             <option value ="default" selected disabled>Seleccione una opción</option>
-                                            <option value="uno">Si</option>
+                                            <option value="uno">Sí</option>
                                             <option value="dos">No</option>
                                     </select>
                                 </div>
