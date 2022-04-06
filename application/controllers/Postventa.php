@@ -613,8 +613,9 @@ class Postventa extends CI_Controller
         }elseif ($type == 2) {
             $motivos_rechazo = $_POST['comentarios'];
             $informacion = $this->Postventa_model->changeStatus($id_solicitud, $type, 'NULL', $motivos_rechazo);
-        } else {
-            $informacion = $this->Postventa_model->changeStatus($id_solicitud, $type, 'Cambio de fecha', 0);
+        }else {
+            $comentarios = $_POST['comentarios'];
+            $informacion = $this->Postventa_model->changeStatus($id_solicitud, $type, $comentarios, 0);
         }
 
         echo json_encode($informacion);
@@ -1267,7 +1268,7 @@ class Postventa extends CI_Controller
                                             <tr>
                                                 <td style="font-size: 1em;">
                                                     <b>¿Tenemos cliente anterior (traspaso, cesión o segunda venta)?:</b><br>
-                                                    ' . $data->cliente_anterior . '
+                                                    ' . ($data->cliente_anterior == 1 ? 'Si':'NO') . '
                                                 </td>
                                                 
                                             </tr>
@@ -1365,6 +1366,7 @@ class Postventa extends CI_Controller
             echo json_encode(array());
     }
 
+    //NOTARIA
     public function nuevoNotario()
     {
         $idSolicitud = $_POST['idSolicitud'];
@@ -1395,25 +1397,39 @@ class Postventa extends CI_Controller
     public function rechazarNotaria()
     {
         $idSolicitud = $_POST['idSolicitud'];
+        $rol = $this->session->userdata('id_rol');
 
         $informacion = $this->Postventa_model->rechazarNotaria($idSolicitud);
         return $informacion;
+
+        return $this->Postventa_model->rechazarNotaria($idSolicitud, $rol);
     }
 
     //OBSERVACIONES
     public function observacionesPostventa()
     {
         $idSolicitud = $_POST['idSolicitud'];
+        $rol = $this->session->userdata('id_rol');
 
-        $informacion = $this->Postventa_model->updateObservacionesPostventa($idSolicitud);
-        return $informacion;
+        // $informacion = $this->Postventa_model->updateObservacionesPostventa($idSolicitud);
+        // return $informacion;
+
+        return $this->Postventa_model->updateObservacionesPostventa($idSolicitud, $rol);
+    }
+
+    public function observacionesProyectos()
+    {
+        $idSolicitud = $_POST['idSolicitud'];
+        $rol = $this->session->userdata('id_rol');
+
+        return $this->Postventa_model->updateObservacionesProyectos($idSolicitud, $rol);
     }
 
     public function mailObservaciones()
     {
         $idSolicitud = $_POST['idSolicitud'];
-        $observaciones = $_POTS['observaciones'];
-
+        $observaciones = $_POST['observaciones'];
+        
         $this->load->library('email');
         $mail = $this->email;
         $mail->from('noreply@ciudadmaderas.com', 'Ciudad Maderas');
