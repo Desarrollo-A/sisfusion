@@ -631,9 +631,10 @@ function getStatusMktdPreventa(){
     // }
 
     function getProspectsList($typeTransaction, $beginDate, $endDate, $where){
-        if ($typeTransaction == 1 || $typeTransaction == 3) {  // FIRST LOAD || SEARCH BY DATE RANGE
+        $filter = "";
+        /*if ($typeTransaction == 1 || $typeTransaction == 3) {  // FIRST LOAD || SEARCH BY DATE RANGE
             $filter = "AND c.fecha_creacion BETWEEN '$beginDate 00:00:00' AND '$endDate 23:59:59'";
-        }
+        }*/
         switch ($this->session->userdata('id_rol')) {
             case '2': // SUBDIRECTOR
             case '5': // ASISTENTE SUBDIRECTOR
