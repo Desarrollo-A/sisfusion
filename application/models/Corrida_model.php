@@ -292,6 +292,10 @@
         $query = $this->db->query("SELECT * FROM paquetes WHERE id_paquete=".$id_paquete);
         return $query->row();
     }
+    public function getRelDescByIdPq($id_paquete){
+        $query = $this->db->query("SELECT * FROM relaciones WHERE id_paquete IN ($id_paquete) ORDER BY prioridad");
+        return $query->result_array();
+    }
     function getDescsByCondominio($id_condominio, $id_pxc){
         $query = $this->db->query("SELECT * FROM paquetes_x_condominios WHERE estatus=1 AND id_pxc=".$id_pxc);
         return $query->row();
@@ -385,7 +389,7 @@
         }
     }
     public function insertCXL($data_tocxl){
-        $this->db->insert('sisfusion.dbo.corridas_x_lotes',$data_tocxl);
+        $this->db->insert('corridas_x_lotes',$data_tocxl);
     }
     public function update_cxl($data, $id_corrida){
         $data_insert = json_encode($data);
