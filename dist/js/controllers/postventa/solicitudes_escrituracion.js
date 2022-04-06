@@ -590,8 +590,7 @@ function fillTable(beginDate, endDate) {
             },
             {
                 data: function (d) {
-                    return `<center><span><b>${d.estatus}</b></span><center>
-                    <center><span>(${d.area})</span><center>`;   
+                    return d.fecha_creacion;
                 }
             },
             {
@@ -601,9 +600,8 @@ function fillTable(beginDate, endDate) {
             },
             {
                 data: function (d) {
-                    return `<center><span class="label">${d.idEstatus}</span></center>
-                    <center><span class="label" style="background:${d.tipo == 1 || d.tipo == null ? '#28B463' : '#f44336' }">${d.estatus}</span><center>
-                    <center><span class="label" style="background:${d.tipo == 1 || d.tipo == null ? '#28B463' : '#f44336'}">(${d.area})</span><center>`;   
+                    return `<center><span><b>${d.estatus}</b></span><center>
+                    <center><span>(${d.area})</span><center>`;   
                 }
             },
             {
@@ -612,7 +610,6 @@ function fillTable(beginDate, endDate) {
                     var group_buttons = '';
                     let newBtn = '';
                     let exp;
-                    console.log("el estatus", userType);
 
                     switch (d.idEstatus) {
                         case 0:
@@ -804,7 +801,7 @@ function email(idSolicitud, action, notaria = null, valuador= null) {
             break;
     }
     $.post(action == 1 ? 'mailPresupuesto': action == 2 ? 'presupuestoCliente': action  == 3 ? 'mailNotaria': action  == 4 ? 'mailFecha':'mailPresupuesto', obj, function (data) {
-        if(data == false){//cambiar a true
+        if(data == true){//cambiar a true
             changeStatus(idSolicitud, action == 1 ? 4:0, 'correo enviado', 1);
         }
         $('#spiner-loader').addClass('hide');
@@ -1359,7 +1356,7 @@ function emailObservaciones(idSolicitud, action, observaciones = null) {
             break;
     }
     $.post(action == 1 ? 'mailObservaciones' : 'mailObservaciones', obj, function (data) {
-        if(data == false){
+        if(data == true){
             changeStatus(idSolicitud, action == 1 ? 4:0, 'Correo Envíado a Proyectos', 1);
         }
         $('#spiner-loader').addClass('hide');
