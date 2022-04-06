@@ -6056,8 +6056,8 @@ public function getUsersClient($lote,$compartida,$TipoVenta,$LupgarP,$mdb,$ismkt
     echo json_encode( $respuesta );
     }
 
-    public function porcentajes($cliente,$tipo,$vigencia){
-      echo json_encode($this->Comisiones_model->porcentajes($cliente,$tipo,$vigencia)->result_array(),JSON_NUMERIC_CHECK);
+    public function porcentajes($cliente,$tipoVenta){
+      echo json_encode($this->Comisiones_model->porcentajes($cliente,$tipoVenta)->result_array(),JSON_NUMERIC_CHECK);
     }
     /*public function porcentajes($cliente,$tipo,$vigencia){
         echo json_encode($this->Comisiones_model->porcentajes($cliente,$tipo,$vigencia)->result_array());
