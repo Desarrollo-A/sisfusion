@@ -25,7 +25,7 @@
 						<div class="card-content">
 							<h4 class="card-title"></h4>
 							<div class="toolbar">
-                                <h3 class="card-title center-align">Documentación por lote</h3>
+                                <h3 class="card-title center-align">Documentación por Lote</h3>
                                 <div class="container-fluid">
                                     <div class="row">
                                         <div class="col col-xs-12 col-sm-12 col-md-4 col-lg-4">
@@ -71,7 +71,7 @@
                                         </div>
                                         <div class="col-md-4">
                                             <div class="form-group label-floating">
-                                                <label class="control-label">Estatus del lote</label>
+                                                <label class="control-label">Estatus del Lote</label>
                                                 <div class="radio_container w-100">
                                                     <input class="d-none generate" type="radio" name="estatus" id="estatus" value="1" checked>
                                                     <label class="w-50">Liquidado</label>
@@ -86,15 +86,15 @@
                                             <div class="col-md-5">
                                                 <ol class="list-none">
                                                     <h4 class="card-title">Checklist</h4>
-                                                    <li><b>1)</b> Identificación oficial vigente</li>
+                                                    <li><b>1)</b> Identificación Oficial Vigente</li>
                                                     <li><b>2)</b> RFC (Cédula o constancia de situación fiscal)</li>
-                                                    <li><b>3)</b> Comprobante de domicilio actual luz, agua o telefonia fija(antiguedad menor a 2 meses)</li>
-                                                    <li><b>4)</b> Acta de nacimiento</li>
-                                                    <li><b>5)</b> Acta de matrimonio (en su caso). *</li>
+                                                    <li><b>3)</b> Comprobante de domicilio actual luz, agua o telefonía fija(antigüedad menor a 2 meses)</li>
+                                                    <li><b>4)</b> Acta de Nacimiento</li>
+                                                    <li><b>5)</b> Acta de Matrimonio (en su caso). *</li>
                                                     <li><b>6)</b> CURP(formato actualizado)</li>
-                                                    <li><b>7)</b> Formas de pago (todos los comprobantes de pago a mensialidades / estados de cuenta bancarios) **</li>
+                                                    <li><b>7)</b> Formas de pago (todos los comprobantes de pago a mensualidades / estados de cuenta bancarios) **</li>
                                                     <li><b>8)</b> Boleta predial al corriente y comprobante de pago retroactivo (si aplica)</li>
-                                                    <li><b>9)</b> Constancia no adeudo mantenimiento (si aplica)</li>
+                                                    <li><b>9)</b> Constancia no adeudo de mantenimiento (si aplica)</li>
                                                     <li><b>10)</b> Constancia no adeudo de agua (si aplica)</li>
                                                 </ol>
                                             </div>
@@ -114,37 +114,37 @@
                                                     </div>
                                                     <div class="col-md-4 pl-0">
                                                         <div class="form-group label-floating is-focused">
-                                                            <label class="control-label label-gral">Lugar de origen</label>
+                                                            <label class="control-label label-gral">Lugar de Origen</label>
                                                             <input id="origen" name="origen" class="form-control input-gral" type="text">
                                                         </div>
                                                     </div>
                                                     <div class="col-md-4 pl-0">
                                                         <div class="form-group label-floating is-focused">
-                                                            <label class="control-label label-gral">Estado civil</label>
+                                                            <label class="control-label label-gral">Estado Civil</label>
                                                             <input id="ecivil" name="ecivil" class="form-control input-gral" type="text">
                                                         </div>
                                                     </div>    
                                                     <div class="col-md-4 pl-0">
                                                         <div class="form-group label-floating is-focused">
-                                                            <label class="control-label label-gral">Régimen conyugal</label>
+                                                            <label class="control-label label-gral">Régimen Conyugal</label>
                                                             <input id="rconyugal" name="rconyugal" class="form-control input-gral" type="text">
                                                         </div>
                                                     </div>
                                                     <div class="col-md-8 pl-0">
                                                         <div class="form-group label-floating is-focused">
-                                                            <label class="control-label label-gral">Correo electronico</label>
+                                                            <label class="control-label label-gral">Correo Electrónico</label>
                                                             <input id="correo" name="correo" class="form-control input-gral" type="mail">
                                                         </div>
                                                     </div>
                                                     <div class="col-md-6 pl-0">
                                                         <div class="form-group label-floating is-focused">
-                                                            <label class="control-label label-gral">Domicilio fiscal</label>
+                                                            <label class="control-label label-gral">Domicilio Fiscal</label>
                                                             <input id="direccionf" name="direccionf" class="form-control input-gral" type="text">
                                                         </div>
                                                     </div>
                                                     <div class="col-md-6 pl-0">
                                                         <div class="form-group label-floating is-focused">
-                                                            <label class="control-label label-gral">Domicilio actual</label>
+                                                            <label class="control-label label-gral">Domicilio Actual</label>
                                                             <input id="direccion" name="direccion" class="form-control input-gral" type="text">
                                                         </div>
                                                     </div>
@@ -183,7 +183,7 @@
                                                 <div class="w-50">
                                                     <button class="btn-gral-data find_doc" id="aportaciones" type="submit">
                                                     <i class="fas fa-spinner fa-spin" style="display: none"></i>
-                                                    <span class="btn-text">Iniciar proceso.</span>
+                                                    <span class="btn-text">Iniciar Proceso.</span>
                                                     </button>
                                                 </div>
                                             </div>

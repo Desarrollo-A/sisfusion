@@ -525,7 +525,7 @@
             $("#modal_pagadas").modal();
         });
 
-        $("#tabla_ingresar_9 tbody").on("click", ".pausar", function(){
+        /*$("#tabla_ingresar_9 tbody").on("click", ".pausar", function(){
             var tr = $(this).closest('tr');
             var row = tabla_1.row( tr );
             idLote = $(this).val();
@@ -536,9 +536,9 @@
                     <input type="hidden" name="ideLotep" id="ideLotep" value="${idLote}"><input type="hidden" name="estatusL" id="estatusL" value="8">`);
             $("#modal_pagadas .modal-body").append('<br><div class="row"><div class="col-md-12"><center><input type="submit" class="btn btn-success" value="ACEPTAR"></center></div></div>');
             $("#modal_pagadas").modal();
-        });
+        });*/
 
-        $("#tabla_ingresar_9 tbody").on("click", ".liquidarPago", function(){
+        /*$("#tabla_ingresar_9 tbody").on("click", ".liquidarPago", function(){
             var tr = $(this).closest('tr');
             var row = tabla_1.row( tr );
             idLote = $(this).val();
@@ -564,15 +564,15 @@
                     alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
                 }
             });
-        });
+        });*/
 
-        async function VerificarUsers(idLote,compartida,tipo_venta,lugar_prospeccionLote,mdb,ismktd){
+        /*async function VerificarUsers(idLote,compartida,tipo_venta,lugar_prospeccionLote,mdb,ismktd){
             return new Promise(resolve => {
                 $.getJSON( url + "Comisiones/getUsersClient/"+idLote+"/"+compartida+"/"+tipo_venta+"/"+lugar_prospeccionLote+"/"+mdb+"/"+ismktd).done( function( data ){
                     resolve({data:data});
                 });
             });
-        }
+        }*/
 
         $("#tabla_ingresar_9 tbody").on("click", ".verify_neodata", async function(){ 
 

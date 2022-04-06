@@ -170,7 +170,7 @@
                                                         </div>
 
                                                         <div class="col xol-xs-4 col-sm-4 col-md-4 col-lg-4">
-                                                            <button ype="button" class="btn btn-primary " data-toggle="modal" data-target="#miModal">APLICAR RETIRO</button>
+                                                            <button type="button" class="btn btn-primary " data-toggle="modal" data-target="#miModal">APLICAR RETIRO</button>
                                                         </div>
                                                     </div>
                                                     <div class="col xol-xs-12 col-sm-12 col-md-12 col-lg-12">
@@ -227,7 +227,7 @@
 
 
 
-        <div class="modal fade modal-alertas" id="myModalEspera" role="dialog">
+        <!--<div class="modal fade modal-alertas" id="myModalEspera" role="dialog">
             <div class="modal-dialog modal-sm">
                 <div class="modal-content">
 
@@ -237,10 +237,10 @@
                     </form>
                 </div>
             </div>
-        </div>
+        </div>-->
 
 
-        <div class="modal fade modal-alertas" id="modal-delete" role="dialog" data-backdrop="static">
+        <!--<div class="modal fade modal-alertas" id="modal-delete" role="dialog" data-backdrop="static">
             <div class="modal-dialog modal-sm">
                 <div class="modal-content">
 
@@ -251,7 +251,7 @@
 
                 </div>
             </div>
-        </div>
+        </div>-->
 
 
 
@@ -259,7 +259,7 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header bg-red">
-                        <!-- <center><img src="<?= base_url() ?>static/images/preview.gif" width="250" height="200"></center> -->
+                        <!-- <center><img src="<//?= base_url() ?>static/images/preview.gif" width="250" height="200"></center> -->
                     </div>
 
                     <form method="post" id="form_aplicar">
@@ -372,28 +372,28 @@
             </div>
         </div>
 
-        <div class="modal fade modal-alertas" id="modal_descuentos" role="dialog">
+        <!--<div class="modal fade modal-alertas" id="modal_descuentos" role="dialog">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header bg-red">
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
 
-                    </div>
+                    </div>-->
                     <!-- <form method="post" id="form_descuentos">
                 <div class="modal-body"></div>
                 <div class="modal-footer"></div>
             </form> -->
-                </div>
+                <!--</div>
             </div>
-        </div>
+        </div>-->
 
 
-        <div class="modal fade modal-alertas" id="modal_abono" data-backdrop="static" data-keyboard="false" role="dialog">
+        <!--<div class="modal fade modal-alertas" id="modal_abono" data-backdrop="static" data-keyboard="false" role="dialog">
             <div class="modal-dialog ">
                 <div class="modal-content">
-                    <div class="modal-header bg-red">
+                    <div class="modal-header bg-red">-->
                         <!--<button type="button" class="close" data-dismiss="modal">&times;</button>-->
-                        <center><img src="<?= base_url() ?>static/images/preview.gif" width="250" height="200"></center>
+                        <!--<center><img src="<?= base_url() ?>static/images/preview.gif" width="250" height="200"></center>
 
 
 
@@ -407,15 +407,15 @@
 
                 </div>
             </div>
-        </div>
+        </div>-->
 
-        <div class="modal fade bd-example-modal-sm" id="myModalEnviadas" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+        <!--<div class="modal fade bd-example-modal-sm" id="myModalEnviadas" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-sm">
                 <div class="modal-content">
                     <div class="modal-body"></div>
                 </div>
             </div>
-        </div>
+        </div>-->
 
 
 
@@ -806,7 +806,7 @@
 
 
         /**------------------------------------------- */
-        $("#tabla_descuentos tbody").on("click", ".abonar", function() {
+        /*$("#tabla_descuentos tbody").on("click", ".abonar", function() {
             bono = $(this).val();
             var dat = bono.split(",");
             //$("#modal_abono").html("");
@@ -827,7 +827,7 @@
             $("#modal_abono .modal-body").append(``);
             $('#modal_abono').modal('show');
             //save(bono);
-        });
+        });*/
 
 
 
@@ -845,7 +845,7 @@
         // });
 
 
-        $("#tabla_descuentos tbody").on("click", ".btn-aut", function() {
+        /*$("#tabla_descuentos tbody").on("click", ".btn-aut", function() {
             var tr = $(this).closest('tr');
             var row = tabla_nuevas.row(tr);
 
@@ -856,7 +856,7 @@
             $("#modal_nuevas .modal-header").append(`<h3>Autorizar</h3>`);
             $("#modal_nuevas .modal-body").append('<div class="row"><div class="col-lg-12"><p><h5>¿Seguro que desea autorizar a <b>' + row.data().usuario + '</b> la cantidad de <b style="color:red;">$' + formatMoney(row.data().monto) + '</b>?</h5><input type="hidden" name="id_descuento" id="id_descuento" value="' + row.data().id_rc + '"><input type="hidden" name="opcion" id="opcion" value="Autorizar"><br><div><input type="submit"  class="btn btn-success" value="Aceptar"><button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button></p></div></div>');
             $("#modal_nuevas").modal();
-        });
+        });*/
 
         $("#tabla_descuentos tbody").on("click", ".btn-delete", function() {
             var tr = $(this).closest('tr');
@@ -1051,7 +1051,7 @@ let nuevoTotal = parseFloat(total67) - parseFloat(restaactual);
 
 
 
-    function closeModalEng() {
+    /*function closeModalEng() {
         // document.getElementById("inputhidden").innerHTML = "";
         document.getElementById("form_abono").reset();
         a = document.getElementById('inputhidden');
@@ -1060,9 +1060,9 @@ let nuevoTotal = parseFloat(total67) - parseFloat(restaactual);
 
         $("#modal_abono").modal('toggle');
 
-    }
+    }*/
 
-    function Cerrar() {
+    /*function Cerrar() {
         // document.getElementById("inputhidden").innerHTML = "";
         a = document.getElementById('bod');
         padre = a.parentNode;
@@ -1070,9 +1070,9 @@ let nuevoTotal = parseFloat(total67) - parseFloat(restaactual);
 
         $("#modal_log").modal('toggle');
 
-    }
+    }*/
 
-    function CloseModalDelete() {
+    /*function CloseModalDelete() {
         // document.getElementById("inputhidden").innerHTML = "";
         a = document.getElementById('borrarBono');
         padre = a.parentNode;
@@ -1080,9 +1080,9 @@ let nuevoTotal = parseFloat(total67) - parseFloat(restaactual);
 
         $("#modal-delete").modal('toggle');
 
-    }
+    }*/
 
-    function CloseModalDelete2() {
+    /*function CloseModalDelete2() {
         // document.getElementById("inputhidden").innerHTML = "";
         document.getElementById("form-delete").reset();
         a = document.getElementById('borrarBono');
@@ -1091,9 +1091,9 @@ let nuevoTotal = parseFloat(total67) - parseFloat(restaactual);
 
         $("#modal-delete").modal('toggle');
 
-    }
+    }*/
 
-    function CloseModalUpdate2() {
+    /*function CloseModalUpdate2() {
         // document.getElementById("inputhidden").innerHTML = "";
         document.getElementById("form-update").reset();
         a = document.getElementById('borrarUpdare');
@@ -1102,8 +1102,8 @@ let nuevoTotal = parseFloat(total67) - parseFloat(restaactual);
 
         $("#modal-abono").modal('toggle');
 
-    }
-    $(document).on('submit', '#form-delete', function(e) {
+    }*/
+    /*$(document).on('submit', '#form-delete', function(e) {
         e.preventDefault();
         var formData = new FormData(document.getElementById("form-delete"));
         formData.append("dato", "valor");
@@ -1137,7 +1137,7 @@ let nuevoTotal = parseFloat(total67) - parseFloat(restaactual);
                 alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
             }
         });
-    });
+    });*/
 
 
 
@@ -1229,7 +1229,7 @@ let nuevoTotal = parseFloat(total67) - parseFloat(restaactual);
 
 
 
-    function mandar_espera(idLote, nombre) {
+    /*function mandar_espera(idLote, nombre) {
         idLoteespera = idLote;
         // link_post2 = "Cuentasxp/datos_para_rechazo1/";
         link_espera1 = "Comisiones/generar comisiones/";
@@ -1238,7 +1238,7 @@ let nuevoTotal = parseFloat(total67) - parseFloat(restaactual);
         $("#myModalEspera ").modal();
         // $("#myModalEspera .modal-body").append("<div class='btn-group'>LOTE: "+nombre+"</div>");
         $("#myModalEspera .modal-footer").append("<div class='btn-group'><button type='submit' class='btn btn-success'>GENERAR COMISIÓN</button></div>");
-    }
+    }*/
 
 
 
@@ -1331,7 +1331,7 @@ let nuevoTotal = parseFloat(total67) - parseFloat(restaactual);
 
 
 
-    $("#numeroP").change(function() {
+    /*$("#numeroP").change(function() {
 
         let monto = parseFloat($('#monto1').val());
         let cantidad = parseFloat($('#numeroP').val());
@@ -1353,7 +1353,7 @@ let nuevoTotal = parseFloat(total67) - parseFloat(restaactual);
                 $('#pago').val(formatMoney(0));
             }
         }
-    });
+    });*/
 
    
 
@@ -1398,7 +1398,7 @@ let nuevoTotal = parseFloat(total67) - parseFloat(restaactual);
         }
     }
 
-    function verificar4() {
+    /*function verificar4() {
         let monto_ingresado = replaceAll($('#monto').val(), ',', '');
         let monto = parseFloat(monto_ingresado).toFixed(2);
         //console.log('disponible: '+disponible);
@@ -1412,5 +1412,5 @@ let nuevoTotal = parseFloat(total67) - parseFloat(restaactual);
             document.getElementById('btnsub').disabled = false;
             //alert('simon');
         }
-    }
+    }*/
 </script>

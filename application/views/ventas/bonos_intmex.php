@@ -11,7 +11,7 @@
         ?>
 
         <!-- Modals -->
-        <div class="modal fade modal-alertas" id="myModalEspera" role="dialog">
+        <!--<div class="modal fade modal-alertas" id="myModalEspera" role="dialog">
             <div class="modal-dialog modal-sm">
                 <div class="modal-content">
                     <form method="post" id="form_espera_uno">
@@ -20,7 +20,7 @@
                     </form>
                 </div>
             </div>
-        </div>
+        </div>-->
 
         <div class="modal fade bd-example-modal-sm" id="myModalEnviadas" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-sm">
@@ -464,14 +464,14 @@
             });
         });
 
-        function mandar_espera(idLote, nombre) {
+        /*function mandar_espera(idLote, nombre) {
             idLoteespera = idLote;
             link_espera1 = "Comisiones/generar comisiones/";
             $("#myModalEspera .modal-footer").html("");
             $("#myModalEspera .modal-body").html("");
             $("#myModalEspera ").modal();
             $("#myModalEspera .modal-footer").append("<div class='btn-group'><button type='submit' class='btn btn-success'>GENERAR COMISIÓN</button></div>");
-        }
+        }*/
 
         // FUNCTION MORE
         $(window).resize(function(){
@@ -492,7 +492,7 @@
         };
 
 
-        $("#roles").change(function() {
+        /*$("#roles").change(function() {
             var parent = $(this).val();
 
             document.getElementById("users").innerHTML ='';
@@ -512,9 +512,9 @@
                 }
                 $("#usuarioid").selectpicker('refresh');
             }, 'json'); 
-        });
+        });*/
 
-        $("#numeroP").change(function(){
+        /*$("#numeroP").change(function(){
             let monto = parseFloat($('#monto').val());
             let cantidad = parseFloat($('#numeroP').val());
             let resultado=0;
@@ -526,6 +526,6 @@
                 resultado = monto /cantidad;
                 $('#pago').val(formatMoney(resultado));
             }
-        });
+        });*/
     </script>
 </bdoy>

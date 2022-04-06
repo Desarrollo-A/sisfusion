@@ -78,7 +78,7 @@
             </div>
         </div>
 
-        <div class="modal fade modal-alertas" id="modalQuitarFactura" role="dialog">
+        <!--<div class="modal fade modal-alertas" id="modalQuitarFactura" role="dialog">
             <div class="modal-dialog modal-sm">
                 <div class="modal-content">
                     <div class="modal-header bg-red">
@@ -89,7 +89,7 @@
                     </form>
                 </div>
             </div>
-        </div>
+        </div>-->
 
         <div class="modal fade" id="seeInformationModalAsimilados" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog modal-md modal-dialog-scrollable" role="document">
@@ -148,7 +148,7 @@
             </div>
         </div>
 
-        <div class="modal fade modal-alertas" id="modal_documentacion" role="dialog">
+        <!--<div class="modal fade modal-alertas" id="modal_documentacion" role="dialog">
             <div class="modal-dialog" style="width:800px; margin-top:20px">
                 <div class="modal-content">
                     <div class="modal-body">
@@ -156,15 +156,15 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div>-->
 
-        <div class="modal fade bd-example-modal-sm" id="myModalEnviadas" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+        <!--<div class="modal fade bd-example-modal-sm" id="myModalEnviadas" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-sm">
                 <div class="modal-content">
                     <div class="modal-body"></div>
                 </div>
             </div>
-        </div>
+        </div>-->
 
         <!-- inicia modal subir factura -->
         <div id="modal_formulario_solicitud" class="modal" style="position:fixed; top:0; left:0; margin-bottom: 1%;  margin-top: -5%;">
@@ -267,16 +267,16 @@
             </div>
         </div>
 
-        <div id="modal_formulario_solicitud_multiple" class="modal" style="position:fixed; top:0; left:0; margin-bottom: 1%;  margin-top: -5%;">
+        <!--<div id="modal_formulario_solicitud_multiple" class="modal" style="position:fixed; top:0; left:0; margin-bottom: 1%;  margin-top: -5%;">
             <div class="modal-dialog modal-md">
                 <div class="modal-content">
                     <div class="modal-body">
                         <div class="tab-content">
                             <div class="active tab-pane" id="generar_solicitud">
                                 <div class="row">
-                                    <div class="col-lg-12">
+                                    <div class="col-lg-12">-->
                                         <!-- //poner modal -->
-                                        <div class="row">
+                                        <!--<div class="row">
                                             <div class="col-lg-5">
                                                 <div class="fileinput fileinput-new text-center" data-provides="fileinput">
                                                     <div><br>
@@ -359,7 +359,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div>-->
         <!-- END Modals -->
 
         <div class="content boxContent">
@@ -1952,7 +1952,7 @@
             return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
         };
 
-        $(document).on("click", ".subir_factura", function() {
+        /*$(document).on("click", ".subir_factura", function() {
             resear_formulario();
             id_comision = $(this).val();
             total = $(this).attr("data-total");
@@ -1963,7 +1963,7 @@
             });
             $("#modal_formulario_solicitud .modal-body #frmnewsol").append(`<div id="inputhidden"><input type="hidden" id="comision_xml" name="comision_xml" value="${ id_comision}">
             <input type="hidden" id="pago_cliente" name="pago_cliente" value="${ parseFloat(total).toFixed(2) }"></div>`);
-        });
+        });*/
 
     
         let c = 0;
@@ -2005,7 +2005,7 @@
             });
         }
 
-        $(document).on("click", ".quitar_factura", function() {
+        /*$(document).on("click", ".quitar_factura", function() {
             resear_formulario();
             id_comision = $(this).val();
             $("#modalQuitarFactura .modal-body").html('');
@@ -2019,11 +2019,11 @@
                 backdrop: 'static',
                 keyboard: false
             });
-        });
+        });*/
 
         /** ----------------------------------------*/
 
-        $(document).on("click", ".EnviarMultiple", function() {
+        /*$(document).on("click", ".EnviarMultiple", function() {
             $("#ModalEnviar .modal-body").html("");
             $("#ModalEnviar .modal-header").html("");
 
@@ -2063,7 +2063,7 @@
             </div></div>`);
 
             $("#ModalEnviar").modal();
-        });
+        });*/
         /** -------------------------------------------------------------*/
 
         function todos(){
@@ -2291,7 +2291,7 @@
             });
         }
 
-        $("#eliminar_factura").submit(function(e) {
+        /*$("#eliminar_factura").submit(function(e) {
             e.preventDefault();
         }).validate({
             submitHandler: function(form) {
@@ -2320,7 +2320,7 @@
                     }
                 });
             }
-        });
+        });*/
 
         function closeModalEng(){
             document.getElementById("frmnewsol").reset();
@@ -2574,7 +2574,7 @@
             }
         });
 
-        function calcularMontoParcialidad() {
+        /*function calcularMontoParcialidad() {
             $precioFinal = parseFloat($('#value_pago_cliente').val());
             $precioNuevo = parseFloat($('#new_value_parcial').val());
             if ($precioNuevo >= $precioFinal) {
@@ -2582,9 +2582,9 @@
             } else if ($precioNuevo < $precioFinal) {
                 $('#label_estado').append('<label>MONTO VALIDO</label>');
             }
-        }
+        }*/
 
-        function preview_info(archivo) {
+        /*function preview_info(archivo) {
             $("#documento_preview .modal-dialog").html("");
             $("#documento_preview").css('z-index', 9999);
             archivo = url + "dist/documentos/" + archivo + "";
@@ -2610,15 +2610,15 @@
                 elemento += '</div>';
                 $("#documento_preview .modal-dialog").append(elemento);
             }
-        }
+        }*/
 
 
-        function cleanComments() {
+        /*function cleanComments() {
             var myCommentsList = document.getElementById('comments-list-factura');
             myCommentsList.innerHTML = '';
             var myFactura = document.getElementById('facturaInfo');
             myFactura.innerHTML = '';
-        }
+        }*/
 
     
         function cleanCommentsAsimilados() {

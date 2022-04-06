@@ -207,13 +207,13 @@ else {
 
 
 
-<div class="modal fade bd-example-modal-sm" id="myModalEnviadas" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+<!--<div class="modal fade bd-example-modal-sm" id="myModalEnviadas" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-sm">
     <div class="modal-content">
       <div class="modal-body"></div>
     </div>
   </div>
-</div>
+</div>-->
 
 
 
@@ -610,7 +610,7 @@ else {
 
 
 
-        $("#tabla_dispersar_comisiones tbody").on("click", ".marcar_plan_pago", function(){
+        /*$("#tabla_dispersar_comisiones tbody").on("click", ".marcar_plan_pago", function(){
             var tr = $(this).closest('tr');
             var row = tabla_historial.row( tr );
             idLote = $(this).val();
@@ -624,7 +624,7 @@ else {
             $("#modal_enganche .modal-body").append('<input type="hidden" name="ideLotenganche" id="ideLotenganche" value="'+idLote+'">');
 
             
-            $("#modal_enganche .modal-body").append('<div class="col-md-12"><select id="planSelect" name="planSelect" class="form-control planSelect ng-invalid ng-invalid-required" required data-live-search="true"></select></div>');
+            $("#modal_enganche .modal-body").append('<div class="col-md-12"><select id="planSelect" name="planSelect" class="form-control planSelect ng-invalid ng-invalid-required" required data-live-search="true"></select></div>');*/
 
 
             
@@ -652,7 +652,7 @@ $.post('getPlanesEnganche', function(data) {
 
             $("#modal_enganche .modal-body").append('<br><div class="row"><div class="col-md-12"><center><input type="submit" class="btn btn-success" value="ACEPTAR"></center></div></div>');
         $("#modal_enganche").modal();
-        });
+        });*/
 
         
 

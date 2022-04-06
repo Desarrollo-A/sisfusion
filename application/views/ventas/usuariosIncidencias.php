@@ -100,7 +100,7 @@
 
  
 
-    <div class="modal fade" id="myUpdateBanderaModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <!--<div class="modal fade" id="myUpdateBanderaModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -120,7 +120,7 @@
                 </form>
             </div>
         </div>
-    </div>
+    </div>-->
 
 
  
@@ -204,13 +204,13 @@
 <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
 <script>
 
-    $(document).on('click', '.update_bandera', function(e){
+    /*$(document).on('click', '.update_bandera', function(e){
         id_pagoc = $(this).attr("data-idpagoc");
         $("#myUpdateBanderaModal").modal();
         $("#id_pagoc").val(id_pagoc);
-    });
+    });*/
 
-    $("#my_updatebandera_form").on('submit', function(e){
+    /*$("#my_updatebandera_form").on('submit', function(e){
         e.preventDefault();
         $.ajax({
             type: 'POST',
@@ -236,7 +236,7 @@
                 alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
             }
         });
-    });
+    });*/
 
     var url = "<?=base_url()?>";
     var url2 = "<?=base_url()?>index.php/";
@@ -595,7 +595,7 @@
         $("#modal_pagadas").modal();
         });
 
-        $("#tabla_ingresar_9 tbody").on("click", ".pausar", function(){
+        /*$("#tabla_ingresar_9 tbody").on("click", ".pausar", function(){
             var tr = $(this).closest('tr');
             var row = tabla_1.row( tr );
             idLote = $(this).val();
@@ -610,11 +610,11 @@
 
             $("#modal_pagadas .modal-body").append('<br><div class="row"><div class="col-md-12"><center><input type="submit" class="btn btn-success" value="ACEPTAR"></center></div></div>');
         $("#modal_pagadas").modal();
-        });
+        });*/
 
 
 
-        $("#tabla_ingresar_9 tbody").on("click", ".addPlanEnganche", function () {
+        /*$("#tabla_ingresar_9 tbody").on("click", ".addPlanEnganche", function () {
             var tr = $(this).closest('tr');
             var row = tabla_1.row(tr);
             idLote = $(this).val();
@@ -642,7 +642,7 @@
             $("#modal_enganche .modal-body").append('<div class="row"><div class="col-md-12"><br></div></div>');
             $("#modal_enganche .modal-body").append('<div class="row"><div class="col-md-3"></div><div class="col-md-3"><input type="submit" class="btn btn-primary" value="ACEPTAR"></div><div class="col-md-3"><input type="button" class="btn btn-danger" value="CANCELAR" onclick="closeModalEng()"></div><div class="col-md-3"></div></div>');
             $("#modal_enganche").modal();
-        });
+        });*/
 
 
         $("#tabla_ingresar_9 tbody").on("click", ".verify_neodata", function () {
@@ -1156,7 +1156,7 @@ $("#form_pagadas").submit( function(e) {
 
 
 
-    $("#form_enganche").submit(function (e) {
+    /*$("#form_enganche").submit(function (e) {
         e.preventDefault();
     }).validate({
         submitHandler: function (form) {
@@ -1186,7 +1186,7 @@ $("#form_pagadas").submit( function(e) {
                 }
             });
         }
-    });
+    });*/
 
 
     $("#form_NEODATA2").submit(function (e) {
@@ -1221,7 +1221,7 @@ $("#form_pagadas").submit( function(e) {
         }
     });
 
-    jQuery(document).ready(function () {
+    /*jQuery(document).ready(function () {
 
         jQuery('#editReg').on('hidden.bs.modal', function (e) {
             jQuery(this).removeData('bs.modal');
@@ -1235,10 +1235,10 @@ $("#form_pagadas").submit( function(e) {
             jQuery(this).find('#comentario3').val('');
         })
 
-    })
+    })*/
 
 
-    function SoloNumeros(evt) {
+    /*function SoloNumeros(evt) {
         if (window.event) {
             keynum = evt.keyCode;
         } else {
@@ -1251,11 +1251,11 @@ $("#form_pagadas").submit( function(e) {
             alerts.showNotification("top", "left", "Solo Numeros.", "danger");
             return false;
         }
-    }
+    }*/
 
-    function closeModalEng() {
+    /*function closeModalEng() {
         $("#modal_enganche").modal('toggle');
-    }
+    }*/
 
 
     function formatMoney(n) {

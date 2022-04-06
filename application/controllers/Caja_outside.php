@@ -2622,4 +2622,11 @@ class Caja_outside extends CI_Controller
         echo json_encode($data);
     }
 
+    public function reviewTokenEvidence()
+    {
+        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
+        $this->load->view('template/header');
+        $this->load->view("token/reviewTokenEvidence", $datos);
+    }
+
 }

@@ -119,10 +119,10 @@
     <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
     <script>
-        function cleanCommentsAsimilados() {
+        /*function cleanCommentsAsimilados() {
             var myCommentsList = document.getElementById('comments-list-asimilados');
             myCommentsList.innerHTML = '';
-        }
+        }*/
 
         $('#tableDinamicMKTD thead tr:eq(0) th').each( function (i) {
                 var title = $(this).text();
@@ -459,8 +459,8 @@
             return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
         };
 
-        $(document).on("click", ".btn-historial-lo", function(){
+        /*$(document).on("click", ".btn-historial-lo", function(){
             window.open(url+"Comisiones/getHistorialEmpresa", "_blank");
-        });
+        });*/
     </script>
 </body>

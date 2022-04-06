@@ -29,7 +29,7 @@
             </div>
         </div>
 
-        <div class="modal fade" id="seeInformationMarketing" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+        <!--<div class="modal fade" id="seeInformationMarketing" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog modal-md modal-dialog-scrollable" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -63,7 +63,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div>-->
 
         <div class="content boxContent">
             <div class="container-fluid">
@@ -370,7 +370,7 @@
         });
 
 
-        $("#tabla_historialGral tbody").on("click", ".bitacora_reporte_marketing", function(){
+        /*$("#tabla_historialGral tbody").on("click", ".bitacora_reporte_marketing", function(){
             lote = $(this).val();
             cliente = $(this).attr("data-value");
 
@@ -382,7 +382,7 @@
                     $("#comments-list-asimilados").append('<div class="col-lg-12"><p style="color:gray;"><b>COMENTARIO: </b><i style="color:gray;">'+v.comentario+'</i></p><p style="color:gray;"><b>FECHA PROSPECCIÓN: </b><i style="color:gray;">'+v.fecha_prospecion_mktd+'</i></p><p style="color:gray;"><b>CREADO POR: </b> '+v.nombre+'<p><b style="color:#896597">'+v.fecha_creacion+'</b></p><hr></div>');
                 });
             });
-        });
+        });*/
 
         $('#tabla_historialGral').on('click', 'input', function() {
             tr = $(this).closest('tr');
@@ -400,7 +400,7 @@
             $("#totpagarPen").html(formatMoney(totaPen));
         });
 
-        $("#tabla_historialGral tbody").on("click", ".add_reporte_marketing", function(){
+        /*$("#tabla_historialGral tbody").on("click", ".add_reporte_marketing", function(){
             var tr = $(this).closest('tr');
             var row = tabla_historialGral2.row( tr );
 
@@ -417,7 +417,7 @@
 
             $("#modal_nuevas .modal-footer").append('<div class="row"><div class="col-md-12"><input type="submit" class="btn btn-success" value="Aceptar"><button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button></div></div>');
             $("#modal_nuevas").modal();
-        });
+        });*/
 
         $("#form_aplicar").submit( function(e) {
             e.preventDefault();
@@ -475,16 +475,16 @@
             return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
         };
 
-        $(document).on("click", ".btn-historial-lo", function(){
+        /*$(document).on("click", ".btn-historial-lo", function(){
             window.open(url+"Comisiones/getHistorialEmpresa", "_blank");
-        });
+        });*/
 
-        function cleanComments(){
+        /*function cleanComments(){
             var myCommentsList = document.getElementById('documents');
             myCommentsList.innerHTML = '';
 
             var myFactura = document.getElementById('facturaInfo');
             myFactura.innerHTML = '';
-        }
+        }*/
     </script>
 </body>
