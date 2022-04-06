@@ -15,7 +15,7 @@ class Comisiones extends CI_Controller
     $this->load->model('Comisiones_model');
     $this->load->model('asesor/Asesor_model');
     $this->load->model('Usuarios_modelo');
-    $this->load->library(array('session', 'form_validation'));
+    $this->load->library(array('session', 'form_validation', 'get_menu'));
     $this->load->helper(array('url', 'form'));
     $this->load->database('default');
    }
@@ -3212,6 +3212,19 @@ public function LiquidarLote(){
         }
     }
 
+    public function viewDetenidas()
+    {
+        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
+        $this->load->view('template/header');
+        $this->load->view("ventas/comisiones_detenidas", $datos);
+    }
+
+    public function getStoppedCommissions()
+    {
+        $data = $this->Comisiones_model->getStoppedCommissions();
+        echo ($data !== null) ? json_encode($data) : json_encode(array());
+    }
+
     public function getAllCommissions()
     {
         $datos = array();
@@ -3296,10 +3309,22 @@ public function LiquidarLote(){
         }
     }
 
-    public function updateBandera(){
+    public function updateBandera() {
          // echo($_POST['param']);
         $response = $this->Comisiones_model->updateBandera( $_POST['id_pagoc'], $_POST['param']);
         echo json_encode($response);
+    }
+
+    public function changeLoteToStopped()
+    {
+        $response = $this->Comisiones_model
+            ->insertHistorialLog($_POST['id_pagoc'], $this->session->userdata('id_usuario'), 1, $_POST['descripcion'],
+                'pago_comision', $_POST['motivo']);
+        if ($response) {
+            $response = $this->Comisiones_model->updateBanderaDetenida( $_POST['id_pagoc'], 6);
+        }
+
+         echo json_encode($response);
     }
 
     public function asigno_region_uno($sol){
@@ -6422,7 +6447,7 @@ for ($d=0; $d <count($dos) ; $d++) {
     /**--------------------------------PRESTAMOS ATOMATICOS--------------------- */
     public function panel_prestamos()
     {
-  
+
       $datos = array();
       $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
       $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
@@ -6464,19 +6489,19 @@ for ($d=0; $d <count($dos) ; $d++) {
     }else{
       echo json_encode(0);
     }
-      
- 
-  
+
+
+
   }
 
   public function BorrarPrestamo(){
     $respuesta =  $this->Comisiones_model->BorrarPrestamo($this->input->post("id_prestamo"));
   echo json_encode($respuesta);
-  
+
   }
 
   public function InsertPago()
-  { 
+  {
     $id_prestamo = $this->input->post('id_prestamo');
 
     $pago = $this->input->post('pago');
@@ -6486,14 +6511,14 @@ for ($d=0; $d <count($dos) ; $d++) {
       if(!empty($dato)){
         $monto = $dato[0]['monto'];
         $abonado = $dato[0]['suma'];
-       
-      
+
+
       if($abonado >= $monto -.10 && $abonado <= $monto + .10){
-        
+
         $row = $this->Comisiones_model->UpdatePrestamo($id_prestamo);
         $row=2;
         echo json_encode($row);
-  
+
       }else{
 
         $row = $this->Comisiones_model->InsertPago($id_prestamo,$usuario,$pago,$this->session->userdata('id_usuario'));
@@ -6502,26 +6527,26 @@ for ($d=0; $d <count($dos) ; $d++) {
         $monto = $dato[0]['monto'];
         $abonado = $dato[0]['suma'];
         if($abonado >= $monto -.10 && $abonado <= $monto + .10){
-        
+
           $row = $this->Comisiones_model->UpdatePrestamo($id_prestamo);
           $row=2;
           //echo json_encode($row);
-    
+
         }else{
           $row =1;
         }
 
 
-        echo json_encode($row); 
+        echo json_encode($row);
       }
       }else{
         $row = $this->Comisiones_model->InsertPago($id_prestamo,$usuario,$pago,$this->session->userdata('id_usuario'));
-        echo json_encode($row); 
+        echo json_encode($row);
       }
 
-     
 
-    
+
+
   }
 
   public function getHistorialPrestamo($id)
@@ -6531,7 +6556,7 @@ for ($d=0; $d <count($dos) ; $d++) {
 
   public function prestamo_colaborador()
   {
-    
+
     $datos = array();
     $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
     $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
@@ -6562,8 +6587,8 @@ for ($d=0; $d <count($dos) ; $d++) {
     echo json_encode($res);
   }
   public function UpdateRevisionPagos()
-  { 
-    $id_prestamo = $this->input->post('id_prestamo');    
+  {
+    $id_prestamo = $this->input->post('id_prestamo');
         $row = $this->Comisiones_model->UpdateRevisionPagos($id_prestamo);
     echo json_encode($row);
   }
