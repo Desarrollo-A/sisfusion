@@ -355,13 +355,13 @@ public function getLotesPagados($res){
     }
 
     public function updatePlan($prioridad, $plan){
-        $whereData =  $this->db->query("SELECT CONCAT(where_principal,' ', fecha_inicio, ' ', fecha_fin, ' ', lugar_prospeccion, ' ', regional, ' ', otro) cadena FROM plan_comision WHERE id_plan = $plan AND prioridad = $prioridad");
+        $whereData =  $this->db->query("SELECT CONCAT(where_principal,' ', fecha_inicio, ' ', fecha_fin, ' ', lugar_prospeccion, ' ', venta_regional, ' ', otro_vobo) cadena FROM plan_comision WHERE id_plan = $plan AND prioridad = $prioridad");
 
         $whereRes = $whereData->row()->cadena;
  
         return $this->db->query("UPDATE clientes set modificado_por = 1, plan_comision = $plan where id_cliente in (
             SELECT cl.id_cliente FROM clientes cl
-            INNER JOIN lotes l on l.idCliente = cl.id_cliente AND l.status = 1 AND l.registro_comision in (1) AND l.idStatusContratacion BETWEEN 9 AND 15
+            INNER JOIN lotes l on l.idCliente = cl.id_cliente AND l.status = 1 AND l.registro_comision not in (7,1) AND l.idStatusContratacion BETWEEN 9 AND 15
             INNER JOIN condominios c on c.idCondominio = l.idCondominio
             INNER JOIN residenciales r on r.idResidencial = c.idResidencial
             INNER JOIN usuarios ae on ae.id_usuario = cl.id_asesor

@@ -119,7 +119,7 @@ class Usuarios_modelo extends CI_Model {
                 LEFT JOIN opcs_x_cats oxc2 ON oxc2.id_opcion = u.forma_pago AND oxc2.id_catalogo = 16
                 INNER JOIN sedes s ON s.id_sede = (CASE WHEN LEN (u.id_sede) > 1 THEN 2 ELSE u.id_sede END)
                 LEFT JOIN (SELECT SUM(abono_neodata) abono_pendiente, id_usuario FROM pago_comision_ind WHERE estatus=1 and ( descuento_aplicado is null or descuento_aplicado=0) 
-                 GROUP BY id_usuario) pci2 ON pci2.id_usuario = us.id_usuario
+                 GROUP BY id_usuario) pci2 ON pci2.id_usuario = u.id_usuario
                 WHERE  u.id_rol IN (1, 2, 3, 7, 9, 18, 19, 20, 25, 26, 27, 28, 29, 30, 36) 
                 AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%') OR usuarios.id_usuario IN (9359, 9827))
                 AND u.id_usuario NOT IN (821, 1366, 1923, 4340, 9623, 9624, 9625, 9626, 9627, 9628, 9629) ORDER BY nombre");
