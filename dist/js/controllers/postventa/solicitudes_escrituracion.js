@@ -600,7 +600,7 @@ function fillTable(beginDate, endDate) {
             },
             {
                 data: function (d) {
-                    return `<center><span><b>${d.idEstatus + d.estatus}</b></span><center>
+                    return `<center><span><b>${d.idEstatus} - ${d.estatus}</b></span><center>
                     <center><span>(${d.area})</span><center>`;   
                 }
             },

@@ -354,29 +354,29 @@
                                                             <!--table table-bordered table-hover -->
                                                             <thead>
                                                             <tr>
-                                                                <th class="disabled-sorting text-right">Estatus</th>
-                                                                <th class="disabled-sorting text-right">
+                                                                <th class="disabled-sorting">Estatus</th>
+                                                                <th class="disabled-sorting">
                                                                     <center>ID</center>
                                                                 </th>
-                                                                <th class="disabled-sorting text-right">
+                                                                <th class="disabled-sorting">
                                                                     <center>Nombre</center>
                                                                 </th>
-                                                                <th class="disabled-sorting text-right">
+                                                                <th class="disabled-sorting">
                                                                     <center>Correo</center>
                                                                 </th>
-                                                                <th class="disabled-sorting text-right">
+                                                                <th class="disabled-sorting">
                                                                     <center>Teléfono</center>
                                                                 </th>
-                                                                <th class="disabled-sorting text-right">
+                                                                <th class="disabled-sorting">
                                                                     <center>Tipo</center>
                                                                 </th>
-                                                                <th class="disabled-sorting text-right">
+                                                                <th class="disabled-sorting">
                                                                     <center>Sede</center>
                                                                 </th>
-                                                                <th class="disabled-sorting text-right">
+                                                                <th class="disabled-sorting">
                                                                     <center>Jefe directo</center>
                                                                 </th>
-                                                                <th class="disabled-sorting text-right">
+                                                                <th class="disabled-sorting">
                                                                     <center>Acciones</center>
                                                                 </th>
                                                             </tr>
