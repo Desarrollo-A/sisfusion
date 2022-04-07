@@ -1384,12 +1384,12 @@
             $mail->isSMTP();
             $mail->Host     = 'smtp.gmail.com';
             $mail->SMTPAuth = true;
-            $mail->Username = 'noreply@ciudadmaderas.com';
-            $mail->Password = 'euTan4&9';
+            $mail->Username = 'no-reply@ciudadmaderas.com';
+            $mail->Password = 'Va7<*V8P';
             $mail->SMTPSecure = 'ssl';
             $mail->Port     = 465;
 
-            $mail->setFrom('noreply@ciudadmaderas.com', 'Ciudad Maderas');
+            $mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
             //$mail->AddAddress('programador.analista1@ciudadmaderas.com');
 
             foreach ($arrayCorreoNotRepeat AS $arrCorreo){
@@ -7125,11 +7125,11 @@
 			$mail->isSMTP();
 			$mail->Host     = 'smtp.gmail.com';
 			$mail->SMTPAuth = true;
-			$mail->Username = 'noreply@ciudadmaderas.com';
-			$mail->Password = 'euTan4&9';
+			$mail->Username = 'no-reply@ciudadmaderas.com';
+			$mail->Password = 'Va7<*V8P';
 			$mail->SMTPSecure = 'ssl';
 			$mail->Port     = 465;
-			$mail->setFrom('noreply@ciudadmaderas.com', 'Ciudad Maderas');
+			$mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
 			$mail->AddAddress('programador.analista1@ciudadmaderas.com');
 			// Email subject
 			$mail->Subject = utf8_decode('DEPÓSITO DE SERIEDAD-CIUDAD MADERAS');
@@ -7619,11 +7619,11 @@
 		$mail->isSMTP();
 		$mail->Host     = 'smtp.gmail.com';
 		$mail->SMTPAuth = true;
-		$mail->Username = 'noreply@ciudadmaderas.com';
-		$mail->Password = 'euTan4&9';
+		$mail->Username = 'no-reply@ciudadmaderas.com';
+		$mail->Password = 'Va7<*V8P';
 		$mail->SMTPSecure = 'ssl';
 		$mail->Port     = 465;
-		$mail->setFrom('noreply@ciudadmaderas.com', 'Ciudad Maderas');
+		$mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
 		$mail->addAddress($correoDir);
 
 		$mail->Subject = utf8_decode('SOLICITUD DE AUTORIZACIÓN-CONTRATACIÓN');
@@ -7928,11 +7928,11 @@
 		$mail->isSMTP();
 		$mail->Host     = 'smtp.gmail.com';
 		$mail->SMTPAuth = true;
-		$mail->Username = 'noreply@ciudadmaderas.com';
-		$mail->Password = 'euTan4&9';
+		$mail->Username = 'no-reply@ciudadmaderas.com';
+		$mail->Password = 'Va7<*V8P';
 		$mail->SMTPSecure = 'ssl';
 		$mail->Port     = 465;
-		$mail->setFrom('noreply@ciudadmaderas.com', 'Ciudad Maderas');
+		$mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
 		$mail->addAddress($correoDir);/*$correoDir*/
 		$mail->Subject = utf8_decode('SOLICITUD DE AUTORIZACIÓN-CONTRATACIÓN');
 		$mail->isHTML(true);
@@ -8342,11 +8342,11 @@
                 $mail->isSMTP();
                 $mail->Host = 'smtp.gmail.com';
                 $mail->SMTPAuth = true;
-                $mail->Username = 'noreply@ciudadmaderas.com';
-                $mail->Password = 'euTan4&9';
+                $mail->Username = 'no-reply@ciudadmaderas.com';
+                $mail->Password = 'Va7<*V8P';
                 $mail->SMTPSecure = 'ssl';
                 $mail->Port = 465;
-                $mail->setFrom('noreply@ciudadmaderas.com', 'Ciudad Maderas');
+                $mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
                 $mail->AddAddress('coord.administrativoslp@ciudadmaderas.com');
                 $mail->AddAddress('coord.administrativo@ciudadmaderas.com');
                 $mail->AddAddress('coord.administrativo1@ciudadmaderas.com');
