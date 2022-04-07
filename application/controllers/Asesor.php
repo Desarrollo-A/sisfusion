@@ -3228,7 +3228,7 @@ class Asesor extends CI_Controller
             $mail->Host = 'smtp.gmail.com';
             $mail->SMTPAuth = true;
             $mail->Username = 'no-reply@ciudadmaderas.com';
-            $mail->Password = 'Va7<*V8P';
+            $mail->Password = 'Va7<*V8PP';
             $mail->SMTPSecure = 'ssl';
             $mail->Port = 465;
 
@@ -3457,7 +3457,7 @@ class Asesor extends CI_Controller
         $mail->Host = 'smtp.gmail.com';
         $mail->SMTPAuth = true;
         $mail->Username = 'no-reply@ciudadmaderas.com';
-        $mail->Password = 'Va7<*V8P';
+        $mail->Password = 'Va7<*V8PP';
         $mail->SMTPSecure = 'ssl';
         $mail->Port = 465;
         $mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
@@ -5213,7 +5213,7 @@ class Asesor extends CI_Controller
         $mail->Host = 'smtp.gmail.com';
         $mail->SMTPAuth = true;
         $mail->Username = 'no-reply@ciudadmaderas.com';
-        $mail->Password = 'Va7<*V8P';
+        $mail->Password = 'Va7<*V8PP';
         $mail->SMTPSecure = 'ssl';
         $mail->Port = 465;
         $mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');

@@ -61,7 +61,7 @@ public function sendRv5(){
   $mail->Host     = 'smtp.gmail.com';
   $mail->SMTPAuth = true;
   $mail->Username = 'no-reply@ciudadmaderas.com';
-  $mail->Password = 'Va7<*V8P';
+  $mail->Password = 'Va7<*V8PP';
   $mail->SMTPSecure = 'ssl';
   $mail->Port     = 465;
   
@@ -243,7 +243,7 @@ public function mailBloqueosAfter45(){
   $mail->Host     = 'smtp.gmail.com';
   $mail->SMTPAuth = true;
   $mail->Username = 'no-reply@ciudadmaderas.com';
-  $mail->Password = 'Va7<*V8P';
+  $mail->Password = 'Va7<*V8PP';
   $mail->SMTPSecure = 'ssl';
   $mail->Port     = 465;
   
@@ -1076,7 +1076,7 @@ public function select_gph_maderas_64(){ //HACER INSERT DE LOS LOTES EN 0 Y PASA
         $mail->Host     = 'smtp.gmail.com';
         $mail->SMTPAuth = true;
         $mail->Username = 'no-reply@ciudadmaderas.com';
-        $mail->Password = 'Va7<*V8P';
+        $mail->Password = 'Va7<*V8PP';
         $mail->SMTPSecure = 'ssl';
         $mail->Port     = 465;
         $mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
@@ -1258,7 +1258,7 @@ public function select_gph_maderas_64(){ //HACER INSERT DE LOS LOTES EN 0 Y PASA
         $mail->Host = 'smtp.gmail.com';
         $mail->SMTPAuth = true;
         $mail->Username = 'no-reply@ciudadmaderas.com';
-        $mail->Password = 'Va7<*V8P';
+        $mail->Password = 'Va7<*V8PP';
         $mail->SMTPSecure = 'ssl';
         $mail->Port = 465;
         $mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
