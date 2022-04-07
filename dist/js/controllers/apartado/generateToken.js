@@ -171,6 +171,7 @@ function copyToClipBoard() {
                 $('#copyToken').popover('hide');
             });
         }, 1500);*/
+        alerts.showNotification("top", "right", "Token copiado al portapapeles.", "success");
     }
 }
 
