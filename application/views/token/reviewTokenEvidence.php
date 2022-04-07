@@ -44,12 +44,12 @@
                                 <h3 class="card-title center-align">Revisar evidencia de token</h3>
                             </div>
                             <div class="table-responsive box-table">
-                                <table id="tokensTable" name="tokensTable"
+                                <input class="hide" id="generatedToken"/>
+                                <table id="reviewTokenEvidenceTable" name="reviewTokenEvidenceTable"
                                        class="table-striped table-hover">
                                     <thead>
                                     <tr>
                                         <th>ID</th>
-                                        <th>TOKEN</th>
                                         <th>GENERADO PARA</th>
                                         <th>FECHA ALTA</th>
                                         <th>CREADO POR</th>
@@ -79,11 +79,9 @@
 <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
 <script type="text/javascript" src="//unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
 
-<link rel="stylesheet" type="text/css" href="<?=base_url()?>dist/css/shadowbox.css">
-<script type="text/javascript" src="<?=base_url()?>dist/js/shadowbox.js"></script>
+<script src="<?= base_url() ?>dist/js/controllers/apartado/generateToken.js"></script>
 
 <script>
-    Shadowbox.init();
 
     let id_gerente = "<?=$this->session->userdata('id_usuario')?>";
     $(document).ready(function () {
@@ -99,12 +97,12 @@
         });
     });
 
-    $('#tokensTable thead tr:eq(0) th').each(function (i) {
+    $('#reviewTokenEvidenceTable thead tr:eq(0) th').each(function (i) {
         const title = $(this).text();
         $(this).html('<input type="text" class="textoshead"  placeholder="' + title + '"/>');
         $('input', this).on('keyup change', function () {
-            if ($("#tokensTable").DataTable().column(i).search() !== this.value) {
-                $("#tokensTable").DataTable()
+            if ($("#reviewTokenEvidenceTable").DataTable().column(i).search() !== this.value) {
+                $("#reviewTokenEvidenceTable").DataTable()
                     .column(i)
                     .search(this.value)
                     .draw();
@@ -113,7 +111,7 @@
     });
 
     function fillTokensTable() {
-        tokensTable = $('#tokensTable').dataTable({
+        reviewTokenEvidenceTable = $('#reviewTokenEvidenceTable').dataTable({
             dom: 'Brt' + "<'row'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'i><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>",
             width: "auto",
             buttons: [
@@ -123,7 +121,7 @@
                     className: 'btn buttons-excel',
                     titleAttr: 'Descargar archivo de Excel',
                     exportOptions: {
-                        columns: [0, 1, 2, 3, 4],
+                        columns: [0, 1, 2, 3],
                         format: {
                             header: function (d, columnIdx) {
                                 switch (columnIdx) {
@@ -131,14 +129,11 @@
                                         return "ID";
                                         break;
                                     case 1:
-                                        return "TOKEN";
-                                        break;
-                                    case 2:
                                         return "GENERADO PARA"
-                                    case 3:
+                                    case 2:
                                         return "FECHA ALTA";
                                         break;
-                                    case 4:
+                                    case 3:
                                         return "CREADO POR";
                                         break;
                                 }
@@ -170,11 +165,6 @@
                 },
                 {
                     data: function (d) {
-                        return '<h5>' + d.token + '<h5>';
-                    }
-                },
-                {
-                    data: function (d) {
                         return d.generado_para;
                     }
                 },
@@ -190,14 +180,19 @@
                 },
                 {
                     data: function (d) {
-                        return '<button class="btn-data btn-gray reviewEvidenceToken" data-token-name="' + d.token +'" data-nombre-archivo="' + d.nombre_archivo +'"><i class="fas fa-eye"></i></button>';
+                        let btns = '<div class="d-flex align-center justify-center">' +
+                            '<button class="btn-data btn-gray reviewEvidenceToken" data-nombre-archivo="' + d.nombre_archivo +'" title="Ver evidencia"></body><i class="fas fa-eye"></i></button>' +
+                            '<button class="btn-data btn-green setToken" data-token-name="' + d.token +'" title="Copiar token"><i class="fas fa-copy"></i></button></div>';
+                        return btns;
                     }
                 }
             ],
-            columnDefs: [{
-                visible: false,
-                searchable: false
-            }],
+            columnDefs: [
+                {
+                    visible: false,
+                    searchable: false
+                }
+            ],
             ajax: {
                 url: "getTokensInformation",
                 type: "POST",
@@ -213,6 +208,11 @@
         $("#token_name").text($(this).attr("data-token-name"));
         $("#img_actual").append(img_cnt);
         $("#reviewTokenEvidence").modal()
+    });
+
+    $(document).on('click', '.setToken', function () {
+        $("#generatedToken").val($(this).attr("data-token-name"));
+        copyToClipBoard();
     });
 
 </script>

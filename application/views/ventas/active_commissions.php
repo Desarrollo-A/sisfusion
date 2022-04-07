@@ -82,6 +82,71 @@
                 </div>
             </div>
         </div>
+
+        <div class="modal fade modal-alertas"
+             id="detenciones-modal"
+             role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header bg-red">
+                        <button type="button"
+                                class="close"
+                                data-dismiss="modal"
+                                aria-hidden="true">
+                            <i class="material-icons">clear</i>
+                        </button>
+                        <h4 class="modal-title">Motivo de controversia</h4>
+                    </div>
+
+                    <form method="post"
+                          class="row"
+                          id="detenidos-form"
+                          autocomplete="off">
+                        <div class="modal-body">
+                            <input type="hidden"
+                                   name="id_pagoc"
+                                   id="id-lote-detenido">
+
+                            <div class="col-lg-12">
+                                <div class="form-group is-empty">
+                                    <label for="motivo" class="control-label label-gral">Motivo</label>
+                                    <input id="motivo"
+                                           name="motivo"
+                                           type="text"
+                                           class="form-control input-gral"
+                                           placeholder="Escriba un motivo corto..."
+                                           minlength="3"
+                                           maxlength="50"
+                                           required />
+                                </div>
+                            </div>
+
+                            <div class="col-lg-12">
+                                <div class="form-group label-floating">
+                                    <textarea class="form-control"
+                                              name="descripcion"
+                                              rows="3"
+                                              placeholder="Escriba la descripción de la controversia..."
+                                              required></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="submit"
+                                    class="btn btn-primary">
+                                Aceptar
+                            </button>
+                            <button type="button"
+                                    class="btn btn-danger btn-simple"
+                                    data-dismiss="modal">
+                                Cancelar
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
         <!-- END Modals -->
 
         <div class="content boxContent">
@@ -360,16 +425,22 @@
                     "width": "15%",
                     "orderable": false,
                     "data": function (data) {
-                        var BtnStats;
+                        let BtnStats = '';
 
-                        if(data.totalNeto2==null) {
-                            BtnStats = '';
-                        }
-                        else {
-                            if(data.compartida==null) {
-                                BtnStats = '<button href="#" value="'+data.idLote+'" data-estatus="'+data.idStatusContratacion+'"  data-value="'+data.registro_comision+'" data-code="'+data.cbbtton+'" ' +'class="btn-data btn-violetChin verify_neodata" title="Verificar en NEODATA">' +'<span class="material-icons">verified_user</span></button><button href="#" data-param="0" data-idpagoc="' + data.idLote + '" ' +'class="btn-data btn-green update_bandera" title="Regresar a dispersión">' + '<i class="fas fa-sync-alt"></i></button><button class="btn-data btn-warning marcar_pagada" title="Marcar como liquidada" value="' + data.idLote +'"><i class="material-icons">how_to_reg</i></button>';
-                            }else {
-                                BtnStats = '<button href="#" value="'+data.idLote+'" data-estatus="'+data.idStatusContratacion+'" data-value="'+data.registro_comision+'"  data-code="'+data.cbbtton+'" ' +'class="btn-data btn-green verify_neodataCompartida" title="Verificar en NEODATA">' +'<span class="material-icons">verified_user </span></button><button href="#" data-param="0"  data-idpagoc="' + data.idLote + '" ' +'class="btn-data btn-violetChin update_bandera" title="Regresar a dispersión">' +'<i class="fas fa-sync-alt"></i></button><button class="btn-data btn-orangeYellow marcar_pagada" title="Marcar como liquidada" value="' + data.idLote +'"><i class="material-icons">how_to_reg</i></button>';  
+                        if (data.totalNeto2 != null) {
+                            BtnStats += `
+                                <button href="#"
+                                    value="`+data.idLote+`"
+                                    class="btn-data btn-blueMaderas btn-detener"
+                                    title="Detener">
+                                    <i class="material-icons">block</i>
+                                </button>
+                            `;
+
+                            if (data.compartida == null) {
+                                BtnStats += '<button href="#" value="'+data.idLote+'" data-estatus="'+data.idStatusContratacion+'"  data-value="'+data.registro_comision+'" data-code="'+data.cbbtton+'" ' +'class="btn-data btn-violetChin verify_neodata" title="Verificar en NEODATA">' +'<span class="material-icons">verified_user</span></button><button href="#" data-param="0" data-idpagoc="' + data.idLote + '" ' +'class="btn-data btn-green update_bandera" title="Regresar a dispersión">' + '<i class="fas fa-sync-alt"></i></button><button class="btn-data btn-warning marcar_pagada" title="Marcar como liquidada" value="' + data.idLote +'"><i class="material-icons">how_to_reg</i></button>';
+                            } else {
+                                BtnStats += '<button href="#" value="'+data.idLote+'" data-estatus="'+data.idStatusContratacion+'" data-value="'+data.registro_comision+'"  data-code="'+data.cbbtton+'" ' +'class="btn-data btn-green verify_neodataCompartida" title="Verificar en NEODATA">' +'<span class="material-icons">verified_user </span></button><button href="#" data-param="0"  data-idpagoc="' + data.idLote + '" ' +'class="btn-data btn-violetChin update_bandera" title="Regresar a dispersión">' +'<i class="fas fa-sync-alt"></i></button><button class="btn-data btn-orangeYellow marcar_pagada" title="Marcar como liquidada" value="' + data.idLote +'"><i class="material-icons">how_to_reg</i></button>';
                             }
                         }
                         return '<div class="d-flex justify-center">'+BtnStats+'</div>';
@@ -439,6 +510,13 @@
                 $("#modal_pagadas .modal-body").append('<input type="hidden" name="ideLotep" id="ideLotep" value="'+idLote+'"><input type="hidden" name="estatusL" id="estatusL" value="7">');
                 $("#modal_pagadas .modal-body").append('<br><div class="row"><div class="col-md-12"><center><input type="submit" class="btn btn-success" value="ACEPTAR"></center></div></div>');
                 $("#modal_pagadas").modal();
+            });
+
+            $("#tabla_ingresar_9 tbody").on('click', '.btn-detener', function () {
+                const idLote = $(this).val();
+                $('#id-lote-detenido').val(idLote);
+
+                $("#detenciones-modal").modal();
             });
 
             /*
@@ -786,6 +864,60 @@
             });
         });
 
+        $('#detenidos-form').on('submit', function (e) {
+            e.preventDefault();
+
+            $.ajax({
+                type: 'POST',
+                url: 'changeLoteToStopped',
+                data: new FormData(this),
+                contentType: false,
+                cache: false,
+                processData:false,
+                success: function (data) {
+                    if (data) {
+                        $('#detenciones-modal').modal("hide");
+                        $("#id-lote-detenido").val("");
+                        alerts.showNotification("top", "right", "El registro se ha actualizado exitosamente.", "success");
+                        tabla_1.ajax.reload();
+                    } else {
+                        alerts.showNotification("top", "right", "Ocurrió un problema, vuelva a intentarlo más tarde.", "warning");
+                    }
+                },
+                error: function(){
+                    alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+                }
+            });
+        });
+
+        $(document).ready(function () {
+            $('#detenidos-form').validate({
+                rules: {
+                    motivo: {
+                        required: true,
+                        minlength: 3,
+                        maxlength: 50
+                    },
+                    descripcion: {
+                        required: true
+                    }
+                },
+                messages: {
+                    motivo: {
+                        required: 'El motivo es requerido.',
+                        minlength: 'El motivo debe contener 3 o más caracteres.',
+                        maxlength: 'El motivo debe contener 120 caracteres o menos.'
+                    },
+                    descripcion: {
+                        required: 'La descripción es requerida.'
+                    }
+                }
+            });
+        });
+
+        $('#detenciones-modal').on('hidden.bs.modal', function() {
+            $('#detenidos-form').trigger('reset');
+        });
 
         $("#form_NEODATA").submit(function (e) {
             e.preventDefault();

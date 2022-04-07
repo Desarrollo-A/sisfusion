@@ -60,12 +60,12 @@ public function sendRv5(){
 
   $mail->Host     = 'smtp.gmail.com';
   $mail->SMTPAuth = true;
-  $mail->Username = 'noreply@ciudadmaderas.com';
-  $mail->Password = 'euTan4&9';
+  $mail->Username = 'no-reply@ciudadmaderas.com';
+  $mail->Password = 'Va7<*V8P';
   $mail->SMTPSecure = 'ssl';
   $mail->Port     = 465;
   
-  $mail->setFrom('noreply@ciudadmaderas.com', 'Ciudad Maderas');
+  $mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
 
   $mail->addAddress('lucero.velazquez@ciudadmaderas.com');
   $mail->addAddress('subdirector.contraloria@ciudadmaderas.com');
@@ -242,12 +242,12 @@ public function mailBloqueosAfter45(){
   $mail->isSMTP();
   $mail->Host     = 'smtp.gmail.com';
   $mail->SMTPAuth = true;
-  $mail->Username = 'noreply@ciudadmaderas.com';
-  $mail->Password = 'euTan4&9';
+  $mail->Username = 'no-reply@ciudadmaderas.com';
+  $mail->Password = 'Va7<*V8P';
   $mail->SMTPSecure = 'ssl';
   $mail->Port     = 465;
   
-  $mail->setFrom('noreply@ciudadmaderas.com', 'Ciudad Maderas');
+  $mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
   $mail->addAddress("contraloria.corporativa6@ciudadmaderas.com");
   $mail->Subject = utf8_decode('LOTES BLOQUEADOS-CIUDAD MADERAS');
   $mail->isHTML(true);
@@ -1075,11 +1075,11 @@ public function select_gph_maderas_64(){ //HACER INSERT DE LOS LOTES EN 0 Y PASA
         $mail->isSMTP();
         $mail->Host     = 'smtp.gmail.com';
         $mail->SMTPAuth = true;
-        $mail->Username = 'noreply@ciudadmaderas.com';
-        $mail->Password = 'euTan4&9';
+        $mail->Username = 'no-reply@ciudadmaderas.com';
+        $mail->Password = 'Va7<*V8P';
         $mail->SMTPSecure = 'ssl';
         $mail->Port     = 465;
-        $mail->setFrom('noreply@ciudadmaderas.com', 'Ciudad Maderas');
+        $mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
         $mail->addAddress($correo);
         $mail->Subject = $subject;
         $mail->isHTML(true);
@@ -1257,11 +1257,11 @@ public function select_gph_maderas_64(){ //HACER INSERT DE LOS LOTES EN 0 Y PASA
         // $mail->SMTPDebug = 3;
         $mail->Host = 'smtp.gmail.com';
         $mail->SMTPAuth = true;
-        $mail->Username = 'noreply@ciudadmaderas.com';
-        $mail->Password = 'euTan4&9';
+        $mail->Username = 'no-reply@ciudadmaderas.com';
+        $mail->Password = 'Va7<*V8P';
         $mail->SMTPSecure = 'ssl';
         $mail->Port = 465;
-        $mail->setFrom('noreply@ciudadmaderas.com', 'Ciudad Maderas');
+        $mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
         //$mail->addAddress('coord.desarrollo2@ciudadmaderas.com');
         $mail->addAddress('asistente.pv2@ciudadmaderas.com');
         $mail->addAddress('coord.contraloriacorporativa@ciudadmaderas.com');
