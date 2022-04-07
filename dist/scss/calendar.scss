@@ -4,13 +4,23 @@
     .fc-toolbar-title{
         text-transform: uppercase;
     }
-    .fc-googleSync-button{
+    .fc-googleSignIn-button{
         background-color: transparent;
         box-shadow: none;
         border: none;
         color: $redGoogle;
         &:hover{
             background-color: $redGoogle;
+            color: $white;
+        }
+    }
+    .fc-googleLogout-button{
+        background-color: transparent;
+        box-shadow: none;
+        border: none;
+        color: $platinumScroll;
+        &:hover{
+            background-color: $platinumScroll;
             color: $white;
         }
     }

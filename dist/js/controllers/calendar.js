@@ -7,13 +7,20 @@ document.addEventListener('DOMContentLoaded', function() {
       headerToolbar: {
         start:   'timeGridDay,timeGridWeek,dayGridMonth',
         center: 'title',
-        end: 'prev,next today googleSync'
+        end: 'prev,next today googleSignIn googleLogout'
       },
       customButtons: {
-        googleSync: {
+        googleSignIn: {
           icon: 'fab fa-google',
           click: function() {
-            alert('clicked the custom button!');
+            gapi.auth2.getAuthInstance().signIn();
+            listUpcomingEvents();
+          }
+        },
+        googleLogout: {
+          icon: 'fas fa-power-off',
+          click: function() {
+            gapi.auth2.getAuthInstance().signOut();
           }
         }
       },
@@ -128,6 +135,7 @@ document.addEventListener('DOMContentLoaded', function() {
       new FormData(e.target)
     )
     
+    insertEvent(data);
     data['estatus_particular'] = $('#estatus_particular').val();
     data['id_prospecto_estatus_particular'] = $("#prospecto").val()
     $.ajax({
@@ -146,6 +154,8 @@ document.addEventListener('DOMContentLoaded', function() {
         $('#spiner-loader').addClass('hide');
         alerts.showNotification("top", "right", data["message"], (data["status" == 503]) ? "danger" : (data["status" == 400]) ? "warning" : "success");
         $('#agendaInsert').modal('toggle');
+
+        
       },
       error: function() {
           $('#spiner-loader').addClass('hide');
@@ -290,3 +300,47 @@ document.addEventListener('DOMContentLoaded', function() {
     $("#description").val('');
     $("#comodinDIV").addClass('hide');
   }
+
+
+  /* Google sign in estatus true */
+  function buildEvent(data){
+    const { dateEnd, dateStart, description, estatus_recordatorio, evtTitle } = data;
+    var evento = {
+      'summary': evtTitle,
+      'description': description,
+      'start': {
+        'dateTime': dateStart,
+        'timeZone': 'America/Mexico_City'
+      },
+      'end': {
+        'dateTime': dateEnd,
+        'timeZone': 'America/Mexico_City'
+      },
+      'recurrence': [
+        'RRULE:FREQ=DAILY;COUNT=2'
+      ],
+      'attendees': [
+        {'email': 'lpage@example.com'},
+        {'email': 'sbrin@example.com'}
+      ],
+      'reminders': {
+        'useDefault': false,
+        'overrides': [
+          {'method': 'email', 'minutes': 24 * 60},
+          {'method': 'popup', 'minutes': 10}
+        ]
+      }
+    };
+
+    return evento;
+  }
+
+  function insertEvent(data){
+    var request = gapi.client.calendar.events.insert({
+      'calendarId': 'primary',
+      'resource': buildEvent(data)
+    });
+    
+    request.execute();
+  }
+  /* Google sign in estatus true */

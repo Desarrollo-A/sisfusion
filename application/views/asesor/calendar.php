@@ -14,8 +14,16 @@
     ?>
 
     <style>
-        .fc-icon-fab{
+        .fc-icon-fab, .fc-icon-fas{
             font-family: FontAwesome!important;
+        }
+
+        .fc-googleSignIn-button{
+            display: none!important;
+        }
+
+        .fc-googleLogout-button{
+            display: none!important;
         }
     </style>
 
@@ -26,12 +34,6 @@
                     <div class="card">
                         <div class="card-content">
                             <div id='calendar'></div>
-                            
-                            <button id="authorize_button" style="display: none;"><img src="<?= base_url() ?>dist/img/googleCalendar.png" alt="Icono google calendar">Sincronizar</button>
-                            
-                            <button id="signout_button" style="display: none;">Sign Out</button>
-
-                            <pre id="content" style="white-space: pre-wrap;"></pre>
                         </div>
                     </div>
                 </div>
@@ -47,8 +49,8 @@
 
 
 <script src="<?= base_url() ?>dist/assets/js/bootstrap-datetimepicker.js"></script>
-<script src="<?=base_url()?>dist/js/controllers/calendar.js"></script>
 <script async defer src="https://apis.google.com/js/api.js" onload="this.onload=function(){};handleClientLoad()" onreadystatechange="if (this.readyState === 'complete') this.onload()"></script>
+<script src="<?=base_url()?>dist/js/controllers/calendar.js"></script>
 <script src="<?=base_url()?>dist/js/googleCalendarConnection.js"></script>
 
 <script>

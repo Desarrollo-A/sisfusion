@@ -922,14 +922,26 @@
   text-transform: uppercase;
 }
 
-#calendar .fc-googleSync-button {
+#calendar .fc-googleSignIn-button {
   background-color: transparent;
   box-shadow: none;
   border: none;
   color: #EA4335;
 }
 
-#calendar .fc-googleSync-button:hover {
+#calendar .fc-googleSignIn-button:hover {
   background-color: #EA4335;
+  color: #ffffff;
+}
+
+#calendar .fc-googleLogout-button {
+  background-color: transparent;
+  box-shadow: none;
+  border: none;
+  color: #c1c1c1;
+}
+
+#calendar .fc-googleLogout-button:hover {
+  background-color: #c1c1c1;
   color: #ffffff;
 }
