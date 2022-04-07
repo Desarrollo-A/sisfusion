@@ -125,7 +125,7 @@ public function sendRv5(){
   $mail->Host     = 'smtp.gmail.com';
   $mail->SMTPAuth = true;
   $mail->Username = 'no-reply@ciudadmaderas.com';
-  $mail->Password = 'Va7<*V8P';
+  $mail->Password = 'Va7<*V8PP';
   $mail->SMTPSecure = 'ssl';
   $mail->Port     = 465;
   
@@ -303,7 +303,7 @@ public function mailBloqueosAfter45(){
   $mail->Host     = 'smtp.gmail.com';
   $mail->SMTPAuth = true;
   $mail->Username = 'no-reply@ciudadmaderas.com';
-  $mail->Password = 'Va7<*V8P';
+  $mail->Password = 'Va7<*V8PP';
   $mail->SMTPSecure = 'ssl';
   $mail->Port     = 465;
   

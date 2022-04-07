@@ -338,7 +338,7 @@ public function editar_registro_loteRechazo_asistentes_proceceso8(){
   $mail->Host     = 'smtp.gmail.com';
   $mail->SMTPAuth = true;
   $mail->Username = 'no-reply@ciudadmaderas.com';
-  $mail->Password = 'Va7<*V8P';
+  $mail->Password = 'Va7<*V8PP';
   $mail->SMTPSecure = 'ssl';
   $mail->Port     = 465;
   
