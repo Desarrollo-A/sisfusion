@@ -1,5 +1,5 @@
 <?php
-
+    //require_once 'static/autoload.php';
     use PhpOffice\PhpSpreadsheet\Spreadsheet;
     use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
@@ -38,9 +38,7 @@ class Corrida extends CI_Controller {
 				}
 			}
 			$paquetes[$i]['response'] = $array;
-
 		}
-
 		echo json_encode($paquetes);
 	}
 
@@ -1900,7 +1898,7 @@ $pdf->Output(utf8_decode($namePDF), 'I');
         $sheet->getStyle("C2:I2")->getFont()->setSize(26);
         $sheet->getStyle('C2')->getFont()->getColor()->setARGB('FFFFFF');
         $sheet->getStyle( 'C1:C2' )->getFont()->setName('Calibri');
-        $sheet->getStyle('  C2')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('1F497D');
+        $sheet->getStyle('C2')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('1F497D');
 
 
 
@@ -2421,7 +2419,7 @@ $pdf->Output(utf8_decode($namePDF), 'I');
                     $paquete_view[$i]['response'][$c]['inicio'] = $data_descuento->inicio;
                     $paquete_view[$i]['response'][$c]['fin'] = $data_descuento->fin;
                     $paquete_view[$i]['response'][$c]['id_condicion'] = $data_descuento->id_condicion;
-                    $paquete_view[$i]['response'][$c]['porcentaje'] = $data_descuento->porcentaje;
+                    $paquete_view[$i]['response'][$c]['porcentaje'] = (int)$data_descuento->porcentaje;
                     $paquete_view[$i]['response'][$c]['eng_top'] = $data_descuento->eng_top;
                     $paquete_view[$i]['response'][$c]['apply'] = $data_descuento->apply;
                     $paquete_view[$i]['response'][$c]['leyenda'] = $data_descuento->leyenda;
@@ -2492,7 +2490,7 @@ $pdf->Output(utf8_decode($namePDF), 'I');
                 $paquete_view[$i]['response'][$q]['inicio'] = $data_descuento->inicio;
                 $paquete_view[$i]['response'][$q]['fin'] = $data_descuento->fin;
                 $paquete_view[$i]['response'][$q]['id_condicion'] = $data_descuento->id_condicion;
-                $paquete_view[$i]['response'][$q]['porcentaje'] = $data_descuento->porcentaje;
+                $paquete_view[$i]['response'][$q]['porcentaje'] = (int)$data_descuento->porcentaje;
                 $paquete_view[$i]['response'][$q]['eng_top'] = $data_descuento->eng_top;
                 $paquete_view[$i]['response'][$q]['apply'] = $data_descuento->apply;
                 $paquete_view[$i]['response'][$q]['leyenda'] = $data_descuento->leyenda;
