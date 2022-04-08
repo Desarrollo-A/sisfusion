@@ -119,7 +119,7 @@ class Postventa extends CI_Controller
         $pdf = new TCPDF('P', 'mm', 'LETTER', 'UTF-8', false);
         $pdf->SetCreator(PDF_CREATOR);
         // $pdf->SetAuthor('Sistemas Victor Manuel Sanchez Ramirez');
-        $pdf->SetTitle('Checklist persona física');
+        $pdf->SetTitle('Documentos para Escrituración persona física');
         $pdf->SetSubject('escrituracion (CRM)');
         $pdf->SetKeywords('CRM, escrituracion, PERSONAL, solicitud');
         // se pueden modificar en el archivo tcpdf_config.php de libraries/config
@@ -164,7 +164,7 @@ class Postventa extends CI_Controller
                                         <table width="100%" style="height: 100px; border: 1px solid #ddd;" width="690">
                                             <tr>
                                                 <td colspan="2" align="left"><img src="https://www.ciudadmaderas.com/assets/img/logo.png" style=" max-width: 70%; height: auto;"></td>
-                                                <td colspan="2" align="right"><b style="font-size: 1.7em; "> Checklist<BR></b>
+                                                <td colspan="2" align="right"><b style="font-size: 1.7em; "> Documentos para Escrituración<BR></b>
                                                 </td>
                                             </tr>
                                         </table>
@@ -237,7 +237,7 @@ class Postventa extends CI_Controller
                                             <br>
                                             <table width="100%" style="text-align: center;padding:10px;height: 45px; border-top: 1px solid #ddd;border-left: 1px solid #ddd;border-right: 1px solid #ddd;" width="690">
                                                 <tr>
-                                                    <td colspan="2" style="background-color: #15578B;color: #fff;padding: 3px 6px; "><b style="font-size: 2em; ">Checklist</b>
+                                                    <td colspan="2" style="background-color: #15578B;color: #fff;padding: 3px 6px; "><b style="font-size: 2em; ">Documentos para Escrituración</b>
                                                     </td>
                                                 </tr>
                                             </table>                            
@@ -361,7 +361,7 @@ class Postventa extends CI_Controller
         $mail->from('noreply@ciudadmaderas.com', 'Ciudad Maderas');
 
         $mail->to('programador.analista18@ciudadmaderas.com');
-        $mail->Subject(utf8_decode("Checklist escrituracion"));
+        $mail->Subject(utf8_decode("Documentos para Escrituración"));
         $mailContent = '
         <!DOCTYPE html>
             <html lang="es_mx"  ng-app="CRM">
@@ -382,7 +382,7 @@ class Postventa extends CI_Controller
                                         <table width="100%" style="height: 100px; border: 1px solid #ddd;" width="690">
                                             <tr>
                                                 <td colspan="2" align="left"><img src="https://www.ciudadmaderas.com/assets/img/logo.png" style=" max-width: 70%; height: auto;"></td>
-                                                <td colspan="2" align="right"><b style="font-size: 1.7em; "> Checklist<BR></b>
+                                                <td colspan="2" align="right"><b style="font-size: 1.7em; "> Documentos para Escrituración<BR></b>
                                                 </td>
                                             </tr>
                                         </table>
@@ -466,7 +466,7 @@ class Postventa extends CI_Controller
                                             <br>
                                             <table width="100%" style="text-align: center;padding:10px;height: 45px; border-top: 1px solid #ddd;border-left: 1px solid #ddd;border-right: 1px solid #ddd;" width="690">
                                                 <tr>
-                                                    <td colspan="2" style="background-color: #15578B;color: #fff;padding: 3px 6px; "><b style="font-size: 2em; ">Checklist</b>
+                                                    <td colspan="2" style="background-color: #15578B;color: #fff;padding: 3px 6px; "><b style="font-size: 2em; ">Documentos para Escrituración</b>
                                                     </td>
                                                 </tr>
                                             </table>                            
@@ -1270,10 +1270,33 @@ class Postventa extends CI_Controller
                                                     <b>¿Tenemos cliente anterior (traspaso, cesión o segunda venta)?:</b><br>
                                                     ' . ($data->cliente_anterior == 1 ? 'Si':'NO') . '
                                                 </td>
-                                                
                                             </tr>
                                         </table>
-                                    </div>
+                                    </div>';
+                                            if($data->cliente_anterior == 1){
+                                                $html .= '
+                                                <div class="row">                
+                                                    <table width="100%" style="padding:10px 3px;height: 45px; border: 1px solid #ddd; text-align: center;" width="690">
+                                                        <tr>
+                                                            <td style="font-size: 1em;">
+                                                                <b>Nombre del titular anterior:</b><br>
+                                                                ' . $data->nombre_anterior . '
+                                                            </td>
+                                                            <td style="font-size: 1em;">
+                                                                <b>Nombre a quien escritura:</b><br>
+                                                                ' . $data->fecha_anterior . '
+                                                            </td>
+                                                            <td style="font-size: 1em;">
+                                                                <b>Estatus de pago:</b><br>
+                                                                ' . $data->RFC . '
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                </div>
+                                                ';
+                                            }
+            $html .= '
+                                        
                                 </div>
                             </div>
                         </div>
