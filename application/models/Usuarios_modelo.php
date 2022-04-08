@@ -759,4 +759,10 @@ function getAllFoldersPDF()
             ORDER BY u.id_rol");
          }
 
+         function VerificarComision($idUsuario){
+            return $this->db->query("SELECT SUM(abono_neodata) abono_pendiente, id_usuario 
+            FROM pago_comision_ind 
+            WHERE id_usuario=$idUsuario and estatus=1 and ( descuento_aplicado is null or descuento_aplicado=0) group by id_usuario");
+         }
+
 }
