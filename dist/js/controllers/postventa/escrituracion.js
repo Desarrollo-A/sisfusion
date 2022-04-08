@@ -7,14 +7,17 @@ $(document).ready(function () {
 //JQuery events
 $(document).on('change', '#proyecto', function () {
     getCondominios($(this).val());
+    clearInputs();
 })
 
 $(document).on('change', '#condominio', function () {
     getLotes($(this).val());
+    clearInputs();
 })
 
 $(document).on('change', '#lotes', function () {
     getClient($(this).val());
+    clearInputs();
 })
 
 $(document).on('click', '#print', function () {
@@ -28,6 +31,8 @@ $(document).on('click', '#email', function () {
 $(document).on('click', '#aportaciones', function (e) {
     e.preventDefault();
     // loading();
+    $('#aportaciones').prop('disabled', true);
+    $('#aportaciones').css('background-color', 'gray');
     aportaciones();
 })
 
@@ -55,6 +60,10 @@ function aportaciones() {
         $('#spiner-loader').addClass('hide');
         if(data == true){
             alerts.showNotification("top", "right", "Se ha creado la solicitud correctamente.", "success");
+            $('#lotes').val('');
+            $("#lotes").selectpicker('refresh');
+            clearInputs();
+            getLotes($('#condominio').val());
         }
         // complete();
     }, 'json');
@@ -114,6 +123,8 @@ function getClient(idLote) {
 }
 
 function getProyectos() {
+    $("#condominio").val('');
+    $("#condominio").selectpicker('refresh');
     $("#proyecto").find("option").remove();
     $("#proyecto").append($('<option disabled selected>').val(null).text("Seleccione una opción"));
     $.post('getProyectos', function (data) {
@@ -131,6 +142,8 @@ function getProyectos() {
 }
 
 function getCondominios(idResidencial) {
+    $("#lotes").val('');
+    $("#lotes").selectpicker('refresh');
     $('#spiner-loader').removeClass('hide');
     $('#check').addClass("d-none");
     $("#condominio").find("option").remove();
@@ -173,3 +186,19 @@ function getLotes(idCondominio) {
         $('#spiner-loader').addClass('hide');
     }, 'json');
 }   
+
+function clearInputs(){
+    $('#nombre').val('');
+    $('#nombre2').val('');
+    $('#ocupacion').val('');
+    $('#origen').val('');
+    $('#ecivil').val('');
+    $('#rconyugal').val('');
+    $('#correo').val('');
+    $('#direccionf').val('');
+    $('#direccion').val('');
+    $('#rfc').val('');
+    $('#telefono').val('');
+    $('#cel').val('');
+    $('#idCliente').val('');
+}
