@@ -600,7 +600,7 @@ function fillTable(beginDate, endDate) {
             },
             {
                 data: function (d) {
-                    return d.tipo == 1 || d.tipo == 3 ? d.comentarios : d.tipo == 2 ? d.motivos_rechazo : 'ERROR S/TIPO';
+                    return d.tipo == 1 || d.tipo == 3 ? d.comentarios : d.tipo == 2 ? d.motivos_rechazo : d.tipo == 4 ? '':'ERROR S/TIPO';
                 }
             },
             {

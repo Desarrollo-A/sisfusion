@@ -854,17 +854,7 @@ class Postventa extends CI_Controller
     public function savePresupuesto()
     {
         $data = $_POST;
-        /*$data['nombreT'] == '' || $data['nombreT'] == null ? $nombreT = null : $nombreT =  $data['nombreT'];
-        $data['fechaCA'] == '' || $data['fechaCA'] == null ? $fechaCA = null : $fechaCA =  date("Y-m-d", strtotime($data['fechaCA']));
-        $data['cliente'] == 'default' || $data['cliente'] == null ? $cliente = 2 : $data['cliente'] == 'uno' ?  $cliente = 1: $cliente = 2;
-        $data['superficie'] == '' || $data['superficie'] == null ? $superficie =  null: $superficie = $data['superficie'];
-        $data['catastral'] == '' || $data['catastral'] == null ? $catastral =  null: $catastral = $data['catastral'];
-        $data['rfcDatos'] == 'N/A' ? $rfcDatos =  NULL :$rfcDatos =  $data['rfcDatos'];*/
-
-        /*$construccion = $data['construccion'];
-        $estatusPago = $data['estatusPago'];
-        $nombrePresupuesto2 = $data['nombrePresupuesto2'];*/
-
+      
         $id_solicitud = $data['id_solicitud3'];
 
         $updateData = array(
@@ -874,14 +864,11 @@ class Postventa extends CI_Controller
             "clave_catastral" => ($data['catastral'] == '' || $data['catastral'] == null) ? null : $data['catastral'],
             "estatus_construccion" => $data['construccion'],
             "cliente_anterior" =>($data['cliente'] == 'default' || $data['cliente'] == null ? 2 : $data['cliente'] == 'uno') ? 1 : 2,
-            "nombre_anterior" => $data['nombreT'] == '' || $data['nombreT'] == null ? null : $data['nombreT'],
+            "nombre_anterior" => $data['nombreT'] == '' || $data['nombreT'] == null || $data['nombreT'] == 'null' ? '' : $data['nombreT'],
             "fecha_anterior" => ($data['fechaCA'] == '' || $data['fechaCA'] == null) ? null : date("Y-m-d", strtotime($data['fechaCA'])),
             "RFC" => $data['rfcDatos'] == '' || $data['rfcDatos'] == 'N/A' ? null : $data['rfcDatos']
         );
 
-
-        //$data = $this->Postventa_model->savePresupuesto($nombreT,$fechaCA,$cliente,$superficie,$catastral,$rfcDatos,$construccion,$nombrePresupuesto2,$id_solicitud,$estatusPago)->row();
-        // $this->pdfPresupuesto($id_solicitud);
         $data = $this->Postventa_model->updatePresupuesto($updateData, $id_solicitud);
         if ($data != null)
             echo json_encode($data);
