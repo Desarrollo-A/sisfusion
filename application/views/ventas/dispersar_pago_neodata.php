@@ -444,25 +444,28 @@
                     var BtnStats;
                     var RegresaActiva = '';
                     
-                    if(data.totalNeto2==null) {
-                        BtnStats = '';
+                    if(data.totalNeto2==null || data.totalNeto2=='') {
+                        BtnStats = 'Asignar precio';
+                    }else if(data.id_subdirector==null || data.id_subdirector=='') {
+                        BtnStats = 'Asignar Subdirector';
+                    }else if(data.id_sede==null || data.id_sede=='') {
+                        BtnStats = 'Asignar Sede';
                     } else{
-                        
                         if(data.compartida==null) {
                             varColor  = 'btn-sky';
-                            } else{
-                                varColor  = 'btn-green';
-                                }
-                                
-                                if(data.fecha_modificacion != null ) {
-                                    RegresaActiva = '<button href="#" data-param="1" data-idpagoc="' + data.idLote + '" ' +'class="btn-data btn-deepGray update_bandera" title="Regresar a activas">' +'<i class="fas fa-undo-alt"></i></button>'
-                                    }
-                                    
-                                    BtnStats = '<button href="#" value="'+data.idLote+'" data-totalNeto2 = "'+data.totalNeto2+'" data-code="'+data.cbbtton+'" ' +'class="btn-data '+varColor+' verify_neodata" title="Verificar en NEODATA">'+'<span class="material-icons">verified_user</span></button> '+RegresaActiva+''+'<button href="#" value="'+data.idLote+'" data-code="'+data.cbbtton+'" ' +'class="btn-data btn-warning verify_neodata" title="Incidencias">'+'<span class = "material-icons" >stop</span></button> ';
-                                    }
-                                    return '<div class="d-flex justify-center">'+BtnStats+'</div>';
-                                    }
-                                    // +'<button class="btn-data btn-orangeYellow marcar_pagada" title="Marcar como liquidada" value="' + data.idLote +'"><i class="material-icons">how_to_reg</i></button>';
+                        } else{
+                            varColor  = 'btn-green';
+                        }
+                        
+                        if(data.fecha_modificacion != null ) {
+                            RegresaActiva = '<button href="#" data-param="1" data-idpagoc="' + data.idLote + '" ' +'class="btn-data btn-deepGray update_bandera" title="Regresar a activas">' +'<i class="fas fa-undo-alt"></i></button>';
+                        }
+                        
+                        BtnStats = '<button href="#" value="'+data.idLote+'" data-value="'+data.registro_comision+'" data-totalNeto2 = "'+data.totalNeto2+'" data-estatus="'+data.idStatusContratacion+'" data-cliente="'+data.id_cliente+'" data-plan="'+data.plan_comision+'" data-descplan="'+data.plan_descripcion+'" data-code="'+data.cbbtton+'" ' +'class="btn-data '+varColor+' verify_neodata" title="Verificar en NEODATA">'+'<span class="material-icons">verified_user</span></button> '+RegresaActiva+'';
+                    }
+                    return '<div class="d-flex justify-center">'+BtnStats+'</div>';
+                }
+                                    // +'<button class="btn-data btn-orangeYellow marcar_pagada" title="Marcar como liquidada" value="' + data.idLote +'"><i class="material-icons">how_to_reg</i></button>'  data-estatus  ;
             }],
             columnDefs: [{
                 "searchable": false,
@@ -504,20 +507,20 @@
 
     
 
-        async function VerificarUsers(idLote,compartida,tipo_venta,lugar_prospeccionLote,mdb,ismktd,IdResidencial){
-            return new Promise(resolve => {
-                $.getJSON( url + "Comisiones/getUsersClient/"+idLote+"/"+compartida+"/"+tipo_venta+"/"+lugar_prospeccionLote+"/"+mdb+"/"+ismktd+"/"+IdResidencial).done( function( data ){
-                    resolve({data:data});
-                });
-            });
-        }
+        // async function VerificarUsers(idLote,compartida,tipo_venta,lugar_prospeccionLote,mdb,ismktd,IdResidencial){
+        //     return new Promise(resolve => {
+        //         $.getJSON( url + "Comisiones/getUsersClient/"+idLote+"/"+compartida+"/"+tipo_venta+"/"+lugar_prospeccionLote+"/"+mdb+"/"+ismktd+"/"+IdResidencial).done( function( data ){
+        //             resolve({data:data});
+        //         });
+        //     });
+        // }
 
         $("#tabla_ingresar_9 tbody").on("click", ".verify_neodata", async function(){ 
 
-            subdirector = $(this).attr("data-subdirector");
-            if(subdirector == 0){
-                        alerts.showNotification("top", "right", "SIN SUBDIRECTOR ASIGNADO, FAVOR DE REVISARLO CON SISTEMAS VIA TICKET INDICANDO LOS DATOS DEL USUARIO FALTANTE (NOMBRE Y EL ID)", "warning");
-            }else{
+            // subdirector = $(this).attr("data-subdirector");
+            // if(subdirector == 0){
+            //             alerts.showNotification("top", "right", "Este lote requiere asignar un Subdirector, favor de inidicarlo via Ticket a sistemas", "warning");
+            // }else{
 
                 // $("#tabla_ingresar_9 tbody").on("click", ".verify_neodata", async function(){ 
             $("#modal_NEODATA .modal-header").html("");
@@ -525,68 +528,53 @@
             $("#modal_NEODATA .modal-footer").html("");
             var tr = $(this).closest('tr');
             var row = tabla_1.row( tr );
-            idLote = $(this).val();
-            let cadena = '';
-            registro_status = $(this).attr("data-value");
-            compartida = $(this).attr("data-compartida");
-            id_estatus = $(this).attr("data-estatus");
-            tipo_venta = $(this).attr("data-tipov");
-            lugar_prospeccionLote = $(this).attr("data-lugarP");
-            totalNeto2 = $(this).attr("data-totalNeto2");
             
-            IdResidencial = $(this).attr("data-idResidencial");
+            let cadena = '';
+            idLote = $(this).val();
+            registro_comision = $(this).attr("data-value");
+            totalNeto2 = $(this).attr("data-totalNeto2");
+            id_estatus = $(this).attr("data-estatus");
+            idCliente = $(this).attr("data-cliente");
+            plan_comision = $(this).attr("data-plan");
+            descripcion_plan = $(this).attr("data-descplan");
+            
 
-            ismktd = $(this).attr("data-ismktd");
-            console.log($(this).attr("data-mdb"));
-            let martha = $(this).attr("data-mdb");
+            //  data-code="'+data.cbbtton+'" ' +'class="btn-data '+varColor+' verify_neodata"
+            // compartida = $(this).attr("data-compartida");
+            // tipo_venta = $(this).attr("data-tipov");
+            // lugar_prospeccionLote = $(this).attr("data-lugarP");
+            
+            
+            // IdResidencial = $(this).attr("data-idResidencial");
+
+            // ismktd = $(this).attr("data-ismktd");
+            // console.log($(this).attr("data-mdb"));
+            // let martha = $(this).attr("data-mdb");
         
-          let mdb = ( martha == 'null' || martha == undefined) ? 0 : martha;
+            // let mdb = ( martha == 'null' || martha == undefined) ? 0 : martha;
 
-            var bandera_anticipo = 0;
+            // var bandera_anticipo = 0;
 
 
-            let resulq = await VerificarUsers(idLote,compartida,tipo_venta,lugar_prospeccionLote,mdb,ismktd,IdResidencial);
-            console.log(resulq);
+            // let resulq = await VerificarUsers(idLote,compartida,tipo_venta,lugar_prospeccionLote,mdb,ismktd,IdResidencial);
+            // console.log(resulq);
 
             if(parseFloat(totalNeto2) > 0){
-                if(resulq.data == 0){
-                    alerts.showNotification("top", "right", "Venta mal capturada", "warning");
-                }else if(resulq.data == 5){
-                    alerts.showNotification("top", "right", "NO HAY SEDE REGISTRADA EN SISTEMA, REPORTAR A SISTEMAS INDICANDO LA SEDE CORRECTA, POR FAVOR.", "warning");
-
-                }
-                else{
-                    console.log('datos de la consulta ');
-                    console.log(row.data);
-                    let gerente = resulq.data[0].id_gerente;
-                    let asesor = resulq.data[0].id_asesor;
-                    let idCliente = resulq.data[0].id_cliente;
-                    let id_sede_cl = resulq.data[0].sede_cl;
-                    var fecha_inicio = new Date('2021-09-10');  
-                    var fecha_fin = new Date('2029-12-31'); 
-                    let VentaTipo = resulq.data[0].esquema;
-                    let vigencia=resulq.data[0].vigencia;
-
-                    console.log(resulq.data[0].esquema);
-                    console.log(resulq.data[0].vigencia);
-
-                    var fecha_fin_mktd = new Date('2022-01-19'); 
-                    console.log('tipo venta:'+VentaTipo)
+           
                     $("#modal_NEODATA .modal-body").html("");
                     $("#modal_NEODATA .modal-footer").html("");
                     $.getJSON( url + "ComisionesNeo/getStatusNeodata/"+idLote).done( function( data ){
-                        //  $("#modal_NEODATA .modal-header").html("");
-        
-                        console.log('NEO');
-                        console.log(data[0]);
+                       
                         if(data.length > 0){
-                            console.log('ENTRA AL LENGTH');
                             switch (data[0].Marca) {
                                 case 0:
                                     $("#modal_NEODATA .modal-body").append('<div class="row"><div class="col-md-12"><h4><b>En espera de próximo abono en NEODATA de '+row.data().nombreLote+'.</b></h4><br><h5>Revisar con Administración.</h5></div> <div class="col-md-12"><center><img src="'+url+'static/images/robot.gif" width="320" height="300"></center></div></div>');
                                 break;
                                 case 1:
-                                    if(registro_status == 0 || registro_status ==8 || registro_status == 2){
+                                    console.log('case 1 ');
+
+                                    if(registro_comision == 0 || registro_comision ==8 || registro_comision == 2){
+                                        console.log('case registro_comision ');
                                         //COMISION NUEVA
                                         let total0 = parseFloat(data[0].Aplicado);
                                         let total = 0;
@@ -596,7 +584,7 @@
                                             total = 0; 
                                         }
 
-                                        // INICIO BONIFICACION *******************
+                                        // INICIO BONIFICACION *********************************
                                         if(parseFloat(data[0].Bonificado) > 0){
                                             cadena = '<h5>Bonificación: <b style="color:#D84B16;">$'+formatMoney(data[0].Bonificado)+'</b></h4></div></div>';
                                             $("#modal_NEODATA .modal-body").append(`<input type="hidden" name="bonificacion" id="bonificacion" value="${parseFloat(data[0].Bonificado)}">`);
@@ -604,95 +592,73 @@
                                             cadena = '<h5>Bonificación: <b>$'+formatMoney(0)+'</b></h4></div></div>';
                                             $("#modal_NEODATA .modal-body").append(`<input type="hidden" name="bonificacion" id="bonificacion" value="0">`);
                                         }
-
                                         // FINAL BONIFICACION *********************************
-                                        $("#modal_NEODATA .modal-body").append(`<div class="row"><div class="col-md-12 text-center"><h3><i>${row.data().nombreLote}</i></h3></div></div><div class="row"><div class="col-md-3 p-0"><h5>Precio lote: <b>$${formatMoney(totalNeto2)}</b></h5></div><div class="col-md-3 p-0"><h5>Apl. neodata: <b style="color:${data[0].Aplicado <= 0 ? 'black' : 'blue'};">$${formatMoney(data[0].Aplicado)}</b></h5></div><div class="col-md-3 p-0"><h5>Disponible: <b style="color:green;">$${formatMoney(total0)}</b></h5></div><div class="col-md-3 p-0">${cadena}</div></div><br>`);
 
-                                        // OPERACION PARA SACAR 5% ***
+                                        $("#modal_NEODATA .modal-body").append(`<div class="row"><div class="col-md-12 text-center"><h3>Lote: <b>${row.data().nombreLote}</b></h3><l style='color:gray;'>Plan de venta: <b>${descripcion_plan}</b></l></div></div><div class="row"><div class="col-md-3 p-0"><h5>Precio lote: <b>$${formatMoney(totalNeto2)}</b></h5></div><div class="col-md-3 p-0"><h5>$ Neodata: <b style="color:${data[0].Aplicado <= 0 ? 'black' : 'blue'};">$${formatMoney(data[0].Aplicado)}</b></h5></div><div class="col-md-3 p-0"><h5>Disponible: <b style="color:green;">$${formatMoney(total0)}</b></h5></div><div class="col-md-3 p-0">${cadena}</div></div><br>`);
+
+                                        // $("#modal_NEODATA .modal-body").append(`<div class="row"><div class="col-md-12 text-center"><h5>Plan de venta: <i>${descripcion_plan}</i></h5></div></div><br>`);
+
+                                        
+
+                                        
+                                        // OPERACION PARA SACAR 5% *********************************
                                         first_validate = (totalNeto2 * 0.05).toFixed(3);
                                         new_validate = parseFloat(first_validate);
-                                        console.log('OP 5%: '+new_validate);
-                                        console.log('OP T: '+new_validate);
-
-                                        // if(total>new_validate && (id_estatus == 9 || id_estatus == 10 || id_estatus == 11 || id_estatus == 12 || id_estatus == 13 || id_estatus == 14)){
-                                        //     console.log("SOLO DISPERSA LA MITAD*******");
-                                        //     $("#modal_NEODATA .modal-body").append('<div class="row"><div class="col-md-12"><h3><i class="fa fa-info-circle" style="color:gray;"></i><b style="color:blue;"> Anticipo </b> diponible <i>'+row.data().nombreLote+'</i></h3></div></div><br><br>');
-                                        //     bandera_anticipo = 1;
-                                        // }
-                                        // else if((total<new_validate && (id_estatus == 9 || id_estatus == 10 || id_estatus == 11 || id_estatus == 12 || id_estatus == 13 || id_estatus == 14)) || (id_estatus == 15)){
-                                        //     console.log("SOLO DISPERSA LO PROPORCIONAL*******");
-                                        //     if( lugar_prospeccionLote == 28 || lugar_prospeccionLote == '28'){
-                                        //         $("#modal_NEODATA .modal-body").append('<div class="row"><div class="col-md-12"><h3><i class="fa fa-info-circle" style="color:red;"></i> Venta E-commerce <i>'+row.data().nombreLote+'</i></h3></div></div><br><br>');
-                                        //     }
-                                        //     bandera_anticipo = 0;
-                                        // }
-                                        // else if((total==new_validate && (id_estatus == 9 || id_estatus == 10 || id_estatus == 11 || id_estatus == 12 || id_estatus == 13 || id_estatus == 14)) || (id_estatus == 15)  ){
-                                        //     console.log("SOLO DISPERSA 5% *******");
-                                        //     $("#modal_NEODATA .modal-body").append('<div class="row"><div class="col-md-12"><h3><i class="fa fa-info-circle" style="color:gray;"></i><b style="color:blue;"> Anticipo 5%</b> disponible <i>'+row.data().nombreLote+'</i></h3></div></div><br><br>');
-                                        //     bandera_anticipo = 2;
-                                        // }
-
-
-
-
+                                        // console.log('OP 5%: '+new_validate);
+                                        // console.log('OP T: '+new_validate);
+  
                                         if(total>(new_validate+1) && (id_estatus == 9 || id_estatus == 10 || id_estatus == 11 || id_estatus == 12 || id_estatus == 13 || id_estatus == 14)){
 
-                                            console.log("SOLO DISPERSA LA MITAD*******");
+                                            // console.log("SOLO DISPERSA LA MITAD*******");
                                             $("#modal_NEODATA .modal-body").append('<div class="row"><div class="col-md-12"><h3><i class="fa fa-info-circle" style="color:gray;"></i><b style="color:blue;"> Anticipo </b> diponible <i>'+row.data().nombreLote+'</i></h3></div></div><br><br>');
                                             bandera_anticipo = 1;
                                         }
                                         else if((total<(new_validate-1) && (id_estatus == 9 || id_estatus == 10 || id_estatus == 11 || id_estatus == 12 || id_estatus == 13 || id_estatus == 14)) || (id_estatus == 15)){
-                                            console.log("SOLO DISPERSA LO PROPORCIONAL*******");
-                                            if( lugar_prospeccionLote == 28 || lugar_prospeccionLote == '28'){
-                                                $("#modal_NEODATA .modal-body").append('<div class="row"><div class="col-md-12"><h3><i class="fa fa-info-circle" style="color:red;"></i> Venta E-commerce <i>'+row.data().nombreLote+'</i></h3></div></div><br><br>');
-                                            }
+                                            // console.log("SOLO DISPERSA LO PROPORCIONAL*******");
                                             bandera_anticipo = 0;
                                         }
                                         else if((  total>(new_validate-1) && total<(new_validate+1) && (id_estatus == 9 || id_estatus == 10 || id_estatus == 11 || id_estatus == 12 || id_estatus == 13 || id_estatus == 14)) || (id_estatus == 15)  ){
-                                            console.log("SOLO DISPERSA 5% *******");
+                                            // console.log("SOLO DISPERSA 5% *******");
                                             $("#modal_NEODATA .modal-body").append('<div class="row"><div class="col-md-12"><h3><i class="fa fa-info-circle" style="color:gray;"></i><b style="color:blue;"> Anticipo 5%</b> disponible <i>'+row.data().nombreLote+'</i></h3></div></div><br><br>');
                                             bandera_anticipo = 2;
                                         }
+                                        // FIN BANDERA OPERACION PARA SACAR 5% *********************************
 
-
-
-
-                                        // FIN BANDERA OPERACION PARA SACAR 5% ************
                                         $("#modal_NEODATA .modal-body").append(`<div class="row"><div class="col-md-3"><p style="font-zise:10px;"><b>USUARIOS</b></p></div><div class="col-md-1"><b>%</b></div><div class="col-md-2"><b>TOT. COMISIÓN</b></div><div class="col-md-2"><b><b>ABONADO</b></div><div class="col-md-2"><b>PENDIENTE</b></div><div class="col-md-2"><b>DISPONIBLE</b></div></div>`);
                               
-                                         lugar = lugar_prospeccionLote;
+                                        // lugar = lugar_prospeccionLote;
                                         var_sum = 0;
 
                                         let abonado=0;
                                         let porcentaje_abono=0;
                                         let total_comision=0;
 
-                                        $.getJSON( url + "Comisiones/porcentajes/"+idCliente+"/"+VentaTipo+"/"+vigencia).done( function( resultArr ){
+                                        $.getJSON( url + "Comisiones/porcentajes/"+idCliente+"/"+plan_comision).done( function( resultArr ){
                                             let parteAsesor=0;
                                             let parteGerente=0;
                                             let parteCoord=0;
                                             let resta=0;
-                                            if((tipo_venta == 7 || tipo_venta == 8) && data[0].Aplicado <= 10000){
-                                                for (let j = resultArr.length-1; j >= 0 ;j--) {
+                                            // if((tipo_venta == 7 || tipo_venta == 8) && data[0].Aplicado <= 10000){
+                                            //     for (let j = resultArr.length-1; j >= 0 ;j--) {
                                                     
-                                                    if(resultArr[j].id_rol == 7){
-                                                        if(data[0].Aplicado > resultArr[j].comision_total){
-                                                        parteAsesor= resultArr[j].comision_total;
-                                                            resta = data[0].Aplicado - resultArr[j].comision_total;
-                                                            if(resta > 500){
-                                                                if(resultArr.length == 2){
-                                                                    parteGerente = resta;
-                                                                }else if(resultArr.length == 3){
-                                                                    parteCoord=resta/2; 
-                                                                    parteGerente = resta/2;
-                                                                }
-                                                            }
-                                                        }else{
-                                                            parteAsesor=data[0].Aplicado;
-                                                        }
-                                                    }
-                                                }
-                                            }
+                                            //         if(resultArr[j].id_rol == 7){
+                                            //             if(data[0].Aplicado > resultArr[j].comision_total){
+                                            //             parteAsesor= resultArr[j].comision_total;
+                                            //                 resta = data[0].Aplicado - resultArr[j].comision_total;
+                                            //                 if(resta > 500){
+                                            //                     if(resultArr.length == 2){
+                                            //                         parteGerente = resta;
+                                            //                     }else if(resultArr.length == 3){
+                                            //                         parteCoord=resta/2; 
+                                            //                         parteGerente = resta/2;
+                                            //                     }
+                                            //                 }
+                                            //             }else{
+                                            //                 parteAsesor=data[0].Aplicado;
+                                            //             }
+                                            //         }
+                                            //     }
+                                            // }
                                             
                                             $.each( resultArr, function( i, v){
                                                 let porcentajeAse =  v.porcentaje_decimal;
@@ -749,7 +715,8 @@
                                                 <div class="col-md-2"><input class="form-control ng-invalid ng-invalid-required" name="comision_total[]" required readonly="true" value="${formatMoney(v.comision_total)}"></div>
                                                 <div class="col-md-2"><input class="form-control ng-invalid ng-invalid-required" name="comision_abonada[]" required readonly="true" value="${formatMoney(0)}"></div>
                                                 <div class="col-md-2"><input class="form-control ng-invalid ng-invalid-required" name="comision_pendiente[]" required readonly="true" value="${formatMoney(v.comision_total)}"></div>
-                                                <div class="col-md-2"><input class="form-control ng-invalid ng-invalid-required decimals" name="comision_dar[]"  data-old="" id="inputEdit" readonly="true"  value="${ (tipo_venta == 7 || tipo_venta == 8) && data[0].Aplicado < 10000 ? v.id_rol == 7 ? formatMoney(parteAsesor): v.id_rol == 9 ? formatMoney(parteCoord) : formatMoney(parteGerente)   : formatMoney(saldo1C)}"></div></div>`);
+                                                <div class="col-md-2"><input class="form-control ng-invalid ng-invalid-required decimals" name="comision_dar[]"  data-old="" id="inputEdit" readonly="true"  value="${formatMoney(saldo1C)}"></div></div>`);
+                                           
                                                 if(i == resultArr.length -1){
                                                     $("#modal_NEODATA .modal-body").append(`
                                                     <input type="hidden" name="pago_neo" id="pago_neo" value="${formatMoney(data[0].Aplicado)}">
@@ -761,8 +728,8 @@
                                                     <input type="hidden" name="pendiente" id="pendiente" value="${formatMoney(total_comision-abonado)}">
                                                     <input type="hidden" name="idCliente" id="idCliente" value="${idCliente}">
                                                     <input type="hidden" name="id_disparador" id="id_disparador" value="0">
-                                                    <input type="hidden" name="lugar_p" id="lugar_p" value="${lugar_prospeccionLote}">
-                                                    <input type="hidden" name="tipo_venta_insert" id="tipo_venta_insert" value="${VentaTipo}">
+                                                     
+                               
                                                     <input type="hidden" name="totalNeto2" id="totalNeto2" value="${totalNeto2}">
                                                     `);
                                                 }
@@ -775,6 +742,7 @@
         
                                     }
                                     else{
+                                        console.log('Entra a else ya abonado getDatosAbonadoSuma11');
                                         $.getJSON( url + "Comisiones/getDatosAbonadoSuma11/"+idLote).done( function( data1 ){
                                             let total0 = parseFloat((data[0].Aplicado));
                                             let total = 0;
@@ -787,10 +755,15 @@
 
                                             var counts=0;
 
-                                            $("#modal_NEODATA .modal-body").append('<div class="row"><div class="col-md-12"><h3><i class="fa fa-info-circle" style="color:gray;"></i> Saldo diponible para <i>'+row.data().nombreLote+'</i>: <b>$'+formatMoney(total0-(data1[0].abonado))+'</b></h3></div></div><br>');
+                                            $("#modal_NEODATA .modal-body").append(`<div class="row">
+                                            <div class="col-md-6 text-center"><h4>Lote: <b>${row.data().nombreLote}</b></h4><l style='color:gray;'>Plan de venta: <b>${descripcion_plan}</b></l></div>                                            
+                                            <div class="col-md-6 text-center"><h4>Saldo diponible: <mark><b>$${formatMoney(total0-(data1[0].abonado))}</b><mark></h4></div>
+                                            </div><br>`);
 
+
+ 
                                             $("#modal_NEODATA .modal-body").append('<div class="row">'+
-                                            '<div class="col-md-4">Total pago: <b style="color:blue">'+formatMoney(data1[0].total_comision)+'</b></div>'+
+                                            '<div class="col-md-4">Total a pagar: <b style="color:blue">'+formatMoney(data1[0].total_comision)+'</b></div>'+
                                             '<div class="col-md-4">Total abonado: <b style="color:green">'+formatMoney(data1[0].abonado)+'</b></div>'+
                                             '<div class="col-md-4">Total pendiente: <b style="color:orange">'+formatMoney((data1[0].total_comision)-(data1[0].abonado))+'</b></div></div>');
 
@@ -817,21 +790,21 @@
 
                                                 $.each( data, function( i, v){
                                                     saldo =0;
-                                                    if(tipo_venta == 7 && coor == 2){
-                                                        total = total - data1[0].abonado;
-                                                        console.log(total);
+                                                    // if(tipo_venta == 7 && coor == 2){
+                                                    //     total = total - data1[0].abonado;
+                                                    //     console.log(total);
 
-                                                        saldo = tipo_venta == 7 && v.rol_generado == "3" ? (0.925*total) : tipo_venta == 7 && v.rol_generado == "7" ? (0.075*total) : ((12.5 *(v.porcentaje_decimal / 100)) * total);
+                                                    //     saldo = tipo_venta == 7 && v.rol_generado == "3" ? (0.925*total) : tipo_venta == 7 && v.rol_generado == "7" ? (0.075*total) : ((12.5 *(v.porcentaje_decimal / 100)) * total);
 
-                                                    }
-                                                    else if(tipo_venta == 7 && coor == 3){
-                                                        total = total - data1[0].abonado;
-                                                        console.log(total);
-                                                        saldo = tipo_venta == 7 && v.rol_generado == "3" ? (0.675*total) : tipo_venta == 7 && v.rol_generado == "7" ? (0.075*total) : tipo_venta == 7 && v.rol_generado == "9" ?  (0.25*total) :   ((12.5 *(v.porcentaje_decimal / 100)) * total);
-                                                    }
-                                                    else{
+                                                    // }
+                                                    // else if(tipo_venta == 7 && coor == 3){
+                                                    //     total = total - data1[0].abonado;
+                                                    //     console.log(total);
+                                                    //     saldo = tipo_venta == 7 && v.rol_generado == "3" ? (0.675*total) : tipo_venta == 7 && v.rol_generado == "7" ? (0.075*total) : tipo_venta == 7 && v.rol_generado == "9" ?  (0.25*total) :   ((12.5 *(v.porcentaje_decimal / 100)) * total);
+                                                    // }
+                                                    // else{
                                                         saldo =  ((12.5 *(v.porcentaje_decimal / 100)) * total);
-                                                    }
+                                                    // }
 
                                                     if(v.abono_pagado > 0){
                                                         console.log("OPCION 1");
@@ -933,11 +906,11 @@
                     
                     $("#modal_NEODATA").modal();
                 }
-            } 
-            else{
-                alerts.showNotification("top", "right", "El lote no tiene precio asignado en inventario", "warning");
-            }
-        }
+        //     // } 
+        //     else{
+        //         alerts.showNotification("top", "right", "El lote no tiene precio asignado en inventario", "warning");
+        //     }
+        // // }
         }); //FIN VERIFY_NEODATA
         /**----------------------------------------------------------------------- */
     

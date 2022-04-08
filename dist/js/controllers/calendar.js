@@ -3,11 +3,26 @@ var appointment = '';
 
 document.addEventListener('DOMContentLoaded', function() {
     var calendarEl = document.getElementById('calendar');
-    calendar = new FullCalendar.Calendar(calendarEl, {    
+    calendar = new FullCalendar.Calendar(calendarEl, {   
       headerToolbar: {
         start:   'timeGridDay,timeGridWeek,dayGridMonth',
         center: 'title',
-        end: 'prev,next today'
+        end: 'prev,next today googleSignIn googleLogout'
+      },
+      customButtons: {
+        googleSignIn: {
+          icon: 'fab fa-google',
+          click: function() {
+            gapi.auth2.getAuthInstance().signIn();
+            listUpcomingEvents();
+          }
+        },
+        googleLogout: {
+          icon: 'fas fa-power-off',
+          click: function() {
+            gapi.auth2.getAuthInstance().signOut();
+          }
+        }
       },
       timeZone: 'none',
       locale: 'es',
@@ -114,32 +129,38 @@ document.addEventListener('DOMContentLoaded', function() {
     $('#dateEnd2').prop('min', $(this).val());
   });
 
-  $("#insert_appointment_form").on('submit', function(e) {
+  document.querySelector('#insert_appointment_form').addEventListener('submit', e => {
     e.preventDefault();
-    var formData = new FormData(this);
-    formData.append('estatus_particular',$('#estatus_particular').val());
-    formData.append('id_prospecto_estatus_particular',  $("#prospecto").val());
+    const data = Object.fromEntries(
+      new FormData(e.target)
+    )
+    
+    insertEvent(data);
+    data['estatus_particular'] = $('#estatus_particular').val();
+    data['id_prospecto_estatus_particular'] = $("#prospecto").val()
     $.ajax({
-        type: 'POST',
-        url: '../Calendar/insertRecordatorio',
-        data: formData,
-        contentType: false,
-        cache: false,
-        processData: false,
-        beforeSend: function() {
-          $('#spiner-loader').removeClass('hide');
-        },
-        success: function(data) {
-          calendar.refetchEvents();
-          data = JSON.parse(data);
+      type: 'POST',
+      url: '../Calendar/insertRecordatorio',
+      data: JSON.stringify(data),
+      contentType: false,
+      cache: false,
+      processData: false,
+      beforeSend: function() {
+        $('#spiner-loader').removeClass('hide');
+      },
+      success: function(data) {
+        calendar.refetchEvents();
+        data = JSON.parse(data);
+        $('#spiner-loader').addClass('hide');
+        alerts.showNotification("top", "right", data["message"], (data["status" == 503]) ? "danger" : (data["status" == 400]) ? "warning" : "success");
+        $('#agendaInsert').modal('toggle');
+
+        
+      },
+      error: function() {
           $('#spiner-loader').addClass('hide');
-          alerts.showNotification("top", "right", data["message"], (data["status" == 503]) ? "danger" : (data["status" == 400]) ? "warning" : "success");
-          $('#agendaInsert').modal('toggle');
-        },
-        error: function() {
-            $('#spiner-loader').addClass('hide');
-            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
-        }
+          alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+      }
     });
   });
 
@@ -279,3 +300,45 @@ document.addEventListener('DOMContentLoaded', function() {
     $("#description").val('');
     $("#comodinDIV").addClass('hide');
   }
+
+
+  /* Google sign in estatus true */
+  function buildEvent(data){
+    const { dateEnd, dateStart, description, estatus_recordatorio, evtTitle } = data;
+    var evento = {
+      'summary': evtTitle,
+      'description': description,
+      'start': {
+        'dateTime': dateStart,
+        'timeZone': 'America/Mexico_City'
+      },
+      'end': {
+        'dateTime': dateEnd,
+        'timeZone': 'America/Mexico_City'
+      },
+      'reminders': {
+        'useDefault': false,
+        'overrides': [
+          {'method': 'email', 'minutes': 24 * 60},
+          {'method': 'popup', 'minutes': 10}
+        ]
+      },
+      'extendedProperties':{
+        'private' : [
+          { 'setByFullCalendar' : true }
+        ]
+      }
+    };
+
+    return evento;
+  }
+
+  function insertEvent(data){
+    var request = gapi.client.calendar.events.insert({
+      'calendarId': 'primary',
+      'resource': buildEvent(data)
+    });
+    
+    request.execute();
+  }
+  /* Google sign in estatus true */

@@ -119,7 +119,7 @@ class Postventa extends CI_Controller
         $pdf = new TCPDF('P', 'mm', 'LETTER', 'UTF-8', false);
         $pdf->SetCreator(PDF_CREATOR);
         // $pdf->SetAuthor('Sistemas Victor Manuel Sanchez Ramirez');
-        $pdf->SetTitle('Checklist persona física');
+        $pdf->SetTitle('Documentos para Escrituración persona física');
         $pdf->SetSubject('escrituracion (CRM)');
         $pdf->SetKeywords('CRM, escrituracion, PERSONAL, solicitud');
         // se pueden modificar en el archivo tcpdf_config.php de libraries/config
@@ -164,7 +164,7 @@ class Postventa extends CI_Controller
                                         <table width="100%" style="height: 100px; border: 1px solid #ddd;" width="690">
                                             <tr>
                                                 <td colspan="2" align="left"><img src="https://www.ciudadmaderas.com/assets/img/logo.png" style=" max-width: 70%; height: auto;"></td>
-                                                <td colspan="2" align="right"><b style="font-size: 1.7em; "> Checklist<BR></b>
+                                                <td colspan="2" align="right"><b style="font-size: 1.7em; "> Documentos para Escrituración<BR></b>
                                                 </td>
                                             </tr>
                                         </table>
@@ -237,7 +237,7 @@ class Postventa extends CI_Controller
                                             <br>
                                             <table width="100%" style="text-align: center;padding:10px;height: 45px; border-top: 1px solid #ddd;border-left: 1px solid #ddd;border-right: 1px solid #ddd;" width="690">
                                                 <tr>
-                                                    <td colspan="2" style="background-color: #15578B;color: #fff;padding: 3px 6px; "><b style="font-size: 2em; ">Checklist</b>
+                                                    <td colspan="2" style="background-color: #15578B;color: #fff;padding: 3px 6px; "><b style="font-size: 2em; ">Documentos para Escrituración</b>
                                                     </td>
                                                 </tr>
                                             </table>                            
@@ -361,7 +361,7 @@ class Postventa extends CI_Controller
         $mail->from('noreply@ciudadmaderas.com', 'Ciudad Maderas');
 
         $mail->to('programador.analista18@ciudadmaderas.com');
-        $mail->Subject(utf8_decode("Checklist escrituracion"));
+        $mail->Subject(utf8_decode("Documentos para Escrituración"));
         $mailContent = '
         <!DOCTYPE html>
             <html lang="es_mx"  ng-app="CRM">
@@ -382,7 +382,7 @@ class Postventa extends CI_Controller
                                         <table width="100%" style="height: 100px; border: 1px solid #ddd;" width="690">
                                             <tr>
                                                 <td colspan="2" align="left"><img src="https://www.ciudadmaderas.com/assets/img/logo.png" style=" max-width: 70%; height: auto;"></td>
-                                                <td colspan="2" align="right"><b style="font-size: 1.7em; "> Checklist<BR></b>
+                                                <td colspan="2" align="right"><b style="font-size: 1.7em; "> Documentos para Escrituración<BR></b>
                                                 </td>
                                             </tr>
                                         </table>
@@ -466,7 +466,7 @@ class Postventa extends CI_Controller
                                             <br>
                                             <table width="100%" style="text-align: center;padding:10px;height: 45px; border-top: 1px solid #ddd;border-left: 1px solid #ddd;border-right: 1px solid #ddd;" width="690">
                                                 <tr>
-                                                    <td colspan="2" style="background-color: #15578B;color: #fff;padding: 3px 6px; "><b style="font-size: 2em; ">Checklist</b>
+                                                    <td colspan="2" style="background-color: #15578B;color: #fff;padding: 3px 6px; "><b style="font-size: 2em; ">Documentos para Escrituración</b>
                                                     </td>
                                                 </tr>
                                             </table>                            
@@ -613,8 +613,9 @@ class Postventa extends CI_Controller
         }elseif ($type == 2) {
             $motivos_rechazo = $_POST['comentarios'];
             $informacion = $this->Postventa_model->changeStatus($id_solicitud, $type, 'NULL', $motivos_rechazo);
-        } else {
-            $informacion = $this->Postventa_model->changeStatus($id_solicitud, $type, 'Cambio de fecha', 0);
+        }else {
+            $comentarios = $_POST['comentarios'];
+            $informacion = $this->Postventa_model->changeStatus($id_solicitud, $type, $comentarios, 0);
         }
 
         echo json_encode($informacion);
@@ -853,17 +854,7 @@ class Postventa extends CI_Controller
     public function savePresupuesto()
     {
         $data = $_POST;
-        /*$data['nombreT'] == '' || $data['nombreT'] == null ? $nombreT = null : $nombreT =  $data['nombreT'];
-        $data['fechaCA'] == '' || $data['fechaCA'] == null ? $fechaCA = null : $fechaCA =  date("Y-m-d", strtotime($data['fechaCA']));
-        $data['cliente'] == 'default' || $data['cliente'] == null ? $cliente = 2 : $data['cliente'] == 'uno' ?  $cliente = 1: $cliente = 2;
-        $data['superficie'] == '' || $data['superficie'] == null ? $superficie =  null: $superficie = $data['superficie'];
-        $data['catastral'] == '' || $data['catastral'] == null ? $catastral =  null: $catastral = $data['catastral'];
-        $data['rfcDatos'] == 'N/A' ? $rfcDatos =  NULL :$rfcDatos =  $data['rfcDatos'];*/
-
-        /*$construccion = $data['construccion'];
-        $estatusPago = $data['estatusPago'];
-        $nombrePresupuesto2 = $data['nombrePresupuesto2'];*/
-
+      
         $id_solicitud = $data['id_solicitud3'];
 
         $updateData = array(
@@ -873,14 +864,11 @@ class Postventa extends CI_Controller
             "clave_catastral" => ($data['catastral'] == '' || $data['catastral'] == null) ? null : $data['catastral'],
             "estatus_construccion" => $data['construccion'],
             "cliente_anterior" =>($data['cliente'] == 'default' || $data['cliente'] == null ? 2 : $data['cliente'] == 'uno') ? 1 : 2,
-            "nombre_anterior" => $data['nombreT'] == '' || $data['nombreT'] == null ? null : $data['nombreT'],
+            "nombre_anterior" => $data['nombreT'] == '' || $data['nombreT'] == null || $data['nombreT'] == 'null' ? '' : $data['nombreT'],
             "fecha_anterior" => ($data['fechaCA'] == '' || $data['fechaCA'] == null) ? null : date("Y-m-d", strtotime($data['fechaCA'])),
             "RFC" => $data['rfcDatos'] == '' || $data['rfcDatos'] == 'N/A' ? null : $data['rfcDatos']
         );
 
-
-        //$data = $this->Postventa_model->savePresupuesto($nombreT,$fechaCA,$cliente,$superficie,$catastral,$rfcDatos,$construccion,$nombrePresupuesto2,$id_solicitud,$estatusPago)->row();
-        // $this->pdfPresupuesto($id_solicitud);
         $data = $this->Postventa_model->updatePresupuesto($updateData, $id_solicitud);
         if ($data != null)
             echo json_encode($data);
@@ -1267,12 +1255,35 @@ class Postventa extends CI_Controller
                                             <tr>
                                                 <td style="font-size: 1em;">
                                                     <b>¿Tenemos cliente anterior (traspaso, cesión o segunda venta)?:</b><br>
-                                                    ' . $data->cliente_anterior . '
+                                                    ' . ($data->cliente_anterior == 1 ? 'Si':'NO') . '
                                                 </td>
-                                                
                                             </tr>
                                         </table>
-                                    </div>
+                                    </div>';
+                                            if($data->cliente_anterior == 1){
+                                                $html .= '
+                                                <div class="row">                
+                                                    <table width="100%" style="padding:10px 3px;height: 45px; border: 1px solid #ddd; text-align: center;" width="690">
+                                                        <tr>
+                                                            <td style="font-size: 1em;">
+                                                                <b>Nombre del titular anterior:</b><br>
+                                                                ' . $data->nombre_anterior . '
+                                                            </td>
+                                                            <td style="font-size: 1em;">
+                                                                <b>Nombre a quien escritura:</b><br>
+                                                                ' . $data->fecha_anterior . '
+                                                            </td>
+                                                            <td style="font-size: 1em;">
+                                                                <b>Estatus de pago:</b><br>
+                                                                ' . $data->RFC . '
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                </div>
+                                                ';
+                                            }
+            $html .= '
+                                        
                                 </div>
                             </div>
                         </div>
@@ -1365,6 +1376,7 @@ class Postventa extends CI_Controller
             echo json_encode(array());
     }
 
+    //NOTARIA
     public function nuevoNotario()
     {
         $idSolicitud = $_POST['idSolicitud'];
@@ -1395,25 +1407,39 @@ class Postventa extends CI_Controller
     public function rechazarNotaria()
     {
         $idSolicitud = $_POST['idSolicitud'];
+        $rol = $this->session->userdata('id_rol');
 
         $informacion = $this->Postventa_model->rechazarNotaria($idSolicitud);
         return $informacion;
+
+        return $this->Postventa_model->rechazarNotaria($idSolicitud, $rol);
     }
 
     //OBSERVACIONES
     public function observacionesPostventa()
     {
         $idSolicitud = $_POST['idSolicitud'];
+        $rol = $this->session->userdata('id_rol');
 
-        $informacion = $this->Postventa_model->updateObservacionesPostventa($idSolicitud);
-        return $informacion;
+        // $informacion = $this->Postventa_model->updateObservacionesPostventa($idSolicitud);
+        // return $informacion;
+
+        return $this->Postventa_model->updateObservacionesPostventa($idSolicitud, $rol);
+    }
+
+    public function observacionesProyectos()
+    {
+        $idSolicitud = $_POST['idSolicitud'];
+        $rol = $this->session->userdata('id_rol');
+
+        return $this->Postventa_model->updateObservacionesProyectos($idSolicitud, $rol);
     }
 
     public function mailObservaciones()
     {
         $idSolicitud = $_POST['idSolicitud'];
-        $observaciones = $_POTS['observaciones'];
-
+        $observaciones = $_POST['observaciones'];
+        
         $this->load->library('email');
         $mail = $this->email;
         $mail->from('noreply@ciudadmaderas.com', 'Ciudad Maderas');

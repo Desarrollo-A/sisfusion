@@ -66,9 +66,10 @@ class Postventa_model extends CI_Model
 
         return $this->db->query("SELECT oxc2.nombre area, se.idSolicitud, oxc.nombre estatus, se.fecha_creacion, l.nombreLote, se.estatus idEstatus,
         CONCAT(c.nombre, ' ', c.apellido_paterno, ' ', c.apellido_materno) nombre, cond.nombre nombreCondominio, r.nombreResidencial, de.expediente,
-        ctrl.tipo_documento, de.idDocumento, ctrl.permisos, de2.result, ce.tipo, ce.comentarios, mr.motivo motivos_rechazo, de2.estatusValidacion, de3.Spresupuesto,
-        de2.no_rechazos FROM solicitud_escrituracion se 
+        ctrl.tipo_documento, de.idDocumento, ctrl.permisos, de2.result, cee.tipo, cee.comentarios, mr.motivo motivos_rechazo, de2.estatusValidacion, de3.Spresupuesto,
+        de2.no_rechazos, n.pertenece FROM solicitud_escrituracion se 
         INNER JOIN clientes c ON c.id_cliente = se.idCliente AND c.status = 1
+        LEFT JOIN Notarias n ON n.idNotaria = se.idNotaria 
         INNER JOIN lotes l ON se.idLote = l.idLote 
         INNER JOIN condominios cond ON cond.idCondominio = l.idCondominio 
         INNER JOIN residenciales r ON r.idResidencial = cond.idResidencial 
@@ -77,14 +78,15 @@ class Postventa_model extends CI_Model
         INNER JOIN control_procesos ctrl ON ctrl.estatus = se.estatus AND ctrl.idRol = $rol
         LEFT JOIN documentos_escrituracion de ON de.idSolicitud=se.idSolicitud AND de.tipo_documento = ctrl.tipo_documento
         LEFT JOIN (SELECT idSolicitud, CASE WHEN COUNT(*) != COUNT(CASE WHEN expediente IS NOT NULL THEN 1 END) 
-		THEN 0 ELSE 1 END result, 
-		CASE WHEN COUNT(*) != COUNT(CASE WHEN estatus_validacion = 1 THEN 1 END) THEN 0 ELSE 1 END estatusValidacion,
+        THEN 0 ELSE 1 END result, 
+        CASE WHEN COUNT(*) != COUNT(CASE WHEN estatus_validacion = 1 THEN 1 END) THEN 0 ELSE 1 END estatusValidacion,
         COUNT(CASE WHEN estatus_validacion = 2 THEN 1 END) no_rechazos
-		FROM documentos_escrituracion WHERE tipo_documento NOT IN (7,9,10, 11, 12, 13,14,15,16,17) GROUP BY idSolicitud) de2 ON de2.idSolicitud = se.idSolicitud
+        FROM documentos_escrituracion WHERE tipo_documento NOT IN (7,9,10, 11, 12, 13,14,15,16,17) GROUP BY idSolicitud) de2 ON de2.idSolicitud = se.idSolicitud
         LEFT JOIN (SELECT idSolicitud,  CASE WHEN COUNT(*) != COUNT(CASE WHEN expediente IS NOT NULL THEN 1 END) THEN 0 ELSE 1 END Spresupuesto
-		FROM documentos_escrituracion WHERE tipo_documento = 11 GROUP BY idSolicitud) de3 ON de3.idSolicitud = se.idSolicitud
-        LEFT JOIN control_estatus ce ON ce.fecha_creacion = (SELECT max(fecha_creacion) FROM control_estatus WHERE ce.idEscrituracion = se.idSolicitud AND ce.newStatus = se.estatus)
-        LEFT JOIN motivos_rechazo mr ON mr.id_motivo = ce.motivos_rechazo
+        FROM documentos_escrituracion WHERE tipo_documento = 11 GROUP BY idSolicitud) de3 ON de3.idSolicitud = se.idSolicitud
+        LEFT JOIN (SELECT idEscrituracion, max(fecha_creacion) fecha_creacion FROM control_estatus GROUP BY idEscrituracion) ce ON ce.idEscrituracion = se.idSolicitud
+        LEFT JOIN control_estatus cee ON cee.idEscrituracion = ce.idEscrituracion AND cee.fecha_creacion = ce.fecha_creacion
+        LEFT JOIN motivos_rechazo mr ON mr.id_motivo = cee.motivos_rechazo
         LEFT JOIN usuarios us ON us.id_usuario = de.validado_por
         WHERE se.fecha_creacion BETWEEN '$begin 00:00:00' AND '$end 23:59:59'");
     }
@@ -190,10 +192,10 @@ class Postventa_model extends CI_Model
         (CASE WHEN de.estatus_validacion IS NULL THEN 'Sin validar' WHEN de.estatus_validacion = 1 THEN 'Validado OK' WHEN de.estatus_validacion = 2 THEN 'Rechazado' END) estatus_validacion,
         (CASE WHEN de.estatus_validacion IS NULL THEN '#566573' WHEN de.estatus_validacion = 1 THEN '#239B56' WHEN de.estatus_validacion = 2 THEN '#C0392B' END) colour,
         (CASE WHEN CONCAT(us2.nombre, ' ', us2.apellido_paterno, ' ', us2.apellido_materno) = '' THEN 'Sin especificar' ELSE CONCAT(us2.nombre, ' ', us2.apellido_paterno, ' ', us2.apellido_materno) END) validado_por,
-        de.estatus_validacion ev,
+        de.estatus_validacion ev,STRING_AGG(mr.motivo, '') motivos_rechazo,
 		(CASE 
-		WHEN de.estatus_validacion = 2 THEN STRING_AGG (CONCAT('<span class=\"label\" style=\"background:#A569BD\">', mr.motivo, '</span><br><br>'), '')
-		ELSE '<span class=\"label\" style=\"background:#5499C7\">SIN  MOTIVOS DE RECHAZO</span>'
+		WHEN de.estatus_validacion = 2 THEN STRING_AGG (mr.motivo, '')
+		ELSE 'SIN  MOTIVOS DE RECHAZO'
 		END) motivos_rechazo
         FROM documentos_escrituracion de 
         INNER JOIN solicitud_escrituracion se ON se.idSolicitud = de.idSolicitud
@@ -340,7 +342,8 @@ function checkBudgetInfo($idSolicitud){
         $rol = $this->session->userdata('id_rol');
         
         $this->db->query("UPDATE solicitud_escrituracion SET idNotaria = '', estatus = 10 WHERE idSolicitud = $idSolicitud;");
-        return $this->db->query("INSERT INTO control_estatus VALUES(11, 59, 1, GETDATE(), 13, $idSolicitud, $rol, 10, 'Se rechazo la Notaria', 0);");
+        
+        return $this->db->query("INSERT INTO control_estatus VALUES(11, 59, 2, GETDATE(), 12, $idSolicitud, $rol, 10, 'Se rechazo la Notaria', 0);");
     }
 
     function getEstatusConstruccion()
@@ -360,10 +363,18 @@ function checkBudgetInfo($idSolicitud){
         $idSolicitud = $_POST['idSolicitud'];
         $rol = $this->session->userdata('id_rol');
 
-        $this->db->query("UPDATE solicitud_escrituracion SET estatus = 10 WHERE idSolicitud = $idSolicitud");
-        return $this->db->query("INSERT INTO control_estatus VALUES(13, 59, 1, GETDATE(), 14, $idSolicitud, $rol, 10, 'Corrección Documentos', 0);");
+        $this->db->query("UPDATE solicitud_escrituracion SET estatus = 10 WHERE idSolicitud = $idSolicitud;");
+
+        return $this->db->query("INSERT INTO control_estatus VALUES(13, 59, 3, GETDATE(), 14, $idSolicitud, $rol, 10, 'Corrección Documentos', 0);");
     }
 
+    function updateObservacionesProyectos() {
+        $idSolicitud = $_POST['idSolicitud'];
+        $rol = $this->session->userdata('id_rol');
+
+        return $this->db->query("INSERT INTO control_estatus VALUES(13, 59, 3, GETDATE(), 14, $idSolicitud, $rol, 10, 'Se envío correo a Proyectos', 0);");
+    }
+ 
     function getSolicitudEscrituracion($idSolicitud)
     {
         $idSolicitud = $_POST['idSolicitud'];

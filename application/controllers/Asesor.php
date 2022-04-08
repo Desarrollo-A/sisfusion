@@ -113,26 +113,39 @@ class Asesor extends CI_Controller
         echo json_encode($this->Asesor_model->get_validar_solicitud($lote)->result_array());
     }
 
-    public function getinfoLoteDisponible()
-    {
+    public function getinfoLoteDisponible() {
         $objDatos = json_decode(file_get_contents("php://input"));
         $data = $this->Asesor_model->getLotesInfoCorrida($objDatos->lote);
+        /*print_r($data);
+        exit;*/
         $cd = json_decode(str_replace("'", '"', $data[0]['casasDetail']));
         $total_construccion = 0; // MJ: AQUÍ VAMOS A GUARDAR EL TOTAL DE LA CONSTRUCCIÓN + LOS EXRTAS
 
-
-        foreach ($cd->tipo_casa as $value) {
-            // if($value->nombre == 'Aura') {
-            $total_construccion = $value->total_const; // MJ: SE EXTRAE EL TOTAL DE LA CONSTRUCCIÓN POR TIPO DE CASA
-            foreach ($value->extras as $v) {
-                $total_construccion += $v->techado;
+        if($data[0]['casasDetail'] == 1){
+            foreach($cd->tipo_casa as $value) {
+                // if($value->nombre == 'Aura') {
+                $total_construccion = $value->total_const; // MJ: SE EXTRAE EL TOTAL DE LA CONSTRUCCIÓN POR TIPO DE CASA
+                foreach($value->extras as $v) {
+                    $total_construccion += $v->techado;
+                }
+                // }
             }
-            // }
         }
+
         $data[0]['total'] += $total_construccion;
 
 
-        if ($data != null) {
+        if($data != null) {
+            echo json_encode($data);
+        } else {
+            echo json_encode(array());
+        }
+    }
+
+    public function getinfoLoteDisponibleE() {
+        $objDatos = json_decode(file_get_contents("php://input"));
+        $data = $this->Asesor_model->getLotesInfoCorridaE($objDatos->lote);
+        if($data != null) {
             echo json_encode($data);
         } else {
             echo json_encode(array());
@@ -3214,13 +3227,13 @@ class Asesor extends CI_Controller
             $mail->isSMTP();
             $mail->Host = 'smtp.gmail.com';
             $mail->SMTPAuth = true;
-            $mail->Username = 'noreply@ciudadmaderas.com';
-            $mail->Password = 'euTan4&9';
+            $mail->Username = 'no-reply@ciudadmaderas.com';
+            $mail->Password = 'Va7<*V8PP';
             $mail->SMTPSecure = 'ssl';
             $mail->Port = 465;
 
 
-            $mail->setFrom('noreply@ciudadmaderas.com', 'Ciudad Maderas');
+            $mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
             /*$mail->AddAddress('programador.analista8@ciudadmaderas.com');*/
             foreach ($arrayCorreoNotRepeat AS $arrCorreo) {
                 if ($arrCorreo) {
@@ -3443,11 +3456,11 @@ class Asesor extends CI_Controller
         $mail->isSMTP();
         $mail->Host = 'smtp.gmail.com';
         $mail->SMTPAuth = true;
-        $mail->Username = 'noreply@ciudadmaderas.com';
-        $mail->Password = 'euTan4&9';
+        $mail->Username = 'no-reply@ciudadmaderas.com';
+        $mail->Password = 'Va7<*V8PP';
         $mail->SMTPSecure = 'ssl';
         $mail->Port = 465;
-        $mail->setFrom('noreply@ciudadmaderas.com', 'Ciudad Maderas');
+        $mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
         $mail->addAddress($correoDir);/*$correoDir*/
 
         $mail->Subject = utf8_decode('SOLICITUD DE AUTORIZACIÓN-CONTRATACIÓN');
@@ -5199,11 +5212,11 @@ class Asesor extends CI_Controller
         $mail->isSMTP();
         $mail->Host = 'smtp.gmail.com';
         $mail->SMTPAuth = true;
-        $mail->Username = 'noreply@ciudadmaderas.com';
-        $mail->Password = 'euTan4&9';
+        $mail->Username = 'no-reply@ciudadmaderas.com';
+        $mail->Password = 'Va7<*V8PP';
         $mail->SMTPSecure = 'ssl';
         $mail->Port = 465;
-        $mail->setFrom('noreply@ciudadmaderas.com', 'Ciudad Maderas');
+        $mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
         $mail->addAddress($correo_new);
         $mail->addCC('erick_eternal@live.com.mx');
         //$mail->addBCC('copia_oculta@outlook.com');

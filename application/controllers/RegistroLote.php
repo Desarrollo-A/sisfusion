@@ -340,12 +340,12 @@
 			$mail->isSMTP();
 			$mail->Host = 'smtp.gmail.com';
 			$mail->SMTPAuth = true;
-			$mail->Username = 'noreply@ciudadmaderas.com';
-			$mail->Password = 'euTan4&9';
+			$mail->Username = 'no-reply@ciudadmaderas.com';
+			$mail->Password = 'Va7<*V8PP';
 			$mail->SMTPSecure = 'ssl';
 			$mail->Port = 465;
 
-			$mail->setFrom('noreply@ciudadmaderas.com', 'Ciudad Maderas');
+			$mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
 			$mail->addAddress("lucero.velazquez@ciudadmaderas.com", "coord.contraloria2@ciudadmaderas.com", "subdirector.contraloria@ciudadmaderas.com");
 			$mail->Subject = utf8_decode('LOTE BLOQUEADO-CIUDAD MADERAS');
 			$mail->isHTML(true);
@@ -18215,12 +18215,12 @@ tr td:hover { background: #666; color: #FFF; }
 		$mail->isSMTP();
 		$mail->Host = 'smtp.gmail.com';
 		$mail->SMTPAuth = true;
-		$mail->Username = 'noreply@ciudadmaderas.com';
-		$mail->Password = 'euTan4&9';
+		$mail->Username = 'no-reply@ciudadmaderas.com';
+		$mail->Password = 'Va7<*V8PP';
 		$mail->SMTPSecure = 'ssl';
 		$mail->Port = 465;
 
-		$mail->setFrom('noreply@ciudadmaderas.com', 'Ciudad Maderas');
+		$mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
 		$mail->addAddress("programador.analista1@ciudadmaderas.com");
 		$mail->Subject = utf8_decode('LOTES BLOQUEADOS-CIUDAD MADERAS');
 		$mail->isHTML(true);
