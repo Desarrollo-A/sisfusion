@@ -28,7 +28,6 @@
       // Handle the initial sign-in state.
       updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
       listUpcomingEvents();
-      console.log("apooint", googleAppointments);
     }, function(error) {
       appendPre(JSON.stringify(error, null, 2));
     });
@@ -53,37 +52,46 @@
   }
 
   function listUpcomingEvents() {
-    test = [];
+    var arrayEvents = [];
     gapi.client.idc
     gapi.client.calendar.events.list({
       'calendarId': 'primary',
-      'timeMin': '2021-03-31T23:22:28.621Z',
+      'timeMin': '2022-04-06T23:22:28.621Z',
       'showDeleted': false,
       'singleEvents': true,
       'maxResults': 50,
       'orderBy': 'startTime'
     }).then(function(response) {
       googleAppointments = response.result.items;
-      console.log(googleAppointments);
-      test.push({
-        title: 'mio mio mio',
-        start: '2022-04-30 02:00:00.000',
-        end: '2022-04-30 02:30:00.000'
-      });
+      for(let i = 0; i < googleAppointments.length; i++){
+        if(!(googleAppointments[i].hasOwnProperty('extendedProperties') && googleAppointments[i].extendedProperties.hasOwnProperty('private') && googleAppointments[i].extendedProperties.private.hasOwnProperty('setByFullCalendar'))){
+          eventTemplate(arrayEvents, googleAppointments[i]);
+        }
+      }
+
       calendar.addEventSource({
         color: '#12558C',
         textColor: 'white',
         backgroundColor:'#999',
         display:'block',
         borderColor: '#999',
-        events: test
+        events: arrayEvents
       })
-      calendar.refetchEvents();
       
+      calendar.refetchEvents(); 
+    });
+  }
 
+  function eventTemplate(arrayEvents, googleAppointments){
+    const { summary } = googleAppointments;
+    let start, end;
 
-      // console.log("apoint", googleAppointments);
-      // calendar.addEvent(googleAppointments);
-      // calendar.refetchEvents();
+    start = (googleAppointments.start.hasOwnProperty('date')) ? googleAppointments.start.date : googleAppointments.start.dateTime;
+    end = (googleAppointments.end.hasOwnProperty('date')) ? googleAppointments.end.date : googleAppointments.end.dateTime;
+
+    arrayEvents.push({
+      title: summary,
+      start: start,
+      end: end
     });
   }
