@@ -1672,7 +1672,6 @@
 
 
                 $scope.infoLote={
-
                     precioTotal: r1,
                     yPlan: $scope.age_plan,
                     msn: $scope.msni,
@@ -1714,7 +1713,7 @@
                     }
 
 
-//////////////////////// ON PLAN CONTRUCTOR ////////////////////////////////////
+                    //////////////////////// ON PLAN CONTRUCTOR ////////////////////////////////////
 
 
                     if($scope.infoLote.mesesSinInteresP1 > 0 && $scope.infoLote.mesesSinInteresP1 <=35 && $scope.noPagomensualidad == 1) {
@@ -1722,9 +1721,6 @@
                         ini =  $scope.infoLote.contadorInicial;
 
                         if($scope.noPagomensualidad == 1){
-
-
-////////////////////////////////////////////////////////////////////////////////////
 
 
                             var rangePlanc=[];
@@ -2027,7 +2023,7 @@
 
                     }
 
-//////////////////////// OFF PLAN CONTRUCTOR ////////////////////////////////////
+                    //////////////////////// OFF PLAN CONTRUCTOR ////////////////////////////////////
 
 
 
@@ -2561,26 +2557,6 @@
 
 
                     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -3572,7 +3548,7 @@
                     }
 
 
-//////////////////////// ON PLAN CONTRUCTOR ////////////////////////////////////
+                    //////////////////////// ON PLAN CONTRUCTOR ////////////////////////////////////
 
 
                     if($scope.infoLote.mesesSinInteresP1 > 0 && $scope.infoLote.mesesSinInteresP1 <=35 && $scope.noPagomensualidad == 1) {
@@ -3581,11 +3557,6 @@
 
 
                         if($scope.noPagomensualidad == 1){
-
-
-////////////////////////////////////////////////////////////////////////////////////
-
-
                             var rangePlanc=[];
 
 
@@ -3996,7 +3967,7 @@
 
                     }
 
-//////////////////////// OFF PLAN CONTRUCTOR ////////////////////////////////////
+                    //////////////////////// OFF PLAN CONTRUCTOR ////////////////////////////////////
 
 
 
@@ -4992,7 +4963,6 @@
                                 }
                             }
                         }
-
                         calcularCF();
                         var finalLenght = $scope.decFin.length;
                         for(i=0; i<=finalLenght-1; i++)
@@ -5177,6 +5147,7 @@
 
             $scope.getAgePlan = function() {
                 $scope.age_plan = $scope.yearplan.yearplan;
+                console.log("$scope.age_plan: ", $scope.age_plan);
                 calcularCF();
             };
 

@@ -1631,8 +1631,6 @@
 
             function setAgePlan(currentAge){
                 $scope.age_view = $scope.age.age;
-                console.log("CurrentAge: ", currentAge);
-                console.log("AgeView: ", $scope.age_view);
                 let age = currentAge;
                 if (age <= 60) {
 
@@ -5951,6 +5949,7 @@
 
             $scope.getAgePlan = function () {
                 $scope.age_plan = $scope.yearplan;
+                console.log("$scope.age_plan: ", $scope.age_plan);
                 calcularCF();
             };
 
