@@ -568,10 +568,8 @@
                                                         <span ng-if="descuento.id_condicion == 3 || descuento.id_condicion == 4" style="color:#000;">{{descuento.porcentaje | currency }} </span>
                                                         <span ng-if="descuento.id_condicion == 1 || descuento.id_condicion == 2 || descuento.id_condicion == 3" class="animate-if" style="color:#000;">Descuento al total.</span>
                                                         <span ng-if="descuento.id_condicion == 4" class="animate-if" style="color:#000;">Descuento al total por m2.</span>
-
                                                         <span ng-if="descuento.id_condicion == 7" class="animate-if" style="color:#000;">Enganche diferido sin descontar MSI</span>
-
-
+                                                        <span ng-if="descuento.id_condicion == 12" class="animate-if" style="color:#000;">Bono al m2 de {{descuento.porcentaje | currency }}</span>
                                                     </li>
                                                 </div>
 
@@ -586,6 +584,7 @@
                                                             <span ng-if="descuento.id_condicion == 4" class="animate-if" style="color:#000;">Descuento al total por m2.</span>
 
                                                             <span ng-if="descuento.id_condicion == 7" class="animate-if" style="color:#000;">Enganche diferido sin descontar MSI</span>
+                                                            <span ng-if="descuento.id_condicion == 12" class="animate-if" style="color:#000;">Bono al m2 de {{descuento.porcentaje | currency }}</span>
 
 
 
@@ -665,7 +664,17 @@
 
                                             <span ng-if="i.id_condicion == 8"> Primera Mensualidad Octubre </span>
                                             <span ng-if="i.id_condicion == 9"> Primera Mensualidad Mayo </span>
-                                            <span ng-if="i.id_condicion == 10"> Primera Mensualidad Septiembre </span>
+                                            <span ng-if="i.id_condicion == 10"> Primera Mensualidad Septiembre </span>  
+                                            <span ng-if="i.id_condicion == 12">  Bono de {{i.porcentaje | currency}} al m<sup>2</sup></span>
+                                        </b>
+                                    </td>
+
+                                    <td style="color:#2E86C1" class="text-center">
+                                        <b>
+                                            <span ng-if="i.id_condicion == 1 || i.id_condicion == 2 || i.id_condicion == 3 || i.id_condicion == 4 || i.id_condicion == 5 || i.id_condicion == 7 || i.id_condicion == 12"> {{ i.pm | currency }} </span>
+                                            <span ng-if="i.id_condicion == 6"> </span>
+                                            <span ng-if="i.id_condicion == 8"> </span>
+                                            <span ng-if="i.id_condicion == 12"> </span>
 
 
                                         </b>
@@ -673,32 +682,22 @@
 
                                     <td style="color:#2E86C1" class="text-center">
                                         <b>
-                                            <span ng-if="i.id_condicion == 1 || i.id_condicion == 2 || i.id_condicion == 3 || i.id_condicion == 4 || i.id_condicion == 5 || i.id_condicion == 7"> {{ i.pm | currency }} </span>
+                                            <span ng-if="i.id_condicion == 1 || i.id_condicion == 2 || i.id_condicion == 3 || i.id_condicion == 4 || i.id_condicion == 5 || i.id_condicion == 7 || i.id_condicion == 12"> {{ i.pt | currency }} </span>
                                             <span ng-if="i.id_condicion == 6"> </span>
                                             <span ng-if="i.id_condicion == 8"> </span>
-
-
-                                        </b>
-                                    </td>
-
-                                    <td style="color:#2E86C1" class="text-center">
-                                        <b>
-                                            <span ng-if="i.id_condicion == 1 || i.id_condicion == 2 || i.id_condicion == 3 || i.id_condicion == 4 || i.id_condicion == 5 || i.id_condicion == 7"> {{ i.pt | currency }} </span>
-                                            <span ng-if="i.id_condicion == 6"> </span>
-                                            <span ng-if="i.id_condicion == 8"> </span>
+                                            <span ng-if="i.id_condicion == 12"> </span>
 
                                         </b>
                                     </td>
 
                                     <td style="color:#27AE60" class="text-center">
                                         <b>
-
-                                            <span ng-if="i.id_condicion == 1 || i.id_condicion == 2 || i.id_condicion == 3 || i.id_condicion == 4 || i.id_condicion == 5 || i.id_condicion == 7"> {{ i.ahorro | currency }} </span>
+                                            <span ng-if="i.id_condicion == 1 || i.id_condicion == 2 || i.id_condicion == 3 || i.id_condicion == 4 || i.id_condicion == 5 || i.id_condicion == 7 || i.id_condicion == 12"> {{ i.ahorro | currency }} </span>
                                             <span ng-if="i.id_condicion == 6"> </span>
                                             <span ng-if="i.id_condicion == 8"> </span>
+                                            <span ng-if="i.id_condicion == 12"> </span>
                                         </b>
                                     </td>
-
                                 </tr>
                                 <!---->
 
@@ -1037,9 +1036,6 @@
                 var cantidadToGetP = (( 100 * cantidadEnganche.val())/r1);
                 porcentajeEnganche.val(parseFloat(cantidadToGetP).toFixed(2));
                 //termina nueva sección
-
-
-
                 calcularCF();
             };
 
@@ -1051,7 +1047,6 @@
             $scope.porcentaje = $scope.porcentajeEng = 0;
 
             $scope.selectDescuentos = function(descuento, checked){
-
                 var idx = descuentosAplicados.indexOf(descuento);
                 if (idx >= 0 && !checked) {
                     descuentosAplicados.splice(idx, 1);
@@ -1062,7 +1057,6 @@
                     descuentosAplicados.push(descuento);
                     $scope.descApply = descuentosAplicados;
                 }
-
                 calcularCF();
 
             }
@@ -1108,6 +1102,7 @@
                 var descEng = 0;
                 var enganche = 0;
                 var supLote = $scope.superficie;
+                console.log($scope.superficie);
 
 
 
@@ -1117,6 +1112,7 @@
                 var b = 0;
                 var c = 0;
                 var e = 0;
+                var d = 0;
                 var f = 0;
                 var g = 0;
                 var tot = $scope.total;
@@ -1153,11 +1149,8 @@
                     angular.forEach(orderEnganche, function(item, index) {
                         porcentaje1 = (item.porcentaje/100);
                         porcentaje2 = (enganche * porcentaje1);
-
                         descEng = porcentaje2;
-
-
-////////////////////PORCENTAJE TOPADO A $20,000////////////////////////////////
+                        ////////////////////PORCENTAJE TOPADO A $20,000////////////////////////////////
                         if(item.eng_top == 1){
                             if (descEng > 20000){
                                 descEng = 20000;
@@ -1170,17 +1163,17 @@
                             descEng = porcentaje2;
                             enganche = (enganche - descEng);
                         }
-////////////////////PORCENTAJE TOPADO A $20,000////////////////////////////////
+                        ////////////////////PORCENTAJE TOPADO A $20,000////////////////////////////////
 
 
 
-///////////////////////DESCIPCION DE DESCUENTOS////////////////////////////////////////
+                        ///////////////////////DESCIPCION DE DESCUENTOS////////////////////////////////////////
                         a +=  descEng;
                         b = (tot - a);
                         c = (b/supLote);
                         arreglo.push({ahorro: a, pm: c, pt: b, td:2, porcentaje: item.porcentaje, id_condicion: item.id_condicion});
                         $scope.decFin =arreglo;
-///////////////////////DESCIPCION DE DESCUENTOS////////////////////////////////////////
+                        ///////////////////////DESCIPCION DE DESCUENTOS////////////////////////////////////////
 
                     });
 
@@ -1193,6 +1186,7 @@
                 else if(porcentajeDeEnganche === '0' && orderEnganche.length === 0 && orderTotal.length > 0){
 
                     angular.forEach(orderTotal, function(item, index) {
+                        console.log('item: ', item);
 
                         if(item.id_condicion == 1 || item.id_condicion == 2){
                             porcentaje1 = (item.porcentaje/100);
@@ -1229,9 +1223,11 @@
 
                     });
 
-                } else if(porcentajeDeEnganche != 0 && orderEnganche.length === 0 && orderTotal.length > 0){
+                }
+                else if(porcentajeDeEnganche != 0 && orderEnganche.length === 0 && orderTotal.length > 0){
 
                     console.log('HEY');
+                    console.log('entré aqui alv prros: ', orderTotal);
 
                     angular.forEach(orderTotal, function(item, index) {
 
@@ -1239,30 +1235,57 @@
                             porcentaje1 = (item.porcentaje/100);
                             porcentaje2 = (r1 * porcentaje1);
                             r1 -= porcentaje2;
+                            console.log('condicion 1 y 2');
+
                         }
 
                         if(item.id_condicion == 3){
+                            console.log('condicion 3');
+
                             porcentaje2 = parseFloat(item.porcentaje);
                             r1 = (r1 - porcentaje2);
                         }
 
 
                         if(item.id_condicion == 4){
+                            console.log('condicion 4');
+
                             porcentaje1 = (item.porcentaje);
                             porcentaje2 = (supLote * porcentaje1);
                             r1 -= porcentaje2;
                         }
+                        //aqui se agrega la validación la operación del bono
+                        if(item.id_condicion == 12){
+                            console.log('condicion 12');
+                            // descuentoM2 = montoBono/supLote
+                            porcentaje1 = (item.porcentaje);
+                            porcentaje2 = (porcentaje1 / supLote);
+                            r1 -= porcentaje1;
+                        }
 
 
 
-///////////////////////DESCIPCION DE DESCUENTOS////////////////////////////////////////
-                        a +=  porcentaje2;
-                        b = (tot - a);
-                        c = (b/supLote);
+                        ///////////////////////DESCIPCION DE DESCUENTOS////////////////////////////////////////
+                        if(item.id_condicion==12){
+                            console.log('descuento de chuy');
+                            a +=  porcentaje1;
+                            b = (tot - porcentaje1);
+                            d = (tot - porcentaje2);
+                            c = (d/supLote) - porcentaje2;
+                        }else{
+                            console.log('logica normal');
+                            a +=  porcentaje2;
+                            b = (tot - a);
+                            c = (b/supLote);
+                        }
+                        // a +=  porcentaje2;
+                        // b = (tot - a);
+                        // c = (b/supLote);
                         arreglo.push({ahorro: a, pm: c, pt: b, td:1, porcentaje: item.porcentaje, id_condicion: item.id_condicion});
                         $scope.decFin =arreglo;
+                        // console.log($scope.decFin);
 
-///////////////////////DESCIPCION DE DESCUENTOS////////////////////////////////////////
+                        ///////////////////////DESCIPCION DE DESCUENTOS////////////////////////////////////////
 
 
                     });
@@ -1297,7 +1320,6 @@
 
 
                 }
-
                 else if(porcentajeDeEnganche != 0 && orderEnganche.length > 0 && orderTotal.length > 0){
 
 
@@ -1323,6 +1345,13 @@
                             r1 -= porcentaje2;
                         }
 
+                        if(item.id_condicion == 12){
+                            // descuentoM2 = montoBono/supLote
+                            porcentaje1 = (item.porcentaje);
+                            porcentaje2 = (supLote / porcentaje1);
+                            r1 -= porcentaje2;
+                        }
+
 ///////////////////////DESCIPCION DE DESCUENTOS////////////////////////////////////////
                         a +=  porcentaje2;
                         b = (tot - a);
@@ -1338,6 +1367,7 @@
                     r1= (r1 - enganche);
 
                     angular.forEach(orderEnganche, function(item, index) {
+
                         porcentaje1 = (item.porcentaje/100);
                         porcentaje2 = (enganche * porcentaje1);
                         descEng = porcentaje2;
@@ -1642,7 +1672,6 @@
 
 
                 $scope.infoLote={
-
                     precioTotal: r1,
                     yPlan: $scope.age_plan,
                     msn: $scope.msni,
@@ -1684,7 +1713,7 @@
                     }
 
 
-//////////////////////// ON PLAN CONTRUCTOR ////////////////////////////////////
+                    //////////////////////// ON PLAN CONTRUCTOR ////////////////////////////////////
 
 
                     if($scope.infoLote.mesesSinInteresP1 > 0 && $scope.infoLote.mesesSinInteresP1 <=35 && $scope.noPagomensualidad == 1) {
@@ -1692,9 +1721,6 @@
                         ini =  $scope.infoLote.contadorInicial;
 
                         if($scope.noPagomensualidad == 1){
-
-
-////////////////////////////////////////////////////////////////////////////////////
 
 
                             var rangePlanc=[];
@@ -1997,7 +2023,7 @@
 
                     }
 
-//////////////////////// OFF PLAN CONTRUCTOR ////////////////////////////////////
+                    //////////////////////// OFF PLAN CONTRUCTOR ////////////////////////////////////
 
 
 
@@ -2531,26 +2557,6 @@
 
 
                     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -3542,7 +3548,7 @@
                     }
 
 
-//////////////////////// ON PLAN CONTRUCTOR ////////////////////////////////////
+                    //////////////////////// ON PLAN CONTRUCTOR ////////////////////////////////////
 
 
                     if($scope.infoLote.mesesSinInteresP1 > 0 && $scope.infoLote.mesesSinInteresP1 <=35 && $scope.noPagomensualidad == 1) {
@@ -3551,11 +3557,6 @@
 
 
                         if($scope.noPagomensualidad == 1){
-
-
-////////////////////////////////////////////////////////////////////////////////////
-
-
                             var rangePlanc=[];
 
 
@@ -3966,7 +3967,7 @@
 
                     }
 
-//////////////////////// OFF PLAN CONTRUCTOR ////////////////////////////////////
+                    //////////////////////// OFF PLAN CONTRUCTOR ////////////////////////////////////
 
 
 
@@ -4962,7 +4963,6 @@
                                 }
                             }
                         }
-
                         calcularCF();
                         var finalLenght = $scope.decFin.length;
                         for(i=0; i<=finalLenght-1; i++)
@@ -5147,6 +5147,7 @@
 
             $scope.getAgePlan = function() {
                 $scope.age_plan = $scope.yearplan.yearplan;
+                console.log("$scope.age_plan: ", $scope.age_plan);
                 calcularCF();
             };
 

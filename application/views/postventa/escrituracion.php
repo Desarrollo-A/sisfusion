@@ -25,7 +25,7 @@
 						<div class="card-content">
 							<h4 class="card-title"></h4>
 							<div class="toolbar">
-                                <h3 class="card-title center-align">Documentación por Lote</h3>
+                                <h3 class="card-title center-align">Escrituración</h3>
                                 <div class="container-fluid">
                                     <div class="row">
                                         <div class="col col-xs-12 col-sm-12 col-md-4 col-lg-4">
@@ -85,7 +85,7 @@
                                         <div class="row">
                                             <div class="col-md-5">
                                                 <ol class="list-none">
-                                                    <h4 class="card-title">Checklist</h4>
+                                                    <h4 class="card-title">Documentos para Escrituración</h4>
                                                     <li><b>1)</b> Identificación Oficial Vigente</li>
                                                     <li><b>2)</b> RFC (Cédula o constancia de situación fiscal)</li>
                                                     <li><b>3)</b> Comprobante de domicilio actual luz, agua o telefonía fija(antigüedad menor a 2 meses)</li>

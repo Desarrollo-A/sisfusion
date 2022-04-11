@@ -800,7 +800,7 @@
 
         $query = $this->db->query("SELECT id_usuario, CONCAT(id_usuario,' - ',nombre, ' ', apellido_paterno, ' ', apellido_materno) nombre FROM usuarios 
 			WHERE (id_rol IN (7, 9, 3) AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%') AND estatus = 1) OR 
-            (id_usuario IN (2567, 4064, 4068, 2588, 4065, 4069, 2541, 2583, 2562, 2593,2580,2597, 1917, 2591))  ORDER BY nombre");
+            (id_usuario IN (2567, 4064, 4068, 2588, 4065, 4069, 2541, 2583, 2562, 2593,2580,2597, 1917, 2591, 9827))  ORDER BY nombre");
 
         return $query->result_array();
     }
@@ -1452,12 +1452,16 @@
 
     public function getTokensInformation()
     {
+        if($this->session->userdata('id_usuario') == 3)
+            $where = "WHERE tk.creado_por = " . $this->session->userdata('id_usuario');
+        else
+            $where = "";
         return $this->db->query("SELECT tk.id_token, tk.token, CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno) generado_para,
-        tk.fecha_creacion, CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno) creado_por
+        tk.fecha_creacion, CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno) creado_por, tk.nombre_archivo
         FROM tokens tk
         INNER JOIN usuarios u1 ON u1.id_usuario = tk.para
         INNER JOIN usuarios u2 ON u2.id_usuario = tk.creado_por
-        WHERE tk.creado_por = " . $this->session->userdata('id_usuario') . " ORDER BY tk.fecha_creacion");
+        $where  ORDER BY tk.fecha_creacion");
     }
 
 }

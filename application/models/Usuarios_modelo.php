@@ -119,7 +119,7 @@ class Usuarios_modelo extends CI_Model {
                 LEFT JOIN opcs_x_cats oxc2 ON oxc2.id_opcion = u.forma_pago AND oxc2.id_catalogo = 16
                 INNER JOIN sedes s ON s.id_sede = (CASE WHEN LEN (u.id_sede) > 1 THEN 2 ELSE u.id_sede END)
                 LEFT JOIN (SELECT SUM(abono_neodata) abono_pendiente, id_usuario FROM pago_comision_ind WHERE estatus=1 and ( descuento_aplicado is null or descuento_aplicado=0) 
-                 GROUP BY id_usuario) pci2 ON pci2.id_usuario = us.id_usuario
+                 GROUP BY id_usuario) pci2 ON pci2.id_usuario = u.id_usuario
                 WHERE  u.id_rol IN (1, 2, 3, 7, 9, 18, 19, 20, 25, 26, 27, 28, 29, 30, 36) 
                 AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%') OR usuarios.id_usuario IN (9359, 9827))
                 AND u.id_usuario NOT IN (821, 1366, 1923, 4340, 9623, 9624, 9625, 9626, 9627, 9628, 9629) ORDER BY nombre");
@@ -361,19 +361,6 @@ function getAllFoldersPDF()
     $query = $this->db->get('archivos_carpetas');
     return $query;
 }
-/*---------------------------------------*/
-
-    /*function getChangelog($id_usuario){
-        return $this->db->query("SELECT a.fecha_creacion, (CASE a.creado_por WHEN '1297' THEN 'ADMINISTRADOR INTERNO DE SISTEMAS' ELSE 
-                                CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) END) creador,
-                                a.col_afect parametro_modificado, CONCAT(uu.nombre, ' ', uu.apellido_paterno, ' ', uu.apellido_materno) anterior,
-                                CONCAT(uuu.nombre, ' ', uuu.apellido_paterno, ' ', uuu.apellido_materno) nuevo
-                                FROM auditoria a 
-                                LEFT JOIN usuarios u ON u.id_usuario = a.creado_por
-                                LEFT JOIN usuarios uu ON uu.id_usuario = a.anterior
-                                LEFT JOIN usuarios uuu ON uuu.id_usuario = a.nuevo
-                                WHERE a.col_afect = 'id_lider' AND a.tabla = 'usuarios' AND a.id_parametro = $id_usuario");
-    }*/
 
     function getChangelog($id_usuario){
         switch ($this->session->userdata('id_rol')) {
@@ -409,7 +396,9 @@ function getAllFoldersPDF()
                 ELSE anterior  
                 END) AS anterior
                 FROM auditoria
-                INNER JOIN (SELECT id_usuario AS id_creador, CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) AS creador  FROM usuarios) AS creadores ON id_creador = creado_por
+                INNER JOIN (SELECT id_usuario AS id_creador, 
+                CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) AS creador  FROM usuarios) 
+                AS creadores ON CAST(id_creador AS VARCHAR(255)) = CAST(creado_por AS VARCHAR(255))
                 WHERE id_parametro = $id_usuario AND tabla = 'usuarios' ORDER BY fecha_creacion DESC");
             break;
             case '41': // GENERALISTAS
@@ -445,9 +434,27 @@ function getAllFoldersPDF()
                 ELSE anterior  
                 END) AS anterior
                 FROM auditoria
-                INNER JOIN (SELECT id_usuario AS id_creador, CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) AS creador  FROM usuarios) AS creadores ON id_creador = creado_por
+                INNER JOIN (SELECT id_usuario AS id_creador, 
+                CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) AS creador  FROM usuarios) 
+                AS CAST(id_creador AS VARCHAR(255)) = CAST(creado_por AS VARCHAR(255))
                 WHERE id_parametro = $id_usuario AND col_afect NOT IN ('contrasena', 'tiene_hijos', 'sesion_activa', 'imagen_perfil', 'jerarquia_user', 'usuario') AND tabla = 'usuarios' ORDER BY fecha_creacion DESC");
             break;
+            case '49': // CAPITAL HUMANO
+                $query = $this->db->query("SELECT fecha_creacion, creador, col_afect parametro_modificado,(
+                CASE col_afect
+                WHEN 'estatus' THEN (SELECT nombre FROM opcs_x_cats WHERE id_opcion = nuevo AND id_catalogo = 3)
+                ELSE nuevo  
+                END) AS nuevo,(
+                CASE col_afect
+                WHEN 'estatus' THEN (SELECT nombre FROM opcs_x_cats WHERE id_opcion = anterior AND id_catalogo = 3)
+                ELSE anterior  
+                END) AS anterior
+                FROM auditoria
+                INNER JOIN (SELECT id_usuario AS id_creador, 
+				CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) AS creador  FROM usuarios) 
+				AS creadores ON CAST(id_creador AS VARCHAR(255)) = CAST(creado_por AS VARCHAR(255))
+                WHERE id_parametro = $id_usuario AND tabla = 'usuarios' ORDER BY fecha_creacion DESC");
+                break;
         }
         return $query;
     }
@@ -757,6 +764,12 @@ function getAllFoldersPDF()
             OR u.id_lider in (select u2.id_usuario from usuarios u2 where id_lider = @user )
             OR u.id_lider in (select u2.id_usuario from usuarios u2 where id_lider in (select u2.id_usuario from usuarios u2 where id_lider = @user )))
             ORDER BY u.id_rol");
+         }
+
+         function VerificarComision($idUsuario){
+            return $this->db->query("SELECT SUM(abono_neodata) abono_pendiente, id_usuario 
+            FROM pago_comision_ind 
+            WHERE id_usuario=$idUsuario and estatus=1 and ( descuento_aplicado is null or descuento_aplicado=0) group by id_usuario");
          }
 
 }

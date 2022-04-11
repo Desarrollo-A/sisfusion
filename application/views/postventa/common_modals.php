@@ -1,4 +1,7 @@
-<div class="modal   ade" id="approveModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+<link href="<?= base_url() ?>dist/css/commonModals.css" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
+
+<div class="modal fade" id="approveModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -13,8 +16,8 @@
                     <input type="hidden" name="id_solicitud" id="id_solicitud">
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary">Aceptar</button>
                     <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Aceptar</button>
                 </div>
             </form>
         </div>
@@ -32,15 +35,19 @@
             </div>
             <form id="rejectForm" name="rejectForm" method="post">
                 <div class="modal-body">
-                    <div class="col-lg-12 form-group">
-                        <label>Seleccione el motivo de rechazo.</label>
-                        <select class="selectpicker" name="motivos_rechazo" id="motivos_rechazo" data-style="select-with-transition" title="Seleccione una opción" data-size="7"></select>
-                        <input type="hidden" name="id_solicitud2" id="id_solicitud2">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-lg-12 form-group p-0 m-0">
+                                <label class="label-gral">Seleccione el motivo de rechazo.</label>
+                                <select class="selectpicker select-gral m-0" name="motivos_rechazo" id="motivos_rechazo" data-style="btn" data-show-subtext="true" data-live-search="true" title="Seleccione una opción" data-size="7" required></select>
+                                <input type="hidden" name="id_solicitud2" id="id_solicitud2">
+                            </div>
+                            <div class="col-lg-12 form-group p-0 d-flex justify-end">
+                                <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                                <button type="submit" class="btn btn-primary">Aceptar</button>
+                            </div>
+                        </div>
                     </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary">Aceptar</button>
-                    <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
                 </div>
             </form>
         </div>
@@ -98,7 +105,7 @@
         <div class="modal-content card">
             <form class="card-content" id="formPresupuesto" name="formPresupuesto" method="post">
             <input type="hidden" name="id_solicitud3" id="id_solicitud3">
-                <div class="modal-body text-center toolbar m-0">
+                <div class="modal-body text-center toolbar m-0 p-0">
                     <h3 id="mainLabelText"></h3>
                     <h4 id="encabezado"></h4>
                     <div class="container-fluid">
@@ -111,13 +118,13 @@
                             </div>
                             <div class="col-md-12 pr-0 pr-0">
                                 <div class="form-group text-left m-0">
-                                    <label class="control-label label-gral m-0">Nombre a quien escritura</label>
+                                    <label class="control-label label-gral m-0">Nombre a quien escritura *</label>
                                     <input id="nombrePresupuesto2" name="nombrePresupuesto2" class="form-control input-gral" type="text" required>
                                 </div>
                             </div>
                             <div class="col-md-4 pr-0">
                                 <div class="form-group text-left m-0">
-                                    <label class="control-label label-gral m-0">Estatus de pago</label>
+                                    <label class="control-label label-gral m-0">Estatus de pago *</label>
                                     <select class="selectpicker m-0" data-style="btn btn-primary btn-round"
                                             title="Estatus de pago" data-size="7" id="estatusPago" name="estatusPago"
                                             data-live-search="true" required>
@@ -127,7 +134,7 @@
                             </div>
                             <div class="col-md-4 pr-0">
                                 <div class="form-group text-left m-0">
-                                    <label class="control-label label-gral m-0">Superficie</label>
+                                    <label class="control-label label-gral m-0">Superficie *</label>
                                     <input id="superficie" name="superficie" class="form-control input-gral" value="" type="number" required>
                                 </div>
                             </div>    
@@ -140,13 +147,13 @@
                             </div>
                             <div class="col-md-4 pr-0">
                                 <div class="form-group text-left m-0">
-                                    <label class="control-label label-gral m-0">Clave catastral</label>
+                                    <label class="control-label label-gral m-0">Clave catastral *</label>
                                     <input id="catastral" name="catastral" value="" class="form-control input-gral" type="number" required>
                                 </div>
                             </div>
                             <div class="col-md-4 pr-0">
                                 <div class="form-group text-left m-0">
-                                    <label class="control-label label-gral m-0">Estatus construcción</label>
+                                    <label class="control-label label-gral m-0">Estatus construcción *</label>
                                     <select class="selectpicker m-0" data-style="btn btn-primary btn-round"
                                             title="Estatus construcción" data-size="7" id="construccion" name="construccion"
                                             data-live-search="true" required>
@@ -155,12 +162,12 @@
                             </div>
                             <div class="col-md-4 pr-0">
                                 <div class="form-group text-left m-0">
-                                    <label class="control-label label-gral m-0">¿Tenemos cliente anterior?</label>
+                                    <label class="control-label label-gral m-0">¿Tenemos cliente anterior? *</label>
                                     <select class="selectpicker m-0" data-style="btn btn-primary btn-round"
                                             title="¿Tenemos cliente anterior?" data-size="7" id="cliente" name="cliente"
                                             data-live-search="true" required>
                                             <option value ="default" selected disabled>Seleccione una opción</option>
-                                            <option value="uno">Si</option>
+                                            <option value="uno">Sí</option>
                                             <option value="dos">No</option>
                                     </select>
                                 </div>
@@ -185,6 +192,11 @@
                                         <label class="control-label label-gral">RFC / Datos personales</label>
                                         <input id="rfcDatos" name="rfcDatos" value="N/A" class="form-control input-gral" type="text">
                                     </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12 pr-0">
+                                <div class="form-group text-left m-0">
+                                    <p>*Estos campos son obligatorios.</p>
                                 </div>
                             </div>
                         </div>
@@ -261,7 +273,7 @@
                                             title="¿Tenemos cliente anterior?" data-size="7" id="cliente2" name="cliente2"
                                             data-live-search="true" disabled>
                                             <option value ="default" selected disabled>Seleccione una opción</option>
-                                            <option value="uno">Si</option>
+                                            <option value="uno">Sí</option>
                                             <option value="dos">No</option>
                                     </select>
                                 </div>
@@ -408,31 +420,31 @@
                                 <div class="col-md-4 pr-0 pr-0">
                                     <div class="form-group text-left m-0">
                                         <label class="control-label label-gral">Nombre de la Notaría</label>
-                                        <input type="text" id="nombre_notaria" name="nombre_notaria" class="form-control input-gral">
+                                        <input type="text" id="nombre_notaria" name="nombre_notaria" class="form-control input-gral" required>
                                     </div>
                                 </div>
                                 <div class="col-md-4 pr-0 pr-0">
                                     <div class="form-group text-left m-0">
                                         <label class="control-label label-gral">Nombre del notario</label>
-                                        <input type="text" id="nombre_notario" name="nombre_notario" class="form-control input-gral">
+                                        <input type="text" id="nombre_notario" name="nombre_notario" class="form-control input-gral" required>
                                     </div>
                                 </div>
                                 <div class="col-md-4 pr-0 pr-0">
                                     <div class="form-group text-left m-0">
                                         <label class="control-label label-gral">Dirección</label>
-                                        <input type="text" id="direccion" name="direccion" class="form-control input-gral">
+                                        <input type="text" id="direccion" name="direccion" class="form-control input-gral" required>
                                     </div>
                                 </div>
                                 <div class="col-md-4 pr-0 pr-0">
                                     <div class="form-group text-left m-0">
                                         <label class="control-label label-gral">Correo</label>
-                                        <input type="text" id="correo" name="correo" class="form-control input-gral">
+                                        <input type="email" id="correo" name="correo" class="form-control input-gral" required>
                                     </div>
                                 </div>
                                 <div class="col-md-4 pr-0 pr-0">
                                     <div class="form-group text-left m-0">
                                         <label class="control-label label-gral">Teléfono</label>
-                                        <input type="text" id="telefono" name="telefono" class="form-control input-gral">
+                                        <input type="text" id="telefono" name="telefono" class="form-control input-gral" required>
                                     </div>
                                 </div>
                     </div>
@@ -465,15 +477,7 @@
                                 <label class="control-label label-gral">Nombre del notario</label>
                                 <input type="text" id="nombreNotario" name="nombre_notario" class="form-control input-gral" value="" style="text-align:center" disabled>
                             </div>
-                        </div>    
-                        <div class="col-md-2"></div>
-                        <div class="col-md-8">
-                            <div class="form-group">
-                                <label class="control-label label-gral">Dirección</label>
-                                <input type="text" id="direccionN" name="direccion" class="form-control input-gral" value="" style="text-align:center" disabled>
-                            </div>
-                        </div> 
-                        <div class="col-md-2"></div>  
+                        </div>  
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label class="control-label label-gral">Correo</label>
@@ -485,18 +489,21 @@
                                 <label class="control-label label-gral">Teléfono</label>
                                 <input type="text" id="telefonoN" name="telefono" class="form-control input-gral" value="" style="text-align:center" disabled>
                             </div>
-                        </div>    
-                    </div>
-                    <div class="modal-footer">
-                        <div class="col-md-4"></div>
-                        <div class="col-md-4">
+                        </div>      
+                        <div class="col-md-12">
                             <div class="form-group">
-                                <button type="submit" class="btn btn-danger">Rechazar</button>
-                                <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                                <label class="control-label label-gral">Dirección</label>
+                                <input type="text" id="direccionN" name="direccion" class="form-control input-gral" value="" style="text-align:center" disabled>
                             </div>
-                        </div>    
-                        <div class="col-md-4"></div>
+                        </div> 
                     </div>
+                    <div class="row">
+                        <div class="col-md-12 d-flex justify-end p-0">
+                        <button type="button" class="btn btn-danger btn-simple mt-2" data-dismiss="modal">Cancelar</button>
+                                <button type="submit" id="observacionesSubmit" class="btn btn-primary">Rechazar</button>
+                        </div>
+                    </div>
+                   
                 </form> 
             </div>
         </div>

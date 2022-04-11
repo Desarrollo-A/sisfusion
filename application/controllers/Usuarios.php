@@ -151,7 +151,7 @@ class Usuarios extends CI_Controller
     {
         echo json_encode($this->Usuarios_modelo->getLeadersList($headquarter, $type)->result_array());
     }
-
+ 
     public function changeUserStatus()
     {
         date_default_timezone_set('America/Mexico_City');
@@ -161,7 +161,13 @@ class Usuarios extends CI_Controller
             if ($this->input->post("estatus") == 0) {
                 $estatus = 0;
                 if ($this->input->post("idrol") == 'Asesor' || $this->input->post("idrol") == 'Coordinador de ventas' || $this->input->post("idrol") == 'Gerente') {
-                    $estatus = 3;
+
+                  $VerificarComision = $this->Usuarios_modelo->VerificarComision($this->input->post("id_user"))->result_array();
+                    if(count($VerificarComision) == 0 || $VerificarComision[0]['abono_pendiente'] <= 0 ){
+                        $estatus = 0;
+                    }else{
+                        $estatus = 3;
+                    }
                     $dataBaja = array(
                         "fecha_baja" => $hoy,
                         "cantidad_descuento" => "0",

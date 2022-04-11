@@ -200,7 +200,9 @@ class Api extends CI_Controller
 
         if (count($result) > 0) {
             $row = json_encode(array("resultado" => true,
-                "id_usuario" => $result[0]['id_usuario']));
+                "id_usuario" => $result[0]['id_usuario'],
+                "estatus" => $result[0]['estatus']
+            ));
         } else {
             $row = json_encode(array('resultado' => false));
         }

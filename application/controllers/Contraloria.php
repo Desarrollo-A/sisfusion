@@ -401,12 +401,12 @@ class Contraloria extends CI_Controller {
 		$mail->isSMTP();
 		$mail->Host     = 'smtp.gmail.com';
 		$mail->SMTPAuth = true;
-		$mail->Username = 'noreply@ciudadmaderas.com';
-		$mail->Password = 'euTan4&9';
+		$mail->Username = 'no-reply@ciudadmaderas.com';
+		$mail->Password = 'Va7<*V8PP';
 		$mail->SMTPSecure = 'ssl';
 		$mail->Port     = 465;
 
-		$mail->setFrom('noreply@ciudadmaderas.com', 'Ciudad Maderas');
+		$mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
 
 		foreach($array as $email)
 		{
@@ -683,12 +683,12 @@ class Contraloria extends CI_Controller {
 		$mail->isSMTP();
 		$mail->Host     = 'smtp.gmail.com';
 		$mail->SMTPAuth = true;
-		$mail->Username = 'noreply@ciudadmaderas.com';
-		$mail->Password = 'euTan4&9';
+		$mail->Username = 'no-reply@ciudadmaderas.com';
+		$mail->Password = 'Va7<*V8PP';
 		$mail->SMTPSecure = 'ssl';
 		$mail->Port     = 465;
 
-		$mail->setFrom('noreply@ciudadmaderas.com', 'Ciudad Maderas');
+		$mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
 
 		foreach($array as $email)
 		{
@@ -1194,12 +1194,12 @@ public function get_sede(){
   $mail->isSMTP();
   $mail->Host     = 'smtp.gmail.com';
   $mail->SMTPAuth = true;
-  $mail->Username = 'noreply@ciudadmaderas.com';
-  $mail->Password = 'euTan4&9';
+  $mail->Username = 'no-reply@ciudadmaderas.com';
+  $mail->Password = 'Va7<*V8PP';
   $mail->SMTPSecure = 'ssl';
   $mail->Port     = 465;
   
-  $mail->setFrom('noreply@ciudadmaderas.com', 'Ciudad Maderas');
+  $mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
 
   
   foreach($array as $email)
@@ -1570,12 +1570,12 @@ public function editar_registro_loteRechazo_contraloria_proceceso6(){
   $mail->isSMTP();
   $mail->Host     = 'smtp.gmail.com';
   $mail->SMTPAuth = true;
-  $mail->Username = 'noreply@ciudadmaderas.com';
-  $mail->Password = 'euTan4&9';
+  $mail->Username = 'no-reply@ciudadmaderas.com';
+  $mail->Password = 'Va7<*V8PP';
   $mail->SMTPSecure = 'ssl';
   $mail->Port     = 465;
   
-  $mail->setFrom('noreply@ciudadmaderas.com', 'Ciudad Maderas');
+  $mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
 
   foreach($array as $email)
   {
@@ -1975,12 +1975,12 @@ $i = 0;
   $mail->isSMTP();
   $mail->Host     = 'smtp.gmail.com';
   $mail->SMTPAuth = true;
-  $mail->Username = 'noreply@ciudadmaderas.com';
-  $mail->Password = 'euTan4&9';
+  $mail->Username = 'no-reply@ciudadmaderas.com';
+  $mail->Password = 'Va7<*V8PP';
   $mail->SMTPSecure = 'ssl';
   $mail->Port     = 465;
   
-  $mail->setFrom('noreply@ciudadmaderas.com', 'Ciudad Maderas');
+  $mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
 
   foreach($array as $email)
   {

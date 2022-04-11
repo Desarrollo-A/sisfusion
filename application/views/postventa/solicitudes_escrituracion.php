@@ -1,9 +1,10 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
 <link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet" />
+<link rel="stylesheet" type="text/css" href="<?=base_url()?>dist/css/shadowbox.css">
 
 <body>
     <div class="wrapper">
-        <?php //include 'sidebarParams_prospectsList.php'
+        <?php 
             /*-------------------------------------------------------*/
             $datos = array();
             $datos = $datos4;
@@ -19,7 +20,7 @@
                     <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
                         <div class="card">
                             <div class="card-header card-header-icon" data-background-color="goldMaderas">
-                                <i class="material-icons">list</i>
+                                <i class="fas fa-feather-alt fa-2x"></i>
                             </div>
                             <div class="card-content">
                                 <h3 class="card-title center-align">Listado General de Solicitudes de Escrituración.</h3>
@@ -70,9 +71,7 @@
                                         </div>
                                     </div>
                                 </div>
-
                                 <?php include 'common_modals.php' ?>
-
                             </div>
                         </div>
                     </div>
@@ -92,16 +91,11 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
 <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
-<link rel="stylesheet" type="text/css" href="<?=base_url()?>dist/css/shadowbox.css">
 <script type="text/javascript" src="<?=base_url()?>dist/js/shadowbox.js"></script>
-<!--<script src="--><?php //base_url()?>
-<!--dist/js/jquery.validate.js"></script>-->
-
 <script>
     userType = <?= $this->session->userdata('id_rol') ?> ;
     idUser = <?= $this->session->userdata('id_usuario') ?> ;
     typeTransaction = 1;
-    console.log(idUser);
 	Shadowbox.init();
     base_url = "<?=base_url()?>";
 </script>
@@ -113,7 +107,6 @@
 <script src="<?= base_url() ?>dist/js/es.js"></script>
 <!-- DateTimePicker Plugin -->
 <script src="<?= base_url() ?>dist/js/bootstrap-datetimepicker.js"></script>
-<!-- <script src="<?=base_url()?>dist/js/controllers/general-1.1.0.js"></script> -->
 <script src="<?=base_url()?>static/yadcf/jquery.dataTables.yadcf.js"></script>
 <script src="<?=base_url()?>dist/js/controllers/general/main_services.js"></script>
 <script src="<?=base_url()?>dist/js/controllers/postventa/solicitudes_escrituracion.js"></script>

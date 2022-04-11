@@ -3227,13 +3227,13 @@ class Asesor extends CI_Controller
             $mail->isSMTP();
             $mail->Host = 'smtp.gmail.com';
             $mail->SMTPAuth = true;
-            $mail->Username = 'noreply@ciudadmaderas.com';
-            $mail->Password = 'euTan4&9';
+            $mail->Username = 'no-reply@ciudadmaderas.com';
+            $mail->Password = 'Va7<*V8PP';
             $mail->SMTPSecure = 'ssl';
             $mail->Port = 465;
 
 
-            $mail->setFrom('noreply@ciudadmaderas.com', 'Ciudad Maderas');
+            $mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
             /*$mail->AddAddress('programador.analista8@ciudadmaderas.com');*/
             foreach ($arrayCorreoNotRepeat AS $arrCorreo) {
                 if ($arrCorreo) {
@@ -3456,11 +3456,11 @@ class Asesor extends CI_Controller
         $mail->isSMTP();
         $mail->Host = 'smtp.gmail.com';
         $mail->SMTPAuth = true;
-        $mail->Username = 'noreply@ciudadmaderas.com';
-        $mail->Password = 'euTan4&9';
+        $mail->Username = 'no-reply@ciudadmaderas.com';
+        $mail->Password = 'Va7<*V8PP';
         $mail->SMTPSecure = 'ssl';
         $mail->Port = 465;
-        $mail->setFrom('noreply@ciudadmaderas.com', 'Ciudad Maderas');
+        $mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
         $mail->addAddress($correoDir);/*$correoDir*/
 
         $mail->Subject = utf8_decode('SOLICITUD DE AUTORIZACIÓN-CONTRATACIÓN');
@@ -5212,11 +5212,11 @@ class Asesor extends CI_Controller
         $mail->isSMTP();
         $mail->Host = 'smtp.gmail.com';
         $mail->SMTPAuth = true;
-        $mail->Username = 'noreply@ciudadmaderas.com';
-        $mail->Password = 'euTan4&9';
+        $mail->Username = 'no-reply@ciudadmaderas.com';
+        $mail->Password = 'Va7<*V8PP';
         $mail->SMTPSecure = 'ssl';
         $mail->Port = 465;
-        $mail->setFrom('noreply@ciudadmaderas.com', 'Ciudad Maderas');
+        $mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
         $mail->addAddress($correo_new);
         $mail->addCC('erick_eternal@live.com.mx');
         //$mail->addBCC('copia_oculta@outlook.com');
