@@ -6,7 +6,7 @@ class Comisiones_model extends CI_Model {
     {
         parent::__construct();
         // $this->gphsis = $this->load->database('GPHSIS', TRUE);
-    
+        $this->load->library('phpmailer_lib');
     }
 
     public function getActiveCommissions()
