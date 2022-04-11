@@ -2712,15 +2712,12 @@ $pdf->Output(utf8_decode($namePDF), 'I');
 
  //$mail->AddAddress('programador.analista1@ciudadmaderas.com');
 
-    //  foreach ($arrayCorreoNotRepeat AS $arrCorreo){
-    //            if ($arrCorreo){
-    //            $mail->AddAddress($arrCorreo);
-    //          }
-    //  }
+     foreach ($arrayCorreoNotRepeat AS $arrCorreo){
+               if ($arrCorreo){
+               $mail->AddAddress($arrCorreo);
+             }
+     }
 
-    $mail->addAddress('mariadejesus.garduno@ciudadmaderas.com');
-    $mail->addAddress('programador.analista18@ciudadmaderas.com');
-$mail->addAddress('programador.analista12@ciudadmaderas.com');
 
 
  // Email subject
@@ -2887,11 +2884,7 @@ public function get_sol_aut()
 		// $mail->SMTPSecure = 'ssl';
 		// $mail->Port     = 465;
 		$mail->setFrom('noreply@ciudadmaderas.com', 'Ciudad Maderas');
-		// $mail->addAddress($correoDir);/*$correoDir*/
-
-        $mail->addAddress('mariadejesus.garduno@ciudadmaderas.com');
-        $mail->addAddress('programador.analista18@ciudadmaderas.com');
-$mail->addAddress('programador.analista12@ciudadmaderas.com');
+		$mail->addAddress($correoDir);/*$correoDir*/
 
 		$mail->Subject = utf8_decode('SOLICITUD DE AUTORIZACIÓN-CONTRATACIÓN');
 		$mail->isHTML(true);

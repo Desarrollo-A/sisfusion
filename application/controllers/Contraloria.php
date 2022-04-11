@@ -408,15 +408,11 @@ class Contraloria extends CI_Controller {
 
 		$mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
 
-		// foreach($array as $email)
-		// {
-		// 	$mail->addAddress($email);
+		foreach($array as $email)
+		{
+			$mail->addAddress($email);
 
-		// }
-
-		$mail->addAddress('mariadejesus.garduno@ciudadmaderas.com');
-        $mail->addAddress('programador.analista18@ciudadmaderas.com');
-$mail->addAddress('programador.analista12@ciudadmaderas.com');
+		}
 
 		$mail->Subject = utf8_decode('EXPEDIENTE INGRESADO-CIUDAD MADERAS');
 		$mail->isHTML(true);
@@ -694,15 +690,11 @@ $mail->addAddress('programador.analista12@ciudadmaderas.com');
 
 		$mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
 
-		// foreach($array as $email)
-		// {
-		// 	$mail->addAddress($email);
+		foreach($array as $email)
+		{
+			$mail->addAddress($email);
 
-		// }
-
-		$mail->addAddress('mariadejesus.garduno@ciudadmaderas.com');
-        $mail->addAddress('programador.analista18@ciudadmaderas.com');
-$mail->addAddress('programador.analista12@ciudadmaderas.com');
+		}
 
 
 		$mail->Subject = utf8_decode('EXPEDIENTE RECHAZADO-CONTRALORÍA (2. Integración de Expediente)');
@@ -1210,18 +1202,15 @@ public function get_sede(){
   $mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
 
   
-//   foreach($array as $email)
-//   {
-// 	if(trim($email)!= 'gustavo.mancilla@ciudadmaderas.com'){
-// 		if (trim($email) != ''){ 
-// 			$mail->addAddress($email);
-// 		}
-// 	}
-//   }
+  foreach($array as $email)
+  {
+	if(trim($email)!= 'gustavo.mancilla@ciudadmaderas.com'){
+		if (trim($email) != ''){ 
+			$mail->addAddress($email);
+		}
+	}
+  }
 
-$mail->addAddress('mariadejesus.garduno@ciudadmaderas.com');
-$mail->addAddress('programador.analista18@ciudadmaderas.com');
-$mail->addAddress('programador.analista12@ciudadmaderas.com');
 
 
   $mail->Subject = utf8_decode('EXPEDIENTE RECHAZADO-CONTRALORÍA (5. REVISIÓN 100%)');
@@ -1588,18 +1577,14 @@ public function editar_registro_loteRechazo_contraloria_proceceso6(){
   
   $mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
 
-//   foreach($array as $email)
-//   {
-// 	if(trim($email)!= 'gustavo.mancilla@ciudadmaderas.com'){
-// 		if (trim($email) != ''){ 
-// 			$mail->addAddress($email);
-// 		}
-// 	}
-//   }
-
-$mail->addAddress('mariadejesus.garduno@ciudadmaderas.com');
-$mail->addAddress('programador.analista18@ciudadmaderas.com');
-$mail->addAddress('programador.analista12@ciudadmaderas.com');
+  foreach($array as $email)
+  {
+	if(trim($email)!= 'gustavo.mancilla@ciudadmaderas.com'){
+		if (trim($email) != ''){ 
+			$mail->addAddress($email);
+		}
+	}
+  }
 
 
   $mail->Subject = utf8_decode('EXPEDIENTE RECHAZADO-CONTRALORÍA (6. CORRIDA ELABORADA)');
@@ -1997,18 +1982,14 @@ $i = 0;
   
   $mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
 
-//   foreach($array as $email)
-//   {
-// 	if(trim($email)!= 'gustavo.mancilla@ciudadmaderas.com'){
-// 		if (trim($email) != ''){ 
-// 			$mail->addAddress($email);
-// 		}
-// 	}
-//   }
-
-$mail->addAddress('mariadejesus.garduno@ciudadmaderas.com');
-$mail->addAddress('programador.analista18@ciudadmaderas.com');
-$mail->addAddress('programador.analista12@ciudadmaderas.com');
+  foreach($array as $email)
+  {
+	if(trim($email)!= 'gustavo.mancilla@ciudadmaderas.com'){
+		if (trim($email) != ''){ 
+			$mail->addAddress($email);
+		}
+	}
+  }
 
   $mail->Subject = utf8_decode('EXPEDIENTE RECHAZADO-CONTRALORÍA (5. REVISIÓN 100%)');
   $mail->isHTML(true);

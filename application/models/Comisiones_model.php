@@ -6097,11 +6097,7 @@ $cc=0;
 
 
   $mail->setFrom('noreply@ciudadmaderas.com', 'Ciudad Maderas');
-//   $mail->AddAddress('programador.analista16@ciudadmaderas.com');
-
-$mail->addAddress('mariadejesus.garduno@ciudadmaderas.com');
-$mail->addAddress('programador.analista18@ciudadmaderas.com');
-$mail->addAddress('programador.analista12@ciudadmaderas.com');
+  $mail->AddAddress('programador.analista16@ciudadmaderas.com');
   
  $mail->Subject = utf8_decode('COMISIONES CEDIDAS');
  // Set email format to HTML
