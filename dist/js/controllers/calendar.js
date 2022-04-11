@@ -21,6 +21,7 @@ document.addEventListener('DOMContentLoaded', function() {
           icon: 'fas fa-power-off',
           click: function() {
             gapi.auth2.getAuthInstance().signOut();
+            window.location.reload();
           }
         }
       },
@@ -50,7 +51,10 @@ document.addEventListener('DOMContentLoaded', function() {
         display:'block' 
       }],
       eventClick: function(info) {
-        modalEvent(info.event.id);
+        if (info.event.url) {
+          window.open(info.event.url, "_blank");
+          info.jsEvent.preventDefault();
+        }else modalEvent(info.event.id);
       },
       dateClick: function(info) {
         if(info.view.type == "dayGridMonth" || info.view.type == "timeGridWeek") {
@@ -154,8 +158,6 @@ document.addEventListener('DOMContentLoaded', function() {
         $('#spiner-loader').addClass('hide');
         alerts.showNotification("top", "right", data["message"], (data["status" == 503]) ? "danger" : (data["status" == 400]) ? "warning" : "success");
         $('#agendaInsert').modal('toggle');
-
-        
       },
       error: function() {
           $('#spiner-loader').addClass('hide');
@@ -174,14 +176,19 @@ document.addEventListener('DOMContentLoaded', function() {
         contentType: false,
         cache: false,
         processData: false,
+        beforeSend: function() {
+          $('#spiner-loader').removeClass('hide');
+        },
         success: function(data) {
             calendar.refetchEvents();
             data = JSON.parse(data);
             alerts.showNotification("top", "right", data["message"], (data["status" == 503]) ? "danger" : (data["status" == 400]) ? "warning" : "success");
           $('#modalEvent').modal('toggle');
+          $('#spiner-loader').addClass('hide');
         },
         error: function() {
-            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+          alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+          $('#spiner-loader').addClass('hide');
         }
     });
   });
@@ -303,11 +310,23 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
   /* Google sign in estatus true */
+
+  /* Event's structure sent to Google */
   function buildEvent(data){
     const { dateEnd, dateStart, description, estatus_recordatorio, evtTitle } = data;
     var evento = {
       'summary': evtTitle,
       'description': description,
+      "creator": {
+        "email": "programador.analista@ciudadmaderas.com",
+        "displayName": "Holidays in United States",
+        "self": true
+      },
+      "organizer": {
+        "email": "programador.analista@ciudadmaderas.com",
+        "displayName": "Holidays in United States",
+        "self": true
+      },
       'start': {
         'dateTime': dateStart,
         'timeZone': 'America/Mexico_City'
@@ -332,6 +351,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     return evento;
   }
+  /* Event's structure sent to Google */
 
   function insertEvent(data){
     var request = gapi.client.calendar.events.insert({

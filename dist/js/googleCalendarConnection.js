@@ -8,7 +8,7 @@
   // included, separated by spaces.
   var SCOPES = "https://www.googleapis.com/auth/calendar";
 
-  var googleAppointments = '';
+  var arrayEvents = [];
 
   /** On load, called to load the auth2 library and API client library.*/
   function handleClientLoad() {
@@ -27,7 +27,6 @@
       gapi.auth2.getAuthInstance().isSignedIn.listen(updateSigninStatus);
       // Handle the initial sign-in state.
       updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
-      listUpcomingEvents();
     }, function(error) {
       appendPre(JSON.stringify(error, null, 2));
     });
@@ -38,7 +37,7 @@
     if (isSignedIn) {
       $(".fc-googleSignIn-button").attr("style", "display: none !important");
       $(".fc-googleLogout-button").attr("style", "display: block !important");
-      // insertEvent();
+      listUpcomingEvents();
     } else {
       $(".fc-googleSignIn-button").attr("style", "display: block !important");
       $(".fc-googleLogout-button").attr("style", "display: none !important");
@@ -52,23 +51,23 @@
   }
 
   function listUpcomingEvents() {
-    var arrayEvents = [];
+    gapi.client.lis
     gapi.client.idc
     gapi.client.calendar.events.list({
       'calendarId': 'primary',
-      'timeMin': '2022-04-06T23:22:28.621Z',
+      'timeMin': '2022-04-01T23:59:59.000Z',
       'showDeleted': false,
       'singleEvents': true,
-      'maxResults': 50,
+      'maxResults': 2500,
       'orderBy': 'startTime'
     }).then(function(response) {
-      googleAppointments = response.result.items;
+      var googleAppointments = response.result.items;
       for(let i = 0; i < googleAppointments.length; i++){
         if(!(googleAppointments[i].hasOwnProperty('extendedProperties') && googleAppointments[i].extendedProperties.hasOwnProperty('private') && googleAppointments[i].extendedProperties.private.hasOwnProperty('setByFullCalendar'))){
           eventTemplate(arrayEvents, googleAppointments[i]);
         }
       }
-
+      
       calendar.addEventSource({
         color: '#12558C',
         textColor: 'white',
@@ -78,12 +77,12 @@
         events: arrayEvents
       })
       
-      calendar.refetchEvents(); 
+      calendar.refetchEvents();
     });
   }
 
   function eventTemplate(arrayEvents, googleAppointments){
-    const { summary } = googleAppointments;
+    const { summary, htmlLink } = googleAppointments;
     let start, end;
 
     start = (googleAppointments.start.hasOwnProperty('date')) ? googleAppointments.start.date : googleAppointments.start.dateTime;
@@ -92,6 +91,8 @@
     arrayEvents.push({
       title: summary,
       start: start,
-      end: end
+      end: end,
+      url: htmlLink,
+      resourceEditable: false
     });
   }
