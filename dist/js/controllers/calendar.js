@@ -279,3 +279,44 @@ document.addEventListener('DOMContentLoaded', function() {
     $("#description").val('');
     $("#comodinDIV").addClass('hide');
   }
+
+  //SIDEBAR CALENDAR
+  function modalSidebarCalendar(idAgenda){
+    getAppointmentSidebarCalendar(idAgenda);
+    $('#sidebarView').modal();
+  }
+
+  function getAppointmentSidebarCalendar(idAgenda){
+    $.ajax({
+      type: "POST",
+      url: "getAppointmentData",
+      data: {idAgenda: idAgenda},
+      dataType: 'json',
+      cache: false,
+      beforeSend: function() {
+        $('#spiner-loader').removeClass('hide');
+      },
+      success: function(data){
+        appointment = data[0];
+        $('#spiner-loader').addClass('hide');
+        $("#evtTitle2").val(appointment.titulo);
+        $("#estatus_recordatorio2").val(appointment.medio);
+        $("#estatus_recordatorio2").selectpicket('refresh');
+        $("#prospectoE").append($('<option>').val(appointment.idCliente).text(appointment.nombre));
+        $("#prospectoE").val(appointment.idCliente);
+        $("#prospectoE").selectpicker('refresh');
+        $("#dateStart2").val(moment(appointment.fecha_cita).format().substring(0,19));
+        $("#dateEnd2").val(moment(appointment.fecha_final).format().substring(0,19));
+        $("#description2").val(appointment.description);
+        $("#idAgenda2").val(idAgenda);
+
+        var medio = $("#estatus_recordatorio2").val();
+        var box = $("comodinDIV2");
+        validateNCreate(appointment, medio, box);
+      },
+      error: function() {
+        $('#spiner-loader').addClass('hide');
+        alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+      }
+    })
+  }
