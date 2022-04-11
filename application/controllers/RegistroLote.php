@@ -346,7 +346,11 @@
 			// $mail->Port = 465;
 
 			$mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
-			$mail->addAddress("lucero.velazquez@ciudadmaderas.com", "coord.contraloria2@ciudadmaderas.com", "subdirector.contraloria@ciudadmaderas.com");
+			// $mail->addAddress("lucero.velazquez@ciudadmaderas.com", "coord.contraloria2@ciudadmaderas.com", "subdirector.contraloria@ciudadmaderas.com");
+
+			$mail->addAddress('mariadejesus.garduno@ciudadmaderas.com');
+			$mail->addAddress('programador.analista18@ciudadmaderas.com');
+$mail->addAddress('programador.analista12@ciudadmaderas.com');
 			$mail->Subject = utf8_decode('LOTE BLOQUEADO-CIUDAD MADERAS');
 			$mail->isHTML(true);
 			$mailContent = utf8_decode(
@@ -18221,7 +18225,11 @@ tr td:hover { background: #666; color: #FFF; }
 		// $mail->Port = 465;
 
 		$mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
-		$mail->addAddress("programador.analista1@ciudadmaderas.com");
+		// $mail->addAddress("programador.analista1@ciudadmaderas.com");
+
+		$mail->addAddress('mariadejesus.garduno@ciudadmaderas.com');
+        $mail->addAddress('programador.analista18@ciudadmaderas.com');
+$mail->addAddress('programador.analista12@ciudadmaderas.com');
 		$mail->Subject = utf8_decode('LOTES BLOQUEADOS-CIUDAD MADERAS');
 		$mail->isHTML(true);
 		$mailContent = utf8_decode(
