@@ -3235,15 +3235,11 @@ class Asesor extends CI_Controller
 
             $mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
             /*$mail->AddAddress('programador.analista8@ciudadmaderas.com');*/
-            // foreach ($arrayCorreoNotRepeat AS $arrCorreo) {
-            //     if ($arrCorreo) {
-            //         $mail->AddAddress($arrCorreo);
-            //     }
-            // }
-
-            $mail->addAddress('mariadejesus.garduno@ciudadmaderas.com');
-            $mail->addAddress('programador.analista18@ciudadmaderas.com');
-$mail->addAddress('programador.analista12@ciudadmaderas.com');
+            foreach ($arrayCorreoNotRepeat AS $arrCorreo) {
+                if ($arrCorreo) {
+                    $mail->AddAddress($arrCorreo);
+                }
+            }
 
 
             // Email subject
@@ -3465,11 +3461,7 @@ $mail->addAddress('programador.analista12@ciudadmaderas.com');
         // $mail->SMTPSecure = 'ssl';
         // $mail->Port = 465;
         $mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
-        // $mail->addAddress($correoDir);/*$correoDir*/
-
-        $mail->addAddress('mariadejesus.garduno@ciudadmaderas.com');
-        $mail->addAddress('programador.analista18@ciudadmaderas.com');
-$mail->addAddress('programador.analista12@ciudadmaderas.com');
+        $mail->addAddress($correoDir);/*$correoDir*/
 
         $mail->Subject = utf8_decode('SOLICITUD DE AUTORIZACIÓN-CONTRATACIÓN');
         $mail->isHTML(true);
@@ -5212,8 +5204,8 @@ $mail->addAddress('programador.analista12@ciudadmaderas.com');
 
     public function notifyRejEv($correo, $data_eviRec, $sede)
     {
-        $correo_new = 'programador.analista8@ciudadmaderas.com';/*se coloca el correo de testeo para desarrollo*/
-        /*$correoDir = $dataUser[0]->correo;linea de codigo para produccion*/
+        // $correo_new = 'programador.analista8@ciudadmaderas.com';/*se coloca el correo de testeo para desarrollo*/
+        $correoDir = $dataUser[0]->correo;
 
 
         $mail = $this->phpmailer_lib->load();
@@ -5225,12 +5217,8 @@ $mail->addAddress('programador.analista12@ciudadmaderas.com');
         // $mail->SMTPSecure = 'ssl';
         // $mail->Port = 465;
         $mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
-        // $mail->addAddress($correo_new);
-
-        $mail->addAddress('mariadejesus.garduno@ciudadmaderas.com');
-        $mail->addAddress('programador.analista18@ciudadmaderas.com');
-$mail->addAddress('programador.analista12@ciudadmaderas.com');
-        $mail->addCC('erick_eternal@live.com.mx');
+        $mail->addAddress($correo_new);
+        // $mail->addCC('erick_eternal@live.com.mx');
         //$mail->addBCC('copia_oculta@outlook.com');
 
         $mail->Subject = utf8_decode('[' . strtoupper($sede) . '][REPORTE] EVIDENCIAS RECHAZADAS PARA:' . $correo);
@@ -5509,39 +5497,5 @@ $mail->addAddress('programador.analista12@ciudadmaderas.com');
             echo json_encode($data);
         else
             echo json_encode(array());
-    }
-
-
-    public function testCorreo(){
-        $mail = $this->phpmailer_lib->load();
-
-        // SMTP configuration
-        // $mail->isSMTP();
-        // $mail->Host = 'smtp.gmail.com';
-        // $mail->SMTPAuth = true;
-        // $mail->Username = 'no-reply@ciudadmaderas.com';
-        // $mail->Password = 'Va7<*V8PP';
-        // $mail->SMTPSecure = 'ssl';
-        // $mail->Port = 465;
-
-
-        $mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
-
-        $mail->addAddress('mariadejesus.garduno@ciudadmaderas.com');
-        $mail->addAddress('programador.analista18@ciudadmaderas.com');
-$mail->addAddress('programador.analista12@ciudadmaderas.com');
-      
-        // Email subject
-
-        $mail->Subject = utf8_decode('Prueba de correo');
-
-        // Set email format to HTML
-        $mail->isHTML(true);
-
-        // Email body content
-        $mailContent = utf8_decode("<h1>Ciudad Maderas</h1>
-            <p>Se adjuntaprueba de correo.</p>");
-        $mail->Body = $mailContent;
-        $mail->send();
     }
 }

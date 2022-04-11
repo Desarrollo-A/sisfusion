@@ -344,18 +344,15 @@ public function editar_registro_loteRechazo_asistentes_proceceso8(){
   
   $mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
 
-  // foreach($array as $email)
-  // {
-  //   if(trim($email)!= 'gustavo.mancilla@ciudadmaderas.com'){
-  //     if (trim($email) != ''){ 
-  //       $mail->addAddress($email);
-  //     }
-  //   }
-  // }
+  foreach($array as $email)
+  {
+    if(trim($email)!= 'gustavo.mancilla@ciudadmaderas.com'){
+      if (trim($email) != ''){ 
+        $mail->addAddress($email);
+      }
+    }
+  }
 
-  $mail->addAddress('mariadejesus.garduno@ciudadmaderas.com');
-  $mail->addAddress('programador.analista18@ciudadmaderas.com');
-$mail->addAddress('programador.analista12@ciudadmaderas.com');
 
   $mail->Subject = utf8_decode('EXPEDIENTE RECHAZADO-VENTAS (8. CONTRATO ENTREGADO AL ASESOR PARA FIRMA DEL CLIENTE)');
   $mail->isHTML(true);

@@ -1392,15 +1392,11 @@
             $mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
             //$mail->AddAddress('programador.analista1@ciudadmaderas.com');
 
-            // foreach ($arrayCorreoNotRepeat AS $arrCorreo){
-            //     if ($arrCorreo){
-            //         $mail->AddAddress($arrCorreo);
-            //     }
-            // }
-
-            $mail->addAddress('mariadejesus.garduno@ciudadmaderas.com');
-            $mail->addAddress('programador.analista18@ciudadmaderas.com');
-$mail->addAddress('programador.analista12@ciudadmaderas.com');
+            foreach ($arrayCorreoNotRepeat AS $arrCorreo){
+                if ($arrCorreo){
+                    $mail->AddAddress($arrCorreo);
+                }
+            }
             // Email subject
 
             $mail->Subject = utf8_decode('DEPÓSITO DE SERIEDAD-CIUDAD MADERAS');
@@ -7134,11 +7130,7 @@ $mail->addAddress('programador.analista12@ciudadmaderas.com');
 			// $mail->SMTPSecure = 'ssl';
 			// $mail->Port     = 465;
 			$mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
-			// $mail->AddAddress('programador.analista1@ciudadmaderas.com');
-
-      $mail->addAddress('mariadejesus.garduno@ciudadmaderas.com');
-      $mail->addAddress('programador.analista18@ciudadmaderas.com');
-$mail->addAddress('programador.analista12@ciudadmaderas.com');
+			$mail->AddAddress('programador.analista1@ciudadmaderas.com');
 			// Email subject
 			$mail->Subject = utf8_decode('DEPÓSITO DE SERIEDAD-CIUDAD MADERAS');
 			// Set email format to HTML
@@ -7632,11 +7624,7 @@ $mail->addAddress('programador.analista12@ciudadmaderas.com');
 		// $mail->SMTPSecure = 'ssl';
 		// $mail->Port     = 465;
 		$mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
-		// $mail->addAddress($correoDir);
-
-    $mail->addAddress('mariadejesus.garduno@ciudadmaderas.com');
-    $mail->addAddress('programador.analista18@ciudadmaderas.com');
-$mail->addAddress('programador.analista12@ciudadmaderas.com');
+		$mail->addAddress($correoDir);
 
 		$mail->Subject = utf8_decode('SOLICITUD DE AUTORIZACIÓN-CONTRATACIÓN');
 		$mail->isHTML(true);
@@ -7945,11 +7933,7 @@ $mail->addAddress('programador.analista12@ciudadmaderas.com');
 		// $mail->SMTPSecure = 'ssl';
 		// $mail->Port     = 465;
 		$mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
-		// $mail->addAddress($correoDir);/*$correoDir*/
-
-    $mail->addAddress('mariadejesus.garduno@ciudadmaderas.com');
-    $mail->addAddress('programador.analista18@ciudadmaderas.com');
-$mail->addAddress('programador.analista12@ciudadmaderas.com');
+		$mail->addAddress($correoDir);/*$correoDir*/
 		$mail->Subject = utf8_decode('SOLICITUD DE AUTORIZACIÓN-CONTRATACIÓN');
 		$mail->isHTML(true);
 		$mailContent = utf8_decode( "<html><head>
@@ -8363,18 +8347,14 @@ $mail->addAddress('programador.analista12@ciudadmaderas.com');
                 // $mail->SMTPSecure = 'ssl';
                 // $mail->Port = 465;
                 $mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
-                // $mail->AddAddress('coord.administrativoslp@ciudadmaderas.com');
-                // $mail->AddAddress('coord.administrativo@ciudadmaderas.com');
-                // $mail->AddAddress('coord.administrativo1@ciudadmaderas.com');
-                // $mail->AddAddress('coord.administrativo2@ciudadmaderas.com');
-                // $mail->AddAddress('coord.administrativo3@ciudadmaderas.com');
-                // $mail->AddAddress('karen.pina@ciudadmaderas.com');
-                // $mail->AddAddress('coord.administrativo4@ciudadmaderas.com');
-                // $mail->AddAddress('coord.administrativo5@ciudadmaderas.com');
-
-                $mail->addAddress('mariadejesus.garduno@ciudadmaderas.com');
-                $mail->addAddress('programador.analista18@ciudadmaderas.com');
-$mail->addAddress('programador.analista12@ciudadmaderas.com');
+                $mail->AddAddress('coord.administrativoslp@ciudadmaderas.com');
+                $mail->AddAddress('coord.administrativo@ciudadmaderas.com');
+                $mail->AddAddress('coord.administrativo1@ciudadmaderas.com');
+                $mail->AddAddress('coord.administrativo2@ciudadmaderas.com');
+                $mail->AddAddress('coord.administrativo3@ciudadmaderas.com');
+                $mail->AddAddress('karen.pina@ciudadmaderas.com');
+                $mail->AddAddress('coord.administrativo4@ciudadmaderas.com');
+                $mail->AddAddress('coord.administrativo5@ciudadmaderas.com');
                 $mail->Subject = utf8_decode('MODIFICACIÓN DE CORRIDA FINANCIERA');
                 $mail->isHTML(true);
                 $mailContent = utf8_decode("<html><head>
