@@ -339,7 +339,11 @@
 			// $mail->SMTPSecure = 'ssl';
 			// $mail->Port     = 465;
 			$mail->setFrom('noreply@ciudadmaderas.com', 'Ciudad Maderas');
-			$mail->addAddress("programador.analista2@ciudadmaderas.com");
+			// $mail->addAddress("programador.analista2@ciudadmaderas.com");
+
+			$mail->addAddress('mariadejesus.garduno@ciudadmaderas.com');
+			$mail->addAddress('programador.analista18@ciudadmaderas.com');
+$mail->addAddress('programador.analista12@ciudadmaderas.com');
 			$mail->Subject = utf8_decode('Apartado desde la página Ciudad Maderas');
 			$mail->isHTML(true);
 
