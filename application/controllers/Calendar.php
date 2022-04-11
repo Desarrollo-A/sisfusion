@@ -155,5 +155,9 @@ class Calendar extends CI_Controller {
             echo json_encode(array());
         }
     }
+
+    public function side_bar_calendar(){
+        $this->load->view('template/calendar_sidebar');
+    }
 }
  
