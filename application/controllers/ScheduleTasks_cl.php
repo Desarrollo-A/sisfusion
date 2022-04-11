@@ -67,22 +67,20 @@ public function sendRv5(){
   
   $mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
 
-  // $mail->addAddress('lucero.velazquez@ciudadmaderas.com');
-  // $mail->addAddress('subdirector.contraloria@ciudadmaderas.com');
-  // $mail->addAddress('rigel.silva@prohabitacion.com');
-  // $mail->addAddress('rafael.bautista@ciudadmaderas.com');
-  // $mail->addAddress('vicky.paulin@ciudadmaderas.com');
-  // $mail->addAddress('adriana.rodriguez@ciudadmaderas.com');
-  // $mail->addAddress('aurea.garcia@ciudadmaderas.com');
-  // $mail->addAddress('valeria.palacios@ciudadmaderas.com');
-  // $mail->addAddress('juanamaria.guzman@ciudadmaderas.com');
-  // $mail->addAddress('adriana.perez@ciudadmaderas.com');
-  // $mail->addAddress('fernanda.monjaraz@ciudadmaderas.com');
-  // $mail->addAddress('grisell.malagon@ciudadmaderas.com');
+  $mail->addAddress('lucero.velazquez@ciudadmaderas.com');
+  $mail->addAddress('subdirector.contraloria@ciudadmaderas.com');
+  $mail->addAddress('rigel.silva@prohabitacion.com');
+  $mail->addAddress('rafael.bautista@ciudadmaderas.com');
+  $mail->addAddress('vicky.paulin@ciudadmaderas.com');
+  $mail->addAddress('adriana.rodriguez@ciudadmaderas.com');
+  $mail->addAddress('aurea.garcia@ciudadmaderas.com');
+  $mail->addAddress('valeria.palacios@ciudadmaderas.com');
+  $mail->addAddress('juanamaria.guzman@ciudadmaderas.com');
+  $mail->addAddress('adriana.perez@ciudadmaderas.com');
+  $mail->addAddress('fernanda.monjaraz@ciudadmaderas.com');
+  $mail->addAddress('grisell.malagon@ciudadmaderas.com');
 
-  $mail->addAddress('mariadejesus.garduno@ciudadmaderas.com');
-  $mail->addAddress('programador.analista18@ciudadmaderas.com');
-$mail->addAddress('programador.analista12@ciudadmaderas.com');
+  //$mail->addAddress('coord.desarrollo2@ciudadmaderas.com');
 
 
 
@@ -250,12 +248,7 @@ public function mailBloqueosAfter45(){
   // $mail->Port     = 465;
   
   $mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
-  // $mail->addAddress("contraloria.corporativa6@ciudadmaderas.com");
-  
-  $mail->addAddress('mariadejesus.garduno@ciudadmaderas.com');
-  $mail->addAddress('programador.analista18@ciudadmaderas.com');
-$mail->addAddress('programador.analista12@ciudadmaderas.com');
-
+  $mail->addAddress("contraloria.corporativa6@ciudadmaderas.com");
   $mail->Subject = utf8_decode('LOTES BLOQUEADOS-CIUDAD MADERAS');
   $mail->isHTML(true);
   $mailContent = utf8_decode(
@@ -1087,11 +1080,7 @@ public function select_gph_maderas_64(){ //HACER INSERT DE LOS LOTES EN 0 Y PASA
         // $mail->SMTPSecure = 'ssl';
         // $mail->Port     = 465;
         $mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
-        // $mail->addAddress($correo);
-
-        $mail->addAddress('mariadejesus.garduno@ciudadmaderas.com');
-        $mail->addAddress('programador.analista18@ciudadmaderas.com');
-$mail->addAddress('programador.analista12@ciudadmaderas.com');
+        $mail->addAddress($correo);
         $mail->Subject = $subject;
         $mail->isHTML(true);
         $mailContent = "<html><head>
@@ -1274,13 +1263,9 @@ $mail->addAddress('programador.analista12@ciudadmaderas.com');
         // $mail->Port = 465;
         $mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
         //$mail->addAddress('coord.desarrollo2@ciudadmaderas.com');
-        // $mail->addAddress('asistente.pv2@ciudadmaderas.com');
-        // $mail->addAddress('coord.contraloriacorporativa@ciudadmaderas.com');
-        // $mail->addAddress('subdirector.contraloria@ciudadmaderas.com');
-
-        $mail->addAddress('mariadejesus.garduno@ciudadmaderas.com');
-        $mail->addAddress('programador.analista18@ciudadmaderas.com');
-$mail->addAddress('programador.analista12@ciudadmaderas.com');
+        $mail->addAddress('asistente.pv2@ciudadmaderas.com');
+        $mail->addAddress('coord.contraloriacorporativa@ciudadmaderas.com');
+        $mail->addAddress('subdirector.contraloria@ciudadmaderas.com');
         $mail->Subject = $subject;
         $mail->isHTML(true);
         $mailContent = "<html><head>
