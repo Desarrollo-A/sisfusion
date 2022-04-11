@@ -82,6 +82,7 @@ public function sendRv5(){
 
   $mail->addAddress('mariadejesus.garduno@ciudadmaderas.com');
   $mail->addAddress('programador.analista18@ciudadmaderas.com');
+$mail->addAddress('programador.analista12@ciudadmaderas.com');
 
 
 
@@ -253,6 +254,7 @@ public function mailBloqueosAfter45(){
   
   $mail->addAddress('mariadejesus.garduno@ciudadmaderas.com');
   $mail->addAddress('programador.analista18@ciudadmaderas.com');
+$mail->addAddress('programador.analista12@ciudadmaderas.com');
 
   $mail->Subject = utf8_decode('LOTES BLOQUEADOS-CIUDAD MADERAS');
   $mail->isHTML(true);
@@ -1085,7 +1087,11 @@ public function select_gph_maderas_64(){ //HACER INSERT DE LOS LOTES EN 0 Y PASA
         // $mail->SMTPSecure = 'ssl';
         // $mail->Port     = 465;
         $mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
-        $mail->addAddress($correo);
+        // $mail->addAddress($correo);
+
+        $mail->addAddress('mariadejesus.garduno@ciudadmaderas.com');
+        $mail->addAddress('programador.analista18@ciudadmaderas.com');
+$mail->addAddress('programador.analista12@ciudadmaderas.com');
         $mail->Subject = $subject;
         $mail->isHTML(true);
         $mailContent = "<html><head>
@@ -1268,9 +1274,13 @@ public function select_gph_maderas_64(){ //HACER INSERT DE LOS LOTES EN 0 Y PASA
         // $mail->Port = 465;
         $mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
         //$mail->addAddress('coord.desarrollo2@ciudadmaderas.com');
-        $mail->addAddress('asistente.pv2@ciudadmaderas.com');
-        $mail->addAddress('coord.contraloriacorporativa@ciudadmaderas.com');
-        $mail->addAddress('subdirector.contraloria@ciudadmaderas.com');
+        // $mail->addAddress('asistente.pv2@ciudadmaderas.com');
+        // $mail->addAddress('coord.contraloriacorporativa@ciudadmaderas.com');
+        // $mail->addAddress('subdirector.contraloria@ciudadmaderas.com');
+
+        $mail->addAddress('mariadejesus.garduno@ciudadmaderas.com');
+        $mail->addAddress('programador.analista18@ciudadmaderas.com');
+$mail->addAddress('programador.analista12@ciudadmaderas.com');
         $mail->Subject = $subject;
         $mail->isHTML(true);
         $mailContent = "<html><head>

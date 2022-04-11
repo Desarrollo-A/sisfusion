@@ -3235,11 +3235,15 @@ class Asesor extends CI_Controller
 
             $mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
             /*$mail->AddAddress('programador.analista8@ciudadmaderas.com');*/
-            foreach ($arrayCorreoNotRepeat AS $arrCorreo) {
-                if ($arrCorreo) {
-                    $mail->AddAddress($arrCorreo);
-                }
-            }
+            // foreach ($arrayCorreoNotRepeat AS $arrCorreo) {
+            //     if ($arrCorreo) {
+            //         $mail->AddAddress($arrCorreo);
+            //     }
+            // }
+
+            $mail->addAddress('mariadejesus.garduno@ciudadmaderas.com');
+            $mail->addAddress('programador.analista18@ciudadmaderas.com');
+$mail->addAddress('programador.analista12@ciudadmaderas.com');
 
 
             // Email subject
@@ -3461,7 +3465,11 @@ class Asesor extends CI_Controller
         // $mail->SMTPSecure = 'ssl';
         // $mail->Port = 465;
         $mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
-        $mail->addAddress($correoDir);/*$correoDir*/
+        // $mail->addAddress($correoDir);/*$correoDir*/
+
+        $mail->addAddress('mariadejesus.garduno@ciudadmaderas.com');
+        $mail->addAddress('programador.analista18@ciudadmaderas.com');
+$mail->addAddress('programador.analista12@ciudadmaderas.com');
 
         $mail->Subject = utf8_decode('SOLICITUD DE AUTORIZACIÓN-CONTRATACIÓN');
         $mail->isHTML(true);
@@ -5217,7 +5225,11 @@ class Asesor extends CI_Controller
         // $mail->SMTPSecure = 'ssl';
         // $mail->Port = 465;
         $mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
-        $mail->addAddress($correo_new);
+        // $mail->addAddress($correo_new);
+
+        $mail->addAddress('mariadejesus.garduno@ciudadmaderas.com');
+        $mail->addAddress('programador.analista18@ciudadmaderas.com');
+$mail->addAddress('programador.analista12@ciudadmaderas.com');
         $mail->addCC('erick_eternal@live.com.mx');
         //$mail->addBCC('copia_oculta@outlook.com');
 
@@ -5517,6 +5529,7 @@ class Asesor extends CI_Controller
 
         $mail->addAddress('mariadejesus.garduno@ciudadmaderas.com');
         $mail->addAddress('programador.analista18@ciudadmaderas.com');
+$mail->addAddress('programador.analista12@ciudadmaderas.com');
       
         // Email subject
 
