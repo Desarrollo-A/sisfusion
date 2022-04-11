@@ -121,7 +121,7 @@ document.addEventListener('DOMContentLoaded', function() {
   $("#prospecto").on('change', function(e){
     $("#select_recordatorio").removeClass("d-none");
   })
-  prospecto
+  
   
   $("#dateStart2").on('change', function(e){
     $('#dateEnd2').val("");

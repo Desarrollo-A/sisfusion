@@ -3224,13 +3224,13 @@ class Asesor extends CI_Controller
             $mail = $this->phpmailer_lib->load();
 
             // SMTP configuration
-            $mail->isSMTP();
-            $mail->Host = 'smtp.gmail.com';
-            $mail->SMTPAuth = true;
-            $mail->Username = 'no-reply@ciudadmaderas.com';
-            $mail->Password = 'Va7<*V8PP';
-            $mail->SMTPSecure = 'ssl';
-            $mail->Port = 465;
+            // $mail->isSMTP();
+            // $mail->Host = 'smtp.gmail.com';
+            // $mail->SMTPAuth = true;
+            // $mail->Username = 'no-reply@ciudadmaderas.com';
+            // $mail->Password = 'Va7<*V8PP';
+            // $mail->SMTPSecure = 'ssl';
+            // $mail->Port = 465;
 
 
             $mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
@@ -5497,5 +5497,36 @@ class Asesor extends CI_Controller
             echo json_encode($data);
         else
             echo json_encode(array());
+    }
+
+
+    public function testCorreo(){
+        $mail = $this->phpmailer_lib->load();
+
+        // SMTP configuration
+        // $mail->isSMTP();
+        // $mail->Host = 'smtp.gmail.com';
+        // $mail->SMTPAuth = true;
+        // $mail->Username = 'no-reply@ciudadmaderas.com';
+        // $mail->Password = 'Va7<*V8PP';
+        // $mail->SMTPSecure = 'ssl';
+        // $mail->Port = 465;
+
+
+        $mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
+        $mail->AddAddress('programador.analista18@ciudadmaderas.com');
+
+        // Email subject
+
+        $mail->Subject = utf8_decode('Prueba de correo');
+
+        // Set email format to HTML
+        $mail->isHTML(true);
+
+        // Email body content
+        $mailContent = utf8_decode("<h1>Ciudad Maderas</h1>
+            <p>Se adjuntaprueba de correo.</p>");
+        $mail->Body = $mailContent;
+        $mail->send();
     }
 }
