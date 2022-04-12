@@ -8081,10 +8081,13 @@ return $query->result();
             }
             function getPrestamos(){
                 return $this->db->query("SELECT CONCAT(u.nombre, ' ', u.apellido_paterno, ' ' ,u.apellido_materno) as nombre,
-                p.id_prestamo,p.id_usuario,p.monto,p.num_pagos,p.estatus,p.comentario,p.fecha_creacion,p.pago_individual,pendiente
+                p.id_prestamo,p.id_usuario,p.monto,p.num_pagos,p.estatus,p.comentario,p.fecha_creacion,p.pago_individual,pendiente,SUM(pci.abono_neodata) as total_pagado
                 FROM prestamos_aut p 
                 INNER JOIN usuarios u ON u.id_usuario=p.id_usuario 
-                WHERE p.estatus in(1,2,3)");
+				LEFT JOIN relacion_pagos_prestamo rpp ON rpp.id_prestamo = p.id_prestamo
+				LEFT JOIN pago_comision_ind pci ON pci.id_pago_i = rpp.id_pago_i AND pci.estatus = 18 AND pci.descuento_aplicado = 1
+                WHERE p.estatus in(1,2,3)
+				group by u.nombre,u.apellido_paterno,u.apellido_materno,p.id_prestamo,p.id_usuario,p.monto,p.num_pagos,p.estatus,p.comentario,p.fecha_creacion,p.pago_individual,pendiente,pci.abono_neodata");
             }
             function InsertPago($id_prestamo,$id_user,$pago,$usuario){
                 $respuesta = $this->db->query("INSERT INTO pagos_prestamos_ind(id_prestamo,id_usuario,pago,estado,comentario,fecha_abono,fecha_abono_intmex,creado_por) VALUES(".$id_prestamo.",".$id_user." ,".$pago.",1,'ABONO A PRESTAMO', GETDATE(), GETDATE(), ".$usuario." )");
@@ -8140,6 +8143,17 @@ return $query->result();
                 return $this->db->query(" select * from pagos_bonos_ind where id_usuario=".$usuario." and convert(date,fecha_abono) = CONVERT(date,GETDATE())");
             }
 
+            public function CierrePrestamo($id_prestamo){
+             return $CierrePrestamo = $this->db->query("SELECT  pa.id_prestamo,sum( pci.abono_neodata) as pagado
+                                        FROM prestamos_aut pa
+                                        JOIN usuarios u ON u.id_usuario = pa.id_usuario
+                                        JOIN relacion_pagos_prestamo rpp ON rpp.id_prestamo = pa.id_prestamo
+                                        JOIN pago_comision_ind pci ON pci.id_pago_i = rpp.id_pago_i AND pci.estatus = 18 AND pci.descuento_aplicado = 1
+                                        JOIN comisiones c ON c.id_comision = pci.id_comision
+                                        WHERE pa.id_prestamo = ".$id_prestamo."
+                                        group by pa.id_prestamo")->result_array();
+
+            }
 
             function descuentos_aut(){
                 $data = $this->db->query("select *,DATEADD(DAY,28,fecha_creacion) as fecha_suma from prestamos_aut where GETDATE() > DATEADD(DAY,28,fecha_creacion) and estatus=1")->result_array();
@@ -8176,16 +8190,10 @@ return $query->result();
                                         $insert_id = $this->db->insert_id();
                                         $this->db->query("INSERT INTO  historial_comisiones VALUES ($insert_id, 1, GETDATE(), 1, 'ESTE PAGO ES EL RESTANTE DEL PAGO CON ID ".$PagosByUSer[$n]['id_pago_i']."')");
                                         //Proceso para cerrar el prestamo, si es que ya se pago por completo
-                                        $CierrePrestamo = $this->db->query("SELECT  pa.id_prestamo,sum( pci.abono_neodata) as pagado
-                                        FROM prestamos_aut pa
-                                        JOIN usuarios u ON u.id_usuario = pa.id_usuario
-                                        JOIN relacion_pagos_prestamo rpp ON rpp.id_prestamo = pa.id_prestamo
-                                        JOIN pago_comision_ind pci ON pci.id_pago_i = rpp.id_pago_i AND pci.estatus = 18 AND pci.descuento_aplicado = 1
-                                        JOIN comisiones c ON c.id_comision = pci.id_comision
-                                        WHERE pa.id_prestamo = ".$data[$m]['id_prestamo']."
-                                        group by pa.id_prestamo")->result_array();
+                                        
+                                        $CierrePrestamo = $this->Comisiones_model->CierrePrestamo($data[$m]['id_prestamo']);
 
-                                        if($CierrePrestamo[0]['pagado'] > ($data[$m]['pago_individual'] - 0.50)){
+                                        if($CierrePrestamo[0]['pagado'] > ($data[$m]['monto'] - 0.50)){
                                             $this->db->query("UPDATE prestamos_aut SET n_p=n_p+1,modificado_por=1,pendiente=0,fecha_modificacion=GETDATE(),estatus=3 WHERE id_prestamo=".$data[$m]['id_prestamo']."");
                                         }else{
                                             $this->db->query("UPDATE prestamos_aut SET n_p=n_p+1,modificado_por=1,pendiente=0,fecha_modificacion=GETDATE() WHERE id_prestamo=".$data[$m]['id_prestamo']."");
@@ -8194,9 +8202,14 @@ return $query->result();
 
                                         break;
                                     }else{
+                                        $CierrePrestamo = $this->Comisiones_model->CierrePrestamo($data[$m]['id_prestamo']);
+
                                         if($n == count($PagosByUSer) -1 ){
                                             /**YA NO HAY MAS PAGOS*/
                                             $pendiente = $pagoMensual - $Suma;
+                                            if($pendiente > $data[$m]['monto']){
+                                                $pendiente =  $data[$m]['monto'] - $CierrePrestamo[0]['pagado'];
+                                            }
                                             $this->db->query("UPDATE pago_comision_ind SET estatus=18,descuento_aplicado=1,modificado_por=1 WHERE id_pago_i = ".$PagosByUSer[$n]['id_pago_i']." ");
                                             $this->db->query("INSERT INTO relacion_pagos_prestamo(id_prestamo,id_pago_i,estatus,creado_por,fecha_creacion,modificado_por,fecha_modificacion,np) values(".$data[$m]['id_prestamo'].",".$PagosByUSer[$n]['id_pago_i'].",1,1,GETDATE(),1,GETDATE(),".$data[$m]['n_p'].")");
                                             $this->db->query("INSERT INTO historial_comisiones values(".$PagosByUSer[$n]['id_pago_i'].",1,GETDATE(),1,'DESCUENTO')");
@@ -8215,7 +8228,12 @@ return $query->result();
 
                             }
                         }else{
+                            $CierrePrestamo = $this->Comisiones_model->CierrePrestamo($data[$m]['id_prestamo']);
+
                             $pendiente = $pagoMensual;
+                             if($pendiente > $data[$m]['monto']){
+                                 $pendiente =  $data[$m]['monto'] - $CierrePrestamo[0]['pagado'];
+                             }
                             $this->db->query("UPDATE prestamos_aut SET modificado_por=1,fecha_modificacion=GETDATE(),pendiente=$pendiente WHERE id_prestamo=".$data[$m]['id_prestamo']."");
                         }
 

@@ -306,13 +306,13 @@
 				{
 					"width": "7%",
 					"data": function( d ){
-						return '<p class="m-0">$'+formatMoney(0)+'</p>';
+						return '<p class="m-0">$'+formatMoney(d.total_pagado)+'</p>';
 					}
 				},
 				{
 					"width": "7%",
 					"data": function( d ){
-						return '<p class="m-0">$'+formatMoney(d.pendiente)+'</p>';
+						return '<p class="m-0">$'+formatMoney(d.monto - d.total_pagado)+'</p>';
 					}
 				},
 				{
