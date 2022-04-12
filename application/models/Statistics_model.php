@@ -2201,7 +2201,62 @@ class Statistics_model extends CI_Model {
         }
         return $query;
     }
-    
 
+    public function getDataGraficaAnual($anio)
+    {
+        $result = $this->db->query("SELECT COUNT(DISTINCT(id_lote)) lotes, COUNT(DISTINCT(c.id_comision)) comisiones, 
+            COUNT(DISTINCT(pci.id_pago_i)) pagos, MONTH(c.fecha_creacion)mes
+            FROM comisiones c
+            LEFT JOIN usuarios u on u.id_usuario = c.creado_por and u.id_rol in (32,13,17) 
+            LEFT JOIN pago_comision_ind pci on pci.id_comision = c.id_comision 
+            and year(pci.fecha_abono) = $anio
+            WHERE year(c.fecha_creacion) = $anio
+            and u.id_usuario is not null
+            GROUP BY YEAR(c.fecha_creacion), MONTH(c.fecha_creacion)");
 
+        return $result->result_array();
+    }
+
+    public function getDataGraficaTopUsuarios($anio, $mes)
+    {
+        $result = $this->db->query("SELECT TOP 5 COUNT(DISTINCT(id_lote)) lotes, COUNT(DISTINCT(c.id_comision)) comisiones, 
+            COUNT(DISTINCT(pci.id_pago_i)) pagos,
+            CONCAT( u.nombre, ' ', u.apellido_paterno) nombre
+            FROM comisiones c
+            INNER JOIN usuarios u ON u.id_usuario = c.creado_por AND u.id_rol IN (32,13,17) 
+            INNER JOIN pago_comision_ind pci ON pci.id_comision = c.id_comision 
+            AND YEAR(pci.fecha_abono) = $anio AND MONTH(pci.fecha_abono) = $mes
+            WHERE YEAR(c.fecha_creacion) = $anio AND MONTH(c.fecha_creacion) = $mes
+            GROUP BY c.creado_por, YEAR(c.fecha_creacion), u.id_rol, u.nombre, u.apellido_paterno, MONTH(c.fecha_creacion)
+            ORDER BY COUNT(distinct(id_lote)) DESC, count(distinct(c.id_comision)) DESC, count(distinct(pci.id_pago_i)) DESC");
+
+        return $result->result_array();
+    }
+
+    public function getDataAsesorGraficaTabla($anio, $mes)
+    {
+        $monthSelectClause = '';
+        $monthAbonoWhereClause = '';
+        $monthCreacionWhereClause = '';
+        $monthGroupByClause = '';
+
+        if (trim($mes) !== '' && $mes != 0) {
+            $monthSelectClause = ', MONTH(c.fecha_creacion) mes';
+            $monthAbonoWhereClause = "AND MONTH(pci.fecha_abono) = $mes";
+            $monthCreacionWhereClause = "AND MONTH(c.fecha_creacion) = $mes";
+            $monthGroupByClause = ', MONTH(c.fecha_creacion)';
+        }
+
+        $result = $this->db->query("SELECT COUNT(DISTINCT(id_lote)) lotes, COUNT(DISTINCT(c.id_comision)) comisiones, 
+            COUNT(DISTINCT(pci.id_pago_i)) pagos, c.creado_por, u.id_usuario, $anio as anio,
+            CONCAT( u.nombre, ' ', u.apellido_paterno, ' ',  u.apellido_materno) nombre_completo $monthSelectClause
+            FROM comisiones c
+            LEFT JOIN usuarios u ON u.id_usuario = c.creado_por AND u.id_rol IN (32,13,17) 
+            LEFT JOIN pago_comision_ind pci ON pci.id_comision = c.id_comision
+            AND YEAR(pci.fecha_abono) = $anio $monthAbonoWhereClause
+            WHERE YEAR(c.fecha_creacion) = $anio AND u.id_usuario IS NOT NULL $monthCreacionWhereClause
+            GROUP BY c.creado_por, u.id_usuario, u.nombre, u.apellido_paterno, u.apellido_materno $monthGroupByClause
+            ORDER BY COUNT(DISTINCT(id_lote)) DESC");
+        return $result->result_array();
+    }
 }
