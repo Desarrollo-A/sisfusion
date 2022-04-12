@@ -762,7 +762,7 @@ class Asesor extends CI_Controller
 
 
     //public function invDispAsesor()
-    {
+    // {
         /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/
         //$datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
         /*-------------------------------------------------------------------------------*/
