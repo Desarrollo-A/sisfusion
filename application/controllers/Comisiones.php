@@ -6631,6 +6631,16 @@ for ($d=0; $d <count($dos) ; $d++) {
   public function descuentos_aut(){
     echo json_encode($this->Comisiones_model->descuentos_aut()->result_array());
   }
+
+    public function getDetallePrestamo($idPrestamo)
+    {
+        $general = $this->Comisiones_model->getGeneralDataPrestamo($idPrestamo);
+        $detalle = $this->Comisiones_model->getDetailPrestamo($idPrestamo);
+        echo json_encode(array(
+            'general' => $general,
+            'detalle' => $detalle
+        ));
+    }
     /**--------------------------------------------------------------------- */
 
     public function getDatosFlujoComisiones() {

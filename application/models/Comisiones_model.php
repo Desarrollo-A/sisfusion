@@ -8246,6 +8246,36 @@ return $query->result();
             }
 
 
+    public function getGeneralDataPrestamo($idPrestamo)
+    {
+        $result = $this->db->query("SELECT CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u .apellido_materno) AS nombre_completo, 
+            pa.monto as monto_prestado, pa.pago_individual, pa.num_pagos, pa.n_p as num_pago_act, SUM(pci.abono_neodata) as total_pagado, 
+            (pa.monto - SUM(pci.abono_neodata)) as pendiente
+            FROM prestamos_aut pa
+            JOIN usuarios u ON u.id_usuario = pa.id_usuario
+            JOIN relacion_pagos_prestamo rpp ON rpp.id_prestamo = pa.id_prestamo
+            JOIN pago_comision_ind pci ON pci.id_pago_i = rpp.id_pago_i 
+            AND pci.estatus = 18 AND pci.descuento_aplicado = 1
+            WHERE pa.id_prestamo = $idPrestamo
+            GROUP BY u.nombre, u.apellido_paterno, u.apellido_materno, pa.monto, pa.pago_individual, pa.num_pagos, pa.n_p");
+        return $result->row();
+    }
+
+    public function getDetailPrestamo($idPrestamo)
+    {
+        $this->db->query("SET LANGUAGE Español;");
+        $result = $this->db->query("SELECT l.nombreLote, CONVERT(NVARCHAR, rpp.fecha_creacion, 6) as fecha_pago, pci.abono_neodata, rpp.np,
+            (SELECT TOP 1 hc.comentario FROM historial_comisiones hc WHERE hc.id_pago_i = rpp.id_pago_i ORDER BY id_log DESC) as comentario
+            FROM prestamos_aut pa
+            JOIN usuarios u ON u.id_usuario = pa.id_usuario
+            JOIN relacion_pagos_prestamo rpp ON rpp.id_prestamo = pa.id_prestamo
+            JOIN pago_comision_ind pci ON pci.id_pago_i = rpp.id_pago_i AND pci.estatus = 18 AND pci.descuento_aplicado = 1
+            JOIN comisiones c ON c.id_comision = pci.id_comision
+            JOIN lotes l ON l.idLote = c.id_lote
+            WHERE pa.id_prestamo = $idPrestamo
+            ORDER BY np ASC");
+        return $result->result_array();
+    }
 /**----------------------------------------FIN BONOS Y PRESTAMOS------------------------------- */
 /**---------------------------------------------- */
 
