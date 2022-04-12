@@ -163,10 +163,10 @@ class Asesor extends CI_Controller
         $this->load->view("contratacion/datos_lote_contratacion_view", $datos);
     }
 
-    public function cf()
-    {
-        $this->load->view("corrida/cf_view");
-    }
+    //public function cf()
+    //{
+        //$this->load->view("corrida/cf_view");
+    //}
 
     public function cf2()
     {
@@ -761,16 +761,16 @@ class Asesor extends CI_Controller
     }
 
 
-    public function invDispAsesor()
+    //public function invDispAsesor()
     {
         /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/
-        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
+        //$datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
         /*-------------------------------------------------------------------------------*/
 
-        $datos["residencial"] = $this->registrolote_modelo->getResidencialQro();
-        $this->load->view('template/header');
-        $this->load->view("asesor/inventario_disponible", $datos);
-    }
+        //$datos["residencial"] = $this->registrolote_modelo->getResidencialQro();
+        //$this->load->view('template/header');
+        //$this->load->view("asesor/inventario_disponible", $datos);
+    //}
 
     public function manual()
     {
