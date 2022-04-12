@@ -1,9 +1,6 @@
-<head>
-    <!-- Google API LOGIN -->
-	<!-- <meta name="google-signin-client_id" content="848186048646-ugthma1qfj0ocamf1jeju4ahdi3n7qop.apps.googleusercontent.com">
-	<script src="https://apis.google.com/js/platform.js" async defer></script>
-	 -->
-</head>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
+<link href="<?= base_url() ?>dist/css/calendar.css" rel="stylesheet"/>
+
 <body>
 <div class="wrapper">
     <?php
@@ -13,10 +10,25 @@
     $datos = $datos2;
     $datos = $datos3;  
     $this->load->view('template/sidebar', $datos);
+            $this->load->view('template/calendar_sidebar');
+
     /*--------------------------------------------------------*/
     ?>
 
-    <link href="<?= base_url() ?>dist/css/calendar.css" rel="stylesheet"/>
+    <style>
+        .fc-icon-fab, .fc-icon-fas{
+            font-family: FontAwesome!important;
+        }
+
+        .fc-googleSignIn-button{
+            display: none!important;
+        }
+
+        .fc-googleLogout-button{
+            display: none!important;
+        }
+    </style>
+
     <div class="content">
         <div class="container-fluid">
             <div class="row">
@@ -30,10 +42,6 @@
             </div>
         </div>
     </div>
-    <button id="authorize_button" style="display: none;">Authorize</button>
-    <button id="signout_button" style="display: none;">Sign Out</button>
-    <pre id="content" style="white-space: pre-wrap;"></pre>
-
     <?php include 'common_modals.php' ?>
 </div>
 </div><!--main-panel close-->
@@ -43,11 +51,10 @@
 
 
 <script src="<?= base_url() ?>dist/assets/js/bootstrap-datetimepicker.js"></script>
+<script async defer src="https://apis.google.com/js/api.js" onload="this.onload=function(){};handleClientLoad()" onreadystatechange="if (this.readyState === 'complete') this.onload()"></script>
 <script src="<?=base_url()?>dist/js/controllers/calendar.js"></script>
-<script async defer src="https://apis.google.com/js/api.js"
-      onload="this.onload=function(){};handleClientLoad()"
-      onreadystatechange="if (this.readyState === 'complete') this.onload()">
-    </script>
+<script src="<?=base_url()?>dist/js/googleCalendarConnection.js"></script>
+
 <script>
     userType = <?= $this->session->userdata('id_rol') ?> ;
     idUser = <?= $this->session->userdata('id_usuario') ?> ;

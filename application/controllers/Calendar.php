@@ -88,17 +88,18 @@ class Calendar extends CI_Controller {
     }
 
     public function insertRecordatorio(){
+        $objDatos = json_decode(file_get_contents("php://input"));
         $data = array(
             "fecha_creacion" => date("Y-m-d H:i:s"),
-            "medio" => $this->input->post("estatus_recordatorio"),
-            "fecha_cita" =>  str_replace("T", " ", $this->input->post("dateStart")),
-            "idCliente" => $this->input->post("id_prospecto_estatus_particular"),
+            "medio" => $objDatos->estatus_recordatorio,
+            "fecha_cita" =>  str_replace("T", " ", $objDatos->dateStart),
+            "idCliente" => $objDatos->id_prospecto_estatus_particular,
             "estatus" => 1,
-            "titulo" => $this->input->post("evtTitle"), 
-            "fecha_final" =>  str_replace("T", " ", $this->input->post("dateEnd")),
-            "id_direccion" => $this->input->post("id_direccion") ? $this->input->post("id_direccion"):null,
-            "direccion" => $this->input->post("direccion") ? $this->input->post("direccion"):null,
-            "descripcion" => $this->input->post("description")
+            "titulo" => $objDatos->evtTitle, 
+            "fecha_final" =>  str_replace("T", " ", $objDatos->dateEnd),
+            "id_direccion" => isset($objDatos->id_direccion) ? $objDatos->id_direccion :null,
+            "direccion" => isset($objDatos->direccion) ? $objDatos->direccion :null,
+            "descripcion" => $objDatos->description
         );
 
         $response = $this->General_model->addRecord('agenda', $data);
@@ -110,8 +111,8 @@ class Calendar extends CI_Controller {
                 "estatus_particular" => 3
             );
 
-            if(isset($_POST['telefono2'])){
-                $dataN['telefono_2'] = $this->input->post("telefono2");
+            if(isset($objDatos->telefono2)){
+                $dataN['telefono_2'] = $objDatos->telefono2;
             }
 
             $responseN = $this->General_model->updateRecord('prospectos', $dataN, 'id_prospecto', $this->input->post("id_prospecto_estatus_particular"));
@@ -143,6 +144,20 @@ class Calendar extends CI_Controller {
         } else {
             echo json_encode(array());
         }   
+    }
+
+    //SIDEBAR CALENDAR
+    public function getAppointmentSidebarCalendar(){
+        $data = $this->Calendar_model->getAppointmentSidebarCalendar($_POST['idAgenda']);
+        if($data != null) {
+            echo json_encode($data);
+        } else {
+            echo json_encode(array());
+        }
+    }
+
+    public function side_bar_calendar(){
+        $this->load->view('template/calendar_sidebar');
     }
 }
  

@@ -129,6 +129,26 @@ class Usuarios extends CI_Controller
     public function getUsersList()
     {
         $data['data'] = $this->Usuarios_modelo->getUsersList()->result_array();
+        //$data['contrasena'] = desencriptar($data['contrasena']);
+        echo json_encode($data);
+    }
+
+    public function usersAsesor()
+    {
+        /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/
+        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
+        /*-------------------------------------------------------------------------------*/
+        $this->load->view('template/header');
+        $this->load->view("asesor/viewUser", $datos);   
+    }
+
+    public function getUsersListAsesor()
+    {
+        $data['data'] = $this->Usuarios_modelo->getUserPassword($this->session->userdata('id_usuario'))->result_array();
+        //print_r($data['data'][0]['contrasena']);
+
+        //exit;
+        $data['data'][0]['contrasena'] = desencriptar($data['data'][0]['contrasena']);
         echo json_encode($data);
     }
 
@@ -151,7 +171,7 @@ class Usuarios extends CI_Controller
     {
         echo json_encode($this->Usuarios_modelo->getLeadersList($headquarter, $type)->result_array());
     }
-
+ 
     public function changeUserStatus()
     {
         date_default_timezone_set('America/Mexico_City');
@@ -161,7 +181,13 @@ class Usuarios extends CI_Controller
             if ($this->input->post("estatus") == 0) {
                 $estatus = 0;
                 if ($this->input->post("idrol") == 'Asesor' || $this->input->post("idrol") == 'Coordinador de ventas' || $this->input->post("idrol") == 'Gerente') {
-                    $estatus = 3;
+
+                  $VerificarComision = $this->Usuarios_modelo->VerificarComision($this->input->post("id_user"))->result_array();
+                    if(count($VerificarComision) == 0 || $VerificarComision[0]['abono_pendiente'] <= 0 ){
+                        $estatus = 0;
+                    }else{
+                        $estatus = 3;
+                    }
                     $dataBaja = array(
                         "fecha_baja" => $hoy,
                         "cantidad_descuento" => "0",

@@ -464,6 +464,11 @@ $(document).on('click', '#tree', function () {
 $(document).on('click', '#newNotary', function () {
     var data = prospectsTable.row($(this).parents('tr')).data();
     $('#idSolicitud').val(data.idSolicitud);
+    $('#nombre_notaria').val('');
+    $('#nombre_notario').val('');
+    $('#direccion').val('');
+    $('#correo').val('');
+    $('#telefono').val('');
     $("#altaNotario").modal();
 });
 
@@ -595,7 +600,7 @@ function fillTable(beginDate, endDate) {
             },
             {
                 data: function (d) {
-                    return d.tipo == 1 ? d.comentarios : d.motivos_rechazo || d.tipo == 2 ? d.comentarios : d.motivos_rechazo || d.tipo == 3 ? d.comentarios : d.motivos_rechazo;
+                    return d.tipo == 1 || d.tipo == 3 ? d.comentarios : d.tipo == 2 ? d.motivos_rechazo : d.tipo == 4 ? '':'ERROR S/TIPO';
                 }
             },
             {
@@ -694,7 +699,7 @@ function fillTable(beginDate, endDate) {
 
                             break;
                         case 13:
-                            newBtn += `<button id="observacionesButton" data-idSolicitud=${d.idSolicitud} data-action="3" class="btn-data btn-violetBoots" data-id-prospecto="" data-toggle="tooltip" data-placement="top" title="Envió Observaciones"><i class="far fa-envelope"></i></button>`;
+                            newBtn += `<button id="observacionesButton" data-idSolicitud=${d.idSolicitud} data-action="3" class="btn-data btn-violetBoots" data-id-prospecto="" data-toggle="tooltip" data-placement="top" title="Envió Observaciones"><i class="far fa-comment"></i></button>`;
                             group_buttons += permisos(d.permisos, d.expediente, d.idDocumento, d.tipo_documento, d.idSolicitud, 1, newBtn);
                             break;
                         case 14:
@@ -922,6 +927,9 @@ function getNotarias() {
             $("#construccion").selectpicker('refresh');
             $('#cliente').val(data.cliente_anterior == 1 ? 'uno':'dos').trigger('change');
             $("#cliente").selectpicker('refresh');
+            $('#nombreT').val(data.nombre_anterior);
+            $('#fechaCA').val(data.fecha_anterior);
+            $('#rfcDatos').val(data.RFC);
             $("#encabezado").html(`${data.nombreResidencial} / ${data.nombreCondominio} / ${data.nombreLote}`);
             $('#spiner-loader').addClass('hide');
     }, 'json');

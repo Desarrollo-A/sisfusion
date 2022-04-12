@@ -189,10 +189,10 @@ class Asesor extends CI_Controller
         $this->load->view("contratacion/datos_lote_contratacion_view", $datos);
     }
 
-    public function cf()
-    {
-        $this->load->view("corrida/cf_view");
-    }
+    //public function cf()
+    //{
+        //$this->load->view("corrida/cf_view");
+    //}
 
     public function cf2()
     {
@@ -787,16 +787,16 @@ class Asesor extends CI_Controller
     }
 
 
-    public function invDispAsesor()
-    {
+    //public function invDispAsesor()
+    // {
         /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/
-        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
+        //$datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
         /*-------------------------------------------------------------------------------*/
 
-        $datos["residencial"] = $this->registrolote_modelo->getResidencialQro();
-        $this->load->view('template/header');
-        $this->load->view("asesor/inventario_disponible", $datos);
-    }
+        //$datos["residencial"] = $this->registrolote_modelo->getResidencialQro();
+        //$this->load->view('template/header');
+        //$this->load->view("asesor/inventario_disponible", $datos);
+    //}
 
     public function manual()
     {
@@ -3250,13 +3250,13 @@ class Asesor extends CI_Controller
             $mail = $this->phpmailer_lib->load();
 
             // SMTP configuration
-            $mail->isSMTP();
-            $mail->Host = 'smtp.gmail.com';
-            $mail->SMTPAuth = true;
-            $mail->Username = 'no-reply@ciudadmaderas.com';
-            $mail->Password = 'Va7<*V8P';
-            $mail->SMTPSecure = 'ssl';
-            $mail->Port = 465;
+            // $mail->isSMTP();
+            // $mail->Host = 'smtp.gmail.com';
+            // $mail->SMTPAuth = true;
+            // $mail->Username = 'no-reply@ciudadmaderas.com';
+            // $mail->Password = 'Va7<*V8PP';
+            // $mail->SMTPSecure = 'ssl';
+            // $mail->Port = 465;
 
 
             $mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
@@ -3479,13 +3479,13 @@ class Asesor extends CI_Controller
 
 
         $mail = $this->phpmailer_lib->load();
-        $mail->isSMTP();
-        $mail->Host = 'smtp.gmail.com';
-        $mail->SMTPAuth = true;
-        $mail->Username = 'no-reply@ciudadmaderas.com';
-        $mail->Password = 'Va7<*V8P';
-        $mail->SMTPSecure = 'ssl';
-        $mail->Port = 465;
+        // $mail->isSMTP();
+        // $mail->Host = 'smtp.gmail.com';
+        // $mail->SMTPAuth = true;
+        // $mail->Username = 'no-reply@ciudadmaderas.com';
+        // $mail->Password = 'Va7<*V8PP';
+        // $mail->SMTPSecure = 'ssl';
+        // $mail->Port = 465;
         $mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
         $mail->addAddress($correoDir);/*$correoDir*/
 
@@ -5230,21 +5230,21 @@ class Asesor extends CI_Controller
 
     public function notifyRejEv($correo, $data_eviRec, $sede)
     {
-        $correo_new = 'programador.analista8@ciudadmaderas.com';/*se coloca el correo de testeo para desarrollo*/
-        /*$correoDir = $dataUser[0]->correo;linea de codigo para produccion*/
+        // $correo_new = 'programador.analista8@ciudadmaderas.com';/*se coloca el correo de testeo para desarrollo*/
+        $correoDir = $dataUser[0]->correo;
 
 
         $mail = $this->phpmailer_lib->load();
-        $mail->isSMTP();
-        $mail->Host = 'smtp.gmail.com';
-        $mail->SMTPAuth = true;
-        $mail->Username = 'no-reply@ciudadmaderas.com';
-        $mail->Password = 'Va7<*V8P';
-        $mail->SMTPSecure = 'ssl';
-        $mail->Port = 465;
+        // $mail->isSMTP();
+        // $mail->Host = 'smtp.gmail.com';
+        // $mail->SMTPAuth = true;
+        // $mail->Username = 'no-reply@ciudadmaderas.com';
+        // $mail->Password = 'Va7<*V8PP';
+        // $mail->SMTPSecure = 'ssl';
+        // $mail->Port = 465;
         $mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
         $mail->addAddress($correo_new);
-        $mail->addCC('erick_eternal@live.com.mx');
+        // $mail->addCC('erick_eternal@live.com.mx');
         //$mail->addBCC('copia_oculta@outlook.com');
 
         $mail->Subject = utf8_decode('[' . strtoupper($sede) . '][REPORTE] EVIDENCIAS RECHAZADAS PARA:' . $correo);
@@ -5523,5 +5523,12 @@ class Asesor extends CI_Controller
             echo json_encode($data);
         else
             echo json_encode(array());
+    }
+
+    public function viewGrafica()
+    {
+        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
+        $this->load->view('template/header');
+        $this->load->view("asesor/grafica_comisiones", $datos);
     }
 }
