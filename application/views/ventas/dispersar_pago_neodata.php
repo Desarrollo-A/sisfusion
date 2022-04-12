@@ -51,20 +51,27 @@
         <div class="modal fade" id="myUpdateBanderaModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog">
                 <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-                            <i class="material-icons">clear</i>
-                        </button>
-                    </div>
+                    
                     <form id="my_updatebandera_form" name="my_updatebandera_form" method="post">
+                    <div class="modal-header">
+                        <button type="button"class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title"><b>Modificar estatus</b></h4>
+                    </div>
                         <div class="modal-body" style="text-align: center;">
                             <input type="hidden" name="id_pagoc" id="id_pagoc">
                             <input type="hidden" name="param" id="param">
-                            <h4 class="modal-title"><b>¿Está seguro de regresar este lote a activas?</b></h4>
+                            <h4 class="modal-title">¿Está seguro de regresar el lote a comisiones activas?</h4>
+                            <center><img src="../static/images/back-arrow.gif" width="120" height="100"></center>
                         </div>
                         <div class="modal-footer">
-                            <button type="submit" class="btn btn-primary">Aceptar</button>
-                            <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                        <div class="col-md-3"></div>
+                            <div class="col-md-3"><input type="submit" class="btn btn-success" name="disper_btn"  id="Regresar" value="Regresar"></div>
+                            
+                            <div class="col-md-3"><input type="button" class="btn btn-danger" data-dismiss="modal" value="CANCELAR"></div> 
+
+
+                            <!-- <button type="submit" class="btn btn-primary">Aceptar</button>
+                            <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button> -->
                         </div>
                     </form>
                 </div>
@@ -190,7 +197,6 @@
                                                         <th>TIPO VENTA</th>
                                                         <th>MODALIDAD</th>
                                                         <th>CONTRATACIÓN</th>
-                                                         
                                                         <th>PLAN VENTA</th>
                                                         <th>F. NEODATA</th>
                                                         <th>MÁS</th>
@@ -264,7 +270,7 @@
                 titleAttr: 'Descargar archivo de Excel',
                 title: 'REPORTE DISPERSIÓN DE PAGO',
                 exportOptions: {
-                    columns: [1,2,3,4,5,6,7,8,9,10],
+                    columns: [1,2,3,4,5,6,7,8,9,10,11],
                     format: {
                         header:  function (d, columnIdx) {
                             if(columnIdx == 0){
@@ -371,57 +377,19 @@
                     return lblStats;
                 }
             },
-            // {
-            //     "width": "8%",
-            //     "data": function( d ){
-            //         return '<span class="label label-success" style="background:#69C1A2;">'+d.fechaApartado+'</span>';
-            //      }
-            // },
+   
             {
                 "width": "8%",
                 "data": function( d ){
                     var lblStats;
                     if(d.totalNeto2==null) {
                         lblStats ='<span class="label label-danger">Sin precio lote</span>';
-                    } else{
-
-                        if(d.descuento_mdb == 1){
-
-                            lblStats ='<span class="label" style="background:#8069B4;">MARTHA DEBAYLE</span>';
-                        }else{
-
-                        switch(d.lugar_prospeccion){        
-                            case '6':
-                                if(d.registro_comision == 2){
-                                    lblStats ='<span class="label" style="background:#11DFC6;">SOLICITADO MKT</span>';
-                                }else{
-                                    lblStats ='<span class="label" style="background:#B4A269;">MARKETING DIGÍTAL</span>';
-                                }
-                            break;
-
-                            case '12':
-                                lblStats ='<span class="label" style="background:#00548C;">CLUB MADERAS</span>';
-                            break;
-
-                            case '26':
-                                lblStats ='<span class="label" style="background:#0860BA;">COREANO VLOGS</span>';
-                            break;
-
-                            case '29':
-                                lblStats ='<span class="label" style="background:#0891BB;">COREANO VLOGS + MKTD</span>';
-                            break;
-
-                            case '32':
-                                lblStats ='<span class="label" style="background:#BA0899;">YO AMO SLP</span>';
-                            break;
-                            default:
-                                lblStats ='';
-                            break;
-                        }
+                    } else if(d.registro_comision == 2){
+                        lblStats ='<span class="label" style="background:#11DFC6;">SOLICITADO MKT</span>'+' '+d.plan_descripcion;
+                    }else{
+                        lblStats = d.plan_descripcion;
                     }
-                }
-                var lastlblStats = lblStats+' '+d.plan_descripcion;
-                    return lastlblStats;
+                    return lblStats;
                 }
             },
             {
@@ -431,7 +399,10 @@
 
                     if(d.fecha_modificacion <= '2021-01-01' || d.fecha_modificacion == null ) {
                         lblStats ='';
-                    }else {
+                    }else if (d.registro_comision == 8){
+                        lblStats ='<span class="label label-gray" style="color:gray;">Recisión Nueva Venta</span>';
+                    }
+                    else {
                         lblStats ='<span class="label label-info">'+d.date_final+'</span>';
                     }
                     return lblStats;
@@ -444,12 +415,16 @@
                     var BtnStats;
                     var RegresaActiva = '';
                     
-                    if(data.totalNeto2==null || data.totalNeto2=='') {
-                        BtnStats = 'Asignar precio';
-                    }else if(data.id_subdirector==null || data.id_subdirector=='') {
+                    if(data.totalNeto2==null || data.totalNeto2==''|| data.totalNeto2==0) {
+                        BtnStats = 'Asignar Precio';
+                    }else if(data.id_prospecto==null || data.id_prospecto==''|| data.id_prospecto==0) {
+                        BtnStats = 'Asignar Prospecto';
+                    }else if(data.id_subdirector==null || data.id_subdirector==''|| data.id_subdirector==0) {
                         BtnStats = 'Asignar Subdirector';
-                    }else if(data.id_sede==null || data.id_sede=='') {
+                    }else if(data.id_sede==null || data.id_sede==''|| data.id_sede==0) {
                         BtnStats = 'Asignar Sede';
+                    }else if(data.plan_comision==null || data.plan_comision==''|| data.plan_comision==0) {
+                        BtnStats = 'Asignar Plan';
                     } else{
                         if(data.compartida==null) {
                             varColor  = 'btn-sky';
@@ -461,7 +436,7 @@
                             RegresaActiva = '<button href="#" data-param="1" data-idpagoc="' + data.idLote + '" ' +'class="btn-data btn-deepGray update_bandera" title="Regresar a activas">' +'<i class="fas fa-undo-alt"></i></button>';
                         }
                         
-                        BtnStats = '<button href="#" value="'+data.idLote+'" data-value="'+data.registro_comision+'" data-totalNeto2 = "'+data.totalNeto2+'" data-estatus="'+data.idStatusContratacion+'" data-cliente="'+data.id_cliente+'" data-plan="'+data.plan_comision+'" data-descplan="'+data.plan_descripcion+'" data-code="'+data.cbbtton+'" ' +'class="btn-data '+varColor+' verify_neodata" title="Verificar en NEODATA">'+'<span class="material-icons">verified_user</span></button> '+RegresaActiva+'';
+                        BtnStats = '<button href="#" value="'+data.idLote+'" data-value="'+data.registro_comision+'" data-totalNeto2 = "'+data.totalNeto2+'" data-estatus="'+data.idStatusContratacion+'" data-cliente="'+data.id_cliente+'" data-plan="'+data.plan_comision+'"  data-tipov="'+data.tipo_venta+'"data-descplan="'+data.plan_descripcion+'" data-code="'+data.cbbtton+'" ' +'class="btn-data '+varColor+' verify_neodata" title="Verificar en NEODATA">'+'<span class="material-icons">verified_user</span></button> '+RegresaActiva+'';
                     }
                     return '<div class="d-flex justify-center">'+BtnStats+'</div>';
                 }
@@ -504,25 +479,9 @@
                 $(this).parent().find('.animacion').removeClass("fas fa-chevron-down").addClass("fas fa-chevron-up");
             }
         });
-
-    
-
-        // async function VerificarUsers(idLote,compartida,tipo_venta,lugar_prospeccionLote,mdb,ismktd,IdResidencial){
-        //     return new Promise(resolve => {
-        //         $.getJSON( url + "Comisiones/getUsersClient/"+idLote+"/"+compartida+"/"+tipo_venta+"/"+lugar_prospeccionLote+"/"+mdb+"/"+ismktd+"/"+IdResidencial).done( function( data ){
-        //             resolve({data:data});
-        //         });
-        //     });
-        // }
-
+ 
         $("#tabla_ingresar_9 tbody").on("click", ".verify_neodata", async function(){ 
-
-            // subdirector = $(this).attr("data-subdirector");
-            // if(subdirector == 0){
-            //             alerts.showNotification("top", "right", "Este lote requiere asignar un Subdirector, favor de inidicarlo via Ticket a sistemas", "warning");
-            // }else{
-
-                // $("#tabla_ingresar_9 tbody").on("click", ".verify_neodata", async function(){ 
+ 
             $("#modal_NEODATA .modal-header").html("");
             $("#modal_NEODATA .modal-body").html("");
             $("#modal_NEODATA .modal-footer").html("");
@@ -537,27 +496,8 @@
             idCliente = $(this).attr("data-cliente");
             plan_comision = $(this).attr("data-plan");
             descripcion_plan = $(this).attr("data-descplan");
-            
-
-            //  data-code="'+data.cbbtton+'" ' +'class="btn-data '+varColor+' verify_neodata"
-            // compartida = $(this).attr("data-compartida");
-            // tipo_venta = $(this).attr("data-tipov");
-            // lugar_prospeccionLote = $(this).attr("data-lugarP");
-            
-            
-            // IdResidencial = $(this).attr("data-idResidencial");
-
-            // ismktd = $(this).attr("data-ismktd");
-            // console.log($(this).attr("data-mdb"));
-            // let martha = $(this).attr("data-mdb");
-        
-            // let mdb = ( martha == 'null' || martha == undefined) ? 0 : martha;
-
-            // var bandera_anticipo = 0;
-
-
-            // let resulq = await VerificarUsers(idLote,compartida,tipo_venta,lugar_prospeccionLote,mdb,ismktd,IdResidencial);
-            // console.log(resulq);
+ 
+            tipo_venta = $(this).attr("data-tipov");
 
             if(parseFloat(totalNeto2) > 0){
            
@@ -595,11 +535,7 @@
                                         // FINAL BONIFICACION *********************************
 
                                         $("#modal_NEODATA .modal-body").append(`<div class="row"><div class="col-md-12 text-center"><h3>Lote: <b>${row.data().nombreLote}</b></h3><l style='color:gray;'>Plan de venta: <b>${descripcion_plan}</b></l></div></div><div class="row"><div class="col-md-3 p-0"><h5>Precio lote: <b>$${formatMoney(totalNeto2)}</b></h5></div><div class="col-md-3 p-0"><h5>$ Neodata: <b style="color:${data[0].Aplicado <= 0 ? 'black' : 'blue'};">$${formatMoney(data[0].Aplicado)}</b></h5></div><div class="col-md-3 p-0"><h5>Disponible: <b style="color:green;">$${formatMoney(total0)}</b></h5></div><div class="col-md-3 p-0">${cadena}</div></div><br>`);
-
-                                        // $("#modal_NEODATA .modal-body").append(`<div class="row"><div class="col-md-12 text-center"><h5>Plan de venta: <i>${descripcion_plan}</i></h5></div></div><br>`);
-
-                                        
-
+ 
                                         
                                         // OPERACION PARA SACAR 5% *********************************
                                         first_validate = (totalNeto2 * 0.05).toFixed(3);
@@ -638,28 +574,7 @@
                                             let parteGerente=0;
                                             let parteCoord=0;
                                             let resta=0;
-                                            // if((tipo_venta == 7 || tipo_venta == 8) && data[0].Aplicado <= 10000){
-                                            //     for (let j = resultArr.length-1; j >= 0 ;j--) {
-                                                    
-                                            //         if(resultArr[j].id_rol == 7){
-                                            //             if(data[0].Aplicado > resultArr[j].comision_total){
-                                            //             parteAsesor= resultArr[j].comision_total;
-                                            //                 resta = data[0].Aplicado - resultArr[j].comision_total;
-                                            //                 if(resta > 500){
-                                            //                     if(resultArr.length == 2){
-                                            //                         parteGerente = resta;
-                                            //                     }else if(resultArr.length == 3){
-                                            //                         parteCoord=resta/2; 
-                                            //                         parteGerente = resta/2;
-                                            //                     }
-                                            //                 }
-                                            //             }else{
-                                            //                 parteAsesor=data[0].Aplicado;
-                                            //             }
-                                            //         }
-                                            //     }
-                                            // }
-                                            
+
                                             $.each( resultArr, function( i, v){
                                                 let porcentajeAse =  v.porcentaje_decimal;
                                                 let total_comision1=0;
@@ -742,7 +657,6 @@
         
                                     }
                                     else{
-                                        console.log('Entra a else ya abonado getDatosAbonadoSuma11');
                                         $.getJSON( url + "Comisiones/getDatosAbonadoSuma11/"+idLote).done( function( data1 ){
                                             let total0 = parseFloat((data[0].Aplicado));
                                             let total = 0;
@@ -755,15 +669,10 @@
 
                                             var counts=0;
 
-                                            $("#modal_NEODATA .modal-body").append(`<div class="row">
-                                            <div class="col-md-6 text-center"><h4>Lote: <b>${row.data().nombreLote}</b></h4><l style='color:gray;'>Plan de venta: <b>${descripcion_plan}</b></l></div>                                            
-                                            <div class="col-md-6 text-center"><h4>Saldo diponible: <mark><b>$${formatMoney(total0-(data1[0].abonado))}</b><mark></h4></div>
-                                            </div><br>`);
+                                            $("#modal_NEODATA .modal-body").append('<div class="row"><div class="col-md-12"><h3><i class="fa fa-info-circle" style="color:gray;"></i> Saldo diponible para <i>'+row.data().nombreLote+'</i>: <b>$'+formatMoney(total0-(data1[0].abonado))+'</b></h3></div></div><br>');
 
-
- 
                                             $("#modal_NEODATA .modal-body").append('<div class="row">'+
-                                            '<div class="col-md-4">Total a pagar: <b style="color:blue">'+formatMoney(data1[0].total_comision)+'</b></div>'+
+                                            '<div class="col-md-4">Total pago: <b style="color:blue">'+formatMoney(data1[0].total_comision)+'</b></div>'+
                                             '<div class="col-md-4">Total abonado: <b style="color:green">'+formatMoney(data1[0].abonado)+'</b></div>'+
                                             '<div class="col-md-4">Total pendiente: <b style="color:orange">'+formatMoney((data1[0].total_comision)-(data1[0].abonado))+'</b></div></div>');
 
@@ -790,26 +699,27 @@
 
                                                 $.each( data, function( i, v){
                                                     saldo =0;
-                                                    // if(tipo_venta == 7 && coor == 2){
-                                                    //     total = total - data1[0].abonado;
-                                                    //     console.log(total);
+                                                    if(tipo_venta == 7 && coor == 2){
+                                                        total = total - data1[0].abonado;
+                                                        console.log(total);
 
-                                                    //     saldo = tipo_venta == 7 && v.rol_generado == "3" ? (0.925*total) : tipo_venta == 7 && v.rol_generado == "7" ? (0.075*total) : ((12.5 *(v.porcentaje_decimal / 100)) * total);
+                                                        saldo = tipo_venta == 7 && v.rol_generado == "3" ? (0.925*total) : tipo_venta == 7 && v.rol_generado == "7" ? (0.075*total) : ((12.5 *(v.porcentaje_decimal / 100)) * total);
 
-                                                    // }
-                                                    // else if(tipo_venta == 7 && coor == 3){
-                                                    //     total = total - data1[0].abonado;
-                                                    //     console.log(total);
-                                                    //     saldo = tipo_venta == 7 && v.rol_generado == "3" ? (0.675*total) : tipo_venta == 7 && v.rol_generado == "7" ? (0.075*total) : tipo_venta == 7 && v.rol_generado == "9" ?  (0.25*total) :   ((12.5 *(v.porcentaje_decimal / 100)) * total);
-                                                    // }
-                                                    // else{
+                                                    }
+                                                    else if(tipo_venta == 7 && coor == 3){
+                                                        total = total - data1[0].abonado;
+                                                        console.log(total);
+                                                        saldo = tipo_venta == 7 && v.rol_generado == "3" ? (0.675*total) : tipo_venta == 7 && v.rol_generado == "7" ? (0.075*total) : tipo_venta == 7 && v.rol_generado == "9" ?  (0.25*total) :   ((12.5 *(v.porcentaje_decimal / 100)) * total);
+                                                    }
+                                                    else{
                                                         saldo =  ((12.5 *(v.porcentaje_decimal / 100)) * total);
-                                                    // }
+                                                    }
 
-                                                    if(v.abono_pagado > 0){
+                                                    if(parseFloat(v.abono_pagado) > 0){
                                                         console.log("OPCION 1");
-                                                        evaluar = (v.comision_total-v.abono_pagado);
-                                                        if(evaluar<0){
+                                                        console.log(v.colaborador);
+                                                        evaluar = (parseFloat(v.comision_total)- parseFloat(v.abono_pagado));
+                                                        if(parseFloat(evaluar) < 0){
                                                            // pending = 0;
                                                            pending=evaluar;
                                                             saldo = 0;
@@ -821,23 +731,24 @@
                                                         console.log('PENDDING: '+pending);
 
                                                         resta_1 = saldo-v.abono_pagado;
+                                                        
                                                         console.log('resta_1: '+resta_1);
 
-                                                        if(resta_1 <= 0){
+                                                        if(parseFloat(resta_1) <= 0){
                                                             saldo = 0;
                                                         }
-                                                        else if(resta_1 > 0){
-                                                            if(resta_1 > pending){
+                                                        else if(parseFloat(resta_1) > 0){
+                                                            if(parseFloat(resta_1) > parseFloat(pending)){
                                                                 saldo = pending;
                                                             }
                                                             else{
                                                                 saldo = saldo-v.abono_pagado;
                                                             }
                                                         }
-                                                        
+
                                                         console.log(saldo);
                                                     }  
-                                                    else if(v.abono_pagado < 0){
+                                                    else if(v.abono_pagado <= 0){
                                                         console.log("OPCION 2");
                                                         pending = (v.comision_total);
                                                         if(saldo > pending){
@@ -847,13 +758,11 @@
                                                             saldo = 0;
                                                         }
                                                     }
+                                                    console.log('SALDO'+saldo);
 
-
-                                                    
-                                            if( (saldo + v.abono_pagado) > v.comision_total){
-                                                saldo = 0;
-                                            }
-
+                                                    if( (parseFloat(saldo) + parseFloat(v.abono_pagado)) > parseFloat(v.comision_total)){
+                                                            saldo = 0;
+                                                        }
                                                     $("#modal_NEODATA .modal-body").append(`<div class="row">
                                                     <div class="col-md-3"><input id="id_disparador" type="hidden" name="id_disparador" value="1"><input type="hidden" name="pago_neo" id="pago_neo" value="${total.toFixed(3)}">
                                                     <input type="hidden" name="pending" id="pending" value="${pending}"><input type="hidden" name="idLote" id="idLote" value="${idLote}">
@@ -906,11 +815,7 @@
                     
                     $("#modal_NEODATA").modal();
                 }
-        //     // } 
-        //     else{
-        //         alerts.showNotification("top", "right", "El lote no tiene precio asignado en inventario", "warning");
-        //     }
-        // // }
+ 
         }); //FIN VERIFY_NEODATA
         /**----------------------------------------------------------------------- */
     
@@ -965,7 +870,6 @@
             });     
         }
     });   
-
 
     $("#form_pagadas").submit( function(e) {
         e.preventDefault();

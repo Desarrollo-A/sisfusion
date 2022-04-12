@@ -56,7 +56,7 @@
                             <div class="card-content">
                                 <div class="encabezadoBox">
                                     <h3 class="card-title center-align" >Comisiones liquidadas</h3>
-                                    <p class="card-title pl-1">(Comisiones donde ya se cubrio el pago total de comisones por parte de NEODATA)</p>
+                                    <p class="card-title pl-1">(Comisiones donde ya se cubrio el pago total de comisones)</p>
                                 </div>
                                 <div class="material-datatables">
                                     <div class="form-group">
@@ -65,14 +65,13 @@
                                                 <thead>
                                                     <tr>
                                                         <th></th>
-                                                        <th>ID LOTE</th>
-                                                        <th>PROYECTO</th>
-                                                        <th>CONDOMINIO</th>
+                                                        <th>ID</th>
                                                         <th>LOTE</th>
-                                                        <th>TIPO VENTA</th>
+                                                        <th>CLIENTE</th>
                                                         <th>MODALIDAD</th>
-                                                        <th>EST. CONTRATACIÓN</th>
-                                                        <th>ENT. VENTA</th>
+                                                        <th>PLAN VENTA</th>
+                                                        <th>TOTAL</th>
+                                                        <th>PENDIENTE</th>
                                                         <th>MÁS</th>
                                                     </tr>
                                                 </thead>
@@ -108,7 +107,7 @@
         $("#tabla_ingresar_9").ready(function () {
             let titulos = [];
             $('#tabla_ingresar_9 thead tr:eq(0) th').each(function (i) {
-                if (i != 0 && i != 11) {
+                if (i != 0 && i != 8) {
                     var title = $(this).text();
                     titulos.push(title);
 
@@ -178,38 +177,22 @@
                     }
                 },
                 {
-                    "width": "9%",
-                    "data": function( d ){
-                        return '<p class="m-0">'+d.nombreResidencial+'</p>';
-                    }
-                },
-                {
-                    "width": "10%",
-                    "data": function( d ){
-                        return '<p class="m-0">'+(d.nombreCondominio).toUpperCase();+'</p>';
-                    }
-                },
-                {
                     "width": "15%",
                     "data": function( d ){
                         return '<p class="m-0">'+d.nombreLote+'</p>';
                     }
                 }, 
-                 {
-                "width": "8%",
+
+
+                {
+                "width": "12%",
                 "data": function( d ){
-                    var lblType;
-                    if(d.tipo_venta==1) {
-                        lblType ='<span class="label label-danger">Venta Particular</span>';
-                    }else if(d.tipo_venta==2) {
-                        lblType ='<span class="label label-success">Venta normal</span>';
-                    }
-                    else if(d.tipo_venta==7) {
-                        lblType ='<span class="label label-warning">Venta especial</span>';
-                    }
-                    return lblType;
+                    return '<p class="m-0"><b>'+d.nombre_cliente+'</b></p>';
                 }
             }, 
+
+
+                  
             {
                 "width": "8%",
                 "data": function( d ){
@@ -222,64 +205,31 @@
                     return lblStats;
                 }
             }, 
+    
             {
                 "width": "8%",
                 "data": function( d ){
-                    var lblStats;
-                    if(d.idStatusContratacion==15) {
-                        lblStats ='<span class="label label-success" style="background:#9E9CD5;">Contratado</span>';
-                    }else {
-                        lblStats ='<p class="m-0"><b>'+d.idStatusContratacion+'</b></p>';
-                    }
-                    return lblStats;
+                    return d.plan_descripcion;
                 }
             },
+
+
             {
-                "width": "8%",
-                "data": function( d ){
-                    var lblStats;
-                    if(d.totalNeto2==null) {
-                        lblStats ='<span class="label label-danger">Sin precio lote</span>';
-                    } else{
+                    "width": "15%",
+                    "data": function( d ){
+                        return '$'+formatMoney(d.abono_comisiones);
+                        // return '<p class="m-0">'+d.nombreLote+'</p>';
 
-                        if(d.descuento_mdb == 1){
-
-                            lblStats ='<span class="label" style="background:#8069B4;">MARTHA DEBAYLE</span>';
-                        }else{
-
-                        switch(d.lugar_prospeccion){        
-                            case '6':
-                                if(d.registro_comision == 2){
-                                    lblStats ='<span class="label" style="background:#11DFC6;">SOLICITADO MKT</span>';
-                                }else{
-                                    lblStats ='<span class="label" style="background:#B4A269;">MARKETING DIGÍTAL</span>';
-                                }
-                            break;
-
-                            case '12':
-                                lblStats ='<span class="label" style="background:#00548C;">CLUB MADERAS</span>';
-                            break;
-
-                            case '26':
-                                lblStats ='<span class="label" style="background:#0860BA;">COREANO VLOGS</span>';
-                            break;
-
-                            case '29':
-                                lblStats ='<span class="label" style="background:#0891BB;">COREANO VLOGS + MKTD</span>';
-                            break;
-
-                            case '32':
-                                lblStats ='<span class="label" style="background:#BA0899;">YO AMO SLP</span>';
-                            break;
-                            default:
-                                lblStats ='';
-                            break;
-                        }
                     }
-                }
-                    return lblStats;
-                }
-            },
+                }, 
+                {
+                    "width": "15%",
+                    "data": function( d ){
+                        return '$'+formatMoney(d.pendiente);
+                    }
+                }, 
+
+             
                 {
                     "width": "8%",
                     "orderable": false,
@@ -316,34 +266,27 @@
             });
 
             $('#tabla_ingresar_9 tbody').on('click', 'td.details-control', function () {
-                var tr = $(this).closest('tr');
-                var row = tabla_1.row(tr);
-                if (row.child.isShown()) {
-                    row.child.hide();
-                    tr.removeClass('shown');
-                    $(this).parent().find('.animacion').removeClass("fas fa-chevron-up").addClass("fas fa-chevron-down");
-                } else {
-                    var status;
-                    var fechaVenc;
-                    if (row.data().idStatusContratacion == 8 && row.data().idMovimiento == 38) {
-                        status = 'Status 8 listo (Asistentes de Gerentes)';
-                    } else if (row.data().idStatusContratacion == 8 && row.data().idMovimiento == 65) {
-                        status = 'Status 8 enviado a Revisión (Asistentes de Gerentes)';
-                    } else {
-                        status = 'N/A';
-                    }
-                    if (row.data().idStatusContratacion == 8 && row.data().idMovimiento == 38 ||
-                        row.data().idStatusContratacion == 8 && row.data().idMovimiento == 65) {
-                        fechaVenc = row.data().fechaVenc;
-                    } else {
-                        fechaVenc = 'N/A';
-                    }
-                    var informacion_adicional = '<div class="container subBoxDetail"><div class="row"><div class="col-12 col-sm-12 col-sm-12 col-lg-12" style="border-bottom: 2px solid #fff; color: #4b4b4b; margin-bottom: 7px"><label><b>Información colaboradores</b></label></div><div class="col-12 col-sm-12 col-md-12 col-lg-12"><label><b>Subdirector: </b>' + row.data().subdirector + '</label></div><div class="col-12 col-sm-12 col-md-12 col-lg-12"><label><b>Gerente: </b>' + row.data().gerente + '</label></div><div class="col-12 col-sm-12 col-md-12 col-lg-12"><label><b>Coordinador: </b>' + row.data().coordinador + '</label></div><div class="col-12 col-sm-12 col-md-12 col-lg-12"><label><b>Asesor: </b>' + row.data().asesor + '</label></div></div></div>';
-                    row.child(informacion_adicional).show();
-                    tr.addClass('shown');
-                    $(this).parent().find('.animacion').removeClass("fas fa-chevron-down").addClass("fas fa-chevron-up");
-                }
-            });
+            var tr = $(this).closest('tr');
+            var row = tabla_1.row(tr);
+            if (row.child.isShown()) {
+                row.child.hide();
+                tr.removeClass('shown');
+                $(this).parent().find('.animacion').removeClass("fas fa-chevron-up").addClass("fas fa-chevron-down");
+            } 
+            else {
+ 
+                var informacion_adicional = `<div class="container subBoxDetail"><div class="row"><div class="col-12 col-sm-12 col-sm-12 col-lg-12" style="border-bottom: 2px solid #fff; color: #4b4b4b; margin-bottom: 7px"><label><b>Información colaboradores</b></label></div>
+                <div class="col-2 col-sm-2 col-md-2 col-lg-2"><label><b>Director: </b>` + row.data().director + `</label></div>
+                <div class="col-2 col-sm-2 col-md-2 col-lg-2"><label><b>Regional: </b>` + row.data().regional + `</label></div>
+                <div class="col-2 col-sm-2 col-md-2 col-lg-2"><label><b>Subdirector: </b>` + row.data().subdirector + `</label></div><div class="col-2 col-sm-2 col-md-2 col-lg-2"><label><b>Gerente: </b>` + row.data().gerente + `</label></div>
+                <div class="col-2 col-sm-2 col-md-2 col-lg-2"><label><b>Coordinador: </b>` + row.data().coordinador + `</label></div><div class="col-2 col-sm-2 col-md-2 col-lg-2"><label><b>Asesor: </b>` + row.data().asesor + `</label></div>
+                </div></div>`;
+
+                row.child(informacion_adicional).show();
+                tr.addClass('shown');
+                $(this).parent().find('.animacion').removeClass("fas fa-chevron-down").addClass("fas fa-chevron-up");
+            }
+        });
 
             $("#tabla_ingresar_9 tbody").on("click", ".verify_neodata", function () {
                 var tr = $(this).closest('tr');
