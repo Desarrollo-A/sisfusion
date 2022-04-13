@@ -8276,6 +8276,57 @@ return $query->result();
             ORDER BY np ASC");
         return $result->result_array();
     }
+
+    public function getPrestamosTable($rol, $user)
+    {
+        $whereUserClause = '';
+        if ($user != 0) {
+            $whereUserClause = "AND pa.id_usuario = $user";
+        }
+
+        $result = $this->db->query("SELECT pci.id_pago_i, pa.id_prestamo, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', 
+            u .apellido_materno) AS nombre_completo, 
+            oxc.nombre as puesto, pa.id_usuario, pa.monto as monto_prestado, pci.abono_neodata, pa.pago_individual, 
+            rpp.id_relacion_pp,
+            (SELECT (pa1.monto - SUM(pci1.abono_neodata)) as pendiente
+            FROM prestamos_aut pa1
+            JOIN relacion_pagos_prestamo rpp1 ON rpp1.id_prestamo = pa1.id_prestamo
+            JOIN pago_comision_ind pci1 ON pci1.id_pago_i = rpp1.id_pago_i 
+            WHERE pa1.id_usuario = pa.id_usuario
+            GROUP BY pa1.monto) pendiente
+            FROM prestamos_aut pa
+            JOIN usuarios u ON u.id_usuario = pa.id_usuario
+            JOIN relacion_pagos_prestamo rpp ON rpp.id_prestamo = pa.id_prestamo
+            JOIN pago_comision_ind pci ON pci.id_pago_i = rpp.id_pago_i 
+            JOIN opcs_x_cats oxc ON oxc.id_opcion = u.id_rol AND oxc.id_catalogo = 1
+            AND pci.estatus = 18 AND pci.descuento_aplicado = 1
+            AND u.id_rol = $rol $whereUserClause
+            ORDER BY pa.id_usuario ASC, pa.id_prestamo ASC");
+        return $result->result_array();
+    }
+
+    public function getHistorialPrestamoAut($idRelacion)
+    {
+        $result = $this->db->query("SELECT pa.id_prestamo, rpp.id_pago_i, hc.comentario, CONVERT(NVARCHAR(20), hc.fecha_movimiento, 113) fecha,
+            CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombre_usuario,
+            rpp.id_relacion_pp
+            FROM prestamos_aut pa
+            JOIN relacion_pagos_prestamo rpp ON pa.id_prestamo = rpp.id_prestamo
+            JOIN historial_comisiones hc ON rpp.id_pago_i = hc.id_pago_i
+            JOIN usuarios u ON u.id_usuario = hc.id_usuario
+            WHERE rpp.id_relacion_pp = $idRelacion
+            ORDER BY hc.fecha_movimiento DESC");
+        return $result->result_array();
+    }
+
+    public function getUserPrestamoByRol($rol)
+    {
+        $result = $this->db->query("SELECT u.id_usuario, CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) as name_user 
+            FROM usuarios u
+            JOIN prestamos_aut pa ON u.id_usuario = pa.id_usuario
+            WHERE id_rol = $rol");
+        return $result->result_array();
+    }
 /**----------------------------------------FIN BONOS Y PRESTAMOS------------------------------- */
 /**---------------------------------------------- */
 
