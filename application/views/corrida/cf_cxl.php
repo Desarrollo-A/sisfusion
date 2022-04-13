@@ -5218,12 +5218,14 @@
                     content += '<option value = ""> - Selecciona un Lote - </option>';
                     content += '</select>';
                     content += '<p id="lotetext" style="color: red;"></p>';
+                    $scope.tipo_casa = {nombre:null, casa:null};
                     $('#tcasa').addClass('hide');
                 }
                 angular.element(document.querySelector('#loteCont')).append($compile(content)($scope)); //angular directive
 
                 $http.post('<?=base_url()?>index.php/corrida/getCondominioDisponibleA',{residencial: proyecto.idResidencial}).then(
                     function (response) {
+                        console.log('$scope.tipo_casa: ', $scope.tipo_casa);
 
                         var apartado = angular.element( document.querySelector( '#aptdo' ) );
                         var mesesdiferidos = angular.element( document.querySelector( '#msdif' ) );
@@ -7814,6 +7816,7 @@
                 var gerente = ($scope.gerente == undefined) ? 0 : $scope.gerente.idGerente;
                 var plan = ($scope.plan == undefined) ? 0 : $scope.plan;
 
+
                 //-------
                 var anio2 = ($scope.yearplan == undefined) ? 0 : $scope.yearplan.yearplan;
 
@@ -7856,8 +7859,17 @@
                             }
                             var cadenaDesc = joinDesc.join(',');
                             var opcion_paquete = cadenaDesc;
-                            var precio_m2_final = $scope.decFin[$scope.decFin.length - 1].pm;
+                            // var precio_m2_final = $scope.decFin[$scope.decFin.length - 1].pm;
+                            const closest = $scope.decFin.reduce(
+                                (acc, loc) =>
+                                    acc.pm < loc.pm
+                                        ? acc
+                                        : loc
+                            )
+                            var precio_m2_final = closest.pm;
                         }
+                        // console.log("pa poner el verdadero IF: ", $scope.decFin);
+
 
                     } else {
 
@@ -7867,15 +7879,18 @@
                         }
                         var cadenaDesc = joinDesc.join(',');
                         var opcion_paquete = cadenaDesc;
-                        var precio_m2_final = $scope.decFin[$scope.decFin.length - 1].pm;
-
+                        // var precio_m2_final = $scope.decFin[$scope.decFin.length - 1].pm;
+                        const closest = $scope.decFin.reduce(
+                            (acc, loc) =>
+                                acc.pm < loc.pm
+                                    ? acc
+                                    : loc
+                        )
+                        var precio_m2_final = closest.pm;
+                        // console.log("pa poner el verdadero ELSE: ", closest.pm);
 
                     }
-
-
                 }
-
-
                 else if(paquete == 0){
                     var opcion_paquete = 0;
                     var precio_m2_final = $scope.preciom2;
@@ -8004,7 +8019,8 @@
                         observaciones: observaciones,
                         allPackages: localStorage.getItem('allPackages'),
                         corrida_dump: $scope.alphaNumeric,
-                        descApply: ($scope.descApply != undefined) ? $scope.descApply : null
+                        descApply: ($scope.descApply != undefined) ? $scope.descApply : null,
+                        tipo_casa: ($scope.tipo_casa.nombre == "Stella") ? 1 : ($scope.tipo_casa.nombre == "Aura") ? 2 : null
                     }).then(
                         function(response){
 
