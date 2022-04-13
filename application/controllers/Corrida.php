@@ -129,6 +129,8 @@ class Corrida extends CI_Controller {
 		$arreglo["observaciones"]= $objDatos->observaciones;
 		$arreglo['status'] = 0;
         $arreglo["corrida_dump"]= json_encode($objDatos->corrida_dump);
+        $arreglo["tipo_casa"]= $objDatos->tipo_casa;
+
 
 
         $array_allPackages = json_decode($objDatos->allPackages);
