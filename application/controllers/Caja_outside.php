@@ -10,10 +10,11 @@ class Caja_outside extends CI_Controller
 
 
         //$this->load->model('caja_model_outside');
-        $this->load->model(array('Clientes_model', 'caja_model_outside'));
+        $this->load->model(array('Clientes_model', 'caja_model_outside','General_model'));
         $this->load->library(array('session', 'form_validation', 'get_menu'));
         $this->load->helper(array('url', 'form'));
         $this->load->database('default');
+        
     }
 
     public function index()
@@ -2627,6 +2628,18 @@ class Caja_outside extends CI_Controller
         $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
         $this->load->view('template/header');
         $this->load->view("token/reviewTokenEvidence", $datos);
+    }
+
+    public function validarToken()
+    {
+        if(isset($_POST) && !empty($_POST)){
+            $data = array (
+                "validacion" => $this->input->post("action")
+            );
+            $response = $this->General_model->updateRecord('tokens',  $data, 'id_token', $this->input->post("id"));
+            echo json_encode($response);
+        }
+
     }
 
 }

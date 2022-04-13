@@ -53,6 +53,7 @@
                                         <th>GENERADO PARA</th>
                                         <th>FECHA ALTA</th>
                                         <th>CREADO POR</th>
+                                        <th>STATUS</th>
                                         <th>ACCIONES</th>
                                     </tr>
                                     </thead>
@@ -121,7 +122,7 @@
                     className: 'btn buttons-excel',
                     titleAttr: 'Descargar archivo de Excel',
                     exportOptions: {
-                        columns: [0, 1, 2, 3],
+                        columns: [0, 1, 2, 3, 4],
                         format: {
                             header: function (d, columnIdx) {
                                 switch (columnIdx) {
@@ -135,6 +136,9 @@
                                         break;
                                     case 3:
                                         return "CREADO POR";
+                                        break;
+                                    case 4:
+                                        return "STATUS";
                                         break;
                                 }
                             }
@@ -180,9 +184,23 @@
                 },
                 {
                     data: function (d) {
+                        return d.status;
+                    }
+                },
+                {
+                    data: function (d) {
                         let btns = '<div class="d-flex align-center justify-center">' +
                             '<button class="btn-data btn-gray reviewEvidenceToken" data-nombre-archivo="' + d.nombre_archivo +'" title="Ver evidencia"></body><i class="fas fa-eye"></i></button>' +
-                            '<button class="btn-data btn-green setToken" data-token-name="' + d.token +'" title="Copiar token"><i class="fas fa-copy"></i></button></div>';
+                            '<button class="btn-data btn-green setToken" data-token-name="' + d.token +'" title="Copiar token"><i class="fas fa-copy"></i></button>';
+                            //console.log(d.validacion);
+                            if(d.validacion == 1){
+                               btns += '<button class="btn-data btn-warning validateToken" data-action="2" data-token-id="' + d.id_token + '" title="Rechazar token"><i class="fas fa-minus"></i></button>';
+                            }
+                            if(d.validacion == 2 || d.validacion == 0){
+                                btns += '<button class="btn-data btn-green validateToken" data-action="1" data-token-id="' + d.id_token + '" title="Validar token"><i class="fas fa-check"></i></button>';
+                            }
+                            '</div>';
+                            
                         return btns;
                     }
                 }
@@ -213,6 +231,32 @@
     $(document).on('click', '.setToken', function () {
         $("#generatedToken").val($(this).attr("data-token-name"));
         copyToClipBoard();
+    });
+
+    $(document).on('click', '.validateToken', function (){
+        let action = $(this).attr("data-action");
+        let id = $(this).attr("data-token-id");
+        console.log(id);
+
+        $.ajax({
+                type: 'POST',
+                url: 'validarToken',
+                data: {
+                    'action': action,
+                    'id': id
+                },
+                dataType: 'json',
+                success: function (data) {
+                    $("#reviewTokenEvidenceTable").DataTable().ajax.reload(null, false);
+                    if (action == 2){
+                        alerts.showNotification("top", "right", "El token a sido rechazado.", "success");
+                    }else{
+                        alerts.showNotification("top", "right", "El token a sido validado.", "success");
+                    }
+                }, error: function () {
+                    alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+                }
+            });
     });
 
 </script>
