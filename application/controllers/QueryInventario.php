@@ -5,6 +5,7 @@
 		parent::__construct();
 		header('Access-Control-Allow-Origin: *');
 		$this->load->model('model_queryinventario');
+        $this->load->model('asesor/Asesor_model');
 		$this->load->library(array('session','form_validation'));
 		$this->load->library('phpmailer_lib');
 		$this->load->helper(array('url','form'));
@@ -445,12 +446,68 @@
 
         $lotes = $this->model_queryinventario->getLoteToEdit($objDatos->id_lote);
 
+//        print_r($lotes);
+//        exit;
+//        $lotes[0]['total'] += 10000;
+        //experimental
+        $data = $this->Asesor_model->getLotesInfoCorrida($objDatos->id_lote);
+        $data_casa = ($objDatos->tipo_casa==null) ? null : $objDatos->tipo_casa;
+        /*print_r($data);
+        echo '<br>';
+        print_r($data_casa);
+        exit;*/
+        $cd = json_decode(str_replace("'", '"', $data[0]['casasDetail']));
+        $total_construccion = 0; // MJ: AQUÍ VAMOS A GUARDAR EL TOTAL DE LA CONSTRUCCIÓN + LOS EXRTAS
+        /*print_r($data[0]['casasDetail']);
+        exit;*/
 
+        if($data[0]['casasDetail']!=null){
+            if(count($cd->tipo_casa) >= 1){
+                foreach($cd->tipo_casa as $value) {
+//                    print_r($value);
+//                    echo '<br><br>';
+
+                    if($data_casa->id === $value->id){
+                        $total_construccion = $value->total_const; // MJ: SE EXTRAE EL TOTAL DE LA CONSTRUCCIÓN POR TIPO DE CASA
+                        foreach($value->extras as $v) {
+                            $total_construccion += $v->techado;
+                        }
+                    }
+
+
+//                     if($value->nombre === 'Aura') {
+//                        print_r($value);
+//                        $total_construccion = $value->total_const; // MJ: SE EXTRAE EL TOTAL DE LA CONSTRUCCIÓN POR TIPO DE CASA
+//                        foreach($value->extras as $v) {
+//                            $total_construccion += $v->techado;
+//                        }
+//                     }else if($value->nombre === 'Stella'){
+//                         echo '<br><br>STELLA';
+//                     }
+                }
+            }
+        }
+
+
+        $total_nuevo = $total_construccion + $data[0]['total'];
+        $data[0]['total'] += $total_construccion;
+        $data[0]['enganche'] += $total_construccion*(.10);
+        $preciom2 = $total_nuevo/$data[0]['sup'];
+        $data[0]['precio'] = $preciom2;
+        //termina experimental
+
+        if($data != null) {
+            echo json_encode($data, JSON_NUMERIC_CHECK);
+        } else {
+            echo json_encode(array());
+        }
+        //original
+        /*
         if($lotes != null) {
             echo json_encode($lotes);
         } else {
             echo json_encode(array());
-        }
+        }*/
     }
 
 	function getLoteDisponibleA() {
