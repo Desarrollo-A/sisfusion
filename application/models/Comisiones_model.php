@@ -40,7 +40,7 @@ class Comisiones_model extends CI_Model {
 
     public function getStoppedCommissions()
     {
-        $query = $this->db-> query("SELECT DISTINCT(l.idLote), res.nombreResidencial, cond.nombre as nombreCondominio,
+        $query = $this->db->query("SELECT DISTINCT(l.idLote), res.nombreResidencial, cond.nombre as nombreCondominio,
             l.nombreLote, l.tipo_venta, vc.id_cliente AS compartida, l.idStatusContratacion,
             hl.motivo, hl.comentario
             FROM lotes l 

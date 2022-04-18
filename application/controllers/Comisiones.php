@@ -3312,6 +3312,11 @@ public function LiquidarLote(){
         echo json_encode($response);
     }
 
+    public function updateBanderaDetenida() {
+      $response = $this->Comisiones_model->updateBanderaDetenida($_POST['idLote'], $_POST['bandera']);
+      echo json_encode($response);
+    }
+
     public function changeLoteToStopped()
     {
         $response = $this->Comisiones_model
