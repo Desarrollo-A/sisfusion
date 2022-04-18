@@ -5617,7 +5617,7 @@ function getBonosPorUser($id,$estado){
 
     $cadena = 'p.id_usuario='.$id.' AND';
     if($this->session->userdata('id_rol') == 32){
-$cadena = 'u.estatus=0 AND';
+$cadena = 'u.estatus in(0,3) AND';
     }
     return $this->db->query("SELECT CONCAT(u.nombre, ' ', u.apellido_paterno, ' ' ,u.apellido_materno) as nombre,
     opcs.nombre as id_rol,p.id_bono,p.id_usuario,p.monto,p.num_pagos,p.pago,p.estatus,p.comentario,
