@@ -2472,7 +2472,7 @@
                                 // console.log($scope.lotes);
 
 
-                                $http.post('<?=base_url()?>index.php/queryInventario/getLotesToEdit', {id_lote: <?php echo $data_corrida->id_lote;?>}).then(
+                                $http.post('<?=base_url()?>index.php/queryInventario/getLotesToEdit', {id_lote: <?php echo $data_corrida->id_lote;?>, tipo_casa:<?=($data_corrida->tipo_casa != null) ?  $data_corrida->tipo_casa : '{}' ?>}).then(
                                     function(response){
                                         $scope.lotes.push(response.data[0]);
 

@@ -1858,11 +1858,11 @@ $pdf->Output(utf8_decode($namePDF), 'I');
 
 	    /*echo 'Estoy creadno el excel';
 	    exit;*/
-//	    $id_corrida = 76515;
+        //$id_corrida = 76515;
         $data_corrida = $this->Corrida_model->getAllInfoCorrida($id_corrida);
-//        print_r($data_corrida);
+        //print_r($data_corrida);
         $residencial = $data_corrida->residencial;
-//        exit;
+        //exit;
 
 
 
@@ -1931,8 +1931,8 @@ $pdf->Output(utf8_decode($namePDF), 'I');
         $sheet->getColumnDimension('C')->setWidth(20);
         $sheet->getColumnDimension('D')->setWidth(13);
         $sheet->getColumnDimension('E')->setWidth(15);
-        $sheet->getColumnDimension('F')->setWidth(15);
-        $sheet->getColumnDimension('G')->setWidth(14);
+        $sheet->getColumnDimension('F')->setWidth(18);
+        $sheet->getColumnDimension('G')->setWidth(18);
         $sheet->getColumnDimension('H')->setWidth(18);
         $sheet->getColumnDimension('I')->setWidth(15);
 
