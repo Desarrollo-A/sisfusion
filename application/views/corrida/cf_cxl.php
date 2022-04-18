@@ -8218,15 +8218,40 @@
 
                     anio = (anio == 'Activo') ? '0' : anio;
 
-                    $http.post('<?=base_url()?>index.php/corrida/editar_ds',{nombre: nombre, id_lote: id_lote, edad: edad, telefono: telefono, correo: correo, asesor: asesor, gerente: gerente,
-                        plan: plan, anio: anio, dias_pagar_enganche: dias_pagar_enganche, porcentaje_enganche: porcentaje_enganche, cantidad_enganche: cantidad_enganche, meses_diferir: meses_diferir,
-                        apartado: apartado, paquete: paquete, opcion_paquete: opcion_paquete, precio_m2_final: precio_m2_final, saldoc: saldoc, precioFinalc: precioFinalc, fechaEngc: fechaEngc,
-                        engancheFinalc: engancheFinalc, msi_1p: msi_1p, msi_2p: msi_2p, msi_3p: msi_3p, primer_mensualidad: primer_mensualidad, allDescuentos: allDescuentos, finalMesesp1: finalMesesp1, finalMesesp2: finalMesesp2,
+                    $http.post('<?=base_url()?>index.php/corrida/editar_ds',{
+                        nombre: nombre,
+                        id_lote: id_lote,
+                        edad: edad,
+                        telefono: telefono,
+                        correo: correo,
+                        asesor: asesor,
+                        gerente: gerente,
+                        plan: plan,
+                        anio: anio,
+                        dias_pagar_enganche: dias_pagar_enganche,
+                        porcentaje_enganche: porcentaje_enganche,
+                        cantidad_enganche: cantidad_enganche, meses_diferir: meses_diferir,
+                        apartado: apartado,
+                        paquete: paquete,
+                        opcion_paquete: opcion_paquete,
+                        precio_m2_final: precio_m2_final,
+                        saldoc: saldoc,
+                        precioFinalc: precioFinalc,
+                        fechaEngc: fechaEngc,
+                        engancheFinalc: engancheFinalc,
+                        msi_1p: msi_1p,
+                        msi_2p: msi_2p,
+                        msi_3p: msi_3p,
+                        primer_mensualidad: primer_mensualidad,
+                        allDescuentos: allDescuentos,
+                        finalMesesp1: finalMesesp1,
+                        finalMesesp2: finalMesesp2,
                         finalMesesp3: finalMesesp3,
                         observaciones: observaciones,
                         allPackages: localStorage.getItem('allPackages'),
                         corrida_dump: $scope.alphaNumeric,
-                        descApply: ($scope.descApply != undefined) ? $scope.descApply : null
+                        descApply: ($scope.descApply != undefined) ? $scope.descApply : null,
+                        tipo_casa: ($scope.tipo_casa.nombre == "Stella") ? 1 : ($scope.tipo_casa.nombre == "Aura") ? 2 : null
                     }).then(
                         function(response){
 
