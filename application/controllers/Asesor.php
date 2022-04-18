@@ -116,27 +116,47 @@ class Asesor extends CI_Controller
     public function getinfoLoteDisponible() {
         $objDatos = json_decode(file_get_contents("php://input"));
         $data = $this->Asesor_model->getLotesInfoCorrida($objDatos->lote);
-        /*print_r($data);
-        exit;*/
+        $data_casa = ($objDatos->tipo_casa==null) ? null : $objDatos->tipo_casa;
         $cd = json_decode(str_replace("'", '"', $data[0]['casasDetail']));
         $total_construccion = 0; // MJ: AQUÍ VAMOS A GUARDAR EL TOTAL DE LA CONSTRUCCIÓN + LOS EXRTAS
+        /*print_r($data[0]['casasDetail']);
+        exit;*/
 
-        if($data[0]['casasDetail'] == 1){
-            foreach($cd->tipo_casa as $value) {
-                // if($value->nombre == 'Aura') {
-                $total_construccion = $value->total_const; // MJ: SE EXTRAE EL TOTAL DE LA CONSTRUCCIÓN POR TIPO DE CASA
-                foreach($value->extras as $v) {
-                    $total_construccion += $v->techado;
+        if($data[0]['casasDetail']!=null){
+            if(count($cd->tipo_casa) >= 1){
+                foreach($cd->tipo_casa as $value) {
+//                    print_r($value);
+//                    echo '<br><br>';
+
+                    if($data_casa->id === $value->id){
+                        $total_construccion = $value->total_const; // MJ: SE EXTRAE EL TOTAL DE LA CONSTRUCCIÓN POR TIPO DE CASA
+                        foreach($value->extras as $v) {
+                            $total_construccion += $v->techado;
+                        }
+                    }
+
+
+//                     if($value->nombre === 'Aura') {
+//                        print_r($value);
+//                        $total_construccion = $value->total_const; // MJ: SE EXTRAE EL TOTAL DE LA CONSTRUCCIÓN POR TIPO DE CASA
+//                        foreach($value->extras as $v) {
+//                            $total_construccion += $v->techado;
+//                        }
+//                     }else if($value->nombre === 'Stella'){
+//                         echo '<br><br>STELLA';
+//                     }
                 }
-                // }
             }
         }
 
+
+        $total_nuevo = $total_construccion + $data[0]['total'];
         $data[0]['total'] += $total_construccion;
-
-
+        $data[0]['enganche'] += $total_construccion*(.10);
+        $preciom2 = $total_nuevo/$data[0]['sup'];
+        $data[0]['precio'] = $preciom2;
         if($data != null) {
-            echo json_encode($data);
+            echo json_encode($data, JSON_NUMERIC_CHECK);
         } else {
             echo json_encode(array());
         }
@@ -145,8 +165,42 @@ class Asesor extends CI_Controller
     public function getinfoLoteDisponibleE() {
         $objDatos = json_decode(file_get_contents("php://input"));
         $data = $this->Asesor_model->getLotesInfoCorridaE($objDatos->lote);
+        $getDataDB = $this->Asesor_model->getInfoCasasByLote($objDatos->lote);
+//        print_r(count($getDataDB));
+//        exit;
+        if(count($getDataDB)>0){
+            $casas = str_replace("'tipo_casa':", '', $getDataDB[0]['tipo_casa']);
+            $casas = str_replace('"', '', $casas );
+            $casas = str_replace("'", '"', $casas );
+            $data_casa = ($objDatos->tipo_casa==null) ? null : json_decode($casas);
+            $data_casa = $data_casa[0];
+
+            $cd = json_decode(str_replace("'", '"', $data[0]['casasDetail']));
+            $total_construccion = 0; // MJ: AQUÍ VAMOS A GUARDAR EL TOTAL DE LA CONSTRUCCIÓN + LOS EXRTAS
+
+            if($data[0]['casasDetail']!=null){
+                if(count($cd->tipo_casa) >= 1){
+                    foreach($cd->tipo_casa as $value) {
+                        if($data_casa->id === $value->id){
+                            $total_construccion = $value->total_const;
+                            foreach($value->extras as $v) {
+                                $total_construccion += $v->techado;
+                            }
+                        }
+                    }
+                }
+            }
+            $total_nuevo = $total_construccion + $data[0]['total'];
+            $data[0]['total'] += $total_construccion;
+            $data[0]['enganche'] += $total_construccion*(.10);
+            $preciom2 = $total_nuevo/$data[0]['sup'];
+            $data[0]['precio'] = $preciom2;
+        }
+
+
+
         if($data != null) {
-            echo json_encode($data);
+            echo json_encode($data, JSON_NUMERIC_CHECK);
         } else {
             echo json_encode(array());
         }
@@ -163,10 +217,10 @@ class Asesor extends CI_Controller
         $this->load->view("contratacion/datos_lote_contratacion_view", $datos);
     }
 
-    public function cf()
-    {
-        $this->load->view("corrida/cf_view");
-    }
+    //public function cf()
+    //{
+        //$this->load->view("corrida/cf_view");
+    //}
 
     public function cf2()
     {
@@ -761,16 +815,16 @@ class Asesor extends CI_Controller
     }
 
 
-    public function invDispAsesor()
-    {
+    //public function invDispAsesor()
+    // {
         /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/
-        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
+        //$datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
         /*-------------------------------------------------------------------------------*/
 
-        $datos["residencial"] = $this->registrolote_modelo->getResidencialQro();
-        $this->load->view('template/header');
-        $this->load->view("asesor/inventario_disponible", $datos);
-    }
+        //$datos["residencial"] = $this->registrolote_modelo->getResidencialQro();
+        //$this->load->view('template/header');
+        //$this->load->view("asesor/inventario_disponible", $datos);
+    //}
 
     public function manual()
     {
@@ -3224,13 +3278,13 @@ class Asesor extends CI_Controller
             $mail = $this->phpmailer_lib->load();
 
             // SMTP configuration
-            $mail->isSMTP();
-            $mail->Host = 'smtp.gmail.com';
-            $mail->SMTPAuth = true;
-            $mail->Username = 'no-reply@ciudadmaderas.com';
-            $mail->Password = 'Va7<*V8PP';
-            $mail->SMTPSecure = 'ssl';
-            $mail->Port = 465;
+            // $mail->isSMTP();
+            // $mail->Host = 'smtp.gmail.com';
+            // $mail->SMTPAuth = true;
+            // $mail->Username = 'no-reply@ciudadmaderas.com';
+            // $mail->Password = 'Va7<*V8PP';
+            // $mail->SMTPSecure = 'ssl';
+            // $mail->Port = 465;
 
 
             $mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
@@ -3453,13 +3507,13 @@ class Asesor extends CI_Controller
 
 
         $mail = $this->phpmailer_lib->load();
-        $mail->isSMTP();
-        $mail->Host = 'smtp.gmail.com';
-        $mail->SMTPAuth = true;
-        $mail->Username = 'no-reply@ciudadmaderas.com';
-        $mail->Password = 'Va7<*V8PP';
-        $mail->SMTPSecure = 'ssl';
-        $mail->Port = 465;
+        // $mail->isSMTP();
+        // $mail->Host = 'smtp.gmail.com';
+        // $mail->SMTPAuth = true;
+        // $mail->Username = 'no-reply@ciudadmaderas.com';
+        // $mail->Password = 'Va7<*V8PP';
+        // $mail->SMTPSecure = 'ssl';
+        // $mail->Port = 465;
         $mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
         $mail->addAddress($correoDir);/*$correoDir*/
 
@@ -5204,21 +5258,21 @@ class Asesor extends CI_Controller
 
     public function notifyRejEv($correo, $data_eviRec, $sede)
     {
-        $correo_new = 'programador.analista8@ciudadmaderas.com';/*se coloca el correo de testeo para desarrollo*/
-        /*$correoDir = $dataUser[0]->correo;linea de codigo para produccion*/
+        // $correo_new = 'programador.analista8@ciudadmaderas.com';/*se coloca el correo de testeo para desarrollo*/
+        $correoDir = $dataUser[0]->correo;
 
 
         $mail = $this->phpmailer_lib->load();
-        $mail->isSMTP();
-        $mail->Host = 'smtp.gmail.com';
-        $mail->SMTPAuth = true;
-        $mail->Username = 'no-reply@ciudadmaderas.com';
-        $mail->Password = 'Va7<*V8PP';
-        $mail->SMTPSecure = 'ssl';
-        $mail->Port = 465;
+        // $mail->isSMTP();
+        // $mail->Host = 'smtp.gmail.com';
+        // $mail->SMTPAuth = true;
+        // $mail->Username = 'no-reply@ciudadmaderas.com';
+        // $mail->Password = 'Va7<*V8PP';
+        // $mail->SMTPSecure = 'ssl';
+        // $mail->Port = 465;
         $mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
         $mail->addAddress($correo_new);
-        $mail->addCC('erick_eternal@live.com.mx');
+        // $mail->addCC('erick_eternal@live.com.mx');
         //$mail->addBCC('copia_oculta@outlook.com');
 
         $mail->Subject = utf8_decode('[' . strtoupper($sede) . '][REPORTE] EVIDENCIAS RECHAZADAS PARA:' . $correo);
@@ -5497,5 +5551,12 @@ class Asesor extends CI_Controller
             echo json_encode($data);
         else
             echo json_encode(array());
+    }
+
+    public function viewGrafica()
+    {
+        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
+        $this->load->view('template/header');
+        $this->load->view("asesor/grafica_comisiones", $datos);
     }
 }

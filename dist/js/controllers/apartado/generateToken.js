@@ -23,7 +23,7 @@ function fillTokensTable() {
                 className: 'btn buttons-excel',
                 titleAttr: 'Descargar archivo de Excel',
                 exportOptions: {
-                    columns: [0, 1, 2, 3, 4],
+                    columns: [0, 1, 2, 3, 4, 5],
                     format: {
                         header: function (d, columnIdx) {
                             switch (columnIdx) {
@@ -40,6 +40,9 @@ function fillTokensTable() {
                                     break;
                                 case 4:
                                     return "CREADO POR";
+                                    break;
+                                case 5:
+                                    return "STATUS";
                                     break;
                             }
                         }
@@ -86,6 +89,11 @@ function fillTokensTable() {
             {
                 data: function (d) {
                     return d.creado_por;
+                }
+            },
+            {
+                data: function (d) {
+                    return d.status;
                 }
             }
         ],
@@ -174,4 +182,3 @@ function copyToClipBoard() {
         alerts.showNotification("top", "right", "Token copiado al portapapeles.", "success");
     }
 }
-

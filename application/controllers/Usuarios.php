@@ -129,6 +129,26 @@ class Usuarios extends CI_Controller
     public function getUsersList()
     {
         $data['data'] = $this->Usuarios_modelo->getUsersList()->result_array();
+        //$data['contrasena'] = desencriptar($data['contrasena']);
+        echo json_encode($data);
+    }
+
+    public function usersAsesor()
+    {
+        /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/
+        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
+        /*-------------------------------------------------------------------------------*/
+        $this->load->view('template/header');
+        $this->load->view("asesor/viewUser", $datos);   
+    }
+
+    public function getUsersListAsesor()
+    {
+        $data['data'] = $this->Usuarios_modelo->getUserPassword($this->session->userdata('id_usuario'))->result_array();
+        //print_r($data['data'][0]['contrasena']);
+
+        //exit;
+        $data['data'][0]['contrasena'] = desencriptar($data['data'][0]['contrasena']);
         echo json_encode($data);
     }
 

@@ -145,5 +145,19 @@ class Calendar extends CI_Controller {
             echo json_encode(array());
         }   
     }
+
+    //SIDEBAR CALENDAR
+    public function getAppointmentSidebarCalendar(){
+        $data = $this->Calendar_model->getAppointmentSidebarCalendar($_POST['idAgenda']);
+        if($data != null) {
+            echo json_encode($data);
+        } else {
+            echo json_encode(array());
+        }
+    }
+
+    public function side_bar_calendar(){
+        $this->load->view('template/calendar_sidebar');
+    }
 }
  

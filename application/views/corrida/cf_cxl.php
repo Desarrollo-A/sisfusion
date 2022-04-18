@@ -306,8 +306,8 @@
                                     <td align="right">&nbsp&nbsp</td>
 
 
-                                    <td rowspan=4 align="left"><img src="https://www.ciudadmaderas.com/assets/img/logo.png" style=" max-width: 70%; height: auto;"></td>
-                                    <td rowspan=4 align="right"><b style="font-size: 2em; font-family:'Sabon LT Std', 'Hoefler Text', 'Palatino Linotype', 'Book Antiqua', serif;"> CORRIDA FINANCIERA<BR></b><small style="font-size: 1.5em; font-family: 'Sabon LT Std', 'Hoefler Text', 'Palatino Linotype', 'Book Antiqua', serif; color: #777;"> Ciudad Maderas</small>
+                                    <td rowspan=4 align="left"><img src="https://maderascrm.gphsis.com/static/images/logo_ciudadmaderasAct.jpg" style=" max-width: 70%; height: auto;padding:20px"></td>
+                                    <td rowspan=4 align="right"><b style="font-size: 2em; font-family:'Sabon LT Std', 'Hoefler Text', 'Palatino Linotype', 'Book Antiqua', serif;"> CORRIDA FINANCIERA<BR></b><small style="font-size: 1.5em; font-family: 'Sabon LT Std', 'Hoefler Text', 'Palatino Linotype', 'Book Antiqua', serif; color: #777;"></small>
                                     </td>
                                     <td align="right">&nbsp&nbsp</td>
                                 </tr>
@@ -411,18 +411,24 @@
                                             <option value = ""> - Selecciona un Proyecto - </option>
                                         </select>
                                     </div>
-                                    <div class="col-md-2 form-group" >
+                                    <div class="col-md-2 form-group" id="condominioCont">
                                         <label>Condominio:</label>
                                         <select ng-model="condominio" ng-options="item.nombre for item in condominios" ng-change="onSelectChangec(condominio)" class="form-control" style="text-transform: uppercase;">
                                             <option value = ""> - Selecciona un Condominio - </option>
                                         </select>
                                     </div>
-                                    <div class="col-md-3 form-group" >
+                                    <div class="col-md-3 form-group" id="loteCont">
                                         <label>Lote:</label>
                                         <select ng-model="lote" id="lote" ng-options="item.nombreLote for item in lotes" ng-change="onSelectChangel(lote)" class="form-control">
                                             <option value = ""> - Selecciona un Lote - </option>
                                         </select>
                                         <p id="lotetext" style="color: red;"></p>
+                                    </div>
+                                    <div class="col-md-2 form-group hide" id="tcasa">
+                                        <label>Tipo casa:</label>
+                                        <select ng-model="tipo_casa" id="tipo_casa" ng-options="item.nombre for item in tipo_casas" ng-change="onSelectChangeLC(tipo_casa, lote)" class="form-control">
+                                            <option value = ""> - Selecciona un Lote - </option>
+                                        </select>
                                     </div>
                                     <div class="col-md-2 form-group" >
                                         <label>Plan:</label>
@@ -433,7 +439,7 @@
                                         </select>
                                         <p id="plantext" style="color: red;"></p>
                                     </div>
-                                    <div class="col-md-2 form-group" >
+                                    <div class="col-md-2 form-group" id="anioCont">
                                         <label>Años:</label>
                                         <select ng-model="yearplan" id="yearplan" ng-options="item.yearplan for item in yearsplan" class="form-control" ng-change="getAgePlan()">
                                             <option value = ""> - Selecciona los años - </option>
@@ -1006,7 +1012,7 @@
 
 
 
-        myApp.controller('myController', function ($scope, $http, $window, DTOptionsBuilder, DTColumnBuilder) {
+        myApp.controller('myController', function ($scope, $compile, $http, $window, DTOptionsBuilder, DTColumnBuilder) {
 
             var descuentosAplicados = [];
 
@@ -4925,7 +4931,7 @@
             $scope.ages = [{age: 18}, {age: 19}, {age: 20}, {age: 21},{age: 22}, {age: 23}, {age: 24}, {age: 25},{age: 26}, {age: 27}, {age: 28}, {age: 29},{age: 30}, {age: 31}, {age: 32},{age: 33}, {age: 34}, {age: 35}, {age: 36},{age: 37}, {age: 38}, {age: 39}, {age: 40}, {age: 41}, {age: 42}, {age: 43}, {age: 44}, {age: 45}, {age: 46}, {age: 47}, {age: 48}, {age: 49}, {age: 50}, {age: 51}, {age: 52}, {age: 53}, {age: 54}, {age: 55},{age: 56}, {age: 57}, {age: 58}, {age: 59}, {age: 60}, {age: 61}, {age: 62},{age: 63}, {age: 64}, {age: 65}, {age: 66}, {age: 67}, {age: 68}, {age: 69}, {age: 70},{age: 71}, {age: 72}, {age: 73}, {age: 74},{age: 75},{age: 76},{age: 77},{age: 78},{age: 79},{age: 80}]
 
 
-            $scope.diasEnganche = [{day: 7}, {day: 25}, {day: 'Diferido'}]
+            $scope.diasEnganche = [{day: 7}, {day: 25}, {day: 'Diferido'}];
 
             $scope.diasDiferidos = [1, 2, 3, 4, 5, 6];
 
@@ -5180,8 +5186,46 @@
                 });
 
             $scope.onSelectChangep = function(proyecto) {
+                // condominioCont
+                // loteCont
+                // anioCont
+                let content;
+                let residencial = proyecto.idResidencial;
+                console.log('residencial: ', residencial);
+                $('#loteCont').empty();
+                if(residencial == 17 || residencial == 28){
+                    $('#loteCont').removeClass('col-md-3');
+                    $('#loteCont').addClass('col-md-2');
+
+                    $('#anioCont').removeClass('col-md-2');
+                    $('#anioCont').addClass('col-md-1');
+                    content = ' <label>Lotes:</label>';
+                    content += '<select ng-model="lote" id="lote" ng-options="item.nombreLote for item in lotes" ng-change="loadCasasData(lote)" class="form-control">';
+                    content += '<option value = ""> - Selecciona un Lote - </option>';
+                    content += '</select>';
+                    content += '<p id="lotetext" style="color: red;"></p>';
+
+                    $('#tcasa').removeClass('hide');
+                }else{
+                    $('#loteCont').removeClass('col-md-2');
+                    $('#loteCont').addClass('col-md-3');
+
+                    $('#anioCont').removeClass('col-md-1');
+                    $('#anioCont').addClass('col-md-2');
+
+                    content = ' <label>Lotes:</label>';
+                    content += '<select ng-model="lote" id="lote" ng-options="item.nombreLote for item in lotes" ng-change="onSelectChangel(lote)" class="form-control">';
+                    content += '<option value = ""> - Selecciona un Lote - </option>';
+                    content += '</select>';
+                    content += '<p id="lotetext" style="color: red;"></p>';
+                    $scope.tipo_casa = {nombre:null, casa:null};
+                    $('#tcasa').addClass('hide');
+                }
+                angular.element(document.querySelector('#loteCont')).append($compile(content)($scope)); //angular directive
+
                 $http.post('<?=base_url()?>index.php/corrida/getCondominioDisponibleA',{residencial: proyecto.idResidencial}).then(
                     function (response) {
+                        console.log('$scope.tipo_casa: ', $scope.tipo_casa);
 
                         var apartado = angular.element( document.querySelector( '#aptdo' ) );
                         var mesesdiferidos = angular.element( document.querySelector( '#msdif' ) );
@@ -5191,7 +5235,7 @@
                         $scope.condominios = response.data;
                         $scope.lotes = "";
                         $scope.plan = "";
-                        $scope.diasEnganche = [{day: 7}, {day: 25}, {day: 'Diferido'}]
+                        $scope.diasEnganche = [{day: 7}, {day: 25}, {day: 'Diferido'}];
                         $scope.porcentaje="";
                         $scope.cantidad="";
                         apartado.val('0');
@@ -5269,10 +5313,26 @@
                     });
             }
 
+            $scope.loadCasasData = function(lote){
+                console.log('Lote eligedo: ', lote);
+                let idLote = lote.idLote;
+                let nombreLote = lote.nombreLote;
+                let supLote = lote.sup;
+                let totalLote = lote.total;
+                $http.post('<?=base_url()?>index.php/corrida/getInfoCasasRes',{idLote: idLote}).then(
+                    function (response) {
+                        $scope.tipo_casas = response.data;
+                        console.log("$scope.tipo_casas: ", $scope.tipo_casas);
+                    },
+                    function (response) {
+                    });
+            }
+
             $scope.onSelectChangec = function(condominio) {
                 $http.post('<?=base_url()?>index.php/queryInventario/getLoteDisponibleA',{condominio: condominio.idCondominio}).then(
                     function (response) {
                         $scope.lotes = response.data;
+                        console.log('$scope.lotes: ', $scope.lotes);
 
                         var apartado = angular.element( document.querySelector( '#aptdo' ) );
                         var mesesdiferidos = angular.element( document.querySelector( '#msdif' ) );
@@ -5280,7 +5340,7 @@
                         var cehboxInterno = angular.element( document.querySelector('#paquete.id_paquete') );
 
                         $scope.plan = "";
-                        $scope.diasEnganche = [{day: 7}, {day: 25}, {day: 'Diferido'}]
+                        $scope.diasEnganche = [{day: 7}, {day: 25}, {day: 'Diferido'}];
                         $scope.porcentaje="";
                         $scope.cantidad="";
                         apartado.val('0');
@@ -5357,8 +5417,10 @@
                     });
             }
             $scope.onSelectChangel = function(lote) {
-                $http.post('<?=base_url()?>index.php/Asesor/getinfoLoteDisponible',{lote: lote.idLote}).then(
+                console.log("Lotes: ", lote);
+                $http.post('<?=base_url()?>index.php/Asesor/getinfoLoteDisponible',{lote: lote.idLote, tipo_casa:null}).then(
                     function (response) {
+                        console.log("response: ", response);
 
 
                         /*Reinicia los valores del arreglo que trae descuentos*/
@@ -5370,7 +5432,6 @@
                         $scope.descMSI = 0;
 
                         $scope.descDateOctubre = 0;
-
 
                         $scope.descDateEneroMerida = 0;
                         $scope.descDateMayoMerida = 0;
@@ -6515,6 +6576,1170 @@
                     });
             }
 
+            $scope.onSelectChangeLC = function(tipo_casa , lote) {
+                console.log("tipo_casa: ", tipo_casa);
+                console.log("lote: ", lote);
+
+                $http.post('<?=base_url()?>index.php/Asesor/getinfoLoteDisponible',{lote: lote.idLote, tipo_casa: tipo_casa}).then(
+                    function (response) {
+
+
+                        /*Reinicia los valores del arreglo que trae descuentos*/
+                        descuentosAplicados=[];
+                        $scope.selected = {};
+                        $scope.porcentaje = $scope.porcentajeEng = 0;
+                        $scope.descDateEnero = 0;
+                        $scope.noPagomensualidad = 0;
+                        $scope.descMSI = 0;
+
+                        $scope.descDateOctubre = 0;
+
+
+                        $scope.descDateEneroMerida = 0;
+                        $scope.descDateMayoMerida = 0;
+                        $scope.descDateSeptiembreMerida = 0;
+
+                        $scope.descDateEneroMeridaC = 0;
+                        $scope.descDateMayoMeridaC = 0;
+                        $scope.descDateSeptiembreMeridaC = 0;
+
+
+                        $scope.descDateEneroLM1 = 0;
+                        $scope.descDateEneroLM2 = 0;
+                        $scope.descDateEneroLM3 = 0;
+                        $scope.descDateSepLM4 = 0;
+
+
+                        $scope.descDateEneroLM1C = 0;
+                        $scope.descDateEneroLM2C = 0;
+                        $scope.descDateSepLM3C = 0;
+                        $scope.descDateSepLM4C = 0;
+
+
+
+                        $scope.descDateEneroL1 = 0;
+                        $scope.descDateEneroL2 = 0;
+                        $scope.descDateEneroL3 = 0;
+                        $scope.descDateEneroL4 = 0;
+                        $scope.descDateSepL1 = 0;
+
+
+                        $scope.descDateEneroL5 = 0;
+                        $scope.descDateEneroL6 = 0;
+                        $scope.descDateEneroL7 = 0;
+                        $scope.descDateSepL2 = 0;
+                        $scope.descDateSepL3 = 0;
+
+                        $scope.descDateEneroL8 = 0;
+                        $scope.descDateEneroL9 = 0;
+                        $scope.descDateSepL4 = 0;
+                        $scope.descDateSepL5 = 0;
+
+
+
+                        $scope.descDateEneroAllQro1 = 0;
+                        $scope.descDateEneroAllQro2 = 0;
+                        $scope.descDateSepAllQro1 = 0;
+                        $scope.descDateSepAllQro2 = 0;
+                        $scope.descDateMayoAllQro1 = 0;
+                        $scope.descDateMayoAllQro2 = 0;
+
+
+                        $scope.descDateMayoSLP = 0;
+
+                        $scope.engancheCincoMil = 0;
+                        $scope.engancheVeintiCincoMilMerida = 0;
+
+                        $scope.engancheCincoMilLM = 0;
+                        $scope.engancheVeintiCincoMilLM = 0;
+                        $scope.engancheCincoMilL1 = 0;
+                        $scope.engancheCincoMilL2 = 0;
+                        $scope.engancheVeintiCincoMilL = 0;
+
+
+                        $scope.helpMxMerida1 = 0;
+                        $scope.helpMxMerida2 = 0;
+                        $scope.helpMxMerida3 = 0;
+                        $scope.helpMxMerida4 = 0;
+
+                        $scope.descDateEneroS1YS2 = 0;
+                        $scope.descDateEng0S1YS2 = 0;
+
+                        $scope.engancheDiezMilLSLP = 0;
+
+
+
+
+                        $scope.cinco_milM = 0;
+                        $scope.veinteJ_milM = 0;
+                        $scope.diez_milM = 0;
+
+                        $scope.cinco_milL = 0;
+                        $scope.diez_milL = 0;
+                        $scope.veinticinco_milL = 0;
+
+                        $scope.cinco_milLM = 0;
+                        $scope.veinticinco_milLM = 0;
+                        $scope.veinticinco_milLM2 = 0;
+
+
+                        $scope.ceroQ1 = 0;
+                        $scope.ceroQ2 = 0;
+                        $scope.ceroQ3 = 0;
+                        $scope.ceroQ4 = 0;
+
+
+                        $scope.cyd_slp1 = 0;
+                        $scope.cyd_slp2 = 0;
+
+                        $scope.cincoCSLP = 0;
+                        $scope.cincoCL = 0;
+
+
+                        $scope.selectDescuentos = function(descuento, checked){
+
+                            var idx = descuentosAplicados.indexOf(descuento);
+                            /* console.log('Tienes un número negativo ' +idx); */
+                            if (idx >= 0 && !checked) {
+                                descuentosAplicados.splice(idx, 1);
+                                $scope.descApply = descuentosAplicados;
+
+
+                                for(var descuentos of $scope.descApply){
+
+                                    if(descuentos.id_paquete == 261 || descuentos.id_paquete == 151 || descuentos.id_paquete == 368 || descuentos.id_paquete == 369 || descuentos.id_paquete == 263 || descuentos.id_paquete == 268 || descuentos.id_paquete == 269
+                                        || descuentos.id_paquete == 265 || descuentos.id_paquete == 270 || descuentos.id_paquete == 271 || descuentos.id_paquete == 272 || descuentos.id_paquete == 273 || descuentos.id_paquete == 274
+                                        || descuentos.id_paquete == 275 || descuentos.id_paquete == 276 || descuentos.id_paquete == 278 || descuentos.id_paquete == 279 || descuentos.id_paquete == 280 || descuentos.id_paquete == 281
+
+
+                                        || descuentos.id_paquete == 283 || descuentos.id_paquete == 284 || descuentos.id_paquete == 285 || descuentos.id_paquete == 286 || descuentos.id_paquete == 287
+
+
+                                        || descuentos.id_paquete == 289 || descuentos.id_paquete == 290 || descuentos.id_paquete == 291 || descuentos.id_paquete == 292 || descuentos.id_paquete == 293
+                                        || descuentos.id_paquete == 295 || descuentos.id_paquete == 296 || descuentos.id_paquete == 297 || descuentos.id_paquete == 298
+
+
+
+                                        || descuentos.id_paquete == 300 || descuentos.id_paquete == 301 || descuentos.id_paquete == 302 || descuentos.id_paquete == 303
+                                        || descuentos.id_paquete == 304 || descuentos.id_paquete == 305
+
+                                        || descuentos.id_paquete == 262
+
+                                        || descuentos.id_paquete == 277 || descuentos.id_paquete == 282 || descuentos.id_paquete == 288 || descuentos.id_paquete == 294
+                                        || descuentos.id_paquete == 299 || descuentos.id_paquete == 307 || descuentos.id_paquete == 308 || descuentos.id_paquete == 309 || descuentos.id_paquete == 310
+
+                                        || descuentos.id_paquete == 311 || descuentos.id_paquete == 312
+                                        || descuentos.id_paquete == 313
+
+
+                                        || descuentos.id_paquete == 267
+                                        || descuentos.id_paquete == 351
+                                        || descuentos.id_paquete == 354
+
+
+                                        || descuentos.id_paquete == 317
+                                        || descuentos.id_paquete == 320
+                                        || descuentos.id_paquete == 324
+
+                                        || descuentos.id_paquete == 329
+                                        || descuentos.id_paquete == 333
+
+
+                                        || descuentos.id_paquete == 360
+                                        || descuentos.id_paquete == 361
+                                        || descuentos.id_paquete == 362
+                                        || descuentos.id_paquete == 365
+
+                                        || descuentos.id_paquete == 366
+                                        || descuentos.id_paquete == 367
+
+                                        || descuentos.id_paquete == 370
+                                        || descuentos.id_paquete == 373
+                                        || descuentos.id_paquete == 378
+
+
+                                    ){
+                                        if(descuentos.id_paquete == 261){
+                                            $scope.descDateEnero = 1;
+                                        } else if (descuentos.id_paquete == 151){
+                                            $scope.noPagomensualidad = 1;
+                                        } else if (descuentos.id_paquete == 368 || descuentos.id_paquete == 369){
+                                            $scope.descMSI = 1;
+                                        } else if (descuentos.id_paquete == 263){
+                                            $scope.descDateOctubre = 1;
+                                        } else if (descuentos.id_paquete == 268){
+                                            $scope.descDateSeptiembreMerida = 1;
+                                        } else if (descuentos.id_paquete == 269){
+                                            $scope.descDateMayoMerida = 1;
+                                            $scope.engancheCincoMil = 1;
+
+                                        } else if (descuentos.id_paquete == 265){
+                                            $scope.descDateEneroMerida = 1;
+                                        } else if (descuentos.id_paquete == 270){
+                                            $scope.descDateEneroMeridaC = 1;
+                                        } else if (descuentos.id_paquete == 271){
+                                            $scope.descDateSeptiembreMeridaC = 1;
+                                        } else if (descuentos.id_paquete == 272){
+                                            $scope.descDateMayoMeridaC = 1;
+                                            $scope.engancheVeintiCincoMilMerida = 1;
+
+                                        }
+
+
+                                        else if (descuentos.id_paquete == 273){
+                                            $scope.descDateEneroLM1 = 1;
+                                        } else if (descuentos.id_paquete == 274){
+                                            $scope.descDateEneroLM2 = 1;
+                                        } else if (descuentos.id_paquete == 275){
+                                            $scope.descDateEneroLM3 = 1;
+                                        } else if (descuentos.id_paquete == 276){
+                                            $scope.descDateSepLM4 = 1;
+                                        }
+
+
+                                        else if (descuentos.id_paquete == 278){
+                                            $scope.descDateEneroLM1C = 1;
+                                        } else if (descuentos.id_paquete == 279){
+                                            $scope.descDateEneroLM2C = 1;
+                                        } else if (descuentos.id_paquete == 280){
+                                            $scope.descDateSepLM3C = 1;
+                                        } else if (descuentos.id_paquete == 281){
+                                            $scope.descDateSepLM4C = 1;
+                                        }
+
+
+                                        else if (descuentos.id_paquete == 283){
+                                            $scope.descDateEneroL1 = 1;
+                                        } else if (descuentos.id_paquete == 284){
+                                            $scope.descDateEneroL2 = 1;
+                                        } else if (descuentos.id_paquete == 285){
+                                            $scope.descDateEneroL3 = 1;
+                                        } else if (descuentos.id_paquete == 286){
+                                            $scope.descDateEneroL4 = 1;
+                                        }	else if (descuentos.id_paquete == 287){
+                                            $scope.descDateSepL1 = 1;
+                                        }
+
+
+
+
+                                        else if (descuentos.id_paquete == 289){
+                                            $scope.descDateEneroL5 = 1;
+                                        } else if (descuentos.id_paquete == 290){
+                                            $scope.descDateEneroL6 = 1;
+                                        } else if (descuentos.id_paquete == 291){
+                                            $scope.descDateEneroL7 = 1;
+                                        } else if (descuentos.id_paquete == 292){
+                                            $scope.descDateSepL2 = 1;
+                                        }	else if (descuentos.id_paquete == 293){
+                                            $scope.descDateSepL3 = 1;
+                                        }
+
+                                        else if (descuentos.id_paquete == 295){
+                                            $scope.descDateEneroL8 = 1;
+                                        } else if (descuentos.id_paquete == 296){
+                                            $scope.descDateEneroL9 = 1;
+                                        } else if (descuentos.id_paquete == 297){
+                                            $scope.descDateSepL4 = 1;
+                                        } else if (descuentos.id_paquete == 298){
+                                            $scope.descDateSepL5 = 1;
+                                        }
+
+
+
+
+                                        else if (descuentos.id_paquete == 300){
+                                            $scope.descDateEneroAllQro1 = 1;
+                                        } else if (descuentos.id_paquete == 301){
+                                            $scope.descDateEneroAllQro2 = 1;
+                                        } else if (descuentos.id_paquete == 302){
+                                            $scope.descDateSepAllQro1 = 1;
+                                        } else if (descuentos.id_paquete == 303){
+                                            $scope.descDateSepAllQro2 = 1;
+                                        } else if (descuentos.id_paquete == 304){
+                                            $scope.descDateMayoAllQro1 = 1;
+                                        } else if (descuentos.id_paquete == 305){
+                                            $scope.descDateMayoAllQro2 = 1;
+                                        }
+
+                                        else if (descuentos.id_paquete == 262){
+                                            $scope.descDateMayoSLP = 1;
+                                        }
+
+                                        else if (descuentos.id_paquete == 277){
+
+                                            $scope.engancheCincoMilLM = 1;
+                                        }
+
+                                        else if (descuentos.id_paquete == 282){
+                                            $scope.engancheVeintiCincoMilLM = 1;
+                                        }
+
+                                        else if (descuentos.id_paquete == 288){
+                                            $scope.engancheCincoMilL1 = 1;
+                                        }
+
+                                        else if (descuentos.id_paquete == 294){
+                                            $scope.engancheCincoMilL2 = 1;
+                                        }
+
+                                        else if (descuentos.id_paquete == 299){
+                                            $scope.engancheVeintiCincoMilL = 1;
+                                        }
+
+                                        else if (descuentos.id_paquete == 307){
+                                            $scope.helpMxMerida1 = 1;
+                                        }
+
+                                        else if (descuentos.id_paquete == 308){
+                                            $scope.helpMxMerida2 = 1;
+                                        }
+
+                                        else if (descuentos.id_paquete == 309){
+                                            $scope.helpMxMerida3 = 1;
+                                        }
+
+                                        else if (descuentos.id_paquete == 310){
+                                            $scope.helpMxMerida4 = 1;
+                                        }
+
+                                        else if (descuentos.id_paquete == 311){
+                                            $scope.descDateEneroS1YS2 = 1;
+                                        }
+
+                                        else if (descuentos.id_paquete == 312){
+                                            $scope.descDateEng0S1YS2 = 1;
+                                        }
+
+                                        else if (descuentos.id_paquete == 313){
+                                            $scope.engancheDiezMilLSLP = 1;
+                                        }
+
+
+                                        else if (descuentos.id_paquete == 267){
+                                            $scope.cinco_milM = 1;
+                                        }
+
+                                        else if (descuentos.id_paquete == 351){
+                                            $scope.veinteJ_milM = 1;
+                                        }
+
+                                        else if (descuentos.id_paquete == 354){
+                                            $scope.diez_milM = 1;
+                                        }
+
+
+
+                                        else if (descuentos.id_paquete == 317){
+                                            $scope.cinco_milL = 1;
+                                        }
+
+                                        else if (descuentos.id_paquete == 320){
+                                            $scope.diez_milL = 1;
+                                        }
+
+                                        else if (descuentos.id_paquete == 324){
+                                            $scope.veinticinco_milL = 1;
+                                        }
+
+                                        else if (descuentos.id_paquete == 329){
+                                            $scope.cinco_milLM = 1;
+                                        }
+
+                                        else if (descuentos.id_paquete == 333){
+                                            $scope.veinticinco_milLM = 1;
+                                        }
+
+
+
+
+
+                                        else if (descuentos.id_paquete == 360){
+                                            $scope.ceroQ1 = 1;
+                                        }
+
+                                        else if (descuentos.id_paquete == 361){
+                                            $scope.ceroQ2 = 1;
+                                        }
+
+                                        else if (descuentos.id_paquete == 362){
+                                            $scope.ceroQ3 = 1;
+                                        }
+
+                                        else if (descuentos.id_paquete == 365){
+                                            $scope.ceroQ4 = 1;
+                                        }
+
+
+
+                                        else if (descuentos.id_paquete == 366){
+                                            $scope.cyd_slp1 = 1;
+                                        }
+
+                                        else if (descuentos.id_paquete == 367){
+                                            $scope.cyd_slp2 = 1;
+                                        }
+
+                                        else if (descuentos.id_paquete == 370){
+                                            $scope.cincoCSLP = 1;
+                                        }
+
+                                        else if (descuentos.id_paquete == 373){
+                                            $scope.veinticinco_milLM2 = 1;
+                                        }
+
+                                        else if (descuentos.id_paquete == 378){
+                                            $scope.cincoCL = 1;
+                                        }
+
+                                    } else if (descuentos.id_paquete != 261 || descuentos.id_paquete != 151 || descuentos.id_paquete != 368 || descuentos.id_paquete != 369 || descuentos.id_paquete != 263 || descuentos.id_paquete != 268
+                                        || descuentos.id_paquete != 269 || descuentos.id_paquete != 265 || descuentos.id_paquete != 270 || descuentos.id_paquete != 271 || descuentos.id_paquete != 272
+                                        || descuentos.id_paquete != 273 || descuentos.id_paquete != 274 || descuentos.id_paquete != 275 || descuentos.id_paquete != 276
+                                        || descuentos.id_paquete != 278 || descuentos.id_paquete != 279 || descuentos.id_paquete != 280 || descuentos.id_paquete != 281
+
+                                        || descuentos.id_paquete != 283 || descuentos.id_paquete != 284 || descuentos.id_paquete != 285 || descuentos.id_paquete != 286 || descuentos.id_paquete != 287
+
+
+
+                                        || descuentos.id_paquete != 289 || descuentos.id_paquete != 290 || descuentos.id_paquete != 291 || descuentos.id_paquete != 292 || descuentos.id_paquete != 293
+                                        || descuentos.id_paquete != 295 || descuentos.id_paquete != 296 || descuentos.id_paquete != 297 || descuentos.id_paquete != 298
+
+
+                                        || descuentos.id_paquete != 300 || descuentos.id_paquete != 301 || descuentos.id_paquete != 302 || descuentos.id_paquete != 303
+                                        || descuentos.id_paquete != 304 || descuentos.id_paquete != 305
+
+                                        || descuentos.id_paquete != 262
+
+                                        || descuentos.id_paquete != 277 || descuentos.id_paquete != 282 || descuentos.id_paquete != 288 || descuentos.id_paquete != 294
+                                        || descuentos.id_paquete != 299 || descuentos.id_paquete != 307 || descuentos.id_paquete != 308 || descuentos.id_paquete != 309 || descuentos.id_paquete != 310
+
+                                        || descuentos.id_paquete != 311 || descuentos.id_paquete != 312
+                                        || descuentos.id_paquete != 313
+
+                                        || descuentos.id_paquete != 267
+                                        || descuentos.id_paquete != 351
+                                        || descuentos.id_paquete != 354
+
+
+                                        || descuentos.id_paquete != 317
+                                        || descuentos.id_paquete != 320
+                                        || descuentos.id_paquete != 324
+
+                                        || descuentos.id_paquete != 329
+                                        || descuentos.id_paquete != 333
+
+
+
+                                        || descuentos.id_paquete != 360
+                                        || descuentos.id_paquete != 361
+                                        || descuentos.id_paquete != 362
+                                        || descuentos.id_paquete != 365
+
+                                        || descuentos.id_paquete != 366
+                                        || descuentos.id_paquete != 367
+
+                                        || descuentos.id_paquete != 370
+                                        || descuentos.id_paquete != 373
+                                        || descuentos.id_paquete != 378
+
+                                    ) {
+                                        $scope.descDateEnero = 0;
+                                        $scope.noPagomensualidad = 0;
+                                        $scope.descMSI = 0;
+                                        $scope.descDateOctubre = 0;
+                                        $scope.descDateMayoMerida = 0;
+                                        $scope.descDateSeptiembreMerida = 0;
+                                        $scope.descDateEneroMerida = 0;
+                                        $scope.descDateEneroMeridaC = 0;
+                                        $scope.descDateMayoMeridaC = 0;
+                                        $scope.descDateSeptiembreMeridaC = 0;
+                                        $scope.descDateEneroLM1 = 0;
+                                        $scope.descDateEneroLM2 = 0;
+                                        $scope.descDateEneroLM3 = 0;
+                                        $scope.descDateSepLM4 = 0;
+
+                                        $scope.descDateEneroLM1C = 0;
+                                        $scope.descDateEneroLM2C = 0;
+                                        $scope.descDateSepLM3C = 0;
+                                        $scope.descDateSepLM4C = 0;
+
+                                        $scope.descDateEneroL1 = 0;
+                                        $scope.descDateEneroL2 = 0;
+                                        $scope.descDateEneroL3 = 0;
+                                        $scope.descDateEneroL4 = 0;
+                                        $scope.descDateSepL1 = 0;
+
+
+                                        $scope.descDateEneroL5 = 0;
+                                        $scope.descDateEneroL6 = 0;
+                                        $scope.descDateEneroL7 = 0;
+                                        $scope.descDateSepL2 = 0;
+                                        $scope.descDateSepL3 = 0;
+
+                                        $scope.descDateEneroL8 = 0;
+                                        $scope.descDateEneroL9 = 0;
+                                        $scope.descDateSepL4 = 0;
+                                        $scope.descDateSepL5 = 0;
+
+
+                                        $scope.descDateEneroAllQro1 = 0;
+                                        $scope.descDateEneroAllQro2 = 0;
+                                        $scope.descDateSepAllQro1 = 0;
+                                        $scope.descDateSepAllQro2 = 0;
+                                        $scope.descDateMayoAllQro1 = 0;
+                                        $scope.descDateMayoAllQro2 = 0;
+
+                                        $scope.descDateMayoSLP = 0;
+
+                                        $scope.engancheCincoMil = 0;
+                                        $scope.engancheVeintiCincoMilMerida = 0;
+
+
+                                        $scope.engancheCincoMilLM = 0;
+                                        $scope.engancheVeintiCincoMilLM = 0;
+                                        $scope.engancheCincoMilL1 = 0;
+                                        $scope.engancheCincoMilL2 = 0;
+                                        $scope.engancheVeintiCincoMilL = 0;
+
+                                        $scope.helpMxMerida1 = 0;
+                                        $scope.helpMxMerida2 = 0;
+                                        $scope.helpMxMerida3 = 0;
+                                        $scope.helpMxMerida4 = 0;
+
+                                        $scope.descDateEneroS1YS2 = 0;
+                                        $scope.descDateEng0S1YS2 = 0;
+
+                                        $scope.engancheDiezMilLSLP = 0;
+
+
+                                        $scope.cinco_milM = 0;
+                                        $scope.veinteJ_milM = 0;
+                                        $scope.diez_milM = 0;
+
+
+                                        $scope.cinco_milL = 0;
+                                        $scope.diez_milL = 0;
+                                        $scope.veinticinco_milL = 0;
+
+                                        $scope.cinco_milLM = 0;
+                                        $scope.veinticinco_milLM = 0;
+
+
+                                        $scope.ceroQ1 = 0;
+                                        $scope.ceroQ2 = 0;
+                                        $scope.ceroQ3 = 0;
+                                        $scope.ceroQ4 = 0;
+
+                                        $scope.cyd_slp1 = 0;
+                                        $scope.cyd_slp2 = 0;
+
+                                        $scope.cincoCSLP = 0;
+                                        $scope.veinticinco_milLM2 = 0;
+                                        $scope.cincoCL = 0;
+
+
+                                    }
+
+                                }
+
+                                if($scope.descApply.length == 0){
+                                    $scope.descDateEnero = 0;
+                                    $scope.noPagomensualidad = 0;
+                                    $scope.descMSI = 0;
+                                    $scope.descDateOctubre = 0;
+                                    $scope.descDateMayoMerida = 0;
+                                    $scope.descDateSeptiembreMerida = 0;
+                                    $scope.descDateEneroMerida = 0;
+                                    $scope.descDateEneroMeridaC = 0;
+                                    $scope.descDateMayoMeridaC = 0;
+                                    $scope.descDateSeptiembreMeridaC = 0;
+                                    $scope.descDateEneroLM1 = 0;
+                                    $scope.descDateEneroLM2 = 0;
+                                    $scope.descDateEneroLM3 = 0;
+                                    $scope.descDateSepLM4 = 0;
+
+                                    $scope.descDateEneroLM1C = 0;
+                                    $scope.descDateEneroLM2C = 0;
+                                    $scope.descDateSepLM3C = 0;
+                                    $scope.descDateSepLM4C = 0;
+
+                                    $scope.descDateEneroL1 = 0;
+                                    $scope.descDateEneroL2 = 0;
+                                    $scope.descDateEneroL3 = 0;
+                                    $scope.descDateEneroL4 = 0;
+                                    $scope.descDateSepL1 = 0;
+
+                                    $scope.descDateEneroL5 = 0;
+                                    $scope.descDateEneroL6 = 0;
+                                    $scope.descDateEneroL7 = 0;
+                                    $scope.descDateSepL2 = 0;
+                                    $scope.descDateSepL3 = 0;
+
+                                    $scope.descDateEneroL8 = 0;
+                                    $scope.descDateEneroL9 = 0;
+                                    $scope.descDateSepL4 = 0;
+                                    $scope.descDateSepL5 = 0;
+
+                                    $scope.descDateEneroAllQro1 = 0;
+                                    $scope.descDateEneroAllQro2 = 0;
+                                    $scope.descDateSepAllQro1 = 0;
+                                    $scope.descDateSepAllQro2 = 0;
+                                    $scope.descDateMayoAllQro1 = 0;
+                                    $scope.descDateMayoAllQro2 = 0;
+
+                                    $scope.descDateMayoSLP = 0;
+
+                                    $scope.engancheCincoMil = 0;
+                                    $scope.engancheVeintiCincoMilMerida = 0;
+
+
+                                    $scope.engancheCincoMilLM = 0;
+                                    $scope.engancheVeintiCincoMilLM = 0;
+                                    $scope.engancheCincoMilL1 = 0;
+                                    $scope.engancheCincoMilL2 = 0;
+                                    $scope.engancheVeintiCincoMilL = 0;
+
+                                    $scope.helpMxMerida1 = 0;
+                                    $scope.helpMxMerida2 = 0;
+                                    $scope.helpMxMerida3 = 0;
+                                    $scope.helpMxMerida4 = 0;
+
+                                    $scope.descDateEneroS1YS2 = 0;
+                                    $scope.descDateEng0S1YS2 = 0;
+
+                                    $scope.engancheDiezMilLSLP = 0;
+
+
+                                    $scope.cinco_milM = 0;
+                                    $scope.veinteJ_milM = 0;
+                                    $scope.diez_milM = 0;
+
+                                    $scope.cinco_milL = 0;
+                                    $scope.diez_milL = 0;
+                                    $scope.veinticinco_milL = 0;
+
+                                    $scope.cinco_milLM = 0;
+                                    $scope.veinticinco_milLM = 0;
+
+
+                                    $scope.ceroQ1 = 0;
+                                    $scope.ceroQ2 = 0;
+                                    $scope.ceroQ3 = 0;
+                                    $scope.ceroQ4 = 0;
+
+                                    $scope.cyd_slp1 = 0;
+                                    $scope.cyd_slp2 = 0;
+
+                                    $scope.cincoCSLP = 0;
+                                    $scope.veinticinco_milLM2 = 0;
+                                    $scope.cincoCL = 0;
+
+
+                                }
+
+                            }
+
+                            if (idx < 0 && checked) {
+                                descuentosAplicados.push(descuento);
+                                $scope.descApply = descuentosAplicados;
+                                for(var descuentos of $scope.descApply){
+
+                                    if(descuentos.id_paquete == 261 || descuentos.id_paquete == 151 || descuentos.id_paquete == 368 || descuentos.id_paquete == 369 || descuentos.id_paquete == 263 || descuentos.id_paquete == 268 || descuentos.id_paquete == 269
+                                        || descuentos.id_paquete == 265 || descuentos.id_paquete == 270 || descuentos.id_paquete == 271 || descuentos.id_paquete == 272 || descuentos.id_paquete == 273 || descuentos.id_paquete == 274
+                                        || descuentos.id_paquete == 275 || descuentos.id_paquete == 276 || descuentos.id_paquete == 278 || descuentos.id_paquete == 279 || descuentos.id_paquete == 280 || descuentos.id_paquete == 281
+
+                                        || descuentos.id_paquete == 283 || descuentos.id_paquete == 284 || descuentos.id_paquete == 285 || descuentos.id_paquete == 286 || descuentos.id_paquete == 287
+
+                                        || descuentos.id_paquete == 289 || descuentos.id_paquete == 290 || descuentos.id_paquete == 291 || descuentos.id_paquete == 292 || descuentos.id_paquete == 293
+                                        || descuentos.id_paquete == 295 || descuentos.id_paquete == 296 || descuentos.id_paquete == 297 || descuentos.id_paquete == 298
+
+
+                                        || descuentos.id_paquete == 300 || descuentos.id_paquete == 301 || descuentos.id_paquete == 302 || descuentos.id_paquete == 303
+                                        || descuentos.id_paquete == 304 || descuentos.id_paquete == 305
+
+                                        || descuentos.id_paquete == 262
+
+                                        || descuentos.id_paquete == 277 || descuentos.id_paquete == 282 || descuentos.id_paquete == 288 || descuentos.id_paquete == 294
+                                        || descuentos.id_paquete == 299 || descuentos.id_paquete == 307 || descuentos.id_paquete == 308 || descuentos.id_paquete == 309 || descuentos.id_paquete == 310
+
+
+                                        || descuentos.id_paquete == 311 || descuentos.id_paquete == 312
+                                        || descuentos.id_paquete == 313
+
+
+                                        || descuentos.id_paquete == 267
+                                        || descuentos.id_paquete == 351
+                                        || descuentos.id_paquete == 354
+
+                                        || descuentos.id_paquete == 317
+                                        || descuentos.id_paquete == 320
+                                        || descuentos.id_paquete == 324
+
+
+                                        || descuentos.id_paquete == 329
+                                        || descuentos.id_paquete == 333
+
+
+                                        || descuentos.id_paquete == 360
+                                        || descuentos.id_paquete == 361
+                                        || descuentos.id_paquete == 362
+                                        || descuentos.id_paquete == 365
+
+                                        || descuentos.id_paquete == 366
+                                        || descuentos.id_paquete == 367
+
+                                        || descuentos.id_paquete == 370
+                                        || descuentos.id_paquete == 373
+                                        || descuentos.id_paquete == 378
+
+                                    ){
+                                        if(descuentos.id_paquete == 261){
+                                            $scope.descDateEnero = 1;
+                                        } else if (descuentos.id_paquete == 151){
+                                            $scope.noPagomensualidad = 1;
+                                        } else if (descuentos.id_paquete == 368 || descuentos.id_paquete == 369){
+                                            $scope.descMSI = 1;
+                                        } else if (descuentos.id_paquete == 263){
+                                            $scope.descDateOctubre = 1;
+                                        } else if (descuentos.id_paquete == 268){
+                                            $scope.descDateSeptiembreMerida = 1;
+                                        } else if (descuentos.id_paquete == 269){
+                                            $scope.descDateMayoMerida = 1;
+                                            $scope.engancheCincoMil = 1;
+
+
+                                        } else if (descuentos.id_paquete == 265){
+                                            $scope.descDateEneroMerida = 1;
+                                        } else if (descuentos.id_paquete == 270){
+                                            $scope.descDateEneroMeridaC = 1;
+                                        } else if (descuentos.id_paquete == 271){
+                                            $scope.descDateSeptiembreMeridaC = 1;
+                                        } else if (descuentos.id_paquete == 272){
+                                            $scope.descDateMayoMeridaC = 1;
+                                            $scope.engancheVeintiCincoMilMerida = 1;
+
+                                        }
+
+                                        else if (descuentos.id_paquete == 273){
+                                            $scope.descDateEneroLM1 = 1;
+                                        } else if (descuentos.id_paquete == 274){
+                                            $scope.descDateEneroLM2 = 1;
+                                        } else if (descuentos.id_paquete == 275){
+                                            $scope.descDateEneroLM3 = 1;
+                                        } else if (descuentos.id_paquete == 276){
+                                            $scope.descDateSepLM4 = 1;
+                                        }
+
+                                        else if (descuentos.id_paquete == 278){
+                                            $scope.descDateEneroLM1C = 1;
+                                        } else if (descuentos.id_paquete == 279){
+                                            $scope.descDateEneroLM2C = 1;
+                                        } else if (descuentos.id_paquete == 280){
+                                            $scope.descDateSepLM3C = 1;
+                                        } else if (descuentos.id_paquete == 281){
+                                            $scope.descDateSepLM4C = 1;
+                                        }
+
+
+
+
+                                        else if (descuentos.id_paquete == 283){
+                                            $scope.descDateEneroL1 = 1;
+                                        } else if (descuentos.id_paquete == 284){
+                                            $scope.descDateEneroL2 = 1;
+                                        } else if (descuentos.id_paquete == 285){
+                                            $scope.descDateEneroL3 = 1;
+                                        } else if (descuentos.id_paquete == 286){
+                                            $scope.descDateEneroL4 = 1;
+                                        }	else if (descuentos.id_paquete == 287){
+                                            $scope.descDateSepL1 = 1;
+                                        }
+
+
+
+
+
+                                        else if (descuentos.id_paquete == 289){
+                                            $scope.descDateEneroL5 = 1;
+                                        } else if (descuentos.id_paquete == 290){
+                                            $scope.descDateEneroL6 = 1;
+                                        } else if (descuentos.id_paquete == 291){
+                                            $scope.descDateEneroL7 = 1;
+                                        } else if (descuentos.id_paquete == 292){
+                                            $scope.descDateSepL2 = 1;
+                                        }	else if (descuentos.id_paquete == 293){
+                                            $scope.descDateSepL3 = 1;
+                                        }
+
+                                        else if (descuentos.id_paquete == 295){
+                                            $scope.descDateEneroL8 = 1;
+                                        } else if (descuentos.id_paquete == 296){
+                                            $scope.descDateEneroL9 = 1;
+                                        } else if (descuentos.id_paquete == 297){
+                                            $scope.descDateSepL4 = 1;
+                                        } else if (descuentos.id_paquete == 298){
+                                            $scope.descDateSepL5 = 1;
+                                        }
+
+
+                                        else if (descuentos.id_paquete == 300){
+                                            $scope.descDateEneroAllQro1 = 1;
+                                        } else if (descuentos.id_paquete == 301){
+                                            $scope.descDateEneroAllQro2 = 1;
+                                        } else if (descuentos.id_paquete == 302){
+                                            $scope.descDateSepAllQro1 = 1;
+                                        } else if (descuentos.id_paquete == 303){
+                                            $scope.descDateSepAllQro2 = 1;
+                                        } else if (descuentos.id_paquete == 304){
+                                            $scope.descDateMayoAllQro1 = 1;
+                                        } else if (descuentos.id_paquete == 305){
+                                            $scope.descDateMayoAllQro2 = 1;
+                                        }
+
+
+                                        else if (descuentos.id_paquete == 262){
+                                            $scope.descDateMayoSLP = 1;
+                                        }
+
+                                        else if (descuentos.id_paquete == 277){
+
+                                            $scope.engancheCincoMilLM = 1;
+                                        }
+
+                                        else if (descuentos.id_paquete == 282){
+                                            $scope.engancheVeintiCincoMilLM = 1;
+                                        }
+
+                                        else if (descuentos.id_paquete == 288){
+                                            $scope.engancheCincoMilL1 = 1;
+                                        }
+
+                                        else if (descuentos.id_paquete == 294){
+                                            $scope.engancheCincoMilL2 = 1;
+                                        }
+
+                                        else if (descuentos.id_paquete == 299){
+                                            $scope.engancheVeintiCincoMilL = 1;
+                                        }
+
+
+                                        else if (descuentos.id_paquete == 307){
+                                            $scope.helpMxMerida1 = 1;
+                                        }
+
+                                        else if (descuentos.id_paquete == 308){
+                                            $scope.helpMxMerida2 = 1;
+                                        }
+
+                                        else if (descuentos.id_paquete == 309){
+                                            $scope.helpMxMerida3 = 1;
+                                        }
+
+                                        else if (descuentos.id_paquete == 310){
+                                            $scope.helpMxMerida4 = 1;
+                                        }
+
+
+                                        else if (descuentos.id_paquete == 311){
+                                            $scope.descDateEneroS1YS2 = 1;
+                                        }
+
+                                        else if (descuentos.id_paquete == 312){
+                                            $scope.descDateEng0S1YS2 = 1;
+                                        }
+
+                                        else if (descuentos.id_paquete == 313){
+                                            $scope.engancheDiezMilLSLP = 1;
+                                        }
+
+
+
+
+                                        else if (descuentos.id_paquete == 267){
+                                            $scope.cinco_milM = 1;
+                                        }
+                                        else if (descuentos.id_paquete == 351){
+                                            $scope.veinteJ_milM = 1;
+                                        }
+
+                                        else if (descuentos.id_paquete == 354){
+                                            $scope.diez_milM = 1;
+                                        }
+
+
+
+                                        else if (descuentos.id_paquete == 317){
+                                            $scope.cinco_milL = 1;
+                                        }
+
+                                        else if (descuentos.id_paquete == 320){
+                                            $scope.diez_milL = 1;
+                                        }
+
+                                        else if (descuentos.id_paquete == 324){
+                                            $scope.veinticinco_milL = 1;
+                                        }
+
+                                        else if (descuentos.id_paquete == 329){
+                                            $scope.cinco_milLM = 1;
+                                        }
+
+                                        else if (descuentos.id_paquete == 333){
+                                            $scope.veinticinco_milLM = 1;
+                                        }
+
+
+
+
+                                        else if (descuentos.id_paquete == 360){
+                                            $scope.ceroQ1 = 1;
+                                        }
+
+                                        else if (descuentos.id_paquete == 361){
+                                            $scope.ceroQ2 = 1;
+                                        }
+
+                                        else if (descuentos.id_paquete == 362){
+                                            $scope.ceroQ3 = 1;
+                                        }
+
+                                        else if (descuentos.id_paquete == 365){
+                                            $scope.ceroQ4 = 1;
+                                        }
+
+
+                                        else if (descuentos.id_paquete == 366){
+                                            $scope.cyd_slp1 = 1;
+                                        }
+
+                                        else if (descuentos.id_paquete == 367){
+                                            $scope.cyd_slp2 = 1;
+                                        }
+
+                                        else if (descuentos.id_paquete == 370){
+                                            $scope.cincoCSLP = 1;
+                                        }
+                                        else if (descuentos.id_paquete == 373){
+                                            $scope.veinticinco_milLM2 = 1;
+                                        }
+                                        else if (descuentos.id_paquete == 378){
+                                            $scope.cincoCL = 1;
+                                        }
+
+                                    } else if (descuentos.id_paquete != 261 || descuentos.id_paquete != 151 || descuentos.id_paquete != 368 || descuentos.id_paquete != 369 || descuentos.id_paquete != 263 || descuentos.id_paquete != 268
+                                        || descuentos.id_paquete != 269 || descuentos.id_paquete != 265 || descuentos.id_paquete != 270 || descuentos.id_paquete != 271 || descuentos.id_paquete != 272
+                                        || descuentos.id_paquete != 273 || descuentos.id_paquete != 274 || descuentos.id_paquete != 275 || descuentos.id_paquete != 276
+                                        || descuentos.id_paquete != 278 || descuentos.id_paquete != 279 || descuentos.id_paquete != 280 || descuentos.id_paquete != 281
+
+                                        || descuentos.id_paquete != 283 || descuentos.id_paquete != 284 || descuentos.id_paquete != 285 || descuentos.id_paquete != 286 || descuentos.id_paquete != 287
+
+
+                                        || descuentos.id_paquete != 289 || descuentos.id_paquete != 290 || descuentos.id_paquete != 291 || descuentos.id_paquete != 292 || descuentos.id_paquete != 293
+                                        || descuentos.id_paquete != 295 || descuentos.id_paquete != 296 || descuentos.id_paquete != 297 || descuentos.id_paquete != 298
+
+                                        || descuentos.id_paquete != 300 || descuentos.id_paquete != 301 || descuentos.id_paquete != 302 || descuentos.id_paquete != 303
+                                        || descuentos.id_paquete != 304 || descuentos.id_paquete != 305
+
+                                        || descuentos.id_paquete != 262
+
+                                        || descuentos.id_paquete != 277 || descuentos.id_paquete != 282 || descuentos.id_paquete != 288 || descuentos.id_paquete != 294
+                                        || descuentos.id_paquete != 299 || descuentos.id_paquete != 307 || descuentos.id_paquete != 308 || descuentos.id_paquete != 309 || descuentos.id_paquete != 310
+
+
+                                        || descuentos.id_paquete != 311 || descuentos.id_paquete != 312
+                                        || descuentos.id_paquete != 313
+
+                                        || descuentos.id_paquete != 267
+                                        || descuentos.id_paquete != 351
+                                        || descuentos.id_paquete != 354
+
+
+                                        || descuentos.id_paquete != 317
+                                        || descuentos.id_paquete != 320
+                                        || descuentos.id_paquete != 324
+
+                                        || descuentos.id_paquete != 329
+                                        || descuentos.id_paquete != 333
+
+
+                                        || descuentos.id_paquete != 360
+                                        || descuentos.id_paquete != 361
+                                        || descuentos.id_paquete != 362
+                                        || descuentos.id_paquete != 365
+
+
+                                        || descuentos.id_paquete != 366
+                                        || descuentos.id_paquete != 367
+
+                                        || descuentos.id_paquete != 370
+                                        || descuentos.id_paquete != 373
+                                        || descuentos.id_paquete != 378
+
+                                    ) {
+                                        $scope.descDateEnero = 0;
+                                        $scope.noPagomensualidad = 0;
+                                        $scope.descMSI = 0;
+                                        $scope.descDateOctubre = 0;
+                                        $scope.descDateMayoMerida = 0;
+                                        $scope.descDateSeptiembreMerida = 0;
+                                        $scope.descDateEneroMerida = 0;
+                                        $scope.descDateEneroMeridaC = 0;
+                                        $scope.descDateMayoMeridaC = 0;
+                                        $scope.descDateSeptiembreMeridaC = 0;
+                                        $scope.descDateEneroLM1 = 0;
+                                        $scope.descDateEneroLM2 = 0;
+                                        $scope.descDateEneroLM3 = 0;
+                                        $scope.descDateSepLM4 = 0;
+
+
+                                        $scope.descDateEneroLM1C = 0;
+                                        $scope.descDateEneroLM2C = 0;
+                                        $scope.descDateSepLM3C = 0;
+                                        $scope.descDateSepLM4C = 0;
+
+                                        $scope.descDateEneroL1 = 0;
+                                        $scope.descDateEneroL2 = 0;
+                                        $scope.descDateEneroL3 = 0;
+                                        $scope.descDateEneroL4 = 0;
+                                        $scope.descDateSepL1 = 0;
+
+                                        $scope.descDateEneroL5 = 0;
+                                        $scope.descDateEneroL6 = 0;
+                                        $scope.descDateEneroL7 = 0;
+                                        $scope.descDateSepL2 = 0;
+                                        $scope.descDateSepL3 = 0;
+
+                                        $scope.descDateEneroL8 = 0;
+                                        $scope.descDateEneroL9 = 0;
+                                        $scope.descDateSepL4 = 0;
+                                        $scope.descDateSepL5 = 0;
+
+
+                                        $scope.descDateEneroAllQro1 = 0;
+                                        $scope.descDateEneroAllQro2 = 0;
+                                        $scope.descDateSepAllQro1 = 0;
+                                        $scope.descDateSepAllQro2 = 0;
+                                        $scope.descDateMayoAllQro1 = 0;
+                                        $scope.descDateMayoAllQro2 = 0;
+
+
+                                        $scope.descDateMayoSLP = 0;
+                                        $scope.engancheCincoMil = 0;
+                                        $scope.engancheVeintiCincoMilMerida = 0;
+
+                                        $scope.engancheCincoMilLM = 0;
+                                        $scope.engancheVeintiCincoMilLM = 0;
+                                        $scope.engancheCincoMilL1 = 0;
+                                        $scope.engancheCincoMilL2 = 0;
+                                        $scope.engancheVeintiCincoMilL = 0;
+
+
+                                        $scope.helpMxMerida1 = 0;
+                                        $scope.helpMxMerida2 = 0;
+                                        $scope.helpMxMerida3 = 0;
+                                        $scope.helpMxMerida4 = 0;
+
+                                        $scope.descDateEneroS1YS2 = 0;
+                                        $scope.descDateEng0S1YS2 = 0;
+                                        $scope.engancheDiezMilLSLP = 0;
+
+                                        $scope.cinco_milM = 0;
+                                        $scope.veinteJ_milM = 0;
+                                        $scope.diez_milM = 0;
+
+
+                                        $scope.cinco_milL = 0;
+                                        $scope.diez_milL = 0;
+                                        $scope.veinticinco_milL = 0;
+
+                                        $scope.cinco_milLM = 0;
+                                        $scope.veinticinco_milLM = 0;
+
+
+                                        $scope.ceroQ1 = 0;
+                                        $scope.ceroQ2 = 0;
+                                        $scope.ceroQ3 = 0;
+                                        $scope.ceroQ4 = 0;
+
+                                        $scope.cyd_slp1 = 0;
+                                        $scope.cyd_slp2 = 0;
+
+
+                                        $scope.cincoCSLP = 0;
+
+                                        $scope.veinticinco_milLM2 = 0;
+                                        $scope.cincoCL = 0;
+
+
+                                    }
+
+                                }
+
+                            }
+                            /*  console.log("El valor del indez del arreglo es: "+idx); */
+                            calcularCF();
+                        }
+                        /*Termina Reinicia los valores del arreglo que trae descuentos*/
+
+                        /**/
+                        console.log("contrucción: ", parseInt(tipo_casa.total_const));
+                        console.log("terreno: ", response.data[0].total);
+                        console.log("Total const+terreno: ", (parseInt(tipo_casa.total_const )+ response.data[0].total));
+                        $scope.superficie = response.data[0].sup;
+                        $scope.preciom2 = response.data[0].precio;
+                        $scope.total = response.data[0].total;
+                        $scope.porcentajeInv = response.data[0].porcentaje;
+                        $scope.enganche = response.data[0].enganche;
+                        $scope.CurrentDate = new Date();
+
+                        $scope.nombreLote = response.data[0].nombreLote;
+                        $scope.precioTotal = response.data[0].total;
+                        $scope.superficie = response.data[0].sup;
+                        $scope.preciom2 = response.data[0].precio;
+
+                        $scope.banco = response.data[0].banco;
+                        $scope.rsocial = response.data[0].empresa;
+                        $scope.cuenta = response.data[0].cuenta;
+                        $scope.clabe = response.data[0].clabe;
+                        $scope.referencia = response.data[0].referencia;
+                        $scope.msni = response.data[0].msni;
+                        calcularCF();
+
+
+                        /*Reset vars from eng days*/
+                        var apartado = angular.element( document.querySelector( '#aptdo' ) );
+                        var mesesdiferidos = angular.element( document.querySelector( '#msdif' ) );
+                        var checkPack = angular.element( document.querySelector('#checkPack') );
+                        var cehboxInterno = angular.element( document.querySelector('#paquete.id_paquete') );
+                        var porcentajeEnganche = angular.element( document.querySelector('#porcentajeEnganche') );
+                        var cantidadEnganche   =  angular.element( document.querySelector('#cantidadEnganche') );
+                        $scope.diasEnganche=[{day: 7}, {day: 25}, {day: 'Diferido'}];
+                        $scope.cantidad="";
+                        porcentajeEnganche.val('10');
+                        apartado.val('0');
+                        $scope.porcentajeEng = "10";
+                        cantidadEnganche.val(response.data[0].enganche);
+                        mesesdiferidos.val('[1, 2, 3, 4, 5, 6]');
+
+
+                        calcularCF();
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+                        $http.post('<?=base_url()?>index.php/corrida/descuentos',{lote: response.data[0].idLote}).then(
+
+                            function(paquetes){
+                                $scope.paquetes = paquetes.data;
+                                localStorage.setItem('allPackages', JSON.stringify(paquetes.data));
+                            },
+                            function(paquetes){
+                            });
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+                    },
+                    function (response) {
+                    });
+            }
+
             $http.get("<?=base_url()?>index.php/corrida/getGerente").then(
                 function(data){
                     $scope.gerentes = data.data;
@@ -6591,6 +7816,7 @@
                 var gerente = ($scope.gerente == undefined) ? 0 : $scope.gerente.idGerente;
                 var plan = ($scope.plan == undefined) ? 0 : $scope.plan;
 
+
                 //-------
                 var anio2 = ($scope.yearplan == undefined) ? 0 : $scope.yearplan.yearplan;
 
@@ -6633,8 +7859,17 @@
                             }
                             var cadenaDesc = joinDesc.join(',');
                             var opcion_paquete = cadenaDesc;
-                            var precio_m2_final = $scope.decFin[$scope.decFin.length - 1].pm;
+                            // var precio_m2_final = $scope.decFin[$scope.decFin.length - 1].pm;
+                            const closest = $scope.decFin.reduce(
+                                (acc, loc) =>
+                                    acc.pm < loc.pm
+                                        ? acc
+                                        : loc
+                            )
+                            var precio_m2_final = closest.pm;
                         }
+                        // console.log("pa poner el verdadero IF: ", $scope.decFin);
+
 
                     } else {
 
@@ -6644,15 +7879,18 @@
                         }
                         var cadenaDesc = joinDesc.join(',');
                         var opcion_paquete = cadenaDesc;
-                        var precio_m2_final = $scope.decFin[$scope.decFin.length - 1].pm;
-
+                        // var precio_m2_final = $scope.decFin[$scope.decFin.length - 1].pm;
+                        const closest = $scope.decFin.reduce(
+                            (acc, loc) =>
+                                acc.pm < loc.pm
+                                    ? acc
+                                    : loc
+                        )
+                        var precio_m2_final = closest.pm;
+                        // console.log("pa poner el verdadero ELSE: ", closest.pm);
 
                     }
-
-
                 }
-
-
                 else if(paquete == 0){
                     var opcion_paquete = 0;
                     var precio_m2_final = $scope.preciom2;
@@ -6781,7 +8019,8 @@
                         observaciones: observaciones,
                         allPackages: localStorage.getItem('allPackages'),
                         corrida_dump: $scope.alphaNumeric,
-                        descApply: ($scope.descApply != undefined) ? $scope.descApply : null
+                        descApply: ($scope.descApply != undefined) ? $scope.descApply : null,
+                        tipo_casa: ($scope.tipo_casa.nombre == "Stella") ? 1 : ($scope.tipo_casa.nombre == "Aura") ? 2 : null
                     }).then(
                         function(response){
 
@@ -6979,15 +8218,40 @@
 
                     anio = (anio == 'Activo') ? '0' : anio;
 
-                    $http.post('<?=base_url()?>index.php/corrida/editar_ds',{nombre: nombre, id_lote: id_lote, edad: edad, telefono: telefono, correo: correo, asesor: asesor, gerente: gerente,
-                        plan: plan, anio: anio, dias_pagar_enganche: dias_pagar_enganche, porcentaje_enganche: porcentaje_enganche, cantidad_enganche: cantidad_enganche, meses_diferir: meses_diferir,
-                        apartado: apartado, paquete: paquete, opcion_paquete: opcion_paquete, precio_m2_final: precio_m2_final, saldoc: saldoc, precioFinalc: precioFinalc, fechaEngc: fechaEngc,
-                        engancheFinalc: engancheFinalc, msi_1p: msi_1p, msi_2p: msi_2p, msi_3p: msi_3p, primer_mensualidad: primer_mensualidad, allDescuentos: allDescuentos, finalMesesp1: finalMesesp1, finalMesesp2: finalMesesp2,
+                    $http.post('<?=base_url()?>index.php/corrida/editar_ds',{
+                        nombre: nombre,
+                        id_lote: id_lote,
+                        edad: edad,
+                        telefono: telefono,
+                        correo: correo,
+                        asesor: asesor,
+                        gerente: gerente,
+                        plan: plan,
+                        anio: anio,
+                        dias_pagar_enganche: dias_pagar_enganche,
+                        porcentaje_enganche: porcentaje_enganche,
+                        cantidad_enganche: cantidad_enganche, meses_diferir: meses_diferir,
+                        apartado: apartado,
+                        paquete: paquete,
+                        opcion_paquete: opcion_paquete,
+                        precio_m2_final: precio_m2_final,
+                        saldoc: saldoc,
+                        precioFinalc: precioFinalc,
+                        fechaEngc: fechaEngc,
+                        engancheFinalc: engancheFinalc,
+                        msi_1p: msi_1p,
+                        msi_2p: msi_2p,
+                        msi_3p: msi_3p,
+                        primer_mensualidad: primer_mensualidad,
+                        allDescuentos: allDescuentos,
+                        finalMesesp1: finalMesesp1,
+                        finalMesesp2: finalMesesp2,
                         finalMesesp3: finalMesesp3,
                         observaciones: observaciones,
                         allPackages: localStorage.getItem('allPackages'),
                         corrida_dump: $scope.alphaNumeric,
-                        descApply: ($scope.descApply != undefined) ? $scope.descApply : null
+                        descApply: ($scope.descApply != undefined) ? $scope.descApply : null,
+                        tipo_casa: ($scope.tipo_casa.nombre == "Stella") ? 1 : ($scope.tipo_casa.nombre == "Aura") ? 2 : null
                     }).then(
                         function(response){
 

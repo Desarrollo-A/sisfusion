@@ -77,28 +77,43 @@
             return $query;
         }
     }
-	public function getLotesDisCorridaAll($condominio) {
+    public function getLotesDisCorridaAll($condominio) {
 
-		$this->db->select('idLote,nombreLote, total, sup');
-		$this->db->where('idCondominio', $condominio);
-		$this->db->where('lotes.status','1');
+        // $this->db->select('idLote,nombreLote, total, sup');
+        // $this->db->where('idCondominio', $condominio);
+        // $this->db->where('lotes.status','1');
+        $statusLoteVar = '';
+        $idAsesor = '';
 
-		if($this->session->userdata('id_rol') == 6){
+        if($this->session->userdata('id_rol') == 6){
 
-		$this->db->where_in('idStatusLote', array('1', '3'));
-		
-		} else {
-		
-		$this->db->where_in('idStatusLote', array('1'));
+            // $this->db->where_in('idStatusLote', array('1', '3'));
+            $statusLoteVar = '1, 3';
 
-		}
-		
-		$query = $this->db->get('lotes');
-		if($query){
-			$query = $query->result_array();
-			return $query;
-		}
-	}
+
+        } else if($this->session->userdata('id_rol') == 7){
+            $statusLoteVar = '1, 3';
+            $idAsesor = " AND id_asesor=".$this->session->userdata('id_usuario');
+
+        }else {
+
+            // $this->db->where_in('idStatusLote', array('1'));
+            $statusLoteVar = '1';
+
+        }
+
+        // $query = $this->db->get('lotes');
+
+
+        $query = $this->db->query("SELECT lo.idLote, lo.nombreLote, lo.total, lo.sup FROM lotes lo
+			LEFT JOIN clientes cl ON cl.idLote = lo.idLote AND cl.id_cliente = lo.idCliente AND cl.status = 1 ".$idAsesor."
+			WHERE lo.status = 1 AND idStatusLote IN (".$statusLoteVar.") AND lo.idCondominio IN (".$condominio.")");
+        return $query->result();
+        // if($query){
+        // $query = $query->result_array();
+        // return $query;
+        // }
+    }
 
 
 
@@ -331,13 +346,13 @@
 
 
 			$mail = $this->phpmailer_lib->load();
-			$mail->isSMTP();
-			$mail->Host     = 'smtp.gmail.com';
-			$mail->SMTPAuth = true;
-			$mail->Username = 'noreply@ciudadmaderas.com';
-			$mail->Password = 'Marzo2019@';
-			$mail->SMTPSecure = 'ssl';
-			$mail->Port     = 465;
+			// $mail->isSMTP();
+			// $mail->Host     = 'smtp.gmail.com';
+			// $mail->SMTPAuth = true;
+			// $mail->Username = 'noreply@ciudadmaderas.com';
+			// $mail->Password = 'Marzo2019@';
+			// $mail->SMTPSecure = 'ssl';
+			// $mail->Port     = 465;
 			$mail->setFrom('noreply@ciudadmaderas.com', 'Ciudad Maderas');
 			$mail->addAddress("programador.analista2@ciudadmaderas.com");
 			$mail->Subject = utf8_decode('Apartado desde la página Ciudad Maderas');

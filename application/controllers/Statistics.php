@@ -713,13 +713,28 @@ class Statistics extends CI_Controller
         }
     }
 
+    public function getDataAsesorGrafica($anio)
+    {
+        $data = $this->Statistics_model->getDataGraficaAnual($anio);
+        echo json_encode($data);
+    }
 
+    public function getDataGraficaTopUsuarios($anio, $mes)
+    {
+        $data = $this->Statistics_model->getDataGraficaTopUsuarios($anio, $mes);
+        echo json_encode($data);
+    }
 
-
-
-
-
-
+    public function getDataAsesorGraficaTabla($anio, $mes)
+    {
+        $data = $this->Statistics_model->getDataAsesorGraficaTabla($anio, $mes);
+        foreach($data as &$user) {
+            if (!isset($user['mes'])) {
+                $user['mes'] = 0;
+            }
+        }
+        echo json_encode($data);
+    }
 }
 
 

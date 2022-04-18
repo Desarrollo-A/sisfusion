@@ -74,6 +74,20 @@
 			</div>
 		</div>
 
+        <div class="modal fade modal-alertas"
+             id="detalle-prestamo-modal"
+             role="dialog">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header bg-red">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                    <div class="modal-body"></div>
+                    <div class="modal-footer"></div>
+                </div>
+            </div>
+        </div>
+
 		<div class="modal fade bd-example-modal-sm" id="myModalEnviadas" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
 			<div class="modal-dialog modal-sm">
 				<div class="modal-content">
@@ -115,7 +129,7 @@
 											<table class="table-striped table-hover" id="tabla_prestamos" name="tabla_prestamos">
 												<thead>
 													<tr>
-														<th>ID</th>
+														<th>ID USUARIO</th>
 														<th>USUARIO</th>
 														<th>MONTO</th>
 														<th>NUM. PAGOS</th>
@@ -306,13 +320,13 @@
 				{
 					"width": "7%",
 					"data": function( d ){
-						return '<p class="m-0">$'+formatMoney(0)+'</p>';
+						return '<p class="m-0">$'+formatMoney(d.total_pagado)+'</p>';
 					}
 				},
 				{
 					"width": "7%",
 					"data": function( d ){
-						return '<p class="m-0">$'+formatMoney(d.pendiente)+'</p>';
+						return '<p class="m-0">$'+formatMoney(d.monto - d.total_pagado)+'</p>';
 					}
 				},
 				{
@@ -326,7 +340,7 @@
 					"data": function( d ){
 
 						if(d.estatus == 1){
-							return '<span class="label label-danger" style="background:#27AE60">ACTIVO</span>';
+							return '<span class="label label-danger" style="background:#29A2CC">ACTIVO</span>';
 						}else{
 							return '<span class="label label-danger" style="background:#27AE60">LIQUIDADO</span>';
 						}
@@ -348,7 +362,7 @@
 					"width": "6%",
 					"orderable": false,
 					"data": function( d ){
-		return '<button href="#" value="'+d.id_prestamo+'" class="btn-data btn-blueMaderas consultar_logs_asimilados" title="Hitorial"><i class="fas fa-info"></i></button>';
+                        return '<button href="#" value="'+d.id_prestamo+'" class="btn-data btn-blueMaderas detalle-prestamo" title="Hitorial"><i class="fas fa-info"></i></button>';
 					}
 				}],
 				ajax: {
@@ -359,6 +373,80 @@
 					}
 				},
 			});
+
+            $('#tabla_prestamos tbody').on('click', '.detalle-prestamo', function () {
+                const idPrestamo = $(this).val();
+
+                $.getJSON(`${url}Comisiones/getDetallePrestamo/${idPrestamo}`).done(function (data) {
+                    const { general, detalle } = data;
+
+                    if (general.length === 0) {
+                        alerts.showNotification("top", "right", "No hay préstamos.", "warning");
+                    } else {
+                        const detalleHeaderModal = $('#detalle-prestamo-modal .modal-header');
+                        const detalleBodyModal = $('#detalle-prestamo-modal .modal-body');
+
+                        detalleHeaderModal.html('');
+                        detalleBodyModal.html('');
+
+                        detalleHeaderModal.append('<h4 class="card-title"><b>Detalle del préstamo</b></h4>');
+                        detalleBodyModal.append(`
+                            <div class="row">
+                                <div class="col col col-xs-12 col-sm-4 col-md-4 col-lg-4">
+                                    <h6>USUARIO: <b>${ general.nombre_completo }</b></h6>
+                                </div>
+                                <div class="col col-xs-12 col-sm-4 col-md-4 col-lg-4">
+                                    <h6>PAGO MENSUAL: <b>$${formatMoney(general.pago_individual)}</b></h6>
+                                </div>
+                                <div class="col col-xs-12 col-sm-4 col-md-4 col-lg-4">
+                                    <h6>PAGOS: <b>${general.num_pago_act} / ${general.num_pagos}</b></h6>
+                                </div>
+                                <div class="col col-xs-12 col-sm-4 col-md-4 col-lg-4">
+                                    <h6>MONTO PRESTADO: <b>$${formatMoney(general.monto_prestado)}</b></h6>
+                                </div>
+                                <div class="col col-xs-12 col-sm-4 col-md-4 col-lg-4">
+                                    <h6>ABONADO: <b style="color:green;">$${formatMoney(general.total_pagado)}</b></h6>
+                                </div>
+                                <div class="col col-xs-12 col-sm-4 col-md-4 col-lg-4">
+                                    <h6>PENDIENTE: <b style="color:orange;">$${formatMoney(general.pendiente)}</b></h6>
+                                </div>
+                            </div>
+                        `);
+
+                        let htmlTableBody = '';
+                        for (let i = 0; i < detalle.length; i++) {
+                            htmlTableBody += '<tr>';
+                            htmlTableBody += `<td scope="row">${detalle[i].np}</td>`;
+                            htmlTableBody += `<td>${detalle[i].nombreLote}</td>`;
+                            htmlTableBody += `<td>${detalle[i].comentario}</td>`;
+                            htmlTableBody += `<td>${detalle[i].fecha_pago}</td>`;
+                            htmlTableBody += `<td>$${formatMoney(detalle[i].abono_neodata)}</td>`;
+                            htmlTableBody += '</tr>';
+                        }
+
+                        detalleBodyModal.append(`
+                            <div style="margin-top: 20px;" class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Lote</th>
+                                            <th>Comentario</th>
+                                            <th>Fecha</th>
+                                            <th>Monto</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        ${htmlTableBody}
+                                    </tbody>
+                                </table>
+                            </div>
+                        `);
+
+                        $("#detalle-prestamo-modal").modal();
+                    }
+                });
+            });
 		});
 
 
@@ -374,7 +462,7 @@
 				i = String(parseInt(n = Math.abs(Number(n) || 0).toFixed(c))),
 				j = (j = i.length) > 3 ? j % 3 : 0;
 			return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
-		};
+		}
 
 
 		$("#roles").change(function() {

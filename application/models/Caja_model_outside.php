@@ -1457,7 +1457,7 @@
         else
             $where = "";
         return $this->db->query("SELECT tk.id_token, tk.token, CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno) generado_para,
-        tk.fecha_creacion, CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno) creado_por, tk.nombre_archivo
+        tk.fecha_creacion, CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno) creado_por, tk.nombre_archivo, tk.status, tk.validacion
         FROM tokens tk
         INNER JOIN usuarios u1 ON u1.id_usuario = tk.para
         INNER JOIN usuarios u2 ON u2.id_usuario = tk.creado_por
