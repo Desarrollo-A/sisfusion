@@ -922,7 +922,12 @@
   text-transform: uppercase;
 }
 
+#calendar .fc-icon-fab, #calendar .fc-icon-fas {
+  font-family: FontAwesome !important;
+}
+
 #calendar .fc-googleSignIn-button {
+  display: none !important;
   background-color: transparent;
   box-shadow: none;
   border: none;
@@ -935,6 +940,7 @@
 }
 
 #calendar .fc-googleLogout-button {
+  display: none !important;
   background-color: transparent;
   box-shadow: none;
   border: none;
@@ -944,4 +950,8 @@
 #calendar .fc-googleLogout-button:hover {
   background-color: #c1c1c1;
   color: #ffffff;
+}
+
+#calendar .fc-daygrid-block-event {
+  box-shadow: none;
 }
