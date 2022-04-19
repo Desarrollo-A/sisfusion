@@ -24,7 +24,7 @@ class Usuarios_modelo extends CI_Model {
     function getUserPassword(){
         switch ($this->session->userdata('id_rol')) {
             case '4': //ASISTENTE DIRECCION
-                return $this->db->query("SELECT contrasena FROM usuarios WHERE id_usuario = ".$this->session->userdata('id_usuario')."");                        
+                return $this->db->query("SELECT usuario, contrasena FROM usuarios WHERE id_usuario = ".$this->session->userdata('id_usuario')."");                        
                 break;
         }
     }
