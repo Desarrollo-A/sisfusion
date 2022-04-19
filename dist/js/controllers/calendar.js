@@ -508,7 +508,7 @@
     var id = new Promise((resolve, reject) => {
       var request = gapi.client.calendar.events.insert({
         'calendarId': 'primary',
-        'resource': buildEvent(data)
+        'resource': buildEventGoogle(data)
       });
       
       request.execute(function (event) {
