@@ -325,7 +325,7 @@ public function editar_registro_loteRechazo_asistentes_proceceso8(){
 	   $correosClean = explode(',', $datos[0]["correos"]);
 	   $array = array_unique($correosClean);
 	} else {
-	   $correosClean = explode(',', $datos[0]["correos"].','.'ejecutivo.mktd@ciudadmaderass.com,cobranza.mktd@ciudadmaderass.com');
+	   $correosClean = explode(',', $datos[0]["correos"].','.'ejecutivo.mktd@ciudadmaderas.com,cobranza.mktd@ciudadmaderas.com');
 	   $array = array_unique($correosClean);
 	}
 

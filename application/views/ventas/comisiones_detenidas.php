@@ -5,6 +5,74 @@
     <div class="wrapper">
         <?php $this->load->view('template/sidebar', ""); ?>
 
+        <div class="modal fade modal-alertas"
+             id="estatus-modal"
+             role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header bg-red">
+                        <button type="button"
+                                class="close"
+                                data-dismiss="modal"
+                                aria-hidden="true">
+                            <i class="material-icons">clear</i>
+                        </button>
+                        <h4 class="modal-title">Reactivar</h4>
+                    </div>
+
+                    <form method="post"
+                          class="row"
+                          id="estatus-form"
+                          autocomplete="off">
+                        <div class="modal-body">
+                            <div class="col-lg-12">
+                                <h5>¿Desea cambiar el estatus de este lote?</h5>
+                            </div>
+                            <div class="col-lg-12">
+                                <input type="hidden"
+                                       name="idLote"
+                                       id="id-lote" />
+
+                                <div class="form-check">
+                                    <input class="form-check-input"
+                                           type="radio"
+                                           name="bandera" id="bandera-1"
+                                           value="1"
+                                           checked>
+                                    <label class="form-check-label" for="bandera-1">
+                                        Activa
+                                    </label>
+                                </div>
+
+                                <div class="form-check">
+                                    <input class="form-check-input"
+                                           type="radio"
+                                           name="bandera"
+                                           id="bandera-2"
+                                           value="0">
+                                    <label class="form-check-label" for="bandera-2">
+                                        Dispersión
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="submit"
+                                    class="btn btn-primary">
+                                Aceptar
+                            </button>
+                            <button type="button"
+                                    class="btn btn-danger btn-simple"
+                                    data-dismiss="modal">
+                                Cancelar
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
         <div class="content boxContent">
             <div class="container-fluid">
                 <div class="row">
@@ -38,6 +106,7 @@
                                                         <th>MODALIDAD</th>
                                                         <th>EST. CONTRATACIÓN</th>
                                                         <th>MOTIVO</th>
+                                                        <th>ACCIONES</th>
                                                     </tr>
                                                 </thead>
                                             </table>
@@ -94,23 +163,10 @@
                     className: 'btn buttons-excel',
                     titleAttr: 'Descargar archivo de Excel',
                     exportOptions: {
-                        columns: [1, 2, 3, 4, 5, 6, 7],
+                        columns: [1, 2, 3, 4, 5, 6, 7, 8],
                         format: {
                             header: function (d, columnIdx) {
-                                if (columnIdx === 0) {
-                                    return ' ' + d + ' ';
-                                } else if (columnIdx === 10) {
-                                    return ' ' + d + ' ';
-                                } else if (columnIdx !== 10 && columnIdx !== 0) {
-                                    if (columnIdx === 11) {
-                                        return 'SEDE ';
-                                    }
-                                    if (columnIdx === 12) {
-                                        return 'TIPO'
-                                    } else {
-                                        return ' ' + titulos[columnIdx - 1] + ' ';
-                                    }
-                                }
+                                return ' ' + titulos[columnIdx - 1] + ' ';
                             }
                         }
                     }
@@ -202,6 +258,21 @@
                         'data': function (d) {
                             return '<p class="m-0"><b>'+d.motivo+'</b></p>';
                         }
+                    },
+                    {
+                        'width': '8%',
+                        'orderable': false,
+                        'data': function (d) {
+                            return `
+                                <div class="d-flex justify-center">
+                                    <button value="${d.idLote}"
+                                        class="btn-data btn-blueMaderas btn-cambiar-estatus"
+                                        title="Detener">
+                                        <i class="material-icons">undo</i>
+                                    </button>
+                                </div>
+                            `;
+                        }
                     }
                 ],
                 columnDefs: [{
@@ -244,6 +315,39 @@
                     tr.addClass('shown');
                     $(this).parent().find('.animacion').removeClass("fas fa-chevron-down").addClass("fas fa-chevron-up");
                 }
+            });
+
+            $('#comisiones-detenidas-table tbody').on('click', '.btn-cambiar-estatus', function () {
+                const idLote = $(this).val();
+                $('#id-lote').val(idLote);
+
+                $('#estatus-modal').modal();
+            });
+
+            $('#estatus-form').on('submit', function (e) {
+                e.preventDefault();
+
+                $.ajax({
+                    type: 'POST',
+                    url: 'updateBanderaDetenida',
+                    data: new FormData(this),
+                    contentType: false,
+                    cache: false,
+                    processData:false,
+                    success: function (data) {
+                        if (data) {
+                            $('#estatus-modal').modal("hide");
+                            $("#id-lote").val("");
+                            alerts.showNotification("top", "right", "El registro se ha actualizado exitosamente.", "success");
+                            comisionesDetenidasTabla.ajax.reload();
+                        } else {
+                            alerts.showNotification("top", "right", "Ocurrió un problema, vuelva a intentarlo más tarde.", "warning");
+                        }
+                    },
+                    error: function(){
+                        alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+                    }
+                });
             });
         });
     </script>
