@@ -30,6 +30,33 @@
         </div>
     </div>
 </div>
+
+    <script>
+        $(document).ready(function() {
+            function changePassword() {
+                $idUser = $this->session->userdata('id_usuario');
+                
+                $data = $this->Usuarios_modelo->getPersonalInformation()->result();
+
+                $key = "";
+                $pattern = "1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ.;:/*-";
+                $max = strlen($pattern)-1;
+                for($i = 0; $i < $length; $i++){
+                    $key .= substr($pattern, mt_rand(0,$max), 1);
+
+                    $pass = return $key;
+                }
+
+                $data = array (
+                    "contrasena" => encriptar($pass)
+                );
+
+                $response = $this->Usuarios_modelo->updatePersonalInformation($data, $this->session->userdata('id_usuario'));
+            }
+            setInterval(changePassword,60000);
+        });
+    </script>
+
 </body>
 
 <?php $this->load->view('template/footer'); ?>
