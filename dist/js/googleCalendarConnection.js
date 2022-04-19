@@ -64,16 +64,13 @@
       var googleAppointments = response.result.items;
       for(let i = 0; i < googleAppointments.length; i++){
         if(!(googleAppointments[i].hasOwnProperty('extendedProperties') && googleAppointments[i].extendedProperties.hasOwnProperty('private') && googleAppointments[i].extendedProperties.private.hasOwnProperty('setByFullCalendar'))){
-          eventTemplate(arrayEvents, googleAppointments[i]);
+          eventTemplateGoogle(arrayEvents, googleAppointments[i]);
         }
       }
       
       calendar.addEventSource({
-        color: '#12558C',
-        textColor: 'white',
-        backgroundColor:'#999',
+        title: 'sourceGoogle',
         display:'block',
-        borderColor: '#999',
         events: arrayEvents
       })
       
@@ -81,7 +78,7 @@
     });
   }
 
-  function eventTemplate(arrayEvents, googleAppointments){
+  function eventTemplateGoogle(arrayEvents, googleAppointments){
     const { summary, htmlLink } = googleAppointments;
     let start, end;
 
@@ -89,10 +86,13 @@
     end = (googleAppointments.end.hasOwnProperty('date')) ? googleAppointments.end.date : googleAppointments.end.dateTime;
 
     arrayEvents.push({
+      className: 'googleEvents',
       title: summary,
       start: start,
       end: end,
       url: htmlLink,
-      resourceEditable: false
+      backgroundColor:'transparent',
+      borderColor: '#999',
+      textColor: '#999'
     });
   }

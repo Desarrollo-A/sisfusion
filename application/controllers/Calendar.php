@@ -28,7 +28,8 @@ class Calendar extends CI_Controller {
     }
 
     public function Events(){
-        $data = $this->Calendar_model->getEvents();
+        $ids = $this->input->post('ids');
+        $data = $this->Calendar_model->getEvents($ids);
         if($data != null) {
             echo json_encode($data);
         } else {
@@ -94,6 +95,7 @@ class Calendar extends CI_Controller {
             "medio" => $objDatos->estatus_recordatorio,
             "fecha_cita" =>  str_replace("T", " ", $objDatos->dateStart),
             "idCliente" => $objDatos->id_prospecto_estatus_particular,
+            "idOrganizador" => $this->session->userdata('id_usuario'),
             "estatus" => 1,
             "titulo" => $objDatos->evtTitle, 
             "fecha_final" =>  str_replace("T", " ", $objDatos->dateEnd),
@@ -144,6 +146,39 @@ class Calendar extends CI_Controller {
         } else {
             echo json_encode(array());
         }   
+    }
+
+    public function getManagers(){
+        $idUser = $this->session->userdata('id_usuario');
+        $data = $this->Calendar_model->getManagers($idUser)->result_array();
+
+        if($data != null) {
+            echo json_encode($data);
+        } else {
+            echo json_encode(array());
+        } 
+    }
+
+    public function getCoordinators(){
+        $idUser = $this->input->post('id');
+        $data = $this->Calendar_model->getCoordinators($idUser)->result_array();
+
+        if($data != null) {
+            echo json_encode($data);
+        } else {
+            echo json_encode(array());
+        } 
+    }
+
+    public function getAdvisers(){
+        $idUser = $this->input->post('id');
+        $data = $this->Calendar_model->getAdvisers($idUser)->result_array();
+
+        if($data != null) {
+            echo json_encode($data);
+        } else {
+            echo json_encode(array());
+        } 
     }
 }
  

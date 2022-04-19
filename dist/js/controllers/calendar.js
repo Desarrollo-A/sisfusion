@@ -1,75 +1,187 @@
-var calendar;
-var appointment = '';
+  var calendar;
+  var appointment = '';
 
-document.addEventListener('DOMContentLoaded', function() {
-    var calendarEl = document.getElementById('calendar');
-    calendar = new FullCalendar.Calendar(calendarEl, {   
-      headerToolbar: {
-        start:   'timeGridDay,timeGridWeek,dayGridMonth',
-        center: 'title',
-        end: 'prev,next today googleSignIn googleLogout'
-      },
-      customButtons: {
-        googleSignIn: {
-          icon: 'fab fa-google',
-          click: function() {
-            gapi.auth2.getAuthInstance().signIn();
-            listUpcomingEvents();
-          }
-        },
-        googleLogout: {
-          icon: 'fas fa-power-off',
-          click: function() {
-            gapi.auth2.getAuthInstance().signOut();
-            window.location.reload();
-          }
+  $(document).ready(function() {
+    if(userType == 2){ /* Subdirector */
+      getGerentes();
+    }
+    else if(userType == 3){ /* Gerente */
+      getCoordinators(idUser);
+    }
+    else if(userType == 7 ){
+      getEventos(idUser).then( response => {
+        setSourceEventCRM(response, '#143860');
+      }).catch( error => { alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger"); });
+    }
+    else if(userType == 9){ /* Coordinador */
+      getAdvisers(idUser).then( response => {
+        var arrayId = idUser;
+        for (var i = 0; i < response.length; i++) {
+          arrayId = arrayId + ',' + response[i]['id_usuario'];
         }
+        getEventos(arrayId).then( response => {
+          setSourceEventCRM(response, '#143860');
+        }).catch( error => { alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger"); });
+      }).catch( error => { alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger"); });
+    }
+  });
+
+  $("#gerente").on('change', function(e){
+    let id = $("#gerente").val();
+    getCoordinators(id);
+    $("#coordinador").empty().selectpicker('refresh');
+    $("#asesor").empty().selectpicker('refresh');
+  });
+
+  $("#coordinador").on('change', function(e){
+    removeEvents();
+    var idCoordinador = $("#coordinador").val();
+    getAdvisers(idCoordinador).then( response => {
+      var arrayId = idCoordinador;
+      for (var i = 0; i < response.length; i++) {
+        arrayId = arrayId + ',' + response[i]['id_usuario'];
+      }
+      getEventos(arrayId).then( response => {
+        setSourceEventCRM(response, '#143860');
+      }).catch( error => { alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger"); });;
+    }).catch( error => { alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger"); });
+    $("#asesor").empty().selectpicker('refresh');
+  });
+
+  $("#asesor").on('change', function(e){
+    removeEvents();
+    if(userType == 9) var arrayId = idUser + ', ' + $("#asesor").val();
+    else var arrayId = $("#coordinador").val() + ', ' +$("#asesor").val();
+    
+    getEventos(arrayId).then( response => {
+      setSourceEventCRM(response, '#143860');
+    }).catch( error => { alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger"); });;
+  });
+
+  function getGerentes(){
+    $.post('../Calendar/getManagers', function(data) {
+      var len = data.length;
+      for (var i = 0; i < len; i++) {
+          var id = data[i]['id_usuario'];
+          var nombre = data[i]['nombre'];
+          $("#gerente").append($('<option>').val(id).text(nombre));
+      }
+      if (len <= 0) {
+        $("#gerente").append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
+      }
+      $("#gerente").selectpicker('refresh');
+    }, 'json');
+  }
+
+  function getCoordinators(id){
+    $('#spiner-loader').removeClass('hide');
+    $.post('../Calendar/getCoordinators', {id: id}, function(data) {
+      $('#spiner-loader').addClass('hide');
+      var len = data.length;
+      for (var i = 0; i < len; i++) {
+          var id = data[i]['id_usuario'];
+          var nombre = data[i]['nombre'];
+          $("#coordinador").append($('<option>').val(id).text(nombre));
+      }
+      if (len <= 0) {
+        $("#coordinador").append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
+      }
+      $("#coordinador").selectpicker('refresh');
+
+      return data;
+    }, 'json');
+  }
+
+  function getAdvisers(idCoordinador){
+    return $.ajax({
+      type: 'POST',
+      url: 'getAdvisers',
+      data: {id: idCoordinador},
+      dataType: 'json',
+      cache: false,
+      beforeSend: function() {
+        $('#spiner-loader').removeClass('hide');
       },
-      timeZone: 'none',
-      locale: 'es',
-      initialView: 'dayGridMonth',
-      allDaySlot: false,
-      selectable: true,
-      weekends: true,
-      height: 'auto',
-      contentHeight: 550,
-      views: {
-        // view-specific options here
-        timeGridWeek: {
-          titleFormat: { year: 'numeric', month: 'long', day: 'numeric' },
-        },
-        dayGridMonth: {
-          dayMaxEvents: 2
+      success: function(data) {
+        $('#spiner-loader').addClass('hide');
+        var len = data.length;
+        for (var i = 0; i < len; i++) {
+          var id = data[i]['id_usuario'];
+          var nombre = data[i]['nombre'];
+          $("#asesor").append($('<option>').val(id).text(nombre));
         }
-      },
-      eventSources: [{
-        url: base_url+'index.php/calendar/Events',
-        method: 'POST',
-        color: '#12558C',   // a non-ajax option
-        textColor: 'white', // a non-ajax option
-        backgroundColor:'#12558C',
-        display:'block' 
-      }],
-      eventClick: function(info) {
-        if (info.event.url) {
-          window.open(info.event.url, "_blank");
-          info.jsEvent.preventDefault();
-        }else modalEvent(info.event.id);
-      },
-      dateClick: function(info) {
-        if(info.view.type == "dayGridMonth" || info.view.type == "timeGridWeek") {
-          calendar.changeView( 'timeGridDay', info.dateStr );
+        if (len <= 0) {
+          $("#asesor").append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
         }
+
+        $("#asesor").selectpicker('refresh');
       },
-      select: function(info) {
-        if(info.view.type == "timeGridDay") {
-          cleanModal();
-          setDatesToModalInsert(info);
-        }
+      error: function() {
+        $('#spiner-loader').addClass('hide');
+        alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
       }
     });
-    calendar.render();
+  }
+
+  var calendarEl = document.getElementById('calendar');
+  calendar = new FullCalendar.Calendar(calendarEl, {   
+    headerToolbar: {
+      start:   'timeGridDay,timeGridWeek,dayGridMonth',
+      center: 'title',
+      end: 'prev,next today googleSignIn googleLogout'
+    },
+    customButtons: {
+      googleSignIn: {
+        icon: 'fab fa-google',
+        click: function() {
+          gapi.auth2.getAuthInstance().signIn();
+          listUpcomingEvents();
+        }
+      },
+      googleLogout: {
+        icon: 'fas fa-power-off',
+        click: function() {
+          gapi.auth2.getAuthInstance().signOut();
+          window.location.reload();
+        }
+      }
+    },
+    timeZone: 'none',
+    locale: 'es',
+    initialView: 'dayGridMonth',
+    allDaySlot: false,
+    selectable: true,
+    weekends: true,
+    height: 'auto',
+    contentHeight: 550,
+    views: {
+      // view-specific options here
+      timeGridWeek: {
+        titleFormat: { year: 'numeric', month: 'long', day: 'numeric' },
+      },
+      dayGridMonth: {
+        dayMaxEvents: 2
+      }
+    },
+    eventClick: function(info) {
+      if (info.event.url) {
+        window.open(info.event.url, "_blank");
+        info.jsEvent.preventDefault();
+      }else modalEvent(info.event.id);
+    },
+    dateClick: function(info) {
+      if(info.view.type == "dayGridMonth" || info.view.type == "timeGridWeek") {
+        calendar.changeView( 'timeGridDay', info.dateStr );
+      }
+    },
+    select: function(info) {
+      if(info.view.type == "timeGridDay") {
+        cleanModal();
+        setDatesToModalInsert(info);
+      }
+    }
   });
+  calendar.render();
 
   $.post('../Calendar/getStatusRecordatorio', function(data) {
     var len = data.length;
@@ -124,8 +236,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
   $("#prospecto").on('change', function(e){
     $("#select_recordatorio").removeClass("d-none");
-  })
-  prospecto
+  });
   
   $("#dateStart2").on('change', function(e){
     $('#dateEnd2').val("");
@@ -138,8 +249,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const data = Object.fromEntries(
       new FormData(e.target)
     )
-    
-    insertEvent(data);
+
     data['estatus_particular'] = $('#estatus_particular').val();
     data['id_prospecto_estatus_particular'] = $("#prospecto").val()
     $.ajax({
@@ -153,6 +263,7 @@ document.addEventListener('DOMContentLoaded', function() {
         $('#spiner-loader').removeClass('hide');
       },
       success: function(data) {
+        if(gapi.auth2.getAuthInstance().isSignedIn.get()) insertEventGoogle(data);
         calendar.refetchEvents();
         data = JSON.parse(data);
         $('#spiner-loader').addClass('hide');
@@ -312,21 +423,11 @@ document.addEventListener('DOMContentLoaded', function() {
   /* Google sign in estatus true */
 
   /* Event's structure sent to Google */
-  function buildEvent(data){
+  function buildEventGoogle(data){
     const { dateEnd, dateStart, description, estatus_recordatorio, evtTitle } = data;
     var evento = {
       'summary': evtTitle,
-      'description': description,
-      "creator": {
-        "email": "programador.analista@ciudadmaderas.com",
-        "displayName": "Holidays in United States",
-        "self": true
-      },
-      "organizer": {
-        "email": "programador.analista@ciudadmaderas.com",
-        "displayName": "Holidays in United States",
-        "self": true
-      },
+      'description': description, 
       'start': {
         'dateTime': dateStart,
         'timeZone': 'America/Mexico_City'
@@ -353,12 +454,57 @@ document.addEventListener('DOMContentLoaded', function() {
   }
   /* Event's structure sent to Google */
 
-  function insertEvent(data){
+  function insertEventGoogle(data){
     var request = gapi.client.calendar.events.insert({
       'calendarId': 'primary',
-      'resource': buildEvent(data)
+      'resource': buildEventGoogle(data)
     });
     
     request.execute();
   }
   /* Google sign in estatus true */
+
+  function removeEvents(){
+    srcEventos = calendar.getEventSources();
+    srcEventos.forEach(event => {
+      if(!gapi.auth2.getAuthInstance().isSignedIn.get() && event['internalEventSource']['extendedProps'].hasOwnProperty('title') && event['internalEventSource']['extendedProps']['title'] == "sourceGoogle")
+          event.remove();
+      else{
+        if(event['internalEventSource']['extendedProps'].hasOwnProperty('title') && event['internalEventSource']['extendedProps']['title'] == "sourceCRM"){
+          event.remove();
+        }
+      }
+    });
+  }
+
+  function getEventos(ids){
+    return $.ajax({
+      type: 'POST',
+      url: 'Events',
+      data: {ids: ids},
+      dataType: 'json',
+      cache: false,
+      success: function(data) {
+        if(data.length == 0){
+          alerts.showNotification("top", "right", "Aún no hay ningún evento registrado", "success");
+        }
+      },
+      error: function(){
+        alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+      }
+    });
+  }
+
+  function setSourceEventCRM(events, colorBk){
+    calendar.addEventSource({
+      title: 'sourceCRM',
+      color: colorBk,
+      textColor: 'white',
+      backgroundColor: colorBk,
+      display:'block',
+      borderColor: '#999',
+      events: events
+    })
+    
+    calendar.refetchEvents();
+  }

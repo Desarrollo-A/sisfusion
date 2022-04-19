@@ -4,7 +4,11 @@
     .fc-toolbar-title{
         text-transform: uppercase;
     }
+    .fc-icon-fab, .fc-icon-fas{
+        font-family: FontAwesome!important;
+    }
     .fc-googleSignIn-button{
+        display: none!important;
         background-color: transparent;
         box-shadow: none;
         border: none;
@@ -15,6 +19,7 @@
         }
     }
     .fc-googleLogout-button{
+        display: none!important;
         background-color: transparent;
         box-shadow: none;
         border: none;
@@ -24,7 +29,7 @@
             color: $white;
         }
     }
-    #comodinDIV{
-        
+    .fc-daygrid-block-event{
+        box-shadow: none;
     }
 }
