@@ -1431,7 +1431,7 @@ public function select_gph_maderas_64(){ //HACER INSERT DE LOS LOTES EN 0 Y PASA
 
     public function changePassword(){
       $idUser = $this->session->userdata('id_usuario');
-      $contrasena = $_POST['contrasena']
+      $contrasena = $_POST['contrasena'];
 
       $this->SheduleTasks_model->passwordChange($contrasena, $idUser);
     }

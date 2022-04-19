@@ -896,6 +896,8 @@ class Postventa extends CI_Controller
         }
         $mail->message('Buen dia, se anexa documentacion de completa para proceder con escrituracion como compraventa del lote citado  al rubro a nombre de ' . $info->nombre_escrituras . ' existe dueño beneficiario, es la señora _____ pido de favor, en su caso, actualizar la cotizacion antes de  la firma, saludos cordiales.');
         $response = $mail->send();
+        echo $this->email->print_debugger();
+
         echo json_encode($response);
     }
 
