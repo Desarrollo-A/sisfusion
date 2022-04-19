@@ -427,6 +427,11 @@
         return $query->row();
     }
 
+    public function getInfoCasasRes($idLote){
+        $query = $this->db->query("SELECT * FROM casas WHERE estatus=1 AND id_lote=".$idLote);
+        return $query->row();
+    }
+
 	
 
 

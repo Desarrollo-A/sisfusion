@@ -2777,10 +2777,10 @@ inner join condominio on condominio.idCondominio = lotes.idCondominio inner join
 
 	public function sendMailBloqueosDireccion(){
 
-		$this->db->select('lotes.idLote, condominio.idCondominio, residencial.idResidencial, lotes.nombreLote, residencial.nombreResidencial, condominio.nombre as nombreCondominio, historial_bloqueo.create_at');
+		$this->db->select('lotes.idLote, condominios.idCondominio, residenciales.idResidencial, lotes.nombreLote, residenciales.nombreResidencial, condominios.nombre as nombreCondominio, historial_bloqueo.create_at');
 		$this->db->join('lotes', 'lotes.idLote = historial_bloqueo.idLote');
-		$this->db->join('condominio', 'lotes.idCondominio = condominio.idCondominio');
-		$this->db->join('residencial', 'condominio.idResidencial = residencial.idResidencial');
+		$this->db->join('condominios', 'lotes.idCondominio = condominios.idCondominio');
+		$this->db->join('residenciales', 'condominios.idResidencial = residenciales.idResidencial');
 		$this->db->where("historial_bloqueo.status", '1');
 		$query = $this->db->get('historial_bloqueo');
 		return $query->result();

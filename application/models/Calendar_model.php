@@ -7,9 +7,9 @@ class Calendar_model extends CI_Model {
         parent::__construct();
     }
 
-    function getEvents(){
+    function getEvents($idSource){
         $query = $this->db->query("SELECT a.titulo as title, a.fecha_cita as start, a.fecha_final as 'end', a.id_cita as id FROM agenda a
-        INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = a.medio WHERE oxc.id_catalogo=65");
+        INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = a.medio WHERE idOrganizador IN ($idSource) AND oxc.id_catalogo=65");
         return $query->result_array();
     }
 
@@ -54,6 +54,24 @@ class Calendar_model extends CI_Model {
         $response = $this->db->query("SELECT dir.id_direccion, dir.nombre as direccion 
         FROM direcciones dir 
         WHERE dir.estatus = 1");
+
+        return $response;
+    }
+
+    function getManagers($idUser){
+        $response = $this->db->query("SELECT CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) nombre, id_usuario FROM usuarios us WHERE id_lider = $idUser AND id_rol = 3 AND estatus = 1");
+
+        return $response;
+    }
+
+    function getCoordinators($idUser){
+        $response = $this->db->query("SELECT CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) nombre, id_usuario FROM usuarios us WHERE id_lider = $idUser AND id_rol = 9 AND estatus = 1");
+
+        return $response;
+    }
+
+    function getAdvisers($idUser){
+        $response = $this->db->query("SELECT CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) nombre, id_usuario FROM usuarios us WHERE id_lider = $idUser AND id_rol = 7 AND estatus = 1");
 
         return $response;
     }
