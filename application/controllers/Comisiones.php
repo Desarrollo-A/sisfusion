@@ -6465,7 +6465,7 @@ for ($d=0; $d <count($dos) ; $d++) {
         $comas =str_replace(",", "", $pesos);
         $pago = $comas;
         $pagoCorresp = $pago / $this->input->post("numeroP");
-        $pagoCorresReal = number_format($pagoCorresp, 2, '.', '');
+        $pagoCorresReal = $pagoCorresp;
 
         $dat =  $this->Comisiones_model->insertar_prestamos($this->input->post("usuarioid"),$pago,$this->input->post("numeroP"),$this->input->post("comentario"),$pagoCorresReal );
         echo json_encode($dat);
@@ -6620,7 +6620,7 @@ for ($d=0; $d <count($dos) ; $d++) {
 
 
   public function descuentos_aut(){
-    echo json_encode($this->Comisiones_model->descuentos_aut()->result_array());
+    echo json_encode($this->Comisiones_model->descuentos_aut());
   }
 
     public function getDetallePrestamo($idPrestamo)
