@@ -441,8 +441,16 @@
                         if(data.fecha_modificacion != null ) {
                             RegresaActiva = '<button href="#" data-param="1" data-idpagoc="' + data.idLote + '" ' +'class="btn-data btn-violetChin update_bandera" title="Regresar a dispersión ">' +'<i class="fas fa-undo-alt"></i></button>';
                         }
-                        
-                        BtnStats = '<button href="#" value="'+data.idLote+'" data-value="'+data.registro_comision+'" data-totalNeto2 = "'+data.totalNeto2+'" data-estatus="'+data.idStatusContratacion+'" data-cliente="'+data.id_cliente+'" data-plan="'+data.plan_comision+'"  data-tipov="'+data.tipo_venta+'"data-descplan="'+data.plan_descripcion+'" data-code="'+data.cbbtton+'" ' +'class="btn-data '+varColor+' verify_neodata" title="Verificar en NEODATA">'+'<span class="material-icons">verified_user</span></button> '+RegresaActiva+'';
+
+                        BtnStats += `
+                                <button href="#"
+                                    value="${data.idLote}"
+                                    class="btn-data btn-blueMaderas btn-detener"
+                                    title="Detener">
+                                    <i class="material-icons">block</i>
+                                </button>
+                            `;
+                        BtnStats += '<button href="#" value="'+data.idLote+'" data-value="'+data.registro_comision+'" data-totalNeto2 = "'+data.totalNeto2+'" data-estatus="'+data.idStatusContratacion+'" data-cliente="'+data.id_cliente+'" data-plan="'+data.plan_comision+'"  data-tipov="'+data.tipo_venta+'"data-descplan="'+data.plan_descripcion+'" data-code="'+data.cbbtton+'" ' +'class="btn-data '+varColor+' verify_neodata" title="Verificar en NEODATA">'+'<span class="material-icons">verified_user</span></button> '+RegresaActiva+'';
                     }
                     return '<div class="d-flex justify-center">'+BtnStats+'</div>';
                 }

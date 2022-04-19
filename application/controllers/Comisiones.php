@@ -3312,6 +3312,11 @@ public function LiquidarLote(){
         echo json_encode($response);
     }
 
+    public function updateBanderaDetenida() {
+      $response = $this->Comisiones_model->updateBanderaDetenida($_POST['idLote'], $_POST['bandera']);
+      echo json_encode($response);
+    }
+
     public function changeLoteToStopped()
     {
         $response = $this->Comisiones_model
@@ -6631,6 +6636,30 @@ for ($d=0; $d <count($dos) ; $d++) {
             'general' => $general,
             'detalle' => $detalle
         ));
+    }
+
+    public function viewHistorialPrestamos()
+    {
+        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
+        $this->load->view('template/header');
+        $this->load->view("ventas/historial_prestamos", $datos);
+    }
+
+    public function getPrestamosTable($rol, $user)
+    {
+        $data = $this->Comisiones_model->getPrestamosTable($rol, $user);
+        echo json_encode(array('data' => $data));
+    }
+
+    public function getHistorialPrestamoAut($idRelacion) {
+        $data = $this->Comisiones_model->getHistorialPrestamoAut($idRelacion);
+        echo json_encode($data);
+    }
+
+    public function getUserPrestamoByRol($rol)
+    {
+        $users = $this->Comisiones_model->getUserPrestamoByRol($rol);
+        echo json_encode($users);
     }
     /**--------------------------------------------------------------------- */
 
