@@ -48,6 +48,7 @@
 <script src="<?=base_url()?>dist/js/controllers/select2/select2.full.min.js"></script>
 <script src="<?=base_url()?>dist/js/fullcalendar/main.js"></script>
 <script src="<?=base_url()?>dist/js/fullcalendar/locales-all.js"></script>
+<script src="<?=base_url()?>dist/js/controllers/calendar/side_calendar.js"></script>
 <script type="text/javascript">
     var url2 = "<?=base_url()?>index.php/";
 	$(document).ready(function() {

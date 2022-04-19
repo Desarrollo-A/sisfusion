@@ -101,7 +101,8 @@ class Calendar extends CI_Controller {
             "fecha_final" =>  str_replace("T", " ", $objDatos->dateEnd),
             "id_direccion" => isset($objDatos->id_direccion) ? $objDatos->id_direccion :null,
             "direccion" => isset($objDatos->direccion) ? $objDatos->direccion :null,
-            "descripcion" => $objDatos->description
+            "descripcion" => $objDatos->description,
+            "idGoogle" => $objDatos->idGoogle
         );
 
         $response = $this->General_model->addRecord('agenda', $data);
