@@ -256,11 +256,12 @@
     const data = Object.fromEntries(
       new FormData(e.target)
     )
-    
-    let inserted = await insertEvent(data);
+    if(gapi.auth2.getAuthInstance().isSignedIn.get() == true){
+      let inserted = await insertEvent(data);
+      data['idGoogle'] = inserted;
+    }
     data['estatus_particular'] = $('#estatus_particular').val();
     data['id_prospecto_estatus_particular'] = $("#prospecto").val();
-    data['idGoogle'] = inserted;
     $.ajax({
       type: 'POST',
       url: '../Calendar/insertRecordatorio',
@@ -273,10 +274,10 @@
       },
       success: function(data) {
         if(gapi.auth2.getAuthInstance().isSignedIn.get()) insertEventGoogle(data);
-        calendar.refetchEvents();
         data = JSON.parse(data);
         $('#spiner-loader').addClass('hide');
         alerts.showNotification("top", "right", data["message"], (data["status" == 503]) ? "danger" : (data["status" == 400]) ? "warning" : "success");
+        calendar.refetchEvents();
         $('#agendaInsert').modal('toggle');
       },
       error: function() {
@@ -508,7 +509,7 @@
     var id = new Promise((resolve, reject) => {
       var request = gapi.client.calendar.events.insert({
         'calendarId': 'primary',
-        'resource': buildEvent(data)
+        'resource': buildEventGoogle(data)
       });
       
       request.execute(function (event) {
