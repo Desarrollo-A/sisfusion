@@ -217,8 +217,4 @@
 		}
 		return $updateArrayData;
 	}
-
-	public function passwordChange($contrasena, $idUser){
-		return $this->db->query("UPDATE usuarios SET contrasena = $contrasena WHERE id_usuario = $idUser");
-	}
 }
