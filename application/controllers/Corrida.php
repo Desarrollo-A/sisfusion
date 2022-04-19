@@ -39,7 +39,7 @@ class Corrida extends CI_Controller {
 			}
 			$paquetes[$i]['response'] = $array;
 		}
-		echo json_encode($paquetes);
+		echo json_encode($paquetes, JSON_NUMERIC_CHECK);
 	}
 
 
@@ -129,6 +129,8 @@ class Corrida extends CI_Controller {
 		$arreglo["observaciones"]= $objDatos->observaciones;
 		$arreglo['status'] = 0;
         $arreglo["corrida_dump"]= json_encode($objDatos->corrida_dump);
+        $arreglo["tipo_casa"]= $objDatos->tipo_casa;
+
 
 
         $array_allPackages = json_decode($objDatos->allPackages);
@@ -1434,10 +1436,13 @@ legend {
 							  $html .='
 							   '.$row['porcentaje'].'%
                               ';
-							   }
-							   
-							  
-							  if ($row['id_condicion'] == 3 || $row['id_condicion'] == 4){
+							   }else if($row['id_condicion'] == 12){
+                                  $html .=' Bono descuento al m2 $'.$row['porcentaje'].'';
+                              }
+
+
+
+                              if ($row['id_condicion'] == 3 || $row['id_condicion'] == 4){
 							  $html .=' '.money_format('%(#10n',$row['porcentaje']).' ';							 
 							  }
 							  
@@ -1628,16 +1633,16 @@ legend {
 					  </table>
 
                       <table width="100%" style="height: 45px; border: 1px solid #ddd;" width="690">';
-                      
+
                           foreach ($informacion_plan as $row){
                               $html .='
                               <tr align="center">
-							  <td style="border:1px solid #ddd; font-size: 1.4em;">'.$row['fecha'].'</td>
-							  <td style="border:1px solid #ddd; font-size: 1.4em;">'.$row['pago'].'</td>
-							  <td style="border:1px solid #ddd; font-size: 1.4em;">'.money_format('%(#10n',$row['capital']).'</td>
-							  <td style="border:1px solid #ddd; font-size: 1.4em;">'.money_format('%(#10n',$row['interes']).'</td>
-							  <td style="border:1px solid #ddd; font-size: 1.4em;">'.money_format('%(#10n',$row['total']).'</td>
-							  <td style="border:1px solid #ddd; font-size: 1.4em;">'.money_format('%(#10n',$row['saldo']).'</td>
+							  <td style="border:1px solid #ddd; font-size: 1.4em;">'.$row->fecha.'</td>
+							  <td style="border:1px solid #ddd; font-size: 1.4em;">'.$row->pago.'</td>
+							  <td style="border:1px solid #ddd; font-size: 1.4em;">'.money_format('%(#10n',$row->capital).'</td>
+							  <td style="border:1px solid #ddd; font-size: 1.4em;">'.money_format('%(#10n',$row->interes).'</td>
+							  <td style="border:1px solid #ddd; font-size: 1.4em;">'.money_format('%(#10n',$row->total).'</td>
+							  <td style="border:1px solid #ddd; font-size: 1.4em;">'.money_format('%(#10n',$row->saldo).'</td>
                               </tr>';
                           }
                           
@@ -1853,11 +1858,11 @@ $pdf->Output(utf8_decode($namePDF), 'I');
 
 	    /*echo 'Estoy creadno el excel';
 	    exit;*/
-//	    $id_corrida = 76515;
+        //$id_corrida = 76515;
         $data_corrida = $this->Corrida_model->getAllInfoCorrida($id_corrida);
-//        print_r($data_corrida);
+        //print_r($data_corrida);
         $residencial = $data_corrida->residencial;
-//        exit;
+        //exit;
 
 
 
@@ -1879,9 +1884,8 @@ $pdf->Output(utf8_decode($namePDF), 'I');
         $drawing->setOffsetY(20);
         $drawing->setWorksheet($sheet);
         $sheet->getRowDimension('1')->setRowHeight(100);
+        $sheet->setShowGridlines(false);
 
-
-        
         //$sheet->setCellValue('C1', 'CIUDAD MADERAS');
         $range1 = 'C1';
         $range2 = 'I1';
@@ -1927,8 +1931,8 @@ $pdf->Output(utf8_decode($namePDF), 'I');
         $sheet->getColumnDimension('C')->setWidth(20);
         $sheet->getColumnDimension('D')->setWidth(13);
         $sheet->getColumnDimension('E')->setWidth(15);
-        $sheet->getColumnDimension('F')->setWidth(15);
-        $sheet->getColumnDimension('G')->setWidth(14);
+        $sheet->getColumnDimension('F')->setWidth(18);
+        $sheet->getColumnDimension('G')->setWidth(18);
         $sheet->getColumnDimension('H')->setWidth(18);
         $sheet->getColumnDimension('I')->setWidth(15);
 
@@ -2582,6 +2586,29 @@ $pdf->Output(utf8_decode($namePDF), 'I');
     function checCFActived($idLote){
         $data = $this->Corrida_model->checCFActived($idLote);
         $response['message'] = count($data);
+        if($response != null) {
+            echo json_encode($response);
+        } else {
+            echo json_encode(array());
+        }
+    }
+
+
+    #Traer costos de las casas de ciudad mederas
+    function getInfoCasasRes(){
+        $objDatos = json_decode(file_get_contents("php://input"));
+        $idLote = $objDatos->idLote;
+        $data_casas = $this->Corrida_model->getInfoCasasRes($idLote);
+        //$casas = json_decode(str_replace('"', '', $data_casas->tipo_casa));
+        $casas = str_replace("'tipo_casa':", '', $data_casas->tipo_casa);
+        $casas = str_replace('"', '', $casas );
+        $casas = str_replace("'", '"', $casas );
+
+        print_r($casas);
+        exit;
+
+
+        $response = $casas;
         if($response != null) {
             echo json_encode($response);
         } else {

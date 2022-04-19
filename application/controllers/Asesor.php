@@ -116,27 +116,47 @@ class Asesor extends CI_Controller
     public function getinfoLoteDisponible() {
         $objDatos = json_decode(file_get_contents("php://input"));
         $data = $this->Asesor_model->getLotesInfoCorrida($objDatos->lote);
-        /*print_r($data);
-        exit;*/
+        $data_casa = ($objDatos->tipo_casa==null) ? null : $objDatos->tipo_casa;
         $cd = json_decode(str_replace("'", '"', $data[0]['casasDetail']));
         $total_construccion = 0; // MJ: AQUÍ VAMOS A GUARDAR EL TOTAL DE LA CONSTRUCCIÓN + LOS EXRTAS
+        /*print_r($data[0]['casasDetail']);
+        exit;*/
 
-        if($data[0]['casasDetail'] == 1){
-            foreach($cd->tipo_casa as $value) {
-                // if($value->nombre == 'Aura') {
-                $total_construccion = $value->total_const; // MJ: SE EXTRAE EL TOTAL DE LA CONSTRUCCIÓN POR TIPO DE CASA
-                foreach($value->extras as $v) {
-                    $total_construccion += $v->techado;
+        if($data[0]['casasDetail']!=null){
+            if(count($cd->tipo_casa) >= 1){
+                foreach($cd->tipo_casa as $value) {
+//                    print_r($value);
+//                    echo '<br><br>';
+
+                    if($data_casa->id === $value->id){
+                        $total_construccion = $value->total_const; // MJ: SE EXTRAE EL TOTAL DE LA CONSTRUCCIÓN POR TIPO DE CASA
+                        foreach($value->extras as $v) {
+                            $total_construccion += $v->techado;
+                        }
+                    }
+
+
+//                     if($value->nombre === 'Aura') {
+//                        print_r($value);
+//                        $total_construccion = $value->total_const; // MJ: SE EXTRAE EL TOTAL DE LA CONSTRUCCIÓN POR TIPO DE CASA
+//                        foreach($value->extras as $v) {
+//                            $total_construccion += $v->techado;
+//                        }
+//                     }else if($value->nombre === 'Stella'){
+//                         echo '<br><br>STELLA';
+//                     }
                 }
-                // }
             }
         }
 
+
+        $total_nuevo = $total_construccion + $data[0]['total'];
         $data[0]['total'] += $total_construccion;
-
-
+        $data[0]['enganche'] += $total_construccion*(.10);
+        $preciom2 = $total_nuevo/$data[0]['sup'];
+        $data[0]['precio'] = $preciom2;
         if($data != null) {
-            echo json_encode($data);
+            echo json_encode($data, JSON_NUMERIC_CHECK);
         } else {
             echo json_encode(array());
         }
@@ -145,8 +165,42 @@ class Asesor extends CI_Controller
     public function getinfoLoteDisponibleE() {
         $objDatos = json_decode(file_get_contents("php://input"));
         $data = $this->Asesor_model->getLotesInfoCorridaE($objDatos->lote);
+        $getDataDB = $this->Asesor_model->getInfoCasasByLote($objDatos->lote);
+//        print_r(count($getDataDB));
+//        exit;
+        if(count($getDataDB)>0){
+            $casas = str_replace("'tipo_casa':", '', $getDataDB[0]['tipo_casa']);
+            $casas = str_replace('"', '', $casas );
+            $casas = str_replace("'", '"', $casas );
+            $data_casa = ($objDatos->tipo_casa==null) ? null : json_decode($casas);
+            $data_casa = $data_casa[0];
+
+            $cd = json_decode(str_replace("'", '"', $data[0]['casasDetail']));
+            $total_construccion = 0; // MJ: AQUÍ VAMOS A GUARDAR EL TOTAL DE LA CONSTRUCCIÓN + LOS EXRTAS
+
+            if($data[0]['casasDetail']!=null){
+                if(count($cd->tipo_casa) >= 1){
+                    foreach($cd->tipo_casa as $value) {
+                        if($data_casa->id === $value->id){
+                            $total_construccion = $value->total_const;
+                            foreach($value->extras as $v) {
+                                $total_construccion += $v->techado;
+                            }
+                        }
+                    }
+                }
+            }
+            $total_nuevo = $total_construccion + $data[0]['total'];
+            $data[0]['total'] += $total_construccion;
+            $data[0]['enganche'] += $total_construccion*(.10);
+            $preciom2 = $total_nuevo/$data[0]['sup'];
+            $data[0]['precio'] = $preciom2;
+        }
+
+
+
         if($data != null) {
-            echo json_encode($data);
+            echo json_encode($data, JSON_NUMERIC_CHECK);
         } else {
             echo json_encode(array());
         }

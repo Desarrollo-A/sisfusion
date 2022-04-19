@@ -129,7 +129,7 @@
 											<table class="table-striped table-hover" id="tabla_prestamos" name="tabla_prestamos">
 												<thead>
 													<tr>
-														<th>ID</th>
+														<th>ID USUARIO</th>
 														<th>USUARIO</th>
 														<th>MONTO</th>
 														<th>NUM. PAGOS</th>
@@ -340,7 +340,7 @@
 					"data": function( d ){
 
 						if(d.estatus == 1){
-							return '<span class="label label-danger" style="background:#27AE60">ACTIVO</span>';
+							return '<span class="label label-danger" style="background:#29A2CC">ACTIVO</span>';
 						}else{
 							return '<span class="label label-danger" style="background:#27AE60">LIQUIDADO</span>';
 						}

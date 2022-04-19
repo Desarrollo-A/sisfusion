@@ -222,10 +222,7 @@ public function getPuestosDescuentos(){
       $this->load->view('ventas/flujo_comisiones', $datos);
     }
 
-    public function getDatosFlujoComisiones() {
-      $data = $this->Comisiones_model->getDatosFlujoComisiones()->result_array();
-      echo json_encode(array('data' => $data));
-    }
+    
     
     function aprobar_comision(){
       $id_pago= $_POST['id_pago'];
@@ -4036,7 +4033,7 @@ else if($valor == 3){
 
          if($valor == 2){
 
-          $dat =  $this->Comisiones_model->update_descuentoEsp($id,$montoAinsertar,$comentario, $this->session->userdata('id_usuario'),$valor,$usuario);
+         $dat =  $this->Comisiones_model->update_descuentoEsp($id,$montoAinsertar,$comentario, $this->session->userdata('id_usuario'),$valor,$usuario);
           $dat =  $this->Comisiones_model->insertar_descuentoEsp($usuario,$Restante,$comision[0]['id_comision'],$comentario,$this->session->userdata('id_usuario'),$pago_neodata,$valor);
          }else{
           $dat =  $this->Comisiones_model->update_descuento($id,$descuento,$comentario, $saldo_comisiones, $this->session->userdata('id_usuario'),$valor,$usuario,$pagos_apli);
@@ -6441,15 +6438,9 @@ for ($d=0; $d <count($dos) ; $d++) {
         exit;
     }
 
-    public function flujo_comisiones() {
-      $datos = array();
-      $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-      $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-      $val = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
-      $salida = str_replace('' . base_url() . '', '', $val);
-      $datos["datos4"] = $this->Asesor_model->getActiveBtn($salida, $this->session->userdata('id_rol'))->result();
 
     /**--------------------------------PRESTAMOS ATOMATICOS--------------------- */
+    
     public function panel_prestamos()
     {
 
