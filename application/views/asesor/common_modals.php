@@ -40,6 +40,7 @@
                         </div>
 
                         <input type="hidden" name="idAgenda" id="idAgenda2">
+                        <input type="hidden" name="idGoogle" id="idGoogle">
 
                         <div class="modal-footer">
                             <button type="submit" class="btn btn-primary" id="finishS">Aceptar</button>

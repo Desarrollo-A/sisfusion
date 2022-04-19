@@ -14,7 +14,7 @@ class Calendar_model extends CI_Model {
     }
 
     function getAppointmentData($idAgenda){
-        $query = $this->db->query("SELECT a.id_cita, a.idCliente, a.fecha_cita, a.estatus, a.fecha_creacion, a.medio, a.titulo, a.id_direccion, a.titulo, a.fecha_final, a.descripcion, CONCAT(p.nombre, ' ', p.apellido_paterno, ' ', p.apellido_materno) AS nombre, p.telefono, p.telefono_2 ,
+        $query = $this->db->query("SELECT a.id_cita, a.idCliente, a.fecha_cita, a.estatus, a.fecha_creacion, a.medio, a.titulo, a.id_direccion, a.titulo, a.fecha_final, a.descripcion, a.idGoogle, CONCAT(p.nombre, ' ', p.apellido_paterno, ' ', p.apellido_materno) AS nombre, p.telefono, p.telefono_2 ,
         (CASE WHEN a.id_direccion IS NOT NULL THEN dir.nombre ELSE a.direccion END) direccion
         FROM agenda a
         INNER JOIN prospectos p ON p.id_prospecto = a.idCliente
@@ -41,7 +41,7 @@ class Calendar_model extends CI_Model {
     }
 
     function getStatusRecordatorio(){
-        return $this->db->query("SELECT id_opcion, nombre FROM sisfusion.dbo.opcs_x_cats WHERE id_catalogo = 65 AND estatus = 1 ORDER BY nombre");
+        return $this->db->query("SELECT id_opcion, nombre FROM opcs_x_cats WHERE id_catalogo = 65 AND estatus = 1 ORDER BY nombre");
     }
 
     function getProspectos($idUser){

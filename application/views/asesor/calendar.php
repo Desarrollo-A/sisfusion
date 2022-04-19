@@ -10,7 +10,6 @@
     $datos = $datos2;
     $datos = $datos3;  
     $this->load->view('template/sidebar', $datos);
-            $this->load->view('template/calendar_sidebar');
 
     /*--------------------------------------------------------*/
     ?>
@@ -74,7 +73,8 @@
 </div><!--main-panel close-->
 </body>
 
-<?php $this->load->view('template/footer');?>
+<?php 
+$this->load->view('template/footer');?>
 
 
 <script src="<?= base_url() ?>dist/assets/js/bootstrap-datetimepicker.js"></script>

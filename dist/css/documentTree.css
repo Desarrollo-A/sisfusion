@@ -246,6 +246,26 @@
   overflow: hidden;
 }
 
+.t-0 {
+  top: 0;
+}
+
+.r-0 {
+  right: 0;
+}
+
+.b-0 {
+  bottom: 0;
+}
+
+.l-auto {
+  left: auto;
+}
+
+.z-1030 {
+  z-index: 1030;
+}
+
 /* END utilities */
 /* Flexbox */
 .d-none {
