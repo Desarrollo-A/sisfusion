@@ -74,7 +74,9 @@
                 </div>
             </div>
         </div>
-        <?php $this->load->view('template/footer_legend');?>
+        <?php $this->load->view('template/footer_legend');
+       
+        ?>
     </div>
     </div><!-- main-panel close -->
 

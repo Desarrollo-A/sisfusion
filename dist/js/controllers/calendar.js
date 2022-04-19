@@ -127,17 +127,25 @@ document.addEventListener('DOMContentLoaded', function() {
     $('#dateEnd2').val("");
     $("#dateEnd2").prop('disabled', false);
     $('#dateEnd2').prop('min', $(this).val());
+    var temp = $(this).val() + ':00';
+    $(this).val(temp);
   });
 
-  document.querySelector('#insert_appointment_form').addEventListener('submit', e => {
+  $("#dateEnd2").on('change', function(e){
+    var temp = $(this).val() + ':00';
+    $(this).val(temp);
+  });
+
+  document.querySelector('#insert_appointment_form').addEventListener('submit',async e =>  {
     e.preventDefault();
     const data = Object.fromEntries(
       new FormData(e.target)
     )
     
-    insertEvent(data);
+    let inserted = await insertEvent(data);
     data['estatus_particular'] = $('#estatus_particular').val();
-    data['id_prospecto_estatus_particular'] = $("#prospecto").val()
+    data['id_prospecto_estatus_particular'] = $("#prospecto").val();
+    data['idGoogle'] = inserted;
     $.ajax({
       type: 'POST',
       url: '../Calendar/insertRecordatorio',
@@ -164,7 +172,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   });
 
-  $("#edit_appointment_form").on('submit', function(e) {
+  $(document).on('submit', '#edit_appointment_form', function(e) {
     e.preventDefault();
     var formData = new FormData(this);
     $.ajax({
@@ -175,9 +183,10 @@ document.addEventListener('DOMContentLoaded', function() {
         cache: false,
         processData: false,
         success: function(data) {
-            calendar.refetchEvents();
-            data = JSON.parse(data);
-            alerts.showNotification("top", "right", data["message"], (data["status" == 503]) ? "danger" : (data["status" == 400]) ? "warning" : "success");
+          updateGoogleEvent(Object.fromEntries(formData.entries()));
+          calendar.refetchEvents();
+          data = JSON.parse(data);
+          alerts.showNotification("top", "right", data["message"], (data["status" == 503]) ? "danger" : (data["status" == 400]) ? "warning" : "success");
           $('#modalEvent').modal('toggle');
         },
         error: function() {
@@ -242,7 +251,7 @@ document.addEventListener('DOMContentLoaded', function() {
         $("#dateEnd2").val(moment(appointment.fecha_final).format().substring(0,19));
         $("#description2").val(appointment.descripcion);
         $("#idAgenda2").val(idAgenda);
-
+        $("#idGoogle").val(appointment.idGoogle)
         var medio = $("#estatus_recordatorio2").val();
         var box = $("#comodinDIV2");
         validateNCreate(appointment, medio, box);
@@ -374,11 +383,41 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   function insertEvent(data){
-    var request = gapi.client.calendar.events.insert({
-      'calendarId': 'primary',
-      'resource': buildEvent(data)
+    var id = new Promise((resolve, reject) => {
+      var request = gapi.client.calendar.events.insert({
+        'calendarId': 'primary',
+        'resource': buildEvent(data)
+      });
+      
+      request.execute(function (event) {
+        console.log(event);
+        resolve(event.id);
+      });
     });
-    
+    return id;
+  }
+
+  async function updateGoogleEvent(obj){
+    let evento = new Promise((resolve,reject)=>{
+      gapi.client.calendar.events.get({"calendarId": 'primary', "eventId":obj.idGoogle }).execute(function(event){
+        console.log(event);
+        resolve(event);
+      });
+    })
+    editGoogleEvent(await evento, obj);
+  }
+
+  function editGoogleEvent(evento, obj){
+    console.log(obj);
+    evento.summary = obj.evtTitle;
+    evento.description = obj.description;
+    evento.start.dateTime = obj.dateStart;
+    evento.end.dateTime = obj.dateEnd;
+    var request = gapi.client.calendar.events.patch({
+      'calendarId': 'primary',
+      'eventId': obj.idGoogle,
+      'resource': evento
+    });
     request.execute();
   }
   /* Google sign in estatus true */
