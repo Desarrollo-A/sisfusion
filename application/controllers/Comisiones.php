@@ -3956,7 +3956,7 @@ public function descuentos_historial()
   }
 
 
-  
+   
   public function saveDescuento($valor)
   {
     $saldo_comisiones = $this->input->post('saldo_comisiones');
