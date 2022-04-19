@@ -304,14 +304,18 @@ $(document).ready( function() {
                 extend: 'excelHtml5',
                 text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
                 className: 'btn buttons-excel',
-                titleAttr: 'Listado de usuarios',
-                title:'Listado de usuarios',
+                titleAttr: 'Consulta Contraseña',
+                title:'Consulta Contraseña',
                 exportOptions: {
-                    columns: [0],
+                    columns: [0,1],
                     format: {
                         header: function (d, columnIdx) {
                             switch (columnIdx) {
                                 case 0:
+                                    return 'USUARIO';
+                                    break;
+
+                                case 1:
                                     return 'CONTRASENA';
                                     break;
                             }
@@ -320,8 +324,26 @@ $(document).ready( function() {
                 }
             }
         ],
+        ordering: false,
+        paging: true,
+        pagingType: "full_numbers",
+        lengthMenu: [
+            [10, 25, 50, -1],
+            [10, 25, 50, "Todos"]
+        ],
+        language: {
+            url: "./..//static/spanishLoader_v2.json",
+            paginate: {
+                previous: "<i class='fa fa-angle-left'>",
+                next: "<i class='fa fa-angle-right'>"
+            }
+        },
         destroy: true,
         columns: [
+            { data: function (d) {
+                    return d.usuario
+                }
+            },
             { data: function (d) {
                     return d.contrasena
                 }
@@ -335,6 +357,7 @@ $(document).ready( function() {
             }
         }
     });
+
 
 });
 

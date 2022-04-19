@@ -133,25 +133,6 @@ class Usuarios extends CI_Controller
         echo json_encode($data);
     }
 
-    public function usersAsesor()
-    {
-        /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/
-        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-        /*-------------------------------------------------------------------------------*/
-        $this->load->view('template/header');
-        $this->load->view("asesor/viewUser", $datos);   
-    }
-
-    public function getUsersListAsesor()
-    {
-        $data['data'] = $this->Usuarios_modelo->getUserPassword($this->session->userdata('id_usuario'))->result_array();
-        //print_r($data['data'][0]['contrasena']);
-
-        //exit;
-        $data['data'][0]['contrasena'] = desencriptar($data['data'][0]['contrasena']);
-        echo json_encode($data);
-    }
-
     public function getPaymentMethod()
     {
         echo json_encode($this->Usuarios_modelo->getPaymentMethod()->result_array());
@@ -472,6 +453,25 @@ SEDES CAPITAL HUMANO
 
     public function getUsersListByLeader(){
         $data['data'] = $this->Usuarios_modelo->getUsersListByLeader($this->session->userdata('id_usuario'))->result_array();
+        echo json_encode($data);
+    }
+
+    public function usersAsesor()
+    {
+        /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/
+        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
+        /*-------------------------------------------------------------------------------*/
+        $this->load->view('template/header');
+        $this->load->view("asesor/viewUser", $datos);   
+    }
+
+    public function getUsersListAsesor()
+    {
+        $data['data'] = $this->Usuarios_modelo->getUserPassword($this->session->userdata('id_usuario'))->result_array();
+        //print_r($data['data'][0]['contrasena']);
+
+        //exit;
+        $data['data'][0]['contrasena'] = desencriptar($data['data'][0]['contrasena']);
         echo json_encode($data);
     }
 
