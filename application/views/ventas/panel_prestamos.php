@@ -302,7 +302,7 @@
 				{
 					"width": "7%",
 					"data": function( d ){
-						return '<p class="m-0">$'+formatMoney(d.monto)+'</p>';
+						return '<p class="m-0"><b>$'+formatMoney(d.monto)+'</b></p>';
 					}
 				},
 				{
@@ -326,7 +326,15 @@
 				{
 					"width": "7%",
 					"data": function( d ){
-						return '<p class="m-0">$'+formatMoney(d.monto - d.total_pagado)+'</p>';
+						let color = 'black';
+						let resultado  = d.monto - d.total_pagado;
+						if(resultado > 0.5){
+							color='orange';
+						}
+						if(resultado < 0.0){
+							resultado=0;
+						}
+						return '<p class="m-0" style="color:'+color+'">$'+formatMoney(resultado)+'</p>';
 					}
 				},
 				{
@@ -340,7 +348,7 @@
 					"data": function( d ){
 
 						if(d.estatus == 1){
-							return '<span class="label label-danger" style="background:#29A2CC">ACTIVO</span>';
+							return '<span class="label label-danger" style="background:dodgerblue">ACTIVO</span>';
 						}else{
 							return '<span class="label label-danger" style="background:#27AE60">LIQUIDADO</span>';
 						}
@@ -353,7 +361,7 @@
 					"data": function( d ){
 
 						let f = d.fecha_creacion.split('.');
-						//let fecha = f.toLocaleString;
+						//let fecha = new Date(f[0].replace(/-/g,"/"));
 
 						return '<p class="m-0">'+f[0]+'</p>';
 					}
