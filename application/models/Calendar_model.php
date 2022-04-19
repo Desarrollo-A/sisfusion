@@ -7,9 +7,14 @@ class Calendar_model extends CI_Model {
         parent::__construct();
     }
 
-    function getEvents($idSource){
-        $query = $this->db->query("SELECT a.titulo as title, a.fecha_cita as start, a.fecha_final as 'end', a.id_cita as id FROM agenda a
-        INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = a.medio WHERE idOrganizador IN ($idSource) AND oxc.id_catalogo=65");
+    function getEvents($idSource, $idUsuario){
+        $query = $this->db->query("SELECT a.titulo as title, a.fecha_cita as start, a.fecha_final as 'end', a.id_cita as id, a.idOrganizador, '#eaeaea' as borderColor, '#eaeaea' as textColor,
+        CASE u.id_rol WHEN 7 THEN '#96843D' ELSE '#103f75' END backgroundColor,
+        CASE u.id_rol WHEN 7 THEN 'asesor' ELSE 'coordinador' END className
+        FROM agenda a
+        INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = a.medio 
+        INNER JOIN usuarios u ON u.id_usuario = a.idOrganizador
+        WHERE idOrganizador IN ($idSource) AND oxc.id_catalogo=65");
         return $query->result_array();
     }
 

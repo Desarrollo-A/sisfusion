@@ -10,7 +10,7 @@
     }
     else if(userType == 7 ){
       getEventos(idUser).then( response => {
-        setSourceEventCRM(response, '#143860');
+        setSourceEventCRM(response);
       }).catch( error => { alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger"); });
     }
     else if(userType == 9){ /* Coordinador */
@@ -20,7 +20,7 @@
           arrayId = arrayId + ',' + response[i]['id_usuario'];
         }
         getEventos(arrayId).then( response => {
-          setSourceEventCRM(response, '#143860');
+          setSourceEventCRM(response);
         }).catch( error => { alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger"); });
       }).catch( error => { alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger"); });
     }
@@ -42,7 +42,7 @@
         arrayId = arrayId + ',' + response[i]['id_usuario'];
       }
       getEventos(arrayId).then( response => {
-        setSourceEventCRM(response, '#143860');
+        setSourceEventCRM(response);
       }).catch( error => { alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger"); });;
     }).catch( error => { alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger"); });
     $("#asesor").empty().selectpicker('refresh');
@@ -54,7 +54,7 @@
     else var arrayId = $("#coordinador").val() + ', ' +$("#asesor").val();
     
     getEventos(arrayId).then( response => {
-      setSourceEventCRM(response, '#143860');
+      setSourceEventCRM(response);
     }).catch( error => { alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger"); });;
   });
 
@@ -582,14 +582,10 @@
     });
   }
 
-  function setSourceEventCRM(events, colorBk){
+  function setSourceEventCRM(events){
     calendar.addEventSource({
       title: 'sourceCRM',
-      color: colorBk,
-      textColor: 'white',
-      backgroundColor: colorBk,
       display:'block',
-      borderColor: '#999',
       events: events
     })
     

@@ -972,6 +972,10 @@
   color: #ffffff;
 }
 
+#calendar .fc-daygrid-block-event {
+  box-shadow: none;
+}
+
 .iconCustom {
   cursor: pointer;
   font-size: 3rem;
@@ -1202,6 +1206,4 @@
     display: flex;
     justify-content: flex-end;
   }
-#calendar .fc-daygrid-block-event {
-  box-shadow: none;
 }
