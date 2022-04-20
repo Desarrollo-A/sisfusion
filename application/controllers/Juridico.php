@@ -759,7 +759,7 @@ public function editar_registro_loteRevision_juridico_proceceso7(){
 	   $correosClean = explode(',', $datos[0]["correos"]);
 	   $array = array_unique($correosClean);
 	} else {
-	   $correosClean = explode(',', $datos[0]["correos"].','.'ejecutivo.mktd@ciudadmaderass.com,cobranza.mktd@ciudadmaderass.com');
+	   $correosClean = explode(',', $datos[0]["correos"].','.'ejecutivo.mktd@ciudadmaderas.com,cobranza.mktd@ciudadmaderas.com');
 	   $array = array_unique($correosClean);
 	}
 
@@ -1051,7 +1051,7 @@ public function editar_registro_loteRevision_juridico_proceceso7(){
 	   $correosClean = explode(',', $datos[0]["correos"]);
 	   $array = array_unique($correosClean);
 	} else {
-	   $correosClean = explode(',', $datos[0]["correos"].','.'ejecutivo.mktd@ciudadmaderass.com,cobranza.mktd@ciudadmaderass.com');
+	   $correosClean = explode(',', $datos[0]["correos"].','.'ejecutivo.mktd@ciudadmaderas.com,cobranza.mktd@ciudadmaderas.com');
 	   $array = array_unique($correosClean);
 	}
 

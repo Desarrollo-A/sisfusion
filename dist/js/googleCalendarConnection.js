@@ -28,7 +28,7 @@
       // Handle the initial sign-in state.
       updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
     }, function(error) {
-      appendPre(JSON.stringify(error, null, 2));
+      console.log(error);
     });
   }
 
@@ -42,12 +42,6 @@
       $(".fc-googleSignIn-button").attr("style", "display: block !important");
       $(".fc-googleLogout-button").attr("style", "display: none !important");
     }
-  }
-
-  function appendPre(message) {
-    var pre = document.getElementById('content');
-    var textContent = document.createTextNode(message + '\n');
-    pre.appendChild(textContent);
   }
 
   function listUpcomingEvents() {

@@ -21,14 +21,6 @@ class Usuarios_modelo extends CI_Model {
         }
     }
 
-    function getUserPassword(){
-        switch ($this->session->userdata('id_rol')) {
-            case '4': //ASISTENTE DIRECCION
-                return $this->db->query("SELECT contrasena FROM usuarios WHERE id_usuario = ".$this->session->userdata('id_usuario')."");                        
-                break;
-        }
-    }
-
     function getUsersList(){
         switch ($this->session->userdata('id_rol')) {
             case '19': // SUBDIRECTOR MKTD
@@ -624,12 +616,14 @@ function getAllFoldersPDF()
              $query = $this->db->query("SELECT * FROM usuarios WHERE id_usuario = ".$id_usuario." and id_lider=".$id_lider." ")->result_array();
              if(count($query) == 0){
                  //ENTONCES SI CAMBIO DE LIDER
-                 $getLider = $this->db->query("SELECT u.id_usuario as lider,u2.id_usuario as lider2 FROM usuarios u inner join usuarios u2 on u.id_lider=u2.id_usuario WHERE u.id_usuario = ".$id_lider." ")->result_array();
+                 $getLider = $this->db->query("SELECT u.id_usuario as lider,u2.id_usuario as lider2,u.id_lider as id_subdirector, (CASE WHEN u.id_lider = 7092 THEN 3 WHEN u.id_lider = 9471 THEN 607 ELSE 0 END) id_regional FROM usuarios u inner join usuarios u2 on u.id_lider=u2.id_usuario WHERE u.id_usuario = ".$id_lider." ")->result_array();
                              if($rol_actual == 7){
                                      //ASESOR, CONSULTAR LOS PROSPECTOS QUE TIENE ASIGNADOS DE TIPO 0 
                                   $data = array(
                                          "id_coordinador" => $id_lider,
                                          "id_gerente" => $getLider[0]['lider2'],
+                                         "id_subdirector" => $id_lider,
+                                         "id_regional" => $id_lider,
                                          "fecha_modificacion" => date("Y-m-d H:i:s"),
                                          "modificado_por" => $this->session->userdata('id_usuario')
                                      );
@@ -637,6 +631,8 @@ function getAllFoldersPDF()
                                                   "idpuesto" => 7,
                                                   "idgerente" => $getLider[0]['lider2'],
                                                   "idcoordinador" => $id_lider,
+                                                  "idsubdirecor" => $id_lider,
+                                                  "idregional" => $id_lider,
                                                   "idsedech" => $sedeCH,
                                                   "idsucursalch" => $sucursal);
                                    $resultado = $this->Usuarios_modelo->ServicePostCH($url,$dataCH);
@@ -644,6 +640,8 @@ function getAllFoldersPDF()
                                  $data = array(
                                      "id_coordinador" => $id_usuario,
                                      "id_gerente" => $id_lider,
+                                     "id_subdirector" => $id_lider,
+                                     "id_regional" => $id_lider,
                                      "fecha_modificacion" => date("Y-m-d H:i:s"),
                                      "modificado_por" => $this->session->userdata('id_usuario')
                                  );
@@ -651,6 +649,8 @@ function getAllFoldersPDF()
                                  "idpuesto" => 9,
                                  "idgerente" => $id_lider,
                                  "idcoordinador" => $id_usuario,
+                                 "idsubdirector" => $id_lider,
+                                 "idregional" => $id_lider,
                                  "idsedech" => $sedeCH,
                                  "idsucursalch" => $sucursal);
                                $resultado = $this->Usuarios_modelo->ServicePostCH($url,$dataCH);
@@ -658,6 +658,8 @@ function getAllFoldersPDF()
                                  $data = array(
                                      "id_coordinador" => $id_usuario,
                                      "id_gerente" => $id_usuario,
+                                     "id_subdirector" => $id_lider,
+                                     "id_regional" => $id_lider,
                                      "fecha_modificacion" => date("Y-m-d H:i:s"),
                                      "modificado_por" => $this->session->userdata('id_usuario')
                                  );
@@ -665,31 +667,108 @@ function getAllFoldersPDF()
                                  "idpuesto" => 3,
                                  "idgerente" => $id_usuario,
                                  "idcoordinador" => $id_usuario,
+                                 "idsubdirector" => $id_lider,
+                                 "idregional" => $id_lider,
                                  "idsedech" => $sedeCH,
                                  "idsucursalch" => $sucursal);
                                  $resultado = $this->Usuarios_modelo->ServicePostCH($url,$dataCH);
-     
+                             }else if($rol_actual == 7092){ //SUBDIRECTOR - CDMX&SMA
+                                $data = array(
+                                    "id_coordinador" => $id_usuario,
+                                    "id_gerente" => $id_usuario,
+                                    "id_subdirector" => $id_lider,
+                                    "id_regional" => $id_lider,
+                                    "fecha_modificacion" => date("Y-m-d H:i:s"),
+                                    "modificado_por" => $this->session->userdata('id_usuario')
+                                );
+                                $dataCH = array("idasesor" => $id_usuario,
+                                "idpuesto" => 7092,
+                                "idgerente" => $id_usuario,
+                                "idcoordinador" => $id_usuario,
+                                "idsubdirector" => $id_lider,
+                                "idregional" => $id_lider,
+                                "idsedech" => $sedeCH,
+                                "idsucursalch" => $sucursal);
+                                $resultado = $this->Usuarios_modelo->ServicePostCH($url,$dataCH);
+                             }else if($rol_actual == 3){    //DIRECTOR REGIONAL - CDMX&SMA
+                                $data = array(
+                                    "id_coordinador" => $id_usuario,
+                                    "id_gerente" => $id_usuario,
+                                    "id_subdirector" => $id_lider,
+                                    "id_regional" => $id_lider,
+                                    "fecha_modificacion" => date("Y-m-d H:i:s"),
+                                    "modificado_por" => $this->session->userdata('id_usuario')
+                                );
+                                $dataCH = array("idasesor" => $id_usuario,
+                                "idpuesto" => 3,
+                                "idgerente" => $id_usuario,
+                                "idcoordinador" => $id_usuario,
+                                "idsubdirector" => $id_lider,
+                                "idregional" => $id_lider,
+                                "idsedech" => $sedeCH,
+                                "idsucursalch" => $sucursal);
+                                $resultado = $this->Usuarios_modelo->ServicePostCH($url,$dataCH);
+                             }else if($rol_actual == 9471){ //SUBDIRECTOR - SLP
+                                $data = array(
+                                    "id_coordinador" => $id_usuario,
+                                    "id_gerente" => $id_usuario,
+                                    "id_subdirector" => $id_lider,
+                                    "id_regional" => $id_lider,
+                                    "fecha_modificacion" => date("Y-m-d H:i:s"),
+                                    "modificado_por" => $this->session->userdata('id_usuario')
+                                );
+                                $dataCH = array("idasesor" => $id_usuario,
+                                "idpuesto" => 9471,
+                                "idgerente" => $id_usuario,
+                                "idcoordinador" => $id_usuario,
+                                "idsubdirector" => $id_lider,
+                                "idregional" => $id_lider,
+                                "idsedech" => $sedeCH,
+                                "idsucursalch" => $sucursal);
+                                $resultado = $this->Usuarios_modelo->ServicePostCH($url,$dataCH);
+                             }else if($rol_actual == 607){  //DIRECTOR REGIONAL - SLP
+                                $data = array(
+                                    "id_coordinador" => $id_usuario,
+                                    "id_gerente" => $id_usuario,
+                                    "id_subdirector" => $id_lider,
+                                    "id_regional" => $id_lider,
+                                    "fecha_modificacion" => date("Y-m-d H:i:s"),
+                                    "modificado_por" => $this->session->userdata('id_usuario')
+                                );
+                                $dataCH = array("idasesor" => $id_usuario,
+                                "idpuesto" => 607,
+                                "idgerente" => $id_usuario,
+                                "idcoordinador" => $id_usuario,
+                                "idsubdirector" => $id_lider,
+                                "idregional" => $id_lider,
+                                "idsedech" => $sedeCH,
+                                "idsucursalch" => $sucursal);
+                                $resultado = $this->Usuarios_modelo->ServicePostCH($url,$dataCH);
                              }
              }else{
                  //NO CAMBIO DE LIDER Y TERMINA EL PROCESO, (SOLO SE ACTUALIZA SU INFO)
-                 $getLider = $this->db->query("SELECT u.id_usuario as lider,u2.id_usuario as lider2 FROM usuarios u inner join usuarios u2 on u.id_lider=u2.id_usuario WHERE u.id_usuario = ".$id_lider." ")->result_array();
+                 $getLider = $this->db->query("SELECT u.id_usuario as lider,u2.id_usuario as lider2,u.id_lider as id_subdirector, (CASE WHEN u.id_lider = 7092 THEN 3 WHEN u.id_lider = 9471 THEN 607 ELSE 0 END) id_regional FROM usuarios u inner join usuarios u2 on u.id_lider=u2.id_usuario WHERE u.id_usuario = ".$id_lider." ")->result_array();
                  $dataCH = array("idasesor" => $id_usuario,
                  "idpuesto" => $rol_actual,
                  "idgerente" => $getLider[0]['lider2'],
                  "idcoordinador" => $id_lider,
+                 "idsubdirector" => $id_lider,
+                 "idregional" => $id_lider,
                  "idsedech" => $sedeCH,
                  "idsucursalch" => $sucursal);
                  $resultado = $this->Usuarios_modelo->ServicePostCH($url,$dataCH);
              }
          }else{
              $resultado=false;
-             $getLider = $this->db->query("SELECT u.id_usuario as lider,u2.id_usuario as lider2 FROM usuarios u inner join usuarios u2 on u.id_lider=u2.id_usuario WHERE u.id_usuario = ".$id_lider." ")->result_array();
+             $getLider = $this->db->query("SELECT u.id_usuario as lider,u2.id_usuario as lider2,u.id_lider as id_subdirector, (CASE WHEN u.id_lider = 7092 THEN 3 WHEN u.id_lider = 9471 THEN 607 ELSE 0 END) id_regional FROM usuarios u inner join usuarios u2 on u.id_lider=u2.id_usuario WHERE u.id_usuario ".$id_lider." ")->result_array();
              //SI HUBO UN CAMBIO DE ROL
              if($rol_actual == 7 && $rol_seleccionado == 9){
                      //SE CAMBIO DE ASESOR A COORDINADOR
                      $data = array(
                          "id_coordinador" => $id_usuario,
                          "id_gerente" => $id_lider,
+                         "id_subdirector" => $id_lider,
+                         "id_regional" => $id_lider,
                          "fecha_modificacion" => date("Y-m-d H:i:s"),
                          "modificado_por" => $this->session->userdata('id_usuario')
                      );
@@ -697,6 +776,8 @@ function getAllFoldersPDF()
                      "idpuesto" => 9,
                      "idgerente" => $id_lider,
                      "idcoordinador" => $id_usuario,
+                     "idsubdirector" => $id_lider,
+                     //"idregional" = $id_lider,
                      "idsedech" => $sedeCH,
                      "idsucursalch" => $sucursal);
                      $resultado = $this->Usuarios_modelo->ServicePostCH($url,$dataCH);
@@ -705,6 +786,8 @@ function getAllFoldersPDF()
                  $data = array(
                      "id_coordinador" => $id_lider,
                      "id_gerente" => $getLider[0]['lider2'],
+                     "id_subdirector" => $id_lider,
+                     "id_regional" => $id_lider,
                      "fecha_modificacion" => date("Y-m-d H:i:s"),
                      "modificado_por" => $this->session->userdata('id_usuario')
                  );
@@ -712,6 +795,8 @@ function getAllFoldersPDF()
                      "idpuesto" => 7,
                      "idcoordinador" => $id_lider,
                      "idgerente" => $getLider[0]['lider2'],
+                     "idsubdirector" => $id_lider,
+                     "idregional" => $id_lider,
                      "idsedech" => $sedeCH,
                      "idsucursalch" => $sucursal);
                      $resultado = $this->Usuarios_modelo->ServicePostCH($url,$dataCH);
@@ -720,6 +805,8 @@ function getAllFoldersPDF()
                  $data = array(
                      "id_coordinador" => $id_usuario,
                      "id_gerente" => $id_usuario,
+                     "id_subdirector" => $id_lider,
+                     "id_regional" => $id_lider,
                      "fecha_modificacion" => date("Y-m-d H:i:s"),
                      "modificado_por" => $this->session->userdata('id_usuario')
                  );
@@ -727,6 +814,8 @@ function getAllFoldersPDF()
                  "idpuesto" => 3,
                  "idgerente" => $id_usuario,
                  "idcoordinador" => $id_usuario,
+                 "idsubdirector" => $id_lider,
+                 "idregional" => $id_lider,
                  "idsedech" => $sedeCH,
                  "idsucursalch" => $sucursal);
                  $resultado = $this->Usuarios_modelo->ServicePostCH($url,$dataCH);
@@ -735,6 +824,8 @@ function getAllFoldersPDF()
                  $data = array(
                      "id_coordinador" => $id_usuario,
                      "id_gerente" => $id_lider,
+                     "id_subdirector" => $id_lider,
+                     "id_regional" => $id_lider,
                      "fecha_modificacion" => date("Y-m-d H:i:s"),
                      "modificado_por" => $this->session->userdata('id_usuario')
                  );
@@ -742,11 +833,175 @@ function getAllFoldersPDF()
                  "idpuesto" => 9,
                  "idgerente" => $id_lider,
                  "idcoordinador" => $id_usuario,
+                 "idsubdirector" => $id_lider,
+                 "idregional" => $id_lider,
+                 "idsedech" => $sedeCH,
+                 "idsucursalch" => $sucursal);
+
+                 $resultado = $this->Usuarios_modelo->ServicePostCH($url,$dataCH);
+             }else if($rol_actual == 607 && $rol_seleccionado == 9471){
+                 //SE CAMBIO DE DIRECTOR REGIONAL A SUBDIRECTOR - SLP
+                 $data = array(
+                     "id_coordinador" => $id_usuario,
+                     "id_gerente" => $id_usuario,
+                     "id_subdirector" => $id_lider,
+                     "id_regional" => $id_lider,
+                     "fecha_modificacion" => date("Y-m-d H:i:s"),
+                     "modificado_por" => $this->session->userdata('id_usuario')
+                 );
+                 $dataCH = array("idasesor" => $id_usuario,
+                 "idpuesto" => 9471,
+                 "idgerente" => $id_usuario,
+                 "idcoordinador" => $id_usuario,
+                 "idsubdirector" => $id_lider,
+                 "idregional" => $id_lider,
+                 "idsedech" => $sedeCH,
+                 "idsucursal" => $sucursal);
+
+                 $resultado = $this->Usuarios_modelo->ServicePostCH($url,$dataCH);
+             }else if($rol_actual == 9471 && $rol_seleccionado == 3){
+                 //SE CAMBIO DE SUBDIRECTOR - SLP A GERENTE
+                 $data = array(
+                     "id_coordinador" => $id_usuario,
+                     "id_gerente" => $id_lider,
+                     "id_subdirector" => $id_lider,
+                     "id_regional" => $id_lider,
+                     "fecha_modificacion" => date("Y-m-d H:i:s"),
+                     "modificado_por" => $this->session->userdata('id_usuario')
+                 );
+                 $dataCH = array("idasesor" => $id_usuario,
+                 "idpuesto" => 3,
+                 "idgerente" => $id_lider,
+                 "idcoordinador" => $id_usuario,
+                 "idsubdirector" => $id_lider,
+                 "idregional" => $id_lider,
+                 "idsedech" => $sedeCH,
+                 "idsucursalch" => $sucursal);
+
+                 $resultado = $this->Usuarios_modelo->ServicePostCH($url,$dataCH);
+             }else if($rol_actual == 3 && $rol_seleccionado == 9471){
+                 //SE CAMBIO DE GERENTE A SUBDIRECTOR - SLP
+                 $data = array(
+                     "id_coordinador" => $id_usuario,
+                     "id_gerente" => $id_usuario,
+                     "id_subdirector" => $id_lider,
+                     "id_regional" => $id_lider,
+                     "fecha_modificacion" => date("Y-m-d H:i:s"),
+                     "modificado_por" => $this->session->userdata('id_usuario')
+                 );
+                 $dataCH = array("idasesor" => $id_usuario,
+                 "idpuesto" => 9471,
+                 "idgerente" => $id_usuario,
+                 "idcoordinador" => $id_usuario,
+                 "idsubdirector" => $id_lider,
+                 "idregional" => $id_lider,
+                 "idsedech" => $sedeCH,
+                 "idsucursalch" => $sucursal);
+
+                 $resultado = $this->Usuarios_modelo->ServicePostCH($url,$dataCH);
+             }else if($rol_actual == 9471 && $rol_seleccionado == 607){
+                 //SE CAMBIO DE SUBDIRECTOR A DIRECTOR REGIONAL - SLP
+                 $data = array(
+                     "id_coordinador" => $id_usuario,
+                     "id_gerente" => $id_usuario,
+                     "id_subdirector" => $id_lider,
+                     "id_regional" => $id_lider,
+                     "fecha_modificacion" => date("Y-m-d H:i:s"),
+                     "modificado_por" => $this->session->userdata('id_usuario')
+                 );
+                 $dataCH = array("idasesor" => $id_usuario,
+                 "idpuesto" => 607,
+                 "idgerente" => $id_usuario,
+                 "idcoordinador" => $id_usuario,
+                 "idsubdirector" => $id_lider,
+                 "idregional" => $id_lider,
+                 "idsedech" => $sedeCH,
+                 "idsucursalch" => $sucursal);
+
+                 $resultado = $this->Usuarios_modelo->ServicePostCH($url,$dataCH);
+             }else if($rol_actual == 3 && $rol_seleccionado == 7092){
+                 //SE CAMBIO DE DIRECTOR REGIONAL A SUBDIRECTOR - CDMX & SMA
+                 $data = array(
+                     "id_coordinador" => $id_usuario,
+                     "id_gerente" => $id_usuario,
+                     "id_subdirector" => $id_lider,
+                     "id_subdirector" => $id_lider,
+                     "id_regional" => $id_lider,
+                     "fecha_modificacion" => date("Y-m-d H:i:s"),
+                     "modificado_por" => $this->session->userdata('id_usuario')
+                 );
+                 $dataCH = array("idasesor" => $id_usuario,
+                 "idpuesto" => 7092,
+                 "idgerente" => $id_usuario,
+                 "idcoordinador" => $id_usuario,
+                 "idsubdirector" => $id_lider,
+                 "idregional" => $id_lider,
+                 "idsedech" => $sedeCH,
+                 "idsucursalch" => $sucursal);
+
+                 $resultado = $this->Usuarios_modelo->SevicePostCH($url,$dataCH);
+             }else if($rol_actual == 7092 && $rol_seleccionado == 3){
+                 //SE CAMBIO DE SUBDIRECTOR - CDMX & SMA A GERENTE
+                 $data = array(
+                     "id_coordinador" => $id_usuario,
+                     "id_gerente" => $id_lider,
+                     "id_subdirector" => $id_lider,
+                     "id_regional" => $id_lider,
+                     "fecha_modificacion" => date("Y-m-d H:i:s"),
+                     "modificado_por" => $this->session->userdata('id_usuario')
+                 );
+                 $dataCH = array("idasesor" => $id_usuario,
+                 "idpuesto" => 3,
+                 "idgerente" => $id_usuario,
+                 "idcoordinador" => $id_usuario,
+                 "idsubdirector" => $id_lider,
+                 "idregional" => $id_lider,
+                 "idsedech" => $sedeCH,
+                 "idsucursalch" => $sucursal);
+
+                 $resultado = $this->Usuarios_modelo->ServicePostCH($url,$dataCH);
+             }else if($rol_actual == 3 && $rol_seleccionado == 7092){
+                 //SE CAMBIO DE GERENTE A SUBDIRECTOR - CDMX & SMA
+                 $data = array(
+                     "id_coordinador" => $id_usuario,
+                     "id_gerente" => $id_usuario,
+                     "id_subdirector" => $id_lider,
+                     "id_regional" => $id_lider,
+                     "fecha_modificacion" => date("Y-m-d H:i:s"),
+                     "modificado_por" => $this->session->userdata('id_usuario')
+                 );
+                 $dataCH = array("idasesor" => $id_usuario,
+                 "idpuesto" => 7092,
+                 "idgerente" => $id_usuario,
+                 "idcoordinador" => $id_usuario,
+                 "idsubdirector" => $id_lider,
+                 "idregional" => $id_lider,
+                 "idsedech" => $sedeCH,
+                 "idsucursalch" => $sucursal);
+
+                 $resultado = $this->Usuarios_modelo->ServicePostCH($url,$dataCH);
+             }else if($rol_actual == 7092 && $rol_seleccionado == 3){
+                 //SE CAMBIO DE SUBDIRECTOR A DIRECTOR REGIONAL - CDMX & SMA
+                 $data = array(
+                     "id_coordinador" => $id_usuario,
+                     "id_gerente" => $id_usuario,
+                     "id_subdirector" => $id_lider,
+                     "id_regional" => $id_lider,
+                     "fecha_modificacion" => date("Y-m-d H:i:s"),
+                     "modificado_por" => $this->session->userdata('id_usuario')
+                 );
+                 $dataCH = array("idasesor" => $id_usuario,
+                 "idpuesto" => 3,
+                 "idgerente" => $id_usuario,
+                 "idcoordinador" => $id_usuario,
+                 "idsubdorector" => $id_lider,
+                 "idregional" => $id_lider,
                  "idsedech" => $sedeCH,
                  "idsucursalch" => $sucursal);
 
                  $resultado = $this->Usuarios_modelo->ServicePostCH($url,$dataCH);
              }
+
 
          }
          $someArray = json_decode($resultado, true);
@@ -781,4 +1036,21 @@ function getAllFoldersPDF()
             WHERE id_usuario=$idUsuario and estatus=1 and ( descuento_aplicado is null or descuento_aplicado=0) group by id_usuario");
          }
 
+        function getUserPassword(){
+            switch ($this->session->userdata('id_rol')) {
+                case '4': //ASISTENTE DIRECCION
+                    return $this->db->query("SELECT usuario, contrasena FROM usuarios WHERE id_rol = 61");                        
+                    break;
+            }
+        }
+
+        function updatePersonalPassword($data) {
+            $response = $this->db->update("usuarios", $data, "id_rol = 61");
+            
+            if (! $response ) {
+                return $finalAnswer = 0;
+            } else {
+                return $finalAnswer = 1;
+            }
+        }
 }

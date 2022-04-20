@@ -1183,7 +1183,7 @@ public function get_sede(){
 	   $correosClean = explode(',', $datos[0]["correos"]);
 	   $array = array_unique($correosClean);
 	} else {
-	   $correosClean = explode(',', $datos[0]["correos"].','.'ejecutivo.mktd@ciudadmaderass.com,cobranza.mktd@ciudadmaderass.com');
+	   $correosClean = explode(',', $datos[0]["correos"].','.'ejecutivo.mktd@ciudadmaderas.com,cobranza.mktd@ciudadmaderas.com');
 	   $array = array_unique($correosClean);
 	}
 	
@@ -1559,7 +1559,7 @@ public function editar_registro_loteRechazo_contraloria_proceceso6(){
 	   $correosClean = explode(',', $datos[0]["correos"]);
 	   $array = array_unique($correosClean);
 	} else {
-	   $correosClean = explode(',', $datos[0]["correos"].','.'ejecutivo.mktd@ciudadmaderass.com,cobranza.mktd@ciudadmaderass.com');
+	   $correosClean = explode(',', $datos[0]["correos"].','.'ejecutivo.mktd@ciudadmaderas.com,cobranza.mktd@ciudadmaderas.com');
 	   $array = array_unique($correosClean);
 	}
 
@@ -1964,7 +1964,7 @@ $i = 0;
 	   $correosClean = explode(',', $datos[0]["correos"]);
 	   $array = array_unique($correosClean);
 	} else {
-	   $correosClean = explode(',', $datos[0]["correos"].','.'ejecutivo.mktd@ciudadmaderass.com,cobranza.mktd@ciudadmaderass.com');
+	   $correosClean = explode(',', $datos[0]["correos"].','.'ejecutivo.mktd@ciudadmaderas.com,cobranza.mktd@ciudadmaderas.com');
 	   $array = array_unique($correosClean);
 	}
 
