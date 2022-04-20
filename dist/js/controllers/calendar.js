@@ -253,19 +253,19 @@
 
   document.querySelector('#insert_appointment_form').addEventListener('submit',async e =>  {
     e.preventDefault();
-    const data = Object.fromEntries(
+    const dataF = Object.fromEntries(
       new FormData(e.target)
     )
     if(gapi.auth2.getAuthInstance().isSignedIn.get() == true){
-      let inserted = await insertEvent(data);
-      data['idGoogle'] = inserted;
+      let inserted = await insertEventGoogle(dataF);
+      dataF['idGoogle'] = inserted;
     }
-    data['estatus_particular'] = $('#estatus_particular').val();
-    data['id_prospecto_estatus_particular'] = $("#prospecto").val();
+    dataF['estatus_particular'] = $('#estatus_particular').val();
+    dataF['id_prospecto_estatus_particular'] = $("#prospecto").val();
     $.ajax({
       type: 'POST',
       url: '../Calendar/insertRecordatorio',
-      data: JSON.stringify(data),
+      data: JSON.stringify(dataF),
       contentType: false,
       cache: false,
       processData: false,
@@ -273,7 +273,7 @@
         $('#spiner-loader').removeClass('hide');
       },
       success: function(data) {
-        if(gapi.auth2.getAuthInstance().isSignedIn.get()) insertEventGoogle(data);
+        if(gapi.auth2.getAuthInstance().isSignedIn.get()) insertEventGoogle(dataF);
         data = JSON.parse(data);
         $('#spiner-loader').addClass('hide');
         alerts.showNotification("top", "right", data["message"], (data["status" == 503]) ? "danger" : (data["status" == 400]) ? "warning" : "success");
@@ -289,30 +289,11 @@
 
   $(document).on('submit', '#edit_appointment_form', function(e) {
     e.preventDefault();
-    var formData = new FormData(this);
-    $.ajax({
-        type: 'POST',
-        url: 'updateAppointmentData',
-        data: formData,
-        contentType: false,
-        cache: false,
-        processData: false,
-        beforeSend: function() {
-          $('#spiner-loader').removeClass('hide');
-        },
-        success: function(data) {
-          updateGoogleEvent(Object.fromEntries(formData.entries()));
-          calendar.refetchEvents();
-          data = JSON.parse(data);
-          alerts.showNotification("top", "right", data["message"], (data["status" == 503]) ? "danger" : (data["status" == 400]) ? "warning" : "success");
-          $('#modalEvent').modal('toggle');
-          $('#spiner-loader').addClass('hide');
-        },
-        error: function() {
-          alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
-          $('#spiner-loader').addClass('hide');
-        }
-    });
+    const dataF = Object.fromEntries(
+      new FormData(e.target)
+    );
+    updateGoogleEvent(dataF);
+    
   });
 
   function deleteCita(){
@@ -505,7 +486,8 @@
   }
   /* Event's structure sent to Google */
 
-  function insertEvent(data){
+  function insertEventGoogle(data){
+    console.log('insert',data)
     var id = new Promise((resolve, reject) => {
       var request = gapi.client.calendar.events.insert({
         'calendarId': 'primary',
@@ -520,36 +502,68 @@
     return id;
   }
 
-  async function updateGoogleEvent(obj){
-    let evento = new Promise((resolve,reject)=>{
-      gapi.client.calendar.events.get({"calendarId": 'primary', "eventId":obj.idGoogle }).execute(function(event){
-        console.log(event);
-        resolve(event);
-      });
-    })
-    editGoogleEvent(await evento, obj);
+  async function updateGoogleEvent(data){
+    const { dateEnd, dateStart, description, estatus_recordatorio, evtTitle, idGoogle} = data;
+
+    if(idGoogle == ''){
+      data['inserted'] = await insertEventGoogle(data);
+      console.log('insert');
+    }else{
+      console.log('edit');
+      let evento = new Promise((resolve,reject)=>{
+        gapi.client.calendar.events.get({"calendarId": 'primary', "eventId":idGoogle }).execute(function(event){
+          console.log(event);
+          resolve(event);
+        });
+      })
+      editGoogleEvent(await evento, data);
+    }
+
+    $.ajax({
+      type: 'POST',
+      url: 'updateAppointmentData',
+      data: JSON.stringify(data),
+      contentType: false,
+      cache: false,
+      processData: false,
+      beforeSend: function() {
+        $('#spiner-loader').removeClass('hide');
+      },
+      success: function(data) {
+        calendar.refetchEvents();
+        data = JSON.parse(data);
+        alerts.showNotification("top", "right", data["message"], (data["status" == 503]) ? "danger" : (data["status" == 400]) ? "warning" : "success");
+        $('#modalEvent').modal('toggle');
+        $('#spiner-loader').addClass('hide');
+      },
+      error: function() {
+        alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+        $('#spiner-loader').addClass('hide');
+      }
+    });
   }
 
-  function editGoogleEvent(evento, obj){
-    console.log(obj);
-    evento.summary = obj.evtTitle;
-    evento.description = obj.description;
-    evento.start.dateTime = obj.dateStart;
-    evento.end.dateTime = obj.dateEnd;
+  function editGoogleEvent(evento, data){
+    const { dateEnd, dateStart, description, estatus_recordatorio, evtTitle, idGoogle} = data;
+
+    evento.summary = evtTitle;
+    evento.description = description;
+    evento.start.dateTime = dateStart;
+    evento.end.dateTime = dateEnd;
     var request = gapi.client.calendar.events.patch({
       'calendarId': 'primary',
-      'eventId': obj.idGoogle,
+      'eventId': idGoogle,
       'resource': evento
     });
     request.execute();
   }
-  function insertEventGoogle(data){
-    var request = gapi.client.calendar.events.insert({
-      'calendarId': 'primary',
-      'resource': buildEventGoogle(data)
-    });
-    request.execute();
-  }
+  // function insertEventGoogle(data){
+  //   var request = gapi.client.calendar.events.insert({
+  //     'calendarId': 'primary',
+  //     'resource': buildEventGoogle(data)
+  //   });
+  //   request.execute();
+  // }
   /* Google sign in estatus true */
 
   function removeEvents(){
