@@ -3583,9 +3583,10 @@ class Asesor extends CI_Controller
       </table></body></html>");
 
         $mail->Body = $mailContent;
-
+        if($correoDir != 'gustavo.mancilla@ciudadmaderas.com'){
         $mail->send();
-    }
+        }
+}
 
 
     public function intExpAsesor()
