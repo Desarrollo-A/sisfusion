@@ -938,6 +938,11 @@
   font-size: 12px;
 }
 
+.form-control[disabled] {
+  border-bottom: none !important;
+  opacity: .65;
+}
+
 #calendar .fc-toolbar-title {
   text-transform: uppercase;
 }
@@ -972,6 +977,47 @@
   color: #ffffff;
 }
 
+#calendar .fc-view-harness .fc-scrollgrid {
+  border: 1px solid #f1efef;
+}
+
+#calendar .fc-view-harness .fc-scrollgrid .fc-daygrid-day {
+  border: 1px solid #f1efef !important;
+}
+
+#calendar .fc-view-harness .fc-scrollgrid .fc-daygrid-block-event {
+  box-shadow: none;
+}
+
+#calendar .fc-view-harness .fc-scrollgrid .fc-day-other {
+  background: repeating-linear-gradient(-55deg, #F8F8F8, #F8F8F8 5px, #ffffff 5px, #ffffff 10px);
+}
+
+#calendar .fc-view-harness .fc-scrollgrid .fc-day-today {
+  background-color: transparent;
+}
+
+#calendar .fc-view-harness .fc-scrollgrid .fc-day-today .fc-daygrid-day-top a {
+  background-color: #1A73E8;
+  height: 25px;
+  width: 25px;
+  border-radius: 25px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #ffffff;
+  font-weight: 500;
+}
+
+#calendar .fc-view-harness .fc-scrollgrid .fc-daygrid-day-number {
+  font-size: 12px;
+}
+
+#calendar .fc-daygrid-day-frame {
+  height: 145px;
+  padding: 3px;
+}
+
 .iconCustom {
   cursor: pointer;
   font-size: 3rem;
@@ -987,7 +1033,7 @@
     position: absolute;
     bottom: 0;
     width: 260px;
-    background: #FFFFFF;
+    background: #ffffff;
     box-shadow: 0 10px 30px -12px rgba(0, 0, 0, 0.42), 0 4px 25px 0px rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(0, 0, 0, 0.2);
     overflow: auto;
   }
@@ -1009,7 +1055,7 @@
     height: 100%;
     content: "";
     display: block;
-    background: #FFFFFF;
+    background: #ffffff;
     opacity: .93;
   }
   .hover-collapse, .sidebar-calendar .sidebar .nav li:hover .collapse, .sidebar-calendar .sidebar .nav li:focus .collapse, .sidebar-calendar .sidebar .user:hover .collapse {
@@ -1020,7 +1066,7 @@
     box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.14);
     border-radius: 6px;
     color: rgba(0, 0, 0, 0.87);
-    background: #fff;
+    background: #ffffff;
   }
   .sidebar-calendar .visible-on-sidebar-regular {
     display: none !important;
@@ -1057,7 +1103,7 @@
     margin-top: 20px;
   }
   .sidebar-calendar .sidebar .nav li.active > [data-toggle="collapse"] i {
-    color: #FFFFFF;
+    color: #ffffff;
   }
   .sidebar-calendar .sidebar .nav li > a {
     margin: 5px 10px;
@@ -1074,30 +1120,6 @@
   .sidebar-calendar .sidebar .nav [data-toggle="collapse"] ~ div > ul > li > a {
     padding: 10px 15px;
     border-radius: 3px;
-  }
-  .sidebar-calendar .sidebar[data-active-color="purple"] .nav li.active > [data-toggle="collapse"] {
-    background-color: #96843D;
-    box-shadow: 0 4px 20px 0px rgba(0, 0, 0, 0.14), 0 7px 10px -5px rgba(0, 0, 0, 0.14);
-  }
-  .sidebar-calendar .sidebar[data-active-color="red"] .nav li.active > [data-toggle="collapse"] {
-    background-color: #f44336;
-    box-shadow: 0 4px 20px 0px rgba(0, 0, 0, 0.14), 0 7px 10px -5px rgba(244, 67, 54, 0.4);
-  }
-  .sidebar-calendar .sidebar[data-active-color="orange"] .nav li.active > [data-toggle="collapse"] {
-    background-color: #ff9800;
-    box-shadow: 0 4px 20px 0px rgba(0, 0, 0, 0.14), 0 7px 10px -5px rgba(255, 152, 0, 0.4);
-  }
-  .sidebar-calendar .sidebar[data-active-color="rose"] .nav li.active > [data-toggle="collapse"] {
-    background-color: #e91e63;
-    box-shadow: 0 4px 20px 0px rgba(0, 0, 0, 0.14), 0 7px 10px -5px rgba(233, 30, 99, 0.4);
-  }
-  .sidebar-calendar .sidebar[data-active-color="blue"] .nav li.active > [data-toggle="collapse"] {
-    background-color: #033f84;
-    box-shadow: 0 4px 20px 0px rgba(0, 0, 0, 0.14), 0 7px 10px -5px rgba(0, 72, 212, 0.4);
-  }
-  .sidebar-calendar .sidebar[data-active-color="green"] .nav li.active > [data-toggle="collapse"] {
-    background-color: #4caf50;
-    box-shadow: 0 4px 20px 0px rgba(0, 0, 0, 0.14), 0 7px 10px -5px rgba(76, 175, 80, 0.4);
   }
   .sidebar-calendar .sidebar .info > a {
     height: 0;
@@ -1140,7 +1162,7 @@
     top: 9px;
   }
   .sidebar-calendar .sidebar .collapse .nav:after {
-    border-right: 11px solid #fff;
+    border-right: 11px solid #ffffff;
     border-top: 11px solid transparent;
     border-bottom: 11px solid transparent;
     position: absolute;
@@ -1202,6 +1224,4 @@
     display: flex;
     justify-content: flex-end;
   }
-#calendar .fc-daygrid-block-event {
-  box-shadow: none;
 }
