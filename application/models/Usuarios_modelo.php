@@ -21,14 +21,6 @@ class Usuarios_modelo extends CI_Model {
         }
     }
 
-    function getUserPassword(){
-        switch ($this->session->userdata('id_rol')) {
-            case '4': //ASISTENTE DIRECCION
-                return $this->db->query("SELECT contrasena FROM usuarios WHERE id_usuario = ".$this->session->userdata('id_usuario')."");                        
-                break;
-        }
-    }
-
     function getUsersList(){
         switch ($this->session->userdata('id_rol')) {
             case '19': // SUBDIRECTOR MKTD
@@ -1044,4 +1036,21 @@ function getAllFoldersPDF()
             WHERE id_usuario=$idUsuario and estatus=1 and ( descuento_aplicado is null or descuento_aplicado=0) group by id_usuario");
          }
 
+        function getUserPassword(){
+            switch ($this->session->userdata('id_rol')) {
+                case '4': //ASISTENTE DIRECCION
+                    return $this->db->query("SELECT usuario, contrasena FROM usuarios WHERE id_rol = 61");                        
+                    break;
+            }
+        }
+
+        function updatePersonalPassword($data) {
+            $response = $this->db->update("usuarios", $data, "id_rol = 61");
+            
+            if (! $response ) {
+                return $finalAnswer = 0;
+            } else {
+                return $finalAnswer = 1;
+            }
+        }
 }
