@@ -8,8 +8,9 @@ class Calendar_model extends CI_Model {
     }
 
     function getEvents($idSource, $idUsuario){
-        $query = $this->db->query("SELECT a.titulo as title, a.fecha_cita as start, a.fecha_final as 'end', a.id_cita as id, a.idOrganizador, '#eaeaea' as borderColor, '#eaeaea' as textColor,
-        CASE u.id_rol WHEN 7 THEN '#96843D' ELSE '#103f75' END backgroundColor,
+        $query = $this->db->query("SELECT a.titulo as title, a.fecha_cita as start, a.fecha_final as 'end', 'fab fa-google' as icon, a.id_cita as id, a.idOrganizador, 'transparent' as borderColor,
+        CASE u.id_rol WHEN 7 THEN '#96843D4D' ELSE '#103f754D' END backgroundColor,
+        CASE u.id_rol WHEN 7 THEN '#96843D' ELSE '#103f75' END textColor,
         CASE u.id_rol WHEN 7 THEN 'asesor' ELSE 'coordinador' END className
         FROM agenda a
         INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = a.medio 
@@ -19,8 +20,8 @@ class Calendar_model extends CI_Model {
     }
 
     function getAppointmentData($idAgenda){
-        $query = $this->db->query("SELECT a.id_cita, a.idCliente, a.fecha_cita, a.estatus, a.fecha_creacion, a.medio, a.titulo, a.id_direccion, a.titulo, a.fecha_final, a.descripcion, a.idGoogle, CONCAT(p.nombre, ' ', p.apellido_paterno, ' ', p.apellido_materno) AS nombre, p.telefono, p.telefono_2 ,
-        (CASE WHEN a.id_direccion IS NOT NULL THEN dir.nombre ELSE a.direccion END) direccion
+        $query = $this->db->query("SELECT a.id_cita, a.idCliente, a.idOrganizador, a.fecha_cita, a.fecha_final, a.fecha_creacion, a.titulo, a.descripcion, CONCAT(p.nombre, ' ', p.apellido_paterno, ' ', p.apellido_materno) AS nombre, p.telefono, p.telefono_2 ,  a.id_direccion,
+        (CASE WHEN a.id_direccion IS NOT NULL THEN dir.nombre ELSE a.direccion END) direccion, a.medio, a.estatus, a.idGoogle
         FROM agenda a
         INNER JOIN prospectos p ON p.id_prospecto = a.idCliente
         LEFT JOIN direcciones dir ON dir.id_direccion = a.id_direccion WHERE a.id_cita = $idAgenda");
