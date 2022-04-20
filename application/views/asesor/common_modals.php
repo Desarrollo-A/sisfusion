@@ -2,13 +2,16 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
 
 <div class="modal fade" id="modalEvent" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header mb-1 d-flex justify-between">
                 <h3 class="modal-title">Detalles de la cita</h3>
+                <?php if ($this->session->userdata('id_rol') != '2' && $this->session->userdata('id_rol') != '3') { ?>
                 <button type="button" class="close" aria-hidden="true" onclick="deleteCita()">
                     <i class="fas fa-trash-alt fa-3x"></i>
                 </button>
+                <?php } ?>
             </div>
             <div class="modal-body">
                 <form id="edit_appointment_form" name="edit_appointment_form" method="post">
@@ -43,8 +46,8 @@
                         <input type="hidden" name="idGoogle" id="idGoogle">
 
                         <div class="modal-footer">
-                            <button type="submit" class="btn btn-primary" id="finishS">Aceptar</button>
-                            <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                            <button type="submit" class="btn btn-primary" id="finishS">Guardar</button>
+                            <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cerrar</button>
                         </div>
                     </div>
                 </form>
