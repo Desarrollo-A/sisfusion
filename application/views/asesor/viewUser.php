@@ -16,7 +16,7 @@
                                 <i class="fas fa-user-friends fa-2x"></i>
                             </div>
                             <div class="card-content">
-                                <h3 class="card-title center-align">Consulta Contraseña</h3>
+                                <h3 class="card-title center-align">Consulta contraseña</h3>
                                 <div class="table-responsive">
                                     <div class="material-datatables">
                                         <table id="all_password_datatable" class="table-striped table-hover"
