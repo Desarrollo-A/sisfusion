@@ -42,6 +42,7 @@ function minMaxSideCalendar(){
 
     $('#sideCalendar').show("slow");
     setTimeout(function() {
+      
       createCalendar();
     },500)
   }
@@ -158,6 +159,7 @@ function createCalendar(){
     height: 'auto',
     eventSources: [{
       url: `${base_url}Calendar/Events`,
+      data: {ids: ids},
       method: 'POST',
       color: '#12558C',   // a non-ajax option
       textColor: 'white', // a non-ajax option

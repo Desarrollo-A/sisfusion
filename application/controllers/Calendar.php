@@ -29,7 +29,7 @@ class Calendar extends CI_Controller {
 
     public function Events(){
         $ids = $this->input->post('ids');
-        $data = $this->Calendar_model->getEvents($ids);
+        $data = $this->Calendar_model->getEvents($ids, $this->session->userdata('id_usuario'));
         if($data != null) {
             echo json_encode($data);
         } else {

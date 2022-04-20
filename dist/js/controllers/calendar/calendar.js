@@ -10,8 +10,8 @@
     }
     else if(userType == 7 ){
       getEventos(idUser).then( response => {
-        setSourceEventCRM(response, '#143860');
-      }).catch( error => { alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger"); });
+        setSourceEventCRM(response);
+      }).catch( error => { alerts.showNotification("top", "right", "Oops, algo salió mal. "+error, "danger"); });
     }
     else if(userType == 9){ /* Coordinador */
       getAdvisers(idUser).then( response => {
@@ -20,9 +20,9 @@
           arrayId = arrayId + ',' + response[i]['id_usuario'];
         }
         getEventos(arrayId).then( response => {
-          setSourceEventCRM(response, '#143860');
-        }).catch( error => { alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger"); });
-      }).catch( error => { alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger"); });
+          setSourceEventCRM(response);
+        }).catch( error => { alerts.showNotification("top", "right", "Oops, algo salió mal. "+error, "danger"); });
+      }).catch( error => { alerts.showNotification("top", "right", "Oops, algo salió mal. "+error, "danger"); });
     }
   });
 
@@ -42,9 +42,9 @@
         arrayId = arrayId + ',' + response[i]['id_usuario'];
       }
       getEventos(arrayId).then( response => {
-        setSourceEventCRM(response, '#143860');
-      }).catch( error => { alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger"); });;
-    }).catch( error => { alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger"); });
+        setSourceEventCRM(response);
+      }).catch( error => { alerts.showNotification("top", "right", "Oops, algo salió mal. "+error, "danger"); });;
+    }).catch( error => { alerts.showNotification("top", "right", "Oops, algo salió mal. "+error, "danger"); });
     $("#asesor").empty().selectpicker('refresh');
   });
 
@@ -54,7 +54,7 @@
     else var arrayId = $("#coordinador").val() + ', ' +$("#asesor").val();
     
     getEventos(arrayId).then( response => {
-      setSourceEventCRM(response, '#143860');
+      setSourceEventCRM(response);
     }).catch( error => { alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger"); });;
   });
 
@@ -150,17 +150,22 @@
     locale: 'es',
     initialView: 'dayGridMonth',
     allDaySlot: false,
-    selectable: true,
+    selectable: (userType == 2 || userType == 3) ? false : true,
     weekends: true,
     height: 'auto',
-    contentHeight: 550,
+    contentHeight: 600,
+    eventTimeFormat: {
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: true
+    },
     views: {
       // view-specific options here
       timeGridWeek: {
         titleFormat: { year: 'numeric', month: 'long', day: 'numeric' },
       },
       dayGridMonth: {
-        dayMaxEvents: 2
+        dayMaxEvents: 4
       }
     },
     eventClick: function(info) {
@@ -311,7 +316,7 @@
         $('#spiner-loader').addClass('hide');
           if (data == 1) {
               $('#modalEvent').modal("hide");
-              calendar.refetchEvents();
+              calendar.render();
               alerts.showNotification("top", "right", "La actualización se ha llevado a cabo correctamente.", "success");
           } else {
               alerts.showNotification("top", "right", "Asegúrate de haber llenado todos los campos mínimos requeridos.", "warning");
@@ -326,6 +331,9 @@
 
   function modalEvent(idAgenda){
     getAppointmentData(idAgenda);
+    if(userType == 2 || userType == 3){
+      disabledEditModal(true);
+    }
     $('#modalEvent').modal();
   }
 
@@ -356,6 +364,8 @@
         var medio = $("#estatus_recordatorio2").val();
         var box = $("#comodinDIV2");
         validateNCreate(appointment, medio, box);
+        if(idUser != appointment.idOrganizador) disabledEditModal(true)
+        else disabledEditModal(false)
       },
       error: function() {
         $('#spiner-loader').addClass('hide');
@@ -495,7 +505,6 @@
       });
       
       request.execute(function (event) {
-        console.log(event);
         resolve(event.id);
       });
     });
@@ -557,15 +566,7 @@
     });
     request.execute();
   }
-  // function insertEventGoogle(data){
-  //   var request = gapi.client.calendar.events.insert({
-  //     'calendarId': 'primary',
-  //     'resource': buildEventGoogle(data)
-  //   });
-  //   request.execute();
-  // }
-  /* Google sign in estatus true */
-
+  
   function removeEvents(){
     srcEventos = calendar.getEventSources();
     srcEventos.forEach(event => {
@@ -597,16 +598,33 @@
     });
   }
 
-  function setSourceEventCRM(events, colorBk){
+  function setSourceEventCRM(events){
     calendar.addEventSource({
       title: 'sourceCRM',
-      color: colorBk,
-      textColor: 'white',
-      backgroundColor: colorBk,
       display:'block',
-      borderColor: '#999',
       events: events
     })
     
-    calendar.refetchEvents();
+    calendar.render();
+  }
+
+  function disabledEditModal(value){
+    if(value){
+      $("#modalEvent .close").addClass("d-none");
+      $("#edit_appointment_form input").prop("disabled", true);
+      $("#edit_appointment_form textarea").prop("disabled", true);
+      $("#prospectoE").prop("disabled", true);
+      $("#estatus_recordatorio2").prop("disabled", true);
+      $("#finishS").addClass("d-none");
+    }
+    else{
+      $("#modalEvent .close").removeClass("d-none");
+      $("#edit_appointment_form input").prop("disabled", false);
+      $("#edit_appointment_form textarea").prop("disabled", false);
+      $("#prospectoE").prop("disabled", false);
+      $("#estatus_recordatorio2").prop("disabled", false);
+      $("#finishS").removeClass("d-none");
+    }
+    $("#prospectoE").selectpicker('refresh');
+    $("#estatus_recordatorio2").selectpicker('refresh');
   }
