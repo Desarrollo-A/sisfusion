@@ -1253,41 +1253,57 @@
                         }
 
 
-                        if(item.id_condicion == 4){
+                        if(item.id_condicion == 4 ){
                             console.log('condicion 4');
 
                             porcentaje1 = (item.porcentaje);
                             porcentaje2 = (supLote * porcentaje1);
-                            r1 -= porcentaje2;
+                            r1 = (r1 - porcentaje2);
                         }
                         //aqui se agrega la validación la operación del bono
                         if(item.id_condicion == 12){
-                            console.log('condicion 12');
-                            // descuentoM2 = montoBono/supLote
+                        //     console.log('condicion 12 ', item.porcentaje);
+                        //     // descuentoM2 = montoBono/supLote
                             porcentaje1 = (item.porcentaje);
                             porcentaje2 = (porcentaje1 / supLote);
-                            r1 -= porcentaje1;
+                            r1 = (r1 - porcentaje1);
+                        //     console.log("condicion12 alv: ", r1);
                         }
 
 
 
                         ///////////////////////DESCIPCION DE DESCUENTOS////////////////////////////////////////
                         if(item.id_condicion==12){
-                            console.log('descuento de chuy');
+                            console.log('descuento de chuyyuhtgrf');
                             a +=  porcentaje1;
-                            b = (tot - porcentaje1);
-                            d = (tot - porcentaje2);
-                            c = (d/supLote) - porcentaje2;
+                            b = tot - porcentaje1;
+                            // d = (tot - porcentaje2);
+                            e = b/supLote;
+                            c -=  porcentaje2;
+                            // c = e - c;
+
+
+
+                            // c -= 52.63;
+                            // console.log("a: ", a);
+                            console.log("b: ", b);
+                            // console.log("d: ", d);
+                            console.log("porcentaje1: ", porcentaje1);
+                            console.log("porcentaje2: ", porcentaje2);
+                            console.log("e: ", e);
+                            // console.log("c: ", c);
+                            // console.log("tot: ", a/supLote);
                         }else{
                             console.log('logica normal');
                             a +=  porcentaje2;
                             b = (tot - a);
-                            c = (b/supLote);
+                            c = b/supLote;
                         }
+
                         // a +=  porcentaje2;
                         // b = (tot - a);
                         // c = (b/supLote);
-                        arreglo.push({ahorro: a, pm: c, pt: b, td:1, porcentaje: item.porcentaje, id_condicion: item.id_condicion});
+                        arreglo.push({ahorro: a, pm: (item.id_condicion==12 && orderTotal.length==1) ? e : c, pt: b, td:1, porcentaje: item.porcentaje, id_condicion: item.id_condicion});
                         $scope.decFin =arreglo;
                         // console.log($scope.decFin);
 
@@ -8053,12 +8069,6 @@
                 }
 
             }
-
-
-
-
-
-
             $scope.exportcf = function() {
 
                 var nombre = ($scope.nombre == undefined) ? 0 : $scope.nombre;
@@ -8283,13 +8293,6 @@
                 }
 
             }
-
-
-
-
-
-
-
 
 
             $scope.dtoptions = DTOptionsBuilder;
