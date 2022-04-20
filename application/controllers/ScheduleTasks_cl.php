@@ -4,6 +4,7 @@
     $this->load->model('scheduleTasks_model');
     $this->load->model('Comisiones_model');
     $this->load->model('asesor/Asesor_model');
+    $this->load->model('Usuarios_modelo');
 		$this->load->library(array('session','form_validation'));
 		$this->load->helper(array('url','form'));
 		$this->load->database('default');
@@ -1430,25 +1431,21 @@ public function select_gph_maderas_64(){ //HACER INSERT DE LOS LOTES EN 0 Y PASA
     }
 
     public function changePassword() {
-      $idUser = $this->session->userdata('id_usuario');
-        
-      $data = $this->Usuarios_modelo->getPersonalInformation()->result();
-
       $key = "";
       $pattern = "1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ.;:/*-";
       $max = strlen($pattern)-1;
+      $length = 8;
       for($i = 0; $i < $length; $i++){
         $key .= substr($pattern, mt_rand(0,$max), 1);
-
-        $pass = return $key;
       }
 
       $data = array (
-        "contrasena" => encriptar($pass)
+        "contrasena" => encriptar($key)
       );
 
-      $this->Usuarios_modelo->updatePersonalInformation($data, $this->session->userdata('id_usuario'));
+      $response = $this->Usuarios_modelo->updatePersonalPassword($data);
+      //print($response);
+      echo json_encode($response);
     }
-
 
 }
