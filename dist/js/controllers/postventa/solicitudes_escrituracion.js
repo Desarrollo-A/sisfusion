@@ -806,9 +806,10 @@ function email(idSolicitud, action, notaria = null, valuador= null) {
             break;
     }
     $.post(action == 1 ? 'mailPresupuesto': action == 2 ? 'presupuestoCliente': action  == 3 ? 'mailNotaria': action  == 4 ? 'mailFecha':'mailPresupuesto', obj, function (data) {
-        if(data == true){//cambiar a true
-            changeStatus(idSolicitud, action == 1 ? 4:0, 'correo enviado', 1);
-        }
+        // if(data == true){//cambiar a true
+        // }
+        changeStatus(idSolicitud, action == 1 ? 4:0, 'correo enviado', 1);
+
         $('#spiner-loader').addClass('hide');
     }, 'json');
 }
@@ -1364,9 +1365,10 @@ function emailObservaciones(idSolicitud, action, observaciones = null) {
             break;
     }
     $.post(action == 1 ? 'mailObservaciones' : 'mailObservaciones', obj, function (data) {
-        if(data == true){
-            changeStatus(idSolicitud, action == 1 ? 4:0, 'Correo Envíado a Proyectos', 1);
-        }
+        // if(data == true){
+        // }
+        changeStatus(idSolicitud, action == 1 ? 4:0, 'Correo Envíado a Proyectos', 1);
+
         $('#spiner-loader').addClass('hide');
         $("#viewObservaciones").modal("hide");
         prospectsTable.ajax.reload();

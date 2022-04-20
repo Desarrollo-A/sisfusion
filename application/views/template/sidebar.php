@@ -217,6 +217,7 @@ foreach($datos2 as $datos)
 </ul>
 	</div>
 </div>
+
 <div class="spiner-loader hide" id="spiner-loader">
     <div class="backgroundLS">
         <div class="contentLS">
@@ -232,6 +233,8 @@ foreach($datos2 as $datos)
         </div>
     </div>
 </div>
+
+<?php $this->load->view('template/calendar_sidebar');?>
 <div class="main-panel">
 	<nav class="navbar navbar-transparent navbar-absolute">
 		<div class="container-fluid">
@@ -251,6 +254,12 @@ foreach($datos2 as $datos)
 				<a href="<?=base_url()?>#" class="navbar-brand hidden-md hidden-lg" style="color: #0e4377;font-weight: 800">
 					<img src="<?=base_url()?>static/images/img.ico" class="img-responsive" width="15%">
 				</a>
+                <div class="divCalendar">
+                    <a id="minimizeSidecalendar" class="navbar-brand openCalendar-mini" style="cursor:pointer;">
+                        <i class="material-icons far fa-calendar-alt"></i>
+                        <p class="hidden-lg hidden-md"></p>
+                    </a>
+                </div>
             </div>
 			<div class="collapse navbar-collapse">
 				<a class="navbar-brand" href="#"> Menú </a>
@@ -259,10 +268,10 @@ foreach($datos2 as $datos)
                     <input type="hidden" id="uri2" value="<?=$url?>">
                     <input type="hidden" id="uri" value="<?=base_url()?>Usuarios/Chat">
                     <!------------------------------------------------------------------------->
-					<li>
-						<a href="<?=base_url() ?>">
-							<i class="material-icons">home</i>
-							<p class="hidden-lg hidden-md">Home</p>
+                    <!-- Abrir side-calendar -->
+					<li class="openCalendar">
+						<a id="minimizeSidecalendar"  style="cursor:pointer;">
+                            <i class="material-icons far fa-calendar-alt"></i>
 						</a>
                     </li>
                     <?php
