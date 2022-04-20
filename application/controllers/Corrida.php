@@ -2174,6 +2174,8 @@ $pdf->Output(utf8_decode($namePDF), 'I');
         );
         $data_corrida['data_corrida'] = $this -> Corrida_model -> getInfoCorridaByID($id_corrida);
 
+//        print_r($data_corrida);
+//        exit;
         $this->load->view("corrida/editar_corrida", $data_corrida);
     }
     function update_financialR(){
@@ -2378,7 +2380,7 @@ $pdf->Output(utf8_decode($namePDF), 'I');
 
             }
             else{
-                echo json_encode(array("status" => 200, "message" => "No information to display."));
+                echo json_encode(array("status" => 200, "message" => "No information to display.", "data"=>array()));
             }
         }
     }
