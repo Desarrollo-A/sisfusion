@@ -1439,13 +1439,12 @@ public function select_gph_maderas_64(){ //HACER INSERT DE LOS LOTES EN 0 Y PASA
         $data = array("contrasena" => encriptar($key), "modificado_por" => 1, "fecha_modificacion" => date('Y-m-d H:i:s'));
         $response = $this->General_model->updateRecord('usuarios', $data, 'id_rol', '61');
         echo json_encode($response);
+        $this->destroySession();
     }
 
     public function destroySession(){
-      $this->session->userdata('id_rol') == "61";
-
       $this->session->sess_destroy();
 
-      redirect(base_url() . "index.php/login");
+      redirect(base_url() . "login");
     }
 }
