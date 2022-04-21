@@ -5,8 +5,9 @@
         <a id="minimizeSidecalendar" class="closeCalendar">
             <i class="fas fa-times"></i>
         </a>
-    </div>    
-	<div id="side-calendar"></div>
+    </div>
+      <div class="container-fluid p-0">	<div id="side-calendar"></div>
+</div>
 </div>
 
 <div class="modal fade" id="modalEventConsulta" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
@@ -54,6 +55,8 @@
         </div>
     </div>
 </div>
+<script src="<?=base_url()?>dist/js/controllers/calendar/general_calendar.js"></script>
+
 <script>
     userType = <?= $this->session->userdata('id_rol') ?> ;
     idUser = <?= $this->session->userdata('id_usuario') ?> ;

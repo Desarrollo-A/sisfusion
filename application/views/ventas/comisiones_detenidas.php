@@ -17,7 +17,7 @@
                                 aria-hidden="true">
                             <i class="material-icons">clear</i>
                         </button>
-                        <h4 class="modal-title">Reactivar</h4>
+                        
                     </div>
 
                     <form method="post"
@@ -26,7 +26,7 @@
                           autocomplete="off">
                         <div class="modal-body">
                             <div class="col-lg-12">
-                                <h5>¿Desea cambiar el estatus de este lote?</h5>
+                                <h5>¿A donde desea cambiar el estatus del lote?</h5>
                             </div>
                             <div class="col-lg-12">
                                 <input type="hidden"
@@ -86,7 +86,7 @@
                                 <div class="encabezadoBox">
                                     <h3 class="card-title center-align">Comisiones detenidas</h3>
                                     <p class="card-title pl-1">
-                                        (Comisiones sin saldo disponible en NEODATA, ya dispersadas con anterioridad)
+                                        Lotes detenidos por alguna controversia presentada durante el proceso de comisiones.
                                     </p>
                                 </div>
 
@@ -162,6 +162,7 @@
                     text: "<i class='fa fa-file-excel-o' aria-hidden='true'></i>",
                     className: 'btn buttons-excel',
                     titleAttr: 'Descargar archivo de Excel',
+                    title: 'REPORTE COMISIONES DETENIDAS',
                     exportOptions: {
                         columns: [1, 2, 3, 4, 5, 6, 7, 8],
                         format: {
@@ -265,7 +266,7 @@
                         'data': function (d) {
                             return `
                                 <div class="d-flex justify-center">
-                                    <button value="${d.idLote}"
+                                    <button value="${d.idLote}" data-value="${d.nombreLote}"
                                         class="btn-data btn-blueMaderas btn-cambiar-estatus"
                                         title="Detener">
                                         <i class="material-icons">undo</i>
@@ -320,6 +321,10 @@
             $('#comisiones-detenidas-table tbody').on('click', '.btn-cambiar-estatus', function () {
                 const idLote = $(this).val();
                 $('#id-lote').val(idLote);
+                const nombreLote = $(this).attr("data-value");
+
+                $("#estatus-modal .modal-header").html("");
+                $("#estatus-modal .modal-header").append('<h4 class="modal-title">Reactivar <b>'+nombreLote+'</b></h4>');
 
                 $('#estatus-modal').modal();
             });
