@@ -245,7 +245,7 @@ if($this->session->userdata('id_rol') == 2 || $this->session->userdata('id_rol')
 {
 ?>
 
-	<script src="<?=base_url()?>dist/js/controllers/general-1.1.0.js"></script>
+	<script src="<?=base_url()?>dist/js/controllers/consultaProspectos.js"></script>
 <?php
 } ?>
 
@@ -433,7 +433,7 @@ if($this->session->userdata('id_rol') == 2 || $this->session->userdata('id_rol')
 				$(`#${rol == 59 ? 'subdirector':'gerente'}`).append($('<option>').val(id).text(name));
 			}
 			if(len<=0){
-				$(`#${rol == 59 ? 'subdirector':'gerente'}`).append('<option selected="selected" disabled>NINGUN GERENTE</option>');
+				$(`#${rol == 59 ? 'subdirector':'gerente'}`).append('<option selected="selected" disabled>NINGÚN GERENTE</option>');
 			}
 			$(`#${rol == 59 ? 'subdirector':'gerente'}`).selectpicker('refresh');
 		}, 'json');
@@ -476,7 +476,7 @@ if($this->session->userdata('id_rol') == 2 || $this->session->userdata('id_rol')
                 $("#gerente").append($('<option>').val(id).text(name));
             }
             if (len <= 0) {
-                $("#gerente").append('<option selected="selected" disabled>NINGUN SUBDIRECTOR</option>');
+                $("#gerente").append('<option selected="selected" disabled>NINGÚN SUBDIRECTOR</option>');
             }
             $("#gerente").selectpicker('refresh');
         }, 'json');
@@ -523,7 +523,7 @@ if($this->session->userdata('id_rol') == 2 || $this->session->userdata('id_rol')
 			}
 			if(len<=0)
 			{
-				$("#coordinador").append('<option selected="selected" disabled>NINGUN COORDINADOR</option>');
+				$("#coordinador").append('<option selected="selected" disabled>NINGÚN COORDINADOR</option>');
 			}
 			$("#coordinador").selectpicker('refresh');
 		}, 'json');
@@ -562,7 +562,7 @@ if($this->session->userdata('id_rol') == 2 || $this->session->userdata('id_rol')
 			}
 			if(len<=0)
 			{
-				$("#asesores").append('<option selected="selected" disabled>NINGUN COORDINADOR</option>');
+				$("#asesores").append('<option selected="selected" disabled>NINGÚN COORDINADOR</option>');
 			}
 			$("#asesores").selectpicker('refresh');
 		}, 'json');

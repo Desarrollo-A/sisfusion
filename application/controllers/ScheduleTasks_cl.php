@@ -1,10 +1,7 @@
 <?php class ScheduleTasks_cl extends CI_Controller {
 	public function __construct() {
 		parent::__construct();
-    $this->load->model('scheduleTasks_model');
-    $this->load->model('Comisiones_model');
-    $this->load->model('asesor/Asesor_model');
-    $this->load->model('Usuarios_modelo');
+    $this->load->model(array('scheduleTasks_model', 'Comisiones_model', 'asesor/Asesor_model', 'General_model'));
 		$this->load->library(array('session','form_validation'));
 		$this->load->helper(array('url','form'));
 		$this->load->database('default');
@@ -1430,22 +1427,18 @@ public function select_gph_maderas_64(){ //HACER INSERT DE LOS LOTES EN 0 Y PASA
       echo json_encode($response);
     }
 
-    public function changePassword() {
-      $key = "";
-      $pattern = "1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ.;:/*-";
-      $max = strlen($pattern)-1;
-      $length = 8;
-      for($i = 0; $i < $length; $i++){
-        $key .= substr($pattern, mt_rand(0,$max), 1);
-      }
-
-      $data = array (
-        "contrasena" => encriptar($key)
-      );
-
-      $response = $this->Usuarios_modelo->updatePersonalPassword($data);
-      //print($response);
-      echo json_encode($response);
+    public function changePassword()
+    {
+        $key = "";
+        $pattern = "1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ.;:/*-";
+        $max = strlen($pattern) - 1;
+        $length = 8;
+        for ($i = 0; $i < $length; $i++) {
+            $key .= substr($pattern, mt_rand(0, $max), 1);
+        }
+        $data = array("contrasena" => encriptar($key), "modificado_por" => 1, "fecha_modificacion" => date('Y-m-d H:i:s'));
+        $response = $this->General_model->updateRecord('usuarios', $data, 'id_rol', '61');
+        echo json_encode($response);
     }
 
 }
