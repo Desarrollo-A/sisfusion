@@ -51,27 +51,23 @@
         <div class="modal fade" id="myUpdateBanderaModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog">
                 <div class="modal-content">
-                    
                     <form id="my_updatebandera_form" name="my_updatebandera_form" method="post">
                     <div class="modal-header">
                         <button type="button"class="close" data-dismiss="modal">&times;</button>
                         <h4 class="modal-title"><b>Modificar estatus</b></h4>
                     </div>
                         <div class="modal-body" style="text-align: center;">
-                            <input type="hidden" name="id_pagoc" id="id_pagoc">
-                            <input type="hidden" name="param" id="param">
-                            <h4 class="modal-title">¿Está seguro de regresar el lote a comisiones activas?</h4>
-                            <center><img src="../static/images/back-arrow.gif" width="120" height="100"></center>
                         </div>
                         <div class="modal-footer">
-                        <div class="col-md-3"></div>
-                            <div class="col-md-3"><input type="submit" class="btn btn-success" name="disper_btn"  id="Regresar" value="Regresar"></div>
-                            
-                            <div class="col-md-3"><input type="button" class="btn btn-danger" data-dismiss="modal" value="CANCELAR"></div> 
-
-
-                            <!-- <button type="submit" class="btn btn-primary">Aceptar</button>
-                            <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button> -->
+                        <button type="submit"
+                                    class="btn btn-primary">
+                                Aceptar
+                            </button>
+                            <button type="button"
+                                    class="btn btn-danger btn-simple"
+                                    data-dismiss="modal">
+                                Cancelar
+                            </button>
                         </div>
                     </form>
                 </div>
@@ -95,9 +91,6 @@
         <div class="modal fade modal-alertas" id="modal_NEODATA" role="dialog">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
-                    <!--<div class="modal-header bg-red">
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    </div>-->
                     <form method="post" id="form_NEODATA">
                         <div class="modal-body"></div>
                         <div class="modal-footer"></div>
@@ -134,7 +127,7 @@
                             <div class="card-content">
                                 <div class="encabezadoBox">
                                     <h3 class="card-title center-align" >Dispersión de pago</h3>
-                                    <p class="card-title pl-1">(Comisiones con saldo disponible en NEODATA, nuevas sin dispersar y abonadas con saldo a favor.)</p>
+                                    <p class="card-title pl-1">Lotes nuevos sin dispersar, con saldo disponible en neodata y recesiones con la nueva venta.</p>
                                 </div>
                                 <div class="toolbar">
                                     <div class="container-fluid">
@@ -228,8 +221,14 @@
 
     $(document).on('click', '.update_bandera', function(e){
         id_pagoc = $(this).attr("data-idpagoc");
-        param = $(this).attr("data-param");
-        $("#myUpdateBanderaModal").modal();
+            nombreLote = $(this).attr("data-nombreLote");
+            param = $(this).attr("data-param");
+
+            $("#myUpdateBanderaModal .modal-body").html('');
+
+            $("#myUpdateBanderaModal .modal-body").append('<input type="hidden" name="id_pagoc" id="id_pagoc"><input type="hidden" name="param" id="param"><h4 class="modal-title">¿Está seguro de regresar el lote <b>'+nombreLote+'</b> a comisiones por dispersar?</h4><center><img src="../static/images/backaw2.gif" width="100" height="100"></center>');
+
+            $("#myUpdateBanderaModal").modal();
         $("#id_pagoc").val(id_pagoc);
         $("#param").val(1);
     });
@@ -268,7 +267,7 @@
                 text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
                 className: 'btn buttons-excel',
                 titleAttr: 'Descargar archivo de Excel',
-                title: 'REPORTE DISPERSIÓN DE PAGO',
+                title: 'REPORTE COMISIONES POR DISPERSAR',
                 exportOptions: {
                     columns: [1,2,3,4,5,6,7,8,9,10,11],
                     format: {
@@ -412,7 +411,7 @@
                 "width": "8%",
                 "orderable": false,
                 "data": function( data ){
-                    var BtnStats;
+                    var BtnStats = '';
                     var RegresaActiva = '';
                     
                     if(data.totalNeto2==null || data.totalNeto2==''|| data.totalNeto2==0) {
@@ -432,15 +431,15 @@
                             varColor  = 'btn-green';
                         }
                         
-                        if(data.fecha_modificacion != null ) {
-                            RegresaActiva = '<button href="#" data-param="1" data-idpagoc="' + data.idLote + '" ' +'class="btn-data btn-deepGray update_bandera" title="Regresar a activas">' +'<i class="fas fa-undo-alt"></i></button>';
+                        if(data.fecha_modificacion != null && data.registro_comision != 8 ) {
+                            RegresaActiva = '<button href="#" data-param="1" data-idpagoc="' + data.idLote + '" data-nombreLote="' + data.nombreLote + '"  ' +'class="btn-data btn-violetChin update_bandera" title="Regresar a activas">' +'<i class="fas fa-undo-alt"></i></button>';
                         }
                         
                         BtnStats = '<button href="#" value="'+data.idLote+'" data-value="'+data.registro_comision+'" data-totalNeto2 = "'+data.totalNeto2+'" data-estatus="'+data.idStatusContratacion+'" data-cliente="'+data.id_cliente+'" data-plan="'+data.plan_comision+'"  data-tipov="'+data.tipo_venta+'"data-descplan="'+data.plan_descripcion+'" data-code="'+data.cbbtton+'" ' +'class="btn-data '+varColor+' verify_neodata" title="Verificar en NEODATA">'+'<span class="material-icons">verified_user</span></button> '+RegresaActiva+'';
                     }
                     return '<div class="d-flex justify-center">'+BtnStats+'</div>';
                 }
-                                    // +'<button class="btn-data btn-orangeYellow marcar_pagada" title="Marcar como liquidada" value="' + data.idLote +'"><i class="material-icons">how_to_reg</i></button>'  data-estatus  ;
+                // +'<button class="btn-data btn-orangeYellow marcar_pagada" title="Marcar como liquidada" value="' + data.idLote +'"><i class="material-icons">how_to_reg</i></button>'  data-estatus  ;
             }],
             columnDefs: [{
                 "searchable": false,
@@ -1039,7 +1038,7 @@
                 if (data == 1) {
                     $('#myUpdateBanderaModal').modal("hide");
                     $("#id_pagoc").val("");
-                    alerts.showNotification("top", "right", "El registro se ha actualizado exitosamente.", "success");
+                    alerts.showNotification("top", "right", "Lote actualizado exitosamente", "success");
                     tabla_1.ajax.reload();
                 } else {
                     alerts.showNotification("top", "right", "Oops, algo salió mal. Error al intentar actualizar.", "warning");
