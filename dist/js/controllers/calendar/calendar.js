@@ -2,126 +2,105 @@
   var appointment = '';
 
   $(document).ready(function() {
-    if(userType == 2){ /* Subdirector */
-      getGerentes();
-    }
-    else if(userType == 3){ /* Gerente */
-      getCoordinators(idUser);
-    }
-    else if(userType == 7 ){
-      getEventos(idUser).then( response => {
-        setSourceEventCRM(response);
-      }).catch( error => { alerts.showNotification("top", "right", "Oops, algo salió mal. "+error, "danger"); });
-    }
-    else if(userType == 9){ /* Coordinador */
-      getAdvisers(idUser).then( response => {
-        var arrayId = idUser;
-        for (var i = 0; i < response.length; i++) {
-          arrayId = arrayId + ',' + response[i]['id_usuario'];
-        }
-        getEventos(arrayId).then( response => {
-          setSourceEventCRM(response);
-        }).catch( error => { alerts.showNotification("top", "right", "Oops, algo salió mal. "+error, "danger"); });
-      }).catch( error => { alerts.showNotification("top", "right", "Oops, algo salió mal. "+error, "danger"); });
-    }
+    getUsersAndEvents(userType,idUser);
   });
 
-  $("#gerente").on('change', function(e){
-    let id = $("#gerente").val();
-    getCoordinators(id);
-    $("#coordinador").empty().selectpicker('refresh');
-    $("#asesor").empty().selectpicker('refresh');
-  });
+  // $("#gerente").on('change', function(e){
+  //   let id = $("#gerente").val();
+  //   getCoordinators(id);
+  //   $("#coordinador").empty().selectpicker('refresh');
+  //   $("#asesor").empty().selectpicker('refresh');
+  // });
 
-  $("#coordinador").on('change', function(e){
-    removeEvents();
-    var idCoordinador = $("#coordinador").val();
-    getAdvisers(idCoordinador).then( response => {
-      var arrayId = idCoordinador;
-      for (var i = 0; i < response.length; i++) {
-        arrayId = arrayId + ',' + response[i]['id_usuario'];
-      }
-      getEventos(arrayId).then( response => {
-        setSourceEventCRM(response);
-      }).catch( error => { alerts.showNotification("top", "right", "Oops, algo salió mal. "+error, "danger"); });;
-    }).catch( error => { alerts.showNotification("top", "right", "Oops, algo salió mal. "+error, "danger"); });
-    $("#asesor").empty().selectpicker('refresh');
-  });
+  // $("#coordinador").on('change', function(e){
+  //   removeEvents();
+  //   var idCoordinador = $("#coordinador").val();
+  //   getAdvisers(idCoordinador).then( response => {
+  //     var arrayId = idCoordinador;
+  //     for (var i = 0; i < response.length; i++) {
+  //       arrayId = arrayId + ',' + response[i]['id_usuario'];
+  //     }
+  //     getEventos(arrayId).then( response => {
+  //       setSourceEventCRM(response);
+  //     }).catch( error => { alerts.showNotification("top", "right", "Oops, algo salió mal. "+error, "danger"); });;
+  //   }).catch( error => { alerts.showNotification("top", "right", "Oops, algo salió mal. "+error, "danger"); });
+  //   $("#asesor").empty().selectpicker('refresh');
+  // });
 
-  $("#asesor").on('change', function(e){
-    removeEvents();
-    if(userType == 9) var arrayId = idUser + ', ' + $("#asesor").val();
-    else var arrayId = $("#coordinador").val() + ', ' +$("#asesor").val();
+  // $("#asesor").on('change', function(e){
+  //   removeEvents();
+  //   if(userType == 9) var arrayId = idUser + ', ' + $("#asesor").val();
+  //   else var arrayId = $("#coordinador").val() + ', ' +$("#asesor").val();
     
-    getEventos(arrayId).then( response => {
-      setSourceEventCRM(response);
-    }).catch( error => { alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger"); });;
-  });
+  //   getEventos(arrayId).then( response => {
+  //     setSourceEventCRM(response);
+  //   }).catch( error => { alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger"); });;
+  // });
 
-  function getGerentes(){
-    $.post('../Calendar/getManagers', function(data) {
-      var len = data.length;
-      for (var i = 0; i < len; i++) {
-          var id = data[i]['id_usuario'];
-          var nombre = data[i]['nombre'];
-          $("#gerente").append($('<option>').val(id).text(nombre));
-      }
-      if (len <= 0) {
-        $("#gerente").append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
-      }
-      $("#gerente").selectpicker('refresh');
-    }, 'json');
-  }
+  // function getGerentes(){
+  //   $.post('../Calendar/getManagers', function(data) {
+  //     var len = data.length;
+  //     for (var i = 0; i < len; i++) {
+  //         var id = data[i]['id_usuario'];
+  //         var nombre = data[i]['nombre'];
+  //         $("#gerente").append($('<option>').val(id).text(nombre));
+  //     }
+  //     if (len <= 0) {
+  //       $("#gerente").append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
+  //     }
+  //     $("#gerente").selectpicker('refresh');
+  //   }, 'json');
+  // }
 
-  function getCoordinators(id){
-    $('#spiner-loader').removeClass('hide');
-    $.post('../Calendar/getCoordinators', {id: id}, function(data) {
-      $('#spiner-loader').addClass('hide');
-      var len = data.length;
-      for (var i = 0; i < len; i++) {
-          var id = data[i]['id_usuario'];
-          var nombre = data[i]['nombre'];
-          $("#coordinador").append($('<option>').val(id).text(nombre));
-      }
-      if (len <= 0) {
-        $("#coordinador").append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
-      }
-      $("#coordinador").selectpicker('refresh');
+  // function getCoordinators(id){
+  //   $('#spiner-loader').removeClass('hide');
+  //   $.post('../Calendar/getCoordinators', {id: id}, function(data) {
+  //     $('#spiner-loader').addClass('hide');
+  //     var len = data.length;
+  //     for (var i = 0; i < len; i++) {
+  //         var id = data[i]['id_usuario'];
+  //         var nombre = data[i]['nombre'];
+  //         $("#coordinador").append($('<option>').val(id).text(nombre));
+  //     }
+  //     if (len <= 0) {
+  //       $("#coordinador").append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
+  //     }
+  //     $("#coordinador").selectpicker('refresh');
 
-      return data;
-    }, 'json');
-  }
+  //     return data;
+  //   }, 'json');
+  // }
 
-  function getAdvisers(idCoordinador){
-    return $.ajax({
-      type: 'POST',
-      url: 'getAdvisers',
-      data: {id: idCoordinador},
-      dataType: 'json',
-      cache: false,
-      beforeSend: function() {
-        $('#spiner-loader').removeClass('hide');
-      },
-      success: function(data) {
-        $('#spiner-loader').addClass('hide');
-        var len = data.length;
-        for (var i = 0; i < len; i++) {
-          var id = data[i]['id_usuario'];
-          var nombre = data[i]['nombre'];
-          $("#asesor").append($('<option>').val(id).text(nombre));
-        }
-        if (len <= 0) {
-          $("#asesor").append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
-        }
+  // function getAdvisers(idCoordinador){
+  //   return $.ajax({
+  //     type: 'POST',
+  //     url: 'getAdvisers',
+  //     data: {id: idCoordinador},
+  //     dataType: 'json',
+  //     cache: false,
+  //     beforeSend: function() {
+  //       $('#spiner-loader').removeClass('hide');
+  //     },
+  //     success: function(data) {
+  //       $('#spiner-loader').addClass('hide');
+  //       var len = data.length;
+  //       for (var i = 0; i < len; i++) {
+  //         var id = data[i]['id_usuario'];
+  //         var nombre = data[i]['nombre'];
+  //         $("#asesor").append($('<option>').val(id).text(nombre));
+  //       }
+  //       if (len <= 0) {
+  //         $("#asesor").append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
+  //       }
 
-        $("#asesor").selectpicker('refresh');
-      },
-      error: function() {
-        $('#spiner-loader').addClass('hide');
-        alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
-      }
-    });
-  }
+  //       $("#asesor").selectpicker('refresh');
+  //     },
+  //     error: function() {
+  //       $('#spiner-loader').addClass('hide');
+  //       alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+  //     }
+  //   });
+  // }
 
   var calendarEl = document.getElementById('calendar');
   calendar = new FullCalendar.Calendar(calendarEl, {   
@@ -580,23 +559,23 @@
     });
   }
 
-  function getEventos(ids){
-    return $.ajax({
-      type: 'POST',
-      url: 'Events',
-      data: {ids: ids},
-      dataType: 'json',
-      cache: false,
-      success: function(data) {
-        if(data.length == 0){
-          alerts.showNotification("top", "right", "Aún no hay ningún evento registrado", "success");
-        }
-      },
-      error: function(){
-        alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
-      }
-    });
-  }
+  // function getEventos(ids){
+  //   return $.ajax({
+  //     type: 'POST',
+  //     url: 'Events',
+  //     data: {ids: ids},
+  //     dataType: 'json',
+  //     cache: false,
+  //     success: function(data) {
+  //       if(data.length == 0){
+  //         alerts.showNotification("top", "right", "Aún no hay ningún evento registrado", "success");
+  //       }
+  //     },
+  //     error: function(){
+  //       alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+  //     }
+  //   });
+  // }
 
   function setSourceEventCRM(events){
     calendar.addEventSource({
@@ -628,3 +607,28 @@
     $("#prospectoE").selectpicker('refresh');
     $("#estatus_recordatorio2").selectpicker('refresh');
   }
+
+  // function getUsersAndEvents(userType, idUser){
+  //   if(userType == 2){ /* Subdirector */
+  //     getGerentes();
+  //   }
+  //   else if(userType == 3){ /* Gerente */
+  //     getCoordinators(idUser);
+  //   }
+  //   else if(userType == 7 ){
+  //     getEventos(idUser).then( response => {
+  //       setSourceEventCRM(response);
+  //     }).catch( error => { alerts.showNotification("top", "right", "Oops, algo salió mal. "+error, "danger"); });
+  //   }
+  //   else if(userType == 9){ /* Coordinador */
+  //     getAdvisers(idUser).then( response => {
+  //       var arrayId = idUser;
+  //       for (var i = 0; i < response.length; i++) {
+  //         arrayId = arrayId + ',' + response[i]['id_usuario'];
+  //       }
+  //       getEventos(arrayId).then( response => {
+  //         setSourceEventCRM(response);
+  //       }).catch( error => { alerts.showNotification("top", "right", "Oops, algo salió mal. "+error, "danger"); });
+  //     }).catch( error => { alerts.showNotification("top", "right", "Oops, algo salió mal. "+error, "danger"); });
+  //   }
+  // }
