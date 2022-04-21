@@ -26,7 +26,7 @@ function createCustomButtons(){
       <a id="next" class="iconCustom">
         <i class="fas fa-angle-right"></i>
       </a>
-    </div>`).insertAfter("#side-calendar .fc-header-toolbar");
+    </div>`).insertAfter("#selects");
 }
 
 
@@ -42,6 +42,7 @@ function minMaxSideCalendar(){
 
     $('#sideCalendar').show("slow");
     setTimeout(function() {
+      
       createCalendar();
     },500)
   }
@@ -156,20 +157,12 @@ function createCalendar(){
     initialView: 'timeGridDay',
     allDaySlot: false,
     height: 'auto',
-    eventSources: [{
-      url: `${base_url}Calendar/Events`,
-      method: 'POST',
-      color: '#12558C',   // a non-ajax option
-      textColor: 'white', // a non-ajax option
-      backgroundColor:'#12558C',
-      display:'block' 
-    }],
     eventClick: function(info) {
       modalEventC(info.event.id);
     },
   });
   sideCalendar.render();
-  createCustomButtons();
+  createFilters(userType);
 }
 
 function backDiv(){
@@ -180,4 +173,57 @@ function backDiv(){
     sidebar_container = '<div class="sidebarCalendar-background" style="background-image: url(' + image_src + ') "/>';
     $sidebar.append(sidebar_container);
   }
+}
+
+function createFilters(rol){
+  let fatherDiv = `<div class="container-fluid">
+  <div class="row mb-2" id="selects"></div></div>`;
+  let selects = '';
+  if(rol == 2){
+     selects += `<div class="col-12 col-sm-12 col-md-12 col-lg-12 overflow-hidden ">
+                          <label class="label-gral">Gerente</label>
+                          <select class="selectpicker select-gral m-0" id="gerente" name="gerente" data-style="btn" data-show-subtext="true" data-live-search="true" title="Seleccione un gerente" data-size="7" data-container="body"></select>
+                      </div>`;
+  }
+
+  if(rol == 2 || rol == 3){
+    selects += `<div class="col-12 col-sm-12 col-md-12 col-lg-12 overflow-hidden ">
+    <label class="label-gral">Coordinador</label>
+    <select class="selectpicker select-gral m-0" id="coordinador" name="coordinador" data-style="btn" data-show-subtext="true" data-live-search="true" title="Seleccione un coordinador" data-size="7" data-container="body"></select>
+                      </div>`;
+  }
+
+  if(rol == 2 || rol == 3 || rol == 9){
+    selects += ` <div class="col-12 col-sm-12 col-md-12 col-lg-12 overflow-hidden ">
+    <label class="label-gral">Asesor</label>
+    <select class="selectpicker select-gral m-0" id="asesor" name="asesor" data-style="btn" data-show-subtext="true" data-live-search="true" title="Seleccione un asesor" data-size="7" data-container="body"></select>
+                      </div>`;
+  }
+  $(fatherDiv).insertAfter("#side-calendar .fc-header-toolbar");
+  $('#selects').append(selects);
+  getUsersAndEvents(userType,idUser);
+  createCustomButtons();
+}
+
+function setSourceEventCRM(events){
+  sideCalendar.addEventSource({
+    title: 'sourceCRM',
+    display:'block',
+    events: events
+  })
+  
+  sideCalendar.render();
+}
+
+function removeEvents(){
+  srcEventos = sideCalendar.getEventSources();
+  srcEventos.forEach(event => {
+      if(!gapi.auth2.getAuthInstance().isSignedIn.get() && event['internalEventSource']['extendedProps'].hasOwnProperty('title') && event['internalEventSource']['extendedProps']['title'] == "sourceGoogle")
+          event.remove();
+      else{
+          if(event['internalEventSource']['extendedProps'].hasOwnProperty('title') && event['internalEventSource']['extendedProps']['title'] == "sourceCRM"){
+              event.remove();
+          }
+      }
+  });
 }

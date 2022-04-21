@@ -237,6 +237,22 @@
             }
         }
     }
+        
+    .bootstrap-select {
+        width: 100% !important;
+    }
+    .bootstrap-select button {
+        background-color: $platinum !important;
+        box-shadow: none !important;
+        color: $deepGray !important;
+    }
+    textarea:focus, textarea.form-control:focus {
+        outline:none !important;
+        outline-width: 0 !important;
+        box-shadow: none;
+        -moz-box-shadow: none;
+        -webkit-box-shadow: none;
+    }
 }
 .table-responsive{
     .table-striped{
@@ -352,19 +368,4 @@
         }
     }
 }
-    
-.bootstrap-select {
-    width: 100% !important;
-}
-.bootstrap-select button {
-    background-color: $platinum !important;
-    box-shadow: none !important;
-    color: $deepGray !important;
-}
-textarea:focus, textarea.form-control:focus {
-    outline:none !important;
-    outline-width: 0 !important;
-    box-shadow: none;
-    -moz-box-shadow: none;
-    -webkit-box-shadow: none;
-}
+  
