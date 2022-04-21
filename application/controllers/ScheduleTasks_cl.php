@@ -1441,4 +1441,11 @@ public function select_gph_maderas_64(){ //HACER INSERT DE LOS LOTES EN 0 Y PASA
         echo json_encode($response);
     }
 
+    public function destroySession(){
+      $this->session->userdata('id_rol') == "61";
+
+      $this->session->sess_destroy();
+
+      redirect(base_url() . "index.php/login");
+    }
 }
