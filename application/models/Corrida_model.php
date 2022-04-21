@@ -260,7 +260,10 @@
     public function getInfoCorridaByID($id_corrida){
         $query = $this->db->query("SELECT *,cf.nombre as nombre, cf.telefono as telefono, cf.correo as correo,
         c.idCondominio, r.idResidencial, l.idLote, coord.id_lider as id_coordinador,
-		cf.status as corridaStatus
+		cf.status as corridaStatus,
+		CASE WHEN cf.tipo_casa IS NULL THEN 0
+		ELSE cf.tipo_casa END 
+		as tipo_casa
         FROM corridas_financieras cf 
         INNER JOIN lotes l ON cf.id_lote = l.idLote
         INNER JOIN condominios c ON l.idCondominio=c.idCondominio

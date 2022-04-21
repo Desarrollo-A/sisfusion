@@ -536,7 +536,7 @@ function getAllFoldersPDF()
                                 END) AS anterior
                                 FROM auditoria
                                 INNER JOIN (SELECT id_usuario AS id_creador, CONCAT(nombre, ' ', apellido_paterno,' ',apellido_materno) AS creador  FROM usuarios) AS creadores ON id_creador = creado_por
-                                WHERE id_parametro = ".$id_usuario." ORDER BY fecha_creacion DESC");
+                                WHERE id_parametro = $id_usuario AND tabla = 'usuarios' ORDER BY fecha_creacion DESC");
         return $query->result_array();
     }
 
@@ -569,7 +569,7 @@ function getAllFoldersPDF()
             $where = " AND u.id_sede IN ('".$this->session->userdata('id_sede')."')";
         else {
             if ($this->session->userdata('id_usuario') == 1988)
-                $where = " AND u.id_sede IN ('5')";
+                $where = " AND u.getUsersListByLeaderid_sede IN ('5')";
             else
                 $where = " AND u.id_sede IN ('2', '3', '4', '6')";
         }
@@ -1023,7 +1023,7 @@ function getAllFoldersPDF()
             INNER JOIN opcs_x_cats ON u.id_rol = opcs_x_cats.id_opcion and id_catalogo = 1
             INNER JOIN sedes s ON CAST(s.id_sede AS VARCHAR(45)) = CAST(u.id_sede AS VARCHAR(45))
             INNER JOIN usuarios us ON us.id_usuario= u.id_lider
-            where u.id_rol in(1,2,3,7,9) and u.rfc NOT LIKE '%TSTDD%' AND u.correo NOT LIKE '%test_%'  AND u.estatus = 1
+            where u.id_rol in(1,2,3,7,9) and u.rfc NOT LIKE '%TSTDD%' AND u.correo NOT LIKE '%test_%'
             AND (u.id_lider = @user  
             OR u.id_lider in (select u2.id_usuario from usuarios u2 where id_lider = @user )
             OR u.id_lider in (select u2.id_usuario from usuarios u2 where id_lider in (select u2.id_usuario from usuarios u2 where id_lider = @user )))
