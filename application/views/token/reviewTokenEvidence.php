@@ -53,7 +53,7 @@
                                         <th>GENERADO PARA</th>
                                         <th>FECHA ALTA</th>
                                         <th>CREADO POR</th>
-                                        <th>STATUS</th>
+                                        <th>ESTATUS</th>
                                         <th>ACCIONES</th>
                                     </tr>
                                     </thead>
@@ -138,7 +138,7 @@
                                         return "CREADO POR";
                                         break;
                                     case 4:
-                                        return "STATUS";
+                                        return "ESTATUS";
                                         break;
                                 }
                             }
@@ -184,7 +184,7 @@
                 },
                 {
                     data: function (d) {
-                        return d.status;
+                        return d.estatus;
                     }
                 },
                 {
@@ -192,15 +192,11 @@
                         let btns = '<div class="d-flex align-center justify-center">' +
                             '<button class="btn-data btn-gray reviewEvidenceToken" data-nombre-archivo="' + d.nombre_archivo +'" title="Ver evidencia"></body><i class="fas fa-eye"></i></button>' +
                             '<button class="btn-data btn-green setToken" data-token-name="' + d.token +'" title="Copiar token"><i class="fas fa-copy"></i></button>';
-                            //console.log(d.validacion);
-                            if(d.validacion == 1){
+                            if(d.estatus == 1)
                                btns += '<button class="btn-data btn-warning validateToken" data-action="2" data-token-id="' + d.id_token + '" title="Rechazar token"><i class="fas fa-minus"></i></button>';
-                            }
-                            if(d.validacion == 2 || d.validacion == 0){
+                            if(d.estatus == 2 || d.estatus == 0)
                                 btns += '<button class="btn-data btn-green validateToken" data-action="1" data-token-id="' + d.id_token + '" title="Validar token"><i class="fas fa-check"></i></button>';
-                            }
-                            '</div>';
-                            
+                        btns += '</div>';
                         return btns;
                     }
                 }
@@ -233,30 +229,23 @@
         copyToClipBoard();
     });
 
-    $(document).on('click', '.validateToken', function (){
+    $(document).on('click', '.validateToken', function () {
         let action = $(this).attr("data-action");
-        let id = $(this).attr("data-token-id");
-        console.log(id);
-
         $.ajax({
-                type: 'POST',
-                url: 'validarToken',
-                data: {
-                    'action': action,
-                    'id': id
-                },
-                dataType: 'json',
-                success: function (data) {
-                    $("#reviewTokenEvidenceTable").DataTable().ajax.reload(null, false);
-                    if (action == 2){
-                        alerts.showNotification("top", "right", "El token a sido rechazado.", "success");
-                    }else{
-                        alerts.showNotification("top", "right", "El token a sido validado.", "success");
-                    }
-                }, error: function () {
-                    alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
-                }
-            });
+            type: 'POST',
+            url: 'validarToken',
+            data: {
+                'action': action,
+                'id': $(this).attr("data-token-id")
+            },
+            dataType: 'json',
+            success: function (data) {
+                $("#reviewTokenEvidenceTable").DataTable().ajax.reload(null, false);
+                alerts.showNotification("top", "right", action == 2 ? "El token ha sido marcado como rechazado." : "El token ha sido marcado como aprobado.", "success");
+            }, error: function () {
+                alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+            }
+        });
     });
 
 </script>

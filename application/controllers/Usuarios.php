@@ -467,7 +467,7 @@ SEDES CAPITAL HUMANO
 
     public function getUsersListAsesor()
     {
-        $data['data'] = $this->Usuarios_modelo->getUserPassword($this->session->userdata('id_usuario'))->result_array();
+        $data['data'] = $this->Usuarios_modelo->getUserPassword()->result_array();
         //print_r($data['data'][0]['contrasena']);
 
         //exit;

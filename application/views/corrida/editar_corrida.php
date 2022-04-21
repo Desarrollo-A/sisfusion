@@ -2634,10 +2634,15 @@
 
                                 $http.post('<?=base_url()?>index.php/Corrida/getPaquetesByCondominio', {id_condominio: <?php echo $data_corrida->idCondominio;?>, id_corrida: <?php echo $data_corrida->id_corrida;?>}).then(
                                     function(response){
-                                        $scope.planesAnteriores = response.data;
-                                        console.log(response.data);
-                                        let qw = JSON.parse(localStorage.getItem('plan_actual'));
-                                        $scope.planesAnteriores.push(qw[0]);
+                                        // console.log("response: ", response);
+                                        // console.log("response: ", response.data.length);
+                                        if(response.data.length!=undefined){
+                                            $scope.planesAnteriores = response.data;
+                                            let qw = JSON.parse(localStorage.getItem('plan_actual'));
+                                            // console.log("Que onda xdxd", qw);
+                                            // console.log("BLABLABLA: ", $scope.planesAnteriores);
+                                            $scope.planesAnteriores.push(qw[0]);
+                                        }
                                         // console.log(qw[0]);
                                     }
                                 );
@@ -3104,7 +3109,8 @@
 
                     $scope.decFin = [];
 
-                } else if (porcentajeDeEnganche != 0 && orderEnganche.length === 0 && orderTotal.length === 0) {
+                }
+                else if (porcentajeDeEnganche != 0 && orderEnganche.length === 0 && orderTotal.length === 0) {
 
 
                     $scope.decFin = [];
@@ -3259,9 +3265,10 @@
                         if(item.id_condicion==12){
                             console.log('descuento de chuy');
                             a +=  porcentaje1;
-                            b = (tot - porcentaje1);
-                            d = (tot - porcentaje2);
-                            c = (d/supLote) - porcentaje2;
+                            b = tot - porcentaje1;
+                            // d = (tot - porcentaje2);
+                            e = b/supLote;
+                            c -=  porcentaje2;
                         }else{
                             console.log('logica normal');
                             a +=  porcentaje2;
@@ -3270,7 +3277,7 @@
                         }
                         arreglo.push({
                             ahorro: a,
-                            pm: c,
+                            pm: (item.id_condicion==12 && orderTotal.length==1) ? e : c,
                             pt: b,
                             td: 1,
                             porcentaje: item.porcentaje,
