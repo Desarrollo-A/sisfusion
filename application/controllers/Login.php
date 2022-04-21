@@ -70,6 +70,7 @@ class Login extends CI_Controller
 		  case '36': // MKTD
 		  case '22': // MKTD
 		  case '53': // ANALISTA COMISIONES
+		  case '61': // ANSESOR CONSULTA
               redirect(base_url().'Administracion');
          break;
 
@@ -104,10 +105,6 @@ class Login extends CI_Controller
 		case '57': // TITULACIÓN
 			redirect(base_url() . 'Postventa');
 		break;
-		case '61': // TITULACIÓN
-			redirect(base_url() . 'Asesor/homeView');
-		break;
-
          default:
              $data['titulo'] = 'Login con roles de usuario en codeigniter';
              $this->load->view('login/login_view',$data);

@@ -1007,7 +1007,9 @@ class Contraloria_model extends CI_Model {
 	
 	public function get_lp($idLote){
 		$query = $this->db-> query("SELECT cl.lugar_prospeccion
-        FROM clientes cl where cl.lugar_prospeccion = 6 AND cl.idLote = ".$idLote." "); 
+        FROM clientes cl 
+        INNER JOIN prospectos pr ON pr.id_prospecto = cl.id_prospecto AND pr.fecha_creacion <= '2022-01-20 00:00:00.000'
+        WHERE cl.lugar_prospeccion = 6 AND cl.idLote = $idLote AND cl.status = 1");
 		return $query->row();
 	}
 

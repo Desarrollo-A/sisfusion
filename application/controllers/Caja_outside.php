@@ -2619,7 +2619,7 @@ class Caja_outside extends CI_Controller
 
     public function getTokensInformation()
     {
-            $data['data'] = $this->caja_model_outside->getTokensInformation()->result_array();
+        $data['data'] = $this->caja_model_outside->getTokensInformation()->result_array();
         echo json_encode($data);
     }
 
@@ -2633,9 +2633,7 @@ class Caja_outside extends CI_Controller
     public function validarToken()
     {
         if(isset($_POST) && !empty($_POST)){
-            $data = array (
-                "validacion" => $this->input->post("action")
-            );
+            $data = array ("estatus" => $this->input->post("action"));
             $response = $this->General_model->updateRecord('tokens',  $data, 'id_token', $this->input->post("id"));
             echo json_encode($response);
         }

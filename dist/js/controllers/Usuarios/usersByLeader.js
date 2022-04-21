@@ -17,10 +17,49 @@ $('#users_datatable thead tr:eq(0) th').each(function (i) {
 });
 
 function tableUsers(){
-    console.log('hola');
     usersTable = $('#users_datatable').DataTable({
-        dom: 'rt' + "<'row'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'i><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>",
+        dom: 'Brt'+ "<'row'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'i><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>",
         width: "auto",
+        buttons: [
+            {
+                extend: 'excelHtml5',
+                text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
+                className: 'btn buttons-excel',
+                titleAttr: 'Descargar archivo de Excel',
+                exportOptions: {
+                    columns: [0, 1, 2, 3, 4, 5, 6, 7],
+                    format: {
+                        header: function (d, columnIdx) {
+                            switch (columnIdx) {
+                                case 0:
+                                    return 'ESTATUS';
+                                    break;
+                                case 1:
+                                    return 'ID';
+                                    break;
+                                case 2:
+                                    return 'NOMBRE'
+                                case 3:
+                                    return 'CORREO';
+                                    break;
+                                case 4:
+                                    return 'TELÉFONO';
+                                    break;
+                                case 5:
+                                    return 'TIPO';
+                                    break;
+                                case 6:
+                                    return 'JEFE DIRECTO';
+                                    break;
+                                case 7:
+                                    return 'SEDE';
+                                    break;
+                            }
+                        }
+                    }
+                }
+            }
+        ],
         pagingType: "full_numbers",
         language: {
             url: "../static/spanishLoader.json",
