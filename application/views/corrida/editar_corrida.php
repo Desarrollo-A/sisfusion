@@ -72,6 +72,9 @@
     <!-- Google Font -->
     <link rel="stylesheet"
           href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;800&display=swap" rel="stylesheet">
     <style type="text/css">
         .contenedorinputs {
             position: relative;
@@ -113,7 +116,7 @@
 
 
         legend {
-            background-color: #296D5D;
+            background-color: #103f75;
             color: #fff;
             padding: 3px 6px;
         }
@@ -123,7 +126,7 @@
         }
 
         .foreach {
-            background: #4C9B79;
+            background: #337ab7bd;
             height: 22em;
             width: auto;
             border-radius: 10px;
@@ -249,8 +252,9 @@
         }
 
         .bkLoading {
-            /* background:#000; *//*b3b3b3*/
-            background-image: linear-gradient(to bottom, #000, #000);
+            backdrop-filter: blur(8px) !important;
+            background-color: RGB(0 0 0/42%);
+            /* background-image: linear-gradient(to bottom, #000, #000); */
             position: absolute;
             top: 0%;
             left: 0%;
@@ -260,10 +264,11 @@
             padding-top: 200px;
             color: white;
             font-weight: 300;
-            opacity: 0.5;
+            /* opacity: 0.7; */
+            /* display: none;
 
 
-            /* display:none; */
+                    /* display:none; */
         }
 
         .center-align {
@@ -275,7 +280,36 @@
         .hide {
             display: none;
         }
-
+        label{
+            font-family: 'Open Sans', sans-serif;
+            font-weight: 500;
+        }
+        span{
+            font-family: 'Open Sans', sans-serif;
+            font-weight: 500;
+        }
+        input select{
+            font-family: 'Open Sans', sans-serif;
+        }
+        .form-control {
+            font-family: 'Open Sans', sans-serif;
+            display: block;
+            width: 100%;
+            height: 34px;
+            padding: 6px 12px;
+            font-size: 14px;
+            line-height: 1.42857143;
+            color: #555;
+            background-color: #fff;
+            background-image: none;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            -webkit-box-shadow: inset 0 1px 1px rgb(0 0 0 / 8%);
+            box-shadow: inset 0 1px 1px rgb(0 0 0 / 8%);
+            -webkit-transition: border-color ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
+            -o-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+            transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+        }
         /*Terminan los nuevos estilos*/
 
 
@@ -376,8 +410,8 @@
 
 
 <div class="bkLoading hide" id="loaderDiv">
-    <div class="center-align">
-        <img src="<?= base_url() ?>static/images/logo_blanco_cdm.png" style="width:25%;"><br>
+    <div class="center-align" style="font-family: 'Open Sans', sans-serif;padding-top:11%">
+        <img src="<?= base_url() ?>static/images/logo.svg" style="width:35%;"><br>
         Este proceso puede demorar algunos segundos, espere por favor ...
     </div>
     <div class="inner">
@@ -412,19 +446,15 @@
                             <button ng-click="exportcf()" class="btn btn-success">Imprimir carátula + Corrida
                                 Financiera
                             </button>-->
-                            <?php #print_r($data_corrida->tipo_casa);  ?>
+                            <?php #print_r($data_corrida);  ?>
 
                             <table align="center" width="100%" cellpadding="8" cellspacing="8">
                                 <tr>
                                     <td align="right">&nbsp&nbsp</td>
 
 
-                                    <td rowspan=4 align="left"><img src="https://maderascrm.gphsis.com/static/images/logo_ciudadmaderasAct.jpg" style=" max-width: 70%; height: auto;padding:20px"></td>
-                                    <td rowspan=4 align="right"><b
-                                                style="font-size: 2em; font-family:'Sabon LT Std', 'Hoefler Text', 'Palatino Linotype', 'Book Antiqua', serif;">
-                                            CORRIDA FINANCIERA<BR></b><small
-                                                style="font-size: 1.5em; font-family: 'Sabon LT Std', 'Hoefler Text', 'Palatino Linotype', 'Book Antiqua', serif; color: #777;"></small>
-                                    </td>
+                                    <td rowspan=4 align="left"><img src="https://maderascrm.gphsis.com/static/images/logo_ciudadmaderasAct.jpg" style=" max-width: 55%; height: auto;padding:20px"></td>
+                                    <td rowspan=4 align="right"><p style="font-size: 1.5em;font-family: 'Open Sans', sans-serif;letter-spacing: 5px"> CORRIDA FINANCIERA<BR></p><small style="font-size: 1.5em; font-family: 'Sabon LT Std', 'Hoefler Text', 'Palatino Linotype', 'Book Antiqua', serif; color: #777;"></small>
                                     <td align="right">&nbsp&nbsp</td>
                                 </tr>
                             </table>
@@ -435,7 +465,7 @@
 
 
                                     <section class="content-header"
-                                             style="font-family: 'Sabon LT Std', 'Hoefler Text', 'Palatino Linotype', 'Book Antiqua', serif;">
+                                             style="font-family: 'Open Sans', sans-serif;font-weight: lighter;letter-spacing: 5px;">
                                         INFORMACIÓN:
                                     </section>
                                 </legend>
@@ -714,7 +744,7 @@
                             <fieldset>
                                 <legend>
                                     <section class="content-header"
-                                             style="font-family: 'Sabon LT Std', 'Hoefler Text', 'Palatino Linotype', 'Book Antiqua', serif;">
+                                             style="font-family: 'Open Sans', sans-serif;font-weight: lighter;letter-spacing: 5px;">
                                         DESCUENTOS DISPONIBLES:
                                     </section>
                                 </legend>
@@ -801,20 +831,20 @@
                                                     </li>
                                                 </div>
 
-                                                <div ng-if="day.day == 7">
+                                                <div ng-if="day == 7">
                                                     <div ng-if="descuento.apply == 0">
                                                         <li class="list-group-item">
                                                             <input type="checkbox" checklist-model="selected.descuentos"
                                                                    checklist-value="descuento"
                                                                    ng-change="selectDescuentos(descuento, checked)"
                                                                    ng-disabled="paquete.id_paquete"
-                                                                   ng-checked="checkedStatus"/>
+                                                                   ng-checked="descuento.estatus == 1 ? true : false"/>
                                                             <span ng-if="descuento.id_condicion == 1 || descuento.id_condicion == 2"
                                                                   style="color:#000;">{{descuento.porcentaje}}% </span>
                                                             <span ng-if="descuento.id_condicion == 3 || descuento.id_condicion == 4"
                                                                   style="color:#000;">{{descuento.porcentaje | currency }} </span>
                                                             <span ng-if="descuento.id_condicion == 1 || descuento.id_condicion == 2 || descuento.id_condicion == 3"
-                                                                  class="animate-if" style="color:#000;">Descuento al Enganche.</span>
+                                                                  class="animate-if" style="color:#000;" >Descuento al Enganche.</span>
                                                             <span ng-if="descuento.id_condicion == 4" class="animate-if"
                                                                   style="color:#000;">Descuento al total por m2.</span>
 
@@ -900,15 +930,15 @@
                                 <tr ng-repeat="i in decFin">
                                     <td style="color:#27AE60" class="text-center">
                                         <b>
-                                            <span ng-if="i.id_condicion == 1 || i.id_condicion == 2">{{i.porcentaje}}% </span>
-                                            <span ng-if="i.id_condicion == 3 || i.id_condicion == 4">{{i.porcentaje | currency }} </span>
-                                            <span ng-if="i.id_condicion == 6"> Primera Mensualidad Enero {{i.porcentaje}} </span>
-                                            <span ng-if="i.id_condicion == 7"> Enganche diferido 3 meses </span>
+                                            <span ng-if="i.id_condicion == 1 || i.id_condicion == 2" style="font-weight: 600">{{i.porcentaje}}% </span>
+                                            <span ng-if="i.id_condicion == 3 || i.id_condicion == 4" style="font-weight: 600">{{i.porcentaje | currency }} </span>
+                                            <span ng-if="i.id_condicion == 6" style="font-weight: 600"> Primera Mensualidad Enero {{i.porcentaje}} </span>
+                                            <span ng-if="i.id_condicion == 7" style="font-weight: 600"> Enganche diferido 3 meses </span>
 
-                                            <span ng-if="i.id_condicion == 8"> Primera Mensualidad Octubre </span>
-                                            <span ng-if="i.id_condicion == 9"> Primera Mensualidad Mayo </span>
-                                            <span ng-if="i.id_condicion == 10"> Primera Mensualidad Septiembre </span>
-                                            <span ng-if="i.id_condicion == 12">  Bono de {{i.porcentaje | currency}} al m<sup>2</sup></span>
+                                            <span ng-if="i.id_condicion == 8" style="font-weight: 600"> Primera Mensualidad Octubre </span>
+                                            <span ng-if="i.id_condicion == 9" style="font-weight: 600"> Primera Mensualidad Mayo </span>
+                                            <span ng-if="i.id_condicion == 10" style="font-weight: 600"> Primera Mensualidad Septiembre </span>
+                                            <span ng-if="i.id_condicion == 12" style="font-weight: 600">  Bono de {{i.porcentaje | currency}} al m<sup>2</sup></span>
 
 
 
@@ -917,29 +947,29 @@
 
                                     <td style="color:#2E86C1" class="text-center">
                                         <b>
-                                            <span ng-if="i.id_condicion == 1 || i.id_condicion == 2 || i.id_condicion == 3 || i.id_condicion == 4 || i.id_condicion == 5 || i.id_condicion == 7 || i.id_condicion == 12"> {{ i.pm | currency }} </span>
-                                            <span ng-if="i.id_condicion == 6"> </span>
-                                            <span ng-if="i.id_condicion == 8"> </span>
-                                            <span ng-if="i.id_condicion == 12"> </span>
+                                            <span ng-if="i.id_condicion == 1 || i.id_condicion == 2 || i.id_condicion == 3 || i.id_condicion == 4 || i.id_condicion == 5 || i.id_condicion == 7 || i.id_condicion == 12" style="font-weight: 600"> {{ i.pm | currency }} </span>
+                                            <span ng-if="i.id_condicion == 6" style="font-weight: 600"> </span>
+                                            <span ng-if="i.id_condicion == 8" style="font-weight: 600"> </span>
+                                            <span ng-if="i.id_condicion == 12" style="font-weight: 600"> </span>
                                         </b>
                                     </td>
 
                                     <td style="color:#2E86C1" class="text-center">
                                         <b>
-                                            <span ng-if="i.id_condicion == 1 || i.id_condicion == 2 || i.id_condicion == 3 || i.id_condicion == 4 || i.id_condicion == 5 || i.id_condicion == 7 || i.id_condicion == 12"> {{ i.pt | currency }} </span>
-                                            <span ng-if="i.id_condicion == 6"> </span>
-                                            <span ng-if="i.id_condicion == 8"> </span>
-                                            <span ng-if="i.id_condicion == 12"> </span>
+                                            <span ng-if="i.id_condicion == 1 || i.id_condicion == 2 || i.id_condicion == 3 || i.id_condicion == 4 || i.id_condicion == 5 || i.id_condicion == 7 || i.id_condicion == 12" style="font-weight: 600"> {{ i.pt | currency }} </span>
+                                            <span ng-if="i.id_condicion == 6" style="font-weight: 600"> </span>
+                                            <span ng-if="i.id_condicion == 8" style="font-weight: 600"> </span>
+                                            <span ng-if="i.id_condicion == 12" style="font-weight: 600"> </span>
                                         </b>
                                     </td>
 
                                     <td style="color:#27AE60" class="text-center">
                                         <b>
 
-                                            <span ng-if="i.id_condicion == 1 || i.id_condicion == 2 || i.id_condicion == 3 || i.id_condicion == 4 || i.id_condicion == 5 || i.id_condicion == 7 || i.id_condicion == 12"> {{ i.ahorro | currency }} </span>
-                                            <span ng-if="i.id_condicion == 6"> </span>
-                                            <span ng-if="i.id_condicion == 8"> </span>
-                                            <span ng-if="i.id_condicion == 12"> </span>
+                                            <span ng-if="i.id_condicion == 1 || i.id_condicion == 2 || i.id_condicion == 3 || i.id_condicion == 4 || i.id_condicion == 5 || i.id_condicion == 7 || i.id_condicion == 12" style="font-weight: 600"> {{ i.ahorro | currency }} </span>
+                                            <span ng-if="i.id_condicion == 6" style="font-weight: 600"> </span>
+                                            <span ng-if="i.id_condicion == 8" style="font-weight: 600"> </span>
+                                            <span ng-if="i.id_condicion == 12" style="font-weight: 600"> </span>
                                         </b>
                                     </td>
 
@@ -1265,7 +1295,7 @@
                 $scope.yearplan = <?php echo $data_corrida->anio;?>;
                 $scope.gerente = <?php echo $data_corrida->id_gerente; ?>;
                 $scope.asesor = <?php echo $data_corrida->id_asesor; ?>;
-                $scope.tipo_casas = [{id: "1",nombre: "Stella"}, {id: '2', nombre: 'Aura'}]
+                $scope.tipo_casas = [{id: "1",nombre: "Stella"}, {id: '2', nombre: 'Aura'}];
                 var datos = [];
 
 
@@ -3167,11 +3197,7 @@
                     });
 
                 }
-
-
                 ////////////////////////////////////////////////////////////
-
-
                 else if (porcentajeDeEnganche === '0' && orderEnganche.length === 0 && orderTotal.length > 0) {
                     console.log("2");
                     angular.forEach(orderTotal, function (item, index) {
@@ -3255,9 +3281,9 @@
                         if(item.id_condicion == 12){
                             console.log('condicion 12');
                             // descuentoM2 = montoBono/supLote
-                            porcentaje1 = (item.porcentaje);
+                            porcentaje1 = item.porcentaje;
                             porcentaje2 = (porcentaje1 / supLote);
-                            r1 -= porcentaje1;
+                            r1 = (r1 - porcentaje1);
                         }
 
 
@@ -3265,7 +3291,7 @@
                         if(item.id_condicion==12){
                             console.log('descuento de chuy');
                             a +=  porcentaje1;
-                            b = tot - porcentaje1;
+                            b = r1;
                             // d = (tot - porcentaje2);
                             e = b/supLote;
                             c -=  porcentaje2;
@@ -3323,7 +3349,6 @@
                 }
                 else if (porcentajeDeEnganche != 0 && orderEnganche.length > 0 && orderTotal.length > 0) {
 
-                    console.log('4')
                     angular.forEach(orderTotal, function (item, index) {
 
                         if (item.id_condicion == 1 || item.id_condicion == 2) {
@@ -3349,10 +3374,24 @@
                             msi = parseInt(msi + item.msi_descuento);
                         }
 
+                        if(item.id_condicion == 12){
+                            // descuentoM2 = montoBono/supLote
+                            porcentaje1 = item.porcentaje;
+                            porcentaje2 = (porcentaje1 / supLote);
+                            r1 -= porcentaje1;
+                        }
+
                         ///////////////////////DESCIPCION DE DESCUENTOS////////////////////////////////////////
-                        a += porcentaje2;
-                        b = (tot - a);
-                        c = (b / supLote);
+                        if(item.id_condicion == 12){
+                            a +=  porcentaje1;
+                            b = r1;
+                            e = b/supLote;
+                            c -=  porcentaje2;
+                        }else{
+                            a +=  porcentaje2;
+                            b = r1;
+                            c = (b/supLote);
+                        }
                         arreglo.push({
                             ahorro: a,
                             pm: c,
