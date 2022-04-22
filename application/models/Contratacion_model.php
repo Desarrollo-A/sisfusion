@@ -62,7 +62,7 @@ class Contratacion_model extends CI_Model {
     function get_datos_inventario($estatus, $condominio){
          return $this->db->query("SELECT  lot.idLote, lot.nombreLote, con.nombre as nombreCondominio, res.nombreResidencial, lot.idStatusLote, con.idCondominio, lot.sup as superficie, lot.totalNeto2,
                                 lot.total, lot.referencia, lot.comentario, lot.comentarioLiberacion, lot.observacionLiberacion, 
-                                CONCAT(sl.nombre, ' casa') as descripcion_estatus, sl.color, tv.tipo_venta, con.msni,
+                                CASE WHEN lot.casa = 1 THEN CONCAT(sl.nombre, ' casa') ELSE sl.nombre end as descripcion_estatus, sl.color, tv.tipo_venta, con.msni,
                                 CONCAT(asesor.nombre,' ', asesor.apellido_paterno, ' ', asesor.apellido_materno) as asesor,
                                 CONCAT(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno) as gerente,
                                 CONCAT(coordinador.nombre,' ', coordinador.apellido_paterno, ' ', coordinador.apellido_materno) as coordinador,
@@ -98,7 +98,7 @@ class Contratacion_model extends CI_Model {
     function get_todo_inventario(){
          return $this->db->query("SELECT  lot.idLote, lot.nombreLote, con.nombre as nombreCondominio, res.nombreResidencial, lot.idStatusLote, con.idCondominio, lot.sup as superficie, lot.totalNeto2,
                                 lot.total, lot.referencia, lot.comentario, lot.comentarioLiberacion, lot.observacionLiberacion, 
-                                CONCAT(sl.nombre, ' casa') as descripcion_estatus, sl.color , tv.tipo_venta, con.msni, lot.observacionContratoUrgente,
+                                CASE WHEN lot.casa = 1 THEN CONCAT(sl.nombre, ' casa') ELSE sl.nombre end as descripcion_estatus, sl.color , tv.tipo_venta, con.msni, lot.observacionContratoUrgente,
                                 CONCAT(asesor.nombre,' ', asesor.apellido_paterno, ' ', asesor.apellido_materno) as asesor,
                                 CONCAT(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno) as gerente,
                                 CONCAT(coordinador.nombre,' ', coordinador.apellido_paterno, ' ', coordinador.apellido_materno) as coordinador,
@@ -135,7 +135,7 @@ class Contratacion_model extends CI_Model {
       function get_datos_inventario_pe($proyecto, $estatus){
             if ($proyecto == 0) {
               return $this->db->query("SELECT  lot.idLote, lot.nombreLote, con.nombre as nombreCondominio, res.nombreResidencial, lot.idStatusLote, con.idCondominio, lot.sup as superficie, lot.total, lot.totalNeto2,
-                                lot.referencia, lot.comentario, lot.comentarioLiberacion, lot.observacionLiberacion, CONCAT(sl.nombre, ' casa') as descripcion_estatus, sl.color, tv.tipo_venta, con.msni,                
+                                lot.referencia, lot.comentario, lot.comentarioLiberacion, lot.observacionLiberacion, CASE WHEN lot.casa = 1 THEN CONCAT(sl.nombre, ' casa') ELSE sl.nombre end as descripcion_estatus, sl.color, tv.tipo_venta, con.msni,                
                                 CONCAT(asesor.nombre,' ', asesor.apellido_paterno, ' ', asesor.apellido_materno) as asesor,
                                 CONCAT(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno) as gerente,
                                 CONCAT(coordinador.nombre,' ', coordinador.apellido_paterno, ' ', coordinador.apellido_materno) as coordinador,                 
@@ -161,7 +161,7 @@ class Contratacion_model extends CI_Model {
                                 WHERE lot.status = 1 and lot.idStatusLote = ".$estatus." ORDER BY lot.idLote");
             } else {
               return $this->db->query("SELECT  lot.idLote, lot.nombreLote, con.nombre as nombreCondominio, res.nombreResidencial, lot.idStatusLote, con.idCondominio, lot.sup as superficie, lot.total, 
-                                lot.referencia, lot.comentario, lot.comentarioLiberacion, lot.observacionLiberacion, CONCAT(sl.nombre, ' casa') as descripcion_estatus, sl.color, tv.tipo_venta, con.msni,             
+                                lot.referencia, lot.comentario, lot.comentarioLiberacion, lot.observacionLiberacion, CASE WHEN lot.casa = 1 THEN CONCAT(sl.nombre, ' casa') ELSE sl.nombre end as descripcion_estatus, sl.color, tv.tipo_venta, con.msni,             
                                 CONCAT(asesor.nombre,' ', asesor.apellido_paterno, ' ', asesor.apellido_materno) as asesor,
                                 CONCAT(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno) as gerente,
                                 CONCAT(coordinador.nombre,' ', coordinador.apellido_paterno, ' ', coordinador.apellido_materno) as coordinador,                 
@@ -198,7 +198,7 @@ class Contratacion_model extends CI_Model {
     function get_datos_inventario_e($estatus){
          return $this->db->query("SELECT  lot.idLote, lot.nombreLote, con.nombre as nombreCondominio, res.nombreResidencial, lot.idStatusLote, con.idCondominio, lot.sup as superficie, lot.totalNeto2,
                                 lot.total, lot.referencia, lot.comentario, lot.comentarioLiberacion, lot.observacionLiberacion, 
-                                CONCAT(sl.nombre, ' casa') as descripcion_estatus, sl.color, tv.tipo_venta, con.msni, lot.observacionContratoUrgente,
+                                CASE WHEN lot.casa = 1 THEN CONCAT(sl.nombre, ' casa') ELSE sl.nombre end as descripcion_estatus, sl.color, tv.tipo_venta, con.msni, lot.observacionContratoUrgente,
                                 CONCAT(asesor.nombre,' ', asesor.apellido_paterno, ' ', asesor.apellido_materno) as asesor,
                                 CONCAT(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno) as gerente,
                                 CONCAT(coordinador.nombre,' ', coordinador.apellido_paterno, ' ', coordinador.apellido_materno) as coordinador,
@@ -235,7 +235,7 @@ class Contratacion_model extends CI_Model {
               return $this->db->query("SELECT lot.idLote, lot.nombreLote, con.nombre as nombreCondominio, lot.totalNeto2,
                                   res.nombreResidencial, lot.idStatusLote, con.idCondominio, lot.sup as superficie, 
                                   lot.total, lot.referencia, lot.comentario, lot.comentarioLiberacion, lot.observacionLiberacion,
-                                  CONCAT(sl.nombre, ' casa')as descripcion_estatus, sl.color, tv.tipo_venta, con.msni,
+                                  CASE WHEN lot.casa = 1 THEN CONCAT(sl.nombre, ' casa') ELSE sl.nombre end as descripcion_estatus, sl.color, tv.tipo_venta, con.msni,
                                   CONCAT(asesor.nombre,' ', asesor.apellido_paterno, ' ', asesor.apellido_materno) as asesor,
                                   CONCAT(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno) as gerente,
                                   CONCAT(coordinador.nombre,' ', coordinador.apellido_paterno, ' ', coordinador.apellido_materno) as coordinador,
@@ -263,7 +263,7 @@ class Contratacion_model extends CI_Model {
               return $this->db->query("SELECT lot.idLote, lot.nombreLote, con.nombre as nombreCondominio, 
                                   res.nombreResidencial, lot.idStatusLote, con.idCondominio, lot.sup as superficie, 
                                   lot.total, lot.referencia, lot.comentario, lot.comentarioLiberacion, lot.observacionLiberacion,
-                                  CONCAT(sl.nombre, ' casa') as descripcion_estatus, sl.color, tv.tipo_venta, con.msni,
+                                  CASE WHEN lot.casa = 1 THEN CONCAT(sl.nombre, ' casa') ELSE sl.nombre end as descripcion_estatus, sl.color, tv.tipo_venta, con.msni,
                                   CONCAT(asesor.nombre,' ', asesor.apellido_paterno, ' ', asesor.apellido_materno) as asesor,
                                   CONCAT(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno) as gerente,
                                   CONCAT(coordinador.nombre,' ', coordinador.apellido_paterno, ' ', coordinador.apellido_materno) as coordinador,
@@ -299,7 +299,7 @@ class Contratacion_model extends CI_Model {
      }*/
     function get_datos_inventario_pc($proyecto, $condominio){
          return $this->db->query("SELECT  lot.idLote, lot.nombreLote, con.nombre as nombreCondominio, res.nombreResidencial, lot.idStatusLote, con.idCondominio, lot.sup as superficie, lot.total, lot.totalNeto2,
-                                lot.referencia, lot.comentario, lot.comentarioLiberacion, lot.observacionLiberacion, CONCAT(sl.nombre, ' casa') as descripcion_estatus, sl.color, tv.tipo_venta, con.msni,
+                                lot.referencia, lot.comentario, lot.comentarioLiberacion, lot.observacionLiberacion, CASE WHEN lot.casa = 1 THEN CONCAT(sl.nombre, ' casa') ELSE sl.nombre end as descripcion_estatus, sl.color, tv.tipo_venta, con.msni,
                                 CONCAT(asesor.nombre,' ', asesor.apellido_paterno, ' ', asesor.apellido_materno) as asesor,
                                 CONCAT(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno) as gerente,
                                 CONCAT(coordinador.nombre,' ', coordinador.apellido_paterno, ' ', coordinador.apellido_materno) as coordinador,
