@@ -558,10 +558,10 @@ $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
 $pdf->setPrintHeader(false);
 $pdf->setPrintFooter(false);
 $pdf->setFontSubsetting(true);
-$pdf->SetFont('Open Sans', '', 10, '', true);
+$pdf->SetFont('Helvetica', '', 10, '', true);
 // $pdf->SetMargins(15, 20, 15, true);
 $pdf->AddPage('P', 'LEGAL');
-$pdf->SetFont('Open Sans', '', 5, '', true);
+$pdf->SetFont('Helvetica', '', 5, '', true);
 $pdf->SetFooterMargin(0);
 $bMargin = $pdf->getBreakMargin();
 $auto_page_break = $pdf->getAutoPageBreak();
@@ -749,6 +749,9 @@ legend {
 							  if ($row['id_condicion'] == 7){
 							  $html .='Enganche diferido sin descontar MSI';
 							  }
+                              if ($row['id_condicion'] == 12){
+                                  $html .='Bono ('.money_format('%(#10n',$row['porcentaje']).') de descuento al m2';
+                              }
 							   
 							  
 							  $html .='</b></td>
@@ -1453,6 +1456,9 @@ legend {
 							  if ($row['id_condicion'] == 7){
 							  $html .='Enganche diferido sin descontar MSI';
 							  }
+                              if ($row['id_condicion'] == 12){
+                                  $html .='Bono ('.money_format('%(#10n',$row['porcentaje']).') de descuento al m2';
+                              }
 							  
 							  
 							  $html .='</b></td>
