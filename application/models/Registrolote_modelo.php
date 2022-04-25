@@ -6214,5 +6214,38 @@ WHERE idLote IN ('".$row['idLote']."') and nombreLote = '".$insert_csv['nombreLo
 	
 		}
 
+
+	/*nuevo*/
+    function getSelectedLotes($idCondominio, $idResidencial){
+        $query = $this->db->query("SELECT c.idResidencial, l.idCondominio, l.* FROM lotes  l
+        INNER JOIN condominios c ON l.idCondominio = c.idCondominio
+        WHERE l.idCondominio=$idCondominio AND c.idResidencial=$idResidencial AND l.registro_comision IN (0, 8);");
+        return $query->result_array();
+    }
+    function getClientsByLote($idLote){
+        $query = $this->db->query("SELECT CONCAT(cl.nombre,' ', cl.apellido_paterno, ' ', cl.apellido_materno) as nombreCliente, cl.* FROM clientes cl
+        WHERE idLote=$idLote");
+        return $query->result_array();
+    }
+    function getClientByID($idCliente){
+        $query = $this->db->query("SELECT 
+        CONCAT(gerente.nombre, ' ', gerente.apellido_paterno, ' ', gerente.apellido_materno) as gerente,
+        CONCAT(coord.nombre, ' ', coord.apellido_paterno, ' ', coord.apellido_materno) as coordinador,
+        CONCAT(asesor.nombre, ' ', asesor.apellido_paterno, ' ', asesor.apellido_materno) as asesor,
+        CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno) as nomCliente,
+        c.nombre as nombreCondominio, cl.status as estatus_cliente, oxc.nombre as lp, 
+        sl.nombre as estatus_lote, CONCAT('#',sl.color) as statusLoteColor, cl.nombre as nombreCliente, * 
+        FROM lotes l
+        INNER JOIN clientes cl ON cl.idLote=l.idLote AND cl.id_cliente=$idCliente
+        LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion=cl.lugar_prospeccion AND oxc.id_catalogo=9
+        INNER JOIN condominios c ON l.idCondominio=c.idCondominio
+        INNER JOIN residenciales r ON c.idResidencial=r.idResidencial 
+        INNER JOIN usuarios asesor ON asesor.id_usuario=cl.id_asesor
+        LEFT JOIN usuarios coord ON coord.id_usuario=cl.id_coordinador
+        INNER JOIN usuarios gerente ON gerente.id_usuario = cl.id_gerente
+        INNER JOIN statuslote sl ON sl.idStatusLote=l.idStatusLote  ;");
+        return $query->result_array();
+    }
+
 	
 }
