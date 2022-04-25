@@ -23,12 +23,16 @@ class ScheduleTasks_com extends CI_Controller
 
 // ScheduleTasks_com/CleanMonthly
 
-  public function CleanMonthly(){ //CRON JOB 1 DE CADA MES
-    $this->db->query("UPDATE descuentos_universidad SET estatus = 4, pagos_activos = 0 WHERE estatus IN(2) AND id_descuento IN (SELECT du.id_descuento FROM descuentos_universidad du INNER JOIN usuarios us ON us.id_usuario = du.id_usuario INNER JOIN usuarios ua ON ua.id_usuario = du.creado_por INNER JOIN opcs_x_cats opc ON opc.id_opcion = us.id_rol AND opc.id_catalogo = 1 LEFT JOIN (SELECT SUM(abono_neodata) abono_pagado, id_usuario FROM pago_comision_ind WHERE estatus in (17) GROUP BY id_usuario) pci2 ON du.id_usuario = pci2.id_usuario GROUP BY du.id_usuario, us.nombre, us.apellido_paterno, us.apellido_materno, opc.nombre, pci2.abono_pagado, du.pagado_caja, du.monto, du.id_descuento HAVING(pci2.abono_pagado + du.pagado_caja - du.monto) >-1 and (pci2.abono_pagado + du.pagado_caja - du.monto) <1 )");
-   $this->db->query("UPDATE descuentos_universidad SET estatus = 1, pagos_activos = pagos_activos + 1 WHERE estatus IN (1,2) and pagos_activos < 7");
-   // -- $this->db->query("UPDATE descuentos_universidad SET pagos_activos = 0 WHERE estatus IN (3)");
-    $this->db->query("UPDATE opinion_cumplimiento SET estatus = 0  WHERE estatus IN (1,2)");
+    public function CleanMonthly() { //CRON JOB 1 DE CADA MES
+        $this->db->query("UPDATE descuentos_universidad SET estatus = 4, pagos_activos = 0 WHERE estatus IN(2) AND id_descuento IN (SELECT du.id_descuento FROM descuentos_universidad du INNER JOIN usuarios us ON us.id_usuario = du.id_usuario INNER JOIN usuarios ua ON ua.id_usuario = du.creado_por INNER JOIN opcs_x_cats opc ON opc.id_opcion = us.id_rol AND opc.id_catalogo = 1 LEFT JOIN (SELECT SUM(abono_neodata) abono_pagado, id_usuario FROM pago_comision_ind WHERE estatus in (17) GROUP BY id_usuario) pci2 ON du.id_usuario = pci2.id_usuario GROUP BY du.id_usuario, us.nombre, us.apellido_paterno, us.apellido_materno, opc.nombre, pci2.abono_pagado, du.pagado_caja, du.monto, du.id_descuento HAVING(pci2.abono_pagado + du.pagado_caja - du.monto) >-1 and (pci2.abono_pagado + du.pagado_caja - du.monto) <1 )");
+        $this->db->query("UPDATE descuentos_universidad SET estatus = 1, pagos_activos = pagos_activos + 1 WHERE estatus IN (1,2) and pagos_activos < 7");
 
+        $this->db->query("UPDATE descuentos_universidad SET estatus = 1, pagos_activos = 1
+            WHERE estatus = 5 AND YEAR(GETDATE()) = YEAR(fecha_modificacion) 
+            AND MONTH(GETDATE()) = MONTH(fecha_modificacion)");
+
+        // -- $this->db->query("UPDATE descuentos_universidad SET pagos_activos = 0 WHERE estatus IN (3)");
+        $this->db->query("UPDATE opinion_cumplimiento SET estatus = 0  WHERE estatus IN (1,2)");
     }
 
  
