@@ -56,7 +56,7 @@
                             <div class="card-content">
                                 <div class="encabezadoBox">
                                     <h3 class="card-title center-align" >Comisiones liquidadas</h3>
-                                    <p class="card-title pl-1">(Comisiones donde ya se cubrio el pago total de comisones)</p>
+                                    <p class="card-title pl-1">Lotes donde ya se cubrió el monto total de comisones.</p>
                                 </div>
                                 <div class="material-datatables">
                                     <div class="form-group">
@@ -128,6 +128,7 @@
                     text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
                     className: 'btn buttons-excel',
                     titleAttr: 'Descargar archivo de Excel',
+                    title: 'REPORTE COMISIONES LIQUIDADAS',
                     exportOptions: {
                         columns: [1, 2, 3, 4, 5, 6, 7],
                         format: {

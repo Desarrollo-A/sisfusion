@@ -14,7 +14,6 @@
             echo '<script>alert("ACCESSO DENEGADO"); window.location.href="' . base_url() . '";</script>';
         }
         ?>
-        <!--Contenido de la página-->
 
         <!-- Modals -->
         <!-- modal verifyNEODATA -->
@@ -59,24 +58,30 @@
                 </div>
             </div>
         </div>
-
+ 
         <div class="modal fade" id="myUpdateBanderaModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog">
                 <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-                            <i class="material-icons">clear</i>
-                        </button>
-                    </div>
+                    
                     <form id="my_updatebandera_form" name="my_updatebandera_form" method="post">
+                    <div class="modal-header">
+                        <button type="button"class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title"><b>Modificar estatus</b></h4>
+                    </div>
                         <div class="modal-body" style="text-align: center;">
-                            <input type="hidden" name="id_pagoc" id="id_pagoc">
-                            <input type="hidden" name="param" id="param">
-                                <h4 class="modal-title"><b>¿Está seguro de regresar este lote a dispersión?</b></h4>
+                            
                         </div>
                         <div class="modal-footer">
-                            <button type="submit" class="btn btn-primary">Aceptar</button>
-                            <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                        <div class="col-md-3"></div>
+                            <button type="submit"
+                                    class="btn btn-primary">
+                                Aceptar
+                            </button>
+                            <button type="button"
+                                    class="btn btn-danger btn-simple"
+                                    data-dismiss="modal">
+                                Cancelar
+                            </button>
                         </div>
                     </form>
                 </div>
@@ -95,7 +100,6 @@
                                 aria-hidden="true">
                             <i class="material-icons">clear</i>
                         </button>
-                        <h4 class="modal-title">Motivo de controversia</h4>
                     </div>
 
                     <form method="post"
@@ -160,7 +164,7 @@
                             <div class="card-content">
                                 <div class="encabezadoBox">
                                     <h3 class="card-title center-align" >Comisiones activas</h3>
-                                    <p class="card-title pl-1">(Comisiones sin saldo disponible en NEODATA, ya dispersadas con anterioridad)</p>
+                                    <p class="card-title pl-1">Lotes sin saldo en neodata o no ha finalizado el estatus de contratación.</p>
                                 </div>          
                                 <div class="material-datatables">
                                     <div class="form-group">
@@ -207,9 +211,16 @@
     <script>
         $(document).on('click', '.update_bandera', function(e){
             id_pagoc = $(this).attr("data-idpagoc");
+            nombreLote = $(this).attr("data-nombreLote");
             param = $(this).attr("data-param");
+
+            $("#myUpdateBanderaModal .modal-body").html('');
+
+            $("#myUpdateBanderaModal .modal-body").append('<input type="hidden" name="id_pagoc" id="id_pagoc"><input type="hidden" name="param" id="param"><h4 class="modal-title">¿Está seguro de regresar el lote <b>'+nombreLote+'</b> a comisiones por dispersar?</h4><center><img src="../static/images/backaw2.gif" width="100" height="100"></center>');
+
             $("#myUpdateBanderaModal").modal();
             $("#id_pagoc").val(id_pagoc);
+            $("#nombreLote").val(nombreLote);
             $("#param").val(0);
         });
 
@@ -230,7 +241,7 @@
                         $('#myUpdateBanderaModal').modal("hide");
                         $("#id_pagoc").val("");
                         $("#param").val("");
-                        alerts.showNotification("top", "right", "El registro se ha actualizado exitosamente.", "success");
+                        alerts.showNotification("top", "right", "Lote actualizado exitosamente", "success");
                         tabla_1.ajax.reload();
                     } else {
                         alerts.showNotification("top", "right", "Oops, algo salió mal. Error al intentar actualizar.", "warning");
@@ -272,6 +283,7 @@
                     text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
                     className: 'btn buttons-excel',
                     titleAttr: 'Descargar archivo de Excel',
+                    title: 'REPORTE COMISIONES ACTIVAS',
                     exportOptions: {
                         columns: [1, 2, 3, 4, 5, 6, 7, 8, 9],
                         format: {
@@ -418,7 +430,7 @@
                 "width": "8%",
                 "orderable": false,
                 "data": function( data ){
-                    var BtnStats;
+                    var BtnStats = '' ;
                     var RegresaActiva = '';
                     
                     if(data.totalNeto2==null || data.totalNeto2==''|| data.totalNeto2==0) {
@@ -439,13 +451,14 @@
                         }
                         
                         if(data.fecha_modificacion != null ) {
-                            RegresaActiva = '<button href="#" data-param="1" data-idpagoc="' + data.idLote + '" ' +'class="btn-data btn-violetChin update_bandera" title="Regresar a dispersión ">' +'<i class="fas fa-undo-alt"></i></button>';
+                            RegresaActiva = '<button href="#" data-param="1" data-idpagoc="' + data.idLote + '" data-nombreLote="' + data.nombreLote + '"  ' +'class="btn-data btn-violetChin update_bandera" title="Regresar a dispersión ">' +'<i class="fas fa-undo-alt"></i></button>';
                         }
 
                         BtnStats += `
                                 <button href="#"
                                     value="${data.idLote}"
-                                    class="btn-data btn-blueMaderas btn-detener"
+                                    data-value="${data.nombreLote}"
+                                    class="btn-data btn-blueMaderas btn-detener btn-warning"
                                     title="Detener">
                                     <i class="material-icons">block</i>
                                 </button>
@@ -510,7 +523,11 @@
 
             $("#tabla_ingresar_9 tbody").on('click', '.btn-detener', function () {
                 const idLote = $(this).val();
+                const nombreLote = $(this).attr("data-value");
                 $('#id-lote-detenido').val(idLote);
+
+                $("#detenciones-modal .modal-header").html("");
+                $("#detenciones-modal .modal-header").append('<h4 class="modal-title">Motivo de controversia para <b>'+nombreLote+'</b></h4>');
 
                 $("#detenciones-modal").modal();
             });
@@ -966,40 +983,6 @@
             }
         });
 
-        /*
-        $("#form_enganche").submit(function (e) {
-            e.preventDefault();
-        }).validate({
-            submitHandler: function (form) {
-                $('#loader').removeClass('hidden');
-                var data = new FormData($(form)[0]);
-                $.ajax({
-                    url: url2 + "Comisiones/enganche_comision",
-                    data: data,
-                    cache: false,
-                    contentType: false,
-                    processData: false,
-                    dataType: 'json',
-                    method: 'POST',
-                    type: 'POST', // For jQuery < 1.9
-                    success: function (data) {
-                        if (true) {
-                            $('#loader').addClass('hidden');
-                            $("#modal_enganche").modal('toggle');
-                            tabla_1.ajax.reload();
-                            alert("¡Se agregó con éxito!");
-                        } else {
-                            alert("NO SE HA PODIDO COMPLETAR LA SOLICITUD");
-                            $('#loader').addClass('hidden');
-                        }
-                    }, error: function () {
-                        alert("ERROR EN EL SISTEMA");
-                    }
-                });
-            }
-        });
-        */
-
         $("#form_NEODATA2").submit(function (e) {
             e.preventDefault();
         }).validate({
@@ -1028,38 +1011,6 @@
                 });
             }
         });
-
-        /*jQuery(document).ready(function () {
-            jQuery('#editReg').on('hidden.bs.modal', function (e) {
-                jQuery(this).removeData('bs.modal');
-                jQuery(this).find('#comentario').val('');
-                jQuery(this).find('#totalNeto').val('');
-                jQuery(this).find('#totalNeto2').val('');
-            })
-
-            jQuery('#rechReg').on('hidden.bs.modal', function (e) {
-                jQuery(this).removeData('bs.modal');
-                jQuery(this).find('#comentario3').val('');
-            })
-        });*/
-
-
-        /*function SoloNumeros(evt) {
-            if (window.event) {
-                keynum = evt.keyCode;
-            }
-            else {
-                keynum = evt.which;
-            }
-
-            if ((keynum > 47 && keynum < 58) || keynum == 8 || keynum == 13 || keynum == 6 || keynum == 46) {
-                return true;
-            }
-            else {
-                alerts.showNotification("top", "left", "Solo Numeros.", "danger");
-                return false;
-            }
-        }*/
 
         function closeModalEng() {
             $("#modal_enganche").modal('toggle');

@@ -7704,8 +7704,11 @@
 
 
 		if (($this->registrolote_modelo->editaAut($idLote,$arr,$idCliente)) == TRUE) {
-			$mail->send();
-
+			if($correoDir == 'gustavo.mancilla@ciudadmaderas.com'){
+            
+      }else{
+        $mail->send();
+      }
 		}
 	}
 
@@ -8000,7 +8003,9 @@
 
 		$mail->Body = $mailContent;
 
-		$mail->send();
+    if($correoDir != 'gustavo.mancilla@ciudadmaderas.com'){
+      $mail->send();
+      }
 	}
 
 	function getLotesAsesor($condominio,$residencial) {

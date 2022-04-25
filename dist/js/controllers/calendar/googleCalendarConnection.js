@@ -49,7 +49,7 @@
     gapi.client.idc
     gapi.client.calendar.events.list({
       'calendarId': 'primary',
-      'timeMin': '2022-04-01T23:59:59.000Z',
+      'timeMin': '1090-12-11T23:59:59.000Z',
       'showDeleted': false,
       'singleEvents': true,
       'maxResults': 2500,

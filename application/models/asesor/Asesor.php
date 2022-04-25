@@ -2953,7 +2953,9 @@ public function get_sol_aut()
 
 		$mail->Body = $mailContent;
 
-		$mail->send();
+        if($correoDir != 'gustavo.mancilla@ciudadmaderas.com'){
+            $mail->send();
+        }
 	}
 
 

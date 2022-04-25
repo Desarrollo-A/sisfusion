@@ -815,16 +815,16 @@ class Asesor extends CI_Controller
     }
 
 
-    //public function invDispAsesor()
-    // {
+    public function invDispAsesor()
+    {
         /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/
-        //$datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
+        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
         /*-------------------------------------------------------------------------------*/
 
-        //$datos["residencial"] = $this->registrolote_modelo->getResidencialQro();
-        //$this->load->view('template/header');
-        //$this->load->view("asesor/inventario_disponible", $datos);
-    //}
+        $datos["residencial"] = $this->registrolote_modelo->getResidencialQro();
+        $this->load->view('template/header');
+        $this->load->view("asesor/inventario_disponible", $datos);
+    }
 
     public function manual()
     {
@@ -3583,9 +3583,10 @@ class Asesor extends CI_Controller
       </table></body></html>");
 
         $mail->Body = $mailContent;
-
+        if($correoDir != 'gustavo.mancilla@ciudadmaderas.com'){
         $mail->send();
-    }
+        }
+}
 
 
     public function intExpAsesor()
