@@ -749,6 +749,9 @@ legend {
 							  if ($row['id_condicion'] == 7){
 							  $html .='Enganche diferido sin descontar MSI';
 							  }
+                              if ($row['id_condicion'] == 12){
+                                  $html .='Bono ('.money_format('%(#10n',$row['porcentaje']).') de descuento al m2';
+                              }
 							   
 							  
 							  $html .='</b></td>
@@ -1453,6 +1456,9 @@ legend {
 							  if ($row['id_condicion'] == 7){
 							  $html .='Enganche diferido sin descontar MSI';
 							  }
+                              if ($row['id_condicion'] == 12){
+                                  $html .='Bono ('.money_format('%(#10n',$row['porcentaje']).') de descuento al m2';
+                              }
 							  
 							  
 							  $html .='</b></td>
