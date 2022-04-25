@@ -10,13 +10,26 @@ class Restore extends CI_Controller {
         date_default_timezone_set('America/Mexico_City');
     }
     
-    public function return_status_uno($idCliente){
-        // for($x = 0;$x < count($idCliente);$x++){
-            // $data= $this->Restore_model->return_status_uno($idCliente[$x]);
+    public function return_status_uno()
+    {
+        $idCliente = $this->input->post('idCliente');
 
-        // }
+//        $data_back = array(
+//            'data' =>false
+//        );
+//        print_r(json_encode($data_back));
+//        exit;
 		$data= $this->Restore_model->return_status_uno($idCliente);
+        $data_back = array(
+            'data' =>$data
+        );
 
-        echo json_encode( $data );
+
+        if($data_back != null) {
+            echo json_encode($data_back);
+        } else {
+            echo json_encode(array());
+        }
+
     }
 }
