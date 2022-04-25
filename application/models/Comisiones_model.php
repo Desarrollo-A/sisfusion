@@ -4483,7 +4483,8 @@ function getDescuentos2(){
 
 
 function getDescuentosCapital(){
-    return $this->db->query("SELECT us.estatus as status,SUM(du.monto) as monto, du.id_usuario,CONCAT(us.nombre,' ',us.apellido_paterno,' ',us.apellido_materno) nombre, opc.nombre as puesto, se.id_sede, se.nombre as sede, CONCAT(ua.nombre,' ',ua.apellido_paterno,' ',ua.apellido_materno) creado_por, pci2.abono_pagado, pci3.abono_nuevo, du.pagado_caja, du.pago_individual, du.pagos_activos, du.estatus, (pci2.abono_pagado + du.pagado_caja) aply, CONVERT(varchar,du.fecha_modificacion,23) fecha_creacion
+    return $this->db->query("SELECT us.estatus as status,SUM(du.monto) as monto, du.id_usuario,CONCAT(us.nombre,' ',us.apellido_paterno,' ',us.apellido_materno) nombre, opc.nombre as puesto, se.id_sede, se.nombre as sede, CONCAT(ua.nombre,' ',ua.apellido_paterno,' ',ua.apellido_materno) creado_por, pci2.abono_pagado, pci3.abono_nuevo, du.pagado_caja, du.pago_individual, du.pagos_activos, du.estatus, (pci2.abono_pagado + du.pagado_caja) aply, CONVERT(varchar,du.fecha_modificacion,23) fecha_creacion,
+       du.estatus as estatusDU
         FROM descuentos_universidad du
         INNER JOIN usuarios us ON us.id_usuario = du.id_usuario AND us.estatus = 1
         INNER JOIN usuarios ua ON ua.id_usuario = du.creado_por
@@ -4491,7 +4492,7 @@ function getDescuentosCapital(){
         LEFT JOIN (SELECT SUM(abono_neodata) abono_pagado, id_usuario FROM pago_comision_ind WHERE estatus in (17) GROUP BY id_usuario) pci2 ON du.id_usuario = pci2.id_usuario
         LEFT JOIN (SELECT SUM(abono_neodata) abono_nuevo, id_usuario FROM pago_comision_ind WHERE estatus in (1) GROUP BY id_usuario) pci3 ON du.id_usuario = pci3.id_usuario
         LEFT JOIN sedes se ON se.id_sede = us.id_sede
-        WHERE du.estatus in (1,2)
+        WHERE du.estatus in (0,1,2,5)
         GROUP BY us.estatus,du.id_usuario, us.nombre, us.apellido_paterno, us.apellido_materno, opc.nombre, se.nombre, ua.nombre, ua.apellido_paterno, ua.apellido_materno,pci2.abono_pagado, pci3.abono_nuevo, se.id_sede, du.pagado_caja, du.pago_individual, du.pagos_activos, du.estatus, du.fecha_modificacion");
 }
 
@@ -7884,20 +7885,57 @@ function getDatosNuevasMontos($proyecto,$condominio){
 
 
 
+    function getDescuentosLiquidados()
+    {
+        return $this->db->query("SELECT us.estatus as status,SUM(du.monto) as monto, 
+            du.id_usuario,CONCAT(us.nombre,' ',us.apellido_paterno,' ',us.apellido_materno) nombre, opc.nombre as puesto, 
+            se.id_sede, se.nombre as sede, CONCAT(ua.nombre,' ',ua.apellido_paterno,' ',ua.apellido_materno) creado_por, 
+            pci2.abono_pagado, pci3.abono_nuevo, du.pagado_caja, du.pago_individual, du.pagos_activos, du.estatus, 
+            (pci2.abono_pagado + du.pagado_caja) aply, CONVERT(varchar,du.fecha_modificacion,23)  fecha_creacion
+            FROM descuentos_universidad du
+            INNER JOIN usuarios us ON us.id_usuario = du.id_usuario
+            INNER JOIN usuarios ua ON ua.id_usuario = du.creado_por
+            INNER JOIN opcs_x_cats opc ON opc.id_opcion = us.id_rol AND opc.id_catalogo = 1
+            LEFT JOIN (SELECT SUM(abono_neodata) abono_pagado, id_usuario FROM pago_comision_ind WHERE estatus in (17) GROUP BY id_usuario) pci2 ON du.id_usuario = pci2.id_usuario
+            LEFT JOIN (SELECT SUM(abono_neodata) abono_nuevo, id_usuario FROM pago_comision_ind WHERE estatus in (1) GROUP BY id_usuario) pci3 ON du.id_usuario = pci3.id_usuario 
+            LEFT JOIN sedes se ON se.id_sede = us.id_sede
+            WHERE du.estatus in (3,4) or (du.estatus in (1,2) and us.estatus in (0,3))
+            GROUP BY us.estatus,du.id_usuario, us.nombre, us.apellido_paterno, us.apellido_materno, opc.nombre, se.nombre, ua.nombre, ua.apellido_paterno, ua.apellido_materno,pci2.abono_pagado, pci3.abono_nuevo, se.id_sede, du.pagado_caja, du.pago_individual, du.pagos_activos, du.estatus, du.fecha_modificacion");
+    }
 
-             function getDescuentosLiquidados(){
-    return $this->db->query("SELECT us.estatus as status,SUM(du.monto) as monto, du.id_usuario,CONCAT(us.nombre,' ',us.apellido_paterno,' ',us.apellido_materno) nombre, opc.nombre as puesto, se.id_sede, se.nombre as sede, CONCAT(ua.nombre,' ',ua.apellido_paterno,' ',ua.apellido_materno) creado_por, pci2.abono_pagado, pci3.abono_nuevo, du.pagado_caja, du.pago_individual, du.pagos_activos, du.estatus, (pci2.abono_pagado + du.pagado_caja) aply, CONVERT(varchar,du.fecha_modificacion,23)  fecha_creacion
-        FROM descuentos_universidad du
-        INNER JOIN usuarios us ON us.id_usuario = du.id_usuario
-        INNER JOIN usuarios ua ON ua.id_usuario = du.creado_por
-        INNER JOIN opcs_x_cats opc ON opc.id_opcion = us.id_rol AND opc.id_catalogo = 1
-        LEFT JOIN (SELECT SUM(abono_neodata) abono_pagado, id_usuario FROM pago_comision_ind WHERE estatus in (17) GROUP BY id_usuario) pci2 ON du.id_usuario = pci2.id_usuario
-        LEFT JOIN (SELECT SUM(abono_neodata) abono_nuevo, id_usuario FROM pago_comision_ind WHERE estatus in (1) GROUP BY id_usuario) pci3 ON du.id_usuario = pci3.id_usuario 
-        LEFT JOIN sedes se ON se.id_sede = us.id_sede
-        WHERE du.estatus in (3,4) or (du.estatus in (1,2) and us.estatus in (0,3))
-        GROUP BY us.estatus,du.id_usuario, us.nombre, us.apellido_paterno, us.apellido_materno, opc.nombre, se.nombre, ua.nombre, ua.apellido_paterno, ua.apellido_materno,pci2.abono_pagado, pci3.abono_nuevo, se.id_sede, du.pagado_caja, du.pago_individual, du.pagos_activos, du.estatus, du.fecha_modificacion");
-}
+    public function getTotalPagoFaltanteUsuario($usuarioId)
+    {
+        $result = $this->db->query("SELECT du.id_descuento, (SUM(du.monto) - (pci2.abono_pagado + du.pagado_caja)) as faltante, 
+            SUM(du.monto) AS monto_total, du.id_usuario
+            FROM descuentos_universidad du
+            INNER JOIN usuarios us ON us.id_usuario = du.id_usuario
+            LEFT JOIN (SELECT SUM(abono_neodata) abono_pagado, id_usuario FROM pago_comision_ind WHERE estatus in (17) 
+            GROUP BY id_usuario) pci2 ON du.id_usuario = pci2.id_usuario
+            LEFT JOIN (SELECT SUM(abono_neodata) abono_nuevo, id_usuario FROM pago_comision_ind WHERE estatus in (1) 
+            GROUP BY id_usuario) pci3 ON du.id_usuario = pci3.id_usuario 
+            LEFT JOIN sedes se ON se.id_sede = us.id_sede
+            WHERE du.id_usuario = $usuarioId
+            GROUP BY du.id_usuario, pci2.abono_pagado, du.pagado_caja, du.id_descuento");
+        return $result->row();
+    }
 
+    public function updatePagoReactivadoMismoDiaMes($idDescuento, $fecha)
+    {
+        return $this->db->query("UPDATE descuentos_universidad SET estatus = 1, fecha_modificacion = '$fecha', 
+            pagos_activos = 1 WHERE id_descuento = $idDescuento");
+    }
+
+    public function updatePagoReactivadoMismoMes($idDescuento, $fecha)
+    {
+        return $this->db->query("UPDATE descuentos_universidad SET estatus = 1, fecha_modificacion = '$fecha',
+            pagos_activos = 0 WHERE id_descuento = $idDescuento");
+    }
+
+    public function updatePagoReactivadoFechaDiferente($idDescuento, $fecha)
+    {
+        return $this->db->query("UPDATE descuentos_universidad SET estatus = 5, fecha_modificacion = '$fecha',
+            pagos_activos = 0 WHERE id_descuento = $idDescuento");
+    }
 
 public function AddEmpresa($idLote,$comision,$idCliente){
 
@@ -8040,7 +8078,7 @@ return $query->result();
 
     function fusionAcLi(){
         $query = $this->db->query("
-        (SELECT us.estatus as status,SUM(du.monto) as monto, du.id_usuario,CONCAT(us.nombre,' ',us.apellido_paterno,' ',us.apellido_materno) nombre, opc.nombre as puesto, 
+        (SELECT du.estatus AS estatusDU, us.estatus as status,SUM(du.monto) as monto, du.id_usuario,CONCAT(us.nombre,' ',us.apellido_paterno,' ',us.apellido_materno) nombre, opc.nombre as puesto, 
         se.id_sede, se.nombre as sede, CONCAT(ua.nombre,' ',ua.apellido_paterno,' ',ua.apellido_materno) creado_por, pci2.abono_pagado, pci3.abono_nuevo, du.pagado_caja, 
         du.pago_individual, du.pagos_activos, du.estatus, (pci2.abono_pagado + du.pagado_caja) aply, CONVERT(varchar,du.fecha_modificacion,23) fecha_creacion, '1' as queryType
         FROM descuentos_universidad du
@@ -8050,13 +8088,13 @@ return $query->result();
         LEFT JOIN (SELECT SUM(abono_neodata) abono_pagado, id_usuario FROM pago_comision_ind WHERE estatus in (17) GROUP BY id_usuario) pci2 ON du.id_usuario = pci2.id_usuario
         LEFT JOIN (SELECT SUM(abono_neodata) abono_nuevo, id_usuario FROM pago_comision_ind WHERE estatus in (1) GROUP BY id_usuario) pci3 ON du.id_usuario = pci3.id_usuario
         LEFT JOIN sedes se ON se.id_sede = us.id_sede
-        WHERE du.estatus in (1,2)
+        WHERE du.estatus in (0,1,2,5)
         GROUP BY us.estatus,du.id_usuario, us.nombre, us.apellido_paterno, us.apellido_materno, opc.nombre, se.nombre, ua.nombre, ua.apellido_paterno, ua.apellido_materno,
         pci2.abono_pagado, pci3.abono_nuevo, se.id_sede, du.pagado_caja, du.pago_individual, du.pagos_activos, du.estatus, du.fecha_modificacion)
         
         UNION
         
-        (SELECT us.estatus as status,SUM(du.monto) as monto, du.id_usuario,CONCAT(us.nombre,' ',us.apellido_paterno,' ',us.apellido_materno) nombre, opc.nombre as puesto, se.id_sede, 
+        (SELECT du.estatus AS estatusDU, us.estatus as status,SUM(du.monto) as monto, du.id_usuario,CONCAT(us.nombre,' ',us.apellido_paterno,' ',us.apellido_materno) nombre, opc.nombre as puesto, se.id_sede, 
         se.nombre as sede, CONCAT(ua.nombre,' ',ua.apellido_paterno,' ',ua.apellido_materno) creado_por, pci2.abono_pagado, pci3.abono_nuevo, du.pagado_caja, du.pago_individual, 
         du.pagos_activos, du.estatus, (pci2.abono_pagado + du.pagado_caja) aply, CONVERT(varchar,du.fecha_modificacion,23)  fecha_creacion, '2' as queryType
         FROM descuentos_universidad du
