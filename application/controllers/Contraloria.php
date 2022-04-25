@@ -3455,6 +3455,17 @@ public function return1(){
     }
 
 
+    /**al día de hoy**/
+    public function backExp(){
+        /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/
+        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
+        /*-------------------------------------------------------------------------------*/
+        $this->load->view('template/header');
+        $datos["residencial"]= $this->registrolote_modelo->getResidencialQro();
+        $this->load->view("contraloria/checarExpediente", $datos);
+    }
+
+
 
 
 

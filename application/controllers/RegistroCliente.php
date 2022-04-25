@@ -8779,8 +8779,8 @@
 			echo json_encode(array());
 		}
 	}
-  public function expedientesReplace($lotes,$cliente = '') {
-    $data = $this->registrolote_modelo->getExpedienteReplace($lotes);
+    public function expedientesReplace($lotes,$cliente = '') {
+        $data = $this->registrolote_modelo->getExpedienteReplace($lotes);
         if($data != null) {
             echo json_encode($data);
         } else {
@@ -8788,4 +8788,34 @@
         }
         exit;
 	}
+
+	function getSelectedLotes($idCondominio, $idResidencial){
+	    $data = $this->registrolote_modelo->getSelectedLotes($idCondominio, $idResidencial);
+        if($data != null) {
+            echo json_encode($data);
+        } else {
+            echo json_encode(array());
+        }
+        exit;
+    }
+
+    function getClientsByLote($idLote){
+        $data = $this->registrolote_modelo->getClientsByLote($idLote);
+        if($data != null) {
+            echo json_encode($data);
+        } else {
+            echo json_encode(array());
+        }
+        exit;
+    }
+
+    function getClientByID($idCliente){
+        $data = $this->registrolote_modelo->getClientByID($idCliente);
+        if($data != null) {
+            echo json_encode($data);
+        } else {
+            echo json_encode(array());
+        }
+        exit;
+    }
 }//clase
