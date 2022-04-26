@@ -179,6 +179,7 @@
 
             // console.log(valorSeleccionado);
             //build select condominios
+            $('#tableDoct').DataTable().clear();
             $("#filtro4").empty().selectpicker('refresh');
             $.ajax({
                 url: '<?=base_url()?>registroCliente/getCondominios/'+valorSeleccionado,
@@ -205,6 +206,7 @@
         $('#filtro4').change(function(){
             var residencial = $('#filtro3').val();
             var condominio = $(this).val();
+            $('#tableDoct').DataTable().clear();
             // console.log(valorSeleccionado);
             //$('#filtro5').load("<?//= site_url('registroCliente/getLotesAll') ?>///"+valorSeleccionado+'/'+residencial);
             $("#filtro5").empty().selectpicker('refresh');
@@ -235,6 +237,7 @@
             // console.log(valorSeleccionado);
             //$('#filtro5').load("<?//= site_url('registroCliente/getLotesAll') ?>///"+valorSeleccionado+'/'+residencial);
             $("#filtro6").empty().selectpicker('refresh');
+            $('#tableDoct').DataTable().clear();
             $.ajax({
                 url: '<?=base_url()?>registroCliente/getClientsByLote/'+idLote,
                 type: 'post',
@@ -502,8 +505,12 @@
                 }else{
                     alerts.showNotification("top", "right", "Ha ocurrido un error intentalo nuevamente.", "danger");
                 }
+                $('#modalConfirmRegExp').modal('hide');
+                $("#tableDoct").DataTable().ajax.reload();
             },
             error: function() {
+                $('#modalConfirmRegExp').modal('hide');
+
                 $('#spiner-loader').addClass('hide');
                 alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
             }
