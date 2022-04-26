@@ -115,5 +115,6 @@ $this->load->view('template/footer');?>
     idUser = <?= $this->session->userdata('id_usuario') ?> ;
     typeTransaction = 1;
     base_url = "<?=base_url()?>";
+   
 </script>
 </html>

@@ -55,11 +55,12 @@
         </div>
     </div>
 </div>
-<script src="<?=base_url()?>dist/js/controllers/calendar/general_calendar.js"></script>
-
 <script>
     userType = <?= $this->session->userdata('id_rol') ?> ;
     idUser = <?= $this->session->userdata('id_usuario') ?> ;
     typeTransaction = 1;
     base_url = "<?=base_url()?>";
 </script>
+<script src="<?=base_url()?>dist/js/controllers/calendar/general_calendar.js"></script>
+
+

@@ -36,7 +36,7 @@
 //funciones
   function getCoordinators(id){
     $('#spiner-loader').removeClass('hide');
-    $.post('../Calendar/getCoordinators', {id: id}, function(data) {
+    $.post(`${base_url}Calendar/getCoordinators`, {id: id}, function(data) {
         $('#spiner-loader').addClass('hide');
         var len = data.length;
         for (var i = 0; i < len; i++) {
@@ -56,7 +56,7 @@
   function getAsesores(idCoordinador, firstLoad){
     return $.ajax({
       type: 'POST',
-      url: '../Calendar/getAdvisers',
+      url: `${base_url}Calendar/getAdvisers`,
       data: {id: idCoordinador},
       dataType: 'json',
       cache: false,
@@ -90,7 +90,7 @@
   function getEventos(ids){
     return $.ajax({
       type: 'POST',
-      url: '../Calendar/Events',
+      url: `${base_url}Calendar/Events`,
       data: {ids: ids},
       dataType: 'json',
       cache: false,
@@ -111,7 +111,7 @@
   }
 
   function getGerentes(){
-    $.post('../Calendar/getManagers', function(data) {
+    $.post(`${base_url}Calendar/getManagers`, function(data) {
       var len = data.length;
       for (var i = 0; i < len; i++) {
           var id = data[i]['id_usuario'];
