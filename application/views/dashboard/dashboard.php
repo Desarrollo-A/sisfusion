@@ -42,11 +42,13 @@
                                         <div class="col-md-9 h-100">
                                             <div class="card h-100 m-0">
                                                 <div class="row h-100">
-                                                    <div class="col-md-3 h-100">
+                                                    <!-- <div class="col-md-3 h-100">
                                                         <h4 class="text-center">INFO</h4>
-                                                    </div>
-                                                    <div class="col-md-9 pb-0 h-100">
-                                                        <div id="chart2"></div>
+                                                    </div> -->
+                                                    <div class="col-md-12 pb-0 h-100 d-flex align-end">
+                                                        <div class="col-md-12 pb-0 h-70">
+                                                            <div id="chart2"></div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
