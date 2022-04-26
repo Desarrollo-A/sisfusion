@@ -8,6 +8,8 @@ class Restore_model extends CI_Model {
     }
 
     public function return_status_uno($idCliente){
+        $this->db->trans_begin();
+
         $query4 = $this->db->query("SELECT idStatusContratacion, idMovimiento, perfil, comentario, usuario,
 		                            modificado, fechaVenc,
 									idLote FROM historial_lotes WHERE idHistorialLote = (SELECT max(idHistorialLote) FROM historial_lotes WHERE idCliente = '$idCliente');");
@@ -74,5 +76,14 @@ class Restore_model extends CI_Model {
         $query6 = $this->db->query("UPDATE clientes SET status=0 WHERE idLote='$idlote';");
         $query10 = $this->db->query("UPDATE clientes SET status=1, modificado_por=1 WHERE id_cliente='$idCliente' AND idLote='$idlote';");
 
+
+
+        if ($this->db->trans_status() === FALSE) { // Hubo errores en la consulta, entonces se cancela la transacción.
+            $this->db->trans_rollback();
+            return false;
+        } else { // Todas las consultas se hicieron correctamente.
+            $this->db->trans_commit();
+            return true;
+        }
     }
 }
