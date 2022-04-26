@@ -14,6 +14,34 @@
     /*--------------------------------------------------------*/
     ?>
 
+    <div class="modal fade" id="feedbackModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-sm" role="document">
+            <form id="feedback_form" name="feedback_form" method="post">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3 class="modal-title">Evalua este evento</h3>
+                        <p class="">¿Cómo valorarías este evento?</p>
+                    </div>
+                    <div class="modal-body pt-0">
+                        <div class="pl-1 pr-1 pb-3 pt-3 d-flex justify-between">
+                        <img src="https://i.ibb.co/fYN2rVn/no.png" alt="">
+                        <small>Unhappy</small>
+                        <img src="https://i.ibb.co/VVDYGLZ/yes.png" alt=""/>
+                        <small>Satisfied</small>
+                            <!-- <i class="fas fa-calendar-times fa-3x"></i> -->
+                        </div>
+                        <p>Agrega tus comentarios u observaciones adicionales a este evento.</p>
+                        <textarea class="text-modal" class="form-control" type="text" name="observaciones" id="observaciones" onkeyup="javascript:this.value=this.value.toUpperCase();"></textarea>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary" id="finishS">Guardar</button>
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cerrar</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <div class="content">
         <div class="container-fluid">
             <div class="row">

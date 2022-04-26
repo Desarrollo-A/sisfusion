@@ -31,7 +31,7 @@
                             <label class="label-gral">Tipo de cita</label>
                             <select class="selectpicker select-gral m-0" name="estatus_recordatorio2" id="estatus_recordatorio3" data-style="btn" data-show-subtext="true" data-live-search="true" title="Seleccione una opción" data-size="7" required disabled></select>
                         </div>
-                        <div class="col-lg-12 form-group m-0 hide" id="comodinDIV2">
+                        <div class="col-lg-12 form-group m-0 hide" id="">
                         </div>
                         <div class="col-lg-12 form-group m-0">
                             <label class="label-gral">Fecha de cita</label>

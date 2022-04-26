@@ -2,112 +2,15 @@
   var appointment = '';
 
   $(document).ready(function() {
-    getUsersAndEvents(userType,idUser);
+    getUsersAndEvents(userType,idUser, true);
   });
-
-  // $("#gerente").on('change', function(e){
-  //   let id = $("#gerente").val();
-  //   getCoordinators(id);
-  //   $("#coordinador").empty().selectpicker('refresh');
-  //   $("#asesor").empty().selectpicker('refresh');
-  // });
-
-  // $("#coordinador").on('change', function(e){
-  //   removeEvents();
-  //   var idCoordinador = $("#coordinador").val();
-  //   getAdvisers(idCoordinador).then( response => {
-  //     var arrayId = idCoordinador;
-  //     for (var i = 0; i < response.length; i++) {
-  //       arrayId = arrayId + ',' + response[i]['id_usuario'];
-  //     }
-  //     getEventos(arrayId).then( response => {
-  //       setSourceEventCRM(response);
-  //     }).catch( error => { alerts.showNotification("top", "right", "Oops, algo salió mal. "+error, "danger"); });;
-  //   }).catch( error => { alerts.showNotification("top", "right", "Oops, algo salió mal. "+error, "danger"); });
-  //   $("#asesor").empty().selectpicker('refresh');
-  // });
-
-  // $("#asesor").on('change', function(e){
-  //   removeEvents();
-  //   if(userType == 9) var arrayId = idUser + ', ' + $("#asesor").val();
-  //   else var arrayId = $("#coordinador").val() + ', ' +$("#asesor").val();
-    
-  //   getEventos(arrayId).then( response => {
-  //     setSourceEventCRM(response);
-  //   }).catch( error => { alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger"); });;
-  // });
-
-  // function getGerentes(){
-  //   $.post('../Calendar/getManagers', function(data) {
-  //     var len = data.length;
-  //     for (var i = 0; i < len; i++) {
-  //         var id = data[i]['id_usuario'];
-  //         var nombre = data[i]['nombre'];
-  //         $("#gerente").append($('<option>').val(id).text(nombre));
-  //     }
-  //     if (len <= 0) {
-  //       $("#gerente").append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
-  //     }
-  //     $("#gerente").selectpicker('refresh');
-  //   }, 'json');
-  // }
-
-  // function getCoordinators(id){
-  //   $('#spiner-loader').removeClass('hide');
-  //   $.post('../Calendar/getCoordinators', {id: id}, function(data) {
-  //     $('#spiner-loader').addClass('hide');
-  //     var len = data.length;
-  //     for (var i = 0; i < len; i++) {
-  //         var id = data[i]['id_usuario'];
-  //         var nombre = data[i]['nombre'];
-  //         $("#coordinador").append($('<option>').val(id).text(nombre));
-  //     }
-  //     if (len <= 0) {
-  //       $("#coordinador").append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
-  //     }
-  //     $("#coordinador").selectpicker('refresh');
-
-  //     return data;
-  //   }, 'json');
-  // }
-
-  // function getAdvisers(idCoordinador){
-  //   return $.ajax({
-  //     type: 'POST',
-  //     url: 'getAdvisers',
-  //     data: {id: idCoordinador},
-  //     dataType: 'json',
-  //     cache: false,
-  //     beforeSend: function() {
-  //       $('#spiner-loader').removeClass('hide');
-  //     },
-  //     success: function(data) {
-  //       $('#spiner-loader').addClass('hide');
-  //       var len = data.length;
-  //       for (var i = 0; i < len; i++) {
-  //         var id = data[i]['id_usuario'];
-  //         var nombre = data[i]['nombre'];
-  //         $("#asesor").append($('<option>').val(id).text(nombre));
-  //       }
-  //       if (len <= 0) {
-  //         $("#asesor").append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
-  //       }
-
-  //       $("#asesor").selectpicker('refresh');
-  //     },
-  //     error: function() {
-  //       $('#spiner-loader').addClass('hide');
-  //       alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
-  //     }
-  //   });
-  // }
 
   var calendarEl = document.getElementById('calendar');
   calendar = new FullCalendar.Calendar(calendarEl, {   
     headerToolbar: {
-      start:   'timeGridDay,timeGridWeek,dayGridMonth',
+      start: 'prev,next today googleSignIn googleLogout',
       center: 'title',
-      end: 'prev,next today googleSignIn googleLogout'
+      end:   'timeGridDay,timeGridWeek,dayGridMonth',
     },
     customButtons: {
       googleSignIn: {
@@ -153,16 +56,16 @@
         info.jsEvent.preventDefault();
       }else modalEvent(info.event.id);
     },
-    dateClick: function(info) {
-      if(info.view.type == "dayGridMonth" || info.view.type == "timeGridWeek") {
-        calendar.changeView( 'timeGridDay', info.dateStr );
-      }
-    },
+    // dateClick: function(info) {
+    //   if(info.view.type == "dayGridMonth" || info.view.type == "timeGridWeek") {
+    //     calendar.changeView( 'timeGridDay', info.dateStr );
+    //   }
+    // },
     select: function(info) {
-      if(info.view.type == "timeGridDay") {
+      // if(info.view.type == "timeGridDay") {
         cleanModal();
         setDatesToModalInsert(info);
-      }
+      // }
     }
   });
   calendar.render();
@@ -258,10 +161,10 @@
       },
       success: function(data) {
         if(gapi.auth2.getAuthInstance().isSignedIn.get()) insertEventGoogle(dataF);
+        removeEvents();
+        getUsersAndEvents(userType, idUser, false);
         data = JSON.parse(data);
-        $('#spiner-loader').addClass('hide');
         alerts.showNotification("top", "right", data["message"], (data["status" == 503]) ? "danger" : (data["status" == 400]) ? "warning" : "success");
-        calendar.refetchEvents();
         $('#agendaInsert').modal('toggle');
       },
       error: function() {
@@ -277,7 +180,6 @@
       new FormData(e.target)
     );
     updateGoogleEvent(dataF);
-    
   });
 
   function deleteCita(){
@@ -292,10 +194,10 @@
         $('#spiner-loader').removeClass('hide');
       },
       success: function(data) {
-        $('#spiner-loader').addClass('hide');
           if (data == 1) {
               $('#modalEvent').modal("hide");
-              calendar.render();
+              removeEvents();
+              getUsersAndEvents(userType, idUser, false);
               alerts.showNotification("top", "right", "La actualización se ha llevado a cabo correctamente.", "success");
           } else {
               alerts.showNotification("top", "right", "Asegúrate de haber llenado todos los campos mínimos requeridos.", "warning");
@@ -306,6 +208,11 @@
           alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
       }
     });
+  }
+
+  function finalizarCita(){
+    $('#modalEvent').modal('toggle');
+    $('#feedbackModal').modal();
   }
 
   function modalEvent(idAgenda){
@@ -328,13 +235,15 @@
       },
       success: function(data){
         appointment = data[0];
+        if(idUser != appointment.idOrganizador) disabledEditModal(true);
+        else disabledEditModal(false);
         $('#spiner-loader').addClass('hide');
         $("#evtTitle2").val(appointment.titulo);
         $("#estatus_recordatorio2").val(appointment.medio);
         $("#estatus_recordatorio2").selectpicker('refresh');
-        $("#prospectoE").append($('<option>').val(appointment.idCliente).text(appointment.nombre));
+        $("#textProspecto").val(appointment.nombre);
+        $("#textProspecto").prop("disabled", true);
         $("#prospectoE").val(appointment.idCliente);
-        $("#prospectoE").selectpicker('refresh');
         $("#dateStart2").val(moment(appointment.fecha_cita).format().substring(0,19));
         $("#dateEnd2").val(moment(appointment.fecha_final).format().substring(0,19));
         $("#description2").val(appointment.descripcion);
@@ -343,8 +252,6 @@
         var medio = $("#estatus_recordatorio2").val();
         var box = $("#comodinDIV2");
         validateNCreate(appointment, medio, box);
-        if(idUser != appointment.idOrganizador) disabledEditModal(true)
-        else disabledEditModal(false)
       },
       error: function() {
         $('#spiner-loader').addClass('hide');
@@ -440,7 +347,6 @@
       }
     })
   }
-
   /* Google sign in estatus true */
 
   /* Event's structure sent to Google */
@@ -476,7 +382,6 @@
   /* Event's structure sent to Google */
 
   function insertEventGoogle(data){
-    console.log('insert',data)
     var id = new Promise((resolve, reject) => {
       var request = gapi.client.calendar.events.insert({
         'calendarId': 'primary',
@@ -491,16 +396,13 @@
   }
 
   async function updateGoogleEvent(data){
-    const { dateEnd, dateStart, description, estatus_recordatorio, evtTitle, idGoogle} = data;
+    const {idGoogle} = data;
 
     if(idGoogle == ''){
       data['inserted'] = await insertEventGoogle(data);
-      console.log('insert');
     }else{
-      console.log('edit');
       let evento = new Promise((resolve,reject)=>{
         gapi.client.calendar.events.get({"calendarId": 'primary', "eventId":idGoogle }).execute(function(event){
-          console.log(event);
           resolve(event);
         });
       })
@@ -518,11 +420,11 @@
         $('#spiner-loader').removeClass('hide');
       },
       success: function(data) {
-        calendar.refetchEvents();
+        removeEvents();
+        getUsersAndEvents(userType, idUser, false);
         data = JSON.parse(data);
         alerts.showNotification("top", "right", data["message"], (data["status" == 503]) ? "danger" : (data["status" == 400]) ? "warning" : "success");
         $('#modalEvent').modal('toggle');
-        $('#spiner-loader').addClass('hide');
       },
       error: function() {
         alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
@@ -559,24 +461,6 @@
     });
   }
 
-  // function getEventos(ids){
-  //   return $.ajax({
-  //     type: 'POST',
-  //     url: 'Events',
-  //     data: {ids: ids},
-  //     dataType: 'json',
-  //     cache: false,
-  //     success: function(data) {
-  //       if(data.length == 0){
-  //         alerts.showNotification("top", "right", "Aún no hay ningún evento registrado", "success");
-  //       }
-  //     },
-  //     error: function(){
-  //       alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
-  //     }
-  //   });
-  // }
-
   function setSourceEventCRM(events){
     calendar.addEventSource({
       title: 'sourceCRM',
@@ -584,12 +468,12 @@
       events: events
     })
     
-    calendar.render();
+    calendar.refetchEvents();
   }
 
   function disabledEditModal(value){
     if(value){
-      $("#modalEvent .close").addClass("d-none");
+      $("#modalEvent #menuModal").addClass("d-none");
       $("#edit_appointment_form input").prop("disabled", true);
       $("#edit_appointment_form textarea").prop("disabled", true);
       $("#prospectoE").prop("disabled", true);
@@ -597,7 +481,7 @@
       $("#finishS").addClass("d-none");
     }
     else{
-      $("#modalEvent .close").removeClass("d-none");
+      $("#modalEvent #menuModal").removeClass("d-none");
       $("#edit_appointment_form input").prop("disabled", false);
       $("#edit_appointment_form textarea").prop("disabled", false);
       $("#prospectoE").prop("disabled", false);
@@ -607,28 +491,3 @@
     $("#prospectoE").selectpicker('refresh');
     $("#estatus_recordatorio2").selectpicker('refresh');
   }
-
-  // function getUsersAndEvents(userType, idUser){
-  //   if(userType == 2){ /* Subdirector */
-  //     getGerentes();
-  //   }
-  //   else if(userType == 3){ /* Gerente */
-  //     getCoordinators(idUser);
-  //   }
-  //   else if(userType == 7 ){
-  //     getEventos(idUser).then( response => {
-  //       setSourceEventCRM(response);
-  //     }).catch( error => { alerts.showNotification("top", "right", "Oops, algo salió mal. "+error, "danger"); });
-  //   }
-  //   else if(userType == 9){ /* Coordinador */
-  //     getAdvisers(idUser).then( response => {
-  //       var arrayId = idUser;
-  //       for (var i = 0; i < response.length; i++) {
-  //         arrayId = arrayId + ',' + response[i]['id_usuario'];
-  //       }
-  //       getEventos(arrayId).then( response => {
-  //         setSourceEventCRM(response);
-  //       }).catch( error => { alerts.showNotification("top", "right", "Oops, algo salió mal. "+error, "danger"); });
-  //     }).catch( error => { alerts.showNotification("top", "right", "Oops, algo salió mal. "+error, "danger"); });
-  //   }
-  // }

@@ -1014,7 +1014,6 @@
 }
 
 #calendar .fc-daygrid-day-frame {
-  height: 145px;
   padding: 3px;
 }
 
@@ -1022,6 +1021,10 @@
   cursor: pointer;
   font-size: 3rem;
   z-index: 1;
+}
+
+.iconMod {
+  color: #999;
 }
 
 .visible-on-sidebar-calendar {
