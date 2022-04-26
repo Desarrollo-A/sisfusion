@@ -1,5 +1,10 @@
 $( document ).ready(function() {
   backDiv();
+  console.log('exists', exists);
+  if(exists == 1){
+    document.getElementById('openCalendar').style.display = 'none';
+    document.getElementById('divCalendar').style.display = 'none';
+  }
 });
 var sideCalendar;
 $(document).on('click', '#minimizeSidecalendar', function(e){
@@ -152,6 +157,18 @@ function createCalendar(){
       center: 'title',
       end: ''
     },
+    eventTimeFormat: {
+      hour: '2-digit', //2-digit, numeric
+      minute: '2-digit', //2-digit, numeric
+      second: '2-digit', //2-digit, numeric
+      meridiem: 'lowercase', //lowercase, short, narrow, false (display of AM/PM)
+      hour12: true //true, false
+    },
+    slotLabelFormat:{
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: true
+      },
     timeZone: 'none',
     locale: 'es',
     initialView: 'timeGridDay',
