@@ -32,16 +32,16 @@ class Restore_model extends CI_Model {
         $queryAuditoria = $this->db->query("WITH cte AS(
             SELECT
                 col_afect
-                ,MAX(fecha_creacion) as fecha_creacion
+                ,MAX(fecha_creacion) as fecha_creacion, id_parametro
             FROM auditoria WHERE id_parametro = $idlote AND tabla = 'lotes'
             AND col_afect IN ('tipo_venta', 'registro_comision', 'ubicacion', 'ubicacion_dos', 'totalNeto2') 
-            GROUP BY col_afect
+            GROUP BY col_afect, id_parametro
         )
         SELECT
             t.anterior
             ,cte.*
         FROM cte
-        INNER JOIN auditoria t ON t.col_afect = cte.col_afect AND t.fecha_creacion = cte.fecha_creacion");
+        INNER JOIN auditoria t ON t.col_afect = cte.col_afect AND t.fecha_creacion = cte.fecha_creacion AND t.id_parametro = cte.id_parametro");
         $rowAuditoria= $queryAuditoria->result_array();
         $AND = "";
         if(count($rowAuditoria) > 0){

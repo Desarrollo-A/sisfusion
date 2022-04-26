@@ -254,7 +254,7 @@ foreach($datos2 as $datos)
 				<a href="<?=base_url()?>#" class="navbar-brand hidden-md hidden-lg" style="color: #0e4377;font-weight: 800">
 					<img src="<?=base_url()?>static/images/img.ico" class="img-responsive" width="15%">
 				</a>
-                <div class="divCalendar">
+                <div class="divCalendar" id="divCalendar">
                     <a id="minimizeSidecalendar" class="navbar-brand openCalendar-mini" style="cursor:pointer;">
                         <i class="material-icons far fa-calendar-alt"></i>
                         <p class="hidden-lg hidden-md"></p>
@@ -269,7 +269,7 @@ foreach($datos2 as $datos)
                     <input type="hidden" id="uri" value="<?=base_url()?>Usuarios/Chat">
                     <!------------------------------------------------------------------------->
                     <!-- Abrir side-calendar -->
-					<li class="openCalendar">
+					<li class="openCalendar" id ="openCalendar">
 						<a id="minimizeSidecalendar"  style="cursor:pointer;">
                             <i class="material-icons far fa-calendar-alt"></i>
 						</a>

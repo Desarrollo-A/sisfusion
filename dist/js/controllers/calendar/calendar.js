@@ -1,6 +1,6 @@
   var calendar;
   var appointment = '';
-
+  var exists = 1;
   $(document).ready(function() {
     getUsersAndEvents(userType,idUser);
   });
@@ -257,7 +257,7 @@
         $('#spiner-loader').removeClass('hide');
       },
       success: function(data) {
-        if(gapi.auth2.getAuthInstance().isSignedIn.get()) insertEventGoogle(dataF);
+        // if(gapi.auth2.getAuthInstance().isSignedIn.get()) insertEventGoogle(dataF);
         data = JSON.parse(data);
         $('#spiner-loader').addClass('hide');
         alerts.showNotification("top", "right", data["message"], (data["status" == 503]) ? "danger" : (data["status" == 400]) ? "warning" : "success");
@@ -280,32 +280,12 @@
     
   });
 
-  function deleteCita(){
+  function deleteCita(e){
     let idAgenda = $("#idAgenda2").val();
-    $.ajax({
-      type: 'POST',
-      url: 'deleteAppointment',
-      data: {idAgenda: idAgenda},
-      dataType: 'json',
-      cache: false,
-      beforeSend: function() {
-        $('#spiner-loader').removeClass('hide');
-      },
-      success: function(data) {
-        $('#spiner-loader').addClass('hide');
-          if (data == 1) {
-              $('#modalEvent').modal("hide");
-              calendar.render();
-              alerts.showNotification("top", "right", "La actualización se ha llevado a cabo correctamente.", "success");
-          } else {
-              alerts.showNotification("top", "right", "Asegúrate de haber llenado todos los campos mínimos requeridos.", "warning");
-          }
-      },
-      error: function() {
-        $('#spiner-loader').addClass('hide');
-          alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
-      }
-    });
+    let idGoogle = $("#idGoogle").val();
+
+    console.log(this);
+    deleteGoogleEvent(idAgenda,idGoogle);
   }
 
   function modalEvent(idAgenda){
@@ -429,6 +409,7 @@
         $("#dateEnd2").val(moment(appointment.fecha_final).format().substring(0,19));
         $("#description2").val(appointment.description);
         $("#idAgenda2").val(idAgenda);
+        $("#idGoogle").val(appointment.idGoogle);
 
         var medio = $("#estatus_recordatorio2").val();
         var box = $("comodinDIV2");
@@ -559,24 +540,6 @@
     });
   }
 
-  // function getEventos(ids){
-  //   return $.ajax({
-  //     type: 'POST',
-  //     url: 'Events',
-  //     data: {ids: ids},
-  //     dataType: 'json',
-  //     cache: false,
-  //     success: function(data) {
-  //       if(data.length == 0){
-  //         alerts.showNotification("top", "right", "Aún no hay ningún evento registrado", "success");
-  //       }
-  //     },
-  //     error: function(){
-  //       alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
-  //     }
-  //   });
-  // }
-
   function setSourceEventCRM(events){
     calendar.addEventSource({
       title: 'sourceCRM',
@@ -608,27 +571,41 @@
     $("#estatus_recordatorio2").selectpicker('refresh');
   }
 
-  // function getUsersAndEvents(userType, idUser){
-  //   if(userType == 2){ /* Subdirector */
-  //     getGerentes();
-  //   }
-  //   else if(userType == 3){ /* Gerente */
-  //     getCoordinators(idUser);
-  //   }
-  //   else if(userType == 7 ){
-  //     getEventos(idUser).then( response => {
-  //       setSourceEventCRM(response);
-  //     }).catch( error => { alerts.showNotification("top", "right", "Oops, algo salió mal. "+error, "danger"); });
-  //   }
-  //   else if(userType == 9){ /* Coordinador */
-  //     getAdvisers(idUser).then( response => {
-  //       var arrayId = idUser;
-  //       for (var i = 0; i < response.length; i++) {
-  //         arrayId = arrayId + ',' + response[i]['id_usuario'];
-  //       }
-  //       getEventos(arrayId).then( response => {
-  //         setSourceEventCRM(response);
-  //       }).catch( error => { alerts.showNotification("top", "right", "Oops, algo salió mal. "+error, "danger"); });
-  //     }).catch( error => { alerts.showNotification("top", "right", "Oops, algo salió mal. "+error, "danger"); });
-  //   }
-  // }
+  async function deleteGoogleEvent(idAgenda, idGoogle){
+    $.ajax({
+      type: 'POST',
+      url: 'deleteAppointment',
+      data: {idAgenda:idAgenda},
+      dataType: 'json',
+      cache: false,
+      beforeSend: function() {
+        $('#spiner-loader').removeClass('hide');
+      },
+      success: function(data) {
+        $('#spiner-loader').addClass('hide');
+          if (data == 1) {
+              $('#modalEvent').modal("hide");
+              calendar.render();
+              alerts.showNotification("top", "right", "La actualización se ha llevado a cabo correctamente.", "success");
+              if(idGoogle != ''){
+                console.log('delete');
+                delGoogleEvent(idGoogle);
+              }
+          } else {
+              alerts.showNotification("top", "right", "Asegúrate de haber llenado todos los campos mínimos requeridos.", "warning");
+          }
+      },
+      error: function() {
+        $('#spiner-loader').addClass('hide');
+          alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+      }
+    });
+  }
+
+  function delGoogleEvent(idGoogle){
+    var request = gapi.client.calendar.events.delete({
+      'calendarId': 'primary',
+      'eventId': idGoogle
+    });
+    request.execute();
+  }
