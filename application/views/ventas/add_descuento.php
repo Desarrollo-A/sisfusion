@@ -1839,7 +1839,7 @@ function getPagosByUser(user,mes, anio){
                         let datosLote = data[index].text.split('-   $');
                         let nameLote = datosLote[0]
                         let montoLote = datosLote[1];
-                        cadena =  'DESCUENTO UNIVERSIDAD MADERAS \n LOTE INVOLUCRADO: '+nameLote+',  MONTO DISPONIBLE: $'+montoLote+'.\n DESCUENTO DE: $'+formatMoney(monto)+', RESTANTE:'+formatMoney(parseFloat(abono_neo) - parseFloat(monto));
+                        cadena =  'DESCUENTO UNIVERSIDAD MADERAS \n LOTE INVOLUCRADO: '+nameLote+',  MONTO DISPONIBLE: $'+montoLote+'.\n DESCUENTO DE: $'+formatMoney(monto)+', RESTANTE:$'+formatMoney(parseFloat(abono_neo) - parseFloat(monto));
                     }else{
                         cadena = 'DESCUENTO UNIVERSIDAD MADERAS';
                     }
