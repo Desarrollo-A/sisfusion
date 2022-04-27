@@ -78,7 +78,7 @@ public function getActiveCommissions($val = '') {
     // }
 
 
-    public function getStoppedCommissions()
+     public function getStoppedCommissions()
     {
         $query = $this->db->query("SELECT DISTINCT(l.idLote), res.nombreResidencial, cond.nombre as nombreCondominio,
             l.nombreLote, l.tipo_venta, vc.id_cliente AS compartida, l.idStatusContratacion,
