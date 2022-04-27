@@ -250,7 +250,7 @@ $datos = array();
 <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
 <script>
     $('#tabla_ingresar_5 thead tr:eq(0) th').each( function (i) {
-        if(i!=0 && i!=1 && i!=10){
+        if(i!=0 && i!=1 && i!=11){
         var title = $(this).text();
         $(this).html('<input type="text" class="textoshead"  placeholder="'+title+'"/>' );
         $( 'input', this ).on('keyup change', function () {
