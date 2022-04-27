@@ -185,8 +185,6 @@
   function deleteCita(e){
     let idAgenda = $("#idAgenda2").val();
     let idGoogle = $("#idGoogle").val();
-
-    console.log(this);
     deleteGoogleEvent(idAgenda,idGoogle);
   }
 
@@ -197,9 +195,6 @@
 
   function modalEvent(idAgenda){
     getAppointmentData(idAgenda);
-    if(userType == 2 || userType == 3){
-      disabledEditModal(true);
-    }
     $('#modalEvent').modal();
   }
 
@@ -215,8 +210,6 @@
       },
       success: function(data){
         appointment = data[0];
-        if(idUser != appointment.idOrganizador) disabledEditModal(true);
-        else disabledEditModal(false);
         $('#spiner-loader').addClass('hide');
         $("#evtTitle2").val(appointment.titulo);
         $("#estatus_recordatorio2").val(appointment.medio);
@@ -232,6 +225,8 @@
         var medio = $("#estatus_recordatorio2").val();
         var box = $("#comodinDIV2");
         validateNCreate(appointment, medio, box);
+        if(idUser != appointment.idOrganizador) disabledEditModal(true);
+        else disabledEditModal(false);
       },
       error: function() {
         $('#spiner-loader').addClass('hide');
@@ -288,10 +283,10 @@
   }
 
   //SIDEBAR CALENDAR
-  function modalSidebarCalendar(idAgenda){
-    getAppointmentSidebarCalendar(idAgenda);
-    $('#sidebarView').modal();
-  }
+  // function modalSidebarCalendar(idAgenda){
+  //   getAppointmentSidebarCalendar(idAgenda);
+  //   $('#sidebarView').modal();
+  // }
 
   function getAppointmentSidebarCalendar(idAgenda){
     $.ajax({
@@ -446,10 +441,8 @@
     calendar.addEventSource({
       title: 'sourceCRM',
       display:'block',
-      events: events
+      events: events,
     })
-    
-    calendar.refetchEvents();
   }
 
   function disabledEditModal(value){
@@ -459,7 +452,7 @@
       $("#edit_appointment_form textarea").prop("disabled", true);
       $("#prospectoE").prop("disabled", true);
       $("#estatus_recordatorio2").prop("disabled", true);
-      $("#finishS").addClass("d-none");
+      $(".finishS").addClass("d-none");
     }
     else{
       $("#modalEvent #menuModal").removeClass("d-none");
@@ -467,7 +460,7 @@
       $("#edit_appointment_form textarea").prop("disabled", false);
       $("#prospectoE").prop("disabled", false);
       $("#estatus_recordatorio2").prop("disabled", false);
-      $("#finishS").removeClass("d-none");
+      $(".finishS").removeClass("d-none");
     }
     $("#prospectoE").selectpicker('refresh');
     $("#estatus_recordatorio2").selectpicker('refresh');
@@ -490,7 +483,6 @@
               calendar.render();
               alerts.showNotification("top", "right", "La actualización se ha llevado a cabo correctamente.", "success");
               if(idGoogle != ''){
-                console.log('delete');
                 delGoogleEvent(idGoogle);
               }
           } else {
@@ -511,3 +503,43 @@
     });
     request.execute();
   }
+    
+  $(document).on('submit', '#feedback_form', function(e) {
+    e.preventDefault();
+
+    let data = new FormData($(this)[0]);
+    data.append("idAgenda", $("#idAgenda2").val());
+    
+    
+  });
+
+  document.querySelector('#feedback_form').addEventListener('submit', e =>  {
+    e.preventDefault();
+    const data = Object.fromEntries(
+      new FormData(e.target)
+    )
+    data['idAgenda'] = $("#idAgenda2").val();
+    console.log("si está");
+    $.ajax({
+      type: 'POST',
+      url: 'setAppointmentRate',
+      data: JSON.stringify(data),
+      contentType: false,
+      cache: false,
+      processData: false,
+      beforeSend: function() {
+        $('#spiner-loader').removeClass('hide');
+      },
+      success: function(data) {
+        $('#spiner-loader').removeClass('hide');
+        data = JSON.parse(data);
+        alerts.showNotification("top", "right", data["message"], (data["status" == 503]) ? "danger" : (data["status" == 400]) ? "warning" : "success");
+        $('#feedbackModal').modal('toggle');
+      },
+      error: function() {
+          $('#feedbackModal').modal('toggle');
+          $('#spiner-loader').addClass('hide');
+          alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+      }
+    });
+  });

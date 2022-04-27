@@ -35,7 +35,6 @@ $(document).ready(function() {
             numFiles = input.get(0).files ? input.get(0).files.length : 1,
             label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
         input.trigger('fileselect', [numFiles, label]);
-        console.log('triggered');
     });
 })
 
@@ -45,7 +44,6 @@ $(document).on('change', '#asesores', function(){
 
 function validateEmptyFields() {
     var miArray = [];
-    // console.log("entró a la function "+ $("#tamanocer").val());
     $("#btnSubmit").attr("onclick", "").unbind("click");
     for (i = 0; i < $("#tamanocer").val(); i++) {
         if ($('#expediente1')[0].files.length === 0) {

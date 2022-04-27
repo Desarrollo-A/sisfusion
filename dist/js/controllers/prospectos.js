@@ -161,51 +161,11 @@ function validateFile() {
     if ($('#prospecting_place').val() == '' || $('#prospecting_place').val() == null ||
         $('#sales_plaza').val() == '' || $('#sales_plaza').val() == null ||
         $('#asesor_prospecto').val() == '' || $('#asesor_prospecto').val() == null) {
-        console.log('vals 5');
         alerts.showNotification('top', 'right', 'Debes ingresar los campos requeridos', 'danger');
 
     } else {
         $('#confirmar').modal('toggle');
     }
-    /*console.log('emtro aqui');
-    if($('#prospecting_place').val() == 6  && $('#specify_mkt').val()=='Recomendado')
-    {
-        console.log('Entro aqui II');
-        if( document.getElementById("archivo_evidencia").files.length == 0 ){
-            alerts.showNotification('top', 'right', 'DEBES SELECCIONAR UN ARCHIVO', 'danger');
-
-        }
-        else
-        {
-            if($('#prospecting_place').val()=='' ||  $('#prospecting_place').val() == null ||
-                $('#sales_plaza').val() =='' || $('#sales_plaza').val() == null ||
-                $('#asesor_prospecto').val()=='' || $('#asesor_prospecto').val() == null)
-            {
-                console.log('vals 3');
-                alerts.showNotification('top', 'right', 'Debes ingresar los campos requeridos', 'danger');
-
-            }
-            else
-            {
-                $('#confirmar').modal('toggle');
-            }
-        }
-    }
-    else
-    {
-        console.log('vals 4');
-        if($('#prospecting_place').val()=='' ||  $('#prospecting_place').val() == null ||
-            $('#sales_plaza').val() =='' || $('#sales_plaza').val() == null ||
-            $('#asesor_prospecto').val()=='' || $('#asesor_prospecto').val() == null)
-        {
-            console.log('vals 5');
-            alerts.showNotification('top', 'right', 'Debes ingresar los campos requeridos', 'danger');
-
-        }
-        else {
-            $('#confirmar').modal('toggle');
-        }
-    }*/
 }
 
 function validateEmptySelects(type) {
@@ -363,7 +323,6 @@ function getAge(type) {
 
 // Validate prospect's legal personality
 function validatePersonality() {
-    console.log("entra a la función de validación");
     lp = document.getElementById('legal_personality');
     lp = lp.value;
     if (lp == 1) {
@@ -489,7 +448,6 @@ function fillFields(v, type) {
         }
 
         pp = v.lugar_prospeccion;
-        console.log(pp);
         if (pp == 3 || pp == 7 || pp == 9 || pp == 10) { // SPECIFY OPTION
             $("#specify").val(v.otro_lugar);
         } else if (pp == 6) { // SPECIFY MKTD OPTION
@@ -655,7 +613,6 @@ function fillChangelog(v) {
 
 function getRecommendationData() {
     type = $("#specify_recommends option:selected").attr('data-type');
-    console.log(type);
     $("#type_recomendado").val(type);
 }
 
