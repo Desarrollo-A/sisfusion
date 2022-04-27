@@ -125,6 +125,7 @@
                                                         <th>PENDIENTE</th>
                                                         <th>PAGO INDIVUAL</th>
                                                         <th>ESTATUS</th>
+                                                        <th>TIPO DESCUENTO</th>
                                                         <th>OPCIONES</th>
                                                     </tr>
                                                 </thead>
@@ -196,11 +197,19 @@
         $('#prestamos-table thead tr:eq(0) th').each(function (i) {
             const title = $(this).text();
 
-            if (i !== 0 && i !== 1 && i !== 8 && i !== 9) {
+            if (i !== 0  && i !== 8 && i !== 9) {
                 $(this).html('<input type="text" class="textoshead" placeholder="' + title + '"/>');
                 $('input', this).on('keyup change', function () {
                     if (prestamosTabla.column(i).search() !== this.value) {
                         prestamosTabla.column(i).search(this.value).draw();
+
+                        var total = 0;
+							var index = prestamosTabla.rows({ selected: true, search: 'applied' }).indexes();
+							var data = prestamosTabla.rows( index ).data();
+							$.each(data, function(i, v){
+								total += parseFloat(v.abono_neodata);
+							});
+                            document.getElementById('total-pago').textContent = '$' + formatMoney(total);
                     }
                 });
             }
@@ -235,7 +244,7 @@
                         className: 'btn buttons-excel',
                         titleAttr: 'Descargar archivo de Excel',
                         exportOptions: {
-                            columns: [0, 1, 2, 3, 4, 5, 6, 7, 8],
+                            columns: [0, 1, 2, 3, 4, 5, 6, 7, 8,9],
                             format: {
                                 header: function (d, columnIndx) {
                                     switch (columnIndx) {
@@ -247,7 +256,8 @@
                                         case 5: return 'PAGADO';
                                         case 6: return 'PENDIENTE';
                                         case 7: return 'PAGO INDIVIDUAL';
-                                        case 8: return 'ESTATUS';
+                                        case 8: return 'TIPO DESCUENTO';
+                                        case 9: return 'ESTATUS';
                                         default: return 'NA';
                                     }
                                 }
@@ -318,8 +328,28 @@
                     },
                     {
                         'width': "5%",
-                        'data': function() {
+                        'data': function(d) {
                             return '<span class="label" style="background: #05A134;">PAGADO</span>';
+                        }
+                    },
+                    {
+                        'width': "5%",
+                        'data': function(d) {
+                            let etiqueta = '';
+						color='000';
+						if(d.id_opcion == 18){ //PRESTAMO
+							color='89C86C';
+						} else if(d.id_opcion == 19){ //SCIO
+							color='72EDD6';
+						}else if(d.id_opcion == 20){ //PLAZA
+							color='72CBED';
+						}else if(d.id_opcion == 21){ //LINEA TELEFÓNICA
+							color='7282ED';
+						}else if(d.id_opcion == 22){ //MANTENIMIENTO
+							color='CA72ED';
+						}
+
+						return '<p><span class="label" style="background:#'+color+';">'+d.tipo+'</span></p>';
                         }
                     },
                     {
