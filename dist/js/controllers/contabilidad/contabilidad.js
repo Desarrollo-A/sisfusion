@@ -258,7 +258,6 @@ $(document).on('click', '.find-results', function () {
     if (result) {
         $(".row-load").addClass("hide");
         let lotes = $("#lotes").val();
-        console.log('lotes',lotes);
         fillTableLotificacion(lotes);
     } else {
         $('#notificacion').modal('show');
@@ -356,7 +355,6 @@ $(document).ready(function () {
 async function processFile(selectedFile) {
     try {
         let arrayBuffer = await readFileAsync(selectedFile);
-        console.log(arrayBuffer);
         return arrayBuffer;
     } catch (err) {
         console.log(err);
@@ -403,7 +401,6 @@ $(document).on('click', '#cargaCoincidencias', function () {
                         "lotes": lotes
                     },
                     success: function (response) {
-                        console.log('response', response);
                         alerts.showNotification("top", "right", response["message"], (response["status" == 503]) ? "danger" : (response["status" == 400]) ? "warning" : "success");
                         $('#uploadModal').modal('toggle');
                     },
