@@ -169,6 +169,7 @@ $datos = array();
                                                 <th>PROYECTO</th>
                                                 <th>CONDOMINIO</th>
                                                 <th>LOTE</th>
+                                                <th>REFERENCIA</th>
                                                 <th>GERENTE</th>
                                                 <th>CLIENTE</th>
                                                 <th>F.MOD</th>
@@ -310,37 +311,30 @@ $("#tabla_ingresar_5").ready( function(){
                     titleAttr: 'Registro estatus 5',
                     title:"Registro estatus 5",
                     exportOptions: {
-                        columns: [1,2,3,4,5,6,7,8,9],
+                        columns: [1,2,3,4,5,6,7,8,9,10],
                         format: {
                             header: function (d, columnIdx) {
                                 switch (columnIdx) {
                                     case 1:
                                         return 'TIPO';
-                                        break;
                                     case 2:
                                         return 'PROYECTO';
-                                        break;
                                     case 3:
                                         return 'CONDOMINIO';
-                                        break;
                                     case 4:
                                         return 'LOTE';
-                                        break;
                                     case 5:
-                                        return 'GERENTE';
-                                        break;
+                                        return 'REFERENCIA';
                                     case 6:
-                                        return 'CLIENTE';
-                                        break;
+                                        return 'GERENTE';
                                     case 7:
-                                        return 'FECHA MODIFICADO';
-                                        break;
+                                        return 'CLIENTE';
                                     case 8:
-                                        return 'FECHA VENCIMIENTO';
-                                        break;
+                                        return 'FECHA MODIFICADO';
                                     case 9:
+                                        return 'FECHA VENCIMIENTO';
+                                    case 10:
                                         return 'UC';
-                                        break;
                                 }
                             }
                         }
@@ -355,37 +349,30 @@ $("#tabla_ingresar_5").ready( function(){
                     orientation: 'landscape',
                     pageSize: 'LEGAL',
                     exportOptions: {
-                        columns: [1,2,3,4,5,6,7,8,9],
+                        columns: [1,2,3,4,5,6,7,8,9,10],
                         format: {
                             header: function (d, columnIdx) {
                                 switch (columnIdx) {
                                     case 1:
                                         return 'TIPO';
-                                        break;
                                     case 2:
                                         return 'PROYECTO';
-                                        break;
                                     case 3:
                                         return 'CONDOMINIO';
-                                        break;
                                     case 4:
                                         return 'LOTE';
-                                        break;
                                     case 5:
-                                        return 'GERENTE';
-                                        break;
+                                        return 'REFERENCIA';
                                     case 6:
-                                        return 'CLIENTE';
-                                        break;
+                                        return 'GERENTE';
                                     case 7:
-                                        return 'FECHA MODIFICADO';
-                                        break;
+                                        return 'CLIENTE';
                                     case 8:
-                                        return 'FECHA VENCIMIENTO';
-                                        break;
+                                        return 'FECHA MODIFICADO';
                                     case 9:
+                                        return 'FECHA VENCIMIENTO';
+                                    case 10:
                                         return 'UC';
-                                        break;
                                 }
                             }
                         }
@@ -413,6 +400,7 @@ $("#tabla_ingresar_5").ready( function(){
 },
 
 {
+    "width": "7%",
 		"data": function( d ){
 			var lblStats;
 
@@ -434,25 +422,31 @@ $("#tabla_ingresar_5").ready( function(){
 	}
 },
 {
-    "width": "10%",
+    "width": "8%",
     "data": function( d ){
         return '<p class="m-0">'+(d.nombreCondominio).toUpperCase();+'</p>';
     }
 },
 {
-    "width": "10%",
+    "width": "8%",
     "data": function( d ){
         return '<p class="m-0">'+d.nombreLote+'</p>';
 	}
-}, 
+},
+    {
+        "width": "7%",
+        "data": function (d) {
+            return '<p class="m-0">'+d.referencia+'</p>';
+        }
+    },
 {
-	"width": "16%",
+	"width": "15%",
     "data": function( d ){
         return '<p class="m-0">'+d.gerente+'</p>';
     }
 }, 
 {
-    "width": "16%",
+    "width": "15%",
     "data": function( d ){
         return '<p class="m-0">'+d.nombre+" "+d.apellido_paterno+" "+d.apellido_materno+'</p>';
     }
@@ -491,7 +485,7 @@ $("#tabla_ingresar_5").ready( function(){
     }
 }, 
 { 
-    "width": "19%",
+    "width": "8%",
     "orderable": false,
     "data": function( data ){
 
