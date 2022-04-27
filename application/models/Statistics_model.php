@@ -2241,19 +2241,18 @@ class Statistics_model extends CI_Model {
         $monthGroupByClause = '';
 
         if (trim($mes) !== '' && $mes != 0) {
-            $monthSelectClause = ', MONTH(c.fecha_creacion) mes';
+            $monthSelectClause = ', MONTH(pci.fecha_abono) mes';
             $monthAbonoWhereClause = "AND MONTH(pci.fecha_abono) = $mes";
-            $monthCreacionWhereClause = "AND MONTH(c.fecha_creacion) = $mes";
-            $monthGroupByClause = ', MONTH(c.fecha_creacion)';
+            $monthCreacionWhereClause = "AND MONTH(pci.fecha_abono) = $mes";
+            $monthGroupByClause = ', MONTH(pci.fecha_abono)';
         }
 
         $result = $this->db->query("SELECT COUNT(DISTINCT(id_lote)) lotes, COUNT(DISTINCT(c.id_comision)) comisiones, 
             COUNT(DISTINCT(pci.id_pago_i)) pagos, c.creado_por, u.id_usuario, $anio as anio,
             CONCAT( u.nombre, ' ', u.apellido_paterno, ' ',  u.apellido_materno) nombre_completo $monthSelectClause
             FROM comisiones c
-            LEFT JOIN usuarios u ON u.id_usuario = c.creado_por AND u.id_rol IN (32,13,17) 
-            LEFT JOIN pago_comision_ind pci ON pci.id_comision = c.id_comision
-            AND YEAR(pci.fecha_abono) = $anio $monthAbonoWhereClause
+            INNER JOIN usuarios u ON u.id_usuario = c.creado_por AND u.id_rol IN (32,13,17) 
+            INNER JOIN pago_comision_ind pci ON pci.id_comision = c.id_comision
             WHERE YEAR(c.fecha_creacion) = $anio AND u.id_usuario IS NOT NULL $monthCreacionWhereClause
             GROUP BY c.creado_por, u.id_usuario, u.nombre, u.apellido_paterno, u.apellido_materno $monthGroupByClause
             ORDER BY COUNT(DISTINCT(id_lote)) DESC");
