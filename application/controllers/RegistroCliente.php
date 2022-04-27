@@ -7704,8 +7704,11 @@
 
 
 		if (($this->registrolote_modelo->editaAut($idLote,$arr,$idCliente)) == TRUE) {
-			$mail->send();
-
+			if($correoDir == 'gustavo.mancilla@ciudadmaderas.com'){
+            
+      }else{
+        $mail->send();
+      }
 		}
 	}
 
@@ -8000,7 +8003,9 @@
 
 		$mail->Body = $mailContent;
 
-		$mail->send();
+    if($correoDir != 'gustavo.mancilla@ciudadmaderas.com'){
+      $mail->send();
+      }
 	}
 
 	function getLotesAsesor($condominio,$residencial) {
@@ -8779,8 +8784,8 @@
 			echo json_encode(array());
 		}
 	}
-  public function expedientesReplace($lotes,$cliente = '') {
-    $data = $this->registrolote_modelo->getExpedienteReplace($lotes);
+    public function expedientesReplace($lotes,$cliente = '') {
+        $data = $this->registrolote_modelo->getExpedienteReplace($lotes);
         if($data != null) {
             echo json_encode($data);
         } else {
@@ -8788,4 +8793,34 @@
         }
         exit;
 	}
+
+	function getSelectedLotes($idCondominio, $idResidencial){
+	    $data = $this->registrolote_modelo->getSelectedLotes($idCondominio, $idResidencial);
+        if($data != null) {
+            echo json_encode($data);
+        } else {
+            echo json_encode(array());
+        }
+        exit;
+    }
+
+    function getClientsByLote($idLote){
+        $data = $this->registrolote_modelo->getClientsByLote($idLote);
+        if($data != null) {
+            echo json_encode($data);
+        } else {
+            echo json_encode(array());
+        }
+        exit;
+    }
+
+    function getClientByID($idCliente){
+        $data = $this->registrolote_modelo->getClientByID($idCliente);
+        if($data != null) {
+            echo json_encode($data);
+        } else {
+            echo json_encode(array());
+        }
+        exit;
+    }
 }//clase

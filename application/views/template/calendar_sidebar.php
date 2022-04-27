@@ -5,8 +5,9 @@
         <a id="minimizeSidecalendar" class="closeCalendar">
             <i class="fas fa-times"></i>
         </a>
-    </div>    
-	<div id="side-calendar"></div>
+    </div>
+      <div class="container-fluid p-0">	<div id="side-calendar"></div>
+</div>
 </div>
 
 <div class="modal fade" id="modalEventConsulta" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
@@ -30,7 +31,7 @@
                             <label class="label-gral">Tipo de cita</label>
                             <select class="selectpicker select-gral m-0" name="estatus_recordatorio2" id="estatus_recordatorio3" data-style="btn" data-show-subtext="true" data-live-search="true" title="Seleccione una opción" data-size="7" required disabled></select>
                         </div>
-                        <div class="col-lg-12 form-group m-0 hide" id="comodinDIV2">
+                        <div class="col-lg-12 form-group m-0 hide" id="">
                         </div>
                         <div class="col-lg-12 form-group m-0">
                             <label class="label-gral">Fecha de cita</label>
@@ -60,3 +61,6 @@
     typeTransaction = 1;
     base_url = "<?=base_url()?>";
 </script>
+<script src="<?=base_url()?>dist/js/controllers/calendar/general_calendar.js"></script>
+
+

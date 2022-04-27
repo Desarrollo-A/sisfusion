@@ -1,6 +1,9 @@
 <link href="<?= base_url() ?>dist/css/commonModals.css" rel="stylesheet"/>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
 
+<style>
+    
+</style>
 <div class="modal fade" id="modalEvent" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
     
     <div class="modal-dialog">
@@ -8,36 +11,59 @@
             <div class="modal-header mb-1 d-flex justify-between">
                 <h3 class="modal-title">Detalles de la cita</h3>
                 <?php if ($this->session->userdata('id_rol') != '2' && $this->session->userdata('id_rol') != '3') { ?>
-                <button type="button" class="close" aria-hidden="true" onclick="deleteCita()">
-                    <i class="fas fa-trash-alt fa-3x"></i>
-                </button>
+                <div class="dropdown">
+                    <button class="" type="button" id="menuModal" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="background-color: transparent; border:none; color: #999"><i class="fas fa-ellipsis-v"></i></button>
+                    <ul class="dropdown-menu dropdown-menu-right p-0" aria-labelledby="menuModal">
+                        <li><a class="m-0" onclick="finalizarCita()">Finalizar evento</a></li>
+                        <li><a class="m-0" onclick="deleteCita()">Eliminar evento</a></li>
+                        <li><a class="m-0" data-dismiss="modal" style="border-top: 1px solid #eaeaea;">Cerrar ventana</a></li>
+                    </ul>
+                </div>
                 <?php } ?>
             </div>
             <div class="modal-body">
                 <form id="edit_appointment_form" name="edit_appointment_form" method="post">
                     <div class="container-fluid p-0">
-                        <div class="col-lg-12 form-group m-0">
+                        <div class="col-lg-1 form-group m-0 pr-0">
+                            <i class="fas fa-font iconMod fa-lg"></i>
+                        </div>
+                        <div class="col-lg-11 form-group m-0">
                             <label class="label-gral">Titulo</label>
                             <input id="evtTitle2" name="evtTitle" type="text" class="form-control input-gral">
                         </div>
-                        <div class="col-lg-12 form-group m-0 overflow-hidden">
-                            <label class="label-gral">Prospectos</label>
-                            <select class="selectpicker select-gral m-0" id="prospectoE" name="prospectoE" data-style="btn" data-show-subtext="true" data-live-search="true" title="Seleccione un prospecto" data-size="7" data-container="body"></select>
+                        <div class="col-lg-1 form-group m-0 pr-0">
+                            <i class="fas fa-user iconMod fa-lg"></i>
                         </div>
-                        <div class="col-lg-12 form-group m-0">
+                        <div class="col-lg-11 form-group m-0 overflow-hidden">
+                            <label class="label-gral">Prospecto</label>
+                            <input id="textProspecto" name="textProspecto" type="text" class="form-control input-gral" disabled>
+                            <input id="prospectoE" name="prospectoE" type="text" class="form-control input-gral d-none">
+                        </div>
+                        <div class="col-lg-1 form-group m-0 pr-0">
+                            <i class="fas fa-pencil-alt iconMod fa-lg"></i>
+                        </div>
+                        <div class="col-lg-11 form-group m-0">
                             <label class="label-gral">Tipo de cita</label>
                             <select class="selectpicker select-gral m-0" name="estatus_recordatorio2" id="estatus_recordatorio2" data-style="btn" data-show-subtext="true" data-live-search="true" title="Seleccione una opción" data-size="7" required></select>
                         </div>
-                        <div class="col-lg-12 form-group m-0 hide" id="comodinDIV2">
+                        <div class="col-lg-1 form-group m-0 pr-0">
                         </div>
-                        <div class="col-lg-12 form-group m-0">
+                        <div class="col-lg-11 form-group m-0 hide" id="comodinDIV2">
+                        </div>
+                        <div class="col-lg-1 form-group m-0 pr-0">
+                            <i class="fas fa-clock iconMod fa-lg"></i>
+                        </div>
+                        <div class="col-lg-11 form-group m-0">
                             <label class="label-gral">Fecha de cita</label>
                             <div class="d-flex">
                                 <input id="dateStart2" name="dateStart" type="datetime-local" class="form-control beginDate w-50 text-left pl-1">
                                 <input id="dateEnd2" name="dateEnd" type="datetime-local" class="form-control endDate w-50 pr-1">
                             </div>
                         </div>
-                        <div class="col-lg-12 form-group m-0">
+                        <div class="col-lg-1 form-group m-0 pr-0">
+                            <i class="fas fa-align-left iconMod fa-lg"></i>
+                        </div>
+                        <div class="col-lg-11 form-group m-0">
                             <label class="label-gral">Descripción</label>
                             <textarea class="text-modal" class="form-control" type="text" name="description" id="description2" onkeyup="javascript:this.value=this.value.toUpperCase();"></textarea>
                         </div>
@@ -120,7 +146,7 @@
                     <label class="label-gral">Tipo de cita</label>
                     <select class="selectpicker select-gral m-0" id="prospectoE" name="prospectoE" data-style="btn" data-show-subtext="true" data-live-search="true" tutle="Seleccione una opción" data-size="7" disabled></select>
                 </div>
-                <div class="col-lg-12 form-group m-0 hide" id="comodinDIV2"></div>
+                <div class="col-lg-12 form-group m-0 comodinDIV2 hide"></div>
                 <div class="col-lg-12 form-group m-0">
                     <label class="label-gral">Decha de cita</label>
                     <div class="d-flex">

@@ -842,7 +842,8 @@ class Asesor_model extends CI_Model
 		
 		WHERE 
 		
-		           idStatusContratacion = 1 AND idMovimiento = 31 and cl.status = 1 AND cl.id_asesor = " . $this->session->userdata('id_usuario') . "
+		        cl.id_coordinador != 2562 AND
+		        idStatusContratacion = 1 AND idMovimiento = 31 and cl.status = 1 AND cl.id_asesor = " . $this->session->userdata('id_usuario') . "
 				OR idStatusContratacion = 2 AND idMovimiento = 85 and cl.status = 1 AND cl.id_asesor = " . $this->session->userdata('id_usuario') . "
 				OR idStatusContratacion = 1 and idMovimiento = 20 and cl.status = 1 AND cl.id_asesor = " . $this->session->userdata('id_usuario') . "
 				OR idStatusContratacion = 1 and idMovimiento = 63 and cl.status = 1 AND cl.id_asesor = " . $this->session->userdata('id_usuario') . "

@@ -47,25 +47,27 @@ class Calendar extends CI_Controller {
     }
 
     public function updateAppointmentData(){
+        $objDatos = json_decode(file_get_contents("php://input"));
         $a = 0;
         $data = array(
-            "medio" => $this->input->post("estatus_recordatorio2"),
-            "fecha_cita" => str_replace("T", " ", $this->input->post("dateStart")),
-            "titulo" => $this->input->post("evtTitle"),
-            "fecha_final" => str_replace("T", " ", $this->input->post("dateEnd")),
-            "id_direccion" => $this->input->post("id_direccion") ? $this->input->post("id_direccion"):null,
-            "direccion" => $this->input->post("direccion") ? $this->input->post("direccion"):null,
-            "descripcion" => $this->input->post("description") == '' ? null:$this->input->post("description"),
-        );
+            "medio" => $objDatos->estatus_recordatorio2,
+            "fecha_cita" => $objDatos->dateStart,
+            "titulo" => $objDatos->evtTitle,
+            "fecha_final" => str_replace("T", " ", $objDatos->dateEnd),
+            "id_direccion" => isset($objDatos->id_direccion) ? $objDatos->id_direccion :null,
+            "direccion" => isset($objDatos->direccion) ? $objDatos->direccion :null,
+            "descripcion" => $objDatos->description == '' ? null:$objDatos->description,
+            "idGoogle" => isset($objDatos->inserted) ? $objDatos->inserted:null
 
-        $response = $this->General_model->updateRecord('agenda', $data, 'id_cita',  $this->input->post("idAgenda"));
+        );
+        $response = $this->General_model->updateRecord('agenda', $data, 'id_cita',  $objDatos->idAgenda);
 
         if($response){
-            if(isset($_POST['telefono2'])){
+            if(isset($objDatos->telefono2)){
                 $dataN = array(
-                    "telefono_2" => $this->input->post("telefono2"),
+                    "telefono_2" => $objDatos->telefono2,
                 );
-                $responseN = $this->General_model->updateRecord('prospectos', $dataN, 'id_prospecto',  $this->input->post("prospectoE"));
+                $responseN = $this->General_model->updateRecord('prospectos', $dataN, 'id_prospecto',  $objDatos->prospectoE);
 
                 if($responseN)
                     echo json_encode(array("status" => 200, "message" => "Se ha actualizado el recordatorio y dato del prospecto correctamente."));
@@ -102,7 +104,7 @@ class Calendar extends CI_Controller {
             "id_direccion" => isset($objDatos->id_direccion) ? $objDatos->id_direccion :null,
             "direccion" => isset($objDatos->direccion) ? $objDatos->direccion :null,
             "descripcion" => $objDatos->description,
-            "idGoogle" => $objDatos->idGoogle
+            "idGoogle" => isset($objDatos->idGoogle) ? $objDatos->idGoogle:null
         );
 
         $response = $this->General_model->addRecord('agenda', $data);

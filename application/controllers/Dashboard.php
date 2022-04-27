@@ -102,5 +102,15 @@ class Dashboard extends CI_Controller
         }
     }
 
-
+    public function dashboard()
+    {
+        if ($this->session->userdata('id_rol') == FALSE) {
+            redirect(base_url());
+        }
+        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
+        $this->load->view('template/header');
+        $this->load->view("dashboard/dashboard", $datos);
+    }
 }
+
+

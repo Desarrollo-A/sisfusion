@@ -3,6 +3,7 @@
     use PhpOffice\PhpSpreadsheet\Spreadsheet;
     use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
+
 class Corrida extends CI_Controller {
 
 	public function __construct(){
@@ -547,7 +548,6 @@ class Corrida extends CI_Controller {
 
 		$pdf = new TCPDF('P', 'mm', 'LETTER', 'UTF-8', false);
 
-
 $pdf->SetCreator(PDF_CREATOR);
 $pdf->SetAuthor('Ciudad Maderas');
 $pdf->SetTitle('Corrida Financiera');
@@ -558,10 +558,10 @@ $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
 $pdf->setPrintHeader(false);
 $pdf->setPrintFooter(false);
 $pdf->setFontSubsetting(true);
-$pdf->SetFont('Helvetica', '', 10, '', true);
+$pdf->SetFont('Open Sans', '', 10, '', true);
 // $pdf->SetMargins(15, 20, 15, true);
 $pdf->AddPage('P', 'LEGAL');
-$pdf->SetFont('Helvetica', '', 5, '', true);
+$pdf->SetFont('Open Sans', '', 5, '', true);
 $pdf->SetFooterMargin(0);
 $bMargin = $pdf->getBreakMargin();
 $auto_page_break = $pdf->getAutoPageBreak();
@@ -577,7 +577,7 @@ $html = '
 
 
 legend {
-    background-color: #296D5D;
+    background-color: #103f75;
     color: #fff;
     padding: 3px 6px;
 }
@@ -594,8 +594,8 @@ legend {
 				<div class="box-body">
                       <table width="100%" style="height: 45px; border: 1px solid #ddd;" width="690">
 						<tr>
-							<td colspan="2" align="left"><img src="https://www.ciudadmaderas.com/assets/img/logo.png" style=" max-width: 70%; height: auto;"></td>
-							<td colspan="2" align="right"><b style="font-size: 3em; "> CORRIDA FINANCIERA<BR></b><small style="font-size: 2.5em; color: #777;"> Ciudad Maderas</small> 
+							<td colspan="2" align="left"><img src="https://maderascrm.gphsis.com/static/images/logo_ciudadmaderasAct.jpg" style=" max-width: 70%; height: auto;"></td>
+							<td colspan="2" align="right"><b style="font-size: 3em; "> CORRIDA FINANCIERA<BR></b><small style="font-size: 2.5em; color: #777;"> </small> 
 							</td>
 						</tr>
 					</table>
@@ -603,7 +603,7 @@ legend {
 					<br><br>
                       <table width="100%" style="height: 45px; border: 1px solid #ddd;" width="690">
 						<tr>
-							<td colspan="2" style="background-color: #296D5D;color: #fff;padding: 3px 6px; "><b style="font-size: 2em; ">Información general</b>
+							<td colspan="2" style="background-color: #103f75;color: #fff;padding: 3px 6px; "><b style="font-size: 2em; ">Información general</b>
 							</td>
 						</tr>
 					</table>							
@@ -709,7 +709,7 @@ legend {
                         
                       <table width="100%" style="height: 45px; border: 1px solid #ddd;" width="690">
 						<tr>
-							<td colspan="2" style="background-color: #296D5D;color: #fff;padding: 3px 6px; "><b style="font-size: 2em; ">Descuentos</b>
+							<td colspan="2" style="background-color: #103f75;color: #fff;padding: 3px 6px; "><b style="font-size: 2em; ">Descuentos</b>
 							</td>
 						</tr>
 					</table>							
@@ -749,6 +749,9 @@ legend {
 							  if ($row['id_condicion'] == 7){
 							  $html .='Enganche diferido sin descontar MSI';
 							  }
+                              if ($row['id_condicion'] == 12){
+                                  $html .='Bono ('.money_format('%(#10n',$row['porcentaje']).') de descuento al m2';
+                              }
 							   
 							  
 							  $html .='</b></td>
@@ -766,7 +769,7 @@ legend {
                         
                       <table width="100%" style="height: 45px; border: 1px solid #ddd;" width="690">
 						<tr>
-							<td colspan="2" style="background-color: #296D5D;color: #fff;padding: 3px 6px; "><b style="font-size: 2em; ">Enganche diferido</b>
+							<td colspan="2" style="background-color: #103f75;color: #fff;padding: 3px 6px; "><b style="font-size: 2em; ">Enganche diferido</b>
 							</td>
 						</tr>
 					</table>							
@@ -815,7 +818,7 @@ legend {
 					<br><br>
                       <table width="100%" style="height: 45px; border: 1px solid #ddd;" width="690">
 						<tr>
-							<td colspan="2" style="background-color: #296D5D;color: #fff;padding: 3px 6px; "><b style="font-size: 2em; ">Enganche y mensualidades</b>
+							<td colspan="2" style="background-color: #103f75;color: #fff;padding: 3px 6px; "><b style="font-size: 2em; ">Enganche y mensualidades</b>
 							</td>
 						</tr>
 					</table>							
@@ -859,7 +862,7 @@ legend {
 					<br><br>
                       <table width="100%" style="height: 45px; border: 1px solid #ddd;" width="690">
 						<tr>
-							<td colspan="2" style="background-color: #296D5D;color: #fff;padding: 3px 6px; "><b style="font-size: 2em; ">Datos Bancarios</b>
+							<td colspan="2" style="background-color: #103f75;color: #fff;padding: 3px 6px; "><b style="font-size: 2em; ">Datos Bancarios</b>
 							</td>
 						</tr>
 					</table>							
@@ -1293,7 +1296,7 @@ legend {
                       <table width="100%" style="height: 45px; border: 1px solid #ddd;" width="690">
 						<tr>
 							<td colspan="2" align="left"><img src="https://www.ciudadmaderas.com/assets/img/logo.png" style=" max-width: 70%; height: auto;"></td>
-							<td colspan="2" align="right"><b style="font-size: 3em; "> CORRIDA FINANCIERA<BR></b><small style="font-size: 2.5em; color: #777;"> Ciudad Maderas</small> 
+							<td colspan="2" align="right"><b style="font-size: 3em; "> CORRIDA FINANCIERA<BR></b><small style="font-size: 2.5em; color: #777;"></small> 
 							</td>
 						</tr>
 					</table>
@@ -1453,6 +1456,9 @@ legend {
 							  if ($row['id_condicion'] == 7){
 							  $html .='Enganche diferido sin descontar MSI';
 							  }
+                              if ($row['id_condicion'] == 12){
+                                  $html .='Bono ('.money_format('%(#10n',$row['porcentaje']).') de descuento al m2';
+                              }
 							  
 							  
 							  $html .='</b></td>
@@ -1915,7 +1921,7 @@ $pdf->Output(utf8_decode($namePDF), 'I');
 
         #set values
         $sheet->setCellValue('D5', $data_corrida->nombreCondominio);
-        $sheet->setCellValue('E5', $data_corrida->id_lote);
+        $sheet->setCellValue('E5', abs((int) filter_var(substr($data_corrida->nombreLote, -3), FILTER_SANITIZE_NUMBER_INT)));
         $sheet->setCellValue('F5', $data_corrida->superficie);
         $sheet->setCellValue('G5', $data_corrida->preciom2);
         $sheet->getStyle('G5')->getNumberFormat()->setFormatCode(PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_CURRENCY_USD_SIMPLE);
