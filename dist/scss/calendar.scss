@@ -77,11 +77,25 @@
     font-size: 3rem;
     z-index: 1;
 }
-
-.iconMod{
-  color: #999;
+#feedbackModal{
+  .radio-with-Icon{
+    input[type="radio"]:checked ~ label i{
+      color: $deepGray;
+    }
+    i{
+      color: $platinum;
+      &:hover{
+        color: $deepGray;
+      }
+    }
+  }
 }
-
+.iconMod{
+  color: $platinumScroll;
+}
+.evtAbierto{
+  border-left: 4px solid green!important;
+}
 .visible-on-sidebar-calendar {
     display: none !important;
   }

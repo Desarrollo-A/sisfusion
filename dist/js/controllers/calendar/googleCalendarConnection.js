@@ -28,7 +28,7 @@
       // Handle the initial sign-in state.
       updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
     }, function(error) {
-      console.log(error);
+      console.error(error);
     });
   }
 
