@@ -991,6 +991,42 @@ function update_estatus(){
       }
   }
 
+    public function cambiarEstatusComisiones()
+    {
+        $idPagos = explode(',', $this->input->post('idPagos'));
+        $userId = $this->session->userdata('id_usuario');
+        $estatus = $_POST['estatus'];
+        $comentario = $_POST['comentario'];
+        $historiales = array();
+
+        foreach($idPagos as $pago) {
+            $historiales[] = array(
+                'id_pago_i' => $pago,
+                'id_usuario' =>  $userId,
+                'fecha_movimiento' => date('Y-m-d H:i:s'),
+                'estatus' => 1,
+                'comentario' => $comentario
+            );
+        }
+
+        $resultUpdate = $this->Comisiones_model->massiveUpdateEstatusComisionInd(implode(',', $idPagos), $estatus);
+        $resultMassiveInsert = $this->Comisiones_model->insert_phc($historiales);
+
+        echo ($resultUpdate && $resultMassiveInsert);
+    }
+
+    public function getUsersName()
+    {
+        $result = $this->Comisiones_model->getUsersName();
+        echo json_encode($result);
+    }
+
+    public function getPuestoByIdOpts()
+    {
+        $result = $this->Comisiones_model->getPuestoByIdOpts('3,7,9');
+        echo json_encode($result);
+    }
+
   public function acepto_comisiones_contra(){
     $this->load->model("Comisiones_model");
     $sol=$this->input->post('idcomision');  
@@ -5803,18 +5839,19 @@ public function saveTipoVenta(){
       echo json_encode($this->Comisiones_model->get_lista_estatus($proyecto)->result_array());
 }
 
-public function getDatosHistorialPagoEstatus($proyecto,$condominio){
+    public function getDatosHistorialPagoEstatus($proyecto, $condominio, $usuario)
+    {
 
-  ini_set('max_execution_time', 900);
-      set_time_limit(900);
-      ini_set('memory_limit','2048M');
+        ini_set('max_execution_time', 900);
+        set_time_limit(900);
+        ini_set('memory_limit','2048M');
 
-      
-  $dat =  $this->Comisiones_model->getDatosHistorialPagoEstatus($proyecto,$condominio)->result_array();
- for( $i = 0; $i < count($dat); $i++ ){
-     $dat[$i]['pa'] = 0;
- }
- echo json_encode( array( "data" => $dat));
+        $dat =  $this->Comisiones_model->getDatosHistorialPagoEstatus($proyecto, $condominio, $usuario)->result_array();
+        for( $i = 0; $i < count($dat); $i++ ){
+            $dat[$i]['pa'] = 0;
+        }
+
+        echo json_encode( array( "data" => $dat));
 }
 
 
@@ -6577,6 +6614,46 @@ for ($d=0; $d <count($dos) ; $d++) {
     {
       $res["data"] = $this->Comisiones_model->getDescuentosLiquidados()->result_array();
       echo json_encode($res);
+    }
+
+    public function getTotalPagoFaltanteUsuario($usuarioId)
+    {
+        $data = $this->Comisiones_model->getTotalPagoFaltanteUsuario($usuarioId);
+        echo json_encode($data);
+    }
+
+    public function reactivarPago()
+    {
+        $idDescuento = $_POST['id_descuento'];
+        $fechaActivacion = strtotime($_POST['fecha']);
+        $diaActivacion = date('d', $fechaActivacion);
+        $mesActivacion = date('m', $fechaActivacion);
+        $anioActivacion = date('Y', $fechaActivacion);
+        $mesActual = date('m');
+        $anioActual = date('Y');
+
+        if ($diaActivacion >= 1 && $diaActivacion <= 5) {
+            if ($mesActivacion === $mesActual) {
+                if ($anioActivacion === $anioActual) {
+                    $result = $this->Comisiones_model->updatePagoReactivadoMismoDiaMes($idDescuento,
+                        date('Y-m-d H:i:s', $fechaActivacion));
+                } else {
+                    $result = $this->Comisiones_model->updatePagoReactivadoFechaDiferente($idDescuento,
+                        date('Y-m-d H:i:s', $fechaActivacion));
+                }
+            } else {
+                $result = $this->Comisiones_model->updatePagoReactivadoFechaDiferente($idDescuento,
+                    date('Y-m-d H:i:s', $fechaActivacion));
+            }
+        } else if ($mesActivacion === $mesActual) {
+            $result = $this->Comisiones_model->updatePagoReactivadoMismoMes($idDescuento,
+                date('Y-m-d H:i:s', $fechaActivacion));
+        } else {
+            $result = $this->Comisiones_model->updatePagoReactivadoFechaDiferente($idDescuento,
+                date('Y-m-d H:i:s', $fechaActivacion));
+        }
+
+        echo json_encode($result);
     }
 
     public function AddEmpresa(){
