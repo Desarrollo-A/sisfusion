@@ -2141,12 +2141,12 @@ ORDER BY hc.fecha_movimiento DESC");
  {
 
     $this->db->query("SET LANGUAGE Español;");
-    return $this->db->query("SELECT  pci.abono_neodata comentario, pci.id_pago_i, pci.modificado_por, 
+    return $this->db->query("SELECT  pci.abono_neodata comentario, pci.id_pago_i, pci.creado_por, 
     convert(nvarchar(20), pci.fecha_abono, 113) date_final,
     pci.fecha_abono,
     CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombre_usuario, du.saldo_comisiones
     FROM pago_comision_ind pci  
-    INNER JOIN usuarios u ON u.id_usuario = pci.modificado_por 
+    INNER JOIN usuarios u ON u.id_usuario = pci.creado_por 
     LEFT JOIN descuentos_universidad du ON du.id_usuario = u.id_usuario
     WHERE pci.estatus = 17 AND pci.id_usuario = $user
     ORDER BY pci.fecha_abono DESC");
@@ -4441,7 +4441,7 @@ function getDescuentos(){
     INNER JOIN comisiones co ON co.id_comision = pci.id_comision
     INNER JOIN lotes lo ON lo.idLote = co.id_lote
     LEFT JOIN historial_comisiones hc ON hc.id_pago_i = pci.id_pago_i AND hc.comentario like 'MOTIVO DESCUENTO%'
-    INNER JOIN usuarios us2 ON us2.id_usuario = pci.modificado_por
+    INNER JOIN usuarios us2 ON us2.id_usuario = pci.creado_por
     WHERE (pci.estatus = 0 ) AND pci.descuento_aplicado = 1");
 }
 function getDescuentos2(){
@@ -4453,7 +4453,7 @@ function getDescuentos2(){
     INNER JOIN comisiones co ON co.id_comision = pci.id_comision
     INNER JOIN lotes lo ON lo.idLote = co.id_lote
     LEFT JOIN historial_comisiones hc ON hc.id_pago_i = pci.id_pago_i AND hc.comentario like '%MOTIVO DESCUENTO%'
-    INNER JOIN usuarios us2 ON us2.id_usuario = pci.modificado_por
+    INNER JOIN usuarios us2 ON us2.id_usuario = pci.creado_por
     WHERE (pci.estatus = 17) AND pci.descuento_aplicado = 1");
 }
 
@@ -4514,7 +4514,7 @@ function getHistorialDescuentos($proyecto,$condominio){
     INNER JOIN condominios con ON con.idCondominio = lo.idCondominio
     INNER JOIN residenciales re ON re.idResidencial = con.idResidencial
     INNER JOIN historial_comisiones hc ON hc.id_pago_i = pci.id_pago_i  
-    INNER JOIN usuarios us2 ON us2.id_usuario = pci.modificado_por
+    INNER JOIN usuarios us2 ON us2.id_usuario = pci.creado_por
     WHERE pci.estatus IN(0,11,16) and pci.comentario='DESCUENTO' AND pci.descuento_aplicado IN(1) AND re.idResidencial = $proyecto AND (hc.comentario like 'MOTIVO DESCUENTO%' OR hc.comentario like 'MÓTIVO DESCUENTO%')
 	group by pci.id_pago_i,us.nombre,us.apellido_paterno,us.apellido_materno,pci.abono_neodata,lo.nombreLote, hc.comentario,us2.nombre,us2.apellido_paterno,us2.apellido_materno,pci.fecha_abono, pci.estatus");
 }
@@ -4527,7 +4527,7 @@ else{
     INNER JOIN condominios con ON con.idCondominio = lo.idCondominio
     INNER JOIN residenciales re ON re.idResidencial = con.idResidencial
     INNER JOIN historial_comisiones hc ON hc.id_pago_i = pci.id_pago_i 
-    INNER JOIN usuarios us2 ON us2.id_usuario = pci.modificado_por
+    INNER JOIN usuarios us2 ON us2.id_usuario = pci.creado_por
      WHERE pci.estatus IN(0,11,16) and pci.comentario='DESCUENTO' AND pci.descuento_aplicado IN(1) AND con.idCondominio = $condominio AND (hc.comentario like 'MOTIVO DESCUENTO%' OR hc.comentario like 'MÓTIVO DESCUENTO%')
 	group by pci.id_pago_i,us.nombre,us.apellido_paterno,us.apellido_materno,pci.abono_neodata,lo.nombreLote, hc.comentario,us2.nombre,us2.apellido_paterno,us2.apellido_materno,pci.fecha_abono, pci.estatus");
 
@@ -4545,7 +4545,7 @@ function getHistorialRetiros($proyecto,$condominio){
         INNER JOIN condominios con ON con.idCondominio = lo.idCondominio 
         INNER JOIN residenciales re ON re.idResidencial = con.idResidencial 
         LEFT JOIN historial_comisiones hc ON hc.id_pago_i = pci.id_pago_i AND hc.comentario like '%MOTIVO DESCUENTO%' 
-        INNER JOIN usuarios us2 ON us2.id_usuario = pci.modificado_por 
+        INNER JOIN usuarios us2 ON us2.id_usuario = pci.creado_por 
         WHERE pci.estatus IN(100,12) AND pci.descuento_aplicado = 1 AND re.idResidencial = $proyecto");
         }
         else{
@@ -4557,7 +4557,7 @@ function getHistorialRetiros($proyecto,$condominio){
             INNER JOIN condominios con ON con.idCondominio = lo.idCondominio 
             INNER JOIN residenciales re ON re.idResidencial = con.idResidencial 
             LEFT JOIN historial_comisiones hc ON hc.id_pago_i = pci.id_pago_i AND hc.comentario like '%MOTIVO DESCUENTO%' 
-            INNER JOIN usuarios us2 ON us2.id_usuario = pci.modificado_por 
+            INNER JOIN usuarios us2 ON us2.id_usuario = pci.creado_por 
             WHERE pci.estatus IN(100,12) AND pci.descuento_aplicado = 1 AND con.idCondominio = $condominio");
             }
         }
