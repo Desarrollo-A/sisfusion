@@ -27,15 +27,12 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true" onclick="cleanSelects()">
-                    <i class="material-icons">clear</i>
-                </button>
                 <h4 class="modal-title">¿Qué estatus asignarás a este prospecto?</h4>
             </div>
             <form id="my_update_status_form" name="my_update_status_form" method="post">
                 <div class="col-lg-12 form-group">
                     <label>Estatus</label>
-                    <select class="selectpicker" name="estatus_particular" id="estatus_particular" data-style="select-with-transition" title="Seleccione una opción" data-size="7"></select>
+                    <select class="selectpicker select-gral" name="estatus_particular" id="estatus_particular" data-style="select-with-transition" title="Seleccione una opción" data-size="7"></select>
                 </div>
                 <input type="hidden" name="id_prospecto_estatus_particular" id="id_prospecto_estatus_particular">
                 <div class="modal-footer">
