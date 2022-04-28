@@ -2287,7 +2287,7 @@ gerente2.nombreGerente as gerente2, gerente3.nombreGerente as gerente3, gerente4
         /*
         $this->db->join('usuarios as us', 'cl.id_asesor=us.id_usuario', 'INNER');
         $this->db->join('usuarios as ge', 'ge.id_usuario=us.id_lider ', 'INNER');*/
-		$this->db->select(" lotes.idLote, cl.id_cliente, cl.nombre, cl.apellido_paterno, cl.apellido_materno, lotes.nombreLote, 
+		$this->db->select(" lotes.idLote, s.nombre AS nombreSede, cl.id_cliente, cl.nombre, cl.apellido_paterno, cl.apellido_materno, lotes.nombreLote, 
 		lotes.idStatusContratacion, lotes.idMovimiento, lotes.modificado, CAST(lotes.comentario AS varchar(MAX)) as comentario, 
 		fechaVenc, lotes.perfil, residencial.nombreResidencial, cond.nombre as nombreCondominio, lotes.ubicacion, lotes.tipo_venta,
 		lotes.fechaSolicitudValidacion, lotes.firmaRL, lotes.validacionEnganche, cl.fechaApartado,
@@ -2296,6 +2296,7 @@ gerente2.nombreGerente as gerente2, gerente3.nombreGerente as gerente3, gerente4
 
 
 		$this->db->join('clientes as cl', 'lotes.idLote=cl.idLote', 'INNER');
+        $this->db->join('sedes AS s', 's.id_sede = cl.id_sede');
 		$this->db->join('condominios as cond', 'lotes.idCondominio=cond.idCondominio', 'INNER');
 		$this->db->join('residenciales as residencial', 'cond.idResidencial=residencial.idResidencial', 'INNER');
 
@@ -2306,7 +2307,7 @@ gerente2.nombreGerente as gerente2, gerente3.nombreGerente as gerente3, gerente4
 
 		$this->db->where('cl.status=1 AND lotes.idStatusContratacion <> 15 AND lotes.idMovimiento <> 45 AND cl.status=1');
 
-		$query  = $this->db->group_by("lotes.idLote, cl.id_cliente, cl.nombre, cl.apellido_materno, cl.apellido_paterno,
+		$query  = $this->db->group_by("lotes.idLote, s.nombre, cl.id_cliente, cl.nombre, cl.apellido_materno, cl.apellido_paterno,
 			lotes.nombreLote, lotes.idStatusContratacion, lotes.idMovimiento, lotes.modificado,
 			lotes.modificado, CAST(lotes.comentario AS varchar(MAX)), lotes.fechaVenc, lotes.perfil,
 			residencial.nombreResidencial, cond.nombre, lotes.ubicacion, lotes.tipo_venta,
