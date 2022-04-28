@@ -5901,6 +5901,7 @@
 		{
 			$datos[$i]['referencia'] = $data[$i]->referencia;
 			$datos[$i]['idLote'] = $data[$i]->idLote;
+            $datos[$i]['nombreSede'] = $data[$i]->nombreSede;
 			$datos[$i]['id_cliente'] = $data[$i]->id_cliente;
 			$datos[$i]['nombreLote'] = $data[$i]->nombreLote;
 			$datos[$i]['idStatusContratacion'] = $data[$i]->idStatusContratacion;
@@ -16134,6 +16135,7 @@ tr td:hover { background: #666; color: #FFF; }
 			{
 					$datos[$i]['referencia'] = $data[$i]->referencia;
 					$datos[$i]['idLote'] = $data[$i]->idLote;
+                    $datos[$i]['nombreSede'] = $data[$i]->nombreSede;
 					$datos[$i]['id_cliente'] = $data[$i]->id_cliente;
 					$datos[$i]['fechaApartado'] = ($data[$i]->fechaApartado!=null || $data[$i]->fechaApartado!="")?$data[$i]->fechaApartado : "N/A";
 					$datos[$i]['nombreLote'] = $data[$i]->nombreLote;

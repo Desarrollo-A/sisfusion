@@ -68,7 +68,6 @@
       }
     }
     .fc-daygrid-day-frame{
-      height: 145px;
       padding: 3px;
     }
   }
@@ -77,6 +76,22 @@
     cursor: pointer;
     font-size: 3rem;
     z-index: 1;
+}
+#feedbackModal{
+  .radio-with-Icon{
+    input[type="radio"]:checked ~ label i{
+      color: $deepGray;
+    }
+    i{
+      color: $platinum;
+      &:hover{
+        color: $deepGray;
+      }
+    }
+  }
+}
+.iconMod{
+  color: $platinumScroll;
 }
 
 .visible-on-sidebar-calendar {

@@ -28,10 +28,16 @@
 				<div class="modal-content">
 					<div class="modal-header bg-red">
 						<button type="button" class="close" data-dismiss="modal">&times;</button>
-						<h4 class="modal-title">PRESTAMOS</h4>
+						<h4 class="modal-title">PRÉSTAMOS Y PENALIZACIONES</h4>
 					</div>
 					<form method="post" id="form_prestamos">
 						<div class="modal-body">
+						<div class="form-group">
+								<label class="label">Tipo descuento</label>
+								<select class="selectpicker" name="tipo" id="tipo" required>
+								<option value="">----Seleccionar-----</option>
+								</select>
+							</div>
 							<div class="form-group">
 								<label class="label">Puesto del usuario</label>
 								<select class="selectpicker" name="roles" id="roles" required>
@@ -58,7 +64,7 @@
 								</div>
 							</div>
 							<div class="form-group">
-								<label class="label">Comentario</label>
+								<label class="label">Comentario</label><b id="texto" style="font-size:12px;"></b>
 								<textarea id="comentario" name="comentario" required class="form-control" rows="3"></textarea>
 							</div>
 
@@ -105,7 +111,7 @@
 								<i class="material-icons">dashboard</i>
                             </div>
 							<div class="card-content">
-								<h3 class="card-title center-align">Préstamos</h3>
+								<h3 class="card-title center-align">Préstamos y penalizaciones</h3>
 								<div class="toolbar">
                                     <div class="container-fluid p-0">
                                         <div class="row">
@@ -132,12 +138,13 @@
 														<th>ID USUARIO</th>
 														<th>USUARIO</th>
 														<th>MONTO</th>
-														<th>NUM. PAGOS</th>
+														<th>NÚM. PAGOS</th>
 														<th>PAGO CORRESPONDIENTE</th>
 														<th>ABONADO</th>
 														<th>PENDIENTE</th>
 														<th>COMENTARIO</th>
 														<th>ESTATUS</th>
+														<th>TIPO</th>
 														<th>FECHA DE REGISTRO</th>
 														<th>MÁS</th>
 													</tr>
@@ -171,7 +178,46 @@
 		var url2 = "<?=base_url()?>index.php/";
 		var totaPen = 0;
 		var tr;
+		$(document).ready(function() {
+		$.post("<?=base_url()?>index.php/Comisiones/lista_estatus_descuentos", function (data) {
+                var len = data.length;
+                for (var i = 0; i < len; i++) {
+                    var id = data[i]['id_opcion'];
+                    var name = data[i]['nombre'];
+                    $("#tipo").append($('<option>').val(id).text(name.toUpperCase()));
+                }
+                $("#tipo").selectpicker('refresh');
+            }, 'json');       
+        });
 
+
+		$('#tipo').change(function(ruta){
+        tipo = $('#tipo').val();
+		let m = $('#monto').val();
+		let texto='';
+			if(tipo == 18){
+				
+				//PRESTAMO
+				texto = 'Este es un pago recurrente, el cuál se hará cada mes hasta cubrir el monto prestado.'
+
+				document.getElementById("numeroP").value = 1;
+				//document.getElementById("numeroP").readOnly = false;
+				if(m != ''){
+					verificar();
+				}
+			
+					
+			}else{
+				texto = 'Este es un pago único que se hará en una sola exhibición.'
+				document.getElementById("numeroP").value = 1;
+			//	document.getElementById("numeroP").readOnly = true;
+				if(m != ''){
+					verificar();
+				}
+						}
+						document.getElementById("texto").innerHTML = texto;
+
+        });
 		function closeModalEng(){
 			document.getElementById("form_prestamos").reset();
 			$("#miModal").modal('toggle');	
@@ -264,7 +310,7 @@
 					titleAttr: 'Descargar archivo de Excel',
 					titleAttr: 'Excel',
 					exportOptions: {
-						columns: [0,1,2,3,4,5,6,7,8,9],
+						columns: [0,1,2,3,4,5,6,7,8,9,10],
 						format: {
 							header:  function (d, columnIdx) {
 								if(columnIdx >= 0){
@@ -355,6 +401,26 @@
 
 						
 					} 
+				},
+				{
+					"width": "10%",
+					"data": function( d ){
+						let etiqueta = '';
+						color='000';
+						if(d.id_opcion == 18){ //PRESTAMO
+							color='89C86C';
+						} else if(d.id_opcion == 19){ //SCIO
+							color='72EDD6';
+						}else if(d.id_opcion == 20){ //PLAZA
+							color='72CBED';
+						}else if(d.id_opcion == 21){ //LINEA TELEFÓNICA
+							color='7282ED';
+						}else if(d.id_opcion == 22){ //MANTENIMIENTO
+							color='CA72ED';
+						}
+
+						return '<p><span class="label" style="background:#'+color+';">'+d.tipo+'</span></p>';
+					}
 				},
 				{
 					"width": "12%",

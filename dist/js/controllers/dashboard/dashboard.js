@@ -59,20 +59,17 @@ var options = {
 
   var options2 = {
     series: [{
-      name: 'Marine Sprite',
+      name: 'Ventas apartados',
       data: [44]
     }, {
-      name: 'Striking Calf',
+      name: 'Cancelados apartados',
       data: [53]
     }, {
-      name: 'Tank Picture',
+      name: 'Ventas contratadas',
       data: [12]
     }, {
-      name: 'Bucket Slope',
+      name: 'Canceladas contratadas',
       data: [9]
-    }, {
-      name: 'Reborn Kid',
-      data: [25]
     }],
     chart: {
       type: 'bar',
@@ -88,9 +85,6 @@ var options = {
     stroke: {
       width: 0.5,
       colors: ['#fff']
-    },
-    title: {
-      text: '100% Stacked Bar'
     },
     yaxis: {
       labels: {
@@ -108,9 +102,9 @@ var options = {
       opacity: 1
     },
     legend: {
-      position: 'top',
-      horizontalAlign: 'left',
-      offsetX: 40
+      position: 'left',
+      horizontalAlign: 'center',
+      offsetY: 10
     }
   };
   var chart = new ApexCharts(document.querySelector("#chart"), options);

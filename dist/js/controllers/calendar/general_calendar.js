@@ -1,6 +1,5 @@
 //jquery
-
-$(document).on('change','#gerente', function(e){
+  $(document).on('change','#gerente', function(e){
     let id = $("#gerente").val();
     getCoordinators(id);
     $("#coordinador").empty().selectpicker('refresh');
@@ -10,9 +9,7 @@ $(document).on('change','#gerente', function(e){
   $(document).on('change', '#coordinador', function(e){
     removeEvents();
     var idCoordinador = $("#coordinador").val();
-    console.log('idCoordinador',idCoordinador);
-
-    getAsesores(idCoordinador).then( response => {
+    getAsesores(idCoordinador, true).then( response => {
       var arrayId = idCoordinador;
       for (var i = 0; i < response.length; i++) {
         arrayId = arrayId + ',' + response[i]['id_usuario'];
@@ -35,8 +32,7 @@ $(document).on('change','#gerente', function(e){
   });
 
 //funciones
-
-function getCoordinators(id){
+  function getCoordinators(id){
     $('#spiner-loader').removeClass('hide');
     $.post(`${base_url}Calendar/getCoordinators`, {id: id}, function(data) {
         $('#spiner-loader').addClass('hide');
@@ -53,11 +49,9 @@ function getCoordinators(id){
 
         return data;
     }, 'json');
-}
+  }
 
-
-
-function getAsesores(idCoordinador){
+  function getAsesores(idCoordinador, firstLoad){
     return $.ajax({
       type: 'POST',
       url: `${base_url}Calendar/getAdvisers`,
@@ -69,17 +63,19 @@ function getAsesores(idCoordinador){
       },
       success: function(data) {
         $('#spiner-loader').addClass('hide');
-        var len = data.length;
-        for (var i = 0; i < len; i++) {
-          var id = data[i]['id_usuario'];
-          var nombre = data[i]['nombre'];
-          $("#asesor").append($('<option>').val(id).text(nombre));
+        if(firstLoad){
+          var len = data.length;
+          for (var i = 0; i < len; i++) {
+            var id = data[i]['id_usuario'];
+            var nombre = data[i]['nombre'];
+            $("#asesor").append($('<option>').val(id).text(nombre));
+          }
+          if (len <= 0) {
+            $("#asesor").append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
+          }
+  
+          $("#asesor").selectpicker('refresh');
         }
-        if (len <= 0) {
-          $("#asesor").append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
-        }
-
-        $("#asesor").selectpicker('refresh');
       },
       error: function() {
         $('#spiner-loader').addClass('hide');
@@ -96,12 +92,17 @@ function getAsesores(idCoordinador){
       data: {ids: ids},
       dataType: 'json',
       cache: false,
+      beforeSend: function() {
+        $('#spiner-loader').removeClass('hide');
+      },
       success: function(data) {
+        $('#spiner-loader').addClass('hide');
         if(data.length == 0){
           alerts.showNotification("top", "right", "Aún no hay ningún evento registrado", "success");
         }
       },
       error: function(){
+        $('#spiner-loader').addClass('hide');
         alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
       }
     });
@@ -122,12 +123,12 @@ function getAsesores(idCoordinador){
     }, 'json');
   }
 
-  function getUsersAndEvents(userType, idUser){
+  function getUsersAndEvents(userType, idUser, firstLoad){
     if(userType == 2){ /* Subdirector */
       getGerentes();
     }
     else if(userType == 3){ /* Gerente */
-      getCoordinators(idUser);
+      getCoordinators(idUser, 1);
     }
     else if(userType == 7 ){
       getEventos(idUser).then( response => {
@@ -135,7 +136,7 @@ function getAsesores(idCoordinador){
       }).catch( error => { alerts.showNotification("top", "right", "Oops, algo salió mal. "+error, "danger"); });
     }
     else if(userType == 9){ /* Coordinador */
-        getAsesores(idUser).then( response => {
+        getAsesores(idUser, firstLoad).then( response => {
         var arrayId = idUser;
         for (var i = 0; i < response.length; i++) {
           arrayId = arrayId + ',' + response[i]['id_usuario'];

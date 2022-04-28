@@ -1,6 +1,5 @@
 $( document ).ready(function() {
   backDiv();
-  console.log('exists', exists);
   if(exists == 1){
     document.getElementById('openCalendar').style.display = 'none';
     document.getElementById('divCalendar').style.display = 'none';
@@ -9,7 +8,6 @@ $( document ).ready(function() {
 var sideCalendar;
 $(document).on('click', '#minimizeSidecalendar', function(e){
   e.preventDefault();
-  console.log('click');
   minMaxSideCalendar();
 })
 
@@ -53,11 +51,8 @@ function minMaxSideCalendar(){
   }
 
   if (md.misc.sidebar_mini_active == true) {
-    console.log('entra if');
-
     md.misc.sidebar_mini_active = false;
   } else {
-    console.log('entra else');
     md.misc.sidebar_mini_active = true;
   }
 
@@ -89,8 +84,10 @@ function getAppointmentDataC(idAgenda){
     },
     success: function(data){
       appointment = data[0];
+      console.log(appointment);
       $('#spiner-loader').addClass('hide');
       $("#evtTitle3").val(appointment.titulo);
+      $("#estatus_recordatorio3").append($('<option>').val(appointment.medio).text(appointment.nombre_medio));
       $("#estatus_recordatorio3").val(appointment.medio);
       $("#estatus_recordatorio3").selectpicker('refresh');
       $("#prospectoE2").append($('<option>').val(appointment.idCliente).text(appointment.nombre));
@@ -100,9 +97,10 @@ function getAppointmentDataC(idAgenda){
       $("#dateEnd3").val(moment(appointment.fecha_final).format().substring(0,19));
       $("#description3").val(appointment.descripcion);
       $("#idAgenda3").val(idAgenda);
-
-      var medio = $("#estatus_recordatorio2").val();
-      var box = $("#comodinDIV2");
+      $(".dotStatusAppointment").css('color', `${appointment.estatus == 1 ? '#06B025' : '#e52424'}`);
+      var medio = $("#estatus_recordatorio3").val();
+      var box = $("#comodinDIV3");
+      box.prop("disabled", true);
       validateNCreateC(appointment, medio, box);
     },
     error: function() {
@@ -115,14 +113,14 @@ function getAppointmentDataC(idAgenda){
 function validateNCreateC(appointment, medio, box){
   box.empty();
   if(medio == 2 || medio == 5){
-    box.append(`<label>Dirección del ${medio == 5 ? 'evento':'recorrido'}</label><input id="direccion2" name="direccion2" type="text" class="form-control input-gral" value='${((appointment !=  '' && (medio == 2 || medio == 5 )) ? ((appointment.id_direccion == ''|| appointment.id_direccion == null) ? appointment.direccion : '' ) : '' )}' required>`);
+    box.append(`<label class="m-0">Dirección del ${medio == 5 ? 'evento':'recorrido'}</label><input id="direccion2" name="direccion2" type="text" class="form-control input-gral" value='${((appointment !=  '' && (medio == 2 || medio == 5 )) ? ((appointment.id_direccion == ''|| appointment.id_direccion == null) ? appointment.direccion : '' ) : '' )}' disabled>`);
   }
   else if(medio == 3){
-    box.append(`<div class="container-fluid"><div class="row"><div class="col-sm-12 col-md-6 col-lg-6 pl-0 m-0"><label>Teléfono 1</label><input type="text" class="form-control input-gral" value=${(appointment !=  '' &&  medio == 3 ) ? ((appointment.telefono != ''|| appointment.telefono != null) ? appointment.telefono : '') : ''+ $("#prospecto option:selected").attr('data-telefono') +''} disabled></div>`
-    +`<div class="col-sm-12 col-md-6 col-lg-6 pr-0 m-0"><label>Teléfono 2</label><input type="text" class="form-control input-gral" id="telefono4" name="telefono4" value=${(appointment !=  '' &&  medio == 3 ) ? ((appointment.telefono_2 != ''|| appointment.telefono_2 != null) ? appointment.telefono_2 : '') : ($("#prospecto option:selected").attr('data-telefono2') != '' || $("#prospecto option:selected").attr('data-telefono2') != null ) ? $("#prospecto option:selected").attr('data-telefono2') : '' } ></div></div></div>`);
+    box.append(`<div class="container-fluid"><div class="row"><div class="col-sm-12 col-md-6 col-lg-6 pl-0 m-0"><label class="m-0">Teléfono 1</label><input type="text" class="form-control input-gral" value=${(appointment !=  '' &&  medio == 3 ) ? ((appointment.telefono != ''|| appointment.telefono != null) ? appointment.telefono : '') : ''+ $("#prospecto option:selected").attr('data-telefono') +''} disabled></div>`
+    +`<div class="col-sm-12 col-md-6 col-lg-6 pr-0 m-0"><label class="m-0">Teléfono 2</label><input type="text" class="form-control input-gral" id="telefono4" name="telefono4" value=${(appointment !=  '' &&  medio == 3 ) ? ((appointment.telefono_2 != ''|| appointment.telefono_2 != null) ? appointment.telefono_2 : '') : ($("#prospecto option:selected").attr('data-telefono2') != '' || $("#prospecto option:selected").attr('data-telefono2') != null ) ? $("#prospecto option:selected").attr('data-telefono2') : '' } disabled></div></div></div>`);
   }
   else if(medio == 4){
-    box.append(`<div class="col-sm-12 col-md-12 col-lg-12 p-0"><label>Dirección de oficina</label><select class="selectpicker select-gral m-0 w-100" name="id_direccion2" id="id_direccion2" data-style="btn" data-show-subtext="true" data-live-search="true" title="Seleccione una opción" data-size="7" required></select></div>`);
+    box.append(`<div class="col-sm-12 col-md-12 col-lg-12 p-0"><label class="m-0">Dirección de oficina</label><select class="selectpicker select-gral m-0 w-100" name="id_direccion2" id="id_direccion2" data-style="btn" data-show-subtext="true" data-live-search="true" title="Seleccione una opción" data-size="7" disabled></select></div>`);
     getOfficeAddressesC(appointment);
   }
   box.removeClass('hide');

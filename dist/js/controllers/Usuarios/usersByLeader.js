@@ -5,7 +5,6 @@ $('#users_datatable thead tr:eq(0) th').each(function (i) {
     var title = $(this).text();
    
     $(this).html('<input type="text" style="width:100%; background:#003D82; color:white; border: 0; font-weight: 500;" class="textoshead"  placeholder="' + title + '"/>');
-    console.log($(this).html());
     $('input', this).on('keyup change', function () {
         if ($('#users_datatable').DataTable().column(i).search() !== this.value) {
             $('#users_datatable').DataTable()

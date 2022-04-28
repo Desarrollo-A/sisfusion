@@ -2,112 +2,15 @@
   var appointment = '';
   var exists = 1;
   $(document).ready(function() {
-    getUsersAndEvents(userType,idUser);
+    getUsersAndEvents(userType,idUser, true);
   });
-
-  // $("#gerente").on('change', function(e){
-  //   let id = $("#gerente").val();
-  //   getCoordinators(id);
-  //   $("#coordinador").empty().selectpicker('refresh');
-  //   $("#asesor").empty().selectpicker('refresh');
-  // });
-
-  // $("#coordinador").on('change', function(e){
-  //   removeEvents();
-  //   var idCoordinador = $("#coordinador").val();
-  //   getAdvisers(idCoordinador).then( response => {
-  //     var arrayId = idCoordinador;
-  //     for (var i = 0; i < response.length; i++) {
-  //       arrayId = arrayId + ',' + response[i]['id_usuario'];
-  //     }
-  //     getEventos(arrayId).then( response => {
-  //       setSourceEventCRM(response);
-  //     }).catch( error => { alerts.showNotification("top", "right", "Oops, algo salió mal. "+error, "danger"); });;
-  //   }).catch( error => { alerts.showNotification("top", "right", "Oops, algo salió mal. "+error, "danger"); });
-  //   $("#asesor").empty().selectpicker('refresh');
-  // });
-
-  // $("#asesor").on('change', function(e){
-  //   removeEvents();
-  //   if(userType == 9) var arrayId = idUser + ', ' + $("#asesor").val();
-  //   else var arrayId = $("#coordinador").val() + ', ' +$("#asesor").val();
-    
-  //   getEventos(arrayId).then( response => {
-  //     setSourceEventCRM(response);
-  //   }).catch( error => { alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger"); });;
-  // });
-
-  // function getGerentes(){
-  //   $.post('../Calendar/getManagers', function(data) {
-  //     var len = data.length;
-  //     for (var i = 0; i < len; i++) {
-  //         var id = data[i]['id_usuario'];
-  //         var nombre = data[i]['nombre'];
-  //         $("#gerente").append($('<option>').val(id).text(nombre));
-  //     }
-  //     if (len <= 0) {
-  //       $("#gerente").append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
-  //     }
-  //     $("#gerente").selectpicker('refresh');
-  //   }, 'json');
-  // }
-
-  // function getCoordinators(id){
-  //   $('#spiner-loader').removeClass('hide');
-  //   $.post('../Calendar/getCoordinators', {id: id}, function(data) {
-  //     $('#spiner-loader').addClass('hide');
-  //     var len = data.length;
-  //     for (var i = 0; i < len; i++) {
-  //         var id = data[i]['id_usuario'];
-  //         var nombre = data[i]['nombre'];
-  //         $("#coordinador").append($('<option>').val(id).text(nombre));
-  //     }
-  //     if (len <= 0) {
-  //       $("#coordinador").append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
-  //     }
-  //     $("#coordinador").selectpicker('refresh');
-
-  //     return data;
-  //   }, 'json');
-  // }
-
-  // function getAdvisers(idCoordinador){
-  //   return $.ajax({
-  //     type: 'POST',
-  //     url: 'getAdvisers',
-  //     data: {id: idCoordinador},
-  //     dataType: 'json',
-  //     cache: false,
-  //     beforeSend: function() {
-  //       $('#spiner-loader').removeClass('hide');
-  //     },
-  //     success: function(data) {
-  //       $('#spiner-loader').addClass('hide');
-  //       var len = data.length;
-  //       for (var i = 0; i < len; i++) {
-  //         var id = data[i]['id_usuario'];
-  //         var nombre = data[i]['nombre'];
-  //         $("#asesor").append($('<option>').val(id).text(nombre));
-  //       }
-  //       if (len <= 0) {
-  //         $("#asesor").append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
-  //       }
-
-  //       $("#asesor").selectpicker('refresh');
-  //     },
-  //     error: function() {
-  //       $('#spiner-loader').addClass('hide');
-  //       alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
-  //     }
-  //   });
-  // }
 
   var calendarEl = document.getElementById('calendar');
   calendar = new FullCalendar.Calendar(calendarEl, {   
     headerToolbar: {
-      start:   'timeGridDay,timeGridWeek,dayGridMonth',
+      start: 'prev,next today googleSignIn googleLogout',
       center: 'title',
-      end: 'prev,next today googleSignIn googleLogout'
+      end:   'timeGridDay,timeGridWeek,dayGridMonth',
     },
     customButtons: {
       googleSignIn: {
@@ -151,18 +54,12 @@
       if (info.event.url) {
         window.open(info.event.url, "_blank");
         info.jsEvent.preventDefault();
-      }else modalEvent(info.event.id);
-    },
-    dateClick: function(info) {
-      if(info.view.type == "dayGridMonth" || info.view.type == "timeGridWeek") {
-        calendar.changeView( 'timeGridDay', info.dateStr );
       }
+      else modalEvent(info.event.id);
     },
     select: function(info) {
-      if(info.view.type == "timeGridDay") {
-        cleanModal();
-        setDatesToModalInsert(info);
-      }
+      cleanModal();
+      setDatesToModalInsert(info);
     }
   });
   calendar.render();
@@ -257,11 +154,11 @@
         $('#spiner-loader').removeClass('hide');
       },
       success: function(data) {
-        // if(gapi.auth2.getAuthInstance().isSignedIn.get()) insertEventGoogle(dataF);
+        if(gapi.auth2.getAuthInstance().isSignedIn.get()) insertEventGoogle(dataF);
+        removeEvents();
+        getUsersAndEvents(userType, idUser, false);
         data = JSON.parse(data);
-        $('#spiner-loader').addClass('hide');
         alerts.showNotification("top", "right", data["message"], (data["status" == 503]) ? "danger" : (data["status" == 400]) ? "warning" : "success");
-        calendar.refetchEvents();
         $('#agendaInsert').modal('toggle');
       },
       error: function() {
@@ -277,22 +174,21 @@
       new FormData(e.target)
     );
     updateGoogleEvent(dataF);
-    
   });
 
   function deleteCita(e){
     let idAgenda = $("#idAgenda2").val();
     let idGoogle = $("#idGoogle").val();
-
-    console.log(this);
     deleteGoogleEvent(idAgenda,idGoogle);
+  }
+
+  function finalizarCita(){
+    $('#modalEvent').modal('toggle');
+    $('#feedbackModal').modal();
   }
 
   function modalEvent(idAgenda){
     getAppointmentData(idAgenda);
-    if(userType == 2 || userType == 3){
-      disabledEditModal(true);
-    }
     $('#modalEvent').modal();
   }
 
@@ -312,9 +208,9 @@
         $("#evtTitle2").val(appointment.titulo);
         $("#estatus_recordatorio2").val(appointment.medio);
         $("#estatus_recordatorio2").selectpicker('refresh');
-        $("#prospectoE").append($('<option>').val(appointment.idCliente).text(appointment.nombre));
+        $("#textProspecto").val(appointment.nombre);
+        $("#textProspecto").prop("disabled", true);
         $("#prospectoE").val(appointment.idCliente);
-        $("#prospectoE").selectpicker('refresh');
         $("#dateStart2").val(moment(appointment.fecha_cita).format().substring(0,19));
         $("#dateEnd2").val(moment(appointment.fecha_final).format().substring(0,19));
         $("#description2").val(appointment.descripcion);
@@ -323,8 +219,9 @@
         var medio = $("#estatus_recordatorio2").val();
         var box = $("#comodinDIV2");
         validateNCreate(appointment, medio, box);
-        if(idUser != appointment.idOrganizador) disabledEditModal(true)
-        else disabledEditModal(false)
+        if(idUser != appointment.idOrganizador) disabledEditModal(true, appointment.estatus);
+        else disabledEditModal(false, appointment.estatus);
+        $(".dotStatusAppointment").css('color', `${appointment.estatus == 1 ? '#06B025' : '#e52424'}`);
       },
       error: function() {
         $('#spiner-loader').addClass('hide');
@@ -336,14 +233,14 @@
   function validateNCreate(appointment, medio, box){
     box.empty();
     if(medio == 2 || medio == 5){
-      box.append(`<label>Dirección del ${medio == 5 ? 'evento':'recorrido'}</label><input id="direccion" name="direccion" type="text" class="form-control input-gral" value='${((appointment !=  '' && (medio == 2 || medio == 5 )) ? ((appointment.id_direccion == ''|| appointment.id_direccion == null) ? appointment.direccion : '' ) : '' )}' required>`);
+      box.append(`<label class="m-0">Dirección del ${medio == 5 ? 'evento':'recorrido'}</label><input id="direccion" name="direccion" type="text" class="form-control input-gral" value='${((appointment !=  '' && (medio == 2 || medio == 5 )) ? ((appointment.id_direccion == ''|| appointment.id_direccion == null) ? appointment.direccion : '' ) : '' )}' required>`);
     }
     else if(medio == 3){
-      box.append(`<div class="container-fluid"><div class="row"><div class="col-sm-12 col-md-6 col-lg-6 pl-0 m-0"><label>Teléfono 1</label><input type="text" class="form-control input-gral" value=${(appointment !=  '' &&  medio == 3 ) ? ((appointment.telefono != ''|| appointment.telefono != null) ? appointment.telefono : '') : ''+ $("#prospecto option:selected").attr('data-telefono') +''} disabled></div>`
-      +`<div class="col-sm-12 col-md-6 col-lg-6 pr-0 m-0"><label>Teléfono 2</label><input type="text" class="form-control input-gral" id="telefono2" name="telefono2" value=${(appointment !=  '' &&  medio == 3 ) ? ((appointment.telefono_2 != ''|| appointment.telefono_2 != null) ? appointment.telefono_2 : '') : ($("#prospecto option:selected").attr('data-telefono2') != '' || $("#prospecto option:selected").attr('data-telefono2') != null ) ? $("#prospecto option:selected").attr('data-telefono2') : '' } ></div></div></div>`);
+      box.append(`<div class="container-fluid"><div class="row"><div class="col-sm-12 col-md-6 col-lg-6 pl-0 m-0"><label class="m-0">Teléfono 1</label><input type="text" class="form-control input-gral" value=${(appointment !=  '' &&  medio == 3 ) ? ((appointment.telefono != ''|| appointment.telefono != null) ? appointment.telefono : '') : ''+ $("#prospecto option:selected").attr('data-telefono') +''} disabled></div>`
+      +`<div class="col-sm-12 col-md-6 col-lg-6 pr-0 m-0"><label class="m-0">Teléfono 2</label><input type="text" class="form-control input-gral" id="telefono2" name="telefono2" value=${(appointment !=  '' &&  medio == 3 ) ? ((appointment.telefono_2 != ''|| appointment.telefono_2 != null) ? appointment.telefono_2 : '') : ($("#prospecto option:selected").attr('data-telefono2') != '' || $("#prospecto option:selected").attr('data-telefono2') != null ) ? $("#prospecto option:selected").attr('data-telefono2') : '' } ></div></div></div>`);
     }
     else if(medio == 4){
-      box.append(`<div class="col-sm-12 col-md-12 col-lg-12 p-0"><label>Dirección de oficina</label><select class="selectpicker select-gral m-0 w-100" name="id_direccion" id="id_direccion" data-style="btn" data-show-subtext="true" data-live-search="true" title="Seleccione una opción" data-size="7" required></select></div>`);
+      box.append(`<div class="col-sm-12 col-md-12 col-lg-12 p-0"><label class="m-0">Dirección de oficina</label><select class="selectpicker select-gral m-0 w-100" name="id_direccion" id="id_direccion" data-style="btn" data-show-subtext="true" data-live-search="true" title="Seleccione una opción" data-size="7" required></select></div>`);
       getOfficeAddresses(appointment);
     }
     box.removeClass('hide');
@@ -381,10 +278,10 @@
   }
 
   //SIDEBAR CALENDAR
-  function modalSidebarCalendar(idAgenda){
-    getAppointmentSidebarCalendar(idAgenda);
-    $('#sidebarView').modal();
-  }
+  // function modalSidebarCalendar(idAgenda){
+  //   getAppointmentSidebarCalendar(idAgenda);
+  //   $('#sidebarView').modal();
+  // }
 
   function getAppointmentSidebarCalendar(idAgenda){
     $.ajax({
@@ -421,7 +318,6 @@
       }
     })
   }
-
   /* Google sign in estatus true */
 
   /* Event's structure sent to Google */
@@ -457,7 +353,6 @@
   /* Event's structure sent to Google */
 
   function insertEventGoogle(data){
-    console.log('insert',data)
     var id = new Promise((resolve, reject) => {
       var request = gapi.client.calendar.events.insert({
         'calendarId': 'primary',
@@ -472,16 +367,13 @@
   }
 
   async function updateGoogleEvent(data){
-    const { dateEnd, dateStart, description, estatus_recordatorio, evtTitle, idGoogle} = data;
+    const {idGoogle} = data;
 
     if(idGoogle == ''){
       data['inserted'] = await insertEventGoogle(data);
-      console.log('insert');
     }else{
-      console.log('edit');
       let evento = new Promise((resolve,reject)=>{
         gapi.client.calendar.events.get({"calendarId": 'primary', "eventId":idGoogle }).execute(function(event){
-          console.log(event);
           resolve(event);
         });
       })
@@ -499,11 +391,11 @@
         $('#spiner-loader').removeClass('hide');
       },
       success: function(data) {
-        calendar.refetchEvents();
+        removeEvents();
+        getUsersAndEvents(userType, idUser, false);
         data = JSON.parse(data);
         alerts.showNotification("top", "right", data["message"], (data["status" == 503]) ? "danger" : (data["status" == 400]) ? "warning" : "success");
         $('#modalEvent').modal('toggle');
-        $('#spiner-loader').addClass('hide');
       },
       error: function() {
         alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
@@ -544,28 +436,28 @@
     calendar.addEventSource({
       title: 'sourceCRM',
       display:'block',
-      events: events
+      events: events,
     })
-    
-    calendar.render();
   }
 
-  function disabledEditModal(value){
+  function disabledEditModal(value, estatus){
     if(value){
-      $("#modalEvent .close").addClass("d-none");
+      $("#modalEvent #menuModal").addClass('d-none');
       $("#edit_appointment_form input").prop("disabled", true);
       $("#edit_appointment_form textarea").prop("disabled", true);
       $("#prospectoE").prop("disabled", true);
       $("#estatus_recordatorio2").prop("disabled", true);
-      $("#finishS").addClass("d-none");
+      $(".finishS").addClass("d-none");
     }
     else{
-      $("#modalEvent .close").removeClass("d-none");
+      var menuModal = $("#modalEvent #menuModal");
+      (estatus == 1 ? menuModal.removeClass('d-none') : menuModal.addClass('d-none'));
       $("#edit_appointment_form input").prop("disabled", false);
       $("#edit_appointment_form textarea").prop("disabled", false);
       $("#prospectoE").prop("disabled", false);
       $("#estatus_recordatorio2").prop("disabled", false);
-      $("#finishS").removeClass("d-none");
+      var btnSave = $(".finishS");
+      ( estatus == 1 ? btnSave.removeClass('d-none') : btnSave.addClass('d-none'));
     }
     $("#prospectoE").selectpicker('refresh');
     $("#estatus_recordatorio2").selectpicker('refresh');
@@ -588,7 +480,6 @@
               calendar.render();
               alerts.showNotification("top", "right", "La actualización se ha llevado a cabo correctamente.", "success");
               if(idGoogle != ''){
-                console.log('delete');
                 delGoogleEvent(idGoogle);
               }
           } else {
@@ -609,3 +500,43 @@
     });
     request.execute();
   }
+    
+  $(document).on('submit', '#feedback_form', function(e) {
+    e.preventDefault();
+
+    let data = new FormData($(this)[0]);
+    data.append("idAgenda", $("#idAgenda2").val());
+    
+    
+  });
+
+  document.querySelector('#feedback_form').addEventListener('submit', e =>  {
+    e.preventDefault();
+    const data = Object.fromEntries(
+      new FormData(e.target)
+    )
+    data['idAgenda'] = $("#idAgenda2").val();
+    console.log("si está");
+    $.ajax({
+      type: 'POST',
+      url: 'setAppointmentRate',
+      data: JSON.stringify(data),
+      contentType: false,
+      cache: false,
+      processData: false,
+      beforeSend: function() {
+        $('#spiner-loader').removeClass('hide');
+      },
+      success: function(data) {
+        $('#spiner-loader').removeClass('hide');
+        data = JSON.parse(data);
+        alerts.showNotification("top", "right", data["message"], (data["status" == 503]) ? "danger" : (data["status" == 400]) ? "warning" : "success");
+        $('#feedbackModal').modal('toggle');
+      },
+      error: function() {
+          $('#feedbackModal').modal('toggle');
+          $('#spiner-loader').addClass('hide');
+          alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+      }
+    });
+  });
