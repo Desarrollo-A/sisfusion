@@ -36,6 +36,7 @@
                                                 <th>PROYECTO</th>
                                                 <th>CONDOMINIO</th>
                                                 <th>LOTE</th>
+                                                <th>SEDE</th>
                                                 <th>REFERENCIA</th>
                                                 <th>SUP</th>
                                                 <th>GERENTE</th>
@@ -186,54 +187,42 @@
                 titleAttr: 'Estatus actuales de terrenos al: ' + dateTime ,
                 title: 'Estatus actuales de terrenos al:  ' + dateTime ,
                 exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14],
+                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
                     format: {
                         header: function (d, columnIdx) {
                             switch (columnIdx) {
                                 case 0:
                                     return 'PROYECTO';
-                                    break;
                                 case 1:
                                     return 'CONDOMINIO';
-                                    break;
                                 case 2:
                                     return 'LOTE';
                                 case 3:
-                                    return 'REFERENCIA';
-                                    break;
+                                    return 'SEDE';
                                 case 4:
-                                    return 'SUP';
-                                    break;
+                                    return 'REFERENCIA';
                                 case 5:
-                                    return 'GERENTE';
-                                    break;
+                                    return 'SUP';
                                 case 6:
-                                    return 'ASESOR(ES)';
-                                    break;
+                                    return 'GERENTE';
                                 case 7:
-                                    return 'PROCESO CONTRATACIÓN';
-                                    break;
+                                    return 'ASESOR(ES)';
                                 case 8:
-                                    return 'ESTATUS';
-                                    break;
+                                    return 'PROCESO CONTRATACIÓN';
                                 case 9:
-                                    return 'COMENTARIO';
-                                    break;
-                                case 10:
-                                    return 'FECHA VENCIMIENTO';
-                                    break;
-                                case 11:
-                                    return 'DÍAS RESTANTES';
-                                    break;
-                                case 12:
-                                    return 'DÍAS VENCIDOS';
-                                    break;
-                                case 13:
                                     return 'ESTATUS';
-                                    break;
+                                case 10:
+                                    return 'COMENTARIO';
+                                case 11:
+                                    return 'FECHA VENCIMIENTO';
+                                case 12:
+                                    return 'DÍAS RESTANTES';
+                                case 13:
+                                    return 'DÍAS VENCIDOS';
                                 case 14:
+                                    return 'ESTATUS';
+                                case 15:
                                     return 'FECHA APARTADO';
-                                    break;
                             }
                         }
                     }
@@ -263,6 +252,7 @@
 				{data: 'nombreResidencial'},
 				{data: 'nombreCondominio'},
 				{data: 'nombreLote'},
+                { data: 'nombreSede' },
 				{data: 'referencia'},
 				{data: 'sup'},
 				{

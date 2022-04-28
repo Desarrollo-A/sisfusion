@@ -1243,20 +1243,21 @@ gerente2.nombreGerente as gerente2, gerente3.nombreGerente as gerente3, gerente4
         $this->db->join('residenciales as residencial', 'cond.idResidencial=residencial.idResidencial', 'INNER');
         $this->db->join('usuarios as us', 'cl.id_asesor=us.id_usuario', 'INNER');
         $this->db->join('usuarios as ge', 'ge.id_usuario=us.id_lider ', 'INNER');*/
-		$query = $this->db-> query("SELECT lotes.idLote, cl.id_cliente, cl.nombre, cl.apellido_paterno, cl.apellido_materno, lotes.nombreLote, 
+		$query = $this->db-> query("SELECT lotes.idLote, s.nombre as nombreSede, cl.id_cliente, cl.nombre, cl.apellido_paterno, cl.apellido_materno, lotes.nombreLote, 
                                     lotes.idStatusContratacion, lotes.idMovimiento, lotes.modificado, CAST(lotes.comentario AS varchar(MAX)) as comentario, 
                                     fechaVenc, lotes.perfil, residencial.nombreResidencial, cond.nombre as nombreCondominio, lotes.ubicacion, lotes.tipo_venta,
                                     lotes.fechaSolicitudValidacion, lotes.firmaRL, lotes.validacionEnganche, sup, cl.fechaApartado,
                                     concat(us.nombre,' ', us.apellido_paterno, ' ', us.apellido_materno) as asesor, idAsesor,
                                     concat(ge.nombre,' ', ge.apellido_paterno, ' ', ge.apellido_materno) as gerente, lotes.referencia FROM lotes as lotes
                                     INNER JOIN clientes as cl ON lotes.idLote=cl.idLote
+                                    INNER JOIN sedes AS s ON s.id_sede = cl.id_sede
                                     INNER JOIN condominios as cond ON lotes.idCondominio=cond.idCondominio
                                     INNER JOIN residenciales as residencial ON cond.idResidencial=residencial.idResidencial
                                     LEFT JOIN usuarios us ON cl.id_asesor=us.id_usuario
                                     LEFT JOIN usuarios coord ON cl.id_coordinador=coord.id_usuario
                                     LEFT JOIN usuarios as ge ON cl.id_gerente=ge.id_usuario 
                                     WHERE cl.status=1 AND lotes.status = 1 AND lotes.idStatusContratacion <> 15 AND lotes.idMovimiento <> 45
-                                    GROUP BY lotes.idLote, cl.id_cliente, cl.nombre, cl.apellido_materno, cl.apellido_paterno, sup, cl.fechaApartado,
+                                    GROUP BY lotes.idLote, s.nombre, cl.id_cliente, cl.nombre, cl.apellido_materno, cl.apellido_paterno, sup, cl.fechaApartado,
                                     lotes.nombreLote, lotes.idStatusContratacion, lotes.idMovimiento, lotes.modificado,
                                     lotes.modificado, CAST(lotes.comentario AS varchar(MAX)), lotes.fechaVenc, lotes.perfil,
                                     residencial.nombreResidencial, cond.nombre, lotes.ubicacion, lotes.tipo_venta,
