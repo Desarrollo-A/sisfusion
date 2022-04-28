@@ -3535,7 +3535,7 @@
                 "width": "8%",
                 "data": function (d) {
                     if (d.estatusDU === 5 || (d.estatusDU === 1 && d.pagos_activos === 0)) {
-                        return '<span class="label" style="background: blue;">REACTIVADA</span>';
+                        return '<span class="label" style="background:blue;">REACTIVADO</span>';
                     } else if(d.queryType == 2){
                         if (d.status == 0 && d.estatus != 4) {
                             return '<span class="label" style="background:red;">BAJA</span>';
@@ -3754,23 +3754,21 @@
                 "data": function (d) {
                     if (d.estatusDU === 0) {
                         return `
-                            <div class="d-flex justify-center">
-                                <button value="${d.id_usuario}"
-                                    data-value="${d.nombre}"
-                                    data-code="${d.id_usuario}"
-                                    class="btn-data btn-blueMaderas consultar_logs_asimilados"
-                                    title="Detalles">
-                                        <i class="fas fa-info-circle"></i>
-                                </button>
-                                <button value="${d.id_usuario}"
-                                    data-value="${d.nombre}"
-                                    data-code="${d.id_usuario}"
-                                    class="btn-data btn-blueMaderas consultar_logs_asimilados"
-                                    title="Detalles">
-                                        <span class="fas fa-info-circle"></span>
-                                </button>
-                            </div>
-                        `;
+                                <div class="d-flex justify-center">
+                                    <button value="${d.id_usuario}"
+                                        data-value="${d.nombre}"
+                                        data-code="${d.id_usuario}"
+                                        class="btn-data btn-blueMaderas consultar_logs_asimilados"
+                                        title="Detalles">
+                                            <i class="fas fa-info-circle"></i>
+                                    </button>
+                                    <button value="${d.id_usuario}"
+                                        class="btn-data btn-violetDeep activar-prestamo"
+                                        title="Activar">
+                                        <i class="fa fa-rotate-left"></i>
+                                    </button>
+                                </div>
+                            `;
                     } else if ((d.estatusDU === 1 || d.estatusDU === 5) && d.pagos_activos === 0) {
                         return `
                                 <div class="d-flex justify-center">
@@ -3784,6 +3782,8 @@
                                 </div>
                             `;
                     }
+
+
 
                     let tipo_descuento = d.queryType;
                     if(tipo_descuento == 2){
