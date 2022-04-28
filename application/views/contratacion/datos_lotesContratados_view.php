@@ -34,6 +34,7 @@
                                                     <th>PROYECTO</th>
                                                     <th>CONDOMINIO</th>
                                                     <th>LOTE</th>
+                                                    <th>SEDE</th>
                                                     <th>REFERENCIA</th>
                                                     <th>GERENTE</th>
                                                     <th>ASESOR(ES)</th>
@@ -198,45 +199,36 @@
                 titleAttr: 'Lotes contratados al: ' + dateTime ,
                 title: 'Lotes contratados al: ' + dateTime ,
                 exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
                     format: {
                         header: function (d, columnIdx) {
                             switch (columnIdx) {
                                 case 0:
                                     return 'PROYECTO';
-                                    break;
                                 case 1:
                                     return 'CONDOMINIO';
-                                    break;
                                 case 2:
                                     return 'LOTE';
                                 case 3:
-                                    return 'REFERENCIA';
-                                    break;
+                                    return 'SEDE';
                                 case 4:
-                                    return 'GERENTE';
-                                    break;
+                                    return 'REFERENCIA';
                                 case 5:
-                                    return 'ASESOR(ES)';
-                                    break;
+                                    return 'GERENTE';
                                 case 6:
-                                    return 'USUARIO';
-                                    break;
+                                    return 'ASESOR(ES)';
                                 case 7:
-                                    return 'PROCESO DE CONTRATACIÓN';
-                                    break;
+                                    return 'USUARIO';
                                 case 8:
-                                    return 'COMENTARIO';
-                                    break;
+                                    return 'PROCESO DE CONTRATACIÓN';
                                 case 9:
-                                    return 'FECHA CONTRATADO';
-                                    break;
+                                    return 'COMENTARIO';
                                 case 10:
-                                    return 'FECHA APARTADO';
-                                    break;
+                                    return 'FECHA CONTRATADO';
                                 case 11:
+                                    return 'FECHA APARTADO';
+                                case 12:
                                     return 'PRECIO F.';
-                                    break;
                             }
                         }
                     }
@@ -266,6 +258,7 @@
 				{data: 'nombreResidencial'},
 				{data: 'nombreCondominio'},
 				{data: 'nombreLote'},
+                { data: 'nombreSede' },
 				{data: 'referencia'},
 				{
 					// data: 'gerente1'
