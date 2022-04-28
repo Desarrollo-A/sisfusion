@@ -6054,7 +6054,7 @@ INNER JOIN lotes lo ON lo.idLote = com.id_lote AND lo.status = 1
 INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
 INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
 INNER JOIN usuarios u ON u.id_usuario = com.id_usuario
-INNER JOIN usuarios cr ON cr.id_usuario = pci1.modificado_por
+INNER JOIN usuarios cr ON cr.id_usuario = pci1.creado_por
 INNER JOIN opcs_x_cats oprol ON oprol.id_opcion = com.rol_generado AND oprol.id_catalogo = 1
 LEFT JOIN sedes se ON se.id_sede = u.id_sede AND se.estatus = 1
 WHERE pci1.estatus = 17 $filtro
@@ -6073,7 +6073,7 @@ INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
 INNER JOIN residenciales re ON re.idResidencial = co.idResidencial 
 INNER JOIN clientes cl ON cl.idLote = lo.idLote AND cl.status = 1
 INNER JOIN usuarios u ON u.id_usuario = com.id_usuario
-INNER JOIN usuarios cr ON cr.id_usuario = pci1.modificado_por
+INNER JOIN usuarios cr ON cr.id_usuario = pci1.creado_por
 INNER JOIN opcs_x_cats oprol ON oprol.id_opcion = com.rol_generado AND oprol.id_catalogo = 1
 LEFT JOIN sedes se ON se.id_sede = u.id_sede AND se.estatus = 1
 WHERE pci1.estatus = 17 $filtro
