@@ -15,11 +15,15 @@
     ?>
     <style>
         .evtAbierto{
-            border-left: 4px solid #4caf50d1!important;
+          border-left: 4px solid #50d920!important;
         }
         .evtFinalizado{
-            border-left: 4px solid #e91e1ea6!important;
+          border-left: 4px solid #df5a5a!important;;
         }
+        .fc-daygrid-event{
+            padding-left: 4px;
+        }
+
     </style>
     <div class="modal fade" id="feedbackModal" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog modal-sm" role="document">
