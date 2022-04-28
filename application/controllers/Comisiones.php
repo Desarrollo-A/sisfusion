@@ -6480,7 +6480,7 @@ for ($d=0; $d <count($dos) ; $d++) {
     /**--------------------------------PRESTAMOS ATOMATICOS--------------------- */
     
     public function panel_prestamos()
-    {
+    { 
 
       $datos = array();
       $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
