@@ -8355,7 +8355,7 @@ return $query->result();
             JOIN usuarios u ON u.id_usuario = pa.id_usuario
             JOIN relacion_pagos_prestamo rpp ON rpp.id_prestamo = pa.id_prestamo
             JOIN pago_comision_ind pci ON pci.id_pago_i = rpp.id_pago_i 
-            AND pci.estatus (18,19,20,21,22) AND pci.descuento_aplicado = 1
+            AND pci.estatus IN(18,19,20,21,22) AND pci.descuento_aplicado = 1
             WHERE pa.id_prestamo = $idPrestamo
             GROUP BY u.nombre, u.apellido_paterno, u.apellido_materno, pa.monto, pa.pago_individual, pa.num_pagos, pa.n_p");
         return $result->row();
@@ -8369,7 +8369,7 @@ return $query->result();
             FROM prestamos_aut pa
             JOIN usuarios u ON u.id_usuario = pa.id_usuario
             JOIN relacion_pagos_prestamo rpp ON rpp.id_prestamo = pa.id_prestamo
-            JOIN pago_comision_ind pci ON pci.id_pago_i = rpp.id_pago_i AND pci.estatus (18,19,20,21,22) AND pci.descuento_aplicado = 1
+            JOIN pago_comision_ind pci ON pci.id_pago_i = rpp.id_pago_i AND pci.estatus IN(18,19,20,21,22) AND pci.descuento_aplicado = 1
             JOIN comisiones c ON c.id_comision = pci.id_comision
             JOIN lotes l ON l.idLote = c.id_lote
             WHERE pa.id_prestamo = $idPrestamo
