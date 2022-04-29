@@ -16,7 +16,7 @@
       }
       getEventos(arrayId).then( response => {
         setSourceEventCRM(response);
-      }).catch( error => { alerts.showNotification("top", "right", "Oops, algo salió mal. "+error, "danger"); });;
+      }).catch( error => { alerts.showNotification("top", "right", "Oops, algo salió mal. "+error, "danger"); });
     }).catch( error => { alerts.showNotification("top", "right", "Oops, algo salió mal. "+error, "danger"); });
     $("#asesor").empty().selectpicker('refresh');
   });
