@@ -17,27 +17,13 @@ class Api_model extends CI_Model
         if($query->num_rows() > 0)
             return $query->row();
         else
-            return "User not found!";
+            return false;
     }
 
     function getAdviserLeaderInformation($id_asesor)
     {
         return $this->db->query("SELECT u.id_sede, u.id_lider id_coordinador, uu.id_lider id_gerente FROM usuarios u 
         INNER JOIN usuarios uu ON uu.id_usuario = u.id_lider WHERE u.id_usuario = $id_asesor")->row();
-    }
-
-    public function addRecord($table, $data) // MJ: AGREGA UN REGISTRO A UNA TABLA EN PARTICULAR, RECIBE 2 PARÁMETROS. LA TABLA Y LA DATA A INSERTAR
-    {
-        if ($data != '' && $data != null) {
-            $response = $this->db->insert($table, $data);
-            if (!$response) {
-                return 0;
-            } else {
-                return 1;
-            }
-        } else {
-            return 0;
-        }
     }
 
     function generateFilename($idLote, $idDocumento)
