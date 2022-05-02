@@ -27,7 +27,7 @@ class Api_model extends CI_Model
 		INNER JOIN usuarios ge ON ge.id_usuario = uu.id_lider
         INNER JOIN usuarios sb ON sb.id_usuario = ge.id_lider
         INNER JOIN usuarios rg ON rg.id_usuario = sb.id_lider
-        WHERE u.id_usuario $id_asesor")->row();
+        WHERE u.id_usuario = $id_asesor")->row();
     }
 
     function generateFilename($idLote, $idDocumento)
