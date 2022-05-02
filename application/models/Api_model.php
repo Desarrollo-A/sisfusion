@@ -22,8 +22,12 @@ class Api_model extends CI_Model
 
     function getAdviserLeaderInformation($id_asesor)
     {
-        return $this->db->query("SELECT u.id_sede, u.id_lider id_coordinador, uu.id_lider id_gerente FROM usuarios u 
-        INNER JOIN usuarios uu ON uu.id_usuario = u.id_lider WHERE u.id_usuario = $id_asesor")->row();
+        return $this->db->query("SELECT u.id_rol, u.id_sede, u.id_lider id_coordinador, ge.id_usuario id_gerente, sb.id_usuario id_subdirector, CASE rg.id_usuario WHEN 2 THEN 0 ELSE rg.id_usuario END id_regional FROM usuarios u 
+        INNER JOIN usuarios uu ON uu.id_usuario = u.id_lider
+		INNER JOIN usuarios ge ON ge.id_usuario = uu.id_lider
+        INNER JOIN usuarios sb ON sb.id_usuario = ge.id_lider
+        INNER JOIN usuarios rg ON rg.id_usuario = sb.id_lider
+        WHERE u.id_usuario $id_asesor")->row();
     }
 
     function generateFilename($idLote, $idDocumento)
