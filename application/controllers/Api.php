@@ -70,10 +70,10 @@ class Api extends CI_Controller
                         if ($data->Name == '' || $data->Mail == '' || $data->Phone == '' || $data->Comments == '' || $data->iScore == '' || $data->ProductID == '' || $data->CampaignID == '' || $data->Source == '' || $data->Owner == '')
                             echo json_encode(array("status" => 400, "message" => "Algún parámetro no tiene un valor especificado. Verifique que todos los parámetros contengan un valor especificado."), JSON_UNESCAPED_UNICODE);
                         else {
+                            $result = $this->Api_model->getAdviserLeaderInformation($data->Owner);
                             if ($result->id_rol != 7)
                                 echo json_encode(array("status" => 400, "message" => "El valor ingresado para OWNER no corresponde a un ID de usuario con rol de asesor."), JSON_UNESCAPED_UNICODE);
                             else {
-                                $result = $this->Api_model->getAdviserLeaderInformation($data->Owner);
                                 $data = array(
                                     "id_sede" => $result->id_sede,
                                     "id_asesor" => $data->Owner,
