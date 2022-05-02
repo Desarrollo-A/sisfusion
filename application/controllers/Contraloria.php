@@ -5,8 +5,8 @@ class Contraloria extends CI_Controller {
 		$this->load->model('Contraloria_model');
 		$this->load->model('registrolote_modelo');
 		$this->load->model('Clientes_model');
-				$this->load->model('asesor/Asesor_model'); //EN ESTE MODELO SE ENCUENTRAN LAS CONSULTAS DEL MENU
-
+		$this->load->model('asesor/Asesor_model'); //EN ESTE MODELO SE ENCUENTRAN LAS CONSULTAS DEL MENU
+		$this->load->model('General_model');
 		$this->load->library(array('session','form_validation', 'get_menu'));
 		$this->load->helper(array('url','form'));
 		$this->load->database('default');
@@ -3454,16 +3454,55 @@ public function return1(){
 
     }
 
+	public function lotes_apartados(){
+		$this->validateSession();
+		/*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/           
+		$datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
+        /*-------------------------------------------------------------------------------*/
+		$this->load->view('template/header');
+	 	$this->load->view("Contraloria/vista_lotes_apartados",$datos);
+	}
 
+	public function get_lote_historial($lote){
+		echo json_encode($this->Contraloria_model->get_datos_lotes($lote)->result_array());
+	}
 
+	public function get_lote_apartado(){
+		$idLote = $_GET['idLote'];
 
+		$data = $this->Contraloria_model->get_datos_lotes($idLote)->row();
 
+		if($data != null)
+			echo json_encode($data);
+		else
+			echo json_encode(array());
+	}
 
+	public function lista_lote_apartado($condominio)
+	{
+		$residencial = 0;
+		$data = $this->registrolote_modelo->getLotesApartado($condominio,$residencial);
+		if($data != null) {
+			echo json_encode($data);
+		} else {
+			echo json_encode(array());
+		}
+	}
 
+	public function updateLote(){
+		$idLote = $_POST['idLote'];
 
+		$data = $this->Contraloria_model->get_datos_lotes($idLote);
+		$data = array(
+			"saldo" => $this->input->post("preciodesc"), 
+			"enganche" => $this->input->post("enganches"), 
+			"ubicacion" => $this->input->post("ubicacion_sede"));
 
+		$response = $this->General_model->updateRecord('lotes', $data, 'idLote', $idLote);
+		echo json_encode($response);
+	}
 
-
-
-
+	public function lista_sedes(){
+		echo json_encode($this->Contraloria_model->get_sedes_lista()->result_array());
+	}
 }

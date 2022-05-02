@@ -6208,5 +6208,21 @@ WHERE idLote IN ('".$row['idLote']."') and nombreLote = '".$insert_csv['nombreLo
 	
 		}
 
-	
+		public function getLotesApartado($condominio,$residencial)
+		{
+			$this->db->select('idLote,nombreLote, idStatusLote');
+			
+			if(in_array($this->session->userdata('id_usuario'), array("2765", "2776", "2857", "2820", "2876"))){
+			$this->db->where("(lotes.asig_jur = ".$this->session->userdata('id_usuario').")");
+			}
+			
+			$this->db->where('lotes.status', 1);
+			$this->db->where('lotes.idStatusLote', 3);
+			$this->db->where('idCondominio', $condominio);
+			$query = $this->db->get('lotes');
+			if($query){
+				$query = $query->result_array();
+				return $query;
+			}
+		}
 }
