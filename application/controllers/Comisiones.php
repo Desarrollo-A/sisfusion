@@ -6740,8 +6740,7 @@ for ($d=0; $d <count($dos) ; $d++) {
 
     public function getEstatusComisionesAsistentes()
     {
-        $data = $this->Comisiones_model->getOpcionCatByIdCatAndIdOpt(23,
-            '1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 51, 52, 88, 16, 17, 41, 42');
+        $data = $this->Comisiones_model->get_lista_estatus()->result_array();
         echo json_encode($data);
     }
 }
