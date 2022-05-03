@@ -60,8 +60,7 @@
                         </div>
                         <div class="card-content">
                             <div class="encabezadoBox">
-                                <h3 class="card-title center-align">Seguimiento <b>comisiones para asistentes</b></h3>
-                                <p class="card-title pl-1">(Listado de todas las comisiones)</p>
+                                <h3 class="card-title center-align">Seguimiento <b>comisiones por gerencia</b></h3>
                             </div>
 
                             <div class="toolbar">
@@ -117,7 +116,8 @@
                                 </div>
                             </div>
 
-                            <div class="material-datatables">
+                            <div id="div-tabla"
+                                 class="material-datatables">
                                 <div class="table-responsive">
                                     <table class="table-striped table-hover"
                                            id="tabla-historial">
@@ -168,7 +168,7 @@
     let tablaComisiones;
 
     $(document).ready(function () {
-        $("#tabla-historial").prop("hidden", true);
+        $("#div-tabla").prop("hidden", true);
 
         $.ajax({
             url: `${url}Comisiones/getPuestoComisionesAsistentes`,
@@ -212,9 +212,11 @@
                 $('#estatus').append($('<option>').val(0).text('Selecciona una opción'));
 
                 for (let i = 0; i < data.length; i++) {
-                    const id = data[i].id_opcion;
-                    const nombre = data[i].nombre;
-                    $('#estatus').append($('<option>').val(id).text(nombre));
+                    if (data[i].idEstatus !== 6) {
+                        const id = data[i].idEstatus;
+                        const nombre = data[i].nombre;
+                        $('#estatus').append($('<option>').val(id).text(nombre));
+                    }
                 }
 
                 $('#estatus').selectpicker('refresh');
@@ -227,6 +229,7 @@
         $('#usuarios').empty()
             .append($('<option>').val(0).text('Selecciona una opción'))
             .selectpicker('refresh');
+        $("#div-tabla").prop("hidden", true);
 
         if (puesto !== '0') {
             $.ajax({
@@ -244,8 +247,6 @@
                     $('#usuarios').selectpicker('refresh');
                 }
             });
-        } else {
-            $("#tabla-historial").prop("hidden", true);
         }
     });
 
@@ -257,7 +258,7 @@
         if (idUsuario !== '0') {
             loadTable(idUsuario, idProyecto, idEstatus);
         } else {
-            $("#tabla-historial").prop("hidden", true);
+            $("#div-tabla").prop("hidden", true);
         }
     });
 
@@ -286,8 +287,8 @@
         if (i !== 15){
             $(this).html('<input type="text" class="textoshead"  placeholder="'+title+'"/>' );
             $('input', this).on('keyup change', function () {
-                if ($('#tabla_historialGral').DataTable().column(i).search() !== this.value ) {
-                    $('#tabla_historialGral').DataTable()
+                if ($('#tabla-historial').DataTable().column(i).search() !== this.value ) {
+                    $('#tabla-historial').DataTable()
                         .column(i)
                         .search(this.value)
                         .draw();
@@ -296,29 +297,61 @@
         }
     });
 
-    $("#tabla-historial tbody").on("click", ".consultar_logs_asimilados", function(e){
-        e.preventDefault();
-        e.stopImmediatePropagation();
-
-        const id_pago = $(this).val();
-        const lote = $(this).attr("data-value");
-
-        $("#seeInformationModalAsimilados").modal();
-        $("#nameLote").append('<p><h5 style="color: white;">HISTORIAL DEL PAGO DE: <b>'+lote+'</b></h5></p>');
-        $.getJSON("getComments/"+id_pago).done( function( data ){
-            $.each( data, function(i, v){
-                $("#comments-list-asimilados").append('<div class="col-lg-12"><p><i style="color:gray;">'+v.comentario+'</i><br><b style="color:#3982C0">'+v.fecha_movimiento+'</b><b style="color:gray;"> - '+v.nombre_usuario+'</b></p></div>');
-            });
-        });
-    });
-
     function loadTable(idUsuario, idProyecto, idEstatus) {
-        $("#tabla-historial").prop("hidden", false);
+        $("#div-tabla").prop("hidden", false);
 
         tablaComisiones = $('#tabla-historial').DataTable({
             dom: 'Brt'+ "<'row'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'i><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>",
             width: 'auto',
-            buttons: [],
+            buttons: [
+                {
+                    extend: 'excelHtml5',
+                    text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
+                    className: 'btn buttons-excel',
+                    titleAttr: 'Descargar archivo de Excel',
+                    title: 'HISTORIAL_GENERAL_COMISIONES',
+                    exportOptions: {
+                        columns: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14],
+                        format: {
+                            header:  function (d, columnIdx) {
+                                if (columnIdx === 0) {
+                                    return 'ID PAGO';
+                                } else if (columnIdx === 1) {
+                                    return 'PROYECTO';
+                                } else if (columnIdx === 2) {
+                                    return 'CONDOMINIO';
+                                } else if(columnIdx === 3) {
+                                    return 'NOMBRE LOTE';
+                                } else if(columnIdx === 4) {
+                                    return 'REFERENCIA';
+                                } else if(columnIdx === 5) {
+                                    return 'PRECIO LOTE';
+                                } else if(columnIdx === 6) {
+                                    return 'TOTAL COMISIÓN';
+                                } else if(columnIdx === 7) {
+                                    return 'PAGO CLIENTE';
+                                } else if(columnIdx === 8) {
+                                    return 'DISPERSADO NEODATA';
+                                } else if(columnIdx === 9) {
+                                    return 'PAGADO';
+                                } else if(columnIdx === 10) {
+                                    return 'PENDIENTE';
+                                } else if(columnIdx === 11) {
+                                    return 'COMISIONISTA';
+                                } else if(columnIdx === 12) {
+                                    return 'PUESTO';
+                                } else if(columnIdx === 13) {
+                                    return 'DETALLE';
+                                } else if(columnIdx === 14) {
+                                    return 'ESTATUS ACTUAL';
+                                } else if(columnIdx !== 15 && columnIdx !== 0) {
+                                    return ' '+titulos[columnIdx-1] +' ';
+                                }
+                            }
+                        }
+                    }
+                }
+            ],
             pagingType: "full_numbers",
             fixedHeader: true,
             language: {
@@ -420,7 +453,7 @@
                             p2 = '';
                         }
 
-                        return p1 + p2;;
+                        return p1 + p2;
                     }
                 },
                 {
@@ -551,12 +584,29 @@
                 }
             ],
             ajax: {
-                "url": `${url}Comisiones/getUsuariosByComisionesAsistentes/${idUsuario}/0/0`,
+                "url": `${url}Comisiones/getUsuariosByComisionesAsistentes/${idUsuario}/${idProyecto}/${idEstatus}`,
                 "type": "GET",
                 "cache": false,
                 "data": function( d ) {}
             },
             order: [[ 1, 'asc' ]]
+        });
+
+        $("#tabla-historial tbody").on("click", ".consultar_logs_asimilados", function(e){
+            e.preventDefault();
+            e.stopImmediatePropagation();
+
+            const id_pago = $(this).val();
+            const lote = $(this).attr("data-value");
+
+            $.getJSON("getComments/"+id_pago).done( function( data ){
+                $("#seeInformationModalAsimilados").modal();
+                $("#nameLote").append('<p><h5 style="color: white;">HISTORIAL DEL PAGO DE: <b>'+lote+'</b></h5></p>');
+
+                $.each( data, function(i, v){
+                    $("#comments-list-asimilados").append('<div class="col-lg-12"><p><i style="color:gray;">'+v.comentario+'</i><br><b style="color:#3982C0">'+v.fecha_movimiento+'</b><b style="color:gray;"> - '+v.nombre_usuario+'</b></p></div>');
+                });
+            });
         });
     }
 
