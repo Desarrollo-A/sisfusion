@@ -800,7 +800,10 @@
                     'searchable':true,
                     'className': 'dt-body-center',
                     'render': function (d, type, full) {
-                        if ($('#filtro44').val() === '2') {
+                        const estatus = $('#filtro44').val();
+                        if (estatus === '3' || estatus === '5' || estatus === '6' || estatus === '7') {
+                            return '';
+                        } else if ($('#filtro44').val() === '2') {
                             if (full.forma_pago.toLowerCase() !== 'factura') {
                                 return '<input type="checkbox" name="idTQ[]" style="width:20px;height:20px;"  value="' + full.id_pago_i + '">';
                             } else {

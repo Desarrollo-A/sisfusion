@@ -5596,14 +5596,14 @@ public function saveTipoVenta(){
       echo json_encode($this->Comisiones_model->get_lista_estatus($proyecto)->result_array());
 }
 
-public function getDatosHistorialPagoEstatus($proyecto,$condominio){
+public function getDatosHistorialPagoEstatus($proyecto,$condominio, $usuario){
 
   ini_set('max_execution_time', 900);
       set_time_limit(900);
       ini_set('memory_limit','2048M');
 
       
-  $dat =  $this->Comisiones_model->getDatosHistorialPagoEstatus($proyecto,$condominio)->result_array();
+  $dat =  $this->Comisiones_model->getDatosHistorialPagoEstatus($proyecto, $condominio, $usuario)->result_array();
  for( $i = 0; $i < count($dat); $i++ ){
      $dat[$i]['pa'] = 0;
  }
@@ -6702,4 +6702,10 @@ for ($d=0; $d <count($dos) ; $d++) {
   {
     echo json_encode($this->Comisiones_model->lista_estatus_descuentos()->result_array());
   }
+
+    public function getPuestoByIdOpts()
+    {
+        $result = $this->Comisiones_model->getPuestoByIdOpts('3,7,9');
+        echo json_encode($result);
+    }
 }
