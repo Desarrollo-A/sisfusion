@@ -3460,7 +3460,7 @@ public function return1(){
 		$datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
         /*-------------------------------------------------------------------------------*/
 		$this->load->view('template/header');
-	 	$this->load->view("Contraloria/vista_lotes_apartados",$datos);
+	 	$this->load->view("contraloria/vista_lotes_apartados",$datos);
 	}
 
     /**al día de hoy**/

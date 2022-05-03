@@ -36,13 +36,13 @@
                                     <div class="col-12 col-sm-4 col-md-4 col-lg-12">
                                         <div id="precio" style="display:none">
                                             <label class="control-label label-gral">Precio total con descuento</label>
-                                            <input type="number" id="preciodesc" name="preciodesc" class="form-control input-gral" style="text-align:center" value="">
+                                            <input type="text" id="preciodesc" name="preciodesc" class="form-control input-gral" style="text-align:center" value="">
                                         </div>
                                     </div>
                                     <div class="col-12 col-sm-4 col-md-4 col-lg-12">
                                         <div id="enganche" style="display:none">
                                             <label class="control-label label-gral">Enganche</label>
-                                            <input type="number" id="enganches" name="enganches" class="form-control input-gral" style="text-align:center" value="">
+                                            <input type="text" id="enganches" name="enganches" class="form-control input-gral" style="text-align:center" value="">
                                         </div>
                                     </div>
                                     <div class="col-12 col-sm-4 col-md-4 col-lg-12">
@@ -83,7 +83,7 @@
                                                 <div class="form-group label-floating select-is-empty">
                                                     <label class="control-label">PROYECTO</label>
                                                     <select name="proyecto" id="proyecto" class="selectpicker select-gral m-0"
-                                                            data-style="btn" data-show-subtext="true"  title="Selecciona proyecto"
+                                                            data-style="btn" data-show-subtext="true"  title="Selecciona un proyecto"
                                                             data-size="7" data-live-search="true" required>
                                                     </select>
                                                 </div>
@@ -92,7 +92,7 @@
                                                 <div class="form-group label-floating select-is-empty">
                                                     <label class="control-label">CONDOMINIO</label>
                                                     <select name="condominio" id="condominio"  class="selectpicker select-gral m-0"
-                                                            data-style="btn" data-show-subtext="true"  title="Selecciona condominio"
+                                                            data-style="btn" data-show-subtext="true"  title="Selecciona un condominio"
                                                             data-size="7" data-live-search="true" required>
                                                     </select>
                                                 </div>
@@ -101,7 +101,7 @@
                                                 <div class="form-group label-floating select-is-empty">
                                                     <label class="control-label">LOTE</label>
                                                     <select name="lote" id="lote" class="selectpicker select-gral m-0"
-                                                            data-style="btn" data-show-subtext="true"  title="Selecciona lote"
+                                                            data-style="btn" data-show-subtext="true"  title="Selecciona un lote"
                                                             data-size="7" data-live-search="true" required>
                                                     </select>
                                                 </div>
@@ -115,8 +115,6 @@
                                                 class="table-striped table-hover" style="text-align:center;">
                                             <thead>
                                                 <tr>
-                                                    <th>DESARROLLO</th>
-                                                    <th>CONDOMINIO</th>
                                                     <th>LOTE</th>
                                                     <th>ID LOTE</th>
                                                     <th>CLIENTE</th>
@@ -153,17 +151,17 @@
                                     <div class="row">
                                         <div class="col-md-4 form-group">
                                             <label for="proyecto">Proyecto: </label>
-                                            <select name="proyecto" id="proyecto" class="selectpicker" data-style="btn"data-show-subtext="true" data-live-search="true"  title="" data-size="7" required><option disabled selected>- SELECCIONA PROYECTO -</option></select>
+                                            <select name="proyecto" id="proyecto" class="selectpicker" data-style="btn"data-show-subtext="true" data-live-search="true"  title="" data-size="7" required><option disabled selected>SELECCIONA UN PROYECTO</option></select>
                                         </div>
 
                                         <div class="col-md-4 form-group">
                                             <label for="condominio">Condominio: </label>
-                                            <select name="condominio" id="condominio" class="selectpicker" data-style="btn"data-show-subtext="true" data-live-search="true"  title="" data-size="7" required><option disabled selected>- SELECCIONA CONDOMINIO -</option></select>
+                                            <select name="condominio" id="condominio" class="selectpicker" data-style="btn"data-show-subtext="true" data-live-search="true"  title="" data-size="7" required><option disabled selected>SELECCIONA UN CONDOMINIO</option></select>
                                         </div>
 
                                         <div class="col-md-4 form-group">
                                             <label for="lote">Lote: </label>
-                                            <select name="lote" id="lote" class="selectpicker" data-style="btn"data-show-subtext="true" data-live-search="true"  title="" data-size="7" required><option disabled selected>- SELECCIONA LOTE -</option></select>
+                                            <select name="lote" id="lote" class="selectpicker" data-style="btn"data-show-subtext="true" data-live-search="true"  title="" data-size="7" required><option disabled selected>SELECCIONA UN LOTE</option></select>
                                         </div>
                                     </div>
                                 </div>
@@ -187,8 +185,6 @@
                                                     id="tabla_historial" name="tabla_historial">
                                                 <thead>
                                                     <tr>
-                                                        <th style="font-size: .9em;">DESARROLLO</th>
-                                                        <th style="font-size: .9em;">CONDOMINIO</th>
                                                         <th style="font-size: .9em;">LOTE</th>
                                                         <th style="font-size: .9em;">ID LOTE</th>
                                                         <th style="font-size: .9em;">CLIENTE</th>
@@ -250,7 +246,7 @@
                 $("#proyecto").append($('<option>').val(id).text(name.toUpperCase()));
             }
             $("#proyecto").selectpicker('refresh');
-        }, 'json');
+        }, 'json'); 
     });
 
     $('#proyecto').change( function() {
@@ -259,7 +255,7 @@
         $(document).ready(function(){
             $.post(url + "Contraloria/lista_condominio/"+index_proyecto, function(data) {
                 var len = data.length;
-                $("#condominio").append($('<option disabled selected>- SELECCIONA CONDOMINIO -</option>'));
+                $("#condominio").append($('<option disabled selected>SELECCIONA UN CONDOMINIO</option>'));
                 for( var i = 0; i<len; i++)
                 {
                     var id = data[i]['idCondominio'];
@@ -278,7 +274,7 @@
         $(document).ready(function(){
             $.post(url + "Contraloria/lista_lote_apartado/"+index_condominio, function(data) {
                 var len = data.length;
-                $("#lote").append($('<option disabled selected>- SELECCIONA LOTE -</option>'));
+                $("#lote").append($('<option disabled selected>SELECCIONA UN LOTE</option>'));
                 for( var i = 0; i<len; i++)
                 {
                     var id = data[i]['idLote'];
@@ -331,8 +327,6 @@
 
             "columns":
                 [
-                    {data: 'desarrollo'},
-                    {data: 'condominio'},
                     {data: 'nombreLote'},
                     {'data': function (d) {
                             return d.idLote
@@ -345,7 +339,7 @@
                     {data: 'gerente'},
                     {
                         "data": function(d){
-                            opciones = `<center><button onclick="selectSedes("+idLote+", "+id_sede+")" id="modificar" data-idLote=${d.idLote} class="btn-data btn-orangeYellow" data-toggle="tooltip" data-placement="top" title="Modificar"><i class="far fa-edit"></i></button></center>`;
+                            opciones = `<center><button id="modificar" data-idLote=${d.idLote} class="btn-data btn-orangeYellow" data-toggle="tooltip" data-placement="top" title="Modificar"><i class="far fa-edit"></i></button></center>`;
                             return opciones;
                         }
                     }
@@ -387,7 +381,7 @@
             }
         });
     });
-
+    
     $(document).on("submit", "#form_modificacion", function (e) {
         e.preventDefault();
         let idLote = $("#idLote").val();
