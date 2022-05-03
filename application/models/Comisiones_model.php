@@ -697,8 +697,25 @@ function getDatosHistorialPagoRP($id_usuario){
         }
 
         $estatusWhereClause = '';
-        if ($estatus !== '0') {
-            $estatusWhereClause = "AND pci1.estatus = $estatus";
+        switch ($estatus) {
+            case '1':
+                $estatusWhereClause = "AND pci1.estatus IN (1,2,41,42,51,52,61,62) AND (pci1.descuento_aplicado is null or pci1.descuento_aplicado = 0)";
+                break;
+            case '2':
+                $estatusWhereClause = "AND pci1.estatus IN (4,13) AND (pci1.descuento_aplicado is null or pci1.descuento_aplicado = 0)";
+                break;
+            case '3':
+                $estatusWhereClause = "AND pci1.estatus IN (8,88) AND (pci1.descuento_aplicado is null or pci1.descuento_aplicado = 0)";
+                break;
+            case '4':
+                $estatusWhereClause = "AND pci1.estatus IN (6) AND (pci1.descuento_aplicado is null or pci1.descuento_aplicado = 0)";
+                break;
+            case '5':
+                $estatusWhereClause = "AND pci1.estatus IN (11,16,17,0) AND pci1.descuento_aplicado = 1";
+                break;
+            case '7':
+                $estatusWhereClause = "AND pci1.estatus IN (11,12) AND (pci1.descuento_aplicado is null or pci1.descuento_aplicado = 0)";
+                break;
         }
 
         $query = $this->db->query("(SELECT pci1.id_pago_i, pci1.id_comision, lo.nombreLote, re.nombreResidencial as 
@@ -791,7 +808,7 @@ function getDatosHistorialPagoRP($id_usuario){
     public function findAllResidenciales()
     {
         $query = $this->db->query('SELECT idResidencial, nombreResidencial, descripcion FROM residenciales
-            WHERE status = 1');
+            WHERE active_comission = 1');
         return $query->result_array();
     }
 
