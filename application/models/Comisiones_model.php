@@ -687,7 +687,137 @@ function getDatosHistorialPagoRP($id_usuario){
 
     }
 
+    public function getUsuariosByComisionesAsistentes($idUsuarioSelect, $proyecto, $estatus)
+    {
+        $usuarioWhereClause = "u.id_usuario = $idUsuarioSelect";
 
+        $proyectoWhereClause = '';
+        if ($proyecto !== '0') {
+            $proyectoWhereClause = "AND re.idResidencial = $proyecto";
+        }
+
+        $estatusWhereClause = '';
+        switch ($estatus) {
+            case '1':
+                $estatusWhereClause = "AND pci1.estatus IN (1,2,41,42,51,52,61,62) AND (pci1.descuento_aplicado is null or pci1.descuento_aplicado = 0)";
+                break;
+            case '2':
+                $estatusWhereClause = "AND pci1.estatus IN (4,13) AND (pci1.descuento_aplicado is null or pci1.descuento_aplicado = 0)";
+                break;
+            case '3':
+                $estatusWhereClause = "AND pci1.estatus IN (8,88) AND (pci1.descuento_aplicado is null or pci1.descuento_aplicado = 0)";
+                break;
+            case '4':
+                $estatusWhereClause = "AND pci1.estatus IN (6) AND (pci1.descuento_aplicado is null or pci1.descuento_aplicado = 0)";
+                break;
+            case '5':
+                $estatusWhereClause = "AND pci1.estatus IN (11,16,17,0) AND pci1.descuento_aplicado = 1";
+                break;
+            case '7':
+                $estatusWhereClause = "AND pci1.estatus IN (11,12) AND (pci1.descuento_aplicado is null or pci1.descuento_aplicado = 0)";
+                break;
+        }
+
+        $query = $this->db->query("(SELECT pci1.id_pago_i, pci1.id_comision, lo.nombreLote, re.nombreResidencial as 
+        proyecto, co.nombre as condominio,lo.totalNeto2 precio_lote, com.comision_total, com.porcentaje_decimal, 
+            pci1.abono_neodata pago_cliente, pci1.pago_neodata, pci2.abono_pagado pagado, 
+            com.comision_total-pci2.abono_pagado restante, pci1.estatus, pci1.fecha_abono fecha_creacion, 
+            CONCAT(u.nombre, ' ',u.apellido_paterno, ' ', u.apellido_materno) user_names ,pci1.id_usuario, 
+            oprol.nombre as puesto, oxcest.nombre as estatus_actual, oxcest.id_opcion id_estatus_actual, 
+            pci1.descuento_aplicado, 0 lugar_prospeccion, lo.referencia, pac.bonificacion, u.estatus as activo
+            FROM pago_comision_ind pci1 
+            LEFT JOIN (SELECT SUM(abono_neodata) abono_pagado, id_comision FROM pago_comision_ind WHERE estatus in (11) 
+            GROUP BY id_comision) pci2 ON pci1.id_comision = pci2.id_comision
+            INNER JOIN comisiones com ON pci1.id_comision = com.id_comision
+            INNER JOIN lotes lo ON lo.idLote = com.id_lote AND lo.status = 1 
+            INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
+            INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
+            INNER JOIN usuarios u ON u.id_usuario = com.id_usuario
+            INNER JOIN opcs_x_cats oprol ON oprol.id_opcion = com.rol_generado AND oprol.id_catalogo = 1
+            INNER JOIN pago_comision pac ON pac.id_lote = com.id_lote
+            INNER JOIN opcs_x_cats oxcest ON oxcest.id_opcion = pci1.estatus AND oxcest.id_catalogo = 23
+                     
+            WHERE (((pci1.estatus IN (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 51, 52, 88, 16, 17, 41, 42)) 
+            OR (pci1.estatus = 0 AND pci1.descuento_aplicado = 1) ) 
+            
+            AND ( (lo.idStatusContratacion < 9 AND com.estatus IN (1,8)) OR (lo.idStatusContratacion > 8 
+            AND com.estatus IN (8))) AND $usuarioWhereClause $proyectoWhereClause $estatusWhereClause)
+            
+            GROUP BY pci1.id_comision, lo.nombreLote, re.nombreResidencial, co.nombre, lo.totalNeto2, 
+            com.comision_total, com.porcentaje_decimal, pci1.abono_neodata, pci1.pago_neodata, 
+            pci2.abono_pagado, pci1.estatus, pci1.fecha_abono, pci1.id_usuario, pci1.id_pago_i, u.nombre,
+            u.apellido_paterno,u.apellido_materno, oprol.nombre, oxcest.nombre, oxcest.id_opcion, 
+            pci1.descuento_aplicado, lo.referencia, com.estatus, pac.bonificacion, u.estatus)
+            
+            UNION 
+             
+            (SELECT pci1.id_pago_i, pci1.id_comision, lo.nombreLote, re.nombreResidencial as proyecto, co.nombre 
+            as condominio,lo.totalNeto2 precio_lote, com.comision_total, com.porcentaje_decimal, 
+            pci1.abono_neodata pago_cliente, pci1.pago_neodata, pci2.abono_pagado pagado, 
+            com.comision_total-pci2.abono_pagado restante, pci1.estatus, pci1.fecha_abono fecha_creacion, 
+            CONCAT(u.nombre, ' ',u.apellido_paterno, ' ', u.apellido_materno) user_names ,pci1.id_usuario, 
+            oprol.nombre as puesto, oxcest.nombre as estatus_actual, oxcest.id_opcion id_estatus_actual, 
+            pci1.descuento_aplicado, cl.lugar_prospeccion, lo.referencia, pac.bonificacion, u.estatus as activo
+            FROM pago_comision_ind pci1 
+            LEFT JOIN (SELECT SUM(abono_neodata) abono_pagado, id_comision FROM pago_comision_ind WHERE estatus in (11) 
+            GROUP BY id_comision) pci2 ON pci1.id_comision = pci2.id_comision
+            INNER JOIN comisiones com ON pci1.id_comision = com.id_comision AND com.estatus in (1)
+            INNER JOIN lotes lo ON lo.idLote = com.id_lote AND lo.status = 1 
+            INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
+            INNER JOIN residenciales re ON re.idResidencial = co.idResidencial 
+            INNER JOIN clientes cl ON cl.idLote = lo.idLote AND cl.status = 1
+            INNER JOIN usuarios u ON u.id_usuario = com.id_usuario
+            INNER JOIN opcs_x_cats oprol ON oprol.id_opcion = com.rol_generado AND oprol.id_catalogo = 1
+            INNER JOIN pago_comision pac ON pac.id_lote = com.id_lote
+            INNER JOIN opcs_x_cats oxcest ON oxcest.id_opcion = pci1.estatus AND oxcest.id_catalogo = 23
+            
+            WHERE ((pci1.estatus IN (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 51, 52, 88,16,17, 41,42) 
+            OR (pci1.estatus = 0 AND pci1.descuento_aplicado = 1) 
+            AND lo.idStatusContratacion > 8) AND $usuarioWhereClause $proyectoWhereClause $estatusWhereClause)
+            
+            GROUP BY pci1.id_comision, lo.nombreLote, re.nombreResidencial, co.nombre, lo.totalNeto2, com.comision_total, 
+            com.porcentaje_decimal, pci1.abono_neodata, pci1.pago_neodata, 
+            pci2.abono_pagado, pci1.estatus, pci1.fecha_abono, pci1.id_usuario, pci1.id_pago_i, u.nombre, 
+            u.apellido_paterno, u.apellido_materno, oprol.nombre, oxcest.nombre, oxcest.id_opcion,
+            pci1.descuento_aplicado, cl.lugar_prospeccion, lo.referencia, com.estatus, pac.bonificacion, u.estatus)
+            ORDER BY lo.nombreLote");
+
+        return $query->result_array();
+    }
+
+    public function findUsuariosByPuestoAsistente($puesto, $idUsuarioSesion)
+    {
+        $puestoWhereClause = '';
+        if ($puesto === '3') {
+            $puestoWhereClause = "id_usuario = (SELECT id_lider FROM usuarios WHERE id_usuario = $idUsuarioSesion)";
+        } else if ($puesto === '9') {
+            $puestoWhereClause = "id_lider IN (SELECT id_lider FROM usuarios WHERE id_usuario = $idUsuarioSesion) 
+                AND id_rol = 9";
+        } else if ($puesto === '7') {
+            $puestoWhereClause = "id_lider IN (SELECT id_usuario FROM usuarios WHERE id_lider IN (SELECT id_lider FROM usuarios 
+                WHERE id_usuario = $idUsuarioSesion) AND id_rol = 9)";
+        }
+
+        $query = $this->db->query("SELECT id_usuario, CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno)
+            AS nombre_completo
+            FROM usuarios WHERE $puestoWhereClause");
+
+        return $query->result_array();
+    }
+
+    public function findAllResidenciales()
+    {
+        $query = $this->db->query('SELECT idResidencial, nombreResidencial, descripcion FROM residenciales
+            WHERE active_comission = 1');
+        return $query->result_array();
+    }
+
+    public function getOpcionCatByIdCatAndIdOpt($idCatalogo, $idOpciones)
+    {
+        $query = $this->db->query("SELECT id_opcion, id_catalogo, nombre FROM opcs_x_cats 
+            WHERE id_catalogo = $idCatalogo AND id_opcion IN ($idOpciones)");
+        return $query->result_array();
+    }
 
  function getDatosHistorialPagoM($proyecto,$condominio){
 

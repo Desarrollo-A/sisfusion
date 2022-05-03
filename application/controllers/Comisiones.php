@@ -6711,4 +6711,45 @@ for ($d=0; $d <count($dos) ; $d++) {
         $result = $this->Comisiones_model->getPuestoByIdOpts('3,7,9');
         echo json_encode($result);
     }
+
+    public function viewAsistentesGerencia()
+    {
+        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
+        $this->load->view('template/header');
+        $this->load->view("ventas/seguimiento_comisiones_asistente", $datos);
+    }
+
+    public function getUsuariosByComisionesAsistentes($idUsuarioSelect, $proyecto, $estatus)
+    {
+        $data = $this->Comisiones_model->getUsuariosByComisionesAsistentes($idUsuarioSelect, $proyecto, $estatus);
+        for($i = 0; $i < count($data); $i++ ){
+            $data[$i]['pa'] = 0;
+        }
+        echo json_encode(array('data' => $data));
+    }
+
+    public function getPuestoComisionesAsistentes()
+    {
+        $data = $this->Comisiones_model->getOpcionCatByIdCatAndIdOpt(1, '3,7,9');
+        echo json_encode($data);
+    }
+
+    public function findUsuariosByPuestoAsistente($puesto)
+    {
+        $idUsuario = $this->session->userdata('id_usuario');
+        $data = $this->Comisiones_model->findUsuariosByPuestoAsistente($puesto, $idUsuario);
+        echo json_encode($data);
+    }
+
+    public function findAllResidenciales()
+    {
+        $data = $this->Comisiones_model->findAllResidenciales();
+        echo json_encode($data);
+    }
+
+    public function getEstatusComisionesAsistentes()
+    {
+        $data = $this->Comisiones_model->get_lista_estatus()->result_array();
+        echo json_encode($data);
+    }
 }
