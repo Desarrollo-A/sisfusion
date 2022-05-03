@@ -2137,20 +2137,26 @@ ORDER BY hc.fecha_movimiento DESC");
 
 }
 
- function getCommentsDU($user)
- {
-
+function getCommentsDU($user){
+    //     return $this->db->query("SELECT DISTINCT(hc.comentario), hc.id_pago_i, hc.id_usuario, hc.fecha_movimiento,
+    // CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombre_usuario
+    // FROM historial_comisiones hc 
+    // INNER JOIN pago_comision_ind pci ON pci.id_pago_i = hc.id_pago_i
+    // INNER JOIN usuarios u ON u.id_usuario = hc.id_usuario 
+    // WHERE hc.id_pago_i = $pago  
+    // ORDER BY hc.fecha_movimiento DESC");
     $this->db->query("SET LANGUAGE Español;");
-    return $this->db->query("SELECT  pci.abono_neodata comentario, pci.id_pago_i, pci.creado_por, 
+    return $this->db->query("SELECT pci.abono_neodata as comentario,concat(' - ',pci.comentario) comentario2, pci.id_pago_i, pci.creado_por, 
     convert(nvarchar(20), pci.fecha_abono, 113) date_final,
     pci.fecha_abono,
-    CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombre_usuario, du.saldo_comisiones
+    CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombre_usuario
     FROM pago_comision_ind pci  
     INNER JOIN usuarios u ON u.id_usuario = pci.creado_por 
-    LEFT JOIN descuentos_universidad du ON du.id_usuario = u.id_usuario
     WHERE pci.estatus = 17 AND pci.id_usuario = $user
     ORDER BY pci.fecha_abono DESC");
-}
+    
+    
+    }
 
 
 
@@ -4351,7 +4357,7 @@ function insertar_descuento($usuarioid,$monto,$ide_comision,$comentario,$usuario
         $respuesta = $this->db->query("INSERT INTO pago_comision_ind(id_comision, id_usuario, abono_neodata, fecha_abono, fecha_pago_intmex, pago_neodata, estatus, modificado_por, comentario, descuento_aplicado,abono_final,aply_pago_intmex) VALUES ($ide_comision, $usuarioid, $monto, GETDATE(), GETDATE(), $pago_neodata, $estatus, $usuario, 'DESCUENTO NUEVO PAGO', 0 ,null, null)");
         $insert_id = $this->db->insert_id();
     
-        $respuesta = $this->db->query("INSERT INTO historial_comisiones VALUES ($insert_id, $usuario, GETDATE(), 1, 'SALDO DISPONIBLE POSTERIOR A UN DESCUENTO')");
+        $respuesta = $this->db->query("INSERT INTO historial_comisiones VALUES ($insert_id, $usuario, GETDATE(), 1, 'ESTE ES EL RESTANTE A UN DESCUENTO UNIVERSIDAD, DISPONIBLE PARA COBRO')");
     
     
         if (! $respuesta ) {
@@ -4382,18 +4388,20 @@ function insertar_descuento($usuarioid,$monto,$ide_comision,$comentario,$usuario
    
        function update_descuento($id_pago_i,$monto, $comentario, $saldo_comisiones, $usuario,$valor,$user,$pagos_aplicados){
            $estatus = 0;
+           $uni='DESCUENTO';
            if($valor == 2){
        $estatus =16;
            }else if($valor == 3){
                $estatus =17;
                // -- $respuesta = $this->db->query("UPDATE descuentos_universidad SET estatus = 2 where id_usuario=$user");
                $respuesta = $this->db->query("UPDATE descuentos_universidad SET saldo_comisiones=".$saldo_comisiones.", pagos_activos = (pagos_activos - ".$pagos_aplicados."), estatus = 2 WHERE id_usuario = ".$user." AND estatus = 1");
-       
+               $uni='SALDO COMISIONES: $'.number_format($saldo_comisiones,2, '.', ',');
+
            }
            if ($monto == 0) {
-               $respuesta = $this->db->query("UPDATE pago_comision_ind SET estatus = $estatus, descuento_aplicado=1, modificado_por='$usuario', fecha_pago_intmex = GETDATE(), fecha_abono = GETDATE(), comentario='DESCUENTO' WHERE id_pago_i=$id_pago_i");
+               $respuesta = $this->db->query("UPDATE pago_comision_ind SET estatus = $estatus, descuento_aplicado=1, modificado_por='$usuario', fecha_pago_intmex = GETDATE(), fecha_abono = GETDATE(), comentario='$uni' WHERE id_pago_i=$id_pago_i");
            } else {
-               $respuesta = $this->db->query("UPDATE pago_comision_ind SET estatus = $estatus, descuento_aplicado=1, modificado_por='$usuario', fecha_pago_intmex = GETDATE(), fecha_abono = GETDATE(), abono_neodata = $monto, comentario='DESCUENTO' WHERE id_pago_i=$id_pago_i");
+               $respuesta = $this->db->query("UPDATE pago_comision_ind SET estatus = $estatus, descuento_aplicado=1, modificado_por='$usuario', fecha_pago_intmex = GETDATE(), fecha_abono = GETDATE(), abono_neodata = $monto, comentario='$uni' WHERE id_pago_i=$id_pago_i");
            }
 
            $respuesta = $this->db->query("INSERT INTO historial_comisiones VALUES ($id_pago_i, $usuario, GETDATE(), 1, 'MOTIVO DESCUENTO: " . $comentario . "')");

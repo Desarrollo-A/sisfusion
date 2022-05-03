@@ -32,6 +32,68 @@
         </div>
     </div>
 
+    <div class="modal fade"
+         id="activar-pago-modal"
+         tabindex="-1"
+         role="dialog"
+         aria-labelledby="myModalLabel"
+         aria-hidden="true"
+         data-backdrop="static"
+         data-keyboard="false">
+        <div class="modal-dialog"
+             role="document">
+            <div class="modal-content">
+                <div class="modal-header bg-red">
+                    <button type="button"
+                            class="close"
+                            data-dismiss="modal"
+                            aria-hidden="true">
+                        <i class="material-icons">clear</i>
+                    </button>
+                    <h4 class="modal-title">Reactivar pagos</h4>
+                </div>
+
+                <form method="post"
+                      class="row"
+                      id="activar-pago-form"
+                      autocomplete="off">
+                    <div class="modal-body">
+                        <input type="hidden"
+                               name="id_descuento"
+                               id="id-descuento-pago">
+
+                        <div class="col-lg-12">
+                            <h4>Faltante: <b><span id="faltante-pago"></span></b></h4>
+                        </div>
+
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <label for="fecha">Fecha reactivación</label>
+                                <input type="date"
+                                       class="form-control"
+                                       name="fecha"
+                                       id="fecha"
+                                       min="<?=date('Y-m-d')?>"
+                                       required />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="submit"
+                                class="btn btn-primary">
+                            Aceptar
+                        </button>
+                        <button type="button"
+                                class="btn btn-danger btn-simple"
+                                data-dismiss="modal">
+                            Cancelar
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 
     <div class="modal fade" id="seeInformationModalDU" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
          aria-hidden="true" data-backdrop="static" data-keyboard="false">
@@ -171,7 +233,7 @@
                         <div class="col-md-12">
 
                             <label class="label">Mótivo de descuento</label>
-                            <textarea id="comentario" name="comentario" class="form-control" rows="3"
+                            <textarea id="comentario" name="comentario" class="form-control" rows="5"
                                       required></textarea>
 
                         </div>
@@ -336,14 +398,14 @@
         </div>
     </div>
 
-    <!--<div class="modal fade bd-example-modal-sm" id="myModalEnviadas" tabindex="-1" role="dialog"
+    <div class="modal fade bd-example-modal-sm" id="myModalEnviadas" tabindex="-1" role="dialog"
          aria-labelledby="mySmallModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-sm">
             <div class="modal-content">
                 <div class="modal-body"></div>
             </div>
         </div>
-    </div>-->
+    </div>
 
 
 
@@ -635,6 +697,9 @@
     var url2 = "<?=base_url()?>index.php/";
     var totaPen = 0;
     var tr;
+    let tabla_nuevas_liquidado;
+    let tabla_nuevas;
+    let tabla_nuevas_combinada;
 
     $(document).ready(function(){
 
@@ -850,7 +915,7 @@
             {
                 "width": "8%",
                 "data": function (d) {
-                    if (d.status == 0 && d.estatus != 4) {
+                    if ((d.status == 0 ||d.status == 3)&& d.estatus != 4) {
                         return '<span class="label" style="background:red;">BAJA</span>';
                     }
                     else if (d.estatus == 4) {
@@ -983,6 +1048,40 @@
         },
     });
 
+    $('#activar-pago-form').on('submit', function (e) {
+        e.preventDefault();
+
+        let dateForm = new Date($('#fecha').val());
+        dateForm.setDate(dateForm.getDate() + 1);
+        const today = new Date();
+
+        if (dateForm.setHours(0,0,0,0) < today.setHours(0,0,0,0)) {
+            alerts.showNotification("top", "right", "La Fecha debe ser igual o mayor a la actual.", "danger");
+        } else {
+            $.ajax({
+                type: 'POST',
+                url: 'reactivarPago',
+                data: new FormData(this),
+                contentType: false,
+                cache: false,
+                processData: false,
+                success: function (data) {
+                    if (JSON.parse(data)) {
+                        $('#activar-pago-modal').modal('hide');
+                        $('#id-descuento-pago').val('');
+                        alerts.showNotification("top", "right", "El registro se ha actualizado exitosamente.", "success");
+                        tabla_nuevas.ajax.reload();
+                    } else {
+                        alerts.showNotification("top", "right", "Ocurrió un problema, vuelva a intentarlo más tarde.", "warning");
+                    }
+                },
+                error: function(){
+                    alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+                }
+            });
+        }
+    });
+
 
     $("#tabla_descuentos_liquidados tbody").on("click", ".consultar_logs_asimilados", function (e) {
         e.preventDefault();
@@ -1000,7 +1099,7 @@
 
             } else {
                 $.each(data, function (i, v) {
-                    $("#comments-list-asimilados").append('<div class="col-lg-12"><p style="color:gray;font-size:1.1em;">SE DESCONTÓ LA CANTIDAD DE <b>$' + formatMoney(v.comentario) + '</b><br><b style="color:#3982C0;font-size:0.9em;">' + v.date_final + '</b><b style="color:#C6C6C6;font-size:0.9em;"> - ' + v.nombre_usuario + '</b></p></div>');
+                    $("#comments-list-asimilados").append('<div class="col-lg-12"><p style="color:gray;font-size:1.1em;">SE DESCONTÓ LA CANTIDAD DE <b>$' + formatMoney(v.comentario) +'<br>'+ v.comentario2 +'</b><br><b style="color:#3982C0;font-size:0.9em;">' + v.date_final + '</b><b style="color:#C6C6C6;font-size:0.9em;"> - ' + v.nombre_usuario + '</b></p></div>');
                 });
             }
         });
@@ -1289,7 +1388,9 @@
                 {
                     "width": "7%",
                     "data": function (d) {
-                        if (d.status == 0) {
+                        if (d.estatusDU === 5 || (d.estatusDU === 1 && d.pagos_activos === 0)) {
+                            return '<span class="label" style="background:blue;">REACTIVADO</span>';
+                        } else if (d.status == 0) {
                             return '<span class="label" style="background:red;">BAJA</span>';
                         } else {
                             if (d.id_sede == 6) {
@@ -1420,7 +1521,36 @@
                 {
                     "width": "8%",
                     "data": function (d) {
-                        if (d.status == 0) {
+                        if (d.estatusDU === 0) {
+                            return `
+                                <div class="d-flex justify-center">
+                                    <button value="${d.id_usuario}"
+                                        data-value="${d.nombre}"
+                                        data-code="${d.id_usuario}"
+                                        class="btn-data btn-blueMaderas consultar_logs_asimilados"
+                                        title="Detalles">
+                                            <i class="fas fa-info-circle"></i>
+                                    </button>
+                                    <button value="${d.id_usuario}"
+                                        class="btn-data btn-violetDeep activar-prestamo"
+                                        title="Activar">
+                                        <i class="fa fa-rotate-left"></i>
+                                    </button>
+                                </div>
+                            `;
+                        } else if ((d.estatusDU === 1 || d.estatusDU === 5) && d.pagos_activos === 0) {
+                            return `
+                                <div class="d-flex justify-center">
+                                    <button value="${d.id_usuario}"
+                                        data-value="${d.nombre}"
+                                        data-code="${d.id_usuario}"
+                                        class="btn-data btn-blueMaderas consultar_logs_asimilados"
+                                        title="Detalles">
+                                            <i class="fas fa-info-circle"></i>
+                                    </button>
+                                </div>
+                            `;
+                        } else if (d.status == 0) {
                             return '<div class="d-flex justify-center"><button href="#" value="' + d.id_usuario + '" data-value="' + d.nombre + '" data-code="' + d.id_usuario + '" ' + 'class="btn-data btn-blueMaderas consultar_logs_asimilados" title="Detalles">' + '<i class="fas fa-info-circle"></i></button>'+
                                 '<button href="#" value="' + d.id_usuario + '" data-value="' + d.nombre + '" data-code="' + d.id_usuario + '" ' + 'class="btn-data btn-darkMaderas consultar_historial_pagos" title="Historial pagos">' + '<i class="fas fa-chart-bar"></i></button></div>';
 
@@ -1505,6 +1635,25 @@
             },
         });
 
+        $('#tabla_descuentos tbody').on('click', '.activar-prestamo', function () {
+        const usuarioId = $(this).val();
+
+        $('#activar-pago-form').trigger('reset');
+
+        $.get(`${url}Comisiones/getTotalPagoFaltanteUsuario/${usuarioId}`, function (data) {
+            const pago = JSON.parse(data);
+
+            $('#id-descuento-pago').val(pago.id_descuento);
+
+            if (pago.faltante !== null) {
+                $('#faltante-pago').text('').text(formatMoney(pago.faltante));
+            } else {
+                $('#faltante-pago').text('').text(formatMoney(pago.monto_total));
+            }
+
+            $('#activar-pago-modal').modal();
+        });
+    });
 
         $("#tabla_descuentos tbody").on("click", ".agregar_nuevo_descuento", function (e) {
             e.preventDefault();
@@ -1557,7 +1706,7 @@
                     console.log('suma2 lote ' + sumaselected);
 
 
-                    $("#idloteorigen").append(`<option value='${comision},${comtotal.toFixed(2)},${pago_neodata}' selected="selected">${name}  -   $${formatMoney(comtotal.toFixed(2))}</option>`);
+                    $("#idloteorigen").append(`<option value='${comision},${comtotal.toFixed(2)},${pago_neodata},${name}' selected="selected">${name}  -   $${formatMoney(comtotal.toFixed(2))}</option>`);
                 }
 
                 $("#idmontodisponible").val('$' + formatMoney(sumaselected));
@@ -1684,7 +1833,7 @@
                     $("#comments-list-asimilados").append('<div class="col-lg-12"><p style="color:gray;font-size:1.1em;">SIN </p></div>');
                 } else {
                     $.each(data, function (i, v) {
-                        $("#comments-list-asimilados").append('<div class="col-lg-12"><p style="color:gray;font-size:1.1em;">SE DESCONTÓ LA CANTIDAD DE <b>$' + formatMoney(v.comentario) + '</b>'+saldo_comisiones+'<br><b style="color:#3982C0;font-size:0.9em;">' + v.date_final + '</b><b style="color:#C6C6C6;font-size:0.9em;"> - ' + v.nombre_usuario + '</b></p></div>');
+                        $("#comments-list-asimilados").append('<div class="col-lg-12"><p style="color:gray;font-size:1.1em;">SE DESCONTÓ LA CANTIDAD DE <b>$' + formatMoney(v.comentario) +'<br>' + v.comentario2 +'</b>'+saldo_comisiones+'<br><b style="color:#3982C0;font-size:0.9em;">' + v.date_final + '</b><b style="color:#C6C6C6;font-size:0.9em;"> - ' + v.nombre_usuario + '</b></p></div>');
                     });
                 }
             });
@@ -1823,9 +1972,9 @@
         });
 
         /******************/
-        /*function cancela() {
+        function cancela() {
             $("#modal_nuevas").modal('toggle');
-        }*/
+        }
 
 
         //Función para pausar la solicitud
@@ -2092,7 +2241,7 @@
 
         }
 
-        /*function CloseModalDelete() {
+        function CloseModalDelete() {
             // document.getElementById("inputhidden").innerHTML = "";
             a = document.getElementById('borrarBono');
             padre = a.parentNode;
@@ -2100,7 +2249,7 @@
 
             $("#modal-delete").modal('toggle');
 
-        }*/
+        }
 
         function CloseModalDelete2() {
             // document.getElementById("inputhidden").innerHTML = "";
@@ -2159,7 +2308,7 @@
         });
 
 
-        /*$("#form_aplicar").submit(function (e) {
+        $("#form_aplicar").submit(function (e) {
             e.preventDefault();
         }).validate({
             submitHandler: function (form) {
@@ -2194,13 +2343,13 @@
                     }
                 });
             }
-        });*/
+        });
 
 
         // FIN TABLA PAGADAS
 
 
-        /*function mandar_espera(idLote, nombre) {
+        function mandar_espera(idLote, nombre) {
             idLoteespera = idLote;
             // link_post2 = "Cuentasxp/datos_para_rechazo1/";
             link_espera1 = "Comisiones/generar comisiones/";
@@ -2209,7 +2358,7 @@
             $("#myModalEspera ").modal();
             // $("#myModalEspera .modal-body").append("<div class='btn-group'>LOTE: "+nombre+"</div>");
             $("#myModalEspera .modal-footer").append("<div class='btn-group'><button type='submit' class='btn btn-success'>GENERAR COMISIÓN</button></div>");
-        }*/
+        }
 
 
         // FUNCTION MORE
@@ -2347,11 +2496,24 @@
 
                             break;
                         }
-                        cadena = cadena + ' , ' + data[index].text;
+                       // cadena = cadena + ' , ' + data[index].text;
+                       
+                    console.log(data[index].text);
+                    if(cuantos == 1){
+                        let datosLote = data[index].text.split('-   $');
+                        let nameLote = datosLote[0]
+                        let montoLote = datosLote[1];
+                        cadena =  'DESCUENTO UNIVERSIDAD MADERAS \n LOTE INVOLUCRADO: '+nameLote+',  MONTO DISPONIBLE: $'+montoLote+'.\n DESCUENTO DE: $'+formatMoney(monto)+', RESTANTE:$'+formatMoney(parseFloat(abono_neo) - parseFloat(monto));
+                    }else{
+                        cadena = 'DESCUENTO UNIVERSIDAD MADERAS';
+                    }
+                    
                         document.getElementById('msj2').innerHTML = '';
 
                     }
-                    $('#comentario').val('Lotes involucrados en el descuento(universidad): ' + cadena + '. Por la cantidad de: $' + formatMoney(monto));
+                    $('#comentario').val(cadena);
+
+                  //  $('#comentario').val('Lotes involucrados en el descuento(universidad): ' + cadena + '. Por la cantidad de: $' + formatMoney(monto));
 
                     // console.log(cadena);
                 }
@@ -3385,8 +3547,9 @@
             {
                 "width": "8%",
                 "data": function (d) {
-
-                    if(d.queryType == 2){
+                    if (d.estatusDU === 5 || (d.estatusDU === 1 && d.pagos_activos === 0)) {
+                        return '<span class="label" style="background: blue;">REACTIVADA</span>';
+                    } else if(d.queryType == 2) {
                         if (d.status == 0 && d.estatus != 4) {
                             return '<span class="label" style="background:red;">BAJA</span>';
                         }
@@ -3602,6 +3765,36 @@
             {
                 "width": "8%",
                 "data": function (d) {
+                    if (d.estatusDU === 0) {
+                        return `
+                                <div class="d-flex justify-center">
+                                    <button value="${d.id_usuario}"
+                                        data-value="${d.nombre}"
+                                        data-code="${d.id_usuario}"
+                                        class="btn-data btn-blueMaderas consultar_logs_asimilados"
+                                        title="Detalles">
+                                            <i class="fas fa-info-circle"></i>
+                                    </button>
+                                    <button value="${d.id_usuario}"
+                                        class="btn-data btn-violetDeep activar-prestamo"
+                                        title="Activar">
+                                        <i class="fa fa-rotate-left"></i>
+                                    </button>
+                                </div>
+                            `;
+                    } else if ((d.estatusDU === 1 || d.estatusDU === 5) && d.pagos_activos === 0) {
+                        return `
+                                <div class="d-flex justify-center">
+                                    <button value="${d.id_usuario}"
+                                        data-value="${d.nombre}"
+                                        data-code="${d.id_usuario}"
+                                        class="btn-data btn-blueMaderas consultar_logs_asimilados"
+                                        title="Detalles">
+                                            <i class="fas fa-info-circle"></i>
+                                    </button>
+                                </div>
+                            `;
+                    }
                     let tipo_descuento = d.queryType;
                     if(tipo_descuento == 2){
                         return '<div class="d-flex justify-center"><button href="#" value="' + d.id_usuario + '" data-value="' + d.nombre + '" data-code="' + d.id_usuario + '" ' + 'class="btn-data btn-blueMaderas consultar_logs_asimilados" title="Detalles">' + '<span class="fas fa-info-circle"></span></button></div>';
@@ -3710,11 +3903,32 @@
 
             } else {
                 $.each(data, function (i, v) {
-                    $("#comments-list-asimilados").append('<div class="col-lg-12"><p style="color:gray;font-size:1.1em;">SE DESCONTÓ LA CANTIDAD DE <b>$' + formatMoney(v.comentario) + '</b><br><b style="color:#3982C0;font-size:0.9em;">' + v.date_final + '</b><b style="color:#C6C6C6;font-size:0.9em;"> - ' + v.nombre_usuario + '</b></p></div>');
+                    $("#comments-list-asimilados").append('<div class="col-lg-12"><p style="color:gray;font-size:1.1em;">SE DESCONTÓ LA CANTIDAD DE <b>$' + formatMoney(v.comentario) + '<br>' + v.comentario2 + '</b><br><b style="color:#3982C0;font-size:0.9em;">' + v.date_final + '</b><b style="color:#C6C6C6;font-size:0.9em;"> - ' + v.nombre_usuario + '</b></p></div>');
                 });
             }
         });
     });
+
+    $('#tabla_descuentos_combinada tbody').on('click', '.activar-prestamo', function () {
+        const usuarioId = $(this).val();
+
+        $('#activar-pago-form').trigger('reset');
+
+        $.get(`${url}Comisiones/getTotalPagoFaltanteUsuario/${usuarioId}`, function (data) {
+            const pago = JSON.parse(data);
+
+            $('#id-descuento-pago').val(pago.id_descuento);
+
+            if (pago.faltante !== null) {
+                $('#faltante-pago').text('').text(formatMoney(pago.faltante));
+            } else {
+                $('#faltante-pago').text('').text(formatMoney(pago.monto_total));
+            }
+
+            $('#activar-pago-modal').modal();
+        });
+    });
+
     $('#tabla_descuentos_combinada tbody').on('click', 'td.details-control', function () {
         var tr = $(this).closest('tr');
         var row = tabla_nuevas_combinada.row(tr);
@@ -3902,11 +4116,6 @@
 
         return solicitudes += '</table>';
     }
-
-
-
-
-
 </script>
 
 
