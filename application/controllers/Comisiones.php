@@ -3969,22 +3969,27 @@ public function descuentos_historial()
   
     $LotesInvolucrados = "";
 
-if($valor == 1){
+if(floatval($valor) == 1){
+  echo "ENTRA 1";
   $datos =  $this->input->post("idloteorigen[]");
   $descuento = $this->input->post("monto");
   $usuario = $this->input->post("usuarioid");
   $comentario = $this->input->post("comentario");
-  $pagos_aplica = 0;
+  $pagos_apli = 0;
   
-}else if($valor == 2){
+}else if(floatval($valor) == 2){
+  echo "ENTRA 2";
+
   $datos =  $this->input->post("idloteorigen2[]");
   $descuento = $this->input->post("monto2");
   $usuario = $this->input->post("usuarioid2");
   $comentario = $this->input->post("comentario2");
-  $pagos_aplica = 0;
+  $pagos_apli = 0;
  
 }
-else if($valor == 3){
+else if(floatval($valor) == 3){
+  echo "ENTRA 3";
+
   /**DESCUENTOS UNIVERSIDAD*/
   $datos =  $this->input->post("idloteorigen[]");
   $desc =  $this->input->post("monto");
@@ -4008,9 +4013,6 @@ else if($valor == 3){
      $descuento = str_replace("$",'',$descuent0);
 }
 
-print_r($datos);
-echo "<br>";
-print_r($LotesInvolucrados);
     $cuantos = count($datos); 
     if($cuantos > 1){
       $sumaMontos = 0;
@@ -4020,38 +4022,39 @@ print_r($LotesInvolucrados);
           $id = $formatear[0]; 
           $monto = $formatear[1];
           $pago_neodata = $formatear[2];
-          $nameLote = $formatear[3];
          $montoAinsertar = $descuento - $sumaMontos;
          $Restante = $monto - $montoAinsertar;
          $comision = $this->Comisiones_model->obtenerID($id)->result_array();
         if($valor == 2){
-         // $dat =  $this->Comisiones_model->update_descuentoEsp($id,$Restante,$comentario, $this->session->userdata('id_usuario'),$valor,$usuario);
-         // $dat =  $this->Comisiones_model->insertar_descuentoEsp($usuario,$montoAinsertar,$comision[0]['id_comision'],$comentario,$this->session->userdata('id_usuario'),$pago_neodata,$valor);
+          $dat =  $this->Comisiones_model->update_descuentoEsp($id,$Restante,$comentario, $this->session->userdata('id_usuario'),$valor,$usuario);
+         $dat =  $this->Comisiones_model->insertar_descuentoEsp($usuario,$montoAinsertar,$comision[0]['id_comision'],$comentario,$this->session->userdata('id_usuario'),$pago_neodata,$valor);
          
          }else{
-           //--
            $num = $i +1;
-           if($comentario == 0){
+           if($comentario == 0 && floatval($valor) == 3){
+            $nameLote = $formatear[3];
+
             $comentario = "DESCUENTO UNIVERSIDAD MADERAS  LOTES INVOLUCRADOS:  $LotesInvolucrados (TOTAL DESCUENTO: $desc ), ".$num."° LOTE A DESCONTAR $nameLote, MONTO DISPONIBLE: $".number_format(floatval($monto), 2, '.', ',').",  DESCUENTO DE: $".number_format(floatval($montoAinsertar), 2, '.', ',').", RESTANTE:$".number_format(floatval($Restante), 2, '.', ',')."    ";
-           }
-         // $dat =  $this->Comisiones_model->update_descuento($id,$montoAinsertar,$comentario, $saldo_comisiones, $this->session->userdata('id_usuario'),$valor,$usuario,$pagos_apli);
-         // $dat =  $this->Comisiones_model->insertar_descuento($usuario,$Restante,$comision[0]['id_comision'],$comentario,$this->session->userdata('id_usuario'),$pago_neodata,$valor);
-        echo $comentario; 
+           }else{
+            $comentario = $this->input->post("comentario");
+          }
+          $dat =  $this->Comisiones_model->update_descuento($id,$montoAinsertar,$comentario, $saldo_comisiones, $this->session->userdata('id_usuario'),$valor,$usuario,$pagos_apli);
+         $dat =  $this->Comisiones_model->insertar_descuento($usuario,$Restante,$comision[0]['id_comision'],$comentario,$this->session->userdata('id_usuario'),$pago_neodata,$valor);
         }
         }else{
-          //--
-          
           $formatear = explode(",",$datos[$i]);
            $id=$formatear[0];
           $monto = $formatear[1]; 
           $pago_neodata = $formatear[2];
+          if($comentario == 0 && floatval($valor) == 3){
           $nameLote = $formatear[3];
-          if($comentario == 0){
+          
             $num = $i +1;
             $comentario = "DESCUENTO UNIVERSIDAD MADERAS  LOTES INVOLUCRADOS:  $LotesInvolucrados ( TOTAL DESCUENTO $desc ), ".$num."° LOTE A DESCONTAR $nameLote, MONTO DISPONIBLE: $".number_format(floatval($monto), 2, '.', ',').",  DESCUENTO DE: $".number_format(floatval($monto), 2, '.', ',').", RESTANTE:$".number_format(floatval(0), 2, '.', ',')." ";
+          }else{
+            $comentario = $this->input->post("comentario");
           }
-          echo $comentario;
-         //$dat = $this->Comisiones_model->update_descuento($id,0,$comentario, $saldo_comisiones, $this->session->userdata('id_usuario'),$valor,$usuario, $pagos_apli);
+         $dat = $this->Comisiones_model->update_descuento($id,0,$comentario, $saldo_comisiones, $this->session->userdata('id_usuario'),$valor,$usuario, $pagos_apli);
          $sumaMontos = $sumaMontos + $monto;
         }
 

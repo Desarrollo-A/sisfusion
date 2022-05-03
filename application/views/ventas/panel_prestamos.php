@@ -548,7 +548,7 @@
 			<select id="usuarioid" name="usuarioid" class="form-control directorSelect ng-invalid ng-invalid-required" required data-live-search="true">
 			</select>
 			`);
-			$.post('getUsuariosRol/'+parent, function(data) {
+			$.post('getUsuariosRol/'+parent+'/1', function(data) {
 				$("#usuarioid").append($('<option disabled>').val("default").text("Seleccione una opción"))
 				var len = data.length;
 				for( var i = 0; i<len; i++){

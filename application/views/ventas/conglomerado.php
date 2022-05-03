@@ -95,7 +95,6 @@
         </div>
     </div>
 
-
     <div class="modal fade" id="seeInformationModalDU" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
          aria-hidden="true" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog modal-md modal-dialog-scrollable" role="document">
@@ -234,7 +233,7 @@
                         <div class="col-md-12">
 
                             <label class="label">Mótivo de descuento</label>
-                            <textarea id="comentario" name="comentario" class="form-control" rows="3"
+                            <textarea id="comentario" name="comentario" class="form-control" rows="5"
                                       required></textarea>
 
                         </div>
@@ -399,14 +398,14 @@
         </div>
     </div>
 
-    <!--<div class="modal fade bd-example-modal-sm" id="myModalEnviadas" tabindex="-1" role="dialog"
+    <div class="modal fade bd-example-modal-sm" id="myModalEnviadas" tabindex="-1" role="dialog"
          aria-labelledby="mySmallModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-sm">
             <div class="modal-content">
                 <div class="modal-body"></div>
             </div>
         </div>
-    </div>-->
+    </div>
 
 
 
@@ -916,7 +915,7 @@
             {
                 "width": "8%",
                 "data": function (d) {
-                    if (d.status == 0 && d.estatus != 4) {
+                    if ((d.status == 0 ||d.status == 3)&& d.estatus != 4) {
                         return '<span class="label" style="background:red;">BAJA</span>';
                     }
                     else if (d.estatus == 4) {
@@ -1100,7 +1099,7 @@
 
             } else {
                 $.each(data, function (i, v) {
-                    $("#comments-list-asimilados").append('<div class="col-lg-12"><p style="color:gray;font-size:1.1em;">SE DESCONTÓ LA CANTIDAD DE <b>$' + formatMoney(v.comentario) + '</b><br><b style="color:#3982C0;font-size:0.9em;">' + v.date_final + '</b><b style="color:#C6C6C6;font-size:0.9em;"> - ' + v.nombre_usuario + '</b></p></div>');
+                    $("#comments-list-asimilados").append('<div class="col-lg-12"><p style="color:gray;font-size:1.1em;">SE DESCONTÓ LA CANTIDAD DE <b>$' + formatMoney(v.comentario) +'<br>'+ v.comentario2 +'</b><br><b style="color:#3982C0;font-size:0.9em;">' + v.date_final + '</b><b style="color:#C6C6C6;font-size:0.9em;"> - ' + v.nombre_usuario + '</b></p></div>');
                 });
             }
         });
@@ -1654,7 +1653,6 @@
         });
     });
 
-
         $("#tabla_descuentos tbody").on("click", ".agregar_nuevo_descuento", function (e) {
             e.preventDefault();
             e.stopImmediatePropagation();
@@ -1706,7 +1704,7 @@
                     console.log('suma2 lote ' + sumaselected);
 
 
-                    $("#idloteorigen").append(`<option value='${comision},${comtotal.toFixed(2)},${pago_neodata}' selected="selected">${name}  -   $${formatMoney(comtotal.toFixed(2))}</option>`);
+                    $("#idloteorigen").append(`<option value='${comision},${comtotal.toFixed(2)},${pago_neodata},${name}' selected="selected">${name}  -   $${formatMoney(comtotal.toFixed(2))}</option>`);
                 }
 
                 $("#idmontodisponible").val('$' + formatMoney(sumaselected));
@@ -1833,7 +1831,7 @@
                     $("#comments-list-asimilados").append('<div class="col-lg-12"><p style="color:gray;font-size:1.1em;">SIN </p></div>');
                 } else {
                     $.each(data, function (i, v) {
-                        $("#comments-list-asimilados").append('<div class="col-lg-12"><p style="color:gray;font-size:1.1em;">SE DESCONTÓ LA CANTIDAD DE <b>$' + formatMoney(v.comentario) + '</b>'+saldo_comisiones+'<br><b style="color:#3982C0;font-size:0.9em;">' + v.date_final + '</b><b style="color:#C6C6C6;font-size:0.9em;"> - ' + v.nombre_usuario + '</b></p></div>');
+                        $("#comments-list-asimilados").append('<div class="col-lg-12"><p style="color:gray;font-size:1.1em;">SE DESCONTÓ LA CANTIDAD DE <b>$' + formatMoney(v.comentario) +'<br>' + v.comentario2 +'</b>'+saldo_comisiones+'<br><b style="color:#3982C0;font-size:0.9em;">' + v.date_final + '</b><b style="color:#C6C6C6;font-size:0.9em;"> - ' + v.nombre_usuario + '</b></p></div>');
                     });
                 }
             });
@@ -1972,9 +1970,9 @@
         });
 
         /******************/
-        /*function cancela() {
+        function cancela() {
             $("#modal_nuevas").modal('toggle');
-        }*/
+        }
 
 
         //Función para pausar la solicitud
@@ -2241,7 +2239,7 @@
 
         }
 
-        /*function CloseModalDelete() {
+        function CloseModalDelete() {
             // document.getElementById("inputhidden").innerHTML = "";
             a = document.getElementById('borrarBono');
             padre = a.parentNode;
@@ -2249,7 +2247,7 @@
 
             $("#modal-delete").modal('toggle');
 
-        }*/
+        }
 
         function CloseModalDelete2() {
             // document.getElementById("inputhidden").innerHTML = "";
@@ -2308,7 +2306,7 @@
         });
 
 
-        /*$("#form_aplicar").submit(function (e) {
+        $("#form_aplicar").submit(function (e) {
             e.preventDefault();
         }).validate({
             submitHandler: function (form) {
@@ -2343,13 +2341,13 @@
                     }
                 });
             }
-        });*/
+        });
 
 
         // FIN TABLA PAGADAS
 
 
-        /*function mandar_espera(idLote, nombre) {
+        function mandar_espera(idLote, nombre) {
             idLoteespera = idLote;
             // link_post2 = "Cuentasxp/datos_para_rechazo1/";
             link_espera1 = "Comisiones/generar comisiones/";
@@ -2358,7 +2356,7 @@
             $("#myModalEspera ").modal();
             // $("#myModalEspera .modal-body").append("<div class='btn-group'>LOTE: "+nombre+"</div>");
             $("#myModalEspera .modal-footer").append("<div class='btn-group'><button type='submit' class='btn btn-success'>GENERAR COMISIÓN</button></div>");
-        }*/
+        }
 
 
         // FUNCTION MORE
@@ -2496,11 +2494,24 @@
 
                             break;
                         }
-                        cadena = cadena + ' , ' + data[index].text;
+                       // cadena = cadena + ' , ' + data[index].text;
+                       
+                    console.log(data[index].text);
+                    if(cuantos == 1){
+                        let datosLote = data[index].text.split('-   $');
+                        let nameLote = datosLote[0]
+                        let montoLote = datosLote[1];
+                        cadena =  'DESCUENTO UNIVERSIDAD MADERAS \n LOTE INVOLUCRADO: '+nameLote+',  MONTO DISPONIBLE: $'+montoLote+'.\n DESCUENTO DE: $'+formatMoney(monto)+', RESTANTE:$'+formatMoney(parseFloat(abono_neo) - parseFloat(monto));
+                    }else{
+                        cadena = 'DESCUENTO UNIVERSIDAD MADERAS';
+                    }
+                    
                         document.getElementById('msj2').innerHTML = '';
 
                     }
-                    $('#comentario').val('Lotes involucrados en el descuento(universidad): ' + cadena + '. Por la cantidad de: $' + formatMoney(monto));
+                    $('#comentario').val(cadena);
+
+                  //  $('#comentario').val('Lotes involucrados en el descuento(universidad): ' + cadena + '. Por la cantidad de: $' + formatMoney(monto));
 
                     // console.log(cadena);
                 }
@@ -3535,8 +3546,8 @@
                 "width": "8%",
                 "data": function (d) {
                     if (d.estatusDU === 5 || (d.estatusDU === 1 && d.pagos_activos === 0)) {
-                        return '<span class="label" style="background:blue;">REACTIVADO</span>';
-                    } else if(d.queryType == 2){
+                        return '<span class="label" style="background: blue;">REACTIVADA</span>';
+                    } else if(d.queryType == 2) {
                         if (d.status == 0 && d.estatus != 4) {
                             return '<span class="label" style="background:red;">BAJA</span>';
                         }
@@ -3893,7 +3904,7 @@
 
             } else {
                 $.each(data, function (i, v) {
-                    $("#comments-list-asimilados").append('<div class="col-lg-12"><p style="color:gray;font-size:1.1em;">SE DESCONTÓ LA CANTIDAD DE <b>$' + formatMoney(v.comentario) + '</b><br><b style="color:#3982C0;font-size:0.9em;">' + v.date_final + '</b><b style="color:#C6C6C6;font-size:0.9em;"> - ' + v.nombre_usuario + '</b></p></div>');
+                    $("#comments-list-asimilados").append('<div class="col-lg-12"><p style="color:gray;font-size:1.1em;">SE DESCONTÓ LA CANTIDAD DE <b>$' + formatMoney(v.comentario) + '<br>' + v.comentario2 + '</b><br><b style="color:#3982C0;font-size:0.9em;">' + v.date_final + '</b><b style="color:#C6C6C6;font-size:0.9em;"> - ' + v.nombre_usuario + '</b></p></div>');
                 });
             }
         });
