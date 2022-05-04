@@ -398,14 +398,14 @@
         </div>
     </div>
 
-    <div class="modal fade bd-example-modal-sm" id="myModalEnviadas" tabindex="-1" role="dialog"
+    <!--<div class="modal fade bd-example-modal-sm" id="myModalEnviadas" tabindex="-1" role="dialog"
          aria-labelledby="mySmallModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-sm">
             <div class="modal-content">
                 <div class="modal-body"></div>
             </div>
         </div>
-    </div>
+    </div>-->
 
 
 
@@ -1386,7 +1386,7 @@
                 {
                     "width": "7%",
                     "data": function (d) {
-                        if (d.estatusDU === 5 || (d.estatusDU === 1 && d.pagos_activos === 0)) {
+                        if (d.estatusDU == 5 || (d.estatusDU == 1 && d.pagos_activos == 0)) {
                             return '<span class="label" style="background:blue;">REACTIVADO</span>';
                         } else if (d.status == 0) {
                             return '<span class="label" style="background:red;">BAJA</span>';
@@ -1519,7 +1519,7 @@
                 {
                     "width": "8%",
                     "data": function (d) {
-                        if (d.estatusDU === 0) {
+                        if (d.estatusDU == 0) {
                             return `
                                 <div class="d-flex justify-center">
                                     <button value="${d.id_usuario}"
@@ -1536,7 +1536,7 @@
                                     </button>
                                 </div>
                             `;
-                        } else if ((d.estatusDU === 1 || d.estatusDU === 5) && d.pagos_activos === 0) {
+                        } else if ((d.estatusDU == 1 || d.estatusDU == 5) && d.pagos_activos == 0) {
                             return `
                                 <div class="d-flex justify-center">
                                     <button value="${d.id_usuario}"
@@ -1970,9 +1970,9 @@
         });
 
         /******************/
-        function cancela() {
+        /*function cancela() {
             $("#modal_nuevas").modal('toggle');
-        }
+        }*/
 
 
         //Función para pausar la solicitud
@@ -2239,7 +2239,7 @@
 
         }
 
-        function CloseModalDelete() {
+        /*function CloseModalDelete() {
             // document.getElementById("inputhidden").innerHTML = "";
             a = document.getElementById('borrarBono');
             padre = a.parentNode;
@@ -2247,7 +2247,7 @@
 
             $("#modal-delete").modal('toggle');
 
-        }
+        }*/
 
         function CloseModalDelete2() {
             // document.getElementById("inputhidden").innerHTML = "";
@@ -2306,7 +2306,7 @@
         });
 
 
-        $("#form_aplicar").submit(function (e) {
+        /*$("#form_aplicar").submit(function (e) {
             e.preventDefault();
         }).validate({
             submitHandler: function (form) {
@@ -2341,13 +2341,13 @@
                     }
                 });
             }
-        });
+        });*/
 
 
         // FIN TABLA PAGADAS
 
 
-        function mandar_espera(idLote, nombre) {
+        /*function mandar_espera(idLote, nombre) {
             idLoteespera = idLote;
             // link_post2 = "Cuentasxp/datos_para_rechazo1/";
             link_espera1 = "Comisiones/generar comisiones/";
@@ -2356,7 +2356,7 @@
             $("#myModalEspera ").modal();
             // $("#myModalEspera .modal-body").append("<div class='btn-group'>LOTE: "+nombre+"</div>");
             $("#myModalEspera .modal-footer").append("<div class='btn-group'><button type='submit' class='btn btn-success'>GENERAR COMISIÓN</button></div>");
-        }
+        }*/
 
 
         // FUNCTION MORE
@@ -2495,7 +2495,7 @@
                             break;
                         }
                        // cadena = cadena + ' , ' + data[index].text;
-                       
+
                     console.log(data[index].text);
                     if(cuantos == 1){
                         let datosLote = data[index].text.split('-   $');
@@ -2505,7 +2505,7 @@
                     }else{
                         cadena = 'DESCUENTO UNIVERSIDAD MADERAS';
                     }
-                    
+
                         document.getElementById('msj2').innerHTML = '';
 
                     }
@@ -3545,9 +3545,9 @@
             {
                 "width": "8%",
                 "data": function (d) {
-                    if (d.estatusDU === 5 || (d.estatusDU === 1 && d.pagos_activos === 0)) {
-                        return '<span class="label" style="background: blue;">REACTIVADA</span>';
-                    } else if(d.queryType == 2) {
+                    if (d.estatusDU == 5 || (d.estatusDU == 1 && d.pagos_activos == 0)) {
+                        return '<span class="label" style="background:blue;">REACTIVADO</span>';
+                    } else if(d.queryType == 2){
                         if (d.status == 0 && d.estatus != 4) {
                             return '<span class="label" style="background:red;">BAJA</span>';
                         }
@@ -3763,7 +3763,7 @@
             {
                 "width": "8%",
                 "data": function (d) {
-                    if (d.estatusDU === 0) {
+                    if (d.estatusDU == 0) {
                         return `
                                 <div class="d-flex justify-center">
                                     <button value="${d.id_usuario}"
@@ -3780,7 +3780,7 @@
                                     </button>
                                 </div>
                             `;
-                    } else if ((d.estatusDU === 1 || d.estatusDU === 5) && d.pagos_activos === 0) {
+                    } else if ((d.estatusDU == 1 || d.estatusDU == 5) && d.pagos_activos == 0) {
                         return `
                                 <div class="d-flex justify-center">
                                     <button value="${d.id_usuario}"
