@@ -6708,4 +6708,38 @@ for ($d=0; $d <count($dos) ; $d++) {
         $result = $this->Comisiones_model->getPuestoByIdOpts('3,7,9');
         echo json_encode($result);
     }
+
+    public function reactivarPago()
+    {
+        $idDescuento = $_POST['id_descuento'];
+        $fechaActivacion = strtotime($_POST['fecha']);
+        $diaActivacion = date('d', $fechaActivacion);
+        $mesActivacion = date('m', $fechaActivacion);
+        $anioActivacion = date('Y', $fechaActivacion);
+        $mesActual = date('m');
+        $anioActual = date('Y');
+
+        if ($diaActivacion >= 1 && $diaActivacion <= 5) {
+            if ($mesActivacion === $mesActual) {
+                if ($anioActivacion === $anioActual) {
+                    $result = $this->Comisiones_model->updatePagoReactivadoMismoDiaMes($idDescuento,
+                        date('Y-m-d H:i:s', $fechaActivacion));
+                } else {
+                    $result = $this->Comisiones_model->updatePagoReactivadoFechaDiferente($idDescuento,
+                        date('Y-m-d H:i:s', $fechaActivacion));
+                }
+            } else {
+                $result = $this->Comisiones_model->updatePagoReactivadoFechaDiferente($idDescuento,
+                    date('Y-m-d H:i:s', $fechaActivacion));
+            }
+        } else if ($mesActivacion === $mesActual) {
+            $result = $this->Comisiones_model->updatePagoReactivadoMismoMes($idDescuento,
+                date('Y-m-d H:i:s', $fechaActivacion));
+        } else {
+            $result = $this->Comisiones_model->updatePagoReactivadoFechaDiferente($idDescuento,
+                date('Y-m-d H:i:s', $fechaActivacion));
+        }
+
+        echo json_encode($result);
+    }
 }

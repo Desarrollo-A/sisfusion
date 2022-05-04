@@ -1387,7 +1387,7 @@
                 {
                     "width": "7%",
                     "data": function (d) {
-                        if (d.estatusDU === 5 || (d.estatusDU === 1 && d.pagos_activos === 0)) {
+                        if (d.estatusDU == 5 || (d.estatusDU == 1 && d.pagos_activos == 0)) {
                             return '<span class="label" style="background:blue;">REACTIVADO</span>';
                         } else if (d.status == 0) {
                             return '<span class="label" style="background:red;">BAJA</span>';
@@ -1520,7 +1520,7 @@
                 {
                     "width": "8%",
                     "data": function (d) {
-                        if (d.estatusDU === 0) {
+                        if (d.estatusDU == 0) {
                             return `
                                 <div class="d-flex justify-center">
                                     <button value="${d.id_usuario}"
@@ -1537,7 +1537,7 @@
                                     </button>
                                 </div>
                             `;
-                        } else if ((d.estatusDU === 1 || d.estatusDU === 5) && d.pagos_activos === 0) {
+                        } else if ((d.estatusDU == 1 || d.estatusDU == 5) && d.pagos_activos == 0) {
                             return `
                                 <div class="d-flex justify-center">
                                     <button value="${d.id_usuario}"
@@ -3534,7 +3534,7 @@
             {
                 "width": "8%",
                 "data": function (d) {
-                    if (d.estatusDU === 5 || (d.estatusDU === 1 && d.pagos_activos === 0)) {
+                    if (d.estatusDU == 5 || (d.estatusDU == 1 && d.pagos_activos == 0)) {
                         return '<span class="label" style="background:blue;">REACTIVADO</span>';
                     } else if(d.queryType == 2){
                         if (d.status == 0 && d.estatus != 4) {
@@ -3752,7 +3752,7 @@
             {
                 "width": "8%",
                 "data": function (d) {
-                    if (d.estatusDU === 0) {
+                    if (d.estatusDU == 0) {
                         return `
                                 <div class="d-flex justify-center">
                                     <button value="${d.id_usuario}"
@@ -3769,7 +3769,7 @@
                                     </button>
                                 </div>
                             `;
-                    } else if ((d.estatusDU === 1 || d.estatusDU === 5) && d.pagos_activos === 0) {
+                    } else if ((d.estatusDU == 1 || d.estatusDU == 5) && d.pagos_activos == 0) {
                         return `
                                 <div class="d-flex justify-center">
                                     <button value="${d.id_usuario}"
