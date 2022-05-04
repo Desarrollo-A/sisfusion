@@ -7887,7 +7887,7 @@ function getDatosNuevasMontos($proyecto,$condominio){
 
    public  function usuarios_nuevas($rol){
 
-    return $this->db->query("SELECT id_usuario AS idCondominio, CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) AS nombre FROM usuarios WHERE id_usuario in (SELECT id_usuario FROM pago_comision_ind WHERE estatus in (1)) AND estatus in (1,0) AND id_rol = $rol ORDER BY nombre");
+    return $this->db->query("SELECT id_usuario AS idCondominio, CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) AS nombre FROM usuarios WHERE id_usuario in (SELECT id_usuario FROM pago_comision_ind WHERE estatus in (1)) AND estatus in (1,0,3) AND id_rol = $rol ORDER BY nombre");
      }
 
 
