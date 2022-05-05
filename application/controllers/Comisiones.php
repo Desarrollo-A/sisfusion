@@ -6786,4 +6786,65 @@ for ($d=0; $d <count($dos) ; $d++) {
 
         echo json_encode($result);
     }
+
+    public function findAllPlanes()
+    {
+        $data = $this->Comisiones_model->findAllPlanes();
+        echo json_encode($data);
+    }
+
+    public function findPlanDetailById($idPlan)
+    {
+        $data = $this->Comisiones_model->findPlanDetailById($idPlan);
+        $info = array();
+        $info['id_plan'] = $data->id_plan;
+        $info['descripcion'] = $data->descripcion;
+        $info['comisiones'][] = array(
+            'puesto' => $data->director,
+            'com' => $data->comDi,
+            'neo' => $data->neoDi
+        );
+        $info['comisiones'][] = array(
+            'puesto' => $data->regional,
+            'com' => $data->comRe,
+            'neo' => $data->neoRe
+        );
+        $info['comisiones'][] = array(
+            'puesto' => $data->subdirector,
+            'com' => $data->comSu,
+            'neo' => $data->neoSu
+        );
+        $info['comisiones'][] = array(
+            'puesto' => $data->gerente,
+            'com' => $data->comGe,
+            'neo' => $data->neoGe
+        );
+        $info['comisiones'][] = array(
+            'puesto' => $data->coordinador,
+            'com' => $data->comCo,
+            'neo' => $data->neoCo
+        );
+        $info['comisiones'][] = array(
+            'puesto' => $data->asesor,
+            'com' => $data->comAs,
+            'neo' => $data->neoAs
+        );
+        $info['comisiones'][] = array(
+            'puesto' => $data->otro,
+            'com' => $data->comOt,
+            'neo' => $data->neoOt
+        );
+        $info['comisiones'][] = array(
+            'puesto' => $data->mktd,
+            'com' => $data->comMk,
+            'neo' => $data->neoMk
+        );
+        $info['comisiones'][] = array(
+            'puesto' => $data->otro2,
+            'com' => $data->comOt2,
+            'neo' => $data->neoOt2
+        );
+
+        echo json_encode($info);
+    }
 }
