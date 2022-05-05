@@ -8695,4 +8695,38 @@ function lista_estatus_descuentos(){
         return $this->db->query("SELECT * FROM opcs_x_cats WHERE id_catalogo = 1 AND id_opcion IN ($idOpciones)")
             ->result_array();
     }
+
+    public function findAllPlanes()
+    {
+        $query = $this->db->query('SELECT id_plan, descripcion FROM plan_comision WHERE estatus = 1');
+        return $query->result_array();
+    }
+
+    public function findPlanDetailById($idPlan)
+    {
+        $query = $this->db->query("SELECT pc.id_plan, pc.descripcion,
+            pc.comDi, pc.neoDi, rolDir.nombre AS director, 
+            pc.comRe, pc.neoRe, rolReg.nombre AS regional,
+            pc.comSu, pc.neoSu, rolSubdir.nombre AS subdirector,
+            pc.comGe, pc.neoGe, rolGer.nombre AS gerente,
+            pc.comCo, pc.neoCo, rolCoor.nombre AS coordinador,
+            pc.comAs, pc.neoAs, rolAse.nombre AS asesor,
+            pc.comOt, pc.neoOt, rolOtr.nombre AS otro,
+            pc.comMk, pc.neoMk, rolMkt.nombre AS mktd,
+            pc.comOt2, pc.neoOt2, rolOtr2.nombre AS otro2
+            FROM plan_comision pc
+            LEFT JOIN opcs_x_cats rolDir ON rolDir.id_opcion = pc.director AND rolDir.id_catalogo = 1
+            LEFT JOIN opcs_x_cats rolReg ON rolReg.id_opcion = pc.regional AND rolReg.id_catalogo = 1
+            LEFT JOIN opcs_x_cats rolSubdir ON rolSubdir.id_opcion = pc.subdirector AND rolSubdir.id_catalogo = 1
+            LEFT JOIN opcs_x_cats rolGer ON rolGer.id_opcion = pc.gerente AND rolGer.id_catalogo = 1
+            LEFT JOIN opcs_x_cats rolCoor ON rolCoor.id_opcion = pc.coordinador AND rolCoor.id_catalogo = 1
+            LEFT JOIN opcs_x_cats rolAse ON rolAse.id_opcion = pc.asesor AND rolAse.id_catalogo = 1
+            LEFT JOIN usuarios usOtr ON usOtr.id_usuario = pc.id_o 
+                LEFT JOIN opcs_x_cats rolOtr ON rolOtr.id_opcion = usOtr.id_rol AND rolOtr.id_catalogo = 1
+            LEFT JOIN opcs_x_cats rolMkt ON rolMkt.id_opcion = pc.mktd AND rolMkt.id_catalogo = 1
+            LEFT JOIN usuarios usOtr2 ON usOtr2.id_usuario = pc.id_o2 
+                LEFT JOIN opcs_x_cats rolOtr2 ON rolOtr2.id_opcion = usOtr2.id_rol AND rolOtr2.id_catalogo = 1
+            WHERE pc.id_plan = $idPlan");
+        return $query->row();
+    }
 }
