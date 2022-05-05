@@ -72,11 +72,6 @@
     }
   }
 
-.iconCustom{
-    cursor: pointer;
-    font-size: 3rem;
-    z-index: 1;
-}
 #feedbackModal{
   .radio-with-Icon{
     input[type="radio"]:checked ~ label i{

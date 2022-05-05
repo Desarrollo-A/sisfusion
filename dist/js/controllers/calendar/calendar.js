@@ -277,11 +277,9 @@
     $("#comodinDIV").addClass('hide');
   }
 
-  //SIDEBAR CALENDAR
-  // function modalSidebarCalendar(idAgenda){
-  //   getAppointmentSidebarCalendar(idAgenda);
-  //   $('#sidebarView').modal();
-  // }
+  $('#feedbackModal').on('hidden.bs.modal', function () {
+    $(this).find('form').trigger('reset');
+  });
 
   function getAppointmentSidebarCalendar(idAgenda){
     $.ajax({
@@ -446,6 +444,7 @@
       $("#edit_appointment_form input").prop("disabled", true);
       $("#edit_appointment_form textarea").prop("disabled", true);
       $("#prospectoE").prop("disabled", true);
+      $("#id_direccion").prop("disabled", true);
       $("#estatus_recordatorio2").prop("disabled", true);
       $(".finishS").addClass("d-none");
     }
@@ -455,6 +454,7 @@
       $("#edit_appointment_form input").prop("disabled", false);
       $("#edit_appointment_form textarea").prop("disabled", false);
       $("#prospectoE").prop("disabled", false);
+      $("#id_direccion").prop("disabled", false);
       $("#estatus_recordatorio2").prop("disabled", false);
       var btnSave = $(".finishS");
       ( estatus == 1 ? btnSave.removeClass('d-none') : btnSave.addClass('d-none'));
@@ -516,7 +516,6 @@
       new FormData(e.target)
     )
     data['idAgenda'] = $("#idAgenda2").val();
-    console.log("si está");
     $.ajax({
       type: 'POST',
       url: 'setAppointmentRate',
@@ -528,7 +527,7 @@
         $('#spiner-loader').removeClass('hide');
       },
       success: function(data) {
-        $('#spiner-loader').removeClass('hide');
+        $('#spiner-loader').addClass('hide');
         data = JSON.parse(data);
         alerts.showNotification("top", "right", data["message"], (data["status" == 503]) ? "danger" : (data["status" == 400]) ? "warning" : "success");
         $('#feedbackModal').modal('toggle');

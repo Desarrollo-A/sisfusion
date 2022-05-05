@@ -970,6 +970,12 @@
   font-size: 12px;
 }
 
+.text-modal:disabled {
+  border: none;
+  color: #929292;
+  background-color: #F1F1F1;
+}
+
 @font-face {
   font-family: Montserrat-Black;
   src: url(../fonts/Montserrat/Montserrat-Black.ttf);

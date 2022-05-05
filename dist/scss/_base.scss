@@ -99,6 +99,7 @@
 /* Vrbls colores */
 $white         : #ffffff;
 $platinumLight : #eeeeee;
+$grayDisabled  : #F1F1F1;
 $platinum      : #eaeaea;
 $platinumScroll: #c1c1c1;
 $deepGray      : #929292;
@@ -692,4 +693,9 @@ $tv                 : "(min-width : 1824px)";
     height: 80px;
     overflow: auto;
     font-size: 12px;
+    &:disabled{
+        border: none;
+        color: $deepGray;
+        background-color: #F1F1F1;
+    }
 }
