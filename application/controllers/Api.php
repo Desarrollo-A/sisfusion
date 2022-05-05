@@ -38,14 +38,14 @@ class Api extends CI_Controller
                     $token = JWT::encode($data, $JwtSecretKey);
                     echo json_encode(array("id_token" => $token));
                 } else
-                    echo json_encode(array("status" => 400, "message" => "Usuario o contraseña inválido."), JSON_UNESCAPED_UNICODE);
+                    echo json_encode(array("status" => 403, "message" => "Usuario o contraseña inválido."), JSON_UNESCAPED_UNICODE);
             }
         }
     }
 
     function addLeadRecord()
     {
-        if(!isset(apache_request_headers()["Authorization"]))
+        if (!isset(apache_request_headers()["Authorization"]))
             echo json_encode(array("status" => 400, "message" => "La petición no cuenta con el encabezado Authorization."), JSON_UNESCAPED_UNICODE);
         else {
             if (apache_request_headers()["Authorization"] == "")
@@ -59,9 +59,9 @@ class Api extends CI_Controller
                 else if ($result == 'ALR002')
                     echo json_encode(array("status" => 400, "message" => "Número incorrecto de segmentos. Verifique la estructura del token de autorización enviado."), JSON_UNESCAPED_UNICODE);
                 else if ($result == 'ALR011')
-                    echo json_encode(array("status" => 401, "message" => "Verificación de firma fallida. Estructura no válida del token de autorización enviado."), JSON_UNESCAPED_UNICODE);
+                    echo json_encode(array("status" => 403, "message" => "Verificación de firma fallida. Estructura no válida del token de autorización enviado."), JSON_UNESCAPED_UNICODE);
                 else if ($result == 'ALR014')
-                    echo json_encode(array("status" => 401, "message" => "Token caducado. El tiempo de vida del token enviado ha expirado, obtenga uno nuevo para poder continuar con el proceso."), JSON_UNESCAPED_UNICODE);
+                    echo json_encode(array("status" => 403, "message" => "Token caducado. El tiempo de vida del token enviado ha expirado, obtenga uno nuevo para poder continuar con el proceso."), JSON_UNESCAPED_UNICODE);
                 else {
                     $data = json_decode(file_get_contents("php://input"));
                     if (!isset($data->Name) || !isset($data->Mail) || !isset($data->Phone) || !isset($data->Comments) || !isset($data->iScore) || !isset($data->ProductID) || !isset($data->CampaignID) || !isset($data->Source) || !isset($data->Owner))
@@ -71,31 +71,41 @@ class Api extends CI_Controller
                             echo json_encode(array("status" => 400, "message" => "Algún parámetro no tiene un valor especificado. Verifique que todos los parámetros contengan un valor especificado."), JSON_UNESCAPED_UNICODE);
                         else {
                             $result = $this->Api_model->getAdviserLeaderInformation($data->Owner);
-                            $data = array(
-                                "id_sede" => $result->id_sede,
-                                "id_asesor" => $data->Owner,
-                                "id_coordinador" => $result->id_coordinador,
-                                "id_gerente" => $result->id_gerente,
-                                "personalidad_juridica" => 2,
-                                "nombre" => $data->Name,
-                                "apellido_paterno" => '',
-                                "apellido_materno" => '',
-                                "correo" => $data->Mail,
-                                "telefono" => $data->Phone,
-                                "lugar_prospeccion" => 6,
-                                "otro_lugar" => $data->CampaignID,
-                                "plaza_venta" => 0,
-                                "fecha_creacion" => date("Y-m-d H:i:s"),
-                                "creado_por" => 1,
-                                "fecha_modificacion" => date("Y-m-d H:i:s"),
-                                "modificado_por" => 1,
-                                "fecha_vencimiento" => date("Y-m-d H:i:s", strtotime(date("Y-m-d H:i:s") . "+ 30 days"))
-                            );
-                            $dbTransaction = $this->General_model->addRecord("prospectos", $data); // MJ: LLEVA 2 PARÁMETROS $table, $data
-                            if ($dbTransaction) // SUCCESS TRANSACTION
-                                echo json_encode(array("status" => 200, "message" => "Registro guardado con éxito."), JSON_UNESCAPED_UNICODE);
-                            else // ERROR TRANSACTION
-                                echo json_encode(array("status" => 503, "message" => "Servicio no disponible. El servidor no está listo para manejar la solicitud. Por favor, inténtelo de nuevo más tarde."), JSON_UNESCAPED_UNICODE);
+                            if ($result->id_rol != 7)
+                                echo json_encode(array("status" => 400, "message" => "El valor ingresado para OWNER no corresponde a un ID de usuario con rol de asesor."), JSON_UNESCAPED_UNICODE);
+                            else {
+                                $data = array(
+                                    "id_sede" => $result->id_sede,
+                                    "id_asesor" => $data->Owner,
+                                    "id_coordinador" => $result->id_coordinador,
+                                    "id_gerente" => $result->id_gerente,
+                                    "id_subdirector" => $result->id_subdirector,
+                                    "id_regional" => $result->id_regional,
+                                    "personalidad_juridica" => 2,
+                                    "nombre" => $data->Name,
+                                    "apellido_paterno" => '',
+                                    "apellido_materno" => '',
+                                    "correo" => $data->Mail,
+                                    "telefono" => $data->Phone,
+                                    "lugar_prospeccion" => 6,
+                                    "otro_lugar" => $data->CampaignID,
+                                    "plaza_venta" => 0,
+                                    "fecha_creacion" => date("Y-m-d H:i:s"),
+                                    "creado_por" => 1,
+                                    "fecha_modificacion" => date("Y-m-d H:i:s"),
+                                    "modificado_por" => 1,
+                                    "fecha_vencimiento" => date("Y-m-d H:i:s", strtotime(date("Y-m-d H:i:s") . "+ 30 days")),
+                                    "observaciones" => $data->Comments,
+                                    "desarrollo" => $data->ProductID,
+                                    "score" => $data->iScore,
+                                    "source" => $data->Source
+                                );
+                                $dbTransaction = $this->General_model->addRecord("prospectos", $data); // MJ: LLEVA 2 PARÁMETROS $table, $data
+                                if ($dbTransaction) // SUCCESS TRANSACTION
+                                    echo json_encode(array("status" => 200, "message" => "Registro guardado con éxito."), JSON_UNESCAPED_UNICODE);
+                                else // ERROR TRANSACTION
+                                    echo json_encode(array("status" => 503, "message" => "Servicio no disponible. El servidor no está listo para manejar la solicitud. Por favor, inténtelo de nuevo más tarde."), JSON_UNESCAPED_UNICODE);
+                            }
                         }
                     }
                 }
