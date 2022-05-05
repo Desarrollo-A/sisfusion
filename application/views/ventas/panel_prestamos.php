@@ -425,11 +425,20 @@
 				{
 					"width": "12%",
 					"data": function( d ){
-
-						let f = d.fecha_creacion.split('.');
-						//let fecha = new Date(f[0].replace(/-/g,"/"));
-
-						return '<p class="m-0">'+f[0]+'</p>';
+                        if (d.fecha_creacion_referencia !== null) {
+                            const fecha = new Date(d.fecha_creacion_referencia);
+                            const now = new Date();
+                            const mesesDif = monthDiff(fecha, now);
+                            if (mesesDif >= 2) {
+                                return `
+                                    <p>
+                                        ${d.fecha_creacion_referencia.split('.')[0]}
+                                        <span class="label" style="background: orange">Sin saldo en ${mesesDif} meses</label>
+                                    </p>
+                                `;
+                            }
+                        }
+                        return '<p class="m-0">'+d.fecha_creacion.split('.')[0]+'</p>';
 					}
 				},
 				{
@@ -607,5 +616,9 @@
 			}
 			
 		}
+
+        function monthDiff(dateFrom, dateTo) {
+            return dateTo.getMonth() - dateFrom.getMonth() + (12 * (dateTo.getFullYear() - dateFrom.getFullYear()))
+        }
 	</script>
 </body>
