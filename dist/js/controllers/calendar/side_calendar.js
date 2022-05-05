@@ -84,7 +84,6 @@ function getAppointmentDataC(idAgenda){
     },
     success: function(data){
       appointment = data[0];
-      console.log(appointment);
       $('#spiner-loader').addClass('hide');
       $("#evtTitle3").val(appointment.titulo);
       $("#estatus_recordatorio3").append($('<option>').val(appointment.medio).text(appointment.nombre_medio));
@@ -151,9 +150,27 @@ function createCalendar(){
   var calendarEl = document.getElementById('side-calendar');
   sideCalendar = new FullCalendar.Calendar(calendarEl, {   
     headerToolbar: {
-      start: '',
+      start: 'googleSignIn googleLogout',
       center: 'title',
       end: ''
+    },
+    customButtons: {
+      googleSignIn: {
+        // icon: 'fab fa-google',
+        text: 'Sincronizar con google',
+        click: function() {
+          gapi.auth2.getAuthInstance().signIn();
+          // listUpcomingEvents();
+        }
+      },
+      googleLogout: {
+        // icon: 'fas fa-power-off',
+        text: 'Desincronizar',
+        click: function() {
+          gapi.auth2.getAuthInstance().signOut();
+          window.location.reload();
+        }
+      }
     },
     eventTimeFormat: {
       hour: '2-digit', //2-digit, numeric
@@ -216,7 +233,7 @@ function createFilters(rol){
   }
   $(fatherDiv).insertAfter("#side-calendar .fc-header-toolbar");
   $('#selects').append(selects);
-  getUsersAndEvents(userType,idUser);
+  getUsersAndEvents(userType,idUser,true);
   createCustomButtons();
 }
 
