@@ -579,18 +579,18 @@ class Dashboard_model extends CI_Model {
     public function getDataBetweenDates($fecha_inicio, $fecha_fin, $typeTransaction){
         $condicionalPR= '';
         $condicionalCL= '';
-        $id_asesor = $this->session->userdata('id_usuario');
+        $id_usuario = $this->session->userdata('id_usuario');
 
 
         if($typeTransaction == 1){ #Filtro que solo muestra los del usuario sesionado
-            $condicionalPR = 'AND id_asesor='.$id_asesor;
-            $condicionalCL = 'AND cl.id_asesor='.$id_asesor;
+            $condicionalPR = 'AND id_asesor='.$id_usuario;
+            $condicionalCL = 'AND cl.id_asesor='.$id_usuario;
         }else if($typeTransaction == 2){#Filtro que solo muestra los de todos los asesres
-            $condicionalPR = '';
-            $condicionalCL = '';
+            $condicionalPR = 'AND id_coordinador='.$id_usuario;
+            $condicionalCL = 'AND cl.id_coordinador='.$id_usuario;
         }else if($typeTransaction == 3){ #Filtro que muestra los propios y los asesores
-            $condicionalPR = 'OR id_asesor='.$id_asesor;
-            $condicionalCL = 'OR cl.id_asesor='.$id_asesor;
+            $condicionalPR = 'OR id_asesor='.$id_usuario." OR id_coordinador=".$id_usuario;
+            $condicionalCL = 'OR cl.id_asesor='.$id_usuario." OR cl.id_coordinador=".$id_usuario;
         }else{
             $condicionalPR= '';
             $condicionalCL= '';
