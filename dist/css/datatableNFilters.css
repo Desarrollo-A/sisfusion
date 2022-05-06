@@ -340,6 +340,10 @@
   text-align: start !important;
 }
 
+.row-reverse {
+  flex-direction: row-reverse;
+}
+
 /* END Flexbox */
 /* Vrbls colores */
 /* END vrbls coloress */

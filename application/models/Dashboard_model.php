@@ -571,4 +571,138 @@ class Dashboard_model extends CI_Model {
         GROUP BY ss.nombre, ss.id_sede) c ON c.nombre = a.nombre");
     }
 
+    public function getProspectsByUserSessioned($id_asesor){
+        $query = $this->db->query("SELECT COUNT(id_prospecto) as prospectos FROM prospectos WHERE id_asesor=$id_asesor");
+        return $query->result_array();
+    }
+
+    public function getDataBetweenDates($fecha_inicio, $fecha_fin, $typeTransaction){
+        $condicionalPR= '';
+        $condicionalCL= '';
+        $id_asesor = $this->session->userdata('id_usuario');
+
+
+        if($typeTransaction == 1){ #Filtro que solo muestra los del usuario sesionado
+            $condicionalPR = 'AND id_asesor='.$id_asesor;
+            $condicionalCL = 'AND cl.id_asesor='.$id_asesor;
+        }else if($typeTransaction == 2){#Filtro que solo muestra los de todos los asesres
+            $condicionalPR = '';
+            $condicionalCL = '';
+        }else if($typeTransaction == 3){ #Filtro que muestra los propios y los asesores
+            $condicionalPR = 'OR id_asesor='.$id_asesor;
+            $condicionalCL = 'OR cl.id_asesor='.$id_asesor;
+        }else{
+            $condicionalPR= '';
+            $condicionalCL= '';
+        }
+        $query = $this->db->query("
+        SELECT ISNULL(COUNT(id_prospecto), 0) as numerosTotales, 'prospectos_totales' as 'queryType' FROM prospectos 
+        WHERE fecha_creacion>'$fecha_inicio 00:00:00.000' AND fecha_creacion<'$fecha_fin  23:59:59.000' $condicionalPR 
+            UNION ALL 
+        SELECT ISNULL(COUNT(id_prospecto), 0) as numerosTotales, 'prospectos_nuevos' as 'queryType' FROM prospectos 
+        WHERE tipo=0 AND fecha_creacion>'$fecha_inicio 00:00:00.000' AND fecha_creacion<'$fecha_fin  23:59:59.000' $condicionalPR        
+            UNION ALL 
+        SELECT ISNULL(COUNT(*),0) as numerosTotales, 'ventas_apartados' as 'queryType' FROM clientes 
+        WHERE fechaApartado BETWEEN '$fecha_inicio 00:00:00.000' AND '$fecha_fin 23:59:59.000' AND status = 1 $condicionalPR
+            UNION ALL 
+        SELECT ISNULL(COUNT(*), 0)
+        numerosTotales, 'cancelados_apartados' as 'queryType' FROM clientes cl
+        INNER JOIN lotes lo ON lo.idLote = cl.idLote
+        INNER JOIN historial_liberacion hl ON hl.idLote = lo.idLote
+        INNER JOIN historial_lotes hl2 ON hl2.idLote =  lo.idLote AND hl2.idCliente = cl.id_cliente AND hl2.idStatusContratacion = 1 AND hl2.idMovimiento = 31
+        WHERE cl.fechaApartado BETWEEN '$fecha_inicio 00:00:00.000' AND '$fecha_fin 23:59:59.000' AND cl.status = 0
+        AND cl.noRecibo != 'CANCELADO' $condicionalCL
+            UNION ALL 
+        SELECT SUM (total) numerosTotales, 'cierres_totales' as 'queryType' FROM (
+        SELECT ISNULL(COUNT(*),0)
+        total FROM clientes 
+        WHERE fechaApartado BETWEEN '$fecha_inicio 00:00:00.000' AND '$fecha_fin 23:59:59.000' AND status = 1 $condicionalPR
+        --GROUP BY id_asesor
+        UNION ALL
+        SELECT ISNULL(COUNT(*),0)
+        total FROM clientes cl
+        INNER JOIN lotes lo ON lo.idLote = cl.idLote AND lo.idCliente = cl.id_cliente AND lo.idStatusContratacion = 15 AND lo.idMovimiento = 45 AND lo.idStatusLote = 2
+        INNER JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes WHERE idStatusContratacion = 15 AND idMovimiento = 45 GROUP BY idLote, idCliente) hl ON hl.idLote = lo.idLote AND hl.idCliente = cl.id_cliente
+        AND hl.modificado BETWEEN '$fecha_inicio 00:00:00.000' AND '$fecha_fin 23:59:59.000'
+        WHERE cl.status = 1 $condicionalCL 
+        --GROUP BY cl.id_asesor
+        ) result
+            UNION ALL 
+        SELECT 0 AS numerosTotales, 'prospectos_cita' as 'queryType'
+            UNION ALL
+        SELECT COUNT(*) ventas_contratadas, 'ventas_contratadas' AS 'queryType' FROM clientes cl
+        INNER JOIN lotes lo ON lo.idLote = cl.idLote AND lo.idCliente = cl.id_cliente AND lo.idStatusContratacion = 15 AND lo.idMovimiento = 45 AND lo.idStatusLote = 2
+        INNER JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes WHERE idStatusContratacion = 15 AND idMovimiento = 45 GROUP BY idLote, idCliente) hl ON hl.idLote = lo.idLote AND hl.idCliente = cl.id_cliente
+        AND hl.modificado BETWEEN '$fecha_inicio 00:00:00.000' AND '$fecha_fin 23:59:59.000'
+        WHERE cl.status = 1 $condicionalCL
+            UNION ALL 
+        SELECT COUNT(*) contratos_cancelados, 'contratos_cancelados' AS 'queryType' FROM clientes cl
+        INNER JOIN lotes lo ON lo.idLote = cl.idLote
+        INNER JOIN (SELECT idLote, MAX(modificado) modificado FROM historial_liberacion GROUP BY idLote) hl ON hl.idLote = lo.idLote AND hl.modificado BETWEEN '$fecha_inicio 00:00:00.000' AND '$fecha_fin 23:59:59.000'
+        INNER JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes WHERE idStatusContratacion = 15 AND idMovimiento = 45 GROUP BY idLote, idCliente) hl2 ON hl2.idLote = lo.idLote AND hl2.idCliente = cl.id_cliente
+        WHERE cl.status = 0 $condicionalCL
+        ");
+        return $query->result_array();
+    }
+
+
+    public function totalVentasData(){
+        $query = $this->db->query("
+        SELECT /*UPPER(a.nombre) nombre, a.id_sede id, '2' type, */
+		FORMAT(ISNULL(a.apartado, 0), 'C') ventas_apartadas, ISNULL(a.totalApartados, 0) totalApartados,
+		FORMAT(ISNULL(c.contratado, 0), 'C') ventas_contratadas, ISNULL(c.totalContratados, 0) totalContratados, 
+		FORMAT(ISNULL(b.canceladoContratado, 0), 'C') canceladoContratados, ISNULL(b.totalCanceladosContratados, 0) totalCanceladosContratados, 
+		FORMAT(ISNULL(d.canceladoTotal, 0) - ISNULL(b.canceladoContratado, 0), 'C') canceladoApartados, ISNULL(d.totalCancelados, 0) - ISNULL(b.totalCanceladosContratados, 0) totalApartados, 
+		ISNULL(CAST((c.contratado * 100) / a.apartado AS decimal(16,2)), 0) porcentajeContratado,
+		ISNULL(CAST((b.canceladoContratado * 100) / a.apartado AS decimal(16,2)), 0) porcentajeCanceladoApartado,
+		ISNULL(CAST(((d.canceladoTotal - b.canceladoContratado) * 100) / a.apartado AS decimal(16,2)), 0) porcentajeCanceladoContratado,
+		100 - (ISNULL(CAST((c.contratado * 100) / a.apartado AS decimal(16,2)), 0) + ISNULL(CAST((d.canceladoTotal * 100) / a.apartado AS decimal(16,2)), 0)) porcentajeApartado
+		FROM (
+		-- VENTAS APARTADAS
+		SELECT /*s.nombre, s.id_sede,*/ SUM(ISNULL(l.totalNeto2, l.total)) apartado, COUNT(*) totalApartados, '1' opt FROM lotes l
+        INNER JOIN clientes cl ON cl.idLote = l.idLote AND cl.status = 1 AND YEAR(cl.fechaApartado) = 2022
+        INNER JOIN usuarios u ON u.id_usuario = cl.id_asesor
+        INNER JOIN sedes s ON s.id_sede = l.ubicacion
+        WHERE l.status = 1
+        /*GROUP BY s.nombre, s.id_sede*/) a
+		-- CANCELADOS CONTRATADOS
+        LEFT JOIN(
+        SELECT /*s.nombre,*/ SUM(ISNULL(l.totalNeto2, l.total)) canceladoContratado, COUNT(*) totalCanceladosContratados, '1' opt FROM lotes l
+        INNER JOIN clientes cl ON cl.idLote = l.idLote AND cl.status = 1 AND YEAR(cl.fechaApartado) = 2022
+        INNER JOIN (SELECT MAX(modificado) modificado, idLote, status FROM historial_liberacion
+        GROUP BY idLote, status) hl ON hl.idLote = l.idLote AND hl.status = 1
+		INNER JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes 
+		WHERE idStatusContratacion = 15 AND idMovimiento = 45 AND status = 1 GROUP BY idLote, idCliente) hl2 ON hl2.idLote = l.idLote 
+        INNER JOIN usuarios u ON u.id_usuario = cl.id_asesor
+        INNER JOIN sedes s ON s.id_sede = l.ubicacion
+        WHERE l.status = 1
+        /*GROUP BY s.nombre, s.id_sede*/) b ON b.opt = a.opt
+		-- VENTAS CONTRATADAS
+        LEFT JOIN(
+		SELECT /*s.nombre, s.id_sede,*/ SUM(ISNULL(l.totalNeto2, l.total)) contratado, COUNT(*) totalContratados, '1' opt FROM lotes l
+        INNER JOIN clientes cl ON cl.idLote = l.idLote AND cl.status = 1 AND YEAR(cl.fechaApartado) = 2022
+        INNER JOIN (SELECT MAX(modificado) modificado, idStatusContratacion, idMovimiento, idLote, status, idCliente FROM historial_lotes 
+        GROUP BY idStatusContratacion, idMovimiento, idLote, status, idCliente) hl ON hl.idLote = l.idLote AND hl.idStatusContratacion = 15 
+        AND hl.idMovimiento = 45 AND hl.status = 1 AND hl.idCliente = cl.id_cliente
+        INNER JOIN usuarios u ON u.id_usuario = cl.id_asesor
+        INNER JOIN sedes s ON s.id_sede = l.ubicacion
+        WHERE l.status = 1 AND l.idStatusLote = 2 AND l.idStatusContratacion = 15 AND l.idMovimiento = 45
+        /*GROUP BY s.nombre, s.id_sede*/) c ON c.opt = a.opt
+		-- GRAND TOTAL CANCELADOS
+		LEFT JOIN(
+        SELECT /*s.nombre,*/ SUM(ISNULL(l.totalNeto2, l.total)) canceladoTotal, COUNT(*) totalCancelados, '1' opt FROM lotes l
+        INNER JOIN clientes cl ON cl.idLote = l.idLote AND cl.status = 1 AND YEAR(cl.fechaApartado) = 2022
+        INNER JOIN (SELECT MAX(modificado) modificado, idLote, status FROM historial_liberacion
+        GROUP BY idLote, status) hl ON hl.idLote = l.idLote AND hl.status = 1
+        INNER JOIN usuarios u ON u.id_usuario = cl.id_asesor
+        INNER JOIN sedes s ON s.id_sede = l.ubicacion
+        WHERE l.status = 1
+        /*GROUP BY s.nombre, s.id_sede*/) d ON d.opt = c.opt
+		/*GROUP BY a.nombre, a.id_sede, c.contratado, c.totalContratados, 
+        b.canceladoContratado, b.totalCanceladosContratados, a.apartado, a.totalApartados, d.canceladoTotal, d.totalCancelados ORDER BY a.id_sede*/
+        ");
+        return $query->result_array();
+    }
+
+
 }

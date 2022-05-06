@@ -1,5 +1,5 @@
 <?php
-    //require_once 'static/autoload.php';
+    require_once 'static/autoload.php';
     use PhpOffice\PhpSpreadsheet\Spreadsheet;
     use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
@@ -558,10 +558,10 @@ $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
 $pdf->setPrintHeader(false);
 $pdf->setPrintFooter(false);
 $pdf->setFontSubsetting(true);
-$pdf->SetFont('Open Sans', '', 10, '', true);
+$pdf->SetFont('Helvetica', '', 10, '', true);
 // $pdf->SetMargins(15, 20, 15, true);
 $pdf->AddPage('P', 'LEGAL');
-$pdf->SetFont('Open Sans', '', 5, '', true);
+$pdf->SetFont('Helvetica', '', 5, '', true);
 $pdf->SetFooterMargin(0);
 $bMargin = $pdf->getBreakMargin();
 $auto_page_break = $pdf->getAutoPageBreak();
@@ -1295,7 +1295,7 @@ legend {
 				<div class="box-body">
                       <table width="100%" style="height: 45px; border: 1px solid #ddd;" width="690">
 						<tr>
-							<td colspan="2" align="left"><img src="https://www.ciudadmaderas.com/assets/img/logo.png" style=" max-width: 70%; height: auto;"></td>
+							<td colspan="2" align="left"><img src="https://maderascrm.gphsis.com/static/images/logo_ciudadmaderasAct.jpg" style=" max-width: 70%; height: auto;"></td>
 							<td colspan="2" align="right"><b style="font-size: 3em; "> CORRIDA FINANCIERA<BR></b><small style="font-size: 2.5em; color: #777;"></small> 
 							</td>
 						</tr>
@@ -1304,7 +1304,7 @@ legend {
 					<br><br>
                       <table width="100%" style="height: 45px; border: 1px solid #ddd;" width="690">
 						<tr>
-							<td colspan="2" style="background-color: #296D5D;color: #fff;padding: 3px 6px; "><b style="font-size: 2em; ">Información general</b>
+							<td colspan="2" style="background-color: #103f75;color: #fff;padding: 3px 6px; "><b style="font-size: 2em; ">Información general</b>
 							</td>
 						</tr>
 					</table>							
@@ -1413,7 +1413,7 @@ legend {
                         
                       <table width="100%" style="height: 45px; border: 1px solid #ddd;" width="690">
 						<tr>
-							<td colspan="2" style="background-color: #296D5D;color: #fff;padding: 3px 6px; "><b style="font-size: 2em; ">Descuentos</b>
+							<td colspan="2" style="background-color: #103f75;color: #fff;padding: 3px 6px; "><b style="font-size: 2em; ">Descuentos</b>
 							</td>
 						</tr>
 					</table>							
@@ -1476,7 +1476,7 @@ legend {
                         
                       <table width="100%" style="height: 45px; border: 1px solid #ddd;" width="690">
 						<tr>
-							<td colspan="2" style="background-color: #296D5D;color: #fff;padding: 3px 6px; "><b style="font-size: 2em; ">Enganche diferido</b>
+							<td colspan="2" style="background-color: #103f75;color: #fff;padding: 3px 6px; "><b style="font-size: 2em; ">Enganche diferido</b>
 							</td>
 						</tr>
 					</table>							
@@ -1524,7 +1524,7 @@ legend {
 					<br><br>
                       <table width="100%" style="height: 45px; border: 1px solid #ddd;" width="690">
 						<tr>
-							<td colspan="2" style="background-color: #296D5D;color: #fff;padding: 3px 6px; "><b style="font-size: 2em; ">Enganche y mensualidades</b>
+							<td colspan="2" style="background-color: #103f75;color: #fff;padding: 3px 6px; "><b style="font-size: 2em; ">Enganche y mensualidades</b>
 							</td>
 						</tr>
 					</table>							
@@ -1568,7 +1568,7 @@ legend {
 					<br><br>
                       <table width="100%" style="height: 45px; border: 1px solid #ddd;" width="690">
 						<tr>
-							<td colspan="2" style="background-color: #296D5D;color: #fff;padding: 3px 6px; "><b style="font-size: 2em; ">Datos Bancarios</b>
+							<td colspan="2" style="background-color: #103f75;color: #fff;padding: 3px 6px; "><b style="font-size: 2em; ">Datos Bancarios</b>
 							</td>
 						</tr>
 					</table>							
