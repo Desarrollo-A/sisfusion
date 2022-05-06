@@ -111,6 +111,40 @@ class Dashboard extends CI_Controller
         $this->load->view('template/header');
         $this->load->view("dashboard/dashboard", $datos);
     }
+
+    public function getProspectsByUserSessioned(){
+        $id_asesor = $this->session->userdata('id_usuario');
+        $data = $this->Dashboard_model->getProspectsByUserSessioned($id_asesor);
+        $data['total_ventas'] = $this->Dashboard_model->totalVentasData();
+        if($data != null) {
+            echo json_encode($data);
+        } else {
+            echo json_encode(array());
+        }
+    }
+    public function getDataFromDates(){
+        $fecha_inicio = $this->input->post('fecha_inicio');
+        $fecha_fin = $this->input->post('fecha_fin');
+        $typeTransaction = $this->input->post('typeTransaction');
+
+        $data = $this->Dashboard_model->getDataBetweenDates($fecha_inicio, $fecha_fin, $typeTransaction);
+        if($data != null) {
+            echo json_encode($data);
+        } else {
+            echo json_encode(array());
+        }
+    }
+
+    public function totalVentasData(){
+        $data = $this->Dashboard_model->totalVentasData();
+        if($data != null) {
+            echo json_encode($data);
+        } else {
+            echo json_encode(array());
+        }
+    }
 }
+
+
 
 
