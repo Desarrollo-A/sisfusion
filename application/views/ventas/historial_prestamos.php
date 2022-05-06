@@ -197,7 +197,7 @@
         $('#prestamos-table thead tr:eq(0) th').each(function (i) {
             const title = $(this).text();
 
-            if (i !== 0  && i !== 8 && i !== 9) {
+            if ( i != 10) {
                 $(this).html('<input type="text" class="textoshead" placeholder="' + title + '"/>');
                 $('input', this).on('keyup change', function () {
                     if (prestamosTabla.column(i).search() !== this.value) {

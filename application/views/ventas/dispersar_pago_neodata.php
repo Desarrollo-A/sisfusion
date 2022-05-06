@@ -890,7 +890,10 @@
                                                     }
                                                     console.log('SALDO'+saldo);
 
-                                                    if( (parseFloat(saldo) + parseFloat(v.abono_pagado)) > parseFloat(v.comision_total)){
+                                                    if( (parseFloat(saldo) + parseFloat(v.abono_pagado)) > (parseFloat(v.comision_total)+0.5 )){
+                                                        console.log((parseFloat(saldo) + parseFloat(v.abono_pagado)));
+                                                        console.log(parseFloat(v.comision_total));
+                                                        console.log('ENTRA AQUI AL CERO');
                                                             saldo = 0;
                                                         }
                                                     $("#modal_NEODATA .modal-body").append(`<div class="row">
