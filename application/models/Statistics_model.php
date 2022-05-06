@@ -2216,7 +2216,6 @@ class Statistics_model extends CI_Model {
 
         return $result->result_array();
     }
-
     public function getDataGraficaTopUsuarios($anio, $mes)
     {
         $result = $this->db->query("SELECT TOP 5 COUNT(DISTINCT(id_lote)) lotes, COUNT(DISTINCT(c.id_comision)) comisiones, 
