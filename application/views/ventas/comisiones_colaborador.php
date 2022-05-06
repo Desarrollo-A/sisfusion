@@ -889,6 +889,42 @@
                     }
                 }, 
                 <?php } ?>
+                    <?php if ($this->session->userdata('forma_pago') == 2) { ?>
+                    {
+                        text: '<i class="fa fa-play"></i>',
+                        action: function () {
+                            window.open('https://youtu.be/YuZNsPk8-gY', '_blank');
+                        },
+                        attr: {
+                            class: 'btn btn-azure',
+                            style: 'position: relative; float: right; margin-right: 10px;'
+                        }
+                    },
+                    <?php } ?>
+                    <?php if ($this->session->userdata('forma_pago') == 3) { ?>
+                    {
+                        text: '<i class="fa fa-play"></i>',
+                        action: function () {
+                            window.open('https://youtu.be/LmmIdipDSEA', '_blank');
+                        },
+                        attr: {
+                            class: 'btn btn-azure',
+                            style: 'position: relative; float: right; margin-right: 10px;'
+                        }
+                    },
+                    <?php } ?>
+                    <?php if ($this->session->userdata('forma_pago') == 4) { ?>
+                    {
+                        text: '<i class="fa fa-play"></i>',
+                        action: function () {
+                            window.open('https://youtu.be/oRoJev_AZgs', '_blank');
+                        },
+                        attr: {
+                            class: 'btn btn-azure',
+                            style: 'position: relative; float: right; margin-right: 10px;'
+                        }
+                    },
+                    <?php } ?>
                 {
                     extend: 'excelHtml5',
                     text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',

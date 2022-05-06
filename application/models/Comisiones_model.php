@@ -8622,69 +8622,6 @@ return $query->result();
     }
 /**----------------------------------------FIN BONOS Y PRESTAMOS------------------------------- */
 /**---------------------------------------------- */
-function getDatosFlujoComisiones() {
-
-        return $this->db->query("(SELECT l.idLote,l.nombreLote, l.idStatusContratacion, l.idMovimiento, sl.nombreStatus , 
-        CONVERT(varchar,c.fechaApartado,23) as fechaApartado, CONVERT(varchar,p.fecha_creacion,23) as fechaProspecto,
-        (CASE WHEN s.nombre is null and c.id_sede is not null THEN 'Sede Cliente' WHEN s.nombre is null and c.id_sede is null THEN 'Sede Asesor' ELSE 'ubicacion 2' end) sedeTOMADA,
-        (CASE WHEN s.nombre is null and c.id_sede is not null THEN sc.nombre WHEN s.nombre is null and c.id_sede is null THEN sa.nombre ELSE s.nombre end ) sede,
-        CASE WHEN ec.estatus=0 THEN 'EVIDENCIA SIN INTEGRAR' WHEN ec.estatus=1 THEN 'ENVIADA A COBRANZA' WHEN ec.estatus=2 THEN 'ENVIADA A CONTRALORÍA' WHEN ec.estatus=3 THEN 'EVIDENCIA ACEPTADA' WHEN ec.estatus=4 THEN 'SIN ESTATUS REGISTRADO' WHEN ec.estatus=5 THEN 'COBRANZA RECHAZÓ LA EVIDENCIA AL GERENTE' WHEN ec.estatus=6 THEN 'CONTRALORÍA RECHAZÓ LA EVIDENCIA' ELSE 'SIN EVIDENCIA' end  estatus_evidencia,
-        CASE WHEN (l.ubicacion_dos in (2,3,4,6) or c.id_sede in (2,3,4,6) or  ase.id_sede in (2,3,4,6) ) THEN 'Plaza 2' WHEN (l.ubicacion_dos in (1,5,8,9) or c.id_sede in (1,5,8,9) or  ase.id_sede in (1,5,8,9) ) THEN 'Plaza 1' ELSE 'SIN ASIGNAR' END plaza,
-        co.comision_total,pci.abono_pagado,(co.comision_total-pci.abono_pagado) as pendiente,
-        CASE WHEN co.estatus=1 AND (co.descuento not in (1) or co.descuento is null) THEN 'ACTIVA' WHEN co.estatus=8 THEN 'RECISIÓN' WHEN co.estatus=0 THEN 'BORRADA' WHEN co.descuento in (1) THEN 'TOPADA' ELSE 'SIN IDENTIFICAR' END AS estatus_com,
-        CASE WHEN pc.bandera IN (1,55,0) THEN 'LOTE ACTIVO' WHEN pc.bandera IN (7) then 'LOTE LIQUIDADO' WHEN pc.bandera in(8) THEN 'LOTE CANCELADO' ELSE 'SIN IDENTIFICAR' END as estatus_comision_lote,
-        CASE WHEN (co.comision_total-pci.abono_pagado)<1 THEN 'LIQUIDADA MKTD' WHEN (co.comision_total-pci.abono_pagado)>1 THEN 'ACTIVA MKTD' ELSE '-' END AS ESTATUS_MKTD,
-        CASE WHEN rm.id_lote IS NULL THEN 'MANUAL' ELSE 'AUTOMATICA' END dispersion, co.id_comision,co.id_usuario,
-        CASE WHEN co.observaciones like '%IMPORTACION%' THEN concat('IMPORTACION ', co.fecha_creacion) else '' END observaciones 
-        
-        FROM lotes l 
-        LEFT JOIN clientes c on c.id_cliente=l.idCliente
-        LEFT JOIN usuarios ase on ase.id_usuario=c.id_asesor
-        LEFT JOIN comisiones co on co.id_lote=l.idLote
-        LEFT JOIN sedes s on s.id_sede=l.ubicacion_dos 
-        LEFT JOIN sedes sc on sc.id_sede= c.id_sede
-        LEFT JOIN sedes sa on sa.id_sede= ase.id_sede
-        LEFT JOIN pago_comision pc on pc.id_lote=l.idLote
-        LEFT JOIN (SELECT idLote, MAX(fecha_creacion) modificado,estatus FROM evidencia_cliente WHERE estatus_particular=1 GROUP BY idLote,estatus ) ec on ec.idLote=l.idLote
-        LEFT JOIN (SELECT SUM(abono_neodata) abono_pagado,id_comision FROM pago_comision_ind GROUP BY id_comision) pci ON co.id_comision = pci.id_comision
-        LEFT JOIN (SELECT id_lote, MAX(fecha_creacion) fecha FROM reportes_marketing GROUP BY id_lote ) rm  on rm.id_lote=l.idLote
-        LEFT JOIN prospectos p on p.id_prospecto = c.id_prospecto
-        LEFT JOIN statuscontratacion sl ON l.idStatusContratacion = sl.idStatusContratacion
-        WHERE co.id_usuario = 4394)
-        
-        UNION
-        
-        (SELECT l.idLote,l.nombreLote, l.idStatusContratacion, l.idMovimiento, sl.nombreStatus , 
-        CONVERT(varchar,c.fechaApartado,23) as fechaApartado,
-        CONVERT(varchar,p.fecha_creacion,23) as fechaProspecto,
-        (CASE WHEN s.nombre is null and c.id_sede is not null THEN 'Sede Cliente' WHEN s.nombre is null and c.id_sede is null THEN 'Sede Asesor' ELSE 'ubicacion 2' end ) sedeTOMADA,
-        (CASE WHEN s.nombre is null and c.id_sede is not null THEN sc.nombre WHEN s.nombre is null and c.id_sede is null THEN sa.nombre ELSE s.nombre end ) sede,
-        CASE WHEN ec.estatus=0 THEN 'EVIDENCIA SIN INTEGRAR' WHEN ec.estatus=1 THEN 'ENVIADA A COBRANZA' WHEN ec.estatus=2 THEN 'ENVIADA A CONTRALORÍA' WHEN ec.estatus=3 THEN 'EVIDENCIA ACEPTADA' WHEN ec.estatus=4 THEN 'SIN ESTATUS REGISTRADO' WHEN ec.estatus=5 THEN 'COBRANZA RECHAZÓ LA EVIDENCIA AL GERENTE' WHEN ec.estatus=6 THEN 'CONTRALORÍA RECHAZÓ LA EVIDENCIA' ELSE 'SIN EVIDENCIA' end  estatus_evidencia,
-        CASE WHEN (l.ubicacion_dos in (2,3,4,6) or c.id_sede in (2,3,4,6) or  ase.id_sede in (2,3,4,6) ) THEN 'Plaza 2' WHEN (l.ubicacion_dos in (1,5,8,9) or c.id_sede in (1,5,8,9) or  ase.id_sede in (1,5,8,9) ) THEN 'Plaza 1' ELSE 'SIN ASIGNAR' END plaza,
-        co.comision_total,pci.abono_pagado,(co.comision_total-pci.abono_pagado) as pendiente,
-        CASE WHEN co.estatus=1 AND (co.descuento not in (1) or co.descuento is null) THEN 'ACTIVA' WHEN co.estatus=8 THEN 'RECISIÓN' WHEN co.estatus=0 THEN 'BORRADA' WHEN co.descuento in (1) THEN 'TOPADA' ELSE 'SIN IDENTIFICAR' END AS estatus_com,
-        CASE WHEN pc.bandera IN (1,55,0) THEN 'LOTE ACTIVO' WHEN pc.bandera IN (7) then 'LOTE LIQUIDADO' WHEN pc.bandera in(8) THEN 'LOTE CANCELADO' ELSE 'SIN IDENTIFICAR' END as estatus_comision_lote,
-        CASE WHEN (co.comision_total-pci.abono_pagado)<1 THEN 'LIQUIDADA MKTD' WHEN (co.comision_total-pci.abono_pagado)>1 THEN 'ACTIVA MKTD' ELSE '-' END AS ESTATUS_MKTD,
-        CASE WHEN rm.id_lote IS NULL THEN 'MANUAL' ELSE 'AUTOMATICA' END dispersion, co.id_comision,co.id_usuario,
-        CASE WHEN co.observaciones like '%IMPORTACION%' THEN concat('IMPORTACION ', co.fecha_creacion) else '' END observaciones 
-        FROM lotes l 
-        inner JOIN clientes c on c.id_cliente=l.idCliente 
-        LEFT JOIN usuarios ase on ase.id_usuario=c.id_asesor
-        LEFT JOIN sedes s on s.id_sede=l.ubicacion_dos 
-        LEFT JOIN sedes sc on sc.id_sede= c.id_sede
-        LEFT JOIN sedes sa on sa.id_sede= ase.id_sede
-        INNER JOIN comisiones co on co.id_lote=l.idLote and co.id_usuario=4394 
-        INNER JOIN pago_comision pc on pc.id_lote=l.idLote
-        LEFT JOIN (SELECT idLote, MAX(fecha_creacion) modificado,estatus,idCliente FROM evidencia_cliente WHERE estatus_particular=1 GROUP BY idLote,estatus,idCliente ) ec on ec.idLote=l.idLote -- and ec.idCliente=c.id_cliente  --evidencia_cliente ec on ec.idLote=l.idLote and ec.idCliente=c.id_cliente
-        LEFT JOIN (SELECT SUM(abono_neodata) abono_pagado,id_comision FROM pago_comision_ind GROUP BY id_comision) pci ON co.id_comision = pci.id_comision
-        LEFT JOIN (SELECT id_lote, MAX(fecha_creacion) fecha FROM reportes_marketing GROUP BY id_lote ) rm  on rm.id_lote=l.idLote
-        LEFT JOIN prospectos p on p.id_prospecto = c.id_prospecto
-        LEFT JOIN statuscontratacion sl ON l.idStatusContratacion = sl.idStatusContratacion
-        WHERE  c.lugar_prospeccion NOT in(6,29) and c.descuento_mdb != 1)");
-
-    }
-
-    
 
 function lista_estatus_descuentos(){
     return $this->db->query(" SELECT * FROM opcs_x_cats where id_catalogo=23 and id_opcion in(18,19,20,21,22)");
