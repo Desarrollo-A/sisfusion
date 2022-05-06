@@ -48,7 +48,7 @@
                                     <div class="col-12 col-sm-4 col-md-4 col-lg-12">
                                         <div id="ubicacion" style="display:none">
                                             <label class="control-label label-gral">Ubicación</label>
-                                            <select id="ubicacion_sede" name="ubicacion_sede" class="selectpicker" data-style="btn btn-round" style="text-align:center"></select>
+                                            <select id="ubicacion_sede" name="ubicacion_sede" class="selectpicker select-gral m-0" data-style="btn btn-round" style="text-align:center"></select>
                                         </div>
                                     </div>
                                 </div>
@@ -360,8 +360,9 @@
         }, function(data) {
             $('#preciodesc').val(data.saldo);
             $('#enganches').val(data.enganche);
-            $('#nombre').val(data.ubicacion).text(data.nombre_ubicacion);
-        }, 'json');
+            $("#ubicacion_sede").append($('<option selected disabled>').val(data.id_sede).text(data.nombre_ubicacion.toUpperCase()));
+            $("#ubicacion_sede").selectpicker('refresh');
+        }, 'json');   
     }
 
     $(document).on('change', '#modificacion', function () {
@@ -406,6 +407,7 @@
     });
 
     $(document).ready(function(){
+        $("#ubicacion_sede").empty().selectpicker('refresh');
         $.post(url + "Contraloria/lista_sedes", function(data) {
             var len = data.length;
             for( var i = 0; i<len; i++)
@@ -417,4 +419,5 @@
             $("#ubicacion_sede").selectpicker('refresh');
         }, 'json');
     });
+
 </script>
