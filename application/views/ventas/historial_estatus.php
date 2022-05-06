@@ -696,6 +696,16 @@
                             etiqueta = '<p class=""m-0><span class="label" style="background:#ED8172;">DESCUENTO DE PAGO</span></p>';
                         }else if((d.id_estatus_actual == 17) && d.descuento_aplicado == 1 ){
                             etiqueta = '<p class=""m-0><span class="label" style="background:#ED72B9;">DESCUENTO UNIVERSIDAD</span></p>';
+                        }else if((d.id_estatus_actual == 18) && d.descuento_aplicado == 1 ){
+                            etiqueta = '<p><span class="label" style="background:#89C86C;">DESCUENTO PRÉSTAMO</span></p>';
+                        }else if((d.id_estatus_actual == 19) && d.descuento_aplicado == 1 ){
+                            etiqueta = '<p><span class="label" style="background:#3BC6AC;">DESCUENTO SCIO</span></p>';
+                        }else if((d.id_estatus_actual == 20) && d.descuento_aplicado == 1 ){
+                            etiqueta = '<p><span class="label" style="background:#72CBED;">DESCUENTO PLAZA</span></p>';
+                        }else if((d.id_estatus_actual == 21) && d.descuento_aplicado == 1 ){
+                            etiqueta = '<p><span class="label" style="background:#7282ED;">DESCUENTO LINEA TELEFÓNICA</span></p>';
+                        }else if((d.id_estatus_actual == 22) && d.descuento_aplicado == 1 ){
+                            etiqueta = '<p><span class="label" style="background:#CA72ED;">DESCUENTO MANTENIMIENTO</span></p>';
                         }else{
                             switch(d.id_estatus_actual){
                                 case '1':
