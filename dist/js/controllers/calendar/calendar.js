@@ -155,7 +155,7 @@
       },
       success: function(data) {
         if(gapi.auth2.getAuthInstance().isSignedIn.get()) insertEventGoogle(dataF);
-        removeEvents();
+        removeCRMEvents();
         getUsersAndEvents(userType, idUser, false);
         data = JSON.parse(data);
         alerts.showNotification("top", "right", data["message"], (data["status" == 503]) ? "danger" : (data["status" == 400]) ? "warning" : "success");
@@ -389,7 +389,7 @@
         $('#spiner-loader').removeClass('hide');
       },
       success: function(data) {
-        removeEvents();
+        removeCRMEvents();
         getUsersAndEvents(userType, idUser, false);
         data = JSON.parse(data);
         alerts.showNotification("top", "right", data["message"], (data["status" == 503]) ? "danger" : (data["status" == 400]) ? "warning" : "success");
@@ -417,16 +417,12 @@
     request.execute();
   }
   
-  function removeEvents(){
+  function removeCRMEvents(){
     srcEventos = calendar.getEventSources();
     srcEventos.forEach(event => {
-      if(!gapi.auth2.getAuthInstance().isSignedIn.get() && event['internalEventSource']['extendedProps'].hasOwnProperty('title') && event['internalEventSource']['extendedProps']['title'] == "sourceGoogle")
-          event.remove();
-      else{
         if(event['internalEventSource']['extendedProps'].hasOwnProperty('title') && event['internalEventSource']['extendedProps']['title'] == "sourceCRM"){
           event.remove();
         }
-      }
     });
   }
 
