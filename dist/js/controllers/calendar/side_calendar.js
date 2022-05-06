@@ -39,14 +39,13 @@ function minMaxSideCalendar(){
     $('#sideCalendar').hide("slow");
     $('#side-calendar').html("");
   }else{
-    // sideCalendar.refetchEvents();
     $('body').addClass('sidebar-calendar');
     $('.sidebar-wrapper').removeClass('ps-container ps-theme-default ps-active-x ps-active-y');
 
     $('#sideCalendar').show("slow");
     setTimeout(function() {
-      
       createCalendar();
+      updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
     },500)
   }
 
@@ -156,7 +155,6 @@ function createCalendar(){
     },
     customButtons: {
       googleSignIn: {
-        // icon: 'fab fa-google',
         text: 'Sincronizar con google',
         click: function() {
           gapi.auth2.getAuthInstance().signIn();
@@ -164,11 +162,9 @@ function createCalendar(){
         }
       },
       googleLogout: {
-        // icon: 'fas fa-power-off',
         text: 'Desincronizar',
         click: function() {
           gapi.auth2.getAuthInstance().signOut();
-          window.location.reload();
         }
       }
     },

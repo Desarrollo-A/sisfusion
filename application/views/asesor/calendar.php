@@ -127,15 +127,10 @@
 </div><!--main-panel close-->
 </body>
 
-<?php 
-$this->load->view('template/footer');?>
-
-
 <script src="<?= base_url() ?>dist/assets/js/bootstrap-datetimepicker.js"></script>
-<script async defer src="https://apis.google.com/js/api.js" onload="this.onload=function(){};handleClientLoad()" onreadystatechange="if (this.readyState === 'complete') this.onload()"></script>
+<?php $this->load->view('template/footer');?>
 <script src="<?=base_url()?>dist/js/controllers/calendar/general_calendar.js"></script>
 <script src="<?=base_url()?>dist/js/controllers/calendar/calendar.js"></script>
-<script src="<?=base_url()?>dist/js/controllers/calendar/googleCalendarConnection.js"></script>
 <script>
     userType = <?= $this->session->userdata('id_rol') ?> ;
     idUser = <?= $this->session->userdata('id_usuario') ?> ;
