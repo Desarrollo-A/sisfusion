@@ -230,24 +230,15 @@
                                                 <div class="table-responsive">
                                                     <table class="table-striped table-hover" id="tabla_plaza_2" name="tabla_plaza_2">
                                                         <thead>
-                                                            <tr>
-                                                                <th>ID</th>
-                                                                <th>ID LOTE</th>
-                                                                <th>PROY.</th>
-                                                                <th>CONDOMINIO</th>
-                                                                <th>LOTE</th>
-                                                                <th>REFERENCIA</th>
-                                                                <th>PRECIO LOTE</th>
-                                                                <th>EMP.</th>
-                                                                <th>TOT. COM.</th>
-                                                                <th>P. CLIENTE</th>
-                                                                <th>SOLICITADO</th>
-                                                                <th>TIPO VENTA</th>
-                                                                <th>USUARIO</th>
-                                                                <th>PLAZA</th>
-                                                                <th>FEC. ENVÍO</th>
-                                                                <th>MÁS</th>
-                                                            </tr>
+                                                        <tr>
+                                                            <th></th>
+                                                            <th>USUARIO</th>
+                                                            <th>MONTO</th>
+                                                            <th>PROYECTO</th>
+                                                            <th>EMPRESA</th>
+                                                            <th>OPINIÓN CUMPLIMIENTO</th>
+                                                            <th>MÁS</th>
+                                                        </tr>
                                                         </thead>
                                                     </table>
                                                 </div>
