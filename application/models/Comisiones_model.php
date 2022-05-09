@@ -6591,15 +6591,6 @@ $cc=0;
 //echo $infoCedida[0]['id_lote'];
     $mail = $this->phpmailer_lib->load();
 
- // SMTP configuration
-//  $mail->isSMTP();
-//  $mail->Host     = 'smtp.gmail.com';
-//  $mail->SMTPAuth = true;
-//  $mail->Username = 'noreply@ciudadmaderas.com';
-//  $mail->Password = 'Marzo2019@';
-//  $mail->SMTPSecure = 'ssl';
-//  $mail->Port     = 465;
-
 
   $mail->setFrom('noreply@ciudadmaderas.com', 'Ciudad Maderas');
   $mail->AddAddress('programador.analista16@ciudadmaderas.com');

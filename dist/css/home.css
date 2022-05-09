@@ -694,6 +694,11 @@
   color: #ffffff !important;
 }
 
+.btn-unstyled {
+  border: none !important;
+  background: none;
+}
+
 .lbl-gray {
   background-color: #4e4e4e;
   color: #ffffff;

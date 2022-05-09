@@ -3277,14 +3277,7 @@ class Asesor extends CI_Controller
             // PHPMailer object
             $mail = $this->phpmailer_lib->load();
 
-            // SMTP configuration
-            // $mail->isSMTP();
-            // $mail->Host = 'smtp.gmail.com';
-            // $mail->SMTPAuth = true;
-            // $mail->Username = 'no-reply@ciudadmaderas.com';
-            // $mail->Password = 'Va7<*V8PP';
-            // $mail->SMTPSecure = 'ssl';
-            // $mail->Port = 465;
+   
 
 
             $mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
@@ -3507,13 +3500,7 @@ class Asesor extends CI_Controller
 
 
         $mail = $this->phpmailer_lib->load();
-        // $mail->isSMTP();
-        // $mail->Host = 'smtp.gmail.com';
-        // $mail->SMTPAuth = true;
-        // $mail->Username = 'no-reply@ciudadmaderas.com';
-        // $mail->Password = 'Va7<*V8PP';
-        // $mail->SMTPSecure = 'ssl';
-        // $mail->Port = 465;
+      
         $mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
         $mail->addAddress($correoDir);/*$correoDir*/
 
@@ -5264,13 +5251,7 @@ class Asesor extends CI_Controller
 
 
         $mail = $this->phpmailer_lib->load();
-        // $mail->isSMTP();
-        // $mail->Host = 'smtp.gmail.com';
-        // $mail->SMTPAuth = true;
-        // $mail->Username = 'no-reply@ciudadmaderas.com';
-        // $mail->Password = 'Va7<*V8PP';
-        // $mail->SMTPSecure = 'ssl';
-        // $mail->Port = 465;
+     
         $mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
         $mail->addAddress($correo_new);
         // $mail->addCC('erick_eternal@live.com.mx');
