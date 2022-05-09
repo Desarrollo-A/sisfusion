@@ -337,14 +337,7 @@
 
 
 			$mail = $this->phpmailer_lib->load();
-			// $mail->isSMTP();
-			// $mail->Host = 'smtp.gmail.com';
-			// $mail->SMTPAuth = true;
-			// $mail->Username = 'no-reply@ciudadmaderas.com';
-			// $mail->Password = 'Va7<*V8PP';
-			// $mail->SMTPSecure = 'ssl';
-			// $mail->Port = 465;
-
+	
 			$mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
 			$mail->addAddress("lucero.velazquez@ciudadmaderas.com", "coord.contraloria2@ciudadmaderas.com", "subdirector.contraloria@ciudadmaderas.com");
 			$mail->Subject = utf8_decode('LOTE BLOQUEADO-CIUDAD MADERAS');
@@ -18212,13 +18205,6 @@ tr td:hover { background: #666; color: #FFF; }
 		$datos["mailbloqueos"] = $this->registrolote_modelo->sendMailBloqueosDireccion();
 
 		$mail = $this->phpmailer_lib->load();
-		// $mail->isSMTP();
-		// $mail->Host = 'smtp.gmail.com';
-		// $mail->SMTPAuth = true;
-		// $mail->Username = 'no-reply@ciudadmaderas.com';
-		// $mail->Password = 'Va7<*V8PP';
-		// $mail->SMTPSecure = 'ssl';
-		// $mail->Port = 465;
 
 		$mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
 		$mail->addAddress("programador.analista1@ciudadmaderas.com");

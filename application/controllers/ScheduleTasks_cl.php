@@ -54,14 +54,7 @@ public function sendRv5(){
   
 
   $mail = $this->phpmailer_lib->load();
-  // $mail->isSMTP();
 
-  // $mail->Host     = 'smtp.gmail.com';
-  // $mail->SMTPAuth = true;
-  // $mail->Username = 'no-reply@ciudadmaderas.com';
-  // $mail->Password = 'Va7<*V8PP';
-  // $mail->SMTPSecure = 'ssl';
-  // $mail->Port     = 465;
   
   $mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
 
@@ -237,13 +230,7 @@ public function mailBloqueosAfter45(){
   $datos["mailbloqueos"]= $this->scheduleTasks_model->sendMailBloqueosDireccion();
 
   $mail = $this->phpmailer_lib->load();
-  // $mail->isSMTP();
-  // $mail->Host     = 'smtp.gmail.com';
-  // $mail->SMTPAuth = true;
-  // $mail->Username = 'no-reply@ciudadmaderas.com';
-  // $mail->Password = 'Va7<*V8PP';
-  // $mail->SMTPSecure = 'ssl';
-  // $mail->Port     = 465;
+
   
   $mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
   $mail->addAddress("contraloria.corporativa6@ciudadmaderas.com");
@@ -1070,13 +1057,7 @@ public function select_gph_maderas_64(){ //HACER INSERT DE LOS LOTES EN 0 Y PASA
         $correo_test= 'programador.analista8@ciudadmaderas.com';/*se coloca el correo de testeo para desarrollo*/
         /*$correoDir = $dataUser[0]->correo;linea de codigo para produccion*/
         $mail = $this->phpmailer_lib->load();
-        // $mail->isSMTP();
-        // $mail->Host     = 'smtp.gmail.com';
-        // $mail->SMTPAuth = true;
-        // $mail->Username = 'no-reply@ciudadmaderas.com';
-        // $mail->Password = 'Va7<*V8PP';
-        // $mail->SMTPSecure = 'ssl';
-        // $mail->Port     = 465;
+   
         $mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
         $mail->addAddress($correo);
         $mail->Subject = $subject;
@@ -1251,14 +1232,7 @@ public function select_gph_maderas_64(){ //HACER INSERT DE LOS LOTES EN 0 Y PASA
     public function sendComptrollerNotification($data_eviRec, $subject, $typeTransaction)
     {
         $mail = $this->phpmailer_lib->load();
-        // $mail->isSMTP();
-        // // $mail->SMTPDebug = 3;
-        // $mail->Host = 'smtp.gmail.com';
-        // $mail->SMTPAuth = true;
-        // $mail->Username = 'no-reply@ciudadmaderas.com';
-        // $mail->Password = 'Va7<*V8PP';
-        // $mail->SMTPSecure = 'ssl';
-        // $mail->Port = 465;
+       
         $mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
         //$mail->addAddress('coord.desarrollo2@ciudadmaderas.com');
         $mail->addAddress('asistente.pv2@ciudadmaderas.com');
