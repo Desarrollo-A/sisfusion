@@ -458,10 +458,13 @@
 			});
 
             $('#tabla_prestamos tbody').on('click', '.detalle-prestamo', function () {
+				$('#spiner-loader').removeClass('hide');
+
                 const idPrestamo = $(this).val();
 
                 $.getJSON(`${url}Comisiones/getDetallePrestamo/${idPrestamo}`).done(function (data) {
                     const { general, detalle } = data;
+					$('#spiner-loader').addClass('hide');
 
                     if (general.length === 0) {
                         alerts.showNotification("top", "right", "No hay préstamos.", "warning");
