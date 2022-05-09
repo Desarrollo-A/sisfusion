@@ -65,7 +65,8 @@ class Ventas extends CI_Controller {
                 $this->load->view("clientes/consult_statistics_as", $datos);
             break;
             case '9': // COORDINADOR
-                $this->load->view("clientes/consult_statistics_co", $datos);
+                //$this->load->view("clientes/consult_statistics_co", $datos);
+                $this->load->view("dashboard/dashboard", $datos);
             break;
             case '6': // ASISTENTE GERENTE
             case '3': // GERENTE
