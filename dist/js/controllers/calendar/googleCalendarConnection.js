@@ -107,6 +107,7 @@
   }
   
   function removeEvents(){
+    let srcEventos;
     if (typeof(sideCalendar) != 'undefined') srcEventos = sideCalendar.getEventSources();
     if (typeof(calendar) != 'undefined') srcEventos = calendar.getEventSources();
   
