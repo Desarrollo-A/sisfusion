@@ -56,7 +56,6 @@ function aportaciones() {
         idLote: idLote,
         idCliente: idCliente
     }, function (data) {
-        console.log(data);
         $('#spiner-loader').addClass('hide');
         if(data == true){
             alerts.showNotification("top", "right", "Se ha creado la solicitud correctamente.", "success");

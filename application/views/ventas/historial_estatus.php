@@ -59,6 +59,71 @@
             </div>
         </div>
 
+        <div class="modal fade"
+             id="movimiento-modal"
+             tabindex="-1"
+             role="dialog"
+             aria-labelledby="movimientoModal"
+             aria-hidden="true"
+             data-backdrop="static"
+             data-keyboard="false">
+            <div class="modal-dialog modal-md modal-dialog-scrollable"
+                 role="document">
+                <div class="modal-content">
+                    <div class="modal-header bg-red">
+                        <button type="button"
+                                class="close"
+                                data-dismiss="modal"
+                                aria-hidden="true">
+                            <i class="material-icons">clear</i>
+                        </button>
+                        <h4 class="modal-title">Cambio de estatus</h4>
+                    </div>
+
+                    <form method="post"
+                          class="row"
+                          id="estatus-form"
+                          autocomplete="off">
+                        <div class="modal-body">
+                            <div class="col-lg-12">
+                                <h5 id="total-pagos">
+                                </h5>
+                            </div>
+
+                            <div class="col-lg-12"><hr></div>
+
+                            <div class="col-lg-12">
+                                <div id="div-options"></div>
+                            </div>
+
+                            <div class="col-lg-12">
+                                <div class="form-group is-empty">
+                                    <textarea class="form-control"
+                                              name="comentario"
+                                              id="comentario"
+                                              rows="3"
+                                              placeholder="Escriba el comentario..."
+                                              required></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="submit"
+                                    class="btn btn-primary">
+                                Aceptar
+                            </button>
+                            <button type="button"
+                                    class="btn btn-danger btn-simple"
+                                    data-dismiss="modal">
+                                Cancelar
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
         <!--<div class="modal fade modal-alertas" id="modal_nuevas" role="dialog">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -85,9 +150,9 @@
                                 <div class="toolbar">
                                     <div class="container-fluid p-0">
                                         <div class="row">
-                                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-3">
                                                 <div class="form-group">
-                                                    <label class="m-0" for="filtro33">Proyecto</label>
+                                                    <label class="m-0" for="proyecto">Proyecto *</label>
                                                     <select name="filtro33" id="filtro33" class="selectpicker select-gral" data-style="btn " data-show-subtext="true" data-live-search="true"  title="Selecciona un proyecto" data-size="7" required>
                                                         <option value="0">Seleccione todo</option>
                                                     </select>
@@ -106,10 +171,39 @@
                                                     ?>
                                                 </div>
                                             </div>
-                                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-3">
                                                 <div class="form-group">
-                                                    <label class="m-0" for="filtro44">Estatus</label>
-                                                    <select class="selectpicker select-gral" id="filtro44" name="filtro44[]" data-style="btn " data-show-subtext="true" data-live-search="true" title="Selecciona estatus" data-size="7" required/>
+                                                    <label class="m-0" for="filtro44">Estatus *</label>
+                                                    <select class="selectpicker select-gral" id="filtro44" name="estatus[]" data-style="btn " data-show-subtext="true" data-live-search="true" title="Selecciona estatus" data-size="7" required/>
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-3">
+                                                <div class="form-group">
+                                                    <label class="m-0"
+                                                           for="roles">Puesto</label>
+                                                    <select class="selectpicker select-gral"
+                                                            name="roles"
+                                                            id="roles"
+                                                            required>
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-3">
+                                                <div class="form-group">
+                                                    <label class="m-0"
+                                                           for="users">Usuario</label>
+                                                    <select class="selectpicker select-gral"
+                                                            id="users"
+                                                            name="users"
+                                                            data-style="btn"
+                                                            data-show-subtext="true"
+                                                            data-live-search="true"
+                                                            title="SELECCIONA UN USUARIO"
+                                                            data-size="7"
+                                                            required>
                                                     </select>
                                                 </div>
                                             </div>
@@ -176,6 +270,19 @@
                 }
                 $("#filtro33").selectpicker('refresh');
             }, 'json');
+
+            $.get(`${url2}Comisiones/getPuestoByIdOpts`, function (data) {
+                const puestos = JSON.parse(data);
+                $('#roles').append($('<option>').val('').text('SELECCIONA UN ROL'));
+                puestos.forEach(puesto => {
+                    const id = puesto.id_opcion;
+                    const name = puesto.nombre.toUpperCase();
+
+                    $('#roles').append($('<option>').val(id).text(name));
+                });
+
+                $("#roles").selectpicker('refresh');
+            });
         });
 
         $('#filtro33').change(function(ruta){
@@ -199,12 +306,73 @@
         });
     
         $('#filtro44').change(function(ruta){
-            proyecto = $('#filtro33').val();
-            condominio = $('#filtro44').val();
-            if(condominio == '' || condominio == null || condominio == undefined){
+            const proyecto = $('#filtro33').val();
+            let condominio = $('#filtro44').val();
+
+            if(condominio === '' || condominio === null || condominio === undefined){
                 condominio = 0;
             }
-            getAssimilatedCommissions(proyecto, condominio);
+
+            let usuario = $('#users').val();
+            if (usuario === undefined || usuario === null || usuario === '') {
+                usuario = 0;
+            }
+
+            getAssimilatedCommissions(proyecto, condominio, usuario);
+        });
+
+        $('#roles').change(function () {
+            $("#users").empty().selectpicker('refresh');
+
+            $.ajax({
+                url: `${url}Comisiones/getUsersName`,
+                type: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    const len = data.length;
+                    for(let i = 0; i < len; i++){
+                        const id = data[i]['id_usuario'];
+                        const name = data[i]['name_user'].toUpperCase();
+                        $("#users").append($('<option>').val(id).text(name));
+                    }
+
+                    $("#users").selectpicker('refresh');
+
+                    const proyecto = $('#filtro33').val();
+                    let condominio = $('#filtro44').val();
+
+                    if (proyecto === undefined || proyecto === null || proyecto === '') {
+                        return;
+                    }
+
+                    if(condominio === '' || condominio === null || condominio === undefined){
+                        condominio = 0;
+                    }
+
+                    let usuario = $('#users').val();
+                    if (usuario === undefined || usuario === null || usuario === '') {
+                        usuario = 0;
+                    }
+
+                    getAssimilatedCommissions(proyecto, condominio, usuario);
+                }
+            });
+        });
+
+        $('#users').change(function () {
+            const proyecto = $('#filtro33').val();
+            let condominio = $('#filtro44').val();
+
+            if(condominio === '' || condominio === null || condominio === undefined){
+                condominio = 0;
+            }
+
+            let usuario = $('#users').val();
+            if (usuario === undefined || usuario === null || usuario === '') {
+                usuario = 0;
+            }
+
+            getAssimilatedCommissions(proyecto, condominio, usuario);
         });
 
         function cleanCommentsAsimilados() {
@@ -253,60 +421,87 @@
         var tr;
         var tabla_historialGral2 ;
         var totaPen = 0;
+
+        const optNueva = `
+            <div class="form-check">
+                <input class="form-check-input"
+                    type="radio"
+                    name="estatus"
+                    id="estatus-nueva"
+                    value="1"
+                    required>
+                <label class="form-check-label"
+                    for="estatus-nueva">
+                Nueva
+                </label>
+            </div>`;
+        const optRevision = `
+            <div class="form-check">
+                <input class="form-check-input"
+                    type="radio"
+                    name="estatus"
+                    id="estatus-revision"
+                    value="4"
+                    required>
+                <label class="form-check-label"
+                    for="estatus-revision">
+                Revisión contraloría
+                </label>
+            </div>`;
+        const optPausado = `
+            <div class="form-check">
+                <input class="form-check-input"
+                    type="radio"
+                    name="estatus"
+                    id="estatus-pausado"
+                    value="6"
+                    required>
+                <label class="form-check-label"
+                    for="estatus-pausado">
+                Pausado
+                </label>
+            </div>`;
+
+        let seleccionados = [];
         //INICIO TABLA QUERETARO*****************************************
 
-        function getAssimilatedCommissions(proyecto, condominio){
+        function getAssimilatedCommissions(proyecto, condominio, usuario){
             let titulos = [];
             $("#tabla_historialGral").prop("hidden", false);
             tabla_historialGral2 = $("#tabla_historialGral").DataTable({
                 dom: 'Brt'+ "<'row'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'i><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>",
                 width: 'auto',
                 buttons: [{
-                    text: 'DESPAUSAR',
+                    text: 'MOVIMIENTO',
                     action: function() {
+                        seleccionados = [];
+
                         if ($('input[name="idTQ[]"]:checked').length > 0) {
-                            $('#loader').removeClass('hide');
-                            var idcomision = $(tabla_historialGral2.$('input[name="idTQ[]"]:checked')).map(function() {
-                                return this.value;
-                            }).get();
-                            
-                            var com2 = new FormData();
-                            com2.append("idcomision", idcomision); 
-                            $.ajax({
-                                url : url2 + 'Comisiones/despausar_historial/',
-                                data: com2,
-                                cache: false,
-                                contentType: false,
-                                processData: false,
-                                type: 'POST', 
-                                success: function(data){
-                                    response = JSON.parse(data);
-                                    if(data == 1) {
-                                        $('#loader').addClass('hide');
-                                        $("#totpagarPen").html(formatMoney(0));
-                                        $("#all").prop('checked', false);
-                                        var fecha = new Date();
-                                        $("#myModalEnviadas").modal('toggle');
-                                        tabla_historialGral2.ajax.reload();
-                                        $("#myModalEnviadas .modal-body").html("");
-                                        $("#myModalEnviadas").modal();
-                                        $("#myModalEnviadas .modal-body").append("<center><img style='width: 75%; height: 75%;' src='<?= base_url('dist/img/send_intmex.gif')?>'><p style='color:#676767;'>Se despausaron los pagos, ahora se encuentran en <b>NUEVAS</b> </p></center>");
-                                    } else {
-                                        $('#loader').addClass('hide');
-                                        $("#myModalEnviadas").modal('toggle');
-                                        $("#myModalEnviadas .modal-body").html("");
-                                        $("#myModalEnviadas").modal();
-                                        $("#myModalEnviadas .modal-body").append("<center><P>ERROR AL ENVIAR COMISIONES </P><BR><i style='font-size:12px;'>NO SE HA PODIDO EJECUTAR ESTA ACCIÓN, INTÉNTALO MÁS TARDE.</i></P></center>");
-                                    }
-                                },
-                                error: function( data ){
-                                    $('#loader').addClass('hide');
-                                    $("#myModalEnviadas").modal('toggle');
-                                    $("#myModalEnviadas .modal-body").html("");
-                                    $("#myModalEnviadas").modal();
-                                    $("#myModalEnviadas .modal-body").append("<center><P>ERROR AL ENVIAR COMISIONES </P><BR><i style='font-size:12px;'>NO SE HA PODIDO EJECUTAR ESTA ACCIÓN, INTÉNTALO MÁS TARDE.</i></P></center>");
-                                }
-                            });
+                            const estatus = $('#filtro44').val();
+                            const idComisiones = $(tabla_historialGral2.$('input[name="idTQ[]"]:checked'))
+                                .map(function () {
+                                    return this.value;
+                                })
+                                .get();
+
+                            seleccionados = idComisiones;
+
+                            let options = '';
+                            if (estatus === '1') {
+                                options = optRevision + optPausado;
+                            } else if (estatus === '2') {
+                                options = optNueva + optPausado;
+                            } else if (estatus === '4') {
+                                options = optNueva;
+                            }
+
+                            const titlePagos = (idComisiones.length > 1)
+                                ? `<b>${idComisiones.length}</b> pagos seleccionados`
+                                : `<b>${idComisiones.length}</b> pago seleccionado`;
+
+                            $('#total-pagos').html('').html(titlePagos);
+                            $('#div-options').html('').html('<label>Seleccione una opción:</label>'+options);
+                            $('#movimiento-modal').modal();
                         }
                     },
                     attr: {
@@ -410,19 +605,19 @@
                     }
                 },
                 {
-                    "width": "7%",
+                    "width": "6%",
                     "data": function( d ){
                         return '<p class="m-0">$'+formatMoney(d.precio_lote)+'</p>';
                     }
                 },
                 {
-                    "width": "7%",
+                    "width": "6%",
                     "data": function( d ){
                         return '<p class="m-0">$'+formatMoney(d.comision_total)+' </p>';
                     }
                 },
                 {
-                    "width": "7%",
+                    "width": "6%",
                     "data": function( d ){
                         return '<p class=""m-0>$'+formatMoney(d.pago_neodata)+'</p>';
                     }
@@ -434,13 +629,13 @@
                     }
                 },
                 {
-                    "width": "7%",
+                    "width": "6%",
                     "data": function( d ){
                         return '<p class=""m-0>$'+formatMoney(d.pagado)+'</p>';
                     }
                 },
                 {
-                    "width": "7%",
+                    "width": "6%",
                     "data": function( d ){
                         if(d.restante==null||d.restante==''){
                             return '<p class=""m-0>$'+formatMoney(d.comision_total)+'</p>';
@@ -450,7 +645,7 @@
                     }
                 }, 
                 {
-                    "width": "7%",
+                    "width": "5%",
                     "data": function( d ){
                         if(d.activo == 0 || d.activo == '0'){
                             return '<p class=""m-0><b>'+d.user_names+'</b></p><p class=""m-0><span class="label" style="background:red;">BAJA</span></p>';
@@ -461,13 +656,13 @@
                     }
                 },
                 {
-                    "width": "7%",
+                    "width": "5%",
                     "data": function( d ){
                         return '<p class=""m-0>'+d.puesto+'</p>';
                     }
                 },
                 {
-                    "width": "7%",
+                    "width": "5%",
                     "data": function( d ){
                         if(d.bonificacion >= 1){
                             p1 = '<p class=""m-0><span class="label" style="background:pink;color: black;">Bonificación $'+formatMoney(d.bonificacion)+'</span></p>';
@@ -487,7 +682,7 @@
                     }
                 },
                 {
-                    "width": "7%",
+                    "width": "5%",
                     "data": function( d ){
                         var etiqueta;
                             
@@ -501,6 +696,16 @@
                             etiqueta = '<p class=""m-0><span class="label" style="background:#ED8172;">DESCUENTO DE PAGO</span></p>';
                         }else if((d.id_estatus_actual == 17) && d.descuento_aplicado == 1 ){
                             etiqueta = '<p class=""m-0><span class="label" style="background:#ED72B9;">DESCUENTO UNIVERSIDAD</span></p>';
+                        }else if((d.id_estatus_actual == 18) && d.descuento_aplicado == 1 ){
+                            etiqueta = '<p><span class="label" style="background:#89C86C;">DESCUENTO PRÉSTAMO</span></p>';
+                        }else if((d.id_estatus_actual == 19) && d.descuento_aplicado == 1 ){
+                            etiqueta = '<p><span class="label" style="background:#3BC6AC;">DESCUENTO SCIO</span></p>';
+                        }else if((d.id_estatus_actual == 20) && d.descuento_aplicado == 1 ){
+                            etiqueta = '<p><span class="label" style="background:#72CBED;">DESCUENTO PLAZA</span></p>';
+                        }else if((d.id_estatus_actual == 21) && d.descuento_aplicado == 1 ){
+                            etiqueta = '<p><span class="label" style="background:#7282ED;">DESCUENTO LINEA TELEFÓNICA</span></p>';
+                        }else if((d.id_estatus_actual == 22) && d.descuento_aplicado == 1 ){
+                            etiqueta = '<p><span class="label" style="background:#CA72ED;">DESCUENTO MANTENIMIENTO</span></p>';
                         }else{
                             switch(d.id_estatus_actual){
                                 case '1':
@@ -604,17 +809,18 @@
                     targets:   0,
                     'searchable':true,
                     'className': 'dt-body-center',
-                    'render': function (d, type, full, meta){
-
-
-                        if(full.estatus == 6){
-                            if(full.id_comision){
+                    'render': function (d, type, full) {
+                        const estatus = $('#filtro44').val();
+                        if (estatus === '3' || estatus === '5' || estatus === '6' || estatus === '7') {
+                            return '';
+                        } else if ($('#filtro44').val() === '2') {
+                            if (full.forma_pago.toLowerCase() !== 'factura') {
+                                return '<input type="checkbox" name="idTQ[]" style="width:20px;height:20px;"  value="' + full.id_pago_i + '">';
+                            } else {
+                                return '';
+                            }
+                        } else {
                             return '<input type="checkbox" name="idTQ[]" style="width:20px;height:20px;"  value="' + full.id_pago_i + '">';
-                        }else{
-                            return '';
-                        }
-                        }else{
-                            return '';
                         }
                     },
                     select: {
@@ -623,7 +829,7 @@
                     },
                 }],
                 ajax: {
-                    url: url2 + "Comisiones/getDatosHistorialPagoEstatus/" + proyecto + "/" + condominio,
+                    url: `${url2}Comisiones/getDatosHistorialPagoEstatus/${proyecto}/${condominio}/${usuario}`,
                     type: "POST",
                     cache: false,
                     data: function( d ){}
@@ -690,6 +896,65 @@
         }
 
         //FIN TABLA  **********************************************
+
+        $('#estatus-form').on('submit', function (e) {
+            e.preventDefault();
+
+            const estatusId = $('input[name="estatus"]:checked').val();
+
+            let comentario = $('#comentario').val();
+            if (estatusId === '1') {
+                comentario = `Se marcó como NUEVA: ${comentario}`;
+            } else if (estatusId === '4') {
+                comentario = `Se marcó como REVISIÓN CONTRALORÍA: ${comentario}`;
+            } else if (estatusId === '6') {
+                comentario = `Se marcó como PAUSADA: ${comentario}`;
+            }
+
+            let formData = new FormData();
+            formData.append('idPagos', seleccionados);
+            formData.append('estatus', estatusId);
+            formData.append('comentario', comentario);
+
+            $.ajax({
+                type: 'POST',
+                url: 'cambiarEstatusComisiones',
+                data: formData,
+                contentType: false,
+                cache: false,
+                processData:false,
+                success: function (response) {
+                    if (JSON.parse(response)) {
+                        $('#movimiento-modal').modal('hide');
+                        $("#myModalEnviadas").modal('toggle');
+                        $("#myModalEnviadas .modal-body").html("");
+                        $("#myModalEnviadas .modal-body").append(`
+                            <img style='width: 75%; height: 75%;' src='<?= base_url('dist/img/send_intmex.gif')?>'>
+                                <p style='color:#676767;'>Se cambiaron los estatus de los pagos seleccionados.</p>
+                        `);
+                        $("#myModalEnviadas").modal();
+                        tabla_historialGral2.ajax.reload();
+                    } else {
+                        $("#myModalEnviadas").modal('toggle');
+                        $("#myModalEnviadas .modal-body").html("");
+                        $("#myModalEnviadas .modal-body").append(`
+                            <P>Error al enviar comisiones</P>
+                            <br>
+                            <i style='font-size:12px;'>No se pudo ejecutar esta acción, intentalo más tarde.</i>
+                        `);
+                        $("#myModalEnviadas").modal();
+                    }
+                },
+                error: function() {
+                    alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+                }
+            });
+        });
+
+        $('#movimiento-modal').on('hidden.bs.modal', function() {
+            $('#estatus-form').trigger('reset');
+        });
+
         $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
             $($.fn.dataTable.tables(true)).DataTable().columns.adjust();
         });

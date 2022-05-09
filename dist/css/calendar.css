@@ -132,6 +132,10 @@
   padding-left: 40px;
 }
 
+.pt-0 {
+  padding-top: 0 !important;
+}
+
 .pt-1 {
   padding-top: 10px;
 }
@@ -140,12 +144,20 @@
   padding-top: 20px;
 }
 
+.pt-3 {
+  padding-top: 30px;
+}
+
 .pb-1 {
   padding-bottom: 10px;
 }
 
 .pb-2 {
   padding-bottom: 20px;
+}
+
+.pb-3 {
+  padding-bottom: 30px;
 }
 
 /* END Margin and padding generales */
@@ -220,6 +232,10 @@
 
 .border-none {
   border: none;
+}
+
+.rounded-circle {
+  border-radius: 50px;
 }
 
 .bkcolor-trans {
@@ -322,6 +338,10 @@
 
 .text-left {
   text-align: start !important;
+}
+
+.row-reverse {
+  flex-direction: row-reverse;
 }
 
 /* END Flexbox */
@@ -959,6 +979,12 @@
   font-size: 12px;
 }
 
+.text-modal:disabled {
+  border: none;
+  color: #929292;
+  background-color: #F1F1F1;
+}
+
 .form-control[disabled] {
   border-bottom: none !important;
   opacity: .65;
@@ -1038,214 +1064,18 @@
   padding: 3px;
 }
 
-.iconCustom {
-  cursor: pointer;
-  font-size: 3rem;
-  z-index: 1;
+#feedbackModal .radio-with-Icon input[type="radio"]:checked ~ label i {
+  color: #929292;
+}
+
+#feedbackModal .radio-with-Icon i {
+  color: #eaeaea;
+}
+
+#feedbackModal .radio-with-Icon i:hover {
+  color: #929292;
 }
 
 .iconMod {
-  color: #999;
-}
-
-.visible-on-sidebar-calendar {
-  display: none !important;
-}
-
-@media (min-width: 992px) {
-  .side-calendar {
-    position: absolute;
-    bottom: 0;
-    width: 260px;
-    background: #ffffff;
-    box-shadow: 0 10px 30px -12px rgba(0, 0, 0, 0.42), 0 4px 25px 0px rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(0, 0, 0, 0.2);
-    overflow: auto;
-  }
-  .side-calendar .sidebarCalendar-background {
-    position: absolute;
-    z-index: 0;
-    height: 100%;
-    width: 100%;
-    display: block;
-    top: 0;
-    left: 0;
-    background-size: cover;
-    background-position: center center;
-  }
-  .side-calendar .sidebarCalendar-background:after {
-    position: absolute;
-    z-index: 1;
-    width: 100%;
-    height: 100%;
-    content: "";
-    display: block;
-    background: #ffffff;
-    opacity: .93;
-  }
-  .hover-collapse, .sidebar-calendar .sidebar .nav li:hover .collapse, .sidebar-calendar .sidebar .nav li:focus .collapse, .sidebar-calendar .sidebar .user:hover .collapse {
-    display: block;
-    position: absolute;
-    top: 0;
-    left: 81px;
-    box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.14);
-    border-radius: 6px;
-    color: rgba(0, 0, 0, 0.87);
-    background: #ffffff;
-  }
-  .sidebar-calendar .visible-on-sidebar-regular {
-    display: none !important;
-  }
-  .sidebar-calendar .visible-on-sidebar-calendar {
-    display: inline-block !important;
-  }
-  .sidebar-calendar [data-background-color="black"] .nav .collapse li:not(.active) > a,
-  .sidebar-calendar [data-background-color="black"] .user .collapse li:not(.active) > a {
-    color: #3C4858;
-  }
-  .sidebar-calendar .sidebar {
-    width: 80px;
-    display: block;
-    font-weight: 200;
-    z-index: 3;
-  }
-  .sidebar-calendar .sidebar .sidebar-wrapper {
-    overflow: inherit;
-    width: 80px;
-    box-shadow: none;
-  }
-  .sidebar-calendar .sidebar .logo {
-    display: none;
-  }
-  .sidebar-calendar .sidebar .logo-mini {
-    padding: 10px 0px;
-    display: block;
-    margin: 0px;
-    position: relative;
-    z-index: 4;
-  }
-  .sidebar-calendar .sidebar .nav {
-    margin-top: 20px;
-  }
-  .sidebar-calendar .sidebar .nav li.active > [data-toggle="collapse"] i {
-    color: #ffffff;
-  }
-  .sidebar-calendar .sidebar .nav li > a {
-    margin: 5px 10px;
-  }
-  .sidebar-calendar .sidebar .nav li > a:before, .sidebar-calendar .sidebar .nav li > a:after {
-    display: none;
-  }
-  .sidebar-calendar .sidebar .nav p {
-    display: none;
-  }
-  .sidebar-calendar .sidebar .nav i {
-    float: none;
-  }
-  .sidebar-calendar .sidebar .nav [data-toggle="collapse"] ~ div > ul > li > a {
-    padding: 10px 15px;
-    border-radius: 3px;
-  }
-  .sidebar-calendar .sidebar .info > a {
-    height: 0;
-    padding: 0;
-    opacity: 0;
-  }
-  .sidebar-calendar .sidebar .info [data-toggle="collapse"] ~ div > ul > li > a {
-    padding: 10px 15px;
-    border-radius: 3px;
-  }
-  .sidebar-calendar .sidebar .user {
-    position: relative;
-  }
-  .sidebar-calendar .sidebar .user .nav a {
-    color: #3C4858;
-  }
-  .sidebar-calendar .sidebar .user .photo {
-    width: 50px;
-    height: 50px;
-    border-width: 2px;
-  }
-  .sidebar-calendar .sidebar .collapse .nav {
-    width: 180px;
-    height: auto;
-    position: relative;
-    margin: 5px 0;
-  }
-  .sidebar-calendar .sidebar .collapse .nav > li a {
-    margin-left: 5px;
-    margin-right: 5px;
-  }
-  .sidebar-calendar .sidebar .collapse .nav:before {
-    border-right: 11px solid #ccc;
-    border-top: 11px solid transparent;
-    border-bottom: 11px solid transparent;
-    position: absolute;
-    content: "";
-    display: inline-block;
-    left: -11px;
-    top: 9px;
-  }
-  .sidebar-calendar .sidebar .collapse .nav:after {
-    border-right: 11px solid #ffffff;
-    border-top: 11px solid transparent;
-    border-bottom: 11px solid transparent;
-    position: absolute;
-    content: "";
-    display: inline-block;
-    left: -10px;
-    top: 9px;
-  }
-  .sidebar-calendar .main-panel {
-    width: calc(100% - 310px);
-    margin-left: 80px;
-    margin-right: 245px;
-  }
-  .sidebar-calendar .wrapper {
-    height: auto;
-  }
-  .sidebar-calendar .sidebar,
-  .sidebar-calendar .main-panel {
-    overflow: visible;
-    max-height: none;
-    height: auto;
-  }
-  .closeCalendar {
-    display: none;
-  }
-  .openCalendar {
-    display: block;
-  }
-  .openCalendar-mini {
-    display: none !important;
-  }
-  .side-calendar .fc-header-toolbar {
-    z-index: 1;
-  }
-}
-
-@media (max-width: 768px) {
-  .side-calendar {
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-    box-shadow: 0 10px 30px -12px rgba(0, 0, 0, 0.42), 0 4px 25px 0px rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(0, 0, 0, 0.2);
-    overflow: auto;
-    background: white;
-  }
-  .closeCalendar {
-    display: block;
-    cursor: pointer;
-    padding: 8px 11px 0px 0px;
-    font-size: 2.5rem;
-  }
-  .openCalendar {
-    display: none !important;
-  }
-  .openCalendar-mini {
-    display: block !important;
-  }
-  .divCalendar {
-    display: flex;
-    justify-content: flex-end;
-  }
+  color: #c1c1c1;
 }

@@ -28,19 +28,21 @@
       // Handle the initial sign-in state.
       updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
     }, function(error) {
-      console.log(error);
+      console.error(error);
     });
   }
 
-  /*  Called when the signed in status changes, to update the UI appropriately. After a sign-in, the API is called. */
+  /*Called when the signed in status changes, to update the UI appropriately. After a sign-in, the API is called. */
   function updateSigninStatus(isSignedIn) {
     if (isSignedIn) {
       $(".fc-googleSignIn-button").attr("style", "display: none !important");
       $(".fc-googleLogout-button").attr("style", "display: block !important");
-      listUpcomingEvents();
+      if (typeof(sideCalendar) != 'undefined') listUpcomingEvents();
+      if (typeof(calendar) != 'undefined') listUpcomingEvents();
     } else {
       $(".fc-googleSignIn-button").attr("style", "display: block !important");
       $(".fc-googleLogout-button").attr("style", "display: none !important");
+      removeEvents();
     }
   }
 
@@ -55,6 +57,7 @@
       'maxResults': 2500,
       'orderBy': 'startTime'
     }).then(function(response) {
+      if (typeof(sideCalendar) !== 'undefined') arrayEvents = [];
       var googleAppointments = response.result.items;
       for(let i = 0; i < googleAppointments.length; i++){
         if(!(googleAppointments[i].hasOwnProperty('extendedProperties') && googleAppointments[i].extendedProperties.hasOwnProperty('private') && googleAppointments[i].extendedProperties.private.hasOwnProperty('setByFullCalendar'))){
@@ -62,6 +65,7 @@
         }
       }
       
+      if(typeof(calendar) != 'undefined'){
       calendar.addEventSource({
         title: 'sourceGoogle',
         display:'block',
@@ -69,6 +73,17 @@
       })
       
       calendar.refetchEvents();
+    }
+      
+    if(typeof(sideCalendar) != 'undefined'){
+      sideCalendar.addEventSource({
+        title: 'sourceGoogle',
+        display:'block',
+        events: arrayEvents
+      })
+      
+      sideCalendar.refetchEvents();
+    }
     });
   }
 
@@ -88,5 +103,14 @@
       backgroundColor:'transparent',
       borderColor: '#999',
       textColor: '#999'
+    });
+  }
+  
+  function removeEvents(){
+    if (typeof(sideCalendar) != 'undefined') srcEventos = sideCalendar.getEventSources();
+    if (typeof(calendar) != 'undefined') srcEventos = calendar.getEventSources();
+  
+    srcEventos.forEach(event => {
+      if(event['internalEventSource']['extendedProps'].hasOwnProperty('title') && event['internalEventSource']['extendedProps']['title'] == "sourceGoogle") event.remove();
     });
   }

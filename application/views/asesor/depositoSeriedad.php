@@ -752,7 +752,7 @@ $('#tabla_deposito_seriedad thead tr:eq(0) th').each( function (i) {
                                 }
                             }
                         }else{
-                            buttonst += '<a href="" id="vCompartida" data-idCliente="'+d.id_cliente+'" data-idLote="'+d.idLote+'" class="btn-data btn-green"><i class="fas fa-users"></i></a>'
+                            buttonst += '<a href="" title= "Tipo de venta" id="vCompartida" data-idCliente="'+d.id_cliente+'" data-idLote="'+d.idLote+'" class="btn-data btn-green"><i class="fas fa-users"></i></a>'
                         }
                         
                         return '<div class="d-flex justify-center align-center">'+buttonst+'</div>';
@@ -1744,6 +1744,9 @@ $('#tabla_deposito_seriedad thead tr:eq(0) th').each( function (i) {
         e.preventDefault();
         var data = tabla_valores_ds.row($(this).parents('tr')).data();
         $('#id_cliente').val(data.id_cliente);
+        $("#ventaC").val("");
+        $("#ventaC").trigger('change');
+        $("#ventaC").selectpicker('refresh');
         $('#ventaCompartida').modal('show');
     });
 

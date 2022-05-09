@@ -13,7 +13,7 @@ $('#tokensTable thead tr:eq(0) th').each(function (i) {
 });
 
 function fillTokensTable() {
-    tokensTable = $('#tokensTable').dataTable({
+    tokensTable = $("#tokensTable").dataTable({
         dom: 'Brt' + "<'row'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'i><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>",
         width: "auto",
         buttons: [
@@ -23,7 +23,7 @@ function fillTokensTable() {
                 className: 'btn buttons-excel',
                 titleAttr: 'Descargar archivo de Excel',
                 exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5],
+                    columns: [0, 1, 2, 3, 4],
                     format: {
                         header: function (d, columnIdx) {
                             switch (columnIdx) {
@@ -31,30 +31,21 @@ function fillTokensTable() {
                                     return "ID";
                                     break;
                                 case 1:
-                                    return "TOKEN";
-                                    break;
-                                case 2:
                                     return "GENERADO PARA"
-                                case 3:
+                                case 2:
                                     return "FECHA ALTA";
                                     break;
-                                case 4:
+                                case 3:
                                     return "CREADO POR";
                                     break;
-                                case 5:
-                                    return "STATUS";
+                                case 4:
+                                    return "ETATUS";
                                     break;
                             }
                         }
                     }
                 }
             }
-        ],
-        pagingType: "full_numbers",
-        fixedHeader: true,
-        lengthMenu: [
-            [10, 25, 50, -1],
-            [10, 25, 50, "Todos"]
         ],
         language: {
             url: "../static/spanishLoader_v2.json",
@@ -69,11 +60,6 @@ function fillTokensTable() {
             {
                 data: function (d) {
                     return d.id_token;
-                }
-            },
-            {
-                data: function (d) {
-                    return d.token;
                 }
             },
             {
@@ -93,7 +79,22 @@ function fillTokensTable() {
             },
             {
                 data: function (d) {
-                    return d.status;
+                    return d.estatus;
+                }
+            },
+            {
+                data: function (d) {
+                    let btns = '<div class="d-flex align-center justify-center">' +
+                        '<button class="btn-data btn-gray reviewEvidenceToken" data-nombre-archivo="' + d.nombre_archivo + '" title="Ver evidencia"></body><i class="fas fa-eye"></i></button>' +
+                        '<button class="btn-data btn-green setToken" data-token-name="' + d.token + '" title="Copiar token"><i class="fas fa-copy"></i></button>';
+                    if (current_rol_user != 3){
+                        if (d.estatus == 1)
+                            btns += '<button class="btn-data btn-warning validateToken" data-action="2" data-token-id="' + d.id_token + '" title="Rechazar token"><i class="fas fa-minus"></i></button>';
+                        if (d.estatus == 2 || d.estatus == 0)
+                            btns += '<button class="btn-data btn-green validateToken" data-action="1" data-token-id="' + d.id_token + '" title="Validar token"><i class="fas fa-check"></i></button>';
+                    }
+                    btns += '</div>';
+                    return btns;
                 }
             }
         ],
@@ -104,7 +105,7 @@ function fillTokensTable() {
         ajax: {
             url: "getTokensInformation",
             type: "POST",
-            cache: false,
+            cache: false
         }
     });
 }
@@ -170,15 +171,41 @@ function copyToClipBoard() {
         /* Select the text field */
         copyText.select();
         copyText.setSelectionRange(0, 99999); /* For mobile devices */
-
         /* Copy the text inside the text field */
         navigator.clipboard.writeText(copyText.value);
-
-        /*setTimeout(function () {
-            $( "#copyToken" ).fadeOut( "slow", function() {
-                $('#copyToken').popover('hide');
-            });
-        }, 1500);*/
         alerts.showNotification("top", "right", "Token copiado al portapapeles.", "success");
     }
 }
+
+$(document).on('click', '.reviewEvidenceToken', function () {
+    $("#img_actual").empty();
+    let path = general_base_url + "static/documentos/evidence_token/" + $(this).attr("data-nombre-archivo");
+    let img_cnt = '<img src="' + path + '" class="img-responsive zoom m-auto">';
+    $("#token_name").text($(this).attr("data-token-name"));
+    $("#img_actual").append(img_cnt);
+    $("#reviewTokenEvidence").modal()
+});
+
+$(document).on('click', '.setToken', function () {
+    $("#generatedToken").val($(this).attr("data-token-name"));
+    copyToClipBoard();
+});
+
+$(document).on('click', '.validateToken', function () {
+    let action = $(this).attr("data-action");
+    $.ajax({
+        type: 'POST',
+        url: 'validarToken',
+        data: {
+            'action': action,
+            'id': $(this).attr("data-token-id")
+        },
+        dataType: 'json',
+        success: function (data) {
+            $("#tokensTable").DataTable().ajax.reload(null, false);
+            alerts.showNotification("top", "right", action == 2 ? "El token ha sido marcado como rechazado." : "El token ha sido marcado como aprobado.", "success");
+        }, error: function () {
+            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+        }
+    });
+});

@@ -340,10 +340,6 @@
   text-align: start !important;
 }
 
-.row-reverse {
-  flex-direction: row-reverse;
-}
-
 /* END Flexbox */
 /* Vrbls colores */
 /* END vrbls coloress */
@@ -694,11 +690,6 @@
   color: #ffffff !important;
 }
 
-.btn-unstyled {
-  border: none !important;
-  background: none;
-}
-
 .lbl-gray {
   background-color: #4e4e4e;
   color: #ffffff;
@@ -985,153 +976,215 @@
   background-color: #F1F1F1;
 }
 
-.cardDocument {
-  height: calc(100vh - 125px);
+.visible-on-sidebar-calendar {
+  display: none !important;
 }
 
-.cardDocument .realBox #documentsList {
-  height: 60vh;
-  overflow: auto;
+.iconCustom {
+  cursor: pointer;
+  font-size: 3rem;
+  z-index: 1;
 }
 
-.cardDocument .realBox #documentsList .activeSB {
-  border-radius: 8px !important;
-  background-color: #143860 !important;
+.select-gral button {
+  background-color: #eaeaea !important;
+  box-shadow: none !important;
+  color: #929292 !important;
+  border-radius: 27px;
 }
 
-.cardDocument .realBox #documentsList .activeSB h4, .cardDocument .realBox #documentsList .activeSB i {
-  color: #ffffff !important;
-}
-
-@media (min-device-width: 320px) and (max-device-width: 480px), (min-width: 480px) and (max-width: 991px) {
-  .cardDocument .realBox #documentsList {
-    height: initial;
+@media (min-width: 992px) {
+  .side-calendar {
+    position: absolute;
+    bottom: 0;
+    width: 260px;
+    background: #fff;
+    box-shadow: 0 10px 30px -12px rgba(0, 0, 0, 0.42), 0 4px 25px 0px rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(0, 0, 0, 0.2);
+    overflow: auto;
+  }
+  .side-calendar .sidebarCalendar-background {
+    position: absolute;
+    z-index: 0;
+    height: 100%;
+    width: 100%;
+    display: block;
+    top: 0;
+    left: 0;
+    background-size: cover;
+    background-position: center center;
+  }
+  .side-calendar .sidebarCalendar-background:after {
+    position: absolute;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    content: "";
+    display: block;
+    background: #fff;
+    opacity: .93;
+  }
+  .hover-collapse, .sidebar-calendar .sidebar .nav li:hover .collapse, .sidebar-calendar .sidebar .nav li:focus .collapse, .sidebar-calendar .sidebar .user:hover .collapse {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 81px;
+    box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.14);
+    border-radius: 6px;
+    color: rgba(0, 0, 0, 0.87);
+    background: #fff;
+  }
+  .sidebar-calendar .visible-on-sidebar-regular {
+    display: none !important;
+  }
+  .sidebar-calendar .visible-on-sidebar-calendar {
+    display: inline-block !important;
+  }
+  .sidebar-calendar [data-background-color="black"] .nav .collapse li:not(.active) > a, .sidebar-calendar [data-background-color="black"] .user .collapse li:not(.active) > a {
+    color: #3C4858;
+  }
+  .sidebar-calendar .sidebar {
+    width: 80px;
+    display: block;
+    font-weight: 200;
+    z-index: 3;
+  }
+  .sidebar-calendar .sidebar .sidebar-wrapper {
+    overflow: inherit;
+    width: 80px;
+    box-shadow: none;
+  }
+  .sidebar-calendar .sidebar .logo {
+    display: none;
+  }
+  .sidebar-calendar .sidebar .logo-mini {
+    padding: 10px 0px;
+    display: block;
+    margin: 0px;
+    position: relative;
+    z-index: 4;
+  }
+  .sidebar-calendar .sidebar .nav {
+    margin-top: 20px;
+  }
+  .sidebar-calendar .sidebar .nav li.active > [data-toggle="collapse"] i {
+    color: #fff;
+  }
+  .sidebar-calendar .sidebar .nav li > a {
+    margin: 5px 10px;
+  }
+  .sidebar-calendar .sidebar .nav li > a:before, .sidebar-calendar .sidebar .nav li > a:after {
+    display: none;
+  }
+  .sidebar-calendar .sidebar .nav p {
+    display: none;
+  }
+  .sidebar-calendar .sidebar .nav i {
+    float: none;
+  }
+  .sidebar-calendar .sidebar .nav [data-toggle="collapse"] ~ div > ul > li > a {
+    padding: 10px 15px;
+    border-radius: 3px;
+  }
+  .sidebar-calendar .sidebar .info > a {
+    height: 0;
+    padding: 0;
+    opacity: 0;
+  }
+  .sidebar-calendar .sidebar .info [data-toggle="collapse"] ~ div > ul > li > a {
+    padding: 10px 15px;
+    border-radius: 3px;
+  }
+  .sidebar-calendar .sidebar .user {
+    position: relative;
+  }
+  .sidebar-calendar .sidebar .user .nav a {
+    color: #3C4858;
+  }
+  .sidebar-calendar .sidebar .user .photo {
+    width: 50px;
+    height: 50px;
+    border-width: 2px;
+  }
+  .sidebar-calendar .sidebar .collapse .nav {
+    width: 180px;
+    height: auto;
+    position: relative;
+    margin: 5px 0;
+  }
+  .sidebar-calendar .sidebar .collapse .nav > li a {
+    margin-left: 5px;
+    margin-right: 5px;
+  }
+  .sidebar-calendar .sidebar .collapse .nav:before {
+    border-right: 11px solid #ccc;
+    border-top: 11px solid transparent;
+    border-bottom: 11px solid transparent;
+    position: absolute;
+    content: "";
+    display: inline-block;
+    left: -11px;
+    top: 9px;
+  }
+  .sidebar-calendar .sidebar .collapse .nav:after {
+    border-right: 11px solid #fff;
+    border-top: 11px solid transparent;
+    border-bottom: 11px solid transparent;
+    position: absolute;
+    content: "";
+    display: inline-block;
+    left: -10px;
+    top: 9px;
+  }
+  .sidebar-calendar .main-panel {
+    width: calc(100% - 310px);
+    margin-left: 80px;
+    margin-right: 245px;
+  }
+  .sidebar-calendar .wrapper {
+    height: auto;
+  }
+  .sidebar-calendar .sidebar, .sidebar-calendar .main-panel {
+    overflow: visible;
+    max-height: none;
+    height: auto;
+  }
+  .closeCalendar {
+    display: none;
+  }
+  .openCalendar {
+    display: block;
+  }
+  .openCalendar-mini {
+    display: none !important;
+  }
+  .side-calendar .fc-header-toolbar {
+    z-index: 1;
   }
 }
 
-.cardDocument .realBox .boxDocument {
-  background-color: #333333;
-  border-radius: 8px;
-  color: #ffffff;
-}
-
-.cardDocument .realBox .boxDocument .btnDocuments {
-  background-color: #191B1C;
-  border-radius: 25px;
-  height: 38px;
-  width: 38px;
-  border: none;
-  box-shadow: -1px -1px 3px RGB(0 0 0/12%), 0 1px 2px RGB(0 0 0/24%);
-  margin: 0 3px;
-}
-
-.cardDocument .realBox .boxDocument #documentFile {
-  height: calc(60vh - 50px);
-  position: relative;
-  top: 6px;
-  border-radius: 0 0 6px 6px;
-}
-
-@media (min-device-width: 320px) and (max-device-width: 480px), (min-width: 480px) and (max-width: 991px) {
-  .cardDocument .realBox .boxDocument #documentFile {
-    height: 100vh;
+@media (max-width: 768px) {
+  .side-calendar {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    box-shadow: 0 10px 30px -12px rgba(0, 0, 0, 0.42), 0 4px 25px 0px rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(0, 0, 0, 0.2);
+    overflow: auto;
+    background: #fff;
   }
-}
-
-.cardDocument .realBox .boxDocument .stylesEmpty {
-  height: calc(60vh - 50px);
-}
-
-.cardDocument .realBox .boxDocument .stylesEmpty .boxDocumentEmptyD {
-  background-color: #eaeaea;
-}
-
-.cardDocument .realBox .boxDocument .stylesEmpty .boxDocumentEmptyD i {
-  font-size: 200px;
-  color: #c1c1c1;
-}
-
-.cardDocument .realBox .boxDocument .stylesEmpty .boxDocumentEmptyD p {
-  font-size: 25px;
-  color: #c1c1c1;
-}
-
-.cardDocument .realBox .boxDocumentEmpty {
-  background-color: #eaeaea;
-  border-radius: 10px;
-  height: 60vh;
-}
-
-.cardDocument .realBox .boxDocumentEmpty i {
-  font-size: 200px;
-  color: #c1c1c1;
-}
-
-.cardDocument .realBox .boxDocumentEmpty p {
-  font-size: 25px;
-  color: #c1c1c1;
-}
-
-.cardDocument .realBox .scrollDocumentTree::-webkit-scrollbar-track {
-  background-color: transparent;
-  border-radius: none;
-}
-
-.cardDocument .realBox .scrollDocumentTree::-webkit-scrollbar {
-  width: 5px;
-  background-color: transparent;
-  border-right: 2px solid #c1c1c1;
-}
-
-.cardDocument .realBox .scrollDocumentTree::-webkit-scrollbar-thumb {
-  background-color: #c1c1c1;
-  border-radius: none;
-  border-radius: 0;
-}
-
-.cardDocument .realBox .scrollDocumentTree::-webkit-scrollbar-thumb:hover {
-  background-color: #929292;
-  width: 10px !important;
-  border-radius: none;
-}
-
-@media (min-device-width: 320px) and (max-device-width: 480px), (min-width: 480px) and (max-width: 991px) {
-  .cardDocument {
-    height: initial;
+  .closeCalendar {
+    display: block;
+    cursor: pointer;
+    padding: 8px 11px 0px 0px;
+    font-size: 2.5rem;
   }
-}
-
-.cardDocument .fakeBox {
-  height: 60vh;
-}
-
-.cardDocument .fakeBox .documentsList i {
-  color: #eaeaea;
-  font-size: 34px;
-}
-
-.cardDocument .fakeBox .documentsList .col-9.col-md-9 {
-  background-color: #eaeaea;
-  border-radius: 5px;
-}
-
-.cardDocument .fakeBox .boxContentDoc {
-  background-color: #eaeaea;
-  border-radius: 10px;
-}
-
-.cardDocument .fakeBox .boxContentDoc i {
-  font-size: 200px;
-  color: #c1c1c1;
-}
-
-.cardDocument .fakeBox .boxContentDoc p {
-  font-size: 25px;
-  color: #c1c1c1;
-}
-
-@media (min-width: 768px) {
-  .modal-sm {
-    width: 350px;
+  .openCalendar {
+    display: none !important;
+  }
+  .openCalendar-mini {
+    display: block !important;
+  }
+  .divCalendar {
+    display: flex;
+    justify-content: flex-end;
   }
 }

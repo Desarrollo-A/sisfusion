@@ -54,18 +54,12 @@
       if (info.event.url) {
         window.open(info.event.url, "_blank");
         info.jsEvent.preventDefault();
-      }else modalEvent(info.event.id);
+      }
+      else modalEvent(info.event.id);
     },
-    // dateClick: function(info) {
-    //   if(info.view.type == "dayGridMonth" || info.view.type == "timeGridWeek") {
-    //     calendar.changeView( 'timeGridDay', info.dateStr );
-    //   }
-    // },
     select: function(info) {
-      // if(info.view.type == "timeGridDay") {
-        cleanModal();
-        setDatesToModalInsert(info);
-      // }
+      cleanModal();
+      setDatesToModalInsert(info);
     }
   });
   calendar.render();
@@ -161,7 +155,7 @@
       },
       success: function(data) {
         if(gapi.auth2.getAuthInstance().isSignedIn.get()) insertEventGoogle(dataF);
-        removeEvents();
+        removeCRMEvents();
         getUsersAndEvents(userType, idUser, false);
         data = JSON.parse(data);
         alerts.showNotification("top", "right", data["message"], (data["status" == 503]) ? "danger" : (data["status" == 400]) ? "warning" : "success");
@@ -185,8 +179,6 @@
   function deleteCita(e){
     let idAgenda = $("#idAgenda2").val();
     let idGoogle = $("#idGoogle").val();
-
-    console.log(this);
     deleteGoogleEvent(idAgenda,idGoogle);
   }
 
@@ -197,9 +189,6 @@
 
   function modalEvent(idAgenda){
     getAppointmentData(idAgenda);
-    if(userType == 2 || userType == 3){
-      disabledEditModal(true);
-    }
     $('#modalEvent').modal();
   }
 
@@ -215,8 +204,6 @@
       },
       success: function(data){
         appointment = data[0];
-        if(idUser != appointment.idOrganizador) disabledEditModal(true);
-        else disabledEditModal(false);
         $('#spiner-loader').addClass('hide');
         $("#evtTitle2").val(appointment.titulo);
         $("#estatus_recordatorio2").val(appointment.medio);
@@ -232,6 +219,9 @@
         var medio = $("#estatus_recordatorio2").val();
         var box = $("#comodinDIV2");
         validateNCreate(appointment, medio, box);
+        if(idUser != appointment.idOrganizador) disabledEditModal(true, appointment.estatus);
+        else disabledEditModal(false, appointment.estatus);
+        $(".dotStatusAppointment").css('color', `${appointment.estatus == 1 ? '#06B025' : '#e52424'}`);
       },
       error: function() {
         $('#spiner-loader').addClass('hide');
@@ -243,14 +233,14 @@
   function validateNCreate(appointment, medio, box){
     box.empty();
     if(medio == 2 || medio == 5){
-      box.append(`<label>Dirección del ${medio == 5 ? 'evento':'recorrido'}</label><input id="direccion" name="direccion" type="text" class="form-control input-gral" value='${((appointment !=  '' && (medio == 2 || medio == 5 )) ? ((appointment.id_direccion == ''|| appointment.id_direccion == null) ? appointment.direccion : '' ) : '' )}' required>`);
+      box.append(`<label class="m-0">Dirección del ${medio == 5 ? 'evento':'recorrido'}</label><input id="direccion" name="direccion" type="text" class="form-control input-gral" value='${((appointment !=  '' && (medio == 2 || medio == 5 )) ? ((appointment.id_direccion == ''|| appointment.id_direccion == null) ? appointment.direccion : '' ) : '' )}' required>`);
     }
     else if(medio == 3){
-      box.append(`<div class="container-fluid"><div class="row"><div class="col-sm-12 col-md-6 col-lg-6 pl-0 m-0"><label>Teléfono 1</label><input type="text" class="form-control input-gral" value=${(appointment !=  '' &&  medio == 3 ) ? ((appointment.telefono != ''|| appointment.telefono != null) ? appointment.telefono : '') : ''+ $("#prospecto option:selected").attr('data-telefono') +''} disabled></div>`
-      +`<div class="col-sm-12 col-md-6 col-lg-6 pr-0 m-0"><label>Teléfono 2</label><input type="text" class="form-control input-gral" id="telefono2" name="telefono2" value=${(appointment !=  '' &&  medio == 3 ) ? ((appointment.telefono_2 != ''|| appointment.telefono_2 != null) ? appointment.telefono_2 : '') : ($("#prospecto option:selected").attr('data-telefono2') != '' || $("#prospecto option:selected").attr('data-telefono2') != null ) ? $("#prospecto option:selected").attr('data-telefono2') : '' } ></div></div></div>`);
+      box.append(`<div class="container-fluid"><div class="row"><div class="col-sm-12 col-md-6 col-lg-6 pl-0 m-0"><label class="m-0">Teléfono 1</label><input type="text" class="form-control input-gral" value=${(appointment !=  '' &&  medio == 3 ) ? ((appointment.telefono != ''|| appointment.telefono != null) ? appointment.telefono : '') : ''+ $("#prospecto option:selected").attr('data-telefono') +''} disabled></div>`
+      +`<div class="col-sm-12 col-md-6 col-lg-6 pr-0 m-0"><label class="m-0">Teléfono 2</label><input type="text" class="form-control input-gral" id="telefono2" name="telefono2" value=${(appointment !=  '' &&  medio == 3 ) ? ((appointment.telefono_2 != ''|| appointment.telefono_2 != null) ? appointment.telefono_2 : '') : ($("#prospecto option:selected").attr('data-telefono2') != '' || $("#prospecto option:selected").attr('data-telefono2') != null ) ? $("#prospecto option:selected").attr('data-telefono2') : '' } ></div></div></div>`);
     }
     else if(medio == 4){
-      box.append(`<div class="col-sm-12 col-md-12 col-lg-12 p-0"><label>Dirección de oficina</label><select class="selectpicker select-gral m-0 w-100" name="id_direccion" id="id_direccion" data-style="btn" data-show-subtext="true" data-live-search="true" title="Seleccione una opción" data-size="7" required></select></div>`);
+      box.append(`<div class="col-sm-12 col-md-12 col-lg-12 p-0"><label class="m-0">Dirección de oficina</label><select class="selectpicker select-gral m-0 w-100" name="id_direccion" id="id_direccion" data-style="btn" data-show-subtext="true" data-live-search="true" title="Seleccione una opción" data-size="7" required></select></div>`);
       getOfficeAddresses(appointment);
     }
     box.removeClass('hide');
@@ -287,11 +277,9 @@
     $("#comodinDIV").addClass('hide');
   }
 
-  //SIDEBAR CALENDAR
-  function modalSidebarCalendar(idAgenda){
-    getAppointmentSidebarCalendar(idAgenda);
-    $('#sidebarView').modal();
-  }
+  $('#feedbackModal').on('hidden.bs.modal', function () {
+    $(this).find('form').trigger('reset');
+  });
 
   function getAppointmentSidebarCalendar(idAgenda){
     $.ajax({
@@ -401,7 +389,7 @@
         $('#spiner-loader').removeClass('hide');
       },
       success: function(data) {
-        removeEvents();
+        removeCRMEvents();
         getUsersAndEvents(userType, idUser, false);
         data = JSON.parse(data);
         alerts.showNotification("top", "right", data["message"], (data["status" == 503]) ? "danger" : (data["status" == 400]) ? "warning" : "success");
@@ -429,16 +417,12 @@
     request.execute();
   }
   
-  function removeEvents(){
+  function removeCRMEvents(){
     srcEventos = calendar.getEventSources();
     srcEventos.forEach(event => {
-      if(!gapi.auth2.getAuthInstance().isSignedIn.get() && event['internalEventSource']['extendedProps'].hasOwnProperty('title') && event['internalEventSource']['extendedProps']['title'] == "sourceGoogle")
-          event.remove();
-      else{
         if(event['internalEventSource']['extendedProps'].hasOwnProperty('title') && event['internalEventSource']['extendedProps']['title'] == "sourceCRM"){
           event.remove();
         }
-      }
     });
   }
 
@@ -446,28 +430,30 @@
     calendar.addEventSource({
       title: 'sourceCRM',
       display:'block',
-      events: events
+      events: events,
     })
-    
-    calendar.refetchEvents();
   }
 
-  function disabledEditModal(value){
+  function disabledEditModal(value, estatus){
     if(value){
-      $("#modalEvent #menuModal").addClass("d-none");
+      $("#modalEvent #menuModal").addClass('d-none');
       $("#edit_appointment_form input").prop("disabled", true);
       $("#edit_appointment_form textarea").prop("disabled", true);
       $("#prospectoE").prop("disabled", true);
+      $("#id_direccion").prop("disabled", true);
       $("#estatus_recordatorio2").prop("disabled", true);
-      $("#finishS").addClass("d-none");
+      $(".finishS").addClass("d-none");
     }
     else{
-      $("#modalEvent #menuModal").removeClass("d-none");
+      var menuModal = $("#modalEvent #menuModal");
+      (estatus == 1 ? menuModal.removeClass('d-none') : menuModal.addClass('d-none'));
       $("#edit_appointment_form input").prop("disabled", false);
       $("#edit_appointment_form textarea").prop("disabled", false);
       $("#prospectoE").prop("disabled", false);
+      $("#id_direccion").prop("disabled", false);
       $("#estatus_recordatorio2").prop("disabled", false);
-      $("#finishS").removeClass("d-none");
+      var btnSave = $(".finishS");
+      ( estatus == 1 ? btnSave.removeClass('d-none') : btnSave.addClass('d-none'));
     }
     $("#prospectoE").selectpicker('refresh');
     $("#estatus_recordatorio2").selectpicker('refresh');
@@ -490,7 +476,6 @@
               calendar.render();
               alerts.showNotification("top", "right", "La actualización se ha llevado a cabo correctamente.", "success");
               if(idGoogle != ''){
-                console.log('delete');
                 delGoogleEvent(idGoogle);
               }
           } else {
@@ -511,3 +496,42 @@
     });
     request.execute();
   }
+    
+  $(document).on('submit', '#feedback_form', function(e) {
+    e.preventDefault();
+
+    let data = new FormData($(this)[0]);
+    data.append("idAgenda", $("#idAgenda2").val());
+    
+    
+  });
+
+  document.querySelector('#feedback_form').addEventListener('submit', e =>  {
+    e.preventDefault();
+    const data = Object.fromEntries(
+      new FormData(e.target)
+    )
+    data['idAgenda'] = $("#idAgenda2").val();
+    $.ajax({
+      type: 'POST',
+      url: 'setAppointmentRate',
+      data: JSON.stringify(data),
+      contentType: false,
+      cache: false,
+      processData: false,
+      beforeSend: function() {
+        $('#spiner-loader').removeClass('hide');
+      },
+      success: function(data) {
+        $('#spiner-loader').addClass('hide');
+        data = JSON.parse(data);
+        alerts.showNotification("top", "right", data["message"], (data["status" == 503]) ? "danger" : (data["status" == 400]) ? "warning" : "success");
+        $('#feedbackModal').modal('toggle');
+      },
+      error: function() {
+          $('#feedbackModal').modal('toggle');
+          $('#spiner-loader').addClass('hide');
+          alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+      }
+    });
+  });

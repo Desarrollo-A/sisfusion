@@ -242,7 +242,6 @@ $(document).ready( function() {
 
                 var id_rol = id_rol_global;
                 // localStorage.getItem('id_rol');
-//console.log(id_rol);
                 if(id_rol==53){
                     return '<button class="btn-data btn-azure see-changes-log" data-id-usuario="' + d.id_usuario +'"><span class="material-icons">visibility</span> </button>';
                 }else if(id_rol == 41){
@@ -651,7 +650,6 @@ $(document).on('change', '#sedech', function() {
     $.getJSON("getSucursalCH/"+id_sede).done( function( data ){
 
         var select = document.getElementsByName('sucursal')[0];
-        console.log(data.data);
         if(data.data.length > 0){
             $('#sucursal').prop('required', true);
         }else{
@@ -675,7 +673,6 @@ function getSedesCH(sede = 0,sucursal = 0){
 
     $.getJSON("getSedesCH").done( function( data ){
         var select = document.getElementsByName('sedech')[0];
-        console.log(data.data);
         $.each( data.data, function(i, v){
             if(v.idsede != 7){
                     var option = document.createElement("option");
@@ -687,7 +684,6 @@ function getSedesCH(sede = 0,sucursal = 0){
                         $.getJSON("getSucursalCH/"+sede).done( function( data2 ){
 
                             var select = document.getElementsByName('sucursal')[0];
-                            console.log(data2.data);
                             $.each( data2.data, function(i, v){
                                     var option = document.createElement("option");
                                     option.text = v.nom_oficina;
@@ -806,9 +802,7 @@ $("#editUserForm").on('submit', function(e){
 
 $(document).on('click', '.see-changes-log', function(){
     id_usuario = $(this).attr("data-id-usuario");
-    // console.log('camara alv :', id_usuario);
     $.post("getChangeLogUsers/"+id_usuario).done( function( data ){
-        console.log("aqui es: " + data);
         $("#changesRegsUsers").modal();
         $.each( JSON.parse(data), function(i, v){
             // $("#changesRegsUsers").modal();
