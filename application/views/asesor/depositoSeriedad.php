@@ -433,7 +433,7 @@
                                         <div class="form-group label-floating is-focused">
                                             <label class="control-label label-gral">¿La venta es compartida?</label>
                                             <select class="selectpicker" data-style="btn btn-primary btn-round"
-                                                    title="¿Tenemos cliente anterior?" data-size="7" id="ventaC" name="ventaC"
+                                                    title="¿La venta es compartida?" data-size="7" id="ventaC" name="ventaC"
                                                     data-live-search="true">
                                                     <option value ="default" selected disabled>Selecciona una opción</option>
                                                     <option value="uno">Si</option>
