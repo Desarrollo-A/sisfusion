@@ -32,7 +32,7 @@
     });
   }
 
-  /*  Called when the signed in status changes, to update the UI appropriately. After a sign-in, the API is called. */
+  /*Called when the signed in status changes, to update the UI appropriately. After a sign-in, the API is called. */
   function updateSigninStatus(isSignedIn) {
     if (isSignedIn) {
       $(".fc-googleSignIn-button").attr("style", "display: none !important");
@@ -42,6 +42,7 @@
     } else {
       $(".fc-googleSignIn-button").attr("style", "display: block !important");
       $(".fc-googleLogout-button").attr("style", "display: none !important");
+      removeEvents();
     }
   }
 
@@ -64,7 +65,7 @@
         }
       }
       
-      if(typeof(calendar) !== 'undefined'){
+      if(typeof(calendar) != 'undefined'){
       calendar.addEventSource({
         title: 'sourceGoogle',
         display:'block',
@@ -74,7 +75,7 @@
       calendar.refetchEvents();
     }
       
-    if(typeof(sideCalendar) !== 'undefined'){
+    if(typeof(sideCalendar) != 'undefined'){
       sideCalendar.addEventSource({
         title: 'sourceGoogle',
         display:'block',
@@ -83,7 +84,6 @@
       
       sideCalendar.refetchEvents();
     }
-    
     });
   }
 
@@ -103,5 +103,14 @@
       backgroundColor:'transparent',
       borderColor: '#999',
       textColor: '#999'
+    });
+  }
+  
+  function removeEvents(){
+    if (typeof(sideCalendar) != 'undefined') srcEventos = sideCalendar.getEventSources();
+    if (typeof(calendar) != 'undefined') srcEventos = calendar.getEventSources();
+  
+    srcEventos.forEach(event => {
+      if(event['internalEventSource']['extendedProps'].hasOwnProperty('title') && event['internalEventSource']['extendedProps']['title'] == "sourceGoogle") event.remove();
     });
   }

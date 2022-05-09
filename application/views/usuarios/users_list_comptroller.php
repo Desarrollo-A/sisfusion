@@ -193,7 +193,7 @@
                         if (d.estatus == 1) {
                             return '<center><span class="label label-danger" style="background:#27AE60">Activo</span><center>';
                         } else if (d.estatus == 3) {
-                            boton =  '<center><span class="label label-danger" style="background:#FF7C00">Inactivo comisionando</span><center>';
+                            boton =  '<center><span class="label label-danger" style="background:#E74C3C">Baja </span><center>';
 
                              <?php
                                         if($this->session->userdata('id_rol') == 49){
@@ -215,7 +215,7 @@
                         } else {
                             if (d.abono_pendiente !== undefined) {
                                 if (parseFloat(d.abono_pendiente) > 0) {
-                                    boton = '<center><p class="mt-1"><span class="label label-danger" style="background:#FF7C00">Inactivo comisionando</span></p><center>';
+                                    boton = '<center><p class="mt-1"><span class="label label-danger" style="background:#E74C3C">Baja </span></p><center>';
 
 
                                     <?php
@@ -236,7 +236,7 @@
 
                                 } else {
                                     // return '<center><span class="label label-danger" style="background:#E74C3C">Inactivo</span><center>';
-                                    var boton = '<center><span class="label label-danger" style="background:#E74C3C">Inactivo </span></center>';
+                                    var boton = '<center><span class="label label-danger" style="background:#E74C3C">Baja </span></center>';
                                    
                                     <?php
                                         if($this->session->userdata('id_rol') == 49){
@@ -255,7 +255,7 @@
 
                             } else {
                                 // return '<center><span class="label label-danger" style="background:#E74C3C">Inactivo</span><center>';
-                                    var boton = '<center><span class="label label-danger" style="background:#E74C3C">Inactivo </span></center>';
+                                    var boton = '<center><span class="label label-danger" style="background:#E74C3C">Baja </span></center>';
                                    
                                     <?php
                                         if($this->session->userdata('id_rol') == 49){

@@ -158,13 +158,13 @@ function createCalendar(){
         text: 'Sincronizar con google',
         click: function() {
           gapi.auth2.getAuthInstance().signIn();
-          // listUpcomingEvents();
         }
       },
       googleLogout: {
         text: 'Desincronizar',
         click: function() {
           gapi.auth2.getAuthInstance().signOut();
+          removeEvents();
         }
       }
     },
@@ -241,17 +241,4 @@ function setSourceEventCRM(events){
   })
   
   sideCalendar.render();
-}
-
-function removeEvents(){
-  srcEventos = sideCalendar.getEventSources();
-  srcEventos.forEach(event => {
-      if(!gapi.auth2.getAuthInstance().isSignedIn.get() && event['internalEventSource']['extendedProps'].hasOwnProperty('title') && event['internalEventSource']['extendedProps']['title'] == "sourceGoogle")
-          event.remove();
-      else{
-          if(event['internalEventSource']['extendedProps'].hasOwnProperty('title') && event['internalEventSource']['extendedProps']['title'] == "sourceCRM"){
-              event.remove();
-          }
-      }
-  });
 }

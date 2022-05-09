@@ -54,6 +54,11 @@ class Usuarios_modelo extends CI_Model {
                 else 
                     $id_sede = "(usuarios.id_sede LIKE('%".$this->session->userdata('id_sede')."%'))";
 
+                if($this->session->userdata('id_usuario') == 29)
+                    $id_usuario = " OR usuarios.id_usuario IN (10105, 9585, 9704, 9404, 10107, 10106)";
+                else
+                    $id_usuario = "";
+
                     return $this->db->query("SELECT usuarios.id_usuario, id_rol, opcs_x_cats.nombre AS puesto, CONCAT(usuarios.nombre, ' ', apellido_paterno, ' ', apellido_materno)
                     AS nombre, (CASE id_rol WHEN 7 THEN lider ELSE lider_coord END) AS jefe_directo, telefono, correo, usuarios.estatus, 
                     id_lider, id_lider_2, 0 nuevo, usuarios.fecha_creacion, s.nombre sede FROM usuarios 
@@ -64,6 +69,7 @@ class Usuarios_modelo extends CI_Model {
                     FROM usuarios) AS lider_3 ON lider_3.id_usuario = lider_2.id_lid
                     LEFT JOIN sedes s ON CAST(s.id_sede AS VARCHAR(45)) = CAST(usuarios.id_sede AS VARCHAR(45))
                     WHERE ($id_sede AND id_rol IN (2, 3, 7, 9) AND rfc NOT LIKE '%TSTDD%' AND correo NOT LIKE '%test_%' AND correo NOT LIKE '%OOAM%' AND correo NOT LIKE '%CASA%')
+                    $id_usuario
                     ORDER BY nombre");
                 break;
             case '6': // ASISTENTE GERENCIA
@@ -122,7 +128,7 @@ class Usuarios_modelo extends CI_Model {
                 LEFT JOIN (SELECT SUM(abono_neodata) abono_pendiente, id_usuario FROM pago_comision_ind WHERE estatus=1 and ( descuento_aplicado is null or descuento_aplicado=0) 
                  GROUP BY id_usuario) pci2 ON pci2.id_usuario = u.id_usuario
                 WHERE  u.id_rol IN (1, 2, 3, 7, 9, 18, 19, 20, 25, 26, 27, 28, 29, 30, 36) 
-                AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%') OR usuarios.id_usuario IN (9359, 9827))
+                AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%') OR usuarios.id_usuario IN (9359, 9827)
                 AND u.id_usuario NOT IN (821, 1366, 1923, 4340, 9623, 9624, 9625, 9626, 9627, 9628, 9629) ORDER BY nombre");
                 break;
             case '26': // MERCADÓLOGO
@@ -150,8 +156,9 @@ class Usuarios_modelo extends CI_Model {
                                         INNER JOIN sedes s ON s.id_sede = (CASE WHEN LEN (u.id_sede) > 1 THEN 2 ELSE u.id_sede END)
                                         LEFT JOIN descuentos_universidad du ON du.id_usuario = u.id_usuario
                                         --LEFT JOIN  (SELECT id_usuario FROM descuentos_universidad GROUP BY id_usuario) du ON du.id_usuario = u.id_usuario
-                                        WHERE  u.id_rol IN (3, 7, 9) AND u.rfc
-                                        NOT LIKE '%TSTDD%' AND ISNULL(u.correo, '' ) NOT LIKE '%test_%' AND u.id_usuario NOT IN (821, 1366, 1923, 4340, 4062, 4064, 4065, 4067, 4068, 4069, 6578, 712 , 9942) ORDER BY nombre");
+                                        WHERE  u.id_rol IN (3, 7, 9) 
+                                        AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%') OR usuarios.id_usuario IN (9359, 9827)
+                                        AND u.id_usuario NOT IN (821, 1366, 1923, 4340, 4062, 4064, 4065, 4067, 4068, 4069, 6578, 712 , 9942) ORDER BY nombre");
                 break;
 
 
@@ -162,12 +169,12 @@ class Usuarios_modelo extends CI_Model {
                 $id_rol = "";
 
             return $this->db->query("SELECT u.estatus, u.id_usuario, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombre, u.correo,
-                                    u.telefono, oxc.nombre puesto, CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) jefe_directo, u.correo, CASE WHEN DAY(u.fecha_creacion) >= 6 AND MONTH(u.fecha_creacion) = MONTH(GETDATE()) AND YEAR(u.fecha_creacion) = YEAR(GETDATE()) THEN 1 ELSE 0 END as nuevo, u.fecha_creacion, s.nombre sede
-                                    FROM usuarios u 
-                                    LEFT JOIN usuarios us ON us.id_usuario = u.id_lider
-                                    INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = u.id_rol
-                                    LEFT JOIN sedes s ON CAST(s.id_sede AS VARCHAR(45)) = CAST(u.id_sede AS VARCHAR(45))
-                                    WHERE u.rfc NOT LIKE '%TSTDD%' AND ISNULL(u.correo, '' ) NOT LIKE '%test_%' AND oxc.id_catalogo = 1 $id_rol ORDER BY nombre");
+            u.telefono, oxc.nombre puesto, CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) jefe_directo, u.correo, CASE WHEN DAY(u.fecha_creacion) >= 6 AND MONTH(u.fecha_creacion) = MONTH(GETDATE()) AND YEAR(u.fecha_creacion) = YEAR(GETDATE()) THEN 1 ELSE 0 END as nuevo, u.fecha_creacion, s.nombre sede
+            FROM usuarios u 
+            LEFT JOIN usuarios us ON us.id_usuario = u.id_lider
+            INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = u.id_rol AND oxc.id_catalogo = 1
+            LEFT JOIN sedes s ON CAST(s.id_sede AS VARCHAR(45)) = CAST(u.id_sede AS VARCHAR(45))
+            WHERE (u.rfc NOT LIKE '%TSTDD%' AND ISNULL(u.correo, '' ) NOT LIKE '%test_%') $id_rol OR u.id_usuario IN (9359, 9827) ORDER BY nombre");
             break;
         }
     }
