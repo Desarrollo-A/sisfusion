@@ -1744,9 +1744,9 @@ $('#tabla_deposito_seriedad thead tr:eq(0) th').each( function (i) {
         e.preventDefault();
         var data = tabla_valores_ds.row($(this).parents('tr')).data();
         $('#id_cliente').val(data.id_cliente);
-        $("#asesor1").empty().selectpicker('refresh');
-        $("#asesor2").empty().selectpicker('refresh');
-        $("#ventaC").empty().selectpicker('refresh');
+        $("#ventaC").val("");
+        $("#ventaC").trigger('change');
+        $("#ventaC").selectpicker('refresh');
         $('#ventaCompartida').modal('show');
     });
 
