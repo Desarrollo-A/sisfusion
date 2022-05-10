@@ -8667,4 +8667,75 @@ function lista_estatus_descuentos(){
             WHERE pc.id_plan = $idPlan");
         return $query->row();
     }
+
+    public function getVentasCanceladas()
+    {
+        $query = $this->db->query("(SELECT c.id_lote, l.nombreLote, SUM(c.comision_total) AS comision_total, CONCAT(cl.nombre,' ',
+            cl.apellido_paterno,' ',cl.apellido_materno) nombre_cliente, (CASE WHEN cl.plan_comision IN (0) OR cl.plan_comision 
+            IS NULL THEN '-' ELSE pl.descripcion END)  AS plan_descripcion, 0 AS idCliente
+            FROM comisiones c
+            LEFT JOIN clientes cl ON cl.id_cliente = c.idCliente
+            LEFT JOIN plan_comision pl ON pl.id_plan = cl.plan_comision
+            JOIN lotes l ON l.idLote = c.id_lote
+            WHERE l.status = 1 AND c.estatus IN (8) AND c.id_usuario NOT IN (0) AND c.idCliente IS NULL
+            GROUP BY c.id_lote, l.nombreLote, cl.nombre, cl.apellido_paterno, cl.apellido_materno, cl.plan_comision, pl.descripcion
+            
+            UNION
+            
+            SELECT c.id_lote, l.nombreLote, SUM(c.comision_total) AS comision_total, CONCAT(cl.nombre,' ',cl.apellido_paterno,' ',
+            cl.apellido_materno) nombre_cliente, (CASE WHEN cl.plan_comision IN (0) OR cl.plan_comision IS NULL THEN '-' 
+            ELSE pl.descripcion END) AS plan_descripcion, c.idCliente
+            FROM comisiones c
+            JOIN clientes cl ON cl.id_cliente = c.idCliente
+            LEFT JOIN plan_comision pl ON pl.id_plan = cl.plan_comision
+            JOIN lotes l ON l.idLote = c.id_lote
+            WHERE l.status = 1 AND c.estatus IN (8) AND c.id_usuario NOT IN (0) AND c.idCliente IS NOT NULL
+            GROUP BY c.idCliente, c.id_lote, l.nombreLote, cl.nombre, cl.apellido_paterno, cl.apellido_materno, cl.plan_comision, 
+            pl.descripcion)
+            ORDER BY c.id_lote ASC");
+        return $query->result_array();
+    }
+
+    public function getVentCanceladaSuma($idLote, $idCliente)
+    {
+        $clienteWhereClause = '';
+        if ($idCliente === '0') {
+            $clienteWhereClause = 'c1.idCliente IS NULL';
+        } else {
+            $clienteWhereClause = "c1.idCliente = $idCliente";
+        }
+        $query = $this->db->query("SELECT SUM(c1.comision_total) comision_total, (SELECT SUM(abono_neodata) 
+            FROM pago_comision_ind WHERE id_comision IN (SELECT id_comision FROM comisiones 
+            WHERE id_lote = $idLote AND estatus = 8)) AS abonado, lo.nombreLote
+            FROM lotes lo
+            INNER JOIN comisiones c1 ON lo.idLote = c1.id_lote AND c1.estatus = 8
+            WHERE lo.idLote = $idLote AND $clienteWhereClause
+            GROUP BY lo.idLote, lo.nombreLote");
+        return $query->row();
+    }
+
+    public function getVentaCanceladaDetalle($idLote, $idCliente)
+    {
+        $clienteWhereClause = '';
+        if ($idCliente === '0') {
+            $clienteWhereClause = 'com.idCliente IS NULL';
+        } else {
+            $clienteWhereClause = "com.idCliente = $idCliente";
+        }
+        $query = $this->db->query("SELECT com.id_comision, com.id_usuario, lo.totalNeto2, lo.idLote, res.idResidencial, 
+            lo.referencia, lo.tipo_venta, com.id_lote, lo.nombreLote, com.porcentaje_decimal, CONCAT(us.nombre,' ' ,
+            us.apellido_paterno,' ',us.apellido_materno) colaborador, oxc.nombre as rol, com.comision_total, 
+            pci.abono_pagado, com.rol_generado, com.descuento
+            FROM comisiones com
+            LEFT JOIN (SELECT SUM(abono_neodata) abono_pagado, id_comision FROM pago_comision_ind 
+            GROUP BY id_comision) pci ON pci.id_comision = com.id_comision
+            INNER JOIN lotes lo ON lo.idLote = com.id_lote 
+            INNER JOIN usuarios us ON us.id_usuario = com.id_usuario
+            INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = com.rol_generado
+            INNER JOIN condominios con ON con.idCondominio = lo.idCondominio
+            INNER JOIN residenciales res ON res.idResidencial = con.idResidencial
+            WHERE oxc.id_catalogo = 1 AND com.id_lote = $idLote AND com.estatus = 8 AND $clienteWhereClause 
+            ORDER BY com.rol_generado ASC");
+        return $query->result_array();
+    }
 }

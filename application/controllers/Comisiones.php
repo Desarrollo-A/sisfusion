@@ -6847,4 +6847,27 @@ for ($d=0; $d <count($dos) ; $d++) {
 
         echo json_encode($info);
     }
+
+    public function viewVentasCanceladas()
+    {
+        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
+        $this->load->view('template/header');
+        $this->load->view("ventas/ventas_canceladas", $datos);
+    }
+
+    public function getVentasCanceladas()
+    {
+        $data = $this->Comisiones_model->getVentasCanceladas();
+        echo json_encode(array('data' => $data));
+    }
+
+    public function getDetailVentaCancelada($idLote, $idCliente)
+    {
+        $cantidades = $this->Comisiones_model->getVentCanceladaSuma($idLote, $idCliente);
+        $detalle = $this->Comisiones_model->getVentaCanceladaDetalle($idLote, $idCliente);
+        echo json_encode(array(
+            'cantidades' => $cantidades,
+            'detalle' => $detalle
+        ));
+    }
 }
