@@ -6975,8 +6975,8 @@ SELECT 7 AS idEstatus, 'PAGADAS' as nombre ");
             break;
 
             case '5':
-            $filtro_estatus = " pci1.estatus IN (11,16,17,0) AND pci1.descuento_aplicado = 1 ";
-            break;
+                $filtro_estatus = " pci1.estatus IN (11,16,17,0,18,19,20,21,22) AND pci1.descuento_aplicado = 1 ";
+                break;
 
             case '6':
             $filtro_estatus = " pci1.estatus IN (3)  AND (pci1.descuento_aplicado is null or pci1.descuento_aplicado = '0') ";
@@ -8168,7 +8168,7 @@ return $query->result();
                 LEFT JOIN clientes c on c.id_cliente=l.idCliente
                 LEFT JOIN usuarios ase on ase.id_usuario=c.id_asesor
                 LEFT JOIN comisiones co on co.id_lote=l.idLote
-                LEFT JOIN sedes s on s.id_sede=l.ubicacion_dos 
+                LEFT JOIN sedes s on s.id_sede=l.ubicacion_dos
                 LEFT JOIN sedes sc on sc.id_sede= c.id_sede
                 LEFT JOIN sedes sa on sa.id_sede= ase.id_sede
                 LEFT JOIN pago_comision pc on pc.id_lote=l.idLote
