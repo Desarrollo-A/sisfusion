@@ -358,8 +358,8 @@
                         if (rol.puesto !== null && (rol.com > 0 && rol.neo > 0)) {
                             $('#plan-detalle-tabla tbody').append('<tr>');
                             $('#plan-detalle-tabla tbody').append(`<td>${rol.puesto}</td>`);
-                            $('#plan-detalle-tabla tbody').append(`<td>${rol.com} %</td>`);
-                            $('#plan-detalle-tabla tbody').append(`<td>${rol.neo} %</td>`);
+                            $('#plan-detalle-tabla tbody').append(`<td>${convertirPorcentajes(rol.com)} %</td>`);
+                            $('#plan-detalle-tabla tbody').append(`<td>${convertirPorcentajes(rol.neo)} %</td>`);
                             $('#plan-detalle-tabla tbody').append('</tr>');
                         }
                     });
@@ -1230,5 +1230,25 @@
   return number.toString().replace(exp,rep);
 }
 
+    function convertirPorcentajes(value) {
+        const fixed = value.toFixed(3);
+        const partes = fixed.split(".");
+        const numeroEntero = partes[0];
+        const numeroDecimal = checkDecimal(partes[1]);
+        if (numeroDecimal === '') {
+            return `${numeroEntero}`;
+        }
+        return `${numeroEntero}.${numeroDecimal}`;
+    }
+
+    function checkDecimal(decimal) {
+        let str = '';
+        for (let i = 0; i < decimal.length; i++) {
+            if (decimal.charAt(i) !== '0') {
+                str += decimal.charAt(i);
+            }
+        }
+        return str;
+    }
     </script>
 </body>
