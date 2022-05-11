@@ -309,8 +309,8 @@
                     if (rol.puesto !== null && (rol.com > 0 && rol.neo > 0)) {
                         $('#plan-detalle-tabla tbody').append('<tr>');
                         $('#plan-detalle-tabla tbody').append(`<td>${rol.puesto}</td>`);
-                        $('#plan-detalle-tabla tbody').append(`<td>${rol.com} %</td>`);
-                        $('#plan-detalle-tabla tbody').append(`<td>${rol.neo} %</td>`);
+                        $('#plan-detalle-tabla tbody').append(`<td>${convertirPorcentajes(rol.com)} %</td>`);
+                        $('#plan-detalle-tabla tbody').append(`<td>${convertirPorcentajes(rol.neo)} %</td>`);
                         $('#plan-detalle-tabla tbody').append('</tr>');
                     }
                 });
@@ -1231,7 +1231,7 @@
 }
 
     function convertirPorcentajes(value) {
-        const fixed = value.toFixed(3);
+        const fixed = Number(value).toFixed(3);
         const partes = fixed.split(".");
         const numeroEntero = partes[0];
         const numeroDecimal = checkDecimal(partes[1]);
