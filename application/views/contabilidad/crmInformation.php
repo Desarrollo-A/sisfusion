@@ -100,21 +100,7 @@
                                 <div class="row pt-2 row-load hide">
                                     <div class="col col-xs-12 col-sm-12 col-md-10 col-lg-10">
                                         <div class="form-group label-floating select-is-empty m-0 p-0">
-                                            <select id="columns" name="columns" class="selectpicker select-gral m-0"
-                                                    data-style="btn" data-show-subtext="true" data-live-search="true"
-                                                    title="Selecciona las columnas que se requieran" data-size="10"
-                                                    required multiple>
-                                                <!-- <option value="1" data-name="fecha_firma">Fecha de firma</option>
-                                                <option value="2" data-name="adendum">Adedum precio de venta</option>
-                                                <option value="3" data-name="superficie_postventa">Superficie de contrato</option>
-                                                <option value="4" data-name="costo_m2">Costo por m2</option>
-                                                <option value="5" data-name="parcela">Parcela</option>
-                                                <option value="6" data-name="superficie_proyectos">Superficie proyectos</option>
-                                                <option value="7" data-name="presupuesto_m2">Presupuestos de obra estimada aplicada por m2</option>
-                                                <option value="8" data-name="deduccion">Presupuesto a plazos (deducción física)</option>
-                                                <option value="9" data-name="m2_erreno">$M2 Terreno</option>
-                                                <option value="10" data-name="costo_terreno">Costo terreno</option>
-                                                <option value="10" data-name="comentario">Observaciones</option> -->
+                                            <select id="columns" name="columns" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona las columnas que se requieran" data-size="10" required multiple>
                                             </select>
                                         </div>
                                     </div>
@@ -128,11 +114,9 @@
                                         </button> <!-- UPLOAD -->
                                     </div>
                                 </div>
-                                <!--        Here you can write extra buttons/actions for the toolbar              -->
                             </div>
                             <div class="table-responsive box-table hide">
-                                <table id="tableLotificacion" name="tableLotificacion"
-                                       class="table-striped table-hover">
+                                <table id="tableLotificacion" name="tableLotificacion" class="table-striped table-hover">
                                     <thead>
                                     <tr>
                                         <th>CLIENTE</th>

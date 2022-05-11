@@ -20,6 +20,13 @@ class Calendar_model extends CI_Model {
         return $query->result_array();
     }
 
+    function getAllEvents($idUsuario){
+        $query = $this->db->query("SELECT a.id_cita, CONCAT(p.nombre, ' ', p.apellido_paterno, ' ', p.apellido_materno) nombre, a.fecha_cita FROM agenda a 
+        INNER JOIN prospectos p ON p.id_prospecto = a.idCliente
+        WHERE a.idOrganizador = $idUsuario AND a.estatus = 1");
+        return $query->result_array();
+    }
+
     function getAppointmentData($idAgenda){
         $query = $this->db->query("SELECT a.id_cita, a.idCliente, a.idOrganizador, a.fecha_cita, a.fecha_final, a.fecha_creacion, a.titulo, a.descripcion, CONCAT(p.nombre, ' ', p.apellido_paterno, ' ', p.apellido_materno) AS nombre, p.telefono, p.telefono_2 ,  a.id_direccion,
         (CASE WHEN a.id_direccion IS NOT NULL THEN dir.nombre ELSE a.direccion END) direccion, a.medio, oxc.nombre as nombre_medio, a.estatus, a.idGoogle

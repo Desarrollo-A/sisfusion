@@ -8,20 +8,25 @@
   var calendarEl = document.getElementById('calendar');
   calendar = new FullCalendar.Calendar(calendarEl, {   
     headerToolbar: {
-      start: 'prev,next today googleSignIn googleLogout',
+      start: 'prev next today appointments googleSignIn googleLogout',
       center: 'title',
-      end:   'timeGridDay,timeGridWeek,dayGridMonth',
+      end:   'timeGridDay timeGridWeek dayGridMonth',
     },
     customButtons: {
+      appointments: {
+        text: 'Citas',
+        click: function(){
+          $("#allAppointmentsModal").modal();
+          createTable();
+        }
+      },
       googleSignIn: {
-        icon: 'fab fa-google',
         click: function() {
           gapi.auth2.getAuthInstance().signIn();
           listUpcomingEvents();
         }
       },
       googleLogout: {
-        icon: 'fas fa-power-off',
         click: function() {
           gapi.auth2.getAuthInstance().signOut();
           window.location.reload();
@@ -63,6 +68,7 @@
     }
   });
   calendar.render();
+  customizeIcon();
 
   $.post('../Calendar/getStatusRecordatorio', function(data) {
     var len = data.length;
@@ -534,3 +540,70 @@
       }
     });
   });
+
+  function customizeIcon(){
+    $(".fc-googleSignIn-button").append('<img src='+base_url+'/dist/img/googlecalendar.png>');
+    $(".fc-googleLogout-button").append('<img src='+base_url+'/dist/img/unsync.png>');
+  }
+
+  function createTable(){
+    eventsTable = $('#appointments-datatable').dataTable({
+      dom: 'rt' + "<'row'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>",
+      width: "auto",
+      pagingType: "full_numbers",
+      fixedHeader: true,
+      language: {
+          url: "../static/spanishLoader_v2.json",
+          paginate: {
+              previous: "<i class='fa fa-angle-left'>",
+              next: "<i class='fa fa-angle-right'>"
+          }
+      },
+      destroy: true,
+      ordering: false,
+      columns: [{
+        data: function (d) {
+          return '<input type="text" value="'+d.id_cita+'">';
+        }
+      },
+      { 
+        data: function (d) {
+          return '<input type="text" value="'+d.id_prospecto+'">';
+        }
+      },
+      { 
+        width: "30%",
+        data: function (d) {
+          return d.nombre;
+        }
+      },
+      { 
+        width: "12%",
+        data: function (d) {
+          return '<select class="form-control"><option>Positiva</option><option>Negativa</option><option>Cancelada</option></select> ';
+        }
+      },
+      {
+        width: "38%",
+        data: function (d) {
+          return '<textarea class="textarea" type="text"></textarea>';
+        }
+      },
+      { 
+        width: "20%",
+        data: function (d) {
+          return '<label class="text-center m-0">'+d.fecha_cita+'</label>';
+        }
+      }],
+      columnDefs: [{
+        "targets": [ 0, 1],
+        "visible": false,
+        "searchable": false
+      }],
+      ajax: {
+        url: "AllEvents",
+        type: "POST",
+        cache: false,
+      }
+    });
+  }

@@ -43,7 +43,7 @@
 
 /* Utilities */
 .min-w100 { min-width: 100%!important; }
-.w-100{ width: 100% };
+.w-100{ width: 100%!important };
 .w-90{ width: 90% };
 .w-80{ width: 80% };
 .w-70{ width: 70% };
@@ -98,6 +98,7 @@
 
 /* Vrbls colores */
 $white         : #ffffff;
+$cultured      : #f8f8f8;
 $platinumLight : #eeeeee;
 $grayDisabled  : #F1F1F1;
 $platinum      : #eaeaea;
@@ -105,14 +106,15 @@ $platinumScroll: #c1c1c1;
 $deepGray      : #929292;
 $grey9         : #999999;
 $grayOxford    : #4e4e4e;
-$grayDisabled  : #353535;
 $gray          : #333333;
 $grayDark      : #191B1C;
 $goldMaderas   : #96843D;
-$azure         : #4382EF;
+$water         : #D1EEFF;
 $blueLight     : #5DADE2;
-$sky           : #00bcd4;
 $aqua          : #54d2d2;
+$sky           : #00bcd4;
+$cerulean      : #00A0FF;
+$azure         : #4382EF;
 $blueMaderas   : #0a548b;
 $blueIndigo    : #103f75;
 $blueIndigoDeep: #143860;
@@ -122,10 +124,12 @@ $violetBoots   : #563D7C;
 $redLight      : #f44336;
 $red           : #c01313;
 $redGoogle     : #EA4335;
+$jellyBean     : #df5a5a;
 $orangeYellow  : #ff9800;
 $orangeLight   : #f8aa4b;
 $greenExcel    : #209E63;
 $green         : #28B463;
+$harlequin     : #50d920;
 $acidGreen     : #AFB42B;
 $violet        : #702497;
 

@@ -4,73 +4,113 @@
   border-bottom: none!important;
   opacity: .65;
 }
-  #calendar{
+#calendar{
+  .fc-toolbar-chunk{
+    display: flex;
+    align-items: center;
+    .fc-prev-button, .fc-next-button{
+      background-color: transparent;
+      box-shadow: none;
+      color: $platinumScroll;
+      border: none;
+      font-size: 18px;
+      padding: 0;
+      &:hover{
+        color: $cerulean;
+      }
+    }
+    .fc-today-button, .fc-appointments-button, .fc-timeGridDay-button, .fc-timeGridWeek-button, .fc-dayGridMonth-button{
+      background-color: $water;
+      border: none;
+      box-shadow: none;
+      border-radius: 27px;
+      color: $gray;
+      padding: 8px 15px;
+    }
     .fc-toolbar-title{
         text-transform: uppercase;
     }
     .fc-icon-fab, .fc-icon-fas{
-        font-family: FontAwesome!important;
+      font-family: FontAwesome!important;
     }
     .fc-googleSignIn-button{
-        display: none!important;
-        background-color: transparent;
-        box-shadow: none;
-        border: none;
-        color: $redGoogle;
-        &:hover{
-            background-color: $redGoogle;
-            color: $white;
-        }
-    }
-    .fc-googleLogout-button{
-        display: none!important;
-        background-color: transparent;
-        box-shadow: none;
-        border: none;
-        color: $platinumScroll;
-        &:hover{
-            background-color: $platinumScroll;
-            color: $white;
-        }
-    }
-    
-    .fc-view-harness{
-      .fc-scrollgrid{
-        border: 1px solid #f1efef;
-        .fc-daygrid-day{
-          border: 1px solid #f1efef!important;
-        }
-        .fc-daygrid-block-event{
-          box-shadow: none;
-        }
-        .fc-day-other{
-          background: repeating-linear-gradient(-55deg, #F8F8F8, #F8F8F8 5px, $white 5px, $white 10px);
-        }
-        .fc-day-today{
-          background-color: transparent;
-          .fc-daygrid-day-top{
-            a{
-              background-color: #1A73E8;
-              height: 25px;
-              width: 25px;
-              border-radius: 25px;
-              display: flex;
-              justify-content: center;
-              align-items: center;
-              color: $white;
-              font-weight: 500;
-            }
-          }
-        }
-        .fc-daygrid-day-number{
-          font-size: 12px;
-        }
+      display: none!important;
+      background-color: transparent;
+      box-shadow: none;
+      border: none;
+      height: 37px;
+      width: 37px;
+      padding: 0;
+      border: 1px solid transparent;
+      img{
+        width: 100%;
       }
     }
-    .fc-daygrid-day-frame{
-      padding: 3px;
+    .fc-googleLogout-button{
+      display: none!important;
+      background-color: transparent;
+      box-shadow: none;
+      border: none;
+      height: 37px;
+      width: 37px;
+      padding: 0;
+      border: 1px solid transparent;
+      img{
+        width: 100%;
+      }
+    }
+    .fc-button-active{
+      background-color: $cerulean;
+      color: $white;
     }
   }
+  
+  .fc-view-harness{
+    .fc-scrollgrid{
+      border: 1px solid $platinumLight;
+      .fc-daygrid-day{
+        border: 1px solid $platinumLight!important;
+      }
+      .fc-daygrid-block-event{
+        box-shadow: none;
+      }
+      .fc-day-other{
+        background: repeating-linear-gradient(-55deg, $cultured, $cultured 5px, $white 5px, $white 10px);
+      }
+      .fc-day-today{
+        background-color: transparent;
+        .fc-daygrid-day-top{
+          a{
+            background-color: $azure;
+            height: 25px;
+            width: 25px;
+            border-radius: 25px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: $white;
+            font-weight: 500;
+          }
+        }
+      }
+      .fc-daygrid-day-number{
+        font-size: 12px;
+      }
+    }
+  }
+  .fc-daygrid-day-frame{
+    padding: 3px;
+  }
+  .evtAbierto{
+    border-left: 4px solid $harlequin!important;
+  }
+  .evtFinalizado{
+    border-left: 4px solid $jellyBean!important;;
+  }
+  .fc-daygrid-event{
+    padding-left: 4px;
+  }
+}
 
 #feedbackModal{
   .radio-with-Icon{
@@ -87,4 +127,60 @@
 }
 .iconMod{
   color: $platinumScroll;
+}
+
+#allAppointmentsModal{
+  .table-striped{
+    width: 100%!important;
+    thead > tr {
+      background-color: transparent!important;
+      color: $gray;
+      th{
+        border-right: 1px solid $platinumScroll;
+        &:last-child{
+          border-right: none;
+        }
+      }
+    }
+    tbody{
+      tr > td{
+        padding: 0 5px!important;
+        border-right: 1px solid $platinumScroll;
+        &:nth-child(2) {
+          display:flex;
+          justify-content:center;
+        }
+        &:last-child{
+          border-right: none;
+        }
+      }
+      select{
+        width: 88%!important;
+        background-image: none;
+        color: $cerulean;
+        -moz-appearance: none;
+        -webkit-appearance: none;
+        appearance: none;
+        background: url(../img/next.png);
+        background-repeat:no-repeat;
+        background-size:16px 17px;
+        background-position:right;
+        &:focus{
+          border-color:none!important;
+        }
+      }
+      .textarea{
+        border: none;
+        border-radius: 0;
+        background-color: transparent;
+        overflow: auto;
+        resize: none;
+        width: 100%;
+        height: 25px;
+      }
+    }
+    .tooltip-inner {
+      text-align: justify;
+    }
+  }
 }

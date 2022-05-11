@@ -167,7 +167,7 @@
 }
 
 .w-100 {
-  width: 100%;
+  width: 100% !important;
 }
 
 .w-90 {
@@ -983,7 +983,7 @@
 }
 
 .boxContent .nav-tabs-cm li > a {
-  color: #353535 !important;
+  color: #F1F1F1 !important;
   padding: 5px 60px;
   border-radius: 20px 20px 0 0;
   background-color: #96843D;

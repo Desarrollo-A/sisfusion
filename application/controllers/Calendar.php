@@ -199,6 +199,15 @@ class Calendar extends CI_Controller {
             echo json_encode(array("status" => 503, "message" => "Oops, algo salió mal. No se ha podido actualizar el estatus del prospecto"));
     }
 
+    public function AllEvents(){
+        $data['data'] = $this->Calendar_model->getAllEvents($this->session->userdata('id_usuario'));
+        if($data != null) {
+            echo json_encode($data);
+        } else {
+            echo json_encode(array());
+        }    
+    }
+
     //SIDEBAR CALENDAR
     public function getAppointmentSidebarCalendar(){
         $data = $this->Calendar_model->getAppointmentSidebarCalendar($_POST['idAgenda']);
