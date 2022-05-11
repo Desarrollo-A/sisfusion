@@ -45,7 +45,6 @@
                                                         <input type="checkbox" value="1" name="infoMainSelector" id="infoMainSelector1" class="infoMainSelector" checked><span>Propios </span>
                                                     </label>
                                                 </div>
-
                                             </div>
                                         </div>
                                         <div class="container-fluid">
@@ -68,6 +67,11 @@
                                                 <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9 h-100 box1Inicio2">
                                                     <div class="card h-100 m-0">
                                                         <div class="row h-20 m-0">
+                                                            <div class="btn-menuchart-container">
+                                                                <button id="menuTotalVentas">
+                                                                    <i class="fas fa-ellipsis-v"></i>
+                                                                </button>
+                                                            </div>
                                                             <div class="col-md-3  h-100 boxGraphic">
                                                                 <h4 class="text-left">Total de ventas</h4>
                                                                 <h2 class="numberGraphic" id="total_ventas">--</h2>
@@ -84,7 +88,26 @@
                                                 </div>
                                             </div>
                                             <div class="row pdt-50">
-                                                <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12  d-flex row-reverse boxNavPills">
+                                                <div class="col col-xs-12 col-sm-12 col-md-6 col-lg-6 container-filters boxNavPills">
+                                                    <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5">
+                                                        <div class="form-group select-is-empty active">
+                                                            <label class="control-label">Fecha inicio</label>
+                                                            <input id="date_inicio" name="date_inicio" type="date" class="form-control">
+                                                            <span class="material-input"></span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5">
+                                                        <div class="form-group select-is-empty active">
+                                                            <label class="control-label">Fecha termino</label>
+                                                            <input id="date_final" name="date_final" type="date" class="form-control">
+                                                            <span class="material-input"></span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-12 col-md-2 col-lg-2">
+                                                        <button onclick="searchByDates()"><i class="fa fa-search"></i></button>
+                                                    </div>
+                                                </div>
+                                                <div class="col col-xs-12 col-sm-12 col-md-6 col-lg-6  d-flex row-reverse boxNavPills">
                                                     <ul class="nav nav-pills">
                                                         <li class="active" onclick="weekFilter(this.id)" id="thisWeek">
                                                             <a href="#thisWeek" data-toggle="tab" >Esta semana</a>
@@ -97,7 +120,7 @@
                                                         </li>
                                                     </ul>
                                                 </div>
-                                                <div class="col-md-3 box1Inicio3" >
+                                                <div class="col-md-3 box1Inicio3 hide" >
                                                     <div class="card h-100">
                                                         <div class="card-header">
                                                             <h4 class="card-title">Lorem ipsue
@@ -152,7 +175,7 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="col-md-3 box1Inicio3" >
+                                                <div class="col-md-3 box1Inicio3 hide" >
                                                     <div class="card h-100">
                                                         <div class="card-header">
                                                             <h4 class="card-title">Lorem ipsue
@@ -206,10 +229,10 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="col-md-6 box1Inicio4" >
+                                                <div class="col-xs-12 col-sm-12 col-md-10 col-lg-10 col-md-offset-1 col-lg-offset-1 box1Inicio4" >
                                                     <div class="card h-100">
                                                         <div class="card-header">
-                                                            <h4 class="card-title">Lorem ipsue</h4>
+                                                            <h4 class="card-title"></h4>
                                                         </div>
                                                         <div class="card-content">
                                                             <div class="row" >
@@ -217,6 +240,78 @@
                                                             </div>
                                                         </div>
                                                     </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="row pdt-50 boxNavPills hide" id="PCtable" >
+                                                <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                                    <h4>Prospectos por mes</h4>
+                                                </div>
+                                                <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12 container-filters">
+                                                    <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
+                                                        <div class="form-group select-is-empty active">
+                                                            <label class="control-label">Selecciona el tipo de búsqueda</label>
+                                                            <select name="tipo_operacion" id="tipo_operacion" class="form-control">
+                                                                <option value="100">selecciona una opción</option>
+                                                                <option value="0">Prospectos</option>
+                                                                <option value="1">Clientes</option>
+                                                                <option value="2">Prospectos y clientes</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-12 col-md-2 col-lg-2">
+                                                        <div class="form-group select-is-empty active">
+                                                            <label class="control-label">Fecha inicio</label>
+                                                            <input id="date_inicio_s" name="date_inicio_s" type="date" class="form-control">
+                                                            <span class="material-input"></span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-12 col-md-2 col-lg-2">
+                                                        <div class="form-group select-is-empty active">
+                                                            <label class="control-label">Fecha termino</label>
+                                                            <input id="date_fin_s" name="date_fin_s" type="date" class="form-control">
+                                                            <span class="material-input"></span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-12 col-md-1 col-lg-1">
+                                                        <button onclick="searchPXM()"><i class="fa fa-search"></i></button>
+                                                    </div>
+                                                </div>
+                                                <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12 mt-4 pdt-10 hide" id="skeleton_table">
+                                                    <div class="col col-xs-6 col-sm-6 col-md-2 col-lg-2 border-table-skeletton">
+                                                        <h3 class="subtitle_skeleton"></h3>
+                                                        <hr>
+                                                        <div class="column_skeleton"></div>
+                                                    </div>
+                                                    <div class="col col-xs-6 col-sm-6 col-md-2 col-lg-2 border-table-skeletton">
+                                                        <h3 class="subtitle_skeleton"></h3>
+                                                        <hr>
+                                                        <div class="column_skeleton"></div>
+                                                    </div>
+                                                    <div class="col col-xs-6 col-sm-6 col-md-2 col-lg-2 border-table-skeletton">
+                                                        <h3 class="subtitle_skeleton"></h3>
+                                                        <hr>
+                                                        <div class="column_skeleton"></div>
+                                                    </div>
+                                                    <div class="col col-xs-6 col-sm-6 col-md-2 col-lg-2 border-table-skeletton">
+                                                        <h3 class="subtitle_skeleton"></h3>
+                                                        <hr>
+                                                        <div class="column_skeleton"></div>
+                                                    </div>
+                                                    <div class="col col-xs-6 col-sm-6 col-md-2 col-lg-2 border-table-skeletton">
+                                                        <h3 class="subtitle_skeleton"></h3>
+                                                        <hr>
+                                                        <div class="column_skeleton"></div>
+                                                    </div>
+                                                    <div class="col col-xs-6 col-sm-6 col-md-2 col-lg-2 border-table-skeletton">
+                                                        <h3 class="subtitle_skeleton"></h3>
+                                                        <hr>
+                                                        <div class="column_skeleton"></div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12 hide pdt-10" id="table_resultados">
+                                                    <div id="content-results"></div>
                                                 </div>
                                             </div>
                                         </div>
@@ -295,7 +390,7 @@
                 response = response[0];
 
                 console.log(response_vtas);
-                if(response.prospectos > 0) {
+                if(response.prospectos >= 0) {
 
 
                     $('.numberElement').removeClass('subtitle_skeleton');
@@ -304,18 +399,33 @@
                     $('#pt_card').text(response.prospectos);
                     $('#total_ventas').text(response_vtas.ventas_apartadas);
 
+                    let ventas_apartados=response_vtas.ventas_apartadas;
+                    let cancelados_apartados = response_vtas.canceladoApartados;
+                    let ventas_contratadas = response_vtas.ventas_contratadas;
+                    let canceladas_contratadas = response_vtas.canceladoContratados;
+
+                    ventas_apartados = parseFloat(ventas_apartados.replace(/[^0-9\.]+/g, ''));
+
+                    cancelados_apartados = parseFloat(cancelados_apartados.replace(/[^0-9\.]+/g, ''));
+                    ventas_contratadas = parseFloat(ventas_contratadas.replace(/[^0-9\.]+/g, ''));
+                    canceladas_contratadas = parseFloat(canceladas_contratadas.replace(/[^0-9\.]+/g, ''));
+
+                    let sumatoria = (cancelados_apartados + ventas_contratadas + canceladas_contratadas);
+                    let apartado_final = ventas_apartados - sumatoria;
+
+
                     chart2.updateSeries([{
                         data: [response_vtas.porcentajeApartado],
-                        name: 'Ventas apartados'
+                        name: 'Ventas apartados: <b>'+mexicanPeso.format(apartado_final)+'</b>'
                     },{
                         data: [response_vtas.porcentajeCanceladoApartado],
-                        name: 'Cancelados apartados'
+                        name: 'Cancelados apartados: <b>'+response_vtas.canceladoApartados+'</b>'
                     },{
                         data: [response_vtas.porcentajeContratado],
-                        name: 'Ventas contratadas'
+                        name: 'Ventas contratadas: <b>'+response_vtas.ventas_contratadas+'</b>'
                     },{
                         data: [response_vtas.porcentajeCanceladoContratado],
-                        name: 'Canceladas contratadas'
+                        name: 'Canceladas contratadas: <b>'+response_vtas.canceladoContratados+'</b>'
                     }])
 
                 }else if(response.message == 'ERROR'){
@@ -361,8 +471,8 @@
             let fin_semana = new Date(lastday.getFullYear(), lastday.getMonth(), lastday.getDate());
             fin_semana = fin_semana.toISOString().split('T')[0];
             typeTransaction = validateMainFilters();
-            console.log("Fecha inicio: ", inicio_semana);
-            console.log("Fecha fin: ", fin_semana);
+            // console.log("Fecha inicio: ", inicio_semana);
+            // console.log("Fecha fin: ", fin_semana);
             var com2 = new FormData();
             com2.append("fecha_inicio", inicio_semana);
             com2.append("fecha_fin", fin_semana);
@@ -418,7 +528,7 @@
                             array_chart_numbers.push(element.numerosTotales);
                         }
                     });
-                    console.log(array_chart_numbers);
+                    // console.log(array_chart_numbers);
                     /*$('#pt_card').text(response.prospectos);*/
                     // $('#spiner-loader').addClass('hide');
                     chart4.updateSeries([{
@@ -501,7 +611,7 @@
                             array_chart_numbers.push(element.numerosTotales);
                         }
                     });
-                    console.log(array_chart_numbers);
+                    // console.log(array_chart_numbers);
                     /*$('#pt_card').text(response.prospectos);*/
                     // $('#spiner-loader').addClass('hide');
                     chart4.updateSeries([{
@@ -581,7 +691,7 @@
                             array_chart_numbers.push(element.numerosTotales);
                         }
                     });
-                    console.log(array_chart_numbers);
+                    // console.log(array_chart_numbers);
                     /*$('#pt_card').text(response.prospectos);*/
                     // $('#spiner-loader').addClass('hide');
                     chart4.updateSeries([{
@@ -722,7 +832,7 @@
                             array_chart_numbers.push(element.numerosTotales);
                         }
                     });
-                    console.log(array_chart_numbers);
+                    // console.log(array_chart_numbers);
                     /*$('#pt_card').text(response.prospectos);*/
                     // $('#spiner-loader').addClass('hide');
                     chart4.updateSeries([{
@@ -807,7 +917,7 @@
                             array_chart_numbers.push(element.numerosTotales);
                         }
                     });
-                    console.log(array_chart_numbers);
+                    // console.log(array_chart_numbers);
                     /*$('#pt_card').text(response.prospectos);*/
                     // $('#spiner-loader').addClass('hide');
                     chart4.updateSeries([{
@@ -886,7 +996,7 @@
                             array_chart_numbers.push(element.numerosTotales);
                         }
                     });
-                    console.log(array_chart_numbers);
+                    // console.log(array_chart_numbers);
                     /*$('#pt_card').text(response.prospectos);*/
                     // $('#spiner-loader').addClass('hide');
                     chart4.updateSeries([{
@@ -1005,5 +1115,183 @@
         }
 
     }
+    function searchByDates(){
+        let fecha_inicio = $('#date_inicio').val();
+        let fecha_termino = $('#date_final').val();
+        let typeTransaction = validateMainFilters();
+
+        if(fecha_inicio=='' && fecha_termino!=''){
+            console.log('Falta la fecha de Inicio');
+            alerts.showNotification('top', 'right', 'Falta la fecha de inicio', 'warning');
+        }else if(fecha_inicio!='' && fecha_termino==''){
+            console.log('Falta la fecha de termino');
+            alerts.showNotification('top', 'right', 'Falta la fecha de termino', 'warning');
+        }else if(fecha_inicio=='' && fecha_termino==''){
+            console.log('Faltan ambas fechas');
+            alerts.showNotification('top', 'right', 'Ingrese el rando de busqueda', 'warning');
+        }else if(fecha_inicio!='' && fecha_termino!=''){
+            console.log('vamo a buscar en el siguiente rango:');
+            console.log('Fecha inicio: ', fecha_inicio);
+            console.log('Fecha termino: ', fecha_termino);
+
+            var com2 = new FormData();
+            com2.append("fecha_inicio", fecha_inicio);
+            com2.append("fecha_fin", fecha_termino);
+            com2.append("typeTransaction", typeTransaction);
+
+            $.ajax({
+                url: "<?=base_url()?>index.php/Dashboard/getDataFromDates",
+                data:com2,
+                cache: false,
+                contentType: false,
+                processData: false,
+                type: 'POST',
+                beforeSend: function(){
+                    // $('#spiner-loader').removeClass('hide');
+                    $('.numberElement').addClass('subtitle_skeleton');
+                    cleanValues(true);
+                },
+                success : function (response) {
+                    response = JSON.parse(response);
+                    let array_chart_numbers = [];
+                    $('.numberElement').removeClass('subtitle_skeleton');
+                    response.map((element)=>{
+                        if(element.queryType == 'prospectos_totales'){
+                            $('#pt_card').text(element.numerosTotales);
+                            array_chart_numbers.push(element.numerosTotales);
+                        }
+                        if(element.queryType == 'prospectos_nuevos'){
+                            $('#np_card').text(element.numerosTotales);
+                            array_chart_numbers.push(element.numerosTotales);
+                        }
+                        if(element.queryType == 'ventas_apartados'){
+                            $('#va_card').text(element.numerosTotales);
+                            array_chart_numbers.push(element.numerosTotales);
+                        }
+                        if(element.queryType == 'cancelados_apartados'){
+                            $('#ca_card').text(element.numerosTotales);
+                            array_chart_numbers.push(element.numerosTotales);
+                        }
+                        if(element.queryType == 'cierres_totales'){
+                            $('#ct_card').text(element.numerosTotales);
+                            array_chart_numbers.push(element.numerosTotales);
+                        }
+                        if(element.queryType == 'prospectos_cita'){
+                            $('#pcc_card').text(element.numerosTotales);
+                            array_chart_numbers.push(element.numerosTotales);
+                        }
+                        if(element.queryType == 'ventas_contratadas'){
+                            $('#vc_card').text(element.numerosTotales);
+                            array_chart_numbers.push(element.numerosTotales);
+                        }
+                        if(element.queryType == 'contratos_cancelados'){
+                            $('#cc_card').text(element.numerosTotales);
+                            array_chart_numbers.push(element.numerosTotales);
+                        }
+                    });
+                    // console.log(array_chart_numbers);
+                    /*$('#pt_card').text(response.prospectos);*/
+                    // $('#spiner-loader').addClass('hide');
+                    chart4.updateSeries([{
+                        data: array_chart_numbers
+                    }])
+
+                }
+            });
+        }
+
+
+    }
+
+    // Format the price above to USD
+    let mexicanPeso = Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: "USD",//se coloca USD para que este no muestre el prefijo de los pesos mexas
+    });
+    $(document).on('click', '#menuTotalVentas', function(){
+       console.log('Se debe abrir el menu alv');
+        $('#PCtable').toggleClass('hide');
+        // document.getElementById("PCtable").classList.toggle("hiden");
+        // $('#PCtable').fadeToggle('slow');
+    });
+
+
+    function searchPXM(){
+        console.log('llegué aqui alv');
+        let tipo_busqueda = $('#tipo_operacion').val();
+        let fecha_inicio = $('#date_inicio_s').val();
+        let fecha_termino = $('#date_fin_s').val();
+
+        if(fecha_inicio=='' && fecha_termino!='' && tipo_busqueda==100){
+            console.log('Falta la fecha de Inicio');
+            alerts.showNotification('top', 'right', 'Falta la fecha de inicio', 'warning');
+        }else if(fecha_inicio!='' && fecha_termino=='' && tipo_busqueda==100){
+            console.log('Falta la fecha de termino');
+            alerts.showNotification('top', 'right', 'Falta la fecha de termino', 'warning');
+        }else if(fecha_inicio=='' && fecha_termino=='' && tipo_busqueda==100){
+            console.log('Faltan ambas fechas');
+            alerts.showNotification('top', 'right', 'Ingrese el rando de busqueda', 'warning');
+        }else if(fecha_inicio!='' && fecha_termino!='' && tipo_busqueda!=100){
+            console.log('Tipo de busqueda: ', tipo_busqueda);
+            console.log('fecha_inicio: ', fecha_inicio);
+            console.log('fecha_termino: ', fecha_termino);
+
+            // var com2 = new FormData();
+            // com2.append("fecha_inicio", fecha_inicio);
+            // com2.append("fecha_fin", fecha_termino);
+            // com2.append("typeTransaction", tipo_busqueda);
+            var content ='';
+            $.ajax({
+                method: 'POST',
+                url: 'Statistics/get_chart',
+                data: JSON.stringify({tipo : tipo_busqueda, fecha_ini : fecha_inicio, fecha_fin : fecha_termino}),
+                beforeSend: function(){
+                    $('#skeleton_table').removeClass('hide');
+                    $('#table_resultados').addClass('hide');
+                },
+                success : function (response) {
+                    $('#skeleton_table').addClass('hide');
+                    $('#table_resultados').removeClass('hide');
+
+                    response = JSON.parse(response);
+                    content += '<table>';
+
+                    content += ' <tr>';
+                    response.map((element)=>{
+                       // console.log(element);
+                        if(tipo_busqueda==0 || tipo_busqueda==1){ //prospectos
+                            content += '<td>';
+                            content += '     <h4>'+element.mes+'</h4>';
+                            content += '     <hr>';
+                            content += '     <h2>'+element.clientes+'</h2>';
+                            content += '</td>';
+                        }else if(tipo_busqueda==2){ //Prospectos y Clientes
+                            content += '<td>';
+                            content += '     <h4>'+element.mes+'</h4>';
+                            content += '     <hr>';
+                            content += '     <h2>'+element.prospectos+'</h2>';
+                            content += '     <hr>';
+                            content += '     <h2>'+element.clientes+'</h2>';
+                            content += '</td>';
+                        }else{
+                            //NA
+                        }
+
+
+                    });
+                    content += ' </tr>';
+                    content += '</table>';
+
+                    $('#content-results').html(content);
+                }
+            });
+
+        }else if(fecha_inicio!='' && fecha_termino!='' && tipo_busqueda==100){
+            alerts.showNotification('top', 'right', 'Elige el tipo de busqueda', 'warning');
+        }
+
+    }
+
+
 </script>
 

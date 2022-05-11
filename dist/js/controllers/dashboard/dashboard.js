@@ -75,7 +75,10 @@
       type: 'bar',
       height: '80%',
       stacked: true,
-      stackType: '100%'
+      stackType: '100%',
+      toolbar:{
+        show:false
+      }
     },
     noData: {
       text: undefined,
@@ -83,6 +86,7 @@
       verticalAlign: 'middle',
       offsetX: 0,
       offsetY: 0,
+      show:false,
       style: {
         color: undefined,
         fontSize: '14px',
@@ -91,7 +95,7 @@
     },
     plotOptions: {
       bar: {
-        horizontal: true,
+        horizontal: true
       },
     },
     stroke: {
@@ -106,18 +110,23 @@
     tooltip: {
       y: {
         formatter: function (val) {
-          return val + "K"
+          return ''
         }
       }
     },
     fill: {
       opacity: 1
     },
+    xaxis: {
+      categories: [''],
+    },
     legend: {
       position: 'left',
       horizontalAlign: 'center',
-      offsetY: 10
-    }
+      offsetY: 10,
+      show:false,
+    },
+
   };
 
   var options3 = {
@@ -196,9 +205,11 @@
   plotOptions: {
     bar: {
       columnWidth: "45%",
-      distributed: !0
+      distributed: !0,
+      horizontal: true,
     }
   },
+
   dataLabels: {
     enabled: !1
   },
@@ -206,7 +217,7 @@
     data: [100560, 156, 25, 52, 2508, 6532, 198360, 1632]
   }],
   xaxis: {
-    categories: ["PT", "NP", "VA", "CA", "CT", "PCC", "VC", "CC"],
+    categories: ["Prospectos Totales", "Nuevos prospectos", "Ventas apartados", "Cancelados apartados", "Cierres totales", "Prospectos con cita", "Ventas contratadas", "Contratos cancelados"],
     labels: {
       style: {
         colors : ["#4caf50", "#003d82", "#999999", "#f44336", "#ffa500", "#003d82", "#4caf50", "#f44336"],
