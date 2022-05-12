@@ -1128,7 +1128,7 @@
             $("#modal_mktd .modal-body").html("");
             $("#modal_mktd .modal-footer").html("");
             $.getJSON( url + "Comisiones/getDatosNuevo/").done( function( data1 ){
-                $("#modal_mktd .modal-body").append('<div class="row"><div class="col-md-6"><label>Fecha inicio: </label><input type="date" class="form-control ng-pristine ng-invalid ng-invalid-required ng-touched" name="fecha_inicio" id="fecha_inicio" required=""></div></div>');
+                $("#modal_mktd .modal-body").append('<div class="row mb-2"><div class="col-md-6"><label>Fecha inicio</label><input type="date" class="form-control beginDate" name="fecha_inicio" id="fecha_inicio" required="" style="border-radius: 25px!important; padding-right: 10px"></div></div>');
                 $.each( data1, function( i, v){
                     $("#modal_mktd .modal-body").append('<div class="row">'
                     +'<div class="col-md-3"><br><input class="form-contol ng-invalid ng-invalid-required" style="border: 1px solid white; outline: none;" value="'+v.puesto+'"  readonly><input id="puesto" name="puesto[]" value="'+v.id_rol+'" type="hidden"></div>'
