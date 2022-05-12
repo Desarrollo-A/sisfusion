@@ -73,7 +73,70 @@
                 </div>
             </div>
         </div>
+        <div class="modal fade modal-alertas"
+             id="detenciones-modal"
+             role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header bg-red">
+                        <button type="button"
+                                class="close"
+                                data-dismiss="modal"
+                                aria-hidden="true">
+                            <i class="material-icons">clear</i>
+                        </button>
+                    </div>
 
+                    <form method="post"
+                          class="row"
+                          id="detenidos-form"
+                          autocomplete="off">
+                        <div class="modal-body">
+                            <input type="hidden"
+                                   name="id_pagoc"
+                                   id="id-lote-detenido">
+
+                            <div class="col-lg-12">
+                                <div class="form-group is-empty">
+                                    <label for="motivo" class="control-label label-gral">Motivo</label>
+                                    <input id="motivo"
+                                           name="motivo"
+                                           type="text"
+                                           class="form-control input-gral"
+                                           placeholder="Escriba un motivo corto..."
+                                           minlength="3"
+                                           maxlength="50"
+                                           required />
+                                </div>
+                            </div>
+
+                            <div class="col-lg-12">
+                                <div class="form-group label-floating">
+                                    <textarea class="form-control"
+                                              name="descripcion"
+                                              rows="3"
+                                              placeholder="Escriba la descripción de la controversia..."
+                                              required></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="submit"
+                                    class="btn btn-primary">
+                                Aceptar
+                            </button>
+                            <button type="button"
+                                    class="btn btn-danger btn-simple"
+                                    data-dismiss="modal">
+                                Cancelar
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <!-- END Modals -->
         <div class="modal fade modal-alertas" id="modal_pagadas" role="dialog">
             <div class="modal-dialog modal-md">
                 <div class="modal-content">
@@ -567,6 +630,15 @@
                         }
                         
                         BtnStats = '<button href="#" value="'+data.idLote+'" data-value="'+data.registro_comision+'" data-totalNeto2 = "'+data.totalNeto2+'" data-estatus="'+data.idStatusContratacion+'" data-cliente="'+data.id_cliente+'" data-plan="'+data.plan_comision+'"  data-tipov="'+data.tipo_venta+'"data-descplan="'+data.plan_descripcion+'" data-code="'+data.cbbtton+'" ' +'class="btn-data '+varColor+' verify_neodata" title="Verificar en NEODATA">'+'<span class="material-icons">verified_user</span></button> '+RegresaActiva+'';
+                        BtnStats += `
+                                <button href="#"
+                                    value="${data.idLote}"
+                                    data-value="${data.nombreLote}"
+                                    class="btn-data btn-blueMaderas btn-detener btn-warning"
+                                    title="Detener">
+                                    <i class="material-icons">block</i>
+                                </button>
+                            `;
                     }
                     return '<div class="d-flex justify-center">'+BtnStats+'</div>';
                 }
@@ -609,6 +681,18 @@
                 $(this).parent().find('.animacion').removeClass("fas fa-chevron-down").addClass("fas fa-chevron-up");
             }
         });
+
+
+        $("#tabla_ingresar_9 tbody").on('click', '.btn-detener', function () {
+                const idLote = $(this).val();
+                const nombreLote = $(this).attr("data-value");
+                $('#id-lote-detenido').val(idLote);
+
+                $("#detenciones-modal .modal-header").html("");
+                $("#detenciones-modal .modal-header").append('<h4 class="modal-title">Motivo de controversia para <b>'+nombreLote+'</b></h4>');
+
+                $("#detenciones-modal").modal();
+            });
  
         $("#tabla_ingresar_9 tbody").on("click", ".verify_neodata", async function(){ 
  
@@ -954,6 +1038,31 @@
     
     });
 
+    $('#detenidos-form').on('submit', function (e) {
+            e.preventDefault();
+
+            $.ajax({
+                type: 'POST',
+                url: 'changeLoteToStopped',
+                data: new FormData(this),
+                contentType: false,
+                cache: false,
+                processData:false,
+                success: function (data) {
+                    if (data) {
+                        $('#detenciones-modal').modal("hide");
+                        $("#id-lote-detenido").val("");
+                        alerts.showNotification("top", "right", "El registro se ha actualizado exitosamente.", "success");
+                        tabla_1.ajax.reload();
+                    } else {
+                        alerts.showNotification("top", "right", "Ocurrió un problema, vuelva a intentarlo más tarde.", "warning");
+                    }
+                },
+                error: function(){
+                    alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+                }
+            });
+        });
     $("#form_NEODATA").submit( function(e) {
         $('#dispersar').prop('disabled', true);
         document.getElementById('dispersar').disabled = true;
