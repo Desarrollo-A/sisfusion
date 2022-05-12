@@ -105,11 +105,34 @@ class Postventa extends CI_Controller
     public function getClient()
     {
         $idLote = $this->input->post("idLote");
-        $data = $this->Postventa_model->getClient($idLote)->row();
-        if ($data != null)
-            echo json_encode($data);
-        else
-            echo json_encode(array());
+        $data = $this->Postventa_model->getEmpRef($idLote)->result_array();
+        
+        $data = $this->Postventa_model->getProyectos()->result_array();
+        if ($data != null){
+            $url = 'https://prueba.gphsis.com/backCobranza/index.php/PaginaCDM/getDatos_clientePV';
+
+            $datos = base64_encode(json_encode(array(
+                "referencia" => $datos[0]['referencia'],
+                "empresa" => $datos[0]['empresa']
+            )));
+            
+            $opciones = array(
+                "http" => array(
+                    "header" => "Content-type: application/x-www-form-urlencoded\r\n",
+                    "method" => "POST",
+                    "content" => $datos, # Agregar el contenido definido antes
+                ),
+            );
+            # Preparar petición
+            $contexto = stream_context_create($opciones);
+            # Hacerla
+            $resultado = file_get_contents($url, false, $contexto);
+            if (base64_decode($resultado != 'false')) {
+                echo json_encode($resultado);
+            } else {
+                echo json_encode(array());
+            }
+        }
     }
 
     public function printChecklist($data)

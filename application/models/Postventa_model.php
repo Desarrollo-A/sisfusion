@@ -40,6 +40,14 @@ class Postventa_model extends CI_Model
         WHERE l.idLote = $idLote");
     }
 
+    function getEmpRef($idLote){
+        return $this->db->query("SELECT l.referencia, r.empresa
+        FROM lotes l
+        INNER JOIN condominios c ON c.idCondominio = l.idCondominio
+        INNER JOIN residenciales r ON r.idResidencial = c.idResidencial
+        WHERE l.idLote = $idLote");
+    }
+
     function setEscrituracion($idLote, $idCliente)
     {
         $idUsuario = $this->session->userdata('id_usuario');
