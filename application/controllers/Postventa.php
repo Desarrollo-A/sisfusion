@@ -896,7 +896,8 @@ class Postventa extends CI_Controller
             "cliente_anterior" =>($data['cliente'] == 'default' || $data['cliente'] == null ? 2 : $data['cliente'] == 'uno') ? 1 : 2,
             "nombre_anterior" => $data['nombreT'] == '' || $data['nombreT'] == null || $data['nombreT'] == 'null' ? '' : $data['nombreT'],
             "fecha_anterior" => ($data['fechaCA'] == '' || $data['fechaCA'] == null) ? null : date("Y-m-d", strtotime($data['fechaCA'])),
-            "RFC" => $data['rfcDatos'] == '' || $data['rfcDatos'] == 'N/A' ? null : $data['rfcDatos']
+            "RFC" => $data['rfcDatos'] == '' || $data['rfcDatos'] == 'N/A' ? null : $data['rfcDatos'],
+            "tipo_escritura" => $data['tipoE']
         );
 
         $data = $this->Postventa_model->updatePresupuesto($updateData, $id_solicitud);
@@ -1254,6 +1255,10 @@ class Postventa extends CI_Controller
                                                 <td style="font-size: 1em;">
                                                     <b>Nombre a quien escritura:</b><br>
                                                     ' . $data->nombre_escrituras . '
+                                                </td>
+                                                <td style="font-size: 1em;">
+                                                    <b>Nombre a quien escritura:</b><br>
+                                                    ' . $data->tipoEscritura . '
                                                 </td>
                                                 <td style="font-size: 1em;">
                                                     <b>Estatus de pago:</b><br>
@@ -1643,5 +1648,14 @@ class Postventa extends CI_Controller
             echo json_encode($data);
         else
             echo json_encode(array());    
+    }
+
+    public function getTipoEscrituracion()
+    {
+        $data = $this->Postventa_model->getTipoEscrituracion();
+        if ($data != null)
+            echo json_encode($data);
+        else
+            echo json_encode(array());
     }
 }

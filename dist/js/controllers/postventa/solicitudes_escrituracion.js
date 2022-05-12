@@ -1035,6 +1035,7 @@ function getNotarias() {
     function getBudgetInfo(idSolicitud){
         $('#spiner-loader').removeClass('hide');
         getEstatusPago();
+        getTipoEscrituracion();
         $.post('getBudgetInfo',{
             idSolicitud:idSolicitud
         }, function(data) {
@@ -1054,6 +1055,8 @@ function getNotarias() {
             $('#fechaCA').val(data.fecha_anterior);
             $('#rfcDatos').val(data.RFC);
             $("#encabezado").html(`${data.nombreResidencial} / ${data.nombreCondominio} / ${data.nombreLote}`);
+            $('#tipoE').val(data.tipo_escritura).trigger('change');
+            $("#tipoE").selectpicker('refresh');
             $('#spiner-loader').addClass('hide');
     }, 'json');
 }
@@ -1618,4 +1621,23 @@ function getEstatusEscrituracion(){
     //     $("#estatusE").selectpicker('refresh');
     //     $('#spiner-loader').addClass('hide');
     // }, 'json');
+}
+
+function getTipoEscrituracion() {
+    $('#spiner-loader').removeClass('hide');
+    $("#tipoE").find("option").remove();
+    $("#tipoE").append($('<option disabled selected>').val("0").text("Seleccione una opción"));
+    $.post('getTipoEscrituracion', function(data) {
+        var len = data.length;
+        for (var i = 0; i < len; i++) {
+            var id = data[i]['id_opcion'];
+            var name = data[i]['nombre'];
+            $("#tipoE").append($('<option>').val(id).text(name));
+        }
+        if (len <= 0) {
+            $("#tipoE").append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
+        }
+        $("#tipoE").selectpicker('refresh');
+        $('#spiner-loader').addClass('hide');
+    }, 'json');
 }
