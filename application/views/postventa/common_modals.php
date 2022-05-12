@@ -114,6 +114,15 @@
                                     <input id="nombrePresupuesto2" name="nombrePresupuesto2" class="form-control input-gral" type="text" required>
                                 </div>
                             </div>
+                            <div class="col-md-12 pr-0">
+                                <div class="form-group text-left m-0">
+                                    <label class="control-label label-gral m-0">Tipo de escrituracion *</label>
+                                    <select class="selectpicker m-0" data-style="btn btn-primary btn-round"
+                                            title="Tipo de escrituracion" data-size="7" id="tipoE" name="tipoE"
+                                            data-live-search="true" required>
+                                    </select>
+                                </div>
+                            </div>
                             <div class="col-md-4 pr-0">
                                 <div class="form-group text-left m-0">
                                     <label class="control-label label-gral m-0">Estatus de pago *</label>

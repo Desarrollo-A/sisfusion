@@ -292,7 +292,7 @@ class Postventa_model extends CI_Model
 
     function getBudgetInfo($idSolicitud){
         return $this->db->query("SELECT se.*, CONCAT(c.nombre, ' ', c.apellido_paterno, ' ', c.apellido_materno) nombre, hl.modificado,
-        cond.nombre nombreCondominio, r.nombreResidencial, l.nombreLote, oxc2.nombre nombreConst, oxc.nombre nombrePago FROM solicitud_escrituracion se 
+        cond.nombre nombreCondominio, r.nombreResidencial, l.nombreLote, oxc2.nombre nombreConst, oxc.nombre nombrePago, oxc3.nombre tipoEscritura FROM solicitud_escrituracion se 
         INNER JOIN clientes c ON c.id_cliente = se.idCliente
         INNER JOIN (SELECT idLote, MAX(modificado) modificado FROM historial_lotes WHERE idStatusContratacion = 15 AND idMovimiento = 45 GROUP BY idLote) hl ON hl.idLote=se.idLote
         INNER JOIN lotes l ON se.idLote = l.idLote 
@@ -300,6 +300,7 @@ class Postventa_model extends CI_Model
         INNER JOIN residenciales r ON r.idResidencial = cond.idResidencial
 		LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = se.estatus_pago AND oxc.id_catalogo = 63
 		LEFT JOIN opcs_x_cats oxc2 ON oxc2.id_opcion = se.estatus_construccion AND oxc2.id_catalogo = 62
+        LEFT JOIN opcs_x_cats oxc3 ON oxc3.id_opcion = se.tipo_escritura AND oxc3.id_catalogo = 70
         WHERE se.idSolicitud = $idSolicitud");
     }
 
@@ -322,7 +323,7 @@ class Postventa_model extends CI_Model
 
 function checkBudgetInfo($idSolicitud){
         return $this->db->query("SELECT se.*, CONCAT(c.nombre, ' ', c.apellido_paterno, ' ', c.apellido_materno) nombre, hl.modificado, l.nombreLote, 
-        cond.nombre nombreCond, r.nombreResidencial, n.correo correoN, v.correo correoV, oxc2.nombre nombreConst, oxc.nombre nombrePago
+        cond.nombre nombreCond, r.nombreResidencial, n.correo correoN, v.correo correoV, oxc2.nombre nombreConst, oxc.nombre nombrePago, oxc3.nombre tipoEscritura
                 FROM solicitud_escrituracion se 
                 INNER JOIN clientes c ON c.id_cliente = se.idCliente
                 INNER JOIN (SELECT idLote, MAX(modificado) modificado FROM historial_lotes WHERE idStatusContratacion = 15 AND idMovimiento = 45 GROUP BY idLote) hl ON hl.idLote=se.idLote
@@ -333,6 +334,7 @@ function checkBudgetInfo($idSolicitud){
                 LEFT JOIN Valuadores v ON v.idValuador = se.idValuador
                 LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = se.estatus_pago AND oxc.id_catalogo = 63
 		        LEFT JOIN opcs_x_cats oxc2 ON oxc2.id_opcion = se.estatus_construccion AND oxc2.id_catalogo = 62
+                LEFT JOIN opcs_x_cats oxc3 ON oxc3.id_opcion = se.tipo_escritura AND oxc3.id_catalogo = 70
                 WHERE se.idSolicitud =$idSolicitud");
     }
 
@@ -524,6 +526,12 @@ function checkBudgetInfo($idSolicitud){
 		l.nombreLote,cond.nombre, r.nombreResidencial,
         CONCAT(c.nombre, ' ', c.apellido_paterno, ' ', c.apellido_materno), oxc.nombre, oxc2.nombre, cp.tiempo
 		,cee.fecha_creacion, ce.fecha_creacion");
+        return $query->result_array();
+    }
+
+    function getTipoEscrituracion()
+    {
+        $query = $this->db->query("SELECT * FROM opcs_x_cats WHERE id_catalogo = 70");
         return $query->result_array();
     }
     
