@@ -119,6 +119,10 @@
                     border-radius: 27px!important;
                     background-image: none!important;
                     padding-left: 20px;
+                    &:disabled{
+                        cursor: not-allowed;
+                        border: none;
+                    }
                 }
                 .label-gral{
                     left: 10px;
