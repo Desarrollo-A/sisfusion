@@ -1,5 +1,5 @@
-  var CLIENT_ID = '267709590113-v4i5keof8q5gb07c85kbcl0in9tjuq1u.apps.googleusercontent.com';
-  var API_KEY = 'AIzaSyCT-w9W-QZ6mEex9OUzmlKK9Z_Q5VVwBP0';
+  var CLIENT_ID = '20777256148-vn24jag8p6gg898hu4ncoabsqc3galup.apps.googleusercontent.com';
+  var API_KEY = 'AIzaSyCG2ig3Dj3XGIvTpcRCiT10hQ8jdEVxANg';
 
   // Array of API discovery doc URLs for APIs used by the quickstart
   var DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest"];
@@ -107,6 +107,7 @@
   }
   
   function removeEvents(){
+    let srcEventos;
     if (typeof(sideCalendar) != 'undefined') srcEventos = sideCalendar.getEventSources();
     if (typeof(calendar) != 'undefined') srcEventos = calendar.getEventSources();
   

@@ -73,7 +73,70 @@
                 </div>
             </div>
         </div>
+        <div class="modal fade modal-alertas"
+             id="detenciones-modal"
+             role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header bg-red">
+                        <button type="button"
+                                class="close"
+                                data-dismiss="modal"
+                                aria-hidden="true">
+                            <i class="material-icons">clear</i>
+                        </button>
+                    </div>
 
+                    <form method="post"
+                          class="row"
+                          id="detenidos-form"
+                          autocomplete="off">
+                        <div class="modal-body">
+                            <input type="hidden"
+                                   name="id_pagoc"
+                                   id="id-lote-detenido">
+
+                            <div class="col-lg-12">
+                                <div class="form-group is-empty">
+                                    <label for="motivo" class="control-label label-gral">Motivo</label>
+                                    <input id="motivo"
+                                           name="motivo"
+                                           type="text"
+                                           class="form-control input-gral"
+                                           placeholder="Escriba un motivo corto..."
+                                           minlength="3"
+                                           maxlength="50"
+                                           required />
+                                </div>
+                            </div>
+
+                            <div class="col-lg-12">
+                                <div class="form-group label-floating">
+                                    <textarea class="form-control"
+                                              name="descripcion"
+                                              rows="3"
+                                              placeholder="Escriba la descripción de la controversia..."
+                                              required></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="submit"
+                                    class="btn btn-primary">
+                                Aceptar
+                            </button>
+                            <button type="button"
+                                    class="btn btn-danger btn-simple"
+                                    data-dismiss="modal">
+                                Cancelar
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <!-- END Modals -->
         <div class="modal fade modal-alertas" id="modal_pagadas" role="dialog">
             <div class="modal-dialog modal-md">
                 <div class="modal-content">
@@ -114,6 +177,52 @@
                 </div>
             </div>
         </div>
+
+        <div class="modal fade" id="detalle-plan-modal" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button"
+                                class="close"
+                                data-dismiss="modal"
+                                aria-hidden="true">
+                            <i class="material-icons">clear</i>
+                        </button>
+                        <h4 class="modal-title" id="title-plan"></h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-lg-12" id="planes-div">
+                                <div class="form-group">
+                                    <select class="selectpicker select-gral"
+                                            id="planes"
+                                            name="planes"
+                                            data-style="btn"
+                                            required>
+                                    </select>
+                                </div>
+                            </div>
+                            <div id="detalle-tabla-div"
+                                 class="col-lg-12">
+                                <table class="table table-bordered"
+                                       id="plan-detalle-tabla">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">PUESTO</th>
+                                            <th scope="col">COMISIÓN</th>
+                                            <th scope="col">NEODATA</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="plan-detalle-tabla-tbody">
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer"></div>
+                </div>
+            </div>
+        </div>
         <!-- END Modals -->
 
         <div class="content boxContent">
@@ -145,7 +254,7 @@
                                                     </p>
                                                 </div>
                                             </div>
-                                            <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
+                                            <div class="col-xs-12 col-sm-12 col-md-3 col-lg-2">
                                                 <div class="form-group text-center">
                                                     <h4 class="title-tot center-align m-0">Pagos hoy: </h4>
                                                     <p class="category input-tot pl-1" id="pagos_label">
@@ -157,7 +266,7 @@
                                                     </p>
                                                 </div>
                                             </div>
-                                            <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
+                                            <div class="col-xs-12 col-sm-12 col-md-3 col-lg-2">
                                                 <div class="form-group text-center">
                                                     <h4 class="title-tot center-align m-0">Lotes hoy: </h4>
                                                     <p class="category input-tot pl-1" id="lotes_label">
@@ -170,7 +279,14 @@
                                                 </div>
                                             </div>
                                             <div class="col-xs-12 col-sm-12 col-md-2 col-lg-2 d-flex align-end text-center">
-                                                <a data-target="#myModal" data-toggle="modal" class="btn-gral-data" id="MainNavHelp" href="#myModal" style="color:white"> Más detalle</a>
+                                                <a data-target="#myModal" data-toggle="modal" class="btn-gral-data" id="MainNavHelp" href="#myModal" style="color:white"> Reporte dispersión</a>
+                                            </div>
+                                            <div class="col-xs-12 col-sm-12 col-md-2 col-lg-2 d-flex align-end text-center">
+                                                <button class="btn-gral-data"
+                                                   id="btn-detalle-plan"
+                                                   style="color:white; ">
+                                                    Planes
+                                                </button>
                                             </div>
                                         </div>
                                     </div>
@@ -239,6 +355,84 @@
     var getInfo1 = new Array(6);
     var getInfo3 = new Array(6);
 
+    function showDetailModal(idPlan) {
+        $('#planes-div').hide();
+        $.ajax({
+            url: `${url}Comisiones/findPlanDetailById/${idPlan}`,
+            type: 'GET',
+            dataType: 'json',
+            success: function (data) {
+                $('#plan-detalle-tabla-tbody').empty();
+                $('#title-plan').text(`Plan: ${data.descripcion}`);
+                $('#detalle-plan-modal').modal();
+                $('#detalle-tabla-div').hide();
+
+                const roles = data.comisiones;
+                roles.forEach(rol => {
+                    if (rol.puesto !== null && (rol.com > 0 && rol.neo > 0)) {
+                        $('#plan-detalle-tabla tbody').append('<tr>');
+                        $('#plan-detalle-tabla tbody').append(`<td>${rol.puesto}</td>`);
+                        $('#plan-detalle-tabla tbody').append(`<td>${convertirPorcentajes(rol.com)} %</td>`);
+                        $('#plan-detalle-tabla tbody').append(`<td>${convertirPorcentajes(rol.neo)} %</td>`);
+                        $('#plan-detalle-tabla tbody').append('</tr>');
+                    }
+                });
+                $('#detalle-tabla-div').show();
+            }
+        });
+    }
+
+    $('#btn-detalle-plan').on('click', function () {
+        $('#planes-div').show();
+        $('#planes').empty().selectpicker('refresh');
+
+        $('#planes').append($('<option>').val(0).text('SELECCIONA UNA OPCIÓN')).selectpicker('refresh');
+
+        $.ajax({
+            url: `${url}Comisiones/findAllPlanes`,
+            type: 'GET',
+            dataType: 'json',
+            success: function (data) {
+                for (let i = 0; i < data.length; i++) {
+                    const id = data[i].id_plan;
+                    const name = data[i].descripcion.toUpperCase();
+                    $('#planes').append($('<option>').val(id).text(name));
+                }
+
+                $('#title-plan').text('Planes de comisión');
+                $('#planes').selectpicker('refresh');
+                $('#detalle-plan-modal').modal();
+                $('#detalle-tabla-div').hide();
+            }
+        });
+    });
+
+    $('#planes').change(function () {
+        const idPlan = $(this).val();
+        if (idPlan !== '0') {
+            $.ajax({
+                url: `${url}Comisiones/findPlanDetailById/${idPlan}`,
+                type: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    $('#plan-detalle-tabla-tbody').empty();
+                    const roles = data.comisiones;
+                    roles.forEach(rol => {
+                        if (rol.puesto !== null && (rol.com > 0 && rol.neo > 0)) {
+                            $('#plan-detalle-tabla tbody').append('<tr>');
+                            $('#plan-detalle-tabla tbody').append(`<td>${rol.puesto}</td>`);
+                            $('#plan-detalle-tabla tbody').append(`<td>${convertirPorcentajes(rol.com)} %</td>`);
+                            $('#plan-detalle-tabla tbody').append(`<td>${convertirPorcentajes(rol.neo)} %</td>`);
+                            $('#plan-detalle-tabla tbody').append('</tr>');
+                        }
+                    });
+                    $('#detalle-tabla-div').show();
+                }
+            });
+        } else {
+            $('#detalle-tabla-div').hide();
+        }
+    });
 
     $("#tabla_ingresar_9").ready( function(){
         let titulos = [];
@@ -386,7 +580,7 @@
                     } else if(d.registro_comision == 2){
                         lblStats ='<span class="label" style="background:#11DFC6;">SOLICITADO MKT</span>'+' '+d.plan_descripcion;
                     }else{
-                        lblStats = d.plan_descripcion;
+                        lblStats = `<span onclick="showDetailModal(${d.plan_comision})" style="cursor: pointer;">${d.plan_descripcion}</span>`;
                     }
                     return lblStats;
                 }
@@ -436,6 +630,15 @@
                         }
                         
                         BtnStats = '<button href="#" value="'+data.idLote+'" data-value="'+data.registro_comision+'" data-totalNeto2 = "'+data.totalNeto2+'" data-estatus="'+data.idStatusContratacion+'" data-cliente="'+data.id_cliente+'" data-plan="'+data.plan_comision+'"  data-tipov="'+data.tipo_venta+'"data-descplan="'+data.plan_descripcion+'" data-code="'+data.cbbtton+'" ' +'class="btn-data '+varColor+' verify_neodata" title="Verificar en NEODATA">'+'<span class="material-icons">verified_user</span></button> '+RegresaActiva+'';
+                        BtnStats += `
+                                <button href="#"
+                                    value="${data.idLote}"
+                                    data-value="${data.nombreLote}"
+                                    class="btn-data btn-blueMaderas btn-detener btn-warning"
+                                    title="Detener">
+                                    <i class="material-icons">block</i>
+                                </button>
+                            `;
                     }
                     return '<div class="d-flex justify-center">'+BtnStats+'</div>';
                 }
@@ -478,6 +681,18 @@
                 $(this).parent().find('.animacion').removeClass("fas fa-chevron-down").addClass("fas fa-chevron-up");
             }
         });
+
+
+        $("#tabla_ingresar_9 tbody").on('click', '.btn-detener', function () {
+                const idLote = $(this).val();
+                const nombreLote = $(this).attr("data-value");
+                $('#id-lote-detenido').val(idLote);
+
+                $("#detenciones-modal .modal-header").html("");
+                $("#detenciones-modal .modal-header").append('<h4 class="modal-title">Motivo de controversia para <b>'+nombreLote+'</b></h4>');
+
+                $("#detenciones-modal").modal();
+            });
  
         $("#tabla_ingresar_9 tbody").on("click", ".verify_neodata", async function(){ 
  
@@ -759,7 +974,10 @@
                                                     }
                                                     console.log('SALDO'+saldo);
 
-                                                    if( (parseFloat(saldo) + parseFloat(v.abono_pagado)) > parseFloat(v.comision_total)){
+                                                    if( (parseFloat(saldo) + parseFloat(v.abono_pagado)) > (parseFloat(v.comision_total)+0.5 )){
+                                                        console.log((parseFloat(saldo) + parseFloat(v.abono_pagado)));
+                                                        console.log(parseFloat(v.comision_total));
+                                                        console.log('ENTRA AQUI AL CERO');
                                                             saldo = 0;
                                                         }
                                                     $("#modal_NEODATA .modal-body").append(`<div class="row">
@@ -820,6 +1038,31 @@
     
     });
 
+    $('#detenidos-form').on('submit', function (e) {
+            e.preventDefault();
+
+            $.ajax({
+                type: 'POST',
+                url: 'changeLoteToStopped',
+                data: new FormData(this),
+                contentType: false,
+                cache: false,
+                processData:false,
+                success: function (data) {
+                    if (data) {
+                        $('#detenciones-modal').modal("hide");
+                        $("#id-lote-detenido").val("");
+                        alerts.showNotification("top", "right", "El registro se ha actualizado exitosamente.", "success");
+                        tabla_1.ajax.reload();
+                    } else {
+                        alerts.showNotification("top", "right", "Ocurrió un problema, vuelva a intentarlo más tarde.", "warning");
+                    }
+                },
+                error: function(){
+                    alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+                }
+            });
+        });
     $("#form_NEODATA").submit( function(e) {
         $('#dispersar').prop('disabled', true);
         document.getElementById('dispersar').disabled = true;
@@ -1096,5 +1339,25 @@
   return number.toString().replace(exp,rep);
 }
 
+    function convertirPorcentajes(value) {
+        const fixed = Number(value).toFixed(3);
+        const partes = fixed.split(".");
+        const numeroEntero = partes[0];
+        const numeroDecimal = checkDecimal(partes[1]);
+        if (numeroDecimal === '') {
+            return `${numeroEntero}`;
+        }
+        return `${numeroEntero}.${numeroDecimal}`;
+    }
+
+    function checkDecimal(decimal) {
+        let str = '';
+        for (let i = 0; i < decimal.length; i++) {
+            if (decimal.charAt(i) !== '0') {
+                str += decimal.charAt(i);
+            }
+        }
+        return str;
+    }
     </script>
 </body>

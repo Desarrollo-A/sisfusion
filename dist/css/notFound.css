@@ -167,7 +167,7 @@
 }
 
 .w-100 {
-  width: 100%;
+  width: 100% !important;
 }
 
 .w-90 {
@@ -338,6 +338,10 @@
 
 .text-left {
   text-align: start !important;
+}
+
+.row-reverse {
+  flex-direction: row-reverse;
 }
 
 /* END Flexbox */
@@ -688,6 +692,11 @@
 .btn-details-grey:hover {
   background: #999999;
   color: #ffffff !important;
+}
+
+.btn-unstyled {
+  border: none !important;
+  background: none;
 }
 
 .lbl-gray {

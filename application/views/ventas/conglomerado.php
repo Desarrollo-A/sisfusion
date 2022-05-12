@@ -95,7 +95,6 @@
         </div>
     </div>
 
-
     <div class="modal fade" id="seeInformationModalDU" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
          aria-hidden="true" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog modal-md modal-dialog-scrollable" role="document">
@@ -234,7 +233,7 @@
                         <div class="col-md-12">
 
                             <label class="label">Mótivo de descuento</label>
-                            <textarea id="comentario" name="comentario" class="form-control" rows="3"
+                            <textarea id="comentario" name="comentario" class="form-control" rows="5"
                                       required></textarea>
 
                         </div>
@@ -742,7 +741,7 @@
     let titulos_liquidado = [];
 
     $('#tabla_descuentos_liquidados thead tr:eq(0) th').each(function (i) {
-        if (i != 0 && i!=12) {
+        if (i != 12) {
             var title_liq = $(this).text();
             titulos_liquidado.push(title_liq);
 
@@ -916,7 +915,7 @@
             {
                 "width": "8%",
                 "data": function (d) {
-                    if (d.status == 0 && d.estatus != 4) {
+                    if ((d.status == 0 ||d.status == 3)&& d.estatus != 4) {
                         return '<span class="label" style="background:red;">BAJA</span>';
                     }
                     else if (d.estatus == 4) {
@@ -1028,15 +1027,6 @@
                 },
             }
         ],
-        columnDefs: [
-            {
-
-                orderable: false,
-                className: 'select-checkbox',
-                targets: 0,
-                'searchable': false,
-                'className': 'dt-body-center'
-            }],
 
         "ajax": {
             "url": url2 + "Comisiones/getDescuentosLiquidados",
@@ -1100,7 +1090,7 @@
 
             } else {
                 $.each(data, function (i, v) {
-                    $("#comments-list-asimilados").append('<div class="col-lg-12"><p style="color:gray;font-size:1.1em;">SE DESCONTÓ LA CANTIDAD DE <b>$' + formatMoney(v.comentario) + '</b><br><b style="color:#3982C0;font-size:0.9em;">' + v.date_final + '</b><b style="color:#C6C6C6;font-size:0.9em;"> - ' + v.nombre_usuario + '</b></p></div>');
+                    $("#comments-list-asimilados").append('<div class="col-lg-12"><p style="color:gray;font-size:1.1em;">SE DESCONTÓ LA CANTIDAD DE <b>$' + formatMoney(v.comentario) +'<br>'+ v.comentario2 +'</b><br><b style="color:#3982C0;font-size:0.9em;">' + v.date_final + '</b><b style="color:#C6C6C6;font-size:0.9em;"> - ' + v.nombre_usuario + '</b></p></div>');
                 });
             }
         });
@@ -1387,7 +1377,7 @@
                 {
                     "width": "7%",
                     "data": function (d) {
-                        if (d.estatusDU === 5 || (d.estatusDU === 1 && d.pagos_activos === 0)) {
+                        if (d.estatusDU == 5 || (d.estatusDU == 1 && d.pagos_activos == 0)) {
                             return '<span class="label" style="background:blue;">REACTIVADO</span>';
                         } else if (d.status == 0) {
                             return '<span class="label" style="background:red;">BAJA</span>';
@@ -1520,7 +1510,7 @@
                 {
                     "width": "8%",
                     "data": function (d) {
-                        if (d.estatusDU === 0) {
+                        if (d.estatusDU == 0) {
                             return `
                                 <div class="d-flex justify-center">
                                     <button value="${d.id_usuario}"
@@ -1537,7 +1527,7 @@
                                     </button>
                                 </div>
                             `;
-                        } else if ((d.estatusDU === 1 || d.estatusDU === 5) && d.pagos_activos === 0) {
+                        } else if ((d.estatusDU == 1 || d.estatusDU == 5) && d.pagos_activos == 0) {
                             return `
                                 <div class="d-flex justify-center">
                                     <button value="${d.id_usuario}"
@@ -1654,7 +1644,6 @@
         });
     });
 
-
         $("#tabla_descuentos tbody").on("click", ".agregar_nuevo_descuento", function (e) {
             e.preventDefault();
             e.stopImmediatePropagation();
@@ -1706,7 +1695,7 @@
                     console.log('suma2 lote ' + sumaselected);
 
 
-                    $("#idloteorigen").append(`<option value='${comision},${comtotal.toFixed(2)},${pago_neodata}' selected="selected">${name}  -   $${formatMoney(comtotal.toFixed(2))}</option>`);
+                    $("#idloteorigen").append(`<option value='${comision},${comtotal.toFixed(2)},${pago_neodata},${name}' selected="selected">${name}  -   $${formatMoney(comtotal.toFixed(2))}</option>`);
                 }
 
                 $("#idmontodisponible").val('$' + formatMoney(sumaselected));
@@ -1833,7 +1822,7 @@
                     $("#comments-list-asimilados").append('<div class="col-lg-12"><p style="color:gray;font-size:1.1em;">SIN </p></div>');
                 } else {
                     $.each(data, function (i, v) {
-                        $("#comments-list-asimilados").append('<div class="col-lg-12"><p style="color:gray;font-size:1.1em;">SE DESCONTÓ LA CANTIDAD DE <b>$' + formatMoney(v.comentario) + '</b>'+saldo_comisiones+'<br><b style="color:#3982C0;font-size:0.9em;">' + v.date_final + '</b><b style="color:#C6C6C6;font-size:0.9em;"> - ' + v.nombre_usuario + '</b></p></div>');
+                        $("#comments-list-asimilados").append('<div class="col-lg-12"><p style="color:gray;font-size:1.1em;">SE DESCONTÓ LA CANTIDAD DE <b>$' + formatMoney(v.comentario) +'<br>' + v.comentario2 +'</b>'+saldo_comisiones+'<br><b style="color:#3982C0;font-size:0.9em;">' + v.date_final + '</b><b style="color:#C6C6C6;font-size:0.9em;"> - ' + v.nombre_usuario + '</b></p></div>');
                     });
                 }
             });
@@ -2496,11 +2485,24 @@
 
                             break;
                         }
-                        cadena = cadena + ' , ' + data[index].text;
+                       // cadena = cadena + ' , ' + data[index].text;
+
+                    console.log(data[index].text);
+                    if(cuantos == 1){
+                        let datosLote = data[index].text.split('-   $');
+                        let nameLote = datosLote[0]
+                        let montoLote = datosLote[1];
+                        cadena =  'DESCUENTO UNIVERSIDAD MADERAS \n LOTE INVOLUCRADO: '+nameLote+',  MONTO DISPONIBLE: $'+montoLote+'.\n DESCUENTO DE: $'+formatMoney(monto)+', RESTANTE:$'+formatMoney(parseFloat(abono_neo) - parseFloat(monto));
+                    }else{
+                        cadena = 'DESCUENTO UNIVERSIDAD MADERAS';
+                    }
+
                         document.getElementById('msj2').innerHTML = '';
 
                     }
-                    $('#comentario').val('Lotes involucrados en el descuento(universidad): ' + cadena + '. Por la cantidad de: $' + formatMoney(monto));
+                    $('#comentario').val(cadena);
+
+                  //  $('#comentario').val('Lotes involucrados en el descuento(universidad): ' + cadena + '. Por la cantidad de: $' + formatMoney(monto));
 
                     // console.log(cadena);
                 }
@@ -3383,7 +3385,7 @@
                 titleAttr: 'DESCUENTOS UNIVERSIDAD ',
                 title: 'DESCUENTOS UNIVERSIDAD ',
                 exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10,11],
+                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10,11,12],
                     format: {
                         header: function (d, columnIdx) {
                             switch (columnIdx) {
@@ -3399,29 +3401,32 @@
                                     return 'SEDE';
                                     break;
                                 case 4:
-                                    return 'DESCUENTO';
+                                    return 'SALDO COMISIÓN';
                                     break;
                                 case 5:
-                                    return 'APLICADO';
+                                    return 'DESCUENTO';
                                     break;
                                 case 6:
-                                    return 'PENDIENTE GRAL.';
+                                    return 'APLICADO';
                                     break;
                                 case 7:
-                                    return 'PAGO MENSUAL';
+                                    return 'PENDIENTE GRAL.';
                                     break;
                                 case 8:
-                                    return 'ESTATUS';
+                                    return 'PAGO MENSUAL';
                                     break;
                                 case 9:
-                                    return 'PENDIENTE MES';
+                                    return 'ESTATUS';
                                     break;
                                 case 10:
-                                    return 'DISPONIBLE DESC';
+                                    return 'PENDIENTE MES';
                                     break;
                                 case 11:
-                                    return 'FECHA CREACIÓN';
+                                    return 'DISPONIBLE DESCUENTO';
                                     break;
+                                case 12:
+                                return 'FECHA CREACIÓN';
+                                break;
                             }
                         }
                     }
@@ -3534,8 +3539,8 @@
             {
                 "width": "8%",
                 "data": function (d) {
-                    if (d.estatusDU === 5 || (d.estatusDU === 1 && d.pagos_activos === 0)) {
-                        return '<span class="label" style="background: blue;">REACTIVADA</span>';
+                    if (d.estatusDU == 5 || (d.estatusDU == 1 && d.pagos_activos == 0)) {
+                        return '<span class="label" style="background:blue;">REACTIVADO</span>';
                     } else if(d.queryType == 2){
                         if (d.status == 0 && d.estatus != 4) {
                             return '<span class="label" style="background:red;">BAJA</span>';
@@ -3752,26 +3757,24 @@
             {
                 "width": "8%",
                 "data": function (d) {
-                    if (d.estatusDU === 0) {
+                    if (d.estatusDU == 0) {
                         return `
-                            <div class="d-flex justify-center">
-                                <button value="${d.id_usuario}"
-                                    data-value="${d.nombre}"
-                                    data-code="${d.id_usuario}"
-                                    class="btn-data btn-blueMaderas consultar_logs_asimilados"
-                                    title="Detalles">
-                                        <i class="fas fa-info-circle"></i>
-                                </button>
-                                <button value="${d.id_usuario}"
-                                    data-value="${d.nombre}"
-                                    data-code="${d.id_usuario}"
-                                    class="btn-data btn-blueMaderas consultar_logs_asimilados"
-                                    title="Detalles">
-                                        <span class="fas fa-info-circle"></span>
-                                </button>
-                            </div>
-                        `;
-                    } else if ((d.estatusDU === 1 || d.estatusDU === 5) && d.pagos_activos === 0) {
+                                <div class="d-flex justify-center">
+                                    <button value="${d.id_usuario}"
+                                        data-value="${d.nombre}"
+                                        data-code="${d.id_usuario}"
+                                        class="btn-data btn-blueMaderas consultar_logs_asimilados"
+                                        title="Detalles">
+                                            <i class="fas fa-info-circle"></i>
+                                    </button>
+                                    <button value="${d.id_usuario}"
+                                        class="btn-data btn-violetDeep activar-prestamo"
+                                        title="Activar">
+                                        <i class="fa fa-rotate-left"></i>
+                                    </button>
+                                </div>
+                            `;
+                    } else if ((d.estatusDU == 1 || d.estatusDU == 5) && d.pagos_activos == 0) {
                         return `
                                 <div class="d-flex justify-center">
                                     <button value="${d.id_usuario}"
@@ -3784,6 +3787,8 @@
                                 </div>
                             `;
                     }
+
+
 
                     let tipo_descuento = d.queryType;
                     if(tipo_descuento == 2){
@@ -3855,16 +3860,6 @@
                 },
             }
         ],
-        columnDefs: [
-            {
-
-                orderable: false,
-                className: 'select-checkbox',
-                targets: 0,
-                'searchable': false,
-                'className': 'dt-body-center'
-            }],
-
         "ajax": {
             "url": url2 + "Comisiones/fusionAcLi",
             /*registroCliente/getregistrosClientes*/
@@ -3893,7 +3888,7 @@
 
             } else {
                 $.each(data, function (i, v) {
-                    $("#comments-list-asimilados").append('<div class="col-lg-12"><p style="color:gray;font-size:1.1em;">SE DESCONTÓ LA CANTIDAD DE <b>$' + formatMoney(v.comentario) + '</b><br><b style="color:#3982C0;font-size:0.9em;">' + v.date_final + '</b><b style="color:#C6C6C6;font-size:0.9em;"> - ' + v.nombre_usuario + '</b></p></div>');
+                    $("#comments-list-asimilados").append('<div class="col-lg-12"><p style="color:gray;font-size:1.1em;">SE DESCONTÓ LA CANTIDAD DE <b>$' + formatMoney(v.comentario) + '<br>' + v.comentario2 + '</b><br><b style="color:#3982C0;font-size:0.9em;">' + v.date_final + '</b><b style="color:#C6C6C6;font-size:0.9em;"> - ' + v.nombre_usuario + '</b></p></div>');
                 });
             }
         });

@@ -167,7 +167,7 @@
 }
 
 .w-100 {
-  width: 100%;
+  width: 100% !important;
 }
 
 .w-90 {
@@ -338,6 +338,10 @@
 
 .text-left {
   text-align: start !important;
+}
+
+.row-reverse {
+  flex-direction: row-reverse;
 }
 
 /* END Flexbox */
@@ -690,6 +694,11 @@
   color: #ffffff !important;
 }
 
+.btn-unstyled {
+  border: none !important;
+  background: none;
+}
+
 .lbl-gray {
   background-color: #4e4e4e;
   color: #ffffff;
@@ -983,7 +992,7 @@
 }
 
 .boxContent .nav-tabs-cm li > a {
-  color: #353535 !important;
+  color: #F1F1F1 !important;
   padding: 5px 60px;
   border-radius: 20px 20px 0 0;
   background-color: #96843D;

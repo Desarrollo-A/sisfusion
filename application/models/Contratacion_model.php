@@ -426,6 +426,4 @@ class Contratacion_model extends CI_Model {
                                 LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = cl.lugar_prospeccion AND oxc.id_catalogo = 9
                                 WHERE lot.status = 1 and lot.idLote = $idLote ORDER BY lot.idLote");
      }
-    
-
 }

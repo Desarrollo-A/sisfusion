@@ -123,10 +123,11 @@
                                     <thead>
                                     <tr>
                                         <th>ID</th>
-                                        <th>TOKEN</th>
                                         <th>GENERADO PARA</th>
                                         <th>FECHA ALTA</th>
                                         <th>CREADO POR</th>
+                                        <th>ESTATUS</th>
+                                        <th>ACCIONES</th>
                                     </tr>
                                     </thead>
                                 </table>
@@ -157,6 +158,7 @@
 
 <script>
     let id_gerente = "<?=$this->session->userdata('id_usuario')?>";
+    let current_rol_user = "<?=$this->session->userdata('id_rol')?>";
     $(document).ready(function () {
         fillTokensTable();
         getAsesoresList();

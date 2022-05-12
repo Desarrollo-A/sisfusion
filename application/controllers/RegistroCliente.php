@@ -1380,14 +1380,6 @@
             // PHPMailer object
             $mail = $this->phpmailer_lib->load();
 
-            // SMTP configuration
-            // $mail->isSMTP();
-            // $mail->Host     = 'smtp.gmail.com';
-            // $mail->SMTPAuth = true;
-            // $mail->Username = 'no-reply@ciudadmaderas.com';
-            // $mail->Password = 'Va7<*V8PP';
-            // $mail->SMTPSecure = 'ssl';
-            // $mail->Port     = 465;
 
             $mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
             //$mail->AddAddress('programador.analista1@ciudadmaderas.com');
@@ -7121,14 +7113,7 @@
 			$attachment= $pdf->Output(utf8_decode($namePDF), 'S');
 			// PHPMailer object
 			$mail = $this->phpmailer_lib->load();
-			// SMTP configuration
-			// $mail->isSMTP();
-			// $mail->Host     = 'smtp.gmail.com';
-			// $mail->SMTPAuth = true;
-			// $mail->Username = 'no-reply@ciudadmaderas.com';
-			// $mail->Password = 'Va7<*V8PP';
-			// $mail->SMTPSecure = 'ssl';
-			// $mail->Port     = 465;
+
 			$mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
 			$mail->AddAddress('programador.analista1@ciudadmaderas.com');
 			// Email subject
@@ -7616,13 +7601,7 @@
         $dataUser = $this->Asesor_model->getInfoUserById($idAut);
         $correoDir = $dataUser[0]->correo;/*linea de codigo para produccion*/
 		$mail = $this->phpmailer_lib->load();
-		// $mail->isSMTP();
-		// $mail->Host     = 'smtp.gmail.com';
-		// $mail->SMTPAuth = true;
-		// $mail->Username = 'no-reply@ciudadmaderas.com';
-		// $mail->Password = 'Va7<*V8PP';
-		// $mail->SMTPSecure = 'ssl';
-		// $mail->Port     = 465;
+
 		$mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
 		$mail->addAddress($correoDir);
 
@@ -7928,13 +7907,7 @@
 		$correoDir = $dataUser[0]->correo;/*linea de codigo para produccion*/
 
 		$mail = $this->phpmailer_lib->load();
-		// $mail->isSMTP();
-		// $mail->Host     = 'smtp.gmail.com';
-		// $mail->SMTPAuth = true;
-		// $mail->Username = 'no-reply@ciudadmaderas.com';
-		// $mail->Password = 'Va7<*V8PP';
-		// $mail->SMTPSecure = 'ssl';
-		// $mail->Port     = 465;
+
 		$mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
 		$mail->addAddress($correoDir);/*$correoDir*/
 		$mail->Subject = utf8_decode('SOLICITUD DE AUTORIZACIÓN-CONTRATACIÓN');
@@ -8344,13 +8317,7 @@
             if ($validaMail->idHistorialLote != NULL) {
                 $infoLote = $this->registrolote_modelo->getNameLote($nombreExp->idLote);
                 $mail = $this->phpmailer_lib->load();
-                // $mail->isSMTP();
-                // $mail->Host = 'smtp.gmail.com';
-                // $mail->SMTPAuth = true;
-                // $mail->Username = 'no-reply@ciudadmaderas.com';
-                // $mail->Password = 'Va7<*V8PP';
-                // $mail->SMTPSecure = 'ssl';
-                // $mail->Port = 465;
+         
                 $mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
                 $mail->AddAddress('coord.administrativoslp@ciudadmaderas.com');
                 $mail->AddAddress('coord.administrativo@ciudadmaderas.com');
