@@ -741,7 +741,7 @@
     let titulos_liquidado = [];
 
     $('#tabla_descuentos_liquidados thead tr:eq(0) th').each(function (i) {
-        if (i != 0 && i!=12) {
+        if (i != 12) {
             var title_liq = $(this).text();
             titulos_liquidado.push(title_liq);
 
@@ -1027,15 +1027,6 @@
                 },
             }
         ],
-        columnDefs: [
-            {
-
-                orderable: false,
-                className: 'select-checkbox',
-                targets: 0,
-                'searchable': false,
-                'className': 'dt-body-center'
-            }],
 
         "ajax": {
             "url": url2 + "Comisiones/getDescuentosLiquidados",
@@ -3869,16 +3860,6 @@
                 },
             }
         ],
-        columnDefs: [
-            {
-
-                orderable: false,
-                className: 'select-checkbox',
-                targets: 0,
-                'searchable': false,
-                'className': 'dt-body-center'
-            }],
-
         "ajax": {
             "url": url2 + "Comisiones/fusionAcLi",
             /*registroCliente/getregistrosClientes*/
