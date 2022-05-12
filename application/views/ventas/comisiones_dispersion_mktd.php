@@ -1,6 +1,13 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
 <link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet"/>
+<link href="<?= base_url() ?>dist/css/commonModals.css" rel="stylesheet"/>
 <body>
+    <style>
+        #modal_mktd .bootstrap-select{
+            margin: 0!important;
+            background:none!important;
+        }
+    </style>
     <div class="wrapper">
         <?php
         if($this->session->userdata('id_rol')=="18"){
@@ -60,71 +67,6 @@
                 </div>
             </div>
         </div>
-
-        <!--<div class="modal fade modal-alertas" id="modalParcialidad" role="dialog">
-            <div class="modal-dialog modal-sm">
-                <div class="modal-content">
-                    <div class="modal-header bg-red">
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        <h4 class="modal-title">SOLICITAR PARCIALIDAD DE PAGO</h4>
-                    </div>
-                    <form method="post" id="form_parcialidad">
-                        <div class="modal-body"></div>
-                    </form>
-                </div>
-            </div>
-        </div>-->
-    
-        <!--<div class="modal fade" id="seeInformationModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
-            <div class="modal-dialog modal-md modal-dialog-scrollable" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-                            <i class="material-icons" onclick="cleanComments()">clear</i>
-                        </button>
-                        <h4 class="modal-title">Consulta información</h4>
-                    </div>
-                    <div class="modal-body">
-                        <div role="tabpanel">-->
-                            <!-- Nav tabs -->
-                            <!--<ul class="nav nav-tabs" role="tablist" style="background: #003d82;">
-                                <li role="presentation" class="active"><a href="#documents" aria-controls="documents" role="tab" data-toggle="tab">Documentación</a></li>
-                                <li role="presentation"><a href="#facturaInfo" aria-controls="facturaInfo" role="tab" data-toggle="tab">Datos factura</a></li>
-                                <li role="presentation"><a href="#changelogTab" aria-controls="changelogTab" role="tab" data-toggle="tab">Bitácora de cambios</a></li>
-                            </ul>-->
-                            <!-- Tab panes -->
-                            <!--<div class="tab-content">
-                                <div role="tabpanel" class="tab-pane active documents" id="documents"></div>
-                                <div role="tabpanel" class="tab-pane facturaInfo" id="facturaInfo"></div>
-                                <div role="tabpanel" class="tab-pane changelogTab" id="changelogTab"></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" onclick="cleanComments()">Cerrar</button>
-                    </div>
-                </div>
-            </div>
-        </div>-->
-
-        <!--<div class="modal fade modal-alertas" id="modal_documentacion" role="dialog">
-            <div class="modal-dialog" style="width:800px; margin-top:20px">
-                <div class="modal-content">
-                    <div class="modal-body">
-                        <div class="row">
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>-->
-
-        <!--<div class="modal fade bd-example-modal-sm" id="myModalEnviadas" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-sm">
-                <div class="modal-content">
-                    <div class="modal-body"></div>
-                </div>
-            </div>
-        </div>-->
 
         <div class="modal fade modal-alertas" id="documento_preview" role="dialog">
             <div class="modal-dialog" style= "margin-top:20px;"></div>
@@ -1191,13 +1133,13 @@
                     $("#modal_mktd .modal-body").append('<div class="row">'
                     +'<div class="col-md-3"><br><input class="form-contol ng-invalid ng-invalid-required" style="border: 1px solid white; outline: none;" value="'+v.puesto+'"  readonly><input id="puesto" name="puesto[]" value="'+v.id_rol+'" type="hidden"></div>'
 
-                    +'<div class="col-md-3"><select id="userMKTDSelect'+i+'" name="userMKTDSelect[]" class="form-control userMKTDSelect ng-invalid ng-invalid-required" required data-live-search="true"></select></div>'
+                    +'<div class="col-md-3"><select id="userMKTDSelect'+i+'" name="userMKTDSelect[]" class="form-control userMKTDSelect select-gral" required data-live-search="true"></select></div>'
 
-                    +'<div class="col-md-2"><input id="porcentajeUserMk'+i+'" name="porcentajeUserMk[]" class="form-control porcentajeUserMk ng-invalid ng-invalid-required" required placeholder="%" value="0"></div>'
+                    +'<div class="col-md-2"><input id="porcentajeUserMk'+i+'" name="porcentajeUserMk[]" class="form-control porcentajeUserMk input-gral" required placeholder="%" value="0"></div>'
 
-                    +'<div class="col-md-2"><select id="plazaMKTDSelect'+i+'" name="plazaMKTDSelect[]" class="form-control plazaMKTDSelect ng-invalid ng-invalid-required"   data-live-search="true"></select></div>'
+                    +'<div class="col-md-2"><select id="plazaMKTDSelect'+i+'" name="plazaMKTDSelect[]" class="form-control plazaMKTDSelect select-gral" data-live-search="true"></select></div>'
 
-                    +'<div class="col-md-2"><select id="sedeMKTDSelect'+i+'" name="sedeMKTDSelect[]" class="form-control sedeMKTDSelect ng-invalid ng-invalid-required"   data-live-search="true"></select></div></div>');
+                    +'<div class="col-md-2"><select id="sedeMKTDSelect'+i+'" name="sedeMKTDSelect[]" class="form-control sedeMKTDSelect select-gral" data-live-search="true"></select></div></div>');
 
                     $.post('getUserMk', function(data) {
                         $("#userMKTDSelect"+i+"").append($('<option disabled>').val("default").text("Seleccione una opción"));

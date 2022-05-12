@@ -394,7 +394,7 @@
   background-color: #ffffff !important;
   border: 1px solid #f44336;
   border-radius: 27px;
-  margin: 0;
+  margin-bottom: 0;
 }
 
 .buttons-pdf:hover {

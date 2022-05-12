@@ -394,7 +394,7 @@
   background-color: #ffffff !important;
   border: 1px solid #f44336;
   border-radius: 27px;
-  margin: 0;
+  margin-bottom: 0;
 }
 
 .buttons-pdf:hover {
@@ -1117,6 +1117,11 @@
   border-radius: 27px !important;
   background-image: none !important;
   padding-left: 20px;
+}
+
+.boxContent .card .card-content .toolbar .input-gral:disabled {
+  cursor: not-allowed;
+  border: none;
 }
 
 .boxContent .card .card-content .toolbar .label-gral {
