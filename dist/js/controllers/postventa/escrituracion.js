@@ -28,12 +28,13 @@ $(document).on('click', '#email', function () {
     email();
 })
 
-$(document).on('click', '#aportaciones', function (e) {
+$(document).on('submit', '#formEscrituracion', function (e) {
     e.preventDefault();
     // loading();
     $('#aportaciones').prop('disabled', true);
     $('#aportaciones').css('background-color', 'gray');
-    aportaciones();
+    let formData = new FormData(this);
+    aportaciones(formData);
 })
 
 //Functions
@@ -48,24 +49,33 @@ function complete() {
     $('#spiner-loader').addClass('hide');
 }
 
-function aportaciones() {
+function aportaciones(data) {
     let idLote = $('#lotes').val();
     let idCliente = $('#idCliente').val();
+    let idPostventa = $('#idPostventa').val();
+    data.append('idLote', idLote);
+
     $('#spiner-loader').removeClass('hide');
-    $.post('aportaciones', {
-        idLote: idLote,
-        idCliente: idCliente
-    }, function (data) {
-        $('#spiner-loader').addClass('hide');
-        if(data == true){
-            alerts.showNotification("top", "right", "Se ha creado la solicitud correctamente.", "success");
-            $('#lotes').val('');
-            $("#lotes").selectpicker('refresh');
-            clearInputs();
-            getLotes($('#condominio').val());
+    $.ajax({
+        url: 'aportaciones',
+        data: data,
+        cache: false,
+        contentType: false,
+        processData: false,
+        type: 'POST',
+        dataType: 'json',
+        success: function (response) {
+            console.log(response);
+            $('#spiner-loader').addClass('hide');
+            if(response == true){
+                alerts.showNotification("top", "right", "Se ha creado la solicitud correctamente.", "success");
+                $('#lotes').val('');
+                $("#lotes").selectpicker('refresh');
+                clearInputs();
+                getLotes($('#condominio').val());
+            }
         }
-        // complete();
-    }, 'json');
+    });
 }
 
 function print() {
@@ -104,19 +114,22 @@ function getClient(idLote) {
     $.post('getClient', {
         idLote: idLote
     }, function (data) {
-        $('#nombre').val(data.nombre);
-        $('#nombre2').val(data.nombre);
-        $('#ocupacion').val(data.ocupacion);
-        $('#origen').val(data.nacionalidad);
-        $('#ecivil').val(data.estado_civil);
-        $('#rconyugal').val(data.regimen_matrimonial);
+        console.log(data);
+        $('#nombre').val(data.ncliente);
+        $('#nombre2').val(data.ncliente);
+        $('#ocupacion').val(data.ocupacion); //pendiente
+        $('#origen').val(data.estado);
+        $('#ecivil').val(data.estado_civil);//pendiente
+        $('#rconyugal').val(data.regimen_matrimonial);//pendiente
         $('#correo').val(data.correo);
-        $('#direccionf').val(data.domicilio_particular);
-        $('#direccion').val(data.domicilio_particular);
+        // $('#direccionf').val(); //nosotros insertamos
+        let dir = `${data.direccion}, ${data.colonia} ${data.cod_post}`;
+        $('#direccion').val(dir); 
         $('#rfc').val(data.rfc);
-        $('#telefono').val(data.telefono1);
-        $('#cel').val(data.telefono2);
+        $('#telefono').val(data.telefono);
+        $('#cel').val(data.tfijo);
         $('#idCliente').val(data.id_cliente);
+        $('#idPostventa').val(data.id_dpersonal);
     }, 'json');
     $('#check').removeClass("d-none");
 }
