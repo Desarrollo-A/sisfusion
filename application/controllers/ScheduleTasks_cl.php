@@ -1428,8 +1428,8 @@ public function select_gph_maderas_64(){ //HACER INSERT DE LOS LOTES EN 0 Y PASA
         }
         $data = array("contrasena" => encriptar($key), "modificado_por" => 1, "fecha_modificacion" => date('Y-m-d H:i:s'));
         $response = $this->General_model->updateRecord('usuarios', $data, 'id_rol', '61');
-        $this->change_password_mail();
         $destroy = $this->scheduleTasks_model->SessionDestroy();
+        $this->change_password_mail($key);
         echo json_encode($response);
         $this->destroySession();
     }
@@ -1440,11 +1440,11 @@ public function select_gph_maderas_64(){ //HACER INSERT DE LOS LOTES EN 0 Y PASA
       redirect(base_url() . "login");
     }
 
-    public function change_password_mail(){
+    public function change_password_mail($key){
       $mail = $this->phpmailer_lib->load();
       $mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
       $mail->addAddress('programador.analista18@ciudadmaderas.com');
-      $mail->Subject = utf8_decode("La contraseña del usuario... se ha modificado.");
+      $mail->Subject = utf8_decode("Cambio de contraseña ASESOR COMODÍN.");
       $mail->isHTML(true);
       $mailContent ="<html><head>
       <meta http-equiv='Content-Type' content='text/html; charset=utf-8'>
@@ -1484,10 +1484,10 @@ public function select_gph_maderas_64(){ //HACER INSERT DE LOS LOTES EN 0 Y PASA
       <td border=1 bgcolor='#FFFFFF' align='center'> 
           <h3>¡ Buenos días estimad@ !</h3><br> <br>
           
-          <p style='padding: 10px 90px;text-align: center;'>¿Cómo estás?, espero que bien. Este es el listado de todos los registros de lotes cuyo contrató se envió a firma de RL.
-          </p><br><br>
-          
-          
+          <p style='padding: 10px 90px;text-align: center;'>La nueva contraseña del usuario ASESOR COMODÍN es: $key
+          </p>
+          <p style='padding: 10px 90px;text-align: center;'><b>*Recuerda que esta contraseña solo es valida durante 15 días.</b> 
+          </p>
       </td>
     </tr></table>
     <img src='" . base_url() . "static/images/mailER/footer@4x.png' width='100%'>
