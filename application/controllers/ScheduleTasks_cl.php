@@ -1207,8 +1207,14 @@ public function select_gph_maderas_64(){ //HACER INSERT DE LOS LOTES EN 0 Y PASA
           echo $data_request['msg'];
         }
       } else {
-        $data_request['msg'] = 'No hay registros para enviar un correo.';
-        echo $data_request['msg'];
+          $data_enviar_mail = $this->sendComptrollerNotification($data_first_report, 'REPORTE ESTATUS 10 ' . $finalDate, 3);
+          if ($data_enviar_mail > 0) {
+              $data_request['msg'] = 'Correo enviado correctamente.';
+              echo $data_request['msg'];
+          } else {
+              $data_request['msg'] = 'Correo no enviado.';
+              echo $data_request['msg'];
+          }
       }
 
       // MJ: SECOND EMAIL - LIBERACIONES
@@ -1281,7 +1287,7 @@ public function select_gph_maderas_64(){ //HACER INSERT DE LOS LOTES EN 0 Y PASA
                 <td border=1 bgcolor='#FFFFFF' align='center'> 
                     <h3>¡ Buenos días estimad@ !</h3><br> <br>
                     
-                    <p style='padding: 10px 90px;text-align: center;'>¿Cómo estás?, espero que bien. Este es el listado de todos los registros de lotes cuyo contrató se envió a firma de RL.
+                    <p style='padding: 10px 90px;text-align: center;'>¿Cómo estás?, espero que bien. Este es el listado de todos los registros de lotes cuyo contrato se envió a firma de RL.
                     </p><br><br>
                     
                     
@@ -1365,6 +1371,16 @@ public function select_gph_maderas_64(){ //HACER INSERT DE LOS LOTES EN 0 Y PASA
             }
             $mailContent .= "</table></center>
                     <br><br>
+                </td>
+              </tr>";
+        } else if ($typeTransaction == 3) { // MJ: REPORTE ESTATUS 10  (NOTIFICACIÓN SIN REGISTROS)
+            $mailContent .= "
+              <tr>
+                <td border=1 bgcolor='#FFFFFF' align='center'> 
+                    <h3>¡ Buenos días estimad@ !</h3><br> <br>
+                    
+                    <p style='padding: 10px 90px;text-align: center;'>¿Cómo estás?, espero que bien. El día de hoy no hay registros de lotes cuyo contrato se envió a firma de RL.
+                    </p><br><br>
                 </td>
               </tr>";
         }
