@@ -1443,7 +1443,7 @@ public function select_gph_maderas_64(){ //HACER INSERT DE LOS LOTES EN 0 Y PASA
     public function change_password_mail($key){
       $mail = $this->phpmailer_lib->load();
       $mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
-      $mail->addAddress('programador.analista18@ciudadmaderas.com');
+      $mail->addAddress('mariadejesus.garduno@ciudadmaderas.com');
       $mail->Subject = utf8_decode("Cambio de contraseña ASESOR COMODÍN.");
       $mail->isHTML(true);
       $mailContent ="<html><head>
@@ -1486,7 +1486,7 @@ public function select_gph_maderas_64(){ //HACER INSERT DE LOS LOTES EN 0 Y PASA
           
           <p style='padding: 10px 90px;text-align: center;'>La nueva contraseña del usuario ASESOR COMODÍN es: $key
           </p>
-          <p style='padding: 10px 90px;text-align: center;'><b>*Recuerda que esta contraseña solo es valida durante 15 días.</b> 
+          <p style='padding: 10px 90px;text-align: center;'><b>*Recuerda que esta contraseña solo es valída durante 15 días.</b> 
           </p>
       </td>
     </tr></table>
