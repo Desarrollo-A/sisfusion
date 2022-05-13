@@ -48,13 +48,13 @@ class Postventa_model extends CI_Model
         WHERE l.idLote = $idLote");
     }
 
-    function setEscrituracion($idLote, $idCliente)
+    function setEscrituracion($idLote, $idCliente, $idPostventa)
     {
         $idUsuario = $this->session->userdata('id_usuario');
         $rol = $this->session->userdata('id_rol');
 
         $this->db->query("INSERT INTO solicitud_escrituracion (idLote, idCliente, estatus, fecha_creacion
-        , creado_por, fecha_modificacion, modificado_por, idArea) VALUES($idLote, $idCliente, 0, GETDATE(), $idUsuario, GETDATE(),$idUsuario, $rol);");
+        , creado_por, fecha_modificacion, modificado_por, idArea, idPostventa) VALUES($idLote, $idCliente, 0, GETDATE(), $idUsuario, GETDATE(),$idUsuario, $rol, $idPostventa);");
         $insert_id = $this->db->insert_id();
         $opciones = $this->db->query("SELECT * FROM opcs_x_cats WHERE id_catalogo = 60")->result_array();
         foreach ($opciones as $row) {
