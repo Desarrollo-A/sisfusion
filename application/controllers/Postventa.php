@@ -613,7 +613,7 @@ class Postventa extends CI_Controller
         $idCliente = $_POST['idCliente'];
         $idPostventa = $_POST['idPostventa'];
 
-        $informacion = $this->Postventa_model->setEscrituracion($idLote, $idCliente, $idPostventa);
+        $informacion = $this->Postventa_model->setEscrituracion($_POST);
         echo json_encode($informacion);
     }
 
