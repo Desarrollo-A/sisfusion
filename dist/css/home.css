@@ -167,7 +167,7 @@
 }
 
 .w-100 {
-  width: 100%;
+  width: 100% !important;
 }
 
 .w-90 {
@@ -340,6 +340,10 @@
   text-align: start !important;
 }
 
+.row-reverse {
+  flex-direction: row-reverse;
+}
+
 /* END Flexbox */
 /* Vrbls colores */
 /* END vrbls coloress */
@@ -394,7 +398,7 @@
   background-color: #ffffff !important;
   border: 1px solid #f44336;
   border-radius: 27px;
-  margin: 0;
+  margin-bottom: 0;
 }
 
 .buttons-pdf:hover {
@@ -690,6 +694,11 @@
   color: #ffffff !important;
 }
 
+.btn-unstyled {
+  border: none !important;
+  background: none;
+}
+
 .lbl-gray {
   background-color: #4e4e4e;
   color: #ffffff;
@@ -968,6 +977,12 @@
   height: 80px;
   overflow: auto;
   font-size: 12px;
+}
+
+.text-modal:disabled {
+  border: none;
+  color: #929292;
+  background-color: #F1F1F1;
 }
 
 .navbar {

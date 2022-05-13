@@ -105,11 +105,34 @@ class Postventa extends CI_Controller
     public function getClient()
     {
         $idLote = $this->input->post("idLote");
-        $data = $this->Postventa_model->getClient($idLote)->row();
-        if ($data != null)
-            echo json_encode($data);
-        else
-            echo json_encode(array());
+        $data = $this->Postventa_model->getEmpRef($idLote)->result_array();
+        
+        $data = $this->Postventa_model->getProyectos()->result_array();
+        if ($data != null){
+            $url = 'https://prueba.gphsis.com/backCobranza/index.php/PaginaCDM/getDatos_clientePV';
+
+            $datos = base64_encode(json_encode(array(
+                "referencia" => $datos[0]['referencia'],
+                "empresa" => $datos[0]['empresa']
+            )));
+            
+            $opciones = array(
+                "http" => array(
+                    "header" => "Content-type: application/x-www-form-urlencoded\r\n",
+                    "method" => "POST",
+                    "content" => $datos, # Agregar el contenido definido antes
+                ),
+            );
+            # Preparar petición
+            $contexto = stream_context_create($opciones);
+            # Hacerla
+            $resultado = file_get_contents($url, false, $contexto);
+            if (base64_decode($resultado != 'false')) {
+                echo json_encode($resultado);
+            } else {
+                echo json_encode(array());
+            }
+        }
     }
 
     public function printChecklist($data)
@@ -594,8 +617,9 @@ class Postventa extends CI_Controller
     {
         $beginDate = date("Y-m-d", strtotime($this->input->post("beginDate")));
         $endDate = date("Y-m-d", strtotime($this->input->post("endDate")));
+        $estatus = $this->input->post("estatus");
         $v = strtotime($this->input->post("endDate"));
-        $data['data'] = $this->Postventa_model->getSolicitudes($beginDate, $endDate)->result_array();
+        $data['data'] = $this->Postventa_model->getSolicitudes($beginDate, $endDate, $estatus)->result_array();
         if ($data != null) {
             echo json_encode($data, JSON_NUMERIC_CHECK);
         } else {
@@ -607,16 +631,17 @@ class Postventa extends CI_Controller
     {
         $id_solicitud = $_POST['id_solicitud'];
         $type = $_POST['type'];
-        if ($type == 1) {
+        if ($type == 1 || $type == 3 || $type == 4) {
             $comentarios = $_POST['comentarios'];
             $informacion = $this->Postventa_model->changeStatus($id_solicitud, $type, $comentarios, 0);
         }elseif ($type == 2) {
             $motivos_rechazo = $_POST['comentarios'];
             $informacion = $this->Postventa_model->changeStatus($id_solicitud, $type, 'NULL', $motivos_rechazo);
-        }else {
-            $comentarios = $_POST['comentarios'];
-            $informacion = $this->Postventa_model->changeStatus($id_solicitud, $type, $comentarios, 0);
         }
+        // }elseif($type == 3) {
+        //     $comentarios = $_POST['comentarios'];
+        //     $informacion = $this->Postventa_model->changeStatus($id_solicitud, $type, $comentarios, 0);
+        // }
 
         echo json_encode($informacion);
     }
@@ -625,13 +650,20 @@ class Postventa extends CI_Controller
     {
         $file = $_FILES["uploadedDocument"];
         $idSolicitud = $this->input->post('idSolicitud');
-        // $idDocumento = $this->input->post('idDocumento');
         $documentType = $this->input->post('documentType');
+        $presupuestoType = null;
+        if( $documentType == 13){
+            $presupuestoType = $this->input->post('presupuestoType');
+        }
         $documentName = $this->Postventa_model->generateFilename($idSolicitud, $documentType)->row();
         $documentInfo = $documentName;
-        $documentName = $documentName->fileName . '.' . substr(strrchr($_FILES["uploadedDocument"]["name"], '.'), 1);
+        if($documentType == 13){
+            $documentName = $documentName->fileName . '.' . $presupuestoType . '.' . substr(strrchr($_FILES["uploadedDocument"]["name"], '.'), 1);
+        }else{
+            $documentName = $documentName->fileName . '.' . substr(strrchr($_FILES["uploadedDocument"]["name"], '.'), 1);
+        }
         $folder = $this->getFolderFile($documentType);
-        $this->updateDocumentBranch($file, $folder, $documentName, $idSolicitud, $documentType, $documentInfo->expediente, $documentInfo->idDocumento);
+        $this->updateDocumentBranch($file, $folder, $documentName, $idSolicitud, $documentType, $documentInfo->expediente, $documentInfo->idDocumento, $presupuestoType, $documentInfo->estatus_validacion);
     }
 
     public function uploadFile2()
@@ -706,30 +738,42 @@ class Postventa extends CI_Controller
         return $folder;
     }
 
-    function updateDocumentBranch($file, $folder, $documentName, $idSolicitud, $documentType, $exists, $idDocumento)
+    function updateDocumentBranch($file, $folder, $documentName, $idSolicitud, $documentType, $exists, $idDocumento, $presupuestoType = null, $estatus_validacion = null)
     {
         $movement = move_uploaded_file($file["tmp_name"], $folder . $documentName);
         $validateMovement = $movement == FALSE ? 0 : 1;
         if ($validateMovement == 1) {
             $idUsuario = $this->session->userdata('id_usuario');
-            $updateDocumentData = array(
-                "expediente" => $documentName,
-                "movimiento" => $documentName,
-                "modificado" => date('Y-m-d H:i:s'),
-                "idUsuario" => $idUsuario,
-                "modificado_por" => $idUsuario,
-                "status" => 1
-            );
-            $response = $this->Postventa_model->replaceDocument($updateDocumentData, $idDocumento);
-            // if($exists === null){
-            //     print_r('if');
-
-
-            // }else{
-            //     print_r('else');
-
-            //     $response = $this->Postventa_model->updateDocumentBranch($documentName, $idSolicitud, $idUsuario, $documentType);
-            // }
+            if($presupuestoType == null){
+                if($estatus_validacion ==2){
+                    $updateDocumentData = array(
+                        "expediente" => $documentName,
+                        "movimiento" => $documentName,
+                        "modificado" => date('Y-m-d H:i:s'),
+                        "idUsuario" => $idUsuario,
+                        "modificado_por" => $idUsuario,
+                        "status" => 1, 
+                        "editado" => 1
+                    );
+                }else{
+                    $updateDocumentData = array(
+                        "expediente" => $documentName,
+                        "movimiento" => $documentName,
+                        "modificado" => date('Y-m-d H:i:s'),
+                        "idUsuario" => $idUsuario,
+                        "modificado_por" => $idUsuario,
+                        "status" => 1
+                    );
+                }
+               
+                $response = $this->Postventa_model->replaceDocument($updateDocumentData, $idDocumento);
+            }else{
+                $updateDocumentData = array(
+                    "expediente" => $documentName,
+                    "modificado_por" => $idUsuario,
+                );
+                $response = $this->Postventa_model->addPresupuesto($updateDocumentData, $idSolicitud, $presupuestoType);
+            }
             echo json_encode($response);
         } else if ($exists == 99) {
             $idUsuario = $this->session->userdata('id_usuario');
@@ -741,7 +785,7 @@ class Postventa extends CI_Controller
                 "modificado_por" => $idUsuario,
                 "status" => 1
             );
-            $response = $this->Postventa_model->replaceDocument($updateDocumentData, $idDocumento); // EL ARCHIVO NO SE PUDO MOVER
+            $response = $this->Postventa_model->replaceDocument($updateDocumentData, $idDocumento);
             echo json_encode($response);
         } else
             echo json_encode(2); // EL ARCHIVO NO SE PUDO MOVER
@@ -750,23 +794,33 @@ class Postventa extends CI_Controller
 
     public function deleteFile()
     {
-        $idDocumento = $this->input->post('idDocumento');
         $documentType = $this->input->post('documentType');
+        $presupuestoType = null;
         $idSolicitud = $this->input->post('idSolicitud');
-        $updateDocumentData = array(
-            "expediente" => null,
-            "movimiento" => '',
-            "modificado" => date('Y-m-d H:i:s'),
-            "idUsuario" => $this->session->userdata('id_usuario'),
-            "modificado_por" => $this->session->userdata('id_usuario'),
-            "status" => 1
-        );
-        $filename = $this->Postventa_model->getFilename($idDocumento)->row()->expediente;
+        $idDocumento = $this->input->post('idDocumento');
+
+        if( $documentType == 13){
+            $presupuestoType = $this->input->post('presupuestoType');
+            $updateDocumentData = array(
+                "expediente" => '',
+                "modificado_por" => $this->session->userdata('id_usuario'),
+            );
+        }else{
+            $updateDocumentData = array(
+                "expediente" => null,
+                "movimiento" => '',
+                "modificado" => date('Y-m-d H:i:s'),
+                "idUsuario" => $this->session->userdata('id_usuario'),
+                "modificado_por" => $this->session->userdata('id_usuario'),
+                "status" => 1
+            );
+        }
+        $filename = $this->Postventa_model->getFilename($idDocumento, $documentType)->row()->expediente;
         $folder = $this->getFolderFile($documentType);
         $file = $folder . $filename;
         if (file_exists($file))
             unlink($file);
-        $response = $this->Postventa_model->replaceDocument($updateDocumentData, $idDocumento);
+        $response = $this->Postventa_model->replaceDocument($updateDocumentData, $idDocumento, $documentType);
         echo json_encode($response);
         // FALTA ENVIAR EL CORREO CUANDO ES LA CORRIDA QUE SE ELIMINA
     }
@@ -862,11 +916,11 @@ class Postventa extends CI_Controller
             "estatus_pago" => $data['estatusPago'],
             "superficie" => ($data['superficie'] == '' || $data['superficie'] == null) ? null : $data['superficie'],
             "clave_catastral" => ($data['catastral'] == '' || $data['catastral'] == null) ? null : $data['catastral'],
-            "estatus_construccion" => $data['construccion'],
             "cliente_anterior" =>($data['cliente'] == 'default' || $data['cliente'] == null ? 2 : $data['cliente'] == 'uno') ? 1 : 2,
             "nombre_anterior" => $data['nombreT'] == '' || $data['nombreT'] == null || $data['nombreT'] == 'null' ? '' : $data['nombreT'],
             "fecha_anterior" => ($data['fechaCA'] == '' || $data['fechaCA'] == null) ? null : date("Y-m-d", strtotime($data['fechaCA'])),
-            "RFC" => $data['rfcDatos'] == '' || $data['rfcDatos'] == 'N/A' ? null : $data['rfcDatos']
+            "RFC" => $data['rfcDatos'] == '' || $data['rfcDatos'] == 'N/A' ? null : $data['rfcDatos'],
+            "tipo_escritura" => $data['tipoE']
         );
 
         $data = $this->Postventa_model->updatePresupuesto($updateData, $id_solicitud);
@@ -1226,6 +1280,10 @@ class Postventa extends CI_Controller
                                                     ' . $data->nombre_escrituras . '
                                                 </td>
                                                 <td style="font-size: 1em;">
+                                                    <b>Nombre a quien escritura:</b><br>
+                                                    ' . $data->tipoEscritura . '
+                                                </td>
+                                                <td style="font-size: 1em;">
                                                     <b>Estatus de pago:</b><br>
                                                     ' . $data->nombrePago . '
                                                 </td>
@@ -1451,5 +1509,176 @@ class Postventa extends CI_Controller
         $response = $mail->send();
     }
 
+    public function saveEstatusLote()
+    {
+        $data = $_POST;
+      
+        $id_solicitud = $data['id_solicitudEstatus'];
 
+        $updateData = array(
+            "estatus_construccion" => $data['construccion']
+        );
+
+        $data = $this->Postventa_model->saveEstatusLote($updateData, $id_solicitud);
+        if ($data != null)
+            echo json_encode($data);
+        else
+            echo json_encode(array());
+    }
+
+    public function getPresupuestos(){
+        $idSolicitud = $_POST['idEscritura'];
+        $data = $this->Postventa_model->getPresupuestos($idSolicitud)->result();
+        if ($data != null)
+            echo json_encode($data);
+        else
+            echo json_encode(array());
+    }
+
+    public function approvePresupuesto(){
+        $data = $_POST;
+        $response = $this->Postventa_model->approvePresupuesto($data);
+        if ($response != null)
+            echo json_encode(1);
+        else
+            echo json_encode(0);
+    }
+
+    public function reportes()
+    {
+        if ($this->session->userdata('id_rol') == FALSE) {
+            redirect(base_url());
+        }
+        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
+        switch ($this->session->userdata('id_rol')) {
+            case '32'://CONTRALORIA
+            case '55': // POSTVENTA
+            case '57': // TITULACIÓN
+                $this->load->view('template/header');
+                $this->load->view("postventa/Reportes/reportes", $datos);
+                break;
+
+            default:
+                echo '<script>alert("ACCESSO DENEGADO"); window.location.href="' . base_url() . '";</script>';
+                break;
+        }
+    }
+
+    function getData(){
+
+        if($this->session->userdata('id_rol') == 32){
+            $columns = array(
+                [
+                    "title" => 'ID',
+                    "data" => 'idSolicitud'
+                ],
+                [
+                    "title" => 'Lote',
+                    "data" => 'nombreLote'
+                ],
+                [
+                    "title" => 'Condominio',
+                    "data" => 'nombreCondominio'
+                ],
+                [
+                    "title" => 'Residencial',
+                    "data" => 'nombreResidencial'
+                ],
+                [
+                    "title" => 'Cliente',
+                    "data" => 'nombre'
+                ],
+                [
+                    "title" => 'Estatus',
+                    "data" => 'estatus'
+                ],
+                [
+                    "title" => 'Area',
+                    "data" => 'area'
+                ],
+                [
+                    "title" => 'Vigencia',
+                    "data" => 'atrasado'
+                ],
+                [
+                    "title" => 'Dias de atraso',
+                    "data" => 'diferencia'
+                ],
+                [
+                    "title" => 'Fecha del estatus',
+                    "data" => 'fecha_creacion'
+                ],
+            );
+            $data = $this->Postventa_model->getData_contraloria()->result();
+        }else if($this->session->userdata('id_rol') == 57){
+            $columns = array(
+                [
+                    "title" => 'ID',
+                    "data" => 'idSolicitud'
+                ],
+                [
+                    "title" => 'Lote',
+                    "data" => 'nombreLote'
+                ],
+                [
+                    "title" => 'Condominio',
+                    "data" => 'nombreCondominio'
+                ],
+                [
+                    "title" => 'Residencial',
+                    "data" => 'nombreResidencial'
+                ],
+                [
+                    "title" => 'Cliente',
+                    "data" => 'nombre'
+                ],
+                [
+                    "title" => 'Estatus',
+                    "data" => 'estatus'
+                ],
+                [
+                    "title" => 'Area',
+                    "data" => 'area'
+                ],
+            );
+            $data = $this->Postventa_model->getData_titulacion()->result();
+        }
+
+        $array = [
+            "columns" => $columns,
+            "data" => $data
+        ];
+        // $newData = array_merge($columns, $data);
+        if ($data != null)
+            echo json_encode($array);
+        else
+            echo json_encode(array());
+    }
+
+    public function getEstatusEscrituracion()
+    {
+        $data = $this->Postventa_model->getEstatusEscrituracion();
+        if ($data != null)
+            echo json_encode($data);
+        else
+            echo json_encode(array());
+    }
+
+    public function getFullReportContraloria(){
+        $idSolicitud = $_POST['idEscritura'];
+        $data = $this->Postventa_model->getFullReportContraloria($idSolicitud);
+        if ($data != null)
+            echo json_encode($data);
+        else
+            echo json_encode(array());    
+    }
+
+    public function getTipoEscrituracion()
+    {
+        $data = $this->Postventa_model->getTipoEscrituracion();
+        if ($data != null)
+            echo json_encode($data);
+        else
+            echo json_encode(array());
+    }
 }

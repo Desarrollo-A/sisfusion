@@ -247,7 +247,6 @@
                             });
                             var to1 = formatMoney(total);
                             document.getElementById("totaln").textContent = total;
-                            console.log('fsdf'+total);
                         }
                     });
                 }

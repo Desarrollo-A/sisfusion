@@ -26,21 +26,23 @@
 <div class="modal fade" id="myUpdateStatusModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog">
         <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true" onclick="cleanSelects()">
-                    <i class="material-icons">clear</i>
-                </button>
-                <h4 class="modal-title">¿Qué estatus asignarás a este prospecto?</h4>
-            </div>
             <form id="my_update_status_form" name="my_update_status_form" method="post">
-                <div class="col-lg-12 form-group">
-                    <label>Estatus</label>
-                    <select class="selectpicker" name="estatus_particular" id="estatus_particular" data-style="select-with-transition" title="Seleccione una opción" data-size="7"></select>
-                </div>
-                <input type="hidden" name="id_prospecto_estatus_particular" id="id_prospecto_estatus_particular">
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary finishS">Aceptar</button>
-                    <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" onclick="cleanSelects()">Cancelar</button>
+                <div class="container-fluid pl-2 pr-2 pt-3 pb-1">
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 m-0">
+                            <h4 class="modal-title">¿Qué estatus asignarás a este prospecto?</h4>
+                        </div>
+                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 m-0">
+                            <select class="selectpicker select-gral m-0" name="estatus_particular" id="estatus_particular" data-style="btn" data-show-subtext="true" data-live-search="true" title="Seleccione una opción" data-size="7" data-container="body"></select>
+                        </div>
+                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-end pt-1">
+                            <button type="submit" class="btn btn-primary finishS">Aceptar</button>
+                            <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" onclick="cleanSelects()">Cancelar</button>
+                        </div>
+                    </div>
+                    <input type="hidden" name="id_prospecto_estatus_particular" id="id_prospecto_estatus_particular">
+                    <input type="hidden" id="telefono1">
+                    <input type="hidden" id="telefono2">
                 </div>
             </form>
         </div>
@@ -76,9 +78,8 @@
 
 <div class="modal fade" id="myUpdateStatusPreve" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog">
-        <div class="modal-content"  style="height: 210px;" >
+        <div class="modal-content">
             <div class="modal-header">
-                </button>--><br><br>
                 <center><h4 class="modal-title">¿Estás seguro que deseas cambiar este prospecto de preventa a cliente?</h4></center>
             </div>
             <form id="my_update_status_prevee" name="my_update_status_prevee" method="post">

@@ -39,14 +39,13 @@ function minMaxSideCalendar(){
     $('#sideCalendar').hide("slow");
     $('#side-calendar').html("");
   }else{
-    // sideCalendar.refetchEvents();
     $('body').addClass('sidebar-calendar');
     $('.sidebar-wrapper').removeClass('ps-container ps-theme-default ps-active-x ps-active-y');
 
     $('#sideCalendar').show("slow");
     setTimeout(function() {
-      
       createCalendar();
+      updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
     },500)
   }
 
@@ -84,7 +83,6 @@ function getAppointmentDataC(idAgenda){
     },
     success: function(data){
       appointment = data[0];
-      console.log(appointment);
       $('#spiner-loader').addClass('hide');
       $("#evtTitle3").val(appointment.titulo);
       $("#estatus_recordatorio3").append($('<option>').val(appointment.medio).text(appointment.nombre_medio));
@@ -151,9 +149,24 @@ function createCalendar(){
   var calendarEl = document.getElementById('side-calendar');
   sideCalendar = new FullCalendar.Calendar(calendarEl, {   
     headerToolbar: {
-      start: '',
+      start: 'googleSignIn googleLogout',
       center: 'title',
       end: ''
+    },
+    customButtons: {
+      googleSignIn: {
+        text: 'Sincronizar con google',
+        click: function() {
+          gapi.auth2.getAuthInstance().signIn();
+        }
+      },
+      googleLogout: {
+        text: 'Desincronizar',
+        click: function() {
+          gapi.auth2.getAuthInstance().signOut();
+          removeEvents();
+        }
+      }
     },
     eventTimeFormat: {
       hour: '2-digit', //2-digit, numeric
@@ -216,7 +229,7 @@ function createFilters(rol){
   }
   $(fatherDiv).insertAfter("#side-calendar .fc-header-toolbar");
   $('#selects').append(selects);
-  getUsersAndEvents(userType,idUser);
+  getUsersAndEvents(userType,idUser,true);
   createCustomButtons();
 }
 
@@ -228,17 +241,4 @@ function setSourceEventCRM(events){
   })
   
   sideCalendar.render();
-}
-
-function removeEvents(){
-  srcEventos = sideCalendar.getEventSources();
-  srcEventos.forEach(event => {
-      if(!gapi.auth2.getAuthInstance().isSignedIn.get() && event['internalEventSource']['extendedProps'].hasOwnProperty('title') && event['internalEventSource']['extendedProps']['title'] == "sourceGoogle")
-          event.remove();
-      else{
-          if(event['internalEventSource']['extendedProps'].hasOwnProperty('title') && event['internalEventSource']['extendedProps']['title'] == "sourceCRM"){
-              event.remove();
-          }
-      }
-  });
 }

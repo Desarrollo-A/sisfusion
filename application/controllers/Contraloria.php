@@ -398,13 +398,7 @@ class Contraloria extends CI_Controller {
 
 
 		$mail = $this->phpmailer_lib->load();
-		// $mail->isSMTP();
-		// $mail->Host     = 'smtp.gmail.com';
-		// $mail->SMTPAuth = true;
-		// $mail->Username = 'no-reply@ciudadmaderas.com';
-		// $mail->Password = 'Va7<*V8PP';
-		// $mail->SMTPSecure = 'ssl';
-		// $mail->Port     = 465;
+		
 
 		$mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
 
@@ -680,13 +674,7 @@ class Contraloria extends CI_Controller {
 
 
 		$mail = $this->phpmailer_lib->load();
-		// $mail->isSMTP();
-		// $mail->Host     = 'smtp.gmail.com';
-		// $mail->SMTPAuth = true;
-		// $mail->Username = 'no-reply@ciudadmaderas.com';
-		// $mail->Password = 'Va7<*V8PP';
-		// $mail->SMTPSecure = 'ssl';
-		// $mail->Port     = 465;
+	
 
 		$mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
 
@@ -1191,13 +1179,7 @@ public function get_sede(){
 
  
   $mail = $this->phpmailer_lib->load();
-//   $mail->isSMTP();
-//   $mail->Host     = 'smtp.gmail.com';
-//   $mail->SMTPAuth = true;
-//   $mail->Username = 'no-reply@ciudadmaderas.com';
-//   $mail->Password = 'Va7<*V8PP';
-//   $mail->SMTPSecure = 'ssl';
-//   $mail->Port     = 465;
+
   
   $mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
 
@@ -1567,13 +1549,7 @@ public function editar_registro_loteRechazo_contraloria_proceceso6(){
 
 
   $mail = $this->phpmailer_lib->load();
-//   $mail->isSMTP();
-//   $mail->Host     = 'smtp.gmail.com';
-//   $mail->SMTPAuth = true;
-//   $mail->Username = 'no-reply@ciudadmaderas.com';
-//   $mail->Password = 'Va7<*V8PP';
-//   $mail->SMTPSecure = 'ssl';
-//   $mail->Port     = 465;
+
   
   $mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
 
@@ -1972,13 +1948,7 @@ $i = 0;
 
  
   $mail = $this->phpmailer_lib->load();
-//   $mail->isSMTP();
-//   $mail->Host     = 'smtp.gmail.com';
-//   $mail->SMTPAuth = true;
-//   $mail->Username = 'no-reply@ciudadmaderas.com';
-//   $mail->Password = 'Va7<*V8PP';
-//   $mail->SMTPSecure = 'ssl';
-//   $mail->Port     = 465;
+
   
   $mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
 
@@ -3460,7 +3430,7 @@ public function return1(){
 		$datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
         /*-------------------------------------------------------------------------------*/
 		$this->load->view('template/header');
-	 	$this->load->view("Contraloria/vista_lotes_apartados",$datos);
+	 	$this->load->view("contraloria/vista_lotes_apartados",$datos);
 	}
 
     /**al día de hoy**/

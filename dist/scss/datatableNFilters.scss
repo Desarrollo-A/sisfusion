@@ -119,6 +119,10 @@
                     border-radius: 27px!important;
                     background-image: none!important;
                     padding-left: 20px;
+                    &:disabled{
+                        cursor: not-allowed;
+                        border: none;
+                    }
                 }
                 .label-gral{
                     left: 10px;
@@ -197,17 +201,17 @@
                         left: 0;
                         right: 0;
                         bottom: 0;
-                        background-color: #999999;
+                        background-color: $grey9;
                         -webkit-transition: .4s;
                         transition: .4s;
                         border-radius: 50px;
                         .fa-times {
-                            color: #ffffff;
+                            color: $white;
                             position: absolute;
                             right: 15px;
                         }
                         .fa-check {
-                            color: #ffffff;
+                            color: $white;
                             position: absolute;
                             left: 15px;
                             display: none;
@@ -220,7 +224,7 @@
                             left: 4px;
                             bottom: 4px;
                             border-radius: 50%;
-                            background-color: #ffffff;
+                            background-color: $white;
                             -webkit-transition: .4s;
                             transition: .4s;
                         }

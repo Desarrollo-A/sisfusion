@@ -68,64 +68,66 @@
                             <div class="card-content">
                                 <div class="encabezadoBox">
                                     <h3 class="card-title center-align">Descuentos de resguardos</h3>
-                                    <p class="card-title pl-1">(Descuentos aplicados a directivos, todas las comisiones
-                                        que aparecen en el listado de lotes para poder descontar son
-                                        solicitudes en estatus 'Enviada a resguardo personal'.)</p>
+                                    <p class="card-title pl-1">(Descuentos aplicados a directivos, todas las comisiones que aparecen en el listado de lotes para poder descontar son solicitudes en estatus 'Enviada a resguardo personal'.)</p>
                                 </div>
-                                <div  class="toolbar">
+                                <div class="toolbar">
                                     <div class="row">
-                                        <div class="col col-xs-12 col-sm-12 col-md-3 col-lg-3 cantidades_box">
-                                                <h5>Total resguardo:</h5>
-                                                <input style="" disabled="disabled" readonly="readonly" type="text" name="totalpv" id="totalp">
+                                        <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
+                                            <div class="form-group text-center">
+                                                <h4 class="title-tot center-align m-0">Total resguardo:</h4>
+                                                <p class="category input-tot pl-1" name="totalpv" id="totalp">$0.00</p>
+                                            </div>
                                         </div>
-                                        <div class="col col-xs-12 col-sm-12 col-md-3 col-lg-3 cantidades_box">
-                                            <h5>Ingresos extras:</h5>
-                                            <input disabled="disabled" readonly="readonly" type="text" name="totalx" id="totalx">
+                                        <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
+                                            <div class="form-group text-center">
+                                                <h4 class="title-tot center-align m-0">Ingresos extras:</h4>
+                                                <p class="category input-tot pl-1" name="totalx" id="totalx">$0.00</p>
+                                            </div>
                                         </div>
-                                        <div class="col col-xs-12 col-sm-12 col-md-3 col-lg-3 cantidades_box">
-                                            <h5>Saldo disponible:</h5>
-                                            <input disabled="disabled" readonly="readonly" type="text" name="totalpv3" id="totalp3">
+                                        <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
+                                            <div class="form-group text-center">
+                                                <h4 class="title-tot center-align m-0">Saldo disponible:</h4>
+                                                <p class="category input-tot pl-1" name="totalpv3" id="totalp3">$0.00</p>
+                                            </div>
                                         </div>
-                                        <div class="col col-xs-12 col-sm-12 col-md-3 col-lg-3 cantidades_box">
-                                            <h5>Descuentos aplicados:</h5>
-                                            <input disabled="disabled" class="red" readonly="readonly" type="text" name="totalpv2" id="totalp2">
-                                        </div>
-
-                                        <div class="col col-xs-12 col-sm-12 col-md-2 col-lg-2">
-                                            <button type="button" class="btn-gral-data" data-toggle="modal" data-target="#miModal">APLICAR RETIRO</button>
-                                        </div>
-                                        <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                                            <div class="col-md-4 form-group">
-                                                <div class="form-group label-floating select-is-empty">
-                                                    <label for="proyecto">Directivo:</label>
-                                                    <select name="filtro33" id="filtro33"  class="selectpicker select-gral m-0"
-                                                            data-style="btn" data-show-subtext="true" data-live-search="true"
-                                                            title="Selecciona directivo" data-size="7" required>
-                                                        <option value="0">Seleccione todo</option>
-
-                                                    </select>
-                                                </div>
+                                        <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
+                                            <div class="form-group text-center">
+                                                <h4 class="title-tot center-align m-0">Descuentos aplicados:</h4>
+                                                <p class="category input-tot pl-1" name="totalpv2" id="totalp2">$0.00</p>
                                             </div>
                                         </div>
                                     </div>
+                                    <div class="row aligned-row mb-2">
+                                        <div class="col-xs-12 col-sm-12 col-md-10 col-lg-10">
+                                            <div class="label-floating select-is-empty">
+                                                <label for="proyecto">Directivo</label>
+                                                <select name="filtro33" id="filtro33"  class="selectpicker select-gral m-0"
+                                                        data-style="btn" data-show-subtext="true" data-live-search="true"
+                                                        title="Selecciona directivo" data-size="7" required>
+                                                    <option value="0">Seleccione todo</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-12 col-sm-12 col-md-2 col-lg-2 d-flex align-end">   
+                                                <button type="button" class="btn-gral-data" data-toggle="modal" data-target="#miModal">APLICAR RETIRO</button>
+                                        </div>
+                                    </div>
                                 </div>
-
                                 <div class="material-datatables">
                                     <div class="table-responsive">
-                                        <table   id="tabla_descuentos" name="tabla_descuentos"
-                                                class="table-striped table-hover">
-                                                <thead style="height: 15px;">
-                                                    <tr>
-                                                        <th>ID</th>
-                                                        <th>USUARIO</th>
-                                                        <th>$ DESCUENTO</th>
-                                                        <th>MOTIVO</th>
-                                                        <th>ESTATUS</th>
-                                                        <th>CREADO POR</th>
-                                                        <th>FECHA CAPTURA</th>
-                                                        <th>OPCIONES</th>
-                                                    </tr>
-                                                </thead>
+                                        <table id="tabla_descuentos" name="tabla_descuentos" class="table-striped table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th>ID</th>
+                                                    <th>USUARIO</th>
+                                                    <th>$ DESCUENTO</th>
+                                                    <th>MOTIVO</th>
+                                                    <th>ESTATUS</th>
+                                                    <th>CREADO POR</th>
+                                                    <th>FECHA CAPTURA</th>
+                                                    <th>OPCIONES</th>
+                                                </tr>
+                                            </thead>
                                         </table>
                                     </div>
                                 </div>
@@ -153,7 +155,6 @@
                                                     <div class="col xol-xs-12 col-sm-12 col-md-12 col-lg-12">
                                                         <div class="col xol-xs-12 col-sm-12 col-md-12 col-lg-12">
                                                             <h4 class="card-title"><b>DESCUENTOS DE RESGUARDOS</b></h4>
-                                                            <!-- <p class="category">Comisiones solictadas por colaboradores para proceder a pago sin factura.</b></p> -->
                                                             <p class="category"><i class="material-icons">info</i> Descuentos aplicados a directivos, todas las comisiones que aparecen en el listado de lotes para poder descontar son solicitudes en estatus 'Enviada a resguardo personal'.</p>
 
                                                         </div>
@@ -218,50 +219,15 @@
                         </div>
                     </div>
                 </div>
-
-
                 <?php $this->load->view('template/footer_legend'); ?>
             </div>
         </div>
-
-
-
-
-        <!--<div class="modal fade modal-alertas" id="myModalEspera" role="dialog">
-            <div class="modal-dialog modal-sm">
-                <div class="modal-content">
-
-                    <form method="post" id="form_espera_uno">
-                        <div class="modal-body"></div>
-                        <div class="modal-footer"></div>
-                    </form>
-                </div>
-            </div>
-        </div>-->
-
-
-        <!--<div class="modal fade modal-alertas" id="modal-delete" role="dialog" data-backdrop="static">
-            <div class="modal-dialog modal-sm">
-                <div class="modal-content">
-
-
-                    <div class="modal-body"></div>
-                    <div class="modal-footer"></div>
-
-
-                </div>
-            </div>
-        </div>-->
-
-
 
         <div class="modal fade modal-alertas" id="modal_nuevas" role="dialog">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header bg-red">
-                        <!-- <center><img src="<//?= base_url() ?>static/images/preview.gif" width="250" height="200"></center> -->
                     </div>
-
                     <form method="post" id="form_aplicar">
                         <div class="modal-body"></div>
                     </form>
@@ -272,19 +238,10 @@
         <div class="modal fade modal-alertas" id="modal_log" role="dialog" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog">
                 <div class="modal-content">
-                    <!--    <div class="modal-header bg-red">
-             </div> -->
-
-
-                    <div class="modal-body" id="bod">
-                    </div>
-
+                    <div class="modal-body" id="bod"></div>
                 </div>
             </div>
         </div>
-
-
-
 
         <div class="modal fade modal-alertas" id="miModal" role="dialog">
             <div class="modal-dialog">
@@ -295,26 +252,17 @@
                     </div>
                     <form method="post" id="form_descuentos">
                         <div class="modal-body">
-
                             <div class="form-group">
                                 <label class="label">Puesto del usuario</label>
                                 <select class="selectpicker roles" name="roles" id="roles" required>
                                     <option value="">----Seleccionar-----</option>
-
                                     <option value="2">Sub director</option>
                                     <option value="1">Director</option>
-
                                 </select>
                             </div>
-
-
                             <div class="form-group" id="users"><label class="label">Usuario</label>
                                 <select id="usuarioid" name="usuarioid" class="form-control directorSelect ng-invalid ng-invalid-required" required data-live-search="true"></select>
                             </div>
-
-                            <!-- <div class="form-group" id="loteorigen"><label class="label">Lote origen</label>
-                    <select id="idloteorigen"  name="idloteorigen[]" multiple="multiple" class="form-control directorSelect2 js-example-theme-multiple" style="width: 100%;height:200px !important;"  required data-live-search="true"></select>
-                    </div> -->
 
                             <div class="form-group">
                                 <label class="label">Opción</label>
@@ -324,11 +272,7 @@
                                     <option value="2">INGRESO EXTRA</option>
                                 </select>
                             </div>
-
-
-
                             <div class="form-group row">
-
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label class="label" id="labelmonto1">Monto disponible</label>
@@ -338,89 +282,30 @@
 
                                     </div>
                                 </div>
-
-
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label class="label" id="labelmonto2">Monto a descontar</label>
                                         <input class="form-control" type="number" step="any" id="monto1" name="monto">
                                     </div>
                                 </div>
-
-
                             </div>
 
                             <div class="form-group">
-
                                 <label class="label">Mótivo de descuento</label>
                                 <textarea id="comentario" name="comentario" class="form-control" rows="3" required></textarea>
-
                             </div>
 
                             <div class="form-group">
-
                                 <center>
                                     <button type="submit" id="btn_abonar" class="btn btn-success">GUARDAR</button>
                                     <button class="btn btn-danger" type="button" data-dismiss="modal">CANCELAR</button>
-
                                 </center>
                             </div>
-
                         </div>
                     </form>
                 </div>
             </div>
         </div>
-
-        <!--<div class="modal fade modal-alertas" id="modal_descuentos" role="dialog">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                    <div class="modal-header bg-red">
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-
-                    </div>-->
-                    <!-- <form method="post" id="form_descuentos">
-                <div class="modal-body"></div>
-                <div class="modal-footer"></div>
-            </form> -->
-                <!--</div>
-            </div>
-        </div>-->
-
-
-        <!--<div class="modal fade modal-alertas" id="modal_abono" data-backdrop="static" data-keyboard="false" role="dialog">
-            <div class="modal-dialog ">
-                <div class="modal-content">
-                    <div class="modal-header bg-red">-->
-                        <!--<button type="button" class="close" data-dismiss="modal">&times;</button>-->
-                        <!--<center><img src="<?= base_url() ?>static/images/preview.gif" width="250" height="200"></center>
-
-
-
-                    </div>
-                    <form method="post" id="form_abono">
-                        <div class="modal-body"></div>
-                        <div class="modal-footer">
-
-                        </div>
-                    </form>
-
-                </div>
-            </div>
-        </div>-->
-
-        <!--<div class="modal fade bd-example-modal-sm" id="myModalEnviadas" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-sm">
-                <div class="modal-content">
-                    <div class="modal-body"></div>
-                </div>
-            </div>
-        </div>-->
-
-
-
-
-
     </div>
     <!--main-panel close-->
 </body>
@@ -455,9 +340,6 @@
         return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
     };
 
-
-
-
     $(document).ready(function() {
 
         $.post("<?= base_url() ?>index.php/Comisiones/getDirectivos", function(data) {
@@ -472,15 +354,10 @@
 
     });
 
-
-
     $('#filtro33').change(function(ruta) {
         directivo = $('#filtro33').val();
-        //alert(directivo);
         DescuentosxDirectivos(directivo);
     });
-
-
 
     $("#form_descuentos").on('submit', function(e) {
         e.preventDefault();
@@ -500,13 +377,11 @@
                 console.log(data);
                 if (data == 1) {
                     document.getElementById("form_descuentos").reset();
-                    // $('#tabla_descuentos').DataTable().ajax.reload(null, false);
                     $('#miModal').modal('hide');
                     document.getElementById('btn_abonar').disabled = false;
 
                     DescuentosxDirectivos(userid);
 
-                    // $(".directorSelect2").val('');
                     $("#roles").val('');
                     $("#roles").selectpicker("refresh");
                     $('#usuarioid').val('default');
@@ -517,17 +392,12 @@
                     alerts.showNotification("top", "right", "Descuento registrado con exito.", "success");
 
                 } else if (data == 2) {
-                    // $('#tabla_descuentos').DataTable().ajax.reload(null, false);
                     $('#miModal').modal('hide');
                     alerts.showNotification("top", "right", "Ocurrio un error.", "warning");
                     document.getElementById('btn_abonar').disabled = false;
-                    // $(".directorSelect2").empty();
-
                 } else if (data == 3) {
-                    // $('#tabla_descuentos').DataTable().ajax.reload(null, false);
                     $('#miModal').modal('hide');
                     alerts.showNotification("top", "right", "El usuario seleccionado ya tiene un pago activo.", "warning");document.getElementById('btn_abonar').disabled = false;
-                    //$(".directorSelect2").empty();
 
                 }
             },
@@ -546,9 +416,6 @@
         if (i != 7) {
             var title = $(this).text();
             titulos.push(title);
-
-            //titulos.push(title);
-
             $(this).html('<input type="text" class="textoshead"  placeholder="' + title + '"/>');
             $('input', this).on('keyup change', function() {
                 if (tabla_nuevas.column(i).search() !== this.value) {
@@ -565,12 +432,8 @@
                     var data = tabla_nuevas.rows(index).data();
 
                     $.each(data, function(i, v) {
-                        //  total += parseFloat(v.monto);
                     });
                     let to1 = 0;
-                    // to1 = formatMoney(total);
-                    //document.getElementById("totalp").value = total;
-                    // console.log('fsdf'+total);
                 }
             });
         }
@@ -578,49 +441,30 @@
 
 
     function DescuentosxDirectivos(user) {
-        // document.getElementById('totalp').value ='';
-        // document.getElementById('totalp2').value ='';
-        // document.getElementById('totalp3').value ='';
-
         let resto = 0;
         let total67 = 0;
         $.post('getDisponbleResguardo/' + user, function(data) {
 
-            document.getElementById('totalp3').value = '';
-            // console.log(data);
+            document.getElementById('totalp3').textContent = '';
             let disponible = formatMoney(data.toFixed(3));
-            document.getElementById('totalp3').value = "$ " + disponible;
-            //$('#idmontodisponible').val(disponible);
+            document.getElementById('totalp3').textContent = "$ " + disponible;
             resto = 0;
             resto = data.toFixed(3);
         }, 'json');
 
         $.post('getDisponbleResguardoP/' + user, function(data) {
 
-            document.getElementById('totalp').value = '';
+            document.getElementById('totalp').textContent = '';
             console.log('data' + data);
             let disponible = formatMoney(data);
             console.log('disponible' + disponible);
-            document.getElementById('totalp').value = '$ ' + disponible;
+            document.getElementById('totalp').textContent = '$ ' + disponible;
             total67 = data;
-            // document.getElementById('totalp').innerHTML = disponible;
-            //$('#idmontodisponible').val(disponible);
-            //  resto=0;
-            //  resto = data.toFixed(3);
         }, 'json');
 
 
         $('#tabla_descuentos').on('xhr.dt', function(e, settings, json, xhr) {
-
-
-
-
-
-            // e.preventDefault();
-            //e.stopImmediatePropagation(); 
-            //document.getElementById('totalp').value ='';
-            document.getElementById('totalp2').value = '';
-
+            document.getElementById('totalp2').textContent = '';
 
             var total = 0;
             let sumaExtras=0;
@@ -634,17 +478,14 @@
             });
             let to = 0;
             to = formatMoney(total);
-            document.getElementById("totalp2").value = "$ " + to;
+            document.getElementById("totalp2").textContent = "$ " + to;
 
             let extra = 0;
             extra = formatMoney(sumaExtras);
-            document.getElementById("totalx").value = "$ " + extra;
+            document.getElementById("totalx").textContent = "$ " + extra;
             
             let to2 = 0;
             to2 = parseFloat(resto) + parseFloat(total);
-            console.log(resto);
-            console.log(total);
-            //document.getElementById("totalp").value = formatMoney(to2);
         });
 
         tabla_nuevas = $("#tabla_descuentos").DataTable({

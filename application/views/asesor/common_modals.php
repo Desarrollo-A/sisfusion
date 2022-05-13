@@ -5,10 +5,10 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header d-flex align-center mb-1">
-                <div class="col-lg-1 form-group m-0 pr-0">
+                <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1 form-group m-0 pr-0">
                     <i class="fas fa-circle dotStatusAppointment"></i>
                 </div>
-                <div class="col-lg-11 form-group m-0 pr-0 d-flex justify-between align-center">
+                <div class="col-xs-11 col-sm-11 col-md-11 col-lg-11 form-group m-0 pr-0 d-flex justify-between align-center">
                     <h3 class="modal-title">Detalles de la cita</h3>
                     <?php if ($this->session->userdata('id_rol') != '2' && $this->session->userdata('id_rol') != '3') { ?>
                     <div class="dropdown">
@@ -25,46 +25,46 @@
             <div class="modal-body pt-0">
                 <form id="edit_appointment_form" name="edit_appointment_form" method="post">
                     <div class="container-fluid p-0">
-                        <div class="col-lg-1 form-group m-0 pr-0">
+                        <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1 form-group m-0 pr-0">
                             <i class="fas fa-font iconMod fa-lg"></i>
                         </div>
-                        <div class="col-lg-11 form-group m-0">
+                        <div class="col-xs-11 col-sm-11 col-md-11 col-lg-11 form-group m-0">
                             <label class="label-gral m-0">Titulo</label>
                             <input id="evtTitle2" name="evtTitle" type="text" class="form-control input-gral">
                         </div>
-                        <div class="col-lg-1 form-group m-0 pr-0">
+                        <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1 form-group m-0 pr-0">
                             <i class="fas fa-user iconMod fa-lg"></i>
                         </div>
-                        <div class="col-lg-11 form-group m-0 overflow-hidden">
+                        <div class="col-xs-11 col-sm-11 col-md-11 col-lg-11 form-group m-0 overflow-hidden">
                             <label class="label-gral m-0">Prospecto</label>
                             <input id="textProspecto" name="textProspecto" type="text" class="form-control input-gral" disabled>
                             <input id="prospectoE" name="prospectoE" type="text" class="form-control input-gral d-none">
                         </div>
-                        <div class="col-lg-1 form-group m-0 pr-0">
+                        <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1 form-group m-0 pr-0">
                             <i class="fas fa-pencil-alt iconMod fa-lg"></i>
                         </div>
-                        <div class="col-lg-11 form-group m-0">
+                        <div class="col-xs-11 col-sm-11 col-md-11 col-lg-11 form-group m-0">
                             <label class="label-gral m-0">Tipo de cita</label>
                             <select class="selectpicker select-gral m-0" name="estatus_recordatorio2" id="estatus_recordatorio2" data-style="btn" data-show-subtext="true" data-live-search="true" title="Seleccione una opción" data-size="7" required></select>
                         </div>
-                        <div class="col-lg-1 form-group m-0 pr-0">
+                        <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1 form-group m-0 pr-0">
                         </div>
-                        <div class="col-lg-11 form-group m-0 hide" id="comodinDIV2">
+                        <div class="col-xs-11 col-sm-11 col-md-11 col-lg-11 form-group m-0 hide" id="comodinDIV2">
                         </div>
-                        <div class="col-lg-1 form-group m-0 pr-0">
+                        <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1 form-group m-0 pr-0">
                             <i class="fas fa-clock iconMod fa-lg"></i>
                         </div>
-                        <div class="col-lg-11 form-group m-0">
+                        <div class="col-xs-11 col-sm-11 col-md-11 col-lg-11 form-group m-0">
                             <label class="label-gral m-0">Fecha de cita</label>
                             <div class="d-flex">
                                 <input id="dateStart2" name="dateStart" type="datetime-local" class="form-control beginDate w-50 text-left pl-1">
                                 <input id="dateEnd2" name="dateEnd" type="datetime-local" class="form-control endDate w-50 pr-1">
                             </div>
                         </div>
-                        <div class="col-lg-1 form-group m-0 pr-0">
+                        <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1 form-group m-0 pr-0">
                             <i class="fas fa-align-left iconMod fa-lg"></i>
                         </div>
-                        <div class="col-lg-11 form-group m-0">
+                        <div class="col-xs-11 col-sm-11 col-md-11 col-lg-11 form-group m-0">
                             <label class="label-gral m-0">Descripción</label>
                             <textarea class="text-modal" class="form-control" type="text" name="description" id="description2" onkeyup="javascript:this.value=this.value.toUpperCase();"></textarea>
                         </div>

@@ -10,21 +10,9 @@
     $datos = $datos2;
     $datos = $datos3;  
     $this->load->view('template/sidebar', $datos);
-
     /*--------------------------------------------------------*/
     ?>
-    <style>
-        .evtAbierto{
-          border-left: 4px solid #50d920!important;
-        }
-        .evtFinalizado{
-          border-left: 4px solid #df5a5a!important;;
-        }
-        .fc-daygrid-event{
-            padding-left: 4px;
-        }
 
-    </style>
     <div class="modal fade" id="feedbackModal" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog modal-sm" role="document">
             <form id="feedback_form" name="feedback_form" method="post">
@@ -67,6 +55,45 @@
             </form>
         </div>
     </div>
+
+    <div class="modal fade" id="allAppointmentsModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <form id="all_appointments_form" name="all_appointments_form" method="post">
+                <div class="modal-content">                    
+                    <div class="modal-header pb-2">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <h3 class="modal-title">Citas abiertas</h3>
+                    </div>
+                    <div class="modal-body pt-0">
+                        <div class="">
+                            <div class="material-datatables">
+                                <table id="appointments-datatable" class="table-striped table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>ID Evento</th>
+                                            <th>ID Prospecto</th>
+                                            <th>Nombre</th>
+                                            <th class="text-center">Estatus&nbsp;&nbsp;&nbsp;<i class="fas fa-info-circle" data-html="true" data-toggle="tooltip" data-placement="bottom" title="Positivo.<br/>Se identifica como estatus positivo a la cita, llamada o recorrido con un cliente el cual sigue interesado y está un paso más cerca del cliente.<br/><br/>Negativo.<br/> Se identifica como estatus negativo a la cita, llama o recorrido con un prospecto con un prospecto el cual NO sigue sigue interesaso y no desea seguimiento para concretar su compra."></i></th>
+                                            <th class="text-center">Nota</th>
+                                            <th class="text-center">Fecha de cita</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-end">
+                            <button type="submit" class="btn btn-primary no-shadow rounded-circle finishS">Guardar</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
 
     <div class="content">
         <div class="container-fluid">
@@ -127,20 +154,16 @@
 </div><!--main-panel close-->
 </body>
 
-<?php 
-$this->load->view('template/footer');?>
-
-
 <script src="<?= base_url() ?>dist/assets/js/bootstrap-datetimepicker.js"></script>
-<script async defer src="https://apis.google.com/js/api.js" onload="this.onload=function(){};handleClientLoad()" onreadystatechange="if (this.readyState === 'complete') this.onload()"></script>
+<?php $this->load->view('template/footer');?>
 <script src="<?=base_url()?>dist/js/controllers/calendar/general_calendar.js"></script>
 <script src="<?=base_url()?>dist/js/controllers/calendar/calendar.js"></script>
-<script src="<?=base_url()?>dist/js/controllers/calendar/googleCalendarConnection.js"></script>
 <script>
     userType = <?= $this->session->userdata('id_rol') ?> ;
     idUser = <?= $this->session->userdata('id_usuario') ?> ;
     typeTransaction = 1;
     base_url = "<?=base_url()?>";
    
+    $('[data-toggle="tooltip"]').tooltip();
 </script>
 </html>

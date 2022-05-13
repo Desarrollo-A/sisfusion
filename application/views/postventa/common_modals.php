@@ -41,6 +41,7 @@
                                 <label class="label-gral">Seleccione el motivo de rechazo.</label>
                                 <select class="selectpicker select-gral m-0" name="motivos_rechazo" id="motivos_rechazo" data-style="btn" data-show-subtext="true" data-live-search="true" title="Seleccione una opción" data-size="7" required></select>
                                 <input type="hidden" name="id_solicitud2" id="id_solicitud2">
+                                <input type="hidden" name="estatus" id="estatus">
                             </div>
                             <div class="col-lg-12 form-group p-0 d-flex justify-end">
                                 <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
@@ -61,16 +62,6 @@
             <div class="modal-body text-center">
                 <h4 class="card-title" id="mainLabelText"></h4>
                 <p id="secondaryLabelDetail"></p>
-                <!-- <div class="input-group hide" id="selectFileSection">
-                    <label class="input-group-btn">
-                        <span class="btn btn-primary btn-file">
-                            Seleccionar archivo&hellip;
-                            <input type="file" name="uploadedDocument" id="uploadedDocument" style="display: none;">
-                        </span>
-                    </label>
-                    <input type="text" class="form-control" id="txtexp" readonly>
-                </div> -->
-
                 <div class="file-gph" id="selectFileSection">
                     <input class="d-none" type="file" name="uploadedDocument" id="uploadedDocument">
                     <input class="file-name" id="file-name" type="text" placeholder="No ha seleccionado nada aún" readonly="">
@@ -79,7 +70,6 @@
                         <i class="fas fa-folder-open"></i>
                     </label>
                 </div>
-
                 <div class="input-group hide" id="rejectReasonsSection">
                     <div class="col-12 col-sm-12 col-md-12 col-lg-12 pr-0">
                         <select class="selectpicker" data-style="btn btn-primary btn-round" title="Seleccione un motivo de rechazo" data-size="7" id="rejectionReasons" data-live-search="true" multiple></select>
@@ -91,6 +81,8 @@
                 <input type="text" class="hide" id="docName">
                 <input type="text" class="hide" id="action">
                 <input type="text" class="hide" id="details">
+                <input type="text" class="hide" id="presupuestoType">
+                
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
@@ -120,6 +112,15 @@
                                 <div class="form-group text-left m-0">
                                     <label class="control-label label-gral m-0">Nombre a quien escritura *</label>
                                     <input id="nombrePresupuesto2" name="nombrePresupuesto2" class="form-control input-gral" type="text" required>
+                                </div>
+                            </div>
+                            <div class="col-md-12 pr-0">
+                                <div class="form-group text-left m-0">
+                                    <label class="control-label label-gral m-0">Tipo de escrituracion *</label>
+                                    <select class="selectpicker m-0" data-style="btn btn-primary btn-round"
+                                            title="Tipo de escrituracion" data-size="7" id="tipoE" name="tipoE"
+                                            data-live-search="true" required>
+                                    </select>
                                 </div>
                             </div>
                             <div class="col-md-4 pr-0">
@@ -154,10 +155,7 @@
                             <div class="col-md-4 pr-0">
                                 <div class="form-group text-left m-0">
                                     <label class="control-label label-gral m-0">Estatus construcción *</label>
-                                    <select class="selectpicker m-0" data-style="btn btn-primary btn-round"
-                                            title="Estatus construcción" data-size="7" id="construccion" name="construccion"
-                                            data-live-search="true" required>
-                                    </select>
+                                    <input id="construccionInfo" name="construccionInfo" value="" class="form-control input-gral" type="text" disabled>
                                 </div>
                             </div>
                             <div class="col-md-4 pr-0">
@@ -346,7 +344,7 @@
 </div>
 
 <div class="modal fade" id="notarias" data-keyboard="false" data-backdrop="static">
-<div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content ">
             <div class="modal-header">
             <h5 class="text-center m-0">Seleccione Notaría/Valuador</h5>
@@ -552,4 +550,35 @@
             </div>
         </div>
     </div>
-</div>              
+</div>             
+
+<div class="modal fade" id="estatusLModal" data-keyboard="false" data-backdrop="static">
+    <div class="modal-dialog boxContent">
+        <div class="modal-content card">
+            <form class="card-content" id="formEstatusLote" name="formEstatusLote" method="post">
+                <input type="hidden" name="id_solicitudEstatus" id="id_solicitudEstatus">
+                <div class="modal-body text-center toolbar m-0 p-0">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-12 pr-0">
+                                <div class="form-group text-left m-0">
+                                    <label class="control-label label-gral m-0">Estatus construcción</label>
+                                    <select class="selectpicker m-0" data-style="btn btn-primary btn-round"
+                                            title="Estatus construcción" data-size="7" id="construccion" name="construccion"
+                                            data-live-search="true" required>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 d-flex justify-end p-0">
+                                <button type="button" class="btn btn-danger btn-simple mt-2" data-dismiss="modal">Cancelar</button>
+                                <button type="submit" id="requestEstatusLote" class="btn btn-primary mt-2">Guardar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

@@ -425,11 +425,20 @@
 				{
 					"width": "12%",
 					"data": function( d ){
-
-						let f = d.fecha_creacion.split('.');
-						//let fecha = new Date(f[0].replace(/-/g,"/"));
-
-						return '<p class="m-0">'+f[0]+'</p>';
+                        if (d.fecha_creacion_referencia !== null) {
+                            const fecha = new Date(d.fecha_creacion_referencia);
+                            const now = new Date();
+                            const mesesDif = monthDiff(fecha, now);
+                            if (mesesDif >= 2) {
+                                return `
+                                    <p>
+                                        ${d.fecha_creacion_referencia.split('.')[0]}
+                                        <span class="label" style="background: orange">Sin saldo en ${mesesDif} meses</label>
+                                    </p>
+                                `;
+                            }
+                        }
+                        return '<p class="m-0">'+d.fecha_creacion.split('.')[0]+'</p>';
 					}
 				},
 				{
@@ -449,10 +458,13 @@
 			});
 
             $('#tabla_prestamos tbody').on('click', '.detalle-prestamo', function () {
+				$('#spiner-loader').removeClass('hide');
+
                 const idPrestamo = $(this).val();
 
                 $.getJSON(`${url}Comisiones/getDetallePrestamo/${idPrestamo}`).done(function (data) {
                     const { general, detalle } = data;
+					$('#spiner-loader').addClass('hide');
 
                     if (general.length === 0) {
                         alerts.showNotification("top", "right", "No hay préstamos.", "warning");
@@ -548,7 +560,7 @@
 			<select id="usuarioid" name="usuarioid" class="form-control directorSelect ng-invalid ng-invalid-required" required data-live-search="true">
 			</select>
 			`);
-			$.post('getUsuariosRol/'+parent, function(data) {
+			$.post('getUsuariosRol/'+parent+'/1', function(data) {
 				$("#usuarioid").append($('<option disabled>').val("default").text("Seleccione una opción"))
 				var len = data.length;
 				for( var i = 0; i<len; i++){
@@ -607,5 +619,9 @@
 			}
 			
 		}
+
+        function monthDiff(dateFrom, dateTo) {
+            return dateTo.getMonth() - dateFrom.getMonth() + (12 * (dateTo.getFullYear() - dateFrom.getFullYear()))
+        }
 	</script>
 </body>

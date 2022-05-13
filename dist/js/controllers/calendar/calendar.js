@@ -8,20 +8,25 @@
   var calendarEl = document.getElementById('calendar');
   calendar = new FullCalendar.Calendar(calendarEl, {   
     headerToolbar: {
-      start: 'prev,next today googleSignIn googleLogout',
+      start: 'prev next today appointments googleSignIn googleLogout',
       center: 'title',
-      end:   'timeGridDay,timeGridWeek,dayGridMonth',
+      end:   'timeGridDay timeGridWeek dayGridMonth',
     },
     customButtons: {
+      appointments: {
+        text: 'Citas',
+        click: function(){
+          $("#allAppointmentsModal").modal();
+          createTable();
+        }
+      },
       googleSignIn: {
-        icon: 'fab fa-google',
         click: function() {
           gapi.auth2.getAuthInstance().signIn();
           listUpcomingEvents();
         }
       },
       googleLogout: {
-        icon: 'fas fa-power-off',
         click: function() {
           gapi.auth2.getAuthInstance().signOut();
           window.location.reload();
@@ -63,6 +68,7 @@
     }
   });
   calendar.render();
+  customizeIcon();
 
   $.post('../Calendar/getStatusRecordatorio', function(data) {
     var len = data.length;
@@ -155,7 +161,7 @@
       },
       success: function(data) {
         if(gapi.auth2.getAuthInstance().isSignedIn.get()) insertEventGoogle(dataF);
-        removeEvents();
+        removeCRMEvents();
         getUsersAndEvents(userType, idUser, false);
         data = JSON.parse(data);
         alerts.showNotification("top", "right", data["message"], (data["status" == 503]) ? "danger" : (data["status" == 400]) ? "warning" : "success");
@@ -233,11 +239,11 @@
   function validateNCreate(appointment, medio, box){
     box.empty();
     if(medio == 2 || medio == 5){
-      box.append(`<label class="m-0">Dirección del ${medio == 5 ? 'evento':'recorrido'}</label><input id="direccion" name="direccion" type="text" class="form-control input-gral" value='${((appointment !=  '' && (medio == 2 || medio == 5 )) ? ((appointment.id_direccion == ''|| appointment.id_direccion == null) ? appointment.direccion : '' ) : '' )}' required>`);
+      box.append(`<label class="m-0">Dirección del ${medio == 5 ? 'evento':'recorrido'}</label><input id="direccion" name="direccion" type="text" class="form-control input-gral" value='${((appointment !=  '' && (medio == 2 || medio == 5 )) ? ((appointment.id_direccion == ''|| appointment.id_direccion == NULL) ? appointment.direccion : '' ) : '' )}' required>`);
     }
     else if(medio == 3){
-      box.append(`<div class="container-fluid"><div class="row"><div class="col-sm-12 col-md-6 col-lg-6 pl-0 m-0"><label class="m-0">Teléfono 1</label><input type="text" class="form-control input-gral" value=${(appointment !=  '' &&  medio == 3 ) ? ((appointment.telefono != ''|| appointment.telefono != null) ? appointment.telefono : '') : ''+ $("#prospecto option:selected").attr('data-telefono') +''} disabled></div>`
-      +`<div class="col-sm-12 col-md-6 col-lg-6 pr-0 m-0"><label class="m-0">Teléfono 2</label><input type="text" class="form-control input-gral" id="telefono2" name="telefono2" value=${(appointment !=  '' &&  medio == 3 ) ? ((appointment.telefono_2 != ''|| appointment.telefono_2 != null) ? appointment.telefono_2 : '') : ($("#prospecto option:selected").attr('data-telefono2') != '' || $("#prospecto option:selected").attr('data-telefono2') != null ) ? $("#prospecto option:selected").attr('data-telefono2') : '' } ></div></div></div>`);
+      box.append(`<div class="container-fluid"><div class="row"><div class="col-sm-12 col-md-6 col-lg-6 pl-0 m-0"><label class="m-0">Teléfono 1</label><input type="text" class="form-control input-gral" value=${(appointment !=  '' &&  medio == 3 ) ? ((appointment.telefono != ''|| appointment.telefono != NULL) ? appointment.telefono : '') : ''+ $("#prospecto option:selected").attr('data-telefono') +''} disabled></div>`
+      +`<div class="col-sm-12 col-md-6 col-lg-6 pr-0 m-0"><label class="m-0">Teléfono 2</label><input type="text" class="form-control input-gral" id="telefono2" name="telefono2" value=${(appointment !=  '' &&  medio == 3 ) ? ((appointment.telefono_2 != ''|| appointment.telefono_2 != NULL) ? appointment.telefono_2 : '') : ($("#prospecto option:selected").attr('data-telefono2') != '' || $("#prospecto option:selected").attr('data-telefono2') != NULL ) ? $("#prospecto option:selected").attr('data-telefono2') : '' } ></div></div></div>`);
     }
     else if(medio == 4){
       box.append(`<div class="col-sm-12 col-md-12 col-lg-12 p-0"><label class="m-0">Dirección de oficina</label><select class="selectpicker select-gral m-0 w-100" name="id_direccion" id="id_direccion" data-style="btn" data-show-subtext="true" data-live-search="true" title="Seleccione una opción" data-size="7" required></select></div>`);
@@ -257,7 +263,6 @@
       if (len <= 0) {
         $("#id_direccion").append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
       }
-      $("#id_direccion").selectpicker('refresh');
 
       if( appointment != null && appointment.id_direccion != null ){
         $("#id_direccion").val(appointment.id_direccion);
@@ -277,11 +282,9 @@
     $("#comodinDIV").addClass('hide');
   }
 
-  //SIDEBAR CALENDAR
-  // function modalSidebarCalendar(idAgenda){
-  //   getAppointmentSidebarCalendar(idAgenda);
-  //   $('#sidebarView').modal();
-  // }
+  $('#feedbackModal').on('hidden.bs.modal', function () {
+    $(this).find('form').trigger('reset');
+  });
 
   function getAppointmentSidebarCalendar(idAgenda){
     $.ajax({
@@ -391,7 +394,7 @@
         $('#spiner-loader').removeClass('hide');
       },
       success: function(data) {
-        removeEvents();
+        removeCRMEvents();
         getUsersAndEvents(userType, idUser, false);
         data = JSON.parse(data);
         alerts.showNotification("top", "right", data["message"], (data["status" == 503]) ? "danger" : (data["status" == 400]) ? "warning" : "success");
@@ -419,16 +422,12 @@
     request.execute();
   }
   
-  function removeEvents(){
+  function removeCRMEvents(){
     srcEventos = calendar.getEventSources();
     srcEventos.forEach(event => {
-      if(!gapi.auth2.getAuthInstance().isSignedIn.get() && event['internalEventSource']['extendedProps'].hasOwnProperty('title') && event['internalEventSource']['extendedProps']['title'] == "sourceGoogle")
-          event.remove();
-      else{
         if(event['internalEventSource']['extendedProps'].hasOwnProperty('title') && event['internalEventSource']['extendedProps']['title'] == "sourceCRM"){
           event.remove();
         }
-      }
     });
   }
 
@@ -446,6 +445,7 @@
       $("#edit_appointment_form input").prop("disabled", true);
       $("#edit_appointment_form textarea").prop("disabled", true);
       $("#prospectoE").prop("disabled", true);
+      $("#id_direccion").prop("disabled", true);
       $("#estatus_recordatorio2").prop("disabled", true);
       $(".finishS").addClass("d-none");
     }
@@ -455,6 +455,7 @@
       $("#edit_appointment_form input").prop("disabled", false);
       $("#edit_appointment_form textarea").prop("disabled", false);
       $("#prospectoE").prop("disabled", false);
+      $("#id_direccion").prop("disabled", false);
       $("#estatus_recordatorio2").prop("disabled", false);
       var btnSave = $(".finishS");
       ( estatus == 1 ? btnSave.removeClass('d-none') : btnSave.addClass('d-none'));
@@ -516,7 +517,6 @@
       new FormData(e.target)
     )
     data['idAgenda'] = $("#idAgenda2").val();
-    console.log("si está");
     $.ajax({
       type: 'POST',
       url: 'setAppointmentRate',
@@ -528,7 +528,7 @@
         $('#spiner-loader').removeClass('hide');
       },
       success: function(data) {
-        $('#spiner-loader').removeClass('hide');
+        $('#spiner-loader').addClass('hide');
         data = JSON.parse(data);
         alerts.showNotification("top", "right", data["message"], (data["status" == 503]) ? "danger" : (data["status" == 400]) ? "warning" : "success");
         $('#feedbackModal').modal('toggle');
@@ -540,3 +540,70 @@
       }
     });
   });
+
+  function customizeIcon(){
+    $(".fc-googleSignIn-button").append('<img src='+base_url+'/dist/img/googlecalendar.png>');
+    $(".fc-googleLogout-button").append('<img src='+base_url+'/dist/img/unsync.png>');
+  }
+
+  function createTable(){
+    eventsTable = $('#appointments-datatable').dataTable({
+      dom: 'rt' + "<'row'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>",
+      width: "auto",
+      pagingType: "full_numbers",
+      fixedHeader: true,
+      language: {
+          url: "../static/spanishLoader_v2.json",
+          paginate: {
+              previous: "<i class='fa fa-angle-left'>",
+              next: "<i class='fa fa-angle-right'>"
+          }
+      },
+      destroy: true,
+      ordering: false,
+      columns: [{
+        data: function (d) {
+          return '<input type="text" value="'+d.id_cita+'">';
+        }
+      },
+      { 
+        data: function (d) {
+          return '<input type="text" value="'+d.id_prospecto+'">';
+        }
+      },
+      { 
+        width: "30%",
+        data: function (d) {
+          return d.nombre;
+        }
+      },
+      { 
+        width: "12%",
+        data: function (d) {
+          return '<select class="form-control"><option>Positiva</option><option>Negativa</option><option>Cancelada</option></select> ';
+        }
+      },
+      {
+        width: "38%",
+        data: function (d) {
+          return '<textarea class="textarea" type="text"></textarea>';
+        }
+      },
+      { 
+        width: "20%",
+        data: function (d) {
+          return '<label class="text-center m-0">'+d.fecha_cita+'</label>';
+        }
+      }],
+      columnDefs: [{
+        "targets": [ 0, 1],
+        "visible": false,
+        "searchable": false
+      }],
+      ajax: {
+        url: "AllEvents",
+        type: "POST",
+        cache: false,
+      }
+    });
+  }
