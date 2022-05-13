@@ -429,6 +429,24 @@
                                                 <?php
                                                 }
                                                 ?>
+
+                                                <p class="card-title m-1">
+                                                    Para consultar mas detalles sobre el uso y funcionalidad del apartado
+                                                    de comisiones podrás visualizarlo en el siguiente tutorial
+
+                                                    <?php if ($this->session->userdata('forma_pago') == 2) { ?>
+                                                        <a href="https://youtu.be/YuZNsPk8-gY"
+                                                           target="_blank"><u>click aquí</u></a>
+                                                    <?php } ?>
+                                                    <?php if ($this->session->userdata('forma_pago') == 3) { ?>
+                                                        <a href="https://youtu.be/LmmIdipDSEA"
+                                                           target="_blank"><u>click aquí</u></a>
+                                                    <?php } ?>
+                                                    <?php if ($this->session->userdata('forma_pago') == 4) { ?>
+                                                        <a href="https://youtu.be/oRoJev_AZgs"
+                                                           target="_blank"><u>click aquí</u></a>
+                                                    <?php } ?>
+                                                </p>
                                             </div>
                                             <div class="toolbar">
                                                 <div class="container-fluid p-0">
