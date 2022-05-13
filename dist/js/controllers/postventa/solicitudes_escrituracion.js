@@ -693,7 +693,7 @@ function fillTable(beginDate, endDate, estatus) {
             },
             {
                 data: function (d) {
-                    return d.tipo == 1 || d.tipo == 3 ? d.comentarios : d.tipo == 2 || d.tipo == 4? d.motivos_rechazo : d.tipo == 5 ? '':'ERROR S/TIPO';
+                    return d.tipo == 1 || d.tipo == 3 ? d.comentarios : d.tipo == 2 || d.tipo == 4? d.motivos_rechazo : d.tipo == 5 ? '':'';
                 }
             },
             {
