@@ -79,5 +79,9 @@ class Api_model extends CI_Model
             WHERE u.usuario = '$username' AND u.contrasena = '$new_pass' AND u.estatus in (1,3)");
             return $query->result_array();
 	}
+    function getNacionalidades()
+    {
+        return $this->db->query("SELECT * FROM opcs_x_cats WHERE id_catalogo=11")->result_array();
+    }
 
 }
