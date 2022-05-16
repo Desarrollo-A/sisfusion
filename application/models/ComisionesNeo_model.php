@@ -371,8 +371,25 @@ public function getLotesPagados($res){
  
     }
 
+    public function getFlag($param){
+        return $this->db->query("SELECT cm.id_lote, sum(cm.comision_total) as total,  (sum(cm.comision_total) - pc.total_comision) resta, (CASE when pc.bandera = 0 then 10 when pc.bandera = 55 then 15 when pc.bandera = 1 then 11 when pc.bandera = 7 then 17 end) as bandera
+        FROM comisiones cm
+        INNER JOIN pago_comision pc on pc.id_lote = cm.id_lote 
+        INNER JOIN lotes lo on lo.idLote = cm.id_lote AND lo.registro_comision not in (8)
+        WHERE cm.estatus = 1 AND pc.bandera in ($param) and (cm.descuento is null OR cm.descuento = 0) --and pc.id_lote = 33355
+        GROUP BY cm.id_lote, pc.total_comision, pc.bandera
+        HAVING sum(cm.comision_total) - pc.total_comision not in (0) 
+        order by cm.id_lote");
+    }
 
 
-      
+    public function updateFlag($a, $b, $c){
+        return $this->db->query("UPDATE pago_comision SET total_comision = $b, bandera = $c WHERE id_lote in ($a)");
+    }
+    
+
+
+     
+    
 
 }
