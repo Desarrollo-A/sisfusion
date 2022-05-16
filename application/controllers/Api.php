@@ -288,4 +288,10 @@ class Api extends CI_Controller
         }
     }
 
+
+    function getNacionalidades(){
+        $data = $this->Api_model->getNacionalidades();
+       echo json_encode(array("resultado" => true, "data" => $data));
+    }
+
 }
