@@ -1486,7 +1486,7 @@ public function select_gph_maderas_64(){ //HACER INSERT DE LOS LOTES EN 0 Y PASA
           
           <p style='padding: 10px 90px;text-align: center;'>La nueva contraseña del usuario ASESOR COMODÍN es: $key
           </p>
-          <p style='padding: 10px 90px;text-align: center;'><b>*Recuerda que esta contraseña solo es valída durante 15 días.</b> 
+          <p style='padding: 10px 90px;text-align: center;'><b>*Recuerda que esta contraseña solo es válida durante 15 días.</b> 
           </p>
       </td>
     </tr></table>
