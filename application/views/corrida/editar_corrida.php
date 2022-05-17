@@ -2685,17 +2685,17 @@
 
 
 
-                                        $scope.superficie = response.data[0].sup;
-                                        $scope.preciom2 = response.data[0].precio;
-                                        $scope.total = response.data[0].total;
-                                        $scope.porcentajeInv = response.data[0].porcentaje;
-                                        $scope.enganche = response.data[0].enganche;
-                                        $scope.CurrentDate = new Date();
-
-                                        $scope.nombreLote = response.data[0].nombreLote;
-                                        $scope.precioTotal = response.data[0].total;
-                                        $scope.superficie = response.data[0].sup;
-                                        $scope.preciom2 = response.data[0].precio;
+                                        // $scope.superficie = response.data[0].sup;
+                                        // $scope.preciom2 = response.data[0].precio;
+                                        // $scope.total = response.data[0].total;
+                                        // $scope.porcentajeInv = response.data[0].porcentaje;
+                                        // $scope.enganche = response.data[0].enganche;
+                                        // $scope.CurrentDate = new Date();
+                                        //
+                                        // $scope.nombreLote = response.data[0].nombreLote;
+                                        // $scope.precioTotal = response.data[0].total;
+                                        // $scope.superficie = response.data[0].sup;
+                                        // $scope.preciom2 = response.data[0].precio;
 
                                         $scope.banco = response.data[0].banco;
                                         $scope.rsocial = response.data[0].empresa;

@@ -1208,7 +1208,7 @@
         currency: "USD",//se coloca USD para que este no muestre el prefijo de los pesos mexas
     });
     $(document).on('click', '#menuTotalVentas', function(){
-       console.log('Se debe abrir el menu alv');
+       // console.log('Se debe abrir el menu alv');
         $('#PCtable').toggleClass('hide');
         // document.getElementById("PCtable").classList.toggle("hiden");
         // $('#PCtable').fadeToggle('slow');
@@ -1216,7 +1216,7 @@
 
 
     function searchPXM(){
-        console.log('llegué aqui alv');
+        // console.log('llegué aqui alv');
         let tipo_busqueda = $('#tipo_operacion').val();
         let fecha_inicio = $('#date_inicio_s').val();
         let fecha_termino = $('#date_fin_s').val();
@@ -1239,10 +1239,11 @@
             // com2.append("fecha_inicio", fecha_inicio);
             // com2.append("fecha_fin", fecha_termino);
             // com2.append("typeTransaction", tipo_busqueda);
+
             var content ='';
             $.ajax({
                 method: 'POST',
-                url: 'Statistics/get_chart',
+                    url: '<?=base_url()?>/Statistics/get_chart',
                 data: JSON.stringify({tipo : tipo_busqueda, fecha_ini : fecha_inicio, fecha_fin : fecha_termino}),
                 beforeSend: function(){
                     $('#skeleton_table').removeClass('hide');
