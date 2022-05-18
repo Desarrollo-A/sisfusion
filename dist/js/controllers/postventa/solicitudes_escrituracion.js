@@ -335,13 +335,13 @@ $(document).on("click", "#sendRequestButton", function (e) {
                     // getDocumentsInformation(idSolicitud);
                     alerts.showNotification("top", "right", action == 1 ? "El documento se ha cargado con éxito." : action == 2 ? "El documento se ha eliminado con éxito." : action == 4 ? "Los motivos de rechazo se han asociado de manera exitosa para el documento." : "El documento ha sido validado correctamente.", "success");
                     if(details == 1){
-                        var tr = $('.details-control').closest('tr');
+                        var tr = $(`#trees${idSolicitud}`).closest('tr');
                         var row = prospectsTable.row(tr);
-                        createDocRow(row, tr, $('.details-control'));
+                        createDocRow(row, tr, $(`#trees${idSolicitud}`));
                     }else if(details == 2){
-                        var tr = $('.treePresupuesto').closest('tr');
+                        var tr = $(`#treePresupuesto${idSolicitud}`).closest('tr');
                         var row = prospectsTable.row(tr);
-                        createDocRowPresupuesto(row, tr, $('.treePresupuesto'));
+                        createDocRowPresupuesto(row, tr, $(`#treePresupuesto${idSolicitud}`));
                     }
                     else{
                         prospectsTable.ajax.reload();
@@ -576,7 +576,7 @@ $(document).on('submit', '#formEstatusLote', function (e) {
     saveEstatusLote(id_solicitud, formData);
 })
 
-$(document).on('click', '#treePresupuesto', function () {
+$(document).on('click', '.treePresupuesto', function () {
     var detailRows = [];
     var tr = $(this).closest('tr');
     var row = prospectsTable.row(tr);
@@ -621,9 +621,9 @@ $(document).on('click', '.approve', function(){
                 // getDocumentsInformation(idSolicitud);
                 alerts.showNotification("top", "right", action == 1 ? "El documento se ha cargado con éxito." : action == 2 ? "El documento se ha eliminado con éxito." : action == 4 ? "Los motivos de rechazo se han asociado de manera exitosa para el documento." : "El documento ha sido validado correctamente.", "success");
                 if(details == 1){
-                    var tr = $('.details-control').closest('tr');
+                    var tr = $(`#trees${idSolicitud}`).closest('tr');
                     var row = prospectsTable.row(tr);
-                    createDocRow(row, tr, $('.details-control'));
+                    createDocRow(row, tr, $(`#trees${idSolicitud}`));
                 }
                 else{
                     prospectsTable.ajax.reload();
@@ -754,7 +754,7 @@ function fillTable(beginDate, endDate, estatus) {
                             group_buttons += permisos(d.permisos, d.expediente, d.idDocumento, d.tipo_documento, d.idSolicitud, 1, newBtn);
                             break;
                         case 7:
-                            newBtn += `<button id="treePresupuesto" data-idSolicitud=${d.idSolicitud} class="btn-data btn-details-grey treePresupuesto" data-permisos="1" data-id-prospecto="" data-toggle="tooltip" data-placement="top" title="Desglose presupuestos"><i class="fas fa-chevron-down"></i></button>`;
+                            newBtn += `<button id="treePresupuesto${d.idSolicitud}" data-idSolicitud=${d.idSolicitud} class="btn-data btn-details-grey treePresupuesto" data-permisos="1" data-id-prospecto="" data-toggle="tooltip" data-placement="top" title="Desglose presupuestos"><i class="fas fa-chevron-down"></i></button>`;
                             if(d.flagPresupuesto == 1){
                                 exp = 2
                             }else{
@@ -768,7 +768,7 @@ function fillTable(beginDate, endDate, estatus) {
                             }else{
                                 exp = d.expediente;
                             }
-                            newBtn += `<button id="treePresupuesto" data-idSolicitud=${d.idSolicitud} class="btn-data btn-details-grey treePresupuesto" data-permisos="2" data-id-prospecto="" data-toggle="tooltip" data-placement="top" title="Desglose presupuestos"><i class="fas fa-chevron-down"></i></button>`;
+                            newBtn += `<button id="treePresupuesto${d.idSolicitud}" data-idSolicitud=${d.idSolicitud} class="btn-data btn-details-grey treePresupuesto" data-permisos="2" data-id-prospecto="" data-toggle="tooltip" data-placement="top" title="Desglose presupuestos"><i class="fas fa-chevron-down"></i></button>`;
                             group_buttons += permisos(d.permisos, exp, d.idDocumento, d.tipo_documento, d.idSolicitud, 1, newBtn);
                             break;
                         case 9:
@@ -781,7 +781,7 @@ function fillTable(beginDate, endDate, estatus) {
                             if (d.result == 1 && d.approvedPresupuesto == 1) {
                                 exp = 1;
                             }
-                            newBtn += `<button id="trees" data-idSolicitud=${d.idSolicitud} class="btn-data btn-details-grey details-control" data-permisos="1" data-id-prospecto="" data-toggle="tooltip" data-placement="top" title="Desglose documentos"><i class="fas fa-chevron-down"></i></button>`;
+                            newBtn += `<button id="trees${d.idSolicitud}" data-idSolicitud=${d.idSolicitud} class="btn-data btn-details-grey details-control" data-permisos="1" data-id-prospecto="" data-toggle="tooltip" data-placement="top" title="Desglose documentos"><i class="fas fa-chevron-down"></i></button>`;
                             newBtn += `<button id="newNotary" data-idSolicitud=${d.idSolicitud} class="btn-data btn-sky" data-permisos="1" data-id-prospecto="" data-toggle="tooltip" data-placement="top" title="Nueva Notaría"><i class="fas fa-user-tie"></i></button>`;
                             group_buttons += permisos(d.permisos, exp, d.idDocumento, d.tipo_documento, d.idSolicitud, 1, newBtn);
                             break;
@@ -791,7 +791,7 @@ function fillTable(beginDate, endDate, estatus) {
                                 exp = 1;
                             else if (d.result == 1 && d.estatusValidacion == 1)
                                 exp = 2;   
-                                newBtn += `<button id="trees" data-idSolicitud=${d.idSolicitud} class="btn-data btn-details-grey details-control" data-permisos="2" data-id-prospecto="" data-toggle="tooltip" data-placement="top" title="Desglose documentos"><i class="fas fa-chevron-down"></i></button>`;
+                                newBtn += `<button id="trees${d.idSolicitud}" data-idSolicitud=${d.idSolicitud} class="btn-data btn-details-grey details-control" data-permisos="2" data-id-prospecto="" data-toggle="tooltip" data-placement="top" title="Desglose documentos"><i class="fas fa-chevron-down"></i></button>`;
                             if (d.pertenece == 2){
                                 newBtn += `<button id="notaria" data-idSolicitud=${d.idSolicitud} class="btn-data btn-green" data-permisos="2" data-id-prospecto="" data-toggle="tooltip" data-placement="top" title="Notaría"><i class="fas fa-user-tie"></i></button>`;
                             } 
