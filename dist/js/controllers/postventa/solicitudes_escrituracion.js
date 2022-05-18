@@ -1434,7 +1434,7 @@ function createDocRow(row, tr, thisVar){
         row.data().solicitudes = JSON.parse(data);
         prospectsTable.row(tr).data(row.data());
         row = prospectsTable.row(tr);
-        row.child(buildTableDetail(row.data().solicitudes, $('.trees').attr('data-permisos'))).show();
+        row.child(buildTableDetail(row.data().solicitudes, $('.details-control').attr('data-permisos'))).show();
         tr.addClass('shown');
         thisVar.parent().find('.animacion').removeClass("fa-caret-right").addClass("fa-caret-down");
         $('#spiner-loader').addClass('hide');
