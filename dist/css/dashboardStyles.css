@@ -29,7 +29,7 @@
 }
 
 .mb-2 {
-  margin-bottom: 20px;
+  margin-bottom: 20px !important;
 }
 
 .mb-3 {
@@ -132,12 +132,20 @@
   padding-left: 40px;
 }
 
+.pt-0 {
+  padding-top: 0 !important;
+}
+
 .pt-1 {
   padding-top: 10px;
 }
 
 .pt-2 {
   padding-top: 20px;
+}
+
+.pt-3 {
+  padding-top: 30px;
 }
 
 .pb-1 {
@@ -148,6 +156,10 @@
   padding-bottom: 20px;
 }
 
+.pb-3 {
+  padding-bottom: 30px;
+}
+
 /* END Margin and padding generales */
 /* Utilities */
 .min-w100 {
@@ -155,7 +167,7 @@
 }
 
 .w-100 {
-  width: 100%;
+  width: 100% !important;
 }
 
 .w-90 {
@@ -220,6 +232,10 @@
 
 .border-none {
   border: none;
+}
+
+.rounded-circle {
+  border-radius: 50px;
 }
 
 .bkcolor-trans {
@@ -958,6 +974,12 @@
   font-size: 12px;
 }
 
+.text-modal:disabled {
+  border: none;
+  color: #929292;
+  background-color: #F1F1F1;
+}
+
 .boxGraphic {
   padding: 13px 10px;
 }
@@ -1181,3 +1203,266 @@ hr {
   margin-top: 20px;
   margin-bottom: 20px;
 }
+
+.form-control[disabled] {
+  border-bottom: none !important;
+  opacity: .65;
+}
+
+#calendar .fc-toolbar-chunk {
+  display: flex;
+  align-items: center;
+}
+
+#calendar .fc-toolbar-chunk .fc-prev-button, #calendar .fc-toolbar-chunk .fc-next-button {
+  background-color: transparent;
+  box-shadow: none;
+  color: #c1c1c1;
+  border: none;
+  font-size: 18px;
+  padding: 0;
+}
+
+#calendar .fc-toolbar-chunk .fc-prev-button:hover, #calendar .fc-toolbar-chunk .fc-next-button:hover {
+  color: #00A0FF;
+}
+
+#calendar .fc-toolbar-chunk .fc-today-button, #calendar .fc-toolbar-chunk .fc-appointments-button, #calendar .fc-toolbar-chunk .fc-timeGridDay-button, #calendar .fc-toolbar-chunk .fc-timeGridWeek-button, #calendar .fc-toolbar-chunk .fc-dayGridMonth-button {
+  background-color: #D1EEFF;
+  border: none;
+  box-shadow: none;
+  border-radius: 27px;
+  color: #333333;
+  padding: 8px 15px;
+}
+
+#calendar .fc-toolbar-chunk .fc-toolbar-title {
+  text-transform: uppercase;
+}
+
+#calendar .fc-toolbar-chunk .fc-icon-fab, #calendar .fc-toolbar-chunk .fc-icon-fas {
+  font-family: FontAwesome !important;
+}
+
+#calendar .fc-toolbar-chunk .fc-googleSignIn-button {
+  display: none !important;
+  background-color: transparent;
+  box-shadow: none;
+  border: none;
+  height: 37px;
+  width: 37px;
+  padding: 0;
+  border: 1px solid transparent;
+}
+
+#calendar .fc-toolbar-chunk .fc-googleSignIn-button img {
+  width: 100%;
+}
+
+#calendar .fc-toolbar-chunk .fc-googleLogout-button {
+  display: none !important;
+  background-color: transparent;
+  box-shadow: none;
+  border: none;
+  height: 37px;
+  width: 37px;
+  padding: 0;
+  border: 1px solid transparent;
+}
+
+#calendar .fc-toolbar-chunk .fc-googleLogout-button img {
+  width: 100%;
+}
+
+#calendar .fc-toolbar-chunk .fc-button-active {
+  background-color: #00A0FF;
+  color: #ffffff;
+}
+
+#calendar .fc-view-harness .fc-scrollgrid {
+  border: 1px solid #eeeeee;
+}
+
+#calendar .fc-view-harness .fc-scrollgrid .fc-daygrid-day {
+  border: 1px solid #eeeeee !important;
+}
+
+#calendar .fc-view-harness .fc-scrollgrid .fc-daygrid-block-event {
+  box-shadow: none;
+}
+
+#calendar .fc-view-harness .fc-scrollgrid .fc-day-other {
+  background: repeating-linear-gradient(-55deg, #f8f8f8, #f8f8f8 5px, #ffffff 5px, #ffffff 10px);
+}
+
+#calendar .fc-view-harness .fc-scrollgrid .fc-day-today {
+  background-color: transparent;
+}
+
+#calendar .fc-view-harness .fc-scrollgrid .fc-day-today .fc-daygrid-day-top a {
+  background-color: #4382EF;
+  height: 25px;
+  width: 25px;
+  border-radius: 25px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #ffffff;
+  font-weight: 500;
+}
+
+#calendar .fc-view-harness .fc-scrollgrid .fc-daygrid-day-number {
+  font-size: 12px;
+}
+
+#calendar .fc-daygrid-day-frame {
+  padding: 3px;
+}
+
+#calendar .evtAbierto {
+  border-left: 4px solid #50d920 !important;
+}
+
+#calendar .evtFinalizado {
+  border-left: 4px solid #df5a5a !important;
+}
+
+#calendar .fc-daygrid-event {
+  padding-left: 4px;
+}
+
+#feedbackModal .radio-with-Icon input[type="radio"]:checked ~ label i {
+  color: #929292;
+}
+
+#feedbackModal .radio-with-Icon i {
+  color: #eaeaea;
+}
+
+#feedbackModal .radio-with-Icon i:hover {
+  color: #929292;
+}
+
+.iconMod {
+  color: #c1c1c1;
+}
+
+#allAppointmentsModal .close {
+  font-size: 25px;
+  font-weight: 300;
+  position: absolute;
+  top: 7px;
+  right: 10px;
+}
+
+#allAppointmentsModal .table-striped {
+  width: 100% !important;
+}
+
+#allAppointmentsModal .table-striped thead > tr {
+  background-color: transparent !important;
+  color: #333333;
+}
+
+#allAppointmentsModal .table-striped thead > tr th {
+  border-right: 1px solid #c1c1c1;
+  font-weight: 300;
+}
+
+#allAppointmentsModal .table-striped thead > tr th:last-child {
+  border-right: none;
+}
+
+#allAppointmentsModal .table-striped thead > tr .fa-info-circle {
+  color: #999999;
+}
+
+#allAppointmentsModal .table-striped tbody tr:hover {
+  background-color: transparent;
+}
+
+#allAppointmentsModal .table-striped tbody tr td {
+  padding: 0 5px !important;
+  border-right: 1px solid #c1c1c1;
+}
+
+#allAppointmentsModal .table-striped tbody tr td:nth-child(3) {
+  display: flex;
+  justify-content: center;
+}
+
+#allAppointmentsModal .table-striped tbody tr td:nth-child(4):focus-within {
+  border: 2px solid #003d82;
+}
+
+#allAppointmentsModal .table-striped tbody tr td:nth-child(4):hover {
+  border: 2px solid #003d82;
+  opacity: 0.3;
+}
+
+#allAppointmentsModal .table-striped tbody tr td:last-child {
+  border-right: none;
+}
+
+#allAppointmentsModal .table-striped tbody select {
+  width: 88% !important;
+  background-image: none;
+  color: #003d82;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  appearance: none;
+  background: url(../img/siguiente.png);
+  background-repeat: no-repeat;
+  background-size: 16px 17px;
+  background-position: right;
+}
+
+#allAppointmentsModal .table-striped tbody select:focus {
+  box-shadow: none !important;
+}
+
+#allAppointmentsModal .table-striped tbody label {
+  color: #333333 !important;
+  font-weight: 300;
+}
+
+#allAppointmentsModal .table-striped tbody .textarea {
+  border: none;
+  border-radius: 0;
+  background-color: transparent;
+  overflow: auto;
+  resize: none;
+  width: 100%;
+  height: 25px;
+}
+
+#allAppointmentsModal .table-striped .tooltip-inner {
+  text-align: justify;
+  background-color: #ffffff !important;
+  color: #929292;
+}
+
+#allAppointmentsModal .dataTables_filter label {
+  display: flex;
+  align-items: center;
+  justify-content: end;
+  position: relative;
+}
+
+#allAppointmentsModal .dataTables_filter label input {
+  border: 0px !important;
+  background: #eaeaea;
+  border-radius: 27px;
+  padding: 0px 10px;
+  height: 38px;
+  text-align: left;
+}
+
+#allAppointmentsModal .dataTables_filter label #input_img {
+  position: absolute;
+  bottom: 2px;
+  right: 12px;
+  width: 24px;
+  height: 24px;
+}
+

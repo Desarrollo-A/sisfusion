@@ -29,7 +29,7 @@
 }
 
 .mb-2 {
-  margin-bottom: 20px;
+  margin-bottom: 20px !important;
 }
 
 .mb-3 {

@@ -8,30 +8,6 @@
 		<a href="<?=base_url()?>#" class="simple-text" style="color: #0e4377;font-weight: 800;font-family: 'Times New Roman', Times, serif;">CM</a>
 	</div>
 	<div class="sidebar-wrapper">
-		<div class="user hide">
-			<div class="photo">
-				<img src="../dist/img/faces/avatar.jpg" />
-			</div>
-			<div class="info">
-				<a data-toggle="collapse" href="#collapseExample" class="collapsed">
-					Tania Andrew
-					<b class="caret"></b>
-				</a>
-				<div class="collapse" id="collapseExample">
-					<ul class="nav">
-						<li>
-							<a href="#">My Profile</a>
-						</li>
-						<li>
-							<a href="#">Edit Profile</a>
-						</li>
-						<li>
-							<a href="#">Settings</a>
-						</li>
-					</ul>
-				</div>
-			</div>
-		</div>
 		<br><br>
 		<ul class="nav">
 <?php
