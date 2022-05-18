@@ -1506,7 +1506,7 @@ class Asesor extends CI_Controller
             <html lang="en">
             <head>
             <link rel="shortcut icon" href="' . base_url() . 'static/images/arbol_cm.png" />
-            <link href="<?=base_url()?>dist/css/bootstrap.min.css" rel="stylesheet" />
+            <link "<?=base_url()?>dist/css/bootstrap.min.css" rel="stylesheet" />
             <!--  Material Dashboard CSS    -->
             <link href="<?=base_url()?>dist/css/material-dashboard.css" rel="stylesheet" />
             <!--  CSS for Demo Purpose, don\'t include it in your project     -->

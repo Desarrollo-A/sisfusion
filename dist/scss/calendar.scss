@@ -130,6 +130,13 @@
 }
 
 #allAppointmentsModal{
+  .close{
+    font-size: 25px;
+    font-weight: 300;
+    position: absolute;
+    top: 7px;
+    right: 10px;
+  }
   .table-striped{
     width: 100%!important;
     thead > tr {
@@ -137,37 +144,57 @@
       color: $gray;
       th{
         border-right: 1px solid $platinumScroll;
+        font-weight: 300;
         &:last-child{
           border-right: none;
         }
       }
+      .fa-info-circle{
+        color: $grey9;
+      }
     }
     tbody{
-      tr > td{
-        padding: 0 5px!important;
-        border-right: 1px solid $platinumScroll;
-        &:nth-child(2) {
-          display:flex;
-          justify-content:center;
+      tr{
+        &:hover{
+          background-color: transparent;
         }
-        &:last-child{
-          border-right: none;
+        td{
+          padding: 0 5px!important;
+          border-right: 1px solid $platinumScroll;
+          &:nth-child(3){
+            display:flex;
+            justify-content:center;
+          }
+          &:nth-child(4):focus-within{
+            border: 2px solid $blueSubmit;
+          }
+          &:nth-child(4):hover{
+            border: 2px solid $blueSubmit;
+            opacity: 0.3;
+          }
+          &:last-child{
+            border-right: none;
+          }
         }
       }
       select{
         width: 88%!important;
         background-image: none;
-        color: $cerulean;
+        color: $blueSubmit;
         -moz-appearance: none;
         -webkit-appearance: none;
         appearance: none;
-        background: url(../img/next.png);
+        background: url(../img/siguiente.png);
         background-repeat:no-repeat;
         background-size:16px 17px;
         background-position:right;
         &:focus{
-          border-color:none!important;
+          box-shadow: none!important;
         }
+      }
+      label{
+        color: $gray!important;
+        font-weight: 300;
       }
       .textarea{
         border: none;
@@ -181,6 +208,29 @@
     }
     .tooltip-inner {
       text-align: justify;
+      background-color: $white!important;
+      color: $deepGray;
+    }
+  }
+  .dataTables_filter label{
+    display: flex;
+    align-items: center;
+    justify-content: end;
+    position: relative;
+    input {
+      border: 0px !important;
+      background: $platinum;
+      border-radius: 27px;
+      padding: 0px 10px;
+      height: 38px;
+      text-align: left;
+    }
+    #input_img {
+      position: absolute;
+      bottom: 2px;
+      right: 12px;
+      width: 24px;
+      height: 24px;
     }
   }
 }

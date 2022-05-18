@@ -221,5 +221,23 @@ class Calendar extends CI_Controller {
     public function side_bar_calendar(){
         $this->load->view('template/calendar_sidebar');
     }
+
+    public function updateNFinishAppointments(){
+        $updateArrayData = json_decode(file_get_contents("php://input"));
+        $this->db->trans_begin();
+        $this->db->update_batch('agenda', $updateArrayData, 'id_cita');
+        if ($this->db->trans_status() === FALSE) {
+            $this->db->trans_rollback();
+            return false;
+        } else {
+            $this->db->trans_commit();
+            return true;
+        }
+
+        if ($response)
+            echo json_encode(array("status" => 200, "message" => "El registro se ha actualizado de manera exitosa."));
+        else 
+            echo json_encode(array("status" => 503, "message" => "Oops, algo salió mal. No se ha podido actualizar el estatus del prospecto"));
+    }
 }
  
