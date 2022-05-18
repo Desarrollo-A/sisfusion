@@ -226,7 +226,7 @@
         foreach ($query->result_array() as $row) {
 
             $this->db->trans_begin();
-
+            $id_cliente = $this->db->query("SELECT id_cliente FROM clientes WHERE status = 1 and idLote IN (" . $row['idLote'] . ") ")->result_array();
             $this->db->query("UPDATE historial_documento SET status = 0 WHERE status = 1 and idLote IN (" . $row['idLote'] . ") ");
             $this->db->query("UPDATE prospectos SET tipo = 0, estatus_particular = 4, modificado_por = 1, fecha_modificacion = GETDATE() WHERE id_prospecto IN (SELECT id_prospecto FROM clientes WHERE status = 1 AND idLote = " . $row['idLote'] . ")");
             $this->db->query("UPDATE clientes SET status = 0 WHERE status = 1 and idLote IN (" . $row['idLote'] . ") ");
@@ -262,8 +262,10 @@
                 'status' => $datos['status'],
                 'idLote' => $row['idLote'],
                 'tipo' => $datos['tipo'],
-                'userLiberacion' => $datos['userLiberacion']
+                'userLiberacion' => $datos['userLiberacion'],
+                'id_cliente' => (count($id_cliente)>=1 ) ? $id_cliente[0]['id_cliente'] : 0
             );
+
 
             $this->db->insert('historial_liberacion', $data_l);
 
