@@ -752,7 +752,7 @@ $('#tabla_deposito_seriedad thead tr:eq(0) th').each( function (i) {
                                 }
                             }
                         }else{
-                            buttonst += '<a href="" title= "Tipo de venta" id="vCompartida" data-idCliente="'+d.id_cliente+'" data-idLote="'+d.idLote+'" class="btn-data btn-green"><i class="fas fa-users"></i></a>'
+                            buttonst += '<a href="" title= "Asignación de ventas compartidas" id="vCompartida" data-idCliente="'+d.id_cliente+'" data-idLote="'+d.idLote+'" class="btn-data btn-green"><i class="fas fa-users"></i></a>'
                         }
                         
                         return '<div class="d-flex justify-center align-center">'+buttonst+'</div>';
