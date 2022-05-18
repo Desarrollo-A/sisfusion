@@ -29,7 +29,7 @@
 }
 
 .mb-2 {
-  margin-bottom: 20px;
+  margin-bottom: 20px !important;
 }
 
 .mb-3 {
@@ -1128,6 +1128,14 @@
   color: #c1c1c1;
 }
 
+#allAppointmentsModal .close {
+  font-size: 25px;
+  font-weight: 300;
+  position: absolute;
+  top: 7px;
+  right: 10px;
+}
+
 #allAppointmentsModal .table-striped {
   width: 100% !important;
 }
@@ -1139,41 +1147,64 @@
 
 #allAppointmentsModal .table-striped thead > tr th {
   border-right: 1px solid #c1c1c1;
+  font-weight: 300;
 }
 
 #allAppointmentsModal .table-striped thead > tr th:last-child {
   border-right: none;
 }
 
-#allAppointmentsModal .table-striped tbody tr > td {
+#allAppointmentsModal .table-striped thead > tr .fa-info-circle {
+  color: #999999;
+}
+
+#allAppointmentsModal .table-striped tbody tr:hover {
+  background-color: transparent;
+}
+
+#allAppointmentsModal .table-striped tbody tr td {
   padding: 0 5px !important;
   border-right: 1px solid #c1c1c1;
 }
 
-#allAppointmentsModal .table-striped tbody tr > td:nth-child(2) {
+#allAppointmentsModal .table-striped tbody tr td:nth-child(3) {
   display: flex;
   justify-content: center;
 }
 
-#allAppointmentsModal .table-striped tbody tr > td:last-child {
+#allAppointmentsModal .table-striped tbody tr td:nth-child(4):focus-within {
+  border: 2px solid #003d82;
+}
+
+#allAppointmentsModal .table-striped tbody tr td:nth-child(4):hover {
+  border: 2px solid #003d82;
+  opacity: 0.3;
+}
+
+#allAppointmentsModal .table-striped tbody tr td:last-child {
   border-right: none;
 }
 
 #allAppointmentsModal .table-striped tbody select {
   width: 88% !important;
   background-image: none;
-  color: #00A0FF;
+  color: #003d82;
   -moz-appearance: none;
   -webkit-appearance: none;
   appearance: none;
-  background: url(../img/next.png);
+  background: url(../img/siguiente.png);
   background-repeat: no-repeat;
   background-size: 16px 17px;
   background-position: right;
 }
 
 #allAppointmentsModal .table-striped tbody select:focus {
-  border-color: none !important;
+  box-shadow: none !important;
+}
+
+#allAppointmentsModal .table-striped tbody label {
+  color: #333333 !important;
+  font-weight: 300;
 }
 
 #allAppointmentsModal .table-striped tbody .textarea {
@@ -1188,4 +1219,30 @@
 
 #allAppointmentsModal .table-striped .tooltip-inner {
   text-align: justify;
+  background-color: #ffffff !important;
+  color: #929292;
+}
+
+#allAppointmentsModal .dataTables_filter label {
+  display: flex;
+  align-items: center;
+  justify-content: end;
+  position: relative;
+}
+
+#allAppointmentsModal .dataTables_filter label input {
+  border: 0px !important;
+  background: #eaeaea;
+  border-radius: 27px;
+  padding: 0px 10px;
+  height: 38px;
+  text-align: left;
+}
+
+#allAppointmentsModal .dataTables_filter label #input_img {
+  position: absolute;
+  bottom: 2px;
+  right: 12px;
+  width: 24px;
+  height: 24px;
 }
