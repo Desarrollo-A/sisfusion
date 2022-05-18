@@ -1,4 +1,5 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="<?=base_url()?>dist/css/shadowbox.css">
 <link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet"/>
 <body>
     <div class="wrapper">
@@ -55,9 +56,20 @@
                         $cadena = '<button type="button" class="btn btn-info subir_factura_multiple" >SUBIR FACTURAS</button>';
                     }
                 }
-            }
-            else{
-                $cadena = '';
+            } else if ($forma_pago == 5) {
+                if(count($opn_cumplimiento) == 0){
+                    $cadena = '<button type="button" class="btn btn-info subir-archivo">SUBIR DOCUMENTO FISCAL</button>';
+                } else if($opn_cumplimiento[0]['estatus'] == 0) {
+                    $cadena = '<button type="button" class="btn btn-info subir-archivo">SUBIR DOCUMENTO FISCAL</button>';
+                } else if ($opn_cumplimiento[0]['estatus'] == 1) {
+                    $idDoc = $opn_cumplimiento[0]["id_opn"];
+                    $cadena = '<p><b style="color:#4068AB;">Documento fiscal cargada con éxito</b></p>
+                            <a href="#" class="btn btn-info btn-round btn-fab btn-fab-mini verPDFExtranjero" 
+                                title="Documento fiscal"
+                                data-usuario="'.$opn_cumplimiento[0]["archivo_name"].'" >
+                            <span style="margin-top: 10px;" class="material-icons">block</span>
+                            </a>';
+                }
             }
         }
         ?>
@@ -360,6 +372,54 @@
                 </div>
             </div>
         </div>-->
+
+        <div class="modal fade modal-alertas" id="addFileExtranjero" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header bg-red">
+                        <h4 class="card-title"><b>Cargar documento fiscal</b></h4>
+                    </div>
+                    <form id="EditarPerfilExtranjeroForm"
+                          name="EditarPerfilExtranjeroForm"
+                          method="post">
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-lg-12 text-center">
+                                    <p>Recuerda que tu documento fiscal debe corresponder al total exacto de las
+                                        comisiones a solicitar, una vez solicitados tus pagos ya no podrás remplazar
+                                        este archivo.</p>
+                                    <div class="input-group">
+                                        <label  class="input-group-btn"></label>
+                                        <span class="btn btn-info btn-file">
+                                    <i class="fa fa-upload"></i> Subir archivo
+                                    <input id="file-upload-extranjero"
+                                           name="file-upload-extranjero"
+                                           required
+                                           accept="application/pdf"
+                                           type="file" />
+                                </span>
+                                        <p id="archivo-extranjero"></p>
+
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-12 text-center">
+                                            <h3 id="total-comision"></h3>
+                                        </div>
+                                        <div class="col-lg-12"
+                                             id="preview-div">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <button type="submit" id="sendFileExtranjero" class="btn btn-primary">GUARDAR</button>
+                                        <button class="btn btn-danger" type="button" data-dismiss="modal" >CANCELAR</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
         <!-- END Modals -->
 
         <div class="content boxContent">
@@ -481,9 +541,11 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <?php
-                                                echo $cadena;
-                                            ?>
+                                            <div class="row">
+                                                <div class="col-lg-12 text-left mt-1">
+                                                    <?= $cadena ?>
+                                                </div>
+                                            </div>
                                             <div class="material-datatables">
                                                 <div class="form-group">
                                                     <div class="table-responsive">
@@ -731,10 +793,86 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
+    <script type="text/javascript" src="<?=base_url()?>dist/js/shadowbox.js"></script>
+    <script>
+        Shadowbox.init();
+    </script>
     <script>
         userType = <?= $this->session->userdata('id_rol') ?>;
         userSede = <?= $this->session->userdata('id_sede') ?>;
         userID = <?= $this->session->userdata('id_usuario') ?>;
+
+        $("#file-upload-extranjero").on('change', function() {
+            $('#archivo-extranjero').val('');
+
+            v2 = document.getElementById("file-upload-extranjero").files[0].name;
+            document.getElementById("archivo-extranjero").innerHTML = v2;
+
+            const src = URL.createObjectURL(document.getElementById("file-upload-extranjero").files[0]);
+            $('#preview-div').html("");
+            $('#preview-div').append(`<embed src="${src}" width="500" height="400">`);
+        });
+
+        $(document).on("click", ".subir-archivo", function(e) {
+            e.preventDefault();
+            $('#archivo-extranjero').val('');
+
+            $.ajax({
+                url: 'getTotalComisionAsesor',
+                type: 'GET',
+                dataType: 'JSON',
+                success: function (data) {
+                    $('#total-comision').html("");
+                    $('#total-comision').append(`Total: $${formatMoney(data.total)}`);
+                    $('#addFileExtranjero').modal('show');
+                }
+            });
+        });
+
+        $("#EditarPerfilExtranjeroForm").one('submit', function(e){
+            document.getElementById('sendFileExtranjero').disabled =true;
+            $("#sendFileExtranjero").prop("disabled", true);
+            e.preventDefault();
+
+            const formData = new FormData(document.getElementById("EditarPerfilExtranjeroForm"));
+            formData.append("dato", "valor");
+
+            $.ajax({
+                type: 'POST',
+                url: url+'index.php/Usuarios/SubirPDFExtranjero',
+                data: formData,
+                contentType: false,
+                cache: false,
+                processData:false,
+                success: function(data) {
+                    document.getElementById('sendFileExtranjero').disabled =false;
+                    $("#sendFileExtranjero").prop("disabled", false);
+                    if (data == 1) {
+                        $("#addFileExtranjero").modal('hide');
+                        setTimeout('document.location.reload()',100);
+                    } else {
+                        $("#addFileExtranjero").modal('hide');
+                        alerts.showNotification("top", "right", "Error al subir el archivo.", "warning");
+                    }
+                },
+                error: function(){
+                    $("#addFileExtranjero").modal('hide');
+                    alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+                }
+            });
+        });
+
+        $(document).on('click', '.verPDFExtranjero', function () {
+            const $itself = $(this);
+            Shadowbox.open({
+                content: '<div><iframe style="overflow:hidden;width: 100%;height: 100%;position:absolute;" src="<?=base_url()?>static/documentos/extranjero/'+$itself.attr('data-usuario')+'"></iframe></div>',
+                player: "html",
+                title: "Visualizando documento fiscal: " + $itself.attr('data-usuario'),
+                width: 985,
+                height: 660
+            });
+        });
+
         $(document).ready(function () {
             $.post(url + "Contratacion/lista_proyecto", function (data) {
                 var len = data.length;
