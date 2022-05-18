@@ -107,34 +107,15 @@ class Postventa extends CI_Controller
         $idLote = $this->input->post("idLote");
         $data1 = $this->Postventa_model->getEmpRef($idLote)->result_array();
         $idClient = $this->Postventa_model->getClient($idLote)->row();
-        $data = $this->Postventa_model->getProyectos()->result_array();
-        if ($data != null){
-            $url = 'https://prueba.gphsis.com/backCobranza/index.php/PaginaCDM/getDatos_clientePV';
+        $resDecode = $this->servicioPostventa($data1[0]['referencia'], $data1[0]['empresa']);
+        $resDecode->data[0]->id_cliente = $idClient->id_cliente;
+        $resDecode->data[0]->referencia = $data1[0]['referencia'];
+        $resDecode->data[0]->empresa = $data1[0]['empresa'];
 
-            $datos = base64_encode(json_encode(array(
-                "referencia" => $data1[0]['referencia'],
-                "empresa" => $data1[0]['empresa']
-            )));
-
-            $opciones = array(
-                "http" => array(
-                    "header" => "Content-type: application/x-www-form-urlencoded\r\n",
-                    "method" => "POST",
-                    "content" => $datos, # Agregar el contenido definido antes
-                ),
-            );
-            # Preparar petición
-            $contexto = stream_context_create($opciones);
-            # Hacerla
-            $resultado = file_get_contents($url, false, $contexto);
-            $resDecode = json_decode(base64_decode($resultado));
-            $resDecode->data[0]->id_cliente = $idClient->id_cliente;
-
-            if ($resDecode->resultado == 1) {
-                echo json_encode($resDecode->data[0]);
-            } else {
-                echo json_encode(array());
-            }
+        if ($resDecode->resultado == 1) {
+            echo json_encode($resDecode->data[0]);
+        } else {
+            echo json_encode(array());
         }
     }
 
@@ -612,9 +593,24 @@ class Postventa extends CI_Controller
         $idLote = $_POST['idLote'];
         $idCliente = $_POST['idCliente'];
         $idPostventa = $_POST['idPostventa'];
+        $referencia = $_POST['referencia'];
+        $empresa = $_POST['empresa'];
+        $resDecode = $this->servicioPostventa($referencia, $empresa);
 
-        $informacion = $this->Postventa_model->setEscrituracion($_POST);
-        echo json_encode($informacion);
+        $dataFiscal = base64_encode(json_encode(array(
+            "id_dpersonal" => $_POST['idPostventa'],
+            "rfc" => $_POST['rfc'],
+            "calle" => $_POST['calleF'],
+            "numext" => $_POST['numExtF'],
+            "numint" => $_POST['numIntF'],
+            "colonia" => $_POST['coloniaf'],
+            "municipio" => $_POST['municipiof'],
+            "estado" => $_POST['estadof'],
+            "cp" => $_POST['cpf']
+        )));
+        $responseInsert = $this->insertPostventaDF($dataFiscal);
+        $informacion = $this->Postventa_model->setEscrituracion($idLote,$idCliente, $idPostventa, $resDecode->data[0]);
+        // echo json_encode($informacion);
     }
 
     public function getSolicitudes()
@@ -918,14 +914,14 @@ class Postventa extends CI_Controller
         $updateData = array(
             "nombre_escrituras" => $data['nombrePresupuesto2'] == '' || $data['nombrePresupuesto2'] == null ? null : $data['nombrePresupuesto2'],
             "estatus_pago" => $data['estatusPago'],
-            "superficie" => ($data['superficie'] == '' || $data['superficie'] == null) ? null : $data['superficie'],
-            "clave_catastral" => ($data['catastral'] == '' || $data['catastral'] == null) ? null : $data['catastral'],
+            "superficie" => ($data['superficie'] == '' || $data['superficie'] == null) ? NULL : $data['superficie'],
+            "clave_catastral" => ($data['catastral'] == '' || $data['catastral'] == null) ? NULL : $data['catastral'],
             "cliente_anterior" =>($data['cliente'] == 'default' || $data['cliente'] == null ? 2 : $data['cliente'] == 'uno') ? 1 : 2,
             "nombre_anterior" => $data['nombreT'] == '' || $data['nombreT'] == null || $data['nombreT'] == 'null' ? '' : $data['nombreT'],
-            "fecha_anterior" => ($data['fechaCA'] == '' || $data['fechaCA'] == null) ? null : date("Y-m-d", strtotime($data['fechaCA'])),
-            "RFC" => $data['rfcDatos'] == '' || $data['rfcDatos'] == 'N/A' ? null : $data['rfcDatos'],
+            "RFC" => $data['rfcDatos'] == '' || $data['rfcDatos'] == 'N/A' || $data['rfcDatos'] == 'null' ? NULL : $data['rfcDatos'],
             "tipo_escritura" => $data['tipoE']
         );
+        ($data['fechaCA2'] == '' || $data['fechaCA2'] == null || $data['fechaCA2'] == 'null') ? '': $updateData['fecha_anterior'] =  $data['fechaCA2'];
 
         $data = $this->Postventa_model->updatePresupuesto($updateData, $id_solicitud);
         if ($data != null)
@@ -1334,11 +1330,11 @@ class Postventa extends CI_Controller
                                                                 ' . $data->nombre_anterior . '
                                                             </td>
                                                             <td style="font-size: 1em;">
-                                                                <b>Nombre a quien escritura:</b><br>
+                                                                <b>Fecha contrato anterior:</b><br>
                                                                 ' . $data->fecha_anterior . '
                                                             </td>
                                                             <td style="font-size: 1em;">
-                                                                <b>Estatus de pago:</b><br>
+                                                                <b>RFC del titular anterior:</b><br>
                                                                 ' . $data->RFC . '
                                                             </td>
                                                         </tr>
@@ -1684,5 +1680,57 @@ class Postventa extends CI_Controller
             echo json_encode($data);
         else
             echo json_encode(array());
+    }
+
+    public function servicioPostventa($referencia, $empresa){
+        $url = 'https://prueba.gphsis.com/backCobranza/index.php/PaginaCDM/getDatos_clientePV';
+
+        $datos = base64_encode(json_encode(array(
+            "referencia" => $referencia,
+            "empresa" => $empresa
+        )));
+
+        $opciones = array(
+            "http" => array(
+                "header" => "Content-type: application/x-www-form-urlencoded\r\n",
+                "method" => "POST",
+                "content" => $datos, # Agregar el contenido definido antes
+            ),
+        );
+        # Preparar petición
+        $contexto = stream_context_create($opciones);
+        # Hacerla
+        $resultado = file_get_contents($url, false, $contexto);
+        $resDecode = json_decode(base64_decode($resultado));
+        return $resDecode;
+    }
+
+    public function insertPostventaDF($dataFiscal){
+        // print_r($dataFiscal);
+        // $opciones = array(
+        //     "http" => array(
+        //         "header" => "Content-type: application/x-www-form-urlencoded\r\n",
+        //         "method" => "POST",
+        //         "content" => $dataFiscal, # Agregar el contenido definido antes
+        //         'timeout' => 30,
+        //     ),
+        // );
+        $url = 'https://prueba.gphsis.com/backCobranza/index.php/PaginaCDM/updateDFiscales';
+
+        // $fields_string = http_build_query($dataFiscal);
+        $ch = curl_init($url);
+        # Setup request to send json via POST.
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $dataFiscal);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type:application/json'));
+        # Return response instead of printing.
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        # Send request.
+        $result = curl_exec($ch);
+        curl_close($ch);
+        // $resultado = file_get_contents($url, false, $contexto);
+        $resDecode = json_decode(base64_decode($result));
+        print_r($resDecode);
+
+        return $resDecode; 
     }
 }
