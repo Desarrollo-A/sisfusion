@@ -693,6 +693,13 @@ function update_estatus(){
     echo json_encode(array("data" => $dat));
   }
 
+  public function getTotalComisionAsesor()
+  {
+      $idUsuario = $this->session->userdata('id_usuario');
+      $data = $this->Comisiones_model->getTotalComisionAsesor($idUsuario);
+      echo json_encode($data);
+  }
+
   public function getDatosComisionesAsesorBaja($a)
   {
     $dat =  $this->Comisiones_model->getDatosComisionesAsesorBaja($a)->result_array();

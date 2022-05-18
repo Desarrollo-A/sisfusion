@@ -1180,8 +1180,14 @@ WHERE oxc.id_catalogo = 1 AND pcm.estatus = 11 AND pcm.id_usuario =  ".$this->se
                     u.forma_pago,pci1.id_pago_i, pac.porcentaje_abono, oxcC.nombre, sed.impuesto, pac.bonificacion, cl.lugar_prospeccion)");
         }
 
-
-
+    public function getTotalComisionAsesor($idUsuario)
+    {
+        $query = $this->db->query("SELECT SUM(pci.abono_neodata) AS total
+            FROM pago_comision_ind pci 
+            INNER JOIN comisiones com ON pci.id_comision = com.id_comision 
+            where pci.estatus = 1 and com.id_usuario = $idUsuario");
+        return $query->row();
+    }
 
     function getDatosComisionesAsesorBaja($estado){
         $filtro = 'AND u.estatus = 0 AND u.id_rol IN (3,9,7,42)';
