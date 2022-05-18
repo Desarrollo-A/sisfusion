@@ -108,14 +108,13 @@ class Postventa extends CI_Controller
         $data1 = $this->Postventa_model->getEmpRef($idLote)->result_array();
         $idClient = $this->Postventa_model->getClient($idLote)->row();
         $resDecode = $this->servicioPostventa($data1[0]['referencia'], $data1[0]['empresa']);
-        $resDecode->data[0]->id_cliente = $idClient->id_cliente;
-        $resDecode->data[0]->referencia = $data1[0]['referencia'];
-        $resDecode->data[0]->empresa = $data1[0]['empresa'];
-
-        if ($resDecode->resultado == 1) {
+        if (count($resDecode->data) > 0) {
+            $resDecode->data[0]->id_cliente = $idClient->id_cliente;
+            $resDecode->data[0]->referencia = $data1[0]['referencia'];
+            $resDecode->data[0]->empresa = $data1[0]['empresa'];
             echo json_encode($resDecode->data[0]);
         } else {
-            echo json_encode(array());
+            echo json_encode(false);
         }
     }
 
@@ -597,20 +596,26 @@ class Postventa extends CI_Controller
         $empresa = $_POST['empresa'];
         $resDecode = $this->servicioPostventa($referencia, $empresa);
 
-        $dataFiscal = base64_encode(json_encode(array(
+        $dataFiscal = array(
             "id_dpersonal" => $_POST['idPostventa'],
             "rfc" => $_POST['rfc'],
-            "calle" => $_POST['calleF'],
-            "numext" => $_POST['numExtF'],
-            "numint" => $_POST['numIntF'],
-            "colonia" => $_POST['coloniaf'],
-            "municipio" => $_POST['municipiof'],
-            "estado" => $_POST['estadof'],
-            "cp" => $_POST['cpf']
-        )));
+        );
+        ($_POST['calleF'] == '' || $_POST['calleF'] == null) ? '': $dataFiscal['calle'] =  $_POST['calleF'];
+        ($_POST['numExtF'] == '' || $_POST['numExtF'] == null) ? '': $dataFiscal['numext'] =  $_POST['numExtF'];
+        ($_POST['numIntF'] == '' || $_POST['numIntF'] == null) ? '': $dataFiscal['numint'] =  $_POST['numIntF'];
+        ($_POST['coloniaf'] == '' || $_POST['coloniaf'] == null) ? '': $dataFiscal['colonia'] =  $_POST['coloniaf'];
+        ($_POST['municipiof'] == '' || $_POST['municipiof'] == null) ? '': $dataFiscal['municipio'] =  $_POST['municipiof'];
+        ($_POST['estadof'] == '' || $_POST['estadof'] == null) ? '': $dataFiscal['estado'] =  $_POST['estadof'];
+        ($_POST['cpf'] == '' || $_POST['cpf'] == null) ? '': $dataFiscal['cp'] =  $_POST['cpf'];
+
+        $dataFiscal = base64_encode(json_encode($dataFiscal));
         $responseInsert = $this->insertPostventaDF($dataFiscal);
-        $informacion = $this->Postventa_model->setEscrituracion($idLote,$idCliente, $idPostventa, $resDecode->data[0]);
-        // echo json_encode($informacion);
+        if($responseInsert->resultado == 1){
+            $informacion = $this->Postventa_model->setEscrituracion($idLote,$idCliente, $idPostventa, $resDecode->data[0]);
+            echo json_encode($informacion);
+        }else{
+            echo json_encode(false);
+        }
     }
 
     public function getSolicitudes()
@@ -1729,8 +1734,6 @@ class Postventa extends CI_Controller
         curl_close($ch);
         // $resultado = file_get_contents($url, false, $contexto);
         $resDecode = json_decode(base64_decode($result));
-        print_r($resDecode);
-
         return $resDecode; 
     }
 }

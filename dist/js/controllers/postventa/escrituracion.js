@@ -73,6 +73,8 @@ function aportaciones(data) {
                 $("#lotes").selectpicker('refresh');
                 clearInputs();
                 getLotes($('#condominio').val());
+            }else{
+                alerts.showNotification("top", "right", "Oops, algo salio mal.", "error");
             }
         }
     });
@@ -111,29 +113,43 @@ function getInputData() {
 };
 
 function getClient(idLote) {
+    $('#spiner-loader').removeClass('hide');
     $.post('getClient', {
         idLote: idLote
     }, function (data) {
         console.log(data);
-        $('#nombre').val(data.ncliente);
-        $('#nombre2').val(data.ncliente);
-        $('#ocupacion').val(data.ocupacion); //pendiente
-        $('#origen').val(data.estado);
-        $('#ecivil').val(data.estado_civil);//pendiente
-        $('#rconyugal').val(data.regimen_matrimonial);//pendiente
-        $('#correo').val(data.correo);
-        // $('#direccionf').val(); //nosotros insertamos
-        let dir = `${data.direccion}, ${data.colonia} ${data.cod_post}`;
-        $('#direccion').val(dir); 
-        $('#rfc').val(data.rfc);
-        $('#telefono').val(data.telefono);
-        $('#cel').val(data.tfijo);
-        $('#idCliente').val(data.id_cliente);
-        $('#idPostventa').val(data.id_dpersonal);
-        $('#referencia').val(data.referencia);
-        $('#empresa').val(data.empresa);
+        if(data){
+            $('#nombre').val(data.ncliente);
+            $('#nombre2').val(data.ncliente);
+            $('#ocupacion').val(data.ocupacion); //pendiente
+            $('#origen').val(data.estado);
+            $('#ecivil').val(data.estado_civil);//pendiente
+            $('#rconyugal').val(data.regimen_matrimonial);//pendiente
+            $('#correo').val(data.correo);
+            // $('#direccionf').val(); //nosotros insertamos
+            let dir = `${data.direccion}, ${data.colonia} ${data.cod_post}`;
+            $('#direccion').val(dir); 
+            $('#rfc').val(data.rfc);
+            $('#telefono').val(data.telefono);
+            $('#cel').val(data.tfijo);
+            $('#idCliente').val(data.id_cliente);
+            $('#idPostventa').val(data.id_dpersonal);
+            $('#referencia').val(data.referencia);
+            $('#empresa').val(data.empresa);
+            data.idEstatus == 8 ? $("#estatusL").prop("checked", true):$("#estatusSL").prop("checked", true);
+            $('#check').removeClass("d-none");
+   
+        }else{
+            $('#lotes').val('');
+            $("#lotes").selectpicker('refresh');
+            clearInputs();
+            getLotes($('#condominio').val());
+            alerts.showNotification("top", "right", "No se han encontrado registros.", "danger");
+        }
+       
+        $('#spiner-loader').addClass('hide');
+
     }, 'json');
-    $('#check').removeClass("d-none");
 }
 
 function getProyectos() {
