@@ -12,10 +12,7 @@ $(document).ready(function() {
             $(this).html('<input type="text" class="textoshead"  placeholder="' + title + '"/>');
             $('input', this).on('keyup change', function () {
                 if ($("#prospects-datatable").DataTable().column(i).search() !== this.value) {
-                    $("#prospects-datatable").DataTable()
-                        .column(i)
-                        .search(this.value)
-                        .draw();
+                    $("#prospects-datatable").DataTable().column(i).search(this.value).draw();
                 }
             });
         }
@@ -108,7 +105,7 @@ $(document).ready(function() {
 
                                 actions += '<button class="desplegable btn-data btn-deepGray" id="btn_' + d.id_prospecto + '" onclick="javascript: $(this).addClass(\'hide\');$(\'#cnt_' + d.id_prospecto + '\').removeClass(\'hide\'); "><i class="fas fa-chevron-up"></i></button>';
                                 actions += '<div class="hide boxSBtns" id="cnt_' + d.id_prospecto + '">' + group_buttons + '<br><button onclick="javascript: $(\'#btn_' + d.id_prospecto + '\').removeClass(\'hide\');$(\'#cnt_' + d.id_prospecto + '\').addClass(\'hide\'); " class="btn-data btn-deepGray"><i class="fas fa-chevron-down"></i></button></div>';
-                                actions += '<button class="btn-data btn-gray update-status" data-id-prospecto="' + d.id_prospecto + '" title="Actualizar estatus"><i class="fas fa-redo"></i>' + change_buttons;
+                                actions += '<button class="btn-data btn-gray update-status" data-id-prospecto="' + d.id_prospecto + '" data-telefono="'+d.telefono+'" data-telefono2="'+d.telefono2+'" title="Actualizar estatus"><i class="fas fa-redo"></i>' + change_buttons;
                                 return '<center>'+actions+'<center>';
                             } else { // IS NOT ACTIVE
                                 var actions = '';
@@ -134,7 +131,7 @@ $(document).ready(function() {
                                             '<button class="btn-data btn-violetChin re-asign" data-id-prospecto="' + d.id_prospecto + '" rel="tooltip" data-placement="left" title="Re - asignar"><i class="fab fa-rev"></i></button>';
                                         actions += '<button class="desplegable btn-data btn-deepGray" id="btn_' + d.id_prospecto + '" onclick="javascript: $(this).addClass(\'hide\');$(\'#cnt_' + d.id_prospecto + '\').removeClass(\'hide\'); "><i class="fas fa-chevron-up"></i></button>';
                                         actions += '<div class="hide boxSBtns" id="cnt_' + d.id_prospecto + '">' + group_buttons + '<br><button onclick="javascript: $(\'#btn_' + d.id_prospecto + '\').removeClass(\'hide\');$(\'#cnt_' + d.id_prospecto + '\').addClass(\'hide\'); " class="btn-data btn-deepGray"><i class="fas fa-chevron-down"></i></button></div>';
-                                        actions += '<button class="btn-data btn-gray update-status" data-id-prospecto="' + d.id_prospecto + '" title="Actualizar estatus"><i class="fas fa-redo"></i>';
+                                        actions += '<button class="btn-data btn-gray update-status" data-id-prospecto="' + d.id_prospecto + '" data-telefono="'+d.telefono+'" data-telefono2="'+d.telefono2+'" title="Actualizar estatus"><i class="fas fa-redo"></i>';
                                     }
                                     return '<center>'+actions+'</center>';
                                 } else {
@@ -166,7 +163,7 @@ $(document).ready(function() {
                                             '<button class="btn-data btn-sky see-information" data-id-prospecto="' + d.id_prospecto + '" rel="tooltip" data-placement="left" title="Ver información"><i class="far fa-eye"></i></button>';
                                         actions += '<button class="desplegable btn-data btn-deepGray" id="btn_' + d.id_prospecto + '" onclick="javascript: $(this).addClass(\'hide\');$(\'#cnt_' + d.id_prospecto + '\').removeClass(\'hide\'); "><i class="fas fa-chevron-up"></i></button>';
                                         actions += '<div class="hide boxSBtns" id="cnt_' + d.id_prospecto + '">' + group_buttons + '<br><button onclick="javascript: $(\'#btn_' + d.id_prospecto + '\').removeClass(\'hide\');$(\'#cnt_' + d.id_prospecto + '\').addClass(\'hide\'); " class="btn-data btn-deepGray"><i class="fas fa-chevron-down"></i></button></div>';
-                                        actions += '<button class="btn-data btn-gray update-status" data-id-prospecto="' + d.id_prospecto + '" title="Actualizar estatus"><i class="fas fa-redo"></i>';
+                                        actions += '<button class="btn-data btn-gray update-status" data-id-prospecto="' + d.id_prospecto + '" data-telefono="'+d.telefono+'" data-telefono2="'+d.telefono2+'" title="Actualizar estatus"><i class="fas fa-redo"></i>';
                                     }
                                     return '<center>'+actions+'</center>';
                                 } else {
@@ -180,7 +177,7 @@ $(document).ready(function() {
                                             '<button class="btn-data btn-sky see-information" data-id-prospecto="' + d.id_prospecto + '"><i class="material-icons" rel="tooltip" data-placement="left" title="Ver información">remove_red_eye</i></button>';
                                         actions += '<button class="desplegable btn-data btn-deepGray" id="btn_' + d.id_prospecto + '" onclick="javascript: $(this).addClass(\'hide\');$(\'#cnt_' + d.id_prospecto + '\').removeClass(\'hide\'); "><i class="fas fa-chevron-up"></i></button>';
                                         actions += '<div class="hide boxSBtns" id="cnt_' + d.id_prospecto + '">' + group_buttons + '<br><button onclick="javascript: $(\'#btn_' + d.id_prospecto + '\').removeClass(\'hide\');$(\'#cnt_' + d.id_prospecto + '\').addClass(\'hide\'); " class="btn-data btn-deepGray"><i class="fas fa-chevron-down"></i></button></div>';
-                                        if (d.vigencia >= 0 /*< 5 && d.fecha_creacion >= '2021-04-19 23:59:59.000'*/) {
+                                        if (d.vigencia >= 0) {
                                             actions += '<button class="btn-data btn-deepGray update-validity" data-id-prospecto="' + d.id_prospecto + '" rel="tooltip" data-placement="left" title="Renovar vigencia"><i class="fas fa-history"></i></button>';
                                         }
                                     }
@@ -472,9 +469,6 @@ function validateEmptySelects(type) {
         if ($("#state").val() == null || $("#state").val() == '') {
             $("#state").val(33);
         }
-        /* if (($("#own").val() == null || $("#own").val() == '') && ($("#rented").val() == null || $("#rented").val() == '') && ($("#paying").val() == null || $("#paying").val() == '') && ($("#family").val() == null || $("#family").val() == '') && ($("#other").val() == null || $("#other").val() == '')) {
-             $("#hidden").val(6);
-         }*/
     } else if (type == 3) { // validate fields before insert a co-owner
         if ($("#civil_status_co").val() == null || $("#civil_status_co").val() == '') {
             $("#civil_status_co").val(7);
@@ -884,8 +878,6 @@ function validateEmptyFields(v, type) {
 }
 
 function fillTimeline(v) {
-    //colours = ["success", "danger", "warning", "info", "rose"];
-    //colourSelected = colours[Math.floor(Math.random() * colours.length)];
     $("#comments-list").append('<li class="timeline-inverted">\n' +
         '    <div class="timeline-badge info"></div>\n' +
         '    <div class="timeline-panel">\n' +
@@ -1062,22 +1054,22 @@ $(document).on('click', '.re-asign', function(e) {
         $("#myReAsignModalGerMktd").modal();
         $("#id_prospecto_re_asign_gm").val(id_prospecto);
     }
-    //id_prospecto = $(this).attr("data-id-prospecto");
-    //$("#myReAsignModal").modal();
-    //$("#id_prospecto_re_asign").val(id_prospecto);
 });
 
 $(document).on('click', '.update-status', function(e) {
     id_prospecto = $(this).attr("data-id-prospecto");
+    telefono = $(this).attr("data-telefono");
+    telefono2 = $(this).attr("data-telefono2");
     $("#myUpdateStatusModal").modal();
     $("#id_prospecto_estatus_particular").val(id_prospecto);
+    $("#telefono1").val(telefono);
+    $("#telefono2").val(telefono2);
 });
 
 $("#my_update_status_form").on('submit', function(e) {
     e.preventDefault();
     if($('#estatus_particular').val() == 3){
         $("#agendaInsert").modal();
-
     }else{$.ajax({
         type: 'POST',
         url: 'updateStatus',
@@ -1089,13 +1081,7 @@ $("#my_update_status_form").on('submit', function(e) {
             // Actions before send post
             document.getElementById("finishS").disabled = true;
         },
-        success: function(data) {
-            /*$("#proyecto").val("");
-            $("#proyecto").selectpicker('refresh');
-            $("#condominio").empty().selectpicker('refresh');
-            $("#lote").empty().selectpicker('refresh');
-            document.getElementById("datatoassign").style.display = "none";
-            document.getElementById("housesDetail").style.display = "none";*/
+        success: function(data) {            
             if (data == 1) { // SUCCESS RESPONSE
                 document.getElementById("finishS").disabled = false;
                 $('#myUpdateStatusModal').modal("hide");
@@ -1123,27 +1109,6 @@ function cleanSelects() {
     $("#estatus_particular").selectpicker("refresh");
 }
 
-/*$.post('getStatusMktdPreventa', function(data) {
-    $("#estatus_particular2").append($('<option disabled selected>').val("0").text("Seleccione una opción"));
-    var len = data.length;
-    for (var i = 0; i < len; i++) {
-        var id = data[i]['id_opcion'];
-        var name = data[i]['nombre'];
-        $("#estatus_particular2").append($('<option>').val(id).text(name));
-    }
-    if (len <= 0) {
-        $("#estatus_particular2").append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
-    }
-    $("#estatus_particular2").selectpicker('refresh');
-}, 'json');
-
-$(document).on('click', '.update-status-preventa', function(e) {
-    id_prospecto = $(this).attr("data-id-prospecto");
-    ///alert(id_prospecto);
-    $("#myUpdateStatusModalPreventa").modal();
-    $("#id_prospecto_estatus_particular2").val(id_prospecto);
-});*/
-
 $("#my_update_status_form_preventa").on('submit', function(e) {
     e.preventDefault();
 
@@ -1151,27 +1116,13 @@ $("#my_update_status_form_preventa").on('submit', function(e) {
     let id = $("#id_prospecto_estatus_particular2").val();
     //si la opcion seleccionada es 6 
     if (val == 7) {
-
         $("#id_prospecto_estatus_particular3").val(id);
         $("#myUpdateStatusPreve").modal();
-        //$('#idestatusPP').val(val);
-
-
-    } else {
-
-
     }
-
 });
 
 $("#my_update_status_prevee").on('submit', function(e) {
     e.preventDefault();
-
-    //let val = $('#estatus_particular2').val();
-    //let id = $("#id_prospecto_estatus_particular2").val();
-    //si la opcion seleccionada es 6 
-    //$("#id_prospecto_estatus_particular3").val(id);
-    //  $("#myUpdateStatusPreve").modal();
     $.ajax({
         type: 'POST',
         url: 'updateStatusPreventa',
@@ -1273,86 +1224,56 @@ $(document).on('click', '.change-pl', function () { // MJ: FUNCIÓN CAMBIO DE ES
     });
 });
 
-function compareDates(fecha_creacion){
-    var isBefore = moment(fecha_creacion).isBefore('2022-01-20T00:00:00Z');
-    return isBefore;
-}
-$("#estatus_recordatorio").on('change', function(e){
-    let medio =  $(this).val();
-    if(medio == 2 || medio == 4 || medio == 5){
-        $("#comodinDIV").empty();
-        $("#comodinDIV").append(`<label>Dirección</label>`+
-        `<input id="comodin" name="comodin" type="text" class="form-control">`);
-        $("#comodinDIV2").removeClass('hide');
-      }else{
-        $("#comodinDIV").empty();
-
-      }
-  })
-
-$("#estatus_recordatorio_form").on('submit', function(e) {
-    e.preventDefault();
-    var formData = new FormData(this);
-    formData.append('estatus_particular',$('#estatus_particular').val());
-    formData.append('id_prospecto_estatus_particular',  $("#id_prospecto_estatus_particular").val());
-    $.ajax({
-        type: 'POST',
-        url: '../Calendar/insertRecordatorio',
-        data: formData,
-        contentType: false,
-        cache: false,
-        processData: false,
-        beforeSend: function() {
-            // Actions before send post
-            document.getElementById("finishS").disabled = true;
-        },
-        success: function(data) {
-            $.ajax({
-                type: 'POST',
-                url: 'updateStatus',
-                data: formData,
-                contentType: false,
-                cache: false,
-                processData: false,
-                beforeSend: function() {
-                    // Actions before send post
-                    document.getElementById("finishS").disabled = true;
-                },
-                success: function(data) {
-                    /*$("#proyecto").val("");
-                    $("#proyecto").selectpicker('refresh');
-                    $("#condominio").empty().selectpicker('refresh');
-                    $("#lote").empty().selectpicker('refresh');
-                    document.getElementById("datatoassign").style.display = "none";
-                    document.getElementById("housesDetail").style.display = "none";*/
-                    if (data == 1) { // SUCCESS RESPONSE
-                        document.getElementById("finishS").disabled = false;
-                        $('#myUpdateStatusModal').modal("hide");
-                        $('#agendaInsert').modal("hide");
-                        $('#estatus_particular').val("0");
-                        $("#estatus_particular").selectpicker("refresh");
-                        $('#prospects-datatable').DataTable().ajax.reload(null, false);
-                        alerts.showNotification("top", "right", "La actualización se ha llevado a cabo correctamente.", "success");
-                    } else if (data == 2) { // LOTE APARTADO
-                        document.getElementById("finishS").disabled = false;
-                        alerts.showNotification("top", "right", "La asignación no se ha podido llevar a cabo debido a que el lote seleccionado ya se encuentra apartado.", "warning");
-                    } else { // ALGO LE FALTÓ
-                        document.getElementById("finishS").disabled = false;
-                        alerts.showNotification("top", "right", "Asegúrate de haber llenado todos los campos mínimos requeridos.", "warning");
-                    }
-                },
-                error: function() {
-                    document.getElementById("finishS").disabled = false;
-                    alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
-                }
-            });
-        },
-        error: function() {
-            document.getElementById("finishS").disabled = false;
-            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+    function compareDates(fecha_creacion){
+        var isBefore = moment(fecha_creacion).isBefore('2022-01-20T00:00:00Z');
+        return isBefore;
+    }
+    $("#estatus_recordatorio").on('change', function(e){
+        let medio =  $(this).val();
+        if(medio == 2 || medio == 4 || medio == 5){
+            $("#comodinDIV").empty();
+            $("#comodinDIV").append(`<label>Dirección</label>`+
+            `<input id="comodin" name="comodin" type="text" class="form-control">`);
+            $("#comodinDIV2").removeClass('hide');
         }
+        else{
+            $("#comodinDIV").empty();
+        }
+    })
+
+    document.querySelector('#estatus_recordatorio_form').addEventListener('submit',async e =>  {
+        e.preventDefault();
+        const data = Object.fromEntries(new FormData(e.target));
+        if(gapi.auth2.getAuthInstance().isSignedIn.get()){
+            let inserted = await insertEventGoogle(data);
+            data['idGoogle'] = inserted;
+        }
+        data['estatus_particular'] = $('#estatus_particular').val();
+        data['id_prospecto_estatus_particular'] = $("#id_prospecto_estatus_particular").val();
+        $.ajax({
+            type: 'POST',
+            url: '../Calendar/insertRecordatorio',
+            data: JSON.stringify(data),
+            contentType: false,
+            cache: false,
+            processData: false,
+            beforeSend: function() {
+                $('#spiner-loader').removeClass('hide');
+            },
+            success: function(data) {
+                $('#spiner-loader').addClass('hide');
+                $('#myUpdateStatusModal').modal("hide");
+                $('#agendaInsert').modal("hide");
+                data = JSON.parse(data);
+                alerts.showNotification("top", "right", data["message"], (data["status" == 503]) ? "danger" : (data["status" == 400]) ? "warning" : "success");
+                $('#agendaInsert').modal('toggle');
+            },
+            error: function() {
+                $('#spiner-loader').addClass('hide');
+                alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+            }
+        });
     });
-});
 
 function getStatusRecordatorio(){
     $.post('../Calendar/getStatusRecordatorio', function(data) {
@@ -1370,106 +1291,42 @@ function getStatusRecordatorio(){
     }, 'json'); 
 }
 
-/*
-    $.post('getStatusMktd', function(data) {
-        $("#estatus_particular").append($('<option disabled selected>').val("0").text("Seleccione una opción"));
-        var len = data.length;
-        for (var i = 0; i < len; i++) {
-            var id = data[i]['id_opcion'];
-            var name = data[i]['nombre'];
-            $("#estatus_particular").append($('<option>').val(id).text(name));
-        }
-        if (len <= 0) {
-            $("#estatus_particular").append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
-        }
-        $("#estatus_particular").selectpicker('refresh');
+$("#estatus_recordatorio").on('change', function(e){
+    var medio = $("#estatus_recordatorio").val();
+    var box = $("#comodinDIV");
+    validateNCreate(medio, box);
+});
+
+function validateNCreate(medio, box){
+    box.empty();
+    let telefono1 = $('#telefono1').val();
+    let telefono2 = $('#telefono2').val();
+    if(medio == 2 || medio == 5){
+      box.append(`<label class="m-0">Dirección del ${medio == 5 ? 'evento':'recorrido'}</label><input id="direccion" name="direccion" type="text" class="form-control input-gral" value='' required>`);
+    }
+    else if(medio == 3){
+      box.append(`<div class="container-fluid"><div class="row"><div class="col-sm-12 col-md-6 col-lg-6 pl-0 m-0"><label class="m-0">Teléfono 1</label><input type="text" class="form-control input-gral" value=${ telefono1 != 'undefined' ? telefono1 : ''} disabled></div>`
+      +`<div class="col-sm-12 col-md-6 col-lg-6 pr-0 m-0"><label class="m-0">Teléfono 2</label><input type="text" class="form-control input-gral" id="telefono2" name="telefono2" value=${ telefono2 != 'undefined' ? telefono2 : ''}  ></div></div></div>`);
+    }
+    else if(medio == 4){
+      box.append(`<div class="col-sm-12 col-md-12 col-lg-12 p-0"><label class="m-0">Dirección de oficina</label><select class="selectpicker select-gral m-0 w-100" name="id_direccion" id="id_direccion" data-style="btn" data-show-subtext="true" data-live-search="true" title="Seleccione una opción" data-size="7" required></select></div>`);
+      getOfficeAddresses();
+    }
+    box.removeClass('hide');
+}
+
+function getOfficeAddresses(){
+    $.post('../Calendar/getOfficeAddresses', function(data) {
+      var len = data.length;
+      for (var i = 0; i < len; i++) {
+          var id = data[i]['id_direccion'];
+          var direccion = data[i]['direccion'];
+          $("#id_direccion").append($('<option>').val(id).text(direccion));
+      }
+      if (len <= 0) {
+        $("#id_direccion").append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
+      }
+
+      $("#id_direccion").selectpicker('refresh');
     }, 'json');
-
-    $.getJSON("getProspectingPlaces").done(function(data) {
-        $(".prospecting_place").append($('<option disabled selected>').val("0").text("Seleccione una opción"));
-        var len = data.length;
-        for (var i = 0; i < len; i++) {
-            var id = data[i]['id_opcion'];
-            var name = data[i]['nombre'];
-            $(".prospecting_place").append($('<option>').val(id).text(name));
-        }
-    });
-
-
-        // Fill the select of nationality
-    $.getJSON("getNationality").done(function(data) {
-        $(".nationality").append($('<option disabled selected>').val("").text("Seleccione una opción"));
-        var len = data.length;
-        for (var i = 0; i < len; i++) {
-            var id = data[i]['id_opcion'];
-            var name = data[i]['nombre'];
-            $(".nationality").append($('<option>').val(id).text(name));
-        }
-    });
-
-    // Fill the select of legal personality
-    $.getJSON("getLegalPersonality").done(function(data) {
-        $(".legal_personality").append($('<option disabled selected>').val("0").text("Seleccione una opción"));
-        var len = data.length;
-        for (var i = 0; i < len; i++) {
-            var id = data[i]['id_opcion'];
-            var name = data[i]['nombre'];
-            $(".legal_personality").append($('<option>').val(id).text(name));
-        }
-    });
-
-    // Fill the select of advertising
-    $.getJSON("getAdvertising").done(function(data) {
-        $(".advertising").append($('<option disabled selected>').val("0").text("Seleccione una opción"));
-        var len = data.length;
-        for (var i = 0; i < len; i++) {
-            var id = data[i]['id_opcion'];
-            var name = data[i]['nombre'];
-            $(".advertising").append($('<option>').val(id).text(name));
-        }
-    });
-
-    // Fill the select of sales plaza
-    $.getJSON("getSalesPlaza").done(function(data) {
-        $(".sales_plaza").append($('<option disabled selected>').val("0").text("Seleccione una opción"));
-        var len = data.length;
-        for (var i = 0; i < len; i++) {
-            var id = data[i]['id_opcion'];
-            var name = data[i]['nombre'];
-            $(".sales_plaza").append($('<option>').val(id).text(name));
-        }
-    });
-
-    // Fill the select of civil status
-    $.getJSON("getCivilStatus").done(function(data) {
-        $(".civil_status").append($('<option selected="true">').val("0").text("Seleccione una opción"));
-        var len = data.length;
-        for (var i = 0; i < len; i++) {
-            var id = data[i]['id_opcion'];
-            var name = data[i]['nombre'];
-            $(".civil_status").append($('<option>').val(id).text(name));
-        }
-    });
-
-    // Fill the select of matrimonial regime
-    $.getJSON("getMatrimonialRegime").done(function(data) {
-        $(".matrimonial_regime").append($('<option selected="true">').val("5").text("Seleccione una opción"));
-        var len = data.length;
-        for (var i = 0; i < len; i++) {
-            var id = data[i]['id_opcion'];
-            var name = data[i]['nombre'];
-            $(".matrimonial_regime").append($('<option>').val(id).text(name));
-        }
-    });
-
-    // Fill the select of state
-    $.getJSON("getState").done(function(data) {
-        $(".state").append($('<option disabled selected>').val("0").text("Seleccione una opción"));
-        var len = data.length;
-        for (var i = 0; i < len; i++) {
-            var id = data[i]['id_estado'];
-            var name = data[i]['nombre'];
-            $(".state").append($('<option>').val(id).text(name));
-        }
-        //$("#state").selectpicker('refresh');;
-    });*/
+}

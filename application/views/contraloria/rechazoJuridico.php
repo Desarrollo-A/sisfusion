@@ -55,6 +55,7 @@
                                             <th>PROYECTO</th>
                                             <th>CLUSTER</th>
                                             <th>LOTE</th>
+                                            <th>SEDE</th>
                                             <th>GERENTE</th>
                                             <th>COORDINADOR</th>
                                             <th>ASESOR</th>
@@ -310,43 +311,34 @@
                     titleAttr: 'Expedientes rechazados de jurídico',
                     title:'Expedientes rechazados de jurídico',
                     exportOptions: {
-                        columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+                        columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
                         format: {
                             header: function (d, columnIdx) {
                                 switch (columnIdx) {
                                     case 0:
                                         return 'PROYECTO';
-                                        break;
                                     case 1:
                                         return 'CLUSTER';
-                                        break;
                                     case 2:
                                         return 'LOTE';
-                                        break;
                                     case 3:
-                                        return 'GERENTE';
-                                        break;
+                                        return 'SEDE';
                                     case 4:
-                                        return 'COORDINADOR';
-                                        break;
+                                        return 'GERENTE';
                                     case 5:
-                                        return 'ASESOR';
-                                        break;
+                                        return 'COORDINADOR';
                                     case 6:
-                                        return 'USUARIO';
-                                        break;
+                                        return 'ASESOR';
                                     case 7:
-                                        return 'APARTADO';
-                                        break;
+                                        return 'USUARIO';
                                     case 8:
-                                        return 'COMENTARIO';
-                                        break;
+                                        return 'APARTADO';
                                     case 9:
-                                        return 'REALIZADO';
-                                        break;
+                                        return 'COMENTARIO';
                                     case 10:
+                                        return 'REALIZADO';
+                                    case 11:
                                         return 'VENCIMIENTO';
-                                        break;
                                 }
                             }
                         }
@@ -356,47 +348,38 @@
                     extend: 'pdfHtml5',
                     text: '<i class="fa fa-file-pdf-o"></i>',
                     orientation: 'landscape',
-                    pageSize: 'LEGAL',
+                    pageSize: 'A3',
                     titleAttr: 'Expedientes rechazados de jurídico',
                     title:'Expedientes rechazados de jurídico',
                     exportOptions: {
-                        columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+                        columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
                         format: {
                             header: function (d, columnIdx) {
                                 switch (columnIdx) {
                                     case 0:
                                         return 'PROYECTO';
-                                        break;
                                     case 1:
                                         return 'CLUSTER';
-                                        break;
                                     case 2:
                                         return 'LOTE';
-                                        break;
                                     case 3:
-                                        return 'GERENTE';
-                                        break;
+                                        return 'SEDE';
                                     case 4:
-                                        return 'COORDINADOR';
-                                        break;
+                                        return 'GERENTE';
                                     case 5:
-                                        return 'ASESOR';
-                                        break;
+                                        return 'COORDINADOR';
                                     case 6:
-                                        return 'USUARIO';
-                                        break;
+                                        return 'ASESOR';
                                     case 7:
-                                        return 'APARTADO';
-                                        break;
+                                        return 'USUARIO';
                                     case 8:
-                                        return 'COMENTARIO';
-                                        break;
+                                        return 'APARTADO';
                                     case 9:
-                                        return 'REALIZADO';
-                                        break;
+                                        return 'COMENTARIO';
                                     case 10:
+                                        return 'REALIZADO';
+                                    case 11:
                                         return 'VENCIMIENTO';
-                                        break;
                                 }
                             }
                         }
@@ -405,9 +388,18 @@
             ],
             "columns":
                 [
-                    {data: 'nombreResidencial'},
-                    {data: 'nombreCondominio'},
-                    {data: 'nombreLote'},
+                    {
+                        data: 'nombreResidencial'
+                    },
+                    {
+                        data: 'nombreCondominio'
+                    },
+                    {
+                        data: 'nombreLote'
+                    },
+                    {
+                        data: 'nombreSede'
+                    },
                     {
                         data: function (data) {
                             return myFunctions.validateEmptyField(data.gerente);

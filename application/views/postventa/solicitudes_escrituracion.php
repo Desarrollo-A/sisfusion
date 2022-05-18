@@ -25,8 +25,18 @@
                             <div class="card-content">
                                 <h3 class="card-title center-align">Listado General de Solicitudes de Escrituración.</h3>
                                 <div class="toolbar">
-                                    <div class="row">
-                                        <div class="col-12 col-sm-6 col-md-6 col-lg-6"></div>
+                                    <div class="row"> 
+                                        <div class="col-12 col-sm-6 col-md-6 col-lg-6">
+                                            <div class="form-group label-floating select-is-empty">
+                                                <label class="control-label">Estatus</label>
+                                                <select id="estatusE" name="estatusE"
+                                                        class="selectpicker select-gral m-0"
+                                                        data-style="btn" data-show-subtext="true"
+                                                        data-live-search="true"
+                                                        title="Selecciona un estatus" data-size="7" required>
+                                                </select>
+                                            </div>
+                                        </div>
                                         <div class="col-12 col-sm-6 col-md-6 col-lg-6">
                                             <div class="container-fluid p-0">
                                                 <div class="row">
@@ -65,6 +75,7 @@
                                                         <th>COMENTARIOS</th>
                                                         <th>ESTATUS</th>
                                                         <th>ACCIONES</th>
+                                                        <th>idEstatus</th>
                                                     </tr>
                                                 </thead>
                                             </table>

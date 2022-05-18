@@ -48,7 +48,6 @@ class Calendar extends CI_Controller {
 
     public function updateAppointmentData(){
         $objDatos = json_decode(file_get_contents("php://input"));
-        $a = 0;
         $data = array(
             "medio" => $objDatos->estatus_recordatorio2,
             "fecha_cita" => $objDatos->dateStart,
@@ -148,7 +147,7 @@ class Calendar extends CI_Controller {
             echo json_encode($data);
         } else {
             echo json_encode(array());
-        }   
+        }
     }
 
     public function getManagers(){
@@ -182,6 +181,31 @@ class Calendar extends CI_Controller {
         } else {
             echo json_encode(array());
         } 
+    }
+
+    public function setAppointmentRate(){
+        $objDatos = json_decode(file_get_contents("php://input"));
+        $data = array(
+            "estatus" => 2,
+            "evaluacion" => $objDatos->rate,
+            "observaciones" => $objDatos->observaciones
+        );
+        
+        $response = $this->General_model->updateRecord('agenda', $data, 'id_cita',  $objDatos->idAgenda);
+
+        if ($response)
+            echo json_encode(array("status" => 200, "message" => "El registro se ha actualizado de manera exitosa."));
+        else 
+            echo json_encode(array("status" => 503, "message" => "Oops, algo salió mal. No se ha podido actualizar el estatus del prospecto"));
+    }
+
+    public function AllEvents(){
+        $data['data'] = $this->Calendar_model->getAllEvents($this->session->userdata('id_usuario'));
+        if($data != null) {
+            echo json_encode($data);
+        } else {
+            echo json_encode(array());
+        }    
     }
 
     //SIDEBAR CALENDAR

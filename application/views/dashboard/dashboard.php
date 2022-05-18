@@ -393,7 +393,6 @@
                 if(response.prospectos >= 0) {
 
 
-                    $('#spiner-loader').addClass('hide');
                     $('.numberElement').removeClass('subtitle_skeleton');
 
                     $('#numberGraphic').text(response.prospectos);
@@ -433,6 +432,8 @@
                     alerts.showNotification('top', 'right', 'Ocurrió un error, intentalo nuevamente', 'danger');
                     $('#spiner-loader').addClass('hide');
                 }
+                $('#spiner-loader').addClass('hide');
+
             }
         });
         loadData2();

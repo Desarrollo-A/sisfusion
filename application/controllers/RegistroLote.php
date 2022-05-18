@@ -337,14 +337,7 @@
 
 
 			$mail = $this->phpmailer_lib->load();
-			// $mail->isSMTP();
-			// $mail->Host = 'smtp.gmail.com';
-			// $mail->SMTPAuth = true;
-			// $mail->Username = 'no-reply@ciudadmaderas.com';
-			// $mail->Password = 'Va7<*V8PP';
-			// $mail->SMTPSecure = 'ssl';
-			// $mail->Port = 465;
-
+	
 			$mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
 			$mail->addAddress("lucero.velazquez@ciudadmaderas.com", "coord.contraloria2@ciudadmaderas.com", "subdirector.contraloria@ciudadmaderas.com");
 			$mail->Subject = utf8_decode('LOTE BLOQUEADO-CIUDAD MADERAS');
@@ -5901,6 +5894,7 @@
 		{
 			$datos[$i]['referencia'] = $data[$i]->referencia;
 			$datos[$i]['idLote'] = $data[$i]->idLote;
+            $datos[$i]['nombreSede'] = $data[$i]->nombreSede;
 			$datos[$i]['id_cliente'] = $data[$i]->id_cliente;
 			$datos[$i]['nombreLote'] = $data[$i]->nombreLote;
 			$datos[$i]['idStatusContratacion'] = $data[$i]->idStatusContratacion;
@@ -16134,6 +16128,7 @@ tr td:hover { background: #666; color: #FFF; }
 			{
 					$datos[$i]['referencia'] = $data[$i]->referencia;
 					$datos[$i]['idLote'] = $data[$i]->idLote;
+                    $datos[$i]['nombreSede'] = $data[$i]->nombreSede;
 					$datos[$i]['id_cliente'] = $data[$i]->id_cliente;
 					$datos[$i]['fechaApartado'] = ($data[$i]->fechaApartado!=null || $data[$i]->fechaApartado!="")?$data[$i]->fechaApartado : "N/A";
 					$datos[$i]['nombreLote'] = $data[$i]->nombreLote;
@@ -18212,13 +18207,6 @@ tr td:hover { background: #666; color: #FFF; }
 		$datos["mailbloqueos"] = $this->registrolote_modelo->sendMailBloqueosDireccion();
 
 		$mail = $this->phpmailer_lib->load();
-		// $mail->isSMTP();
-		// $mail->Host = 'smtp.gmail.com';
-		// $mail->SMTPAuth = true;
-		// $mail->Username = 'no-reply@ciudadmaderas.com';
-		// $mail->Password = 'Va7<*V8PP';
-		// $mail->SMTPSecure = 'ssl';
-		// $mail->Port = 465;
 
 		$mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
 		$mail->addAddress("programador.analista1@ciudadmaderas.com");

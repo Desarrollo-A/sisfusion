@@ -613,6 +613,11 @@
               $('#modal1').modal('hide');
               $('#tabla_deposito_seriedad').DataTable().ajax.reload();
               alerts.showNotification("top", "right", "El status ya fue registrado.", "danger");
+          }  else if(response.message == 'MISSING_DOCUMENTS'){
+              $('#save1').prop('disabled', false);
+              $('#modal1').modal('hide');
+              $('#tabla_deposito_seriedad').DataTable().ajax.reload();
+              alerts.showNotification("top", "right", "Asegúrate de incluir los documentos; IDENTIFICACIÓN OFICIAL, COMPROBANTE DE DOMICILIO, RECIBOS DE APARTADO Y ENGANCHE y DEPÓSITO DE SERIEDAD antes de llevar a cabo el avance.", "danger");
           } else if(response.message == 'ERROR'){
               $('#save1').prop('disabled', false);
               $('#modal1').modal('hide');

@@ -62,133 +62,175 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="row">
-                                        <div class="col-md-8">
-                                            <div class="form-group label-floating is-focused">
-                                                <label class="control-label ">Nombre Completo</label>
-                                                <input id="nombre" name="nombre" class="form-control input-gral" type="text" disabled>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <div class="form-group label-floating">
-                                                <label class="control-label">Estatus del Lote</label>
-                                                <div class="radio_container w-100">
-                                                    <input class="d-none generate" type="radio" name="estatus" id="estatus" value="1" checked>
-                                                    <label class="w-50">Liquidado</label>
-                                                    <input class="d-none find-results" type="radio" name="estatus" id="estatus" value="2">
-                                                    <label class="w-50">Sin liquidar</label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="container-fluid d-none mt-3 mb-3" id="check" style="border: 1px solid #eaeaea; padding: 20px 30px; border-radius: 10px">
+                                    <form id="formEscrituracion">
                                         <div class="row">
-                                            <div class="col-md-5">
-                                                <ol class="list-none">
-                                                    <h4 class="card-title">Documentos para Escrituración</h4>
-                                                    <li><b>1)</b> Identificación Oficial Vigente</li>
-                                                    <li><b>2)</b> RFC (Cédula o constancia de situación fiscal)</li>
-                                                    <li><b>3)</b> Comprobante de domicilio actual luz, agua o telefonía fija(antigüedad menor a 2 meses)</li>
-                                                    <li><b>4)</b> Acta de Nacimiento</li>
-                                                    <li><b>5)</b> Acta de Matrimonio (en su caso). *</li>
-                                                    <li><b>6)</b> CURP(formato actualizado)</li>
-                                                    <li><b>7)</b> Formas de pago (todos los comprobantes de pago a mensualidades / estados de cuenta bancarios) **</li>
-                                                    <li><b>8)</b> Boleta predial al corriente y comprobante de pago retroactivo (si aplica)</li>
-                                                    <li><b>9)</b> Constancia no adeudo de mantenimiento (si aplica)</li>
-                                                    <li><b>10)</b> Constancia no adeudo de agua (si aplica)</li>
-                                                </ol>
+                                            <div class="col-md-8">
+                                                <div class="form-group label-floating is-focused">
+                                                    <label class="control-label ">Nombre Completo</label>
+                                                    <input id="nombre" name="nombre" class="form-control input-gral" type="text" disabled>
+                                                </div>
                                             </div>
-                                            <div class="col-md-7">
-                                                <div class="row">
-                                                    <div class="col-md-12 pl-0">
-                                                        <div class="form-group label-floating is-focused">
-                                                            <label class="control-label label-gral">Nombre Completo</label>
-                                                            <input id="nombre2" name="nombre2" class="form-control input-gral" type="text">
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-4 pl-0">
-                                                        <div class="form-group label-floating is-focused">
-                                                            <label class="control-label label-gral">Ocupación</label>
-                                                            <input id="ocupacion" name="ocupacion" class="form-control input-gral" type="text">
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-4 pl-0">
-                                                        <div class="form-group label-floating is-focused">
-                                                            <label class="control-label label-gral">Lugar de Origen</label>
-                                                            <input id="origen" name="origen" class="form-control input-gral" type="text">
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-4 pl-0">
-                                                        <div class="form-group label-floating is-focused">
-                                                            <label class="control-label label-gral">Estado Civil</label>
-                                                            <input id="ecivil" name="ecivil" class="form-control input-gral" type="text">
-                                                        </div>
-                                                    </div>    
-                                                    <div class="col-md-4 pl-0">
-                                                        <div class="form-group label-floating is-focused">
-                                                            <label class="control-label label-gral">Régimen Conyugal</label>
-                                                            <input id="rconyugal" name="rconyugal" class="form-control input-gral" type="text">
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-8 pl-0">
-                                                        <div class="form-group label-floating is-focused">
-                                                            <label class="control-label label-gral">Correo Electrónico</label>
-                                                            <input id="correo" name="correo" class="form-control input-gral" type="mail">
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-6 pl-0">
-                                                        <div class="form-group label-floating is-focused">
-                                                            <label class="control-label label-gral">Domicilio Fiscal</label>
-                                                            <input id="direccionf" name="direccionf" class="form-control input-gral" type="text">
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-6 pl-0">
-                                                        <div class="form-group label-floating is-focused">
-                                                            <label class="control-label label-gral">Domicilio Actual</label>
-                                                            <input id="direccion" name="direccion" class="form-control input-gral" type="text">
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-4 pl-0">
-                                                        <div class="form-group label-floating is-focused">
-                                                            <label class="control-label label-gral">RFC</label>
-                                                            <input id="rfc" name="rfc" class="form-control input-gral" type="text">
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-4 pl-0">
-                                                        <div class="form-group label-floating is-focused">
-                                                            <label class="control-label label-gral">Teléfono (casa)</label>
-                                                            <input id="telefono" name="telefono" class="form-control input-gral" type="number">
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-4 pl-0">
-                                                        <div class="form-group label-floating is-focused">
-                                                            <label class="control-label label-gral">Teléfono (cel)</label>
-                                                            <input id="cel" name="cel" class="form-control input-gral" type="number">
-                                                        </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group label-floating">
+                                                    <label class="control-label">Estatus del Lote</label>
+                                                    <div class="radio_container w-100">
+                                                        <input class="d-none generate" type="radio" name="estatus" id="estatusL" value="">
+                                                        <label class="w-50">Liquidado</label>
+                                                        <input class="d-none find-results" type="radio" name="estatus" id="estatusSL" value="">
+                                                        <label class="w-50">Sin liquidar</label>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <input id="idCliente" name="idCliente" class="form-control input-gral d-none">
                                         </div>
-                                        <div class="row d-flex align-center mt-3">
-                                            <div class="col-md-5">
-                                                <a role="button" id="print" name="print">
-                                                    <i class="material-icons">print</i>
-                                                </a>
-                                                <a role="button" id="email" name="email">
-                                                    <i class="material-icons">email</i>
-                                                </a>
+                                        <div class="container-fluid d-none mt-3 mb-3" id="check" style="border: 1px solid #eaeaea; padding: 20px 30px; border-radius: 10px">
+                                            <div class="row">
+                                                <div class="col-md-5">
+                                                    <ol class="list-none">
+                                                        <h4 class="card-title">Documentos para Escrituración</h4>
+                                                        <li><b>1)</b> Identificación Oficial Vigente</li>
+                                                        <li><b>2)</b> RFC (Cédula o constancia de situación fiscal)</li>
+                                                        <li><b>3)</b> Comprobante de domicilio actual luz, agua o telefonía fija(antigüedad menor a 2 meses)</li>
+                                                        <li><b>4)</b> Acta de Nacimiento</li>
+                                                        <li><b>5)</b> Acta de Matrimonio (en su caso). *</li>
+                                                        <li><b>6)</b> CURP(formato actualizado)</li>
+                                                        <li><b>7)</b> Formas de pago (todos los comprobantes de pago a mensualidades / estados de cuenta bancarios) **</li>
+                                                        <li><b>8)</b> Boleta predial al corriente y comprobante de pago retroactivo (si aplica)</li>
+                                                        <li><b>9)</b> Constancia no adeudo de mantenimiento (si aplica)</li>
+                                                        <li><b>10)</b> Constancia no adeudo de agua (si aplica)</li>
+                                                    </ol>
+                                                </div>
+                                                <div class="col-md-7">
+                                                    <div class="row">
+                                                        <div class="col-md-12 pl-0">
+                                                            <div class="form-group label-floating is-focused">
+                                                                <label class="control-label label-gral">Nombre Completo</label>
+                                                                <input id="nombre2" name="nombre2" class="form-control input-gral" type="text">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-4 pl-0">
+                                                            <div class="form-group label-floating is-focused">
+                                                                <label class="control-label label-gral">Ocupación</label>
+                                                                <input id="ocupacion" name="ocupacion" class="form-control input-gral" type="text">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-4 pl-0">
+                                                            <div class="form-group label-floating is-focused">
+                                                                <label class="control-label label-gral">Lugar de Origen</label>
+                                                                <input id="origen" name="origen" class="form-control input-gral" type="text">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-4 pl-0">
+                                                            <div class="form-group label-floating is-focused">
+                                                                <label class="control-label label-gral">Estado Civil</label>
+                                                                <input id="ecivil" name="ecivil" class="form-control input-gral" type="text">
+                                                            </div>
+                                                        </div>    
+                                                        <div class="col-md-4 pl-0">
+                                                            <div class="form-group label-floating is-focused">
+                                                                <label class="control-label label-gral">Régimen Conyugal</label>
+                                                                <input id="rconyugal" name="rconyugal" class="form-control input-gral" type="text">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-8 pl-0">
+                                                            <div class="form-group label-floating is-focused">
+                                                                <label class="control-label label-gral">Correo Electrónico</label>
+                                                                <input id="correo" name="correo" class="form-control input-gral" type="mail">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-12 pl-0">
+                                                            <div class="form-group label-floating is-focused">
+                                                                <label class="control-label label-gral">Domicilio Actual</label>
+                                                                <input id="direccion" name="direccion" class="form-control input-gral" type="text">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-8 pl-0">
+                                                            <div class="form-group label-floating is-focused">
+                                                                <label class="control-label label-gral">Calle fiscal</label>
+                                                                <input id="calleF" name="calleF" class="form-control input-gral" type="text">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-2 pl-0">
+                                                            <div class="form-group label-floating is-focused">
+                                                                <label class="control-label label-gral">Número exterior</label>
+                                                                <input id="numExtF" name="numExtF" class="form-control input-gral" type="text">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-2 pl-0">
+                                                            <div class="form-group label-floating is-focused">
+                                                                <label class="control-label label-gral">Número interior</label>
+                                                                <input id="numIntF" name="numIntF" class="form-control input-gral" type="text">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-3 pl-0">
+                                                            <div class="form-group label-floating is-focused">
+                                                                <label class="control-label label-gral">Colonia</label>
+                                                                <input id="coloniaf" name="coloniaf" class="form-control input-gral" type="text">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-3 pl-0">
+                                                            <div class="form-group label-floating is-focused">
+                                                                <label class="control-label label-gral">Municipio</label>
+                                                                <input id="municipiof" name="municipiof" class="form-control input-gral" type="text">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-3 pl-0">
+                                                            <div class="form-group label-floating is-focused">
+                                                                <label class="control-label label-gral">Estado</label>
+                                                                <input id="estadof" name="estadof" class="form-control input-gral" type="text">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-3 pl-0">
+                                                            <div class="form-group label-floating is-focused">
+                                                                <label class="control-label label-gral">Codigo postal</label>
+                                                                <input id="cpf" name="cpf" class="form-control input-gral" type="text">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-4 pl-0">
+                                                            <div class="form-group label-floating is-focused">
+                                                                <label class="control-label label-gral">RFC *</label>
+                                                                <input id="rfc" name="rfc" class="form-control input-gral" type="text" required>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-4 pl-0">
+                                                            <div class="form-group label-floating is-focused">
+                                                                <label class="control-label label-gral">Teléfono (casa)</label>
+                                                                <input id="telefono" name="telefono" class="form-control input-gral" type="number">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-4 pl-0">
+                                                            <div class="form-group label-floating is-focused">
+                                                                <label class="control-label label-gral">Teléfono (cel)</label>
+                                                                <input id="cel" name="cel" class="form-control input-gral" type="number">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <input id="idCliente" name="idCliente" class="form-control input-gral d-none">
+                                                <input id="idPostventa" name="idPostventa" class="form-control input-gral d-none">
+                                                <input id="referencia" name="referencia" class="form-control input-gral d-none">
+                                                <input id="empresa" name="empresa" class="form-control input-gral d-none">
+
                                             </div>
-                                            <div class="col-md-7 d-flex justify-end">
-                                                <div class="w-50">
-                                                    <button class="btn-gral-data find_doc" id="aportaciones" type="submit">
-                                                    <i class="fas fa-spinner fa-spin" style="display: none"></i>
-                                                    <span class="btn-text">Iniciar Proceso.</span>
-                                                    </button>
+                                            <div class="row d-flex align-center mt-3">
+                                                <div class="col-md-5">
+                                                    <a role="button" id="print" name="print">
+                                                        <i class="material-icons">print</i>
+                                                    </a>
+                                                    <a role="button" id="email" name="email">
+                                                        <i class="material-icons">email</i>
+                                                    </a>
+                                                </div>
+                                                <div class="col-md-7 d-flex justify-end">
+                                                    <div class="w-50">
+                                                        <button class="btn-gral-data find_doc" id="aportaciones" type="submit">
+                                                        <i class="fas fa-spinner fa-spin" style="display: none"></i>
+                                                        <span class="btn-text">Iniciar Proceso.</span>
+                                                        </button>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
+                                    </form>
                                 </div>
 							</div>
 						</div>

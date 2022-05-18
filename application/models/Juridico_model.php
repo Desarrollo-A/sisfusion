@@ -60,7 +60,7 @@ class Juridico_model extends CI_Model {
         OR l.idStatusContratacion=6 AND l.idMovimiento=97 AND cl.status=1
         group by 
         l.idLote, cl.id_cliente, cl.fechaApartado, cl.nombre, cl.apellido_paterno, cl.apellido_materno, l.nombreLote, l.idStatusContratacion,
-        l.idMovimiento, l.modificado, cl.rfc, CAST(l.comentario AS varchar(MAX)), l.fechaVenc, l.perfil, cond.nombre, res.nombreResidencial, l.ubicacion,
+        l.idMovimiento, l.modificado, cl.rfget_users_reassingc, CAST(l.comentario AS varchar(MAX)), l.fechaVenc, l.perfil, cond.nombre, res.nombreResidencial, l.ubicacion,
         l.tipo_venta, cond.idCondominio, l.observacionContratoUrgente, et.descripcion,
 		concat(asesor.nombre,' ', asesor.apellido_paterno, ' ', asesor.apellido_materno),
         concat(coordinador.nombre,' ', coordinador.apellido_paterno, ' ', coordinador.apellido_materno),
@@ -68,7 +68,7 @@ class Juridico_model extends CI_Model {
 		concat(juridico.nombre,' ', juridico.apellido_paterno, ' ', juridico.apellido_materno)
         ORDER BY l.modificado DESC");
 		
-		} else if(in_array($this->session->userdata('id_usuario'), array("2765", "2776", "2857", "2820", "2876"))){
+		} else if(in_array($this->session->userdata('id_usuario'), array("2765", "2776", "2857", "2820", "2876", "10437"))){
 
 
 			$query = $this->db-> query("SELECT l.idLote, cl.id_cliente, cl.fechaApartado, cl.nombre, cl.apellido_paterno, cl.apellido_materno, l.nombreLote, l.idStatusContratacion,
@@ -291,7 +291,7 @@ class Juridico_model extends CI_Model {
 	
 	
 	public function get_users_reassing(){
-		$query = $this->db->query("SELECT * FROM usuarios WHERE id_usuario IN (2776,2857,2765,2820,2876);"); 
+		$query = $this->db->query("SELECT * FROM usuarios WHERE id_usuario IN (2776, 2857, 2765, 2820, 2876, 10437);");
 		return $query->result_array();
 	}
 

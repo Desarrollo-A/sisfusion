@@ -2758,6 +2758,11 @@ public function getStatusMktdPreventa(){
         $prospectos = json_decode($jsonProspectos);
         $anio = $this->input->post("anio") == '' ? 0 : $this->input->post("anio");
 
+        if (in_array("anio", $arrayChecks) && $anio != 0)
+            $where2= "AND cl.fechaApartado BETWEEN '" . ($anio - 1) . "-12-31 23:59:59.999' AND '$anio-12-31 23:59:59.999'";
+        if (in_array("anio", $arrayChecks) && $anio == 0)
+            $where2 .= "AND cl.fechaApartado BETWEEN '2019-12-31 23:59:59.999' AND '" . date("Y") . "-12-31 23:59:59.999'";
+
         for ($i = 0; $i < count($prospectos); $i++) {
             $alone = "";
             if (in_array("nombre", $arrayChecks) && isset($prospectos[$i]->nombre))
@@ -2770,17 +2775,12 @@ public function getStatusMktdPreventa(){
                 $alone .= "AND cl.telefono1 LIKE '%" . $this->normalizeTelephone($prospectos[$i]->telefono) . "%' ";
             if (in_array("correo", $arrayChecks) && isset($prospectos[$i]->correo))
                 $alone .= "AND cl.correo LIKE '%" . $this->doubleSpaceBlank($prospectos[$i]->correo) . "%' ";
-            if (in_array("anio", $arrayChecks) && $anio != 0)
-                $alone .= "AND cl.fechaApartado BETWEEN '" . ($anio - 1) . "-12-31 23:59:59.999' AND '$anio-12-31 23:59:59.999'";
-            if (in_array("anio", $arrayChecks) && $anio == 0)
-                $alone .= "AND cl.fechaApartado BETWEEN '2019-12-31 23:59:59.999' AND '" . date("Y") . "-12-31 23:59:59.999'";
-
             $string .= ' OR (' . substr($alone, 4) . ')';
         }
 
         $where = substr($string, 4);
 
-        $data['data'] = $this->Clientes_model->getCoincidencias($where)->result_array();
+        $data['data'] = $this->Clientes_model->getCoincidencias($where, $where2)->result_array();
         if ($data != null) {
             echo json_encode($data);
         } else {

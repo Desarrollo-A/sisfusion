@@ -9,8 +9,6 @@
   $(document).on('change', '#coordinador', function(e){
     removeEvents();
     var idCoordinador = $("#coordinador").val();
-    console.log('idCoordinador',idCoordinador);
-
     getAsesores(idCoordinador, true).then( response => {
       var arrayId = idCoordinador;
       for (var i = 0; i < response.length; i++) {
@@ -18,7 +16,7 @@
       }
       getEventos(arrayId).then( response => {
         setSourceEventCRM(response);
-      }).catch( error => { alerts.showNotification("top", "right", "Oops, algo salió mal. "+error, "danger"); });;
+      }).catch( error => { alerts.showNotification("top", "right", "Oops, algo salió mal. "+error, "danger"); });
     }).catch( error => { alerts.showNotification("top", "right", "Oops, algo salió mal. "+error, "danger"); });
     $("#asesor").empty().selectpicker('refresh');
   });

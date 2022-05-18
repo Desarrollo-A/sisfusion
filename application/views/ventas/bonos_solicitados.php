@@ -3,11 +3,17 @@
 <body>
     <div class="wrapper">
         <?php
-        $datos = array();
-        $datos = $datos4;
-        $datos = $datos2;
-        $datos = $datos3;
-        $this->load->view('template/sidebar', $datos);
+           if($this->session->userdata('id_rol') =="13" || $this->session->userdata('id_rol') =="17" || $this->session->userdata('id_rol') =="18" || $this->session->userdata('id_rol')=="31" || $this->session->userdata('id_usuario')=="2767"){
+            /*-----------//contraloria--------------------------------------------*/
+            $datos = array();
+            $datos = $datos4;
+            $datos = $datos2;
+            $datos = $datos3;
+            $this->load->view('template/sidebar', $datos);
+        }
+        else{
+            echo '<script>alert("ACCESSO DENEGADO"); window.location.href="'.base_url().'";</script>';
+        }
         ?>
 
         <!-- Modals -->

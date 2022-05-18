@@ -60,7 +60,7 @@ class Contraloria_model extends CI_Model {
 
  	public function registroStatusContratacion5 () {
 
-		$query = $this->db-> query("SELECT l.idLote, cl.id_cliente, cl.nombre, cl.apellido_paterno, cl.apellido_materno,
+		$query = $this->db-> query("SELECT l.idLote, l.referencia, cl.id_cliente, cl.nombre, cl.apellido_paterno, cl.apellido_materno,
         l.nombreLote, l.idStatusContratacion, l.idMovimiento, l.modificado, cl.rfc,
         CAST(l.comentario AS varchar(MAX)) as comentario, l.fechaVenc, l.perfil, cond.nombre as nombreCondominio, res.nombreResidencial, l.ubicacion,
         l.tipo_venta, l.observacionContratoUrgente as vl,
@@ -93,7 +93,7 @@ class Contraloria_model extends CI_Model {
 			  OR l.idStatusContratacion = 2 AND l.idMovimiento  = 93 AND cl.status = 1
 
 			  
-        GROUP BY l.idLote, cl.id_cliente, cl.nombre, cl.apellido_paterno, cl.apellido_materno,
+        GROUP BY l.idLote, l.referencia, cl.id_cliente, cl.nombre, cl.apellido_paterno, cl.apellido_materno,
         l.nombreLote, l.idStatusContratacion, l.idMovimiento, l.modificado, cl.rfc,
         CAST(l.comentario AS varchar(MAX)), l.fechaVenc, l.perfil, cond.nombre, res.nombreResidencial, l.ubicacion,
         l.tipo_venta, l.observacionContratoUrgente,
@@ -1102,6 +1102,27 @@ class Contraloria_model extends CI_Model {
 			return 0;
 		}
 	}
-	
+
+	function get_datos_lotes($lote){
+        return $this->db->query("SELECT res.nombreResidencial as desarrollo, con.nombre as condominio, lot.idLote, lot.nombreLote,
+                                 CONCAT(cli.nombre,' ',cli.apellido_paterno,' ',cli.apellido_materno) as cliente, cli.fechaApartado,
+                                 CONCAT(asesor.nombre,' ',asesor.apellido_paterno,' ',asesor.apellido_materno) as asesor,
+                                 CONCAT(coordinador.nombre,' ',coordinador.apellido_paterno,' ',coordinador.apellido_materno) as coordinador,
+                                 CONCAT(gerente.nombre,' ',gerente.apellido_paterno,' ',gerente.apellido_materno) as gerente,
+								 lot.enganche, lot.ubicacion, lot.saldo, s.id_sede, s.nombre as nombre_ubicacion
+                                 FROM clientes cli
+                                    INNER JOIN lotes lot ON lot.idLote = cli.idLote
+									LEFT JOIN sedes s ON s.id_sede = lot.ubicacion
+                                    INNER JOIN condominios con ON con.idCondominio = lot.idCondominio
+                                    INNER JOIN residenciales res ON res.idResidencial = con.idResidencial 
+                                    LEFT JOIN usuarios asesor ON cli.id_asesor = asesor.id_usuario
+                                    LEFT JOIN usuarios coordinador ON cli.id_coordinador = coordinador.id_usuario
+                                    LEFT JOIN usuarios gerente ON cli.id_gerente = gerente.id_usuario
+                                 WHERE cli.status = 1 AND cli.idLote = ".$lote."");
+     }
+
+	function get_sedes_lista(){
+    	return $this->db->query("SELECT * FROM sedes WHERE estatus = 1");
+    }
 
 }
