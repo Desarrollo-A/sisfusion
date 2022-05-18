@@ -74,9 +74,9 @@
                                                 <div class="form-group label-floating">
                                                     <label class="control-label">Estatus del Lote</label>
                                                     <div class="radio_container w-100">
-                                                        <input class="d-none generate" type="radio" name="estatus" id="estatus" value="" checked>
+                                                        <input class="d-none generate" type="radio" name="estatus" id="estatusL" value="">
                                                         <label class="w-50">Liquidado</label>
-                                                        <input class="d-none find-results" type="radio" name="estatus" id="estatus" value="">
+                                                        <input class="d-none find-results" type="radio" name="estatus" id="estatusSL" value="">
                                                         <label class="w-50">Sin liquidar</label>
                                                     </div>
                                                 </div>
@@ -188,7 +188,7 @@
                                                         <div class="col-md-4 pl-0">
                                                             <div class="form-group label-floating is-focused">
                                                                 <label class="control-label label-gral">RFC *</label>
-                                                                <input id="rfc" name="rfc" class="form-control input-gral" type="text">
+                                                                <input id="rfc" name="rfc" class="form-control input-gral" type="text" required>
                                                             </div>
                                                         </div>
                                                         <div class="col-md-4 pl-0">
