@@ -404,6 +404,17 @@
             color: white;
             padding: 2px 13px;
         }
+        .infoBank{
+            font-size: 1.3em;
+            color: #103f75;
+            font-weight: 600;
+        }
+        .table-data-bank tr td{
+            text-align: center;
+            word-wrap:break-word;
+            padding:10px;
+
+        }
     </style>
 </head>
 <body class="hold-transition register-page" ng-controller="myController">
@@ -446,7 +457,7 @@
                             <button ng-click="exportcf()" class="btn btn-success">Imprimir carátula + Corrida
                                 Financiera
                             </button>-->
-                            <?php #print_r($data_corrida);  ?>
+                            <?php print_r($data_corrida);  ?>
 
                             <table align="center" width="100%" cellpadding="8" cellspacing="8">
                                 <tr>
@@ -1023,8 +1034,10 @@
                                 <tr>
                                     <td><label type="text" for="fecha">Fecha Límite </label></td>
                                     <td><label type="text" id="fecha"><b> {{fechaEng}} </b></label></td>
-                                    <td><b><label type="text" id="mPlan2" name="mPlan2"></label></b><label type="text6">Mensualidades
-                                            con interés (1% S.S.I.) </label></td>
+
+                                    <td ng-if="casaFlag == 0"><label type="text6">Mensualidades con interés (1% S.S.I.) </label></td>
+                                    <td ng-if="casaFlag == 1"><label type="text6">Mensualidades con interés (1.108% S.S.I.) </label></td>
+<!--                                    <td><b><label type="text" id="mPlan2" name="mPlan2"></label></b><label type="text6">Mensualidades con interés (1% S.S.I.) </label></td>-->
                                     <td><b><label type="text">{{ finalMesesp2 }}&nbsp&nbsp&nbsp</b> {{ totalSegundoPlan
                                         | currency }}</label></td>
                                 </tr>
@@ -1033,8 +1046,8 @@
                                     <td>
                                         <label type="text"><b>{{engancheFinal | currency }}</b></label><br>
                                     </td>
-                                    <td><b><label type="text" id="mPlan3" name="mPlan3"></label></b><label type="text6">Mensualidades
-                                            con interés (1.25% S.S.I.) </label></td>
+                                    <td ng-if="casaFlag == 0"><b><label type="text" id="mPlan3" name="mPlan3"></label></b><label type="text6">Mensualidades con interés (1.25% S.S.I.) </label></td>
+                                    <td ng-if="casaFlag == 1"><label type="text6">Mensualidades con interés (1.108% S.S.I.) </label></td>
                                     <td><b><label type="text">{{ finalMesesp3 }}&nbsp&nbsp&nbsp</b> {{ totalTercerPlan |
                                         currency }}</label></td>
                                 </tr>
@@ -1045,13 +1058,36 @@
                                 </tr>
                                 <tr>
                                     <td colspan="3">
-                                        <b>Banco:</b> <label type="text">{{banco}}</label>
-                                        <b>Razón Social:</b> <label type="text">{{rsocial}}</label>
-                                        <b>Cuenta:</b> <label type="text">{{cuenta}}</label>
-                                        <b>CLABE:</b> <label type="text">{{clabe}}</label>
-                                        <p>
-                                            <b>Referencia:</b> <label type="text"
-                                                                      style="font-size:30px">{{referencia}}</label>
+                                        <table width="100%" class="table-data-bank">
+                                            <tr>
+                                                <td>
+                                                    <b>Banco:</b><br>
+                                                    <label type="text" class="infoBank">{{banco}}</label>
+                                                </td>
+                                                <td>
+                                                    <b>Razón Social:</b><br>
+                                                    <label type="text" class="infoBank">{{rsocial}}</label>
+                                                </td>
+                                                <td>
+                                                    <b>Cuenta:</b><br>
+                                                    <label type="text" class="infoBank">{{cuenta}}</label>
+                                                </td>
+                                                <td>
+                                                    <b>CLABE:</b><br>
+                                                    <label type="text" class="infoBank">{{clabe}}</label>
+                                                </td>
+                                                <td>
+                                                    <b>Referencia:</b><br>
+                                                    <label type="text" class="infoBank">{{referencia}}</label>
+                                                </td>
+                                            </tr>
+                                        </table>
+<!--                                        <b>Banco:</b> <label type="text" class="infoBank">{{banco}}</label>-->
+<!--                                        <b>Razón Social:</b> <label type="text" class="infoBank">{{rsocial}}</label>-->
+<!--                                        <b>Cuenta:</b> <label type="text" class="infoBank">{{cuenta}}</label>-->
+<!--                                        <b>CLABE:</b> <label type="text" class="infoBank">{{clabe}}</label>-->
+<!--                                        <p>-->
+<!--                                            <b>Referencia:</b> <label type="text" class="infoBank">{{referencia}}</label>-->
                                     </td>
                                 </tr>
                                 <tr>
@@ -2696,7 +2732,8 @@
                                         // $scope.precioTotal = response.data[0].total;
                                         // $scope.superficie = response.data[0].sup;
                                         // $scope.preciom2 = response.data[0].precio;
-
+                                        //console.log('CAMARA MIS PERRRRRRRRRRROS: ', <?php //echo $data_corrida->tipo_casa; ?>//);
+                                        $scope.casaFlag = (<?php echo $data_corrida->tipo_casa; ?>==0) ? 0 : 1;
                                         $scope.banco = response.data[0].banco;
                                         $scope.rsocial = response.data[0].empresa;
                                         $scope.cuenta = response.data[0].cuenta;
@@ -3723,8 +3760,8 @@
                     mesesSinInteresP2: 120,
                     mesesSinInteresP3: 60,
                     interes_p1: 0,
-                    interes_p2: 0.01,
-                    interes_p3: 0.0125,
+                    interes_p2: ($scope.casaFlag==1) ? 0.01108 : 0.01,
+                    interes_p3: ($scope.casaFlag==1) ? 0.01108 : 0.0125,
                     contadorInicial: 0,
                     capital: ($scope.mesesdiferir > 0) ? (r1 / (($scope.age_plan * 12) - $scope.mesesdiferir)) : (r1 / ($scope.age_plan * 12)),
                     fechaActual: $scope.date = new Date(),
