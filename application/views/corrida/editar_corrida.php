@@ -457,7 +457,7 @@
                             <button ng-click="exportcf()" class="btn btn-success">Imprimir carátula + Corrida
                                 Financiera
                             </button>-->
-                            <?php print_r($data_corrida);  ?>
+                            <?php #print_r($data_corrida);  ?>
 
                             <table align="center" width="100%" cellpadding="8" cellspacing="8">
                                 <tr>
