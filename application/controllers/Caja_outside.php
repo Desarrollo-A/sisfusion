@@ -219,7 +219,8 @@ class Caja_outside extends CI_Controller
 
             }
 
-        } else if ($data->accion == 1) {
+        }
+        else if ($data->accion == 1) {
 
             foreach ($data->lotes as $value) {
 
@@ -241,7 +242,8 @@ class Caja_outside extends CI_Controller
             }
 
 
-        } else if ($data->accion == 2) {
+        }
+        else if ($data->accion == 2) {
 
             foreach ($data->lotes as $value) {
 
@@ -263,7 +265,8 @@ class Caja_outside extends CI_Controller
             }
 
 
-        } else if ($data->accion == 3) {
+        }
+        else if ($data->accion == 3) {
 
             foreach ($data->lotes as $value) {
 
@@ -300,7 +303,8 @@ class Caja_outside extends CI_Controller
 
 
             }
-        } else if ($data->accion == 6) {
+        }
+        else if ($data->accion == 6) {
 
             foreach ($data->lotes as $value) {
 
