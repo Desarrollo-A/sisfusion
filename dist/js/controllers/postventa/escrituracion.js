@@ -130,6 +130,8 @@ function getClient(idLote) {
         $('#cel').val(data.tfijo);
         $('#idCliente').val(data.id_cliente);
         $('#idPostventa').val(data.id_dpersonal);
+        $('#referencia').val(data.referencia);
+        $('#empresa').val(data.empresa);
     }, 'json');
     $('#check').removeClass("d-none");
 }

@@ -364,7 +364,7 @@ $(document).on("submit", "#formPresupuesto", function (e) {
     e.preventDefault();
     let data = new FormData($(this)[0]);
     data.append('nombreT', $('#nombreT').val() == '' ? null : $('#nombreT').val());
-    data.append('fechaCA', $('#fechaCA').val() == '' ? null : $('#fechaCA').val());
+    data.append('fechaCA2', $('#fechaCA').val() == '' ? null : formatDate($('#fechaCA').val()));
     $('#spiner-loader').removeClass('hide');
     $.ajax({
         url: "savePresupuesto",
