@@ -73,8 +73,8 @@
 							</div>
 							<div class="card-content">
 								<div class="encabezadoBox">
-                                    <h3 class="card-title center-align" >Registro Status 3</h3>
-                                    <p class="card-title pl-1">(Rechazos de status 7 Jurídico)</p>
+                                    <h3 class="card-title center-align" >Registro estatus 7</h3>
+                                    <p class="card-title pl-1">(Rechazos de estatus 7 jurídico)</p>
                                 </div>
 								<div class="material-datatables">
                                     <div class="form-group">
