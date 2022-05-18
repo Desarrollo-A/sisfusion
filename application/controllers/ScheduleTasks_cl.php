@@ -1428,6 +1428,8 @@ public function select_gph_maderas_64(){ //HACER INSERT DE LOS LOTES EN 0 Y PASA
         }
         $data = array("contrasena" => encriptar($key), "modificado_por" => 1, "fecha_modificacion" => date('Y-m-d H:i:s'));
         $response = $this->General_model->updateRecord('usuarios', $data, 'id_rol', '61');
+        $destroy = $this->scheduleTasks_model->SessionDestroy();
+        $this->change_password_mail($key);
         echo json_encode($response);
         $this->destroySession();
     }
@@ -1436,5 +1438,65 @@ public function select_gph_maderas_64(){ //HACER INSERT DE LOS LOTES EN 0 Y PASA
       $this->session->sess_destroy();
 
       redirect(base_url() . "login");
+    }
+
+    public function change_password_mail($key){
+      $mail = $this->phpmailer_lib->load();
+      $mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
+      $mail->addAddress('mariadejesus.garduno@ciudadmaderas.com');
+      $mail->Subject = utf8_decode("Cambio de contraseña ASESOR COMODÍN.");
+      $mail->isHTML(true);
+      $mailContent ="<html><head>
+      <meta http-equiv='Content-Type' content='text/html; charset=utf-8'>
+      <meta name='viewport' content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no'>
+      <link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css' integrity='sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO' crossorigin='anonymous'> 
+      <style media='all' type='text/css'>
+          .encabezados{
+              text-align: center;
+              padding-top:  1.5%;
+              padding-bottom: 1.5%;
+          }
+          .encabezados a{
+              color: #234e7f;
+              font-weight: bold;
+          }
+          
+          .fondo{
+              background-color: #234e7f;
+              color: #fff;
+          }
+          
+          h4{
+              text-align: center;
+          }
+          p{
+              text-align: right;
+          }
+          strong{
+              color: #234e7f;
+          }
+      </style>
+    </head>
+    <body>
+      <img src='" . base_url() . "static/images/mailER/header9@4x.png' width='100%'>
+      <table align='center' cellspacing='0' cellpadding='0' border='0' width='100%'> <br><br>
+      <tr>
+      <td border=1 bgcolor='#FFFFFF' align='center'> 
+          <h3>¡ Buenos días estimad@ !</h3><br> <br>
+          
+          <p style='padding: 10px 90px;text-align: center;'>La nueva contraseña del usuario ASESOR COMODÍN es: $key
+          </p>
+          <p style='padding: 10px 90px;text-align: center;'><b>*Recuerda que esta contraseña solo es válida durante 15 días.</b> 
+          </p>
+      </td>
+    </tr></table>
+    <img src='" . base_url() . "static/images/mailER/footer@4x.png' width='100%'>
+    </body></html>";
+      $mail->Body = utf8_decode($mailContent);
+      if ($mail->send()) {
+        return 1;
+      } else {
+        return $mail->ErrorInfo;
+      }
     }
 }

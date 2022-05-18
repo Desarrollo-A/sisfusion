@@ -105,17 +105,17 @@ class Postventa extends CI_Controller
     public function getClient()
     {
         $idLote = $this->input->post("idLote");
-        $data = $this->Postventa_model->getEmpRef($idLote)->result_array();
-        
+        $data1 = $this->Postventa_model->getEmpRef($idLote)->result_array();
+        $idClient = $this->Postventa_model->getClient($idLote)->row();
         $data = $this->Postventa_model->getProyectos()->result_array();
         if ($data != null){
             $url = 'https://prueba.gphsis.com/backCobranza/index.php/PaginaCDM/getDatos_clientePV';
 
             $datos = base64_encode(json_encode(array(
-                "referencia" => $datos[0]['referencia'],
-                "empresa" => $datos[0]['empresa']
+                "referencia" => $data1[0]['referencia'],
+                "empresa" => $data1[0]['empresa']
             )));
-            
+
             $opciones = array(
                 "http" => array(
                     "header" => "Content-type: application/x-www-form-urlencoded\r\n",
@@ -127,8 +127,11 @@ class Postventa extends CI_Controller
             $contexto = stream_context_create($opciones);
             # Hacerla
             $resultado = file_get_contents($url, false, $contexto);
-            if (base64_decode($resultado != 'false')) {
-                echo json_encode($resultado);
+            $resDecode = json_decode(base64_decode($resultado));
+            $resDecode->data[0]->id_cliente = $idClient->id_cliente;
+
+            if ($resDecode->resultado == 1) {
+                echo json_encode($resDecode->data[0]);
             } else {
                 echo json_encode(array());
             }
@@ -608,8 +611,9 @@ class Postventa extends CI_Controller
     {
         $idLote = $_POST['idLote'];
         $idCliente = $_POST['idCliente'];
+        $idPostventa = $_POST['idPostventa'];
 
-        $informacion = $this->Postventa_model->setEscrituracion($idLote, $idCliente);
+        $informacion = $this->Postventa_model->setEscrituracion($idLote, $idCliente, $idPostventa);
         echo json_encode($informacion);
     }
 
