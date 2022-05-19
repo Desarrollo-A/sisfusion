@@ -1,5 +1,4 @@
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
-<!-- <link href="<?= base_url() ?>dist/css/calendar.css" rel="stylesheet"/> -->
+<link href="<?= base_url() ?>dist/css/calendarDashboard.css" rel="stylesheet"/>
     <style>
         .hide_column {
             display : none!important;
@@ -133,7 +132,7 @@
     <?php include 'common_modals.php' ?>
     <script src="<?= base_url() ?>dist/assets/js/bootstrap-datetimepicker.js"></script>
     <script src="<?=base_url()?>dist/js/controllers/dashboard/agenda/general_calendar.js"></script>
-    <script src="<?=base_url()?>dist/js/controllers/dashboard/agenda/calendar.js"></script>
+    <script src="<?=base_url()?>dist/js/controllers/dashboard/agenda/dashboardCalendar.js"></script>
     <script>
         userType = <?= $this->session->userdata('id_rol') ?> ;
         idUser = <?= $this->session->userdata('id_usuario') ?> ;
