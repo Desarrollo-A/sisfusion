@@ -71,7 +71,7 @@
   calendar.render();
   customizeIcon();
 
-  $.post(base_url+'Calendar/getStatusRecordatorio', function(data) {
+  $.post('Calendar/getStatusRecordatorio', function(data) {
     var len = data.length;
     for (var i = 0; i < len; i++) {
         var id = data[i]['id_opcion'];
