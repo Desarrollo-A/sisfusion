@@ -250,7 +250,7 @@ function loadInit(){
 function loadData(){
     let response_vtas;
     $.ajax({
-        url: url+"index.php/Dashboard/getProspectsByUserSessioned",
+        url: base_url+"index.php/Dashboard/getProspectsByUserSessioned",
         cache: false,
         contentType: false,
         processData: false,
@@ -295,6 +295,7 @@ function loadData(){
     loadData2();
 }
 
+
 function weekFilter(element){
     let typeTransaction = 0;
     if(element == 'thisWeek'){
@@ -316,7 +317,7 @@ function weekFilter(element){
         com2.append("typeTransaction", typeTransaction);
 
         $.ajax({
-            url: url+"index.php/Dashboard/getDataFromDates",
+            url: base_url+"index.php/Dashboard/getDataFromDates",
             data:com2,
             cache: false,
             contentType: false,
@@ -393,7 +394,7 @@ function weekFilter(element){
 
 
         $.ajax({
-            url: url+"index.php/Dashboard/getDataFromDates",
+            url: base_url+"index.php/Dashboard/getDataFromDates",
             data:com2,
             cache: false,
             contentType: false,
@@ -467,7 +468,7 @@ function weekFilter(element){
         com2.append("fecha_fin", end_sp);
         com2.append("typeTransaction", typeTransaction);
         $.ajax({
-            url: url+"index.php/Dashboard/getDataFromDates",
+            url: base_url+"index.php/Dashboard/getDataFromDates",
             data:com2,
             cache: false,
             contentType: false,
@@ -588,7 +589,7 @@ function loadData2(){
         com2.append("typeTransaction", typeTransaction);
 
         $.ajax({
-            url: url+"index.php/Dashboard/getDataFromDates",
+            url: base_url+"index.php/Dashboard/getDataFromDates",
             data:com2,
             cache: false,
             contentType: false,
@@ -665,7 +666,7 @@ function loadData2(){
 
 
         $.ajax({
-            url: url+"index.php/Dashboard/getDataFromDates",
+            url: base_url+"index.php/Dashboard/getDataFromDates",
             data:com2,
             cache: false,
             contentType: false,
@@ -738,7 +739,7 @@ function loadData2(){
         com2.append("fecha_fin", end_sp);
         com2.append("typeTransaction", typeTransaction);
         $.ajax({
-            url: url+"index.php/Dashboard/getDataFromDates",
+            url: base_url+"index.php/Dashboard/getDataFromDates",
             data:com2,
             cache: false,
             contentType: false,
