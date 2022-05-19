@@ -205,8 +205,6 @@
         </div>
     </div>
 </div>
-<?php $this->load->view('template/footer_legend'); ?>
-<?php $this->load->view('template/footer');?>
 <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 <script src="<?=base_url()?>dist/js/controllers/dashboard/inicio/dashboardHome.js"></script>
 

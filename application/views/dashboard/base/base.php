@@ -68,41 +68,5 @@
 </body>
 <?php $this->load->view('template/footer');?>
 <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
-<<<<<<< HEAD
-=======
-<script>
-    let base_url = "<?=base_url()?>";
-function changePill(element){
-    if(element == 'inicioOption'){
-        $('.box1Inicio1').addClass('fadeInAnimation');
-        $('.box1Inicio2').addClass('fadeInAnimationDelay2');
-        $('.box1Inicio3').addClass('fadeInAnimationDelay3');
-        $('.box1Inicio4').addClass('fadeInAnimationDelay3');
-        $('.boxNavPills').addClass('fadeInAnimationDelay4');
-        $('#inicio .col-lg-12').html("");
-        $('#inicio .col-lg-12').load("Inicio/index");
-    }
-    else if(element == 'reporteOption'){
-        $('#reporte .col-lg-12').html("");
-        $('#reporte .col-lg-12').load("Dashboard/Reporte/reporte");
-    }
-    else if(element == 'agendaOption'){
-        $('#agenda .col-lg-12').html("");
-        $('#agenda .col-lg-12').load("Dashboard/Calendar/calendar");
-    }
-    else if(element == 'rankingOption'){
-        console.log("ranking opt");
-        $('#ranking .col-lg-12').html("");
-        $('#ranking .col-lg-12').load("Dashboard/Ranking/ranking");
-    }
-    else if(element == 'metricasOption'){
-        console.log("metricas opt");
-
-        $('#metricas .col-lg-12').html("");
-        $('#metricas .col-lg-12').load("Dashboard/Metricas/metricas");
-    }
-}
-</script>
->>>>>>> 17146cda292127137bf631718c1874a7951ebf51
 <script src="<?=base_url()?>dist/js/controllers/dashboard/base/base.js"></script>
 
