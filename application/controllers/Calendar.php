@@ -24,7 +24,7 @@ class Calendar extends CI_Controller {
         $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
 
         $this->load->view('template/header');
-        $this->load->view("asesor/calendar", $datos);
+        $this->load->view("dashboard/agenda/calendar", $datos);
     }
 
     public function Events(){
