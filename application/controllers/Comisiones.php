@@ -693,6 +693,13 @@ function update_estatus(){
     echo json_encode(array("data" => $dat));
   }
 
+  public function getTotalComisionAsesor()
+  {
+      $idUsuario = $this->session->userdata('id_usuario');
+      $data = $this->Comisiones_model->getTotalComisionAsesor($idUsuario);
+      echo json_encode($data);
+  }
+
   public function getDatosComisionesAsesorBaja($a)
   {
     $dat =  $this->Comisiones_model->getDatosComisionesAsesorBaja($a)->result_array();
@@ -710,7 +717,7 @@ function update_estatus(){
 
   public function acepto_comisiones_user(){
     $this->load->model("Comisiones_model");
-    $sol=$this->input->post('idcomision');  
+    $sol=$this->input->post('idcomision');
      $consulta_comisiones = $this->db->query("SELECT id_pago_i FROM pago_comision_ind where id_pago_i IN (".$sol.")");
    
       if( $consulta_comisiones->num_rows() > 0 ){
@@ -741,6 +748,7 @@ function update_estatus(){
       
             $up_b = $this->Comisiones_model->update_acepta_solicitante($id_pago_i);
             $ins_b = $this->Comisiones_model->insert_phc($data);
+            $this->Comisiones_model->changeEstatusOpinion($id_user_Vl);
       
       if($up_b == true && $ins_b == true){
         $data_response = 1;

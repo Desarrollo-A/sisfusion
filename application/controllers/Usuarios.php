@@ -389,6 +389,37 @@ SEDES CAPITAL HUMANO
 
     }
 
+    public function SubirPDFExtranjero($id = '')
+    {
+        $id_usuario = $this->session->userdata('id_usuario');
+        $nombre = $this->session->userdata('nombre');
+        $opc = 0;
+
+        if ($id != '') {
+            $opc = 1;
+            $id_usuario = $this->input->post("id_usuario");
+            $nombre = $this->input->post("nombre");
+        }
+
+        date_default_timezone_set('America/Mexico_City');
+        $hoy = date("Y-m-d");
+
+
+        $fileTmpPath = $_FILES['file-upload-extranjero']['tmp_name'];
+        $fileName = $_FILES['file-upload-extranjero']['name'];
+        $fileNameCmps = explode(".", $fileName);
+        $fileExtension = strtolower(end($fileNameCmps));
+        $newFileName = $nombre . $hoy . md5(time() . $fileName) . '.' . $fileExtension;
+        $uploadFileDir = './static/documentos/extranjero/';
+
+        $dest_path = $uploadFileDir . $newFileName;
+        move_uploaded_file($fileTmpPath, $dest_path);
+
+
+        $response = $this->Usuarios_modelo->SaveCumplimiento($id_usuario, $newFileName, $opc);
+        echo json_encode($response);
+    }
+
     /**---------------------------------------------------------------------------------- */
     public function UpdatePDF()
     {
