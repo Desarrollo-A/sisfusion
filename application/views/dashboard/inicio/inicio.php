@@ -52,23 +52,38 @@
                                             </div>
                                         </div>
                                         <div class="container-fluid">
-                                            <div class="row" style="height: 210px;">
+                                            <div class="row" style="height: 300px;">
                                                 <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 h-100 box1Inicio1" >
-                                                    <div class="card h-100 m-0">
-                                                        <div class="row h-40  m-0">
-                                                            <div class="col-md-12 h-100 boxGraphic">
-                                                                <h4 class="text-left">Total Prospectos</h4>
-                                                                <h2 class="numberGraphic" id="numberGraphic">--</h2>
-                                                            </div>
-                                                        </div>
-                                                        <div class="row h-60  m-0">
-                                                            <div class="col-md-12 pb-0 h-100 p-0">
-                                                                <div id="chart"></div>
-                                                            </div>
+                                                    <div class="row h-60">
+                                                        <div class="col-md-12 h-100">
+                                                            <div class="card h-100 m-0">
+                                                                <div class="h-40 m-0">
+                                                                   
+                                                                </div>
+                                                                <div class="h-60 m-0">
+                                                                    <div class="col-md-12 pb-0 h-100 p-0">
+                                                                        <div id="chart"></div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>        
                                                         </div>
                                                     </div>
+                                                    <div class="row h-40" style="padding-top: 15px">
+                                                        <div class="col-md-12 h-100">
+                                                            <div class="card m-0 h-100">
+                                                                <div class="h-100  m-0">
+                                                                    <div class="col-md-12 h-100 boxGraphic">
+                                                                        <h4 class="text-left">Total Prospectos</h4>
+                                                                        <h2 class="numberGraphic" id="numberGraphic">--</h2>
+                                                                    </div>
+                                                                </div>
+                                                            </div>    
+                                                        </div>
+                                                    </div>
+                                                   
+                                                    
                                                 </div>
-                                                <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9 h-100 box1Inicio2">
+                                                <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9 h-100 box1Inicio2 pl-0" >
                                                     <div class="card h-100 m-0">
                                                         <div class="row h-20 m-0">
                                                             <div class="col-md-3  h-100 boxGraphic">
