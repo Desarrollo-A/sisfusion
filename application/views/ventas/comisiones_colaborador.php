@@ -1,4 +1,5 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="<?=base_url()?>dist/css/shadowbox.css">
 <link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet"/>
 <body>
     <div class="wrapper">
@@ -55,9 +56,24 @@
                         $cadena = '<button type="button" class="btn btn-info subir_factura_multiple" >SUBIR FACTURAS</button>';
                     }
                 }
-            }
-            else{
-                $cadena = '';
+            } else if ($forma_pago == 5) {
+                if(count($opn_cumplimiento) == 0){
+                    $cadena = '<button type="button" class="btn btn-info subir-archivo">SUBIR DOCUMENTO FISCAL</button>';
+                } else if($opn_cumplimiento[0]['estatus'] == 0) {
+                    $cadena = '<button type="button" class="btn btn-info subir-archivo">SUBIR DOCUMENTO FISCAL</button>';
+                } else if ($opn_cumplimiento[0]['estatus'] == 1) {
+                    $idDoc = $opn_cumplimiento[0]["id_opn"];
+                    $cadena = '<p><b>Documento fiscal cargado con éxito</b>
+                                <a href="#" class="verPDFExtranjero" 
+                                    title="Documento fiscal"
+                                    data-usuario="'.$opn_cumplimiento[0]["archivo_name"].'" 
+                                    style="cursor: pointer;">
+                                    <u>Ver documento</u>
+                                </a>
+                            </p>';
+                } else if($opn_cumplimiento[0]['estatus'] == 2) {
+                    $cadena = '<p style="color: #02B50C;">Documento fiscal bloqueado, hay comisiones asociadas.</p>';
+                }
             }
         }
         ?>
@@ -360,6 +376,101 @@
                 </div>
             </div>
         </div>-->
+
+        <div class="modal fade modal-alertas" id="addFileExtranjero" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header bg-red">
+                        <h4 class="card-title"><b>Cargar documento fiscal</b></h4>
+                    </div>
+                    <form id="EditarPerfilExtranjeroForm"
+                          name="EditarPerfilExtranjeroForm"
+                          method="post">
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-lg-12 text-center">
+                                    <p>Recuerda que tu documento fiscal debe corresponder al total exacto de las
+                                        comisiones a solicitar, una vez solicitados tus pagos ya no podrás remplazar
+                                        este archivo.</p>
+                                    <div class="input-group">
+                                        <label  class="input-group-btn"></label>
+                                        <span class="btn btn-info btn-file">
+                                    <i class="fa fa-upload"></i> Subir archivo
+                                    <input id="file-upload-extranjero"
+                                           name="file-upload-extranjero"
+                                           required
+                                           accept="application/pdf"
+                                           type="file" />
+                                </span>
+                                        <p id="archivo-extranjero"></p>
+
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-12 text-center">
+                                            <h3 id="total-comision"></h3>
+                                        </div>
+                                        <div class="col-lg-12"
+                                             id="preview-div">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <button type="submit" id="sendFileExtranjero" class="btn btn-primary">GUARDAR</button>
+                                        <button class="btn btn-danger" type="button" data-dismiss="modal" >CANCELAR</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="info-modal" tabindex="-1" aria-labelledby="Información" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="Información">Información</h5>
+                    </div>
+                    <div class="modal-body">
+                        <p>
+                            Para deducir los comprobantes emitidos por residentes en el extranjero sin establecimiento permanente en México, es necesario que contengan los siguientes requisitos:
+                        </p>
+                        <p>
+                            <b>I.</b> Nombre, denominación o razón social; domicilio.
+                        </p>
+                        <p>
+                            <b>II.</b> Número de identificación fiscal, o su equivalente, de quien lo expide.
+                        </p>
+                        <p>
+                              USA se llama Tax Id o ITIN (Taxpayer Identification Number).
+                            <br>
+                              Canadá: Tax Id o Business Number.
+                            <br>
+                              Ecuador: RUC (Registro Único de Contribuyentes).
+                            <br>
+                              Colombia: RUT (Registro Único Tributario).
+                            <br>
+                              Otros países: el número de registro que se utiliza en su país para el pago de impuesto.
+                        </p>
+                        <p>
+                            <b>III.</b> Lugar y fecha de expedición.
+                        </p>
+                        <p>
+                            <b>IV.</b> Clave de RFC de la persona a favor de quien se expida o, en su defecto, nombre, denominación o razón social de dicha persona.
+                        </p>
+                        <p>
+                            <b>V.</b>   Servicio y descripción del mismo. (cantidad en caso de aplicar).
+                        </p>
+                        <p>
+                            <b>VI.</b>  Valor unitario consignado en número e importe total consignado en número o letra.
+                        </p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
         <!-- END Modals -->
 
         <div class="content boxContent">
@@ -436,17 +547,26 @@
 
                                                     <?php if ($this->session->userdata('forma_pago') == 2) { ?>
                                                         <a href="https://youtu.be/YuZNsPk8-gY"
-                                                           target="_blank"><u>click aquí</u></a>
+                                                           target="_blank"><u>clic aquí</u></a>
                                                     <?php } ?>
                                                     <?php if ($this->session->userdata('forma_pago') == 3) { ?>
                                                         <a href="https://youtu.be/LmmIdipDSEA"
-                                                           target="_blank"><u>click aquí</u></a>
+                                                           target="_blank"><u>clic aquí</u></a>
                                                     <?php } ?>
                                                     <?php if ($this->session->userdata('forma_pago') == 4) { ?>
                                                         <a href="https://youtu.be/oRoJev_AZgs"
-                                                           target="_blank"><u>click aquí</u></a>
+                                                           target="_blank"><u>clic aquí</u></a>
                                                     <?php } ?>
                                                 </p>
+
+                                                <?php if ($this->session->userdata('forma_pago') == 5) { ?>
+                                                    <p class="card-title pl-1">Comprobantes fiscales emitidos por residentes en el <b>extranjero</b>
+                                                        sin establecimiento permanente en México.
+                                                        <a data-toggle="modal" data-target="#info-modal" style="cursor: pointer;">
+                                                            <u>Clic aquí para más información</u>
+                                                        </a>
+                                                    </p>
+                                                <?php } ?>
                                             </div>
                                             <div class="toolbar">
                                                 <div class="container-fluid p-0">
@@ -481,9 +601,11 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <?php
-                                                echo $cadena;
-                                            ?>
+                                            <div class="row">
+                                                <div class="col-lg-12 text-left mt-1">
+                                                    <?= $cadena ?>
+                                                </div>
+                                            </div>
                                             <div class="material-datatables">
                                                 <div class="form-group">
                                                     <div class="table-responsive">
@@ -731,10 +853,86 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
+    <script type="text/javascript" src="<?=base_url()?>dist/js/shadowbox.js"></script>
+    <script>
+        Shadowbox.init();
+    </script>
     <script>
         userType = <?= $this->session->userdata('id_rol') ?>;
         userSede = <?= $this->session->userdata('id_sede') ?>;
         userID = <?= $this->session->userdata('id_usuario') ?>;
+
+        $("#file-upload-extranjero").on('change', function() {
+            $('#archivo-extranjero').val('');
+
+            v2 = document.getElementById("file-upload-extranjero").files[0].name;
+            document.getElementById("archivo-extranjero").innerHTML = v2;
+
+            const src = URL.createObjectURL(document.getElementById("file-upload-extranjero").files[0]);
+            $('#preview-div').html("");
+            $('#preview-div').append(`<embed src="${src}" width="500" height="200">`);
+        });
+
+        $(document).on("click", ".subir-archivo", function(e) {
+            e.preventDefault();
+            $('#archivo-extranjero').val('');
+
+            $.ajax({
+                url: 'getTotalComisionAsesor',
+                type: 'GET',
+                dataType: 'JSON',
+                success: function (data) {
+                    $('#total-comision').html("");
+                    $('#total-comision').append(`Total: $${formatMoney(data.total)}`);
+                    $('#addFileExtranjero').modal('show');
+                }
+            });
+        });
+
+        $("#EditarPerfilExtranjeroForm").one('submit', function(e){
+            document.getElementById('sendFileExtranjero').disabled =true;
+            $("#sendFileExtranjero").prop("disabled", true);
+            e.preventDefault();
+
+            const formData = new FormData(document.getElementById("EditarPerfilExtranjeroForm"));
+            formData.append("dato", "valor");
+
+            $.ajax({
+                type: 'POST',
+                url: url+'index.php/Usuarios/SubirPDFExtranjero',
+                data: formData,
+                contentType: false,
+                cache: false,
+                processData:false,
+                success: function(data) {
+                    document.getElementById('sendFileExtranjero').disabled =false;
+                    $("#sendFileExtranjero").prop("disabled", false);
+                    if (data == 1) {
+                        $("#addFileExtranjero").modal('hide');
+                        setTimeout('document.location.reload()',100);
+                    } else {
+                        $("#addFileExtranjero").modal('hide');
+                        alerts.showNotification("top", "right", "Error al subir el archivo.", "warning");
+                    }
+                },
+                error: function(){
+                    $("#addFileExtranjero").modal('hide');
+                    alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+                }
+            });
+        });
+
+        $(document).on('click', '.verPDFExtranjero', function () {
+            const $itself = $(this);
+            Shadowbox.open({
+                content: '<div><iframe style="overflow:hidden;width: 100%;height: 100%;position:absolute;" src="<?=base_url()?>static/documentos/extranjero/'+$itself.attr('data-usuario')+'"></iframe></div>',
+                player: "html",
+                title: "Visualizando documento fiscal: " + $itself.attr('data-usuario'),
+                width: 985,
+                height: 660
+            });
+        });
+
         $(document).ready(function () {
             $.post(url + "Contratacion/lista_proyecto", function (data) {
                 var len = data.length;
@@ -1043,26 +1241,29 @@
                             case '1': //SIN DEFINIR
                             case 1: //SIN DEFINIr
                                 return '<p class="mb-1"><span class="label" style="background:#B3B4B4;">SIN DEFINIR FORMA DE PAGO</span><br><span class="label" style="background:#EED943; color:black;">REVISAR CON RH</span></p>';
-                            break;
 
                             case '2': //FACTURA
                             case 2: //FACTURA
                                 return '<p class="mb-1"><span class="label" style="background:#806AB7;">FACTURA</span></p><p style="font-size: .5em"><span class="label" style="background:#EB6969;">SUBIR XML</span></p>';
-                            break;
 
                             case '3': //ASIMILADOS
                             case 3: //ASIMILADOS
                                 return '<p class="mb-1"><span class="label" style="background:#4B94CC;">ASIMILADOS</span></p><p style="font-size: .5em"><span class="label" style="background:#00B397;">LISTA PARA APROBAR</span></p>';
-                            break;
 
                             case '4': //RD
                             case 4: //RD
                                 return '<p class="mb-1"><span class="label" style="background:#6D527E;">REMANENTE DIST.</span></p><p style="font-size: .5em"><span class="label" style="background:#00B397;">LISTA PARA APROBAR</span></p>';
-                            break;
+
+                            case '5':
+                            case 5:
+                                return `
+                                    <p class="mb-1">
+                                        <span class="label" style="background:#0080FF;">FACTURA EXTRANJERO</span>
+                                    </p>
+                                `;
 
                             default:
                                 return '<p class="mb-1"><span class="label" style="background:#B3B4B4;">DOCUMENTACIÓN FALTANTE</span><br><span class="label" style="background:#EED943; color:black;">REVISAR CON RH</span></p>';
-                            break;
                         }
                     }
                 },
@@ -1126,18 +1327,25 @@
                                 case 3: //ASIMILADOS
                                 case '4': //RD
                                 case 4: //RD
+                                case 5:
+                                case '5':
                                 default:
 
                                 if (full.id_usuario == 5028  || full.id_usuario == 4773 || full.id_usuario == 5381 ){
                                     return '<span class="material-icons" style="color: #DCDCDC;">block</span>';
 
-                                }else{
+                                } else if (full.fecha_abono && full.estatus == 1) {
+                                    const fechaAbono = new Date(full.fecha_abono);
+                                    const fechaOpinion = new Date(full.fecha_opinion);
+                                    if (fechaAbono.getTime() > fechaOpinion.getTime()) {
+                                        return '<span class="material-icons" style="color: #DCDCDC;">block</span>';
+                                    }
                                     return '<input type="checkbox" name="idT[]" style="width:20px;height:20px;"  value="' + full.id_pago_i + '">';
+                                } else {
+                                    return '<span class="material-icons" style="color: #DCDCDC;">block</span>';
                                 }
-                                break;
                             }
-                        } 
-                        else {
+                        } else {
                             return '<span class="material-icons" style="color: #DCDCDC;">block</span>';
                         }
                     },
