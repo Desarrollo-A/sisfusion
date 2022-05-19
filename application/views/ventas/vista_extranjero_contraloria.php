@@ -17,12 +17,12 @@
         ?>
 
         <!-- Modals -->
-        <div class="modal fade" id="seeInformationModalremanente" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+        <div class="modal fade" id="seeInformationModalExtranjero" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog modal-md modal-dialog-scrollable" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-                            <i class="material-icons" onclick="cleanCommentsremanente()">clear</i>
+                            <i class="material-icons" onclick="cleanCommentsextranjero()">clear</i>
                         </button>
                     </div>
                     <div class="modal-body">
@@ -36,7 +36,7 @@
                                         <div class="col-md-12">
                                             <div class="card card-plain">
                                                 <div class="card-content">
-                                                    <ul class="timeline timeline-simple" id="comments-list-remanente"></ul>
+                                                    <ul class="timeline timeline-simple" id="comments-list-extranjero"></ul>
                                                 </div>
                                             </div>
                                         </div>
@@ -46,7 +46,7 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" onclick="cleanCommentsremanente()"><b>Cerrar</b></button>
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" onclick="cleanCommentsextranjero()"><b>Cerrar</b></button>
                     </div>
                 </div>
             </div>
@@ -132,7 +132,7 @@
                                             <div class="col-12 col-sm-12 col-md-12 col-lg-6">
                                                 <div class="form-group d-flex justify-center align-center">
                                                     <h4 class="title-tot center-align m-0">Disponible:</h4>
-                                                    <p class="input-tot pl-1" name="totpagarremanente" id="totpagarremanente">$0.00</p>
+                                                    <p class="input-tot pl-1" name="totpagarextranjero" id="totpagarextranjero">$0.00</p>
                                                 </div>
                                             </div>
                                             <div class="col-12 col-sm-12 col-md-12 col-lg-6">
@@ -162,7 +162,7 @@
                                     <div class="material-datatables">
                                         <div class="form-group">
                                             <div class="table-responsive">
-                                                <table class="table-striped table-hover" id="tabla_remanente" name="tabla_remanente">
+                                                <table class="table-striped table-hover" id="tabla_extranjero" name="tabla_extranjero">
                                                     <thead>
                                                         <tr>
                                                             <th></th>
@@ -210,15 +210,15 @@
     <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
 
     <script>
-        function cleanCommentsremanente() {
-            var myCommentsList = document.getElementById('comments-list-remanente');
+        function cleanCommentsextranjero() {
+            var myCommentsList = document.getElementById('comments-list-extranjero');
             var myCommentsLote = document.getElementById('nameLote');
             myCommentsList.innerHTML = '';
             myCommentsLote.innerHTML = '';
         }
 
         $(document).ready(function() {
-            $("#tabla_remanente").prop("hidden", true);
+            $("#tabla_extranjero").prop("hidden", true);
 
             var url = "<?=base_url()?>/index.php/";
             /*$.post("<//?=base_url()?>index.php/Contratacion/lista_proyecto", function (data) {
@@ -345,36 +345,36 @@
         var totalCdmx = 0;
         var totalCancun = 0;
         var tr;
-        var tabla_remanente2 ;
+        var tabla_extranjero2 ;
         var totaPen = 0;
         let titulos = [];
     
         //INICIO TABLA QUERETARO*************************************
-        $('#tabla_remanente thead tr:eq(0) th').each( function (i) {
+        $('#tabla_extranjero thead tr:eq(0) th').each( function (i) {
             if(i != 0){
                 var title = $(this).text();
                 titulos.push(title);
                 $(this).html('<input type="text" class="textoshead" placeholder="'+title+'"/>');
                 $('input', this).on('keyup change', function() {
-                    if (tabla_remanente2.column(i).search() !== this.value) {
-                        tabla_remanente2
+                    if (tabla_extranjero2.column(i).search() !== this.value) {
+                        tabla_extranjero2
                         .column(i)
                         .search(this.value)
                         .draw();
 
                         var total = 0;
-                        var index = tabla_remanente2.rows({
+                        var index = tabla_extranjero2.rows({
                         selected: true,
                         search: 'applied'
                     }).indexes();
 
-                        var data = tabla_remanente2.rows(index).data();
+                        var data = tabla_extranjero2.rows(index).data();
                         $.each(data, function(i, v) {
                             total += parseFloat(v.impuesto);
                         });
 
                         var to1 = formatMoney(total);
-                        document.getElementById("totpagarremanente").textcontent = formatMoney(total);
+                        document.getElementById("totpagarextranjero").textcontent = formatMoney(total);
                     }
                 });
             }
@@ -384,17 +384,17 @@
         });
 
         function getAssimilatedCommissions(proyecto, condominio){
-            $('#tabla_remanente').on('xhr.dt', function(e, settings, json, xhr) {
+            $('#tabla_extranjero').on('xhr.dt', function(e, settings, json, xhr) {
                 var total = 0;
                 $.each(json.data, function(i, v) {
                     total += parseFloat(v.impuesto);
                 });
                 var to = formatMoney(total);
-                document.getElementById("totpagarremanente").textContent = '$' + to;
+                document.getElementById("totpagarextranjero").textContent = '$' + to;
             });
 
-            $("#tabla_remanente").prop("hidden", false);
-            tabla_remanente2 = $("#tabla_remanente").DataTable({
+            $("#tabla_extranjero").prop("hidden", false);
+            tabla_extranjero2 = $("#tabla_extranjero").DataTable({
                 dom: 'Brt'+ "<'row'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'i><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>",
                 width: 'auto',
                 buttons: [{
@@ -402,7 +402,7 @@
                     action: function() {
                         if ($('input[name="idTQ[]"]:checked').length > 0) {
                             $('#spiner-loader').removeClass('hide');
-                            var idcomision = $(tabla_remanente2.$('input[name="idTQ[]"]:checked')).map(function() {
+                            var idcomision = $(tabla_extranjero2.$('input[name="idTQ[]"]:checked')).map(function() {
                                 return this.value;
                             }).get();
                             
@@ -423,10 +423,10 @@
                                         $("#all").prop('checked', false);
                                         var fecha = new Date();
                                         $("#myModalEnviadas").modal('toggle');
-                                        tabla_remanente2.ajax.reload();
+                                        tabla_extranjero2.ajax.reload();
                                         $("#myModalEnviadas .modal-body").html("");
                                         $("#myModalEnviadas").modal();
-                                        $("#myModalEnviadas .modal-body").append("<center><img style='width: 75%; height: 75%;' src='<?= base_url('dist/img/send_intmex.gif')?>'><p style='color:#676767;'>Comisiones de esquema <b>asimilados</b>, fueron enviadas a <b>INTERNOMEX</b> correctamente.</p></center>");
+                                        $("#myModalEnviadas .modal-body").append("<center><img style='width: 75%; height: 75%;' src='<?= base_url('dist/img/send_intmex.gif')?>'><p style='color:#676767;'>Comisiones de esquema <b>Factura extranjero</b>, fueron enviadas a <b>INTERNOMEX</b> correctamente.</p></center>");
                                     }
                                     else {
                                         $('#spiner-loader').addClass('hide');
@@ -456,7 +456,7 @@
                     text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
                     className: 'btn buttons-excel',
                     titleAttr: 'Descargar archivo de Excel',
-                    title: 'REMANENTE_CONTRALORÍA_SISTEMA_COMISIONES',
+                    title: 'EXTRANJERO_CONTRALORÍA_SISTEMA_COMISIONES',
                     exportOptions: {
                         columns: [1,2,3,4,5,6,7,8,9,10,11,12,13,14],
                         format: {
@@ -612,7 +612,7 @@
                     "data": function( data ){
                         var BtnStats;
                         
-                        BtnStats = '<button href="#" value="'+data.id_pago_i+'" data-value="'+data.lote+'" data-code="'+data.cbbtton+'" ' +'class="btn-data btn-blueMaderas consultar_logs_remanente" title="Detalles">' +'<i class="fas fa-info"></i></button>'+
+                        BtnStats = '<button href="#" value="'+data.id_pago_i+'" data-value="'+data.lote+'" data-code="'+data.cbbtton+'" ' +'class="btn-data btn-blueMaderas consultar_logs_extranjero" title="Detalles">' +'<i class="fas fa-info"></i></button>'+
 
                         '<button href="#" value="'+data.id_pago_i+'" data-value="'+data.id_pago_i+'" data-code="'+data.cbbtton+'" ' + 'class="btn-data btn-warning cambiar_estatus" title="Pausar solicitud">' + '<i class="fas fa-ban"></i></button>';
                         return '<div class="d-flex justify-center">'+BtnStats+'</div>';
@@ -651,25 +651,25 @@
                 },
             });
 
-            $("#tabla_remanente tbody").on("click", ".consultar_logs_remanente", function(e){
+            $("#tabla_extranjero tbody").on("click", ".consultar_logs_extranjero", function(e){
                 e.preventDefault();
                 e.stopImmediatePropagation();
 
                 id_pago = $(this).val();
                 lote = $(this).attr("data-value");
 
-                $("#seeInformationModalremanente").modal();
+                $("#seeInformationModalExtranjero").modal();
                 $("#nameLote").append('<p><h5 style="color: white;">HISTORIAL DEL PAGO DE: <b>'+lote+'</b></h5></p>');
                 $.getJSON("getComments/"+id_pago).done( function( data ){
                     $.each( data, function(i, v){
-                        $("#comments-list-remanente").append('<div class="col-lg-12"><p><i style="color:gray;">'+v.comentario+'</i><br><b style="color:#3982C0">'+v.fecha_movimiento+'</b><b style="color:gray;"> - '+v.nombre_usuario+'</b></p></div>');
+                        $("#comments-list-extranjero").append('<div class="col-lg-12"><p><i style="color:gray;">'+v.comentario+'</i><br><b style="color:#3982C0">'+v.fecha_movimiento+'</b><b style="color:gray;"> - '+v.nombre_usuario+'</b></p></div>');
                     });
                 });
             });
 
-            $('#tabla_remanente').on('click', 'input', function() {
+            $('#tabla_extranjero').on('click', 'input', function() {
                 tr = $(this).closest('tr');
-                var row = tabla_remanente2.row(tr).data();
+                var row = tabla_extranjero2.row(tr).data();
                 if (row.pa == 0) {
                     row.pa = row.impuesto;
                     totaPen += parseFloat(row.pa);
@@ -683,9 +683,9 @@
                 $("#totpagarPen").html(formatMoney(totaPen));
             });
 
-            $("#tabla_remanente tbody").on("click", ".cambiar_estatus", function(){
+            $("#tabla_extranjero tbody").on("click", ".cambiar_estatus", function(){
                 var tr = $(this).closest('tr');
-                var row = tabla_remanente2.row( tr );
+                var row = tabla_extranjero2.row( tr );
                 id_pago_i = $(this).val();
 
                 $("#modal_nuevas .modal-body").html("");
@@ -696,9 +696,9 @@
                 $("#modal_nuevas").modal();
             });
 
-            /*$("#tabla_remanente tbody").on("click", ".despausar_estatus", function(){
+            /*$("#tabla_extranjero tbody").on("click", ".despausar_estatus", function(){
                 var tr = $(this).closest('tr');
-                var row = tabla_remanente2.row( tr );
+                var row = tabla_extranjero2.row( tr );
                 id_pago_i = $(this).val();
                 $("#modal_refresh .modal-body").html("");
                 $("#modal_refresh .modal-body").append('<div class="row"><div class="col-lg-12"><p>¿Está seguro regresar al estatus inicial la comisión  de <b>'+row.data().lote+'</b> para el <b>'+(row.data().puesto).toUpperCase()+':</b> <i>'+row.data().usuario+'</i>?</p></div></div>');
@@ -707,7 +707,7 @@
                 $("#modal_refresh").modal();
             });*/
 
-            /*$("#tabla_remanente tbody").on("click", ".consultar_documentos", function(){
+            /*$("#tabla_extranjero tbody").on("click", ".consultar_documentos", function(){
                 id_com = $(this).val();
                 id_pj = $(this).attr("data-personalidad");
 
@@ -775,7 +775,7 @@
         });
 
         $(window).resize(function(){
-            tabla_remanente2.columns.adjust();
+            tabla_extranjero2.columns.adjust();
         });
 
         function formatMoney( n ) {
@@ -814,7 +814,7 @@
                             $("#modal_nuevas").modal('toggle' );
                             alerts.showNotification("top", "right", "Se ha pausado la comisión exitosamente", "success");
                             setTimeout(function() {
-                                tabla_remanente2.ajax.reload();
+                                tabla_extranjero2.ajax.reload();
                                 // tabla_otras2.ajax.reload();
                             }, 3000);
                         }else{
@@ -850,7 +850,7 @@
                             $("#modal_refresh").modal('toggle' );
                             alerts.showNotification("top", "right", "Se ha procesado la solicitud exitosamente", "success");
                             setTimeout(function() {
-                                tabla_remanente2.ajax.reload();
+                                tabla_extranjero2.ajax.reload();
                             }, 3000);
                         }
                         else{
@@ -897,10 +897,10 @@
 
         function selectAll(e) {
             tota2 = 0;
-            $(tabla_remanente2.$('input[type="checkbox"]')).each(function (i, v) {
+            $(tabla_extranjero2.$('input[type="checkbox"]')).each(function (i, v) {
                 if (!$(this).prop("checked")) {
                     $(this).prop("checked", true);
-                    tota2 += parseFloat(tabla_remanente2.row($(this).closest('tr')).data().impuesto);
+                    tota2 += parseFloat(tabla_extranjero2.row($(this).closest('tr')).data().impuesto);
                 } else {
                     $(this).prop("checked", false);
                 }
