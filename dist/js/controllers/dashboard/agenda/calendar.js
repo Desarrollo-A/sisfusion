@@ -71,7 +71,7 @@
   calendar.render();
   customizeIcon();
 
-  $.post(url+'Calendar/getStatusRecordatorio', function(data) {
+  $.post(base_url+'Calendar/getStatusRecordatorio', function(data) {
     var len = data.length;
     for (var i = 0; i < len; i++) {
         var id = data[i]['id_opcion'];
@@ -88,7 +88,7 @@
 
   }, 'json'); 
 
-  $.post(url+'Calendar/getProspectos', function(data) {
+  $.post(base_url+'Calendar/getProspectos', function(data) {
     var len = data.length;
     for (var i = 0; i < len; i++) {
         var id = data[i]['id_prospecto'];
@@ -152,7 +152,7 @@
     dataF['id_prospecto_estatus_particular'] = $("#prospecto").val();
     $.ajax({
       type: 'POST',
-      url: url+'Calendar/insertRecordatorio',
+      url: base_url+'Calendar/insertRecordatorio',
       data: JSON.stringify(dataF),
       contentType: false,
       cache: false,
@@ -202,7 +202,7 @@
   function getAppointmentData(idAgenda){
     $.ajax({
       type: "POST",
-      url: url+"Calendar/getAppointmentData",
+      url: base_url+"Calendar/getAppointmentData",
       data: {idAgenda: idAgenda},
       dataType: 'json',
       cache: false,
@@ -255,7 +255,7 @@
   }
 
   function getOfficeAddresses(appointment){
-    $.post(url+'Calendar/getOfficeAddresses', function(data) {
+    $.post(base_url+'Calendar/getOfficeAddresses', function(data) {
       var len = data.length;
       for (var i = 0; i < len; i++) {
           var id = data[i]['id_direccion'];
@@ -290,7 +290,7 @@
   function getAppointmentSidebarCalendar(idAgenda){
     $.ajax({
       type: "POST",
-      url: url+"Calendar/getAppointmentData",
+      url: base_url+"Calendar/getAppointmentData",
       data: {idAgenda: idAgenda},
       dataType: 'json',
       cache: false,
@@ -386,7 +386,7 @@
 
     $.ajax({
       type: 'POST',
-      url: url+'Calendar/updateAppointmentData',
+      url: base_url+'Calendar/updateAppointmentData',
       data: JSON.stringify(data),
       contentType: false,
       cache: false,
@@ -468,7 +468,7 @@
   async function deleteGoogleEvent(idAgenda, idGoogle){
     $.ajax({
       type: 'POST',
-      url: url+'Calendar/deleteAppointment',
+      url: base_url+'Calendar/deleteAppointment',
       data: {idAgenda:idAgenda},
       dataType: 'json',
       cache: false,
@@ -517,7 +517,7 @@
     data['idAgenda'] = $("#idAgenda2").val();
     $.ajax({
       type: 'POST',
-      url: url+'Calendar/setAppointmentRate',
+      url: base_url+'Calendar/setAppointmentRate',
       data: JSON.stringify(data),
       contentType: false,
       cache: false,
@@ -540,8 +540,8 @@
   });
 
   function customizeIcon(){
-    $(".fc-googleSignIn-button").append('<img src='+url+'/dist/img/googlecalendar.png>');
-    $(".fc-googleLogout-button").append('<img src='+url+'/dist/img/unsync.png>');
+    $(".fc-googleSignIn-button").append('<img src='+base_url+'/dist/img/googlecalendar.png>');
+    $(".fc-googleLogout-button").append('<img src='+base_url+'/dist/img/unsync.png>');
   }
 
   function createTable(){
@@ -551,7 +551,7 @@
       pagingType: "full_numbers",
       fixedHeader: true,
       language: {
-          url: url+"static/spanishLoader_v2.json",
+          url: base_url+"static/spanishLoader_v2.json",
           paginate: {
             previous: "<i class='fa fa-angle-left'>",
             next: "<i class='fa fa-angle-right'>"
@@ -597,7 +597,7 @@
         $('div.toolbar').html('<h3 class="m-0">Citas abiertas</h3>');
       },
       ajax: {
-        url: url+"Calendar/AllEvents",
+        url: base_url+"Calendar/AllEvents",
         type: "POST",
         cache: false,
       }
@@ -612,7 +612,7 @@
     let array = createArrayEvents(params);
     $.ajax({
       type: 'POST',
-      url: url+'Calendar/updateNFinishAppointments',
+      url: base_url+'Calendar/updateNFinishAppointments',
       data: JSON.stringify(array),
       contentType: false,
       cache: false,
