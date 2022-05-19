@@ -13,26 +13,26 @@
         <div class="content boxContent">
             <div class="container-fluid">
                 <ul class="nav nav-pills nav-pills-gray">
-                    <li class="active" onclick="changePill(this.id)">
-                        <a href="#Inicio" data-toggle="tab">Inicio</a>
+                    <li class="active" id="inicioOption" onclick="changePill(this.id)">
+                        <a href="#inicio" data-toggle="tab">Inicio</a>
                     </li>
-                    <li onclick="changePill(this.id)">
-                        <a href="#Reporte" data-toggle="tab">Reporte</a>
+                    <li id="reporteOption" onclick="changePill(this.id)">
+                        <a href="#reporte" data-toggle="tab">Reporte</a>
                     </li>
-                    <li onclick="changePill(this.id)">
-                        <a href="#Agenda" data-toggle="tab">Agenda</a>
+                    <li id="agendaOption" onclick="changePill(this.id)">
+                        <a href="#agenda" data-toggle="tab">Agenda</a>
                     </li>
-                    <li onclick="changePill(this.id)">
-                        <a href="#Ranking" data-toggle="tab">Ranking</a>
+                    <li id="rankingOption" onclick="changePill(this.id)">
+                        <a href="#ranking" data-toggle="tab">Ranking</a>
                     </li>
-                    <li onclick="changePill(this.id)">
-                        <a href="#Metricas" data-toggle="tab">Metricas</a>
+                    <li id="metricasOption" onclick="changePill(this.id)">
+                        <a href="#metricas" data-toggle="tab">Metricas</a>
                     </li>
                 </ul>
                 <div class="tab-content">
-                    <div class="tab-pane active" id="Inicio">
+                    <div class="tab-pane active" id="inicio">
                         <div class="row">
-                            <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                                 <div class="card">
                                     <div class="card-content">
                                         <h3 class="card-title center-align">Dashboard</h3>
@@ -228,49 +228,27 @@
                             </div>
                         </div>
                     </div>
-                    <div class="tab-pane" id="Reporte">
+                    <div class="tab-pane" id="reporte">
                         <div class="row">
-                            <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                                <div class="card">
-                                    <div class="card-content">
-                                        <h3 class="card-title center-align">Reporte</h3>
-                                        <div class="container-fluid">
-                                        </div>
-                                    </div>
-                                </div>
+                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                             </div>
                         </div>
                     </div>
-                    <div class="tab-pane" id="Agenda">
+                    <div class="tab-pane" id="agenda">
                         <div class="row">
-                            <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                                <?php $this->load->view('asesor/calendar'); ?>
+                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                             </div>
                         </div>
                     </div>
-                    <div class="tab-pane" id="Ranking">
+                    <div class="tab-pane" id="ranking">
                         <div class="row">
-                            <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                                <div class="card">
-                                    <div class="card-content">
-                                        <h3 class="card-title center-align">Ranking</h3>
-                                        <div class="container-fluid">
-                                        </div>
-                                    </div>
-                                </div>
+                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                             </div>
                         </div>
                     </div>
-                    <div class="tab-pane" id="Metricas">
+                    <div class="tab-pane" id="metricas">
                         <div class="row">
-                            <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                                <div class="card">
-                                    <div class="card-content">
-                                        <h3 class="card-title center-align">Metricas</h3>
-                                        <div class="container-fluid">
-                                        </div>
-                                    </div>
-                                </div>
+                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                             </div>
                         </div>
                     </div>
@@ -280,9 +258,31 @@
         <?php $this->load->view('template/footer_legend'); ?>
     </div><!--main-panel close-->
 </body>
+<?php $this->load->view('template/footer');?>
 <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 <script>
-    let url = "<?=base_url()?>";
+    let base_url = "<?=base_url()?>";
+    function changePill(element){
+        if(element == 'inicioOption'){
+            $('.box1Inicio1').addClass('fadeInAnimation');
+            $('.box1Inicio2').addClass('fadeInAnimationDelay2');
+            $('.box1Inicio3').addClass('fadeInAnimationDelay3');
+            $('.box1Inicio4').addClass('fadeInAnimationDelay3');
+            $('.boxNavPills').addClass('fadeInAnimationDelay4');
+        }
+        else if(element == 'reporteOption'){
+            console.log("click reporte");
+        }
+        else if(element == 'agendaOption'){
+            $('#agenda .col-lg-12').html("<?php base_url().'dashboard/agenda/calendar'; ?>");
+        }
+        else if(element == 'rankingOption'){
+            console.log("click ranking");
+        }
+        else if(element == 'metricasOption'){
+            console.log("click metricas");
+        }
+    }
 </script>
 <script src="<?=base_url()?>dist/js/controllers/dashboard/inicio/dashboardHome.js"></script>
 
