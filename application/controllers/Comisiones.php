@@ -6871,7 +6871,7 @@ for ($d=0; $d <count($dos) ; $d++) {
         ));
     }
 
-    public function pagosExtranjeros()
+    public function pagosExtranjero()
     {
       $datos = array();
       $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
@@ -6894,4 +6894,15 @@ for ($d=0; $d <count($dos) ; $d++) {
 
 
     }
+
+
+
+    public function getDatosNuevasEContraloria($proyecto,$condominio){
+      $dat =  $this->Comisiones_model->getDatosNuevasEContraloria($proyecto,$condominio)->result_array();
+     for( $i = 0; $i < count($dat); $i++ ){
+         $dat[$i]['pa'] = 0;
+     }
+     echo json_encode( array( "data" => $dat));
+    }
+
 }
