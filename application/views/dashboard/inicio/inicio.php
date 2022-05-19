@@ -262,27 +262,6 @@
 <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 <script>
     let base_url = "<?=base_url()?>";
-    function changePill(element){
-        if(element == 'inicioOption'){
-            $('.box1Inicio1').addClass('fadeInAnimation');
-            $('.box1Inicio2').addClass('fadeInAnimationDelay2');
-            $('.box1Inicio3').addClass('fadeInAnimationDelay3');
-            $('.box1Inicio4').addClass('fadeInAnimationDelay3');
-            $('.boxNavPills').addClass('fadeInAnimationDelay4');
-        }
-        else if(element == 'reporteOption'){
-            console.log("click reporte");
-        }
-        else if(element == 'agendaOption'){
-            $('#agenda .col-lg-12').html("<?php base_url().'dashboard/agenda/calendar'; ?>");
-        }
-        else if(element == 'rankingOption'){
-            console.log("click ranking");
-        }
-        else if(element == 'metricasOption'){
-            console.log("click metricas");
-        }
-    }
 </script>
 <script src="<?=base_url()?>dist/js/controllers/dashboard/inicio/dashboardHome.js"></script>
 
