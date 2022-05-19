@@ -132,10 +132,10 @@
                 
     <?php include 'common_modals.php' ?>
     <script src="<?= base_url() ?>dist/assets/js/bootstrap-datetimepicker.js"></script>
-    <?php $this->load->view('template/footer');?>
-    <script src="<?=base_url()?>dist/js/controllers/calendar/general_calendar.js"></script>
-    <script src="<?=base_url()?>dist/js/controllers/calendar/calendar.js"></script>
+    <script src="<?=base_url()?>dist/js/controllers/dashboard/agenda/general_calendar.js"></script>
+    <script src="<?=base_url()?>dist/js/controllers/dashboard/agenda/calendar.js"></script>
     <script>
         userType = <?= $this->session->userdata('id_rol') ?> ;
         idUser = <?= $this->session->userdata('id_usuario') ?> ;
+        let base_url = "<?=base_url()?>";
     </script>

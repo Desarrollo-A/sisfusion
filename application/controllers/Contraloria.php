@@ -3428,10 +3428,31 @@ public function return1(){
 	public function lotes_apartados(){
 		$this->validateSession();
 		/*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/           
+		if ($this->session->userdata('id_usuario') == FALSE) {
+			redirect(base_url());
+		}
 		$datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
+		switch($this->session->userdata('id_usuario')){
+			case '2807': //Mariela Sánchez Sánchez
+			case '2826': //Ana Laura García Tovar
+			case '2767': //Irene Vallejo
+				$this->load->view('template/header');
+	 			$this->load->view("contraloria/vista_lotes_precio_enganche",$datos);
+				break;
+			case '2754': //Gabriela Hernández Tovar
+				$this->load->view('template/header');
+	 			$this->load->view("contraloria/vista_lotes_enganche_sede",$datos);
+				break;
+			case '2749': //Ariadna Martínez
+				$this->load->view('template/header');
+	 			$this->load->view("contraloria/vista_lotes_sede",$datos);
+				break;
+			default:
+				echo '<script>alert("ACCESO DENEGADO"); window.location.href="' . base_url() . '";</script>';
+				break;
+		}
         /*-------------------------------------------------------------------------------*/
-		$this->load->view('template/header');
-	 	$this->load->view("contraloria/vista_lotes_apartados",$datos);
+		
 	}
 
     /**al día de hoy**/
@@ -3486,5 +3507,40 @@ public function return1(){
 
 	public function lista_sedes(){
 		echo json_encode($this->Contraloria_model->get_sedes_lista()->result_array());
+	}
+
+	public function updateLotePrecioEnganche(){
+		$idLote = $_POST['idLote'];
+
+		$data = $this->Contraloria_model->get_datos_lotes($idLote);
+		$data = array(
+			"saldo" => $this->input->post("preciodesc"), 
+			"enganche" => $this->input->post("enganches"));
+
+		$response = $this->General_model->updateRecord('lotes', $data, 'idLote', $idLote);
+		echo json_encode($response);
+	}
+
+	public function updateLoteEngancheSede(){
+		$idLote = $_POST['idLote'];
+
+		$data = $this->Contraloria_model->get_datos_lotes($idLote);
+		$data = array(
+			"enganche" => $this->input->post("enganches"), 
+			"ubicacion" => $this->input->post("ubicacion_sede"));
+
+		$response = $this->General_model->updateRecord('lotes', $data, 'idLote', $idLote);
+		echo json_encode($response);
+	}
+
+	public function updateLoteSede(){
+		$idLote = $_POST['idLote'];
+
+		$data = $this->Contraloria_model->get_datos_lotes($idLote);
+		$data = array( 
+			"ubicacion" => $this->input->post("ubicacion_sede"));
+
+		$response = $this->General_model->updateRecord('lotes', $data, 'idLote', $idLote);
+		echo json_encode($response);
 	}
 }
