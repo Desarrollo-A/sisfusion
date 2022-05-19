@@ -249,7 +249,7 @@ class ComisionesNeo_model extends CI_Model {
     }
 
     public function UpdateBanderaPagoComision($idLote, $bonificacion){
-        return $this->db->query("UPDATE pago_comision SET bandera = 0, bonificacion = ".$bonificacion.", fecha_modificacion = GETDATE() WHERE id_lote = ".$idLote."");
+        return $this->db->query("UPDATE pago_comision SET bandera = 0, bonificacion = ".$bonificacion." WHERE id_lote = ".$idLote."");
     }
 
     public function UpdateBanderaPagoComisionNO($idLote){
@@ -295,12 +295,13 @@ class ComisionesNeo_model extends CI_Model {
     }
 
     public function getFlagAbonado(){
-        return $this->db->query("SELECT DISTINCT(cm.id_lote), SUM(abono_neodata) abonado, (CASE when pc.bandera = 10 then 100 when pc.bandera = 15 then 150 when pc.bandera = 11 then 110 when pc.bandera = 17 then 170 end) as bandera
-        FROM pago_comision_ind pci
-        INNER JOIN comisiones cm on cm.id_comision = pci.id_comision and cm.estatus = 1
-        INNER JOIN pago_comision pc on pc.id_lote = cm.id_lote 
-        WHERE cm.estatus = 1 and (cm.descuento is null OR cm.descuento = 0) and pc.bandera in (10,11,15,17)
-        GROUP BY cm.id_lote, pc.abonado, pc.bandera");
+        return $this->db->query("SELECT DISTINCT(cm.id_lote), SUM(abono_neodata) abonado, (sum(abono_neodata) - pc.abonado) resta, (CASE when pc.bandera = 10 then 100 when pc.bandera = 0 then 100 when pc.bandera = 55 then 150 when pc.bandera = 15 then 150 when pc.bandera = 1 then 110 when pc.bandera = 11 then 110 when pc.bandera = 7 then 170 when pc.bandera = 17 then 170 end) as bandera
+               FROM pago_comision_ind pci
+               INNER JOIN comisiones cm on cm.id_comision = pci.id_comision and cm.estatus = 1
+               INNER JOIN pago_comision pc on pc.id_lote = cm.id_lote 
+               WHERE cm.estatus = 1 and (cm.descuento is null OR cm.descuento = 0) and pc.bandera not in (100, 150, 110, 170)
+               GROUP BY cm.id_lote, pc.abonado, pc.bandera
+               HAVING (SUM(abono_neodata) - pc.abonado) not between -1 and 1");
     }
 
     public function updateFlagAbonado($a, $b, $c){
@@ -308,11 +309,16 @@ class ComisionesNeo_model extends CI_Model {
     }
 
     public function getFlagPendiente(){
-        return $this->db->query("SELECT pc.id_lote, (CASE when pc.bandera = 100 then 0 when pc.bandera = 150 then 55 when pc.bandera = 110 then 1 when pc.bandera = 170 then 7 end) as bandera FROM pago_comision pc WHERE pc.bandera in (100, 150, 110, 170)");
+        return $this->db->query("SELECT pc.id_lote, (CASE when pc.bandera = 100 then 0 when pc.bandera = 150 then 55 when pc.bandera = 110 then 1 when pc.bandera = 170 then 7 else pc.bandera end) as bandera FROM pago_comision pc WHERE pc.bandera in (100, 150, 110, 170)");
     }
     
     public function updateFlagPendiente($a, $b){
-        return $this->db->query("UPDATE pago_comision SET pendiente = total_comision - abonado, bandera = $b WHERE id_lote in ($a)");
+        $this->db->query("UPDATE pago_comision SET pendiente = total_comision - abonado, bandera = $b WHERE id_lote in ($a)");
     }
+
+    public function updateFlagPendienteDistintos(){
+        $this->db->query("UPDATE pago_comision SET pendiente = total_comision - abonado WHERE total_comision not in (0) and bandera not in (100, 150, 110, 170) ");
+    }
+
 
 }
