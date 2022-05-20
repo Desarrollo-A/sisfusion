@@ -1,31 +1,4 @@
-function changePill(element){
-    if(element == 'inicioOption'){
-        $('.box1Inicio1').addClass('fadeInAnimation');
-        $('.box1Inicio2').addClass('fadeInAnimationDelay2');
-        $('.box1Inicio3').addClass('fadeInAnimationDelay3');
-        $('.box1Inicio4').addClass('fadeInAnimationDelay3');
-        $('.boxNavPills').addClass('fadeInAnimationDelay4');
-    }
-    else if(element == 'reporteOption'){
-        $('#reporte .col-lg-12').html("");
-        $('#reporte .col-lg-12').load("Reporte/reporte");
-    }
-    else if(element == 'agendaOption'){
-        $('#agenda .col-lg-12').html("");
-        $('#agenda .col-lg-12').load("Calendar/calendar");
-    }
-    else if(element == 'rankingOption'){
-        console.log("ranking opt");
-        $('#ranking .col-lg-12').html("");
-        $('#ranking .col-lg-12').load("Ranking/ranking");
-    }
-    else if(element == 'metricasOption'){
-        console.log("metricas opt");
 
-        $('#metricas .col-lg-12').html("");
-        $('#metricas .col-lg-12').load("Metricas/metricas");
-    }
-}
 
 var options = {
     series: [{
@@ -279,7 +252,7 @@ function loadInit(){
 function loadData(){
     let response_vtas;
     $.ajax({
-        url: base_url+"index.php/Dashboard/getProspectsByUserSessioned",
+        url:"Dashboard/getProspectsByUserSessioned",
         cache: false,
         contentType: false,
         processData: false,
@@ -346,7 +319,7 @@ function weekFilter(element){
         com2.append("typeTransaction", typeTransaction);
 
         $.ajax({
-            url: base_url+"index.php/Dashboard/getDataFromDates",
+            url: "Dashboard/getDataFromDates",
             data:com2,
             cache: false,
             contentType: false,
@@ -423,7 +396,7 @@ function weekFilter(element){
 
 
         $.ajax({
-            url: base_url+"index.php/Dashboard/getDataFromDates",
+            url: "Dashboard/getDataFromDates",
             data:com2,
             cache: false,
             contentType: false,
@@ -497,7 +470,7 @@ function weekFilter(element){
         com2.append("fecha_fin", end_sp);
         com2.append("typeTransaction", typeTransaction);
         $.ajax({
-            url: base_url+"index.php/Dashboard/getDataFromDates",
+            url: "Dashboard/getDataFromDates",
             data:com2,
             cache: false,
             contentType: false,
@@ -618,7 +591,7 @@ function loadData2(){
         com2.append("typeTransaction", typeTransaction);
 
         $.ajax({
-            url: base_url+"index.php/Dashboard/getDataFromDates",
+            url: "Dashboard/getDataFromDates",
             data:com2,
             cache: false,
             contentType: false,
@@ -695,7 +668,7 @@ function loadData2(){
 
 
         $.ajax({
-            url: base_url+"index.php/Dashboard/getDataFromDates",
+            url: "Dashboard/getDataFromDates",
             data:com2,
             cache: false,
             contentType: false,
@@ -768,7 +741,7 @@ function loadData2(){
         com2.append("fecha_fin", end_sp);
         com2.append("typeTransaction", typeTransaction);
         $.ajax({
-            url: base_url+"index.php/Dashboard/getDataFromDates",
+            url: "Dashboard/getDataFromDates",
             data:com2,
             cache: false,
             contentType: false,
