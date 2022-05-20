@@ -347,12 +347,18 @@ public function getPuestosDescuentos(){
 
     
     
-    public function getDatosEnviadasInternomex($proyecto, $condominio){
-      $dat =  $this->Comisiones_model->getDatosEnviadasInternomex($proyecto, $condominio)->result_array();
-     for( $i = 0; $i < count($dat); $i++ ){
+    public function getDatosEnviadasInternomex($proyecto, $condominio, $formaPago){
+        $dat =  $this->Comisiones_model->getDatosEnviadasInternomex($proyecto, $condominio, $formaPago)->result_array();
+        for( $i = 0; $i < count($dat); $i++ ){
          $dat[$i]['pa'] = 0;
-     }
-     echo json_encode( array( "data" => $dat));
+        }
+        echo json_encode( array( "data" => $dat));
+    }
+
+    public function getFormasPago()
+    {
+        $data = $this->Comisiones_model->getFormasPago();
+        echo json_encode($data);
     }
     
     
