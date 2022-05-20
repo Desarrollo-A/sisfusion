@@ -2670,9 +2670,14 @@ function getDatosRevisionFactura($proyecto,$condominio){
 
 
 
- function getDatosEnviadasInternomex($proyecto,$condominio){
+ function getDatosEnviadasInternomex($proyecto,$condominio, $formaPago){
 
       $user_data = $this->session->userdata('id_usuario');
+
+      $formaPagoWhereClause = '';
+      if ($formaPago !== '0') {
+          $formaPagoWhereClause = "AND oxcfp.id_opcion = $formaPago";
+      }
 
          if($condominio == 0){
                 return $this->db->query("SELECT pci1.id_pago_i, pci1.id_comision, lo.nombreLote as lote, re.nombreResidencial as proyecto, lo.totalNeto2 precio_lote, com.comision_total, com.porcentaje_decimal, pci1.abono_neodata pago_cliente, pci1.pago_neodata, /*pci2.abono_pagado pagado, com.comision_total-pci2.abono_pagado restante, */pci1.estatus, pci1.fecha_pago_intmex fecha_creacion, CONCAT(u.nombre, ' ',u.apellido_paterno, ' ', u.apellido_materno) usuario ,pci1.id_usuario, oprol.nombre as puesto, cl.personalidad_juridica, u.forma_pago, 0 as factura, pac.porcentaje_abono, oxcest.nombre as estatus_actual, oxcest.id_opcion id_estatus_actual, re.empresa, cl.lugar_prospeccion, co.nombre as condominio, lo.referencia, (CASE u.forma_pago WHEN 3 THEN (((100-sed.impuesto)/100)*pci1.abono_neodata) ELSE pci1.abono_neodata END) impuesto, (CASE u.forma_pago WHEN 3 THEN (((sed.impuesto)/100)*pci1.abono_neodata) ELSE 0 END) dcto, sed.impuesto valimpuesto, oxcfp.nombre as regimen
@@ -2702,7 +2707,7 @@ function getDatosRevisionFactura($proyecto,$condominio){
                  WHEN 7092 THEN 4
                      WHEN 9629 THEN 2
                  ELSE u.id_sede END) and sed.estatus = 1
-                 WHERE pci1.estatus IN (8,88) 
+                 WHERE pci1.estatus IN (8,88) $formaPagoWhereClause
                  GROUP BY pci1.id_comision, lo.nombreLote, re.nombreResidencial, lo.totalNeto2, com.comision_total, com.porcentaje_decimal, pci1.abono_neodata, pci1.pago_neodata, /*pci2.abono_pagado, */pci1.estatus, pci1.fecha_pago_intmex, pci1.id_usuario, cl.personalidad_juridica, u.forma_pago, pci1.id_pago_i, pac.porcentaje_abono, u.nombre, u.apellido_paterno,u.apellido_materno, oprol.nombre, oxcest.nombre, oxcest.id_opcion, re.empresa, cl.lugar_prospeccion, co.nombre, lo.referencia, sed.impuesto, oxcfp.nombre ORDER BY lo.nombreLote");
     
             }else{
@@ -2733,14 +2738,18 @@ function getDatosRevisionFactura($proyecto,$condominio){
                  WHEN 7092 THEN 4
                      WHEN 9629 THEN 2
                  ELSE u.id_sede END) and sed.estatus = 1
-                 WHERE pci1.estatus IN (8,88) 
+                 WHERE pci1.estatus IN (8,88) $formaPagoWhereClause
                  GROUP BY pci1.id_comision, lo.nombreLote, re.nombreResidencial, lo.totalNeto2, com.comision_total, com.porcentaje_decimal, pci1.abono_neodata, pci1.pago_neodata, /*pci2.abono_pagado, */pci1.estatus, pci1.fecha_pago_intmex, pci1.id_usuario, cl.personalidad_juridica, u.forma_pago, pci1.id_pago_i, pac.porcentaje_abono, u.nombre, u.apellido_paterno,u.apellido_materno, oprol.nombre, oxcest.nombre, oxcest.id_opcion, re.empresa, cl.lugar_prospeccion, co.nombre, lo.referencia, sed.impuesto, oxcfp.nombre ORDER BY lo.nombreLote");
 
            
             }
         }
 
-  
+    public function getFormasPago()
+    {
+        $query = $this->db->query("SELECT id_opcion, nombre, estatus FROM opcs_x_cats WHERE id_catalogo = 16");
+        return $query->result_array();
+    }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////77
 
