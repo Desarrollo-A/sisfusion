@@ -3406,7 +3406,6 @@
                             }
                             if(i==0){
                                 $scope.fechaPM = day+'-'+mes+'-'+yearc;
-                                console.log("alabesra");
                             }
 
 

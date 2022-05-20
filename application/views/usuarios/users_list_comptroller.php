@@ -318,8 +318,13 @@
                 }
             },
             { data: function (d) {
-
+                if(d.id_forma_pago == 5 && d.id_nacionalidad == 0){
+                    return '<center>Sin definir<center>';
+                }else{
                     return '<center><span class="label label-danger" style="background:#'+d.color+'">'+d.nacionalidad+'</span><center>';
+
+                }
+
                 }
             },
             { data: function (d) {

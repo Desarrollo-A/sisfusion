@@ -95,7 +95,9 @@ class Api_model extends CI_Model
         $ArrayExt =  array_pop($FormasPago);
      //   $contadorExt++;
     //}
-        $Nacionalidades =  $this->db->query("SELECT id_opcion as id_nacionalidad,nombre as nacionalidad FROM opcs_x_cats WHERE id_catalogo=11")->result_array();
+        $Nacionalidades =  $this->db->query("SELECT id_opcion as id_nacionalidad,nombre as nacionalidad,
+        CASE WHEN id_opcion=0 THEN 0 ELSE 1 END as tipo_contrato
+         FROM opcs_x_cats WHERE id_catalogo=11 and id_opcion in(0,1,14,17)")->result_array();
         for ($m=0; $m <count($Nacionalidades) ; $m++) { 
                 if($m == 0){
                    
@@ -113,6 +115,21 @@ class Api_model extends CI_Model
 
 
 
+    }
+
+
+
+    function saveUserCH($data) {
+        if ($data != '' && $data != null) {
+            $response = $this->db->insert("usuarios", $data);
+            if (!$response) {
+                return $finalAnswer = 0;
+            } else {
+                return $finalAnswer = 1;
+            }
+        } else {
+            return 0;
+        }
     }
 
 }
