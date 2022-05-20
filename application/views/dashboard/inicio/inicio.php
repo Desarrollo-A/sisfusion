@@ -205,6 +205,7 @@
         </div>
     </div>
 </div>
+<script src="<?= base_url() ?>dist/assets/js/bootstrap-datetimepicker.js"></script>
+<?php $this->load->view('template/footer');?>
 <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 <script src="<?=base_url()?>dist/js/controllers/dashboard/inicio/dashboardHome.js"></script>
-

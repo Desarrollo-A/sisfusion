@@ -1,14 +1,70 @@
+<style>
+    .perfil{
+        background-color: #E9E9E9c9;
+        border-radius: 20px!important;
+        display:flex!important;
+        padding: 5px 8px 5px 5px!important;
+        align-items: center;
+        color: #999;
+        font-weight: 400;
+        font-size: 12px;
+    }
+    .perfil .idBubble{
+        background-color: #163960;
+        font-size: 10px;
+        border-radius: 20px;
+        width: 35px;
+        height: 35px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-right: 8px;
+        color: #fff;
+    }
+    .header .divIconsNav a{
+        cursor: pointer;
+    }
+    .navbar-right{
+        display:flex; 
+        align-items:center; 
+        padding-right:15px
+    }
+    .navbar-right .icoNav{
+        border-radius: 29px;
+        margin: 0 5px;
+    }
+    .navbar-right .icoNav a{
+        width: 42px;
+        height: 42px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #EEEEEEc9;
+        border-radius: 27px!important;
+    }
+    .navbar-right .icoNav span{
+        margin: 0!important;
+    }
+    .navbar-right .icoNav:hover{
+        background-color: #e3e3e3;
+    }
+    .navbar-right li a{
+        cursor:pointer;
+        padding: 0 15px!important;
+    }
+</style>
+
 <div class="sidebar" data-active-color="blue" data-background-color="white" data-image="<?=base_url()?>/dist/img/sidebar-1.jpg">
 	<div class="logo"> 
 		<a href="<?=base_url()?>#" class="simple-text">
-            <img src="<?=base_url()?>static/images/cm_blue.png" width="70%">
+            <img class="pt-2" src="<?=base_url()?>static/images/logo_CM.png" width="70%">
 		</a>
 	</div>
 	<div class="logo logo-mini">
 		<a href="<?=base_url()?>#" class="simple-text" style="color: #0e4377;font-weight: 800;font-family: 'Times New Roman', Times, serif;">CM</a>
 	</div>
 	<div class="sidebar-wrapper">
-		<br><br>
+		<br>
 		<ul class="nav">
 <?php
   $url = "https://".$_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];	
@@ -230,24 +286,40 @@ foreach($datos2 as $datos)
 				<a href="<?=base_url()?>#" class="navbar-brand hidden-md hidden-lg" style="color: #0e4377;font-weight: 800">
 					<img src="<?=base_url()?>static/images/img.ico" class="img-responsive" width="15%">
 				</a>
-                <div class="divCalendar" id="divCalendar">
-                    <a id="minimizeSidecalendar" class="navbar-brand openCalendar-mini" style="cursor:pointer;">
-                        <i class="material-icons far fa-calendar-alt"></i>
-                        <p class="hidden-lg hidden-md"></p>
+                <div class="divIconsNav">
+                    <div class="divCalendar" id="divCalendar">
+                        <a id="minimizeSidecalendar" class="navbar-brand responsive">
+                            <i class="material-icons far fa-calendar-alt"></i>
+                        </a>
+                    </div>
+                    <a class="navbar-brand responsive">
+                        <span class="material-icons">settings</span>
+                    </a>
+                    <a  class="navbar-brand responsive">
+                        <span class="material-icons">exit_to_app</span>
                     </a>
                 </div>
             </div>
 			<div class="collapse navbar-collapse">
-				<a class="navbar-brand" href="#"> Menú </a>
 				<ul class="nav navbar-nav navbar-right">
                     <!----------------------------------------------------------------------->
                     <input type="hidden" id="uri2" value="<?=$url?>">
                     <input type="hidden" id="uri" value="<?=base_url()?>Usuarios/Chat">
                     <!------------------------------------------------------------------------->
                     <!-- Abrir side-calendar -->
-					<li class="openCalendar" id ="openCalendar">
-						<a id="minimizeSidecalendar"  style="cursor:pointer;">
-                            <i class="material-icons far fa-calendar-alt"></i>
+					<li class="icoNav noResponsive" id ="openCalendar">
+						<a id="minimizeSidecalendar">
+                            <span class="material-icons">date_range</span>
+						</a>
+                    </li>
+                    <li class="icoNav noResponsive">
+						<a href="<?=base_url()?>index.php/Usuarios/configureProfile">
+                            <span class="material-icons">settings</span>
+						</a>
+                    </li>
+                    <li class="icoNav noResponsive">
+						<a href="<?=base_url()?>index.php/login/logout_ci">
+                            <span class="material-icons">exit_to_app</span>
 						</a>
                     </li>
                     <?php
@@ -268,20 +340,9 @@ foreach($datos2 as $datos)
                     <?php
                     }
                     ?>
-					<li class="dropdown">
-						<a href="#" class="dropdown-toggle" data-toggle="dropdown">
-							<span><?= $this->session->userdata('id_usuario') . " - " . $this->session->userdata('nombre')." ".$this->session->userdata('apellido_paterno')." ".$this->session->userdata('apellido_materno') ?></span>
-							<i class="material-icons">person</i>
-							<p class="hidden-lg hidden-md">Profile</p>
-						</a>
-						<ul class="dropdown-menu">
-							<li>
-								<a href="<?=base_url()?>index.php/Usuarios/configureProfile">Configurar perfil</a>
-							</li>
-							<li>
-								<a href="<?=base_url()?>index.php/login/logout_ci" class="session_close_btn_clean">Cerrar sesión</a>
-							</li>
-						</ul>
+					<li class=" perfil">
+                        <div class="idBubble"><p class="overflow-text m-0"><?= $this->session->userdata('id_usuario') ?></p></div>
+                        <div class="fullName"><?= $this->session->userdata('nombre')." ".$this->session->userdata('apellido_paterno')." ".$this->session->userdata('apellido_materno') ?></div>
 					</li>
 					<li class="separator hidden-lg hidden-md"></li>
 				</ul>

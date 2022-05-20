@@ -66,6 +66,8 @@
         <?php $this->load->view('template/footer_legend'); ?>
     </div><!--main-panel close-->
 </body>
+<?php $this->load->view('dashboard/agenda/common_modals'); ?>
+<script src="<?= base_url() ?>dist/assets/js/bootstrap-datetimepicker.js"></script>
 <?php $this->load->view('template/footer');?>
 <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 <script src="<?=base_url()?>dist/js/controllers/dashboard/base/base.js"></script>
