@@ -1,4 +1,3 @@
-
 var optionsTotalVentas = {
     series: [44, 55, 67, 83],
     chart: {
@@ -184,7 +183,6 @@ chartFunnel.render();
 
   
 $(document).ready(function(){
-  
     loadInit();
 });
 function loadInit(){
