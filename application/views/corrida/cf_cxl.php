@@ -3404,6 +3404,9 @@
                             if(mes == 12){
                                 mes = '12';
                             }
+                            if(i==0){
+                                $scope.fechaPM = day+'-'+mes+'-'+yearc;
+                            }
 
 
                             $scope.dateCf = day + '-' + mes + '-' + yearc;
@@ -4582,10 +4585,12 @@
                             if(mes == 12){
                                 mes = '12';
                             }
+                            if(i==0){
+                                $scope.fechaPM = day+'-'+mes+'-'+yearc;
+                            }
 
 
                             $scope.dateCf = day + '-' + mes + '-' + yearc;
-
                             $scope.interes_plan2 = $scope.infoLote.precioTotal * ($scope.infoLote.interes_p2);
                             $scope.capital2 = ($scope.p2 - $scope.interes_plan2);
 
@@ -4600,6 +4605,7 @@
 
                             });
                             mes++;
+
 
                             if (i == 119){
                                 $scope.total3 = $scope.infoLote.precioTotal;

@@ -12,19 +12,14 @@ class Calendar extends CI_Controller {
         $this->validateSession();
 	}
 
-    public function validateSession()
-    {
-        if($this->session->userdata('id_usuario')=="" || $this->session->userdata('id_rol')=="")
-        {
+    public function validateSession(){
+        if($this->session->userdata('id_usuario')=="" || $this->session->userdata('id_rol')==""){
             redirect(base_url() . "index.php/login");
         }
     }
 
     public function calendar(){
-        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-
-        $this->load->view('template/header');
-        $this->load->view("asesor/calendar", $datos);
+        $this->load->view("dashboard/agenda/calendar");
     }
 
     public function Events(){

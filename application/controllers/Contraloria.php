@@ -11,6 +11,7 @@ class Contraloria extends CI_Controller {
 		$this->load->helper(array('url','form'));
 		$this->load->database('default');
 		$this->load->library('phpmailer_lib');
+		$this->load->library('formatter');
 		$this->validateSession();
 
 		date_default_timezone_set('America/Mexico_City');
@@ -3514,8 +3515,8 @@ public function return1(){
 
 		$data = $this->Contraloria_model->get_datos_lotes($idLote);
 		$data = array(
-			"saldo" => $this->input->post("preciodesc"), 
-			"enganche" => $this->input->post("enganches"));
+			"totalNeto2" => $this->formatter->removeNumberFormat($_POST['preciodesc']),
+			"totalNeto" => $this->formatter->removeNumberFormat($_POST['enganches']));
 
 		$response = $this->General_model->updateRecord('lotes', $data, 'idLote', $idLote);
 		echo json_encode($response);
@@ -3526,7 +3527,7 @@ public function return1(){
 
 		$data = $this->Contraloria_model->get_datos_lotes($idLote);
 		$data = array(
-			"enganche" => $this->input->post("enganches"), 
+			"totalNeto" => $this->formatter->removeNumberFormat($_POST['enganches']),
 			"ubicacion" => $this->input->post("ubicacion_sede"));
 
 		$response = $this->General_model->updateRecord('lotes', $data, 'idLote', $idLote);

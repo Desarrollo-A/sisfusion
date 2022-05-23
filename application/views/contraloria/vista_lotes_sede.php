@@ -108,6 +108,11 @@
                                                     <th>ASESOR</th>
                                                     <th>COORDINADOR</th>
                                                     <th>GERENTE</th>
+                                                    <th>TOTAL</th>
+                                                    <th>ENGANCHE</th>
+                                                    <th>SEDE</th>
+                                                    <th>STATUS LOTE</th>
+                                                    <th>STATUS CONTRATACIÓN</th>
                                                     <th>ACCIONES</th>
                                                 </tr>
                                             </thead>
@@ -178,6 +183,11 @@
                                                         <th style="font-size: .9em;">ASESOR</th>
                                                         <th style="font-size: .9em;">COORDINADOR</th>
                                                         <th style="font-size: .9em;">GERENTE</th>
+                                                        <th style="font-size: .9em;">TOTAL</th>
+                                                        <th style="font-size: .9em;">ENGANCHE</th>
+                                                        <th style="font-size: .9em;">SEDE</th>
+                                                        <th style="font-size: .9em;">STATUS LOTE</th>
+                                                        <th style="font-size: .9em;">STATUS CONTRATACIÓN</th>
                                                         <th style="font-size: .9em;">ACCIONES</th>
                                                     </tr>
                                                 </thead>
@@ -323,6 +333,11 @@
                     {data: 'asesor'},
                     {data: 'coordinador'},
                     {data: 'gerente'},
+                    {data: 'saldo'},
+                    {data: 'enganche'},
+                    {data: 'nombre_ubicacion'},
+                    {data: 'lote'},
+                    {data: 'contratacion'},
                     {
                         "data": function(d){
                             opciones = `<center><button id="modificar" data-idLote=${d.idLote} class="btn-data btn-orangeYellow" data-toggle="tooltip" data-placement="top" title="Modificar"><i class="far fa-edit"></i></button></center>`;
@@ -376,6 +391,7 @@
             success: function (response) {
                 alerts.showNotification("top", "right", "El registro se ha actualizado con éxito.", "success");
                 $("#modal_aprobar").modal("hide");
+                $('#tabla_historial').DataTable().ajax.reload();
             }
         });
     });
