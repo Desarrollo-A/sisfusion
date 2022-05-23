@@ -1467,7 +1467,7 @@ $i = 0;
 		$id_sede_jur = 2;
 		$data_asig = $this->Contraloria_model->get_id_asig(2);
 		$id_asig = $data_asig->contador;
-		$arreglo["asig_jur"] = $id_asig == 2765 ? 2776 : ($id_asig == 2776 ? 2857 : 2765);
+		$arreglo["asig_jur"] = $id_asig == 2765 ? 2776 : ($id_asig == 2776 ? 10463 : 2765);
 	} else if($ub_jur[0]['ubicacion'] == 4){
 		$id_sede_jur = 4;
 		$data_asig = $this->Contraloria_model->get_id_asig(4);
