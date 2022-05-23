@@ -784,7 +784,7 @@ console.log(resulq.data[0].vigencia);
                                                 <div class="col-md-3">
                                                 <input id="id_usuario" type="hidden" name="id_usuario[]" value="${v.id_usuario}"><input id="id_rol" type="hidden" name="id_rol[]" value="${v.id_rol}">
                                                 <input class="form-control ng-invalid ng-invalid-required" required readonly="true" value="${v.nombre}" style="font-size:12px;"><b><p style="font-size:12px;">${v.detail_rol}</p></b></div>
-                                                <div class="col-md-1"><input class="form-control ng-invalid ng-invalid-required" name="porcentaje[]" id="porcentaje_${i}" onblur="Editar(${i},${totalNeto2},${v.id_usuario},${resultArr.length})" required  value="${v.porcentaje_decimal % 1 == 0 ? parseInt(v.porcentaje_decimal) : v.porcentaje_decimal.toString().match(/^-?\d+(?:\.\d{0,2})?/)[0]}"></div>
+                                                <div class="col-md-1"><input class="form-control ng-invalid ng-invalid-required" name="porcentaje[]" id="porcentaje_${i}" onchange="validarPorcentaje(${i}, ${resultArr.length})" onblur="Editar(${i},${totalNeto2},${v.id_usuario},${resultArr.length})" required  value="${v.porcentaje_decimal % 1 == 0 ? parseInt(v.porcentaje_decimal) : v.porcentaje_decimal.toString().match(/^-?\d+(?:\.\d{0,2})?/)[0]}"></div>
                                                 <div class="col-md-2"><input class="form-control ng-invalid ng-invalid-required" name="comision_total[]" id="comision_total_${i}" required readonly="true" value="${formatMoney(v.comision_total)}"></div>
                                                 <div class="col-md-2"><input class="form-control ng-invalid ng-invalid-required" name="comision_abonada[]" required readonly="true" value="${formatMoney(0)}"></div>
                                                 <div class="col-md-2"><input class="form-control ng-invalid ng-invalid-required" name="comision_pendiente[]" id="comision_pendiente_${i}" required readonly="true" value="${formatMoney(v.comision_total)}"></div>
@@ -1089,6 +1089,21 @@ function Editar(i,precio,id_usuario,lengt){
 
 
         }
+
+    function validarPorcentaje(index, arrLength) {
+        const currentValue = parseFloat($(`#porcentaje_${index}`).val());
+        const limit = 20;
+        let accumulatedValue = currentValue;
+        for (let i = 0; i < arrLength; i++) {
+            if (index !== i) {
+                accumulatedValue += parseFloat($(`#porcentaje_${i}`).val());
+            }
+        }
+        if (accumulatedValue > limit) {
+            $(`#porcentaje_${index}`).val(0);
+            alerts.showNotification("top", "right", `El límite del porcentaje sumado debe ser ${limit}%`, "danger");
+        }
+    }
 /**--------------------------------------------------------------------- */
     $("#form_NEODATA").submit( function(e) {
         $('#dispersar').prop('disabled', true);
