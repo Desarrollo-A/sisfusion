@@ -1,242 +1,186 @@
-
-
-var options = {
-    series: [{
-    name: 'series1',
-    data: [31, 40, 28, 51, 42, 109, 100]
-  }],
+var optionsTotalVentas = {
+    series: [44, 55, 67, 83],
     chart: {
-    width: '100%',
-    height:'100%',
-    type: 'area',
-    toolbar: {
-      show: false
-    },
-    sparkline: {
-      enabled: false
-    }
-  },
-  grid:{
-    show:true,
-    
-    xaxis: {
-      lines: {
-          show: false
-      },
-      axisBorder: {
-        show: false,
-      },
-    },
-    yaxis: {
-      lines: {
-          show: false
-      },
-      axisBorder: {
-        show: false,
-      },
-    }
-  },
-  dataLabels: {
-    enabled: false
-  },
-  stroke: {
-    curve: 'smooth'
-  },
-  yaxis:{
-    labels: {
-      show: false
-    }
-  },
-  xaxis: {
-    labels: {
-      show: false
-    },
-  },
-  tooltip: {
-    x: {
-      format: 'dd/MM/yy HH:mm'
-    },
-  },
-  };
-
-  var options2 = {
-    series: [{
-      name: 'Ventas apartados',
-      data: [0]
-    }, {
-      name: 'Cancelados apartados',
-      data: [0]
-    }, {
-      name: 'Ventas contratadas',
-      data: [0]
-    }, {
-      name: 'Canceladas contratadas',
-      data: [0]
-    }],
-    chart: {
-      type: 'bar',
-      height: '80%',
-      stacked: true,
-      stackType: '100%'
-    },
-    noData: {
-      text: undefined,
-      align: 'center',
-      verticalAlign: 'middle',
-      offsetX: 0,
-      offsetY: 0,
-      style: {
-        color: undefined,
-        fontSize: '14px',
-        fontFamily: undefined
-      }
+        height: '100%',
+        type: 'radialBar',
     },
     plotOptions: {
-      bar: {
-        horizontal: true,
-      },
-    },
-    stroke: {
-      width: 0.5,
-      colors: ['#fff']
-    },
-    yaxis: {
-      labels: {
-        show: false,
-      }
-    },
-    tooltip: {
-      y: {
-        formatter: function (val) {
-          return val + "K"
+        radialBar: {
+            dataLabels: {
+                name: {
+                    fontSize: '22px',
+                },
+                value: {
+                    fontSize: '16px',
+                },
+                total: {
+                    show: true,
+                    label: 'Total',
+                    formatter: function (w) {
+                        // By default this function returns the average of all series. The below is just an example to show the use of custom formatter function
+                        return 249
+                    }
+                }
+            }
         }
-      }
     },
-    fill: {
-      opacity: 1
+    title:{
+        text: 'TOTAL DE VENTAS',
+        align: 'center',
+        margin: 5
     },
-    legend: {
-      position: 'left',
-      horizontalAlign: 'center',
-      offsetY: 10
-    }
-  };
-
-  var options3 = {
-    series: [{
-      name: 'series1',
-      data: [256, 104, 318, 465, 233, 363, 150]
-    }],
-    chart: {
-      width: '100%',
-      height:'100%',
-      type: 'area',
-      toolbar: {
-        show: false
-      },
-      sparkline: {
-        enabled: false
-      }
-    },
-    grid:{
-      show:true,
-
-      xaxis: {
-        lines: {
-          show: false
-        },
-        axisBorder: {
-          show: false,
-        },
-      },
-      yaxis: {
-        lines: {
-          show: false
-        },
-        axisBorder: {
-          show: false,
-        },
-      }
-    },
-    dataLabels: {
-      enabled: false
-    },
-    stroke: {
-      curve: 'smooth'
-    },
-    yaxis:{
-      labels: {
-        show: false
-      }
-    },
-    xaxis: {
-      labels: {
-        show: false
-      },
-    },
-    tooltip: {
-      x: {
-        format: 'dd/MM/yy HH:mm'
-      },
-    },
-  };
-
-  var options4 = {
-  chart: {
-    height: 360,
-    type: "bar",
-    toolbar: {
-      show: !1
-    },
-    events: {
-      click: function(o, a, t) {
-        console.log(o, a, t)
-      }
-    }
-  },
-  colors : ["#4caf50", "#003d82", "#999999", "#f44336", "#ffa500", "#003d82", "#4caf50", "#f44336"],
-  plotOptions: {
-    bar: {
-      columnWidth: "45%",
-      distributed: !0
-    }
-  },
-  dataLabels: {
-    enabled: !1
-  },
-  series: [{
-    data: [100560, 156, 25, 52, 2508, 6532, 198360, 1632]
-  }],
-  xaxis: {
-    categories: ["PT", "NP", "VA", "CA", "CT", "PCC", "VC", "CC"],
-    labels: {
-      style: {
-        colors : ["#4caf50", "#003d82", "#999999", "#f44336", "#ffa500", "#003d82", "#4caf50", "#f44336"],
-        fontSize: "14px"
-      }
-    }
-  },
-  legend: {
-    offsetY: 7
-  },
-  grid: {
-    row: {
-      colors: ["transparent", "transparent"],
-      opacity: .2
-    },
-    borderColor: "#f1f3fa"
-  }
+    labels: ['Apples', 'Oranges', 'Bananas', 'Berries'],
 };
 
-var chart = new ApexCharts(document.querySelector("#chart"), options);
-var chart2 = new ApexCharts(document.querySelector("#chart2"), options2);
-var chart3 = new ApexCharts(document.querySelector("#chart3"), options3);
-var chart4 = new ApexCharts(document.querySelector("#chart4"), options4);
+var optionsProspectos = {
+    series: [{
+        name: 'series1',
+        data: [31, 40, 28, 51, 42, 109, 100]
+    }],
+    chart: {
+        height: '100%',
+        type: 'area',
+        toolbar: {
+            show: false
+        },
 
-chart.render();
-chart2.render();
-chart3.render();
-chart4.render();
+        sparkline: {
+            enabled: true,
+        }
+    },
+    dataLabels: {
+        enabled: false
+    },
+    stroke: {
+        width: 2,
+        curve: 'smooth'
+    },
+};
+
+var optionsProspClients = {
+    series: [{
+        name: 'series1',
+        data: [31, 40, 28, 51, 42, 109, 100]
+    }, {
+        name: 'series2',
+        data: [11, 32, 45, 32, 34, 52, 41]
+    }],
+    chart: {
+        height: '100%',
+        type: 'area',
+        toolbar: {
+            show: false
+        },
+        sparkline: {
+            enabled: false,
+        }
+    },
+    yaxis:{
+        labels: {
+            offsetX: -13,
+          },
+    },
+    grid: {
+        padding: {
+          left: -3,
+        },
+      },
+    dataLabels: {
+        enabled: false
+    },
+    stroke: {
+        width: 1,
+        curve: 'smooth'
+    },
+};
+
+var optionsWeekly = {
+    series: [{
+        data: [21, 22, 10, 28, 16, 21, 13, 30]
+    }],
+    chart: {
+        height: '100%',
+        type: 'bar',
+        toolbar: {
+            show: false
+        },
+    },
+    grid:{
+        show: false,
+    },
+    plotOptions: {
+        bar: {
+            columnWidth: '45%',
+            distributed: true,
+        }
+    },
+    dataLabels: {
+        enabled: false
+    },
+    legend: {
+        show: false
+    },
+    xaxis: {
+        categories: ['uno','dos','tres','cuatro','cinco','seis','siete','ocho'],
+        labels: {
+            style: {
+                fontSize: '12px'
+            }
+        }
+    }
+};
+
+var optionsFunnel = {
+    series: [44, 55, 67, 83],
+    chart: {
+        height: '100%',
+        type: 'radialBar',
+    },
+    plotOptions: {
+        radialBar: {
+            dataLabels: {
+                name: {
+                    fontSize: '22px',
+                },
+                value: {
+                    fontSize: '16px',
+                },
+                total: {
+                    show: true,
+                    label: 'Total',
+                    formatter: function (w) {
+                        // By default this function returns the average of all series. The below is just an example to show the use of custom formatter function
+                        return 249
+                    }
+                }
+            }
+        }
+    },
+    title:{
+        text: 'CICLO DE VENTA',
+        align: 'center',
+        margin: 5
+    },
+    labels: ['Apples', 'Oranges', 'Bananas', 'Berries'],
+};
+
+
+
+var totalVentasChart = new ApexCharts(document.querySelector("#totalVentasChart"), optionsTotalVentas);
+totalVentasChart.render();
+
+var prospectosChart = new ApexCharts(document.querySelector("#prospectosChart"), optionsProspectos);
+prospectosChart.render();
+
+var chartProspClients = new ApexCharts(document.querySelector("#chartProspClients"), optionsProspClients);
+chartProspClients.render();
+
+var chartWeekly = new ApexCharts(document.querySelector("#chartWeekly"), optionsWeekly);
+chartWeekly.render();
+
+var chartFunnel = new ApexCharts(document.querySelector("#chartFunnel"), optionsFunnel);
+chartFunnel.render();
+
   
 $(document).ready(function(){
     loadInit();
