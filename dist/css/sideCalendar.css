@@ -210,6 +210,14 @@
   height: 100%;
 }
 
+.h-90 {
+  height: 90%;
+}
+
+.h-80 {
+  height: 80%;
+}
+
 .h-70 {
   height: 70%;
 }
@@ -224,6 +232,22 @@
 
 .h-40 {
   height: 40%;
+}
+
+.h-30 {
+  height: 30%;
+}
+
+.h-25 {
+  height: 25%;
+}
+
+.h-20 {
+  height: 20%;
+}
+
+.h-10 {
+  height: 10%;
 }
 
 .vh-100 {
@@ -298,6 +322,10 @@
   z-index: 1030;
 }
 
+.f-bolder {
+  font-weight: bolder;
+}
+
 /* END utilities */
 /* Flexbox */
 .d-none {
@@ -338,6 +366,10 @@
 
 .text-left {
   text-align: start !important;
+}
+
+.text-right {
+  text-align: right !important;
 }
 
 .row-reverse {
@@ -1160,10 +1192,10 @@
   .closeCalendar {
     display: none;
   }
-  .openCalendar {
+  .noResponsive {
     display: block;
   }
-  .openCalendar-mini {
+  .responsive {
     display: none !important;
   }
   .side-calendar .fc-header-toolbar {
@@ -1186,13 +1218,13 @@
     padding: 8px 11px 0px 0px;
     font-size: 2.5rem;
   }
-  .openCalendar {
+  .noResponsive {
     display: none !important;
   }
-  .openCalendar-mini {
+  .responsive {
     display: block !important;
   }
-  .divCalendar {
+  .divIconsNav {
     display: flex;
     justify-content: flex-end;
   }
