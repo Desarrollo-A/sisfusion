@@ -1,8 +1,9 @@
   var calendar;
   var appointment = '';
   var exists = 1;
+  var eventsTable;
   $(document).ready(function() {
-    getUsersAndEvents(userType,idUser, true);
+    getUsersAndEvents(userType,idUser, true);    
   });
 
   var calendarEl = document.getElementById('calendar');
@@ -69,8 +70,11 @@
   });
   calendar.render();
   customizeIcon();
+  
 
-  $.post('../Calendar/getStatusRecordatorio', function(data) {
+  updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
+
+  $.post('Calendar/getStatusRecordatorio', function(data) {
     var len = data.length;
     for (var i = 0; i < len; i++) {
         var id = data[i]['id_opcion'];
@@ -87,7 +91,7 @@
 
   }, 'json'); 
 
-  $.post('../Calendar/getProspectos', function(data) {
+  $.post('Calendar/getProspectos', function(data) {
     var len = data.length;
     for (var i = 0; i < len; i++) {
         var id = data[i]['id_prospecto'];
@@ -151,7 +155,7 @@
     dataF['id_prospecto_estatus_particular'] = $("#prospecto").val();
     $.ajax({
       type: 'POST',
-      url: '../Calendar/insertRecordatorio',
+      url: 'Calendar/insertRecordatorio',
       data: JSON.stringify(dataF),
       contentType: false,
       cache: false,
@@ -201,7 +205,7 @@
   function getAppointmentData(idAgenda){
     $.ajax({
       type: "POST",
-      url: "getAppointmentData",
+      url: "Calendar/getAppointmentData",
       data: {idAgenda: idAgenda},
       dataType: 'json',
       cache: false,
@@ -238,12 +242,13 @@
 
   function validateNCreate(appointment, medio, box){
     box.empty();
+    console.log(appointment);
     if(medio == 2 || medio == 5){
-      box.append(`<label class="m-0">Dirección del ${medio == 5 ? 'evento':'recorrido'}</label><input id="direccion" name="direccion" type="text" class="form-control input-gral" value='${((appointment !=  '' && (medio == 2 || medio == 5 )) ? ((appointment.id_direccion == ''|| appointment.id_direccion == NULL) ? appointment.direccion : '' ) : '' )}' required>`);
+      box.append(`<label class="m-0">Dirección del ${medio == 5 ? 'evento':'recorrido'}</label><input id="direccion" name="direccion" type="text" class="form-control input-gral" value='${((appointment !=  '' && (medio == 2 || medio == 5 )) ? ((appointment.id_direccion == ''|| appointment.id_direccion == null) ? appointment.direccion : '' ) : '' )}' required>`);
     }
     else if(medio == 3){
-      box.append(`<div class="container-fluid"><div class="row"><div class="col-sm-12 col-md-6 col-lg-6 pl-0 m-0"><label class="m-0">Teléfono 1</label><input type="text" class="form-control input-gral" value=${(appointment !=  '' &&  medio == 3 ) ? ((appointment.telefono != ''|| appointment.telefono != NULL) ? appointment.telefono : '') : ''+ $("#prospecto option:selected").attr('data-telefono') +''} disabled></div>`
-      +`<div class="col-sm-12 col-md-6 col-lg-6 pr-0 m-0"><label class="m-0">Teléfono 2</label><input type="text" class="form-control input-gral" id="telefono2" name="telefono2" value=${(appointment !=  '' &&  medio == 3 ) ? ((appointment.telefono_2 != ''|| appointment.telefono_2 != NULL) ? appointment.telefono_2 : '') : ($("#prospecto option:selected").attr('data-telefono2') != '' || $("#prospecto option:selected").attr('data-telefono2') != NULL ) ? $("#prospecto option:selected").attr('data-telefono2') : '' } ></div></div></div>`);
+      box.append(`<div class="container-fluid"><div class="row"><div class="col-sm-12 col-md-6 col-lg-6 pl-0 m-0"><label class="m-0">Teléfono 1</label><input type="text" class="form-control input-gral" value=${(appointment !=  '' &&  medio == 3 ) ? ((appointment.telefono != ''|| appointment.telefono != null) ? appointment.telefono : '') : ''+ $("#prospecto option:selected").attr('data-telefono') +''} disabled></div>`
+      +`<div class="col-sm-12 col-md-6 col-lg-6 pr-0 m-0"><label class="m-0">Teléfono 2</label><input type="text" class="form-control input-gral" id="telefono2" name="telefono2" value=${(appointment !=  '' &&  medio == 3 ) ? ((appointment.telefono_2 != ''|| appointment.telefono_2 != null) ? appointment.telefono_2 : '') : ($("#prospecto option:selected").attr('data-telefono2') != '' || $("#prospecto option:selected").attr('data-telefono2') != null ) ? $("#prospecto option:selected").attr('data-telefono2') : '' } ></div></div></div>`);
     }
     else if(medio == 4){
       box.append(`<div class="col-sm-12 col-md-12 col-lg-12 p-0"><label class="m-0">Dirección de oficina</label><select class="selectpicker select-gral m-0 w-100" name="id_direccion" id="id_direccion" data-style="btn" data-show-subtext="true" data-live-search="true" title="Seleccione una opción" data-size="7" required></select></div>`);
@@ -253,7 +258,7 @@
   }
 
   function getOfficeAddresses(appointment){
-    $.post('../Calendar/getOfficeAddresses', function(data) {
+    $.post('Calendar/getOfficeAddresses', function(data) {
       var len = data.length;
       for (var i = 0; i < len; i++) {
           var id = data[i]['id_direccion'];
@@ -263,13 +268,12 @@
       if (len <= 0) {
         $("#id_direccion").append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
       }
-
-      if( appointment != null && appointment.id_direccion != null ){
+      if( appointment != null || appointment.id_direccion != null ){
         $("#id_direccion").val(appointment.id_direccion);
+        $("#id_direccion").selectpicker('refresh');
       }
-
-      $("#id_direccion").selectpicker('refresh');
     }, 'json');
+    $("#id_direccion").selectpicker('refresh');
   }
 
   function cleanModal(){
@@ -289,7 +293,7 @@
   function getAppointmentSidebarCalendar(idAgenda){
     $.ajax({
       type: "POST",
-      url: "getAppointmentData",
+      url: "Calendar/getAppointmentData",
       data: {idAgenda: idAgenda},
       dataType: 'json',
       cache: false,
@@ -385,7 +389,7 @@
 
     $.ajax({
       type: 'POST',
-      url: 'updateAppointmentData',
+      url: 'Calendar/updateAppointmentData',
       data: JSON.stringify(data),
       contentType: false,
       cache: false,
@@ -467,7 +471,7 @@
   async function deleteGoogleEvent(idAgenda, idGoogle){
     $.ajax({
       type: 'POST',
-      url: 'deleteAppointment',
+      url: 'Calendar/deleteAppointment',
       data: {idAgenda:idAgenda},
       dataType: 'json',
       cache: false,
@@ -504,11 +508,8 @@
     
   $(document).on('submit', '#feedback_form', function(e) {
     e.preventDefault();
-
     let data = new FormData($(this)[0]);
     data.append("idAgenda", $("#idAgenda2").val());
-    
-    
   });
 
   document.querySelector('#feedback_form').addEventListener('submit', e =>  {
@@ -519,7 +520,7 @@
     data['idAgenda'] = $("#idAgenda2").val();
     $.ajax({
       type: 'POST',
-      url: 'setAppointmentRate',
+      url: 'Calendar/setAppointmentRate',
       data: JSON.stringify(data),
       contentType: false,
       cache: false,
@@ -542,68 +543,120 @@
   });
 
   function customizeIcon(){
-    $(".fc-googleSignIn-button").append('<img src='+base_url+'/dist/img/googlecalendar.png>');
-    $(".fc-googleLogout-button").append('<img src='+base_url+'/dist/img/unsync.png>');
+    $(".fc-googleSignIn-button").append("<img src='"+base_url+"dist/img/googlecalendar.png'>");
+    $(".fc-googleLogout-button").append("<img src='"+"dist/img/unsync.png'>");
   }
 
   function createTable(){
     eventsTable = $('#appointments-datatable').dataTable({
-      dom: 'rt' + "<'row'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>",
+      dom: "<'row w-100 m-0 mb-2 d-flex justify-evenly'<'col-xs-12 col-sm-12 col-md-6 col-lg-6 pl-0'<'toolbar'>><'col-xs-12 col-sm-12 col-md-6 col-lg-6 pr-0'f>>rt<'row'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>",
       width: "auto",
       pagingType: "full_numbers",
       fixedHeader: true,
       language: {
-          url: "../static/spanishLoader_v2.json",
+          url: "static/spanishLoader_v2.json",
           paginate: {
-              previous: "<i class='fa fa-angle-left'>",
-              next: "<i class='fa fa-angle-right'>"
+            previous: "<i class='fa fa-angle-left'>",
+            next: "<i class='fa fa-angle-right'>"
           }
       },
       destroy: true,
       ordering: false,
       columns: [{
         data: function (d) {
-          return '<input type="text" value="'+d.id_cita+'">';
+          return '<input type="text" name="id_cita" value="'+d.id_cita+'">';
         }
       },
-      { 
-        data: function (d) {
-          return '<input type="text" value="'+d.id_prospecto+'">';
-        }
-      },
-      { 
+      {
         width: "30%",
         data: function (d) {
-          return d.nombre;
+          return '<label class="text-center m-0">'+d.nombre+'</label>';
         }
       },
       { 
         width: "12%",
         data: function (d) {
-          return '<select class="form-control"><option>Positiva</option><option>Negativa</option><option>Cancelada</option></select> ';
+          return '<select class="form-control" name="evaluacion"><option value="0">Abierta</option><option value="1">Positiva</option><option value="2">Negativa</option><option value="3">Cancelada</option></select> ';
         }
       },
       {
         width: "38%",
         data: function (d) {
-          return '<textarea class="textarea" type="text"></textarea>';
+          return '<textarea class="textarea" name="observaciones" type="text"></textarea>';
         }
       },
       { 
         width: "20%",
         data: function (d) {
-          return '<label class="text-center m-0">'+d.fecha_cita+'</label>';
+          return '<label class="text-center w-100 m-0">'+objectStringToDate(d.fecha_cita)+'</label>';
         }
       }],
       columnDefs: [{
-        "targets": [ 0, 1],
-        "visible": false,
+        "targets": [0],
+        "sClass": "hide_column",
         "searchable": false
       }],
+      fnInitComplete: function(){
+        $('div.toolbar').html('<h3 class="m-0">Citas abiertas</h3>');
+      },
       ajax: {
-        url: "AllEvents",
+        url: "Calendar/AllEvents",
         type: "POST",
         cache: false,
       }
     });
+  }
+
+  $(document).on('submit', '#appointmentsForm', function(e) {
+    e.preventDefault();
+
+    // Encode a set of form elements from all pages as an array of names and values
+    var params = eventsTable.$('input,select,textarea').serialize();
+    let array = createArrayEvents(params);
+    $.ajax({
+      type: 'POST',
+      url: 'Calendar/updateNFinishAppointments',
+      data: JSON.stringify(array),
+      contentType: false,
+      cache: false,
+      processData: false,
+      beforeSend: function() {
+        $('#spiner-loader').removeClass('hide');
+      },
+      success: function(data) {
+        $('#spiner-loader').addClass('hide');
+        data = JSON.parse(data);
+        alerts.showNotification("top", "right", data["message"], (data["status" == 503]) ? "danger" : (data["status" == 400]) ? "warning" : "success");
+        $('#feedbackModal').modal('toggle');
+      },
+      error: function() {
+          $('#feedbackModal').modal('toggle');
+          $('#spiner-loader').addClass('hide');
+          alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+      }
+    });
+  });
+
+  function createArrayEvents(params){
+    array = [], obj = {};
+    var nameWithValue = params.split('&');
+    for(i=0; i<nameWithValue.length; i++){
+      var objAttr = nameWithValue[i].split('=');
+      for(j=0; j<objAttr.length; j+=2){
+        obj[objAttr[j]] = objAttr[j+1];
+        obj['estatus'] = '2';
+        if(objAttr[j] == 'observaciones' && obj['evaluacion'] != '0' ){
+          array.push(obj);
+          obj = {};
+        }
+      }
+    }
+    return array;
+  }
+
+  function objectStringToDate(objectDate){
+    var fecha = new Date(objectDate);
+    var options = { year: 'numeric', month: 'long', day: 'numeric' }
+    
+    return fecha.toLocaleDateString('es-ES', options);
   }

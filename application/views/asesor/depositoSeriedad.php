@@ -436,7 +436,7 @@
                                                     title="¿La venta es compartida?" data-size="7" id="ventaC" name="ventaC"
                                                     data-live-search="true">
                                                     <option value ="default" selected disabled>Selecciona una opción</option>
-                                                    <option value="uno">Si</option>
+                                                    <option value="uno">Sí</option>
                                                     <option value="dos">No</option>
                                             </select>
                                         </div>
@@ -741,18 +741,18 @@ $('#tabla_deposito_seriedad thead tr:eq(0) th').each( function (i) {
                                         buttonst += '<button class="btn-data btn-green abrir_prospectos ' +
                                             'btn-fab btn-fab-mini" data-idCliente="'+d.id_cliente+'" data-nomCliente="'+nombre_cliente+'">' +
                                             '<i class="fas fa-user-check"></i></button><br>';
-                                            buttonst += '<div><span class="label label-success">Debes asignar el prospecto al cliente para poder acceder al depósito de seriedad o integrar el expediente</span></div>';
+                                            buttonst += '<br><div><span class="label label-success">Debes asignar el prospecto al cliente para poder acceder al depósito de seriedad o integrar el expediente</span></div>';
 
                                     } else {
-                                        buttonst += '<div><span class="label label-success">Validado correctamente</span></div>';
+                                        buttonst += '<br><div><span class="label label-success">Validado correctamente</span></div>';
                                     }
                                 }
                                 else {
-                                    buttonst += '<div><span class="label label-success">Validado correctamente</span></div>';
+                                    buttonst += '<br><div><span class="label label-success">Validado correctamente</span></div>';
                                 }
                             }
                         }else{
-                            buttonst += '<a href="" title= "Tipo de venta" id="vCompartida" data-idCliente="'+d.id_cliente+'" data-idLote="'+d.idLote+'" class="btn-data btn-green"><i class="fas fa-users"></i></a>'
+                            buttonst += '<a href="" title= "Asignación de ventas compartidas" id="vCompartida" data-idCliente="'+d.id_cliente+'" data-idLote="'+d.idLote+'" class="btn-data btn-green"><i class="fas fa-users"></i></a>'
                         }
                         
                         return '<div class="d-flex justify-center align-center">'+buttonst+'</div>';

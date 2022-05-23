@@ -48,6 +48,7 @@
                                                         <th><center>TIPO</center></th>
                                                         <th><center>SEDE</center></th>
                                                         <th><center>FORMA PAGO</center></th>
+                                                        <th><center>NACIONALIDAD</center></th>
                                                         <th><center>JEFE DIRECTO</center></th>
                                                         <th><center>TIPO DE USUARIO</center></th>
                                                         <th><center>FECHA ALTA</center></th>
@@ -151,12 +152,15 @@
                                     return 'FORMA PAGO';
                                     break;
                                 case 8:
-                                    return 'JEFE DIRECTO';
+                                    return 'FORMA PAGO';
                                     break;
                                 case 9:
-                                    return 'TIPO DE USUARIO';
+                                    return 'JEFE DIRECTO';
                                     break;
                                 case 10:
+                                    return 'TIPO DE USUARIO';
+                                    break;
+                                case 11:
                                     return 'FECHA ALTA';
                                     break;
                             }
@@ -311,6 +315,16 @@
                         else{
                             return d.forma_pago;
                         }
+                }
+            },
+            { data: function (d) {
+                if(d.id_forma_pago == 5 && d.id_nacionalidad == 0){
+                    return '<center>Sin definir<center>';
+                }else{
+                    return '<center><span class="label label-danger" style="background:#'+d.color+'">'+d.nacionalidad+'</span><center>';
+
+                }
+
                 }
             },
             { data: function (d) {

@@ -1915,7 +1915,7 @@ $pdf->Output(utf8_decode($namePDF), 'I');
             $extras_general = array();
             foreach ($casas as $clave=>$valor)
             {
-                if($data_corrida->tipo_casa === (int) $valor->id){
+                if((int) $data_corrida->tipo_casa === (int) $valor->id){
 //                    echo 'el elegido es:<br>';
 //                    print_r($valor);
 //                    echo'<br>';

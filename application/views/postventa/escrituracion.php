@@ -74,9 +74,9 @@
                                                 <div class="form-group label-floating">
                                                     <label class="control-label">Estatus del Lote</label>
                                                     <div class="radio_container w-100">
-                                                        <input class="d-none generate" type="radio" name="estatus" id="estatus" value="1" checked>
+                                                        <input class="d-none generate" type="radio" name="estatus" id="estatusL" value="">
                                                         <label class="w-50">Liquidado</label>
-                                                        <input class="d-none find-results" type="radio" name="estatus" id="estatus" value="2">
+                                                        <input class="d-none find-results" type="radio" name="estatus" id="estatusSL" value="">
                                                         <label class="w-50">Sin liquidar</label>
                                                     </div>
                                                 </div>
@@ -137,22 +137,58 @@
                                                                 <input id="correo" name="correo" class="form-control input-gral" type="mail">
                                                             </div>
                                                         </div>
-                                                        <div class="col-md-6 pl-0">
-                                                            <div class="form-group label-floating is-focused">
-                                                                <label class="control-label label-gral">Domicilio Fiscal</label>
-                                                                <input id="direccionf" name="direccionf" class="form-control input-gral" type="text">
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-md-6 pl-0">
+                                                        <div class="col-md-12 pl-0">
                                                             <div class="form-group label-floating is-focused">
                                                                 <label class="control-label label-gral">Domicilio Actual</label>
                                                                 <input id="direccion" name="direccion" class="form-control input-gral" type="text">
                                                             </div>
                                                         </div>
+                                                        <div class="col-md-8 pl-0">
+                                                            <div class="form-group label-floating is-focused">
+                                                                <label class="control-label label-gral">Calle fiscal</label>
+                                                                <input id="calleF" name="calleF" class="form-control input-gral" type="text">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-2 pl-0">
+                                                            <div class="form-group label-floating is-focused">
+                                                                <label class="control-label label-gral">Número exterior</label>
+                                                                <input id="numExtF" name="numExtF" class="form-control input-gral" type="text">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-2 pl-0">
+                                                            <div class="form-group label-floating is-focused">
+                                                                <label class="control-label label-gral">Número interior</label>
+                                                                <input id="numIntF" name="numIntF" class="form-control input-gral" type="text">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-3 pl-0">
+                                                            <div class="form-group label-floating is-focused">
+                                                                <label class="control-label label-gral">Colonia</label>
+                                                                <input id="coloniaf" name="coloniaf" class="form-control input-gral" type="text">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-3 pl-0">
+                                                            <div class="form-group label-floating is-focused">
+                                                                <label class="control-label label-gral">Municipio</label>
+                                                                <input id="municipiof" name="municipiof" class="form-control input-gral" type="text">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-3 pl-0">
+                                                            <div class="form-group label-floating is-focused">
+                                                                <label class="control-label label-gral">Estado</label>
+                                                                <input id="estadof" name="estadof" class="form-control input-gral" type="text">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-3 pl-0">
+                                                            <div class="form-group label-floating is-focused">
+                                                                <label class="control-label label-gral">Codigo postal</label>
+                                                                <input id="cpf" name="cpf" class="form-control input-gral" type="text">
+                                                            </div>
+                                                        </div>
                                                         <div class="col-md-4 pl-0">
                                                             <div class="form-group label-floating is-focused">
-                                                                <label class="control-label label-gral">RFC</label>
-                                                                <input id="rfc" name="rfc" class="form-control input-gral" type="text">
+                                                                <label class="control-label label-gral">RFC *</label>
+                                                                <input id="rfc" name="rfc" class="form-control input-gral" type="text" required>
                                                             </div>
                                                         </div>
                                                         <div class="col-md-4 pl-0">
@@ -171,6 +207,8 @@
                                                 </div>
                                                 <input id="idCliente" name="idCliente" class="form-control input-gral d-none">
                                                 <input id="idPostventa" name="idPostventa" class="form-control input-gral d-none">
+                                                <input id="referencia" name="referencia" class="form-control input-gral d-none">
+                                                <input id="empresa" name="empresa" class="form-control input-gral d-none">
 
                                             </div>
                                             <div class="row d-flex align-center mt-3">

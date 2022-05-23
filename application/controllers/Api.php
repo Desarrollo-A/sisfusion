@@ -291,7 +291,47 @@ class Api extends CI_Controller
 
     function getNacionalidades(){
         $data = $this->Api_model->getNacionalidades();
-       echo json_encode(array("resultado" => true, "data" => $data));
+       echo json_encode($data);
     }
+
+    public function saveUserCH()
+    {
+        $objDatos = json_decode(base64_decode(file_get_contents("php://input")), true);
+
+        $data = array(
+            "nombre" => $objDatos['nombre'],
+            "apellido_paterno" => $objDatos['apellido_paterno'],
+            "apellido_materno" => $objDatos['apellido_materno'],
+            "forma_pago" => $objDatos['forma_pago'],
+            "rfc" => $objDatos['rfc'],
+            "tiene_hijos" => 2,
+            "estatus" => 1,
+            "sesion_activa" => 1,
+            "imagen_perfil" => '',
+            "correo" => $objDatos['correo'],
+            "telefono" => $objDatos['telefono'],
+            "id_sede" => $objDatos['id_sede'],
+            "id_rol" => $objDatos['id_rol'],
+            "id_lider" => $objDatos['id_lider'],
+            "usuario" => $objDatos['usuario'],
+            "contrasena" => encriptar($objDatos['contrasena']),
+            "fecha_creacion" => date("Y-m-d H:i:s"),
+            "creado_por" => $objDatos['creado_por'],
+            "fecha_modificacion" => date("Y-m-d H:i:s"),
+            "modificado_por" => $objDatos['creado_por'],
+            "sedech" => $objDatos['sedech'],
+            "sucursalch" => $objDatos['sucursalch'],
+            "status_contratacion" => $objDatos['status_contratacion'],
+            "nacionalidad" => $objDatos['nacionalidad']
+
+        );
+        echo var_dump($data);
+       /* if (isset($_POST) && !empty($_POST)) {
+            $response = $this->Api_model->saveUser($data);
+            echo json_encode($response);
+        }*/
+    }
+
+
 
 }

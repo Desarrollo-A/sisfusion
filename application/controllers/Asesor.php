@@ -780,6 +780,8 @@ class Asesor extends CI_Controller
         $this->load->view("asesor/depositoSeriedad", $datos);
     }
 
+
+
     public function depositoSeriedadConsulta()
     {
         // $this->validateSession();
@@ -1506,7 +1508,7 @@ class Asesor extends CI_Controller
             <html lang="en">
             <head>
             <link rel="shortcut icon" href="' . base_url() . 'static/images/arbol_cm.png" />
-            <link href="<?=base_url()?>dist/css/bootstrap.min.css" rel="stylesheet" />
+            <link "<?=base_url()?>dist/css/bootstrap.min.css" rel="stylesheet" />
             <!--  Material Dashboard CSS    -->
             <link href="<?=base_url()?>dist/css/material-dashboard.css" rel="stylesheet" />
             <!--  CSS for Demo Purpose, don\'t include it in your project     -->
@@ -5540,5 +5542,22 @@ class Asesor extends CI_Controller
         $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
         $this->load->view('template/header');
         $this->load->view("asesor/grafica_comisiones", $datos);
+    }
+
+    public function expedientesRechazados(){
+        /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/
+        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
+        /*-------------------------------------------------------------------------------*/
+        // $this->validateSession();
+        $this->load->view('template/header');
+        $this->load->view("asesor/contratosCancelados", $datos);
+    }
+
+    function getlotesRechazados(){
+        $data = $this->Asesor_model->getlotesRechazados();
+        if ($data != null)
+            echo json_encode($data);
+        else
+            echo json_encode(array());
     }
 }

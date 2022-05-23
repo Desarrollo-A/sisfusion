@@ -50,6 +50,7 @@ public function flagAbonado(){
         $data = array();
         for($i = 0; $i < COUNT($datos); $i++){
             $data[$i] = $this->ComisionesNeo_model->updateFlagAbonado($datos[$i]['id_lote'], $datos[$i]['abonado'], $datos[$i]['bandera']);
+            echo 'AB: '.$datos[$i]['id_lote'].' '.$datos[$i]['bandera'].'<BR>';
         }
     }else{
         echo NULL;
@@ -63,15 +64,21 @@ public function flagPendiente(){
         $data = array();
         for($i = 0; $i < COUNT($datos); $i++){
             $data[$i] = $this->ComisionesNeo_model->updateFlagPendiente($datos[$i]['id_lote'], $datos[$i]['bandera']);
+            echo 'PE: '.$datos[$i]['id_lote'].' '.$datos[$i]['bandera'].'<BR>';
         }
     }else{
         echo NULL;
     }
 }
 
+public function flagPendienteDistintos(){
+    $this->ComisionesNeo_model->updateFlagPendienteDistintos()->result_array();
+}
+
 public function topar_bandera_neo(){
     $this->flag();
     $this->flagAbonado();
+    $this->flagPendienteDistintos();
     $this->flagPendiente();
 
     //UPDATE BANDERA QUE DEBEN ESTAR EN 7 Y ESTAN EN OTRO ESTATUS
@@ -104,6 +111,9 @@ public function limpiar_bandera_neo(){
     $this->db->query("UPDATE pago_comision SET bandera = 1 WHERE bandera IN (55,0)");
     $this->db->query("UPDATE pago_comision SET bandera = 0 WHERE id_lote in (select idLote from lotes where registro_comision = 1 and idStatusContratacion = 15) and bandera IN (1,55) and abonado<(total_comision-100) and abonado < (ultimo_pago-100)");
     $this->db->query("UPDATE pago_comision SET bandera = 0 WHERE id_lote in (select idLote from lotes where registro_comision = 8) and bandera NOT IN (0)");
+    $this->db->query("UPDATE pago_comision SET bandera = 7 where pendiente <2 and bandera not in (7) and total_comision not in (0)");
+    $this->db->query("UPDATE lotes SET registro_comision = 7 where registro_comision not in (7) and idLote in (select id_lote from pago_comision where bandera in (7))");
+
     $this->LlenadoPlan();
 }
 
