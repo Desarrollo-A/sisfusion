@@ -9929,13 +9929,11 @@
    border-radius: 0;
  }
  @media (max-width: 1199px) {
-   .navbar {
-     /*
+   /* .navbar {
          .navbar-form {
            margin-top: 10px;
          }
-     */
-   }
+   }*/
    .navbar .navbar-brand {
      height: 50px;
      padding: 10px 15px;
@@ -11644,4 +11642,83 @@
      max-width: 211px;
    }
  }
- 
+
+ .perfil{
+  background-color: #E9E9E9c9;
+  border-radius: 20px!important;
+  display:flex!important;
+  padding: 5px 8px 5px 5px!important;
+  align-items: center;
+  color: #999;
+  font-weight: 400;
+  font-size: 12px;
+}
+.perfil .idBubble{
+  background-color: transparent;
+  font-size: 10px;
+  border-radius: 20px;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 8px;
+  color: #999;
+}
+.navbar-right{
+  padding-right:15px
+}
+.navbar-right .icoNav{
+  border-radius: 29px;
+  margin: 0 5px;
+}
+.navbar-right .icoNav a{
+  width: 42px;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #EEEEEEc9;
+  border-radius: 27px!important;
+}
+.navbar-right .icoNav span{
+  margin: 0!important;
+}
+.navbar-right .icoNav:hover{
+  background-color: #e3e3e3;
+}
+.navbar-right li a{
+  cursor:pointer;
+  padding: 0 15px!important;
+}
+.dashboard-nav-pills li a .iconBox{
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 27px;
+    margin-right: 8px;
+}
+.dashboard-nav-pills> li.active > a .iconBox, .dashboard-nav-pills > li.active > a:focus .iconBox, .dashboard-nav-pills > li.active > a:hover .iconBox{
+  background-color: #1341761a;
+}
+.dashboard-nav-pills li a{
+  background-color: transparent!important;   
+  box-shadow: none!important;
+  color: #999;
+  font-weight: 400;
+  border-radius: 0!important;
+  display: flex!important; 
+  justify-content: space-evenly!important;
+  align-items: center!important;
+  text-transform: inherit!important;
+  font-size: 15px;;
+}
+.dashboard-nav-pills > li i {
+  font-size: 12px!important;
+}
+.dashboard-nav-pills> li.active > a, .dashboard-nav-pills > li.active > a:focus, .dashboard-nav-pills > li.active > a:hover {
+  border-bottom: 2px solid #103F75;
+  color: #103F75;
+}
