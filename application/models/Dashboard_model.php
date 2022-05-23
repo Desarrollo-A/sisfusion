@@ -704,5 +704,15 @@ class Dashboard_model extends CI_Model {
         return $query->result_array();
     }
 
+    public function getProspectsByYear(){
+        $year = date("Y");
+        $id_usuario = $this->session->userdata('id_usuario');
+        $query = $this->db->query("SELECT DATENAME(month,fecha_creacion) MONTH, COUNT(*) FROM prospectos 
+        WHERE YEAR(fecha_creacion) = '2021' AND id_asesor = $id_usuario
+        GROUP BY DATENAME(month,fecha_creacion), MONTH(fecha_creacion)
+        ORDER BY MONTH(fecha_creacion)");
+        return $query->result_array();
+    }
+
 
 }

@@ -143,6 +143,15 @@ class Dashboard extends CI_Controller
             echo json_encode(array());
         }
     }
+
+    public function getProspectsByYear(){
+        $data = $this->Dashboard_model->getProspectsByYear();
+        if($data != null) {
+            echo json_encode($data);
+        } else {
+            echo json_encode(array());
+        }
+    }
 }
 
 

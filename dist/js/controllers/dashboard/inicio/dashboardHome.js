@@ -35,7 +35,7 @@ var optionsTotalVentas = {
 
 var optionsProspectos = {
     series: [{
-        name: 'series1',
+        name: 'Prospectos',
         data: [31, 40, 28, 51, 42, 109, 100]
     }],
     chart: {
@@ -165,8 +165,6 @@ var optionsFunnel = {
     labels: ['Apples', 'Oranges', 'Bananas', 'Berries'],
 };
 
-
-
 var totalVentasChart = new ApexCharts(document.querySelector("#totalVentasChart"), optionsTotalVentas);
 totalVentasChart.render();
 
@@ -184,7 +182,6 @@ chartFunnel.render();
 
   
 $(document).ready(function(){
-  
     loadInit();
 });
 function loadInit(){
@@ -192,7 +189,25 @@ function loadInit(){
     let select2 = document.getElementById('infoMainSelector2').checked;
     if(select1 == true){
         loadData();
+        getProspectsByYear();
     }
+}
+
+function getProspectsByYear(){
+    $.ajax({
+        url: "Dashboard/getProspectsByYear",
+        cache: false,
+        contentType: false,
+        processData: false,
+        type: 'POST',
+        dataType: 'json',
+        beforeSend: function(){
+            $('#spiner-loader').removeClass('hide');
+        },
+        success : function (response) {
+           console.log(response);
+        }
+    });
 }
 
 function loadData(){

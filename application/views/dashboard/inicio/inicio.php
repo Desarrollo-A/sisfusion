@@ -312,36 +312,7 @@
                                         </div>    
                                     </div>
                                 </div>
-                            </div> 
-                            <!-- <div class="col-md-6 pb-0 h-100 m-0">
-                                <div class="d-flex" >
-                                    <div class="w-80 d-flex align-center">
-                                    <i class="fas fa-circle pr-2 pl-2 dot"></i>
-                                    <p class="m-0">Cita seguimiento</p>
-                                    </div>
-                                    <div class="w-20">
-                                        <h4 id="ct_card" class="subtitle_skeleton numberElement mb-0"></h4>
-                                    </div>
-                                </div>
-                                <div class="d-flex" >
-                                    <div class="w-80 d-flex align-center">
-                                    <i class="fas fa-circle pr-2 pl-2 dot"></i>
-                                    <p class="m-0">Apartados/cliente</p>
-                                    </div>
-                                    <div class="w-20">
-                                        <h4 id="pcc_card" class="subtitle_skeleton numberElement mb-0"></h4>
-                                    </div>
-                                </div>
-                                <div class="d-flex" >
-                                    <div class="w-80 d-flex align-center">
-                                    <i class="fas fa-circle pr-2 pl-2 dot"></i>
-                                    <p class="m-0">No interesado</p>
-                                    </div>
-                                    <div class="w-20">
-                                        <h4 id="vc_card" class="subtitle_skeleton numberElement mb-0"></h4>
-                                    </div>
-                                </div>
-                            </div>  -->
+                            </div>
                         </div>
                     </div>
                 </div>
