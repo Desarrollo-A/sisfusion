@@ -1,5 +1,43 @@
 @import "_base";
 
+.boxMultipleOpt{
+  display: flex!important;
+  align-items: center;
+  margin-left: 70px!important;
+  padding: 0 15px 10px 15px;
+  .back{
+      background-color: $white;
+      padding: 8px 2px;
+      border-radius: 5px;
+      .checkBox{
+          cursor: pointer;
+          user-select: none;
+          display: block;
+          line-height: inherit;
+          span{
+              font-size: 12px;
+              border-radius: 5px;
+              transition: 0.4s;
+              padding: 8px 15px;
+              color: $deepGray;
+              background-color: $white;
+              margin: 0 2px;
+          }
+          span:hover{
+              box-shadow: none;
+          }
+          input{
+              pointer-events: none;
+              display: none;
+          }
+          input:checked + span{
+              color: $white;
+              background-color: $indigo;
+          }
+      }
+  }
+}
+
 .boxGraphic{
   h4{
     line-height: 5px;

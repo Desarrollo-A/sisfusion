@@ -2,19 +2,16 @@
 <link href="<?= base_url() ?>dist/css/dashboardStyles.css" rel="stylesheet"/>
 <div class="">
     <div class="card-content pt-2">
-        <div class="container-fluid">
-            <div class="col-md-12 d-flex row-reverse boxNavPills">
-                <div class="ck-button">
-                    <label>
-                        <input type="checkbox" value="2" name="infoMainSelector" id="infoMainSelector2" class="infoMainSelector"><span>Asesores </span>
-                    </label>
-                </div>
-                <div class="ck-button">
-                    <label>
-                        <input type="checkbox" value="1" name="infoMainSelector" id="infoMainSelector1" class="infoMainSelector" checked><span>Propios </span>
-                    </label>
-                </div>
-
+        <div class="boxMultipleOpt d-flex justify-end">
+            <div class="back d-flex">
+                <label class="m-0 checkBox" >
+                    <input type="checkbox" class="d-none" onClick="" value="1" name="infoMainSelector" id="infoMainSelector1" checked>
+                    <span class="mr-1">Propios</span>
+                </label>
+                <label class="m-0 checkBox" >
+                    <input type="checkbox" class="d-none" onClick="" value="2" name="infoMainSelector" id="infoMainSelector2" class="infoMainSelector">
+                    <span>Asesores</span>
+                </label>
             </div>
         </div>
         <div class="container-fluid">

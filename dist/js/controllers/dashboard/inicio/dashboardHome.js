@@ -1,4 +1,3 @@
-
 var optionsTotalVentas = {
     series: [44, 55, 67, 83],
     chart: {
