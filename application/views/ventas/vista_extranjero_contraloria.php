@@ -3,26 +3,80 @@
 <body>
     <div class="wrapper">
         <?php
-        if($this->session->userdata('id_rol')=="13" || $this->session->userdata('id_rol')=="17" || $this->session->userdata('id_usuario')=="2767"){
-            /*--------------------contraloria-----------------------------------*/
-            $datos = array();
-            $datos = $datos4;
-            $datos = $datos2;
-            $datos = $datos3;
-            $this->load->view('template/sidebar', $datos);
-        }
-        else{
-            echo '<script>alert("ACCESSO DENEGADO"); window.location.href="'.base_url().'";</script>';
-        }
+            if($this->session->userdata('id_rol')=="13" || $this->session->userdata('id_rol')=="17" || $this->session->userdata('id_usuario')=="2767"){
+                $datos = array();
+                $datos = $datos4;
+                $datos = $datos2;
+                $datos = $datos3;  
+                $this->load->view('template/sidebar', $datos);
+            }
+            else
+            {
+                echo '<script>alert("ACCESSO DENEGADO"); window.location.href="'.base_url().'";</script>';
+            }
         ?>
-
+    
         <!-- Modals -->
-        <div class="modal fade" id="seeInformationModalExtranjero" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+        <!--<div class="modal fade modal-alertas" id="modal_users" role="dialog">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+            
+                    <form method="post" id="form_interes">
+                        <div class="modal-body"></div>
+                    </form>
+                </div>
+            </div>
+        </div>-->
+
+        <div class="modal fade modal-alertas" id="modal_colaboradores" role="dialog">
+            <div class="modal-dialog modal-md">
+                <div class="modal-content">
+            
+                    <form method="post" id="form_colaboradores">
+                        <div class="modal-body"></div>
+                        <div class="modal-footer"></div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade modal-alertas" id="modal_mktd" role="dialog">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header bg-red">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">EDITAR INFORMACIÓN</h4>
+                    </div>
+                    <form method="post" id="form_MKTD">
+                        <div class="modal-body"></div>
+                        <div class="modal-footer"></div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!--<div class="modal fade modal-alertas" id="modalParcialidad" role="dialog">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header bg-red">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">SOLICITAR PARCIALIDAD DE PAGO</h4>
+                    </div>
+                    <form method="post" id="form_parcialidad">
+                        <div class="modal-body"></div>
+                    </form>
+                </div>
+            </div>
+        </div>-->
+
+
+        <div class="modal fade" id="seeInformationModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog modal-md modal-dialog-scrollable" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-                            <i class="material-icons" onclick="cleanCommentsextranjero()">clear</i>
+                            <i class="material-icons" onclick="cleanComments()">clear</i>
                         </button>
                     </div>
                     <div class="modal-body">
@@ -36,7 +90,7 @@
                                         <div class="col-md-12">
                                             <div class="card card-plain">
                                                 <div class="card-content">
-                                                    <ul class="timeline timeline-simple" id="comments-list-extranjero"></ul>
+                                                    <ul class="timeline timeline-simple" id="comments-list-asimilados"></ul>
                                                 </div>
                                             </div>
                                         </div>
@@ -46,41 +100,11 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" onclick="cleanCommentsextranjero()"><b>Cerrar</b></button>
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" onclick="cleanComments()"><b>Cerrar</b></button>
                     </div>
                 </div>
             </div>
         </div>
-
-        <div class="modal fade modal-alertas" id="modal_nuevas" role="dialog">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <form method="post" id="form_interes">
-                        <div class="modal-body"></div>
-                    </form>
-                </div>
-            </div>
-        </div>
-
-        <!--<div class="modal fade modal-alertas" id="modal_despausar" role="dialog">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <form method="post" id="form_despausar">
-                        <div class="modal-body"></div>
-                    </form>
-                </div>
-            </div>
-        </div>-->
-
-        <!--<div class="modal fade modal-alertas" id="modal_refresh" role="dialog">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <form method="post" id="form_refresh">
-                        <div class="modal-body"></div>
-                    </form>
-                </div>
-            </div>
-        </div>-->
 
         <!--<div class="modal fade modal-alertas" id="modal_documentacion" role="dialog">
             <div class="modal-dialog" style="width:800px; margin-top:20px">
@@ -92,37 +116,35 @@
                 </div>
             </div>
         </div>-->
- 
-        <div class="modal fade modal-alertas" id="documento_preview" role="dialog">
-            <div class="modal-dialog" style= "margin-top:20px;"></div>
-        </div>
 
-        <div class="modal fade bd-example-modal-sm" id="myModalEnviadas" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+        <!--<div class="modal fade bd-example-modal-sm" id="myModalEnviadas" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-sm">
                 <div class="modal-content">
                     <div class="modal-body"></div>
                 </div>
             </div>
-        </div>
+        </div>-->
 
-        <!--<div class="modal fade bd-example-modal-sm" id="myModalTQro" tabindex="-1" role="dialog" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-body"></div>
-                </div>
-            </div>
+        <!--<div class="modal fade modal-alertas" id="documento_preview" role="dialog">
+            <div class="modal-dialog" style= "margin-top:20px;"></div>
         </div>-->
         <!-- END Modals -->
 
         <div class="content boxContent">
             <div class="container-fluid">
                 <div class="row">
-                    <div class="col xol-xs-12 col-sm-12 col-md-12 col-lg-12">
-                            <div class="card">
-                                <div class="card-header card-header-icon" data-background-color="goldMaderas">
-                                    <i class="fas fa-dollar-sign fa-2x"></i>
-                                </div>
-                                 <div class="card-content">
+                    <div class="col xol-xs-12 col-sm-12 col-md-12 col-lg-12">        
+                        <ul class="nav nav-tabs nav-tabs-cm" role="tablist">
+                            <li class="active"><a href="#nuevas-1" role="tab" data-toggle="tab">Pagos Solicitados</a></li>
+                            <li><a href="#proceso-1" role="tab" data-toggle="tab">Invoice</a></li>
+                        </ul>
+                        
+                        <div class="card no-shadow m-0 border-conntent__tabs">
+                            <div class="card-content p-0">
+                                <div class="nav-tabs-custom">
+                                    <div class="tab-content p-2">
+                                        <div class="tab-pane active" id="nuevas-1">
+                                        <div class="card-content">
                                     <div class="encabezadoBox">
                                         <h3 class="card-title center-align" >Comisiones nuevas <b>Factura Extranjero</b></h3>
                                         <p class="card-title pl-1">(Comisiones nuevas, solicitadas para proceder a pago en esquema de Factura Extranjero)</p>
@@ -188,17 +210,61 @@
                                         </div>
                                     </div>
                                 </div>
+                                        </div>
+                                        <div class="tab-pane" id="proceso-1">
+                                            <div class="text-center">
+                                                <h3 class="card-title center-align">Comisiones dispersadas por dirección mktd</h3>
+                                                <p class="card-title pl-1">(Lotes correspondientes a comisiones solicitadas para pago por el área de MKTD, en espera de validación contraloría y pago de internomex)</p>
+                                            </div>
+                                            <div class="toolbar">
+                                                <div class="container-fluid p-0">
+                                                    <div class="row">
+                                                        <div class="col-12 col-sm-12 col-md-12 col-lg-12">
+                                                            <div class="form-group d-flex justify-center align-center">
+                                                                <h4 class="title-tot center-align m-0">Total</h4>
+                                                                <p class="input-tot pl-1" id="myText_proceso">$0.00</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="table-responsive">
+                                                    <table class="table-striped table-hover" id="tabla_plaza_2" name="tabla_plaza_2">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>ID</th>
+                                                                <th>ID LOTE</th>
+                                                                <th>PROY.</th>
+                                                                <th>CONDOMINIO</th>
+                                                                <th>LOTE</th>
+                                                                <th>REFERENCIA</th>
+                                                                <th>PRECIO LOTE</th>
+                                                                <th>EMP.</th>
+                                                                <th>TOT. COM.</th>
+                                                                <th>P. CLIENTE</th>
+                                                                <th>SOLICITADO</th>
+                                                                <th>TIPO VENTA</th>
+                                                                <th>USUARIO</th>
+                                                                <th>PLAZA</th>
+                                                                <th>FEC. ENVÍO</th>
+                                                                <th>MÁS</th>
+                                                            </tr>
+                                                        </thead>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
+
                     </div>
                 </div>
             </div>
         </div>
-        <?php $this->load->view('template/footer_legend');?>
+    <?php $this->load->view('template/footer_legend');?>
     </div>
     </div><!--main-panel close-->
-    
-
     <?php $this->load->view('template/footer');?>
     <!--DATATABLE BUTTONS DATA EXPORT-->
     <script src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>
@@ -208,28 +274,12 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
-
     <script>
-        function cleanCommentsextranjero() {
-            var myCommentsList = document.getElementById('comments-list-extranjero');
-            var myCommentsLote = document.getElementById('nameLote');
-            myCommentsList.innerHTML = '';
-            myCommentsLote.innerHTML = '';
-        }
-
         $(document).ready(function() {
             $("#tabla_extranjero").prop("hidden", true);
 
             var url = "<?=base_url()?>/index.php/";
-            /*$.post("<//?=base_url()?>index.php/Contratacion/lista_proyecto", function (data) {
-                var len = data.length;
-                for (var i = 0; i < len; i++) {
-                    var id = data[i]['idResidencial'];
-                    var name = data[i]['descripcion'];
-                    $("#filtro3").append($('<option>').val(id).text(name.toUpperCase()));
-                }
-                $("#filtro3").selectpicker('refresh');
-            }, 'json');*/
+          
 
             $.post("<?=base_url()?>index.php/Contratacion/lista_proyecto", function (data) {
                 var len = data.length;
@@ -241,38 +291,9 @@
                 $("#filtro33").selectpicker('refresh');
             }, 'json');
 
-
-            /*$.post("<?=base_url()?>index.php/Contratacion/lista_proyecto", function (data) {
-                var len = data.length;
-                for (var i = 0; i < len; i++) {
-                    var id = data[i]['idResidencial'];
-                    var name = data[i]['descripcion'];
-                    $("#filtro333").append($('<option>').val(id).text(name.toUpperCase()));
-                }
-                $("#filtro333").selectpicker('refresh');
-            }, 'json');*/
+ 
         });
-
-        /*$('#filtro3').change(function(ruta){
-            residencial = $('#filtro3').val();
-            $("#filtro4").empty().selectpicker('refresh');
-            $.ajax({
-                url: '<?=base_url()?>Asesor/getCondominioDesc/'+residencial,
-                type: 'post',
-                dataType: 'json',
-                success:function(response){
-                    var len = response.length;
-                    for( var i = 0; i<len; i++){
-                        var id = response[i]['idCondominio'];
-                        var name = response[i]['nombre'];
-                        $("#filtro4").append($('<option>').val(id).text(name));
-                    }
-
-                    $("#filtro4").selectpicker('refresh');
-                }
-            });
-        });*/
-
+ 
         $('#filtro33').change(function(ruta){
             residencial = $('#filtro33').val();
             $("#filtro44").empty().selectpicker('refresh');
@@ -293,24 +314,7 @@
             });
         });
 
-        /*$('#filtro3').change(function(ruta){
-            proyecto = $('#filtro3').val();
-            condominio = $('#filtro4').val();
-            if(condominio == '' || condominio == null || condominio == undefined){
-                condominio = 0;
-            }
-            getInvoiceCommissions(proyecto, condominio);
-        });*/
-
-        /*$('#filtro4').change(function(ruta){
-            proyecto = $('#filtro3').val();
-            condominio = $('#filtro4').val();
-            if(condominio == '' || condominio == null || condominio == undefined){
-                condominio = 0;
-            }
-            getInvoiceCommissions(proyecto, condominio);
-        });*/
-
+ 
         $('#filtro33').change(function(ruta){
             proyecto = $('#filtro33').val();
             condominio = $('#filtro44').val();
@@ -330,12 +334,7 @@
             }
             getAssimilatedCommissions(proyecto, condominio);
         });
-
-        /*$('#filtro333').change(function(ruta){
-            proyecto = $('#filtro333').val();
-            getHistoryCommissions(proyecto);
-        });*/
-
+ 
         var url = "<?=base_url()?>";
         var url2 = "<?=base_url()?>index.php/";
         var totalLeon = 0;
@@ -345,12 +344,11 @@
         var totalCdmx = 0;
         var totalCancun = 0;
         var tr;
-        var tabla_extranjero2 ;
+        var tabla_remanente2 ;
         var totaPen = 0;
-        let titulos = [];
-    
-        //INICIO TABLA QUERETARO*************************************
-        $('#tabla_extranjero thead tr:eq(0) th').each( function (i) {
+
+          //INICIO TABLA QUERETARO*************************************
+          $('#tabla_extranjero thead tr:eq(0) th').each( function (i) {
             if(i != 0){
                 var title = $(this).text();
                 titulos.push(title);
@@ -696,87 +694,367 @@
                 $("#modal_nuevas").modal();
             });
 
-            /*$("#tabla_extranjero tbody").on("click", ".despausar_estatus", function(){
-                var tr = $(this).closest('tr');
-                var row = tabla_extranjero2.row( tr );
-                id_pago_i = $(this).val();
-                $("#modal_refresh .modal-body").html("");
-                $("#modal_refresh .modal-body").append('<div class="row"><div class="col-lg-12"><p>¿Está seguro regresar al estatus inicial la comisión  de <b>'+row.data().lote+'</b> para el <b>'+(row.data().puesto).toUpperCase()+':</b> <i>'+row.data().usuario+'</i>?</p></div></div>');
-                $("#modal_refresh .modal-body").append('<input class="idComPau" name="id_comision" type="text" value="'+row.data().id_comision+'" hidden>');
-                $("#modal_refresh .modal-body").append('<div class="row"><div class="col-md-6"></div><div class="col-md-3"><input type="submit" class="btn btn-primary" value="CONFIRMAR"></div><div class="col-md-3"><button type="button" class="btn btn-danger" data-dismiss="modal">CANCELAR</button></div></div>');
-                $("#modal_refresh").modal();
-            });*/
-
-            /*$("#tabla_extranjero tbody").on("click", ".consultar_documentos", function(){
-                id_com = $(this).val();
-                id_pj = $(this).attr("data-personalidad");
-
-                $("#seeInformationModal").modal();
-                $.getJSON( url + "Comisiones/getDatosDocumentos/"+id_com+"/"+id_pj).done( function( data ){
-                    $.each( data, function( i, v){
-
-                        $("#seeInformationModal .documents").append('<div class="row">');
-                        if (v.estado == "NO EXISTE"){
-                            $("#seeInformationModal .documents").append('<div class="col-md-7"><label style="font-size:10px; margin:0; color:gray;">'+(v.nombre).substr(0, 52)+'</label></div><div class="col-md-5"><label style="font-size:10px; margin:0; color:gray;">(No existente)</label></div>');
-                        }
-                        else{
-                            $("#seeInformationModal .documents").append('<div class="col-md-7"><label style="font-size:10px; margin:0; color:#0a548b;"><b>'+(v.nombre).substr(0, 52)+'</b></label></div> <div class="col-md-5"><label style="font-size:10px; margin:0; color:#0a548b;"><b>('+v.expediente+')</label></b> - <button onclick="preview_info(&#39;'+(v.expediente)+'&#39;)" style="border:none; background-color:#fff;"><i class="fa fa-file" aria-hidden="true" style="font-size: 12px; color:#0a548b;"></i></button></div>');
-                        }
-                        $("#seeInformationModal .documents").append('</div>');
-                    });
-                });
-
-                $.getJSON( url + "Comisiones/getDatosFactura/"+id_com).done( function( data ){
-                    $("#seeInformationModal .facturaInfo").append('<div class="row">');
-                    if (!data.datos_solicitud['id_factura'] == '' && !data.datos_solicitud['id_factura'] == '0'){
-
-                        $("#seeInformationModal .facturaInfo").append('<BR><div class="col-md-12"><label style="font-size:14px; margin:0; color:gray;"><b>NOMBRE EMISOR</b></label><br><label style="font-size:12px; margin:0; color:gray;">'+data.datos_solicitud['nombre']+' '+data.datos_solicitud['apellido_paterno']+' '+data.datos_solicitud['apellido_materno']+'</label><br><label style="font-size:12px; margin:0; color:gray;"> </label></div>');
-
-                        $("#seeInformationModal .facturaInfo").append('<div class="col-md-4"><label style="font-size:14px; margin:0; color:gray;"><b> LOTE</b></label><br><label style="font-size:12px; margin:0; color:gray;">'+data.datos_solicitud['nombreLote']+'</label><br><label style="font-size:12px; margin:0; color:gray;"> </label></div>');
-
-                        $("#seeInformationModal .facturaInfo").append('<div class="col-md-4"><label style="font-size:14px; margin:0; color:gray;"><b>TOTAL FACT.</b></label><br><label style="font-size:12px; margin:0; color:gray;">$ '+data.datos_solicitud['total']+'</label><br><label style="font-size:12px; margin:0; color:gray;"> </label></div>');
-
-                        $("#seeInformationModal .facturaInfo").append('<div class="col-md-4"><label style="font-size:14px; margin:0; color:gray;"><b>MONTO COMSN.</b></label><br><label style="font-size:12px; margin:0; color:gray;">$ '+data.datos_solicitud['porcentaje_dinero']+'</label><br><label style="font-size:12px; margin:0; color:gray;"> </label></div>');
-
-                        $("#seeInformationModal .facturaInfo").append('<div class="col-md-4"><label style="font-size:14px; margin:0; color:gray;"><b>FOLIO</b></label><br><label style="font-size:12px; margin:0; color:gray;">'+data.datos_solicitud['folio_factura']+'</label><br><label style="font-size:12px; margin:0; color:gray;"> </label></div>');
-
-                        $("#seeInformationModal .facturaInfo").append('<div class="col-md-4"><label style="font-size:14px; margin:0; color:gray;"><b>FECHA FACTURA</b></label><br><label style="font-size:12px; margin:0; color:gray;">'+data.datos_solicitud['fecha_factura']+'</label><br><label style="font-size:12px; margin:0; color:gray;"> </label></div>');
-
-                        $("#seeInformationModal .facturaInfo").append('<div class="col-md-4"><label style="font-size:14px; margin:0; color:gray;"><b>FECHA CAPTURA</b></label><br><label style="font-size:12px; margin:0; color:gray;">'+data.datos_solicitud['fecha_ingreso']+'</label><br><label style="font-size:12px; margin:0; color:gray;"> </label></div>');
-
-                        $("#seeInformationModal .facturaInfo").append('<div class="col-md-3"><label style="font-size:14px; margin:0; color:gray;"><b>MÉTODO</b></label><br><label style="font-size:12px; margin:0; color:gray;">'+data.datos_solicitud['metodo_pago']+'</label><br><label style="font-size:12px; margin:0; color:gray;"> </label></div>');
-
-                        $("#seeInformationModal .facturaInfo").append('<div class="col-md-3"><label style="font-size:14px; margin:0; color:gray;"><b>RÉGIMEN F.</b></label><br><label style="font-size:12px; margin:0; color:gray;">'+data.datos_solicitud['regimen']+'</label><br><label style="font-size:12px; margin:0; color:gray;"> </label></div>');
-
-                        $("#seeInformationModal .facturaInfo").append('<div class="col-md-3"><label style="font-size:14px; margin:0; color:gray;"><b>FORMA P.</b></label><br><label style="font-size:12px; margin:0; color:gray;">'+data.datos_solicitud['forma_pago']+'</label><br><label style="font-size:12px; margin:0; color:gray;"> </label></div>');
-
-                        $("#seeInformationModal .facturaInfo").append('<div class="col-md-3"><label style="font-size:14px; margin:0; color:gray;"><b>CFDI</b></label><br><label style="font-size:12px; margin:0; color:gray;">'+data.datos_solicitud['cfdi']+'</label><br><label style="font-size:12px; margin:0; color:gray;"> </label></div>');
-
-                        $("#seeInformationModal .facturaInfo").append('<div class="col-md-3"><label style="font-size:14px; margin:0; color:gray;"><b>UNIDAD</b></label><br><label style="font-size:12px; margin:0; color:gray;">'+data.datos_solicitud['unidad']+'</label><br><label style="font-size:12px; margin:0; color:gray;"> </label></div>');
-
-                        $("#seeInformationModal .facturaInfo").append('<div class="col-md-3"><label style="font-size:14px; margin:0; color:gray;"><b>CLAVE PROD.</b></label><br><label style="font-size:12px; margin:0; color:gray;">'+data.datos_solicitud['claveProd']+'</label><br><label style="font-size:12px; margin:0; color:gray;"> </label></div>');
-
-                        $("#seeInformationModal .facturaInfo").append('<div class="col-md-6"><label style="font-size:14px; margin:0; color:gray;"><b>UUID</b></label><br><label style="font-size:12px; margin:0; color:gray;">'+data.datos_solicitud['uuid']+'</label><br><label style="font-size:12px; margin:0; color:gray;"> </label></div>');
-
-                        $("#seeInformationModal .facturaInfo").append('<div class="col-md-12"><label style="font-size:14px; margin:0; color:gray;"><b>DESCRIPCIÓN</b></label><br><label style="font-size:12px; margin:0; color:gray;">'+data.datos_solicitud['descripcion']+'</label><br><label style="font-size:12px; margin:0; color:gray;"> </label></div>');
-                    }
-                    else {
-                        $("#seeInformationModal .facturaInfo").append('<div class="col-md-12"><label style="font-size:10px; margin:0; color:orange;">SIN HAY DATOS A MOSTRAR</label></div>');
-                    }
-                    $("#seeInformationModal .facturaInfo").append('</div>');
-                });
-            });*/
+          
         }
         //FIN TABLA  ****************************************************************************************
+    
+        // INICIO TABLA EN PROCESO
+        $("#tabla_plaza_2").ready( function(){
+            let titulos = [];
+            $('#tabla_plaza_2 thead tr:eq(0) th').each( function (i) {
+                if( i != 15 ){
+                    var title = $(this).text();
+                    titulos.push(title);
 
-        $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-            $($.fn.dataTable.tables(true)).DataTable()
-            .columns.adjust();
-        });
+                    $(this).html('<input type="text" class="textoshead" placeholder="'+title+'"/>' );
+                    $( 'input', this ).on('keyup change', function () {
+                        if (plaza_2.column(i).search() !== this.value ) {
+                            plaza_2
+                            .column(i)
+                            .search(this.value)
+                            .draw();
 
-        $(window).resize(function(){
-            tabla_extranjero2.columns.adjust();
+                            var total = 0;
+                            var index = plaza_2.rows({ selected: true, search: 'applied' }).indexes();
+                            var data = plaza_2.rows( index ).data();
+
+                            $.each(data, function(i, v){
+                                total += parseFloat(v.pago_cliente);
+                            });
+                            var to1 = formatMoney(total);
+                            document.getElementById("myText_proceso").textContent = '$'+ formatMoney(total);
+                        }
+                    } );
+                }
+            });
+
+            let c=0;
+            $('#tabla_plaza_2').on('xhr.dt', function ( e, settings, json, xhr ) {
+                var total = 0;
+                $.each(json.data, function(i, v){
+                    total += parseFloat(v.pago_cliente);
+                });
+                var to = formatMoney(total);            
+                document.getElementById("myText_proceso").textContent = '$'+ to;
+            });
+
+
+            plaza_2 = $("#tabla_plaza_2").DataTable({
+                dom: 'Brt'+ "<'row'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'i><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>",
+                width: 'auto',
+                buttons: [{
+                    extend: 'excelHtml5',
+                    text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
+                    className: 'btn buttons-excel',
+                    titleAttr: 'Descargar archivo de Excel',
+                    title: 'DISPERSADOS_DIRECCIÓN_MKTD',
+                    exportOptions: {
+                        columns: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14],
+                        format: {
+                            header:  function (d, columnIdx) {
+                                if(columnIdx == 0){
+                                    return 'ID PAGO';
+                                }else if(columnIdx == 1){
+                                    return 'ID LOTE';
+                                }
+                                else if(columnIdx == 2){
+                                    return 'PROYECTO';
+                                }else if(columnIdx == 3){
+                                    return 'CONDOMINIO';
+                                }else if(columnIdx == 4){
+                                    return 'NOMBRE LOTE ';
+                                }else if(columnIdx == 5){
+                                    return 'REFERENCIA';
+                                }else if(columnIdx == 6){
+                                    return 'PRECIO LOTE';
+                                }else if(columnIdx == 7){
+                                    return 'EMPRESA';
+                                }else if(columnIdx == 8){
+                                    return 'TOT. COMISIÓN';
+                                }else if(columnIdx == 9){
+                                    return 'P. CLIENTE';
+                                }else if(columnIdx == 10){
+                                    return 'TOT. PAGAR';
+                                }else if(columnIdx == 11){
+                                    return 'TIPO VENTA';
+                                }else if(columnIdx == 12){
+                                    return 'COMISIONISTA';
+                                }else if(columnIdx == 13){
+                                    return 'PUESTO';
+                                }else if(columnIdx == 14){
+                                    return 'FECH. ENVÍO';
+                                }
+                            }
+                        }
+                    },
+                }],
+                pagingType: "full_numbers",
+                fixedHeader: true,
+                language: {
+                    url: "<?=base_url()?>/static/spanishLoader_v2.json",
+                    paginate: {
+                        previous: "<i class='fa fa-angle-left'>",
+                        next: "<i class='fa fa-angle-right'>"
+                    }
+                },
+                destroy: true,
+                ordering: false,
+                columns: [{
+                    "width": "5%",
+                    "data": function( d ){
+                        return '<p class="m-0">'+d.id_pago_i+'</p>';
+                    }
+                },
+                {
+                    "width": "3%",
+                    "data": function( d ){
+                        return '<p class="m-0">'+d.id_lote+'</p>';
+                    }
+                },
+                {
+                    "width": "3%",
+                    "data": function( d ){
+                        return '<p class="m-0">'+d.proyecto+'</p>';
+                    }
+                },
+                {
+                    "width": "5%",
+                    "data": function( d ){
+                        return '<p class="m-0">'+d.condominio+'</p>';
+                    }
+                },
+                {
+                    "width": "8%",
+                    "data": function( d ){
+                        return '<p class="m-0"><b>'+d.lote+'</b></p>';
+                    }
+                },
+                {
+                    "width": "5%",
+                    "data": function( d ){
+                        return '<p class="m-0">'+d.referencia+'</p>';
+                    }
+                },
+                {
+                    "width": "7%",
+                    "data": function( d ){
+                        return '<p class="m-0">$'+formatMoney(d.precio_lote)+'</p>';
+                    }
+                },
+
+                {
+                    "width": "3%",
+                    "data": function( d ){
+                        return '<p class="m-0"><b>'+d.empresa+'</p>';
+                    }
+                },
+                
+                {
+                    "width": "5%",
+                    "data": function( d ){
+                        return '<p class="m-0">$'+formatMoney(d.comision_total)+'</p>';
+                    }
+                },
+                {
+                    "width": "5%",
+                    "data": function( d ){
+                        return '<p class="m-0">$'+formatMoney(d.pago_neodata)+'</p>';
+                    }
+                },
+                {
+                    "width": "5%",
+                    "data": function( d ){
+                        return '<p class="m-0">$'+formatMoney(d.pago_cliente)+'</p>';
+                    }
+                },
+                {
+                    "width": "8%",
+                    "data": function( d ){
+                        if(d.lugar_prospeccion == 6){
+                            return '<p class="m-0">COMISIÓN + MKTD <br><b> ('+d.porcentaje_decimal+'% de '+d.porcentaje_abono+'%)</b></p>';
+                        }
+                        else{
+                            return '<p class="m-0">COMISIÓN <br><b> ('+d.porcentaje_decimal+'% de '+d.porcentaje_abono+'%)</b></p>';
+                        }
+                    
+                    }
+                },
+                {
+                    "width": "8%",
+                    "data": function( d ){
+                        return '<p class="m-0"><b>'+d.usuario+'</b></i></p>';
+                    }
+                },
+                // {
+                //     "width": "6%",
+                //     "data": function( d ){
+                //         return '<p class="m-0"><i> '+d.puesto+'</i></p>';
+                //     }
+                // },
+                 {
+                    "width": "6%",
+                    "data": function( d ){
+                        return '<p  class="m-0">' + d.sede + '</p>';
+                         // return '<span class="label label-warning">Compartida</span><br><br>'+'<p class="m-0"><b>' +d.sd1+' / '+d.sd2+ '</b></p>';
+                        }
+                    
+                },
+                {
+                    "width": "5%",
+                    "data": function( d ){
+                        var BtnStats1;
+                        BtnStats1 =  '<p class="m-0">'+d.fecha_creacion+'</p>';
+                        return BtnStats1;
+                    }
+                },
+                {
+                    "width": "5%",
+                    "orderable": false,
+                    "data": function( data ){
+                        var BtnStats;
+                        
+                        BtnStats = '<button href="#" value="'+data.id_pago_i+'" data-value="'+data.lote+'" data-code="'+data.cbbtton+'" ' +'class="btn-data btn-blueMaderas consultar_logs_asimilados" title="Detalles">' +'<i class="fas fa-info"></i></button>';
+                        return BtnStats;
+                    }
+                }],
+                columnDefs: [{
+                    orderable: false,
+                    className: 'select-checkbox',
+                    targets:   0,
+                    'searchable':false,
+                    'className': 'dt-body-center',
+                    select: {
+                        style:    'os',
+                        selector: 'td:first-child'
+                    },
+                }],
+                ajax: {
+                    "url": url2 + "Comisiones/getDatosNuevasmkContraloria",
+                    "type": "POST",
+                    cache: false,
+                    "data": function( d ){}
+                },
+                "order": [[ 1, 'asc' ]]
+            });
+
+            
+            $("#tabla_plaza_2 tbody").on("click", ".consultar_logs_asimilados", function(e){
+                e.preventDefault();
+                e.stopImmediatePropagation();
+
+                id_pago = $(this).val();
+                lote = $(this).attr("data-value");
+
+                $("#seeInformationModal").modal();
+                $("#nameLote").append('<p><h5 style="color: white;">HISTORIAL DEL PAGO DE: <b>'+lote+'</b></h5></p>');
+                $.getJSON("getComments/"+id_pago).done( function( data ){
+                    $.each( data, function(i, v){
+                        $("#comments-list-asimilados").append('<div class="col-lg-12"><p><i style="color:gray;">'+v.comentario+'</i><br><b style="color:#3982C0">'+v.fecha_movimiento+'</b><b style="color:gray;"> - '+v.nombre_usuario+'</b></p></div>');
+                    });
+                });
+            });
         });
+ 
+        // FUNCTION MORE
+        /*$(document).on( "click", ".nuevo_plan", function(){
+            $("#modal_mktd .modal-body").html("");
+            $("#modal_mktd .modal-footer").html("");
+
+            $.getJSON( url + "Comisiones/getDatosNuevo/").done( function( data1 ){
+                $("#modal_mktd .modal-body").append('<div class="row"><div class="col-md-6"><label>Fecha inicio: </label><input type="date" class="form-control ng-pristine ng-invalid ng-invalid-required ng-touched" name="fecha_inicio" id="fecha_inicio" required=""></div></div>');
+
+                $.each( data1, function( i, v){
+                    $("#modal_mktd .modal-body").append('<div class="row">'
+                            +'<div class="col-md-3"><br><input class="form-contol ng-invalid ng-invalid-required" style="border: 1px solid white; outline: none;" value="'+v.puesto+'"  readonly><input id="puesto" name="puesto[]" value="'+v.id_rol+'" type="hidden"></div>'
+
+                            +'<div class="col-md-3"><select id="userMKTDSelect'+i+'" name="userMKTDSelect[]" class="form-control userMKTDSelect ng-invalid ng-invalid-required" required data-live-search="true"></select></div>'
+
+                            +'<div class="col-md-2"><input id="porcentajeUserMk'+i+'" name="porcentajeUserMk[]" class="form-control porcentajeUserMk ng-invalid ng-invalid-required" required placeholder="%" value="0"></div>'
+
+                            +'<div class="col-md-2"><select id="plazaMKTDSelect'+i+'" name="plazaMKTDSelect[]" class="form-control plazaMKTDSelect ng-invalid ng-invalid-required"   data-live-search="true"></select></div>'
+
+                            +'<div class="col-md-2"><select id="sedeMKTDSelect'+i+'" name="sedeMKTDSelect[]" class="form-control sedeMKTDSelect ng-invalid ng-invalid-required"   data-live-search="true"></select></div></div>');
+
+                            $.post('getUserMk', function(data) {
+                            $("#userMKTDSelect"+i+"").append($('<option disabled>').val("default").text("Seleccione una opción"))
+                            var len = data.length;
+                            for( var j = 0; j<len; j++)
+                            {
+                                var id = data[j]['id_usuario'];
+                                var name = data[j]['name_user'];
+                                // var sede = data[i]['id_sede'];
+                                // alert(name);
+                                $("#userMKTDSelect"+i+"").append($('<option>').val(id).attr('data-value', id).text(name));
+                            }
+                            if(len<=0)
+                            {
+                            $("#userMKTDSelect"+i+"").append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
+                            }
+                            
+                            $("#userMKTDSelect"+i+"").val(data1[i].id_usuario);                     
+    
+                            $("#userMKTDSelect"+i+"").selectpicker('refresh');
+                        }, 'json');
+
+
+
+                        $.post('getPlazasMk', function(data) {
+                            $("#plazaMKTDSelect"+i+"").append($('<option disabled>').val("default").text("Seleccione una opción"))
+                            var len = data.length;
+                            for( var j = 0; j<len; j++)
+                            {
+                                var id = data[j]['id_opcion'];
+                                var name = data[j]['nombre'];
+                                // var sede = data[i]['id_sede'];
+                                // alert(name);
+                                $("#plazaMKTDSelect"+i+"").append($('<option>').val(id).attr('data-value', id).text(name));
+                            }
+                            if(len<=0)
+                            {
+                            $("#plazaMKTDSelect"+i+"").append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
+                            }
+                    
+                                    $("#plazaMKTDSelect"+i+"").val(1); 
+        
+                            $("#plazaMKTDSelect"+i+"").selectpicker('refresh');
+                        }, 'json');
+
+
+
+                        $.post('getSedeMk', function(data) {
+                            $("#sedeMKTDSelect"+i+"").append($('<option disabled>').val("default").text("Seleccione una opción"))
+                            var len = data.length;
+                            for( var j = 0; j<len; j++)
+                            {
+                                var id = data[j]['id_sede'];
+                                var name = data[j]['nombre'];
+                                
+                                $("#sedeMKTDSelect"+i+"").append($('<option>').val(id).attr('data-value', id).text(name));
+                            }
+                            if(len<=0)
+                            {
+                            $("#sedeMKTDSelect"+i+"").append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
+                            }
+                            console.log(data1[i].id_sede);
+
+                            if(data1[i].id_rol=='20'){
+                                
+                                $("#sedeMKTDSelect"+i+"").val(data1[i].id_sede);
+
+                            }else{
+                                    $("#sedeMKTDSelect"+i+"").val(2); 
+                            }
+
+
+                                // $("#sedeMKTDSelect"+i+"").val(data1[i].id_usuario);
+                            $("#sedeMKTDSelect"+i+"").selectpicker('refresh');
+                        }, 'json'); 
+                });
+            });
+
+            $("#modal_mktd .modal-footer").append('<br><div class="row"><div class="col-md-12"><center><input type="submit" id="btnsubmit" class="btn btn-success" value="GUARDAR"></center></div></div>');
+            $("#modal_mktd").modal();
+        });*/
 
         function formatMoney( n ) {
             var c = isNaN(c = Math.abs(c)) ? 2 : c,
@@ -788,56 +1066,144 @@
             return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
         };
 
-        /*function cancela(){
-            $("#modal_nuevas").modal('toggle');
+        /*$(document).on( "click", ".subir_factura", function(){
+            resear_formulario();
+            id_comision = $(this).val();
+            link_post = "Comisiones/guardar_solicitud/"+id_comision;
+            $("#modal_formulario_solicitud").modal( {backdrop: 'static', keyboard: false} );
+            });*/
+
+        //FUNCION PARA LIMPIAR EL FORMULARIO CON DE PAGOS A PROVEEDOR.
+        function resear_formulario(){
+            $("#modal_formulario_solicitud input.form-control").prop("readonly", false).val("");
+            $("#modal_formulario_solicitud textarea").html('');
+
+            $("#modal_formulario_solicitud #obse").val('');
+    
+            var validator = $( "#frmnewsol" ).validate();
+            validator.resetForm();
+            $( "#frmnewsol div" ).removeClass("has-error");
+
+        }
+ 
+        /*$("#cargar_xml").click( function(){
+            subir_xml( $("#xmlfile") );
+        });*/
+
+        var justificacion_globla = "";
+
+        /*function subir_xml( input ){
+            var data = new FormData();
+            documento_xml = input[0].files[0];
+            var xml = documento_xml;
+
+            data.append("xmlfile", documento_xml);
+            resear_formulario();
+            $.ajax({
+                url: url + "Comisiones/cargaxml",
+                data: data,
+                cache: false,
+                contentType: false,
+                processData: false,
+                dataType: 'json',
+                method: 'POST',
+                type: 'POST', // For jQuery < 1.9
+                success: function(data){
+                    if( data.respuesta[0] ){
+                        documento_xml = xml;
+                        var informacion_factura = data.datos_xml;
+                        cargar_info_xml( informacion_factura );
+                        $("#solobs").val( justificacion_globla );
+                    }
+                    else{
+                        input.val('');
+                        alert( data.respuesta[1] );
+                    }
+                },
+                error: function( data ){
+                    input.val('');
+                    alert("ERROR INTENTE COMUNICARSE CON EL PROVEEDOR");
+                }
+            });
         }*/
 
-        //Función para pausar la solicitud
-        $("#form_interes").submit( function(e) {
+        /*function cargar_info_xml( informacion_factura ){
+            $("#emisor").val( ( informacion_factura.nameEmisor ? informacion_factura.nameEmisor[0] : '') ).attr('readonly',true);
+            $("#rfcemisor").val( ( informacion_factura.rfcemisor ? informacion_factura.rfcemisor[0] : '') ).attr('readonly',true);
+            $("#receptor").val( ( informacion_factura.namereceptor ? informacion_factura.namereceptor[0] : '') ).attr('readonly',true);
+            $("#rfcreceptor").val( ( informacion_factura.rfcreceptor ? informacion_factura.rfcreceptor[0] : '') ).attr('readonly',true);
+            $("#regimenFiscal").val( ( informacion_factura.regimenFiscal ? informacion_factura.regimenFiscal[0] : '') ).attr('readonly',true);
+            $("#formaPago").val( ( informacion_factura.formaPago ? informacion_factura.formaPago[0] : '') ).attr('readonly',true);
+            $("#total").val( ('$ '+informacion_factura.total ? '$ '+informacion_factura.total[0] : '') ).attr('readonly',true);
+            $("#cfdi").val( ( informacion_factura.usocfdi ? informacion_factura.usocfdi[0] : '') ).attr('readonly',true);
+            $("#metodopago").val( ( informacion_factura.metodoPago ? informacion_factura.metodoPago[0] : '') ).attr('readonly',true);
+            $("#unidad").val( ( informacion_factura.claveUnidad ? informacion_factura.claveUnidad[0] : '') ).attr('readonly',true);
+            $("#clave").val( ( informacion_factura.claveProdServ ? informacion_factura.claveProdServ[0] : '') ).attr('readonly',true);
+            $("#obse").val( ( informacion_factura.descripcion ? informacion_factura.descripcion[0] : '') ).attr('readonly',true);
+        }*/
+
+        $("#form_colaboradores").submit( function(e) {
             e.preventDefault();
         }).validate({
             submitHandler: function( form ) {
+                $('#loader').removeClass('hidden');
                 var data = new FormData( $(form)[0] );
-                console.log(data);
-                data.append("id_pago_i", id_pago_i);
-                $.ajax({
-                    url: url + "Comisiones/despausar_solicitud/",
-                    data: data,
-                    cache: false,
-                    contentType: false,
-                    processData: false,
-                    dataType: 'json',
-                    method: 'POST',
-                    type: 'POST', // For jQuery < 1.9
-                    success: function(data){
-                        if( data[0] ){
-                            $("#modal_nuevas").modal('toggle' );
-                            alerts.showNotification("top", "right", "Se ha pausado la comisión exitosamente", "success");
-                            setTimeout(function() {
-                                tabla_extranjero2.ajax.reload();
-                                // tabla_otras2.ajax.reload();
-                            }, 3000);
-                        }else{
-                            alerts.showNotification("top", "right", "No se ha procesado tu solicitud", "danger");
-
-                        }
-                    },error: function( ){
-                        alert("ERROR EN EL SISTEMA");
+                let sumat=0;
+                let valor = parseFloat($('#pago_mktd').val()).toFixed(3);
+                let valor1 = parseFloat(valor-0.10);
+                let valor2 = parseFloat(valor)+0.010;
+            
+                for(let i=0;i<$('#cuantos').val();i++){
+                    sumat += parseFloat($('#abono_marketing_'+i).val());
+                }
+                
+                let sumat2 =  parseFloat((sumat).toFixed(3));
+                document.getElementById('Sumto').innerHTML= ''+ parseFloat(sumat2.toFixed(3)) +'';
+                if(parseFloat(sumat2.toFixed(3)) < valor1){
+                    alerts.showNotification("top", "right", "Falta dispersar", "warning");
+                }
+                else{
+                    if(parseFloat(sumat2.toFixed(3)) >= valor1 && parseFloat(sumat2.toFixed(3)) <= valor2 ){
+                        $.ajax({
+                            url: url2 + "Comisiones/nueva_mktd_comision",
+                            data: data,
+                            cache: false,
+                            contentType: false,
+                            processData: false,
+                            dataType: 'json',
+                            method: 'POST',
+                            type: 'POST', // For jQuery < 1.9
+                            success: function(data){
+                                if(true){
+                                    $('#loader').addClass('hidden');
+                                    $("#modal_colaboradores").modal('toggle');
+                                    plaza_2.ajax.reload();
+                                    plaza_1.ajax.reload();
+                                    alert("¡Se agregó con éxito!");
+                                }else{
+                                    alert("NO SE HA PODIDO COMPLETAR LA SOLICITUD");
+                                    $('#loader').addClass('hidden');
+                                }
+                            },error: function( ){
+                                alert("ERROR EN EL SISTEMA");
+                            }
+                        });
                     }
-                });
+                    else if(parseFloat(sumat2.toFixed(3)) > valor1 && parseFloat(sumat2.toFixed(3)) > valor2 ){
+                        alerts.showNotification("top", "right", "Cantidad excedida", "danger");
+                    }
+                }
             }
         });
 
-        //Función para regresar a estatus 7 la solicitud
-        /*$("#form_refresh").submit( function(e) {
+        $("#frmnewsol").submit( function(e) {
             e.preventDefault();
         }).validate({
             submitHandler: function( form ) {
                 var data = new FormData( $(form)[0] );
-                console.log(data);
-                data.append("id_pago_i", id_pago_i);
+                data.append("xmlfile", documento_xml);
                 $.ajax({
-                    url: url + "Comisiones/refresh_solicitud/",
+                    url: url + link_post,
                     data: data,
                     cache: false,
                     contentType: false,
@@ -846,26 +1212,69 @@
                     method: 'POST',
                     type: 'POST', // For jQuery < 1.9
                     success: function(data){
-                        if( data[0] ){
-                            $("#modal_refresh").modal('toggle' );
-                            alerts.showNotification("top", "right", "Se ha procesado la solicitud exitosamente", "success");
-                            setTimeout(function() {
-                                tabla_extranjero2.ajax.reload();
-                            }, 3000);
+                        if( data.resultado ){
+                            alert("LA FACTURA SE SUBIO CORRECTAMENTE");
+                            $("#modal_formulario_solicitud").modal( 'toggle' );
+                            tabla_nuevas.ajax.reload();
+                        }else{
+                            alert("NO SE HA PODIDO COMPLETAR LA SOLICITUD");
                         }
-                        else{
-                            alerts.showNotification("top", "right", "No se ha procesado tu solicitud", "danger");
-                        }
-                    },error: function( ){
+                    },error: function(){
                         alert("ERROR EN EL SISTEMA");
                     }
                 });
             }
-        });*/
+        });          
 
-        /*$(document).on("click", ".btn-historial-lo", function(){
-            window.open(url+"Comisiones/getHistorialEmpresa", "_blank");
-        });*/
+        $("#form_MKTD").submit( function(e) {
+            e.preventDefault();        
+        }).validate({
+            rules: {
+                'porcentajeUserMk[]':{
+                    required: true,
+                }
+            },
+            messages: {
+                'porcentajeUserMk[]':{
+                    required : "Dato requerido"
+                }
+            },
+            submitHandler: function( form ) {
+                var data = new FormData( $(form)[0] );
+                $.ajax({
+                    url: url + "Comisiones/save_new_mktd",
+                    data: data,
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    dataType: 'json',
+                    method: 'POST',
+                    type: 'POST', // For jQuery < 1.9
+                    success: function(data){
+                        if( data.resultado ){
+                            alert("LA FACTURA SE SUBIO CORRECTAMENTE");
+                                $("#modal_mktd").modal( 'toggle' );
+                            //  tabla_nuevas.ajax.reload();
+                        }else{
+                            alert("NO SE HA PODIDO COMPLETAR LA SOLICITUD");
+                        }
+                    },error: function(){
+                        alert("ERROR EN EL SISTEMA");
+                    }
+                });   
+            }
+        });
+
+        /*function calcularMontoParcialidad() {
+            $precioFinal = parseFloat($('#value_pago_cliente').val());
+            $precioNuevo = parseFloat($('#new_value_parcial').val());
+            if ($precioNuevo >= $precioFinal) {
+                $('#label_estado').append('<label>MONTO NO VALIDO</label>');
+            }
+            else if ($precioNuevo < $precioFinal) {
+                $('#label_estado').append('<label>MONTO VALIDO</label>');
+            }
+        }*/
 
         /*function preview_info(archivo){
             $("#documento_preview .modal-dialog").html("");
@@ -894,37 +1303,57 @@
                 $("#documento_preview .modal-dialog").append(elemento);
             }
         }*/
-
-        function selectAll(e) {
-            tota2 = 0;
-            $(tabla_extranjero2.$('input[type="checkbox"]')).each(function (i, v) {
-                if (!$(this).prop("checked")) {
-                    $(this).prop("checked", true);
-                    tota2 += parseFloat(tabla_extranjero2.row($(this).closest('tr')).data().impuesto);
-                } else {
-                    $(this).prop("checked", false);
-                }
-                $("#totpagarPen").html(formatMoney(tota2));
-            });
+ 
+        function cleanComments() {
+            var myCommentsList = document.getElementById('comments-list-asimilados');
+            var myCommentsLote = document.getElementById('nameLote');
+            myCommentsList.innerHTML = '';
+            myCommentsLote.innerHTML = '';
         }
 
-        /*function cleanComments(){
-            var myCommentsList = document.getElementById('documents');
-            myCommentsList.innerHTML = '';
+        $(window).resize(function(){
+            plaza_1.columns.adjust();
+            plaza_2.columns.adjust();
+        });
 
-            var myFactura = document.getElementById('facturaInfo');
-            myFactura.innerHTML = '';
-        }*/
+        $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+            $($.fn.dataTable.tables(true)).DataTable()
+            .columns.adjust();
+        });
 
-        /*$(document).ready( function(){
-            $.getJSON( url + "Comisiones/getReporteEmpresa").done( function( data ){
-                $(".report_empresa").html();
-                $.each( data, function( i, v){
-                    $(".report_empresa").append('<div class="col xol-xs-3 col-sm-3 col-md-3 col-lg-3"><label style="color: #00B397;">&nbsp;'+v.empresa+': $<input style="border-bottom: none; border-top: none; border-right: none;  border-left: none; background: white; color: #00B397; font-weight: bold;" value="'+formatMoney(v.porc_empresa)+'" disabled="disabled" readonly="readonly" type="text"  name="myText_FRO" id="myText_FRO"></label></div>');
+    </script>
 
-                });
+    <script>
+        $(document).ready( function(){
+            $.getJSON( url + "Comisiones/report_plazas").done( function( data ){
+                $(".report_plazas").html();
+                $(".report_plazas1").html();
+                $(".report_plazas2").html();
+                if(data[0].id_plaza == '0' || data[1].id_plaza == 0){
+                    if(data[0].plaza00==null || data[0].plaza00=='null' ||data[0].plaza00==''){
+                        $(".report_plazas").append('<label style="color: #6a2c70;">&nbsp;<b>Porcentaje:</b> '+data[0].plaza01+'%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>Restante</b> 0%</label>');
+                    }
+                    else{
+                        $(".report_plazas").append('<label style="color: #6a2c70;">&nbsp;<b>Porcentaje:</b> '+data[0].plaza01+'%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>Restante</b> '+data[0].plaza00+'%</label>');
+                    }
+                }
+                if(data[1].id_plaza == '1' || data[1].id_plaza == 1){
+                    if(data[1].plaza10==null || data[1].plaza10=='null' ||data[1].plaza10==''){
+                        $(".report_plazas1").append('<label style="color: #b83b5e;">&nbsp;<b>Porcentaje:</b> '+data[1].plaza11+'%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>Restante</b> 0%</label>');
+                    }
+                    else{
+                        $(".report_plazas1").append('<label style="color: #b83b5e;">&nbsp;<b>Porcentaje:</b> '+data[1].plaza11+'%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>Restante</b> '+data[1].plaza10+'%</label>');
+                    }
+                }
+                if(data[2].id_plaza == '2' || data[2].id_plaza == 2){
+                    if(data[2].plaza20==null || data[2].plaza20=='null' ||data[2].plaza20==''){
+                        $(".report_plazas2").append('<label style="color: #f08a5d;">&nbsp;<b>Porcentaje:</b> '+data[2].plaza21+'%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>Restante</b> 0%</label>');
+                    }
+                    else{
+                        $(".report_plazas2").append('<label style="color: #f08a5d;">&nbsp;<b>Porcentaje:</b> '+data[2].plaza21+'%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>Restante</b> '+data[2].plaza20+'%</label>');
+                    }
+                }
             });
-
-        });*/
+        });                                               
     </script>
 </body>
