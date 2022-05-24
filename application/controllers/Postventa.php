@@ -1513,6 +1513,7 @@ class Postventa extends CI_Controller
         $mail->Subject(utf8_decode("Observaciones Notaria"));
         $mail->message('Buen día! Las observaciones que la notaria envío sobre la solicitud: ' . $idSolicitud . ' son: ' . $observaciones);
         $response = $mail->send();
+        echo json_encode($response);
     }
 
     public function saveEstatusLote()
