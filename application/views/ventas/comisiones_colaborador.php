@@ -2690,10 +2690,15 @@
         } 
 
         function save2() {
-            var formData = new FormData(document.getElementById("frmnewsol2"));
+            let formData = new FormData(document.getElementById("frmnewsol2"));
+            const labelSum = $('#sumacheck').text();
+            const total = Number(labelSum.split('$')[1].trim().replace(',', ''));
+
             formData.append("dato", "valor");
             formData.append("xmlfile", documento_xml);
             formData.append("pagos",pagos);
+            formData.append('total', total);
+
             $.ajax({
                 url: url + 'Comisiones/guardar_solicitud2',
                 data: formData,
@@ -2718,9 +2723,14 @@
                         tabla_nuevas.ajax.reload();
                         $("#modal_multiples .modal-body").html("");
                         $("#modal_multiples .header").html("");
-
-                    }
-                    else {
+                    } else if (data == 4) {
+                        alert("EL TOTAL DE LA FACTURA NO COINCIDE CON EL TOTAL DE COMISIONES SELECCIONADAS");
+                        $('#loader').addClass('hidden');
+                        $("#modal_multiples").modal('toggle');
+                        tabla_nuevas.ajax.reload();
+                        $("#modal_multiples .modal-body").html("");
+                        $("#modal_multiples .header").html("");
+                    } else {
                         alert("NO SE HA PODIDO COMPLETAR LA SOLICITUD");
                         $('#loader').addClass('hidden');
                         $("#modal_multiples").modal('toggle');
