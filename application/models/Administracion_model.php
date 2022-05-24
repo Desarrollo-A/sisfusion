@@ -67,17 +67,17 @@ class Administracion_model extends CI_Model {
 	public function validateSt11($idLote){
       $this->db->where("idLote",$idLote);
       $this->db->where_in('idStatusLote', 3);
-  
+
       $this->db->where("(idStatusContratacion = 10 and idMovimiento  = 40
             OR idStatusContratacion = 10 and idMovimiento = 10
             OR idStatusContratacion = 8 and idMovimiento = 67
             OR idStatusContratacion = 12 and idMovimiento = 42 and validacionEnganche = 'NULL'
-            OR idStatusContratacion = 12 and idMovimiento = 42 and validacionEnganche IS NULL )");	
-  
+            OR idStatusContratacion = 12 and idMovimiento = 42 and validacionEnganche IS NULL )");
+
       $query = $this->db->get('lotes');
       $valida = (empty($query->result())) ? 0 : 1;
       return $valida;
-  
+
     }
 
 
@@ -99,7 +99,7 @@ class Administracion_model extends CI_Model {
         }
 
 	}
-  
+
 	   public function get_data_asignacion($idLote){
 		return $this->db->query("SELECT id_estado, id_desarrollo_n FROM lotes WHERE idLote = $idLote")->row();
 	  }
@@ -107,7 +107,7 @@ class Administracion_model extends CI_Model {
 	  public function get_edo_lote(){
 		return $this->db->query("SELECT * FROM opcs_x_cats WHERE id_catalogo = 44")->result_array();
 	  }
-	  
+
 	  public function get_des_lote(){
 		return $this->db->query("SELECT * FROM opcs_x_cats WHERE id_catalogo = 45")->result_array();
 	  }
@@ -117,6 +117,25 @@ class Administracion_model extends CI_Model {
 		$this->db->update('lotes',$data);
 		return true;
 	 }
-  
- 
+
+	 public function getAssisGte($id_cliente){
+        $query = $this->db->query("SELECT id_gerente FROM clientes WHERE id_cliente=".$id_cliente);
+        $query = $query->row();
+
+        if($query->id_gerente != NULL || $query->id_gerente != ''){
+            $query2 = $this->db->query("SELECT * FROM usuarios WHERE id_rol=6 AND estatus=1 AND id_lider=".$query->id_gerente);
+            return $query2 = $query2->result_array();
+//            print_r($query2 = $query2->result_array());
+        }else{
+            return $query;
+//            print_r($query);
+
+        }
+
+        exit;
+
+
+
+     }
+
 }

@@ -15,6 +15,8 @@ class Administracion extends CI_Controller{
                      $this->load->library(array('session','form_validation', 'get_menu'));
 		$this->load->helper(array('url', 'form'));
 		$this->load->database('default');
+        $this->load->library('phpmailer_lib');
+        date_default_timezone_set('America/Mexico_City');
 		$this->validateSession();
 	}
 
@@ -493,14 +495,45 @@ class Administracion extends CI_Controller{
 		 $arreglo2["idLote"]= $idLote;  
 		 $arreglo2["idCondominio"]= $idCondominio;          
 		 $arreglo2["idCliente"]= $idCliente;   
-	 
 
-		 $validate = $this->Administracion_model->validateSt11($idLote);
+		 $data_ag = $this->Administracion_model->getAssisGte($idCliente);
+		 $correos_submit = array();
+		 if(count($data_ag)>1){
+             foreach ($data_ag as $item=>$value){
+                 array_push($correos_submit, $value['correo']);
+             }
+             $correos_submit = implode(", ", $correos_submit);
+         }elseif(count($data_ag) == 1){
+             foreach ($data_ag as $item=>$value){
+                 $correos_submit = $value['correo'];
+             }
+         }else{
+             $correos_submit ='';
+         }
+
+
+          $data_eviRec =array(
+              'correo_a_enviar' => $correos_submit,
+              'comentario' => $comentario
+          );
+
+        //print_r($data_eviRec['comentario']);
+
+
+
+
+          $validate = $this->Administracion_model->validateSt11($idLote);
 
 		 if($validate == 1){
  
 		 if ($this->Administracion_model->updateSt($idLote,$arreglo,$arreglo2) == TRUE){ 
 			 $data['message'] = 'OK';
+             $data_enviar_mail = $this->notifyRejEv($correos_submit, $data_eviRec);
+             if ($data_enviar_mail > 0) {
+                 $data['status_msg'] = 'Correo enviado correctamente';
+             } else {
+                 $data['status_msg'] = 'Correo no enviado '.$data_enviar_mail;
+             }
 			 echo json_encode($data);
  
 			 }else{
@@ -569,8 +602,95 @@ class Administracion extends CI_Controller{
 		}
 
     }
- 
 
+
+    public function notifyRejEv($correo, $data_eviRec)
+    {
+         $correo_new = 'programador.analista8@ciudadmaderas.com';/*se coloca el correo de testeo para desarrollo*/
+//        $correoDir = $data_eviRec['correo_a_enviar'];
+
+
+        $mail = $this->phpmailer_lib->load();
+
+        $mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
+        $mail->addAddress($correo_new);
+        // $mail->addCC('erick_eternal@live.com.mx'); #copia oculta
+
+        $mail->Subject = utf8_decode('[RECHAZO ADMINISTRACIÓN] '.$data_eviRec['comentario']);
+        $mail->isHTML(true);
+
+        $mailContent = "<html><head>
+          <meta http-equiv='Content-Type' content='text/html; charset=utf-8'>
+          <meta name='viewport' content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no'>
+          <link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css' integrity='sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO' crossorigin='anonymous'> 
+          <style media='all' type='text/css'>
+              .encabezados{
+                  text-align: center;
+                  padding-top:  1.5%;
+                  padding-bottom: 1.5%;
+              }
+              .encabezados a{
+                  color: #234e7f;
+                  font-weight: bold;
+              }
+              
+              .fondo{
+                  background-color: #234e7f;
+                  color: #fff;
+              }
+              
+              h4{
+                  text-align: center;
+              }
+              p{
+                  text-align: right;
+              }
+              strong{
+                  color: #234e7f;
+              }
+          </style>
+        </head>
+        <body>
+          <img src='" . base_url() . "static/images/mailER/header9@4x.png' width='100%'>
+          <table align='center' cellspacing='0' cellpadding='0' border='0' width='100%'>
+              <tr colspan='3'>
+                <td class='navbar navbar-inverse' align='center'>
+                  <table width='750px' cellspacing='0' cellpadding='3' class='container'>
+                      <tr class='navbar navbar-inverse encabezados'><td>
+                          <p><a href='#'>SISTEMA DE CONTRATACIÓN</a></p>
+                      </td></tr>
+                  </table>
+                </td>
+              </tr>
+              <tr>
+                <td border=1 bgcolor='#FFFFFF' align='center'> 
+                <!--rechazo administración-->
+                    <h3>¡Buenos días!</h3><br> <br>
+                    
+                    <p style='padding: 10px 90px;text-align: justify;'>
+                    Hemos registrado un rechazo de administración.
+                    </p><br><br>
+                    
+                    
+                </td>
+              </tr>
+              <tr>
+                <td border=1 bgcolor='#FFFFFF' align='center'>  
+                    Comentario: ".$data_eviRec['comentario']."
+                    <br><br>
+                </td>
+              </tr>
+          </table>
+          <img src='" . base_url() . "static/images/mailER/footer@4x.png' width='100%'>
+          </body></html>";
+
+        $mail->Body = utf8_decode($mailContent);
+        if ($mail->send()) {
+            return 1;
+        } else {
+            return $mail->ErrorInfo;
+        }
+    }
 }
 
 
