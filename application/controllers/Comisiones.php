@@ -15,6 +15,7 @@ class Comisiones extends CI_Controller
     $this->load->model('Comisiones_model');
     $this->load->model('asesor/Asesor_model');
     $this->load->model('Usuarios_modelo');
+    $this->load->model('PagoInvoice_model');
     $this->load->library(array('session', 'form_validation', 'get_menu'));
     $this->load->helper(array('url', 'form'));
     $this->load->database('default');
@@ -723,17 +724,19 @@ function update_estatus(){
 
   public function acepto_comisiones_user(){
     $this->load->model("Comisiones_model");
+    $id_user_Vl = $this->session->userdata('id_usuario');
     $sol=$this->input->post('idcomision');
      $consulta_comisiones = $this->db->query("SELECT id_pago_i FROM pago_comision_ind where id_pago_i IN (".$sol.")");
+    $opinionCumplimiento = $this->Comisiones_model->findOpinionActiveByIdUsuario($id_user_Vl);
    
       if( $consulta_comisiones->num_rows() > 0 ){
         $consulta_comisiones = $consulta_comisiones->result_array();
-        $id_user_Vl = $this->session->userdata('id_usuario');
         
           $sep = ',';
           $id_pago_i = '';
 
           $data=array();
+          $pagoInvoice = array();
 
           foreach ($consulta_comisiones as $row) {
             $id_pago_i .= implode($sep, $row);
@@ -748,13 +751,20 @@ function update_estatus(){
             );
              array_push($data,$row_arr);
 
-
+             $pagoInvoice[] = array(
+                 'id_pago_i' => $row['id_pago_i'],
+                 'nombre_archivo' => $opinionCumplimiento->archivo_name,
+                 'estatus' => 1,
+                 'modificado_por' => $id_user_Vl,
+                 'fecha_registro' => date('Y-m-d H:i:s')
+             );
           }
           $id_pago_i = rtrim($id_pago_i, $sep);
       
             $up_b = $this->Comisiones_model->update_acepta_solicitante($id_pago_i);
             $ins_b = $this->Comisiones_model->insert_phc($data);
             $this->Comisiones_model->changeEstatusOpinion($id_user_Vl);
+            $this->PagoInvoice_model->insertMany($pagoInvoice);
       
       if($up_b == true && $ins_b == true){
         $data_response = 1;

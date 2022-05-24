@@ -1202,6 +1202,13 @@ WHERE oxc.id_catalogo = 1 AND pcm.estatus = 11 AND pcm.id_usuario =  ".$this->se
         $this->db->query("UPDATE opinion_cumplimiento SET estatus = 2 WHERE estatus = 1 AND id_usuario = $idUsuario");
     }
 
+    public function findOpinionActiveByIdUsuario($idUsuario)
+    {
+        $query = $this->db->query("SELECT id_opn, id_usuario, archivo_name FROM opinion_cumplimiento WHERE estatus = 1 
+            AND id_usuario = $idUsuario");
+        return $query->row();
+    }
+
     function getDatosComisionesAsesorBaja($estado){
         $filtro = 'AND u.estatus = 0 AND u.id_rol IN (3,9,7,42)';
         $sede = $this->session->userdata('id_sede');

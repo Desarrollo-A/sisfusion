@@ -1444,6 +1444,16 @@ public function select_gph_maderas_64(){ //HACER INSERT DE LOS LOTES EN 0 Y PASA
       $mail = $this->phpmailer_lib->load();
       $mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
       $mail->addAddress('mariadejesus.garduno@ciudadmaderas.com');
+      $mail->addAddress('rafael.bautista@ciudadmaderas.com');
+      $mail->addAddress('vicky.paulin@ciudadmaderas.com');
+      $mail->addAddress('adriana.perez@ciudadmaderas.com');
+      $mail->addAddress('leonardo.aguilar@ciudadmaderas.com');
+      $mail->addAddress('grisell.malagon@ciudadmaderas.com');
+      $mail->addAddress('jorge.mugica@ciudadmaderas.com');
+      $mail->addAddress('adriana.rodriguez@ciudadmaderas.com');
+      $mail->addAddress('fernanda.monjaraz@ciudadmaderas.com');
+      $mail->addAddress('valeria.palacios@ciduadmaderas.com');
+      $mail->addAddress('juanamaria.guzman@ciudadmaderas.com');
       $mail->Subject = utf8_decode("Cambio de contraseña ASESOR COMODÍN.");
       $mail->isHTML(true);
       $mailContent ="<html><head>

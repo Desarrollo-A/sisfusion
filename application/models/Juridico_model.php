@@ -68,7 +68,7 @@ class Juridico_model extends CI_Model {
 		concat(juridico.nombre,' ', juridico.apellido_paterno, ' ', juridico.apellido_materno)
         ORDER BY l.modificado DESC");
 		
-		} else if(in_array($this->session->userdata('id_usuario'), array("2765", "2776", "2857", "2820", "2876", "10437"))){
+		} else if(in_array($this->session->userdata('id_usuario'), array("2765", "2776", "10463", "2820", "2876", "10437"))){
 
 
 			$query = $this->db-> query("SELECT l.idLote, cl.id_cliente, cl.fechaApartado, cl.nombre, cl.apellido_paterno, cl.apellido_materno, l.nombreLote, l.idStatusContratacion,
@@ -291,7 +291,7 @@ class Juridico_model extends CI_Model {
 	
 	
 	public function get_users_reassing(){
-		$query = $this->db->query("SELECT * FROM usuarios WHERE id_usuario IN (2776, 2857, 2765, 2820, 2876, 10437);");
+		$query = $this->db->query("SELECT * FROM usuarios WHERE id_usuario IN (2776, 10463, 2765, 2820, 2876, 10437);");
 		return $query->result_array();
 	}
 

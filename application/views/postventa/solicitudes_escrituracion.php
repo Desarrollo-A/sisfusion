@@ -43,9 +43,9 @@
                                                     <div class="col-md-12 p-r">
                                                         <div class="form-group d-flex">
                                                             <input type="text" class="form-control datepicker"
-                                                                id="beginDate" value="01/01/2022" autocomplete='off'/>
+                                                                id="beginDate" value="" autocomplete='off'/>
                                                             <input type="text" class="form-control datepicker"
-                                                                id="endDate" value="28/02/2022" autocomplete='off' />
+                                                                id="endDate" value="" autocomplete='off' />
                                                             <button
                                                                 class="btn btn-success btn-round btn-fab btn-fab-mini"
                                                                 id="searchByDateRange">
