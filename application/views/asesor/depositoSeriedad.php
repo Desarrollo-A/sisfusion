@@ -500,14 +500,21 @@
 
     var aut;
 
-let titulos = [];
-$('#tabla_deposito_seriedad thead tr:eq(0) th').each( function (i) {
- if( i!=0 && i!=13){
-  var title = $(this).text();
-
-  titulos.push(title);
-}
-});
+    let titulos_intxt = [];
+    $('#tabla_deposito_seriedad thead tr:eq(0) th').each( function (i) {
+        $(this).css('text-align', 'center');
+        var title = $(this).text();
+        titulos_intxt.push(title);
+        $(this).html('<input type="text" class="textoshead"  placeholder="'+title+'"/>' );
+        $( 'input', this ).on('keyup change', function () {
+            if ($('#tabla_deposito_seriedad').DataTable().column(i).search() !== this.value ) {
+                $('#tabla_deposito_seriedad').DataTable()
+                    .column(i)
+                    .search(this.value)
+                    .draw();
+            }
+        });
+    });
 
     $("#tabla_deposito_seriedad").ready( function(){
 
