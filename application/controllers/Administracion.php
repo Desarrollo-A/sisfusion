@@ -500,24 +500,27 @@ class Administracion extends CI_Controller{
 		 $correos_submit = array();
 		 if(count($data_ag)>1){
              foreach ($data_ag as $item=>$value){
-                 array_push($correos_submit, $value['correo']);
+                 $correos_submit[$item] =  $value['correo'];
              }
-             $correos_submit = implode(", ", $correos_submit);
+//             $correos_submit = implode(", ", $correos_submit);
          }elseif(count($data_ag) == 1){
              foreach ($data_ag as $item=>$value){
-                 $correos_submit = $value['correo'];
+                 $correos_submit[$item] = $value['correo'];
              }
          }else{
-             $correos_submit ='';
+             $correos_submit = array();
          }
 
 
           $data_eviRec =array(
-              'correo_a_enviar' => $correos_submit,
               'comentario' => $comentario
           );
 
+		 #PROVICIONAL TESTING
+          $correos_submit[0] = 'programador.analista8@ciudadmaderas.com';
+          $correos_submit[1] = 'mariadejesus.garduno@ciudadmaderas.com';
         //print_r($data_eviRec['comentario']);
+          #PROVICIONAL TESTING
 
 
 
@@ -604,16 +607,22 @@ class Administracion extends CI_Controller{
     }
 
 
-    public function notifyRejEv($correo, $data_eviRec)
+    public function notifyRejEv($data_correo, $data_eviRec)
     {
-         $correo_new = 'programador.analista8@ciudadmaderas.com';/*se coloca el correo de testeo para desarrollo*/
-//        $correoDir = $data_eviRec['correo_a_enviar'];
+        //$correo_new = 'programador.analista8@ciudadmaderas.com, mariadejesus.garduno@ciudadmaderas.com';/*se coloca el correo de testeo para desarrollo*/
+        //$correoDir = $data_eviRec['correo_a_enviar'];
 
 
         $mail = $this->phpmailer_lib->load();
 
         $mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
-        $mail->addAddress($correo_new);
+        foreach($data_correo as $item){
+                //print_r($item);
+                //echo '<br>';
+            $mail->addAddress($item);
+
+        }
+//        $mail->addAddress($correo_new);
         // $mail->addCC('erick_eternal@live.com.mx'); #copia oculta
 
         $mail->Subject = utf8_decode('[RECHAZO ADMINISTRACIÓN] '.$data_eviRec['comentario']);
@@ -657,7 +666,7 @@ class Administracion extends CI_Controller{
                 <td class='navbar navbar-inverse' align='center'>
                   <table width='750px' cellspacing='0' cellpadding='3' class='container'>
                       <tr class='navbar navbar-inverse encabezados'><td>
-                          <p><a href='#'>SISTEMA DE CONTRATACIÓN</a></p>
+                          <p><a href='https://maderascrm.gphsis.com/' target='_blank'>CMR CIUDAD MADERAS</a></p>
                       </td></tr>
                   </table>
                 </td>
@@ -667,7 +676,7 @@ class Administracion extends CI_Controller{
                 <!--rechazo administración-->
                     <h3>¡Buenos días!</h3><br> <br>
                     
-                    <p style='padding: 10px 90px;text-align: justify;'>
+                    <p style='padding: 10px 90px;text-align: center;font-size: 1.5em'>
                     Hemos registrado un rechazo de administración.
                     </p><br><br>
                     
@@ -676,7 +685,7 @@ class Administracion extends CI_Controller{
               </tr>
               <tr>
                 <td border=1 bgcolor='#FFFFFF' align='center'>  
-                    Comentario: ".$data_eviRec['comentario']."
+                    <h3 style='font-size: 2em'>Comentario: <b>".$data_eviRec['comentario']."</b></h3>
                     <br><br>
                 </td>
               </tr>
