@@ -1526,46 +1526,52 @@ if( isset( $_FILES ) && !empty($_FILES) ){
           if( $resultado ){
             $xml_subido = $this->upload->data();
             $datos_xml = $this->Comisiones_model->leerxml( $xml_subido['full_path'], TRUE );
-            
-            $nuevo_nombre = date("my")."_";
-            $nuevo_nombre .= str_replace( array(",", ".", '"'), "", str_replace( array(" ", "/"), "_", limpiar_dato($datos_xml["nameEmisor"]) ))."_";
-            $nuevo_nombre .= date("Hms")."_";
-            $nuevo_nombre .= rand(4, 100)."_";
-            $nuevo_nombre .= substr($datos_xml["uuidV"], -5).".xml";
-            rename( $xml_subido['full_path'], "./UPLOADS/XMLS/".$nuevo_nombre );
-            $datos_xml['nombre_xml'] = $nuevo_nombre;
-            ini_set('max_execution_time', 0);
-            for ($i=0; $i <count($datos) ; $i++) { 
-              if(!empty($datos[$i])){
-                $id_com =  $datos[$i];
-                $this->Comisiones_model->insertar_factura($id_com, $datos_xml,$usuarioid);
-                $this->Comisiones_model->update_acepta_solicitante($id_com);
-              $this->db->query("INSERT INTO historial_comisiones VALUES (".$id_com.", ".$this->session->userdata('id_usuario').", GETDATE(), 1, 'COLABORADOR ENVÍO FACTURA A CONTRALORÍA')");
 
-              }
+            $total = (float)$this->input->post('total');
+            $totalXml = (float)$datos_xml['total'];
+
+            if (($total + .50) >= $totalXml && ($total - .50) <= $totalXml) {
+                $nuevo_nombre = date("my")."_";
+                $nuevo_nombre .= str_replace( array(",", ".", '"'), "", str_replace( array(" ", "/"), "_", limpiar_dato($datos_xml["nameEmisor"]) ))."_";
+                $nuevo_nombre .= date("Hms")."_";
+                $nuevo_nombre .= rand(4, 100)."_";
+                $nuevo_nombre .= substr($datos_xml["uuidV"], -5).".xml";
+                rename( $xml_subido['full_path'], "./UPLOADS/XMLS/".$nuevo_nombre );
+                $datos_xml['nombre_xml'] = $nuevo_nombre;
+                ini_set('max_execution_time', 0);
+                for ($i=0; $i <count($datos) ; $i++) {
+                    if(!empty($datos[$i])){
+                        $id_com =  $datos[$i];
+                        $this->Comisiones_model->insertar_factura($id_com, $datos_xml,$usuarioid);
+                        $this->Comisiones_model->update_acepta_solicitante($id_com);
+                        $this->db->query("INSERT INTO historial_comisiones VALUES (".$id_com.", ".$this->session->userdata('id_usuario').", GETDATE(), 1, 'COLABORADOR ENVÍO FACTURA A CONTRALORÍA')");
+
+                    }
+                }
+            } else {
+                $this->db->trans_rollback();
+                echo json_encode(4);
+                return;
             }
-          }else{
+          } else {
             $resultado["mensaje"] = $this->upload->display_errors();
           }
         }
-        if ( $resultado === FALSE || $this->db->trans_status() === FALSE){
-                  $this->db->trans_rollback();
-                  $resultado = array("resultado" => FALSE);
-              }else{
-                  $this->db->trans_commit();
-                  $resultado = array("resultado" => TRUE);
-              }
-          }
-
-          $this->Usuarios_modelo->Update_OPN($this->session->userdata('id_usuario'));
-          echo json_encode( $resultado );
-
-
-        }else{
-          echo json_encode(3);
+        if ( $resultado === FALSE || $this->db->trans_status() === FALSE) {
+          $this->db->trans_rollback();
+          $resultado = array("resultado" => FALSE);
+        } else {
+          $this->db->trans_commit();
+          $resultado = array("resultado" => TRUE);
         }
-
       }
+
+      $this->Usuarios_modelo->Update_OPN($this->session->userdata('id_usuario'));
+      echo json_encode( $resultado );
+    } else {
+      echo json_encode(3);
+    }
+  }
 
       public function getComments($pago){
         echo json_encode($this->Comisiones_model->getComments($pago)->result_array());
