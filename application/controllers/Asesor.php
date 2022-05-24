@@ -151,6 +151,10 @@ class Asesor extends CI_Controller
 
 
         $total_nuevo = $total_construccion + $data[0]['total'];
+        #prueba
+        $data[0]['precio_lote'] = $data[0]['total'];
+        $data[0]['precio_construccion'] = $total_construccion;
+        #end prueba
         $data[0]['total'] += $total_construccion;
         $data[0]['enganche'] += $total_construccion*(.10);
         $preciom2 = $total_nuevo/$data[0]['sup'];
@@ -191,6 +195,10 @@ class Asesor extends CI_Controller
                 }
             }
             $total_nuevo = $total_construccion + $data[0]['total'];
+            #prueba
+            $data[0]['precio_lote'] = $data[0]['total'];
+            $data[0]['precio_construccion'] = $total_construccion;
+            #end prueba
             $data[0]['total'] += $total_construccion;
             $data[0]['enganche'] += $total_construccion*(.10);
             $preciom2 = $total_nuevo/$data[0]['sup'];
