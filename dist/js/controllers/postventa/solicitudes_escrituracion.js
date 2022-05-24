@@ -436,6 +436,9 @@ $(document).on('click', '#checkPresupuesto', function () {
 $(document).on('click', '#newDate', function () {
     var data = prospectsTable.row($(this).parents('tr')).data();
     // $('#id_solicitud3').val(data.idSolicitud);
+    let idNotaria = $(this).attr('data-idNotaria');
+    let signDate = getSignDate(idNotaria);
+    $('#signDate').val(signDate);
     $('#idSolicitud').val($(this).attr('data-idSolicitud'));
     $('#type').val(3);
     $("#dateModal").modal();
@@ -830,7 +833,7 @@ function fillTable(beginDate, endDate, estatus) {
                             break;
                         case 15://16
                             if (userType == 55) { // MJ: ANTES 54
-                                newBtn +=  `<button id="newDate" data-idSolicitud=${d.idSolicitud} class="btn-data btn-orangeYellow"  data-toggle="tooltip" data-placement="top"  title="Nueva fecha"><i class="fas fa-calendar-alt"></i></i></button>`;
+                                newBtn +=  `<button id="newDate" data-idSolicitud=${d.idSolicitud} data-idNotaria=${d.idNotaria} class="btn-data btn-orangeYellow"  data-toggle="tooltip" data-placement="top"  title="Nueva fecha"><i class="fas fa-calendar-alt"></i></i></button>`;
                             }
                             group_buttons += permisos(d.permisos, 1, d.idDocumento, d.tipo_documento, d.idSolicitud, 1, newBtn);
                             break;
@@ -869,7 +872,7 @@ function fillTable(beginDate, endDate, estatus) {
                             group_buttons += permisos(d.permisos, d.expediente, d.idDocumento, d.tipo_documento, d.idSolicitud, 2, newBtn);
                             break;
                         case 90:
-                            newBtn += `<button id="newDate" data-idSolicitud=${d.idSolicitud} class="btn-data btn-green" data-toggle="tooltip" data-placement="top" title="Nueva fecha"><i class="fas fa-calendar-alt"></i></button>`;
+                            newBtn += `<button id="newDate" data-idSolicitud=${d.idSolicitud} data-idNotaria=${d.idNotaria} class="btn-data btn-green" data-toggle="tooltip" data-placement="top" title="Nueva fecha"><i class="fas fa-calendar-alt"></i></button>`;
                             group_buttons += permisos(d.permisos, 1, d.idDocumento, d.tipo_documento, d.idSolicitud, 1, newBtn);
                             break;
                         default:
@@ -1489,7 +1492,7 @@ $(document).on('click', '#observacionesSubmit', function (e) {
     let idSolicitud = $('#idSolicitud').val();
     let action = $('#action').val();
     let observaciones = $('#observacionesS').val();
-    emailObservaciones(idSolicitud, action, observaciones);
+    emailObservaciones(idSolicitud, 1, observaciones);
 });
 
 function emailObservaciones(idSolicitud, action, observaciones = null) {
