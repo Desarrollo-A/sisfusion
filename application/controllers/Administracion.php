@@ -622,7 +622,6 @@ class Administracion extends CI_Controller{
             $mail->addAddress($item);
 
         }
-        exit;
 //        $mail->addAddress($correo_new);
         // $mail->addCC('erick_eternal@live.com.mx'); #copia oculta
 
