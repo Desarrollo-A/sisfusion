@@ -59,6 +59,7 @@ class Postventa extends CI_Controller
         switch ($this->session->userdata('id_rol')) {
             case '11': // ADMON
             case '13': // CONTRALORÏa
+            case '32': // CONTRALORÏa corporativa
             case '55': // POSTVENTA
             case '56': // COMITÉ TÉCNICO
             case '57': // TITULACIÓN
