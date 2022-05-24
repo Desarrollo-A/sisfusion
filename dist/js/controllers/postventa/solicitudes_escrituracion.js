@@ -1521,7 +1521,7 @@ function emailObservaciones(idSolicitud, action, observaciones = null) {
             obj = {idSolicitud: idSolicitud};
             break;
     }
-    $.post(action == 1 ? 'mailObservaciones' : 'mailObservaciones', obj, function (data) {
+    $.post(action == 1 ? 'mailObservaciones' : 'mailObservaciones', {idSolicitud: idSolicitud, observaciones: observaciones}, function (data) {
         // if(data == true){
         // }
         changeStatus(idSolicitud, action == 1 ? 4:0, 'Correo Envíado a Proyectos', 1);
