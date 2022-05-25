@@ -494,7 +494,16 @@ class Administracion extends CI_Controller{
 		 $arreglo2["fechaVenc"]= $modificado;
 		 $arreglo2["idLote"]= $idLote;  
 		 $arreglo2["idCondominio"]= $idCondominio;          
-		 $arreglo2["idCliente"]= $idCliente;   
+		 $arreglo2["idCliente"]= $idCliente;
+
+
+          $nombre = $this->session->userdata('nombre');
+          $apellido_paterno = $this->session->userdata('apellido_paterno');
+          $apellido_materno = $this->session->userdata('apellido_materno');
+
+          $nombre_rechazador = $nombre." ".$apellido_paterno." ".$apellido_materno;
+
+          $data_send = $this->Administracion_model->getInfoToMail($idCliente, $idLote);
 
 		 $data_ag = $this->Administracion_model->getAssisGte($idCliente);
 		 $correos_submit = array();
@@ -513,8 +522,20 @@ class Administracion extends CI_Controller{
 
 
           $data_eviRec =array(
-              'comentario' => $comentario
+              'comentario' => $comentario,
+              'id_cliente' => $idCliente,
+              'id_lote' => $idLote
           );
+
+		 $data_mail[0] = array(
+		     "proyecto" => $data_send->nombreResidencial,
+             "condominio" => $data_send->nombreCondominio,
+             "lote" => $data_send->nombreLote,
+             "cliente" => $data_send->nombreCliente,
+             "quien_rechaza" => $nombre_rechazador,
+             "fecha_apartado" => $data_send->fechaApartado,
+             "fecha_rechazo" => $modificado,
+         );
 
 		 #PROVICIONAL TESTING
           $correos_submit[0] = 'programador.analista8@ciudadmaderas.com';
@@ -524,14 +545,16 @@ class Administracion extends CI_Controller{
 
 
 
+          /*$data_enviar_mail = $this->notifyRejEv($correos_submit, $data_eviRec, $data_mail);
+          exit;*/
+
 
           $validate = $this->Administracion_model->validateSt11($idLote);
 
 		 if($validate == 1){
- 
 		 if ($this->Administracion_model->updateSt($idLote,$arreglo,$arreglo2) == TRUE){ 
 			 $data['message'] = 'OK';
-             $data_enviar_mail = $this->notifyRejEv($correos_submit, $data_eviRec);
+             $data_enviar_mail = $this->notifyRejEv($correos_submit, $data_eviRec, $data_mail);
              if ($data_enviar_mail > 0) {
                  $data['status_msg'] = 'Correo enviado correctamente';
              } else {
@@ -543,7 +566,6 @@ class Administracion extends CI_Controller{
 				 $data['message'] = 'ERROR';
 				 echo json_encode($data);
 			 }
- 
 		 }else {
 			 $data['message'] = 'FALSE';
 			 echo json_encode($data);
@@ -607,11 +629,10 @@ class Administracion extends CI_Controller{
     }
 
 
-    public function notifyRejEv($data_correo, $data_eviRec)
+    public function notifyRejEv($data_correo, $data_eviRec, $data_send)
     {
         //$correo_new = 'programador.analista8@ciudadmaderas.com, mariadejesus.garduno@ciudadmaderas.com';/*se coloca el correo de testeo para desarrollo*/
         //$correoDir = $data_eviRec['correo_a_enviar'];
-
 
         $mail = $this->phpmailer_lib->load();
 
@@ -620,8 +641,8 @@ class Administracion extends CI_Controller{
                 //print_r($item);
                 //echo '<br>';
             $mail->addAddress($item);
-
         }
+
 //        $mail->addAddress($correo_new);
         // $mail->addCC('erick_eternal@live.com.mx'); #copia oculta
 
@@ -687,6 +708,33 @@ class Administracion extends CI_Controller{
                 <td border=1 bgcolor='#FFFFFF' align='center'>  
                     <h3 style='font-size: 2em'>Comentario: <b>".$data_eviRec['comentario']."</b></h3>
                     <br><br>
+                  <table id='reporyt' cellpadding='0' cellspacing='0' border='1' width ='100%' style class='darkheader'>
+                    <tr class='active' style='text-align: center'>
+                      <th>Proyecto</th>   
+                      <th>Condominio</th>   
+                      <th>Lote</th>   
+                      <th>Cliente</th>   
+                      <th>Usuario</th>   
+                      <th>Fecha Apartado</th>   
+                      <th>Fecha Rechazo</th>   
+                    </tr>
+                        <tr>";
+                            foreach ($data_send as $index=>$item){
+                                $mailContent .= '    <td><center>' . $item['proyecto'] . '</center></td>';
+                                $mailContent .= '    <td><center>' . $item['condominio'] . '</center></td>';
+                                $mailContent .= '    <td><center>' . $item['lote'] . '</center></td>';
+                                $mailContent .= '    <td><center>' . $item['cliente'] . '</center></td>';
+                                $mailContent .= '    <td><center>' . $item['quien_rechaza'] . '</center></td>';
+                                $mailContent .= '    <td><center>' . $item['fecha_apartado'] . '</center></td>';
+                                $mailContent .= '    <td><center>' . $item['fecha_rechazo'] . '</center></td>';
+                            }
+                        $mailContent .= "
+                        </tr>   
+                    </table></center>
+                    <br><br>
+                </td>
+              </tr>
+          </table>
                 </td>
               </tr>
           </table>

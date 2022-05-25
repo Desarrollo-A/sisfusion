@@ -131,11 +131,19 @@ class Administracion_model extends CI_Model {
 //            print_r($query);
 
         }
-
         exit;
+     }
 
-
-
+     public function getInfoToMail($id_cliente, $id_lote){
+        $query = $this->db->query("SELECT res.nombreResidencial, c.nombre as nombreCondominio, l.nombreLote,
+        CONCAT(cl.nombre,' ', cl.apellido_paterno, ' ', cl.apellido_materno) as nombreCliente,
+        cl.fechaApartado
+        FROM clientes cl
+        INNER JOIN lotes l ON l.idLote = cl.idLote
+        INNER JOIN condominios c ON c.idCondominio=l.idCondominio
+        INNER JOIN residenciales res ON res.idResidencial = c.idResidencial
+        WHERE cl.id_cliente=".$id_cliente." AND cl.idLote=".$id_lote);
+        return $query->row();
      }
 
 }
