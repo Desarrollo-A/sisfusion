@@ -1889,6 +1889,13 @@ class Caja_outside extends CI_Controller
             $recibo_pago = NULL;
             $mensaje_error = NULL;
 
+            $token_data = array();
+            if(!empty($data->token)){
+                $token_data[0]['existe'] = 1;
+                $token_data[0]['token'] = $data->token;
+
+            }
+
             //VERIFICAMOS LA IDENTIDAD DEL ASESOR
             if ($this->db->query("SELECT * FROM usuarios WHERE id_usuario = " . $data->idAsesor . " AND contrasena = '" . encriptar($data->name) . "'")->num_rows() > 0) {
                 //VERIFICAMOS SI TODOS LOS LOTES INTERESADOS ESTAN LIBRES
@@ -1972,23 +1979,23 @@ class Caja_outside extends CI_Controller
                         /*********************************************************************************************/
 
                         if ($this->caja_model_outside->validar_aOnline($value->idLote) == 1) {
-                            $trans = $this->caja_model_outside->trasns_vo($arreglo, $data->asesores, (!isset($data->lote_casa)) ? [] : $data->lote_casa, $value->idLote);
+                            $trans = $this->caja_model_outside->trasns_vo($arreglo, $data->asesores, (!isset($data->lote_casa)) ? [] : $data->lote_casa, $value->idLote, $token_data);
                             if ($trans == true) {
                                 $resultado = TRUE;
                             } else {
                                 $resultado = FALSE;
-                                $mensaje_error = "¡Disculpe! Algún terreno se encuentra en proceso de ser apartado.";
+                                $mensaje_error = "¡Disculpe! Algún terreno se encuentra en proceso de ser apartado. 1";
                                 break;
                             }
                         } else {
                             $resultado = FALSE;
-                            $mensaje_error = "¡Disculpe! Algún terreno se encuentra en proceso de ser apartado.";
+                            $mensaje_error = "¡Disculpe! Algún terreno se encuentra en proceso de ser apartado. 2";
                             break;
                         }
                     } // END FOREACH
                 } else {
                     $resultado = FALSE;
-                    $mensaje_error = "¡Disculpe! Algún terreno se encuentra en proceso de ser apartado.";
+                    $mensaje_error = "¡Disculpe! Algún terreno se encuentra en proceso de ser apartado. 3";
                 }
             } else {
                 $resultado = FALSE;
