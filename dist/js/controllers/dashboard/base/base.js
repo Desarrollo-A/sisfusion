@@ -10,8 +10,8 @@ function changePill(element){
         $('#inicio .col-lg-12').load("Inicio/index");
     }
     else if(element == 'reporteOption'){
-        $('#reporte .col-lg-12').html("");
-        $('#reporte .col-lg-12').load("Reporte/reporte");
+        $('#reporte').html("");
+        $('#reporte').load("Reporte/reporte");
     }
     else if(element == 'agendaOption'){
         $('#agenda .col-lg-12').html("");
