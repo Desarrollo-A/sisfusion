@@ -37,12 +37,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="tab-pane" id="reporte">
-                        <div class="row">
-                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                            </div>
-                        </div>
-                    </div>
+                    <div class="tab-pane" id="reporte"></div>
                     <div class="tab-pane" id="agenda">
                         <div class="row">
                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
@@ -72,4 +67,7 @@
 <?php $this->load->view('template/footer');?>
 <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 <script src="<?=base_url()?>dist/js/controllers/dashboard/base/base.js"></script>
-
+<script>
+    userType = <?= $this->session->userdata('id_rol') ?> ;
+    idUser = <?= $this->session->userdata('id_usuario') ?>;
+</script>
