@@ -1155,7 +1155,7 @@
     }
 
     /***********APARTADO ONLINE***********/
-    public function trasns_vo($data, $data2, $casas, $idLote)
+    public function trasns_vo($data, $data2, $casas, $idLote, $token_data)
     {
         //Iniciamos la transacción.    
         $this->db->trans_begin();
@@ -1164,6 +1164,12 @@
         //Recuperamos el id del cliente registrado.    
         //$cliente_id = $this->db->last_id();
         $cliente_id = $this->db->query("SELECT IDENT_CURRENT('clientes') as lastId")->row()->lastId;
+
+        ###UPDATE id_cliente, id_lote
+        if(count($token_data)>0){
+            $loclup_data = $this->db->query("UPDATE tokens SET id_cliente=".$cliente_id.", id_lote=".$idLote." WHERE token LIKE '". $token_data[0]['token']."'");
+        }
+        ###END UPDATE
 
         $horaActual = date('H:i:s');
         $horaInicio = date("08:00:00");
