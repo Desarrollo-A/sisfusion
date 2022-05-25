@@ -2970,6 +2970,14 @@ $sumaDispoCorea = str_replace($replace,"",$this->input->post("totalCorea"));
 }
 
 
+public function getDatosInvoice(){
+  $dat =  $this->Comisiones_model->getDatosInvoice()->result_array();
+ for( $i = 0; $i < count($dat); $i++ ){
+     $dat[$i]['pa'] = 0;
+ }
+ echo json_encode( array( "data" => $dat));
+}
+
 
 
 public function getDatosNuevasAContraloria($proyecto,$condominio){

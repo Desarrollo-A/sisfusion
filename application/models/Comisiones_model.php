@@ -3503,7 +3503,7 @@ public function validateDispersionCommissions($idlote){
           
 
 
-              function getDatosNuevasEContraloria($proyecto,$condominio){
+              function getDatosInvoice(){
             
                 return $this->db->query("SELECT sum(pci1.abono_neodata) total, CONCAT(u.nombre, ' ',u.apellido_paterno, ' ', u.apellido_materno) usuario, pci1.id_usuario, u.forma_pago, opn.estatus estatus_opinion, opn.archivo_name, na.nombre as nacionalidad
                 FROM pago_comision_ind pci1 
