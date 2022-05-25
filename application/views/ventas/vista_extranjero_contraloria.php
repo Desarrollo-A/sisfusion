@@ -887,7 +887,7 @@
                     "targets": 0
                 }],
                 ajax: {
-                    "url": url2 + "Comisiones/getDatosNuevasEContraloria/" + proyecto + "/" + condominio,
+                    "url": url2 + "Comisiones/getDatosNuevasXContraloria/" + proyecto + "/" + condominio,
                     "type": "POST",
                     cache: false,
                     "data": function( d ){
