@@ -434,7 +434,7 @@
   background-color: #ffffff !important;
   border: 1px solid #f44336;
   border-radius: 27px;
-  margin-bottom: 0;
+  margin: 0;
 }
 
 .buttons-pdf:hover {
@@ -454,7 +454,7 @@
   background-color: #ffffff !important;
   border: 1px solid #209E63;
   border-radius: 27px;
-  margin-bottom: 0;
+  margin: 0;
 }
 
 .buttons-excel i {

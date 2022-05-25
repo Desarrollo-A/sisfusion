@@ -57,7 +57,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-9 h-100 box1Inicio2 pl-0" >
+                <div class="col-md-9 h-100 box1Inicio2">
                     <div class="card h-100 m-0">
                         <div class="row h-20 m-0">
                             <div class="col-md-8 text-left">

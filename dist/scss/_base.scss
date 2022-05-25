@@ -204,7 +204,7 @@ $tv                 : "(min-width : 1824px)";
     background-color: $white !important;
     border: 1px solid $redLight;
     border-radius: 27px;
-    margin-bottom: 0;
+    margin: 0;
   }
 .buttons-pdf:hover {
     background-color: $redLight !important;
@@ -221,7 +221,7 @@ $tv                 : "(min-width : 1824px)";
     background-color: $white !important;
     border: 1px solid $greenExcel;
     border-radius: 27px;
-    margin-bottom: 0;
+    margin: 0;
 }
 .buttons-excel i {
     color: $greenExcel;

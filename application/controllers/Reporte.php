@@ -19,5 +19,30 @@ class Reporte extends CI_Controller {
     public function reporte(){
         $this->load->view("dashboard/reporte/reporte");
     }
+
+    public function getInformation()
+    {
+        if (isset($_POST) && !empty($_POST)) {
+            $typeTransaction = $this->input->post("typeTransaction");
+            $beginDate = date("Y-m-d", strtotime($this->input->post("beginDate")));
+            $endDate = date("Y-m-d", strtotime($this->input->post("endDate")));
+            $where = $this->input->post("where");
+            $type = $this->input->post("type");
+            $saleType = $this->input->post("saleType");
+            $currentYear = date("Y");
+            if ($type == 1) { // GENERAL TABLE
+                $data['data'] = $this->Reporte_model->getGeneralInformation($typeTransaction, $beginDate, $endDate, $currentYear, $saleType)->result_array();
+            } else if ($type == 2) { // MANAGER TABLE
+                $data['data'] = $this->Reporte_model->getInformationByManager($typeTransaction, $beginDate, $endDate, $currentYear, $where, $saleType)->result_array();
+            } else if ($type == 3) { // COORDINATOR TABLE
+                $data['data'] = $this->Reporte_model->getInformationByCoordinator($typeTransaction, $beginDate, $endDate, $currentYear, $where, $saleType)->result_array();
+            } else if ($type == 4) { // ADVISER TABLE
+                $data['data'] = $this->Reporte_model->getInformationByAdviser($typeTransaction, $beginDate, $endDate, $currentYear, $where, $saleType)->result_array();
+            }
+            echo json_encode($data);
+        } else {
+            json_encode(array());
+        }
+    }
 }
  
