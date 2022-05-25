@@ -5629,10 +5629,35 @@ public function saveTipoVenta(){
 
 
 
-   public function lista_estatus($proyecto)
+    public function lista_estatus()
     {
-      echo json_encode($this->Comisiones_model->get_lista_estatus($proyecto)->result_array());
-}
+        $data = $this->Comisiones_model->getListaEstatusHistorialEstatus();
+        echo json_encode($data);
+    }
+
+    public function cambiarEstatusComisiones()
+    {
+        $idPagos = explode(',', $this->input->post('idPagos'));
+        $userId = $this->session->userdata('id_usuario');
+        $estatus = $_POST['estatus'];
+        $comentario = $_POST['comentario'];
+        $historiales = array();
+
+        foreach($idPagos as $pago) {
+            $historiales[] = array(
+                'id_pago_i' => $pago,
+                'id_usuario' =>  $userId,
+                'fecha_movimiento' => date('Y-m-d H:i:s'),
+                'estatus' => 1,
+                'comentario' => $comentario
+            );
+        }
+
+        $resultUpdate = $this->Comisiones_model->massiveUpdateEstatusComisionInd(implode(',', $idPagos), $estatus);
+        $resultMassiveInsert = $this->Comisiones_model->insert_phc($historiales);
+
+        echo ($resultUpdate && $resultMassiveInsert);
+    }
 
 public function getDatosHistorialPagoEstatus($proyecto,$condominio, $usuario){
 
