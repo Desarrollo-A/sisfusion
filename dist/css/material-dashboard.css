@@ -11722,3 +11722,13 @@
   border-bottom: 2px solid #103F75;
   color: #103F75;
 }
+
+@media (min-device-width : 320px) and (max-device-width : 480px){
+  .dashboard-nav-pills{
+      overflow: auto;
+      justify-content: inherit!important;
+  }
+  .dashboard-nav-pills> li.active > a, .dashboard-nav-pills > li.active > a:focus, .dashboard-nav-pills > li.active > a:hover {
+    border-bottom: none;
+  }
+}
