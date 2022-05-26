@@ -3477,12 +3477,16 @@ public function return1(){
 				$this->load->view('template/header');
 	 			$this->load->view("contraloria/vista_lotes_sede",$datos);
 				break;
+			case '1297': //María de Jesús
+			case '826': //Victor Hugo
+				$this->load->view('template/header');
+				$this->load->view("contraloria/vista_lotes_apartados",$datos);
+				break;
 			default:
 				echo '<script>alert("ACCESO DENEGADO"); window.location.href="' . base_url() . '";</script>';
 				break;
 		}
         /*-------------------------------------------------------------------------------*/
-		
 	}
 
     /**al día de hoy**/
@@ -3527,8 +3531,8 @@ public function return1(){
 
 		$data = $this->Contraloria_model->get_datos_lotes($idLote);
 		$data = array(
-			"saldo" => $this->input->post("preciodesc"), 
-			"enganche" => $this->input->post("enganches"), 
+			"totalNeto2" => $this->formatter->removeNumberFormat($_POST['preciodesc']),
+			"totalNeto" => $this->formatter->removeNumberFormat($_POST['enganches']), 
 			"ubicacion" => $this->input->post("ubicacion_sede"));
 
 		$response = $this->General_model->updateRecord('lotes', $data, 'idLote', $idLote);
