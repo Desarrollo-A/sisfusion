@@ -1,4 +1,5 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="<?=base_url()?>dist/css/shadowbox.css">
 <link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet"/>
 <body>
     <div class="wrapper">
@@ -184,12 +185,12 @@
                                                 <table class="table-striped table-hover" id="tabla_factura" name="tabla_factura">
                                                 <thead>
                                                     <tr>
-                                                        <th></th>
+                                                        <th>ID</th>
                                                         <th>USUARIO</th>
-                                                        <th>MONTO</th>
-                                                        <th>PROYECTO</th>
-                                                        <th>EMPRESA</th>
-                                                        <th>OPINIÓN CUMPLIMIENTO</th>
+                                                        <th>TOTAL</th>
+                                                        <th>FORMA DE PAGO</th>
+                                                        <th>NACIONALIDAD</th>
+                                                        <th>ESTATUS</th>
                                                         <th>MÁS</th>
                                                     </tr>
                                                 </thead>
@@ -218,6 +219,10 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
+    <script type="text/javascript" src="<?=base_url()?>dist/js/shadowbox.js"></script>
+    <script>
+        Shadowbox.init();
+    </script>
     <script>
         $(document).ready(function() {
             $("#tabla_extranjero").prop("hidden", true);
@@ -642,13 +647,118 @@
           
         }
         //FIN TABLA  ****************************************************************************************
-    
-        //INICIO TABLA DOS ******************************************
-       
 
-      
-        
-        //FIN TABLA  *****************************************************************
+        $('#tabla_factura').ready(function () {
+            let titulos = [];
+
+            $('#tabla_factura thead tr:eq(0) th').each(function (i) {
+                if (i !== 4 || i !== 5) {
+                    const title = $(this).text();
+                    titulos.push(title);
+                }
+            });
+
+            $('#tabla_factura').on('xhr.dt', function (e, settings, json, xhr) {
+                let total = 0;
+                $.each(json.data, function (i, v) {
+                    total += parseFloat(v.total);
+                });
+                document.getElementById('myText_proceso').textContent = `$${formatMoney(total)}`;
+            });
+
+            $('#tabla_factura').DataTable({
+                dom: 'Brt'+ "<'row'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'i><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>",
+                width: 'auto',
+                buttons: [
+                    {
+                        extend: 'excelHtml5',
+                        text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
+                        className: 'btn buttons-excel',
+                        titleAttr: 'Descargar archivo de Excel',
+                        title: 'REPORTE COMPROBANTES FISCALES EXTRANJEROS',
+                        exportOptions: {
+                            columns: [0,1,2,3,4,5],
+                            format: {
+                                header: function (d, columnIndex) {
+                                    return ' '+titulos[columnIndex] +' ';
+                                }
+                            }
+                        }
+                    }
+                ],
+                pagingType: "full_numbers",
+                fixedHeader: true,
+                language: {
+                    url: "<?=base_url()?>/static/spanishLoader_v2.json",
+                    paginate: {
+                        previous: "<i class='fa fa-angle-left'>",
+                        next: "<i class='fa fa-angle-right'>"
+                    }
+                },
+                destroy: true,
+                ordering: false,
+                columns: [
+                    {
+                        "data": function(d) {
+                            return `<p class="m-0"><b>${d.id_usuario}</b></p>`;
+                        }
+                    },
+                    {
+                        "data": function(d) {
+                            return `<p class="m-0">${d.usuario}</p>`;
+                        }
+                    },
+                    {
+                        "data": function (d) {
+                            return `<p class="m-0">$${formatMoney(d.total)}</p>`;
+                        }
+                    },
+                    {
+                        "data": function (d) {
+                            return `<p class="m-0">${d.forma_pago}</p>`;
+                        }
+                    },
+                    {
+                        "data": function (d) {
+                            return `<p class="m-0">${d.nacionalidad}</p>`;
+                        }
+                    },
+                    {
+                        "data": function (d) {
+                            return `<p class="m-0">${d.estatus_usuario}</p>`;
+                        }
+                    },
+                    {
+                        "data": function (d) {
+                            return `
+                                <div class="d-flex justify-center">
+                                    <button data-usuario="${d.archivo_name}"
+                                        class="btn-data btn-blueMaderas consultar-archivo"
+                                        title="Detalles">
+                                            <i class="fas fa-file-pdf-o"></i>
+                                    </button>
+                                </div>`;
+                        }
+                    }
+                ],
+                ajax: {
+                    "url": "getComprobantesExtranjero",
+                    "type": "GET",
+                    "data": function(d) {}
+                },
+            });
+
+            $('#tabla_factura tbody').on('click', '.consultar-archivo', function () {
+                const $itself = $(this);
+                Shadowbox.open({
+                    content: '<div><iframe style="overflow:hidden;width: 100%;height: 100%;position:absolute;" src="<?=base_url()?>static/documentos/extranjero/'+$itself.attr('data-usuario')+'"></iframe></div>',
+                    player: "html",
+                    title: "Visualizando documento fiscal: " + $itself.attr('data-usuario'),
+                    width: 985,
+                    height: 660
+                });
+            });
+        });
  
         function formatMoney( n ) {
             var c = isNaN(c = Math.abs(c)) ? 2 : c,

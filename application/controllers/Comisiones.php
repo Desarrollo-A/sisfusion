@@ -6960,9 +6960,14 @@ for ($d=0; $d <count($dos) ; $d++) {
         break;
       }
 
-
     }
 
+
+    public function getComprobantesExtranjero()
+    {
+        $data = $this->Comisiones_model->getComprobantesExtranjero();
+        echo json_encode(array('data' => $data));
+    }
 
 
     public function getDatosNuevasEContraloria($proyecto,$condominio){
