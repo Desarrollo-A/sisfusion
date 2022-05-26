@@ -67,7 +67,7 @@ function fillBoxAccordions(option){
     });
 
     generalDataTable = $("#table"+option).dataTable({
-        dom: 'rt'+ "<'row'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'i><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>",
+        dom: 'rt'+ "<'container-fluid pt-1 pb-1'<'row d-flex align-center'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'i><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>>",
         width: '100%',
         pagingType: "full_numbers",
         lengthMenu: [
@@ -101,7 +101,7 @@ function fillBoxAccordions(option){
             {
                 width: "8%",
                 data: function (d) {
-                    return "$" + formatMoney(d.total);
+                    return "<b>$" + formatMoney(d.total)+"</b>";
                 }
             },
             {
@@ -113,7 +113,7 @@ function fillBoxAccordions(option){
             {
                 width: "8%",
                 data: function (d) {
-                    return "$" + formatMoney(d.apartado);
+                    return "<b>$" + formatMoney(d.apartado)+"</b>";
                 }
             },
             {
@@ -131,7 +131,7 @@ function fillBoxAccordions(option){
             {
                 width: "8%",
                 data: function (d) {
-                    return "$" + formatMoney(d.contratado);
+                    return "<b>$" + formatMoney(d.contratado)+"</b>";
                 }
             },
             {
@@ -149,7 +149,7 @@ function fillBoxAccordions(option){
             {
                 width: "8%",
                 data: function (d) {
-                    return "$" + formatMoney(d.cancelado);
+                    return "<b>$" + formatMoney(d.cancelado)+"</b>";
                 }
             },
             {

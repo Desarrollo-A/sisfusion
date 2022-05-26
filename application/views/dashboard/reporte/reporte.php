@@ -5,10 +5,10 @@
         <div class="card p-2">
             <div class="container-fluid">
                 <div class="row">
-                    <div class="col-12 col-sm-7 col-md-7 col-lg-7 p-0 info">
-                        <p class="m-0">Ventas<br>contratadas</p>
+                    <div class="col-xs-7 col-sm-7 col-md-7 col-lg-7 p-0 info">
+                        <p class="m-0">Ventas<br> contratadas</p>
                     </div>
-                    <div class="col-12 col-sm-5 col-md-5 col-lg-5 p-0 d-flex align-center justify-end">
+                    <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5 p-0 d-flex align-center justify-end">
                         <label class="selectMini m-0">3 meses <span class="material-icons">show_chart</span></label>
                     </div>
                 </div>
@@ -20,10 +20,10 @@
                 <div class="row">
                     <div class="p-0 col-12 col-sm-12 col-md-12 col-lg-12">
                         <div class="boxMiniCharts" id="ventasContratadas"></div>
-                        <button type="btn" id="" class="moreMiniChart d-flex justify-center align-center" data-toggle="tooltip" data-placement="bottom" title="Más detalle">  
-                            <i class="fas fa-expand-alt"></i>
-                        </button> 
                     </div>
+                    <button type="btn" id="" class="moreMiniChart d-flex justify-center align-center" data-toggle="tooltip" data-placement="bottom" title="Más detalle">  
+                        <i class="fas fa-expand-alt"></i>
+                    </button>
                 </div>
             </div>
         </div>
@@ -32,10 +32,10 @@
         <div class="card p-2">
             <div class="container-fluid">
                 <div class="row">
-                    <div class="col-12 col-sm-7 col-md-7 col-lg-7 p-0 info">
-                        <p class="m-0">Ventas<br>apartadas</p>
+                    <div class="col-xs-7 col-sm-7 col-md-7 col-lg-7 p-0 info">
+                        <p class="m-0">Ventas<br> apartadas</p>
                     </div>
-                    <div class="col-12 col-sm-5 col-md-5 col-lg-5 p-0 d-flex align-center justify-end">
+                    <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5 p-0 d-flex align-center justify-end">
                         <label class="selectMini m-0">3 meses <span class="material-icons">show_chart</span></label> 
                     </div>
                 </div>
@@ -47,10 +47,10 @@
                 <div class="row">
                     <div class="p-0 col-12 col-sm-12 col-md-12 col-lg-12">
                         <div class="boxMiniCharts" id="ventasApartadas"></div>
-                        <button type="btn" id="" class="moreMiniChart d-flex justify-center align-center" data-toggle="tooltip" data-placement="bottom" title="Más detalle">  
-                            <i class="fas fa-expand-alt"></i>
-                        </button> 
                     </div>
+                    <button type="btn" id="" class="moreMiniChart d-flex justify-center align-center" data-toggle="tooltip" data-placement="bottom" title="Más detalle">  
+                        <i class="fas fa-expand-alt"></i>
+                    </button>
                 </div>
             </div>
         </div>
@@ -59,10 +59,10 @@
         <div class="card p-2">
             <div class="container-fluid">
                 <div class="row">
-                    <div class="col-12 col-sm-7 col-md-7 col-lg-7 p-0 info">
-                        <p class="m-0">Canceladas<br>contratadas</p>
+                    <div class="col-xs-7 col-sm-7 col-md-7 col-lg-7 p-0 info">
+                        <p class="m-0">Canceladas<br> contratadas</p>
                     </div>
-                    <div class="col-12 col-sm-5 col-md-5 col-lg-5 p-0 d-flex align-center justify-end">
+                    <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5 p-0 d-flex align-center justify-end">
                         <label class="selectMini m-0">3 meses <span class="material-icons">show_chart</span></label> 
                     </div>
                 </div>
@@ -74,10 +74,10 @@
                 <div class="row">
                     <div class="p-0 col-12 col-sm-12 col-md-12 col-lg-12">
                         <div class="boxMiniCharts" id="canceladasContratadas"></div>
-                        <button type="btn" id="" class="moreMiniChart d-flex justify-center align-center" data-toggle="tooltip" data-placement="bottom" title="Más detalle">  
-                            <i class="fas fa-expand-alt"></i>
-                        </button> 
                     </div>
+                    <button type="btn" id="" class="moreMiniChart d-flex justify-center align-center" data-toggle="tooltip" data-placement="bottom" title="Más detalle">  
+                        <i class="fas fa-expand-alt"></i>
+                    </button>
                 </div>
             </div>
         </div>
@@ -86,10 +86,10 @@
         <div class="card p-2">
             <div class="container-fluid">
                 <div class="row">
-                    <div class="col-12 col-sm-7 col-md-7 col-lg-7 p-0 info">
-                        <p class="m-0">Canceladas<br>apartadas</p>
+                    <div class="col-xs-7 col-sm-7 col-md-7 col-lg-7 p-0 info">
+                        <p class="m-0">Canceladas<br> apartadas</p>
                     </div>
-                    <div class="col-12 col-sm-5 col-md-5 col-lg-5 p-0 d-flex align-center justify-end">
+                    <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5 p-0 d-flex align-center justify-end">
                         <label class="selectMini m-0">3 meses <span class="material-icons">show_chart</span></label> 
                     </div>
                 </div>
@@ -101,10 +101,10 @@
                 <div class="row">
                     <div class="p-0 col-12 col-sm-12 col-md-12 col-lg-12">
                         <div class="boxMiniCharts" id="canceladasApartadas"></div>
-                        <button type="btn" id="" class="moreMiniChart d-flex justify-center align-center" data-toggle="tooltip" data-placement="bottom" title="Más detalle">  
-                            <i class="fas fa-expand-alt"></i>
-                        </button> 
                     </div>
+                    <button type="btn" id="" class="moreMiniChart d-flex justify-center align-center" data-toggle="tooltip" data-placement="bottom" title="Más detalle">  
+                        <i class="fas fa-expand-alt"></i>
+                    </button> 
                 </div>
             </div>
         </div>
