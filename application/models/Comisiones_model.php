@@ -8894,4 +8894,34 @@ function lista_estatus_descuentos(){
             ORDER BY com.rol_generado ASC");
         return $query->result_array();
     }
+
+    public function findOpinionActiveByIdUsuario($idUsuario)
+    {
+        $query = $this->db->query("SELECT id_opn, id_usuario, archivo_name FROM opinion_cumplimiento WHERE estatus = 1 
+            AND id_usuario = $idUsuario");
+        return $query->row();
+    }
+
+    public function getComprobantesExtranjero()
+    {
+        $query = $this->db->query("SELECT sum(pci1.abono_neodata) total, u.id_usuario, CONCAT(u.nombre, ' ',
+            u.apellido_paterno, ' ', u.apellido_materno) usuario,
+            fp.nombre as forma_pago, na.nombre as nacionalidad, opn.estatus estatus_archivo, opn.archivo_name,
+            estatus.nombre as estatus_usuario
+            FROM pago_comision_ind pci1
+            INNER JOIN comisiones com ON pci1.id_comision = com.id_comision AND com.estatus in (1,8)
+            INNER JOIN lotes lo ON lo.idLote = com.id_lote AND lo.status = 1
+            INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
+            INNER JOIN usuarios u ON u.id_usuario = com.id_usuario AND u.forma_pago in (5)
+            INNER JOIN opcs_x_cats na ON na.id_opcion = u.nacionalidad AND na.id_catalogo = 11
+            INNER JOIN opinion_cumplimiento opn ON opn.id_usuario = u.id_usuario and opn.estatus IN (2)
+            INNER JOIN opcs_x_cats fp ON fp.id_opcion = u.forma_pago AND fp.id_catalogo = 16
+            INNER JOIN opcs_x_cats estatus ON estatus.id_opcion = u.estatus AND estatus.id_catalogo = 3
+            INNER JOIN pagos_invoice iv ON iv.id_pago_i = pci1.id_pago_i
+            WHERE pci1.estatus in (4,8,88)
+            GROUP BY opn.archivo_name, u.nombre, u.apellido_paterno, u.apellido_materno, u.id_usuario,
+            u.forma_pago, opn.estatus, na.nombre, fp.nombre, estatus.nombre
+            ORDER BY u.nombre");
+        return $query->result_array();
+    }
 }
