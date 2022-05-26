@@ -42,7 +42,7 @@
                                     <div class="col-12 col-sm-4 col-md-4 col-lg-12">
                                         <div id="enganche" style="display:none">
                                             <label class="control-label label-gral">Enganche</label>
-                                            <input type="text" id="enganches" name="enganches" class="form-control input-gral" style="text-align:center" value="">
+                                            <input type="text" id="enganches" name="enganches" class="form-control input-gral" style="text-align:center" value="" onkeyup="format(this)" onchange="format(this)">
                                         </div>
                                     </div>
                                     <div class="col-12 col-sm-4 col-md-4 col-lg-12">
@@ -75,7 +75,7 @@
                                 <div class="encabezadoBox">
                                     <h3 class="card-title center-align">Actualización de lotes apartados</h3>
                                 </div>
-                                <p class="card-title center-align">En esta vista podrás hacer la actualización del precio total con descuento, enganche y ubicación de un lote apartado.</p>
+                                <p class="card-title center-align">En esta vista podrás hacer la actualización del precio total con descuentos, enganche y ubicación de un lote apartado.</p>
                                 <div  class="toolbar">
                                     <div class="row">
                                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
@@ -122,6 +122,11 @@
                                                     <th>ASESOR</th>
                                                     <th>COORDINADOR</th>
                                                     <th>GERENTE</th>
+                                                    <th>TOTAL</th>
+                                                    <th>ENGANCHE</th>
+                                                    <th>UBICACIÓN</th>
+                                                    <th>ESTATUS LOTE</th>
+                                                    <th>ESTATUS CONTRATACIÓN</th>
                                                     <th>ACCIONES</th>
                                                 </tr>
                                             </thead>
@@ -192,6 +197,11 @@
                                                         <th style="font-size: .9em;">ASESOR</th>
                                                         <th style="font-size: .9em;">COORDINADOR</th>
                                                         <th style="font-size: .9em;">GERENTE</th>
+                                                        <th style="font-size: .9em;">TOTAL</th>
+                                                        <th style="font-size: .9em;">ENGANCHE</th>
+                                                        <th style="font-size: .9em;">UBICACIÓN</th>
+                                                        <th style="font-size: .9em;">ESTATUS LOTE</th>
+                                                        <th style="font-size: .9em;">ESTATUS CONTRATACIÓN</th>
                                                         <th style="font-size: .9em;">ACCIONES</th>
                                                     </tr>
                                                 </thead>
@@ -292,16 +302,7 @@
             dom: 'Brt'+ "<'row'<'col-12 col-sm-12 col-md-6 col-lg-6'i><'col-12 col-sm-12 col-md-6 col-lg-6'p>>",
             destroy: true,
             "buttons": [
-                {
-                    extend: 'excelHtml5',
-                    text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
-                    className: 'btn buttons-excel',
-                    titleAttr: 'Historial pagos',
-                    title:"Historial pagos",
-                    exportOptions: {
-                        columns: ':visible'
-                    }
-                }
+                
             ],
             "ajax":
                 {
@@ -337,6 +338,11 @@
                     {data: 'asesor'},
                     {data: 'coordinador'},
                     {data: 'gerente'},
+                    {data: 'saldo'},
+                    {data: 'enganche'},
+                    {data: 'nombre_ubicacion'},
+                    {data: 'lote'},
+                    {data: 'contratacion'},
                     {
                         "data": function(d){
                             opciones = `<center><button id="modificar" data-idLote=${d.idLote} class="btn-data btn-orangeYellow" data-toggle="tooltip" data-placement="top" title="Modificar"><i class="far fa-edit"></i></button></center>`;
@@ -402,6 +408,7 @@
             success: function (response) {
                 alerts.showNotification("top", "right", "El registro se ha actualizado con éxito.", "success");
                 $("#modal_aprobar").modal("hide");
+                $('#tabla_historial').DataTable().ajax.reload();
             }
         });
     });
@@ -418,6 +425,32 @@
             }
             $("#ubicacion_sede").selectpicker('refresh');
         }, 'json');
+    });
+
+    $("#preciodesc").on({
+        "focus": function (event) {
+            $(event.target).select();
+        },
+        "keyup": function (event) {
+            $(event.target).val(function (index, value ) {
+                return value.replace(/\D/g, "")
+                            .replace(/([0-9])([0-9]{2})$/, '$1.$2')
+                            .replace(/\B(?=(\d{3})+(?!\d)\.?)/g, ",");
+            });
+        }
+    });
+
+    $("#enganches").on({
+        "focus": function (event) {
+            $(event.target).select();
+        },
+        "keyup": function (event) {
+            $(event.target).val(function (index, value ) {
+                return value.replace(/\D/g, "")
+                            .replace(/([0-9])([0-9]{2})$/, '$1.$2')
+                            .replace(/\B(?=(\d{3})+(?!\d)\.?)/g, ",");
+            });
+        }
     });
 
 </script>

@@ -117,9 +117,9 @@
                                                     <th>GERENTE</th>
                                                     <th>TOTAL</th>
                                                     <th>ENGANCHE</th>
-                                                    <th>SEDE</th>
-                                                    <th>STATUS LOTE</th>
-                                                    <th>STATUS CONTRATACIÓN</th>
+                                                    <th>UBICACIÓN</th>
+                                                    <th>ESTATUS LOTE</th>
+                                                    <th>ESTATUS CONTRATACIÓN</th>
                                                     <th>ACCIONES</th>
                                                 </tr>
                                             </thead>
@@ -192,9 +192,9 @@
                                                         <th style="font-size: .9em;">GERENTE</th>
                                                         <th style="font-size: .9em;">TOTAL</th>
                                                         <th style="font-size: .9em;">ENGANCHE</th>
-                                                        <th style="font-size: .9em;">SEDE</th>
-                                                        <th style="font-size: .9em;">STATUS LOTE</th>
-                                                        <th style="font-size: .9em;">STATUS CONTRATACIÓN</th>
+                                                        <th style="font-size: .9em;">UBICACIÓN</th>
+                                                        <th style="font-size: .9em;">ESTATUS LOTE</th>
+                                                        <th style="font-size: .9em;">ESTATUS CONTRATACIÓN</th>
                                                         <th style="font-size: .9em;">ACCIONES</th>
                                                     </tr>
                                                 </thead>
@@ -295,16 +295,7 @@
             dom: 'Brt'+ "<'row'<'col-12 col-sm-12 col-md-6 col-lg-6'i><'col-12 col-sm-12 col-md-6 col-lg-6'p>>",
             destroy: true,
             "buttons": [
-                {
-                    extend: 'excelHtml5',
-                    text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
-                    className: 'btn buttons-excel',
-                    titleAttr: 'Historial pagos',
-                    title:"Historial pagos",
-                    exportOptions: {
-                        columns: ':visible'
-                    }
-                }
+                
             ],
             "ajax":
                 {
@@ -421,6 +412,19 @@
             }
             $("#ubicacion_sede").selectpicker('refresh');
         }, 'json');
+    });
+
+    $("#enganches").on({
+        "focus": function (event) {
+            $(event.target).select();
+        },
+        "keyup": function (event) {
+            $(event.target).val(function (index, value ) {
+                return value.replace(/\D/g, "")
+                            .replace(/([0-9])([0-9]{2})$/, '$1.$2')
+                            .replace(/\B(?=(\d{3})+(?!\d)\.?)/g, ",");
+            });
+        }
     });
 
 </script>
