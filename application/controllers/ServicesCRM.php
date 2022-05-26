@@ -9,7 +9,7 @@ class ServicesCRM extends CI_Controller
     public function __construct()
     {
             header('Access-Control-Allow-Origin: *');
-            header('Access-Control-Allow-Headers: Content-Type,Origin, authorization, X-API-KEY');
+            header('Access-Control-Allow-Headers: Content-Type,Origin, authorization, X-API-KEY,X-Requested-With,Accept,Access-Control-Request-Method');
             header('Access-Control-Allow-Method: GET, POST, PUT, DELETE,OPTION');
             parent::__construct();
             $urls = array('prueba.gphsis.com','localhost','127.0.0.1','rh.gphsis.com','maderascrm.gphsis.com');
