@@ -396,7 +396,7 @@ function getDatosComisionesHistorialRigel($proyecto,$condominio){
             LEFT JOIN plan_comision pl ON pl.id_plan = cl.plan_comision
             LEFT JOIN sedes se ON se.id_sede = cl.id_sede 
             WHERE l.idStatusContratacion BETWEEN 15 AND 15 AND cl.status = 1 AND l.status = 1
-            AND (l.registro_comision in (0,8,2)  or (l.registro_comision in (1,8) AND pc.bandera in (0))) AND tipo_venta IS NOT NULL AND tipo_venta IN (1,2,7)
+            AND (l.registro_comision in (0,8,2)  or (l.registro_comision in (1,8) AND pc.bandera in (0))) AND tipo_venta IS NOT NULL AND tipo_venta IN (1,2)
             AND cl.fechaApartado >= '2020-03-01'
             ORDER BY l.idLote");
             return $query->result();
