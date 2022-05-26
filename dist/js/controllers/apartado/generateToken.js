@@ -13,6 +13,7 @@ $('#tokensTable thead tr:eq(0) th').each(function (i) {
 });
 
 function fillTokensTable() {
+    let current_rol_user;
     tokensTable = $("#tokensTable").dataTable({
         dom: 'Brt' + "<'row'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'i><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>",
         width: "auto",
@@ -57,6 +58,39 @@ function fillTokensTable() {
         destroy: true,
         ordering: false,
         columns: [
+            {
+                data: function (d) {
+                    let lote;
+                    if(d.id_lote != null){
+                        lote = d.id_lote;
+                    }else{
+                        lote = "--";
+                    }
+                    return lote;
+                }
+            },
+            {
+                data: function (d) {
+                    let cliente;
+                    if(d.id_cliente != null){
+                        cliente = d.id_cliente;
+                    }else{
+                        cliente = "--";
+                    }
+                    return cliente;
+                }
+            },
+            {
+                data: function (d) {
+                    let fecha_apartado;
+                    if(d.fechaApartado != null){
+                        fecha_apartado = d.fechaApartado;
+                    }else{
+                        fecha_apartado = "--";
+                    }
+                    return fecha_apartado;
+                }
+            },
             {
                 data: function (d) {
                     return d.id_token;
