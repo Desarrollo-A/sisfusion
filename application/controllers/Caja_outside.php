@@ -2631,7 +2631,7 @@ class Caja_outside extends CI_Controller
     public function getTokensInformation()
     {
         $data['data'] = $this->caja_model_outside->getTokensInformation()->result_array();
-        echo json_encode($data);
+        echo json_encode($data, JSON_NUMERIC_CHECK);
     }
 
     public function reviewTokenEvidence()
