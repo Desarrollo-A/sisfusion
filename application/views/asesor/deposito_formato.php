@@ -451,16 +451,16 @@ $datos = array();
 
 							<div class="row">
 								<div class="col-md-4">
-									<div class="form-group label-floating select-is-empty">
+									<div class="form-group label-floating select-is-empty" id="group_dateNacimiento">
 										<label class="control-label" style="font-size: 0.8em;">
 											FECHA NACIMIENTO
 											(<small style="color: red;">*</small>)
 										</label>
 										<input class="form-control" name="fecha_nacimiento" id="fecha_nacimiento" type="date" <?php echo $readOnly; ?>
-											   value="<?=$cliente[0]->fecha_nacimiento?>" style="font-size: 0.9em;"/>
+											   value="<?=$cliente[0]->fecha_nacimiento?>" style="font-size: 0.9em;"  onchange="validafecha(this.value)" max="<?=date('Y-m-d')?>">
+
 									</div>
 								</div>
-
 								<div class="col-md-4">
 									<div class="form-group label-floating select-is-empty">
 										<label class="control-label" style="font-size: 0.8em;">
@@ -1336,7 +1336,7 @@ $datos = array();
 											(<small style="color: red;">*</small>)
 										</label>
 										<input class="form-control" name="fecha1erAport" <?php echo $readOnly; ?>
-											   id="fecha1erAport" type="date" required="true" value="<?=$cliente[0]->fecha1erAport?>" style="font-size: 0.9em;"/>
+											   id="fecha1erAport" type="date" required="true" value="<?=$cliente[0]->fecha1erAport?>" style="font-size: 0.9em;" max="<?=date('Y')+1?>-12-01"/>
 									</div>
 								</div>
 
@@ -1358,7 +1358,7 @@ $datos = array();
 											(<small style="color: red;">*</small>)
 										</label>
 										<input class="form-control" name="fechaLiquidaDepo" <?php echo $readOnly; ?>
-											   id="fechaLiquidaDepo" type="date"  value="<?=$cliente[0]->fechaLiquidaDepo?>" style="font-size: 0.9em;"/>
+											   id="fechaLiquidaDepo" type="date"  value="<?=$cliente[0]->fechaLiquidaDepo?>" style="font-size: 0.9em;" max="<?=date('Y')+1?>-12-01"/>
 									</div>
 								</div>
 
@@ -1369,7 +1369,7 @@ $datos = array();
 											(<small style="color: red;">*</small>)
 										</label>
 										<input class="form-control" name="fecha2daAport" id="fecha2daAport" <?php echo $readOnly; ?>
-											   type="date" required="true" value="<?=$cliente[0]->fecha2daAport?>" style="font-size: 0.9em;"/>
+											   type="date" required="true" value="<?=$cliente[0]->fecha2daAport?>" style="font-size: 0.9em;" max="<?=date('Y')+1?>-12-01"/>
 									</div>
 								</div>
 							</div>
@@ -1820,6 +1820,18 @@ $datos = array();
 <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
 
 <script>
+   function validafecha(date_input){
+       console.log(date_input);
+       var date_regex = /^(0[1-9]|1[0-2])\/(0[1-9]|1\d|2\d|3[01])\/(19|20)\d{2}$/;
+       if (date_input > <?=date('Y-m-d')?>) {
+           console.log('NO PERMITIDO');
+           $('#fecha_nacimiento').val('1980-10-31');
+           return false;
+       }else{
+           $('#group_dateNacimiento').removeClass('has-error');
+           console.log('LISTISIMO');
+       }
+   }
 	function validaTipoVivienda()
 	{
 		/*var tv = $('#tipo_vivienda').val();
