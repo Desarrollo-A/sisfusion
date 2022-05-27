@@ -5597,7 +5597,8 @@ public function getUsuariosByrol($rol,$user)
   public function CancelarDescuento(){
     $id_pago = $this->input->post('id_pago');
     $motivo =  $this->input->post('motivo');
-    $respuesta = array($this->Comisiones_model->CancelarDescuento($id_pago,$motivo));
+    $monto =  $this->input->post('monto');
+    $respuesta = array($this->Comisiones_model->CancelarDescuento($id_pago,$motivo,$monto));
     echo json_encode( $respuesta[0]);
   
   }

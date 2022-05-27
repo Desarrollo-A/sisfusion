@@ -7276,10 +7276,12 @@ function UpdateVcUser($usuarioOld,$newColab,$rolSelect,$idLote,$idCliente,$comen
 
 }
 /**----------------------------------------------------------------------- */ 
-public function CancelarDescuento($id_pago,$motivo)
+public function CancelarDescuento($id_pago,$motivo,$monto)
 {
     $respuesta = $this->db->query("UPDATE pago_comision_ind set descuento_aplicado=0,estatus=1 where id_pago_i=".$id_pago."");
-    $this->db->query("INSERT INTO  historial_comisiones VALUES (".$id_pago.",".$this->session->userdata('id_usuario').", GETDATE(), 1, 'CAPITAL HUMANO CANCELÓ DESCUENTO, MOTIVO: ".$motivo."')");
+    $Monto2 = number_format($monto, 2, '.', ',');
+    $usuario = $this->session->userdata('nombre').' '.$this->session->userdata('apellido_paterno').' '.$this->session->userdata('apellido_materno');
+    $this->db->query("INSERT INTO  historial_comisiones VALUES (".$id_pago.",".$this->session->userdata('id_usuario').", GETDATE(), 1, '".$usuario." CANCELÓ DESCUENTO, MONTO DEVUELTO $".$Monto2." MOTIVO: ".$motivo."')");
 
     if ($respuesta ) {
         return 1;
