@@ -165,8 +165,8 @@ class Usuarios_modelo extends CI_Model {
 
 
             default: // VE TODOS LOS REGISTROS
-            if($this->session->userdata('id_usuario') != 1297)
-                $id_rol = " AND u.id_rol NOT IN ('18', '19', '20')";
+            if($this->session->userdata('id_usuario') != 1297 && $this->session->userdata('id_usuario') != 1)
+                $id_rol = " AND u.id_rol NOT IN ('18', '19', '20','2','1','17','13','32','28')";
             else
                 $id_rol = "";
 
@@ -559,6 +559,8 @@ function getAllFoldersPDF()
             $where = " AND id_opcion IN (7, 9, 3)";
             if ($id_rol == 41)
                 $whereTwo = "AND id_sede = ".$this->session->userdata('id_sede')."";
+        }else if($id_rol == 8){
+            $where = " AND id_opcion NOT IN (1,2,3,7,9,59)";  
         }
         else // MJ: VE TODOS LOS REGISTROS
             $where = "";

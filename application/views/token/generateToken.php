@@ -121,14 +121,17 @@
                                 <table id="tokensTable" name="tokensTable"
                                        class="table-striped table-hover">
                                     <thead>
-                                    <tr>
-                                        <th>ID</th>
-                                        <th>GENERADO PARA</th>
-                                        <th>FECHA ALTA</th>
-                                        <th>CREADO POR</th>
-                                        <th>ESTATUS</th>
-                                        <th>ACCIONES</th>
-                                    </tr>
+                                        <tr>
+                                            <th>LOTE</th>
+                                            <th>CLIENTE</th>
+                                            <th>FECHA APARTADO</th>
+                                            <th>ID</th>
+                                            <th>GENERADO PARA</th>
+                                            <th>FECHA ALTA</th>
+                                            <th>CREADO POR</th>
+                                            <th>ESTATUS</th>
+                                            <th>ACCIONES</th>
+                                        </tr>
                                     </thead>
                                 </table>
                             </div>

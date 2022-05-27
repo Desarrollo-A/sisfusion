@@ -1026,8 +1026,31 @@
   border-radius: 10px;
 }
 
+@media (min-device-width: 320px) and (max-device-width: 480px), (min-width: 480px) and (max-width: 991px) {
+  #reporte .card {
+    margin-bottom: 0 !important;
+  }
+}
+
+@media (min-device-width: 320px) and (max-device-width: 480px) {
+  #reporte .card {
+    width: 98%;
+  }
+}
 #reporte .info {
   line-height: 1;
+}
+
+@media (min-device-width: 320px) and (max-device-width: 480px), (min-width: 480px) and (max-width: 991px) {
+  #reporte .info {
+    font-size: 18px !important;
+  }
+}
+
+@media (min-device-width: 320px) and (max-device-width: 480px), (min-width: 480px) and (max-width: 991px) {
+  #reporte .info br {
+    display: none !important;
+  }
 }
 
 #reporte .money {
@@ -1035,10 +1058,16 @@
   font-weight: 600;
 }
 
+@media (min-device-width: 320px) and (max-device-width: 480px), (min-width: 480px) and (max-width: 991px) {
+  #reporte .money {
+    margin: 0 !important;
+  }
+}
+
 #reporte .moreMiniChart {
   position: absolute;
-  right: 0;
-  bottom: 0;
+  right: 15px;
+  bottom: 15px;
   background-color: #D8DDE2;
   color: #103f75;
   border-radius: 20px;
@@ -1070,7 +1099,11 @@
   font-size: 12px;
   margin-left: 5px;
 }
-
+@media (min-device-width: 320px) and (max-device-width: 480px) {
+  #reporte .selectMini {
+    font-size: 12px !important;
+  }
+}
 #reporte .boxMiniCharts {
   height: 150px !important;
 }
@@ -1086,6 +1119,11 @@
   /* Color del HOVER de barra de desplazamiento */
 }
 
+@media (min-device-width: 320px) and (max-device-width: 480px), (min-width: 480px) and (max-width: 991px) {
+  #reporte .boxAccordions .bk {
+    margin-top: 25px !important;
+  }
+}
 #reporte .boxAccordions .bk .accordion-title {
   display: relative;
   text-transform: capitalize;
@@ -1159,8 +1197,9 @@
   background-color: #b5c2d0;
 }
 
-#reporte .boxAccordions .bk .dataTables_scroll {
-  padding: 10px 0;
+#reporte .boxAccordions .bk .dataTables_scroll .container-fluid {
+  padding-top: 5px;
+  padding-bottom: 5px;
 }
 
 #reporte .boxAccordions .bk .dataTables_scrollBody::-webkit-scrollbar-track {
@@ -1187,6 +1226,39 @@
   display: none;
 }
 
-#reporte .boxAccordions .accordion-content .dataTables_info {
+#reporte .boxAccordions .accordion-content .dataTables_wrapper .container-fluid .row .dataTables_info {
+  padding: 0;
   font-size: 12px;
+}
+
+#reporte .boxAccordions .accordion-content .dataTables_wrapper .container-fluid .row .paging_full_numbers {
+  display: flex;
+  justify-content: flex-end;
+}
+
+@media (min-device-width: 320px) and (max-device-width: 480px) {
+  #reporte .boxAccordions .accordion-content .dataTables_wrapper .container-fluid .row .paging_full_numbers {
+    display: flex;
+    justify-content: center;
+  }
+}
+
+@media (min-width: 480px) and (max-width: 991px) {
+  #reporte .boxAccordions .accordion-content .dataTables_wrapper .container-fluid .row .paging_full_numbers {
+    display: flex;
+    justify-content: center;
+  }
+}
+
+@media (min-device-width: 320px) and (max-device-width: 480px) {
+  #reporte .boxAccordions .accordion-content .dataTables_wrapper .container-fluid .row {
+    display: block !important;
+  }
+}
+
+@media (min-width: 480px) and (max-width: 991px) {
+  #reporte .boxAccordions .accordion-content .dataTables_wrapper .container-fluid .row {
+    display: block;
+    text-align: center;
+  }
 }

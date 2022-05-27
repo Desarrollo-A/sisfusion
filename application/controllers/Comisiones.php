@@ -3362,11 +3362,16 @@ public function LiquidarLote(){
 
     public function changeLoteToStopped()
     {
+
         $response = $this->Comisiones_model
             ->insertHistorialLog($_POST['id_pagoc'], $this->session->userdata('id_usuario'), 1, $_POST['descripcion'],
                 'pago_comision', $_POST['motivo']);
         if ($response) {
+          if(isset($_POST['statusLote'])){
+            $response = $this->Comisiones_model->updateBanderaDetenida( $_POST['id_pagoc'], 6,$_POST['statusLote']);
+          }else{
             $response = $this->Comisiones_model->updateBanderaDetenida( $_POST['id_pagoc'], 6);
+          }
         }
 
          echo json_encode($response);
@@ -5592,7 +5597,8 @@ public function getUsuariosByrol($rol,$user)
   public function CancelarDescuento(){
     $id_pago = $this->input->post('id_pago');
     $motivo =  $this->input->post('motivo');
-    $respuesta = array($this->Comisiones_model->CancelarDescuento($id_pago,$motivo));
+    $monto =  $this->input->post('monto');
+    $respuesta = array($this->Comisiones_model->CancelarDescuento($id_pago,$motivo,$monto));
     echo json_encode( $respuesta[0]);
   
   }
