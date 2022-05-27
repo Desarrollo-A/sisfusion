@@ -98,9 +98,9 @@ class ServicesCRM extends CI_Controller
                     "sucursalch" => $objDatos['sucursalch'],
                     "status_contratacion" => $objDatos['status_contratacion'],
                     "nacionalidad" => $objDatos['nacionalidad'],
-                    "id_gerente" => $id_gerente,
-                    "id_subdirector" => $id_subdirector,
-                    "id_regional" => $id_regional
+                    "gerente_id" => $id_gerente,
+                    "subdirector_id" => $id_subdirector,
+                    "regional_id" => $id_regional
                 );
                 //echo var_dump($data);
                 if (isset($objDatos) && !empty($objDatos)) {

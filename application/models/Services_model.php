@@ -42,12 +42,13 @@ class Services_model extends CI_Model
             if (!$response) {  
             $error = $this->db->error();
             $datos = explode('.',$error['message']);
-          //  echo  $error['code'];
+           // echo  $error['message'];
+           // echo  $error['code'];
             //echo $datos[3];
-            $message = $datos[3];
+            //$message = $datos[3];
             if($error['code'] == "23000/2627"){
-                $separarCadena = explode('is ',$datos[3]);
-                $message = "El usuario ".$separarCadena[1]." ya se encuentra registrado";
+                //$separarCadena = explode('is ',$datos[3]);
+                $message = "El nombre de usuario ya se encuentra registrado";
             }else{
                 echo $error;
 
