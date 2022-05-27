@@ -6978,4 +6978,9 @@ for ($d=0; $d <count($dos) ; $d++) {
      echo json_encode( array( "data" => $dat));
     }
 
+    public function getTotalPagoFaltanteUsuario($usuarioId)
+    {
+        $data = $this->Comisiones_model->getTotalPagoFaltanteUsuario($usuarioId);
+        echo json_encode($data);
+    }
 }

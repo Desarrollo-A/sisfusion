@@ -407,10 +407,6 @@
         </div>
     </div>-->
 
-
-
-
-
     <div class="content boxContent">
         <div class="container-fluid">
             <div class="row">
@@ -422,6 +418,58 @@
 
                         <div class="toolbar">
                             <div class="container">
+                                <div id="title-activo">
+                                    <div class="col-lg-12 text-center mt-1">
+                                        <h3 class="card-title center-align">Descuentos Universidad</h3>
+                                        <p class="card-title pl-1">(Descuentos activos, una vez liquidados podrás consultarlos en el Historial de descuentos)</p><br>
+                                    </div>
+                                    <div class="col-lg-12">
+                                        <h5 class="card-title center-align">
+                                            Total descuentos<b>:</b> $<input style="border-bottom: none; border-top: none; border-right: none;
+                                            border-left: none; background: white; color: #0a548b; font-weight: bold;" disabled="disabled"
+                                                                             readonly="readonly" type="text" id="total-activo">
+                                        </h5>
+                                    </div>
+                                </div>
+
+                                <div id="title-baja">
+                                    <div class="col-lg-12 text-center mt-1">
+                                        <h3 class="card-title center-align">Descuentos Universidad</h3>
+                                        <p class="card-title pl-1">(Usuarios dados de baja)</p><br>
+                                    </div>
+                                    <div class="col-lg-12">
+                                        <h5 class="card-title center-align">
+                                            Total descuentos<b>:</b> $<input style="border-bottom: none; border-top: none; border-right: none;
+                                            border-left: none; background: white; color: #0a548b; font-weight: bold;" disabled="disabled"
+                                                                             readonly="readonly" type="text" id="total-baja">
+                                        </h5>
+                                    </div>
+                                </div>
+
+                                <div id="title-liquidado">
+                                    <div class="col-lg-12 text-center mt-1">
+                                        <h3 class="card-title center-align">Descuentos Universidad - <b>Liquidados</b></h3>
+                                        <p class="card-title pl-1">(Listado de descuentos completos ó pausados)</p><br>
+                                    </div>
+                                    <div class="col-lg-12">
+                                        <h5 class="card-title center-align">
+                                            Total descuentos<b>:</b> $<input style="border-bottom: none; border-top: none; border-right: none;  border-left: none; background: white; color: #0a548b; font-weight: bold;" disabled="disabled" readonly="readonly" type="text" id="total-liquidado">
+                                        </h5>
+                                    </div>
+                                </div>
+
+                                <div id="title-conglomerado">
+                                    <div class="col-lg-12 mt-1">
+                                        <h3 class="card-title center-align">Descuentos Universidad y Liquidados</h3>
+                                    </div>
+                                    <div class="col-lg-12">
+                                        <h5 class="card-title center-align">
+                                            Total descuentos (liquidadas y descuentos)<b>:</b> $<input style="border-bottom: none; border-top: none; border-right: none;  border-left: none; background: white; color: #0a548b; font-weight: bold;" disabled="disabled" readonly="readonly"
+                                                                                                       type="text" id="total-conglomerado">
+                                        </h5>
+                                    </div>
+                                </div>
+
                                 <div class="col-12 col-sm-12 col-md-12 col-lg-12">
                                     <div class="form-group">
                                         <label for="proyecto">Tipo descuento:</label>
@@ -429,27 +477,18 @@
                                                 data-live-search="true"  title="Selecciona el tipo de descuento" data-size="7" required onChange="checkTypeOfDesc()">
                                             <!--<option value="0">Seleccione all</option>-->
                                             <option value="1" selected>Activo</option>
-                                            <option value="2">Liquidado</option>
-                                            <option value="3">Conglomerado</option>
+                                            <option value="2">Baja / Detenidos</option>
+                                            <option value="3">Liquidado</option>
+                                            <option value="4">Conglomerado</option>
                                         </select>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="card-content" id="activeDesc">
-                            <div class="encabezadoBox">
-                                <h3 class="card-title center-align">Descuentos Universidad</h3>
-                                <p class="card-title pl-1">(Descuentos activos, una vez liquidados podrás consultarlos en el Historial de descuentos)</p><br>
-                            </div>
+                        <!--<div class="card-content" id="activeDesc">
                             <div class="material-datatables">
                                 <div class="table-responsive">
-                                    <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12 pdt-50">
-                                        <h5 class="card-title center-align">
-                                            <!--Total bonos aplicados<b>:</b> $<input style="border-bottom: none; border-top: none; border-right: none;  border-left: none; background: white; color: #0a548b; font-weight: bold;" disabled="disabled" readonly="readonly" type="text"  name="totalp" id="totalp">-->
-                                            Total descuentos<b>:</b> $<input style="border-bottom: none; border-top: none; border-right: none;  border-left: none; background: white; color: #0a548b; font-weight: bold;" disabled="disabled" readonly="readonly" type="text" name="totalp" id="totalp">
-                                        </h5>
-                                    </div>
                                     <table  id="tabla_descuentos" name="tabla_descuentos"
                                             class="table-striped table-hover" style="text-align:center;">
                                         <thead>
@@ -477,16 +516,6 @@
                         </div>
 
                         <div class="card-content" id="liquidadoDesc" style="display: none">
-                            <div class="encabezadoBox">
-                                <h3 class="card-title center-align">Descuentos Universidad - <b>Liquidados</b></h3>
-                                <p class="card-title pl-1">(Listado de descuentos completos ó pausados)</p><br>
-                            </div>
-                            <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                                <h5 class="card-title center-align">
-                                    <!--Total bonos aplicados<b>:</b> $<input style="border-bottom: none; border-top: none; border-right: none;  border-left: none; background: white; color: #0a548b; font-weight: bold;" disabled="disabled" readonly="readonly" type="text"  name="totalp" id="totalp">-->
-                                    Total descuentos<b>:</b> $<input style="border-bottom: none; border-top: none; border-right: none;  border-left: none; background: white; color: #0a548b; font-weight: bold;" disabled="disabled" readonly="readonly" type="text" name="totalpLIQ" id="totalpLIQ">
-                                </h5>
-                            </div>
                             <div class="toolbar">
                                 <div class="row">
                                 </div>
@@ -518,19 +547,8 @@
                         </div>
 
                         <div class="card-content" id="conglomeradoTable" style="display:none">
-                            <div class="encabezadoBox">
-                                <h3 class="card-title center-align">Descuentos Universidad y Liquidados</h3>
-                                <!--<p class="card-title pl-1">(Descuentos activos, una vez liquidados podrás consultarlos en el Historial de descuentos)</p><br>-->
-                            </div>
                             <div class="material-datatables">
                                 <div class="table-responsive">
-                                    <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12 pdt-50">
-                                        <h5 class="card-title center-align">
-                                            <!--Total bonos aplicados<b>:</b> $<input style="border-bottom: none; border-top: none; border-right: none;  border-left: none; background: white; color: #0a548b; font-weight: bold;" disabled="disabled" readonly="readonly" type="text"  name="totalp" id="totalp">-->
-                                            Total descuentos (liquidadas y descuentos)<b>:</b> $<input style="border-bottom: none; border-top: none; border-right: none;  border-left: none; background: white; color: #0a548b; font-weight: bold;" disabled="disabled" readonly="readonly"
-                                                                             type="text" name="totalConglamerado" id="totalConglamerado">
-                                        </h5>
-                                    </div>
                                     <table  id="tabla_descuentos_combinada" name="tabla_descuentos_combinada"
                                             class="table-striped table-hover" style="text-align:center;">
                                         <thead>
@@ -554,113 +572,33 @@
                                     </table>
                                 </div>
                             </div>
-                        </div>
+                        </div>-->
 
-
-                    </div>
-                </div>
-            </div>
-        </div>
-</div>
-
-
-<div class="content hide">
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col xol-xs-12 col-sm-12 col-md-12 col-lg-12">
-                <div class="card">
-                    <div class="card-content">
-                        <div class="row">
-                            <div class="col xol-xs-12 col-sm-12 col-md-12 col-lg-12">
-                                <div class="tab-content">
-                                    <div class="tab-pane active" id="nuevas-1">
-                                        <div class="content">
-                                            <div class="container-fluid">
-                                                <div class="row">
-                                                    <div class="col xol-xs-12 col-sm-12 col-md-12 col-lg-12">
-                                                        <div class="card">
-                                                            <div class="card-header">
-                                                                <div class="col xol-xs-12 col-sm-12 col-md-12 col-lg-12">
-                                                                    <h4 class="card-title">DESCUENTOS - <b>UNIVERSIDAD</b>
-                                                                    </h4>
-                                                                    <p class="category">Descuentos activos, una vez
-                                                                        liquidados podrás consultarlos en el
-                                                                        Historial de descuentos.</b></p>
-                                                                </div>
-                                                                <div class="col xol-xs-12 col-sm-12 col-md-12 col-lg-12">
-                                                                    <label style="color: #0a548b;">&nbsp;Total
-                                                                        Descuentos<b>:</b> $<input
-                                                                            style="border-bottom: none; border-top: none; border-right: none;  border-left: none; background: white; color: #0a548b; font-weight: bold;"
-                                                                            disabled="disabled"
-                                                                            readonly="readonly" type="text"
-                                                                            name="totalp" id="totalp"></label>
-                                                                </div>
-                                                            </div>
-                                                            <div class="card-content">
-                                                                <div class="col xol-xs-12 col-sm-12 col-md-12 col-lg-12">
-                                                                    <div class="material-datatables">
-                                                                        <div class="form-group">
-                                                                            <div class="table-responsive">
-                                                                                <table class="table table-responsive table-bordered table-striped table-hover"
-                                                                                       style="font-size: .7em;"
-                                                                                       id="tabla_descuentos"
-                                                                                       name="tabla_descuentos">
-                                                                                    <thead>
-                                                                                    <tr>
-                                                                                        <th style="font-size: 1em;"></th>
-                                                                                        <th style="font-size: 1em;">
-                                                                                            ID
-                                                                                        </th>
-                                                                                        <th style="font-size: 1em;">
-                                                                                            USUARIO
-                                                                                        </th>
-                                                                                        <th style="font-size: 1em;">
-                                                                                            PUESTO
-                                                                                        </th>
-                                                                                        <th style="font-size: 1em;">
-                                                                                            SEDE
-                                                                                        </th>
-                                                                                        <th style="font-size: 1em;">
-                                                                                            SALDO COMISIONES
-                                                                                        </th>
-                                                                                        <th style="font-size: 1em;">
-                                                                                            DESCUENTO
-                                                                                        </th>
-                                                                                        <th style="font-size: 1em;">
-                                                                                            APLICADO
-                                                                                        </th>
-                                                                                        <th style="font-size: 1em;">
-                                                                                            PENDIENTE GRAL.
-                                                                                        </th>
-                                                                                        <th style="font-size: 1em;">
-                                                                                            PAGO MENSUAL
-                                                                                        </th>
-                                                                                        <th style="font-size: 1em;">
-                                                                                            ESTATUS
-                                                                                        </th>
-                                                                                        <th style="font-size: 1em;">
-                                                                                            PENDIENTE MES
-                                                                                        </th>
-                                                                                        <th style="font-size: 1em;">
-                                                                                            DISPONIBLE DESC.
-                                                                                        </th>
-                                                                                        <th style="font-size: 1em;">
-                                                                                            ACCIONES
-                                                                                        </th>
-                                                                                    </tr>
-                                                                                    </thead>
-                                                                                </table>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+                        <div class="card-content">
+                            <div class="material-datatables">
+                                <div class="table-responsive">
+                                    <table id="tabla-general"
+                                           class="table-striped table-hover"
+                                           style="text-align: center;">
+                                        <thead>
+                                            <tr>
+                                                <th>ID</th>
+                                                <th>USUARIO</th>
+                                                <th>PUESTO</th>
+                                                <th>SEDE</th>
+                                                <th>SALDO COMISIONES</th>
+                                                <th>DESCUENTO</th>
+                                                <th>APLICADO</th>
+                                                <th>PENDIENTE GRAL.</th>
+                                                <th>PAGO MENSUAL</th>
+                                                <th>ESTATUS</th>
+                                                <th>PENDIENTE MES</th>
+                                                <th>DISPONIBLE DESC.</th>
+                                                <th>FEC. CREACIÓN</th>
+                                                <th>ACCIONES</th>
+                                            </tr>
+                                        </thead>
+                                    </table>
                                 </div>
                             </div>
                         </div>
@@ -668,7 +606,6 @@
                 </div>
             </div>
         </div>
-    </div>
 </div>
 
 
@@ -697,9 +634,10 @@
     var url2 = "<?=base_url()?>index.php/";
     var totaPen = 0;
     var tr;
-    let tabla_nuevas_liquidado;
+    /*let tabla_nuevas_liquidado;
     let tabla_nuevas;
-    let tabla_nuevas_combinada;
+    let tabla_nuevas_combinada;*/
+    let tablaGeneral, titulosTablaGeneral;
 
     $(document).ready(function(){
 
@@ -709,33 +647,206 @@
 
     function checkTypeOfDesc(){
 
-        let tipo_descuento = $('#tipo_descuento').val();
-        console.log("TYPEOF", tipo_descuento);
+        let tipoDescuento = $('#tipo_descuento').val();
 
-        if(tipo_descuento == 1){
-            $('#activeDesc').css('display', 'block');
+        if (tipoDescuento === '1') {
+            $('#title-activo').css('display', 'block');
+            $('#title-liquidado').css('display', 'none');
+            $('#title-conglomerado').css('display', 'none');
+
+            /*$('#activeDesc').css('display', 'block');
             $("#liquidadoDesc").css('display', 'none');
-            // loadActivedDesc();
-            $('#conglomeradoTable').css('display', 'none');
+            $('#conglomeradoTable').css('display', 'none')*/
+        } else if (tipoDescuento === '2') {
+            $('#title-activo').css('display', 'none');
+            $('#title-liquidado').css('display', 'block');
+            $('#title-conglomerado').css('display', 'none');
 
-
-        }else if(tipo_descuento == 2){
-
-            $('#activeDesc').css('display', 'none');
+            /*$('#activeDesc').css('display', 'none');
             $("#liquidadoDesc").css('display', 'block');
+            $('#conglomeradoTable').css('display', 'none');*/
+        } else if(tipoDescuento === '3') {
+            $('#title-activo').css('display', 'none');
+            $('#title-liquidado').css('display', 'none');
+            $('#title-conglomerado').css('display', 'block');
 
-            $('#conglomeradoTable').css('display', 'none');
-            /**/
-
-
-        }else if(tipo_descuento == 3){
-            $('#activeDesc').css('display', 'none');
+            /*$('#activeDesc').css('display', 'none');
             $("#liquidadoDesc").css('display', 'none');
-            $('#conglomeradoTable').css('display', 'block');
-
+            $('#conglomeradoTable').css('display', 'block');*/
         }
-
     }
+
+    /************************/
+    function loadTable(tipoDescuento) {
+        $('#tabla-general thead tr:eq(0) th').each(function (i) {
+            if (i !== 12) {
+                const title = $(this).text();
+                titulosTablaGeneral.push(title);
+
+                $(this).html(`<input type="text" class="textoshead" placeholder="${title_liq}"/>`);
+                $('input', this).on('keyup change', function () {
+                    if (tablaGeneral.column(i).search() !== this.value) {
+                        tablaGeneral.column(i).search(this.value).draw();
+
+                        let totalDescuento = 0;
+                        const index = tablaGeneral.rows({selected: true, search: 'applied'}).indexes();
+                        const data = tablaGeneral.rows(index).data();
+
+                        $.each(data, function (i, v) {
+                            totalDescuento += parseFloat(v.monto);
+                        });
+                        
+                        document.getElementById(getInputTotalId(tipoDescuento)).value = formatMoney(totalDescuento);
+                    }
+                });
+            }
+        });
+
+        $('tabla-general').on('xhr.dt', function (e, settings, json, xhr) {
+            let total = 0;
+            $.each(json.data, function (i, v) {
+                total += parseFloat(v.monto);
+            })
+            document.getElementById(getInputTotalId(tipoDescuento)).value = formatMoney(total);
+        });
+
+        tablaGeneral = $('#tabla-general').DataTable({
+            dom: 'Brt'+ "<'row'<'col-12 col-sm-12 col-md-6 col-lg-6'i><'col-12 col-sm-12 col-md-6 col-lg-6'p>>",
+            "buttons": [
+                {
+                    extend: 'excelHtml5',
+                    text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
+                    className: 'buttons-excel',
+                    titleAttr: 'DESCUENTOS UNIVERSIDAD',
+                    title: 'DESCUENTOS UNIVERSIDAD',
+                    exportOptions: {
+                        columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10,11],
+                        format: {
+                            header: function (d, columnIndex) {
+                                return ' '+titulos[columnIndex - 1] +' ';
+                            }
+                        }
+                    },
+                    "width": 'auto',
+                    "ordering": false,
+                    "destroy": true,
+                    "pageLength": 10,
+                    "bAutoWidth": false,
+                    "fixedColumns": true,
+                    "language": {
+                        "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"
+                    },
+                    "columns": [
+                        {
+                            // ID
+                            "data": function (d) {
+                                return `<p style="font-size: 1em;">${d.id_usuario}</p>`;
+                            }
+                        },
+                        {
+                            // Usuario
+                            "data": function (d) {
+                                return `<p style="font-size: 1em;">${d.nombre}</p>`;
+                            }
+                        },
+                        {
+                            // Puesto
+                            "data": function (d) {
+                                return `<p style="font-size: 1em;">${d.puesto}</p>`;
+                            }
+                        },
+                        {
+                            // Sede
+                            "data": function (d) {
+                                return `<p style="font-size: 1em;">${d.sede}</p>`;
+                            }
+                        },
+                        {
+                            // Saldo comisiones
+                            "data": function (d) {
+                                if (tipoDescuento === '1') {
+                                    return `<p style="font-size: 1em"><b>$${formatMoney(d.monto)}</b></p>`;
+                                }
+                                if (tipoDescuento === '2' || tipoDescuento === '3') {
+                                    return '';
+                                }
+                                if (tipoDescuento === '4') {
+                                    if (d.id_sede == 6) {
+                                        if (d.abono_nuevo < 15000) {
+                                            return `<p style="font-size: 1em; color:gray">$${formatMoney(d.abono_nuevo)}</p>`;
+                                        } else {
+                                            return `<p style="font-size: 1em; color:blue"><b>$${formatMoney(d.abono_nuevo)}</b></p>`;
+                                        }
+
+                                    }
+                                    if (d.abono_nuevo < 10000) {
+                                        return `<p style="font-size: 1em; color:gray">$${formatMoney(d.abono_nuevo)}</p>`;
+                                    } else {
+                                        return `<p style="font-size: 1em; color:blue"><b>$${formatMoney(d.abono_nuevo)}</b></p>`;
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            // Descuento
+                            "data": function (d) {
+                                return '';
+                            }
+                        },
+                        {
+                            // Aplicado
+                        },
+                        {
+                            // Pendiente general
+                        },
+                        {
+                            // Pago mensual
+                        },
+                        {
+                            // Estatus
+                        },
+                        {
+                            // Pendiente mes
+                        },
+                        {
+                            // Disponible desc
+                        },
+                        {
+                            // Fecha creación
+                        },
+                        {
+                            // Acciones
+                            "data": function (d) {
+                                if (tipoDescuento === 1) {
+
+                                }
+                            }
+                        }
+                    ],
+                    "ajax": {
+                        "url": `${url2}Comisiones/getDescuentosLiquidados/${tipoDescuento}`,
+                        "type": "GET",
+                        cache: false,
+                        "data": function (d) {}
+                    }
+                }
+            ]
+        });
+    }
+
+    function getInputTotalId(tipoDescuento) {
+        if (tipoDescuento === '1') {
+            return 'total-activo';
+        } else if (tipoDescuento === '2') {
+            return 'total-baja';
+        } else if (tipoDescuento === '3') {
+            return 'total-liquidado'
+        } else if (tipoDescuento === '4') {
+            return 'total-conglomerado';
+        }
+        return '';
+    }
+    /************************/
 
 
     let titulos_liquidado = [];
@@ -764,7 +875,7 @@
                         totalLIQ += parseFloat(v.monto);
                     });
                     var to1LIQ = formatMoney(totalLIQ);
-                    document.getElementById("totalpLIQ").value = to1LIQ;
+                    document.getElementById("total-liquidado").value = to1LIQ;
                     // console.log('fsdf'+total);
                 }
             });
@@ -777,7 +888,7 @@
             total += parseFloat(v.monto);
         });
         var to = formatMoney(total);
-        document.getElementById("totalpLIQ").value = to;
+        document.getElementById("total-liquidado").value = to;
     });
 
     tabla_nuevas_liquidado = $("#tabla_descuentos_liquidados").DataTable({
@@ -1187,7 +1298,7 @@
                         total += parseFloat(v.monto);
                     });
                     var to1 = formatMoney(total);
-                    document.getElementById("totalp").value = to1;
+                    document.getElementById("total-activo").value = to1;
                     // console.log('fsdf'+total);
                 }
             });
@@ -1199,7 +1310,7 @@
                 total += parseFloat(v.monto);
             });
             var to = formatMoney(total);
-            document.getElementById("totalp").value = to;
+            document.getElementById("total-activo").value = to;
         });
 
         tabla_nuevas = $("#tabla_descuentos").DataTable({
@@ -2552,7 +2663,7 @@
                             total += parseFloat(v.monto);
                         });
                         var to1 = formatMoney(total);
-                        document.getElementById("totalp").value = to1;
+                        document.getElementById("total-activo").value = to1;
                         // console.log('fsdf'+total);
                     }
                 });
@@ -2565,7 +2676,7 @@
                 total += parseFloat(v.monto);
             });
             var to = formatMoney(total);
-            document.getElementById("totalp").value = to;
+            document.getElementById("total-activo").value = to;
         });
 
         tabla_nuevas = $("#tabla_descuentos").DataTable({
@@ -3355,7 +3466,7 @@
                         totalCombinado += parseFloat(v.monto);
                     });
                     var to1Combinado = formatMoney(totalCombinado);
-                    document.getElementById("totalConglamerado").value = to1Combinado;
+                    document.getElementById("total-conglomerado").value = to1Combinado;
                     // console.log('fsdf'+total);
                 }
             });
@@ -3368,7 +3479,7 @@
             total += parseFloat(v.monto);
         });
         var to = formatMoney(total);
-        document.getElementById("totalConglamerado").value = to;
+        document.getElementById("total-conglomerado").value = to;
     });
 
     tabla_nuevas_combinada = $("#tabla_descuentos_combinada").DataTable({
