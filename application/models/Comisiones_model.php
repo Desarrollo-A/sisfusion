@@ -8511,8 +8511,7 @@ return $query->result();
 
     function fusionAcLi($estatus=3){
         
-        switch($estatus){
-            //activos
+        switch($estatus) {
             case 1:
                 $filtro = ' WHERE du.estatus in (0,1,2,5) AND us.estatus in (1) ';
             break;
@@ -8543,7 +8542,6 @@ return $query->result();
         $filtro
         GROUP BY us.estatus,du.id_usuario, us.nombre, us.apellido_paterno, us.apellido_materno, opc.nombre, se.nombre, ua.nombre, ua.apellido_paterno, ua.apellido_materno,pci2.abono_pagado, pci3.abono_nuevo, se.id_sede, du.pagado_caja, du.pago_individual, du.pagos_activos, du.estatus, du.fecha_modificacion");
         return $query->result_array();
-
     }
 
 
