@@ -6984,4 +6984,15 @@ for ($d=0; $d <count($dos) ; $d++) {
      echo json_encode( array( "data" => $dat));
     }
 
+    public function getTotalPagoFaltanteUsuario($usuarioId)
+    {
+        $data = $this->Comisiones_model->getTotalPagoFaltanteUsuario($usuarioId);
+        echo json_encode($data);
+    }
+
+    public function getDataConglomerado($tipoDescuento)
+    {
+        $data = $this->Comisiones_model->fusionAcLi($tipoDescuento);
+        echo json_encode(array('data' => $data));
+    }
 }
