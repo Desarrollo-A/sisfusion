@@ -11,7 +11,7 @@ var optionsTotalVentas = {
                     fontSize: '22px',
                 },
                 value: {
-                    fontSize: '16px',
+                    fontSize: '32px',
                 },
                 total: {
                     show: true,
@@ -24,22 +24,17 @@ var optionsTotalVentas = {
             }
         }
     },
-    title:{
-        text: 'TOTAL DE VENTAS',
-        align: 'center',
-        margin: 5
-    },
     labels: ['Apples', 'Oranges', 'Bananas', 'Berries'],
 };
 
 var optionsProspectos = {
     series: [{
         name: 'series1',
-        data: [31, 40, 28, 51, 42, 109, 100]
+        data: [31, 40, 28, 51, 42, 93, 76, 70, 88]
     }],
     chart: {
         height: '100%',
-        type: 'area',
+        type: 'line',
         toolbar: {
             show: false
         },
@@ -59,11 +54,11 @@ var optionsProspectos = {
 
 var optionsProspClients = {
     series: [{
-        name: 'series1',
-        data: [31, 40, 28, 51, 42, 109, 100]
+        name: 'Clientes',
+        data: [91, 45, 31, 40, 28, 51, 42, 109, 100, 67, 80, 115]
     }, {
-        name: 'series2',
-        data: [11, 32, 45, 32, 34, 52, 41]
+        name: 'Prospectos',
+        data: [45, 30, 11, 32, 45, 32, 34, 52, 41, 38, 65, 47]
     }],
     chart: {
         height: '100%',
@@ -81,17 +76,39 @@ var optionsProspClients = {
           },
     },
     grid: {
-        padding: {
-          left: -3,
+        show: true,
+        borderColor: '#f3f3f3',
+        strokeDashArray: 0,
+        position: 'back', 
+        yaxis: {
+            lines: {
+                show: true
+            }
+        },  
+        row: {
+            colors: undefined,
+            opacity: 0.5
+        },  
+        column: {
+            colors: undefined,
+            opacity: 0.5
         },
-      },
+    },
     dataLabels: {
         enabled: false
     },
     stroke: {
-        width: 1,
+        width: 2,
         curve: 'smooth'
     },
+    fill: {
+        colors: undefined,
+        opacity: 0.4,
+        type: 'solid',
+    },
+    xaxis: {
+        categories: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+    }
 };
 
 var optionsWeekly = {
@@ -140,14 +157,15 @@ var optionsFunnel = {
         radialBar: {
             dataLabels: {
                 name: {
-                    fontSize: '22px',
+                    fontSize: '20px',
+                    fontWeight: '100'
                 },
                 value: {
-                    fontSize: '16px',
+                    fontSize: '36px',
                 },
                 total: {
                     show: true,
-                    label: 'Total',
+                    label: 'Suma',
                     formatter: function (w) {
                         // By default this function returns the average of all series. The below is just an example to show the use of custom formatter function
                         return 249
@@ -155,11 +173,6 @@ var optionsFunnel = {
                 }
             }
         }
-    },
-    title:{
-        text: 'CICLO DE VENTA',
-        align: 'center',
-        margin: 5
     },
     labels: ['Apples', 'Oranges', 'Bananas', 'Berries'],
 };

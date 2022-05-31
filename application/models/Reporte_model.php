@@ -87,4 +87,75 @@ class Reporte_model extends CI_Model {
         GROUP BY aa.total, aa.totalLotes, bb.contratado, bb.totalContratados) d ON d.joption = a.joption
 		GROUP BY a.nombre, a.id_usuario, c.contratado, c.totalContratados, b.cancelado, b.totalCancelados, a.apartado, a.totalApartados, d.finalTotal, d.finalTotalLotes");
     }
+
+    public function ventasCanceladas($id){
+        $query = $this->db->query("SELECT SUM(ISNULL(l.totalNeto2, l.total)) abril, SUM(l.totalNeto) mayo, SUM(l.totalValidado) junio, SUM(l.total) julio, '#26E7A6' hexa
+        FROM lotes l 
+        INNER JOIN clientes cl ON cl.idLote = l.idLote AND YEAR(cl.fechaApartado) = 2021 
+        INNER JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes WHERE idStatusContratacion = 15 AND idMovimiento = 45
+        GROUP BY idLote, idCliente) hl2 ON hl2.idLote = l.idLote AND hl2.idCliente = cl.id_cliente
+        INNER JOIN historial_liberacion hl ON hl.idLote = hl2.idLote AND hl.status = 1  AND hl.tipo NOT IN (2,5,6)
+        INNER JOIN usuarios u ON u.id_usuario = cl.id_asesor 
+        INNER JOIN sedes s ON s.id_sede = l.ubicacion
+        WHERE l.status = 1 AND  hl.fechaLiberacion between  DATEADD(MM, -6, GETDATE()) AND GETDATE()
+        UNION ALL
+        SELECT SUM(l.totalNeto) abril, SUM(ISNULL(l.totalNeto2, l.total))  mayo, SUM(l.totalValidado) junio, SUM(l.total) julio, '#3CA9FC' hexa
+        FROM lotes l 
+        INNER JOIN clientes cl ON cl.idLote = l.idLote AND YEAR(cl.fechaApartado) = 2021 
+        INNER JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes WHERE idStatusContratacion = 15 AND idMovimiento = 45
+        GROUP BY idLote, idCliente) hl2 ON hl2.idLote = l.idLote AND hl2.idCliente = cl.id_cliente
+        INNER JOIN historial_liberacion hl ON hl.idLote = hl2.idLote AND hl.status = 1  AND hl.tipo NOT IN (2,5,6)
+        INNER JOIN usuarios u ON u.id_usuario = cl.id_asesor 
+        INNER JOIN sedes s ON s.id_sede = l.ubicacion
+        WHERE l.status = 1 AND  hl.fechaLiberacion between  DATEADD(MM, -6, GETDATE()) AND GETDATE()
+        UNION ALL
+        SELECT SUM(l.totalValidado) abril, SUM(l.total) julio, SUM(ISNULL(l.totalNeto2, l.total))  mayo, '0' junio, '#FF7444' hexa
+        FROM lotes l 
+        INNER JOIN clientes cl ON cl.idLote = l.idLote AND YEAR(cl.fechaApartado) = 2021 
+        INNER JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes WHERE idStatusContratacion = 15 AND idMovimiento = 45
+        GROUP BY idLote, idCliente) hl2 ON hl2.idLote = l.idLote AND hl2.idCliente = cl.id_cliente
+        INNER JOIN historial_liberacion hl ON hl.idLote = hl2.idLote AND hl.status = 1  AND hl.tipo NOT IN (2,5,6)
+        INNER JOIN usuarios u ON u.id_usuario = cl.id_asesor 
+        INNER JOIN sedes s ON s.id_sede = l.ubicacion
+        WHERE l.status = 1 AND  hl.fechaLiberacion between  DATEADD(MM, -6, GETDATE()) AND GETDATE()
+        UNION ALL
+        SELECT '0' abril, NULL mayo, NULL junio, '3989133200' julio, '#26E7A6' hexa");
+        return $query->result_array();
+    }
+
+    public function getVentasContratadas($id){
+        $query = $this->db->query("SELECT SUM(ISNULL(l.totalNeto2, l.total)) abril, SUM(l.totalNeto) mayo, SUM(l.totalValidado) junio, SUM(l.total) julio, '#85DF7F' hexa
+        FROM lotes l 
+        INNER JOIN clientes cl ON cl.idLote = l.idLote AND YEAR(cl.fechaApartado) = 2021 
+        INNER JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes WHERE idStatusContratacion = 15 AND idMovimiento = 45
+        GROUP BY idLote, idCliente) hl2 ON hl2.idLote = l.idLote AND hl2.idCliente = cl.id_cliente
+        INNER JOIN historial_liberacion hl ON hl.idLote = hl2.idLote AND hl.status = 1  AND hl.tipo NOT IN (2,5,6)
+        INNER JOIN usuarios u ON u.id_usuario = cl.id_asesor 
+        INNER JOIN sedes s ON s.id_sede = l.ubicacion
+        WHERE l.status = 1 AND  hl.fechaLiberacion between  DATEADD(MM, -6, GETDATE()) AND GETDATE()");
+        return $query->result_array();
+    }
+
+    public function getVentasApartadas($id){
+        $query = $this->db->query("SELECT SUM(l.totalValidado) abril, SUM(l.total) julio, SUM(ISNULL(l.totalNeto2, l.total))  mayo, '0' junio, '#B33C5B' hexa
+        FROM lotes l 
+        INNER JOIN clientes cl ON cl.idLote = l.idLote AND YEAR(cl.fechaApartado) = 2021 
+        INNER JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes WHERE idStatusContratacion = 15 AND idMovimiento = 45
+        GROUP BY idLote, idCliente) hl2 ON hl2.idLote = l.idLote AND hl2.idCliente = cl.id_cliente
+        INNER JOIN historial_liberacion hl ON hl.idLote = hl2.idLote AND hl.status = 1  AND hl.tipo NOT IN (2,5,6)
+        INNER JOIN usuarios u ON u.id_usuario = cl.id_asesor 
+        INNER JOIN sedes s ON s.id_sede = l.ubicacion
+        WHERE l.status = 1 AND  hl.fechaLiberacion between  DATEADD(MM, -6, GETDATE()) AND GETDATE()");
+        return $query->result_array();
+    }
+
+    public function getCancelasContratadas($id){
+        $query = $this->db->query("");
+        return $query->result_array();
+    }
+
+    public function getCanceladasApartadas($id){
+        $query = $this->db->query("");
+        return $query->result_array();
+    }
 }
