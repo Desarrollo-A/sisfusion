@@ -619,10 +619,10 @@
                         titleAttr: 'DESCUENTOS UNIVERSIDAD',
                         title: 'DESCUENTOS UNIVERSIDAD',
                         exportOptions: {
-                            columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+                            columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
                             format: {
                                 header: function (d, columnIndex) {
-                                    return ' ' + titulos[columnIndex - 1] + ' ';
+                                    return ' ' + titulosTablaGeneral[columnIndex] + ' ';
                                 }
                             }
                         }
@@ -679,7 +679,7 @@
 
                             }
                             if (d.abono_nuevo < 10000) {
-                                return `<p style="font-size: 1em; color:gray">$${formatMoney(d.abono_nuevo)}</p`;
+                                return `<p style="font-size: 1em; color:gray">$${formatMoney(d.abono_nuevo)}</p>`;
                             } else {
                                 return `<p style="font-size: 1em; color:blue"><b>$${formatMoney(d.abono_nuevo)}</b></p>`;
                             }
