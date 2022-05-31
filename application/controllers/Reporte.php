@@ -20,8 +20,7 @@ class Reporte extends CI_Controller {
         $this->load->view("dashboard/reporte/reporte");
     }
 
-    public function getInformation()
-    {
+    public function getInformation(){
         if (isset($_POST) && !empty($_POST)) {
             $typeTransaction = $this->input->post("typeTransaction");
             $beginDate = date("Y-m-d", strtotime($this->input->post("beginDate")));
@@ -43,6 +42,50 @@ class Reporte extends CI_Controller {
         } else {
             json_encode(array());
         }
+    }
+
+    public function ventasCanceladas(){
+        $id = $this->session->userdata('id_usuario');
+        $data = $this->Reporte_model->ventasCanceladas($id);
+        if($data != null) {
+            $array = [];
+            for ( $i=0 ; $i<COUNT($data); $i++ ){
+                
+                if( $i == 0 ){
+                    $array['ventasContratadas'] = $data[$i];
+                }
+                else if( $i == 1){
+                    $array['ventasApartadas'] = $data[$i];
+                }
+                else if( $i == 2){
+                    $array['canceladasContratadas'] = $data[$i];
+                }
+                else if( $i == 3){
+                    $array['canceladasApartadas'] = $data[$i];
+                }
+            }
+            echo json_encode($array);
+        } else {
+            echo json_encode(array());
+        }
+    }
+
+    public function getSpecificChart(){
+        $tipo = $this->input->post('type');
+        $id = $this->session->userdata('id_usuario');
+        if( $tipo == '1' )
+            $data = $this->Reporte_model->getVentasContratadas($id);
+        else if( $tipo == '2' )
+            $data = $this->Reporte_model->getVentasApartadas($id);
+        else if( $tipo == '3' )
+            $data = $this->Reporte_model->getCancelasContratadas($id);
+        else if( $tipo == '4' )
+            $data = $this->Reporte_model->getCanceladasApartadas($id);
+
+        if($data != null) {
+            echo json_encode($array);
+        }
+        else echo json_encode(array());
     }
 }
  

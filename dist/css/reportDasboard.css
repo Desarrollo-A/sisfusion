@@ -364,6 +364,12 @@
   justify-content: space-between;
 }
 
+.row-reverse {
+  flex-direction: row-reverse;
+}
+
+/* END Flexbox */
+/* Text */
 .text-center {
   text-align: center;
 }
@@ -376,11 +382,43 @@
   text-align: right !important;
 }
 
-.row-reverse {
-  flex-direction: row-reverse;
+.fw-100 {
+  font-weight: 100;
 }
 
-/* END Flexbox */
+.fw-200 {
+  font-weight: 200;
+}
+
+.fw-300 {
+  font-weight: 300;
+}
+
+.fw-400 {
+  font-weight: 400;
+}
+
+.fw-500 {
+  font-weight: 500;
+}
+
+.fw-600 {
+  font-weight: 600;
+}
+
+.fw-700 {
+  font-weight: 700;
+}
+
+.fw-800 {
+  font-weight: 800;
+}
+
+.fw-900 {
+  font-weight: 900;
+}
+
+/* Text */
 /* Vrbls colores */
 /* END vrbls coloress */
 /* size devices */
@@ -1054,7 +1092,7 @@
 }
 
 #reporte .money {
-  font-size: 26px;
+  font-size: 24px;
   font-weight: 600;
 }
 
@@ -1068,13 +1106,14 @@
   position: absolute;
   right: 15px;
   bottom: 15px;
-  background-color: #D8DDE2;
-  color: #103f75;
+  background-color: #103f75;
+  color: #ffffff;
   border-radius: 20px;
   width: 23px;
   height: 23px;
   border: none;
   margin-left: 3px;
+  font-size: 12px;
 }
 
 #reporte .moreMiniChart span {
@@ -1088,8 +1127,8 @@
 #reporte .selectMini {
   display: flex;
   align-items: center;
-  background-color: #e3ddc9;
-  color: #4e4e4e;
+  background-color: #bdac7b;
+  color: #ffffff;
   border-radius: 20px;
   font-size: 9px;
   padding: 4px 7px;
@@ -1105,7 +1144,7 @@
   }
 }
 #reporte .boxMiniCharts {
-  height: 150px !important;
+  height: 110px !important;
 }
 
 #reporte .boxAccordions .bk {
@@ -1172,6 +1211,14 @@
   color: #4e4e4e;
   text-align: center;
   font-weight: 500;
+}
+
+#reporte .boxAccordions .bk table thead tr th input:active {
+  border: 1px solid #333333;
+}
+
+#reporte .boxAccordions .bk table thead tr th input:focus {
+  border: 1px solid #333333;
 }
 
 #reporte .boxAccordions .bk table .update-dataTable {

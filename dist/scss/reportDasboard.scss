@@ -15,7 +15,7 @@
         }
     }
     .money{
-        font-size: 26px;
+        font-size: 24px;
         font-weight: 600;
         @media #{$smartphone}, #{$tablets}{ margin: 0!important; }
     }
@@ -23,13 +23,14 @@
         position: absolute;
         right: 15px;
         bottom: 15px;
-        background-color: #D8DDE2;
-        color: $blueIndigo;
+        background-color: $blueIndigo;
+        color: $white;
         border-radius: 20px;
         width: 23px;
         height: 23px;
         border: none;
         margin-left: 3px;
+        font-size: 12px;
         span{
             font-size: 12px!important;
         }
@@ -40,8 +41,8 @@
     .selectMini{
         display: flex;
         align-items: center;
-        background-color: #e3ddc9;
-        color: $grayOxford;
+        background-color: #bdac7b;
+        color: $white;
         border-radius: 20px;
         font-size: 9px;
         padding: 4px 7px;
@@ -52,7 +53,7 @@
         @media #{$smartphone}{ font-size: 12px!important; }
     }
     .boxMiniCharts{
-        height: 150px!important;
+        height: 110px!important;
     }
     .boxAccordions{
         .bk{
@@ -102,6 +103,12 @@
                         color: $grayOxford;
                         text-align: center;
                         font-weight: 500;
+                        &:active{
+                            border: 1px solid $gray;
+                        }
+                        &:focus{
+                            border: 1px solid $gray;
+                        }
                     }
                 }
                 .update-dataTable{

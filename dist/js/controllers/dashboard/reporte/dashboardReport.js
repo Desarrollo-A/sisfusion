@@ -1,52 +1,37 @@
 $('[data-toggle="tooltip"]').tooltip();
-
-var optionsMiniChart = {
-    series: [{
-        name: 'Mayo',
-        data: [31, 40, 28, 51, 42, 109, 100]
-    },
-    {
-        name: 'Abril',
-        data: [21, 3, 49, 28, 78, 80, 95]
-    },
-    {
-        name: 'Marzo',
-        data: [10, 26, 38, 42, 19, 40, 63]
-    }],
-    chart: {
-        height: '100%',
-        type: 'line',
-        toolbar: {
-            show: false
-        },
-
-        sparkline: {
-            enabled: true,
-        }
-    },
-    dataLabels: {
-        enabled: false
-    },
-    stroke: {
-        width: 2,
-        curve: 'smooth'
-    },
-};
-
-var ventasContratadasChart = new ApexCharts(document.querySelector("#ventasContratadas"), optionsMiniChart);
-ventasContratadasChart.render();
-
-var ventasApartadasChart = new ApexCharts(document.querySelector("#ventasApartadas"), optionsMiniChart);
-ventasApartadasChart.render();
-
-var canceladasContratadasChart = new ApexCharts(document.querySelector("#canceladasContratadas"), optionsMiniChart);
-canceladasContratadasChart.render();
-
-var canceladasApartadasChart = new ApexCharts(document.querySelector("#canceladasApartadas"), optionsMiniChart);
-canceladasApartadasChart.render();
-
 //AA: Carga inicial de datatable y acordión. 
+getLastSales();
 fillBoxAccordions(userType == '1' ? 'subdirector': userType == '2' ? 'gerente' : userType == '3' ? 'coordinador' : 'asesor');
+
+
+function createAccordions(option){
+    let html = '';
+    html = `<div class="bk">
+        <h4 class="accordion-title js-accordion-title">`+option+`</h4>
+            <div class="accordion-content">
+                <table class="table-striped table-hover" id="table`+option+`" name="table`+option+`">
+                    <thead>
+                        <tr>
+                            <th class="detail">MÁS</th>
+                            <th class="encabezado">`+option.toUpperCase()+`</th>
+                            <th>TOTAL</th>
+                            <th># LOTES</th>
+                            <th>APARTADO</th>
+                            <th># LOTES APARTADOS</th>
+                            <th>% APARTADOS</th>
+                            <th>CONTRATADOS</th>
+                            <th># LOTES CONTRATADOS</th>
+                            <th>% CONTRATADOS</th>
+                            <th>CANCELADOS</th>
+                            <th># LOTES CANCELADOS</th>
+                            <th>ACCIONES</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>`;
+    $(".boxAccordions").append(html);
+}
 
 function fillBoxAccordions(option){
     createAccordions(option);
@@ -58,10 +43,8 @@ function fillBoxAccordions(option){
         $(this).html('<input type="text" center;" class="textoshead"  placeholder="' + title + '"/>');
         $('input', this).on('keyup change', function () {
             if ($("#table"+option+"").DataTable().column(i).search() !== this.value) {
-                $("#table"+option+"").DataTable()
-                    .column(i)
-                    .search(this.value)
-                    .draw();
+                $("#table"+option+"").DataTable().column(i)
+                    .search(this.value).draw();
             }
         });
     });
@@ -186,37 +169,7 @@ function fillBoxAccordions(option){
     $('[data-toggle="tooltip"]').tooltip();
 }
 
-function createAccordions(option){
-    let html = '';
-    html = `<div class="bk">
-        <h4 class="accordion-title js-accordion-title">`+option+`</h4>
-            <div class="accordion-content">
-                <table class="table-striped table-hover" id="table`+option+`" name="table`+option+`">
-                    <thead>
-                        <tr>
-                            <th class="detail">MÁS</th>
-                            <th class="encabezado">`+option.toUpperCase()+`</th>
-                            <th>TOTAL</th>
-                            <th># LOTES</th>
-                            <th>APARTADO</th>
-                            <th># LOTES APARTADOS</th>
-                            <th>% APARTADOS</th>
-                            <th>CONTRATADOS</th>
-                            <th># LOTES CONTRATADOS</th>
-                            <th>% CONTRATADOS</th>
-                            <th>CANCELADOS</th>
-                            <th># LOTES CANCELADOS</th>
-                            <th>ACCIONES</th>
-                        </tr>
-                    </thead>
-                </table>
-            </div>
-        </div>`;
-    $(".boxAccordions").append(html);
-}
-
 $(document).on('click', '.update-dataTable', function () {
-    console.log("click");
     const type = $(this).attr("data-type");
     // const beginDate = $("#beginDate").val();
     // const endDate = $("#endDate").val();
@@ -256,6 +209,54 @@ $(document).on('click', '.update-dataTable', function () {
     }
 });
 
+function setOptionsMiniChart(nameChart, dataChart, color, months){
+    console.log(color);
+    var optionsMiniChart = {
+        series: [{
+            name: nameChart,
+            data: dataChart
+        }],
+        chart: {
+            height: '100%',
+            type: 'line',
+            toolbar: {
+                show: false
+            },
+            sparkline: {
+                enabled: true,
+            }
+        },
+        dataLabels: {
+            enabled: false
+        },
+        stroke: {
+            width: 3,
+            curve: 'smooth',
+        },
+        xaxis: {
+            categories: months,
+        },
+        markers: {
+            size: 4,
+            colors: '#fff',
+            strokeColors: color,
+        },
+        colors: [''+color+'']
+    };
+    return optionsMiniChart;
+}
+
+$(document).on('click', '.js-accordion-title', function () {
+    $(this).next().slideToggle(200);
+    $(this).toggleClass('open', 200);
+});
+
+function chartDetail(e){
+    console.log(e);
+    $("#modalChart").modal();
+    // getSpecificChart(e.value);
+}
+
 function formatMoney(n) {
     var c = isNaN(c = Math.abs(c)) ? 2 : c,
         d = d == undefined ? "." : d,
@@ -266,7 +267,64 @@ function formatMoney(n) {
     return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
 };
 
-$(document).on('click', '.js-accordion-title', function () {
-    $(this).next().slideToggle(200);
-    $(this).toggleClass('open', 200);
-});
+function getSpecificChart(type){
+    $.ajax({
+        type: "POST",
+        url: "Reporte/getSpecificChart",
+        data: { type: type},
+        dataType: 'json',
+        cache: false,
+        beforeSend: function() {
+            $('#spiner-loader').removeClass('hide');
+        },
+        success: function(data){
+            $('#spiner-loader').addClass('hide');
+            
+        },
+        error: function() {
+            $('#spiner-loader').addClass('hide');
+            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+        }
+    });
+}
+
+function getLastSales(){
+    $.ajax({
+        type: "POST",
+        url: "Reporte/ventasCanceladas",
+        dataType: 'json',
+        cache: false,
+        beforeSend: function() {
+          $('#spiner-loader').removeClass('hide');
+        },
+        success: function(data){
+          $('#spiner-loader').addClass('hide');
+            for (const [key, value] of Object.entries(data)) {
+                var color = ''; var nameChart = key; var total = 0;
+                var dataChart = [];
+                var objVentasCanceladas = Object.values(value);
+                var months = (Object.keys(value)).slice(0, -1);
+                
+                for ( i = 0; i < objVentasCanceladas.length ; i++ ){
+                    if( (objVentasCanceladas.length - 1) == i)
+                        color = objVentasCanceladas[i];
+                    else{
+                        amount = objVentasCanceladas[i];
+                        dataChart.push(amount);
+                        if (amount == null || amount == .0) amount = 0;
+                        total = total + parseInt(amount);
+                    }
+                }
+                $("#tot"+key).text("$ "+formatMoney(total));
+                var miniChart = new ApexCharts(document.querySelector("#"+key+""), setOptionsMiniChart(nameChart, dataChart, color, months));
+                
+                miniChart.render();
+            }
+        },
+        error: function() {
+          $('#spiner-loader').addClass('hide');
+            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+        }
+    });
+}
+
