@@ -1075,7 +1075,6 @@
     width: 98%;
   }
 }
-
 #reporte .info {
   line-height: 1;
 }
@@ -1139,13 +1138,11 @@
   font-size: 12px;
   margin-left: 5px;
 }
-
 @media (min-device-width: 320px) and (max-device-width: 480px) {
   #reporte .selectMini {
     font-size: 12px !important;
   }
 }
-
 #reporte .boxMiniCharts {
   height: 110px !important;
 }
@@ -1166,7 +1163,6 @@
     margin-top: 25px !important;
   }
 }
-
 #reporte .boxAccordions .bk .accordion-title {
   display: relative;
   text-transform: capitalize;
