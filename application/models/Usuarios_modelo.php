@@ -158,8 +158,9 @@ class Usuarios_modelo extends CI_Model {
                                         INNER JOIN sedes s ON s.id_sede = (CASE WHEN LEN (u.id_sede) > 1 THEN 2 ELSE u.id_sede END)
                                         LEFT JOIN descuentos_universidad du ON du.id_usuario = u.id_usuario
                                         --LEFT JOIN  (SELECT id_usuario FROM descuentos_universidad GROUP BY id_usuario) du ON du.id_usuario = u.id_usuario
-                                        WHERE (u.id_rol IN (3, 7, 9) 
+                                        WHERE u.id_usuario not in (select id_usuario_d from relacion_usuarios_duplicados) AND (u.id_rol IN (3, 7, 9) 
                                         AND (u.rfc NOT LIKE '%TSTDD%' AND ISNULL(u.correo, '' ) NOT LIKE '%test_%') AND u.id_usuario NOT IN (821, 1366, 1923, 4340, 4062, 4064, 4065, 4067, 4068, 4069, 6578, 712 , 9942, 4415)) OR u.id_usuario IN (9359, 9827)
+                                        
                                         ORDER BY nombre");
                 break;
 
