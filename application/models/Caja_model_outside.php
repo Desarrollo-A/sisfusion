@@ -1155,7 +1155,7 @@
     }
 
     /***********APARTADO ONLINE***********/
-    public function trasns_vo($data, $data2, $casas, $idLote)
+    public function trasns_vo($data, $data2, $casas, $idLote, $token_data)
     {
         //Iniciamos la transacción.    
         $this->db->trans_begin();
@@ -1164,6 +1164,12 @@
         //Recuperamos el id del cliente registrado.    
         //$cliente_id = $this->db->last_id();
         $cliente_id = $this->db->query("SELECT IDENT_CURRENT('clientes') as lastId")->row()->lastId;
+
+        ###UPDATE id_cliente, id_lote
+        if(count($token_data)>0){
+            $loclup_data = $this->db->query("UPDATE tokens SET id_cliente=".$cliente_id.", id_lote=".$idLote." WHERE token LIKE '". $token_data[0]['token']."'");
+        }
+        ###END UPDATE
 
         $horaActual = date('H:i:s');
         $horaInicio = date("08:00:00");
@@ -1459,10 +1465,14 @@
         else
             $where = "";
         return $this->db->query("SELECT tk.id_token, tk.token, CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno) generado_para,
-        tk.fecha_creacion, CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno) creado_por, tk.nombre_archivo, tk.estatus
+        tk.fecha_creacion, CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno) creado_por, tk.nombre_archivo, tk.estatus,
+        cl.fechaApartado, tk.id_cliente, tk.id_lote, CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno ) as nombreCliente,
+        l.nombreLote, ".$this->session->userdata('id_rol')." as currentRol
         FROM tokens tk
         INNER JOIN usuarios u1 ON u1.id_usuario = tk.para
         INNER JOIN usuarios u2 ON u2.id_usuario = tk.creado_por
+        LEFT JOIN clientes cl ON cl.id_cliente = tk.id_cliente
+        LEFT JOIN lotes l ON l.idLote = tk.id_lote
         $where  ORDER BY tk.fecha_creacion");
     }
 

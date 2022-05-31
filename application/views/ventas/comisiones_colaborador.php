@@ -389,7 +389,7 @@
                         <div class="modal-body">
                             <div class="row">
                                 <div class="col-lg-12 text-center">
-                                    <p>Recuerda que tu documento fiscal debe corresponder al total exacto de las
+                                    <p style="text-align: justify; text-justify: inter-word;"><b>Nota:</b> Recuerda que tu documento fiscal debe corresponder al total exacto de las
                                         comisiones a solicitar, una vez solicitados tus pagos ya no podrás remplazar
                                         este archivo.</p>
                                     <div class="input-group">
@@ -1323,26 +1323,27 @@
                                     return '<span class="material-icons" style="color: #DCDCDC;">block</span>';
                                 break;
 
+                                case '5':
+                                case 5:
+                                    if (full.fecha_abono && full.estatus == 1) {
+                                        const fechaAbono = new Date(full.fecha_abono);
+                                        const fechaOpinion = new Date(full.fecha_opinion);
+                                        if (fechaAbono.getTime() > fechaOpinion.getTime()) {
+                                            return '<span class="material-icons" style="color: #DCDCDC;">block</span>';
+                                        }
+                                    }
+                                    return '<input type="checkbox" name="idT[]" style="width:20px;height:20px;"  value="' + full.id_pago_i + '">';
+
                                 case '3': //ASIMILADOS
                                 case 3: //ASIMILADOS
                                 case '4': //RD
                                 case 4: //RD
-                                case 5:
-                                case '5':
                                 default:
 
                                 if (full.id_usuario == 5028  || full.id_usuario == 4773 || full.id_usuario == 5381 ){
                                     return '<span class="material-icons" style="color: #DCDCDC;">block</span>';
-
-                                } else if (full.fecha_abono && full.estatus == 1) {
-                                    const fechaAbono = new Date(full.fecha_abono);
-                                    const fechaOpinion = new Date(full.fecha_opinion);
-                                    if (fechaAbono.getTime() > fechaOpinion.getTime()) {
-                                        return '<span class="material-icons" style="color: #DCDCDC;">block</span>';
-                                    }
-                                    return '<input type="checkbox" name="idT[]" style="width:20px;height:20px;"  value="' + full.id_pago_i + '">';
                                 } else {
-                                    return '<span class="material-icons" style="color: #DCDCDC;">block</span>';
+                                    return '<input type="checkbox" name="idT[]" style="width:20px;height:20px;"  value="' + full.id_pago_i + '">';
                                 }
                             }
                         } else {
@@ -2690,10 +2691,15 @@
         } 
 
         function save2() {
-            var formData = new FormData(document.getElementById("frmnewsol2"));
+            let formData = new FormData(document.getElementById("frmnewsol2"));
+            const labelSum = $('#sumacheck').text();
+            const total = Number(labelSum.split('$')[1].trim().replace(',', ''));
+
             formData.append("dato", "valor");
             formData.append("xmlfile", documento_xml);
             formData.append("pagos",pagos);
+            formData.append('total', total);
+
             $.ajax({
                 url: url + 'Comisiones/guardar_solicitud2',
                 data: formData,
@@ -2718,9 +2724,14 @@
                         tabla_nuevas.ajax.reload();
                         $("#modal_multiples .modal-body").html("");
                         $("#modal_multiples .header").html("");
-
-                    }
-                    else {
+                    } else if (data == 4) {
+                        alert("EL TOTAL DE LA FACTURA NO COINCIDE CON EL TOTAL DE COMISIONES SELECCIONADAS");
+                        $('#loader').addClass('hidden');
+                        $("#modal_multiples").modal('toggle');
+                        tabla_nuevas.ajax.reload();
+                        $("#modal_multiples .modal-body").html("");
+                        $("#modal_multiples .header").html("");
+                    } else {
                         alert("NO SE HA PODIDO COMPLETAR LA SOLICITUD");
                         $('#loader').addClass('hidden');
                         $("#modal_multiples").modal('toggle');

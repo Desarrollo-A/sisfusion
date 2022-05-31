@@ -15,6 +15,7 @@ class Comisiones extends CI_Controller
     $this->load->model('Comisiones_model');
     $this->load->model('asesor/Asesor_model');
     $this->load->model('Usuarios_modelo');
+    $this->load->model('PagoInvoice_model');
     $this->load->library(array('session', 'form_validation', 'get_menu'));
     $this->load->helper(array('url', 'form'));
     $this->load->database('default');
@@ -723,17 +724,20 @@ function update_estatus(){
 
   public function acepto_comisiones_user(){
     $this->load->model("Comisiones_model");
+    $id_user_Vl = $this->session->userdata('id_usuario');
+    $formaPagoUsuario = $this->session->userdata('forma_pago');
     $sol=$this->input->post('idcomision');
      $consulta_comisiones = $this->db->query("SELECT id_pago_i FROM pago_comision_ind where id_pago_i IN (".$sol.")");
+    $opinionCumplimiento = $this->Comisiones_model->findOpinionActiveByIdUsuario($id_user_Vl);
    
       if( $consulta_comisiones->num_rows() > 0 ){
         $consulta_comisiones = $consulta_comisiones->result_array();
-        $id_user_Vl = $this->session->userdata('id_usuario');
         
           $sep = ',';
           $id_pago_i = '';
 
           $data=array();
+          $pagoInvoice = array();
 
           foreach ($consulta_comisiones as $row) {
             $id_pago_i .= implode($sep, $row);
@@ -748,13 +752,24 @@ function update_estatus(){
             );
              array_push($data,$row_arr);
 
-
+             if ($formaPagoUsuario == 5) { // Pago extranjero
+                 $pagoInvoice[] = array(
+                     'id_pago_i' => $row['id_pago_i'],
+                     'nombre_archivo' => $opinionCumplimiento->archivo_name,
+                     'estatus' => 1,
+                     'modificado_por' => $id_user_Vl,
+                     'fecha_registro' => date('Y-m-d H:i:s')
+                 );
+             }
           }
           $id_pago_i = rtrim($id_pago_i, $sep);
       
             $up_b = $this->Comisiones_model->update_acepta_solicitante($id_pago_i);
             $ins_b = $this->Comisiones_model->insert_phc($data);
             $this->Comisiones_model->changeEstatusOpinion($id_user_Vl);
+            if ($formaPagoUsuario == 5) {
+                $this->PagoInvoice_model->insertMany($pagoInvoice);
+            }
       
       if($up_b == true && $ins_b == true){
         $data_response = 1;
@@ -1526,46 +1541,52 @@ if( isset( $_FILES ) && !empty($_FILES) ){
           if( $resultado ){
             $xml_subido = $this->upload->data();
             $datos_xml = $this->Comisiones_model->leerxml( $xml_subido['full_path'], TRUE );
-            
-            $nuevo_nombre = date("my")."_";
-            $nuevo_nombre .= str_replace( array(",", ".", '"'), "", str_replace( array(" ", "/"), "_", limpiar_dato($datos_xml["nameEmisor"]) ))."_";
-            $nuevo_nombre .= date("Hms")."_";
-            $nuevo_nombre .= rand(4, 100)."_";
-            $nuevo_nombre .= substr($datos_xml["uuidV"], -5).".xml";
-            rename( $xml_subido['full_path'], "./UPLOADS/XMLS/".$nuevo_nombre );
-            $datos_xml['nombre_xml'] = $nuevo_nombre;
-            ini_set('max_execution_time', 0);
-            for ($i=0; $i <count($datos) ; $i++) { 
-              if(!empty($datos[$i])){
-                $id_com =  $datos[$i];
-                $this->Comisiones_model->insertar_factura($id_com, $datos_xml,$usuarioid);
-                $this->Comisiones_model->update_acepta_solicitante($id_com);
-              $this->db->query("INSERT INTO historial_comisiones VALUES (".$id_com.", ".$this->session->userdata('id_usuario').", GETDATE(), 1, 'COLABORADOR ENVÍO FACTURA A CONTRALORÍA')");
 
-              }
+            $total = (float)$this->input->post('total');
+            $totalXml = (float)$datos_xml['total'];
+
+            if (($total + .50) >= $totalXml && ($total - .50) <= $totalXml) {
+                $nuevo_nombre = date("my")."_";
+                $nuevo_nombre .= str_replace( array(",", ".", '"'), "", str_replace( array(" ", "/"), "_", limpiar_dato($datos_xml["nameEmisor"]) ))."_";
+                $nuevo_nombre .= date("Hms")."_";
+                $nuevo_nombre .= rand(4, 100)."_";
+                $nuevo_nombre .= substr($datos_xml["uuidV"], -5).".xml";
+                rename( $xml_subido['full_path'], "./UPLOADS/XMLS/".$nuevo_nombre );
+                $datos_xml['nombre_xml'] = $nuevo_nombre;
+                ini_set('max_execution_time', 0);
+                for ($i=0; $i <count($datos) ; $i++) {
+                    if(!empty($datos[$i])){
+                        $id_com =  $datos[$i];
+                        $this->Comisiones_model->insertar_factura($id_com, $datos_xml,$usuarioid);
+                        $this->Comisiones_model->update_acepta_solicitante($id_com);
+                        $this->db->query("INSERT INTO historial_comisiones VALUES (".$id_com.", ".$this->session->userdata('id_usuario').", GETDATE(), 1, 'COLABORADOR ENVÍO FACTURA A CONTRALORÍA')");
+
+                    }
+                }
+            } else {
+                $this->db->trans_rollback();
+                echo json_encode(4);
+                return;
             }
-          }else{
+          } else {
             $resultado["mensaje"] = $this->upload->display_errors();
           }
         }
-        if ( $resultado === FALSE || $this->db->trans_status() === FALSE){
-                  $this->db->trans_rollback();
-                  $resultado = array("resultado" => FALSE);
-              }else{
-                  $this->db->trans_commit();
-                  $resultado = array("resultado" => TRUE);
-              }
-          }
-
-          $this->Usuarios_modelo->Update_OPN($this->session->userdata('id_usuario'));
-          echo json_encode( $resultado );
-
-
-        }else{
-          echo json_encode(3);
+        if ( $resultado === FALSE || $this->db->trans_status() === FALSE) {
+          $this->db->trans_rollback();
+          $resultado = array("resultado" => FALSE);
+        } else {
+          $this->db->trans_commit();
+          $resultado = array("resultado" => TRUE);
         }
-
       }
+
+      $this->Usuarios_modelo->Update_OPN($this->session->userdata('id_usuario'));
+      echo json_encode( $resultado );
+    } else {
+      echo json_encode(3);
+    }
+  }
 
       public function getComments($pago){
         echo json_encode($this->Comisiones_model->getComments($pago)->result_array());
@@ -2949,6 +2970,14 @@ $sumaDispoCorea = str_replace($replace,"",$this->input->post("totalCorea"));
 }
 
 
+public function getDatosInvoice(){
+  $dat =  $this->Comisiones_model->getDatosInvoice()->result_array();
+ for( $i = 0; $i < count($dat); $i++ ){
+     $dat[$i]['pa'] = 0;
+ }
+ echo json_encode( array( "data" => $dat));
+}
+
 
 
 public function getDatosNuevasAContraloria($proyecto,$condominio){
@@ -3333,11 +3362,16 @@ public function LiquidarLote(){
 
     public function changeLoteToStopped()
     {
+
         $response = $this->Comisiones_model
             ->insertHistorialLog($_POST['id_pagoc'], $this->session->userdata('id_usuario'), 1, $_POST['descripcion'],
                 'pago_comision', $_POST['motivo']);
         if ($response) {
+          if(isset($_POST['statusLote'])){
+            $response = $this->Comisiones_model->updateBanderaDetenida( $_POST['id_pagoc'], 6,$_POST['statusLote']);
+          }else{
             $response = $this->Comisiones_model->updateBanderaDetenida( $_POST['id_pagoc'], 6);
+          }
         }
 
          echo json_encode($response);
@@ -5563,7 +5597,8 @@ public function getUsuariosByrol($rol,$user)
   public function CancelarDescuento(){
     $id_pago = $this->input->post('id_pago');
     $motivo =  $this->input->post('motivo');
-    $respuesta = array($this->Comisiones_model->CancelarDescuento($id_pago,$motivo));
+    $monto =  $this->input->post('monto');
+    $respuesta = array($this->Comisiones_model->CancelarDescuento($id_pago,$motivo,$monto));
     echo json_encode( $respuesta[0]);
   
   }
@@ -5608,10 +5643,35 @@ public function saveTipoVenta(){
 
 
 
-   public function lista_estatus($proyecto)
+    public function lista_estatus()
     {
-      echo json_encode($this->Comisiones_model->get_lista_estatus($proyecto)->result_array());
-}
+        $data = $this->Comisiones_model->getListaEstatusHistorialEstatus();
+        echo json_encode($data);
+    }
+
+    public function cambiarEstatusComisiones()
+    {
+        $idPagos = explode(',', $this->input->post('idPagos'));
+        $userId = $this->session->userdata('id_usuario');
+        $estatus = $_POST['estatus'];
+        $comentario = $_POST['comentario'];
+        $historiales = array();
+
+        foreach($idPagos as $pago) {
+            $historiales[] = array(
+                'id_pago_i' => $pago,
+                'id_usuario' =>  $userId,
+                'fecha_movimiento' => date('Y-m-d H:i:s'),
+                'estatus' => 1,
+                'comentario' => $comentario
+            );
+        }
+
+        $resultUpdate = $this->Comisiones_model->massiveUpdateEstatusComisionInd(implode(',', $idPagos), $estatus);
+        $resultMassiveInsert = $this->Comisiones_model->insert_phc($historiales);
+
+        echo ($resultUpdate && $resultMassiveInsert);
+    }
 
 public function getDatosHistorialPagoEstatus($proyecto,$condominio, $usuario){
 
@@ -6906,9 +6966,14 @@ for ($d=0; $d <count($dos) ; $d++) {
         break;
       }
 
-
     }
 
+
+    public function getComprobantesExtranjero()
+    {
+        $data = $this->Comisiones_model->getComprobantesExtranjero();
+        echo json_encode(array('data' => $data));
+    }
 
 
     public function getDatosNuevasEContraloria($proyecto,$condominio){
@@ -6919,4 +6984,15 @@ for ($d=0; $d <count($dos) ; $d++) {
      echo json_encode( array( "data" => $dat));
     }
 
+    public function getTotalPagoFaltanteUsuario($usuarioId)
+    {
+        $data = $this->Comisiones_model->getTotalPagoFaltanteUsuario($usuarioId);
+        echo json_encode($data);
+    }
+
+    public function getDataConglomerado($tipoDescuento)
+    {
+        $data = $this->Comisiones_model->fusionAcLi($tipoDescuento);
+        echo json_encode(array('data' => $data));
+    }
 }

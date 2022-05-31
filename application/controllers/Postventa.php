@@ -59,6 +59,7 @@ class Postventa extends CI_Controller
         switch ($this->session->userdata('id_rol')) {
             case '11': // ADMON
             case '13': // CONTRALORÏa
+            case '32': // CONTRALORÏa corporativa
             case '55': // POSTVENTA
             case '56': // COMITÉ TÉCNICO
             case '57': // TITULACIÓN
@@ -1512,6 +1513,7 @@ class Postventa extends CI_Controller
         $mail->Subject(utf8_decode("Observaciones Notaria"));
         $mail->message('Buen día! Las observaciones que la notaria envío sobre la solicitud: ' . $idSolicitud . ' son: ' . $observaciones);
         $response = $mail->send();
+        echo json_encode($response);
     }
 
     public function saveEstatusLote()

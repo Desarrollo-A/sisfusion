@@ -222,11 +222,11 @@
                     {
                         "width": "8%",
                         "data": function( d ){
-                            if (d.tipo_venta === 1) {
+                            if (d.tipo_venta == 1) {
                                 return '<span class="label label-danger">Venta Particular</span>';
-                            }else if (d.tipo_venta === 2) {
+                            }else if (d.tipo_venta == 2) {
                                 return '<span class="label label-success">Venta normal</span>';
-                            } else if (d.tipo_venta === 7) {
+                            } else if (d.tipo_venta == 7) {
                                 return '<span class="label label-warning">Venta especial</span>';
                             } else {
                                 return '';

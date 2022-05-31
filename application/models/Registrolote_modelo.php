@@ -65,17 +65,19 @@
     }
 
     public function getdp_CL($lotes){
-        $query = $this->db-> query("SELECT cl.id_cliente, l.idLote, l.idCliente, l.nombreLote, c.nombre, r.nombreResidencial, cl.nombre nomCliente, cl.apellido_paterno, cl.apellido_materno,
-                                CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) asesor,
-                                CONCAT(uu.nombre, ' ', uu.apellido_paterno, ' ', uu.apellido_materno) coordinador,
-                                CONCAT(uuu.nombre, ' ', uuu.apellido_paterno, ' ', uuu.apellido_materno) gerente FROM lotes l 
-                                INNER JOIN condominios c ON c.idCondominio = l.idCondominio
-                                INNER JOIN residenciales r ON r.idResidencial = c.idResidencial
-                                INNER JOIN clientes cl ON cl.id_cliente = l.idCliente
-                                LEFT JOIN usuarios u ON u.id_usuario = cl.id_asesor
-                                LEFT JOIN usuarios uu ON uu.id_usuario = cl.id_coordinador
-                                LEFT JOIN usuarios uuu ON uuu.id_usuario = cl.id_gerente
-                                WHERE l.idLote = ".$lotes);
+		$query = $this->db->query("	SELECT cl.id_cliente, l.idLote, l.idCliente, l.nombreLote, c.nombre, r.nombreResidencial, cl.nombre nomCliente, cl.apellido_paterno, cl.apellido_materno,
+										CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) asesor,
+										CONCAT(uu.nombre, ' ', uu.apellido_paterno, ' ', uu.apellido_materno) coordinador,
+										CONCAT(uuu.nombre, ' ', uuu.apellido_paterno, ' ', uuu.apellido_materno) gerente
+									FROM lotes l
+										INNER JOIN condominios c ON c.idCOndominio = l.idCondominio
+										INNER JOIN residenciales r ON r.idResidencial = c.idResidencial
+										INNER JOIN clientes cl ON cl.id_cliente = l.idCliente
+										LEFT JOIN usuarios u ON u.id_usuario = cl.id_asesor
+										LEFT JOIN usuarios uu ON uu.id_usuario = cl.id_coordinador
+										LEFT JOIN usuarios uuu ON uuu.id_usuario = cl.id_gerente
+									WHERE l.idLote = ".$lote);
+
         return $query->result_array();
     }
 
@@ -6268,4 +6270,83 @@ WHERE idLote IN ('".$row['idLote']."') and nombreLote = '".$insert_csv['nombreLo
 				return $query;
 			}
 		}
+
+	public function getReporteStatus11(){
+		$id_currentUser = $this->session->userdata('id_usuario');
+		$lider_currentUser = $this->session->userdata('id_usuario');
+		switch ($this->session->userdata('id_rol')) {
+            case 1:
+            { #DIRECTOR   - RIGEL
+                $filter = '';
+                break;
+            }
+            case 4:
+            { #ASISTENTE DIRECTOR ASISTENTE RIGEL
+                $filter = '';
+                break;
+            }
+            case 3:
+            { #GERENTE
+                $filter = ' AND cl.id_gerente=' . $id_currentUser;
+                break;
+            }
+            case 6:
+            { #ASISTENTE GERENTE
+                $filter = ' AND cl.id_gerente=' . $lider_currentUser;
+                break;
+            }
+            case 2:
+            { #SUBDIRECCIÓN
+                $filter = ' AND cl.id_subdirector=' . $id_currentUser;
+                break;
+            }
+            case 5:
+            { #ASISTENTE SUBDIRECCIÓN
+                $filter = ' AND cl.id_subdirector=' . $lider_currentUser;
+                break;
+            }
+            case 9:
+            { #COORDINADOR
+                $filter = ' AND cl.id_coordinador=' . $id_currentUser;
+                break;
+            }
+            case 59:
+            { #DIRECTOR REGIONAL
+                $filter = ' AND cl.id_regional=' . $id_currentUser;
+                break;
+            }
+            case 60:
+            { #ASISTENTE DIRECTOR REGIONAL
+                $filter = ' AND cl.id_regional=' . $lider_currentUser;
+                break;
+            }
+            default:
+            {
+                $filter = '';
+                break;
+            }
+        }
+
+		$query = $this->db-> query("SELECT re.descripcion nombreResidencial, co.nombre nombreCondominio, lo.nombreLote, lo.idLote, 
+        								CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno) nombreCliente, cl.fechaApartado, sc.nombreStatus estatusActual,
+        								mo.descripcion, sl.nombre estatusLote, 
+										CONCAT(usu.nombre, ' ', usu.apellido_paterno, ' ', usu.apellido_materno) usuario,
+										lo.modificado fechaRechazo, lo.comentario motivoRechazo
+                					FROM clientes cl
+                						INNER JOIN lotes lo ON lo.idLote = cl.idLote AND lo.idCliente = cl.id_cliente AND lo.idStatusLote = 3
+                						INNER JOIN condominios co ON lo.idCondominio = co.idCondominio
+                						INNER JOIN residenciales re ON co.idResidencial = re.idResidencial
+                						INNER JOIN usuarios ae ON ae.id_usuario = cl.id_asesor
+                						INNER JOIN usuarios cr ON cr.id_usuario = cl.id_coordinador
+                						INNER JOIN usuarios ge ON ge.id_usuario = cl.id_gerente
+                						INNER JOIN statuscontratacion sc ON sc.idStatusContratacion = lo.idStatusContratacion
+										INNER JOIN statuslote sl ON sl.idStatusLote = lo.idStatusLote
+                						INNER JOIN movimientos mo ON mo.idMovimiento = lo.idMovimiento
+										INNER JOIN usuarios usu ON usu.id_usuario = lo.usuario
+                					WHERE cl.status = 1 AND lo.idStatusContratacion = 7 AND lo.idMovimiento = 66 AND cl.status = 1 $filter ORDER BY cl.id_Cliente ASC");
+
+		return $query->result();
+
+		
+	}
 }

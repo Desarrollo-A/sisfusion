@@ -158,15 +158,15 @@ class Usuarios_modelo extends CI_Model {
                                         INNER JOIN sedes s ON s.id_sede = (CASE WHEN LEN (u.id_sede) > 1 THEN 2 ELSE u.id_sede END)
                                         LEFT JOIN descuentos_universidad du ON du.id_usuario = u.id_usuario
                                         --LEFT JOIN  (SELECT id_usuario FROM descuentos_universidad GROUP BY id_usuario) du ON du.id_usuario = u.id_usuario
-                                        WHERE  u.id_rol IN (3, 7, 9) 
-                                        AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%') OR usuarios.id_usuario IN (9359, 9827)
-                                        AND u.id_usuario NOT IN (821, 1366, 1923, 4340, 4062, 4064, 4065, 4067, 4068, 4069, 6578, 712 , 9942) ORDER BY nombre");
+                                        WHERE (u.id_rol IN (3, 7, 9) 
+                                        AND (u.rfc NOT LIKE '%TSTDD%' AND ISNULL(u.correo, '' ) NOT LIKE '%test_%') AND u.id_usuario NOT IN (821, 1366, 1923, 4340, 4062, 4064, 4065, 4067, 4068, 4069, 6578, 712 , 9942, 4415)) OR u.id_usuario IN (9359, 9827)
+                                        ORDER BY nombre");
                 break;
 
 
             default: // VE TODOS LOS REGISTROS
-            if($this->session->userdata('id_usuario') != 1297)
-                $id_rol = " AND u.id_rol NOT IN ('18', '19', '20')";
+            if($this->session->userdata('id_usuario') != 1297 && $this->session->userdata('id_usuario') != 1)
+                $id_rol = " AND u.id_rol NOT IN ('18', '19', '20','2','1','17','13','32','28')";
             else
                 $id_rol = "";
 
@@ -559,6 +559,8 @@ function getAllFoldersPDF()
             $where = " AND id_opcion IN (7, 9, 3)";
             if ($id_rol == 41)
                 $whereTwo = "AND id_sede = ".$this->session->userdata('id_sede')."";
+        }else if($id_rol == 8){
+            $where = " AND id_opcion NOT IN (1,2,3,7,9,59)";  
         }
         else // MJ: VE TODOS LOS REGISTROS
             $where = "";

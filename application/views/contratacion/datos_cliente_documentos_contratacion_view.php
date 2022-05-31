@@ -493,7 +493,7 @@
 										}
 										return '<div class="d-flex justify-center">' + file + '</div>';
 									}else{
-										return '<span class="label label-success">Se necesita especificar venta compartida</span>';
+										return '<span class="label label-success">Se necesita especificar si es venta compartida</span>';
 									}
 								}
 							},
