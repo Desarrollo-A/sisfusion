@@ -19160,4 +19160,41 @@ tr td:hover { background: #666; color: #FFF; }
 		}
 	}
 
+	//Reporte lotes apartados
+	public function reporteLotesApartados()
+	{
+		/*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/           
+        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
+        /*-------------------------------------------------------------------------------*/	
+		$this->load->view('template/header');
+		$this->load->view('administracion/vista_reportes_gerencial',$datos);
+	}
+
+	public function getReporteLotesApartados(){
+		$data = $this->registrolote_modelo->getLotesApartados();
+		$dataPer = array();
+		for($i=0;$i< count($data);$i++)
+		{
+			$dataPer[$i]['nombreResidencial']=$data[$i]->nombreResidencial;
+			$dataPer[$i]['nombreCondominio']=$data[$i]->nombreCondominio;
+			$dataPer[$i]['nombreLote']=$data[$i]->nombreLote;
+			$dataPer[$i]['idLote']=$data[$i]->idLote;
+			$dataPer[$i]['nombreCliente']=$data[$i]->nombreCliente;
+			$dataPer[$i]['fechaApartado']=$data[$i]->fechaApartado;
+			$dataPer[$i]['estatusLote']=$data[$i]->estatusLote;
+			$dataPer[$i]['estatusContratacion']=$data[$i]->estatusContratacion;
+			$dataPer[$i]['movimiento']=$data[$i]->movimiento;
+			$dataPer[$i]['asesor']=$data[$i]->asesor;
+			$dataPer[$i]['coordinador']=$data[$i]->coordinador;
+			$dataPer[$i]['gerente']=$data[$i]->gerente;
+			$dataPer[$i]['subdirector']=$data[$i]->subdirector;
+			$dataPer[$i]['regional']=$data[$i]->regional;
+		}
+		if($dataPer != null){
+			echo json_encode($dataPer);
+		} else{
+			echo json_encode(array());
+		}
+	}
+
 }//clase
