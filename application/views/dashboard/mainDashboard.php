@@ -586,11 +586,6 @@
                             return '<div class="d-flex justify-center"><button class="btn-data btn-blueMaderas update-dataTable" data-type="' + d.type + '" value="' + d.id + '"><i class="fas fa-sign-in-alt"></i></button></div>';
                         }
                     },
-                    {
-                        data: function (d) {
-                            return d.id;
-                        }
-                    }
                 ],
                 columnDefs: [{
                     targets: [13],

@@ -48,7 +48,7 @@
                                                         <th><center>TIPO</center></th>
                                                         <th><center>SEDE</center></th>
                                                         <th><center>FORMA PAGO</center></th>
-                                                        <th><center>NACIONALIDAD</center></th>
+                                                       <?php if($this->session->userdata('id_rol') != 49){ ?> <th><center>NACIONALIDAD</center></th> <?php } ?>
                                                         <th><center>JEFE DIRECTO</center></th>
                                                         <th><center>TIPO DE USUARIO</center></th>
                                                         <th><center>FECHA ALTA</center></th>
@@ -124,10 +124,13 @@
                 titleAttr: 'Lista de usuarios',
                 title:'Lista de usuarios',
                 exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+                
+                    columns: userType == 49 ? [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10] : [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10,11] ,
                     format: {
                         header: function (d, columnIdx) {
-                            switch (columnIdx) {
+
+                            if(userType == 49){
+                                switch (columnIdx) {
                                 case 0:
                                     return 'ESTATUS';
                                     break;
@@ -152,7 +155,7 @@
                                     return 'FORMA PAGO';
                                     break;
                                 case 8:
-                                    return 'FORMA PAGO';
+                                    return 'NACIONALIDAD';
                                     break;
                                 case 9:
                                     return 'JEFE DIRECTO';
@@ -163,6 +166,44 @@
                                 case 11:
                                     return 'FECHA ALTA';
                                     break;
+                            }
+
+                            }else{
+                                switch (columnIdx) {
+                                case 0:
+                                    return 'ESTATUS';
+                                    break;
+                                case 1:
+                                    return 'ID';
+                                    break;
+                                case 2:
+                                    return 'NOMBRE';
+                                case 3:
+                                    return 'CORREO';
+                                    break;
+                                case 4:
+                                    return 'TELÉFONO';
+                                    break;
+                                case 5:
+                                    return 'TIPO';
+                                    break;
+                                case 6:
+                                    return 'SEDE';
+                                    break;
+                                case 7:
+                                    return 'FORMA PAGO';
+                                    break;
+                                case 8:
+                                    return 'JEFE DIRECTO';
+                                    break;
+                                case 9:
+                                    return 'TIPO DE USUARIO';
+                                    break;
+                                case 10:
+                                    return 'FECHA ALTA';
+                                    break;
+                            }
+
                             }
                         }
                     }
@@ -317,16 +358,30 @@
                         }
                 }
             },
-            { data: function (d) {
-                if(d.id_forma_pago == 5 && d.id_nacionalidad == 0){
-                    return '<center>Sin definir<center>';
-                }else{
-                    return '<center><span class="label label-danger" style="background:#'+d.color+'">'+d.nacionalidad+'</span><center>';
+            <?php
+                                        if($this->session->userdata('id_rol') != 49){
+                                    ?>
+            {
+                
+                 data: function (d) {
+               
+
+                        if(d.id_forma_pago == 5 && d.id_nacionalidad == 0){
+                                return '<center>Sin definir<center>';
+                            }else{
+                                return '<center><span class="label label-danger" style="background:#'+d.color+'">'+d.nacionalidad+'</span><center>';
+
+                            }
+                        
+               
 
                 }
 
-                }
+
             },
+            <?php
+                                        }
+                                    ?>
             { data: function (d) {
                     return d.jefe_directo;
                 }

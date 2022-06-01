@@ -95,6 +95,9 @@
                             <input type="hidden"
                                    name="id_pagoc"
                                    id="id-lote-detenido">
+                                   <input type="hidden"
+                                   name="statusLote"
+                                   id="statusLote">
 
                             <div class="col-lg-12">
                                 <div class="form-group is-empty">
@@ -630,15 +633,19 @@
                         }
                         
                         BtnStats = '<button href="#" value="'+data.idLote+'" data-value="'+data.registro_comision+'" data-totalNeto2 = "'+data.totalNeto2+'" data-estatus="'+data.idStatusContratacion+'" data-cliente="'+data.id_cliente+'" data-plan="'+data.plan_comision+'"  data-tipov="'+data.tipo_venta+'"data-descplan="'+data.plan_descripcion+'" data-code="'+data.cbbtton+'" ' +'class="btn-data '+varColor+' verify_neodata" title="Verificar en NEODATA">'+'<span class="material-icons">verified_user</span></button> '+RegresaActiva+'';
-                        BtnStats += `
+                        
+                        let estatusLote = data.registro_comision == 0 ? 1 : 0;
+                        if(data.registro_comision == 0 || data.registro_comision == 1){
+                            BtnStats += `
                                 <button href="#"
                                     value="${data.idLote}"
                                     data-value="${data.nombreLote}"
+                                    data-statusLote="${estatusLote}"
                                     class="btn-data btn-blueMaderas btn-detener btn-warning"
                                     title="Detener">
                                     <i class="material-icons">block</i>
-                                </button>
-                            `;
+                                </button>`;
+                        }
                     }
                     return '<div class="d-flex justify-center">'+BtnStats+'</div>';
                 }
@@ -686,7 +693,10 @@
         $("#tabla_ingresar_9 tbody").on('click', '.btn-detener', function () {
                 const idLote = $(this).val();
                 const nombreLote = $(this).attr("data-value");
+                const statusLote = $(this).attr("data-statusLote");
+
                 $('#id-lote-detenido').val(idLote);
+                $('#statusLote').val(statusLote);
 
                 $("#detenciones-modal .modal-header").html("");
                 $("#detenciones-modal .modal-header").append('<h4 class="modal-title">Motivo de controversia para <b>'+nombreLote+'</b></h4>');
@@ -1052,6 +1062,7 @@
                     if (data) {
                         $('#detenciones-modal').modal("hide");
                         $("#id-lote-detenido").val("");
+                        $("#statusLote").val("");
                         alerts.showNotification("top", "right", "El registro se ha actualizado exitosamente.", "success");
                         tabla_1.ajax.reload();
                     } else {

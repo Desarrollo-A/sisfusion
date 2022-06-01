@@ -100,6 +100,12 @@ class Asesor_model extends CI_Model
         if(($this->session->userdata('id_usuario') != 2826 && $this->session->userdata('id_usuario') != 2767 && $this->session->userdata('id_usuario') != 2754 && $this->session->userdata('id_usuario') != 2749) && $this->session->userdata('id_rol') == 32){
             $complemento = " AND idmenu not in(1091)";
         }
+        if(($this->session->userdata('id_usuario') != 1297 && $this->session->userdata('id_usuario') != 826) && $this->session->userdata('id_rol') == 8){
+            $complemento = " AND idmenu not in(1980)";
+        }
+        if(($this->session->userdata('id_usuario') != 5107) && $this->session->userdata('id_rol') == 33){
+            $complemento = " AND idmenu not in(1105)";
+        }
         return $this->db->query("SELECT * FROM Menu2 WHERE rol=" . $rol . " AND padre > 0 AND estatus = 1 $complemento order by orden asc");
     }
 

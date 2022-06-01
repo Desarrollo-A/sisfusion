@@ -1,5 +1,4 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
-<link href="<?= base_url() ?>dist/css/baseDashboard.css" rel="stylesheet"/>
 
 <body class="">
     <div class="wrapper ">
@@ -37,12 +36,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="tab-pane" id="reporte">
-                        <div class="row">
-                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                            </div>
-                        </div>
-                    </div>
+                    <div class="tab-pane" id="reporte"></div>
                     <div class="tab-pane" id="agenda">
                         <div class="row">
                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
@@ -68,8 +62,12 @@
     </div><!--main-panel close-->
 </body>
 <?php $this->load->view('dashboard/agenda/common_modals'); ?>
+<?php $this->load->view('dashboard/reporte/common_modals'); ?>
 <script src="<?= base_url() ?>dist/assets/js/bootstrap-datetimepicker.js"></script>
 <?php $this->load->view('template/footer');?>
 <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 <script src="<?=base_url()?>dist/js/controllers/dashboard/base/base.js"></script>
-
+<script>
+    userType = <?= $this->session->userdata('id_rol') ?> ;
+    idUser = <?= $this->session->userdata('id_usuario') ?>;
+</script>

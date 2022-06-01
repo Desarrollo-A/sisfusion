@@ -389,7 +389,7 @@
                         <div class="modal-body">
                             <div class="row">
                                 <div class="col-lg-12 text-center">
-                                    <p>Recuerda que tu documento fiscal debe corresponder al total exacto de las
+                                    <p style="text-align: justify; text-justify: inter-word;"><b>Nota:</b> Recuerda que tu documento fiscal debe corresponder al total exacto de las
                                         comisiones a solicitar, una vez solicitados tus pagos ya no podrás remplazar
                                         este archivo.</p>
                                     <div class="input-group">
@@ -1323,26 +1323,27 @@
                                     return '<span class="material-icons" style="color: #DCDCDC;">block</span>';
                                 break;
 
+                                case '5':
+                                case 5:
+                                    if (full.fecha_abono && full.estatus == 1) {
+                                        const fechaAbono = new Date(full.fecha_abono);
+                                        const fechaOpinion = new Date(full.fecha_opinion);
+                                        if (fechaAbono.getTime() > fechaOpinion.getTime()) {
+                                            return '<span class="material-icons" style="color: #DCDCDC;">block</span>';
+                                        }
+                                    }
+                                    return '<input type="checkbox" name="idT[]" style="width:20px;height:20px;"  value="' + full.id_pago_i + '">';
+
                                 case '3': //ASIMILADOS
                                 case 3: //ASIMILADOS
                                 case '4': //RD
                                 case 4: //RD
-                                case 5:
-                                case '5':
                                 default:
 
                                 if (full.id_usuario == 5028  || full.id_usuario == 4773 || full.id_usuario == 5381 ){
                                     return '<span class="material-icons" style="color: #DCDCDC;">block</span>';
-
-                                } else if (full.fecha_abono && full.estatus == 1) {
-                                    const fechaAbono = new Date(full.fecha_abono);
-                                    const fechaOpinion = new Date(full.fecha_opinion);
-                                    if (fechaAbono.getTime() > fechaOpinion.getTime()) {
-                                        return '<span class="material-icons" style="color: #DCDCDC;">block</span>';
-                                    }
-                                    return '<input type="checkbox" name="idT[]" style="width:20px;height:20px;"  value="' + full.id_pago_i + '">';
                                 } else {
-                                    return '<span class="material-icons" style="color: #DCDCDC;">block</span>';
+                                    return '<input type="checkbox" name="idT[]" style="width:20px;height:20px;"  value="' + full.id_pago_i + '">';
                                 }
                             }
                         } else {

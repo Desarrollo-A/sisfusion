@@ -12,119 +12,6 @@
 		/*--------------------------------------------------------*/
 		?>
 
-		<!-- Modals -->
-		<div class="modal fade" id="modal_registrar_11" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
-			<div class="modal-dialog modal-lg" role="document">
-				<div class="modal-content">
-					<div class="modal-header">
-						<h4 class="modal-title"><b>Validación</b> de enganche.</h4>
-						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-						<h5 class=""></h5>
-					</div>
-					<form id="my-edit-form" name="my-edit-form" method="post">
-						<div class="modal-body">
-						</div>
-					</form>
-				</div>
-			</div>
-		</div>
-
-		<div class="modal fade" id="modal_cancelar_11" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
-			<div class="modal-dialog modal-lg" role="document">
-				<div class="modal-content">
-					<div class="modal-header">
-						<h4 class="modal-title"><b>Rechazar</b> estatus.</h4>
-						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-						<h5 class=""></h5>
-					</div>
-					<form id="my-edit-form" name="my-edit-form" method="post">
-						<div class="modal-body">
-						</div>
-					</form>
-				</div>
-			</div>
-		</div>
-
-		<!-- modal  ENVIA A CONTRALORIA 7-->
-		<div class="modal fade" id="editReg" data-backdrop="static" data-keyboard="false">
-			<div class="modal-dialog">
-				<div class="modal-content" >
-					<div class="modal-header">
-						<center><h4 class="modal-title"><label>Registro estatus 11 - <b><span class="lote"></span></b></label></h4></center>
-					</div>
-					<div class="modal-body">
-					<div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
-							<div class="col col-xs-12 col-sm-12 col-md-6 col-lg-12">
-								<label>Comentario:</label>
-								<textarea class="form-control" id="comentario" rows="3"></textarea>
-								<br>
-							</div>
-
-							<div class="col col-xs-12 col-sm-12 col-md-6 col-lg-6">
-								<label id="tvLbl">Total a validar:</label>
-								<input type="text" class="form-control" name="totalNeto" id="totalNeto" oncopy="return false" onpaste="return false" readonly>
-							</div>
-
-
-							<div class="col col-xs-12 col-sm-12 col-md-6 col-lg-6">
-								<label id="tvLbl">Total validado:</label>
-								<input type="text" class="form-control" name="totalValidado" id="totalValidado" oncopy="return false" onpaste="return false" onkeypress="return SoloNumeros(event)">
-
-							</div>
-						</div>
-					</div>
-					<div class="modal-footer"></div>
-					<div class="modal-footer">
-						<button type="button" id="save1" class="btn btn-success"><span class="material-icons" >send</span> </i> Registrar</button>
-						<button type="button" class="btn btn-danger" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> Cancelar</button>
-					</div>
-				</div>
-			</div>
-		</div>
-
-		<!-- modal  rechazar A CONTRALORIA 7-->
-		<div class="modal fade" id="rechReg" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
-			<div class="modal-dialog">
-				<div class="modal-content">
-					<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-							<i class="material-icons">clear</i>
-						</button>
-						<h4 class="modal-title"><center>Rechazo estatus 11 - <b><span class="lote"></span></b></center></h4>
-					</div>
-					<div class="modal-body">
-						<div class="container-fluid">
-							<div class="row">
-								<div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
-									<div class="col col-xs-12 col-sm-12 col-md-6 col-lg-12">
-										<label id="tvLbl">Comentario:</label>
-										<select name="comentario3" id="comentario3" class="selectpicker select-gral m-0" data-style="btn btn-round" required="required" />
-											<option value="0">Selecciona una opción</option>
-											<option value="Transferencia no reflejada en Banco">Transferencia no reflejada en Banco</option>
-											<option value="Cheque rebotado">Cheque rebotado</option>
-											<option value="Rechazo por falta de dinero">Rechazo por falta de dinero</option>
-											<option value="Otro">Otro</option>
-										</select>
-										<div id="valida_otro" style="display:none">
-											<br>
-											<label>Observaciones:</label>
-											<textarea class="form-control input-gral" id="observaciones" rows="3" style="text-align:center"></textarea>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="modal-footer"></div>
-					<div class="modal-footer">
-					<button type="button" id="save3" class="btn btn-success"><span class="material-icons" >send</span> </i> Registrar</button>
-						<button type="button" class="btn btn-danger btn-simple" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span>Cancelar</button>
-					</div>
-				</div>
-			</div>
-		</div>
-		<!-- END Modals -->
-
 		<div class="content boxContent">
 			<div class="container-fluid">
 				<div class="row">
@@ -135,27 +22,28 @@
 							</div>
 							<div class="card-content">
 								<div class="encabezadoBox">
-									<h3 class="card-title center-align">Registro estatus 11</h3>
-									<p class="card-title pl-1">(Validación de enganche)</p>
+									<h3 class="card-title center-align">Reporte lotes apartados</h3>
 								</div>
 								<div class="material-datatables"> 
 									<div class="form-group">
 										<div class="table-responsive">
-											<table class="table-striped table-hover" id="tabla_ingresar_11" name="tabla_ingresar_11">
+											<table class="table-striped table-hover" id="tabla_lotes_apartados" name="tabla_lotes_apartados">
 												<thead>
 													<tr>
-														<th></th>
-														<th></th>
 														<th>PROYECTO</th>
 														<th>CONDOMINIO</th>
 														<th>LOTE</th>
-														<th>GERENTE</th>
+														<th>ID LOTE</th>
 														<th>CLIENTE</th>
-														<th>TOTAL NETO</th>
-														<th>FECHA REALIZADO</th>
-														<th>FECHA VENC</th>
-														<th>DÍAS TRANSC</th>
-														<th></th>
+														<th>FECHA APARTADO</th>
+														<th>ESTATUS LOTE</th>
+														<th>ESTATUS CONTRATACIÓN</th>
+														<th>MOVIMIENTO</th>
+                                                        <th>ASESOR</th>
+                                                        <th>COORDINADOR</th>
+                                                        <th>GERENTE</th>
+                                                        <th>SUBDIRECTOR</th>
+                                                        <th>REGIONAL</th>
 													</tr>
 												</thead>
 											</table>
@@ -188,9 +76,9 @@
 		var getInfo3 = new Array(6);
 
 
-		$("#tabla_ingresar_11").ready( function(){
-			$('#tabla_ingresar_11 thead tr:eq(0) th').each( function (i) {
-				if(i != 0 && i != 11){
+		$("#tabla_lotes_apartados").ready( function(){
+			$('#tabla_reporte_11 thead tr:eq(0) th').each( function (i) {
+				if(i != 0 && i != 10){
 					var title = $(this).text();
 					$(this).html('<input type="text" class="textoshead" placeholder="'+title+'"/>' );
 					$( 'input', this ).on('keyup change', function () {
@@ -205,15 +93,15 @@
 			});
 
 			let titulos = [];
-			$('#tabla_ingresar_11 thead tr:eq(0) th').each( function (i) {
-				if( i!=0 && i!=13){
+			$('#tabla_lotes_apartados thead tr:eq(0) th').each( function (i) {
+				if( i!=0 && i!=10){
 				var title = $(this).text();
 
 				titulos.push(title);
 				}
 			});
 
-			tabla_9 = $("#tabla_ingresar_11").DataTable({
+			tabla_9 = $("#tabla_lotes_apartados").DataTable({
 				dom: 'Brt'+ "<'row'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'i><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>",
 				width: 'auto',
 				buttons: [{
@@ -222,7 +110,7 @@
                     className: 'btn buttons-excel',
                     titleAttr: 'Descargar archivo de Excel',
 					exportOptions: {
-						columns: [1,2,3,4,5,6,7,8,9,10],
+						columns: [0,1,2,3,4,5,6,7,8,9,10,11,12,13],
 						format: {
 							header:  function (d, columnIdx) {
 								if(columnIdx == 0){
@@ -245,170 +133,96 @@
                 },
                 destroy: true,
                 ordering: false,
-				columns: [{
-					"width": "3%",
-					"className": 'details-control',
-					"orderable": false,
-					"data" : null,
-					"defaultContent": '<div class="toggle-subTable"><i class="animacion fas fa-chevron-down fa-lg"></i>'
-				},
-				{
-					"data": function( d ){
-						var lblStats;
-						if(d.tipo_venta==1) {
-							lblStats ='<span class="label label-danger">Venta Particular</span>';
-						}
-						else if(d.tipo_venta==2) {
-							lblStats ='<span class="label label-success">Venta normal</span>';
-						}
-						else if(d.tipo_venta==3) {
-							lblStats ='<span class="label label-warning">Bono</span>';
-						}
-						else if(d.tipo_venta==4) {
-							lblStats ='<span class="label label-primary">Donación</span>';
-						}
-						else if(d.tipo_venta==5) {
-							lblStats ='<span class="label label-info">Intercambio</span>';
-						}
-						else if(d.tipo_venta== null) {
-							lblStats ='<span class="label label-info"></span>';
-						}
-
-						return lblStats;
-					}
-				},
-				{
-					"width": "10%",
-					"data": function( d ){
-						return '<p class="m-0">'+d.nombreResidencial+'</p>';
-					}
-				},
+				columns: [
 				{
 					"width": "8%",
+					"data": function( d ){
+						return '<p class="m-0">'+d.nombreResidencial+'</p>';
+					}	
+				},
+				{
+					"width": "6%",
 					"data": function( d ){
 						return '<p class="m-0">'+(d.nombreCondominio).toUpperCase();+'</p>';
 					}
 				},
 				{
-					"width": "10%",
+					"width": "6%",
 					"data": function( d ){
 						return '<p class="m-0">'+d.nombreLote+'</p>';
 
 					}
 				}, 
 				{
-					"width": "12%",
+					"width": "6%",
 					"data": function( d ){
-						return '<p class="m-0">'+d.gerente+'</p>';
+						return '<p class="m-0">'+d.idLote+'</p>';
 					}
 				}, 
 				{
-					"width": "12%",
+					"width": "8%",
 					"data": function( d ){
-						return '<p class="m-0">'+d.nombre+" "+d.apellido_paterno+" "+d.apellido_materno+'</p>';
+						return '<p class="m-0">'+d.nombreCliente+'</p>';
 					}
 				}, 
 				{
 					"width": "6%",
 					"data": function( d ){
-						var a = (d.totalNeto == null || d.totalNeto == .00) ? formatMoney(0) : formatMoney(d.totalNeto);
-						return '<p class="m-0">' + a + '</p>';
+						return '<p class="m-0">'+d.fechaApartado+'</p>';
 					}
 				},
 				{
-					"width": "8%",
+					"width": "6%",
 					"data": function( d ){
-						return '<p class="m-0">'+d.modificado+'</p>';
-
-					}
-				}, 
-				{
-					"width": "10%",
-					"data": function( d ){
-						var fechaVenc;
-						if (d.idStatusContratacion == 10 && d.idMovimiento == 40 || d.idStatusContratacion == 8 && d.idMovimiento == 67 ||
-							d.idStatusContratacion == 12 && d.idMovimiento == 42 ) {
-							fechaVenc = d.fechaVenc2;
-						} 
-						else {
-							fechaVenc='N/A';
-						}
-						
-						return '<p class="m-0">' + fechaVenc + '</p>';
+						return '<p class="m-0">'+d.estatusLote+'</p>';
 					}
 				},
 				{
-					"width": "8%",
+					"width": "6%",
 					"data": function( d ){
-						
-						/*var date_r =  new Date();
-						var hoy= date_r.toISOString().substring(0, 10);
-						var dateH =  new Date(hoy);
-						
-						var date_fv= new Date(d.fechaVenc2);
-						var venc= date_fv.toISOString().substring(0, 10);
-						var dateV = new Date(venc);
-
-						var diasasml = 86400000;
-						var difinml = dateV - dateH;
-						var dif_dias = difinml / diasasml;
-						
-						var res = (dif_dias < 1) ? 'Vencido' : dif_dias;
-						
-						return '<p class="m-0">'+ res +'</p>';*/
-
-						var dateFuture = new Date(d.fechaVenc2);
-					    var dateNow = new Date();
-
-					    /*console.log("TF: " + dateFuture);
-					    console.log(dateNow);*/
-
-					    var seconds = Math.floor((dateFuture - (dateNow))/1000);
-					    var minutes = Math.floor(seconds/60);
-					    var hours = Math.floor(minutes/60);
-					    var days = Math.floor(hours/24);
-
-					    hours = hours-(days*24);
-					    minutes = minutes-(days*24*60)-(hours*60);
-					    seconds = seconds-(days*24*60*60)-(hours*60*60)-(minutes*60);
-
-					    if(days < 0){
-					        return 'Vencido';
-					    }else{
-
-					        return '<p style="font-size: .9em">Vence en:' + days + ' día(s), ' + hours + ' hora(s), ' + minutes + ' minuto(s)</p>';
-					    }
+					    return '<p class="m-0">'+d.estatusContratacion+'</p>';
 					}
 				}, 
 				{ 
-					"width": "30%",
+					"width": "6%",
 					"orderable": false,
-					"data": function( data ){
-						var cntActions;
-
-						if(data.vl == '1') {
-							cntActions = 'En proceso de Liberación';
-						} 
-						else {
-							if(data.idStatusContratacion == 10 && data.idMovimiento == 40 ||
-								data.idStatusContratacion == 8 && data.idMovimiento == 67 ||
-								data.idStatusContratacion == 12 && data.idMovimiento == 42){
-									cntActions = '<button href="#" data-idLote="'+data.idLote+'" data-nomLote="'+data.nombreLote+'" data-idCond="'+data.idCondominio+'"' +
-									'data-idCliente="'+data.id_cliente+'" data-fecVen="'+data.fechaVenc+'" data-ubic="'+data.ubicacion+'" data-tot="'+data.totalNeto+'" ' +
-									'class="btn-data btn-green editReg" title="Registrar estatus">' +
-									'<i class="far fa-thumbs-up"></i></button>';
-
-									cntActions += '<button href="#" data-idLote="'+data.idLote+'" data-nomLote="'+data.nombreLote+'" data-idCond="'+data.idCondominio+'"' +
-									'data-idCliente="'+data.id_cliente+'" data-fecVen="'+data.fechaVenc+'" data-ubic="'+data.ubicacion+'"  ' +
-									'class="btn-data btn-warning cancelReg" title="Rechazo/regreso estatus (Juridico)">' +
-									'<i class="far fa-thumbs-down"></i></button>';
-							}
-							else{
-								cntActions ='N/A';
-							}
-						}
-
-						return '<div class="d-flex justify-center">'+cntActions+'</div>';
+					"data": function( d ){
+						return '<p class="m-0">'+d.movimiento+'</p>';
+					} 
+				}, 
+				{ 
+					"width": "8%",
+					"orderable": false,
+					"data": function( d ){
+						return '<p class="m-0">'+d.asesor+'</p>';
+					} 
+				}, 
+				{ 
+					"width": "8%",
+					"orderable": false,
+					"data": function( d ){
+						return '<p class="m-0">'+d.coordinador+'</p>';
+					} 
+				}, 
+				{ 
+					"width": "8%",
+					"orderable": false,
+					"data": function( d ){
+						return '<p class="m-0">'+d.gerente+'</p>';
+					} 
+				}, 
+				{ 
+					"width": "8%",
+					"orderable": false,
+					"data": function( d ){
+						return '<p class="m-0">'+d.subdirector+'</p>';
+					} 
+				}, 
+				{ 
+					"width": "8%",
+					"orderable": false,
+					"data": function( d ){
+						return '<p class="m-0">'+d.regional+'</p>';
 					} 
 				}],
 				columnDefs: [{
@@ -417,7 +231,7 @@
 					"targets": 0
 				}],
 				ajax: {
-					"url": '<?=base_url()?>index.php/Administracion/datos_estatus_11_datos',
+					"url": '<?=base_url()?>index.php/RegistroLote/getReporteLotesApartados',
 					"dataSrc": "",
 					"type": "POST",
 					cache: false,
@@ -426,7 +240,7 @@
 				},
 			});
 
-			$('#tabla_ingresar_11 tbody').on('click', 'td.details-control', function () {
+			$('#tabla_lotes_apartados tbody').on('click', 'td.details-control', function () {
 				var tr = $(this).closest('tr');
 				var row = tabla_9.row(tr);
 
@@ -464,7 +278,7 @@
 
 
 
-		$("#tabla_ingresar_11 tbody").on("click", ".editReg", function(e){
+		$("#tabla_lotes_apartados tbody").on("click", ".editReg", function(e){
 				e.preventDefault();
 
 				getInfo1[0] = $(this).attr("data-idCliente");
@@ -486,7 +300,7 @@
 				});
 
 
-				$("#tabla_ingresar_11 tbody").on("click", ".cancelReg", function(e){
+				$("#tabla_lotes_apartados tbody").on("click", ".cancelReg", function(e){
 				e.preventDefault();
 
 				getInfo3[0] = $(this).attr("data-idCliente");
@@ -555,24 +369,24 @@
 					if(response.message == 'OK') {
 						$('#save1').prop('disabled', false);
 						$('#editReg').modal('hide');
-						$('#tabla_ingresar_11').DataTable().ajax.reload();
+						$('#tabla_reporte_11').DataTable().ajax.reload();
 						alerts.showNotification("top", "right", "Estatus enviado.", "success");
 					} else if(response.message == 'FALSE'){
 						$('#save1').prop('disabled', false);
 						$('#editReg').modal('hide');
-						$('#tabla_ingresar_11').DataTable().ajax.reload();
+						$('#tabla_reporte_11').DataTable().ajax.reload();
 						alerts.showNotification("top", "right", "El status ya fue registrado.", "danger");
 					} else if(response.message == 'ERROR'){
 						$('#save1').prop('disabled', false);
 						$('#editReg').modal('hide');
-						$('#tabla_ingresar_11').DataTable().ajax.reload();
+						$('#tabla_reporte_11').DataTable().ajax.reload();
 						alerts.showNotification("top", "right", "Error al enviar la solicitud.", "danger");
 					}
 				},
 				error: function( data ){
 						$('#save1').prop('disabled', false);
 						$('#editReg').modal('hide');
-						$('#tabla_ingresar_11').DataTable().ajax.reload();
+						$('#tabla_reporte_11').DataTable().ajax.reload();
 						alerts.showNotification("top", "right", "Error al enviar la solicitud.", "danger");
 				}
 				});
@@ -634,24 +448,24 @@
 					if(response.message == 'OK') {
 						$('#save3').prop('disabled', false);
 						$('#rechReg').modal('hide');
-						$('#tabla_ingresar_11').DataTable().ajax.reload();
+						$('#tabla_reporte_11').DataTable().ajax.reload();
 						alerts.showNotification("top", "right", "Estatus enviado.", "success");
 					} else if(response.message == 'FALSE'){
 						$('#save3').prop('disabled', false);
 						$('#rechReg').modal('hide');
-						$('#tabla_ingresar_11').DataTable().ajax.reload();
+						$('#tabla_reporte_11').DataTable().ajax.reload();
 						alerts.showNotification("top", "right", "El status ya fue registrado.", "danger");
 					} else if(response.message == 'ERROR'){
 						$('#save3').prop('disabled', false);
 						$('#rechReg').modal('hide');
-						$('#tabla_ingresar_11').DataTable().ajax.reload();
+						$('#tabla_reporte_11').DataTable().ajax.reload();
 						alerts.showNotification("top", "right", "Error al enviar la solicitud.", "danger");
 					}
 				},
 				error: function( data ){
 						$('#save3').prop('disabled', false);
 						$('#rechReg').modal('hide');
-						$('#tabla_ingresar_11').DataTable().ajax.reload();
+						$('#tabla_reporte_11').DataTable().ajax.reload();
 						alerts.showNotification("top", "right", "Error al enviar la solicitud.", "danger");
 				}
 				});
@@ -665,7 +479,7 @@
 		
 
 		$('#comentario3').change(function() {
-			if(document.getElementById('comentario3').value == "Otro") {
+			if(document.getElementById('comentario3').value == "4") {
 				document.getElementById('valida_otro').style.display='block';
 			} else {
 				document.getElementById('valida_otro').style.display='none';
