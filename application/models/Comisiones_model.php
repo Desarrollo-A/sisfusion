@@ -8511,22 +8511,23 @@ return $query->result();
         return $query->result_array();
     }
 
-    function fusionAcLi($estatus=3){
+    function fusionAcLi($estatus='3'){
         
         switch($estatus) {
-            case 1:
+            case '1':
                 $filtro = ' WHERE du.estatus in (0,1,2,5) AND us.estatus in (1) ';
             break;
-            case 2:
+            case '2':
                 $filtro = ' WHERE du.estatus not in (4,3) AND us.estatus in (0,3) ';
             break;
-            case 3:
+            case '3':
                 $filtro = ' WHERE du.estatus in (4,3) AND us.estatus in (0,1,3) ';
             break;
-            case 4:
+            case '4':
                 $filtro = ' ';
             break;
-
+            default:
+                $filtro = '';
         }
 
         $query = $this->db->query("SELECT us.estatus as status, SUM(du.monto) as monto, 
