@@ -4018,7 +4018,6 @@ public function descuentos_historial()
     $LotesInvolucrados = "";
 
 if(floatval($valor) == 1){
-  echo "ENTRA 1";
   $datos =  $this->input->post("idloteorigen[]");
   $descuento = $this->input->post("monto");
   $usuario = $this->input->post("usuarioid");
@@ -4026,7 +4025,6 @@ if(floatval($valor) == 1){
   $pagos_apli = 0;
   
 }else if(floatval($valor) == 2){
-  echo "ENTRA 2";
 
   $datos =  $this->input->post("idloteorigen2[]");
   $descuento = $this->input->post("monto2");
@@ -4036,7 +4034,6 @@ if(floatval($valor) == 1){
  
 }
 else if(floatval($valor) == 3){
-  echo "ENTRA 3";
 
   /**DESCUENTOS UNIVERSIDAD*/
   $datos =  $this->input->post("idloteorigen[]");
