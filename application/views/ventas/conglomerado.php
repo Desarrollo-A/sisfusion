@@ -459,7 +459,7 @@
                                                 data-live-search="true"  title="Selecciona el tipo de descuento" data-size="7" required onChange="checkTypeOfDesc()">
                                             <!--<option value="0">Seleccione all</option>-->
                                             <option value="1" selected>Activo</option>
-                                            <option value="2">Baja / Detenidos</option>
+                                            <option value="2">Baja</option>
                                             <option value="3">Liquidado</option>
                                             <option value="4">Conglomerado</option>
                                         </select>
