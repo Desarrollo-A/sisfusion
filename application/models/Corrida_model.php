@@ -98,7 +98,10 @@
 		return $this->db-> query("SELECT id_pf, precio_t as pt, precio_m as pm, ahorro, idLote, id_corrida FROM [precios_finales] WHERE idLote = ".$idLote." AND id_corrida = ".$id_corrida."");
 	}
 	public function getinfoDescLoteCorrida($idLote, $id_corrida) {
-		$query = $this->db-> query("SELECT id_pf, porcentaje, precio_t as pt, precio_m as pm, ahorro, idLote, id_corrida, id_condicion FROM [precios_finales] WHERE idLote = ".$idLote." AND id_corrida = ".$id_corrida."");
+		$query = $this->db-> query("SELECT id_pf, porcentaje, precio_t as pt, precio_m as pm, ahorro, idLote, id_corrida, precios_finales.id_condicion, c.descripcion as aplicable_a
+                FROM [precios_finales] 
+                LEFT JOIN condiciones c ON c.id_condicion=precios_finales.id_condicion
+                WHERE idLote = ".$idLote." AND id_corrida = ".$id_corrida);
 		return $query->result_array();
 	}
 
@@ -177,9 +180,6 @@
 
 
 	public function insertPreciosAll($dato, $idLote, $idCorrida){
-		
-		
-
 		for($i=0;$i<count($dato);$i++) {
 			$data = array(
 			    'porcentaje'=> $dato[$i]->porcentaje,
@@ -249,7 +249,7 @@
 	/*COSAS DE LA CORRIDA Y DEMÁS*/
 	public function getAllInfoCorrida($id_corrida){
         $query = $this->db->query("SELECT res.nombreResidencial, res.descripcion as residencial, l.nombreLote, l.precio as preciom2, c.nombre as nombreCondominio,
-        l.total as precioOriginal, l.sup as superficie, l.idCliente, cf.*
+        l.total as precioOriginal, l.sup as superficie, l.idCliente, l.total as precio_total_lote, cf.*
         FROM corridas_financieras cf
         INNER JOIN lotes l ON l.idLote = cf.id_lote
         INNER JOIN condominios c ON c.idCondominio=l.idCondominio

@@ -4,7 +4,7 @@
     <div class="wrapper">
 
         <?php
-        if($this->session->userdata('id_rol')=="13" || $this->session->userdata('id_rol')=="17"){
+        if($this->session->userdata('id_rol')=="13" || $this->session->userdata('id_rol')=="17" || $this->session->userdata('id_usuario') == "2767"){
         //contraloria
         $datos = array();
         $datos = $datos4;
@@ -148,7 +148,7 @@
                                             </div>
                                         </div>
                                         <div class="row">
-                                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4">
                                                 <div class="form-group">
                                                     <label class="m-0" for="filtro33">Proyecto</label>
                                                     <select name="filtro33" id="filtro33" class="selectpicker select-gral" data-style="btn " data-show-subtext="true" data-live-search="true"  title="Selecciona un proyecto" data-size="7" required>
@@ -156,10 +156,25 @@
                                                     </select>
                                                 </div>
                                             </div>
-                                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4">
                                                 <div class="form-group">
                                                     <label class="m-0" for="filtro44">Condominio</label>
                                                     <select class="selectpicker select-gral" id="filtro44" name="filtro44[]" data-style="btn " data-show-subtext="true" data-live-search="true" title="Selecciona un condominio" data-size="7" required></select>
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4">
+                                                <div class="form-group">
+                                                    <label class="m-0" for="forma-pago-filtro">Forma de pago</label>
+                                                    <select name="forma-pago-filtro"
+                                                            id="forma-pago-filtro"
+                                                            class="selectpicker select-gral"
+                                                            data-style="btn"
+                                                            data-show-subtext="true"
+                                                            data-live-search="true"
+                                                            title="Selecciona una forma de pago"
+                                                            data-size="7"
+                                                            required>
+                                                    </select>
                                                 </div>
                                             </div>
                                         </div>
@@ -223,6 +238,16 @@
 
         $(document).ready(function() {
             $("#tabla_asimilados").prop("hidden", true);
+
+            $.get('getFormasPago', function (data) {
+                const formasPago = JSON.parse(data);
+                formasPago.forEach(formaPago => {
+                    const id = formaPago.id_opcion;
+                    const name = formaPago.nombre;
+                    $("#forma-pago-filtro").append($('<option>').val(id).text(name.toUpperCase()));
+                });
+                $('#forma-pago-filtro').selectpicker('refresh');
+            });
 
             var url = "<?=base_url()?>/index.php/";
             $.post("<?=base_url()?>index.php/Contratacion/lista_proyecto", function (data) {
@@ -314,27 +339,38 @@
 
 
         $('#filtro33').change(function(ruta){
-            proyecto = $('#filtro33').val();
-            condominio = $('#filtro44').val();
-            if(condominio == '' || condominio == null || condominio == undefined){
+            const formaPago = $('#forma-pago-filtro').val() || 0;
+            const proyecto = $('#filtro33').val();
+            let condominio = $('#filtro44').val();
+            if(condominio === undefined || condominio == null || condominio === '') {
                 condominio = 0;
             }
-
-            getAssimilatedCommissions(proyecto, condominio);
+            getAssimilatedCommissions(proyecto, condominio, formaPago);
         });
 
         $('#filtro44').change(function(ruta){
-            proyecto = $('#filtro33').val();
-            condominio = $('#filtro44').val();
-            if(condominio == '' || condominio == null || condominio == undefined){
+            const formaPago = $('#forma-pago-filtro').val() || 0;
+            const proyecto = $('#filtro33').val();
+            let condominio = $('#filtro44').val();
+            if(condominio === undefined || condominio == null || condominio === '') {
                 condominio = 0;
             }
-            getAssimilatedCommissions(proyecto, condominio);
+            getAssimilatedCommissions(proyecto, condominio, formaPago);
         });
 
         $('#filtro333').change(function(ruta){
             proyecto = $('#filtro333').val();
             getHistoryCommissions(proyecto);
+        });
+
+        $('#forma-pago-filtro').change(function () {
+            const formaPago = $(this).val() || 0;
+            const proyecto = $('#filtro33').val();
+            let condominio = $('#filtro44').val();
+            if(condominio === undefined || condominio == null || condominio === '') {
+                condominio = 0;
+            }
+            getAssimilatedCommissions(proyecto, condominio, formaPago);
         });
 
         var url = "<?=base_url()?>";
@@ -379,7 +415,7 @@
             }
         });
 
-        function getAssimilatedCommissions(proyecto, condominio){
+        function getAssimilatedCommissions(proyecto, condominio, formaPago){
             $('#tabla_asimilados').on('xhr.dt', function(e, settings, json, xhr) {
                 var total = 0;
                 $.each(json.data, function(i, v) {
@@ -598,7 +634,7 @@
                     },
                 }],
                 ajax: {
-                    url: url2 + "Comisiones/getDatosEnviadasInternomex/" + proyecto + "/" + condominio,
+                    url: `${url2}Comisiones/getDatosEnviadasInternomex/${proyecto}/${condominio}/${formaPago}`,
                     type: "POST",
                     cache: false,
                     data: function( d ){}

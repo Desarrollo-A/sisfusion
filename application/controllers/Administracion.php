@@ -15,6 +15,8 @@ class Administracion extends CI_Controller{
                      $this->load->library(array('session','form_validation', 'get_menu'));
 		$this->load->helper(array('url', 'form'));
 		$this->load->database('default');
+        $this->load->library('phpmailer_lib');
+        date_default_timezone_set('America/Mexico_City');
 		$this->validateSession();
 	}
 
@@ -492,22 +494,78 @@ class Administracion extends CI_Controller{
 		 $arreglo2["fechaVenc"]= $modificado;
 		 $arreglo2["idLote"]= $idLote;  
 		 $arreglo2["idCondominio"]= $idCondominio;          
-		 $arreglo2["idCliente"]= $idCliente;   
-	 
+		 $arreglo2["idCliente"]= $idCliente;
 
-		 $validate = $this->Administracion_model->validateSt11($idLote);
+
+          $nombre = $this->session->userdata('nombre');
+          $apellido_paterno = $this->session->userdata('apellido_paterno');
+          $apellido_materno = $this->session->userdata('apellido_materno');
+
+          $nombre_rechazador = $nombre." ".$apellido_paterno." ".$apellido_materno;
+
+          $data_send = $this->Administracion_model->getInfoToMail($idCliente, $idLote);
+
+		 $data_ag = $this->Administracion_model->getAssisGte($idCliente);
+		 $correos_submit = array();
+		 if(count($data_ag)>1){
+             foreach ($data_ag as $item=>$value){
+                 $correos_submit[$item] =  $value['correo'];
+             }
+//             $correos_submit = implode(", ", $correos_submit);
+         }elseif(count($data_ag) == 1){
+             foreach ($data_ag as $item=>$value){
+                 $correos_submit[$item] = $value['correo'];
+             }
+         }else{
+             $correos_submit = array();
+         }
+
+
+          $data_eviRec =array(
+              'comentario' => $comentario,
+              'id_cliente' => $idCliente,
+              'id_lote' => $idLote
+          );
+
+		 $data_mail[0] = array(
+		     "proyecto" => $data_send->nombreResidencial,
+             "condominio" => $data_send->nombreCondominio,
+             "lote" => $data_send->nombreLote,
+             "cliente" => $data_send->nombreCliente,
+             "quien_rechaza" => $nombre_rechazador,
+             "fecha_apartado" => $data_send->fechaApartado,
+             "fecha_rechazo" => $modificado,
+         );
+
+		 #PROVICIONAL TESTING
+          $correos_submit[0] = 'programador.analista8@ciudadmaderas.com';
+          $correos_submit[1] = 'mariadejesus.garduno@ciudadmaderas.com';
+        //print_r($data_eviRec['comentario']);
+          #PROVICIONAL TESTING
+
+
+
+          /*$data_enviar_mail = $this->notifyRejEv($correos_submit, $data_eviRec, $data_mail);
+          exit;*/
+
+
+          $validate = $this->Administracion_model->validateSt11($idLote);
 
 		 if($validate == 1){
- 
 		 if ($this->Administracion_model->updateSt($idLote,$arreglo,$arreglo2) == TRUE){ 
 			 $data['message'] = 'OK';
+             $data_enviar_mail = $this->notifyRejEv($correos_submit, $data_eviRec, $data_mail);
+             if ($data_enviar_mail > 0) {
+                 $data['status_msg'] = 'Correo enviado correctamente';
+             } else {
+                 $data['status_msg'] = 'Correo no enviado '.$data_enviar_mail;
+             }
 			 echo json_encode($data);
  
 			 }else{
 				 $data['message'] = 'ERROR';
 				 echo json_encode($data);
 			 }
- 
 		 }else {
 			 $data['message'] = 'FALSE';
 			 echo json_encode($data);
@@ -569,8 +627,127 @@ class Administracion extends CI_Controller{
 		}
 
     }
- 
 
+
+    public function notifyRejEv($data_correo, $data_eviRec, $data_send)
+    {
+        //$correo_new = 'programador.analista8@ciudadmaderas.com, mariadejesus.garduno@ciudadmaderas.com';/*se coloca el correo de testeo para desarrollo*/
+        //$correoDir = $data_eviRec['correo_a_enviar'];
+
+        $mail = $this->phpmailer_lib->load();
+
+        $mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
+        foreach($data_correo as $item){
+                //print_r($item);
+                //echo '<br>';
+            $mail->addAddress($item);
+        }
+
+//        $mail->addAddress($correo_new);
+        // $mail->addCC('erick_eternal@live.com.mx'); #copia oculta
+
+        $mail->Subject = utf8_decode('[RECHAZO ADMINISTRACIÓN] '.$data_eviRec['comentario']);
+        $mail->isHTML(true);
+
+        $mailContent = "<html><head>
+          <meta http-equiv='Content-Type' content='text/html; charset=utf-8'>
+          <meta name='viewport' content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no'>
+          <link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css' integrity='sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO' crossorigin='anonymous'> 
+          <style media='all' type='text/css'>
+              .encabezados{
+                  text-align: center;
+                  padding-top:  1.5%;
+                  padding-bottom: 1.5%;
+              }
+              .encabezados a{
+                  color: #234e7f;
+                  font-weight: bold;
+              }
+              
+              .fondo{
+                  background-color: #234e7f;
+                  color: #fff;
+              }
+              
+              h4{
+                  text-align: center;
+              }
+              p{
+                  text-align: right;
+              }
+              strong{
+                  color: #234e7f;
+              }
+          </style>
+        </head>
+        <body>
+          <img src='" . base_url() . "static/images/mailER/header9@4x.png' width='100%'>
+          <table align='center' cellspacing='0' cellpadding='0' border='0' width='100%'>
+              <tr colspan='3'>
+                <td class='navbar navbar-inverse' align='center'>
+                  <table width='750px' cellspacing='0' cellpadding='3' class='container'>
+                      <tr class='navbar navbar-inverse encabezados'><td>
+                          <p><a href='https://maderascrm.gphsis.com/' target='_blank'>CMR CIUDAD MADERAS</a></p>
+                      </td></tr>
+                  </table>
+                </td>
+              </tr>
+              <tr>
+                <td border=1 bgcolor='#FFFFFF' align='center'> 
+                <!--rechazo administración-->
+                    <h3>¡Buenos días!</h3><br> <br>
+                    
+                    <p style='padding: 10px 90px;text-align: center;font-size: 1.5em'>
+                    Hemos registrado un rechazo de administración.
+                    </p><br><br>
+                    
+                    
+                </td>
+              </tr>
+              <tr>
+                <td border=1 bgcolor='#FFFFFF' align='center'>  
+                    <h3 style='font-size: 2em'>Comentario: <b>".$data_eviRec['comentario']."</b></h3>
+                    <br><br>
+                  <table id='reporyt' cellpadding='0' cellspacing='0' border='1' width ='100%' style class='darkheader'>
+                    <tr class='active' style='text-align: center'>
+                      <th>Proyecto</th>   
+                      <th>Condominio</th>   
+                      <th>Lote</th>   
+                      <th>Cliente</th>   
+                      <th>Usuario</th>   
+                      <th>Fecha Apartado</th>   
+                      <th>Fecha Rechazo</th>   
+                    </tr>
+                        <tr>";
+                            foreach ($data_send as $index=>$item){
+                                $mailContent .= '    <td><center>' . $item['proyecto'] . '</center></td>';
+                                $mailContent .= '    <td><center>' . $item['condominio'] . '</center></td>';
+                                $mailContent .= '    <td><center>' . $item['lote'] . '</center></td>';
+                                $mailContent .= '    <td><center>' . $item['cliente'] . '</center></td>';
+                                $mailContent .= '    <td><center>' . $item['quien_rechaza'] . '</center></td>';
+                                $mailContent .= '    <td><center>' . $item['fecha_apartado'] . '</center></td>';
+                                $mailContent .= '    <td><center>' . $item['fecha_rechazo'] . '</center></td>';
+                            }
+                        $mailContent .= "
+                        </tr>   
+                    </table></center>
+                    <br><br>
+                </td>
+              </tr>
+          </table>
+                </td>
+              </tr>
+          </table>
+          <img src='" . base_url() . "static/images/mailER/footer@4x.png' width='100%'>
+          </body></html>";
+
+        $mail->Body = utf8_decode($mailContent);
+        if ($mail->send()) {
+            return 1;
+        } else {
+            return $mail->ErrorInfo;
+        }
+    }
 }
 
 

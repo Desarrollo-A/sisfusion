@@ -485,19 +485,19 @@
                             <div class="vcnew"></div>
                             <div class="form-group" id="users5">
                                 <label class="label">Asesor</label>
-                                <select id="usuarioid5" name="usuarioid5" class="form-control asesor ng-invalid ng-invalid-required" required data-live-search="true" ></select>
+                                <select id="usuarioid5" name="usuarioid5" class="form-control asesor ng-invalid ng-invalid-required" required data-live-search="true" required></select>
                             </div>
                             <div class="form-group" id="users6">
                                 <label class="label">Coordinador</label>
-                                <select id="usuarioid6" name="usuarioid6" class="form-control coor ng-invalid ng-invalid-required"  data-live-search="true"></select>
+                                <select id="usuarioid6" name="usuarioid6" class="form-control coor ng-invalid ng-invalid-required"  data-live-search="true" required></select>
                             </div>
                             <div class="form-group" id="users7">
                                 <label class="label">Gerente</label>
-                                <select id="usuarioid7" name="usuarioid7" class="form-control ger ng-invalid ng-invalid-required" required data-live-search="true" ></select>
+                                <select id="usuarioid7" name="usuarioid7" class="form-control ger ng-invalid ng-invalid-required" required data-live-search="true" required></select>
                             </div>
                             <div class="form-group" id="users7">
                                 <label class="label">Subdirector</label>
-                                <select id="usuarioid8" name="usuarioid8" class="form-control ger ng-invalid ng-invalid-required" required data-live-search="true" ></select>
+                                <select id="usuarioid8" name="usuarioid8" class="form-control ger ng-invalid ng-invalid-required" required data-live-search="true" required></select>
                                 <p><b>Si deseas agregar un subdirector regional, favor de subir ticket a sistemas.</b></p>
                             </div>
                             <div class="form-group">
@@ -2761,7 +2761,7 @@ $('#modal_avisos').modal('show');
         $("#form_vcNew").on('submit', function(e){ 
             e.preventDefault();
             document.getElementById('btn_vc').disabled=true;
-
+if( $('#usuarioid6').val() != 0 && $('#usuarioid7').val() != 0 && $('#usuarioid8').val() != 0){
             let formData = new FormData(document.getElementById("form_vcNew"));
             $.ajax({
                 url: 'AddVentaCompartida',
@@ -2805,6 +2805,11 @@ $('#modal_avisos').modal('show');
                     alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
                 }
             });
+
+        }else{
+            alerts.showNotification("top", "right", "DEBE SELECCIONAR COORDINADOR,GERENTE Y SUBDIRECTOR.", "warning");
+
+        }
         });
 
         $("#form_empresa").on('submit', function(e){ 

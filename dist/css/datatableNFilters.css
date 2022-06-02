@@ -29,7 +29,7 @@
 }
 
 .mb-2 {
-  margin-bottom: 20px;
+  margin-bottom: 20px !important;
 }
 
 .mb-3 {
@@ -148,6 +148,10 @@
   padding-top: 30px;
 }
 
+.pt-4 {
+  padding-top: 40px !important;
+}
+
 .pb-1 {
   padding-bottom: 10px;
 }
@@ -167,7 +171,7 @@
 }
 
 .w-100 {
-  width: 100%;
+  width: 100% !important;
 }
 
 .w-90 {
@@ -210,6 +214,14 @@
   height: 100%;
 }
 
+.h-90 {
+  height: 90%;
+}
+
+.h-80 {
+  height: 80%;
+}
+
 .h-70 {
   height: 70%;
 }
@@ -224,6 +236,22 @@
 
 .h-40 {
   height: 40%;
+}
+
+.h-30 {
+  height: 30%;
+}
+
+.h-25 {
+  height: 25%;
+}
+
+.h-20 {
+  height: 20%;
+}
+
+.h-10 {
+  height: 10%;
 }
 
 .vh-100 {
@@ -298,6 +326,10 @@
   z-index: 1030;
 }
 
+.f-bolder {
+  font-weight: bolder;
+}
+
 /* END utilities */
 /* Flexbox */
 .d-none {
@@ -332,6 +364,12 @@
   justify-content: space-between;
 }
 
+.row-reverse {
+  flex-direction: row-reverse;
+}
+
+/* END Flexbox */
+/* Text */
 .text-center {
   text-align: center;
 }
@@ -340,7 +378,47 @@
   text-align: start !important;
 }
 
-/* END Flexbox */
+.text-right {
+  text-align: right !important;
+}
+
+.fw-100 {
+  font-weight: 100;
+}
+
+.fw-200 {
+  font-weight: 200;
+}
+
+.fw-300 {
+  font-weight: 300;
+}
+
+.fw-400 {
+  font-weight: 400;
+}
+
+.fw-500 {
+  font-weight: 500;
+}
+
+.fw-600 {
+  font-weight: 600;
+}
+
+.fw-700 {
+  font-weight: 700;
+}
+
+.fw-800 {
+  font-weight: 800;
+}
+
+.fw-900 {
+  font-weight: 900;
+}
+
+/* Text */
 /* Vrbls colores */
 /* END vrbls coloress */
 /* size devices */
@@ -414,7 +492,7 @@
   background-color: #ffffff !important;
   border: 1px solid #209E63;
   border-radius: 27px;
-  margin-bottom: 0;
+  margin: 0;
 }
 
 .buttons-excel i {
@@ -688,6 +766,11 @@
 .btn-details-grey:hover {
   background: #999999;
   color: #ffffff !important;
+}
+
+.btn-unstyled {
+  border: none !important;
+  background: none;
 }
 
 .lbl-gray {
@@ -970,6 +1053,12 @@
   font-size: 12px;
 }
 
+.text-modal:disabled {
+  border: none;
+  color: #929292;
+  background-color: #F1F1F1;
+}
+
 .boxContent .nav-tabs-cm {
   background: #eeeeee;
   padding: 0;
@@ -977,7 +1066,7 @@
 }
 
 .boxContent .nav-tabs-cm li > a {
-  color: #353535 !important;
+  color: #F1F1F1 !important;
   padding: 5px 60px;
   border-radius: 20px 20px 0 0;
   background-color: #96843D;
@@ -1111,6 +1200,11 @@
   border-radius: 27px !important;
   background-image: none !important;
   padding-left: 20px;
+}
+
+.boxContent .card .card-content .toolbar .input-gral:disabled {
+  cursor: not-allowed;
+  border: none;
 }
 
 .boxContent .card .card-content .toolbar .label-gral {

@@ -48,6 +48,7 @@
                                                         <th><center>TIPO</center></th>
                                                         <th><center>SEDE</center></th>
                                                         <th><center>FORMA PAGO</center></th>
+                                                       <?php if($this->session->userdata('id_rol') != 49){ ?> <th><center>NACIONALIDAD</center></th> <?php } ?>
                                                         <th><center>JEFE DIRECTO</center></th>
                                                         <th><center>TIPO DE USUARIO</center></th>
                                                         <th><center>FECHA ALTA</center></th>
@@ -123,10 +124,52 @@
                 titleAttr: 'Lista de usuarios',
                 title:'Lista de usuarios',
                 exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+                
+                    columns: userType == 49 ? [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10] : [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10,11] ,
                     format: {
                         header: function (d, columnIdx) {
-                            switch (columnIdx) {
+
+                            if(userType == 49){
+                                switch (columnIdx) {
+                                case 0:
+                                    return 'ESTATUS';
+                                    break;
+                                case 1:
+                                    return 'ID';
+                                    break;
+                                case 2:
+                                    return 'NOMBRE';
+                                case 3:
+                                    return 'CORREO';
+                                    break;
+                                case 4:
+                                    return 'TELÉFONO';
+                                    break;
+                                case 5:
+                                    return 'TIPO';
+                                    break;
+                                case 6:
+                                    return 'SEDE';
+                                    break;
+                                case 7:
+                                    return 'FORMA PAGO';
+                                    break;
+                                case 8:
+                                    return 'NACIONALIDAD';
+                                    break;
+                                case 9:
+                                    return 'JEFE DIRECTO';
+                                    break;
+                                case 10:
+                                    return 'TIPO DE USUARIO';
+                                    break;
+                                case 11:
+                                    return 'FECHA ALTA';
+                                    break;
+                            }
+
+                            }else{
+                                switch (columnIdx) {
                                 case 0:
                                     return 'ESTATUS';
                                     break;
@@ -159,6 +202,8 @@
                                 case 10:
                                     return 'FECHA ALTA';
                                     break;
+                            }
+
                             }
                         }
                     }
@@ -193,7 +238,7 @@
                         if (d.estatus == 1) {
                             return '<center><span class="label label-danger" style="background:#27AE60">Activo</span><center>';
                         } else if (d.estatus == 3) {
-                            boton =  '<center><span class="label label-danger" style="background:#FF7C00">Inactivo comisionando</span><center>';
+                            boton =  '<center><span class="label label-danger" style="background:#E74C3C">Baja </span><center>';
 
                              <?php
                                         if($this->session->userdata('id_rol') == 49){
@@ -215,7 +260,7 @@
                         } else {
                             if (d.abono_pendiente !== undefined) {
                                 if (parseFloat(d.abono_pendiente) > 0) {
-                                    boton = '<center><p class="mt-1"><span class="label label-danger" style="background:#FF7C00">Inactivo comisionando</span></p><center>';
+                                    boton = '<center><p class="mt-1"><span class="label label-danger" style="background:#E74C3C">Baja </span></p><center>';
 
 
                                     <?php
@@ -236,7 +281,7 @@
 
                                 } else {
                                     // return '<center><span class="label label-danger" style="background:#E74C3C">Inactivo</span><center>';
-                                    var boton = '<center><span class="label label-danger" style="background:#E74C3C">Inactivo </span></center>';
+                                    var boton = '<center><span class="label label-danger" style="background:#E74C3C">Baja </span></center>';
                                    
                                     <?php
                                         if($this->session->userdata('id_rol') == 49){
@@ -255,7 +300,7 @@
 
                             } else {
                                 // return '<center><span class="label label-danger" style="background:#E74C3C">Inactivo</span><center>';
-                                    var boton = '<center><span class="label label-danger" style="background:#E74C3C">Inactivo </span></center>';
+                                    var boton = '<center><span class="label label-danger" style="background:#E74C3C">Baja </span></center>';
                                    
                                     <?php
                                         if($this->session->userdata('id_rol') == 49){
@@ -313,6 +358,30 @@
                         }
                 }
             },
+            <?php
+                                        if($this->session->userdata('id_rol') != 49){
+                                    ?>
+            {
+                
+                 data: function (d) {
+               
+
+                        if(d.id_forma_pago == 5 && d.id_nacionalidad == 0){
+                                return '<center>Sin definir<center>';
+                            }else{
+                                return '<center><span class="label label-danger" style="background:#'+d.color+'">'+d.nacionalidad+'</span><center>';
+
+                            }
+                        
+               
+
+                }
+
+
+            },
+            <?php
+                                        }
+                                    ?>
             { data: function (d) {
                     return d.jefe_directo;
                 }

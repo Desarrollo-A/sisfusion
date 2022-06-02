@@ -433,10 +433,10 @@
                                         <div class="form-group label-floating is-focused">
                                             <label class="control-label label-gral">¿La venta es compartida?</label>
                                             <select class="selectpicker" data-style="btn btn-primary btn-round"
-                                                    title="¿Tenemos cliente anterior?" data-size="7" id="ventaC" name="ventaC"
+                                                    title="¿La venta es compartida?" data-size="7" id="ventaC" name="ventaC"
                                                     data-live-search="true">
                                                     <option value ="default" selected disabled>Selecciona una opción</option>
-                                                    <option value="uno">Si</option>
+                                                    <option value="uno">Sí</option>
                                                     <option value="dos">No</option>
                                             </select>
                                         </div>
@@ -500,14 +500,21 @@
 
     var aut;
 
-let titulos = [];
-$('#tabla_deposito_seriedad thead tr:eq(0) th').each( function (i) {
- if( i!=0 && i!=13){
-  var title = $(this).text();
-
-  titulos.push(title);
-}
-});
+    let titulos_intxt = [];
+    $('#tabla_deposito_seriedad thead tr:eq(0) th').each( function (i) {
+        $(this).css('text-align', 'center');
+        var title = $(this).text();
+        titulos_intxt.push(title);
+        $(this).html('<input type="text" class="textoshead"  placeholder="'+title+'"/>' );
+        $( 'input', this ).on('keyup change', function () {
+            if ($('#tabla_deposito_seriedad').DataTable().column(i).search() !== this.value ) {
+                $('#tabla_deposito_seriedad').DataTable()
+                    .column(i)
+                    .search(this.value)
+                    .draw();
+            }
+        });
+    });
 
     $("#tabla_deposito_seriedad").ready( function(){
 
@@ -741,18 +748,18 @@ $('#tabla_deposito_seriedad thead tr:eq(0) th').each( function (i) {
                                         buttonst += '<button class="btn-data btn-green abrir_prospectos ' +
                                             'btn-fab btn-fab-mini" data-idCliente="'+d.id_cliente+'" data-nomCliente="'+nombre_cliente+'">' +
                                             '<i class="fas fa-user-check"></i></button><br>';
-                                            buttonst += '<div><span class="label label-success">Debes asignar el prospecto al cliente para poder acceder al depósito de seriedad o integrar el expediente</span></div>';
+                                            buttonst += '<br><div><span class="label label-success">Debes asignar el prospecto al cliente para poder acceder al depósito de seriedad o integrar el expediente</span></div>';
 
                                     } else {
-                                        buttonst += '<div><span class="label label-success">Validado correctamente</span></div>';
+                                        buttonst += '<br><div><span class="label label-success">Validado correctamente</span></div>';
                                     }
                                 }
                                 else {
-                                    buttonst += '<div><span class="label label-success">Validado correctamente</span></div>';
+                                    buttonst += '<br><div><span class="label label-success">Validado correctamente</span></div>';
                                 }
                             }
                         }else{
-                            buttonst += '<a href="" id="vCompartida" data-idCliente="'+d.id_cliente+'" data-idLote="'+d.idLote+'" class="btn-data btn-green"><i class="fas fa-users"></i></a>'
+                            buttonst += '<a href="" title= "Asignación de ventas compartidas" id="vCompartida" data-idCliente="'+d.id_cliente+'" data-idLote="'+d.idLote+'" class="btn-data btn-green"><i class="fas fa-users"></i></a>'
                         }
                         
                         return '<div class="d-flex justify-center align-center">'+buttonst+'</div>';
@@ -1744,6 +1751,9 @@ $('#tabla_deposito_seriedad thead tr:eq(0) th').each( function (i) {
         e.preventDefault();
         var data = tabla_valores_ds.row($(this).parents('tr')).data();
         $('#id_cliente').val(data.id_cliente);
+        $("#ventaC").val("");
+        $("#ventaC").trigger('change');
+        $("#ventaC").selectpicker('refresh');
         $('#ventaCompartida').modal('show');
     });
 

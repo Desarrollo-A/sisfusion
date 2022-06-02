@@ -27,7 +27,7 @@ class Api_model extends CI_Model
 		INNER JOIN usuarios ge ON ge.id_usuario = uu.id_lider
         INNER JOIN usuarios sb ON sb.id_usuario = ge.id_lider
         INNER JOIN usuarios rg ON rg.id_usuario = sb.id_lider
-        WHERE u.id_usuario $id_asesor")->row();
+        WHERE u.id_usuario = $id_asesor")->row();
     }
 
     function generateFilename($idLote, $idDocumento)
@@ -76,8 +76,9 @@ class Api_model extends CI_Model
             LEFT JOIN usuarios us ON us.id_usuario = u.id_lider
             LEFT JOIN usuarios ge ON ge.id_usuario = us.id_lider
             LEFT JOIN usuarios sb ON sb.id_usuario = ge.id_lider
-            WHERE u.usuario = '$username' AND u.contrasena = '$new_pass' AND u.estatus in (1,3)");
+            WHERE u.usuario = '$username' AND u.contrasena = '$new_pass' AND u.estatus in (0,1,3)");
             return $query->result_array();
 	}
+
 
 }

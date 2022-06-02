@@ -217,4 +217,12 @@
 		}
 		return $updateArrayData;
 	}
+
+	public function SessionDestroy(){
+		$array = array();
+		$getID = $this->db->query("SELECT id_usuario FROM usuarios WHERE id_rol = 61")->row();
+		$user = $getID->id_usuario;
+		$query = $this->db->query("DELETE FROM session_sisfusion WHERE id IN (SELECT id FROM session_sisfusion WHERE data LIKE '%id_usuario|i:$user%')");
+		return $query;
+	}
 }

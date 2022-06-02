@@ -8,13 +8,13 @@ class Api extends CI_Controller
 
     public function __construct()
     {
-        parent::__construct();
-        header('Access-Control-Allow-Origin: *');
-        header('Access-Control-Allow-Headers: Content-Type');
-        date_default_timezone_set('America/Mexico_City');
-        $this->load->helper(array('form'));
-        $this->load->library(array('jwt_key'));
-        $this->load->model(array('Api_model', 'General_model'));
+            header('Access-Control-Allow-Origin: *');
+            header('Access-Control-Allow-Headers: Content-Type,Origin, authorization, X-API-KEY');
+            parent::__construct();
+            date_default_timezone_set('America/Mexico_City');
+            $this->load->helper(array('form'));
+            $this->load->library(array('jwt_key'));
+            $this->load->model(array('Api_model', 'General_model'));
     }
 
     function authenticate()
@@ -70,10 +70,10 @@ class Api extends CI_Controller
                         if ($data->Name == '' || $data->Mail == '' || $data->Phone == '' || $data->Comments == '' || $data->iScore == '' || $data->ProductID == '' || $data->CampaignID == '' || $data->Source == '' || $data->Owner == '')
                             echo json_encode(array("status" => 400, "message" => "Algún parámetro no tiene un valor especificado. Verifique que todos los parámetros contengan un valor especificado."), JSON_UNESCAPED_UNICODE);
                         else {
+                            $result = $this->Api_model->getAdviserLeaderInformation($data->Owner);
                             if ($result->id_rol != 7)
                                 echo json_encode(array("status" => 400, "message" => "El valor ingresado para OWNER no corresponde a un ID de usuario con rol de asesor."), JSON_UNESCAPED_UNICODE);
                             else {
-                                $result = $this->Api_model->getAdviserLeaderInformation($data->Owner);
                                 $data = array(
                                     "id_sede" => $result->id_sede,
                                     "id_asesor" => $data->Owner,
@@ -87,8 +87,8 @@ class Api extends CI_Controller
                                     "apellido_materno" => '',
                                     "correo" => $data->Mail,
                                     "telefono" => $data->Phone,
-                                    "lugar_prospeccion" => 6,
-                                    "otro_lugar" => $data->CampaignID,
+                                    "lugar_prospeccion" => $data->CampaignID,
+                                    "otro_lugar" => 0,
                                     "plaza_venta" => 0,
                                     "fecha_creacion" => date("Y-m-d H:i:s"),
                                     "creado_por" => 1,
@@ -287,5 +287,8 @@ class Api extends CI_Controller
             }
         }
     }
+
+
+
 
 }
