@@ -1257,6 +1257,10 @@ class Asesor extends CI_Controller
 
 
         $datos['onlyView'] = $onlyView;
+        $datos['corrida_financiera'] = $this->Asesor_model->getInfoCFByCl($id_cliente);
+        $datos['descuentos_aplicados'] = $this->Asesor_model->getDescsByCF($datos['corrida_financiera']->id_corrida);
+        /*print_r($datos['descuentos_aplicados']);
+        exit;*/
 
         $this->load->view('template/header');
         $this->load->view('asesor/deposito_formato', $datos);

@@ -71,7 +71,7 @@
         $this->db->select('idLote,nombreLote, total, sup');
         $this->db->where('idLote', $lote);
         //$this->db->where('lotes.status','1');
-        $query = $this->db->get('sisfusion.dbo.lotes');
+        $query = $this->db->get('lotes');
         if($query){
             $query = $query->result_array();
             return $query;
