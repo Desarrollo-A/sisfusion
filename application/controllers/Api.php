@@ -8,13 +8,13 @@ class Api extends CI_Controller
 
     public function __construct()
     {
-        parent::__construct();
-        header('Access-Control-Allow-Origin: *');
-        header('Access-Control-Allow-Headers: Content-Type');
-        date_default_timezone_set('America/Mexico_City');
-        $this->load->helper(array('form'));
-        $this->load->library(array('jwt_key'));
-        $this->load->model(array('Api_model', 'General_model'));
+            header('Access-Control-Allow-Origin: *');
+            header('Access-Control-Allow-Headers: Content-Type,Origin, authorization, X-API-KEY');
+            parent::__construct();
+            date_default_timezone_set('America/Mexico_City');
+            $this->load->helper(array('form'));
+            $this->load->library(array('jwt_key'));
+            $this->load->model(array('Api_model', 'General_model'));
     }
 
     function authenticate()
@@ -87,8 +87,8 @@ class Api extends CI_Controller
                                     "apellido_materno" => '',
                                     "correo" => $data->Mail,
                                     "telefono" => $data->Phone,
-                                    "lugar_prospeccion" => 6,
-                                    "otro_lugar" => $data->CampaignID,
+                                    "lugar_prospeccion" => $data->CampaignID,
+                                    "otro_lugar" => 0,
                                     "plaza_venta" => 0,
                                     "fecha_creacion" => date("Y-m-d H:i:s"),
                                     "creado_por" => 1,
@@ -288,49 +288,6 @@ class Api extends CI_Controller
         }
     }
 
-
-    function getNacionalidades(){
-        $data = $this->Api_model->getNacionalidades();
-       echo json_encode($data);
-    }
-
-    public function saveUserCH()
-    {
-        $objDatos = json_decode(base64_decode(file_get_contents("php://input")), true);
-
-        $data = array(
-            "nombre" => $objDatos['nombre'],
-            "apellido_paterno" => $objDatos['apellido_paterno'],
-            "apellido_materno" => $objDatos['apellido_materno'],
-            "forma_pago" => $objDatos['forma_pago'],
-            "rfc" => $objDatos['rfc'],
-            "tiene_hijos" => 2,
-            "estatus" => 1,
-            "sesion_activa" => 1,
-            "imagen_perfil" => '',
-            "correo" => $objDatos['correo'],
-            "telefono" => $objDatos['telefono'],
-            "id_sede" => $objDatos['id_sede'],
-            "id_rol" => $objDatos['id_rol'],
-            "id_lider" => $objDatos['id_lider'],
-            "usuario" => $objDatos['usuario'],
-            "contrasena" => encriptar($objDatos['contrasena']),
-            "fecha_creacion" => date("Y-m-d H:i:s"),
-            "creado_por" => $objDatos['creado_por'],
-            "fecha_modificacion" => date("Y-m-d H:i:s"),
-            "modificado_por" => $objDatos['creado_por'],
-            "sedech" => $objDatos['sedech'],
-            "sucursalch" => $objDatos['sucursalch'],
-            "status_contratacion" => $objDatos['status_contratacion'],
-            "nacionalidad" => $objDatos['nacionalidad']
-
-        );
-        echo var_dump($data);
-       /* if (isset($_POST) && !empty($_POST)) {
-            $response = $this->Api_model->saveUser($data);
-            echo json_encode($response);
-        }*/
-    }
 
 
 

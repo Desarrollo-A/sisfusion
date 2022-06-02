@@ -1,5 +1,189 @@
 @import "_base";
 
 #reporte{
-    
+    .card{
+        box-shadow: 0px 2px 9px -12px RGB(0 0 0 / 42%), 0 4px 25px 0px RGB(0 0 0 / 12%), 0 8px 10px -5px RGB(0 0 0 / 20%);
+        border-radius: 10px;
+        @media #{$smartphone}, #{$tablets}{ margin-bottom: 0!important; }
+        @media #{$smartphone}{ width: 98%; }
+    }
+    .info{
+        line-height: 1;
+        @media #{$smartphone}, #{$tablets}{ font-size: 18px!important; }
+        br{
+            @media #{$smartphone}, #{$tablets}{ display: none!important; }
+        }
+    }
+    .money{
+        font-size: 24px;
+        font-weight: 600;
+        @media #{$smartphone}, #{$tablets}{ margin: 0!important; }
+    }
+    .moreMiniChart{
+        position: absolute;
+        right: 15px;
+        bottom: 15px;
+        background-color: $blueIndigo;
+        color: $white;
+        border-radius: 20px;
+        width: 23px;
+        height: 23px;
+        border: none;
+        margin-left: 3px;
+        font-size: 12px;
+        span{
+            font-size: 12px!important;
+        }
+        &:hover{
+            background-color: #b5c2d0;
+        }
+    }
+    .selectMini{
+        display: flex;
+        align-items: center;
+        background-color: #bdac7b;
+        color: $white;
+        border-radius: 20px;
+        font-size: 9px;
+        padding: 4px 7px;
+        span{
+            font-size: 12px;
+            margin-left: 5px;
+        }
+        @media #{$smartphone}{ font-size: 12px!important; }
+    }
+    .boxMiniCharts{
+        height: 110px!important;
+    }
+    .boxAccordions{
+        .bk{
+            @media #{$smartphone}, #{$tablets}{ margin-top: 25px!important; }
+            background-color: $white;
+            padding: 10px 10px 0 10px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0px 2px 9px -12px RGB(0 0 0 / 42%), 0 4px 25px 0px RGB(0 0 0 / 12%), 0 8px 10px -5px RGB(0 0 0 / 20%);
+            .accordion-title {
+                display: relative;
+                text-transform: capitalize;
+                padding: 0 15px 10px 15px;
+                margin: 0;
+                cursor: pointer;
+                text-align: center;
+                &:hover, :active{
+                    font-weight: 900;
+                }
+                &:after{   
+                    content: "";
+                    position: absolute;
+                    right: 35px;
+                    top: 23%;
+                    transition: all 0.2s ease-in-out;
+                    display: block;
+                    width: 8px;
+                    height: 8px;
+                    border-top: solid 1px $gray;
+                    border-right: solid 1px $gray;
+                    -webkit-transform: rotate(135deg);
+                    transform: rotate(135deg); 
+                } 
+            }
+            .open:after {
+                -webkit-transform: rotate(-45deg);
+                transform: rotate(-45deg);
+                top: 3%;
+            }
+            table{
+                text-align: center;
+                thead tr {
+                    background-color: $white;
+                    th input{
+                        border: 1px solid transparent;
+                        border-radius: 5px;
+                        color: $grayOxford;
+                        text-align: center;
+                        font-weight: 500;
+                        &:active{
+                            border: 1px solid $gray;
+                        }
+                        &:focus{
+                            border: 1px solid $gray;
+                        }
+                    }
+                }
+                .update-dataTable{
+                    border: 0;
+                    background-color: #D8DDE2;
+                    color: $blueIndigo;
+                    &:hover{
+                        background-color: #b5c2d0;
+                    }
+                }
+                .btnSub{
+                    border: none;
+                    background-color: #D8DDE2;
+                    border-radius: 20px;
+                    width: 30px;
+                    height: 30px;
+                    color: $blueIndigo;
+                    &:hover{
+                        background-color: #b5c2d0;
+                    }
+                }
+            }
+            .dataTables_scroll .container-fluid{
+                padding-top: 5px;
+                padding-bottom: 5px;
+            }
+            .dataTables_scrollBody::-webkit-scrollbar-track{
+                border-radius: 10px;
+                background-color: transparent;
+            }
+            /* El background del scroll (border)*/
+            .dataTables_scrollBody::-webkit-scrollbar{
+                width: 2px;
+                height: 5px;
+                background-color: transparent;
+            }
+            /* Color de la barra de desplazamiento */
+            .dataTables_scrollBody::-webkit-scrollbar-thumb{
+                border-radius: 0px;
+                background-color: $platinumScroll;
+            }
+            /* Color del HOVER de barra de desplazamiento */
+            .dataTables_scrollBody::-webkit-scrollbar-thumb:hover{
+                background-color: $deepGray;
+            }
+        }
+        .accordion-content {
+            display: none;
+            .dataTables_wrapper{
+                .container-fluid .row{
+                    .dataTables_info{
+                        padding: 0;
+                        font-size: 12px;
+                    }
+                    .paging_full_numbers{
+                        display: flex;
+                        justify-content: flex-end;
+                        @media #{$smartphone}{
+                            display: flex;
+                            justify-content: center;
+                        }
+                        @media #{$tablets}{
+                            display: flex;
+                            justify-content: center;
+                        }
+                    }
+                    @media #{$smartphone}{
+                        display: block!important;
+                    }
+                    @media #{$tablets}{
+                        display: block;
+                        text-align: center;
+                    }
+                }
+            }
+        }
+    } 
 }

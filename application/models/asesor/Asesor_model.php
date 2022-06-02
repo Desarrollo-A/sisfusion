@@ -48,7 +48,7 @@ class Asesor_model extends CI_Model
 
 
         return $this->db->query("SELECT id_copropietario, id_cliente, regimen_matrimonial as regimen_valor, estado_civil as estado_valor, 
-                                    nacionalidad as nacionalidad_valor, co.nombre as 
+                                    co.nacionalidad as nacionalidad_valor, co.nombre as 
                                     nombre_cop, apellido_paterno, apellido_materno, telefono, telefono_2, correo, fecha_nacimiento, 
                                     originario_de, conyuge, domicilio_particular, personalidad_juridica, 
                                     ocupacion, empresa, posicion,  antiguedad, edadFirma, direccion, tipo_vivienda, rfc
@@ -99,6 +99,12 @@ class Asesor_model extends CI_Model
         }
         if(($this->session->userdata('id_usuario') != 2826 && $this->session->userdata('id_usuario') != 2767 && $this->session->userdata('id_usuario') != 2754 && $this->session->userdata('id_usuario') != 2749) && $this->session->userdata('id_rol') == 32){
             $complemento = " AND idmenu not in(1091)";
+        }
+        if(($this->session->userdata('id_usuario') != 1297 && $this->session->userdata('id_usuario') != 826) && $this->session->userdata('id_rol') == 8){
+            $complemento = " AND idmenu not in(1980)";
+        }
+        if(($this->session->userdata('id_usuario') != 5107) && $this->session->userdata('id_rol') == 33){
+            $complemento = " AND idmenu not in(1105)";
         }
         return $this->db->query("SELECT * FROM Menu2 WHERE rol=" . $rol . " AND padre > 0 AND estatus = 1 $complemento order by orden asc");
     }
@@ -380,7 +386,7 @@ class Asesor_model extends CI_Model
     {
 
         $this->db->select("cl.id_cliente, id_asesor, id_coordinador, id_gerente, cl.id_sede, cl.nombre, cl.apellido_paterno, 
-        cl.apellido_materno ,personalidad_juridica ,nacionalidad ,cl.rfc ,curp ,cl.correo ,telefono1
+        cl.apellido_materno ,personalidad_juridica ,cl.nacionalidad ,cl.rfc ,curp ,cl.correo ,telefono1
       ,telefono2 ,telefono3 ,fecha_nacimiento ,lugar_prospeccion ,medio_publicitario ,otro_lugar ,plaza_venta ,
       tp.tipo ,estado_civil ,regimen_matrimonial ,nombre_conyuge ,tipo_vivienda ,ocupacion ,cl.empresa ,
       puesto ,edadFirma ,antiguedad ,domicilio_empresa ,telefono_empresa ,noRecibo,engancheCliente ,
@@ -434,7 +440,7 @@ class Asesor_model extends CI_Model
                                     LEFT JOIN opcs_x_cats oc3 ON oc3.id_opcion = co.regimen_matrimonial WHERE co.estatus = 1 AND co.id_cliente = ".$cliente." AND
                                     oc.id_catalogo = 11 AND oc2.id_catalogo = 18 AND oc3.id_catalogo = 19*/
         $query = $this->db->query("SELECT id_copropietario, id_cliente, regimen_matrimonial as regimen_valor, estado_civil as estado_valor, 
-                                    nacionalidad as nacionalidad_valor, co.nombre as 
+                                    co.nacionalidad as nacionalidad_valor, co.nombre as 
                                     nombre_cop, apellido_paterno, apellido_materno, telefono, telefono_2, correo, fecha_nacimiento, 
                                     originario_de, conyuge, domicilio_particular, 
                                     ocupacion, empresa, posicion,  antiguedad, edadFirma, direccion, tipo_vivienda, rfc

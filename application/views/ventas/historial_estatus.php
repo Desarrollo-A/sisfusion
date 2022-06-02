@@ -286,18 +286,17 @@
         });
 
         $('#filtro33').change(function(ruta){
-            residencial = $('#filtro33').val();
-            param = $('#param').val();
             $("#filtro44").empty().selectpicker('refresh');
+
             $.ajax({
-                url: '<?=base_url()?>Comisiones/lista_estatus/'+residencial,
+                url: '<?=base_url()?>Comisiones/lista_estatus',
                 type: 'post',
                 dataType: 'json',
                 success:function(response){
-                    var len = response.length;
-                    for( var i = 0; i<len; i++){
-                        var id = response[i]['idEstatus'];
-                        var name = response[i]['nombre'];
+                    const len = response.length;
+                    for(let i = 0; i<len; i++){
+                        const id = response[i]['idEstatus'];
+                        const name = response[i]['nombre'];
                         $("#filtro44").append($('<option>').val(id).text(name));
                     }
                     $("#filtro44").selectpicker('refresh');
@@ -461,6 +460,19 @@
                 Pausado
                 </label>
             </div>`;
+        const optPagado = `
+            <div class="form-check">
+                <input class="form-check-input"
+                    type="radio"
+                    name="estatus"
+                    id="estatus-pagado"
+                    value="11"
+                    required>
+                <label class="form-check-label"
+                    for="estatus-pagado">
+                Pagado
+                </label>
+            </div>`;
 
         let seleccionados = [];
         //INICIO TABLA QUERETARO*****************************************
@@ -493,6 +505,8 @@
                                 options = optNueva + optPausado;
                             } else if (estatus === '4') {
                                 options = optNueva;
+                            } else if (estatus === '8') {
+                                options = optPagado;
                             }
 
                             const titlePagos = (idComisiones.length > 1)
@@ -813,6 +827,8 @@
                         const estatus = $('#filtro44').val();
                         if (estatus === '3' || estatus === '5' || estatus === '6' || estatus === '7') {
                             return '';
+                        } else if (estatus === '7' && (full.estatus === '1' || full.estatus === '6')) {
+                            return '<input type="checkbox" name="idTQ[]" style="width:20px;height:20px;"  value="' + full.id_pago_i + '">';
                         } else if ($('#filtro44').val() === '2') {
                             if (full.forma_pago.toLowerCase() !== 'factura') {
                                 return '<input type="checkbox" name="idTQ[]" style="width:20px;height:20px;"  value="' + full.id_pago_i + '">';

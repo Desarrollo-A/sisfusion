@@ -100,11 +100,16 @@ class ScheduleTasks_Prestamos extends CI_Controller
                 }
             }else{
                 $CierrePrestamo = $this->CierrePrestamo($data[$m]['id_prestamo']);
-                $pendiente = $pagoMensual;
-                 if($pendiente > $data[$m]['monto']){
-                     $pendiente =  $data[$m]['monto'] - $CierrePrestamo[0]['pagado'];
-                 }
-                $this->db->query("UPDATE prestamos_aut SET modificado_por=1,fecha_modificacion=GETDATE(),pendiente=$pendiente WHERE id_prestamo=".$data[$m]['id_prestamo']."");
+
+                if($CierrePrestamo[0]['pagado'] > ($data[$m]['monto'] - 0.50)){
+                    $this->db->query("UPDATE prestamos_aut SET modificado_por=1,pendiente=0,fecha_modificacion=GETDATE(),estatus=3 WHERE id_prestamo=".$data[$m]['id_prestamo']."");
+                }else{
+                    $pendiente = $pagoMensual;
+                    if($pendiente > $data[$m]['monto']){
+                        $pendiente =  $data[$m]['monto'] - $CierrePrestamo[0]['pagado'];
+                    }
+                    $this->db->query("UPDATE prestamos_aut SET modificado_por=1,fecha_modificacion=GETDATE(),pendiente=$pendiente WHERE id_prestamo=".$data[$m]['id_prestamo']."");
+                }
             }
     }
 }

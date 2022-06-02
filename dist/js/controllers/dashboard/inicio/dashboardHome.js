@@ -8,59 +8,93 @@ var optionsTotalVentas = {
         radialBar: {
             dataLabels: {
                 name: {
-                    fontSize: '22px',
+                    fontSize: '12px',
+                    formatter: function (val){
+                        // val = val.split(':');
+                        // console.log('titulo',val);
+                        return val
+                    }
                 },
                 value: {
-                    fontSize: '16px',
+                    fontSize: '18px',
+                    formatter: function (val) {
+                        return val + '%'
+                      }
                 },
                 total: {
-                    show: true,
-                    label: 'Total',
+                    show: false,
+                    label: 'Totales',
                     formatter: function (w) {
+                        console.log('w',w);
                         // By default this function returns the average of all series. The below is just an example to show the use of custom formatter function
-                        return 249
+                        return 600
                     }
                 }
+            },
+            track: {
+                background: ['#f9f9f9', '#f9f9f9', '#f9f9f9', '#f9f9f9'],
             }
         }
     },
-    title:{
-        text: 'TOTAL DE VENTAS',
-        align: 'center',
-        margin: 5
-    },
-    labels: ['Apples', 'Oranges', 'Bananas', 'Berries'],
 };
 
 var optionsProspectos = {
     series: [],
     chart: {
-        height: '100%',
         type: 'area',
-        toolbar: {
-            show: false
-        },
-
+        height: '100%',
+        toolbar: { show: false },
+        zoom: { enabled: false },
         sparkline: {
-            enabled: true,
+            enabled: true
+          }
+    },
+    colors: ["#2C93E7"],
+    grid: { 
+        show: false,
+    },
+    dataLabels: { enabled: false },
+    legend: { show: false },
+    stroke: {
+        curve: 'smooth',
+        width: 2,
+    },
+    xaxis: {
+    labels: {show: false},
+    axisBorder: {show:false},
+    axisTicks: {show:false},
+    },
+    yaxis: {
+        type: 'numeric',
+        labels: {show: false},
+        axisBorder: {show:false},
+        axisTicks: {show:false},
+    },
+    fill: {
+        opacity: 1,
+        type: 'gradient',
+        gradient: {
+            shade: 'light',
+            type: "vertical",
+            shadeIntensity: 1,
+            gradientToColors:  ['#2C93E7'],
+            inverseColors: true,
+            opacityFrom: 0.55,
+            opacityTo: 0.2,
+            stops: [0, 70, 100],
+            colorStops: []
         }
     },
-    dataLabels: {
-        enabled: false
-    },
-    stroke: {
-        width: 2,
-        curve: 'smooth'
-    },
+    tooltip: { enabled: true}
 };
 
 var optionsProspClients = {
     series: [{
-        name: 'series1',
-        data: [31, 40, 28, 51, 42, 109, 100]
+        name: 'Clientes',
+        data: [91, 45, 31, 40, 28, 51, 42, 109, 100, 67, 80, 115]
     }, {
-        name: 'series2',
-        data: [11, 32, 45, 32, 34, 52, 41]
+        name: 'Prospectos',
+        data: [45, 30, 11, 32, 45, 32, 34, 52, 41, 38, 65, 47]
     }],
     chart: {
         height: '100%',
@@ -70,25 +104,59 @@ var optionsProspClients = {
         },
         sparkline: {
             enabled: false,
-        }
+        },
     },
+    colors: ['#22639b', '#00A0FF'],
     yaxis:{
         labels: {
             offsetX: -13,
           },
     },
     grid: {
-        padding: {
-          left: -3,
+        show: true,
+        borderColor: '#f3f3f3',
+        strokeDashArray: 0,
+        position: 'back', 
+        yaxis: {
+            lines: {
+                show: true
+            }
+        },  
+        row: {
+            colors: undefined,
+            opacity: 0.5
+        },  
+        column: {
+            colors: undefined,
+            opacity: 0.5
         },
-      },
+    },
     dataLabels: {
         enabled: false
     },
     stroke: {
-        width: 1,
-        curve: 'smooth'
+        width: 2,
+        curve: 'smooth',
+        opacity: 0.7
     },
+    xaxis: {
+        categories: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+    },
+    fill: {
+        opacity: 1,
+        type: 'gradient',
+        gradient: {
+            shade: 'light',
+            type: "vertical",
+            shadeIntensity: 1,
+            gradientToColors: ['#22639b', '#00A0FF'],
+            inverseColors: true,
+            opacityFrom: 0.6,
+            opacityTo: 0.2,
+            stops: [0, 70, 100],
+            colorStops: []
+        }
+    }
 };
 
 var optionsWeekly = {
@@ -137,14 +205,15 @@ var optionsFunnel = {
         radialBar: {
             dataLabels: {
                 name: {
-                    fontSize: '22px',
+                    fontSize: '20px',
+                    fontWeight: '100'
                 },
                 value: {
-                    fontSize: '16px',
+                    fontSize: '36px',
                 },
                 total: {
                     show: true,
-                    label: 'Total',
+                    label: 'Suma',
                     formatter: function (w) {
                         // By default this function returns the average of all series. The below is just an example to show the use of custom formatter function
                         return 249
@@ -152,11 +221,6 @@ var optionsFunnel = {
                 }
             }
         }
-    },
-    title:{
-        text: 'CICLO DE VENTA',
-        align: 'center',
-        margin: 5
     },
     labels: ['Apples', 'Oranges', 'Bananas', 'Berries'],
 };
@@ -202,11 +266,23 @@ function getSalesByYear(){
             $('#spiner-loader').removeClass('hide');
         },
         success: function (response) {
-            let totalVentasArray = [response.totalVentas, (response.ConT + response.totalAT), response.totalCT]
-            totalVentasChart.updateSeries([{
-                data: totalVentasArray
-            }])
+            let totalVentasArray = [
+                parseFloat(response.porcentajeTotal), 
+                parseFloat(response.porcentajeTotalCont), 
+                parseFloat(response.porcentajeTotalAp),
+                parseFloat(response.porcentajeTotalC),
+            ];
+            console.log('ventasarr',totalVentasArray);
+            totalVentasChart.updateSeries(totalVentasArray)
 
+            totalVentasChart.updateOptions({
+              labels: [
+                `Gran total: ${response.totalVentas}`, 
+                `Contratado: ${response.totalConT}`, 
+                `Apartado: ${response.totalAT}`, 
+                `Cancelado: ${response.totalCT}`
+                ]
+             });
             console.log(response);
         }
     });
@@ -232,6 +308,8 @@ function getProspectsByYear() {
                 data.push(element.counts);
                 count = count + element.counts;
             });
+            console.log('data',data);
+            console.log('months',months);
             prospectosChart.updateSeries([{
                 name: 'Prospectos',
                 data: data
@@ -270,7 +348,7 @@ function loadData(){
 
                 // $('#numberGraphic').text(response.prospectos);
                 $('#pt_card').text(response.prospectos);
-                $('#total_ventas').text(response_vtas.ventas_apartadas);
+                $('#total_ventas').text(1);
 
                 // chart2.updateSeries([{
                 //     data: [response_vtas.porcentajeApartado],

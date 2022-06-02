@@ -130,7 +130,3 @@
     </div>
     <script src="<?=base_url()?>dist/js/controllers/dashboard/agenda/general_calendar.js"></script>
     <script src="<?=base_url()?>dist/js/controllers/dashboard/agenda/dashboardCalendar.js"></script>
-    <script>
-        userType = <?= $this->session->userdata('id_rol') ?> ;
-        idUser = <?= $this->session->userdata('id_usuario') ?> ;
-    </script>

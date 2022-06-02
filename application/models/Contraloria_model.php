@@ -773,32 +773,26 @@ class Contraloria_model extends CI_Model {
 
 		public function getAllDsByLote($idLote)
 		{
-			$query = $this->db-> query("SELECT cl.id_cliente, id_asesor, id_coordinador, id_gerente, cl.id_sede, cl.nombre, cl.apellido_paterno, 
-	        cl.apellido_materno, cl.status ,cl.idLote, fechaApartado ,fechaVencimiento , cl.usuario, cond.idCondominio, cl.fecha_creacion, 
-	        cl.creado_por, cl.fecha_modificacion, cl.modificado_por, cond.nombre as nombreCondominio, residencial.nombreResidencial as nombreResidencial,
-	        cl.status, nombreLote, lotes.comentario, lotes.idMovimiento, lotes.fechaVenc, lotes.modificado
-			FROM deposito_seriedad as ds
-			INNER JOIN clientes as cl ON ds.id_cliente = cl.id_cliente
-			INNER JOIN lotes as lotes on lotes.idLote=cl.idLote and lotes.idCliente = cl.id_cliente and cl.status = 1
+			$query = $this->db->query("	SELECT cl.id_cliente, id_asesor, id_coordinador, id_gerente, cl.id_sede, cl.nombre, cl.apellido_paterno,
+											cl.apellido_materno, cl.status, cl.idLote, fechaApartado, fechaVencimiento, cl.usuario, cond.idCondominio, cl.fecha_creacion,
+											cl.creado_por, cl.fecha_modificacion, cl.modificado_por, cond.nombre AS nombreCondominio, residencial.nombreResidencial AS nombreResidencial,
+											cl.status, nombreLote, lotes.comentario, lotes.idMovimiento, lotes.fechaVenc, lotes.modificado
+										FROM deposito_seriedad AS ds
+											INNER JOIN clientes AS cl ON ds.id_cliente = cl.id_cliente
+											INNER JOIN lotes AS lotes ON lotes.idLote=cl.idLote AND lotes.idCliente = cl.idCliente AND cl.status = 1
+											LEFT JOIN condominios AS cond ON lotes.idCondominio=cond.idCondominio
+											LEFT JOIN residenciales AS residencial ON cond.idResidencial=residencial.idResidencial
+										WHERE
+											idStatusContratacion = 1 AND idMovimiento = 31 AND cl.status = 1 AND cl.idLote = ".$idLote."
+											OR idStatusContratacion = 2 AND idMovimiento = 85 AND cl.status = 1 AND cl.idLote = ".$idLote."
+											OR idStatusContratacion = 1 AND idMovimiento = 20 AND cl.status = 1 AND cl.idLote = ".$idLote."
+											OR idStatusContratacion = 1 AND idMovimiento = 63 AND cl.status = 1 AND cl.idLote = ".$idLote."
+											OR idStatusContratacion = 1 AND idMovimiento = 73 AND cl.status = 1 AND cl.idLote = ".$idLote."
+											OR idStatusContratacion = 3 AND idMovimiento = 82 AND cl.status = 1 AND cl.idLote = ".$idLote."
+											OR idStatusContratacion = 1 AND idMovimiento = 92 AND cl.status = 1 AND cl.idLote = ".$idLote."
+											OR idStatusContratacion = 1 AND idMovimiento = 96 AND cl.status = 1 AND cl.idLote = ".$idLote."
+										ORDER BY cl.id_Cliente ASC");
 
-
-			LEFT JOIN condominios as cond on lotes.idCondominio=cond.idCondominio
-	        LEFT JOIN residenciales as residencial on cond.idResidencial=residencial.idResidencial
-			
-			WHERE  
-
-			    idStatusContratacion = 1 AND idMovimiento = 31 and cl.status = 1 AND cl.idLote = ".$idLote."
-				OR idStatusContratacion = 2 AND idMovimiento = 85 and cl.status = 1 AND cl.idLote = ".$idLote."
-				OR idStatusContratacion = 1 and idMovimiento = 20 and cl.status = 1 AND cl.idLote = ".$idLote."
-				OR idStatusContratacion = 1 and idMovimiento = 63 and cl.status = 1 AND cl.idLote = ".$idLote."
-				OR idStatusContratacion = 1 and idMovimiento = 73 and cl.status = 1 AND cl.idLote = ".$idLote."
-				OR idStatusContratacion = 3 and idMovimiento = 82 and cl.status = 1 AND cl.idLote = ".$idLote."
-				OR idStatusContratacion = 1 and idMovimiento = 92 and cl.status = 1 AND cl.idLote = ".$idLote."
-				OR idStatusContratacion = 1 and idMovimiento = 96 and cl.status = 1 AND cl.idLote = ".$idLote."
-
-					
-					
-			ORDER BY cl.id_Cliente ASC");
 			return $query->result_array();
 		}
 
@@ -830,12 +824,12 @@ class Contraloria_model extends CI_Model {
 				}
 				$i++;
 			  
-				  $query = $this->db->query("SELECT idLote from lotes
+				  $query = $this->db->query("SELECT idLote FROM lotes
 											INNER JOIN condominios ON condominios.idCondominio = lotes.idCondominio 
 											INNER JOIN residenciales ON residenciales.idResidencial = condominios.idResidencial 
 											WHERE residenciales.idResidencial = ".$idResidencial." 
-											and condominios.nombre = '".$insert_csv['condominio']."'
-											and lotes.nombreLote = '".$insert_csv['nombreLote']."' and lotes.status = 1")->result_array();
+											AND condominios.nombre = '".$insert_csv['condominio']."'
+											AND lotes.nombreLote = '".$insert_csv['nombreLote']."' AND lotes.status = 1")->result_array();
 					if (!empty($query)){
 
 							foreach ($query as $row) {
@@ -846,7 +840,7 @@ class Contraloria_model extends CI_Model {
 							$datos = trim($datos, ',');
 					
 							$this->db->trans_begin();
-								 $this->db->query("UPDATE lotes SET observacionContratoUrgente = 1 WHERE status = 1 and idLote IN (".$datos.") ");		
+								 $this->db->query("UPDATE lotes SET observacionContratoUrgente = 1 WHERE status = 1 AND idLote IN (".$datos.") ");		
 				
 							 if ($this->db->trans_status() === FALSE) {
 								$this->db->trans_rollback();

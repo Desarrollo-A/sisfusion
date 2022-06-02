@@ -76,60 +76,9 @@ class Api_model extends CI_Model
             LEFT JOIN usuarios us ON us.id_usuario = u.id_lider
             LEFT JOIN usuarios ge ON ge.id_usuario = us.id_lider
             LEFT JOIN usuarios sb ON sb.id_usuario = ge.id_lider
-            WHERE u.usuario = '$username' AND u.contrasena = '$new_pass' AND u.estatus in (1,3)");
+            WHERE u.usuario = '$username' AND u.contrasena = '$new_pass' AND u.estatus in (0,1,3)");
             return $query->result_array();
 	}
-    function getNacionalidades()
-    {
-        $FormasPago =  $this->db->query("SELECT id_opcion as id_forma_pago,nombre as forma_pago FROM opcs_x_cats WHERE id_catalogo=16")->result_array();
-       // echo var_dump($FormasPago);
-       $ArrayMex = $FormasPago;
-    //   $ArrayExt = $FormasPago;
-       $contadorMex=0;
-       $contadorExt=0;
-      // if($contadorMex == 0){
-        unset($ArrayMex[4]);
-     //   $contadorMex++;
-    //}
-    //if($contadorExt == 0){
-        $ArrayExt =  array_pop($FormasPago);
-     //   $contadorExt++;
-    //}
-        $Nacionalidades =  $this->db->query("SELECT id_opcion as id_nacionalidad,nombre as nacionalidad,
-        CASE WHEN id_opcion=0 THEN 0 ELSE 1 END as tipo_contrato
-         FROM opcs_x_cats WHERE id_catalogo=11 and id_opcion in(0,1,14,17)")->result_array();
-        for ($m=0; $m <count($Nacionalidades) ; $m++) { 
-                if($m == 0){
-                   
-                    $Nacionalidades[$m]['tipo_pago'] = $ArrayMex; 
-                    $Nacionalidades[$m]['contrato'] = array('tipo_contrato' => 0);
 
-                }else{
-                    
-                    $Nacionalidades[$m]['tipo_pago'] = $ArrayExt;
-                    $Nacionalidades[$m]['contrato'] = array('tipo_contrato' => 1);
-                }
-            
-        }
-        return $Nacionalidades;
-
-
-
-    }
-
-
-
-    function saveUserCH($data) {
-        if ($data != '' && $data != null) {
-            $response = $this->db->insert("usuarios", $data);
-            if (!$response) {
-                return $finalAnswer = 0;
-            } else {
-                return $finalAnswer = 1;
-            }
-        } else {
-            return 0;
-        }
-    }
 
 }

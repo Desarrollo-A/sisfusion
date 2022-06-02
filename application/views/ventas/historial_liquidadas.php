@@ -71,6 +71,7 @@
                                                         <th>MODALIDAD</th>
                                                         <th>PLAN VENTA</th>
                                                         <th>TOTAL</th>
+                                                        <th>PORCENTAJE</th>
                                                         <th>PENDIENTE</th>
                                                         <th>MÁS</th>
                                                     </tr>
@@ -107,7 +108,7 @@
         $("#tabla_ingresar_9").ready(function () {
             let titulos = [];
             $('#tabla_ingresar_9 thead tr:eq(0) th').each(function (i) {
-                if (i != 0 && i != 8) {
+                if (i != 0) {
                     var title = $(this).text();
                     titulos.push(title);
 
@@ -130,22 +131,11 @@
                     titleAttr: 'Descargar archivo de Excel',
                     title: 'REPORTE COMISIONES LIQUIDADAS',
                     exportOptions: {
-                        columns: [1, 2, 3, 4, 5, 6, 7],
+                        columns: [1, 2, 3, 4, 5, 6, 7, 8],
                         format: {
                             header: function (d, columnIdx) {
-                                if (columnIdx == 0) {
-                                    return ' ' + d + ' ';
-                                } else if (columnIdx == 10) {
-                                    return ' ' + d + ' ';
-                                } else if (columnIdx != 10 && columnIdx != 0) {
-                                    if (columnIdx == 11) {
-                                        return 'SEDE ';
-                                    }
-                                    if (columnIdx == 12) {
-                                        return 'TIPO'
-                                    } else {
-                                        return ' ' + titulos[columnIdx - 1] + ' ';
-                                    }
+                                if (columnIdx != 0) {
+                                    return ' ' + titulos[columnIdx - 1] + ' ';
                                 }
                             }
                         }
@@ -222,7 +212,15 @@
                         // return '<p class="m-0">'+d.nombreLote+'</p>';
 
                     }
-                }, 
+                },
+                    {
+                        "data": function (d) {
+                            if (d.porcentaje_comisiones) {
+                                return `${parseInt(d.porcentaje_comisiones)}%`;
+                            }
+                            return '-';
+                        }
+                    },
                 {
                     "width": "15%",
                     "data": function( d ){
