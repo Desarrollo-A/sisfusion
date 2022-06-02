@@ -4184,7 +4184,7 @@
 			};
 
 
-			$http.get("<?=base_url()?>index.php/queryInventario/getResidencialDisponible").then(
+			$http.get("<?=base_url()?>index.php/Corrida/getResidencialDisponible").then(
 				function(data){
 					$scope.residencial = data.data;
 				},
@@ -4192,7 +4192,7 @@
 				});
 
 			$scope.onSelectChangep = function(proyecto) {
-				$http.post('<?=base_url()?>index.php/queryInventario/getCondominioDisponibleA',{residencial: proyecto.idResidencial}).then(
+				$http.post('<?=base_url()?>index.php/Corrida/getCondominioDisponibleA',{residencial: proyecto.idResidencial}).then(
 					function (response) {
 
 						var apartado = angular.element( document.querySelector( '#aptdo' ) );
@@ -4282,7 +4282,7 @@
 			}
 
 			$scope.onSelectChangec = function(condominio) {
-				$http.post('<?=base_url()?>index.php/queryInventario/getLoteDisponibleA',{condominio: condominio.idCondominio}).then(
+				$http.post('<?=base_url()?>index.php/Corrida/getLoteDisponibleA',{condominio: condominio.idCondominio}).then(
 					function (response) {
 						$scope.lotes = response.data;
 
@@ -4369,7 +4369,7 @@
 					});
 			}
 			$scope.onSelectChangel = function(lote) {
-				$http.post('<?=base_url()?>index.php/queryInventario/getinfoLoteDisponible',{lote: lote.idLote}).then(
+				$http.post('<?=base_url()?>index.php/Corrida/getinfoLoteDisponible',{lote: lote.idLote}).then(
 					function (response) {
 
 						/*Reinicia los valores del arreglo que trae descuentos*/
