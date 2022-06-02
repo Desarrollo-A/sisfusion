@@ -1,29 +1,38 @@
 @import "_base";
 
 #reporte{
+    .cardMiniChart{
+        background-color: $blueIndigoDeep;
+        box-shadow: none!important;
+    }
     .card{
-        box-shadow: 0px 2px 9px -12px RGB(0 0 0 / 42%), 0 4px 25px 0px RGB(0 0 0 / 12%), 0 8px 10px -5px RGB(0 0 0 / 20%);
         border-radius: 10px;
         @media #{$smartphone}, #{$tablets}{ margin-bottom: 0!important; }
         @media #{$smartphone}{ width: 98%; }
     }
     .info{
         line-height: 1;
+        color: $white;
+        .str{
+            color: $blueFrance;
+            font-weight: 600;
+        }
         @media #{$smartphone}, #{$tablets}{ font-size: 18px!important; }
         br{
             @media #{$smartphone}, #{$tablets}{ display: none!important; }
         }
     }
     .money{
-        font-size: 24px;
-        font-weight: 600;
+        font-size: 22px;
+        font-weight: 400;
+        color: $white;
         @media #{$smartphone}, #{$tablets}{ margin: 0!important; }
     }
     .moreMiniChart{
         position: absolute;
         right: 15px;
         bottom: 15px;
-        background-color: $blueIndigo;
+        background-color: $blueFrance;
         color: $white;
         border-radius: 20px;
         width: 23px;
@@ -35,17 +44,19 @@
             font-size: 12px!important;
         }
         &:hover{
-            background-color: #b5c2d0;
+            background-color: $blueIndigo;
         }
     }
     .selectMini{
         display: flex;
         align-items: center;
-        background-color: #bdac7b;
-        color: $white;
+        background-color: transparent;
+        color: $shadowBlue;
+        font-weight: 400;
         border-radius: 20px;
         font-size: 9px;
         padding: 4px 7px;
+        border: 1px solid $shadowBlue;
         span{
             font-size: 12px;
             margin-left: 5px;
