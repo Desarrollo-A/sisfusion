@@ -40,6 +40,9 @@ var optionsProspectos = {
         height: '100%',
         toolbar: { show: false },
         zoom: { enabled: false },
+        sparkline: {
+            enabled: true
+        }
     },
     colors: ["#2C93E7"],
     grid: { show: false},
@@ -98,11 +101,11 @@ var optionsProspClients = {
         },
     },
     colors: ['#22639b', '#00A0FF'],
-    yaxis:{
-        labels: {
-            offsetX: -13,
-          },
-    },
+    // yaxis:{
+    //     labels: {
+    //         offsetX: -13,
+    //       },
+    // },
     grid: {
         show: true,
         borderColor: '#f3f3f3',

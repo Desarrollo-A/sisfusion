@@ -210,42 +210,126 @@ $(document).on('click', '.update-dataTable', function () {
 });
 
 function setOptionsMiniChart(nameChart, dataChart, color, months){
-    console.log(color);
     var optionsMiniChart = {
         series: [{
             name: nameChart,
             data: dataChart
         }],
         chart: {
+            type: 'area',
             height: '100%',
-            type: 'line',
-            toolbar: {
-                show: false
-            },
+            toolbar: { show: false },
+            zoom: { enabled: false },
             sparkline: {
-                enabled: true,
+                enabled: true
             }
         },
-        dataLabels: {
-            enabled: false
-        },
+        colors: ["#2C93E7"],
+        grid: { show: false},
+        dataLabels: { enabled: false },
+        legend: { show: false },
         stroke: {
-            width: 3,
             curve: 'smooth',
+            width: 2,
         },
         xaxis: {
-            categories: months,
+            labels: {show: false},
+            axisBorder: {show:false},
+            axisTicks: {show:false},
         },
-        markers: {
-            size: 4,
-            colors: '#fff',
-            strokeColors: color,
+        yaxis: {
+            type: 'numeric',
+            labels: {show: false},
+            axisBorder: {show:false},
+            axisTicks: {show:false},
         },
-        colors: [''+color+'']
-    };
+        fill: {
+            opacity: 1,
+            type: 'gradient',
+            gradient: {
+                shade: 'light',
+                type: "vertical",
+                shadeIntensity: 1,
+                gradientToColors:  ['#2C93E7'],
+                inverseColors: true,
+                opacityFrom: 0.55,
+                opacityTo: 0.2,
+                stops: [0, 70, 100],
+                colorStops: []
+            }
+        },
+        tooltip: { enabled: true}
+    }
     return optionsMiniChart;
 }
 
+function setModalChart(){
+    var optionsMiniChart = {
+        series: [{
+            name: "Music",
+            data: [1, 15, 26, 20, 33, 27]
+          },
+          {
+            name: "Photos",
+            data: [3, 33, 21, 42, 19, 32]
+          },
+          {
+            name: "Files",
+            data: [0, 39, 52, 11, 29, 43]
+          }
+        ],
+        chart: {
+            type: 'area',
+            height: '100%',
+            toolbar: { show: false },
+            zoom: { enabled: false },
+            sparkline: {
+                enabled: false
+            }
+        },
+        colors: ["#2C93E7"],
+        grid: { show: false},
+        dataLabels: { enabled: false },
+        legend: { show: false },
+        stroke: {
+            curve: 'smooth',
+            width: 2,
+        },
+        xaxis: {
+            show: true,
+            labels: {show: false},
+            axisBorder: {show:false},
+            axisTicks: {show:false},
+        },
+        yaxis: {
+            type: 'numeric',
+            show: true,
+            labels: {show: false},
+            axisBorder: {show:false},
+            axisTicks: {show:false},
+        },
+        fill: {
+            opacity: 1,
+            type: 'gradient',
+            gradient: {
+                shade: 'light',
+                type: "vertical",
+                shadeIntensity: 1,
+                gradientToColors:  ['#2C93E7'],
+                inverseColors: true,
+                opacityFrom: 0.55,
+                opacityTo: 0.2,
+                stops: [0, 70, 100],
+                colorStops: []
+            }
+        },
+        tooltip: { enabled: true}
+    }
+      
+    var chartLine = new ApexCharts(document.querySelector('#line-adwords'), optionsMiniChart);
+    chartLine.render();
+}
+  
 $(document).on('click', '.js-accordion-title', function () {
     $(this).next().slideToggle(200);
     $(this).toggleClass('open', 200);
@@ -254,7 +338,7 @@ $(document).on('click', '.js-accordion-title', function () {
 function chartDetail(e){
     console.log(e);
     $("#modalChart").modal();
-    // getSpecificChart(e.value);
+    setModalChart();
 }
 
 function formatMoney(n) {
