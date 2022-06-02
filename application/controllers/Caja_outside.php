@@ -2577,17 +2577,17 @@ class Caja_outside extends CI_Controller
     {
         $data = json_decode(file_get_contents("php://input"));
         if (!isset($data->abreviacion) || !isset($data->nombre) || !isset($data->empresa))
-            echo json_encode(array("status" => 400, "error" => "Algún parámetro no tiene un valor especificado o no viene informado."));
+            echo json_encode(array("status" => 400, "error" => "Algún parámetro no tiene un valor especificado o no viene informado."), JSON_UNESCAPED_UNICODE);
         else {
             if ($data->abreviacion == "" || $data->nombre == "" || $data->empresa == "")
-                echo json_encode(array("status" => 400, "error" => "Algún parámetro no tiene un valor especificado o no viene informado."));
+                echo json_encode(array("status" => 400, "error" => "Algún parámetro no tiene un valor especificado o no viene informado."), JSON_UNESCAPED_UNICODE);
             else {
                 $insertData = array("nombreResidencial" => $data->abreviacion, "descripcion" => $data->nombre, "empresa" => $data->empresa);
-                $reuslt = $this->caja_model_outside->insertResidencial($insertData);
+                $reuslt = $this->General_model->addRecord("residenciales", $insertData);
                 if ($reuslt == true)
-                    echo json_encode(array("status" => 200, "error" => "El registro se ha ingresado de manera exitosa."));
+                    echo json_encode(array("status" => 200, "error" => "El registro se ha ingresado de manera exitosa."), JSON_UNESCAPED_UNICODE);
                 else
-                    echo json_encode(array("status" => 400, "error" => "Oops, algo salió mal. Inténtalo más tarde."));
+                    echo json_encode(array("status" => 400, "error" => "Oops, algo salió mal. Inténtalo más tarde."), JSON_UNESCAPED_UNICODE);
             }
         }
     }
@@ -2601,10 +2601,10 @@ class Caja_outside extends CI_Controller
     {
         $data = json_decode(file_get_contents("php://input"));
         if (!isset($data->idResidencial) || !isset($data->abreviacion) || !isset($data->nombre) || !isset($data->empresa) || !isset($data->servicio_bajio))
-            echo json_encode(array("status" => 400, "error" => "Algún parámetro no tiene un valor especificado o no viene informado."));
+            echo json_encode(array("status" => 400, "message" => "Algún parámetro no tiene un valor especificado o no viene informado."), JSON_UNESCAPED_UNICODE);
         else {
             if ($data->idResidencial == "" || $data->abreviacion == "" || $data->nombre == "" || $data->empresa == "" || $data->servicio_bajio == "")
-                echo json_encode(array("status" => 400, "error" => "Algún parámetro no tiene un valor especificado o no viene informado."));
+                echo json_encode(array("status" => 400, "message" => "Algún parámetro no tiene un valor especificado o no viene informado."), JSON_UNESCAPED_UNICODE);
             else {
                 $updateData = array(
                     "nombreResidencial" => $data->abreviacion,
@@ -2612,11 +2612,11 @@ class Caja_outside extends CI_Controller
                     "empresa" => $data->empresa,
                     "servicio_bajio" => $data->servicio_bajio
                 );
-                $reuslt = $this->caja_model_outside->updateResidencial($updateData, $data->idResidencial);
+                $reuslt = $this->General_model->updateRecord("residenciales", $updateData, "idResidencial", $data->idResidencial);
                 if ($reuslt == true)
-                    echo json_encode(array("status" => 200, "error" => "El registro se ha actualizado de manera exitosa."));
+                    echo json_encode(array("status" => 200, "message" => "El registro se ha actualizado de manera exitosa."), JSON_UNESCAPED_UNICODE);
                 else
-                    echo json_encode(array("status" => 400, "error" => "Oops, algo salió mal. Inténtalo más tarde."));
+                    echo json_encode(array("status" => 400, "message" => "Oops, algo salió mal. Inténtalo más tarde."), JSON_UNESCAPED_UNICODE);
             }
         }
     }
@@ -2649,6 +2649,35 @@ class Caja_outside extends CI_Controller
             echo json_encode($response);
         }
 
+    }
+
+    public function updateCondominio()
+    {
+        $data = json_decode(file_get_contents("php://input"));
+        if (!isset($data->idCondominio) || !isset($data->nombre) || !isset($data->nombre_condominio) || !isset($data->abreviatura) || !isset($data->tipo_lote) ||
+            !isset($data->idEtapa) || !isset($data->idDBanco) || !isset($data->idResidencial))
+            echo json_encode(array("status" => 400, "message" => "Algún parámetro no tiene un valor especificado o no viene informado."), JSON_UNESCAPED_UNICODE);
+        else {
+            if ($data->idCondominio == "" || $data->nombre == "" || $data->nombre_condominio == "" || $data->abreviatura == "" || $data->tipo_lote == "" ||
+                $data->idEtapa == "" || $data->idDBanco == "" || $data->idResidencial == "")
+                echo json_encode(array("status" => 400, "message" => "Algún parámetro no tiene un valor especificado o no viene informado..."), JSON_UNESCAPED_UNICODE);
+            else {
+                $updateData = array(
+                    "nombre" => $data->nombre,
+                    "nombre_condominio" => $data->nombre_condominio,
+                    "abreviatura" => $data->abreviatura,
+                    "tipo_lote" => $data->tipo_lote,
+                    "idEtapa" => $data->idEtapa,
+                    "idDBanco" => $data->idDBanco,
+                    "idResidencial" => $data->idResidencial
+                );
+                $reuslt = $this->General_model->updateRecord("condominios", $updateData, "idCondominio", $data->idCondominio);
+                if ($reuslt == true)
+                    echo json_encode(array("status" => 200, "message" => "El registro se ha actualizado de manera exitosa."), JSON_UNESCAPED_UNICODE);
+                else
+                    echo json_encode(array("status" => 400, "message" => "Oops, algo salió mal. Inténtalo más tarde."), JSON_UNESCAPED_UNICODE);
+            }
+        }
     }
 
 }
