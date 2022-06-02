@@ -2640,4 +2640,13 @@ class Caja_outside extends CI_Controller
 
     }
 
+    public function getEmpresasLargoList()
+    {
+        echo json_encode($this->caja_model_outside->getEmpresasLargoList());
+    }
+
+    public function getBancosLargoList()
+    {
+        echo json_encode($this->caja_model_outside->getBancosLargoList());
+    }
 }
