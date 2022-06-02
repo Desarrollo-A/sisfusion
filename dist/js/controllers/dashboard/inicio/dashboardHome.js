@@ -1,5 +1,5 @@
 var optionsTotalVentas = {
-    series: [44, 55, 67, 83],
+    series: [],
     chart: {
         height: '100%',
         type: 'radialBar',
@@ -33,10 +33,7 @@ var optionsTotalVentas = {
 };
 
 var optionsProspectos = {
-    series: [{
-        name: 'Prospectos',
-        data: [31, 40, 28, 51, 42, 109, 100]
-    }],
+    series: [],
     chart: {
         height: '100%',
         type: 'area',
@@ -189,10 +186,33 @@ function loadInit(){
     if(select1 == true){
         loadData();
         getProspectsByYear();
+        getSalesByYear();
     }
 }
 
-function getProspectsByYear(){
+function getSalesByYear(){
+    $.ajax({
+        url: "Dashboard/totalVentasData",
+        cache: false,
+        contentType: false,
+        processData: false,
+        type: 'POST',
+        dataType: 'json',
+        beforeSend: function () {
+            $('#spiner-loader').removeClass('hide');
+        },
+        success: function (response) {
+            let totalVentasArray = [response.totalVentas, (response.ConT + response.totalAT), response.totalCT]
+            totalVentasChart.updateSeries([{
+                data: totalVentasArray
+            }])
+
+            console.log(response);
+        }
+    });
+}
+
+function getProspectsByYear() {
     $.ajax({
         url: "Dashboard/getProspectsByYear",
         cache: false,
@@ -200,11 +220,29 @@ function getProspectsByYear(){
         processData: false,
         type: 'POST',
         dataType: 'json',
-        beforeSend: function(){
+        beforeSend: function () {
             $('#spiner-loader').removeClass('hide');
         },
-        success : function (response) {
-           console.log(response);
+        success: function (response) {
+            let months = [];
+            let data = [];
+            let count = 0;
+            response.forEach(element => {
+                months.push(element.MONTH);
+                data.push(element.counts);
+                count = count + element.counts;
+            });
+            prospectosChart.updateSeries([{
+                name: 'Prospectos',
+                data: data
+            }])
+
+            prospectosChart.updateOptions({
+                xaxis: {
+                   categories: months
+                },
+             });
+            $('#numberGraphic').text(count);
         }
     });
 }
@@ -230,23 +268,23 @@ function loadData(){
                 $('#spiner-loader').addClass('hide');
                 $('.numberElement').removeClass('subtitle_skeleton');
 
-                $('#numberGraphic').text(response.prospectos);
+                // $('#numberGraphic').text(response.prospectos);
                 $('#pt_card').text(response.prospectos);
                 $('#total_ventas').text(response_vtas.ventas_apartadas);
 
-                chart2.updateSeries([{
-                    data: [response_vtas.porcentajeApartado],
-                    name: 'Ventas apartados'
-                },{
-                    data: [response_vtas.porcentajeCanceladoApartado],
-                    name: 'Cancelados apartados'
-                },{
-                    data: [response_vtas.porcentajeContratado],
-                    name: 'Ventas contratadas'
-                },{
-                    data: [response_vtas.porcentajeCanceladoContratado],
-                    name: 'Canceladas contratadas'
-                }])
+                // chart2.updateSeries([{
+                //     data: [response_vtas.porcentajeApartado],
+                //     name: 'Ventas apartados'
+                // },{
+                //     data: [response_vtas.porcentajeCanceladoApartado],
+                //     name: 'Cancelados apartados'
+                // },{
+                //     data: [response_vtas.porcentajeContratado],
+                //     name: 'Ventas contratadas'
+                // },{
+                //     data: [response_vtas.porcentajeCanceladoContratado],
+                //     name: 'Canceladas contratadas'
+                // }])
 
             }else if(response.message == 'ERROR'){
                 alerts.showNotification('top', 'right', 'Ocurrió un error, intentalo nuevamente', 'danger');
@@ -328,9 +366,9 @@ function weekFilter(element){
                         array_chart_numbers.push(element.numerosTotales);
                     }
                 });
-                chart4.updateSeries([{
-                    data: array_chart_numbers
-                }])
+                // chart4.updateSeries([{
+                //     data: array_chart_numbers
+                // }])
 
             }
         });
@@ -352,9 +390,6 @@ function weekFilter(element){
         com2.append("fecha_inicio", start_sp);
         com2.append("fecha_fin", end_sp);
         com2.append("typeTransaction", typeTransaction);
-
-
-
         $.ajax({
             url: "Dashboard/getDataFromDates",
             data:com2,
@@ -600,9 +635,9 @@ function loadData2(){
                         array_chart_numbers.push(element.numerosTotales);
                     }
                 });
-                chart4.updateSeries([{
-                    data: array_chart_numbers
-                }])
+                // chart4.updateSeries([{
+                //     data: array_chart_numbers
+                // }])
 
             }
         });
