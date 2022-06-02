@@ -30,31 +30,11 @@
                     </li>
                 </ul>
                 <div class="tab-content">
-                    <div class="tab-pane active" id="inicio">
-                        <div class="row">
-                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                            </div>
-                        </div>
-                    </div>
+                    <div class="tab-pane active" id="inicio"></div>
                     <div class="tab-pane" id="reporte"></div>
-                    <div class="tab-pane" id="agenda">
-                        <div class="row">
-                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="tab-pane" id="ranking">
-                        <div class="row">
-                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="tab-pane" id="metricas">
-                        <div class="row">
-                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                            </div>
-                        </div>
-                    </div>
+                    <div class="tab-pane" id="agenda"></div>
+                    <div class="tab-pane" id="ranking"></div>
+                    <div class="tab-pane" id="metricas"></div>
                 </div>
             </div>
         </div>
@@ -70,4 +50,5 @@
 <script>
     userType = <?= $this->session->userdata('id_rol') ?> ;
     idUser = <?= $this->session->userdata('id_usuario') ?>;
+    changePill('inicioOption')
 </script>

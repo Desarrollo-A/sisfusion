@@ -17,16 +17,16 @@
     </div>
 </div>
 
-<div class="container-fluid pb-1">
+<div class="container-fluid pb-1 first-row">
     <div class="row" style="height: 450px;">
-        <div class="col-12 col-sm-8 col-md-8 col-lg-8 h-100">
+        <div class="col-12 col-sm-9 col-md-9 col-lg-9 h-100">
             <div class="card p-2 h-100 m-0">
                 <div class="container-fluid h-100">
                     <div class="row h-10">
                         <div class="col-12 col-sm-8 col-md-8 col-lg-8 p-0">
                             <h4 class="m-0 fw-400">Clientes y prospectos por mes.</h4>
                         </div>
-                        <div class="col-12 col-sm-4 col-md-4 col-lg-4">
+                        <div class="col-12 col-sm-4 col-md-4 col-lg-4 h-100">
                             <div class="form-group d-flex m-0">
                                 <input type="text" class="form-control datepicker" id="beginDate" value="01/01/2022" autocomplete='off'/>
                                 <input type="text" class="form-control datepicker" id="endDate" value="28/02/2022" autocomplete='off' />
@@ -46,7 +46,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-12 col-sm-4 col-md-4 col-lg-4 h-100">
+        <div class="col-12 col-sm-3 col-md-3 col-lg-3 h-100">
             <div class="container-fluid h-100 p-0">
                 <div class="row h-70">
                     <div class="col-md-12 h-100 pb-3">
@@ -58,15 +58,20 @@
                 </div>
                 <div class="row h-30">
                     <div class="col-md-12 h-100">
-                        <div class="card p-2 m-0 h-100">
-                            <div class="container-fluid h-100 p-0">
-                                <div class="col-md-7 h-100 p-0">
-                                    <p>Prospectos anuales<br>vigentes</p>
-                                    <div id="numberGraphic" class="h-60 d-flex justify-center align-center numberGraphic">334
+                        <div class="card p-0 m-0 h-100 cardProspectosVig">
+                            <div class="container-fluid h-100">
+                                <div class="row h-100">
+                                    <div class="col-md-12 h-20 pl-2 pt-2 pr-2">
+                                        <p class="m-0">prospectos anuales <span class="">vigentes</span></p>
+                                        <div class="d-flex align-center">
+                                            <span class="boxIcoProsp"><i class="fas fa-user"></i></span>
+                                            <span id="numberGraphic" class="numberGraphic">334
+                                            </span>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-md-5 h-100 p-0">
-                                    <div id="prospectosChart"></div>
+                                    <div class="col-md-12 h-80 p-0">
+                                        <div id="prospectosChart"></div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -79,7 +84,7 @@
 
 <div class="container-fluid mt-3">
     <div class="row" style="height: 500px;">
-        <div class="col-12 col-sm-12 col-md-8 col-lg-8 h-100">
+        <div class="col-12 col-sm-12 col-md-9 col-lg-9 h-100">
             <div class="card h-100 m-0 p-2">
                 <div class="container-fluid h-100 p-0">
                     <div class="row m-0 h-10">
@@ -192,45 +197,57 @@
                 </div>
             </div>
         </div>
-        <div class="col-12 col-sm-12 col-md-4 col-lg-4 h-100">
+        <div class="col-12 col-sm-12 col-md-3 col-lg-3 h-100">
             <div class="card p-2 h-100 m-0">
                 <div class="container-fluid h-100">
                     <div class="row h-60">
                         <div class="col-md-12 p-0 h-100">
-                            <h4 class="m-0 fw-400">Clientes y prospectos por mes.</h4>
+                            <h7 class="m-0 fw-400">Clientes y prospectos por mes</h7>
                             <div id="chartFunnel"></div>
                         </div>
                     </div>
-                    <div class="row h-40" style="font-size: 1.1rem;">
-                        <div class="col-6 col-sm-6 col-md-4 col-lg-4">
-                            <i class="fas fa-circle pr-2 pl-2 dot"></i>
-                            <p class="m-0">Alta CRM</p>
-                            <h4 id="alta" class="subtitle_skeleton numberElement mb-0">0</h4>
+                    <div class="row h-40">
+                        <div class="col-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-between p-0">
+                            <div class="d-flex">
+                                <i class="fas fa-circle pr-2 dot"></i>
+                                <p class="m-0">Alta CRM</p>
+                            </div>
+                            <h4 id="alta" class="subtitle_skeleton numberElement m-0">0</h4>
                         </div>
-                        <div class="col-6 col-sm-6 col-md-4 col-lg-4">
-                            <i class="fas fa-circle pr-2 pl-2 dot"></i>
-                            <p class="m-0">Corrida financiera</p>
-                            <h4 id="cf" class="subtitle_skeleton numberElement mb-0">0</h4>
+                        <div class="col-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-between p-0">
+                            <div class="d-flex">
+                                <i class="fas fa-circle pr-2 dot"></i>
+                                <p class="m-0">Corrida financiera</p>
+                            </div>
+                            <h4 id="cf" class="subtitle_skeleton numberElement m-0">0</h4>
                         </div>
-                        <div class="col-6 col-sm-6 col-md-4 col-lg-4">
-                            <i class="fas fa-circle pr-2 pl-2 dot"></i>
-                            <p class="m-0">Cita</p>
-                            <h4 id="cita" class="subtitle_skeleton numberElement mb-0">0</h4>
+                        <div class="col-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-between p-0">
+                            <div class="d-flex">
+                                <i class="fas fa-circle pr-2 dot"></i>
+                                <p class="m-0">Cita</p>
+                            </div>
+                            <h4 id="cita" class="subtitle_skeleton numberElement m-0">0</h4>
                         </div>
-                        <div class="col-6 col-sm-6 col-md-3 col-lg-3">
-                            <i class="fas fa-circle pr-2 pl-2 dot"></i>
-                            <p class="m-0">Cita seguimiento</p>
-                            <h4 id="alta" class="subtitle_skeleton numberElement mb-0">0</h4>
+                        <div class="col-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-between p-0">
+                            <div class="d-flex">
+                                <i class="fas fa-circle pr-2 dot"></i>
+                                <p class="m-0">Cita seguimiento</p>
+                            </div>
+                            <h4 id="alta" class="subtitle_skeleton numberElement m-0">0</h4>
                         </div>
-                        <div class="col-6 col-sm-6 col-md-3 col-lg-3">
-                            <i class="fas fa-circle pr-2 pl-2 dot"></i>
-                            <p class="m-0">Apartados</p>
-                            <h4 id="cf" class="subtitle_skeleton numberElement mb-0">0</h4>
+                        <div class="col-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-between p-0">
+                            <div class="d-flex">
+                                <i class="fas fa-circle pr-2 dot"></i>
+                                <p class="m-0">Apartados</p>
+                            </div>
+                            <h4 id="cf" class="subtitle_skeleton numberElement m-0">0</h4>
                         </div>
-                        <div class="col-6 col-sm-6 col-md-3 col-lg-3">
-                            <i class="fas fa-circle pr-2 pl-2 dot"></i>
-                            <p class="m-0">No interesado</p>
-                            <h4 id="cita" class="subtitle_skeleton numberElement mb-0">0</h4>
+                        <div class="col-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-between p-0">
+                            <div class="d-flex">
+                                <i class="fas fa-circle pr-2 dot"></i>
+                                <p class="m-0">No interesado</p>
+                            </div>
+                            <h4 id="cita" class="subtitle_skeleton numberElement m-0">0</h4>
                         </div>
                     </div>
                 </div>
