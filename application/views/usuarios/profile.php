@@ -123,38 +123,38 @@ $datos = array();
                                                         <div class="col-sm-6">
                                                             <div class="form-group label-floating">
                                                                 <label class="control-label">Nombre</label>
-                                                                <input id="name" name="name" type="text" class="form-control" value="<?= $nombre ?>">
+                                                                <input id="name" name="name" type="text" class="form-control" disabled value="<?= $nombre ?>">
                                                             </div>
                                                         </div>
                                                         <div class="col-sm-3">
                                                             <div class="form-group label-floating">
                                                                 <label class="control-label">Apellido paterno</label>
-                                                                <input id="last_name" name="last_name" type="text" class="form-control" value="<?= $apellido_paterno ?>">
+                                                                <input id="last_name" name="last_name" type="text" class="form-control" disabled value="<?= $apellido_paterno ?>">
                                                             </div>
                                                         </div>
                                                         <div class="col-sm-3">
                                                             <div class="form-group label-floating">
                                                                 <label class="control-label">Apellido materno</label>
-                                                                <input id="mothers_last_name" name="mothers_last_name" type="text" class="form-control" value="<?= $apellido_materno ?>">
+                                                                <input id="mothers_last_name" name="mothers_last_name" type="text" class="form-control" disabled value="<?= $apellido_materno ?>">
                                                             </div>
                                                         </div>
 
                                                         <div class="col-sm-3">
                                                             <div class="form-group label-floating">
                                                                 <label class="control-label">RFC</label>
-                                                                <input id="rfc" name="rfc" type="text" class="form-control" maxlength="13" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" value="<?= $rfc ?>">
+                                                                <input id="rfc" name="rfc" type="text" class="form-control" maxlength="13" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" disabled value="<?= $rfc ?>">
                                                             </div>
-                                                        </div>
+                                                        </div>  
                                                         <div class="col-sm-6">
                                                             <div class="form-group label-floating">
                                                                 <label class="control-label">Correo electrónico</label>
-                                                                <input id="email" name="email" type="email" class="form-control" value="<?= $correo ?>">
+                                                                <input id="email" name="email" type="email" class="form-control" disabled value="<?= $correo ?>">
                                                             </div>
                                                         </div>
                                                         <div class="col-sm-3">
                                                             <div class="form-group label-floating">
                                                                 <label class="control-label">Teléfono celular</label>
-                                                                <input id="phone_number" name="phone_number" type="number" class="form-control" maxlength="10" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" value="<?= $telefono ?>">
+                                                                <input id="phone_number" name="phone_number" type="number" class="form-control" maxlength="10" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" disabled value="<?= $telefono ?>">
                                                             </div>
                                                         </div>
 
