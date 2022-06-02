@@ -61,15 +61,16 @@
                         <div class="card p-0 m-0 h-100 cardProspectosVig">
                             <div class="container-fluid h-100">
                                 <div class="row h-100">
-                                    <div class="col-md-12 h-20 pl-2 pt-2 pr-2">
-                                        <p class="m-0">prospectos anuales <span class="">vigentes</span></p>
+                                    <div class="col-md-12 h-30 pl-2 pt-2 pr-2 d-flex justify-between align-center">
                                         <div class="d-flex align-center">
                                             <span class="boxIcoProsp"><i class="fas fa-user"></i></span>
                                             <span id="numberGraphic" class="numberGraphic">334
                                             </span>
                                         </div>
+                                        <p class="m-0">prospectos anuales <span class="">vigentes</span></p>
+                                        
                                     </div>
-                                    <div class="col-md-12 h-80 p-0">
+                                    <div class="col-md-12 h-70 p-0">
                                         <div id="prospectosChart"></div>
                                     </div>
                                 </div>

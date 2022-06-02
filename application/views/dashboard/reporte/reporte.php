@@ -3,17 +3,17 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-12 col-sm-6 col-md-3 col-lg-3">
-            <div class="card p-2">
+            <div class="card p-0 cardMiniChart">
                 <div class="container-fluid">
-                    <div class="row">
+                    <div class="row pl-2 pt-2 pr-2">
                         <div class="col-xs-7 col-sm-7 col-md-7 col-lg-7 p-0 info">
-                            <p class="m-0">Ventas<br> contratadas</p>
+                            <p class="m-0">ventas<br> <span class="str">contratadas</span></p>
                         </div>
                         <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5 p-0 d-flex align-center justify-end">
-                            <label class="selectMini m-0">3 meses <span class="material-icons">show_chart</span></label>
+                            <label class="selectMini m-0">4 meses <span class="material-icons">show_chart</span></label>
                         </div>
                     </div>
-                    <div class="row">
+                    <div class="row pl-2 pr-2">
                         <div class="col-12 col-sm-12 col-md-12 col-lg-12 p-0">
                             <p class="mt-1 money" id="totventasContratadas">$0.00</p>
                         </div>
@@ -30,17 +30,17 @@
             </div>
         </div>
         <div class="col-12 col-sm-6 col-md-3 col-lg-3">
-            <div class="card p-2">
+            <div class="card p-0 cardMiniChart">
                 <div class="container-fluid">
-                    <div class="row">
+                    <div class="row pl-2 pt-2 pr-2">
                         <div class="col-xs-7 col-sm-7 col-md-7 col-lg-7 p-0 info">
-                            <p class="m-0">Ventas<br> apartadas</p>
+                            <p class="m-0">ventas<br><span class="str">apartadas</span></p>
                         </div>
                         <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5 p-0 d-flex align-center justify-end">
-                            <label class="selectMini m-0">3 meses <span class="material-icons">show_chart</span></label> 
+                            <label class="selectMini m-0">4 meses <span class="material-icons">show_chart</span></label> 
                         </div>
                     </div>
-                    <div class="row">
+                    <div class="row pl-2 pr-2">
                         <div class="col-12 col-sm-12 col-md-12 col-lg-12 p-0">
                             <p class="mt-1 money" id="totventasApartadas">$0.00</p>
                         </div>
@@ -57,17 +57,17 @@
             </div>
         </div>
         <div class="col-12 col-sm-6 col-md-3 col-lg-3">
-            <div class="card p-2">
+            <div class="card p-0 cardMiniChart">
                 <div class="container-fluid">
-                    <div class="row">
+                    <div class="row pl-2 pt-2 pr-2">
                         <div class="col-xs-7 col-sm-7 col-md-7 col-lg-7 p-0 info">
-                            <p class="m-0">Canceladas<br> contratadas</p>
+                            <p class="m-0">canceladas<br> <span class="str">contratadas</span></p>
                         </div>
                         <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5 p-0 d-flex align-center justify-end">
-                            <label class="selectMini m-0">3 meses <span class="material-icons">show_chart</span></label> 
+                            <label class="selectMini m-0">4 meses <span class="material-icons">show_chart</span></label> 
                         </div>
                     </div>
-                    <div class="row">
+                    <div class="row pl-2 pr-2">
                         <div class="col-12 col-sm-12 col-md-12 col-lg-12 p-0">
                             <p class="mt-1 money" id="totcanceladasContratadas">$0.00</p>
                         </div>
@@ -84,17 +84,17 @@
             </div>
         </div>
         <div class="col-12 col-sm-6 col-md-3 col-lg-3">
-            <div class="card p-2">
+            <div class="card p-0 cardMiniChart">
                 <div class="container-fluid">
-                    <div class="row">
+                    <div class="row pl-2 pt-2 pr-2">
                         <div class="col-xs-7 col-sm-7 col-md-7 col-lg-7 p-0 info">
-                            <p class="m-0">Canceladas<br> apartadas</p>
+                            <p class="m-0">canceladas<br> <span class="str">apartadas</span></p>
                         </div>
                         <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5 p-0 d-flex align-center justify-end">
-                            <label class="selectMini m-0">3 meses <span class="material-icons">show_chart</span></label> 
+                            <label class="selectMini m-0">4 meses <span class="material-icons">show_chart</span></label> 
                         </div>
                     </div>
-                    <div class="row">
+                    <div class="row pl-2 pr-2">
                         <div class="col-12 col-sm-12 col-md-12 col-lg-12 p-0">
                             <p class="mt-1 money" id="totcanceladasApartadas">$0.00</p>
                         </div>
