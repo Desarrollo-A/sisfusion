@@ -21,6 +21,9 @@ var optionsTotalVentas = {
                         return 249
                     }
                 }
+            },
+            track: {
+                background: ['#f9f9f9', '#f9f9f9', '#f9f9f9', '#f9f9f9'],
             }
         }
     },
@@ -33,23 +36,47 @@ var optionsProspectos = {
         data: [31, 40, 28, 51, 42, 93, 76, 70, 88]
     }],
     chart: {
+        type: 'area',
         height: '100%',
-        type: 'line',
-        toolbar: {
-            show: false
-        },
-
-        sparkline: {
-            enabled: true,
+        toolbar: { show: false },
+        zoom: { enabled: false },
+    },
+    colors: ["#2C93E7"],
+    grid: { show: false},
+    dataLabels: { enabled: false },
+    legend: { show: false },
+    stroke: {
+        curve: 'smooth',
+        width: 2,
+    },
+    xaxis: {
+    type: 'numeric',
+    labels: {show: false},
+    axisBorder: {show:false},
+    axisTicks: {show:false},
+    },
+    yaxis: {
+        type: 'numeric',
+        labels: {show: false},
+        axisBorder: {show:false},
+        axisTicks: {show:false},
+    },
+    fill: {
+        opacity: 1,
+        type: 'gradient',
+        gradient: {
+            shade: 'light',
+            type: "vertical",
+            shadeIntensity: 1,
+            gradientToColors:  ['#2C93E7'],
+            inverseColors: true,
+            opacityFrom: 0.55,
+            opacityTo: 0.2,
+            stops: [0, 70, 100],
+            colorStops: []
         }
     },
-    dataLabels: {
-        enabled: false
-    },
-    stroke: {
-        width: 2,
-        curve: 'smooth'
-    },
+    tooltip: { enabled: true}
 };
 
 var optionsProspClients = {
@@ -68,8 +95,9 @@ var optionsProspClients = {
         },
         sparkline: {
             enabled: false,
-        }
+        },
     },
+    colors: ['#22639b', '#00A0FF'],
     yaxis:{
         labels: {
             offsetX: -13,
@@ -99,15 +127,26 @@ var optionsProspClients = {
     },
     stroke: {
         width: 2,
-        curve: 'smooth'
-    },
-    fill: {
-        colors: undefined,
-        opacity: 0.4,
-        type: 'solid',
+        curve: 'smooth',
+        opacity: 0.7
     },
     xaxis: {
         categories: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+    },
+    fill: {
+        opacity: 1,
+        type: 'gradient',
+        gradient: {
+            shade: 'light',
+            type: "vertical",
+            shadeIntensity: 1,
+            gradientToColors: ['#22639b', '#00A0FF'],
+            inverseColors: true,
+            opacityFrom: 0.6,
+            opacityTo: 0.2,
+            stops: [0, 70, 100],
+            colorStops: []
+        }
     }
 };
 
