@@ -135,11 +135,11 @@
 											<table class="table-striped table-hover" id="tabla_prestamos" name="tabla_prestamos">
 												<thead>
 													<tr>
-														<th>ID USUARIO</th>
+														<th>ID</th>
 														<th>USUARIO</th>
 														<th>MONTO</th>
-														<th>NÚM. PAGOS</th>
-														<th>PAGO CORRESPONDIENTE</th>
+														<th>N°</th>
+														<th>PAGO CORRESP.</th>
 														<th>ABONADO</th>
 														<th>PENDIENTE</th>
 														<th>COMENTARIO</th>
@@ -466,8 +466,8 @@
                     const { general, detalle } = data;
 					$('#spiner-loader').addClass('hide');
 
-                    if (general.length === 0) {
-                        alerts.showNotification("top", "right", "No hay préstamos.", "warning");
+                    if (detalle.length === 0) {
+                        alerts.showNotification("top", "right", "No hay abonos.", "warning");
                     } else {
                         const detalleHeaderModal = $('#detalle-prestamo-modal .modal-header');
                         const detalleBodyModal = $('#detalle-prestamo-modal .modal-body');
@@ -512,7 +512,7 @@
 
                         detalleBodyModal.append(`
                             <div style="margin-top: 20px;" class="table-responsive">
-                                <table class="table">
+                                <table class="table" id="detalle-abonos-table">
                                     <thead>
                                         <tr>
                                             <th>#</th>
@@ -530,6 +530,24 @@
                         `);
 
                         $("#detalle-prestamo-modal").modal();
+                        $('#detalle-abonos-table').DataTable({
+                            "dom": 'Brt' + "<'row'<'col-12 col-sm-12 col-md-6 col-lg-6'i><'col-12 col-sm-12 col-md-6 col-lg-6'p>>",
+                            "buttons": [],
+                            "width": 'auto',
+                            "ordering": false,
+                            "destroy": true,
+                            "pageLength": 5,
+                            "bAutoWidth": false,
+                            "fixedColumns": true,
+                            language: {
+                                url: "<?=base_url()?>/static/spanishLoader_v2.json",
+                                paginate: {
+                                    previous: "<i class='fa fa-angle-left'>",
+                                    next: "<i class='fa fa-angle-right'>"
+                                }
+                            },
+                            pagingType: "full_numbers",
+                        });
                     }
                 });
             });
