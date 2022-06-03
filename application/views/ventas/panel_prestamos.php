@@ -33,13 +33,13 @@
 					<form method="post" id="form_prestamos">
 						<div class="modal-body">
 						<div class="form-group">
-								<label class="label">Tipo descuento</label>
+								<label class="label">Tipo descuento (<b class="text-danger">*</b>)</label>
 								<select class="selectpicker" name="tipo" id="tipo" required>
 								<option value="">----Seleccionar-----</option>
 								</select>
 							</div>
 							<div class="form-group">
-								<label class="label">Puesto del usuario</label>
+								<label class="label">Puesto del usuario(<b class="text-danger">*</b>)</label>
 								<select class="selectpicker" name="roles" id="roles" required>
 									<option value="">----Seleccionar-----</option>
 									<option value="7">Asesor</option>
@@ -51,11 +51,11 @@
 							<div class="form-group" id="users"></div>
 							<div class="form-group row">
 								<div class="col-md-4">
-									<label class="label">Monto prestado</label>
+									<label class="label">Monto prestado (<b class="text-danger">*</b>)</label>
 									<input class="form-control" type="text" required onblur="verificar();" id="monto" name="monto">
 								</div>
 								<div class="col-md-4">
-									<label class="label">Número de pagos</label>
+									<label class="label">Número de pagos (<b class="text-danger">*</b>)</label>
 									<input class="form-control" id="numeroP" required onblur="verificar();" type="number" name="numeroP">
 								</div>
 								<div class="col-md-4">
@@ -64,7 +64,7 @@
 								</div>
 							</div>
 							<div class="form-group">
-								<label class="label">Comentario</label><b id="texto" style="font-size:12px;"></b>
+								<label class="label">Comentario (<b class="text-danger">*</b>)</label><b id="texto" style="font-size:12px;"></b>
 								<textarea id="comentario" name="comentario" required class="form-control" rows="3"></textarea>
 							</div>
 
@@ -83,7 +83,7 @@
         <div class="modal fade modal-alertas"
              id="detalle-prestamo-modal"
              role="dialog">
-            <div class="modal-dialog modal-lg">
+            <div class="modal-dialog modal-lg" style="width:70% !important;height:70% !important;">
                 <div class="modal-content">
                     <div class="modal-header bg-red">
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
@@ -395,8 +395,10 @@
 
 						if(d.estatus == 1){
 							return '<span class="label label-danger" style="background:dodgerblue">ACTIVO</span>';
-						}else{
+						}else if(d.estatus == 2){
 							return '<span class="label label-danger" style="background:#27AE60">LIQUIDADO</span>';
+						}else if(d.estatus == 0){
+							return '<span class="label label-danger" style="background:#D52803">CANCELADO</span>';
 						}
 
 						
@@ -445,7 +447,8 @@
 					"width": "6%",
 					"orderable": false,
 					"data": function( d ){
-                        return '<button href="#" value="'+d.id_prestamo+'" class="btn-data btn-blueMaderas detalle-prestamo" title="Hitorial"><i class="fas fa-info"></i></button>';
+                        return a = `<button href="#" value="${d.id_prestamo}" class="btn-data btn-blueMaderas detalle-prestamo" title="Hitorial"><i class="fas fa-info"></i></button>
+						<button href="#" value="${d.id_prestamo}" class="btn-data btn-warning delete-prestamo" title="Eliminar"><i class="fas fa-trash"></i></button>`;
 					}
 				}],
 				ajax: {
@@ -456,7 +459,14 @@
 					}
 				},
 			});
+			$('#tabla_prestamos tbody').on('click', '.delete-prestamo', function () {
+				const idPrestamo = $(this).val();
+				$.getJSON(`${url}Comisiones/BorrarPrestamo/${idPrestamo}`).done(function (data) { 
+					console.log(data);
+					$('#tabla_prestamos').DataTable().ajax.reload(null, false);
 
+				});
+			});
             $('#tabla_prestamos tbody').on('click', '.detalle-prestamo', function () {
 				$('#spiner-loader').removeClass('hide');
 
@@ -465,9 +475,9 @@
                 $.getJSON(`${url}Comisiones/getDetallePrestamo/${idPrestamo}`).done(function (data) {
                     const { general, detalle } = data;
 					$('#spiner-loader').addClass('hide');
-
-                    if (detalle.length === 0) {
-                        alerts.showNotification("top", "right", "No hay abonos.", "warning");
+					console.log(detalle.length);
+                    if (detalle.length == 0) {
+                        alerts.showNotification("top", "right", "Este préstamo no tiene pagos aplicados.", "warning");
                     } else {
                         const detalleHeaderModal = $('#detalle-prestamo-modal .modal-header');
                         const detalleBodyModal = $('#detalle-prestamo-modal .modal-body');
@@ -485,7 +495,7 @@
                                     <h6>PAGO MENSUAL: <b>$${formatMoney(general.pago_individual)}</b></h6>
                                 </div>
                                 <div class="col col-xs-12 col-sm-4 col-md-4 col-lg-4">
-                                    <h6>PAGOS: <b>${general.num_pago_act} / ${general.num_pagos}</b></h6>
+                                    <h6>PAGOS APLICADOS: <b>${general.num_pago_act} / ${general.num_pagos} MENSUALIDADES</b></h6>
                                 </div>
                                 <div class="col col-xs-12 col-sm-4 col-md-4 col-lg-4">
                                     <h6>MONTO PRESTADO: <b>$${formatMoney(general.monto_prestado)}</b></h6>
@@ -504,22 +514,22 @@
                             htmlTableBody += '<tr>';
                             htmlTableBody += `<td scope="row">${detalle[i].np}</td>`;
                             htmlTableBody += `<td>${detalle[i].nombreLote}</td>`;
-                            htmlTableBody += `<td>${detalle[i].comentario}</td>`;
-                            htmlTableBody += `<td>${detalle[i].fecha_pago}</td>`;
+                            htmlTableBody += `<td style="width:50% !important;">${detalle[i].comentario}</td>`;
+                            htmlTableBody += `<td style="width:20% !important;">${detalle[i].fecha_pago}</td>`;
                             htmlTableBody += `<td>$${formatMoney(detalle[i].abono_neodata)}</td>`;
                             htmlTableBody += '</tr>';
                         }
 
                         detalleBodyModal.append(`
                             <div style="margin-top: 20px;" class="table-responsive">
-                                <table class="table" id="detalle-abonos-table">
+                                <table class="table table-striped table-hover" id="table_detalles">
                                     <thead>
                                         <tr>
                                             <th>#</th>
-                                            <th>Lote</th>
-                                            <th>Comentario</th>
-                                            <th>Fecha</th>
-                                            <th>Monto</th>
+                                            <th >Lote</th>
+                                            <th >Comentario</th>
+                                            <th >Fecha</th>
+                                            <th >Monto</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -528,26 +538,40 @@
                                 </table>
                             </div>
                         `);
+						
 
                         $("#detalle-prestamo-modal").modal();
-                        $('#detalle-abonos-table').DataTable({
-                            "dom": 'Brt' + "<'row'<'col-12 col-sm-12 col-md-6 col-lg-6'i><'col-12 col-sm-12 col-md-6 col-lg-6'p>>",
-                            "buttons": [],
-                            "width": 'auto',
-                            "ordering": false,
-                            "destroy": true,
-                            "pageLength": 5,
-                            "bAutoWidth": false,
-                            "fixedColumns": true,
-                            language: {
-                                url: "<?=base_url()?>/static/spanishLoader_v2.json",
-                                paginate: {
-                                    previous: "<i class='fa fa-angle-left'>",
-                                    next: "<i class='fa fa-angle-right'>"
-                                }
-                            },
-                            pagingType: "full_numbers",
-                        });
+
+						$('#table_detalles thead tr:eq(0) th').each( function (i) {
+				if(  i!=10){
+					var title = $(this).text();
+					titulos.push(title);
+					$(this).html('<input type="text" class="textoshead" placeholder="'+title+'"/>' );
+					$( 'input', this ).on('keyup change', function () {
+						if (tableDetalles.column(i).search() !== this.value ) {
+							tableDetalles.column(i).search(this.value).draw();
+
+						}
+					});
+				}
+			});
+						var tableDetalles = $('#table_detalles').DataTable({
+                width: 'auto',
+				ordering: false,	
+				"pageLength": 5,
+				"lengthMenu": [ 5,10, 25, 50, 75, 100 ],
+                language: {
+                    url: "<?=base_url()?>/static/spanishLoader_v2.json",
+                    paginate: {
+                        previous: "<i class='fa fa-angle-left'>",
+                        next: "<i class='fa fa-angle-right'>"
+                    }
+                }
+                
+						});
+						tableDetalles
+                    .order([0, 'desc'])
+                    .draw();
                     }
                 });
             });
