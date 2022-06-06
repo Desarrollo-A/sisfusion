@@ -52,3 +52,17 @@
 	
 </head>
 
+<!-- MODALES GENERALES -->
+<div class="modal fade"
+     id="blank-modal"
+     tabindex="-1"
+     role="dialog"
+     aria-labelledby="mySmallModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" id="blank-modal-div">
+        <div class="modal-content">
+            <div class="modal-body"></div>
+        </div>
+    </div>
+</div>
+<!-- FIN MODALES GENERALES -->
