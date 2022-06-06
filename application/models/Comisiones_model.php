@@ -7384,8 +7384,7 @@ SELECT 7 AS idEstatus, 'PAGADAS' as nombre ");
 
 
     function getDatosHistorialPagoEstatus($proyecto, $estado, $usuario){
-
-        $filtro_00 = ' AND re.idResidencial = '.$proyecto.' ';
+        $filtro_00 = ($proyecto === '0') ? '' : " AND re.idResidencial = $proyecto ";
         $userWhereClause = ($usuario != 0) ? "AND com.id_usuario = $usuario" : '';
 
         switch ( $estado) {
