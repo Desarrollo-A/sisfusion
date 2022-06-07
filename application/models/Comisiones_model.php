@@ -8558,14 +8558,16 @@ return $query->result();
 
 
         }
-        function BorrarPrestamo($id_prestamo){
-            $respuesta = $this->db->query("UPDATE prestamo SET estatus = 0 WHERE id_prestamo=$id_prestamo ");
-            if (! $respuesta ) {
-            return 0;
-            } else {
-            return 1;
-            }
-            }
+        public function BorrarPrestamo($id_prestamo){
+                    $respuesta = $this->db->query("UPDATE prestamos_aut SET estatus=0,modificado_por=".$this->session->userdata('id_usuario')." WHERE id_prestamo=$id_prestamo ");
+                    $respuesta = $this->db->query("INSERT INTO historial_log VALUES($id_prestamo,".$this->session->userdata('id_usuario').",GETDATE(),1,'SE CANCELÓ EL PRÉSTAMO','prestamos_aut',NULL)");
+
+                    if (! $respuesta ) {
+                    return 0;
+                    } else {
+                    return 1;
+                    }
+                }
 
 
             function insertar_prestamos($usuarioid,$monto,$numeroP,$comentario,$pago,$tipo){
@@ -8579,13 +8581,14 @@ return $query->result();
             function getPrestamos(){
                 return $this->db->query("SELECT CONCAT(u.nombre, ' ', u.apellido_paterno, ' ' ,u.apellido_materno) as nombre,
                 p.id_prestamo,p.id_usuario,p.monto,p.num_pagos,p.estatus,p.comentario,p.fecha_creacion,p.pago_individual,pendiente,SUM(pci.abono_neodata) as total_pagado,opc.nombre as tipo,opc.id_opcion,
-                (SELECT TOP 1 rpp2.fecha_creacion FROM relacion_pagos_prestamo rpp2 WHERE rpp2.id_prestamo = rpp.id_prestamo ORDER BY rpp2.id_relacion_pp DESC) AS fecha_creacion_referencia
+                (SELECT TOP 1 rpp2.fecha_creacion FROM relacion_pagos_prestamo rpp2 WHERE rpp2.id_prestamo = rpp.id_prestamo ORDER BY rpp2.id_relacion_pp DESC) AS fecha_creacion_referencia,
+                rpp.id_prestamo as id_prestamo2
                 FROM prestamos_aut p 
                 INNER JOIN usuarios u ON u.id_usuario=p.id_usuario 
 				LEFT JOIN relacion_pagos_prestamo rpp ON rpp.id_prestamo = p.id_prestamo
 				LEFT JOIN pago_comision_ind pci ON pci.id_pago_i = rpp.id_pago_i AND pci.estatus in (18,19,20,21,22) AND pci.descuento_aplicado = 1
                 left join opcs_x_cats opc on opc.id_opcion=p.tipo and opc.id_catalogo=23
-                WHERE p.estatus in(1,2,3)
+                WHERE p.estatus in(1,2,3,0)
 				group by rpp.id_prestamo, u.nombre,u.apellido_paterno,u.apellido_materno,p.id_prestamo,p.id_usuario,p.monto,p.num_pagos,p.estatus,p.comentario,p.fecha_creacion,p.pago_individual,pendiente,opc.nombre,opc.id_opcion");
             }
             function InsertPago($id_prestamo,$id_user,$pago,$usuario){
@@ -8724,16 +8727,16 @@ return $query->result();
     public function getDetailPrestamo($idPrestamo)
     {
         $this->db->query("SET LANGUAGE Español;");
-        $result = $this->db->query("SELECT l.nombreLote, CONVERT(NVARCHAR, rpp.fecha_creacion, 6) as fecha_pago, pci.abono_neodata, rpp.np,
-            (SELECT TOP 1 hc.comentario FROM historial_comisiones hc WHERE hc.id_pago_i = rpp.id_pago_i ORDER BY id_log DESC) as comentario
-            FROM prestamos_aut pa
-            JOIN usuarios u ON u.id_usuario = pa.id_usuario
-            JOIN relacion_pagos_prestamo rpp ON rpp.id_prestamo = pa.id_prestamo
-            JOIN pago_comision_ind pci ON pci.id_pago_i = rpp.id_pago_i AND pci.estatus IN(18,19,20,21,22) AND pci.descuento_aplicado = 1
-            JOIN comisiones c ON c.id_comision = pci.id_comision
-            JOIN lotes l ON l.idLote = c.id_lote
-            WHERE pa.id_prestamo = $idPrestamo
-            ORDER BY np ASC");
+        $result = $this->db->query("SELECT hc.comentario, l.nombreLote, CONVERT(NVARCHAR, rpp.fecha_creacion, 6) as fecha_pago, pci.abono_neodata, rpp.np 
+        FROM prestamos_aut pa
+        INNER JOIN usuarios u ON u.id_usuario = pa.id_usuario
+        INNER JOIN relacion_pagos_prestamo rpp ON rpp.id_prestamo = pa.id_prestamo
+        INNER JOIN pago_comision_ind pci ON pci.id_pago_i = rpp.id_pago_i AND pci.estatus IN(18,19,20,21,22) AND pci.descuento_aplicado = 1
+        INNER JOIN comisiones c ON c.id_comision = pci.id_comision
+        INNER JOIN lotes l ON l.idLote = c.id_lote
+        INNER JOIN historial_comisiones hc ON hc.id_pago_i = rpp.id_pago_i and hc.comentario like 'DESCUENTO POR%' and hc.estatus=1
+        WHERE pa.id_prestamo = $idPrestamo
+        ORDER BY np ASC");
         return $result->result_array();
     }
 
