@@ -1869,8 +1869,8 @@
                     mesesSinInteresP2: 120,
                     mesesSinInteresP3: 60,
                     interes_p1: 0,
-                    interes_p2: ($scope.casaFlag==1) ? 0.01108 : 0.01,
-                    interes_p3: ($scope.casaFlag==1) ? 0.01108 : 0.0125,
+                    interes_p2: ($scope.casaFlag==1) ? 0.011083333 : 0.01,
+                    interes_p3: ($scope.casaFlag==1) ? 0.011083333 : 0.0125,
                     contadorInicial: 0,
                     capital: ($scope.mesesdiferir > 0) ? (r1 / (($scope.age_plan*12) - $scope.mesesdiferir)) : (r1 / ($scope.age_plan*12)),
                     fechaActual: $scope.date = new Date(),
@@ -1890,12 +1890,9 @@
 
 
                 /////////// TABLES DE 1 A 3 AÑOS ////////////
-
-
                 if($scope.infoLote.meses >=12 && $scope.infoLote.meses <= 36) {
 
                     var range=[];
-
                     if($scope.descMSI == 0){
                         ini = ($scope.mesesdiferir > 0) ? $scope.mesesdiferir : $scope.infoLote.contadorInicial;
                     } else if($scope.descMSI == 1){
@@ -2312,7 +2309,32 @@
                             }
 
 
+                            if($scope.casaFlag==1) {
+                                let meses_restantes = $scope.infoLote.meses - $scope.infoLote.mesesSinInteresP1;
+                                // console.log("LA DIVI: ", meses_restantes);
+                                // console.log("INTERES: ", $scope.infoLote.interes_p2);
 
+                                let param1 = $scope.infoLote.mesesSinInteresP1;
+                                let param2 = Math.pow((1 / (1 + 0)), 1);
+                                let var1 = (Math.pow((1 + $scope.infoLote.interes_p2), meses_restantes)) - 1;
+                                let var2 = (Math.pow((1 + $scope.infoLote.interes_p2), meses_restantes) * $scope.infoLote.interes_p2);
+
+                                // console.log("param1: ", param1);
+                                // console.log("param2: ", param2);
+                                // console.log("var1: ", var1);
+                                // console.log("var2: ", var2);
+
+                                let var3 = var1 / var2;
+                                // console.log("var3: ", var3);
+
+                                let F = (param1 * param2) + (var3);
+                                console.log("F: ", F);
+                                let mensualidad = $scope.saldoFinal / F;
+                                // console.log("Mensualidad: " + mensualidad);
+                                // console.log("$scope.precioFinal: ", $scope.infoLote);
+
+                                $scope.infoLote.capital = mensualidad;
+                            }
 
                             range.push({
 
@@ -3179,7 +3201,32 @@
 
 
 
+                            if($scope.casaFlag==1) {
+                                let meses_restantes = $scope.infoLote.meses - $scope.infoLote.mesesSinInteresP1;
+                                // console.log("LA DIVI: ", meses_restantes);
+                                // console.log("INTERES: ", $scope.infoLote.interes_p2);
 
+                                let param1 = $scope.infoLote.mesesSinInteresP1;
+                                let param2 = Math.pow((1 / (1 + 0)), 1);
+                                let var1 = (Math.pow((1 + $scope.infoLote.interes_p2), meses_restantes)) - 1;
+                                let var2 = (Math.pow((1 + $scope.infoLote.interes_p2), meses_restantes) * $scope.infoLote.interes_p2);
+
+                                // console.log("param1: ", param1);
+                                // console.log("param2: ", param2);
+                                // console.log("var1: ", var1);
+                                // console.log("var2: ", var2);
+
+                                let var3 = var1 / var2;
+                                // console.log("var3: ", var3);
+
+                                let F = (param1 * param2) + (var3);
+                                console.log("F: ", F);
+                                let mensualidad = $scope.saldoFinal / F;
+                                // console.log("Mensualidad: " + mensualidad);
+                                // console.log("$scope.precioFinal: ", $scope.infoLote);
+
+                                $scope.infoLote.capital = mensualidad;
+                            }
 
                             range.push({
 
@@ -3335,7 +3382,6 @@
 
 
                     }
-
 
                     if($scope.infoLote.mesesSinInteresP1 == 0) {
 
@@ -3460,10 +3506,6 @@
 
                     }
 
-
-
-
-
                     if($scope.infoLote.mesesSinInteresP1 == 36) {
 
                         for (var i = ini; i < $scope.infoLote.mesesSinInteresP1; i++) {
@@ -3554,7 +3596,32 @@
                             }
 
 
+                            if($scope.casaFlag==1) {
+                                let meses_restantes = $scope.infoLote.meses - $scope.infoLote.mesesSinInteresP1;
+                                // console.log("LA DIVI: ", meses_restantes);
+                                // console.log("INTERES: ", $scope.infoLote.interes_p2);
 
+                                let param1 = $scope.infoLote.mesesSinInteresP1;
+                                let param2 = Math.pow((1 / (1 + 0)), 1);
+                                let var1 = (Math.pow((1 + $scope.infoLote.interes_p2), meses_restantes)) - 1;
+                                let var2 = (Math.pow((1 + $scope.infoLote.interes_p2), meses_restantes) * $scope.infoLote.interes_p2);
+
+                                // console.log("param1: ", param1);
+                                // console.log("param2: ", param2);
+                                // console.log("var1: ", var1);
+                                // console.log("var2: ", var2);
+
+                                let var3 = var1 / var2;
+                                // console.log("var3: ", var3);
+
+                                let F = (param1 * param2) + (var3);
+                                console.log("F: ", F);
+                                let mensualidad = $scope.saldoFinal / F;
+                                // console.log("Mensualidad: " + mensualidad);
+                                // console.log("$scope.precioFinal: ", $scope.infoLote);
+
+                                $scope.infoLote.capital = mensualidad;
+                            }
 
                             range.push({
 
@@ -3714,18 +3781,12 @@
 
 
 
-
-
-
-
-
-
                 }
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-                /////////// TABLES X 11 A 15 AÑOS ////////////
+                /////////// TABLES X 11 A 20 AÑOS ////////////
 
 
 
@@ -4163,11 +4224,6 @@
                     //////////////////////// OFF PLAN CONTRUCTOR ////////////////////////////////////
 
 
-
-
-
-
-
                     if($scope.infoLote.mesesSinInteresP1 > 0 && $scope.infoLote.mesesSinInteresP1 <=35 && $scope.noPagomensualidad == 0) {
 
 
@@ -4263,9 +4319,36 @@
 
 
 
+                            if($scope.casaFlag==1) {
+                                let meses_restantes = $scope.infoLote.meses - $scope.infoLote.mesesSinInteresP1;
+                                // console.log("LA DIVI: ", meses_restantes);
+                                // console.log("INTERES: ", $scope.infoLote.interes_p2);
+
+                                let param1 = $scope.infoLote.mesesSinInteresP1;
+                                let param2 = Math.pow((1 / (1 + 0)), 1);
+                                let var1 = (Math.pow((1 + $scope.infoLote.interes_p2), meses_restantes)) - 1;
+                                let var2 = (Math.pow((1 + $scope.infoLote.interes_p2), meses_restantes) * $scope.infoLote.interes_p2);
+
+                                // console.log("param1: ", param1);
+                                // console.log("param2: ", param2);
+                                // console.log("var1: ", var1);
+                                // console.log("var2: ", var2);
+
+                                let var3 = var1 / var2;
+                                // console.log("var3: ", var3);
+
+                                let F = (param1 * param2) + (var3);
+                                console.log("F: ", F);
+                                let mensualidad = $scope.saldoFinal / F;
+                                // console.log("Mensualidad: " + mensualidad);
+                                // console.log("$scope.precioFinal: ", $scope.infoLote);
+
+                                $scope.infoLote.capital = mensualidad;
+                            }
+
+
 
                             range.push({
-
                                 "fecha" : $scope.dateCf,
                                 "pago" : i + 1,
                                 "capital" : $scope.infoLote.capital,
@@ -4297,7 +4380,6 @@
                         }
                         $scope.range= range;
 
-                        //////////
 
                         $scope.p2 = ($scope.infoLote.interes_p2 *  Math.pow(1 + $scope.infoLote.interes_p2, $scope.infoLote.meses - $scope.infoLote.mesesSinInteresP1) * $scope.total2) / ( Math.pow(1 + $scope.infoLote.interes_p2, $scope.infoLote.meses - $scope.infoLote.mesesSinInteresP1 )-1);
 
@@ -4513,10 +4595,6 @@
 
 
                     }
-
-
-
-
 
                     if($scope.infoLote.mesesSinInteresP1 == 0) {
 
@@ -4743,9 +4821,6 @@
 
                     }
 
-
-
-
                     if($scope.infoLote.mesesSinInteresP1 == 36) {
 
 
@@ -4837,7 +4912,32 @@
                                 }
                             }
 
+                            if($scope.casaFlag==1) {
+                                let meses_restantes = $scope.infoLote.meses - $scope.infoLote.mesesSinInteresP1;
+                                // console.log("LA DIVI: ", meses_restantes);
+                                // console.log("INTERES: ", $scope.infoLote.interes_p2);
 
+                                let param1 = $scope.infoLote.mesesSinInteresP1;
+                                let param2 = Math.pow((1 / (1 + 0)), 1);
+                                let var1 = (Math.pow((1 + $scope.infoLote.interes_p2), meses_restantes)) - 1;
+                                let var2 = (Math.pow((1 + $scope.infoLote.interes_p2), meses_restantes) * $scope.infoLote.interes_p2);
+
+                                // console.log("param1: ", param1);
+                                // console.log("param2: ", param2);
+                                // console.log("var1: ", var1);
+                                // console.log("var2: ", var2);
+
+                                let var3 = var1 / var2;
+                                // console.log("var3: ", var3);
+
+                                let F = (param1 * param2) + (var3);
+                                console.log("F: ", F);
+                                let mensualidad = $scope.saldoFinal / F;
+                                // console.log("Mensualidad: " + mensualidad);
+                                // console.log("$scope.precioFinal: ", $scope.infoLote);
+
+                                $scope.infoLote.capital = mensualidad;
+                            }
 
                             range.push({
 
@@ -5089,23 +5189,6 @@
 
 
                     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
                 }
 
