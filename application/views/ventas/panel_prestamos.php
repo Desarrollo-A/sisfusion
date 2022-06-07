@@ -23,6 +23,18 @@
 			</div>
 		</div>
 
+		<div class="modal fade modal-alertas" id="myModalDelete" role="dialog">
+			<div class="modal-dialog modal-md">
+				<div class="modal-content">
+
+					<form method="post" id="form_delete">
+						<div class="modal-body"></div>
+						<div class="modal-footer"></div>
+					</form>
+				</div>
+			</div>
+		</div>
+
 		<div class="modal fade modal-alertas" id="miModal" role="dialog">
 			<div class="modal-dialog">
 				<div class="modal-content">
@@ -244,7 +256,7 @@
 						$('#tabla_prestamos').DataTable().ajax.reload(null, false);
 						closeModalEng();
 						$('#miModal').modal('hide');
-						alerts.showNotification("top", "right", "Prestamo registrado con exito.", "success");
+						alerts.showNotification("top", "right", "Préstamo registrado con éxito.", "success");
 						document.getElementById("form_abono").reset();
 					
 					} else if(data == 2) {
@@ -255,7 +267,34 @@
 					}else if(data == 3){
 						closeModalEng();
 						$('#miModal').modal('hide');
-						alerts.showNotification("top", "right", "El usuario seleccionado ya tiene un prestamo activo.", "warning");
+						alerts.showNotification("top", "right", "El usuario seleccionado ya tiene un préstamo activo.", "warning");
+					}
+				},
+				error: function(){
+					alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+				}
+			});
+		});
+		$("#form_delete").on('submit', function(e){ 
+			e.preventDefault();
+			let formData = new FormData(document.getElementById("form_delete"));
+			$.ajax({
+				url: 'BorrarPrestamo',
+				data: formData,
+				method: 'POST',
+				contentType: false,
+				cache: false,
+				processData:false,
+				success: function(data) {
+					if (data == 1) {
+						$('#tabla_prestamos').DataTable().ajax.reload(null, false);
+						$('#myModalDelete').modal('hide');
+						alerts.showNotification("top", "right", "Préstamo eliminado con éxito.", "success");
+						document.getElementById("form_delete").reset();
+					
+					} else{
+						$('#myModalDelete').modal('hide');
+						alerts.showNotification("top", "right", "Error.", "warning");
 					}
 				},
 				error: function(){
@@ -395,7 +434,7 @@
 
 						if(d.estatus == 1){
 							return '<span class="label label-danger" style="background:dodgerblue">ACTIVO</span>';
-						}else if(d.estatus == 2){
+						}else if(d.estatus == 3 || d.estatus == 2){
 							return '<span class="label label-danger" style="background:#27AE60">LIQUIDADO</span>';
 						}else if(d.estatus == 0){
 							return '<span class="label label-danger" style="background:#D52803">CANCELADO</span>';
@@ -447,8 +486,13 @@
 					"width": "6%",
 					"orderable": false,
 					"data": function( d ){
-                        return a = `<button href="#" value="${d.id_prestamo}" class="btn-data btn-blueMaderas detalle-prestamo" title="Hitorial"><i class="fas fa-info"></i></button>
-						<button href="#" value="${d.id_prestamo}" class="btn-data btn-warning delete-prestamo" title="Eliminar"><i class="fas fa-trash"></i></button>`;
+						if(d.id_prestamo2 == null && d.estatus == 1){
+							return a = `<button href="#" value="${d.id_prestamo}" class="btn-data btn-blueMaderas detalle-prestamo" title="Hitorial"><i class="fas fa-info"></i></button>
+						<button href="#" value="${d.id_prestamo}" data-name="${d.nombre}" class="btn-data btn-warning delete-prestamo" title="Eliminar"><i class="fas fa-trash"></i></button>`;
+						}else{
+							return a = `<button href="#" value="${d.id_prestamo}" class="btn-data btn-blueMaderas detalle-prestamo" title="Hitorial"><i class="fas fa-info"></i></button>`;
+						}
+                        
 					}
 				}],
 				ajax: {
@@ -461,11 +505,23 @@
 			});
 			$('#tabla_prestamos tbody').on('click', '.delete-prestamo', function () {
 				const idPrestamo = $(this).val();
-				$.getJSON(`${url}Comisiones/BorrarPrestamo/${idPrestamo}`).done(function (data) { 
-					console.log(data);
-					$('#tabla_prestamos').DataTable().ajax.reload(null, false);
+				const nombreUsuario = $(this).attr("data-name");
+			//	$.getJSON(`${url}Comisiones/BorrarPrestamo/${idPrestamo}`).done(function (data) { 
+					const Modalbody = $('#myModalDelete .modal-body');
+					const Modalfooter = $('#myModalDelete .modal-footer');
+					Modalbody.html('');
+					Modalfooter.html('');
+					Modalbody.append(`<input type="hidden" value="${idPrestamo}" name="idPrestamo" id="idPrestamo"> <h4>¿Esta seguro que desea borrar el préstamo de ${nombreUsuario}?</h4>
+                           
+                        `);
 
-				});
+						Modalfooter.append(`<div class="row"><div class="col-md-3"></div><div class="col-md-3"><input type="submit" class="btn btn-success" name="disper_btn"  id="dispersar" value="Dispersar"></div><div class="col-md-3"><input type="button" class="btn btn-danger" data-dismiss="modal" value="CANCELAR"></div></div>`);
+
+					//console.log(data);
+					$("#myModalDelete").modal();
+				//	$('#tabla_prestamos').DataTable().ajax.reload(null, false);
+
+				//});
 			});
             $('#tabla_prestamos tbody').on('click', '.detalle-prestamo', function () {
 				$('#spiner-loader').removeClass('hide');
@@ -484,6 +540,7 @@
 
                         detalleHeaderModal.html('');
                         detalleBodyModal.html('');
+						let numPagosReal = general.num_pago_act == general.num_pagos ? general.num_pago_act :  general.num_pago_act -1;
 
                         detalleHeaderModal.append('<h4 class="card-title"><b>Detalle del préstamo</b></h4>');
                         detalleBodyModal.append(`
@@ -495,7 +552,7 @@
                                     <h6>PAGO MENSUAL: <b>$${formatMoney(general.pago_individual)}</b></h6>
                                 </div>
                                 <div class="col col-xs-12 col-sm-4 col-md-4 col-lg-4">
-                                    <h6>PAGOS APLICADOS: <b>${general.num_pago_act} / ${general.num_pagos} MENSUALIDADES</b></h6>
+                                    <h6>PAGOS APLICADOS: <b>${numPagosReal} / ${general.num_pagos} MENSUALIDADES</b></h6>
                                 </div>
                                 <div class="col col-xs-12 col-sm-4 col-md-4 col-lg-4">
                                     <h6>MONTO PRESTADO: <b>$${formatMoney(general.monto_prestado)}</b></h6>
