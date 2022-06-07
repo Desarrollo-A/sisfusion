@@ -475,9 +475,9 @@
                 $.getJSON(`${url}Comisiones/getDetallePrestamo/${idPrestamo}`).done(function (data) {
                     const { general, detalle } = data;
 					$('#spiner-loader').addClass('hide');
-
-                    if (detalle.length === 0) {
-                        alerts.showNotification("top", "right", "No hay abonos.", "warning");
+					console.log(detalle.length);
+                    if (detalle.length == 0) {
+                        alerts.showNotification("top", "right", "Este préstamo no tiene pagos aplicados.", "warning");
                     } else {
                         const detalleHeaderModal = $('#detalle-prestamo-modal .modal-header');
                         const detalleBodyModal = $('#detalle-prestamo-modal .modal-body');
