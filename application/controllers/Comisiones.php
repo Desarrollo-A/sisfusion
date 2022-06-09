@@ -4012,7 +4012,7 @@ public function descuentos_historial()
   
   public function saveDescuento($valor)
   {
-    $saldo_comisiones = 0; $this->input->post('saldo_comisiones');
+    $saldo_comisiones = $this->input->post('saldo_comisiones');
 
   
     $LotesInvolucrados = "";

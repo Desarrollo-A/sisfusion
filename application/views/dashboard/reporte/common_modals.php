@@ -22,6 +22,11 @@
                     </div>
                 </div>
                 <div class="row">
+                    <div class="col-12 col-sm-12 col-md-12 col-lg-12">
+                        <div id="line-adwords"></div>
+                    </div>
+                </div>
+                <div class="row">
                     <div class="col-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-end">
                         <div class="boxModalChart"></div>
                     </div>
