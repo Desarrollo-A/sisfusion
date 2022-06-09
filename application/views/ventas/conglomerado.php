@@ -286,7 +286,7 @@
                     <div class="modal-body">
 
                         <div class="form-group">
-                            <label class="label">Puesto del usuario</label>
+                            <label class="label">Puesto del usuario *</label>
                             <select class="selectpicker roles" name="roles" id="roles" required>
                                 <option value="">----Seleccionar-----</option>
                                 <option value="7">Asesor</option>
@@ -305,10 +305,17 @@
 
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label class="label">Monto Descuento</label>
-                                    <input class="form-control" type="text" id="descuento" required name="descuento"
-                                           maxlength="10" autocomplete="off" value=""
-                                           onkeypress="return filterFloat(event,this);"/>
+                                    <label class="label">Monto Descuento *</label>
+                                    <input class="form-control"
+                                           type="number"
+                                           id="descuento"
+                                           name="descuento"
+                                           autocomplete="off"
+                                           min="1"
+                                           max="19000"
+                                           step=".01"
+                                           required
+                                    />
                                 </div>
 
                             </div>
@@ -316,7 +323,7 @@
 
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label class="label">NÚmero de Pagos</label>
+                                    <label class="label">Número de Pagos *</label>
                                     <select class="form-control" name="numeroPagos" id="numeroPagos" required>
                                         <option value="" disabled="true" selected="selected">- Selecciona opción -
                                         </option>
@@ -348,7 +355,7 @@
 
                         <div class="form-group">
 
-                            <label class="label">Mótivo de descuento</label>
+                            <label class="label">Mótivo de descuento *</label>
                             <textarea id="comentario2" name="comentario2" class="form-control" rows="3"
                                       required></textarea>
 
@@ -521,7 +528,7 @@
 <!--<link href="<?= base_url() ?>dist/js/controllers/select2/select2.min.css" rel="stylesheet" />
 <script src="<?= base_url() ?>dist/js/controllers/select2/select2.min.js"></script>-->
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet"/>
-<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js">}</script>
 
 <script>
     var url = "<?=base_url()?>";
@@ -717,8 +724,12 @@
                     {
                         // Estatus
                         "data": function (d) {
+                            const primerDescuento = (d.primer_descuento === 1)
+                                ? '<br><div style="margin-top: 5px;"><span class="label" style="background:deepskyblue;">PRIMER DESCUENTO</span></div>'
+                                : '';
+
                             if ((d.status == 0 || d.status == 3) && (d.estatus != 2 && d.estatus != 3 && d.estatus != 4) ) {
-                                return '<span class="label" style="background:red;">BAJA</span>';
+                                return `<span class="label" style="background:red;">BAJA</span>${primerDescuento}`;
                             }
 
                             if (d.id_sede == 6) {
@@ -736,29 +747,29 @@
                             switch (d.estatus) {
                                 case 0:
                                     if ($RES === 0) {
-                                        return '<span class="label" style="background:#7F8C8D;">SIN SALDO DISPONIBLE</span>';
+                                        return `<span class="label" style="background:#7F8C8D;">SIN SALDO DISPONIBLE</span>${primerDescuento}`;
                                     }
-                                    return '<span class="label" style="background:#9B59B6;">DISPONIBLE</span>';
+                                    return `<span class="label" style="background:#9B59B6;">DISPONIBLE</span>${primerDescuento}`;
                                 case 1:
                                     if (d.pagos_activos == 0){
-                                        return '<span class="label" style="background:#7F8C8D;">REACTIVADO</span>';
+                                        return `<span class="label" style="background:#7F8C8D;">REACTIVADO</span>${primerDescuento}`;
                                     }
                                     if ($RES === 0){
-                                        return '<span class="label" style="background:#7F8C8D;">SIN SALDO DISPONIBLE</span>';
+                                        return `<span class="label" style="background:#7F8C8D;">SIN SALDO DISPONIBLE</span>${primerDescuento}`;
                                     }
-                                    return '<span class="label" style="background:#9B59B6;">DISPONIBLE</span>';
+                                    return `<span class="label" style="background:#9B59B6;">DISPONIBLE</span>${primerDescuento}`;
 
                                 case 2:
-                                    return '<span class="label" style="background:green;">DESCUENTO APLICADO</span>';
+                                    return `<span class="label" style="background:green;">DESCUENTO APLICADO</span>${primerDescuento}`;
 
                                 case 3:
-                                    return '<span class="label" style="background:#95A5A6;">LIQUIDADO EN CAJA</span>';
+                                    return `<span class="label" style="background:#95A5A6;">LIQUIDADO EN CAJA</span>${primerDescuento}`;
 
                                 case 4:
-                                    return '<span class="label" style="background:#34495E;">LIQUIDADO</span>';
+                                    return `<span class="label" style="background:#34495E;">LIQUIDADO</span>${primerDescuento}`;
 
                                 case 5:
-                                    return '<span class="label" style="background:#7F8C8D;">REACTIVADO</span>';
+                                    return `<span class="label" style="background:#7F8C8D;">REACTIVADO</span>${primerDescuento}`;
 
                                 default:
                                     return '<span class="label" style="background:#1ABC9C;">REVISAR CON SISTEMAS</span>';
@@ -1494,16 +1505,48 @@
     });
 
     $("#form_nuevo").submit(function (e) {
-
         // $('#btn_abonar').attr('disabled', 'true');
         $('#btn_abonar').prop('disabled', true);
         document.getElementById('btn_abonar').disabled = true;
 
         e.preventDefault();
     }).validate({
+        rules: {
+            roles: {
+                required: true
+            },
+            descuento: {
+                required: true,
+                number: true,
+                min: 1,
+                max: 19000
+            },
+            numeroPagos: {
+                required: true
+            },
+            comentario2: {
+                required: true
+            }
+        },
+        messages: {
+            roles: {
+                required: 'Campo requerido.'
+            },
+            descuento: {
+                required: 'Campo requerido.',
+                number: 'Número no válido.',
+                min: 'El valor mínimo debe ser 1',
+                max: 'El valor máximo debe ser 19,000'
+            },
+            numeroPagos: {
+                required: 'Campo requerido.'
+            },
+            comentario2: {
+                required: 'Campo requerido.'
+            }
+        },
         submitHandler: function (form) {
-
-            var data1 = new FormData($(form)[0]);
+            const data1 = new FormData($(form)[0]);
             $.ajax({
                 url: 'saveDescuentoch/',
                 data: data1,
@@ -1808,6 +1851,10 @@
 
         $('#ModalBonos').modal('show');
     }
+
+    $('#ModalBonos').on('hidden.bs.modal', function() {
+        $('#form_nuevo').trigger('reset');
+    });
 </script>
 
 
