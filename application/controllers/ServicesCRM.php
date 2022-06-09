@@ -12,7 +12,7 @@ class ServicesCRM extends CI_Controller
             header('Access-Control-Allow-Headers: Content-Type,Origin, authorization, X-API-KEY,X-Requested-With,Accept,Access-Control-Request-Method');
             header('Access-Control-Allow-Method: GET, POST, PUT, DELETE,OPTION');
             parent::__construct();
-            $urls = array('prueba.gphsis.com','localhost','http://localhost','127.0.0.1','rh.gphsis.com','maderascrm.gphsis.com');
+            $urls = array('https://prueba.gphsis.com','localhost','http://localhost','127.0.0.1','https://rh.gphsis.com','https://maderascrm.gphsis.com');
             date_default_timezone_set('America/Mexico_City');
             
 
