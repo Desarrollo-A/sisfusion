@@ -1,4 +1,18 @@
 let base_url = "<?=base_url()?>";
+//jquery
+$(document).ready(function(){
+    changePill('inicioOption');
+});
+
+$(document).on('click', '.menuTab', function(e){
+    e.preventDefault();
+    console.log(this.id);
+    console.log(e.id);
+
+    changePill(this.id);
+})
+
+//functions
 function changePill(element){
     if(element == 'inicioOption'){
         $('.box1Inicio1').addClass('fadeInAnimation');

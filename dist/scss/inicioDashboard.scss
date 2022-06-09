@@ -5,17 +5,16 @@
   .first-row{
     height: 450px;
     .cardProspectosVig{
-      background-color: #1D3566;
       p{
         font-size: 12px;
-        color: white;
+        color: $grayDark;
         span{
           color: #2C93E7;
           font-weight: 700;
         }
       }
       .boxIcoProsp{
-        background-color: #ffffff3d;
+        background-color: #0089b73d;
         width: 25px;
         height: 25px;
         border-radius: 20px;
@@ -23,10 +22,10 @@
         align-items: center;
         justify-content: center;
         margin-right: 7px;
-        color: $white;
+        color: $grayDark;
       }
       .numberGraphic{
-        color: $white;
+        color: $grayDark;
         font-weight: 600;
         font-size: 18px;
       }
@@ -100,18 +99,18 @@
   }
 }
 
-#beginDate{
-  background-color: $platinum;
-  border-radius: 27px 0 0 27px;
-  background-image: initial;
-  text-align: right;
+.beginDates{
+  background-color: $platinum!important;
+  border-radius: 27px 0 0 27px!important;
+  background-image: initial!important;
+  text-align: right!important;
 }
 
-#endDate {
-  background-color: $platinum;
-  border-radius: 0;
-  background-image: initial;
-  text-align: center;
+.endDates {
+  background-color: $platinum!important;
+  border-radius: 0!important;
+  background-image: initial!important;
+  text-align: center!important;
 }
 
 .btn-fab-mini {
@@ -125,6 +124,5 @@
 }
 
 .dot{
-  color: aquamarine;
   font-size: 1.2rem;
 }
