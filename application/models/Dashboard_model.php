@@ -23,7 +23,10 @@ class Dashboard_model extends CI_Model {
         $filter .= "p.fecha_creacion BETWEEN '$fecha_inicio 00:00:00' AND '$fecha_fin 23:59:59' ";
 
         if ($id_rol == 7) // MJ: Asesor
-            $filter = " AND cl.id_asesor = $id_usuario";
+          {  $filtro .= " AND cl.id_asesor = $id_usuario";
+            $filter .= " AND p.id_asesor = $id_usuario";
+            $filter2 .= "  p.id_asesor = $id_usuario";}
+
         else if ($id_rol == 9) // MJ: Coordinador
            {
             if($typeTransaction == 1){ #Filtro que solo muestra los del usuario sesionado
@@ -48,26 +51,42 @@ class Dashboard_model extends CI_Model {
                 $filter2 .= "(p.id_coordinador = $id_usuario OR p.id_asesor = $id_usuario)";
 
             }else{
-                $filtro = '';
-                $filter = "";
-                $filter2 = "";
+                $filtro .= '';
+                $filter .= "";
+                $filter2 .= "";
             }}
         else if ($id_rol == 3) // MJ: Gerente
-            $filter = " AND cl.id_gerente = $id_usuario";
+          {  $filtro .= " AND cl.id_gerente = $id_usuario";
+            $filter .= " AND id_gerente = $id_usuario";
+            $filter2 .= "p.id_gerente = $id_usuario";}
         else if ($id_rol == 6) // MJ: Asistente de gerencia
-            $filter = " AND cl.id_gerente = $id_lider";
+          {  $filtro .= " AND cl.id_gerente = $id_lider";
+            $filter .= " AND p.id_gerente = $id_lider";
+            $filter2 .= " p.id_gerente = $id_lider";}
         else if ($id_rol == 2) // MJ: Subdirector
-            $filter = " AND cl.id_subdirector = $id_usuario";
+           { $filtro .= " AND cl.id_subdirector = $id_usuario";
+            $filter .= " AND p.id_subdirector = $id_usuario";
+            $filter2 .= " p.id_subdirector = $id_usuario";}
         else if ($id_rol == 5) // MJ: Asistente subdirección
-            $filter = " AND cl.id_subdirector = $id_lider";
+          {  $filtro .= " AND cl.id_subdirector = $id_lider";
+            $filter .= " AND p.id_subdirector = $id_lider";
+            $filter2 .= " p.id_subdirector = $id_lider";}
         else if ($id_rol == 2) {// MJ: Director regional
             $id_sede = "'" . implode("', '", explode(", ", $this->session->userdata('id_sede'))) . "'"; // MJ: ID sede separado por , como string
-            $filter = " AND cl.id_sede IN ($id_sede)";
+            $filtro .= " AND cl.id_sede IN ($id_sede)";
+            $filter .= " AND p.id_sede IN ($id_sede)";
+            $filter2 .= " p.id_sede IN ($id_sede)";
         }
         else if ($id_rol == 5) // MJ: Asistente de dirección regional
-            $filter = ""; // MJ: PENDIENTE
+           { $filtro .= ""; // MJ: PENDIENTE
+            $filter .= ""; // MJ: PENDIENTE
+            $filter2 .= ""; // MJ: PENDIENTE
+        }
         else if ($id_rol == 1 || $id_rol == 4) // MJ: Director comercial
-            $filter = "";
+           { $filtro .= "";
+            $filter .= "";
+            $filter2 .= "";
+        }
         $query = $this->db->query("SELECT 
         ISNULL(a.totalVentas, 0) totalVentas, --TOTAL VENDIDO
         ISNULL(b.totalCT, 0) totalCT,  --TOTAL CANCELADO
