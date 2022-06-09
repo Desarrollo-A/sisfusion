@@ -236,9 +236,10 @@ LEFT JOIN  usuarios di ON di.id_usuario = su.id_lider
 
 
 
-  function getUsuariosRolDU($rol){
-
-        return $this->db->query("SELECT id_usuario,CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) as name_user,estatus FROM usuarios WHERE id_usuario NOT IN (SELECT id_usuario FROM descuentos_universidad where  estatus in (1,2,3) ) AND estatus not in (0) and id_rol = $rol ");
+    function getUsuariosRolDU($rol) {
+        return $this->db->query("SELECT id_usuario,CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) as 
+            name_user, estatus FROM usuarios WHERE id_usuario NOT IN (SELECT id_usuario FROM descuentos_universidad)
+            AND estatus = 1 AND id_rol = $rol");
     }
 
 
@@ -7280,6 +7281,10 @@ function UpdateVcUser($usuarioOld,$newColab,$rolSelect,$idLote,$idCliente,$comen
 /**----------------------------------------------------------------------- */ 
 public function CancelarDescuento($id_pago,$motivo,$monto)
 {
+    $this->db->query("UPDATE descuentos_universidad
+        SET estatus = CASE WHEN (estatus = 4) THEN 1 ELSE estatus END,
+        pagos_activos = CASE WHEN (estatus = 4) THEN pagos_activos + 1 else pagos_activos END
+        WHERE id_usuario = (SELECT id_usuario FROM pago_comision_ind WHERE id_pago_i = $id_pago)");
     $respuesta = $this->db->query("UPDATE pago_comision_ind set descuento_aplicado=0,estatus=1 where id_pago_i=".$id_pago."");
     $Monto2 = number_format($monto, 2, '.', ',');
     $usuario = $this->session->userdata('nombre').' '.$this->session->userdata('apellido_paterno').' '.$this->session->userdata('apellido_materno');
@@ -8533,7 +8538,8 @@ return $query->result();
         du.id_usuario, CONCAT(us.nombre,' ',us.apellido_paterno,' ',us.apellido_materno) nombre, opc.nombre as puesto, 
         se.id_sede, se.nombre as sede, CONCAT(ua.nombre,' ',ua.apellido_paterno,' ',ua.apellido_materno) creado_por, 
         pci2.abono_pagado, pci3.abono_nuevo, du.pagado_caja, du.pago_individual, du.pagos_activos, du.estatus, 
-        (pci2.abono_pagado + du.pagado_caja) aply, CONVERT(varchar,du.fecha_modificacion,23)  fecha_creacion, '1' AS queryType
+        (pci2.abono_pagado + du.pagado_caja) aply, CONVERT(varchar,du.fecha_modificacion,23)  fecha_creacion, '1' AS queryType,
+        CASE WHEN (SELECT COUNT(*) FROM pago_comision_ind pci WHERE pci.id_usuario = du.id_usuario) = 1 THEN 1 ELSE 0 END AS primer_descuento
         FROM descuentos_universidad du
         INNER JOIN usuarios us ON us.id_usuario = du.id_usuario
         INNER JOIN usuarios ua ON ua.id_usuario = du.creado_por
