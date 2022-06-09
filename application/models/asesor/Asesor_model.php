@@ -1363,11 +1363,8 @@ class Asesor_model extends CI_Model
         ec.idLote, l.nombreLote, CONCAT(solicitante.nombre,' ', solicitante.apellido_paterno,' ', solicitante.apellido_materno) as solicitante, ec.estatus,
         ec.id_evidencia, cl.id_cliente, ec.evidencia, ec.fecha_modificado, cl.fechaApartado, s.nombre plaza,
         he1.fecha_creacion fechaValidacionGerente, he2.fecha_creacion fechaValidacionCobranza, he3.fecha_creacion fechaValidacionContraloria,
-        he10.fecha_creacion fechaRechazoCobranza, he20.fecha_creacion fechaRechazoContraloria, he200.comentario_autorizacion, (CASE cn.tipo WHEN 1 THEN 11 WHEN 
-        2 
-        THEN 
-        (CASE WHEN (asesor.id_sede = '2' OR asesor.id_sede = '3' OR asesor.id_sede = '4' OR asesor.id_sede = '6') THEN 1 ELSE 22 END)
-        ELSE 1 END) rowType
+        he10.fecha_creacion fechaRechazoCobranza, he20.fecha_creacion fechaRechazoContraloria, he200.comentario_autorizacion, 
+        (CASE cn.tipo WHEN 1 THEN 11 WHEN 2 THEN 22 WHEN 3 THEN 33 WHEN 4 THEN 44 WHEN 5 THEN 55 ELSE 1 END) rowType
         FROM evidencia_cliente ec
         INNER JOIN clientes cl ON ec.idCliente = cl.id_cliente AND cl.lugar_prospeccion IN (6, 29) AND cl.status = 1
         INNER JOIN usuarios asesor ON cl.id_asesor = asesor.id_usuario
@@ -1390,10 +1387,8 @@ class Asesor_model extends CI_Model
         ec.idLote, l.nombreLote, CONCAT(solicitante.nombre,' ', solicitante.apellido_paterno,' ', solicitante.apellido_materno) as solicitante, ec.estatus,
         ec.id_evidencia, cl.id_cliente, ec.evidencia, ec.fecha_modificado, cl.fechaApartado, s.nombre plaza,
         he1.fecha_creacion fechaValidacionGerente, he2.fecha_creacion fechaValidacionCobranza, he3.fecha_creacion fechaValidacionContraloria,
-        he10.fecha_creacion fechaRechazoCobranza, he20.fecha_creacion fechaRechazoContraloria, he200.comentario_autorizacion, (CASE cn.tipo WHEN 1 THEN 11 WHEN 2 
-        THEN 
-        (CASE WHEN (asesor.id_sede = '2' OR asesor.id_sede = '3' OR asesor.id_sede = '4' OR asesor.id_sede = '6') THEN 1 ELSE 22 END) 
-        END) rowType
+        he10.fecha_creacion fechaRechazoCobranza, he20.fecha_creacion fechaRechazoContraloria, he200.comentario_autorizacion, 
+        (CASE cn.tipo WHEN 1 THEN 11 WHEN 2 THEN 22 WHEN 3 THEN 33 WHEN 4 THEN 44 WHEN 5 THEN 55 ELSE 1 END) rowType
         FROM evidencia_cliente ec
         INNER JOIN clientes cl ON ec.idCliente = cl.id_cliente AND cl.lugar_prospeccion NOT IN (6, 29) AND cl.status = 1
         INNER JOIN usuarios asesor ON cl.id_asesor = asesor.id_usuario

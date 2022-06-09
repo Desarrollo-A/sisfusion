@@ -590,7 +590,7 @@
             day = 17;
         }
 //FIN FECHA
-        var mes = (new Date().getMonth() + 2);//($scope.apartado && $scope.mesesdiferir > 0) ? (new Date().getMonth() + 2) : (new Date().getMonth() + 3)
+        var mes = (new Date().getMonth() + 1);//($scope.apartado && $scope.mesesdiferir > 0) ? (new Date().getMonth() + 2) : (new Date().getMonth() + 3)
 
         var day;
         var month = (new Date().getMonth() + 1);
@@ -601,6 +601,12 @@
 			calculaMoratorio();
 		};
 		function calculaMoratorio() {
+            let fecha_input = new Date($scope.fechaField);
+            let dayCorrect = (fecha_input.getDate() < 10) ? '0'+fecha_input.getDate() : fecha_input.getDate();
+            console.log('fecha_input: ', fecha_input);
+            console.log('día: ', dayCorrect);
+            day = dayCorrect;
+
 		    var saldoInsoluto = (document.getElementById('SIField').value).replace(/,/g, "");
 		    // console.log(saldoInsoluto.replace(/,/g, ""));
             // console.log(saldoInsoluto.replace(/./g, ""));

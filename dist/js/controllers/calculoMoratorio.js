@@ -49,8 +49,12 @@ function calculoMoratorioII(IM, importeSaldoI, posPay, PositionPago, diasRetardo
 	var month = (new Date().getMonth() + 1);
 	var yearc = new Date().getFullYear();
 //FIN FECHA
-	var mes = (new Date().getMonth() + 2);//($scope.apartado && $scope.mesesdiferir > 0) ? (new Date().getMonth() + 2) : (new Date().getMonth() + 3)
-
+	var mes = (new Date().getMonth() + 1);//($scope.apartado && $scope.mesesdiferir > 0) ? (new Date().getMonth() + 2) : (new Date().getMonth() + 3)
+	/*nuevooooo*/
+	let fecha_input = new Date($scope.fechaField);
+	let dayCorrect = (fecha_input.getDate() < 10) ? '0'+fecha_input.getDate() : fecha_input.getDate();
+	day = dayCorrect;
+	/*termina nuevooooo*/
 		$scope.infoMoratorio=
 			{
 				plazo:$scope.plazoField,
@@ -746,7 +750,7 @@ function calculoMoratorioII(IM, importeSaldoI, posPay, PositionPago, diasRetardo
 											else
 											{
 												// alert('II');
-												// $scope.p2 = ($scope.infoMoratorio.interes_p2 *  Math.pow(1 + $scope.infoMoratorio.interes_p2, $scope.infoMoratorio.plazo - $scope.infoMoratorio.mesesSinInteresP1) * $scope.alphaNumeric[(posPay-1)]['saldoNormal']) / ( Math.pow(1 + $scope.infoMoratorio.interes_p2, $scope.infoMoratorio.plazo - $scope.infoMoratorio.mesesSinInteresP1 )-1);
+												// $scope.p2 = ($scope.infoMoratorio.interes_p2 *  Ma9th.pow(1 + $scope.infoMoratorio.interes_p2, $scope.infoMoratorio.plazo - $scope.infoMoratorio.mesesSinInteresP1) * $scope.alphaNumeric[(posPay-1)]['saldoNormal']) / ( Math.pow(1 + $scope.infoMoratorio.interes_p2, $scope.infoMoratorio.plazo - $scope.infoMoratorio.mesesSinInteresP1 )-1);
 												interes = $scope.alphaNumeric[(posPay-1)]['saldoNormal'] * $scope.infoMoratorio.interes_p2;//$scope.alphaNumeric.sal* $scope.infoMoratorio.interes_p2
 												capital=$scope.alphaNumeric[i]['capital'];
 											}

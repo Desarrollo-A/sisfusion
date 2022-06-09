@@ -1,5 +1,5 @@
 <?php
-//    require_once 'static/autoload.php';
+    require_once 'static/autoload.php';
     use PhpOffice\PhpSpreadsheet\Spreadsheet;
     use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
@@ -1861,8 +1861,8 @@ $pdf->Output(utf8_decode($namePDF), 'I');
     /*COSAS DE LA CORRIDA Y DEL EXPORT DEL EXCEL*/
     public function excelFile($id_corrida){
 
-	    /*echo 'Estoy creadno el excel';
-	    exit;*/
+//	    echo 'Estoy creadno el excel';
+//	    exit;
         //$id_corrida = 76515;
         $data_corrida = $this->Corrida_model->getAllInfoCorrida($id_corrida);
         //print_r($data_corrida);
@@ -2010,44 +2010,46 @@ $pdf->Output(utf8_decode($namePDF), 'I');
             $sheet->getStyle( 'D6:I6' )->getFont()->setName('Arial');
             $sheet->getStyle('D7:H7')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('D9D9D9');
 
-            $sheet->mergeCells("D8:H8");
-            $sheet->setCellValue('D8', 'EXTRAS');
-            $sheet->getStyle( 'D8' )->getFont()->setBold( true );
-            $sheet->getStyle('D8:H8')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('D8E4BC');
+            //$sheet->mergeCells("D8:H8");
+            //$sheet->setCellValue('D8', 'EXTRAS');
+            //$sheet->getStyle( 'D8' )->getFont()->setBold( true );
+            //$sheet->getStyle('D8:H8')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('D8E4BC');
 
 //            print_r(count($extras_general));
 //            exit;
             $contador=10;
             $extras_total = 0;
             if(count($extras_general) >= 1){
-                $sheet->mergeCells("D9:F9");
-                $sheet->setCellValue('D9', "Nombre");
-                $sheet->mergeCells("G9:H9");
-                $sheet->setCellValue('G9', "Precio");
-                $sheet->getStyle("D9:H9")->getFont()->setSize(10);
-                $sheet->getStyle('D9:H9')->getFont()->getColor()->setARGB('4472C4');
-                $sheet->getStyle( 'D9:H9' )->getFont()->setBold( true );
-                $sheet->getStyle( 'D9:H9' )->getFont()->setName('Arial');
+                //$sheet->mergeCells("D9:F9");
+                //$sheet->setCellValue('D9', "Nombre");
+                //$sheet->mergeCells("G9:H9");
+                //$sheet->setCellValue('G9', "Precio");
+                //$sheet->getStyle("D9:H9")->getFont()->setSize(10);
+                //$sheet->getStyle('D9:H9')->getFont()->getColor()->setARGB('4472C4');
+                //$sheet->getStyle( 'D9:H9' )->getFont()->setBold( true );
+                //$sheet->getStyle( 'D9:H9' )->getFont()->setName('Arial');
 
                 foreach ($extras_general as $values){
-//                    print_r($values['tipo']);
-                    if($values['tipo']=='techado'){
-                        $sheet->mergeCells("D".$contador.":F".$contador);
-                        $sheet->setCellValue('D'.$contador, "Techado");
-                        $sheet->mergeCells("G".$contador.":H".$contador);
-                        $sheet->setCellValue('G'.$contador, $values['techado']);
-                        $sheet->getStyle('G'.$contador)->getNumberFormat()->setFormatCode(PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_CURRENCY_USD_SIMPLE);
+                    //print_r($values['tipo']);
+                    //if($values['tipo']=='techado'){
+                        //$sheet->mergeCells("D".$contador.":F".$contador);
+                        //$sheet->setCellValue('D'.$contador, "Techado");
+                        //$sheet->mergeCells("G".$contador.":H".$contador);
+                        //$sheet->setCellValue('G'.$contador, $values['techado']);
+                        //$sheet->getStyle('G'.$contador)->getNumberFormat()->setFormatCode(PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_CURRENCY_USD_SIMPLE);
 
-                    }
-                    $contador++;
+                    //}
+                    //$contador++;
                     $extras_total = $extras_total + $values['techado'];
-//                    print_r($values);
+                    //print_r($values);
 
                 }
             }else{
-                $sheet->mergeCells("D9:H9");
-                $sheet->setCellValue('D9', 'Sin extras');
+                //$sheet->mergeCells("D9:H9");
+                //$sheet->setCellValue('D9', 'Sin extras');
             }
+            $sheet->setCellValue('G5', $precio_casa + $extras_total); #se vuelve a setear el valor de la casa más los extras en un solo registro
+
 
             #Aqui se deben mostrar los resultados
             $sheet->mergeCells("D14:H14");
@@ -2080,7 +2082,14 @@ $pdf->Output(utf8_decode($namePDF), 'I');
 //                $sheet->getStyle('H'.$contador2)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('D9D9D9');
                 $flag_cell = 0;
                 $suma_descuentos=0;
+                $precio_final_excel=0;
+//                print_r(count($informacion_descCorrida));
+//                echo '<br>';
                 foreach($informacion_descCorrida as $item=>$value){
+//                    print_r($item+1);
+                    if(count($informacion_descCorrida) == ($item+1)){
+                        $precio_final_excel = $value['pm'];
+                    }
                     //print_r($value['porcentaje']);
                     $contador2++;
                     #porcentaje
@@ -2123,15 +2132,21 @@ $pdf->Output(utf8_decode($namePDF), 'I');
                 $sheet->getStyle('D'.$contador2.':'.'D'.$contador2)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('D9D9D9');
 
             }
-//            exit;
 
+            $sheet->mergeCells("E21:F21");
+            $sheet->setCellValue('E21', 'PRECIO FINAL M2');
+            $sheet->getStyle('E21:F21')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('C4D79B');
+            $sheet->getStyle( 'E21')->getFont()->setBold( true );
 
-
+            $sheet->setCellValue('G21', $precio_final_excel);
+            $sheet->getStyle( 'G21')->getFont()->setBold( false );
+            $sheet->getStyle('G21')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('D8E4BC');
+            $sheet->getStyle('G21')->getNumberFormat()->setFormatCode(PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_CURRENCY_USD_SIMPLE);
 
 
             #saldos y tabla
-            $sheet->mergeCells("D22:F22");
-            $sheet->setCellValue('D22', 'SUBTOTAL (contrucción + extras)');
+            //$sheet->mergeCells("D22:F22");
+            //$sheet->setCellValue('D22', 'SUBTOTAL (contrucción + extras)');
             $sheet->mergeCells("D23:F23");
             $sheet->setCellValue('D23', 'SALDO CONSOLIDADO');
             $sheet->mergeCells("D24:F24");
@@ -2141,19 +2156,19 @@ $pdf->Output(utf8_decode($namePDF), 'I');
             $sheet->mergeCells("D26:F26");
             $sheet->setCellValue('D26', 'MENSUALIDAD');
 
-            $sheet->getStyle("D22:F22")->getFont()->setSize(13)->setName('Arial')->setBold(true)->getColor()->setARGB('000000');
+           // $sheet->getStyle("D22:F22")->getFont()->setSize(13)->setName('Arial')->setBold(true)->getColor()->setARGB('000000');
             $sheet->getStyle("D23:F23")->getFont()->setSize(13)->setName('Arial')->setBold(true)->getColor()->setARGB('000000');
             $sheet->getStyle("D24:F24")->getFont()->setSize(13)->setName('Arial')->setBold(true)->getColor()->setARGB('000000');
             $sheet->getStyle("D25:F25")->getFont()->setSize(13)->setName('Arial')->setBold(true)->getColor()->setARGB('000000');
             $sheet->getStyle("D26:F26")->getFont()->setSize(13)->setName('Arial')->setBold(true)->getColor()->setARGB('000000');
 
-            $sheet->mergeCells("G22:H22");
-            $sheet->getStyle('G22:H22')->getAlignment()->setHorizontal('left');
-            $sheet->getStyle('G22:H22')->getAlignment()->setVertical('left');
-            $sheet->setCellValue('G22', ($precio_casa + $extras_total));
-            $sheet->getStyle("G14:H22")->getFont()->setSize(13)->setBold( true );
-            $sheet->getStyle('G22')->getNumberFormat()->setFormatCode(PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_CURRENCY_USD_SIMPLE);
-            $sheet->getStyle('G22:H22')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('#D9D9D9');
+            //$sheet->mergeCells("G22:H22");
+            //$sheet->getStyle('G22:H22')->getAlignment()->setHorizontal('left');
+            //$sheet->getStyle('G22:H22')->getAlignment()->setVertical('left');
+            //$sheet->setCellValue('G22', ($precio_casa + $extras_total));
+            //$sheet->getStyle("G14:H22")->getFont()->setSize(13)->setBold( true );
+            //$sheet->getStyle('G22')->getNumberFormat()->setFormatCode(PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_CURRENCY_USD_SIMPLE);
+            //$sheet->getStyle('G22:H22')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('#D9D9D9');
 
 
             $sheet->mergeCells("G23:H23");
