@@ -234,12 +234,12 @@ class Dashboard_model extends CI_Model {
             FORMAT(ISNULL(b.sumaCT, 0) - ISNULL(e.sumaCanC, 0), 'C') sumaCanA, 
             ISNULL(b.totalCT, 0) - ISNULL(e.totalCanC, 0) totalCanA,
             ----PORCENTAJES
-            ISNULL(CAST((a.totalVentas * 100) / a.totalVentas AS decimal(16,2)), 0) porcentajeTotal,
-            ISNULL(CAST((b.totalCT * 100) / a.totalVentas AS decimal(16,2)), 0) porcentajeTotalC,
-            ISNULL(CAST((c.totalConT * 100) / a.totalVentas AS decimal(16,2)), 0) porcentajeTotalCont,
-            ISNULL(CAST((d.totalAT * 100) / a.totalVentas AS decimal(16,2)), 0) porcentajeTotalAp,
-            ISNULL(CAST((e.totalCanC * 100) / a.totalVentas AS decimal(16,2)), 0) porcentajeTotalCanC,
-            ISNULL(CAST(((ISNULL(b.totalCT, 0) - ISNULL(e.totalCanC, 0)) * 100) / a.totalVentas AS decimal(16,2)), 0) porcentajeTotalCanA
+            ISNULL(CAST((a.totalVentas * 100) / NULLIF(a.totalVentas,0) AS decimal(16,2)), 0) porcentajeTotal, 
+            ISNULL(CAST((b.totalCT * 100) / NULLIF(a.totalVentas,0) AS decimal(16,2)), 0) porcentajeTotalC, 
+            ISNULL(CAST((c.totalConT * 100) / NULLIF(a.totalVentas,0) AS decimal(16,2)), 0) porcentajeTotalCont, 
+            ISNULL(CAST((d.totalAT * 100) / NULLIF(a.totalVentas,0) AS decimal(16,2)), 0) porcentajeTotalAp, 
+            ISNULL(CAST((e.totalCanC * 100) / NULLIF(a.totalVentas,0) AS decimal(16,2)), 0) porcentajeTotalCanC, 
+            ISNULL(CAST(((ISNULL(b.totalCT, 0) - ISNULL(e.totalCanC, 0)) * 100) / NULLIF(a.totalVentas,0) AS decimal(16,2)), 0) porcentajeTotalCanA 
             FROM (
             --SUMA TOTAL
             SELECT SUM(
