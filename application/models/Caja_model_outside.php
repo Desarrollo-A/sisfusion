@@ -1450,4 +1450,13 @@
         $where  ORDER BY tk.fecha_creacion");
     }
 
+    public function getEmpresasLargoList()
+    {
+        return $this->db->query("SELECT id_opcion, id_catalogo, nombre FROM opcs_x_cats WHERE id_catalogo = 72 AND estatus = 1")->result_array();
+    }
+
+    public function getBancosLargoList(){
+        return $this->db->query("SELECT id_opcion, id_catalogo, nombre FROM opcs_x_cats WHERE id_catalogo = 73 AND estatis = 1")->result_array();
+    }
+
 }

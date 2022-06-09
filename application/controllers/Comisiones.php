@@ -4012,13 +4012,12 @@ public function descuentos_historial()
   
   public function saveDescuento($valor)
   {
-    $saldo_comisiones = 0; $this->input->post('saldo_comisiones');
+    $saldo_comisiones = $this->input->post('saldo_comisiones');
 
   
     $LotesInvolucrados = "";
 
 if(floatval($valor) == 1){
-  echo "ENTRA 1";
   $datos =  $this->input->post("idloteorigen[]");
   $descuento = $this->input->post("monto");
   $usuario = $this->input->post("usuarioid");
@@ -4026,7 +4025,6 @@ if(floatval($valor) == 1){
   $pagos_apli = 0;
   
 }else if(floatval($valor) == 2){
-  echo "ENTRA 2";
 
   $datos =  $this->input->post("idloteorigen2[]");
   $descuento = $this->input->post("monto2");
@@ -4036,7 +4034,6 @@ if(floatval($valor) == 1){
  
 }
 else if(floatval($valor) == 3){
-  echo "ENTRA 3";
 
   /**DESCUENTOS UNIVERSIDAD*/
   $datos =  $this->input->post("idloteorigen[]");
@@ -6605,11 +6602,7 @@ for ($d=0; $d <count($dos) ; $d++) {
 
   }
 
-  public function BorrarPrestamo(){
-    $respuesta =  $this->Comisiones_model->BorrarPrestamo($this->input->post("id_prestamo"));
-  echo json_encode($respuesta);
-
-  }
+  
 
   public function InsertPago()
   {
@@ -6743,6 +6736,16 @@ for ($d=0; $d <count($dos) ; $d++) {
             'general' => $general,
             'detalle' => $detalle
         ));
+    }
+    public function BorrarPrestamo(){
+      $id_prestamo = $this->input->post('idPrestamo');
+      $detalle = $this->Comisiones_model->getDetailPrestamo($id_prestamo);
+      if(count($detalle) != 0){
+        $respuesta = 0;
+      }else{
+          $respuesta =  $this->Comisiones_model->BorrarPrestamo($id_prestamo);
+      }
+      echo json_encode($respuesta);
     }
 
     public function viewHistorialPrestamos()

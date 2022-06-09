@@ -235,7 +235,7 @@
                         <div class="card">
                             <div class="card-header card-header-icon" data-background-color="goldMaderas">
                                 <i class="fas fa-chart-pie fa-2x"></i>
-							</div>
+                            </div>
                             <div class="card-content">
                                 <div class="encabezadoBox">
                                     <h3 class="card-title center-align" >Dispersión de pago</h3>
@@ -613,14 +613,14 @@
                     
                     if(data.totalNeto2==null || data.totalNeto2==''|| data.totalNeto2==0) {
                         BtnStats = 'Asignar Precio';
-                    }else if((data.id_prospecto==null || data.id_prospecto==''|| data.id_prospecto==0)&&data.lugar_prospeccion == 6) {
+                    }else if((data.id_prospecto==null || data.id_prospecto==''|| data.id_prospecto==0) && data.lugar_prospeccion == 6) {
                         BtnStats = 'Asignar Prospecto';
                     }else if(data.id_subdirector==null || data.id_subdirector==''|| data.id_subdirector==0) {
                         BtnStats = 'Asignar Subdirector';
                     }else if(data.id_sede==null || data.id_sede==''|| data.id_sede==0) {
                         BtnStats = 'Asignar Sede';
                     }else if(data.plan_comision==null || data.plan_comision==''|| data.plan_comision==0) {
-                        BtnStats = 'Asignar Plan';
+                        BtnStats = 'Asignar Plan <br> Sede:'+data.sede;
                     } else{
                         if(data.compartida==null) {
                             varColor  = 'btn-sky';
@@ -633,7 +633,7 @@
                         }
                         
                         BtnStats = '<button href="#" value="'+data.idLote+'" data-value="'+data.registro_comision+'" data-totalNeto2 = "'+data.totalNeto2+'" data-estatus="'+data.idStatusContratacion+'" data-cliente="'+data.id_cliente+'" data-plan="'+data.plan_comision+'"  data-tipov="'+data.tipo_venta+'"data-descplan="'+data.plan_descripcion+'" data-code="'+data.cbbtton+'" ' +'class="btn-data '+varColor+' verify_neodata" title="Verificar en NEODATA">'+'<span class="material-icons">verified_user</span></button> '+RegresaActiva+'';
-                        
+                       
                         let estatusLote = data.registro_comision == 0 ? 1 : 0;
                         if(data.registro_comision == 0 || data.registro_comision == 1){
                             BtnStats += `
@@ -645,7 +645,10 @@
                                     title="Detener">
                                     <i class="material-icons">block</i>
                                 </button>`;
+                        }else{
+                            BtnStats += `-`;
                         }
+                        
                     }
                     return '<div class="d-flex justify-center">'+BtnStats+'</div>';
                 }
@@ -688,8 +691,6 @@
                 $(this).parent().find('.animacion').removeClass("fas fa-chevron-down").addClass("fas fa-chevron-up");
             }
         });
-
-
         $("#tabla_ingresar_9 tbody").on('click', '.btn-detener', function () {
                 const idLote = $(this).val();
                 const nombreLote = $(this).attr("data-value");
@@ -703,7 +704,6 @@
 
                 $("#detenciones-modal").modal();
             });
- 
         $("#tabla_ingresar_9 tbody").on("click", ".verify_neodata", async function(){ 
  
             $("#modal_NEODATA .modal-header").html("");
@@ -1047,7 +1047,6 @@
         /**----------------------------------------------------------------------- */
     
     });
-
     $('#detenidos-form').on('submit', function (e) {
             e.preventDefault();
 
@@ -1062,7 +1061,6 @@
                     if (data) {
                         $('#detenciones-modal').modal("hide");
                         $("#id-lote-detenido").val("");
-                        $("#statusLote").val("");
                         alerts.showNotification("top", "right", "El registro se ha actualizado exitosamente.", "success");
                         tabla_1.ajax.reload();
                     } else {
@@ -1350,7 +1348,7 @@
   return number.toString().replace(exp,rep);
 }
 
-    function convertirPorcentajes(value) {
+function convertirPorcentajes(value) {
         const fixed = Number(value).toFixed(3);
         const partes = fixed.split(".");
         const numeroEntero = partes[0];
@@ -1370,5 +1368,6 @@
         }
         return str;
     }
+
     </script>
 </body>

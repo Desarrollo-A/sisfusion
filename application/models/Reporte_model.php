@@ -7,6 +7,98 @@ class Reporte_model extends CI_Model {
         parent::__construct();
     }
 
+    public function getDataChart($general, $tipoChart, $rol, $condicion_x_rol, $coordinador, $coordinadorVC, $coordinadorVA, $coordinadorCC, $coordinadorCA, $beginDate, $endDate){
+        $ventasContratadas = ''; $ventasApartadas = ''; $canceladasContratadas = ''; $canceladasApartadas = '';
+        
+        $defaultColumns = "WITH cte AS(
+            SELECT MONTH( '$beginDate' ) DateValue  
+            UNION ALL
+            SELECT  DateValue + 1
+            FROM    cte   
+            WHERE   DateValue + 1 < MONTH( '$endDate')
+        )"; 
+        
+        $ventasContratadas = "SELECT qu.total, cantidad, DateValue, 'vc' tipo, '$rol' rol FROM cte
+        LEFT JOIN (SELECT  FORMAT(ISNULL(SUM(CASE WHEN totalNeto2 IS NULL THEN total WHEN totalNeto2 = 0 THEN total ELSE totalNeto2 END), 0), 'C') total,
+        COUNT(*) cantidad, MONTH(cl.fechaApartado) mes
+        FROM clientes cl
+        INNER JOIN lotes lo ON lo.idLote = cl.idLote AND lo.idStatusLote = 2
+        INNER JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes WHERE idStatusContratacion = 15 AND idMovimiento = 45
+        GROUP BY idLote, idCliente) hl ON hl.idLote = lo.idLote AND hl.idCliente = cl.id_cliente
+        WHERE ISNULL(noRecibo, '') != 'CANCELADO' AND cl.status = 1 AND cl.fechaApartado BETWEEN '$beginDate' AND '$endDate'
+        $condicion_x_rol
+        GROUP BY MONTH(cl.fechaApartado)) qu ON qu.mes = cte.DateValue";
+
+        $ventasApartadas = "SELECT qu.total, cantidad, DateValue,'va' tipo, '$rol' rol FROM cte
+        LEFT JOIN (SELECT FORMAT(ISNULL(SUM(CASE WHEN totalNeto2 IS NULL THEN total  WHEN totalNeto2 = 0 THEN total  ELSE totalNeto2  END), 0), 'C') total, 
+        COUNT(*) cantidad, MONTH(cl.fechaApartado) mes
+        FROM clientes cl
+        INNER JOIN lotes lo ON lo.idLote = cl.idLote AND lo.idStatusLote != 2
+        WHERE isNULL(noRecibo, '') != 'CANCELADO' AND cl.status = 1 AND cl.fechaApartado BETWEEN '$beginDate' AND '$endDate'
+        $condicion_x_rol
+        GROUP BY MONTH(cl.fechaApartado)) qu ON qu.mes = cte.DateValue";
+
+        $canceladasContratadas = "SELECT qu.total, cantidad, DateValue, 'cc' tipo, '$rol' rol FROM cte
+        LEFT JOIN (SELECT FORMAT(ISNULL(SUM(CASE WHEN totalNeto2 IS NULL THEN total WHEN totalNeto2 = 0 THEN total ELSE totalNeto2 END), 0), 'C') total, 
+        COUNT(*) cantidad, MONTH(cl.fechaApartado) mes
+        FROM clientes cl
+        INNER JOIN lotes lo ON lo.idLote = cl.idLote
+        LEFT JOIN historial_liberacion hl ON hl.idLote = lo.idLote AND hl.tipo NOT IN (2, 5, 6) AND hl.id_cliente = cl.id_cliente
+        INNER JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes WHERE idStatusContratacion = 15 AND idMovimiento = 45
+        GROUP BY idLote, idCliente) hlo ON hlo.idLote = lo.idLote AND hlo.idCliente = cl.id_cliente
+        WHERE isNULL(noRecibo, '') != 'CANCELADO' AND cl.status = 0  AND cl.fechaApartado BETWEEN '$beginDate' AND '$endDate' 
+        $condicion_x_rol
+        GROUP BY MONTH(cl.fechaApartado)) qu ON qu.mes = cte.DateValue";
+
+        $canceladasApartadas = "SELECT qu.total, cantidad, DateValue, 'ca' tipo, '$rol' rol FROM cte
+        LEFT JOIN (SELECT FORMAT(ISNULL(SUM(CASE WHEN totalNeto2 IS NULL THEN total WHEN totalNeto2 = 0 THEN total ELSE totalNeto2 END), 0), 'C') total, 
+        COUNT(*) cantidad, MONTH(cl.fechaApartado) mes
+        FROM clientes cl
+        INNER JOIN lotes lo ON lo.idLote = cl.idLote
+        LEFT JOIN historial_liberacion hl ON hl.idLote = lo.idLote AND hl.tipo NOT IN (2, 5, 6) AND hl.id_cliente = cl.id_cliente
+        INNER JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes WHERE idStatusContratacion = 15 AND idMovimiento = 45
+        GROUP BY idLote, idCliente) hlo ON hlo.idLote = lo.idLote AND hlo.idCliente = cl.id_cliente
+        WHERE isNULL(noRecibo, '') != 'CANCELADO' AND cl.status = 0  AND cl.fechaApartado BETWEEN '$beginDate' AND '$endDate' 
+        $condicion_x_rol
+        GROUP BY MONTH(cl.fechaApartado)) qu ON qu.mes = cte.DateValue";
+
+        if($coordinador){
+            $ventasContratadas = $ventasContratadas . " UNION ALL " . $coordinadorVC;
+            $ventasApartadas = $ventasApartadas . " UNION ALL " . $coordinadorVA;
+            $canceladasContratadas = $canceladasContratadas . " UNION ALL " . $coordinadorCC;
+            $canceladasApartadas = $canceladasApartadas . " UNION ALL " . $coordinadorCA;
+        }
+
+        if($general){
+            $data = $this->db->query("$defaultColumns
+            $ventasContratadas
+            UNION ALL
+            $ventasApartadas
+            UNION ALL
+            $canceladasContratadas
+            UNION ALL
+            $canceladasApartadas");
+        }
+        else if ($tipoChart == 'vc'){
+            $data = $this->db->query("$defaultColumns
+            $ventasContratadas");
+        }
+        else if ($tipoChart == 'va'){
+            $data = $this->db->query("$defaultColumns
+            $ventasApartadas");
+        }
+        else if ($tipoChart == 'cc'){
+            $data = $this->db->query("$defaultColumns
+            $canceladasContratadas");
+        }
+        else if ($tipoChart == 'ca'){
+            $data = $this->db->query("$defaultColumns
+            $canceladasContratadas");
+        }
+
+        return $data->result_array();    
+    }
+
     public function getInformationByManager($typeTransaction, $beginDate, $endDate, $currentYear, $plaza, $saleType) {
         if ($saleType == 1) $prospectingPlace = " AND cl.lugar_prospeccion != 6";
         else if ($saleType ==2) $prospectingPlace = " AND cl.lugar_prospeccion = 6";
@@ -88,74 +180,8 @@ class Reporte_model extends CI_Model {
 		GROUP BY a.nombre, a.id_usuario, c.contratado, c.totalContratados, b.cancelado, b.totalCancelados, a.apartado, a.totalApartados, d.finalTotal, d.finalTotalLotes");
     }
 
-    public function ventasCanceladas($id){
-        $query = $this->db->query("SELECT SUM(ISNULL(l.totalNeto2, l.total)) abril, SUM(l.totalNeto) mayo, SUM(l.totalValidado) junio, SUM(l.total) julio, '#26E7A6' hexa
-        FROM lotes l 
-        INNER JOIN clientes cl ON cl.idLote = l.idLote AND YEAR(cl.fechaApartado) = 2021 
-        INNER JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes WHERE idStatusContratacion = 15 AND idMovimiento = 45
-        GROUP BY idLote, idCliente) hl2 ON hl2.idLote = l.idLote AND hl2.idCliente = cl.id_cliente
-        INNER JOIN historial_liberacion hl ON hl.idLote = hl2.idLote AND hl.status = 1  AND hl.tipo NOT IN (2,5,6)
-        INNER JOIN usuarios u ON u.id_usuario = cl.id_asesor 
-        INNER JOIN sedes s ON s.id_sede = l.ubicacion
-        WHERE l.status = 1 AND  hl.fechaLiberacion between  DATEADD(MM, -6, GETDATE()) AND GETDATE()
-        UNION ALL
-        SELECT SUM(l.totalNeto) abril, SUM(ISNULL(l.totalNeto2, l.total))  mayo, SUM(l.totalValidado) junio, SUM(l.total) julio, '#3CA9FC' hexa
-        FROM lotes l 
-        INNER JOIN clientes cl ON cl.idLote = l.idLote AND YEAR(cl.fechaApartado) = 2021 
-        INNER JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes WHERE idStatusContratacion = 15 AND idMovimiento = 45
-        GROUP BY idLote, idCliente) hl2 ON hl2.idLote = l.idLote AND hl2.idCliente = cl.id_cliente
-        INNER JOIN historial_liberacion hl ON hl.idLote = hl2.idLote AND hl.status = 1  AND hl.tipo NOT IN (2,5,6)
-        INNER JOIN usuarios u ON u.id_usuario = cl.id_asesor 
-        INNER JOIN sedes s ON s.id_sede = l.ubicacion
-        WHERE l.status = 1 AND  hl.fechaLiberacion between  DATEADD(MM, -6, GETDATE()) AND GETDATE()
-        UNION ALL
-        SELECT SUM(l.totalValidado) abril, SUM(l.total) julio, SUM(ISNULL(l.totalNeto2, l.total))  mayo, '0' junio, '#FF7444' hexa
-        FROM lotes l 
-        INNER JOIN clientes cl ON cl.idLote = l.idLote AND YEAR(cl.fechaApartado) = 2021 
-        INNER JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes WHERE idStatusContratacion = 15 AND idMovimiento = 45
-        GROUP BY idLote, idCliente) hl2 ON hl2.idLote = l.idLote AND hl2.idCliente = cl.id_cliente
-        INNER JOIN historial_liberacion hl ON hl.idLote = hl2.idLote AND hl.status = 1  AND hl.tipo NOT IN (2,5,6)
-        INNER JOIN usuarios u ON u.id_usuario = cl.id_asesor 
-        INNER JOIN sedes s ON s.id_sede = l.ubicacion
-        WHERE l.status = 1 AND  hl.fechaLiberacion between  DATEADD(MM, -6, GETDATE()) AND GETDATE()
-        UNION ALL
-        SELECT '0' abril, NULL mayo, NULL junio, '3989133200' julio, '#26E7A6' hexa");
-        return $query->result_array();
-    }
-
-    public function getVentasContratadas($id){
-        $query = $this->db->query("SELECT SUM(ISNULL(l.totalNeto2, l.total)) abril, SUM(l.totalNeto) mayo, SUM(l.totalValidado) junio, SUM(l.total) julio, '#85DF7F' hexa
-        FROM lotes l 
-        INNER JOIN clientes cl ON cl.idLote = l.idLote AND YEAR(cl.fechaApartado) = 2021 
-        INNER JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes WHERE idStatusContratacion = 15 AND idMovimiento = 45
-        GROUP BY idLote, idCliente) hl2 ON hl2.idLote = l.idLote AND hl2.idCliente = cl.id_cliente
-        INNER JOIN historial_liberacion hl ON hl.idLote = hl2.idLote AND hl.status = 1  AND hl.tipo NOT IN (2,5,6)
-        INNER JOIN usuarios u ON u.id_usuario = cl.id_asesor 
-        INNER JOIN sedes s ON s.id_sede = l.ubicacion
-        WHERE l.status = 1 AND  hl.fechaLiberacion between  DATEADD(MM, -6, GETDATE()) AND GETDATE()");
-        return $query->result_array();
-    }
-
-    public function getVentasApartadas($id){
-        $query = $this->db->query("SELECT SUM(l.totalValidado) abril, SUM(l.total) julio, SUM(ISNULL(l.totalNeto2, l.total))  mayo, '0' junio, '#B33C5B' hexa
-        FROM lotes l 
-        INNER JOIN clientes cl ON cl.idLote = l.idLote AND YEAR(cl.fechaApartado) = 2021 
-        INNER JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes WHERE idStatusContratacion = 15 AND idMovimiento = 45
-        GROUP BY idLote, idCliente) hl2 ON hl2.idLote = l.idLote AND hl2.idCliente = cl.id_cliente
-        INNER JOIN historial_liberacion hl ON hl.idLote = hl2.idLote AND hl.status = 1  AND hl.tipo NOT IN (2,5,6)
-        INNER JOIN usuarios u ON u.id_usuario = cl.id_asesor 
-        INNER JOIN sedes s ON s.id_sede = l.ubicacion
-        WHERE l.status = 1 AND  hl.fechaLiberacion between  DATEADD(MM, -6, GETDATE()) AND GETDATE()");
-        return $query->result_array();
-    }
-
-    public function getCancelasContratadas($id){
-        $query = $this->db->query("");
-        return $query->result_array();
-    }
-
-    public function getCanceladasApartadas($id){
-        $query = $this->db->query("");
-        return $query->result_array();
+    public function validateRegional($id){
+        $data = $this->db->query("SELECT * FROM roles_x_usuario WHERE idUsuario = $id and idRol IN (59,60)");
+        return $data->result_array();    
     }
 }

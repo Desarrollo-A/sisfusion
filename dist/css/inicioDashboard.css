@@ -435,6 +435,38 @@
 }
 
 /* END Estilos generales encabezado, datetime picker, calendar, input filtros, selects */
+.txt-lapisLazuli {
+  color: #22639B !important;
+}
+
+.txt-blueNCS {
+  color: #0089B7 !important;
+}
+
+.txt-viridianGreen {
+  color: #039590 !important;
+}
+
+.txt-tiffanyBlue {
+  color: #00ACB8 !important;
+}
+
+.txt-oceanGreen {
+  color: #4BBC8E !important;
+}
+
+.txt-caribbeanGreen {
+  color: #00CDA3 !important;
+}
+
+.txt-lightGreen {
+  color: #92E784 !important;
+}
+
+.txt-sunny {
+  color: #F9F871 !important;
+}
+
 .btn-a {
   border-radius: 25px !important;
   height: 37px !important;
@@ -1060,7 +1092,39 @@
 }
 
 #inicio .card {
-  box-shadow: 0px 2px 9px -12px RGB(0 0 0/42%), 0 4px 25px 0px RGB(0 0 0/12%), 0 8px 10px -5px RGB(0 0 0/20%);
+  box-shadow: none !important;
+}
+
+#inicio .first-row {
+  height: 450px;
+}
+
+#inicio .first-row .cardProspectosVig p {
+  font-size: 12px;
+  color: #191B1C;
+}
+
+#inicio .first-row .cardProspectosVig p span {
+  color: #2C93E7;
+  font-weight: 700;
+}
+
+#inicio .first-row .cardProspectosVig .boxIcoProsp {
+  background-color: #0089b73d;
+  width: 25px;
+  height: 25px;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 7px;
+  color: #191B1C;
+}
+
+#inicio .first-row .cardProspectosVig .numberGraphic {
+  color: #191B1C;
+  font-weight: 600;
+  font-size: 18px;
 }
 
 #inicio .back {
@@ -1137,18 +1201,18 @@
   }
 }
 
-#beginDate {
-  background-color: #eaeaea;
-  border-radius: 27px 0 0 27px;
-  background-image: initial;
-  text-align: right;
+.beginDates {
+  background-color: #eaeaea !important;
+  border-radius: 27px 0 0 27px !important;
+  background-image: initial !important;
+  text-align: right !important;
 }
 
-#endDate {
-  background-color: #eaeaea;
-  border-radius: 0;
-  background-image: initial;
-  text-align: center;
+.endDates {
+  background-color: #eaeaea !important;
+  border-radius: 0 !important;
+  background-image: initial !important;
+  text-align: center !important;
 }
 
 .btn-fab-mini {
@@ -1163,6 +1227,5 @@
 }
 
 .dot {
-  color: aquamarine;
   font-size: 1.2rem;
 }

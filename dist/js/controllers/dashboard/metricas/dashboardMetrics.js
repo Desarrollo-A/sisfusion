@@ -1,3 +1,3 @@
 $(document).ready(function(){
-    console.log("JS Ranking");
+    console.log("JS Metrics");
 });

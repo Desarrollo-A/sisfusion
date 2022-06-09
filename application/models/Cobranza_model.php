@@ -42,11 +42,12 @@ class Cobranza_model extends CI_Model {
         FROM lotes l
         INNER JOIN condominios cn ON cn.idCondominio = l.idCondominio
         INNER JOIN residenciales r ON r.idResidencial = cn.idResidencial
-        INNER JOIN clientes cl ON cl.id_cliente = l.idCliente AND cl.status = 1 AND (cl.lugar_prospeccion IN(6, 29) OR cl.descuento_mdb = 1) $filter
+        LEFT JOIN evidencia_cliente ec ON ec.idLote = l.idLote AND ec.idCliente = l.idCliente
+        INNER JOIN clientes cl ON cl.id_cliente = l.idCliente AND cl.status = 1 AND (cl.lugar_prospeccion IN(6, 29) OR cl.descuento_mdb = 1 OR (ec.estatus = 3 and cl.lugar_prospeccion not IN(6,29)) ) $filter
         INNER JOIN prospectos pr ON pr.id_prospecto = cl.id_prospecto AND pr.fecha_creacion <= '2022-01-20 00:00:00.000'
         INNER JOIN usuarios u ON u.id_usuario = cl.id_asesor AND u.id_sede IN ($result) 
-        INNER JOIN sedes s ON CAST(s.id_sede AS VARCHAR(15)) = CAST(u.id_sede AS VARCHAR(15))
-        LEFT JOIN evidencia_cliente ec ON ec.idLote = cl.idLote AND ec.idCliente = l.idCliente
+        --INNER JOIN sedes s ON CAST(s.id_sede AS VARCHAR(15)) = CAST(u.id_sede AS VARCHAR(15))
+        INNER JOIN sedes s ON s.id_sede = (CASE WHEN l.ubicacion_dos != 0 THEN l.ubicacion_dos WHEN l.ubicacion != 0 and l.ubicacion_dos = 0 THEN l.ubicacion WHEN u.id_sede != 0 and l.ubicacion_dos = 0 and l.ubicacion  = 0 THEN u.id_sede END)
         LEFT JOIN comisiones cm ON cm.id_lote = l.idLote AND cm.rol_generado = 38
         LEFT JOIN pago_comision pc ON pc.id_lote = l.idLote    
         LEFT JOIN (SELECT SUM(abono_neodata) abonoPagado, id_comision FROM pago_comision_ind WHERE estatus IN (11) GROUP BY id_comision) pci2 ON cm.id_comision = pci2.id_comision

@@ -459,7 +459,7 @@
                                                 data-live-search="true"  title="Selecciona el tipo de descuento" data-size="7" required onChange="checkTypeOfDesc()">
                                             <!--<option value="0">Seleccione all</option>-->
                                             <option value="1" selected>Activo</option>
-                                            <option value="2">Baja / Detenidos</option>
+                                            <option value="2">Baja</option>
                                             <option value="3">Liquidado</option>
                                             <option value="4">Conglomerado</option>
                                         </select>
@@ -1451,7 +1451,7 @@
                 success: function (data) {
                     if (data == 1) {
                         $('#loaderDiv').addClass('hidden');
-                        $('#tabla_descuentos').DataTable().ajax.reload(null, false);
+                        $('#tabla-general').DataTable().ajax.reload(null, false);
                         $('#miModal').modal('hide');
                         $('#idloteorigen option').remove();
                         $("#roles").val('');
@@ -1466,13 +1466,13 @@
 
                     } else if (data == 2) {
                         $('#loaderDiv').addClass('hidden');
-                        $('#tabla_descuentos').DataTable().ajax.reload(null, false);
+                        $('#tabla-general').DataTable().ajax.reload(null, false);
                         $('#miModal').modal('hide');
                         alerts.showNotification("top", "right", "Ocurrio un error.", "warning");
                         $(".directorSelect2").empty();
 
                     } else if (data == 3) {
-                        $('#tabla_descuentos').DataTable().ajax.reload(null, false);
+                        $('#tabla-general').DataTable().ajax.reload(null, false);
                         $('#miModal').modal('hide');
                         alerts.showNotification("top", "right", "El usuario seleccionado ya tiene un pago activo.", "warning");
                         $(".directorSelect2").empty();
@@ -1514,7 +1514,7 @@
                 success: function (data) {
                     if (data == 1) {
                         $('#loaderDiv').addClass('hidden');
-                        $('#tabla_descuentos').DataTable().ajax.reload(null, false);
+                        $('#tabla-general').DataTable().ajax.reload(null, false);
                         $('#ModalBonos').modal('hide');
                         $("#roles").val('');
                         $("#roles").selectpicker("refresh");
@@ -1530,13 +1530,13 @@
 
                     } else if (data == 2) {
                         $('#loaderDiv').addClass('hidden');
-                        $('#tabla_descuentos').DataTable().ajax.reload(null, false);
+                        $('#tabla-general').DataTable().ajax.reload(null, false);
                         $('#ModalBonos').modal('hide');
                         alerts.showNotification("top", "right", "Ocurrio un error.", "warning");
                         $(".directorSelect2").empty();
 
                     } else if (data == 3) {
-                        $('#tabla_descuentos').DataTable().ajax.reload(null, false);
+                        $('#tabla-general').DataTable().ajax.reload(null, false);
                         $('#ModalBonos').modal('hide');
                         alerts.showNotification("top", "right", "El usuario seleccionado ya tiene un pago activo.", "warning");
                         $(".directorSelect2").empty();

@@ -560,47 +560,6 @@
                             }
                         }
                     }
-                },
-                {
-                    extend: 'pdfHtml5',
-                    text: '<i class="fa fa-file-pdf" aria-hidden="true"></i>',
-                    className: 'btn buttons-pdf',
-                    titleAttr: 'Tus ventas',
-                    title:"Tus ventas",
-                    orientation: 'landscape',
-                    pageSize: 'LEGAL',
-                    exportOptions: {
-                        columns: [0,1,2,3,4,5,6,9],
-                        format: {
-                            header: function (d, columnIdx) {
-                                switch (columnIdx) {
-                                    case 0:
-                                        return 'PROYECTO';
-                                        break;
-                                    case 1:
-                                        return 'CONDOMINIO';
-                                        break;
-                                    case 2:
-                                        return 'LOTE';
-                                    case 3:
-                                        return 'CLIENTE';
-                                        break;
-                                    case 4:
-                                        return 'FECHA APARTADO';
-                                        break;
-                                    case 5:
-                                        return 'FECHA VENCIMIENTO';
-                                        break;
-                                    case 6:
-                                        return 'COMENTARIO';
-                                        break;
-                                    case 9:
-                                        return 'VALIDAR';
-                                        break;
-                                }
-                            }
-                        }
-                    }
                 }
             ],
             columnDefs: [{
@@ -662,7 +621,7 @@
                         var action='';
 
                         if (d.idMovimiento == 31 && d.idStatusContratacion == 1) {
-                            if (d.id_prospecto == 0 && d.concepto == 'APARTADO DESDE LA PAGINA DE CIUDAD MADERAS')/*APARTADO DESDE LA PAGINA DE CIUDAD MADERAS*/
+                            if (d.id_prospecto == 0)/*APARTADO DESDE LA PAGINA DE CIUDAD MADERAS*/
                             {
                                 atributo_button2 = 'disabled';
                                 url_to_go  = '#';
@@ -682,7 +641,7 @@
                             buttonst += 'En proceso de Liberación';
                             } else {
                                 if (d.idMovimiento == 31 && d.idStatusContratacion == 1) {
-                                    if (d.id_prospecto == 0 && d.concepto == 'APARTADO DESDE LA PAGINA DE CIUDAD MADERAS')/*APARTADO DESDE LA PAGINA DE CIUDAD MADERAS*/
+                                    if (d.id_prospecto == 0)/*APARTADO DESDE LA PAGINA DE CIUDAD MADERAS*/
                                     {
                                         buttonst += d.idMovimiento == 31 ?  '<a href="#" disabled  data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="btn-data btn-green disabled">  <i class="fas fa-check" title= "Enviar estatus"></i></a>':
                                             d.idMovimiento == 85 ?  '<a href="#" disabled  data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="btn-data btn-green disabled"><i class="fas fa-check" title= "Enviar estatus"></i></a>':
@@ -741,7 +700,7 @@
                             //buton tres
                             if (d.dsType == 1) {
                                 if (d.idMovimiento == 31 && d.idStatusContratacion == 1) {
-                                    if (d.id_prospecto == 0 && d.concepto == 'APARTADO DESDE LA PAGINA DE CIUDAD MADERAS')/*APARTADO DESDE LA PAGINA DE CIUDAD MADERAS*/
+                                    if (d.id_prospecto == 0)/*APARTADO DESDE LA PAGINA DE CIUDAD MADERAS*/
                                     {
                                         var nombre_cliente = '';
                                         nombre_cliente = d.nombre + ' ' + d.apellido_paterno + ' ' + d.apellido_materno;
@@ -862,15 +821,6 @@
                         className: 'btn buttons-excel',
                         titleAttr: 'Prospectos',
                         title:"Prospectos",
-                    },
-                    {
-                        extend: 'pdfHtml5',
-                        text: '<i class="fa fa-file-pdf" aria-hidden="true"></i>',
-                        className: 'btn buttons-pdf',
-                        titleAttr: 'Prospectos',
-                        title:"Prospectos",
-                        orientation: 'landscape',
-                        pageSize: 'LEGAL',
                     }
                 ],
                 columnDefs: [{
@@ -1235,12 +1185,22 @@
                         $('#save1').prop('disabled', false);
                         $('#modal1').modal('hide');
                         $('#tabla_deposito_seriedad').DataTable().ajax.reload();
-                        alerts.showNotification("top", "right", "Asegúrate de incluir los documentos; IDENTIFICACIÓN OFICIAL, COMPROBANTE DE DOMICILIO, RECIBOS DE APARTADO Y ENGANCHE y DEPÓSITO DE SERIEDAD antes de llevar a cabo el avance.", "danger");
+                        alerts.showNotification("top", "right", "Asegúrate de incluir los documentos; IDENTIFICACIÓN OFICIAL, COMPROBANTE DE DOMICILIO, RECIBOS DE APARTADO Y ENGANCHE Y DEPÓSITO DE SERIEDAD antes de llevar a cabo el avance.", "danger");
                     } else if(response.message == 'ERROR'){
                         $('#save1').prop('disabled', false);
                         $('#modal1').modal('hide');
                         $('#tabla_deposito_seriedad').DataTable().ajax.reload();
-                        alerts.showNotification("top", "right", "Error al enviar la solicitud.", "danger");
+                        alerts.showNotification("top", "right", "Error al envial la solicitud.", "danger");
+                    } else if(response.message == 'MISSING_DOCUMENTS_AUTORIZACION'){
+                        $('#save1').prop('disabled', false);
+                        $('#modal1').modal('hide');
+                        $('#tabla_deposito_seriedad').DataTable().ajax.reload();
+                        alerts.showNotification("top", "right", "En proceso de autorización. Asegúrate de incluir los documentos; IDENTIFICACIÓN OFICIAL, COMPROBANTE DE DOMICILIO y DEPÓSITO DE SERIEDAD antes de llevar a cabo el avance.", "danger");
+                    } else if(response.message == 'MISSING_AUTORIZACION'){
+                        $('#save1').prop('disabled', false);
+                        $('#modal1').modal('hide');
+                        $('#tabla_deposito_seriedad').DataTable().ajax.reload();
+                        alerts.showNotification("top", "right", "En proceso de autorización.", "danger");
                     }
                 },
                 error: function( data ){

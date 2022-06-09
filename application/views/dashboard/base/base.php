@@ -13,48 +13,28 @@
         <div class="content boxContent pt-0">
             <div class="container-fluid">
                 <ul class="nav nav-pills nav-pills-gray dashboard-nav-pills d-flex justify-center">
-                    <li class="active" id="inicioOption" onclick="changePill(this.id)">
+                    <li class="active menuTab" id="inicioOption">
                         <a href="#inicio" data-toggle="tab"><div class="iconBox"><i class="fas fa-home p-0"></i></div><p class="m-0">Inicio</p></a>
                     </li>
-                    <li id="reporteOption" onclick="changePill(this.id)">
+                    <li class="menuTab" id="reporteOption">
                         <a href="#reporte" data-toggle="tab"><div class="iconBox"><i class="fas fa-file-alt p-0"></i></div><p class="m-0">Reporte</p></a>
                     </li>
-                    <li id="agendaOption" onclick="changePill(this.id)">
+                    <li class="menuTab" id="agendaOption">
                         <a href="#agenda" data-toggle="tab"><div class="iconBox"><i class="far fa-calendar-alt p-0"></i></div><p class="m-0">Agenda</p></a>
                     </li>
-                    <li id="rankingOption" onclick="changePill(this.id)">
+                    <li class="menuTab" id="rankingOption">
                         <a href="#ranking" data-toggle="tab"><div class="iconBox"><i class="fas fa-chart-line p-0"></i></i></div><p class="m-0">Ranking</p></a>
                     </li>
-                    <li id="metricasOption" onclick="changePill(this.id)">
+                    <li class="menuTab" id="metricasOption">
                         <a href="#metricas" data-toggle="tab"><div class="iconBox"><i class="far fa-chart-bar p-0"></i></div><p class="m-0">Métricas</p></a>
                     </li>
                 </ul>
                 <div class="tab-content">
-                    <div class="tab-pane active" id="inicio">
-                        <div class="row">
-                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                            </div>
-                        </div>
-                    </div>
+                    <div class="tab-pane active" id="inicio"></div>
                     <div class="tab-pane" id="reporte"></div>
-                    <div class="tab-pane" id="agenda">
-                        <div class="row">
-                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="tab-pane" id="ranking">
-                        <div class="row">
-                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="tab-pane" id="metricas">
-                        <div class="row">
-                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                            </div>
-                        </div>
-                    </div>
+                    <div class="tab-pane" id="agenda"></div>
+                    <div class="tab-pane" id="ranking"></div>
+                    <div class="tab-pane" id="metricas"></div>
                 </div>
             </div>
         </div>

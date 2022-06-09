@@ -209,52 +209,141 @@ $(document).on('click', '.update-dataTable', function () {
     }
 });
 
-function setOptionsMiniChart(nameChart, dataChart, color, months){
-    console.log(color);
+function setOptionsMiniChart(name, data, categories){
+    // console.log("set options");
+    // console.log(name);
+    // console.log(data);
+    // console.log(categories);
+
     var optionsMiniChart = {
         series: [{
-            name: nameChart,
-            data: dataChart
+            name: name,
+            data: data
         }],
         chart: {
+            type: 'area',
             height: '100%',
-            type: 'line',
-            toolbar: {
-                show: false
-            },
+            toolbar: { show: false },
+            zoom: { enabled: false },
             sparkline: {
-                enabled: true,
+                enabled: true
             }
         },
-        dataLabels: {
-            enabled: false
-        },
+        colors: ["#2C93E7"],
+        // colors: ["#2C93E7", "#d9c07b"],
+        grid: { show: false},
+        dataLabels: { enabled: false },
+        legend: { show: false },
         stroke: {
-            width: 3,
             curve: 'smooth',
+            width: 2,
         },
         xaxis: {
-            categories: months,
+            categories: categories,
+            labels: {show: false},
+            axisBorder: {show:false},
+            axisTicks: {show:false},
         },
-        markers: {
-            size: 4,
-            colors: '#fff',
-            strokeColors: color,
+        yaxis: {
+            labels: {show: false},
+            axisBorder: {show:false},
+            axisTicks: {show:false},
         },
-        colors: [''+color+'']
-    };
+        fill: {
+            opacity: 1,
+            type: 'gradient',
+            gradient: {
+                shade: 'light',
+                type: "vertical",
+                shadeIntensity: 1,
+                gradientToColors:  ['#2C93E7'],
+                inverseColors: true,
+                opacityFrom: 0.55,
+                opacityTo: 0.2,
+                stops: [0, 70, 100],
+                colorStops: []
+            }
+        },
+        tooltip: { enabled: true}
+    }
     return optionsMiniChart;
 }
 
+function setModalChart(){
+    var optionsMiniChart = {
+        series: [{
+            name: "Music",
+            data: [1, 15, 26, 20, 33, 27]
+          },
+          {
+            name: "Photos",
+            data: [3, 33, 21, 42, 19, 32]
+          },
+          {
+            name: "Files",
+            data: [0, 39, 52, 11, 29, 43]
+          }
+        ],
+        chart: {
+            type: 'area',
+            height: '100%',
+            toolbar: { show: false },
+            zoom: { enabled: false },
+            sparkline: {
+                enabled: false
+            }
+        },
+        colors: ["#2C93E7"],
+        grid: { show: false},
+        dataLabels: { enabled: false },
+        legend: { show: false },
+        stroke: {
+            curve: 'smooth',
+            width: 2,
+        },
+        xaxis: {
+            show: true,
+            labels: {show: false},
+            axisBorder: {show:false},
+            axisTicks: {show:false},
+        },
+        yaxis: {
+            type: 'numeric',
+            show: true,
+            labels: {show: false},
+            axisBorder: {show:false},
+            axisTicks: {show:false},
+        },
+        fill: {
+            opacity: 1,
+            type: 'gradient',
+            gradient: {
+                shade: 'light',
+                type: "vertical",
+                shadeIntensity: 1,
+                gradientToColors:  ['#2C93E7'],
+                inverseColors: true,
+                opacityFrom: 0.55,
+                opacityTo: 0.2,
+                stops: [0, 70, 100],
+                colorStops: []
+            }
+        },
+        tooltip: { enabled: true}
+    }
+      
+    var chartLine = new ApexCharts(document.querySelector('#line-adwords'), optionsMiniChart);
+    chartLine.render();
+}
+  
 $(document).on('click', '.js-accordion-title', function () {
     $(this).next().slideToggle(200);
     $(this).toggleClass('open', 200);
 });
 
 function chartDetail(e){
-    console.log(e);
     $("#modalChart").modal();
-    // getSpecificChart(e.value);
+    setModalChart();
 }
 
 function formatMoney(n) {
@@ -291,32 +380,23 @@ function getSpecificChart(type){
 function getLastSales(){
     $.ajax({
         type: "POST",
-        url: "Reporte/ventasCanceladas",
+        url: "Reporte/getDataChart",
+        data: {general: true, tipoChart:'na'},
         dataType: 'json',
         cache: false,
         beforeSend: function() {
           $('#spiner-loader').removeClass('hide');
         },
         success: function(data){
-          $('#spiner-loader').addClass('hide');
-            for (const [key, value] of Object.entries(data)) {
-                var color = ''; var nameChart = key; var total = 0;
-                var dataChart = [];
-                var objVentasCanceladas = Object.values(value);
-                var months = (Object.keys(value)).slice(0, -1);
+            $('#spiner-loader').addClass('hide');
+            console.log(data);
+            let orderedArray = orderedDataChart(data);
+            for ( i=0; i<orderedArray.length; i++ ){
+                let { name, categories, data } = orderedArray[i];
+
+                $("#tot"+name).text("$ "+formatMoney(total));
                 
-                for ( i = 0; i < objVentasCanceladas.length ; i++ ){
-                    if( (objVentasCanceladas.length - 1) == i)
-                        color = objVentasCanceladas[i];
-                    else{
-                        amount = objVentasCanceladas[i];
-                        dataChart.push(amount);
-                        if (amount == null || amount == .0) amount = 0;
-                        total = total + parseInt(amount);
-                    }
-                }
-                $("#tot"+key).text("$ "+formatMoney(total));
-                var miniChart = new ApexCharts(document.querySelector("#"+key+""), setOptionsMiniChart(nameChart, dataChart, color, months));
+                var miniChart = new ApexCharts(document.querySelector("#"+name+""), setOptionsMiniChart(name, data, categories));
                 
                 miniChart.render();
             }
@@ -328,3 +408,46 @@ function getLastSales(){
     });
 }
 
+function orderedDataChart(data){
+    let allData = [], totalMes = [], meses = [];
+    let contMes = 0;
+    for( i=0; i<data.length; i++){
+
+        // totalFinal = (data[i].total == null) ? parseFloat(totalFinal) + 0 : parseFloat(totalFinal) + parseFloat(data[i].total.replace(/[^0-9.-]+/g,""));
+        totalMes.push( (data[i].total != null) ? data[i].total.replace(/[^0-9.-]+/g,"") : 0 );
+        meses.push(monthName(data[i].DateValue));
+
+        if( contMes == 3 ){
+            console.log(data[i].rol);
+            if(data[i].rol != '9' || data[i].rol != '7'){
+                allData.push({
+                    name : `${ (data[i].tipo == 'vc') ? 'ventasContratadas' : (data[i].tipo == 'va') ? 'ventasApartadas' : (data[i].tipo == 'cc') ? 'canceladasContratadas' : 'canceladasApartadas' }`,
+                    data : totalMes,
+                    categories : meses,
+                    name_adicional : 'na'
+                });
+            }
+            else{
+                allData.push({
+                    name : `${ (data[i].tipo == 'vc') ? 'ventasContratadas' : (data[i].tipo == 'va') ? 'ventasApartadas' : (data[i].tipo == 'cc') ? 'canceladasContratadas' : 'canceladasApartadas' }`,
+                    data : totalMes,
+                    categories : meses,
+                    name_adicional : `${ (data[i].rol == '9') ? 'Coordinador' : (data[i].rol == '7') ? 'Asesor ': 'na' }`
+                });
+            }
+        }
+
+        if( contMes == 3 ){
+            contMes = 0;
+            totalMes = [], meses = [];
+        }
+        else contMes++;
+    }
+    console.log(allData);
+    return allData;
+}
+
+function monthName(mon){
+    var monthName = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'][mon - 1];
+    return monthName;
+}

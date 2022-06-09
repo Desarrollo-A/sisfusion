@@ -435,6 +435,38 @@
 }
 
 /* END Estilos generales encabezado, datetime picker, calendar, input filtros, selects */
+.txt-lapisLazuli {
+  color: #22639B !important;
+}
+
+.txt-blueNCS {
+  color: #0089B7 !important;
+}
+
+.txt-viridianGreen {
+  color: #039590 !important;
+}
+
+.txt-tiffanyBlue {
+  color: #00ACB8 !important;
+}
+
+.txt-oceanGreen {
+  color: #4BBC8E !important;
+}
+
+.txt-caribbeanGreen {
+  color: #00CDA3 !important;
+}
+
+.txt-lightGreen {
+  color: #92E784 !important;
+}
+
+.txt-sunny {
+  color: #F9F871 !important;
+}
+
 .btn-a {
   border-radius: 25px !important;
   height: 37px !important;
@@ -1059,8 +1091,12 @@
   background-color: #F1F1F1;
 }
 
+#reporte .cardMiniChart {
+  background-color: #143860;
+  box-shadow: none !important;
+}
+
 #reporte .card {
-  box-shadow: 0px 2px 9px -12px RGB(0 0 0/42%), 0 4px 25px 0px RGB(0 0 0/12%), 0 8px 10px -5px RGB(0 0 0/20%);
   border-radius: 10px;
 }
 
@@ -1075,8 +1111,15 @@
     width: 98%;
   }
 }
+
 #reporte .info {
   line-height: 1;
+  color: #ffffff;
+}
+
+#reporte .info .str {
+  color: #2C93E7;
+  font-weight: 600;
 }
 
 @media (min-device-width: 320px) and (max-device-width: 480px), (min-width: 480px) and (max-width: 991px) {
@@ -1092,8 +1135,9 @@
 }
 
 #reporte .money {
-  font-size: 24px;
-  font-weight: 600;
+  font-size: 22px;
+  font-weight: 400;
+  color: #ffffff;
 }
 
 @media (min-device-width: 320px) and (max-device-width: 480px), (min-width: 480px) and (max-width: 991px) {
@@ -1106,7 +1150,7 @@
   position: absolute;
   right: 15px;
   bottom: 15px;
-  background-color: #103f75;
+  background-color: #2C93E7;
   color: #ffffff;
   border-radius: 20px;
   width: 23px;
@@ -1121,28 +1165,32 @@
 }
 
 #reporte .moreMiniChart:hover {
-  background-color: #b5c2d0;
+  background-color: #103f75;
 }
 
 #reporte .selectMini {
   display: flex;
   align-items: center;
-  background-color: #bdac7b;
-  color: #ffffff;
+  background-color: transparent;
+  color: #7083A9;
+  font-weight: 400;
   border-radius: 20px;
   font-size: 9px;
   padding: 4px 7px;
+  border: 1px solid #7083A9;
 }
 
 #reporte .selectMini span {
   font-size: 12px;
   margin-left: 5px;
 }
+
 @media (min-device-width: 320px) and (max-device-width: 480px) {
   #reporte .selectMini {
     font-size: 12px !important;
   }
 }
+
 #reporte .boxMiniCharts {
   height: 110px !important;
 }
@@ -1163,6 +1211,7 @@
     margin-top: 25px !important;
   }
 }
+
 #reporte .boxAccordions .bk .accordion-title {
   display: relative;
   text-transform: capitalize;
@@ -1202,15 +1251,16 @@
 }
 
 #reporte .boxAccordions .bk table thead tr {
-  background-color: #ffffff;
+  background-color: #143860;
 }
 
 #reporte .boxAccordions .bk table thead tr th input {
   border: 1px solid transparent;
   border-radius: 5px;
-  color: #4e4e4e;
+  color: #ffffff;
   text-align: center;
   font-weight: 500;
+  background-color: #143860;
 }
 
 #reporte .boxAccordions .bk table thead tr th input:active {
@@ -1219,6 +1269,10 @@
 
 #reporte .boxAccordions .bk table thead tr th input:focus {
   border: 1px solid #333333;
+}
+
+#reporte .boxAccordions .bk table thead tr th input::placeholder {
+  color: #ffffff;
 }
 
 #reporte .boxAccordions .bk table .update-dataTable {

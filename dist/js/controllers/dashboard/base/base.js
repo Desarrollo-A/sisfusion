@@ -1,4 +1,18 @@
 let base_url = "<?=base_url()?>";
+//jquery
+$(document).ready(function(){
+    changePill('inicioOption');
+});
+
+$(document).on('click', '.menuTab', function(e){
+    e.preventDefault();
+    console.log(this.id);
+    console.log(e.id);
+
+    changePill(this.id);
+})
+
+//functions
 function changePill(element){
     if(element == 'inicioOption'){
         $('.box1Inicio1').addClass('fadeInAnimation');
@@ -6,26 +20,23 @@ function changePill(element){
         $('.box1Inicio3').addClass('fadeInAnimationDelay3');
         $('.box1Inicio4').addClass('fadeInAnimationDelay3');
         $('.boxNavPills').addClass('fadeInAnimationDelay4');
-        $('#inicio .col-lg-12').html("");
-        $('#inicio .col-lg-12').load("Inicio/index");
+        $('#inicio').html("");
+        $('#inicio').load("Inicio/index");
     }
     else if(element == 'reporteOption'){
         $('#reporte').html("");
         $('#reporte').load("Reporte/reporte");
     }
     else if(element == 'agendaOption'){
-        $('#agenda .col-lg-12').html("");
-        $('#agenda .col-lg-12').load("Calendar/calendar");
+        $('#agenda').html("");
+        $('#agenda').load("Calendar/calendar");
     }
     else if(element == 'rankingOption'){
-        console.log("ranking opt");
-        $('#ranking .col-lg-12').html("");
-        $('#ranking .col-lg-12').load("Ranking/ranking");
+        $('#ranking').html("");
+        $('#ranking').load("Ranking/ranking");
     }
     else if(element == 'metricasOption'){
-        console.log("metricas opt");
-
-        $('#metricas .col-lg-12').html("");
-        $('#metricas .col-lg-12').load("Metricas/metricas");
+        $('#metricas').html("");
+        $('#metricas').load("Metricas/metricas");
     }
 }

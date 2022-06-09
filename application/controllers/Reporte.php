@@ -44,30 +44,100 @@ class Reporte extends CI_Controller {
         }
     }
 
-    public function ventasCanceladas(){
+    public function getDataChart(){
+        $coordinadorVC = ''; $coordinadorVA = ''; $coordinadorCC = ''; $coordinadorCA = ''; $coordinador = false;
+        $general = $this->input->post('general');
+        $tipoChart = $this->input->post('tipoChart');
+
+        $beginDate = '2022-02-06 00:00:00.000';
+        $endDate = '2022-06-06 23:59:00.000';
         $id = $this->session->userdata('id_usuario');
-        $data = $this->Reporte_model->ventasCanceladas($id);
+        $rol = $this->session->userdata('id_rol');
+        
+        if( $rol == 2 || $rol == 5){
+            $condicion_x_rol = $this->validateRegional($id);
+        }
+        else if( $rol == 3 ){
+            $condicion_x_rol = ' AND cl.id_gerente = ' . $id;
+        }
+        else if( $rol == 7 ){
+            $condicion_x_rol = ' AND cl.id_asesor = ' . $id;
+        }
+        else if( $rol == 9 ){
+            $condicion_x_rol = ' AND cl.id_coordinador = ' . $id;
+            $rol = 7;
+            $coordinador = true;
+            $arraySalesByCoor = $this->chartCoordinator($id, $beginDate, $endDate);
+            $coordinadorVC = $arraySalesByCoor[0];
+            $coordinadorVA = $arraySalesByCoor[1];
+            $coordinadorCC = $arraySalesByCoor[2];
+            $coordinadorCA = $arraySalesByCoor[3]; 
+        }
+        else{
+            $condicion_x_rol = '';
+        }
+
+        if( $rol == 4 || $rol == 5 || $rol == 6 ) $id = $this->session->userdata('id_lider');
+        $data = $this->Reporte_model->getDataChart($general, $tipoChart, $rol, $condicion_x_rol, $coordinador, $coordinadorVC, $coordinadorVA, $coordinadorCC, $coordinadorCA, $beginDate, $endDate);
+        
         if($data != null) {
-            $array = [];
-            for ( $i=0 ; $i<COUNT($data); $i++ ){
-                
-                if( $i == 0 ){
-                    $array['ventasContratadas'] = $data[$i];
-                }
-                else if( $i == 1){
-                    $array['ventasApartadas'] = $data[$i];
-                }
-                else if( $i == 2){
-                    $array['canceladasContratadas'] = $data[$i];
-                }
-                else if( $i == 3){
-                    $array['canceladasApartadas'] = $data[$i];
-                }
-            }
-            echo json_encode($array);
+            echo json_encode($data);
         } else {
             echo json_encode(array());
         }
+    }
+    public function chartCoordinator($id, $beginDate, $endDate){
+        $coordinadorAll = [];
+        $coordinadorVC = "SELECT qu.total, cantidad, DateValue, 'vc' tipo, '9' rol FROM cte
+        LEFT JOIN (SELECT  FORMAT(ISNULL(SUM(CASE WHEN totalNeto2 IS NULL THEN total WHEN totalNeto2 = 0 THEN total ELSE totalNeto2 END), 0), 'C') total,
+        COUNT(*) cantidad, MONTH(cl.fechaApartado) mes
+        FROM clientes cl
+        INNER JOIN lotes lo ON lo.idLote = cl.idLote AND lo.idStatusLote = 2
+        INNER JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes WHERE idStatusContratacion = 15 AND idMovimiento = 45
+        GROUP BY idLote, idCliente) hl ON hl.idLote = lo.idLote AND hl.idCliente = cl.id_cliente
+        WHERE ISNULL(noRecibo, '') != 'CANCELADO' AND cl.status = 1 AND cl.fechaApartado BETWEEN '$beginDate' AND '$endDate'
+        AND cl.id_asesor = $id
+        GROUP BY MONTH(cl.fechaApartado)) qu ON qu.mes = cte.DateValue";
+        // array_push($coordinadorAll, $coordinadorVC);
+
+        $coordinadorVA = "SELECT qu.total, cantidad, DateValue,'va' tipo, '9' rol FROM cte
+        LEFT JOIN (SELECT FORMAT(ISNULL(SUM(CASE WHEN totalNeto2 IS NULL THEN total  WHEN totalNeto2 = 0 THEN total  ELSE totalNeto2  END), 0), 'C') total, 
+        COUNT(*) cantidad, MONTH(cl.fechaApartado) mes
+        FROM clientes cl
+        INNER JOIN lotes lo ON lo.idLote = cl.idLote AND lo.idStatusLote != 2
+        WHERE isNULL(noRecibo, '') != 'CANCELADO' AND cl.status = 1 AND cl.fechaApartado BETWEEN '$beginDate' AND '$endDate'
+        AND cl.id_asesor = $id
+        GROUP BY MONTH(cl.fechaApartado)) qu ON qu.mes = cte.DateValue";
+        // array_push($coordinadorAll, $coordinadorVA);
+
+        $coordinadorCC = "SELECT qu.total, cantidad, DateValue, 'cc' tipo, '9' rol FROM cte
+        LEFT JOIN (SELECT FORMAT(ISNULL(SUM(CASE WHEN totalNeto2 IS NULL THEN total WHEN totalNeto2 = 0 THEN total ELSE totalNeto2 END), 0), 'C') total, 
+        COUNT(*) cantidad, MONTH(cl.fechaApartado) mes
+        FROM clientes cl
+        INNER JOIN lotes lo ON lo.idLote = cl.idLote
+        LEFT JOIN historial_liberacion hl ON hl.idLote = lo.idLote AND hl.tipo NOT IN (2, 5, 6) AND hl.id_cliente = cl.id_cliente
+        INNER JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes WHERE idStatusContratacion = 15 AND idMovimiento = 45
+        GROUP BY idLote, idCliente) hlo ON hlo.idLote = lo.idLote AND hlo.idCliente = cl.id_cliente
+        WHERE isNULL(noRecibo, '') != 'CANCELADO' AND cl.status = 0  AND cl.fechaApartado BETWEEN '$beginDate' AND '$endDate' 
+        AND cl.id_asesor = $id
+        GROUP BY MONTH(cl.fechaApartado)) qu ON qu.mes = cte.DateValue";
+        // array_push($coordinadorAll, $coordinadorCC);
+
+        $coordinadorCA = "SELECT qu.total, cantidad, DateValue, 'ca' tipo, '9' rol FROM cte
+        LEFT JOIN (SELECT FORMAT(ISNULL(SUM(CASE WHEN totalNeto2 IS NULL THEN total WHEN totalNeto2 = 0 THEN total ELSE totalNeto2 END), 0), 'C') total, 
+        COUNT(*) cantidad, MONTH(cl.fechaApartado) mes
+        FROM clientes cl
+        INNER JOIN lotes lo ON lo.idLote = cl.idLote
+        LEFT JOIN historial_liberacion hl ON hl.idLote = lo.idLote AND hl.tipo NOT IN (2, 5, 6) AND hl.id_cliente = cl.id_cliente
+        INNER JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes WHERE idStatusContratacion = 15 AND idMovimiento = 45
+        GROUP BY idLote, idCliente) hlo ON hlo.idLote = lo.idLote AND hlo.idCliente = cl.id_cliente
+        WHERE isNULL(noRecibo, '') != 'CANCELADO' AND cl.status = 0  AND cl.fechaApartado BETWEEN '$beginDate' AND '$endDate' 
+        AND cl.id_asesor = $id
+        GROUP BY MONTH(cl.fechaApartado)) qu ON qu.mes = cte.DateValue";
+        // array_push($coordinadorAll, $coordinadorCA);
+
+        array_push($coordinadorAll, $coordinadorVC, $coordinadorVA, $coordinadorCC, $coordinadorCA);
+        return $coordinadorAll;
     }
 
     public function getSpecificChart(){
@@ -86,6 +156,14 @@ class Reporte extends CI_Controller {
             echo json_encode($array);
         }
         else echo json_encode(array());
+    }
+
+    public function validateRegional($id){
+        $data = $this->Reporte_model->validateRegional($id);
+        if($data != null) $where = " AND cl.id_regional = " . $id;
+        else $where = " AND cl.id_subdirector = " . $id;
+
+        return $where;
     }
 }
  

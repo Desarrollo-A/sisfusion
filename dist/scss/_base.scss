@@ -133,9 +133,11 @@ $grayDark      : #191B1C;
 $goldMaderas   : #96843D;
 $water         : #D1EEFF;
 $blueLight     : #5DADE2;
+$shadowBlue    : #7083A9;
 $aqua          : #54d2d2;
 $sky           : #00bcd4;
 $cerulean      : #00A0FF;
+$blueFrance    : #2C93E7;
 $azure         : #4382EF;
 $blueMaderas   : #0a548b;
 $blueIndigo    : #103f75;
@@ -156,7 +158,14 @@ $green         : #28B463;
 $harlequin     : #50d920;
 $acidGreen     : #AFB42B;
 $violet        : #702497;
-
+$lapisLazuli   : #22639B;
+$blueNCS       : #0089B7;
+$viridianGreen : #039590;
+$tiffanyBlue   : #00ACB8;
+$oceanGreen    : #4BBC8E;
+$caribbeanGreen: #00CDA3;
+$lightGreen    : #92E784;
+$sunny         : #F9F871;
 /* END vrbls coloress */
 
 
@@ -179,7 +188,31 @@ $tv                 : "(min-width : 1824px)";
     color: $deepGray!important;
 }
 /* END Estilos generales encabezado, datetime picker, calendar, input filtros, selects */
-
+//txt colors
+.txt-lapisLazuli{
+    color: $lapisLazuli!important;
+}
+.txt-blueNCS{
+    color: $blueNCS!important;
+}
+.txt-viridianGreen{
+    color: $viridianGreen!important;
+}
+.txt-tiffanyBlue{
+    color: $tiffanyBlue!important;
+}
+.txt-oceanGreen{
+    color: $oceanGreen!important;
+}
+.txt-caribbeanGreen{
+    color: $caribbeanGreen!important;
+}
+.txt-lightGreen{
+    color: $lightGreen!important;
+}
+.txt-sunny{
+    color: $sunny!important;
+}
 
 .btn-a {
     border-radius: 25px !important;
