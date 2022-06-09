@@ -47,10 +47,14 @@ class Ventas extends CI_Controller {
         //        $this->load->view('ventas/inicio_ventas');
         switch ($this->session->userdata('id_rol')) {
             case '2': // SUBDIRECTOR
+                $this->load->view("dashboard/base/base", $datos);
+            break;
             case '5': // ASISTENTE SUBDIRECTOR
                 $this->load->view("clientes/consult_statistics_sd2", $datos);
             break;
             case '7': // ASESOR
+                $this->load->view("dashboard/base/base", $datos);
+            break;
             case '61': // ASESOR
                 $this->load->view("clientes/consult_statistics_as", $datos);
             break;
