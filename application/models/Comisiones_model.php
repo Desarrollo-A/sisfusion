@@ -369,11 +369,11 @@ function getDatosComisionesHistorialRigel($proyecto,$condominio){
         $this->db->query("SET LANGUAGE Español;");
 
         $query = $this->db->query("SELECT DISTINCT(l.idLote), res.nombreResidencial, cond.nombre as nombreCondominio, l.nombreLote,  
-            CONCAT(cl.nombre,' ',cl.apellido_paterno,' ',cl.apellido_materno) nombre_cliente, 
+            CONCAT(cl.nombre,' ',cl.apellido_paterno,' ',cl.apellido_materno) nombre_cliente,
             vc.id_cliente AS compartida, l.idStatusContratacion, l.totalNeto2, pc.fecha_modificacion, 
             convert(nvarchar, pc.fecha_modificacion, 6) date_final,
             convert(nvarchar, cl.fechaApartado, 6) fechaApartado, se.nombre as sede,
-            l.registro_comision, l.referencia, cl.id_cliente,         
+            l.registro_comision, l.referencia, cl.id_cliente,            
             CONCAT(ae.nombre, ' ', ae.apellido_paterno, ' ', ae.apellido_materno) as asesor,
             CONCAT(co.nombre, ' ', co.apellido_paterno, ' ', co.apellido_materno) as coordinador,
             CONCAT(ge.nombre, ' ', ge.apellido_paterno, ' ', ge.apellido_materno) as gerente,
@@ -395,7 +395,7 @@ function getDatosComisionesHistorialRigel($proyecto,$condominio){
             LEFT JOIN usuarios di ON di.id_usuario = 2
             LEFT JOIN plan_comision pl ON pl.id_plan = cl.plan_comision
             LEFT JOIN sedes se ON se.id_sede = cl.id_sede 
-            WHERE l.idStatusContratacion BETWEEN 15 AND 15 AND cl.status = 1 AND l.status = 1
+            WHERE l.idStatusContratacion BETWEEN 11 AND 15 AND cl.status = 1 AND l.status = 1
             AND (l.registro_comision in (0,8,2)  or (l.registro_comision in (1,8) AND pc.bandera in (0))) AND tipo_venta IS NOT NULL AND tipo_venta IN (1,2)
             AND cl.fechaApartado >= '2020-03-01'
             ORDER BY l.idLote");
