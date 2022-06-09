@@ -209,17 +209,11 @@ $(document).on('click', '.update-dataTable', function () {
     }
 });
 
-function setOptionsMiniChart(name, data, categories){
-    // console.log("set options");
-    // console.log(name);
-    // console.log(data);
-    // console.log(categories);
+function setOptionsMiniChart(series, categories){
+    (series.length > 1) ? colors = ["#2C93E7", "#d9c07b"] : colors = ["#2C93E7"];
 
     var optionsMiniChart = {
-        series: [{
-            name: name,
-            data: data
-        }],
+        series: series,
         chart: {
             type: 'area',
             height: '100%',
@@ -229,8 +223,7 @@ function setOptionsMiniChart(name, data, categories){
                 enabled: true
             }
         },
-        colors: ["#2C93E7"],
-        // colors: ["#2C93E7", "#d9c07b"],
+        colors: colors,
         grid: { show: false},
         dataLabels: { enabled: false },
         legend: { show: false },
@@ -245,7 +238,12 @@ function setOptionsMiniChart(name, data, categories){
             axisTicks: {show:false},
         },
         yaxis: {
-            labels: {show: false},
+            labels: {
+                show: false,
+                formatter: function (value) {
+                    return "$ " + formatMoney(value);
+                }
+            },
             axisBorder: {show:false},
             axisTicks: {show:false},
         },
@@ -256,7 +254,7 @@ function setOptionsMiniChart(name, data, categories){
                 shade: 'light',
                 type: "vertical",
                 shadeIntensity: 1,
-                gradientToColors:  ['#2C93E7'],
+                gradientToColors:  colors,
                 inverseColors: true,
                 opacityFrom: 0.55,
                 opacityTo: 0.2,
@@ -268,73 +266,6 @@ function setOptionsMiniChart(name, data, categories){
     }
     return optionsMiniChart;
 }
-
-function setModalChart(){
-    var optionsMiniChart = {
-        series: [{
-            name: "Music",
-            data: [1, 15, 26, 20, 33, 27]
-          },
-          {
-            name: "Photos",
-            data: [3, 33, 21, 42, 19, 32]
-          },
-          {
-            name: "Files",
-            data: [0, 39, 52, 11, 29, 43]
-          }
-        ],
-        chart: {
-            type: 'area',
-            height: '100%',
-            toolbar: { show: false },
-            zoom: { enabled: false },
-            sparkline: {
-                enabled: false
-            }
-        },
-        colors: ["#2C93E7"],
-        grid: { show: false},
-        dataLabels: { enabled: false },
-        legend: { show: false },
-        stroke: {
-            curve: 'smooth',
-            width: 2,
-        },
-        xaxis: {
-            show: true,
-            labels: {show: false},
-            axisBorder: {show:false},
-            axisTicks: {show:false},
-        },
-        yaxis: {
-            type: 'numeric',
-            show: true,
-            labels: {show: false},
-            axisBorder: {show:false},
-            axisTicks: {show:false},
-        },
-        fill: {
-            opacity: 1,
-            type: 'gradient',
-            gradient: {
-                shade: 'light',
-                type: "vertical",
-                shadeIntensity: 1,
-                gradientToColors:  ['#2C93E7'],
-                inverseColors: true,
-                opacityFrom: 0.55,
-                opacityTo: 0.2,
-                stops: [0, 70, 100],
-                colorStops: []
-            }
-        },
-        tooltip: { enabled: true}
-    }
-      
-    var chartLine = new ApexCharts(document.querySelector('#line-adwords'), optionsMiniChart);
-    chartLine.render();
-}
   
 $(document).on('click', '.js-accordion-title', function () {
     $(this).next().slideToggle(200);
@@ -343,18 +274,10 @@ $(document).on('click', '.js-accordion-title', function () {
 
 function chartDetail(e){
     $("#modalChart").modal();
+    console.log((e).data("name"));
+    
     setModalChart();
 }
-
-function formatMoney(n) {
-    var c = isNaN(c = Math.abs(c)) ? 2 : c,
-        d = d == undefined ? "." : d,
-        t = t == undefined ? "," : t,
-        s = n < 0 ? "-" : "",
-        i = String(parseInt(n = Math.abs(Number(n) || 0).toFixed(c))),
-        j = (j = i.length) > 3 ? j % 3 : 0;
-    return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
-};
 
 function getSpecificChart(type){
     $.ajax({
@@ -390,22 +313,17 @@ function getLastSales(){
         success: function(data){
             let total = 0;
             $('#spiner-loader').addClass('hide');
-            console.log(data);
             let orderedArray = orderedDataChart(data);
             for ( i=0; i<orderedArray.length; i++ ){
-                let { name, categories, data, name_adicional } = orderedArray[i];
-                total = data.reduce((a, b) => parseFloat(a) + parseFloat(b), 0);
-                console.log(total);
-                if( (i+1) > orderedArray.length ){
-                    if(name != orderedArray[i + 1].name){
-                        total = 0; 
-                    }
+                let { chart, categories, series } = orderedArray[i];
+                total = 0;
+                for ( j=0; j < series.length; j++ ){
+                    total += series[j].data.reduce((a, b) => parseFloat(a) + parseFloat(b), 0);
                 }
+                $("#tot"+chart).text("$ "+formatMoney(total));
+                var miniChart = new ApexCharts(document.querySelector("#"+chart+""), setOptionsMiniChart(series, categories));
                 
-                $("#tot"+name).text("$ "+formatMoney(total));
-                // var miniChart = new ApexCharts(document.querySelector("#"+name+""), setOptionsMiniChart(name, data, categories));
-                
-                // miniChart.render();
+                miniChart.render();
             }
         },
         error: function() {
@@ -416,44 +334,77 @@ function getLastSales(){
 }
 
 function orderedDataChart(data){
-    let allData = [], totalMes = [], meses = [];
-    let contMes = 0;
+    let allData = [], totalMes = [], meses = [], series = [];
     for( i=0; i<data.length; i++){
+        let { tipo, rol, total, DateValue } = data[i];
 
-        // totalFinal = (data[i].total == null) ? parseFloat(totalFinal) + 0 : parseFloat(totalFinal) + parseFloat(data[i].total.replace(/[^0-9.-]+/g,""));
-        totalMes.push( (data[i].total != null) ? data[i].total.replace(/[^0-9.-]+/g,"") : 0 );
-        meses.push(monthName(data[i].DateValue));
+        nameTypeChart = `${ (tipo == 'vc') ? 'ventasContratadas' : (tipo == 'va') ? 'ventasApartadas' : (tipo == 'cc') ? 'canceladasContratadas' : 'canceladasApartadas' }`;
 
-        if( contMes == 3 ){
-            if(data[i].rol != '9' && data[i].rol != '7'){
-                allData.push({
-                    name : `${ (data[i].tipo == 'vc') ? 'ventasContratadas' : (data[i].tipo == 'va') ? 'ventasApartadas' : (data[i].tipo == 'cc') ? 'canceladasContratadas' : 'canceladasApartadas' }`,
-                    data : totalMes,
-                    categories : meses,
-                    name_adicional : ''
-                });
+        nameSerie = `${ (rol == '9') ? 'Coordinador' : (rol == '7') ? 'Asesor' : (tipo == 'vc') ? 'ventasContratadas' : (tipo == 'va') ? 'ventasApartadas' : (tipo == 'cc') ? 'canceladasContratadas' : 'canceladasApartadas' }`;
+        
+        totalMes.push( (total != null) ? parseFloat(total.replace(/[^0-9.-]+/g,"")) : 0 );
+        if( (i+1) < data.length ){
+            if(tipo == data[i + 1].tipo){
+                if(rol != data[i + 1].rol){
+                    buildSeries(series, nameSerie, totalMes);
+                    totalMes = [];
+                    meses = [];
+                }
+                else{
+                    meses.push(monthName(DateValue));
+                }             
             }
             else{
-                allData.push({
-                    name : `${ (data[i].tipo == 'vc') ? 'ventasContratadas' : (data[i].tipo == 'va') ? 'ventasApartadas' : (data[i].tipo == 'cc') ? 'canceladasContratadas' : 'canceladasApartadas' }`,
-                    data : totalMes,
-                    categories : meses,
-                    name_adicional : `${ (data[i].rol == '9') ? 'Coordinador' : 'Asesor'}`
-                });
+                meses.push(monthName(DateValue));
+                buildSeries(series, nameSerie, totalMes);
+                buildAllDataChart(allData, nameTypeChart, series, meses);
+                series = [];
+                totalMes = [];
+                meses = [];
             }
         }
-
-        if( contMes == 3 ){
-            contMes = 0;
-            totalMes = [], meses = [];
+        else{
+            meses.push(monthName(DateValue));
+            buildSeries(series, nameSerie, totalMes);
+            buildAllDataChart(allData, nameTypeChart, series, meses)
+            series = [];
+            totalMes = [];
         }
-        else contMes++;
     }
-    console.log(allData);
     return allData;
 }
+
+function buildSeries(series, nameSerie, totalMes){
+    nameSerie = titleCase(nameSerie.split(/(?=[A-Z])/).join(" "));
+    series.push({
+        name: nameSerie,
+        data: totalMes
+    });
+}
+
+function buildAllDataChart(allData, nameTypeChart, series, meses){
+    allData.push({
+        chart : nameTypeChart,
+        series : series,
+        categories : meses
+    });
+}
+
+function formatMoney(n) {
+    var c = isNaN(c = Math.abs(c)) ? 2 : c,
+        d = d == undefined ? "." : d,
+        t = t == undefined ? "," : t,
+        s = n < 0 ? "-" : "",
+        i = String(parseInt(n = Math.abs(Number(n) || 0).toFixed(c))),
+        j = (j = i.length) > 3 ? j % 3 : 0;
+    return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
+};
 
 function monthName(mon){
     var monthName = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'][mon - 1];
     return monthName;
+}
+
+function titleCase(string){
+    return string[0].toUpperCase() + string.slice(1).toLowerCase();
 }

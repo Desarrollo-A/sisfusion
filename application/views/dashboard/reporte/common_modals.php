@@ -1,10 +1,9 @@
 <link href="<?= base_url() ?>dist/css/commonModals.css" rel="stylesheet"/>
 
-<div class="modal" id="modalChart" tabindex="-1" role="dialog">
+<div class="modal fade" id="modalChart" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
-        <div class="modal-content">
+        <div class="modal-content" style="border-radius: 15px">
             <div class="modal-header">
-                
             </div>
             <div class="modal-body">
                 <div class="row">
@@ -31,10 +30,6 @@
                         <div class="boxModalChart"></div>
                     </div>
                 </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary">Save changes</button>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
