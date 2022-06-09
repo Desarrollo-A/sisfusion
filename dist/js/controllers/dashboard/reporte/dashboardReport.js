@@ -388,17 +388,24 @@ function getLastSales(){
           $('#spiner-loader').removeClass('hide');
         },
         success: function(data){
+            let total = 0;
             $('#spiner-loader').addClass('hide');
             console.log(data);
             let orderedArray = orderedDataChart(data);
             for ( i=0; i<orderedArray.length; i++ ){
-                let { name, categories, data } = orderedArray[i];
-
+                let { name, categories, data, name_adicional } = orderedArray[i];
+                total = data.reduce((a, b) => parseFloat(a) + parseFloat(b), 0);
+                console.log(total);
+                if( (i+1) > orderedArray.length ){
+                    if(name != orderedArray[i + 1].name){
+                        total = 0; 
+                    }
+                }
+                
                 $("#tot"+name).text("$ "+formatMoney(total));
+                // var miniChart = new ApexCharts(document.querySelector("#"+name+""), setOptionsMiniChart(name, data, categories));
                 
-                var miniChart = new ApexCharts(document.querySelector("#"+name+""), setOptionsMiniChart(name, data, categories));
-                
-                miniChart.render();
+                // miniChart.render();
             }
         },
         error: function() {
@@ -418,13 +425,12 @@ function orderedDataChart(data){
         meses.push(monthName(data[i].DateValue));
 
         if( contMes == 3 ){
-            console.log(data[i].rol);
-            if(data[i].rol != '9' || data[i].rol != '7'){
+            if(data[i].rol != '9' && data[i].rol != '7'){
                 allData.push({
                     name : `${ (data[i].tipo == 'vc') ? 'ventasContratadas' : (data[i].tipo == 'va') ? 'ventasApartadas' : (data[i].tipo == 'cc') ? 'canceladasContratadas' : 'canceladasApartadas' }`,
                     data : totalMes,
                     categories : meses,
-                    name_adicional : 'na'
+                    name_adicional : ''
                 });
             }
             else{
@@ -432,7 +438,7 @@ function orderedDataChart(data){
                     name : `${ (data[i].tipo == 'vc') ? 'ventasContratadas' : (data[i].tipo == 'va') ? 'ventasApartadas' : (data[i].tipo == 'cc') ? 'canceladasContratadas' : 'canceladasApartadas' }`,
                     data : totalMes,
                     categories : meses,
-                    name_adicional : `${ (data[i].rol == '9') ? 'Coordinador' : (data[i].rol == '7') ? 'Asesor ': 'na' }`
+                    name_adicional : `${ (data[i].rol == '9') ? 'Coordinador' : 'Asesor'}`
                 });
             }
         }
