@@ -3589,7 +3589,6 @@ class Asesor extends CI_Controller
         }
 }
 
-
     public function intExpAsesor()
     {
 
@@ -3612,9 +3611,16 @@ class Asesor extends CI_Controller
 
         $dataClient = $this->Asesor_model->getLegalPersonalityByLote($idLote);
         $documentsValidation = $this->Asesor_model->validateDocumentation($idLote, $dataClient[0]['personalidad_juridica']);
+        $validacion = $this->Asesor_model->getAutorizaciones($idLote, 'estatus') ;
 
-        if (COUNT($documentsValidation) < $documentsNumber) {
+        if (COUNT($documentsValidation) < $documentsNumber && $validacion['estatus'] == 1) {
+            $data['message'] = 'MISSING_DOCUMENTS_AUTORIZACION';
+            echo json_encode($data);
+        } else if(COUNT($documentsValidation) < $documentsNumber) {
             $data['message'] = 'MISSING_DOCUMENTS';
+            echo json_encode($data);
+        } else if($validacion['estatus'] == 1) {
+            $data['message'] = 'MISSING_AUTORIZACION';
             echo json_encode($data);
         } else {
             date_default_timezone_set('America/Mexico_City');
@@ -3776,7 +3782,6 @@ class Asesor extends CI_Controller
                 if ($this->Asesor_model->updateSt($idLote, $arreglo, $arreglo2) == TRUE) {
                     $data['message'] = 'OK';
                     echo json_encode($data);
-
                 } else {
                     $data['message'] = 'ERROR';
                     echo json_encode($data);
@@ -3961,7 +3966,7 @@ class Asesor extends CI_Controller
                 $data['message'] = 'ERROR';
                 echo json_encode($data);
             }
-
+            
         } else {
             $data['message'] = 'FALSE';
             echo json_encode($data);

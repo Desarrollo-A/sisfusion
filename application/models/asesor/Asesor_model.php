@@ -1626,6 +1626,9 @@ class Asesor_model extends CI_Model
 
     }
 
+    public function getAutorizaciones($idLote){
+        $query = $this->db->query("SELECT estatus FROM autorizaciones WHERE idLote = ".$idLote.";");
+    }
     function getlotesRechazados(){
         $id_currentUser = $this->session->userdata('id_usuario');
         $lider_currentUser = $this->session->userdata('id_lider');
