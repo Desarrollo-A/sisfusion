@@ -107,18 +107,22 @@
             table{
                 text-align: center;
                 thead tr {
-                    background-color: $white;
+                    background-color: $blueIndigoDeep;
                     th input{
                         border: 1px solid transparent;
                         border-radius: 5px;
-                        color: $grayOxford;
+                        color: $white;
                         text-align: center;
                         font-weight: 500;
+                        background-color: $blueIndigoDeep;
                         &:active{
                             border: 1px solid $gray;
                         }
                         &:focus{
                             border: 1px solid $gray;
+                        }
+                        &::placeholder{
+                            color: $white;
                         }
                     }
                 }
