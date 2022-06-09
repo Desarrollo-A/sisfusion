@@ -1251,15 +1251,16 @@
 }
 
 #reporte .boxAccordions .bk table thead tr {
-  background-color: #ffffff;
+  background-color: #143860;
 }
 
 #reporte .boxAccordions .bk table thead tr th input {
   border: 1px solid transparent;
   border-radius: 5px;
-  color: #4e4e4e;
+  color: #ffffff;
   text-align: center;
   font-weight: 500;
+  background-color: #143860;
 }
 
 #reporte .boxAccordions .bk table thead tr th input:active {
@@ -1268,6 +1269,10 @@
 
 #reporte .boxAccordions .bk table thead tr th input:focus {
   border: 1px solid #333333;
+}
+
+#reporte .boxAccordions .bk table thead tr th input::placeholder {
+  color: #ffffff;
 }
 
 #reporte .boxAccordions .bk table .update-dataTable {

@@ -19,15 +19,17 @@ class Services_model extends CI_Model
        $contadorExt=0;
         unset($ArrayMex[4]);
         $ArrayExt =  array_pop($FormasPago);
+        $arr = array();
+        $arr[0] = $ArrayExt;
 
         $Nacionalidades =  $this->db->query("SELECT id_opcion as id_nacionalidad,nombre as nacionalidad,
         CASE WHEN id_opcion=0 THEN 0 ELSE 1 END as tipo_contrato
-         FROM opcs_x_cats WHERE id_catalogo=11 and id_opcion in(0,1,14,17)")->result_array();
+         FROM opcs_x_cats WHERE id_catalogo=11 and id_opcion in(0,1,14,17,20)")->result_array();
         for ($m=0; $m <count($Nacionalidades) ; $m++) { 
                 if($m == 0){
-                    $Nacionalidades[$m]['tipo_pago'] = $ArrayMex; 
+                    $Nacionalidades[$m]['tipo_pago'] = $ArrayMex;
                 }else{
-                    $Nacionalidades[$m]['tipo_pago'] = $ArrayExt;
+                    $Nacionalidades[$m]['tipo_pago'] = $arr;
                 } 
         }
         return $Nacionalidades;
@@ -39,15 +41,11 @@ class Services_model extends CI_Model
         if ($data != '' && $data != null) {
             $this->db->db_debug = false;
             $response = $this->db->insert("usuarios", $data);
+            $id = $this->db->insert_id();
             if (!$response) {  
             $error = $this->db->error();
             $datos = explode('.',$error['message']);
-           // echo  $error['message'];
-           // echo  $error['code'];
-            //echo $datos[3];
-            //$message = $datos[3];
             if($error['code'] == "23000/2627"){
-                //$separarCadena = explode('is ',$datos[3]);
                 $message = "El nombre de usuario ya se encuentra registrado";
             }else{
                 echo $error;
@@ -57,7 +55,8 @@ class Services_model extends CI_Model
                                         "code" => $error['code'],
                                         "message" => $message);
             } else {
-            return 1;
+                return $finalAnswer = array("result" => true,
+                "id_usuario" => $id);
             } 
 
 

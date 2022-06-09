@@ -1427,35 +1427,9 @@
         return $query->result_array();
     }
 
-    public function insertResidencial($data)
-    {
-        $this->db->trans_begin();
-        $this->db->insert('residenciales', $data);
-        if ($this->db->trans_status() === FALSE) { // Hubo errores en la consulta, entonces se cancela la transacción.
-            $this->db->trans_rollback();
-            return false;
-        } else { // Todas las consultas se hicieron correctamente.
-            $this->db->trans_commit();
-            return true;
-        }
-    }
-
     public function getEmpresasList()
     {
         return $this->db->query("SELECT id_opcion, id_catalogo, nombre FROM opcs_x_cats WHERE id_catalogo = 61 AND estatus = 1")->result_array();
-    }
-
-    public function updateResidencial($data, $idResidencial)
-    {
-        $this->db->trans_begin();
-        $this->db->update("residenciales", $data, "idResidencial = $idResidencial");
-        if ($this->db->trans_status() === FALSE) { // Hubo errores en la consulta, entonces se cancela la transacción.
-            $this->db->trans_rollback();
-            return false;
-        } else { // Todas las consultas se hicieron correctamente.
-            $this->db->trans_commit();
-            return true;
-        }
     }
 
     public function getTokensInformation()
@@ -1474,6 +1448,15 @@
         LEFT JOIN clientes cl ON cl.id_cliente = tk.id_cliente
         LEFT JOIN lotes l ON l.idLote = tk.id_lote
         $where  ORDER BY tk.fecha_creacion");
+    }
+
+    public function getEmpresasLargoList()
+    {
+        return $this->db->query("SELECT id_opcion, id_catalogo, nombre FROM opcs_x_cats WHERE id_catalogo = 72 AND estatus = 1")->result_array();
+    }
+
+    public function getBancosLargoList(){
+        return $this->db->query("SELECT id_opcion, id_catalogo, nombre FROM opcs_x_cats WHERE id_catalogo = 73 AND estatis = 1")->result_array();
     }
 
 }

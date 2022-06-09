@@ -6602,11 +6602,7 @@ for ($d=0; $d <count($dos) ; $d++) {
 
   }
 
-  public function BorrarPrestamo(){
-    $respuesta =  $this->Comisiones_model->BorrarPrestamo($this->input->post("id_prestamo"));
-  echo json_encode($respuesta);
-
-  }
+  
 
   public function InsertPago()
   {
@@ -6740,6 +6736,16 @@ for ($d=0; $d <count($dos) ; $d++) {
             'general' => $general,
             'detalle' => $detalle
         ));
+    }
+    public function BorrarPrestamo(){
+      $id_prestamo = $this->input->post('idPrestamo');
+      $detalle = $this->Comisiones_model->getDetailPrestamo($id_prestamo);
+      if(count($detalle) != 0){
+        $respuesta = 0;
+      }else{
+          $respuesta =  $this->Comisiones_model->BorrarPrestamo($id_prestamo);
+      }
+      echo json_encode($respuesta);
     }
 
     public function viewHistorialPrestamos()
