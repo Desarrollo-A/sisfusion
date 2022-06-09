@@ -4012,7 +4012,7 @@ public function descuentos_historial()
   
   public function saveDescuento($valor)
   {
-    $saldo_comisiones = 0; $this->input->post('saldo_comisiones');
+    $saldo_comisiones = $this->input->post('saldo_comisiones');
 
   
     $LotesInvolucrados = "";
@@ -6602,11 +6602,7 @@ for ($d=0; $d <count($dos) ; $d++) {
 
   }
 
-  public function BorrarPrestamo(){
-    $respuesta =  $this->Comisiones_model->BorrarPrestamo($this->input->post("id_prestamo"));
-  echo json_encode($respuesta);
-
-  }
+  
 
   public function InsertPago()
   {
@@ -6740,6 +6736,16 @@ for ($d=0; $d <count($dos) ; $d++) {
             'general' => $general,
             'detalle' => $detalle
         ));
+    }
+    public function BorrarPrestamo($id_prestamo){
+      $detalle = $this->Comisiones_model->getDetailPrestamo($id_prestamo);
+      if(count($detalle) != 0){
+        $respuesta = 0;
+      }else{
+        echo 66666666666;
+          $respuesta =  $this->Comisiones_model->BorrarPrestamo($id_prestamo);
+      }
+      echo json_encode($respuesta);
     }
 
     public function viewHistorialPrestamos()

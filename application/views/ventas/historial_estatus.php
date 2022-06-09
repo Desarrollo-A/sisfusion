@@ -16,14 +16,6 @@
         ?>
 
         <!-- Modals -->
-        <div class="modal fade bd-example-modal-sm" id="myModalEnviadas" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-sm">
-                <div class="modal-content">
-                    <div class="modal-body"></div>
-                </div>
-            </div>
-        </div>
-
         <div class="modal fade" id="seeInformationModalAsimilados" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog modal-md modal-dialog-scrollable" role="document">
                 <div class="modal-content">
@@ -257,6 +249,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
+    <!-- Modal general -->
+    <script src="<?= base_url() ?>dist/js/core/modal-general.js"></script>
     <script>
         $(document).ready(function() {
             $("#tabla_historialGral").prop("hidden", true);
@@ -396,14 +390,6 @@
                             selected: true,
                             search: 'applied'
                         }).indexes();
-
-                        var data = tabla_historialGral2.rows(index).data();
-                        $.each(data, function(i, v) {
-                            total += parseFloat(v.impuesto);
-                        });
-
-                        var to1 = formatMoney(total);
-                        document.getElementById("totpagarAsimilados").value = formatMoney(total);
                     }
                 });
             }
@@ -942,23 +928,31 @@
                 success: function (response) {
                     if (JSON.parse(response)) {
                         $('#movimiento-modal').modal('hide');
-                        $("#myModalEnviadas").modal('toggle');
-                        $("#myModalEnviadas .modal-body").html("");
-                        $("#myModalEnviadas .modal-body").append(`
-                            <img style='width: 75%; height: 75%;' src='<?= base_url('dist/img/send_intmex.gif')?>'>
-                                <p style='color:#676767;'>Se cambiaron los estatus de los pagos seleccionados.</p>
+                        appendBodyModal(`
+                            <div class="row">
+                                <div class="col-lg-12 text-center">
+                                    <h3 style='color:#676767;'>Se cambiaron los estatus de los pagos seleccionados</h3>
+                                    <img style='width: 200px; height: 200px;'
+                                        src='<?= base_url('dist/img/check.gif')?>'>
+                                </div>
+                            </div>
                         `);
-                        $("#myModalEnviadas").modal();
+                        showModal();
                         tabla_historialGral2.ajax.reload();
                     } else {
-                        $("#myModalEnviadas").modal('toggle');
-                        $("#myModalEnviadas .modal-body").html("");
-                        $("#myModalEnviadas .modal-body").append(`
-                            <P>Error al enviar comisiones</P>
-                            <br>
-                            <i style='font-size:12px;'>No se pudo ejecutar esta acción, intentalo más tarde.</i>
+                        $('#movimiento-modal').modal('hide');
+                        appendBodyModal(`
+                            <div class="row">
+                                <div class="col-lg-12 text-center">
+                                    <h3>Error al enviar comisiones</h3>
+                                    <img style='width: 200px; height: 200px;'
+                                                src='<?= base_url('dist/img/error.gif')?>'>
+                                    <br>
+                                    <p style="font-size: 16px">No se pudo ejecutar esta acción, intentalo más tarde.</p>
+                                <div>
+                            </div>
                         `);
-                        $("#myModalEnviadas").modal();
+                        showModal();
                     }
                 },
                 error: function() {

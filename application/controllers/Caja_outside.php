@@ -2577,17 +2577,17 @@ class Caja_outside extends CI_Controller
     {
         $data = json_decode(file_get_contents("php://input"));
         if (!isset($data->abreviacion) || !isset($data->nombre) || !isset($data->empresa))
-            echo json_encode(array("status" => 400, "error" => "Algún parámetro no tiene un valor especificado o no viene informado."));
+            echo json_encode(array("status" => 400, "error" => "Algún parámetro no tiene un valor especificado o no viene informado."), JSON_UNESCAPED_UNICODE);
         else {
             if ($data->abreviacion == "" || $data->nombre == "" || $data->empresa == "")
-                echo json_encode(array("status" => 400, "error" => "Algún parámetro no tiene un valor especificado o no viene informado."));
+                echo json_encode(array("status" => 400, "error" => "Algún parámetro no tiene un valor especificado o no viene informado."), JSON_UNESCAPED_UNICODE);
             else {
                 $insertData = array("nombreResidencial" => $data->abreviacion, "descripcion" => $data->nombre, "empresa" => $data->empresa);
-                $reuslt = $this->caja_model_outside->insertResidencial($insertData);
+                $reuslt = $this->General_model->addRecord("residenciales", $insertData);
                 if ($reuslt == true)
-                    echo json_encode(array("status" => 200, "error" => "El registro se ha ingresado de manera exitosa."));
+                    echo json_encode(array("status" => 200, "error" => "El registro se ha ingresado de manera exitosa."), JSON_UNESCAPED_UNICODE);
                 else
-                    echo json_encode(array("status" => 400, "error" => "Oops, algo salió mal. Inténtalo más tarde."));
+                    echo json_encode(array("status" => 400, "error" => "Oops, algo salió mal. Inténtalo más tarde."), JSON_UNESCAPED_UNICODE);
             }
         }
     }
@@ -2601,10 +2601,10 @@ class Caja_outside extends CI_Controller
     {
         $data = json_decode(file_get_contents("php://input"));
         if (!isset($data->idResidencial) || !isset($data->abreviacion) || !isset($data->nombre) || !isset($data->empresa) || !isset($data->servicio_bajio))
-            echo json_encode(array("status" => 400, "error" => "Algún parámetro no tiene un valor especificado o no viene informado."));
+            echo json_encode(array("status" => 400, "message" => "Algún parámetro no tiene un valor especificado o no viene informado."), JSON_UNESCAPED_UNICODE);
         else {
             if ($data->idResidencial == "" || $data->abreviacion == "" || $data->nombre == "" || $data->empresa == "" || $data->servicio_bajio == "")
-                echo json_encode(array("status" => 400, "error" => "Algún parámetro no tiene un valor especificado o no viene informado."));
+                echo json_encode(array("status" => 400, "message" => "Algún parámetro no tiene un valor especificado o no viene informado."), JSON_UNESCAPED_UNICODE);
             else {
                 $updateData = array(
                     "nombreResidencial" => $data->abreviacion,
@@ -2612,11 +2612,11 @@ class Caja_outside extends CI_Controller
                     "empresa" => $data->empresa,
                     "servicio_bajio" => $data->servicio_bajio
                 );
-                $reuslt = $this->caja_model_outside->updateResidencial($updateData, $data->idResidencial);
+                $reuslt = $this->General_model->updateRecord("residenciales", $updateData, "idResidencial", $data->idResidencial);
                 if ($reuslt == true)
-                    echo json_encode(array("status" => 200, "error" => "El registro se ha actualizado de manera exitosa."));
+                    echo json_encode(array("status" => 200, "message" => "El registro se ha actualizado de manera exitosa."), JSON_UNESCAPED_UNICODE);
                 else
-                    echo json_encode(array("status" => 400, "error" => "Oops, algo salió mal. Inténtalo más tarde."));
+                    echo json_encode(array("status" => 400, "message" => "Oops, algo salió mal. Inténtalo más tarde."), JSON_UNESCAPED_UNICODE);
             }
         }
     }
@@ -2647,6 +2647,89 @@ class Caja_outside extends CI_Controller
             $data = array ("estatus" => $this->input->post("action"));
             $response = $this->General_model->updateRecord('tokens',  $data, 'id_token', $this->input->post("id"));
             echo json_encode($response);
+        }
+
+    }
+
+    public function updateCondominio()
+    {
+        $data = json_decode((file_get_contents("php://input")));
+//        var_dump(json_decode($data));
+
+        if (!isset($data->idCondominio) || !isset($data->nombre) || !isset($data->nombre_condominio) || !isset($data->abreviatura) || !isset($data->tipo_lote) ||
+            !isset($data->idEtapa) || !isset($data->idDBanco) || !isset($data->idResidencial)){
+            echo json_encode(array("status" => 400, "message" => "Algún parámetro no tiene un valor especificado o no viene informado."), JSON_UNESCAPED_UNICODE);
+            echo 'flag1';}
+        else {
+            if ($data->idCondominio == "" || $data->nombre == "" || $data->nombre_condominio == "" || $data->abreviatura == "" || $data->tipo_lote == "" ||
+                $data->idEtapa == "" || $data->idDBanco == "" || $data->idResidencial=="")
+               {
+                   echo json_encode(array("status" => 400, "message" => "Algún parámetro no tiene un valor especificado o no viene informado..."), JSON_UNESCAPED_UNICODE);
+                    echo 'flag2';
+               }
+            else {
+                echo 'flag3';
+                $updateData = array(
+                    "nombre" => $data->nombre,
+                    "nombre_condominio" => $data->nombre_condominio,
+                    "abreviatura" => $data->abreviatura,
+                    "tipo_lote" => $data->tipo_lote,
+                    "idEtapa" => $data->idEtapa,
+                    "idDBanco" => $data->idDBanco,
+                    "idResidencial" => $data->idResidencial
+                );
+                $reuslt = $this->General_model->updateRecord("condominios", $updateData, "idCondominio", $data->idCondominio);
+                if ($reuslt == true)
+                    echo json_encode(array("status" => 200, "message" => "El registro se ha actualizado de manera exitosa."), JSON_UNESCAPED_UNICODE);
+                else
+                    echo json_encode(array("status" => 400, "message" => "Oops, algo salió mal. Inténtalo más tarde."), JSON_UNESCAPED_UNICODE);
+            }
+        }
+    }
+
+
+    public function dataBankTask(){
+        $data = json_decode((file_get_contents("php://input")));
+//        print_r($data);
+//        exit;
+
+        if (!isset($data->idDBanco) || !isset($data->empresa) || !isset($data->banco) || !isset($data->cuenta) || !isset($data->clabe) ||
+            !isset($data->estatus)) {
+            echo json_encode(array("status" => 400, "message" => "Algún parámetro no tiene un valor especificado o no viene informado."), JSON_UNESCAPED_UNICODE);
+//            echo 'flag1';}
+        }
+        else {
+            if ($data->idDBanco < 0 || $data->empresa == "" || $data->banco == "" || $data->cuenta == "" || $data->clabe == "" ||
+                $data->estatus == "")
+            {
+                echo json_encode(array("status" => 400, "message" => "Algún parámetro no tiene un valor especificado o no viene informado..."), JSON_UNESCAPED_UNICODE);
+//                echo 'flag2';
+            }
+            else {
+                $idDBanco = (int) $data->idDBanco;
+                $data_action = array(
+                    "empresa"   => $data->empresa,
+                    "banco"     => $data->banco,
+                    "cuenta"    => $data->cuenta,
+                    "clabe"     => $data->clabe,
+                    "estatus"   => $data->estatus
+                );
+
+
+                if($idDBanco==0){
+                    #SE DEBE HACER EL INSERT DE LA DATA BANCO
+                    $result = $this->General_model->addRecord("datosbancarios", $data_action);
+
+                }else{
+                    #SE DEBE HACER EL UPDATE
+                    $result = $this->General_model->updateRecord("datosbancarios", $data_action, "idDBanco", $idDBanco);
+                }
+
+                if ($result == true)
+                    echo json_encode(array("status" => 200, "message" => "El registro se ha actualizado de manera exitosa."), JSON_UNESCAPED_UNICODE);
+                else
+                    echo json_encode(array("status" => 400, "message" => "Oops, algo salió mal. Inténtalo más tarde."), JSON_UNESCAPED_UNICODE);
+            }
         }
 
     }

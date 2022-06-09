@@ -1715,4 +1715,21 @@ class Asesor_model extends CI_Model
         ORDER BY cl.id_Cliente ASC");
         return $query->result_array();
     }
+    function getInfoCFByCl($id_cliente){
+        $query = $this->db->query("
+        SELECT * FROM corridas_financieras cf
+        INNER JOIN lotes l ON l.idLote = cf.id_lote
+        INNER JOIN clientes cl ON l.idCliente = cl.id_cliente
+        WHERE l.idCliente = $id_cliente AND cf.status=1;
+        ");
+        return $query->row();
+    }
+    function getDescsByCF($id_corrida){
+        $query = $this->db->query("SELECT id_pf, porcentaje, precio_t, precio_m, ahorro, idLote, co.descripcion as aplicable_a, pf.id_corrida  FROM precios_finales pf 
+        INNER JOIN condiciones co ON pf.id_condicion = co.id_condicion
+        WHERE id_corrida=".$id_corrida);
+        return $query->result_array();
+    }
+
+
 }
