@@ -4019,7 +4019,7 @@ LEFT JOIN  usuarios di ON di.id_usuario = su.id_lider
             return (bool)($this->db->query("UPDATE lotes SET registro_comision = $bandera,modificado=".$this->session->userdata('id_usuario')." WHERE idLote = $idLote"));
         }else{
             $this->db->query("UPDATE lotes SET registro_comision = $bandera,modificado=".$this->session->userdata('id_usuario')." WHERE idLote = $idLote");
-            $this->db->query("UPDATE historial_log SET estatus = 0 WHERE tabla = 'pago_comision' AND estatus = 1 AND identificador = $idLote");
+            $this->db->query("UPDATE historial_log SET estatus = 1 WHERE tabla = 'pago_comision' AND estatus = 1 AND identificador = $idLote");
             return (bool)($this->db->query("UPDATE pago_comision SET bandera = $bandera WHERE id_lote = $idLote"));
         }
     }
