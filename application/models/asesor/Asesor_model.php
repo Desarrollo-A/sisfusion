@@ -1622,4 +1622,8 @@ class Asesor_model extends CI_Model
         return $query->result_array();
 
     }
+
+    public function getAutorizaciones($idLote){
+        $query = $this->db->query("SELECT estatus FROM autorizaciones WHERE idLote = ".$idLote.";");
+    }
 }
