@@ -1,24 +1,34 @@
 var optionsTotalVentas = {
-    series: [44, 55, 67, 83],
+    series: [],
     chart: {
         height: '100%',
         type: 'radialBar',
     },
+    colors: ['#0089B7','#039590', '#00ACB8', '#4BBC8E', '#00CDA3', '#92E784', '#F9F871'],
     plotOptions: {
         radialBar: {
+            startAngle: -135,
+            endAngle: 135,
             dataLabels: {
                 name: {
-                    fontSize: '22px',
+                    fontSize: '14px',
+                    offsetY: 120
                 },
                 value: {
-                    fontSize: '32px',
+                    fontSize: '18px',
+                    offsetY: 76,
+                    formatter: function (val) {
+                        return val + '%'
+                      }
                 },
                 total: {
                     show: true,
-                    label: 'Total',
+                    label: '',
+                    fontSize: '14px',
+                    offsetY: 120,
                     formatter: function (w) {
                         // By default this function returns the average of all series. The below is just an example to show the use of custom formatter function
-                        return 249
+                        return w.globals.labels[0]
                     }
                 }
             },
@@ -27,14 +37,10 @@ var optionsTotalVentas = {
             }
         }
     },
-    labels: ['Apples', 'Oranges', 'Bananas', 'Berries'],
 };
 
 var optionsProspectos = {
-    series: [{
-        name: 'series1',
-        data: [31, 40, 28, 51, 42, 93, 76, 70, 88]
-    }],
+    series: [],
     chart: {
         type: 'area',
         height: '100%',
@@ -42,10 +48,12 @@ var optionsProspectos = {
         zoom: { enabled: false },
         sparkline: {
             enabled: true
-        }
+          }
     },
     colors: ["#2C93E7"],
-    grid: { show: false},
+    grid: {
+        show: false,
+    },
     dataLabels: { enabled: false },
     legend: { show: false },
     stroke: {
@@ -53,7 +61,6 @@ var optionsProspectos = {
         width: 2,
     },
     xaxis: {
-    type: 'numeric',
     labels: {show: false},
     axisBorder: {show:false},
     axisTicks: {show:false},
@@ -83,13 +90,7 @@ var optionsProspectos = {
 };
 
 var optionsProspClients = {
-    series: [{
-        name: 'Clientes',
-        data: [91, 45, 31, 40, 28, 51, 42, 109, 100, 67, 80, 115]
-    }, {
-        name: 'Prospectos',
-        data: [45, 30, 11, 32, 45, 32, 34, 52, 41, 38, 65, 47]
-    }],
+    series: [],
     chart: {
         height: '100%',
         type: 'area',
@@ -110,16 +111,16 @@ var optionsProspClients = {
         show: true,
         borderColor: '#f3f3f3',
         strokeDashArray: 0,
-        position: 'back', 
+        position: 'back',
         yaxis: {
             lines: {
                 show: true
             }
-        },  
+        },
         row: {
             colors: undefined,
             opacity: 0.5
-        },  
+        },
         column: {
             colors: undefined,
             opacity: 0.5
@@ -132,9 +133,6 @@ var optionsProspClients = {
         width: 2,
         curve: 'smooth',
         opacity: 0.7
-    },
-    xaxis: {
-        categories: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
     },
     fill: {
         opacity: 1,
@@ -155,7 +153,7 @@ var optionsProspClients = {
 
 var optionsWeekly = {
     series: [{
-        data: [21, 22, 10, 28, 16, 21, 13, 30]
+        data: []
     }],
     chart: {
         height: '100%',
@@ -164,8 +162,12 @@ var optionsWeekly = {
             show: false
         },
     },
+    noData: {
+        text: 'No hay informacion para mostrar...'
+      },
+    colors: ['#0089B7','#039590', '#00ACB8', '#4BBC8E', '#00CDA3', '#92E784', '#F9F871'],
     grid:{
-        show: false,
+        show: true,
     },
     plotOptions: {
         bar: {
@@ -177,49 +179,57 @@ var optionsWeekly = {
         enabled: false
     },
     legend: {
-        show: false
+        show: false,
     },
     xaxis: {
-        categories: ['uno','dos','tres','cuatro','cinco','seis','siete','ocho'],
+        show: false,
         labels: {
-            style: {
-                fontSize: '12px'
-            }
-        }
+          show: false
+        },
+        axisBorder: {
+          show: false
+        },
+        axisTicks: {
+          show: false
+        },
+        categories: ['Prospectos nuevos','Prospectos c/cita','Ventas totales','Ventas contratadas',
+        'Ventas apartadas','Cancelados contratados','Cancelados apartados']
     }
 };
 
 var optionsFunnel = {
-    series: [44, 55, 67, 83],
+    series: [],
     chart: {
         height: '100%',
-        type: 'radialBar',
+        type: 'polarArea',
     },
-    plotOptions: {
-        radialBar: {
-            dataLabels: {
-                name: {
-                    fontSize: '20px',
-                    fontWeight: '100'
-                },
-                value: {
-                    fontSize: '36px',
-                },
-                total: {
-                    show: true,
-                    label: 'Suma',
-                    formatter: function (w) {
-                        // By default this function returns the average of all series. The below is just an example to show the use of custom formatter function
-                        return 249
-                    }
-                }
+    colors: ['#0089B7','#039590', '#00ACB8', '#4BBC8E', '#00CDA3', '#92E784', '#F9F871'],
+    stroke: {
+        colors: ['#fff']
+    },
+    fill: {
+        opacity: 0.8
+    },
+    yaxis: {
+        show: false
+    },
+    grid: {
+        show: false,
+        xaxis: {
+            lines: {
+                show: false //or just here to disable only x axis grids
             }
-        }
+        },
+        yaxis: {
+            lines: {
+                show: false //or just here to disable only y axis
+            }
+        },
     },
-    labels: ['Apples', 'Oranges', 'Bananas', 'Berries'],
+    legend: {
+        show: false
+    }
 };
-
-
 
 var totalVentasChart = new ApexCharts(document.querySelector("#totalVentasChart"), optionsTotalVentas);
 totalVentasChart.render();
@@ -236,573 +246,308 @@ chartWeekly.render();
 var chartFunnel = new ApexCharts(document.querySelector("#chartFunnel"), optionsFunnel);
 chartFunnel.render();
 
-  
-$(document).ready(function(){
-    loadInit();
-});
-function loadInit(){
-    let select1 = document.getElementById('infoMainSelector1').checked;
-    let select2 = document.getElementById('infoMainSelector2').checked;
-    if(select1 == true){
-        loadData();
+sp = { // MJ: SELECT PICKER
+    initFormExtendedDatetimepickers: function () {
+        $('.datepicker').datetimepicker({
+            format: 'DD/MM/YYYY',
+            icons: {
+                time: "fa fa-clock-o",
+                date: "fa fa-calendar",
+                up: "fa fa-chevron-up",
+                down: "fa fa-chevron-down",
+                previous: 'fa fa-chevron-left',
+                next: 'fa fa-chevron-right',
+                today: 'fa fa-screenshot',
+                clear: 'fa fa-trash',
+                close: 'fa fa-remove',
+                inline: true
+            }
+        });
     }
 }
 
-function loadData(){
-    let response_vtas;
+// jquery
+$(document).ready(function(){
+    rol != 9 ? $('#buttonsCoord').hide():'';
+    sp.initFormExtendedDatetimepickers();
+    $('.datepicker').datetimepicker({locale: 'es'});
+    setInitialValues();
+    loadInit();
+});
+
+$(document).on('click', '.week', function(e){
+    e.preventDefault();
+    var id = $(this).attr('id');
+    weekFilter(id);
+});
+
+$(document).on('click', '#searchByDateRange', function(e){
+    e.preventDefault();
+    var beginDate = $('#beginDate').val();
+    var endDate = $('#endDate').val();
+    getClientsAndProspectsByYear(2, formatDate(beginDate), formatDate(endDate));
+});
+
+$(document).on('click', '#searchByDateRange2', function(e){
+    e.preventDefault();
+    var beginDate = $('#beginDate2').val();
+    var endDate = $('#endDate2').val();
+    let typeTransaction = validateMainFilters();
+
+    var com2 = new FormData();
+    com2.append("fecha_inicio", formatDate(beginDate));
+    com2.append("fecha_fin", formatDate(endDate));
+    com2.append("typeTransaction", typeTransaction);
+    getDataFromDates(com2);
+});
+
+$('.infoMainSelector').unbind().on('click', function(e){
+    let c= $('input:checkbox.infoMainSelector:checked').length
+    var checkbox = $(this);
+    if (!checkbox.is(":checked") && c<1) {
+        // do the confirmation thing here
+        e.preventDefault();
+        return false;
+    }
+    loadInit();
+    console.log('click');
+});
+
+function loadInit(){
+        typeTransaction = validateMainFilters();
+        var com2 = new FormData();
+        com2.append("typeTransaction", typeTransaction);
+        getProspectsByYear(com2); 
+        getSalesByYear(com2);
+        getClientsAndProspectsByYear(); 
+        generalMetrics(typeTransaction); 
+        cicloVenta(com2);
+}
+
+function getSalesByYear(com2){
     $.ajax({
-        url:"Dashboard/getProspectsByUserSessioned",
+        url: "Dashboard/totalVentasData",
+        data:com2,
         cache: false,
         contentType: false,
         processData: false,
         type: 'POST',
-        beforeSend: function(){
+        dataType: 'json',
+        beforeSend: function () {
             $('#spiner-loader').removeClass('hide');
         },
-        success : function (response) {
-            response = JSON.parse(response);
-            response_vtas = response['total_ventas'][0];
-            response = response[0];
-            if(response.prospectos > 0) {
+        success: function (response) {
+            let totalVentasArray = [
+                parseFloat(response.porcentajeTotal),
+                parseFloat(response.porcentajeTotalCont),
+                parseFloat(response.porcentajeTotalAp),
+                parseFloat(response.porcentajeTotalC),
+            ];
+            totalVentasChart.updateSeries(totalVentasArray)
 
+            totalVentasChart.updateOptions({
+              labels: [
+                `Gran total: ${response.totalVentas}`,
+                `Contratado: ${response.totalConT}`,
+                `Apartado: ${response.totalAT}`,
+                `Cancelado: ${response.totalCT}`
+                ]
+             });
 
-                $('#spiner-loader').addClass('hide');
-                $('.numberElement').removeClass('subtitle_skeleton');
-
-                $('#numberGraphic').text(response.prospectos);
-                $('#pt_card').text(response.prospectos);
-                $('#total_ventas').text(response_vtas.ventas_apartadas);
-
-                chart2.updateSeries([{
-                    data: [response_vtas.porcentajeApartado],
-                    name: 'Ventas apartados'
-                },{
-                    data: [response_vtas.porcentajeCanceladoApartado],
-                    name: 'Cancelados apartados'
-                },{
-                    data: [response_vtas.porcentajeContratado],
-                    name: 'Ventas contratadas'
-                },{
-                    data: [response_vtas.porcentajeCanceladoContratado],
-                    name: 'Canceladas contratadas'
-                }])
-
-            }else if(response.message == 'ERROR'){
-                alerts.showNotification('top', 'right', 'Ocurrió un error, intentalo nuevamente', 'danger');
-                $('#spiner-loader').addClass('hide');
-            }
+            totalVentasChart.toggleDataPointSelection (0);
         }
     });
-    loadData2();
 }
 
+function getProspectsByYear(com2) {
+    $.ajax({
+        url: "Dashboard/getProspectsByYear",
+        data:com2,
+        cache: false,
+        contentType: false,
+        processData: false,
+        type: 'POST',
+        dataType: 'json',
+        beforeSend: function () {
+            $('#spiner-loader').removeClass('hide');
+        },
+        success: function (response) {
+            let months = [];
+            let data = [];
+            let count = 0;
+            response.forEach(element => {
+                months.push(element.MONTH);
+                data.push(element.counts);
+                count = count + element.counts;
+            });
+            prospectosChart.updateSeries([{
+                name: 'Prospectos',
+                data: data
+            }])
+
+            prospectosChart.updateOptions({
+                xaxis: {
+                   categories: months
+                },
+             });
+
+            $('#numberGraphic').text(count);
+        }
+    });
+}
+
+function getClientsAndProspectsByYear(type = 1, beginDate = null, endDate= null) {
+    typeTransaction = validateMainFilters();
+    var data = new FormData();
+    data.append("type", type);
+    data.append("beginDate", beginDate);
+    data.append("endDate", endDate);
+    data.append("typeTransaction", typeTransaction);
+
+    $.ajax({
+        url: "Dashboard/getClientsAndProspectsByYear",
+        cache: false,
+        contentType: false,
+        processData: false,
+        type: 'POST',
+        data: data,
+        dataType: 'json',
+        beforeSend: function () {
+            $('#spiner-loader').removeClass('hide');
+        },
+        success: function (response) {
+            let monthsP = [];
+            let monthsC = [];
+            let dataP = [];
+            let dataC = [];
+            let countC = 0;
+            let countP = 0;
+
+            response.Clientes.forEach(element => {
+                monthsP.push(element.MONTH);
+                dataC.push(element.counts);
+                countC = countC + element.counts;
+            });
+
+            response.Prospectos.forEach(element => {
+                monthsC.push(element.MONTH);
+                dataP.push(element.counts);
+                countP = countP + element.counts;
+            });
+
+            chartProspClients.updateSeries([{
+                name: 'Prospectos',
+                data: dataP
+            },{
+                name: 'Clientes',
+                data: dataC
+            }])
+
+            chartProspClients.updateOptions({
+                xaxis: {
+                   categories: monthsP.length >= monthsC.length ? monthsP:monthsC
+                },
+             });
+
+            $('#spiner-loader').addClass('hide');
+        }
+    });
+}
+
+function generalMetrics(typeTransaction) {
+    let thisWeek = getThisWeek();
+    var com2 = new FormData();
+    com2.append("fecha_inicio", thisWeek.inicio_semana);
+    com2.append("fecha_fin", thisWeek.fin_semana);
+    com2.append("typeTransaction", typeTransaction);
+    getDataFromDates(com2);
+}
 
 function weekFilter(element){
-    let typeTransaction = 0;
+    typeTransaction = validateMainFilters();
     if(element == 'thisWeek'){
-        var curr = new Date; // get current date
-        var first = curr.getDate() - curr.getDay(); // First day is the day of the month - the day of the week
-        var last = first + 6; // last day is the first day + 6
-
-        var firstday = new Date(curr.setDate(first));
-        let inicio_semana = new Date(firstday.getFullYear(), firstday.getMonth(), firstday.getDate())
-        inicio_semana = inicio_semana.toISOString().split('T')[0];
-
-        var lastday = new Date(curr.setDate(last));
-        let fin_semana = new Date(lastday.getFullYear(), lastday.getMonth(), lastday.getDate());
-        fin_semana = fin_semana.toISOString().split('T')[0];
-        typeTransaction = validateMainFilters();
+        let thisWeek = getThisWeek();
         var com2 = new FormData();
-        com2.append("fecha_inicio", inicio_semana);
-        com2.append("fecha_fin", fin_semana);
+        com2.append("fecha_inicio", thisWeek.inicio_semana);
+        com2.append("fecha_fin", thisWeek.fin_semana);
         com2.append("typeTransaction", typeTransaction);
-
-        $.ajax({
-            url: "Dashboard/getDataFromDates",
-            data:com2,
-            cache: false,
-            contentType: false,
-            processData: false,
-            type: 'POST',
-            beforeSend: function(){
-                // $('#spiner-loader').removeClass('hide');
-                $('.numberElement').addClass('subtitle_skeleton');
-                cleanValues(true);
-            },
-            success : function (response) {
-                response = JSON.parse(response);
-                let array_chart_numbers = [];
-                $('.numberElement').removeClass('subtitle_skeleton');
-                response.map((element)=>{
-                    if(element.queryType == 'prospectos_totales'){
-                        $('#pt_card').text(element.numerosTotales);
-                        array_chart_numbers.push(element.numerosTotales);
-                    }
-                    if(element.queryType == 'prospectos_nuevos'){
-                        $('#np_card').text(element.numerosTotales);
-                        array_chart_numbers.push(element.numerosTotales);
-                    }
-                    if(element.queryType == 'ventas_apartados'){
-                        $('#va_card').text(element.numerosTotales);
-                        array_chart_numbers.push(element.numerosTotales);
-                    }
-                    if(element.queryType == 'cancelados_apartados'){
-                        $('#ca_card').text(element.numerosTotales);
-                        array_chart_numbers.push(element.numerosTotales);
-                    }
-                    if(element.queryType == 'cierres_totales'){
-                        $('#ct_card').text(element.numerosTotales);
-                        array_chart_numbers.push(element.numerosTotales);
-                    }
-                    if(element.queryType == 'prospectos_cita'){
-                        $('#pcc_card').text(element.numerosTotales);
-                        array_chart_numbers.push(element.numerosTotales);
-                    }
-                    if(element.queryType == 'ventas_contratadas'){
-                        $('#vc_card').text(element.numerosTotales);
-                        array_chart_numbers.push(element.numerosTotales);
-                    }
-                    if(element.queryType == 'contratos_cancelados'){
-                        $('#cc_card').text(element.numerosTotales);
-                        array_chart_numbers.push(element.numerosTotales);
-                    }
-                });
-                chart4.updateSeries([{
-                    data: array_chart_numbers
-                }])
-
-            }
-        });
+        getDataFromDates(com2);
     }
     if(element == 'lastWeek'){
         let semana_pasada =  getLastWeek();
-        let start_sp;
-        let end_sp;
-        semana_pasada.map((element)=>{
-            if(element.type==1){
-                start_sp = element.date;
-            }else{
-                end_sp = element.date;
-            }
-        });
-
-        typeTransaction = validateMainFilters();
         var com2 = new FormData();
-        com2.append("fecha_inicio", start_sp);
-        com2.append("fecha_fin", end_sp);
+        com2.append("fecha_inicio", semana_pasada.inicio_semana);
+        com2.append("fecha_fin", semana_pasada.fin_semana);
         com2.append("typeTransaction", typeTransaction);
-
-
-
-        $.ajax({
-            url: "Dashboard/getDataFromDates",
-            data:com2,
-            cache: false,
-            contentType: false,
-            processData: false,
-            type: 'POST',
-            beforeSend: function(){
-                // $('#spiner-loader').removeClass('hide');
-                $('.numberElement').addClass('subtitle_skeleton');
-                cleanValues(true);
-            },
-            success : function (response) {
-                response = JSON.parse(response);
-                let array_chart_numbers = [];
-                $('.numberElement').removeClass('subtitle_skeleton');
-                response.map((element)=>{
-                    if(element.queryType == 'prospectos_totales'){
-                        $('#pt_card').text(element.numerosTotales);
-                        array_chart_numbers.push(element.numerosTotales);
-                    }
-                    if(element.queryType == 'prospectos_nuevos'){
-                        $('#np_card').text(element.numerosTotales);
-                        array_chart_numbers.push(element.numerosTotales);
-                    }
-                    if(element.queryType == 'ventas_apartados'){
-                        $('#va_card').text(element.numerosTotales);
-                        array_chart_numbers.push(element.numerosTotales);
-                    }
-                    if(element.queryType == 'cancelados_apartados'){
-                        $('#ca_card').text(element.numerosTotales);
-                        array_chart_numbers.push(element.numerosTotales);
-                    }
-                    if(element.queryType == 'cierres_totales'){
-                        $('#ct_card').text(element.numerosTotales);
-                        array_chart_numbers.push(element.numerosTotales);
-                    }
-                    if(element.queryType == 'prospectos_cita'){
-                        $('#pcc_card').text(element.numerosTotales);
-                        array_chart_numbers.push(element.numerosTotales);
-                    }
-                    if(element.queryType == 'ventas_contratadas'){
-                        $('#vc_card').text(element.numerosTotales);
-                        array_chart_numbers.push(element.numerosTotales);
-                    }
-                    if(element.queryType == 'contratos_cancelados'){
-                        $('#cc_card').text(element.numerosTotales);
-                        array_chart_numbers.push(element.numerosTotales);
-                    }
-                });
-                chart4.updateSeries([{
-                    data: array_chart_numbers
-                }])
-
-            }
-        });
-
+        getDataFromDates(com2);
     }
     if(element == 'lastMonth'){
         let mes_pasada =  getLastMonth();
-        let start_sp;
-        let end_sp;
-        mes_pasada.map((element)=>{
-            if(element.type==1){
-                start_sp = element.date;
-            }else{
-                end_sp = element.date;
-            }
-        });
-        typeTransaction = validateMainFilters();
         var com2 = new FormData();
-        com2.append("fecha_inicio", start_sp);
-        com2.append("fecha_fin", end_sp);
+        com2.append("fecha_inicio", mes_pasada.inicio_mes);
+        com2.append("fecha_fin", mes_pasada.fin_mes);
         com2.append("typeTransaction", typeTransaction);
-        $.ajax({
-            url: "Dashboard/getDataFromDates",
-            data:com2,
-            cache: false,
-            contentType: false,
-            processData: false,
-            type: 'POST',
-            beforeSend: function(){
-                // $('#spiner-loader').removeClass('hide');
-                $('.numberElement').addClass('subtitle_skeleton');
-                cleanValues(true);
-            },
-            success : function (response) {
-                response = JSON.parse(response);
-                let array_chart_numbers = [];
-                $('.numberElement').removeClass('subtitle_skeleton');
-                response.map((element)=>{
-                    if(element.queryType == 'prospectos_totales'){
-                        $('#pt_card').text(element.numerosTotales);
-                        array_chart_numbers.push(element.numerosTotales);
-                    }
-                    if(element.queryType == 'prospectos_nuevos'){
-                        $('#np_card').text(element.numerosTotales);
-                        array_chart_numbers.push(element.numerosTotales);
-                    }
-                    if(element.queryType == 'ventas_apartados'){
-                        $('#va_card').text(element.numerosTotales);
-                        array_chart_numbers.push(element.numerosTotales);
-                    }
-                    if(element.queryType == 'cancelados_apartados'){
-                        $('#ca_card').text(element.numerosTotales);
-                        array_chart_numbers.push(element.numerosTotales);
-                    }
-                    if(element.queryType == 'cierres_totales'){
-                        $('#ct_card').text(element.numerosTotales);
-                        array_chart_numbers.push(element.numerosTotales);
-                    }
-                    if(element.queryType == 'prospectos_cita'){
-                        $('#pcc_card').text(element.numerosTotales);
-                        array_chart_numbers.push(element.numerosTotales);
-                    }
-                    if(element.queryType == 'ventas_contratadas'){
-                        $('#vc_card').text(element.numerosTotales);
-                        array_chart_numbers.push(element.numerosTotales);
-                    }
-                    if(element.queryType == 'contratos_cancelados'){
-                        $('#cc_card').text(element.numerosTotales);
-                        array_chart_numbers.push(element.numerosTotales);
-                    }
-                });
-                chart4.updateSeries([{
-                    data: array_chart_numbers
-                }])
-
-            }
-        });
-    }
-}
-$(document).on('click', '.infoMainSelector', function(){
-    let selector1 = $('#infoMainSelector1')[0];
-    let selector2 = $('#infoMainSelector2')[0];
-    let valueOf = this.value;
-    let isCheck = this.checked;
-    let transaction = '';
-
-    if(valueOf == 1 && isCheck){
-        if(selector1.checked && selector2.checked){
-            transaction = 3;
-        }
-        else{
-            transaction = 1;
-        }
-    }
-    else if(valueOf == 2 && isCheck){
-        if(selector1.checked && selector2.checked){
-            transaction = 3;
-        }else{
-            transaction = 2;
-        }
-    }else{
-        if(selector1.checked && !selector2.checked){
-            transaction = 1;
-        }
-        else if(selector2.checked && !selector1.checked){
-            transaction = 2;
-        }else if(selector1.checked && selector2.checked){
-            transaction = 3;
-        }else
-        {
-            transaction = 0;
-        }
-    }
-
-    loadData2();
-
-
-});
-
-function loadData2(){
-    let typeTransaction = 0;
-    let thisWeekS = $('#thisWeek');
-    let lastWeekS = $('#lastWeek');
-    let lastMonthS = $('#lastMonth');
-    if(thisWeekS.hasClass('active')){
-        var curr = new Date; // get current date
-        var first = curr.getDate() - curr.getDay(); // First day is the day of the month - the day of the week
-        var last = first + 6; // last day is the first day + 6
-
-        var firstday = new Date(curr.setDate(first));
-        let inicio_semana = new Date(firstday.getFullYear(), firstday.getMonth(), firstday.getDate()) // can also be a Temporal object
-        inicio_semana = inicio_semana.toISOString().split('T')[0];
-
-        var lastday = new Date(curr.setDate(last));
-        let fin_semana = new Date(lastday.getFullYear(), lastday.getMonth(), lastday.getDate());
-        fin_semana = fin_semana.toISOString().split('T')[0];
-        var com2 = new FormData();
-        typeTransaction = validateMainFilters();
-        com2.append("fecha_inicio", inicio_semana);
-        com2.append("fecha_fin", fin_semana);
-        com2.append("typeTransaction", typeTransaction);
-
-        $.ajax({
-            url: "Dashboard/getDataFromDates",
-            data:com2,
-            cache: false,
-            contentType: false,
-            processData: false,
-            type: 'POST',
-            beforeSend: function(){
-                // $('#spiner-loader').removeClass('hide');
-                $('.numberElement').addClass('subtitle_skeleton');
-                cleanValues(true);
-            },
-            success : function (response) {
-                response = JSON.parse(response);
-                let array_chart_numbers = [];
-                $('.numberElement').removeClass('subtitle_skeleton');
-                response.map((element)=>{
-                    if(element.queryType == 'prospectos_totales'){
-                        $('#pt_card').text(element.numerosTotales);
-                        array_chart_numbers.push(element.numerosTotales);
-                    }
-                    if(element.queryType == 'prospectos_nuevos'){
-                        $('#np_card').text(element.numerosTotales);
-                        array_chart_numbers.push(element.numerosTotales);
-                    }
-                    if(element.queryType == 'ventas_apartados'){
-                        $('#va_card').text(element.numerosTotales);
-                        array_chart_numbers.push(element.numerosTotales);
-                    }
-                    if(element.queryType == 'cancelados_apartados'){
-                        $('#ca_card').text(element.numerosTotales);
-                        array_chart_numbers.push(element.numerosTotales);
-                    }
-                    if(element.queryType == 'cierres_totales'){
-                        $('#ct_card').text(element.numerosTotales);
-                        array_chart_numbers.push(element.numerosTotales);
-                    }
-                    if(element.queryType == 'prospectos_cita'){
-                        $('#pcc_card').text(element.numerosTotales);
-                        array_chart_numbers.push(element.numerosTotales);
-                    }
-                    if(element.queryType == 'ventas_contratadas'){
-                        $('#vc_card').text(element.numerosTotales);
-                        array_chart_numbers.push(element.numerosTotales);
-                    }
-                    if(element.queryType == 'contratos_cancelados'){
-                        $('#cc_card').text(element.numerosTotales);
-                        array_chart_numbers.push(element.numerosTotales);
-                    }
-                });
-                chart4.updateSeries([{
-                    data: array_chart_numbers
-                }])
-
-            }
-        });
-
-    }
-    else if(lastWeekS.hasClass('active')){
-        let semana_pasada =  getLastWeek();
-        let start_sp;
-        let end_sp;
-        semana_pasada.map((element)=>{
-            if(element.type==1){
-                start_sp = element.date;
-            }else{
-                end_sp = element.date;
-            }
-        });
-        typeTransaction = validateMainFilters();
-        var com2 = new FormData();
-        com2.append("fecha_inicio", start_sp);
-        com2.append("fecha_fin", end_sp);
-        com2.append("typeTransaction", typeTransaction);
-
-
-
-        $.ajax({
-            url: "Dashboard/getDataFromDates",
-            data:com2,
-            cache: false,
-            contentType: false,
-            processData: false,
-            type: 'POST',
-            beforeSend: function(){
-                // $('#spiner-loader').removeClass('hide');
-                $('.numberElement').addClass('subtitle_skeleton');
-                cleanValues(true);
-            },
-            success : function (response) {
-                response = JSON.parse(response);
-                let array_chart_numbers = [];
-                $('.numberElement').removeClass('subtitle_skeleton');
-                response.map((element)=>{
-                    if(element.queryType == 'prospectos_totales'){
-                        $('#pt_card').text(element.numerosTotales);
-                        array_chart_numbers.push(element.numerosTotales);
-                    }
-                    if(element.queryType == 'prospectos_nuevos'){
-                        $('#np_card').text(element.numerosTotales);
-                        array_chart_numbers.push(element.numerosTotales);
-                    }
-                    if(element.queryType == 'ventas_apartados'){
-                        $('#va_card').text(element.numerosTotales);
-                        array_chart_numbers.push(element.numerosTotales);
-                    }
-                    if(element.queryType == 'cancelados_apartados'){
-                        $('#ca_card').text(element.numerosTotales);
-                        array_chart_numbers.push(element.numerosTotales);
-                    }
-                    if(element.queryType == 'cierres_totales'){
-                        $('#ct_card').text(element.numerosTotales);
-                        array_chart_numbers.push(element.numerosTotales);
-                    }
-                    if(element.queryType == 'prospectos_cita'){
-                        $('#pcc_card').text(element.numerosTotales);
-                        array_chart_numbers.push(element.numerosTotales);
-                    }
-                    if(element.queryType == 'ventas_contratadas'){
-                        $('#vc_card').text(element.numerosTotales);
-                        array_chart_numbers.push(element.numerosTotales);
-                    }
-                    if(element.queryType == 'contratos_cancelados'){
-                        $('#cc_card').text(element.numerosTotales);
-                        array_chart_numbers.push(element.numerosTotales);
-                    }
-                });
-                chart4.updateSeries([{
-                    data: array_chart_numbers
-                }])
-
-            }
-        });
-    }
-    else if(lastMonthS.hasClass('active')){
-        let mes_pasada =  getLastMonth();
-        let start_sp;
-        let end_sp;
-        mes_pasada.map((element)=>{
-            if(element.type==1){
-                start_sp = element.date;
-            }else{
-                end_sp = element.date;
-            }
-        });
-        typeTransaction = validateMainFilters();
-        var com2 = new FormData();
-        com2.append("fecha_inicio", start_sp);
-        com2.append("fecha_fin", end_sp);
-        com2.append("typeTransaction", typeTransaction);
-        $.ajax({
-            url: "Dashboard/getDataFromDates",
-            data:com2,
-            cache: false,
-            contentType: false,
-            processData: false,
-            type: 'POST',
-            beforeSend: function(){
-                // $('#spiner-loader').removeClass('hide');
-                $('.numberElement').addClass('subtitle_skeleton');
-                cleanValues(true);
-            },
-            success : function (response) {
-                response = JSON.parse(response);
-                let array_chart_numbers = [];
-                $('.numberElement').removeClass('subtitle_skeleton');
-                response.map((element)=>{
-                    if(element.queryType == 'prospectos_totales'){
-                        $('#pt_card').text(element.numerosTotales);
-                        array_chart_numbers.push(element.numerosTotales);
-                    }
-                    if(element.queryType == 'prospectos_nuevos'){
-                        $('#np_card').text(element.numerosTotales);
-                        array_chart_numbers.push(element.numerosTotales);
-                    }
-                    if(element.queryType == 'ventas_apartados'){
-                        $('#va_card').text(element.numerosTotales);
-                        array_chart_numbers.push(element.numerosTotales);
-                    }
-                    if(element.queryType == 'cancelados_apartados'){
-                        $('#ca_card').text(element.numerosTotales);
-                        array_chart_numbers.push(element.numerosTotales);
-                    }
-                    if(element.queryType == 'cierres_totales'){
-                        $('#ct_card').text(element.numerosTotales);
-                        array_chart_numbers.push(element.numerosTotales);
-                    }
-                    if(element.queryType == 'prospectos_cita'){
-                        $('#pcc_card').text(element.numerosTotales);
-                        array_chart_numbers.push(element.numerosTotales);
-                    }
-                    if(element.queryType == 'ventas_contratadas'){
-                        $('#vc_card').text(element.numerosTotales);
-                        array_chart_numbers.push(element.numerosTotales);
-                    }
-                    if(element.queryType == 'contratos_cancelados'){
-                        $('#cc_card').text(element.numerosTotales);
-                        array_chart_numbers.push(element.numerosTotales);
-                    }
-                });
-                chart4.updateSeries([{
-                    data: array_chart_numbers
-                }])
-
-            }
-        });
+        getDataFromDates(com2);
     }
 }
 
-const formatter = new Intl.DateTimeFormat("en-GB", { // <- re-use me
-    day: "2-digit",
-    month: "2-digit",
-    year: "numeric",
-})
+function getDataFromDates(com2){
+    $.ajax({
+        url: "Dashboard/getDataFromDates",
+        data:com2,
+        cache: false,
+        contentType: false,
+        processData: false,
+        type: 'POST',
+        dataType: 'json',
+        beforeSend: function(){
+            $('#spiner-loader').removeClass('hide');
+            $('.numberElement').addClass('subtitle_skeleton');
+            cleanValues();
+        },
+        success : function (response) {
+            const sumValues = obj => Object.values(obj).reduce((a, b) => a + b);
+            let suma = sumValues(response)-response.prospTotales;
+            chartWeekly.updateSeries([{
+                data: suma > 0 ? [response.prospNuevos, response.prosCita, response.totalVentas, response.totalConT,
+                response.totalAT, response.totalCanC, response.totalCanA] : []
+            }]);
+
+            addTextFields(response);
+            $('#spiner-loader').addClass('hide');
+            $('.numberElement').removeClass('subtitle_skeleton');
+
+        }
+    });
+}
+
+function cicloVenta(com2){
+    $.ajax({
+        url: "Dashboard/cicloVenta",
+        data:com2,
+        cache: false,
+        contentType: false,
+        processData: false,
+        type: 'POST',
+        dataType: 'json',
+        beforeSend: function(){
+            $('#spiner-loader').removeClass('hide');
+            $('.numberElement2').addClass('subtitle_skeleton');
+            cleanValues2();
+        },
+        success : function (response) {
+            chartFunnel.updateSeries([
+               response.totalProspectosCita, response.totalProspectosCitaSeguimiento, 
+                    response.totalApartados, response.totalMitadProceso,response.prospectosNoInteresados
+            ]);
+
+            addTextFields2(response);
+            $('#spiner-loader').addClass('hide');
+            $('.numberElement2').removeClass('subtitle_skeleton');
+
+        }
+    });
+}
 
 function getLastWeek(){
     var curr = new Date; // get current date
@@ -820,7 +565,7 @@ function getLastWeek(){
     let dates = [];
     dates.push({"date":inicio_semana, type:1});
     dates.push({"date":fin_semana, type:2});
-    return dates;
+    return {inicio_semana:inicio_semana, fin_semana:fin_semana};
 }
 
 function getLastMonth(){
@@ -833,15 +578,10 @@ function getLastMonth(){
     };
 
     var formatDate = function(date) {
-        // return formatDateComponent(date.getMonth() + 1) + '/' + formatDateComponent(date.getDate()) + '/' + date.getFullYear();
         return date.getFullYear() + '-' +formatDateComponent(date.getMonth() + 1) + '-' + formatDateComponent(date.getDate());
     };
 
-
-    let dates = [];
-    dates.push({"date":formatDate(prevMonthFirstDate), type:1});
-    dates.push({"date":formatDate(prevMonthLastDate), type:2});
-    return dates;
+    return {inicio_mes:formatDate(prevMonthFirstDate), fin_mes:formatDate(prevMonthLastDate)};
 }
 
 function validateMainFilters(){
@@ -881,17 +621,91 @@ function validateMainFilters(){
     return transaction;
 }
 
-function cleanValues(validator){
-    if(validator){
-        $('#pt_card').text('');
-        $('#np_card').text('');
-        $('#va_card').text('');
-        $('#ca_card').text('');
-        $('#ct_card').text('');
-        $('#pcc_card').text('');
-        $('#vc_card').text('');
-        $('#cc_card').text('');
-    }
+function cleanValues() {
+    $('#pt_card').text('');
+    $('#np_card').text('');
+    $('#va_card').text('');
+    $('#ca_card').text('');
+    $('#vc_card').text('');
+    $('#cc_card').text('');
+    $('#ct_card').text('');
+    $('#pcc_card').text('');
+};
 
+function addTextFields(response){
+    $('#pt_card').text(response.prospTotales);
+    $('#np_card').text(response.prospNuevos);
+    $('#va_card').text(response.totalAT);
+    $('#ca_card').text(response.totalCanA);
+    $('#vc_card').text(response.totalConT);
+    $('#cc_card').text(response.totalCanC);
+    $('#ct_card').text(response.totalVentas);
+    $('#pcc_card').text(response.prosCita);
+};
+
+function cleanValues2() {
+    $('#ac').text('');
+    $('#cf').text('');
+    $('#cita').text('');
+    $('#cs').text('');
+    $('#ap').text('');
+    $('#ni').text('');
+};
+
+function addTextFields2(response){
+    $('#ac').text(response.totalProspectos);
+    $('#cf').text(response.totalMitadProceso);
+    $('#cita').text(response.totalProspectosCita);
+    $('#cs').text(response.totalProspectosCitaSeguimiento);
+    $('#ap').text(response.totalApartados);
+    $('#ni').text(response.prospectosNoInteresados);
+};
+
+function getThisWeek() {
+    var curr = new Date; // get current date
+    var first = curr.getDate() - curr.getDay(); // First day is the day of the month - the day of the week
+    var last = first + 6; // last day is the first day + 6
+
+    var firstday = new Date(curr.setDate(first));
+    let inicio_semana = new Date(firstday.getFullYear(), firstday.getMonth(), firstday.getDate())
+    inicio_semana = inicio_semana.toISOString().split('T')[0];
+
+    var lastday = new Date(curr.setDate(last));
+    let fin_semana = new Date(lastday.getFullYear(), lastday.getMonth(), lastday.getDate());
+    fin_semana = fin_semana.toISOString().split('T')[0];
+    return {fin_semana: fin_semana, inicio_semana: inicio_semana}
 }
 
+function setInitialValues() {
+    // BEGIN DATE
+    const fechaInicio = new Date();
+    // Iniciar en este año, este mes, en el día 1
+    const beginDate = new Date(fechaInicio.getFullYear(), fechaInicio.getMonth(), 1);
+    // END DATE
+    const fechaFin = new Date();
+    // Iniciar en este año, el siguiente mes, en el día 0 (así que así nos regresamos un día)
+    const endDate = new Date(fechaFin.getFullYear(), fechaFin.getMonth() + 1, 0);
+    finalBeginDate = [beginDate.getFullYear(), ('0' + (beginDate.getMonth() + 1)).slice(-2), ('0' + beginDate.getDate()).slice(-2)].join('-');
+    finalEndDate = [endDate.getFullYear(), ('0' + (endDate.getMonth() + 1)).slice(-2), ('0' + endDate.getDate()).slice(-2)].join('-');
+    finalBeginDate2 = [('0' + beginDate.getDate()).slice(-2), ('0' + (beginDate.getMonth() + 1)).slice(-2), beginDate.getFullYear()].join('/');
+    finalEndDate2 = [('0' + endDate.getDate()).slice(-2), ('0' + (endDate.getMonth() + 1)).slice(-2), endDate.getFullYear()].join('/');
+
+    $('#beginDate').val(finalBeginDate2);
+    $('#endDate').val(finalEndDate2);
+    $('#beginDate2').val(finalBeginDate2);
+    $('#endDate2').val(finalEndDate2);
+}
+
+function formatDate(date) {
+    var dateParts = date.split("/");
+    var d = new Date(+dateParts[2], dateParts[1] - 1, +dateParts[0]),
+        month = '' + (d.getMonth() + 1),
+        day = '' + d.getDate(),
+        year = d.getFullYear();
+    if (month.length < 2)
+        month = '0' + month;
+    if (day.length < 2)
+        day = '0' + day;
+
+    return [year, month, day].join('-');
+}
