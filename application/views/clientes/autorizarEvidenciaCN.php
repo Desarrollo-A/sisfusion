@@ -398,16 +398,16 @@
                 },
                 {
                     "data": function (d) {
-                        if (d.rowType == 1) // MJ: CONTROVERSIA NORMAL
+                        if (d.rowType == 11 || d.rowType == 22) // MJ: CONTROVERSIA NORMAL / CONTROVERSIA PARA DESCUENTO
                             return "<small class='label bg-green' style='background-color: #45B39D'>Normal</small>";
-                        else if (d.rowType == 2)// MJ: CONTROVERSIA PARA DESCUENTO
-                            return "<small class='label bg-green' style='background-color: #F4D03F'>Para descuento</small>";
-                        else if (d.rowType == 3)//Implementación Venta nueva
+                        else if (d.rowType == 33)//Implementación Venta nueva
                             return "<small class='label' style='background-color: #566573'>Venta nueva</small>";
-                        else if (d.rowType == 4)// MJ: CONTROVERSIA MKTD 2022
+                        else if (d.rowType == 44)// MJ: CONTROVERSIA MKTD 2022
                             return "<small class='label bg-green' style='background-color: #A569BD'>MKTD 2022</small>";
-                        else if (d.rowType == 5)// MJ: CONTROVERSIA CARGA MASIVA
+                        else if (d.rowType == 55)// MJ: CONTROVERSIA CARGA MASIVA
                             return "<small class='label bg-green' style='background-color: #5DADE2'>Carga masiva</small>"
+                        else // MJ: NO ES CONTROVERSIA
+                            return "<small class='label bg-green' style='background-color: #138D75'>MKTD</small>"
                     }
                 },
                 {"data": "fechaValidacionGerente"},
@@ -549,7 +549,7 @@
         });
 
         // AQUÍ ME FALTA VALIDAR CON EL NAME ACCION == 1
-        if ((rowType == 11 || rowType == 22) && document.getElementById('avanzaContra').checked == true) { // MJ: CUANDO ES UNA CONTROVERSIA SE VA A MANDAR LLAMAR LA FUNCIÓN DE ADDREMOVEMKTD PARA AGREGAR MKTD
+        if ((rowType == 11 || rowType == 22 || rowType == 33 || rowType == 44  || rowType == 55) && document.getElementById('avanzaContra').checked == true) { // MJ: CUANDO ES UNA CONTROVERSIA SE VA A MANDAR LLAMAR LA FUNCIÓN DE ADDREMOVEMKTD PARA AGREGAR MKTD
 
             $.ajax({
                 type: 'POST',
