@@ -121,14 +121,7 @@ public function sendRv5(){
   
 
   $mail = $this->phpmailer_lib->load();
-  // $mail->isSMTP();
-  // $mail->Host     = 'smtp.gmail.com';
-  // $mail->SMTPAuth = true;
-  // $mail->Username = 'no-reply@ciudadmaderas.com';
-  // $mail->Password = 'Va7<*V8PP';
-  // $mail->SMTPSecure = 'ssl';
-  // $mail->Port     = 465;
-  
+
   $mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
 
   $mail->addAddress('lucero.velazquez@ciudadmaderas.com');
@@ -299,13 +292,7 @@ public function mailBloqueosAfter45(){
   $datos["mailbloqueos"]= $this->scheduleTasks_model->sendMailBloqueosDireccion();
 
   $mail = $this->phpmailer_lib->load();
-  // $mail->isSMTP();
-  // $mail->Host     = 'smtp.gmail.com';
-  // $mail->SMTPAuth = true;
-  // $mail->Username = 'no-reply@ciudadmaderas.com';
-  // $mail->Password = 'Va7<*V8PP';
-  // $mail->SMTPSecure = 'ssl';
-  // $mail->Port     = 465;
+
   
   $mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
   $mail->addAddress("contraloria.corporativa6@ciudadmaderas.com");

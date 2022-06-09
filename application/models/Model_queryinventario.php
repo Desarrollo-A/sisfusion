@@ -71,7 +71,7 @@
         $this->db->select('idLote,nombreLote, total, sup');
         $this->db->where('idLote', $lote);
         //$this->db->where('lotes.status','1');
-        $query = $this->db->get('sisfusion.dbo.lotes');
+        $query = $this->db->get('lotes');
         if($query){
             $query = $query->result_array();
             return $query;
@@ -346,13 +346,7 @@
 
 
 			$mail = $this->phpmailer_lib->load();
-			// $mail->isSMTP();
-			// $mail->Host     = 'smtp.gmail.com';
-			// $mail->SMTPAuth = true;
-			// $mail->Username = 'noreply@ciudadmaderas.com';
-			// $mail->Password = 'Marzo2019@';
-			// $mail->SMTPSecure = 'ssl';
-			// $mail->Port     = 465;
+	
 			$mail->setFrom('noreply@ciudadmaderas.com', 'Ciudad Maderas');
 			$mail->addAddress("programador.analista2@ciudadmaderas.com");
 			$mail->Subject = utf8_decode('Apartado desde la página Ciudad Maderas');

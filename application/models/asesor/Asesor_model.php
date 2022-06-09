@@ -48,7 +48,7 @@ class Asesor_model extends CI_Model
 
 
         return $this->db->query("SELECT id_copropietario, id_cliente, regimen_matrimonial as regimen_valor, estado_civil as estado_valor, 
-                                    nacionalidad as nacionalidad_valor, co.nombre as 
+                                    co.nacionalidad as nacionalidad_valor, co.nombre as 
                                     nombre_cop, apellido_paterno, apellido_materno, telefono, telefono_2, correo, fecha_nacimiento, 
                                     originario_de, conyuge, domicilio_particular, personalidad_juridica, 
                                     ocupacion, empresa, posicion,  antiguedad, edadFirma, direccion, tipo_vivienda, rfc
@@ -77,7 +77,15 @@ class Asesor_model extends CI_Model
                 if ($this->session->userdata('id_usuario') == 2762) {
                     return $this->db->query("SELECT * FROM Menu2 WHERE rol=" . $rol . " AND estatus = 1 ORDER BY orden ASC");
                 } else {
-                    return $this->db->query("SELECT * FROM Menu2 WHERE rol=" . $rol . " AND estatus = 1 AND nombre NOT IN ('Reemplazo contrato') ORDER BY orden ASC");
+                    if($this->session->userdata('id_rol') == 32){
+                        $complemento='';
+                        $complemento = $this->session->userdata('id_usuario') == 2767 ? "" : ",'Pagos'"; 
+
+                        return $this->db->query("SELECT * FROM Menu2 WHERE rol=" . $rol . " AND estatus = 1 AND nombre NOT IN ('Reemplazo contrato' $complemento) ORDER BY orden ASC");
+
+                    }else{
+                        return $this->db->query("SELECT * FROM Menu2 WHERE rol=" . $rol . " AND estatus = 1 AND nombre NOT IN ('Reemplazo contrato') ORDER BY orden ASC");
+                    }
                 }
             }
         }
@@ -378,7 +386,7 @@ class Asesor_model extends CI_Model
     {
 
         $this->db->select("cl.id_cliente, id_asesor, id_coordinador, id_gerente, cl.id_sede, cl.nombre, cl.apellido_paterno, 
-        cl.apellido_materno ,personalidad_juridica ,nacionalidad ,cl.rfc ,curp ,cl.correo ,telefono1
+        cl.apellido_materno ,personalidad_juridica ,cl.nacionalidad ,cl.rfc ,curp ,cl.correo ,telefono1
       ,telefono2 ,telefono3 ,fecha_nacimiento ,lugar_prospeccion ,medio_publicitario ,otro_lugar ,plaza_venta ,
       tp.tipo ,estado_civil ,regimen_matrimonial ,nombre_conyuge ,tipo_vivienda ,ocupacion ,cl.empresa ,
       puesto ,edadFirma ,antiguedad ,domicilio_empresa ,telefono_empresa ,noRecibo,engancheCliente ,
@@ -432,7 +440,7 @@ class Asesor_model extends CI_Model
                                     LEFT JOIN opcs_x_cats oc3 ON oc3.id_opcion = co.regimen_matrimonial WHERE co.estatus = 1 AND co.id_cliente = ".$cliente." AND
                                     oc.id_catalogo = 11 AND oc2.id_catalogo = 18 AND oc3.id_catalogo = 19*/
         $query = $this->db->query("SELECT id_copropietario, id_cliente, regimen_matrimonial as regimen_valor, estado_civil as estado_valor, 
-                                    nacionalidad as nacionalidad_valor, co.nombre as 
+                                    co.nacionalidad as nacionalidad_valor, co.nombre as 
                                     nombre_cop, apellido_paterno, apellido_materno, telefono, telefono_2, correo, fecha_nacimiento, 
                                     originario_de, conyuge, domicilio_particular, 
                                     ocupacion, empresa, posicion,  antiguedad, edadFirma, direccion, tipo_vivienda, rfc
@@ -1626,4 +1634,105 @@ class Asesor_model extends CI_Model
     public function getAutorizaciones($idLote){
         $query = $this->db->query("SELECT estatus FROM autorizaciones WHERE idLote = ".$idLote.";");
     }
+    function getlotesRechazados(){
+        $id_currentUser = $this->session->userdata('id_usuario');
+        $lider_currentUser = $this->session->userdata('id_lider');
+        $current_rol = $this->session->userdata('id_rol');
+
+//        print_r($id_currentUser);
+//        echo '<br>';
+//        print_r($lider_currentUser);
+//        echo '<br>';
+//        print_r($current_rol);
+//        echo '<br>';
+//        exit;
+        $filter = '';
+        switch ($current_rol) {
+            case 1:
+            { #DIRECTOR   - RIGEL
+                $filter = '';
+                break;
+            }
+            case 4:
+            { #ASISTENTE DIRECTOR ASISTENTE RIGEL
+                $filter = '';
+                break;
+            }
+            case 3:
+            { #GERENTE
+                $filter = ' AND cl.id_gerente=' . $id_currentUser;
+                break;
+            }
+            case 6:
+            { #ASISTENTE GERENTE
+                $filter = ' AND cl.id_gerente=' . $lider_currentUser;
+                break;
+            }
+            case 2:
+            { #SUBDIRECCIÓN
+                $filter = ' AND cl.id_subdirector=' . $id_currentUser;
+                break;
+            }
+            case 5:
+            { #ASISTENTE SUBDIRECCIÓN
+                $filter = ' AND cl.id_subdirector=' . $lider_currentUser;
+                break;
+            }
+            case 9:
+            { #COORDINADOR
+                $filter = ' AND cl.id_coordinador=' . $id_currentUser;
+                break;
+            }
+            case 59:
+            { #DIRECTOR REGIONAL
+                $filter = ' AND cl.id_regional=' . $id_currentUser;
+                break;
+            }
+            case 60:
+            { #ASISTENTE DIRECTOR REGIONAL
+                $filter = ' AND cl.id_regional=' . $lider_currentUser;
+                break;
+            }
+            default:
+            {
+                $filter = '';
+                break;
+            }
+        }
+
+
+        $query = $this->db->query("SELECT re.descripcion nombreResidencial, co.nombre nombreCondominio, lo.nombreLote, lo.idLote, 
+        CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno) nombreCliente, cl.fechaApartado, sc.nombreStatus estatusActual,
+        mo.descripcion
+                FROM clientes cl
+                INNER JOIN lotes lo ON lo.idLote = cl.idLote AND lo.idCliente = cl.id_cliente AND lo.idStatusLote = 3
+                INNER JOIN condominios co ON lo.idCondominio = co.idCondominio
+                INNER JOIN residenciales re ON co.idResidencial = re.idResidencial
+                INNER JOIN usuarios ae ON ae.id_usuario = cl.id_asesor
+                INNER JOIN usuarios cr ON cr.id_usuario = cl.id_coordinador
+                INNER JOIN usuarios ge ON ge.id_usuario = cl.id_gerente
+                INNER JOIN statuscontratacion sc ON sc.idStatusContratacion = lo.idStatusContratacion
+                INNER JOIN movimientos mo ON mo.idMovimiento = lo.idMovimiento
+                WHERE cl.status = 1 AND
+                (lo.idStatusContratacion = 2 OR lo.idStatusContratacion = 1) AND lo.idMovimiento IN (85, 20, 63, 73, 82, 92, 96) AND cl.status = 1 ".$filter."
+        ORDER BY cl.id_Cliente ASC");
+        return $query->result_array();
+    }
+    function getInfoCFByCl($id_cliente){
+        $query = $this->db->query("
+        SELECT * FROM corridas_financieras cf
+        INNER JOIN lotes l ON l.idLote = cf.id_lote
+        INNER JOIN clientes cl ON l.idCliente = cl.id_cliente
+        WHERE l.idCliente = $id_cliente AND cf.status=1;
+        ");
+        return $query->row();
+    }
+    function getDescsByCF($id_corrida){
+        $query = $this->db->query("SELECT id_pf, porcentaje, precio_t, precio_m, ahorro, idLote, co.descripcion as aplicable_a, pf.id_corrida  FROM precios_finales pf 
+        INNER JOIN condiciones co ON pf.id_condicion = co.id_condicion
+        WHERE id_corrida=".$id_corrida);
+        return $query->result_array();
+    }
+
+
 }

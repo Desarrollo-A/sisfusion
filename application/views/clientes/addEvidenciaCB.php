@@ -380,18 +380,15 @@
                                                     <table id="controversyTable" class="table-striped table-hover">
                                                         <thead>
                                                         <tr>
-                                                            <th data-toggle="tooltip" title="ID lote">ID LOTE</th>
-                                                            <th data-toggle="tooltip" title="Nombre lote">LOTE</th>
-                                                            <th data-toggle="tooltip" title="Tipo">TIPO</th>
-                                                            <th data-toggle="tooltip" title="Comentario">COMENTARIO</th>
-                                                            <th data-toggle="tooltip" title="Fecha creación">FECHA
-                                                                APARTADO
-                                                            </th>
-                                                            <th data-toggle="tooltip" title="Sede">SEDE</th>
-                                                            <th data-toggle="tooltip" title="Cliente">CLIENTE</th>
-                                                            <th data-toggle="tooltip" title="Cliente">FECHA CREACIÓN
-                                                            </th>
-                                                            <th data-toggle="tooltip" title="Cliente">CREADO POR</th>
+                                                            <th>ID LOTE</th>
+                                                            <th>LOTE</th>
+                                                            <th>TIPO</th>
+                                                            <th>COMENTARIO</th>
+                                                            <th>FECHA APARTADO</th>
+                                                            <th>SEDE</th>
+                                                            <th>CLIENTE</th>
+                                                            <th>FECHA CREACIÓN</th>
+                                                            <th>CREADO POR</th>
                                                         </tr>
                                                         </thead>
                                                         <tbody></tbody>
@@ -798,7 +795,7 @@
 
     $(document).on('click', '.reempEvCobranza', function (e) {
         e.preventDefault();
-
+        $('#img_actual_input').empty();
         // $('#img_actual').html('');
         var $itself = $(this);
         var id_evidencia = $itself.attr('data-id_evidencia');

@@ -207,10 +207,15 @@ class VentasAsistentes_model extends CI_Model {
             $where = "l.idStatusContratacion = 13 AND l.idMovimiento  = 43 AND cl.status = 1 AND l.tipo_venta = 4 OR l.idStatusContratacion = 13 AND l.idMovimiento  = 68 AND cl.status = 1 and l.tipo_venta IN (4, 6)";
         } else { // MJ: ES VENTAS
             if ($this->session->userdata('id_sede') == 9)
-                $id_sede = "'4', '" . $this->session->userdata('id_sede') . "'";
-            else
-                $id_sede = "'" . $this->session->userdata('id_sede') . "'";
-            $where = "l.idStatusContratacion = 13 AND l.idMovimiento  = 43 AND cl.status = 1 and l.ubicacion IN($id_sede) OR l.idStatusContratacion = 13 AND l.idMovimiento  = 68 AND cl.status = 1 and l.ubicacion IN($id_sede)";
+                $id_sede = "'4', '" . $this->session->userdata('id_sede') . "')";
+            else {
+                if ($this->session->userdata('id_usuario') == 6831)
+                    $id_sede = "'4', '" . $this->session->userdata('id_sede') . "') AND cl.id_gerente = 690";
+                else
+                    $id_sede = "'" . $this->session->userdata('id_sede') . "')";
+            }
+
+            $where = "l.idStatusContratacion = 13 AND l.idMovimiento  = 43 AND cl.status = 1 and l.ubicacion IN($id_sede OR l.idStatusContratacion = 13 AND l.idMovimiento  = 68 AND cl.status = 1 and l.ubicacion IN($id_sede";
         }
         $query = $this->db->query(" SELECT l.idLote, cl.id_cliente, cl.nombre, cl.apellido_paterno, cl.apellido_materno,
                                         l.nombreLote, l.idStatusContratacion, l.idMovimiento, l.modificado, cl.rfc,

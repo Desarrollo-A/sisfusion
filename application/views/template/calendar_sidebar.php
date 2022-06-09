@@ -1,4 +1,4 @@
-<link href="<?= base_url() ?>dist/css/calendar.css" rel="stylesheet"/>
+<link href="<?= base_url() ?>dist/css/sideCalendar.css" rel="stylesheet"/>
 
 <div id="sideCalendar" class="t-0 r-0 l-auto h-100 z-1030 side-calendar scroll-styles" data-active-color="blue" data-background-color="white" data-image="<?=base_url()?>/dist/img/sidebar-1.jpg" style="display:none;">
     <div class="d-flex justify-end">
@@ -82,6 +82,6 @@
     typeTransaction = 1;
     base_url = "<?=base_url()?>";
 </script>
-<script src="<?=base_url()?>dist/js/controllers/calendar/general_calendar.js"></script>
+<script src="<?=base_url()?>dist/js/controllers/dashboard/agenda/general_calendar.js"></script>
 
 

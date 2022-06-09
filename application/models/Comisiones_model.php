@@ -81,25 +81,21 @@ public function getActiveCommissions($val = '') {
      public function getStoppedCommissions()
     {
         $query = $this->db->query("SELECT DISTINCT(l.idLote), res.nombreResidencial, cond.nombre as nombreCondominio,
-            l.nombreLote, l.tipo_venta, vc.id_cliente AS compartida, l.idStatusContratacion,
-            hl.motivo, hl.comentario
-            FROM lotes l 
-            INNER JOIN clientes cl ON cl.id_cliente = l.idCliente 
-            INNER JOIN condominios cond ON l.idCondominio=cond.idCondominio 
-            INNER JOIN residenciales res ON cond.idResidencial = res.idResidencial 
-            INNER JOIN pago_comision pc ON pc.id_lote = l.idLote 
-            INNER JOIN historial_log hl ON hl.identificador = l.idLote 
-            LEFT JOIN opcs_x_cats plane ON plane.id_opcion = l.plan_enganche AND plane.id_catalogo = 39 
-            LEFT JOIN ventas_compartidas vc ON vc.id_cliente = cl.id_cliente AND vc.estatus = 1
-            WHERE l.idStatusContratacion BETWEEN 9 AND 15 
-            AND cl.status = 1 
-            AND l.status = 1 
-            AND pc.bandera = 6 
-            AND l.registro_comision in (1) 
-            AND l.tipo_venta IS NOT NULL 
-            AND l.tipo_venta IN (1,2,7)
-            AND hl.tabla = 'pago_comision'
-            ORDER BY l.idLote");
+        l.nombreLote, l.tipo_venta, vc.id_cliente AS compartida, l.idStatusContratacion,
+        hl.motivo, hl.comentario
+        FROM lotes l 
+        INNER JOIN clientes cl ON cl.id_cliente = l.idCliente AND cl.status = 1 
+        INNER JOIN condominios cond ON l.idCondominio=cond.idCondominio 
+        INNER JOIN residenciales res ON cond.idResidencial = res.idResidencial 
+        LEFT JOIN pago_comision pc ON pc.id_lote = l.idLote AND pc.bandera = 6 
+        INNER JOIN historial_log hl ON hl.identificador = l.idLote AND hl.tabla = 'pago_comision' AND hl.estatus = 1
+        LEFT JOIN ventas_compartidas vc ON vc.id_cliente = cl.id_cliente AND vc.estatus = 1
+        WHERE l.idStatusContratacion BETWEEN 9 AND 15 
+        AND l.status = 1 
+        AND l.registro_comision in (6) 
+        AND l.tipo_venta IS NOT NULL 
+        AND l.tipo_venta IN (1,2,7)
+        ORDER BY l.idLote");
         return $query->result();
     }
 
@@ -368,7 +364,7 @@ function getDatosComisionesHistorialRigel($proyecto,$condominio){
     }
 
 
-public function getDataDispersionPago($val = '') {
+    public function getDataDispersionPago($val = '') {
 
         $this->db->query("SET LANGUAGE Español;");
 
@@ -399,8 +395,8 @@ public function getDataDispersionPago($val = '') {
             LEFT JOIN usuarios di ON di.id_usuario = 2
             LEFT JOIN plan_comision pl ON pl.id_plan = cl.plan_comision
             LEFT JOIN sedes se ON se.id_sede = cl.id_sede 
-            WHERE l.idStatusContratacion BETWEEN 11 AND 15 AND cl.status = 1 AND l.status = 1
-            AND (l.registro_comision in (0,8,2)  or (l.registro_comision in (1,8) AND pc.bandera in (0))) AND tipo_venta IS NOT NULL AND tipo_venta IN (1,2,7)
+            WHERE l.idStatusContratacion BETWEEN 15 AND 15 AND cl.status = 1 AND l.status = 1
+            AND (l.registro_comision in (0,8,2)  or (l.registro_comision in (1,8) AND pc.bandera in (0))) AND tipo_venta IS NOT NULL AND tipo_venta IN (1,2)
             AND cl.fechaApartado >= '2020-03-01'
             ORDER BY l.idLote");
             return $query->result();
@@ -687,7 +683,137 @@ function getDatosHistorialPagoRP($id_usuario){
 
     }
 
+    public function getUsuariosByComisionesAsistentes($idUsuarioSelect, $proyecto, $estatus)
+    {
+        $usuarioWhereClause = "u.id_usuario = $idUsuarioSelect";
 
+        $proyectoWhereClause = '';
+        if ($proyecto !== '0') {
+            $proyectoWhereClause = "AND re.idResidencial = $proyecto";
+        }
+
+        $estatusWhereClause = '';
+        switch ($estatus) {
+            case '1':
+                $estatusWhereClause = "AND pci1.estatus IN (1,2,41,42,51,52,61,62) AND (pci1.descuento_aplicado is null or pci1.descuento_aplicado = 0)";
+                break;
+            case '2':
+                $estatusWhereClause = "AND pci1.estatus IN (4,13) AND (pci1.descuento_aplicado is null or pci1.descuento_aplicado = 0)";
+                break;
+            case '3':
+                $estatusWhereClause = "AND pci1.estatus IN (8,88) AND (pci1.descuento_aplicado is null or pci1.descuento_aplicado = 0)";
+                break;
+            case '4':
+                $estatusWhereClause = "AND pci1.estatus IN (6) AND (pci1.descuento_aplicado is null or pci1.descuento_aplicado = 0)";
+                break;
+            case '5':
+                $estatusWhereClause = "AND pci1.estatus IN (11,16,17,0) AND pci1.descuento_aplicado = 1";
+                break;
+            case '7':
+                $estatusWhereClause = "AND pci1.estatus IN (11,12) AND (pci1.descuento_aplicado is null or pci1.descuento_aplicado = 0)";
+                break;
+        }
+
+        $query = $this->db->query("(SELECT pci1.id_pago_i, pci1.id_comision, lo.nombreLote, re.nombreResidencial as 
+        proyecto, co.nombre as condominio,lo.totalNeto2 precio_lote, com.comision_total, com.porcentaje_decimal, 
+            pci1.abono_neodata pago_cliente, pci1.pago_neodata, pci2.abono_pagado pagado, 
+            com.comision_total-pci2.abono_pagado restante, pci1.estatus, pci1.fecha_abono fecha_creacion, 
+            CONCAT(u.nombre, ' ',u.apellido_paterno, ' ', u.apellido_materno) user_names ,pci1.id_usuario, 
+            oprol.nombre as puesto, oxcest.nombre as estatus_actual, oxcest.id_opcion id_estatus_actual, 
+            pci1.descuento_aplicado, 0 lugar_prospeccion, lo.referencia, pac.bonificacion, u.estatus as activo
+            FROM pago_comision_ind pci1 
+            LEFT JOIN (SELECT SUM(abono_neodata) abono_pagado, id_comision FROM pago_comision_ind WHERE estatus in (11) 
+            GROUP BY id_comision) pci2 ON pci1.id_comision = pci2.id_comision
+            INNER JOIN comisiones com ON pci1.id_comision = com.id_comision
+            INNER JOIN lotes lo ON lo.idLote = com.id_lote AND lo.status = 1 
+            INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
+            INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
+            INNER JOIN usuarios u ON u.id_usuario = com.id_usuario
+            INNER JOIN opcs_x_cats oprol ON oprol.id_opcion = com.rol_generado AND oprol.id_catalogo = 1
+            INNER JOIN pago_comision pac ON pac.id_lote = com.id_lote
+            INNER JOIN opcs_x_cats oxcest ON oxcest.id_opcion = pci1.estatus AND oxcest.id_catalogo = 23
+                     
+            WHERE (((pci1.estatus IN (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 51, 52, 88, 16, 17, 41, 42)) 
+            OR (pci1.estatus = 0 AND pci1.descuento_aplicado = 1) ) 
+            
+            AND ( (lo.idStatusContratacion < 9 AND com.estatus IN (1,8)) OR (lo.idStatusContratacion > 8 
+            AND com.estatus IN (8))) AND $usuarioWhereClause $proyectoWhereClause $estatusWhereClause)
+            
+            GROUP BY pci1.id_comision, lo.nombreLote, re.nombreResidencial, co.nombre, lo.totalNeto2, 
+            com.comision_total, com.porcentaje_decimal, pci1.abono_neodata, pci1.pago_neodata, 
+            pci2.abono_pagado, pci1.estatus, pci1.fecha_abono, pci1.id_usuario, pci1.id_pago_i, u.nombre,
+            u.apellido_paterno,u.apellido_materno, oprol.nombre, oxcest.nombre, oxcest.id_opcion, 
+            pci1.descuento_aplicado, lo.referencia, com.estatus, pac.bonificacion, u.estatus)
+            
+            UNION 
+             
+            (SELECT pci1.id_pago_i, pci1.id_comision, lo.nombreLote, re.nombreResidencial as proyecto, co.nombre 
+            as condominio,lo.totalNeto2 precio_lote, com.comision_total, com.porcentaje_decimal, 
+            pci1.abono_neodata pago_cliente, pci1.pago_neodata, pci2.abono_pagado pagado, 
+            com.comision_total-pci2.abono_pagado restante, pci1.estatus, pci1.fecha_abono fecha_creacion, 
+            CONCAT(u.nombre, ' ',u.apellido_paterno, ' ', u.apellido_materno) user_names ,pci1.id_usuario, 
+            oprol.nombre as puesto, oxcest.nombre as estatus_actual, oxcest.id_opcion id_estatus_actual, 
+            pci1.descuento_aplicado, cl.lugar_prospeccion, lo.referencia, pac.bonificacion, u.estatus as activo
+            FROM pago_comision_ind pci1 
+            LEFT JOIN (SELECT SUM(abono_neodata) abono_pagado, id_comision FROM pago_comision_ind WHERE estatus in (11) 
+            GROUP BY id_comision) pci2 ON pci1.id_comision = pci2.id_comision
+            INNER JOIN comisiones com ON pci1.id_comision = com.id_comision AND com.estatus in (1)
+            INNER JOIN lotes lo ON lo.idLote = com.id_lote AND lo.status = 1 
+            INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
+            INNER JOIN residenciales re ON re.idResidencial = co.idResidencial 
+            INNER JOIN clientes cl ON cl.idLote = lo.idLote AND cl.status = 1
+            INNER JOIN usuarios u ON u.id_usuario = com.id_usuario
+            INNER JOIN opcs_x_cats oprol ON oprol.id_opcion = com.rol_generado AND oprol.id_catalogo = 1
+            INNER JOIN pago_comision pac ON pac.id_lote = com.id_lote
+            INNER JOIN opcs_x_cats oxcest ON oxcest.id_opcion = pci1.estatus AND oxcest.id_catalogo = 23
+            
+            WHERE ((pci1.estatus IN (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 51, 52, 88,16,17, 41,42) 
+            OR (pci1.estatus = 0 AND pci1.descuento_aplicado = 1) 
+            AND lo.idStatusContratacion > 8) AND $usuarioWhereClause $proyectoWhereClause $estatusWhereClause)
+            
+            GROUP BY pci1.id_comision, lo.nombreLote, re.nombreResidencial, co.nombre, lo.totalNeto2, com.comision_total, 
+            com.porcentaje_decimal, pci1.abono_neodata, pci1.pago_neodata, 
+            pci2.abono_pagado, pci1.estatus, pci1.fecha_abono, pci1.id_usuario, pci1.id_pago_i, u.nombre, 
+            u.apellido_paterno, u.apellido_materno, oprol.nombre, oxcest.nombre, oxcest.id_opcion,
+            pci1.descuento_aplicado, cl.lugar_prospeccion, lo.referencia, com.estatus, pac.bonificacion, u.estatus)
+            ORDER BY lo.nombreLote");
+
+        return $query->result_array();
+    }
+
+    public function findUsuariosByPuestoAsistente($puesto, $idUsuarioSesion)
+    {
+        $puestoWhereClause = '';
+        if ($puesto === '3') {
+            $puestoWhereClause = "id_usuario = (SELECT id_lider FROM usuarios WHERE id_usuario = $idUsuarioSesion)";
+        } else if ($puesto === '9') {
+            $puestoWhereClause = "id_lider IN (SELECT id_lider FROM usuarios WHERE id_usuario = $idUsuarioSesion) 
+                AND id_rol = 9";
+        } else if ($puesto === '7') {
+            $puestoWhereClause = "id_lider IN (SELECT id_usuario FROM usuarios WHERE id_lider IN (SELECT id_lider FROM usuarios 
+                WHERE id_usuario = $idUsuarioSesion) AND id_rol = 9)";
+        }
+
+        $query = $this->db->query("SELECT id_usuario, CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno)
+            AS nombre_completo
+            FROM usuarios WHERE $puestoWhereClause");
+
+        return $query->result_array();
+    }
+
+    public function findAllResidenciales()
+    {
+        $query = $this->db->query('SELECT idResidencial, nombreResidencial, descripcion FROM residenciales
+            WHERE active_comission = 1');
+        return $query->result_array();
+    }
+
+    public function getOpcionCatByIdCatAndIdOpt($idCatalogo, $idOpciones)
+    {
+        $query = $this->db->query("SELECT id_opcion, id_catalogo, nombre FROM opcs_x_cats 
+            WHERE id_catalogo = $idCatalogo AND id_opcion IN ($idOpciones)");
+        return $query->result_array();
+    }
 
  function getDatosHistorialPagoM($proyecto,$condominio){
 
@@ -1014,44 +1140,63 @@ WHERE oxc.id_catalogo = 1 AND pcm.estatus = 11 AND pcm.id_usuario =  ".$this->se
         $user_data = $this->session->userdata('id_usuario');
         $sede = $this->session->userdata('id_sede');
         
-        return $this->db->query("(SELECT pci1.id_pago_i, pci1.id_comision, lo.nombreLote as lote, re.nombreResidencial as proyecto, lo.totalNeto2 precio_lote, com.comision_total, com.porcentaje_decimal, pci1.abono_neodata pago_cliente, pci1.pago_neodata, pci1.estatus, pci1.fecha_abono fecha_creacion, pci1.id_usuario, oxcpj.nombre as pj_name, u.forma_pago, pac.porcentaje_abono, 0 as factura, 1 expediente, oxcC.nombre as estatus_actual, (CASE u.forma_pago WHEN 3 THEN (((100-sed.impuesto)/100)*pci1.abono_neodata) ELSE pci1.abono_neodata END) impuesto, pac.bonificacion, 0 lugar_prospeccion
-                    FROM pago_comision_ind pci1 
-                    INNER JOIN comisiones com ON pci1.id_comision = com.id_comision 
-                    INNER JOIN lotes lo ON lo.idLote = com.id_lote AND lo.status = 1
-                    INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
-                    INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
-                    INNER JOIN usuarios u ON u.id_usuario = com.id_usuario  
-                    INNER JOIN opcs_x_cats oxcpj ON oxcpj.id_opcion = u.forma_pago AND oxcpj.id_catalogo = 16 
-                    LEFT JOIN pago_comision pac ON pac.id_lote = com.id_lote
-                    INNER JOIN opcs_x_cats oxcC ON pci1.estatus = oxcC.id_opcion and oxcC.id_catalogo = 23
-                    LEFT JOIN sedes sed ON sed.id_sede = $sede and sed.estatus = 1
-                    WHERE pci1.estatus IN ($estado) AND ( (lo.idStatusContratacion < 9 AND com.estatus IN (1,8)) OR (lo.idStatusContratacion > 8 AND com.estatus IN (8))) AND com.id_usuario = $user_data
-                    GROUP BY pci1.id_comision, lo.nombreLote, re.nombreResidencial, lo.totalNeto2, com.comision_total, 
-                    com.porcentaje_decimal, pci1.abono_neodata, pci1.pago_neodata,
-                    pci1.estatus, pci1.fecha_abono, pci1.id_usuario, oxcpj.nombre, 
-                    u.forma_pago,pci1.id_pago_i, pac.porcentaje_abono, oxcC.nombre, sed.impuesto, pac.bonificacion)
-                    UNION
-                    (SELECT pci1.id_pago_i, pci1.id_comision, lo.nombreLote as lote, re.nombreResidencial as proyecto, lo.totalNeto2 precio_lote, com.comision_total, com.porcentaje_decimal, pci1.abono_neodata pago_cliente, pci1.pago_neodata, pci1.estatus, pci1.fecha_abono fecha_creacion, pci1.id_usuario, oxcpj.nombre as pj_name, u.forma_pago, pac.porcentaje_abono, 0 as factura, 1 expediente, oxcC.nombre as estatus_actual, (CASE u.forma_pago WHEN 3 THEN (((100-sed.impuesto)/100)*pci1.abono_neodata) ELSE pci1.abono_neodata END) impuesto, pac.bonificacion, cl.lugar_prospeccion
-                    FROM pago_comision_ind pci1 
-                    INNER JOIN comisiones com ON pci1.id_comision = com.id_comision
-                    INNER JOIN lotes lo ON lo.idLote = com.id_lote AND lo.status = 1
-                    INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
-                    INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
-                    INNER JOIN clientes cl ON cl.idLote = lo.idLote AND cl.status = 1
-                    INNER JOIN usuarios u ON u.id_usuario = com.id_usuario  
-                    INNER JOIN opcs_x_cats oxcpj ON oxcpj.id_opcion = u.forma_pago AND oxcpj.id_catalogo = 16 
-                    LEFT JOIN pago_comision pac ON pac.id_lote = com.id_lote
-                    INNER JOIN opcs_x_cats oxcC ON pci1.estatus = oxcC.id_opcion and oxcC.id_catalogo = 23
-                    INNER JOIN sedes sed ON sed.id_sede = $sede and sed.estatus = 1
-                    WHERE pci1.estatus IN ($estado) AND com.estatus in (1) AND lo.idStatusContratacion > 8   AND com.id_usuario = $user_data 
-                    GROUP BY pci1.id_comision, lo.nombreLote, re.nombreResidencial, lo.totalNeto2, com.comision_total, 
-                    com.porcentaje_decimal, pci1.abono_neodata, pci1.pago_neodata,
-                    pci1.estatus, pci1.fecha_abono, pci1.id_usuario, oxcpj.nombre, 
-                    u.forma_pago,pci1.id_pago_i, pac.porcentaje_abono, oxcC.nombre, sed.impuesto, pac.bonificacion, cl.lugar_prospeccion)");
+        return $this->db->query("(SELECT pci1.id_pago_i, pci1.id_comision, lo.nombreLote as lote, re.nombreResidencial as proyecto, lo.totalNeto2 precio_lote, com.comision_total, com.porcentaje_decimal, pci1.abono_neodata pago_cliente, pci1.pago_neodata, pci1.estatus, pci1.fecha_abono fecha_creacion, pci1.id_usuario, oxcpj.nombre as pj_name, u.forma_pago, pac.porcentaje_abono, 0 as factura, 1 expediente, oxcC.nombre as estatus_actual, (CASE u.forma_pago WHEN 3 THEN (((100-sed.impuesto)/100)*pci1.abono_neodata) ELSE pci1.abono_neodata END) impuesto, pac.bonificacion, 0 lugar_prospeccion,
+            pci1.fecha_abono, opt.fecha_creacion as fecha_opinion, opt.estatus as estatus_opinion
+            FROM pago_comision_ind pci1 
+            INNER JOIN comisiones com ON pci1.id_comision = com.id_comision 
+            INNER JOIN lotes lo ON lo.idLote = com.id_lote AND lo.status = 1
+            INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
+            INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
+            INNER JOIN usuarios u ON u.id_usuario = com.id_usuario  
+            INNER JOIN opcs_x_cats oxcpj ON oxcpj.id_opcion = u.forma_pago AND oxcpj.id_catalogo = 16 
+            LEFT JOIN pago_comision pac ON pac.id_lote = com.id_lote
+            INNER JOIN opcs_x_cats oxcC ON pci1.estatus = oxcC.id_opcion and oxcC.id_catalogo = 23
+            LEFT JOIN sedes sed ON sed.id_sede = $sede and sed.estatus = 1
+            LEFT JOIN (SELECT id_usuario, fecha_creacion, estatus FROM opinion_cumplimiento WHERE estatus = 1)
+                opt ON opt.id_usuario = com.id_usuario
+            WHERE pci1.estatus IN ($estado) AND ( (lo.idStatusContratacion < 9 AND com.estatus IN (1,8)) OR (lo.idStatusContratacion > 8 AND com.estatus IN (8))) AND com.id_usuario = $user_data
+            
+            GROUP BY pci1.id_comision, lo.nombreLote, re.nombreResidencial, lo.totalNeto2, com.comision_total, 
+            com.porcentaje_decimal, pci1.abono_neodata, pci1.pago_neodata,
+            pci1.estatus, pci1.fecha_abono, pci1.id_usuario, oxcpj.nombre, 
+            u.forma_pago,pci1.id_pago_i, pac.porcentaje_abono, oxcC.nombre, sed.impuesto, pac.bonificacion, opt.fecha_creacion, opt.estatus)
+            UNION
+            (SELECT pci1.id_pago_i, pci1.id_comision, lo.nombreLote as lote, re.nombreResidencial as proyecto, lo.totalNeto2 precio_lote, com.comision_total, com.porcentaje_decimal, pci1.abono_neodata pago_cliente, pci1.pago_neodata, pci1.estatus, pci1.fecha_abono fecha_creacion, pci1.id_usuario, oxcpj.nombre as pj_name, u.forma_pago, pac.porcentaje_abono, 0 as factura, 1 expediente, oxcC.nombre as estatus_actual, (CASE u.forma_pago WHEN 3 THEN (((100-sed.impuesto)/100)*pci1.abono_neodata) ELSE pci1.abono_neodata END) impuesto, pac.bonificacion, cl.lugar_prospeccion,
+            pci1.fecha_abono, opt.fecha_creacion AS fecha_opinion, opt.estatus as estatus_opinion
+            FROM pago_comision_ind pci1 
+            INNER JOIN comisiones com ON pci1.id_comision = com.id_comision
+            INNER JOIN lotes lo ON lo.idLote = com.id_lote AND lo.status = 1
+            INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
+            INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
+            INNER JOIN clientes cl ON cl.idLote = lo.idLote AND cl.status = 1
+            INNER JOIN usuarios u ON u.id_usuario = com.id_usuario  
+            INNER JOIN opcs_x_cats oxcpj ON oxcpj.id_opcion = u.forma_pago AND oxcpj.id_catalogo = 16 
+            LEFT JOIN pago_comision pac ON pac.id_lote = com.id_lote
+            INNER JOIN opcs_x_cats oxcC ON pci1.estatus = oxcC.id_opcion and oxcC.id_catalogo = 23
+            INNER JOIN sedes sed ON sed.id_sede = $sede and sed.estatus = 1
+            LEFT JOIN (SELECT id_usuario, fecha_creacion, estatus FROM opinion_cumplimiento WHERE estatus = 1)
+                opt ON opt.id_usuario = com.id_usuario
+            WHERE pci1.estatus IN ($estado) AND com.estatus in (1) AND lo.idStatusContratacion > 8   AND com.id_usuario = $user_data
+            GROUP BY pci1.id_comision, lo.nombreLote, re.nombreResidencial, lo.totalNeto2, com.comision_total, 
+            com.porcentaje_decimal, pci1.abono_neodata, pci1.pago_neodata,
+            pci1.estatus, pci1.fecha_abono, pci1.id_usuario, oxcpj.nombre, 
+            u.forma_pago,pci1.id_pago_i, pac.porcentaje_abono, oxcC.nombre, sed.impuesto, pac.bonificacion, cl.lugar_prospeccion, opt.fecha_creacion,
+            opt.estatus)");
         }
 
+    public function getTotalComisionAsesor($idUsuario)
+    {
+        $query = $this->db->query("SELECT SUM(pci.abono_neodata) AS total
+            FROM pago_comision_ind pci 
+            INNER JOIN comisiones com ON pci.id_comision = com.id_comision 
+            where pci.estatus = 1 and com.id_usuario = $idUsuario");
+        return $query->row();
+    }
 
-
+    public function changeEstatusOpinion($idUsuario)
+    {
+        $this->db->query("UPDATE opinion_cumplimiento SET estatus = 2 WHERE estatus = 1 AND id_usuario = $idUsuario");
+    }
 
     function getDatosComisionesAsesorBaja($estado){
         $filtro = 'AND u.estatus = 0 AND u.id_rol IN (3,9,7,42)';
@@ -1256,9 +1401,10 @@ WHERE oxc.id_catalogo = 1 AND pcm.estatus = 11 AND pcm.id_usuario =  ".$this->se
             "unidad" => $datos_factura['claveUnidad'],
             "claveProd" => $datos_factura['claveProdServ']
         );
-        $this->db->insert("facturas", $data);
-        $ultimoId = $this->db->insert_id();
-        return $this->db->query("INSERT INTO xmldatos VALUES (".$ultimoId.", '".$VALOR_TEXT."', GETDATE())");
+       // $this->db->insert("facturas", $data);
+       // $ultimoId = $this->db->insert_id();
+        return $this->db->insert("facturas", $data);
+        //$this->db->query("INSERT INTO xmldatos VALUES (".$ultimoId.", '".$VALOR_TEXT."', GETDATE())");
     }
  
     function getDatosPlanesMktd(){
@@ -2247,26 +2393,26 @@ ORDER BY hc.fecha_movimiento DESC");
 
 }
 
- function getCommentsDU($user){
-//     return $this->db->query("SELECT DISTINCT(hc.comentario), hc.id_pago_i, hc.id_usuario, hc.fecha_movimiento,
-// CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombre_usuario
-// FROM historial_comisiones hc
-// INNER JOIN pago_comision_ind pci ON pci.id_pago_i = hc.id_pago_i
-// INNER JOIN usuarios u ON u.id_usuario = hc.id_usuario
-// WHERE hc.id_pago_i = $pago
-// ORDER BY hc.fecha_movimiento DESC");
-
+function getCommentsDU($user){
+    //     return $this->db->query("SELECT DISTINCT(hc.comentario), hc.id_pago_i, hc.id_usuario, hc.fecha_movimiento,
+    // CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombre_usuario
+    // FROM historial_comisiones hc 
+    // INNER JOIN pago_comision_ind pci ON pci.id_pago_i = hc.id_pago_i
+    // INNER JOIN usuarios u ON u.id_usuario = hc.id_usuario 
+    // WHERE hc.id_pago_i = $pago  
+    // ORDER BY hc.fecha_movimiento DESC");
     $this->db->query("SET LANGUAGE Español;");
-    return $this->db->query("SELECT  pci.abono_neodata comentario, pci.id_pago_i, pci.creado_por, 
+    return $this->db->query("SELECT pci.abono_neodata as comentario,concat(' - ',pci.comentario) comentario2, pci.id_pago_i, pci.modificado_por, 
     convert(nvarchar(20), pci.fecha_abono, 113) date_final,
     pci.fecha_abono,
-    CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombre_usuario, du.saldo_comisiones
+    CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombre_usuario
     FROM pago_comision_ind pci  
-    INNER JOIN usuarios u ON u.id_usuario = pci.creado_por 
-    LEFT JOIN descuentos_universidad du ON du.id_usuario = u.id_usuario
+    INNER JOIN usuarios u ON u.id_usuario = pci.modificado_por 
     WHERE pci.estatus = 17 AND pci.id_usuario = $user
     ORDER BY pci.fecha_abono DESC");
-}
+    
+    
+    }
 
 
 
@@ -2521,9 +2667,14 @@ function getDatosRevisionFactura($proyecto,$condominio){
 
 
 
- function getDatosEnviadasInternomex($proyecto,$condominio){
+ function getDatosEnviadasInternomex($proyecto,$condominio, $formaPago){
 
       $user_data = $this->session->userdata('id_usuario');
+
+      $formaPagoWhereClause = '';
+      if ($formaPago !== '0') {
+          $formaPagoWhereClause = "AND oxcfp.id_opcion = $formaPago";
+      }
 
          if($condominio == 0){
                 return $this->db->query("SELECT pci1.id_pago_i, pci1.id_comision, lo.nombreLote as lote, re.nombreResidencial as proyecto, lo.totalNeto2 precio_lote, com.comision_total, com.porcentaje_decimal, pci1.abono_neodata pago_cliente, pci1.pago_neodata, /*pci2.abono_pagado pagado, com.comision_total-pci2.abono_pagado restante, */pci1.estatus, pci1.fecha_pago_intmex fecha_creacion, CONCAT(u.nombre, ' ',u.apellido_paterno, ' ', u.apellido_materno) usuario ,pci1.id_usuario, oprol.nombre as puesto, cl.personalidad_juridica, u.forma_pago, 0 as factura, pac.porcentaje_abono, oxcest.nombre as estatus_actual, oxcest.id_opcion id_estatus_actual, re.empresa, cl.lugar_prospeccion, co.nombre as condominio, lo.referencia, (CASE u.forma_pago WHEN 3 THEN (((100-sed.impuesto)/100)*pci1.abono_neodata) ELSE pci1.abono_neodata END) impuesto, (CASE u.forma_pago WHEN 3 THEN (((sed.impuesto)/100)*pci1.abono_neodata) ELSE 0 END) dcto, sed.impuesto valimpuesto, oxcfp.nombre as regimen
@@ -2553,7 +2704,7 @@ function getDatosRevisionFactura($proyecto,$condominio){
                  WHEN 7092 THEN 4
                      WHEN 9629 THEN 2
                  ELSE u.id_sede END) and sed.estatus = 1
-                 WHERE pci1.estatus IN (8,88) 
+                 WHERE pci1.estatus IN (8,88) $formaPagoWhereClause
                  GROUP BY pci1.id_comision, lo.nombreLote, re.nombreResidencial, lo.totalNeto2, com.comision_total, com.porcentaje_decimal, pci1.abono_neodata, pci1.pago_neodata, /*pci2.abono_pagado, */pci1.estatus, pci1.fecha_pago_intmex, pci1.id_usuario, cl.personalidad_juridica, u.forma_pago, pci1.id_pago_i, pac.porcentaje_abono, u.nombre, u.apellido_paterno,u.apellido_materno, oprol.nombre, oxcest.nombre, oxcest.id_opcion, re.empresa, cl.lugar_prospeccion, co.nombre, lo.referencia, sed.impuesto, oxcfp.nombre ORDER BY lo.nombreLote");
     
             }else{
@@ -2584,14 +2735,18 @@ function getDatosRevisionFactura($proyecto,$condominio){
                  WHEN 7092 THEN 4
                      WHEN 9629 THEN 2
                  ELSE u.id_sede END) and sed.estatus = 1
-                 WHERE pci1.estatus IN (8,88) 
+                 WHERE pci1.estatus IN (8,88) $formaPagoWhereClause
                  GROUP BY pci1.id_comision, lo.nombreLote, re.nombreResidencial, lo.totalNeto2, com.comision_total, com.porcentaje_decimal, pci1.abono_neodata, pci1.pago_neodata, /*pci2.abono_pagado, */pci1.estatus, pci1.fecha_pago_intmex, pci1.id_usuario, cl.personalidad_juridica, u.forma_pago, pci1.id_pago_i, pac.porcentaje_abono, u.nombre, u.apellido_paterno,u.apellido_materno, oprol.nombre, oxcest.nombre, oxcest.id_opcion, re.empresa, cl.lugar_prospeccion, co.nombre, lo.referencia, sed.impuesto, oxcfp.nombre ORDER BY lo.nombreLote");
 
            
             }
         }
 
-  
+    public function getFormasPago()
+    {
+        $query = $this->db->query("SELECT id_opcion, nombre, estatus FROM opcs_x_cats WHERE id_catalogo = 16");
+        return $query->result_array();
+    }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////77
 
@@ -2738,14 +2893,16 @@ public function getSettledCommissions($val = '') {
     CONCAT(di.nombre, ' ', di.apellido_paterno, ' ', di.apellido_materno) as director,  
     (CASE WHEN cl.plan_comision IN (0) OR cl.plan_comision IS NULL THEN '-' ELSE pl.descripcion END) 
     AS plan_descripcion, cl.plan_comision, cl.id_subdirector, cl.id_prospecto, abono_comisiones, pc.abonado, 
-    (CASE WHEN ((abono_comisiones-pc.abonado) BETWEEN -1 AND 1) OR (abono_comisiones-pc.abonado) IS NULL THEN 0 ELSE (abono_comisiones-pc.abonado)END) pendiente
+    (CASE WHEN ((abono_comisiones-pc.abonado) BETWEEN -1 AND 1) OR (abono_comisiones-pc.abonado) IS NULL THEN 0 ELSE (abono_comisiones-pc.abonado)END) pendiente,
+    porcentaje_comisiones
     FROM lotes l
     INNER JOIN clientes cl ON cl.id_cliente = l.idCliente
     INNER JOIN condominios cond ON l.idCondominio=cond.idCondominio
     INNER JOIN residenciales res ON cond.idResidencial = res.idResidencial
     INNER JOIN usuarios ae ON ae.id_usuario = cl.id_asesor
     LEFT JOIN pago_comision pc ON pc.id_lote = l.idLote
-    LEFT JOIN (SELECT SUM(comision_total) abono_comisiones, id_lote FROM comisiones WHERE estatus in (1) AND id_usuario not in (0) GROUP BY id_lote) cm ON cm.id_lote = l.idLote 
+    LEFT JOIN (SELECT SUM(comision_total) abono_comisiones, id_lote FROM comisiones WHERE estatus in (1) AND id_usuario not in (0) GROUP BY id_lote) cm ON cm.id_lote = l.idLote
+    LEFT JOIN (SELECT SUM(porcentaje_decimal) porcentaje_comisiones, id_lote FROM comisiones WHERE estatus in (1) AND id_usuario not in (0) GROUP BY id_lote) pcm ON pcm.id_lote = l.idLote    
     LEFT JOIN (SELECT id_cliente FROM ventas_compartidas WHERE estatus = 1) AS vc ON vc.id_cliente = cl.id_cliente
     LEFT JOIN usuarios co ON co.id_usuario = cl.id_coordinador
     LEFT JOIN usuarios ge ON ge.id_usuario = cl.id_gerente
@@ -3343,6 +3500,24 @@ public function validateDispersionCommissions($idlote){
               }
           
           
+
+
+              function getDatosInvoice(){
+            
+                return $this->db->query("SELECT sum(pci1.abono_neodata) total, CONCAT(u.nombre, ' ',u.apellido_paterno, ' ', u.apellido_materno) usuario, pci1.id_usuario, u.forma_pago, opn.estatus estatus_opinion, opn.archivo_name, na.nombre as nacionalidad
+                FROM pago_comision_ind pci1 
+                INNER JOIN comisiones com ON pci1.id_comision = com.id_comision AND com.estatus in (1,8)
+                INNER JOIN lotes lo ON lo.idLote = com.id_lote AND lo.status = 1 
+                INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
+                INNER JOIN usuarios u ON u.id_usuario = com.id_usuario AND u.forma_pago in (5)
+                INNER JOIN opcs_x_cats na ON na.id_opcion = u.nacionalidad AND na.id_catalogo = 11  
+                INNER JOIN opinion_cumplimiento opn ON opn.id_usuario = u.id_usuario and opn.estatus IN (2) 
+                INNER JOIN pagos_invoice iv ON iv.id_pago_i = pci1.id_pago_i
+                WHERE pci1.estatus in (4,8,88)
+                GROUP BY opn.archivo_name, u.nombre, u.apellido_paterno, u.apellido_materno, pci1.id_usuario, u.forma_pago, opn.estatus, na.nombre 
+                ORDER BY u.nombre ");
+            }
+
  
     
 
@@ -3365,6 +3540,111 @@ public function validateDispersionCommissions($idlote){
                  GROUP BY pci1.id_comision, lo.nombreLote, re.nombreResidencial, lo.totalNeto2, com.comision_total, com.porcentaje_decimal, pci1.abono_neodata, pci1.pago_neodata, pci2.abono_pagado, pci1.estatus, pci1.fecha_pago_intmex, pci1.id_usuario, cl.personalidad_juridica, u.forma_pago, pci1.id_pago_i, pac.porcentaje_abono, u.nombre, u.apellido_paterno,u.apellido_materno, oprol.nombre, oxcest.nombre, oxcest.id_opcion, re.empresa, cl.lugar_prospeccion ORDER BY lo.nombreLote");
         }
 
+
+
+
+        
+     function getDatosNuevasEContraloria($proyecto,$condominio){
+
+        if( $this->session->userdata('id_rol') == 31 ){
+  
+          $filtro = " pci1.estatus IN (8,88) AND com.id_usuario = $condominio ";
+  
+            return $this->db->query("(SELECT pci1.id_pago_i, pci1.id_comision, lo.nombreLote as lote, re.nombreResidencial as proyecto, lo.totalNeto2 precio_lote, com.comision_total, com.porcentaje_decimal, pci1.abono_neodata pago_cliente, pci1.pago_neodata, pci1.estatus, pci1.fecha_pago_intmex fecha_creacion, CONCAT(u.nombre, ' ',u.apellido_paterno, ' ', u.apellido_materno) usuario ,pci1.id_usuario, oprol.nombre as puesto, 0 personalidad_juridica, u.forma_pago, 0 as factura, pac.porcentaje_abono, oxcest.nombre as estatus_actual, oxcest.id_opcion id_estatus_actual, re.empresa, 0 lugar_prospeccion, co.nombre as condominio, lo.referencia, pci1.abono_neodata impuesto, 0 dcto
+                   FROM pago_comision_ind pci1 
+                   INNER JOIN comisiones com ON pci1.id_comision = com.id_comision
+                   INNER JOIN lotes lo ON lo.idLote = com.id_lote AND lo.status = 1 
+                   INNER JOIN condominios co ON co.idCondominio = lo.idCondominio 
+                   INNER JOIN residenciales re ON re.idResidencial = co.idResidencial 
+                   INNER JOIN clientes cl ON cl.idLote = lo.idLote AND cl.status = 1
+                   INNER JOIN usuarios u ON u.id_usuario = com.id_usuario AND u.forma_pago in (5)
+                   INNER JOIN opcs_x_cats oprol ON oprol.id_opcion = com.rol_generado AND oprol.id_catalogo = 1
+                   INNER JOIN pago_comision pac ON pac.id_lote = com.id_lote
+                   INNER JOIN opcs_x_cats oxcest ON oxcest.id_opcion = pci1.estatus AND oxcest.id_catalogo = 23 
+                    
+                   WHERE $filtro AND com.estatus in (1) AND lo.idStatusContratacion > 8
+                   GROUP BY pci1.id_comision, lo.nombreLote, re.nombreResidencial, lo.totalNeto2, com.comision_total, com.porcentaje_decimal, pci1.abono_neodata, pci1.pago_neodata, pci1.estatus, pci1.fecha_pago_intmex, pci1.id_usuario, u.forma_pago, pci1.id_pago_i, pac.porcentaje_abono, u.nombre, u.apellido_paterno,u.apellido_materno, oprol.nombre, oxcest.nombre, oxcest.id_opcion, re.empresa, co.nombre, lo.referencia  )
+                   UNION
+                   (SELECT pci1.id_pago_i, pci1.id_comision, lo.nombreLote as lote, re.nombreResidencial as proyecto, lo.totalNeto2 precio_lote, com.comision_total, com.porcentaje_decimal, pci1.abono_neodata pago_cliente, pci1.pago_neodata, pci1.estatus, pci1.fecha_pago_intmex fecha_creacion, CONCAT(u.nombre, ' ',u.apellido_paterno, ' ', u.apellido_materno) usuario ,pci1.id_usuario, oprol.nombre as puesto, 0 personalidad_juridica, u.forma_pago, 0 as factura, pac.porcentaje_abono, oxcest.nombre as estatus_actual, oxcest.id_opcion id_estatus_actual, re.empresa, 0 lugar_prospeccion, co.nombre as condominio, lo.referencia, pci1.abono_neodata impuesto, 0 dcto
+                   FROM pago_comision_ind pci1 
+                   INNER JOIN comisiones com ON pci1.id_comision = com.id_comision
+                   INNER JOIN lotes lo ON lo.idLote = com.id_lote AND lo.status = 1 
+                   INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
+                   INNER JOIN residenciales re ON re.idResidencial = co.idResidencial 
+                   INNER JOIN usuarios u ON u.id_usuario = com.id_usuario AND u.forma_pago in (5)
+                   INNER JOIN opcs_x_cats oprol ON oprol.id_opcion = com.rol_generado AND oprol.id_catalogo = 1
+                   INNER JOIN pago_comision pac ON pac.id_lote = com.id_lote
+                   INNER JOIN opcs_x_cats oxcest ON oxcest.id_opcion = pci1.estatus AND oxcest.id_catalogo = 23 
+                    
+                   WHERE $filtro AND ( (lo.idStatusContratacion < 9 AND com.estatus IN (1,8)) OR (lo.idStatusContratacion > 8  AND com.estatus IN (8)))   
+                   GROUP BY pci1.id_comision, lo.nombreLote, re.nombreResidencial, lo.totalNeto2, com.comision_total, com.porcentaje_decimal, pci1.abono_neodata, pci1.pago_neodata, pci1.estatus, pci1.fecha_pago_intmex, pci1.id_usuario, u.forma_pago, pci1.id_pago_i, pac.porcentaje_abono, u.nombre, u.apellido_paterno,u.apellido_materno, oprol.nombre, oxcest.nombre, oxcest.id_opcion, re.empresa, co.nombre, lo.referencia  )");
+  }else{
+  
+      $filtro = " pci1.estatus IN (4) ";
+  
+      if($condominio == 0){
+          return $this->db->query("(SELECT pci1.id_pago_i, pci1.id_comision, lo.nombreLote as lote, re.nombreResidencial as proyecto, lo.totalNeto2 precio_lote, com.comision_total, com.porcentaje_decimal, pci1.abono_neodata pago_cliente, pci1.pago_neodata, pci1.estatus, pci1.fecha_pago_intmex fecha_creacion, CONCAT(u.nombre, ' ',u.apellido_paterno, ' ', u.apellido_materno) usuario ,pci1.id_usuario, oprol.nombre as puesto, 0 personalidad_juridica, u.forma_pago, 0 as factura, pac.porcentaje_abono, oxcest.nombre as estatus_actual, oxcest.id_opcion id_estatus_actual, re.empresa, 0 lugar_prospeccion, co.nombre as condominio, lo.referencia, pci1.abono_neodata impuesto, 0 dcto
+                   FROM pago_comision_ind pci1 
+                   INNER JOIN comisiones com ON pci1.id_comision = com.id_comision
+                   INNER JOIN lotes lo ON lo.idLote = com.id_lote AND lo.status = 1 
+                   INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
+                   INNER JOIN residenciales re ON re.idResidencial = co.idResidencial AND re.idResidencial = $proyecto 
+                   INNER JOIN clientes cl ON cl.idLote = lo.idLote AND cl.status = 1
+                   INNER JOIN usuarios u ON u.id_usuario = com.id_usuario AND u.forma_pago in (5)
+                   INNER JOIN opcs_x_cats oprol ON oprol.id_opcion = com.rol_generado AND oprol.id_catalogo = 1
+                   INNER JOIN pago_comision pac ON pac.id_lote = com.id_lote
+                   INNER JOIN opcs_x_cats oxcest ON oxcest.id_opcion = pci1.estatus AND oxcest.id_catalogo = 23 
+                    
+                   WHERE  $filtro AND com.estatus in (1) AND lo.idStatusContratacion > 8
+                   GROUP BY pci1.id_comision, lo.nombreLote, re.nombreResidencial, lo.totalNeto2, com.comision_total, com.porcentaje_decimal, pci1.abono_neodata, pci1.pago_neodata, pci1.estatus, pci1.fecha_pago_intmex, pci1.id_usuario, u.forma_pago, pci1.id_pago_i, pac.porcentaje_abono, u.nombre, u.apellido_paterno,u.apellido_materno, oprol.nombre, oxcest.nombre, oxcest.id_opcion, re.empresa, co.nombre, lo.referencia  )
+                   UNION
+                   (SELECT pci1.id_pago_i, pci1.id_comision, lo.nombreLote as lote, re.nombreResidencial as proyecto, lo.totalNeto2 precio_lote, com.comision_total, com.porcentaje_decimal, pci1.abono_neodata pago_cliente, pci1.pago_neodata, pci1.estatus, pci1.fecha_pago_intmex fecha_creacion, CONCAT(u.nombre, ' ',u.apellido_paterno, ' ', u.apellido_materno) usuario ,pci1.id_usuario, oprol.nombre as puesto, 0 personalidad_juridica, u.forma_pago, 0 as factura, pac.porcentaje_abono, oxcest.nombre as estatus_actual, oxcest.id_opcion id_estatus_actual, re.empresa, 0 lugar_prospeccion, co.nombre as condominio, lo.referencia, pci1.abono_neodata impuesto, 0 dcto
+                   FROM pago_comision_ind pci1 
+                   INNER JOIN comisiones com ON pci1.id_comision = com.id_comision
+                   INNER JOIN lotes lo ON lo.idLote = com.id_lote AND lo.status = 1 
+                   INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
+                   INNER JOIN residenciales re ON re.idResidencial = co.idResidencial AND re.idResidencial = $proyecto 
+                   INNER JOIN usuarios u ON u.id_usuario = com.id_usuario AND u.forma_pago in (5)
+                   INNER JOIN opcs_x_cats oprol ON oprol.id_opcion = com.rol_generado AND oprol.id_catalogo = 1
+                   INNER JOIN pago_comision pac ON pac.id_lote = com.id_lote
+                   INNER JOIN opcs_x_cats oxcest ON oxcest.id_opcion = pci1.estatus AND oxcest.id_catalogo = 23 
+                    
+                   WHERE  $filtro AND ((lo.idStatusContratacion < 9 AND com.estatus IN (1,8)) OR (lo.idStatusContratacion > 8  AND com.estatus IN (8)))   
+                   GROUP BY pci1.id_comision, lo.nombreLote, re.nombreResidencial, lo.totalNeto2, com.comision_total, com.porcentaje_decimal, pci1.abono_neodata, pci1.pago_neodata, pci1.estatus, pci1.fecha_pago_intmex, pci1.id_usuario, u.forma_pago, pci1.id_pago_i, pac.porcentaje_abono, u.nombre, u.apellido_paterno,u.apellido_materno, oprol.nombre, oxcest.nombre, oxcest.id_opcion, re.empresa, co.nombre, lo.referencia  )");
+  }else{
+      return $this->db->query("(SELECT pci1.id_pago_i, pci1.id_comision, lo.nombreLote as lote, re.nombreResidencial as proyecto, lo.totalNeto2 precio_lote, com.comision_total, com.porcentaje_decimal, pci1.abono_neodata pago_cliente, pci1.pago_neodata, pci1.estatus, pci1.fecha_pago_intmex fecha_creacion, CONCAT(u.nombre, ' ',u.apellido_paterno, ' ', u.apellido_materno) usuario ,pci1.id_usuario, oprol.nombre as puesto, 0 personalidad_juridica, u.forma_pago, 0 as factura, pac.porcentaje_abono, oxcest.nombre as estatus_actual, oxcest.id_opcion id_estatus_actual, re.empresa, 0 lugar_prospeccion, co.nombre as condominio, lo.referencia, pci1.abono_neodata impuesto, 0 dcto
+                   FROM pago_comision_ind pci1 
+                   INNER JOIN comisiones com ON pci1.id_comision = com.id_comision
+                   INNER JOIN lotes lo ON lo.idLote = com.id_lote AND lo.status = 1 
+                   INNER JOIN condominios co ON co.idCondominio = lo.idCondominio AND co.idCondominio  = $condominio 
+                   INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
+                   INNER JOIN clientes cl ON cl.idLote = lo.idLote AND cl.status = 1
+                   INNER JOIN usuarios u ON u.id_usuario = com.id_usuario AND u.forma_pago in (4)
+                   INNER JOIN opcs_x_cats oprol ON oprol.id_opcion = com.rol_generado AND oprol.id_catalogo = 1
+                   INNER JOIN pago_comision pac ON pac.id_lote = com.id_lote
+                   INNER JOIN opcs_x_cats oxcest ON oxcest.id_opcion = pci1.estatus AND oxcest.id_catalogo = 23 
+                    
+                   WHERE  $filtro AND com.estatus in (1) AND lo.idStatusContratacion > 8
+                   GROUP BY pci1.id_comision, lo.nombreLote, re.nombreResidencial, lo.totalNeto2, com.comision_total, com.porcentaje_decimal, pci1.abono_neodata, pci1.pago_neodata, pci1.estatus, pci1.fecha_pago_intmex, pci1.id_usuario, u.forma_pago, pci1.id_pago_i, pac.porcentaje_abono, u.nombre, u.apellido_paterno,u.apellido_materno, oprol.nombre, oxcest.nombre, oxcest.id_opcion, re.empresa, co.nombre, lo.referencia  )
+                   UNION
+                   (SELECT pci1.id_pago_i, pci1.id_comision, lo.nombreLote as lote, re.nombreResidencial as proyecto, lo.totalNeto2 precio_lote, com.comision_total, com.porcentaje_decimal, pci1.abono_neodata pago_cliente, pci1.pago_neodata, pci1.estatus, pci1.fecha_pago_intmex fecha_creacion, CONCAT(u.nombre, ' ',u.apellido_paterno, ' ', u.apellido_materno) usuario ,pci1.id_usuario, oprol.nombre as puesto, 0 personalidad_juridica, u.forma_pago, 0 as factura, pac.porcentaje_abono, oxcest.nombre as estatus_actual, oxcest.id_opcion id_estatus_actual, re.empresa, 0 lugar_prospeccion, co.nombre as condominio, lo.referencia, pci1.abono_neodata impuesto, 0 dcto
+                   FROM pago_comision_ind pci1 
+                   INNER JOIN comisiones com ON pci1.id_comision = com.id_comision
+                   INNER JOIN lotes lo ON lo.idLote = com.id_lote AND lo.status = 1 
+                   INNER JOIN condominios co ON co.idCondominio = lo.idCondominio AND co.idCondominio  = $condominio 
+                   INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
+                   INNER JOIN usuarios u ON u.id_usuario = com.id_usuario AND u.forma_pago in (4)
+                   INNER JOIN opcs_x_cats oprol ON oprol.id_opcion = com.rol_generado AND oprol.id_catalogo = 1
+                   INNER JOIN pago_comision pac ON pac.id_lote = com.id_lote
+                   INNER JOIN opcs_x_cats oxcest ON oxcest.id_opcion = pci1.estatus AND oxcest.id_catalogo = 23 
+                    
+                   WHERE  $filtro AND ((lo.idStatusContratacion < 9 AND com.estatus IN (1,8)) OR (lo.idStatusContratacion > 8  AND com.estatus IN (8)))   
+                   GROUP BY pci1.id_comision, lo.nombreLote, re.nombreResidencial, lo.totalNeto2, com.comision_total, com.porcentaje_decimal, pci1.abono_neodata, pci1.pago_neodata, pci1.estatus, pci1.fecha_pago_intmex, pci1.id_usuario, u.forma_pago, pci1.id_pago_i, pac.porcentaje_abono, u.nombre, u.apellido_paterno,u.apellido_materno, oprol.nombre, oxcest.nombre, oxcest.id_opcion, re.empresa, co.nombre, lo.referencia  )");
+  }
+  }
+  }
+  
+   
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -3728,9 +4008,20 @@ LEFT JOIN  usuarios di ON di.id_usuario = su.id_lider
         }
     }
 
-    function updateBanderaDetenida($idLote, $bandera)
+    public function insertHistorialLog($idLote, $idUsuario, $estatus, $comentario, $tabla, $motivo)
     {
-        return (bool)($this->db->query("UPDATE pago_comision SET bandera = $bandera WHERE id_lote = $idLote"));
+        return (bool)($this->db->query("INSERT INTO historial_log ".
+            "VALUES ($idLote, $idUsuario, GETDATE(), $estatus, '$comentario', '$tabla', '$motivo')"));
+    }
+    function updateBanderaDetenida($idLote, $bandera,$statusLote = '')
+    {
+        if($statusLote != '' && $statusLote == 1){
+            return (bool)($this->db->query("UPDATE lotes SET registro_comision = $bandera,modificado=".$this->session->userdata('id_usuario')." WHERE idLote = $idLote"));
+        }else{
+            $this->db->query("UPDATE lotes SET registro_comision = $bandera,modificado=".$this->session->userdata('id_usuario')." WHERE idLote = $idLote");
+            $this->db->query("UPDATE historial_log SET estatus = 0 WHERE tabla = 'pago_comision' AND estatus = 1 AND identificador = $idLote");
+            return (bool)($this->db->query("UPDATE pago_comision SET bandera = $bandera WHERE id_lote = $idLote"));
+        }
     }
 
     function ComisionesEnviar($usuario,$recidencial,$opc){
@@ -4475,7 +4766,7 @@ function insertar_descuento($usuarioid,$monto,$ide_comision,$comentario,$usuario
         $respuesta = $this->db->query("INSERT INTO pago_comision_ind(id_comision, id_usuario, abono_neodata, fecha_abono, fecha_pago_intmex, pago_neodata, estatus, modificado_por, comentario, descuento_aplicado,abono_final,aply_pago_intmex) VALUES ($ide_comision, $usuarioid, $monto, GETDATE(), GETDATE(), $pago_neodata, $estatus, $usuario, 'DESCUENTO NUEVO PAGO', 0 ,null, null)");
         $insert_id = $this->db->insert_id();
     
-        $respuesta = $this->db->query("INSERT INTO historial_comisiones VALUES ($insert_id, $usuario, GETDATE(), 1, 'SALDO DISPONIBLE POSTERIOR A UN DESCUENTO')");
+        $respuesta = $this->db->query("INSERT INTO historial_comisiones VALUES ($insert_id, $usuario, GETDATE(), 1, 'ESTE ES EL RESTANTE A UN DESCUENTO UNIVERSIDAD, DISPONIBLE PARA COBRO')");
     
     
         if (! $respuesta ) {
@@ -4490,7 +4781,7 @@ function insertar_descuento($usuarioid,$monto,$ide_comision,$comentario,$usuario
 
         $respuesta = $this->db->query("INSERT INTO descuentos_universidad VALUES (".$usuario.", ".$descuento.", 1, 'DESCUENTO UNIVERSIDAD MADERAS', '".$comentario."', ".$userdata.", GETDATE() , 0, ".$monto.", 1, 0)");
            $insert_id = $this->db->insert_id();
-        $respuesta = $this->db->query("INSERT INTO historial_log VALUES (".$insert_id.", ".$userdata.", GETDATE(), 1, 'MOTIVO DESCUENTO: ".$comentario."', 'descuentos_universidad')");
+        $respuesta = $this->db->query("INSERT INTO historial_log VALUES (".$insert_id.", ".$userdata.", GETDATE(), 1, 'MOTIVO DESCUENTO: ".$comentario."', 'descuentos_universidad', null)");
        
        
     if (! $respuesta ) {
@@ -4506,19 +4797,21 @@ function insertar_descuento($usuarioid,$monto,$ide_comision,$comentario,$usuario
    
        function update_descuento($id_pago_i,$monto, $comentario, $saldo_comisiones, $usuario,$valor,$user,$pagos_aplicados){
            $estatus = 0;
+           $uni='DESCUENTO';
            if($valor == 2){
        $estatus =16;
            }else if($valor == 3){
                $estatus =17;
                // -- $respuesta = $this->db->query("UPDATE descuentos_universidad SET estatus = 2 where id_usuario=$user");
                $respuesta = $this->db->query("UPDATE descuentos_universidad SET saldo_comisiones=".$saldo_comisiones.", pagos_activos = (pagos_activos - ".$pagos_aplicados."), estatus = 2 WHERE id_usuario = ".$user." AND estatus = 1");
-       
+               $uni='SALDO COMISIONES: $'.number_format($saldo_comisiones,2, '.', ',');
+
            }
-           if($monto == 0){
-            $respuesta = $this->db->query("UPDATE pago_comision_ind SET estatus = $estatus, descuento_aplicado=1, modificado_por='$usuario', fecha_pago_intmex = GETDATE(), fecha_abono = GETDATE(), comentario='DESCUENTO' WHERE id_pago_i=$id_pago_i");
-        }else{
-            $respuesta = $this->db->query("UPDATE pago_comision_ind SET estatus = $estatus, descuento_aplicado=1, modificado_por='$usuario', fecha_pago_intmex = GETDATE(), fecha_abono = GETDATE(), abono_neodata = $monto, comentario='DESCUENTO' WHERE id_pago_i=$id_pago_i");
-        }
+           if ($monto == 0) {
+               $respuesta = $this->db->query("UPDATE pago_comision_ind SET estatus = $estatus, descuento_aplicado=1, modificado_por='$usuario', fecha_pago_intmex = GETDATE(), fecha_abono = GETDATE(), comentario='$uni' WHERE id_pago_i=$id_pago_i");
+           } else {
+               $respuesta = $this->db->query("UPDATE pago_comision_ind SET estatus = $estatus, descuento_aplicado=1, modificado_por='$usuario', fecha_pago_intmex = GETDATE(), fecha_abono = GETDATE(), abono_neodata = $monto, comentario='$uni' WHERE id_pago_i=$id_pago_i");
+           }
 
                $respuesta = $this->db->query("INSERT INTO historial_comisiones VALUES ($id_pago_i, $usuario, GETDATE(), 1, 'MOTIVO DESCUENTO: ".$comentario."')");
 
@@ -6150,16 +6443,16 @@ function update_refactura( $id_comision, $datos_factura,$id_usuario,$id_factura)
             $comisiones = $this->db-> query("SELECT * FROM comisiones WHERE id_lote=$idLote and id_usuario !=0 and estatus not in(8,2)")->result_array();
             if(count($comisiones) == 0){
                $respuesta =  $this->db->query("UPDATE lotes set totalNeto2=".$precio." WHERE idLote=".$idLote.";");
-               $respuesta = $this->db->query("INSERT INTO historial_log VALUES($idLote,".$this->session->userdata('id_usuario').",GETDATE(),1,'$comentario','lotes')");
+               $respuesta = $this->db->query("INSERT INTO historial_log VALUES($idLote,".$this->session->userdata('id_usuario').",GETDATE(),1,'$comentario','lotes', null)");
              
             }else{
                 $respuesta =  $this->db->query("UPDATE lotes set totalNeto2=".$precio." WHERE idLote=".$idLote.";");
-               $respuesta = $this->db->query("INSERT INTO historial_log VALUES($idLote,".$this->session->userdata('id_usuario').",GETDATE(),1,'$comentario','lotes')");
+               $respuesta = $this->db->query("INSERT INTO historial_log VALUES($idLote,".$this->session->userdata('id_usuario').",GETDATE(),1,'$comentario','lotes', null)");
                 for ($i=0; $i <count($comisiones) ; $i++) { 
                     $comisionTotal =$precio *($comisiones[$i]['porcentaje_decimal']/100);
                     $comentario2='Se actualizó la comision total por cambio de precio del lote de'.$comisiones[$i]['comision_total'].' a '.$comisionTotal;
                     $respuesta =  $this->db->query("UPDATE comisiones SET comision_total=$comisionTotal WHERE id_comision=".$comisiones[$i]['id_comision']." AND id_lote=".$idLote.";");
-                    $respuesta = $this->db->query("INSERT INTO historial_log VALUES(".$comisiones[$i]['id_comision'].",".$this->session->userdata('id_usuario').",GETDATE(),1,'$comentario2','comisiones')");   
+                    $respuesta = $this->db->query("INSERT INTO historial_log VALUES(".$comisiones[$i]['id_comision'].",".$this->session->userdata('id_usuario').",GETDATE(),1,'$comentario2','comisiones', null)");
                 }
             }
                     if($respuesta){
@@ -6199,7 +6492,7 @@ function update_refactura( $id_comision, $datos_factura,$id_usuario,$id_factura)
                 $respuesta = $this->db->query("INSERT INTO  historial_comisiones VALUES (".$pagos[$j]['id_pago_i'].", ".$this->session->userdata('id_usuario').", GETDATE(), 1, '".$comentario."')");
             
             }
-            $respuesta = $this->db->query("INSERT INTO  historial_log VALUES ($id_comision,".$this->session->userdata('id_usuario').",'".$hoy."',1,'SE TOPO COMISIÓN','comisiones')");
+            $respuesta = $this->db->query("INSERT INTO  historial_log VALUES ($id_comision,".$this->session->userdata('id_usuario').",'".$hoy."',1,'SE TOPO COMISIÓN','comisiones', null)");
 
             if($sumaxcomision == 0  || $sumaxcomision == null || $sumaxcomision == 'null' ){
                 $this->db->query("UPDATE comisiones set comision_total=0,descuento=1 $complemento where id_comision=".$id_comision." ");
@@ -6284,7 +6577,7 @@ public function GuardarPago($id_comision, $comentario_topa, $monotAdd){
                 }  
             }
         }
-        $respuesta = $this->db->query("INSERT INTO  historial_log VALUES ($id_comision,".$this->session->userdata('id_usuario').",'".$hoy."',1,'SE CAMBIO PORCENTAJE','comisiones')");
+        $respuesta = $this->db->query("INSERT INTO  historial_log VALUES ($id_comision,".$this->session->userdata('id_usuario').",'".$hoy."',1,'SE CAMBIO PORCENTAJE','comisiones', null)");
         //$this->Comisiones_model->RecalcularMontos($id_lote);
          return $respuesta;
         }
@@ -6458,15 +6751,6 @@ $cc=0;
     //echo var_dump($infoCedida);
 //echo $infoCedida[0]['id_lote'];
     $mail = $this->phpmailer_lib->load();
-
- // SMTP configuration
-//  $mail->isSMTP();
-//  $mail->Host     = 'smtp.gmail.com';
-//  $mail->SMTPAuth = true;
-//  $mail->Username = 'noreply@ciudadmaderas.com';
-//  $mail->Password = 'Marzo2019@';
-//  $mail->SMTPSecure = 'ssl';
-//  $mail->Port     = 465;
 
 
   $mail->setFrom('noreply@ciudadmaderas.com', 'Ciudad Maderas');
@@ -6694,16 +6978,16 @@ function UpdateInventarioClient($usuarioOld,$newColab,$rolSelect,$idLote,$idClie
 //1-- se topa la comision del usuario a modificar de la tabla clientes
 if($rolSelect == 7){
     $this->db->query("UPDATE clientes set id_asesor=$newColab where id_cliente=$idCliente;");
-    $respuesta = $this->db->query("INSERT INTO historial_log VALUES (".$idCliente.", ".$this->session->userdata('id_usuario').", GETDATE(), 1, 'MOTIVO ACTUALIZACIÓN: ".$comentario."', 'ventas_compartidas')");
+    $respuesta = $this->db->query("INSERT INTO historial_log VALUES (".$idCliente.", ".$this->session->userdata('id_usuario').", GETDATE(), 1, 'MOTIVO ACTUALIZACIÓN: ".$comentario."', 'ventas_compartidas', null)");
 
 }else if($rolSelect == 9){
     $this->db->query("UPDATE clientes set id_coordinador=$newColab where id_cliente=$idCliente;");
-    $respuesta = $this->db->query("INSERT INTO historial_log VALUES (".$idCliente.", ".$this->session->userdata('id_usuario').", GETDATE(), 1, 'MOTIVO ACTUALIZACIÓN: ".$comentario."', 'ventas_compartidas')");
+    $respuesta = $this->db->query("INSERT INTO historial_log VALUES (".$idCliente.", ".$this->session->userdata('id_usuario').", GETDATE(), 1, 'MOTIVO ACTUALIZACIÓN: ".$comentario."', 'ventas_compartidas', null)");
 
 
 }else if($rolSelect == 3){
     $this->db->query("UPDATE clientes set id_gerente=$newColab where id_cliente=$idCliente;");
-    $respuesta = $this->db->query("INSERT INTO historial_log VALUES (".$idCliente.", ".$this->session->userdata('id_usuario').", GETDATE(), 1, 'MOTIVO ACTUALIZACIÓN: ".$comentario."', 'ventas_compartidas')");
+    $respuesta = $this->db->query("INSERT INTO historial_log VALUES (".$idCliente.", ".$this->session->userdata('id_usuario').", GETDATE(), 1, 'MOTIVO ACTUALIZACIÓN: ".$comentario."', 'ventas_compartidas', null)");
 
 
 }
@@ -6816,7 +7100,7 @@ function UpdateVcUser($usuarioOld,$newColab,$rolSelect,$idLote,$idCliente,$comen
         }else if($rolSelect == 3){
             $this->db->query("UPDATE ventas_compartidas set id_gerente=$newColab where id_cliente=$idCliente and estatus=1;");
         }
-        $respuesta = $this->db->query("INSERT INTO historial_log VALUES (".$idCliente.", ".$this->session->userdata('id_usuario').", GETDATE(), 1, 'MOTIVO ACTUALIZACIÓN: ".$comentario."', 'ventas_compartidas')");
+        $respuesta = $this->db->query("INSERT INTO historial_log VALUES (".$idCliente.", ".$this->session->userdata('id_usuario').", GETDATE(), 1, 'MOTIVO ACTUALIZACIÓN: ".$comentario."', 'ventas_compartidas', null)");
 
     }
   
@@ -6994,10 +7278,12 @@ function UpdateVcUser($usuarioOld,$newColab,$rolSelect,$idLote,$idCliente,$comen
 
 }
 /**----------------------------------------------------------------------- */ 
-public function CancelarDescuento($id_pago,$motivo)
+public function CancelarDescuento($id_pago,$motivo,$monto)
 {
     $respuesta = $this->db->query("UPDATE pago_comision_ind set descuento_aplicado=0,estatus=1 where id_pago_i=".$id_pago."");
-    $this->db->query("INSERT INTO  historial_comisiones VALUES (".$id_pago.",".$this->session->userdata('id_usuario').", GETDATE(), 1, 'CAPITAL HUMANO CANCELÓ DESCUENTO, MOTIVO: ".$motivo."')");
+    $Monto2 = number_format($monto, 2, '.', ',');
+    $usuario = $this->session->userdata('nombre').' '.$this->session->userdata('apellido_paterno').' '.$this->session->userdata('apellido_materno');
+    $this->db->query("INSERT INTO  historial_comisiones VALUES (".$id_pago.",".$this->session->userdata('id_usuario').", GETDATE(), 1, '".$usuario." CANCELÓ DESCUENTO, MONTO DEVUELTO $".$Monto2." MOTIVO: ".$motivo."')");
 
     if ($respuesta ) {
         return 1;
@@ -7071,8 +7357,18 @@ return 1;
     // sed.impuesto
 
 
-
-
+    public function getListaEstatusHistorialEstatus()
+    {
+        $query = $this->db->query("SELECT 1 AS idEstatus, 'NUEVAS' as nombre union
+            SELECT 2 AS idEstatus, 'REVISION CONTRALORIA' as nombre union
+            SELECT 3 AS idEstatus, 'INTERNOMEX' as nombre union
+            SELECT 4 AS idEstatus, 'PAUSADAS' as nombre union
+            SELECT 5 AS idEstatus, 'DESCUENTOS' as nombre union
+            SELECT 6 AS idEstatus, 'RESGUARDOS' as nombre union
+            SELECT 7 AS idEstatus, 'PAGADAS' as nombre UNION
+            SELECT 8 AS idEstatus, 'VENTAS ESPECIALES'");
+        return $query->result_array();
+    }
 
    public  function get_lista_estatus(){
 
@@ -7087,50 +7383,53 @@ SELECT 7 AS idEstatus, 'PAGADAS' as nombre ");
 
 
 
-   function getDatosHistorialPagoEstatus($proyecto, $estado, $usuario){
+    function getDatosHistorialPagoEstatus($proyecto, $estado, $usuario){
 
         $filtro_00 = ' AND re.idResidencial = '.$proyecto.' ';
         $userWhereClause = ($usuario != 0) ? "AND com.id_usuario = $usuario" : '';
 
-         switch ( $estado) {
-          
+        switch ( $estado) {
+
             case '1':
-            $filtro_estatus = " pci1.estatus IN (1,2,41,42,51,52,61,62)  AND (pci1.descuento_aplicado is null or pci1.descuento_aplicado = '0') ";
-            break;
+                $filtro_estatus = " pci1.estatus IN (1,2,41,42,51,52,61,62)  AND (pci1.descuento_aplicado is null or pci1.descuento_aplicado = '0') ";
+                break;
 
             case '2':
-            $filtro_estatus = " pci1.estatus IN (4,13)  AND (pci1.descuento_aplicado is null or pci1.descuento_aplicado = '0') ";
-            break;
+                $filtro_estatus = " pci1.estatus IN (4,13)  AND (pci1.descuento_aplicado is null or pci1.descuento_aplicado = '0') ";
+                break;
 
             case '3':
-            $filtro_estatus = " pci1.estatus IN (8,88)  AND (pci1.descuento_aplicado is null or pci1.descuento_aplicado = '0') ";
-            break;
+                $filtro_estatus = " pci1.estatus IN (8,88)  AND (pci1.descuento_aplicado is null or pci1.descuento_aplicado = '0') ";
+                break;
 
             case '4':
-            $filtro_estatus = " pci1.estatus IN (6)  AND (pci1.descuento_aplicado is null or pci1.descuento_aplicado = '0') ";
-            break;
+                $filtro_estatus = " pci1.estatus IN (6)  AND (pci1.descuento_aplicado is null or pci1.descuento_aplicado = '0') ";
+                break;
 
             case '5':
-            $filtro_estatus = " pci1.estatus IN (11,16,17,0) AND pci1.descuento_aplicado = 1 ";
-            break;
+                $filtro_estatus = " pci1.estatus IN (11,16,17,0,18,19,20,21,22) AND pci1.descuento_aplicado = 1 ";
+                break;
 
             case '6':
-            $filtro_estatus = " pci1.estatus IN (3)  AND (pci1.descuento_aplicado is null or pci1.descuento_aplicado = '0') ";
-            break;
+                $filtro_estatus = " pci1.estatus IN (3)  AND (pci1.descuento_aplicado is null or pci1.descuento_aplicado = '0') ";
+                break;
 
             case '7':
-            $filtro_estatus = " pci1.estatus IN (11,12)  AND (pci1.descuento_aplicado is null or pci1.descuento_aplicado = '0') ";
-            break;
- 
-         }
+                $filtro_estatus = " pci1.estatus IN (11,12)  AND (pci1.descuento_aplicado is null or pci1.descuento_aplicado = '0') ";
+                break;
 
-         return $this->db->query("(SELECT pci1.id_pago_i, pci1.id_comision, lo.nombreLote, re.nombreResidencial as proyecto, 
+            case '8':
+                $filtro_estatus = " lo.tipo_venta = 7  AND pci1.estatus IN (1,6) AND (pci1.descuento_aplicado is null or pci1.descuento_aplicado = '0')";
+        }
+
+        return $this->db->query("(SELECT pci1.id_pago_i, pci1.id_comision, lo.nombreLote, re.nombreResidencial as proyecto, 
          co.nombre as condominio,lo.totalNeto2 precio_lote, com.comision_total, com.porcentaje_decimal, 
          pci1.abono_neodata pago_cliente, pci1.pago_neodata, pci2.abono_pagado pagado, com.comision_total-pci2.abono_pagado 
          restante, pci1.estatus, pci1.fecha_abono fecha_creacion, CONCAT(u.nombre, ' ',u.apellido_paterno, ' ', u.apellido_materno)
          user_names ,pci1.id_usuario, oprol.nombre as puesto, u.forma_pago, f.id_comision as factura, pac.porcentaje_abono, 
          oxcest.nombre as estatus_actual, oxcest.id_opcion id_estatus_actual, pci1.descuento_aplicado, 0 lugar_prospeccion, 
-         lo.referencia, com.estatus estado_comision, pac.bonificacion, u.estatus as activo, fpago.nombre AS forma_pago
+         lo.referencia, com.estatus estado_comision, pac.bonificacion, u.estatus as activo, fpago.nombre AS forma_pago,
+         lo.tipo_venta
          FROM pago_comision_ind pci1 
          LEFT JOIN (SELECT SUM(abono_neodata) abono_pagado, id_comision FROM pago_comision_ind WHERE estatus in (11) 
          GROUP BY id_comision) pci2 ON pci1.id_comision = pci2.id_comision
@@ -7151,7 +7450,7 @@ SELECT 7 AS idEstatus, 'PAGADAS' as nombre ");
          GROUP BY pci1.id_comision, lo.nombreLote, re.nombreResidencial, co.nombre, lo.totalNeto2, com.comision_total, com.porcentaje_decimal, pci1.abono_neodata, pci1.pago_neodata, 
          pci2.abono_pagado, pci1.estatus, pci1.fecha_abono, pci1.id_usuario, u.forma_pago, f.id_comision, pci1.id_pago_i, pac.porcentaje_abono, u.nombre,
          u.apellido_paterno,u.apellido_materno, oprol.nombre, oxcest.nombre, oxcest.id_opcion, pci1.descuento_aplicado, lo.referencia, com.estatus, pac.bonificacion, u.estatus,
-         fpago.nombre)
+         fpago.nombre, lo.tipo_venta)
      UNION 
  
      (SELECT pci1.id_pago_i, pci1.id_comision, lo.nombreLote, re.nombreResidencial as proyecto, co.nombre as condominio,
@@ -7160,7 +7459,8 @@ SELECT 7 AS idEstatus, 'PAGADAS' as nombre ");
      pci1.fecha_abono fecha_creacion, CONCAT(u.nombre, ' ',u.apellido_paterno, ' ', u.apellido_materno) user_names ,
      pci1.id_usuario, oprol.nombre as puesto, u.forma_pago, f.id_comision as factura, pac.porcentaje_abono, oxcest.nombre 
      as estatus_actual, oxcest.id_opcion id_estatus_actual, pci1.descuento_aplicado, cl.lugar_prospeccion, lo.referencia, 
-     com.estatus estado_comision, pac.bonificacion, u.estatus as activo, fpago.nombre AS forma_pago
+     com.estatus estado_comision, pac.bonificacion, u.estatus as activo, fpago.nombre AS forma_pago,
+     lo.tipo_venta
          FROM pago_comision_ind pci1 
          LEFT JOIN (SELECT SUM(abono_neodata) abono_pagado, id_comision FROM pago_comision_ind WHERE estatus in (11) 
          GROUP BY id_comision) pci2 ON pci1.id_comision = pci2.id_comision
@@ -7184,9 +7484,9 @@ SELECT 7 AS idEstatus, 'PAGADAS' as nombre ");
          com.porcentaje_decimal, pci1.abono_neodata, pci1.pago_neodata, pci2.abono_pagado, pci1.estatus, pci1.fecha_abono, 
          pci1.id_usuario, u.forma_pago, f.id_comision, pci1.id_pago_i, pac.porcentaje_abono, u.nombre, u.apellido_paterno,
          u.apellido_materno, oprol.nombre, oxcest.nombre, oxcest.id_opcion, pci1.descuento_aplicado, cl.lugar_prospeccion, 
-         lo.referencia, com.estatus, pac.bonificacion, u.estatus, fpago.nombre)
+         lo.referencia, com.estatus, pac.bonificacion, u.estatus, fpago.nombre, lo.tipo_venta)
          ORDER BY lo.nombreLote");
-}
+    }
 
 
 
@@ -7887,7 +8187,7 @@ function getDatosNuevasMontos($proyecto,$condominio){
 
    public  function usuarios_nuevas($rol){
 
-    return $this->db->query("SELECT id_usuario AS idCondominio, CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) AS nombre FROM usuarios WHERE id_usuario in (SELECT id_usuario FROM pago_comision_ind WHERE estatus in (1)) AND estatus in (1,0) AND id_rol = $rol ORDER BY nombre");
+    return $this->db->query("SELECT id_usuario AS idCondominio, CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) AS nombre FROM usuarios WHERE id_usuario in (SELECT id_usuario FROM pago_comision_ind WHERE estatus in (1)) AND estatus in (1,0,3) AND id_rol = $rol ORDER BY nombre");
      }
 
 
@@ -8211,40 +8511,40 @@ return $query->result();
         return $query->result_array();
     }
 
-    function fusionAcLi(){
-        $query = $this->db->query("
-        (SELECT du.estatus AS estatusDU, us.estatus as status,SUM(du.monto) as monto, du.id_usuario,CONCAT(us.nombre,' ',us.apellido_paterno,' ',us.apellido_materno) nombre, opc.nombre as puesto, 
-        se.id_sede, se.nombre as sede, CONCAT(ua.nombre,' ',ua.apellido_paterno,' ',ua.apellido_materno) creado_por, pci2.abono_pagado, pci3.abono_nuevo, du.pagado_caja, 
-        du.pago_individual, du.pagos_activos, du.estatus, (pci2.abono_pagado + du.pagado_caja) aply, CONVERT(varchar,du.fecha_modificacion,23) fecha_creacion, '1' as queryType
-        FROM descuentos_universidad du
-        INNER JOIN usuarios us ON us.id_usuario = du.id_usuario AND us.estatus = 1
-        INNER JOIN usuarios ua ON ua.id_usuario = du.creado_por
-        INNER JOIN opcs_x_cats opc ON opc.id_opcion = us.id_rol AND opc.id_catalogo = 1
-        LEFT JOIN (SELECT SUM(abono_neodata) abono_pagado, id_usuario FROM pago_comision_ind WHERE estatus in (17) GROUP BY id_usuario) pci2 ON du.id_usuario = pci2.id_usuario
-        LEFT JOIN (SELECT SUM(abono_neodata) abono_nuevo, id_usuario FROM pago_comision_ind WHERE estatus in (1) GROUP BY id_usuario) pci3 ON du.id_usuario = pci3.id_usuario
-        LEFT JOIN sedes se ON se.id_sede = us.id_sede
-        WHERE du.estatus in (0,1,2,5)
-        GROUP BY us.estatus,du.id_usuario, us.nombre, us.apellido_paterno, us.apellido_materno, opc.nombre, se.nombre, ua.nombre, ua.apellido_paterno, ua.apellido_materno,
-        pci2.abono_pagado, pci3.abono_nuevo, se.id_sede, du.pagado_caja, du.pago_individual, du.pagos_activos, du.estatus, du.fecha_modificacion)
+    function fusionAcLi($estatus='3'){
         
-        UNION
-        
-        (SELECT du.estatus AS estatusDU, us.estatus as status,SUM(du.monto) as monto, du.id_usuario,CONCAT(us.nombre,' ',us.apellido_paterno,' ',us.apellido_materno) nombre, opc.nombre as puesto, se.id_sede, 
-        se.nombre as sede, CONCAT(ua.nombre,' ',ua.apellido_paterno,' ',ua.apellido_materno) creado_por, pci2.abono_pagado, pci3.abono_nuevo, du.pagado_caja, du.pago_individual, 
-        du.pagos_activos, du.estatus, (pci2.abono_pagado + du.pagado_caja) aply, CONVERT(varchar,du.fecha_modificacion,23)  fecha_creacion, '2' as queryType
+        switch($estatus) {
+            case '1':
+                $filtro = ' WHERE du.estatus in (0,1,2,5) AND us.estatus in (1) ';
+            break;
+            case '2':
+                $filtro = ' WHERE du.estatus not in (4,3) AND us.estatus in (0,3) ';
+            break;
+            case '3':
+                $filtro = ' WHERE du.estatus in (4,3) AND us.estatus in (0,1,3) ';
+            break;
+            case '4':
+                $filtro = ' ';
+            break;
+            default:
+                $filtro = '';
+        }
+
+        $query = $this->db->query("SELECT us.estatus as status, SUM(du.monto) as monto, 
+        du.id_usuario, CONCAT(us.nombre,' ',us.apellido_paterno,' ',us.apellido_materno) nombre, opc.nombre as puesto, 
+        se.id_sede, se.nombre as sede, CONCAT(ua.nombre,' ',ua.apellido_paterno,' ',ua.apellido_materno) creado_por, 
+        pci2.abono_pagado, pci3.abono_nuevo, du.pagado_caja, du.pago_individual, du.pagos_activos, du.estatus, 
+        (pci2.abono_pagado + du.pagado_caja) aply, CONVERT(varchar,du.fecha_modificacion,23)  fecha_creacion, '1' AS queryType
         FROM descuentos_universidad du
         INNER JOIN usuarios us ON us.id_usuario = du.id_usuario
         INNER JOIN usuarios ua ON ua.id_usuario = du.creado_por
         INNER JOIN opcs_x_cats opc ON opc.id_opcion = us.id_rol AND opc.id_catalogo = 1
         LEFT JOIN (SELECT SUM(abono_neodata) abono_pagado, id_usuario FROM pago_comision_ind WHERE estatus in (17) GROUP BY id_usuario) pci2 ON du.id_usuario = pci2.id_usuario
-        LEFT JOIN (SELECT SUM(abono_neodata) abono_nuevo, id_usuario FROM pago_comision_ind WHERE estatus in (1) GROUP BY id_usuario) pci3 ON du.id_usuario = pci3.id_usuario
-        LEFT JOIN sedes se ON se.id_sede = us.id_sede
-        WHERE du.estatus in (3,4) or (du.estatus in (1,2) and us.estatus in (0,3))
-        GROUP BY us.estatus,du.id_usuario, us.nombre, us.apellido_paterno, us.apellido_materno, opc.nombre, se.nombre, ua.nombre, ua.apellido_paterno, 
-        ua.apellido_materno,pci2.abono_pagado, pci3.abono_nuevo, se.id_sede, du.pagado_caja, du.pago_individual, du.pagos_activos, du.estatus, du.fecha_modificacion)
-         ");
+        LEFT JOIN (SELECT SUM(abono_neodata) abono_nuevo, id_usuario FROM pago_comision_ind WHERE estatus in (1) GROUP BY id_usuario) pci3 ON du.id_usuario = pci3.id_usuario 
+        LEFT JOIN sedes se ON se.id_sede = Try_Cast(us.id_sede  As int)
+        $filtro
+        GROUP BY us.estatus,du.id_usuario, us.nombre, us.apellido_paterno, us.apellido_materno, opc.nombre, se.nombre, ua.nombre, ua.apellido_paterno, ua.apellido_materno,pci2.abono_pagado, pci3.abono_nuevo, se.id_sede, du.pagado_caja, du.pago_individual, du.pagos_activos, du.estatus, du.fecha_modificacion");
         return $query->result_array();
-
     }
 
 
@@ -8279,14 +8579,15 @@ return $query->result();
             }
             function getPrestamos(){
                 return $this->db->query("SELECT CONCAT(u.nombre, ' ', u.apellido_paterno, ' ' ,u.apellido_materno) as nombre,
-                p.id_prestamo,p.id_usuario,p.monto,p.num_pagos,p.estatus,p.comentario,p.fecha_creacion,p.pago_individual,pendiente,SUM(pci.abono_neodata) as total_pagado,opc.nombre as tipo,opc.id_opcion
+                p.id_prestamo,p.id_usuario,p.monto,p.num_pagos,p.estatus,p.comentario,p.fecha_creacion,p.pago_individual,pendiente,SUM(pci.abono_neodata) as total_pagado,opc.nombre as tipo,opc.id_opcion,
+                (SELECT TOP 1 rpp2.fecha_creacion FROM relacion_pagos_prestamo rpp2 WHERE rpp2.id_prestamo = rpp.id_prestamo ORDER BY rpp2.id_relacion_pp DESC) AS fecha_creacion_referencia
                 FROM prestamos_aut p 
                 INNER JOIN usuarios u ON u.id_usuario=p.id_usuario 
 				LEFT JOIN relacion_pagos_prestamo rpp ON rpp.id_prestamo = p.id_prestamo
 				LEFT JOIN pago_comision_ind pci ON pci.id_pago_i = rpp.id_pago_i AND pci.estatus in (18,19,20,21,22) AND pci.descuento_aplicado = 1
                 left join opcs_x_cats opc on opc.id_opcion=p.tipo and opc.id_catalogo=23
                 WHERE p.estatus in(1,2,3)
-				group by u.nombre,u.apellido_paterno,u.apellido_materno,p.id_prestamo,p.id_usuario,p.monto,p.num_pagos,p.estatus,p.comentario,p.fecha_creacion,p.pago_individual,pendiente,opc.nombre,opc.id_opcion");
+				group by rpp.id_prestamo, u.nombre,u.apellido_paterno,u.apellido_materno,p.id_prestamo,p.id_usuario,p.monto,p.num_pagos,p.estatus,p.comentario,p.fecha_creacion,p.pago_individual,pendiente,opc.nombre,opc.id_opcion");
             }
             function InsertPago($id_prestamo,$id_user,$pago,$usuario){
                 $respuesta = $this->db->query("INSERT INTO pagos_prestamos_ind(id_prestamo,id_usuario,pago,estado,comentario,fecha_abono,fecha_abono_intmex,creado_por) VALUES(".$id_prestamo.",".$id_user." ,".$pago.",1,'ABONO A PRESTAMO', GETDATE(), GETDATE(), ".$usuario." )");
@@ -8343,7 +8644,67 @@ return $query->result();
             }
 
 
+            function getDatosFlujoComisiones() {
 
+                return $this->db->query("(SELECT l.idLote,l.nombreLote, l.idStatusContratacion, l.idMovimiento, sl.nombreStatus , 
+                CONVERT(varchar,c.fechaApartado,23) as fechaApartado, CONVERT(varchar,p.fecha_creacion,23) as fechaProspecto,
+                (CASE WHEN s.nombre is null and c.id_sede is not null THEN 'Sede Cliente' WHEN s.nombre is null and c.id_sede is null THEN 'Sede Asesor' ELSE 'ubicacion 2' end) sedeTOMADA,
+                (CASE WHEN s.nombre is null and c.id_sede is not null THEN sc.nombre WHEN s.nombre is null and c.id_sede is null THEN sa.nombre ELSE s.nombre end ) sede,
+                CASE WHEN ec.estatus=0 THEN 'EVIDENCIA SIN INTEGRAR' WHEN ec.estatus=1 THEN 'ENVIADA A COBRANZA' WHEN ec.estatus=2 THEN 'ENVIADA A CONTRALORÍA' WHEN ec.estatus=3 THEN 'EVIDENCIA ACEPTADA' WHEN ec.estatus=4 THEN 'SIN ESTATUS REGISTRADO' WHEN ec.estatus=5 THEN 'COBRANZA RECHAZÓ LA EVIDENCIA AL GERENTE' WHEN ec.estatus=6 THEN 'CONTRALORÍA RECHAZÓ LA EVIDENCIA' ELSE 'SIN EVIDENCIA' end  estatus_evidencia,
+                CASE WHEN (l.ubicacion_dos in (2,3,4,6) or c.id_sede in (2,3,4,6) or  ase.id_sede in (2,3,4,6) ) THEN 'Plaza 2' WHEN (l.ubicacion_dos in (1,5,8,9) or c.id_sede in (1,5,8,9) or  ase.id_sede in (1,5,8,9) ) THEN 'Plaza 1' ELSE 'SIN ASIGNAR' END plaza,
+                co.comision_total,pci.abono_pagado,(co.comision_total-pci.abono_pagado) as pendiente,
+                CASE WHEN co.estatus=1 AND (co.descuento not in (1) or co.descuento is null) THEN 'ACTIVA' WHEN co.estatus=8 THEN 'RECISIÓN' WHEN co.estatus=0 THEN 'BORRADA' WHEN co.descuento in (1) THEN 'TOPADA' ELSE 'SIN IDENTIFICAR' END AS estatus_com,
+                CASE WHEN pc.bandera IN (1,55,0) THEN 'LOTE ACTIVO' WHEN pc.bandera IN (7) then 'LOTE LIQUIDADO' WHEN pc.bandera in(8) THEN 'LOTE CANCELADO' ELSE 'SIN IDENTIFICAR' END as estatus_comision_lote,
+                CASE WHEN (co.comision_total-pci.abono_pagado)<1 THEN 'LIQUIDADA MKTD' WHEN (co.comision_total-pci.abono_pagado)>1 THEN 'ACTIVA MKTD' ELSE '-' END AS ESTATUS_MKTD,
+                CASE WHEN rm.id_lote IS NULL THEN 'MANUAL' ELSE 'AUTOMATICA' END dispersion, co.id_comision,co.id_usuario,
+                CASE WHEN co.observaciones like '%IMPORTACION%' THEN concat('IMPORTACION ', co.fecha_creacion) else '' END observaciones 
+                
+                FROM lotes l 
+                LEFT JOIN clientes c on c.id_cliente=l.idCliente
+                LEFT JOIN usuarios ase on ase.id_usuario=c.id_asesor
+                LEFT JOIN comisiones co on co.id_lote=l.idLote
+                LEFT JOIN sedes s on s.id_sede=l.ubicacion_dos
+                LEFT JOIN sedes sc on sc.id_sede= c.id_sede
+                LEFT JOIN sedes sa on sa.id_sede= ase.id_sede
+                LEFT JOIN pago_comision pc on pc.id_lote=l.idLote
+                LEFT JOIN (SELECT idLote, MAX(fecha_creacion) modificado,estatus FROM evidencia_cliente WHERE estatus_particular=1 GROUP BY idLote,estatus ) ec on ec.idLote=l.idLote
+                LEFT JOIN (SELECT SUM(abono_neodata) abono_pagado,id_comision FROM pago_comision_ind GROUP BY id_comision) pci ON co.id_comision = pci.id_comision
+                LEFT JOIN (SELECT id_lote, MAX(fecha_creacion) fecha FROM reportes_marketing GROUP BY id_lote ) rm  on rm.id_lote=l.idLote
+                LEFT JOIN prospectos p on p.id_prospecto = c.id_prospecto
+                LEFT JOIN statuscontratacion sl ON l.idStatusContratacion = sl.idStatusContratacion
+                WHERE co.id_usuario = 4394)
+                
+                UNION
+                
+                (SELECT l.idLote,l.nombreLote, l.idStatusContratacion, l.idMovimiento, sl.nombreStatus , 
+                CONVERT(varchar,c.fechaApartado,23) as fechaApartado,
+                CONVERT(varchar,p.fecha_creacion,23) as fechaProspecto,
+                (CASE WHEN s.nombre is null and c.id_sede is not null THEN 'Sede Cliente' WHEN s.nombre is null and c.id_sede is null THEN 'Sede Asesor' ELSE 'ubicacion 2' end ) sedeTOMADA,
+                (CASE WHEN s.nombre is null and c.id_sede is not null THEN sc.nombre WHEN s.nombre is null and c.id_sede is null THEN sa.nombre ELSE s.nombre end ) sede,
+                CASE WHEN ec.estatus=0 THEN 'EVIDENCIA SIN INTEGRAR' WHEN ec.estatus=1 THEN 'ENVIADA A COBRANZA' WHEN ec.estatus=2 THEN 'ENVIADA A CONTRALORÍA' WHEN ec.estatus=3 THEN 'EVIDENCIA ACEPTADA' WHEN ec.estatus=4 THEN 'SIN ESTATUS REGISTRADO' WHEN ec.estatus=5 THEN 'COBRANZA RECHAZÓ LA EVIDENCIA AL GERENTE' WHEN ec.estatus=6 THEN 'CONTRALORÍA RECHAZÓ LA EVIDENCIA' ELSE 'SIN EVIDENCIA' end  estatus_evidencia,
+                CASE WHEN (l.ubicacion_dos in (2,3,4,6) or c.id_sede in (2,3,4,6) or  ase.id_sede in (2,3,4,6) ) THEN 'Plaza 2' WHEN (l.ubicacion_dos in (1,5,8,9) or c.id_sede in (1,5,8,9) or  ase.id_sede in (1,5,8,9) ) THEN 'Plaza 1' ELSE 'SIN ASIGNAR' END plaza,
+                co.comision_total,pci.abono_pagado,(co.comision_total-pci.abono_pagado) as pendiente,
+                CASE WHEN co.estatus=1 AND (co.descuento not in (1) or co.descuento is null) THEN 'ACTIVA' WHEN co.estatus=8 THEN 'RECISIÓN' WHEN co.estatus=0 THEN 'BORRADA' WHEN co.descuento in (1) THEN 'TOPADA' ELSE 'SIN IDENTIFICAR' END AS estatus_com,
+                CASE WHEN pc.bandera IN (1,55,0) THEN 'LOTE ACTIVO' WHEN pc.bandera IN (7) then 'LOTE LIQUIDADO' WHEN pc.bandera in(8) THEN 'LOTE CANCELADO' ELSE 'SIN IDENTIFICAR' END as estatus_comision_lote,
+                CASE WHEN (co.comision_total-pci.abono_pagado)<1 THEN 'LIQUIDADA MKTD' WHEN (co.comision_total-pci.abono_pagado)>1 THEN 'ACTIVA MKTD' ELSE '-' END AS ESTATUS_MKTD,
+                CASE WHEN rm.id_lote IS NULL THEN 'MANUAL' ELSE 'AUTOMATICA' END dispersion, co.id_comision,co.id_usuario,
+                CASE WHEN co.observaciones like '%IMPORTACION%' THEN concat('IMPORTACION ', co.fecha_creacion) else '' END observaciones 
+                FROM lotes l 
+                inner JOIN clientes c on c.id_cliente=l.idCliente 
+                LEFT JOIN usuarios ase on ase.id_usuario=c.id_asesor
+                LEFT JOIN sedes s on s.id_sede=l.ubicacion_dos 
+                LEFT JOIN sedes sc on sc.id_sede= c.id_sede
+                LEFT JOIN sedes sa on sa.id_sede= ase.id_sede
+                INNER JOIN comisiones co on co.id_lote=l.idLote and co.id_usuario=4394 
+                INNER JOIN pago_comision pc on pc.id_lote=l.idLote
+                LEFT JOIN (SELECT idLote, MAX(fecha_creacion) modificado,estatus,idCliente FROM evidencia_cliente WHERE estatus_particular=1 GROUP BY idLote,estatus,idCliente ) ec on ec.idLote=l.idLote -- and ec.idCliente=c.id_cliente  --evidencia_cliente ec on ec.idLote=l.idLote and ec.idCliente=c.id_cliente
+                LEFT JOIN (SELECT SUM(abono_neodata) abono_pagado,id_comision FROM pago_comision_ind GROUP BY id_comision) pci ON co.id_comision = pci.id_comision
+                LEFT JOIN (SELECT id_lote, MAX(fecha_creacion) fecha FROM reportes_marketing GROUP BY id_lote ) rm  on rm.id_lote=l.idLote
+                LEFT JOIN prospectos p on p.id_prospecto = c.id_prospecto
+                LEFT JOIN statuscontratacion sl ON l.idStatusContratacion = sl.idStatusContratacion
+                WHERE  c.lugar_prospeccion NOT in(6,29) and c.descuento_mdb != 1)");
+        
+            }
 
 
     public function getGeneralDataPrestamo($idPrestamo)
@@ -8430,71 +8791,151 @@ return $query->result();
     }
 /**----------------------------------------FIN BONOS Y PRESTAMOS------------------------------- */
 /**---------------------------------------------- */
-function getDatosFlujoComisiones() {
-
-        return $this->db->query("(SELECT l.idLote,l.nombreLote, l.idStatusContratacion, l.idMovimiento, sl.nombreStatus , 
-        CONVERT(varchar,c.fechaApartado,23) as fechaApartado, CONVERT(varchar,p.fecha_creacion,23) as fechaProspecto,
-        (CASE WHEN s.nombre is null and c.id_sede is not null THEN 'Sede Cliente' WHEN s.nombre is null and c.id_sede is null THEN 'Sede Asesor' ELSE 'ubicacion 2' end) sedeTOMADA,
-        (CASE WHEN s.nombre is null and c.id_sede is not null THEN sc.nombre WHEN s.nombre is null and c.id_sede is null THEN sa.nombre ELSE s.nombre end ) sede,
-        CASE WHEN ec.estatus=0 THEN 'EVIDENCIA SIN INTEGRAR' WHEN ec.estatus=1 THEN 'ENVIADA A COBRANZA' WHEN ec.estatus=2 THEN 'ENVIADA A CONTRALORÍA' WHEN ec.estatus=3 THEN 'EVIDENCIA ACEPTADA' WHEN ec.estatus=4 THEN 'SIN ESTATUS REGISTRADO' WHEN ec.estatus=5 THEN 'COBRANZA RECHAZÓ LA EVIDENCIA AL GERENTE' WHEN ec.estatus=6 THEN 'CONTRALORÍA RECHAZÓ LA EVIDENCIA' ELSE 'SIN EVIDENCIA' end  estatus_evidencia,
-        CASE WHEN (l.ubicacion_dos in (2,3,4,6) or c.id_sede in (2,3,4,6) or  ase.id_sede in (2,3,4,6) ) THEN 'Plaza 2' WHEN (l.ubicacion_dos in (1,5,8,9) or c.id_sede in (1,5,8,9) or  ase.id_sede in (1,5,8,9) ) THEN 'Plaza 1' ELSE 'SIN ASIGNAR' END plaza,
-        co.comision_total,pci.abono_pagado,(co.comision_total-pci.abono_pagado) as pendiente,
-        CASE WHEN co.estatus=1 AND (co.descuento not in (1) or co.descuento is null) THEN 'ACTIVA' WHEN co.estatus=8 THEN 'RECISIÓN' WHEN co.estatus=0 THEN 'BORRADA' WHEN co.descuento in (1) THEN 'TOPADA' ELSE 'SIN IDENTIFICAR' END AS estatus_com,
-        CASE WHEN pc.bandera IN (1,55,0) THEN 'LOTE ACTIVO' WHEN pc.bandera IN (7) then 'LOTE LIQUIDADO' WHEN pc.bandera in(8) THEN 'LOTE CANCELADO' ELSE 'SIN IDENTIFICAR' END as estatus_comision_lote,
-        CASE WHEN (co.comision_total-pci.abono_pagado)<1 THEN 'LIQUIDADA MKTD' WHEN (co.comision_total-pci.abono_pagado)>1 THEN 'ACTIVA MKTD' ELSE '-' END AS ESTATUS_MKTD,
-        CASE WHEN rm.id_lote IS NULL THEN 'MANUAL' ELSE 'AUTOMATICA' END dispersion, co.id_comision,co.id_usuario,
-        CASE WHEN co.observaciones like '%IMPORTACION%' THEN concat('IMPORTACION ', co.fecha_creacion) else '' END observaciones 
-        
-        FROM lotes l 
-        LEFT JOIN clientes c on c.id_cliente=l.idCliente
-        LEFT JOIN usuarios ase on ase.id_usuario=c.id_asesor
-        LEFT JOIN comisiones co on co.id_lote=l.idLote
-        LEFT JOIN sedes s on s.id_sede=l.ubicacion_dos 
-        LEFT JOIN sedes sc on sc.id_sede= c.id_sede
-        LEFT JOIN sedes sa on sa.id_sede= ase.id_sede
-        LEFT JOIN pago_comision pc on pc.id_lote=l.idLote
-        LEFT JOIN (SELECT idLote, MAX(fecha_creacion) modificado,estatus FROM evidencia_cliente WHERE estatus_particular=1 GROUP BY idLote,estatus ) ec on ec.idLote=l.idLote
-        LEFT JOIN (SELECT SUM(abono_neodata) abono_pagado,id_comision FROM pago_comision_ind GROUP BY id_comision) pci ON co.id_comision = pci.id_comision
-        LEFT JOIN (SELECT id_lote, MAX(fecha_creacion) fecha FROM reportes_marketing GROUP BY id_lote ) rm  on rm.id_lote=l.idLote
-        LEFT JOIN prospectos p on p.id_prospecto = c.id_prospecto
-        LEFT JOIN statuscontratacion sl ON l.idStatusContratacion = sl.idStatusContratacion
-        WHERE co.id_usuario = 4394)
-        
-        UNION
-        
-        (SELECT l.idLote,l.nombreLote, l.idStatusContratacion, l.idMovimiento, sl.nombreStatus , 
-        CONVERT(varchar,c.fechaApartado,23) as fechaApartado,
-        CONVERT(varchar,p.fecha_creacion,23) as fechaProspecto,
-        (CASE WHEN s.nombre is null and c.id_sede is not null THEN 'Sede Cliente' WHEN s.nombre is null and c.id_sede is null THEN 'Sede Asesor' ELSE 'ubicacion 2' end ) sedeTOMADA,
-        (CASE WHEN s.nombre is null and c.id_sede is not null THEN sc.nombre WHEN s.nombre is null and c.id_sede is null THEN sa.nombre ELSE s.nombre end ) sede,
-        CASE WHEN ec.estatus=0 THEN 'EVIDENCIA SIN INTEGRAR' WHEN ec.estatus=1 THEN 'ENVIADA A COBRANZA' WHEN ec.estatus=2 THEN 'ENVIADA A CONTRALORÍA' WHEN ec.estatus=3 THEN 'EVIDENCIA ACEPTADA' WHEN ec.estatus=4 THEN 'SIN ESTATUS REGISTRADO' WHEN ec.estatus=5 THEN 'COBRANZA RECHAZÓ LA EVIDENCIA AL GERENTE' WHEN ec.estatus=6 THEN 'CONTRALORÍA RECHAZÓ LA EVIDENCIA' ELSE 'SIN EVIDENCIA' end  estatus_evidencia,
-        CASE WHEN (l.ubicacion_dos in (2,3,4,6) or c.id_sede in (2,3,4,6) or  ase.id_sede in (2,3,4,6) ) THEN 'Plaza 2' WHEN (l.ubicacion_dos in (1,5,8,9) or c.id_sede in (1,5,8,9) or  ase.id_sede in (1,5,8,9) ) THEN 'Plaza 1' ELSE 'SIN ASIGNAR' END plaza,
-        co.comision_total,pci.abono_pagado,(co.comision_total-pci.abono_pagado) as pendiente,
-        CASE WHEN co.estatus=1 AND (co.descuento not in (1) or co.descuento is null) THEN 'ACTIVA' WHEN co.estatus=8 THEN 'RECISIÓN' WHEN co.estatus=0 THEN 'BORRADA' WHEN co.descuento in (1) THEN 'TOPADA' ELSE 'SIN IDENTIFICAR' END AS estatus_com,
-        CASE WHEN pc.bandera IN (1,55,0) THEN 'LOTE ACTIVO' WHEN pc.bandera IN (7) then 'LOTE LIQUIDADO' WHEN pc.bandera in(8) THEN 'LOTE CANCELADO' ELSE 'SIN IDENTIFICAR' END as estatus_comision_lote,
-        CASE WHEN (co.comision_total-pci.abono_pagado)<1 THEN 'LIQUIDADA MKTD' WHEN (co.comision_total-pci.abono_pagado)>1 THEN 'ACTIVA MKTD' ELSE '-' END AS ESTATUS_MKTD,
-        CASE WHEN rm.id_lote IS NULL THEN 'MANUAL' ELSE 'AUTOMATICA' END dispersion, co.id_comision,co.id_usuario,
-        CASE WHEN co.observaciones like '%IMPORTACION%' THEN concat('IMPORTACION ', co.fecha_creacion) else '' END observaciones 
-        FROM lotes l 
-        inner JOIN clientes c on c.id_cliente=l.idCliente 
-        LEFT JOIN usuarios ase on ase.id_usuario=c.id_asesor
-        LEFT JOIN sedes s on s.id_sede=l.ubicacion_dos 
-        LEFT JOIN sedes sc on sc.id_sede= c.id_sede
-        LEFT JOIN sedes sa on sa.id_sede= ase.id_sede
-        INNER JOIN comisiones co on co.id_lote=l.idLote and co.id_usuario=4394 
-        INNER JOIN pago_comision pc on pc.id_lote=l.idLote
-        LEFT JOIN (SELECT idLote, MAX(fecha_creacion) modificado,estatus,idCliente FROM evidencia_cliente WHERE estatus_particular=1 GROUP BY idLote,estatus,idCliente ) ec on ec.idLote=l.idLote -- and ec.idCliente=c.id_cliente  --evidencia_cliente ec on ec.idLote=l.idLote and ec.idCliente=c.id_cliente
-        LEFT JOIN (SELECT SUM(abono_neodata) abono_pagado,id_comision FROM pago_comision_ind GROUP BY id_comision) pci ON co.id_comision = pci.id_comision
-        LEFT JOIN (SELECT id_lote, MAX(fecha_creacion) fecha FROM reportes_marketing GROUP BY id_lote ) rm  on rm.id_lote=l.idLote
-        LEFT JOIN prospectos p on p.id_prospecto = c.id_prospecto
-        LEFT JOIN statuscontratacion sl ON l.idStatusContratacion = sl.idStatusContratacion
-        WHERE  c.lugar_prospeccion NOT in(6,29) and c.descuento_mdb != 1)");
-
-    }
-
-    
 
 function lista_estatus_descuentos(){
     return $this->db->query(" SELECT * FROM opcs_x_cats where id_catalogo=23 and id_opcion in(18,19,20,21,22)");
 }
+
+    public function getPuestoByIdOpts($idOpciones)
+    {
+        return $this->db->query("SELECT * FROM opcs_x_cats WHERE id_catalogo = 1 AND id_opcion IN ($idOpciones)")
+            ->result_array();
+    }
+
+    public function findAllPlanes()
+    {
+        $query = $this->db->query('SELECT id_plan, descripcion FROM plan_comision WHERE estatus = 1');
+        return $query->result_array();
+    }
+
+    public function findPlanDetailById($idPlan)
+    {
+        $query = $this->db->query("SELECT pc.id_plan, pc.descripcion,
+            pc.comDi, pc.neoDi, rolDir.nombre AS director, 
+            pc.comRe, pc.neoRe, rolReg.nombre AS regional,
+            pc.comSu, pc.neoSu, rolSubdir.nombre AS subdirector,
+            pc.comGe, pc.neoGe, rolGer.nombre AS gerente,
+            pc.comCo, pc.neoCo, rolCoor.nombre AS coordinador,
+            pc.comAs, pc.neoAs, rolAse.nombre AS asesor,
+            pc.comOt, pc.neoOt, rolOtr.nombre AS otro,
+            pc.comMk, pc.neoMk, rolMkt.nombre AS mktd,
+            pc.comOt2, pc.neoOt2, rolOtr2.nombre AS otro2
+            FROM plan_comision pc
+            LEFT JOIN opcs_x_cats rolDir ON rolDir.id_opcion = pc.director AND rolDir.id_catalogo = 1
+            LEFT JOIN opcs_x_cats rolReg ON rolReg.id_opcion = pc.regional AND rolReg.id_catalogo = 1
+            LEFT JOIN opcs_x_cats rolSubdir ON rolSubdir.id_opcion = pc.subdirector AND rolSubdir.id_catalogo = 1
+            LEFT JOIN opcs_x_cats rolGer ON rolGer.id_opcion = pc.gerente AND rolGer.id_catalogo = 1
+            LEFT JOIN opcs_x_cats rolCoor ON rolCoor.id_opcion = pc.coordinador AND rolCoor.id_catalogo = 1
+            LEFT JOIN opcs_x_cats rolAse ON rolAse.id_opcion = pc.asesor AND rolAse.id_catalogo = 1
+            LEFT JOIN usuarios usOtr ON usOtr.id_usuario = pc.id_o 
+                LEFT JOIN opcs_x_cats rolOtr ON rolOtr.id_opcion = usOtr.id_rol AND rolOtr.id_catalogo = 1
+            LEFT JOIN opcs_x_cats rolMkt ON rolMkt.id_opcion = pc.mktd AND rolMkt.id_catalogo = 1
+            LEFT JOIN usuarios usOtr2 ON usOtr2.id_usuario = pc.id_o2 
+                LEFT JOIN opcs_x_cats rolOtr2 ON rolOtr2.id_opcion = usOtr2.id_rol AND rolOtr2.id_catalogo = 1
+            WHERE pc.id_plan = $idPlan");
+        return $query->row();
+    }
+
+    public function getVentasCanceladas()
+    {
+    $query = $this->db->query("(SELECT l.idLote, l.nombreLote, SUM(c.comision_total) AS comision_total, CONCAT(cl.nombre,' ',cl.apellido_paterno,' ',cl.apellido_materno) nombre_cliente,
+    (CASE WHEN cl.plan_comision IN (0) OR cl.plan_comision IS NULL THEN '-' ELSE pl.descripcion END)  AS plan_descripcion, 0 AS idCliente, re.nombreResidencial, l.referencia
+    FROM comisiones c
+    LEFT JOIN clientes cl ON cl.id_cliente = c.idCliente
+    LEFT JOIN plan_comision pl ON pl.id_plan = cl.plan_comision
+    JOIN lotes l ON l.idLote = c.id_lote
+    INNER JOIN condominios cd on cd.idCondominio=l.idCondominio
+    INNER JOIN residenciales re on re.idResidencial=cd.idResidencial
+    WHERE l.status = 1 AND c.estatus IN (8) AND c.id_usuario NOT IN (0) AND c.idCliente IS NULL
+    GROUP BY l.idLote, l.nombreLote, cl.nombre, cl.apellido_paterno, cl.apellido_materno, cl.plan_comision, pl.descripcion,  re.nombreResidencial,l.referencia, c.idCliente
+
+        UNION
+        
+        SELECT l.idLote, l.nombreLote, SUM(c.comision_total) AS comision_total, CONCAT(cl.nombre,' ',cl.apellido_paterno,' ',cl.apellido_materno) nombre_cliente, 
+        (CASE WHEN cl.plan_comision IN (0) OR cl.plan_comision IS NULL THEN '-' ELSE pl.descripcion END) AS plan_descripcion, c.idCliente, re.nombreResidencial,l.referencia
+        FROM comisiones c
+        JOIN clientes cl ON cl.id_cliente = c.idCliente
+        LEFT JOIN plan_comision pl ON pl.id_plan = cl.plan_comision
+        JOIN lotes l ON l.idLote = c.id_lote
+        INNER JOIN condominios cd on cd.idCondominio=l.idCondominio
+        INNER JOIN residenciales re on re.idResidencial= cd.idResidencial
+        WHERE l.status = 1 AND c.estatus IN (8) AND c.id_usuario NOT IN (0) AND c.idCliente IS NOT NULL
+        GROUP BY l.idLote, l.nombreLote, cl.nombre, cl.apellido_paterno, cl.apellido_materno, cl.plan_comision, 
+        pl.descripcion,  re.nombreResidencial,l.referencia, c.idCliente)
+        ORDER BY l.idLote ASC");
+        return $query->result_array();
+    }
+
+    public function getVentCanceladaSuma($idLote, $idCliente)
+    {
+        $clienteWhereClause = '';
+        if ($idCliente === '0') {
+            $clienteWhereClause = 'c1.idCliente IS NULL';
+        } else {
+            $clienteWhereClause = "c1.idCliente = $idCliente";
+        }
+        $query = $this->db->query("SELECT SUM(c1.comision_total) comision_total, (SELECT SUM(abono_neodata) 
+            FROM pago_comision_ind WHERE id_comision IN (SELECT id_comision FROM comisiones 
+            WHERE id_lote = $idLote AND estatus = 8)) AS abonado, lo.nombreLote
+            FROM lotes lo
+            INNER JOIN comisiones c1 ON lo.idLote = c1.id_lote AND c1.estatus = 8
+            WHERE lo.idLote = $idLote AND $clienteWhereClause
+            GROUP BY lo.idLote, lo.nombreLote");
+        return $query->row();
+    }
+
+    public function getVentaCanceladaDetalle($idLote, $idCliente)
+    {
+        $clienteWhereClause = '';
+        if ($idCliente === '0') {
+            $clienteWhereClause = 'com.idCliente IS NULL';
+        } else {
+            $clienteWhereClause = "com.idCliente = $idCliente";
+        }
+        $query = $this->db->query("SELECT com.id_comision, com.id_usuario, lo.totalNeto2, lo.idLote, res.idResidencial, 
+            lo.referencia, lo.tipo_venta, com.id_lote, lo.nombreLote, com.porcentaje_decimal, CONCAT(us.nombre,' ' ,
+            us.apellido_paterno,' ',us.apellido_materno) colaborador, oxc.nombre as rol, com.comision_total, 
+            pci.abono_pagado, com.rol_generado, com.descuento
+            FROM comisiones com
+            LEFT JOIN (SELECT SUM(abono_neodata) abono_pagado, id_comision FROM pago_comision_ind 
+            GROUP BY id_comision) pci ON pci.id_comision = com.id_comision
+            INNER JOIN lotes lo ON lo.idLote = com.id_lote 
+            INNER JOIN usuarios us ON us.id_usuario = com.id_usuario
+            INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = com.rol_generado
+            INNER JOIN condominios con ON con.idCondominio = lo.idCondominio
+            INNER JOIN residenciales res ON res.idResidencial = con.idResidencial
+            WHERE oxc.id_catalogo = 1 AND com.id_lote = $idLote AND com.estatus = 8 AND $clienteWhereClause 
+            ORDER BY com.rol_generado ASC");
+        return $query->result_array();
+    }
+
+    public function findOpinionActiveByIdUsuario($idUsuario)
+    {
+        $query = $this->db->query("SELECT id_opn, id_usuario, archivo_name FROM opinion_cumplimiento WHERE estatus = 1 
+            AND id_usuario = $idUsuario");
+        return $query->row();
+    }
+
+    public function getComprobantesExtranjero()
+    {
+        $query = $this->db->query("SELECT sum(pci1.abono_neodata) total, u.id_usuario, CONCAT(u.nombre, ' ',
+            u.apellido_paterno, ' ', u.apellido_materno) usuario,
+            fp.nombre as forma_pago, na.nombre as nacionalidad, opn.estatus estatus_archivo, opn.archivo_name,
+            estatus.nombre as estatus_usuario
+            FROM pago_comision_ind pci1
+            INNER JOIN comisiones com ON pci1.id_comision = com.id_comision AND com.estatus in (1,8)
+            INNER JOIN lotes lo ON lo.idLote = com.id_lote AND lo.status = 1
+            INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
+            INNER JOIN usuarios u ON u.id_usuario = com.id_usuario AND u.forma_pago in (5)
+            INNER JOIN opcs_x_cats na ON na.id_opcion = u.nacionalidad AND na.id_catalogo = 11
+            INNER JOIN opinion_cumplimiento opn ON opn.id_usuario = u.id_usuario and opn.estatus IN (2)
+            INNER JOIN opcs_x_cats fp ON fp.id_opcion = u.forma_pago AND fp.id_catalogo = 16
+            INNER JOIN opcs_x_cats estatus ON estatus.id_opcion = u.estatus AND estatus.id_catalogo = 3
+            INNER JOIN pagos_invoice iv ON iv.id_pago_i = pci1.id_pago_i
+            WHERE pci1.estatus in (4,8,88)
+            GROUP BY opn.archivo_name, u.nombre, u.apellido_paterno, u.apellido_materno, u.id_usuario,
+            u.forma_pago, opn.estatus, na.nombre, fp.nombre, estatus.nombre
+            ORDER BY u.nombre");
+        return $query->result_array();
+    }
 }

@@ -2698,14 +2698,7 @@ $pdf->Output(utf8_decode($namePDF), 'I');
  // PHPMailer object
  $mail = $this->phpmailer_lib->load();
 
- // SMTP configuration
-//  $mail->isSMTP();
-//  $mail->Host     = 'smtp.gmail.com';
-//  $mail->SMTPAuth = true;
-//  $mail->Username = 'noreply@ciudadmaderas.com';
-//  $mail->Password = 'Marzo2019@';
-//  $mail->SMTPSecure = 'ssl';
-//  $mail->Port     = 465;
+
 
  $mail->setFrom('noreply@ciudadmaderas.com', 'Ciudad Maderas');
 
@@ -2876,13 +2869,7 @@ public function get_sol_aut()
 
 
 		$mail = $this->phpmailer_lib->load();
-		// $mail->isSMTP();
-		// $mail->Host     = 'smtp.gmail.com';
-		// $mail->SMTPAuth = true;
-		// $mail->Username = 'noreply@ciudadmaderas.com';
-		// $mail->Password = 'Marzo2019@';
-		// $mail->SMTPSecure = 'ssl';
-		// $mail->Port     = 465;
+
 		$mail->setFrom('noreply@ciudadmaderas.com', 'Ciudad Maderas');
 		$mail->addAddress($correoDir);/*$correoDir*/
 

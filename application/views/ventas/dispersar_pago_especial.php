@@ -136,7 +136,7 @@
                                                 <div class="form-group text-center">
                                                     <h4 class="title-tot center-align m-0">Monto hoy: </h4>
                                                     <p class="category input-tot pl-1" id="monto_label">
-                                                        <?php $query = $this->db->query("SELECT SUM(abono_neodata) nuevo_general FROM pago_comision_ind WHERE estatus NOT IN (11,0) AND id_comision IN (select id_comision from comisiones) AND MONTH(GETDATE()) = MONTH(fecha_abono) AND year(GetDate()) = year(fecha_abono) AND Day(GetDate()) = Day(fecha_abono)");
+                                                        <?php $query = $this->db->query("SELECT SUM(abono_neodata) nuevo_general FROM pago_comision_ind WHERE estatus NOT IN (11,0) AND id_comision IN (select id_comision from comisiones where id_lote in(select idLote from lotes where tipo_venta=7)) AND MONTH(GETDATE()) = MONTH(fecha_abono) AND year(GetDate()) = year(fecha_abono) AND Day(GetDate()) = Day(fecha_abono)");
 
                                                         foreach ($query->result() as $row){
                                                             $number = $row->nuevo_general;
@@ -149,7 +149,7 @@
                                                 <div class="form-group text-center">
                                                     <h4 class="title-tot center-align m-0">Pagos hoy: </h4>
                                                     <p class="category input-tot pl-1" id="pagos_label">
-                                                        <?php $query = $this->db->query("SELECT count(id_pago_i) nuevo_general FROM pago_comision_ind WHERE estatus NOT IN (11,0) AND id_comision IN (select id_comision from comisiones) AND MONTH(GETDATE()) = MONTH(fecha_abono) AND Day(GetDate()) = Day(fecha_abono) AND year(GetDate()) = year(fecha_abono) AND abono_neodata>0");
+                                                        <?php $query = $this->db->query("SELECT count(id_pago_i) nuevo_general FROM pago_comision_ind WHERE estatus NOT IN (11,0) AND id_comision IN (select id_comision from comisiones where id_lote in(select idLote from lotes where tipo_venta=7)) AND MONTH(GETDATE()) = MONTH(fecha_abono) AND Day(GetDate()) = Day(fecha_abono) AND year(GetDate()) = year(fecha_abono) AND abono_neodata>0");
                                                         foreach ($query->result() as $row){
                                                             $number = $row->nuevo_general;
                                                             echo '<B>'.$number,'</B>';
@@ -161,7 +161,7 @@
                                                 <div class="form-group text-center">
                                                     <h4 class="title-tot center-align m-0">Lotes hoy: </h4>
                                                     <p class="category input-tot pl-1" id="lotes_label">
-                                                        <?php $query = $this->db->query("SELECT count(distinct(id_lote)) nuevo_general FROM comisiones WHERE id_comision IN (select id_comision from pago_comision_ind WHERE MONTH(GETDATE()) = MONTH(fecha_abono) AND Day(GetDate()) = Day(fecha_abono) AND year(GetDate()) = year(fecha_abono) AND estatus NOT IN (11,0) AND id_comision IN (SELECT id_comision FROM comisiones))");
+                                                        <?php $query = $this->db->query("SELECT count(distinct(id_lote)) nuevo_general FROM comisiones WHERE id_comision IN (select id_comision from pago_comision_ind WHERE MONTH(GETDATE()) = MONTH(fecha_abono) AND Day(GetDate()) = Day(fecha_abono) AND year(GetDate()) = year(fecha_abono) AND estatus NOT IN (11,0) AND id_comision IN (SELECT id_comision FROM comisiones where id_lote in(select idLote from lotes where tipo_venta=7)))");
                                                         foreach ($query->result() as $row) {
                                                             $number = $row->nuevo_general;
                                                             echo '<B>'.$number,'</B>';
@@ -784,7 +784,7 @@ console.log(resulq.data[0].vigencia);
                                                 <div class="col-md-3">
                                                 <input id="id_usuario" type="hidden" name="id_usuario[]" value="${v.id_usuario}"><input id="id_rol" type="hidden" name="id_rol[]" value="${v.id_rol}">
                                                 <input class="form-control ng-invalid ng-invalid-required" required readonly="true" value="${v.nombre}" style="font-size:12px;"><b><p style="font-size:12px;">${v.detail_rol}</p></b></div>
-                                                <div class="col-md-1"><input class="form-control ng-invalid ng-invalid-required" name="porcentaje[]" id="porcentaje_${i}" onblur="Editar(${i},${totalNeto2},${v.id_usuario},${resultArr.length})" required  value="${v.porcentaje_decimal % 1 == 0 ? parseInt(v.porcentaje_decimal) : v.porcentaje_decimal.toString().match(/^-?\d+(?:\.\d{0,2})?/)[0]}"></div>
+                                                <div class="col-md-1"><input class="form-control ng-invalid ng-invalid-required" name="porcentaje[]" id="porcentaje_${i}" onchange="validarPorcentaje(${i}, ${resultArr.length})" onblur="Editar(${i},${totalNeto2},${v.id_usuario},${resultArr.length})" required  value="${v.porcentaje_decimal % 1 == 0 ? parseInt(v.porcentaje_decimal) : v.porcentaje_decimal.toString().match(/^-?\d+(?:\.\d{0,2})?/)[0]}"></div>
                                                 <div class="col-md-2"><input class="form-control ng-invalid ng-invalid-required" name="comision_total[]" id="comision_total_${i}" required readonly="true" value="${formatMoney(v.comision_total)}"></div>
                                                 <div class="col-md-2"><input class="form-control ng-invalid ng-invalid-required" name="comision_abonada[]" required readonly="true" value="${formatMoney(0)}"></div>
                                                 <div class="col-md-2"><input class="form-control ng-invalid ng-invalid-required" name="comision_pendiente[]" id="comision_pendiente_${i}" required readonly="true" value="${formatMoney(v.comision_total)}"></div>
@@ -1089,6 +1089,21 @@ function Editar(i,precio,id_usuario,lengt){
 
 
         }
+
+    function validarPorcentaje(index, arrLength) {
+        const currentValue = parseFloat($(`#porcentaje_${index}`).val());
+        const limit = 20;
+        let accumulatedValue = currentValue;
+        for (let i = 0; i < arrLength; i++) {
+            if (index !== i) {
+                accumulatedValue += parseFloat($(`#porcentaje_${i}`).val());
+            }
+        }
+        if (accumulatedValue > limit) {
+            $(`#porcentaje_${index}`).val(0);
+            alerts.showNotification("top", "right", `El límite del porcentaje sumado debe ser ${limit}%`, "danger");
+        }
+    }
 /**--------------------------------------------------------------------- */
     $("#form_NEODATA").submit( function(e) {
         $('#dispersar').prop('disabled', true);

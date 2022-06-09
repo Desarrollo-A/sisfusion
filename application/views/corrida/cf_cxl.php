@@ -338,6 +338,20 @@
             color: white;
             padding: 2px 13px;
         }
+        .required-label{
+            color:red; font-weight: 800
+        }
+        .infoBank{
+            font-size: 1.3em;
+            color: #103f75;
+            font-weight: 600;
+        }
+        .table-data-bank tr td{
+            text-align: center;
+            word-wrap:break-word;
+            padding:10px;
+
+        }
         /*Terminan los nuevos estilos*/
 
     </style>
@@ -401,12 +415,12 @@
 
                                     <div class="row">
                                         <div class="col-md-3 form-group">
-                                            <label>Nombre: </label>
+                                            <label>Nombre:<span class="required-label">*</span> </label>
                                             <input type="text" ng-model="nombre" id="nombre" required="text" class="form-control">
                                             <p id="nombretext" style="color:red;"></p>
                                         </div >
                                         <div class="col-md-3 form-group" >
-                                            <label>Edad: </label>
+                                            <label>Edad:<span class="required-label">*</span> </label>
                                             <select ng-model="age" id="edad" ng-options="item.age for item in ages" class="form-control" ng-change="getAge(age.age)">
                                                 <option value = ""> - Selecciona la edad - </option>
                                             </select>
@@ -437,20 +451,22 @@
                                 <div class="row">
 
                                     <div class="col-md-4 form-group" >
-                                        <label>Gerente:</label>
+                                        <label>Gerente:<span class="required-label">*</span></label>
                                         <select ng-model = "gerente" id="gerente" ng-options = "item.nombreGerente for item in gerentes" ng-change="onSelectChangegerente(gerente)" class="form-control">
                                             <option value = ""> - Selecciona un Gerente - </option>
                                         </select>
                                         <p id="gerentetext" style="color: red;"></p>
                                     </div>
                                     <div class="col-md-4 form-group" >
-                                        <label>Coordinador:</label>
-                                        <select ng-model="coordinador" ng-options="item.nombreCoordinador for item in coordinadores" ng-change="onSelectChangecoord(coordinador)" class="form-control" style="text-transform: uppercase;">
+                                        <label>Coordinador:<span class="required-label">*</span></label>
+                                        <select id="coordinador" ng-model="coordinador" ng-options="item.nombreCoordinador for item in coordinadores"
+                                                ng-change="onSelectChangecoord(coordinador)" class="form-control" style="text-transform: uppercase;">
                                             <option value = ""> - Selecciona un Coordinador - </option>
                                         </select>
+                                        <p id="cordinadortext" style="color:red;"></p>
                                     </div>
                                     <div class="col-md-4 form-group" >
-                                        <label>Asesor:</label>
+                                        <label>Asesor:<span class="required-label">*</span></label>
                                         <select ng-model="asesor" id="asesor" ng-options="item.nombreAsesor for item in asesores" class="form-control">
                                             <option value = ""> - Selecciona un Asesor - </option>
                                         </select>
@@ -479,19 +495,24 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-md-3 form-group" >
-                                        <label>Proyecto:</label>
-                                        <select ng-model = "proyecto" ng-options = "item.descripcion for item in residencial" ng-change="onSelectChangep(proyecto)" class="form-control">
+                                        <label>Proyecto:<span class="required-label">*</span></label>
+                                        <select id="proyectoS" ng-model = "proyecto" ng-options = "item.descripcion for item in residencial" ng-change="onSelectChangep(proyecto)" class="form-control">
                                             <option value = ""> - Selecciona un Proyecto - </option>
                                         </select>
+                                        <p id="proyectotext" style="color: red;"></p>
+
+
                                     </div>
                                     <div class="col-md-2 form-group" id="condominioCont">
-                                        <label>Condominio:</label>
-                                        <select ng-model="condominio" ng-options="item.nombre for item in condominios" ng-change="onSelectChangec(condominio)" class="form-control" style="text-transform: uppercase;">
+                                        <label>Condominio:<span class="required-label">*</span></label>
+                                        <select id="condominioS" ng-model="condominio" ng-options="item.nombre for item in condominios" ng-change="onSelectChangec(condominio)" class="form-control" style="text-transform: uppercase;">
                                             <option value = ""> - Selecciona un Condominio - </option>
                                         </select>
+                                        <p id="condominiotext" style="color: red;"></p>
+
                                     </div>
                                     <div class="col-md-3 form-group" id="loteCont">
-                                        <label>Lote:</label>
+                                        <label>Lote:<span class="required-label">*</span></label>
                                         <select ng-model="lote" id="lote" ng-options="item.nombreLote for item in lotes" ng-change="onSelectChangel(lote)" class="form-control">
                                             <option value = ""> - Selecciona un Lote - </option>
                                         </select>
@@ -504,7 +525,7 @@
                                         </select>
                                     </div>
                                     <div class="col-md-2 form-group" >
-                                        <label>Plan:</label>
+                                        <label>Plan:<span class="required-label">*</span></label>
                                         <select ng-model = "plan" class="form-control" id="planSL" ng-change="payPlan()">
                                             <option value = ""> - Selecciona un plan - </option>
                                             <option value = "Crédito"> Crédito </option>
@@ -513,7 +534,7 @@
                                         <p id="plantext" style="color: red;"></p>
                                     </div>
                                     <div class="col-md-2 form-group" id="anioCont">
-                                        <label>Años:</label>
+                                        <label>Años:<span class="required-label">*</span></label>
                                         <select ng-model="yearplan" id="yearplan" ng-options="item.yearplan for item in yearsplan" class="form-control" ng-change="getAgePlan()">
                                             <option value = ""> - Selecciona los años - </option>
                                         </select>
@@ -571,7 +592,7 @@
                                     <div class="col-md-6 form-group">
                                         <label>Días para pagar Enganche: </label>
                                         <select ng-model="day" id="day" ng-options="item.day for item in diasEnganche" class="form-control" ng-change="daysEng(); ChengecheckEngDif">
-                                            <option value = ""> - Selecciona los días de enganche - </option>
+                                            <option value=""> - Selecciona los días de enganche - </option>
                                         </select>
                                     </div>
 
@@ -612,6 +633,7 @@
                                             </select>
                                         </div>
                                     </div>
+
                                     <!--</div>-->
 
                                 </div>
@@ -849,11 +871,35 @@
                                 </tr>
                                 <tr>
                                     <td colspan="3" >
-                                        <b>Banco:</b> <label type="text">{{banco}}</label>
-                                        <b>Razón Social:</b> <label type="text">{{rsocial}}</label>
-                                        <b>Cuenta:</b> <label type="text">{{cuenta}}</label>
-                                        <b>CLABE:</b> <label type="text">{{clabe}}</label><p>
-                                            <b>Referencia:</b> <label type="text" style="font-size:30px">{{referencia}}</label>
+                                        <table width="100%" class="table-data-bank">
+                                            <tr>
+                                                <td>
+                                                    <b>Banco:</b><br>
+                                                    <label type="text" class="infoBank">{{banco}}</label>
+                                                </td>
+                                                <td>
+                                                    <b>Razón Social:</b><br>
+                                                    <label type="text" class="infoBank">{{rsocial}}</label>
+                                                </td>
+                                                <td>
+                                                    <b>Cuenta:</b><br>
+                                                    <label type="text" class="infoBank">{{cuenta}}</label>
+                                                </td>
+                                                <td>
+                                                    <b>CLABE:</b><br>
+                                                    <label type="text" class="infoBank">{{clabe}}</label>
+                                                </td>
+                                                <td>
+                                                    <b>Referencia:</b><br>
+                                                    <label type="text" class="infoBank">{{referencia}}</label>
+                                                </td>
+                                            </tr>
+                                        </table>
+
+<!--                                        <b>Razón Social:</b> <label type="text" class="infoBank">{{rsocial}}</label>-->
+<!--                                        <b>Cuenta:</b> <label type="text" class="infoBank">{{cuenta}}</label>-->
+<!--                                        <b>CLABE:</b> <label type="text" class="infoBank">{{clabe}}</label><p>-->
+<!--                                            <b>Referencia:</b> <label type="text" class="infoBank">{{referencia}}</label>-->
                                     </td>
                                 </tr>
                                 <tr>
@@ -1817,18 +1863,20 @@
                     precioTotal: r1,
                     yPlan: $scope.age_plan,
                     msn: $scope.msni,
+                    casaFlag: $scope.casaFlag,
                     meses: ($scope.age_plan*12),
                     mesesSinInteresP1: $scope.msni,
                     mesesSinInteresP2: 120,
                     mesesSinInteresP3: 60,
                     interes_p1: 0,
-                    interes_p2: 0.01,
-                    interes_p3: 0.0125,
+                    interes_p2: ($scope.casaFlag==1) ? 0.01108 : 0.01,
+                    interes_p3: ($scope.casaFlag==1) ? 0.01108 : 0.0125,
                     contadorInicial: 0,
                     capital: ($scope.mesesdiferir > 0) ? (r1 / (($scope.age_plan*12) - $scope.mesesdiferir)) : (r1 / ($scope.age_plan*12)),
                     fechaActual: $scope.date = new Date(),
                     engancheF: enganche
                 }
+                console.log($scope.infoLote);
 
                 $scope.engancheFinal = ($scope.infoLote.engancheF);
                 $scope.saldoFinal = $scope.infoLote.precioTotal;
@@ -3356,6 +3404,9 @@
                             if(mes == 12){
                                 mes = '12';
                             }
+                            if(i==0){
+                                $scope.fechaPM = day+'-'+mes+'-'+yearc;
+                            }
 
 
                             $scope.dateCf = day + '-' + mes + '-' + yearc;
@@ -4317,7 +4368,6 @@
 
                             $scope.interes_plan2 = $scope.total2*($scope.infoLote.interes_p2);
                             $scope.capital2 = ($scope.p2 - $scope.interes_plan2);
-
                             range2.push({
 
                                 "fecha" : $scope.dateCf,
@@ -4535,10 +4585,12 @@
                             if(mes == 12){
                                 mes = '12';
                             }
+                            if(i==0){
+                                $scope.fechaPM = day+'-'+mes+'-'+yearc;
+                            }
 
 
                             $scope.dateCf = day + '-' + mes + '-' + yearc;
-
                             $scope.interes_plan2 = $scope.infoLote.precioTotal * ($scope.infoLote.interes_p2);
                             $scope.capital2 = ($scope.p2 - $scope.interes_plan2);
 
@@ -4553,6 +4605,7 @@
 
                             });
                             mes++;
+
 
                             if (i == 119){
                                 $scope.total3 = $scope.infoLote.precioTotal;
@@ -5067,16 +5120,16 @@
             $scope.ages = [{age: 18}, {age: 19}, {age: 20}, {age: 21},{age: 22}, {age: 23}, {age: 24}, {age: 25},{age: 26}, {age: 27}, {age: 28}, {age: 29},{age: 30}, {age: 31}, {age: 32},{age: 33}, {age: 34}, {age: 35}, {age: 36},{age: 37}, {age: 38}, {age: 39}, {age: 40}, {age: 41}, {age: 42}, {age: 43}, {age: 44}, {age: 45}, {age: 46}, {age: 47}, {age: 48}, {age: 49}, {age: 50}, {age: 51}, {age: 52}, {age: 53}, {age: 54}, {age: 55},{age: 56}, {age: 57}, {age: 58}, {age: 59}, {age: 60}, {age: 61}, {age: 62},{age: 63}, {age: 64}, {age: 65}, {age: 66}, {age: 67}, {age: 68}, {age: 69}, {age: 70},{age: 71}, {age: 72}, {age: 73}, {age: 74},{age: 75},{age: 76},{age: 77},{age: 78},{age: 79},{age: 80}]
 
 
-            $scope.diasEnganche = [{day: 7}, {day: 25}, {day: 'Diferido'}];
-
             $scope.diasDiferidos = [1, 2, 3, 4, 5, 6];
+
+            $scope.diasEnganche = [{day: 7}, {day: 25}, {day: 'Diferido'}, {day:'Limpiar'}];
 
 
 
 
             $scope.daysEng = function() {
                 $scope.daysEnganche = $scope.day.day;
-
+                // console.log("Andamos debuggeando: ", $scope.day.day);
                 var TuFecha = new Date();
                 var dias = parseInt($scope.daysEnganche);
                 TuFecha.setDate(TuFecha.getDate() + dias);
@@ -5130,6 +5183,11 @@
                             {
                             }
                         }
+                    }
+                    else if($scope.day.day=='Limpiar'){
+                        $scope.mesesdiferir = 0;
+                        $scope.daysEnganche = '';
+                        $scope.fechaEng = '';
                     }
                 }
                 else
@@ -5336,7 +5394,7 @@
 
                     $('#anioCont').removeClass('col-md-2');
                     $('#anioCont').addClass('col-md-1');
-                    content = ' <label>Lotes:</label>';
+                    content = ' <label>Lotes:<span class="required-label">*</span></label>';
                     content += '<select ng-model="lote" id="lote" ng-options="item.nombreLote for item in lotes" ng-change="loadCasasData(lote)" class="form-control">';
                     content += '<option value = ""> - Selecciona un Lote - </option>';
                     content += '</select>';
@@ -5350,7 +5408,7 @@
                     $('#anioCont').removeClass('col-md-1');
                     $('#anioCont').addClass('col-md-2');
 
-                    content = ' <label>Lotes:</label>';
+                    content = ' <label>Lote:<span class="required-label">*</span></label>';
                     content += '<select ng-model="lote" id="lote" ng-options="item.nombreLote for item in lotes" ng-change="onSelectChangel(lote)" class="form-control">';
                     content += '<option value = ""> - Selecciona un Lote - </option>';
                     content += '</select>';
@@ -5456,6 +5514,8 @@
                 let nombreLote = lote.nombreLote;
                 let supLote = lote.sup;
                 let totalLote = lote.total;
+                document.getElementById("lotetext").innerHTML ='';
+                $('#lote').css("border-color", "");
                 $http.post('<?=base_url()?>index.php/corrida/getInfoCasasRes',{idLote: idLote}).then(
                     function (response) {
                         $scope.tipo_casas = response.data;
@@ -5557,6 +5617,10 @@
                 console.log("Lotes: ", lote);
                 $http.post('<?=base_url()?>index.php/Asesor/getinfoLoteDisponible',{lote: lote.idLote, tipo_casa:null}).then(
                     function (response) {
+
+                            document.getElementById("lotetext").innerHTML ='';
+                            $('#lote').css("border-color", "");
+
                         console.log("response: ", response);
 
 
@@ -6661,6 +6725,7 @@
                         $scope.superficie = response.data[0].sup;
                         $scope.preciom2 = response.data[0].precio;
                         $scope.total = response.data[0].total;
+                        $scope.casaFlag = (response.data[0].casa==1) ? 1 : 0;
                         $scope.porcentajeInv = response.data[0].porcentaje;
                         $scope.enganche = response.data[0].enganche;
                         $scope.CurrentDate = new Date();
@@ -7825,6 +7890,7 @@
                         $scope.superficie = response.data[0].sup;
                         $scope.preciom2 = response.data[0].precio;
                         $scope.total = response.data[0].total;
+                        $scope.casaFlag = (response.data[0].casa==1) ? 1 : 0;
                         $scope.porcentajeInv = response.data[0].porcentaje;
                         $scope.enganche = response.data[0].enganche;
                         $scope.CurrentDate = new Date();
@@ -7952,6 +8018,8 @@
                 var coordinador = ($scope.coordinador == undefined) ? 0 : $scope.coordinador.idCoordinador;
                 var gerente = ($scope.gerente == undefined) ? 0 : $scope.gerente.idGerente;
                 var plan = ($scope.plan == undefined) ? 0 : $scope.plan;
+                var proyecto = ($scope.proyecto == undefined) ? 0 : $scope.proyecto;
+                var condominio = ($scope.condominio == undefined) ? 0 : $scope.condominio;
 
 
                 //-------
@@ -8056,7 +8124,7 @@
 
                 var loaderDiv = angular.element(document.querySelector('#loaderDiv'));
 
-                if(nombre == 0 || edad == 0 || id_lote == 0 || plan == 0 || anio2 == 0 || gerente == 0 || asesor == 0){
+                if(nombre == 0 || edad == 0 || id_lote == 0 || plan == 0 || anio2 == 0 || gerente == 0 || asesor == 0 || coordinador==0 || proyecto==0 || condominio==0){
 
 
 
@@ -8084,10 +8152,20 @@
                         document.getElementById("nombretext").innerHTML ='Requerido';
                         $('#nombre').css("border-color", "red");
                     }
-                    /*else{
-                  document.getElementById("nombretext").innerHTML ='';
-                  $('#nombre').css("border-color", "");
-                 } */
+                    if (coordinador == 0) {
+                        document.getElementById("cordinadortext").innerHTML ='Requerido';
+                        $('#coordinador').css("border-color", "red");
+                    }
+                    if (proyecto == 0) {
+                        document.getElementById("proyectotext").innerHTML ='Requerido';
+                        $('#proyectoS').css("border-color", "red");
+                    }
+                    if (condominio == 0) {
+                        document.getElementById("condominiotext").innerHTML ='Requerido';
+                        $('#condominioS').css("border-color", "red");
+                    }
+
+
                     if (edad == 0) {
                         document.getElementById("edadtext").innerHTML ='Requerido';
                         $('#edad').css("border-color", "red");
@@ -8202,6 +8280,8 @@
                 var gerente = ($scope.gerente == undefined) ? 0 : $scope.gerente.idGerente;
                 var plan = ($scope.plan == undefined) ? 0 : $scope.plan;
                 var anio = ($scope.yearplan == undefined) ? 0 : $scope.yearplan.yearplan;
+                var proyecto = ($scope.proyecto == undefined) ? 0 : $scope.proyecto;
+                var condominio = ($scope.condominio == undefined) ? 0 : $scope.condominio;
 
                 if(plan == 'Crédito') {
                     var anio = ($scope.yearplan == undefined) ? 0 : $scope.yearplan.yearplan;
@@ -8282,7 +8362,7 @@
 
                 var loaderDiv = angular.element(document.querySelector('#loaderDiv'));
 
-                if(nombre == 0 || edad == 0 || id_lote == 0 || plan == 0 || anio == 0 || gerente == 0 || asesor == 0){
+                if(nombre == 0 || edad == 0 || id_lote == 0 || plan == 0 || anio == 0 || gerente == 0 || asesor == 0 || coordinador==0 || proyecto==0 || condominio==0){
 
 
                     $.confirm({
@@ -8309,10 +8389,18 @@
                         document.getElementById("nombretext").innerHTML ='Requerido';
                         $('#nombre').css("border-color", "red");
                     }
-                    /*else{
-                  document.getElementById("nombretext").innerHTML ='';
-                  $('#nombre').css("border-color", "");
-                 } */
+                    if (coordinador == 0) {
+                        document.getElementById("cordinadortext").innerHTML ='Requerido';
+                        $('#coordinador').css("border-color", "red");
+                    }
+                    if (proyecto == 0) {
+                        document.getElementById("proyectotext").innerHTML ='Requerido';
+                        $('#proyectoS').css("border-color", "red");
+                    }
+                    if (condominio == 0) {
+                        document.getElementById("condominiotext").innerHTML ='Requerido';
+                        $('#condominioS').css("border-color", "red");
+                    }
                     if (edad == 0) {
                         document.getElementById("edadtext").innerHTML ='Requerido';
                         $('#edad').css("border-color", "red");
@@ -8455,6 +8543,7 @@
         });
 
         $("#lote").change(function(){
+            console.log('assdasd');
             document.getElementById("lotetext").innerHTML ='';
             $('#lote').css("border-color", "");
         });
@@ -8478,6 +8567,20 @@
             document.getElementById("aniotext").innerHTML ='';
             $('#yearplan').css("border-color", "");
         });
+
+        $("#coordinador").change(function(){
+            document.getElementById("cordinadortext").innerHTML ='';
+            $('#coordinador').css("border-color", "");
+        });
+        $("#proyectoS").change(function(){
+            document.getElementById("proyectotext").innerHTML ='';
+            $('#proyectoS').css("border-color", "");
+        });
+        $("#condominioS").change(function(){
+            document.getElementById("condominiotext").innerHTML ='';
+            $('#condominioS').css("border-color", "");
+        });
+
 
         /*---------------*/
 

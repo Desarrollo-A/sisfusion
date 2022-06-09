@@ -452,29 +452,27 @@
         //experimental
         $data = $this->Asesor_model->getLotesInfoCorrida($objDatos->id_lote);
         $data_casa = ($objDatos->tipo_casa==null) ? null : $objDatos->tipo_casa;
-        /*print_r($data);
-        echo '<br>';
-        print_r($data_casa);
-        exit;*/
+//        print_r($data);
+//        echo '<br>';
+//        print_r($data_casa);
+//        exit;
         $cd = json_decode(str_replace("'", '"', $data[0]['casasDetail']));
         $total_construccion = 0; // MJ: AQUÍ VAMOS A GUARDAR EL TOTAL DE LA CONSTRUCCIÓN + LOS EXRTAS
-        /*print_r($data[0]['casasDetail']);
-        exit;*/
+//        print_r($data[0]['casasDetail']);
+//        exit;
 
         if($data[0]['casasDetail']!=null){
             if(count($cd->tipo_casa) >= 1){
-                foreach($cd->tipo_casa as $value) {
-//                    print_r($value);
-//                    echo '<br><br>';
 
-                    if($data_casa->id === $value->id){
-                        $total_construccion = $value->total_const; // MJ: SE EXTRAE EL TOTAL DE LA CONSTRUCCIÓN POR TIPO DE CASA
+
+                foreach($cd->tipo_casa as $value) {
+                    if($data_casa == $value->id){
+//                        print_r($value);
+                        $total_construccion += $value->total_const; // MJ: SE EXTRAE EL TOTAL DE LA CONSTRUCCIÓN POR TIPO DE CASA
                         foreach($value->extras as $v) {
                             $total_construccion += $v->techado;
                         }
                     }
-
-
 //                     if($value->nombre === 'Aura') {
 //                        print_r($value);
 //                        $total_construccion = $value->total_const; // MJ: SE EXTRAE EL TOTAL DE LA CONSTRUCCIÓN POR TIPO DE CASA
@@ -487,8 +485,10 @@
                 }
             }
         }
+//        exit;
 
-
+//        print_r($total_construccion);
+//        exit;
         $total_nuevo = $total_construccion + $data[0]['total'];
         $data[0]['total'] += $total_construccion;
         $data[0]['enganche'] += $total_construccion*(.10);

@@ -23,10 +23,19 @@ class General_model extends CI_Model
                 else // ES OTRO USUARIO DE CONSULTA Y NO VE COMISIONES
                     return $this->db->query("SELECT * FROM Menu2 WHERE rol=" . $id_rol . " AND nombre NOT IN ('Inicio', 'Comisiones') AND estatus = 1 ORDER BY orden ASC");
             } else {
-                if ($this->session->userdata('id_usuario') == 2762)
+                if ($this->session->userdata('id_usuario') == 2762){
                     return $this->db->query("SELECT * FROM Menu2 WHERE rol=" . $id_rol . " AND estatus = 1 ORDER BY orden ASC");
-                else
-                    return $this->db->query("SELECT * FROM Menu2 WHERE rol=" . $id_rol . " AND estatus = 1 AND nombre NOT IN ('Reemplazo contrato') ORDER BY orden ASC");
+                 } else{
+                    if($this->session->userdata('id_rol') == 32){
+                        $complemento='';
+                     $complemento = $this->session->userdata('id_usuario') == 2767 ? "" : ",'Pagos'"; 
+
+                        return $this->db->query("SELECT * FROM Menu2 WHERE rol=" . $id_rol . " AND estatus = 1 AND nombre NOT IN ('Reemplazo contrato' $complemento) ORDER BY orden ASC");
+
+                    }else{
+                        return $this->db->query("SELECT * FROM Menu2 WHERE rol=" . $id_rol . " AND estatus = 1 AND nombre NOT IN ('Reemplazo contrato') ORDER BY orden ASC");
+                    }
+                 }
             }
         }
         //  return $this->db->query("SELECT * FROM Menu2 WHERE rol=".$id_rol." AND estatus = 1 ORDER BY orden ASC");

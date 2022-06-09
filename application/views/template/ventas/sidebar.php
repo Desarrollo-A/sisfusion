@@ -259,7 +259,6 @@
 				</a>
 			</div>
 			<div class="collapse navbar-collapse">
-				<a class="navbar-brand" href="#"> Menú </a>
 				<ul class="nav navbar-nav navbar-right">
 					<li>
 						<a href="<?=base_url() ?>">

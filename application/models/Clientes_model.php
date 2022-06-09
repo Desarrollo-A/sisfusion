@@ -278,7 +278,7 @@ function getStatusMktdPreventa(){
                                         CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) asesor, 
                                         CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) coordinador, 
                                         CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno) gerente, 
-                                        c.fecha_creacion, c.fecha_vencimiento, c.estatus, c.estatus_particular, c.lugar_prospeccion, oxc.nombre nombre_lp
+                                        c.fecha_creacion, c.fecha_vencimiento, c.estatus, c.estatus_particular, c.lugar_prospeccion, oxc.nombre nombre_lp, c.telefono, c.telefono_2
                                         FROM prospectos c 
                                         INNER JOIN usuarios u ON u.id_usuario = c.id_asesor
                                         INNER JOIN usuarios us ON us.id_usuario = c.id_coordinador
@@ -291,7 +291,7 @@ function getStatusMktdPreventa(){
                                         CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) asesor, 
                                         CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) coordinador, 
                                         CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno) gerente, 
-                                        c.fecha_creacion, c.fecha_vencimiento, c.estatus, c.estatus_particular, c.lugar_prospeccion, oxc.nombre nombre_lp
+                                        c.fecha_creacion, c.fecha_vencimiento, c.estatus, c.estatus_particular, c.lugar_prospeccion, oxc.nombre nombre_lp, c.telefono, c.telefono_2
                                         FROM prospectos c 
                                         INNER JOIN usuarios u ON u.id_usuario = c.id_asesor
                                         INNER JOIN usuarios us ON us.id_usuario = c.id_coordinador
@@ -304,7 +304,7 @@ function getStatusMktdPreventa(){
                                         CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) asesor, 
                                         CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) coordinador, 
                                         CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno) gerente, 
-                                        c.fecha_creacion, c.fecha_vencimiento, c.estatus, c.estatus_particular, c.lugar_prospeccion, oxc.nombre nombre_lp
+                                        c.fecha_creacion, c.fecha_vencimiento, c.estatus, c.estatus_particular, c.lugar_prospeccion, oxc.nombre nombre_lp, c.telefono, c.telefono_2
                                         FROM prospectos c 
                                         INNER JOIN usuarios u ON u.id_usuario = c.id_asesor
                                         INNER JOIN usuarios us ON us.id_usuario = c.id_coordinador
@@ -642,7 +642,7 @@ function getStatusMktdPreventa(){
                                         CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) asesor, 
                                         CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) coordinador, 
                                         CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno) gerente, 
-                                        c.fecha_creacion, c.fecha_vencimiento, c.estatus, c.estatus_particular, c.lugar_prospeccion, oxc.nombre nombre_lp, c.id_asesor
+                                        c.fecha_creacion, c.fecha_vencimiento, c.estatus, c.estatus_particular, c.lugar_prospeccion, oxc.nombre nombre_lp, c.id_asesor, c.telefono, c.telefono_2
                                         FROM prospectos c
                                         LEFT JOIN usuarios u ON u.id_usuario = c.id_asesor
                                         LEFT JOIN usuarios us ON us.id_usuario = c.id_coordinador
@@ -655,7 +655,7 @@ function getStatusMktdPreventa(){
                                         CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) asesor, 
                                         CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) coordinador, 
                                         CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno) gerente, 
-                                        c.fecha_creacion, c.fecha_vencimiento, c.estatus, c.estatus_particular, c.lugar_prospeccion, oxc.nombre nombre_lp, c.id_asesor
+                                        c.fecha_creacion, c.fecha_vencimiento, c.estatus, c.estatus_particular, c.lugar_prospeccion, oxc.nombre nombre_lp, c.id_asesor, c.telefono, c.telefono_2
                                         FROM prospectos c 
                                         LEFT JOIN usuarios u ON u.id_usuario = c.id_asesor
                                         LEFT JOIN usuarios us ON us.id_usuario = c.id_coordinador
@@ -668,7 +668,7 @@ function getStatusMktdPreventa(){
                                         CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) asesor, 
                                         CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) coordinador, 
                                         CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno) gerente,  
-                                        c.fecha_creacion, c.fecha_vencimiento, c.estatus, c.estatus_particular, c.lugar_prospeccion, oxc.nombre nombre_lp, c.id_asesor
+                                        c.fecha_creacion, c.fecha_vencimiento, c.estatus, c.estatus_particular, c.lugar_prospeccion, oxc.nombre nombre_lp, c.id_asesor, c.telefono, c.telefono_2
                                         FROM prospectos c 
                                         LEFT JOIN usuarios u ON u.id_usuario = c.id_asesor
                                         LEFT JOIN usuarios us ON us.id_usuario = c.id_coordinador
@@ -681,7 +681,7 @@ function getStatusMktdPreventa(){
                                         CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) asesor, 
                                         CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) coordinador, 
                                         CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno) gerente, 
-                                        c.fecha_creacion, c.fecha_vencimiento, c.estatus, c.estatus_particular, c.lugar_prospeccion, oxc.nombre nombre_lp, c.id_asesor
+                                        c.fecha_creacion, c.fecha_vencimiento, c.estatus, c.estatus_particular, c.lugar_prospeccion, oxc.nombre nombre_lp, c.id_asesor, c.telefono, c.telefono_2
                                         FROM prospectos c 
                                         LEFT JOIN usuarios u ON u.id_usuario = c.id_asesor
                                         LEFT JOIN usuarios us ON us.id_usuario = c.id_coordinador
@@ -699,7 +699,7 @@ function getStatusMktdPreventa(){
                                         CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) asesor, 
                                         CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) coordinador, 
                                         CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno) gerente, 
-                                        c.fecha_creacion, c.fecha_vencimiento, c.estatus, c.estatus_particular, c.lugar_prospeccion, oxc.nombre nombre_lp, c.id_asesor
+                                        c.fecha_creacion, c.fecha_vencimiento, c.estatus, c.estatus_particular, c.lugar_prospeccion, oxc.nombre nombre_lp, c.id_asesor, c.telefono, c.telefono_2
                                         FROM prospectos c 
                                         LEFT JOIN usuarios u ON u.id_usuario = c.id_asesor
                                         LEFT JOIN usuarios us ON us.id_usuario = c.id_coordinador
@@ -711,7 +711,7 @@ function getStatusMktdPreventa(){
                                         CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) asesor, 
                                         CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) coordinador, 
                                         CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno) gerente, 
-                                        c.fecha_creacion, c.fecha_vencimiento, c.estatus, c.estatus_particular, c.lugar_prospeccion, oxc.nombre nombre_lp, c.id_asesor
+                                        c.fecha_creacion, c.fecha_vencimiento, c.estatus, c.estatus_particular, c.lugar_prospeccion, oxc.nombre nombre_lp, c.id_asesor, c.telefono, c.telefono_2
                                         FROM prospectos c 
                                         LEFT JOIN usuarios u ON u.id_usuario = c.id_asesor
                                         LEFT JOIN usuarios us ON us.id_usuario = c.id_coordinador
@@ -726,7 +726,7 @@ function getStatusMktdPreventa(){
                                         CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) asesor, 
                                         CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) coordinador, 
                                         CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno) gerente, 
-                                        c.fecha_creacion, c.fecha_vencimiento, c.fecha_modificacion, c.estatus_particular, c.estatus, c.otro_lugar, c.lugar_prospeccion, oxc.nombre nombre_lp, c.id_asesor
+                                        c.fecha_creacion, c.fecha_vencimiento, c.fecha_modificacion, c.estatus_particular, c.estatus, c.otro_lugar, c.lugar_prospeccion, oxc.nombre nombre_lp, c.id_asesor, c.telefono, c.telefono_2
                                         FROM prospectos c 
                                         LEFT JOIN usuarios u ON u.id_usuario = c.id_asesor
                                         LEFT JOIN usuarios us ON us.id_usuario = c.id_coordinador
@@ -739,7 +739,7 @@ function getStatusMktdPreventa(){
                                         CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) asesor, 
                                         CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) coordinador, 
                                         CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno) gerente, 
-                                        c.fecha_creacion, c.fecha_vencimiento, c.fecha_modificacion, c.estatus_particular, c.estatus, c.otro_lugar, c.lugar_prospeccion, oxc.nombre nombre_lp, c.id_asesor
+                                        c.fecha_creacion, c.fecha_vencimiento, c.fecha_modificacion, c.estatus_particular, c.estatus, c.otro_lugar, c.lugar_prospeccion, oxc.nombre nombre_lp, c.id_asesor, c.telefono, c.telefono_2
                                         FROM prospectos c 
                                         LEFT JOIN usuarios u ON u.id_usuario = c.id_asesor
                                         LEFT JOIN usuarios us ON us.id_usuario = c.id_coordinador
@@ -754,7 +754,7 @@ function getStatusMktdPreventa(){
                                         CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) asesor, 
                                         CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) coordinador, 
                                         CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno) gerente, 
-                                        c.fecha_creacion, c.fecha_vencimiento, c.estatus, c.estatus_particular, c.lugar_prospeccion, oxc.nombre nombre_lp, c.id_asesor
+                                        c.fecha_creacion, c.fecha_vencimiento, c.estatus, c.estatus_particular, c.lugar_prospeccion, oxc.nombre nombre_lp, c.id_asesor, c.telefono, c.telefono_2
                                         FROM prospectos c 
                                         LEFT JOIN usuarios u ON u.id_usuario = c.id_asesor
                                         LEFT JOIN usuarios us ON us.id_usuario = c.id_coordinador

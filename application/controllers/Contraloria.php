@@ -399,13 +399,7 @@ class Contraloria extends CI_Controller {
 
 
 		$mail = $this->phpmailer_lib->load();
-		// $mail->isSMTP();
-		// $mail->Host     = 'smtp.gmail.com';
-		// $mail->SMTPAuth = true;
-		// $mail->Username = 'no-reply@ciudadmaderas.com';
-		// $mail->Password = 'Va7<*V8PP';
-		// $mail->SMTPSecure = 'ssl';
-		// $mail->Port     = 465;
+		
 
 		$mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
 
@@ -681,13 +675,7 @@ class Contraloria extends CI_Controller {
 
 
 		$mail = $this->phpmailer_lib->load();
-		// $mail->isSMTP();
-		// $mail->Host     = 'smtp.gmail.com';
-		// $mail->SMTPAuth = true;
-		// $mail->Username = 'no-reply@ciudadmaderas.com';
-		// $mail->Password = 'Va7<*V8PP';
-		// $mail->SMTPSecure = 'ssl';
-		// $mail->Port     = 465;
+	
 
 		$mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
 
@@ -1192,13 +1180,7 @@ public function get_sede(){
 
  
   $mail = $this->phpmailer_lib->load();
-//   $mail->isSMTP();
-//   $mail->Host     = 'smtp.gmail.com';
-//   $mail->SMTPAuth = true;
-//   $mail->Username = 'no-reply@ciudadmaderas.com';
-//   $mail->Password = 'Va7<*V8PP';
-//   $mail->SMTPSecure = 'ssl';
-//   $mail->Port     = 465;
+
   
   $mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
 
@@ -1486,13 +1468,14 @@ $i = 0;
 		$id_sede_jur = 2;
 		$data_asig = $this->Contraloria_model->get_id_asig(2);
 		$id_asig = $data_asig->contador;
-		$arreglo["asig_jur"] = $id_asig == 2765 ? 2776 : ($id_asig == 2776 ? 2857 : 2765);
+		$arreglo["asig_jur"] = $id_asig == 2765 ? 2776 : ($id_asig == 2776 ? 10463 : 2765);
 	} else if($ub_jur[0]['ubicacion'] == 4){
 		$id_sede_jur = 4;
 		$data_asig = $this->Contraloria_model->get_id_asig(4);
 		$id_asig = $data_asig->contador;
-		$arreglo["asig_jur"] = $id_asig == 2820 ? 2876 : 2820;
-	}
+		//$arreglo["asig_jur"] = $id_asig == 2820 ? 2876 : 2820;
+        $arreglo["asig_jur"] = $id_asig == 2820 ? 10437 : ($id_asig == 10437 ? 2876 : 2820);
+    }
 
 
 
@@ -1568,13 +1551,7 @@ public function editar_registro_loteRechazo_contraloria_proceceso6(){
 
 
   $mail = $this->phpmailer_lib->load();
-//   $mail->isSMTP();
-//   $mail->Host     = 'smtp.gmail.com';
-//   $mail->SMTPAuth = true;
-//   $mail->Username = 'no-reply@ciudadmaderas.com';
-//   $mail->Password = 'Va7<*V8PP';
-//   $mail->SMTPSecure = 'ssl';
-//   $mail->Port     = 465;
+
   
   $mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
 
@@ -1973,13 +1950,7 @@ $i = 0;
 
  
   $mail = $this->phpmailer_lib->load();
-//   $mail->isSMTP();
-//   $mail->Host     = 'smtp.gmail.com';
-//   $mail->SMTPAuth = true;
-//   $mail->Username = 'no-reply@ciudadmaderas.com';
-//   $mail->Password = 'Va7<*V8PP';
-//   $mail->SMTPSecure = 'ssl';
-//   $mail->Port     = 465;
+
   
   $mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
 
