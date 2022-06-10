@@ -1,5 +1,5 @@
 <?php
-    require_once 'static/autoload.php';
+//    require_once 'static/autoload.php';
     use PhpOffice\PhpSpreadsheet\Spreadsheet;
     use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
@@ -1860,9 +1860,8 @@ $pdf->Output(utf8_decode($namePDF), 'I');
     }
     /*COSAS DE LA CORRIDA Y DEL EXPORT DEL EXCEL*/
     public function excelFile($id_corrida){
-
-//	    echo 'Estoy creadno el excel';
-//	    exit;
+        //echo 'Estoy creadno el excel';
+        //exit;
         //$id_corrida = 76515;
         $data_corrida = $this->Corrida_model->getAllInfoCorrida($id_corrida);
         //print_r($data_corrida);
@@ -1937,8 +1936,10 @@ $pdf->Output(utf8_decode($namePDF), 'I');
                 }
             }
             array_push($extras_general, $extras);
-//            print_r($extras_general);
-//            exit;
+
+            if(count($extras_general) >0){
+                $precio_m2_casa = 16000;
+            }
             $i = 30;
             $range1 = 'C1';
             $range2 = 'I1';
@@ -2085,11 +2086,13 @@ $pdf->Output(utf8_decode($namePDF), 'I');
                 $precio_final_excel=0;
 //                print_r(count($informacion_descCorrida));
 //                echo '<br>';
+                $nuevo_preciom2casa = $precio_m2_casa;
+                $descuento_variable = 0;
+                $descuento_variable2 = 0;
+                $nuevo_preciom2lote = $data_corrida->preciom2;
                 foreach($informacion_descCorrida as $item=>$value){
 //                    print_r($item+1);
-                    if(count($informacion_descCorrida) == ($item+1)){
-                        $precio_final_excel = $value['pm'];
-                    }
+
                     //print_r($value['porcentaje']);
                     $contador2++;
                     #porcentaje
@@ -2117,11 +2120,28 @@ $pdf->Output(utf8_decode($namePDF), 'I');
                     /*print_r($value);
 
                     echo '<br>';*/
+//                    if(count($informacion_descCorrida) == ($item+1)){
+//                        $precio_final_excel = $value['pm'];
+//                        print_r();
+//                    }
+
+                    if($value['id_condicion']!=12){
+//                        print_r($value);
+                        $descuento_variable = ( $value['porcentaje'] * $nuevo_preciom2casa / 100);
+                        $nuevo_preciom2casa = $nuevo_preciom2casa - $descuento_variable;
+//                        echo '<br>';
+
+                        $descuento_variable2 = ($value['porcentaje'] * $nuevo_preciom2lote / 100);
+                        $nuevo_preciom2lote = $nuevo_preciom2lote - $descuento_variable2;
+
+                    }
 
                 }
+//                print_r($nuevo_preciom2casa);
+//                echo '<br>';
                 /*echo 'TOTAL DESCUENTOS:<br>';
-                print_r($suma_descuentos);
-                exit;*/
+                print_r($suma_descuentos);*/
+//                exit;
 
 
 
@@ -2134,14 +2154,23 @@ $pdf->Output(utf8_decode($namePDF), 'I');
             }
 
             $sheet->mergeCells("E21:F21");
-            $sheet->setCellValue('E21', 'PRECIO FINAL M2');
+            $sheet->setCellValue('E21', 'PRECIO FINAL M2 CASA');
             $sheet->getStyle('E21:F21')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('C4D79B');
             $sheet->getStyle( 'E21')->getFont()->setBold( true );
-
-            $sheet->setCellValue('G21', $precio_final_excel);
+            $sheet->setCellValue('G21', $nuevo_preciom2casa);
             $sheet->getStyle( 'G21')->getFont()->setBold( false );
             $sheet->getStyle('G21')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('D8E4BC');
             $sheet->getStyle('G21')->getNumberFormat()->setFormatCode(PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_CURRENCY_USD_SIMPLE);
+
+            #***********
+            $sheet->mergeCells("E22:F22");
+            $sheet->setCellValue('E22', 'PRECIO FINAL M2 LOTE');
+            $sheet->getStyle('E22:F22')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('DA9694');
+            $sheet->getStyle( 'E22')->getFont()->setBold( true );
+            $sheet->setCellValue('G22', $nuevo_preciom2lote);
+            $sheet->getStyle( 'G22')->getFont()->setBold( false );
+            $sheet->getStyle('G22')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('E6B8B7');
+            $sheet->getStyle('G22')->getNumberFormat()->setFormatCode(PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_CURRENCY_USD_SIMPLE);
 
 
             #saldos y tabla
