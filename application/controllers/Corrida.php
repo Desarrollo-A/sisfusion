@@ -1860,9 +1860,8 @@ $pdf->Output(utf8_decode($namePDF), 'I');
     }
     /*COSAS DE LA CORRIDA Y DEL EXPORT DEL EXCEL*/
     public function excelFile($id_corrida){
-
-//	    echo 'Estoy creadno el excel';
-//	    exit;
+        //echo 'Estoy creadno el excel';
+        //exit;
         //$id_corrida = 76515;
         $data_corrida = $this->Corrida_model->getAllInfoCorrida($id_corrida);
         //print_r($data_corrida);
@@ -2127,10 +2126,10 @@ $pdf->Output(utf8_decode($namePDF), 'I');
 //                    }
 
                     if($value['id_condicion']!=12){
-                        print_r($value);
+//                        print_r($value);
                         $descuento_variable = ( $value['porcentaje'] * $nuevo_preciom2casa / 100);
                         $nuevo_preciom2casa = $nuevo_preciom2casa - $descuento_variable;
-                        echo '<br>';
+//                        echo '<br>';
 
                         $descuento_variable2 = ($value['porcentaje'] * $nuevo_preciom2lote / 100);
                         $nuevo_preciom2lote = $nuevo_preciom2lote - $descuento_variable2;
