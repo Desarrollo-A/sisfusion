@@ -1,5 +1,10 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
 <link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet"/>
+<style>
+    label.error {
+        color: red;
+    }
+</style>
 <body>
 <div class="wrapper">
 
@@ -1530,19 +1535,19 @@
         },
         messages: {
             roles: {
-                required: 'Campo requerido.'
+                required: '* Campo requerido'
             },
             descuento: {
-                required: 'Campo requerido.',
+                required: '* Campo requerido.',
                 number: 'Número no válido.',
                 min: 'El valor mínimo debe ser 1',
                 max: 'El valor máximo debe ser 19,000'
             },
             numeroPagos: {
-                required: 'Campo requerido.'
+                required: '* Campo requerido.'
             },
             comentario2: {
-                required: 'Campo requerido.'
+                required: '* Campo requerido.'
             }
         },
         submitHandler: function (form) {
