@@ -1,12 +1,22 @@
 $('[data-toggle="tooltip"]').tooltip();
 //AA: Carga inicial de datatable y acordión. 
-getLastSales();
-fillBoxAccordions(userType == '1' ? 'subdirector': userType == '2' ? 'gerente' : userType == '3' ? 'coordinador' : 'asesor');
 
+$(document).ready( function(){
+    init();
+   
+});
 
-function createAccordions(option){
+async function init(){
+    getLastSales();
+    let rol = userType == 2 ? await getRolDR(idUser): userType;
+    console.log('rol',rol);
+    fillBoxAccordions(rol == '1' ? 'director_regional': rol == '2' ? 'gerente' : rol == '3' ? 'coordinador' : rol == '59' ? 'subdirector':'asesor', rol, idUser, 1);
+}
+
+function createAccordions(option, render){
     let html = '';
-    html = `<div class="bk">
+    html = `<div class="bk ${render == 1 ? 'parentTable': 'childTable'}">
+        ${render == 1 ? '': '<i class="far fa-trash-alt deleteTable"></i>'}
         <h4 class="accordion-title js-accordion-title">`+option+`</h4>
             <div class="accordion-content">
                 <table class="table-striped table-hover" id="table`+option+`" name="table`+option+`">
@@ -33,8 +43,8 @@ function createAccordions(option){
     $(".boxAccordions").append(html);
 }
 
-function fillBoxAccordions(option){
-    createAccordions(option);
+function fillBoxAccordions(option, rol, id_usuario, render){
+    createAccordions(option, render);
     $(".js-accordion-title").addClass('open');
     $(".accordion-content").css("display", "block");
 
@@ -78,73 +88,73 @@ function fillBoxAccordions(option){
             {
                 width: "10%",
                 data: function (d) {
-                    return d.nombre;
+                    return d.nombreUsuario;
                 }
             },
             {
                 width: "8%",
                 data: function (d) {
-                    return "<b>$" + formatMoney(d.total)+"</b>";
+                    return "<b>" + d.sumaTotal+"</b>";
                 }
             },
             {
                 width: "8%",
                 data: function (d) {
-                    return d.totalLotes;
+                    return d.totalVentas;
                 }
             },
             {
                 width: "8%",
                 data: function (d) {
-                    return "<b>$" + formatMoney(d.apartado)+"</b>";
+                    return "<b>" + d.sumaAT+"</b>";
                 }
             },
             {
                 width: "8%",
                 data: function (d) {
-                    return d.totalApartados;
+                    return d.totalAT;
                 }
             },
             {
                 width: "8%",
                 data: function (d) {
-                    return d.porcentajeApartado + "%";
+                    return d.porcentajeTotalAp + "%";
                 }
             },
             {
                 width: "8%",
                 data: function (d) {
-                    return "<b>$" + formatMoney(d.contratado)+"</b>";
+                    return "<b>" + d.sumaConT +"</b>";
                 }
             },
             {
                 width: "8%",
                 data: function (d) {
-                    return d.totalContratados;
+                    return d.totalConT;
                 }
             },
             {
                 width: "8%",
                 data: function (d) {
-                    return d.porcentajeContratado + "%";
+                    return d.porcentajeTotalCont + "%";
                 }
             },
             {
                 width: "8%",
                 data: function (d) {
-                    return "<b>$" + formatMoney(d.cancelado)+"</b>";
+                    return "<b>" + d.sumaCT+"</b>";
                 }
             },
             {
                 width: "8%",
                 data: function (d) {
-                    return d.totalCancelados;
+                    return d.totalCT;
                 }
             },
             {
                 width: "8%",
                 data: function (d) {
-                    return '<div class="d-flex justify-center"><button class="btn-data btn-blueMaderas update-dataTable" data-type="' + d.type + '" value="' + d.id + '"><i class="fas fa-sign-in-alt"></i></button></div>';
+                    return  rol == 7 || (rol == 9 && render == 1) ? '':'<div class="d-flex justify-center"><button class="btn-data btn-blueMaderas update-dataTable" data-type="' + rol + '" data-render="' + render + '" value="' + d.userID + '"><i class="fas fa-sign-in-alt"></i></button></div>';
                 }
             },
         ],
@@ -159,10 +169,11 @@ function fillBoxAccordions(option){
             data: {
                 "typeTransaction": '1',
                 "beginDate": '01/01/2022',
-                "endDate":  '01/01/2022',
+                "endDate":  '31/01/2022',
                 "where": '1',
-                "type": '2',
-                "saleType": '1'
+                "type": rol,
+                "id_usuario": id_usuario,
+                "render": render
             }
         }
     });
@@ -171,6 +182,11 @@ function fillBoxAccordions(option){
 
 $(document).on('click', '.update-dataTable', function () {
     const type = $(this).attr("data-type");
+    const render = $(this).data("render");
+    if(render == 1){
+        $('.childTable').remove();
+    }
+    
     // const beginDate = $("#beginDate").val();
     // const endDate = $("#endDate").val();
 
@@ -187,25 +203,57 @@ $(document).on('click', '.update-dataTable', function () {
     // else if ((beginDate != '01/01/2022' || endDate != '01/01/2022') && saleType != null) // APLICA FILTRO POR FECHA Y TIPO DE VENTA
     //     typeTransaction = 4;
 
-    if (type == 1) { // MJ: #generalTable
-        const table = "#generalTable";
-        fillTable(typeTransaction, beginDate, endDate, table, 0, 1);
-        $("#box-managerTable").addClass('d-none');
-    } else if (type == 2) { // MJ: #managerTable
-        const table = "#managerTable";
-        $("#box-managerTable").removeClass('d-none');
-        $("#box-coordinatorTable").addClass('d-none');
-        $("#box-adviserTable").addClass('d-none');
-        fillTable(typeTransaction, beginDate, endDate, table, where, 2);
-    } else if (type == 3) { // MJ: #coordinatorTable
-        const table = "asesor";
+    if (type == 2) { // MJ: #sub->ger->coord
+        // fillTable(typeTransaction, beginDate, endDate, table, 0, 1);
+        // $("#box-managerTable").addClass('d-none');
+        if(render == 1){
+            const table = "coordinador";
+            console.log(table);
+
+            fillBoxAccordions(table, 9, $(this).val(), 2);
+        }else{
+            const table = "gerente";
+        console.log(table);
+
+            fillBoxAccordions(table, 3, $(this).val(), 2);
+
+        }
+    } else if (type == 3) { // MJ: #gerente->coord->asesor
+
+        // $("#box-managerTable").removeClass('d-none');
+        // $("#box-coordinatorTable").addClass('d-none');
+        // $("#box-adviserTable").addClass('d-none');
+        // fillTable(typeTransaction, beginDate, endDate, table, where, 2);
+        if(render == 1){
+            const table = "asesor";
+            console.log(table);
+
+            fillBoxAccordions(table, 7, $(this).val(), 2);
+        }else{
+            const table = "coordinador";
+        console.log(table);
+
+            fillBoxAccordions(table, 9, $(this).val(), 2);
+
+        }
+
+    } else if (type == 9) { // MJ: #coordinatorTable -> asesor
+        if(render == 1){
+
+        }else{
+            const table = "asesor";
+            fillBoxAccordions(table, 7, $(this).val(), 2);
+        }
+        console.log(table);
         // $("#box-coordinatorTable").removeClass('d-none');
         // $("#box-adviserTable").addClass('d-none');
-        fillBoxAccordions(table);
-    } else if (type == 4) { // MJ: #adviserTable
-        const table = "#adviserTable";
-        $("#box-adviserTable").removeClass('d-none');
-        fillTable(typeTransaction, beginDate, endDate, table, where, 4);
+        // fillBoxAccordions(table, 7);
+
+        //aqui ya no debe crear tabla
+    } else if (type == 59) { // MJ: #DirRegional->subdir->ger
+        const table = "gerente";
+        // $("#box-adviserTable").removeClass('d-none');
+        fillBoxAccordions(table, 3, $(this).val(), 2);
     }
 });
 
@@ -341,6 +389,11 @@ $(document).on('click', '.js-accordion-title', function () {
     $(this).toggleClass('open', 200);
 });
 
+$(document).on('click', '.deleteTable', function () {
+    console.log('remove');
+    $(this).parent().remove();
+});
+
 function chartDetail(e){
     $("#modalChart").modal();
     setModalChart();
@@ -450,4 +503,29 @@ function orderedDataChart(data){
 function monthName(mon){
     var monthName = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'][mon - 1];
     return monthName;
+}
+
+function getRolDR(idUser){
+    return new Promise(resolve => {      
+    $.ajax({
+        type: "POST",
+        url: "Reporte/getRolDR",
+        data: {idUser: idUser},
+        dataType: 'json',
+        cache: false,
+        beforeSend: function() {
+          $('#spiner-loader').removeClass('hide');
+        },
+        success: function(data){
+            $('#spiner-loader').addClass('hide');
+            console.log('datarol',data);
+            
+            resolve (data.length > 0 ? 59:2);
+        },
+        error: function() {
+          $('#spiner-loader').addClass('hide');
+            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+        }
+    });
+});
 }
