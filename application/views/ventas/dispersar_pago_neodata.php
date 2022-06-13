@@ -633,21 +633,15 @@
                         }
                         
                         BtnStats = '<button href="#" value="'+data.idLote+'" data-value="'+data.registro_comision+'" data-totalNeto2 = "'+data.totalNeto2+'" data-estatus="'+data.idStatusContratacion+'" data-cliente="'+data.id_cliente+'" data-plan="'+data.plan_comision+'"  data-tipov="'+data.tipo_venta+'"data-descplan="'+data.plan_descripcion+'" data-code="'+data.cbbtton+'" ' +'class="btn-data '+varColor+' verify_neodata" title="Verificar en NEODATA">'+'<span class="material-icons">verified_user</span></button> '+RegresaActiva+'';
-                       
-                        let estatusLote = data.registro_comision == 0 ? 1 : 0;
-                        if(data.registro_comision == 0 || data.registro_comision == 1){
-                            BtnStats += `
+
+                        BtnStats += `
                                 <button href="#"
                                     value="${data.idLote}"
                                     data-value="${data.nombreLote}"
-                                    data-statusLote="${estatusLote}"
                                     class="btn-data btn-blueMaderas btn-detener btn-warning"
                                     title="Detener">
                                     <i class="material-icons">block</i>
                                 </button>`;
-                        }else{
-                            BtnStats += `-`;
-                        }
                         
                     }
                     return '<div class="d-flex justify-center">'+BtnStats+'</div>';

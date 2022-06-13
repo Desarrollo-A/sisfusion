@@ -3356,22 +3356,17 @@ public function LiquidarLote(){
     }
 
     public function updateBanderaDetenida() {
-      $response = $this->Comisiones_model->updateBanderaDetenida($_POST['idLote'], $_POST['bandera']);
+      $response = $this->Comisiones_model->updateBanderaDetenida($_POST['idLote'], true);
       echo json_encode($response);
     }
 
     public function changeLoteToStopped()
     {
-
         $response = $this->Comisiones_model
             ->insertHistorialLog($_POST['id_pagoc'], $this->session->userdata('id_usuario'), 1, $_POST['descripcion'],
                 'pago_comision', $_POST['motivo']);
         if ($response) {
-          if(isset($_POST['statusLote'])){
-            $response = $this->Comisiones_model->updateBanderaDetenida( $_POST['id_pagoc'], 6,$_POST['statusLote']);
-          }else{
-            $response = $this->Comisiones_model->updateBanderaDetenida( $_POST['id_pagoc'], 6);
-          }
+            $response = $this->Comisiones_model->updateBanderaDetenida($_POST['id_pagoc']);
         }
 
          echo json_encode($response);
