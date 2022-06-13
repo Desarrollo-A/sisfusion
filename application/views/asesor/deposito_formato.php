@@ -1758,7 +1758,7 @@ $datos = array();
                                     </table>
                                 </div>
 							</div>
-                            <?php print_r($corrida_financiera)?>
+                            <?php #print_r($corrida_financiera)?>
 
 
 							<div class="row"><br><br></div>
