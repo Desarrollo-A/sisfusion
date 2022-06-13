@@ -86,13 +86,12 @@ public function getActiveCommissions($val = '') {
         FROM lotes l 
         INNER JOIN clientes cl ON cl.id_cliente = l.idCliente AND cl.status = 1 
         INNER JOIN condominios cond ON l.idCondominio=cond.idCondominio 
-        INNER JOIN residenciales res ON cond.idResidencial = res.idResidencial 
-        LEFT JOIN pago_comision pc ON pc.id_lote = l.idLote AND pc.bandera = 6 
+        INNER JOIN residenciales res ON cond.idResidencial = res.idResidencial
         INNER JOIN historial_log hl ON hl.identificador = l.idLote AND hl.tabla = 'pago_comision' AND hl.estatus = 1
         LEFT JOIN ventas_compartidas vc ON vc.id_cliente = cl.id_cliente AND vc.estatus = 1
         WHERE l.idStatusContratacion BETWEEN 9 AND 15 
         AND l.status = 1 
-        AND l.registro_comision in (6) 
+        AND l.registro_comision in (10,11,18) 
         AND l.tipo_venta IS NOT NULL 
         AND l.tipo_venta IN (1,2,7)
         ORDER BY l.idLote");
@@ -4014,14 +4013,17 @@ LEFT JOIN  usuarios di ON di.id_usuario = su.id_lider
         return (bool)($this->db->query("INSERT INTO historial_log ".
             "VALUES ($idLote, $idUsuario, GETDATE(), $estatus, '$comentario', '$tabla', '$motivo')"));
     }
-    function updateBanderaDetenida($idLote, $bandera,$statusLote = '')
+
+    public function updateBanderaDetenida($idLote, $updateHistorial = false)
     {
-        if($statusLote != '' && $statusLote == 1){
-            return (bool)($this->db->query("UPDATE lotes SET registro_comision = $bandera,modificado=".$this->session->userdata('id_usuario')." WHERE idLote = $idLote"));
-        }else{
-            $this->db->query("UPDATE lotes SET registro_comision = $bandera,modificado=".$this->session->userdata('id_usuario')." WHERE idLote = $idLote");
-            $this->db->query("UPDATE historial_log SET estatus = 0 WHERE tabla = 'pago_comision' AND estatus = 1 AND identificador = $idLote");
-            return (bool)($this->db->query("UPDATE pago_comision SET bandera = $bandera WHERE id_lote = $idLote"));
+        if ($updateHistorial) {
+            $this->db->query("UPDATE lotes SET registro_comision = registro_comision - 10, 
+                 modificado=".$this->session->userdata('id_usuario')." WHERE idLote = $idLote");
+            return (bool)($this->db->query("UPDATE historial_log SET estatus = 0 WHERE tabla = 
+                                           'pago_comision' AND estatus = 1 AND identificador = $idLote"));
+        } else {
+            return (bool)($this->db->query("UPDATE lotes SET registro_comision = registro_comision + 10, 
+                 modificado=".$this->session->userdata('id_usuario')." WHERE idLote = $idLote"));
         }
     }
 
