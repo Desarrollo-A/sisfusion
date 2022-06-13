@@ -69,7 +69,7 @@ class Reporte_model extends CI_Model {
             $canceladasApartadas = $canceladasApartadas . " UNION ALL " . $coordinadorCA;
         }
 
-        if($general){
+        if($general == '1' || $general){
             $data = $this->db->query("$defaultColumns
             $ventasContratadas
             UNION ALL

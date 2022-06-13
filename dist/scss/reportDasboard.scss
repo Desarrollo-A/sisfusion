@@ -108,21 +108,24 @@
                 text-align: center;
                 thead tr {
                     background-color: $blueIndigoDeep;
-                    th input{
-                        border: 1px solid transparent;
-                        border-radius: 5px;
-                        color: $white;
-                        text-align: center;
-                        font-weight: 500;
-                        background-color: $blueIndigoDeep;
-                        &:active{
-                            border: 1px solid $gray;
-                        }
-                        &:focus{
-                            border: 1px solid $gray;
-                        }
-                        &::placeholder{
+                    th{
+                        padding: 3px!important;
+                        input{
+                            border: 1px solid transparent;
+                            border-radius: 5px;
                             color: $white;
+                            text-align: center;
+                            font-weight: 500;
+                            background-color: $blueIndigoDeep;
+                            &:active{
+                                border: 1px solid $gray;
+                            }
+                            &:focus{
+                                border: 1px solid $gray;
+                            }
+                            &::placeholder{
+                                color: $white;
+                            }
                         }
                     }
                 }
@@ -201,4 +204,49 @@
             }
         }
     } 
+}
+
+#modalChart{
+    .modal-dialog{
+        -webkit-transform: translate(0,-50%);
+        -o-transform: translate(0,-50%);
+        transform: translate(0,-50%);
+        top: 50%;
+        margin: 0 auto;
+        .modal-content{
+            height:350px!important;
+            border-radius: 15px;
+            background-color: $blueIndigoDeep;
+            .boxModalTitle{
+                .title{
+                    font-size: 20px;
+                    color: $white;
+                    span{
+                        font-weight: 600;
+                        color: $blueFrance;
+                    }
+                }
+                .total{
+                    font-size: 26px;
+                    font-weight: 500;
+                    color: $white;
+                }
+            }
+            .form-group{
+                border-radius: 28px;
+                border: 1px solid $platinum;
+                .form-control{
+                    background-image: none!important;
+                    color: $platinum;
+                }
+                .btn-fab-mini{
+                    background-color: transparent!important;
+                    span{
+                        color: $platinum;
+                    }
+                }
+            }
+        }
+    }
+
 }

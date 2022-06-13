@@ -57,9 +57,9 @@ class Reporte extends CI_Controller {
         $coordinadorVC = ''; $coordinadorVA = ''; $coordinadorCC = ''; $coordinadorCA = ''; $coordinador = false;
         $general = $this->input->post('general');
         $tipoChart = $this->input->post('tipoChart');
+        $beginDate = date("Y-m-d", strtotime($this->input->post("beginDate"))) . ' 00:00:00.000';
+        $endDate = date("Y-m-d", strtotime($this->input->post("endDate"))) . ' 23:59:00.000';
 
-        $beginDate = '2022-02-06 00:00:00.000';
-        $endDate = '2022-06-06 23:59:00.000';
         $id = $this->session->userdata('id_usuario');
         $rol = $this->session->userdata('id_rol');
         
@@ -149,23 +149,23 @@ class Reporte extends CI_Controller {
         return $coordinadorAll;
     }
 
-    public function getSpecificChart(){
-        $tipo = $this->input->post('type');
-        $id = $this->session->userdata('id_usuario');
-        if( $tipo == '1' )
-            $data = $this->Reporte_model->getVentasContratadas($id);
-        else if( $tipo == '2' )
-            $data = $this->Reporte_model->getVentasApartadas($id);
-        else if( $tipo == '3' )
-            $data = $this->Reporte_model->getCancelasContratadas($id);
-        else if( $tipo == '4' )
-            $data = $this->Reporte_model->getCanceladasApartadas($id);
+    // public function getSpecificChart(){
+    //     $tipo = $this->input->post('type');
+    //     $id = $this->session->userdata('id_usuario');
+    //     if( $tipo == '1' )
+    //         $data = $this->Reporte_model->getVentasContratadas($id);
+    //     else if( $tipo == '2' )
+    //         $data = $this->Reporte_model->getVentasApartadas($id);
+    //     else if( $tipo == '3' )
+    //         $data = $this->Reporte_model->getCancelasContratadas($id);
+    //     else if( $tipo == '4' )
+    //         $data = $this->Reporte_model->getCanceladasApartadas($id);
 
-        if($data != null) {
-            echo json_encode($array);
-        }
-        else echo json_encode(array());
-    }
+    //     if($data != null) {
+    //         echo json_encode($array);
+    //     }
+    //     else echo json_encode(array());
+    // }
 
     public function validateRegional($id){
         $data = $this->Reporte_model->validateRegional($id);
