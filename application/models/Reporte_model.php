@@ -77,23 +77,28 @@ class Reporte_model extends CI_Model {
             UNION ALL
             $canceladasContratadas
             UNION ALL
-            $canceladasApartadas");
+            $canceladasApartadas
+            ORDER BY tipo DESC, cte.DateValue");
         }
         else if ($tipoChart == 'vc'){
             $data = $this->db->query("$defaultColumns
-            $ventasContratadas");
+            $ventasContratadas
+            ORDER BY tipo DESC, cte.DateValue");
         }
         else if ($tipoChart == 'va'){
             $data = $this->db->query("$defaultColumns
-            $ventasApartadas");
+            $ventasApartadas
+            ORDER BY tipo DESC, cte.DateValue");
         }
         else if ($tipoChart == 'cc'){
             $data = $this->db->query("$defaultColumns
-            $canceladasContratadas");
+            $canceladasContratadas
+            ORDER BY tipo DESC, cte.DateValue");
         }
         else if ($tipoChart == 'ca'){
             $data = $this->db->query("$defaultColumns
-            $canceladasContratadas");
+            $canceladasContratadas
+            ORDER BY tipo DESC, cte.DateValue");
         }
 
         return $data->result_array();    
