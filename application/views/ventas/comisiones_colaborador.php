@@ -389,7 +389,7 @@
                         <div class="modal-body">
                             <div class="row">
                                 <div class="col-lg-12 text-center">
-                                    <p>Recuerda que tu documento fiscal debe corresponder al total exacto de las
+                                    <p style="text-align: justify; text-justify: inter-word;"><b>Nota:</b> Recuerda que tu documento fiscal debe corresponder al total exacto de las
                                         comisiones a solicitar, una vez solicitados tus pagos ya no podrás remplazar
                                         este archivo.</p>
                                     <div class="input-group">
