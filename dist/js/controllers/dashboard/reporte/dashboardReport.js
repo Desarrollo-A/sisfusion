@@ -331,7 +331,7 @@ function setOptionsChart(series, categories, miniChart){
                 shadeIntensity: 1,
                 gradientToColors:  colors,
                 inverseColors: true,
-                opacityFrom: 0.55,
+                opacityFrom: 0.60,
                 opacityTo: 0.2,
                 stops: [0, 70, 100],
                 colorStops: []
