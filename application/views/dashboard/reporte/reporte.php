@@ -22,9 +22,10 @@
                         <div class="p-0 col-12 col-sm-12 col-md-12 col-lg-12">
                             <div class="boxMiniCharts" id="ventasContratadas"></div>
                         </div>
-                        <button type="btn" class="moreMiniChart d-flex justify-center align-center" data-toggle="tooltip" data-placement="bottom" title="Más detalle" onclick="chartDetail(this)" data-name ="ventas_contratadas" value="1">  
+                        <button type="btn" class="moreMiniChart d-flex justify-center align-center" data-toggle="tooltip" data-placement="bottom" title="Más detalle" onclick="chartDetail(this, 'vc')" data-name ="ventas_contratadas">  
                             <i class="fas fa-expand-alt"></i>
                         </button>
+                        
                     </div>
                 </div>
             </div>
@@ -49,7 +50,7 @@
                         <div class="p-0 col-12 col-sm-12 col-md-12 col-lg-12">
                             <div class="boxMiniCharts" id="ventasApartadas"></div>
                         </div>
-                        <button type="btn" class="moreMiniChart d-flex justify-center align-center" data-toggle="tooltip" data-placement="bottom" title="Más detalle" onclick="chartDetail(this)" data-name ="ventas_apartadas" value="2">  
+                        <button type="btn" class="moreMiniChart d-flex justify-center align-center" data-toggle="tooltip" data-placement="bottom" title="Más detalle" onclick="chartDetail(this, 'va')" data-name ="ventas_apartadas">  
                             <i class="fas fa-expand-alt"></i>
                         </button>
                     </div>
@@ -76,7 +77,7 @@
                         <div class="p-0 col-12 col-sm-12 col-md-12 col-lg-12">
                             <div class="boxMiniCharts" id="canceladasContratadas"></div>
                         </div>
-                        <button type="btn" class="moreMiniChart d-flex justify-center align-center" data-toggle="tooltip" data-placement="bottom" title="Más detalle" onclick="chartDetail(this)" data-name ="canceladas_contratadas" value="3">  
+                        <button type="btn" class="moreMiniChart d-flex justify-center align-center" data-toggle="tooltip" data-placement="bottom" title="Más detalle" onclick="chartDetail(this, 'cc')" data-name ="canceladas_contratadas">  
                             <i class="fas fa-expand-alt"></i>
                         </button>
                     </div>
@@ -103,7 +104,7 @@
                         <div class="p-0 col-12 col-sm-12 col-md-12 col-lg-12">
                             <div class="boxMiniCharts" id="canceladasApartadas"></div>
                         </div>
-                        <button type="btn" class="moreMiniChart d-flex justify-center align-center" data-toggle="tooltip" data-placement="bottom" title="Más detalle" onclick="chartDetail(this)" onclick="chartDetail(this)" data-name ="canceladas_apartadas" value="4">  
+                        <button type="btn" class="moreMiniChart d-flex justify-center align-center" data-toggle="tooltip" data-placement="bottom" title="Más detalle" onclick="chartDetail(this, 'ca')" data-name ="canceladas_apartadas">  
                             <i class="fas fa-expand-alt"></i>
                         </button> 
                     </div>
@@ -113,18 +114,6 @@
     </div>
 </div>
 <!-- mini charts -->
-
-<!-- <div class="row">
-    <div class="col-12 col-sm-12 col-md-12 col-lg-6 d-flex justify-end">
-        <div class="form-group d-flex">
-            <input type="text" class="form-control datepicker" id="beginDate" value="01/01/2022" />
-            <input type="text" class="form-control datepicker" id="endDate" value="01/01/2022" />
-            <button class="btn btn-success btn-round btn-fab btn-fab-mini" id="searchByDateRange">
-                <span class="material-icons update-dataTable">search</span>
-            </button>
-        </div>
-    </div>
-</div> -->
 
 <div class="container-fluid">
     <div class="row">

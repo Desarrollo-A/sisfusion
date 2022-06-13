@@ -1254,6 +1254,10 @@
   background-color: #143860;
 }
 
+#reporte .boxAccordions .bk table thead tr th {
+  padding: 3px !important;
+}
+
 #reporte .boxAccordions .bk table thead tr th input {
   border: 1px solid transparent;
   border-radius: 5px;
@@ -1362,4 +1366,52 @@
     display: block;
     text-align: center;
   }
+}
+
+#modalChart .modal-dialog {
+  -webkit-transform: translate(0, -50%);
+  -o-transform: translate(0, -50%);
+  transform: translate(0, -50%);
+  top: 50%;
+  margin: 0 auto;
+}
+
+#modalChart .modal-dialog .modal-content {
+  height: 350px !important;
+  border-radius: 15px;
+  background-color: #143860;
+}
+
+#modalChart .modal-dialog .modal-content .boxModalTitle .title {
+  font-size: 20px;
+  color: #ffffff;
+}
+
+#modalChart .modal-dialog .modal-content .boxModalTitle .title span {
+  font-weight: 600;
+  color: #2C93E7;
+}
+
+#modalChart .modal-dialog .modal-content .boxModalTitle .total {
+  font-size: 26px;
+  font-weight: 500;
+  color: #ffffff;
+}
+
+#modalChart .modal-dialog .modal-content .form-group {
+  border-radius: 28px;
+  border: 1px solid #eaeaea;
+}
+
+#modalChart .modal-dialog .modal-content .form-group .form-control {
+  background-image: none !important;
+  color: #eaeaea;
+}
+
+#modalChart .modal-dialog .modal-content .form-group .btn-fab-mini {
+  background-color: transparent !important;
+}
+
+#modalChart .modal-dialog .modal-content .form-group .btn-fab-mini span {
+  color: #eaeaea;
 }
