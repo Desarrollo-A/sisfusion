@@ -1657,6 +1657,7 @@ $datos = array();
 														  id="observacion" name="observacion"><?php echo $cliente[0]->observacion; ?></textarea>
 									</div>
 								</div>
+
                                 <div class="col col-xs-12 col-md-12 col-lg-12 mt-4">
                                     <table class="table dataTable cell-border" id="table-corrida">
                                         <thead>
@@ -1674,6 +1675,8 @@ $datos = array();
                                             </tr>
                                         </thead>
                                         <tbody>
+                                        <?php
+                                        if( isset($corrida_financiera->precio_final)){?>
                                             <tr style="text-align: center">
                                                 <td>
                                                     <div class="formatter"><?php echo  $corrida_financiera->precio_final;?></div>
@@ -1713,6 +1716,17 @@ $datos = array();
                                                 </td>
 
                                             </tr>
+                                            <?php
+                                        }else{
+                                            ?>
+                                            <tr style="text-align: center">
+                                                <td colspan="7">
+                                                    No hay corrida financiera
+                                                </td>
+                                            </tr>
+                                            <?php
+                                        }
+                                        ?>
                                         </tbody>
                                     </table>
                                     <table class="table dataTable cell-border table-striped table-bordered" id="table-descuentos">
@@ -1737,6 +1751,9 @@ $datos = array();
                                         </thead>
                                         <tbody>
                                         <?php
+                                        if(count($descuentos_aplicados)>0){
+
+
                                             foreach ($descuentos_aplicados as $row){
                                                 echo '<tr>';
                                                 echo '    <td>';
@@ -1753,6 +1770,14 @@ $datos = array();
                                                 echo '    </td>';
                                                 echo '</tr>';
                                             }
+                                        }else{
+                                            echo '<tr>';
+                                            echo '    <td colspan="4">';
+                                            echo '        <div class="">No hay descuentos</div>';
+                                            echo '    </td>';
+                                            echo '</tr>';
+
+                                        }
                                         ?>
                                         </tbody>
                                     </table>
