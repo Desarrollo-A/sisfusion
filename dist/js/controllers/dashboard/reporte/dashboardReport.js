@@ -1,6 +1,35 @@
+// Obtener fecha inicial y cuatro meses atrás para mini charts.
+var endDate = moment().format("YYYY-MM-DD");
+var beginDate = moment(endDate).subtract(4, 'months').format("YYYY-MM-DD");
+
+sp = { // MJ: SELECT PICKER
+    initFormExtendedDatetimepickers: function () {
+        $('.datepicker').datetimepicker({
+            format: 'DD/MM/YYYY',
+            icons: {
+                time: "fa fa-clock-o",
+                date: "fa fa-calendar",
+                up: "fa fa-chevron-up",
+                down: "fa fa-chevron-down",
+                previous: 'fa fa-chevron-left',
+                next: 'fa fa-chevron-right',
+                today: 'fa fa-screenshot',
+                clear: 'fa fa-trash',
+                close: 'fa fa-remove',
+                inline: true
+            }
+        });
+    }
+}
+
+$(document).ready(function(){
+    sp.initFormExtendedDatetimepickers();
+    $('.datepicker').datetimepicker({locale: 'es'});
+});
+
 $('[data-toggle="tooltip"]').tooltip();
 //AA: Carga inicial de datatable y acordión. 
-getLastSales();
+getLastSales( beginDate, endDate );
 fillBoxAccordions(userType == '1' ? 'subdirector': userType == '2' ? 'gerente' : userType == '3' ? 'coordinador' : 'asesor');
 
 
@@ -67,7 +96,6 @@ function fillBoxAccordions(option){
                 next: "<i class='fa fa-angle-right'>"
             }
         },
-        
         columns: [
             {
                 width: "2%",
@@ -209,17 +237,10 @@ $(document).on('click', '.update-dataTable', function () {
     }
 });
 
-function setOptionsMiniChart(name, data, categories){
-    // console.log("set options");
-    // console.log(name);
-    // console.log(data);
-    // console.log(categories);
-
+function setOptionsChart(series, categories, miniChart){
+    (series.length > 1) ? colors = ["#2C93E7", "#d9c07b"] : colors = ["#2C93E7"];
     var optionsMiniChart = {
-        series: [{
-            name: name,
-            data: data
-        }],
+        series: series,
         chart: {
             type: 'area',
             height: '100%',
@@ -229,14 +250,13 @@ function setOptionsMiniChart(name, data, categories){
                 enabled: true
             }
         },
-        colors: ["#2C93E7"],
-        // colors: ["#2C93E7", "#d9c07b"],
+        colors: colors,
         grid: { show: false},
         dataLabels: { enabled: false },
         legend: { show: false },
         stroke: {
             curve: 'smooth',
-            width: 2,
+            width: `${ ( miniChart == 0 ) ? 4 : 2 }`,
         },
         xaxis: {
             categories: categories,
@@ -245,7 +265,12 @@ function setOptionsMiniChart(name, data, categories){
             axisTicks: {show:false},
         },
         yaxis: {
-            labels: {show: false},
+            labels: {
+                show: false,
+                formatter: function (value) {
+                    return "$" + formatMoney(value);
+                }
+            },
             axisBorder: {show:false},
             axisTicks: {show:false},
         },
@@ -256,7 +281,7 @@ function setOptionsMiniChart(name, data, categories){
                 shade: 'light',
                 type: "vertical",
                 shadeIntensity: 1,
-                gradientToColors:  ['#2C93E7'],
+                gradientToColors:  colors,
                 inverseColors: true,
                 opacityFrom: 0.55,
                 opacityTo: 0.2,
@@ -264,76 +289,18 @@ function setOptionsMiniChart(name, data, categories){
                 colorStops: []
             }
         },
-        tooltip: { enabled: true}
+        tooltip: { enabled: true},
+        markers: {
+            size: `${ ( miniChart == 0 ) ? 5 : 0 }`,
+            colors: '#143860',
+            strokeColors: '#2C93E7',
+            strokeWidth: `${ ( miniChart == 0 ) ? 3 : 0 }`,
+            hover: {
+                size: `${ ( miniChart == 0 ) ? 10 : 3 }`
+            }
+        }
     }
     return optionsMiniChart;
-}
-
-function setModalChart(){
-    var optionsMiniChart = {
-        series: [{
-            name: "Music",
-            data: [1, 15, 26, 20, 33, 27]
-          },
-          {
-            name: "Photos",
-            data: [3, 33, 21, 42, 19, 32]
-          },
-          {
-            name: "Files",
-            data: [0, 39, 52, 11, 29, 43]
-          }
-        ],
-        chart: {
-            type: 'area',
-            height: '100%',
-            toolbar: { show: false },
-            zoom: { enabled: false },
-            sparkline: {
-                enabled: false
-            }
-        },
-        colors: ["#2C93E7"],
-        grid: { show: false},
-        dataLabels: { enabled: false },
-        legend: { show: false },
-        stroke: {
-            curve: 'smooth',
-            width: 2,
-        },
-        xaxis: {
-            show: true,
-            labels: {show: false},
-            axisBorder: {show:false},
-            axisTicks: {show:false},
-        },
-        yaxis: {
-            type: 'numeric',
-            show: true,
-            labels: {show: false},
-            axisBorder: {show:false},
-            axisTicks: {show:false},
-        },
-        fill: {
-            opacity: 1,
-            type: 'gradient',
-            gradient: {
-                shade: 'light',
-                type: "vertical",
-                shadeIntensity: 1,
-                gradientToColors:  ['#2C93E7'],
-                inverseColors: true,
-                opacityFrom: 0.55,
-                opacityTo: 0.2,
-                stops: [0, 70, 100],
-                colorStops: []
-            }
-        },
-        tooltip: { enabled: true}
-    }
-      
-    var chartLine = new ApexCharts(document.querySelector('#line-adwords'), optionsMiniChart);
-    chartLine.render();
 }
   
 $(document).on('click', '.js-accordion-title', function () {
@@ -341,9 +308,150 @@ $(document).on('click', '.js-accordion-title', function () {
     $(this).toggleClass('open', 200);
 });
 
-function chartDetail(e){
+function chartDetail(e, tipoChart){
     $("#modalChart").modal();
-    setModalChart();
+    var nameChart = (titleCase($(e).data("name").replace(/_/g, " "))).split(" ");
+    $(".boxModalTitle").html('');
+    $(".total").html('');
+    $("#modalChart #type").val('');
+    $(".boxModalTitle").append('<p class="title" style="margin-bottom:10px">' + nameChart[0] + '<span class="enfatize"> '+ nameChart[1] +'</span></p>');
+    
+    $("#modalChart #beginDate").val(moment(beginDate).format('DD/MM/YYYY'));
+    $("#modalChart #endDate").val(moment(endDate).format('DD/MM/YYYY'));
+    $("#modalChart #type").val(tipoChart);
+
+    getSpecificChart(tipoChart, beginDate, endDate);
+}
+
+function getSpecificChart(type, beginDate, endDate){
+    $.ajax({
+        type: "POST",
+        url: "Reporte/getDataChart",
+        data: {general: 0, tipoChart: type, beginDate: beginDate, endDate: endDate},
+        dataType: 'json',
+        cache: false,
+        beforeSend: function() {
+            $('#spiner-loader').removeClass('hide');
+        },
+        success: function(data){
+            var miniChart = 0;
+            $('#spiner-loader').addClass('hide');
+            var orderedArray = orderedDataChart(data);
+            let { categories, series } = orderedArray[0];
+            total = series[0].data.reduce((a, b) => parseFloat(a) + parseFloat(b), 0);
+            $(".boxModalTitle").append('<p class="total">$'+formatMoney(total)+'</p>');
+            $("#boxModalChart").html('');
+            var miniChart = new ApexCharts(document.querySelector("#boxModalChart"), setOptionsChart(series, categories, miniChart));
+                
+            miniChart.render();
+        },
+        error: function() {
+            $('#spiner-loader').addClass('hide');
+            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+        }
+    });
+}
+
+function getLastSales(beginDate, endDate){
+    $.ajax({
+        type: "POST",
+        url: "Reporte/getDataChart",
+        data: {general: 1, tipoChart:'na', beginDate: beginDate, endDate: endDate},
+        dataType: 'json',
+        cache: false,
+        beforeSend: function() {
+          $('#spiner-loader').removeClass('hide');
+        },
+        success: function(data){
+            let miniChart = 1, total = 0;
+            $('#spiner-loader').addClass('hide');
+            let orderedArray = orderedDataChart(data);
+            for ( i=0; i<orderedArray.length; i++ ){
+                let { chart, categories, series } = orderedArray[i];
+                total = 0;
+                for ( j=0; j < series.length; j++ ){
+                    total += series[j].data.reduce((a, b) => parseFloat(a) + parseFloat(b), 0);
+                }
+                $("#tot"+chart).text("$"+formatMoney(total));
+                if( total != 0 ){
+                    var miniChartApex = new ApexCharts(document.querySelector("#"+chart+""), setOptionsChart(series, categories, miniChart));
+                
+                    miniChartApex.render();
+                }
+                else{
+                    
+                }
+            }
+        },
+        error: function() {
+          $('#spiner-loader').addClass('hide');
+            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+        }
+    });
+}
+
+$(document).on("click", "#searchByDateRange", function () {
+    var beginDate = $("#modalChart #beginDate").val();
+    var endDate = $("#modalChart #endDate").val();
+    var type = $("#modalChart #type").val();
+    getSpecificChart(type, formatDate(beginDate), formatDate(endDate));
+});
+
+function orderedDataChart(data){
+    let allData = [], totalMes = [], meses = [], series = [];
+    for( i=0; i<data.length; i++){
+        let { tipo, rol, total, DateValue } = data[i];
+
+        nameTypeChart = `${ (tipo == 'vc') ? 'ventasContratadas' : (tipo == 'va') ? 'ventasApartadas' : (tipo == 'cc') ? 'canceladasContratadas' : 'canceladasApartadas' }`;
+
+        nameSerie = `${ (rol == '9') ? 'Coordinador' : (rol == '7') ? 'Asesor' : (tipo == 'vc') ? 'ventasContratadas' : (tipo == 'va') ? 'ventasApartadas' : (tipo == 'cc') ? 'canceladasContratadas' : 'canceladasApartadas' }`;
+        
+        totalMes.push( (total != null) ? parseFloat(total.replace(/[^0-9.-]+/g,"")) : 0 );
+        if( (i+1) < data.length ){
+            if(tipo == data[i + 1].tipo){
+                if(rol != data[i + 1].rol){
+                    buildSeries(series, nameSerie, totalMes);
+                    totalMes = [];
+                    meses = [];
+                }
+                else{
+                    meses.push(monthName(DateValue));
+                }             
+            }
+            else{
+                meses.push(monthName(DateValue));
+                buildSeries(series, nameSerie, totalMes);
+                buildAllDataChart(allData, nameTypeChart, series, meses);
+                series = [];
+                totalMes = [];
+                meses = [];
+            }
+        }
+        else{
+            meses.push(monthName(DateValue));
+            buildSeries(series, nameSerie, totalMes);
+            buildAllDataChart(allData, nameTypeChart, series, meses)
+            series = [];
+            totalMes = [];
+        }
+    }
+    return allData;
+}
+
+function buildSeries(series, nameSerie, totalMes){
+    nameSerie = titleCase(nameSerie.split(/(?=[A-Z])/).join(" "));
+    series.push({
+        name: nameSerie,
+        data: totalMes
+    });
+}
+
+function buildAllDataChart(allData, nameTypeChart, series, meses){
+    allData.push({
+        chart : nameTypeChart,
+        series : series,
+        categories : meses
+    });
 }
 
 function formatMoney(n) {
@@ -356,98 +464,25 @@ function formatMoney(n) {
     return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
 };
 
-function getSpecificChart(type){
-    $.ajax({
-        type: "POST",
-        url: "Reporte/getSpecificChart",
-        data: { type: type},
-        dataType: 'json',
-        cache: false,
-        beforeSend: function() {
-            $('#spiner-loader').removeClass('hide');
-        },
-        success: function(data){
-            $('#spiner-loader').addClass('hide');
-            
-        },
-        error: function() {
-            $('#spiner-loader').addClass('hide');
-            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
-        }
-    });
-}
-
-function getLastSales(){
-    $.ajax({
-        type: "POST",
-        url: "Reporte/getDataChart",
-        data: {general: true, tipoChart:'na'},
-        dataType: 'json',
-        cache: false,
-        beforeSend: function() {
-          $('#spiner-loader').removeClass('hide');
-        },
-        success: function(data){
-            $('#spiner-loader').addClass('hide');
-            console.log(data);
-            let orderedArray = orderedDataChart(data);
-            for ( i=0; i<orderedArray.length; i++ ){
-                let { name, categories, data } = orderedArray[i];
-
-                $("#tot"+name).text("$ "+formatMoney(total));
-                
-                var miniChart = new ApexCharts(document.querySelector("#"+name+""), setOptionsMiniChart(name, data, categories));
-                
-                miniChart.render();
-            }
-        },
-        error: function() {
-          $('#spiner-loader').addClass('hide');
-            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
-        }
-    });
-}
-
-function orderedDataChart(data){
-    let allData = [], totalMes = [], meses = [];
-    let contMes = 0;
-    for( i=0; i<data.length; i++){
-
-        // totalFinal = (data[i].total == null) ? parseFloat(totalFinal) + 0 : parseFloat(totalFinal) + parseFloat(data[i].total.replace(/[^0-9.-]+/g,""));
-        totalMes.push( (data[i].total != null) ? data[i].total.replace(/[^0-9.-]+/g,"") : 0 );
-        meses.push(monthName(data[i].DateValue));
-
-        if( contMes == 3 ){
-            console.log(data[i].rol);
-            if(data[i].rol != '9' || data[i].rol != '7'){
-                allData.push({
-                    name : `${ (data[i].tipo == 'vc') ? 'ventasContratadas' : (data[i].tipo == 'va') ? 'ventasApartadas' : (data[i].tipo == 'cc') ? 'canceladasContratadas' : 'canceladasApartadas' }`,
-                    data : totalMes,
-                    categories : meses,
-                    name_adicional : 'na'
-                });
-            }
-            else{
-                allData.push({
-                    name : `${ (data[i].tipo == 'vc') ? 'ventasContratadas' : (data[i].tipo == 'va') ? 'ventasApartadas' : (data[i].tipo == 'cc') ? 'canceladasContratadas' : 'canceladasApartadas' }`,
-                    data : totalMes,
-                    categories : meses,
-                    name_adicional : `${ (data[i].rol == '9') ? 'Coordinador' : (data[i].rol == '7') ? 'Asesor ': 'na' }`
-                });
-            }
-        }
-
-        if( contMes == 3 ){
-            contMes = 0;
-            totalMes = [], meses = [];
-        }
-        else contMes++;
-    }
-    console.log(allData);
-    return allData;
-}
-
 function monthName(mon){
     var monthName = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'][mon - 1];
     return monthName;
+}
+
+function titleCase(string){
+    return string[0].toUpperCase() + string.slice(1).toLowerCase();
+}
+
+function formatDate(date) {
+    var dateParts = date.split("/");
+    var d = new Date(+dateParts[2], dateParts[1] - 1, +dateParts[0]),
+        month = '' + (d.getMonth() + 1),
+        day = '' + d.getDate(),
+        year = d.getFullYear();
+    if (month.length < 2)
+        month = '0' + month;
+    if (day.length < 2)
+        day = '0' + day;
+
+    return [year, month, day].join('-');
 }
