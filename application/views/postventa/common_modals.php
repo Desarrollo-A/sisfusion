@@ -535,7 +535,6 @@
                 </div>
                 <div class="modal-footer">
                     <div id="postventa" style="display:none">
-                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
                         <button type="submit" class="btn btn-primary">Enviar</button>
                     </div>
                 </div>
@@ -544,9 +543,9 @@
                 <div id="proyectos" style="display:none">
                     <input type="text" class="hide" id="idSolicitud" name="idSolicitud">
                     <input type="text" class="hide" id="action" name="action">
-                    <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
                     <button type="button" id="observacionesSubmit" class="btn btn-primary">Enviar</button>
                 </div>
+                <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
             </div>
         </div>
     </div>

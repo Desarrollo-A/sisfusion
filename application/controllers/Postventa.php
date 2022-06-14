@@ -595,6 +595,7 @@ class Postventa extends CI_Controller
         $idPostventa = $_POST['idPostventa'];
         $referencia = $_POST['referencia'];
         $empresa = $_POST['empresa'];
+        $personalidad = $_POST['personalidad'];
         $resDecode = $this->servicioPostventa($referencia, $empresa);
 
         $dataFiscal = array(
@@ -612,7 +613,7 @@ class Postventa extends CI_Controller
         $dataFiscal = base64_encode(json_encode($dataFiscal));
         $responseInsert = $this->insertPostventaDF($dataFiscal);
         if($responseInsert->resultado == 1){
-            $informacion = $this->Postventa_model->setEscrituracion($idLote,$idCliente, $idPostventa, $resDecode->data[0]);
+            $informacion = $this->Postventa_model->setEscrituracion( $personalidad, $idLote,$idCliente, $idPostventa, $resDecode->data[0]);
             echo json_encode($informacion);
         }else{
             echo json_encode(false);

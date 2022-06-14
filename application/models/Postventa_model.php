@@ -48,7 +48,7 @@ class Postventa_model extends CI_Model
         WHERE l.idLote = $idLote");
     }
 
-    function setEscrituracion($idLote,$idCliente, $idPostventa, $data)
+    function setEscrituracion( $personalidad, $idLote,$idCliente, $idPostventa, $data)
     {
         $idUsuario = $this->session->userdata('id_usuario');
         $rol = $this->session->userdata('id_rol');
@@ -59,13 +59,14 @@ class Postventa_model extends CI_Model
         $clienteAnterior = $data->ult_ncliente != null ? 1:2;
         $nombreClienteAnterior = $clienteAnterior == 1 ? $data->ult_ncliente: NULL;
         $rfcAnterior =  $clienteAnterior == 1 ? $data->ult_rfc: NULL;
-
+      
         $this->db->query("INSERT INTO solicitud_escrituracion (idLote, idCliente, estatus, fecha_creacion
         , creado_por, fecha_modificacion, modificado_por, idArea, idPostventa, estatus_pago, clave_catastral, cliente_anterior,
-        nombre_anterior, RFC, nombre)
-         VALUES($idLote, $idCliente, 0, GETDATE(), $idUsuario, GETDATE(),$idUsuario, $rol, $idPostventa, $idEstatus, '$claveCat', $clienteAnterior, '$nombreClienteAnterior', '$rfcAnterior', '$nombre');");
+        nombre_anterior, RFC, nombre, personalidad)
+         VALUES($idLote, $idCliente, 0, GETDATE(), $idUsuario, GETDATE(),$idUsuario, $rol, $idPostventa, $idEstatus, '$claveCat', $clienteAnterior, '$nombreClienteAnterior', '$rfcAnterior', '$nombre', $personalidad);");
         $insert_id = $this->db->insert_id();
-        $opciones = $this->db->query("SELECT * FROM opcs_x_cats WHERE id_catalogo = 60")->result_array();
+        $opcion = $personalidad == 2 || $personalidad == '' || $personalidad == null ? 60:72;
+        $opciones = $this->db->query("SELECT * FROM opcs_x_cats WHERE id_catalogo =  $opcion")->result_array();
         foreach ($opciones as $row) {
             $opcion = $row['id_opcion'];
             $this->db->query("INSERT INTO documentos_escrituracion VALUES('creacion de rama', null, GETDATE(), 1,  $insert_id,
@@ -166,7 +167,7 @@ class Postventa_model extends CI_Model
         INNER JOIN condominios cn ON cn.idCondominio = l.idCondominio
         INNER JOIN residenciales r ON r.idResidencial = cn.idResidencial
         LEFT JOIN documentos_escrituracion de ON de.idSolicitud = se.idSolicitud AND de.tipo_documento = $tipoDoc
-		LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = $tipoDoc AND oxc.id_catalogo = 60
+		LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = $tipoDoc AND oxc.id_catalogo = (CASE WHEN isNULL(se.personalidad,0) = 1 THEN 72 ELSE 60 END)
 		WHERE se.idSolicitud = $idSolicitud");
     }
 
@@ -180,7 +181,7 @@ class Postventa_model extends CI_Model
         INNER JOIN condominios cn ON cn.idCondominio = l.idCondominio
         INNER JOIN residenciales r ON r.idResidencial = cn.idResidencial
         LEFT JOIN documentos_escrituracion de ON de.idSolicitud = se.idSolicitud 
-		LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = de.tipo_documento AND oxc.id_catalogo = 60
+		LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = de.tipo_documento AND oxc.id_catalogo = (CASE WHEN isNULL(se.personalidad,0) = 1 THEN 72 ELSE 60 END)
 		WHERE de.idDocumento = $idDoc");
     }
 
@@ -240,7 +241,7 @@ class Postventa_model extends CI_Model
         END) motivos_rechazo, 0 estatusPropuesta, de.editado
         FROM documentos_escrituracion de 
         INNER JOIN solicitud_escrituracion se ON se.idSolicitud = de.idSolicitud
-        INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = de.tipo_documento AND oxc.id_catalogo = 60
+        INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = de.tipo_documento AND oxc.id_catalogo = (CASE WHEN isNULL(se.personalidad,0) = 1 THEN 72 ELSE 60 END)
         LEFT JOIN usuarios us ON us.id_usuario = de.creado_por
         LEFT JOIN usuarios us2 ON us2.id_usuario = de.validado_por
         LEFT JOIN motivos_rechazo_x_documento mrxd ON mrxd.id_documento = de.idDocumento AND mrxd.estatus = 1 
@@ -524,7 +525,7 @@ function checkBudgetInfo($idSolicitud){
 
     function getFullReportContraloria($idSolicitud)
     {
-        $query = $this->db->query("SELECT ce.idEscrituracion, max(ce.fecha_creacion) fecha_creacion,isNULL(DATEDIFF(day, ce.fecha_creacion,ISNULL(cee.fecha_creacion, GETDATE())) -CP.tiempo,0) diferencia, ce.newStatus,
+        $query = $this->db->query("SELECT ce.idEscrituracion, max(ce.fecha_creacion) fecha_creacion,(CASE WHEN isNULL(DATEDIFF(day, ce.fecha_creacion,ISNULL(cee.fecha_creacion, GETDATE())) -CP.tiempo,0)< 0.0 THEN 0 ELSE isNULL(DATEDIFF(day, ce.fecha_creacion,ISNULL(cee.fecha_creacion, GETDATE())) -CP.tiempo,0) END) diferencia, ce.newStatus,
 		l.nombreLote,cond.nombre nombreCondominio, r.nombreResidencial,
         se.nombre, oxc.nombre estatus, oxc2.nombre area, cp.tiempo,
 		(CASE WHEN DATEDIFF(day, ce.fecha_creacion,ISNULL(cee.fecha_creacion, GETDATE())) > cp.tiempo THEN 'ATRASADO' ELSE 'EN TIEMPO' END) atrasado
@@ -541,7 +542,7 @@ function checkBudgetInfo($idSolicitud){
 		WHERE ce.idEscrituracion = $idSolicitud GROUP BY ce.idEscrituracion, ce.newStatus,
 		l.nombreLote,cond.nombre, r.nombreResidencial,
         CONCAT(c.nombre, ' ', c.apellido_paterno, ' ', c.apellido_materno), oxc.nombre, oxc2.nombre, cp.tiempo
-		,cee.fecha_creacion, ce.fecha_creacion");
+		,cee.fecha_creacion, ce.fecha_creacion,  se.nombre, se.nombre");
         return $query->result_array();
     }
 
