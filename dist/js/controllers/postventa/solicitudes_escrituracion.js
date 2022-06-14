@@ -174,10 +174,10 @@ $(document).on("click", "#preview", function () {
         case '17':
             folder = 'PROYECTO_ESCRITURA';
             break;
-        case '17':
+        case '18':
             folder = 'RFC_MORAL';
             break; 
-        case '17':
+        case '19':
             folder = 'ACTA_CONSTITUTIVA';
         break;
         default:
