@@ -247,6 +247,13 @@
                 }
             }
         }
+        @media #{$smartphone}{
+            -webkit-transform: inherit!important;
+            -o-transform: inherit!important;
+            transform: inherit!important;
+            top: inherit;
+            margin-top: 100px!important;
+            margin: 10px;
+        }
     }
-
 }

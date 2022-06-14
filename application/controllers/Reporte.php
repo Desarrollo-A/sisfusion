@@ -97,31 +97,33 @@ class Reporte extends CI_Controller {
     }
     public function chartCoordinator($id, $beginDate, $endDate){
         $coordinadorAll = [];
-        $coordinadorVC = "SELECT qu.total, cantidad, DateValue, 'vc' tipo, '9' rol FROM cte
-        LEFT JOIN (SELECT  FORMAT(ISNULL(SUM(CASE WHEN totalNeto2 IS NULL THEN total WHEN totalNeto2 = 0 THEN total ELSE totalNeto2 END), 0), 'C') total,
-        COUNT(*) cantidad, MONTH(cl.fechaApartado) mes
+        $coordinadorVC = "SELECT ISNULL(total, 0) total, ISNULL(cantidad, 0) cantidad, MONTH(DateValue) mes, YEAR(DateValue) año, 'vc' tipo, '9' rol FROM cte
+        LEFT JOIN (SELECT FORMAT(ISNULL(SUM(CASE WHEN totalNeto2 IS NULL THEN total WHEN totalNeto2 = 0 THEN total ELSE totalNeto2 END), 0), 'C') total,
+        COUNT(*) cantidad, MONTH(cl.fechaApartado) mes, YEAR(cl.fechaApartado) año
         FROM clientes cl
         INNER JOIN lotes lo ON lo.idLote = cl.idLote AND lo.idStatusLote = 2
         INNER JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes WHERE idStatusContratacion = 15 AND idMovimiento = 45
         GROUP BY idLote, idCliente) hl ON hl.idLote = lo.idLote AND hl.idCliente = cl.id_cliente
         WHERE ISNULL(noRecibo, '') != 'CANCELADO' AND cl.status = 1 AND cl.fechaApartado BETWEEN '$beginDate' AND '$endDate'
         AND cl.id_asesor = $id
-        GROUP BY MONTH(cl.fechaApartado)) qu ON qu.mes = cte.DateValue";
+       GROUP BY MONTH(cl.fechaApartado), YEAR(cl.fechaApartado)) qu ON qu.mes = month(cte.DateValue) AND qu.año = year(cte.DateValue)
+        GROUP BY Month(DateValue), YEAR(DateValue), cantidad, total";
         // array_push($coordinadorAll, $coordinadorVC);
 
-        $coordinadorVA = "SELECT qu.total, cantidad, DateValue,'va' tipo, '9' rol FROM cte
+        $coordinadorVA = "SELECT ISNULL(total, 0) total, ISNULL(cantidad, 0) cantidad, MONTH(DateValue) mes, YEAR(DateValue) año, 'va' tipo, '9' rol FROM cte
         LEFT JOIN (SELECT FORMAT(ISNULL(SUM(CASE WHEN totalNeto2 IS NULL THEN total  WHEN totalNeto2 = 0 THEN total  ELSE totalNeto2  END), 0), 'C') total, 
-        COUNT(*) cantidad, MONTH(cl.fechaApartado) mes
+        COUNT(*) cantidad, MONTH(cl.fechaApartado) mes, YEAR(cl.fechaApartado) año
         FROM clientes cl
         INNER JOIN lotes lo ON lo.idLote = cl.idLote AND lo.idStatusLote != 2
         WHERE isNULL(noRecibo, '') != 'CANCELADO' AND cl.status = 1 AND cl.fechaApartado BETWEEN '$beginDate' AND '$endDate'
         AND cl.id_asesor = $id
-        GROUP BY MONTH(cl.fechaApartado)) qu ON qu.mes = cte.DateValue";
+        GROUP BY MONTH(cl.fechaApartado), YEAR(cl.fechaApartado)) qu ON qu.mes = month(cte.DateValue) AND qu.año = year(cte.DateValue)
+        GROUP BY Month(DateValue), YEAR(DateValue), cantidad, total";
         // array_push($coordinadorAll, $coordinadorVA);
 
-        $coordinadorCC = "SELECT qu.total, cantidad, DateValue, 'cc' tipo, '9' rol FROM cte
+        $coordinadorCC = "SELECT ISNULL(total, 0) total, ISNULL(cantidad, 0) cantidad, MONTH(DateValue) mes, YEAR(DateValue) año, 'cc' tipo, '9' rol FROM cte
         LEFT JOIN (SELECT FORMAT(ISNULL(SUM(CASE WHEN totalNeto2 IS NULL THEN total WHEN totalNeto2 = 0 THEN total ELSE totalNeto2 END), 0), 'C') total, 
-        COUNT(*) cantidad, MONTH(cl.fechaApartado) mes
+        COUNT(*) cantidad, MONTH(cl.fechaApartado) mes, YEAR(cl.fechaApartado) año
         FROM clientes cl
         INNER JOIN lotes lo ON lo.idLote = cl.idLote
         LEFT JOIN historial_liberacion hl ON hl.idLote = lo.idLote AND hl.tipo NOT IN (2, 5, 6) AND hl.id_cliente = cl.id_cliente
@@ -129,12 +131,13 @@ class Reporte extends CI_Controller {
         GROUP BY idLote, idCliente) hlo ON hlo.idLote = lo.idLote AND hlo.idCliente = cl.id_cliente
         WHERE isNULL(noRecibo, '') != 'CANCELADO' AND cl.status = 0  AND cl.fechaApartado BETWEEN '$beginDate' AND '$endDate' 
         AND cl.id_asesor = $id
-        GROUP BY MONTH(cl.fechaApartado)) qu ON qu.mes = cte.DateValue";
+        GROUP BY MONTH(cl.fechaApartado), YEAR(cl.fechaApartado)) qu ON qu.mes = month(cte.DateValue) AND qu.año = year(cte.DateValue)
+        GROUP BY Month(DateValue), YEAR(DateValue), cantidad, total";
         // array_push($coordinadorAll, $coordinadorCC);
 
-        $coordinadorCA = "SELECT qu.total, cantidad, DateValue, 'ca' tipo, '9' rol FROM cte
+        $coordinadorCA = "SELECT ISNULL(total, 0) total, ISNULL(cantidad, 0) cantidad, MONTH(DateValue) mes, YEAR(DateValue) año, 'ca' tipo, '9' rol FROM cte
         LEFT JOIN (SELECT FORMAT(ISNULL(SUM(CASE WHEN totalNeto2 IS NULL THEN total WHEN totalNeto2 = 0 THEN total ELSE totalNeto2 END), 0), 'C') total, 
-        COUNT(*) cantidad, MONTH(cl.fechaApartado) mes
+        COUNT(*) cantidad, MONTH(cl.fechaApartado) mes, YEAR(cl.fechaApartado) año
         FROM clientes cl
         INNER JOIN lotes lo ON lo.idLote = cl.idLote
         LEFT JOIN historial_liberacion hl ON hl.idLote = lo.idLote AND hl.tipo NOT IN (2, 5, 6) AND hl.id_cliente = cl.id_cliente
@@ -142,9 +145,9 @@ class Reporte extends CI_Controller {
         GROUP BY idLote, idCliente) hlo ON hlo.idLote = lo.idLote AND hlo.idCliente = cl.id_cliente
         WHERE isNULL(noRecibo, '') != 'CANCELADO' AND cl.status = 0  AND cl.fechaApartado BETWEEN '$beginDate' AND '$endDate' 
         AND cl.id_asesor = $id
-        GROUP BY MONTH(cl.fechaApartado)) qu ON qu.mes = cte.DateValue";
-        // array_push($coordinadorAll, $coordinadorCA);
-
+        GROUP BY MONTH(cl.fechaApartado), YEAR(cl.fechaApartado)) qu ON qu.mes = month(cte.DateValue) AND qu.año = year(cte.DateValue)
+        GROUP BY Month(DateValue), YEAR(DateValue), cantidad, total";
+        
         array_push($coordinadorAll, $coordinadorVC, $coordinadorVA, $coordinadorCC, $coordinadorCA);
         return $coordinadorAll;
     }

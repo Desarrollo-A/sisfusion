@@ -1,4 +1,4 @@
-// Obtener fecha inicial y cuatro meses atrás para mini charts.
+// AA: Obtener fecha inicial y cuatro meses atrás para mini charts.
 var endDate = moment().format("YYYY-MM-DD");
 var beginDate = moment(endDate).subtract(4, 'months').format("YYYY-MM-DD");
 
@@ -28,17 +28,15 @@ $(document).ready(function(){
 });
 
 $('[data-toggle="tooltip"]').tooltip();
-//AA: Carga inicial de datatable y acordión. 
 
+//AA: Carga inicial de datatable y acordión. 
 $(document).ready( function(){
     init();
-   
 });
 
 async function init(){
     getLastSales(beginDate, endDate);
     let rol = userType == 2 ? await getRolDR(idUser): userType;
-    console.log('rol',rol);
     fillBoxAccordions(rol == '1' ? 'director_regional': rol == '2' ? 'gerente' : rol == '3' ? 'coordinador' : rol == '59' ? 'subdirector':'asesor', rol, idUser, 1);
 }
 
@@ -232,17 +230,11 @@ $(document).on('click', '.update-dataTable', function () {
     //     typeTransaction = 4;
 
     if (type == 2) { // MJ: #sub->ger->coord
-        // fillTable(typeTransaction, beginDate, endDate, table, 0, 1);
-        // $("#box-managerTable").addClass('d-none');
         if(render == 1){
             const table = "coordinador";
-            console.log(table);
-
             fillBoxAccordions(table, 9, $(this).val(), 2);
         }else{
             const table = "gerente";
-        console.log(table);
-
             fillBoxAccordions(table, 3, $(this).val(), 2);
 
         }
@@ -254,13 +246,9 @@ $(document).on('click', '.update-dataTable', function () {
         // fillTable(typeTransaction, beginDate, endDate, table, where, 2);
         if(render == 1){
             const table = "asesor";
-            console.log(table);
-
             fillBoxAccordions(table, 7, $(this).val(), 2);
         }else{
             const table = "coordinador";
-        console.log(table);
-
             fillBoxAccordions(table, 9, $(this).val(), 2);
 
         }
@@ -272,7 +260,6 @@ $(document).on('click', '.update-dataTable', function () {
             const table = "asesor";
             fillBoxAccordions(table, 7, $(this).val(), 2);
         }
-        console.log(table);
         // $("#box-coordinatorTable").removeClass('d-none');
         // $("#box-adviserTable").addClass('d-none');
         // fillBoxAccordions(table, 7);
@@ -304,7 +291,7 @@ function setOptionsChart(series, categories, miniChart){
         legend: { show: false },
         stroke: {
             curve: 'smooth',
-            width: `${ ( miniChart == 0 ) ? 4 : 2 }`,
+            width: `${ ( miniChart == 0 ) ? 3 : 2 }`,
         },
         xaxis: {
             categories: categories,
@@ -341,10 +328,10 @@ function setOptionsChart(series, categories, miniChart){
         markers: {
             size: `${ ( miniChart == 0 ) ? 5 : 0 }`,
             colors: '#143860',
-            strokeColors: '#2C93E7',
+            strokeColors: colors,
             strokeWidth: `${ ( miniChart == 0 ) ? 3 : 0 }`,
             hover: {
-                size: `${ ( miniChart == 0 ) ? 10 : 3 }`
+                size: `${ ( miniChart == 0 ) ? 8 : 3 }`
             }
         }
     }
@@ -355,23 +342,23 @@ $(document).on('click', '.js-accordion-title', function () {
     $(this).next().slideToggle(200);
     $(this).toggleClass('open', 200);
 });
+
 $(document).on('click', '.deleteTable', function () {
-    console.log('remove');
     $(this).parent().remove();
 });
 
 function chartDetail(e, tipoChart){
     $("#modalChart").modal();
-    var nameChart = (titleCase($(e).data("name").replace(/_/g, " "))).split(" ");
-    $(".boxModalTitle").html('');
-    $(".total").html('');
+    $("#modalChart .boxModalTitle .title").html('');
+    $("#modalChart .boxModalTitle .total").html('');
     $("#modalChart #type").val('');
-    $(".boxModalTitle").append('<p class="title" style="margin-bottom:10px">' + nameChart[0] + '<span class="enfatize"> '+ nameChart[1] +'</span></p>');
-    
+
+    var nameChart = (titleCase($(e).data("name").replace(/_/g, " "))).split(" ");
+    $(".boxModalTitle .title").append('<p class="mb-1">' + nameChart[0] + '<span class="enfatize"> '+ nameChart[1] +'</span></p>');
+
     $("#modalChart #beginDate").val(moment(beginDate).format('DD/MM/YYYY'));
     $("#modalChart #endDate").val(moment(endDate).format('DD/MM/YYYY'));
     $("#modalChart #type").val(tipoChart);
-
     getSpecificChart(tipoChart, beginDate, endDate);
 }
 
@@ -391,11 +378,19 @@ function getSpecificChart(type, beginDate, endDate){
             var orderedArray = orderedDataChart(data);
             let { categories, series } = orderedArray[0];
             total = series[0].data.reduce((a, b) => parseFloat(a) + parseFloat(b), 0);
-            $(".boxModalTitle").append('<p class="total">$'+formatMoney(total)+'</p>');
+            $("#modalChart .boxModalTitle .total").append('<p>$'+formatMoney(total)+'</p>');
+            
             $("#boxModalChart").html('');
-            var miniChart = new ApexCharts(document.querySelector("#boxModalChart"), setOptionsChart(series, categories, miniChart));
-                
-            miniChart.render();
+            if ( total != 0 ){
+                $("#boxModalChart").removeClass('d-flex justify-center');
+                var miniChart = new ApexCharts(document.querySelector("#boxModalChart"), setOptionsChart(series, categories, miniChart));
+                    
+                miniChart.render();
+            }
+            else{
+                $("#boxModalChart").addClass('d-flex justify-center');
+                $("#boxModalChart").append('<img src="./dist/img/emptyChart.png" alt="Icono gráfica" class="h-70 w-auto">');
+            }
         },
         error: function() {
             $('#spiner-loader').addClass('hide');
@@ -424,15 +419,16 @@ function getLastSales(beginDate, endDate){
                 for ( j=0; j < series.length; j++ ){
                     total += series[j].data.reduce((a, b) => parseFloat(a) + parseFloat(b), 0);
                 }
+
                 $("#tot"+chart).text("$"+formatMoney(total));
-                if( total != 0 ){
+                if ( total != 0 ){
+                    $("#"+chart+"").html('');
+                    $("#"+chart+"").removeClass('d-flex justify-center');
                     var miniChartApex = new ApexCharts(document.querySelector("#"+chart+""), setOptionsChart(series, categories, miniChart));
                 
                     miniChartApex.render();
                 }
-                else{
-                    
-                }
+                else $("#"+chart+"").addClass('d-flex justify-center');
             }
         },
         error: function() {
@@ -446,13 +442,14 @@ $(document).on("click", "#searchByDateRange", function () {
     var beginDate = $("#modalChart #beginDate").val();
     var endDate = $("#modalChart #endDate").val();
     var type = $("#modalChart #type").val();
+    $("#modalChart .boxModalTitle .total").html('');
     getSpecificChart(type, formatDate(beginDate), formatDate(endDate));
 });
 
 function orderedDataChart(data){
     let allData = [], totalMes = [], meses = [], series = [];
     for( i=0; i<data.length; i++){
-        let { tipo, rol, total, DateValue } = data[i];
+        let { tipo, rol, total, mes, año } = data[i];
 
         nameTypeChart = `${ (tipo == 'vc') ? 'ventasContratadas' : (tipo == 'va') ? 'ventasApartadas' : (tipo == 'cc') ? 'canceladasContratadas' : 'canceladasApartadas' }`;
 
@@ -467,11 +464,11 @@ function orderedDataChart(data){
                     meses = [];
                 }
                 else{
-                    meses.push(monthName(DateValue));
+                    meses.push(monthName(mes) + ' ' + año);
                 }             
             }
             else{
-                meses.push(monthName(DateValue));
+                meses.push(monthName(mes) + ' ' + año);
                 buildSeries(series, nameSerie, totalMes);
                 buildAllDataChart(allData, nameTypeChart, series, meses);
                 series = [];
@@ -480,7 +477,7 @@ function orderedDataChart(data){
             }
         }
         else{
-            meses.push(monthName(DateValue));
+            meses.push(monthName(mes) + ' ' + año);
             buildSeries(series, nameSerie, totalMes);
             buildAllDataChart(allData, nameTypeChart, series, meses)
             series = [];
@@ -534,8 +531,6 @@ function getRolDR(idUser){
         },
         success: function(data){
             $('#spiner-loader').addClass('hide');
-            console.log('datarol',data);
-            
             resolve (data.length > 0 ? 59:2);
         },
         error: function() {
