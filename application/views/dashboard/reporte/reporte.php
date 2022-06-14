@@ -15,12 +15,14 @@
                     </div>
                     <div class="row pl-2 pr-2">
                         <div class="col-12 col-sm-12 col-md-12 col-lg-12 p-0">
-                            <p class="mt-1 money" id="totventasContratadas">$0.00</p>
+                            <p class="mt-1 money" id="totventasContratadas"></p>
                         </div>
                     </div>
                     <div class="row">
                         <div class="p-0 col-12 col-sm-12 col-md-12 col-lg-12">
-                            <div class="boxMiniCharts" id="ventasContratadas"></div>
+                            <div class="boxMiniCharts d-flex justify-center align-start" id="ventasContratadas">
+                                <img src="./dist/img/emptyChart.png" alt="Icono gráfica" class="h-70 w-auto">
+                            </div>
                         </div>
                         <button type="btn" class="moreMiniChart d-flex justify-center align-center" data-toggle="tooltip" data-placement="bottom" title="Más detalle" onclick="chartDetail(this, 'vc')" data-name ="ventas_contratadas">  
                             <i class="fas fa-expand-alt"></i>
@@ -43,12 +45,14 @@
                     </div>
                     <div class="row pl-2 pr-2">
                         <div class="col-12 col-sm-12 col-md-12 col-lg-12 p-0">
-                            <p class="mt-1 money" id="totventasApartadas">$0.00</p>
+                            <p class="mt-1 money" id="totventasApartadas"></p>
                         </div>
                     </div>
                     <div class="row">
                         <div class="p-0 col-12 col-sm-12 col-md-12 col-lg-12">
-                            <div class="boxMiniCharts" id="ventasApartadas"></div>
+                            <div class="boxMiniCharts d-flex justify-center align-start" id="ventasApartadas">
+                                <img src="./dist/img/emptyChart.png" alt="Icono gráfica" class="h-70 w-auto">
+                            </div>
                         </div>
                         <button type="btn" class="moreMiniChart d-flex justify-center align-center" data-toggle="tooltip" data-placement="bottom" title="Más detalle" onclick="chartDetail(this, 'va')" data-name ="ventas_apartadas">  
                             <i class="fas fa-expand-alt"></i>
@@ -70,12 +74,14 @@
                     </div>
                     <div class="row pl-2 pr-2">
                         <div class="col-12 col-sm-12 col-md-12 col-lg-12 p-0">
-                            <p class="mt-1 money" id="totcanceladasContratadas">$0.00</p>
+                            <p class="mt-1 money" id="totcanceladasContratadas"></p>
                         </div>
                     </div>
                     <div class="row">
                         <div class="p-0 col-12 col-sm-12 col-md-12 col-lg-12">
-                            <div class="boxMiniCharts" id="canceladasContratadas"></div>
+                            <div class="boxMiniCharts d-flex justify-center align-start" id="canceladasContratadas">
+                                <img src="./dist/img/emptyChart.png" alt="Icono gráfica" class="h-70 w-auto">
+                            </div>
                         </div>
                         <button type="btn" class="moreMiniChart d-flex justify-center align-center" data-toggle="tooltip" data-placement="bottom" title="Más detalle" onclick="chartDetail(this, 'cc')" data-name ="canceladas_contratadas">  
                             <i class="fas fa-expand-alt"></i>
@@ -97,12 +103,14 @@
                     </div>
                     <div class="row pl-2 pr-2">
                         <div class="col-12 col-sm-12 col-md-12 col-lg-12 p-0">
-                            <p class="mt-1 money" id="totcanceladasApartadas">$0.00</p>
+                            <p class="mt-1 money" id="totcanceladasApartadas"></p>
                         </div>
                     </div>
                     <div class="row">
                         <div class="p-0 col-12 col-sm-12 col-md-12 col-lg-12">
-                            <div class="boxMiniCharts" id="canceladasApartadas"></div>
+                            <div class="boxMiniCharts d-flex justify-center align-start" id="canceladasApartadas">
+                                <img src="./dist/img/emptyChart.png" alt="Icono gráfica" class="h-70 w-auto">
+                            </div>
                         </div>
                         <button type="btn" class="moreMiniChart d-flex justify-center align-center" data-toggle="tooltip" data-placement="bottom" title="Más detalle" onclick="chartDetail(this, 'ca')" data-name ="canceladas_apartadas">  
                             <i class="fas fa-expand-alt"></i>
