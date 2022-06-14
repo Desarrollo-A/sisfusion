@@ -179,7 +179,7 @@ class Postventa extends CI_Controller
                                         <br><br>
                                         <table width="100%" style="padding:10px 0px; text-align: center;height: 45px; border: 1px solid #ddd;" width="690">
                                             <tr>
-                                                <td colspan="2" style="background-color: #15578B;color: #fff;padding: 3px 6px; "><b style="font-size: 2em; ">Datos del comprador – Persona Física</b>
+                                                <td colspan="2" style="background-color: #15578B;color: #fff;padding: 3px 6px; "><b style="font-size: 2em; ">Datos del comprador – '.$informacion->personalidad_juridica == 2 ? 'Física':'Moral'.'</b>
                                                 </td>
                                             </tr>
                                         </table>                            
@@ -741,6 +741,12 @@ class Postventa extends CI_Controller
                 break;
             case 17:
                 $folder = "static/documentos/postventa/escrituracion/PROYECTO_ESCRITURA/";
+                break;
+            case 18:
+                $folder = "static/documentos/postventa/escrituracion/RFC_MORAL/";
+                break;
+            case 19:
+                $folder = "static/documentos/postventa/escrituracion/ACTA_CONSTITUTIVA/";
                 break;
         }
         return $folder;
