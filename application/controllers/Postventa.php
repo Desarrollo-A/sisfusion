@@ -150,6 +150,7 @@ class Postventa extends CI_Controller
         $pdf->setPageMark();
 
         $informacion = $this->Postventa_model->getClient($data)->row();
+        $persona = $informacion->personalidad_juridica == 2 ? 'Persona física':'persona moral';
 
 
         $html = '
@@ -179,7 +180,7 @@ class Postventa extends CI_Controller
                                         <br><br>
                                         <table width="100%" style="padding:10px 0px; text-align: center;height: 45px; border: 1px solid #ddd;" width="690">
                                             <tr>
-                                                <td colspan="2" style="background-color: #15578B;color: #fff;padding: 3px 6px; "><b style="font-size: 2em; ">Datos del comprador – '.$informacion->personalidad_juridica == 2 ? 'Física':'Moral'.'</b>
+                                                <td colspan="2" style="background-color: #15578B;color: #fff;padding: 3px 6px; "><b style="font-size: 2em; ">Datos del comprador – '.$persona.'</b>
                                                 </td>
                                             </tr>
                                         </table>                            
@@ -197,7 +198,7 @@ class Postventa extends CI_Controller
                                                     </td>
                                                     <td style="font-size: 1em;">
                                                     <b>Lugar de origen:</b><br>
-                                                    ' . $informacion->origen . '
+                                                    ' . $informacion->nacionalidad . '
                                                     </td>
                                                 </tr>
                                                 <tr>
