@@ -137,7 +137,7 @@ function getClient(idLote) {
             $('#referencia').val(data.referencia);
             $('#empresa').val(data.empresa);
             data.idEstatus == 8 ? $("#estatusL").prop("checked", true):$("#estatusSL").prop("checked", true);
-            $('#personalidad').val(data.personalidad_juridica);
+            $('#personalidad').val(data.personalidad);
             $('#check').removeClass("d-none");
    
         }else{
