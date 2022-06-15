@@ -86,7 +86,10 @@ class PaquetesCorrida extends CI_Controller
         $TipoLote = $this->input->post("tipoLote");
 
         for ($i=1; $i < $index ; $i++) { 
-            if(isset())
+            //VALIDAR SI EXISTE PAQUETE
+            if(isset($_POST["descripcion_".$i])){
+
+            }
         }
         
 
