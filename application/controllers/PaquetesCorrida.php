@@ -9,7 +9,7 @@ class PaquetesCorrida extends CI_Controller
         $this->load->library(array('session', 'form_validation', 'get_menu'));
         $this->load->helper(array('url', 'form'));
         $this->load->database('default');
-        $this->programacion = $this->load->database('programacion', TRUE);
+        $this->programacion = $this->load->database('default', TRUE);
         //$this->validateSession();
     }
 
