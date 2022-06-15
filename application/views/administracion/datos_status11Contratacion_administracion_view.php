@@ -270,6 +270,9 @@
 						else if(d.tipo_venta==5) {
 							lblStats ='<span class="label label-info">Intercambio</span>';
 						}
+						else if(d.tipo_venta==7) {
+							lblStats ='<span class="label label-secondary">Intercambio</span>';
+						}
 						else if(d.tipo_venta== null) {
 							lblStats ='<span class="label label-info"></span>';
 						}

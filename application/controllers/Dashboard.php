@@ -136,13 +136,82 @@ class Dashboard extends CI_Controller
     }
 
     public function totalVentasData(){
-        $data = $this->Dashboard_model->totalVentasData();
+        $typeTransaction = $this->input->post('typeTransaction');
+
+        $data = $this->Dashboard_model->totalVentasData($typeTransaction);
         if($data != null) {
             echo json_encode($data);
         } else {
             echo json_encode(array());
         }
     }
+
+    public function getProspectsByYear(){
+        $typeTransaction = $this->input->post('typeTransaction');
+        $data= [
+            'type'=>1,
+            'typeTransaction' =>  $typeTransaction
+        ];
+        $data = $this->Dashboard_model->getProspectsByYear($data);
+        if($data != null) {
+            echo json_encode($data);
+        } else {
+            echo json_encode(array());
+        }
+    }
+
+    public function getClientsByYear(){
+        $data = $this->Dashboard_model->getClientsByYear();
+        if($data != null) {
+            echo json_encode($data);
+        } else {
+            echo json_encode(array());
+        }
+    }
+
+    public function getClientsAndProspectsByYear(){
+        $data= [
+            'type'=>$_POST['type'],
+            'beginDate'=>$_POST['beginDate'],
+            'endDate'=>$_POST['endDate'],
+            'typeTransaction' => $_POST['typeTransaction']
+        ];
+        $prospect = $this->Dashboard_model->getProspectsByYear($data);
+        $client = $this->Dashboard_model->getClientsByYear($data);
+
+        $data = array('Prospectos' => $prospect, 'Clientes'=>$client);
+
+        if($data != null) {
+            echo json_encode($data);
+        } else {
+            echo json_encode(array());
+        }
+    }
+
+    
+    public function generalMetricsByYear(){
+        $data= [
+            'type'=>$_POST['type'],
+            'beginDate'=>$_POST['beginDate'],
+            'endDate'=>$_POST['endDate'],
+        ];
+        $data = $this->Dashboard_model->generalMetricsByYear($data);
+        if($data != null) {
+            echo json_encode($data);
+        } else {
+            echo json_encode(array());
+        }
+    }
+
+    public function cicloVenta(){
+        $data = $this->Dashboard_model->cicloVenta($_POST['typeTransaction']);
+        if($data != null) {
+            echo json_encode($data);
+        } else {
+            echo json_encode(array());
+        }
+    }
+    
 }
 
 

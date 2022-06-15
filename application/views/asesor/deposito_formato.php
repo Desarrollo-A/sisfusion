@@ -2,6 +2,45 @@
 	.input-group .bootstrap-select.form-control {
 		z-index: inherit;
 	}
+    .currSign:before {
+        content: '$';
+    }
+    #table-descuentos   thead tr th{
+        text-align: center;
+        font-size: 0.9em;
+    }
+    #table-descuentos thead tr td{
+        text-align: center;
+        font-size: 1em;
+    }
+    #table-descuentos tbody tr td{
+        text-align: center;
+        font-size: 1em;
+    }
+
+
+    #table-corrida thead tr th{
+        text-align: center;
+        font-size: 0.9em;
+    }
+    #table-corrida thead tr td{
+        text-align: center;
+        font-size: 1em;
+    }
+    /*#table-corrida tbody td{*/
+    /*    text-align: center;*/
+    /*    border-color: #ddd;*/
+    /*    border-top:1px;*/
+    /*    border-right:0px;*/
+    /*    border-bottom:0px;*/
+    /*    border-left:1px;*/
+    /*    border-style: solid;*/
+
+    /*}*/
+
+    .noborderstable tr td{
+        border:0px !important;
+    }
 </style>
 <body>
 
@@ -293,7 +332,7 @@ $datos = array();
 								<div class="col-sm-10 checkbox-radios">
 									<div class="col-md-2 checkbox checkbox-inline">
 										<label style="font-size: 0.9em;">
-											<b>Persona Fisica</b>
+											<b>Persona Física</b>
 										</label>
 									</div>
 
@@ -357,7 +396,7 @@ $datos = array();
 
 									<div class="col-md-2 checkbox checkbox-inline">
 										<label style="font-size: 0.9em;">
-											<input type="checkbox" name="rfc_check" id="rfc_check" <?php echo $statsInput; ?> value="1" <?php if ($cliente[0]->rfc != '' && $cliente[0]->rfc != null) {echo "checked";}?>>FACTURA
+											<input type="checkbox" name="rfc_check" id="rfc_check" <?php echo $statsInput; ?> value="1" <?php if ($cliente[0]->rfc != '' && $cliente[0]->rfc != null) {echo "checked";}?>>Factura
 										</label>
 									</div>
 
@@ -553,7 +592,8 @@ $datos = array();
 											NOMBRE DE CÓNYUGE
 										</label>
 										<input class="form-control" name="nombre_conyuge" id="nombre_conyuge" <?php echo $readOnly; ?>
-											   type="text" value="<?=$cliente[0]->nombre_conyuge?>" style="font-size: 0.9em;"/>
+											   type="text" value="<?=$cliente[0]->nombre_conyuge?>" style="font-size: 0.9em;" pattern="[A-Za-z ]{1,32}" maxlength="32"
+                                               oninput="this.value = this.value.replace(/[^a-zA-Z ]+/, '');"/>
 									</div>
 								</div>
 
@@ -582,7 +622,6 @@ $datos = array();
 										<input class="form-control" name="ocupacion" id="ocupacion" type="text" <?php echo $readOnly; ?>
 											   value="<?=$cliente[0]->ocupacion?>" style="font-size: 0.9em;"/>
 									</div>
-
 								</div>
 
 
@@ -631,7 +670,7 @@ $datos = array();
 										<input class="form-control" name="edadFirma" id="edadFirma" <?php echo $readOnly; ?>
 											   onKeyPress="if(this.value.length==2) return false;"  type="number" step="any" value="<?=$cliente[0]->edadFirma?>" style="font-size: 0.9em;"/>
 									</div>
-								</div>
+                                </div>
 
 
 								<div class="col-md-7">
@@ -1618,7 +1657,133 @@ $datos = array();
 														  id="observacion" name="observacion"><?php echo $cliente[0]->observacion; ?></textarea>
 									</div>
 								</div>
+
+                                <div class="col col-xs-12 col-md-12 col-lg-12 mt-4">
+                                    <table class="table dataTable cell-border" id="table-corrida">
+                                        <thead>
+                                            <tr style="background: slategray">
+                                                <th colspan="7">CORRIDA FINAL</th>
+                                            </tr>
+                                            <tr>
+                                                <th>PRECIO FINAL</th>
+                                                <th>ENGANCHE</th>
+                                                <th>APARTADO</th>
+                                                <th>PRECIO M<sup>2</sup></th>
+                                                <th>MENSUALIDAD SIN/INT</th>
+                                                <th>MENSUALIDAD CON/INT SSI 1.00%</th>
+                                                <th>MENSUALIDAD CON/INT SSI 1.50%</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        <?php
+                                        if( isset($corrida_financiera->precio_final)){?>
+                                            <tr style="text-align: center">
+                                                <td>
+                                                    <div class="formatter"><?php echo  $corrida_financiera->precio_final;?></div>
+                                                </td>
+                                                <td>
+                                                    <div class="formatter"><?php echo  $corrida_financiera->pago_enganche;?></div>
+                                                </td>
+                                                <td>
+                                                    <div class="formatter"><?php echo  $corrida_financiera->apartado;?></div>
+                                                </td>
+                                                <td>
+                                                    <div class="formatter"><?php echo  $corrida_financiera->precio_m2_final;?></div>
+                                                </td>
+                                                <td>
+                                                    <table style="text-align: center;width: 100%" class="noborderstable">
+                                                        <tr>
+                                                            <td style="text-align: right; color:red" width="30%"><?php echo  $corrida_financiera->finalMesesp1;?> &nbsp;&nbsp;</td>
+                                                            <td style="text-align: left" width="50%"> <div class="formatter"> <?php echo  $corrida_financiera->msi_1p;?></div></td>
+                                                        </tr>
+                                                    </table>
+                                                </td>
+                                                <td>
+                                                    <table style="text-align: center;width: 100%" class="noborderstable">
+                                                        <tr>
+                                                            <td style="text-align: right; color:red" width="30%"><?php echo  $corrida_financiera->finalMesesp2;?> &nbsp;&nbsp;</td>
+                                                            <td style="text-align: left" width="50%"> <div class="formatter"> <?php echo  $corrida_financiera->msi_2p;?></div></td>
+                                                        </tr>
+                                                    </table>
+                                                </td>
+                                                <td>
+                                                    <table style="text-align: center;width: 100%" class="noborderstable">
+                                                        <tr>
+                                                            <td style="text-align: right; color:red" width="30%"><?php echo  $corrida_financiera->finalMesesp3;?> &nbsp;&nbsp;</td>
+                                                            <td style="text-align: left" width="50%"> <div class="formatter"> <?php echo  $corrida_financiera->msi_3p;?></div></td>
+                                                        </tr>
+                                                    </table>
+                                                </td>
+
+                                            </tr>
+                                            <?php
+                                        }else{
+                                            ?>
+                                            <tr style="text-align: center">
+                                                <td colspan="7">
+                                                    No hay corrida financiera
+                                                </td>
+                                            </tr>
+                                            <?php
+                                        }
+                                        ?>
+                                        </tbody>
+                                    </table>
+                                    <table class="table dataTable cell-border table-striped table-bordered" id="table-descuentos">
+                                        <thead>
+                                            <tr style="background: slategray">
+                                                <th colspan="4">DESCUENTOS APLICADOS</th>
+                                            </tr>
+                                            <tr>
+                                                <th>
+                                                    PORCENTAJE/CANTIDAD
+                                                </th>
+                                                <th>
+                                                    PRECIO M<sup>2</sup>
+                                                </th>
+                                                <th>
+                                                    AHORRO
+                                                </th>
+                                                <th>
+                                                    APLICADO A
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        <?php
+                                        if(count($descuentos_aplicados)>0){
+
+
+                                            foreach ($descuentos_aplicados as $row){
+                                                echo '<tr>';
+                                                echo '    <td>';
+                                                echo '        <div class="">'.$row['porcentaje'].'</div>';
+                                                echo '    </td>';
+                                                echo '    <td>';
+                                                echo '        <div class="formatter">'.$row['precio_m'].'</div>';
+                                                echo '    </td>';
+                                                echo '    <td>';
+                                                echo '        <div class="formatter">'.$row['ahorro'].'</div>';
+                                                echo '    </td>';
+                                                echo '    <td>';
+                                                echo '        <div class="">'.$row['aplicable_a'].'</div>';
+                                                echo '    </td>';
+                                                echo '</tr>';
+                                            }
+                                        }else{
+                                            echo '<tr>';
+                                            echo '    <td colspan="4">';
+                                            echo '        <div class="">No hay descuentos</div>';
+                                            echo '    </td>';
+                                            echo '</tr>';
+
+                                        }
+                                        ?>
+                                        </tbody>
+                                    </table>
+                                </div>
 							</div>
+                            <?php #print_r($corrida_financiera)?>
 
 
 							<div class="row"><br><br></div>
@@ -1788,6 +1953,7 @@ $datos = array();
 
 						<div class="datos_select"></div>
 
+
 						<div class="card-footer text-center">
 							<?php if($this->session->userdata('id_rol') == 7 || $this->session->userdata('id_rol') == 9 || $this->session->userdata('id_rol') == 3 || $this->session->userdata('id_rol') == 6 || $this->session->userdata('id_usuario') == 2752 || $this->session->userdata('id_usuario') == 2826 || $this->session->userdata('id_usuario') == 2810 || $this->session->userdata('id_usuario') == 2855 AND $onlyView==0){?>
 								<button type="submit" class="btn btn-primary btn-fill" onclick="validaTipoVivienda()">GUARDAR CAMBIOS</button>
@@ -1820,6 +1986,14 @@ $datos = array();
 <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
 
 <script>
+    let x = document.querySelectorAll(".formatter");
+    for (let i = 0, len = x.length; i < len; i++) {
+        let num = Number(x[i].innerHTML)
+            .toLocaleString('en');
+        x[i].innerHTML = num;
+        x[i].classList.add("currSign");
+    }
+
    function validafecha(date_input){
        console.log(date_input);
        var date_regex = /^(0[1-9]|1[0-2])\/(0[1-9]|1\d|2\d|3[01])\/(19|20)\d{2}$/;
@@ -2256,6 +2430,9 @@ $datos = array();
 
 <script>
 	$(document).ready(function () {
+        const options2 = { style: 'currency', currency: 'USD' };
+        const numberFormat2 = new Intl.NumberFormat('en-US', options2);
+
 		<?php
 		if($this->session->userdata('success_coprop')==777)
 		{

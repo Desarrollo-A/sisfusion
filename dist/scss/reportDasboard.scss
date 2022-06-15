@@ -1,29 +1,38 @@
 @import "_base";
 
 #reporte{
+    .cardMiniChart{
+        background-color: $blueIndigoDeep;
+        box-shadow: none!important;
+    }
     .card{
-        box-shadow: 0px 2px 9px -12px RGB(0 0 0 / 42%), 0 4px 25px 0px RGB(0 0 0 / 12%), 0 8px 10px -5px RGB(0 0 0 / 20%);
         border-radius: 10px;
         @media #{$smartphone}, #{$tablets}{ margin-bottom: 0!important; }
         @media #{$smartphone}{ width: 98%; }
     }
     .info{
         line-height: 1;
+        color: $white;
+        .str{
+            color: $blueFrance;
+            font-weight: 600;
+        }
         @media #{$smartphone}, #{$tablets}{ font-size: 18px!important; }
         br{
             @media #{$smartphone}, #{$tablets}{ display: none!important; }
         }
     }
     .money{
-        font-size: 24px;
-        font-weight: 600;
+        font-size: 22px;
+        font-weight: 400;
+        color: $white;
         @media #{$smartphone}, #{$tablets}{ margin: 0!important; }
     }
     .moreMiniChart{
         position: absolute;
         right: 15px;
         bottom: 15px;
-        background-color: $blueIndigo;
+        background-color: $blueFrance;
         color: $white;
         border-radius: 20px;
         width: 23px;
@@ -35,17 +44,19 @@
             font-size: 12px!important;
         }
         &:hover{
-            background-color: #b5c2d0;
+            background-color: $blueIndigo;
         }
     }
     .selectMini{
         display: flex;
         align-items: center;
-        background-color: #bdac7b;
-        color: $white;
+        background-color: transparent;
+        color: $shadowBlue;
+        font-weight: 400;
         border-radius: 20px;
         font-size: 9px;
         padding: 4px 7px;
+        border: 1px solid $shadowBlue;
         span{
             font-size: 12px;
             margin-left: 5px;
@@ -96,18 +107,25 @@
             table{
                 text-align: center;
                 thead tr {
-                    background-color: $white;
-                    th input{
-                        border: 1px solid transparent;
-                        border-radius: 5px;
-                        color: $grayOxford;
-                        text-align: center;
-                        font-weight: 500;
-                        &:active{
-                            border: 1px solid $gray;
-                        }
-                        &:focus{
-                            border: 1px solid $gray;
+                    background-color: $blueIndigoDeep;
+                    th{
+                        padding: 3px!important;
+                        input{
+                            border: 1px solid transparent;
+                            border-radius: 5px;
+                            color: $white;
+                            text-align: center;
+                            font-weight: 500;
+                            background-color: $blueIndigoDeep;
+                            &:active{
+                                border: 1px solid $gray;
+                            }
+                            &:focus{
+                                border: 1px solid $gray;
+                            }
+                            &::placeholder{
+                                color: $white;
+                            }
                         }
                     }
                 }
@@ -186,4 +204,56 @@
             }
         }
     } 
+}
+
+#modalChart{
+    .modal-dialog{
+        -webkit-transform: translate(0,-50%);
+        -o-transform: translate(0,-50%);
+        transform: translate(0,-50%);
+        top: 50%;
+        margin: 0 auto;
+        .modal-content{
+            height:350px!important;
+            border-radius: 15px;
+            background-color: $blueIndigoDeep;
+            .boxModalTitle{
+                .title{
+                    font-size: 20px;
+                    color: $white;
+                    span{
+                        font-weight: 600;
+                        color: $blueFrance;
+                    }
+                }
+                .total{
+                    font-size: 26px;
+                    font-weight: 500;
+                    color: $white;
+                }
+            }
+            .form-group{
+                border-radius: 28px;
+                border: 1px solid $platinum;
+                .form-control{
+                    background-image: none!important;
+                    color: $platinum;
+                }
+                .btn-fab-mini{
+                    background-color: transparent!important;
+                    span{
+                        color: $platinum;
+                    }
+                }
+            }
+        }
+        @media #{$smartphone}{
+            -webkit-transform: inherit!important;
+            -o-transform: inherit!important;
+            transform: inherit!important;
+            top: inherit;
+            margin-top: 100px!important;
+            margin: 10px;
+        }
+    }
 }

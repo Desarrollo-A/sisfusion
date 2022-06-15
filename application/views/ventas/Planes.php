@@ -11,164 +11,156 @@
 		$datos = $datos3;
 		$this->load->view('template/sidebar', $datos);
 		?>
-
-		<!-- Modals -->
-		<div class="modal fade modal-alertas" id="myModalEspera" role="dialog">
-			<div class="modal-dialog modal-sm">
-				<div class="modal-content">
-
-					<form method="post" id="form_espera_uno">
-						<div class="modal-body"></div>
-						<div class="modal-footer"></div>
-					</form>
-				</div>
-			</div>
+		
+<!-- Modals -->
+<div class="modal fade modal-alertas" id="myModalEspera" role="dialog">
+	<div class="modal-dialog modal-sm">
+		<div class="modal-content">
+			<form method="post" id="form_espera_uno">
+				<div class="modal-body"></div>
+				<div class="modal-footer"></div>
+			</form>
 		</div>
+	</div>
+</div>
 
-		<div class="modal fade modal-alertas" id="myModalDelete" role="dialog">
-			<div class="modal-dialog modal-md">
-				<div class="modal-content">
-
-					<form method="post" id="form_delete">
-						<div class="modal-body"></div>
-						<div class="modal-footer"></div>
-					</form>
-				</div>
-			</div>
+<div class="modal fade modal-alertas" id="myModalDelete" role="dialog">
+	<div class="modal-dialog modal-md">
+		<div class="modal-content">
+			<form method="post" id="form_delete">
+				<div class="modal-body"></div>
+				<div class="modal-footer"></div>
+			</form>
 		</div>
+	</div>
+</div>
 
-		<div class="modal fade modal-alertas" id="miModal" role="dialog">
-			<div class="modal-dialog">
-				<div class="modal-content">
-					<div class="modal-header bg-red">
-						<button type="button" class="close" data-dismiss="modal">&times;</button>
-						<h4 class="modal-title">Agregar plan</h4>
-					</div>
-					<form method="post" id="form_paquete">
-						<div class="modal-body">
-							<div class="form-group">
-								<label class="">Descripción de plan (<b class="text-danger">*</b>)</label>
-								<input type="text" name="" id="" class="form-control input-gral" >
-							</div>
-						
+<div class="content">
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
+				<div class="card">
+					<form id="form-paquetes">
+						<div class="card-content">
+							<h3 class="card-title center-align">Paquetes Corrida Financiera</h3>
+							<div class="container-fluid p-0">
+								<div class="row">
+									<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 form1">
+										<h4 class="card-title left-align">Datos generales</h4>
+										<div class="col-xs-12 col-sm-12 col-md-6 col-lg-4 mb-1">
+											<div class="form-group">
+												<label class="m-0" for="sede">Sede (<b class="text-danger">*</b>)</label>
+                                                <select name="sede" id="sede" class="selectpicker select-gral" data-style="btn " data-show-subtext="true" data-live-search="true"  title="Selecciona una opcion" data-size="7" required>
+                                                </select>
+											</div>
+										</div>
+										
+										<div class="col-xs-12 col-sm-12 col-md-6 col-lg-4 mb-1">
+											<div class="form-group">
+												<label class="m-0" for="sede">Proyecto (<b class="text-danger">*</b>)</label> 
+												<select id="residencial"  name="residencial[]" multiple="multiple" class="form-control select-gral"  data-style="btn " data-show-subtext="true" data-live-search="true"  title="Selecciona una opcion" data-size="7" required></select>
+												</select>
+											</div>
+										</div>
+										
+										<div class="col-xs-12 col-sm-12 col-md-6 col-lg-2 mb-1">          
+                                            <div class="form-group">
+                                                <label class="m-0" for="sede">Fecha Inicio (<b class="text-danger">*</b>)</label>
+                                                <input class="form-control" name="fechainicio" id="fechainicio" type="date" required="true">
+                                            </div>
+										</div>
 
-							<div class="form-group">
-								<center>
-									<button type="submit" id="btn_abonar" class="btn btn-success">GUARDAR</button>
-									<button class="btn btn-danger" type="button" data-dismiss="modal" >CANCELAR</button>
-								</center>
-							</div>
-						</div>
-					</form>
-				</div>
-			</div>
-		</div>
+										<div class="col-xs-12 col-sm-12 col-md-6 col-lg-2 mb-1">          
+                                            <div class="form-group">
+                                                <label class="m-0" for="sede">Fecha Fin (<b class="text-danger">*</b>)</label>
+                                                <input class="form-control" name="fechafin" id="fechafin" type="date" required="true">
+                                            </div>
+										</div>
+										
+										<div class="row">
+											<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 form1">
+												
+											<div class="col-xs-12 col-sm-12 col-md-6 col-lg-5 mb-1">
+												<div class="form-group">
+													<label>Tipo de Lote (<b class="text-danger">*</b>):</label>
+													<div class="col-md-12"><br></div>
+													<div class="row">
+														<div class="col-md-12">
+															<div class="custom-control custom-radio custom-control-inline col-md-4">
+																<input type="radio" id="customRadioInline1" value="1" name="tipoLote">
+																<label class="custom-control-label" for="customRadioInline1">Habitacional</label>
+															</div>
+															<div class="custom-control custom-radio custom-control-inline col-md-4">
+																<input type="radio" id="customRadioInline2" value="2" name="tipoLote">
+																<label class="custom-control-label" for="customRadioInline2">Comercial</label>
+															</div>
+															<div class="custom-control custom-radio custom-control-inline col-md-4">
+																<input type="radio" id="customRadioInline3" value="3" name="tipoLote">
+																<label class="custom-control-label" for="customRadioInline3">Ambos</label>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
 
-		<div class="content">
-			<div class="container-fluid">
-				<div class="row">
-					<div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
-						<div class="card">
-							<div class="card-header card-header-icon" data-background-color="goldMaderas">
-								<i class="material-icons">dashboard</i>
-                            </div>
-							<form id="form-paquetes">
-							<div class="card-content">
-								<h3 class="card-title center-align">Paquetes Corrida Financiera</h3>
-                                    <div class="container-fluid p-0">
+											<div class="col-xs-12 col-sm-12 col-md-6 col-lg-4 mb-1">          
+                                                <div class="form-group">
+													<label>Superficie (<b class="text-danger">*</b>):</label>
+													<div class="col-md-12"><br></div>
+													<div class="row">
+														<div class="col-md-12">
+															<div class="custom-control custom-radio custom-control-inline col-md-4">
+																<input type="radio" id="customRadio1" value="1" name="superficie" onclick="selectSuperficie(1)">
+																<label class="custom-control-label" for="customRadio1">Mayor a</label>
+															</div>
+															<div class="custom-control custom-radio custom-control-inline col-md-4">
+																<input type="radio" id="customRadio2" value="2" name="superficie" onclick="selectSuperficie(2)">
+																<label class="custom-control-label" for="customRadio2">Rango</label>
+															</div>
+															<div class="custom-control custom-radio custom-control-inline col-md-4">
+																<input type="radio" id="customRadio3" value="3" name="superficie" onclick="selectSuperficie(3)">
+																<label class="custom-control-label" for="customRadio3">Cualquiera</label>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+
+											<div class="col-xs-12 col-sm-12 col-md-6 col-lg-3 mb-1">
+												<div class="form-group">
+													<div id="printSuperficie">
+													</div>
+												</div>
+											</div>
+
 											<div class="row">
+											<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 form1">
+										 
+											<div class="form-group d-flex justify-left align-center col-md-12">
 												<button type="button" class="btn btn-success btn-circle btn-lg" data-toggle="tooltip" data-placement="top" title="Agregar paquete" onclick="GenerarCard()"><i class="fas fa-plus"></i></button>
 												<input type="hidden" value="0" name="index" id="index">
-												<!--<div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
-													<div class="form-group d-flex justify-center align-center">
-														<button ype="button" class="btn-gral-data" onclick="AddPackage()">Agregar paquete</button>
-													</div>
-												</div>-->
-												<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 form1">
-													<div class="form-group d-flex justify-center align-center col-md-3">
-														<label>Sede(<b class="text-danger">*</b>):</label>
-														<select class="select-gral" id="sede" name="sede"></select>
-													</div>
-													<div class="form-group d-flex justify-center align-center col-md-4">
-														<label>Residencial(<b class="text-danger">*</b>):</label>
-														<select id="residencial"  name="residencial[]" multiple="multiple" class="form-control"  required data-live-search="true"></select>
-													</div>
-													<div class="form-group col-md-5">
-														<div class="row">
-															<div class="col-md-6">
-																	<label>Superficie(<b class="text-danger">*</b>):</label>
-																	<div class="custom-control custom-radio">
-																		<input type="radio" id="customRadio1" value="1" onclick="selectSuperficie(1)" name="superficie" class="custom-control-input">
-																		<label class="custom-control-label" for="customRadio1">Mayor a</label>
-																	</div>
-																	<div class="custom-control custom-radio">
-																		<input type="radio" id="customRadio2" value="2" onclick="selectSuperficie(2)" name="superficie" class="custom-control-input">
-																		<label class="custom-control-label" for="customRadio2">Rango</label>
-																	</div>
-																	<div class="custom-control custom-radio">
-																		<input type="radio" id="customRadio3" value="3" onclick="selectSuperficie(3)" name="superficie" class="custom-control-input">
-																		<label class="custom-control-label" for="customRadio3">Cualquiera</label>
-																	</div>
-															</div>
-															<div class="col-md-6">
-																<div id="printSuperficie">
-																</div>
-															</div>
-														</div>			
-													</div>
-													
-													
-												</div>
-												<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 form1">
-													<div class="form-group d-flex justify-center align-center col-md-4">
-														<label>Fecha inicio(<b class="text-danger">*</b>):</label>
-														<input type="date" class="form-control input-gral" id="Fechainicio" name="inicio">
-													</div>
-													<div class="form-group d-flex justify-center align-center col-md-4">
-														<label>Fecha fin(<b class="text-danger">*</b>):</label>
-														<input type="date" class="form-control input-gral" id="Fechafin" name="fin">
-													</div>
-													<div class="form-group  col-md-4">
-													<label>Tipo lote(<b class="text-danger">*</b>):</label>
-														<div class="row">
-															<div class="col-md-12">
-																	<div class="custom-control custom-radio custom-control-inline col-md-4">
-																	<input type="radio" id="customRadioInline4" value="1" name="tipoLote" class="custom-control-input radio_container">
-																	<label class="custom-control-label" for="customRadioInline4">Habitacional</label>
-																	</div>
-																	<div class="custom-control custom-radio custom-control-inline col-md-4">
-																	<input type="radio" id="customRadioInline6" value="2" name="tipoLote" class="custom-control-input radio_container">
-																	<label class="custom-control-label" for="customRadioInline6">Comercial</label>
-																	</div>
-																	<div class="custom-control custom-radio custom-control-inline col-md-4">
-																	<input type="radio" id="customRadioInline6" value="3" name="tipoLote" class="custom-control-input radio_container">
-																	<label class="custom-control-label" for="customRadioInline6">Ambos</label>
-																	</div>
-															</div>
-													
-														</div>
-																		
-													</div>
-												</div>
 											</div>
-											<div class="row rowCards">
-											</div>
+										</div>
 									</div>
-									<div class="text-right">
-									<button type="submit" class="btn btn-success">Guardar</button>
-									</div>
-                            </div>
-</form>
+								</div>
+							</div>
+							
+							<div class="row rowCards"></div>
+						</div>
+						
+						<div class="text-center">
+							<button type="submit" class="btn btn-success">Guardar</button>
 						</div>
 					</div>
-				</div>
+				</form>
 			</div>
 		</div>
-		<?php $this->load->view('template/footer_legend');?>
 	</div>
-	</div>
-	</div><!--main-panel close-->
-	<?php $this->load->view('template/footer');?>
+</div>
+</div>
+
+<?php $this->load->view('template/footer_legend');?>
+ <?php $this->load->view('template/footer');?>
      
 	<!--DATATABLE BUTTONS DATA EXPORT-->
 	<script src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>
@@ -180,7 +172,7 @@
 	<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
 
 	<script>
-					$('[data-toggle="tooltip"]').tooltip()
+		$('[data-toggle="tooltip"]').tooltip()
 
 		var url = "<?=base_url()?>";
 		var url2 = "<?=base_url()?>index.php/";
@@ -625,31 +617,39 @@ function PrintSelectDesc(id,index,indexGral){
 		function selectSuperficie(tipoSup){
 	document.getElementById("printSuperficie").innerHTML ='';
 	if(tipoSup == 1){
-		$('#printSuperficie').append(`	
-	<div class="form-group">
-	<input type="hidden" class="form-control" value="0" name="inicio">
+		$('#printSuperficie').append(`
+		<div class="form-group">
+		<div class="form-group col-md-12">
 		<input type="number" class="form-control input-gral" name="fin" placeholder="Mayor a">
-	</div>
-	`);
+		</div>
+
+		<div class="form-group col-md-0">
+		
+		<input type="hidden" class="form-control" value="0" name="inicio">
+
+		</div>
+		</div>`);
+
 	}else if(tipoSup == 2){
 		$('#printSuperficie').append(`<div class="row">
 		<div class="form-group col-md-6">
-			<input type="number" class="form-control input-gral" name="inicio" placeholder="Inicio">
+		<input type="number" class="form-control input-gral" name="inicio" placeholder="Inicio">
 		</div>
+
 		<div class="form-group col-md-6">
-			<input type="number" class="form-control input-gral" name="fin" placeholder="Fin">
+		<input type="number" class="form-control input-gral" name="fin" placeholder="Fin">
 		</div>
-		</div>
-	`);
+
+		</div>`);
+
 	}else if(tipoSup == 3){
 		$('#printSuperficie').append(`	
-	<div class="form-group col-md-6">
+		<div class="form-group col-md-6">
 		<input type="hidden" class="form-control" name="inicio" value="0">
-	</div>
-	<div class="form-group col-md-6">
+		</div>
+		<div class="form-group col-md-6">
 		<input type="hidden" class="form-control" name="fin" value="0">
-	</div>
-	`);
+		</div>`);
 	}	
 }
 /*function selectSuperficie(tipoSup,index){

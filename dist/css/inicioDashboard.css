@@ -210,8 +210,12 @@
   width: 10%;
 }
 
+.w-auto {
+  width: auto !important;
+}
+
 .h-100 {
-  height: 100%;
+  height: 100% !important;
 }
 
 .h-90 {
@@ -223,7 +227,7 @@
 }
 
 .h-70 {
-  height: 70%;
+  height: 70% !important;
 }
 
 .h-60 {
@@ -340,6 +344,10 @@
   display: flex;
 }
 
+.align-start {
+  align-items: flex-start;
+}
+
 .align-end {
   align-items: flex-end;
 }
@@ -435,6 +443,38 @@
 }
 
 /* END Estilos generales encabezado, datetime picker, calendar, input filtros, selects */
+.txt-lapisLazuli {
+  color: #22639B !important;
+}
+
+.txt-blueNCS {
+  color: #0089B7 !important;
+}
+
+.txt-viridianGreen {
+  color: #039590 !important;
+}
+
+.txt-tiffanyBlue {
+  color: #00ACB8 !important;
+}
+
+.txt-oceanGreen {
+  color: #4BBC8E !important;
+}
+
+.txt-caribbeanGreen {
+  color: #00CDA3 !important;
+}
+
+.txt-lightGreen {
+  color: #92E784 !important;
+}
+
+.txt-sunny {
+  color: #F9F871 !important;
+}
+
 .btn-a {
   border-radius: 25px !important;
   height: 37px !important;
@@ -1067,13 +1107,9 @@
   height: 450px;
 }
 
-#inicio .first-row .cardProspectosVig {
-  background-color: #1D3566;
-}
-
 #inicio .first-row .cardProspectosVig p {
   font-size: 12px;
-  color: white;
+  color: #191B1C;
 }
 
 #inicio .first-row .cardProspectosVig p span {
@@ -1082,7 +1118,7 @@
 }
 
 #inicio .first-row .cardProspectosVig .boxIcoProsp {
-  background-color: #ffffff3d;
+  background-color: #0089b73d;
   width: 25px;
   height: 25px;
   border-radius: 20px;
@@ -1090,11 +1126,11 @@
   align-items: center;
   justify-content: center;
   margin-right: 7px;
-  color: #ffffff;
+  color: #191B1C;
 }
 
 #inicio .first-row .cardProspectosVig .numberGraphic {
-  color: #ffffff;
+  color: #191B1C;
   font-weight: 600;
   font-size: 18px;
 }
@@ -1173,18 +1209,18 @@
   }
 }
 
-#beginDate {
-  background-color: #eaeaea;
-  border-radius: 27px 0 0 27px;
-  background-image: initial;
-  text-align: right;
+.beginDates {
+  background-color: #eaeaea !important;
+  border-radius: 27px 0 0 27px !important;
+  background-image: initial !important;
+  text-align: right !important;
 }
 
-#endDate {
-  background-color: #eaeaea;
-  border-radius: 0;
-  background-image: initial;
-  text-align: center;
+.endDates {
+  background-color: #eaeaea !important;
+  border-radius: 0 !important;
+  background-image: initial !important;
+  text-align: center !important;
 }
 
 .btn-fab-mini {
@@ -1199,6 +1235,5 @@
 }
 
 .dot {
-  color: aquamarine;
   font-size: 1.2rem;
 }

@@ -64,12 +64,14 @@ function desc(){
                     $id_gerente=$getLider[0]['id_gerente'];
                     $id_subdirector=$getLider[0]['id_subdirector'];
                     $id_regional=$getLider[0]['id_regional'];
-                }else if($objDatos['id_rol'] == 9){
+                }
+                else if($objDatos['id_rol'] == 9){
                     //Coordinador
                     $id_gerente=0;
                     $id_subdirector=$getLider[0]['id_subdirector'];
                     $id_regional=$getLider[0]['id_regional'];
-                }else if($objDatos['id_rol'] == 3){
+                }
+                else if($objDatos['id_rol'] == 3){
                     //Gerente
                     $id_gerente=0;
                     $id_subdirector=$getLider[0]['id_subdirector'];

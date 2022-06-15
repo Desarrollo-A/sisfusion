@@ -629,11 +629,9 @@
         };
 
         function cleanCommentsAsimilados() {
-            $('#seeInformationModalAsimilados').modal('toggle');
-            var myCommentsList = document.getElementById('comments-list-asimilados');
+            $('#seeInformationModalAsimilados').modal('hide');
             var cancelacion = document.getElementsByClassName('cancelacion');
             $('.cancelacion').html('');
-            myCommentsList.innerHTML = '';
             cancelacion.innerHTML = '';
         }
 

@@ -1162,7 +1162,8 @@ class Asesor_model extends CI_Model
                 l.idLote, l.nombreLote, CONCAT(solicitante.nombre,' ', solicitante.apellido_paterno,' ', solicitante.apellido_materno) as solicitante, ec.estatus,
                 ec.id_evidencia, cl.id_cliente, ec.evidencia, ec.fecha_modificado, cl.fechaApartado, s.nombre plaza,
                 he1.fecha_creacion fechaValidacionGerente, he2.fecha_creacion fechaValidacionCobranza, he3.fecha_creacion fechaValidacionContraloria,
-                he10.fecha_creacion fechaRechazoCobranza, he20.fecha_creacion fechaRechazoContraloria, he200.comentario_autorizacion, (CASE cn.tipo WHEN 1 THEN 11 WHEN 2 THEN 22 WHEN 3 THEN 33 ELSE 1 END) rowType, cn.tipo,
+                he10.fecha_creacion fechaRechazoCobranza, he20.fecha_creacion fechaRechazoContraloria, he200.comentario_autorizacion, 
+                (CASE cn.tipo WHEN 1 THEN 11 WHEN 2 THEN 22 WHEN 3 THEN 33 WHEN 4 THEN 44 WHEN 5 THEN 55 ELSE 1 END) rowType, cn.tipo,
                 cm.id_coment, CASE WHEN (ec.comentario_autorizacion LIKE '%null%' OR CAST(ec.comentario_autorizacion AS VARCHAR(500)) = '' OR ec.comentario_autorizacion IS NULL) 
                 THEN 'Comentario no especificado' ELSE ec.comentario_autorizacion END lastComment, ISNULL(oxc.nombre, 'Sin especificar') lugarProspeccion
                 FROM lotes l
@@ -1189,7 +1190,8 @@ class Asesor_model extends CI_Model
                 l.idLote, l.nombreLote, CONCAT(solicitante.nombre,' ', solicitante.apellido_paterno,' ', solicitante.apellido_materno) as solicitante, ec.estatus,
                 ec.id_evidencia, cl.id_cliente, ec.evidencia, ec.fecha_modificado, cl.fechaApartado, s.nombre plaza,
                 he1.fecha_creacion fechaValidacionGerente, he2.fecha_creacion fechaValidacionCobranza, he3.fecha_creacion fechaValidacionContraloria,
-                he10.fecha_creacion fechaRechazoCobranza, he20.fecha_creacion fechaRechazoContraloria, he200.comentario_autorizacion, (CASE cn.tipo WHEN 1 THEN 11 WHEN 2 THEN 22 WHEN 3 THEN 33 END) rowType, cn.tipo,
+                he10.fecha_creacion fechaRechazoCobranza, he20.fecha_creacion fechaRechazoContraloria, he200.comentario_autorizacion, 
+                (CASE cn.tipo WHEN 1 THEN 11 WHEN 2 THEN 22 WHEN 3 THEN 33 WHEN 4 THEN 44 WHEN 5 THEN 55 ELSE 1 END) rowType, cn.tipo,
                 cm.id_coment, CASE WHEN (ec.comentario_autorizacion LIKE '%null%' OR CAST(ec.comentario_autorizacion AS VARCHAR(500)) = '' OR ec.comentario_autorizacion IS NULL) 
                 THEN 'Comentario no especificado' ELSE ec.comentario_autorizacion END lastComment, ISNULL(oxc.nombre, 'Sin especificar') lugarProspeccion
                 FROM lotes l
@@ -1234,7 +1236,7 @@ class Asesor_model extends CI_Model
 				NULL id_evidencia, cl.id_cliente, NULL evidencia, NULL fecha_modificado, cl.fechaApartado, s.nombre plaza,
 				NULL fechaValidacionGerente, NULL fechaValidacionCobranza, NULL fechaValidacionContraloria,
                 NULL fechaRechazoCobranza, NULL fechaRechazoContraloria, 'Sin especificar' comentario_autorizacion, 
-				(CASE cn.tipo WHEN 1 THEN 11 WHEN 2 THEN 22 WHEN 3 THEN 33 WHEN 4 THEN 44 WHEN 5 THEN 55 END) rowType, 
+				(CASE cn.tipo WHEN 1 THEN 11 WHEN 2 THEN 22 WHEN 3 THEN 33 WHEN 4 THEN 44 WHEN 5 THEN 55 ELSE 1 END) rowType, 
 				NULL tipo, NULL id_coment, 'Sin especificar' lastComment, ISNULL(oxc.nombre, 'Sin especificar') lugarProspeccion
 				FROM lotes l
                 INNER JOIN clientes cl ON l.idLote = cl.idLote AND cl.status = 1
@@ -1363,11 +1365,8 @@ class Asesor_model extends CI_Model
         ec.idLote, l.nombreLote, CONCAT(solicitante.nombre,' ', solicitante.apellido_paterno,' ', solicitante.apellido_materno) as solicitante, ec.estatus,
         ec.id_evidencia, cl.id_cliente, ec.evidencia, ec.fecha_modificado, cl.fechaApartado, s.nombre plaza,
         he1.fecha_creacion fechaValidacionGerente, he2.fecha_creacion fechaValidacionCobranza, he3.fecha_creacion fechaValidacionContraloria,
-        he10.fecha_creacion fechaRechazoCobranza, he20.fecha_creacion fechaRechazoContraloria, he200.comentario_autorizacion, (CASE cn.tipo WHEN 1 THEN 11 WHEN 
-        2 
-        THEN 
-        (CASE WHEN (asesor.id_sede = '2' OR asesor.id_sede = '3' OR asesor.id_sede = '4' OR asesor.id_sede = '6') THEN 1 ELSE 22 END)
-        ELSE 1 END) rowType
+        he10.fecha_creacion fechaRechazoCobranza, he20.fecha_creacion fechaRechazoContraloria, he200.comentario_autorizacion, 
+        (CASE cn.tipo WHEN 1 THEN 11 WHEN 2 THEN 22 WHEN 3 THEN 33 WHEN 4 THEN 44 WHEN 5 THEN 55 ELSE 1 END) rowType
         FROM evidencia_cliente ec
         INNER JOIN clientes cl ON ec.idCliente = cl.id_cliente AND cl.lugar_prospeccion IN (6, 29) AND cl.status = 1
         INNER JOIN usuarios asesor ON cl.id_asesor = asesor.id_usuario
@@ -1390,10 +1389,8 @@ class Asesor_model extends CI_Model
         ec.idLote, l.nombreLote, CONCAT(solicitante.nombre,' ', solicitante.apellido_paterno,' ', solicitante.apellido_materno) as solicitante, ec.estatus,
         ec.id_evidencia, cl.id_cliente, ec.evidencia, ec.fecha_modificado, cl.fechaApartado, s.nombre plaza,
         he1.fecha_creacion fechaValidacionGerente, he2.fecha_creacion fechaValidacionCobranza, he3.fecha_creacion fechaValidacionContraloria,
-        he10.fecha_creacion fechaRechazoCobranza, he20.fecha_creacion fechaRechazoContraloria, he200.comentario_autorizacion, (CASE cn.tipo WHEN 1 THEN 11 WHEN 2 
-        THEN 
-        (CASE WHEN (asesor.id_sede = '2' OR asesor.id_sede = '3' OR asesor.id_sede = '4' OR asesor.id_sede = '6') THEN 1 ELSE 22 END) 
-        END) rowType
+        he10.fecha_creacion fechaRechazoCobranza, he20.fecha_creacion fechaRechazoContraloria, he200.comentario_autorizacion, 
+        (CASE cn.tipo WHEN 1 THEN 11 WHEN 2 THEN 22 WHEN 3 THEN 33 WHEN 4 THEN 44 WHEN 5 THEN 55 ELSE 1 END) rowType
         FROM evidencia_cliente ec
         INNER JOIN clientes cl ON ec.idCliente = cl.id_cliente AND cl.lugar_prospeccion NOT IN (6, 29) AND cl.status = 1
         INNER JOIN usuarios asesor ON cl.id_asesor = asesor.id_usuario
@@ -1631,6 +1628,9 @@ class Asesor_model extends CI_Model
 
     }
 
+    public function getAutorizaciones($idLote){
+        $query = $this->db->query("SELECT estatus FROM autorizaciones WHERE idLote = ".$idLote.";");
+    }
     function getlotesRechazados(){
         $id_currentUser = $this->session->userdata('id_usuario');
         $lider_currentUser = $this->session->userdata('id_lider');
@@ -1715,4 +1715,21 @@ class Asesor_model extends CI_Model
         ORDER BY cl.id_Cliente ASC");
         return $query->result_array();
     }
+    function getInfoCFByCl($id_cliente){
+        $query = $this->db->query("
+        SELECT * FROM corridas_financieras cf
+        INNER JOIN lotes l ON l.idLote = cf.id_lote
+        INNER JOIN clientes cl ON l.idCliente = cl.id_cliente
+        WHERE l.idCliente = $id_cliente AND cf.status=1;
+        ");
+        return $query->row();
+    }
+    function getDescsByCF($id_corrida){
+        $query = $this->db->query("SELECT id_pf, porcentaje, precio_t, precio_m, ahorro, idLote, co.descripcion as aplicable_a, pf.id_corrida  FROM precios_finales pf 
+        INNER JOIN condiciones co ON pf.id_condicion = co.id_condicion
+        WHERE id_corrida=".$id_corrida);
+        return $query->result_array();
+    }
+
+
 }

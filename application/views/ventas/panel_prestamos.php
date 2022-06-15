@@ -147,11 +147,11 @@
 											<table class="table-striped table-hover" id="tabla_prestamos" name="tabla_prestamos">
 												<thead>
 													<tr>
-														<th>ID USUARIO</th>
+														<th>ID</th>
 														<th>USUARIO</th>
 														<th>MONTO</th>
-														<th>NÚM. PAGOS</th>
-														<th>PAGO CORRESPONDIENTE</th>
+														<th>N°</th>
+														<th>PAGO CORRESP.</th>
 														<th>ABONADO</th>
 														<th>PENDIENTE</th>
 														<th>COMENTARIO</th>
