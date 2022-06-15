@@ -4685,7 +4685,7 @@ function insertar_descuentoEsp($usuarioid,$monto,$ide_comision,$comentario,$usua
         $respuesta = $this->db->query("INSERT INTO pago_comision_ind(id_comision, id_usuario, abono_neodata, fecha_abono, fecha_pago_intmex, pago_neodata, estatus, modificado_por, comentario, descuento_aplicado,abono_final,aply_pago_intmex) VALUES ($ide_comision, $usuarioid, $monto, GETDATE(), GETDATE(), $pago_neodata, $estatus, $usuario, 'DESCUENTO ', 1 ,null, null)");
         $insert_id = $this->db->insert_id();
     
-        $respuesta = $this->db->query("INSERT INTO historial_comisiones VALUES ($insert_id, $usuario, GETDATE(), 1, 'A ESTA COMISION SE LE APLICO UN DESCUENTO QUEDANDO ESTA CANTIDAD RESTANTE, MOTIVO DESCUENTO: ".$comentario."')");
+        $respuesta = $this->db->query("INSERT INTO historial_comisiones VALUES ($insert_id, $usuario, GETDATE(), 1, 'SE APLICÓ UN DESCUENTO, MOTIVO DESCUENTO: ".$comentario."')");
     
     
         if (! $respuesta ) {
@@ -4700,7 +4700,7 @@ function insertar_descuentoEsp($usuarioid,$monto,$ide_comision,$comentario,$usua
         $estatus =4;
             
             if($monto == 0){
-                $respuesta = $this->db->query("UPDATE pago_comision_ind SET estatus = 16, modificado_por= $usuario, fecha_pago_intmex = GETDATE(), fecha_abono = GETDATE(), comentario='DESCUENTO' WHERE id_pago_i=$id_pago_i");
+                $respuesta = $this->db->query("UPDATE pago_comision_ind SET estatus = 16, modificado_por= $usuario, fecha_pago_intmex = GETDATE(), fecha_abono = GETDATE(), comentario='DESCUENTO',descuento_aplicado=1 WHERE id_pago_i=$id_pago_i");
                 $respuesta = $this->db->query("INSERT INTO historial_comisiones VALUES ($id_pago_i, $usuario, GETDATE(), 1, 'MOTIVO DESCUENTO: ".$comentario."')");
     
             }else{
@@ -8718,7 +8718,7 @@ return $query->result();
         INNER JOIN pago_comision_ind pci ON pci.id_pago_i = rpp.id_pago_i AND pci.estatus IN(18,19,20,21,22) AND pci.descuento_aplicado = 1
         INNER JOIN comisiones c ON c.id_comision = pci.id_comision
         INNER JOIN lotes l ON l.idLote = c.id_lote
-        INNER JOIN historial_comisiones hc ON hc.id_pago_i = rpp.id_pago_i and hc.comentario like 'DESCUENTO POR%' and hc.estatus=1
+        INNER JOIN historial_comisiones hc ON hc.id_pago_i = rpp.id_pago_i and (hc.comentario like 'DESCUENTO POR%' or hc.comentario like ', POR MOTIVO DE PRESTAMO%') and hc.estatus=1
         WHERE pa.id_prestamo = $idPrestamo
         ORDER BY np ASC");
         return $result->result_array();
@@ -8924,4 +8924,6 @@ function lista_estatus_descuentos(){
             ORDER BY u.nombre");
         return $query->result_array();
     }
+
+ 
 }
