@@ -9,7 +9,7 @@ class PaquetesCorrida extends CI_Controller
         $this->load->library(array('session', 'form_validation', 'get_menu'));
         $this->load->helper(array('url', 'form'));
         $this->load->database('default');
-        $this->programacion = $this->load->database('programacion', TRUE);
+        $this->programacion = $this->load->database('default', TRUE);
         //$this->validateSession();
     }
 
@@ -59,7 +59,7 @@ class PaquetesCorrida extends CI_Controller
         $id_sede = $this->input->post("sede");
         $residenciales = $this->input->post("residencial[]");
         $superficie = $this->input->post("superficie");
-        /** */
+        /***/
         $inicio = $this->input->post("inicio");
         $fin = $this->input->post("fin");
         //Superficie
@@ -85,9 +85,36 @@ class PaquetesCorrida extends CI_Controller
         */
         $TipoLote = $this->input->post("tipoLote");
 
-        for ($i=1; $i < $index ; $i++) { 
+        for ($i=1; $i <= $index ; $i++) { 
             //VALIDAR SI EXISTE PAQUETE
             if(isset($_POST["descripcion_".$i])){
+                echo $_POST["descripcion_".$i];
+                echo "<br>";
+                //1.- DESCUENTO AL TOTAL
+                  if(isset($_POST[$i."_0_ListaDescuentosTotal_"])){
+                    print_r($_POST[$i."_0_ListaDescuentosTotal_"]);
+                    echo "<br>";
+                  }
+                  if(isset($_POST[$i."_1_ListaDescuentosEnganche_"])){
+                    print_r($_POST[$i."_1_ListaDescuentosEnganche_"]);
+                    echo "<br>";
+
+                  }
+                  if(isset($_POST[$i."_2_ListaDescuentosM2_"])){
+                    print_r($_POST[$i."_2_ListaDescuentosM2_"]);
+                    echo "<br>";
+
+                  }
+                  if(isset($_POST[$i."_3_ListaDescuentosBono_"])){
+                    print_r($_POST[$i."_3_ListaDescuentosBono_"]);
+                    echo "<br>";
+
+                  }
+                  
+                    
+                //2.- DESCUENTO AL ENGANCHE
+                //3.- DESCUENTO POR M2
+                //4.- DESCUENTO POR BONO
 
             }
         }

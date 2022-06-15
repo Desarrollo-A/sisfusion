@@ -347,20 +347,46 @@ $.post('getResidencialesList', function(data) {
                 $("#tipo_descuento_"+indexNext).append($('<option>').val("default").text("Seleccione una opción"));
 				console.log(data.length);
                 var len = data.length;
+
+				$('#checks_'+indexNext).append(`
+				<div class="row">
+						<div class="col-md-2">
+						<b>Orden</b>
+						</div>
+						<div class="col-md-4">
+						<b>Descuento a</b>
+						</div>
+						<div class="col-md-6">
+						<b>Descuentos</b>
+						</div>
+					</div>
+				`);
 				
                 for( var i = 0; i<len; i++){
                     var id = data[i]['id_tcondicion'];
                     var descripcion = data[i]['descripcion'];
                     $("#tipo_descuento_"+indexNext).append(`<option value='${id}'>${descripcion}</option>`);
 					$("#checks_"+indexNext).append(`
+					
 					<div class="row" >
+					<div class="col-md-2">
+						<div class="form-group">
+							<select class="select-gral-number text-center" disabled id="orden_${indexNext}_${i}" onchange="ValidarOrden(${indexNext},${i})" >
+							<option value=""></option>
+							<option value="1"><b>1</b></option>
+							<option value="2">2</option>
+							<option value="3">3</option>
+							<option value="4">4</option>
+							</select>
+						</div>
+					</div>
 						<div class="col-md-4" >
-								<div class="form-check form-check-inline">
+								<div class="form-check form-check-inline check-padding">
 								<input class="form-check-input" type="checkbox" onclick="PrintSelectDesc(${id},${i},${indexNext})" id="inlineCheckbox1_${indexNext}_${i}" value="${id}">
 								<label class="form-check-label" for="inlineCheckbox1">${descripcion}</label>
 								</div>
 						</div>
-						<div class="col-md-8"  id="selectDescuentos_${indexNext}_${i}">
+						<div class="col-md-6"  id="selectDescuentos_${indexNext}_${i}">
 						</div>
 					</div>
 					`);
@@ -382,6 +408,21 @@ $.post('getResidencialesList', function(data) {
 			//}
 		}
 
+
+		function ValidarOrden(indexN,i){
+			let seleccionado = $(`#orden_${indexN}_${i}`).val();	
+			for (let m = 0; m < 4; m++) {
+				if(m != i){
+					if( $(`#orden_${indexN}_${m}`).val() == seleccionado && seleccionado != ""){
+						$(`#orden_${indexN}_${i}`).val("");
+						alerts.showNotification("top", "left", "Este número ya se ha seleccionado.", "warning");
+					}
+						
+				}
+			}
+
+		}
+
 function PrintSelectDesc(id,index,indexGral){
 	let tdescuento=0;
 	let id_condicion=0;
@@ -389,15 +430,17 @@ function PrintSelectDesc(id,index,indexGral){
 	let apply=0;
 
 
+
 	if(id == 1){
 		if($(`#inlineCheckbox1_${indexGral}_${index}`).is(':checked')){	
+			$(`#orden_${indexGral}_${index}`).prop( "disabled", false );
 			tdescuento=1;
 			id_condicion=1;
 			apply=1;			
 			///TOTAL DE LOTE
 			$(`#selectDescuentos_${indexGral}_${index}`).append(`
 		<div class="form-group d-flex justify-center align-center">
-		<label>Descuento al total(<b class="text-danger">*</b>):</label>
+		<label>Descuento(<b class="text-danger">*</b>):</label>
 		<select id="ListaDescuentosTotal_${indexGral}_${index}"  name="${indexGral}_${index}_ListaDescuentosTotal_[]" multiple="multiple" class="form-control"  required data-live-search="true"></select>
 		</div>`);
 		$.post('getDescuentosPorTotal',{ tdescuento: tdescuento, id_condicion: id_condicion,eng_top:eng_top,apply:apply }, function(data) {
@@ -410,7 +453,7 @@ function PrintSelectDesc(id,index,indexGral){
 						$(`#ListaDescuentosTotal_${indexGral}_${index}`).append(`<option value='${id}'>${name}%</option>`);
 					}
 					if(len<=0){
-						$(`#ListaDescuentosTotal_${indexGral}_${index}`).append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
+					$(`#ListaDescuentosTotal_${indexGral}_${index}`).append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
 					}
 					$(`#ListaDescuentosTotal_${indexGral}_${index}`).selectpicker('refresh');
 				}, 'json');	
@@ -425,16 +468,19 @@ function PrintSelectDesc(id,index,indexGral){
 				});
 	
 		}else{
+			$(`#orden_${indexGral}_${index}`).val("");
+			$(`#orden_${indexGral}_${index}`).prop( "disabled", true );
 			document.getElementById(`selectDescuentos_${indexGral}_${index}`).innerHTML = "";
 		}
 	}else if(id == 2){
 		if( $(`#inlineCheckbox1_${indexGral}_${index}`).is(':checked') ) {	
+			$(`#orden_${indexGral}_${index}`).prop( "disabled", false );
 		tdescuento=2;
 		id_condicion=2;		
 		///TOTAL DE ENGANCHE
 		$(`#selectDescuentos_${indexGral}_${index}`).append(`
 	<div class="form-group d-flex justify-center align-center">
-	<label>Descuento al enganche(<b class="text-danger">*</b>):</label>
+	<label>Descuento(<b class="text-danger">*</b>):</label>
 	<select id="ListaDescuentosEnganche_${indexGral}_${index}"  name="${indexGral}_${index}_ListaDescuentosEnganche_[]" multiple="multiple" class="form-control"  required data-live-search="true"></select>
 	</div>`);
 	$(`#ListaDescuentosEnganche_${indexGral}_${index}`).select2({containerCssClass: "select-gral",dropdownCssClass: "custom-dropdown",	});
@@ -462,11 +508,15 @@ function PrintSelectDesc(id,index,indexGral){
 					$(this).trigger("change");
 				});
 		}else{
+			$(`#orden_${indexGral}_${index}`).val("");
+			$(`#orden_${indexGral}_${index}`).prop( "disabled", true );
 			document.getElementById(`selectDescuentos_${indexGral}_${index}`).innerHTML = "";
 		}
 
 	}else if(id == 5){
-		if( $(`#inlineCheckbox1_${indexGral}_${index}`).is(':checked') ) {	
+		if( $(`#inlineCheckbox1_${indexGral}_${index}`).is(':checked') ) {
+			$(`#orden_${indexGral}_${index}`).prop( "disabled", false );
+	
 		tdescuento=1;
 		id_condicion=4;
 		apply=1;			
@@ -474,7 +524,7 @@ function PrintSelectDesc(id,index,indexGral){
 		///TOTAL DE ENGANCHE
 		$(`#selectDescuentos_${indexGral}_${index}`).append(`
 	<div class="form-group d-flex justify-center align-center">
-	<label>Descuento por m2(<b class="text-danger">*</b>):</label>
+	<label>Descuento(<b class="text-danger">*</b>):</label>
 	<select id="ListaDescuentosM2_${indexGral}_${index}"  name="${indexGral}_${index}_ListaDescuentosM2_[]" multiple="multiple" class="form-control"  required data-live-search="true"></select>
 	</div>`);
 	$.post('getDescuentosPorTotal',{ tdescuento: tdescuento, id_condicion: id_condicion,eng_top:eng_top,apply:apply }, function(data) {
@@ -501,12 +551,16 @@ function PrintSelectDesc(id,index,indexGral){
 					$(this).trigger("change");
 				});
 		}else{
+			$(`#orden_${indexGral}_${index}`).val("");
+			$(`#orden_${indexGral}_${index}`).prop( "disabled", true );
 			document.getElementById(`selectDescuentos_${indexGral}_${index}`).innerHTML = "";
 		}
 
 	}
 	else if(id == 12){
 		if( $(`#inlineCheckbox1_${indexGral}_${index}`).is(':checked') ) {	
+			$(`#orden_${indexGral}_${index}`).prop( "disabled", false );
+
 		tdescuento=1;
 		id_condicion=12;
 		eng_top=1;
@@ -515,25 +569,27 @@ function PrintSelectDesc(id,index,indexGral){
 		///TOTAL DE ENGANCHE
 		$(`#selectDescuentos_${indexGral}_${index}`).append(`
 	<div class="form-group d-flex justify-center align-center">
-	<label>Descuento por bono(<b class="text-danger">*</b>):</label>
-	<select id="ListaDescuentosEnganche_${indexGral}_${index}"  name="${indexGral}_${index}_ListaDescuentosEnganche_[]" multiple="multiple" class="form-control"  required data-live-search="true"></select>
+	<label>Descuento(<b class="text-danger">*</b>):</label>
+	<select id="ListaDescuentosBono_${indexGral}_${index}"  name="${indexGral}_${index}_ListaDescuentosBono_[]" multiple="multiple" class="form-control"  required data-live-search="true"></select>
 	</div>`);
-	$(`#ListaDescuentosEnganche_${indexGral}_${index}`).select2({containerCssClass: "select-gral",dropdownCssClass: "custom-dropdown",tags: true});
+	$(`#ListaDescuentosBono_${indexGral}_${index}`).select2({containerCssClass: "select-gral",dropdownCssClass: "custom-dropdown",tags: true});
 	$.post('getDescuentosPorTotal',{ tdescuento: tdescuento, id_condicion: id_condicion,eng_top:eng_top,apply:apply }, function(data) {
-                $(`#ListaDescuentosEnganche_${indexGral}_${index}`).append($('<option disabled>').val("default").text("Seleccione una opción"));
+                $(`#ListaDescuentosBono_${indexGral}_${index}`).append($('<option disabled>').val("default").text("Seleccione una opción"));
 				console.log(data.length);
                 var len = data.length;
                 for( var i = 0; i<len; i++){
                     var name = data[i]['porcentaje'];
                     var id = data[i]['id_descuento'];
-                    $(`#ListaDescuentosEnganche_${indexGral}_${index}`).append(`<option value='${id}'>$${formatMoney(name)}</option>`);
+                    $(`#ListaDescuentosBono_${indexGral}_${index}`).append(`<option value='${id}'>$${formatMoney(name)}</option>`);
                 }
                 if(len<=0){
-                    $(`#ListaDescuentosEnganche_${indexGral}_${index}`).append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
+                    $(`#ListaDescuentosBono_${indexGral}_${index}`).append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
                 }
-                $(`#ListaDescuentosEnganche_${indexGral}_${index}`).selectpicker('refresh');
+                $(`#ListaDescuentosBono_${indexGral}_${index}`).selectpicker('refresh');
             }, 'json');
 		}else{
+			$(`#orden_${indexGral}_${index}`).val("");
+			$(`#orden_${indexGral}_${index}`).prop( "disabled", true );
 			document.getElementById(`selectDescuentos_${indexGral}_${index}`).innerHTML = "";
 		}
 

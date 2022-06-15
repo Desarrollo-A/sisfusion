@@ -6340,7 +6340,7 @@ function update_estatus_pausaM($id_pago_i, $obs) {
                    $respuesta = 1;
                }else{
                    $comentario = 'Se regresó esta factura que correspondo al pago con id '.$datos[$i]['id_comision'].' con el monto global de '.$datos[$i]['total'].' por motivo de: '.$obs.' ';
-                   $response = $this->db->query("UPDATE facturas set total=0,bandera=1,descripcion='$comentario'  where id_factura=".$datos[$i]['id_factura']."");
+                   $response = $this->db->query("UPDATE facturas set total=0,id_comision=0,bandera=1,descripcion='$comentario'  where id_factura=".$datos[$i]['id_factura']."");
                   $respuesta = $this->db->query("INSERT INTO  historial_comisiones VALUES (".$datos[$i]['id_comision'].", ".$this->session->userdata('id_usuario').", GETDATE(), 1, '".$comentario."')");
                }
    

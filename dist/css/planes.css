@@ -1109,8 +1109,22 @@
   height: 100%;
 }
 
+.rowCards .boxCard .myCard .check-padding {
+  padding-top: 30px;
+}
+
 .rowCards .boxCard .myCard .card-header {
   padding: 5px 20px 0px !important;
+}
+
+.rowCards .boxCard .myCard .select-gral-number {
+  border-radius: 27px !important;
+  height: 45px;
+  -webkit-border-radius: 27px !important;
+  -moz-border-radius: 27px !important;
+  -ms-border-radius: 27px !important;
+  -o-border-radius: 27px !important;
+  width: 100%;
 }
 
 .rowCards .boxCard .myCard .btn-circle {

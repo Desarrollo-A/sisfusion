@@ -50,8 +50,21 @@
         .myCard{
         height: 100%;
         
+        .check-padding{
+          padding-top: 30px;
+        }
           .card-header{
             padding: 5px 20px 0px !important;
+          }
+
+          .select-gral-number{
+            border-radius: 27px !important;
+        height: 45px;
+        -webkit-border-radius: 27px !important;
+        -moz-border-radius: 27px !important;
+        -ms-border-radius: 27px !important;
+        -o-border-radius: 27px !important;
+            width: 100%;
           }
         
      
