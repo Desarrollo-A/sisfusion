@@ -13,10 +13,10 @@
 		?>
 		
 <!-- Modals -->
-<div class="modal fade modal-alertas" id="myModalEspera" role="dialog">
+<div class="modal fade modal-alertas" id="ModalMsi" role="dialog">
 	<div class="modal-dialog modal-sm">
 		<div class="modal-content">
-			<form method="post" id="form_espera_uno">
+			<form method="post" id="formMsi">
 				<div class="modal-body"></div>
 				<div class="modal-footer"></div>
 			</form>
@@ -386,17 +386,11 @@ $.post('getResidencialesList', function(data) {
 						</div>
 					</div>
 				`);
-				
-                for( var i = 0; i<len; i++){
-                    var id = data[i]['id_tcondicion'];
-                    var descripcion = data[i]['descripcion'];
-                    $("#tipo_descuento_"+indexNext).append(`<option value='${id}'>${descripcion}</option>`);
-					$("#checks_"+indexNext).append(`
-					
-					<div class="row" >
-					<div class="col-md-2">
+				/**
+				 * 
+				 * <div class="col-md-2">
 						<div class="form-group">
-							<select class="select-gral-number text-center" disabled id="orden_${indexNext}_${i}" onchange="ValidarOrden(${indexNext},${i})" >
+							<select class="select-gral-number text-center" name="${indexNext}_${i}_orden" disabled id="orden_${indexNext}_${i}" onchange="ValidarOrden(${indexNext},${i})" >
 							<option value=""></option>
 							<option value="1"><b>1</b></option>
 							<option value="2">2</option>
@@ -405,13 +399,22 @@ $.post('getResidencialesList', function(data) {
 							</select>
 						</div>
 					</div>
+				 */
+                for( var i = 0; i<len; i++){
+                    var id = data[i]['id_tcondicion'];
+                    var descripcion = data[i]['descripcion'];
+                    $("#tipo_descuento_"+indexNext).append(`<option value='${id}'>${descripcion}</option>`);
+					$("#checks_"+indexNext).append(`
+					
+					<div class="row" >
+					
 						<div class="col-md-4" >
 								<div class="form-check form-check-inline check-padding">
 								<input class="form-check-input" type="checkbox" onclick="PrintSelectDesc(${id},${i},${indexNext})" id="inlineCheckbox1_${indexNext}_${i}" value="${id}">
 								<label class="form-check-label" for="inlineCheckbox1">${descripcion}</label>
 								</div>
 						</div>
-						<div class="col-md-6"  id="selectDescuentos_${indexNext}_${i}">
+						<div class="col-md-8"  id="selectDescuentos_${indexNext}_${i}">
 						</div>
 					</div>
 					`);
@@ -448,6 +451,90 @@ $.post('getResidencialesList', function(data) {
 
 		}
 
+		function validarMsi(indexN,i){
+			let valorIngresado = $(`#input_msi_${indexN}_${i}`).val();
+			if(valorIngresado < 1){
+				$(`#btn_save_${indexN}_${i}`).prop( "disabled", true );
+			}else{
+				$(`#btn_save_${indexN}_${i}`).prop( "disabled", false );
+			}
+		}
+		function ModalMsi(indexN,i,select,id,text){
+		
+
+			const Modalbody = $('#ModalMsi .modal-body');
+			const Modalfooter = $('#ModalMsi .modal-footer');
+			Modalbody.html('');
+			Modalfooter.html('');
+			Modalbody.append(`
+				<h4>¿Este descuento tiene meses sin intereses?</h4>
+				<div class="row">
+				<div class="col-md-12">
+				<label>Cantidad</label>
+				</div>
+				<div col-md-12>
+					<div class="form-group">
+					<input type="number" onkeyup="validarMsi(${indexN},${i})" class="input-gral" id="input_msi_${indexN}_${i}">
+					</div>
+				</div>
+				</div>
+
+			`);
+			Modalbody.append(`
+			<div class="row">
+				<div class="col-md-6">
+				<input type="button" class="btn btn-success"  disabled onclick="AddMsi(${indexN},${i},'${select}',${id},${text});" name="disper_btn"  id="btn_save_${indexN}_${i}" value="GUARDAR">
+				</div>
+				<div class="col-md-6">
+				<input type="button" class="btn btn-danger" data-dismiss="modal" value="CANCELAR">
+				</div>
+			</div>`);
+			$("#ModalMsi").modal();
+		}
+
+		function AddMsi(indexN,i,select,id,text){
+			console.log(id)
+			console.log(text)
+			console.log(select)
+			$(`#${select}${indexN}_${i}`).on("option:selected", function (evt){
+			console.log('eeeeeeeeeeeeeeeeeeeeeeeeeeeeeee');
+
+					var element = evt.params.data.element;
+					var $element = $(element);
+					$element.detach();
+					$(this).append($element);
+					console.log('eeeeeeeeeeeeeeeeeeeeeeeeeeeeeee');
+					console.log($element[0]);
+					console.log('eeeeeeeeeeeeeeeeeeeeeeeeeeeeeee');
+					$(this).trigger("change");
+					console.log('zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz');
+					console.log($element[0].value);
+					console.log('zzzzzzzzzzzzzzzzzzzzzzzzzzzzzz');
+					console.log($element[0].label);
+
+				});
+			let valorMsi = $(`#input_msi_${indexN}_${i}`).val();
+		let idDescuentoSeleccionado = $(`#${select}${indexN}_${i} option:selected`).val();
+		let TextDescuentoSeleccionado = $(`#${select}${indexN}_${i} option:selected`).text();
+		console.log(idDescuentoSeleccionado);
+		console.log(TextDescuentoSeleccionado);
+		console.log($(`#${select}${indexN}_${i}`).select2('val'));
+		console.log('------------------------');
+		//$(`#ListaDescuentosTotal_${indexN}_${i}`).data();
+		//$(`#ListaDescuentosTotal_${indexN}_${i}`).find('data-select2-id:25').attr('custom-attribute');//(`${text} + ${valorMsi} MSI `);
+		//console.log($(`#ListaDescuentosTotal_${indexN}_${i}`).on('select2:selected').text('454'));
+		CloseModalMsi();
+		
+		}
+
+
+		function CloseModalMsi(){
+			const Modalbody = $('#ModalMsi .modal-body');
+			const Modalfooter = $('#ModalMsi .modal-footer');
+			Modalbody.html('');
+			Modalfooter.html('');
+			$("#ModalMsi").modal('toggle');
+		}
 function PrintSelectDesc(id,index,indexGral){
 	let tdescuento=0;
 	let id_condicion=0;
@@ -455,7 +542,7 @@ function PrintSelectDesc(id,index,indexGral){
 	let apply=0;
 
 
-
+//onchange="ModalMsi(${indexGral},${index},'ListaDescuentosTotal_')"
 	if(id == 1){
 		if($(`#inlineCheckbox1_${indexGral}_${index}`).is(':checked')){	
 			$(`#orden_${indexGral}_${index}`).prop( "disabled", false );
@@ -466,7 +553,7 @@ function PrintSelectDesc(id,index,indexGral){
 			$(`#selectDescuentos_${indexGral}_${index}`).append(`
 		<div class="form-group d-flex justify-center align-center">
 		<label>Descuento(<b class="text-danger">*</b>):</label>
-		<select id="ListaDescuentosTotal_${indexGral}_${index}"  name="${indexGral}_${index}_ListaDescuentosTotal_[]" multiple="multiple" class="form-control"  required data-live-search="true"></select>
+		<select id="ListaDescuentosTotal_${indexGral}_${index}"   name="${indexGral}_${index}_ListaDescuentosTotal_[]" multiple="multiple" class="form-control"  required data-live-search="true"></select>
 		</div>`);
 		$.post('getDescuentosPorTotal',{ tdescuento: tdescuento, id_condicion: id_condicion,eng_top:eng_top,apply:apply }, function(data) {
 					$(`#ListaDescuentosTotal_${indexGral}_${index}`).append($('<option disabled>').val("default").text("Seleccione una opción"));
@@ -475,21 +562,40 @@ function PrintSelectDesc(id,index,indexGral){
 					for( var i = 0; i<len; i++){
 						var name = data[i]['porcentaje'];
 						var id = data[i]['id_descuento'];
-						$(`#ListaDescuentosTotal_${indexGral}_${index}`).append(`<option value='${id}'>${name}%</option>`);
+						$(`#ListaDescuentosTotal_${indexGral}_${index}`).append(`<option value='${id}' label="${name}">${name}%</option>`);
 					}
 					if(len<=0){
 					$(`#ListaDescuentosTotal_${indexGral}_${index}`).append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
 					}
 					$(`#ListaDescuentosTotal_${indexGral}_${index}`).selectpicker('refresh');
 				}, 'json');	
-				$(`#ListaDescuentosTotal_${indexGral}_${index}`).select2({containerCssClass: "select-gral",dropdownCssClass: "custom-dropdown",tags: true	});
-				$(`#ListaDescuentosTotal_${indexGral}_${index}`).on("select2:select", function (evt) {
+				$(`#ListaDescuentosTotal_${indexGral}_${index}`).select2({containerCssClass: "select-gral",dropdownCssClass: "custom-dropdown",tags: true,tokenSeparators: [',', ' ']	});
+				$(`#ListaDescuentosTotal_${indexGral}_${index}`).on("select2:select", function (evt){
 					var element = evt.params.data.element;
 					var $element = $(element);
-					
 					$element.detach();
 					$(this).append($element);
+					console.log('eeeeeeeeeeeeeeeeeeeeeeeeeeeeeee');
+					console.log($element[0]);
+					console.log('eeeeeeeeeeeeeeeeeeeeeeeeeeeeeee');
 					$(this).trigger("change");
+					console.log('zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz');
+					console.log($element[0].value);
+					console.log('zzzzzzzzzzzzzzzzzzzzzzzzzzzzzz');
+					console.log($element[0].label);
+
+
+
+					ModalMsi(indexGral,index,'ListaDescuentosTotal_',$element[0].value,$element[0].label);
+					/*var data = $(`#ListaDescuentosTotal_${indexGral}_${index} option:selected`).text();
+					var data2 = $(`#ListaDescuentosTotal_${indexGral}_${index} option:selected`).val();
+					console.log('ooooooooooooooooo');
+    				console.log(data);
+					console.log('ooooooooooooooooo');
+					console.log('aaaaaaaaaaaaaaaaaaaaaa');
+    				console.log(data2);
+					console.log('aaaaaaaaaaaaaaaaaaaaaaaa');*/
+
 				});
 	
 		}else{

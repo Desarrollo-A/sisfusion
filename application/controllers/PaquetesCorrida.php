@@ -84,7 +84,7 @@ class PaquetesCorrida extends CI_Controller
         3.-Ambos
         */
         $TipoLote = $this->input->post("tipoLote");
-
+        $datosIssertar = array();
         for ($i=1; $i <= $index ; $i++) { 
             //VALIDAR SI EXISTE PAQUETE
             if(isset($_POST["descripcion_".$i])){
@@ -94,21 +94,28 @@ class PaquetesCorrida extends CI_Controller
                   if(isset($_POST[$i."_0_ListaDescuentosTotal_"])){
                     print_r($_POST[$i."_0_ListaDescuentosTotal_"]);
                     echo "<br>";
+                    $descuentos = $_POST[$i."_0_ListaDescuentosTotal_"];
+                    for ($j=0; $j < count($descuentos) ; $j++) { 
+                      echo $descuentos[$j];
+                    }
+                    echo $_POST[$i."_0_orden"];
                   }
                   if(isset($_POST[$i."_1_ListaDescuentosEnganche_"])){
                     print_r($_POST[$i."_1_ListaDescuentosEnganche_"]);
+                    
                     echo "<br>";
-
+                    echo $_POST[$i."_1_orden"];
                   }
                   if(isset($_POST[$i."_2_ListaDescuentosM2_"])){
                     print_r($_POST[$i."_2_ListaDescuentosM2_"]);
+                    
                     echo "<br>";
-
+                    echo $_POST[$i."_2_orden"];
                   }
                   if(isset($_POST[$i."_3_ListaDescuentosBono_"])){
                     print_r($_POST[$i."_3_ListaDescuentosBono_"]);
                     echo "<br>";
-
+                    echo $_POST[$i."_3_orden"];
                   }
                   
                     
