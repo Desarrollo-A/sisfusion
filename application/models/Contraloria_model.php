@@ -779,7 +779,7 @@ class Contraloria_model extends CI_Model {
 											cl.status, nombreLote, lotes.comentario, lotes.idMovimiento, lotes.fechaVenc, lotes.modificado
 										FROM deposito_seriedad AS ds
 											INNER JOIN clientes AS cl ON ds.id_cliente = cl.id_cliente
-											INNER JOIN lotes AS lotes ON lotes.idLote=cl.idLote AND lotes.idCliente = cl.idCliente AND cl.status = 1
+											INNER JOIN lotes AS lotes ON lotes.idLote=cl.idLote AND lotes.idCliente = cl.id_cliente AND cl.status = 1
 											LEFT JOIN condominios AS cond ON lotes.idCondominio=cond.idCondominio
 											LEFT JOIN residenciales AS residencial ON cond.idResidencial=residencial.idResidencial
 										WHERE
@@ -1122,4 +1122,20 @@ class Contraloria_model extends CI_Model {
     	return $this->db->query("SELECT * FROM sedes WHERE estatus = 1");
     }
 
+    public function getCamposHistorialDS($idCliente)
+    {
+        $query = $this->db->query("SELECT DISTINCT(col_afect) AS columna FROM auditoria WHERE id_parametro = $idCliente");
+        return $query->result_array();
+    }
+
+    public function getDetalleCamposHistorialDS($idCliente, $columna)
+    {
+        $query = $this->db->query("SELECT au.anterior, au.nuevo, au.col_afect, CONVERT(NVARCHAR, au.fecha_creacion, 6) AS fecha,
+            CONCAT(u.nombre, ' ', u.apellido_paterno) as usuario, u.id_usuario
+            FROM auditoria au
+            LEFT JOIN usuarios u ON u.id_usuario = au.creado_por
+            WHERE au.col_afect = '$columna' AND au.id_parametro = $idCliente 
+            ORDER BY au.fecha_creacion DESC");
+        return $query->result_array();
+    }
 }
