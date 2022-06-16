@@ -27,6 +27,16 @@
         
 }
 
+#ModalMsi{
+  .input-gral {
+    background-color: #eaeaea !important;
+    color: #929292 !important;
+    border-radius: 27px !important;
+    background-image: none !important;
+    padding-left: 20px;
+  }
+}
+
 
 .rowCards{
 
@@ -50,6 +60,7 @@
         .myCard{
         height: 100%;
         
+    
         .check-padding{
           padding-top: 30px;
         }
