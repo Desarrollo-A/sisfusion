@@ -2003,6 +2003,7 @@ $datos = array();
         $.get(`${url}Asesor/getHistorialDS/${cliente}`, function (data) {
             changeSizeModal('modal-lg');
             appendBodyModal(historialCampoHtml(JSON.parse(data)));
+            appendFooterModal(`<button type="button" class="btn btn-danger" onclick="hideModal()">Cerrar</button>`);
             showModal();
         });
     }
