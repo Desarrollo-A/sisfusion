@@ -545,6 +545,8 @@
                     }
                     else if(d.tipo_venta==7) {
                         lblType ='<span class="label label-warning">Venta especial</span>';
+                    }else{
+                        lblType ='<span class="label label-danger">SIN TIPO DE VENTA</span>';
                     }
                     return lblType;
                 }
@@ -633,7 +635,7 @@
                         }
                         
                         BtnStats = '<button href="#" value="'+data.idLote+'" data-value="'+data.registro_comision+'" data-totalNeto2 = "'+data.totalNeto2+'" data-estatus="'+data.idStatusContratacion+'" data-cliente="'+data.id_cliente+'" data-plan="'+data.plan_comision+'"  data-tipov="'+data.tipo_venta+'"data-descplan="'+data.plan_descripcion+'" data-code="'+data.cbbtton+'" ' +'class="btn-data '+varColor+' verify_neodata" title="Verificar en NEODATA">'+'<span class="material-icons">verified_user</span></button> '+RegresaActiva+'';
-
+                       
                         BtnStats += `
                                 <button href="#"
                                     value="${data.idLote}"

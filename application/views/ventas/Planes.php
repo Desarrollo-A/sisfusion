@@ -58,7 +58,7 @@
 										<div class="col-xs-12 col-sm-12 col-md-6 col-lg-4 mb-1">
 											<div class="form-group">
 												<label class="m-0" for="sede">Proyecto (<b class="text-danger">*</b>)</label> 
-												<select id="residencial"  name="residencial[]" multiple="multiple" class="form-control select-gral"  data-style="btn " data-show-subtext="true" data-live-search="true"  title="Selecciona una opcion" data-size="7" required></select>
+												<select id="residencial"  name="residencial[]" multiple="multiple" class="form-control select-gral w-100"  data-show-subtext="true" data-live-search="true"  title="Selecciona una opcion" data-size="7" required></select>
 												</select>
 											</div>
 										</div>
@@ -66,21 +66,21 @@
 										<div class="col-xs-12 col-sm-12 col-md-6 col-lg-2 mb-1">          
                                             <div class="form-group">
                                                 <label class="m-0" for="sede">Fecha Inicio (<b class="text-danger">*</b>)</label>
-                                                <input class="form-control" name="fechainicio" id="fechainicio" type="date" required="true">
+                                                <input class="form-control w-100" name="fechainicio" id="fechainicio" type="date" required="true">
                                             </div>
 										</div>
 
 										<div class="col-xs-12 col-sm-12 col-md-6 col-lg-2 mb-1">          
                                             <div class="form-group">
                                                 <label class="m-0" for="sede">Fecha Fin (<b class="text-danger">*</b>)</label>
-                                                <input class="form-control" name="fechafin" id="fechafin" type="date" required="true">
+                                                <input class="form-control w-100" name="fechafin" id="fechafin" type="date" required="true">
                                             </div>
 										</div>
 										
 										<div class="row">
 											<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 form1">
 												
-											<div class="col-xs-12 col-sm-12 col-md-6 col-lg-5 mb-1">
+											<div class="col-xs-12 col-sm-6 col-md-6 col-lg-5 mb-1">
 												<div class="form-group">
 													<label>Tipo de Lote (<b class="text-danger">*</b>):</label>
 													<div class="col-md-12"><br></div>
@@ -103,7 +103,7 @@
 												</div>
 											</div>
 
-											<div class="col-xs-12 col-sm-12 col-md-6 col-lg-4 mb-1">          
+											<div class="col-xs-12 col-sm-6 col-md-6 col-lg-5 mb-1">          
                                                 <div class="form-group">
 													<label>Superficie (<b class="text-danger">*</b>):</label>
 													<div class="col-md-12"><br></div>
@@ -282,27 +282,60 @@
 			indexActual.value = indexNext;
 			console.log(indexNext);
 
-			$('.rowCards').append(`	
-							<div class="card border-primary mb-3 boxCard" style="max-width: 45rem;" id="card_${indexNext}">
-								<div class="text-right">
-								<button type="button" class="btn btn-lg btn-danger btn-circle" data-toggle="tooltip" data-placement="top" title="Eliminar paquete" id="btn_delete_${indexNext}" onclick="removeElementCard('card_${indexNext}')"><i class="fas fa-trash"></i></button>
-								</div>
-								<div class="card-body text-primary myCard">
-									<h5 class="card-title">Paquete</h5>
-												<div class="form-group col-md-12" id="">
-														<label class="">Descripción paquete</label>
-														<input type="text" class="form-control input-gral" name="descripcion_${indexNext}" id="descripcion_${indexNext}">
-														
-														</div>
+			// <div class="row">
+			// 								<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 form1">
 												
-  
+			// 								<div class="col-xs-12 col-sm-12 col-md-6 col-lg-5 mb-1">
 
-													<div  id="checks_${indexNext}">
-													</div>
-													
-												<div class="form-group col-md-12" id="tipo_descuento_select_${indexNext}">
-												</div>
-</div>`);
+			// <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4 form2">
+
+			// 				<div class="card border-primary mb-1 boxCard" style="background:#E8F6F3;"  id="card_${indexNext}">
+
+			$('.rowCards').append(`	
+		 
+			<div class="col-xs-12 col-sm-12 col-md-6 col-lg-4 form2" id="GRAL_${indexNext}">
+			
+			<div class="card border-primary mb-1 boxCard col-xs-12 col-sm-12 col-md-6 col-lg-4" style="background:#E8F6F3;" id="card_${indexNext}">
+								<div class="text-right">
+								<h5 class="card-title"><b>Paquete ${indexNext}</b></h5>
+									<button type="button" class="btn btn-lg btn-danger btn-circle" data-toggle="tooltip" data-placement="top" title="Eliminar paquete" id="btn_delete_${indexNext}" onclick="removeElementCard('card_${indexNext}','GRAL_${indexNext}')"><i class="fas fa-trash"></i></button>
+								</div>
+							</div>
+
+							</div>
+
+
+
+								
+									
+									`);
+
+
+
+		// 							$('.rowCards').append(`	
+		 
+		//  <div class="card border-primary mb-1 boxCard" style="background:#E8F6F3;" id="card_${indexNext}">
+		// 	 <div class="text-right">
+		// 	 <h5 class="card-title"><b>Paquete ${indexNext}</b></h5>
+		// 		 <button type="button" class="btn btn-lg btn-danger btn-circle" data-toggle="tooltip" data-placement="top" title="Eliminar paquete" id="btn_delete_${indexNext}" onclick="removeElementCard('card_${indexNext}')"><i class="fas fa-trash"></i></button>
+		// 	 </div>
+
+		// 	 <div class="card-body text-primary myCard">
+				 
+		// 			 <div class="form-group col-md-12" id="">
+		// 				 <label class="">Descripción paquete</label>
+		// 				 <input type="text" class="form-control input-gral" name="descripcion_${indexNext}" id="descripcion_${indexNext}">
+		// 			 </div>
+
+		// 		 <div id="checks_${indexNext}">
+		// 		 </div>
+				 
+		// 		 <div class="form-group col-md-12" id="tipo_descuento_select_${indexNext}">
+		// 		 </div>
+		// 		 </div> 
+				 
+		// 		 `);
+
 $('[data-toggle="tooltip"]').tooltip()
 
 /**
@@ -683,10 +716,13 @@ function PrintSelectDesc(id,index,indexGral){
 }*/
 
 
-		function removeElementCard(divNum) {
-    var result = window.confirm("¿Desea remover este elemento?");
+		function removeElementCard(divNum,gral) {
+    // var result = window.confirm("¿Desea remover este elemento?");
+	var result = alerts.showNotification("top", "right", "Se eliminó correctamente", "success");
+
     if (result == true) {
         $("#" + divNum + "").remove();
+        $("#" + gral + "").remove();
     }
     return false;
 }
