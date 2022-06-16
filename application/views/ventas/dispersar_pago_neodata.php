@@ -615,6 +615,8 @@
                     
                     if(data.totalNeto2==null || data.totalNeto2==''|| data.totalNeto2==0) {
                         BtnStats = 'Asignar Precio';
+                    }else if(data.tipo_venta==null || data.tipo_venta==0) {
+                        BtnStats = 'Asignar Tipo Venta';
                     }else if((data.id_prospecto==null || data.id_prospecto==''|| data.id_prospecto==0) && data.lugar_prospeccion == 6) {
                         BtnStats = 'Asignar Prospecto';
                     }else if(data.id_subdirector==null || data.id_subdirector==''|| data.id_subdirector==0) {

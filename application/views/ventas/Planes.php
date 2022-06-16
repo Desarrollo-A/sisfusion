@@ -216,7 +216,7 @@
                     var id = data[i]['idResidencial'];
                     var descripcion = data[i]['descripcion'];
                     $("#residencial").append(`<option value='${id}'>${name}</option>`);
-                }
+                }   
                 if(len<=0){
                     $("#residencial").append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
                 }
@@ -716,9 +716,10 @@ function PrintSelectDesc(id,index,indexGral){
 }*/
 
 
-		function removeElementCard(divNum,gral) {
+	function removeElementCard(divNum,gral) {
     // var result = window.confirm("¿Desea remover este elemento?");
-	var result = alerts.showNotification("top", "right", "Se eliminó correctamente", "success");
+	var result = true;
+	alerts.showNotification("top", "right", "Se eliminó correctamente", "success");
 
     if (result == true) {
         $("#" + divNum + "").remove();
