@@ -6,9 +6,6 @@ $(document).ready(function(){
 
 $(document).on('click', '.menuTab', function(e){
     e.preventDefault();
-    console.log(this.id);
-    console.log(e.id);
-
     changePill(this.id);
 })
 
