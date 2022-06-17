@@ -8,39 +8,43 @@ class Reporte_model extends CI_Model {
     }
 
     public function getDataChart($general, $tipoChart, $rol, $condicion_x_rol, $coordinador, $coordinadorVC, $coordinadorVA, $coordinadorCC, $coordinadorCA, $beginDate, $endDate){
+
         $ventasContratadas = ''; $ventasApartadas = ''; $canceladasContratadas = ''; $canceladasApartadas = '';
-        
+        $endDateDos =  date("Y-m-01", strtotime($endDate));
+        //Crear por defecto las columnas en default para evaluar esos puntos en la gráfica. 
         $defaultColumns = "WITH cte AS(
-            SELECT MONTH( '$beginDate' ) DateValue  
+            SELECT CAST('$beginDate' AS DATETIME) DateValue
             UNION ALL
             SELECT  DateValue + 1
             FROM    cte   
-            WHERE   DateValue + 1 < MONTH( '$endDate')
-        )"; 
-        
-        $ventasContratadas = "SELECT qu.total, cantidad, DateValue, 'vc' tipo, '$rol' rol FROM cte
-        LEFT JOIN (SELECT  FORMAT(ISNULL(SUM(CASE WHEN totalNeto2 IS NULL THEN total WHEN totalNeto2 = 0 THEN total ELSE totalNeto2 END), 0), 'C') total,
-        COUNT(*) cantidad, MONTH(cl.fechaApartado) mes
+            WHERE   DateValue + 1 < '$endDateDos'
+        )";
+
+        $ventasContratadas = "SELECT ISNULL(total, 0) total, ISNULL(cantidad, 0) cantidad, MONTH(DateValue) mes, YEAR(DateValue) año, 'vc' tipo, '$rol' rol FROM cte
+        LEFT JOIN (SELECT FORMAT(ISNULL(SUM(CASE WHEN totalNeto2 IS NULL THEN total WHEN totalNeto2 = 0 THEN total ELSE totalNeto2 END), 0), 'C') total,
+        COUNT(*) cantidad, MONTH(cl.fechaApartado) mes, YEAR(cl.fechaApartado) año
         FROM clientes cl
         INNER JOIN lotes lo ON lo.idLote = cl.idLote AND lo.idStatusLote = 2
         INNER JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes WHERE idStatusContratacion = 15 AND idMovimiento = 45
         GROUP BY idLote, idCliente) hl ON hl.idLote = lo.idLote AND hl.idCliente = cl.id_cliente
         WHERE ISNULL(noRecibo, '') != 'CANCELADO' AND cl.status = 1 AND cl.fechaApartado BETWEEN '$beginDate' AND '$endDate'
         $condicion_x_rol
-        GROUP BY MONTH(cl.fechaApartado)) qu ON qu.mes = cte.DateValue";
+        GROUP BY MONTH(cl.fechaApartado), YEAR(cl.fechaApartado)) qu ON qu.mes = month(cte.DateValue) AND qu.año = year(cte.DateValue)
+        GROUP BY Month(DateValue), YEAR(DateValue), cantidad, total";
 
-        $ventasApartadas = "SELECT qu.total, cantidad, DateValue,'va' tipo, '$rol' rol FROM cte
-        LEFT JOIN (SELECT FORMAT(ISNULL(SUM(CASE WHEN totalNeto2 IS NULL THEN total  WHEN totalNeto2 = 0 THEN total  ELSE totalNeto2  END), 0), 'C') total, 
-        COUNT(*) cantidad, MONTH(cl.fechaApartado) mes
+        $ventasApartadas = "SELECT ISNULL(total, 0) total, ISNULL(cantidad, 0) cantidad, MONTH(DateValue) mes, YEAR(DateValue) año, 'va' tipo, '$rol' rol FROM cte
+        LEFT JOIN (SELECT FORMAT(ISNULL(SUM(CASE WHEN totalNeto2 IS NULL THEN total WHEN totalNeto2 = 0 THEN total ELSE totalNeto2 END), 0), 'C') total, 
+        COUNT(*) cantidad, MONTH(cl.fechaApartado) mes, YEAR(cl.fechaApartado) año
         FROM clientes cl
         INNER JOIN lotes lo ON lo.idLote = cl.idLote AND lo.idStatusLote != 2
         WHERE isNULL(noRecibo, '') != 'CANCELADO' AND cl.status = 1 AND cl.fechaApartado BETWEEN '$beginDate' AND '$endDate'
         $condicion_x_rol
-        GROUP BY MONTH(cl.fechaApartado)) qu ON qu.mes = cte.DateValue";
+        GROUP BY MONTH(cl.fechaApartado), YEAR(cl.fechaApartado)) qu ON qu.mes = month(cte.DateValue) AND qu.año = year(cte.DateValue)
+        GROUP BY Month(DateValue), YEAR(DateValue), cantidad, total";
 
-        $canceladasContratadas = "SELECT qu.total, cantidad, DateValue, 'cc' tipo, '$rol' rol FROM cte
+        $canceladasContratadas = "SELECT ISNULL(total, 0) total, ISNULL(cantidad ,0) cantidad, MONTH(DateValue) mes, YEAR(DateValue) año, 'cc' tipo, '$rol' rol FROM cte
         LEFT JOIN (SELECT FORMAT(ISNULL(SUM(CASE WHEN totalNeto2 IS NULL THEN total WHEN totalNeto2 = 0 THEN total ELSE totalNeto2 END), 0), 'C') total, 
-        COUNT(*) cantidad, MONTH(cl.fechaApartado) mes
+        COUNT(*) cantidad, MONTH(cl.fechaApartado) mes, YEAR(cl.fechaApartado) año
         FROM clientes cl
         INNER JOIN lotes lo ON lo.idLote = cl.idLote
         LEFT JOIN historial_liberacion hl ON hl.idLote = lo.idLote AND hl.tipo NOT IN (2, 5, 6) AND hl.id_cliente = cl.id_cliente
@@ -48,11 +52,12 @@ class Reporte_model extends CI_Model {
         GROUP BY idLote, idCliente) hlo ON hlo.idLote = lo.idLote AND hlo.idCliente = cl.id_cliente
         WHERE isNULL(noRecibo, '') != 'CANCELADO' AND cl.status = 0  AND cl.fechaApartado BETWEEN '$beginDate' AND '$endDate' 
         $condicion_x_rol
-        GROUP BY MONTH(cl.fechaApartado)) qu ON qu.mes = cte.DateValue";
+        GROUP BY MONTH(cl.fechaApartado), YEAR(cl.fechaApartado)) qu ON qu.mes = month(cte.DateValue) AND qu.año = year(cte.DateValue)
+        GROUP BY Month(DateValue), YEAR(DateValue), cantidad, total";
 
-        $canceladasApartadas = "SELECT qu.total, cantidad, DateValue, 'ca' tipo, '$rol' rol FROM cte
+        $canceladasApartadas = "SELECT ISNULL(total, 0) total, ISNULL(cantidad ,0) cantidad, MONTH(DateValue) mes, YEAR(DateValue) año, 'ca' tipo, '$rol' rol FROM cte
         LEFT JOIN (SELECT FORMAT(ISNULL(SUM(CASE WHEN totalNeto2 IS NULL THEN total WHEN totalNeto2 = 0 THEN total ELSE totalNeto2 END), 0), 'C') total, 
-        COUNT(*) cantidad, MONTH(cl.fechaApartado) mes
+        COUNT(*) cantidad, MONTH(cl.fechaApartado) mes, YEAR(cl.fechaApartado) año
         FROM clientes cl
         INNER JOIN lotes lo ON lo.idLote = cl.idLote
         LEFT JOIN historial_liberacion hl ON hl.idLote = lo.idLote AND hl.tipo NOT IN (2, 5, 6) AND hl.id_cliente = cl.id_cliente
@@ -60,15 +65,20 @@ class Reporte_model extends CI_Model {
         GROUP BY idLote, idCliente) hlo ON hlo.idLote = lo.idLote AND hlo.idCliente = cl.id_cliente
         WHERE isNULL(noRecibo, '') != 'CANCELADO' AND cl.status = 0  AND cl.fechaApartado BETWEEN '$beginDate' AND '$endDate' 
         $condicion_x_rol
-        GROUP BY MONTH(cl.fechaApartado)) qu ON qu.mes = cte.DateValue";
+        GROUP BY MONTH(cl.fechaApartado), YEAR(cl.fechaApartado)) qu ON qu.mes = month(cte.DateValue) AND qu.año = year(cte.DateValue)
+        GROUP BY Month(DateValue), YEAR(DateValue), cantidad, total";
 
         if($coordinador){
             $ventasContratadas = $ventasContratadas . " UNION ALL " . $coordinadorVC;
+
             $ventasApartadas = $ventasApartadas . " UNION ALL " . $coordinadorVA;
+
             $canceladasContratadas = $canceladasContratadas . " UNION ALL " . $coordinadorCC;
+
             $canceladasApartadas = $canceladasApartadas . " UNION ALL " . $coordinadorCA;
         }
 
+        //General 1. Cuado la consulta va a ser hecho por primera vez por los minicharts
         if($general == '1' || $general){
             $data = $this->db->query("$defaultColumns
             $ventasContratadas
@@ -78,27 +88,33 @@ class Reporte_model extends CI_Model {
             $canceladasContratadas
             UNION ALL
             $canceladasApartadas
-            ORDER BY tipo DESC, cte.DateValue");
+            ORDER BY tipo DESC, rol, año, mes
+            OPTION (MAXRECURSION 0)");
         }
+        //Si general 0 traemos un tipo vc, va, cc o ca para evaluar el chart especifico al que se le hizo clic
         else if ($tipoChart == 'vc'){
             $data = $this->db->query("$defaultColumns
             $ventasContratadas
-            ORDER BY tipo DESC, cte.DateValue");
+            ORDER BY tipo DESC, rol, año, mes
+            OPTION (MAXRECURSION 0)");
         }
         else if ($tipoChart == 'va'){
             $data = $this->db->query("$defaultColumns
             $ventasApartadas
-            ORDER BY tipo DESC, cte.DateValue");
+            ORDER BY tipo DESC, rol, año, mes
+            OPTION (MAXRECURSION 0)");
         }
         else if ($tipoChart == 'cc'){
             $data = $this->db->query("$defaultColumns
             $canceladasContratadas
-            ORDER BY tipo DESC, cte.DateValue");
+            ORDER BY tipo DESC, rol, año, mes
+            OPTION (MAXRECURSION 0)");
         }
         else if ($tipoChart == 'ca'){
             $data = $this->db->query("$defaultColumns
             $canceladasContratadas
-            ORDER BY tipo DESC, cte.DateValue");
+            ORDER BY tipo DESC, rol, año, mes
+            OPTION (MAXRECURSION 0)");
         }
 
         return $data->result_array();    

@@ -1099,153 +1099,132 @@
   background-color: #F1F1F1;
 }
 
-.cardDocument {
-  height: calc(100vh - 125px);
-}
-
-.cardDocument .realBox #documentsList {
-  height: 60vh;
-  overflow: auto;
-}
-
-.cardDocument .realBox #documentsList .activeSB {
-  border-radius: 8px !important;
-  background-color: #143860 !important;
-}
-
-.cardDocument .realBox #documentsList .activeSB h4, .cardDocument .realBox #documentsList .activeSB i {
-  color: #ffffff !important;
-}
-
-@media (min-device-width: 320px) and (max-device-width: 480px), (min-width: 480px) and (max-width: 991px) {
-  .cardDocument .realBox #documentsList {
-    height: initial;
-  }
-}
-
-.cardDocument .realBox .boxDocument {
-  background-color: #333333;
-  border-radius: 8px;
-  color: #ffffff;
-}
-
-.cardDocument .realBox .boxDocument .btnDocuments {
-  background-color: #191B1C;
+.btn-circle.btn-lg {
+  width: 50px;
+  height: 50px;
+  padding: 10px 16px;
+  font-size: 18px;
+  line-height: 1.33;
   border-radius: 25px;
-  height: 38px;
-  width: 38px;
-  border: none;
-  box-shadow: -1px -1px 3px RGB(0 0 0/12%), 0 1px 2px RGB(0 0 0/24%);
-  margin: 0 3px;
 }
 
-.cardDocument .realBox .boxDocument #documentFile {
-  height: calc(60vh - 50px);
+.form1 .input-gral {
+  background-color: #eaeaea !important;
+  color: #929292 !important;
+  border-radius: 27px !important;
+  background-image: none !important;
+  padding-left: 20px;
+}
+
+.form1 .select-gral {
+  border-radius: 27px !important;
+  height: 45px;
+  -webkit-border-radius: 27px !important;
+  -moz-border-radius: 27px !important;
+  -ms-border-radius: 27px !important;
+  -o-border-radius: 27px !important;
+}
+
+.rowCards {
+  /*.boxCard:hover{
+      box-shadow: 0 0 6px $blueMaderas;
+      transform: scale(1.1);
+      -webkit-transform: scale(1.1);
+      -moz-transform: scale(1.1);
+      -ms-transform: scale(1.1);
+      -o-transform: scale(1.1);
+}*/
+}
+
+.rowCards .boxCard {
+  background: #FFF;
+  border-radius: 10px;
+  cursor: pointer;
+  margin: 20px 0;
+  padding: 5px 10px;
+  transition: all 0.5s ease-out;
+}
+
+.rowCards .boxCard .myCard {
+  height: 100%;
+}
+
+.rowCards .boxCard .myCard .check-padding {
+  padding-top: 30px;
+}
+
+.rowCards .boxCard .myCard .card-header {
+  padding: 5px 20px 0px !important;
+}
+
+.rowCards .boxCard .myCard .select-gral-number {
+  border-radius: 27px !important;
+  height: 45px;
+  -webkit-border-radius: 27px !important;
+  -moz-border-radius: 27px !important;
+  -ms-border-radius: 27px !important;
+  -o-border-radius: 27px !important;
+  width: 100%;
+}
+
+.rowCards .boxCard .myCard .btn-circle {
+  width: 30px;
+  height: 30px;
+  text-align: center;
+  padding: 6px 0;
+  font-size: 12px;
+  line-height: 1.428571429;
+  border-radius: 15px;
+}
+
+.rowCards .boxCard .myCard .input-gral {
+  background-color: #f3eeee !important;
+  color: #929292 !important;
+  border-radius: 27px !important;
+  background-image: none !important;
+  padding-left: 20px;
+}
+
+.rowCards .boxCard .myCard .select-gral {
+  border-radius: 27px !important;
+  height: 45px;
+  -webkit-border-radius: 27px !important;
+  -moz-border-radius: 27px !important;
+  -ms-border-radius: 27px !important;
+  -o-border-radius: 27px !important;
+}
+
+.rowCards .boxCard .myCard .custom-dropdown {
+  background-color: #0a548b;
+  color: #0a548b;
+}
+
+.rowCards .boxCard .myCard .select2-results__options {
+  background-color: #0a548b;
+  color: #0a548b;
+}
+
+.rowCards .boxCard .myCard .radio_container input[type="radio"]:checked + label {
+  background-color: #103f75;
+  color: #ffffff;
+  transition: 0.3s;
+}
+
+.rowCards .boxCard .myCard .checkbox {
+  display: block;
   position: relative;
-  top: 6px;
-  border-radius: 0 0 6px 6px;
+  padding-left: 35px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  font-size: 22px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 
-@media (min-device-width: 320px) and (max-device-width: 480px), (min-width: 480px) and (max-width: 991px) {
-  .cardDocument .realBox .boxDocument #documentFile {
-    height: 100vh;
-  }
-}
-
-.cardDocument .realBox .boxDocument .stylesEmpty {
-  height: calc(60vh - 50px);
-}
-
-.cardDocument .realBox .boxDocument .stylesEmpty .boxDocumentEmptyD {
-  background-color: #eaeaea;
-}
-
-.cardDocument .realBox .boxDocument .stylesEmpty .boxDocumentEmptyD i {
-  font-size: 200px;
-  color: #c1c1c1;
-}
-
-.cardDocument .realBox .boxDocument .stylesEmpty .boxDocumentEmptyD p {
-  font-size: 25px;
-  color: #c1c1c1;
-}
-
-.cardDocument .realBox .boxDocumentEmpty {
-  background-color: #eaeaea;
-  border-radius: 10px;
-  height: 60vh;
-}
-
-.cardDocument .realBox .boxDocumentEmpty i {
-  font-size: 200px;
-  color: #c1c1c1;
-}
-
-.cardDocument .realBox .boxDocumentEmpty p {
-  font-size: 25px;
-  color: #c1c1c1;
-}
-
-.cardDocument .realBox .scrollDocumentTree::-webkit-scrollbar-track {
-  background-color: transparent;
-  border-radius: none;
-}
-
-.cardDocument .realBox .scrollDocumentTree::-webkit-scrollbar {
-  width: 5px;
-  background-color: transparent;
-  border-right: 2px solid #c1c1c1;
-}
-
-.cardDocument .realBox .scrollDocumentTree::-webkit-scrollbar-thumb {
-  background-color: #c1c1c1;
-  border-radius: none;
-  border-radius: 0;
-}
-
-.cardDocument .realBox .scrollDocumentTree::-webkit-scrollbar-thumb:hover {
-  background-color: #929292;
-  width: 10px !important;
-  border-radius: none;
-}
-
-@media (min-device-width: 320px) and (max-device-width: 480px), (min-width: 480px) and (max-width: 991px) {
-  .cardDocument {
-    height: initial;
-  }
-}
-
-.cardDocument .fakeBox {
-  height: 60vh;
-}
-
-.cardDocument .fakeBox .documentsList i {
-  color: #eaeaea;
-  font-size: 34px;
-}
-
-.cardDocument .fakeBox .documentsList .col-9.col-md-9 {
-  background-color: #eaeaea;
-  border-radius: 5px;
-}
-
-.cardDocument .fakeBox .boxContentDoc {
-  background-color: #eaeaea;
-  border-radius: 10px;
-}
-
-.cardDocument .fakeBox .boxContentDoc i {
-  font-size: 200px;
-  color: #c1c1c1;
-}
-
-.cardDocument .fakeBox .boxContentDoc p {
-  font-size: 25px;
-  color: #c1c1c1;
-}
-
-@media (min-width: 768px) {
-  .modal-sm {
-    width: 350px;
-  }
+.rowCards .boxCard .mySubtitle {
+  position: absolute;
+  bottom: 0;
+  height: 20%;
 }

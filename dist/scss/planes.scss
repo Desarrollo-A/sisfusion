@@ -1,0 +1,134 @@
+@import "_base";
+
+.btn-circle.btn-lg {
+  width: 50px;
+  height: 50px;
+  padding: 10px 16px;
+  font-size: 18px;
+  line-height: 1.33;
+  border-radius: 25px;
+}
+.form1{
+    .input-gral {
+        background-color: #eaeaea !important;
+        color: #929292 !important;
+        border-radius: 27px !important;
+        background-image: none !important;
+        padding-left: 20px;
+      }
+      .select-gral {
+        border-radius: 27px !important;
+        height: 45px;
+        -webkit-border-radius: 27px !important;
+        -moz-border-radius: 27px !important;
+        -ms-border-radius: 27px !important;
+        -o-border-radius: 27px !important;
+        }
+        
+}
+
+
+.rowCards{
+
+  /*.boxCard:hover{
+      box-shadow: 0 0 6px $blueMaderas;
+      transform: scale(1.1);
+      -webkit-transform: scale(1.1);
+      -moz-transform: scale(1.1);
+      -ms-transform: scale(1.1);
+      -o-transform: scale(1.1);
+}*/
+
+
+    .boxCard{
+      background: #FFF;
+      border-radius: 10px; 
+      cursor: pointer;
+      margin: 20px 0;
+      padding: 5px 10px;
+      transition: all 0.5s ease-out;
+        .myCard{
+        height: 100%;
+        
+        .check-padding{
+          padding-top: 30px;
+        }
+          .card-header{
+            padding: 5px 20px 0px !important;
+          }
+
+          .select-gral-number{
+            border-radius: 27px !important;
+        height: 45px;
+        -webkit-border-radius: 27px !important;
+        -moz-border-radius: 27px !important;
+        -ms-border-radius: 27px !important;
+        -o-border-radius: 27px !important;
+            width: 100%;
+          }
+        
+     
+        .btn-circle{
+          width: 30px;
+          height: 30px;
+          text-align: center;
+          padding: 6px 0;
+          font-size: 12px;
+          line-height: 1.428571429;
+          border-radius: 15px;
+        }
+        .input-gral {
+            background-color: rgb(243, 238, 238) !important;
+            color: #929292 !important;
+            border-radius: 27px !important;
+            background-image: none !important;
+            padding-left: 20px;
+          }
+          .select-gral {
+            border-radius: 27px !important;
+            height: 45px;
+            -webkit-border-radius: 27px !important;
+            -moz-border-radius: 27px !important;
+            -ms-border-radius: 27px !important;
+            -o-border-radius: 27px !important;
+            }
+            .custom-dropdown {
+                background-color: $blueMaderas;
+                color: $blueMaderas;
+            }
+            .select2-results__options{
+                background-color: $blueMaderas;
+                color: $blueMaderas;  
+            }
+          .radio_container input[type="radio"]:checked + label {
+            background-color: #103f75;
+            color: #ffffff;
+            transition: 0.3s;
+          }
+          .checkbox{
+            display: block;
+            position: relative;
+            padding-left: 35px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            font-size: 22px;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+          }
+          
+          
+
+        }
+        .mySubtitle{
+            position: absolute;
+            bottom: 0;
+            height: 20%;
+    
+        }
+
+        
+    }
+}
+

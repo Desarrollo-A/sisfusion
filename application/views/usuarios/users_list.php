@@ -137,6 +137,7 @@
                                                                     class="form-control member_type" required
                                                                     onchange="getLeadersList()"></select>
                                                         </div>
+                                                        <input type="hidden" name="lastTM" id="lastTM">
                                                     </div>
                                                     <div class="col-sm-6">
                                                         <div class="form-group label-floating select-is-empty div_leader">
@@ -146,6 +147,7 @@
                                                             <select id="leader" name="leader" class="form-control"
                                                                     required></select>
                                                         </div>
+                                                        <input type="hidden" name="lastLI" id="lastLI">
                                                     </div>
                                                     <div id="ch">
                                                         <p><b>Los siguientes campos (SEDE CAPITAL HUMANO y SUCURSAL
@@ -501,6 +503,7 @@
                                                                                             class="form-control member_type"
                                                                                             required
                                                                                             onchange="getLeadersList()"></select>
+                                                                                    <input type="text" name="lastTM" id="lastTM">
                                                                                 </div>
                                                                             </div>
                                                                             <div class="col-sm-6">
@@ -510,6 +513,7 @@
                                                                                     <select id="leader" name="leader"
                                                                                             class="form-control"
                                                                                             required></select>
+                                                                                    <input type="text" name="lastLI" id="lastLI">
                                                                                 </div>
                                                                             </div>
 
