@@ -520,28 +520,25 @@ function monthName(mon){
 
 function getRolDR(idUser){
     return new Promise(resolve => {      
-    $.ajax({
-        type: "POST",
-        url: "Reporte/getRolDR",
-        data: {idUser: idUser},
-        dataType: 'json',
-        cache: false,
-        beforeSend: function() {
-          $('#spiner-loader').removeClass('hide');
-        },
-        success: function(data){
+        $.ajax({
+            type: "POST",
+            url: "Reporte/getRolDR",
+            data: {idUser: idUser},
+            dataType: 'json',
+            cache: false,
+            beforeSend: function() {
+            $('#spiner-loader').removeClass('hide');
+            },
+            success: function(data){
+                $('#spiner-loader').addClass('hide');
+                resolve (data.length > 0 ? 59:2);
+            },
+            error: function() {
             $('#spiner-loader').addClass('hide');
-            resolve (data.length > 0 ? 59:2);
-        },
-        error: function() {
-          $('#spiner-loader').addClass('hide');
-            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
-        }
+                alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+            }
+        });
     });
-});
-}
-function titleCase(string){
-    return string[0].toUpperCase() + string.slice(1).toLowerCase();
 }
 
 function formatDate(date) {
@@ -556,4 +553,8 @@ function formatDate(date) {
         day = '0' + day;
 
     return [year, month, day].join('-');
+}
+
+function titleCase(string){
+    return string[0].toUpperCase() + string.slice(1).toLowerCase();
 }

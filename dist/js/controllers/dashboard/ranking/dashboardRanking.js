@@ -1,3 +1,9 @@
+var dataApartados, dataContratados, dataConEnganche, dataSinEnganche;
+
+$(document).ready(function(){
+    getRankings(true).then( response => { divideRankingArrays(response) }).catch( error => { alerts.showNotification("top", "right", "Oops, algo salió mal", "danger"); });
+});
+
 var options = {
     series: [{
         name: 'Inflation',
@@ -77,24 +83,298 @@ var options = {
     }
 };
 
-var chart = new ApexCharts(document.querySelector("#chart"), options);
+var chart = new ApexCharts(document.querySelector('#chart'), options);
 chart.render();
-var chart = new ApexCharts(document.querySelector("#chart2"), options);
+var chart = new ApexCharts(document.querySelector('#chart2'), options);
 chart.render();
-var chart = new ApexCharts(document.querySelector("#chart3"), options);
+var chart = new ApexCharts(document.querySelector('#chart3'), options);
 chart.render();
-var chart = new ApexCharts(document.querySelector("#chart4"), options);
+var chart = new ApexCharts(document.querySelector('#chart4'), options);
 chart.render();
 
-$('.detail').click(function() {
-    console.log("rhis");
-    $(this)
-        // Find parent with the class that starts with "col-md"
-        // Change class to "col-md-3"
-        .closest('[class^="col-md"]')
-            .toggleClass('col-md-6 col-md-12')
-        // Find siblings of parent with similar class criteria
-        // - if all siblings are the same, you can use ".siblings()"
-        // Change class to "col-md-2"
-        
-});
+function toggleDatatable(e){
+    var columnaActiva = e.closest( '.flexible' );
+    var row = e.closest( '.row' );
+    var columnaChart = e.closest( '.col-chart' );
+    var columnDatatable = $( e ).closest( '.row' ).find( '.col-datatable' );
+    var table = $( e ).closest( '.row' ).find('table');
+
+    // La columna se expandera
+    if( $(columnaActiva).hasClass('inactivo') ){
+        columnaActiva.classList.remove('col-sm-6', 'col-md-6', 'col-lg-6', 'inactivo');
+        columnaActiva.classList.add('col-sm-12', 'col-md-12', 'col-lg-12', 'activo');
+        columnaChart.classList.remove('col-sm-12', 'col-md-12', 'col-lg-12');
+        columnaChart.classList.add('col-sm-12', 'col-md-6', 'col-lg-6');
+        columnDatatable.removeClass('hidden');
+        reorderColumns();
+
+        if( table.attr('id') == 'tableApartados' ){
+            buildTableApartados(dataApartados);
+        }
+        else if( table.attr('id') == 'tableContratados' ){
+            buildTableContratados(dataContratados);
+        }
+        else if( table.attr('id') == 'tableConEnganche' ){
+            buildTableConEnganche(dataConEnganche);
+        }
+        else if( table.attr('id') == 'tableSinEnganche' ){
+            buildTableSinEnganche(dataSinEnganche);
+        }
+    }
+    // La columna se contraera 
+    else{
+        columnaActiva.classList.remove('col-sm-12', 'col-md-12', 'col-lg-12', 'activo');
+        columnaActiva.classList.add('col-sm-6', 'col-md-6', 'col-lg-6', 'inactivo');
+        columnaChart.classList.remove('col-sm-12', 'col-md-5', 'col-lg-5');
+        columnaChart.classList.add('col-sm-12', 'col-md-12', 'col-lg-12');
+        columnDatatable.addClass('hidden');
+        table.DataTable().destroy();
+        reorderColumns();
+    }
+}
+
+function reorderColumns(){
+    var principalColumns = document.getElementsByClassName("flexible");
+    var mainRow = document.getElementById('mainRow');
+
+    //Creamos nuevo fragmento en el DOM para insertar las columnas ordenadas
+    var elements = document.createDocumentFragment();
+    inactivos = [];
+    activos = [];
+
+    for( var i = 0; i<principalColumns.length; i++){
+        (principalColumns[i].classList.contains('inactivo')) ? inactivos.push(i) : activos.push(i)
+    }
+    //Array con orden correcto de columnas primero las activas y después inactivas
+    var orden = activos.concat(inactivos);
+    orden.forEach(idx => {
+        if($(principalColumns[idx]).hasClass('inactivo')){
+            principalColumns[idx].classList.add('hidden');
+        }
+        elements.appendChild(principalColumns[idx].cloneNode(true));
+    });
+    mainRow.innerHTML = null;
+    mainRow.appendChild(elements);
+
+    for( i = 1; i<=principalColumns.length; i++){
+        if ($(principalColumns[i-1]).hasClass('hidden')){
+            (function(i){
+                setTimeout(function(){
+                    $(principalColumns[i-1]).removeClass('hidden');
+                    $(principalColumns[i-1]).addClass('fadeInAnimationDelay'+i);
+                }, 250 * i)
+            }(i));
+        } 
+    }
+}
+
+function getRankings(general, typeRanking){
+    return $.ajax({
+        type: 'POST',
+        url: `Ranking/getAllRankings`,
+        data: {general: general, typeRanking},
+        dataType: 'json',
+        cache: false,
+        beforeSend: function() {
+          $('#spiner-loader').removeClass('hide');
+        },
+        success: function(data) {
+          $('#spiner-loader').addClass('hide');
+        },
+        error: function() {
+          $('#spiner-loader').addClass('hide');
+          alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+        }
+    });
+}
+
+function divideRankingArrays(data){
+    Object.entries(data).forEach(([key, value]) => {
+        if(key == 'Apartados'){
+            dataApartados = value;            
+        }
+        else if(key == 'Contratados'){
+            dataContratados = value;
+        }
+        else if(key == 'ConEnganche'){
+            dataConEnganche = value;
+        }
+        else if(key == 'SinEnganche'){
+            dataConEnganche = value;
+        }
+    });
+}
+
+function buildTableApartados(data){
+    $("#tableApartados").DataTable({
+        dom: 'rt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
+        pagingType: "full_numbers",
+        lengthMenu: [
+            [10, 25, 50, -1],
+            [10, 25, 50, "Todos"]
+        ],
+        width: '100%',
+        destroy: true,
+        ordering: false,
+        scrollX: true,
+        language: {
+            url: "static/spanishLoader_v2.json",
+            paginate: {
+                previous: "<i class='fa fa-angle-left'>",
+                next: "<i class='fa fa-angle-right'>"
+            }
+        },
+        data: data,
+        columns: [{
+            data: 'id_usuario'
+        },
+        {
+            data: 'nombre'
+        },
+        {
+            data: 'apellido_paterno'
+        },
+        {
+            data: 'apellido_materno'
+        },
+        {
+            data: 'telefono'
+        },
+        {
+            data: 'correo'
+        }],
+        columnDefs: [{
+            visible: false,
+            searchable: false
+        }],
+    });
+}
+
+function buildTableContratados(data){
+    $("#tableContratados").DataTable({
+        dom: 'rt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
+        pagingType: "full_numbers",
+        lengthMenu: [
+            [10, 25, 50, -1],
+            [10, 25, 50, "Todos"]
+        ],
+        width: '100%',
+        destroy: true,
+        ordering: false,
+        scrollX: true,
+        language: {
+            url: "static/spanishLoader_v2.json",
+            paginate: {
+                previous: "<i class='fa fa-angle-left'>",
+                next: "<i class='fa fa-angle-right'>"
+            }
+        },
+        data: data,
+        columns: [{
+            data: 'id_cliente'
+        },
+        {
+            data: 'nombre'
+        },
+        {
+            data: 'apellido_paterno'
+        },
+        {
+            data: 'apellido_materno'
+        },
+        {
+            data: 'telefono1'
+        },
+        {
+            data: 'fecha_nacimiento'
+        }],
+        columnDefs: [{
+            visible: false,
+            searchable: false
+        }],
+    });
+}
+
+function buildTableConEnganche(data){
+    $("#tableConEnganche").DataTable({
+        dom: 'rt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
+        pagingType: "full_numbers",
+        lengthMenu: [
+            [10, 25, 50, -1],
+            [10, 25, 50, "Todos"]
+        ],
+        width: '100%',
+        destroy: true,
+        ordering: false,
+        scrollX: true,
+        language: {
+            url: "static/spanishLoader_v2.json",
+            paginate: {
+                previous: "<i class='fa fa-angle-left'>",
+                next: "<i class='fa fa-angle-right'>"
+            }
+        },
+        data: data,
+        columns: [{
+            data: 'id_usuario'
+        },
+        {
+            data: 'nombre'
+        },
+        {
+            data: 'apellido_paterno'
+        },
+        {
+            data: 'apellido_materno'
+        },
+        {
+            data: 'telefono'
+        }],
+        columnDefs: [{
+            visible: false,
+            searchable: false
+        }],
+    });
+}
+
+function buildTableSinEnganche(data){
+    $("#tableSinEnganche").DataTable({
+        dom: 'rt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
+        pagingType: "full_numbers",
+        lengthMenu: [
+            [10, 25, 50, -1],
+            [10, 25, 50, "Todos"]
+        ],
+        width: '100%',
+        destroy: true,
+        ordering: false,
+        scrollX: true,
+        language: {
+            url: "static/spanishLoader_v2.json",
+            paginate: {
+                previous: "<i class='fa fa-angle-left'>",
+                next: "<i class='fa fa-angle-right'>"
+            }
+        },
+        data: data,
+        columns: [{
+            data: 'id_usuario'
+        },
+        {
+            data: 'nombre'
+        },
+        {
+            data: 'apellido_paterno'
+        },
+        {
+            data: 'apellido_materno'
+        },
+        {
+            data: 'telefono'
+        }],
+        columnDefs: [{
+            visible: false,
+            searchable: false
+        }],
+    });
+}
