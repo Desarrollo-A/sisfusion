@@ -1197,7 +1197,7 @@
 
 #reporte .boxAccordions .bk {
   background-color: #ffffff;
-  padding: 10px 10px 0 10px;
+  padding: 10px 10px 10px 10px;
   border-radius: 10px;
   margin-bottom: 30px;
   box-shadow: 0px 2px 9px -12px RGB(0 0 0/42%), 0 4px 25px 0px RGB(0 0 0/12%), 0 8px 10px -5px RGB(0 0 0/20%);
@@ -1223,27 +1223,6 @@
 
 #reporte .boxAccordions .bk .accordion-title:hover, #reporte .boxAccordions .bk .accordion-title :active {
   font-weight: 900;
-}
-
-#reporte .boxAccordions .bk .accordion-title:after {
-  content: "";
-  position: absolute;
-  right: 35px;
-  top: 23%;
-  transition: all 0.2s ease-in-out;
-  display: block;
-  width: 8px;
-  height: 8px;
-  border-top: solid 1px #333333;
-  border-right: solid 1px #333333;
-  -webkit-transform: rotate(135deg);
-  transform: rotate(135deg);
-}
-
-#reporte .boxAccordions .bk .open:after {
-  -webkit-transform: rotate(-45deg);
-  transform: rotate(-45deg);
-  top: 3%;
 }
 
 #reporte .boxAccordions .bk table {
@@ -1414,4 +1393,42 @@
 
 #modalChart .modal-dialog .modal-content .form-group .btn-fab-mini span {
   color: #eaeaea;
+}
+
+#tableFilters .datesTable {
+  border-radius: 27px;
+  border: 2px solid #cfcfcf;
+  padding: 0;
+}
+
+#tableFilters .datesTable .tableDates {
+  text-align: center;
+  background-image: none;
+}
+
+#tableFilters .datesTable .tableSearch {
+  background-color: transparent !important;
+}
+
+#tableFilters .chartButton {
+  font-size: 2rem;
+  color: #999999;
+}
+
+#tableFilters .iconHover {
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#tableFilters .iconHover:hover {
+  cursor: pointer;
+  border-radius: 27px;
+  background-color: #1341761a;
+}
+
+#tableFilters .iconHover:hover .chartButton {
+  color: #103f75;
 }
