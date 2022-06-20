@@ -8512,12 +8512,12 @@ return $query->result();
                 $filtro = '';
         }
 
-        $query = $this->db->query("SELECT us.estatus as status, SUM(du.monto) as monto, 
+        $query = $this->db->query("SELECT du.id_descuento, us.estatus as status, SUM(du.monto) as monto, 
         du.id_usuario, CONCAT(us.nombre,' ',us.apellido_paterno,' ',us.apellido_materno) nombre, opc.nombre as puesto, 
         se.id_sede, se.nombre as sede, CONCAT(ua.nombre,' ',ua.apellido_paterno,' ',ua.apellido_materno) creado_por, 
         pci2.abono_pagado, pci3.abono_nuevo, du.pagado_caja, du.pago_individual, du.pagos_activos, du.estatus, 
         (pci2.abono_pagado + du.pagado_caja) aply, CONVERT(varchar,du.fecha_modificacion,23)  fecha_creacion, '1' AS queryType,
-        CASE WHEN (SELECT COUNT(*) FROM pago_comision_ind pci WHERE pci.id_usuario = du.id_usuario) = 1 THEN 1 ELSE 0 END AS primer_descuento
+        (SELECT COUNT(*) FROM pago_comision_ind pci WHERE pci.id_usuario = du.id_usuario AND pci.estatus = 17) AS no_descuentos
         FROM descuentos_universidad du
         INNER JOIN usuarios us ON us.id_usuario = du.id_usuario
         INNER JOIN usuarios ua ON ua.id_usuario = du.creado_por
@@ -8526,7 +8526,9 @@ return $query->result();
         LEFT JOIN (SELECT SUM(abono_neodata) abono_nuevo, id_usuario FROM pago_comision_ind WHERE estatus in (1) GROUP BY id_usuario) pci3 ON du.id_usuario = pci3.id_usuario 
         LEFT JOIN sedes se ON se.id_sede = Try_Cast(us.id_sede  As int)
         $filtro
-        GROUP BY us.estatus,du.id_usuario, us.nombre, us.apellido_paterno, us.apellido_materno, opc.nombre, se.nombre, ua.nombre, ua.apellido_paterno, ua.apellido_materno,pci2.abono_pagado, pci3.abono_nuevo, se.id_sede, du.pagado_caja, du.pago_individual, du.pagos_activos, du.estatus, du.fecha_modificacion");
+        GROUP BY du.id_descuento, us.estatus,du.id_usuario, us.nombre, us.apellido_paterno, us.apellido_materno, opc.nombre, 
+        se.nombre, ua.nombre, ua.apellido_paterno, ua.apellido_materno,pci2.abono_pagado, pci3.abono_nuevo, se.id_sede, 
+        du.pagado_caja, du.pago_individual, du.pagos_activos, du.estatus, du.fecha_modificacion");
         return $query->result_array();
     }
 
@@ -8925,5 +8927,25 @@ function lista_estatus_descuentos(){
         return $query->result_array();
     }
 
- 
+    public function eliminarDescuentoUniversidad($idDescuento)
+    {
+        $this->db->query("DELETE FROM descuentos_universidad WHERE id_descuento = $idDescuento");
+    }
+
+    public function obtenerDescuentoUniversidad($idDescuento)
+    {
+        $query = $this->db->query("SELECT du.id_descuento, du.id_usuario, du.monto, du.pago_individual, 
+            (du.monto/du.pago_individual) AS no_pagos,
+            CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) AS usuario
+            FROM descuentos_universidad du
+            JOIN usuarios u ON du.id_usuario = u.id_usuario
+            WHERE id_descuento = $idDescuento");
+        return $query->row();
+    }
+
+    public function actualizarDescuentoUniversidad($idDescuento, $data)
+    {
+        $this->db->query("UPDATE descuentos_universidad SET monto = ".$data['monto'].", 
+            pago_individual = ".$data['pago_ind']." WHERE id_descuento = $idDescuento");
+    }
 }
