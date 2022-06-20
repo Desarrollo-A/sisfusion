@@ -7,35 +7,38 @@ $(document).ready(function(){
 var options = {
     series: [{
         name: 'Inflation',
-        data: [2.3, 3.1, 4.0, 10.1, 4.0, 3.6, 3.2, 2.3, 1.4, 0.8, 0.5, 0.2]
+        data: [92, 70, 66, 64, 50, 48, 36, 30, 27, 6]
     }],
-        chart: {
+    chart: {
         height: 350,
         type: 'bar',
+        toolbar: {
+            show: false
+        }
     },
     plotOptions: {
         bar: {
-            borderRadius: 10,
+            horizontal: true,
+            borderRadius: 7,
+            endingShape: 'rounded',
+            barHeight: '40%',
+            distributed: false,
             dataLabels: {
-                position: 'top', // top, center, bottom
+                show: false
             },
         }
     },
     dataLabels: {
-        enabled: true,
-        formatter: function (val) {
-            return val + "%";
-        },
+        enabled: false,
         offsetY: -20,
         style: {
             fontSize: '12px',
             colors: ["#304758"]
         }
     },
-    
     xaxis: {
-        categories: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
-        position: 'top',
+        categories: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct"],
+        position: 'bottom',
         axisBorder: {
             show: false
         },
@@ -54,9 +57,6 @@ var options = {
                 }
             }
         },
-        tooltip: {
-            enabled: true,
-        }
     },
     yaxis: {
         axisBorder: {
@@ -72,15 +72,6 @@ var options = {
             }
         }
     },
-    title: {
-        text: 'Monthly Inflation in Argentina, 2002',
-        floating: true,
-        offsetY: 330,
-        align: 'center',
-        style: {
-            color: '#444'
-        }
-    }
 };
 
 var chart = new ApexCharts(document.querySelector('#chart'), options);
@@ -94,11 +85,9 @@ chart.render();
 
 function toggleDatatable(e){
     var columnaActiva = e.closest( '.flexible' );
-    var row = e.closest( '.row' );
     var columnaChart = e.closest( '.col-chart' );
     var columnDatatable = $( e ).closest( '.row' ).find( '.col-datatable' );
-    var table = $( e ).closest( '.row' ).find('table');
-
+    $( columnDatatable ).html('');
     // La columna se expandera
     if( $(columnaActiva).hasClass('inactivo') ){
         columnaActiva.classList.remove('col-sm-6', 'col-md-6', 'col-lg-6', 'inactivo');
@@ -107,19 +96,6 @@ function toggleDatatable(e){
         columnaChart.classList.add('col-sm-12', 'col-md-6', 'col-lg-6');
         columnDatatable.removeClass('hidden');
         reorderColumns();
-
-        if( table.attr('id') == 'tableApartados' ){
-            buildTableApartados(dataApartados);
-        }
-        else if( table.attr('id') == 'tableContratados' ){
-            buildTableContratados(dataContratados);
-        }
-        else if( table.attr('id') == 'tableConEnganche' ){
-            buildTableConEnganche(dataConEnganche);
-        }
-        else if( table.attr('id') == 'tableSinEnganche' ){
-            buildTableSinEnganche(dataSinEnganche);
-        }
     }
     // La columna se contraera 
     else{
@@ -128,9 +104,28 @@ function toggleDatatable(e){
         columnaChart.classList.remove('col-sm-12', 'col-md-5', 'col-lg-5');
         columnaChart.classList.add('col-sm-12', 'col-md-12', 'col-lg-12');
         columnDatatable.addClass('hidden');
-        table.DataTable().destroy();
         reorderColumns();
     }
+}
+
+function buildEstructuraDT(dataName, dataApartados){
+    var tableHeaders = '';
+    var arrayHeaders = Object.keys(dataApartados[0]);
+    for( i=0; i<arrayHeaders.length; i++ ){
+        tableHeaders += '<th>' + arrayHeaders[i] + '</th>';
+    }
+
+    var id = 'table'+dataName;
+    var estructura = `<div class="container-fluid">
+                        <table class="table-striped table-hover" id="`+id+`" name="table">
+                            <thead>
+                                <tr>
+                                    `+tableHeaders+`
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>`;
+    $("#"+dataName).html(estructura);
 }
 
 function reorderColumns(){
@@ -157,15 +152,34 @@ function reorderColumns(){
     mainRow.appendChild(elements);
 
     for( i = 1; i<=principalColumns.length; i++){
-        if ($(principalColumns[i-1]).hasClass('hidden')){
-            (function(i){
-                setTimeout(function(){
-                    $(principalColumns[i-1]).removeClass('hidden');
-                    $(principalColumns[i-1]).addClass('fadeInAnimationDelay'+i);
-                }, 250 * i)
-            }(i));
-        } 
-    }
+        (function(i){
+            setTimeout(function(){
+                $(principalColumns[i-1]).removeClass('hidden');
+                if($(principalColumns[i-1]).hasClass('activo')){
+                    var columnDatatable = $( principalColumns[i-1]).find('.col-datatable');
+                    var id = columnDatatable.attr('id');
+                    $("#"+id).html('');
+                    if( id == 'Apartados' ){
+                        buildEstructuraDT(id, dataApartados);
+                        buildTableApartados(dataApartados);
+                    }
+                    else if( id == 'Contratados' ){
+                        buildEstructuraDT(id, dataContratados);
+                        buildTableContratados(dataContratados);
+                    }
+                    else if( id == 'ConEnganche' ){
+                        buildEstructuraDT(id, dataConEnganche);
+                        buildTableConEnganche(dataConEnganche);
+                    }
+                    else if( id == 'SinEnganche' ){
+                        buildEstructuraDT(id, dataConEnganche);
+                        buildTableSinEnganche(dataSinEnganche);
+                    }
+                }
+                $(principalColumns[i-1]).addClass('fadeInAnimationDelay'+i);
+            }, 500 * i)
+        }(i));
+    }   
 }
 
 function getRankings(general, typeRanking){
@@ -242,6 +256,9 @@ function buildTableApartados(data){
         },
         {
             data: 'correo'
+        },
+        {
+            data: 'usuario'
         }],
         columnDefs: [{
             visible: false,
@@ -271,7 +288,7 @@ function buildTableContratados(data){
         },
         data: data,
         columns: [{
-            data: 'id_cliente'
+            data: 'id_usuario'
         },
         {
             data: 'nombre'
@@ -283,10 +300,13 @@ function buildTableContratados(data){
             data: 'apellido_materno'
         },
         {
-            data: 'telefono1'
+            data: 'telefono'
         },
         {
-            data: 'fecha_nacimiento'
+            data: 'correo'
+        },
+        {
+            data: 'usuario'
         }],
         columnDefs: [{
             visible: false,
