@@ -202,5 +202,26 @@ class Reporte extends CI_Controller {
         }
         else echo json_encode(array());
     }
+
+    public function getDetails(){
+        $typeTransaction = $this->input->post("transaction");//si es consulta inicial = 1 o si es consulta con filtro de fechas = 2
+        if( $typeTransaction==1){
+            $beginDate = $this->get4Months()['firstDate'];
+            $endDate = $this->get4Months()['secondDate'];
+        }else{
+            $beginDate = date("Y-m-d", strtotime($this->input->post("beginDate")));
+            $endDate = date("Y-m-d", strtotime($this->input->post("endDate")));
+        }
+        $id_usuario = $this->input->post("id_usuario");
+        $rol = $this->input->post("rol");//que rol es
+        $render = $this->input->post("render");
+
+        $data = $this->Reporte_model->getDetails($beginDate, $endDate, $rol, $id_usuario, $render)->result_array();
+        if($data != null) {
+            echo json_encode($data);
+        } else {
+            echo json_encode(array());
+        }
+    }
 }
  

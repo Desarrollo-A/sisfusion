@@ -6994,5 +6994,29 @@ for ($d=0; $d <count($dos) ; $d++) {
         $data = $this->Comisiones_model->fusionAcLi($tipoDescuento);
         echo json_encode(array('data' => $data));
     }
-    
+
+    public function eliminarDescuentoUniversidad($idDescuento)
+    {
+        $this->Comisiones_model->eliminarDescuentoUniversidad($idDescuento);
+        echo json_encode(true);
+    }
+
+    public function obtenerDescuentoUniversidad($idDescuento)
+    {
+        $comision = $this->Comisiones_model->obtenerDescuentoUniversidad($idDescuento);
+        echo json_encode($comision);
+    }
+
+    public function actualizarDescuentoUniversidad()
+    {
+        $idDescuento = $this->input->post('id_descuento');
+        $data = array(
+            'monto' => $this->input->post('descuento'),
+            'pago_ind' => str_replace(',', '', $this->input->post('pago_ind'))
+        );
+
+        $this->Comisiones_model->actualizarDescuentoUniversidad($idDescuento, $data);
+
+        echo json_encode(true);
+    }
 }
