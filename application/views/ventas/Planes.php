@@ -312,29 +312,29 @@
 
 
 
-		// 							$('.rowCards').append(`	
+									$('.rowCards').append(`	
 		 
-		//  <div class="card border-primary mb-1 boxCard" style="background:#E8F6F3;" id="card_${indexNext}">
-		// 	 <div class="text-right">
-		// 	 <h5 class="card-title"><b>Paquete ${indexNext}</b></h5>
-		// 		 <button type="button" class="btn btn-lg btn-danger btn-circle" data-toggle="tooltip" data-placement="top" title="Eliminar paquete" id="btn_delete_${indexNext}" onclick="removeElementCard('card_${indexNext}')"><i class="fas fa-trash"></i></button>
-		// 	 </div>
+		 <div class="card border-primary mb-1 boxCard" style="background:#E8F6F3;" id="card_${indexNext}">
+			 <div class="text-right">
+			 <h5 class="card-title"><b>Paquete ${indexNext}</b></h5>
+				 <button type="button" class="btn btn-lg btn-danger btn-circle" data-toggle="tooltip" data-placement="top" title="Eliminar paquete" id="btn_delete_${indexNext}" onclick="removeElementCard('card_${indexNext}')"><i class="fas fa-trash"></i></button>
+			 </div>
 
-		// 	 <div class="card-body text-primary myCard">
+			 <div class="card-body text-primary myCard">
 				 
-		// 			 <div class="form-group col-md-12" id="">
-		// 				 <label class="">Descripción paquete</label>
-		// 				 <input type="text" class="form-control input-gral" name="descripcion_${indexNext}" id="descripcion_${indexNext}">
-		// 			 </div>
+					 <div class="form-group col-md-12" id="">
+						 <label class="">Descripción paquete</label>
+						 <input type="text" class="form-control input-gral" name="descripcion_${indexNext}" id="descripcion_${indexNext}">
+					 </div>
 
-		// 		 <div id="checks_${indexNext}">
-		// 		 </div>
+				 <div id="checks_${indexNext}">
+				 </div>
 				 
-		// 		 <div class="form-group col-md-12" id="tipo_descuento_select_${indexNext}">
-		// 		 </div>
-		// 		 </div> 
+				 <div class="form-group col-md-12" id="tipo_descuento_select_${indexNext}">
+				 </div>
+				 </div> 
 				 
-		// 		 `);
+				 `);
 
 $('[data-toggle="tooltip"]').tooltip()
 
@@ -493,37 +493,45 @@ $.post('getResidencialesList', function(data) {
 		}
 
 		function AddMsi(indexN,i,select,id,text){
-			console.log(id)
-			console.log(text)
-			console.log(select)
-			$(`#${select}${indexN}_${i}`).on("option:selected", function (evt){
-			console.log('eeeeeeeeeeeeeeeeeeeeeeeeeeeeeee');
+			console.log('indexN '+indexN)
+			console.log('id '+id)
+			console.log('text '+text)
+			console.log('select '+select)
 
-					var element = evt.params.data.element;
-					var $element = $(element);
-					$element.detach();
-					$(this).append($element);
-					console.log('eeeeeeeeeeeeeeeeeeeeeeeeeeeeeee');
-					console.log($element[0]);
-					console.log('eeeeeeeeeeeeeeeeeeeeeeeeeeeeeee');
-					$(this).trigger("change");
-					console.log('zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz');
-					console.log($element[0].value);
-					console.log('zzzzzzzzzzzzzzzzzzzzzzzzzzzzzz');
-					console.log($element[0].label);
+			// document.getElementById(id).value = 122;
+			var s = document.getElementById(id);
+			console.log('este es el id '+id)
 
-				});
-			let valorMsi = $(`#input_msi_${indexN}_${i}`).val();
-		let idDescuentoSeleccionado = $(`#${select}${indexN}_${i} option:selected`).val();
-		let TextDescuentoSeleccionado = $(`#${select}${indexN}_${i} option:selected`).text();
-		console.log(idDescuentoSeleccionado);
-		console.log(TextDescuentoSeleccionado);
-		console.log($(`#${select}${indexN}_${i}`).select2('val'));
-		console.log('------------------------');
+            id.value = "new value";
+
+			// $(`#${select}${indexN}_${i}`).on("option:selected", function (evt){
+			// console.log('eeeeeeeeeeeeeeeeeeeeeeeeeeeeeee');
+
+			// 		var element = evt.params.data.element;
+			// 		var $element = $(element);
+			// 		$element.detach();
+			// 		$(this).append($element);
+			// 		console.log('eeeeeeeeeeeeeeeeeeeeeeeeeeeeeee');
+			// 		console.log($element[0]);
+			// 		console.log('eeeeeeeeeeeeeeeeeeeeeeeeeeeeeee');
+			// 		$(this).trigger("change");
+			// 		console.log('zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz');
+			// 		console.log($element[0].value);
+			// 		console.log('zzzzzzzzzzzzzzzzzzzzzzzzzzzzzz');
+			// 		console.log($element[0].label);
+
+			// 	});
+		// let valorMsi = $(`#input_msi_${indexN}_${i}`).val();
+		// let idDescuentoSeleccionado = $(`#${select}${indexN}_${i} option:selected`).val();
+		// let TextDescuentoSeleccionado = $(`#${select}${indexN}_${i} option:selected`).text();
+		// console.log(idDescuentoSeleccionado);
+		// console.log(TextDescuentoSeleccionado);
+		// console.log($(`#${select}${indexN}_${i}`).select2('val'));
+		// console.log('------------------------');
 		//$(`#ListaDescuentosTotal_${indexN}_${i}`).data();
 		//$(`#ListaDescuentosTotal_${indexN}_${i}`).find('data-select2-id:25').attr('custom-attribute');//(`${text} + ${valorMsi} MSI `);
 		//console.log($(`#ListaDescuentosTotal_${indexN}_${i}`).on('select2:selected').text('454'));
-		CloseModalMsi();
+		// CloseModalMsi();
 		
 		}
 

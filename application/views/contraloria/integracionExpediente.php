@@ -39,11 +39,12 @@
 														<thead>
 															<tr>
 																<th>PROYECTO</th>
-																<th>CLUSTER</th>
+																<th>CONDOMINIO</th>
 																<th>LOTE</th>
-																<th>GERENTE</th>
-																<th>COORDINADOR</th>
 																<th>ASESOR</th>
+																<th>COORDINADOR</th>
+																<th>GERENTE</th>
+																<th>USUARIO MODIFICACION</th>																
 																<th>FECHA APARTADO</th>
 																<th>FECHA REALIZADO </th>
 																<th>FECHA VENCIMIENTO </th>
@@ -178,6 +179,11 @@
 				{
 					data: function (data){
 						return data.fechaApartado;
+					}
+				},
+				{
+					data: function (data){
+						return data.modificado;
 					}
 				},
 				{
