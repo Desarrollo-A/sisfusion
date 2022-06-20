@@ -13,7 +13,7 @@
                             <div class="total"></div>
                         </div>
                     </div>
-                    <div class="col-12 col-sm-12 col-md-6 col-lg-6 d-flex justify-end">
+                    <div class="col-12 col-sm-12 col-md-6 col-lg-6 d-flex justify-end datesModal">
                         <div class="form-group d-flex m-0 p-0">
                             <input type="text" class="form-control datepicker text-center pl-1" id="beginDate"/>
                             <span>-</span>

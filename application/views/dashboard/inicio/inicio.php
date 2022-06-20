@@ -206,7 +206,7 @@
                     <div class="row h-50">
                         <div class="col-md-12 p-0 h-100">
                             <!-- <h7 class="m-0 fw-400">Clientes y prospectos por mes</h7> -->
-                            <h4 class="text-center m-0 fw-400">Ciclo de venta</h4>
+                            <h4 class="text-center m-0 fw-400">Embudo de ventas</h4>
                             <div id="chartFunnel"></div>
                         </div>
                     </div>
@@ -214,17 +214,17 @@
                         <div class="col-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-between pt-1">
                             <div class="d-flex">
                                 <i class="fas fa-circle pr-2 pl-2 dot txt-lapisLazuli"></i>
-                                <p class="m-0">Alta CRM</p>
+                                <p class="m-0">Prospectos</p>
                             </div>
                             <h4 id="ac" class="subtitle_skeleton numberElement2 m-0"></h4>
                         </div>
-                        <div class="col-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-between pt-1">
+                        <!-- <div class="col-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-between pt-1">
                             <div class="d-flex">
                                 <i class="fas fa-circle pr-2 pl-2 dot txt-blueNCS"></i>
                                 <p class="m-0">Corrida financiera</p>
                             </div>
                             <h4 id="cf" class="subtitle_skeleton numberElement2 m-0"></h4>
-                        </div>
+                        </div> -->
                         <div class="col-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-between pt-1">
                             <div class="d-flex">
                                 <i class="fas fa-circle pr-2 pl-2 dot txt-viridianGreen"></i>
@@ -241,17 +241,17 @@
                         </div>
                         <div class="col-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-between pt-1">
                             <div class="d-flex">
-                                <i class="fas fa-circle pr-2 pl-2 dot txt-oceanGreen"></i>
-                                <p class="m-0">Apartados</p>
-                            </div>
-                            <h4 id="ap" class="subtitle_skeleton numberElement2 m-0"></h4>
-                        </div>
-                        <div class="col-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-between pt-1">
-                            <div class="d-flex">
                                 <i class="fas fa-circle pr-2 pl-2 dot txt-caribbeanGreen"></i>
                                 <p class="m-0">No interesado</p>
                             </div>
                             <h4 id="ni" class="subtitle_skeleton numberElement2 m-0"></h4>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-between pt-1">
+                            <div class="d-flex">
+                                <i class="fas fa-circle pr-2 pl-2 dot txt-oceanGreen"></i>
+                                <p class="m-0">Apartados</p>
+                            </div>
+                            <h4 id="ap" class="subtitle_skeleton numberElement2 m-0"></h4>
                         </div>
                     </div>
                 </div>
