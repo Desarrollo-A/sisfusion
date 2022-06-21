@@ -64,7 +64,10 @@ var options = {
             show: false
         },
         labels: {
-            show: false,   
+            show: true,
+            formatter: function (val) {
+                return val + "%";
+            }
         }
     },
     yaxis: {
@@ -75,7 +78,10 @@ var options = {
             show: false,
         },
         labels: {
-            show: true,   
+            show: true,
+            formatter: function (val) {
+                return val + "%";
+            }
         }
     },
 };
@@ -190,11 +196,10 @@ function reorderColumns(){
 
 function getRankings(general = false, typeRanking = null){
     let dates = getDates(typeRanking);
-    console.log('dates',dates);
     $.ajax({
         type: 'POST',
         url: `Ranking/getAllRankings`,
-        data: {general: general, typeRanking: typeRanking,beginDate: dates.beginDate, endDate: dates.endDate, sede: $('#sede').val()},
+        data: {general: general, typeRanking: typeRanking,beginDate: dates.beginDate, endDate: dates.endDate, sede: 2},
         dataType: 'json',
         cache: false,
         beforeSend: function() {
@@ -202,6 +207,7 @@ function getRankings(general = false, typeRanking = null){
         },
         success: function(data) {
             updateGraph(typeRanking, data);
+            divideRankingArrays(data);
             $('#spiner-loader').addClass('hide');
         },
         error: function() {
@@ -258,25 +264,16 @@ function buildTableApartados(data){
         },
         data: data,
         columns: [{
-            data: 'id_usuario'
+            data: 'totalAT'
         },
         {
-            data: 'nombre'
+            data: 'id_asesor'
         },
         {
-            data: 'apellido_paterno'
+            data: 'nombreUsuario'
         },
         {
-            data: 'apellido_materno'
-        },
-        {
-            data: 'telefono'
-        },
-        {
-            data: 'correo'
-        },
-        {
-            data: 'usuario'
+            data: 'id_rol'
         }],
         columnDefs: [{
             visible: false,
@@ -314,25 +311,16 @@ function buildTableContratados(data){
         },
         data: data,
         columns: [{
-            data: 'id_usuario'
+            data: 'totalConT'
         },
         {
-            data: 'nombre'
+            data: 'id_asesor'
         },
         {
-            data: 'apellido_paterno'
+            data: 'nombreUsuario'
         },
         {
-            data: 'apellido_materno'
-        },
-        {
-            data: 'telefono'
-        },
-        {
-            data: 'correo'
-        },
-        {
-            data: 'usuario'
+            data: 'id_rol'
         }],
         columnDefs: [{
             visible: false,
@@ -370,19 +358,13 @@ function buildTableConEnganche(data){
         },
         data: data,
         columns: [{
-            data: 'id_usuario'
+            data: 'cuantos'
         },
         {
-            data: 'nombre'
+            data: 'asesor'
         },
         {
-            data: 'apellido_paterno'
-        },
-        {
-            data: 'apellido_materno'
-        },
-        {
-            data: 'telefono'
+            data: 'id_asesor'
         }],
         columnDefs: [{
             visible: false,
@@ -519,8 +501,6 @@ function formatData(data) {
 
 function updateGraph(typeRanking, data){
     let series = formatData(data);
-    console.log('series',series);
-    console.log('typeRanking',typeRanking);
 
     switch (typeRanking) {
         case 'general':
@@ -548,8 +528,7 @@ function updateGraph(typeRanking, data){
 }
 
 function setOptionsChart(series, categories){
-    // (series.length > 1) ? colors = ["#2C93E7", "#d9c07b"] : colors = ["#2C93E7"];
-    let options = {
+    let options = { 
         series: [series],
         chart: {
             height: 'auto',
@@ -562,21 +541,19 @@ function setOptionsChart(series, categories){
             bar: {
                 horizontal: true,
                 borderRadius: 7,
-                endingShape: 'rounded',
-                barHeight: '40%',
+                barHeight: '50%',
                 distributed: false,
                 dataLabels: {
-                    show: false
+                    show: true
                 },
+                
             }
         },
         dataLabels: {
-            enabled: false,
-            offsetY: -20,
-            style: {
-                fontSize: '12px',
-                colors: ["#304758"]
-            }
+            enabled: true,
+        },
+        grid: {
+            show: false,
         },
         xaxis: {
             categories: categories,
@@ -587,18 +564,9 @@ function setOptionsChart(series, categories){
             axisTicks: {
                 show: false
             },
-            crosshairs: {
-                fill: {
-                    type: 'gradient',
-                    gradient: {
-                    colorFrom: '#D8E3F0',
-                    colorTo: '#BED1E6',
-                    stops: [0, 100],
-                    opacityFrom: 0.4,
-                    opacityTo: 0.5,
-                    }
-                }
-            },
+            labels: {
+                show: false,   
+            }
         },
         yaxis: {
             axisBorder: {
@@ -608,13 +576,13 @@ function setOptionsChart(series, categories){
                 show: false,
             },
             labels: {
-                show: false,
-                formatter: function (val) {
-                    return val;
-                }
+                show: true,
+                // formatter: function (val) {
+                //     return val + "%";
+                // }
             }
-        },
-    };    
+        }
+    }
     return options;
 }
 
