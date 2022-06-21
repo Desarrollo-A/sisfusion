@@ -21,31 +21,36 @@ class Ranking extends CI_Controller {
     }
 
     public function getAllRankings(){
+        $year = date("Y");
         $general = $this->input->post('general');
         $tipoRanking = $this->input->post('tipoChart');
-        $beginDate = date("Y-m-d", strtotime($this->input->post("beginDate"))) . ' 00:00:00.000';
-        $endDate = date("Y-m-d", strtotime($this->input->post("endDate"))) . ' 23:59:00.000';
-
-        if ( $general == 'true' ){
-            $data['Apartados'] = $this->Ranking_model->getRankingApartados( $beginDate, $endDate )->result_array();
-            $data['Contratados']= ($this->Ranking_model->getRankingContratados( $beginDate, $endDate )->result_array());
-            $data['ConEnganche'] = $this->Ranking_model->getRankingConEnganche( $beginDate, $endDate )->result_array();
-            $data['SinEnganche'] = $this->Ranking_model->getRankingSinEnganche( $beginDate, $endDate )->result_array();
+        $beginDate = $this->input->post("beginDate") != null ? date("Y-m-d", strtotime($this->input->post("beginDate"))) : "$year-01-01";
+        $endDate = $this->input->post("endDate") != null ? date("Y-m-d", strtotime($this->input->post("endDate"))) : date("Y-m-d");
+        $sede = $this->input->post("sede");
+        if ( $general){
+            $data['Apartados'] = $this->Ranking_model->getRankingApartados( $beginDate, $endDate, $sede)->result_array();
+            $data['Contratados']= ($this->Ranking_model->getRankingContratados( $beginDate, $endDate, $sede )->result_array());
+            $data['ConEnganche'] = $this->Ranking_model->getRankingConEnganche( $beginDate, $endDate, $sede )->result_array();
+            $data['SinEnganche'] = $this->Ranking_model->getRankingSinEnganche( $beginDate, $endDate, $sede )->result_array();
         }
         else if( $tipoRanking ==  'Apartados' ){
-            $data['Apartados']= $this->Ranking_model->getRankingApartados( $beginDate, $endDate )->result_array();
+            $data['Apartados']= $this->Ranking_model->getRankingApartados( $beginDate, $endDate, $sede )->result_array();
         }
         else if( $tipoRanking ==  'Contratados' ){
-            $data['Contratados']= $this->Ranking_model->getRankingContratados( $beginDate, $endDate )->result_array();
+            $data['Contratados']= $this->Ranking_model->getRankingContratados( $beginDate, $endDate, $sede )->result_array();
         }
         else if( $tipoRanking ==  'ConEnganche' ){
-            $data['ConEnganche'] = $this->Ranking_model->getRankingConEnganche( $beginDate, $endDate )->result_array();
+            $data['ConEnganche'] = $this->Ranking_model->getRankingConEnganche( $beginDate, $endDate, $sede )->result_array();
         }
         else if( $tipoRanking ==  'SinEnganche' ){
-            $data['SinEnganche'] = $this->Ranking_model->getRankingSinEnganche( $beginDate, $endDate )->result_array();
+            $data['SinEnganche'] = $this->Ranking_model->getRankingSinEnganche( $beginDate, $endDate, $sede )->result_array();
         }
 
-        echo json_encode($data);
+        if($data != null) {
+            echo json_encode($data);
+        } else {
+            echo json_encode(array());
+        }
     }
 }
  

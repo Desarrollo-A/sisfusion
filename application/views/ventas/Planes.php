@@ -494,36 +494,70 @@ $.post('getResidencialesList', function(data) {
 			var s = document.getElementById(id);
 			console.log('este es el id '+id)
 
-            id.value = "new value";
+				});
+		}
 
-			// $(`#${select}${indexN}_${i}`).on("option:selected", function (evt){
-			// console.log('eeeeeeeeeeeeeeeeeeeeeeeeeeeeeee');
+		function AddMsi(indexN,i,select,id,text2,pesos = 0){
+			console.log(indexN)
+			console.log(i)
+			console.log(select)
+			console.log(id)
+			console.log(text2)
 
-			// 		var element = evt.params.data.element;
-			// 		var $element = $(element);
-			// 		$element.detach();
-			// 		$(this).append($element);
-			// 		console.log('eeeeeeeeeeeeeeeeeeeeeeeeeeeeeee');
-			// 		console.log($element[0]);
-			// 		console.log('eeeeeeeeeeeeeeeeeeeeeeeeeeeeeee');
-			// 		$(this).trigger("change");
-			// 		console.log('zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz');
-			// 		console.log($element[0].value);
-			// 		console.log('zzzzzzzzzzzzzzzzzzzzzzzzzzzzzz');
-			// 		console.log($element[0].label);
+			let valorMsi = $(`#input_msi_${indexN}_${i}`).val();
+			console.log(id)
+			console.log(text2)
+			console.log(select)
+			console.log('-------------b-----------');
+			//console.log($(`#${select}${indexN}_${i}`).select2('text'));
+			console.log($(`#${select}${indexN}_${i}`).select2('val'));
+			console.log('-------------b-----------');
+			let selecdes = $(`#${select}${indexN}_${i}`);
+			console.log(selecdes)
+			console.log(selecdes[0].length)
+			//console.log(selecdes.options[0])
+			console.log(selecdes[0][19]);
+			let texto = pesos != 0 ? '$'+formatMoney(text2) : text2;
+			$(`#listamsi_${indexN}_${i}`).append(`
+			<span class="label label-success color_span" id="${indexN}_${id}_span" >${texto}% + ${valorMsi} MSI</span>
+			<input type="hidden" name="${indexN}_${id}_msi" id="${indexN}_${id}_msi" value="${id},${valorMsi}"> 
+			`)
+			/*for (i = 0; i < selecdes[0].length; i++) {
+				if (selecdes[0][i].value = id) {
+					// Realizar acciones
+					selecdes[0][i].text = text2 + ' + '+ valorMsi + ' MSI';
+				}
+			}*/
+			CloseModalMsi();
+		// otra(indexN,i,select,id,text2);
+	/*	$(`#${select}${indexN}_${i}`).on("select2:unselect",function (evt){
+			console.log('eeeeeeeeeeeeeeeeeeeeeeeeeeeeeee');
 
-			// 	});
-		// let valorMsi = $(`#input_msi_${indexN}_${i}`).val();
-		// let idDescuentoSeleccionado = $(`#${select}${indexN}_${i} option:selected`).val();
-		// let TextDescuentoSeleccionado = $(`#${select}${indexN}_${i} option:selected`).text();
-		// console.log(idDescuentoSeleccionado);
-		// console.log(TextDescuentoSeleccionado);
-		// console.log($(`#${select}${indexN}_${i}`).select2('val'));
-		// console.log('------------------------');
+					var element = evt.params.data.element;
+					var $element = $(element);
+					$element.detach();
+					$(this).append($element);
+					console.log('eeeeeeeeeeeeeeeeeeeeeeeeeeeeeee');
+					console.log($element[0]);
+					console.log('eeeeeeeeeeeeeeeeeeeeeeeeeeeeeee');
+					$(this).trigger("change");
+					console.log('zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz');
+					console.log($element[0].value);
+					console.log('zzzzzzzzzzzzzzzzzzzzzzzzzzzzzz');
+					console.log($element[0].label);
+
+				});*/
+			
+		let idDescuentoSeleccionado = $(`#${select}${indexN}_${i} option:selected`).val();
+		let TextDescuentoSeleccionado = $(`#${select}${indexN}_${i} option:selected`).text();
+		console.log(idDescuentoSeleccionado);
+		console.log(TextDescuentoSeleccionado);
+		console.log($(`#${select}${indexN}_${i}`).select2('val'));
+		console.log('------------------------');
 		//$(`#ListaDescuentosTotal_${indexN}_${i}`).data();
 		//$(`#ListaDescuentosTotal_${indexN}_${i}`).find('data-select2-id:25').attr('custom-attribute');//(`${text} + ${valorMsi} MSI `);
 		//console.log($(`#ListaDescuentosTotal_${indexN}_${i}`).on('select2:selected').text('454'));
-		// CloseModalMsi();
+		
 		
 		}
 

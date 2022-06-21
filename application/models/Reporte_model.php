@@ -55,18 +55,56 @@ class Reporte_model extends CI_Model {
         GROUP BY MONTH(cl.fechaApartado), YEAR(cl.fechaApartado)) qu ON qu.mes = month(cte.DateValue) AND qu.año = year(cte.DateValue)
         GROUP BY Month(DateValue), YEAR(DateValue), cantidad, total";
 
-        $canceladasApartadas = "SELECT ISNULL(total, 0) total, ISNULL(cantidad ,0) cantidad, MONTH(DateValue) mes, YEAR(DateValue) año, 'ca' tipo, '$rol' rol FROM cte
-        LEFT JOIN (SELECT FORMAT(ISNULL(SUM(CASE WHEN totalNeto2 IS NULL THEN total WHEN totalNeto2 = 0 THEN total ELSE totalNeto2 END), 0), 'C') total, 
-        COUNT(*) cantidad, MONTH(cl.fechaApartado) mes, YEAR(cl.fechaApartado) año
-        FROM clientes cl
-        INNER JOIN lotes lo ON lo.idLote = cl.idLote
-        LEFT JOIN historial_liberacion hl ON hl.idLote = lo.idLote AND hl.tipo NOT IN (2, 5, 6) AND hl.id_cliente = cl.id_cliente
-        INNER JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes WHERE idStatusContratacion = 15 AND idMovimiento = 45
-        GROUP BY idLote, idCliente) hlo ON hlo.idLote = lo.idLote AND hlo.idCliente = cl.id_cliente
-        WHERE isNULL(noRecibo, '') != 'CANCELADO' AND cl.status = 0  AND cl.fechaApartado BETWEEN '$beginDate' AND '$endDate' 
-        $condicion_x_rol
-        GROUP BY MONTH(cl.fechaApartado), YEAR(cl.fechaApartado)) qu ON qu.mes = month(cte.DateValue) AND qu.año = year(cte.DateValue)
-        GROUP BY Month(DateValue), YEAR(DateValue), cantidad, total";
+        // $canceladasApartadas = "SELECT ISNULL(total, 0) total, ISNULL(cantidad ,0) cantidad, MONTH(DateValue) mes, YEAR(DateValue) año, 'ca' tipo, '$rol' rol FROM cte
+        // LEFT JOIN (SELECT FORMAT(ISNULL(SUM(CASE WHEN totalNeto2 IS NULL THEN total WHEN totalNeto2 = 0 THEN total ELSE totalNeto2 END), 0), 'C') total, 
+        // COUNT(*) cantidad, MONTH(cl.fechaApartado) mes, YEAR(cl.fechaApartado) año
+        // FROM clientes cl
+        // INNER JOIN lotes lo ON lo.idLote = cl.idLote
+        // LEFT JOIN historial_liberacion hl ON hl.idLote = lo.idLote AND hl.tipo NOT IN (2, 5, 6) AND hl.id_cliente = cl.id_cliente
+        // INNER JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes WHERE idStatusContratacion = 15 AND idMovimiento = 45
+        // GROUP BY idLote, idCliente) hlo ON hlo.idLote = lo.idLote AND hlo.idCliente = cl.id_cliente
+        // WHERE isNULL(noRecibo, '') != 'CANCELADO' AND cl.status = 0  AND cl.fechaApartado BETWEEN '$beginDate' AND '$endDate' 
+        // $condicion_x_rol
+        // GROUP BY MONTH(cl.fechaApartado), YEAR(cl.fechaApartado)) qu ON qu.mes = month(cte.DateValue) AND qu.año = year(cte.DateValue)
+        // GROUP BY Month(DateValue), YEAR(DateValue), cantidad, total";
+
+        $canceladasApartadas = "SELECT 
+            FORMAT(ISNULL(a.sumaCT, 0) - ISNULL(b.sumaCanC, 0), 'C') total,
+            ISNULL(a.totalCT, 0) - ISNULL(b.totalCanC, 0) cantidad,
+            MONTH(DateValue) mes, YEAR(DateValue) año, 'ca' tipo, '$rol' rol FROM cte
+            LEFT JOIN(
+                SELECT SUM(
+                    CASE 
+                        WHEN tempCT.totalNeto2 IS NULL THEN tempCT.total 
+                        WHEN tempCT.totalNeto2 = 0 THEN tempCT.total 
+                        ELSE tempCT.totalNeto2 
+                    END) sumaCT, COUNT(*) totalCT, tempCT.mes, tempCT.año FROM (
+                        SELECT MONTH(cl.fechaApartado) mes , YEAR(cl.fechaApartado) año, totalNeto2, total FROM clientes cl
+                        INNER JOIN lotes lo ON lo.idLote = cl.idLote
+                        LEFT JOIN historial_liberacion hl ON hl.idLote = lo.idLote AND hl.tipo NOT IN (2, 5, 6) AND hl.idLote = lo.idLote AND hl.id_cliente = cl.id_cliente
+                        WHERE isNULL(noRecibo, '') != 'CANCELADO' AND cl.status = 0 AND cl.fechaApartado BETWEEN '$beginDate' AND '$endDate' 
+                        $condicion_x_rol
+                        GROUP BY MONTH(cl.fechaApartado), YEAR(cl.fechaApartado), totalNeto2, total
+                    ) tempCT GROUP BY tempCT.mes, tempCT.año
+                ) a ON a.mes = month(cte.DateValue) AND a.año =  year(cte.DateValue)
+                LEFT JOIN (
+                    SELECT SUM(
+                        CASE 
+                            WHEN tmpCC.totalNeto2 IS NULL THEN tmpCC.total 
+                            WHEN tmpCC.totalNeto2 = 0 THEN tmpCC.total 
+                            ELSE tmpCC.totalNeto2 
+                        END) sumaCanC, COUNT(*) totalCanC, tmpCC.mes, tmpCC.año FROM (
+                            SELECT  MONTH(cl.fechaApartado) mes , YEAR(cl.fechaApartado) año, totalNeto2, total  FROM clientes cl
+                            INNER JOIN lotes lo ON lo.idLote = cl.idLote
+                            LEFT JOIN historial_liberacion hl ON hl.idLote = lo.idLote AND hl.tipo NOT IN (2, 5, 6) AND hl.id_cliente = cl.id_cliente
+                            INNER JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes WHERE idStatusContratacion = 15 AND idMovimiento = 45
+                            GROUP BY idLote, idCliente) hlo ON hlo.idLote = lo.idLote AND hlo.idCliente = cl.id_cliente
+                            WHERE isNULL(noRecibo, '') != 'CANCELADO' AND cl.status = 0  AND cl.fechaApartado BETWEEN '$beginDate' AND '$endDate' 
+                            $condicion_x_rol
+                            GROUP BY MONTH(cl.fechaApartado), YEAR(cl.fechaApartado), totalNeto2, total
+                    ) tmpCC GROUP BY tmpCC.mes, tmpCC.año
+                ) b ON b.mes = month(cte.DateValue) AND b.año =  year(cte.DateValue) 
+            GROUP BY Month(DateValue), YEAR(DateValue), a.sumaCT, b.sumaCanC, a.totalCT, b.totalCanC";
 
         if($coordinador){
             $ventasContratadas = $ventasContratadas . " UNION ALL " . $coordinadorVC;
@@ -112,7 +150,7 @@ class Reporte_model extends CI_Model {
         }
         else if ($tipoChart == 'ca'){
             $data = $this->db->query("$defaultColumns
-            $canceladasContratadas
+            $canceladasApartadas
             ORDER BY tipo DESC, rol, año, mes
             OPTION (MAXRECURSION 0)");
         }
