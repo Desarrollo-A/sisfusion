@@ -8,7 +8,25 @@
   line-height: 1.33;
   border-radius: 25px;
 }
+.btn-maderas {
+  background-color: $blueMaderas;
+}
+.btn-maderas {
+  background-color: $blueMaderas;
+}
+.btn-maderas:hover {
+  background: $blueMaderas;
+}
+.formulario{
+  .none{
+    display: none;
+  }
+
+}
 .form1{
+
+  
+  
     .input-gral {
         background-color: #eaeaea !important;
         color: #929292 !important;
@@ -60,7 +78,9 @@
         .myCard{
         height: 100%;
         
-    
+    .color_span{
+      background:$goldMaderas;
+    }
         .check-padding{
           padding-top: 30px;
         }

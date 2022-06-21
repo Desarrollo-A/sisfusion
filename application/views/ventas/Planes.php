@@ -1,5 +1,4 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
-
 <link href="<?= base_url() ?>dist/css/planes.css" rel="stylesheet"/>
 
 <body>
@@ -23,6 +22,22 @@
 		</div>
 	</div>
 </div>
+<div class="modal fade modal-alertas" id="ModalAlert" role="dialog">
+	<div class="modal-dialog modal-md">
+		<div class="modal-content text-center">
+		<b>Una vez guardados los paquetes ya no se podra modificar la información</b>
+					<div class="row">
+						
+						<div class="col-md-6">
+						<input type="button" class="btn btn-success" onclick="SavePaquete();" name=""  id="" value="GUARDAR">
+					</div>
+					<div class="col-md-6">
+						<input type="button" class="btn btn-danger" data-dismiss="modal" value="CANCELAR">
+					</div>
+				</div>
+		</div>
+	</div>
+</div>
 
 <div class="modal fade modal-alertas" id="myModalDelete" role="dialog">
 	<div class="modal-dialog modal-md">
@@ -34,15 +49,23 @@
 		</div>
 	</div>
 </div>
+<div class="modal fade modal-alertas" id="myModalListaDesc" role="dialog">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			
+		</div>
+	</div>
+</div>
 
 <div class="content">
 	<div class="container-fluid">
 		<div class="row">
 			<div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
 				<div class="card">
-					<form id="form-paquetes">
+					<form id="form-paquetes" class="formulario">
 						<div class="card-content">
 							<h3 class="card-title center-align">Paquetes Corrida Financiera</h3>
+							<div class="text-right"><button type="button" data-toggle="modal" data-target="#exampleModal" class="btn btn-maderas">Ver descuentos</button></div>
 							<div class="container-fluid p-0">
 								<div class="row">
 									<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 form1">
@@ -149,7 +172,7 @@
 						</div>
 						
 						<div class="text-center">
-							<button type="submit" class="btn btn-success">Guardar</button>
+							<button type="submit" id="btn_save" class="btn btn-success">Guardar</button>
 						</div>
 					</div>
 				</form>
@@ -189,25 +212,24 @@
         return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
     };
 		$(document).ready(function() {
-
 			$.post("<?=base_url()?>index.php/PaquetesCorrida/lista_sedes", function (data) {
 				$('[data-toggle="tooltip"]').tooltip()
-
                 var len = data.length;
 				$("#sede").append($('<option>').val("").text("Seleccione una opción"));
                 for (var i = 0; i < len; i++) {
-                    var id = data[i]['id_sede'];
+                    var id = data[i]['id_sede']+','+data[i]['abreviacion'];
                     var name = data[i]['nombre'];
                     $("#sede").append($('<option>').val(id).text(name.toUpperCase()));
                 }
                 $("#sede").selectpicker('refresh');
             }, 'json');
-
         });
 		$("#sede").change(function() {
 			$('#residencial option').remove();
 			var parent = $(this).val();
-			$.post('getResidencialesList/'+parent, function(data) {
+			var	datos = parent.split(',')
+			var	id_sede = datos[0];
+			$.post('getResidencialesList/'+id_sede, function(data) {
                 $("#residencial").append($('<option disabled>').val("default").text("Seleccione una opción"));
 				console.log(data.length);
                 var len = data.length;
@@ -224,14 +246,14 @@
             }, 'json'); 
 		});
 		$("#residencial").select2({containerCssClass: "select-gral",dropdownCssClass: "custom-dropdown"});
-
 		var id_paquete=0;
 		var descripcion='';
 		var id_descuento=0;
+		function ShowAlert(){
 
+		}
 
-		$("#form-paquetes").on('submit', function(e){ 
-			e.preventDefault();
+		function SavePaquete(){
 			let formData = new FormData(document.getElementById("form-paquetes"));
 			$.ajax({
 				url: 'SavePaquete',
@@ -240,14 +262,24 @@
 				contentType: false,
 				cache: false,
 				processData:false,
-				success: function(data) {
-					
+				success: function(data) {	
+					if(data == 1){
+						alerts.showNotification("top", "right", "Paquetes almacenados correctamente.", "success");	
+					}else{
+						alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+					}
+				
 				},
 				error: function(){
 					alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
 				},
 				async: false
 			});
+		}
+
+		$("#form-paquetes").on('submit', function(e){ 
+			e.preventDefault();
+			$("#ModalAlert").modal();
 		});
 
 	/**
@@ -275,13 +307,10 @@
 	
 		function GenerarCard(){
 		//	if($('#sede').val() != '' && $('#residencial').val() != '' && $('input[name="customRadio"]').is(':checked') && ){
-
-			
 			var indexActual = document.getElementById('index');
 			var indexNext = (document.getElementById('index').value - 1) + 2;
 			indexActual.value = indexNext;
 			console.log(indexNext);
-
 			$('.rowCards').append(`	
 							<div class="card border-primary mb-3 boxCard" style="max-width: 45rem;" id="card_${indexNext}">
 								<div class="text-right">
@@ -294,17 +323,12 @@
 														<input type="text" class="form-control input-gral" name="descripcion_${indexNext}" id="descripcion_${indexNext}">
 														
 														</div>
-												
-  
-
 													<div  id="checks_${indexNext}">
-													</div>
-													
+													</div>						
 												<div class="form-group col-md-12" id="tipo_descuento_select_${indexNext}">
 												</div>
 </div>`);
 $('[data-toggle="tooltip"]').tooltip()
-
 /**
  * 
  * <div class="form-group col-md-12" id="">
@@ -342,13 +366,11 @@ $.post('getResidencialesList', function(data) {
 
 				$('#checks_'+indexNext).append(`
 				<div class="row">
-						<div class="col-md-2">
-						<b>Orden</b>
-						</div>
+
 						<div class="col-md-4">
 						<b>Descuento a</b>
 						</div>
-						<div class="col-md-6">
+						<div class="col-md-8">
 						<b>Descuentos</b>
 						</div>
 					</div>
@@ -375,13 +397,18 @@ $.post('getResidencialesList', function(data) {
 					
 					<div class="row" >
 					
-						<div class="col-md-4" >
+						<div class="col-md-3" >
 								<div class="form-check form-check-inline check-padding">
 								<input class="form-check-input" type="checkbox" onclick="PrintSelectDesc(${id},${i},${indexNext})" id="inlineCheckbox1_${indexNext}_${i}" value="${id}">
 								<label class="form-check-label" for="inlineCheckbox1">${descripcion}</label>
 								</div>
 						</div>
-						<div class="col-md-8"  id="selectDescuentos_${indexNext}_${i}">
+						<div class="col-md-9"  id="selectDescuentos_${indexNext}_${i}">
+						</div>
+						<div class="row" >
+						<div class="col-md-1"></div>
+						<div class="col-md-10" id="listamsi_${indexNext}_${i}"></div>
+						<div class="col-md-1"></div>
 						</div>
 					</div>
 					`);
@@ -426,7 +453,7 @@ $.post('getResidencialesList', function(data) {
 				$(`#btn_save_${indexN}_${i}`).prop( "disabled", false );
 			}
 		}
-		function ModalMsi(indexN,i,select,id,text){
+		function ModalMsi(indexN,i,select,id,text,pesos = 0){
 		
 
 			const Modalbody = $('#ModalMsi .modal-body');
@@ -450,20 +477,17 @@ $.post('getResidencialesList', function(data) {
 			Modalbody.append(`
 			<div class="row">
 				<div class="col-md-6">
-				<input type="button" class="btn btn-success"  disabled onclick="AddMsi(${indexN},${i},'${select}',${id},${text});" name="disper_btn"  id="btn_save_${indexN}_${i}" value="GUARDAR">
+				<input type="button" class="btn btn-success"  disabled onclick="AddMsi(${indexN},${i},'${select}',${id},${text},${pesos});" name="disper_btn"  id="btn_save_${indexN}_${i}" value="GUARDAR">
 				</div>
 				<div class="col-md-6">
-				<input type="button" class="btn btn-danger" data-dismiss="modal" value="CANCELAR">
+				<input type="button" class="btn btn-danger" data-dismiss="modal" value="SIN MSI">
 				</div>
 			</div>`);
 			$("#ModalMsi").modal();
 		}
 
-		function AddMsi(indexN,i,select,id,text){
-			console.log(id)
-			console.log(text)
-			console.log(select)
-			$(`#${select}${indexN}_${i}`).on("option:selected", function (evt){
+	 function otra(indexN,i,select,id,text2){
+			$(`#${select}${indexN}_${i}`).on(async function (evt){
 			console.log('eeeeeeeeeeeeeeeeeeeeeeeeeeeeeee');
 
 					var element = evt.params.data.element;
@@ -480,7 +504,59 @@ $.post('getResidencialesList', function(data) {
 					console.log($element[0].label);
 
 				});
+		}
+
+		function AddMsi(indexN,i,select,id,text2,pesos = 0){
+			console.log(indexN)
+			console.log(i)
+			console.log(select)
+			console.log(id)
+			console.log(text2)
+
 			let valorMsi = $(`#input_msi_${indexN}_${i}`).val();
+			console.log(id)
+			console.log(text2)
+			console.log(select)
+			console.log('-------------b-----------');
+			//console.log($(`#${select}${indexN}_${i}`).select2('text'));
+			console.log($(`#${select}${indexN}_${i}`).select2('val'));
+			console.log('-------------b-----------');
+			let selecdes = $(`#${select}${indexN}_${i}`);
+			console.log(selecdes)
+			console.log(selecdes[0].length)
+			//console.log(selecdes.options[0])
+			console.log(selecdes[0][19]);
+			let texto = pesos != 0 ? '$'+formatMoney(text2) : text2;
+			$(`#listamsi_${indexN}_${i}`).append(`
+			<span class="label label-success color_span" id="${indexN}_${id}_span" >${texto}% + ${valorMsi} MSI</span>
+			<input type="hidden" name="${indexN}_${id}_msi" id="${indexN}_${id}_msi" value="${id},${valorMsi}"> 
+			`)
+			/*for (i = 0; i < selecdes[0].length; i++) {
+				if (selecdes[0][i].value = id) {
+					// Realizar acciones
+					selecdes[0][i].text = text2 + ' + '+ valorMsi + ' MSI';
+				}
+			}*/
+			CloseModalMsi();
+		// otra(indexN,i,select,id,text2);
+	/*	$(`#${select}${indexN}_${i}`).on("select2:unselect",function (evt){
+			console.log('eeeeeeeeeeeeeeeeeeeeeeeeeeeeeee');
+
+					var element = evt.params.data.element;
+					var $element = $(element);
+					$element.detach();
+					$(this).append($element);
+					console.log('eeeeeeeeeeeeeeeeeeeeeeeeeeeeeee');
+					console.log($element[0]);
+					console.log('eeeeeeeeeeeeeeeeeeeeeeeeeeeeeee');
+					$(this).trigger("change");
+					console.log('zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz');
+					console.log($element[0].value);
+					console.log('zzzzzzzzzzzzzzzzzzzzzzzzzzzzzz');
+					console.log($element[0].label);
+
+				});*/
+			
 		let idDescuentoSeleccionado = $(`#${select}${indexN}_${i} option:selected`).val();
 		let TextDescuentoSeleccionado = $(`#${select}${indexN}_${i} option:selected`).text();
 		console.log(idDescuentoSeleccionado);
@@ -490,7 +566,7 @@ $.post('getResidencialesList', function(data) {
 		//$(`#ListaDescuentosTotal_${indexN}_${i}`).data();
 		//$(`#ListaDescuentosTotal_${indexN}_${i}`).find('data-select2-id:25').attr('custom-attribute');//(`${text} + ${valorMsi} MSI `);
 		//console.log($(`#ListaDescuentosTotal_${indexN}_${i}`).on('select2:selected').text('454'));
-		CloseModalMsi();
+		
 		
 		}
 
@@ -519,6 +595,8 @@ function PrintSelectDesc(id,index,indexGral){
 			///TOTAL DE LOTE
 			$(`#selectDescuentos_${indexGral}_${index}`).append(`
 		<div class="form-group d-flex justify-center align-center">
+		<div id="divmsi_${indexGral}_${index}">
+		</div>
 		<label>Descuento(<b class="text-danger">*</b>):</label>
 		<select id="ListaDescuentosTotal_${indexGral}_${index}"   name="${indexGral}_${index}_ListaDescuentosTotal_[]" multiple="multiple" class="form-control"  required data-live-search="true"></select>
 		</div>`);
@@ -538,6 +616,7 @@ function PrintSelectDesc(id,index,indexGral){
 				}, 'json');	
 				$(`#ListaDescuentosTotal_${indexGral}_${index}`).select2({containerCssClass: "select-gral",dropdownCssClass: "custom-dropdown",tags: true,tokenSeparators: [',', ' ']	});
 				$(`#ListaDescuentosTotal_${indexGral}_${index}`).on("select2:select", function (evt){
+
 					var element = evt.params.data.element;
 					var $element = $(element);
 					$element.detach();
@@ -550,20 +629,30 @@ function PrintSelectDesc(id,index,indexGral){
 					console.log($element[0].value);
 					console.log('zzzzzzzzzzzzzzzzzzzzzzzzzzzzzz');
 					console.log($element[0].label);
-
-
-
 					ModalMsi(indexGral,index,'ListaDescuentosTotal_',$element[0].value,$element[0].label);
-					/*var data = $(`#ListaDescuentosTotal_${indexGral}_${index} option:selected`).text();
-					var data2 = $(`#ListaDescuentosTotal_${indexGral}_${index} option:selected`).val();
-					console.log('ooooooooooooooooo');
-    				console.log(data);
-					console.log('ooooooooooooooooo');
-					console.log('aaaaaaaaaaaaaaaaaaaaaa');
-    				console.log(data2);
-					console.log('aaaaaaaaaaaaaaaaaaaaaaaa');*/
-
 				});
+				$(`#ListaDescuentosTotal_${indexGral}_${index}`).on("select2:unselecting", function (evt){
+					console.log(evt);
+					var element = evt.params.args.data.element;
+					var $element = $(element);
+					$element.detach();
+					$(this).append($element);
+					console.log('eeeeeeeeeeeeeeeeeeeeeeeeeeeeeee');
+					console.log($element[0]);
+					console.log('eeeeeeeeeeeeeeeeeeeeeeeeeeeeeee');
+					$(this).trigger("change");
+					console.log('zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz');
+					console.log($element[0].value);
+					console.log('zzzzzzzzzzzzzzzzzzzzzzzzzzzzzz');
+					console.log($element[0].label);
+					var classnameExists = !!document.getElementById(`${indexGral}_${$element[0].value}_msi`);
+					console.log(classnameExists);
+					if(classnameExists == true){
+						document.getElementById(`${indexGral}_${$element[0].value}_msi`).outerHTML = "";
+						document.getElementById(`${indexGral}_${$element[0].value}_span`).outerHTML = "";
+					}
+
+				 });
 	
 		}else{
 			$(`#orden_${indexGral}_${index}`).val("");
@@ -589,7 +678,7 @@ function PrintSelectDesc(id,index,indexGral){
                 for( var i = 0; i<len; i++){
                     var name = data[i]['porcentaje'];
                     var id = data[i]['id_descuento'];
-                    $(`#ListaDescuentosEnganche_${indexGral}_${index}`).append(`<option value='${id}'>${name}%</option>`);
+                    $(`#ListaDescuentosEnganche_${indexGral}_${index}`).append(`<option value='${id}' label="${name}">${name}%</option>`);
                 }
                 if(len<=0){
                     $(`#ListaDescuentosEnganche_${indexGral}_${index}`).append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
@@ -604,7 +693,30 @@ function PrintSelectDesc(id,index,indexGral){
 					$element.detach();
 					$(this).append($element);
 					$(this).trigger("change");
+					ModalMsi(indexGral,index,'ListaDescuentosEnganche_',$element[0].value,$element[0].label);
 				});
+				$(`#ListaDescuentosEnganche_${indexGral}_${index}`).on("select2:unselecting", function (evt){
+					console.log(evt);
+					var element = evt.params.args.data.element;
+					var $element = $(element);
+					$element.detach();
+					$(this).append($element);
+					console.log('eeeeeeeeeeeeeeeeeeeeeeeeeeeeeee');
+					console.log($element[0]);
+					console.log('eeeeeeeeeeeeeeeeeeeeeeeeeeeeeee');
+					$(this).trigger("change");
+					console.log('zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz');
+					console.log($element[0].value);
+					console.log('zzzzzzzzzzzzzzzzzzzzzzzzzzzzzz');
+					console.log($element[0].label);
+					var classnameExists = !!document.getElementById(`${indexGral}_${$element[0].value}_msi`);
+					console.log(classnameExists);
+					if(classnameExists == true){
+						document.getElementById(`${indexGral}_${$element[0].value}_msi`).outerHTML = "";
+						document.getElementById(`${indexGral}_${$element[0].value}_span`).outerHTML = "";
+					}
+
+				 });
 		}else{
 			$(`#orden_${indexGral}_${index}`).val("");
 			$(`#orden_${indexGral}_${index}`).prop( "disabled", true );
@@ -632,7 +744,7 @@ function PrintSelectDesc(id,index,indexGral){
                 for( var i = 0; i<len; i++){
                     var name = data[i]['porcentaje'];
                     var id = data[i]['id_descuento'];
-                    $(`#ListaDescuentosM2_${indexGral}_${index}`).append(`<option value='${id}'>$${formatMoney(name)}</option>`);
+                    $(`#ListaDescuentosM2_${indexGral}_${index}`).append(`<option value='${id}' label="${name}">$${formatMoney(name)}</option>`);
                 }
                 if(len<=0){
                     $(`#ListaDescuentosM2_${indexGral}_${index}`).append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
@@ -647,7 +759,31 @@ function PrintSelectDesc(id,index,indexGral){
 					$element.detach();
 					$(this).append($element);
 					$(this).trigger("change");
+					ModalMsi(indexGral,index,'ListaDescuentosM2_',$element[0].value,$element[0].label,1);
+
 				});
+				$(`#ListaDescuentosM2_${indexGral}_${index}`).on("select2:unselecting", function (evt){
+					console.log(evt);
+					var element = evt.params.args.data.element;
+					var $element = $(element);
+					$element.detach();
+					$(this).append($element);
+					console.log('eeeeeeeeeeeeeeeeeeeeeeeeeeeeeee');
+					console.log($element[0]);
+					console.log('eeeeeeeeeeeeeeeeeeeeeeeeeeeeeee');
+					$(this).trigger("change");
+					console.log('zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz');
+					console.log($element[0].value);
+					console.log('zzzzzzzzzzzzzzzzzzzzzzzzzzzzzz');
+					console.log($element[0].label);
+					var classnameExists = !!document.getElementById(`${indexGral}_${$element[0].value}_msi`);
+					console.log(classnameExists);
+					if(classnameExists == true){
+						document.getElementById(`${indexGral}_${$element[0].value}_msi`).outerHTML = "";
+						document.getElementById(`${indexGral}_${$element[0].value}_span`).outerHTML = "";
+					}
+
+				 });
 		}else{
 			$(`#orden_${indexGral}_${index}`).val("");
 			$(`#orden_${indexGral}_${index}`).prop( "disabled", true );
@@ -658,12 +794,10 @@ function PrintSelectDesc(id,index,indexGral){
 	else if(id == 12){
 		if( $(`#inlineCheckbox1_${indexGral}_${index}`).is(':checked') ) {	
 			$(`#orden_${indexGral}_${index}`).prop( "disabled", false );
-
 		tdescuento=1;
 		id_condicion=12;
 		eng_top=1;
 		apply=1;			
-		
 		///TOTAL DE ENGANCHE
 		$(`#selectDescuentos_${indexGral}_${index}`).append(`
 	<div class="form-group d-flex justify-center align-center">
@@ -678,13 +812,45 @@ function PrintSelectDesc(id,index,indexGral){
                 for( var i = 0; i<len; i++){
                     var name = data[i]['porcentaje'];
                     var id = data[i]['id_descuento'];
-                    $(`#ListaDescuentosBono_${indexGral}_${index}`).append(`<option value='${id}'>$${formatMoney(name)}</option>`);
+                    $(`#ListaDescuentosBono_${indexGral}_${index}`).append(`<option value='${id}' label="${name}">$${formatMoney(name)}</option>`);
                 }
                 if(len<=0){
                     $(`#ListaDescuentosBono_${indexGral}_${index}`).append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
                 }
                 $(`#ListaDescuentosBono_${indexGral}_${index}`).selectpicker('refresh');
             }, 'json');
+			$(`#ListaDescuentosBono_${indexGral}_${index}`).select2({containerCssClass: "select-gral",dropdownCssClass: "custom-dropdown",tags: true	});
+			$(`#ListaDescuentosBono_${indexGral}_${index}`).on("select2:select", function (evt) {
+					var element = evt.params.data.element;
+					var $element = $(element);
+					$element.detach();
+					$(this).append($element);
+					$(this).trigger("change");
+					ModalMsi(indexGral,index,'ListaDescuentosBono_',$element[0].value,$element[0].label,1);
+
+				});
+				$(`#ListaDescuentosBono_${indexGral}_${index}`).on("select2:unselecting", function (evt){
+					console.log(evt);
+					var element = evt.params.args.data.element;
+					var $element = $(element);
+					$element.detach();
+					$(this).append($element);
+					console.log('eeeeeeeeeeeeeeeeeeeeeeeeeeeeeee');
+					console.log($element[0]);
+					console.log('eeeeeeeeeeeeeeeeeeeeeeeeeeeeeee');
+					$(this).trigger("change");
+					console.log('zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz');
+					console.log($element[0].value);
+					console.log('zzzzzzzzzzzzzzzzzzzzzzzzzzzzzz');
+					console.log($element[0].label);
+					var classnameExists = !!document.getElementById(`${indexGral}_${$element[0].value}_msi`);
+					console.log(classnameExists);
+					if(classnameExists == true){
+						document.getElementById(`${indexGral}_${$element[0].value}_msi`).outerHTML = "";
+						document.getElementById(`${indexGral}_${$element[0].value}_span`).outerHTML = "";
+					}
+
+				 });
 		}else{
 			$(`#orden_${indexGral}_${index}`).val("");
 			$(`#orden_${indexGral}_${index}`).prop( "disabled", true );
@@ -888,7 +1054,9 @@ function AddPackage(){
             }, 'json');
 		}*/
 
+/**----------------------------DATA TABLES--------------------------------- */
 
+/**------------------------------------------------------------------------ */
 		
 	</script>
 </body>
