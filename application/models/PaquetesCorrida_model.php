@@ -31,6 +31,27 @@ class PaquetesCorrida_model extends CI_Model
         order by porcentaje");
     }
 
+    public function UpdateLotes($desarrollos,$cadena_lotes,$query_superdicie,$query_tipo_lote,$usuario){
+     $row = $this->db->query("UPDATE  l  
+        set l.id_descuento = '$cadena_lotes',usuario='$usuario'
+        from lotes l
+        inner join condominios c on c.idCondominio=l.idCondominio 
+        inner join residenciales r on r.idResidencial=c.idResidencial
+        where r.idResidencial in($desarrollos) 
+        $query_superdicie
+        $query_tipo_lote"); 
+    }
+
+    public function insertBatch($table, $data)
+    {
+      $row = $this->db->insert_batch($table, $data);
+        if ($row === FALSE) { 
+            return false;
+        } else { 
+            return true;
+        }
+    }
+
 
 
 }
