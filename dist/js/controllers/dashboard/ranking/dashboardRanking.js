@@ -1,16 +1,38 @@
 var dataApartados, dataContratados, dataConEnganche, dataSinEnganche;
 
+sp = { // MJ: SELECT PICKER
+    initFormExtendedDatetimepickers: function () {
+        $('.datepicker').datetimepicker({
+            format: 'DD/MM/YYYY',
+            icons: {
+                time: "fa fa-clock-o",
+                date: "fa fa-calendar",
+                up: "fa fa-chevron-up",
+                down: "fa fa-chevron-down",
+                previous: 'fa fa-chevron-left',
+                next: 'fa fa-chevron-right',
+                today: 'fa fa-screenshot',
+                clear: 'fa fa-trash',
+                close: 'fa fa-remove',
+                inline: true
+            }
+        });
+    }
+}
+
 $(document).ready(function(){
     getRankings(true).then( response => { divideRankingArrays(response) }).catch( error => { alerts.showNotification("top", "right", "Oops, algo salió mal", "danger"); });
+    sp.initFormExtendedDatetimepickers();
+    $('.datepicker').datetimepicker({locale: 'es'});
 });
 
 var options = {
     series: [{
-        name: 'Inflation',
-        data: [92, 70, 66, 64, 50, 48, 36, 30, 27, 6]
+        name: 'Ventas de apartados',
+        data: [92, 70, 66, 64, 50, 48, 36, 30, 27, 2]
     }],
     chart: {
-        height: 350,
+        height: 'auto',
         type: 'bar',
         toolbar: {
             show: false
@@ -20,24 +42,22 @@ var options = {
         bar: {
             horizontal: true,
             borderRadius: 7,
-            endingShape: 'rounded',
-            barHeight: '40%',
+            barHeight: '50%',
             distributed: false,
             dataLabels: {
-                show: false
+                show: true
             },
+            
         }
     },
     dataLabels: {
-        enabled: false,
-        offsetY: -20,
-        style: {
-            fontSize: '12px',
-            colors: ["#304758"]
-        }
+        enabled: true,
+    },
+    grid: {
+        show: false,
     },
     xaxis: {
-        categories: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct"],
+        categories: ["Fernando Contreras S.", "Julia Martinez J.", "Roberto Nuñez M.", "Laura Olvera O.", "Cynthia Dominguez F.", "Hugo Torres N.", "Abraham Martinez F.", "Gabriela Castillo D.", "José Fernando Mora C.", "Elias Moya D."],
         position: 'bottom',
         axisBorder: {
             show: false
@@ -45,18 +65,9 @@ var options = {
         axisTicks: {
             show: false
         },
-        crosshairs: {
-            fill: {
-                type: 'gradient',
-                gradient: {
-                colorFrom: '#D8E3F0',
-                colorTo: '#BED1E6',
-                stops: [0, 100],
-                opacityFrom: 0.4,
-                opacityTo: 0.5,
-                }
-            }
-        },
+        labels: {
+            show: false,   
+        }
     },
     yaxis: {
         axisBorder: {
@@ -66,10 +77,7 @@ var options = {
             show: false,
         },
         labels: {
-            show: false,
-            formatter: function (val) {
-                return val + "%";
-            }
+            show: true,   
         }
     },
 };
@@ -93,7 +101,7 @@ function toggleDatatable(e){
         columnaActiva.classList.remove('col-sm-6', 'col-md-6', 'col-lg-6', 'inactivo');
         columnaActiva.classList.add('col-sm-12', 'col-md-12', 'col-lg-12', 'activo');
         columnaChart.classList.remove('col-sm-12', 'col-md-12', 'col-lg-12');
-        columnaChart.classList.add('col-sm-12', 'col-md-6', 'col-lg-6');
+        columnaChart.classList.add('col-sm-6', 'col-md-6', 'col-lg-6');
         columnDatatable.removeClass('hidden');
         reorderColumns();
     }
@@ -101,7 +109,7 @@ function toggleDatatable(e){
     else{
         columnaActiva.classList.remove('col-sm-12', 'col-md-12', 'col-lg-12', 'activo');
         columnaActiva.classList.add('col-sm-6', 'col-md-6', 'col-lg-6', 'inactivo');
-        columnaChart.classList.remove('col-sm-12', 'col-md-5', 'col-lg-5');
+        columnaChart.classList.remove('col-sm-12', 'col-md-6', 'col-lg-6');
         columnaChart.classList.add('col-sm-12', 'col-md-12', 'col-lg-12');
         columnDatatable.addClass('hidden');
         reorderColumns();
@@ -116,7 +124,7 @@ function buildEstructuraDT(dataName, dataApartados){
     }
 
     var id = 'table'+dataName;
-    var estructura = `<div class="container-fluid">
+    var estructura = `<div class="container-fluid p-0" style="padding:15px!important">
                         <table class="table-striped table-hover" id="`+id+`" name="table">
                             <thead>
                                 <tr>
@@ -220,13 +228,21 @@ function divideRankingArrays(data){
 }
 
 function buildTableApartados(data){
+    $('#tableApartados thead tr:eq(0) th').each(function (i) {
+        const title = $(this).text();
+        $(this).html('<input type="text" center;" class="textoshead"  placeholder="' + title + '"/>');
+        $('input', this).on('keyup change', function () {
+            if ($("#tableApartados").DataTable().column(i).search() !== this.value) {
+                $("#tableApartados").DataTable().column(i)
+                    .search(this.value).draw();
+            }
+        });
+    });
+
     $("#tableApartados").DataTable({
         dom: 'rt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         pagingType: "full_numbers",
-        lengthMenu: [
-            [10, 25, 50, -1],
-            [10, 25, 50, "Todos"]
-        ],
+        pageLength : 10,
         width: '100%',
         destroy: true,
         ordering: false,
@@ -268,13 +284,21 @@ function buildTableApartados(data){
 }
 
 function buildTableContratados(data){
+    $('#tableContratados thead tr:eq(0) th').each(function (i) {
+        const title = $(this).text();
+        $(this).html('<input type="text" center;" class="textoshead"  placeholder="' + title + '"/>');
+        $('input', this).on('keyup change', function () {
+            if ($("#tableContratados").DataTable().column(i).search() !== this.value) {
+                $("#tableContratados").DataTable().column(i)
+                    .search(this.value).draw();
+            }
+        });
+    });
+
     $("#tableContratados").DataTable({
         dom: 'rt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         pagingType: "full_numbers",
-        lengthMenu: [
-            [10, 25, 50, -1],
-            [10, 25, 50, "Todos"]
-        ],
+        pageLength : 10,
         width: '100%',
         destroy: true,
         ordering: false,
@@ -316,13 +340,21 @@ function buildTableContratados(data){
 }
 
 function buildTableConEnganche(data){
+    $('#tableConEnganche thead tr:eq(0) th').each(function (i) {
+        const title = $(this).text();
+        $(this).html('<input type="text" center;" class="textoshead"  placeholder="' + title + '"/>');
+        $('input', this).on('keyup change', function () {
+            if ($("#tableConEnganche").DataTable().column(i).search() !== this.value) {
+                $("#tableConEnganche").DataTable().column(i)
+                    .search(this.value).draw();
+            }
+        });
+    });
+
     $("#tableConEnganche").DataTable({
         dom: 'rt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         pagingType: "full_numbers",
-        lengthMenu: [
-            [10, 25, 50, -1],
-            [10, 25, 50, "Todos"]
-        ],
+        pageLength : 10,
         width: '100%',
         destroy: true,
         ordering: false,
@@ -358,13 +390,21 @@ function buildTableConEnganche(data){
 }
 
 function buildTableSinEnganche(data){
+    $('#tableSinEnganche thead tr:eq(0) th').each(function (i) {
+        const title = $(this).text();
+        $(this).html('<input type="text" center;" class="textoshead"  placeholder="' + title + '"/>');
+        $('input', this).on('keyup change', function () {
+            if ($("#tableSinEnganche").DataTable().column(i).search() !== this.value) {
+                $("#tableSinEnganche").DataTable().column(i)
+                    .search(this.value).draw();
+            }
+        });
+    });
+
     $("#tableSinEnganche").DataTable({
         dom: 'rt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         pagingType: "full_numbers",
-        lengthMenu: [
-            [10, 25, 50, -1],
-            [10, 25, 50, "Todos"]
-        ],
+        pageLength : 10,
         width: '100%',
         destroy: true,
         ordering: false,

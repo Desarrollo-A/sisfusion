@@ -212,22 +212,6 @@ $(document).on('click', '.update-dataTable', function () {
     if(render == 1){
         $('.childTable').remove();
     }
-    
-    // const beginDate = $("#beginDate").val();
-    // const endDate = $("#endDate").val();
-
-    // const saleType = $("#saleType").val();
-    // const where = $(this).val();
-    // let typeTransaction = 0;
-
-    // if (beginDate == '01/01/2022' && endDate == '01/01/2022' && saleType == null) // APLICA FILTRO AÑO ACTUAL
-    //     typeTransaction = 1;
-    // else if (beginDate == '01/01/2022' && endDate == '01/01/2022' && saleType != null) // APLICA FILTRO AÑO ACTUAL Y TIPO DE VENTA
-    //     typeTransaction = 2;
-    // else if ((beginDate != '01/01/2022' || endDate != '01/01/2022') && saleType == null) // APLICA FILTRO POR FECHA
-    //     typeTransaction = 3;
-    // else if ((beginDate != '01/01/2022' || endDate != '01/01/2022') && saleType != null) // APLICA FILTRO POR FECHA Y TIPO DE VENTA
-    //     typeTransaction = 4;
 
     if (type == 2) { // MJ: #sub->ger->coord
         if(render == 1){
@@ -239,35 +223,21 @@ $(document).on('click', '.update-dataTable', function () {
 
         }
     } else if (type == 3) { // MJ: #gerente->coord->asesor
-
-        // $("#box-managerTable").removeClass('d-none');
-        // $("#box-coordinatorTable").addClass('d-none');
-        // $("#box-adviserTable").addClass('d-none');
-        // fillTable(typeTransaction, beginDate, endDate, table, where, 2);
         if(render == 1){
             const table = "asesor";
             fillBoxAccordions(table, 7, $(this).val(), 2);
         }else{
             const table = "coordinador";
             fillBoxAccordions(table, 9, $(this).val(), 2);
-
         }
-
     } else if (type == 9) { // MJ: #coordinatorTable -> asesor
-        if(render == 1){
-
-        }else{
+        if(render == 1){ }else{
             const table = "asesor";
             fillBoxAccordions(table, 7, $(this).val(), 2);
         }
-        // $("#box-coordinatorTable").removeClass('d-none');
-        // $("#box-adviserTable").addClass('d-none');
-        // fillBoxAccordions(table, 7);
-
         //aqui ya no debe crear tabla
     } else if (type == 59) { // MJ: #DirRegional->subdir->ger
         const table = "gerente";
-        // $("#box-adviserTable").removeClass('d-none');
         fillBoxAccordions(table, 3, $(this).val(), 2);
     }
 });
