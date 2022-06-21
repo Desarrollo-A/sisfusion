@@ -127,7 +127,7 @@
     <div class="row">
         <div class="col-md-12 d-flex align-center justify-end mb-1" id="tableFilters">
             <div class="col-12 col-sm-1 col-md-1 col-lg-1 h-100 d-flex justify-center iconHover">
-                <i class="fas fa-chart-line chartButton"></i>
+                <i class="fas fa-chart-line chartButton" id="chartButton" ></i>
             </div>
             <div class="col-12 col-sm-4 col-md-4 col-lg-4 h-100 pr-0">
                 <div class="form-group d-flex m-0 datesTable">

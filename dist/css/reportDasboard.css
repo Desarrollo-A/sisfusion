@@ -1436,7 +1436,7 @@
 
 #tableFilters .iconHover {
   width: 30px;
-  height: 30px;
+  height: 30px !important;
   display: flex;
   align-items: center;
   justify-content: center;
