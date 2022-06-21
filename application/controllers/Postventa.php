@@ -114,6 +114,9 @@ class Postventa extends CI_Controller
             $resDecode->data[0]->referencia = $data1[0]['referencia'];
             $resDecode->data[0]->empresa = $data1[0]['empresa'];
             $resDecode->data[0]->personalidad = $idClient->personalidad_juridica;
+            $resDecode->data[0]->ocupacion = $idClient->ocupacion;
+            $resDecode->data[0]->regimen_matrimonial = $idClient->regimen_matrimonial;
+            $resDecode->data[0]->estado_civil = $idClient->estado_civil;
             echo json_encode($resDecode->data[0]);
         } else {
             echo json_encode(false);

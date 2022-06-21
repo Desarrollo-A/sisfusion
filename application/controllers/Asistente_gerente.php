@@ -345,6 +345,10 @@ public function editar_registro_loteRechazo_asistentes_proceceso8(){
         $mail->addAddress($email);
       }
     }
+
+    if(trim($email) == 'diego.perez@ciudadmaderas.com'){
+      $mail->addAddress('analista.comercial@ciudadmaderas.com');
+    }
   }
 
 

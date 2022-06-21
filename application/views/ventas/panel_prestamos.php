@@ -22,7 +22,6 @@
 				</div>
 			</div>
 		</div>
-
 		<div class="modal fade modal-alertas" id="myModalDelete" role="dialog">
 			<div class="modal-dialog modal-md">
 				<div class="modal-content">
@@ -34,7 +33,6 @@
 				</div>
 			</div>
 		</div>
-
 		<div class="modal fade modal-alertas" id="miModal" role="dialog">
 			<div class="modal-dialog">
 				<div class="modal-content">
@@ -64,7 +62,7 @@
 							<div class="form-group row">
 								<div class="col-md-4">
 									<label class="label">Monto prestado (<b class="text-danger">*</b>)</label>
-									<input class="form-control" type="text" required onblur="verificar();" id="monto" name="monto">
+									<input class="form-control" type="number" step="any" required onblur="verificar();" id="monto" name="monto">
 								</div>
 								<div class="col-md-4">
 									<label class="label">Número de pagos (<b class="text-danger">*</b>)</label>
@@ -76,8 +74,9 @@
 								</div>
 							</div>
 							<div class="form-group">
-								<label class="label">Comentario (<b class="text-danger">*</b>)</label><b id="texto" style="font-size:12px;"></b>
-								<textarea id="comentario" name="comentario" required class="form-control" rows="3"></textarea>
+							<p>Nota(<b class="text-danger">*</b>):</label><b id="texto" style="font-size:12px;"></b></p>
+								<label class="label">Comentario</label>
+								<textarea id="comentario" name="comentario" required  class="form-control" rows="3"></textarea>
 							</div>
 
 							<div class="form-group">
@@ -210,7 +209,7 @@
 			if(tipo == 18){
 				
 				//PRESTAMO
-				texto = 'Este es un pago recurrente, el cuál se hará cada mes hasta cubrir el monto prestado.'
+				texto = 'Esté es un pago recurrente, el cual se hará cada mes hasta cubrir el monto prestado.'
 
 				document.getElementById("numeroP").value = 1;
 				//document.getElementById("numeroP").readOnly = false;
@@ -220,7 +219,7 @@
 			
 					
 			}else{
-				texto = 'Este es un pago único que se hará en una sola exhibición.'
+				texto = 'Esté es un pago único que se hará en una sola exhibición.'
 				document.getElementById("numeroP").value = 1;
 			//	document.getElementById("numeroP").readOnly = true;
 				if(m != ''){
@@ -303,11 +302,12 @@
 			});
 		});
 
+
 		$("#tabla_prestamos").ready( function(){
 			let titulos = [];
 
 			$('#tabla_prestamos thead tr:eq(0) th').each( function (i) {
-				if(  i!=10){
+				if(  i!=11){
 					var title = $(this).text();
 					titulos.push(title);
 					$(this).html('<input type="text" class="textoshead" placeholder="'+title+'"/>' );
@@ -491,8 +491,7 @@
 						<button href="#" value="${d.id_prestamo}" data-name="${d.nombre}" class="btn-data btn-warning delete-prestamo" title="Eliminar"><i class="fas fa-trash"></i></button>`;
 						}else{
 							return a = `<button href="#" value="${d.id_prestamo}" class="btn-data btn-blueMaderas detalle-prestamo" title="Hitorial"><i class="fas fa-info"></i></button>`;
-						}
-                        
+						}                        
 					}
 				}],
 				ajax: {
@@ -515,7 +514,7 @@
                            
                         `);
 
-						Modalfooter.append(`<div class="row"><div class="col-md-3"></div><div class="col-md-3"><input type="submit" class="btn btn-success" name="disper_btn"  id="dispersar" value="Dispersar"></div><div class="col-md-3"><input type="button" class="btn btn-danger" data-dismiss="modal" value="CANCELAR"></div></div>`);
+						Modalfooter.append(`<div class="row"><div class="col-md-3"></div><div class="col-md-3"><input type="submit" class="btn btn-success" name="disper_btn"  id="dispersar" value="Aceptar"></div><div class="col-md-3"><input type="button" class="btn btn-danger" data-dismiss="modal" value="CANCELAR"></div></div>`);
 
 					//console.log(data);
 					$("#myModalDelete").modal();
@@ -523,6 +522,7 @@
 
 				//});
 			});
+
             $('#tabla_prestamos tbody').on('click', '.detalle-prestamo', function () {
 				$('#spiner-loader').removeClass('hide');
 
