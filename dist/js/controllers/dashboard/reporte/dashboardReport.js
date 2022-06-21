@@ -142,10 +142,13 @@ function createAccordions(option, render, rol){
 }
 
 function fillBoxAccordions(option, rol, id_usuario, render, transaction, dates=null){
+    console.log('render', render);
     createAccordions(option, render, rol);
     $(".js-accordion-title").addClass('open');
     $(".accordion-content").css("display", "block");
-    $("#chartButton").data('option', option);
+    if(render == 1){
+        $("#chartButton").data('option', option);
+    }
     $('#table'+option+' thead tr:eq(0) th').each(function (i) {
         const title = $(this).text();
         $(this).html('<input type="text" center;" class="textoshead"  placeholder="' + title + '"/>');
@@ -411,8 +414,8 @@ function setOptionsChart(series, categories, miniChart, type= null){
     }
     return optionsMiniChart;
 }
-  
-$(document).on('click', '.js-accordion-title', function () {
+// $(document, '.js-accordion-title').unbind();
+$(document).off('click', '.js-accordion-title').on('click', '.js-accordion-title', function () {
     $(this).parent().parent().next().slideToggle(200);
     $(this).toggleClass('open', 200);
 });
@@ -437,9 +440,11 @@ $(document).on('click', '.btnSub', function () {
     initDetailRow(data);
 });
 
-$(document).on('click', '#searchByDateRangeTable', function () {
+$(document).on('click', '#searchByDateRangeTable', async function () {
     $(".boxAccordions").html('');
-    let dates = {begin: $('#tableBegin').val(), end: $('#tableEnd').val()}
+    let dates = {begin: $('#tableBegin').val(), end: $('#tableEnd').val()};
+    let rol = userType == 2 ? await getRolDR(idUser): userType;
+
     fillBoxAccordions(rol == '1' ? 'director_regional': rol == '2' ? 'gerente' : rol == '3' ? 'coordinador' : rol == '59' ? 'subdirector':'asesor', rol, idUser, 1, 2, dates);
 
 });
@@ -526,6 +531,7 @@ function getLastSales(beginDate, endDate){
           $('#spiner-loader').removeClass('hide');
         },
         success: function(data){
+            console.log('minichart', data);
             let miniChart = 1, total = 0;
             $('#spiner-loader').addClass('hide');
             let orderedArray = orderedDataChart(data);
@@ -555,7 +561,7 @@ function getLastSales(beginDate, endDate){
     });
 }
 
-$(document).on("click", "#searchByDateRange", function () {
+$(document).on("click", "#searchByDateRangeCP", function () {
     var beginDate = $("#modalChart #beginDate").val();
     var endDate = $("#modalChart #endDate").val();
     var type = $("#modalChart #type").val();
@@ -852,6 +858,7 @@ function setInitialValues() {
     
     $('#tableBegin').val(finalBeginDate2);
     $('#tableEnd').val(finalEndDate2);
+}
 function titleCase(string){
     return string[0].toUpperCase() + string.slice(1).toLowerCase();
 }

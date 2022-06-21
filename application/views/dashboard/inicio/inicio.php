@@ -30,7 +30,7 @@
                             <div class="form-group d-flex m-0">
                                 <input type="text" class="form-control datepicker beginDates" id="beginDate" value="" autocomplete='off'/>
                                 <input type="text" class="form-control datepicker endDates" id="endDate" value="" autocomplete='off' />
-                                <button class="btn btn-success btn-round btn-fab btn-fab-mini" id="searchByDateRange">
+                                <button class="btn btn-success btn-round btn-fab btn-fab-mini" id="searchByDateRangeCP">
                                     <span class="material-icons update-dataTable">search</span>
                                 </button>
                             </div>
