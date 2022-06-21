@@ -4564,40 +4564,29 @@ WHERE idLote IN ('".$row['idLote']."') and nombreLote = '".$insert_csv['nombreLo
 
 
 	function getRevision2() {
-
-		$this->db->select("hd.idHistorialLote, hd.nombreLote, hd.idStatusContratacion, hd.idMovimiento, hd.modificado, hd.fechaVenc, l.idLote, cl.fechaApartado,
-							cond.nombre as nombreCondominio, l.comentario, res.nombreResidencial, hd.status, 
-							
-                            CONCAT(asesor.nombre,' ', asesor.apellido_paterno, ' ', asesor.apellido_materno) as asesor,
-                            CONCAT(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno) as gerente,
-                            CONCAT(coordinador.nombre,' ', coordinador.apellido_paterno, ' ', coordinador.apellido_materno) as coordinador
-							
-							
-							");
+ 
+		$this->db->select(" max(hd.modificado) modificado, hd.idHistorialLote, hd.nombreLote, hd.idStatusContratacion, hd.idMovimiento, hd.fechaVenc, l.idLote, cl.fechaApartado, cond.nombre as nombreCondominio, res.nombreResidencial,   
+		CONCAT(ase.nombre, ' ', ase.apellido_paterno, ' ', ase.apellido_materno) as asesor,
+		CONCAT(ger.nombre, ' ', ger.apellido_paterno, ' ', ger.apellido_materno) as gerente, 
+		CONCAT(coo.nombre, ' ', coo.apellido_paterno, ' ', coo.apellido_materno) as coordinador, hd.usuario, CAST(hd.comentario AS NVARCHAR(100)) comentario, 
+		(CASE WHEN mov.id_usuario IS NOT null THEN CONCAT(mov.nombre, ' ', mov.apellido_paterno, ' ', mov.apellido_materno) WHEN mov2.id_usuario IS NOT null THEN CONCAT(mov2.nombre, ' ', mov2.apellido_paterno, ' ', mov2.apellido_materno) ELSE hd.usuario END) result");
 
 		$this->db->join('clientes cl', 'hd.idCliente = cl.id_cliente');
 		$this->db->join('lotes l', 'hd.idLote = l.idLote');
 		$this->db->join('condominios cond', 'cond.idCondominio = l.idCondominio');
 		$this->db->join('residenciales res', 'cond.idResidencial = res.idResidencial');
+		$this->db->join('usuarios ase', 'cl.id_asesor = ase.id_usuario', 'LEFT');
+		$this->db->join('usuarios coo', 'cl.id_coordinador = coo.id_usuario', 'LEFT');
+		$this->db->join('usuarios ger', 'cl.id_gerente = ger.id_usuario', 'LEFT');
 
-
-		$this->db->join('usuarios asesor', 'cl.id_asesor = asesor.id_usuario', 'LEFT');
-		$this->db->join('usuarios coordinador', 'cl.id_coordinador = coordinador.id_usuario', 'LEFT');
-		$this->db->join('usuarios gerente', 'cl.id_gerente = gerente.id_usuario', 'LEFT');
-
-
-
-		$this->db->where('(hd.idStatusContratacion=2 AND hd.idMovimiento=4 AND cl.status=1
-							OR hd.idStatusContratacion=2 AND hd.idMovimiento=74 AND cl.status=1
-							OR hd.idStatusContratacion=2 AND hd.idMovimiento=84 AND cl.status=1
-							OR hd.idStatusContratacion=2 AND hd.idMovimiento=93 AND cl.status=1)');
-
-		$this->db->where("hd.status",1);
-		$this->db->where("l.status",1);
-
+		$this->db->join('usuarios mov', 'CAST(hd.usuario AS VARCHAR(45)) = CAST(mov.id_usuario AS VARCHAR(45))', 'LEFT');
+		$this->db->join('usuarios mov2', 'SUBSTRING(mov2.usuario, 1, 20) = SUBSTRING(hd.usuario, 1, 20)', 'LEFT');
+		$this->db->where('(hd.idStatusContratacion = 2 AND hd.idMovimiento in (4,74,84,93) AND cl.status = 1 AND hd.status = 1 AND l.status = 1)');
+		$this->db->group_by('hd.idHistorialLote, hd.nombreLote, hd.idStatusContratacion, hd.idMovimiento, hd.fechaVenc, l.idLote, cl.fechaApartado, cond.nombre, res.nombreResidencial, ase.nombre, ase.apellido_paterno, ase.apellido_materno, ger.nombre, ger.apellido_paterno, ger.apellido_materno, coo.nombre, coo.apellido_paterno, coo.apellido_materno, mov.nombre, mov.apellido_paterno, mov.apellido_materno, mov2.nombre, mov2.apellido_paterno, mov2.apellido_materno,mov2.usuario, hd.usuario, mov.id_usuario, mov2.id_usuario, CAST(hd.comentario AS NVARCHAR(100)),hd.modificado');
 		$this->db->order_by('hd.modificado','ASC');
 
 		$query = $this->db->get('historial_lotes hd');
+
 		return $query->result();
 	}
 

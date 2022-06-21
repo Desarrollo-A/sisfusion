@@ -813,11 +813,11 @@ class Contraloria extends CI_Controller {
 	public function getRevision2(){
 		$data=array();
 		$data = $this->registrolote_modelo->getRevision2();
-		if($data != null) {
+		if ($data != null) {
 			echo json_encode($data);
-		} else {
+		  } else {
 			echo json_encode(array());
-		}
+		  }
 	}
 
 	public function expRevisados()
