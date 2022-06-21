@@ -25,9 +25,10 @@
 <div class="modal fade modal-alertas" id="ModalAlert" role="dialog">
 	<div class="modal-dialog modal-md">
 		<div class="modal-content text-center">
-		<b>Una vez guardados los paquetes ya no se podra modificar la información</b>
+			<div class="modal-header">
+			<b>Una vez guardados los paquetes ya no se podra modificar la información</b>
+			</div>
 					<div class="row">
-						
 						<div class="col-md-6">
 						<input type="button" class="btn btn-success" onclick="SavePaquete();" name=""  id="" value="GUARDAR">
 					</div>
@@ -264,6 +265,7 @@
 				processData:false,
 				success: function(data) {	
 					if(data == 1){
+						ClearAll();
 						alerts.showNotification("top", "right", "Paquetes almacenados correctamente.", "success");	
 					}else{
 						alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
@@ -282,6 +284,13 @@
 			$("#ModalAlert").modal();
 		});
 
+		function ClearAll(){
+			$("#ModalAlert").modal('toggle');
+			document.getElementById('form-paquetes').reset();
+			document.getElementsByClassName('rowCards').HTML('');	
+			$("#residencial").select2("val", "");
+
+		}
 	/**
 	 * 
 	 * <div class="form-group col-md-12" id="">
