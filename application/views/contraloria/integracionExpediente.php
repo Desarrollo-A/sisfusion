@@ -39,13 +39,15 @@
 														<thead>
 															<tr>
 																<th>PROYECTO</th>
-																<th>CLUSTER</th>
+																<th>CONDOMINIO</th>
 																<th>LOTE</th>
 																<th>GERENTE</th>
 																<th>COORDINADOR</th>
 																<th>ASESOR</th>
-																<th>FECHA APARTADO</th>
-																<th>FECHA REALIZADO </th>
+																<th>USUARIO</th>
+																<th>FECHA MOV.</th>
+																<th>COMENTARIO </th>
+																<th>FECHA MOVIMIENTO </th>
 																<th>FECHA VENCIMIENTO </th>
 															</tr>
 														</thead>
@@ -152,13 +154,19 @@
 					}
 				}],
 				columns: [{
-					data: 'nombreResidencial'
+					data: function (data){
+						return myFunctions.validateEmptyField(data.nombreResidencial);
+					}
 				},
 				{
-					data: 'nombreCondominio'
+					data: function (data){
+						return myFunctions.validateEmptyField(data.nombreCondominio);
+					}
 				},
 				{
-					data: 'nombreLote'
+					data: function (data){
+						return myFunctions.validateEmptyField(data.nombreLote);
+					}
 				},
 				{
 					data: function (data){
@@ -177,17 +185,27 @@
 				},
 				{
 					data: function (data){
-						return data.fechaApartado;
+						return myFunctions.validateEmptyField(data.result);
 					}
 				},
 				{
 					data: function (data){
-						return data.modificado;
+						return myFunctions.validateEmptyField(data.modificado);
 					}
 				},
 				{
 					data: function (data){
-						return data.fechaVenc;
+						return myFunctions.validateEmptyField(data.comentario);
+					}
+				},
+				{
+					data: function (data){
+						return myFunctions.validateEmptyField(data.fechaApartado);
+					}
+				},
+				{
+					data: function (data){
+						return myFunctions.validateEmptyField(data.fechaVenc);
 					}
 				}]
 			}).yadcf([{

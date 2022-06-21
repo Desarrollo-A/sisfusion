@@ -1108,6 +1108,22 @@
   border-radius: 25px;
 }
 
+.btn-maderas {
+  background-color: #0a548b;
+}
+
+.btn-maderas {
+  background-color: #0a548b;
+}
+
+.btn-maderas:hover {
+  background: #0a548b;
+}
+
+.formulario .none {
+  display: none;
+}
+
 .form1 .input-gral {
   background-color: #eaeaea !important;
   color: #929292 !important;
@@ -1155,6 +1171,10 @@
 
 .rowCards .boxCard .myCard {
   height: 100%;
+}
+
+.rowCards .boxCard .myCard .color_span {
+  background: #96843D;
 }
 
 .rowCards .boxCard .myCard .check-padding {

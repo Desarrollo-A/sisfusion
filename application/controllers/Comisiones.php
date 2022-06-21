@@ -474,10 +474,10 @@ public function getPuestosDescuentos(){
           $id_pago_i = rtrim($id_pago_i, $sep);
       
             $up_b = $this->Comisiones_model->update_acepta_contraloria($id_pago_i);
-            $up_b = $this->Comisiones_model->update_mktd_contraloria($id_pago_i);
+            $up_c = $this->Comisiones_model->update_mktd_contraloria($id_pago_i);
             $ins_b = $this->Comisiones_model->insert_phc($data);
       
-      if($up_b == true && $ins_b == true){
+      if($up_b == true && $up_c == true && $ins_b == true){
         $data_response = 1;
         echo json_encode($data_response);
       } else {
@@ -6994,5 +6994,29 @@ for ($d=0; $d <count($dos) ; $d++) {
         $data = $this->Comisiones_model->fusionAcLi($tipoDescuento);
         echo json_encode(array('data' => $data));
     }
-    
+
+    public function eliminarDescuentoUniversidad($idDescuento)
+    {
+        $this->Comisiones_model->eliminarDescuentoUniversidad($idDescuento);
+        echo json_encode(true);
+    }
+
+    public function obtenerDescuentoUniversidad($idDescuento)
+    {
+        $comision = $this->Comisiones_model->obtenerDescuentoUniversidad($idDescuento);
+        echo json_encode($comision);
+    }
+
+    public function actualizarDescuentoUniversidad()
+    {
+        $idDescuento = $this->input->post('id_descuento');
+        $data = array(
+            'monto' => $this->input->post('descuento'),
+            'pago_ind' => str_replace(',', '', $this->input->post('pago_ind'))
+        );
+
+        $this->Comisiones_model->actualizarDescuentoUniversidad($idDescuento, $data);
+
+        echo json_encode(true);
+    }
 }
