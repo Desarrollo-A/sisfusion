@@ -32,7 +32,7 @@ class PaquetesCorrida_model extends CI_Model
     }
 
     public function UpdateLotes($desarrollos,$cadena_lotes,$query_superdicie,$query_tipo_lote,$usuario){
-     $row = $this->db->query("UPDATE  l  
+        $this->db->query("UPDATE  l  
         set l.id_descuento = '$cadena_lotes',usuario='$usuario'
         from lotes l
         inner join condominios c on c.idCondominio=l.idCondominio 
