@@ -102,11 +102,6 @@ var optionsProspClients = {
         },
     },
     colors: ['#22639b', '#00A0FF'],
-    // yaxis:{
-    //     labels: {
-    //         offsetX: -13,
-    //       },
-    // },
     grid: {
         show: true,
         borderColor: '#f3f3f3',

@@ -1,7 +1,145 @@
 @import "_base";
 
 #ranking{
+    table.dataTable > thead > tr > th, table.dataTable > tbody > tr > th, table.dataTable > tfoot > tr > th, table.dataTable > thead > tr > td, table.dataTable > tbody > tr > td, table.dataTable > tfoot > tr > td {
+        white-space: nowrap!important;
+    }
+    .apexcharts-bar-series.apexcharts-plot-series  .apexcharts-series path {
+        clip-path: inset(0% 0% 0% 0% round 8px);
+    }
     .card{
+        height: 440px;
+        margin-bottom: 0;
+        .col-chart{
+            .actions{
+                height: 35px;
+                margin-top: 15px;
+                margin-bottom: -15px;
+                .selectMini button{
+                    display: flex;
+                    align-items: center;
+                    width: 100%;
+                    background-color: $platinum;
+                    color: $gray;
+                    border-radius: 20px;
+                    height: 100%;
+                    @media #{$smartphone}{ font-size: 12px!important; }
+                }
+                .form-group{
+                    border-radius: 27px;
+                    background-color: $platinum;
+                    .datepicker{
+                        background-image: none;
+                        height: 100%;
+                        padding: 0;
+                        z-index: 9999;
+                    }
+                    .btn-search{
+                        display: flex;
+                        align-items: center;
+                        height: 100%;
+                        border: none;
+                        background-color: transparent;
+                        z-index: 9999;
+                    }
+                }
+                .btn-charts{
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    background-color: $platinum;
+                    border-radius: 27px;
+                    border: none;
+                    color: $deepGray;
+                    height: 35px;
+                    width: 35px;
+                    font-size: 14px;
+                    padding: 0;
+                    z-index: 9999;
+                    &:hover{
+                        background-color: $water;
+                        color: $blueIndigoDeep;
+                    }
+                }
+            }
+        }
+        .col-datatable{
+            table{
+                width: 100%!important;
+                text-align: center;
+                margin: 0!important;
+                thead tr {
+                    background-color: $blueIndigoDeep;
+                    th{
+                        padding: 0px!important;
+                        text-align: center;
+                        input{
+                            margin: 4px;
+                            border: 1px solid transparent;
+                            border-radius: 5px;
+                            color: $white;
+                            text-align: center;
+                            font-weight: 300;
+                            background-color: $blueIndigoDeep;
+                            &:active{
+                                border: 1px solid $white;
+                            }
+                            &:focus{
+                                border: 1px solid $white;
+                            }
+                            &::placeholder{
+                                color: $white;
+                            }
+                        }
+                    }
+                }
+            }
+            .dataTables_info{
+                padding: 0;
+                font-size: 11px!important;
+            }
+            .dataTables_paginate{
+                .paginate_button a{
+                    color: $platinumScroll;
+                }
+                .paginate_button.active{
+                    a{
+                        background-color: transparent!important;
+                        color: $gray;
+                        font-weight: 900;
+                    }
+                }
+            }
+            .dataTables_scroll{
+                .dataTables_scrollHead{
+                    border-radius: 0 7px 0 0;
+                }
+                .container-fluid{
+                    padding-top: 5px;
+                    padding-bottom: 5px;
+                }
+            }
+            .dataTables_scrollBody::-webkit-scrollbar-track{
+                border-radius: 10px;
+                background-color: transparent;
+            }
+            /* El background del scroll (border)*/
+            .dataTables_scrollBody::-webkit-scrollbar{
+                width: 2px;
+                height: 5px;
+                background-color: transparent;
+            }
+            /* Color de la barra de desplazamiento */
+            .dataTables_scrollBody::-webkit-scrollbar-thumb{
+                border-radius: 0px;
+                background-color: $platinumScroll;
+            }
+            /* Color del HOVER de barra de desplazamiento */
+            .dataTables_scrollBody::-webkit-scrollbar-thumb:hover{
+                background-color: $deepGray;
+            }
+        }
+        
         .fadeInAnimationDelay1{
             -webkit-animation: scale-up-center 0.5s cubic-bezier(0.390, 0.575, 0.565, 1.000) both;
             animation: scale-up-center 0.5s cubic-bezier(0.390, 0.575, 0.565, 1.000) both;  
@@ -39,58 +177,8 @@
                         transform: scale(1);
             }
         }
-
-        table{
-            width: 100%!important;
-            text-align: center;
-            thead tr {
-                background-color: $blueIndigoDeep;
-                th{
-                    padding: 3px!important;
-                    text-align: center;
-                    input{
-                        border: 1px solid transparent;
-                        border-radius: 5px;
-                        color: $white;
-                        text-align: center;
-                        font-weight: 500;
-                        background-color: $blueIndigoDeep;
-                        &:active{
-                            border: 1px solid $gray;
-                        }
-                        &:focus{
-                            border: 1px solid $gray;
-                        }
-                        &::placeholder{
-                            color: $white;
-                        }
-                    }
-                }
-            }
-        }
-
-        .dataTables_scroll .container-fluid{
-            padding-top: 5px;
-            padding-bottom: 5px;
-        }
-        .dataTables_scrollBody::-webkit-scrollbar-track{
-            border-radius: 10px;
-            background-color: transparent;
-        }
-        /* El background del scroll (border)*/
-        .dataTables_scrollBody::-webkit-scrollbar{
-            width: 2px;
-            height: 5px;
-            background-color: transparent;
-        }
-        /* Color de la barra de desplazamiento */
-        .dataTables_scrollBody::-webkit-scrollbar-thumb{
-            border-radius: 0px;
-            background-color: $platinumScroll;
-        }
-        /* Color del HOVER de barra de desplazamiento */
-        .dataTables_scrollBody::-webkit-scrollbar-thumb:hover{
-            background-color: $deepGray;
+        @media #{$smartphone}{
+            height: inherit!important;
         }
     }
 }
