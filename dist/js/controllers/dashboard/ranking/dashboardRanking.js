@@ -23,7 +23,7 @@ sp = { // MJ: SELECT PICKER
 $(document).ready(function(){
     sp.initFormExtendedDatetimepickers();
     $('.datepicker').datetimepicker({locale: 'es'});
-    setInitialValues();
+    setInitialDates();
     getRankings(true, 'general');
     getSedes().then( response => { 
         dataSedes = response 
@@ -155,9 +155,12 @@ function reorderColumns(){
     for( var i = 0; i<principalColumns.length; i++){
         var select = {};
         (principalColumns[i].classList.contains('inactivo')) ? inactivos.push(i) : activos.push(i)
-        var sedes= $(principalColumns[i]).find('#sedes'+(i+1));
-        select['name'] = sedes[0].id;
-        select['value'] = sedes[0].value
+        var boxSedes= $(principalColumns[i]).find('.boxSedes');
+        var idBox = boxSedes.attr('id');
+        var select = $("#"+idBox).find('#sedes'+(idBox.replace(/\D/g, "")));
+        var idSelect = $( select ).attr('id');
+        select['name'] = $( select ).attr('id');
+        select['value'] = $("#"+idSelect).val();
         selectsSede.push(select);
     }
 
@@ -173,6 +176,21 @@ function reorderColumns(){
     mainRow.appendChild(elements);
 
     buildSelectSedes(dataSedes, selectsSede);
+    $('.datepicker').datetimepicker({
+            format: 'DD/MM/YYYY',
+            icons: {
+                time: "fa fa-clock-o",
+                date: "fa fa-calendar",
+                up: "fa fa-chevron-up",
+                down: "fa fa-chevron-down",
+                previous: 'fa fa-chevron-left',
+                next: 'fa fa-chevron-right',
+                today: 'fa fa-screenshot',
+                clear: 'fa fa-trash',
+                close: 'fa fa-remove',
+                inline: true
+            }
+        });
 
     for( i = 1; i<=principalColumns.length; i++){
         (function(i){
@@ -603,22 +621,11 @@ function setOptionsChart(series, categories){
     return options;
 }
 
-function setInitialValues() {
-    // BEGIN DATE
-    const fechaInicio = new Date();
-    // Iniciar en este año, este mes, en el día 1
-    const beginDate = new Date(fechaInicio.getFullYear(), fechaInicio.getMonth(), 1);
-    // END DATE
-    const fechaFin = new Date();
-    // Iniciar en este año, el siguiente mes, en el día 0 (así que así nos regresamos un día)
-    const endDate = new Date(fechaFin.getFullYear(), fechaFin.getMonth() + 1, 0);
-    finalBeginDate = [beginDate.getFullYear(), ('0' + (beginDate.getMonth() + 1)).slice(-2), ('0' + beginDate.getDate()).slice(-2)].join('-');
-    finalEndDate = [endDate.getFullYear(), ('0' + (endDate.getMonth() + 1)).slice(-2), ('0' + endDate.getDate()).slice(-2)].join('-');
-    finalBeginDate2 = [('0' + beginDate.getDate()).slice(-2), ('0' + (beginDate.getMonth() + 1)).slice(-2), beginDate.getFullYear()].join('/');
-    finalEndDate2 = [('0' + endDate.getDate()).slice(-2), ('0' + (endDate.getMonth() + 1)).slice(-2), endDate.getFullYear()].join('/');
-    
-    $('#beginDate').val(finalBeginDate2);
-    $('#endDate').val(finalEndDate2);
+function setInitialDates() {
+    var beginDt = moment().startOf('year').format('MM/DD/YYYY');
+    var endDt = moment().format('MM/DD/YYYY');
+    $('.beginDate').val(beginDt);
+    $('.endDate').val(endDt);
 }
 
 function getDates(typeRanking){
@@ -673,7 +680,6 @@ function getSedes(){
 }
 
 function buildSelectSedes(dataSedes, selectsSede){
-    console.log(selectsSede);
     $('.boxSedes').html('');
     var boxSedes = document.getElementsByClassName("boxSedes");
     for ( var i = 0; i<boxSedes.length; i++ ){
@@ -697,12 +703,16 @@ function buildSelectSedes(dataSedes, selectsSede){
 
 function setOptionsSelected(selectsSede){
     var boxSedes = document.getElementsByClassName("boxSedes");
-    console.log(selectsSede);
     for ( var i = 0; i<boxSedes.length; i++ ){
-        var select = $( boxSedes[i] ).find('#sedes'+(i+1));
+        var idBox = boxSedes[i].id;
+        var select = $("#"+idBox).find('#sedes'+(idBox.replace(/\D/g, "")));
         var id = select.attr('id');
         let obj = selectsSede.find(o => o.name === id );
         $("#"+id).val(obj.value);
         $("#"+id).selectpicker('refresh');
     }
 }
+
+$(document).on('click', '.btn-search', function () {
+
+});
