@@ -182,26 +182,29 @@
 
 @media (max-width: 1706.67px) {
   #snackbar {
-    visibility: hidden; /* Hidden by default. Visible on click */
-    min-width: 320px; /* Set a default minimum width */
-    margin-left: -125px; /* Divide value of min-width by 2 */
-    background-color: #4caf50; /* Black background color */
-    color: #fff; /* White text color */
-    text-align: center; /* Centered text */
-    border-radius: 2px; /* Rounded borders */
-    padding: 16px; /* Padding */
-    position: fixed; /* Sit on top of the screen */
-    z-index: 1; /* Add a z-index if needed */
-    left: 50%; /* Center the snackbar */
-    bottom: -450px; /* 30px from the bottom */
+    visibility: hidden;
+    min-width: 320px;
+    margin-left: -125px;
+    background-color: #4caf50;
+    color: #fff;
+    text-align: center;
+    border-radius: 22px;
+    padding: 16px;
+    position: fixed;
+    z-index: 1;
+    left: 50%;
+    bottom: -450px;
     opacity: 1;
-  }
+    -webkit-border-radius: 22px;
+    -moz-border-radius: 22px;
+    -ms-border-radius: 22px;
+    -o-border-radius: 22px;
+}
   
   /* Show the snackbar when clicking on a button (class added with JavaScript) */
   #snackbar.show {
     visibility: visible;
-    /*Showthesnackbar*//*Addanimation:;
-    Take0.5secondstofadeinandoutthesnackbar.However,delaythefadeoutprocessfor2.5seconds*/-webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+   -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
     animation: fadein 0.5s, fadeout 0.5s 2.5s;
     -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
   }
@@ -230,20 +233,24 @@
 }
 @media (max-width: 2133.33px) {
   #snackbar {
-    visibility: hidden; /* Hidden by default. Visible on click */
-    min-width: 320px; /* Set a default minimum width */
-    margin-left: -125px; /* Divide value of min-width by 2 */
-    background-color: #4caf50; /* Black background color */
-    color: #fff; /* White text color */
-    text-align: center; /* Centered text */
-    border-radius: 2px; /* Rounded borders */
-    padding: 16px; /* Padding */
-    position: fixed; /* Sit on top of the screen */
-    z-index: 1; /* Add a z-index if needed */
-    left: 50%; /* Center the snackbar */
-    bottom: -650px; /* 30px from the bottom */
+    visibility: hidden;
+    min-width: 320px;
+    margin-left: -125px;
+    background-color: #4caf50;
+    color: #fff;
+    text-align: center;
+    border-radius: 22px;
+    padding: 16px;
+    position: fixed;
+    z-index: 1;
+    left: 50%;
+    bottom: -50px;
     opacity: 1;
-  }
+    -webkit-border-radius: 22px;
+    -moz-border-radius: 22px;
+    -ms-border-radius: 22px;
+    -o-border-radius: 22px;
+}
   
   /* Show the snackbar when clicking on a button (class added with JavaScript) */
   #snackbar.show {
@@ -256,23 +263,23 @@
   
   /* Animations to fade the snackbar in and out */
   @-webkit-keyframes fadein {
-    from {bottom: -650px; opacity: 0;}
-    to {bottom: -600px; opacity: 1;}
+    from {bottom: -50px; opacity: 0;}
+    to {bottom: -10px; opacity: 1;}
   }
   
   @keyframes fadein {
-    from {bottom: -650px; opacity: 0;}
-    to {bottom: -600px; opacity: 1;}
+    from {bottom: -50px; opacity: 0;}
+    to {bottom: -10px; opacity: 1;}
   }
   
   @-webkit-keyframes fadeout {
-    from {bottom: -600px; opacity: 1;}
-    to {bottom: -650px; opacity: 0;}
+    from {bottom: -10px; opacity: 1;}
+    to {bottom: -50px; opacity: 0;}
   }
   
   @keyframes fadeout {
-    from {bottom: -600px; opacity: 1;}
-    to {bottom: -650px; opacity: 0;}
+    from {bottom: -10px; opacity: 1;}
+    to {bottom: -50px; opacity: 0;}
   }
   
 }
