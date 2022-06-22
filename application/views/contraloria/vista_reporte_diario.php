@@ -438,7 +438,8 @@
                             header: function (d, columnIdx) {
                                 switch (columnIdx) {
                                     case 1:
-                                        return 'PROYECTO'
+                                        return 'PROYECTO';
+                                        break;
                                     case 2:
                                         return 'CONDOMINIO';
                                         break;

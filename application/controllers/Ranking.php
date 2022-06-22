@@ -52,5 +52,10 @@ class Ranking extends CI_Controller {
             echo json_encode(array());
         }
     }
+
+    public function getSedes(){
+        $data = $this->Ranking_model->getSedes()->result_array();
+        echo json_encode($data);
+    }
 }
  

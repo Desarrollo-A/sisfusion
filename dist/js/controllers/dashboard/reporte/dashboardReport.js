@@ -335,7 +335,6 @@ $(document).on('click', '.update-dataTable', function () {
             const table = "coordinador";
             fillBoxAccordions(table, 9, $(this).val(), 2, transaction, dates);
         }
-
     } else if (type == 9) { // MJ: #coordinatorTable -> asesor
         if(render == 1){
         }else{
