@@ -66,7 +66,7 @@
 					<form id="form-paquetes" class="formulario">
 						<div class="card-content">
 							<h3 class="card-title center-align">Paquetes Corrida Financiera</h3>
-							<div class="text-right"><button type="button" data-toggle="modal" data-target="#exampleModal" class="btn btn-maderas">Ver descuentos</button></div>
+							<!--<div class="text-right"><button type="button" data-toggle="modal" data-target="#exampleModal" class="btn btn-maderas">Ver descuentos</button></div>-->
 							<div class="container-fluid p-0">
 								<div class="row">
 									<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 form1">
@@ -82,7 +82,7 @@
 										<div class="col-xs-12 col-sm-12 col-md-6 col-lg-4 mb-1">
 											<div class="form-group">
 												<label class="m-0" for="sede">Proyecto (<b class="text-danger">*</b>)</label> 
-												<select id="residencial"  name="residencial[]" multiple="multiple" class="form-control select-gral"  data-style="btn " data-show-subtext="true" data-live-search="true"  title="Selecciona una opción" data-size="7" required></select>
+												<select id="residencial"  name="residencial[]" multiple="multiple" class="form-control select-gral "  data-style="btn " data-show-subtext="true" data-live-search="true"  title="Selecciona una opción" data-size="7" required></select>
 												</select>
 											</div>
 										</div>
@@ -181,7 +181,7 @@
 		</div>
 	</div>
 </div>
-<div id="snackbar">MSI agregado con éxito</div>
+<div id="snackbar"><i class="fas fa-check"></i> ¡MSI agregado con éxito!</div>
 </div>
 
 <?php $this->load->view('template/footer_legend');?>
@@ -327,7 +327,7 @@
 	 */
 	
 		function GenerarCard(){
-		//	if($('#sede').val() != '' && $('#residencial').val() != '' && $('input[name="customRadio"]').is(':checked') && ){
+			if($('#sede').val() != '' && $('#residencial').val() != '' && $('input[name="tipoLote"]').is(':checked') && $('#fechainicio').val() != '' && $('#fechafin').val() != '' && $('input[name="superficie"]').is(':checked') ){
 			var indexActual = document.getElementById('index');
 			var indexNext = (document.getElementById('index').value - 1) + 2;
 			indexActual.value = indexNext;
@@ -340,8 +340,8 @@
 								<div class="card-body text-primary myCard">
 									<h5 class="card-title">Paquete</h5>
 												<div class="form-group col-md-12" id="">
-														<label class="">Descripción paquete</label>
-														<input type="text" class="form-control input-gral" name="descripcion_${indexNext}" id="descripcion_${indexNext}">
+														<label class="">Descripción paquete(<b class="text-danger">*</b>):</label>
+														<input type="text" class="form-control input-gral" required name="descripcion_${indexNext}" id="descripcion_${indexNext}">
 														
 														</div>
 													<div  id="checks_${indexNext}">
@@ -448,7 +448,10 @@ $.post('getResidencialesList', function(data) {
 })
 //}else{
 				
-			//}
+			}else{
+				alerts.showNotification("top", "left", "Debe llenar todos los campos requeridos.", "warning");
+
+			}
 		}
 
 
@@ -623,7 +626,7 @@ function PrintSelectDesc(id,index,indexGral){
 		<div id="divmsi_${indexGral}_${index}">
 		</div>
 		<label>Descuento(<b class="text-danger">*</b>):</label>
-		<select id="ListaDescuentosTotal_${indexGral}_${index}"   name="${indexGral}_${index}_ListaDescuentosTotal_[]" multiple="multiple" class="form-control"  required data-live-search="true"></select>
+		<select id="ListaDescuentosTotal_${indexGral}_${index}" required   name="${indexGral}_${index}_ListaDescuentosTotal_[]" multiple="multiple" class="form-control"  required data-live-search="true"></select>
 		</div>`);
 		$.post('getDescuentosPorTotal',{ tdescuento: tdescuento, id_condicion: id_condicion,eng_top:eng_top,apply:apply }, function(data) {
 					$(`#ListaDescuentosTotal_${indexGral}_${index}`).append($('<option disabled>').val("default").text("Seleccione una opción"));
@@ -693,7 +696,7 @@ function PrintSelectDesc(id,index,indexGral){
 		$(`#selectDescuentos_${indexGral}_${index}`).append(`
 	<div class="form-group d-flex justify-center align-center">
 	<label>Descuento(<b class="text-danger">*</b>):</label>
-	<select id="ListaDescuentosEnganche_${indexGral}_${index}"  name="${indexGral}_${index}_ListaDescuentosEnganche_[]" multiple="multiple" class="form-control"  required data-live-search="true"></select>
+	<select id="ListaDescuentosEnganche_${indexGral}_${index}" required  name="${indexGral}_${index}_ListaDescuentosEnganche_[]" multiple="multiple" class="form-control"  required data-live-search="true"></select>
 	</div>`);
 	$(`#ListaDescuentosEnganche_${indexGral}_${index}`).select2({containerCssClass: "select-gral",dropdownCssClass: "custom-dropdown",	});
 	$.post('getDescuentosPorTotal',{ tdescuento: tdescuento, id_condicion: id_condicion,eng_top:eng_top,apply:apply }, function(data) {
@@ -760,7 +763,7 @@ function PrintSelectDesc(id,index,indexGral){
 		$(`#selectDescuentos_${indexGral}_${index}`).append(`
 	<div class="form-group d-flex justify-center align-center">
 	<label>Descuento(<b class="text-danger">*</b>):</label>
-	<select id="ListaDescuentosM2_${indexGral}_${index}"  name="${indexGral}_${index}_ListaDescuentosM2_[]" multiple="multiple" class="form-control"  required data-live-search="true"></select>
+	<select id="ListaDescuentosM2_${indexGral}_${index}" required name="${indexGral}_${index}_ListaDescuentosM2_[]" multiple="multiple" class="form-control"  required data-live-search="true"></select>
 	</div>`);
 	$.post('getDescuentosPorTotal',{ tdescuento: tdescuento, id_condicion: id_condicion,eng_top:eng_top,apply:apply }, function(data) {
                 $(`#ListaDescuentosM2_${indexGral}_${index}`).append($('<option disabled>').val("default").text("Seleccione una opción"));
@@ -827,7 +830,7 @@ function PrintSelectDesc(id,index,indexGral){
 		$(`#selectDescuentos_${indexGral}_${index}`).append(`
 	<div class="form-group d-flex justify-center align-center">
 	<label>Descuento(<b class="text-danger">*</b>):</label>
-	<select id="ListaDescuentosBono_${indexGral}_${index}"  name="${indexGral}_${index}_ListaDescuentosBono_[]" multiple="multiple" class="form-control"  required data-live-search="true"></select>
+	<select id="ListaDescuentosBono_${indexGral}_${index}" required name="${indexGral}_${index}_ListaDescuentosBono_[]" multiple="multiple" class="form-control"  required data-live-search="true"></select>
 	</div>`);
 	$(`#ListaDescuentosBono_${indexGral}_${index}`).select2({containerCssClass: "select-gral",dropdownCssClass: "custom-dropdown",tags: true});
 	$.post('getDescuentosPorTotal',{ tdescuento: tdescuento, id_condicion: id_condicion,eng_top:eng_top,apply:apply }, function(data) {
