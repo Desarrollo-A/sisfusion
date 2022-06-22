@@ -26,7 +26,7 @@
 	<div class="modal-dialog modal-md">
 		<div class="modal-content text-center">
 			<div class="modal-header">
-			<b>Una vez guardados los paquetes ya no se podra modificar la información</b>
+			<b>Una vez guardados los paquetes ya no se podrá modificar la información</b>
 			</div>
 					<div class="row">
 						<div class="col-md-6">
@@ -74,7 +74,7 @@
 										<div class="col-xs-12 col-sm-12 col-md-6 col-lg-4 mb-1">
 											<div class="form-group">
 												<label class="m-0" for="sede">Sede (<b class="text-danger">*</b>)</label>
-                                                <select name="sede" id="sede" class="selectpicker select-gral" data-style="btn " data-show-subtext="true" data-live-search="true"  title="Selecciona una opcion" data-size="7" required>
+                                                <select name="sede" id="sede" class="selectpicker select-gral" data-style="btn " data-show-subtext="true" data-live-search="true"  title="Selecciona una opción" data-size="7" required>
                                                 </select>
 											</div>
 										</div>
@@ -169,10 +169,10 @@
 								</div>
 							</div>
 							
-							<div class="row rowCards"></div>
+							<div class="row rowCards" id="showPackage"></div>
 						</div>
 						
-						<div class="text-center">
+						<div class="text-right">
 							<button type="submit" id="btn_save" class="btn btn-success">Guardar</button>
 						</div>
 					</div>
@@ -181,6 +181,7 @@
 		</div>
 	</div>
 </div>
+<div id="snackbar">MSI agregado con éxito</div>
 </div>
 
 <?php $this->load->view('template/footer_legend');?>
@@ -212,6 +213,16 @@
         j = (j = i.length) > 3 ? j % 3 : 0;
         return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
     };
+	function myFunction() {
+  // Get the snackbar DIV
+  var x = document.getElementById("snackbar");
+
+  // Add the "show" class to DIV
+  x.className = "show";
+
+  // After 3 seconds, remove the show class from DIV
+  setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
+}
 		$(document).ready(function() {
 			$.post("<?=base_url()?>index.php/PaquetesCorrida/lista_sedes", function (data) {
 				$('[data-toggle="tooltip"]').tooltip()
@@ -287,8 +298,9 @@
 		function ClearAll(){
 			$("#ModalAlert").modal('toggle');
 			document.getElementById('form-paquetes').reset();
-			document.getElementsByClassName('rowCards').HTML('');	
-			$("#residencial").select2("val", "");
+			$("#sede").selectpicker("refresh");
+			$('#residencial option').remove();
+			document.getElementById('showPackage').innerHTML = '';	
 
 		}
 	/**
@@ -406,13 +418,13 @@ $.post('getResidencialesList', function(data) {
 					
 					<div class="row" >
 					
-						<div class="col-md-3" >
+						<div class="col-md-4" >
 								<div class="form-check form-check-inline check-padding">
 								<input class="form-check-input" type="checkbox" onclick="PrintSelectDesc(${id},${i},${indexNext})" id="inlineCheckbox1_${indexNext}_${i}" value="${id}">
 								<label class="form-check-label" for="inlineCheckbox1">${descripcion}</label>
 								</div>
 						</div>
-						<div class="col-md-9"  id="selectDescuentos_${indexNext}_${i}">
+						<div class="col-md-8"  id="selectDescuentos_${indexNext}_${i}">
 						</div>
 						<div class="row" >
 						<div class="col-md-1"></div>
@@ -471,28 +483,30 @@ $.post('getResidencialesList', function(data) {
 			Modalfooter.html('');
 			Modalbody.append(`
 				<h4>¿Este descuento tiene meses sin intereses?</h4>
-				<div class="row">
-				<div class="col-md-12">
-				<label>Cantidad</label>
+				<div class="row text-center">
+				<div class="col-md-12 text-center">
 				</div>
-				<div col-md-12>
-					<div class="form-group">
-					<input type="number" onkeyup="validarMsi(${indexN},${i})" class="input-gral" id="input_msi_${indexN}_${i}">
+				<div class="col-md-10 text-center">
+					<div class="form-group text-center">
+					<label>Cantidad:</label>
+					<input type="number" onkeyup="validarMsi(${indexN},${i})" class="input-descuento" id="input_msi_${indexN}_${i}">
 					</div>
 				</div>
 				</div>
 
 			`);
 			Modalbody.append(`
-			<div class="row">
+			<div class="row text-center">
 				<div class="col-md-6">
-				<input type="button" class="btn btn-success"  disabled onclick="AddMsi(${indexN},${i},'${select}',${id},${text},${pesos});" name="disper_btn"  id="btn_save_${indexN}_${i}" value="GUARDAR">
+				<button class="btn btn-success btn-circle btn-lg" data-toggle="tooltip" data-placement="left" title="Agregar MSI"  disabled onclick="AddMsi(${indexN},${i},'${select}',${id},${text},${pesos});" name="disper_btn"  id="btn_save_${indexN}_${i}"><i class="fas fa-check"></i></button>
 				</div>
 				<div class="col-md-6">
-				<input type="button" class="btn btn-danger" data-dismiss="modal" value="SIN MSI">
+				<button class="btn btn-danger btn-circle btn-lg" data-toggle="tooltip" data-placement="right" title="No tiene MSI" data-dismiss="modal"><i class="fas fa-times"></i></button>
 				</div>
 			</div>`);
 			$("#ModalMsi").modal();
+			$('[data-toggle="tooltip"]').tooltip()
+
 		}
 
 	 function otra(indexN,i,select,id,text2){
@@ -538,6 +552,8 @@ $.post('getResidencialesList', function(data) {
 				}
 			}*/
 			CloseModalMsi();
+			//alerts.showNotification("buttom", "right", "MSI agregado con éxito.", "success");
+			myFunction();
 		// otra(indexN,i,select,id,text2);
 	/*	$(`#${select}${indexN}_${i}`).on("select2:unselect",function (evt){
 			console.log('eeeeeeeeeeeeeeeeeeeeeeeeeeeeeee');
