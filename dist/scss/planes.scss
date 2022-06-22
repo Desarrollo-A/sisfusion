@@ -46,12 +46,29 @@
 }
 
 #ModalMsi{
-  .input-gral {
-    background-color: #eaeaea !important;
-    color: #929292 !important;
+  .input-descuento {
+    background-color: #F9F7F7 !important;
+    color: #000 !important;
     border-radius: 27px !important;
     background-image: none !important;
-    padding-left: 20px;
+    width:60%;
+  }
+  .btn-circle{
+    width: 30px;
+    height: 30px;
+    text-align: center;
+    padding: 6px 0;
+    font-size: 12px;
+    line-height: 1.428571429;
+    border-radius: 15px;
+  }
+  .btn-circle.btn-lg {
+    width: 50px;
+    height: 50px;
+    padding: 10px 16px;
+    font-size: 18px;
+    line-height: 1.33;
+    border-radius: 25px;
   }
 }
 
@@ -161,5 +178,102 @@
 
         
     }
+}
+
+@media (max-width: 1706.67px) {
+  #snackbar {
+    visibility: hidden; /* Hidden by default. Visible on click */
+    min-width: 320px; /* Set a default minimum width */
+    margin-left: -125px; /* Divide value of min-width by 2 */
+    background-color: #4caf50; /* Black background color */
+    color: #fff; /* White text color */
+    text-align: center; /* Centered text */
+    border-radius: 2px; /* Rounded borders */
+    padding: 16px; /* Padding */
+    position: fixed; /* Sit on top of the screen */
+    z-index: 1; /* Add a z-index if needed */
+    left: 50%; /* Center the snackbar */
+    bottom: -450px; /* 30px from the bottom */
+    opacity: 1;
+  }
+  
+  /* Show the snackbar when clicking on a button (class added with JavaScript) */
+  #snackbar.show {
+    visibility: visible;
+    /*Showthesnackbar*//*Addanimation:;
+    Take0.5secondstofadeinandoutthesnackbar.However,delaythefadeoutprocessfor2.5seconds*/-webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+    animation: fadein 0.5s, fadeout 0.5s 2.5s;
+    -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+  }
+  
+  /* Animations to fade the snackbar in and out */
+  @-webkit-keyframes fadein {
+    from {bottom: -450px; opacity: 0;}
+    to {bottom: -400px; opacity: 1;}
+  }
+  
+  @keyframes fadein {
+    from {bottom: -450px; opacity: 0;}
+    to {bottom: -400px; opacity: 1;}
+  }
+  
+  @-webkit-keyframes fadeout {
+    from {bottom: -400px; opacity: 1;}
+    to {bottom: -450px; opacity: 0;}
+  }
+  
+  @keyframes fadeout {
+    from {bottom: -400px; opacity: 1;}
+    to {bottom: -450px; opacity: 0;}
+  }
+  
+}
+@media (max-width: 2133.33px) {
+  #snackbar {
+    visibility: hidden; /* Hidden by default. Visible on click */
+    min-width: 320px; /* Set a default minimum width */
+    margin-left: -125px; /* Divide value of min-width by 2 */
+    background-color: #4caf50; /* Black background color */
+    color: #fff; /* White text color */
+    text-align: center; /* Centered text */
+    border-radius: 2px; /* Rounded borders */
+    padding: 16px; /* Padding */
+    position: fixed; /* Sit on top of the screen */
+    z-index: 1; /* Add a z-index if needed */
+    left: 50%; /* Center the snackbar */
+    bottom: -650px; /* 30px from the bottom */
+    opacity: 1;
+  }
+  
+  /* Show the snackbar when clicking on a button (class added with JavaScript) */
+  #snackbar.show {
+    visibility: visible;
+    /*Showthesnackbar*//*Addanimation:;
+    Take0.5secondstofadeinandoutthesnackbar.However,delaythefadeoutprocessfor2.5seconds*/-webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+    animation: fadein 0.5s, fadeout 0.5s 2.5s;
+    -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+  }
+  
+  /* Animations to fade the snackbar in and out */
+  @-webkit-keyframes fadein {
+    from {bottom: -650px; opacity: 0;}
+    to {bottom: -600px; opacity: 1;}
+  }
+  
+  @keyframes fadein {
+    from {bottom: -650px; opacity: 0;}
+    to {bottom: -600px; opacity: 1;}
+  }
+  
+  @-webkit-keyframes fadeout {
+    from {bottom: -600px; opacity: 1;}
+    to {bottom: -650px; opacity: 0;}
+  }
+  
+  @keyframes fadeout {
+    from {bottom: -600px; opacity: 1;}
+    to {bottom: -650px; opacity: 0;}
+  }
+  
 }
 
