@@ -126,7 +126,6 @@ $datos = array();
 	{
 		$readonlyNameToAsesor='';
 	}
-	/*print_r($cliente)*/
 	?>
 	<div class="content">
 		<div class="container-fluid">
@@ -139,7 +138,11 @@ $datos = array();
 					<form method="post" class="form-horizontal" action="<?=base_url()?>index.php/Asesor/editar_ds/" target="_blank" enctype="multipart/form-data">
 						<!-- <div class="card-content" style="background-image: url('<?=base_url()?>dist/img/ar4c.png'); background-repeat: no-repeat;"> -->
 						<div class="card-content">
-							<h4 class="card-title"><B>Depósito de seriedad</B> - Formato </h4> 
+							<h4 class="card-title"><B>Depósito de seriedad</B> - Formato
+                                <?php if ($this->session->userdata('id_rol') == 17) { ?>
+                                    <span class="material-icons cursor-point" onclick="historial()">info</span>
+                                <?php }?>
+                            </h4>
 							
 							<h4 align="right"> <label>Fecha última modificación: <?php echo $cliente[0]->fecha_modificacion;?></label> </h4> 
 
@@ -1984,14 +1987,30 @@ $datos = array();
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
 <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
-
+<!-- Modal general -->
+<script src="<?= base_url() ?>dist/js/core/modal-general.js"></script>
 <script>
+    const cliente = "<?=$cliente[0]->id_cliente?>";
     let x = document.querySelectorAll(".formatter");
     for (let i = 0, len = x.length; i < len; i++) {
         let num = Number(x[i].innerHTML)
             .toLocaleString('en');
         x[i].innerHTML = num;
         x[i].classList.add("currSign");
+    }
+
+    function historial() {
+        $.get(`${url}Asesor/getHistorialDS/${cliente}`, function (data) {
+            const info = JSON.parse(data);
+            if (info.length === 0) {
+                alerts.showNotification('top', 'right', 'No hay registro de movimientos', 'warning');
+                return;
+            }
+            changeSizeModal('modal-lg');
+            appendBodyModal(historialCampoHtml(info));
+            appendFooterModal(`<button type="button" class="btn btn-danger" onclick="hideModal()">Cerrar</button>`);
+            showModal();
+        });
     }
 
    function validafecha(date_input){
@@ -2031,6 +2050,46 @@ $datos = array();
 		}
 	}
 
+    function historialCampoHtml(data) {
+        let html = '<h3>Historial de movimientos</h3>';
+        data.forEach(columna => {
+            let dataTable = '';
+            columna.detalle.forEach(cambio => {
+                dataTable += `
+                <tr>
+                  <td>${(cambio.usuario) ? cambio.usuario : ''}</td>
+                  <td>${cambio.fecha}</td>
+                  <td>${cambio.anterior}</td>
+                  <td>${cambio.nuevo}</td>
+                </tr>`;
+            });
+
+            html += `
+                <div class="row">
+                    <div class="col-lg-12">
+                        <h4><b>Campo: ${columna.columna}</b></h4>
+                    </div>
+                    <div class="col-lg-12">
+                        <table class="table">
+                          <thead>
+                            <tr>
+                              <th scope="col">Usuario</th>
+                              <th scope="col">Modificación</th>
+                              <th scope="col">Valor Anterior</th>
+                              <th scope="col">Valor Nuevo</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            ${dataTable}
+                          </tbody>
+                        </table>
+                    </div>
+                </div>
+            `;
+        });
+
+        return html;
+    }
 
 	var url = "<?=base_url()?>";
 	var url2 = "<?=base_url()?>index.php/";
