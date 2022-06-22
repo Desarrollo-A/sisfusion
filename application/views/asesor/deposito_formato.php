@@ -139,7 +139,7 @@ $datos = array();
 						<!-- <div class="card-content" style="background-image: url('<?=base_url()?>dist/img/ar4c.png'); background-repeat: no-repeat;"> -->
 						<div class="card-content">
 							<h4 class="card-title"><B>Depósito de seriedad</B> - Formato
-                                <?php if ($this->session->userdata('id_rol') != 17) { ?>
+                                <?php if ($this->session->userdata('id_rol') == 17) { ?>
                                     <span class="material-icons cursor-point" onclick="historial()">info</span>
                                 <?php }?>
                             </h4>
@@ -2001,8 +2001,13 @@ $datos = array();
 
     function historial() {
         $.get(`${url}Asesor/getHistorialDS/${cliente}`, function (data) {
+            const info = JSON.parse(data);
+            if (info.length === 0) {
+                alerts.showNotification('top', 'right', 'No hay registro de movimientos', 'warning');
+                return;
+            }
             changeSizeModal('modal-lg');
-            appendBodyModal(historialCampoHtml(JSON.parse(data)));
+            appendBodyModal(historialCampoHtml(info));
             appendFooterModal(`<button type="button" class="btn btn-danger" onclick="hideModal()">Cerrar</button>`);
             showModal();
         });
@@ -2050,11 +2055,9 @@ $datos = array();
         data.forEach(columna => {
             let dataTable = '';
             columna.detalle.forEach(cambio => {
-                const usuario = (cambio.id_usuario) ? `${cambio.id_usuario} - ${cambio.usuario}` : '';
-                
                 dataTable += `
                 <tr>
-                  <td>${usuario}</td>
+                  <td>${(cambio.usuario) ? cambio.usuario : ''}</td>
                   <td>${cambio.fecha}</td>
                   <td>${cambio.anterior}</td>
                   <td>${cambio.nuevo}</td>
