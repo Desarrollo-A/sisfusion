@@ -199,7 +199,7 @@
 }
 
 .w-30 {
-  width: 30%;
+  width: 30% !important;
 }
 
 .w-20 {
@@ -1099,10 +1099,167 @@
   background-color: #F1F1F1;
 }
 
+#ranking table.dataTable > thead > tr > th, #ranking table.dataTable > tbody > tr > th, #ranking table.dataTable > tfoot > tr > th, #ranking table.dataTable > thead > tr > td, #ranking table.dataTable > tbody > tr > td, #ranking table.dataTable > tfoot > tr > td {
+  white-space: nowrap !important;
+}
+
+#ranking .apexcharts-bar-series.apexcharts-plot-series .apexcharts-series path {
+  clip-path: inset(0% 0% 0% 0% round 8px);
+}
+
 #ranking .card {
+  height: 440px;
+  margin-bottom: 0;
+}
+
+#ranking .card .col-chart .actions {
+  height: 35px;
+  margin-top: 15px;
+  margin-bottom: -15px;
+}
+
+#ranking .card .col-chart .actions .selectMini button {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  background-color: #eaeaea;
+  color: #333333;
+  border-radius: 20px;
+  height: 100%;
+}
+
+@media (min-device-width: 320px) and (max-device-width: 480px) {
+  #ranking .card .col-chart .actions .selectMini button {
+    font-size: 12px !important;
+  }
+}
+
+#ranking .card .col-chart .actions .form-group {
+  border-radius: 27px;
+  background-color: #eaeaea;
+}
+
+#ranking .card .col-chart .actions .form-group .datepicker {
+  background-image: none;
+  height: 100%;
+  padding: 0;
+  z-index: 9999;
+}
+
+#ranking .card .col-chart .actions .form-group .btn-search {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  border: none;
+  background-color: transparent;
+  z-index: 9999;
+}
+
+#ranking .card .col-chart .actions .btn-charts {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #eaeaea;
+  border-radius: 27px;
+  border: none;
+  color: #929292;
+  height: 35px;
+  width: 35px;
+  font-size: 14px;
+  padding: 0;
+  z-index: 9999;
+}
+
+#ranking .card .col-chart .actions .btn-charts:hover {
+  background-color: #D1EEFF;
+  color: #143860;
+}
+
+#ranking .card .col-datatable {
   /* El background del scroll (border)*/
   /* Color de la barra de desplazamiento */
   /* Color del HOVER de barra de desplazamiento */
+}
+
+#ranking .card .col-datatable table {
+  width: 100% !important;
+  text-align: center;
+  margin: 0 !important;
+}
+
+#ranking .card .col-datatable table thead tr {
+  background-color: #143860;
+}
+
+#ranking .card .col-datatable table thead tr th {
+  padding: 0px !important;
+  text-align: center;
+}
+
+#ranking .card .col-datatable table thead tr th input {
+  margin: 4px;
+  border: 1px solid transparent;
+  border-radius: 5px;
+  color: #ffffff;
+  text-align: center;
+  font-weight: 300;
+  background-color: #143860;
+}
+
+#ranking .card .col-datatable table thead tr th input:active {
+  border: 1px solid #ffffff;
+}
+
+#ranking .card .col-datatable table thead tr th input:focus {
+  border: 1px solid #ffffff;
+}
+
+#ranking .card .col-datatable table thead tr th input::placeholder {
+  color: #ffffff;
+}
+
+#ranking .card .col-datatable .dataTables_info {
+  padding: 0;
+  font-size: 11px !important;
+}
+
+#ranking .card .col-datatable .dataTables_paginate .paginate_button a {
+  color: #c1c1c1;
+}
+
+#ranking .card .col-datatable .dataTables_paginate .paginate_button.active a {
+  background-color: transparent !important;
+  color: #333333;
+  font-weight: 900;
+}
+
+#ranking .card .col-datatable .dataTables_scroll .dataTables_scrollHead {
+  border-radius: 0 7px 0 0;
+}
+
+#ranking .card .col-datatable .dataTables_scroll .container-fluid {
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
+#ranking .card .col-datatable .dataTables_scrollBody::-webkit-scrollbar-track {
+  border-radius: 10px;
+  background-color: transparent;
+}
+
+#ranking .card .col-datatable .dataTables_scrollBody::-webkit-scrollbar {
+  width: 2px;
+  height: 5px;
+  background-color: transparent;
+}
+
+#ranking .card .col-datatable .dataTables_scrollBody::-webkit-scrollbar-thumb {
+  border-radius: 0px;
+  background-color: #c1c1c1;
+}
+
+#ranking .card .col-datatable .dataTables_scrollBody::-webkit-scrollbar-thumb:hover {
+  background-color: #929292;
 }
 
 #ranking .card .fadeInAnimationDelay1 {
@@ -1147,62 +1304,8 @@
   }
 }
 
-#ranking .card table {
-  width: 100% !important;
-  text-align: center;
-}
-
-#ranking .card table thead tr {
-  background-color: #143860;
-}
-
-#ranking .card table thead tr th {
-  padding: 3px !important;
-  text-align: center;
-}
-
-#ranking .card table thead tr th input {
-  border: 1px solid transparent;
-  border-radius: 5px;
-  color: #ffffff;
-  text-align: center;
-  font-weight: 500;
-  background-color: #143860;
-}
-
-#ranking .card table thead tr th input:active {
-  border: 1px solid #333333;
-}
-
-#ranking .card table thead tr th input:focus {
-  border: 1px solid #333333;
-}
-
-#ranking .card table thead tr th input::placeholder {
-  color: #ffffff;
-}
-
-#ranking .card .dataTables_scroll .container-fluid {
-  padding-top: 5px;
-  padding-bottom: 5px;
-}
-
-#ranking .card .dataTables_scrollBody::-webkit-scrollbar-track {
-  border-radius: 10px;
-  background-color: transparent;
-}
-
-#ranking .card .dataTables_scrollBody::-webkit-scrollbar {
-  width: 2px;
-  height: 5px;
-  background-color: transparent;
-}
-
-#ranking .card .dataTables_scrollBody::-webkit-scrollbar-thumb {
-  border-radius: 0px;
-  background-color: #c1c1c1;
-}
-
-#ranking .card .dataTables_scrollBody::-webkit-scrollbar-thumb:hover {
-  background-color: #929292;
+@media (min-device-width: 320px) and (max-device-width: 480px) {
+  #ranking .card {
+    height: inherit !important;
+  }
 }

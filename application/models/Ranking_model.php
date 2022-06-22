@@ -52,4 +52,8 @@ class Ranking_model extends CI_Model {
         GROUP BY CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno), cl.id_asesor
         ORDER BY cuantos DESC");
     }
+
+    public function getSedes(){
+        return $this->db->query("SELECT * FROM sedes WHERE estatus != 0");
+    }
 }

@@ -1,8 +1,34 @@
-var dataApartados, dataContratados, dataConEnganche, dataSinEnganche;
+var dataApartados, dataContratados, dataConEnganche, dataSinEnganche, dataSedes;
+
+sp = { // MJ: SELECT PICKER
+    initFormExtendedDatetimepickers: function () {
+        $('.datepicker').datetimepicker({
+            format: 'DD/MM/YYYY',
+            icons: {
+                time: "fa fa-clock-o",
+                date: "fa fa-calendar",
+                up: "fa fa-chevron-up",
+                down: "fa fa-chevron-down",
+                previous: 'fa fa-chevron-left',
+                next: 'fa fa-chevron-right',
+                today: 'fa fa-screenshot',
+                clear: 'fa fa-trash',
+                close: 'fa fa-remove',
+                inline: true
+            }
+        });
+    }
+}
 
 $(document).ready(function(){
+    sp.initFormExtendedDatetimepickers();
+    $('.datepicker').datetimepicker({locale: 'es'});
     setInitialValues();
-    getRankings(true, 'general', );
+    getRankings(true, 'general');
+    getSedes().then( response => { 
+        dataSedes = response 
+        buildSelectSedes(dataSedes);
+    });
 });
 
 var options = {
@@ -18,21 +44,19 @@ var options = {
         bar: {
             horizontal: true,
             borderRadius: 7,
-            endingShape: 'rounded',
-            barHeight: '40%',
+            barHeight: '50%',
             distributed: false,
             dataLabels: {
-                show: false
+                show: true
             },
+            
         }
     },
     dataLabels: {
-        enabled: false,
-        offsetY: -20,
-        style: {
-            fontSize: '12px',
-            colors: ["#304758"]
-        }
+        enabled: true,
+    },
+    grid: {
+        show: false,
     },
     xaxis: {
         categories: [],
@@ -43,18 +67,12 @@ var options = {
         axisTicks: {
             show: false
         },
-        crosshairs: {
-            fill: {
-                type: 'gradient',
-                gradient: {
-                colorFrom: '#D8E3F0',
-                colorTo: '#BED1E6',
-                stops: [0, 100],
-                opacityFrom: 0.4,
-                opacityTo: 0.5,
-                }
+        labels: {
+            show: true,
+            formatter: function (val) {
+                return val + "%";
             }
-        },
+        }
     },
     yaxis: {
         axisBorder: {
@@ -64,7 +82,7 @@ var options = {
             show: false,
         },
         labels: {
-            show: false,
+            show: true,
             formatter: function (val) {
                 return val + "%";
             }
@@ -91,7 +109,7 @@ function toggleDatatable(e){
         columnaActiva.classList.remove('col-sm-6', 'col-md-6', 'col-lg-6', 'inactivo');
         columnaActiva.classList.add('col-sm-12', 'col-md-12', 'col-lg-12', 'activo');
         columnaChart.classList.remove('col-sm-12', 'col-md-12', 'col-lg-12');
-        columnaChart.classList.add('col-sm-12', 'col-md-6', 'col-lg-6');
+        columnaChart.classList.add('col-sm-6', 'col-md-6', 'col-lg-6');
         columnDatatable.removeClass('hidden');
         reorderColumns();
     }
@@ -99,7 +117,7 @@ function toggleDatatable(e){
     else{
         columnaActiva.classList.remove('col-sm-12', 'col-md-12', 'col-lg-12', 'activo');
         columnaActiva.classList.add('col-sm-6', 'col-md-6', 'col-lg-6', 'inactivo');
-        columnaChart.classList.remove('col-sm-12', 'col-md-5', 'col-lg-5');
+        columnaChart.classList.remove('col-sm-12', 'col-md-6', 'col-lg-6');
         columnaChart.classList.add('col-sm-12', 'col-md-12', 'col-lg-12');
         columnDatatable.addClass('hidden');
         reorderColumns();
@@ -114,7 +132,7 @@ function buildEstructuraDT(dataName, dataApartados){
     }
 
     var id = 'table'+dataName;
-    var estructura = `<div class="container-fluid">
+    var estructura = `<div class="container-fluid p-0" style="padding:15px!important">
                         <table class="table-striped table-hover" id="`+id+`" name="table">
                             <thead>
                                 <tr>
@@ -132,12 +150,17 @@ function reorderColumns(){
 
     //Creamos nuevo fragmento en el DOM para insertar las columnas ordenadas
     var elements = document.createDocumentFragment();
-    inactivos = [];
-    activos = [];
-
+    var inactivos = [], activos = [], selectsSede = [];
+    
     for( var i = 0; i<principalColumns.length; i++){
+        var select = {};
         (principalColumns[i].classList.contains('inactivo')) ? inactivos.push(i) : activos.push(i)
+        var sedes= $(principalColumns[i]).find('#sedes'+(i+1));
+        select['name'] = sedes[0].id;
+        select['value'] = sedes[0].value
+        selectsSede.push(select);
     }
+
     //Array con orden correcto de columnas primero las activas y después inactivas
     var orden = activos.concat(inactivos);
     orden.forEach(idx => {
@@ -148,6 +171,8 @@ function reorderColumns(){
     });
     mainRow.innerHTML = null;
     mainRow.appendChild(elements);
+
+    buildSelectSedes(dataSedes, selectsSede);
 
     for( i = 1; i<=principalColumns.length; i++){
         (function(i){
@@ -182,11 +207,10 @@ function reorderColumns(){
 
 function getRankings(general = false, typeRanking = null){
     let dates = getDates(typeRanking);
-    console.log('dates',dates);
     $.ajax({
         type: 'POST',
         url: `Ranking/getAllRankings`,
-        data: {general: general, typeRanking: typeRanking,beginDate: dates.beginDate, endDate: dates.endDate, sede: $('#sede').val()},
+        data: {general: general, typeRanking: typeRanking,beginDate: dates.beginDate, endDate: dates.endDate, sede: 2},
         dataType: 'json',
         cache: false,
         beforeSend: function() {
@@ -194,6 +218,7 @@ function getRankings(general = false, typeRanking = null){
         },
         success: function(data) {
             updateGraph(typeRanking, data);
+            divideRankingArrays(data);
             $('#spiner-loader').addClass('hide');
         },
         error: function() {
@@ -222,13 +247,21 @@ function divideRankingArrays(data){
 }
 
 function buildTableApartados(data){
+    $('#tableApartados thead tr:eq(0) th').each(function (i) {
+        const title = $(this).text();
+        $(this).html('<input type="text" center;" class="textoshead"  placeholder="' + title + '"/>');
+        $('input', this).on('keyup change', function () {
+            if ($("#tableApartados").DataTable().column(i).search() !== this.value) {
+                $("#tableApartados").DataTable().column(i)
+                    .search(this.value).draw();
+            }
+        });
+    });
+
     $("#tableApartados").DataTable({
         dom: 'rt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         pagingType: "full_numbers",
-        lengthMenu: [
-            [10, 25, 50, -1],
-            [10, 25, 50, "Todos"]
-        ],
+        pageLength : 10,
         width: '100%',
         destroy: true,
         ordering: false,
@@ -242,25 +275,16 @@ function buildTableApartados(data){
         },
         data: data,
         columns: [{
-            data: 'id_usuario'
+            data: 'totalAT'
         },
         {
-            data: 'nombre'
+            data: 'id_asesor'
         },
         {
-            data: 'apellido_paterno'
+            data: 'nombreUsuario'
         },
         {
-            data: 'apellido_materno'
-        },
-        {
-            data: 'telefono'
-        },
-        {
-            data: 'correo'
-        },
-        {
-            data: 'usuario'
+            data: 'id_rol'
         }],
         columnDefs: [{
             visible: false,
@@ -270,13 +294,21 @@ function buildTableApartados(data){
 }
 
 function buildTableContratados(data){
+    $('#tableContratados thead tr:eq(0) th').each(function (i) {
+        const title = $(this).text();
+        $(this).html('<input type="text" center;" class="textoshead"  placeholder="' + title + '"/>');
+        $('input', this).on('keyup change', function () {
+            if ($("#tableContratados").DataTable().column(i).search() !== this.value) {
+                $("#tableContratados").DataTable().column(i)
+                    .search(this.value).draw();
+            }
+        });
+    });
+
     $("#tableContratados").DataTable({
         dom: 'rt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         pagingType: "full_numbers",
-        lengthMenu: [
-            [10, 25, 50, -1],
-            [10, 25, 50, "Todos"]
-        ],
+        pageLength : 10,
         width: '100%',
         destroy: true,
         ordering: false,
@@ -290,25 +322,16 @@ function buildTableContratados(data){
         },
         data: data,
         columns: [{
-            data: 'id_usuario'
+            data: 'totalConT'
         },
         {
-            data: 'nombre'
+            data: 'id_asesor'
         },
         {
-            data: 'apellido_paterno'
+            data: 'nombreUsuario'
         },
         {
-            data: 'apellido_materno'
-        },
-        {
-            data: 'telefono'
-        },
-        {
-            data: 'correo'
-        },
-        {
-            data: 'usuario'
+            data: 'id_rol'
         }],
         columnDefs: [{
             visible: false,
@@ -318,13 +341,21 @@ function buildTableContratados(data){
 }
 
 function buildTableConEnganche(data){
+    $('#tableConEnganche thead tr:eq(0) th').each(function (i) {
+        const title = $(this).text();
+        $(this).html('<input type="text" center;" class="textoshead"  placeholder="' + title + '"/>');
+        $('input', this).on('keyup change', function () {
+            if ($("#tableConEnganche").DataTable().column(i).search() !== this.value) {
+                $("#tableConEnganche").DataTable().column(i)
+                    .search(this.value).draw();
+            }
+        });
+    });
+
     $("#tableConEnganche").DataTable({
         dom: 'rt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         pagingType: "full_numbers",
-        lengthMenu: [
-            [10, 25, 50, -1],
-            [10, 25, 50, "Todos"]
-        ],
+        pageLength : 10,
         width: '100%',
         destroy: true,
         ordering: false,
@@ -338,19 +369,13 @@ function buildTableConEnganche(data){
         },
         data: data,
         columns: [{
-            data: 'id_usuario'
+            data: 'cuantos'
         },
         {
-            data: 'nombre'
+            data: 'asesor'
         },
         {
-            data: 'apellido_paterno'
-        },
-        {
-            data: 'apellido_materno'
-        },
-        {
-            data: 'telefono'
+            data: 'id_asesor'
         }],
         columnDefs: [{
             visible: false,
@@ -360,13 +385,21 @@ function buildTableConEnganche(data){
 }
 
 function buildTableSinEnganche(data){
+    $('#tableSinEnganche thead tr:eq(0) th').each(function (i) {
+        const title = $(this).text();
+        $(this).html('<input type="text" center;" class="textoshead"  placeholder="' + title + '"/>');
+        $('input', this).on('keyup change', function () {
+            if ($("#tableSinEnganche").DataTable().column(i).search() !== this.value) {
+                $("#tableSinEnganche").DataTable().column(i)
+                    .search(this.value).draw();
+            }
+        });
+    });
+
     $("#tableSinEnganche").DataTable({
         dom: 'rt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         pagingType: "full_numbers",
-        lengthMenu: [
-            [10, 25, 50, -1],
-            [10, 25, 50, "Todos"]
-        ],
+        pageLength : 10,
         width: '100%',
         destroy: true,
         ordering: false,
@@ -479,8 +512,6 @@ function formatData(data) {
 
 function updateGraph(typeRanking, data){
     let series = formatData(data);
-    console.log('series',series);
-    console.log('typeRanking',typeRanking);
 
     switch (typeRanking) {
         case 'general':
@@ -508,8 +539,7 @@ function updateGraph(typeRanking, data){
 }
 
 function setOptionsChart(series, categories){
-    // (series.length > 1) ? colors = ["#2C93E7", "#d9c07b"] : colors = ["#2C93E7"];
-    let options = {
+    let options = { 
         series: [series],
         chart: {
             height: 'auto',
@@ -522,21 +552,19 @@ function setOptionsChart(series, categories){
             bar: {
                 horizontal: true,
                 borderRadius: 7,
-                endingShape: 'rounded',
-                barHeight: '40%',
+                barHeight: '50%',
                 distributed: false,
                 dataLabels: {
-                    show: false
+                    show: true
                 },
+                
             }
         },
         dataLabels: {
-            enabled: false,
-            offsetY: -20,
-            style: {
-                fontSize: '12px',
-                colors: ["#304758"]
-            }
+            enabled: true,
+        },
+        grid: {
+            show: false,
         },
         xaxis: {
             categories: categories,
@@ -547,18 +575,15 @@ function setOptionsChart(series, categories){
             axisTicks: {
                 show: false
             },
-            crosshairs: {
-                fill: {
-                    type: 'gradient',
-                    gradient: {
-                    colorFrom: '#D8E3F0',
-                    colorTo: '#BED1E6',
-                    stops: [0, 100],
-                    opacityFrom: 0.4,
-                    opacityTo: 0.5,
-                    }
-                }
+            labels: {
+                show: false,   
             },
+            labels: {
+                show: true,
+                formatter: function (val) {
+                    return val;
+                }
+            }
         },
         yaxis: {
             axisBorder: {
@@ -568,13 +593,13 @@ function setOptionsChart(series, categories){
                 show: false,
             },
             labels: {
-                show: false,
+                show: true,
                 formatter: function (val) {
                     return val;
                 }
             }
-        },
-    };    
+        }
+    }
     return options;
 }
 
@@ -625,4 +650,59 @@ function getDates(typeRanking){
     }
 
     return {beginDate: beginDate, endDate: endDate};
+}
+
+function getSedes(){
+    return $.ajax({
+        type: 'POST',
+        url: `Ranking/getSedes`,
+        data: {},
+        dataType: 'json',
+        cache: false,
+        beforeSend: function() {
+          $('#spiner-loader').removeClass('hide');
+        },
+        success: function(data) {
+            // response = data;
+        },
+        error: function() {
+          $('#spiner-loader').addClass('hide');
+          alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+        }
+    });
+}
+
+function buildSelectSedes(dataSedes, selectsSede){
+    console.log(selectsSede);
+    $('.boxSedes').html('');
+    var boxSedes = document.getElementsByClassName("boxSedes");
+    for ( var i = 0; i<boxSedes.length; i++ ){
+        var id = boxSedes[i].id;
+        var html = `<select id="sedes`+(id.replace(/\D/g, ""))+`" name="sedes" class="selectMini sedes w-100 m-0">Sedes</select>`;
+        $('#'+id).append(html);
+    }
+
+    $(".sedes").append($('<option disabled>').val("0").text("Seleccione una opción"));
+    for( var i =0; i<dataSedes.length; i++ ){
+        var id_sede = dataSedes[i]['id_sede'];
+        var nombre = dataSedes[i]['nombre'];
+        $(".sedes").append($('<option>').val(id_sede).text(nombre));
+    }
+    $(".sedes").selectpicker('refresh');
+
+    if ( selectsSede != undefined ){
+        setOptionsSelected(selectsSede);
+    }
+}
+
+function setOptionsSelected(selectsSede){
+    var boxSedes = document.getElementsByClassName("boxSedes");
+    console.log(selectsSede);
+    for ( var i = 0; i<boxSedes.length; i++ ){
+        var select = $( boxSedes[i] ).find('#sedes'+(i+1));
+        var id = select.attr('id');
+        let obj = selectsSede.find(o => o.name === id );
+        $("#"+id).val(obj.value);
+        $("#"+id).selectpicker('refresh');
+    }
 }
