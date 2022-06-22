@@ -1099,215 +1099,322 @@
   background-color: #F1F1F1;
 }
 
-.visible-on-sidebar-calendar {
-  display: none !important;
+.btn-circle.btn-lg {
+  width: 50px;
+  height: 50px;
+  padding: 10px 16px;
+  font-size: 18px;
+  line-height: 1.33;
+  border-radius: 25px;
 }
 
-.iconCustom {
-  cursor: pointer;
-  font-size: 3rem;
-  z-index: 1;
+.btn-maderas {
+  background-color: #0a548b;
 }
 
-.select-gral button {
+.btn-maderas {
+  background-color: #0a548b;
+}
+
+.btn-maderas:hover {
+  background: #0a548b;
+}
+
+.formulario .none {
+  display: none;
+}
+
+.form1 .input-gral {
   background-color: #eaeaea !important;
-  box-shadow: none !important;
   color: #929292 !important;
-  border-radius: 27px;
+  border-radius: 27px !important;
+  background-image: none !important;
+  padding-left: 20px;
 }
 
-@media (min-width: 992px) {
-  .side-calendar {
-    position: absolute;
-    bottom: 0;
-    width: 260px;
-    background: #fff;
-    box-shadow: 0 10px 30px -12px rgba(0, 0, 0, 0.42), 0 4px 25px 0px rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(0, 0, 0, 0.2);
-    overflow: auto;
-  }
-  .side-calendar .sidebarCalendar-background {
-    position: absolute;
-    z-index: 0;
-    height: 100%;
-    width: 100%;
-    display: block;
-    top: 0;
-    left: 0;
-    background-size: cover;
-    background-position: center center;
-  }
-  .side-calendar .sidebarCalendar-background:after {
-    position: absolute;
-    z-index: 1;
-    width: 100%;
-    height: 100%;
-    content: "";
-    display: block;
-    background: #fff;
-    opacity: .93;
-  }
-  .hover-collapse, .sidebar-calendar .sidebar .nav li:hover .collapse, .sidebar-calendar .sidebar .nav li:focus .collapse, .sidebar-calendar .sidebar .user:hover .collapse {
-    display: block;
-    position: absolute;
-    top: 0;
-    left: 81px;
-    box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.14);
-    border-radius: 6px;
-    color: rgba(0, 0, 0, 0.87);
-    background: #fff;
-  }
-  .sidebar-calendar .visible-on-sidebar-regular {
-    display: none !important;
-  }
-  .sidebar-calendar .visible-on-sidebar-calendar {
-    display: inline-block !important;
-  }
-  .sidebar-calendar [data-background-color="black"] .nav .collapse li:not(.active) > a, .sidebar-calendar [data-background-color="black"] .user .collapse li:not(.active) > a {
-    color: #3C4858;
-  }
-  .sidebar-calendar .sidebar {
-    width: 80px;
-    display: block;
-    font-weight: 200;
-    z-index: 3;
-  }
-  .sidebar-calendar .sidebar .sidebar-wrapper {
-    overflow: inherit;
-    width: 80px;
-    box-shadow: none;
-  }
-  .sidebar-calendar .sidebar .logo {
-    display: none;
-  }
-  .sidebar-calendar .sidebar .logo-mini {
-    padding: 10px 0px;
-    display: block;
-    margin: 0px;
-    position: relative;
-    z-index: 4;
-  }
-  .sidebar-calendar .sidebar .nav {
-    margin-top: 20px;
-  }
-  .sidebar-calendar .sidebar .nav li.active > [data-toggle="collapse"] i {
+.form1 .select-gral {
+  border-radius: 27px !important;
+  height: 45px;
+  -webkit-border-radius: 27px !important;
+  -moz-border-radius: 27px !important;
+  -ms-border-radius: 27px !important;
+  -o-border-radius: 27px !important;
+}
+
+#ModalMsi .input-descuento {
+  background-color: #F9F7F7 !important;
+  color: #000 !important;
+  border-radius: 27px !important;
+  background-image: none !important;
+  width: 60%;
+}
+
+#ModalMsi .btn-circle {
+  width: 30px;
+  height: 30px;
+  text-align: center;
+  padding: 6px 0;
+  font-size: 12px;
+  line-height: 1.428571429;
+  border-radius: 15px;
+}
+
+#ModalMsi .btn-circle.btn-lg {
+  width: 50px;
+  height: 50px;
+  padding: 10px 16px;
+  font-size: 18px;
+  line-height: 1.33;
+  border-radius: 25px;
+}
+
+.rowCards {
+  /*.boxCard:hover{
+      box-shadow: 0 0 6px $blueMaderas;
+      transform: scale(1.1);
+      -webkit-transform: scale(1.1);
+      -moz-transform: scale(1.1);
+      -ms-transform: scale(1.1);
+      -o-transform: scale(1.1);
+}*/
+}
+
+.rowCards .boxCard {
+  background: #FFF;
+  border-radius: 10px;
+  cursor: pointer;
+  margin: 20px 0;
+  padding: 5px 10px;
+  transition: all 0.5s ease-out;
+}
+
+.rowCards .boxCard .myCard {
+  height: 100%;
+}
+
+.rowCards .boxCard .myCard .color_span {
+  background: #96843D;
+}
+
+.rowCards .boxCard .myCard .check-padding {
+  padding-top: 30px;
+}
+
+.rowCards .boxCard .myCard .card-header {
+  padding: 5px 20px 0px !important;
+}
+
+.rowCards .boxCard .myCard .select-gral-number {
+  border-radius: 27px !important;
+  height: 45px;
+  -webkit-border-radius: 27px !important;
+  -moz-border-radius: 27px !important;
+  -ms-border-radius: 27px !important;
+  -o-border-radius: 27px !important;
+  width: 100%;
+}
+
+.rowCards .boxCard .myCard .btn-circle {
+  width: 30px;
+  height: 30px;
+  text-align: center;
+  padding: 6px 0;
+  font-size: 12px;
+  line-height: 1.428571429;
+  border-radius: 15px;
+}
+
+.rowCards .boxCard .myCard .input-gral {
+  background-color: #f3eeee !important;
+  color: #929292 !important;
+  border-radius: 27px !important;
+  background-image: none !important;
+  padding-left: 20px;
+}
+
+.rowCards .boxCard .myCard .select-gral {
+  border-radius: 27px !important;
+  height: 45px;
+  -webkit-border-radius: 27px !important;
+  -moz-border-radius: 27px !important;
+  -ms-border-radius: 27px !important;
+  -o-border-radius: 27px !important;
+}
+
+.rowCards .boxCard .myCard .custom-dropdown {
+  background-color: #0a548b;
+  color: #0a548b;
+}
+
+.rowCards .boxCard .myCard .select2-results__options {
+  background-color: #0a548b;
+  color: #0a548b;
+}
+
+.rowCards .boxCard .myCard .radio_container input[type="radio"]:checked + label {
+  background-color: #103f75;
+  color: #ffffff;
+  transition: 0.3s;
+}
+
+.rowCards .boxCard .myCard .checkbox {
+  display: block;
+  position: relative;
+  padding-left: 35px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  font-size: 22px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.rowCards .boxCard .mySubtitle {
+  position: absolute;
+  bottom: 0;
+  height: 20%;
+}
+
+@media (max-width: 1706.67px) {
+  #snackbar {
+    visibility: hidden;
+    min-width: 320px;
+    margin-left: -125px;
+    background-color: #4caf50;
     color: #fff;
-  }
-  .sidebar-calendar .sidebar .nav li > a {
-    margin: 5px 10px;
-  }
-  .sidebar-calendar .sidebar .nav li > a:before, .sidebar-calendar .sidebar .nav li > a:after {
-    display: none;
-  }
-  .sidebar-calendar .sidebar .nav p {
-    display: none;
-  }
-  .sidebar-calendar .sidebar .nav i {
-    float: none;
-  }
-  .sidebar-calendar .sidebar .nav [data-toggle="collapse"] ~ div > ul > li > a {
-    padding: 10px 15px;
-    border-radius: 3px;
-  }
-  .sidebar-calendar .sidebar .info > a {
-    height: 0;
-    padding: 0;
-    opacity: 0;
-  }
-  .sidebar-calendar .sidebar .info [data-toggle="collapse"] ~ div > ul > li > a {
-    padding: 10px 15px;
-    border-radius: 3px;
-  }
-  .sidebar-calendar .sidebar .user {
-    position: relative;
-  }
-  .sidebar-calendar .sidebar .user .nav a {
-    color: #3C4858;
-  }
-  .sidebar-calendar .sidebar .user .photo {
-    width: 50px;
-    height: 50px;
-    border-width: 2px;
-  }
-  .sidebar-calendar .sidebar .collapse .nav {
-    width: 180px;
-    height: auto;
-    position: relative;
-    margin: 5px 0;
-  }
-  .sidebar-calendar .sidebar .collapse .nav > li a {
-    margin-left: 5px;
-    margin-right: 5px;
-  }
-  .sidebar-calendar .sidebar .collapse .nav:before {
-    border-right: 11px solid #ccc;
-    border-top: 11px solid transparent;
-    border-bottom: 11px solid transparent;
-    position: absolute;
-    content: "";
-    display: inline-block;
-    left: -11px;
-    top: 9px;
-  }
-  .sidebar-calendar .sidebar .collapse .nav:after {
-    border-right: 11px solid #fff;
-    border-top: 11px solid transparent;
-    border-bottom: 11px solid transparent;
-    position: absolute;
-    content: "";
-    display: inline-block;
-    left: -10px;
-    top: 9px;
-  }
-  .sidebar-calendar .main-panel {
-    width: calc(100% - 310px);
-    margin-left: 80px;
-    margin-right: 245px;
-  }
-  .sidebar-calendar .wrapper {
-    height: auto;
-  }
-  .sidebar-calendar .sidebar, .sidebar-calendar .main-panel {
-    overflow: visible;
-    max-height: none;
-    height: auto;
-  }
-  .closeCalendar {
-    display: none;
-  }
-  .noResponsive {
-    display: block;
-  }
-  .responsive {
-    display: none !important;
-  }
-  .side-calendar .fc-header-toolbar {
+    text-align: center;
+    border-radius: 22px;
+    padding: 16px;
+    position: fixed;
     z-index: 1;
+    left: 50%;
+    bottom: -450px;
+    opacity: 1;
+    -webkit-border-radius: 22px;
+    -moz-border-radius: 22px;
+    -ms-border-radius: 22px;
+    -o-border-radius: 22px;
+  }
+  /* Show the snackbar when clicking on a button (class added with JavaScript) */
+  #snackbar.show {
+    visibility: visible;
+    -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+    animation: fadein 0.5s, fadeout 0.5s 2.5s;
+    -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+  }
+  /* Animations to fade the snackbar in and out */
+  @-webkit-keyframes fadein {
+    from {
+      bottom: -450px;
+      opacity: 0;
+    }
+    to {
+      bottom: -400px;
+      opacity: 1;
+    }
+  }
+  @keyframes fadein {
+    from {
+      bottom: -450px;
+      opacity: 0;
+    }
+    to {
+      bottom: -400px;
+      opacity: 1;
+    }
+  }
+  @-webkit-keyframes fadeout {
+    from {
+      bottom: -400px;
+      opacity: 1;
+    }
+    to {
+      bottom: -450px;
+      opacity: 0;
+    }
+  }
+  @keyframes fadeout {
+    from {
+      bottom: -400px;
+      opacity: 1;
+    }
+    to {
+      bottom: -450px;
+      opacity: 0;
+    }
   }
 }
 
-@media (max-width: 768px) {
-  .side-calendar {
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-    box-shadow: 0 10px 30px -12px rgba(0, 0, 0, 0.42), 0 4px 25px 0px rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(0, 0, 0, 0.2);
-    overflow: auto;
-    background: #fff;
+@media (max-width: 2133.33px) {
+  #snackbar {
+    visibility: hidden;
+    min-width: 320px;
+    margin-left: -125px;
+    background-color: #4caf50;
+    color: #fff;
+    text-align: center;
+    border-radius: 22px;
+    padding: 16px;
+    position: fixed;
+    z-index: 1;
+    left: 50%;
+    bottom: -50px;
+    opacity: 1;
+    -webkit-border-radius: 22px;
+    -moz-border-radius: 22px;
+    -ms-border-radius: 22px;
+    -o-border-radius: 22px;
   }
-  .closeCalendar {
-    display: block;
-    cursor: pointer;
-    padding: 8px 11px 0px 0px;
-    font-size: 2.5rem;
+  /* Show the snackbar when clicking on a button (class added with JavaScript) */
+  #snackbar.show {
+    visibility: visible;
+    /*Showthesnackbar*/
+    /*Addanimation:;
+    Take0.5secondstofadeinandoutthesnackbar.However,delaythefadeoutprocessfor2.5seconds*/
+    -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+    animation: fadein 0.5s, fadeout 0.5s 2.5s;
+    -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
   }
-  .noResponsive {
-    display: none !important;
+  /* Animations to fade the snackbar in and out */
+  @-webkit-keyframes fadein {
+    from {
+      bottom: -50px;
+      opacity: 0;
+    }
+    to {
+      bottom: -10px;
+      opacity: 1;
+    }
   }
-  .responsive {
-    display: block !important;
+  @keyframes fadein {
+    from {
+      bottom: -50px;
+      opacity: 0;
+    }
+    to {
+      bottom: -10px;
+      opacity: 1;
+    }
   }
-  .divIconsNav {
-    display: flex;
-    justify-content: flex-end;
+  @-webkit-keyframes fadeout {
+    from {
+      bottom: -10px;
+      opacity: 1;
+    }
+    to {
+      bottom: -50px;
+      opacity: 0;
+    }
+  }
+  @keyframes fadeout {
+    from {
+      bottom: -10px;
+      opacity: 1;
+    }
+    to {
+      bottom: -50px;
+      opacity: 0;
+    }
   }
 }

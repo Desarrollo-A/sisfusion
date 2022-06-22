@@ -670,6 +670,7 @@
                                                         <span ng-if="descuento.id_condicion == 1 || descuento.id_condicion == 2 || descuento.id_condicion == 3" class="animate-if" style="color:#000;">Descuento al total.</span>
                                                         <span ng-if="descuento.id_condicion == 4" class="animate-if" style="color:#000;">Descuento al total por m2.</span>
                                                         <span ng-if="descuento.id_condicion == 7" class="animate-if" style="color:#000;">Enganche diferido sin descontar MSI</span>
+                                                        <span ng-if="descuento.msi_descuento > 0" class="animate-if pill-msi" style="color:#000;">{{descuento.msi_descuento}} MSI adicional</span>
                                                         <span ng-if="descuento.id_condicion == 12" class="animate-if" style="color:#000;">Bono al m2 de {{descuento.porcentaje | currency }}</span>
                                                     </li>
                                                 </div>
@@ -896,10 +897,10 @@
                                             </tr>
                                         </table>
 
-<!--                                        <b>Razón Social:</b> <label type="text" class="infoBank">{{rsocial}}</label>-->
-<!--                                        <b>Cuenta:</b> <label type="text" class="infoBank">{{cuenta}}</label>-->
-<!--                                        <b>CLABE:</b> <label type="text" class="infoBank">{{clabe}}</label><p>-->
-<!--                                            <b>Referencia:</b> <label type="text" class="infoBank">{{referencia}}</label>-->
+                                        <!--                                        <b>Razón Social:</b> <label type="text" class="infoBank">{{rsocial}}</label>-->
+                                        <!--                                        <b>Cuenta:</b> <label type="text" class="infoBank">{{cuenta}}</label>-->
+                                        <!--                                        <b>CLABE:</b> <label type="text" class="infoBank">{{clabe}}</label><p>-->
+                                        <!--                                            <b>Referencia:</b> <label type="text" class="infoBank">{{referencia}}</label>-->
                                     </td>
                                 </tr>
                                 <tr>
@@ -1036,7 +1037,6 @@
 
         <div style="float: right;bottom: 2%;right: 3%;position: fixed;display: inline-flex;align-content: center;
                             flex-wrap: wrap;flex-direction: column;">
-
             <button class="btn-circle blue" ng-click="exportc()"
                     data-toggle="tooltip" title="Guardar + Imprimir Caratula"><i class="fas fa-print fa-lg"></i></button>
             <button class="btn-circle dark-blue" ng-click="exportcf()"
@@ -1241,7 +1241,8 @@
                 var descEng = 0;
                 var enganche = 0;
                 var supLote = $scope.superficie;
-                console.log($scope.superficie);
+                var msi = parseInt($scope.msni);
+                console.log("msi: ", msi);
 
 
 
@@ -1262,9 +1263,6 @@
                 var ultimoAhorropm = 0;
 
 ////////////////////////// FIN VARIABLES DESCRIPCION DE DESCUENTOS
-
-
-
 
                 if (porcentajeDeEnganche === 0 && orderEnganche.length === 0 && orderTotal.length === 0){
                     console.log('AREA 1');
@@ -1328,11 +1326,13 @@
                             porcentaje1 = (item.porcentaje/100);
                             porcentaje2 = (r1 * porcentaje1);
                             r1 -= porcentaje2;
+                            msi = msi + item.msi_descuento;
                         }
 
                         if(item.id_condicion == 3){
                             porcentaje2 = parseFloat(item.porcentaje);
                             r1 = (r1 - porcentaje2);
+                            msi = msi + item.msi_descuento;
                         }
 
 
@@ -1340,6 +1340,7 @@
                             porcentaje1 = (item.porcentaje);
                             porcentaje2 = (supLote * porcentaje1);
                             r1 -= porcentaje2;
+                            msi = msi + item.msi_descuento;
                         }
 
                         // if(item.id_condicion == 5){
@@ -1352,7 +1353,7 @@
                         a +=  porcentaje2;
                         b = (tot - a);
                         c = (b/supLote);
-                        arreglo.push({ahorro: a, pm: c, pt: b, td:1, porcentaje: item.porcentaje, id_condicion: item.id_condicion});
+                        arreglo.push({ahorro: a, pm: c, pt: b, td:1, porcentaje: item.porcentaje, id_condicion: item.id_condicion, msiExtra: item.msi_descuento});
                         $scope.decFin =arreglo;
 
 ///////////////////////DESCIPCION DE DESCUENTOS////////////////////////////////////////
@@ -1371,6 +1372,7 @@
                             porcentaje1 = (item.porcentaje/100);
                             porcentaje2 = (r1 * porcentaje1);
                             r1 -= porcentaje2;
+                            msi = parseInt(msi + item.msi_descuento);
                             console.log('condicion 1 y 2');
 
                         }
@@ -1380,6 +1382,7 @@
 
                             porcentaje2 = parseFloat(item.porcentaje);
                             r1 = (r1 - porcentaje2);
+                            msi = parseInt(msi + item.msi_descuento);
                         }
 
 
@@ -1389,16 +1392,17 @@
                             porcentaje1 = (item.porcentaje);
                             porcentaje2 = (supLote * porcentaje1);
                             r1 = (r1 - porcentaje2);
+                            msi = parseInt(msi + item.msi_descuento);
                         }
                         //aqui se agrega la validación la operación del bono
                         if(item.id_condicion == 12){
-                        //     console.log('condicion 12 ', item.porcentaje);
-                        //     // descuentoM2 = montoBono/supLote
+                            //     console.log('condicion 12 ', item.porcentaje);
+                            //     // descuentoM2 = montoBono/supLote
                             porcentaje1 = item.porcentaje;
                             porcentaje2 = (porcentaje1 / supLote);
                             r1 = (r1 - porcentaje1);
                             console.log(r1);
-                        //     console.log("condicion12 alv: ", r1);
+                            //     console.log("condicion12 alv: ", r1);
                         }
 
 
@@ -1439,7 +1443,9 @@
                             pm: (item.id_condicion==12 && orderTotal.length==1) ? e : c,
                             pt: b, td:1,
                             porcentaje: item.porcentaje,
-                            id_condicion: item.id_condicion});
+                            id_condicion: item.id_condicion,
+                            msiExtra: item.msi_descuento
+                        });
                         $scope.decFin =arreglo;
                         // console.log($scope.decFin);
 
@@ -1484,6 +1490,7 @@
                             porcentaje1 = (item.porcentaje/100);
                             porcentaje2 = (r1 * porcentaje1);
                             r1 -= porcentaje2;
+                            msi = parseInt(msi + item.msi_descuento);
 
                         }
 
@@ -1491,6 +1498,7 @@
                         if(item.id_condicion == 3){
                             porcentaje2 = parseFloat(item.porcentaje);
                             r1 = (r1 - porcentaje2);
+                            msi = parseInt(msi + item.msi_descuento);
                         }
 
 
@@ -1498,6 +1506,7 @@
                             porcentaje1 = (item.porcentaje);
                             porcentaje2 = (supLote * porcentaje1);
                             r1 -= porcentaje2;
+                            msi = parseInt(msi + item.msi_descuento);
                         }
 
                         if(item.id_condicion == 12){
@@ -1521,7 +1530,14 @@
                         }
 
 
-                        arreglo.push({ahorro: a, pm: (item.id_condicion==12 && orderTotal.length==1) ? e : c, pt: b, td:1, porcentaje: item.porcentaje, id_condicion: item.id_condicion});
+                        arreglo.push({
+                            ahorro: a, pm: (item.id_condicion==12 && orderTotal.length==1) ? e : c,
+                            pt: b,
+                            td:1,
+                            porcentaje: item.porcentaje,
+                            id_condicion: item.id_condicion,
+                            msiExtra: item.msi_descuento
+                        });
                         $scope.add =arreglo;
 
 
@@ -1862,10 +1878,10 @@
                 $scope.infoLote={
                     precioTotal: r1,
                     yPlan: $scope.age_plan,
-                    msn: $scope.msni,
+                    msn: msi,/*$scope.msni*/
                     casaFlag: $scope.casaFlag,
                     meses: ($scope.age_plan*12),
-                    mesesSinInteresP1: $scope.msni,
+                    mesesSinInteresP1: msi,/*$scope.msni*/
                     mesesSinInteresP2: 120,
                     mesesSinInteresP3: 60,
                     interes_p1: 0,
@@ -2775,8 +2791,6 @@
 
 
                 /////////// TABLES X 4 A 10 AÑOS ////////////
-
-
                 if($scope.infoLote.meses >=48 && $scope.infoLote.meses <=120 ) {
 
                     var range=[];
@@ -3782,14 +3796,8 @@
 
 
                 }
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
+                ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                 /////////// TABLES X 11 A 20 AÑOS ////////////
-
-
-
                 if($scope.infoLote.meses >= 132 && $scope.infoLote.meses <= 240) {
 
                     var range=[];
@@ -5191,10 +5199,7 @@
                     }
 
                 }
-
-
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
             }
 
 
@@ -5701,8 +5706,8 @@
                 $http.post('<?=base_url()?>index.php/Asesor/getinfoLoteDisponible',{lote: lote.idLote, tipo_casa:null}).then(
                     function (response) {
 
-                            document.getElementById("lotetext").innerHTML ='';
-                            $('#lote').css("border-color", "");
+                        document.getElementById("lotetext").innerHTML ='';
+                        $('#lote').css("border-color", "");
 
                         console.log("response: ", response);
 
@@ -6824,6 +6829,7 @@
                         $scope.clabe = response.data[0].clabe;
                         $scope.referencia = response.data[0].referencia;
                         $scope.msni = response.data[0].msni;
+
                         calcularCF();
 
 

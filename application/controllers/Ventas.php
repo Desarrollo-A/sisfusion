@@ -70,6 +70,8 @@ class Ventas extends CI_Controller {
               //  $this->load->view('contraloria/inicio_contraloria_view');
             //break;
             case '1': // DIRECTOR
+                $this->load->view("dashboard/base/base", $datos);
+            break;
             case '4': // ASISTENTE DIRECTOR
             case '8': // SOPORTE
             case '18': // DIRECTOR MKTD

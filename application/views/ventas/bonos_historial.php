@@ -18,7 +18,7 @@
     ?>
 
     <!-- Modals -->
-    <!--<div class="modal fade modal-alertas" id="myModalEspera" role="dialog">
+    <div class="modal fade modal-alertas" id="myModalEspera" role="dialog">
       <div class="modal-dialog modal-sm">
         <div class="modal-content">
           <form method="post" id="form_espera_uno">
@@ -27,16 +27,16 @@
           </form>
         </div>
       </div>
-    </div>-->
+    </div>
 
-    <!--<div class="modal fade modal-alertas" id="modal-delete" role="dialog">
+    <div class="modal fade modal-alertas" id="modal-delete" role="dialog">
       <div class="modal-dialog modal-sm">
         <div class="modal-content" >
             <div class="modal-body"></div>
             <div class="modal-footer"></div>
         </div>
       </div>
-    </div>-->
+    </div>
 
     <div class="modal fade" id="modal_bonos" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
       <div class="modal-dialog modal-md modal-dialog-scrollable" role="document">
@@ -73,7 +73,7 @@
       </div>
     </div>
     
-    <!--<div class="modal fade modal-alertas" id="modal_abono" data-backdrop="static" data-keyboard="false" role="dialog">
+    <div class="modal fade modal-alertas" id="modal_abono" data-backdrop="static" data-keyboard="false" role="dialog">
       <div class="modal-dialog ">
         <div class="modal-content">
             <div class="modal-header"></div>
@@ -83,7 +83,7 @@
             </form>
         </div>
       </div>
-    </div>-->
+    </div>
     <!-- END Modals -->
   
     <div class="content boxContent">
@@ -150,6 +150,7 @@
                           <th>ID PAGO</th>
                           <th># BONO</th>
                           <th>USUARIO</th>
+                          <th>RFC</th>
                           <th>PUESTO</th>
                           <th>MONTO BONO</th>
                           <th>ABONADO</th>
@@ -231,7 +232,7 @@
     var url = "<?=base_url()?>";
     var url2 = "<?=base_url()?>index.php/";
     var tr;
-    var tabla_bonos1 ;
+    var tabla_bonos2 ;
     var totaPen = 0;
     
     //INICIO TABLA QUERETARO*********************************************
@@ -289,7 +290,7 @@
           titleAttr: 'Descargar archivo de Excel',
           title: 'HISTORIAL BONOS - PAGOS LIQUIDADOS',
           exportOptions: {
-            columns: [1,2,3,4,5,6,7,8,9,10,11,12,13],
+            columns: [1,2,3,4,5,6,7,8,9,10,11,12,13,14],
             format: {
               header:  function (d, columnIdx) {
                 if(columnIdx == 0){
@@ -301,26 +302,28 @@
                 }else if(columnIdx == 3){
                   return 'USUARIO';
                 }else if(columnIdx == 4){
-                  return 'ROL ';
+                  return 'RFC';
                 }else if(columnIdx == 5){
-                  return 'MONTO BONO';
+                  return 'ROL ';
                 }else if(columnIdx == 6){
-                  return 'ABONDADO';
+                  return 'MONTO BONO';
                 }else if(columnIdx == 7){
-                  return 'PENDIENTE';
+                  return 'ABONDADO';
                 }else if(columnIdx == 8){
-                  return 'NÚMERO PAGO';
+                  return 'PENDIENTE';
                 }else if(columnIdx == 9){
-                  return 'PAGO INDIVIDUAL';
+                  return 'NÚMERO PAGO';
                 }else if(columnIdx == 10){
-                  return 'IMPUESTO';
+                  return 'PAGO INDIVIDUAL';
                 }else if(columnIdx == 11){
-                  return 'TOTAL A PAGAR';
+                  return 'IMPUESTO';
                 }else if(columnIdx == 12){
-                  return 'FECHA REGISTRO';
+                  return 'TOTAL A PAGAR';
                 }else if(columnIdx == 13){
+                  return 'FECHA REGISTRO';
+                }else if(columnIdx == 14){
                   return 'ESTATUS';
-                }else if(columnIdx != 14 && columnIdx !=0){
+                }else if(columnIdx != 15 && columnIdx !=0){
                   return ' '+titulos[columnIdx-1] +' ';
                 }
               }
@@ -339,7 +342,7 @@
         destroy: true,
         ordering: false,
         columns: [{
-          "width": "5%",
+          "width": "4%",
           "data": function( d ){
             return '<p class="m-0"><center>'+d.id_pago_bono+'</center></p>';
           }
@@ -351,19 +354,25 @@
           }
         },
         {
-          "width": "10%",
+          "width": "8%",
           "data": function( d ){
             return '<p class="m-0"><b>'+d.nombre+'</b></p>';
           }
         },
+         {
+          "width": "7%",
+          "data": function( d ){
+            return '<p class="m-0"><b>'+d.rfc+'</b></p>';
+          }
+        },
         {
-          "width": "8%",
+          "width": "7%",
           "data": function( d ){
             return '<p class="m-0">'+d.id_rol+'</p>';
           }
         },
         {
-          "width": "8%",
+          "width": "7%",
           "data": function( d ){
             if(d.estatus == 2){
               return '<p class="m-0"><center>$'+formatMoney(d.monto)+'</center></p><p style="font-size: .8em"><span class="label" style="background:#5FD482;">LIQUIDADO</span></p>';
@@ -402,19 +411,19 @@
           }
         },
         {
-          "width": "5%",
+          "width": "7%",
           "data": function( d ){
             return '<p class="m-0"><center><b>' +d.n_p+'</b>/'+d.num_pagos+ '</center></p>';
           }
         },
         {
-          "width": "8%",
+          "width": "7%",
           "data": function( d ){
             return '<p class="m-0"><center><b>$'+formatMoney(d.pago)+'</b></center></p>';
           }
         },
         {
-          "width": "5%",
+          "width": "7%",
           "data": function(d) {
             if(parseFloat(d.pago) == parseFloat(d.impuesto1)){
               return '<p class="m-0"><center><b>0%</b></center></p>';
@@ -424,7 +433,7 @@
           }
         },
         {
-          "width": "8%",
+          "width": "7%",
           "data": function(d) {
             if(parseFloat(d.pago) == parseFloat(d.impuesto1)){
               return '<p class="m-0"><center><b>$' + formatMoney(d.pago) + '</b></center></p>';
@@ -442,7 +451,7 @@
           }
         },
         {
-          "width": "8%",
+          "width": "7%",
           "data": function( d ){
             if(d.estado == 1){
               estatus = d.est;
@@ -467,7 +476,7 @@
           }
         },
         {
-          "width": "6%",
+          "width": "5%",
           "orderable": false,
           "data": function( d ){
               return '<button class="btn-data btn-blueMaderas consulta_abonos" value="'+d.id_pago_bono+'" title="Historial"><i class="fas fa-info"></i></button>';
@@ -508,7 +517,7 @@
   
     /**--------------------------------------------------------- */
 
-    /*$("#form_bonos").on('submit', function(e){
+    $("#form_bonos").on('submit', function(e){ 
       e.preventDefault();
       let formData = new FormData(document.getElementById("form_bonos"));
       formData.append("dato", "valor");
@@ -540,9 +549,9 @@
           alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
         }
       });
-    });*/
+    });
 
-    /*function filterFloat(evt,input){
+    function filterFloat(evt,input){
       var key = window.Event ? evt.which : evt.keyCode;   
       var chark = String.fromCharCode(key);
       var tempValue = input.value+chark;
@@ -553,20 +562,20 @@
       }        
       
       return false;    
-    }*/
+    }
 
     function filter(__val__){
       var preg = /^([0-9]+\.?[0-9]{0,2})$/; 
       return (preg.test(__val__) === true);
     }
 
-    /*function closeModalEng(){
+    function closeModalEng(){
       document.getElementById("form_abono").reset();
       a = document.getElementById('inputhidden');
       padre = a.parentNode;
       padre.removeChild(a);
       $("#modal_abono").modal('toggle');
-    }*/
+    }
   
     // FUNCTION MORE
     $(window).resize(function(){

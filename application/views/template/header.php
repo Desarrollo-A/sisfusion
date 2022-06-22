@@ -62,6 +62,7 @@
     <div class="modal-dialog" id="blank-modal-div">
         <div class="modal-content">
             <div class="modal-body"></div>
+            <div class="modal-footer"></div>
         </div>
     </div>
 </div>

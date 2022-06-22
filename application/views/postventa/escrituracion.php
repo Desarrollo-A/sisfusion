@@ -104,43 +104,43 @@
                                                         <div class="col-md-12 pl-0">
                                                             <div class="form-group label-floating is-focused">
                                                                 <label class="control-label label-gral">Nombre Completo</label>
-                                                                <input id="nombre2" name="nombre2" class="form-control input-gral" type="text">
+                                                                <input id="nombre2" name="nombre2" class="form-control input-gral" type="text" disabled>
                                                             </div>
                                                         </div>
                                                         <div class="col-md-4 pl-0">
                                                             <div class="form-group label-floating is-focused">
                                                                 <label class="control-label label-gral">Ocupación</label>
-                                                                <input id="ocupacion" name="ocupacion" class="form-control input-gral" type="text">
+                                                                <input id="ocupacion" name="ocupacion" class="form-control input-gral" type="text" disabled>
                                                             </div>
                                                         </div>
                                                         <div class="col-md-4 pl-0">
                                                             <div class="form-group label-floating is-focused">
                                                                 <label class="control-label label-gral">Lugar de Origen</label>
-                                                                <input id="origen" name="origen" class="form-control input-gral" type="text">
+                                                                <input id="origen" name="origen" class="form-control input-gral" type="text" disabled>
                                                             </div>
                                                         </div>
                                                         <div class="col-md-4 pl-0">
                                                             <div class="form-group label-floating is-focused">
                                                                 <label class="control-label label-gral">Estado Civil</label>
-                                                                <input id="ecivil" name="ecivil" class="form-control input-gral" type="text">
+                                                                <input id="ecivil" name="ecivil" class="form-control input-gral" type="text" disabled>
                                                             </div>
                                                         </div>    
                                                         <div class="col-md-4 pl-0">
                                                             <div class="form-group label-floating is-focused">
                                                                 <label class="control-label label-gral">Régimen Conyugal</label>
-                                                                <input id="rconyugal" name="rconyugal" class="form-control input-gral" type="text">
+                                                                <input id="rconyugal" name="rconyugal" class="form-control input-gral" type="text" disabled>
                                                             </div>
                                                         </div>
                                                         <div class="col-md-8 pl-0">
                                                             <div class="form-group label-floating is-focused">
                                                                 <label class="control-label label-gral">Correo Electrónico</label>
-                                                                <input id="correo" name="correo" class="form-control input-gral" type="mail">
+                                                                <input id="correo" name="correo" class="form-control input-gral" type="mail" disabled>
                                                             </div>
                                                         </div>
                                                         <div class="col-md-12 pl-0">
                                                             <div class="form-group label-floating is-focused">
                                                                 <label class="control-label label-gral">Domicilio Actual</label>
-                                                                <input id="direccion" name="direccion" class="form-control input-gral" type="text">
+                                                                <input id="direccion" name="direccion" class="form-control input-gral" type="text" disabled>
                                                             </div>
                                                         </div>
                                                         <div class="col-md-8 pl-0">
@@ -209,6 +209,7 @@
                                                 <input id="idPostventa" name="idPostventa" class="form-control input-gral d-none">
                                                 <input id="referencia" name="referencia" class="form-control input-gral d-none">
                                                 <input id="empresa" name="empresa" class="form-control input-gral d-none">
+                                                <input id="personalidad" name="personalidad" class="form-control input-gral d-none">
 
                                             </div>
                                             <div class="row d-flex align-center mt-3">

@@ -22,22 +22,31 @@ class Reporte extends CI_Controller {
 
     public function getInformation(){
         if (isset($_POST) && !empty($_POST)) {
-            $typeTransaction = $this->input->post("typeTransaction");
-            $beginDate = date("Y-m-d", strtotime($this->input->post("beginDate")));
-            $endDate = date("Y-m-d", strtotime($this->input->post("endDate")));
-            $where = $this->input->post("where");
-            $type = $this->input->post("type");
-            $saleType = $this->input->post("saleType");
-            $currentYear = date("Y");
-            if ($type == 1) { // GENERAL TABLE
-                $data['data'] = $this->Reporte_model->getGeneralInformation($typeTransaction, $beginDate, $endDate, $currentYear, $saleType)->result_array();
-            } else if ($type == 2) { // MANAGER TABLE
-                $data['data'] = $this->Reporte_model->getInformationByManager($typeTransaction, $beginDate, $endDate, $currentYear, $where, $saleType)->result_array();
-            } else if ($type == 3) { // COORDINATOR TABLE
-                $data['data'] = $this->Reporte_model->getInformationByCoordinator($typeTransaction, $beginDate, $endDate, $currentYear, $where, $saleType)->result_array();
-            } else if ($type == 4) { // ADVISER TABLE
-                $data['data'] = $this->Reporte_model->getInformationByAdviser($typeTransaction, $beginDate, $endDate, $currentYear, $where, $saleType)->result_array();
+            $typeTransaction = $this->input->post("typeTransaction");//si es consulta inicial = 1 o si es consulta con filtro de fechas = 2
+            if( $typeTransaction==1){
+                $beginDate = $this->get4Months()['firstDate'];
+                $endDate = $this->get4Months()['secondDate'];
+            }else{
+                $beginDate = date("Y-m-d", strtotime($this->input->post("beginDate")));
+                $endDate = date("Y-m-d", strtotime($this->input->post("endDate")));
             }
+            $id_usuario = $this->input->post("id_usuario");
+            $where = $this->input->post("where");
+            $rol = $this->input->post("type");//que rol es
+            $render = $this->input->post("render");
+            $currentYear = date("Y");
+
+            $data['data'] = $this->Reporte_model->getGeneralInformation($beginDate, $endDate, $rol, $id_usuario, $render)->result_array();
+
+            // if ($rol == 1) { // GENERAL TABLE - director
+            //     $data['data'] = $this->Reporte_model->getGeneralInformation($typeTransaction, $beginDate, $endDate, $currentYear, $saleType)->result_array();
+            // } else if ($rol == 2) { // MANAGER TABLE - gerente
+            //     $data['data'] = $this->Reporte_model->getInformationByManager($typeTransaction, $beginDate, $endDate, $currentYear, $where, $saleType)->result_array();
+            // } else if ($rol == 9) { // COORDINATOR TABLE - coordinador
+            //     $data['data'] = $this->Reporte_model->getInformationByCoordinator($typeTransaction, $beginDate, $endDate, $currentYear, $where, $saleType)->result_array();
+            // } else if ($rol == 4) { // ADVISER TABLE -- asesor
+            //     $data['data'] = $this->Reporte_model->getInformationByAdviser($typeTransaction, $beginDate, $endDate, $currentYear, $where, $saleType)->result_array();
+            // }
             echo json_encode($data);
         } else {
             json_encode(array());
@@ -48,9 +57,9 @@ class Reporte extends CI_Controller {
         $coordinadorVC = ''; $coordinadorVA = ''; $coordinadorCC = ''; $coordinadorCA = ''; $coordinador = false;
         $general = $this->input->post('general');
         $tipoChart = $this->input->post('tipoChart');
+        $beginDate = date("Y-m-d", strtotime($this->input->post("beginDate"))) . ' 00:00:00.000';
+        $endDate = date("Y-m-d", strtotime($this->input->post("endDate"))) . ' 23:59:00.000';
 
-        $beginDate = '2022-02-06 00:00:00.000';
-        $endDate = '2022-06-06 23:59:00.000';
         $id = $this->session->userdata('id_usuario');
         $rol = $this->session->userdata('id_rol');
         
@@ -88,31 +97,33 @@ class Reporte extends CI_Controller {
     }
     public function chartCoordinator($id, $beginDate, $endDate){
         $coordinadorAll = [];
-        $coordinadorVC = "SELECT qu.total, cantidad, DateValue, 'vc' tipo, '9' rol FROM cte
-        LEFT JOIN (SELECT  FORMAT(ISNULL(SUM(CASE WHEN totalNeto2 IS NULL THEN total WHEN totalNeto2 = 0 THEN total ELSE totalNeto2 END), 0), 'C') total,
-        COUNT(*) cantidad, MONTH(cl.fechaApartado) mes
+        $coordinadorVC = "SELECT ISNULL(total, 0) total, ISNULL(cantidad, 0) cantidad, MONTH(DateValue) mes, YEAR(DateValue) año, 'vc' tipo, '9' rol FROM cte
+        LEFT JOIN (SELECT FORMAT(ISNULL(SUM(CASE WHEN totalNeto2 IS NULL THEN total WHEN totalNeto2 = 0 THEN total ELSE totalNeto2 END), 0), 'C') total,
+        COUNT(*) cantidad, MONTH(cl.fechaApartado) mes, YEAR(cl.fechaApartado) año
         FROM clientes cl
         INNER JOIN lotes lo ON lo.idLote = cl.idLote AND lo.idStatusLote = 2
         INNER JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes WHERE idStatusContratacion = 15 AND idMovimiento = 45
         GROUP BY idLote, idCliente) hl ON hl.idLote = lo.idLote AND hl.idCliente = cl.id_cliente
         WHERE ISNULL(noRecibo, '') != 'CANCELADO' AND cl.status = 1 AND cl.fechaApartado BETWEEN '$beginDate' AND '$endDate'
         AND cl.id_asesor = $id
-        GROUP BY MONTH(cl.fechaApartado)) qu ON qu.mes = cte.DateValue";
+       GROUP BY MONTH(cl.fechaApartado), YEAR(cl.fechaApartado)) qu ON qu.mes = month(cte.DateValue) AND qu.año = year(cte.DateValue)
+        GROUP BY Month(DateValue), YEAR(DateValue), cantidad, total";
         // array_push($coordinadorAll, $coordinadorVC);
 
-        $coordinadorVA = "SELECT qu.total, cantidad, DateValue,'va' tipo, '9' rol FROM cte
+        $coordinadorVA = "SELECT ISNULL(total, 0) total, ISNULL(cantidad, 0) cantidad, MONTH(DateValue) mes, YEAR(DateValue) año, 'va' tipo, '9' rol FROM cte
         LEFT JOIN (SELECT FORMAT(ISNULL(SUM(CASE WHEN totalNeto2 IS NULL THEN total  WHEN totalNeto2 = 0 THEN total  ELSE totalNeto2  END), 0), 'C') total, 
-        COUNT(*) cantidad, MONTH(cl.fechaApartado) mes
+        COUNT(*) cantidad, MONTH(cl.fechaApartado) mes, YEAR(cl.fechaApartado) año
         FROM clientes cl
         INNER JOIN lotes lo ON lo.idLote = cl.idLote AND lo.idStatusLote != 2
         WHERE isNULL(noRecibo, '') != 'CANCELADO' AND cl.status = 1 AND cl.fechaApartado BETWEEN '$beginDate' AND '$endDate'
         AND cl.id_asesor = $id
-        GROUP BY MONTH(cl.fechaApartado)) qu ON qu.mes = cte.DateValue";
+        GROUP BY MONTH(cl.fechaApartado), YEAR(cl.fechaApartado)) qu ON qu.mes = month(cte.DateValue) AND qu.año = year(cte.DateValue)
+        GROUP BY Month(DateValue), YEAR(DateValue), cantidad, total";
         // array_push($coordinadorAll, $coordinadorVA);
 
-        $coordinadorCC = "SELECT qu.total, cantidad, DateValue, 'cc' tipo, '9' rol FROM cte
+        $coordinadorCC = "SELECT ISNULL(total, 0) total, ISNULL(cantidad, 0) cantidad, MONTH(DateValue) mes, YEAR(DateValue) año, 'cc' tipo, '9' rol FROM cte
         LEFT JOIN (SELECT FORMAT(ISNULL(SUM(CASE WHEN totalNeto2 IS NULL THEN total WHEN totalNeto2 = 0 THEN total ELSE totalNeto2 END), 0), 'C') total, 
-        COUNT(*) cantidad, MONTH(cl.fechaApartado) mes
+        COUNT(*) cantidad, MONTH(cl.fechaApartado) mes, YEAR(cl.fechaApartado) año
         FROM clientes cl
         INNER JOIN lotes lo ON lo.idLote = cl.idLote
         LEFT JOIN historial_liberacion hl ON hl.idLote = lo.idLote AND hl.tipo NOT IN (2, 5, 6) AND hl.id_cliente = cl.id_cliente
@@ -120,12 +131,13 @@ class Reporte extends CI_Controller {
         GROUP BY idLote, idCliente) hlo ON hlo.idLote = lo.idLote AND hlo.idCliente = cl.id_cliente
         WHERE isNULL(noRecibo, '') != 'CANCELADO' AND cl.status = 0  AND cl.fechaApartado BETWEEN '$beginDate' AND '$endDate' 
         AND cl.id_asesor = $id
-        GROUP BY MONTH(cl.fechaApartado)) qu ON qu.mes = cte.DateValue";
+        GROUP BY MONTH(cl.fechaApartado), YEAR(cl.fechaApartado)) qu ON qu.mes = month(cte.DateValue) AND qu.año = year(cte.DateValue)
+        GROUP BY Month(DateValue), YEAR(DateValue), cantidad, total";
         // array_push($coordinadorAll, $coordinadorCC);
 
-        $coordinadorCA = "SELECT qu.total, cantidad, DateValue, 'ca' tipo, '9' rol FROM cte
+        $coordinadorCA = "SELECT ISNULL(total, 0) total, ISNULL(cantidad, 0) cantidad, MONTH(DateValue) mes, YEAR(DateValue) año, 'ca' tipo, '9' rol FROM cte
         LEFT JOIN (SELECT FORMAT(ISNULL(SUM(CASE WHEN totalNeto2 IS NULL THEN total WHEN totalNeto2 = 0 THEN total ELSE totalNeto2 END), 0), 'C') total, 
-        COUNT(*) cantidad, MONTH(cl.fechaApartado) mes
+        COUNT(*) cantidad, MONTH(cl.fechaApartado) mes, YEAR(cl.fechaApartado) año
         FROM clientes cl
         INNER JOIN lotes lo ON lo.idLote = cl.idLote
         LEFT JOIN historial_liberacion hl ON hl.idLote = lo.idLote AND hl.tipo NOT IN (2, 5, 6) AND hl.id_cliente = cl.id_cliente
@@ -133,30 +145,30 @@ class Reporte extends CI_Controller {
         GROUP BY idLote, idCliente) hlo ON hlo.idLote = lo.idLote AND hlo.idCliente = cl.id_cliente
         WHERE isNULL(noRecibo, '') != 'CANCELADO' AND cl.status = 0  AND cl.fechaApartado BETWEEN '$beginDate' AND '$endDate' 
         AND cl.id_asesor = $id
-        GROUP BY MONTH(cl.fechaApartado)) qu ON qu.mes = cte.DateValue";
-        // array_push($coordinadorAll, $coordinadorCA);
-
+        GROUP BY MONTH(cl.fechaApartado), YEAR(cl.fechaApartado)) qu ON qu.mes = month(cte.DateValue) AND qu.año = year(cte.DateValue)
+        GROUP BY Month(DateValue), YEAR(DateValue), cantidad, total";
+        
         array_push($coordinadorAll, $coordinadorVC, $coordinadorVA, $coordinadorCC, $coordinadorCA);
         return $coordinadorAll;
     }
 
-    public function getSpecificChart(){
-        $tipo = $this->input->post('type');
-        $id = $this->session->userdata('id_usuario');
-        if( $tipo == '1' )
-            $data = $this->Reporte_model->getVentasContratadas($id);
-        else if( $tipo == '2' )
-            $data = $this->Reporte_model->getVentasApartadas($id);
-        else if( $tipo == '3' )
-            $data = $this->Reporte_model->getCancelasContratadas($id);
-        else if( $tipo == '4' )
-            $data = $this->Reporte_model->getCanceladasApartadas($id);
+    // public function getSpecificChart(){
+    //     $tipo = $this->input->post('type');
+    //     $id = $this->session->userdata('id_usuario');
+    //     if( $tipo == '1' )
+    //         $data = $this->Reporte_model->getVentasContratadas($id);
+    //     else if( $tipo == '2' )
+    //         $data = $this->Reporte_model->getVentasApartadas($id);
+    //     else if( $tipo == '3' )
+    //         $data = $this->Reporte_model->getCancelasContratadas($id);
+    //     else if( $tipo == '4' )
+    //         $data = $this->Reporte_model->getCanceladasApartadas($id);
 
-        if($data != null) {
-            echo json_encode($array);
-        }
-        else echo json_encode(array());
-    }
+    //     if($data != null) {
+    //         echo json_encode($array);
+    //     }
+    //     else echo json_encode(array());
+    // }
 
     public function validateRegional($id){
         $data = $this->Reporte_model->validateRegional($id);
@@ -164,6 +176,52 @@ class Reporte extends CI_Controller {
         else $where = " AND cl.id_subdirector = " . $id;
 
         return $where;
+    }
+
+    public function get4Months(){
+        $dateTime = new DateTime('first day of this month');
+        $lastDate = new DateTime('first day of this month');
+        $firstDate;
+        $lastDate->modify('-1 month');
+        for ($i = 1; $i <= 4; $i++) {
+            $firstDate = $dateTime->modify('-1 month');
+        }
+       
+        $dates = array(
+            'firstDate' => $firstDate->format('Y-m-d'),
+            'secondDate' => $lastDate->format('Y-m-d')
+        );
+        return $dates;
+    }
+
+    public function getRolDR(){
+        $idUser = $this->input->post('idUser');
+        $data = $this->Reporte_model->validateRegional($idUser);
+        if($data != null) {
+            echo json_encode($data);
+        }
+        else echo json_encode(array());
+    }
+
+    public function getDetails(){
+        $typeTransaction = $this->input->post("transaction");//si es consulta inicial = 1 o si es consulta con filtro de fechas = 2
+        if( $typeTransaction==1){
+            $beginDate = $this->get4Months()['firstDate'];
+            $endDate = $this->get4Months()['secondDate'];
+        }else{
+            $beginDate = date("Y-m-d", strtotime($this->input->post("beginDate")));
+            $endDate = date("Y-m-d", strtotime($this->input->post("endDate")));
+        }
+        $id_usuario = $this->input->post("id_usuario");
+        $rol = $this->input->post("rol");//que rol es
+        $render = $this->input->post("render");
+
+        $data = $this->Reporte_model->getDetails($beginDate, $endDate, $rol, $id_usuario, $render)->result_array();
+        if($data != null) {
+            echo json_encode($data);
+        } else {
+            echo json_encode(array());
+        }
     }
 }
  

@@ -113,6 +113,10 @@ class Postventa extends CI_Controller
             $resDecode->data[0]->id_cliente = $idClient->id_cliente;
             $resDecode->data[0]->referencia = $data1[0]['referencia'];
             $resDecode->data[0]->empresa = $data1[0]['empresa'];
+            $resDecode->data[0]->personalidad = $idClient->personalidad_juridica;
+            $resDecode->data[0]->ocupacion = $idClient->ocupacion;
+            $resDecode->data[0]->regimen_matrimonial = $idClient->regimen_matrimonial;
+            $resDecode->data[0]->estado_civil = $idClient->estado_civil;
             echo json_encode($resDecode->data[0]);
         } else {
             echo json_encode(false);
@@ -149,6 +153,7 @@ class Postventa extends CI_Controller
         $pdf->setPageMark();
 
         $informacion = $this->Postventa_model->getClient($data)->row();
+        $persona = $informacion->personalidad_juridica == 2 ? 'Persona física':'persona moral';
 
 
         $html = '
@@ -178,7 +183,7 @@ class Postventa extends CI_Controller
                                         <br><br>
                                         <table width="100%" style="padding:10px 0px; text-align: center;height: 45px; border: 1px solid #ddd;" width="690">
                                             <tr>
-                                                <td colspan="2" style="background-color: #15578B;color: #fff;padding: 3px 6px; "><b style="font-size: 2em; ">Datos del comprador – Persona Física</b>
+                                                <td colspan="2" style="background-color: #15578B;color: #fff;padding: 3px 6px; "><b style="font-size: 2em; ">Datos del comprador – '.$persona.'</b>
                                                 </td>
                                             </tr>
                                         </table>                            
@@ -196,7 +201,7 @@ class Postventa extends CI_Controller
                                                     </td>
                                                     <td style="font-size: 1em;">
                                                     <b>Lugar de origen:</b><br>
-                                                    ' . $informacion->origen . '
+                                                    ' . $informacion->nacionalidad . '
                                                     </td>
                                                 </tr>
                                                 <tr>
@@ -595,6 +600,7 @@ class Postventa extends CI_Controller
         $idPostventa = $_POST['idPostventa'];
         $referencia = $_POST['referencia'];
         $empresa = $_POST['empresa'];
+        $personalidad = $_POST['personalidad'];
         $resDecode = $this->servicioPostventa($referencia, $empresa);
 
         $dataFiscal = array(
@@ -612,7 +618,7 @@ class Postventa extends CI_Controller
         $dataFiscal = base64_encode(json_encode($dataFiscal));
         $responseInsert = $this->insertPostventaDF($dataFiscal);
         if($responseInsert->resultado == 1){
-            $informacion = $this->Postventa_model->setEscrituracion($idLote,$idCliente, $idPostventa, $resDecode->data[0]);
+            $informacion = $this->Postventa_model->setEscrituracion( $personalidad, $idLote,$idCliente, $idPostventa, $resDecode->data[0]);
             echo json_encode($informacion);
         }else{
             echo json_encode(false);
@@ -739,6 +745,12 @@ class Postventa extends CI_Controller
                 break;
             case 17:
                 $folder = "static/documentos/postventa/escrituracion/PROYECTO_ESCRITURA/";
+                break;
+            case 18:
+                $folder = "static/documentos/postventa/escrituracion/RFC_MORAL/";
+                break;
+            case 19:
+                $folder = "static/documentos/postventa/escrituracion/ACTA_CONSTITUTIVA/";
                 break;
         }
         return $folder;

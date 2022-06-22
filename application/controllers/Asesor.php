@@ -7,6 +7,7 @@ class Asesor extends CI_Controller
         parent::__construct();
         $this->load->model('model_queryinventario');
         $this->load->model('asesor/Asesor_model');
+        $this->load->model('Contraloria_model');
         $this->load->model('registrolote_modelo');
         $this->load->model('caja_model_outside');
         $this->load->library(array('session', 'form_validation'));
@@ -1250,23 +1251,28 @@ class Asesor extends CI_Controller
         $datos["regMat"] = $arrayobj3;
         $datos["parentescos"] = $arrayobj4;
 
-        /*$datos["nacionalidades"] = $this->Asesor_model->getNationality()->result_array();
-        $datos["edoCivil"] = $this->Asesor_model->getCivilStatus()->result_array();
-        $datos["regMat"] = $this->Asesor_model->getMatrimonialRegime()->result_array();
-        $datos["parentescos"] = $this->Asesor_model->getParentesco()->result_array();*/
-
 
         $datos['onlyView'] = $onlyView;
         $datos['corrida_financiera'] = $this->Asesor_model->getInfoCFByCl($id_cliente);
-        $datos['descuentos_aplicados'] = $this->Asesor_model->getDescsByCF($datos['corrida_financiera']->id_corrida);
-        /*print_r($datos['descuentos_aplicados']);
-        exit;*/
+        if(isset($datos['corrida_financiera']->id_corrida)){
+            $datos['descuentos_aplicados'] = $this->Asesor_model->getDescsByCF($datos['corrida_financiera']->id_corrida);
+        }else{
+            $datos['descuentos_aplicados'] = array();
+        }
 
         $this->load->view('template/header');
         $this->load->view('asesor/deposito_formato', $datos);
 
     }
 
+    public function getHistorialDS($idCliente)
+    {
+        $columnas = $this->Contraloria_model->getCamposHistorialDS($idCliente);
+        foreach ($columnas as &$columna) {
+            $columna['detalle'] = $this->Contraloria_model->getDetalleCamposHistorialDS($idCliente, $columna['columna']);
+        }
+        echo json_encode($columnas);
+    }
 
     public function imprimir_ds($id_cliente)
     {
@@ -2403,6 +2409,7 @@ class Asesor extends CI_Controller
         $arreglo_ds["mes"] = $mes;
         $arreglo_ds["anio"] = $anio;
         $arreglo_ds["observacion"] = $observacion;
+        $arreglo_ds['modificado_por'] = $this->session->userdata('id_usuario');
 
 
         //ARRAY DATOS CLIENTE
