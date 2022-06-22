@@ -2409,6 +2409,7 @@ class Asesor extends CI_Controller
         $arreglo_ds["mes"] = $mes;
         $arreglo_ds["anio"] = $anio;
         $arreglo_ds["observacion"] = $observacion;
+        $arreglo_ds['modificado_por'] = $this->session->userdata('id_usuario');
 
 
         //ARRAY DATOS CLIENTE
