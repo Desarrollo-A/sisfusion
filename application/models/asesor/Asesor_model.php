@@ -859,7 +859,7 @@ class Asesor_model extends CI_Model
 		
 		WHERE 
 		
-		        cl.id_coordinador != 2562 AND
+		        cl.id_coordinador NOT IN (2562, 2541) AND
 		        idStatusContratacion = 1 AND idMovimiento = 31 and cl.status = 1 AND cl.id_asesor = " . $this->session->userdata('id_usuario') . "
 				OR idStatusContratacion = 2 AND idMovimiento = 85 and cl.status = 1 AND cl.id_asesor = " . $this->session->userdata('id_usuario') . "
 				OR idStatusContratacion = 1 and idMovimiento = 20 and cl.status = 1 AND cl.id_asesor = " . $this->session->userdata('id_usuario') . "
@@ -1548,7 +1548,7 @@ class Asesor_model extends CI_Model
 
     public function verificarControversia($idLote)
     {
-        $query = $this->db->query("SELECT * FROM controversias WHERE id_lote = $idLote");
+        $query = $this->db->query("SELECT * FROM controversias WHERE id_lote = $idLote AND estatus = 1");
         return $query->result_array();
     }
 

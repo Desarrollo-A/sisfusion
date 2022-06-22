@@ -1015,7 +1015,7 @@ class Contraloria_model extends CI_Model {
 			WHERE l.status = 1 AND (l.idStatusContratacion = 1 OR l.idMovimiento = 82) AND c.status = 1 AND c.id_gerente = ". $this->session->userdata('id_lider') ." AND l.idCondominio = $idCondominio
 			UNION ALL
             SELECT l.* FROM lotes l 
-			INNER JOIN clientes c ON c.id_cliente = l.idCliente AND c.id_coordinador = 2562
+			INNER JOIN clientes c ON c.id_cliente = l.idCliente AND c.id_coordinador IN (2562, 2541)
 			INNER JOIN usuarios u ON u.id_usuario = c.id_asesor
 			INNER JOIN usuarios uu ON uu.id_usuario = u.id_lider AND uu.id_lider = ". $this->session->userdata('id_lider') ."
             WHERE l.status = 1 AND (l.idStatusContratacion = 1 OR l.idMovimiento = 82) AND c.status = 1 AND l.idCondominio = $idCondominio");
