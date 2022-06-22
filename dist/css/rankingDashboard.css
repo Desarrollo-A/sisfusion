@@ -199,7 +199,7 @@
 }
 
 .w-30 {
-  width: 30%;
+  width: 30% !important;
 }
 
 .w-20 {
@@ -1113,31 +1113,23 @@
 }
 
 #ranking .card .col-chart .actions {
-  height: 30px;
+  height: 35px;
   margin-top: 15px;
   margin-bottom: -15px;
 }
 
-#ranking .card .col-chart .actions .selectMini {
+#ranking .card .col-chart .actions .selectMini button {
   display: flex;
   align-items: center;
+  width: 100%;
   background-color: #eaeaea;
   color: #333333;
-  font-weight: 400;
   border-radius: 20px;
-  font-size: 12px;
   height: 100%;
-  padding-left: 10px;
-  padding-right: 10px;
-}
-
-#ranking .card .col-chart .actions .selectMini span {
-  font-size: 12px;
-  margin-left: 5px;
 }
 
 @media (min-device-width: 320px) and (max-device-width: 480px) {
-  #ranking .card .col-chart .actions .selectMini {
+  #ranking .card .col-chart .actions .selectMini button {
     font-size: 12px !important;
   }
 }
@@ -1151,12 +1143,16 @@
   background-image: none;
   height: 100%;
   padding: 0;
+  z-index: 9999;
 }
 
 #ranking .card .col-chart .actions .form-group .btn-search {
+  display: flex;
+  align-items: center;
   height: 100%;
   border: none;
   background-color: transparent;
+  z-index: 9999;
 }
 
 #ranking .card .col-chart .actions .btn-charts {
@@ -1171,6 +1167,7 @@
   width: 35px;
   font-size: 14px;
   padding: 0;
+  z-index: 9999;
 }
 
 #ranking .card .col-chart .actions .btn-charts:hover {
@@ -1304,5 +1301,11 @@
   100% {
     -webkit-transform: scale(1);
     transform: scale(1);
+  }
+}
+
+@media (min-device-width: 320px) and (max-device-width: 480px) {
+  #ranking .card {
+    height: inherit !important;
   }
 }

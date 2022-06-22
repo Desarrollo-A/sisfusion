@@ -8,8 +8,8 @@
                     <div class="row h-100">
                         <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-chart h-100">
                             <div class="d-flex justify-between h-10 actions">
-                                <label class="selectMini m-0">Sedes</label>
-                                <div class="form-group d-flex m-0 p-0">
+                                <div id="boxSede1" class="boxSedes w-30"></div>
+                                <div class="form-group d-flex m-0 p-0 w-50">
                                     <input type="text" class="form-control datepicker text-center pl-1" id="beginDate" value="21/06/2022"/>
                                     <input type="text" class="form-control datepicker text-center " id="endDate" value="21/06/2022"/>
                                     <button class="btn-search" id="searchByDateRange">
@@ -37,8 +37,8 @@
                     <div class="row h-100">
                         <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-chart h-100">
                             <div class="d-flex justify-between h-10 actions">
-                                <label class="selectMini m-0">Sedes</label>     
-                                <div class="form-group d-flex m-0 p-0">
+                                <div id="boxSede2" class="boxSedes w-30"></div>
+                                <div class="form-group d-flex m-0 p-0 w-50">
                                     <input type="text" class="form-control datepicker text-center pl-1" id="beginDate" value="21/06/2022"/>
                                     <input type="text" class="form-control datepicker text-center " id="endDate" value="21/06/2022"/>
                                     <button class="btn-search" id="searchByDateRange">
@@ -66,8 +66,8 @@
                     <div class="row h-100">
                         <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-chart h-100">
                             <div class="d-flex justify-between h-10 actions">
-                                <label class="selectMini m-0">Sedes</label>     
-                                <div class="form-group d-flex m-0 p-0">
+                                <div id="boxSede3" class="boxSedes w-30"></div>
+                                <div class="form-group d-flex m-0 p-0 w-50">
                                     <input type="text" class="form-control datepicker text-center pl-1" id="beginDate" value="21/06/2022"/>
                                     <input type="text" class="form-control datepicker text-center " id="endDate" value="21/06/2022"/>
                                     <button class="btn-search" id="searchByDateRange">
@@ -95,8 +95,8 @@
                     <div class="row h-100">
                         <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-chart h-100">
                             <div class="d-flex justify-between h-10 actions">
-                                <label class="selectMini m-0">Sedes</label>
-                                <div class="form-group d-flex m-0 p-0">
+                                <div id="boxSede4" class="boxSedes w-30"></div>
+                                <div class="form-group d-flex m-0 p-0 w-50">
                                     <input type="text" class="form-control datepicker text-center pl-1" id="beginDate" value="21/06/2022"/>
                                     <input type="text" class="form-control datepicker text-center " id="endDate" value="21/06/2022"/>
                                     <button class="btn-search" id="searchByDateRange">

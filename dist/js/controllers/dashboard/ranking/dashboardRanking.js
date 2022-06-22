@@ -1,4 +1,4 @@
-var dataApartados, dataContratados, dataConEnganche, dataSinEnganche;
+var dataApartados, dataContratados, dataConEnganche, dataSinEnganche, dataSedes;
 
 sp = { // MJ: SELECT PICKER
     initFormExtendedDatetimepickers: function () {
@@ -24,7 +24,11 @@ $(document).ready(function(){
     sp.initFormExtendedDatetimepickers();
     $('.datepicker').datetimepicker({locale: 'es'});
     setInitialValues();
-    getRankings(true, 'general', );
+    getRankings(true, 'general');
+    getSedes().then( response => { 
+        dataSedes = response 
+        buildSelectSedes(dataSedes);
+    });
 });
 
 var options = {
@@ -146,12 +150,17 @@ function reorderColumns(){
 
     //Creamos nuevo fragmento en el DOM para insertar las columnas ordenadas
     var elements = document.createDocumentFragment();
-    inactivos = [];
-    activos = [];
-
+    var inactivos = [], activos = [], selectsSede = [];
+    
     for( var i = 0; i<principalColumns.length; i++){
+        var select = {};
         (principalColumns[i].classList.contains('inactivo')) ? inactivos.push(i) : activos.push(i)
+        var sedes= $(principalColumns[i]).find('#sedes'+(i+1));
+        select['name'] = sedes[0].id;
+        select['value'] = sedes[0].value
+        selectsSede.push(select);
     }
+
     //Array con orden correcto de columnas primero las activas y después inactivas
     var orden = activos.concat(inactivos);
     orden.forEach(idx => {
@@ -162,6 +171,8 @@ function reorderColumns(){
     });
     mainRow.innerHTML = null;
     mainRow.appendChild(elements);
+
+    buildSelectSedes(dataSedes, selectsSede);
 
     for( i = 1; i<=principalColumns.length; i++){
         (function(i){
@@ -566,6 +577,12 @@ function setOptionsChart(series, categories){
             },
             labels: {
                 show: false,   
+            },
+            labels: {
+                show: true,
+                formatter: function (val) {
+                    return val;
+                }
             }
         },
         yaxis: {
@@ -577,9 +594,9 @@ function setOptionsChart(series, categories){
             },
             labels: {
                 show: true,
-                // formatter: function (val) {
-                //     return val + "%";
-                // }
+                formatter: function (val) {
+                    return val;
+                }
             }
         }
     }
@@ -633,4 +650,59 @@ function getDates(typeRanking){
     }
 
     return {beginDate: beginDate, endDate: endDate};
+}
+
+function getSedes(){
+    return $.ajax({
+        type: 'POST',
+        url: `Ranking/getSedes`,
+        data: {},
+        dataType: 'json',
+        cache: false,
+        beforeSend: function() {
+          $('#spiner-loader').removeClass('hide');
+        },
+        success: function(data) {
+            // response = data;
+        },
+        error: function() {
+          $('#spiner-loader').addClass('hide');
+          alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+        }
+    });
+}
+
+function buildSelectSedes(dataSedes, selectsSede){
+    console.log(selectsSede);
+    $('.boxSedes').html('');
+    var boxSedes = document.getElementsByClassName("boxSedes");
+    for ( var i = 0; i<boxSedes.length; i++ ){
+        var id = boxSedes[i].id;
+        var html = `<select id="sedes`+(id.replace(/\D/g, ""))+`" name="sedes" class="selectMini sedes w-100 m-0">Sedes</select>`;
+        $('#'+id).append(html);
+    }
+
+    $(".sedes").append($('<option disabled>').val("0").text("Seleccione una opción"));
+    for( var i =0; i<dataSedes.length; i++ ){
+        var id_sede = dataSedes[i]['id_sede'];
+        var nombre = dataSedes[i]['nombre'];
+        $(".sedes").append($('<option>').val(id_sede).text(nombre));
+    }
+    $(".sedes").selectpicker('refresh');
+
+    if ( selectsSede != undefined ){
+        setOptionsSelected(selectsSede);
+    }
+}
+
+function setOptionsSelected(selectsSede){
+    var boxSedes = document.getElementsByClassName("boxSedes");
+    console.log(selectsSede);
+    for ( var i = 0; i<boxSedes.length; i++ ){
+        var select = $( boxSedes[i] ).find('#sedes'+(i+1));
+        var id = select.attr('id');
+        let obj = selectsSede.find(o => o.name === id );
+        $("#"+id).val(obj.value);
+        $("#"+id).selectpicker('refresh');
+    }
 }

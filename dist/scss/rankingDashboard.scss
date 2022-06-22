@@ -12,24 +12,17 @@
         margin-bottom: 0;
         .col-chart{
             .actions{
-                height: 30px;
+                height: 35px;
                 margin-top: 15px;
                 margin-bottom: -15px;
-                .selectMini{
+                .selectMini button{
                     display: flex;
                     align-items: center;
+                    width: 100%;
                     background-color: $platinum;
                     color: $gray;
-                    font-weight: 400;
                     border-radius: 20px;
-                    font-size: 12px;
                     height: 100%;
-                    padding-left: 10px;
-                    padding-right: 10px;
-                    span{
-                        font-size: 12px;
-                        margin-left: 5px;
-                    }
                     @media #{$smartphone}{ font-size: 12px!important; }
                 }
                 .form-group{
@@ -39,11 +32,15 @@
                         background-image: none;
                         height: 100%;
                         padding: 0;
+                        z-index: 9999;
                     }
                     .btn-search{
+                        display: flex;
+                        align-items: center;
                         height: 100%;
                         border: none;
                         background-color: transparent;
+                        z-index: 9999;
                     }
                 }
                 .btn-charts{
@@ -58,6 +55,7 @@
                     width: 35px;
                     font-size: 14px;
                     padding: 0;
+                    z-index: 9999;
                     &:hover{
                         background-color: $water;
                         color: $blueIndigoDeep;
@@ -178,6 +176,9 @@
                 -webkit-transform: scale(1);
                         transform: scale(1);
             }
+        }
+        @media #{$smartphone}{
+            height: inherit!important;
         }
     }
 }
