@@ -1,4 +1,4 @@
-var dataApartados, dataContratados, dataConEnganche, dataSinEnganche, dataSedes;
+var dataApartados, dataContratados, dataConEnganche, dataSinEnganche, dataSedes, chartApartados, chartContratados, chartEnganche, chartSinenganche;
 
 sp = { // MJ: SELECT PICKER
     initFormExtendedDatetimepickers: function () {
@@ -24,6 +24,7 @@ $(document).ready(function(){
     sp.initFormExtendedDatetimepickers();
     $('.datepicker').datetimepicker({locale: 'es'});
     setInitialDates();
+    recreatApexChart(false);
     getRankings(true, 'general');
     getSedes().then( response => { 
         dataSedes = response 
@@ -90,14 +91,31 @@ var options = {
     },
 };
 
-var chartApartados = new ApexCharts(document.querySelector('#chart'), options);
-chartApartados.render();
-var chartContratados = new ApexCharts(document.querySelector('#chart2'), options);
-chartContratados.render();
-var chartEnganche = new ApexCharts(document.querySelector('#chart3'), options);
-chartEnganche.render();
-var chartSinenganche = new ApexCharts(document.querySelector('#chart4'), options);
-chartSinenganche.render();
+function recreatApexChart(estado){
+    if(estado){
+        $(".boxChart").html('');
+        buildChartsID();
+    }
+    chartApartados = new ApexCharts(document.querySelector('#chart'), options);
+    chartApartados.render();
+    chartContratados = new ApexCharts(document.querySelector('#chart2'), options);
+    chartContratados.render();
+    chartEnganche = new ApexCharts(document.querySelector('#chart3'), options);
+    chartEnganche.render();
+    chartSinenganche = new ApexCharts(document.querySelector('#chart4'), options);
+    chartSinenganche.render();
+}
+
+function buildChartsID(){
+    var boxCharts = document.getElementsByClassName("boxChart");
+    for ( var i = 0; i<boxCharts.length; i++ ){
+        var id = boxCharts[i].id;
+        console.log(id);
+        var html = `<div id="chart`+(id.replace(/\D/g, ""))+`" class="chart"></div>`;
+        $('#'+id).append(html);
+    }
+}
+
 
 function toggleDatatable(e){
     var columnaActiva = e.closest( '.flexible' );
@@ -177,20 +195,22 @@ function reorderColumns(){
 
     buildSelectSedes(dataSedes, selectsSede);
     $('.datepicker').datetimepicker({
-            format: 'DD/MM/YYYY',
-            icons: {
-                time: "fa fa-clock-o",
-                date: "fa fa-calendar",
-                up: "fa fa-chevron-up",
-                down: "fa fa-chevron-down",
-                previous: 'fa fa-chevron-left',
-                next: 'fa fa-chevron-right',
-                today: 'fa fa-screenshot',
-                clear: 'fa fa-trash',
-                close: 'fa fa-remove',
-                inline: true
-            }
-        });
+        format: 'DD/MM/YYYY',
+        icons: {
+            time: "fa fa-clock-o",
+            date: "fa fa-calendar",
+            up: "fa fa-chevron-up",
+            down: "fa fa-chevron-down",
+            previous: 'fa fa-chevron-left',
+            next: 'fa fa-chevron-right',
+            today: 'fa fa-screenshot',
+            clear: 'fa fa-trash',
+            close: 'fa fa-remove',
+            inline: true
+        }
+    });
+    
+    recreatApexChart(true);
 
     for( i = 1; i<=principalColumns.length; i++){
         (function(i){
@@ -235,8 +255,10 @@ function getRankings(general = false, typeRanking = null){
           $('#spiner-loader').removeClass('hide');
         },
         success: function(data) {
-            updateGraph(typeRanking, data);
+            
             divideRankingArrays(data);
+            updateGraph(typeRanking, data, general);
+           
             $('#spiner-loader').addClass('hide');
         },
         error: function() {
@@ -528,9 +550,8 @@ function formatData(data) {
     };
 }
 
-function updateGraph(typeRanking, data){
+function updateGraph(typeRanking, data, general){
     let series = formatData(data);
-
     switch (typeRanking) {
         case 'general':
             chartApartados.updateOptions(setOptionsChart(series.apartados, series.apartadosLabel));
@@ -539,7 +560,7 @@ function updateGraph(typeRanking, data){
             chartSinenganche.updateOptions(setOptionsChart(series.sinEnganche, series.sinEngancheLabel));
             break;
         case 'Apartados':
-            chartApartados.updateOptions(ssetOptionsChart(series.apartados, series.apartadosLabel));
+            chartApartados.updateOptions(setOptionsChart(series.apartados, series.apartadosLabel));
             break;
         case 'Contratados':
             chartContratados.updateOptions(setOptionsChart(series.contratados, series.contratadosLabel));
@@ -557,6 +578,8 @@ function updateGraph(typeRanking, data){
 }
 
 function setOptionsChart(series, categories){
+    console.log("series",series);
+    console.log("cat", categories);
     let options = { 
         series: [series],
         chart: {
@@ -651,12 +674,10 @@ function getDates(typeRanking){
             beginDate = $('#beginDateSinEnganche').val();
             endDate = $('#endDateSinEnganche').val();
             break;
-
         default:
             break;
     }
-
-    return {beginDate: beginDate, endDate: endDate};
+    return {beginDate: beginDate == null ? beginDate : formatDate(beginDate), endDate: endDate == null ? endDate : formatDate(endDate)};
 }
 
 function getSedes(){
@@ -713,6 +734,43 @@ function setOptionsSelected(selectsSede){
     }
 }
 
-$(document).on('click', '.btn-search', function () {
+function validateToggledDatatable(typeRanking){
+    if ( typeRanking == 'Apartados' ){
+        var columna = $("#"+typeRanking).closest( '.flexible' );
+        if ($( columna ).hasClass('activo')){
+            buildTableApartados(dataApartados);
+        }
+    }
+    else if( typeRanking == 'Contratados' ){
+        var columna = $("#"+typeRanking).closest( '.flexible' );
+        if ($( columna ).hasClass('activo')){
+            buildTableContratados(dataContratados);
+        }
+    }
+    else if( typeRanking == 'ConEnganche' ){
+        var columna = $("#"+typeRanking).closest( '.flexible' );
+        if ($( columna ).hasClass('activo')){
+            buildTableConEnganche(dataConEnganche);
+        }
+    }
+    else if( typeRanking == 'SinEnganche' ){
+        var columna = $("#"+typeRanking).closest( '.flexible' );
+        if ($( columna ).hasClass('activo')){
+            buildTableSinEnganche(dataSinEnganche);
+        }
+    }
+}
 
-});
+function formatDate(date) {
+    var dateParts = date.split("/");
+    var d = new Date(+dateParts[2], dateParts[1] - 1, +dateParts[0]),
+        month = '' + (d.getMonth() + 1),
+        day = '' + d.getDate(),
+        year = d.getFullYear();
+    if (month.length < 2)
+        month = '0' + month;
+    if (day.length < 2)
+        day = '0' + day;
+
+    return [year, month, day].join('-');
+}
