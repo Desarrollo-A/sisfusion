@@ -1,4 +1,4 @@
-var dataApartados, dataContratados, dataConEnganche, dataSinEnganche, dataSedes;
+var dataApartados, dataContratados, dataConEnganche, dataSinEnganche, dataSedes, chartApartados, chartContratados, chartEnganche, chartSinenganche;
 
 sp = { // MJ: SELECT PICKER
     initFormExtendedDatetimepickers: function () {
@@ -23,7 +23,8 @@ sp = { // MJ: SELECT PICKER
 $(document).ready(function(){
     sp.initFormExtendedDatetimepickers();
     $('.datepicker').datetimepicker({locale: 'es'});
-    setInitialValues();
+    setInitialDates();
+    recreatApexChart(false);
     getRankings(true, 'general');
     getSedes().then( response => { 
         dataSedes = response 
@@ -90,14 +91,31 @@ var options = {
     },
 };
 
-var chartApartados = new ApexCharts(document.querySelector('#chart'), options);
-chartApartados.render();
-var chartContratados = new ApexCharts(document.querySelector('#chart2'), options);
-chartContratados.render();
-var chartEnganche = new ApexCharts(document.querySelector('#chart3'), options);
-chartEnganche.render();
-var chartSinenganche = new ApexCharts(document.querySelector('#chart4'), options);
-chartSinenganche.render();
+function recreatApexChart(estado){
+    if(estado){
+        $(".boxChart").html('');
+        buildChartsID();
+    }
+    chartApartados = new ApexCharts(document.querySelector('#chart'), options);
+    chartApartados.render();
+    chartContratados = new ApexCharts(document.querySelector('#chart2'), options);
+    chartContratados.render();
+    chartEnganche = new ApexCharts(document.querySelector('#chart3'), options);
+    chartEnganche.render();
+    chartSinenganche = new ApexCharts(document.querySelector('#chart4'), options);
+    chartSinenganche.render();
+}
+
+function buildChartsID(){
+    var boxCharts = document.getElementsByClassName("boxChart");
+    for ( var i = 0; i<boxCharts.length; i++ ){
+        var id = boxCharts[i].id;
+        console.log(id);
+        var html = `<div id="chart`+(id.replace(/\D/g, ""))+`" class="chart"></div>`;
+        $('#'+id).append(html);
+    }
+}
+
 
 function toggleDatatable(e){
     var columnaActiva = e.closest( '.flexible' );
@@ -155,9 +173,12 @@ function reorderColumns(){
     for( var i = 0; i<principalColumns.length; i++){
         var select = {};
         (principalColumns[i].classList.contains('inactivo')) ? inactivos.push(i) : activos.push(i)
-        var sedes= $(principalColumns[i]).find('#sedes'+(i+1));
-        select['name'] = sedes[0].id;
-        select['value'] = sedes[0].value
+        var boxSedes= $(principalColumns[i]).find('.boxSedes');
+        var idBox = boxSedes.attr('id');
+        var select = $("#"+idBox).find('#sedes'+(idBox.replace(/\D/g, "")));
+        var idSelect = $( select ).attr('id');
+        select['name'] = $( select ).attr('id');
+        select['value'] = $("#"+idSelect).val();
         selectsSede.push(select);
     }
 
@@ -173,6 +194,23 @@ function reorderColumns(){
     mainRow.appendChild(elements);
 
     buildSelectSedes(dataSedes, selectsSede);
+    $('.datepicker').datetimepicker({
+        format: 'DD/MM/YYYY',
+        icons: {
+            time: "fa fa-clock-o",
+            date: "fa fa-calendar",
+            up: "fa fa-chevron-up",
+            down: "fa fa-chevron-down",
+            previous: 'fa fa-chevron-left',
+            next: 'fa fa-chevron-right',
+            today: 'fa fa-screenshot',
+            clear: 'fa fa-trash',
+            close: 'fa fa-remove',
+            inline: true
+        }
+    });
+    
+    recreatApexChart(true);
 
     for( i = 1; i<=principalColumns.length; i++){
         (function(i){
@@ -217,8 +255,10 @@ function getRankings(general = false, typeRanking = null){
           $('#spiner-loader').removeClass('hide');
         },
         success: function(data) {
-            updateGraph(typeRanking, data);
+            
             divideRankingArrays(data);
+            updateGraph(typeRanking, data, general);
+           
             $('#spiner-loader').addClass('hide');
         },
         error: function() {
@@ -510,9 +550,8 @@ function formatData(data) {
     };
 }
 
-function updateGraph(typeRanking, data){
+function updateGraph(typeRanking, data, general){
     let series = formatData(data);
-
     switch (typeRanking) {
         case 'general':
             chartApartados.updateOptions(setOptionsChart(series.apartados, series.apartadosLabel));
@@ -521,7 +560,7 @@ function updateGraph(typeRanking, data){
             chartSinenganche.updateOptions(setOptionsChart(series.sinEnganche, series.sinEngancheLabel));
             break;
         case 'Apartados':
-            chartApartados.updateOptions(ssetOptionsChart(series.apartados, series.apartadosLabel));
+            chartApartados.updateOptions(setOptionsChart(series.apartados, series.apartadosLabel));
             break;
         case 'Contratados':
             chartContratados.updateOptions(setOptionsChart(series.contratados, series.contratadosLabel));
@@ -539,6 +578,8 @@ function updateGraph(typeRanking, data){
 }
 
 function setOptionsChart(series, categories){
+    console.log("series",series);
+    console.log("cat", categories);
     let options = { 
         series: [series],
         chart: {
@@ -603,22 +644,11 @@ function setOptionsChart(series, categories){
     return options;
 }
 
-function setInitialValues() {
-    // BEGIN DATE
-    const fechaInicio = new Date();
-    // Iniciar en este año, este mes, en el día 1
-    const beginDate = new Date(fechaInicio.getFullYear(), fechaInicio.getMonth(), 1);
-    // END DATE
-    const fechaFin = new Date();
-    // Iniciar en este año, el siguiente mes, en el día 0 (así que así nos regresamos un día)
-    const endDate = new Date(fechaFin.getFullYear(), fechaFin.getMonth() + 1, 0);
-    finalBeginDate = [beginDate.getFullYear(), ('0' + (beginDate.getMonth() + 1)).slice(-2), ('0' + beginDate.getDate()).slice(-2)].join('-');
-    finalEndDate = [endDate.getFullYear(), ('0' + (endDate.getMonth() + 1)).slice(-2), ('0' + endDate.getDate()).slice(-2)].join('-');
-    finalBeginDate2 = [('0' + beginDate.getDate()).slice(-2), ('0' + (beginDate.getMonth() + 1)).slice(-2), beginDate.getFullYear()].join('/');
-    finalEndDate2 = [('0' + endDate.getDate()).slice(-2), ('0' + (endDate.getMonth() + 1)).slice(-2), endDate.getFullYear()].join('/');
-    
-    $('#beginDate').val(finalBeginDate2);
-    $('#endDate').val(finalEndDate2);
+function setInitialDates() {
+    var beginDt = moment().startOf('year').format('MM/DD/YYYY');
+    var endDt = moment().format('MM/DD/YYYY');
+    $('.beginDate').val(beginDt);
+    $('.endDate').val(endDt);
 }
 
 function getDates(typeRanking){
@@ -644,12 +674,10 @@ function getDates(typeRanking){
             beginDate = $('#beginDateSinEnganche').val();
             endDate = $('#endDateSinEnganche').val();
             break;
-
         default:
             break;
     }
-
-    return {beginDate: beginDate, endDate: endDate};
+    return {beginDate: beginDate == null ? beginDate : formatDate(beginDate), endDate: endDate == null ? endDate : formatDate(endDate)};
 }
 
 function getSedes(){
@@ -673,7 +701,6 @@ function getSedes(){
 }
 
 function buildSelectSedes(dataSedes, selectsSede){
-    console.log(selectsSede);
     $('.boxSedes').html('');
     var boxSedes = document.getElementsByClassName("boxSedes");
     for ( var i = 0; i<boxSedes.length; i++ ){
@@ -697,12 +724,53 @@ function buildSelectSedes(dataSedes, selectsSede){
 
 function setOptionsSelected(selectsSede){
     var boxSedes = document.getElementsByClassName("boxSedes");
-    console.log(selectsSede);
     for ( var i = 0; i<boxSedes.length; i++ ){
-        var select = $( boxSedes[i] ).find('#sedes'+(i+1));
+        var idBox = boxSedes[i].id;
+        var select = $("#"+idBox).find('#sedes'+(idBox.replace(/\D/g, "")));
         var id = select.attr('id');
         let obj = selectsSede.find(o => o.name === id );
         $("#"+id).val(obj.value);
         $("#"+id).selectpicker('refresh');
     }
+}
+
+function validateToggledDatatable(typeRanking){
+    if ( typeRanking == 'Apartados' ){
+        var columna = $("#"+typeRanking).closest( '.flexible' );
+        if ($( columna ).hasClass('activo')){
+            buildTableApartados(dataApartados);
+        }
+    }
+    else if( typeRanking == 'Contratados' ){
+        var columna = $("#"+typeRanking).closest( '.flexible' );
+        if ($( columna ).hasClass('activo')){
+            buildTableContratados(dataContratados);
+        }
+    }
+    else if( typeRanking == 'ConEnganche' ){
+        var columna = $("#"+typeRanking).closest( '.flexible' );
+        if ($( columna ).hasClass('activo')){
+            buildTableConEnganche(dataConEnganche);
+        }
+    }
+    else if( typeRanking == 'SinEnganche' ){
+        var columna = $("#"+typeRanking).closest( '.flexible' );
+        if ($( columna ).hasClass('activo')){
+            buildTableSinEnganche(dataSinEnganche);
+        }
+    }
+}
+
+function formatDate(date) {
+    var dateParts = date.split("/");
+    var d = new Date(+dateParts[2], dateParts[1] - 1, +dateParts[0]),
+        month = '' + (d.getMonth() + 1),
+        day = '' + d.getDate(),
+        year = d.getFullYear();
+    if (month.length < 2)
+        month = '0' + month;
+    if (day.length < 2)
+        day = '0' + day;
+
+    return [year, month, day].join('-');
 }
