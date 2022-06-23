@@ -103,7 +103,7 @@ class Contraloria_model extends CI_Model {
         concat(coordinador.nombre,' ', coordinador.apellido_paterno, ' ', coordinador.apellido_materno),
         concat(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno),
 		cond.idCondominio;");
-		return $query->result();
+		return $query->result_array();
 
 	}
 
