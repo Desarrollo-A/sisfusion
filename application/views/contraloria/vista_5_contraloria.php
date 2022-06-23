@@ -29,13 +29,18 @@ $datos = array();
                              <br>
 						</div>
 
-						<div class="col col-xs-12 col-sm-12 col-md-6 col-lg-6">
+						<div class="col col-xs-12 col-sm-12 col-md-6 col-lg-6"
+                             id="tipo-venta-options-div" hidden>
 							<label id="tvLbl">Tipo de venta</label>
 							<select required="required" name="tipo_venta" id="tipo_ventaenvARevCE"
 									class="selectpicker" data-style="btn" title="SELECCIONA TIPO VENTA" data-size="7">
 							</select>			
 						</div>
 
+                        <div class="col col-xs-12 col-sm-12 col-md-6 col-lg-6"
+                             id="tipo-venta-particular-div" hidden>
+                            <h6><b>Tipo de venta particular</b></h6>
+                        </div>
 
 						<div class="col col-xs-12 col-sm-12 col-md-6 col-lg-6">
 							<label id="tvLbl">Ubicación</label>
@@ -500,7 +505,7 @@ if(data.vl == '1') {
 
 			cntActions = '<button href="#" data-idLote="'+data.idLote+'" data-nomLote="'+data.nombreLote+'" data-idCond="'+data.idCondominio+'"' +
 				'data-idCliente="'+data.id_cliente+'" data-fecVen="'+data.fechaVenc+'" data-ubic="'+data.ubicacion+'" title= "Registrar Status" ' +
-				'class="stat5Rev btn-data btn-green" title="Registrar estatus">' +
+				'data-tipo-venta="'+data.tipo_venta+'" class="stat5Rev btn-data btn-green" title="Registrar estatus">' +
 				'<i class="fas fa-thumbs-up"></i></button>&nbsp;&nbsp;';
 
 
@@ -659,6 +664,7 @@ columnDefs: [
 	$(document).on('click', '.stat5Rev', function () {
 		var idLote = $(this).attr("data-idLote");
 		var nomLote = $(this).attr("data-nomLote");
+        const tipoVenta = $(this).attr('data-tipo-venta');
 		
 		$('#nombreLoteenvARevCE').val($(this).attr('data-nomLote'));
 		$('#idLoteenvARevCE').val($(this).attr('data-idLote'));
@@ -667,7 +673,16 @@ columnDefs: [
 		$('#fechaVencenvARevCE').val($(this).attr('data-fecVen'));
 		$('#nomLoteFakeenvARevCE').val($(this).attr('data-nomLote'));
 		$('#tvLbl').removeClass('hide');
-		$('#tipo_ventaenvARevCE').removeClass('hide');
+
+        if (tipoVenta == 1) {
+            $('#tipo-venta-options-div').attr('hidden', true);
+            $('#tipo-venta-particular-div').attr('hidden', false);
+            $('#tipo_ventaenvARevCE').val(tipoVenta);
+        } else {
+            $('#tipo-venta-options-div').attr('hidden', false);
+            $('#tipo-venta-particular-div').attr('hidden', true);
+        }
+
 		$('#enviarenvARevCE').removeAttr('onClick', 'preguntaenvARevCE2()');
 		$('#enviarenvARevCE').attr('onClick', 'preguntaenvARevCE()');
 		$("#comentarioenvARevCE").val('');
