@@ -84,6 +84,8 @@
                                             <th>COMENTARIO</th>
                                             <th>LUGAR PROSPECCIÓN</th>
                                             <th>FECHA APERTURA</th>
+                                            <th>FECHA VAL. ENGANCHE</th>
+											<th>CANTIDAD ENGANCHE PAGADO</th>
                                             <th>ACCIONES</th>
                                         </tr>
                                         </thead>
@@ -609,6 +611,8 @@
                                             <th style="font-size: .9em;">COMENTARIO</th>
                                             <th style="font-size: .9em;">LUGAR PROSPECCIÓN</th>
                                             <th style="font-size: .9em;">FECHA APERTURA</th>
+                                            <th style="font-size: .9em;">FECHA VAL. ENGANCHE</th>
+											<th style="font-size: .9em;">CANTIDAD ENGANCHE PAGADO</th>
                                             <th style="font-size: .9em;">ACCIONES</th>
                                         </tr>
                                     </thead>
@@ -735,7 +739,7 @@ $(document).on('change','#proyecto, #condominio, #estatus', function() {
                     titleAttr: 'Inventario Lotes',
                     title:"Inventario Lotes",
                     exportOptions: {
-                        columns: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16],
+                        columns: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18],
                         format: {
                             header: function (d, columnIdx) {
                                 switch (columnIdx) {
@@ -789,6 +793,12 @@ $(document).on('change','#proyecto, #condominio, #estatus', function() {
                                     case 16:
                                         return 'FECHA APERTURA';
                                         break;
+                                    case 17:
+										return 'FECHA VALIDACION ENGANCHE';
+										break;
+									case 18:
+										return 'CANTIDAD ENGANCHE PAGADO';
+										break;
                                 }
                             }
                         }
@@ -803,7 +813,7 @@ $(document).on('change','#proyecto, #condominio, #estatus', function() {
                     orientation: 'landscape',
                     pageSize: 'LEGAL',
                     exportOptions: {
-                        columns: [0,1,2,3,4,5,6,7,8,11,12,13,14,15,16],
+                        columns: [0,1,2,3,4,5,6,7,8,11,12,13,14,15,16,17,18],
                         format: {
                             header: function (d, columnIdx) {
                                 switch (columnIdx) {
@@ -851,6 +861,12 @@ $(document).on('change','#proyecto, #condominio, #estatus', function() {
                                     case 16:
                                         return 'FECHA APERTURA';
                                         break;
+                                        case 17:
+										return 'FECHA VALIDACION ENGANCHE';
+										break;
+									case 18:
+										return 'CANTIDAD ENGANCHE PAGADO';
+										break;
                                 }
                             }
                         }
@@ -1145,6 +1161,16 @@ $(document).on('change','#proyecto, #condominio, #estatus', function() {
                     }
                 }
             },
+            {
+				"width": "8%",
+				data: 'fecha_validacion'
+			},
+			{
+				"width": "8%",
+				"data": function( d ){
+					return '<p>$ '+formatMoney(d.cantidad_enganche)+'</p>';
+				}
+			},
 		{
 			"width": "8%",
 			"data": function( d ){
