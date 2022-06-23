@@ -71,7 +71,10 @@ var options = {
             show: true,
             formatter: function (val) {
                 return val + "%";
-            }
+            },
+            style: {
+                colors: ['#FFFFFF','#FFFFFF'],
+            },
         }
     },
     yaxis: {
@@ -85,7 +88,10 @@ var options = {
             show: true,
             formatter: function (val) {
                 return val + "%";
-            }
+            },
+            style: {
+                colors: ['#FFFFFF','#FFFFFF'],
+            },
         }
     },
 };
@@ -557,7 +563,6 @@ function setOptionsChart(series, categories){
                 dataLabels: {
                     show: true
                 },
-                
             }
         },
         dataLabels: {
@@ -572,18 +577,15 @@ function setOptionsChart(series, categories){
             axisBorder: {
                 show: false
             },
-            axisTicks: {
-                show: false
-            },
-            labels: {
-                show: false,   
-            },
             labels: {
                 show: true,
                 formatter: function (val) {
                     return val;
                 }
-            }
+            },
+            style: {
+                colors: []
+            },
         },
         yaxis: {
             axisBorder: {
@@ -596,6 +598,9 @@ function setOptionsChart(series, categories){
                 show: true,
                 formatter: function (val) {
                     return val;
+                },
+                style: {
+                    colors: []
                 }
             }
         }
