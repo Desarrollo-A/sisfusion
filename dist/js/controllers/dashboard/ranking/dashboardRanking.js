@@ -116,12 +116,10 @@ function buildChartsID(){
     var boxCharts = document.getElementsByClassName("boxChart");
     for ( var i = 0; i<boxCharts.length; i++ ){
         var id = boxCharts[i].id;
-        console.log(id);
         var html = `<div id="chart`+(id.replace(/\D/g, ""))+`" class="chart"></div>`;
         $('#'+id).append(html);
     }
 }
-
 
 function toggleDatatable(e){
     var columnaActiva = e.closest( '.flexible' );
@@ -584,8 +582,6 @@ function updateGraph(typeRanking, data, general){
 }
 
 function setOptionsChart(series, categories){
-    console.log("series",series);
-    console.log("cat", categories);
     let options = { 
         series: [series],
         chart: {
