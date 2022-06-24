@@ -97,22 +97,37 @@ var options = {
     },
 };
 
-function recreatApexChart(estado){
+function recreatApexChart(estado, opts){
     if(estado){
         $(".boxChart").html('');
         buildChartsID();
+      
+        chartApartados = new ApexCharts(document.querySelector('#chart'), setOptionsChart(opts.seriesA[0], opts.categoriesA));
+        chartApartados.render();
+        
+        chartContratados = new ApexCharts(document.querySelector('#chart2'), setOptionsChart(opts.seriesC[0], opts.categoriesC));
+        chartContratados.render();
+        
+        chartEnganche = new ApexCharts(document.querySelector('#chart3'), setOptionsChart(opts.seriesE[0], opts.categoriesE));
+        chartEnganche.render();
+        
+        chartSinenganche = new ApexCharts(document.querySelector('#chart4'), setOptionsChart(opts.seriesS[0], opts.categoriesS));
+        chartSinenganche.render();
+    }else{
+        chartApartados = new ApexCharts(document.querySelector('#chart'), options);
+        chartApartados.render();
+        chartContratados = new ApexCharts(document.querySelector('#chart2'), options);
+        chartContratados.render();
+        chartEnganche = new ApexCharts(document.querySelector('#chart3'), options);
+        chartEnganche.render();
+        chartSinenganche = new ApexCharts(document.querySelector('#chart4'), options);
+        chartSinenganche.render();
     }
-    chartApartados = new ApexCharts(document.querySelector('#chart'), options);
-    chartApartados.render();
-    chartContratados = new ApexCharts(document.querySelector('#chart2'), options);
-    chartContratados.render();
-    chartEnganche = new ApexCharts(document.querySelector('#chart3'), options);
-    chartEnganche.render();
-    chartSinenganche = new ApexCharts(document.querySelector('#chart4'), options);
-    chartSinenganche.render();
+  
 }
 
 function buildChartsID(){
+    console.log('build');
     var boxCharts = document.getElementsByClassName("boxChart");
     for ( var i = 0; i<boxCharts.length; i++ ){
         var id = boxCharts[i].id;
@@ -127,6 +142,7 @@ function toggleDatatable(e){
     var columnaActiva = e.closest( '.flexible' );
     var columnaChart = e.closest( '.col-chart' );
     var columnDatatable = $( e ).closest( '.row' ).find( '.col-datatable' );
+    console.log(columnDatatable.attr('id'));
     $( columnDatatable ).html('');
     // La columna se expandera
     if( $(columnaActiva).hasClass('inactivo') ){
@@ -135,7 +151,7 @@ function toggleDatatable(e){
         columnaChart.classList.remove('col-sm-12', 'col-md-12', 'col-lg-12');
         columnaChart.classList.add('col-sm-6', 'col-md-6', 'col-lg-6');
         columnDatatable.removeClass('hidden');
-        reorderColumns();
+        reorderColumns(columnDatatable.attr('id'));
     }
     // La columna se contraera 
     else{
@@ -144,7 +160,7 @@ function toggleDatatable(e){
         columnaChart.classList.remove('col-sm-12', 'col-md-6', 'col-lg-6');
         columnaChart.classList.add('col-sm-12', 'col-md-12', 'col-lg-12');
         columnDatatable.addClass('hidden');
-        reorderColumns();
+        reorderColumns(columnDatatable.attr('id'));
     }
 }
 
@@ -171,8 +187,10 @@ function buildEstructuraDT(dataName, dataApartados){
 function reorderColumns(){
     var principalColumns = document.getElementsByClassName("flexible");
     var mainRow = document.getElementById('mainRow');
-
-    //Creamos nuevo fragmento en el DOM para insertar las columnas ordenadas
+   
+// console.log(chartApartados.w.config.xaxis.categories);
+ let opts = getCacheOptions();
+ let dates = getCacheDates();
     var elements = document.createDocumentFragment();
     var inactivos = [], activos = [], selectsSede = [];
     
@@ -200,23 +218,8 @@ function reorderColumns(){
     mainRow.appendChild(elements);
 
     buildSelectSedes(dataSedes, selectsSede);
-    $('.datepicker').datetimepicker({
-        format: 'DD/MM/YYYY',
-        icons: {
-            time: "fa fa-clock-o",
-            date: "fa fa-calendar",
-            up: "fa fa-chevron-up",
-            down: "fa fa-chevron-down",
-            previous: 'fa fa-chevron-left',
-            next: 'fa fa-chevron-right',
-            today: 'fa fa-screenshot',
-            clear: 'fa fa-trash',
-            close: 'fa fa-remove',
-            inline: true
-        }
-    });
-    
-    recreatApexChart(true);
+    buildDatePikcer(dates);
+    recreatApexChart(true,opts);
 
     for( i = 1; i<=principalColumns.length; i++){
         (function(i){
@@ -251,10 +254,11 @@ function reorderColumns(){
 
 function getRankings(general = false, typeRanking = null){
     let dates = getDates(typeRanking);
+    let sede = getSede(typeRanking);
     $.ajax({
         type: 'POST',
         url: `Ranking/getAllRankings`,
-        data: {general: general, typeRanking: typeRanking,beginDate: dates.beginDate, endDate: dates.endDate, sede: 2},
+        data: {general: general, typeRanking: typeRanking,beginDate: dates.beginDate, endDate: dates.endDate, sede: sede},
         dataType: 'json',
         cache: false,
         beforeSend: function() {
@@ -264,7 +268,9 @@ function getRankings(general = false, typeRanking = null){
             
             divideRankingArrays(data);
             updateGraph(typeRanking, data, general);
-           
+           if(!general){
+            validateToggledDatatable(typeRanking);
+           }
             $('#spiner-loader').addClass('hide');
         },
         error: function() {
@@ -778,4 +784,95 @@ function formatDate(date) {
         day = '0' + day;
 
     return [year, month, day].join('-');
+}
+
+function getCacheOptions(){
+    let obj = 
+       {
+            seriesA: chartApartados.w.config.series,
+            categoriesA: chartApartados.w.config.xaxis.categories,
+           
+            seriesC: chartContratados.w.config.series,
+            categoriesC: chartContratados.w.config.xaxis.categories,
+          
+            seriesE: chartEnganche.w.config.series,
+            categoriesE: chartEnganche.w.config.xaxis.categories,
+           
+            seriesS: chartSinenganche.w.config.series,
+            categoriesS: chartSinenganche.w.config.xaxis.categories,
+          
+    }
+    return obj;
+}
+
+function getCacheDates(){
+   let obj ={ 
+        beginDateApartados : $('#beginDateApartados').val(),
+        endDateApartados : $('#endDateApartados').val(),
+
+        beginDateContratados : $('#beginDateContratados').val(),
+        endDateContratados : $('#endDateContratados').val(),
+
+        beginDateConEnganche : $('#beginDateConEnganche').val(),
+        endDateConEnganche : $('#endDateConEnganche').val(),
+
+        beginDateSinEnganche : $('#beginDateSinEnganche').val(),
+        endDateSinEnganche : $('#endDateSinEnganche').val()
+    }
+           
+    return obj;
+}
+
+function buildDatePikcer(dates){
+    $('.datepicker').datetimepicker({
+        format: 'DD/MM/YYYY',
+        icons: {
+            time: "fa fa-clock-o",
+            date: "fa fa-calendar",
+            up: "fa fa-chevron-up",
+            down: "fa fa-chevron-down",
+            previous: 'fa fa-chevron-left',
+            next: 'fa fa-chevron-right',
+            today: 'fa fa-screenshot',
+            clear: 'fa fa-trash',
+            close: 'fa fa-remove',
+            inline: true
+        }
+    });
+
+     $('#beginDateApartados').val(dates.beginDateApartados),
+     $('#endDateApartados').val(dates.endDateApartados),
+
+     $('#beginDateContratados').val(dates.beginDateContratados),
+     $('#endDateContratados').val(dates.endDateContratados),
+
+     $('#beginDateConEnganche').val(dates.beginDateConEnganche),
+     $('#endDateConEnganche').val(dates.endDateConEnganche),
+
+     $('#beginDateSinEnganche').val(dates.beginDateSinEnganche),
+     $('#endDateSinEnganche').val(dates.endDateSinEnganche)
+}
+
+function getSede(typeRanking){
+    let sede;
+    switch (typeRanking) {
+        case 'general':
+           sede = 2;
+            break;
+        case 'Apartados':
+            sede = $('#sedes1').val();
+            break;
+        case 'Contratados':
+            sede = $('#sedes2').val();
+            break;
+        case 'ConEnganche':
+            sede = $('#sedes3').val();
+            break;
+        case 'SinEnganche':
+            sede = $('#sedes4').val();
+            break;
+        default:
+            break;
+    }
+    return sede;
 }
