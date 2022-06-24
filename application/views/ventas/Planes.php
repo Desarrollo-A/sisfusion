@@ -26,16 +26,17 @@
 	<div class="modal-dialog modal-md">
 		<div class="modal-content text-center">
 			<div class="modal-header">
-			<b>Una vez guardados los paquetes ya no se podrá modificar la información</b>
+			<h4>Una vez guardados los paquetes <br> ya no se podrá modificar la información</h4>
 			</div>
 					<div class="row">
-						<div class="col-md-6">
-						<input type="button" class="btn btn-success" onclick="SavePaquete();" name=""  id="" value="GUARDAR">
+						<div class="col-md-6 text-right">
+						<button type="button" data-toggle="tooltip" data-placement="right" title="Guardar" class="btn btn-success btn-circle btn-lg" onclick="SavePaquete();" name=""  id=""><i class="fas fa-check"></i></button>
 					</div>
-					<div class="col-md-6">
-						<input type="button" class="btn btn-danger" data-dismiss="modal" value="CANCELAR">
+					<div class="col-md-6 text-left">
+						<button type="button" data-toggle="tooltip" data-placement="right" title="Cancelar" class="btn btn-danger btn-circle btn-lg" data-dismiss="modal"><i class="fas fa-times"></i></button>
 					</div>
 				</div>
+				<br>
 		</div>
 	</div>
 </div>
@@ -58,6 +59,273 @@
 	</div>
 </div>
 
+
+
+<div class="modal fade modal-alertas" id="exampleModal" role="dialog">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+		<div class="tabbable-panel">
+				<div class="tabbable-line">
+					<ul class="nav nav-tabs ">
+						<li class="active">
+							<a href="#tab_default_1" data-toggle="tab">
+							precio total </a>
+						</li>
+						<li>
+							<a href="#tab_default_2" data-toggle="tab">
+							Enganche </a>
+						</li>
+						<li>
+							<a href="#tab_default_3" data-toggle="tab">
+							Precio por M2 </a>
+						</li>
+						<li>
+							<a href="#tab_default_4" data-toggle="tab">
+							Precio por bono </a>
+						</li>
+						<li>
+							<a href="#tab_default_5" data-toggle="tab">
+							 MSI </a>
+						</li>
+						
+					</ul>
+					<div class="tab-content">
+						<div class="tab-pane active" id="tab_default_1">
+							<h4>Descuentos al total</h4>
+							<p>
+								<a class="btn btn-success" href="#" onclick="OpenModal(1,'tab_default_1');" >
+									Agregar nuevo descuento
+								</a>
+							</p>
+							<div class="material-datatables">
+							<div class="form-group">
+								<div class="table-responsive">
+									<table class="table-striped table-hover" id="table_total" name="table_total">
+										<thead>
+											<tr>
+												<th>ID DESCUENTO</th>
+												<th>PORCENTAJE</th>
+												<th>DESCUENTO A</th>
+											</tr>
+										</thead>
+									</table>
+								</div>
+							</div>
+						</div>
+						</div>
+						<div class="tab-pane" id="tab_default_2">
+								<h4>Descuentos al enganche</h4>
+									<p>
+										<a class="btn btn-success" href="#" target="_blank">
+											Agregar nuevo descuento
+										</a>
+									</p>
+									<div class="material-datatables">
+									<div class="form-group">
+										<div class="table-responsive">
+											<table class="table-striped table-hover" id="table_enganche" name="table_enganche">
+												<thead>
+													<tr>
+														<th>ID DESCUENTO</th>
+														<th>PORCENTAJE</th>
+														<th>DESCUENTO A</th>
+													</tr>
+												</thead>
+											</table>
+										</div>
+									</div>
+								</div>
+						</div>
+						<div class="tab-pane" id="tab_default_3">
+								<h4>Descuentos por M2</h4>
+									<p>
+										<a class="btn btn-success" href="#" target="_blank">
+											Agregar nuevo descuento
+										</a>
+									</p>
+									<div class="material-datatables">
+									<div class="form-group">
+										<div class="table-responsive">
+											<table class="table-striped table-hover" id="table_m2" name="table_m2">
+												<thead>
+													<tr>
+														<th>ID DESCUENTO</th>
+														<th>PORCENTAJE</th>
+														<th>DESCUENTO A</th>
+													</tr>
+												</thead>
+											</table>
+										</div>
+									</div>
+								</div>
+						</div>
+						<div class="tab-pane" id="tab_default_4">
+								<h4>Descuentos por bono</h4>
+									<p>
+										<a class="btn btn-success" href="#" target="_blank">
+											Agregar nuevo descuento
+										</a>
+									</p>
+									<div class="material-datatables">
+									<div class="form-group">
+										<div class="table-responsive">
+											<table class="table-striped table-hover" id="table_bono" name="table_bono">
+												<thead>
+													<tr>
+														<th>ID DESCUENTO</th>
+														<th>PORCENTAJE</th>
+														<th>DESCUENTO A</th>
+													</tr>
+												</thead>
+											</table>
+										</div>
+									</div>
+								</div>
+						</div>
+						<div class="tab-pane" id="tab_default_5">
+								<h4>Descuentos MSI</h4>
+									<p>
+										<a class="btn btn-success" href="#" target="_blank">
+											Agregar nuevo descuento
+										</a>
+									</p>
+									<div class="material-datatables">
+									<div class="form-group">
+										<div class="table-responsive">
+											<table class="table-striped table-hover" id="table_msi" name="table_msi">
+												<thead>
+													<tr>
+														<th>ID DESCUENTO</th>
+														<th>PORCENTAJE</th>
+														<th>DESCUENTO A</th>
+													</tr>
+												</thead>
+											</table>
+										</div>
+									</div>
+								</div>
+						</div>
+
+					</div>
+				</div>
+			</div>
+
+
+
+<div class="modal fade modal-alertas" id="ModalFormAddDescuentos" role="dialog">
+	<div class="modal-dialog modal-md">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Cargar nuevo descuento</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+					</button>
+			</div>
+			<form id="addNewDesc">
+				<input type="hidden" value="0" name="tdescuento" id="tdescuento">
+				<input type="hidden" value="0" name="id_condicion" id="id_condicion">
+				<input type="hidden" value="0" name="eng_top" id="eng_top">
+				<input type="hidden" value="0" name="apply" id="apply">
+				<input type="hidden" value="0" name="boton" id="boton">
+				<div class="form-group">
+					<label id="label_descuento"></label>
+					<input type="text" class="input-gral" id="descuento" name="descuento">
+				</div>
+
+				<div class="row">
+					<div class="col-md-3">
+
+					</div>
+					<div class="col-md-3">
+						<input type="submit" class="btn btn-success" name="disper_btn"  id="dispersar" value="Guardar">
+					</div>
+					<div class="col-md-3">
+						<input type="button" class="btn btn-danger" data-dismiss="modal" value="CANCELAR">
+					</div>
+				</div>
+			</form>
+			
+		</div>
+	</div>
+</div>
+<!------------------> 
+  <!--<div class="row">
+    <div class="col-6">
+      <div class="">
+        <div class="">
+			<ul class="nav nav-tabs card-header-tabs" id="myTab" role="tablist">
+				<li class="nav-item">
+					<a class="nav-link" id="one-tab" data-toggle="tab" href="#one" role="tab" aria-controls="One" aria-selected="true">Precio total</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" id="two-tab" data-toggle="tab" href="#two" role="tab" aria-controls="Two" aria-selected="false">Enganche</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" id="three-tab" data-toggle="tab" href="#three" role="tab" aria-controls="Three" aria-selected="false">M2</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" id="four-tab" data-toggle="tab" href="#four" role="tab" aria-controls="four" aria-selected="false">Bono</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" id="five-tab" data-toggle="tab" href="#five" role="tab" aria-controls="five" aria-selected="false">MSI</a>
+				</li>
+			</ul>
+        </div>
+
+        <div class="tab-content1" id="myTabContent">
+          <div class="tab-pane fade show active p-3" id="one" role="tabpanel" aria-labelledby="one-tab">
+            <h5 class="card-title">Descuentos al total</h5>
+            <p class="card-text">Descuentos registrados</p>
+            <a href="#" class="btn btn-primary"></a>    
+						<div class="material-datatables">
+							<div class="form-group">
+								<div class="table-responsive">
+									<table class="table-striped table-hover" id="table_total" name="table_total">
+										<thead>
+											<tr>
+												<th>ID DESCUENTO</th>
+												<th>PORCENTAJE</th>
+												<th>DESCUENTO A</th>
+											</tr>
+										</thead>
+									</table>
+								</div>
+							</div>
+						</div>
+          </div>
+          <div class="tab-pane fade p-3" id="two" role="tabpanel" aria-labelledby="two-tab">
+            <h5 class="card-title">Tab Card Two</h5>
+            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+            <a href="#" class="btn btn-primary">Go somewhere</a>              
+          </div>
+          <div class="tab-pane fade p-3" id="three" role="tabpanel" aria-labelledby="three-tab">
+            <h5 class="card-title">Tab Card Three</h5>
+            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+            <a href="#" class="btn btn-primary">Go somewhere</a>              
+          </div>
+		  <div class="tab-pane fade p-3" id="four" role="tabpanel" aria-labelledby="four-tab">
+            <h5 class="card-title">Tab Card Three</h5>
+            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+            <a href="#" class="btn btn-primary">Go somewhere</a>              
+          </div>
+		  <div class="tab-pane fade p-3" id="five" role="tabpanel" aria-labelledby="five-tab">
+            <h5 class="card-title">Tab Card Three</h5>
+            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+            <a href="#" class="btn btn-primary">Go somewhere</a>              
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+-->
+
+<!----------------> 
+
+		</div>
+	</div>
+</div>
+
 <div class="content">
 	<div class="container-fluid">
 		<div class="row">
@@ -66,7 +334,7 @@
 					<form id="form-paquetes" class="formulario">
 						<div class="card-content">
 							<h3 class="card-title center-align">Paquetes Corrida Financiera</h3>
-							<!--<div class="text-right"><button type="button" data-toggle="modal" data-target="#exampleModal" class="btn btn-maderas">Ver descuentos</button></div>-->
+							<div class="text-right"><button type="button" data-toggle="modal" onclick="llenarTables();" data-target="#exampleModal" id="btn_open_modal" class="btn btn-maderas">Ver descuentos</button></div>
 							<div class="container-fluid p-0">
 								<div class="row">
 									<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 form1">
@@ -197,6 +465,153 @@
 	<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
 
 	<script>
+
+function OpenModal(tipo,boton){
+	if(tipo == 1){
+		$('#tdescuento').val(1);
+		$('#id_condicion').val(1);
+		$('#eng_top').val(0);
+		$('#apply').val(1);
+		$('#boton').val(boton);
+		document.getElementById('label_descuento').innerHTML = 'Agregar descuento al precio total:';
+	}else if(tipo == 2){
+		$('#tdescuento').val(2);
+		$('#id_condicion').val(2);
+		$('#eng_top').val(0);
+		$('#apply').val(0);
+		document.getElementById('label_descuento').innerHTML = 'Agregar descuento al enganche';
+	}else if(tipo == 4){
+		$('#tdescuento').val(1);
+		$('#id_condicion').val(4);
+		$('#eng_top').val(0);
+		$('#apply').val(1);
+		document.getElementById('label_descuento').innerHTML = 'Agregar descuento al total por M2';
+	}else if(tipo == 12){
+		$('#tdescuento').val(1);
+		$('#id_condicion').val(12);
+		$('#eng_top').val(1);
+		$('#apply').val(1);
+		document.getElementById('label_descuento').innerHTML = 'Agregar descuento bono al M2';
+	}
+	else if(tipo == 13){
+		$('#tdescuento').val(1);
+		$('#id_condicion').val(13);
+		$('#eng_top').val(1);
+		$('#apply').val(1);
+		document.getElementById('label_descuento').innerHTML = 'Agregar descuento Meses sin intereses';
+	}
+$('#ModalFormAddDescuentos').modal();
+}
+
+function CloseModalSave(boton){
+	$('#ModalFormAddDescuentos').modal();
+	$(`#btn_open_modal#${boton}`).trigger("click");
+	document.getElementById('addNewDesc').reset();
+}
+$("#addNewDesc").on('submit', function(e){ 
+			e.preventDefault();
+			let boton = $('#boton').val();
+			let formData = new FormData(document.getElementById("addNewDesc"));
+			$.ajax({
+				url: 'SaveNewDescuento',
+				data: formData,
+				method: 'POST',
+				contentType: false,
+				cache: false,
+				processData:false,
+				success: function(data) {	
+					if(data == 1){
+						CloseModalSave(boton);
+						alerts.showNotification("top", "right", "Descuento almacenado correctamente.", "success");	
+					}else{
+						alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+					}
+				
+				},
+				error: function(){
+					alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+				},
+				async: false
+			});
+
+		});
+/**-------------------------TABLAS----------- */
+function llenarTables(){
+	/**TB TOTAL */
+
+
+        plaza_12 = $("#table_total").DataTable({
+            dom: 'Brt'+ "<'row'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'i><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>",
+            width: "auto",
+            buttons: [{
+                extend: 'excelHtml5',
+                text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
+                className: 'btn buttons-excel',
+                titleAttr: 'Descargar archivo de Excel',
+                title: 'DESCUENTOS AL PRECIO TOTAL',
+                /*exportOptions: {
+                    columns: [0,1,2],
+                        format: {
+                            header:  function (d, columnIdx) {
+                                if(columnIdx == 0){
+                                    return 'ID USUARIO';
+                                }
+                                else if(columnIdx == 1){
+                                    return 'USUARIO';
+                                }else if(columnIdx == 2){
+                                    return 'SEDE USUARIO';
+                                }
+                            }
+                        }
+                },*/
+            }],
+            pagingType: "full_numbers",
+            language: {
+                url: "<?=base_url()?>/static/spanishLoader_v2.json",
+                paginate: {
+                    previous: "<i class='fa fa-angle-left'>",
+                    next: "<i class='fa fa-angle-right'>"
+                }
+            },
+            destroy: true,
+            ordering: false,
+            columns: [{
+						"width": "30%",
+						"data": function( d ){
+							return '<p class="m-0"><b>'+d.id_descuento+'</b></p>';
+						}
+					},
+                {
+                    "width": "30%",
+                    "data": function( d ){
+                        return '<p class="m-0">'+d.porcentaje+'%</p>';
+                    }
+                },
+                {
+                    "width": "30%",
+                    "data": function( d ){
+                        return '<p class="m-0">'+d.descripcion+'</p>';
+                    }
+                }],
+            columnDefs: [{
+                orderable: false,
+                className: 'select-checkbox',
+                targets:   0,
+                searchable:false,
+                className: 'dt-body-center'
+            }],
+            ajax: {
+                url: url2 + "PaquetesCorrida/getDescuentos/"+1+"/"+1+"/"+0+"/"+1,
+                type: "POST",
+                cache: false,
+                data: function( d ){}
+            },
+        });
+
+	/** */
+}
+/**------------------------------------------ */
+
 		$('[data-toggle="tooltip"]').tooltip()
 
 		var url = "<?=base_url()?>";
@@ -290,6 +705,7 @@
 			});
 		}
 
+		
 		$("#form-paquetes").on('submit', function(e){ 
 			e.preventDefault();
 			$("#ModalAlert").modal();
@@ -491,8 +907,7 @@ $.post('getResidencialesList', function(data) {
 				</div>
 				<div class="col-md-10 text-center">
 					<div class="form-group text-center">
-					<label>Cantidad:</label>
-					<input type="number" onkeyup="validarMsi(${indexN},${i})" class="input-descuento" id="input_msi_${indexN}_${i}">
+					<input type="number" placeholder="Cantidad" onkeyup="validarMsi(${indexN},${i})" class="input-descuento" id="input_msi_${indexN}_${i}">
 					</div>
 				</div>
 				</div>
