@@ -1,3 +1,5 @@
+var dataMetros, dataDisponibilidad, dataLugarProspeccion, dataMedio, metrosChart, disponibilidadChart, lugarChart, medioChart;
+
 var optionBarInit = {
     series: [],
     chart: {
@@ -306,7 +308,6 @@ descuentosChart.render();
 
 //Jquery
 $(document).ready(function () {
-    console.log("JS Metrics");
     init();
 });
 //Funciones
@@ -316,6 +317,11 @@ function init(){
     getLugarProspeccion();
     getMedioProspeccion();
     getVentasM2();
+
+    // getSuperficieVendida().then( response => { dataMetros = response });
+    // getDisponibilidadProyecto().then( response => { dataDisponibilidad = response });
+    // getLugarProspeccion().then( response => { dataLugarProspeccion = response });
+    // getMedioProspeccion().then( response => { dataMedio = response });
     // getDescuentosChart();
 }
 
@@ -522,3 +528,164 @@ function formatVentasM2(data){
         },
      });
 }
+
+function toggleDatatable(e){
+    var columnaActiva = e.closest( '.flexible' );
+    var columnaChart = e.closest( '.col-chart' );
+    var columnDatatable = $( e ).closest( '.row' ).find( '.col-datatable' );
+    $( columnDatatable ).html('');
+    // La columna se expandera
+    if( $(columnaActiva).hasClass('inactivo') ){
+        columnaActiva.classList.remove('col-sm-6', 'col-md-6', 'col-lg-6', 'inactivo');
+        columnaActiva.classList.add('col-sm-12', 'col-md-12', 'col-lg-12', 'activo');
+        columnaChart.classList.remove('col-sm-12', 'col-md-12', 'col-lg-12');
+        columnaChart.classList.add('col-sm-6', 'col-md-6', 'col-lg-6');
+        columnDatatable.removeClass('hidden');
+        reorderColumns();
+    }
+    // La columna se contraera 
+    else{
+        columnaActiva.classList.remove('col-sm-12', 'col-md-12', 'col-lg-12', 'activo');
+        columnaActiva.classList.add('col-sm-6', 'col-md-6', 'col-lg-6', 'inactivo');
+        columnaChart.classList.remove('col-sm-12', 'col-md-6', 'col-lg-6');
+        columnaChart.classList.add('col-sm-12', 'col-md-12', 'col-lg-12');
+        columnDatatable.addClass('hidden');
+        reorderColumns();
+    }
+}
+// function toggleDatatable(e){
+//     var columnaActiva = e.closest( '.flexible' );
+//     var columnaChart = e.closest( '.col-chart' );
+//     var columnDatatable = $( e ).closest( '.row' ).find( '.col-datatable' );
+//     $( columnDatatable ).html('');
+//     if( $(columnaActiva).hasClass('inactivo') ){
+//         columnaActiva.classList.remove('inactivo')
+//         columnaChart.classList.remove('col-sm-12', 'col-md-12', 'col-lg-12');
+        
+//         //Función para obtener clases de columna pivote
+//         var arrayColumns = nomenclatureBootstrap(columnaActiva);
+//         console.log(arrayColumns);
+//         arrayColumns.forEach(function(key, index){    
+//             columnaActiva.classList.remove(''+key+'');
+//             columnaChart.classList.add();
+//             columnaChart.classList.add(''+key+'');
+//         });
+//         columnaActiva.classList.add('col-sm-12', 'col-md-12', 'col-lg-12', 'activo', 'flexible');
+//         columnDatatable.removeClass('hidden');
+//         reorderColumns();
+//     }
+//     else{
+//         console.log("inactivar");
+//         console.log(  e.closest( '.flexible' ) );
+//         columnaActiva.classList.remove('col-sm-12', 'col-md-12', 'col-lg-12', 'activo');
+//         columnaActiva.classList.add('inactivo')
+
+//         var arrayColumns = nomenclatureBootstrap(columnaChart);
+//         console.log(arrayColumns);
+//         arrayColumns.forEach(function(key, index){    
+//             columnaActiva.classList.add(''+key+'');
+//             columnaChart.classList.remove(''+key+'');
+//         });
+
+//         columnaChart.classList.add('col-sm-12', 'col-md-12', 'col-lg-12', 'col-chart', 'h-100', 'pb-3');
+//         columnDatatable.addClass('hidden');
+//         // reorderColumns()
+//     }
+// }
+
+// function nomenclatureBootstrap(columna){
+//     reg = /flexible|inactivo|acivo|col-chart/i; 
+//     var classes = ($(columna).attr('class'));
+//     console.log(classes);
+//     var colBootstrap = classes.replace(reg, ""); 
+//     colBootstrap = colBootstrap.replace(/h-100/g,'');
+//     colBootstrap = colBootstrap.replace(/pb-3/g,'');
+//     colBootstrap = colBootstrap.replace(/col-12/g,'');
+//     colBootstrap = colBootstrap.replace(/\s+/g,' ').trim()
+//     var arrayColumns = (colBootstrap.rtrim()).split(/[, ]+/);
+
+//     return arrayColumns;
+// }
+
+
+
+function reorderColumns(){
+    var principalColumns = document.getElementsByClassName("flexible");
+    var mainRow = document.getElementById('mainRow');
+
+    //Creamos nuevo fragmento en el DOM para insertar las columnas ordenadas
+    var elements = document.createDocumentFragment();
+    var inactivos = [], activos = [];
+    
+    for( var i = 0; i<principalColumns.length; i++){
+        (principalColumns[i].classList.contains('inactivo')) ? inactivos.push(i) : activos.push(i)
+    }
+
+    //Array con orden correcto de columnas primero las activas y después inactivas
+    var orden = activos.concat(inactivos);
+    orden.forEach(idx => {
+        if($(principalColumns[idx]).hasClass('inactivo')){
+            principalColumns[idx].classList.add('hidden');
+        }
+        elements.appendChild(principalColumns[idx].cloneNode(true));
+    });
+    mainRow.innerHTML = null;
+    mainRow.appendChild(elements);
+    
+    // recreatApexChart(true);
+
+    for( i = 1; i<=principalColumns.length; i++){
+        (function(i){
+            setTimeout(function(){
+                $(principalColumns[i-1]).removeClass('hidden');
+                if($(principalColumns[i-1]).hasClass('activo')){
+                    var columnDatatable = $( principalColumns[i-1]).find('.col-datatable');
+                    var id = columnDatatable.attr('id');
+                    $("#"+id).html('');
+                    if( id == 'metros' ){
+                        buildEstructuraDT(id, dataMetros);
+                        buildTableMetros(dataApartados);
+                    }
+                    else if( id == 'disponibilidad' ){
+                        buildEstructuraDT(id, dataDisponibilidad);
+                        buildTableDisponibilidad(dataContratados);
+                    }
+                    else if( id == 'lugar' ){
+                        buildEstructuraDT(id, dataLugarProspeccion);
+                        buildTableLugarProspeccion(dataConEnganche);
+                    }
+                    else if( id == 'medio' ){
+                        buildEstructuraDT(id, dataMedio);
+                        buildTableMedio(dataSinEnganche);
+                    }
+                }
+                $(principalColumns[i-1]).addClass('fadeInAnimationDelay'+i);
+            }, 500 * i)
+        }(i));
+    }   
+}
+
+function buildEstructuraDT(dataName, data){
+    var tableHeaders = '';
+    var arrayHeaders = Object.keys(data[0]);
+    console.log(data);
+    // for( i=0; i<arrayHeaders.length; i++ ){
+    //     tableHeaders += '<th>' + arrayHeaders[i] + '</th>';
+    // }
+
+    // var id = 'table'+dataName;
+    // var estructura = `<div class="container-fluid p-0" style="padding:15px!important">
+    //                     <table class="table-striped table-hover" id="`+id+`" name="table">
+    //                         <thead>
+    //                             <tr>
+    //                                 `+tableHeaders+`
+    //                             </tr>
+    //                         </thead>
+    //                     </table>
+    //                 </div>`;
+    // $("#"+dataName).html(estructura);
+}
+
+// String.prototype.rtrim = function () {
+//     return this.replace(/((\s*\S+)*)\s*/, "$1");
+// }
