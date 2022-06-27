@@ -310,19 +310,23 @@ descuentosChart.render();
 $(document).ready(function () {
     init();
 });
+
+$('#proyecto').off().on('change', function(){
+    console.log('changes');
+    getCondominios($(this).val());
+});
+
+$('#condominio').off().on('change', function(){
+    getVentasM2($(this).val());
+});
+
 //Funciones
 function init(){
+    getProyectos();
     getSuperficieVendida();
     getDisponibilidadProyecto();
     getLugarProspeccion();
     getMedioProspeccion();
-    getVentasM2();
-
-    // getSuperficieVendida().then( response => { dataMetros = response });
-    // getDisponibilidadProyecto().then( response => { dataDisponibilidad = response });
-    // getLugarProspeccion().then( response => { dataLugarProspeccion = response });
-    // getMedioProspeccion().then( response => { dataMedio = response });
-    // getDescuentosChart();
 }
 
 function getSuperficieVendida(){
@@ -397,12 +401,10 @@ function getMedioProspeccion(){
     });
 }
 
-function getVentasM2(){
+function getVentasM2(idCond){
     $.ajax({
         url: "Metricas/getVentasM2",
-        cache: false,
-        contentType: false,
-        processData: false,
+        data: {condominio: idCond},
         type: 'POST',
         dataType: 'json',
         beforeSend: function () {
@@ -689,3 +691,50 @@ function buildEstructuraDT(dataName, data){
 // String.prototype.rtrim = function () {
 //     return this.replace(/((\s*\S+)*)\s*/, "$1");
 // }
+
+
+
+function getCondominios(idProyecto){
+    $("#condominio").empty();
+    $("#condominio").selectpicker('refresh');
+    $.ajax({
+        url: "Metricas/getCondominios",
+        data:{proyecto: idProyecto}, 
+        type: 'POST',
+        dataType: 'json',
+        beforeSend: function () {
+            $('#spiner-loader').removeClass('hide');
+        },
+        success: function (response) {
+            response.forEach(element => {
+                $("#condominio").append($(`<option data-name='${element.idCondominio}'>`).val(element.idCondominio).text(element.nombre_condominio));
+            });
+            $("#condominio").selectpicker('refresh');
+            $('#spiner-loader').addClass('hide');
+        }
+    });
+}
+
+function getProyectos(){
+    $("#proyecto").empty();
+    $("#proyecto").selectpicker('refresh');
+    $.ajax({
+        url: "Metricas/getProyectos",
+        cache: false,
+        contentType: false,
+        processData: false,
+        type: 'POST',
+        dataType: 'json',
+        beforeSend: function () {
+            $('#spiner-loader').removeClass('hide');
+        },
+        success: function (response) {
+            response.forEach(element => {
+                console.log(element)
+                $("#proyecto").append($(`<option data-name='${element.nombreResidencial}'>`).val(element.idResidencial).text(element.descripcion));
+            });
+            $('#spiner-loader').addClass('hide');
+        }
+    });
+
+}

@@ -276,7 +276,7 @@ $(document).on('click', '.week', function(e){
     weekFilter(id);
 });
 
-$(document).on('click', '#searchByDateRange', function(e){
+$(document).on('click', '#searchByDateRangeCP', function(e){
     e.preventDefault();
     var beginDate = $('#beginDate').val();
     var endDate = $('#endDate').val();
