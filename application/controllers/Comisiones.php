@@ -5034,9 +5034,6 @@ public function getLotesDispersado(){
 public function getMontoDispersadoDates($fecha1, $fecha2){
 
    $datos["datos_monto"] = $this->Comisiones_model->getMontoDispersadoDates($fecha1, $fecha2)->result_array();
-   $datos["datos_pagos"] = $this->Comisiones_model->getPagosDispersadoDates($fecha1, $fecha2)->result_array();
-   $datos["datos_lotes"] = $this->Comisiones_model->getLotesDispersadoDates($fecha1, $fecha2)->result_array();
-
    echo json_encode($datos);
 
 }
