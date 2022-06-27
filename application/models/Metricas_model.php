@@ -33,12 +33,12 @@ class Metricas_model extends CI_Model {
         return $query->result_array();
     }
 
-    public function getVentasM2($data = null){
+    public function getVentasM2($ídCondo){
         $year = date("Y");
-        $query = $this->db->query("SELECT lo.sup, COUNT(lo.idLote) cantidad FROM clientes cl
-        INNER JOIN lotes lo ON lo.idCliente = cl.id_cliente AND lo.idCondominio = 443
+        $query = $this->db->query("SELECT lo.sup,FORMAT(ISNULL(lo.precio, 0), 'C'), COUNT(lo.idLote) cantidad FROM clientes cl
+        INNER JOIN lotes lo ON lo.idCliente = cl.id_cliente AND lo.idCondominio = $ídCondo
         WHERE isNULL(noRecibo, '') != 'CANCELADO' AND cl.status = 1 AND YEAR(cl.fechaApartado)= $year
-        GROUP BY lo.sup
+        GROUP BY lo.sup, lo.precio
         ORDER BY lo.sup DESC");
         return $query->result_array();
     }
@@ -61,6 +61,16 @@ class Metricas_model extends CI_Model {
         WHERE pros.estatus = 1 AND YEAR(pros.fecha_creacion)= $year
         GROUP BY oxc.nombre,pros.lugar_prospeccion
         ORDER BY cantidad DESC");
+        return $query->result_array();
+    }
+
+    public function getProyectos(){
+        $query = $this->db->query("SELECT * FROM residenciales WHERE status = 1");
+        return $query->result_array();
+    }
+
+    public function getCondominios($idProyecto){
+        $query = $this->db->query("SELECT * FROM condominios WHERE idResidencial=$idProyecto AND status = 1");
         return $query->result_array();
     }
 

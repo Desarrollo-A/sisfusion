@@ -7,6 +7,14 @@
                 <div class="container-fluid h-100 p-0">
                     <div class="row h-100">
                         <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-chart h-100 pb-3">
+                            <div class="form-group label-floating select-is-empty">
+                                <label class="control-label">proyecto</label>
+                                <select id="proyecto" name="proyecto" class="form-control proyecto col-sm-12 col-md-6 col-lg-6"></select>
+                            </div>
+                            <div class="form-group label-floating select-is-empty">
+                                <label class="control-label">condominio</label>
+                                <select id="condominio" name="condominio" class="form-control condominio col-sm-12 col-md-6 col-lg-6"></select>
+                            </div>
                             <h4 class="text-left m-0 fw-400 pb-1">Ventas por metro cuadrado</h4>
                             <div id="ventasMetrosChart"></div>
                         </div>
