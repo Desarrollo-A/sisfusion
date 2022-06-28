@@ -5852,7 +5852,21 @@ function getLotesDispersado(){
 
 
 function getMontoDispersadoDates($fecha1, $fecha2){
-    return $this->db->query("SELECT SUM(abono_neodata) monto FROM pago_comision_ind WHERE estatus NOT IN (11,0) AND id_comision IN (select id_comision from comisiones) AND CAST(fecha_abono as date) >= CAST('$fecha1' AS date) AND CAST(fecha_abono as date) <= CAST('$fecha2' AS date) ");
+    // return $this->db->query("SELECT SUM(abono_neodata) monto FROM pago_comision_ind WHERE estatus NOT IN (11,0) AND id_comision IN (select id_comision from comisiones) AND CAST(fecha_abono as date) >= CAST('$fecha1' AS date) AND CAST(fecha_abono as date) <= CAST('$fecha2' AS date) ");
+
+    return $this->db->query("SELECT SUM(lotes) as lotes, SUM(comisiones) as comisiones, SUM(pagos) as pagos, SUM(monto) monto
+    FROM (
+    SELECT COUNT(DISTINCT(id_lote)) lotes , 
+    COUNT(c.id_comision) comisiones, 
+    COUNT(pci.id_pago_i) pagos, 
+    SUM(pci.abono_neodata) monto
+    FROM pago_comision_ind pci 
+    INNER JOIN comisiones c on c.id_comision = pci.id_comision
+    INNER JOIN usuarios u ON u.id_usuario = pci.creado_por AND u.id_rol IN (32,13,17) 
+    WHERE CAST(pci.fecha_abono as date) >= CAST('$fecha1' AS date)
+    AND CAST(pci.fecha_abono as date) <= CAST('$fecha2' AS date) 
+    AND pci.estatus NOT IN (0) 
+    GROUP BY u.id_usuario) as lotes ; ");
 }
 
 
