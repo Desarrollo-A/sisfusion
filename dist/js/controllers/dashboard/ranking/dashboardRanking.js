@@ -127,7 +127,6 @@ function recreatApexChart(estado, opts){
 }
 
 function buildChartsID(){
-    console.log('build');
     var boxCharts = document.getElementsByClassName("boxChart");
     for ( var i = 0; i<boxCharts.length; i++ ){
         var id = boxCharts[i].id;
@@ -186,9 +185,8 @@ function reorderColumns(){
     var principalColumns = document.getElementsByClassName("flexible");
     var mainRow = document.getElementById('mainRow');
    
-// console.log(chartApartados.w.config.xaxis.categories);
- let opts = getCacheOptions();
- let dates = getCacheDates();
+    let opts = getCacheOptions();
+    let dates = getCacheDates();
     var elements = document.createDocumentFragment();
     var inactivos = [], activos = [], selectsSede = [];
     
@@ -266,9 +264,9 @@ function getRankings(general = false, typeRanking = null){
             
             divideRankingArrays(data);
             updateGraph(typeRanking, data, general);
-           if(!general){
-            validateToggledDatatable(typeRanking);
-           }
+            if(!general){
+                validateToggledDatatable(typeRanking);
+            }
             $('#spiner-loader').addClass('hide');
         },
         error: function() {
