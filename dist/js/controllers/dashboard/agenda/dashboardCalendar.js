@@ -543,8 +543,8 @@
   });
 
   function customizeIcon(){
-    $(".fc-googleSignIn-button").append("<img src='"+base_url+"dist/img/googlecalendar.png'>");
-    $(".fc-googleLogout-button").append("<img src='"+"dist/img/unsync.png'>");
+    $(".fc-googleSignIn-button").append("<img src='dist/img/googlecalendar.png'>");
+    $(".fc-googleLogout-button").append("<img src='dist/img/unsync.png'>");
   }
 
   function createTable(){

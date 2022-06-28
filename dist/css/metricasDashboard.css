@@ -1099,9 +1099,17 @@
   background-color: #F1F1F1;
 }
 
+#metricas table.dataTable > thead > tr > th, #metricas table.dataTable > tbody > tr > th, #metricas table.dataTable > tfoot > tr > th, #metricas table.dataTable > thead > tr > td, #metricas table.dataTable > tbody > tr > td, #metricas table.dataTable > tfoot > tr > td {
+  white-space: nowrap !important;
+}
+
 #metricas .card {
-  height: 450px;
+  height: 440px;
   margin-bottom: 0;
+}
+
+#metricas .card .col-chart .actions {
+  margin-top: 15px !important;
 }
 
 #metricas .card .col-chart .actions .selectMini button {
