@@ -251,7 +251,7 @@
                                                         <?php $query = $this->db->query("SELECT SUM(abono_neodata) nuevo_general FROM pago_comision_ind WHERE estatus NOT IN (11,0) AND id_comision IN (select id_comision from comisiones) AND MONTH(GETDATE()) = MONTH(fecha_abono) AND year(GetDate()) = year(fecha_abono) AND Day(GetDate()) = Day(fecha_abono)");
 
                                                         foreach ($query->result() as $row){
-                                                            $number = $row->nuevo_general;
+                                                            $number = ($row->nuevo_general) ? $row->nuevo_general : 0;
                                                             echo '<B>$'.number_format($number, 3),'</B>';
                                                         } ?>
                                                     </p>

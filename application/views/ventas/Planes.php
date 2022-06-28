@@ -1,5 +1,7 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
 <link href="<?= base_url() ?>dist/css/planes.css" rel="stylesheet"/>
+<link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet"/>
+<script src="//cdnjs.cloudflare.com/ajax/libs/numeral.js/2.0.6/numeral.min.js"></script>
 
 <body>
 	<div class="wrapper">
@@ -62,7 +64,7 @@
 
 
 <div class="modal fade modal-alertas" id="exampleModal" role="dialog">
-	<div class="modal-dialog modal-lg">
+	<div class="modal-dialog modal-md">
 		<div class="modal-content">
 		<div class="tabbable-panel">
 				<div class="tabbable-line">
@@ -116,7 +118,7 @@
 						<div class="tab-pane" id="tab_default_2">
 								<h4>Descuentos al enganche</h4>
 									<p>
-										<a class="btn btn-success" href="#" target="_blank">
+										<a class="btn btn-success" href="#" onclick="OpenModal(2,'tab_default_2');">
 											Agregar nuevo descuento
 										</a>
 									</p>
@@ -139,7 +141,7 @@
 						<div class="tab-pane" id="tab_default_3">
 								<h4>Descuentos por M2</h4>
 									<p>
-										<a class="btn btn-success" href="#" target="_blank">
+										<a class="btn btn-success" href="#" onclick="OpenModal(4,'tab_default_3');">
 											Agregar nuevo descuento
 										</a>
 									</p>
@@ -162,7 +164,7 @@
 						<div class="tab-pane" id="tab_default_4">
 								<h4>Descuentos por bono</h4>
 									<p>
-										<a class="btn btn-success" href="#" target="_blank">
+										<a class="btn btn-success" href="#" onclick="OpenModal(12,'tab_default_4');">
 											Agregar nuevo descuento
 										</a>
 									</p>
@@ -185,7 +187,7 @@
 						<div class="tab-pane" id="tab_default_5">
 								<h4>Descuentos MSI</h4>
 									<p>
-										<a class="btn btn-success" href="#" target="_blank">
+										<a class="btn btn-success" href="#" onclick="OpenModal(13,'tab_default_5');">
 											Agregar nuevo descuento
 										</a>
 									</p>
@@ -227,9 +229,10 @@
 				<input type="hidden" value="0" name="eng_top" id="eng_top">
 				<input type="hidden" value="0" name="apply" id="apply">
 				<input type="hidden" value="0" name="boton" id="boton">
+				<input type="hidden" value="0" name="tipo_d" id="tipo_d">
 				<div class="form-group">
 					<label id="label_descuento"></label>
-					<input type="text" class="input-gral" id="descuento" name="descuento">
+					<input type="text"  class="input-gral" required  data-type="currency"   id="descuento" name="descuento">
 				</div>
 
 				<div class="row">
@@ -325,105 +328,105 @@
 		</div>
 	</div>
 </div>
-
-<div class="content">
+<!------------------------------------------------------------------------>
+<!--<div class="content">
 	<div class="container-fluid">
 		<div class="row">
 			<div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
 				<div class="card">
 					<form id="form-paquetes" class="formulario">
 						<div class="card-content">
-							<h3 class="card-title center-align">Paquetes Corrida Financiera</h3>
+							<h3 class="card-title center-align">Planes Corrida Financiera</h3>
 							<div class="text-right"><button type="button" data-toggle="modal" onclick="llenarTables();" data-target="#exampleModal" id="btn_open_modal" class="btn btn-maderas">Ver descuentos</button></div>
 							<div class="container-fluid p-0">
 								<div class="row">
 									<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 form1">
-										<h4 class="card-title left-align">Datos generales</h4>
-										<div class="col-xs-12 col-sm-12 col-md-6 col-lg-4 mb-1">
-											<div class="form-group">
-												<label class="m-0" for="sede">Sede (<b class="text-danger">*</b>)</label>
-                                                <select name="sede" id="sede" class="selectpicker select-gral" data-style="btn " data-show-subtext="true" data-live-search="true"  title="Selecciona una opción" data-size="7" required>
-                                                </select>
-											</div>
-										</div>
+													<h4 class="card-title left-align">Datos generales</h4>
+													<div class="col-xs-12 col-sm-12 col-md-6 col-lg-4 mb-1">
+														<div class="form-group">
+															<label class="m-0" for="sede">Sede (<b class="text-danger">*</b>)</label>
+															<select name="sede" id="sede" class="selectpicker select-gral" data-style="btn " data-show-subtext="true" data-live-search="true"  title="Selecciona una opción" data-size="7" required>
+															</select>
+														</div>
+													</div>
 										
-										<div class="col-xs-12 col-sm-12 col-md-6 col-lg-4 mb-1">
-											<div class="form-group">
-												<label class="m-0" for="sede">Proyecto (<b class="text-danger">*</b>)</label> 
-												<select id="residencial"  name="residencial[]" multiple="multiple" class="form-control select-gral "  data-style="btn " data-show-subtext="true" data-live-search="true"  title="Selecciona una opción" data-size="7" required></select>
-												</select>
-											</div>
-										</div>
-										
-										<div class="col-xs-12 col-sm-12 col-md-6 col-lg-2 mb-1">          
-                                            <div class="form-group">
-                                                <label class="m-0" for="sede">Fecha Inicio (<b class="text-danger">*</b>)</label>
-                                                <input class="form-control" name="fechainicio" id="fechainicio" type="date" required="true">
-                                            </div>
-										</div>
+													<div class="col-xs-12 col-sm-12 col-md-6 col-lg-4 mb-1">
+														<div class="form-group">
+															<label class="m-0" for="sede">Proyecto (<b class="text-danger">*</b>)</label> 
+															<select id="residencial"  name="residencial[]" multiple="multiple" class="form-control select-gral "  data-style="btn " data-show-subtext="true" data-live-search="true"  title="Selecciona una opción" data-size="7" required></select>
+															</select>
+														</div>
+													</div>
+													
+													<div class="col-xs-12 col-sm-12 col-md-6 col-lg-2 mb-1">          
+														<div class="form-group">
+															<label class="m-0" for="sede">Fecha Inicio (<b class="text-danger">*</b>)</label>
+															<input class="form-control" name="fechainicio" id="fechainicio" type="date" required="true">
+														</div>
+													</div>
 
-										<div class="col-xs-12 col-sm-12 col-md-6 col-lg-2 mb-1">          
-                                            <div class="form-group">
-                                                <label class="m-0" for="sede">Fecha Fin (<b class="text-danger">*</b>)</label>
-                                                <input class="form-control" name="fechafin" id="fechafin" type="date" required="true">
-                                            </div>
-										</div>
+													<div class="col-xs-12 col-sm-12 col-md-6 col-lg-2 mb-1">          
+														<div class="form-group">
+															<label class="m-0" for="sede">Fecha Fin (<b class="text-danger">*</b>)</label>
+															<input class="form-control" name="fechafin" id="fechafin" type="date" required="true">
+														</div>
+													</div>
 										
 										<div class="row">
 											<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 form1">
 												
 											<div class="col-xs-12 col-sm-12 col-md-6 col-lg-5 mb-1">
-												<div class="form-group">
-													<label>Tipo de Lote (<b class="text-danger">*</b>):</label>
-													<div class="col-md-12"><br></div>
-													<div class="row">
-														<div class="col-md-12">
-															<div class="custom-control custom-radio custom-control-inline col-md-4">
-																<input type="radio" id="customRadioInline1" value="1" name="tipoLote">
-																<label class="custom-control-label" for="customRadioInline1">Habitacional</label>
-															</div>
-															<div class="custom-control custom-radio custom-control-inline col-md-4">
-																<input type="radio" id="customRadioInline2" value="2" name="tipoLote">
-																<label class="custom-control-label" for="customRadioInline2">Comercial</label>
-															</div>
-															<div class="custom-control custom-radio custom-control-inline col-md-4">
-																<input type="radio" id="customRadioInline3" value="3" name="tipoLote">
-																<label class="custom-control-label" for="customRadioInline3">Ambos</label>
-															</div>
-														</div>
-													</div>
-												</div>
-											</div>
+																	<div class="form-group">
+																		<label>Tipo de Lote (<b class="text-danger">*</b>):</label>
+																				<div class="col-md-12"><br></div>
+																							<div class="row">
+																								<div class="col-md-12">
+																									<div class="custom-control custom-radio custom-control-inline col-md-4">
+																										<input type="radio" id="customRadioInline1" value="1" name="tipoLote">
+																										<label class="custom-control-label" for="customRadioInline1">Habitacional</label>
+																									</div>
+																									<div class="custom-control custom-radio custom-control-inline col-md-4">
+																										<input type="radio" id="customRadioInline2" value="2" name="tipoLote">
+																										<label class="custom-control-label" for="customRadioInline2">Comercial</label>
+																									</div>
+																									<div class="custom-control custom-radio custom-control-inline col-md-4">
+																										<input type="radio" id="customRadioInline3" value="3" name="tipoLote">
+																										<label class="custom-control-label" for="customRadioInline3">Ambos</label>
+																									</div>
+																								</div>
+																							</div>
+																			</div>
+																</div>
 
 											<div class="col-xs-12 col-sm-12 col-md-6 col-lg-4 mb-1">          
-                                                <div class="form-group">
-													<label>Superficie (<b class="text-danger">*</b>):</label>
-													<div class="col-md-12"><br></div>
-													<div class="row">
-														<div class="col-md-12">
-															<div class="custom-control custom-radio custom-control-inline col-md-4">
-																<input type="radio" id="customRadio1" value="1" name="superficie" onclick="selectSuperficie(1)">
-																<label class="custom-control-label" for="customRadio1">Mayor a</label>
-															</div>
-															<div class="custom-control custom-radio custom-control-inline col-md-4">
-																<input type="radio" id="customRadio2" value="2" name="superficie" onclick="selectSuperficie(2)">
-																<label class="custom-control-label" for="customRadio2">Rango</label>
-															</div>
-															<div class="custom-control custom-radio custom-control-inline col-md-4">
-																<input type="radio" id="customRadio3" value="3" name="superficie" onclick="selectSuperficie(3)">
-																<label class="custom-control-label" for="customRadio3">Cualquiera</label>
-															</div>
+														<div class="form-group">
+															<label>Superficie (<b class="text-danger">*</b>):</label>
+																		<div class="col-md-12"><br></div>
+																			<div class="row">
+																					<div class="col-md-12">
+																						<div class="custom-control custom-radio custom-control-inline col-md-4">
+																							<input type="radio" id="customRadio1" value="1" name="superficie" onclick="selectSuperficie(1)">
+																							<label class="custom-control-label" for="customRadio1">Mayor a</label>
+																						</div>
+																						<div class="custom-control custom-radio custom-control-inline col-md-4">
+																							<input type="radio" id="customRadio2" value="2" name="superficie" onclick="selectSuperficie(2)">
+																							<label class="custom-control-label" for="customRadio2">Rango</label>
+																						</div>
+																						<div class="custom-control custom-radio custom-control-inline col-md-4">
+																							<input type="radio" id="customRadio3" value="3" name="superficie" onclick="selectSuperficie(3)">
+																							<label class="custom-control-label" for="customRadio3">Cualquiera</label>
+																						</div>
+																					</div>
+																			</div>
+																		</div>
 														</div>
-													</div>
-												</div>
-											</div>
 
-											<div class="col-xs-12 col-sm-12 col-md-6 col-lg-3 mb-1">
-												<div class="form-group">
-													<div id="printSuperficie">
-													</div>
-												</div>
-											</div>
+															<div class="col-xs-12 col-sm-12 col-md-6 col-lg-3 mb-1">
+																<div class="form-group">
+																	<div id="printSuperficie">
+																	</div>
+																</div>
+															</div>
 
 											<div class="row">
 											<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 form1">
@@ -448,7 +451,185 @@
 			</div>
 		</div>
 	</div>
-</div>
+</div>---> 
+<div class="content boxContent">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col xol-xs-12 col-sm-12 col-md-12 col-lg-12">        
+                        <ul class="nav nav-tabs nav-tabs-cm" role="tablist">
+                            <li class="active"><a href="#nuevas-1" role="tab" data-toggle="tab">CARGAR PLAN</a></li>
+                            <li><a href="#proceso-1" role="tab" data-toggle="tab">VER PLANES</a></li>
+                        </ul>
+                        
+                        <div class="card no-shadow m-0 border-conntent__tabs">
+                            <div class="card-content p-0">
+                                <div class="nav-tabs-custom">
+                                    <div class="tab-content p-2">
+                                        <div class="tab-pane active" id="nuevas-1">
+										<form id="form-paquetes" class="formulario">
+
+
+
+
+                                            <div class="text-center">
+                                                <h3 class="card-title center-align">Planes Corrida Financiera</h3>
+                                                <!--<p class="card-title pl-1">(Pagos ya validados por el área de cobranza MKTD, actualmente se encuentran en espera de dispersión por parte de dirección)</p>-->
+												<div class="text-right"><button type="button" data-toggle="modal" onclick="llenarTables();" data-target="#exampleModal" id="btn_open_modal" class="btn btn-maderas">Ver descuentos</button></div>
+                                            </div>
+                                            <!-------------------------------------------------------> 
+											<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 form1">
+															<h4 class="card-title left-align">Datos generales</h4>
+															<div class="col-xs-12 col-sm-12 col-md-6 col-lg-4 mb-1">
+																<div class="form-group">
+																	<label class="m-0" for="sede">Sede (<b class="text-danger">*</b>)</label>
+																	<select name="sede" id="sede" class="selectpicker select-gral" data-style="btn " data-show-subtext="true" data-live-search="true"  title="Selecciona una opción" data-size="7" required>
+																	</select>
+																</div>
+															</div>
+										
+															<div class="col-xs-12 col-sm-12 col-md-6 col-lg-4 mb-1">
+																<div class="form-group">
+																	<label class="m-0" for="sede">Proyecto (<b class="text-danger">*</b>)</label> 
+																	<select id="residencial"  name="residencial[]" multiple="multiple" class="form-control select-gral "  data-style="btn " data-show-subtext="true" data-live-search="true"  title="Selecciona una opción" data-size="7" required></select>
+																	</select>
+																</div>
+															</div>
+															
+															<div class="col-xs-12 col-sm-12 col-md-6 col-lg-2 mb-1">          
+																<div class="form-group">
+																	<label class="m-0" for="sede">Fecha Inicio (<b class="text-danger">*</b>)</label>
+																	<input class="form-control" name="fechainicio" id="fechainicio" type="date" required="true">
+																</div>
+															</div>
+
+																<div class="col-xs-12 col-sm-12 col-md-6 col-lg-2 mb-1">          
+																	<div class="form-group">
+																		<label class="m-0" for="sede">Fecha Fin (<b class="text-danger">*</b>)</label>
+																		<input class="form-control" name="fechafin" id="fechafin" type="date" required="true">
+																	</div>
+																</div>
+										
+										<div class="row">
+											<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 form1">
+												
+												<div class="col-xs-12 col-sm-12 col-md-6 col-lg-5 mb-1">
+																		<div class="form-group">
+																			<label>Tipo de Lote (<b class="text-danger">*</b>):</label>
+																								<div class="col-md-12"><br></div>
+																								<div class="row">
+																									<div class="col-md-12">
+																										<div class="custom-control custom-radio custom-control-inline col-md-4">
+																											<input type="radio" id="customRadioInline1" value="1" name="tipoLote">
+																											<label class="custom-control-label" for="customRadioInline1">Habitacional</label>
+																										</div>
+																										<div class="custom-control custom-radio custom-control-inline col-md-4">
+																											<input type="radio" id="customRadioInline2" value="2" name="tipoLote">
+																											<label class="custom-control-label" for="customRadioInline2">Comercial</label>
+																										</div>
+																										<div class="custom-control custom-radio custom-control-inline col-md-4">
+																											<input type="radio" id="customRadioInline3" value="3" name="tipoLote">
+																											<label class="custom-control-label" for="customRadioInline3">Ambos</label>
+																										</div>
+																									</div>
+																								</div>
+																		</div>
+												</div>
+
+											<div class="col-xs-12 col-sm-12 col-md-6 col-lg-4 mb-1">          
+																	<div class="form-group">
+																		<label>Superficie (<b class="text-danger">*</b>):</label>
+																					<div class="col-md-12"><br></div>
+																						<div class="row">
+																								<div class="col-md-12">
+																									<div class="custom-control custom-radio custom-control-inline col-md-4">
+																										<input type="radio" id="customRadio1" value="1" name="superficie" onclick="selectSuperficie(1)">
+																										<label class="custom-control-label" for="customRadio1">Mayor a</label>
+																									</div>
+																									<div class="custom-control custom-radio custom-control-inline col-md-4">
+																										<input type="radio" id="customRadio2" value="2" name="superficie" onclick="selectSuperficie(2)">
+																										<label class="custom-control-label" for="customRadio2">Rango</label>
+																									</div>
+																									<div class="custom-control custom-radio custom-control-inline col-md-4">
+																										<input type="radio" id="customRadio3" value="3" name="superficie" onclick="selectSuperficie(3)">
+																										<label class="custom-control-label" for="customRadio3">Cualquiera</label>
+																									</div>
+																								</div>
+																						</div>
+																					</div>
+																	</div>
+
+																		<div class="col-xs-12 col-sm-12 col-md-6 col-lg-3 mb-1">
+																			<div class="form-group">
+																				<div id="printSuperficie">
+																				</div>
+																			</div>
+																		</div>
+
+																		<div class="row">
+																				<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 form1">
+																			
+																						<div class="form-group d-flex justify-left align-center col-md-12">
+																							<button type="button" class="btn btn-success btn-circle btn-lg" data-toggle="tooltip" data-placement="top" title="Agregar paquete" onclick="GenerarCard()"><i class="fas fa-plus"></i></button>
+																							<input type="hidden" value="0" name="index" id="index">
+																						</div>
+																				</div>
+																		</div>
+												</div>
+							
+													<div class="row rowCards" id="showPackage"></div>
+						</div>
+						
+													<div class="text-right">
+														<button type="submit" id="btn_save" class="btn btn-success">Guardar</button>
+													</div>
+					</div>
+											<!-------------------------------------------------------> 
+
+
+
+
+										</form>
+                                        </div>
+                                        <div class="tab-pane" id="proceso-1">
+                                            <div class="text-center">
+                                                <h3 class="card-title center-align">Planes cargados</h3>
+                                                <!--<p class="card-title pl-1">(Lotes correspondientes a comisiones solicitadas para pago por el área de MKTD, en espera de validación contraloría y pago de internomex)</p>-->
+                                            </div>
+                                            <div class="toolbar">
+                                                <div class="container-fluid p-0">
+                                                   
+                                                </div>
+                                                <div class="table-responsive">
+                                                    <table class="table-striped table-hover" id="table_planes" name="table_planes">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>SUPERFICIE</th>
+                                                                <th>PLAN</th>
+                                                                <th>TOTAL</th>
+                                                                <th>ENGANCHE</th>
+                                                                <th>M2</th>
+                                                                <th>BONO</th>
+                                                                <th>MSI</th>
+                                                                <th>DESARROLLO</th>
+                                                                <th>TOT. COM.</th>
+                                                            </tr>
+                                                        </thead>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+<!------------------------------------------------------------------>
+
+
 <div id="snackbar"><i class="fas fa-check"></i> ¡MSI agregado con éxito!</div>
 </div>
 
@@ -463,50 +644,117 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
 	<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
 	<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
-
 	<script>
-
+const arr = [];
 function OpenModal(tipo,boton){
 	if(tipo == 1){
+		$('#descuento').val('');
 		$('#tdescuento').val(1);
 		$('#id_condicion').val(1);
 		$('#eng_top').val(0);
 		$('#apply').val(1);
 		$('#boton').val(boton);
-		document.getElementById('label_descuento').innerHTML = 'Agregar descuento al precio total:';
+		$('#tipo_d').val(1);
+		document.getElementById('label_descuento').innerHTML = 'Agregar descuento al precio total (<b class="text-danger">*</b>):';
 	}else if(tipo == 2){
+		$('#descuento').val('');
 		$('#tdescuento').val(2);
 		$('#id_condicion').val(2);
 		$('#eng_top').val(0);
 		$('#apply').val(0);
-		document.getElementById('label_descuento').innerHTML = 'Agregar descuento al enganche';
+		$('#boton').val(boton);
+		$('#tipo_d').val(2);
+		document.getElementById('label_descuento').innerHTML = 'Agregar descuento al enganche(<b class="text-danger">*</b>):';
 	}else if(tipo == 4){
+		$('#descuento').val('');
 		$('#tdescuento').val(1);
 		$('#id_condicion').val(4);
 		$('#eng_top').val(0);
 		$('#apply').val(1);
-		document.getElementById('label_descuento').innerHTML = 'Agregar descuento al total por M2';
+		$('#boton').val(boton);
+		$('#tipo_d').val(4);
+		document.getElementById('label_descuento').innerHTML = 'Agregar descuento al total por M2(<b class="text-danger">*</b>):';
 	}else if(tipo == 12){
+		$('#descuento').val('');
 		$('#tdescuento').val(1);
 		$('#id_condicion').val(12);
 		$('#eng_top').val(1);
 		$('#apply').val(1);
-		document.getElementById('label_descuento').innerHTML = 'Agregar descuento bono al M2';
+		$('#boton').val(boton);
+		$('#tipo_d').val(12);
+		document.getElementById('label_descuento').innerHTML = 'Agregar descuento por bono(<b class="text-danger">*</b>):';
 	}
 	else if(tipo == 13){
+		$('#descuento').val('');
 		$('#tdescuento').val(1);
 		$('#id_condicion').val(13);
 		$('#eng_top').val(1);
 		$('#apply').val(1);
-		document.getElementById('label_descuento').innerHTML = 'Agregar descuento Meses sin intereses';
+		$('#boton').val(boton);
+		$('#tipo_d').val(13);
+		document.getElementById('label_descuento').innerHTML = 'Agregar descuento Meses sin intereses(<b class="text-danger">*</b>):';
 	}
 $('#ModalFormAddDescuentos').modal();
 }
+/**-------------------------------------------------------------------------------------------------------------------------------------------------- */
+$("input[data-type='currency']").on({
+    keyup: function() {
+		let tipo_d = $('#tipo_d').val();
+			if(tipo_d == 12 || tipo_d == 4){
+				formatCurrency($(this));
+			}
+    },
+    blur: function() { 
+		let tipo_d = $('#tipo_d').val();
+			if(tipo_d == 12 || tipo_d == 4){
+      formatCurrency($(this), "blur");
+			}
+    }
+});
+function formatNumber(n) {
+  // format number 1000000 to 1,234,567
+  return n.replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+}
+function formatCurrency(input, blur) {
+    var input_val = input.val();
+  if (input_val === "") { return; }
+  var original_len = input_val.length;
+  var caret_pos = input.prop("selectionStart");
+  if (input_val.indexOf(".") >= 0) {
+    var decimal_pos = input_val.indexOf(".");
+    var left_side = input_val.substring(0, decimal_pos);
+    var right_side = input_val.substring(decimal_pos);
+    left_side = formatNumber(left_side);
+    right_side = formatNumber(right_side);
+    if (blur === "blur") {
+      right_side += "00";
+    }
+    right_side = right_side.substring(0, 2);
+    input_val = "$" + left_side + "." + right_side;
+  } else {
+    input_val = formatNumber(input_val);
+    input_val = "$" + input_val;
+    if (blur === "blur") {
+      input_val += ".00";
+    }
+  }
+  input.val(input_val);
+  var updated_len = input_val.length;
+  caret_pos = updated_len - original_len + caret_pos;
+  input[0].setSelectionRange(caret_pos, caret_pos);
+}
+/**-------------------------------------------------------------------------------------------------------------------------------------------------- */
 
 function CloseModalSave(boton){
-	$('#ModalFormAddDescuentos').modal();
+	$('#ModalFormAddDescuentos').modal('toggle');
+	//$('#exampleModal').modal('toggle');
 	$(`#btn_open_modal#${boton}`).trigger("click");
 	document.getElementById('addNewDesc').reset();
+	table_total.ajax.reload();
+	table_enganche.ajax.reload();
+	table_m2.ajax.reload();
+	table_bono.ajax.reload();
+	table_msi.ajax.reload();
 }
 $("#addNewDesc").on('submit', function(e){ 
 			e.preventDefault();
@@ -523,7 +771,11 @@ $("#addNewDesc").on('submit', function(e){
 					if(data == 1){
 						CloseModalSave(boton);
 						alerts.showNotification("top", "right", "Descuento almacenado correctamente.", "success");	
-					}else{
+					}else if(data ==2 ){
+						alerts.showNotification("top", "right", "El descuento ingresado, ya existe.", "warning");	
+
+					}
+					else{
 						alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
 					}
 				
@@ -536,11 +788,87 @@ $("#addNewDesc").on('submit', function(e){
 
 		});
 /**-------------------------TABLAS----------- */
+$('#table_total thead tr:eq(0) th').each( function (i) {
+            if(i != 0){
+                var title = $(this).text();
+
+                $(this).html('<input type="text" class="textoshead" placeholder="'+title+'"/>' );
+                $( 'input', this ).on('keyup change', function () {
+                    if (table_total.column(i).search() !== this.value ) {
+                        table_total
+                        .column(i)
+                        .search(this.value)
+                        .draw();
+                    }
+                });
+            }
+        });
+		$('#table_enganche thead tr:eq(0) th').each( function (i) {
+            if(i != 0){
+                var title = $(this).text();
+
+                $(this).html('<input type="text" class="textoshead" placeholder="'+title+'"/>' );
+                $( 'input', this ).on('keyup change', function () {
+                    if (table_enganche.column(i).search() !== this.value ) {
+                        table_enganche
+                        .column(i)
+                        .search(this.value)
+                        .draw();
+                    }
+                });
+            }
+        });
+		$('#table_m2 thead tr:eq(0) th').each( function (i) {
+            if(i != 0){
+                var title = $(this).text();
+
+                $(this).html('<input type="text" class="textoshead" placeholder="'+title+'"/>' );
+                $( 'input', this ).on('keyup change', function () {
+                    if (table_m2.column(i).search() !== this.value ) {
+                        table_m2
+                        .column(i)
+                        .search(this.value)
+                        .draw();
+                    }
+                });
+            }
+        });
+		$('#table_bono thead tr:eq(0) th').each( function (i) {
+            if(i != 0){
+                var title = $(this).text();
+
+                $(this).html('<input type="text" class="textoshead" placeholder="'+title+'"/>' );
+                $( 'input', this ).on('keyup change', function () {
+                    if (table_bono.column(i).search() !== this.value ) {
+                        table_bono
+                        .column(i)
+                        .search(this.value)
+                        .draw();
+                    }
+                });
+            }
+        });
+		$('#table_msi thead tr:eq(0) th').each( function (i) {
+            if(i != 0){
+                var title = $(this).text();
+
+                $(this).html('<input type="text" class="textoshead" placeholder="'+title+'"/>' );
+                $( 'input', this ).on('keyup change', function () {
+                    if (table_msi.column(i).search() !== this.value ) {
+                        table_msi
+                        .column(i)
+                        .search(this.value)
+                        .draw();
+                    }
+                });
+            }
+        });
+		
 function llenarTables(){
 	/**TB TOTAL */
 
 
-        plaza_12 = $("#table_total").DataTable({
+        table_total = $("#table_total").DataTable({
             dom: 'Brt'+ "<'row'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'i><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>",
             width: "auto",
             buttons: [{
@@ -549,6 +877,283 @@ function llenarTables(){
                 className: 'btn buttons-excel',
                 titleAttr: 'Descargar archivo de Excel',
                 title: 'DESCUENTOS AL PRECIO TOTAL',
+                /*exportOptions: {
+                    columns: [0,1,2],
+                        format: {
+                            header:  function (d, columnIdx) {
+                                if(columnIdx == 0){
+                                    return 'ID USUARIO';
+                                }
+                                else if(columnIdx == 1){
+                                    return 'USUARIO';
+                                }else if(columnIdx == 2){
+                                    return 'SEDE USUARIO';
+                                }
+                            }
+                        }
+                },*/
+            }],
+            pagingType: "full_numbers",
+            language: {
+                url: "<?=base_url()?>/static/spanishLoader_v2.json",
+                paginate: {
+                    previous: "<i class='fa fa-angle-left'>",
+                    next: "<i class='fa fa-angle-right'>"
+                }
+            },
+            destroy: true,
+            ordering: false,
+            columns: [
+				
+				{
+						"width": "30%",
+						"data": function( d ){
+							return '<p class="m-0"><b>'+d.id_descuento+'</b></p>';
+						}
+					},
+                {
+                    "width": "30%",
+                    "data": function( d ){
+                        return '<p class="m-0">'+d.porcentaje+'%</p>';
+                    }
+                },
+                {
+                    "width": "30%",
+                    "data": function( d ){
+                        return '<p class="m-0">'+d.descripcion+'</p>';
+                    }
+                }],
+            columnDefs: [{
+                orderable: false,
+                className: 'select-checkbox',
+                targets:   0,
+                searchable:false,
+                className: 'dt-body-center'
+            }],
+            ajax: {
+                url: url2 + "PaquetesCorrida/getDescuentos/"+1+"/"+1+"/"+0+"/"+1,
+                type: "POST",
+                cache: false,
+                data: function( d ){}
+            },
+        });
+
+		//DESCUENTO AL ENGANCHE
+		table_enganche = $("#table_enganche").DataTable({
+            dom: 'Brt'+ "<'row'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'i><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>",
+            width: "auto",
+            buttons: [{
+                extend: 'excelHtml5',
+                text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
+                className: 'btn buttons-excel',
+                titleAttr: 'Descargar archivo de Excel',
+                title: 'DESCUENTOS AL ENGANCHE',
+                /*exportOptions: {
+                    columns: [0,1,2],
+                        format: {
+                            header:  function (d, columnIdx) {
+                                if(columnIdx == 0){
+                                    return 'ID USUARIO';
+                                }
+                                else if(columnIdx == 1){
+                                    return 'USUARIO';
+                                }else if(columnIdx == 2){
+                                    return 'SEDE USUARIO';
+                                }
+                            }
+                        }
+                },*/
+            }],
+            pagingType: "full_numbers",
+            language: {
+                url: "<?=base_url()?>/static/spanishLoader_v2.json",
+                paginate: {
+                    previous: "<i class='fa fa-angle-left'>",
+                    next: "<i class='fa fa-angle-right'>"
+                }
+            },
+            destroy: true,
+            ordering: false,
+            columns: [{
+						"width": "30%",
+						"data": function( d ){
+							return '<p class="m-0"><b>'+d.id_descuento+'</b></p>';
+						}
+					},
+                {
+                    "width": "30%",
+                    "data": function( d ){
+						
+                        return '<p class="m-0">'+d.porcentaje+'%</p>';
+                    }
+                },
+                {
+                    "width": "30%",
+                    "data": function( d ){
+                        return '<p class="m-0">'+d.descripcion+'</p>';
+                    }
+                }],
+            columnDefs: [{
+                orderable: false,
+                className: 'select-checkbox',
+                targets:   0,
+                searchable:false,
+                className: 'dt-body-center'
+            }],
+            ajax: {
+                url: url2 + "PaquetesCorrida/getDescuentos/"+2+"/"+2+"/"+0+"/"+0,
+                type: "POST",
+                cache: false,
+                data: function( d ){}
+            },
+        });
+		//DESCUENTO AL M2
+		table_m2 = $("#table_m2").DataTable({
+            dom: 'Brt'+ "<'row'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'i><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>",
+            width: "auto",
+            buttons: [{
+                extend: 'excelHtml5',
+                text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
+                className: 'btn buttons-excel',
+                titleAttr: 'Descargar archivo de Excel',
+                title: 'DESCUENTOS AL TOTAL POR M2',
+                /*exportOptions: {
+                    columns: [0,1,2],
+                        format: {
+                            header:  function (d, columnIdx) {
+                                if(columnIdx == 0){
+                                    return 'ID USUARIO';
+                                }
+                                else if(columnIdx == 1){
+                                    return 'USUARIO';
+                                }else if(columnIdx == 2){
+                                    return 'SEDE USUARIO';
+                                }
+                            }
+                        }
+                },*/
+            }],
+            pagingType: "full_numbers",
+            language: {
+                url: "<?=base_url()?>/static/spanishLoader_v2.json",
+                paginate: {
+                    previous: "<i class='fa fa-angle-left'>",
+                    next: "<i class='fa fa-angle-right'>"
+                }
+            },
+            destroy: true,
+            ordering: false,
+            columns: [{
+						"width": "30%",
+						"data": function( d ){
+							return '<p class="m-0"><b>'+d.id_descuento+'</b></p>';
+						}
+					},
+                {
+                    "width": "30%",
+                    "data": function( d ){
+                        return '<p class="m-0">$'+formatMoney(d.porcentaje)+'</p>';
+                    }
+                },
+                {
+                    "width": "30%",
+                    "data": function( d ){
+                        return '<p class="m-0">'+d.descripcion+'</p>';
+                    }
+                }],
+            columnDefs: [{
+                orderable: false,
+                className: 'select-checkbox',
+                targets:   0,
+                searchable:false,
+                className: 'dt-body-center'
+            }],
+            ajax: {
+                url: url2 + "PaquetesCorrida/getDescuentos/"+1+"/"+4+"/"+0+"/"+1,
+                type: "POST",
+                cache: false,
+                data: function( d ){}
+            },
+        });
+		//DESCUENTO POR BONO
+		table_bono = $("#table_bono").DataTable({
+            dom: 'Brt'+ "<'row'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'i><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>",
+            width: "auto",
+            buttons: [{
+                extend: 'excelHtml5',
+                text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
+                className: 'btn buttons-excel',
+                titleAttr: 'Descargar archivo de Excel',
+                title: 'DESCUENTOS POR BONO',
+                /*exportOptions: {
+                    columns: [0,1,2],
+                        format: {
+                            header:  function (d, columnIdx) {
+                                if(columnIdx == 0){
+                                    return 'ID USUARIO';
+                                }
+                                else if(columnIdx == 1){
+                                    return 'USUARIO';
+                                }else if(columnIdx == 2){
+                                    return 'SEDE USUARIO';
+                                }
+                            }
+                        }
+                },*/
+            }],
+            pagingType: "full_numbers",
+            language: {
+                url: "<?=base_url()?>/static/spanishLoader_v2.json",
+                paginate: {
+                    previous: "<i class='fa fa-angle-left'>",
+                    next: "<i class='fa fa-angle-right'>"
+                }
+            },
+            destroy: true,
+            ordering: false,
+            columns: [{
+						"width": "30%",
+						"data": function( d ){
+							return '<p class="m-0"><b>'+d.id_descuento+'</b></p>';
+						}
+					},
+                {
+                    "width": "30%",
+                    "data": function( d ){
+                        return '<p class="m-0">$'+formatMoney(d.porcentaje)+'</p>';
+                    }
+                },
+                {
+                    "width": "30%",
+                    "data": function( d ){
+                        return '<p class="m-0">'+ d.descripcion+'</p>';
+                    }
+                }],
+            columnDefs: [{
+                orderable: false,
+                className: 'select-checkbox',
+                targets:   0,
+                searchable:false,
+                className: 'dt-body-center'
+            }],
+            ajax: {
+                url: url2 + "PaquetesCorrida/getDescuentos/"+1+"/"+12+"/"+1+"/"+1,
+                type: "POST",
+                cache: false,
+                data: function( d ){}
+            },
+        });
+
+		///DESCUENTO MSI
+		table_msi = $("#table_msi").DataTable({
+            dom: 'Brt'+ "<'row'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'i><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>",
+            width: "auto",
+            buttons: [{
+                extend: 'excelHtml5',
+                text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
+                className: 'btn buttons-excel',
+                titleAttr: 'Descargar archivo de Excel',
+                title: 'DESCUENTOS MSI',
                 /*exportOptions: {
                     columns: [0,1,2],
                         format: {
@@ -590,7 +1195,7 @@ function llenarTables(){
                 {
                     "width": "30%",
                     "data": function( d ){
-                        return '<p class="m-0">'+d.descripcion+'</p>';
+                        return '<p class="m-0">'+ d.descripcion+'</p>';
                     }
                 }],
             columnDefs: [{
@@ -601,7 +1206,7 @@ function llenarTables(){
                 className: 'dt-body-center'
             }],
             ajax: {
-                url: url2 + "PaquetesCorrida/getDescuentos/"+1+"/"+1+"/"+0+"/"+1,
+                url: url2 + "PaquetesCorrida/getDescuentos/"+1+"/"+13+"/"+1+"/"+1,
                 type: "POST",
                 cache: false,
                 data: function( d ){}
@@ -609,6 +1214,7 @@ function llenarTables(){
         });
 
 	/** */
+	console.log(arr);
 }
 /**------------------------------------------ */
 
@@ -692,7 +1298,7 @@ function llenarTables(){
 				success: function(data) {	
 					if(data == 1){
 						ClearAll();
-						alerts.showNotification("top", "right", "Paquetes almacenados correctamente.", "success");	
+						alerts.showNotification("top", "right", "Planes almacenados correctamente.", "success");	
 					}else{
 						alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
 					}
@@ -716,7 +1322,8 @@ function llenarTables(){
 			document.getElementById('form-paquetes').reset();
 			$("#sede").selectpicker("refresh");
 			$('#residencial option').remove();
-			document.getElementById('showPackage').innerHTML = '';	
+			document.getElementById('showPackage').innerHTML = '';
+			$('#index').val(0);	
 
 		}
 	/**
@@ -754,7 +1361,7 @@ function llenarTables(){
 								<button type="button" class="btn btn-lg btn-danger btn-circle" data-toggle="tooltip" data-placement="top" title="Eliminar paquete" id="btn_delete_${indexNext}" onclick="removeElementCard('card_${indexNext}')"><i class="fas fa-trash"></i></button>
 								</div>
 								<div class="card-body text-primary myCard">
-									<h5 class="card-title">Paquete</h5>
+									<h5 class="card-title">Plan</h5>
 												<div class="form-group col-md-12" id="">
 														<label class="">Descripción paquete(<b class="text-danger">*</b>):</label>
 														<input type="text" class="form-control input-gral" required name="descripcion_${indexNext}" id="descripcion_${indexNext}">
@@ -1294,6 +1901,50 @@ function PrintSelectDesc(id,index,indexGral){
 					}
 
 				 });
+		}else{
+			$(`#orden_${indexGral}_${index}`).val("");
+			$(`#orden_${indexGral}_${index}`).prop( "disabled", true );
+			document.getElementById(`selectDescuentos_${indexGral}_${index}`).innerHTML = "";
+		}
+
+	}else if(id == 13){
+		if( $(`#inlineCheckbox1_${indexGral}_${index}`).is(':checked') ) {	
+			$(`#orden_${indexGral}_${index}`).prop( "disabled", false );
+		tdescuento=1;
+		id_condicion=13;
+		eng_top=1;
+		apply=1;			
+		///TOTAL DE ENGANCHE
+		$(`#selectDescuentos_${indexGral}_${index}`).append(`
+	<div class="form-group d-flex justify-center align-center">
+	<label>Descuento(<b class="text-danger">*</b>):</label>
+	<select id="ListaDescuentosMSI_${indexGral}_${index}" required name="${indexGral}_${index}_ListaDescuentosMSI_[]" multiple="multiple" class="form-control"  required data-live-search="true"></select>
+	</div>`);
+	$(`#ListaDescuentosMSI_${indexGral}_${index}`).select2({containerCssClass: "select-gral",dropdownCssClass: "custom-dropdown",tags: true});
+	$.post('getDescuentosPorTotal',{ tdescuento: tdescuento, id_condicion: id_condicion,eng_top:eng_top,apply:apply }, function(data) {
+                $(`#ListaDescuentosMSI_${indexGral}_${index}`).append($('<option disabled>').val("default").text("Seleccione una opción"));
+				console.log(data.length);
+                var len = data.length;
+                for( var i = 0; i<len; i++){
+                    var name = data[i]['porcentaje'];
+                    var id = data[i]['id_descuento'];
+                    $(`#ListaDescuentosMSI_${indexGral}_${index}`).append(`<option value='${id}' label="${name}">${name}%</option>`);
+                }
+                if(len<=0){
+                    $(`#ListaDescuentosMSI_${indexGral}_${index}`).append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
+                }
+                $(`#ListaDescuentosMSI_${indexGral}_${index}`).selectpicker('refresh');
+            }, 'json');
+			$(`#ListaDescuentosMSI_${indexGral}_${index}`).select2({containerCssClass: "select-gral",dropdownCssClass: "custom-dropdown",tags: true	});
+			$(`#ListaDescuentosMSI_${indexGral}_${index}`).on("select2:select", function (evt) {
+					var element = evt.params.data.element;
+					var $element = $(element);
+					$element.detach();
+					$(this).append($element);
+					$(this).trigger("change");
+
+				});
+
 		}else{
 			$(`#orden_${indexGral}_${index}`).val("");
 			$(`#orden_${indexGral}_${index}`).prop( "disabled", true );
