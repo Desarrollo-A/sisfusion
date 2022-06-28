@@ -1,10 +1,15 @@
 var dataMetros, dataDisponibilidad, dataLugarProspeccion, dataMedio, metrosChart, disponibilidadChart, lugarChart, medioChart;
 
+$(document).ready(function () {
+    recreatApexChart(false);
+    init();
+});
+
 var optionBarInit = {
     series: [],
     chart: {
         type: 'bar',
-        height: '100%',
+        height: 'auto',
         toolbar: {
             show: false
         },
@@ -52,7 +57,7 @@ var optionBarInit = {
 var optionsDisponibilidad = {
     series: [],
     chart: {
-        height: '100%',
+        height: 'auto',
         type: 'bar',
         toolbar: {
             show: false
@@ -105,7 +110,7 @@ var optionLugar = {
     }],
     chart: {
         type: 'bar',
-        height: '100%',
+        height: 'auto',
         toolbar: {
             show: false
         },
@@ -153,7 +158,7 @@ var optionLugar = {
 var optionsMedio = {
     series: [],
     chart: {
-        height: '100%',
+        height: 'auto',
         type: 'donut',
         toolbar: {
             show: false
@@ -214,79 +219,79 @@ var optionsVentasMetros = {
     },
 };
 
-var optionsDescuentos = {
-    series: [{
-        name: 'Inflation',
-        data: [2.3, 3.1, 4.0, 10.1, 4.0, 3.6, 3.2, 2.3, 1.4, 0.8, 0.5, 0.2]
-    }],
-    chart: {
-        height: '100%',
-        type: 'bar',
-        toolbar: {
-            show: false
-        },
-    },
-    plotOptions: {
-        bar: {
-            borderRadius: 10,
-            dataLabels: {
-                position: 'top', // top, center, bottom
-            },
-        }
-    },
-    dataLabels: {
-        enabled: true,
-        formatter: function (val) {
-            return val + "%";
-        },
-        offsetY: -20,
-        style: {
-            fontSize: '12px',
-            colors: ["#304758"]
-        }
-    },
+// var optionsDescuentos = {
+//     series: [{
+//         name: 'Inflation',
+//         data: [2.3, 3.1, 4.0, 10.1, 4.0, 3.6, 3.2, 2.3, 1.4, 0.8, 0.5, 0.2]
+//     }],
+//     chart: {
+//         height: '100%',
+//         type: 'bar',
+//         toolbar: {
+//             show: false
+//         },
+//     },
+//     plotOptions: {
+//         bar: {
+//             borderRadius: 10,
+//             dataLabels: {
+//                 position: 'top', // top, center, bottom
+//             },
+//         }
+//     },
+//     dataLabels: {
+//         enabled: true,
+//         formatter: function (val) {
+//             return val + "%";
+//         },
+//         offsetY: -20,
+//         style: {
+//             fontSize: '12px',
+//             colors: ["#304758"]
+//         }
+//     },
 
-    xaxis: {
-        categories: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
-        position: 'top',
-        axisBorder: {
-            show: false
-        },
-        axisTicks: {
-            show: false
-        },
-        crosshairs: {
-            fill: {
-                type: 'gradient',
-                gradient: {
-                    colorFrom: '#D8E3F0',
-                    colorTo: '#BED1E6',
-                    stops: [0, 100],
-                    opacityFrom: 0.4,
-                    opacityTo: 0.5,
-                }
-            }
-        },
-        tooltip: {
-            enabled: true,
-        }
-    },
-    yaxis: {
-        axisBorder: {
-            show: false
-        },
-        axisTicks: {
-            show: false,
-        },
-        labels: {
-            show: false,
-            formatter: function (val) {
-                return val + "%";
-            }
-        }
+//     xaxis: {
+//         categories: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+//         position: 'top',
+//         axisBorder: {
+//             show: false
+//         },
+//         axisTicks: {
+//             show: false
+//         },
+//         crosshairs: {
+//             fill: {
+//                 type: 'gradient',
+//                 gradient: {
+//                     colorFrom: '#D8E3F0',
+//                     colorTo: '#BED1E6',
+//                     stops: [0, 100],
+//                     opacityFrom: 0.4,
+//                     opacityTo: 0.5,
+//                 }
+//             }
+//         },
+//         tooltip: {
+//             enabled: true,
+//         }
+//     },
+//     yaxis: {
+//         axisBorder: {
+//             show: false
+//         },
+//         axisTicks: {
+//             show: false,
+//         },
+//         labels: {
+//             show: false,
+//             formatter: function (val) {
+//                 return val + "%";
+//             }
+//         }
 
-    },
-};
+//     },
+// };
 
 var metrosChart = new ApexCharts(document.querySelector("#metrosChart"), optionBarInit);
 metrosChart.render();
@@ -303,34 +308,36 @@ medioChart.render();
 var ventasMetrosChart = new ApexCharts(document.querySelector("#ventasMetrosChart"), optionsVentasMetros);
 ventasMetrosChart.render();
 
-var descuentosChart = new ApexCharts(document.querySelector("#descuentosChart"), optionsDescuentos);
-descuentosChart.render();
+// var descuentosChart = new ApexCharts(document.querySelector("#descuentosChart"), optionsDescuentos);
+// descuentosChart.render();
 
 //Jquery
-$(document).ready(function () {
-    init();
-});
-
-$('#proyecto').off().on('change', function(){
-    console.log('changes');
-    getCondominios($(this).val());
-});
-
-$('#condominio').off().on('change', function(){
-    getVentasM2($(this).val());
-});
 
 //Funciones
 function init(){
-    getProyectos();
-    getSuperficieVendida();
-    getDisponibilidadProyecto();
-    getLugarProspeccion();
-    getMedioProspeccion();
+    getVentasM2();
+    getSuperficieVendida().then( response => {
+        dataMetros = response;
+        formatMetrosData( response );
+    });
+    getDisponibilidadProyecto().then( response => { 
+        dataDisponibilidad = response;
+        formatDisponibilidadData( response );
+    });
+    getLugarProspeccion().then( response => { 
+        dataLugarProspeccion = response;
+        formatLugarProspeccion( response );
+    });
+    getMedioProspeccion().then( response => { 
+        dataMedio = response;
+        formatMedioProspeccion(response);
+    });
+
+    // getDescuentosChart();
 }
 
 function getSuperficieVendida(){
-    $.ajax({
+    return $.ajax({
         url: "Metricas/getSuperficieVendida",
         cache: false,
         contentType: false,
@@ -340,15 +347,14 @@ function getSuperficieVendida(){
         beforeSend: function () {
             $('#spiner-loader').removeClass('hide');
         },
-        success: function (response) {
-            formatMetrosData(response);
+        success: function () {
             $('#spiner-loader').addClass('hide');
         }
     });
 }
 
 function getDisponibilidadProyecto(){
-    $.ajax({
+    return $.ajax({
         url: "Metricas/getDisponibilidadProyecto",
         cache: false,
         contentType: false,
@@ -359,14 +365,13 @@ function getDisponibilidadProyecto(){
             $('#spiner-loader').removeClass('hide');
         },
         success: function (response) {
-            formatDisponibilidadData(response);
             $('#spiner-loader').addClass('hide');
         }
     });
 }
 
 function getLugarProspeccion(){
-    $.ajax({
+    return $.ajax({
         url: "Metricas/getLugarProspeccion",
         cache: false,
         contentType: false,
@@ -377,14 +382,13 @@ function getLugarProspeccion(){
             $('#spiner-loader').removeClass('hide');
         },
         success: function (response) {
-            formatLugarProspeccion(response);
             $('#spiner-loader').addClass('hide');
         }
     });
 }
 
 function getMedioProspeccion(){
-    $.ajax({
+    return $.ajax({
         url: "Metricas/getMedioProspeccion",
         cache: false,
         contentType: false,
@@ -395,7 +399,6 @@ function getMedioProspeccion(){
             $('#spiner-loader').removeClass('hide');
         },
         success: function (response) {
-            formatMedioProspeccion(response);
             $('#spiner-loader').addClass('hide');
         }
     });
@@ -422,8 +425,8 @@ function formatMetrosData(data){
     let count = 0;
     data.forEach(element => {
         if (count < 6) {
-            series.push(element.counts);
-            categories.push(`${element.sup} m2`);
+            series.push(element.cantidad);
+            categories.push(`${element.superficie} m2`);
             count++;
         }
     });
@@ -545,7 +548,7 @@ function toggleDatatable(e){
         columnDatatable.removeClass('hidden');
         reorderColumns();
     }
-    // La columna se contraera 
+    // La columna se contraera
     else{
         columnaActiva.classList.remove('col-sm-12', 'col-md-12', 'col-lg-12', 'activo');
         columnaActiva.classList.add('col-sm-6', 'col-md-6', 'col-lg-6', 'inactivo');
@@ -555,70 +558,16 @@ function toggleDatatable(e){
         reorderColumns();
     }
 }
-// function toggleDatatable(e){
-//     var columnaActiva = e.closest( '.flexible' );
-//     var columnaChart = e.closest( '.col-chart' );
-//     var columnDatatable = $( e ).closest( '.row' ).find( '.col-datatable' );
-//     $( columnDatatable ).html('');
-//     if( $(columnaActiva).hasClass('inactivo') ){
-//         columnaActiva.classList.remove('inactivo')
-//         columnaChart.classList.remove('col-sm-12', 'col-md-12', 'col-lg-12');
-        
-//         //Función para obtener clases de columna pivote
-//         var arrayColumns = nomenclatureBootstrap(columnaActiva);
-//         console.log(arrayColumns);
-//         arrayColumns.forEach(function(key, index){    
-//             columnaActiva.classList.remove(''+key+'');
-//             columnaChart.classList.add();
-//             columnaChart.classList.add(''+key+'');
-//         });
-//         columnaActiva.classList.add('col-sm-12', 'col-md-12', 'col-lg-12', 'activo', 'flexible');
-//         columnDatatable.removeClass('hidden');
-//         reorderColumns();
-//     }
-//     else{
-//         console.log("inactivar");
-//         console.log(  e.closest( '.flexible' ) );
-//         columnaActiva.classList.remove('col-sm-12', 'col-md-12', 'col-lg-12', 'activo');
-//         columnaActiva.classList.add('inactivo')
-
-//         var arrayColumns = nomenclatureBootstrap(columnaChart);
-//         console.log(arrayColumns);
-//         arrayColumns.forEach(function(key, index){    
-//             columnaActiva.classList.add(''+key+'');
-//             columnaChart.classList.remove(''+key+'');
-//         });
-
-//         columnaChart.classList.add('col-sm-12', 'col-md-12', 'col-lg-12', 'col-chart', 'h-100', 'pb-3');
-//         columnDatatable.addClass('hidden');
-//         // reorderColumns()
-//     }
-// }
-
-// function nomenclatureBootstrap(columna){
-//     reg = /flexible|inactivo|acivo|col-chart/i; 
-//     var classes = ($(columna).attr('class'));
-//     console.log(classes);
-//     var colBootstrap = classes.replace(reg, ""); 
-//     colBootstrap = colBootstrap.replace(/h-100/g,'');
-//     colBootstrap = colBootstrap.replace(/pb-3/g,'');
-//     colBootstrap = colBootstrap.replace(/col-12/g,'');
-//     colBootstrap = colBootstrap.replace(/\s+/g,' ').trim()
-//     var arrayColumns = (colBootstrap.rtrim()).split(/[, ]+/);
-
-//     return arrayColumns;
-// }
-
-
 
 function reorderColumns(){
     var principalColumns = document.getElementsByClassName("flexible");
     var mainRow = document.getElementById('mainRow');
 
+    let opts = getCacheOptions();
     //Creamos nuevo fragmento en el DOM para insertar las columnas ordenadas
     var elements = document.createDocumentFragment();
     var inactivos = [], activos = [];
-    
+
     for( var i = 0; i<principalColumns.length; i++){
         (principalColumns[i].classList.contains('inactivo')) ? inactivos.push(i) : activos.push(i)
     }
@@ -633,8 +582,8 @@ function reorderColumns(){
     });
     mainRow.innerHTML = null;
     mainRow.appendChild(elements);
-    
-    // recreatApexChart(true);
+
+    recreatApexChart(true,opts);
 
     for( i = 1; i<=principalColumns.length; i++){
         (function(i){
@@ -646,46 +595,46 @@ function reorderColumns(){
                     $("#"+id).html('');
                     if( id == 'metros' ){
                         buildEstructuraDT(id, dataMetros);
-                        buildTableMetros(dataApartados);
+                        buildTableMetros(dataMetros);
                     }
                     else if( id == 'disponibilidad' ){
                         buildEstructuraDT(id, dataDisponibilidad);
-                        buildTableDisponibilidad(dataContratados);
+                        buildTableDisponibilidad(dataDisponibilidad);
                     }
                     else if( id == 'lugar' ){
                         buildEstructuraDT(id, dataLugarProspeccion);
-                        buildTableLugarProspeccion(dataConEnganche);
+                        buildTableLugarProspeccion(dataLugarProspeccion);
                     }
                     else if( id == 'medio' ){
                         buildEstructuraDT(id, dataMedio);
-                        buildTableMedio(dataSinEnganche);
+                        buildTableMedio(dataMedio);
                     }
                 }
                 $(principalColumns[i-1]).addClass('fadeInAnimationDelay'+i);
             }, 500 * i)
         }(i));
-    }   
+    }
 }
 
-function buildEstructuraDT(dataName, data){
+function buildEstructuraDT(dataName, dataApartados){
+    console.log(dataMetros);
     var tableHeaders = '';
-    var arrayHeaders = Object.keys(data[0]);
-    console.log(data);
-    // for( i=0; i<arrayHeaders.length; i++ ){
-    //     tableHeaders += '<th>' + arrayHeaders[i] + '</th>';
-    // }
+    var arrayHeaders = Object.keys(dataApartados[0]);
+    for( i=0; i<arrayHeaders.length; i++ ){
+        tableHeaders += '<th>' + arrayHeaders[i] + '</th>';
+    }
 
-    // var id = 'table'+dataName;
-    // var estructura = `<div class="container-fluid p-0" style="padding:15px!important">
-    //                     <table class="table-striped table-hover" id="`+id+`" name="table">
-    //                         <thead>
-    //                             <tr>
-    //                                 `+tableHeaders+`
-    //                             </tr>
-    //                         </thead>
-    //                     </table>
-    //                 </div>`;
-    // $("#"+dataName).html(estructura);
+    var id = 'table'+dataName;
+    var estructura = `<div class="container-fluid p-0" style="padding:15px!important">
+                        <table class="table-striped table-hover" id="`+id+`" name="table">
+                            <thead>
+                                <tr>
+                                    `+tableHeaders+`
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>`;
+    $("#"+dataName).html(estructura);
 }
 
 // String.prototype.rtrim = function () {
@@ -737,4 +686,244 @@ function getProyectos(){
         }
     });
 
+function buildTableMetros(data){
+    $('#tablemetros thead tr:eq(0) th').each(function (i) {
+        const title = $(this).text();
+        $(this).html('<input type="text" center;" class="textoshead"  placeholder="' + title + '"/>');
+        $('input', this).on('keyup change', function () {
+            if ($("#tablemetros").DataTable().column(i).search() !== this.value) {
+                $("#tablemetros").DataTable().column(i)
+                    .search(this.value).draw();
+            }
+        });
+    });
+
+    $("#tablemetros").DataTable({
+        dom: 'rt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
+        pagingType: "full_numbers",
+        pageLength : 10,
+        width: '100%',
+        destroy: true,
+        ordering: false,
+        scrollX: true,
+        language: {
+            url: "static/spanishLoader_v2.json",
+            paginate: {
+                previous: "<i class='fa fa-angle-left'>",
+                next: "<i class='fa fa-angle-right'>"
+            }
+        },
+        data: data,
+        columns: [{
+            data: 'cantidad'
+        },
+        {
+            data: 'superficie'
+        },
+        {
+            data: 'suma'
+        }],
+        columnDefs: [{
+            visible: false,
+            searchable: false
+        }],
+    });
+}
+
+function buildTableDisponibilidad(data){
+    $('#tabledisponibilidad thead tr:eq(0) th').each(function (i) {
+        const title = $(this).text();
+        $(this).html('<input type="text" center;" class="textoshead"  placeholder="' + title + '"/>');
+        $('input', this).on('keyup change', function () {
+            if ($("#tabledisponibilidad").DataTable().column(i).search() !== this.value) {
+                $("#tabledisponibilidad").DataTable().column(i)
+                    .search(this.value).draw();
+            }
+        });
+    });
+
+    $("#tabledisponibilidad").DataTable({
+        dom: 'rt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
+        pagingType: "full_numbers",
+        pageLength : 10,
+        width: '100%',
+        destroy: true,
+        ordering: false,
+        scrollX: true,
+        language: {
+            url: "static/spanishLoader_v2.json",
+            paginate: {
+                previous: "<i class='fa fa-angle-left'>",
+                next: "<i class='fa fa-angle-right'>"
+            }
+        },
+        data: data,
+        columns: [{
+            data: 'nombreResidencial'
+        },
+        {
+            data: 'descripcion'
+        },
+        {
+            data: 'totales'
+        },
+        {
+            data: 'ocupados'
+        },
+        {
+            data: 'restante'
+        }],
+        columnDefs: [{
+            visible: false,
+            searchable: false
+        }],
+    });
+}
+
+function buildTableLugarProspeccion(data){
+    $('#tablelugar thead tr:eq(0) th').each(function (i) {
+        const title = $(this).text();
+        $(this).html('<input type="text" center;" class="textoshead"  placeholder="' + title + '"/>');
+        $('input', this).on('keyup change', function () {
+            if ($("#tablelugar").DataTable().column(i).search() !== this.value) {
+                $("#tablelugar").DataTable().column(i)
+                    .search(this.value).draw();
+            }
+        });
+    });
+
+    $("#tablelugar").DataTable({
+        dom: 'rt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
+        pagingType: "full_numbers",
+        pageLength : 10,
+        width: '100%',
+        destroy: true,
+        ordering: false,
+        scrollX: true,
+        language: {
+            url: "static/spanishLoader_v2.json",
+            paginate: {
+                previous: "<i class='fa fa-angle-left'>",
+                next: "<i class='fa fa-angle-right'>"
+            }
+        },
+        data: data,
+        columns: [{
+            data: 'nombre'
+        },
+        {
+            data: 'prospectos'
+        },
+        {
+            data: 'clientes'
+        }],
+        columnDefs: [{
+            visible: false,
+            searchable: false
+        }],
+    });
+}
+
+function buildTableMedio(data){
+    $('#tablemedio thead tr:eq(0) th').each(function (i) {
+        const title = $(this).text();
+        $(this).html('<input type="text" center;" class="textoshead"  placeholder="' + title + '"/>');
+        $('input', this).on('keyup change', function () {
+            if ($("#tablemedio").DataTable().column(i).search() !== this.value) {
+                $("#tablemedio").DataTable().column(i)
+                    .search(this.value).draw();
+            }
+        });
+    });
+
+    $("#tablemedio").DataTable({
+        dom: 'rt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
+        pagingType: "full_numbers",
+        pageLength : 10,
+        width: '100%',
+        destroy: true,
+        ordering: false,
+        scrollX: true,
+        language: {
+            url: "static/spanishLoader_v2.json",
+            paginate: {
+                previous: "<i class='fa fa-angle-left'>",
+                next: "<i class='fa fa-angle-right'>"
+            }
+        },
+        data: data,
+        columns: [{
+            data: 'nombre'
+        },
+        {
+            data: 'lugar_prospeccion'
+        },
+        {
+            data: 'cantidad'
+        }],
+        columnDefs: [{
+            visible: false,
+            searchable: false
+        }],
+    });
+}
+
+function getCacheOptions(){
+    let obj = 
+       {
+            seriesMetros: metrosChart.w.config.series,
+            categoriesMetros: metrosChart.w.config.xaxis.categories,
+           
+            seriesDisponibilidad: disponibilidadChart.w.config.series,
+            categoriesDisponibilidad: disponibilidadChart.w.config.xaxis.categories,
+          
+            seriesLugar: lugarChart.w.config.series,
+            categoriesLugar: lugarChart.w.config.xaxis.categories,
+           
+            seriesMedio: medioChart.w.config.series,
+            categoriesMedio: medioChart.w.config.xaxis.categories,
+          
+    }
+    return obj;
+}
+
+function recreatApexChart(estado, opts){
+    console.log(opts);
+    if(estado){
+        $(".boxChart").html('');
+        buildChartsID();
+      
+    //     chartApartados = new ApexCharts(document.querySelector('#chart'), setOptionsChart(opts.seriesA[0], opts.categoriesA));
+    //     chartApartados.render();
+        
+    //     chartContratados = new ApexCharts(document.querySelector('#chart2'), setOptionsChart(opts.seriesC[0], opts.categoriesC));
+    //     chartContratados.render();
+        
+    //     chartEnganche = new ApexCharts(document.querySelector('#chart3'), setOptionsChart(opts.seriesE[0], opts.categoriesE));
+    //     chartEnganche.render();
+        
+    //     chartSinenganche = new ApexCharts(document.querySelector('#chart4'), setOptionsChart(opts.seriesS[0], opts.categoriesS));
+    //     chartSinenganche.render();
+    }
+    //else{
+    //     chartApartados = new ApexCharts(document.querySelector('#chart'), options);
+    //     chartApartados.render();
+    //     chartContratados = new ApexCharts(document.querySelector('#chart2'), options);
+    //     chartContratados.render();
+    //     chartEnganche = new ApexCharts(document.querySelector('#chart3'), options);
+    //     chartEnganche.render();
+    //     chartSinenganche = new ApexCharts(document.querySelector('#chart4'), options);
+    //     chartSinenganche.render();
+    // }
+  
+}
+
+function buildChartsID(){
+    var boxCharts = document.getElementsByClassName("boxChart");
+    console.log(boxCharts);
+    // for ( var i = 0; i<boxCharts.length; i++ ){
+    //     var id = boxCharts[i].id;
+    //     var html = `<div id="chart`+(id.replace(/\D/g, ""))+`" class="chart"></div>`;
+    //     $('#'+id).append(html);
+    // }
 }

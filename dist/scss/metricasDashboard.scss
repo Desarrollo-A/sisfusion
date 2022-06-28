@@ -1,11 +1,15 @@
 @import "_base";
 
 #metricas{
+    table.dataTable > thead > tr > th, table.dataTable > tbody > tr > th, table.dataTable > tfoot > tr > th, table.dataTable > thead > tr > td, table.dataTable > tbody > tr > td, table.dataTable > tfoot > tr > td {
+        white-space: nowrap!important;
+    }
     .card{
-        height: 450px;
+        height: 440px;
         margin-bottom: 0;
         .col-chart{
             .actions{
+                margin-top: 15px!important;
                 .selectMini button{
                     display: flex;
                     align-items: center;
