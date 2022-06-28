@@ -8,7 +8,7 @@ class Metricas_model extends CI_Model {
     }
     public function getSuperficieVendida($data = null){
         $year = date("Y");
-        $query = $this->db->query("SELECT COUNT(lo.sup) counts, lo.sup,  
+        $query = $this->db->query("SELECT COUNT(lo.sup) cantidad, lo.sup superficie,  
         FORMAT(SUM(
             CASE 
                 WHEN lo.totalNeto2 IS NULL THEN lo.total 
@@ -18,7 +18,7 @@ class Metricas_model extends CI_Model {
         INNER JOIN lotes lo ON lo.idCliente = cl.id_cliente
         WHERE isNULL(noRecibo, '') != 'CANCELADO' AND cl.status = 1 AND YEAR(cl.fechaApartado)= $year
         GROUP BY lo.sup
-        ORDER BY counts DESC");
+        ORDER BY cantidad DESC");
         return $query->result_array();
     }
 
