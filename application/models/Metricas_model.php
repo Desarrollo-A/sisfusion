@@ -11,9 +11,9 @@ class Metricas_model extends CI_Model {
         $query = $this->db->query("SELECT COUNT(lo.sup) cantidad, lo.sup superficie,  
         FORMAT(SUM(
             CASE 
-                WHEN lo.totalNeto2 IS NULL THEN lo.total 
-                WHEN lo.totalNeto2 = 0 THEN lo.total 
-                ELSE lo.totalNeto2 
+                WHEN isNULL(cl.totalNeto2_cl ,lo.totalNeto2) IS NULL THEN isNULL(cl.total_cl, lo.total)
+                WHEN isNULL(cl.totalNeto2_cl ,lo.totalNeto2) = 0 THEN isNULL(cl.total_cl, lo.total)
+                ELSE isNULL(cl.totalNeto2_cl ,lo.totalNeto2) 
             END), 'C') suma FROM clientes cl 
         INNER JOIN lotes lo ON lo.idCliente = cl.id_cliente
         WHERE isNULL(noRecibo, '') != 'CANCELADO' AND cl.status = 1 AND YEAR(cl.fechaApartado)= $year
