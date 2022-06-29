@@ -3739,6 +3739,22 @@ LEFT JOIN  usuarios di ON di.id_usuario = su.id_lider
         }
     }
 
+    // public function insertHistorialLog($idLote, $idUsuario, $estatus, $comentario, $tabla, $motivo)
+    // {
+    //     return (bool)($this->db->query("INSERT INTO historial_log ".
+    //         "VALUES ($idLote, $idUsuario, GETDATE(), $estatus, '$comentario', '$tabla', '$motivo')"));
+    // }
+    // function updateBanderaDetenida($idLote, $bandera,$statusLote = '')
+    // {
+    //     if($statusLote != '' && $statusLote == 1){
+    //         return (bool)($this->db->query("UPDATE lotes SET registro_comision = $bandera,modificado=".$this->session->userdata('id_usuario')." WHERE idLote = $idLote"));
+    //     }else{
+    //         $this->db->query("UPDATE lotes SET registro_comision = $bandera,modificado=".$this->session->userdata('id_usuario')." WHERE idLote = $idLote");
+    //         $this->db->query("UPDATE historial_log SET estatus = 1 WHERE tabla = 'pago_comision' AND estatus = 1 AND identificador = $idLote");
+    //         return (bool)($this->db->query("UPDATE pago_comision SET bandera = $bandera WHERE id_lote = $idLote"));
+    //     }
+    // }
+
     function ComisionesEnviar($usuario,$recidencial,$opc){
 switch ($opc) {
 case 3:
