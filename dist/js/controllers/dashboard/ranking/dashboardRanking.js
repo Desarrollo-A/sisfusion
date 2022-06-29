@@ -139,7 +139,6 @@ function toggleDatatable(e){
     var columnaActiva = e.closest( '.flexible' );
     var columnaChart = e.closest( '.col-chart' );
     var columnDatatable = $( e ).closest( '.row' ).find( '.col-datatable' );
-    console.log(columnDatatable.attr('id'));
     $( columnDatatable ).html('');
     // La columna se expandera
     if( $(columnaActiva).hasClass('inactivo') ){

@@ -1,10 +1,5 @@
 var dataMetros, dataDisponibilidad, dataLugarProspeccion, dataMedio, metrosChart, disponibilidadChart, lugarChart, medioChart;
 
-$(document).ready(function () {
-    recreatApexChart(false);
-    init();
-});
-
 var optionBarInit = {
     series: [],
     chart: {
@@ -168,7 +163,7 @@ var optionsMedio = {
     dataLabels: {
         enabled: true,
         formatter: function (val) {
-          return ''
+          return '';
         }
       },
     responsive: [{
@@ -219,121 +214,38 @@ var optionsVentasMetros = {
     },
 };
 
-// var optionsDescuentos = {
-//     series: [{
-//         name: 'Inflation',
-//         data: [2.3, 3.1, 4.0, 10.1, 4.0, 3.6, 3.2, 2.3, 1.4, 0.8, 0.5, 0.2]
-//     }],
-//     chart: {
-//         height: '100%',
-//         type: 'bar',
-//         toolbar: {
-//             show: false
-//         },
-//     },
-//     plotOptions: {
-//         bar: {
-//             borderRadius: 10,
-//             dataLabels: {
-//                 position: 'top', // top, center, bottom
-//             },
-//         }
-//     },
-//     dataLabels: {
-//         enabled: true,
-//         formatter: function (val) {
-//             return val + "%";
-//         },
-//         offsetY: -20,
-//         style: {
-//             fontSize: '12px',
-//             colors: ["#304758"]
-//         }
-//     },
+$(document).ready(function () {
+    init();
+});
 
-//     xaxis: {
-//         categories: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
-//         position: 'top',
-//         axisBorder: {
-//             show: false
-//         },
-//         axisTicks: {
-//             show: false
-//         },
-//         crosshairs: {
-//             fill: {
-//                 type: 'gradient',
-//                 gradient: {
-//                     colorFrom: '#D8E3F0',
-//                     colorTo: '#BED1E6',
-//                     stops: [0, 100],
-//                     opacityFrom: 0.4,
-//                     opacityTo: 0.5,
-//                 }
-//             }
-//         },
-//         tooltip: {
-//             enabled: true,
-//         }
-//     },
-//     yaxis: {
-//         axisBorder: {
-//             show: false
-//         },
-//         axisTicks: {
-//             show: false,
-//         },
-//         labels: {
-//             show: false,
-//             formatter: function (val) {
-//                 return val + "%";
-//             }
-//         }
+$('#proyecto').off().on('change', function(){
+    getCondominios($(this).val());
+});
 
-//     },
-// };
-
-var metrosChart = new ApexCharts(document.querySelector("#metrosChart"), optionBarInit);
-metrosChart.render();
-
-var disponibilidadChart = new ApexCharts(document.querySelector("#disponibilidadChart"), optionsDisponibilidad);
-disponibilidadChart.render();
-
-var lugarChart = new ApexCharts(document.querySelector("#lugarChart"), optionLugar);
-lugarChart.render();
-
-var medioChart = new ApexCharts(document.querySelector("#medioChart"), optionsMedio);
-medioChart.render();
-
-var ventasMetrosChart = new ApexCharts(document.querySelector("#ventasMetrosChart"), optionsVentasMetros);
-ventasMetrosChart.render();
-
-// var descuentosChart = new ApexCharts(document.querySelector("#descuentosChart"), optionsDescuentos);
-// descuentosChart.render();
-
-//Jquery
+$('#condominio').off().on('change', function(){
+    getVentasM2($(this).val());
+});
 
 //Funciones
 function init(){
-    getVentasM2();
+    recreatApexChart(false);
+    getProyectos();
     getSuperficieVendida().then( response => {
         dataMetros = response;
-        formatMetrosData( response );
+        formatMetrosData( dataMetros );     
     });
-    getDisponibilidadProyecto().then( response => { 
+    getDisponibilidadProyecto().then( response => {
         dataDisponibilidad = response;
-        formatDisponibilidadData( response );
+        formatDisponibilidadData(dataDisponibilidad);
     });
-    getLugarProspeccion().then( response => { 
+    getLugarProspeccion().then( response => {
         dataLugarProspeccion = response;
-        formatLugarProspeccion( response );
+        formatLugarProspeccion(dataLugarProspeccion);
     });
     getMedioProspeccion().then( response => { 
         dataMedio = response;
-        formatMedioProspeccion(response);
+        formatMedioProspeccion(dataMedio);
     });
-
-    // getDescuentosChart();
 }
 
 function getSuperficieVendida(){
@@ -421,7 +333,7 @@ function getVentasM2(idCond){
 }
 
 function formatMetrosData(data){
-    let series =[] , categories = [];
+    let series =[], categories = [];
     let count = 0;
     data.forEach(element => {
         if (count < 6) {
@@ -440,7 +352,7 @@ function formatMetrosData(data){
         xaxis: {
            categories: categories
         },
-     });
+    });
 }
 
 function formatDisponibilidadData(data){
@@ -494,7 +406,7 @@ function formatLugarProspeccion(data){
         xaxis: {
            categories: categories
         },
-     });
+    });
 }
 
 function formatMedioProspeccion(data){
@@ -502,25 +414,23 @@ function formatMedioProspeccion(data){
     let count = 0;
     data.forEach(element => {
         if (count < 6) {
-            series.push(
-                element.cantidad
-            );
+            series.push( element.cantidad );
             categories.push(`${element.nombre}`);
-
             count++;
         }
     });
+
     medioChart.updateOptions({
         series: series,
         labels: categories
-     });
+    });
 }
 
 function formatVentasM2(data){
     let series =[] , categories = [];
     data.forEach(element => {
-            series.push(element.cantidad);
-            categories.push(`${element.sup} m2`);
+        series.push(element.cantidad);
+        categories.push(`${element.sup} m2`);
     });
     ventasMetrosChart.updateSeries([{
         name: '#',
@@ -531,7 +441,7 @@ function formatVentasM2(data){
         xaxis: {
            categories: categories
         },
-     });
+    });
 }
 
 function toggleDatatable(e){
@@ -569,7 +479,7 @@ function reorderColumns(){
     var inactivos = [], activos = [];
 
     for( var i = 0; i<principalColumns.length; i++){
-        (principalColumns[i].classList.contains('inactivo')) ? inactivos.push(i) : activos.push(i)
+        (principalColumns[i].classList.contains('inactivo')) ? inactivos.push(i) : activos.push(i);
     }
 
     //Array con orden correcto de columnas primero las activas y después inactivas
@@ -583,7 +493,7 @@ function reorderColumns(){
     mainRow.innerHTML = null;
     mainRow.appendChild(elements);
 
-    recreatApexChart(true,opts);
+    recreatApexChart(true);
 
     for( i = 1; i<=principalColumns.length; i++){
         (function(i){
@@ -617,7 +527,6 @@ function reorderColumns(){
 }
 
 function buildEstructuraDT(dataName, dataApartados){
-    console.log(dataMetros);
     var tableHeaders = '';
     var arrayHeaders = Object.keys(dataApartados[0]);
     for( i=0; i<arrayHeaders.length; i++ ){
@@ -637,18 +546,11 @@ function buildEstructuraDT(dataName, dataApartados){
     $("#"+dataName).html(estructura);
 }
 
-// String.prototype.rtrim = function () {
-//     return this.replace(/((\s*\S+)*)\s*/, "$1");
-// }
-
-
-
 function getCondominios(idProyecto){
     $("#condominio").empty();
-    $("#condominio").selectpicker('refresh');
     $.ajax({
         url: "Metricas/getCondominios",
-        data:{proyecto: idProyecto}, 
+        data:{proyecto: idProyecto},
         type: 'POST',
         dataType: 'json',
         beforeSend: function () {
@@ -666,7 +568,6 @@ function getCondominios(idProyecto){
 
 function getProyectos(){
     $("#proyecto").empty();
-    $("#proyecto").selectpicker('refresh');
     $.ajax({
         url: "Metricas/getProyectos",
         cache: false,
@@ -679,12 +580,13 @@ function getProyectos(){
         },
         success: function (response) {
             response.forEach(element => {
-                console.log(element)
                 $("#proyecto").append($(`<option data-name='${element.nombreResidencial}'>`).val(element.idResidencial).text(element.descripcion));
             });
+            $("#proyecto").selectpicker('refresh');
             $('#spiner-loader').addClass('hide');
         }
     });
+}
 
 function buildTableMetros(data){
     $('#tablemetros thead tr:eq(0) th').each(function (i) {
@@ -869,61 +771,67 @@ function buildTableMedio(data){
 }
 
 function getCacheOptions(){
-    let obj = 
-       {
-            seriesMetros: metrosChart.w.config.series,
-            categoriesMetros: metrosChart.w.config.xaxis.categories,
-           
-            seriesDisponibilidad: disponibilidadChart.w.config.series,
-            categoriesDisponibilidad: disponibilidadChart.w.config.xaxis.categories,
-          
-            seriesLugar: lugarChart.w.config.series,
-            categoriesLugar: lugarChart.w.config.xaxis.categories,
-           
-            seriesMedio: medioChart.w.config.series,
-            categoriesMedio: medioChart.w.config.xaxis.categories,
-          
+    let obj = {
+        seriesMetros: metrosChart.w.config.series,
+        categoriesMetros: metrosChart.w.config.xaxis.categories,
+        
+        seriesDisponibilidad: disponibilidadChart.w.config.series,
+        categoriesDisponibilidad: disponibilidadChart.w.config.xaxis.categories,
+        
+        seriesLugar: lugarChart.w.config.series,
+        categoriesLugar: lugarChart.w.config.xaxis.categories,
+        
+        seriesMedio: medioChart.w.config.series,
+        categoriesMedio: medioChart.w.config.xaxis.categories,
     }
     return obj;
 }
 
-function recreatApexChart(estado, opts){
-    console.log(opts);
+function recreatApexChart(estado){
     if(estado){
         $(".boxChart").html('');
         buildChartsID();
       
-    //     chartApartados = new ApexCharts(document.querySelector('#chart'), setOptionsChart(opts.seriesA[0], opts.categoriesA));
-    //     chartApartados.render();
-        
-    //     chartContratados = new ApexCharts(document.querySelector('#chart2'), setOptionsChart(opts.seriesC[0], opts.categoriesC));
-    //     chartContratados.render();
-        
-    //     chartEnganche = new ApexCharts(document.querySelector('#chart3'), setOptionsChart(opts.seriesE[0], opts.categoriesE));
-    //     chartEnganche.render();
-        
-    //     chartSinenganche = new ApexCharts(document.querySelector('#chart4'), setOptionsChart(opts.seriesS[0], opts.categoriesS));
-    //     chartSinenganche.render();
+        metrosChart = new ApexCharts(document.querySelector("#metrosChart"), optionBarInit);
+        metrosChart.render();
+        formatMetrosData( dataMetros );     
+    
+        disponibilidadChart = new ApexCharts(document.querySelector("#disponibilidadChart"), optionsDisponibilidad);
+        disponibilidadChart.render();
+        formatDisponibilidadData(dataDisponibilidad);
+
+        lugarChart = new ApexCharts(document.querySelector("#lugarChart"), optionLugar);
+        lugarChart.render();
+        formatLugarProspeccion(dataLugarProspeccion);
+
+        medioChart = new ApexCharts(document.querySelector("#medioChart"), optionsMedio);
+        medioChart.render();
+        formatMedioProspeccion(dataMedio);
     }
-    //else{
-    //     chartApartados = new ApexCharts(document.querySelector('#chart'), options);
-    //     chartApartados.render();
-    //     chartContratados = new ApexCharts(document.querySelector('#chart2'), options);
-    //     chartContratados.render();
-    //     chartEnganche = new ApexCharts(document.querySelector('#chart3'), options);
-    //     chartEnganche.render();
-    //     chartSinenganche = new ApexCharts(document.querySelector('#chart4'), options);
-    //     chartSinenganche.render();
-    // }
-  
+    else{
+        metrosChart = new ApexCharts(document.querySelector("#metrosChart"), optionBarInit);
+        metrosChart.render();        
+        
+        disponibilidadChart = new ApexCharts(document.querySelector("#disponibilidadChart"), optionsDisponibilidad);
+        disponibilidadChart.render();
+
+        lugarChart = new ApexCharts(document.querySelector("#lugarChart"), optionLugar);
+        lugarChart.render();
+
+        medioChart = new ApexCharts(document.querySelector("#medioChart"), optionsMedio);
+        medioChart.render();
+
+        ventasMetrosChart = new ApexCharts(document.querySelector("#ventasMetrosChart"), optionsVentasMetros);
+        ventasMetrosChart.render();
+    }
 }
 
 function buildChartsID(){
     var boxCharts = document.getElementsByClassName("boxChart");
-    console.log(boxCharts);
-    // for ( var i = 0; i<boxCharts.length; i++ ){
-    //     var id = boxCharts[i].id;
-    //     var html = `<div id="chart`+(id.replace(/\D/g, ""))+`" class="chart"></div>`;
-    //     $('#'+id).append(html);
-    // }
+    for ( var i = 0; i<boxCharts.length; i++ ){
+        var id = boxCharts[i].id;
+        let type = boxCharts[i].getAttribute('data-value');
+        let  html = `<div id="`+type+`Chart"></div>`;
+        $('#'+id).append(html);
+    }
 }
