@@ -251,7 +251,7 @@
                                                         <?php $query = $this->db->query("SELECT SUM(monto) nuevo_general FROM (SELECT SUM(pci.abono_neodata) monto FROM pago_comision_ind pci INNER JOIN comisiones c on c.id_comision = pci.id_comision INNER JOIN usuarios u ON u.id_usuario = pci.creado_por AND u.id_rol IN (32,13,17) WHERE MONTH(GETDATE()) = MONTH(pci.fecha_abono) AND year(GetDate()) = year(pci.fecha_abono) AND Day(GetDate()) = Day(pci.fecha_abono) AND pci.estatus NOT IN (0) GROUP BY u.id_usuario) as nuevo_general ;");
 
                                                         foreach ($query->result() as $row){
-                                                            $number = $row->nuevo_general;
+                                                            $number = ($row->nuevo_general) ? $row->nuevo_general : 0;
                                                             echo '<B>$'.number_format($number, 3),'</B>';
                                                         } ?>
                                                     </p>
