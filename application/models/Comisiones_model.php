@@ -2951,7 +2951,7 @@ public function validateDispersionCommissions($idlote){
 
  
 
-     function getDatosNuevasAContraloria($proyecto,$condominio){
+        function getDatosNuevasAContraloria($proyecto,$condominio){
 
       if( $this->session->userdata('id_rol') == 31 ){
 
@@ -3063,7 +3063,7 @@ public function validateDispersionCommissions($idlote){
 
 
 
-     function getDatosNuevasRContraloria($proyecto,$condominio){
+    function getDatosNuevasRContraloria($proyecto,$condominio){
 
       if( $this->session->userdata('id_rol') == 31 ){
 
@@ -4045,7 +4045,6 @@ function getDatosEnviadasmkContraloria(){
 
 
 function getDatosEnviadasADirectorMK($filtro){
-
     ini_set('max_execution_time', 300);
     set_time_limit(300);
 
@@ -7092,7 +7091,9 @@ return 1;
 
 
 
-     function getDatosGralInternomex(){
+    
+
+   function getDatosGralInternomex(){
 
        
     return $this->db->query("(SELECT pci1.id_pago_i, re.nombreResidencial as proyecto, co.nombre as condominio, lo.nombreLote as lote, lo.referencia, lo.totalNeto2 precio_lote, re.empresa, /*com.comision_total, pci1.pago_neodata, */pci1.abono_neodata pago_cliente, 
@@ -7136,7 +7137,6 @@ return 1;
                  GROUP BY pci1.id_comision, pci1.id_pago_i, re.nombreResidencial, co.nombre, lo.nombreLote, lo.referencia, lo.totalNeto2, re.empresa, /* com.comision_total, pci1.pago_neodata,*/ pci1.abono_neodata, sed.impuesto, u.nombre, u.apellido_paterno, u.apellido_materno, oprol.nombre, pci1.fecha_pago_intmex, oxcfp.nombre, u.forma_pago, sed.nombre, u.estatus, u.rfc )");
 }
     // sed.impuesto
-
 
 
 
