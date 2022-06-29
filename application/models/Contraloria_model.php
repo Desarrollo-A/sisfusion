@@ -103,7 +103,7 @@ class Contraloria_model extends CI_Model {
         concat(coordinador.nombre,' ', coordinador.apellido_paterno, ' ', coordinador.apellido_materno),
         concat(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno),
 		cond.idCondominio;");
-		return $query->result();
+		return $query->result_array();
 
 	}
 
@@ -1011,7 +1011,7 @@ class Contraloria_model extends CI_Model {
 		{
 			$query = $this->db-> query("SELECT l.* FROM lotes l 
 			INNER JOIN clientes c ON c.id_cliente = l.idCliente
-			INNER JOIN usuarios u ON u.id_usuario = c.id_asesor AND u.estatus IN (0,3)
+			INNER JOIN usuarios u ON u.id_usuario = c.id_asesor AND u.estatus IN (0,1,3)
 			WHERE l.status = 1 AND (l.idStatusContratacion = 1 OR l.idMovimiento = 82) AND c.status = 1 AND c.id_gerente = ". $this->session->userdata('id_lider') ." AND l.idCondominio = $idCondominio
 			UNION ALL
             SELECT l.* FROM lotes l 

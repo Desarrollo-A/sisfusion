@@ -73,9 +73,9 @@ class PaquetesCorrida extends CI_Controller
          * 3.-Cualquiera
          */
         if($superficie == 1){ //Mayor a
-          $query_superdicie = 'and sup >= 200 ';
+          $query_superdicie = 'and sup >= '.$fin.' ';
         }else if($superficie == 2){ // Rango
-          $query_superdicie = 'and (sup >= 100 and sup <= 199) ';
+          $query_superdicie = 'and (sup >= '.$inicio.' and sup <= '.$fin.') ';
 
         }else if($superficie == 3){ // Cualquiera
           $query_superdicie = '';
@@ -102,12 +102,14 @@ class PaquetesCorrida extends CI_Controller
         date_default_timezone_set('America/Mexico_City');
         $hoy = date('Y-m-d');
         $hoy2 = date('Y-m-d H:i:s');
+        $desarrollos = implode(",",$residenciales);
+
         for ($i=1; $i <= $index ; $i++){ 
             //VALIDAR SI EXISTE PAQUETE EN EL FORM
             if(isset($_POST["descripcion_".$i])){
               $descripcion_paquete = $_POST["descripcion_".$i];
               $indice = $i.'.-';
-              $query_paquete = $this->db->query("INSERT INTO paquetes(descripcion,id_descuento,fecha_inicio,fecha_fin,estatus,sede) VALUES('$indice $descripcion_paquete',0,'$Fechainicio','$Fechafin',1,'".$datos_sede[1]."') ");
+              $query_paquete = $this->db->query("INSERT INTO paquetes(descripcion,id_descuento,fecha_inicio,fecha_fin,estatus,sede,desarrollos,tipo_lote,super1,super2) VALUES('$indice $descripcion_paquete',0,'$Fechainicio','$Fechafin',1,'".$datos_sede[1]."','$desarrollos',$TipoLote,$inicio,$fin) ");
               $id_paquete = $this->db->insert_id();
               array_push($ArrPAquetes,$id_paquete);
                // echo $_POST["descripcion_".$i];
@@ -226,6 +228,27 @@ class PaquetesCorrida extends CI_Controller
                     }
                    // echo "<br>";
                   }
+                  if(isset($_POST[$i."_4_ListaDescuentosMSI_"])){
+                    //print_r($_POST[$i."_3_ListaDescuentosBono_"]);
+                    $descuentos = $_POST[$i."_4_ListaDescuentosMSI_"];
+                    for ($j=0; $j < count($descuentos) ; $j++) { 
+                      $meses_s_i=0;
+                      
+                      $data_descuento=array(
+                        'id_paquete' => $id_paquete,
+                        'id_descuento' =>  $descuentos[$j],
+                        'prioridad' => $j +1,
+                        'msi_descuento' => $meses_s_i,
+                        'fecha_creacion' =>  $hoy2,
+                        'creado_por' => $this->session->userdata('id_usuario'),
+                        'fecha_modificacion' =>  $hoy2,
+                        'modificado_por' => $this->session->userdata('id_usuario'),
+                      );
+                       array_push($datosInsertar,$data_descuento);
+                     // echo $descuentos[$j];
+                    }
+                   // echo "<br>";
+                  }
                 //2.- DESCUENTO AL ENGANCHE
                 //3.- DESCUENTO POR M2
                 //4.- DESCUENTO POR BONO
@@ -233,12 +256,28 @@ class PaquetesCorrida extends CI_Controller
         }
         $ins_b = $this->PaquetesCorrida_model->insertBatch('relaciones',$datosInsertar);
         $cadena_lotes = implode(",", $ArrPAquetes);
-        $desarrollos = implode(",",$residenciales);
        /* echo $cadena_lotes;
         echo "<br>";
         print_r($ArrPAquetes);
         print_r($datosInsertar);*/
+        $datosInsertar_x_condominio = array();
+        //$getPaquetesByLotes = $this->PaquetesCorrida_model->getPaquetesByLotes($desarrollos,$cadena_lotes,$query_superdicie,$query_tipo_lote)->result_array();
+       /* $array_x_condominio =array(
+          'id_condominio' => ,
+          'id_paquete' =>  '',
+          'nombre' => '',
+          'fecha_inicio' => ,
+          'fecha_fin' =>  ,
+          'estatus' => ,
+          'fecha_creacion' =>  $hoy2,
+          'creado_por' => $this->session->userdata('id_usuario'),
+          'fecha_modificacion' =>  $hoy2,
+          'modificado_por' => $this->session->userdata('id_usuario'),
+        );
+        array_push($datosInsertar_x_condominio,$data_descuento);*/
 
+
+        
          $this->PaquetesCorrida_model->UpdateLotes($desarrollos,$cadena_lotes,$query_superdicie,$query_tipo_lote,$this->session->userdata('id_usuario'));
 
       
@@ -265,6 +304,28 @@ class PaquetesCorrida extends CI_Controller
 	$apply=$this->input->post("apply");
       echo json_encode($this->PaquetesCorrida_model->getDescuentosPorTotal($tdescuento,$id_condicion,$eng_top,$apply)->result_array());
     }
+    public function getDescuentos($tdescuento,$id_condicion,$eng_top,$apply)
+    {
+      echo json_encode(array( "data" => $this->PaquetesCorrida_model->getDescuentos($tdescuento,$id_condicion,$eng_top,$apply)->result_array()));
+    }
+    public function SaveNewDescuento(){
+          $tdescuento=$this->input->post("tdescuento");
+          $id_condicion=$this->input->post("id_condicion");
+          $eng_top=$this->input->post("eng_top");
+          $apply=$this->input->post("apply");
+          $descuento=$this->input->post("descuento"); 
+          if($this->input->post("tipo_d") == 4 || $this->input->post("tipo_d") == 12){
+             $replace = ["$", ","];
+            $descuento = str_replace($replace,"",$descuento);
+           }
+          $row = $this->PaquetesCorrida_model->ValidarDescuento($tdescuento,$id_condicion,$eng_top,$apply,$descuento)->result_array();
+          if(count($row) > 0){
+            echo json_encode(2);
+          }else{
+            echo json_encode($response = $this->PaquetesCorrida_model->SaveNewDescuento($tdescuento,$id_condicion,$eng_top,$apply,$descuento));
+          }
+    }
+
 
 }
 

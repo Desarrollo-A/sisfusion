@@ -60,6 +60,11 @@ class Asesor_model extends CI_Model
 /*----------------------------------CONSULTAS PARA OBTENER EL MENU------------------------*/
 	function getMenu($rol)
 	{
+        $idUsuario = $this->session->userdata('id_usuario');
+        if ($this->existeUsuarioMenuEspecial($idUsuario)) {
+            return $this->getMenuPadreEspecial($idUsuario);
+        }
+
 		if ($this->session->userdata('id_usuario') == 4415 || $this->session->userdata('id_usuario') == 6578 || $this->session->userdata('id_usuario') == 9942 || $this->session->userdata('id_usuario') == 9911 || $this->session->userdata('estatus') == 3)  { // ES GREENHAM , COREANO, BADABUM, CONTACT CENTER
            $complemento='';
            if($this->session->userdata('id_usuario') == 6578 || $this->session->userdata('id_usuario') == 9942 || $this->session->userdata('id_usuario') == 9911){
@@ -93,6 +98,11 @@ class Asesor_model extends CI_Model
 
     function getMenuHijos($rol)
     {
+        $idUsuario = $this->session->userdata('id_usuario');
+        if ($this->existeUsuarioMenuEspecial($idUsuario)) {
+            return $this->getMenuHijoEspecial($idUsuario);
+        }
+        
         $complemento="";
         if($this->session->userdata('id_usuario') == 6578 || $this->session->userdata('id_usuario') == 9942 || $this->session->userdata('id_usuario') == 9911){
             $complemento = " AND idmenu in(296,307,308,879)";
@@ -113,6 +123,27 @@ class Asesor_model extends CI_Model
     {
 
         return $this->db->query("SELECT padre FROM Menu2 WHERE pagina='" . $var . "' AND rol=" . $rol . " ");
+    }
+
+    public function existeUsuarioMenuEspecial($idUsuario)
+    {
+        $query = $this->db->query("SELECT id_menu_u FROM menu_usuario WHERE id_usuario = $idUsuario");
+        $result = $query->result_array();
+        return count($result) > 0;
+    }
+
+    public function getMenuPadreEspecial($idUsuario)
+    {
+        return $this->db->query("SELECT * FROM Menu2 WHERE idmenu IN 
+            (SELECT value FROM menu_usuario CROSS APPLY STRING_SPLIT(menu, ',') 
+                    WHERE id_usuario = $idUsuario AND es_padre = 1)");
+    }
+
+    public function getMenuHijoEspecial($idUsuario)
+    {
+        return $this->db->query("SELECT * FROM Menu2 WHERE idmenu IN 
+            (SELECT value FROM menu_usuario CROSS APPLY STRING_SPLIT(menu, ',') 
+                    WHERE id_usuario = $idUsuario AND es_padre = 0)");
     }
 
     /*---------------------------------------FIN MENU-------------------------------------*/
