@@ -372,7 +372,7 @@ function getProspectsByYear(com2) {
             response.forEach(element => {
                 months.push(element.MONTH);
                 data.push(element.counts);
-                count = count + element.counts;
+                count = count + parseInt(element.counts);
             });
             prospectosChart.updateSeries([{
                 name: 'Prospectos',
@@ -418,13 +418,13 @@ function getClientsAndProspectsByYear(type = 1, beginDate = null, endDate= null)
             let countP = 0;
 
             response.Clientes.forEach(element => {
-                monthsP.push(element.MONTH);
+                monthsP.push(`${element.MONTH} ${element.año}`);
                 dataC.push(element.counts);
                 countC = countC + element.counts;
             });
 
             response.Prospectos.forEach(element => {
-                monthsC.push(element.MONTH);
+                monthsC.push(`${element.MONTH} ${element.año}`);
                 dataP.push(element.counts);
                 countP = countP + element.counts;
             });
@@ -532,7 +532,7 @@ function cicloVenta(com2){
         success : function (response) {
             chartFunnel.updateSeries([
                response.totalProspectosCita, response.totalProspectosCitaSeguimiento, 
-                    response.totalApartados, response.totalMitadProceso,response.prospectosNoInteresados
+                    response.totalApartados, response.prospectosNoInteresados
             ]);
 
             addTextFields2(response);

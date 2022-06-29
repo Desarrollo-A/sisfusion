@@ -96,7 +96,7 @@ $(document).ready(function(){
 $('[data-toggle="tooltip"]').tooltip();
 
 async function init(){
-    getLastSales(beginDate, endDate);
+    getLastSales(null, null);
     let rol = userType == 2 ? await getRolDR(idUser): userType;
     fillBoxAccordions(rol == '1' ? 'director_regional': rol == '2' ? 'gerente' : rol == '3' ? 'coordinador' : rol == '59' ? 'subdirector':'asesor', rol, idUser, 1, 1);
 }
@@ -491,21 +491,26 @@ function getSpecificChart(type, beginDate, endDate){
             $('#spiner-loader').addClass('hide');
             var orderedArray = orderedDataChart(data);
             let { categories, series } = orderedArray[0];
-            total = series[0].data.reduce((a, b) => parseFloat(a) + parseFloat(b), 0);
+            console.log('series',series);
+            let total = 0;
+            series.forEach(element => {
+                total = total + element.data.reduce((a, b) => parseFloat(a) + parseFloat(b), 0);
+            });
+            console.log(total);
             $("#modalChart .boxModalTitle .total").append('<p>$'+formatMoney(total)+'</p>');
             
             if ( total != 0 ){
                 $("#boxModalChart").removeClass('d-flex justify-center');
                 // var miniChart = new ApexCharts(document.querySelector("#boxModalChart"), setOptionsChart(series, categories, miniChart));
                 chart.updateOptions(setOptionsChart(series, categories, miniChart));
-                chart.render();
             }
             else{
                 $("#boxModalChart").addClass('d-flex justify-center');
                 $("#boxModalChart").append('<img src="./dist/img/emptyChart.png" alt="Icono gráfica" class="h-70 w-auto">');
                 chart.updateOptions(setOptionsChart([], [], miniChart));
-                chart.render();
             }
+            // chart.render();
+
         },
         error: function() {
             $('#spiner-loader').addClass('hide');
@@ -554,11 +559,12 @@ function getLastSales(beginDate, endDate){
     });
 }
 
-$(document).on("click", "#searchByDateRangeCP", function () {
+$(document).on("click", "#searchByDateRange", function () {
     var beginDate = $("#modalChart #beginDate").val();
     var endDate = $("#modalChart #endDate").val();
     var type = $("#modalChart #type").val();
     $("#modalChart .boxModalTitle .total").html('');
+    console.log('trigger');
     getSpecificChart(type, formatDate(beginDate), formatDate(endDate));
 });
 
@@ -887,5 +893,5 @@ function generalChart(data){
         }
     ];
     chart.updateOptions(setOptionsChart(series, x, 0, 1));
-    chart.render();
+    // chart.render();
 }
