@@ -19197,4 +19197,38 @@ tr td:hover { background: #666; color: #FFF; }
 		}
 	}
 
+	public function reporteRechazos()
+	{
+		 /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/           
+         $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
+        /*-------------------------------------------------------------------------------*/
+		$this->load->view('template/header');
+		$this->load->view('administracion/vista_rechazos',$datos);
+	}
+
+	public function getReporteRechazos(){
+		$data = $this->registrolote_modelo->getReporteRechazos();
+	  	$dataPer= array();
+	  	for($i=0;$i< count($data);$i++)
+	 	{
+			$dataPer[$i]['nombreResidencial']=$data[$i]->nombreResidencial;
+			$dataPer[$i]['nombreCondominio']=$data[$i]->nombreCondominio;
+			$dataPer[$i]['nombreLote']=$data[$i]->nombreLote;
+			$dataPer[$i]['idLote']=$data[$i]->idLote;
+			$dataPer[$i]['nombreCliente']=$data[$i]->nombreCliente;
+			$dataPer[$i]['fechaApartado']=$data[$i]->fechaApartado;
+			$dataPer[$i]['estatusActual']=$data[$i]->estatusActual;
+			$dataPer[$i]['estatusLote']=$data[$i]->estatusLote; 
+			$dataPer[$i]['usuario']=$data[$i]->usuario;
+			$dataPer[$i]['fechaRechazo']=$data[$i]->fechaRechazo;
+			$dataPer[$i]['motivoRechazo'] = $data[$i]->motivoRechazo;
+			$dataPer[$i]['movimiento'] = $data[$i]->movimiento;
+		}
+		if($dataPer != null) {
+			echo json_encode($dataPer);
+		} else {
+			echo json_encode(array());
+		}
+	}
+
 }//clase

@@ -779,7 +779,7 @@ class Contraloria_model extends CI_Model {
 											cl.status, nombreLote, lotes.comentario, lotes.idMovimiento, lotes.fechaVenc, lotes.modificado
 										FROM deposito_seriedad AS ds
 											INNER JOIN clientes AS cl ON ds.id_cliente = cl.id_cliente
-											INNER JOIN lotes AS lotes ON lotes.idLote=cl.idLote AND lotes.idCliente = cl.idCliente AND cl.status = 1
+											INNER JOIN lotes AS lotes ON lotes.idLote=cl.idLote AND lotes.idCliente = cl.id_cliente AND cl.status = 1
 											LEFT JOIN condominios AS cond ON lotes.idCondominio=cond.idCondominio
 											LEFT JOIN residenciales AS residencial ON cond.idResidencial=residencial.idResidencial
 										WHERE
@@ -1011,7 +1011,7 @@ class Contraloria_model extends CI_Model {
 		{
 			$query = $this->db-> query("SELECT l.* FROM lotes l 
 			INNER JOIN clientes c ON c.id_cliente = l.idCliente
-			INNER JOIN usuarios u ON u.id_usuario = c.id_asesor AND u.estatus IN (0,3)
+			INNER JOIN usuarios u ON u.id_usuario = c.id_asesor AND u.estatus IN (0,1,3)
 			WHERE l.status = 1 AND (l.idStatusContratacion = 1 OR l.idMovimiento = 82) AND c.status = 1 AND c.id_gerente = ". $this->session->userdata('id_lider') ." AND l.idCondominio = $idCondominio
 			UNION ALL
             SELECT l.* FROM lotes l 
