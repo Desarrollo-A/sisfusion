@@ -83,6 +83,7 @@ $(document).on("click", "#condominios", function (e) { // MJ: SE OBTIENE EL CHAN
 });
 
 function getLotes(idCondominio) {
+    $('#spiner-loader').removeClass('hide');
     $("#lotes").empty().selectpicker('refresh');
     $.ajax({
         url: url + 'General/getLotesList',
@@ -93,6 +94,7 @@ function getLotes(idCondominio) {
             "typeTransaction": typeTransaction
         },
         success: function (response) {
+            $('#spiner-loader').addClass('hide');
             var len = response.length;
             for (var i = 0; i < len; i++) {
                 $("#lotes").append($('<option>').val(response[i]['idLote']).text(response[i]['nombreLote']));
