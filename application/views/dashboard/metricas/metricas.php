@@ -19,16 +19,6 @@
                                     <!-- <label class="control-label">condominio</label> -->
                                     <select class="selectpicker select-gral m-0 condominio" id="condominio" name="condominio" data-style="btn" data-show-subtext="true" data-live-search="true" title="Seleccione un proyecto" data-size="7" data-container="body" required style="height:100%!important"></select>
                                 </div>
-                                <!-- <div class="col-12 col-sm-8 col-md-8 col-lg-8 d-flex"> -->
-                                    <!-- <div class="form-group label-floating select-is-empty overflow-hidden">
-                                        <label class="control-label">proyecto</label>
-                                        <select id="proyecto" name="proyecto" class="form-control proyecto col-sm-12 col-md-6 col-lg-6"></select>
-                                    </div> -->
-                                    <!-- <div class="form-group label-floating select-is-empty">
-                                        <label class="control-label">condominio</label>
-                                        <select id="condominio" name="condominio" class="form-control condominio col-sm-12 col-md-6 col-lg-6"></select>
-                                    </div> -->
-                                <!-- </div> -->
                             </div>
                         </div>
                         <div class="col-12 col-sm-12 col-md-12 col-lg-12 h-90">
