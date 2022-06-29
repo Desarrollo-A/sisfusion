@@ -685,6 +685,7 @@ function getProyectos(){
             $('#spiner-loader').addClass('hide');
         }
     });
+}
 
 function buildTableMetros(data){
     $('#tablemetros thead tr:eq(0) th').each(function (i) {

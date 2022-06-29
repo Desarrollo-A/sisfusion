@@ -64,7 +64,7 @@
                                     <div class="col-md-12 h-30 pl-2 pt-2 pr-2 d-flex justify-between align-center">
                                         <div class="d-flex align-center">
                                             <span class="boxIcoProsp"><i class="fas fa-user"></i></span>
-                                            <span id="numberGraphic" class="numberGraphic">334
+                                            <span id="numberGraphic" class="numberGraphic">
                                             </span>
                                         </div>
                                         <p class="m-0">prospectos anuales <span class="">vigentes</span></p>
