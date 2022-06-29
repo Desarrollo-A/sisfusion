@@ -242,7 +242,6 @@
 
   function validateNCreate(appointment, medio, box){
     box.empty();
-    console.log(appointment);
     if(medio == 2 || medio == 5){
       box.append(`<label class="m-0">Dirección del ${medio == 5 ? 'evento':'recorrido'}</label><input id="direccion" name="direccion" type="text" class="form-control input-gral" value='${((appointment !=  '' && (medio == 2 || medio == 5 )) ? ((appointment.id_direccion == ''|| appointment.id_direccion == null) ? appointment.direccion : '' ) : '' )}' required>`);
     }

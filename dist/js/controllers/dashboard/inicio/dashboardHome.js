@@ -305,7 +305,6 @@ $('.infoMainSelector').unbind().on('click', function(e){
         return false;
     }
     loadInit();
-    console.log('click');
 });
 
 function loadInit(){
