@@ -245,7 +245,7 @@
                                     <tr>
                                         <th>ID Evento</th>
                                         <th>Nombre</th>
-                                        <th class="text-center">Estatus&nbsp;&nbsp;&nbsp;<i class="fas fa-info-circle" data-html="true" data-toggle="tooltip" data-placement="bottom" title="Positivo.<br/>Se identifica como estatus positivo a la cita, llamada o recorrido con un cliente el cual sigue interesado y está un paso más cerca del cliente.<br/><br/>Negativo.<br/> Se identifica como estatus negativo a la cita, llama o recorrido con un prospecto con un prospecto el cual NO sigue sigue interesaso y no desea seguimiento para concretar su compra."></i></th>
+                                        <th class="text-center">Estatus&nbsp;&nbsp;&nbsp;<i class="fas fa-info-circle" data-html="true" data-toggle="tooltip" data-placement="bottom" title="Positivo.<br/>Se identifica como estatus positivo a: la cita, llamada o recorrido con un prospecto, el cual sigue interesado y se encuentra más cerca del cierre de la venta.<br/><br/>Negativo.<br/>Se identifica como estatus negativo a: la cita, llamada o recorrido con un prospecto, el cual NO sigue interesado y No desea seguimiento para concretar la compra."></i></th>
                                         <th class="text-center">Comentarios</th>
                                         <th class="text-center">Fecha de cita</th>
                                     </tr>
