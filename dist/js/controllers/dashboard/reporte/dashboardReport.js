@@ -96,15 +96,13 @@ $(document).ready(function(){
 $('[data-toggle="tooltip"]').tooltip();
 
 async function init(){
-    getLastSales(beginDate, endDate);
+    getLastSales(null, null);
     let rol = userType == 2 ? await getRolDR(idUser): userType;
-    console.log('rol',rol);
     fillBoxAccordions(rol == '1' ? 'director_regional': rol == '2' ? 'gerente' : rol == '3' ? 'coordinador' : rol == '59' ? 'subdirector':'asesor', rol, idUser, 1, 1);
 }
 
 function createAccordions(option, render, rol){
     let tittle = getTitle(option);
-    console.log(tittle);
     let html = '';
     html = `<div data-rol="${rol}" class="bk ${render == 1 ? 'parentTable': 'childTable'}">
                 <div class="d-flex justify-between align-center">   
@@ -142,7 +140,6 @@ function createAccordions(option, render, rol){
 }
 
 function fillBoxAccordions(option, rol, id_usuario, render, transaction, dates=null){
-    console.log('render', render);
     createAccordions(option, render, rol);
     $(".js-accordion-title").addClass('open');
     $(".accordion-content").css("display", "block");
@@ -295,11 +292,11 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, dates=n
 $(document).on('click', '.update-dataTable', function () {
     const type = $(this).attr("data-type");
     const render = $(this).data("render");
-    const transaction = $(this).data("transaction");
+    const transaction = $(this).data("transaction");3
+    let closestChild = $(this).closest('.childTable');
+    console.log( closestChild.nextAll());
+    closestChild.nextAll().remove();
 
-    if(render == 1){
-        $('.childTable').remove();
-    }
     let dates = transaction == 2 ?  {begin: $('#tableBegin').val(), end: $('#tableEnd').val()}:null;
 
 
@@ -458,7 +455,6 @@ $(document).on('click', '.chartButton', function () {
     let option = $('#chartButton').data('option');
     let table = $(`#table${option}`);
     var tableData = table.DataTable().rows().data().toArray();
-    console.log(tableData);
     generalChart(tableData);
 });
 
@@ -495,21 +491,27 @@ function getSpecificChart(type, beginDate, endDate){
             $('#spiner-loader').addClass('hide');
             var orderedArray = orderedDataChart(data);
             let { categories, series } = orderedArray[0];
-            total = series[0].data.reduce((a, b) => parseFloat(a) + parseFloat(b), 0);
+            console.log('series',series);
+            let total = 0;
+            series.forEach(element => {
+                total = total + element.data.reduce((a, b) => parseFloat(a) + parseFloat(b), 0);
+            });
+            console.log(total);
+            $("#modalChart .boxModalTitle .total").html('');
             $("#modalChart .boxModalTitle .total").append('<p>$'+formatMoney(total)+'</p>');
             
             if ( total != 0 ){
                 $("#boxModalChart").removeClass('d-flex justify-center');
                 // var miniChart = new ApexCharts(document.querySelector("#boxModalChart"), setOptionsChart(series, categories, miniChart));
                 chart.updateOptions(setOptionsChart(series, categories, miniChart));
-                chart.render();
             }
             else{
                 $("#boxModalChart").addClass('d-flex justify-center');
                 $("#boxModalChart").append('<img src="./dist/img/emptyChart.png" alt="Icono gráfica" class="h-70 w-auto">');
                 chart.updateOptions(setOptionsChart([], [], miniChart));
-                chart.render();
             }
+            // chart.render();
+
         },
         error: function() {
             $('#spiner-loader').addClass('hide');
@@ -519,7 +521,6 @@ function getSpecificChart(type, beginDate, endDate){
 }
 
 function getLastSales(beginDate, endDate){
-    console.log(chart);
     $.ajax({
         type: "POST",
         url: "Reporte/getDataChart",
@@ -530,7 +531,6 @@ function getLastSales(beginDate, endDate){
           $('#spiner-loader').removeClass('hide');
         },
         success: function(data){
-            console.log('minichart', data);
             let miniChart = 1, total = 0;
             $('#spiner-loader').addClass('hide');
             let orderedArray = orderedDataChart(data);
@@ -560,11 +560,12 @@ function getLastSales(beginDate, endDate){
     });
 }
 
-$(document).on("click", "#searchByDateRangeCP", function () {
+$(document).on("click", "#searchByDateRange", function () {
     var beginDate = $("#modalChart #beginDate").val();
     var endDate = $("#modalChart #endDate").val();
     var type = $("#modalChart #type").val();
     $("#modalChart .boxModalTitle .total").html('');
+    console.log('trigger');
     getSpecificChart(type, formatDate(beginDate), formatDate(endDate));
 });
 
@@ -702,7 +703,6 @@ function getTitle(option){
 };
 
 function accordionToRemove(rol){
-    console.log($(".boxAccordions").find(`[data-rol='${rol}']`));
     $(".boxAccordions").find(`[data-rol='${rol}']`).remove();
     switch (rol) {
         case 7://asesor
@@ -765,11 +765,9 @@ function accordionToRemove(rol){
 }
 
 function initDetailRow(dataObj){
-    console.log('dataObj', dataObj);
     var detailRows = [];
     var tr = $(`#details-${dataObj.user}`).closest('tr');
     var table = $(`#details-${dataObj.user}`).closest('table');
-    console.log('table',table);
     var row = $(`#table${dataObj.option}`).DataTable().row(tr);
     var idx = $.inArray(tr.attr('id'), detailRows);
     if (row.child.isShown()) {
@@ -895,8 +893,6 @@ function generalChart(data){
             data: contratadosC
         }
     ];
-    // console.log(document.querySelector("#boxModalChart .apexcharts-canvas"));
-    // var gChart = new ApexCharts(document.querySelector("#boxModalChart"), setOptionsChart(series, x, 0, 1));
     chart.updateOptions(setOptionsChart(series, x, 0, 1));
-    chart.render();
+    // chart.render();
 }

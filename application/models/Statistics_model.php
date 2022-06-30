@@ -2235,37 +2235,29 @@ class Statistics_model extends CI_Model {
     public function getDataAsesorGraficaTabla($anio, $mes)
     {
         $monthSelectClause = '';
-        $monthAbonoWhereClause = '';
         $monthCreacionWhereClause = '';
         $monthGroupByClause = '';
 
         if (trim($mes) !== '' && $mes != 0) {
             $monthSelectClause = ', MONTH(pci.fecha_abono) mes';
-            $monthAbonoWhereClause = "AND MONTH(pci.fecha_abono) = $mes";
             $monthCreacionWhereClause = "AND MONTH(pci.fecha_abono) = $mes";
             $monthGroupByClause = ', MONTH(pci.fecha_abono)';
         }
-
-        // $result = $this->db->query("SELECT COUNT(DISTINCT(id_lote)) lotes, COUNT(DISTINCT(c.id_comision)) comisiones, 
-        //     COUNT(DISTINCT(pci.id_pago_i)) pagos, c.creado_por, u.id_usuario, $anio as anio,
-        //     CONCAT( u.nombre, ' ', u.apellido_paterno, ' ',  u.apellido_materno) nombre_completo $monthSelectClause
-        //     FROM comisiones c
-        //     INNER JOIN usuarios u ON u.id_usuario = c.creado_por AND u.id_rol IN (32,13,17) 
-        //     INNER JOIN pago_comision_ind pci ON pci.id_comision = c.id_comision
-        //     WHERE YEAR(c.fecha_creacion) = $anio AND u.id_usuario IS NOT NULL $monthCreacionWhereClause
-        //     GROUP BY c.creado_por, u.id_usuario, u.nombre, u.apellido_paterno, u.apellido_materno $monthGroupByClause
-        //     ORDER BY COUNT(DISTINCT(id_lote)) DESC");
-
-        $result = $this->db->query("SELECT COUNT(DISTINCT(id_lote)) lotes, COUNT(DISTINCT(c.id_comision)) comisiones, 
-COUNT(DISTINCT(pci.id_pago_i)) pagos, SUM(pci.abono_neodata) monto, u.id_usuario , $anio as anio,
-CONCAT( u.nombre, ' ', u.apellido_paterno, ' ',  u.apellido_materno) nombre_completo $monthSelectClause
-FROM pago_comision_ind pci 
-INNER JOIN comisiones c on c.id_comision = pci.id_comision
-INNER JOIN usuarios u ON u.id_usuario = pci.creado_por AND u.id_rol IN (32,13,17) 
-WHERE YEAR(pci.fecha_abono) = $anio $monthCreacionWhereClause
- AND pci.estatus NOT IN (0) 
-GROUP BY u.id_usuario, u.nombre, u.apellido_paterno, u.apellido_materno $monthGroupByClause ORDER BY COUNT(DISTINCT(id_lote)) DESC ");
-
+        
+        $result = $this->db->query("SELECT
+        COUNT(DISTINCT(id_lote)) lotes, 
+        COUNT(c.id_comision) comisiones, 
+        COUNT(pci.id_pago_i) pagos, 
+        SUM(pci.abono_neodata) monto, u.id_usuario, $anio as anio,  
+        CONCAT( u.nombre, ' ', u.apellido_paterno, ' ',  u.apellido_materno) nombre_completo $monthSelectClause
+        FROM pago_comision_ind pci 
+        INNER JOIN comisiones c on c.id_comision = pci.id_comision
+        INNER JOIN usuarios u ON u.id_usuario = pci.creado_por AND u.id_rol IN (32,13,17) 
+        WHERE YEAR(pci.fecha_abono) = $anio $monthCreacionWhereClause
+        AND pci.estatus NOT IN (0) 
+        GROUP BY u.id_usuario, u.nombre, u.apellido_paterno, u.apellido_materno $monthGroupByClause
+        ORDER by COUNT(DISTINCT(id_lote)) DESC");
+ 
         return $result->result_array();
     }
 }

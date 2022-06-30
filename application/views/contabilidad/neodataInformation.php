@@ -103,6 +103,8 @@
                                         <th>BONIFICACION</th>
                                         <th>ESCRITURA INDIVIDUIL</th>
                                         <th>FECHA ESCRITURA</th>
+                                        <th>SIN INTERESES</th>
+                                        <th>CON INTERESES</th>
                                     </tr>
                                     </thead>
                                 </table>
@@ -202,7 +204,7 @@
                     className: 'btn buttons-excel',
                     titleAttr: 'Descargar archivo de Excel',
                     exportOptions: {
-                        columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16],
+                        columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18],
                         format: {
                             header: function (d, columnIdx) {
                                 switch (columnIdx) {
@@ -256,12 +258,19 @@
                                     case 16:
                                         return "FECHA ESCRITURA";
                                         break;
+                                        case 17:
+                                        return "SIN INTERESES";
+                                        break;
+                                    case 18:
+                                        return "CON INTERESES";
+                                        break;
                                 }
                             }
                         }
                     }
                 }
             ],
+            scrollX: true,
             pagingType: "full_numbers",
             fixedHeader: true,
             lengthMenu: [
@@ -315,7 +324,7 @@
                 },
                 {
                     data: function (d) {
-                        return d.precioventa;
+                        return '<p>'+formatMoney(d.precioventa)+'</p>';
                     }
                 },
                 {
@@ -340,12 +349,12 @@
                 },
                 {
                     data: function (d) {
-                        return d.monto2170;
+                        return '<p>'+formatMoney(d.monto2170)+'</p>';
                     }
                 },
                 {
                     data: function (d) {
-                        return d.monto1150;
+                        return '<p>'+formatMoney(d.monto1150)+'</p>';
                     }
                 },
                 {
@@ -361,6 +370,16 @@
                 {
                     data: function (d) {
                         return d.fescritura;
+                    }
+                },
+                {
+                    data: function (d) {
+                        return '<p>'+formatMoney(d.totcontrato)+'</p>';
+                    }
+                },
+                {
+                    data: function (d) {
+                        return '<p>'+formatMoney(d.totcontratoint)+'</p>';
                     }
                 }
             ],
@@ -382,6 +401,10 @@
                 }
             }
         });
+    }
+
+    function formatMoney(number) {
+        return '$'+ number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     }
 
     $(document).on('change', "#empresas", function () {

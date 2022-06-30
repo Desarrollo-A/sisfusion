@@ -45,12 +45,14 @@ class General extends CI_Controller
 
     function getLotesList()
     {
-        if ($this->input->post("typeTransaction") == 1) // MJ: LA BÚSQUEDA SERÁ POR MULTI CONDOMINIO
-            if (count($this->input->post("idCondominio"))>1)
+        if ($this->input->post("typeTransaction") == 1){ // MJ: LA BÚSQUEDA SERÁ POR MULTI CONDOMINIO
+            if (count($this->input->post("idCondominio")) > 1)
                 $idCondominio = implode(", ", $this->input->post("idCondominio"));
             else
                 $idCondominio = $this->input->post("idCondominio")[0];
-        
+        } else
+            $idCondominio = $this->input->post("idCondominio");
+
         $data = $this->General_model->getLotesList($idCondominio);
         if ($data != null)
             echo json_encode($data);
