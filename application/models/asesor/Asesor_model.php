@@ -327,30 +327,33 @@ class Asesor_model extends CI_Model
         if ($this->session->userdata('id_rol') == 6) {
 
 
-            $query = $this->db->query("SELECT idLote, nombreLote, total, sup, precio, porcentaje, enganche, con.msni, descSup1, descSup2, referencia, db.banco, db.cuenta, db.empresa, db.clabe, lot.casa, (
+            $query = $this->db->query("SELECT lot.idLote, nombreLote, total, sup, precio, porcentaje, enganche, con.msni, 
+            descSup1, descSup2, referencia, db.banco, db.cuenta, db.empresa, db.clabe, lot.casa, (
             CASE lot.casa
             WHEN 0 THEN ''
             WHEN 1 THEN  casas.casasDetail
-            END) casasDetail 
+            END) casasDetail, idStatusLote, cl.fechaApartado, cl.id_cliente
                                     FROM lotes lot LEFT JOIN condominios con ON lot.idCondominio = con.idCondominio LEFT JOIN residenciales res 
                                     ON con.idResidencial = res.idResidencial LEFT JOIN datosbancarios db ON con.idDBanco = db.idDBanco 
-                                    LEFT JOIN (SELECT id_lote, CONCAT( '{''total_terreno'':''', total_terreno, ''',', tipo_casa, '}') casasDetail 
+                                    LEFT JOIN (SELECT lot.id_lote, CONCAT( '{''total_terreno'':''', total_terreno, ''',', tipo_casa, '}') casasDetail 
             						FROM casas WHERE estatus = 1) casas ON casas.id_lote = lot.idLote
-            						WHERE idLote = " . $lote . " AND idStatusLote IN(1,3)");
+            						LEFT JOIN clientes cl ON lot.idLote = cl.idLote AND cl.status=1
+            						WHERE lot.idLote = " . $lote . " AND idStatusLote IN(1,3)");
         } else {
 
-            $query = $this->db->query("SELECT idLote, nombreLote, total, sup, precio, porcentaje, enganche, con.msni, descSup1, descSup2, referencia, db.banco, db.cuenta, db.empresa, db.clabe, lot.casa, (
+            $query = $this->db->query("SELECT lot.idLote, nombreLote, total, sup, precio, porcentaje, enganche, con.msni, 
+            descSup1, descSup2, referencia, db.banco, db.cuenta, db.empresa, db.clabe, lot.casa, (
             CASE lot.casa
             WHEN 0 THEN ''
             WHEN 1 THEN  casas.casasDetail
-            END) casasDetail
+            END) casasDetail, idStatusLote, cl.fechaApartado, cl.id_cliente
                                     FROM lotes lot LEFT JOIN condominios con ON lot.idCondominio = con.idCondominio LEFT JOIN residenciales res 
                                     ON con.idResidencial = res.idResidencial LEFT JOIN datosbancarios db ON con.idDBanco = db.idDBanco 
                                     LEFT JOIN (SELECT id_lote, CONCAT( '{''total_terreno'':''', total_terreno, ''',', tipo_casa, '}') casasDetail 
             						FROM casas WHERE estatus = 1) casas ON casas.id_lote = lot.idLote
-                                    WHERE idLote = " . $lote . " AND idStatusLote IN(1, 2, 3)"); /*1: original*/
+                                    LEFT JOIN clientes cl ON lot.idLote = cl.idLote AND cl.status=1
+                                    WHERE lot.idLote = " . $lote . " AND idStatusLote IN(1, 2, 3)") ; /*1: original*/
         }
-
 
         if ($query) {
             $query = $query->result_array();
@@ -360,27 +363,29 @@ class Asesor_model extends CI_Model
 
     function getLotesInfoCorridaE($lote){
         if($this->session->userdata('id_rol') == 6){
-            $query =  $this->db->query("SELECT idLote, nombreLote, total, sup, precio, porcentaje, enganche, con.msni, descSup1, descSup2, referencia, db.banco, db.cuenta, db.empresa, db.clabe, lot.casa, (
+            $query =  $this->db->query("SELECT lot.idLote, nombreLote, total, sup, precio, porcentaje, enganche, con.msni, descSup1, descSup2, referencia, db.banco, db.cuenta, db.empresa, db.clabe, lot.casa, (
             CASE lot.casa
             WHEN 0 THEN ''
             WHEN 1 THEN  casas.casasDetail
-            END) casasDetail 
+            END) casasDetail, idStatusLote, cl.fechaApartado, cl.id_cliente
                                     FROM lotes lot LEFT JOIN condominios con ON lot.idCondominio = con.idCondominio LEFT JOIN residenciales res 
                                     ON con.idResidencial = res.idResidencial LEFT JOIN datosbancarios db ON con.idDBanco = db.idDBanco 
                                     LEFT JOIN (SELECT id_lote, CONCAT( '{''total_terreno'':''', total_terreno, ''',', tipo_casa, '}') casasDetail 
             						FROM casas WHERE estatus = 1) casas ON casas.id_lote = lot.idLote
-            						WHERE idLote = " . $lote . " AND idStatusLote IN(1,3)");
+            						LEFT JOIN clientes cl ON lot.idLote = cl.idLote AND cl.status=1
+            						WHERE lot.idLote = " . $lote . " AND idStatusLote IN(1,3)");
         } else {
-            $query =  $this->db->query("SELECT idLote, nombreLote, total, sup, precio, porcentaje, enganche, con.msni, descSup1, descSup2, referencia, db.banco, db.cuenta, db.empresa, db.clabe, lot.casa, (
+            $query =  $this->db->query("SELECT lot.idLote, nombreLote, total, sup, precio, porcentaje, enganche, con.msni, descSup1, descSup2, referencia, db.banco, db.cuenta, db.empresa, db.clabe, lot.casa, (
                                     CASE lot.casa
                                     WHEN 0 THEN ''
                                     WHEN 1 THEN  casas.casasDetail
-                                    END) casasDetail
+                                    END) casasDetail, idStatusLote, cl.fechaApartado, cl.id_cliente
                                     FROM lotes lot LEFT JOIN condominios con ON lot.idCondominio = con.idCondominio LEFT JOIN residenciales res 
                                     ON con.idResidencial = res.idResidencial LEFT JOIN datosbancarios db ON con.idDBanco = db.idDBanco 
                                     LEFT JOIN (SELECT id_lote, CONCAT( '{''total_terreno'':''', total_terreno, ''',', tipo_casa, '}') casasDetail 
             						FROM casas WHERE estatus = 1) casas ON casas.id_lote = lot.idLote
-                                    WHERE idLote = " . $lote . " AND idStatusLote IN(1, 2, 3)"); /*original: 1*/
+            						LEFT JOIN clientes cl ON lot.idLote = cl.idLote AND cl.status=1
+                                    WHERE lot.idLote = " . $lote . " AND idStatusLote IN(1, 2, 3)"); /*original: 1*/
         }
 
 
@@ -1763,4 +1768,32 @@ class Asesor_model extends CI_Model
     }
 
 
+    function getLineOfACG($id_lote){
+        $query = $this->db->query("SELECT CONCAT(asesor.nombre, ' ', asesor.apellido_paterno, ' ', asesor.apellido_materno) as asesor, asesor.id_usuario as id_asesor,
+        CONCAT(coordinador.nombre,' ', coordinador.apellido_paterno, ' ', coordinador.apellido_materno) as coordinador, coordinador.id_usuario as id_coordinador,
+        CONCAT(gerente.nombre, ' ', gerente.apellido_paterno, ' ', gerente.apellido_materno) as gerente, gerente.id_usuario as id_gerente
+        FROM lotes l 
+        INNER JOIN clientes cl ON cl.id_cliente=l.idCliente 
+        LEFT JOIN usuarios asesor ON asesor.id_usuario=cl.id_asesor
+        LEFT JOIN usuarios coordinador ON coordinador.id_usuario=cl.id_coordinador
+        LEFT JOIN usuarios gerente ON gerente.id_usuario=cl.id_gerente
+        WHERE l.idLote=".$id_lote);
+        return $query->result_array();
+    }
+
+    function getGerenteById($id_gerente){
+        $query = $this->db->query("SELECT u.id_lider, u.id_rol, u.estatus, u.id_usuario idGerente, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombreGerente  
+                                    FROM usuarios u WHERE id_usuario=".$id_gerente);
+        return $query->row();
+    }
+    function getCoordinadorById($id_coordinador){
+        $query = $this->db->query("SELECT u.id_lider, u.id_rol, u.estatus, u.id_usuario idCoordinador, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombreCoordinador  
+                                    FROM usuarios u WHERE id_usuario=".$id_coordinador);
+        return $query->row();
+    }
+    function getAsesorById($id_asesor){
+        $query = $this->db->query("SELECT u.id_lider, u.id_rol, u.estatus, u.id_usuario idAsesor, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombreAsesor  
+                                    FROM usuarios u WHERE id_usuario=".$id_asesor);
+        return $query->row();
+    }
 }
