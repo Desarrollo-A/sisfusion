@@ -1314,15 +1314,3 @@
     height: inherit !important;
   }
 }
-
-@media (min-width: 992px) {
-  #ranking .card {
-    background-color: aquamarine;
-  }
-}
-
-@media (min-width: 992px) and (max-width: 1199px) {
-  #ranking .card {
-    background-color: red;
-  }
-}
