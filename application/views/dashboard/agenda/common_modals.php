@@ -28,7 +28,7 @@
                             <i class="fas fa-font iconMod fa-lg"></i>
                         </div>
                         <div class="col-xs-11 col-sm-11 col-md-11 col-lg-11 form-group m-0">
-                            <label class="label-gral m-0">Titulo</label>
+                            <label class="label-gral m-0">Título</label>
                             <input id="evtTitle2" name="evtTitle" type="text" class="form-control input-gral">
                         </div>
                         <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1 form-group m-0 pr-0">
@@ -92,7 +92,7 @@
                 <form id="insert_appointment_form" name="estatus_recordatorio_form" method="post">
                     <div class="container-fluid p-0">
                         <div class="col-lg-12 form-group m-0">
-                            <label class="label-gral m-0">Titulo</label>
+                            <label class="label-gral m-0">Título</label>
                             <input id="evtTitle" name="evtTitle" type="text" class="form-control input-gral" required>
                         </div>
                         <div class="col-lg-12 form-group m-0 overflow-hidden">
@@ -138,7 +138,7 @@
                     <i class="fas fa-font iconMod fa-lg"></i>
                 </div>
                 <div class="col-lg-11 form-group m-0">
-                    <label class="label-gral">Titulo</label>
+                    <label class="label-gral">Título</label>
                     <input id="evtTitle2" name="evtTitle" type="text" class="form-control input-gral" disabled>
                 </div>
                 <div class="col-lg-1 form-group m-0 pr-0">
