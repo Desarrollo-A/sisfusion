@@ -22,7 +22,7 @@
                                 <div id="chart" class="chart"></div>
                             </div>
                             <div class="h-10">
-                                <h5 class="m-0 text-center">Ventas de apartados</h5>
+                                <h5 class="m-0 text-center titles">Ventas de apartados</h5>
                             </div>
                         </div>
                         <div id="Apartados" class="col-12 col-sm-6 col-md-6 col-lg-6 col-datatable hidden h-100 p-0">
@@ -51,7 +51,7 @@
                                 <div id="chart2" class="chart"></div>
                             </div>
                             <div class="h-10">
-                                <h5 class="m-0 text-center">Ventas con contrato</h5>
+                                <h5 class="m-0 text-center titles">Ventas con contrato</h5>
                             </div>
                         </div>
                         <div id="Contratados" class="col-12 col-sm-6 col-md-6 col-lg-6 col-datatable hidden">
@@ -80,7 +80,7 @@
                                 <div id="chart3" class="chart"></div>
                             </div>
                             <div class="h-10">
-                                <h5 class="m-0 text-center">Ventas con enganche</h5>
+                                <h5 class="m-0 text-center titles">Ventas con enganche</h5>
                             </div>
                         </div>
                         <div id="ConEnganche" class="col-12 col-sm-6 col-md-6 col-lg-6 col-datatable hidden">
@@ -109,7 +109,7 @@
                                 <div id="chart4" class="chart"></div>
                             </div>
                             <div class="h-10">
-                                <h5 class="m-0 text-center">Ventas sin enganche</h5>
+                                <h5 class="m-0 text-center titles">Ventas sin enganche</h5>
                             </div>
                         </div>
                         <div id="sinEnganche" class="col-12 col-sm-6 col-md-6 col-lg-6 col-datatable hidden">

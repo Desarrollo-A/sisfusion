@@ -24,7 +24,7 @@
                 <div class="container-fluid h-100">
                     <div class="row h-10">
                         <div class="col-12 col-sm-8 col-md-8 col-lg-8 p-0">
-                            <h4 class="m-0 fw-400">Clientes y prospectos por mes.</h4>
+                            <h4 class="m-0 fw-400">Clientes y prospectos por mes</h4>
                         </div>
                         <div class="col-12 col-sm-4 col-md-4 col-lg-4 h-100">
                             <div class="form-group d-flex m-0">
