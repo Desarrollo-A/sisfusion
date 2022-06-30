@@ -53,7 +53,7 @@
       .numberGraphic{
         color: $grayDark;
         font-weight: 600;
-        font-size: 18px;
+        font-size: 16px;
       }
     }
     @media #{$smartphone}{
@@ -141,4 +141,13 @@
   .btn-fab-mini span {
     color: $deepGray;
   }
+
+  .labelTitle{
+    font-size: 1.2em!important;
+  }
+  .numberElement{
+    font-size: 1.2em!important;
+    font-weight: bold!important;
+  }
 }
+

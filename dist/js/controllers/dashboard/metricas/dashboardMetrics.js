@@ -34,7 +34,7 @@ var optionBarInit = {
     xaxis: {
         show: false,
         labels: {
-            show: false
+            show: true
         },
         axisBorder: {
             show: false
@@ -272,16 +272,7 @@ var optionsVentasMetros = {
         show: false,
     },
     xaxis: {
-        show: false,
-        labels: {
-            show: false
-        },
-        axisBorder: {
-            show: false
-        },
-        axisTicks: {
-            show: false
-        },
+        show: true,
     },
     tooltip: {
       show: false
@@ -308,6 +299,7 @@ var optionsVentasMetros = {
 };
 
 $(document).ready(function () {
+    $('[data-toggle="tooltip"]').tooltip();
     init();
 });
 
@@ -523,7 +515,8 @@ function formatVentasM2(data){
     let series =[] , categories = [];
     data.forEach(element => {
         series.push(element.cantidad);
-        categories.push(`${element.sup} m2`);
+        categories.push([`${element.precio}`,
+        `(${element.sup} m2)`]);
     });
     ventasMetrosChart.updateSeries([{
         name: '#',

@@ -119,7 +119,7 @@
                             <div class="d-flex" >
                                 <div class="w-80 d-flex align-center">
                                 <i class="fas fa-circle pr-2 pl-2 txt-lapisLazuli"></i>
-                                <p class="m-0">Prospectos totales</p>
+                                <p class="m-0 labelTitle">Prospectos totales</p>
                                 </div>
                                 <div class="w-20">
                                     <h4 id="pt_card" class="subtitle_skeleton numberElement m-0"></h4>
@@ -128,7 +128,7 @@
                             <div class="d-flex" >
                                 <div class="w-80 d-flex align-center">
                                 <i class="fas fa-circle pr-2 pl-2 txt-blueNCS"></i>
-                                <p class="m-0">Nuevos prospectos</p>
+                                <p class="m-0 labelTitle">Nuevos prospectos</p>
                                 </div>
                                 <div class="w-20">
                                     <h4 id="np_card" class="subtitle_skeleton numberElement m-0"></h4>
@@ -137,7 +137,7 @@
                             <div class="d-flex" >
                                 <div class="w-80 d-flex align-center">
                                 <i class="fas fa-circle pr-2 pl-2 txt-viridianGreen"></i>
-                                <p class="m-0">Prospectos con cita</p>
+                                <p class="m-0 labelTitle">Prospectos con cita</p>
                                 </div>
                                 <div class="w-20">
                                     <h4 id="pcc_card" class="subtitle_skeleton numberElement m-0"></h4>
@@ -146,7 +146,7 @@
                             <div class="d-flex" >
                                 <div class="w-80 d-flex align-center">
                                 <i class="fas fa-circle pr-2 pl-2 txt-tiffanyBlue"></i>
-                                <p class="m-0">Cierres totales</p>
+                                <p class="m-0 labelTitle">Cierres totales</p>
                                 </div>
                                 <div class="w-20">
                                     <h4 id="ct_card" class="subtitle_skeleton numberElement m-0"></h4>
@@ -157,7 +157,7 @@
                             <div class="d-flex" >
                                 <div class="w-80 d-flex align-center">
                                 <i class="fas fa-circle pr-2 pl-2 txt-oceanGreen"></i>
-                                <p class="m-0">Ventas contratadas</p>
+                                <p class="m-0 labelTitle">Ventas contratadas</p>
                                 </div>
                                 <div class="w-20">
                                     <h4 id="vc_card" class="subtitle_skeleton numberElement m-0"></h4>
@@ -166,7 +166,7 @@
                             <div class="d-flex" >
                                 <div class="w-80 d-flex align-center">
                                 <i class="fas fa-circle pr-2 pl-2 txt-caribbeanGreen"></i>
-                                <p class="m-0">Ventas apartados</p>
+                                <p class="m-0 labelTitle">Ventas apartados</p>
                                 </div>
                                 <div class="w-20">
                                     <h4 id="va_card" class="subtitle_skeleton numberElement m-0"></h4>
@@ -175,7 +175,7 @@
                             <div class="d-flex" >
                                 <div class="w-80 d-flex align-center">
                                 <i class="fas fa-circle pr-2 pl-2 txt-lightGreen"></i>
-                                <p class="m-0">Cancelados contratados</p>
+                                <p class="m-0 labelTitle">Cancelados contratados</p>
                                 </div>
                                 <div class="w-20">
                                     <h4 id="cc_card" class="subtitle_skeleton numberElement m-0"></h4>
@@ -184,7 +184,7 @@
                             <div class="d-flex" >
                                 <div class="w-80 d-flex align-center">
                                 <i class="fas fa-circle pr-2 pl-2 txt-sunny"></i>
-                                <p class="m-0">Cancelados apartados</p>
+                                <p class="m-0 labelTitle">Cancelados apartados</p>
                                 </div>
                                 <div class="w-20">
                                     <h4 id="ca_card" class="subtitle_skeleton numberElement m-0"></h4>
@@ -208,37 +208,37 @@
                         <div class="col-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-between pt-1 pl-0">
                             <div class="d-flex">
                                 <i class="fas fa-circle pr-2 pl-2 txt-lapisLazuli"></i>
-                                <p class="m-0">Prospectos</p>
+                                <p class="m-0 labelTitle">Prospectos</p>
                             </div>
-                            <h4 id="ac" class="subtitle_skeleton numberElement2 m-0"></h4>
+                            <h4 id="ac" class="subtitle_skeleton numberElement m-0"></h4>
                         </div>
                         <div class="col-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-between pt-1 pl-0">
                             <div class="d-flex">
                                 <i class="fas fa-circle pr-2 pl-2 txt-viridianGreen"></i>
-                                <p class="m-0">Cita</p>
+                                <p class="m-0 labelTitle">Cita</p>
                             </div>
-                            <h4 id="cita" class="subtitle_skeleton numberElement2 m-0"></h4>
+                            <h4 id="cita" class="subtitle_skeleton numberElement m-0"></h4>
                         </div>
                         <div class="col-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-between pt-1 pl-0">
                             <div class="d-flex">
                                 <i class="fas fa-circle pr-2 pl-2 txt-tiffanyBlue"></i>
-                                <p class="m-0">Cita seguimiento</p>
+                                <p class="m-0 labelTitle">Cita seguimiento</p>
                             </div>
-                            <h4 id="cs" class="subtitle_skeleton numberElement2 m-0"></h4>
+                            <h4 id="cs" class="subtitle_skeleton numberElement m-0"></h4>
                         </div>
                         <div class="col-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-between pt-1 pl-0">
                             <div class="d-flex">
                                 <i class="fas fa-circle pr-2 pl-2 txt-caribbeanGreen"></i>
-                                <p class="m-0">No interesado</p>
+                                <p class="m-0 labelTitle">No interesado</p>
                             </div>
-                            <h4 id="ni" class="subtitle_skeleton numberElement2 m-0"></h4>
+                            <h4 id="ni" class="subtitle_skeleton numberElement m-0"></h4>
                         </div>
                         <div class="col-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-between pt-1 pl-0">
                             <div class="d-flex">
                                 <i class="fas fa-circle pr-2 pl-2 txt-oceanGreen"></i>
-                                <p class="m-0">Apartados</p>
+                                <p class="m-0 labelTitle">Apartados</p>
                             </div>
-                            <h4 id="ap" class="subtitle_skeleton numberElement2 m-0"></h4>
+                            <h4 id="ap" class="subtitle_skeleton numberElement m-0"></h4>
                         </div>
                     </div>
                 </div>
