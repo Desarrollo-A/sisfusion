@@ -184,13 +184,5 @@
         @media #{$smartphone}, #{$tablets}{
             height: inherit!important;
         }
-        @media #{$desktop}{
-            background-color: aquamarine;
-        }
-        @media #{$minidesktop}{
-            background-color: red;
-
-        }
-        
     }
 }
