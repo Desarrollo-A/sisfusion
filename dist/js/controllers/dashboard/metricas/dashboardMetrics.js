@@ -538,7 +538,7 @@ function formatVentasM2(data){
 }
 
 function toggleDatatable(e){
-    var columnaActiva = e.closest( '.flexible' );
+    var columnaActiva = e.closest( '.flexibleM' );
     var columnaChart = e.closest( '.col-chart' );
     var columnDatatable = $( e ).closest( '.row' ).find( '.col-datatable' );
     $( columnDatatable ).html('');
@@ -563,7 +563,7 @@ function toggleDatatable(e){
 }
 
 function reorderColumns(){
-    var principalColumns = document.getElementsByClassName("flexible");
+    var principalColumns = document.getElementsByClassName("flexibleM");
     var mainRow = document.getElementById('mainRow');
 
     let opts = getCacheOptions();

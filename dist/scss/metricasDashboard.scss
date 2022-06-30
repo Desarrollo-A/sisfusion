@@ -179,4 +179,9 @@
             height: inherit!important;
         }
     }
+    #boxChart4{
+        .apexcharts-legend{
+            justify-content: space-between!important;
+        }
+    }
 }

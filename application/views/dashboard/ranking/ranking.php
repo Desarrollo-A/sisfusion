@@ -2,7 +2,7 @@
 
 <div class="container-fluid p-0">
     <div class="row" id="mainRow">
-        <div class="col-12 col-sm-6 col-md-6 col-lg-6 inactivo flexible">
+        <div class="col-12 col-sm-12 col-md-12 col-lg-6 inactivo flexibleR">
             <div class="card">
                 <div class="container-fluid h-100">
                     <div class="row h-100">
@@ -31,7 +31,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-12 col-sm-6 col-md-6 col-lg-6 inactivo flexible">
+        <div class="col-12 col-sm-12 col-md-12 col-lg-6 inactivo flexibleR">
             <div class="card">
                 <div class="container-fluid h-100">
                     <div class="row h-100">
@@ -60,7 +60,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-12 col-sm-6 col-md-6 col-lg-6 inactivo flexible">
+        <div class="col-12 col-sm-12 col-md-12 col-lg-6 inactivo flexibleR">
             <div class="card">
                 <div class="container-fluid h-100">
                     <div class="row h-100">
@@ -89,7 +89,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-12 col-sm-6 col-md-6 col-lg-6 inactivo flexible">
+        <div class="col-12 col-sm-12 col-md-12 col-lg-6 inactivo flexibleR">
             <div class="card">
                 <div class="container-fluid h-100">
                     <div class="row h-100">

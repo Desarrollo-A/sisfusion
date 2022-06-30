@@ -1431,6 +1431,8 @@
 
 #tableFilters .datesTable .tableSearch {
   background-color: transparent !important;
+  box-shadow: none !important;
+  color: #333333;
 }
 
 #tableFilters .chartButton {

@@ -1309,8 +1309,20 @@
   }
 }
 
-@media (min-device-width: 320px) and (max-device-width: 480px) {
+@media (min-device-width: 320px) and (max-device-width: 480px), (min-width: 480px) and (max-width: 991px) {
   #ranking .card {
     height: inherit !important;
+  }
+}
+
+@media (min-width: 992px) {
+  #ranking .card {
+    background-color: aquamarine;
+  }
+}
+
+@media (min-width: 992px) and (max-width: 1199px) {
+  #ranking .card {
+    background-color: red;
   }
 }

@@ -176,8 +176,8 @@ $smartphone         : "(min-device-width : 320px) and (max-device-width : 480px)
 $smartphoneLandscape: "(min-width : 321px)";
 $tablets            : "(min-width: 480px) and (max-width: 991px)";
 $minidesktop        : "(min-width: 992px) and (max-width: 1199px)";
-$desktop            : "(min-width: 1024px)";
-$tv                 : "(min-width : 1824px)";
+$desktop            : "(min-width: 992px)";
+$tv                 : "(min-width: 1280px)";
 /* END size devices */
 
 /* Estilos generales encabezado, datetime picker, calendar, input filtros, selects */

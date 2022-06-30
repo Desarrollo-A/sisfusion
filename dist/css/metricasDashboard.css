@@ -1307,3 +1307,7 @@
     height: inherit !important;
   }
 }
+
+#metricas #boxChart4 .apexcharts-legend {
+  justify-content: space-between !important;
+}
