@@ -2697,7 +2697,6 @@ class Caja_outside extends CI_Controller
         }
     }
 
-
     public function dataBankTask(){
         $data = json_decode((file_get_contents("php://input")));
 //        print_r($data);

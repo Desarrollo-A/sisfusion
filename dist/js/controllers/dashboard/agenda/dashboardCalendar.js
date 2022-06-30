@@ -70,9 +70,8 @@
   });
   calendar.render();
   customizeIcon();
-  
 
-  updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
+  // updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
 
   $.post('Calendar/getStatusRecordatorio', function(data) {
     var len = data.length;
@@ -242,7 +241,6 @@
 
   function validateNCreate(appointment, medio, box){
     box.empty();
-    console.log(appointment);
     if(medio == 2 || medio == 5){
       box.append(`<label class="m-0">Dirección del ${medio == 5 ? 'evento':'recorrido'}</label><input id="direccion" name="direccion" type="text" class="form-control input-gral" value='${((appointment !=  '' && (medio == 2 || medio == 5 )) ? ((appointment.id_direccion == ''|| appointment.id_direccion == null) ? appointment.direccion : '' ) : '' )}' required>`);
     }
@@ -543,8 +541,8 @@
   });
 
   function customizeIcon(){
-    $(".fc-googleSignIn-button").append("<img src='"+base_url+"dist/img/googlecalendar.png'>");
-    $(".fc-googleLogout-button").append("<img src='"+"dist/img/unsync.png'>");
+    $(".fc-googleSignIn-button").append("<img src='dist/img/googlecalendar.png'>");
+    $(".fc-googleLogout-button").append("<img src='dist/img/unsync.png'>");
   }
 
   function createTable(){
@@ -613,28 +611,35 @@
     // Encode a set of form elements from all pages as an array of names and values
     var params = eventsTable.$('input,select,textarea').serialize();
     let array = createArrayEvents(params);
-    $.ajax({
-      type: 'POST',
-      url: 'Calendar/updateNFinishAppointments',
-      data: JSON.stringify(array),
-      contentType: false,
-      cache: false,
-      processData: false,
-      beforeSend: function() {
-        $('#spiner-loader').removeClass('hide');
-      },
-      success: function(data) {
-        $('#spiner-loader').addClass('hide');
-        data = JSON.parse(data);
-        alerts.showNotification("top", "right", data["message"], (data["status" == 503]) ? "danger" : (data["status" == 400]) ? "warning" : "success");
-        $('#feedbackModal').modal('toggle');
-      },
-      error: function() {
-          $('#feedbackModal').modal('toggle');
+    if (array.length === 0)
+      alerts.showNotification("top", "right", "No hay ningún registro que modificar.", "warning");
+    else {
+      $.ajax({
+        type: 'POST',
+        url: 'Calendar/updateNFinishAppointments',
+        data: JSON.stringify(array),
+        contentType: false,
+        cache: false,
+        processData: false,
+        beforeSend: function() {
+          $('#spiner-loader').removeClass('hide');
+        },
+        success: function(data) {
+          if(gapi.auth2.getAuthInstance().isSignedIn.get()) insertEventGoogle(dataF);
+          removeCRMEvents();
+          getUsersAndEvents(userType, idUser, false);
           $('#spiner-loader').addClass('hide');
-          alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
-      }
-    });
+          data = JSON.parse(data);
+          alerts.showNotification("top", "right", data["message"], (data["status" == 503]) ? "danger" : (data["status" == 400]) ? "warning" : "success");
+          $('#allAppointmentsModal').modal('hide');
+          $('#feedbackModal').modal('toggle');
+        },
+        error: function() {
+            $('#spiner-loader').addClass('hide');
+            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+        }
+      });
+  }
   });
 
   function createArrayEvents(params){
@@ -644,8 +649,8 @@
       var objAttr = nameWithValue[i].split('=');
       for(j=0; j<objAttr.length; j+=2){
         obj[objAttr[j]] = objAttr[j+1];
-        obj['estatus'] = '2';
         if(objAttr[j] == 'observaciones' && obj['evaluacion'] != '0' ){
+          obj['estatus'] = '2';
           array.push(obj);
           obj = {};
         }

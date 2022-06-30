@@ -71,7 +71,8 @@ class Contratacion_model extends CI_Model {
                                 CONCAT(coordinador2.nombre,' ', coordinador2.apellido_paterno, ' ', coordinador2.apellido_materno) as gerente2,
                                 lot.precio, lot.fecha_modst, cl.fechaApartado, lot.observacionContratoUrgente,
                                 CONCAT(cl.nombre,' ', cl.apellido_paterno, ' ', cl.apellido_materno) as nombreCliente, lot.motivo_change_status,
-                                ISNULL(oxc.nombre, 'Sin especificar') lugar_prospeccion, lot.fecha_creacion
+                                ISNULL(oxc.nombre, 'Sin especificar') lugar_prospeccion, lot.fecha_creacion,
+                                lot.totalValidado as cantidad_enganche, fechaSolicitudValidacion as fecha_validacion
                                 FROM lotes lot
                                 INNER JOIN condominios con ON con.idCondominio = lot.idCondominio 
                                 INNER JOIN residenciales res ON res.idResidencial = con.idResidencial 
@@ -106,7 +107,8 @@ class Contratacion_model extends CI_Model {
                                 CONCAT(coordinador2.nombre,' ', coordinador2.apellido_paterno, ' ', coordinador2.apellido_materno) as coordinador2,
                                 CONCAT(gerente2.nombre,' ', gerente2.apellido_paterno, ' ', gerente2.apellido_materno) as gerente2, asesor2.id_rol,
                                 CONCAT(cl.nombre,' ', cl.apellido_paterno, ' ', cl.apellido_materno) as nombreCliente,lot.motivo_change_status,
-                                ISNULL(oxc.nombre, 'Sin especificar') lugar_prospeccion, lot.fecha_creacion
+                                ISNULL(oxc.nombre, 'Sin especificar') lugar_prospeccion, lot.fecha_creacion,
+                                lot.totalValidado as cantidad_enganche, fechaSolicitudValidacion as fecha_validacion
                                 FROM [lotes] lot 
                                 INNER JOIN [condominios] con ON con.idCondominio = lot.idCondominio 
                                 INNER JOIN [residenciales] res ON res.idResidencial = con.idResidencial 
@@ -144,7 +146,8 @@ class Contratacion_model extends CI_Model {
                                 CONCAT(gerente2.nombre,' ', gerente2.apellido_paterno, ' ', gerente2.apellido_materno) as gerente2, asesor2.id_rol,
                                 lot.precio, lot.fecha_modst, cl.fechaApartado, lot.observacionContratoUrgente,
                                 CONCAT(cl.nombre,' ', cl.apellido_paterno, ' ', cl.apellido_materno) as nombreCliente,lot.motivo_change_status,
-                                ISNULL(oxc.nombre, 'Sin especificar') lugar_prospeccion, lot.fecha_creacion
+                                ISNULL(oxc.nombre, 'Sin especificar') lugar_prospeccion, lot.fecha_creacion,
+                                lot.totalValidado as cantidad_enganche, fechaSolicitudValidacion as fecha_validacion
                                 FROM [lotes] lot
                                 INNER JOIN [condominios] con ON con.idCondominio = lot.idCondominio 
                                 INNER JOIN [residenciales] res ON res.idResidencial = con.idResidencial 
@@ -170,7 +173,8 @@ class Contratacion_model extends CI_Model {
                                 CONCAT(gerente2.nombre,' ', gerente2.apellido_paterno, ' ', gerente2.apellido_materno) as gerente2, asesor2.id_rol,
                                 lot.precio, lot.fecha_modst, cl.fechaApartado, lot.observacionContratoUrgente,
                                 CONCAT(cl.nombre,' ', cl.apellido_paterno, ' ', cl.apellido_materno) as nombreCliente,lot.motivo_change_status,
-                                ISNULL(oxc.nombre, 'Sin especificar') lugar_prospeccion, lot.fecha_creacion
+                                ISNULL(oxc.nombre, 'Sin especificar') lugar_prospeccion, lot.fecha_creacion,
+                                lot.totalValidado as cantidad_enganche, fechaSolicitudValidacion as fecha_validacion
                                 FROM [lotes] lot
                                 INNER JOIN [condominios] con ON con.idCondominio = lot.idCondominio 
                                 INNER JOIN [residenciales] res ON res.idResidencial = con.idResidencial 
@@ -206,7 +210,8 @@ class Contratacion_model extends CI_Model {
                                 CONCAT(coordinador2.nombre,' ', coordinador2.apellido_paterno, ' ', coordinador2.apellido_materno) as coordinador2,
                                 CONCAT(gerente2.nombre,' ', gerente2.apellido_paterno, ' ', gerente2.apellido_materno) as gerente2, asesor2.id_rol, lot.precio, lot.fecha_modst, cl.fechaApartado,
                                 CONCAT(cl.nombre,' ', cl.apellido_paterno, ' ', cl.apellido_materno) as nombreCliente,lot.motivo_change_status,
-                                ISNULL(oxc.nombre, 'Sin especificar') lugar_prospeccion, lot.fecha_creacion
+                                ISNULL(oxc.nombre, 'Sin especificar') lugar_prospeccion, lot.fecha_creacion,
+                                lot.totalValidado as cantidad_enganche, fechaSolicitudValidacion as fecha_validacion
                                 FROM [lotes] lot 
                                 INNER JOIN [condominios] con ON con.idCondominio = lot.idCondominio 
                                 INNER JOIN [residenciales] res ON res.idResidencial = con.idResidencial 
@@ -244,7 +249,8 @@ class Contratacion_model extends CI_Model {
                                   CONCAT(gerente2.nombre,' ', gerente2.apellido_paterno, ' ', gerente2.apellido_materno) as gerente2, asesor2.id_rol,
                                   lot.precio, lot.fecha_modst, cl.fechaApartado, lot.observacionContratoUrgente,
                                   CONCAT(cl.nombre,' ', cl.apellido_paterno, ' ', cl.apellido_materno) as nombreCliente,lot.motivo_change_status,
-                                  ISNULL(oxc.nombre, 'Sin especificar') lugar_prospeccion, lot.fecha_creacion
+                                  ISNULL(oxc.nombre, 'Sin especificar') lugar_prospeccion, lot.fecha_creacion,
+                                  lot.totalValidado as cantidad_enganche, fechaSolicitudValidacion as fecha_validacion
                                   FROM lotes lot 
                                   INNER JOIN condominios con ON con.idCondominio = lot.idCondominio 
                                   INNER JOIN residenciales res ON res.idResidencial = con.idResidencial 
@@ -272,7 +278,8 @@ class Contratacion_model extends CI_Model {
                                   CONCAT(gerente2.nombre,' ', gerente2.apellido_paterno, ' ', gerente2.apellido_materno) as gerente2, asesor2.id_rol,
                                   lot.precio, lot.fecha_modst, cl.fechaApartado, lot.observacionContratoUrgente,
                                   CONCAT(cl.nombre,' ', cl.apellido_paterno, ' ', cl.apellido_materno) as nombreCliente,lot.motivo_change_status,
-                                  ISNULL(oxc.nombre, 'Sin especificar') lugar_prospeccion, lot.fecha_creacion
+                                  ISNULL(oxc.nombre, 'Sin especificar') lugar_prospeccion, lot.fecha_creacion,
+                                  lot.totalValidado as cantidad_enganche, fechaSolicitudValidacion as fecha_validacion
                                   FROM lotes lot 
                                   INNER JOIN condominios con ON con.idCondominio = lot.idCondominio 
                                   INNER JOIN residenciales res ON res.idResidencial = con.idResidencial 
@@ -308,7 +315,8 @@ class Contratacion_model extends CI_Model {
                                 CONCAT(gerente2.nombre,' ', gerente2.apellido_paterno, ' ', gerente2.apellido_materno) as gerente2, asesor2.id_rol,
                                 lot.precio, lot.fecha_modst, cl.fechaApartado, lot.observacionContratoUrgente,
                                 CONCAT(cl.nombre,' ', cl.apellido_paterno, ' ', cl.apellido_materno) as nombreCliente,lot.motivo_change_status,
-                                ISNULL(oxc.nombre, 'Sin especificar') lugar_prospeccion, lot.fecha_creacion
+                                ISNULL(oxc.nombre, 'Sin especificar') lugar_prospeccion, lot.fecha_creacion,
+                                lot.totalValidado as cantidad_enganche, fechaSolicitudValidacion as fecha_validacion
                                 FROM lotes lot INNER JOIN condominios con ON con.idCondominio = lot.idCondominio 
                                 INNER JOIN residenciales res ON res.idResidencial = con.idResidencial 
                                 INNER JOIN statuslote sl ON sl.idStatusLote = lot.idStatusLote 

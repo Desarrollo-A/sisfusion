@@ -4564,40 +4564,29 @@ WHERE idLote IN ('".$row['idLote']."') and nombreLote = '".$insert_csv['nombreLo
 
 
 	function getRevision2() {
-
-		$this->db->select("hd.idHistorialLote, hd.nombreLote, hd.idStatusContratacion, hd.idMovimiento, hd.modificado, hd.fechaVenc, l.idLote, cl.fechaApartado,
-							cond.nombre as nombreCondominio, l.comentario, res.nombreResidencial, hd.status, 
-							
-                            CONCAT(asesor.nombre,' ', asesor.apellido_paterno, ' ', asesor.apellido_materno) as asesor,
-                            CONCAT(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno) as gerente,
-                            CONCAT(coordinador.nombre,' ', coordinador.apellido_paterno, ' ', coordinador.apellido_materno) as coordinador
-							
-							
-							");
+ 
+		$this->db->select(" max(hd.modificado) modificado, hd.idHistorialLote, hd.nombreLote, hd.idStatusContratacion, hd.idMovimiento, hd.fechaVenc, l.idLote, cl.fechaApartado, cond.nombre as nombreCondominio, res.nombreResidencial,   
+		CONCAT(ase.nombre, ' ', ase.apellido_paterno, ' ', ase.apellido_materno) as asesor,
+		CONCAT(ger.nombre, ' ', ger.apellido_paterno, ' ', ger.apellido_materno) as gerente, 
+		CONCAT(coo.nombre, ' ', coo.apellido_paterno, ' ', coo.apellido_materno) as coordinador, hd.usuario, CAST(hd.comentario AS NVARCHAR(100)) comentario, 
+		(CASE WHEN mov.id_usuario IS NOT null THEN CONCAT(mov.nombre, ' ', mov.apellido_paterno, ' ', mov.apellido_materno) WHEN mov2.id_usuario IS NOT null THEN CONCAT(mov2.nombre, ' ', mov2.apellido_paterno, ' ', mov2.apellido_materno) ELSE hd.usuario END) result");
 
 		$this->db->join('clientes cl', 'hd.idCliente = cl.id_cliente');
 		$this->db->join('lotes l', 'hd.idLote = l.idLote');
 		$this->db->join('condominios cond', 'cond.idCondominio = l.idCondominio');
 		$this->db->join('residenciales res', 'cond.idResidencial = res.idResidencial');
+		$this->db->join('usuarios ase', 'cl.id_asesor = ase.id_usuario', 'LEFT');
+		$this->db->join('usuarios coo', 'cl.id_coordinador = coo.id_usuario', 'LEFT');
+		$this->db->join('usuarios ger', 'cl.id_gerente = ger.id_usuario', 'LEFT');
 
-
-		$this->db->join('usuarios asesor', 'cl.id_asesor = asesor.id_usuario', 'LEFT');
-		$this->db->join('usuarios coordinador', 'cl.id_coordinador = coordinador.id_usuario', 'LEFT');
-		$this->db->join('usuarios gerente', 'cl.id_gerente = gerente.id_usuario', 'LEFT');
-
-
-
-		$this->db->where('(hd.idStatusContratacion=2 AND hd.idMovimiento=4 AND cl.status=1
-							OR hd.idStatusContratacion=2 AND hd.idMovimiento=74 AND cl.status=1
-							OR hd.idStatusContratacion=2 AND hd.idMovimiento=84 AND cl.status=1
-							OR hd.idStatusContratacion=2 AND hd.idMovimiento=93 AND cl.status=1)');
-
-		$this->db->where("hd.status",1);
-		$this->db->where("l.status",1);
-
+		$this->db->join('usuarios mov', 'CAST(hd.usuario AS VARCHAR(45)) = CAST(mov.id_usuario AS VARCHAR(45))', 'LEFT');
+		$this->db->join('usuarios mov2', 'SUBSTRING(mov2.usuario, 1, 20) = SUBSTRING(hd.usuario, 1, 20)', 'LEFT');
+		$this->db->where('(hd.idStatusContratacion = 2 AND hd.idMovimiento in (4,74,84,93) AND cl.status = 1 AND hd.status = 1 AND l.status = 1)');
+		$this->db->group_by('hd.idHistorialLote, hd.nombreLote, hd.idStatusContratacion, hd.idMovimiento, hd.fechaVenc, l.idLote, cl.fechaApartado, cond.nombre, res.nombreResidencial, ase.nombre, ase.apellido_paterno, ase.apellido_materno, ger.nombre, ger.apellido_paterno, ger.apellido_materno, coo.nombre, coo.apellido_paterno, coo.apellido_materno, mov.nombre, mov.apellido_paterno, mov.apellido_materno, mov2.nombre, mov2.apellido_paterno, mov2.apellido_materno,mov2.usuario, hd.usuario, mov.id_usuario, mov2.id_usuario, CAST(hd.comentario AS NVARCHAR(100)),hd.modificado');
 		$this->db->order_by('hd.modificado','ASC');
 
 		$query = $this->db->get('historial_lotes hd');
+
 		return $query->result();
 	}
 
@@ -6098,11 +6087,11 @@ WHERE idLote IN ('".$row['idLote']."') and nombreLote = '".$insert_csv['nombreLo
     {
         $query = $this->db-> query("SELECT l.* FROM lotes l 
             INNER JOIN clientes c ON c.id_cliente = l.idCliente
-            INNER JOIN usuarios u ON u.id_usuario = c.id_asesor AND u.estatus IN (0,3)
+            INNER JOIN usuarios u ON u.id_usuario = c.id_asesor AND u.estatus IN (0,1,3)
             WHERE l.status = 1 AND (l.idStatusContratacion = 1 OR l.idMovimiento = 82) AND c.status = 1 AND c.id_gerente = ". $this->session->userdata('id_lider') ." AND l.idCondominio = $condominio
             UNION ALL
             SELECT l.* FROM lotes l 
-			INNER JOIN clientes c ON c.id_cliente = l.idCliente AND c.id_coordinador = 2562
+			INNER JOIN clientes c ON c.id_cliente = l.idCliente AND c.id_coordinador IN (2562, 2541)
 			INNER JOIN usuarios u ON u.id_usuario = c.id_asesor
 			INNER JOIN usuarios uu ON uu.id_usuario = u.id_lider AND uu.id_lider = ". $this->session->userdata('id_lider') ."
             WHERE l.status = 1 AND (l.idStatusContratacion = 1 OR l.idMovimiento = 82) AND c.status = 1 AND l.idCondominio = $condominio");
@@ -6342,7 +6331,8 @@ WHERE idLote IN ('".$row['idLote']."') and nombreLote = '".$insert_csv['nombreLo
 										INNER JOIN statuslote sl ON sl.idStatusLote = lo.idStatusLote
                 						INNER JOIN movimientos mo ON mo.idMovimiento = lo.idMovimiento
 										INNER JOIN usuarios usu ON usu.id_usuario = lo.usuario
-                					WHERE cl.status = 1 AND lo.idStatusContratacion = 7 AND lo.idMovimiento = 66 AND cl.status = 1 $filter ORDER BY cl.id_Cliente ASC");
+                					WHERE cl.status = 1 AND lo.idStatusContratacion = 7 AND lo.idMovimiento = 66 AND cl.status = 1 $filter 
+									ORDER BY cl.id_Cliente ASC");
 
 		return $query->result();
 
@@ -6427,5 +6417,95 @@ WHERE idLote IN ('".$row['idLote']."') and nombreLote = '".$insert_csv['nombreLo
 									WHERE lo.idStatusContratacion = 1 AND lo.idMovimiento = 31 $filter ORDER BY cl.id_Cliente ASC");
 
 		return $query->result();
+	}
+
+	public function getReporteRechazos(){
+		$id_currentUser = $this->session->userdata('id_usuario');
+		$lider_currentUser = $this->session->userdata('id_usuario');
+		switch ($this->session->userdata('id_rol')) {
+            case 1:
+            { #DIRECTOR   - RIGEL
+                $filter = '';
+                break;
+            }
+            case 4:
+            { #ASISTENTE DIRECTOR ASISTENTE RIGEL
+                $filter = '';
+                break;
+            }
+            case 3:
+            { #GERENTE
+                $filter = ' AND cl.id_gerente=' . $id_currentUser;
+                break;
+            }
+            case 6:
+            { #ASISTENTE GERENTE
+                $filter = ' AND cl.id_gerente=' . $lider_currentUser;
+                break;
+            }
+            case 2:
+            { #SUBDIRECCIÓN
+                $filter = ' AND cl.id_subdirector=' . $id_currentUser;
+                break;
+            }
+            case 5:
+            { #ASISTENTE SUBDIRECCIÓN
+                $filter = ' AND cl.id_subdirector=' . $lider_currentUser;
+                break;
+            }
+            case 9:
+            { #COORDINADOR
+                $filter = ' AND cl.id_coordinador=' . $id_currentUser;
+                break;
+            }
+            case 59:
+            { #DIRECTOR REGIONAL
+                $filter = ' AND cl.id_regional=' . $id_currentUser;
+                break;
+            }
+            case 60:
+            { #ASISTENTE DIRECTOR REGIONAL
+                $filter = ' AND cl.id_regional=' . $lider_currentUser;
+                break;
+            }
+            default:
+            {
+                $filter = '';
+                break;
+            }
+        }
+
+		$query = $this->db-> query("SELECT re.descripcion nombreResidencial, co.nombre nombreCondominio, lo.nombreLote, lo.idLote, 
+        								CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno) nombreCliente, cl.fechaApartado, sc.nombreStatus estatusActual,
+        								mo.descripcion, sl.nombre estatusLote, 
+										CONCAT(usu.nombre, ' ', usu.apellido_paterno, ' ', usu.apellido_materno) usuario,
+										lo.modificado fechaRechazo, lo.comentario motivoRechazo, mo.descripcion movimiento
+                					FROM clientes cl
+                						INNER JOIN lotes lo ON lo.idLote = cl.idLote AND lo.idCliente = cl.id_cliente AND lo.idStatusLote = 3
+                						INNER JOIN condominios co ON lo.idCondominio = co.idCondominio
+                						INNER JOIN residenciales re ON co.idResidencial = re.idResidencial
+                						INNER JOIN usuarios ae ON ae.id_usuario = cl.id_asesor
+                						INNER JOIN usuarios cr ON cr.id_usuario = cl.id_coordinador
+                						INNER JOIN usuarios ge ON ge.id_usuario = cl.id_gerente
+                						INNER JOIN statuscontratacion sc ON sc.idStatusContratacion = lo.idStatusContratacion
+										INNER JOIN statuslote sl ON sl.idStatusLote = lo.idStatusLote
+                						INNER JOIN movimientos mo ON mo.idMovimiento = lo.idMovimiento
+										INNER JOIN usuarios usu ON usu.id_usuario = lo.usuario
+                					WHERE cl.status = 1 AND lo.idStatusContratacion = 7 AND lo.idMovimiento = 66 AND cl.status = 1 $filter 
+										OR cl.status = 1 AND lo.idStatusContratacion = 7 AND lo.idMovimiento = 7 AND cl.status = 1 $filter
+										OR cl.status = 1 AND lo.idStatusContratacion = 7 AND lo.idMovimiento = 64 AND cl.status = 1 $filter
+										OR cl.status = 1 AND lo.idStatusContratacion = 7 AND lo.idMovimiento = 77 AND cl.status = 1 $filter
+										OR cl.status = 1 AND lo.idStatusContratacion = 1 AND lo.idMovimiento = 20 AND cl.status = 1 $filter
+										OR cl.status = 1 AND lo.idStatusContratacion = 1 AND lo.idMovimiento = 63 AND cl.status = 1 $filter
+										OR cl.status = 1 AND lo.idStatusContratacion = 1 AND lo.idMovimiento = 92 AND cl.status = 1 $filter
+										OR cl.status = 1 AND lo.idStatusContratacion = 1 AND lo.idMovimiento = 73 AND cl.status = 1 $filter
+										OR cl.status = 1 AND lo.idStatusContratacion = 3 AND lo.idMovimiento = 82 AND cl.status = 1 $filter
+										OR cl.status = 1 AND lo.idStatusContratacion = 1 AND lo.idMovimiento = 96 AND cl.status = 1 $filter
+										OR cl.status = 1 AND lo.idStatusContratacion = 13 AND lo.idMovimiento = 43 AND cl.status = 1 $filter
+									ORDER BY cl.id_Cliente ASC");
+
+		return $query->result();
+
+		
 	}
 } 

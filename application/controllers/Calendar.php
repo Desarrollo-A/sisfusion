@@ -3,8 +3,6 @@ class Calendar extends CI_Controller {
 	public function __construct() {
 		parent::__construct();
         $this->load->model(array('Calendar_model', 'General_model'));
-                //$this->load->model('asesor/Asesor_model');	
-
         $this->load->library(array('session','form_validation', 'get_menu', 'Email'));
 		$this->load->helper(array('url','form'));
 		$this->load->database('default');
@@ -218,21 +216,11 @@ class Calendar extends CI_Controller {
     }
 
     public function updateNFinishAppointments(){
-        $updateArrayData = json_decode(file_get_contents("php://input"));
-        $this->db->trans_begin();
-        $this->db->update_batch('agenda', $updateArrayData, 'id_cita');
-        if ($this->db->trans_status() === FALSE) {
-            $this->db->trans_rollback();
-            return false;
-        } else {
-            $this->db->trans_commit();
-            return true;
-        }
-
+        $response = $this->General_model->updateBatch("agenda", json_decode(file_get_contents("php://input")), "id_cita"); // MJ: SE MANDA CORRER EL UPDATE BATCH
         if ($response)
             echo json_encode(array("status" => 200, "message" => "El registro se ha actualizado de manera exitosa."));
         else 
-            echo json_encode(array("status" => 503, "message" => "Oops, algo salió mal. No se ha podido actualizar el estatus del prospecto"));
+            echo json_encode(array("status" => 503, "message" => "Oops, algo salió mal. No se ha podido actualizar la información de la(s) cita(s)."));
     }
 }
  

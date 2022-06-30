@@ -103,7 +103,7 @@ class Contraloria_model extends CI_Model {
         concat(coordinador.nombre,' ', coordinador.apellido_paterno, ' ', coordinador.apellido_materno),
         concat(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno),
 		cond.idCondominio;");
-		return $query->result();
+		return $query->result_array();
 
 	}
 
@@ -779,7 +779,7 @@ class Contraloria_model extends CI_Model {
 											cl.status, nombreLote, lotes.comentario, lotes.idMovimiento, lotes.fechaVenc, lotes.modificado
 										FROM deposito_seriedad AS ds
 											INNER JOIN clientes AS cl ON ds.id_cliente = cl.id_cliente
-											INNER JOIN lotes AS lotes ON lotes.idLote=cl.idLote AND lotes.idCliente = cl.idCliente AND cl.status = 1
+											INNER JOIN lotes AS lotes ON lotes.idLote=cl.idLote AND lotes.idCliente = cl.id_cliente AND cl.status = 1
 											LEFT JOIN condominios AS cond ON lotes.idCondominio=cond.idCondominio
 											LEFT JOIN residenciales AS residencial ON cond.idResidencial=residencial.idResidencial
 										WHERE
@@ -1011,11 +1011,11 @@ class Contraloria_model extends CI_Model {
 		{
 			$query = $this->db-> query("SELECT l.* FROM lotes l 
 			INNER JOIN clientes c ON c.id_cliente = l.idCliente
-			INNER JOIN usuarios u ON u.id_usuario = c.id_asesor AND u.estatus IN (0,3)
+			INNER JOIN usuarios u ON u.id_usuario = c.id_asesor AND u.estatus IN (0,1,3)
 			WHERE l.status = 1 AND (l.idStatusContratacion = 1 OR l.idMovimiento = 82) AND c.status = 1 AND c.id_gerente = ". $this->session->userdata('id_lider') ." AND l.idCondominio = $idCondominio
 			UNION ALL
             SELECT l.* FROM lotes l 
-			INNER JOIN clientes c ON c.id_cliente = l.idCliente AND c.id_coordinador = 2562
+			INNER JOIN clientes c ON c.id_cliente = l.idCliente AND c.id_coordinador IN (2562, 2541)
 			INNER JOIN usuarios u ON u.id_usuario = c.id_asesor
 			INNER JOIN usuarios uu ON uu.id_usuario = u.id_lider AND uu.id_lider = ". $this->session->userdata('id_lider') ."
             WHERE l.status = 1 AND (l.idStatusContratacion = 1 OR l.idMovimiento = 82) AND c.status = 1 AND l.idCondominio = $idCondominio");
@@ -1122,4 +1122,219 @@ class Contraloria_model extends CI_Model {
     	return $this->db->query("SELECT * FROM sedes WHERE estatus = 1");
     }
 
+	public function registroDiario () {
+		$id_currentUser = $this->session->userdata('id_usuario');
+		$lider_currentUser = $this->session->userdata('id_usuario');
+		switch ($this->session->userdata('id_rol')) {
+            case 1:
+            { #DIRECTOR   - RIGEL
+                $filter = '';
+                break;
+            }
+            case 4:
+            { #ASISTENTE DIRECTOR RIGEL
+                $filter = '';
+                break;
+            }
+            case 3:
+            { #GERENTE
+                $filter = ' AND cl.id_gerente=' . $id_currentUser;
+                break;
+            }
+            case 6:
+            { #ASISTENTE GERENTE
+                $filter = ' AND cl.id_gerente=' . $lider_currentUser;
+                break;
+            }
+            case 2:
+            { #SUBDIRECCIÓN
+                $filter = ' AND cl.id_subdirector=' . $id_currentUser;
+                break;
+            }
+            case 5:
+            { #ASISTENTE SUBDIRECCIÓN
+                $filter = ' AND cl.id_subdirector=' . $lider_currentUser;
+                break;
+            }
+            case 9:
+            { #COORDINADOR
+                $filter = ' AND cl.id_coordinador=' . $id_currentUser;
+                break;
+            }
+            case 59:
+            { #DIRECTOR REGIONAL
+                $filter = ' AND cl.id_regional=' . $id_currentUser;
+                break;
+            }
+            case 60:
+            { #ASISTENTE DIRECTOR REGIONAL
+                $filter = ' AND cl.id_regional=' . $lider_currentUser;
+                break;
+            }
+            default:
+            {
+                $filter = '';
+                break;
+            }
+        }
+
+		$query = $this->db-> query("SELECT l.idLote, cl.id_cliente, cl.nombre, cl.apellido_paterno, cl.apellido_materno,
+        								l.nombreLote, l.idStatusContratacion, l.idMovimiento, l.modificado, cl.rfc,
+        								CAST(l.comentario AS VARCHAR(MAX)) AS comentario, l.fechaVenc, l.perfil, cond.nombre AS nombreCondominio, res.nombreResidencial, l.ubicacion,
+        								l.tipo_venta, l.observacionContratoUrgente AS vl,
+										CONCAT(asesor.nombre,' ', asesor.apellido_paterno, ' ', asesor.apellido_materno) AS asesor,
+        								CONCAT(coordinador.nombre,' ', coordinador.apellido_paterno, ' ', coordinador.apellido_materno) AS coordinador,
+        								CONCAT(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno) AS gerente,
+										cond.idCondominio, cl.expediente,
+									(SELECT CONCAT(usuarios.nombre,' ', usuarios.apellido_paterno, ' ', usuarios.apellido_materno)
+									FROM historial_lotes LEFT JOIN usuarios ON historial_lotes.usuario = usuarios.id_usuario
+									WHERE idHistorialLote =(SELECT MAX(idHistorialLote) FROM historial_lotes WHERE idLote IN (l.idLote) AND (perfil = '13' OR perfil = '32' 
+										OR perfil = 'contraloria') AND status = 1)) AS lastUc
+
+	    							FROM lotes l
+        								INNER JOIN clientes cl ON l.idLote=cl.idLote
+        								INNER JOIN condominios cond ON l.idCondominio=cond.idCondominio
+        								INNER JOIN residenciales res ON cond.idResidencial = res.idResidencial
+										LEFT JOIN usuarios asesor ON cl.id_asesor = asesor.id_usuario
+										LEFT JOIN usuarios coordinador ON cl.id_coordinador = coordinador.id_usuario
+										LEFT JOIN usuarios gerente ON cl.id_gerente = gerente.id_usuario
+
+									WHERE CONVERT(nvarchar, l.modificado, 6) = CONVERT(nvarchar, GETDATE(), 6) $filter
+										AND l.idStatusContratacion = '5' AND l.idMovimiento  = '35' AND cl.status = 1
+										OR l.idStatusContratacion = '5' AND l.idMovimiento  = '22' AND cl.status = 1
+										OR l.idStatusContratacion = '2' AND l.idMovimiento  = '62' AND cl.status = 1
+										OR l.idStatusContratacion = '5' AND l.idMovimiento  = '75' AND cl.status = 1
+										OR l.idStatusContratacion = '5' AND l.idMovimiento  = '94' AND cl.status = 1 
+										
+	    							GROUP BY l.idLote, cl.id_cliente, cl.nombre, cl.apellido_paterno, cl.apellido_materno,
+        								l.nombreLote, l.idStatusContratacion, l.idMovimiento, l.modificado, cl.rfc,
+        								CAST(l.comentario AS VARCHAR(MAX)), l.fechaVenc, l.perfil, cond.nombre, res.nombreResidencial, l.ubicacion,
+        								l.tipo_venta, l.observacionContratoUrgente,
+	
+										CONCAT(asesor.nombre,' ', asesor.apellido_paterno, ' ', asesor.apellido_materno),
+        								CONCAT(coordinador.nombre,' ', coordinador.apellido_paterno, ' ', coordinador.apellido_materno),
+        								CONCAT(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno),
+										cond.idCondominio, cl.expediente");
+
+		return $query->result();
+
+	}
+
+	public function registroDiarioPorFecha($fecha_inicio){
+		$id_currentUser = $this->session->userdata('id_usuario');
+		$lider_currentUser = $this->session->userdata('id_usuario');
+		switch ($this->session->userdata('id_rol')) {
+            case 1:
+            { #DIRECTOR   - RIGEL
+                $filter = '';
+                break;
+            }
+            case 4:
+            { #ASISTENTE DIRECTOR RIGEL
+                $filter = '';
+                break;
+            }
+            case 3:
+            { #GERENTE
+                $filter = ' AND cl.id_gerente=' . $id_currentUser;
+                break;
+            }
+            case 6:
+            { #ASISTENTE GERENTE
+                $filter = ' AND cl.id_gerente=' . $lider_currentUser;
+                break;
+            }
+            case 2:
+            { #SUBDIRECCIÓN
+                $filter = ' AND cl.id_subdirector=' . $id_currentUser;
+                break;
+            }
+            case 5:
+            { #ASISTENTE SUBDIRECCIÓN
+                $filter = ' AND cl.id_subdirector=' . $lider_currentUser;
+                break;
+            }
+            case 9:
+            { #COORDINADOR
+                $filter = ' AND cl.id_coordinador=' . $id_currentUser;
+                break;
+            }
+            case 59:
+            { #DIRECTOR REGIONAL
+                $filter = ' AND cl.id_regional=' . $id_currentUser;
+                break;
+            }
+            case 60:
+            { #ASISTENTE DIRECTOR REGIONAL
+                $filter = ' AND cl.id_regional=' . $lider_currentUser;
+                break;
+            }
+            default:
+            {
+                $filter = '';
+                break;
+            }
+        }
+
+		$query = $this->db->query("	SELECT l.idLote, cl.id_cliente, cl.nombre, cl.apellido_paterno, cl.apellido_materno,
+										l.nombreLote, l.idStatusContratacion, l.idMovimiento, l.modificado, cl.rfc,
+										CAST(l.comentario AS VARCHAR(MAX)) AS comentario, l.fechaVenc, l.perfil, cond.nombre AS nombreCondominio, res.nombreResidencial, l.ubicacion,
+										l.tipo_venta, l.observacionContratoUrgente AS vl,
+										CONCAT(asesor.nombre,' ', asesor.apellido_paterno, ' ', asesor.apellido_materno) AS asesor,
+										CONCAT(coordinador.nombre,' ', coordinador.apellido_paterno, ' ', coordinador.apellido_materno) AS coordinador,
+										CONCAT(gerente.nombre, ' ', gerente.apellido_paterno, ' ', gerente.apellido_materno) AS gerente,
+										cond.idCondominio, cl.expediente,
+										(SELECT CONCAT(usuarios.nombre,' ', usuarios.apellido_paterno, ' ', usuarios.apellido_materno)
+											FROM historial_lotes LEFT JOIN usuarios ON historial_lotes.usuario = usuarios.id_usuario
+											WHERE idHistorialLote =(SELECT MAX(idHistorialLote) FROM historial_lotes WHERE idLote IN (idLote) AND (perfil = '13' OR perfil = '32'
+												OR perfil = 'contraloria') AND status = 1)) AS lastUc
+									
+									FROM lotes l
+										INNER JOIN clientes cl ON l.idLote = cl.idLote
+										INNER JOIN condominios cond ON l.idCondominio = cond.idCondominio
+										INNER JOIN residenciales res ON cond.idResidencial = res.idResidencial
+										LEFT JOIN usuarios asesor ON cl.id_asesor = asesor.id_usuario
+										LEFT JOIN usuarios coordinador ON cl.id_coordinador = coordinador.id_usuario
+										LEFT JOIN usuarios gerente ON cl.id_gerente = gerente.id_usuario
+
+									WHERE l.modificado BETWEEN '$fecha_inicio 00:00:00.000' AND '$fecha_inicio 23:59:59.000' $filter
+										AND l.idStatusContratacion = '5' AND l.idMovimiento = '35' AND cl.status = 1
+										OR l.idStatusContratacion = '5' AND l.idMovimiento = '22' AND cl.status = 1
+										OR l.idStatusContratacion = '5' AND l.idMovimiento = '62' AND cl.status = 1
+										OR l.idStatusContratacion = '5' AND l.idMovimiento = '75' AND cl.status = 1
+										OR l.idStatusContratacion = '5' AND l.idMovimiento = '94' AND cl.status = 1
+
+									GROUP BY l.idLote, cl.id_cliente, cl.nombre, cl.apellido_paterno, cl.apellido_materno,
+										l.nombreLote, l.idStatusContratacion, l.idMovimiento, l.modificado, cl.rfc,
+										CAST(l.comentario AS VARCHAR(MAX)), l.fechaVenc, l.perfil, cond.nombre, res.nombreResidencial, l.ubicacion,
+										l.tipo_venta, l.observacionContratoUrgente,
+										CONCAT(asesor.nombre,' ', asesor.apellido_paterno, ' ', asesor.apellido_materno),
+										CONCAT(coordinador.nombre,' ', coordinador.apellido_paterno, ' ', coordinador.apellido_materno),
+										CONCAT(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno),
+										cond.idCondominio, cl.expediente");
+
+		return $query->result();
+	}
+
+    public function getCamposHistorialDS($idCliente)
+    {
+        $query = $this->db->query("SELECT DISTINCT(col_afect) AS columna FROM auditoria WHERE id_parametro = $idCliente 
+            AND col_afect IN ('Nombre', 'Apellido paterno', 'Apellido materno', 'Correo electrónico', 'Celular', 
+                              'Estado civil', 'Ocupación', 'Puesto', 'Fecha 1° Aportación')");
+        return $query->result_array();
+    }
+
+    public function getDetalleCamposHistorialDS($idCliente, $columna)
+    {
+        $query = $this->db->query("SELECT au.anterior, au.nuevo, au.col_afect, CONVERT(NVARCHAR, au.fecha_creacion, 6) AS fecha,
+            (CASE WHEN u.id_usuario IS NOT null THEN CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) 
+            WHEN u2.id_usuario IS NOT null THEN CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno) 
+                ELSE au.creado_por END) usuario
+            FROM auditoria au
+            LEFT JOIN usuarios u ON CAST(au.creado_por AS VARCHAR(45)) = CAST(u.id_usuario AS VARCHAR(45))
+            LEFT JOIN usuarios u2 ON SUBSTRING(u2.usuario, 1, 20) = SUBSTRING(au.creado_por, 1, 20)
+            WHERE au.col_afect = '$columna' AND au.id_parametro = $idCliente
+            ORDER BY au.fecha_creacion DESC");
+        return $query->result_array();
+    }
 }

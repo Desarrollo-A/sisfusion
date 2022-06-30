@@ -76,7 +76,7 @@ class Cobranza_model extends CI_Model {
         INNER JOIN residenciales r ON r.idResidencial = cn.idResidencial
         INNER JOIN evidencia_cliente ec ON ec.idLote = l.idLote AND ec.idCliente = l.idCliente AND ec.estatus = 3
         INNER JOIN controversias co ON co.id_lote = ec.idLote AND co.id_cliente = ec.idCliente AND co.estatus = 1
-        INNER JOIN clientes cl ON cl.id_cliente = l.idCliente AND cl.status = 1 AND cl.descuento_mdb = 0 $filter
+        INNER JOIN clientes cl ON cl.id_cliente = l.idCliente AND cl.status = 1 AND (cl.descuento_mdb = 0 OR cl.descuento_mdb IS NULL) $filter
         INNER JOIN prospectos pr ON pr.id_prospecto = cl.id_prospecto AND pr.fecha_creacion > '2022-01-20 00:00:00.000'
         INNER JOIN usuarios u ON u.id_usuario = cl.id_asesor AND u.id_sede IN ($result) 
         --INNER JOIN sedes s ON CAST(s.id_sede AS VARCHAR(15)) = CAST(u.id_sede AS VARCHAR(15))

@@ -763,7 +763,7 @@
             <div class="container-fluid">
                 <form id="estatus_recordatorio_form" name="estatus_recordatorio_form" method="post">
                     <div class="col-lg-12 form-group m-0">
-                        <label class="label-gral">Titulo</label>
+                        <label class="label-gral">Título</label>
                         <input id="evtTitle" name="evtTitle" type="text" class="form-control input-gral">
                     </div>
                     <div class="col-lg-12 form-group m-0" id="select">
