@@ -17,16 +17,16 @@
     </div>
 </div>
 
-<div class="container-fluid pb-1 first-row">
-    <div class="row" style="height: 450px;">
-        <div class="col-12 col-sm-9 col-md-9 col-lg-9 h-100">
-            <div class="card p-2 h-100 m-0">
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12 col-sm-12 col-md-12 col-lg-9">
+            <div class="card p-2">
                 <div class="container-fluid h-100">
                     <div class="row h-10">
-                        <div class="col-12 col-sm-8 col-md-8 col-lg-8 p-0">
+                        <div class="col-12 col-sm-6 col-md-8 col-lg-8 p-0">
                             <h4 class="m-0 fw-400">Clientes y prospectos por mes.</h4>
                         </div>
-                        <div class="col-12 col-sm-4 col-md-4 col-lg-4 h-100">
+                        <div class="col-12 col-sm-6 col-md-4 col-lg-4 h-100">
                             <div class="form-group d-flex m-0">
                                 <input type="text" class="form-control datepicker beginDates" id="beginDate" value="" autocomplete='off'/>
                                 <input type="text" class="form-control datepicker endDates" id="endDate" value="" autocomplete='off' />
@@ -37,28 +37,24 @@
                         </div>
                     </div>
                     <div class="row h-90">
-                        <div class="col-md-12 pb-0 h-100 d-flex align-end pl-0 pr-0">
-                            <div class="col-md-12 pb-0 h-100 pl-0 pr-0">
-                                <div id="chartProspClients"></div>
-                            </div>
+                        <div class="col-12 col-sm-12 col-md-12 col-lg-12 pb-0 h-100 pl-0 pr-0">
+                            <div id="chartProspClients"></div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-12 col-sm-3 col-md-3 col-lg-3 h-100">
-            <div class="container-fluid h-100 p-0">
-                <div class="row h-70">
-                    <div class="col-md-12 h-100 pb-3">
-                        <div class="card p-2 m-0 h-100">
+        <div class="col-12 col-sm-12 col-md-12 col-lg-3">
+            <div class="container-fluid p-0">
+                <div class="row">
+                    <div class="col-6 col-sm-6 col-md-6 col-lg-12 pb-3 col-total">
+                        <div class="card p-2 h-100">
                             <h4 class="text-center m-0 fw-400">Total de ventas</h4>
                             <div id="totalVentasChart"></div>
                         </div>
                     </div>
-                </div>
-                <div class="row h-30">
-                    <div class="col-md-12 h-100">
-                        <div class="card p-0 m-0 h-100 cardProspectosVig">
+                    <div class="col-6 col-sm-6 col-md-6 col-lg-12 col-prospectos">
+                        <div class="card p-0 h-100 cardProspectosVig">
                             <div class="container-fluid h-100">
                                 <div class="row h-100">
                                     <div class="col-md-12 h-30 pl-2 pt-2 pr-2 d-flex justify-between align-center">
@@ -83,15 +79,14 @@
     </div>
 </div>
 
-<div class="container-fluid mt-3">
-    <div class="row" style="height: 500px;">
-        <div class="col-12 col-sm-12 col-md-9 col-lg-9 h-100">
-            <div class="card h-100 m-0 p-2">
+<div id="estadisticas" class="container-fluid">
+    <div class="row">
+        <div class="col-12 col-sm-12 col-md-9 col-lg-9">
+            <div class="card p-2">
                 <div class="container-fluid h-100 p-0">
                     <div class="row m-0 h-10">
-                    <h4 class="text-left m-0 fw-400 pb-1">Estadísticas generales</h4>
-
-                        <div class="col-12 col-sm-12 col-md-4 col-lg-4 p-0">
+                        <h4 class="text-left m-0 fw-400 pb-1">Estadísticas generales</h4>
+                        <div class="col-12 col-sm-5 col-md-4 col-lg-4 p-0">
                             <div class="form-group d-flex m-0">
                                 <input type="text" class="form-control datepicker beginDates" id="beginDate2" value="" autocomplete='off'/>
                                 <input type="text" class="form-control datepicker endDates" id="endDate2" value="" autocomplete='off'/>
@@ -100,7 +95,7 @@
                                 </button>
                             </div>
                         </div>
-                        <div class="col-12 col-sm-12 col-md-8 col-lg-8 p-0 d-flex justify-end">
+                        <div class="col-12 col-sm-7 col-md-8 col-lg-8 p-0 d-flex justify-end">
                             <ul class="nav nav-pills m-0">
                                 <li class="active week" id="thisWeek">
                                     <a href="#thisWeek" data-toggle="tab" >Esta semana</a>
@@ -120,10 +115,10 @@
                         </div>
                     </div>
                     <div class="row m-0 h-40">
-                        <div class="col-12 col-sm-12 col-md-6 col-lg-6 pl-0">
+                        <div class="col-12 col-sm-6 col-md-6 col-lg-6 pl-0">
                             <div class="d-flex" >
                                 <div class="w-80 d-flex align-center">
-                                <i class="fas fa-circle pr-2 pl-2 dot txt-lapisLazuli"></i>
+                                <i class="fas fa-circle pr-2 pl-2 txt-lapisLazuli"></i>
                                 <p class="m-0">Prospectos totales</p>
                                 </div>
                                 <div class="w-20">
@@ -132,7 +127,7 @@
                             </div>
                             <div class="d-flex" >
                                 <div class="w-80 d-flex align-center">
-                                <i class="fas fa-circle pr-2 pl-2 dot txt-blueNCS"></i>
+                                <i class="fas fa-circle pr-2 pl-2 txt-blueNCS"></i>
                                 <p class="m-0">Nuevos prospectos</p>
                                 </div>
                                 <div class="w-20">
@@ -141,7 +136,7 @@
                             </div>
                             <div class="d-flex" >
                                 <div class="w-80 d-flex align-center">
-                                <i class="fas fa-circle pr-2 pl-2 dot txt-viridianGreen"></i>
+                                <i class="fas fa-circle pr-2 pl-2 txt-viridianGreen"></i>
                                 <p class="m-0">Prospectos con cita</p>
                                 </div>
                                 <div class="w-20">
@@ -150,7 +145,7 @@
                             </div>
                             <div class="d-flex" >
                                 <div class="w-80 d-flex align-center">
-                                <i class="fas fa-circle pr-2 pl-2 dot txt-tiffanyBlue"></i>
+                                <i class="fas fa-circle pr-2 pl-2 txt-tiffanyBlue"></i>
                                 <p class="m-0">Cierres totales</p>
                                 </div>
                                 <div class="w-20">
@@ -158,10 +153,10 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-12 col-sm-12 col-md-6 col-lg-6 pr-0">
+                        <div class="col-12 col-sm-6 col-md-6 col-lg-6 pr-0">
                             <div class="d-flex" >
                                 <div class="w-80 d-flex align-center">
-                                <i class="fas fa-circle pr-2 pl-2 dot txt-oceanGreen"></i>
+                                <i class="fas fa-circle pr-2 pl-2 txt-oceanGreen"></i>
                                 <p class="m-0">Ventas contratadas</p>
                                 </div>
                                 <div class="w-20">
@@ -170,7 +165,7 @@
                             </div>
                             <div class="d-flex" >
                                 <div class="w-80 d-flex align-center">
-                                <i class="fas fa-circle pr-2 pl-2 dot txt-caribbeanGreen"></i>
+                                <i class="fas fa-circle pr-2 pl-2 txt-caribbeanGreen"></i>
                                 <p class="m-0">Ventas apartados</p>
                                 </div>
                                 <div class="w-20">
@@ -179,7 +174,7 @@
                             </div>
                             <div class="d-flex" >
                                 <div class="w-80 d-flex align-center">
-                                <i class="fas fa-circle pr-2 pl-2 dot txt-lightGreen"></i>
+                                <i class="fas fa-circle pr-2 pl-2 txt-lightGreen"></i>
                                 <p class="m-0">Cancelados contratados</p>
                                 </div>
                                 <div class="w-20">
@@ -188,7 +183,7 @@
                             </div>
                             <div class="d-flex" >
                                 <div class="w-80 d-flex align-center">
-                                <i class="fas fa-circle pr-2 pl-2 dot txt-sunny"></i>
+                                <i class="fas fa-circle pr-2 pl-2 txt-sunny"></i>
                                 <p class="m-0">Cancelados apartados</p>
                                 </div>
                                 <div class="w-20">
@@ -200,55 +195,47 @@
                 </div>
             </div>
         </div>
-        <div class="col-12 col-sm-12 col-md-3 col-lg-3 h-100">
-            <div class="card p-2 h-100 m-0">
+        <div class="col-12 col-sm-6 col-md-3 col-lg-3">
+            <div class="card p-2">
                 <div class="container-fluid h-100">
                     <div class="row h-50">
                         <div class="col-md-12 p-0 h-100">
-                            <!-- <h7 class="m-0 fw-400">Clientes y prospectos por mes</h7> -->
                             <h4 class="text-center m-0 fw-400">Embudo de ventas</h4>
                             <div id="chartFunnel"></div>
                         </div>
                     </div>
                     <div class="row h-50">
-                        <div class="col-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-between pt-1">
+                        <div class="col-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-between pt-1 pl-0">
                             <div class="d-flex">
-                                <i class="fas fa-circle pr-2 pl-2 dot txt-lapisLazuli"></i>
+                                <i class="fas fa-circle pr-2 pl-2 txt-lapisLazuli"></i>
                                 <p class="m-0">Prospectos</p>
                             </div>
                             <h4 id="ac" class="subtitle_skeleton numberElement2 m-0"></h4>
                         </div>
-                        <!-- <div class="col-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-between pt-1">
+                        <div class="col-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-between pt-1 pl-0">
                             <div class="d-flex">
-                                <i class="fas fa-circle pr-2 pl-2 dot txt-blueNCS"></i>
-                                <p class="m-0">Corrida financiera</p>
-                            </div>
-                            <h4 id="cf" class="subtitle_skeleton numberElement2 m-0"></h4>
-                        </div> -->
-                        <div class="col-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-between pt-1">
-                            <div class="d-flex">
-                                <i class="fas fa-circle pr-2 pl-2 dot txt-viridianGreen"></i>
+                                <i class="fas fa-circle pr-2 pl-2 txt-viridianGreen"></i>
                                 <p class="m-0">Cita</p>
                             </div>
                             <h4 id="cita" class="subtitle_skeleton numberElement2 m-0"></h4>
                         </div>
-                        <div class="col-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-between pt-1">
+                        <div class="col-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-between pt-1 pl-0">
                             <div class="d-flex">
-                                <i class="fas fa-circle pr-2 pl-2 dot txt-tiffanyBlue"></i>
+                                <i class="fas fa-circle pr-2 pl-2 txt-tiffanyBlue"></i>
                                 <p class="m-0">Cita seguimiento</p>
                             </div>
                             <h4 id="cs" class="subtitle_skeleton numberElement2 m-0"></h4>
                         </div>
-                        <div class="col-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-between pt-1">
+                        <div class="col-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-between pt-1 pl-0">
                             <div class="d-flex">
-                                <i class="fas fa-circle pr-2 pl-2 dot txt-caribbeanGreen"></i>
+                                <i class="fas fa-circle pr-2 pl-2 txt-caribbeanGreen"></i>
                                 <p class="m-0">No interesado</p>
                             </div>
                             <h4 id="ni" class="subtitle_skeleton numberElement2 m-0"></h4>
                         </div>
-                        <div class="col-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-between pt-1">
+                        <div class="col-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-between pt-1 pl-0">
                             <div class="d-flex">
-                                <i class="fas fa-circle pr-2 pl-2 dot txt-oceanGreen"></i>
+                                <i class="fas fa-circle pr-2 pl-2 txt-oceanGreen"></i>
                                 <p class="m-0">Apartados</p>
                             </div>
                             <h4 id="ap" class="subtitle_skeleton numberElement2 m-0"></h4>
