@@ -131,8 +131,10 @@ class Corrida extends CI_Controller {
 		$arreglo['status'] = 0;
         $arreglo["corrida_dump"]= json_encode($objDatos->corrida_dump);
         $arreglo["tipo_casa"]= $objDatos->tipo_casa;
+        $arreglo["id_cliente"]= $objDatos->id_cliente;
 
-
+        /*print_r($arreglo);
+        exit;*/
 
         $array_allPackages = json_decode($objDatos->allPackages);
         $arrayTocxp = array();
@@ -2623,7 +2625,6 @@ $pdf->Output(utf8_decode($namePDF), 'I');
             "paquete" => $paquete
         );
 
-
         $arreglo =array();
         $arreglo["nombre"]= $objDatos->nombre;
         $arreglo["id_lote"]= $idLote;
@@ -2654,15 +2655,16 @@ $pdf->Output(utf8_decode($namePDF), 'I');
         $arreglo["finalMesesp2"]= $objDatos->finalMesesp2;
         $arreglo["finalMesesp3"]= $objDatos->finalMesesp3;
         $arreglo["observaciones"]= $objDatos->observaciones;
+        $arreglo["fecha_modificacion"] = date("Y-m-d H:i:s");
 
-
+        /*print_r($arreglo);
+        exit;*/
 
         /*print_r($arreglo["telefono"]);
         exit;*/
 
         $array_allPackages = json_decode($objDatos->allPackages);
         $arrayTocxp = array();
-
 
 
 
@@ -2676,15 +2678,11 @@ $pdf->Output(utf8_decode($namePDF), 'I');
                     $arrayTocxp[$key]['descuentos'][$key2]['prioridad'] = $value2->prioridad;
                     $arrayTocxp[$key]['descuentos'][$key2]['id_descuento'] = $value2->id_descuento;
                     //$arrayTocxp[$key]['descuentos'][$key2]['estatus'] =  0;
-
-
                     for ($i = 0; $i < count($arrayDescApply); $i++) {
                         if ($arrayDescApply[$i]->id_descuento == $value2->id_descuento && $arrayDescApply[$i]->id_paquete == $value->id_paquete) {
                             $arrayTocxp[$key]['descuentos'][$key2]['estatus'] = 1;
                         }
-
                     }
-
                 }
             }
 
