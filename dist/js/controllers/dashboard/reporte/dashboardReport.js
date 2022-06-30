@@ -359,7 +359,7 @@ function setOptionsChart(series, categories, miniChart, type= null){
             toolbar: { show: false },
             zoom: { enabled: false },
             sparkline: {
-                enabled: true
+                enabled: type==1 ? false: true
             }
         },
         colors: colors,
@@ -371,21 +371,29 @@ function setOptionsChart(series, categories, miniChart, type= null){
             width: `${ ( miniChart == 0 ) ? 3 : 2 }`,
         },
         xaxis: {
+            show: type==1 ? true: false,
             categories: categories,
-            labels: {show: false},
-            axisBorder: {show:false},
-            axisTicks: {show:false},
+            labels: {show: true},
+            formatter: function (value) {
+                return '';
+            },
+            axisBorder: {show:type==1 ? true: false},
+            axisTicks: {show:type==1 ? true: false},
         },
         yaxis: {
             labels: {
-                show: false,
+                show: type==1 ? true: false,
                 formatter: function (value) {
                     let format = type != null ? value: "$" + formatMoney(value);
                     return format;
-                }
+                },
+                style: {
+                    colors: '#eaeaea',
+                },
+                offsetX: -15
             },
-            axisBorder: {show:false},
-            axisTicks: {show:false},
+            axisBorder: {show:type==1 ? true: false},
+            axisTicks: {show:type==1 ? true: false},
         },
         fill: {
             opacity: 1,
