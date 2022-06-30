@@ -1143,7 +1143,7 @@
   background-image: none;
   height: 100%;
   padding: 0;
-  z-index: 9999;
+  z-index: 9;
 }
 
 #ranking .card .col-chart .actions .form-group .btn-search {
@@ -1152,7 +1152,7 @@
   height: 100%;
   border: none;
   background-color: transparent;
-  z-index: 9999;
+  z-index: 9;
 }
 
 #ranking .card .col-chart .actions .btn-charts {
@@ -1177,7 +1177,7 @@
 
 #ranking .card .col-chart .titles {
   color: #103f75;
-  font-weight: bold;
+  font-weight: 500;
 }
 
 #ranking .card .col-datatable {
@@ -1309,8 +1309,20 @@
   }
 }
 
-@media (min-device-width: 320px) and (max-device-width: 480px) {
+@media (min-device-width: 320px) and (max-device-width: 480px), (min-width: 480px) and (max-width: 991px) {
   #ranking .card {
     height: inherit !important;
+  }
+}
+
+@media (min-width: 992px) {
+  #ranking .card {
+    background-color: aquamarine;
+  }
+}
+
+@media (min-width: 992px) and (max-width: 1199px) {
+  #ranking .card {
+    background-color: red;
   }
 }

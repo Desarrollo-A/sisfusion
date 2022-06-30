@@ -35,7 +35,7 @@ $(document).ready(function(){
 var options = {
     series: [],
     chart: {
-        height: 'auto',
+        height: '100%',
         type: 'bar',
         toolbar: {
             show: false
@@ -136,7 +136,7 @@ function buildChartsID(){
 }
 
 function toggleDatatable(e){
-    var columnaActiva = e.closest( '.flexible' );
+    var columnaActiva = e.closest( '.flexibleR' );
     var columnaChart = e.closest( '.col-chart' );
     var columnDatatable = $( e ).closest( '.row' ).find( '.col-datatable' );
     $( columnDatatable ).html('');
@@ -181,9 +181,8 @@ function buildEstructuraDT(dataName, dataApartados){
 }
 
 function reorderColumns(){
-    var principalColumns = document.getElementsByClassName("flexible");
+    var principalColumns = document.getElementsByClassName("flexibleR");
     var mainRow = document.getElementById('mainRow');
-   
     let opts = getCacheOptions();
     let dates = getCacheDates();
     var elements = document.createDocumentFragment();
@@ -821,25 +820,25 @@ function validateToggledDatatable(typeRanking){
     console.log('typeRanking',typeRanking);
 
     if ( typeRanking == 'Apartados' ){
-        var columna = $("#"+typeRanking).closest( '.flexible' );
+        var columna = $("#"+typeRanking).closest( '.flexibleR' );
         if ($( columna ).hasClass('activo')){
             buildTableApartados(dataApartados);
         }
     }
     else if( typeRanking == 'Contratados' ){
-        var columna = $("#"+typeRanking).closest( '.flexible' );
+        var columna = $("#"+typeRanking).closest( '.flexibleR' );
         if ($( columna ).hasClass('activo')){
             buildTableContratados(dataContratados);
         }
     }
     else if( typeRanking == 'ConEnganche' ){
-        var columna = $("#"+typeRanking).closest( '.flexible' );
+        var columna = $("#"+typeRanking).closest( '.flexibleR' );
         if ($( columna ).hasClass('activo')){
             buildTableConEnganche(dataConEnganche);
         }
     }
     else if( typeRanking == 'SinEnganche' ){
-        var columna = $("#"+typeRanking).closest( '.flexible' );
+        var columna = $("#"+typeRanking).closest( '.flexibleR' );
         if ($( columna ).hasClass('activo')){
             buildTableSinEnganche(dataSinEnganche);
         }

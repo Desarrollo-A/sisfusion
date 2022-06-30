@@ -1103,6 +1103,10 @@
   white-space: nowrap !important;
 }
 
+#metricas .apexcharts-bar-series.apexcharts-plot-series .apexcharts-series path {
+  clip-path: inset(0% 0% 0% 0% round 10px);
+}
+
 #metricas .card {
   height: 440px;
   margin-bottom: 0;
@@ -1302,4 +1306,8 @@
   #metricas .card {
     height: inherit !important;
   }
+}
+
+#metricas #boxChart4 .apexcharts-legend {
+  justify-content: space-between !important;
 }
