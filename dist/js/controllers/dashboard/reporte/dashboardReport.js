@@ -295,11 +295,11 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, dates=n
 $(document).on('click', '.update-dataTable', function () {
     const type = $(this).attr("data-type");
     const render = $(this).data("render");
-    const transaction = $(this).data("transaction");
+    const transaction = $(this).data("transaction");3
+    let closestChild = $(this).closest('.childTable');
+    console.log( closestChild.nextAll());
+    closestChild.nextAll().remove();
 
-    if(render == 1){
-        $('.childTable').remove();
-    }
     let dates = transaction == 2 ?  {begin: $('#tableBegin').val(), end: $('#tableEnd').val()}:null;
 
 
@@ -501,6 +501,7 @@ function getSpecificChart(type, beginDate, endDate){
                 total = total + element.data.reduce((a, b) => parseFloat(a) + parseFloat(b), 0);
             });
             console.log(total);
+            $("#modalChart .boxModalTitle .total").html('');
             $("#modalChart .boxModalTitle .total").append('<p>$'+formatMoney(total)+'</p>');
             
             if ( total != 0 ){
