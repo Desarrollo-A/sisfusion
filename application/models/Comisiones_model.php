@@ -2572,18 +2572,18 @@ function getDatosRevisionFactura($proyecto,$condominio){
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////77
 
 
-  function update_estatus_facturas($user, $proyecto) {
+//   function update_estatus_facturas($user, $proyecto) {
 
-    $id_user_Vl = $this->session->userdata('id_usuario');
-    $this->db->query("INSERT INTO  historial_comisiones VALUES ($idcom, $id_user_Vl, GETDATE(), 1, 'SE ACTIVÓ NUEVAMENTE COMISIÓN')");
+//     $id_user_Vl = $this->session->userdata('id_usuario');
+//     $this->db->query("INSERT INTO  historial_comisiones VALUES ($idcom, $id_user_Vl, GETDATE(), 1, 'SE ACTIVÓ NUEVAMENTE COMISIÓN')");
 
-    $this->db->query("UPDATE pago_comision_ind set estatus = 8,modificado_por='".$this->session->userdata('id_usuario')."' FROM pago_comision_ind pci
-    INNER JOIN comisiones com ON com.id_comision = pci.id_comision
-    INNER JOIN lotes lo ON lo.idLote = com.id_lote
-    INNER JOIN condominios cod ON cod.idCondominio = lo.idCondominio
-    INNER JOIN residenciales res ON res.idResidencial = cod.idResidencial
-    WHERE pci.estatus IN (4) AND pci.id_usuario = $user AND res.idResidencial = $proyecto)");
-  }
+//     $this->db->query("UPDATE pago_comision_ind set estatus = 8,modificado_por='".$this->session->userdata('id_usuario')."' FROM pago_comision_ind pci
+//     INNER JOIN comisiones com ON com.id_comision = pci.id_comision
+//     INNER JOIN lotes lo ON lo.idLote = com.id_lote
+//     INNER JOIN condominios cod ON cod.idCondominio = lo.idCondominio
+//     INNER JOIN residenciales res ON res.idResidencial = cod.idResidencial
+//     WHERE pci.estatus IN (4) AND pci.id_usuario = $user AND res.idResidencial = $proyecto)");
+//   }
 
 
 
