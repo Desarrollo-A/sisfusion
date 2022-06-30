@@ -1,15 +1,38 @@
 @import "_base";
 
 #inicio{
-  .card{ box-shadow: none!important;}
-  .first-row{
+  .card{
+    box-shadow: none!important;
     height: 450px;
+    margin: 25px 0 0 0;
+    h4{
+      @media #{$smartphone}{
+        text-align: center!important;
+        margin-bottom: 10px;
+      }
+    }
+    @media #{$smartphone}{
+      height: inherit;
+    }
+    
+  }
+  .col-total{
+    height: 315px;
+    @media #{$smartphone}{
+      height: inherit;
+    }
+    @media #{$tablets}{
+      height: inherit;
+    }
+  }
+  .col-prospectos{ 
+    height: 135px;
     .cardProspectosVig{
       p{
         font-size: 12px;
         color: $grayDark;
         span{
-          color: #2C93E7;
+          color: $blueFrance;
           font-weight: 700;
         }
       }
@@ -29,6 +52,12 @@
         font-weight: 600;
         font-size: 18px;
       }
+    }
+    @media #{$smartphone}{
+      height: inherit;
+    }
+    @media #{$tablets}{
+      height: inherit!important;
     }
   }
   .back{
@@ -63,66 +92,49 @@
       }
     }
   }
-}
-
-.fadeInAnimation{
-  animation: fadeIn 0.5s ease-in both;
-}
-.fadeInAnimationDelay2{
-  animation: fadeIn 1s ease-in both;
-}
-.fadeInAnimationDelay3{
-  animation: fadeIn 1.5s ease-in both;
-}
-.fadeInAnimationDelay4{
-  animation: fadeIn 2s ease-in both;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translate3d(0, -20%, 0);
+  #estadisticas{
+    .container-fluid{
+      .row{
+        @media #{$smartphone}{
+          height: inherit;
+        }
+      }
+      .h-40{
+        .col-12{
+          padding-right: 15px!important;
+          padding-left: 0!important;
+        }
+      }
+      @media #{$smartphone}{
+        height: inherit;
+      }
+    }
+    .nav-pills>li.active>a, .nav-pills>li.active>a:focus{
+      color: $white;
+      background-color: $blueIndigo!important;
+    }
   }
-  to {
-    opacity: 1;
-    transform: translate3d(0, 0, 0);
+  .beginDates{
+    background-color: $platinum!important;
+    border-radius: 27px 0 0 27px!important;
+    background-image: initial!important;
+    text-align: right!important;
   }
-}
-
-
-@keyframes loading {
-  0% {
-    background-position: -100px;
+  
+  .endDates {
+    background-color: $platinum!important;
+    border-radius: 0!important;
+    background-image: initial!important;
+    text-align: center!important;
   }
-  100% {
-    background-position: 200px;
+  
+  .btn-fab-mini {
+    border-radius: 0 27px 27px 0 !important;
+    background-color: $platinum !important;
+    box-shadow: none !important;
+    height: 45px !important;
   }
-}
-
-.beginDates{
-  background-color: $platinum!important;
-  border-radius: 27px 0 0 27px!important;
-  background-image: initial!important;
-  text-align: right!important;
-}
-
-.endDates {
-  background-color: $platinum!important;
-  border-radius: 0!important;
-  background-image: initial!important;
-  text-align: center!important;
-}
-
-.btn-fab-mini {
-  border-radius: 0 27px 27px 0 !important;
-  background-color: $platinum !important;
-  box-shadow: none !important;
-  height: 45px !important;
-}
-.btn-fab-mini span {
-  color: $deepGray;
-}
-
-.dot{
-  font-size: 1.2rem;
+  .btn-fab-mini span {
+    color: $deepGray;
+  }
 }
