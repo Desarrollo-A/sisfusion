@@ -1266,6 +1266,10 @@
   color: #ffffff;
 }
 
+#reporte .boxAccordions .bk table td.delimetter {
+  border-right: solid #eaeaea6b !important;
+}
+
 #reporte .boxAccordions .bk table .update-dataTable {
   border: 0;
   background-color: #D8DDE2;

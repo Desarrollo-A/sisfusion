@@ -7,7 +7,7 @@
                 <div class="container-fluid">
                     <div class="row pl-2 pt-2 pr-2">
                         <div class="col-xs-7 col-sm-7 col-md-7 col-lg-7 p-0 info">
-                            <p class="m-0">ventas<br> <span class="str">contratadas</span></p>
+                            <p class="m-0">Ventas<br> <span class="str">contratadas</span></p>
                         </div>
                         <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5 p-0 d-flex align-center justify-end">
                             <label class="selectMini m-0">4 meses <span class="material-icons">show_chart</span></label>
@@ -37,7 +37,7 @@
                 <div class="container-fluid">
                     <div class="row pl-2 pt-2 pr-2">
                         <div class="col-xs-7 col-sm-7 col-md-7 col-lg-7 p-0 info">
-                            <p class="m-0">ventas<br><span class="str">apartadas</span></p>
+                            <p class="m-0">Ventas<br><span class="str">apartadas</span></p>
                         </div>
                         <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5 p-0 d-flex align-center justify-end">
                             <label class="selectMini m-0">4 meses <span class="material-icons">show_chart</span></label> 
@@ -66,7 +66,7 @@
                 <div class="container-fluid">
                     <div class="row pl-2 pt-2 pr-2">
                         <div class="col-xs-7 col-sm-7 col-md-7 col-lg-7 p-0 info">
-                            <p class="m-0">canceladas<br> <span class="str">contratadas</span></p>
+                            <p class="m-0">Canceladas<br> <span class="str">contratadas</span></p>
                         </div>
                         <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5 p-0 d-flex align-center justify-end">
                             <label class="selectMini m-0">4 meses <span class="material-icons">show_chart</span></label> 
@@ -95,7 +95,7 @@
                 <div class="container-fluid">
                     <div class="row pl-2 pt-2 pr-2">
                         <div class="col-xs-7 col-sm-7 col-md-7 col-lg-7 p-0 info">
-                            <p class="m-0">canceladas<br> <span class="str">apartadas</span></p>
+                            <p class="m-0">Canceladas<br> <span class="str">apartadas</span></p>
                         </div>
                         <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5 p-0 d-flex align-center justify-end">
                             <label class="selectMini m-0">4 meses <span class="material-icons">show_chart</span></label> 

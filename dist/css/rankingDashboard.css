@@ -1175,6 +1175,11 @@
   color: #143860;
 }
 
+#ranking .card .col-chart .titles {
+  color: #103f75;
+  font-weight: bold;
+}
+
 #ranking .card .col-datatable {
   /* El background del scroll (border)*/
   /* Color de la barra de desplazamiento */

@@ -129,6 +129,9 @@
                         }
                     }
                 }
+                td.delimetter{
+                    border-right: solid #eaeaea6b!important;
+                }
                 .update-dataTable{
                     border: 0;
                     background-color: #D8DDE2;
@@ -172,6 +175,8 @@
             .dataTables_scrollBody::-webkit-scrollbar-thumb:hover{
                 background-color: $deepGray;
             }
+           
+           
         }
         .accordion-content {
             display: none;
@@ -292,3 +297,4 @@
         }
     }
 }
+

@@ -268,6 +268,9 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, dates=n
             },
         ],
         columnDefs: [{
+            className: "delimetter", "targets": [ 5 ],
+        },{
+           
             visible: false,
             searchable: false
         }],
@@ -286,6 +289,8 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, dates=n
             }
         }
     });
+    console.log( $(`#table${option} thead tr th`));
+    // $(`#table${option} thead tr th`).removeClass('delimetter');
     $('[data-toggle="tooltip"]').tooltip();
 }
 
@@ -345,7 +350,7 @@ $(document).on('click', '.update-dataTable', function () {
 });
 
 function setOptionsChart(series, categories, miniChart, type= null){
-    (series.length > 1) ? colors = ["#2C93E7", "#d9c07b"] : colors = ["#2C93E7"];
+    (series.length > 1 && type == 1) ? colors=  ['#0089B7','#C25E5E', '#00CDA3', '#EB7B90']:(series.length > 1 && (type == 0 || type == null)) ? colors = ["#2C93E7", "#d9c07b"]:colors = ["#2C93E7"]
     var optionsMiniChart = {
         series: series,
         chart: {
@@ -449,10 +454,11 @@ $(document).on('click', '.chartButton', function () {
     $(".datesModal").hide();
     $("#modalChart .boxModalTitle .title").html('');
     $("#modalChart .boxModalTitle .total").html('');
-    $("#modalChart .boxModalTitle .title").append('Grafica general');
+    let option = $('#chartButton').data('option');
+    let title = getTitle(option);
+    $("#modalChart .boxModalTitle .title").append(`${title}`);
     $('#modalChart').modal();
     // $("#boxModalChart").html('');
-    let option = $('#chartButton').data('option');
     let table = $(`#table${option}`);
     var tableData = table.DataTable().rows().data().toArray();
     generalChart(tableData);
@@ -814,12 +820,12 @@ function buildTableDetail(data) {
     sedes += '<td>' + '<b>' + 'SEDE ' + '</b></td>';
     sedes += '<td>' + '<b>' + '# DE LOTES APARTADOS ' + '</b></td>';
     sedes += '<td>' + '<b>' + 'APARTADO ' + '</b></td>';
-    sedes += '<td>' + '<b>' + 'CANCELADO ' + '</b></td>';
-    sedes += '<td>' + '<b>' + '% CANCELADOS ' + '</b></td>';
+    sedes += '<td>' + '<b>' + 'CANCELADO APARTADOS ' + '</b></td>';
+    sedes += '<td>' + '<b>' + '% CANCELADOS APARTADOS ' + '</b></td>';
     sedes += '<td>' + '<b>' + '# DE LOTES CONTRATADOS ' + '</b></td>';
     sedes += '<td>' + '<b>' + 'CONTRATADOS ' + '</b></td>';
-    sedes += '<td>' + '<b>' + 'CANCELADOS ' + '</b></td>';
-    sedes += '<td>' + '<b>' + '% CANCELADOS ' + '</b></td>';
+    sedes += '<td>' + '<b>' + 'CANCELADOS CONTRATADOS ' + '</b></td>';
+    sedes += '<td>' + '<b>' + '% CANCELADOS CONTRATADOS ' + '</b></td>';
     sedes += '</tr>';
     $.each(data, function (i, v) {
         //i es el indice y v son los valores de cada fila
