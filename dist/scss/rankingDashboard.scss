@@ -32,7 +32,7 @@
                         background-image: none;
                         height: 100%;
                         padding: 0;
-                        z-index: 9999;
+                        z-index: 9;
                     }
                     .btn-search{
                         display: flex;
@@ -40,7 +40,7 @@
                         height: 100%;
                         border: none;
                         background-color: transparent;
-                        z-index: 9999;
+                        z-index: 9;
                     }
                 }
                 .btn-charts{
@@ -64,7 +64,7 @@
             }
             .titles{
                 color: $blueIndigo;
-                font-weight: bold;
+                font-weight: 500;
             }
         }
         .col-datatable{
