@@ -5094,33 +5094,33 @@ public function lista_proyecto($param)
     echo json_encode($this->Comisiones_model->get_proyectos_comisiones($filtro_post)->result_array());
 }
 
- public function lista_condominio($param, $proyecto)
-    {
-      // $this->validateSession();
-      $id_user = $this->session->userdata('id_usuario');
+//  public function lista_condominio($param, $proyecto)
+//     {
+//       // $this->validateSession();
+//       $id_user = $this->session->userdata('id_usuario');
 
-      // if($param == 0){
-        $filtro_00 = ' WHERE con.idResidencial = '.$proyecto.' ';
-      // }else{
-      //   $filtro_00 = ' AND pci.estatus = '.$param.' AND con.idResidencial = '.$proyecto.' ';
-      // }
+//       // if($param == 0){
+//         $filtro_00 = ' WHERE con.idResidencial = '.$proyecto.' ';
+//       // }else{
+//       //   $filtro_00 = ' AND pci.estatus = '.$param.' AND con.idResidencial = '.$proyecto.' ';
+//       // }
 
-      // switch ($this->session->userdata('id_rol')) {
-      //   case '1':
-      //   case '2':
-      //   case '3':
-      //   case '7':
-      //   case '9':
-      //   // case '1':
-      //     $filtro_post = ' WHERE con.status = 1 AND com.id_usuario = '.$id_user.' '.$filtro_00;
-      //     break;
+//       // switch ($this->session->userdata('id_rol')) {
+//       //   case '1':
+//       //   case '2':
+//       //   case '3':
+//       //   case '7':
+//       //   case '9':
+//       //   // case '1':
+//       //     $filtro_post = ' WHERE con.status = 1 AND com.id_usuario = '.$id_user.' '.$filtro_00;
+//       //     break;
         
-      //   default:
-      //     $filtro_post = ' WHERE con.status = 1 '.$filtro_00;
-      //     break; 
-      // }
-        echo json_encode($this->Comisiones_model->get_condominios_comisiones($filtro_post)->result_array());
-    }
+//       //   default:
+//       //     $filtro_post = ' WHERE con.status = 1 '.$filtro_00;
+//       //     break; 
+//       // }
+//         echo json_encode($this->Comisiones_model->get_condominios_comisiones($filtro_post)->result_array());
+//     }
 
 
 

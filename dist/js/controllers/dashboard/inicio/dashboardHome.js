@@ -143,7 +143,7 @@ var optionsProspClients = {
             stops: [0, 70, 100],
             colorStops: []
         }
-    }
+    },
 };
 
 var optionsWeekly = {
