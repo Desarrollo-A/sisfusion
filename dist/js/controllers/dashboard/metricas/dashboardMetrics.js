@@ -12,14 +12,14 @@ var optionBarInit = {
     colors: ['#0089B7', '#039590', '#00ACB8', '#4BBC8E', '#00CDA3', '#92E784', '#F9F871'],
     stroke: {
         colors: ['transparent'],
-        width: 10,
+        width: 0,
     },
     plotOptions: {
         bar: {
             distributed: false, // this line is mandatory
             borderRadius: 10,
             horizontal: true,
-            barHeight: '60%',
+            barHeight: '40%',
         }
     },
     dataLabels: {
@@ -83,14 +83,14 @@ var optionsDisponibilidad = {
         bar: {
             distributed: true,
             horizontal: true,
-            barHeight: '100%',
+            barHeight: '70%',
             borderRadius: 10
         }
     },
     colors: ['#0089B7', '#039590', '#00ACB8', '#4BBC8E', '#00CDA3', '#92E784', '#F9F871'],
     stroke: {
         colors: ['transparent'],
-        width: 10,
+        width: 0,
     },
     dataLabels: {
         formatter: function (val, opt) {
