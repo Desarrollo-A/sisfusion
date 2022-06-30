@@ -16,69 +16,16 @@ var optionBarInit = {
     },
     plotOptions: {
         bar: {
-            distributed: true, // this line is mandatory
-            borderRadius: 4,
+            distributed: false, // this line is mandatory
+            borderRadius: 10,
             horizontal: true,
+            barHeight: '60%',
         }
     },
     dataLabels: {
         enabled: true,
         formatter: function (val, opts) {
-            return opts.w.config.xaxis.categories[opts.dataPointIndex];
-        },
-        textAnchor: 'middle',
-        offsetX: 0,
-        offsetY: 0,
-        style: {
-            fontSize: '12px',
-            fontFamily: 'Helvetica, Arial, sans-serif',
-            fontWeight: 'bold',
-        },
-    },
-    legend: {
-        show: false,
-    },
-    xaxis: {
-        categories: [],
-    },
-    yaxis: {
-        show: false,
-        labels: {
-            show: false
-        },
-    }
-};
-
-var optionsDisponibilidad = {
-    series: [],
-    chart: {
-        height: 'auto',
-        type: 'bar',
-        toolbar: {
-            show: false
-        },
-    },
-    plotOptions: {
-        bar: {
-            distributed: true,
-            horizontal: true,
-        }
-    },
-    colors: ['#0089B7', '#039590', '#00ACB8', '#4BBC8E', '#00CDA3', '#92E784', '#F9F871'],
-    stroke: {
-        colors: ['transparent'],
-        width: 10,
-    },
-    dataLabels: {
-        formatter: function (val, opt) {
-            const goals =
-                opt.w.config.series[opt.seriesIndex].data[opt.dataPointIndex]
-                .goals
-
-            if (goals && goals.length) {
-                return `${val} / ${goals[0].value}`
-            }
-            return val
+            return val;
         }
     },
     legend: {
@@ -94,6 +41,99 @@ var optionsDisponibilidad = {
         },
         axisTicks: {
             show: false
+        },
+    },
+    yaxis: {
+        show: true,
+        labels: {
+            show: true
+        },
+    },
+    grid: {
+        show: true,
+        borderColor: '#f3f3f3',
+        strokeDashArray: 0,
+        position: 'back',
+        yaxis: {
+            lines: {
+                show: true
+            }
+        },
+        row: {
+            colors: undefined,
+            opacity: 0.5
+        },
+        column: {
+            colors: undefined,
+            opacity: 0.5
+        },
+    },
+};
+
+var optionsDisponibilidad = {
+    series: [],
+    chart: {
+        height: 'auto',
+        type: 'bar',
+        toolbar: {
+            show: false
+        },
+    },
+    plotOptions: {
+        bar: {
+            distributed: true,
+            horizontal: true,
+            barHeight: '100%',
+            borderRadius: 10
+        }
+    },
+    colors: ['#0089B7', '#039590', '#00ACB8', '#4BBC8E', '#00CDA3', '#92E784', '#F9F871'],
+    stroke: {
+        colors: ['transparent'],
+        width: 10,
+    },
+    dataLabels: {
+        formatter: function (val, opt) {
+            const goals = opt.w.config.series[opt.seriesIndex].data[opt.dataPointIndex].goals;
+
+            if (goals && goals.length) {
+                return `${val} / ${goals[0].value}`
+            }
+            return val
+        },
+    },
+    legend: {
+        show: false,
+    },
+    xaxis: {
+        show: false,
+        labels: {
+            show: false
+        },
+        axisBorder: {
+            show: false
+        },
+        axisTicks: {
+            show: false
+        },
+    },
+    grid: {
+        show: true,
+        borderColor: '#f3f3f3',
+        strokeDashArray: 0,
+        position: 'back',
+        yaxis: {
+            lines: {
+                show: true
+            }
+        },
+        row: {
+            colors: undefined,
+            opacity: 0.5
+        },
+        column: {
+            colors: undefined,
+            opacity: 0.5
         },
     },
 };
@@ -117,37 +157,71 @@ var optionLugar = {
     },
     plotOptions: {
         bar: {
-            distributed: true, // this line is mandatory
-            borderRadius: 4,
             horizontal: true,
+            borderRadius: 10,
+            barHeight: '100%',
+            distributed: false,
+            dataLabels: {
+                show: true
+            },
         }
     },
     dataLabels: {
         enabled: true,
         formatter: function (val, opts) {
-            return opts.w.config.xaxis.categories[opts.dataPointIndex];
-        },
-        textAnchor: 'middle',
-        offsetX: 0,
-        offsetY: 0,
-        style: {
-            fontSize: '12px',
-            fontFamily: 'Helvetica, Arial, sans-serif',
-            fontWeight: 'bold',
+            return val;
         },
     },
     legend: {
         show: false,
     },
     xaxis: {
-        categories: [],
-    },
-    yaxis: {
-        show: false,
-        labels: {
+        axisBorder: {
             show: false
         },
-    }
+        axisTicks: {
+            show: false,
+        },
+        labels: {
+            show: false,
+        }
+    },
+    yaxis: {
+        axisBorder: {
+            show: false
+        },
+        axisTicks: {
+            show: false,
+        },
+        labels: {
+            show: true,
+            formatter: function (val) {
+                return val;
+            },
+            style: {
+                colors: []
+            }
+        }
+    },
+    grid: {
+        show: true,
+        borderColor: '#f3f3f3',
+        strokeDashArray: 0,
+        position: 'back',
+        yaxis: {
+            lines: {
+                show: true
+            }
+        },
+        row: {
+            colors: undefined,
+            opacity: 0.5
+        },
+        column: {
+            colors: undefined,
+            opacity: 0.5
+        },
+    },
 };
 
 var optionsMedio = {
@@ -211,6 +285,25 @@ var optionsVentasMetros = {
     },
     tooltip: {
       show: false
+    },
+    grid: {
+        show: true,
+        borderColor: '#f3f3f3',
+        strokeDashArray: 0,
+        position: 'back',
+        yaxis: {
+            lines: {
+                show: true
+            }
+        },
+        row: {
+            colors: undefined,
+            opacity: 0.5
+        },
+        column: {
+            colors: undefined,
+            opacity: 0.5
+        },
     },
 };
 
