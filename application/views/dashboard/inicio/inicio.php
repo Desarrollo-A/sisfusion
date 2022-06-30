@@ -1,6 +1,6 @@
 <link href="<?= base_url() ?>dist/css/inicioDashboard.css" rel="stylesheet"/>
 
-<div class="container-fluid pb-1" >
+<div class="container-fluid" >
     <div class="row" id="buttonsCoord">
         <div class="col-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-end">
             <div class="back d-flex">
