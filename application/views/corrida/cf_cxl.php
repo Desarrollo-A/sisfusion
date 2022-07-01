@@ -8386,7 +8386,15 @@
                 });
 
             $scope.onSelectChangegerente = function(gerente) {
-                $http.post('<?=base_url()?>index.php/corrida/getCoordinador',{gerente: gerente.idGerente}).then(
+                console.log("Gerente: ", gerente);
+                let gerenteParam;
+                if($scope.id_clienteP == undefined){
+                    gerenteParam = gerente.idGerente;
+                }else{
+                    gerenteParam = gerente;
+                }
+                // console.log("$scope.idcliete", $scope.id_clienteP);
+                $http.post('<?=base_url()?>index.php/corrida/getCoordinador',{gerente: gerenteParam}).then(
                     function (response) {
                         $scope.coordinadores = response.data;
                     },
@@ -8395,7 +8403,16 @@
             }
 
             $scope.onSelectChangecoord = function(coordinador) {
-                $http.post('<?=base_url()?>index.php/corrida/getAsesor',{coordinador: coordinador.idCoordinador}).then(
+                console.log("coordinador: ", coordinador);
+                console.log("$scope.idcliete", $scope.id_clienteP);
+                let coordParam;
+                if($scope.id_clienteP == undefined){
+                    coordParam = coordinador.idCoordinador;
+                }else{
+                    coordParam = coordinador;
+                }
+
+                $http.post('<?=base_url()?>index.php/corrida/getAsesor',{coordinador: coordParam}).then(
                     function (response) {
                         $scope.asesores = response.data;
                     },
