@@ -10,17 +10,7 @@
 		$this->load->view('template/sidebar', $datos);
 		/*--------------------------------------------------------*/
 		?>
-		<style>
-			#boxHome #banner{
-				background-image: linear-gradient(RGB(0 0 0/30%),RGB(0 0 0/32%)),url('<?=base_url()?>dist/img/home.png');
-				background-position: center;
-				background-size: cover;
-				background-repeat: no-repeat;
-				display:flex;
-				justify-content: center;
-				align-items: center;
-			}
-		</style>
+		
 		<div class="content" id="boxHome">
 			<div class="container-fluid h-100">				
 				<div class="row h-100" style="" id="banner">
@@ -76,14 +66,11 @@
 		}else if(time > '03:00' && '0'+time < '12:00'){
 			saludo = 'Buenos días';
 		}
-		console.log("Tiempo: " + time);
-		console.log("Saludo: " + saludo);
 		const shortDate = `${date.getDate()} - ${months[date.getMonth()]}`
 		
 		document.getElementById("time").textContent = time
 		document.getElementById("date").textContent = shortDate
 		document.getElementById("saludoTxt").textContent = saludo
-		
 	}
 
 	function startClock() {

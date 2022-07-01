@@ -215,7 +215,7 @@ foreach($datos2 as $datos)
 	<nav class="navbar navbar-transparent navbar-absolute">
 		<div class="container-fluid">
 			<div class="navbar-minimize">
-				<button id="minimizeSidebar" class="btn btn-round btn-white btn-fill btn-just-icon">
+				<button id="minimizeSidebar" class="btn btn-round btn-white btn-fill btn-just-icon" rel="tooltip" data-placement="bottom" title="Contraer menú">
 					<i class="material-icons visible-on-sidebar-regular">more_vert</i>
 					<i class="material-icons visible-on-sidebar-mini">view_list</i>
 				</button>
@@ -231,7 +231,7 @@ foreach($datos2 as $datos)
 					<img src="<?=base_url()?>static/images/img.ico" class="img-responsive" width="15%">
 				</a>
                 <div class="divIconsNav">
-                    <div class="divCalendar" id="divCalendar">
+                    <div class="divCalendar hidden" id="divCalendar">
                         <a id="minimizeSidecalendar" class="navbar-brand responsive">
                             <i class="material-icons far fa-calendar-alt"></i>
                         </a>
@@ -251,17 +251,17 @@ foreach($datos2 as $datos)
                     <input type="hidden" id="uri" value="<?=base_url()?>Usuarios/Chat">
                     <!------------------------------------------------------------------------->
                     <!-- Abrir side-calendar -->
-					<li class="icoNav noResponsive" id ="openCalendar">
+					<li class="icoNav noResponsive hidden" id ="openCalendar" rel="tooltip" data-placement="bottom" title="calendario">
 						<a id="minimizeSidecalendar">
                             <span class="material-icons">date_range</span>
 						</a>
                     </li>
-                    <li class="icoNav noResponsive">
+                    <li class="icoNav noResponsive" rel="tooltip" data-placement="bottom" title="Ajustes">
 						<a href="<?=base_url()?>index.php/Usuarios/configureProfile">
                             <span class="material-icons">settings</span>
 						</a>
                     </li>
-                    <li class="icoNav noResponsive">
+                    <li class="icoNav noResponsive" rel="tooltip" data-placement="bottom" title="Salir">
 						<a href="<?=base_url()?>index.php/login/logout_ci">
                             <span class="material-icons">exit_to_app</span>
 						</a>
@@ -285,7 +285,7 @@ foreach($datos2 as $datos)
                     }
                     ?>
 					<li class=" perfil">
-                        <div class="idBubble"><p class="overflow-text m-0"><?= $this->session->userdata('id_usuario') ?></p></div>
+                        <div class="idBubble"><p class="m-0"><?= $this->session->userdata('id_usuario') ?></p></div>
                         <div class="fullName"><?= $this->session->userdata('nombre')." ".$this->session->userdata('apellido_paterno')." ".$this->session->userdata('apellido_materno') ?></div>
 					</li>
 					<li class="separator hidden-lg hidden-md"></li>
@@ -294,6 +294,7 @@ foreach($datos2 as $datos)
 		</div>
     </nav>
 <script>
+    $('[data-toggle="tooltip"]').tooltip();
     function AddTicket(){
           $.post("<?=base_url()?>index.php/Api/ServicePostTicket", function (data) {
             console.log(data);
