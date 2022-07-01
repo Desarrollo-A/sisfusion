@@ -340,6 +340,10 @@
   display: none;
 }
 
+.d-block {
+  display: block;
+}
+
 .d-flex {
   display: flex;
 }
@@ -1311,7 +1315,7 @@
   }
 }
 
-@media (min-device-width: 320px) and (max-device-width: 480px) {
+@media (min-device-width: 320px) and (max-device-width: 480px), (min-width: 480px) and (max-width: 991px) {
   #metricas .card {
     height: inherit !important;
   }

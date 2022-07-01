@@ -16,9 +16,11 @@
 				<div class="row h-100" style="" id="banner">
 					<div id="clock">
 						<div class="w-100" id="info">
-							<h5 id="saludoTxt" style="text-align: left;font-size: 1.5em;padding:0px 0px 20px 0px;margin:0px"></h5>
-							<div id="time"></div>
-							<div class="pl-2" id="date"></div>
+							<h5 id="saludoTxt"></h5>
+							<div class="">
+								<p class="m-0 w-100" id="time"></p>
+								<p class="m-0 w-100" id="date"></p>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -66,7 +68,7 @@
 		}else if(time > '03:00' && '0'+time < '12:00'){
 			saludo = 'Buenos días';
 		}
-		const shortDate = `${date.getDate()} - ${months[date.getMonth()]}`
+		const shortDate = `${date.getDate()} ${months[date.getMonth()]}`
 		
 		document.getElementById("time").textContent = time
 		document.getElementById("date").textContent = shortDate
