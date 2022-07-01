@@ -231,7 +231,7 @@ foreach($datos2 as $datos)
 					<img src="<?=base_url()?>static/images/img.ico" class="img-responsive" width="15%">
 				</a>
                 <div class="divIconsNav">
-                    <div class="divCalendar" id="divCalendar">
+                    <div class="divCalendar hidden" id="divCalendar">
                         <a id="minimizeSidecalendar" class="navbar-brand responsive">
                             <i class="material-icons far fa-calendar-alt"></i>
                         </a>
@@ -285,7 +285,7 @@ foreach($datos2 as $datos)
                     }
                     ?>
 					<li class=" perfil">
-                        <div class="idBubble"><p class="overflow-text m-0"><?= $this->session->userdata('id_usuario') ?></p></div>
+                        <div class="idBubble"><p class="m-0"><?= $this->session->userdata('id_usuario') ?></p></div>
                         <div class="fullName"><?= $this->session->userdata('nombre')." ".$this->session->userdata('apellido_paterno')." ".$this->session->userdata('apellido_materno') ?></div>
 					</li>
 					<li class="separator hidden-lg hidden-md"></li>

@@ -93,3 +93,20 @@
         opacity: 1;
     }
 }
+@media (max-width: 1199px) {
+    .navbar .navbar-brand {
+        color: #fff!important;
+    }
+    .perfil{
+        background-color: inherit!important;
+        color: $gray!important;
+    }
+    .perfil .idBubble{
+        color: $gray!important;
+    }
+}
+@media (max-width: 991px){
+    .navbar-header .navbar-toggle {
+        color: #fff;
+    }
+}
