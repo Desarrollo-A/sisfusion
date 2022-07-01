@@ -1343,7 +1343,7 @@
                 $scope.lote = <?php echo $data_corrida->id_lote;?>;
                 $scope.plan = '<?php echo $data_corrida->plan_corrida;?>';
                 $scope.yearplan = <?php echo $data_corrida->anio;?>;
-                $scope.gerente = <?php echo $data_corrida->id_gerente; ?>;
+                $scope.gerente = <?php echo $data_corrida->id_gerente;?>;
                 $scope.asesor = <?php echo $data_corrida->id_asesor; ?>;
                 $scope.tipo_casas = [{id: "1",nombre: "Stella"}, {id: '2', nombre: 'Aura'}];
                 var datos = [];
@@ -3015,7 +3015,15 @@
                 $scope.porcentaje = parseFloat(cantidadToGetP).toFixed(2);
                 //termina nueva sección
 
-
+                if(porcentajeEnganche.val() == 10 || porcentajeEnganche.val() == 5){
+                    document.getElementById("day").disabled = false;
+                    document.getElementById("aptdo").disabled = false;
+                    document.getElementById("msdif").disabled = false;
+                }else{
+                    document.getElementById("day").disabled = true;
+                    document.getElementById("aptdo").disabled = true;
+                    document.getElementById("msdif").disabled = true;
+                }
                 calcularCF();
             };
 
@@ -7392,7 +7400,15 @@
                 }
                 /*termina nuevo*/
 
-
+                if(porcentajeEnganche.val() == 10 || porcentajeEnganche.val() == 5){
+                    document.getElementById("day").disabled = false;
+                    document.getElementById("aptdo").disabled = false;
+                    document.getElementById("msdif").disabled = false;
+                }else{
+                    document.getElementById("day").disabled = true;
+                    document.getElementById("aptdo").disabled = true;
+                    document.getElementById("msdif").disabled = true;
+                }
                 calcularCF();
             };
 
