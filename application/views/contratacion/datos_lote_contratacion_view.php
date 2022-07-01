@@ -296,6 +296,8 @@
 												<th>APARTADO</th>
 												<th>COMENTARIO</th>
 												<th>LUGAR PROS.</th>
+												<th>FECHA VAL. ENGANCHE</th>
+												<th>CANTIDAD ENGANCHE PAGADO</th>
 												<th></th>
 											</tr>
 										</thead>
@@ -403,7 +405,7 @@
 							titleAttr: 'Descargar archivo de Excel',
 							title: 'MADERAS_CRM_INVENTARIO',
 							exportOptions: {
-							columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16],
+							columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18],
 							format: {
 								header: function (d, columnIdx) {
 									switch (columnIdx) {
@@ -457,6 +459,12 @@
 											break;
 										case 16:
 											return 'LUGAR PROSPECCIÓN';
+											break;
+										case 17:
+											return 'FECHA VALIDACION ENGANCHE';
+											break;
+										case 18:
+											return 'CANTIDAD ENGANCHE PAGADO';
 											break;
 									}
 								}
@@ -769,13 +777,22 @@
 				},
 				{
 					"width": "8%",
+					data: 'fecha_validacion'
+				},
+				{
+					"width": "8%",
+					"data": function( d ){
+						return '<p>$ '+formatMoney(d.cantidad_enganche)+'</p>';
+					}
+				},
+				{
+					"width": "8%",
 					"data": function( d ){
 						return '<center><button class="btn-data  btn-details-grey to-comment ver_historial" value="' + d.idLote +'" data-nomLote="'+d.nombreLote+'" data-tipo-venta="'+d.tipo_venta+'"><i class="fas fa-history"></i></button></center>';
 					}
 				}
 				]
 			});
-
 
 			$(window).resize(function(){
 			tabla_inventario.columns.adjust();

@@ -8,13 +8,13 @@ class Api extends CI_Controller
 
     public function __construct()
     {
-        parent::__construct();
-        header('Access-Control-Allow-Origin: *');
-        header('Access-Control-Allow-Headers: Content-Type');
-        date_default_timezone_set('America/Mexico_City');
-        $this->load->helper(array('form'));
-        $this->load->library(array('jwt_key'));
-        $this->load->model(array('Api_model', 'General_model'));
+            header('Access-Control-Allow-Origin: *');
+            header('Access-Control-Allow-Headers: Content-Type,Origin, authorization, X-API-KEY');
+            parent::__construct();
+            date_default_timezone_set('America/Mexico_City');
+            $this->load->helper(array('form'));
+            $this->load->library(array('jwt_key'));
+            $this->load->model(array('Api_model', 'General_model'));
     }
 
     function authenticate()
@@ -87,8 +87,8 @@ class Api extends CI_Controller
                                     "apellido_materno" => '',
                                     "correo" => $data->Mail,
                                     "telefono" => $data->Phone,
-                                    "lugar_prospeccion" => 6,
-                                    "otro_lugar" => $data->CampaignID,
+                                    "lugar_prospeccion" => $data->CampaignID,
+                                    "otro_lugar" => 0,
                                     "plaza_venta" => 0,
                                     "fecha_creacion" => date("Y-m-d H:i:s"),
                                     "creado_por" => 1,
@@ -287,5 +287,8 @@ class Api extends CI_Controller
             }
         }
     }
+
+
+
 
 }

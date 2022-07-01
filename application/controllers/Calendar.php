@@ -3,8 +3,6 @@ class Calendar extends CI_Controller {
 	public function __construct() {
 		parent::__construct();
         $this->load->model(array('Calendar_model', 'General_model'));
-                //$this->load->model('asesor/Asesor_model');	
-
         $this->load->library(array('session','form_validation', 'get_menu', 'Email'));
 		$this->load->helper(array('url','form'));
 		$this->load->database('default');
@@ -12,19 +10,14 @@ class Calendar extends CI_Controller {
         $this->validateSession();
 	}
 
-    public function validateSession()
-    {
-        if($this->session->userdata('id_usuario')=="" || $this->session->userdata('id_rol')=="")
-        {
+    public function validateSession(){
+        if($this->session->userdata('id_usuario')=="" || $this->session->userdata('id_rol')==""){
             redirect(base_url() . "index.php/login");
         }
     }
 
     public function calendar(){
-        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-
-        $this->load->view('template/header');
-        $this->load->view("asesor/calendar", $datos);
+        $this->load->view("dashboard/agenda/calendar");
     }
 
     public function Events(){
@@ -220,6 +213,14 @@ class Calendar extends CI_Controller {
 
     public function side_bar_calendar(){
         $this->load->view('template/calendar_sidebar');
+    }
+
+    public function updateNFinishAppointments(){
+        $response = $this->General_model->updateBatch("agenda", json_decode(file_get_contents("php://input")), "id_cita"); // MJ: SE MANDA CORRER EL UPDATE BATCH
+        if ($response)
+            echo json_encode(array("status" => 200, "message" => "El registro se ha actualizado de manera exitosa."));
+        else 
+            echo json_encode(array("status" => 503, "message" => "Oops, algo salió mal. No se ha podido actualizar la información de la(s) cita(s)."));
     }
 }
  

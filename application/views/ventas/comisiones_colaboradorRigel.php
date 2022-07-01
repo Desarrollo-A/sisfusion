@@ -126,7 +126,7 @@
             </div>
         </div>
 
-        <!--<div class="modal fade modal-alertas" id="modal_documentacion" role="dialog">
+        <div class="modal fade modal-alertas" id="modal_documentacion" role="dialog">
             <div class="modal-dialog" style="width:800px; margin-top:20px">
                 <div class="modal-content">
                     <div class="modal-body">
@@ -134,15 +134,15 @@
                     </div>
                 </div>
             </div>
-        </div>-->
+        </div>
 
-        <!--<div class="modal fade bd-example-modal-sm" id="myModalEnviadas" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+        <div class="modal fade bd-example-modal-sm" id="myModalEnviadas" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-sm">
                 <div class="modal-content">
                     <div class="modal-body"></div>
                 </div>
             </div>
-        </div>-->
+        </div>
     
         <!-- inicia modal subir factura -->
         <div id="modal_formulario_solicitud" class="modal" style="position:fixed; top:0; left:0; margin-bottom: 1%;  margin-top: -5%;">
@@ -242,7 +242,7 @@
             </div>
         </div>
 
-        <!--<div id="modal_formulario_solicitud_multiple" class="modal" style="position:fixed; top:0; left:0; margin-bottom: 1%;  margin-top: -5%;">
+        <div id="modal_formulario_solicitud_multiple" class="modal" style="position:fixed; top:0; left:0; margin-bottom: 1%;  margin-top: -5%;">
             <div class="modal-dialog modal-md">
                 <div class="modal-content">
                     <div class="modal-body">
@@ -332,7 +332,7 @@
                     </div>
                 </div>
             </div>
-        </div>-->
+        </div>
 
         <div class="content boxContent">
             <div class="container-fluid">
@@ -860,6 +860,7 @@
 
     <script>
         userType = <?= $this->session->userdata('id_rol') ?> ;
+        userID = <?= $this->session->userdata('id_usuario') ?> ;
         $(document).ready(function() {
             $.post(url + "Contratacion/lista_proyecto", function (data) {
                 var len = data.length;
@@ -1200,7 +1201,7 @@
                         var hora = hoy.getHours();
                         var minuto = hoy.getMinutes();
 
-                         if (((mes == 2 && dia == 9) || (mes == 2 && dia == 10 && hora <= 13)) ||
+                         if (userID == 4 || ((mes == 2 && dia == 9) || (mes == 2 && dia == 10 && hora <= 13)) ||
                         ((mes == 3 && dia == 9) || (mes == 3 && dia == 10 && hora <= 13)) ||
                         ((mes == 4 && dia == 13) || (mes == 4 && dia == 14 && hora <= 13)) ||
                         ((mes == 5 && dia == 11) || (mes == 5 && dia == 12 && hora <= 13)) ||
@@ -1444,7 +1445,7 @@
                         var hora = hoy.getHours();
                         var minuto = hoy.getMinutes();
 
-                        if (((mes == 2 && dia == 7) || (mes == 2 && dia == 8 && hora <= 13)) ||
+                        if (userID == 4 || ((mes == 2 && dia == 7) || (mes == 2 && dia == 8 && hora <= 13)) ||
                             ((mes == 2 && dia == 9) || (mes == 2 && dia == 10 && hora <= 13)) ||
 
                         ((mes == 3 && dia == 7) || (mes == 3 && dia == 8 && hora <= 13)) ||
@@ -1457,14 +1458,25 @@
                         ((mes == 5 && dia == 11) || (mes == 5 && dia == 12 && hora <= 13)) ||
 
                         ((mes == 6 && dia == 13) || (mes == 6 && dia == 14 && hora <= 13)) ||
+                        ((mes == 6 && dia == 15) || (mes == 6 && dia == 16 && hora <= 13)) ||
+
                         ((mes == 7 && dia == 11) || (mes == 7 && dia == 12 && hora <= 13)) ||
+                        ((mes == 7 && dia == 13) || (mes == 7 && dia == 14 && hora <= 13)) ||
+
                         ((mes == 8 && dia == 8) || (mes == 8 && dia == 9 && hora <= 13)) ||
+                        ((mes == 8 && dia == 10) || (mes == 8 && dia == 11 && hora <= 13)) ||
+
                         ((mes == 9 && dia == 12) || (mes == 9 && dia == 13 && hora <= 13)) ||
+                        ((mes == 9 && dia == 14) || (mes == 9 && dia == 15 && hora <= 13)) ||
+
                         ((mes == 10 && dia == 10) || (mes == 10 && dia == 11 && hora <= 13)) ||
+                        ((mes == 10 && dia == 12) || (mes == 10 && dia == 13 && hora <= 13)) ||
+
                         ((mes == 11 && dia == 7) || (mes == 11 && dia == 8 && hora <= 13)) ||
+                        ((mes == 11 && dia == 9) || (mes == 11 && dia == 10 && hora <= 13)) ||
 
-
-                        ((mes == 12 && dia == 12) || (mes == 12 && dia == 13 && hora <= 13))
+                        ((mes == 12 && dia == 12) || (mes == 12 && dia == 13 && hora <= 13)) ||
+                        ((mes == 12 && dia == 14) || (mes == 12 && dia == 15 && hora <= 13))
 
                         )
                         {
@@ -2519,7 +2531,7 @@
             return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
         };
 
-        /*$(document).on("click", ".subir_factura", function() {
+        $(document).on("click", ".subir_factura", function() {
             resear_formulario();
             id_comision = $(this).val();
             total = $(this).attr("data-total");
@@ -2530,7 +2542,7 @@
             });
             $("#modal_formulario_solicitud .modal-body #frmnewsol").append(`<div id="inputhidden"><input type="hidden" id="comision_xml" name="comision_xml" value="${ id_comision}">
             <input type="hidden" id="pago_cliente" name="pago_cliente" value="${ parseFloat(total).toFixed(2) }"></div>`);
-        });*/
+        });
 
         let c = 0;
 
@@ -2570,7 +2582,7 @@
             });
         }
 
-        /*$(document).on("click", ".quitar_factura", function() {
+        $(document).on("click", ".quitar_factura", function() {
             resear_formulario();
             id_comision = $(this).val();
 
@@ -2584,11 +2596,11 @@
                 backdrop: 'static',
                 keyboard: false
             });
-        });*/
+        });
 
         /** -----------------------------------------*/
 
-        /*$(document).on("click", ".EnviarMultiple", function() {
+        $(document).on("click", ".EnviarMultiple", function() {
             $("#ModalEnviar .modal-body").html("");
             $("#ModalEnviar .modal-header").html("");
 
@@ -2626,7 +2638,7 @@
             </div></div>`);
 
             $("#ModalEnviar").modal();
-        });*/
+        });
 
         function todos(){
             if($(".checkdata1:checked").length == 0){
@@ -3115,7 +3127,7 @@
             }
         });
 
-        /*function calcularMontoParcialidad() {
+        function calcularMontoParcialidad() {
             $precioFinal = parseFloat($('#value_pago_cliente').val());
             $precioNuevo = parseFloat($('#new_value_parcial').val());
 
@@ -3125,9 +3137,9 @@
             else if ($precioNuevo < $precioFinal) {
                 $('#label_estado').append('<label>MONTO VALIDO</label>');
             }
-        }*/
+        }
 
-        /*function preview_info(archivo) {
+        function preview_info(archivo) {
             $("#documento_preview .modal-dialog").html("");
             $("#documento_preview").css('z-index', 9999);
             archivo = url + "dist/documentos/" + archivo + "";
@@ -3153,14 +3165,14 @@
                 elemento += '</div>';
                 $("#documento_preview .modal-dialog").append(elemento);
             }
-        }*/
+        }
 
-        /*function cleanComments() {
+        function cleanComments() {
             var myCommentsList = document.getElementById('comments-list-factura');
             myCommentsList.innerHTML = '';
             var myFactura = document.getElementById('facturaInfo');
             myFactura.innerHTML = '';
-        }*/
+        }
 
         function cleanCommentsAsimilados() {
             var myCommentsList = document.getElementById('comments-list-asimilados');

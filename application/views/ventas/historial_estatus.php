@@ -16,14 +16,6 @@
         ?>
 
         <!-- Modals -->
-        <div class="modal fade bd-example-modal-sm" id="myModalEnviadas" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-sm">
-                <div class="modal-content">
-                    <div class="modal-body"></div>
-                </div>
-            </div>
-        </div>
-
         <div class="modal fade" id="seeInformationModalAsimilados" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog modal-md modal-dialog-scrollable" role="document">
                 <div class="modal-content">
@@ -257,6 +249,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
+    <!-- Modal general -->
+    <script src="<?= base_url() ?>dist/js/core/modal-general.js"></script>
     <script>
         $(document).ready(function() {
             $("#tabla_historialGral").prop("hidden", true);
@@ -286,18 +280,17 @@
         });
 
         $('#filtro33').change(function(ruta){
-            residencial = $('#filtro33').val();
-            param = $('#param').val();
             $("#filtro44").empty().selectpicker('refresh');
+
             $.ajax({
-                url: '<?=base_url()?>Comisiones/lista_estatus/'+residencial,
+                url: '<?=base_url()?>Comisiones/lista_estatus',
                 type: 'post',
                 dataType: 'json',
                 success:function(response){
-                    var len = response.length;
-                    for( var i = 0; i<len; i++){
-                        var id = response[i]['idEstatus'];
-                        var name = response[i]['nombre'];
+                    const len = response.length;
+                    for(let i = 0; i<len; i++){
+                        const id = response[i]['idEstatus'];
+                        const name = response[i]['nombre'];
                         $("#filtro44").append($('<option>').val(id).text(name));
                     }
                     $("#filtro44").selectpicker('refresh');
@@ -397,14 +390,6 @@
                             selected: true,
                             search: 'applied'
                         }).indexes();
-
-                        var data = tabla_historialGral2.rows(index).data();
-                        $.each(data, function(i, v) {
-                            total += parseFloat(v.impuesto);
-                        });
-
-                        var to1 = formatMoney(total);
-                        document.getElementById("totpagarAsimilados").value = formatMoney(total);
                     }
                 });
             }
@@ -461,6 +446,19 @@
                 Pausado
                 </label>
             </div>`;
+        const optPagado = `
+            <div class="form-check">
+                <input class="form-check-input"
+                    type="radio"
+                    name="estatus"
+                    id="estatus-pagado"
+                    value="11"
+                    required>
+                <label class="form-check-label"
+                    for="estatus-pagado">
+                Pagado
+                </label>
+            </div>`;
 
         let seleccionados = [];
         //INICIO TABLA QUERETARO*****************************************
@@ -493,6 +491,8 @@
                                 options = optNueva + optPausado;
                             } else if (estatus === '4') {
                                 options = optNueva;
+                            } else if (estatus === '8') {
+                                options = optPagado;
                             }
 
                             const titlePagos = (idComisiones.length > 1)
@@ -813,6 +813,8 @@
                         const estatus = $('#filtro44').val();
                         if (estatus === '3' || estatus === '5' || estatus === '6' || estatus === '7') {
                             return '';
+                        } else if (estatus === '7' && (full.estatus === '1' || full.estatus === '6')) {
+                            return '<input type="checkbox" name="idTQ[]" style="width:20px;height:20px;"  value="' + full.id_pago_i + '">';
                         } else if ($('#filtro44').val() === '2') {
                             if (full.forma_pago.toLowerCase() !== 'factura') {
                                 return '<input type="checkbox" name="idTQ[]" style="width:20px;height:20px;"  value="' + full.id_pago_i + '">';
@@ -926,23 +928,31 @@
                 success: function (response) {
                     if (JSON.parse(response)) {
                         $('#movimiento-modal').modal('hide');
-                        $("#myModalEnviadas").modal('toggle');
-                        $("#myModalEnviadas .modal-body").html("");
-                        $("#myModalEnviadas .modal-body").append(`
-                            <img style='width: 75%; height: 75%;' src='<?= base_url('dist/img/send_intmex.gif')?>'>
-                                <p style='color:#676767;'>Se cambiaron los estatus de los pagos seleccionados.</p>
+                        appendBodyModal(`
+                            <div class="row">
+                                <div class="col-lg-12 text-center">
+                                    <h3 style='color:#676767;'>Se cambiaron los estatus de los pagos seleccionados</h3>
+                                    <img style='width: 200px; height: 200px;'
+                                        src='<?= base_url('dist/img/check.gif')?>'>
+                                </div>
+                            </div>
                         `);
-                        $("#myModalEnviadas").modal();
+                        showModal();
                         tabla_historialGral2.ajax.reload();
                     } else {
-                        $("#myModalEnviadas").modal('toggle');
-                        $("#myModalEnviadas .modal-body").html("");
-                        $("#myModalEnviadas .modal-body").append(`
-                            <P>Error al enviar comisiones</P>
-                            <br>
-                            <i style='font-size:12px;'>No se pudo ejecutar esta acción, intentalo más tarde.</i>
+                        $('#movimiento-modal').modal('hide');
+                        appendBodyModal(`
+                            <div class="row">
+                                <div class="col-lg-12 text-center">
+                                    <h3>Error al enviar comisiones</h3>
+                                    <img style='width: 200px; height: 200px;'
+                                                src='<?= base_url('dist/img/error.gif')?>'>
+                                    <br>
+                                    <p style="font-size: 16px">No se pudo ejecutar esta acción, intentalo más tarde.</p>
+                                <div>
+                            </div>
                         `);
-                        $("#myModalEnviadas").modal();
+                        showModal();
                     }
                 },
                 error: function() {

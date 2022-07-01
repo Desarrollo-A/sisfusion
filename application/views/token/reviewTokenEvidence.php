@@ -49,6 +49,10 @@
                                        class="table-striped table-hover">
                                     <thead>
                                     <tr>
+                                        <th>ID LOTE</th>
+                                        <th>NOMBRE LOTE</th>
+                                        <th>CLIENTE</th>
+                                        <th>FECHA APARTADO</th>
                                         <th>ID</th>
                                         <th>GENERADO PARA</th>
                                         <th>FECHA ALTA</th>

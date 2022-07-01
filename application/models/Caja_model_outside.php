@@ -226,7 +226,7 @@
         foreach ($query->result_array() as $row) {
 
             $this->db->trans_begin();
-
+            $id_cliente = $this->db->query("SELECT id_cliente FROM clientes WHERE status = 1 and idLote IN (" . $row['idLote'] . ") ")->result_array();
             $this->db->query("UPDATE historial_documento SET status = 0 WHERE status = 1 and idLote IN (" . $row['idLote'] . ") ");
             $this->db->query("UPDATE prospectos SET tipo = 0, estatus_particular = 4, modificado_por = 1, fecha_modificacion = GETDATE() WHERE id_prospecto IN (SELECT id_prospecto FROM clientes WHERE status = 1 AND idLote = " . $row['idLote'] . ")");
             $this->db->query("UPDATE clientes SET status = 0 WHERE status = 1 and idLote IN (" . $row['idLote'] . ") ");
@@ -262,8 +262,10 @@
                 'status' => $datos['status'],
                 'idLote' => $row['idLote'],
                 'tipo' => $datos['tipo'],
-                'userLiberacion' => $datos['userLiberacion']
+                'userLiberacion' => $datos['userLiberacion'],
+                'id_cliente' => (count($id_cliente)>=1 ) ? $id_cliente[0]['id_cliente'] : 0
             );
+
 
             $this->db->insert('historial_liberacion', $data_l);
 
@@ -380,10 +382,10 @@
     {
         $query = $this->db->query("SELECT u.id_usuario id_asesor, uu.id_usuario id_coordinador, uuu.id_usuario id_gerente, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombre FROM usuarios u 
                                     INNER JOIN usuarios uu ON uu.id_usuario = u.id_lider 
-                                    INNER JOIN usuarios uuu ON uuu.id_usuario = uu.id_lider WHERE u.id_rol = 7 AND u.estatus = 1 AND u.correo NOT LIKE '%SINCO%' AND u.correo NOT LIKE '%test_%'
+                                    INNER JOIN usuarios uuu ON uuu.id_usuario = uu.id_lider WHERE u.id_rol = 7 AND u.estatus = 1 AND ISNULL(u.correo, '') NOT LIKE '%SINCO%' AND ISNULL(u.correo, '') NOT LIKE '%test_%'
                                     UNION ALL
                                     SELECT u.id_usuario id_asesor, u.id_usuario id_coordinador, u.id_lider id_gerente, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombre FROM usuarios u 
-                                    WHERE u.id_rol = 9 AND u.estatus = 1 AND u.correo NOT LIKE '%SINCO%' AND u.correo NOT LIKE '%test_%' ORDER BY nombre");
+                                    WHERE u.id_rol = 9 AND u.estatus = 1 AND ISNULL(u.correo, '') NOT LIKE '%SINCO%' AND ISNULL(u.correo, '') NOT LIKE '%test_%' ORDER BY nombre");
         return $query->result();
     }
 
@@ -776,7 +778,7 @@
 
     public function getGerente()
     {
-        $query = $this->db->query("SELECT id_usuario, CONCAT(id_usuario,' - ',nombre, ' ', apellido_paterno, ' ', apellido_materno) nombre FROM usuarios WHERE id_rol = 3 AND estatus = 1 OR id_usuario IN (6482)");
+        $query = $this->db->query("SELECT id_usuario, CONCAT(id_usuario,' - ',nombre, ' ', apellido_paterno, ' ', apellido_materno) nombre FROM usuarios WHERE id_rol = 3 AND estatus = 1 OR id_usuario IN (6482, 5)");
         return $query->result_array();
     }
 
@@ -788,7 +790,7 @@
             SELECT id_usuario, CONCAT(id_usuario,' - ', nombre, ' ', apellido_paterno, ' ', apellido_materno) nombre FROM usuarios WHERE id_usuario = $id_gerente");*/
 
         $query = $this->db->query("SELECT id_usuario, CONCAT(id_usuario,' - ',nombre, ' ', apellido_paterno, ' ', apellido_materno) nombre FROM usuarios 
-			WHERE (id_rol IN (7, 9, 3) AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%') AND estatus = 1) OR (id_usuario IN (2567, 4064, 4068, 2588, 4065, 4069, 2541, 2583, 2562, 2572,2559,2576, 2595, 2570, 1383)) ORDER BY nombre");
+			WHERE (id_rol IN (7, 9, 3) AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%') AND estatus = 1) OR (id_usuario IN (2567, 4064, 4068, 2588, 4065, 4069, 2541, 2583, 2562, 2572,2559,2576, 2595, 2570, 1383, 5)) ORDER BY nombre");
 
         return $query->result_array();
     }
@@ -800,7 +802,7 @@
 
         $query = $this->db->query("SELECT id_usuario, CONCAT(id_usuario,' - ',nombre, ' ', apellido_paterno, ' ', apellido_materno) nombre FROM usuarios 
 			WHERE (id_rol IN (7, 9, 3) AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%') AND estatus = 1) OR 
-            (id_usuario IN (2567, 4064, 4068, 2588, 4065, 4069, 2541, 2583, 2562, 2593,2580,2597, 1917, 2591, 9827))  ORDER BY nombre");
+            (id_usuario IN (2567, 4064, 4068, 2588, 4065, 4069, 2541, 2583, 2562, 2593,2580,2597, 1917, 2591, 9827, 5))  ORDER BY nombre");
 
         return $query->result_array();
     }
@@ -885,7 +887,7 @@
     {
 
         $query = $this->db->query("select cl.id_cliente ,id_asesor ,id_coordinador ,id_gerente ,cl.id_sede ,cl.nombre ,cl.apellido_paterno, lotes.referencia,
-                                cl.apellido_materno ,personalidad_juridica ,nacionalidad ,cl.rfc ,curp ,cl.correo ,telefono1, us.rfc, cl.id_prospecto
+                                cl.apellido_materno ,personalidad_juridica ,cl.nacionalidad ,cl.rfc ,curp ,cl.correo ,telefono1, us.rfc, cl.id_prospecto
                                 ,telefono2 ,telefono3 ,fecha_nacimiento ,lugar_prospeccion ,medio_publicitario ,otro_lugar ,plaza_venta ,tp.tipo ,estado_civil ,regimen_matrimonial ,nombre_conyuge  
                                 ,domicilio_particular ,tipo_vivienda ,ocupacion ,cl.empresa ,puesto ,edadFirma ,antiguedad ,domicilio_empresa ,telefono_empresa  ,noRecibo
                                 ,engancheCliente ,concepto ,fechaEnganche ,cl.idTipoPago ,expediente ,cl.status ,cl.idLote ,fechaApartado ,fechaVencimiento , cl.usuario, cond.idCondominio, cl.fecha_creacion, cl.creado_por, 
@@ -911,7 +913,7 @@
     {
 
         $query = $this->db->query("SELECT cl.id_cliente ,id_asesor ,id_coordinador ,id_gerente ,cl.id_sede, cl.nombre ,cl.apellido_paterno, cl.apellido_materno,
-		                        lotes.referencia ,personalidad_juridica ,nacionalidad ,cl.rfc ,curp ,cl.correo ,telefono1, us.rfc, cl.id_prospecto
+		                        lotes.referencia ,personalidad_juridica ,cl.nacionalidad ,cl.rfc ,curp ,cl.correo ,telefono1, us.rfc, cl.id_prospecto
                                 ,telefono2 ,telefono3 ,fecha_nacimiento ,lugar_prospeccion ,medio_publicitario ,otro_lugar ,plaza_venta ,tp.tipo ,estado_civil ,regimen_matrimonial ,nombre_conyuge  
                                 ,domicilio_particular ,tipo_vivienda ,ocupacion ,cl.empresa ,puesto ,edadFirma ,antiguedad ,domicilio_empresa ,telefono_empresa  ,noRecibo
                                 ,engancheCliente ,concepto ,fechaEnganche ,cl.idTipoPago ,expediente ,cl.status ,cl.idLote ,fechaApartado ,fechaVencimiento , cl.usuario, cond.idCondominio, cl.fecha_creacion, cl.creado_por,
@@ -1153,7 +1155,7 @@
     }
 
     /***********APARTADO ONLINE***********/
-    public function trasns_vo($data, $data2, $casas, $idLote)
+    public function trasns_vo($data, $data2, $casas, $idLote, $token_data)
     {
         //Iniciamos la transacción.    
         $this->db->trans_begin();
@@ -1162,6 +1164,12 @@
         //Recuperamos el id del cliente registrado.    
         //$cliente_id = $this->db->last_id();
         $cliente_id = $this->db->query("SELECT IDENT_CURRENT('clientes') as lastId")->row()->lastId;
+
+        ###UPDATE id_cliente, id_lote
+        if(count($token_data)>0){
+            $loclup_data = $this->db->query("UPDATE tokens SET id_cliente=".$cliente_id.", id_lote=".$idLote." WHERE token LIKE '". $token_data[0]['token']."'");
+        }
+        ###END UPDATE
 
         $horaActual = date('H:i:s');
         $horaInicio = date("08:00:00");
@@ -1419,35 +1427,9 @@
         return $query->result_array();
     }
 
-    public function insertResidencial($data)
-    {
-        $this->db->trans_begin();
-        $this->db->insert('residenciales', $data);
-        if ($this->db->trans_status() === FALSE) { // Hubo errores en la consulta, entonces se cancela la transacción.
-            $this->db->trans_rollback();
-            return false;
-        } else { // Todas las consultas se hicieron correctamente.
-            $this->db->trans_commit();
-            return true;
-        }
-    }
-
     public function getEmpresasList()
     {
         return $this->db->query("SELECT id_opcion, id_catalogo, nombre FROM opcs_x_cats WHERE id_catalogo = 61 AND estatus = 1")->result_array();
-    }
-
-    public function updateResidencial($data, $idResidencial)
-    {
-        $this->db->trans_begin();
-        $this->db->update("residenciales", $data, "idResidencial = $idResidencial");
-        if ($this->db->trans_status() === FALSE) { // Hubo errores en la consulta, entonces se cancela la transacción.
-            $this->db->trans_rollback();
-            return false;
-        } else { // Todas las consultas se hicieron correctamente.
-            $this->db->trans_commit();
-            return true;
-        }
     }
 
     public function getTokensInformation()
@@ -1457,11 +1439,24 @@
         else
             $where = "";
         return $this->db->query("SELECT tk.id_token, tk.token, CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno) generado_para,
-        tk.fecha_creacion, CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno) creado_por, tk.nombre_archivo, tk.estatus
+        tk.fecha_creacion, CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno) creado_por, tk.nombre_archivo, tk.estatus,
+        cl.fechaApartado, tk.id_cliente, tk.id_lote, CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno ) as nombreCliente,
+        l.nombreLote, ".$this->session->userdata('id_rol')." as currentRol
         FROM tokens tk
         INNER JOIN usuarios u1 ON u1.id_usuario = tk.para
         INNER JOIN usuarios u2 ON u2.id_usuario = tk.creado_por
+        LEFT JOIN clientes cl ON cl.id_cliente = tk.id_cliente
+        LEFT JOIN lotes l ON l.idLote = tk.id_lote
         $where  ORDER BY tk.fecha_creacion");
+    }
+
+    public function getEmpresasLargoList()
+    {
+        return $this->db->query("SELECT id_opcion, id_catalogo, nombre FROM opcs_x_cats WHERE id_catalogo = 72 AND estatus = 1")->result_array();
+    }
+
+    public function getBancosLargoList(){
+        return $this->db->query("SELECT id_opcion, id_catalogo, nombre FROM opcs_x_cats WHERE id_catalogo = 73 AND estatis = 1")->result_array();
     }
 
 }

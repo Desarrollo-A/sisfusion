@@ -404,6 +404,17 @@
             color: white;
             padding: 2px 13px;
         }
+        .infoBank{
+            font-size: 1.3em;
+            color: #103f75;
+            font-weight: 600;
+        }
+        .table-data-bank tr td{
+            text-align: center;
+            word-wrap:break-word;
+            padding:10px;
+
+        }
     </style>
 </head>
 <body class="hold-transition register-page" ng-controller="myController">
@@ -451,8 +462,6 @@
                             <table align="center" width="100%" cellpadding="8" cellspacing="8">
                                 <tr>
                                     <td align="right">&nbsp&nbsp</td>
-
-
                                     <td rowspan=4 align="left"><img src="https://maderascrm.gphsis.com/static/images/logo_ciudadmaderasAct.jpg" style=" max-width: 55%; height: auto;padding:20px"></td>
                                     <td rowspan=4 align="right"><p style="font-size: 1.5em;font-family: 'Open Sans', sans-serif;letter-spacing: 5px"> CORRIDA FINANCIERA<BR></p><small style="font-size: 1.5em; font-family: 'Sabon LT Std', 'Hoefler Text', 'Palatino Linotype', 'Book Antiqua', serif; color: #777;"></small>
                                     <td align="right">&nbsp&nbsp</td>
@@ -508,7 +517,67 @@
 
                                 </div>
 
-
+                                <div class="row">
+                                    <div class="col-md-3 form-group">
+                                        <label>Proyecto:</label>
+                                        <!--ng-options="item.descripcion for item in residencial"-->
+                                        <select ng-model="proyecto"
+                                                ng-change="onSelectChangep(proyecto)" class="form-control" disabled>
+                                            <option value=""> - Selecciona un Proyecto -</option>
+                                            <option ng-repeat="residencial in residencial"  ng-value="residencial.idResidencial"
+                                                    ng-selected="(residencial.idResidencial== <?php echo $data_corrida->idResidencial;?>) ? selected : ''">{{residencial.nombreResidencial}}</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-2 form-group">
+                                        <label>Condominio:</label>
+                                        <!--ng-options="item.nombre for item in condominios"-->
+                                        <select ng-model="condominio"
+                                                ng-change="onSelectChangec(condominio)" class="form-control"
+                                                style="text-transform: uppercase;" disabled>
+                                            <option value=""> - Selecciona un Condominio -</option>
+                                            <option ng-repeat="condominios in condominios "  ng-value="condominios.idCondominio"
+                                                    ng-selected="(condominios.idCondominio== <?php echo $data_corrida->idCondominio;?>) ? selected : ''">{{condominios.nombre}}</option>
+                                        </select>
+                                    </div>
+                                    <div class="<?php if($casasLote == 1 ) { echo 'col-md-2'; } else{echo 'col-md-3';} ?> form-group">
+                                        <label>Lote:</label>
+                                        <!-- ng-options="item.nombreLote for item in lotes" -->
+                                        <select ng-model="lote" id="lote"
+                                                ng-change="onSelectChangel(lote)" class="form-control" disabled>
+                                            <option value = ""> - Selecciona un Lote - </option>
+                                            <option ng-repeat="lotes in lotes "  ng-value="lotes.idLote"
+                                                    ng-selected="(lotes.idLote== <?php echo $data_corrida->id_lote;?>) ? selected : ''">{{lotes.nombreLote}}</option>
+                                        </select>
+                                        <p id="lotetext" style="color: red;"></p>
+                                    </div>
+                                    <div class="col-md-2 form-group <?php if($casasLote == 1 ) { echo ''; } else{echo 'hide';} ?> " id="tcasa">
+                                        <label>Tipo casa:</label>
+                                        <select ng-model="tipo_casa" id="tipo_casa"  class="form-control" disabled>
+                                            <option  ng-repeat="tipo_casas in tipo_casas"  ng-value="tipo_casas.id"
+                                                     ng-selected="(tipo_casas.id == <?php echo $data_corrida->tipo_casa;?>) ? selected : ''">{{tipo_casas.nombre}}</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-2 form-group">
+                                        <label>Plan:</label>
+                                        <select ng-model="plan" class="form-control" id="planSL" ng-change="payPlan()">
+                                            <option value=""> - Selecciona un plan -</option>
+                                            <option value="Crédito" ng-selected="<?php echo ($data_corrida->plan_corrida =='Crédito') ? 'selected' : '' ?>" > Crédito</option>
+                                            <option value="Contado" ng-selected="<?php echo ($data_corrida->plan_corrida =='Contado') ? 'selected' : '' ?>" > Contado</option>
+                                        </select>
+                                        <p id="plantext" style="color: red;"></p>
+                                    </div>
+                                    <div class="<?php if($casasLote == 1 ) { echo 'col-md-1'; } else{echo 'col-md-2';} ?> form-group">
+                                        <label>Años:</label>
+                                        <!-- ng-options="item.yearplan for item in yearsplan" -->
+                                        <select ng-model="yearplan" id="yearplan" class="form-control"
+                                                ng-change="getAgePlan()">
+                                            <option value=""> - Selecciona los años -</option>
+                                            <option ng-repeat="yearsplan in yearsplan "  ng-value="yearsplan.yearplan"
+                                                    ng-selected="(yearsplan.yearplan== <?php echo $data_corrida->anio;?>) ? selected : ''">{{yearsplan.yearplan}}</option>
+                                        </select>
+                                        <p id="aniotext" style="color: red;"></p>
+                                    </div>
+                                </div>
                                 <div class="row">
 
                                     <div class="col-md-4 form-group">
@@ -566,67 +635,6 @@
               </div > -->
                                 </div>
                                 <div class="row">
-                                    <div class="col-md-3 form-group">
-                                        <label>Proyecto:</label>
-                                        <!--ng-options="item.descripcion for item in residencial"-->
-                                        <select ng-model="proyecto"
-                                                ng-change="onSelectChangep(proyecto)" class="form-control" disabled>
-                                            <option value=""> - Selecciona un Proyecto -</option>
-                                            <option ng-repeat="residencial in residencial"  ng-value="residencial.idResidencial"
-                                                    ng-selected="(residencial.idResidencial== <?php echo $data_corrida->idResidencial;?>) ? selected : ''">{{residencial.nombreResidencial}}</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-md-2 form-group">
-                                        <label>Condominio:</label>
-                                        <!--ng-options="item.nombre for item in condominios"-->
-                                        <select ng-model="condominio"
-                                                ng-change="onSelectChangec(condominio)" class="form-control"
-                                                style="text-transform: uppercase;" disabled>
-                                            <option value=""> - Selecciona un Condominio -</option>
-                                            <option ng-repeat="condominios in condominios "  ng-value="condominios.idCondominio"
-                                                    ng-selected="(condominios.idCondominio== <?php echo $data_corrida->idCondominio;?>) ? selected : ''">{{condominios.nombre}}</option>
-                                        </select>
-                                    </div>
-                                    <div class="<?php if($casasLote == 1 ) { echo 'col-md-2'; } else{echo 'col-md-3';} ?> form-group">
-                                        <label>Lote:</label>
-                                        <!-- ng-options="item.nombreLote for item in lotes" -->
-                                        <select ng-model="lote" id="lote"
-                                                ng-change="onSelectChangel(lote)" class="form-control" disabled>
-                                            <option value = ""> - Selecciona un Lote - </option>
-                                            <option ng-repeat="lotes in lotes "  ng-value="lotes.idLote"
-                                                    ng-selected="(lotes.idLote== <?php echo $data_corrida->id_lote;?>) ? selected : ''">{{lotes.nombreLote}}</option>
-                                        </select>
-                                        <p id="lotetext" style="color: red;"></p>
-                                    </div>
-                                    <div class="col-md-2 form-group <?php if($casasLote == 1 ) { echo ''; } else{echo 'hide';} ?> " id="tcasa">
-                                        <label>Tipo casa:</label>
-                                        <select ng-model="tipo_casa" id="tipo_casa"  class="form-control" disabled>
-                                            <option  ng-repeat="tipo_casas in tipo_casas"  ng-value="tipo_casas.id"
-                                                    ng-selected="(tipo_casas.id == <?php echo $data_corrida->tipo_casa;?>) ? selected : ''">{{tipo_casas.nombre}}</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-md-2 form-group">
-                                        <label>Plan:</label>
-                                        <select ng-model="plan" class="form-control" id="planSL" ng-change="payPlan()">
-                                            <option value=""> - Selecciona un plan -</option>
-                                            <option value="Crédito" ng-selected="<?php echo ($data_corrida->plan_corrida =='Crédito') ? 'selected' : '' ?>" > Crédito</option>
-                                            <option value="Contado" ng-selected="<?php echo ($data_corrida->plan_corrida =='Contado') ? 'selected' : '' ?>" > Contado</option>
-                                        </select>
-                                        <p id="plantext" style="color: red;"></p>
-                                    </div>
-                                    <div class="<?php if($casasLote == 1 ) { echo 'col-md-1'; } else{echo 'col-md-2';} ?> form-group">
-                                        <label>Años:</label>
-                                        <!-- ng-options="item.yearplan for item in yearsplan" -->
-                                        <select ng-model="yearplan" id="yearplan" class="form-control"
-                                                ng-change="getAgePlan()">
-                                            <option value=""> - Selecciona los años -</option>
-                                            <option ng-repeat="yearsplan in yearsplan "  ng-value="yearsplan.yearplan"
-                                                    ng-selected="(yearsplan.yearplan== <?php echo $data_corrida->anio;?>) ? selected : ''">{{yearsplan.yearplan}}</option>
-                                        </select>
-                                        <p id="aniotext" style="color: red;"></p>
-                                    </div>
-                                </div>
-                                <div class="row">
                                     <div class="col-md-2 form-group">
                                         <label>Superficie:</label>
                                         <div class="input-group">
@@ -656,7 +664,7 @@
                                                    value="{{total | currency:''}}"/>
                                         </div>
                                     </div>
-                                    <div class="col-md-2 form-group">
+                                    <div class="col-md-2 form-group hide">
                                         <label>Porcentaje:</label>
                                         <div class="input-group">
                                             <input type="text" ng-model="porcentajeInv" class="form-control"
@@ -668,6 +676,10 @@
                                         <label>Fecha:</label>
                                         <input type="date" ng-model="CurrentDate" class="form-control"
                                                value="{{CurrentDate | date:'dd-MM-yyyy'}}" ng-readonly="true">
+                                    </div>
+                                    <div class="col-md-2 form-group" >
+                                        <label>Fecha Apartado:</label>
+                                        <input type="date" ng-model="fechaApartado" class="form-control" value="{{fechaApartado | date:'yyyy-MM-dd'}}" ng-readonly="true">
                                     </div>
                                     <div class="col-md-2 form-group">
                                         <label>Enganche:</label>
@@ -683,6 +695,26 @@
 
                                 </div>
                                 <div class="row">
+                                    <div class="col col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                                        <div class="col-md-12 form-group">
+                                            <label>Enganche (%): </label>
+                                            <div class="input-group">
+                                                <span class="input-group-addon" id="basic-addon1">%</span>
+                                                <input type="number" ng-model="porcentaje" max="100" id="porcentajeEnganche"
+                                                       min="1" class="form-control" ng-change="selectPorcentajeEnganche()"
+                                                       string-to-number limit-to-max>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12 form-group">
+                                            <label>Enganche cantidad ($): </label>
+                                            <div class="input-group">
+                                                <span class="input-group-addon" id="basic-addon1">$</span>
+                                                <input ng-model="cantidad" id="cantidadEnganche" type="number"
+                                                       class="form-control" min="1" ng-change="resultCantidad()"
+                                                       string-to-number>
+                                            </div>
+                                        </div>
+                                    </div>
                                     <div class="col-md-6 form-group">
                                         <label>Días para pagar Enganche: </label>
                                         <!-- ng-options="item.day for item in diasEnganche" -->
@@ -695,22 +727,7 @@
                                     </div>
 
 
-                                    <div class="col-md-6 form-group">
-                                        <label>Enganche (%): </label>
-                                        <div class="input-group">
-                                            <span class="input-group-addon" id="basic-addon1">%</span>
-                                            <input type="number" ng-model="porcentaje" max="100" id="porcentajeEnganche"
-                                                   min="1" class="form-control" ng-change="selectPorcentajeEnganche()"
-                                                   string-to-number limit-to-max>
-                                        </div>
-                                        <label>Enganche cantidad ($): </label>
-                                        <div class="input-group">
-                                            <span class="input-group-addon" id="basic-addon1">$</span>
-                                            <input ng-model="cantidad" id="cantidadEnganche" type="number"
-                                                   class="form-control" min="1" ng-change="resultCantidad()"
-                                                   string-to-number>
-                                        </div>
-                                    </div>
+
 
 
                                     <!--<div ng-if="checkEngDif">-->
@@ -824,14 +841,14 @@
 
                                                         <span ng-if="descuento.id_condicion == 7" class="animate-if"
                                                               style="color:#000;">Enganche diferido sin descontar MSI</span>
-                                                        <span ng-if="descuento.msi_descuento > 0" class="animate-if pill-msi"
+                                                        <span ng-if="descuento.msi_descuento > 0 && descuento.id_condicion != 13" class="animate-if pill-msi"
                                                               style="color:#000;">{{descuento.msi_descuento}} MSI adicional</span>
                                                         <span ng-if="descuento.id_condicion == 12" style="color:#000;">  Bono de {{descuento.porcentaje | currency}} al m<sup>2</sup></span>
-
+                                                        <span ng-if="descuento.msi_descuento > 0 && descuento.id_condicion == 13" class="animate-if" style="color:#000;">{{descuento.msi_descuento}} MSI adicionales</span>
                                                     </li>
                                                 </div>
 
-                                                <div ng-if="day == 7">
+                                                <div ng-if="day == 15">
                                                     <div ng-if="descuento.apply == 0">
                                                         <li class="list-group-item">
                                                             <input type="checkbox" checklist-model="selected.descuentos"
@@ -851,6 +868,7 @@
                                                             <span ng-if="descuento.id_condicion == 7" class="animate-if"
                                                                   style="color:#000;">Enganche diferido sin descontar MSI</span>
                                                             <span ng-if="descuento.id_condicion == 12" style="color:#000;">  Bono de {{descuento.porcentaje | currency}} al m<sup>2</sup></span>
+                                                            <span ng-if="descuento.msi_descuento > 0 && descuento.id_condicion == 13" class="animate-if" style="color:#000;">{{descuento.msi_descuento}} MSI adicionales</span>
 
 
 
@@ -939,6 +957,7 @@
                                             <span ng-if="i.id_condicion == 9" style="font-weight: 600"> Primera Mensualidad Mayo </span>
                                             <span ng-if="i.id_condicion == 10" style="font-weight: 600"> Primera Mensualidad Septiembre </span>
                                             <span ng-if="i.id_condicion == 12" style="font-weight: 600">  Bono de {{i.porcentaje | currency}} al m<sup>2</sup></span>
+                                            <span ng-if="i.id_condicion == 13" style="font-weight: 600"> {{i.msi_adicionales}} MSI adicionales</span>
 
 
 
@@ -947,29 +966,35 @@
 
                                     <td style="color:#2E86C1" class="text-center">
                                         <b>
-                                            <span ng-if="i.id_condicion == 1 || i.id_condicion == 2 || i.id_condicion == 3 || i.id_condicion == 4 || i.id_condicion == 5 || i.id_condicion == 7 || i.id_condicion == 12" style="font-weight: 600"> {{ i.pm | currency }} </span>
+                                            <span ng-if="i.id_condicion == 1 || i.id_condicion == 2 || i.id_condicion == 3 || i.id_condicion == 4 || i.id_condicion == 5 || i.id_condicion == 7 || i.id_condicion == 12  || i.id_condicion == 13" style="font-weight: 600"> {{ i.pm | currency }} </span>
                                             <span ng-if="i.id_condicion == 6" style="font-weight: 600"> </span>
                                             <span ng-if="i.id_condicion == 8" style="font-weight: 600"> </span>
                                             <span ng-if="i.id_condicion == 12" style="font-weight: 600"> </span>
+                                            <span ng-if="i.id_condicion == 13" style="font-weight: 600"> </span>
+
                                         </b>
                                     </td>
 
                                     <td style="color:#2E86C1" class="text-center">
                                         <b>
-                                            <span ng-if="i.id_condicion == 1 || i.id_condicion == 2 || i.id_condicion == 3 || i.id_condicion == 4 || i.id_condicion == 5 || i.id_condicion == 7 || i.id_condicion == 12" style="font-weight: 600"> {{ i.pt | currency }} </span>
+                                            <span ng-if="i.id_condicion == 1 || i.id_condicion == 2 || i.id_condicion == 3 || i.id_condicion == 4 || i.id_condicion == 5 || i.id_condicion == 7 || i.id_condicion == 12 || i.id_condicion == 13" style="font-weight: 600"> {{ i.pt | currency }} </span>
                                             <span ng-if="i.id_condicion == 6" style="font-weight: 600"> </span>
                                             <span ng-if="i.id_condicion == 8" style="font-weight: 600"> </span>
                                             <span ng-if="i.id_condicion == 12" style="font-weight: 600"> </span>
+                                            <span ng-if="i.id_condicion == 13" style="font-weight: 600"> </span>
+
                                         </b>
                                     </td>
 
                                     <td style="color:#27AE60" class="text-center">
                                         <b>
 
-                                            <span ng-if="i.id_condicion == 1 || i.id_condicion == 2 || i.id_condicion == 3 || i.id_condicion == 4 || i.id_condicion == 5 || i.id_condicion == 7 || i.id_condicion == 12" style="font-weight: 600"> {{ i.ahorro | currency }} </span>
+                                            <span ng-if="i.id_condicion == 1 || i.id_condicion == 2 || i.id_condicion == 3 || i.id_condicion == 4 || i.id_condicion == 5 || i.id_condicion == 7 || i.id_condicion == 12 || i.id_condicion == 13" style="font-weight: 600"> {{ i.ahorro | currency }} </span>
                                             <span ng-if="i.id_condicion == 6" style="font-weight: 600"> </span>
                                             <span ng-if="i.id_condicion == 8" style="font-weight: 600"> </span>
                                             <span ng-if="i.id_condicion == 12" style="font-weight: 600"> </span>
+                                            <span ng-if="i.id_condicion == 13" style="font-weight: 600"> </span>
+
                                         </b>
                                     </td>
 
@@ -1023,8 +1048,10 @@
                                 <tr>
                                     <td><label type="text" for="fecha">Fecha Límite </label></td>
                                     <td><label type="text" id="fecha"><b> {{fechaEng}} </b></label></td>
-                                    <td><b><label type="text" id="mPlan2" name="mPlan2"></label></b><label type="text6">Mensualidades
-                                            con interés (1% S.S.I.) </label></td>
+
+                                    <td ng-if="casaFlag == 0"><label type="text6">Mensualidades con interés (1% S.S.I.) </label></td>
+                                    <td ng-if="casaFlag == 1"><label type="text6">Mensualidades con interés (1.108% S.S.I.) </label></td>
+<!--                                    <td><b><label type="text" id="mPlan2" name="mPlan2"></label></b><label type="text6">Mensualidades con interés (1% S.S.I.) </label></td>-->
                                     <td><b><label type="text">{{ finalMesesp2 }}&nbsp&nbsp&nbsp</b> {{ totalSegundoPlan
                                         | currency }}</label></td>
                                 </tr>
@@ -1033,8 +1060,8 @@
                                     <td>
                                         <label type="text"><b>{{engancheFinal | currency }}</b></label><br>
                                     </td>
-                                    <td><b><label type="text" id="mPlan3" name="mPlan3"></label></b><label type="text6">Mensualidades
-                                            con interés (1.25% S.S.I.) </label></td>
+                                    <td ng-if="casaFlag == 0"><b><label type="text" id="mPlan3" name="mPlan3"></label></b><label type="text6">Mensualidades con interés (1.25% S.S.I.) </label></td>
+                                    <td ng-if="casaFlag == 1"><label type="text6">Mensualidades con interés (1.108% S.S.I.) </label></td>
                                     <td><b><label type="text">{{ finalMesesp3 }}&nbsp&nbsp&nbsp</b> {{ totalTercerPlan |
                                         currency }}</label></td>
                                 </tr>
@@ -1045,13 +1072,36 @@
                                 </tr>
                                 <tr>
                                     <td colspan="3">
-                                        <b>Banco:</b> <label type="text">{{banco}}</label>
-                                        <b>Razón Social:</b> <label type="text">{{rsocial}}</label>
-                                        <b>Cuenta:</b> <label type="text">{{cuenta}}</label>
-                                        <b>CLABE:</b> <label type="text">{{clabe}}</label>
-                                        <p>
-                                            <b>Referencia:</b> <label type="text"
-                                                                      style="font-size:30px">{{referencia}}</label>
+                                        <table width="100%" class="table-data-bank">
+                                            <tr>
+                                                <td>
+                                                    <b>Banco:</b><br>
+                                                    <label type="text" class="infoBank">{{banco}}</label>
+                                                </td>
+                                                <td>
+                                                    <b>Razón Social:</b><br>
+                                                    <label type="text" class="infoBank">{{rsocial}}</label>
+                                                </td>
+                                                <td>
+                                                    <b>Cuenta:</b><br>
+                                                    <label type="text" class="infoBank">{{cuenta}}</label>
+                                                </td>
+                                                <td>
+                                                    <b>CLABE:</b><br>
+                                                    <label type="text" class="infoBank">{{clabe}}</label>
+                                                </td>
+                                                <td>
+                                                    <b>Referencia:</b><br>
+                                                    <label type="text" class="infoBank">{{referencia}}</label>
+                                                </td>
+                                            </tr>
+                                        </table>
+<!--                                        <b>Banco:</b> <label type="text" class="infoBank">{{banco}}</label>-->
+<!--                                        <b>Razón Social:</b> <label type="text" class="infoBank">{{rsocial}}</label>-->
+<!--                                        <b>Cuenta:</b> <label type="text" class="infoBank">{{cuenta}}</label>-->
+<!--                                        <b>CLABE:</b> <label type="text" class="infoBank">{{clabe}}</label>-->
+<!--                                        <p>-->
+<!--                                            <b>Referencia:</b> <label type="text" class="infoBank">{{referencia}}</label>-->
                                     </td>
                                 </tr>
                                 <tr>
@@ -2685,18 +2735,19 @@
 
 
 
-                                        $scope.superficie = response.data[0].sup;
-                                        $scope.preciom2 = response.data[0].precio;
-                                        $scope.total = response.data[0].total;
-                                        $scope.porcentajeInv = response.data[0].porcentaje;
-                                        $scope.enganche = response.data[0].enganche;
-                                        $scope.CurrentDate = new Date();
-
-                                        $scope.nombreLote = response.data[0].nombreLote;
-                                        $scope.precioTotal = response.data[0].total;
-                                        $scope.superficie = response.data[0].sup;
-                                        $scope.preciom2 = response.data[0].precio;
-
+                                        // $scope.superficie = response.data[0].sup;
+                                        // $scope.preciom2 = response.data[0].precio;
+                                        // $scope.total = response.data[0].total;
+                                        // $scope.porcentajeInv = response.data[0].porcentaje;
+                                        // $scope.enganche = response.data[0].enganche;
+                                        // $scope.CurrentDate = new Date();
+                                        //
+                                        // $scope.nombreLote = response.data[0].nombreLote;
+                                        // $scope.precioTotal = response.data[0].total;
+                                        // $scope.superficie = response.data[0].sup;
+                                        // $scope.preciom2 = response.data[0].precio;
+                                        //console.log('CAMARA MIS PERRRRRRRRRRROS: ', <?php //echo $data_corrida->tipo_casa; ?>//);
+                                        $scope.casaFlag = (<?php echo $data_corrida->tipo_casa; ?>==0) ? 0 : 1;
                                         $scope.banco = response.data[0].banco;
                                         $scope.rsocial = response.data[0].empresa;
                                         $scope.cuenta = response.data[0].cuenta;
@@ -2704,6 +2755,17 @@
                                         $scope.referencia = response.data[0].referencia;
                                         $scope.msni = parseInt(response.data[0].msni);
                                         // calcularCF(); NO NECESARIO
+                                        if(response.data[0].idStatusLote==3){
+                                            let fecha_pre = new Date(response.data[0].fechaApartado);
+                                            let dia_final = (fecha_pre.getDate() < 10 ) ? '0'+fecha_pre.getDate() : fecha_pre.getDate();
+                                            let mes_final = ((fecha_pre.getMonth()-1) < 10) ? '0'+(fecha_pre.getMonth()-1) : (fecha_pre.getMonth()-1);
+                                            let fecha_final = fecha_pre.getFullYear()+'-'+ mes_final +'-'+ dia_final;
+                                            $scope.fechaApartado = fecha_pre;
+                                            console.log("$scope.fechaApartado: ", $scope.fechaApartado);
+                                            console.log("fecha_final: ", fecha_final);
+                                        }else{
+                                            $scope.fechaApartado = new Date();
+                                        }
 
 
                                         /*Reset vars from eng days*/
@@ -2713,7 +2775,7 @@
                                         var cehboxInterno = angular.element(document.querySelector('#paquete.id_paquete'));
                                         var porcentajeEnganche = angular.element(document.querySelector('#porcentajeEnganche'));
                                         var cantidadEnganche = angular.element(document.querySelector('#cantidadEnganche'));
-                                        $scope.diasEnganche = [{day: 7}, {day: 25}, {day: 'Diferido'}];
+                                        $scope.diasEnganche = [{day: 15}, {day: 30}, {day: 'Diferido'}];
                                         $scope.cantidad = <?php echo $data_corrida->cantidad_enganche;?>;
                                         porcentajeEnganche.val(<?php echo $data_corrida->porcentaje_enganche;?>);
                                         // apartado.val('0');
@@ -3285,6 +3347,17 @@
                             porcentaje2 = (porcentaje1 / supLote);
                             r1 = (r1 - porcentaje1);
                         }
+                        if(item.id_condicion == 13){
+                            //     console.log('condicion 12 ', item.porcentaje);
+                            //     // descuentoM2 = montoBono/supLote
+                            console.log('condicion 13');
+
+                            porcentaje1 = (item.porcentaje);
+                            porcentaje2 = (supLote * porcentaje1);
+                            r1 = (r1 - porcentaje2);
+                            msi = parseInt(msi + item.msi_descuento);
+                            //     console.log("condicion12 alv: ", r1);
+                        }
 
 
                         ///////////////////////DESCIPCION DE DESCUENTOS////////////////////////////////////////
@@ -3380,6 +3453,12 @@
                             porcentaje2 = (porcentaje1 / supLote);
                             r1 -= porcentaje1;
                         }
+                        if(item.id_condicion == 13){
+                            porcentaje1 = (item.porcentaje);
+                            porcentaje2 = (supLote * porcentaje1);
+                            r1 -= porcentaje2;
+                            msi = parseInt(msi + item.msi_descuento);
+                        }
 
                         ///////////////////////DESCIPCION DE DESCUENTOS////////////////////////////////////////
                         if(item.id_condicion == 12){
@@ -3470,15 +3549,15 @@
 
                 //INICIO FECHA
                 var day;
-                var month = (new Date().getMonth() + 1);
-                var yearc = new Date().getFullYear();
+                var month = (new Date($scope.fechaApartado).getMonth() + 1);
+                var yearc = new Date($scope.fechaApartado).getFullYear();
 
 
                 if (month == 1) {
                     day = '0' + 1;
                 }
                 if (month == 2) {
-                    day = '0 ' + 2;
+                    day = '0' + 2;
                 }
                 if (month == 3) {
                     day = '0' + 3;
@@ -3603,7 +3682,7 @@
 
 
                 ) {
-                    var mes = ($scope.apartado && $scope.mesesdiferir > 0) ? (new Date().getMonth() + 2) : (new Date().getMonth() + 3);
+                    var mes = ($scope.apartado && $scope.mesesdiferir > 0) ? (new Date($scope.fechaApartado).getMonth() + 2) : (new Date($scope.fechaApartado).getMonth() + 3);
                 } else if ($scope.descDateEnero == 1 || $scope.descDateEneroMerida == 1 || $scope.descDateEneroMeridaC == 1 || $scope.descDateEneroLM1 == 1 || $scope.descDateEneroLM2 == 1
                     || $scope.descDateEneroLM3 == 1 || $scope.descDateEneroLM1C == 1 || $scope.descDateEneroLM2C == 1
                     || $scope.descDateEneroL1 == 1 || $scope.descDateEneroL2 == 1 || $scope.descDateEneroL3 == 1 || $scope.descDateEneroL4 == 1
@@ -3614,25 +3693,25 @@
                     || $scope.descDateEneroS1YS2 == 1
 
                 ) {
-                    var mes = ($scope.apartado && $scope.mesesdiferir > 0) ? (new Date().getMonth() + 2) : (new Date().getMonth() + 9);
+                    var mes = ($scope.apartado && $scope.mesesdiferir > 0) ? (new Date($scope.fechaApartado).getMonth() + 2) : (new Date($scope.fechaApartado).getMonth() + 9);
                 } else if ($scope.descDateOctubre == 1) {
-                    var mes = ($scope.apartado && $scope.mesesdiferir > 0) ? (new Date().getMonth() + 2) : (new Date().getMonth() + 6);
+                    var mes = ($scope.apartado && $scope.mesesdiferir > 0) ? (new Date($scope.fechaApartado).getMonth() + 2) : (new Date($scope.fechaApartado).getMonth() + 6);
                 } else if ($scope.descDateMayoMerida == 1 || $scope.descDateMayoMeridaC == 1 || $scope.descDateMayoAllQro1 == 1 || $scope.descDateMayoAllQro2 == 1 || $scope.descDateMayoSLP == 1 || $scope.helpMxMerida1 == 1 || $scope.helpMxMerida2 == 1 || $scope.helpMxMerida3 == 1 || $scope.helpMxMerida4 == 1) {
-                    var mes = ($scope.apartado && $scope.mesesdiferir > 0) ? (new Date().getMonth() + 2) : (new Date().getMonth() + 1);
+                    var mes = ($scope.apartado && $scope.mesesdiferir > 0) ? (new Date($scope.fechaApartado).getMonth() + 2) : (new Date($scope.fechaApartado).getMonth() + 1);
                 } else if ($scope.descDateSeptiembreMerida == 1 || $scope.descDateSeptiembreMeridaC == 1 || $scope.descDateSepLM4 == 1 || $scope.descDateSepLM3C == 1 || $scope.descDateSepLM4C == 1 || $scope.descDateSepL1 == 1
 
                     || $scope.descDateSepL2 == 1 || $scope.descDateSepL3 == 1 || $scope.descDateSepL4 == 1 || $scope.descDateSepL5 == 1
                     || $scope.descDateSepAllQro1 == 1 || $scope.descDateSepAllQro2 == 1
 
                 ) {
-                    var mes = ($scope.apartado && $scope.mesesdiferir > 0) ? (new Date().getMonth() + 2) : (new Date().getMonth() + 5);
+                    var mes = ($scope.apartado && $scope.mesesdiferir > 0) ? (new Date($scope.fechaApartado).getMonth() + 2) : (new Date($scope.fechaApartado).getMonth() + 5);
                 } else if ($scope.engancheCincoMilLM == 1 || $scope.engancheVeintiCincoMilLM == 1 || $scope.engancheCincoMilL1 == 1 || $scope.engancheCincoMilL2 == 1 || $scope.engancheVeintiCincoMilL == 1
                     || $scope.cinco_milLM == 1) {
-                    var mes = ($scope.apartado && $scope.mesesdiferir > 0) ? (new Date().getMonth() + 2) : (new Date().getMonth() + 2);
+                    var mes = ($scope.apartado && $scope.mesesdiferir > 0) ? (new Date($scope.fechaApartado).getMonth() + 2) : (new Date($scope.fechaApartado).getMonth() + 2);
                 } else if ($scope.descMSI == 1) {
-                    var mes = ($scope.apartado && $scope.mesesdiferir > 0) ? (new Date().getMonth() + 2) : (new Date().getMonth() + 5);
+                    var mes = ($scope.apartado && $scope.mesesdiferir > 0) ? (new Date($scope.fechaApartado).getMonth() + 2) : (new Date($scope.fechaApartado).getMonth() + 5);
                 } else if ($scope.veinteJ_milM == 1 || $scope.cinco_milM == 1 || $scope.veinticinco_milLM2 == 1) {
-                    var mes = ($scope.apartado && $scope.mesesdiferir > 0) ? (new Date().getMonth() + 2) : (new Date().getMonth() + 2);
+                    var mes = ($scope.apartado && $scope.mesesdiferir > 0) ? (new Date($scope.fechaApartado).getMonth() + 2) : (new Date($scope.fechaApartado).getMonth() + 2);
                 }
 
 
@@ -3723,8 +3802,8 @@
                     mesesSinInteresP2: 120,
                     mesesSinInteresP3: 60,
                     interes_p1: 0,
-                    interes_p2: 0.01,
-                    interes_p3: 0.0125,
+                    interes_p2: ($scope.casaFlag==1) ? 0.011083333 : 0.01,
+                    interes_p3: ($scope.casaFlag==1) ? 0.011083333 : 0.0125,
                     contadorInicial: 0,
                     capital: ($scope.mesesdiferir > 0) ? (r1 / (($scope.age_plan * 12) - $scope.mesesdiferir)) : (r1 / ($scope.age_plan * 12)),
                     fechaActual: $scope.date = new Date(),
@@ -4168,6 +4247,32 @@
                                 }
                             }
 
+                            if($scope.casaFlag==1) {
+                                let meses_restantes = $scope.infoLote.meses - $scope.infoLote.mesesSinInteresP1;
+                                // console.log("LA DIVI: ", meses_restantes);
+                                // console.log("INTERES: ", $scope.infoLote.interes_p2);
+
+                                let param1 = $scope.infoLote.mesesSinInteresP1;
+                                let param2 = Math.pow((1 / (1 + 0)), 1);
+                                let var1 = (Math.pow((1 + $scope.infoLote.interes_p2), meses_restantes)) - 1;
+                                let var2 = (Math.pow((1 + $scope.infoLote.interes_p2), meses_restantes) * $scope.infoLote.interes_p2);
+
+                                // console.log("param1: ", param1);
+                                // console.log("param2: ", param2);
+                                // console.log("var1: ", var1);
+                                // console.log("var2: ", var2);
+
+                                let var3 = var1 / var2;
+                                // console.log("var3: ", var3);
+
+                                let F = (param1 * param2) + (var3);
+                                console.log("F: ", F);
+                                let mensualidad = $scope.saldoFinal / F;
+                                // console.log("Mensualidad: " + mensualidad);
+                                // console.log("$scope.precioFinal: ", $scope.infoLote);
+
+                                $scope.infoLote.capital = mensualidad;
+                            }
 
                             range.push({
 
@@ -5043,7 +5148,32 @@
                                     $scope.fechaPM = $scope.dateCf;
                                 }
                             }
+                            if($scope.casaFlag==1) {
+                                let meses_restantes = $scope.infoLote.meses - $scope.infoLote.mesesSinInteresP1;
+                                // console.log("LA DIVI: ", meses_restantes);
+                                // console.log("INTERES: ", $scope.infoLote.interes_p2);
 
+                                let param1 = $scope.infoLote.mesesSinInteresP1;
+                                let param2 = Math.pow((1 / (1 + 0)), 1);
+                                let var1 = (Math.pow((1 + $scope.infoLote.interes_p2), meses_restantes)) - 1;
+                                let var2 = (Math.pow((1 + $scope.infoLote.interes_p2), meses_restantes) * $scope.infoLote.interes_p2);
+
+                                // console.log("param1: ", param1);
+                                // console.log("param2: ", param2);
+                                // console.log("var1: ", var1);
+                                // console.log("var2: ", var2);
+
+                                let var3 = var1 / var2;
+                                // console.log("var3: ", var3);
+
+                                let F = (param1 * param2) + (var3);
+                                console.log("F: ", F);
+                                let mensualidad = $scope.saldoFinal / F;
+                                // console.log("Mensualidad: " + mensualidad);
+                                // console.log("$scope.precioFinal: ", $scope.infoLote);
+
+                                $scope.infoLote.capital = mensualidad;
+                            }
 
                             range.push({
 
@@ -5420,6 +5550,32 @@
                                 }
                             }
 
+                            if($scope.casaFlag==1) {
+                                let meses_restantes = $scope.infoLote.meses - $scope.infoLote.mesesSinInteresP1;
+                                // console.log("LA DIVI: ", meses_restantes);
+                                // console.log("INTERES: ", $scope.infoLote.interes_p2);
+
+                                let param1 = $scope.infoLote.mesesSinInteresP1;
+                                let param2 = Math.pow((1 / (1 + 0)), 1);
+                                let var1 = (Math.pow((1 + $scope.infoLote.interes_p2), meses_restantes)) - 1;
+                                let var2 = (Math.pow((1 + $scope.infoLote.interes_p2), meses_restantes) * $scope.infoLote.interes_p2);
+
+                                // console.log("param1: ", param1);
+                                // console.log("param2: ", param2);
+                                // console.log("var1: ", var1);
+                                // console.log("var2: ", var2);
+
+                                let var3 = var1 / var2;
+                                // console.log("var3: ", var3);
+
+                                let F = (param1 * param2) + (var3);
+                                console.log("F: ", F);
+                                let mensualidad = $scope.saldoFinal / F;
+                                // console.log("Mensualidad: " + mensualidad);
+                                // console.log("$scope.precioFinal: ", $scope.infoLote);
+
+                                $scope.infoLote.capital = mensualidad;
+                            }
 
                             range.push({
 
@@ -6119,6 +6275,32 @@
                                 }
                             }
 
+                            if($scope.casaFlag==1) {
+                                let meses_restantes = $scope.infoLote.meses - $scope.infoLote.mesesSinInteresP1;
+                                // console.log("LA DIVI: ", meses_restantes);
+                                // console.log("INTERES: ", $scope.infoLote.interes_p2);
+
+                                let param1 = $scope.infoLote.mesesSinInteresP1;
+                                let param2 = Math.pow((1 / (1 + 0)), 1);
+                                let var1 = (Math.pow((1 + $scope.infoLote.interes_p2), meses_restantes)) - 1;
+                                let var2 = (Math.pow((1 + $scope.infoLote.interes_p2), meses_restantes) * $scope.infoLote.interes_p2);
+
+                                // console.log("param1: ", param1);
+                                // console.log("param2: ", param2);
+                                // console.log("var1: ", var1);
+                                // console.log("var2: ", var2);
+
+                                let var3 = var1 / var2;
+                                // console.log("var3: ", var3);
+
+                                let F = (param1 * param2) + (var3);
+                                console.log("F: ", F);
+                                let mensualidad = $scope.saldoFinal / F;
+                                // console.log("Mensualidad: " + mensualidad);
+                                // console.log("$scope.precioFinal: ", $scope.infoLote);
+
+                                $scope.infoLote.capital = mensualidad;
+                            }
 
                             range.push({
 
@@ -6694,6 +6876,32 @@
                             }
 
 
+                            if($scope.casaFlag==1) {
+                                let meses_restantes = $scope.infoLote.meses - $scope.infoLote.mesesSinInteresP1;
+                                // console.log("LA DIVI: ", meses_restantes);
+                                // console.log("INTERES: ", $scope.infoLote.interes_p2);
+
+                                let param1 = $scope.infoLote.mesesSinInteresP1;
+                                let param2 = Math.pow((1 / (1 + 0)), 1);
+                                let var1 = (Math.pow((1 + $scope.infoLote.interes_p2), meses_restantes)) - 1;
+                                let var2 = (Math.pow((1 + $scope.infoLote.interes_p2), meses_restantes) * $scope.infoLote.interes_p2);
+
+                                // console.log("param1: ", param1);
+                                // console.log("param2: ", param2);
+                                // console.log("var1: ", var1);
+                                // console.log("var2: ", var2);
+
+                                let var3 = var1 / var2;
+                                // console.log("var3: ", var3);
+
+                                let F = (param1 * param2) + (var3);
+                                console.log("F: ", F);
+                                let mensualidad = $scope.saldoFinal / F;
+                                // console.log("Mensualidad: " + mensualidad);
+                                // console.log("$scope.precioFinal: ", $scope.infoLote);
+
+                                $scope.infoLote.capital = mensualidad;
+                            }
                             range.push({
 
                                 "fecha": $scope.dateCf,
@@ -6956,7 +7164,7 @@
                 }
 
 
-                /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                ////    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
             }
 
@@ -6966,7 +7174,7 @@
             $scope.ages = [{age: 18}, {age: 19}, {age: 20}, {age: 21}, {age: 22}, {age: 23}, {age: 24}, {age: 25}, {age: 26}, {age: 27}, {age: 28}, {age: 29}, {age: 30}, {age: 31}, {age: 32}, {age: 33}, {age: 34}, {age: 35}, {age: 36}, {age: 37}, {age: 38}, {age: 39}, {age: 40}, {age: 41}, {age: 42}, {age: 43}, {age: 44}, {age: 45}, {age: 46}, {age: 47}, {age: 48}, {age: 49}, {age: 50}, {age: 51}, {age: 52}, {age: 53}, {age: 54}, {age: 55}, {age: 56}, {age: 57}, {age: 58}, {age: 59}, {age: 60}, {age: 61}, {age: 62}, {age: 63}, {age: 64}, {age: 65}, {age: 66}, {age: 67}, {age: 68}, {age: 69}, {age: 70}, {age: 71}, {age: 72}, {age: 73}, {age: 74}, {age: 75}, {age: 76}, {age: 77}, {age: 78}, {age: 79}, {age: 80}]
 
 
-            $scope.diasEnganche = [{day: 7}, {day: 25}, {day: 'Diferido'}]
+            $scope.diasEnganche = [{day: 15}, {day: 30}, {day: 'Diferido'}];
 
             $scope.diasDiferidos = [1, 2, 3, 4, 5, 6];
 
@@ -7212,7 +7420,7 @@
                         $scope.condominios = response.data;
                         $scope.lotes = "";
                         $scope.plan = "";
-                        $scope.diasEnganche = [{day: 7}, {day: 25}, {day: 'Diferido'}]
+                        $scope.diasEnganche = [{day: 15}, {day: 30}, {day: 'Diferido'}]
                         $scope.porcentaje = "";
                         $scope.cantidad = "";
                         apartado.val('0');
@@ -7309,7 +7517,7 @@
                         var cehboxInterno = angular.element(document.querySelector('#paquete.id_paquete'));
 
                         $scope.plan = "";
-                        $scope.diasEnganche = [{day: 7}, {day: 25}, {day: 'Diferido'}]
+                        $scope.diasEnganche = [{day: 15}, {day: 30}, {day: 'Diferido'}]
                         $scope.porcentaje = "";
                         $scope.cantidad = "";
                         apartado.val('0');
@@ -8339,7 +8547,7 @@
                         var cehboxInterno = angular.element(document.querySelector('#paquete.id_paquete'));
                         var porcentajeEnganche = angular.element(document.querySelector('#porcentajeEnganche'));
                         var cantidadEnganche = angular.element(document.querySelector('#cantidadEnganche'));
-                        $scope.diasEnganche = [{day: 7}, {day: 25}, {day: 'Diferido'}];
+                        $scope.diasEnganche = [{day: 15}, {day: 30}, {day: 'Diferido'}];
                         $scope.cantidad = "";
                         porcentajeEnganche.val('10');
                         apartado.val('0');

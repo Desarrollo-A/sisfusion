@@ -174,6 +174,12 @@ $(document).on("click", "#preview", function () {
         case '17':
             folder = 'PROYECTO_ESCRITURA';
             break;
+        case '18':
+            folder = 'RFC_MORAL';
+            break; 
+        case '19':
+            folder = 'ACTA_CONSTITUTIVA';
+        break;
         default:
             break;
     }
@@ -335,13 +341,13 @@ $(document).on("click", "#sendRequestButton", function (e) {
                     // getDocumentsInformation(idSolicitud);
                     alerts.showNotification("top", "right", action == 1 ? "El documento se ha cargado con éxito." : action == 2 ? "El documento se ha eliminado con éxito." : action == 4 ? "Los motivos de rechazo se han asociado de manera exitosa para el documento." : "El documento ha sido validado correctamente.", "success");
                     if(details == 1){
-                        var tr = $('.details-control').closest('tr');
+                        var tr = $(`#trees${idSolicitud}`).closest('tr');
                         var row = prospectsTable.row(tr);
-                        createDocRow(row, tr, $('.details-control'));
+                        createDocRow(row, tr, $(`#trees${idSolicitud}`));
                     }else if(details == 2){
-                        var tr = $('.treePresupuesto').closest('tr');
+                        var tr = $(`#treePresupuesto${idSolicitud}`).closest('tr');
                         var row = prospectsTable.row(tr);
-                        createDocRowPresupuesto(row, tr, $('.treePresupuesto'));
+                        createDocRowPresupuesto(row, tr, $(`#treePresupuesto${idSolicitud}`));
                     }
                     else{
                         prospectsTable.ajax.reload();
@@ -364,7 +370,7 @@ $(document).on("submit", "#formPresupuesto", function (e) {
     e.preventDefault();
     let data = new FormData($(this)[0]);
     data.append('nombreT', $('#nombreT').val() == '' ? null : $('#nombreT').val());
-    data.append('fechaCA', $('#fechaCA').val() == '' ? null : $('#fechaCA').val());
+    data.append('fechaCA2', $('#fechaCA').val() == '' ? null : formatDate($('#fechaCA').val()));
     $('#spiner-loader').removeClass('hide');
     $.ajax({
         url: "savePresupuesto",
@@ -436,6 +442,9 @@ $(document).on('click', '#checkPresupuesto', function () {
 $(document).on('click', '#newDate', function () {
     var data = prospectsTable.row($(this).parents('tr')).data();
     // $('#id_solicitud3').val(data.idSolicitud);
+    let idNotaria = $(this).attr('data-idNotaria');
+    let signDate = getSignDate(idNotaria);
+    $('#signDate').val(signDate);
     $('#idSolicitud').val($(this).attr('data-idSolicitud'));
     $('#type').val(3);
     $("#dateModal").modal();
@@ -576,7 +585,7 @@ $(document).on('submit', '#formEstatusLote', function (e) {
     saveEstatusLote(id_solicitud, formData);
 })
 
-$(document).on('click', '#treePresupuesto', function () {
+$(document).on('click', '.treePresupuesto', function () {
     var detailRows = [];
     var tr = $(this).closest('tr');
     var row = prospectsTable.row(tr);
@@ -621,9 +630,9 @@ $(document).on('click', '.approve', function(){
                 // getDocumentsInformation(idSolicitud);
                 alerts.showNotification("top", "right", action == 1 ? "El documento se ha cargado con éxito." : action == 2 ? "El documento se ha eliminado con éxito." : action == 4 ? "Los motivos de rechazo se han asociado de manera exitosa para el documento." : "El documento ha sido validado correctamente.", "success");
                 if(details == 1){
-                    var tr = $('.details-control').closest('tr');
+                    var tr = $(`#trees${idSolicitud}`).closest('tr');
                     var row = prospectsTable.row(tr);
-                    createDocRow(row, tr, $('.details-control'));
+                    createDocRow(row, tr, $(`#trees${idSolicitud}`));
                 }
                 else{
                     prospectsTable.ajax.reload();
@@ -693,7 +702,7 @@ function fillTable(beginDate, endDate, estatus) {
             },
             {
                 data: function (d) {
-                    return d.tipo == 1 || d.tipo == 3 ? d.comentarios : d.tipo == 2 || d.tipo == 4? d.motivos_rechazo : d.tipo == 5 ? '':'ERROR S/TIPO';
+                    return d.tipo == 1 || d.tipo == 3 ? d.comentarios : d.tipo == 2 || d.tipo == 4? d.motivos_rechazo : d.tipo == 5 ? '':'';
                 }
             },
             {
@@ -754,7 +763,7 @@ function fillTable(beginDate, endDate, estatus) {
                             group_buttons += permisos(d.permisos, d.expediente, d.idDocumento, d.tipo_documento, d.idSolicitud, 1, newBtn);
                             break;
                         case 7:
-                            newBtn += `<button id="treePresupuesto" data-idSolicitud=${d.idSolicitud} class="btn-data btn-details-grey treePresupuesto" data-permisos="1" data-id-prospecto="" data-toggle="tooltip" data-placement="top" title="Desglose presupuestos"><i class="fas fa-chevron-down"></i></button>`;
+                            newBtn += `<button id="treePresupuesto${d.idSolicitud}" data-idSolicitud=${d.idSolicitud} class="btn-data btn-details-grey treePresupuesto" data-permisos="1" data-id-prospecto="" data-toggle="tooltip" data-placement="top" title="Desglose presupuestos"><i class="fas fa-chevron-down"></i></button>`;
                             if(d.flagPresupuesto == 1){
                                 exp = 2
                             }else{
@@ -768,20 +777,20 @@ function fillTable(beginDate, endDate, estatus) {
                             }else{
                                 exp = d.expediente;
                             }
-                            newBtn += `<button id="treePresupuesto" data-idSolicitud=${d.idSolicitud} class="btn-data btn-details-grey treePresupuesto" data-permisos="2" data-id-prospecto="" data-toggle="tooltip" data-placement="top" title="Desglose presupuestos"><i class="fas fa-chevron-down"></i></button>`;
+                            newBtn += `<button id="treePresupuesto${d.idSolicitud}" data-idSolicitud=${d.idSolicitud} class="btn-data btn-details-grey treePresupuesto" data-permisos="2" data-id-prospecto="" data-toggle="tooltip" data-placement="top" title="Desglose presupuestos"><i class="fas fa-chevron-down"></i></button>`;
                             group_buttons += permisos(d.permisos, exp, d.idDocumento, d.tipo_documento, d.idSolicitud, 1, newBtn);
                             break;
                         case 9:
                             //se notifica al cliente el presupuesto
                             newBtn += '<button id="request" class="btn-data btn-green" data-toggle="tooltip" data-placement="top" title="Aprobar"><i class="far fa-paper-plane"></i></button>';
-                            group_buttons += permisos(d.permisos, d.expediente, d.idDocumento, d.tipo_documento, d.idSolicitud, 1, newBtn);
+                            group_buttons += permisos(d.permisos, 1, d.idDocumento, d.tipo_documento, d.idSolicitud, 1, newBtn);
                             break;
                         case 10:
                             exp = d.expediente;
                             if (d.result == 1 && d.approvedPresupuesto == 1) {
                                 exp = 1;
                             }
-                            newBtn += `<button id="trees" data-idSolicitud=${d.idSolicitud} class="btn-data btn-details-grey details-control" data-permisos="1" data-id-prospecto="" data-toggle="tooltip" data-placement="top" title="Desglose documentos"><i class="fas fa-chevron-down"></i></button>`;
+                            newBtn += `<button id="trees${d.idSolicitud}" data-idSolicitud=${d.idSolicitud} class="btn-data btn-details-grey details-control" data-permisos="1" data-id-prospecto="" data-toggle="tooltip" data-placement="top" title="Desglose documentos"><i class="fas fa-chevron-down"></i></button>`;
                             newBtn += `<button id="newNotary" data-idSolicitud=${d.idSolicitud} class="btn-data btn-sky" data-permisos="1" data-id-prospecto="" data-toggle="tooltip" data-placement="top" title="Nueva Notaría"><i class="fas fa-user-tie"></i></button>`;
                             group_buttons += permisos(d.permisos, exp, d.idDocumento, d.tipo_documento, d.idSolicitud, 1, newBtn);
                             break;
@@ -791,7 +800,7 @@ function fillTable(beginDate, endDate, estatus) {
                                 exp = 1;
                             else if (d.result == 1 && d.estatusValidacion == 1)
                                 exp = 2;   
-                                newBtn += `<button id="trees" data-idSolicitud=${d.idSolicitud} class="btn-data btn-details-grey details-control" data-permisos="2" data-id-prospecto="" data-toggle="tooltip" data-placement="top" title="Desglose documentos"><i class="fas fa-chevron-down"></i></button>`;
+                                newBtn += `<button id="trees${d.idSolicitud}" data-idSolicitud=${d.idSolicitud} class="btn-data btn-details-grey details-control" data-permisos="2" data-id-prospecto="" data-toggle="tooltip" data-placement="top" title="Desglose documentos"><i class="fas fa-chevron-down"></i></button>`;
                             if (d.pertenece == 2){
                                 newBtn += `<button id="notaria" data-idSolicitud=${d.idSolicitud} class="btn-data btn-green" data-permisos="2" data-id-prospecto="" data-toggle="tooltip" data-placement="top" title="Notaría"><i class="fas fa-user-tie"></i></button>`;
                             } 
@@ -830,7 +839,7 @@ function fillTable(beginDate, endDate, estatus) {
                             break;
                         case 15://16
                             if (userType == 55) { // MJ: ANTES 54
-                                newBtn +=  `<button id="newDate" data-idSolicitud=${d.idSolicitud} class="btn-data btn-orangeYellow"  data-toggle="tooltip" data-placement="top"  title="Nueva fecha"><i class="fas fa-calendar-alt"></i></i></button>`;
+                                newBtn +=  `<button id="newDate" data-idSolicitud=${d.idSolicitud} data-idNotaria=${d.idNotaria} class="btn-data btn-orangeYellow"  data-toggle="tooltip" data-placement="top"  title="Nueva fecha"><i class="fas fa-calendar-alt"></i></i></button>`;
                             }
                             group_buttons += permisos(d.permisos, 1, d.idDocumento, d.tipo_documento, d.idSolicitud, 1, newBtn);
                             break;
@@ -869,7 +878,7 @@ function fillTable(beginDate, endDate, estatus) {
                             group_buttons += permisos(d.permisos, d.expediente, d.idDocumento, d.tipo_documento, d.idSolicitud, 2, newBtn);
                             break;
                         case 90:
-                            newBtn += `<button id="newDate" data-idSolicitud=${d.idSolicitud} class="btn-data btn-green" data-toggle="tooltip" data-placement="top" title="Nueva fecha"><i class="fas fa-calendar-alt"></i></button>`;
+                            newBtn += `<button id="newDate" data-idSolicitud=${d.idSolicitud} data-idNotaria=${d.idNotaria} class="btn-data btn-green" data-toggle="tooltip" data-placement="top" title="Nueva fecha"><i class="fas fa-calendar-alt"></i></button>`;
                             group_buttons += permisos(d.permisos, 1, d.idDocumento, d.tipo_documento, d.idSolicitud, 1, newBtn);
                             break;
                         default:
@@ -949,6 +958,12 @@ function setInitialValues() {
     const endDate = new Date(fechaFin.getFullYear(), fechaFin.getMonth() + 1, 0);
     finalBeginDate = [beginDate.getFullYear(), ('0' + (beginDate.getMonth() + 1)).slice(-2), ('0' + beginDate.getDate()).slice(-2)].join('-');
     finalEndDate = [endDate.getFullYear(), ('0' + (endDate.getMonth() + 1)).slice(-2), ('0' + endDate.getDate()).slice(-2)].join('-');
+    finalBeginDate2 = [('0' + beginDate.getDate()).slice(-2), ('0' + (beginDate.getMonth() + 1)).slice(-2), beginDate.getFullYear()].join('/');
+    finalEndDate2 = [('0' + endDate.getDate()).slice(-2), ('0' + (endDate.getMonth() + 1)).slice(-2), endDate.getFullYear()].join('/');
+    
+    $('#beginDate').val(finalBeginDate2);
+    $('#endDate').val(finalEndDate2);
+
     fillTable(finalBeginDate, finalEndDate, $('#estatusE').val());
 }
 
@@ -1149,7 +1164,7 @@ function permisos(permiso, expediente, idDocumento, tipo_documento, idSolicitud,
                     botones += `<button data-idDocumento="${idDocumento}" data-documentType="${tipo_documento}" data-idSolicitud=${idSolicitud} data-action=${expediente == null || expediente == '' ? 1 : 2} class="btn-data ${expediente == null || expediente == '' ? "btn-sky" : "btn-gray"} upload" data-toggle="tooltip" data-placement="top" title="Upload/Delete">${expediente == null || expediente == '' ? '<i class="fas fa-cloud-upload-alt"></i>' : '<i class="far fa-trash-alt"></i>'}</button>`;
                     botones += newBtn;
                 }
-                botones += `<button id="preview" data-doc="${expediente}" data-documentType="${tipo_documento}" class="btn-data btn-details-grey" data-toggle="tooltip" data-placement="top" title="Preview"><i class="fas fa-eye"></i></button>`;
+                botones += `<button id="preview" data-doc="${expediente}" data-documentType="${tipo_documento}" class="btn-data btn-details-grey" data-toggle="tooltip" data-placement="top" title="Vista previa"><i class="fas fa-eye"></i></button>`;
                 botones += '<button id="request" class="btn-data btn-green" data-toggle="tooltip" data-placement="top" title="Enviar"><i class="far fa-paper-plane"></i></button>';
             }
             break;
@@ -1158,7 +1173,7 @@ function permisos(permiso, expediente, idDocumento, tipo_documento, idSolicitud,
                 botones += newBtn;
             }
             if (expediente != 1) {
-                botones += `<button id="preview" data-doc="${expediente}" data-documentType="${tipo_documento}" class="btn-data btn-details-grey" data-toggle="tooltip" data-placement="top" title="Preview"><i class="fas fa-eye"></i></button>`;
+                botones += `<button id="preview" data-doc="${expediente}" data-documentType="${tipo_documento}" class="btn-data btn-details-grey" data-toggle="tooltip" data-placement="top" title="Vista previa"><i class="fas fa-eye"></i></button>`;
             }
             break;
         case 3: //especial
@@ -1171,7 +1186,7 @@ function permisos(permiso, expediente, idDocumento, tipo_documento, idSolicitud,
                     botones += newBtn;
                 }
                 if (expediente != 1) {
-                    botones += `<button id="preview" data-doc="${expediente}" data-documentType="${tipo_documento}" class="btn-data btn-details-grey" data-toggle="tooltip" data-placement="top" title="Preview"><i class="fas fa-eye"></i></button>`;
+                    botones += `<button id="preview" data-doc="${expediente}" data-documentType="${tipo_documento}" class="btn-data btn-details-grey" data-toggle="tooltip" data-placement="top" title="Vista previa"><i class="fas fa-eye"></i></button>`;
                     botones += `<button id="reject" class="btn-data btn-warning" data-toggle="tooltip" data-placement="top" title="Rechazar"><i class="fas fa-ban"></i></button>`;
                 }
                 botones += '<button id="request" class="btn-data btn-green" data-toggle="tooltip" data-placement="top" title="Enviar"><i class="far fa-paper-plane"></i></button>';
@@ -1252,7 +1267,7 @@ function buildTableDetail(data, permisos) {
         if (v.expediente == null || v.expediente == '')
             solicitudes += '';
         else
-            solicitudes += `<button id="preview" data-doc="${v.expediente}" data-documentType="${v.tipo_documento}" class="btn-data btn-gray" data-toggle="tooltip" data-placement="top" title="Preview"><i class="fas fa-eye"></i></button>`;
+            solicitudes += `<button id="preview" data-doc="${v.expediente}" data-documentType="${v.tipo_documento}" class="btn-data btn-gray" data-toggle="tooltip" data-placement="top" title="Vista previa"><i class="fas fa-eye"></i></button>`;
 
         solicitudes += '</div></td></tr>';
 
@@ -1434,7 +1449,7 @@ function createDocRow(row, tr, thisVar){
         row.data().solicitudes = JSON.parse(data);
         prospectsTable.row(tr).data(row.data());
         row = prospectsTable.row(tr);
-        row.child(buildTableDetail(row.data().solicitudes, $('#trees').attr('data-permisos'))).show();
+        row.child(buildTableDetail(row.data().solicitudes, $('.details-control').attr('data-permisos'))).show();
         tr.addClass('shown');
         thisVar.parent().find('.animacion').removeClass("fa-caret-right").addClass("fa-caret-down");
         $('#spiner-loader').addClass('hide');
@@ -1489,7 +1504,7 @@ $(document).on('click', '#observacionesSubmit', function (e) {
     let idSolicitud = $('#idSolicitud').val();
     let action = $('#action').val();
     let observaciones = $('#observacionesS').val();
-    emailObservaciones(idSolicitud, action, observaciones);
+    emailObservaciones(idSolicitud, 1, observaciones);
 });
 
 function emailObservaciones(idSolicitud, action, observaciones = null) {
@@ -1512,7 +1527,7 @@ function emailObservaciones(idSolicitud, action, observaciones = null) {
             obj = {idSolicitud: idSolicitud};
             break;
     }
-    $.post(action == 1 ? 'mailObservaciones' : 'mailObservaciones', obj, function (data) {
+    $.post(action == 1 ? 'mailObservaciones' : 'mailObservaciones', {idSolicitud: idSolicitud, observaciones: observaciones}, function (data) {
         // if(data == true){
         // }
         changeStatus(idSolicitud, action == 1 ? 4:0, 'Correo Envíado a Proyectos', 1);
@@ -1593,7 +1608,7 @@ function buildTableDetailP(data, permisos) {
         if (v.expediente == null || v.expediente == '')
             solicitudes += '';
         else
-            solicitudes += `<button id="preview" data-idDocumento="${v.idPresupuesto}" data-doc="${v.expediente}" data-documentType="13" data-presupuestoType="${v.tipo}"  class="btn-data btn-gray" data-toggle="tooltip" data-placement="top" title="Preview"><i class="fas fa-eye"></i></button>`;
+            solicitudes += `<button id="preview" data-idDocumento="${v.idPresupuesto}" data-doc="${v.expediente}" data-documentType="13" data-presupuestoType="${v.tipo}"  class="btn-data btn-gray" data-toggle="tooltip" data-placement="top" title="Vista previa"><i class="fas fa-eye"></i></button>`;
 
         solicitudes += '</div></td></tr>';
 

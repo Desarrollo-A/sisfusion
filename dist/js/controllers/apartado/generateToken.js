@@ -13,6 +13,7 @@ $('#tokensTable thead tr:eq(0) th').each(function (i) {
 });
 
 function fillTokensTable() {
+    let current_rol_user;
     tokensTable = $("#tokensTable").dataTable({
         dom: 'Brt' + "<'row'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'i><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>",
         width: "auto",
@@ -59,6 +60,50 @@ function fillTokensTable() {
         columns: [
             {
                 data: function (d) {
+                    let lote;
+                    if(d.id_lote != null){
+                        lote = d.id_lote;
+                    }else{
+                        lote = "--";
+                    }
+                    return lote;
+                }
+            },
+            {
+                data: function (d) {
+                    let nombreLote;
+                    if(d.nombreLote != null){
+                        nombreLote = d.nombreLote;
+                    }else{
+                        nombreLote = "--";
+                    }
+                    return nombreLote;
+                }
+            },
+            {
+                data: function (d) {
+                    let cliente;
+                    if(d.nombreCliente != "  "){
+                        cliente = d.nombreCliente;
+                    }else{
+                        cliente = "--";
+                    }
+                    return cliente;
+                }
+            },
+            {
+                data: function (d) {
+                    let fecha_apartado;
+                    if(d.fechaApartado != null){
+                        fecha_apartado = d.fechaApartado;
+                    }else{
+                        fecha_apartado = "--";
+                    }
+                    return fecha_apartado;
+                }
+            },
+            {
+                data: function (d) {
                     return d.id_token;
                 }
             },
@@ -79,7 +124,22 @@ function fillTokensTable() {
             },
             {
                 data: function (d) {
-                    return d.estatus;
+                    let estatus;
+                    switch (d.estatus) {
+                        case 0:
+                            estatus ='<label style="border-radius: 12px;color:white;background-color: grey; padding:1px 10px;font-size: 0.9em;font-weight: lighter">Sin validar</label>';
+                            break;
+                        case 1:
+                            estatus ='<label style="border-radius: 12px;color:white;background-color: green; padding:1px 10px;font-size: 0.9em;font-weight: lighter">Aceptado</label>';
+                            break;
+                        case 2:
+                            estatus ='<label style="border-radius: 12px;color:white;background-color: red; padding:1px 10px;font-size: 0.9em;font-weight: lighter">Rechazado</label>';
+                            break;
+                        default:
+                            estatus ='<label style="border-radius: 12px;color:white;background-color: grey; padding:1px 10px;font-size: 0.9em;font-weight: lighter">NA</label>';
+                            break;
+                    }
+                    return estatus;
                 }
             },
             {
@@ -87,7 +147,7 @@ function fillTokensTable() {
                     let btns = '<div class="d-flex align-center justify-center">' +
                         '<button class="btn-data btn-gray reviewEvidenceToken" data-nombre-archivo="' + d.nombre_archivo + '" title="Ver evidencia"></body><i class="fas fa-eye"></i></button>' +
                         '<button class="btn-data btn-green setToken" data-token-name="' + d.token + '" title="Copiar token"><i class="fas fa-copy"></i></button>';
-                    if (current_rol_user != 3){
+                    if (d.currentRol != 3){
                         if (d.estatus == 1)
                             btns += '<button class="btn-data btn-warning validateToken" data-action="2" data-token-id="' + d.id_token + '" title="Rechazar token"><i class="fas fa-minus"></i></button>';
                         if (d.estatus == 2 || d.estatus == 0)

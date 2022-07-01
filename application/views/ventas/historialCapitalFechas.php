@@ -431,7 +431,7 @@
 
                         var BtnStats = '';
                         if(rol == 49){
-                        BtnStats = '<button href="#" value="'+data.id_pago_i+'" data-value="'+data.nombreLote+'" data-nameuser="'+data.user_names+'" data-puesto="'+data.puesto+'" data-code="'+data.cbbtton+'" ' +'class="btn-data btn-sky regresarpago" title="Cancelar descuento">' +'<i class="fas fa-sync-alt"></i></button>';
+                        BtnStats = '<button href="#" value="'+data.id_pago_i+'" data-value="'+data.nombreLote+'" data-nameuser="'+data.user_names+'" data-puesto="'+data.puesto+'" data-monto="'+data.abono_neodata+'" data-code="'+data.cbbtton+'" ' +'class="btn-data btn-sky regresarpago" title="Cancelar descuento">' +'<i class="fas fa-sync-alt"></i></button>';
                         }
 
                         return BtnStats;
@@ -476,11 +476,13 @@
                 lote = $(this).attr("data-value");
                 nameuser = $(this).attr("data-nameuser");
                 puesto = $(this).attr("data-puesto");
+                monto = $(this).attr("data-monto");
                 $("#seeInformationModalAsimilados .modal-body").append(`
                 <h5><b>Cancelar descuento</b></h5>
                 <p>¿Está seguro que desea cancelar el descuento del <b>${puesto} ${nameuser}</b>?</p>
                 <div class="form-group">
                 <input type="hidden" name="id_pago" id="id_pago" value="${id_pago}">
+                <input type="hidden" name="monto" id="monto" value="${monto}">
                 <label>Motivo cancelación</label>
                 <textarea class="form-control" row="4" name="motivo" id="motivo"></textarea>
                 </div>`);
@@ -627,11 +629,9 @@
         };
 
         function cleanCommentsAsimilados() {
-            $('#seeInformationModalAsimilados').modal('toggle');
-            var myCommentsList = document.getElementById('comments-list-asimilados');
+            $('#seeInformationModalAsimilados').modal('hide');
             var cancelacion = document.getElementsByClassName('cancelacion');
             $('.cancelacion').html('');
-            myCommentsList.innerHTML = '';
             cancelacion.innerHTML = '';
         }
 

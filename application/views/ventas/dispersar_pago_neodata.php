@@ -95,6 +95,9 @@
                             <input type="hidden"
                                    name="id_pagoc"
                                    id="id-lote-detenido">
+                                   <input type="hidden"
+                                   name="statusLote"
+                                   id="statusLote">
 
                             <div class="col-lg-12">
                                 <div class="form-group is-empty">
@@ -232,7 +235,7 @@
                         <div class="card">
                             <div class="card-header card-header-icon" data-background-color="goldMaderas">
                                 <i class="fas fa-chart-pie fa-2x"></i>
-							</div>
+                            </div>
                             <div class="card-content">
                                 <div class="encabezadoBox">
                                     <h3 class="card-title center-align" >Dispersión de pago</h3>
@@ -245,10 +248,10 @@
                                                 <div class="form-group text-center">
                                                     <h4 class="title-tot center-align m-0">Monto hoy: </h4>
                                                     <p class="category input-tot pl-1" id="monto_label">
-                                                        <?php $query = $this->db->query("SELECT SUM(abono_neodata) nuevo_general FROM pago_comision_ind WHERE estatus NOT IN (11,0) AND id_comision IN (select id_comision from comisiones) AND MONTH(GETDATE()) = MONTH(fecha_abono) AND year(GetDate()) = year(fecha_abono) AND Day(GetDate()) = Day(fecha_abono)");
+                                                        <?php $query = $this->db->query("SELECT SUM(monto) nuevo_general FROM (SELECT SUM(pci.abono_neodata) monto FROM pago_comision_ind pci INNER JOIN comisiones c on c.id_comision = pci.id_comision INNER JOIN usuarios u ON u.id_usuario = pci.creado_por AND u.id_rol IN (32,13,17) WHERE MONTH(GETDATE()) = MONTH(pci.fecha_abono) AND year(GetDate()) = year(pci.fecha_abono) AND Day(GetDate()) = Day(pci.fecha_abono) AND pci.estatus NOT IN (0) GROUP BY u.id_usuario) as nuevo_general ;");
 
                                                         foreach ($query->result() as $row){
-                                                            $number = $row->nuevo_general;
+                                                            $number = ($row->nuevo_general) ? $row->nuevo_general : 0;
                                                             echo '<B>$'.number_format($number, 3),'</B>';
                                                         } ?>
                                                     </p>
@@ -258,7 +261,8 @@
                                                 <div class="form-group text-center">
                                                     <h4 class="title-tot center-align m-0">Pagos hoy: </h4>
                                                     <p class="category input-tot pl-1" id="pagos_label">
-                                                        <?php $query = $this->db->query("SELECT count(id_pago_i) nuevo_general FROM pago_comision_ind WHERE estatus NOT IN (11,0) AND id_comision IN (select id_comision from comisiones) AND MONTH(GETDATE()) = MONTH(fecha_abono) AND Day(GetDate()) = Day(fecha_abono) AND year(GetDate()) = year(fecha_abono) AND abono_neodata>0");
+                                                     
+                                                        <?php $query = $this->db->query("SELECT SUM(pagos) nuevo_general FROM (SELECT  count(id_pago_i) pagos FROM pago_comision_ind pci INNER JOIN comisiones c on c.id_comision = pci.id_comision INNER JOIN usuarios u ON u.id_usuario = pci.creado_por AND u.id_rol IN (32,13,17) WHERE MONTH(GETDATE()) = MONTH(pci.fecha_abono) AND year(GetDate()) = year(pci.fecha_abono) AND Day(GetDate()) = Day(pci.fecha_abono) AND pci.estatus NOT IN (0) GROUP BY u.id_usuario) as nuevo_general ;");
                                                         foreach ($query->result() as $row){
                                                             $number = $row->nuevo_general;
                                                             echo '<B>'.$number,'</B>';
@@ -270,7 +274,9 @@
                                                 <div class="form-group text-center">
                                                     <h4 class="title-tot center-align m-0">Lotes hoy: </h4>
                                                     <p class="category input-tot pl-1" id="lotes_label">
-                                                        <?php $query = $this->db->query("SELECT count(distinct(id_lote)) nuevo_general FROM comisiones WHERE id_comision IN (select id_comision from pago_comision_ind WHERE MONTH(GETDATE()) = MONTH(fecha_abono) AND Day(GetDate()) = Day(fecha_abono) AND year(GetDate()) = year(fecha_abono) AND estatus NOT IN (11,0) AND id_comision IN (SELECT id_comision FROM comisiones))");
+                                                    
+                                                    <?php $query = $this->db->query("SELECT SUM(lotes) nuevo_general FROM (SELECT  COUNT(DISTINCT(id_lote)) lotes FROM pago_comision_ind pci INNER JOIN comisiones c on c.id_comision = pci.id_comision INNER JOIN usuarios u ON u.id_usuario = pci.creado_por AND u.id_rol IN (32,13,17) WHERE MONTH(GETDATE()) = MONTH(pci.fecha_abono) AND year(GetDate()) = year(pci.fecha_abono) AND Day(GetDate()) = Day(pci.fecha_abono) AND pci.estatus NOT IN (0) GROUP BY u.id_usuario) as nuevo_general ;");
+
                                                         foreach ($query->result() as $row) {
                                                             $number = $row->nuevo_general;
                                                             echo '<B>'.$number,'</B>';
@@ -542,6 +548,8 @@
                     }
                     else if(d.tipo_venta==7) {
                         lblType ='<span class="label label-warning">Venta especial</span>';
+                    }else{
+                        lblType ='<span class="label label-danger">SIN TIPO DE VENTA</span>';
                     }
                     return lblType;
                 }
@@ -610,14 +618,16 @@
                     
                     if(data.totalNeto2==null || data.totalNeto2==''|| data.totalNeto2==0) {
                         BtnStats = 'Asignar Precio';
-                    }else if((data.id_prospecto==null || data.id_prospecto==''|| data.id_prospecto==0)&&data.lugar_prospeccion == 6) {
+                    }else if(data.tipo_venta==null || data.tipo_venta==0) {
+                        BtnStats = 'Asignar Tipo Venta';
+                    }else if((data.id_prospecto==null || data.id_prospecto==''|| data.id_prospecto==0) && data.lugar_prospeccion == 6) {
                         BtnStats = 'Asignar Prospecto';
                     }else if(data.id_subdirector==null || data.id_subdirector==''|| data.id_subdirector==0) {
                         BtnStats = 'Asignar Subdirector';
                     }else if(data.id_sede==null || data.id_sede==''|| data.id_sede==0) {
                         BtnStats = 'Asignar Sede';
                     }else if(data.plan_comision==null || data.plan_comision==''|| data.plan_comision==0) {
-                        BtnStats = 'Asignar Plan';
+                        BtnStats = 'Asignar Plan <br> Sede:'+data.sede;
                     } else{
                         if(data.compartida==null) {
                             varColor  = 'btn-sky';
@@ -630,6 +640,7 @@
                         }
                         
                         BtnStats = '<button href="#" value="'+data.idLote+'" data-value="'+data.registro_comision+'" data-totalNeto2 = "'+data.totalNeto2+'" data-estatus="'+data.idStatusContratacion+'" data-cliente="'+data.id_cliente+'" data-plan="'+data.plan_comision+'"  data-tipov="'+data.tipo_venta+'"data-descplan="'+data.plan_descripcion+'" data-code="'+data.cbbtton+'" ' +'class="btn-data '+varColor+' verify_neodata" title="Verificar en NEODATA">'+'<span class="material-icons">verified_user</span></button> '+RegresaActiva+'';
+                       
                         BtnStats += `
                                 <button href="#"
                                     value="${data.idLote}"
@@ -637,8 +648,8 @@
                                     class="btn-data btn-blueMaderas btn-detener btn-warning"
                                     title="Detener">
                                     <i class="material-icons">block</i>
-                                </button>
-                            `;
+                                </button>`;
+                        
                     }
                     return '<div class="d-flex justify-center">'+BtnStats+'</div>';
                 }
@@ -681,19 +692,19 @@
                 $(this).parent().find('.animacion').removeClass("fas fa-chevron-down").addClass("fas fa-chevron-up");
             }
         });
-
-
         $("#tabla_ingresar_9 tbody").on('click', '.btn-detener', function () {
                 const idLote = $(this).val();
                 const nombreLote = $(this).attr("data-value");
+                const statusLote = $(this).attr("data-statusLote");
+
                 $('#id-lote-detenido').val(idLote);
+                $('#statusLote').val(statusLote);
 
                 $("#detenciones-modal .modal-header").html("");
                 $("#detenciones-modal .modal-header").append('<h4 class="modal-title">Motivo de controversia para <b>'+nombreLote+'</b></h4>');
 
                 $("#detenciones-modal").modal();
             });
- 
         $("#tabla_ingresar_9 tbody").on("click", ".verify_neodata", async function(){ 
  
             $("#modal_NEODATA .modal-header").html("");
@@ -1037,7 +1048,6 @@
         /**----------------------------------------------------------------------- */
     
     });
-
     $('#detenidos-form').on('submit', function (e) {
             e.preventDefault();
 
@@ -1226,20 +1236,20 @@
         }
     }
 
-    function function_totales(){
-        $.getJSON( url + "Comisiones/getMontoDispersado").done( function( data ){
-            $cadena = '<b>$'+formatMoney(data[0].monto)+'</b>';
-            document.getElementById("monto_label").innerHTML = $cadena ;
-        });
-        $.getJSON( url + "Comisiones/getPagosDispersado").done( function( data ){
-            $cadena01 = '<b>'+data[0].pagos+'</b>';
-            document.getElementById("pagos_label").innerHTML = $cadena01 ;
-        });
-        $.getJSON( url + "Comisiones/getLotesDispersado").done( function( data ){
-            $cadena02 = '<b>'+data[0].lotes+'</b>';
-            document.getElementById("lotes_label").innerHTML = $cadena02 ;
-        });  
-    }
+    // function function_totales(){
+    //     $.getJSON( url + "Comisiones/getMontoDispersado").done( function( data ){
+    //         $cadena = '<b>$'+formatMoney(data[0].monto)+'</b>';
+    //         document.getElementById("monto_label").innerHTML = $cadena ;
+    //     });
+    //     $.getJSON( url + "Comisiones/getPagosDispersado").done( function( data ){
+    //         $cadena01 = '<b>'+data[0].pagos+'</b>';
+    //         document.getElementById("pagos_label").innerHTML = $cadena01 ;
+    //     });
+    //     $.getJSON( url + "Comisiones/getLotesDispersado").done( function( data ){
+    //         $cadena02 = '<b>'+data[0].lotes+'</b>';
+    //         document.getElementById("lotes_label").innerHTML = $cadena02 ;
+    //     });  
+    // }
 
     $('#fecha1').change( function(){
         fecha1 = $(this).val(); 
@@ -1261,7 +1271,7 @@
         }
         else{
             $.getJSON( url + "Comisiones/getMontoDispersadoDates/"+fecha1+'/'+fecha2).done( function( $datos ){
-                $("#myModal .modal-body").append('<div class="row">                <div class="col-md-5"><p class="category"><b>Monto</b>: $'+formatMoney($datos['datos_monto'][0].monto)+'</p></div><div class="col-md-4"><p class="category"><b>Pagos</b>: '+formatMiles($datos['datos_pagos'][0].pagos)+'</p></div><div class="col-md-3"><p class="category"><b>Lotes</b>: '+formatMiles($datos['datos_lotes'][0].lotes)+'</p></div></div>');
+                $("#myModal .modal-body").append('<div class="row">                <div class="col-md-5"><p class="category"><b>Monto</b>: $'+formatMoney($datos['datos_monto'][0].monto)+'</p></div><div class="col-md-4"><p class="category"><b>Pagos</b>: '+formatMiles($datos['datos_monto'][0].pagos)+'</p></div><div class="col-md-3"><p class="category"><b>Lotes</b>: '+formatMiles($datos['datos_monto'][0].lotes)+'</p></div></div>');
             });
         }
     });
@@ -1339,7 +1349,7 @@
   return number.toString().replace(exp,rep);
 }
 
-    function convertirPorcentajes(value) {
+function convertirPorcentajes(value) {
         const fixed = Number(value).toFixed(3);
         const partes = fixed.split(".");
         const numeroEntero = partes[0];
@@ -1359,5 +1369,6 @@
         }
         return str;
     }
+
     </script>
 </body>

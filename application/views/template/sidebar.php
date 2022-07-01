@@ -1,38 +1,14 @@
 <div class="sidebar" data-active-color="blue" data-background-color="white" data-image="<?=base_url()?>/dist/img/sidebar-1.jpg">
 	<div class="logo"> 
 		<a href="<?=base_url()?>#" class="simple-text">
-            <img src="<?=base_url()?>static/images/cm_blue.png" width="70%">
+            <img class="pt-2" src="<?=base_url()?>static/images/logo_CM.png" width="70%">
 		</a>
 	</div>
 	<div class="logo logo-mini">
 		<a href="<?=base_url()?>#" class="simple-text" style="color: #0e4377;font-weight: 800;font-family: 'Times New Roman', Times, serif;">CM</a>
 	</div>
 	<div class="sidebar-wrapper">
-		<div class="user hide">
-			<div class="photo">
-				<img src="../dist/img/faces/avatar.jpg" />
-			</div>
-			<div class="info">
-				<a data-toggle="collapse" href="#collapseExample" class="collapsed">
-					Tania Andrew
-					<b class="caret"></b>
-				</a>
-				<div class="collapse" id="collapseExample">
-					<ul class="nav">
-						<li>
-							<a href="#">My Profile</a>
-						</li>
-						<li>
-							<a href="#">Edit Profile</a>
-						</li>
-						<li>
-							<a href="#">Settings</a>
-						</li>
-					</ul>
-				</div>
-			</div>
-		</div>
-		<br><br>
+		<br>
 		<ul class="nav">
 <?php
   $url = "https://".$_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];	
@@ -254,15 +230,21 @@ foreach($datos2 as $datos)
 				<a href="<?=base_url()?>#" class="navbar-brand hidden-md hidden-lg" style="color: #0e4377;font-weight: 800">
 					<img src="<?=base_url()?>static/images/img.ico" class="img-responsive" width="15%">
 				</a>
-                <div class="divCalendar" id="divCalendar">
-                    <a id="minimizeSidecalendar" class="navbar-brand openCalendar-mini" style="cursor:pointer;">
-                        <i class="material-icons far fa-calendar-alt"></i>
-                        <p class="hidden-lg hidden-md"></p>
+                <div class="divIconsNav">
+                    <div class="divCalendar" id="divCalendar">
+                        <a id="minimizeSidecalendar" class="navbar-brand responsive">
+                            <i class="material-icons far fa-calendar-alt"></i>
+                        </a>
+                    </div>
+                    <a class="navbar-brand responsive">
+                        <span class="material-icons">settings</span>
+                    </a>
+                    <a  class="navbar-brand responsive">
+                        <span class="material-icons">exit_to_app</span>
                     </a>
                 </div>
             </div>
 			<div class="collapse navbar-collapse">
-				<a class="navbar-brand" href="#"> Menú </a>
 				<ul class="nav navbar-nav navbar-right">
                     <!----------------------------------------------------------------------->
                     <input type="hidden" id="uri2" value="<?=$url?>">
@@ -302,20 +284,9 @@ foreach($datos2 as $datos)
                     <?php
                     }
                     ?>
-					<li class="dropdown">
-						<a href="#" class="dropdown-toggle" data-toggle="dropdown">
-							<span><?= $this->session->userdata('id_usuario') . " - " . $this->session->userdata('nombre')." ".$this->session->userdata('apellido_paterno')." ".$this->session->userdata('apellido_materno') ?></span>
-							<i class="material-icons">person</i>
-							<p class="hidden-lg hidden-md">Profile</p>
-						</a>
-						<ul class="dropdown-menu">
-							<li>
-								<a href="<?=base_url()?>index.php/Usuarios/configureProfile">Configurar perfil</a>
-							</li>
-							<li>
-								<a href="<?=base_url()?>index.php/login/logout_ci" class="session_close_btn_clean">Cerrar sesión</a>
-							</li>
-						</ul>
+					<li class=" perfil">
+                        <div class="idBubble"><p class="overflow-text m-0"><?= $this->session->userdata('id_usuario') ?></p></div>
+                        <div class="fullName"><?= $this->session->userdata('nombre')." ".$this->session->userdata('apellido_paterno')." ".$this->session->userdata('apellido_materno') ?></div>
 					</li>
 					<li class="separator hidden-lg hidden-md"></li>
 				</ul>

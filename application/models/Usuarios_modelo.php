@@ -44,7 +44,7 @@ class Usuarios_modelo extends CI_Model {
                     LEFT JOIN (SELECT id_usuario AS id_lid, id_lider AS id_lider_2, CONCAT(apellido_paterno, ' ', apellido_materno, ' ', usuarios.nombre) lider FROM usuarios) AS lider_2 ON lider_2.id_lid = usuarios.id_lider 
                     LEFT JOIN (SELECT id_usuario, id_lider AS id_lider3, CONCAT(apellido_paterno, ' ', apellido_materno, ' ', usuarios.nombre) lider_coord FROM usuarios) AS lider_3 ON lider_3.id_usuario = lider_2.id_lid 
                     INNER JOIN sedes s ON CAST(s.id_sede AS VARCHAR(45)) = CAST(usuarios.id_sede AS VARCHAR(45))  
-                    WHERE (id_rol IN (3, 7, 9) AND rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%' AND ISNULL(correo, '' ) NOT LIKE '%OOAM%' AND correo NOT LIKE '%CASA%') ORDER BY nombre");                        
+                    WHERE (id_rol IN (3, 7, 9) AND rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%' AND ISNULL(correo, '' ) NOT LIKE '%OOAM%' AND ISNULL(correo, '') NOT LIKE '%CASA%') ORDER BY nombre");                        
                 break;
             case '5': // ASISTENTE SUBDIRECCIÓN
                 if($this->session->userdata('id_usuario') == 6627) // JUANA VE 3 (MÉRIDA) Y 6 (CANCÚN)
@@ -119,16 +119,18 @@ class Usuarios_modelo extends CI_Model {
             case '33': // CONSULTA (CONTROL INTERNO)
                 return $this->db->query("SELECT pci2.abono_pendiente ,CONVERT(varchar,u.fechaIngreso,103) fechaIngreso, u.estatus, u.id_usuario, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombre, u.correo,
                 u.telefono, oxc.nombre puesto, CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) jefe_directo, u.correo, oxc2.nombre forma_pago,
-                s.nombre sede, CASE WHEN DAY(u.fecha_creacion) >= 6 AND MONTH(u.fecha_creacion) = MONTH(GETDATE()) AND YEAR(u.fecha_creacion) = YEAR(GETDATE()) THEN 1 ELSE 0 END as nuevo, u.fecha_creacion, u.ismktd
+                s.nombre sede, CASE WHEN DAY(u.fecha_creacion) >= 6 AND MONTH(u.fecha_creacion) = MONTH(GETDATE()) AND YEAR(u.fecha_creacion) = YEAR(GETDATE()) THEN 1 ELSE 0 END as nuevo, u.fecha_creacion, u.ismktd,oxcN.nombre as nacionalidad,
+                CASE WHEN oxcN.id_opcion = 0 THEN '2D572C' ELSE 'aeaeae' END AS color,oxcn.id_opcion as id_nacionalidad,u.forma_pago as id_forma_pago
                 FROM usuarios u 
                 LEFT JOIN usuarios us ON us.id_usuario = u.id_lider
                 INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = u.id_rol AND oxc.id_catalogo = 1
                 LEFT JOIN opcs_x_cats oxc2 ON oxc2.id_opcion = u.forma_pago AND oxc2.id_catalogo = 16
+                LEFT JOIN opcs_x_cats oxcn ON oxcN.id_opcion = u.nacionalidad AND oxcN.id_catalogo = 11
                 INNER JOIN sedes s ON s.id_sede = (CASE WHEN LEN (u.id_sede) > 1 THEN 2 ELSE u.id_sede END)
                 LEFT JOIN (SELECT SUM(abono_neodata) abono_pendiente, id_usuario FROM pago_comision_ind WHERE estatus=1 and ( descuento_aplicado is null or descuento_aplicado=0) 
                  GROUP BY id_usuario) pci2 ON pci2.id_usuario = u.id_usuario
                 WHERE  u.id_rol IN (1, 2, 3, 7, 9, 18, 19, 20, 25, 26, 27, 28, 29, 30, 36) 
-                AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%') OR usuarios.id_usuario IN (9359, 9827)
+                AND (u.rfc NOT LIKE '%TSTDD%' AND ISNULL(u.correo, '' ) NOT LIKE '%test_%') OR u.id_usuario IN (9359, 9827)
                 AND u.id_usuario NOT IN (821, 1366, 1923, 4340, 9623, 9624, 9625, 9626, 9627, 9628, 9629) ORDER BY nombre");
                 break;
             case '26': // MERCADÓLOGO
@@ -148,7 +150,7 @@ class Usuarios_modelo extends CI_Model {
                                         u.telefono, oxc.nombre puesto, CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) jefe_directo, u.correo, oxc2.nombre forma_pago,
                                         s.nombre sede, CASE WHEN DAY(u.fecha_creacion) >= 6 AND MONTH(u.fecha_creacion) = MONTH(GETDATE()) AND YEAR(u.fecha_creacion) = YEAR(GETDATE()) THEN 1 ELSE 0 END as nuevo, 
                                         u.fecha_creacion, CASE WHEN du.id_usuario <> 0 THEN 1 ELSE 0 END as usuariouniv,
-                                        (SELECT (MAX(fecha_creacion)) FROM auditoria aud WHERE u.id_usuario = aud.id_parametro AND aud.tabla='usuarios' AND col_afect='estatus') as fecha_baja
+                                        (SELECT (MAX(fecha_creacion)) FROM auditoria aud WHERE u.id_usuario = aud.id_parametro AND aud.tabla='usuarios' AND col_afect='estatus' and anterior='1' and (nuevo='0' OR nuevo='3')) as fecha_baja
                                         FROM usuarios u 
                                         LEFT JOIN usuarios us ON us.id_usuario = u.id_lider
                                         INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = u.id_rol AND oxc.id_catalogo = 1
@@ -156,15 +158,16 @@ class Usuarios_modelo extends CI_Model {
                                         INNER JOIN sedes s ON s.id_sede = (CASE WHEN LEN (u.id_sede) > 1 THEN 2 ELSE u.id_sede END)
                                         LEFT JOIN descuentos_universidad du ON du.id_usuario = u.id_usuario
                                         --LEFT JOIN  (SELECT id_usuario FROM descuentos_universidad GROUP BY id_usuario) du ON du.id_usuario = u.id_usuario
-                                        WHERE  u.id_rol IN (3, 7, 9) 
-                                        AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%') OR usuarios.id_usuario IN (9359, 9827)
-                                        AND u.id_usuario NOT IN (821, 1366, 1923, 4340, 4062, 4064, 4065, 4067, 4068, 4069, 6578, 712 , 9942) ORDER BY nombre");
+                                        WHERE u.id_usuario not in (select id_usuario_d from relacion_usuarios_duplicados) AND (u.id_rol IN (3, 7, 9) 
+                                        AND (u.rfc NOT LIKE '%TSTDD%' AND ISNULL(u.correo, '' ) NOT LIKE '%test_%') AND u.id_usuario NOT IN (821, 1366, 1923, 4340, 4062, 4064, 4065, 4067, 4068, 4069, 6578, 712 , 9942, 4415)) OR u.id_usuario IN (9359, 9827)
+                                        
+                                        ORDER BY nombre");
                 break;
 
 
             default: // VE TODOS LOS REGISTROS
-            if($this->session->userdata('id_usuario') != 1297)
-                $id_rol = " AND u.id_rol NOT IN ('18', '19', '20')";
+            if($this->session->userdata('id_usuario') != 1297 && $this->session->userdata('id_usuario') != 1)
+                $id_rol = " AND u.id_rol NOT IN ('18', '19', '20','2','1','17','13','32','28')";
             else
                 $id_rol = "";
 
@@ -542,7 +545,7 @@ function getAllFoldersPDF()
                                     ELSE anterior  
                                 END) AS anterior
                                 FROM auditoria
-                                INNER JOIN (SELECT id_usuario AS id_creador, CONCAT(nombre, ' ', apellido_paterno,' ',apellido_materno) AS creador  FROM usuarios) AS creadores ON id_creador = creado_por
+                                INNER JOIN (SELECT id_usuario AS id_creador, CONCAT(nombre, ' ', apellido_paterno,' ',apellido_materno) AS creador  FROM usuarios) AS creadores ON CAST(id_creador AS VARCHAR(45)) = CAST(creado_por AS VARCHAR(45))
                                 WHERE id_parametro = $id_usuario AND tabla = 'usuarios' ORDER BY fecha_creacion DESC");
         return $query->result_array();
     }
@@ -557,6 +560,8 @@ function getAllFoldersPDF()
             $where = " AND id_opcion IN (7, 9, 3)";
             if ($id_rol == 41)
                 $whereTwo = "AND id_sede = ".$this->session->userdata('id_sede')."";
+        }else if($id_rol == 8){
+            $where = " AND id_opcion NOT IN (1,2,3,7,9,59)";  
         }
         else // MJ: VE TODOS LOS REGISTROS
             $where = "";

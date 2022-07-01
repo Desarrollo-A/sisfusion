@@ -40,6 +40,8 @@
                                         <thead>
                                             <tr>
                                                 <th>ID</th>
+                                                <th>REFERENCIA</th>
+                                                <th>PROYECTO</th>
                                                 <th>LOTE</th>
                                                 <th>CLIENTE</th>
                                                 <th>PLAN VENTA</th>
@@ -99,7 +101,7 @@
                     titleAttr: 'Descargar archivo de Excel',
                     title: 'REPORTE COMISIONES CANCELADAS',
                     exportOptions: {
-                        columns: [0, 1, 2, 3, 4],
+                        columns: [0, 1, 2, 3, 4,5,6],
                         format: {
                             header: function (d, columnIndex) {
                                 return titulos[columnIdx - 1];
@@ -123,7 +125,19 @@
                 {
                     'width': '10%',
                     'data': function (d) {
-                        return `<p class="m-0">${d.id_lote}</p>`;
+                        return `<p class="m-0">${d.idLote}</p>`;
+                    }
+                },
+                {
+                    'width': '25%',
+                    'data': function (d) {
+                        return `<p class="m-0">${d.referencia}</p>`;
+                    }
+                },
+                {
+                    'width': '25%',
+                    'data': function (d) {
+                        return `<p class="m-0">${d.nombreResidencial}</p>`;
                     }
                 },
                 {
@@ -157,7 +171,7 @@
                             <div class="d-flex justify-center">
                                 <button class="btn-data btn-sky"
                                     title="Detalle"
-                                    onclick="detalleLote(${d.id_lote}, ${d.idCliente})">
+                                    onclick="detalleLote(${d.idLote}, ${d.idCliente})">
                                     <i class="material-icons">info</i>
                                 </button>
                             </div>

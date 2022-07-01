@@ -41,41 +41,37 @@ class Ventas extends CI_Controller {
         $datos['dataCdmx'] = $dataPerSede[3];
         $datos['dataLeo'] = $dataPerSede[4];
         $datos['dataCan'] = $dataPerSede[5];
-
-        /*$datos['tprospectos'] = $this->Statistics_model->getProspectsNumber()->result();
-        $datos['pvigentes'] = $this->Statistics_model->getCurrentProspectsNumber()->result();
-        $datos['pnovigentes'] = $this->Statistics_model->getNonCurrentProspectsNumber()->result();
-        $datos['tclientes'] = $this->Statistics_model->getClientsNumber()->result();*/
         $datos['monthlyProspects'] = $this->Statistics_model->getMonthlyProspects()->result();
-        /*$datos['dataSlp'] = $this->Statistics_model->getDataPerSede(1)->result();
-        $datos['dataQro'] = $this->Statistics_model->getDataPerSede(2)->result();
-        $datos['dataPen'] = $this->Statistics_model->getDataPerSede(3)->result();
-        $datos['dataCdmx'] = $this->Statistics_model->getDataPerSede(4)->result();
-        $datos['dataLeo'] = $this->Statistics_model->getDataPerSede(5)->result();
-        $datos['dataCan'] = $this->Statistics_model->getDataPerSede(6)->result();*/
+        
         $this->load->view('template/header');
         //        $this->load->view('ventas/inicio_ventas');
         switch ($this->session->userdata('id_rol')) {
             case '2': // SUBDIRECTOR
+                $this->load->view("dashboard/base/base", $datos);
+            break;
             case '5': // ASISTENTE SUBDIRECTOR
                 $this->load->view("clientes/consult_statistics_sd2", $datos);
             break;
             case '7': // ASESOR
+                $this->load->view("dashboard/base/base", $datos);
+            break;
             case '61': // ASESOR
                 $this->load->view("clientes/consult_statistics_as", $datos);
             break;
             case '9': // COORDINADOR
-//                $this->load->view("clientes/consult_statistics_co", $datos);
-                $this->load->view("dashboard/dashboard", $datos);
+                //$this->load->view("clientes/consult_statistics_co", $datos);
+                $this->load->view("dashboard/base/base", $datos);
             break;
             case '6': // ASISTENTE GERENTE
             case '3': // GERENTE
-                $this->load->view("clientes/consult_statistics_ge", $datos);
+                $this->load->view("dashboard/base/base", $datos);
             break;
             break;            //case '32': // CONTRALORÍA CONRPORATIVA
               //  $this->load->view('contraloria/inicio_contraloria_view');
             //break;
             case '1': // DIRECTOR
+                $this->load->view("dashboard/base/base", $datos);
+            break;
             case '4': // ASISTENTE DIRECTOR
             case '8': // SOPORTE
             case '18': // DIRECTOR MKTD

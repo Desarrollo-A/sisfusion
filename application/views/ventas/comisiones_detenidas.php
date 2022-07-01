@@ -5,74 +5,6 @@
     <div class="wrapper">
         <?php $this->load->view('template/sidebar', ""); ?>
 
-        <div class="modal fade modal-alertas"
-             id="estatus-modal"
-             role="dialog">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header bg-red">
-                        <button type="button"
-                                class="close"
-                                data-dismiss="modal"
-                                aria-hidden="true">
-                            <i class="material-icons">clear</i>
-                        </button>
-                        
-                    </div>
-
-                    <form method="post"
-                          class="row"
-                          id="estatus-form"
-                          autocomplete="off">
-                        <div class="modal-body">
-                            <div class="col-lg-12">
-                                <h5>¿A donde desea cambiar el estatus del lote?</h5>
-                            </div>
-                            <div class="col-lg-12">
-                                <input type="hidden"
-                                       name="idLote"
-                                       id="id-lote" />
-
-                                <div class="form-check">
-                                    <input class="form-check-input"
-                                           type="radio"
-                                           name="bandera" id="bandera-1"
-                                           value="1"
-                                           checked>
-                                    <label class="form-check-label" for="bandera-1">
-                                        Activa
-                                    </label>
-                                </div>
-
-                                <div class="form-check">
-                                    <input class="form-check-input"
-                                           type="radio"
-                                           name="bandera"
-                                           id="bandera-2"
-                                           value="0">
-                                    <label class="form-check-label" for="bandera-2">
-                                        Dispersión
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="modal-footer">
-                            <button type="submit"
-                                    class="btn btn-primary">
-                                Aceptar
-                            </button>
-                            <button type="button"
-                                    class="btn btn-danger btn-simple"
-                                    data-dismiss="modal">
-                                Cancelar
-                            </button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-
         <div class="content boxContent">
             <div class="container-fluid">
                 <div class="row">
@@ -222,11 +154,11 @@
                     {
                         "width": "8%",
                         "data": function( d ){
-                            if (d.tipo_venta === 1) {
+                            if (d.tipo_venta == 1) {
                                 return '<span class="label label-danger">Venta Particular</span>';
-                            }else if (d.tipo_venta === 2) {
+                            }else if (d.tipo_venta == 2) {
                                 return '<span class="label label-success">Venta normal</span>';
-                            } else if (d.tipo_venta === 7) {
+                            } else if (d.tipo_venta == 7) {
                                 return '<span class="label label-warning">Venta especial</span>';
                             } else {
                                 return '';
@@ -320,22 +252,13 @@
 
             $('#comisiones-detenidas-table tbody').on('click', '.btn-cambiar-estatus', function () {
                 const idLote = $(this).val();
-                $('#id-lote').val(idLote);
-                const nombreLote = $(this).attr("data-value");
-
-                $("#estatus-modal .modal-header").html("");
-                $("#estatus-modal .modal-header").append('<h4 class="modal-title">Reactivar <b>'+nombreLote+'</b></h4>');
-
-                $('#estatus-modal').modal();
-            });
-
-            $('#estatus-form').on('submit', function (e) {
-                e.preventDefault();
+                let data = new FormData();
+                data.append('idLote', idLote);
 
                 $.ajax({
                     type: 'POST',
                     url: 'updateBanderaDetenida',
-                    data: new FormData(this),
+                    data: data,
                     contentType: false,
                     cache: false,
                     processData:false,

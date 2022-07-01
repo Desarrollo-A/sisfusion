@@ -83,34 +83,42 @@
 		</div>
 
 		<!-- modal  rechazar A CONTRALORIA 7-->
-		<div class="modal fade" id="rechReg" data-backdrop="static" data-keyboard="false">
+		<div class="modal fade" id="rechReg" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
 			<div class="modal-dialog">
-				<div class="modal-content" >
+				<div class="modal-content">
 					<div class="modal-header">
-						<center><h4 class="modal-title"><label>Rechazo estatus 11 - <b><span class="lote"></span></b></label></h4></center>
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+							<i class="material-icons">clear</i>
+						</button>
+						<h4 class="modal-title"><center>Rechazo estatus 11 - <b><span class="lote"></span></b></center></h4>
 					</div>
 					<div class="modal-body">
-					<div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
-							<div class="col col-xs-12 col-sm-12 col-md-6 col-lg-12">
-								<label id="tvLbl">Comentario:</label>
-								<select name="comentario3" id="comentario3" class="form-control" required="required" />
-									<option value="0">--Seleccione--</option>
-									<option value="Transferencia no reflejada en Banco" >Transferencia no reflejada en Banco</option>
-									<option value="Cheque rebotado" >Cheque rebotado</option>
-									<option value="Otro" >Otro</option>
-								</select>
-								<div id="valida_otro" style="display:none">
-									<br>
-									<label>Observaciones:</label>
-									<textarea class="form-control" id="observaciones" rows="3"></textarea>
-								</div>					
+						<div class="container-fluid">
+							<div class="row">
+								<div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
+									<div class="col col-xs-12 col-sm-12 col-md-6 col-lg-12">
+										<label id="tvLbl">Comentario:</label>
+										<select name="comentario3" id="comentario3" class="selectpicker select-gral m-0" data-style="btn btn-round" required="required" />
+											<option value="0">Selecciona una opción</option>
+											<option value="Transferencia no reflejada en Banco">Transferencia no reflejada en Banco</option>
+											<option value="Cheque rebotado">Cheque rebotado</option>
+											<option value="Rechazo por falta de dinero">Rechazo por falta de dinero</option>
+											<option value="Otro">Otro</option>
+										</select>
+										<div id="valida_otro" style="display:none">
+											<br>
+											<label>Observaciones:</label>
+											<textarea class="form-control input-gral" id="observaciones" rows="3" style="text-align:center"></textarea>
+										</div>
+									</div>
+								</div>
 							</div>
 						</div>
 					</div>
 					<div class="modal-footer"></div>
 					<div class="modal-footer">
-						<button type="button" id="save3" class="btn btn-success"><span class="material-icons" >send</span> </i> Registrar</button>
-						<button type="button" class="btn btn-danger" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> Cancelar</button>
+					<button type="button" id="save3" class="btn btn-success"><span class="material-icons" >send</span> </i> Registrar</button>
+						<button type="button" class="btn btn-danger btn-simple" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span>Cancelar</button>
 					</div>
 				</div>
 			</div>
@@ -261,6 +269,9 @@
 						}
 						else if(d.tipo_venta==5) {
 							lblStats ='<span class="label label-info">Intercambio</span>';
+						}
+						else if(d.tipo_venta==7) {
+							lblStats ='<span class="label label-secondary">Intercambio</span>';
 						}
 						else if(d.tipo_venta== null) {
 							lblStats ='<span class="label label-info"></span>';

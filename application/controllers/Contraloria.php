@@ -11,6 +11,7 @@ class Contraloria extends CI_Controller {
 		$this->load->helper(array('url','form'));
 		$this->load->database('default');
 		$this->load->library('phpmailer_lib');
+		$this->load->library('formatter');
 		$this->validateSession();
 
 		date_default_timezone_set('America/Mexico_City');
@@ -812,11 +813,11 @@ class Contraloria extends CI_Controller {
 	public function getRevision2(){
 		$data=array();
 		$data = $this->registrolote_modelo->getRevision2();
-		if($data != null) {
+		if ($data != null) {
 			echo json_encode($data);
-		} else {
+		  } else {
 			echo json_encode(array());
-		}
+		  }
 	}
 
 	public function expRevisados()
@@ -1184,14 +1185,18 @@ public function get_sede(){
   $mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
 
   
-  foreach($array as $email)
-  {
-	if(trim($email)!= 'gustavo.mancilla@ciudadmaderas.com'){
-		if (trim($email) != ''){ 
-			$mail->addAddress($email);
+	foreach($array as $email)
+	{
+		if(trim($email)!= 'gustavo.mancilla@ciudadmaderas.com'){
+			if (trim($email) != ''){ 
+				$mail->addAddress($email);
+			}
+		}
+
+		if(trim($email) == 'diego.perez@ciudadmaderas.com'){
+			$mail->addAddress('analista.comercial@ciudadmaderas.com');
 		}
 	}
-  }
 
 
 
@@ -1467,13 +1472,14 @@ $i = 0;
 		$id_sede_jur = 2;
 		$data_asig = $this->Contraloria_model->get_id_asig(2);
 		$id_asig = $data_asig->contador;
-		$arreglo["asig_jur"] = $id_asig == 2765 ? 2776 : ($id_asig == 2776 ? 2857 : 2765);
+		$arreglo["asig_jur"] = $id_asig == 2765 ? 2776 : ($id_asig == 2776 ? 10463 : 2765);
 	} else if($ub_jur[0]['ubicacion'] == 4){
 		$id_sede_jur = 4;
 		$data_asig = $this->Contraloria_model->get_id_asig(4);
 		$id_asig = $data_asig->contador;
-		$arreglo["asig_jur"] = $id_asig == 2820 ? 2876 : 2820;
-	}
+		//$arreglo["asig_jur"] = $id_asig == 2820 ? 2876 : 2820;
+        $arreglo["asig_jur"] = $id_asig == 2820 ? 10437 : ($id_asig == 10437 ? 2876 : 2820);
+    }
 
 
 
@@ -1553,14 +1559,18 @@ public function editar_registro_loteRechazo_contraloria_proceceso6(){
   
   $mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
 
-  foreach($array as $email)
-  {
-	if(trim($email)!= 'gustavo.mancilla@ciudadmaderas.com'){
-		if (trim($email) != ''){ 
-			$mail->addAddress($email);
+	foreach($array as $email)
+	{
+		if(trim($email)!= 'gustavo.mancilla@ciudadmaderas.com'){
+			if (trim($email) != ''){ 
+				$mail->addAddress($email);
+			}
+		}
+
+		if(trim($email) == 'diego.perez@ciudadmaderas.com'){
+			$mail->addAddress('analista.comercial@ciudadmaderas.com');
 		}
 	}
-  }
 
 
   $mail->Subject = utf8_decode('EXPEDIENTE RECHAZADO-CONTRALORÍA (6. CORRIDA ELABORADA)');
@@ -1952,14 +1962,18 @@ $i = 0;
   
   $mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
 
-  foreach($array as $email)
-  {
-	if(trim($email)!= 'gustavo.mancilla@ciudadmaderas.com'){
-		if (trim($email) != ''){ 
-			$mail->addAddress($email);
+	foreach($array as $email)
+	{
+		if(trim($email)!= 'gustavo.mancilla@ciudadmaderas.com'){
+			if (trim($email) != ''){ 
+				$mail->addAddress($email);
+			}
+		}
+
+		if(trim($email) == 'diego.perez@ciudadmaderas.com'){
+			$mail->addAddress('analista.comercial@ciudadmaderas.com');
 		}
 	}
-  }
 
   $mail->Subject = utf8_decode('EXPEDIENTE RECHAZADO-CONTRALORÍA (5. REVISIÓN 100%)');
   $mail->isHTML(true);
@@ -3427,10 +3441,35 @@ public function return1(){
 	public function lotes_apartados(){
 		$this->validateSession();
 		/*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/           
+		if ($this->session->userdata('id_usuario') == FALSE) {
+			redirect(base_url());
+		}
 		$datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
+		switch($this->session->userdata('id_usuario')){
+			case '2807': //Mariela Sánchez Sánchez
+			case '2826': //Ana Laura García Tovar
+			case '2767': //Irene Vallejo
+				$this->load->view('template/header');
+	 			$this->load->view("contraloria/vista_lotes_precio_enganche",$datos);
+				break;
+			case '2754': //Gabriela Hernández Tovar
+				$this->load->view('template/header');
+	 			$this->load->view("contraloria/vista_lotes_enganche_sede",$datos);
+				break;
+			case '2749': //Ariadna Martínez
+				$this->load->view('template/header');
+	 			$this->load->view("contraloria/vista_lotes_sede",$datos);
+				break;
+			case '1297': //María de Jesús
+			case '826': //Victor Hugo
+				$this->load->view('template/header');
+				$this->load->view("contraloria/vista_lotes_apartados",$datos);
+				break;
+			default:
+				echo '<script>alert("ACCESO DENEGADO"); window.location.href="' . base_url() . '";</script>';
+				break;
+		}
         /*-------------------------------------------------------------------------------*/
-		$this->load->view('template/header');
-	 	$this->load->view("contraloria/vista_lotes_apartados",$datos);
 	}
 
     /**al día de hoy**/
@@ -3475,8 +3514,8 @@ public function return1(){
 
 		$data = $this->Contraloria_model->get_datos_lotes($idLote);
 		$data = array(
-			"saldo" => $this->input->post("preciodesc"), 
-			"enganche" => $this->input->post("enganches"), 
+			"totalNeto2" => $this->formatter->removeNumberFormat($_POST['preciodesc']),
+			"totalNeto" => $this->formatter->removeNumberFormat($_POST['enganches']), 
 			"ubicacion" => $this->input->post("ubicacion_sede"));
 
 		$response = $this->General_model->updateRecord('lotes', $data, 'idLote', $idLote);
@@ -3485,5 +3524,72 @@ public function return1(){
 
 	public function lista_sedes(){
 		echo json_encode($this->Contraloria_model->get_sedes_lista()->result_array());
+	}
+
+	public function updateLotePrecioEnganche(){
+		$idLote = $_POST['idLote'];
+
+		$data = $this->Contraloria_model->get_datos_lotes($idLote);
+		$data = array(
+			"totalNeto2" => $this->formatter->removeNumberFormat($_POST['preciodesc']),
+			"totalNeto" => $this->formatter->removeNumberFormat($_POST['enganches']));
+
+		$response = $this->General_model->updateRecord('lotes', $data, 'idLote', $idLote);
+		echo json_encode($response);
+	}
+
+	public function updateLoteEngancheSede(){
+		$idLote = $_POST['idLote'];
+
+		$data = $this->Contraloria_model->get_datos_lotes($idLote);
+		$data = array(
+			"totalNeto" => $this->formatter->removeNumberFormat($_POST['enganches']),
+			"ubicacion" => $this->input->post("ubicacion_sede"));
+
+		$response = $this->General_model->updateRecord('lotes', $data, 'idLote', $idLote);
+		echo json_encode($response);
+	}
+
+	public function updateLoteSede(){
+		$idLote = $_POST['idLote'];
+
+		$data = $this->Contraloria_model->get_datos_lotes($idLote);
+		$data = array( 
+			"ubicacion" => $this->input->post("ubicacion_sede"));
+
+		$response = $this->General_model->updateRecord('lotes', $data, 'idLote', $idLote);
+		echo json_encode($response);
+	}
+
+	public function reporte_diario(){
+		/*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/           
+		$datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
+        /*-------------------------------------------------------------------------------*/
+		$this->load->view('template/header');
+		$this->load->view("contraloria/vista_reporte_diario",$datos);
+		
+	}
+
+	public function getRegistroDiario()
+	{
+		$data = array();
+		$data = $this->Contraloria_model->registroDiario();
+		if($data != null) {
+			echo json_encode($data);
+		} else {
+			echo json_encode(array());
+		}
+	}
+
+	public function getRegistroDiarioPorFecha($fecha_inicio)
+	{
+		//$fecha_inicio = $_GET['fecha'];
+		$data = array();
+		$data = $this->Contraloria_model->registroDiarioPorFecha($fecha_inicio);
+		if($data != null) {
+			echo json_encode($data);
+		} else {
+			echo json_encode(array());
+		}
 	}
 }
