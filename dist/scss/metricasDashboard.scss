@@ -175,7 +175,7 @@
                         transform: scale(1);
             }
         }
-        @media #{$smartphone}{
+        @media #{$smartphone}, #{$tablets}{
             height: inherit!important;
         }
     }

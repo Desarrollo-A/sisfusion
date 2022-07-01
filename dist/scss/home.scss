@@ -37,7 +37,6 @@
     #banner{
         #clock {
             color: $white;
-            display: flex;
             flex-wrap: wrap;
             align-items: center;
             justify-content: center;
@@ -47,28 +46,39 @@
             padding: 4em 1em;
             backface-visibility: hidden;
             transition: all 0.5s;
-            height: fit-content;background: #eaeaea30;
+            height: fit-content;
+            background: #eaeaea30;
+            text-align: center;
             #info{
+                #saludoTxt{
+                    font-size: 1.5em;
+                    margin-bottom: 40px;
+                    @media #{$smartphone}{
+                        margin-bottom: 30px;
+                        font-size: 1em;
+                    }
+                }
                 #time {
                     font-size: 8em;
                     display: inline-block;
                     @media #{$smartphone}{
-                        font-size: 3em;
+                        font-size: 5em;
                     }
                     @media #{$tablets}{
                         font-size: 4.5em;
                     }
                 }
                 #date {
-                    margin-top: 1.8em;
-                    margin-bottom: 0.2em;
+                    margin-top: 10px!important;
                     font-size: 2em;
                     display: inline-block;
                     @media #{$smartphone}{
-                        font-size: 1em;
+                        font-size: 2em;
+                        margin-top: 5px!important;
                     }
                     @media #{$tablets}{
                         font-size: 1.5em;
+                        margin-top: 0px!important;
                     }
                 }
             }
@@ -76,12 +86,18 @@
     }
 }
 .footer{
-    margin-top: -117px;
+    margin-top: -83px;
     border: none!important;
     color: $white;
-    a{
-        color: $white;
-        font-weight: bold;
+    .container-fluid{
+        a{
+            color: $white;
+            font-weight: bold;
+        }
+        @media #{$smartphone}{
+            display: flex;
+            justify-content: center;
+        }
     }
 }
 
@@ -95,7 +111,7 @@
 }
 @media (max-width: 1199px) {
     .navbar .navbar-brand {
-        color: #fff!important;
+        color: $white!important;
     }
     .perfil{
         background-color: inherit!important;
@@ -107,6 +123,6 @@
 }
 @media (max-width: 991px){
     .navbar-header .navbar-toggle {
-        color: #fff;
+        color: $white;
     }
 }

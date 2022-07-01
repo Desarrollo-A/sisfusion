@@ -340,6 +340,10 @@
   display: none;
 }
 
+.d-block {
+  display: block;
+}
+
 .d-flex {
   display: flex;
 }
@@ -1152,7 +1156,6 @@
 
 #boxHome #banner #clock {
   color: #ffffff;
-  display: flex;
   flex-wrap: wrap;
   align-items: center;
   justify-content: center;
@@ -1164,6 +1167,19 @@
   transition: all 0.5s;
   height: fit-content;
   background: #eaeaea30;
+  text-align: center;
+}
+
+#boxHome #banner #clock #info #saludoTxt {
+  font-size: 1.5em;
+  margin-bottom: 40px;
+}
+
+@media (min-device-width: 320px) and (max-device-width: 480px) {
+  #boxHome #banner #clock #info #saludoTxt {
+    margin-bottom: 30px;
+    font-size: 1em;
+  }
 }
 
 #boxHome #banner #clock #info #time {
@@ -1173,7 +1189,7 @@
 
 @media (min-device-width: 320px) and (max-device-width: 480px) {
   #boxHome #banner #clock #info #time {
-    font-size: 3em;
+    font-size: 5em;
   }
 }
 
@@ -1184,33 +1200,41 @@
 }
 
 #boxHome #banner #clock #info #date {
-  margin-top: 1.8em;
-  margin-bottom: 0.2em;
+  margin-top: 10px !important;
   font-size: 2em;
   display: inline-block;
 }
 
 @media (min-device-width: 320px) and (max-device-width: 480px) {
   #boxHome #banner #clock #info #date {
-    font-size: 1em;
+    font-size: 2em;
+    margin-top: 5px !important;
   }
 }
 
 @media (min-width: 480px) and (max-width: 991px) {
   #boxHome #banner #clock #info #date {
     font-size: 1.5em;
+    margin-top: 0px !important;
   }
 }
 
 .footer {
-  margin-top: -117px;
+  margin-top: -83px;
   border: none !important;
   color: #ffffff;
 }
 
-.footer a {
+.footer .container-fluid a {
   color: #ffffff;
   font-weight: bold;
+}
+
+@media (min-device-width: 320px) and (max-device-width: 480px) {
+  .footer .container-fluid {
+    display: flex;
+    justify-content: center;
+  }
 }
 
 @keyframes fadeIn {
@@ -1224,7 +1248,7 @@
 
 @media (max-width: 1199px) {
   .navbar .navbar-brand {
-    color: #fff !important;
+    color: #ffffff !important;
   }
   .perfil {
     background-color: inherit !important;
@@ -1237,6 +1261,6 @@
 
 @media (max-width: 991px) {
   .navbar-header .navbar-toggle {
-    color: #fff;
+    color: #ffffff;
   }
 }
