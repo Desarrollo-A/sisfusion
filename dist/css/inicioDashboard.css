@@ -29,7 +29,7 @@
 }
 
 .mb-2 {
-  margin-bottom: 20px;
+  margin-bottom: 20px !important;
 }
 
 .mb-3 {
@@ -148,6 +148,10 @@
   padding-top: 30px;
 }
 
+.pt-4 {
+  padding-top: 40px !important;
+}
+
 .pb-1 {
   padding-bottom: 10px;
 }
@@ -195,7 +199,7 @@
 }
 
 .w-30 {
-  width: 30%;
+  width: 30% !important;
 }
 
 .w-20 {
@@ -206,12 +210,24 @@
   width: 10%;
 }
 
+.w-auto {
+  width: auto !important;
+}
+
 .h-100 {
-  height: 100%;
+  height: 100% !important;
+}
+
+.h-90 {
+  height: 90%;
+}
+
+.h-80 {
+  height: 80%;
 }
 
 .h-70 {
-  height: 70%;
+  height: 70% !important;
 }
 
 .h-60 {
@@ -224,6 +240,22 @@
 
 .h-40 {
   height: 40%;
+}
+
+.h-30 {
+  height: 30%;
+}
+
+.h-25 {
+  height: 25%;
+}
+
+.h-20 {
+  height: 20%;
+}
+
+.h-10 {
+  height: 10%;
 }
 
 .vh-100 {
@@ -298,6 +330,10 @@
   z-index: 1030;
 }
 
+.f-bolder {
+  font-weight: bolder;
+}
+
 /* END utilities */
 /* Flexbox */
 .d-none {
@@ -306,6 +342,10 @@
 
 .d-flex {
   display: flex;
+}
+
+.align-start {
+  align-items: flex-start;
 }
 
 .align-end {
@@ -332,6 +372,12 @@
   justify-content: space-between;
 }
 
+.row-reverse {
+  flex-direction: row-reverse;
+}
+
+/* END Flexbox */
+/* Text */
 .text-center {
   text-align: center;
 }
@@ -340,11 +386,47 @@
   text-align: start !important;
 }
 
-.row-reverse {
-  flex-direction: row-reverse;
+.text-right {
+  text-align: right !important;
 }
 
-/* END Flexbox */
+.fw-100 {
+  font-weight: 100;
+}
+
+.fw-200 {
+  font-weight: 200;
+}
+
+.fw-300 {
+  font-weight: 300;
+}
+
+.fw-400 {
+  font-weight: 400;
+}
+
+.fw-500 {
+  font-weight: 500;
+}
+
+.fw-600 {
+  font-weight: 600;
+}
+
+.fw-700 {
+  font-weight: 700;
+}
+
+.fw-800 {
+  font-weight: 800;
+}
+
+.fw-900 {
+  font-weight: 900;
+}
+
+/* Text */
 /* Vrbls colores */
 /* END vrbls coloress */
 /* size devices */
@@ -361,6 +443,38 @@
 }
 
 /* END Estilos generales encabezado, datetime picker, calendar, input filtros, selects */
+.txt-lapisLazuli {
+  color: #22639B !important;
+}
+
+.txt-blueNCS {
+  color: #0089B7 !important;
+}
+
+.txt-viridianGreen {
+  color: #039590 !important;
+}
+
+.txt-tiffanyBlue {
+  color: #00ACB8 !important;
+}
+
+.txt-oceanGreen {
+  color: #4BBC8E !important;
+}
+
+.txt-caribbeanGreen {
+  color: #00CDA3 !important;
+}
+
+.txt-lightGreen {
+  color: #92E784 !important;
+}
+
+.txt-sunny {
+  color: #F9F871 !important;
+}
+
 .btn-a {
   border-radius: 25px !important;
   height: 37px !important;
@@ -398,7 +512,7 @@
   background-color: #ffffff !important;
   border: 1px solid #f44336;
   border-radius: 27px;
-  margin-bottom: 0;
+  margin: 0;
 }
 
 .buttons-pdf:hover {
@@ -418,7 +532,7 @@
   background-color: #ffffff !important;
   border: 1px solid #209E63;
   border-radius: 27px;
-  margin-bottom: 0;
+  margin: 0;
 }
 
 .buttons-excel i {
@@ -994,46 +1108,179 @@
   background-color: #F1F1F1;
 }
 
-.input-gral {
-  background-color: #eaeaea !important;
-  color: #929292 !important;
-  border-radius: 27px !important;
-  background-image: none !important;
-  padding-left: 20px;
-}
-
-.label-gral {
-  left: 10px;
-}
-
-.text-gral {
-  background-color: #eaeaea !important;
-  background-image: none !important;
-  border-radius: 27px !important;
-  height: 45px !important;
-  padding-left: 20px !important;
-  line-height: 1.5 !important;
-}
-
-.select-gral button {
-  background-color: #eaeaea !important;
+#inicio .card {
   box-shadow: none !important;
-  color: #929292 !important;
-  border-radius: 27px;
+  height: 450px;
+  margin: 25px 0 0 0;
 }
 
-.beginDate {
+@media (min-device-width: 320px) and (max-device-width: 480px) {
+  #inicio .card h4 {
+    text-align: center !important;
+    margin-bottom: 10px;
+  }
+}
+
+@media (min-device-width: 320px) and (max-device-width: 480px) {
+  #inicio .card {
+    height: inherit;
+  }
+}
+
+#inicio .col-total {
+  height: 315px;
+}
+
+@media (min-device-width: 320px) and (max-device-width: 480px) {
+  #inicio .col-total {
+    padding-bottom: 0;
+    height: inherit;
+  }
+}
+
+@media (min-width: 480px) and (max-width: 991px) {
+  #inicio .col-total {
+    padding-bottom: 0;
+    height: 250px;
+    margin-bottom: 25px;
+  }
+}
+
+#inicio .col-prospectos {
+  height: 135px;
+}
+
+#inicio .col-prospectos .cardProspectosVig p {
+  font-size: 12px;
+  color: #191B1C;
+}
+
+#inicio .col-prospectos .cardProspectosVig p span {
+  color: #2C93E7;
+  font-weight: 700;
+}
+
+#inicio .col-prospectos .cardProspectosVig .boxIcoProsp {
+  background-color: #0089b73d;
+  width: 25px;
+  height: 25px;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 7px;
+  color: #191B1C;
+}
+
+#inicio .col-prospectos .cardProspectosVig .numberGraphic {
+  color: #191B1C;
+  font-weight: 600;
+  font-size: 16px;
+}
+
+@media (min-device-width: 320px) and (max-device-width: 480px) {
+  #inicio .col-prospectos {
+    height: inherit;
+  }
+}
+
+@media (min-width: 480px) and (max-width: 991px) {
+  #inicio .col-prospectos {
+    height: 250px !important;
+    margin-bottom: 25px;
+  }
+}
+
+#inicio .back {
+  width: fit-content;
+  background-color: #ffffff;
+  padding: 8px 2px;
+  border-radius: 5px;
+}
+
+#inicio .back .checkBox {
+  cursor: pointer;
+  user-select: none;
+  display: block;
+  line-height: inherit;
+}
+
+#inicio .back .checkBox span {
+  font-size: 12px;
+  border-radius: 5px;
+  transition: 0.4s;
+  padding: 8px 15px;
+  color: #929292;
+  background-color: #ffffff;
+  margin: 0 2px;
+}
+
+#inicio .back .checkBox span:hover {
+  box-shadow: none;
+}
+
+#inicio .back .checkBox input {
+  pointer-events: none;
+  display: none;
+}
+
+#inicio .back .checkBox input:checked + span {
+  color: #ffffff;
+  background-color: #163960;
+}
+
+@media (min-device-width: 320px) and (max-device-width: 480px) {
+  #inicio #estadisticas .container-fluid .row {
+    height: inherit;
+  }
+}
+
+#inicio #estadisticas .container-fluid .h-40 .col-12 {
+  padding-right: 15px !important;
+  padding-left: 0 !important;
+}
+
+@media (min-device-width: 320px) and (max-device-width: 480px) {
+  #inicio #estadisticas .container-fluid {
+    height: inherit;
+  }
+}
+
+#inicio #estadisticas .nav-pills > li.active > a, #inicio #estadisticas .nav-pills > li.active > a:focus {
+  color: #ffffff;
+  background-color: #103f75 !important;
+}
+
+#inicio .beginDates {
   background-color: #eaeaea !important;
   border-radius: 27px 0 0 27px !important;
   background-image: initial !important;
-  text-align: center !important;
-  color: #929292 !important;
+  text-align: right !important;
 }
 
-.endDate {
+#inicio .endDates {
   background-color: #eaeaea !important;
-  border-radius: 0 27px 27px 0 !important;
+  border-radius: 0 !important;
   background-image: initial !important;
   text-align: center !important;
-  color: #929292 !important;
+}
+
+#inicio .btn-fab-mini {
+  border-radius: 0 27px 27px 0 !important;
+  background-color: #eaeaea !important;
+  box-shadow: none !important;
+  height: 45px !important;
+}
+
+#inicio .btn-fab-mini span {
+  color: #929292;
+}
+
+#inicio .labelTitle {
+  font-size: 1.2em !important;
+}
+
+#inicio .numberElement {
+  font-size: 1.2em !important;
+  font-weight: bold !important;
 }

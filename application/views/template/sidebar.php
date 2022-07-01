@@ -239,7 +239,7 @@ foreach($datos2 as $datos)
 	<nav class="navbar navbar-transparent navbar-absolute">
 		<div class="container-fluid">
 			<div class="navbar-minimize">
-				<button id="minimizeSidebar" class="btn btn-round btn-white btn-fill btn-just-icon">
+				<button id="minimizeSidebar" class="btn btn-round btn-white btn-fill btn-just-icon" rel="tooltip" data-placement="bottom" title="Contraer menú">
 					<i class="material-icons visible-on-sidebar-regular">more_vert</i>
 					<i class="material-icons visible-on-sidebar-mini">view_list</i>
 				</button>
@@ -269,9 +269,19 @@ foreach($datos2 as $datos)
                     <input type="hidden" id="uri" value="<?=base_url()?>Usuarios/Chat">
                     <!------------------------------------------------------------------------->
                     <!-- Abrir side-calendar -->
-					<li class="openCalendar" id ="openCalendar">
-						<a id="minimizeSidecalendar"  style="cursor:pointer;">
-                            <i class="material-icons far fa-calendar-alt"></i>
+					<li class="icoNav noResponsive hidden" id ="openCalendar" rel="tooltip" data-placement="bottom" title="calendario">
+						<a id="minimizeSidecalendar">
+                            <span class="material-icons">date_range</span>
+						</a>
+                    </li>
+                    <li class="icoNav noResponsive" rel="tooltip" data-placement="bottom" title="Ajustes">
+						<a href="<?=base_url()?>index.php/Usuarios/configureProfile">
+                            <span class="material-icons">settings</span>
+						</a>
+                    </li>
+                    <li class="icoNav noResponsive" rel="tooltip" data-placement="bottom" title="Salir">
+						<a href="<?=base_url()?>index.php/login/logout_ci">
+                            <span class="material-icons">exit_to_app</span>
 						</a>
                     </li>
                     <?php
@@ -313,6 +323,7 @@ foreach($datos2 as $datos)
 		</div>
     </nav>
 <script>
+    $('[data-toggle="tooltip"]').tooltip();
     function AddTicket(){
           $.post("<?=base_url()?>index.php/Api/ServicePostTicket", function (data) {
             console.log(data);

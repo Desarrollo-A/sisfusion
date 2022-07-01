@@ -931,14 +931,23 @@
 }
 
 /* tooltip styles */
+.tooltip {
+  width: fit-content;
+}
+
 .tooltip .tooltip-inner {
   padding: 5px 10px;
-  color: white;
+  color: #ffffff;
   background-color: #333333;
+  width: fit-content;
 }
 
 .tooltip.top .tooltip-arrow {
   border-top-color: #333333;
+}
+
+.tooltip.bottom .tooltip-arrow {
+  border-bottom-color: #333333;
 }
 
 /* tooltip styles */
@@ -985,8 +994,40 @@
   background-color: #F1F1F1;
 }
 
-.navbar {
-  color: #eaeaea;
+.navbar .navbar-nav > li > a {
+  background-color: #eaeaea30 !important;
+}
+
+.navbar .navbar-nav > li > a > span {
+  color: #ffffff !important;
+}
+
+.navbar-right .icoNav:hover {
+  background-color: #eaeaea30 !important;
+}
+
+.perfil {
+  background-color: #eaeaea30 !important;
+  color: #ffffff !important;
+}
+
+.perfil .idBubble {
+  color: #ffffff !important;
+}
+
+.btn.btn-white, .btn.btn-white:focus, .btn.btn-white:hover {
+  background-color: #eaeaea30 !important;
+  color: #ffffff !important;
+}
+
+#boxHome #banner {
+  background-image: linear-gradient(RGB(0 0 0/30%), RGB(0 0 0/32%)), url("../img/home.png");
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 #boxHome {
@@ -996,14 +1037,13 @@
 }
 
 #boxHome #banner #clock {
-  color: white;
+  color: #ffffff;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   justify-content: center;
   user-select: none;
   animation: fadeIn 1s ease-in-out;
-  cursor: pointer;
   border-radius: 2em;
   padding: 4em 1em;
   backface-visibility: hidden;
@@ -1051,11 +1091,11 @@
 .footer {
   margin-top: -117px;
   border: none !important;
-  color: white;
+  color: #ffffff;
 }
 
 .footer a {
-  color: white;
+  color: #ffffff;
   font-weight: bold;
 }
 
