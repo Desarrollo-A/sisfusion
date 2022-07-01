@@ -47,7 +47,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-12 col-sm-6 col-md-6 col-lg-6 flexibleM inactivo">
+        <div class="col-12 col-sm-12 col-md-12 col-lg-6 flexibleM inactivo">
             <div class="card">
                 <div class="container-fluid h-100">
                     <div class="row h-100">
@@ -60,13 +60,13 @@
                                 <div id="disponibilidadChart"></div>
                             </div>
                         </div>
-                        <div id="disponibilidad" class="col-12 col-sm-6 col-md-6 col-lg-6 col-datatable hidden h-100 p-0">
+                        <div id="disponibilidad" class="col-12 col-sm-12 col-md-12 col-lg-6 col-datatable hidden h-100 p-0">
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-12 col-sm-6 col-md-6 col-lg-6 flexibleM inactivo">
+        <div class="col-12 col-sm-12 col-md-12 col-lg-6 flexibleM inactivo">
             <div class="card">
                 <div class="container-fluid h-100">
                     <div class="row h-100">
@@ -79,13 +79,13 @@
                                 <div id="lugarChart"></div>
                             </div>
                         </div>
-                        <div id="lugar" class="col-12 col-sm-6 col-md-6 col-lg-6 col-datatable hidden h-100 p-0">
+                        <div id="lugar" class="col-12 col-sm-12 col-md-12 col-lg-6 col-datatable hidden h-100 p-0">
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-12 col-sm-6 col-md-6 col-lg-6 flexibleM inactivo">
+        <div class="col-12 col-sm-12 col-md-12 col-lg-6 flexibleM inactivo">
             <div class="card">
                 <div class="container-fluid h-100">
                     <div class="row h-100">
@@ -98,7 +98,7 @@
                                 <div id="medioChart"></div>
                             </div>
                         </div>
-                        <div id="medio" class="col-12 col-sm-6 col-md-6 col-lg-6 col-datatable hidden h-100 p-0">
+                        <div id="medio" class="col-12 col-sm-12 col-md-12 col-lg-6 col-datatable hidden h-100 p-0">
                         </div>
                     </div>
                 </div>

@@ -8,6 +8,7 @@
 
   var calendarEl = document.getElementById('calendar');
   calendar = new FullCalendar.Calendar(calendarEl, {   
+    longPressDelay: 0,
     headerToolbar: {
       start: 'prev next today appointments googleSignIn googleLogout',
       center: 'title',

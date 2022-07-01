@@ -236,6 +236,9 @@
                     font-weight: 500;
                     color: $white;
                 }
+                @media #{$smartphone}{
+                    text-align: center;
+                }
             }
             .form-group{
                 border-radius: 28px;
@@ -246,25 +249,33 @@
                 }
                 .btn-fab-mini{
                     background-color: transparent!important;
+                    box-shadow: none!important;
                     span{
                         color: $platinum;
                     }
                 }
             }
+            #boxModalChart{
+                margin-top: 20px!important;
+            }
+            @media #{$smartphone}, #{$tablets}{
+                height: inherit!important;
+            }
         }
         @media #{$smartphone}{
-            -webkit-transform: inherit!important;
-            -o-transform: inherit!important;
-            transform: inherit!important;
-            top: inherit;
-            margin-top: 100px!important;
-            margin: 10px;
+            // -webkit-transform: inherit!important;
+            // -o-transform: inherit!important;
+            // transform: inherit!important;
+            // top: inherit;
+            // margin-top: 100px!important;
+            margin: 20px;
         }
     }
 
 }
 
 #tableFilters{
+
     .datesTable{
         border-radius: 27px;
         border: 2px solid #cfcfcf;
@@ -297,6 +308,10 @@
             border-radius: 27px;
             background-color: #1341761a;
         }
+    }
+    @media #{$smartphone}, #{$tablets}{
+        margin-top: 30px;
+        padding-right: 20px;
     }
 }
 
