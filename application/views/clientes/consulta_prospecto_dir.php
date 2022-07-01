@@ -106,6 +106,7 @@
                                                 <tr>
                                                     <th class="disabled-sorting text-right"><center>ESTADO</center></th>
                                                     <th class="disabled-sorting text-right"><center>ETAPA</center></th>
+                                                    <th class="disabled-sorting text-right"><center>TIPO</center></th>
                                                     <th class="disabled-sorting text-right"><center>PROSPECTO</center></th>
                                                     <th class="disabled-sorting text-right"><center>ASESOR</center></th>
                                                     <th class="disabled-sorting text-right"><center>COORDINADOR</center></th>
@@ -189,6 +190,7 @@
                                                         <tr>
                                                             <th class="disabled-sorting text-right"><center>Estado</center></th>
                                                             <th class="disabled-sorting text-right"><center>Etapa</center></th>
+                                                            <th class="disabled-sorting text-right"><center>Tipo</center></th>
                                                             <th class="disabled-sorting text-right"><center>Prospecto</center></th>
                                                             <th class="disabled-sorting text-right"><center>Asesor</center></th>
                                                             <th class="disabled-sorting text-right"><center>Coordinador</center></th>
@@ -480,7 +482,7 @@
                     titleAttr: 'Listado general de prospectos',
                     title:"Listado general de prospectos",
                     exportOptions: {
-                        columns: [0,1,2,3,4,5,6,7,8],
+                        columns: [0,1,2,3,4,5,6,7,8,9],
                         format: {
                             header: function (d, columnIdx) {
                                 switch (columnIdx) {
@@ -491,23 +493,26 @@
                                         return 'ETAPA';
                                         break;
                                     case 2:
-                                        return 'PROSPECTO';
+                                        return 'TIPO';
+                                        break;
                                     case 3:
+                                        return 'PROSPECTO';
+                                    case 4:
                                         return 'ASESOR';
                                         break;
-                                    case 4:
+                                    case 5:
                                         return 'COORDINADOR';
                                         break;
-                                    case 5:
+                                    case 6:
                                         return 'GERENTE';
                                         break;
-                                    case 6:
+                                    case 7:
                                         return 'LP';
                                         break;
-                                    case 7:
+                                    case 8:
                                         return 'CREACIÓN';
                                         break;
-                                    case 8:
+                                    case 9:
                                         return 'VENCIMIENTO';
                                         break;
                                 }
@@ -553,6 +558,14 @@
                             b = '<center><span class="label" style="background:#8A1350">Preventa</span><center>';
                         }
                         return b;
+                    }
+                },
+                {   data: function (d) {
+                        if (d.tipo == 0){
+                            return '<center><span class="label label-danger" style="background: #B7950B">Prospecto</span></center>';
+                        } else {
+                            return '<center><span class="label label-danger" style="background: #75DF8F">Cliente</span></center>';
+                        }
                     }
                 },
                 { data: function (d) {
