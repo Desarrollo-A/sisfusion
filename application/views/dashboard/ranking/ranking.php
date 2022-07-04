@@ -16,7 +16,7 @@
                                         <span class="material-icons update-dataTable">search</span>
                                     </button>
                                 </div>
-                                <button class="btn-charts" onclick="toggleDatatable(this)"><i class="far fa-list-alt"></i></button>
+                                <button class="btn-charts" onclick="toggleDatatable(this)" rel="tooltip" data-placement="bottom" title="Mostrar tabla"><i class="far fa-list-alt"></i></button>
                             </div>
                             <div id="boxChart" class="h-80 boxChart">
                                 <div id="chart" class="chart"></div>
@@ -45,7 +45,7 @@
                                         <span class="material-icons update-dataTable">search</span>
                                     </button>
                                 </div>
-                                <button class="btn-charts" onclick="toggleDatatable(this)"><i class="far fa-list-alt"></i></button>
+                                <button class="btn-charts" onclick="toggleDatatable(this)" rel="tooltip" data-placement="bottom" title="Mostrar tabla"><i class="far fa-list-alt"></i></button>
                             </div>
                             <div id="boxChart2" class="h-80 boxChart">
                                 <div id="chart2" class="chart"></div>
@@ -74,7 +74,7 @@
                                         <span class="material-icons update-dataTable">search</span>
                                     </button>
                                 </div>
-                                <button class="btn-charts" onclick="toggleDatatable(this)"><i class="far fa-list-alt"></i></button>
+                                <button class="btn-charts" onclick="toggleDatatable(this)" rel="tooltip" data-placement="bottom" title="Mostrar tabla"><i class="far fa-list-alt"></i></button>
                             </div>
                             <div id="boxChart3" class="h-80 boxChart">
                                 <div id="chart3" class="chart"></div>
@@ -103,7 +103,7 @@
                                         <span class="material-icons update-dataTable">search</span>
                                     </button>
                                 </div>
-                                <button class="btn-charts" onclick="toggleDatatable(this)"><i class="far fa-list-alt"></i></button>
+                                <button type="btn" class="btn-charts"  rel="tooltip" data-placement="bottom" title="Mostrar tabla" onclick="toggleDatatable(this)"><i class="far fa-list-alt"></i></button>
                             </div>
                             <div id="boxChart4" class="h-80 boxChart">
                                 <div id="chart4" class="chart"></div>

@@ -1,15 +1,9 @@
     <link href="<?= base_url() ?>dist/css/calendarDashboard.css" rel="stylesheet"/>
-    <style>
-        .hide_column {
-            display : none!important;
-        }
-    </style>
-
     
     <div class="card">
         <div class="card-content">
             <div class="container-fluid">
-                <div class="row mb-2">
+                <div class="row mb-2 selects">
                 <!-- Subdirector -->
                 <?php if( $this->session->userdata('id_rol') == 2 ) { ?>
                     <div class="col-12 col-sm-4 col-md-4 col-lg-4 overflow-hidden pl-0">

@@ -666,3 +666,5 @@
     
     return fecha.toLocaleDateString('es-ES', options);
   }
+
+  document.querySelector('style').textContent += "@media screen and (max-width:767px) { .fc-toolbar.fc-header-toolbar {flex-direction:column;} .fc-toolbar-chunk { display: table-row; text-align:center; padding:5px 0; } }";
