@@ -4,6 +4,9 @@
   border-bottom: none!important;
   opacity: .65;
 }
+.card{
+  box-shadow: 0px 2px 9px -12px RGB(0 0 0/42%), 0 4px 25px 0px RGB(0 0 0/12%), 0 8px 10px -5px RGB(0 0 0/20%);
+}
 #calendar{
   .fc-toolbar-chunk{
     display: flex;
@@ -20,7 +23,7 @@
       }
     }
     .fc-today-button, .fc-appointments-button, .fc-timeGridDay-button, .fc-timeGridWeek-button, .fc-dayGridMonth-button{
-      background-color: $water;
+      background-color: #1341761a;
       border: none;
       box-shadow: none;
       border-radius: 27px;
@@ -60,7 +63,7 @@
       }
     }
     .fc-button-active{
-      background-color: $cerulean;
+      background-color: $blueIndigo;
       color: $white;
     }
   }
@@ -81,7 +84,7 @@
         background-color: transparent;
         .fc-daygrid-day-top{
           a{
-            background-color: $azure;
+            background-color: $blueIndigo;
             height: 25px;
             width: 25px;
             border-radius: 25px;
@@ -109,6 +112,13 @@
   }
   .fc-daygrid-event{
     padding-left: 4px;
+  }
+  @media #{$smartphone} {
+    .selects{
+      .col-12{
+        padding: 0 15px!important;
+      }
+    }
   }
 }
 

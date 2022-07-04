@@ -1117,6 +1117,10 @@
   opacity: .65;
 }
 
+.card {
+  box-shadow: 0px 2px 9px -12px RGB(0 0 0/42%), 0 4px 25px 0px RGB(0 0 0/12%), 0 8px 10px -5px RGB(0 0 0/20%);
+}
+
 #calendar .fc-toolbar-chunk {
   display: flex;
   align-items: center;
@@ -1136,7 +1140,7 @@
 }
 
 #calendar .fc-toolbar-chunk .fc-today-button, #calendar .fc-toolbar-chunk .fc-appointments-button, #calendar .fc-toolbar-chunk .fc-timeGridDay-button, #calendar .fc-toolbar-chunk .fc-timeGridWeek-button, #calendar .fc-toolbar-chunk .fc-dayGridMonth-button {
-  background-color: #D1EEFF;
+  background-color: #1341761a;
   border: none;
   box-shadow: none;
   border-radius: 27px;
@@ -1183,7 +1187,7 @@
 }
 
 #calendar .fc-toolbar-chunk .fc-button-active {
-  background-color: #00A0FF;
+  background-color: #103f75;
   color: #ffffff;
 }
 
@@ -1208,7 +1212,7 @@
 }
 
 #calendar .fc-view-harness .fc-scrollgrid .fc-day-today .fc-daygrid-day-top a {
-  background-color: #4382EF;
+  background-color: #103f75;
   height: 25px;
   width: 25px;
   border-radius: 25px;
@@ -1237,6 +1241,12 @@
 
 #calendar .fc-daygrid-event {
   padding-left: 4px;
+}
+
+@media (min-device-width: 320px) and (max-device-width: 480px) {
+  #calendar .selects .col-12 {
+    padding: 0 15px !important;
+  }
 }
 
 #feedbackModal .radio-with-Icon input[type="radio"]:checked ~ label i {

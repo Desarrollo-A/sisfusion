@@ -1427,10 +1427,6 @@
   color: #eaeaea;
 }
 
-#modalChart .modal-dialog .modal-content #boxModalChart {
-  margin-top: 20px !important;
-}
-
 @media (min-device-width: 320px) and (max-device-width: 480px), (min-width: 480px) and (max-width: 991px) {
   #modalChart .modal-dialog .modal-content {
     height: inherit !important;
@@ -1445,7 +1441,7 @@
 
 #tableFilters .datesTable {
   border-radius: 27px;
-  border: 2px solid #cfcfcf;
+  border: 2px solid #c1c1c1;
   padding: 0;
 }
 
