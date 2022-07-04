@@ -2894,18 +2894,29 @@ $pdf->Output(utf8_decode($namePDF), 'I');
         $data_descuentos = $this->Corrida_model->getDescsByCondominio($id_condominio, $id_pxc);
 
 
-        $array_descuentos = explode(',', $data_descuentos->id_paquete, 999);
-
-        $data_descuentos->paquetes_array = $array_descuentos;
-
-//        print_r($array_descuentos);
 
 
+
+        $object_descuentos = json_decode($data_descuentos->id_paquete);
+        $array_descuentos = explode(',', $object_descuentos->paquetes, 999);
+        $tipo_superficie = $object_descuentos->tipo_superficie;
+        /*print_r($tipo_superficie->tipo);
+        exit;*/
+
+        #logica anterior
+        #$array_descuentos = explode(',', $data_descuentos->id_paquete, 999);
+        #$data_descuentos->paquetes_array = $array_descuentos;
+
+
+        //recibe un array separados por "," así: Array ( [0] => 326 [1] => 328 [2] => 334 )
         for($i=0; $i<count($array_descuentos); $i++){
             $paquete_info = $this->Corrida_model->getPaqById($array_descuentos[$i]);
             $paquete_view[$i] = array(
                 'id_paquete' => $paquete_info->id_paquete,
                 'descripcion' => $paquete_info->descripcion,
+                'aplicable_a' => $tipo_superficie->tipo,
+                'sup1'        => $tipo_superficie->sup1,
+                'sup2'        => $tipo_superficie->sup2,
                 //'estatus' => $paquete_info->estatus,
             );
 
@@ -2927,7 +2938,7 @@ $pdf->Output(utf8_decode($namePDF), 'I');
                 $paquete_view[$i]['response'][$q]['msi_descuento'] = (int)$data_descuento->msi_descuento;
             }
         }
-        print_r(json_encode($paquete_view));
+        print_r(json_encode($paquete_view, JSON_NUMERIC_CHECK ));
 
         exit;
     }
