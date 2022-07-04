@@ -1,5 +1,4 @@
 <link href="<?= base_url() ?>dist/css/commonModals.css" rel="stylesheet"/>
-
 <div class="modal fade" id="myCommentModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -48,8 +47,6 @@
         </div>
     </div>
 </div>
-
-
 
 <div class="modal fade" id="myUpdateStatusModalPreventa" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog">
@@ -715,7 +712,6 @@
 									</div>
 								</div>
 							</div>
-                            
                             <div class="row">
                                 <input type="hidden" id="id-prospecto-lbl" name="id_prospecto_lbl">
                             </div>

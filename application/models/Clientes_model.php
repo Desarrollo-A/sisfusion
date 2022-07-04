@@ -691,10 +691,7 @@ function getStatusMktdPreventa(){
                 break;
             case '7': // ASESOR
                 if($this->session->userdata('id_usuario') == 6578 || $this->session->userdata('id_usuario') == 9942 || $this->session->userdata('id_usuario') == 9911) {
-
                     $in = $this->session->userdata('id_usuario') == 6578 ? 26 :($this->session->userdata('id_usuario') == 9942 ? 33 : 35);
-                   // echo $in;
-
                     return $this->db->query("SELECT c.id_prospecto, CONCAT (c.nombre, ' ', c.apellido_paterno, ' ', c.apellido_materno) nombre, c.vigencia,
                                         CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) asesor, 
                                         CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) coordinador, 

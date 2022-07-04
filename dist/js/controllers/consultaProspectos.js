@@ -1069,6 +1069,7 @@ $(document).on('click', '.update-status', function(e) {
 $("#my_update_status_form").on('submit', function(e) {
     e.preventDefault();
     if($('#estatus_particular').val() == 3){
+        cleanModal();
         $("#agendaInsert").modal();
     }else{$.ajax({
         type: 'POST',
@@ -1228,18 +1229,6 @@ $(document).on('click', '.change-pl', function () { // MJ: FUNCIÓN CAMBIO DE ES
         var isBefore = moment(fecha_creacion).isBefore('2022-01-20T00:00:00Z');
         return isBefore;
     }
-    $("#estatus_recordatorio").on('change', function(e){
-        let medio =  $(this).val();
-        if(medio == 2 || medio == 4 || medio == 5){
-            $("#comodinDIV").empty();
-            $("#comodinDIV").append(`<label>Dirección</label>`+
-            `<input id="comodin" name="comodin" type="text" class="form-control">`);
-            $("#comodinDIV2").removeClass('hide');
-        }
-        else{
-            $("#comodinDIV").empty();
-        }
-    })
 
     document.querySelector('#estatus_recordatorio_form').addEventListener('submit',async e =>  {
         e.preventDefault();
@@ -1330,3 +1319,13 @@ function getOfficeAddresses(){
       $("#id_direccion").selectpicker('refresh');
     }, 'json');
 }
+
+function cleanModal(){
+    $('#evtTitle').val('');
+    $("#prospecto option:selected").prop("selected", false);
+    $("#prospecto").selectpicker('refresh');
+    $("#estatus_recordatorio option:selected").prop("selected", false);
+    $("#estatus_recordatorio").selectpicker('refresh');
+    $("#description").val('');
+    $("#comodinDIV").addClass('hide');
+  }
