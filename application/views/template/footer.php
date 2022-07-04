@@ -30,10 +30,9 @@
 <script src="<?=base_url()?>dist/js/jquery.datatables.js"></script>
 <!-- Sweet Alert 2 plugin -->
 <script src="<?=base_url()?>dist/js/sweetalert2.js"></script>
-
 <script src="<?=base_url()?>dist/js/jasny-bootstrap.min.js"></script>
 <!--  Full Calendar Plugin    -->
-
+<script src="<?=base_url()?>dist/js/fullcalendar.min.js"></script>
 <!-- TagsInput Plugin -->
 <script src="<?=base_url()?>dist/js/jquery.tagsinput.js"></script>
 <!-- Material Dashboard javascript methods -->
