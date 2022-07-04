@@ -340,6 +340,10 @@
   display: none;
 }
 
+.d-block {
+  display: block;
+}
+
 .d-flex {
   display: flex;
 }
@@ -1045,14 +1049,23 @@
 }
 
 /* tooltip styles */
+.tooltip {
+  width: fit-content;
+}
+
 .tooltip .tooltip-inner {
   padding: 5px 10px;
-  color: white;
+  color: #ffffff;
   background-color: #333333;
+  width: fit-content;
 }
 
 .tooltip.top .tooltip-arrow {
   border-top-color: #333333;
+}
+
+.tooltip.bottom .tooltip-arrow {
+  border-bottom-color: #333333;
 }
 
 /* tooltip styles */
@@ -1302,7 +1315,7 @@
   }
 }
 
-@media (min-device-width: 320px) and (max-device-width: 480px) {
+@media (min-device-width: 320px) and (max-device-width: 480px), (min-width: 480px) and (max-width: 991px) {
   #metricas .card {
     height: inherit !important;
   }

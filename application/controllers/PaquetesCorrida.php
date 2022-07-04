@@ -109,7 +109,7 @@ class PaquetesCorrida extends CI_Controller
             if(isset($_POST["descripcion_".$i])){
               $descripcion_paquete = $_POST["descripcion_".$i];
               $indice = $i.'.-';
-              $query_paquete = $this->db->query("INSERT INTO paquetes(descripcion,id_descuento,fecha_inicio,fecha_fin,estatus,sede,desarrollos,tipo_lote,super1,super2) VALUES('$indice $descripcion_paquete',0,'$Fechainicio','$Fechafin',1,'".$datos_sede[1]."','$desarrollos',$TipoLote,$inicio,$fin) ");
+              //$query_paquete = $this->db->query("INSERT INTO paquetes(descripcion,id_descuento,fecha_inicio,fecha_fin,estatus,sede,desarrollos,tipo_lote,super1,super2) VALUES('$indice $descripcion_paquete',0,'$Fechainicio','$Fechafin',1,'".$datos_sede[1]."','$desarrollos',$TipoLote,$inicio,$fin) ");
               $id_paquete = $this->db->insert_id();
               array_push($ArrPAquetes,$id_paquete);
                // echo $_POST["descripcion_".$i];
@@ -254,31 +254,80 @@ class PaquetesCorrida extends CI_Controller
                 //4.- DESCUENTO POR BONO
             }
         }
-        $ins_b = $this->PaquetesCorrida_model->insertBatch('relaciones',$datosInsertar);
+        //$ins_b = $this->PaquetesCorrida_model->insertBatch('relaciones',$datosInsertar);
         $cadena_lotes = implode(",", $ArrPAquetes);
        /* echo $cadena_lotes;
         echo "<br>";
         print_r($ArrPAquetes);
         print_r($datosInsertar);*/
         $datosInsertar_x_condominio = array();
-        //$getPaquetesByLotes = $this->PaquetesCorrida_model->getPaquetesByLotes($desarrollos,$cadena_lotes,$query_superdicie,$query_tipo_lote)->result_array();
-       /* $array_x_condominio =array(
-          'id_condominio' => ,
-          'id_paquete' =>  '',
-          'nombre' => '',
-          'fecha_inicio' => ,
-          'fecha_fin' =>  ,
-          'estatus' => ,
-          'fecha_creacion' =>  $hoy2,
-          'creado_por' => $this->session->userdata('id_usuario'),
-          'fecha_modificacion' =>  $hoy2,
-          'modificado_por' => $this->session->userdata('id_usuario'),
-        );
-        array_push($datosInsertar_x_condominio,$data_descuento);*/
+        $getPaquetesByLotes = $this->PaquetesCorrida_model->getPaquetesByLotes($desarrollos,$query_superdicie,$query_tipo_lote)->result_array();
+        
+        $arrayDatos = array();
+        for ($o=0; $o <count($getPaquetesByLotes) ; $o++) { 
+          $datosSeparados = explode(' | ',$getPaquetesByLotes[$o]['descuentos']);
+          //print_r($datosSeparados);
+          //echo 'ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc';
+          //echo '<br>';
+          $resultado = array_unique($datosSeparados);
+          /*for ($p=0; $p <count($datosSeparados) ; $p++) { 
+            echo $datosSeparados[$p];
+            echo '<br>';
+
+          }*/
+          //echo 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb';
+          //echo '<br>';
+          //print_r(array_values($resultado));
+          $Newresultado = array_values($resultado);
+          print_r($Newresultado);
+          $json = array();
+          for ($m=0; $m <count($Newresultado) ; $m++){ 
+            $jt = $m+1;
+            //array_push($json['paquete'.$jt], $Newresultado[$m]); 
+            array_push($json,array( "paquete".$jt => $Newresultado[$m]));            
+          }
+          echo '<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<';
+          echo '<br>';
+          print_r($json);
+          echo '<br>';
+
+          $json = json_encode($json);
+          echo '<br>';
+
+          print_r($json);
+
+          echo '<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<';
+          echo '<br>';
+         // $a = implode(',',$json);
+          $pieces = explode('|', (string) $json);
+          $prefix = implode('|', array_slice($pieces, 0, 4));
+          echo '<br>';
+          echo 'wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww';
+          echo $prefix;
+          echo 'wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww';
+          echo '<br>';
+            $array_x_condominio =array(
+              'id_condominio' => $getPaquetesByLotes[$o]['idCondominio'],
+              'id_paquete' => $prefix,
+              'nombre' => 'prueba',
+              'fecha_inicio' => $hoy,
+              'fecha_fin' =>  $hoy,
+              'estatus' => 1,
+              'fecha_creacion' =>  $hoy2,
+              'creado_por' => $this->session->userdata('id_usuario'),
+              'fecha_modificacion' =>  $hoy2,
+              'modificado_por' => $this->session->userdata('id_usuario'),
+            );
+            array_push($datosInsertar_x_condominio,$array_x_condominio);
+         // echo 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa';
+        }
+              $ins_b = $this->PaquetesCorrida_model->insertBatch('paquetes_x_condominios',$datosInsertar_x_condominio);
+
+        /* */
 
 
         
-         $this->PaquetesCorrida_model->UpdateLotes($desarrollos,$cadena_lotes,$query_superdicie,$query_tipo_lote,$this->session->userdata('id_usuario'));
+        // $this->PaquetesCorrida_model->UpdateLotes($desarrollos,$cadena_lotes,$query_superdicie,$query_tipo_lote,$this->session->userdata('id_usuario'));
 
       
         if ($this->db->trans_status() === FALSE) {

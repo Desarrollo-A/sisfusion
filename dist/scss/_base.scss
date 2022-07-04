@@ -93,6 +93,7 @@
 
 /* Flexbox */
 .d-none          { display: none; }
+.d-block         { display: block; }
 .d-flex          { display: flex; }
 .align-start     { align-items: flex-start; }
 .align-end       { align-items: flex-end; }
@@ -716,15 +717,21 @@ $tv                 : "(min-width: 1280px)";
 
 /* tooltip styles */
 .tooltip{
+    width: fit-content;
     .tooltip-inner {
         padding: 5px 10px;
-        color: white;
+        color: $white;
         background-color: $gray;
+    width: fit-content;
+
     }
 }
 .tooltip.top .tooltip-arrow {
     border-top-color: $gray;
 }
+.tooltip.bottom .tooltip-arrow {
+    border-bottom-color: $gray;
+  }
 /* tooltip styles */
 
 .radio_container {
@@ -763,6 +770,6 @@ $tv                 : "(min-width: 1280px)";
     &:disabled{
         border: none;
         color: $deepGray;
-        background-color: #F1F1F1;
+        background-color: $grayDisabled;
     }
 }

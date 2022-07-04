@@ -566,19 +566,19 @@ function toggleDatatable(e){
     $( columnDatatable ).html('');
     // La columna se expandera
     if( $(columnaActiva).hasClass('inactivo') ){
-        columnaActiva.classList.remove('col-sm-6', 'col-md-6', 'col-lg-6', 'inactivo');
-        columnaActiva.classList.add('col-sm-12', 'col-md-12', 'col-lg-12', 'activo');
-        columnaChart.classList.remove('col-sm-12', 'col-md-12', 'col-lg-12');
-        columnaChart.classList.add('col-sm-6', 'col-md-6', 'col-lg-6');
+        columnaActiva.classList.remove('col-lg-6', 'inactivo');
+        columnaActiva.classList.add('col-lg-12', 'activo');
+        columnaChart.classList.remove('col-lg-12');
+        columnaChart.classList.add('col-lg-6');
         columnDatatable.removeClass('hidden');
         reorderColumns();
     }
     // La columna se contraera
     else{
-        columnaActiva.classList.remove('col-sm-12', 'col-md-12', 'col-lg-12', 'activo');
-        columnaActiva.classList.add('col-sm-6', 'col-md-6', 'col-lg-6', 'inactivo');
-        columnaChart.classList.remove('col-sm-12', 'col-md-6', 'col-lg-6');
-        columnaChart.classList.add('col-sm-12', 'col-md-12', 'col-lg-12');
+        columnaActiva.classList.remove('col-lg-12', 'activo');
+        columnaActiva.classList.add('col-lg-6', 'inactivo');
+        columnaChart.classList.remove('col-lg-6');
+        columnaChart.classList.add('col-lg-12');
         columnDatatable.addClass('hidden');
         reorderColumns();
     }

@@ -1,7 +1,33 @@
 @import "_base";
 
-.navbar{
-    color: $platinum;
+.navbar .navbar-nav > li > a{
+    background-color: #eaeaea30!important;
+}
+.navbar .navbar-nav > li > a > span{
+    color: $white!important;
+}
+.navbar-right .icoNav:hover {
+    background-color: #eaeaea30!important;
+}
+.perfil{
+    background-color: #eaeaea30!important;
+    color: $white!important;
+}
+.perfil .idBubble{
+    color: $white!important;
+}
+.btn.btn-white, .btn.btn-white:focus, .btn.btn-white:hover{
+    background-color: #eaeaea30!important;
+    color: $white!important;
+}
+#boxHome #banner{
+    background-image: linear-gradient(RGB(0 0 0/30%),RGB(0 0 0/32%)),url('../img/home.png');
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    display:flex;
+    justify-content: center;
+    align-items: center;
 }
 
 #boxHome{
@@ -10,40 +36,49 @@
     margin: 0;
     #banner{
         #clock {
-            color: white;
-            display: flex;
+            color: $white;
             flex-wrap: wrap;
             align-items: center;
             justify-content: center;
             user-select: none;
             animation: fadeIn 1s ease-in-out;
-            cursor: pointer;
             border-radius: 2em;
             padding: 4em 1em;
             backface-visibility: hidden;
             transition: all 0.5s;
-            height: fit-content;background: #eaeaea30;
+            height: fit-content;
+            background: #eaeaea30;
+            text-align: center;
             #info{
+                #saludoTxt{
+                    font-size: 1.5em;
+                    margin-bottom: 40px;
+                    @media #{$smartphone}{
+                        margin-bottom: 30px;
+                        font-size: 1em;
+                    }
+                }
                 #time {
                     font-size: 8em;
                     display: inline-block;
                     @media #{$smartphone}{
-                        font-size: 3em;
+                        font-size: 5em;
                     }
                     @media #{$tablets}{
                         font-size: 4.5em;
                     }
                 }
                 #date {
-                    margin-top: 1.8em;
-                    margin-bottom: 0.2em;
+                    margin-top: 10px!important;
                     font-size: 2em;
                     display: inline-block;
                     @media #{$smartphone}{
-                        font-size: 1em;
+                        font-size: 2em;
+                        margin-top: 5px!important;
                     }
                     @media #{$tablets}{
                         font-size: 1.5em;
+                        margin-top: 0px!important;
                     }
                 }
             }
@@ -51,12 +86,18 @@
     }
 }
 .footer{
-    margin-top: -117px;
+    margin-top: -83px;
     border: none!important;
-    color: white;
-    a{
-        color: white;
-        font-weight: bold;
+    color: $white;
+    .container-fluid{
+        a{
+            color: $white;
+            font-weight: bold;
+        }
+        @media #{$smartphone}{
+            display: flex;
+            justify-content: center;
+        }
     }
 }
 
@@ -66,5 +107,22 @@
     }
     100% {
         opacity: 1;
+    }
+}
+@media (max-width: 1199px) {
+    .navbar .navbar-brand {
+        color: $white!important;
+    }
+    .perfil{
+        background-color: inherit!important;
+        color: $gray!important;
+    }
+    .perfil .idBubble{
+        color: $gray!important;
+    }
+}
+@media (max-width: 991px){
+    .navbar-header .navbar-toggle {
+        color: $white;
     }
 }

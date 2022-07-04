@@ -88,6 +88,20 @@ class PaquetesCorrida_model extends CI_Model
         order by d.porcentaje");
     }
 
+        public function getPaquetesByLotes($desarrollos,$query_superdicie,$query_tipo_lote){
+            return $this->db->query("SELECT l.idCondominio, 
+            STRING_AGG(L.id_descuento, ' | ') descuentos
+            FROM lotes l
+            INNER JOIN condominios c ON c.idCondominio = l.idCondominio 
+            INNER JOIN residenciales r ON r.idResidencial = c.idResidencial
+            WHERE 
+            r.idResidencial IN ($desarrollos) 
+            $query_superdicie
+            $query_tipo_lote
+            GROUP BY l.idCondominio");
+        }
+    
+
 
 
 }

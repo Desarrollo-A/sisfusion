@@ -63,8 +63,8 @@
                 }
             }
             .titles{
-                color: $blueIndigo;
-                font-weight: 500;
+                color: $gray;
+                font-weight: 400;
             }
         }
         .col-datatable{
@@ -174,7 +174,7 @@
         @keyframes scale-up-center {
             0% {
                 -webkit-transform: scale(0.5);
-                        transform: scale(0.5);
+                     transform: scale(0.5);
             }
             100% {
                 -webkit-transform: scale(1);
@@ -184,13 +184,5 @@
         @media #{$smartphone}, #{$tablets}{
             height: inherit!important;
         }
-        @media #{$desktop}{
-            background-color: aquamarine;
-        }
-        @media #{$minidesktop}{
-            background-color: red;
-
-        }
-        
     }
 }

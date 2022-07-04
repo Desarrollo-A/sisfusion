@@ -83,26 +83,7 @@
                 &:hover, :active{
                     font-weight: 900;
                 }
-                // &:after{   
-                //     content: "";
-                //     position: absolute;
-                //     right: 35px;
-                //     top: 23%;
-                //     transition: all 0.2s ease-in-out;
-                //     display: block;
-                //     width: 8px;
-                //     height: 8px;
-                //     border-top: solid 1px $gray;
-                //     border-right: solid 1px $gray;
-                //     -webkit-transform: rotate(135deg);
-                //     transform: rotate(135deg); 
-                // } 
             }
-            // .open:after {
-            //     -webkit-transform: rotate(-45deg);
-            //     transform: rotate(-45deg);
-            //     top: 3%;
-            // }
             table{
                 text-align: center;
                 thead tr {
@@ -176,9 +157,7 @@
             /* Color del HOVER de barra de desplazamiento */
             .dataTables_scrollBody::-webkit-scrollbar-thumb:hover{
                 background-color: $deepGray;
-            }
-           
-           
+            }  
         }
         .accordion-content {
             display: none;
@@ -246,6 +225,9 @@
                     font-weight: 500;
                     color: $white;
                 }
+                @media #{$smartphone}{
+                    text-align: center;
+                }
             }
             .form-group{
                 border-radius: 28px;
@@ -256,19 +238,18 @@
                 }
                 .btn-fab-mini{
                     background-color: transparent!important;
+                    box-shadow: none!important;
                     span{
                         color: $platinum;
                     }
                 }
             }
+            @media #{$smartphone}, #{$tablets}{
+                height: inherit!important;
+            }
         }
         @media #{$smartphone}{
-            -webkit-transform: inherit!important;
-            -o-transform: inherit!important;
-            transform: inherit!important;
-            top: inherit;
-            margin-top: 100px!important;
-            margin: 10px;
+            margin: 20px;
         }
     }
 
@@ -277,7 +258,7 @@
 #tableFilters{
     .datesTable{
         border-radius: 27px;
-        border: 2px solid #cfcfcf;
+        border: 2px solid $platinumScroll;
         padding: 0;
         .tableDates{
             text-align: center;
@@ -308,7 +289,14 @@
             background-color: #1341761a;
         }
     }
+<<<<<<< HEAD
 
    
+=======
+    @media #{$smartphone}, #{$tablets}{
+        margin-top: 30px;
+        padding-right: 20px;
+    }
+>>>>>>> cfc734b454da4a6b3dc8d475b177e48330e5cceb
 }
 

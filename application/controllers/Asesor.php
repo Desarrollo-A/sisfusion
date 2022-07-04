@@ -5584,4 +5584,41 @@ class Asesor extends CI_Controller
         else
             echo json_encode(array());
     }
+
+    function getLineOfACG(){
+        $objDatos = json_decode(file_get_contents("php://input"));
+        $id_lote = $objDatos->lote;
+        $data = $this->Asesor_model->getLineOfACG($id_lote);
+        if ($data != null)
+            echo json_encode($data);
+        else
+            echo json_encode(array());
+    }
+    function getGerenteById(){
+        $objDatos = json_decode(file_get_contents("php://input"));
+        $id_gerente = $objDatos->gerente;
+        $data = $this->Asesor_model->getGerenteById($id_gerente);
+        if ($data != null)
+            echo json_encode($data);
+        else
+            echo json_encode(array());
+    }
+    function getCoordinadorById(){
+        $objDatos = json_decode(file_get_contents("php://input"));
+        $id_coordinador = $objDatos->coordinador;
+        $data = $this->Asesor_model->getCoordinadorById($id_coordinador);
+        if ($data != null)
+            echo json_encode($data);
+        else
+            echo json_encode(array());
+    }
+    function getAsesorById(){
+        $objDatos = json_decode(file_get_contents("php://input"));
+        $id_asesor = $objDatos->asesor;
+        $data = $this->Asesor_model->getAsesorById($id_asesor);
+        if ($data != null)
+            echo json_encode($data);
+        else
+            echo json_encode(array());
+    }
 }
