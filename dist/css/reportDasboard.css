@@ -1235,7 +1235,6 @@
 
 #reporte .boxAccordions .bk .accordion-title {
   display: relative;
-  text-transform: capitalize;
   padding: 0 15px 10px 15px;
   margin: 0;
   cursor: pointer;
@@ -1281,6 +1280,10 @@
 
 #reporte .boxAccordions .bk table td.delimetter {
   border-right: solid #eaeaea6b !important;
+}
+
+#reporte .boxAccordions .bk table th.delimetter {
+  border-right: solid #284e78 !important;
 }
 
 #reporte .boxAccordions .bk table .update-dataTable {
@@ -1370,6 +1373,15 @@
     display: block;
     text-align: center;
   }
+}
+
+#reporte .no-spin::-webkit-inner-spin-button, #reporte .no-spin::-webkit-outer-spin-button {
+  -webkit-appearance: none !important;
+  margin: 0 !important;
+}
+
+#reporte .no-spin {
+  -moz-appearance: textfield !important;
 }
 
 #modalChart .modal-dialog {

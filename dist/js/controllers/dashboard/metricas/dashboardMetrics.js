@@ -25,7 +25,7 @@ var optionBarInit = {
     dataLabels: {
         enabled: true,
         formatter: function (val, opts) {
-            return val;
+            return val.toLocaleString('es-MX');
         }
     },
     legend: {
@@ -68,6 +68,12 @@ var optionBarInit = {
             opacity: 0.5
         },
     },
+    tooltip: { 
+        enabled: true,
+        y: {
+            formatter: (value) =>  value.toLocaleString('es-MX'),
+        },
+    },
 };
 
 var optionsDisponibilidad = {
@@ -97,9 +103,9 @@ var optionsDisponibilidad = {
             const goals = opt.w.config.series[opt.seriesIndex].data[opt.dataPointIndex].goals;
 
             if (goals && goals.length) {
-                return `${val} / ${goals[0].value}`
+                return `${val.toLocaleString('es-MX')} / ${(goals[0].value).toLocaleString('es-MX')}`
             }
-            return val
+            return val.toLocaleString('es-MX')
         },
     },
     legend: {
@@ -136,6 +142,12 @@ var optionsDisponibilidad = {
             opacity: 0.5
         },
     },
+    tooltip: { 
+        enabled: true,
+        y: {
+            formatter: (value) =>  value.toLocaleString('es-MX'),
+        },
+    },
 };
 
 var optionLugar = {
@@ -169,7 +181,7 @@ var optionLugar = {
     dataLabels: {
         enabled: true,
         formatter: function (val, opts) {
-            return val;
+            return val.toLocaleString('es-MX');
         },
     },
     legend: {
@@ -222,6 +234,12 @@ var optionLugar = {
             opacity: 0.5
         },
     },
+    tooltip: { 
+        enabled: true,
+        y: {
+            formatter: (value) =>  value.toLocaleString('es-MX'),
+        },
+    },
 };
 
 var optionsMedio = {
@@ -235,9 +253,9 @@ var optionsMedio = {
     },
     colors: ['#0089B7', '#039590', '#00ACB8', '#4BBC8E', '#00CDA3', '#92E784', '#F9F871'],
     dataLabels: {
-        enabled: true,
+        enabled: false,
         formatter: function (val) {
-          return '';
+          return val.toLocaleString('es-MX');
         }
       },
     responsive: [{
@@ -250,7 +268,13 @@ var optionsMedio = {
                 position: 'bottom'
             }
         }
-    }]
+    }],
+    tooltip: { 
+        enabled: true,
+        y: {
+            formatter: (value) =>  value.toLocaleString('es-MX'),
+        },
+    },
 };
 
 var optionsVentasMetros = {
@@ -294,6 +318,12 @@ var optionsVentasMetros = {
         column: {
             colors: undefined,
             opacity: 0.5
+        },
+    },
+    tooltip: { 
+        enabled: true,
+        y: {
+            formatter: (value) =>  value.toLocaleString('es-MX'),
         },
     },
 };
@@ -515,11 +545,10 @@ function formatVentasM2(data){
     let series =[] , categories = [];
     data.forEach(element => {
         series.push(element.cantidad);
-        categories.push([`${element.precio}`,
-        `(${element.sup} m2)`]);
+        categories.push(`(${element.sup} m2)`);
     });
     ventasMetrosChart.updateSeries([{
-        name: '#',
+        name: '# de lotes: ',
         data: series
     }])
 
