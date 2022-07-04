@@ -236,10 +236,10 @@ foreach($datos2 as $datos)
                             <i class="material-icons far fa-calendar-alt"></i>
                         </a>
                     </div>
-                    <a class="navbar-brand responsive">
+                    <a class="navbar-brand responsive" href="<?=base_url()?>index.php/Usuarios/configureProfile">
                         <span class="material-icons">settings</span>
                     </a>
-                    <a  class="navbar-brand responsive">
+                    <a  class="navbar-brand responsive" href="<?=base_url()?>index.php/login/logout_ci">
                         <span class="material-icons">exit_to_app</span>
                     </a>
                 </div>
@@ -294,15 +294,10 @@ foreach($datos2 as $datos)
 		</div>
     </nav>
 <script>
-    $('[data-toggle="tooltip"]').tooltip();
     function AddTicket(){
-          $.post("<?=base_url()?>index.php/Api/ServicePostTicket", function (data) {
-            console.log(data);
-          //  window.open(data);
-
-          var newtab =  window.open('','Sistema de tickets', 'toolbar=0,scrollbars=0,location=0,statusbar=0,menubar=0,resizable=1,width=1000,height=400,left = 390,top = 50');
-          newtab.document.write(data);  
-
-    }, 'json');
-        }
+        $.post("<?=base_url()?>index.php/Api/ServicePostTicket", function (data) {
+            var newtab =  window.open('','Sistema de tickets', 'toolbar=0,scrollbars=0,location=0,statusbar=0,menubar=0,resizable=1,width=1000,height=400,left = 390,top = 50');
+            newtab.document.write(data);
+        }, 'json');
+    }
 </script>

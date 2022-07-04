@@ -949,3 +949,5 @@ function getSede(typeRanking){
     }
     return sede;
 }
+
+$('[data-toggle="tooltip"]').tooltip();
