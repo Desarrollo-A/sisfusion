@@ -251,10 +251,10 @@ class Reporte extends CI_Controller {
     }
 
     public function get4Months(){
-        $dateTime = new DateTime('first day of this month');
-        $lastDate = new DateTime('first day of this month');
+        $dateTime = new DateTime();
+        $lastDate = new DateTime();
         $firstDate;
-        $lastDate->modify('-1 month');
+        // $lastDate->modify('-1 month');
         for ($i = 1; $i <= 4; $i++) {
             $firstDate = $dateTime->modify('-1 month');
         }
@@ -295,5 +295,13 @@ class Reporte extends CI_Controller {
             echo json_encode(array());
         }
     }
+
+     
+    public function get4MonthsRequest(){
+        $data = $this->get4Months();
+        if($data != null) {
+            echo json_encode($data);
+        }
+        else echo json_encode(array());
+    }
 }
- 

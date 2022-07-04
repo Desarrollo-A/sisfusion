@@ -389,7 +389,7 @@ class Reporte_model extends CI_Model {
         else if ($id_rol == 9) // MJ: Coordinador
            { 
             if($render == 1){
-                $filtro .= " AND (cl.id_coordinador = $id_usuario OR cl.id_asesor = $id_usuario)";
+                $filtro .= " AND (cl.id_coordinador = $id_usuario)";
                 $comodin = "id_coordinador";
             }else{
                 $filtro .= " AND cl.id_coordinador = $id_usuario";
