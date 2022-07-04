@@ -351,7 +351,9 @@ class Dashboard_model extends CI_Model {
             $end = $data['endDate'];
             $filtro = "WHERE fecha_creacion BETWEEN '$begin 00:00:00' AND '$end 23:59:59' ";
         }else{
-            $filtro = "WHERE YEAR(fecha_creacion) = $year ";
+            $begin = "$year-01-01";
+            $end = date("Y-m-d");
+            $filtro = "WHERE fecha_creacion BETWEEN '$begin 00:00:00' AND '$end 23:59:59' ";
         }
 
         if ($id_rol == 7) // MJ: Asesor
@@ -392,23 +394,34 @@ class Dashboard_model extends CI_Model {
             $filtro .= ""; // MJ: PENDIENTE
         else if ($id_rol == 1 || $id_rol == 4) // MJ: Director comercial
             $filtro .= "";
-        $query = $this->db->query("SELECT (CASE 
-        WHEN DATENAME(month,fecha_creacion) = 'January' THEN 'Enero'
-        WHEN DATENAME(month,fecha_creacion) = 'February' THEN 'Febrero'
-        WHEN DATENAME(month,fecha_creacion) = 'March' THEN 'Marzo'
-        WHEN DATENAME(month,fecha_creacion) = 'April' THEN 'Abril'
-        WHEN DATENAME(month,fecha_creacion) = 'May' THEN 'Mayo'
-        WHEN DATENAME(month,fecha_creacion) = 'June' THEN 'Junio'
-        WHEN DATENAME(month,fecha_creacion) = 'July' THEN 'Julio'
-        WHEN DATENAME(month,fecha_creacion) = 'August' THEN 'Agosto'
-        WHEN DATENAME(month,fecha_creacion) = 'September' THEN 'Septiembre'
-        WHEN DATENAME(month,fecha_creacion) = 'October' THEN 'Octubre'
-        WHEN DATENAME(month,fecha_creacion) = 'November' THEN 'Noviembre'
-        WHEN DATENAME(month,fecha_creacion) = 'December' THEN 'Diciembre'
-        END) MONTH, YEAR(fecha_creacion) año, COUNT(*) counts FROM prospectos
-        $filtro
-        GROUP BY DATENAME(month,fecha_creacion), YEAR(fecha_creacion), MONTH(fecha_creacion)
-        ORDER BY YEAR(fecha_creacion), MONTH(fecha_creacion)");
+        $query = $this->db->query("WITH cte AS(
+            SELECT CAST('$begin 00:00:00' AS DATETIME) DateValue
+            UNION ALL
+            SELECT  DateValue + 1
+            FROM    cte   
+            WHERE   DateValue + 1 <= '$end 00:00:00')
+
+			SELECT 
+				(CASE 
+					WHEN MONTH(DateValue) = '1' THEN 'Enero'
+					WHEN MONTH(DateValue) = '2' THEN 'Febrero'
+					WHEN MONTH(DateValue) = '3' THEN 'Marzo'
+					WHEN MONTH(DateValue) = '4' THEN 'Abril'
+					WHEN MONTH(DateValue) = '5' THEN 'Mayo'
+					WHEN MONTH(DateValue) = '6' THEN 'Junio'
+					WHEN MONTH(DateValue) = '7' THEN 'Julio'
+					WHEN MONTH(DateValue) = '8' THEN 'Agosto'
+					WHEN MONTH(DateValue) = '9' THEN 'Septiembre'
+					WHEN MONTH(DateValue) = '10' THEN 'Octubre'
+					WHEN MONTH(DateValue) = '11' THEN 'Noviembre'
+					WHEN MONTH(DateValue) = '12' THEN 'Diciembre'
+				END) MONTH, YEAR(DateValue) año, isNULL(qu.cantidad,0) counts FROM cte 
+			LEFT JOIN (SELECT COUNT(*)cantidad, MONTH(fecha_creacion) mes, YEAR(fecha_creacion) año FROM prospectos
+			$filtro
+			GROUP BY MONTH(fecha_creacion), YEAR(fecha_creacion)) qu ON qu.mes = month(cte.DateValue) AND qu.año = year(cte.DateValue)
+			GROUP BY YEAR(DateValue), MONTH(DateValue), cantidad
+			ORDER BY YEAR(DateValue), MONTH(DateValue)
+			OPTION (MAXRECURSION 0)");
         return $query->result_array();
     }
 
@@ -425,7 +438,9 @@ class Dashboard_model extends CI_Model {
             $end = $data['endDate'];
             $filtro = "WHERE isNULL(noRecibo, '') != 'CANCELADO' AND isNULL(cl.tipo_venta_cl, lo.tipo_venta) IN(1, 2) AND cl.fecha_creacion BETWEEN '$begin 00:00:00' AND '$end 23:59:59' ";
         }else{
-            $filtro = "WHERE isNULL(noRecibo, '') != 'CANCELADO' AND isNULL(cl.tipo_venta_cl, lo.tipo_venta) IN(1, 2) AND YEAR(cl.fecha_creacion) = $year ";
+            $begin = "$year-01-01";
+            $end = date("Y-m-d");
+            $filtro = "WHERE isNULL(noRecibo, '') != 'CANCELADO' AND isNULL(cl.tipo_venta_cl, lo.tipo_venta) IN(1, 2) AND cl.fecha_creacion BETWEEN '$begin 00:00:00' AND '$end 23:59:59'";
         }
 
         if ($id_rol == 7) // MJ: Asesor
@@ -468,24 +483,35 @@ class Dashboard_model extends CI_Model {
         }
         else if ($id_rol == 1 || $id_rol == 4) // MJ: Director comercial
             $filtro .= "";
-        $query = $this->db->query("SELECT (CASE 
-        WHEN DATENAME(month,cl.fecha_creacion) = 'January' THEN 'Enero'
-        WHEN DATENAME(month,cl.fecha_creacion) = 'February' THEN 'Febrero'
-        WHEN DATENAME(month,cl.fecha_creacion) = 'March' THEN 'Marzo'
-        WHEN DATENAME(month,cl.fecha_creacion) = 'April' THEN 'Abril'
-        WHEN DATENAME(month,cl.fecha_creacion) = 'May' THEN 'Mayo'
-        WHEN DATENAME(month,cl.fecha_creacion) = 'June' THEN 'Junio'
-        WHEN DATENAME(month,cl.fecha_creacion) = 'July' THEN 'Julio'
-        WHEN DATENAME(month,cl.fecha_creacion) = 'August' THEN 'Agosto'
-        WHEN DATENAME(month,cl.fecha_creacion) = 'September' THEN 'Septiembre'
-        WHEN DATENAME(month,cl.fecha_creacion) = 'October' THEN 'Octubre'
-        WHEN DATENAME(month,cl.fecha_creacion) = 'November' THEN 'Noviembre'
-        WHEN DATENAME(month,cl.fecha_creacion) = 'December' THEN 'Diciembre'
-        END) MONTH, YEAR(cl.fecha_creacion) año, COUNT(*) counts FROM clientes cl
-        INNER JOIN lotes lo ON lo.idLote = cl.idLote
-        $filtro
-        GROUP BY DATENAME(month,cl.fecha_creacion), MONTH(cl.fecha_creacion),  YEAR(cl.fecha_creacion)
-        ORDER BY  YEAR(cl.fecha_creacion), MONTH(cl.fecha_creacion)");
+        $query = $this->db->query("WITH cte AS(
+            SELECT CAST('2022-01-01 00:00:00' AS DATETIME) DateValue
+            UNION ALL
+            SELECT  DateValue + 1
+            FROM    cte   
+            WHERE   DateValue + 1 <= '2022-07-04 00:00:00')
+
+			SELECT 
+				(CASE 
+					WHEN MONTH(DateValue) = '1' THEN 'Enero'
+					WHEN MONTH(DateValue) = '2' THEN 'Febrero'
+					WHEN MONTH(DateValue) = '3' THEN 'Marzo'
+					WHEN MONTH(DateValue) = '4' THEN 'Abril'
+					WHEN MONTH(DateValue) = '5' THEN 'Mayo'
+					WHEN MONTH(DateValue) = '6' THEN 'Junio'
+					WHEN MONTH(DateValue) = '7' THEN 'Julio'
+					WHEN MONTH(DateValue) = '8' THEN 'Agosto'
+					WHEN MONTH(DateValue) = '9' THEN 'Septiembre'
+					WHEN MONTH(DateValue) = '10' THEN 'Octubre'
+					WHEN MONTH(DateValue) = '11' THEN 'Noviembre'
+					WHEN MONTH(DateValue) = '12' THEN 'Diciembre'
+				END) MONTH, YEAR(DateValue) año, isNULL(qu.cantidad,0) counts FROM cte 
+			LEFT JOIN (SELECT COUNT(*)cantidad, MONTH(cl.fecha_creacion) mes, YEAR(cl.fecha_creacion) año FROM clientes cl
+			INNER JOIN lotes lo ON lo.idLote = cl.idLote
+            $filtro
+			GROUP BY MONTH(cl.fecha_creacion), YEAR(cl.fecha_creacion)) qu ON qu.mes = month(cte.DateValue) AND qu.año = year(cte.DateValue)
+			GROUP BY YEAR(DateValue), MONTH(DateValue), cantidad
+			ORDER BY YEAR(DateValue), MONTH(DateValue)
+			OPTION (MAXRECURSION 0)");
         return $query->result_array();
     }
 
