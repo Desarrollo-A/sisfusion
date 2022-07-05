@@ -297,8 +297,6 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, dates=n
             }
         }
     });
-    console.log( $(`#table${option} thead tr th`));
-    // $(`#table${option} thead tr th`).removeClass('delimetter');
     $('[data-toggle="tooltip"]').tooltip();
 }
 
@@ -307,27 +305,9 @@ $(document).on('click', '.update-dataTable', function () {
     const render = $(this).data("render");
     const transaction = $(this).data("transaction");3
     let closestChild = $(this).closest('.childTable');
-    console.log( closestChild.nextAll());
     closestChild.nextAll().remove();
 
     let dates = transaction == 2 ?  {begin: $('#tableBegin').val(), end: $('#tableEnd').val()}:null;
-
-
-    // const beginDate = $("#beginDate").val();
-    // const endDate = $("#endDate").val();
-
-    // const saleType = $("#saleType").val();
-    // const where = $(this).val();
-    // let typeTransaction = 0;
-
-    // if (beginDate == '01/01/2022' && endDate == '01/01/2022' && saleType == null) // APLICA FILTRO AÑO ACTUAL
-    //     typeTransaction = 1;
-    // else if (beginDate == '01/01/2022' && endDate == '01/01/2022' && saleType != null) // APLICA FILTRO AÑO ACTUAL Y TIPO DE VENTA
-    //     typeTransaction = 2;
-    // else if ((beginDate != '01/01/2022' || endDate != '01/01/2022') && saleType == null) // APLICA FILTRO POR FECHA
-    //     typeTransaction = 3;
-    // else if ((beginDate != '01/01/2022' || endDate != '01/01/2022') && saleType != null) // APLICA FILTRO POR FECHA Y TIPO DE VENTA
-    //     typeTransaction = 4;
 
     if (type == 2) { // MJ: #sub->ger->coord
         if(render == 1){
@@ -523,12 +503,10 @@ function getSpecificChart(type, beginDate, endDate){
             $('#spiner-loader').addClass('hide');
             var orderedArray = orderedDataChart(data);
             let { categories, series } = orderedArray[0];
-            console.log('series',series);
             let total = 0;
             series.forEach(element => {
                 total = total + element.data.reduce((a, b) => parseFloat(a) + parseFloat(b), 0);
             });
-            console.log(total);
             $("#modalChart .boxModalTitle .total").html('');
             $("#modalChart .boxModalTitle .total").append('<p>$'+formatMoney(total)+'</p>');
             
@@ -597,7 +575,6 @@ $(document).on("click", "#searchByDateRange", function () {
     var endDate = $("#modalChart #endDate").val();
     var type = $("#modalChart #type").val();
     $("#modalChart .boxModalTitle .total").html('');
-    console.log('trigger');
     getSpecificChart(type, formatDate(beginDate), formatDate(endDate));
 });
 
@@ -820,7 +797,7 @@ function initDetailRow(dataObj){
 }
 
 function createDetailRow(row, tr, dataObj){
-    $.post("Reporte/getDetails", {
+    $.post(`${base_url}Reporte/getDetails`, {
         id_usuario: dataObj.user,
         rol: dataObj.rol,
         render:  dataObj.render,
