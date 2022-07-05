@@ -597,7 +597,7 @@ if(estatus == 0 && (id_rol == 'Asesor' || id_rol == 'Gerente' || id_rol == 'Coor
     $('#id_rol').val(0);
     $('#status').val(0);
     if(estatus == 0){
-        document.getElementById('msj').innerHTML = '¿Esta seguro que desea dar de baja a ';
+        document.getElementById('msj').innerHTML = '¿Está seguro que desea dar de baja a ';
         document.getElementById('nameUs2').innerHTML = nameUser;
         //alert('baja');
         $('#iduser').val(id_user);
@@ -606,7 +606,7 @@ if(estatus == 0 && (id_rol == 'Asesor' || id_rol == 'Gerente' || id_rol == 'Coor
         $("#BajaConfirm").modal();
 
     }else{
-        document.getElementById('msj').innerHTML = '¿Esta seguro que desea dar de alta a ';
+        document.getElementById('msj').innerHTML = '¿Está seguro que desea dar de alta a ';
         document.getElementById('nameUs2').innerHTML = nameUser;
        // alert('alta');
         $('#iduser').val(id_user);
