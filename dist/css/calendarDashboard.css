@@ -1304,9 +1304,10 @@
   border-right: 1px solid #c1c1c1;
 }
 
-#allAppointmentsModal .table-striped tbody tr td:nth-child(3) {
+#allAppointmentsModal .table-striped tbody tr td:nth-child(4) {
   display: flex;
   justify-content: center;
+  padding: 10px 0 !important;
 }
 
 #allAppointmentsModal .table-striped tbody tr td:nth-child(4):focus-within {

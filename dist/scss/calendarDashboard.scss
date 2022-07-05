@@ -171,9 +171,10 @@
         td{
           padding: 0 5px!important;
           border-right: 1px solid $platinumScroll;
-          &:nth-child(3){
+          &:nth-child(4){
             display:flex;
             justify-content:center;
+            padding: 10px 0!important;
           }
           &:nth-child(4):focus-within{
             border: 2px solid $blueSubmit;

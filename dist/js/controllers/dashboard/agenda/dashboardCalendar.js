@@ -5,6 +5,8 @@
   $(document).ready(function() {
     getUsersAndEvents(userType,idUser, true);    
   });
+  
+  $('[data-toggle="tooltip"]').tooltip();
 
   var calendarEl = document.getElementById('calendar');
   calendar = new FullCalendar.Calendar(calendarEl, {   
@@ -528,6 +530,8 @@
       },
       success: function(data) {
         $('#spiner-loader').addClass('hide');
+        removeCRMEvents();
+        getUsersAndEvents(userType, idUser, false);
         data = JSON.parse(data);
         alerts.showNotification("top", "right", data["message"], (data["status" == 503]) ? "danger" : (data["status" == 400]) ? "warning" : "success");
         $('#feedbackModal').modal('toggle');
@@ -562,7 +566,7 @@
       ordering: false,
       columns: [{
         data: function (d) {
-          return '<input type="text" name="id_cita" value="'+d.id_cita+'">';
+          return '<label>'+d.id_cita+'</label><input class="d-none" type="text" name="id_cita" value="'+d.id_cita+'">';
         }
       },
       {
@@ -588,11 +592,6 @@
         data: function (d) {
           return '<label class="text-center w-100 m-0">'+objectStringToDate(d.fecha_cita)+'</label>';
         }
-      }],
-      columnDefs: [{
-        "targets": [0],
-        "sClass": "hide_column",
-        "searchable": false
       }],
       fnInitComplete: function(){
         $('div.toolbar').html('<h3 class="m-0">Citas abiertas</h3>');
@@ -632,7 +631,6 @@
           data = JSON.parse(data);
           alerts.showNotification("top", "right", data["message"], (data["status" == 503]) ? "danger" : (data["status" == 400]) ? "warning" : "success");
           $('#allAppointmentsModal').modal('hide');
-          $('#feedbackModal').modal('toggle');
         },
         error: function() {
             $('#spiner-loader').addClass('hide');
