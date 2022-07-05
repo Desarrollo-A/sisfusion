@@ -340,6 +340,10 @@
   display: none;
 }
 
+.d-block {
+  display: block;
+}
+
 .d-flex {
   display: flex;
 }
@@ -1045,14 +1049,23 @@
 }
 
 /* tooltip styles */
+.tooltip {
+  width: fit-content;
+}
+
 .tooltip .tooltip-inner {
   padding: 5px 10px;
-  color: white;
+  color: #ffffff;
   background-color: #333333;
+  width: fit-content;
 }
 
 .tooltip.top .tooltip-arrow {
   border-top-color: #333333;
+}
+
+.tooltip.bottom .tooltip-arrow {
+  border-bottom-color: #333333;
 }
 
 /* tooltip styles */
@@ -1101,6 +1114,10 @@
 
 #metricas table.dataTable > thead > tr > th, #metricas table.dataTable > tbody > tr > th, #metricas table.dataTable > tfoot > tr > th, #metricas table.dataTable > thead > tr > td, #metricas table.dataTable > tbody > tr > td, #metricas table.dataTable > tfoot > tr > td {
   white-space: nowrap !important;
+}
+
+#metricas .apexcharts-bar-series.apexcharts-plot-series .apexcharts-series path {
+  clip-path: inset(0% 0% 0% 0% round 10px);
 }
 
 #metricas .card {
@@ -1298,8 +1315,12 @@
   }
 }
 
-@media (min-device-width: 320px) and (max-device-width: 480px) {
+@media (min-device-width: 320px) and (max-device-width: 480px), (min-width: 480px) and (max-width: 991px) {
   #metricas .card {
     height: inherit !important;
   }
+}
+
+#metricas #boxChart4 .apexcharts-legend {
+  justify-content: space-between !important;
 }

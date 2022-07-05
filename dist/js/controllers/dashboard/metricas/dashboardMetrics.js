@@ -12,41 +12,68 @@ var optionBarInit = {
     colors: ['#0089B7', '#039590', '#00ACB8', '#4BBC8E', '#00CDA3', '#92E784', '#F9F871'],
     stroke: {
         colors: ['transparent'],
-        width: 10,
+        width: 0,
     },
     plotOptions: {
         bar: {
-            distributed: true, // this line is mandatory
-            borderRadius: 4,
+            distributed: false, // this line is mandatory
+            borderRadius: 10,
             horizontal: true,
+            barHeight: '40%',
         }
     },
     dataLabels: {
         enabled: true,
         formatter: function (val, opts) {
-            return opts.w.config.xaxis.categories[opts.dataPointIndex];
-        },
-        textAnchor: 'middle',
-        offsetX: 0,
-        offsetY: 0,
-        style: {
-            fontSize: '12px',
-            fontFamily: 'Helvetica, Arial, sans-serif',
-            fontWeight: 'bold',
-        },
+            return val.toLocaleString('es-MX');
+        }
     },
     legend: {
         show: false,
     },
     xaxis: {
-        categories: [],
-    },
-    yaxis: {
         show: false,
         labels: {
+            show: true
+        },
+        axisBorder: {
             show: false
         },
-    }
+        axisTicks: {
+            show: false
+        },
+    },
+    yaxis: {
+        show: true,
+        labels: {
+            show: true
+        },
+    },
+    grid: {
+        show: true,
+        borderColor: '#f3f3f3',
+        strokeDashArray: 0,
+        position: 'back',
+        yaxis: {
+            lines: {
+                show: true
+            }
+        },
+        row: {
+            colors: undefined,
+            opacity: 0.5
+        },
+        column: {
+            colors: undefined,
+            opacity: 0.5
+        },
+    },
+    tooltip: { 
+        enabled: true,
+        y: {
+            formatter: (value) =>  value.toLocaleString('es-MX'),
+        },
+    },
 };
 
 var optionsDisponibilidad = {
@@ -62,24 +89,24 @@ var optionsDisponibilidad = {
         bar: {
             distributed: true,
             horizontal: true,
+            barHeight: '70%',
+            borderRadius: 10
         }
     },
     colors: ['#0089B7', '#039590', '#00ACB8', '#4BBC8E', '#00CDA3', '#92E784', '#F9F871'],
     stroke: {
         colors: ['transparent'],
-        width: 10,
+        width: 0,
     },
     dataLabels: {
         formatter: function (val, opt) {
-            const goals =
-                opt.w.config.series[opt.seriesIndex].data[opt.dataPointIndex]
-                .goals
+            const goals = opt.w.config.series[opt.seriesIndex].data[opt.dataPointIndex].goals;
 
             if (goals && goals.length) {
-                return `${val} / ${goals[0].value}`
+                return `${val.toLocaleString('es-MX')} / ${(goals[0].value).toLocaleString('es-MX')}`
             }
-            return val
-        }
+            return val.toLocaleString('es-MX')
+        },
     },
     legend: {
         show: false,
@@ -94,6 +121,31 @@ var optionsDisponibilidad = {
         },
         axisTicks: {
             show: false
+        },
+    },
+    grid: {
+        show: true,
+        borderColor: '#f3f3f3',
+        strokeDashArray: 0,
+        position: 'back',
+        yaxis: {
+            lines: {
+                show: true
+            }
+        },
+        row: {
+            colors: undefined,
+            opacity: 0.5
+        },
+        column: {
+            colors: undefined,
+            opacity: 0.5
+        },
+    },
+    tooltip: { 
+        enabled: true,
+        y: {
+            formatter: (value) =>  value.toLocaleString('es-MX'),
         },
     },
 };
@@ -117,37 +169,77 @@ var optionLugar = {
     },
     plotOptions: {
         bar: {
-            distributed: true, // this line is mandatory
-            borderRadius: 4,
             horizontal: true,
+            borderRadius: 10,
+            barHeight: '100%',
+            distributed: false,
+            dataLabels: {
+                show: true
+            },
         }
     },
     dataLabels: {
         enabled: true,
         formatter: function (val, opts) {
-            return opts.w.config.xaxis.categories[opts.dataPointIndex];
-        },
-        textAnchor: 'middle',
-        offsetX: 0,
-        offsetY: 0,
-        style: {
-            fontSize: '12px',
-            fontFamily: 'Helvetica, Arial, sans-serif',
-            fontWeight: 'bold',
+            return val.toLocaleString('es-MX');
         },
     },
     legend: {
         show: false,
     },
     xaxis: {
-        categories: [],
-    },
-    yaxis: {
-        show: false,
-        labels: {
+        axisBorder: {
             show: false
         },
-    }
+        axisTicks: {
+            show: false,
+        },
+        labels: {
+            show: false,
+        }
+    },
+    yaxis: {
+        axisBorder: {
+            show: false
+        },
+        axisTicks: {
+            show: false,
+        },
+        labels: {
+            show: true,
+            formatter: function (val) {
+                return val;
+            },
+            style: {
+                colors: []
+            }
+        }
+    },
+    grid: {
+        show: true,
+        borderColor: '#f3f3f3',
+        strokeDashArray: 0,
+        position: 'back',
+        yaxis: {
+            lines: {
+                show: true
+            }
+        },
+        row: {
+            colors: undefined,
+            opacity: 0.5
+        },
+        column: {
+            colors: undefined,
+            opacity: 0.5
+        },
+    },
+    tooltip: { 
+        enabled: true,
+        y: {
+            formatter: (value) =>  value.toLocaleString('es-MX'),
+        },
+    },
 };
 
 var optionsMedio = {
@@ -161,9 +253,9 @@ var optionsMedio = {
     },
     colors: ['#0089B7', '#039590', '#00ACB8', '#4BBC8E', '#00CDA3', '#92E784', '#F9F871'],
     dataLabels: {
-        enabled: true,
+        enabled: false,
         formatter: function (val) {
-          return '';
+          return val.toLocaleString('es-MX');
         }
       },
     responsive: [{
@@ -176,7 +268,13 @@ var optionsMedio = {
                 position: 'bottom'
             }
         }
-    }]
+    }],
+    tooltip: { 
+        enabled: true,
+        y: {
+            formatter: (value) =>  value.toLocaleString('es-MX'),
+        },
+    },
 };
 
 var optionsVentasMetros = {
@@ -198,23 +296,40 @@ var optionsVentasMetros = {
         show: false,
     },
     xaxis: {
-        show: false,
-        labels: {
-            show: false
-        },
-        axisBorder: {
-            show: false
-        },
-        axisTicks: {
-            show: false
-        },
+        show: true,
     },
     tooltip: {
       show: false
     },
+    grid: {
+        show: true,
+        borderColor: '#f3f3f3',
+        strokeDashArray: 0,
+        position: 'back',
+        yaxis: {
+            lines: {
+                show: true
+            }
+        },
+        row: {
+            colors: undefined,
+            opacity: 0.5
+        },
+        column: {
+            colors: undefined,
+            opacity: 0.5
+        },
+    },
+    tooltip: { 
+        enabled: true,
+        y: {
+            formatter: (value) =>  value.toLocaleString('es-MX'),
+        },
+    },
 };
 
 $(document).ready(function () {
+    $('[data-toggle="tooltip"]').tooltip();
     init();
 });
 
@@ -430,10 +545,10 @@ function formatVentasM2(data){
     let series =[] , categories = [];
     data.forEach(element => {
         series.push(element.cantidad);
-        categories.push(`${element.sup} m2`);
+        categories.push(`(${element.sup} m2)`);
     });
     ventasMetrosChart.updateSeries([{
-        name: '#',
+        name: '# de lotes: ',
         data: series
     }])
 
@@ -445,32 +560,32 @@ function formatVentasM2(data){
 }
 
 function toggleDatatable(e){
-    var columnaActiva = e.closest( '.flexible' );
+    var columnaActiva = e.closest( '.flexibleM' );
     var columnaChart = e.closest( '.col-chart' );
     var columnDatatable = $( e ).closest( '.row' ).find( '.col-datatable' );
     $( columnDatatable ).html('');
     // La columna se expandera
     if( $(columnaActiva).hasClass('inactivo') ){
-        columnaActiva.classList.remove('col-sm-6', 'col-md-6', 'col-lg-6', 'inactivo');
-        columnaActiva.classList.add('col-sm-12', 'col-md-12', 'col-lg-12', 'activo');
-        columnaChart.classList.remove('col-sm-12', 'col-md-12', 'col-lg-12');
-        columnaChart.classList.add('col-sm-6', 'col-md-6', 'col-lg-6');
+        columnaActiva.classList.remove('col-lg-6', 'inactivo');
+        columnaActiva.classList.add('col-lg-12', 'activo');
+        columnaChart.classList.remove('col-lg-12');
+        columnaChart.classList.add('col-lg-6');
         columnDatatable.removeClass('hidden');
         reorderColumns();
     }
     // La columna se contraera
     else{
-        columnaActiva.classList.remove('col-sm-12', 'col-md-12', 'col-lg-12', 'activo');
-        columnaActiva.classList.add('col-sm-6', 'col-md-6', 'col-lg-6', 'inactivo');
-        columnaChart.classList.remove('col-sm-12', 'col-md-6', 'col-lg-6');
-        columnaChart.classList.add('col-sm-12', 'col-md-12', 'col-lg-12');
+        columnaActiva.classList.remove('col-lg-12', 'activo');
+        columnaActiva.classList.add('col-lg-6', 'inactivo');
+        columnaChart.classList.remove('col-lg-6');
+        columnaChart.classList.add('col-lg-12');
         columnDatatable.addClass('hidden');
         reorderColumns();
     }
 }
 
 function reorderColumns(){
-    var principalColumns = document.getElementsByClassName("flexible");
+    var principalColumns = document.getElementsByClassName("flexibleM");
     var mainRow = document.getElementById('mainRow');
 
     let opts = getCacheOptions();

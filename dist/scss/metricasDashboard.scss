@@ -4,6 +4,9 @@
     table.dataTable > thead > tr > th, table.dataTable > tbody > tr > th, table.dataTable > tfoot > tr > th, table.dataTable > thead > tr > td, table.dataTable > tbody > tr > td, table.dataTable > tfoot > tr > td {
         white-space: nowrap!important;
     }
+    .apexcharts-bar-series.apexcharts-plot-series  .apexcharts-series path {
+        clip-path: inset(0% 0% 0% 0% round 10px);
+    }
     .card{
         height: 440px;
         margin-bottom: 0;
@@ -172,8 +175,13 @@
                         transform: scale(1);
             }
         }
-        @media #{$smartphone}{
+        @media #{$smartphone}, #{$tablets}{
             height: inherit!important;
+        }
+    }
+    #boxChart4{
+        .apexcharts-legend{
+            justify-content: space-between!important;
         }
     }
 }

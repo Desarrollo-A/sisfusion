@@ -28,7 +28,8 @@ var optionsTotalVentas = {
                     offsetY: 120,
                     formatter: function (w) {
                         // By default this function returns the average of all series. The below is just an example to show the use of custom formatter function
-                        return w.globals.labels[0]
+                        let val = parseInt((w.globals.labels[0]).split(": ")[1]);
+                        return `Gran total: ${val.toLocaleString('es-MX')}`;
                     }
                 }
             },
@@ -67,6 +68,9 @@ var optionsProspectos = {
     },
     yaxis: {
         type: 'numeric',
+        formatter: function(w){
+            console.lo(w);
+        },
         labels: {show: false},
         axisBorder: {show:false},
         axisTicks: {show:false},
@@ -86,7 +90,15 @@ var optionsProspectos = {
             colorStops: []
         }
     },
-    tooltip: { enabled: true}
+    tooltip: { 
+        enabled: true,
+        y: {
+            formatter: (value) => value.toLocaleString('es-MX'),
+            title: {
+                formatter: (seriesName) => seriesName,
+            },
+        },
+    }
 };
 
 var optionsProspClients = {
@@ -143,6 +155,12 @@ var optionsProspClients = {
             stops: [0, 70, 100],
             colorStops: []
         }
+    },
+    tooltip: { 
+        enabled: true,
+        y: {
+            formatter: (value) => value.toLocaleString('es-MX'),
+        },
     }
 };
 
@@ -189,6 +207,12 @@ var optionsWeekly = {
         },
         categories: ['Prospectos nuevos','Prospectos c/cita','Ventas totales','Ventas contratadas',
         'Ventas apartadas','Cancelados contratados','Cancelados apartados']
+    },
+    tooltip: { 
+        enabled: true,
+        y: {
+            formatter: (value) => value.toLocaleString('es-MX'),
+        },
     }
 };
 
@@ -223,6 +247,12 @@ var optionsFunnel = {
     },
     legend: {
         show: false
+    },
+    tooltip: { 
+        enabled: true,
+        y: {
+            formatter: (value) => value.toLocaleString('es-MX'),
+        },
     }
 };
 
@@ -385,7 +415,7 @@ function getProspectsByYear(com2) {
                 },
              });
 
-            $('#numberGraphic').text(count);
+            $('#numberGraphic').text(count.toLocaleString('es-MX'));
         }
     });
 }
@@ -627,14 +657,14 @@ function cleanValues() {
 };
 
 function addTextFields(response){
-    $('#pt_card').text(response.prospTotales);
-    $('#np_card').text(response.prospNuevos);
-    $('#va_card').text(response.totalAT);
-    $('#ca_card').text(response.totalCanA);
-    $('#vc_card').text(response.totalConT);
-    $('#cc_card').text(response.totalCanC);
-    $('#ct_card').text(response.totalVentas);
-    $('#pcc_card').text(response.prosCita);
+    $('#pt_card').text((response.prospTotales).toLocaleString('es-MX'));
+    $('#np_card').text((response.prospNuevos).toLocaleString('es-MX'));
+    $('#va_card').text((response.totalAT).toLocaleString('es-MX'));
+    $('#ca_card').text((response.totalCanA).toLocaleString('es-MX'));
+    $('#vc_card').text((response.totalConT).toLocaleString('es-MX'));
+    $('#cc_card').text((response.totalCanC).toLocaleString('es-MX'));
+    $('#ct_card').text((response.totalVentas).toLocaleString('es-MX'));
+    $('#pcc_card').text((response.prosCita).toLocaleString('es-MX'));
 };
 
 function cleanValues2() {
@@ -647,12 +677,12 @@ function cleanValues2() {
 };
 
 function addTextFields2(response){
-    $('#ac').text(response.totalProspectos);
-    $('#cf').text(response.totalMitadProceso);
-    $('#cita').text(response.totalProspectosCita);
-    $('#cs').text(response.totalProspectosCitaSeguimiento);
-    $('#ap').text(response.totalApartados);
-    $('#ni').text(response.prospectosNoInteresados);
+    $('#ac').text((response.totalProspectos).toLocaleString('es-MX'));
+    $('#cf').text((response.totalMitadProceso).toLocaleString('es-MX'));
+    $('#cita').text((response.totalProspectosCita).toLocaleString('es-MX'));
+    $('#cs').text((response.totalProspectosCitaSeguimiento).toLocaleString('es-MX'));
+    $('#ap').text((response.totalApartados).toLocaleString('es-MX'));
+    $('#ni').text((response.prospectosNoInteresados).toLocaleString('es-MX'));
 };
 
 function getThisWeek() {

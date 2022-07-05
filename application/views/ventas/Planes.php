@@ -28,11 +28,31 @@
 	<div class="modal-dialog modal-md">
 		<div class="modal-content text-center">
 			<div class="modal-header">
-			<h4>Una vez guardados los paquetes <br> ya no se podrá modificar la información</h4>
+			<h4>Una vez guardados los planes <br> ya no se podrá modificar la información</h4>
 			</div>
 					<div class="row">
 						<div class="col-md-6 text-right">
 						<button type="button" data-toggle="tooltip" data-placement="right" title="Guardar" class="btn btn-success btn-circle btn-lg" onclick="SavePaquete();" name=""  id=""><i class="fas fa-check"></i></button>
+					</div>
+					<div class="col-md-6 text-left">
+						<button type="button" data-toggle="tooltip" data-placement="right" title="Cancelar" class="btn btn-danger btn-circle btn-lg" data-dismiss="modal"><i class="fas fa-times"></i></button>
+					</div>
+				</div>
+				<br>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade modal-alertas" id="ModalRemove" role="dialog">
+	<div class="modal-dialog modal-md">
+		<div class="modal-content text-center">
+			<div class="modal-header">
+			<h4>¿Desea remover este plan?</h4>
+			</div>
+					<div class="row">
+						<div class="col-md-6 text-right">
+							<input type="hidden" value="0" id="iddiv">
+						<button type="button" data-toggle="tooltip" data-placement="right" title="Guardar" class="btn btn-success btn-circle btn-lg" onclick="RemovePackage();" name=""  id=""><i class="fas fa-check"></i></button>
 					</div>
 					<div class="col-md-6 text-left">
 						<button type="button" data-toggle="tooltip" data-placement="right" title="Cancelar" class="btn btn-danger btn-circle btn-lg" data-dismiss="modal"><i class="fas fa-times"></i></button>
@@ -482,7 +502,7 @@
 															<div class="col-xs-12 col-sm-12 col-md-6 col-lg-4 mb-1">
 																<div class="form-group">
 																	<label class="m-0" for="sede">Sede (<b class="text-danger">*</b>)</label>
-																	<select name="sede" id="sede" class="selectpicker select-gral" data-style="btn " data-show-subtext="true" data-live-search="true"  title="Selecciona una opción" data-size="7" required>
+																	<select name="sede" id="sede" class="select-gral" data-style="btn " data-show-subtext="true" data-live-search="true"  title="Selecciona una opción" data-size="7" required>
 																	</select>
 																</div>
 															</div>
@@ -569,7 +589,7 @@
 																				<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 form1">
 																			
 																						<div class="form-group d-flex justify-left align-center col-md-12">
-																							<button type="button" class="btn btn-success btn-circle btn-lg" data-toggle="tooltip" data-placement="top" title="Agregar paquete" onclick="GenerarCard()"><i class="fas fa-plus"></i></button>
+																							<button type="button" class="btn btn-success btn-circle btn-lg" data-toggle="tooltip" data-placement="top" title="Agregar plan" onclick="GenerarCard()"><i class="fas fa-plus"></i></button>
 																							<input type="hidden" value="0" name="index" id="index">
 																						</div>
 																				</div>
@@ -1278,6 +1298,7 @@ function llenarTables(){
                 $("#residencial").selectpicker('refresh');
             }, 'json'); 
 		});
+		
 		$("#residencial").select2({containerCssClass: "select-gral",dropdownCssClass: "custom-dropdown"});
 		var id_paquete=0;
 		var descripcion='';
@@ -1357,13 +1378,21 @@ function llenarTables(){
 			console.log(indexNext);
 			$('.rowCards').append(`	
 							<div class="card border-primary mb-3 boxCard" style="max-width: 45rem;" id="card_${indexNext}">
-								<div class="text-right">
-								<button type="button" class="btn btn-lg btn-danger btn-circle" data-toggle="tooltip" data-placement="top" title="Eliminar paquete" id="btn_delete_${indexNext}" onclick="removeElementCard('card_${indexNext}')"><i class="fas fa-trash"></i></button>
+							<div class="row">
+								<div class="col-md-8 text-center">
+									<h4 class="card-title title-plan"><b>Plan</b></h4>
 								</div>
+								<div class="col-md-4">
+									<div class="text-right">
+										<button type="button" class="btn btn-lg btn-danger btn-circle" data-toggle="tooltip" data-placement="top" title="Eliminar plan" id="btn_delete_${indexNext}" onclick="removeElementCard('card_${indexNext}')"><i class="fas fa-trash"></i></button>
+									</div>
+								</div>
+							</div>
+								
 								<div class="card-body text-primary myCard">
-									<h5 class="card-title">Plan</h5>
+									
 												<div class="form-group col-md-12" id="">
-														<label class="">Descripción paquete(<b class="text-danger">*</b>):</label>
+														<label class="">Descripción plan(<b class="text-danger">*</b>):</label>
 														<input type="text" class="form-control input-gral" required name="descripcion_${indexNext}" id="descripcion_${indexNext}">
 														
 														</div>
@@ -1414,7 +1443,7 @@ $.post('getResidencialesList', function(data) {
 						<div class="col-md-4">
 						<b>Descuento a</b>
 						</div>
-						<div class="col-md-8">
+						<div class="col-md-8 text-center">
 						<b>Descuentos</b>
 						</div>
 					</div>
@@ -1442,10 +1471,9 @@ $.post('getResidencialesList', function(data) {
 					<div class="row" >
 					
 						<div class="col-md-4" >
-								<div class="form-check form-check-inline check-padding">
-								<input class="form-check-input" type="checkbox" onclick="PrintSelectDesc(${id},${i},${indexNext})" id="inlineCheckbox1_${indexNext}_${i}" value="${id}">
-								<label class="form-check-label" for="inlineCheckbox1">${descripcion}</label>
-								</div>
+								<label class="check-box1" for="inlineCheckbox1">
+								<input class="check-box__switcher" type="checkbox" onclick="PrintSelectDesc(${id},${i},${indexNext})" id="inlineCheckbox1_${indexNext}_${i}" value="${id}">
+								${descripcion}</label>
 						</div>
 						<div class="col-md-8"  id="selectDescuentos_${indexNext}_${i}">
 						</div>
@@ -1699,6 +1727,7 @@ function PrintSelectDesc(id,index,indexGral){
 			$(`#orden_${indexGral}_${index}`).val("");
 			$(`#orden_${indexGral}_${index}`).prop( "disabled", true );
 			document.getElementById(`selectDescuentos_${indexGral}_${index}`).innerHTML = "";
+			document.getElementById(`listamsi_${indexGral}_${index}`).innerHTML = "";
 		}
 	}else if(id == 2){
 		if( $(`#inlineCheckbox1_${indexGral}_${index}`).is(':checked') ) {	
@@ -1762,6 +1791,7 @@ function PrintSelectDesc(id,index,indexGral){
 			$(`#orden_${indexGral}_${index}`).val("");
 			$(`#orden_${indexGral}_${index}`).prop( "disabled", true );
 			document.getElementById(`selectDescuentos_${indexGral}_${index}`).innerHTML = "";
+			document.getElementById(`listamsi_${indexGral}_${index}`).innerHTML = "";
 		}
 
 	}else if(id == 5){
@@ -1829,6 +1859,7 @@ function PrintSelectDesc(id,index,indexGral){
 			$(`#orden_${indexGral}_${index}`).val("");
 			$(`#orden_${indexGral}_${index}`).prop( "disabled", true );
 			document.getElementById(`selectDescuentos_${indexGral}_${index}`).innerHTML = "";
+			document.getElementById(`listamsi_${indexGral}_${index}`).innerHTML = "";
 		}
 
 	}
@@ -1896,6 +1927,7 @@ function PrintSelectDesc(id,index,indexGral){
 			$(`#orden_${indexGral}_${index}`).val("");
 			$(`#orden_${indexGral}_${index}`).prop( "disabled", true );
 			document.getElementById(`selectDescuentos_${indexGral}_${index}`).innerHTML = "";
+			document.getElementById(`listamsi_${indexGral}_${index}`).innerHTML = "";
 		}
 
 	}else if(id == 13){
@@ -1918,7 +1950,7 @@ function PrintSelectDesc(id,index,indexGral){
                 var len = data.length;
                 for( var i = 0; i<len; i++){
                     var name = data[i]['porcentaje'];
-                    var id = data[i]['id_descuento'];
+                    var id = data[i]['id_descuento']+','+data[i]['porcentaje'];
                     $(`#ListaDescuentosMSI_${indexGral}_${index}`).append(`<option value='${id}' label="${name}">${name}%</option>`);
                 }
                 if(len<=0){
@@ -1940,6 +1972,7 @@ function PrintSelectDesc(id,index,indexGral){
 			$(`#orden_${indexGral}_${index}`).val("");
 			$(`#orden_${indexGral}_${index}`).prop( "disabled", true );
 			document.getElementById(`selectDescuentos_${indexGral}_${index}`).innerHTML = "";
+			document.getElementById(`listamsi_${indexGral}_${index}`).innerHTML = "";
 		}
 
 	}
@@ -2039,17 +2072,22 @@ function PrintSelectDesc(id,index,indexGral){
 	}	
 }*/
 
-
-	function removeElementCard(divNum,gral) {
-    // var result = window.confirm("¿Desea remover este elemento?");
-	var result = true;
-	alerts.showNotification("top", "right", "Se eliminó correctamente", "success");
-
+function RemovePackage(){
+	let divNum = $('#iddiv').val();
+	$('#ModalRemove').modal('toggle');
+	$("#" + divNum + "").remove();
+	$('#iddiv').val(0);
+	return false;
+}
+		function removeElementCard(divNum) {
+			$('#iddiv').val(divNum);
+			$('#ModalRemove').modal('show');
+    /*var result = window.confirm("¿Desea remover este elemento?");
     if (result == true) {
         $("#" + divNum + "").remove();
         $("#" + gral + "").remove();
     }
-    return false;
+    return false;*/
 }
 function aver(){
 	var indexActual = document.getElementById('index');
