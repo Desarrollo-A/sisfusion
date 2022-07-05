@@ -87,7 +87,7 @@ class PaquetesCorrida extends CI_Controller
         1.-Habitacional
         2.-Comercial
         3.-Ambos
-        */ 
+        */  
         $ArrPAquetes = array();
         $TipoLote = $this->input->post("tipoLote");
         if($TipoLote == 1){ //Habitacional
