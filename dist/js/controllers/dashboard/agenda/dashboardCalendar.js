@@ -49,7 +49,6 @@
       hour12: true
     },
     views: {
-      // view-specific options here
       timeGridWeek: {
         titleFormat: { year: 'numeric', month: 'long', day: 'numeric' },
       },

@@ -295,8 +295,6 @@ class Reporte extends CI_Controller {
             echo json_encode(array());
         }
     }
-
-     
     public function get4MonthsRequest(){
         $data = $this->get4Months();
         if($data != null) {
