@@ -1959,7 +1959,7 @@ function PrintSelectDesc(id,index,indexGral){
                 var len = data.length;
                 for( var i = 0; i<len; i++){
                     var name = data[i]['porcentaje'];
-                    var id = data[i]['id_descuento'];
+                    var id = data[i]['id_descuento']+','+data[i]['porcentaje'];
                     $(`#ListaDescuentosMSI_${indexGral}_${index}`).append(`<option value='${id}' label="${name}">${name}%</option>`);
                 }
                 if(len<=0){
