@@ -645,7 +645,7 @@
                                     <div class="col-md-4" ng-model="id" ng-repeat="paquete in paquetes">
                                         <div class="foreach">
                                             <input type="radio" id="checkPack" name="checkPack" required="required" ng-model="paquete.id_paquete"/>
-                                            <span>Paquete {{paquete.descripcion}} </span>
+                                            <span>Plan {{paquete.descripcion}} </span>
                                             <div ng-repeat="descuento in paquete.response | orderBy:'-apply'">
 
 
