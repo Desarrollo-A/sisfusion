@@ -222,7 +222,6 @@ function reorderColumns(){
                 if($(principalColumns[i-1]).hasClass('activo')){
                     var columnDatatable = $( principalColumns[i-1]).find('.col-datatable');
                     var id = columnDatatable.attr('id');
-                    console.log('id',id);
                     $("#"+id).html('');
                     if( id == 'Apartados' ){
                         buildEstructuraDT(id, dataApartados);
@@ -489,7 +488,6 @@ function buildTableConEnganche(data){
 }
 
 function buildTableSinEnganche(data){
-    console.log('build sin',data);
     $('#tablesinEnganche thead tr:eq(0) th').each(function (i) {
         const title = $(this).text();
         $(this).html('<input type="text" center;" class="textoshead"  placeholder="' + title + '"/>');
@@ -817,8 +815,6 @@ function setOptionsSelected(selectsSede){
 }
 
 function validateToggledDatatable(typeRanking){
-    console.log('typeRanking',typeRanking);
-
     if ( typeRanking == 'Apartados' ){
         var columna = $("#"+typeRanking).closest( '.flexibleR' );
         if ($( columna ).hasClass('activo')){
