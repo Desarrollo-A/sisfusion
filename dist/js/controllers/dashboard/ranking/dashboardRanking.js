@@ -252,7 +252,7 @@ function getRankings(general = false, typeRanking = null){
     let sede = getSede(typeRanking);
     $.ajax({
         type: 'POST',
-        url: `Ranking/getAllRankings`,
+        url: `${base_url}Ranking/getAllRankings`,
         data: {general: general, typeRanking: typeRanking,beginDate: dates.beginDate, endDate: dates.endDate, sede: sede},
         dataType: 'json',
         cache: false,
@@ -314,7 +314,7 @@ function buildTableApartados(data){
         ordering: false,
         scrollX: true,
         language: {
-            url: "static/spanishLoader_v2.json",
+            url: `${base_url}static/spanishLoader_v2.json`,
             paginate: {
                 previous: "<i class='fa fa-angle-left'>",
                 next: "<i class='fa fa-angle-right'>"
@@ -379,7 +379,7 @@ function buildTableContratados(data){
         ordering: false,
         scrollX: true,
         language: {
-            url: "static/spanishLoader_v2.json",
+            url: `${base_url}static/spanishLoader_v2.json`,
             paginate: {
                 previous: "<i class='fa fa-angle-left'>",
                 next: "<i class='fa fa-angle-right'>"
@@ -444,7 +444,7 @@ function buildTableConEnganche(data){
         ordering: false,
         scrollX: true,
         language: {
-            url: "static/spanishLoader_v2.json",
+            url: `${base_url}static/spanishLoader_v2.json`,
             paginate: {
                 previous: "<i class='fa fa-angle-left'>",
                 next: "<i class='fa fa-angle-right'>"
@@ -510,7 +510,7 @@ function buildTableSinEnganche(data){
         ordering: false,
         scrollX: true,
         language: {
-            url: "static/spanishLoader_v2.json",
+            url: `${base_url}static/spanishLoader_v2.json`,
             paginate: {
                 previous: "<i class='fa fa-angle-left'>",
                 next: "<i class='fa fa-angle-right'>"
@@ -764,7 +764,7 @@ function getDates(typeRanking){
 function getSedes(){
     return $.ajax({
         type: 'POST',
-        url: `Ranking/getSedes`,
+        url: `${base_url}Ranking/getSedes`,
         data: {},
         dataType: 'json',
         cache: false,

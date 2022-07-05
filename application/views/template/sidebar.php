@@ -170,7 +170,6 @@ foreach($datos2 as $datos)
         }   
         
         if($this->session->userdata('estatus') == 1){
-
 ?>
 <!---CÓDIGO PARA ABRIR EL SITEMA DE TICKETS------------->
 <li class="nav-item ">
@@ -187,13 +186,10 @@ foreach($datos2 as $datos)
     </div>
 </li>
 <?php } ?>
-
 <!----------FIN DEL CÓDIGO------------------------------>
-
 </ul>
 	</div>
 </div>
-
 <div class="spiner-loader hide" id="spiner-loader">
     <div class="backgroundLS">
         <div class="contentLS">

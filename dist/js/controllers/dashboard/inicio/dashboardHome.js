@@ -350,7 +350,7 @@ function loadInit(){
 
 function getSalesByYear(com2){
     $.ajax({
-        url: "Dashboard/totalVentasData",
+        url: `${base_url}Dashboard/totalVentasData`,
         data:com2,
         cache: false,
         contentType: false,
@@ -385,7 +385,7 @@ function getSalesByYear(com2){
 
 function getProspectsByYear(com2) {
     $.ajax({
-        url: "Dashboard/getProspectsByYear",
+        url: `${base_url}Dashboard/getProspectsByYear`,
         data:com2,
         cache: false,
         contentType: false,
@@ -429,7 +429,7 @@ function getClientsAndProspectsByYear(type = 1, beginDate = null, endDate= null)
     data.append("typeTransaction", typeTransaction);
 
     $.ajax({
-        url: "Dashboard/getClientsAndProspectsByYear",
+        url: `${base_url}Dashboard/getClientsAndProspectsByYear`,
         cache: false,
         contentType: false,
         processData: false,
@@ -517,7 +517,7 @@ function weekFilter(element){
 
 function getDataFromDates(com2){
     $.ajax({
-        url: "Dashboard/getDataFromDates",
+        url: `${base_url}Dashboard/getDataFromDates`,
         data:com2,
         cache: false,
         contentType: false,
@@ -547,7 +547,7 @@ function getDataFromDates(com2){
 
 function cicloVenta(com2){
     $.ajax({
-        url: "Dashboard/cicloVenta",
+        url: `${base_url}Dashboard/cicloVenta`,
         data:com2,
         cache: false,
         contentType: false,

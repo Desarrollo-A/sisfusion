@@ -51,7 +51,7 @@
   function getAsesores(idCoordinador, firstLoad){
     return $.ajax({
       type: 'POST',
-      url: `Calendar/getAdvisers`,
+      url: `${base_url}Calendar/getAdvisers`,
       data: {id: idCoordinador},
       dataType: 'json',
       cache: false,
@@ -86,7 +86,7 @@
     removeCRMEvents();
     return $.ajax({
       type: 'POST',
-      url: `Calendar/Events`,
+      url: `${base_url}Calendar/Events`,
       data: {ids: ids},
       dataType: 'json',
       cache: false,
