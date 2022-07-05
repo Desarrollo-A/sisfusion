@@ -49,7 +49,6 @@
 	<link href="<?=base_url()?>dist/js/controllers/select2/select2.min.css" rel="stylesheet" />
 	<link href="<?= base_url() ?>static/yadcf/jquery.datatables.yadcf.css" rel="stylesheet" type="text/css"/>
 	<link href='<?=base_url()?>dist/js/fullcalendar/main.css' rel='stylesheet' />
-	
 </head>
 
 <!-- MODALES GENERALES -->
@@ -62,6 +61,7 @@
     <div class="modal-dialog" id="blank-modal-div">
         <div class="modal-content">
             <div class="modal-body"></div>
+            <div class="modal-footer"></div>
         </div>
     </div>
 </div>

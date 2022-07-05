@@ -13,14 +13,13 @@ class Dashboard extends CI_Controller
         date_default_timezone_set('America/Mexico_City');
         $this->validateSession();
     }
-
     public function index()
     {
-        if ($this->session->userdata('id_rol') == FALSE || $this->session->userdata('id_rol') != '18') {
+        if ($this->session->userdata('id_rol') == FALSE || $this->session->userdata('id_rol') != '55' && $this->session->userdata('id_rol') != '56' && $this->session->userdata('id_rol') != '57' && $this->session->userdata('id_rol') != '13')
             redirect(base_url() . 'login');
-        }
+        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
         $this->load->view('template/header');
-        $this->load->view('asesor/inicio_asesor_view2');
+        $this->load->view('template/home', $datos);
         $this->load->view('template/footer');
     }
 
@@ -31,26 +30,17 @@ class Dashboard extends CI_Controller
         }
     }
 
-    public function mainDashboard()
+    public function dashboard()
     {
         if ($this->session->userdata('id_rol') == FALSE) {
             redirect(base_url());
         }
         $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
+       
         $this->load->view('template/header');
-        $this->load->view("dashboard/mainDashboard", $datos);
+        $this->load->view("dashboard/base/base", $datos);
     }
-
-    public function mainDashboardTwo()
-    {
-        if ($this->session->userdata('id_rol') == FALSE) {
-            redirect(base_url());
-        }
-        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-        $this->load->view('template/header');
-        $this->load->view("dashboard/mainDashboardTwo", $datos);
-    }
-
+    
     public function getInformation()
     {
         if (isset($_POST) && !empty($_POST)) {
@@ -102,15 +92,15 @@ class Dashboard extends CI_Controller
         }
     }
 
-    public function dashboard()
-    {
-        if ($this->session->userdata('id_rol') == FALSE) {
-            redirect(base_url());
-        }
-        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-        $this->load->view('template/header');
-        $this->load->view("dashboard/dashboard", $datos);
-    }
+    // public function dashboard()
+    // {
+    //     if ($this->session->userdata('id_rol') == FALSE) {
+    //         redirect(base_url());
+    //     }
+    //     $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
+    //     $this->load->view('template/header');
+    //     $this->load->view("dashboard/base/base", $datos);
+    // }
 
     public function getProspectsByUserSessioned(){
         $id_asesor = $this->session->userdata('id_usuario');

@@ -10,6 +10,11 @@ class General_model extends CI_Model
 
     function get_menu($id_rol)
     {
+        $idUsuario = $this->session->userdata('id_usuario');
+        if ($this->existeUsuarioMenuEspecial($idUsuario)) {
+            return $this->getMenuPadreEspecial($idUsuario);
+        }
+
         if ($this->session->userdata('id_usuario') == 4415 || $this->session->userdata('id_usuario') == 6578 || $this->session->userdata('id_usuario') == 9942 || $this->session->userdata('id_usuario') == 9911 || $this->session->userdata('estatus') == 3){ // ES GREENHAM
         $complemento='';
            if($this->session->userdata('id_usuario') == 6578 || $this->session->userdata('id_usuario') == 9942 || $this->session->userdata('id_usuario') == 9911){
@@ -43,6 +48,11 @@ class General_model extends CI_Model
 
     public function get_children_menu($id_rol)
     {
+        $idUsuario = $this->session->userdata('id_usuario');
+        if ($this->existeUsuarioMenuEspecial($idUsuario)) {
+            return $this->getMenuHijoEspecial($idUsuario);
+        }
+
         if ($this->session->userdata('id_usuario') == 2762) {
             return $this->db->query("SELECT * FROM Menu2 WHERE rol = " . $id_rol . " AND padre > 0 AND estatus = 1 ORDER BY orden ASC");
         } else {
@@ -62,6 +72,27 @@ class General_model extends CI_Model
         return $this->db->query("SELECT padre FROM Menu2 WHERE pagina = '" . $var . "' AND rol = " . $id_rol . " ");
     }
 
+    public function existeUsuarioMenuEspecial($idUsuario)
+    {
+        $query = $this->db->query("SELECT id_menu_u FROM menu_usuario WHERE id_usuario = $idUsuario");
+        $result = $query->result_array();
+        return count($result) > 0;
+    }
+
+    public function getMenuPadreEspecial($idUsuario)
+    {
+        return $this->db->query("SELECT * FROM Menu2 WHERE idmenu IN 
+            (SELECT value FROM menu_usuario CROSS APPLY STRING_SPLIT(menu, ',') 
+                    WHERE id_usuario = $idUsuario AND es_padre = 1) ORDER BY orden");
+    }
+
+    public function getMenuHijoEspecial($idUsuario)
+    {
+        return $this->db->query("SELECT * FROM Menu2 WHERE idmenu IN 
+            (SELECT value FROM menu_usuario CROSS APPLY STRING_SPLIT(menu, ',') 
+                    WHERE id_usuario = $idUsuario AND es_padre = 0) ORDER BY orden");
+    }
+
     public function getResidencialesList()
     {
         return $this->db->query("SELECT idResidencial, nombreResidencial, UPPER(CAST(descripcion AS VARCHAR(75))) descripcion, empresa FROM residenciales WHERE status = 1 ORDER BY nombreResidencial ASC")->result_array();
@@ -74,8 +105,7 @@ class General_model extends CI_Model
  
     public function getLotesList($idCondominio)
     {
-        $a = 0;
-        return $this->db->query("SELECT idLote, UPPER(nombreLote) nombreLote, idStatusLote FROM lotes WHERE status = 1 AND idCondominio IN( $idCondominio)")->result_array();
+        return $this->db->query("SELECT idLote, UPPER(nombreLote) nombreLote, idStatusLote FROM lotes WHERE status = 1 AND idCondominio IN ($idCondominio)")->result_array();
     }
 
     public function addRecord($table, $data) // MJ: AGREGA UN REGISTRO A UNA TABLA EN PARTICULAR, RECIBE 2 PARÁMETROS. LA TABLA Y LA DATA A INSERTAR

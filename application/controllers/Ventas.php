@@ -12,7 +12,7 @@ class Ventas extends CI_Controller {
 	{
         $id_rol = $this->session->userdata('id_rol');
 		if($id_rol == FALSE || ($id_rol != '1' && $id_rol != '2' && $id_rol != '3' && $id_rol != '4' && $id_rol != '5'
-                && $id_rol != '7' && $id_rol != '9' && $id_rol != '6')) {
+                && $id_rol != '7' && $id_rol != '9' && $id_rol != '6' && $id_rol != '18')) {
 			redirect(base_url().'login');
 		}
         
@@ -74,7 +74,7 @@ class Ventas extends CI_Controller {
             break;
             case '4': // ASISTENTE DIRECTOR
             case '8': // SOPORTE
-            case '18': // DIRECTOR MKTD
+            case '18':// DIRECTOR MKTD
             case '19': // SUBDIRECTOR MKTD
             case '20': // GERENTE MKTD
             case '21': // CLIENTE

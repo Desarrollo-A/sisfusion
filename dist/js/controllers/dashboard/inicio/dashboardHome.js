@@ -28,7 +28,8 @@ var optionsTotalVentas = {
                     offsetY: 120,
                     formatter: function (w) {
                         // By default this function returns the average of all series. The below is just an example to show the use of custom formatter function
-                        return w.globals.labels[0]
+                        let val = parseInt((w.globals.labels[0]).split(": ")[1]);
+                        return `Gran total: ${val.toLocaleString('es-MX')}`;
                     }
                 }
             },
@@ -67,6 +68,9 @@ var optionsProspectos = {
     },
     yaxis: {
         type: 'numeric',
+        formatter: function(w){
+            console.lo(w);
+        },
         labels: {show: false},
         axisBorder: {show:false},
         axisTicks: {show:false},
@@ -86,7 +90,15 @@ var optionsProspectos = {
             colorStops: []
         }
     },
-    tooltip: { enabled: true}
+    tooltip: { 
+        enabled: true,
+        y: {
+            formatter: (value) => value.toLocaleString('es-MX'),
+            title: {
+                formatter: (seriesName) => seriesName,
+            },
+        },
+    }
 };
 
 var optionsProspClients = {
@@ -102,11 +114,6 @@ var optionsProspClients = {
         },
     },
     colors: ['#22639b', '#00A0FF'],
-    // yaxis:{
-    //     labels: {
-    //         offsetX: -13,
-    //       },
-    // },
     grid: {
         show: true,
         borderColor: '#f3f3f3',
@@ -148,6 +155,12 @@ var optionsProspClients = {
             stops: [0, 70, 100],
             colorStops: []
         }
+    },
+    tooltip: { 
+        enabled: true,
+        y: {
+            formatter: (value) => value.toLocaleString('es-MX'),
+        },
     }
 };
 
@@ -194,6 +207,12 @@ var optionsWeekly = {
         },
         categories: ['Prospectos nuevos','Prospectos c/cita','Ventas totales','Ventas contratadas',
         'Ventas apartadas','Cancelados contratados','Cancelados apartados']
+    },
+    tooltip: { 
+        enabled: true,
+        y: {
+            formatter: (value) => value.toLocaleString('es-MX'),
+        },
     }
 };
 
@@ -228,6 +247,12 @@ var optionsFunnel = {
     },
     legend: {
         show: false
+    },
+    tooltip: { 
+        enabled: true,
+        y: {
+            formatter: (value) => value.toLocaleString('es-MX'),
+        },
     }
 };
 
@@ -281,7 +306,7 @@ $(document).on('click', '.week', function(e){
     weekFilter(id);
 });
 
-$(document).on('click', '#searchByDateRange', function(e){
+$(document).on('click', '#searchByDateRangeCP', function(e){
     e.preventDefault();
     var beginDate = $('#beginDate').val();
     var endDate = $('#endDate').val();
@@ -310,7 +335,6 @@ $('.infoMainSelector').unbind().on('click', function(e){
         return false;
     }
     loadInit();
-    console.log('click');
 });
 
 function loadInit(){
@@ -326,7 +350,7 @@ function loadInit(){
 
 function getSalesByYear(com2){
     $.ajax({
-        url: "Dashboard/totalVentasData",
+        url: `${base_url}Dashboard/totalVentasData`,
         data:com2,
         cache: false,
         contentType: false,
@@ -361,7 +385,7 @@ function getSalesByYear(com2){
 
 function getProspectsByYear(com2) {
     $.ajax({
-        url: "Dashboard/getProspectsByYear",
+        url: `${base_url}Dashboard/getProspectsByYear`,
         data:com2,
         cache: false,
         contentType: false,
@@ -378,7 +402,7 @@ function getProspectsByYear(com2) {
             response.forEach(element => {
                 months.push(element.MONTH);
                 data.push(element.counts);
-                count = count + element.counts;
+                count = count + parseInt(element.counts);
             });
             prospectosChart.updateSeries([{
                 name: 'Prospectos',
@@ -391,7 +415,7 @@ function getProspectsByYear(com2) {
                 },
              });
 
-            $('#numberGraphic').text(count);
+            $('#numberGraphic').text(count.toLocaleString('es-MX'));
         }
     });
 }
@@ -405,7 +429,7 @@ function getClientsAndProspectsByYear(type = 1, beginDate = null, endDate= null)
     data.append("typeTransaction", typeTransaction);
 
     $.ajax({
-        url: "Dashboard/getClientsAndProspectsByYear",
+        url: `${base_url}Dashboard/getClientsAndProspectsByYear`,
         cache: false,
         contentType: false,
         processData: false,
@@ -424,13 +448,13 @@ function getClientsAndProspectsByYear(type = 1, beginDate = null, endDate= null)
             let countP = 0;
 
             response.Clientes.forEach(element => {
-                monthsP.push(element.MONTH);
+                monthsP.push(`${element.MONTH} ${element.año}`);
                 dataC.push(element.counts);
                 countC = countC + element.counts;
             });
 
             response.Prospectos.forEach(element => {
-                monthsC.push(element.MONTH);
+                monthsC.push(`${element.MONTH} ${element.año}`);
                 dataP.push(element.counts);
                 countP = countP + element.counts;
             });
@@ -493,7 +517,7 @@ function weekFilter(element){
 
 function getDataFromDates(com2){
     $.ajax({
-        url: "Dashboard/getDataFromDates",
+        url: `${base_url}Dashboard/getDataFromDates`,
         data:com2,
         cache: false,
         contentType: false,
@@ -523,7 +547,7 @@ function getDataFromDates(com2){
 
 function cicloVenta(com2){
     $.ajax({
-        url: "Dashboard/cicloVenta",
+        url: `${base_url}Dashboard/cicloVenta`,
         data:com2,
         cache: false,
         contentType: false,
@@ -538,7 +562,7 @@ function cicloVenta(com2){
         success : function (response) {
             chartFunnel.updateSeries([
                response.totalProspectosCita, response.totalProspectosCitaSeguimiento, 
-                    response.totalApartados, response.totalMitadProceso,response.prospectosNoInteresados
+                    response.totalApartados, response.prospectosNoInteresados
             ]);
 
             addTextFields2(response);
@@ -633,14 +657,14 @@ function cleanValues() {
 };
 
 function addTextFields(response){
-    $('#pt_card').text(response.prospTotales);
-    $('#np_card').text(response.prospNuevos);
-    $('#va_card').text(response.totalAT);
-    $('#ca_card').text(response.totalCanA);
-    $('#vc_card').text(response.totalConT);
-    $('#cc_card').text(response.totalCanC);
-    $('#ct_card').text(response.totalVentas);
-    $('#pcc_card').text(response.prosCita);
+    $('#pt_card').text((response.prospTotales).toLocaleString('es-MX'));
+    $('#np_card').text((response.prospNuevos).toLocaleString('es-MX'));
+    $('#va_card').text((response.totalAT).toLocaleString('es-MX'));
+    $('#ca_card').text((response.totalCanA).toLocaleString('es-MX'));
+    $('#vc_card').text((response.totalConT).toLocaleString('es-MX'));
+    $('#cc_card').text((response.totalCanC).toLocaleString('es-MX'));
+    $('#ct_card').text((response.totalVentas).toLocaleString('es-MX'));
+    $('#pcc_card').text((response.prosCita).toLocaleString('es-MX'));
 };
 
 function cleanValues2() {
@@ -653,12 +677,12 @@ function cleanValues2() {
 };
 
 function addTextFields2(response){
-    $('#ac').text(response.totalProspectos);
-    $('#cf').text(response.totalMitadProceso);
-    $('#cita').text(response.totalProspectosCita);
-    $('#cs').text(response.totalProspectosCitaSeguimiento);
-    $('#ap').text(response.totalApartados);
-    $('#ni').text(response.prospectosNoInteresados);
+    $('#ac').text((response.totalProspectos).toLocaleString('es-MX'));
+    $('#cf').text((response.totalMitadProceso).toLocaleString('es-MX'));
+    $('#cita').text((response.totalProspectosCita).toLocaleString('es-MX'));
+    $('#cs').text((response.totalProspectosCitaSeguimiento).toLocaleString('es-MX'));
+    $('#ap').text((response.totalApartados).toLocaleString('es-MX'));
+    $('#ni').text((response.prospectosNoInteresados).toLocaleString('es-MX'));
 };
 
 function getThisWeek() {

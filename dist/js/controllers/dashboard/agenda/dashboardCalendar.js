@@ -5,9 +5,12 @@
   $(document).ready(function() {
     getUsersAndEvents(userType,idUser, true);    
   });
+  
+  $('[data-toggle="tooltip"]').tooltip();
 
   var calendarEl = document.getElementById('calendar');
   calendar = new FullCalendar.Calendar(calendarEl, {   
+    longPressDelay: 0,
     headerToolbar: {
       start: 'prev next today appointments googleSignIn googleLogout',
       center: 'title',
@@ -48,7 +51,6 @@
       hour12: true
     },
     views: {
-      // view-specific options here
       timeGridWeek: {
         titleFormat: { year: 'numeric', month: 'long', day: 'numeric' },
       },
@@ -70,9 +72,8 @@
   });
   calendar.render();
   customizeIcon();
-  
 
-  updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
+  // updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
 
   $.post('Calendar/getStatusRecordatorio', function(data) {
     var len = data.length;
@@ -155,7 +156,7 @@
     dataF['id_prospecto_estatus_particular'] = $("#prospecto").val();
     $.ajax({
       type: 'POST',
-      url: 'Calendar/insertRecordatorio',
+      url: `${base_url}Calendar/insertRecordatorio`,
       data: JSON.stringify(dataF),
       contentType: false,
       cache: false,
@@ -205,7 +206,7 @@
   function getAppointmentData(idAgenda){
     $.ajax({
       type: "POST",
-      url: "Calendar/getAppointmentData",
+      url: `${base_url}Calendar/getAppointmentData`,
       data: {idAgenda: idAgenda},
       dataType: 'json',
       cache: false,
@@ -242,7 +243,6 @@
 
   function validateNCreate(appointment, medio, box){
     box.empty();
-    console.log(appointment);
     if(medio == 2 || medio == 5){
       box.append(`<label class="m-0">Dirección del ${medio == 5 ? 'evento':'recorrido'}</label><input id="direccion" name="direccion" type="text" class="form-control input-gral" value='${((appointment !=  '' && (medio == 2 || medio == 5 )) ? ((appointment.id_direccion == ''|| appointment.id_direccion == null) ? appointment.direccion : '' ) : '' )}' required>`);
     }
@@ -293,7 +293,7 @@
   function getAppointmentSidebarCalendar(idAgenda){
     $.ajax({
       type: "POST",
-      url: "Calendar/getAppointmentData",
+      url: `${base_url}Calendar/getAppointmentData`,
       data: {idAgenda: idAgenda},
       dataType: 'json',
       cache: false,
@@ -389,7 +389,7 @@
 
     $.ajax({
       type: 'POST',
-      url: 'Calendar/updateAppointmentData',
+      url: `${base_url}Calendar/updateAppointmentData`,
       data: JSON.stringify(data),
       contentType: false,
       cache: false,
@@ -471,7 +471,7 @@
   async function deleteGoogleEvent(idAgenda, idGoogle){
     $.ajax({
       type: 'POST',
-      url: 'Calendar/deleteAppointment',
+      url: `${base_url}Calendar/deleteAppointment`,
       data: {idAgenda:idAgenda},
       dataType: 'json',
       cache: false,
@@ -520,7 +520,7 @@
     data['idAgenda'] = $("#idAgenda2").val();
     $.ajax({
       type: 'POST',
-      url: 'Calendar/setAppointmentRate',
+      url: `${base_url}Calendar/setAppointmentRate`,
       data: JSON.stringify(data),
       contentType: false,
       cache: false,
@@ -530,6 +530,8 @@
       },
       success: function(data) {
         $('#spiner-loader').addClass('hide');
+        removeCRMEvents();
+        getUsersAndEvents(userType, idUser, false);
         data = JSON.parse(data);
         alerts.showNotification("top", "right", data["message"], (data["status" == 503]) ? "danger" : (data["status" == 400]) ? "warning" : "success");
         $('#feedbackModal').modal('toggle');
@@ -543,8 +545,8 @@
   });
 
   function customizeIcon(){
-    $(".fc-googleSignIn-button").append("<img src='"+base_url+"dist/img/googlecalendar.png'>");
-    $(".fc-googleLogout-button").append("<img src='"+"dist/img/unsync.png'>");
+    $(".fc-googleSignIn-button").append("<img src='dist/img/googlecalendar.png'>");
+    $(".fc-googleLogout-button").append("<img src='dist/img/unsync.png'>");
   }
 
   function createTable(){
@@ -554,7 +556,7 @@
       pagingType: "full_numbers",
       fixedHeader: true,
       language: {
-          url: "static/spanishLoader_v2.json",
+          url: `${base_url}static/spanishLoader_v2.json`,
           paginate: {
             previous: "<i class='fa fa-angle-left'>",
             next: "<i class='fa fa-angle-right'>"
@@ -564,7 +566,7 @@
       ordering: false,
       columns: [{
         data: function (d) {
-          return '<input type="text" name="id_cita" value="'+d.id_cita+'">';
+          return '<label>'+d.id_cita+'</label><input class="d-none" type="text" name="id_cita" value="'+d.id_cita+'">';
         }
       },
       {
@@ -591,16 +593,11 @@
           return '<label class="text-center w-100 m-0">'+objectStringToDate(d.fecha_cita)+'</label>';
         }
       }],
-      columnDefs: [{
-        "targets": [0],
-        "sClass": "hide_column",
-        "searchable": false
-      }],
       fnInitComplete: function(){
         $('div.toolbar').html('<h3 class="m-0">Citas abiertas</h3>');
       },
       ajax: {
-        url: "Calendar/AllEvents",
+        url: `${base_url}Calendar/AllEvents`,
         type: "POST",
         cache: false,
       }
@@ -613,28 +610,34 @@
     // Encode a set of form elements from all pages as an array of names and values
     var params = eventsTable.$('input,select,textarea').serialize();
     let array = createArrayEvents(params);
-    $.ajax({
-      type: 'POST',
-      url: 'Calendar/updateNFinishAppointments',
-      data: JSON.stringify(array),
-      contentType: false,
-      cache: false,
-      processData: false,
-      beforeSend: function() {
-        $('#spiner-loader').removeClass('hide');
-      },
-      success: function(data) {
-        $('#spiner-loader').addClass('hide');
-        data = JSON.parse(data);
-        alerts.showNotification("top", "right", data["message"], (data["status" == 503]) ? "danger" : (data["status" == 400]) ? "warning" : "success");
-        $('#feedbackModal').modal('toggle');
-      },
-      error: function() {
-          $('#feedbackModal').modal('toggle');
+    if (array.length === 0)
+      alerts.showNotification("top", "right", "No hay ningún registro que modificar.", "warning");
+    else {
+      $.ajax({
+        type: 'POST',
+        url: `${base_url}Calendar/updateNFinishAppointments`,
+        data: JSON.stringify(array),
+        contentType: false,
+        cache: false,
+        processData: false,
+        beforeSend: function() {
+          $('#spiner-loader').removeClass('hide');
+        },
+        success: function(data) {
+          if(gapi.auth2.getAuthInstance().isSignedIn.get()) insertEventGoogle(dataF);
+          removeCRMEvents();
+          getUsersAndEvents(userType, idUser, false);
           $('#spiner-loader').addClass('hide');
-          alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
-      }
-    });
+          data = JSON.parse(data);
+          alerts.showNotification("top", "right", data["message"], (data["status" == 503]) ? "danger" : (data["status" == 400]) ? "warning" : "success");
+          $('#allAppointmentsModal').modal('hide');
+        },
+        error: function() {
+            $('#spiner-loader').addClass('hide');
+            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+        }
+      });
+  }
   });
 
   function createArrayEvents(params){
@@ -644,8 +647,8 @@
       var objAttr = nameWithValue[i].split('=');
       for(j=0; j<objAttr.length; j+=2){
         obj[objAttr[j]] = objAttr[j+1];
-        obj['estatus'] = '2';
         if(objAttr[j] == 'observaciones' && obj['evaluacion'] != '0' ){
+          obj['estatus'] = '2';
           array.push(obj);
           obj = {};
         }
@@ -660,3 +663,5 @@
     
     return fecha.toLocaleDateString('es-ES', options);
   }
+
+  document.querySelector('style').textContent += "@media screen and (max-width:767px) { .fc-toolbar.fc-header-toolbar {flex-direction:column;} .fc-toolbar-chunk { display: table-row; text-align:center; padding:5px 0; } }";

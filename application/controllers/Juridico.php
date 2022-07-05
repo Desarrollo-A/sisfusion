@@ -771,14 +771,18 @@ public function editar_registro_loteRevision_juridico_proceceso7(){
 
 	$mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
   
-  foreach($array as $email)
-  {
-	if(trim($email)!= 'gustavo.mancilla@ciudadmaderas.com'){
-		if (trim($email) != ''){ 
-			$mail->addAddress($email);
+	foreach($array as $email)
+	{
+		if(trim($email)!= 'gustavo.mancilla@ciudadmaderas.com'){
+			if (trim($email) != ''){ 
+				$mail->addAddress($email);
+			}
+		}
+
+		if(trim($email) == 'diego.perez@ciudadmaderas.com'){
+			$mail->addAddress('analista.comercial@ciudadmaderas.com');
 		}
 	}
-  }
 
   
   
@@ -1058,14 +1062,18 @@ public function editar_registro_loteRevision_juridico_proceceso7(){
 	
 	$mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
   
-  foreach($array as $email)
-  {
-	if(trim($email)!= 'gustavo.mancilla@ciudadmaderas.com'){
-		if (trim($email) != ''){ 
-			$mail->addAddress($email);
+	foreach($array as $email)
+	{
+		if(trim($email)!= 'gustavo.mancilla@ciudadmaderas.com'){
+			if (trim($email) != ''){ 
+				$mail->addAddress($email);
+			}
+		}
+
+		if(trim($email) == 'diego.perez@ciudadmaderas.com'){
+			$mail->addAddress('analista.comercial@ciudadmaderas.com');
 		}
 	}
-  }
 
   
   

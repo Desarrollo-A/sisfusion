@@ -51,7 +51,7 @@
 .w-60{ width: 60% };
 .w-50{ width: 50% };
 .w-40{ width: 40% };
-.w-30{ width: 30% };
+.w-30{ width: 30%!important};
 .w-20{ width: 20% };
 .w-10{ width: 10% };
 .w-auto{ width: auto!important};
@@ -93,6 +93,7 @@
 
 /* Flexbox */
 .d-none          { display: none; }
+.d-block         { display: block; }
 .d-flex          { display: flex; }
 .align-start     { align-items: flex-start; }
 .align-end       { align-items: flex-end; }
@@ -176,8 +177,8 @@ $smartphone         : "(min-device-width : 320px) and (max-device-width : 480px)
 $smartphoneLandscape: "(min-width : 321px)";
 $tablets            : "(min-width: 480px) and (max-width: 991px)";
 $minidesktop        : "(min-width: 992px) and (max-width: 1199px)";
-$desktop            : "(min-width: 1024px)";
-$tv                 : "(min-width : 1824px)";
+$desktop            : "(min-width: 992px)";
+$tv                 : "(min-width: 1280px)";
 /* END size devices */
 
 /* Estilos generales encabezado, datetime picker, calendar, input filtros, selects */
@@ -716,15 +717,21 @@ $tv                 : "(min-width : 1824px)";
 
 /* tooltip styles */
 .tooltip{
+    width: fit-content;
     .tooltip-inner {
         padding: 5px 10px;
-        color: white;
+        color: $white;
         background-color: $gray;
+    width: fit-content;
+
     }
 }
 .tooltip.top .tooltip-arrow {
     border-top-color: $gray;
 }
+.tooltip.bottom .tooltip-arrow {
+    border-bottom-color: $gray;
+  }
 /* tooltip styles */
 
 .radio_container {
@@ -763,6 +770,6 @@ $tv                 : "(min-width : 1824px)";
     &:disabled{
         border: none;
         color: $deepGray;
-        background-color: #F1F1F1;
+        background-color: $grayDisabled;
     }
 }

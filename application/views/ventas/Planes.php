@@ -1291,7 +1291,7 @@ function llenarTables(){
                     var id = data[i]['idResidencial'];
                     var descripcion = data[i]['descripcion'];
                     $("#residencial").append(`<option value='${id}'>${name}</option>`);
-                }
+                }   
                 if(len<=0){
                     $("#residencial").append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
                 }
@@ -1566,18 +1566,9 @@ $.post('getResidencialesList', function(data) {
 			$(`#${select}${indexN}_${i}`).on(async function (evt){
 			console.log('eeeeeeeeeeeeeeeeeeeeeeeeeeeeeee');
 
-					var element = evt.params.data.element;
-					var $element = $(element);
-					$element.detach();
-					$(this).append($element);
-					console.log('eeeeeeeeeeeeeeeeeeeeeeeeeeeeeee');
-					console.log($element[0]);
-					console.log('eeeeeeeeeeeeeeeeeeeeeeeeeeeeeee');
-					$(this).trigger("change");
-					console.log('zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz');
-					console.log($element[0].value);
-					console.log('zzzzzzzzzzzzzzzzzzzzzzzzzzzzzz');
-					console.log($element[0].label);
+			// document.getElementById(id).value = 122;
+			var s = document.getElementById(id);
+			console.log('este es el id '+id)
 
 				});
 		}
@@ -2094,6 +2085,7 @@ function RemovePackage(){
     /*var result = window.confirm("¿Desea remover este elemento?");
     if (result == true) {
         $("#" + divNum + "").remove();
+        $("#" + gral + "").remove();
     }
     return false;*/
 }

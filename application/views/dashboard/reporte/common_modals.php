@@ -7,13 +7,13 @@
             </div> -->
             <div class="container-fluid h-100">
                 <div class="row h-30 pl-2 pr-2 pt-3">
-                    <div class="col-12 col-sm-12 col-md-6 col-lg-6">
+                    <div class="col-12 col-sm-6 col-md-6 col-lg-6">
                         <div class="boxModalTitle">
                             <div class="title"></div>
                             <div class="total"></div>
                         </div>
                     </div>
-                    <div class="col-12 col-sm-12 col-md-6 col-lg-6 d-flex justify-end">
+                    <div class="col-12 col-sm-6 col-md-6 col-lg-6 d-flex justify-end datesModal">
                         <div class="form-group d-flex m-0 p-0">
                             <input type="text" class="form-control datepicker text-center pl-1" id="beginDate"/>
                             <span>-</span>

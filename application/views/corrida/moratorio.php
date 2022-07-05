@@ -755,6 +755,7 @@
 							//IM = ((importeSaldoI * (ope / 360)) * diasRetardo);
 							var intFinal = InteresM/100;
 							IM = (saldoInsoluto*intFinal/30.4)*diasRetardo;///30.4*diasRetardo
+
                             // console.log("este es un check de prueba: " + check);
 							<?php include("dist/js/controllers/calculoMoratorio.js"); ?>
 							console.log("Interes Moratorio en esta posicion " + IM);

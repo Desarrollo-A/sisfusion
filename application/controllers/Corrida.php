@@ -131,8 +131,10 @@ class Corrida extends CI_Controller {
 		$arreglo['status'] = 0;
         $arreglo["corrida_dump"]= json_encode($objDatos->corrida_dump);
         $arreglo["tipo_casa"]= $objDatos->tipo_casa;
+        $arreglo["id_cliente"]= $objDatos->id_cliente;
 
-
+        /*print_r($arreglo);
+        exit;*/
 
         $array_allPackages = json_decode($objDatos->allPackages);
         $arrayTocxp = array();
@@ -2623,7 +2625,6 @@ $pdf->Output(utf8_decode($namePDF), 'I');
             "paquete" => $paquete
         );
 
-
         $arreglo =array();
         $arreglo["nombre"]= $objDatos->nombre;
         $arreglo["id_lote"]= $idLote;
@@ -2654,15 +2655,16 @@ $pdf->Output(utf8_decode($namePDF), 'I');
         $arreglo["finalMesesp2"]= $objDatos->finalMesesp2;
         $arreglo["finalMesesp3"]= $objDatos->finalMesesp3;
         $arreglo["observaciones"]= $objDatos->observaciones;
+        $arreglo["fecha_modificacion"] = date("Y-m-d H:i:s");
 
-
+        /*print_r($arreglo);
+        exit;*/
 
         /*print_r($arreglo["telefono"]);
         exit;*/
 
         $array_allPackages = json_decode($objDatos->allPackages);
         $arrayTocxp = array();
-
 
 
 
@@ -2676,15 +2678,11 @@ $pdf->Output(utf8_decode($namePDF), 'I');
                     $arrayTocxp[$key]['descuentos'][$key2]['prioridad'] = $value2->prioridad;
                     $arrayTocxp[$key]['descuentos'][$key2]['id_descuento'] = $value2->id_descuento;
                     //$arrayTocxp[$key]['descuentos'][$key2]['estatus'] =  0;
-
-
                     for ($i = 0; $i < count($arrayDescApply); $i++) {
                         if ($arrayDescApply[$i]->id_descuento == $value2->id_descuento && $arrayDescApply[$i]->id_paquete == $value->id_paquete) {
                             $arrayTocxp[$key]['descuentos'][$key2]['estatus'] = 1;
                         }
-
                     }
-
                 }
             }
 
@@ -2896,18 +2894,29 @@ $pdf->Output(utf8_decode($namePDF), 'I');
         $data_descuentos = $this->Corrida_model->getDescsByCondominio($id_condominio, $id_pxc);
 
 
-        $array_descuentos = explode(',', $data_descuentos->id_paquete, 999);
-
-        $data_descuentos->paquetes_array = $array_descuentos;
-
-//        print_r($array_descuentos);
 
 
+
+        $object_descuentos = json_decode($data_descuentos->id_paquete);
+        $array_descuentos = explode(',', $object_descuentos->paquetes, 999);
+        $tipo_superficie = $object_descuentos->tipo_superficie;
+        /*print_r($tipo_superficie->tipo);
+        exit;*/
+
+        #logica anterior
+        #$array_descuentos = explode(',', $data_descuentos->id_paquete, 999);
+        #$data_descuentos->paquetes_array = $array_descuentos;
+
+
+        //recibe un array separados por "," así: Array ( [0] => 326 [1] => 328 [2] => 334 )
         for($i=0; $i<count($array_descuentos); $i++){
             $paquete_info = $this->Corrida_model->getPaqById($array_descuentos[$i]);
             $paquete_view[$i] = array(
                 'id_paquete' => $paquete_info->id_paquete,
                 'descripcion' => $paquete_info->descripcion,
+                'aplicable_a' => $tipo_superficie->tipo,
+                'sup1'        => $tipo_superficie->sup1,
+                'sup2'        => $tipo_superficie->sup2,
                 //'estatus' => $paquete_info->estatus,
             );
 
@@ -2929,7 +2938,7 @@ $pdf->Output(utf8_decode($namePDF), 'I');
                 $paquete_view[$i]['response'][$q]['msi_descuento'] = (int)$data_descuento->msi_descuento;
             }
         }
-        print_r(json_encode($paquete_view));
+        print_r(json_encode($paquete_view, JSON_NUMERIC_CHECK ));
 
         exit;
     }
