@@ -91,9 +91,9 @@ class PaquetesCorrida extends CI_Controller
         $ArrPAquetes = array();
         $TipoLote = $this->input->post("tipoLote");
         if($TipoLote == 1){ //Habitacional
-          $query_tipo_lote = 'and c.tipo_lote = 1 ';
-        }else if($TipoLote == 2){ // Comercial
           $query_tipo_lote = 'and c.tipo_lote = 0 ';
+        }else if($TipoLote == 2){ // Comercial
+          $query_tipo_lote = 'and c.tipo_lote = 1 ';
 
         }else if($TipoLote == 3){ // Ambos
           $query_tipo_lote = '';
