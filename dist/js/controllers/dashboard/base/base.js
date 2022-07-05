@@ -25,14 +25,14 @@ function changePill(element){
     }
     else if(element == 'agendaOption'){
         $('#agenda').html("");
-        $('#agenda').load("Calendar/calendar");
+        $('#agenda').load(`${base_url}Calendar/calendar`);
     }
     else if(element == 'rankingOption'){
         $('#ranking').html("");
-        $('#ranking').load("Ranking/ranking");
+        $('#ranking').load(`${base_url}Ranking/ranking`);
     }
     else if(element == 'metricasOption'){
         $('#metricas').html("");
-        $('#metricas').load("Metricas/metricas");
+        $('#metricas').load(`${base_url}Metricas/metricas`);
     }
 }

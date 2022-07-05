@@ -154,7 +154,7 @@
     dataF['id_prospecto_estatus_particular'] = $("#prospecto").val();
     $.ajax({
       type: 'POST',
-      url: 'Calendar/insertRecordatorio',
+      url: `${base_url}Calendar/insertRecordatorio`,
       data: JSON.stringify(dataF),
       contentType: false,
       cache: false,
@@ -204,7 +204,7 @@
   function getAppointmentData(idAgenda){
     $.ajax({
       type: "POST",
-      url: "Calendar/getAppointmentData",
+      url: `${base_url}Calendar/getAppointmentData`,
       data: {idAgenda: idAgenda},
       dataType: 'json',
       cache: false,
@@ -291,7 +291,7 @@
   function getAppointmentSidebarCalendar(idAgenda){
     $.ajax({
       type: "POST",
-      url: "Calendar/getAppointmentData",
+      url: `${base_url}Calendar/getAppointmentData`,
       data: {idAgenda: idAgenda},
       dataType: 'json',
       cache: false,
@@ -387,7 +387,7 @@
 
     $.ajax({
       type: 'POST',
-      url: 'Calendar/updateAppointmentData',
+      url: `${base_url}Calendar/updateAppointmentData`,
       data: JSON.stringify(data),
       contentType: false,
       cache: false,
@@ -469,7 +469,7 @@
   async function deleteGoogleEvent(idAgenda, idGoogle){
     $.ajax({
       type: 'POST',
-      url: 'Calendar/deleteAppointment',
+      url: `${base_url}Calendar/deleteAppointment`,
       data: {idAgenda:idAgenda},
       dataType: 'json',
       cache: false,
@@ -518,7 +518,7 @@
     data['idAgenda'] = $("#idAgenda2").val();
     $.ajax({
       type: 'POST',
-      url: 'Calendar/setAppointmentRate',
+      url: `${base_url}Calendar/setAppointmentRate`,
       data: JSON.stringify(data),
       contentType: false,
       cache: false,
@@ -552,7 +552,7 @@
       pagingType: "full_numbers",
       fixedHeader: true,
       language: {
-          url: "static/spanishLoader_v2.json",
+          url: `${base_url}static/spanishLoader_v2.json`,
           paginate: {
             previous: "<i class='fa fa-angle-left'>",
             next: "<i class='fa fa-angle-right'>"
@@ -598,7 +598,7 @@
         $('div.toolbar').html('<h3 class="m-0">Citas abiertas</h3>');
       },
       ajax: {
-        url: "Calendar/AllEvents",
+        url: `${base_url}Calendar/AllEvents`,
         type: "POST",
         cache: false,
       }
@@ -616,7 +616,7 @@
     else {
       $.ajax({
         type: 'POST',
-        url: 'Calendar/updateNFinishAppointments',
+        url: `${base_url}Calendar/updateNFinishAppointments`,
         data: JSON.stringify(array),
         contentType: false,
         cache: false,
