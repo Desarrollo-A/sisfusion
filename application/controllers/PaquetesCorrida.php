@@ -356,7 +356,7 @@ class PaquetesCorrida extends CI_Controller
 	$id_condicion=$this->input->post("id_condicion");
 	$eng_top=$this->input->post("eng_top");
 	$apply=$this->input->post("apply");
-      echo json_encode($this->PaquetesCorrida_model->getDescuentosPorTotal($tdescuento,$id_condicion,$eng_top,$apply)->result_array());
+      echo json_encode($this->PaquetesCorrida_model->getDescuentosPorTotal($tdescuento,$id_condicion,$eng_top,$apply)->result_array(),JSON_NUMERIC_CHECK);
     }
     public function getDescuentos($tdescuento,$id_condicion,$eng_top,$apply)
     {
