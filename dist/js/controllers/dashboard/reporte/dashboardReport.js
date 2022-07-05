@@ -177,7 +177,7 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, dates=n
         ordering: false,
         scrollX: true,
         language: {
-            url: "static/spanishLoader_v2.json",
+            url: `${base_url}static/spanishLoader_v2.json`,
             paginate: {
                 previous: "<i class='fa fa-angle-left'>",
                 next: "<i class='fa fa-angle-right'>"
@@ -283,7 +283,7 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, dates=n
             searchable: false
         }],
         ajax: {
-            url: 'Reporte/getInformation',
+            url: `${base_url}Reporte/getInformation`,
             type: "POST",
             cache: false,
             data: {
@@ -511,7 +511,7 @@ async function chartDetail(e, tipoChart){
 function getSpecificChart(type, beginDate, endDate){
     $.ajax({
         type: "POST",
-        url: "Reporte/getDataChart",
+        url: `${base_url}Reporte/getDataChart`,
         data: {general: 0, tipoChart: type, beginDate: beginDate, endDate: endDate},
         dataType: 'json',
         cache: false,
@@ -555,7 +555,7 @@ function getSpecificChart(type, beginDate, endDate){
 function getLastSales(beginDate, endDate){
     $.ajax({
         type: "POST",
-        url: "Reporte/getDataChart",
+        url: `${base_url}Reporte/getDataChart`,
         data: {general: 1, tipoChart:'na', beginDate: beginDate, endDate: endDate},
         dataType: 'json',
         cache: false,
@@ -677,7 +677,7 @@ function getRolDR(idUser){
     return new Promise(resolve => {      
         $.ajax({
             type: "POST",
-            url: "Reporte/getRolDR",
+            url: `${base_url}Reporte/getRolDR`,
             data: {idUser: idUser},
             dataType: 'json',
             cache: false,
@@ -938,7 +938,7 @@ function get4Months() {
     return new Promise(resolve => {
         $.ajax({
             type: "POST",
-            url: "Reporte/get4MonthsRequest",
+            url: `${base_url}Reporte/get4MonthsRequest`,
             dataType: 'json',
             cache: false,
             beforeSend: function() {

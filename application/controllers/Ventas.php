@@ -72,11 +72,9 @@ class Ventas extends CI_Controller {
             case '1': // DIRECTOR
                 $this->load->view("dashboard/base/base", $datos);
             break;
-            case '18':// DIRECTOR MKTD
-                $this->load->view("dashboard/base/base", $datos);
-            break;
             case '4': // ASISTENTE DIRECTOR
             case '8': // SOPORTE
+            case '18':// DIRECTOR MKTD
             case '19': // SUBDIRECTOR MKTD
             case '20': // GERENTE MKTD
             case '21': // CLIENTE
