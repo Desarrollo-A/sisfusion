@@ -50,4 +50,5 @@
 <script>
     userType = <?= $this->session->userdata('id_rol') ?> ;
     idUser = <?= $this->session->userdata('id_usuario') ?>;
+    var  base_url = "<?=base_url()?>";
 </script>

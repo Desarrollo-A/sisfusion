@@ -1,4 +1,3 @@
-let base_url = "<?=base_url()?>";
 //jquery
 $(document).ready(function(){
     changePill('inicioOption');
@@ -18,11 +17,11 @@ function changePill(element){
         $('.box1Inicio4').addClass('fadeInAnimationDelay3');
         $('.boxNavPills').addClass('fadeInAnimationDelay4');
         $('#inicio').html("");
-        $('#inicio').load("Inicio/index");
+        $('#inicio').load(`${base_url}Inicio/index`);
     }
     else if(element == 'reporteOption'){
         $('#reporte').html("");
-        $('#reporte').load("Reporte/reporte");
+        $('#reporte').load(`${base_url}Reporte/reporte`);
     }
     else if(element == 'agendaOption'){
         $('#agenda').html("");
