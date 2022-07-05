@@ -260,9 +260,10 @@
 		CASE WHEN cf.tipo_casa IS NULL THEN 0
 		ELSE cf.tipo_casa END 
 		as tipo_casa,
-		CASE WHEN cl.id_asesor IS NULL THEN 0
+		CASE WHEN cl.id_asesor IS NULL THEN cf.id_asesor
 		ELSE cl.id_asesor END 
-		as id_asesor, CASE WHEN cl.id_gerente IS NULL THEN 0
+		as id_asesor, 
+		CASE WHEN cl.id_gerente IS NULL THEN cf.id_gerente
         ELSE cl.id_gerente END 
         as id_gerente,
         CASE WHEN cl.status IS NULL THEN 0

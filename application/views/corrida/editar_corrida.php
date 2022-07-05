@@ -189,7 +189,7 @@
         .loader:before,
         .loader:after {
             background: #ffffff;
-            -webkit-animation: load1 1s infinite ease-in-out;
+            -webkit-animation: load1 1s infinite eas    e-in-out;
             animation: load1 1s infinite ease-in-out;
             width: 1em;
             height: 4em;
@@ -457,7 +457,7 @@
                             <button ng-click="exportcf()" class="btn btn-success">Imprimir carátula + Corrida
                                 Financiera
                             </button>-->
-                            <?php #print_r($data_corrida);  ?>
+                            <?php print_r($data_corrida);  ?>
 
                             <table align="center" width="100%" cellpadding="8" cellspacing="8">
                                 <tr>
@@ -569,8 +569,7 @@
                                     <div class="<?php if($casasLote == 1 ) { echo 'col-md-1'; } else{echo 'col-md-2';} ?> form-group">
                                         <label>Años:</label>
                                         <!-- ng-options="item.yearplan for item in yearsplan" -->
-                                        <select ng-model="yearplan" id="yearplan" class="form-control"
-                                                ng-change="getAgePlan()">
+                                        <select ng-model="yearplan" id="yearplan" class="form-control" ng-change="getAgePlan()">
                                             <option value=""> - Selecciona los años -</option>
                                             <option ng-repeat="yearsplan in yearsplan "  ng-value="yearsplan.yearplan"
                                                     ng-selected="(yearsplan.yearplan== <?php echo $data_corrida->anio;?>) ? selected : ''">{{yearsplan.yearplan}}</option>
@@ -587,7 +586,7 @@
                                                 ng-change="onSelectChangegerente(gerente)" class="form-control" disabled>
                                             <option value=""> - Selecciona un Gerente -</option>
                                             <option ng-repeat="gerentes in gerentes"  ng-value="gerentes.idGerente"
-                                                    ng-selected="(gerentes.idGerente== <?php echo $data_corrida->id_gerente;?>) ? selected : ''">{{gerentes.nombreGerente}}</option>
+                                                    ng-selected="(gerentes.idGerente == <?php echo $data_corrida->id_gerente; ?>) ? selected : ''">{{gerentes.nombreGerente}}</option>
                                         </select>
                                         <p id="gerentetext" style="color: red;"></p>
                                     </div>
