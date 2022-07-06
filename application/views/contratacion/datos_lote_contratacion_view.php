@@ -243,8 +243,7 @@
 														class="selectpicker select-gral"
 														data-style="btn" data-show-subtext="true"
 														data-live-search="true"
-														title="Selecciona un proyecto" data-size="7" required>
-													<option value="0">Seleccionar todo</option>
+														title="Selecciona un proyecto" data-size="7" multiple size="5" required>
 												</select>
 											</div>
 										</div>
@@ -337,6 +336,7 @@
 				}
 
 				$("#proyecto").selectpicker('refresh');
+				
 			}, 'json');
 
 			$.post(url + "Contratacion/lista_estatus", function(data) {

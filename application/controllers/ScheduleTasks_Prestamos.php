@@ -56,10 +56,10 @@ class ScheduleTasks_Prestamos extends CI_Controller
                     $commonData = array();
                     $commonData2 = array();
                     $Suma = $Suma + $PagosByUSer[$n]['abono_neodata'];
-                    $VerificarCierre = $this->CierrePrestamo($data[$m]['id_prestamo']);
+                   /* $VerificarCierre = $this->CierrePrestamo($data[$m]['id_prestamo']);
                     if(($pagoMensual + $VerificarCierre[0]['pagado']) > ($data[$m]['monto'] - 0.50)){
                         $pagoMensual =  $data[$m]['monto'] - $VerificarCierre[0]['pagado'];
-                    }
+                    }*/
 
                         if($Suma >= $pagoMensual)
                         {
@@ -102,7 +102,7 @@ class ScheduleTasks_Prestamos extends CI_Controller
                                 /**EL SUMA ACOMULADA NO CUBRE EL MONTO CORRESPONDIENTE AL MES, Y SE TOMA POR COMPLETO EL PAGO*/
                                 $this->db->query("UPDATE pago_comision_ind SET estatus=$tipo_prestamo,descuento_aplicado=1,modificado_por=1 WHERE id_pago_i = ".$PagosByUSer[$n]['id_pago_i']." ");
                                 $this->db->query("INSERT INTO relacion_pagos_prestamo(id_prestamo,id_pago_i,estatus,creado_por,fecha_creacion,modificado_por,fecha_modificacion,np) values(".$data[$m]['id_prestamo'].",".$PagosByUSer[$n]['id_pago_i'].",1,1,GETDATE(),1,GETDATE(),".$data[$m]['n_p'].")");
-                                $this->db->query("INSERT INTO historial_comisiones values(".$PagosByUSer[$n]['id_pago_i'].",1,GETDATE(),1,'MOTIVO  ".$data[$m]['nombre']." DE ".number_format($data[$m]['monto'], 2, '.', ',')." ')");
+                                $this->db->query("INSERT INTO historial_comisiones values(".$PagosByUSer[$n]['id_pago_i'].",1,GETDATE(),1,'MOTIVO ".$data[$m]['nombre']." DE ".number_format($data[$m]['monto'], 2, '.', ',')." ')");
                             }
                         }
                 }

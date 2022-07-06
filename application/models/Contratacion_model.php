@@ -12,7 +12,7 @@ class Contratacion_model extends CI_Model {
         return $this->db->query("SELECT * FROM [residenciales] WHERE status = 1");
      }
      function get_condominio_lista($proyecto){
-        return $this->db->query("SELECT * FROM condominios WHERE status = 1 AND idResidencial = ".$proyecto." ORDER BY nombre");
+        return $this->db->query("SELECT * FROM condominios WHERE status = 1 AND idResidencial IN($proyecto) ORDER BY nombre");
      }
 
 
@@ -188,7 +188,7 @@ class Contratacion_model extends CI_Model {
                                 LEFT JOIN usuarios coordinador2 ON asesor2.id_lider = coordinador2.id_usuario
                                 LEFT JOIN usuarios gerente2 ON coordinador2.id_lider = gerente2.id_usuario
                                 LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = cl.lugar_prospeccion AND oxc.id_catalogo = 9
-                                WHERE lot.status = 1 and res.idResidencial = ".$proyecto." AND lot.idStatusLote = ".$estatus." ORDER BY con.nombre, lot.idLote");
+                                WHERE lot.status = 1 and res.idResidencial IN ($proyecto) AND lot.idStatusLote = ".$estatus." ORDER BY con.nombre, lot.idLote");
             }
      }
      
@@ -293,7 +293,7 @@ class Contratacion_model extends CI_Model {
                                   LEFT JOIN usuarios coordinador2 ON asesor2.id_lider = coordinador2.id_usuario
                                   LEFT JOIN usuarios gerente2 ON coordinador2.id_lider = gerente2.id_usuario      
                                   LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = cl.lugar_prospeccion AND oxc.id_catalogo = 9    
-                                  WHERE lot.status = 1 and res.idResidencial =".$proyecto." ORDER BY res.nombreResidencial, con.nombre, lot.idLote");
+                                  WHERE lot.status = 1 and res.idResidencial IN($proyecto) ORDER BY res.nombreResidencial, con.nombre, lot.idLote");
             }
           }
 
@@ -329,7 +329,7 @@ class Contratacion_model extends CI_Model {
                                 LEFT JOIN usuarios coordinador2 ON asesor2.id_lider = coordinador2.id_usuario
                                 LEFT JOIN usuarios gerente2 ON coordinador2.id_lider = gerente2.id_usuario
                                 LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = cl.lugar_prospeccion AND oxc.id_catalogo = 9
-                                WHERE lot.status = 1 and res.idResidencial = ".$proyecto." AND lot.idCondominio = ".$condominio." ORDER BY lot.idLote");
+                                WHERE lot.status = 1 and res.idResidencial IN($proyecto) AND lot.idCondominio = ".$condominio." ORDER BY lot.idLote");
      }
 
 
