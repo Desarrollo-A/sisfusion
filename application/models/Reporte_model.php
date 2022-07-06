@@ -148,7 +148,7 @@ class Reporte_model extends CI_Model {
     public function getGeneralInformation($beginDate, $endDate, $id_rol, $id_usuario, $render) {
         // PARA ASESOR, COORDINADOR, GERENTE, SUBDIRECTOR, REGIONAL Y DIRECCIÓN COMERCIAL
         $id_lider = $this->session->userdata('id_lider'); // PARA ASISTENTES
-
+        $comodin2 = 'LEFT';
         $filtro=" AND cl.fechaApartado BETWEEN '$beginDate 00:00:00.000' AND '$endDate 23:59:00.000'";
         if ($id_rol == 7) // MJ: Asesor
            { 
@@ -226,13 +226,17 @@ class Reporte_model extends CI_Model {
         }
         else if ($id_rol == 1 || $id_rol == 4 || $id_rol == 18) // MJ: Director comercial
            { 
-            if($render == 1){
 
+            $comodin2 = 'LEFT';
+
+            if($render == 1){
+                $filtro .= "";
+                $comodin = "id_regional";//pendiente
             }else{
-                
+                $filtro .= "";
+                $comodin = "id_regional";//pendiente
             }
-            $filtro .= "";
-            $comodin = "";
+         
             }
 
         $query = $this->db->query("SELECT 
@@ -265,7 +269,7 @@ class Reporte_model extends CI_Model {
             totalVentas, '1' opt, $comodin userID, tmpTotal.nombreUsuario, tmpTotal.id_rol FROM (
                     SELECT  u.id_rol, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombreUsuario,lo.idLote, lo.nombreLote, cl.id_asesor, cl.id_coordinador, cl.id_gerente, cl.id_subdirector, cl.id_regional, cl.nombre, cl.apellido_paterno, cl.apellido_materno, isNULL(cl.totalNeto2_cl ,lo.totalNeto2) totalNeto2, isNULL(cl.total_cl ,lo.total) total FROM clientes cl
                     INNER JOIN lotes lo ON lo.idLote = cl.idLote
-                    INNER JOIN usuarios u ON u.id_usuario = cl.$comodin
+                    $comodin2 JOIN usuarios u ON u.id_usuario = cl.$comodin
                     WHERE isNULL(noRecibo, '') != 'CANCELADO'  AND isNULL(cl.tipo_venta_cl, lo.tipo_venta) IN(1, 2) $filtro
                     GROUP BY  u.id_rol, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno),lo.idLote, lo.nombreLote, cl.id_asesor, cl.id_coordinador, cl.id_gerente, cl.id_subdirector, cl.id_regional, cl.nombre, cl.apellido_paterno, cl.apellido_materno, isNULL(cl.totalNeto2_cl ,lo.totalNeto2), isNULL(cl.total_cl ,lo.total)
                 ) tmpTotal GROUP BY $comodin, tmpTotal.nombreUsuario, tmpTotal.id_rol) a
@@ -281,7 +285,7 @@ class Reporte_model extends CI_Model {
             totalCT, '1' opt, $comodin userID, tmpCanT.nombreUsuario, tmpCanT.id_rol FROM (
                     SELECT u.id_rol,CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombreUsuario, lo.idLote, lo.nombreLote, cl.id_asesor, cl.id_coordinador, cl.id_gerente, cl.id_subdirector, cl.id_regional, cl.nombre, cl.apellido_paterno, cl.apellido_materno, isNULL(cl.totalNeto2_cl ,lo.totalNeto2) totalNeto2, isNULL(cl.total_cl ,lo.total) total FROM clientes cl
                     INNER JOIN lotes lo ON lo.idLote = cl.idLote
-                    INNER JOIN usuarios u ON u.id_usuario = cl.$comodin
+                    $comodin2 JOIN usuarios u ON u.id_usuario = cl.$comodin
                     LEFT JOIN historial_liberacion hl ON hl.idLote = lo.idLote AND hl.tipo NOT IN (2, 5, 6) AND hl.idLote = lo.idLote AND hl.id_cliente = cl.id_cliente
                     WHERE isNULL(noRecibo, '') != 'CANCELADO'  AND isNULL(cl.tipo_venta_cl, lo.tipo_venta) IN(1, 2) AND cl.status = 0 $filtro
                     GROUP BY u.id_rol, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno), lo.idLote, lo.nombreLote, cl.id_asesor, cl.id_coordinador, cl.id_gerente, cl.id_subdirector, cl.id_regional, cl.nombre, cl.apellido_paterno, cl.apellido_materno, isNULL(cl.totalNeto2_cl ,lo.totalNeto2), isNULL(cl.total_cl ,lo.total)
@@ -298,7 +302,7 @@ class Reporte_model extends CI_Model {
             totalConT, '1' opt, $comodin userID, tmpConT.nombreUsuario, tmpConT.id_rol FROM (
                     SELECT  u.id_rol, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombreUsuario, lo.idLote, lo.nombreLote, cl.id_asesor, cl.id_coordinador, cl.id_gerente, cl.id_subdirector, cl.id_regional, cl.nombre, cl.apellido_paterno, cl.apellido_materno, isNULL(cl.totalNeto2_cl ,lo.totalNeto2) totalNeto2, isNULL(cl.total_cl ,lo.total) total FROM clientes cl
                     INNER JOIN lotes lo ON lo.idLote = cl.idLote AND lo.idStatusLote = 2
-                    INNER JOIN usuarios u ON u.id_usuario = cl.$comodin
+                    $comodin2 JOIN usuarios u ON u.id_usuario = cl.$comodin
                     INNER JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes WHERE idStatusContratacion = 15 AND idMovimiento = 45
                     GROUP BY idLote, idCliente) hl ON hl.idLote = lo.idLote AND hl.idCliente = cl.id_cliente
                     WHERE isNULL(noRecibo, '') != 'CANCELADO'  AND isNULL(cl.tipo_venta_cl, lo.tipo_venta) IN(1, 2) AND cl.status = 1 $filtro
@@ -316,7 +320,7 @@ class Reporte_model extends CI_Model {
             totalAT, '1' opt, $comodin userID, tmpApT.nombreUsuario, tmpApT.id_rol FROM (
                     SELECT  u.id_rol, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombreUsuario, lo.idLote, lo.nombreLote, cl.id_asesor, cl.id_coordinador, cl.id_gerente, cl.id_subdirector, cl.id_regional, cl.nombre, cl.apellido_paterno, cl.apellido_materno, isNULL(cl.totalNeto2_cl ,lo.totalNeto2) totalNeto2, isNULL(cl.total_cl ,lo.total) total FROM clientes cl
                     INNER JOIN lotes lo ON lo.idLote = cl.idLote AND lo.idStatusLote != 2
-                    INNER JOIN usuarios u ON u.id_usuario = cl.$comodin
+                    $comodin2 JOIN usuarios u ON u.id_usuario = cl.$comodin
                     WHERE isNULL(noRecibo, '') != 'CANCELADO'  AND isNULL(cl.tipo_venta_cl, lo.tipo_venta) IN(1, 2) AND cl.status = 1 $filtro
                     GROUP BY u.id_rol, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno), lo.idLote, lo.nombreLote, cl.id_asesor, cl.id_coordinador, cl.id_gerente, cl.id_subdirector, cl.id_regional, cl.nombre, cl.apellido_paterno, cl.apellido_materno, isNULL(cl.totalNeto2_cl ,lo.totalNeto2), isNULL(cl.total_cl ,lo.total)
                 ) tmpApT GROUP BY $comodin, tmpApT.nombreUsuario, tmpApT.id_rol) d ON d.userID = a.userID
@@ -332,7 +336,7 @@ class Reporte_model extends CI_Model {
             totalCanC, '1' opt, $comodin userID, tmpCC.nombreUsuario, tmpCC.id_rol FROM (
                     SELECT  u.id_rol, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombreUsuario, lo.idLote, lo.nombreLote, cl.id_asesor, cl.id_coordinador, cl.id_gerente, cl.id_subdirector, cl.id_regional, cl.nombre, cl.apellido_paterno, cl.apellido_materno, isNULL(cl.totalNeto2_cl ,lo.totalNeto2) totalNeto2, isNULL(cl.total_cl ,lo.total) total FROM clientes cl
                     INNER JOIN lotes lo ON lo.idLote = cl.idLote
-                    INNER JOIN usuarios u ON u.id_usuario = cl.$comodin
+                    $comodin2 JOIN usuarios u ON u.id_usuario = cl.$comodin
                     LEFT JOIN historial_liberacion hl ON hl.idLote = lo.idLote AND hl.tipo NOT IN (2, 5, 6) AND hl.id_cliente = cl.id_cliente
                     INNER JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes WHERE idStatusContratacion = 15 AND idMovimiento = 45
                     GROUP BY idLote, idCliente) hlo ON hlo.idLote = lo.idLote AND hlo.idCliente = cl.id_cliente
@@ -350,6 +354,7 @@ class Reporte_model extends CI_Model {
 
     public function getDetails($beginDate, $endDate, $id_rol, $id_usuario, $render){
         $id_lider = $this->session->userdata('id_lider'); // PARA ASISTENTES
+        $comodin2 = 'LEFT';
 
         $filtro=" AND cl.fechaApartado BETWEEN '$beginDate 00:00:00.000' AND '$endDate 23:59:00.000'";
         if ($id_rol == 7) // MJ: Asesor
@@ -418,35 +423,26 @@ class Reporte_model extends CI_Model {
                     $comodin = "id_subdirector";
                 }
             }
-        else if ($id_rol == 59) {// MJ: Director regional
+        else if ($id_rol == 59 || $id_rol == 60) {// MJ: Director regional
             $id_sede = "'" . implode("', '", explode(", ", $this->session->userdata('id_sede'))) . "'"; // MJ: ID sede separado por , como string
             if($render == 1){
-                $filtro .= " AND cl.id_regional = $id_usuario OR cl.id_subdirector = $id_usuario";
+                $filtro .= " AND cl.id_regional = $id_usuario";
                 $comodin = "id_subdirector";//pendiente
 
             }else{
                 $filtro .= "";
             }
         }
-        else if ($id_rol == 59) // MJ: Asistente de dirección regional
-            {
-                $id_sede = "'" . implode("', '", explode(", ", $this->session->userdata('id_sede'))) . "'"; // MJ: ID sede separado por , como string
-                if($render == 1){
-                    $filtro .= " AND cl.id_sede IN ($id_sede)";
-                }else{
-                    $filtro .= "";
-                }
-                $comodin = "id_subdirector";//pendiente
-            }
-        else if ($id_rol == 1 || $id_rol == 4 || $id_rol == 18) // MJ: Director comercial
+        else if ($id_rol == 1 || $id_rol == 4) // MJ: Director comercial
            { 
+            $comodin2 = 'LEFT';
             if($render == 1){
-
+                $filtro .= "";
+                $comodin = "id_regional";//pendiente
             }else{
-                
+                $filtro .= "";
+                $comodin = "id_regional";//pendiente
             }
-            $filtro .= "";
-            $comodin = "";
             }
         $query = $this->db->query("SELECT 
             FORMAT(ISNULL(a.sumaTotal, 0), 'C') sumaTotal, ISNULL(a.totalVentas, 0) totalVentas, --TOTAL VENDIDO
@@ -477,7 +473,7 @@ class Reporte_model extends CI_Model {
             totalVentas, '1' opt, tmpTotal.sede, tmpTotal.id_sede FROM (
                     SELECT  ss.nombre sede, ss.id_sede, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombreUsuario,lo.idLote, lo.nombreLote, cl.id_asesor, cl.id_coordinador, cl.id_gerente, cl.id_subdirector, cl.id_regional, cl.nombre, cl.apellido_paterno, cl.apellido_materno, isNULL(cl.totalNeto2_cl ,lo.totalNeto2) totalNeto2, isNULL(cl.total_cl ,lo.total) total FROM clientes cl
                     INNER JOIN lotes lo ON lo.idLote = cl.idLote
-                    INNER JOIN usuarios u ON u.id_usuario = cl.$comodin
+                    $comodin2 JOIN usuarios u ON u.id_usuario = cl.$comodin
                     INNER JOIN condominios cn ON cn.idCondominio = lo.idCondominio
                     INNER JOIN residenciales r ON r.idResidencial = cn.idResidencial
                     LEFT JOIN sedes ss ON ss.id_sede = r.sede_residencial
@@ -496,7 +492,7 @@ class Reporte_model extends CI_Model {
             totalCT, '1' opt, tmpCanT.sede, tmpCanT.id_sede FROM (
                     SELECT ss.nombre sede, ss.id_sede,CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombreUsuario, lo.idLote, lo.nombreLote, cl.id_asesor, cl.id_coordinador, cl.id_gerente, cl.id_subdirector, cl.id_regional, cl.nombre, cl.apellido_paterno, cl.apellido_materno, isNULL(cl.totalNeto2_cl ,lo.totalNeto2) totalNeto2, isNULL(cl.total_cl ,lo.total) total FROM clientes cl
                     INNER JOIN lotes lo ON lo.idLote = cl.idLote
-                    INNER JOIN usuarios u ON u.id_usuario = cl.$comodin
+                    $comodin2 JOIN usuarios u ON u.id_usuario = cl.$comodin
                     LEFT JOIN historial_liberacion hl ON hl.idLote = lo.idLote AND hl.tipo NOT IN (2, 5, 6) AND hl.idLote = lo.idLote AND hl.id_cliente = cl.id_cliente
                     INNER JOIN condominios cn ON cn.idCondominio = lo.idCondominio
                     INNER JOIN residenciales r ON r.idResidencial = cn.idResidencial
@@ -516,7 +512,7 @@ class Reporte_model extends CI_Model {
             totalConT, '1' opt, tmpConT.sede, tmpConT.id_sede FROM (
                     SELECT  ss.nombre sede, ss.id_sede, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombreUsuario, lo.idLote, lo.nombreLote, cl.id_asesor, cl.id_coordinador, cl.id_gerente, cl.id_subdirector, cl.id_regional, cl.nombre, cl.apellido_paterno, cl.apellido_materno, isNULL(cl.totalNeto2_cl ,lo.totalNeto2) totalNeto2, isNULL(cl.total_cl ,lo.total) total FROM clientes cl
                     INNER JOIN lotes lo ON lo.idLote = cl.idLote AND lo.idStatusLote = 2
-                    INNER JOIN usuarios u ON u.id_usuario = cl.$comodin
+                    $comodin2 JOIN usuarios u ON u.id_usuario = cl.$comodin
                     INNER JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes WHERE idStatusContratacion = 15 AND idMovimiento = 45
                     GROUP BY idLote, idCliente) hl ON hl.idLote = lo.idLote AND hl.idCliente = cl.id_cliente
                     INNER JOIN condominios cn ON cn.idCondominio = lo.idCondominio
@@ -537,7 +533,7 @@ class Reporte_model extends CI_Model {
             totalAT, '1' opt, tmpApT.sede, tmpApT.id_sede FROM (
                     SELECT  ss.nombre sede, ss.id_sede,CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombreUsuario, lo.idLote, lo.nombreLote, cl.id_asesor, cl.id_coordinador, cl.id_gerente, cl.id_subdirector, cl.id_regional, cl.nombre, cl.apellido_paterno, cl.apellido_materno, isNULL(cl.totalNeto2_cl ,lo.totalNeto2) totalNeto2, isNULL(cl.total_cl ,lo.total) total FROM clientes cl
                     INNER JOIN lotes lo ON lo.idLote = cl.idLote AND lo.idStatusLote != 2
-                    INNER JOIN usuarios u ON u.id_usuario = cl.$comodin
+                    $comodin2 JOIN usuarios u ON u.id_usuario = cl.$comodin
                     INNER JOIN condominios cn ON cn.idCondominio = lo.idCondominio
                     INNER JOIN residenciales r ON r.idResidencial = cn.idResidencial
                     LEFT JOIN sedes ss ON ss.id_sede = r.sede_residencial
@@ -556,7 +552,7 @@ class Reporte_model extends CI_Model {
             totalCanC, '1' opt, tmpCC.sede, tmpCC.id_sede FROM (
                     SELECT  ss.nombre sede, ss.id_sede,CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombreUsuario, lo.idLote, lo.nombreLote, cl.id_asesor, cl.id_coordinador, cl.id_gerente, cl.id_subdirector, cl.id_regional, cl.nombre, cl.apellido_paterno, cl.apellido_materno, isNULL(cl.totalNeto2_cl ,lo.totalNeto2) totalNeto2, isNULL(cl.total_cl ,lo.total) total FROM clientes cl
                     INNER JOIN lotes lo ON lo.idLote = cl.idLote
-                    INNER JOIN usuarios u ON u.id_usuario = cl.$comodin
+                    $comodin2 JOIN usuarios u ON u.id_usuario = cl.$comodin
                     LEFT JOIN historial_liberacion hl ON hl.idLote = lo.idLote AND hl.tipo NOT IN (2, 5, 6) AND hl.id_cliente = cl.id_cliente
                     INNER JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes WHERE idStatusContratacion = 15 AND idMovimiento = 45
                     GROUP BY idLote, idCliente) hlo ON hlo.idLote = lo.idLote AND hlo.idCliente = cl.id_cliente
