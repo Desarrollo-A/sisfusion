@@ -75,7 +75,7 @@
 
   // updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
 
-  $.post('Calendar/getStatusRecordatorio', function(data) {
+  $.post(`${base_url}Calendar/getStatusRecordatorio`, function(data) {
     var len = data.length;
     for (var i = 0; i < len; i++) {
         var id = data[i]['id_opcion'];
@@ -92,7 +92,7 @@
 
   }, 'json'); 
 
-  $.post('Calendar/getProspectos', function(data) {
+  $.post(`${base_url}Calendar/getProspectos`, function(data) {
     var len = data.length;
     for (var i = 0; i < len; i++) {
         var id = data[i]['id_prospecto'];
@@ -258,7 +258,7 @@
   }
 
   function getOfficeAddresses(appointment){
-    $.post('Calendar/getOfficeAddresses', function(data) {
+    $.post(`${base_url}Calendar/getOfficeAddresses`, function(data) {
       var len = data.length;
       for (var i = 0; i < len; i++) {
           var id = data[i]['id_direccion'];
