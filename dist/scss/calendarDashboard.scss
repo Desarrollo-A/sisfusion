@@ -1,5 +1,7 @@
 @import "_base";
-
+#allAppointmentsModal .table-striped thead > tr th {
+  white-space: nowrap!important;
+}
 .form-control[disabled]{
   border-bottom: none!important;
   opacity: .65;
@@ -8,6 +10,10 @@
   box-shadow: 0px 2px 9px -12px RGB(0 0 0/42%), 0 4px 25px 0px RGB(0 0 0/12%), 0 8px 10px -5px RGB(0 0 0/20%);
 }
 #calendar{
+  
+  table.dataTable > thead > tr > th, table.dataTable > tbody > tr > th, table.dataTable > tfoot > tr > th, table.dataTable > thead > tr > td, table.dataTable > tbody > tr > td, table.dataTable > tfoot > tr > td {
+    white-space: nowrap!important;
+  }
   .fc-toolbar-chunk{
     display: flex;
     align-items: center;
@@ -189,7 +195,7 @@
         }
       }
       select{
-        width: 88%!important;
+        width:100%!important;
         background-image: none;
         color: $blueSubmit;
         -moz-appearance: none;
