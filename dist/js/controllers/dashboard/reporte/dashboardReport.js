@@ -417,6 +417,29 @@ function setOptionsChart(series, categories, miniChart, type= null){
     }
     return optionsMiniChart;
 }
+
+function setOptionsChart2(series, categories, miniChart, type= null){
+    console.log("si?");
+    var arra = [1991,1992,1993,1994,1995,1996,1997, 1998,1999];
+    var options = {
+        chart: {
+          type: 'bar'
+        },
+        series: [{
+          name: 'sales',
+          data: [30,40,45,50,49,60,70,91,125]
+        }],
+        xaxis: {
+            type: "category",
+            labels: function(arra){
+                return arra;
+            }
+        }
+      }
+      console.log(options);
+    return options;
+}
+
 // $(document, '.js-accordion-title').unbind();
 $(document).off('click', '.js-accordion-title').on('click', '.js-accordion-title', function () {
     $(this).parent().parent().next().slideToggle(200);
@@ -905,7 +928,7 @@ function generalChart(data){
             data: contratadosC
         }
     ];
-    chart.updateOptions(setOptionsChart(series, x, 0, 1));
+    chart.updateOptions(setOptionsChart2(series, x, 0, 1));
     // chart.render();
 }
 
