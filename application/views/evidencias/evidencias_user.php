@@ -1,10 +1,10 @@
+<link href="<?= base_url() ?>dist/css/evidencias_user.css" rel="stylesheet"/>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
+<link href="https://vjs.zencdn.net/7.19.2/video-js.css" rel="stylesheet" />
+<link rel="stylesheet" href="//unpkg.com/videojs-record/dist/css/videojs.record.min.css">
 
 <body class="">
 <div class="wrapper">
-
-    <?php $this->load->view('template/sidebar', ""); ?>
-
     <div class="content recisiones">
         <div class="container-fluid">
             <div class="row">
@@ -15,43 +15,7 @@
                         </div>
                         <div class="card-content">
                             <div class="toolbar">
-                                <h3 class="card-title center-align">Generar link para cargar evidencia</h3>
-                                <div class="row">
-									<div class="col col-xs-12 col-sm-12 col-md-4 col-lg-4">
-										<div class="form-group label-floating select-is-empty">
-											<label class="control-label">Proyectos</label>
-											<select name="residenciales" id="residenciales"
-												class="selectpicker select-gral m-0"
-												data-style="btn" data-show-subtext="true"
-												data-live-search="true"
-												title="Selecciona un proyecto" data-size="7" required>
-											</select>
-										</div>
-									</div>
-								    <div class="col col-xs-12 col-sm-12 col-md-4 col-lg-4">
-									    <div class="form-group label-floating select-is-empty">
-											<label class="control-label">Condominios</label>
-											<select id="condominios" name="condominios"
-												class="selectpicker select-gral m-0"
-												data-style="btn" data-show-subtext="true"
-												data-live-search="true"
-												title="Selecciona un condominio" data-size="7" required>
-											</select>
-										</div>
-									</div>
-									<div class="col col-xs-12 col-sm-12 col-md-4 col-lg-4">
-										<div class="form-group label-floating select-is-empty">
-											<label class="control-label">Lotes</label>
-										    <select id="lotes" name="lotes"
-												class="selectpicker select-gral m-0"
-												data-style="btn" data-show-subtext="true"
-												data-live-search="true"
-												title="Selecciona un lote" data-size="7" required>
-											</select>
-										</div>
-									</div>
-								</div>
-
+                                <h3 class="card-title center-align">Guardar evidencia</h3>
                                 <div class="row">
                                     <div class="col-12 col-sm-12 col-md-4 col-lg-4">
                                         <div class="card miniCard">
@@ -118,6 +82,19 @@
                                     </div>
                                 </div>
                             </div>
+                            <div>
+                                <div class="row d-flex justify-center">
+                                    <div class="w-50">
+                                        <div class="action-buttons">
+                                            <button>Guardar</button>
+                                            <button>Regrabar</button>
+                                        </div>
+                                        <video id="myVideo" playsinline class="video-js vjs-default-skin"></video>
+                                    </div>
+                                </div>
+                                <input type="file" id="file" name="file"></input>
+                                <button id="upload">SUBIR</button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -138,8 +115,10 @@
 <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
 <script type="text/javascript" src="//unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
-
-
+<script src="https://vjs.zencdn.net/7.19.2/video.min.js"></script>
+<script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
+<script src="https://www.WebRTC-Experiment.com/RecordRTC.js"></script>
+<script src="//unpkg.com/videojs-record/dist/videojs.record.min.js"></script>
 
 <script>
     let url = "<?=base_url()?>";
@@ -148,5 +127,5 @@
 
 <script src="<?= base_url() ?>dist/js/controllers/general/main_services.js"></script>
 <!-- <script src="<?= base_url() ?>dist/js/controllers/general/main_services_dr.js"></script> -->
-<script src="<?= base_url() ?>dist/js/controllers/evidencias/evidencias.js"></script>
+<script src="<?= base_url() ?>dist/js/controllers/evidencias/user_evidencias.js"></script>
 </body>

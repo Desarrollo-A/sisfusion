@@ -1,0 +1,12 @@
+@import "_base";
+
+#evidencias{
+    .action-buttons{
+        position: absolute;
+        z-index: 1;
+        width: 49%;
+        display: flex;
+        justify-content: flex-end;
+        padding: 3px;
+    }
+}
