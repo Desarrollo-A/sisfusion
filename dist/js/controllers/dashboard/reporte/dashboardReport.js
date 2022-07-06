@@ -98,8 +98,7 @@ $('[data-toggle="tooltip"]').tooltip();
 async function init(){
     getLastSales(null, null);
     let rol = userType == 2 ? await getRolDR(idUser): userType;
-    fillBoxAccordions(rol == '1' ? 'director_regional': rol == '2' ? 'gerente' : rol == '3' ? 'coordinador' : rol == '59' ? 'subdirector':'asesor', rol, idUser, 1, 1);
-    // datesMonths = await get4Months();
+    fillBoxAccordions(rol == '1' || rol == '18' ? 'director_regional': rol == '2' ? 'gerente' : rol == '3' ? 'coordinador' : rol == '59' ? 'subdirector':'asesor', rol, idUser, 1, 1);
 }
 
 function createAccordions(option, render, rol){
@@ -256,18 +255,6 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, dates=n
                     return d.porcentajeTotalCanC + "%"; //PORCENTAJE CANCELADOS CONTRATADOS
                 }
             },
-            // {
-            //     width: "8%",
-            //     data: function (d) {
-            //         return "<b>" + d.sumaCT+"</b>";
-            //     }
-            // },
-            // {
-            //     width: "8%",
-            //     data: function (d) {
-            //         return d.totalCT;
-            //     }
-            // },
             {
                 width: "8%",
                 data: function (d) {
@@ -433,29 +420,6 @@ function setOptionsChart(series, categories, miniChart, type= null){
     return optionsMiniChart;
 }
 
-function setOptionsChart2(series, categories, miniChart, type= null){
-    console.log("si?");
-    var arra = [1991,1992,1993,1994,1995,1996,1997, 1998,1999];
-    var options = {
-        chart: {
-          type: 'bar'
-        },
-        series: [{
-          name: 'sales',
-          data: [30,40,45,50,49,60,70,91,125]
-        }],
-        xaxis: {
-            type: "category",
-            labels: function(arra){
-                return arra;
-            }
-        }
-      }
-      console.log(options);
-    return options;
-}
-
-// $(document, '.js-accordion-title').unbind();
 $(document).off('click', '.js-accordion-title').on('click', '.js-accordion-title', function () {
     $(this).parent().parent().next().slideToggle(200);
     $(this).toggleClass('open', 200);
@@ -486,7 +450,7 @@ $(document).on('click', '#searchByDateRangeTable', async function () {
     let dates = {begin: $('#tableBegin').val(), end: $('#tableEnd').val()};
     let rol = userType == 2 ? await getRolDR(idUser): userType;
 
-    fillBoxAccordions(rol == '1' ? 'director_regional': rol == '2' ? 'gerente' : rol == '3' ? 'coordinador' : rol == '59' ? 'subdirector':'asesor', rol, idUser, 1, 2, dates);
+    fillBoxAccordions(rol == '1' || rol == '18' ? 'director_regional': rol == '2' ? 'gerente' : rol == '3' ? 'coordinador' : rol == '59' ? 'subdirector':'asesor', rol, idUser, 1, 2, dates);
 
 });
 
@@ -633,9 +597,7 @@ function orderedDataChart(data){
                     totalMes = [];
                     meses = [];
                 }
-                else{
-                    meses.push(monthName(mes) + ' ' + año);
-                }             
+                else meses.push(monthName(mes) + ' ' + año);         
             }
             else{
                 meses.push(monthName(mes) + ' ' + año);
@@ -787,6 +749,13 @@ function accordionToRemove(rol){
             break; 
         case 4://asistente dir
             $(".boxAccordions").find(`[data-rol='${1}']`).remove();
+            $(".boxAccordions").find(`[data-rol='${59}']`).remove();
+            $(".boxAccordions").find(`[data-rol='${2}']`).remove();
+            $(".boxAccordions").find(`[data-rol='${3}']`).remove();
+            $(".boxAccordions").find(`[data-rol='${9}']`).remove();
+            $(".boxAccordions").find(`[data-rol='${7}']`).remove();
+            break;
+        case 18://dir
             $(".boxAccordions").find(`[data-rol='${59}']`).remove();
             $(".boxAccordions").find(`[data-rol='${2}']`).remove();
             $(".boxAccordions").find(`[data-rol='${3}']`).remove();
@@ -950,7 +919,7 @@ function generalChart(data){
             data: contratadosC
         }
     ];
-    chart.updateOptions(setOptionsChart2(series, x, 0, 1));
+    chart.updateOptions(setOptionsChart(series, x, 0, 1));
     // chart.render();
 }
 
