@@ -1787,7 +1787,7 @@ function getStatusMktdPreventa(){
             break;
 
             default:
-                 $query = $this->db->query("SELECT c.id_prospecto, c.nombre, c.apellido_paterno, c.apellido_materno, c.vigencia,
+                 $query = $this->db->query("SELECT c.id_prospecto, CONCAT(c.nombre, ' ', c.apellido_paterno, ' ', c.apellido_materno) nombre, c.vigencia,
                 CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) asesor,
                 CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) coordinador,
                 CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno) gerente,
@@ -1858,7 +1858,7 @@ function getStatusMktdPreventa(){
                                         WHERE c.estatus_vigencia = 1 AND c.id_sede IN($id_coord) AND c.lugar_prospeccion = 6 AND c.tipo = 0 OR c.tipo = 1 $filter ORDER BY c.fecha_creacion DESC");
             break;
             default:
-                $query = $this->db->query("SELECT c.id_prospecto, c.nombre, c.apellido_paterno, c.apellido_materno, c.vigencia,
+                $query = $this->db->query("SELECT c.id_prospecto, CONCAT(c.nombre, ' ', c.apellido_paterno, ' ', c.apellido_materno) nombre, c.vigencia,
                                         CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) asesor, 
                                         CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) coordinador, 
                                         CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno) gerente, 
@@ -1868,7 +1868,7 @@ function getStatusMktdPreventa(){
                                         LEFT JOIN usuarios us ON us.id_usuario = c.id_coordinador
                                         LEFT JOIN usuarios uss ON uss.id_usuario = c.id_gerente
                                         LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = c.lugar_prospeccion AND oxc.id_catalogo = 9
-                                        WHERE c.estatus_vigencia = 1 AND (c.id_coordinador = ".$id_coord.") AND c.tipo = 0  OR c.tipo = 1 ".$filter."  ORDER BY c.fecha_creacion DESC");
+                                        WHERE c.estatus_vigencia = 1 AND (c.id_coordinador = ".$id_coord.") AND c.tipo IN(0,1) ".$filter."  ORDER BY c.fecha_creacion DESC");
             break;
         }
         
@@ -1934,7 +1934,7 @@ function getStatusMktdPreventa(){
                                         LEFT JOIN usuarios us ON us.id_usuario = c.id_coordinador
                                         LEFT JOIN usuarios uss ON uss.id_usuario = c.id_gerente
                                         LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = c.lugar_prospeccion AND oxc.id_catalogo = 9
-                                        WHERE c.estatus_vigencia = 1 AND (c.id_asesor = ".$id_asesor.") AND c.tipo = 0 OR c.tipo = 1 ".$filter. "ORDER BY c.fecha_creacion DESC");
+                                        WHERE c.estatus_vigencia = 1 AND (c.id_asesor = ".$id_asesor.") AND c.tipo IN(0,1) ".$filter. "ORDER BY c.fecha_creacion DESC");
             break;
             case '28': // SUBDIRECTOR
                 $query = $this->db->query("SELECT c.id_prospecto, CONCAT (c.nombre, ' ', c.apellido_paterno, ' ', c.apellido_materno) nombre, c.vigencia,
@@ -1947,7 +1947,7 @@ function getStatusMktdPreventa(){
                                         LEFT JOIN usuarios us ON us.id_usuario = c.id_coordinador
                                         LEFT JOIN usuarios uss ON uss.id_usuario = c.id_gerente
                                         LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = c.lugar_prospeccion AND oxc.id_catalogo = 9
-                                        WHERE c.lugar_prospeccion = 6 AND c.estatus_vigencia = 1 AND (c.id_asesor = ".$id_asesor.") AND c.tipo = 0 OR c.tipo = 1 ".$filter."  ORDER BY c.fecha_creacion DESC");
+                                        WHERE c.lugar_prospeccion = 6 AND c.estatus_vigencia = 1 AND (c.id_asesor = ".$id_asesor.") AND c.tipo IN(0,1) ".$filter."  ORDER BY c.fecha_creacion DESC");
             break;
         }
         return $query->result();
