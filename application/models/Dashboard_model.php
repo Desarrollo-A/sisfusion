@@ -89,7 +89,7 @@ class Dashboard_model extends CI_Model {
                 $filter2 .= " p.id_subdirector = $id_lider"; 
             }
         }
-        else if ($id_rol == 1 || $id_rol == 4) // MJ: Director comercial
+        else if ($id_rol == 1 || $id_rol == 4 || $id_rol == 18) // MJ: Director comercial
            { $filtro .= "";
             $filter .= "";
             $filter2 .= "";
@@ -237,7 +237,7 @@ class Dashboard_model extends CI_Model {
                 $filtro = " AND cl.id_subdirector = $id_lider AND YEAR(cl.fechaApartado) = $year";
             }
         }
-        else if ($id_rol == 1 || $id_rol == 4) // MJ: Director comercial
+        else if ($id_rol == 1 || $id_rol == 4 || $id_rol == 18) // MJ: Director comercial
             $filtro = "";
 
         $query = $this->db->query("SELECT 
@@ -392,7 +392,7 @@ class Dashboard_model extends CI_Model {
         }
         else if ($id_rol == 5) // MJ: Asistente de dirección regional
             $filtro .= ""; // MJ: PENDIENTE
-        else if ($id_rol == 1 || $id_rol == 4) // MJ: Director comercial
+        else if ($id_rol == 1 || $id_rol == 4 || $id_rol == 18) // MJ: Director comercial
             $filtro .= "";
         $query = $this->db->query("WITH cte AS(
             SELECT CAST('$begin 00:00:00' AS DATETIME) DateValue
@@ -481,7 +481,7 @@ class Dashboard_model extends CI_Model {
                 $filtro .= " AND cl.id_subdirector = $id_usuario";
             }
         }
-        else if ($id_rol == 1 || $id_rol == 4) // MJ: Director comercial
+        else if ($id_rol == 1 || $id_rol == 4 || $id_rol == 18) // MJ: Director comercial
             $filtro .= "";
         $query = $this->db->query("WITH cte AS(
             SELECT CAST('2022-01-01 00:00:00' AS DATETIME) DateValue
@@ -565,7 +565,7 @@ class Dashboard_model extends CI_Model {
                 $filter = " AND p.id_subdirector = $id_lider AND YEAR(p.fecha_creacion) = $year";
             }
         }
-        else if ($id_rol == 1 || $id_rol == 4) // MJ: Director comercial
+        else if ($id_rol == 1 || $id_rol == 4 || $id_rol == 18) // MJ: Director comercial
             $filter = "";
         $query = $this->db->query("SELECT
         ISNULL(a.totalProspectos, 0) totalProspectos, --TOTAL PROSPECTOS

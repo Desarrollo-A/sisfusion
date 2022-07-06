@@ -246,7 +246,7 @@ var optionsMedio = {
     series: [],
     chart: {
         height: 'auto',
-        type: 'donut',
+        type: 'radialBar',
         toolbar: {
             show: false
         },
