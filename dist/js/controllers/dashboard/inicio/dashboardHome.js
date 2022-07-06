@@ -43,7 +43,7 @@ var optionsTotalVentas = {
 var optionsProspectos = {
     series: [],
     chart: {
-        type: 'bar',
+        type: 'area',
         height: '100%',
         toolbar: { show: false },
         zoom: { enabled: false },
