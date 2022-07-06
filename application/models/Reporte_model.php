@@ -55,19 +55,6 @@ class Reporte_model extends CI_Model {
         GROUP BY MONTH(cl.fechaApartado), YEAR(cl.fechaApartado)) qu ON qu.mes = month(cte.DateValue) AND qu.año = year(cte.DateValue)
         GROUP BY Month(DateValue), YEAR(DateValue), cantidad, total";
 
-        // $canceladasApartadas = "SELECT ISNULL(total, 0) total, ISNULL(cantidad ,0) cantidad, MONTH(DateValue) mes, YEAR(DateValue) año, 'ca' tipo, '$rol' rol FROM cte
-        // LEFT JOIN (SELECT FORMAT(ISNULL(SUM(CASE WHEN totalNeto2 IS NULL THEN total WHEN totalNeto2 = 0 THEN total ELSE totalNeto2 END), 0), 'C') total, 
-        // COUNT(*) cantidad, MONTH(cl.fechaApartado) mes, YEAR(cl.fechaApartado) año
-        // FROM clientes cl
-        // INNER JOIN lotes lo ON lo.idLote = cl.idLote
-        // LEFT JOIN historial_liberacion hl ON hl.idLote = lo.idLote AND hl.tipo NOT IN (2, 5, 6) AND hl.id_cliente = cl.id_cliente
-        // INNER JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes WHERE idStatusContratacion = 15 AND idMovimiento = 45
-        // GROUP BY idLote, idCliente) hlo ON hlo.idLote = lo.idLote AND hlo.idCliente = cl.id_cliente
-        // WHERE isNULL(noRecibo, '') != 'CANCELADO' AND cl.status = 0  AND cl.fechaApartado BETWEEN '$beginDate 00:00:00.000' AND '$endDate 23:59:00.000'  
-        // $condicion_x_rol
-        // GROUP BY MONTH(cl.fechaApartado), YEAR(cl.fechaApartado)) qu ON qu.mes = month(cte.DateValue) AND qu.año = year(cte.DateValue)
-        // GROUP BY Month(DateValue), YEAR(DateValue), cantidad, total";
-
         $canceladasApartadas = "SELECT 
             FORMAT(ISNULL(a.sumaCT, 0) - ISNULL(b.sumaCanC, 0), 'C') total,
             ISNULL(a.totalCT, 0) - ISNULL(b.totalCanC, 0) cantidad,
@@ -159,8 +146,7 @@ class Reporte_model extends CI_Model {
     }
 
     public function getGeneralInformation($beginDate, $endDate, $id_rol, $id_usuario, $render) {
-        // $id_rol = $this->session->userdata('id_rol');
-        // $id_usuario = $this->session->userdata('id_usuario'); // PARA ASESOR, COORDINADOR, GERENTE, SUBDIRECTOR, REGIONAL Y DIRECCIÓN COMERCIAL
+        // PARA ASESOR, COORDINADOR, GERENTE, SUBDIRECTOR, REGIONAL Y DIRECCIÓN COMERCIAL
         $id_lider = $this->session->userdata('id_lider'); // PARA ASISTENTES
         $comodin2 = 'LEFT';
         $filtro=" AND cl.fechaApartado BETWEEN '$beginDate 00:00:00.000' AND '$endDate 23:59:00.000'";
@@ -238,17 +224,7 @@ class Reporte_model extends CI_Model {
                 $filtro .= "";
             }
         }
-        // else if ($id_rol == 59) // MJ: Asistente de dirección regional
-        //     {
-        //         $id_sede = "'" . implode("', '", explode(", ", $this->session->userdata('id_sede'))) . "'"; // MJ: ID sede separado por , como string
-        //         if($render == 1){
-        //             $filtro .= " AND cl.id_sede IN ($id_sede)";
-        //         }else{
-        //             $filtro .= "";
-        //         }
-        //         $comodin = "id_subdirector";//pendiente
-        //     }
-        else if ($id_rol == 1 || $id_rol == 4) // MJ: Director comercial
+        else if ($id_rol == 1 || $id_rol == 4 || $id_rol == 18) // MJ: Director comercial
            { 
 
             $comodin2 = 'LEFT';
@@ -457,16 +433,6 @@ class Reporte_model extends CI_Model {
                 $filtro .= "";
             }
         }
-        // else if ($id_rol == 59) // MJ: Asistente de dirección regional
-        //     {
-        //         $id_sede = "'" . implode("', '", explode(", ", $this->session->userdata('id_sede'))) . "'"; // MJ: ID sede separado por , como string
-        //         if($render == 1){
-        //             $filtro .= " AND cl.id_sede IN ($id_sede)";
-        //         }else{
-        //             $filtro .= "";
-        //         }
-        //         $comodin = "id_subdirector";//pendiente
-        //     }
         else if ($id_rol == 1 || $id_rol == 4) // MJ: Director comercial
            { 
             $comodin2 = 'LEFT';
