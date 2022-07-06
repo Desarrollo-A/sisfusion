@@ -25,7 +25,7 @@ class Dashboard_model extends CI_Model {
         if ($id_rol == 7) // MJ: Asesor
           {  $filtro .= " AND cl.id_asesor = $id_usuario";
             $filter .= " AND p.id_asesor = $id_usuario";
-            $filter2 .= "  p.id_asesor = $id_usuario";}
+            $filter2 .= "WHERE p.id_asesor = $id_usuario";}
 
         else if ($id_rol == 9) // MJ: Coordinador
            {
@@ -34,21 +34,21 @@ class Dashboard_model extends CI_Model {
                 // $condicionalCL = 'AND cl.id_asesor='.$id_usuario;
                 $filtro .= "AND cl.id_asesor = $id_usuario";
                 $filter .= "AND id_asesor = $id_usuario";
-                $filter2 .= "p.id_asesor = $id_usuario";
+                $filter2 .= "WHERE p.id_asesor = $id_usuario";
 
             }else if($typeTransaction == 2){#Filtro que solo muestra los de todos los asesres
                 // $condicionalPR = 'AND id_coordinador='.$id_usuario;
                 // $condicionalCL = 'AND cl.id_coordinador='.$id_usuario;
                 $filtro .= "AND cl.id_coordinador = $id_usuario";
                 $filter .= "AND id_coordinador = $id_usuario";
-                $filter2 .= "p.id_coordinador = $id_usuario";
+                $filter2 .= "WHERE p.id_coordinador = $id_usuario";
 
             }else if($typeTransaction == 3){ #Filtro que muestra los propios y los asesores
                 // $condicionalPR = 'OR id_asesor='.$id_usuario." OR id_coordinador=".$id_usuario;
                 // $condicionalCL = 'OR cl.id_asesor='.$id_usuario." OR cl.id_coordinador=".$id_usuario;
                 $filtro .= "AND (cl.id_coordinador = $id_usuario OR cl.id_asesor = $id_usuario)";
                 $filter .= "AND (p.id_coordinador = $id_usuario OR p.id_asesor = $id_usuario)";
-                $filter2 .= "(p.id_coordinador = $id_usuario OR p.id_asesor = $id_usuario)";
+                $filter2 .= "WHERE (p.id_coordinador = $id_usuario OR p.id_asesor = $id_usuario)";
 
             }else{
                 $filtro .= '';
@@ -58,22 +58,22 @@ class Dashboard_model extends CI_Model {
         else if ($id_rol == 3) // MJ: Gerente
           {  $filtro .= " AND cl.id_gerente = $id_usuario";
             $filter .= " AND id_gerente = $id_usuario";
-            $filter2 .= "p.id_gerente = $id_usuario";}
+            $filter2 .= "WHERE p.id_gerente = $id_usuario";}
         else if ($id_rol == 6) // MJ: Asistente de gerencia
           {  $filtro .= " AND cl.id_gerente = $id_lider";
             $filter .= " AND p.id_gerente = $id_lider";
-            $filter2 .= " p.id_gerente = $id_lider";}
+            $filter2 .= "WHERE p.id_gerente = $id_lider";}
         else if ($id_rol == 2) // MJ: Subdirector
            {
             $getRol = $this->validateRegional($id_usuario);
             if(count($getRol) > 1){
                 $filtro .= " AND (cl.id_subdirector = $id_usuario OR cl.id_regional = $id_usuario)";
                 $filter .= " AND (p.id_subdirector = $id_usuario OR p.id_regional = $id_usuario)";
-                $filter2 .= " (p.id_subdirector = $id_usuario OR p.id_regional = $id_usuario)"; 
+                $filter2 .= "WHERE (p.id_subdirector = $id_usuario OR p.id_regional = $id_usuario)"; 
             }else{
                 $filtro .= " AND cl.id_subdirector = $id_usuario";
                 $filter .= " AND p.id_subdirector = $id_usuario";
-                $filter2 .= " p.id_subdirector = $id_usuario"; 
+                $filter2 .= "WHERE p.id_subdirector = $id_usuario"; 
             }
         }
         else if ($id_rol == 5) // MJ: Asistente subdirección
@@ -82,11 +82,11 @@ class Dashboard_model extends CI_Model {
             if(count($getRol) > 1){
                 $filtro .= " AND (cl.id_subdirector = $id_lider OR cl.id_regional = $id_lider)";
                 $filter .= " AND (p.id_subdirector = $id_lider OR p.id_regional = $id_lider)";
-                $filter2 .= " (p.id_subdirector = $id_lider OR p.id_regional = $id_lider)"; 
+                $filter2 .= "WHERE (p.id_subdirector = $id_lider OR p.id_regional = $id_lider)"; 
             }else{
                 $filtro .= " AND cl.id_subdirector = $id_lider";
                 $filter .= " AND p.id_subdirector = $id_lider";
-                $filter2 .= " p.id_subdirector = $id_lider"; 
+                $filter2 .= "WHERE p.id_subdirector = $id_lider"; 
             }
         }
         else if ($id_rol == 1 || $id_rol == 4 || $id_rol == 18) // MJ: Director comercial
@@ -185,7 +185,7 @@ class Dashboard_model extends CI_Model {
                 WHERE isNULL(noRecibo, '') != 'CANCELADO' AND cl.status = 0 AND isNULL(cl.tipo_venta_cl, lo.tipo_venta) IN(1, 2) $filtro
                 GROUP BY lo.idLote, lo.nombreLote, cl.id_asesor, cl.id_coordinador, cl.id_gerente, cl.nombre, cl.apellido_paterno, cl.apellido_materno, isNULL(cl.totalNeto2_cl, lo.totalNeto2), isNULL(cl.total_cl,lo.total)
             ) tmpCC) e ON e.opt = d.opt
-        INNER JOIN(SELECT COUNT(*) prospTotales, '1' opt FROM prospectos p WHERE $filter2) f ON f.opt = d.opt
+        INNER JOIN(SELECT COUNT(*) prospTotales, '1' opt FROM prospectos p $filter2) f ON f.opt = d.opt
         INNER JOIN (SELECT COUNT(*) prospNuevos, '1' opt FROM prospectos p WHERE $filter) g ON g.opt = f.opt
         INNER JOIN (SELECT COUNT(*) prosCita , '1' opt FROM prospectos p INNER JOIN agenda ag ON ag.idCliente = p.id_prospecto  WHERE $filter) h ON h.opt = g.opt");
         return $query->row();
@@ -265,10 +265,10 @@ class Dashboard_model extends CI_Model {
                 END) sumaTotal, 
                 COUNT(*)
             totalVentas, '1' opt FROM (
-                    SELECT  lo.idLote, lo.nombreLote, cl.id_cliente, cl.id_asesor, cl.id_coordinador, cl.id_gerente, cl.nombre, cl.apellido_paterno, cl.apellido_materno, isNULL(cl.totalNeto2_cl, lo.totalNeto2) totalNeto2, isNULL(cl.total_cl,lo.total) total FROM clientes cl
+                    SELECT  lo.idLote, lo.nombreLote,  cl.id_asesor, cl.id_coordinador, cl.id_gerente, cl.nombre, cl.apellido_paterno, cl.apellido_materno, isNULL(cl.totalNeto2_cl, lo.totalNeto2) totalNeto2, isNULL(cl.total_cl,lo.total) total FROM clientes cl
                     INNER JOIN lotes lo ON lo.idLote = cl.idLote
                     WHERE isNULL(noRecibo, '') != 'CANCELADO' AND isNULL(cl.tipo_venta_cl, lo.tipo_venta) IN(1, 2) $filtro
-                    GROUP BY lo.idLote, lo.nombreLote, cl.id_cliente, cl.id_asesor, cl.id_coordinador, cl.id_gerente, cl.nombre, cl.apellido_paterno, cl.apellido_materno, isNULL(cl.totalNeto2_cl, lo.totalNeto2), isNULL(cl.total_cl,lo.total)
+                    GROUP BY lo.idLote, lo.nombreLote,  cl.id_asesor, cl.id_coordinador, cl.id_gerente, cl.nombre, cl.apellido_paterno, cl.apellido_materno, isNULL(cl.totalNeto2_cl, lo.totalNeto2), isNULL(cl.total_cl,lo.total)
                 ) tmpTotal) a
             --SUMA CANCELADOS TOTALES
             LEFT JOIN(
@@ -280,11 +280,11 @@ class Dashboard_model extends CI_Model {
                 END) sumaCT,
                 COUNT(*)
             totalCT, '1' opt FROM (
-                    SELECT lo.idLote, lo.nombreLote, cl.id_cliente, cl.id_asesor, cl.id_coordinador, cl.id_gerente, cl.nombre, cl.apellido_paterno, cl.apellido_materno, isNULL(cl.totalNeto2_cl, lo.totalNeto2) totalNeto2, isNULL(cl.total_cl,lo.total) total FROM clientes cl
+                    SELECT lo.idLote, lo.nombreLote,  cl.id_asesor, cl.id_coordinador, cl.id_gerente, cl.nombre, cl.apellido_paterno, cl.apellido_materno, isNULL(cl.totalNeto2_cl, lo.totalNeto2) totalNeto2, isNULL(cl.total_cl,lo.total) total FROM clientes cl
                     INNER JOIN lotes lo ON lo.idLote = cl.idLote
                     LEFT JOIN historial_liberacion hl ON hl.idLote = lo.idLote AND hl.tipo NOT IN (2, 5, 6) AND hl.idLote = lo.idLote AND hl.id_cliente = cl.id_cliente
                     WHERE isNULL(noRecibo, '') != 'CANCELADO' AND cl.status = 0 AND isNULL(cl.tipo_venta_cl, lo.tipo_venta) IN(1, 2) $filtro
-                    GROUP BY lo.idLote, lo.nombreLote, cl.id_cliente, cl.id_asesor, cl.id_coordinador, cl.id_gerente, cl.nombre, cl.apellido_paterno, cl.apellido_materno, isNULL(cl.totalNeto2_cl, lo.totalNeto2), isNULL(cl.total_cl,lo.total)
+                    GROUP BY lo.idLote, lo.nombreLote,  cl.id_asesor, cl.id_coordinador, cl.id_gerente, cl.nombre, cl.apellido_paterno, cl.apellido_materno, isNULL(cl.totalNeto2_cl, lo.totalNeto2), isNULL(cl.total_cl,lo.total)
                 ) tmpCanT) b ON b.opt = a.opt
             --SUMA CONTRATOS TOTALES
             LEFT JOIN(
@@ -296,12 +296,12 @@ class Dashboard_model extends CI_Model {
                 END) sumaConT,
                 COUNT(*)
             totalConT, '1' opt FROM (
-                    SELECT lo.idLote, lo.nombreLote, cl.id_cliente, cl.id_asesor, cl.id_coordinador, cl.id_gerente, cl.nombre, cl.apellido_paterno, cl.apellido_materno, isNULL(cl.totalNeto2_cl, lo.totalNeto2) totalNeto2, isNULL(cl.total_cl,lo.total) total FROM clientes cl
+                    SELECT lo.idLote, lo.nombreLote,  cl.id_asesor, cl.id_coordinador, cl.id_gerente, cl.nombre, cl.apellido_paterno, cl.apellido_materno, isNULL(cl.totalNeto2_cl, lo.totalNeto2) totalNeto2, isNULL(cl.total_cl,lo.total) total FROM clientes cl
                     INNER JOIN lotes lo ON lo.idLote = cl.idLote AND lo.idStatusLote = 2
                     INNER JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes WHERE idStatusContratacion = 15 AND idMovimiento = 45
                     GROUP BY idLote, idCliente) hl ON hl.idLote = lo.idLote AND hl.idCliente = cl.id_cliente
                     WHERE isNULL(noRecibo, '') != 'CANCELADO' AND cl.status = 1 AND isNULL(cl.tipo_venta_cl, lo.tipo_venta) IN(1, 2) $filtro
-                    GROUP BY lo.idLote, lo.nombreLote, cl.id_cliente, cl.id_asesor, cl.id_coordinador, cl.id_gerente, cl.nombre, cl.apellido_paterno, cl.apellido_materno, isNULL(cl.totalNeto2_cl, lo.totalNeto2), isNULL(cl.total_cl,lo.total)
+                    GROUP BY lo.idLote, lo.nombreLote,  cl.id_asesor, cl.id_coordinador, cl.id_gerente, cl.nombre, cl.apellido_paterno, cl.apellido_materno, isNULL(cl.totalNeto2_cl, lo.totalNeto2), isNULL(cl.total_cl,lo.total)
                 ) tmpConT) c ON c.opt = a.opt
             --Suma apartados totales
             LEFT JOIN(
@@ -313,10 +313,10 @@ class Dashboard_model extends CI_Model {
                 END) sumaAT, 
                 COUNT(*)
             totalAT, '1' opt FROM (
-                    SELECT  lo.idLote, lo.nombreLote, cl.id_cliente, cl.id_asesor, cl.id_coordinador, cl.id_gerente, cl.nombre, cl.apellido_paterno, cl.apellido_materno, isNULL(cl.totalNeto2_cl, lo.totalNeto2) totalNeto2, isNULL(cl.total_cl,lo.total) total FROM clientes cl
+                    SELECT  lo.idLote, lo.nombreLote,  cl.id_asesor, cl.id_coordinador, cl.id_gerente, cl.nombre, cl.apellido_paterno, cl.apellido_materno, isNULL(cl.totalNeto2_cl, lo.totalNeto2) totalNeto2, isNULL(cl.total_cl,lo.total) total FROM clientes cl
                     INNER JOIN lotes lo ON lo.idLote = cl.idLote AND lo.idStatusLote != 2
                     WHERE isNULL(noRecibo, '') != 'CANCELADO' AND cl.status = 1 AND isNULL(cl.tipo_venta_cl, lo.tipo_venta) IN(1, 2) $filtro
-                    GROUP BY lo.idLote, lo.nombreLote, cl.id_cliente, cl.id_asesor, cl.id_coordinador, cl.id_gerente, cl.nombre, cl.apellido_paterno, cl.apellido_materno, isNULL(cl.totalNeto2_cl, lo.totalNeto2), isNULL(cl.total_cl,lo.total)
+                    GROUP BY lo.idLote, lo.nombreLote,  cl.id_asesor, cl.id_coordinador, cl.id_gerente, cl.nombre, cl.apellido_paterno, cl.apellido_materno, isNULL(cl.totalNeto2_cl, lo.totalNeto2), isNULL(cl.total_cl,lo.total)
                 ) tmpApT) d ON d.opt = c.opt
             --SUMA Cancelados contratados
             LEFT JOIN(
@@ -328,13 +328,13 @@ class Dashboard_model extends CI_Model {
                 END) sumaCanC, 
                 COUNT(*)
             totalCanC, '1' opt FROM (
-                    SELECT  lo.idLote, lo.nombreLote, cl.id_cliente, cl.id_asesor, cl.id_coordinador, cl.id_gerente, cl.nombre, cl.apellido_paterno, cl.apellido_materno, isNULL(cl.totalNeto2_cl, lo.totalNeto2) totalNeto2, isNULL(cl.total_cl,lo.total) total FROM clientes cl
+                    SELECT  lo.idLote, lo.nombreLote,  cl.id_asesor, cl.id_coordinador, cl.id_gerente, cl.nombre, cl.apellido_paterno, cl.apellido_materno, isNULL(cl.totalNeto2_cl, lo.totalNeto2) totalNeto2, isNULL(cl.total_cl,lo.total) total FROM clientes cl
                     INNER JOIN lotes lo ON lo.idLote = cl.idLote
                     LEFT JOIN historial_liberacion hl ON hl.idLote = lo.idLote AND hl.tipo NOT IN (2, 5, 6) AND hl.id_cliente = cl.id_cliente
                     INNER JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes WHERE idStatusContratacion = 15 AND idMovimiento = 45
                     GROUP BY idLote, idCliente) hlo ON hlo.idLote = lo.idLote AND hlo.idCliente = cl.id_cliente
                     WHERE isNULL(noRecibo, '') != 'CANCELADO' AND cl.status = 0 AND isNULL(cl.tipo_venta_cl, lo.tipo_venta) IN(1, 2) $filtro
-                    GROUP BY lo.idLote, lo.nombreLote, cl.id_cliente, cl.id_asesor, cl.id_coordinador, cl.id_gerente, cl.nombre, cl.apellido_paterno, cl.apellido_materno, isNULL(cl.totalNeto2_cl, lo.totalNeto2), isNULL(cl.total_cl,lo.total)
+                    GROUP BY lo.idLote, lo.nombreLote,  cl.id_asesor, cl.id_coordinador, cl.id_gerente, cl.nombre, cl.apellido_paterno, cl.apellido_materno, isNULL(cl.totalNeto2_cl, lo.totalNeto2), isNULL(cl.total_cl,lo.total)
         ) tmpCC) e ON e.opt = d.opt");
         return $query->row();
     }

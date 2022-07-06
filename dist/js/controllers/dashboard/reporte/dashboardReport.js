@@ -176,7 +176,7 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, dates=n
         ordering: false,
         scrollX: true,
         language: {
-            url: `${base_url}static/spanishLoader_v2.json`,
+            url: "static/spanishLoader_v2.json",
             paginate: {
                 previous: "<i class='fa fa-angle-left'>",
                 next: "<i class='fa fa-angle-right'>"
@@ -270,7 +270,7 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, dates=n
             searchable: false
         }],
         ajax: {
-            url: `${base_url}Reporte/getInformation`,
+            url: 'Reporte/getInformation',
             type: "POST",
             cache: false,
             data: {
@@ -288,12 +288,13 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, dates=n
 }
 
 $(document).on('click', '.update-dataTable', function () {
+    let closestChild;
     const type = $(this).attr("data-type");
     const render = $(this).data("render");
     const transaction = $(this).data("transaction");
-    let closestChild = $(this).closest('.childTable');
+    closestChild = $(this).closest('.childTable');
+    closestChild = closestChild.length == 0 ?  $(this).closest('.parentTable'):$(this).closest('.childTable');
     closestChild.nextAll().remove();
-
     let dates = transaction == 2 ?  {begin: $('#tableBegin').val(), end: $('#tableEnd').val()}:null;
 
     if (type == 2) { // MJ: #sub->ger->coord
@@ -319,8 +320,21 @@ $(document).on('click', '.update-dataTable', function () {
             fillBoxAccordions(table, 7, $(this).val(), 2, transaction, dates);
         }
     } else if (type == 59) { // MJ: #DirRegional->subdir->ger
-        const table = "gerente";
-        fillBoxAccordions(table, 3, $(this).val(), 2, transaction, dates);
+        if(render == 1){
+            const table = "gerente";
+            fillBoxAccordions(table, 3, $(this).val(), 2, transaction, dates);
+        }else{
+            const table = "subdirector";
+            fillBoxAccordions(table, 2, $(this).val(), 2, transaction, dates);
+        }
+    }else if(type == 1){
+        if(render == 1){
+            const table = "subdirector";
+            fillBoxAccordions(table, 2, $(this).val(), 2, transaction, dates);
+        }else{
+            const table = "regional";
+            fillBoxAccordions(table, 59, $(this).val(), 2, transaction, dates);
+        }
     }
 });
 
@@ -330,13 +344,14 @@ function setOptionsChart(series, categories, miniChart, type= null){
         series: series,
         chart: {
             type: 'area',
-            height: '100%',
+            height:  type==1 ? '90%': '100%',
+            width:   type==1 ? '90%': '100%',
             toolbar: { show: false },
             zoom: { enabled: false },
             sparkline: {
                 enabled: type==1 ? false: true
             },
-            offsetX: type==1 ? 35: 0
+            offsetX: type==1 ? 0: 0
         },
         colors: colors,
         grid: { show: false},
@@ -349,7 +364,7 @@ function setOptionsChart(series, categories, miniChart, type= null){
         xaxis: {
             show: type==1 ? true: false,
             categories: categories,
-            labels: {show: true},
+            labels: {show: false},
             formatter: function (value) {
                 return '';
             },
@@ -478,7 +493,7 @@ async function chartDetail(e, tipoChart){
 function getSpecificChart(type, beginDate, endDate){
     $.ajax({
         type: "POST",
-        url: `${base_url}Reporte/getDataChart`,
+        url: "Reporte/getDataChart",
         data: {general: 0, tipoChart: type, beginDate: beginDate, endDate: endDate},
         dataType: 'json',
         cache: false,
@@ -498,7 +513,7 @@ function getSpecificChart(type, beginDate, endDate){
             $("#modalChart .boxModalTitle .total").append('<p>$'+formatMoney(total)+'</p>');
             
             if ( total != 0 ){
-                $("#boxModalChart").removeClass('d-flex justify-center');
+                // $("#boxModalChart").removeClass('d-flex justify-center');
                 // var miniChart = new ApexCharts(document.querySelector("#boxModalChart"), setOptionsChart(series, categories, miniChart));
                 chart.updateOptions(setOptionsChart(series, categories, miniChart));
             }
@@ -520,7 +535,7 @@ function getSpecificChart(type, beginDate, endDate){
 function getLastSales(beginDate, endDate){
     $.ajax({
         type: "POST",
-        url: `${base_url}Reporte/getDataChart`,
+        url: "Reporte/getDataChart",
         data: {general: 1, tipoChart:'na', beginDate: beginDate, endDate: endDate},
         dataType: 'json',
         cache: false,
@@ -639,7 +654,7 @@ function getRolDR(idUser){
     return new Promise(resolve => {      
         $.ajax({
             type: "POST",
-            url: `${base_url}Reporte/getRolDR`,
+            url: "Reporte/getRolDR",
             data: {idUser: idUser},
             dataType: 'json',
             cache: false,
@@ -870,14 +885,21 @@ function generalChart(data){
     let apartadosC = [];
     let contratados = [];
     let contratadosC = [];
-
+    console.log(data.length);
     data.forEach(element => {
-        x.push(element.nombreUsuario);
-        apartados.push(element.totalAT);
-        apartadosC.push(element.totalCanA);
-        contratados.push(element.totalConT);
-        contratadosC.push(element.totalCanC);
-
+        if(data.length>1){
+            x.push(element.nombreUsuario);
+            apartados.push(element.totalAT + element.totalCanA);
+            apartadosC.push(element.totalCanA);
+            contratados.push(element.totalConT + element.totalCanC);
+            contratadosC.push(element.totalCanC);    
+        }else{
+            x = ['', element.nombreUsuario, ''];
+            apartados=[0,element.totalAT + element.totalCanA,0];
+            apartadosC=[0,element.totalCanA,0];
+            contratados=[0,element.totalConT + element.totalCanC,0];
+            contratadosC=[0,element.totalCanC,0];    
+        }
     });
     let series = [
         {
@@ -907,7 +929,7 @@ function get4Months() {
     return new Promise(resolve => {
         $.ajax({
             type: "POST",
-            url: `${base_url}Reporte/get4MonthsRequest`,
+            url: "Reporte/get4MonthsRequest",
             dataType: 'json',
             cache: false,
             beforeSend: function() {
