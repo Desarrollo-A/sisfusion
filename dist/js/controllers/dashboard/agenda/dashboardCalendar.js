@@ -73,9 +73,9 @@
   calendar.render();
   customizeIcon();
 
-  // updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
+  updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
 
-  $.post('Calendar/getStatusRecordatorio', function(data) {
+  $.post(`${base_url}Calendar/getStatusRecordatorio`, function(data) {
     var len = data.length;
     for (var i = 0; i < len; i++) {
         var id = data[i]['id_opcion'];
@@ -92,7 +92,7 @@
 
   }, 'json'); 
 
-  $.post('Calendar/getProspectos', function(data) {
+  $.post(`${base_url}Calendar/getProspectos`, function(data) {
     var len = data.length;
     for (var i = 0; i < len; i++) {
         var id = data[i]['id_prospecto'];
@@ -190,7 +190,7 @@
   function deleteCita(e){
     let idAgenda = $("#idAgenda2").val();
     let idGoogle = $("#idGoogle").val();
-    deleteGoogleEvent(idAgenda,idGoogle);
+    deleteEvent(idAgenda,idGoogle);
   }
 
   function finalizarCita(){
@@ -258,7 +258,7 @@
   }
 
   function getOfficeAddresses(appointment){
-    $.post('Calendar/getOfficeAddresses', function(data) {
+    $.post(`${base_url}Calendar/getOfficeAddresses`, function(data) {
       var len = data.length;
       for (var i = 0; i < len; i++) {
           var id = data[i]['id_direccion'];
@@ -429,9 +429,8 @@
   function removeCRMEvents(){
     srcEventos = calendar.getEventSources();
     srcEventos.forEach(event => {
-        if(event['internalEventSource']['extendedProps'].hasOwnProperty('title') && event['internalEventSource']['extendedProps']['title'] == "sourceCRM"){
+        if(event['internalEventSource']['extendedProps'].hasOwnProperty('title') && event['internalEventSource']['extendedProps']['title'] == "sourceCRM")
           event.remove();
-        }
     });
   }
 
@@ -468,7 +467,7 @@
     $("#estatus_recordatorio2").selectpicker('refresh');
   }
 
-  async function deleteGoogleEvent(idAgenda, idGoogle){
+  async function deleteEvent(idAgenda, idGoogle){
     $.ajax({
       type: 'POST',
       url: `${base_url}Calendar/deleteAppointment`,
@@ -482,10 +481,11 @@
         $('#spiner-loader').addClass('hide');
           if (data == 1) {
               $('#modalEvent').modal("hide");
-              calendar.render();
+              removeCRMEvents();
+              getUsersAndEvents(userType, idUser, false);
               alerts.showNotification("top", "right", "La actualización se ha llevado a cabo correctamente.", "success");
               if(idGoogle != ''){
-                delGoogleEvent(idGoogle);
+                deleteGoogleEvent(idGoogle);
               }
           } else {
               alerts.showNotification("top", "right", "Asegúrate de haber llenado todos los campos mínimos requeridos.", "warning");
@@ -498,7 +498,7 @@
     });
   }
 
-  function delGoogleEvent(idGoogle){
+  function deleteGoogleEvent(idGoogle){
     var request = gapi.client.calendar.events.delete({
       'calendarId': 'primary',
       'eventId': idGoogle
