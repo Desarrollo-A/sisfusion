@@ -73,7 +73,7 @@
   calendar.render();
   customizeIcon();
 
-  // updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
+  updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
 
   $.post(`${base_url}Calendar/getStatusRecordatorio`, function(data) {
     var len = data.length;
