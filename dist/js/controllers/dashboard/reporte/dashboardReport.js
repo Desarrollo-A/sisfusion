@@ -176,7 +176,7 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, dates=n
         ordering: false,
         scrollX: true,
         language: {
-            url: "static/spanishLoader_v2.json",
+            url: `${base_url}static/spanishLoader_v2.json`,
             paginate: {
                 previous: "<i class='fa fa-angle-left'>",
                 next: "<i class='fa fa-angle-right'>"
@@ -429,7 +429,6 @@ $(document).on('click', '.btnSub', function () {
         begin: formatDate($('#tableBegin').val()), 
         end: formatDate($('#tableEnd').val())
     }
-
     initDetailRow(data);
 });
 
@@ -501,8 +500,6 @@ function getSpecificChart(type, beginDate, endDate){
             $("#modalChart .boxModalTitle .total").append('<p>$'+formatMoney(total)+'</p>');
             
             if ( total != 0 ){
-                // $("#boxModalChart").removeClass('d-flex justify-center');
-                // var miniChart = new ApexCharts(document.querySelector("#boxModalChart"), setOptionsChart(series, categories, miniChart));
                 chart.updateOptions(setOptionsChart(series, categories, miniChart));
             }
             else{
@@ -510,8 +507,6 @@ function getSpecificChart(type, beginDate, endDate){
                 $("#boxModalChart").append('<img src="./dist/img/emptyChart.png" alt="Icono gráfica" class="h-70 w-auto">');
                 chart.updateOptions(setOptionsChart([], [], miniChart));
             }
-            // chart.render();
-
         },
         error: function() {
             $('#spiner-loader').addClass('hide');
