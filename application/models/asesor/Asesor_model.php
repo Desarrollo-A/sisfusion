@@ -335,7 +335,7 @@ class Asesor_model extends CI_Model
             END) casasDetail, idStatusLote, cl.fechaApartado, cl.id_cliente
                                     FROM lotes lot LEFT JOIN condominios con ON lot.idCondominio = con.idCondominio LEFT JOIN residenciales res 
                                     ON con.idResidencial = res.idResidencial LEFT JOIN datosbancarios db ON con.idDBanco = db.idDBanco 
-                                    LEFT JOIN (SELECT lot.id_lote, CONCAT( '{''total_terreno'':''', total_terreno, ''',', tipo_casa, '}') casasDetail 
+                                    LEFT JOIN (SELECT id_lote, CONCAT( '{''total_terreno'':''', total_terreno, ''',', tipo_casa, '}') casasDetail 
             						FROM casas WHERE estatus = 1) casas ON casas.id_lote = lot.idLote
             						LEFT JOIN clientes cl ON lot.idLote = cl.idLote AND cl.status=1
             						WHERE lot.idLote = " . $lote . " AND idStatusLote IN(1,3)");
