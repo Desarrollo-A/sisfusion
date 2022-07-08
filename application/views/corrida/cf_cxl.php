@@ -490,7 +490,7 @@
                                     </div>
                                     <div class="col-md-2 form-group" id="anioCont">
                                         <label>Años:<span class="required-label">*</span></label>
-                                        <select ng-model="yearplan" id="yearplan" ng-options="item.yearplan for item in yearsplan" class="form-control" ng-change="getAgePlan()">
+                                        <select ng-model="yearplan" id="yearplan" ng-options="item.yearplan for item in yearsplan" class="form-control" ng-change="getAgePlan()" disabled>
                                             <option value = ""> - Selecciona los años - </option>
                                         </select>
                                         <p id="aniotext" style="color: red;"></p>
@@ -666,7 +666,7 @@
                                                     </li>
                                                 </div>
 
-                                                <div ng-if="day.day == 15">
+                                                <div ng-if="day.day == 15 && porcentajeEng==10">
                                                     <div ng-if="descuento.apply == 0">
                                                         <li class="list-group-item">
                                                             <input type="checkbox" checklist-model="selected.descuentos" checklist-value="descuento" ng-change="selectDescuentos(descuento, checked)" ng-disabled="paquete.id_paquete"
@@ -5229,6 +5229,7 @@
 
             // $scope.diasEnganche = [{day: 7}, {day: 25}, {day: 'Diferido'}, {day:'Limpiar'}];
             $scope.diasEnganche = [{day: 15}, {day: 30}, {day: 'Diferido'}, {day:'Limpiar'}];
+            $scope.porcentaje = $('#porcentajeEnganche').val();
 
 
 
@@ -5337,16 +5338,17 @@
 
             $scope.ChengecheckEngDif = function(){
                 calcularCF();
-            }
+            };
 
 
             $scope.changeDaysEng = function(){
                 calcularCF();
-            }
+            };
 
 
             $scope.getAge = function(age) {
                 $scope.age_view = $scope.age.age;
+                $('#yearplan').attr('disabled', false);
                 if(age <= 60){
 
 
