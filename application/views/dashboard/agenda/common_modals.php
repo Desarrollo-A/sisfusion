@@ -222,6 +222,7 @@
                         <textarea class="text-modal" class="form-control" type="text" name="observaciones" id="observaciones" onkeyup="javascript:this.value=this.value.toUpperCase();"></textarea>
                         <div class="d-flex justify-end">
                             <button type="submit" class="btn btn-primary no-shadow rounded-circle finishS">Guardar</button>
+                            <button type="" class="btn btn-primary no-shadow rounded-circle" onclick="backToEvent()" style="background-color:white;">Regresar</button>
                         </div>
                     </div>
                 </div>
