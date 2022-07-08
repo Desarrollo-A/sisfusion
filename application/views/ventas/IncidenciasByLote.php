@@ -2218,7 +2218,7 @@
                 precioAnt=0;
             }
 
-            if(rol == 13 || rol == 8 || rol == 32){
+            if(rol == 8 || rol == 17){
                 if(isNaN(precioAnt) || parseFloat(precioAct) < 0){
                     document.getElementById('msj').innerHTML = 'Precio no válido';
                     document.getElementById('btn-save').disabled = true;
