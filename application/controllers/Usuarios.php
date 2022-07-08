@@ -5,7 +5,7 @@ class Usuarios extends CI_Controller
     public function __construct()
     {
         parent::__construct();
-        $this->load->model(array('Usuarios_modelo'));
+        $this->load->model(array('Usuarios_modelo', 'Services_model'));
         $this->load->model('asesor/Asesor_model'); //EN ESTE MODELO SE ENCUENTRAN LAS CONSULTAS DEL MENU
         $this->load->model('Clientes_model');
         //LIBRERIA PARA LLAMAR OBTENER LAS CONSULTAS DE LAS  DEL MENÚ
@@ -229,6 +229,7 @@ class Usuarios extends CI_Controller
 
             $sedeCH = 0;
             $sucursal = 0;
+            $objDatos = json_decode(base64_decode(file_get_contents("php://input")), true);
             if ($_POST['member_type'] == 3 || $_POST['member_type'] == 7 || $_POST['member_type'] == 9) {
 
                 /*
@@ -245,6 +246,27 @@ SEDES CAPITAL HUMANO
                 $sucursal = !isset($_POST['sucursal']) ? 0 : $_POST['sucursal'];
                 $this->Usuarios_modelo->UpdateProspect($this->input->post("id_usuario"), $_POST['leader'], $_POST['member_type'], $_POST['rol_actual'], $sedeCH, $sucursal);
             }
+            $getLider = $this->Services_model->getLider($objDatos['id_lider'],$objDatos['id_rol']);
+            $id_gerente=0;
+            $id_subdirector=0;
+            $id_regional=0;
+            if($objDatos['id_rol'] == 7){
+                //Asesor
+                $id_gerente=$getLider[0]['id_gerente'];
+                $id_subdirector=$getLider[0]['id_subdirector'];
+                $id_regional=$getLider[0]['id_regional'];
+            }else if($objDatos['id_rol'] == 9){
+                //Coordinador
+                $id_gerente=0;
+                $id_subdirector=$getLider[0]['id_subdirector'];
+                $id_regional=$getLider[0]['id_regional'];
+            }else if($objDatos['id_rol'] == 3){
+                //Gerente
+                $id_gerente=0;
+                $id_subdirector=$getLider[0]['id_subdirector'];
+                $id_regional=$getLider[0]['id_regional'];
+            }
+
             $data = array(
                 "nombre" => $_POST['name'],
                 "apellido_paterno" => $_POST['last_name'],
@@ -260,8 +282,10 @@ SEDES CAPITAL HUMANO
                 "fecha_modificacion" => date("Y-m-d H:i:s"),
                 "modificado_por" => $this->session->userdata('id_usuario'),
                 "sedech" => $sedeCH,
-                "sucursalch" => $sucursal
-
+                "sucursalch" => $sucursal,
+                "gerente_id" => $id_gerente,
+                "subdirector_id" => $id_subdirector,
+                "regional_id" => $id_regional
             );
         }
         $response = $this->Usuarios_modelo->updateUser($data, $this->input->post("id_usuario"));
