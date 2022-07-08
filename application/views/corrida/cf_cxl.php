@@ -801,13 +801,15 @@
 
 
                                 <tr align="center">
-                                    <td colspan="6"><label type="text">Enganche diferido</label></td>
+                                    <td colspan="3"><label type="text">Enganche diferido</label></td>
+                                    <td colspan="3"><label type="text">Apartado</label></td>
                                 </tr>
 
                                 <tr align="center">
                                     <td><label type="text">Fecha</label></td>
                                     <td><label type="text">Pago #</label></td>
                                     <td><label type="text">Total</label></td>
+                                    <td colspan="3"><label><b>{{apartado | currency }}</b></label></td>
                                 </tr>
                                 <tr ng-repeat= "i in rangEd">
 
@@ -1171,7 +1173,7 @@
                 porcentajeEnganche.val(parseFloat(cantidadToGetP).toFixed(2));
                 //termina nueva sección
 
-                if(porcentajeEnganche.val() == 10 || porcentajeEnganche.val() == 5){
+                if(porcentajeEnganche.val() >= 10 ){/*|| porcentajeEnganche.val() == 5*/
                     document.getElementById("day").disabled = false;
                     document.getElementById("aptdo").disabled = false;
                     document.getElementById("msdif").disabled = false;
@@ -5476,7 +5478,7 @@
                 }
                 /*termina nuevo*/
 
-                if(porcentajeEnganche.val() == 10 || porcentajeEnganche.val() == 5){
+                if(porcentajeEnganche.val() >= 10 ){/*|| porcentajeEnganche.val() == 5*/
                     document.getElementById("day").disabled = false;
                     document.getElementById("aptdo").disabled = false;
                     document.getElementById("msdif").disabled = false;
