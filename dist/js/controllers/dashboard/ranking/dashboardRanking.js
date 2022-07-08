@@ -222,7 +222,6 @@ function reorderColumns(){
                 if($(principalColumns[i-1]).hasClass('activo')){
                     var columnDatatable = $( principalColumns[i-1]).find('.col-datatable');
                     var id = columnDatatable.attr('id');
-                    console.log('id',id);
                     $("#"+id).html('');
                     if( id == 'Apartados' ){
                         buildEstructuraDT(id, dataApartados);
@@ -252,7 +251,7 @@ function getRankings(general = false, typeRanking = null){
     let sede = getSede(typeRanking);
     $.ajax({
         type: 'POST',
-        url: `Ranking/getAllRankings`,
+        url: `${base_url}Ranking/getAllRankings`,
         data: {general: general, typeRanking: typeRanking,beginDate: dates.beginDate, endDate: dates.endDate, sede: sede},
         dataType: 'json',
         cache: false,
@@ -314,7 +313,7 @@ function buildTableApartados(data){
         ordering: false,
         scrollX: true,
         language: {
-            url: "static/spanishLoader_v2.json",
+            url: `${base_url}static/spanishLoader_v2.json`,
             paginate: {
                 previous: "<i class='fa fa-angle-left'>",
                 next: "<i class='fa fa-angle-right'>"
@@ -379,7 +378,7 @@ function buildTableContratados(data){
         ordering: false,
         scrollX: true,
         language: {
-            url: "static/spanishLoader_v2.json",
+            url: `${base_url}static/spanishLoader_v2.json`,
             paginate: {
                 previous: "<i class='fa fa-angle-left'>",
                 next: "<i class='fa fa-angle-right'>"
@@ -444,7 +443,7 @@ function buildTableConEnganche(data){
         ordering: false,
         scrollX: true,
         language: {
-            url: "static/spanishLoader_v2.json",
+            url: `${base_url}static/spanishLoader_v2.json`,
             paginate: {
                 previous: "<i class='fa fa-angle-left'>",
                 next: "<i class='fa fa-angle-right'>"
@@ -489,7 +488,6 @@ function buildTableConEnganche(data){
 }
 
 function buildTableSinEnganche(data){
-    console.log('build sin',data);
     $('#tablesinEnganche thead tr:eq(0) th').each(function (i) {
         const title = $(this).text();
         $(this).html('<input type="text" center;" class="textoshead"  placeholder="' + title + '"/>');
@@ -510,7 +508,7 @@ function buildTableSinEnganche(data){
         ordering: false,
         scrollX: true,
         language: {
-            url: "static/spanishLoader_v2.json",
+            url: `${base_url}static/spanishLoader_v2.json`,
             paginate: {
                 previous: "<i class='fa fa-angle-left'>",
                 next: "<i class='fa fa-angle-right'>"
@@ -764,7 +762,7 @@ function getDates(typeRanking){
 function getSedes(){
     return $.ajax({
         type: 'POST',
-        url: `Ranking/getSedes`,
+        url: `${base_url}Ranking/getSedes`,
         data: {},
         dataType: 'json',
         cache: false,
@@ -817,8 +815,6 @@ function setOptionsSelected(selectsSede){
 }
 
 function validateToggledDatatable(typeRanking){
-    console.log('typeRanking',typeRanking);
-
     if ( typeRanking == 'Apartados' ){
         var columna = $("#"+typeRanking).closest( '.flexibleR' );
         if ($( columna ).hasClass('activo')){

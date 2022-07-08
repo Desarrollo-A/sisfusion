@@ -87,13 +87,13 @@ class PaquetesCorrida extends CI_Controller
         1.-Habitacional
         2.-Comercial
         3.-Ambos
-        */ 
+        */  
         $ArrPAquetes = array();
         $TipoLote = $this->input->post("tipoLote");
         if($TipoLote == 1){ //Habitacional
-          $query_tipo_lote = 'and c.tipo_lote = 1 ';
-        }else if($TipoLote == 2){ // Comercial
           $query_tipo_lote = 'and c.tipo_lote = 0 ';
+        }else if($TipoLote == 2){ // Comercial
+          $query_tipo_lote = 'and c.tipo_lote = 1 ';
 
         }else if($TipoLote == 3){ // Ambos
           $query_tipo_lote = '';
@@ -356,7 +356,7 @@ class PaquetesCorrida extends CI_Controller
 	$id_condicion=$this->input->post("id_condicion");
 	$eng_top=$this->input->post("eng_top");
 	$apply=$this->input->post("apply");
-      echo json_encode($this->PaquetesCorrida_model->getDescuentosPorTotal($tdescuento,$id_condicion,$eng_top,$apply)->result_array());
+      echo json_encode($this->PaquetesCorrida_model->getDescuentosPorTotal($tdescuento,$id_condicion,$eng_top,$apply)->result_array(),JSON_NUMERIC_CHECK);
     }
     public function getDescuentos($tdescuento,$id_condicion,$eng_top,$apply)
     {

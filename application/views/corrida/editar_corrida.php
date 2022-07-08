@@ -457,7 +457,7 @@
                             <button ng-click="exportcf()" class="btn btn-success">Imprimir carátula + Corrida
                                 Financiera
                             </button>-->
-                            <?php print_r($data_corrida);  ?>
+                            <?php #print_r($data_corrida);  ?>
 
                             <table align="center" width="100%" cellpadding="8" cellspacing="8">
                                 <tr>
@@ -818,7 +818,7 @@
                                         <div class="foreach">
                                             <input type="radio" id="checkPack" name="checkPack" required="required"
                                                    ng-model="paquete.id_paquete" />
-                                            <span>Paquete {{paquete.descripcion}} </span>
+                                            <span>Plan {{paquete.descripcion}} </span>
                                             <div ng-repeat="descuento in paquete.response | orderBy:'-apply'">
 
                                                 <div ng-if="descuento.apply == 1">

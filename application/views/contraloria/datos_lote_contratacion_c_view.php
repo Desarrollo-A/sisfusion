@@ -548,8 +548,7 @@
                                                                         data-style="btn btn-second" data-show-subtext="true"
                                                                         data-live-search="true"
                                                                         title="--SELECCIONA PROYECTO--" data-size="7"
-                                                                        required>
-                                                                    <option value="0">-SELECCIONA TODO-</option>
+                                                                        multiple max required>
                                                                 </select>
                                                             </div>
 

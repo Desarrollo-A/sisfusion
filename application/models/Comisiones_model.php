@@ -8607,16 +8607,6 @@ return $query->result();
 /**----------------------------------------FIN BONOS Y PRESTAMOS------------------------------- */
 /**---------------------------------------------- */
 
-function lista_estatus_descuentos(){
-    return $this->db->query(" SELECT * FROM opcs_x_cats where id_catalogo=23 and id_opcion in(18,19,20,21,22,23)");
-}
-
-    public function getPuestoByIdOpts($idOpciones)
-    {
-        return $this->db->query("SELECT * FROM opcs_x_cats WHERE id_catalogo = 1 AND id_opcion IN ($idOpciones)")
-            ->result_array();
-    }
-
     public function findAllPlanes()
     {
         $query = $this->db->query('SELECT id_plan, descripcion FROM plan_comision WHERE estatus = 1');

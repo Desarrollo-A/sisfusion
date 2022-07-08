@@ -246,7 +246,7 @@ var optionsMedio = {
     series: [],
     chart: {
         height: 'auto',
-        type: 'donut',
+        type: 'polarArea',
         toolbar: {
             show: false
         },
@@ -365,7 +365,7 @@ function init(){
 
 function getSuperficieVendida(){
     return $.ajax({
-        url: "Metricas/getSuperficieVendida",
+        url: `${base_url}Metricas/getSuperficieVendida`,
         cache: false,
         contentType: false,
         processData: false,
@@ -382,7 +382,7 @@ function getSuperficieVendida(){
 
 function getDisponibilidadProyecto(){
     return $.ajax({
-        url: "Metricas/getDisponibilidadProyecto",
+        url: `${base_url}Metricas/getDisponibilidadProyecto`,
         cache: false,
         contentType: false,
         processData: false,
@@ -399,7 +399,7 @@ function getDisponibilidadProyecto(){
 
 function getLugarProspeccion(){
     return $.ajax({
-        url: "Metricas/getLugarProspeccion",
+        url: `${base_url}Metricas/getLugarProspeccion`,
         cache: false,
         contentType: false,
         processData: false,
@@ -416,7 +416,7 @@ function getLugarProspeccion(){
 
 function getMedioProspeccion(){
     return $.ajax({
-        url: "Metricas/getMedioProspeccion",
+        url: `${base_url}Metricas/getMedioProspeccion`,
         cache: false,
         contentType: false,
         processData: false,
@@ -433,7 +433,7 @@ function getMedioProspeccion(){
 
 function getVentasM2(idCond){
     $.ajax({
-        url: "Metricas/getVentasM2",
+        url: `${base_url}Metricas/getVentasM2`,
         data: {condominio: idCond},
         type: 'POST',
         dataType: 'json',
@@ -664,7 +664,7 @@ function buildEstructuraDT(dataName, dataApartados){
 function getCondominios(idProyecto){
     $("#condominio").empty();
     $.ajax({
-        url: "Metricas/getCondominios",
+        url: `${base_url}Metricas/getCondominios`,
         data:{proyecto: idProyecto},
         type: 'POST',
         dataType: 'json',
@@ -684,7 +684,7 @@ function getCondominios(idProyecto){
 function getProyectos(){
     $("#proyecto").empty();
     $.ajax({
-        url: "Metricas/getProyectos",
+        url: `${base_url}Metricas/getProyectos`,
         cache: false,
         contentType: false,
         processData: false,
@@ -724,7 +724,7 @@ function buildTableMetros(data){
         ordering: false,
         scrollX: true,
         language: {
-            url: "static/spanishLoader_v2.json",
+            url: `${base_url}static/spanishLoader_v2.json`,
             paginate: {
                 previous: "<i class='fa fa-angle-left'>",
                 next: "<i class='fa fa-angle-right'>"
@@ -768,7 +768,7 @@ function buildTableDisponibilidad(data){
         ordering: false,
         scrollX: true,
         language: {
-            url: "static/spanishLoader_v2.json",
+            url: `${base_url}static/spanishLoader_v2.json`,
             paginate: {
                 previous: "<i class='fa fa-angle-left'>",
                 next: "<i class='fa fa-angle-right'>"
@@ -818,7 +818,7 @@ function buildTableLugarProspeccion(data){
         ordering: false,
         scrollX: true,
         language: {
-            url: "static/spanishLoader_v2.json",
+            url: `${base_url}static/spanishLoader_v2.json`,
             paginate: {
                 previous: "<i class='fa fa-angle-left'>",
                 next: "<i class='fa fa-angle-right'>"
@@ -862,7 +862,7 @@ function buildTableMedio(data){
         ordering: false,
         scrollX: true,
         language: {
-            url: "static/spanishLoader_v2.json",
+            url: `${base_url}static/spanishLoader_v2.json`,
             paginate: {
                 previous: "<i class='fa fa-angle-left'>",
                 next: "<i class='fa fa-angle-right'>"
