@@ -8604,9 +8604,7 @@ return $query->result();
             WHERE id_rol = $rol");
         return $result->result_array();
     }
-/**----------------------------------------FIN BONOS Y PRESTAMOS------------------------------- */
-/**---------------------------------------------- */
-
+ 
     public function findAllPlanes()
     {
         $query = $this->db->query('SELECT id_plan, descripcion FROM plan_comision WHERE estatus = 1');
