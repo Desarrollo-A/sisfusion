@@ -39,7 +39,7 @@ class Reporte extends CI_Controller {
 
             $data['data'] = $this->Reporte_model->getGeneralInformation($beginDate, $endDate, $rol, $id_usuario, $render)->result_array();
 
-            echo json_encode($data);
+            echo json_encode($data, JSON_NUMERIC_CHECK);
         } else {
             json_encode(array());
         }
@@ -96,7 +96,7 @@ class Reporte extends CI_Controller {
         $data = $this->Reporte_model->getDataChart($general, $tipoChart, $rol, $condicion_x_rol, $coordinador, $coordinadorVC, $coordinadorVA, $coordinadorCC, $coordinadorCA, $beginDate, $endDate);
         
         if($data != null) {
-            echo json_encode($data);
+            echo json_encode($data, JSON_NUMERIC_CHECK);
         } else {
             echo json_encode(array());
         }
@@ -262,7 +262,7 @@ class Reporte extends CI_Controller {
         $idUser = $this->input->post('idUser');
         $data = $this->Reporte_model->validateRegional($idUser);
         if($data != null) {
-            echo json_encode($data);
+            echo json_encode($data, JSON_NUMERIC_CHECK);
         }
         else echo json_encode(array());
     }
@@ -282,7 +282,7 @@ class Reporte extends CI_Controller {
 
         $data = $this->Reporte_model->getDetails($beginDate, $endDate, $rol, $id_usuario, $render)->result_array();
         if($data != null) {
-            echo json_encode($data);
+            echo json_encode($data, JSON_NUMERIC_CHECK);
         } else {
             echo json_encode(array());
         }
@@ -290,7 +290,7 @@ class Reporte extends CI_Controller {
     public function get4MonthsRequest(){
         $data = $this->get4Months();
         if($data != null) {
-            echo json_encode($data);
+            echo json_encode($data, JSON_NUMERIC_CHECK);
         }
         else echo json_encode(array());
     }
