@@ -85,8 +85,8 @@
                                             <div class="row">
                                                 <div class="col-md-12 p-r">
                                                     <div class="form-group d-flex">
-                                                        <input type="text" class="form-control datepicker" id="beginDate" value="01/01/2021" />
-                                                        <input type="text" class="form-control datepicker" id="endDate" value="01/01/2021" />
+                                                        <input type="text" class="form-control datepicker" id="beginDate" value="01/07/2022" />
+                                                        <input type="text" class="form-control datepicker" id="endDate" value="<?php echo date('d/m/Y')?>" />
                                                         <button class="btn btn-success btn-round btn-fab btn-fab-mini" id="searchByDateRange">
                                                             <span class="material-icons update-dataTable">search</span>
                                                         </button>
@@ -261,6 +261,7 @@
 
 
 <script>
+
     $(document).ready(function () {
         /*primera carga*/
 
@@ -291,7 +292,7 @@
     sp = { //  SELECT PICKER
         initFormExtendedDatetimepickers: function () {
             $('.datepicker').datetimepicker({
-                format: 'MM/DD/YYYY',
+                format: 'DD/MM/YYYY',
                 icons: {
                     time: "fa fa-clock-o",
                     date: "fa fa-calendar",
@@ -317,14 +318,17 @@
         const fechaFin = new Date();
         // Iniciar en este año, el siguiente mes, en el día 0 (así que así nos regresamos un día)
         const endDate = new Date(fechaFin.getFullYear(), fechaFin.getMonth() + 1, 0);
-        finalBeginDate = [beginDate.getFullYear(), ('0' + (beginDate.getMonth() + 1)).slice(-2), ('0' + beginDate.getDate()).slice(-2)].join('-');
-        finalEndDate = [endDate.getFullYear(), ('0' + (endDate.getMonth() + 1)).slice(-2), ('0' + endDate.getDate()).slice(-2)].join('-');
+        //finalBeginDate = [beginDate.getFullYear(), ('0' + (beginDate.getMonth() + 1)).slice(-2), ('0' + beginDate.getDate()).slice(-2)].join('-');
+        //finalEndDate = [endDate.getFullYear(), ('0' + (endDate.getMonth() + 1)).slice(-2), ('0' + endDate.getDate()).slice(-2)].join('-');
+        finalBeginDate2 = [('0' + beginDate.getDate()).slice(-2), ('0' + (beginDate.getMonth() + 1)).slice(-2), beginDate.getFullYear()].join('/');
+        finalEndDate2 = [('0' + endDate.getDate()).slice(-2), ('0' + (endDate.getMonth() + 1)).slice(-2), endDate.getFullYear()].join('/');
         // console.log('Fecha inicio: ', finalBeginDate);
         // console.log('Fecha final: ', finalEndDate);
-        $("#beginDate").val(convertDate(beginDate));
-        $("#endDate").val(convertDate(endDate));
-        // fillTable(1, finalBeginDate, finalEndDate, 0);
+        $("#beginDate").val(convert(beginDate));
+        $("#endDate").val(cpnvert(endDate));
+        // updateTable(1, finalBeginDate, finalEndDate, 0);
     }
+
 
     $(document).on("click", "#searchByDateRange", function () {
         let finalBeginDate = $("#beginDate").val();
@@ -626,8 +630,6 @@
             ]
         )*/
     }
-
-
 
 </script>
 <script src="<?=base_url()?>static/yadcf/jquery.dataTables.yadcf.js"></script>

@@ -98,8 +98,7 @@ $('[data-toggle="tooltip"]').tooltip();
 async function init(){
     getLastSales(null, null);
     let rol = userType == 2 ? await getRolDR(idUser): userType;
-    fillBoxAccordions(rol == '1' ? 'director_regional': rol == '2' ? 'gerente' : rol == '3' ? 'coordinador' : rol == '59' ? 'subdirector':'asesor', rol, idUser, 1, 1);
-    // datesMonths = await get4Months();
+    fillBoxAccordions(rol == '1' || rol == '18' ? 'director_regional': rol == '2' ? 'gerente' : rol == '3' ? 'coordinador' : rol == '59' ? 'subdirector':'asesor', rol, idUser, 1, 1);
 }
 
 function createAccordions(option, render, rol){
@@ -177,7 +176,7 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, dates=n
         ordering: false,
         scrollX: true,
         language: {
-            url: "static/spanishLoader_v2.json",
+            url: `${base_url}static/spanishLoader_v2.json`,
             paginate: {
                 previous: "<i class='fa fa-angle-left'>",
                 next: "<i class='fa fa-angle-right'>"
@@ -196,18 +195,6 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, dates=n
                     return d.nombreUsuario;
                 }
             },
-            // {
-            //     width: "8%",
-            //     data: function (d) {
-            //         return "<b>" + d.sumaTotal+"</b>";
-            //     }
-            // },
-            // {
-            //     width: "8%",
-            //     data: function (d) {
-            //         return d.totalVentas;
-            //     }
-            // },
             {
                 width: "8%",
                 data: function (d) {
@@ -256,18 +243,6 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, dates=n
                     return d.porcentajeTotalCanC + "%"; //PORCENTAJE CANCELADOS CONTRATADOS
                 }
             },
-            // {
-            //     width: "8%",
-            //     data: function (d) {
-            //         return "<b>" + d.sumaCT+"</b>";
-            //     }
-            // },
-            // {
-            //     width: "8%",
-            //     data: function (d) {
-            //         return d.totalCT;
-            //     }
-            // },
             {
                 width: "8%",
                 data: function (d) {
@@ -283,7 +258,7 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, dates=n
             searchable: false
         }],
         ajax: {
-            url: 'Reporte/getInformation',
+            url: `${base_url}Reporte/getInformation`,
             type: "POST",
             cache: false,
             data: {
@@ -432,7 +407,7 @@ function setOptionsChart(series, categories, miniChart, type= null){
     }
     return optionsMiniChart;
 }
-// $(document, '.js-accordion-title').unbind();
+
 $(document).off('click', '.js-accordion-title').on('click', '.js-accordion-title', function () {
     $(this).parent().parent().next().slideToggle(200);
     $(this).toggleClass('open', 200);
@@ -454,7 +429,6 @@ $(document).on('click', '.btnSub', function () {
         begin: formatDate($('#tableBegin').val()), 
         end: formatDate($('#tableEnd').val())
     }
-
     initDetailRow(data);
 });
 
@@ -463,7 +437,7 @@ $(document).on('click', '#searchByDateRangeTable', async function () {
     let dates = {begin: $('#tableBegin').val(), end: $('#tableEnd').val()};
     let rol = userType == 2 ? await getRolDR(idUser): userType;
 
-    fillBoxAccordions(rol == '1' ? 'director_regional': rol == '2' ? 'gerente' : rol == '3' ? 'coordinador' : rol == '59' ? 'subdirector':'asesor', rol, idUser, 1, 2, dates);
+    fillBoxAccordions(rol == '1' || rol == '18' ? 'director_regional': rol == '2' ? 'gerente' : rol == '3' ? 'coordinador' : rol == '59' ? 'subdirector':'asesor', rol, idUser, 1, 2, dates);
 
 });
 
@@ -506,7 +480,7 @@ async function chartDetail(e, tipoChart){
 function getSpecificChart(type, beginDate, endDate){
     $.ajax({
         type: "POST",
-        url: "Reporte/getDataChart",
+        url: `${base_url}Reporte/getDataChart`,
         data: {general: 0, tipoChart: type, beginDate: beginDate, endDate: endDate},
         dataType: 'json',
         cache: false,
@@ -526,8 +500,6 @@ function getSpecificChart(type, beginDate, endDate){
             $("#modalChart .boxModalTitle .total").append('<p>$'+formatMoney(total)+'</p>');
             
             if ( total != 0 ){
-                // $("#boxModalChart").removeClass('d-flex justify-center');
-                // var miniChart = new ApexCharts(document.querySelector("#boxModalChart"), setOptionsChart(series, categories, miniChart));
                 chart.updateOptions(setOptionsChart(series, categories, miniChart));
             }
             else{
@@ -535,8 +507,6 @@ function getSpecificChart(type, beginDate, endDate){
                 $("#boxModalChart").append('<img src="./dist/img/emptyChart.png" alt="Icono gráfica" class="h-70 w-auto">');
                 chart.updateOptions(setOptionsChart([], [], miniChart));
             }
-            // chart.render();
-
         },
         error: function() {
             $('#spiner-loader').addClass('hide');
@@ -548,7 +518,7 @@ function getSpecificChart(type, beginDate, endDate){
 function getLastSales(beginDate, endDate){
     $.ajax({
         type: "POST",
-        url: "Reporte/getDataChart",
+        url: `${base_url}Reporte/getDataChart`,
         data: {general: 1, tipoChart:'na', beginDate: beginDate, endDate: endDate},
         dataType: 'json',
         cache: false,
@@ -610,9 +580,7 @@ function orderedDataChart(data){
                     totalMes = [];
                     meses = [];
                 }
-                else{
-                    meses.push(monthName(mes) + ' ' + año);
-                }             
+                else meses.push(monthName(mes) + ' ' + año);         
             }
             else{
                 meses.push(monthName(mes) + ' ' + año);
@@ -669,7 +637,7 @@ function getRolDR(idUser){
     return new Promise(resolve => {      
         $.ajax({
             type: "POST",
-            url: "Reporte/getRolDR",
+            url: `${base_url}Reporte/getRolDR`,
             data: {idUser: idUser},
             dataType: 'json',
             cache: false,
@@ -764,6 +732,13 @@ function accordionToRemove(rol){
             break; 
         case 4://asistente dir
             $(".boxAccordions").find(`[data-rol='${1}']`).remove();
+            $(".boxAccordions").find(`[data-rol='${59}']`).remove();
+            $(".boxAccordions").find(`[data-rol='${2}']`).remove();
+            $(".boxAccordions").find(`[data-rol='${3}']`).remove();
+            $(".boxAccordions").find(`[data-rol='${9}']`).remove();
+            $(".boxAccordions").find(`[data-rol='${7}']`).remove();
+            break;
+        case 18://dir
             $(".boxAccordions").find(`[data-rol='${59}']`).remove();
             $(".boxAccordions").find(`[data-rol='${2}']`).remove();
             $(".boxAccordions").find(`[data-rol='${3}']`).remove();
@@ -937,7 +912,7 @@ function get4Months() {
     return new Promise(resolve => {
         $.ajax({
             type: "POST",
-            url: "Reporte/get4MonthsRequest",
+            url: `${base_url}Reporte/get4MonthsRequest`,
             dataType: 'json',
             cache: false,
             beforeSend: function() {

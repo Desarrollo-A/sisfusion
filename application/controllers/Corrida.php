@@ -3064,4 +3064,9 @@ $pdf->Output(utf8_decode($namePDF), 'I');
 
 //		$this->load->view("moratorioII"); //avance
     }
+
+    public function moratorios()
+    {
+            $this->load->view("corrida/moratorios_nv");
+    }
 }

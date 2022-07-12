@@ -1128,6 +1128,10 @@
   background-color: #F1F1F1;
 }
 
+#reporte table.dataTable > thead > tr > th, #reporte table.dataTable > tbody > tr > th, #reporte table.dataTable > tfoot > tr > th, #reporte table.dataTable > thead > tr > td, #reporte table.dataTable > tbody > tr > td, #reporte table.dataTable > tfoot > tr > td {
+  white-space: nowrap !important;
+}
+
 #reporte .cardMiniChart {
   background-color: #143860;
   box-shadow: none !important;

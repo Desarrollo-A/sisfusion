@@ -490,7 +490,7 @@
                                     </div>
                                     <div class="col-md-2 form-group" id="anioCont">
                                         <label>Años:<span class="required-label">*</span></label>
-                                        <select ng-model="yearplan" id="yearplan" ng-options="item.yearplan for item in yearsplan" class="form-control" ng-change="getAgePlan()">
+                                        <select ng-model="yearplan" id="yearplan" ng-options="item.yearplan for item in yearsplan" class="form-control" ng-change="getAgePlan()" disabled>
                                             <option value = ""> - Selecciona los años - </option>
                                         </select>
                                         <p id="aniotext" style="color: red;"></p>
@@ -666,7 +666,7 @@
                                                     </li>
                                                 </div>
 
-                                                <div ng-if="day.day == 15">
+                                                <div ng-if="day.day == 15 && porcentajeEng==10">
                                                     <div ng-if="descuento.apply == 0">
                                                         <li class="list-group-item">
                                                             <input type="checkbox" checklist-model="selected.descuentos" checklist-value="descuento" ng-change="selectDescuentos(descuento, checked)" ng-disabled="paquete.id_paquete"
@@ -801,13 +801,15 @@
 
 
                                 <tr align="center">
-                                    <td colspan="6"><label type="text">Enganche diferido</label></td>
+                                    <td colspan="3"><label type="text">Enganche diferido</label></td>
+                                    <td colspan="3"><label type="text">Apartado</label></td>
                                 </tr>
 
                                 <tr align="center">
                                     <td><label type="text">Fecha</label></td>
                                     <td><label type="text">Pago #</label></td>
                                     <td><label type="text">Total</label></td>
+                                    <td colspan="3"><label><b>{{apartado | currency }}</b></label></td>
                                 </tr>
                                 <tr ng-repeat= "i in rangEd">
 
@@ -1171,7 +1173,7 @@
                 porcentajeEnganche.val(parseFloat(cantidadToGetP).toFixed(2));
                 //termina nueva sección
 
-                if(porcentajeEnganche.val() == 10 || porcentajeEnganche.val() == 5){
+                if(porcentajeEnganche.val() >= 10 ){/*|| porcentajeEnganche.val() == 5*/
                     document.getElementById("day").disabled = false;
                     document.getElementById("aptdo").disabled = false;
                     document.getElementById("msdif").disabled = false;
@@ -5229,6 +5231,7 @@
 
             // $scope.diasEnganche = [{day: 7}, {day: 25}, {day: 'Diferido'}, {day:'Limpiar'}];
             $scope.diasEnganche = [{day: 15}, {day: 30}, {day: 'Diferido'}, {day:'Limpiar'}];
+            $scope.porcentaje = $('#porcentajeEnganche').val();
 
 
 
@@ -5337,16 +5340,17 @@
 
             $scope.ChengecheckEngDif = function(){
                 calcularCF();
-            }
+            };
 
 
             $scope.changeDaysEng = function(){
                 calcularCF();
-            }
+            };
 
 
             $scope.getAge = function(age) {
                 $scope.age_view = $scope.age.age;
+                $('#yearplan').attr('disabled', false);
                 if(age <= 60){
 
 
@@ -5474,7 +5478,7 @@
                 }
                 /*termina nuevo*/
 
-                if(porcentajeEnganche.val() == 10 || porcentajeEnganche.val() == 5){
+                if(porcentajeEnganche.val() >= 10 ){/*|| porcentajeEnganche.val() == 5*/
                     document.getElementById("day").disabled = false;
                     document.getElementById("aptdo").disabled = false;
                     document.getElementById("msdif").disabled = false;
