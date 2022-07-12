@@ -1,18 +1,31 @@
 var data;
 
+$(document).ready(function () {
+    console.log('info',information);
+    $('#nombreCl').text(information.nombreCl);
+    $('#nombreAs').text(information.nombreAs);
+    $('#fechaApartado').text(information.fechaApartado);
+    $('#nombreResidencial').text(information.nombreResidencial);
+    $('#nombreCondominio').text(information.nombreCondominio);
+    $('#nombreLote').text(information.nombreLote);
+})
 $(document).on('click', '#upload',function (){
-    console.log(data);
+    $('#spiner-loader').removeClass('hide');
     let formData = new FormData();
     formData.append('file', data, data.name);
+    formData.append('data', JSON.stringify(information));
     $.ajax({
-        url: "uploadToDropbox",
+        url: "../uploadToDropbox",
         data: formData,
         processData: false,
         contentType: false,
         type: 'POST',
         dataType: 'json',
         success: function (response) {
-            console.log(response);
+            $('#player').hide();
+            $('#player').html('');
+            $('#success').css('display','flex');
+            $('#success').addClass('direction-column align-center');
             $('#spiner-loader').addClass('hide');
         }, error: function () {
             $("#sendRequestButton").prop("disabled", false);
@@ -60,6 +73,8 @@ player.on('error', function(element, error) {
 // user clicked the record button and started recording
 player.on('startRecord', function() {
     console.log('started recording!');
+    $('#actionButtons').removeClass('action-buttons-active');
+    $('#actionButtons').addClass('action-buttons-inactive');
 });
 
 // user completed recording and stream is available
@@ -68,4 +83,6 @@ player.on('finishRecord', function() {
     // can be downloaded by the user, stored on server etc.
     console.log('finished recording: ', player.recordedData);
     data = player.recordedData;
+    $('#actionButtons').removeClass('action-buttons-inactive');
+    $('#actionButtons').addClass('action-buttons-active');
 });

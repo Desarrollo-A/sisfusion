@@ -24,5 +24,23 @@
         $where  ORDER BY tk.fecha_creacion");
     }
 
+    public function getClient($idLote){
+        return $this->db->query("SELECT CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno) nombre, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombreAsesor,
+        cl.fechaApartado, FORMAT(lo.totalNeto2,'C') totalLote, FORMAT(isNULL(cl.totalNeto_cl, lo.totalNeto), 'C') engancheValidado, sl.nombre estatus_lote,
+        sc.nombreStatus, oxc.nombre estatus_comision, cl.id_cliente, lo.nombreLote,
+        cond.nombre nombreCondominio, res.nombreResidencial, ve.estatus evidencia FROM clientes cl
+        INNER JOIN usuarios u ON u.id_usuario = cl.id_asesor
+        INNER JOIN lotes lo ON lo.idLote = cl.idLote
+        INNER JOIN condominios cond ON cond.idCondominio = lo.idCondominio
+        INNER JOIN residenciales res ON res.idResidencial = cond.idResidencial
+        INNER JOIN statuslote sl ON sl.idStatusLote = lo.idStatusLote
+        INNER JOIN statuscontratacion sc ON sc.idStatusContratacion = lo.idStatusContratacion
+        INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = lo.registro_comision AND oxc.id_catalogo =23
+        LEFT JOIN video_evidencia ve ON ve.idCliente = cl.id_cliente AND ve.idLote = lo.idLote AND ve.estatus=1
+        WHERE cl.idLote = $idLote AND cl.status = 1");
+    }
 
+    public function validateRecords($data){
+        return $this->db->query("SELECT * FROM video_evidencia WHERE idCliente = $data->idCliente AND idLote = $data->idLote AND estatus =1");
+    }
 }
