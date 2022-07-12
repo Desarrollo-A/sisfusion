@@ -1,0 +1,141 @@
+@import "_base";
+
+.evidencias{
+    .container-fluid{
+        padding-right: 30px!important;
+        padding-left: 30px!important;
+        margin-right: auto!important;
+        margin-left: auto!important;
+        padding-top: 15px!important;
+        .warning{
+            display: flex;
+            width: 50%;
+            justify-content: center;
+            border: 3px solid yellow;
+            align-items: center;
+        }
+    }
+    .miniCard{
+        background: HSLA(212, 57%, 25%, 1);
+        background: linear-gradient(135deg, HSLA(212, 57%, 25%, 1) 22%, HSLA(212, 62%, 25%, 1) 55%, HSLA(211, 57%, 21%, 1) 100%);
+        background: -moz-linear-gradient(135deg, HSLA(212, 57%, 25%, 1) 22%, HSLA(212, 62%, 25%, 1) 55%, HSLA(211, 57%, 21%, 1) 100%);
+        background: -webkit-linear-gradient(135deg, HSLA(212, 57%, 25%, 1) 22%, HSLA(212, 62%, 25%, 1) 55%, HSLA(211, 57%, 21%, 1) 100%);
+        box-shadow: none;
+        height: 160px;
+        margin: 10px 0;
+        padding: 15px;
+        border-radius: 15px;
+        .boxInfo{
+            color: $platinum;
+            .enfatize{
+                font-weight: 600;
+                color: $blueFrance;
+            }
+            .estatus{
+                border: 1px solid $shadowBlue;
+                border-radius: 15px;
+                padding: 3px 10px;
+                color: $shadowBlue;
+            }
+            .estatus2{
+                border: 1px solid $shadowBlue;
+                border-radius: 15px;
+                color: $shadowBlue;
+                font-size: 10px;
+                margin: 4px 0 0 0;
+                padding: 0 10px;
+            }
+            .titleMini{
+                color: $platinum;
+                font-size: 12px;
+                line-height: 10px;
+                font-weight: 100;
+            }
+            .titleMini-price{
+                color: $platinum;
+                font-size: 15px;
+                line-height: 15px;
+                font-weight: 100;
+            }
+            .data{
+                margin-top: 5px;
+                font-size: 14px;
+                font-weight: 500;
+                line-height: 20px;
+                margin: 0;
+            }
+            .data-price{
+                margin-top: 5px;
+                font-size: 20px;
+                font-weight: 500;
+                line-height: 20px;
+                margin: 0;
+            }
+            .titleMonto{
+                font-size: 12px;
+                line-height: 16px;
+            }
+            .monto{
+                font-size: 19px;
+                font-weight: 500;
+            }
+            
+        }
+    }
+    .action-buttons-active{
+        position: absolute;
+        z-index: 1;
+        width: 96%;
+        display: flex;
+        height: fit-content;
+        justify-content: flex-start;
+        padding: 4px;
+        border-radius: 15px 15px 0 0;
+        background: #000000b3;
+        button{
+            background: none!important;
+            border: none!important;
+            padding: 4px 10px;
+            color: #ffffff;
+            font-size: 1.2em;
+            margin: 0px 0px 0px 10px;
+        }
+    }
+    .action-buttons-inactive{
+        display: none;
+    }
+    .vjs-custom .vjs-control-bar {
+        display: flex;
+        border-radius: 0 0 15px 15px;
+        justify-content: center;
+    }
+    .vjs-custom .vjs-tech{
+        border-radius: 15px!important;
+    }
+    #myVideo{
+        border-radius: 15px!important;
+    }
+    #success{
+        display: none;
+        i{
+            font-size: 15rem;
+            color: #1A3D65;
+        }
+        h3{
+            color: #1A3D65;
+        }
+    }
+    .myVideo-dimensions.vjs-fluid:not(.vjs-audio-only-mode){
+        padding-top: 56%!important;
+    }
+    .card{
+        border-radius: 15px!important;
+        padding: 0px 30px 30px 30px!important;
+    }
+    .font-size{
+        font-size: 1.8em;
+    }
+    .font-size-price{
+        font-size: 2.3em;
+    }
+}
