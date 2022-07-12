@@ -98,7 +98,7 @@ $('[data-toggle="tooltip"]').tooltip();
 async function init(){
     getLastSales(null, null);
     let rol = userType == 2 ? await getRolDR(idUser): userType;
-    fillBoxAccordions(rol == '1' || rol == '18' ? 'director_regional': rol == '2' ? 'gerente' : rol == '3' ? 'coordinador' : rol == '59' ? 'subdirector':'asesor', rol, idUser, 1, 1);
+    fillBoxAccordions(rol == '1' || rol == '18' ? 'director_regional': rol == '2' ? 'gerente' : rol == '3' ? 'coordinador' : rol == '59' ? 'subdirector':'asesor', rol == 18 || rol == '18' ? 1:rol, idUser, 1, 1);
 }
 
 function createAccordions(option, render, rol){

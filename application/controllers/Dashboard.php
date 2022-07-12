@@ -60,7 +60,7 @@ class Dashboard extends CI_Controller
             } else if ($type == 4) { // ADVISER TABLE
                 $data['data'] = $this->Dashboard_model->getInformationByAdviser($typeTransaction, $beginDate, $endDate, $currentYear, $where, $saleType)->result_array();
             }
-            echo json_encode($data);
+            echo json_encode($data, JSON_NUMERIC_CHECK);
         } else {
             json_encode(array());
         }
@@ -86,7 +86,7 @@ class Dashboard extends CI_Controller
             } else if ($type == 4) { // ADVISER TABLE
                 $data = $this->Dashboard_model->getDetailsByAdviser($typeTransaction, $beginDate, $endDate, $currentYear, $where, $saleType)->result_array();
             }
-            echo json_encode($data);
+            echo json_encode($data, JSON_NUMERIC_CHECK);
         } else {
             json_encode(array());
         }
@@ -97,7 +97,7 @@ class Dashboard extends CI_Controller
         $data = $this->Dashboard_model->getProspectsByUserSessioned($id_asesor);
         $data['total_ventas'] = $this->Dashboard_model->totalVentasData();
         if($data != null) {
-            echo json_encode($data);
+            echo json_encode($data, JSON_NUMERIC_CHECK);
         } else {
             echo json_encode(array());
         }
@@ -109,7 +109,7 @@ class Dashboard extends CI_Controller
 
         $data = $this->Dashboard_model->getDataBetweenDates($fecha_inicio, $fecha_fin, $typeTransaction);
         if($data != null) {
-            echo json_encode($data);
+            echo json_encode($data, JSON_NUMERIC_CHECK);
         } else {
             echo json_encode(array());
         }
@@ -120,7 +120,7 @@ class Dashboard extends CI_Controller
 
         $data = $this->Dashboard_model->totalVentasData($typeTransaction);
         if($data != null) {
-            echo json_encode($data);
+            echo json_encode($data, JSON_NUMERIC_CHECK);
         } else {
             echo json_encode(array());
         }
@@ -134,7 +134,7 @@ class Dashboard extends CI_Controller
         ];
         $data = $this->Dashboard_model->getProspectsByYear($data);
         if($data != null) {
-            echo json_encode($data);
+            echo json_encode($data, JSON_NUMERIC_CHECK);
         } else {
             echo json_encode(array());
         }
@@ -143,7 +143,7 @@ class Dashboard extends CI_Controller
     public function getClientsByYear(){
         $data = $this->Dashboard_model->getClientsByYear();
         if($data != null) {
-            echo json_encode($data);
+            echo json_encode($data, JSON_NUMERIC_CHECK);
         } else {
             echo json_encode(array());
         }
@@ -162,7 +162,7 @@ class Dashboard extends CI_Controller
         $data = array('Prospectos' => $prospect, 'Clientes'=>$client);
 
         if($data != null) {
-            echo json_encode($data);
+            echo json_encode($data, JSON_NUMERIC_CHECK);
         } else {
             echo json_encode(array());
         }
@@ -177,7 +177,7 @@ class Dashboard extends CI_Controller
         ];
         $data = $this->Dashboard_model->generalMetricsByYear($data);
         if($data != null) {
-            echo json_encode($data);
+            echo json_encode($data, JSON_NUMERIC_CHECK);
         } else {
             echo json_encode(array());
         }
@@ -186,7 +186,7 @@ class Dashboard extends CI_Controller
     public function cicloVenta(){
         $data = $this->Dashboard_model->cicloVenta($_POST['typeTransaction']);
         if($data != null) {
-            echo json_encode($data);
+            echo json_encode($data, JSON_NUMERIC_CHECK);
         } else {
             echo json_encode(array());
         }

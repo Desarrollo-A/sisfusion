@@ -54,18 +54,29 @@
 									</div>
 								</div>
 
-                                <div class="row">
+                                <div id="basic_info" class="row hide">
                                     <div class="col-12 col-sm-12 col-md-4 col-lg-4">
                                         <div class="card miniCard">
                                             <div class="container-fluid">
                                                 <div class="boxInfo">
-                                                    <p class="m-0">Evidencia <span class="evidencia enfatize">cargada</span></p>
-                                                    <p class="mb-1">Ver evidencia <i class="fas fa-eye"></i></p>
-                                                    <span class="estatus">Sin validar<span>
+                                                    <p class="m-0">Evidencia <span class="evidencia enfatize"></span></p>
+                                                    <div id="evidencia" class="mb-2 hide">
+                                                        <p class="mb-1">Ver evidencia <i class="fas fa-eye"></i></p>
+                                                        <span class="estatus">Sin validar<span>
+                                                    </div>
+                                                    <div id="generate" class="row">
+                                                        <div class="col-12 col-sm-12 col-md-12 col-lg-12">
+                                                            <button><i class="fas fa-link"></i>&nbsp;Generar URL</button>
+                                                        </div>
+                                                        <div class="col-12 col-sm-12 col-md-10 col-lg-10">
+                                                            <!-- <p id="url_second"></p> -->
+                                                            <input id="url" type="text" disabled></input>
+                                                        </div>
+                                                        <div id="copy_button" class="col-12 col-sm-12 col-md-2 col-lg-2 p-0 hide">
+                                                            <i class="fas fa-copy iconCopy" title="Copiar" data-toggle="tooltip" data-placement="right"></i>
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                                <!-- <div class="boxIcon">
-                                                    <img src="../dist/img/verify.png" alt="Icono verificación" class="">
-                                                </div> -->
                                             </div>
                                         </div>
                                     </div>
@@ -74,11 +85,13 @@
                                             <div class="container-fluid">
                                                 <div class="boxInfo">
                                                     <p class="titleMini m-0">Nombre</p>
-                                                    <p class="nombreCl data">ADRIANA AUREA ARGAIZ CABRERA</p>
+                                                    <p class="nombreCl data"></p>
+                                                    <input id="nombreCl" type="hidden"></input>
                                                     <p class="titleMini m-0">Asesor</p>
-                                                    <p class="nombreAs data">CHRISTIAN ALFONSO SANCHEZ SANCHEZ</p>
-                                                    <p class="titleMini m-0">Fecha</p>
-                                                    <p class="fechaApartado data">23/06/2022 09:00</p>
+                                                    <p class="nombreAs data"></p>
+                                                    <input id="nombreAs" type="hidden"></input>
+                                                    <p class="titleMini m-0">Fecha apartado</p>
+                                                    <p class="fechaApartado data"></p>
                                                 </div>
                                                 <!-- <div class="boxIcon">
                                                     <img src="../dist/img/verify.png" alt="Icono verificación" class="">
@@ -93,32 +106,38 @@
                                                     <div class="montos d-flex justify-between">
                                                         <div class="w-50">
                                                             <p class="titleMonto m-0">Precio de lote</p>
-                                                            <p class="monto w-100 overflow-text" data-toggle="tooltip" data-placement="top" title="$1,051,193.47">$1,051,193.47</p>
+                                                            <p class="monto w-100 overflow-text" data-toggle="tooltip" data-placement="top" title="$1,051,193.47"></p>
                                                         </div>
                                                         <div class="w-50">
                                                             <p class="titleMonto m-0">Enganche validado</p>
-                                                            <p class="monto w-100 overflow-text" data-toggle="tooltip" data-placement="top" title="$95,563.04">$95,563.04</p>
+                                                            <p class="enganche w-100 overflow-text" data-toggle="tooltip" data-placement="top" title="$95,563.04"></p>
                                                         </div>
                                                     </div>
                                                     <div class="d-flex">
                                                         <div class="mb-1 w-50">
                                                             <p class="titleMini m-0 mt-1">Estatus lote</p>
-                                                            <p class="estatus2 w-90 overflow-text">Contratado</p>
+                                                            <p class="estatus_lote w-90 overflow-text"></p>
                                                         </div>
                                                         <div class="mb-1 w-50">
                                                             <p class="titleMini m-0 mt-1">Estatus comisión</p>
-                                                            <p class="estatus2 w-90 overflow-text">Recisión anterior (aún no se dispersa)</p>
+                                                            <p class="estatus_comision w-90 overflow-text"></p>
                                                         </div>
                                                     </div>
                                                     <div class="mb-1">
                                                         <p class="titleMini m-0">Estatus contratación</p>
-                                                        <p class="estatus2 w-100 overflow-text">15. Acuse entregado (Contraloría)</p>
+                                                        <p class="estatus_contratacion w-100 overflow-text"></p>
                                                     </div>    
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
+                                <input type="hidden" id="idLote"></input>
+                                <input type="hidden" id="idCliente"></input>
+                                <input type="hidden" id="nombreResidencial"></input>
+                                <input type="hidden" id="nombreCondominio"></input>
+                                <input type="hidden" id="nombreLote"></input>
+                                <input type="hidden" id="fechaApartado"></input>
                             </div>
                         </div>
                     </div>
@@ -129,6 +148,7 @@
     <?php $this->load->view('template/footer_legend'); ?>
 </div>
 </div>
+<?php include 'common_modals.php' ?>
 
 <?php $this->load->view('template/footer'); ?>
 <!--DATATABLE BUTTONS DATA EXPORT-->
