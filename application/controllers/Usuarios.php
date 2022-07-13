@@ -8,6 +8,7 @@ class Usuarios extends CI_Controller
         $this->load->model(array('Usuarios_modelo', 'Services_model'));
         $this->load->model('asesor/Asesor_model'); //EN ESTE MODELO SE ENCUENTRAN LAS CONSULTAS DEL MENU
         $this->load->model('Clientes_model');
+        $this->load->model('General_model');
         //LIBRERIA PARA LLAMAR OBTENER LAS CONSULTAS DE LAS  DEL MENÚ
         $this->load->library(array('session', 'form_validation', 'get_menu'));
         $this->load->library(array('session', 'form_validation'));
@@ -53,12 +54,6 @@ class Usuarios extends CI_Controller
     public function updatePersonalInformation()
     {
         $data = array(
-            "nombre" => $_POST['name'],
-            "apellido_paterno" => $_POST['last_name'],
-            "apellido_materno" => $_POST['mothers_last_name'],
-            "rfc" => $_POST['rfc'],
-            "correo" => $_POST['email'],
-            "telefono" => $_POST['phone_number'],
             "contrasena" => encriptar($_POST['contrasena']),
             "fecha_modificacion" => date("Y-m-d H:i:s"),
             "modificado_por" => $this->session->userdata('id_usuario')
@@ -231,9 +226,48 @@ class Usuarios extends CI_Controller
             $sucursal = 0;
             $objDatos = json_decode(base64_decode(file_get_contents("php://input")), true);
             if ($_POST['member_type'] == 3 || $_POST['member_type'] == 7 || $_POST['member_type'] == 9) {
+                #actualizar los registros en caso de que haya modificado de lider o tipo de miembro
+                $getLider = $this->Services_model->getLider($_POST['leader'],$_POST['member_type']);
+                $data_update = array();
+                switch ($_POST['member_type'] ){
+                    case 3;
+                        $data_update = array(
+                            'regional_id' => $getLider[0]['id_regional'],
+                            'subdirector_id' => $_POST['leader'],
+                            'gerente_id' => 0,
+                            'id_lider' => 0
+                        );
+                        break;
+                    case 7;
+                        $data_update = array(
+                            'regional_id' => $getLider[0]['id_regional'],
+                            'subdirector_id' => $getLider[0]['id_subdirector'],
+                            'gerente_id' => $getLider[0]['id_gerente'],
+                            'id_lider' => $_POST['leader']
+                        );
+                        break;
+                    case 9;
+                        $data_update = array(
+                            'regional_id' => $getLider[0]['id_regional'],
+                            'subdirector_id' => $getLider[0]['id_subdirector'],
+                            'gerente_id' => $_POST['leader'],
+                            'id_lider' => 0
+                        );
+                        break;
+                }
+
+                /*print_r($data_update);
+                echo 'data del post:<br><br>';
+                print_r($_POST);
+                exit;*/
+                $this->General_model->updateRecord('usuarios', $data_update, 'id_usuario', $_POST['id_usuario']);
+                #end of this part
+
+
+
 
                 /*
-SEDES CAPITAL HUMANO 
+                SEDES CAPITAL HUMANO
                 9 -- cancun
                 4 ---cdmx
                 2 -- leon
@@ -241,7 +275,7 @@ SEDES CAPITAL HUMANO
                 1 -- qro 
                 3 -- slp
                 11 -- tijuana 
-*/
+                */
                 $sedeCH = $_POST['sedech'];
                 $sucursal = !isset($_POST['sucursal']) ? 0 : $_POST['sucursal'];
                 $this->Usuarios_modelo->UpdateProspect($this->input->post("id_usuario"), $_POST['leader'], $_POST['member_type'], $_POST['rol_actual'], $sedeCH, $sucursal);
@@ -529,5 +563,8 @@ SEDES CAPITAL HUMANO
         $data['data'][0]['contrasena'] = desencriptar($data['data'][0]['contrasena']);
         echo json_encode($data);
     }
+
+
+
 
 }

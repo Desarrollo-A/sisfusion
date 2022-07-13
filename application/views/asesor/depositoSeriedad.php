@@ -621,7 +621,7 @@
                         var action='';
 
                         if (d.idMovimiento == 31 && d.idStatusContratacion == 1) {
-                            if (d.id_prospecto == 0 && d.concepto == 'APARTADO DESDE LA PAGINA DE CIUDAD MADERAS')/*APARTADO DESDE LA PAGINA DE CIUDAD MADERAS*/
+                            if (d.id_prospecto == 0)/*APARTADO DESDE LA PAGINA DE CIUDAD MADERAS*/
                             {
                                 atributo_button2 = 'disabled';
                                 url_to_go  = '#';
@@ -641,7 +641,7 @@
                             buttonst += 'En proceso de Liberación';
                             } else {
                                 if (d.idMovimiento == 31 && d.idStatusContratacion == 1) {
-                                    if (d.id_prospecto == 0 && d.concepto == 'APARTADO DESDE LA PAGINA DE CIUDAD MADERAS')/*APARTADO DESDE LA PAGINA DE CIUDAD MADERAS*/
+                                    if (d.id_prospecto == 0)/*APARTADO DESDE LA PAGINA DE CIUDAD MADERAS*/
                                     {
                                         buttonst += d.idMovimiento == 31 ?  '<a href="#" disabled  data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="btn-data btn-green disabled">  <i class="fas fa-check" title= "Enviar estatus"></i></a>':
                                             d.idMovimiento == 85 ?  '<a href="#" disabled  data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="btn-data btn-green disabled"><i class="fas fa-check" title= "Enviar estatus"></i></a>':
@@ -700,7 +700,7 @@
                             //buton tres
                             if (d.dsType == 1) {
                                 if (d.idMovimiento == 31 && d.idStatusContratacion == 1) {
-                                    if (d.id_prospecto == 0 && d.concepto == 'APARTADO DESDE LA PAGINA DE CIUDAD MADERAS')/*APARTADO DESDE LA PAGINA DE CIUDAD MADERAS*/
+                                    if (d.id_prospecto == 0)/*APARTADO DESDE LA PAGINA DE CIUDAD MADERAS*/
                                     {
                                         var nombre_cliente = '';
                                         nombre_cliente = d.nombre + ' ' + d.apellido_paterno + ' ' + d.apellido_materno;

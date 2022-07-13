@@ -17,7 +17,7 @@
         ?>
 
         <!-- Modals -->
-        <!--<div class="modal fade" id="seeInformationModalremanente" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+        <div class="modal fade" id="seeInformationModalremanente" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog modal-md modal-dialog-scrollable" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -50,7 +50,7 @@
                     </div>
                 </div>
             </div>
-        </div>-->
+        </div>
 
         <div class="modal fade modal-alertas" id="modal_nuevas" role="dialog">
             <div class="modal-dialog">
@@ -62,7 +62,7 @@
             </div>
         </div>
 
-        <!--<div class="modal fade modal-alertas" id="modal_despausar" role="dialog">
+        <div class="modal fade modal-alertas" id="modal_despausar" role="dialog">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <form method="post" id="form_despausar">
@@ -70,9 +70,9 @@
                     </form>
                 </div>
             </div>
-        </div>-->
+        </div>
 
-        <!--<div class="modal fade modal-alertas" id="modal_refresh" role="dialog">
+        <div class="modal fade modal-alertas" id="modal_refresh" role="dialog">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <form method="post" id="form_refresh">
@@ -80,7 +80,7 @@
                     </form>
                 </div>
             </div>
-        </div>-->
+        </div>
 
         <div class="modal fade modal-alertas" id="modal_multiples" role="dialog">
             <div class="modal-dialog modal-md">
@@ -119,13 +119,13 @@
             </div>
         </div>
 
-        <!--<div class="modal fade bd-example-modal-sm" id="myModalTQro" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal fade bd-example-modal-sm" id="myModalTQro" tabindex="-1" role="dialog" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-body"></div>
                 </div>
             </div>
-        </div>-->
+        </div>
         <!-- END Modals -->
 
         <div class="content boxContent">
@@ -199,6 +199,7 @@
                                                         <th>A PAGAR</th>
                                                         <th>TIPO VENTA</th>
                                                         <th>USUARIO</th>
+                                                        <th>RFC</th>
                                                         <th>PUESTO</th>
                                                         <th>FEC. ENVÍO</th>
                                                         <th>MÁS</th>
@@ -476,7 +477,7 @@
                     titleAttr: 'Descargar archivo de Excel',
                     title: 'REMANENTE_INTERNOMEX_COMISIONES',
                     exportOptions: {
-                        columns: [1,2,3,4,5,6,7,8,9,10,11,12,13,14],
+                        columns: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15],
                         format: {
                             header:  function (d, columnIdx) {
                                 if(columnIdx == 0){
@@ -506,11 +507,13 @@
                                 }else if(columnIdx == 12){
                                     return 'COMISIONISTA';
                                 }else if(columnIdx == 13){
-                                    return 'PUESTO';
+                                    return 'RFC';
                                 }else if(columnIdx == 14){
+                                    return 'PUESTO';
+                                }else if(columnIdx == 15){
                                     return 'FECH. ENVÍO';
                                 }
-                                else if(columnIdx != 15 && columnIdx !=0){
+                                else if(columnIdx != 16 && columnIdx !=0){
                                     return ' '+titulos[columnIdx-1] +' ';
                                 }
                             }
@@ -556,13 +559,13 @@
                     }
                 },
                 {
-                    "width": "7%",
+                    "width": "6%",
                     "data": function( d ){
                         return '<p class="m-0">'+d.referencia+'</p>';
                     }
                 },
                 {
-                    "width": "7%",
+                    "width": "6%",
                     "data": function( d ){
                         return '<p class="m-0">$'+formatMoney(d.precio_lote)+'</p>';
                     }
@@ -574,7 +577,7 @@
                     }
                 },
                 {
-                    "width": "7%",
+                    "width": "6%",
                     "data": function( d ){
                         return '<p class="m-0">$'+formatMoney(d.comision_total)+'</p>';
                     }
@@ -586,13 +589,13 @@
                     }
                 },
                 {
-                    "width": "7%",
+                    "width": "6%",
                     "data": function( d ){
                         return '<p class="m-0"><b>$'+formatMoney(d.impuesto)+'</b></p>';
                     }
                 },
                 {
-                    "width": "7%",
+                    "width": "6%",
                     "data": function( d ){
                         if(d.lugar_prospeccion == 6){
                             return '<p class="m-0">COMISIÓN + MKTD <br><b> ('+d.porcentaje_decimal+'% de '+d.porcentaje_abono+'%)</b></p>';
@@ -603,9 +606,15 @@
                     }
                 },
                 {
-                    "width": "9%",
+                    "width": "7%",
                     "data": function( d ){
                         return '<p class="p-0"><b>'+d.usuario+'</b></i></p>';
+                    }
+                },
+                {
+                    "width": "7%",
+                    "data": function( d ){
+                        return '<p class="p-0"><b>'+d.rfc+'</b></i></p>';
                     }
                 },
                 {
@@ -633,11 +642,11 @@
                     "data": function( data ){
                         var BtnStats;
                         if(data.estatus == 8){
-                            BtnStats = '<button href="#" value="'+data.id_pago_i+'" data-value="'+data.lote+'" data-code="'+data.cbbtton+'" ' +'class="btn-data btn-blueMaderas consultar_logs_asimilados" title="Detalles">' +'<i class="fas fa-info"></i></button>'+
+                            BtnStats = '<button href="#" value="'+data.id_pago_i+'" data-value="'+data.lote+'" data-code="'+data.cbbtton+'" ' +'class="btn-data btn-blueMaderas consultar_logs_remanente" title="Detalles">' +'<i class="fas fa-info"></i></button>'+
                             '<button href="#" value="'+data.id_pago_i+'" data-value="'+data.id_pago_i+'" data-code="'+data.cbbtton+'" ' + 'class="btn-data btn-orangeYellow cambiar_estatus" title="Pausar solicitud">' + '<i class="fas fa-pause"></i></button>';
                         }
                         else{
-                            BtnStats = '<button href="#" value="'+data.id_pago_i+'" data-value="'+data.lote+'" data-code="'+data.cbbtton+'" ' +'class="btn-data btn-blueMaderas consultar_logs_asimilados" title="Detalles">' +'<i class="fas fa-info"></i></button>'+
+                            BtnStats = '<button href="#" value="'+data.id_pago_i+'" data-value="'+data.lote+'" data-code="'+data.cbbtton+'" ' +'class="btn-data btn-blueMaderas consultar_logs_remanente" title="Detalles">' +'<i class="fas fa-info"></i></button>'+
                             '<button href="#" value="'+data.id_pago_i+'" data-value="'+data.id_pago_i+'" data-code="'+data.cbbtton+'" ' + 'class="btn-data btn-green regresar_estatus" title="Activar solicitud">' + '<i class="fas fa-play"></i></button>';
                         }
                         return '<div class="d-flex">'+ BtnStats +'</div>';
@@ -676,7 +685,7 @@
                 },
             });
 
-            /*$("#tabla_remanente tbody").on("click", ".consultar_logs_remanente", function(e){
+            $("#tabla_remanente tbody").on("click", ".consultar_logs_remanente", function(e){
                 e.preventDefault();
                 e.stopImmediatePropagation();
 
@@ -689,7 +698,7 @@
                         $("#comments-list-remanente").append('<div class="col-lg-12"><p><i style="color:gray;">'+v.comentario+'</i><br><b style="color:#3982C0">'+v.fecha_movimiento+'</b><b style="color:gray;"> - '+v.nombre_usuario+'</b></p></div>');
                     });
                 });
-            });*/
+            });
 
 
             $('#tabla_remanente').on('click', 'input', function() {
@@ -734,7 +743,7 @@
                 $("#modal_nuevas").modal();
             });
 
-            /*$("#tabla_remanente tbody").on("click", ".consultar_documentos", function(){
+            $("#tabla_remanente tbody").on("click", ".consultar_documentos", function(){
                 id_com = $(this).val();
                 id_pj = $(this).attr("data-personalidad");
 
@@ -795,7 +804,7 @@
                         
                     $("#seeInformationModal .facturaInfo").append('</div>');
                 });
-            });*/
+            });
         }
         //FIN TABLA  ****************************************************************************************
 
@@ -818,9 +827,9 @@
             return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
         };
 
-        /*function cancela(){
+        function cancela(){
             $("#modal_nuevas").modal('toggle');
-        }*/
+        }
 
         $("#form_interes").submit( function(e) {
             e.preventDefault();
@@ -858,7 +867,7 @@
 
 
         //Función para regresar a estatus 7 la solicitud
-        /*$("#form_refresh").submit( function(e) {
+        $("#form_refresh").submit( function(e) {
             e.preventDefault();
         }).validate({
             submitHandler: function( form ) {
@@ -891,9 +900,9 @@
                     }
                 });
             }
-        });*/
+        });
 
-        /*$("#form_despausar").submit( function(e) {
+        $("#form_despausar").submit( function(e) {
             e.preventDefault();
         }).validate({
             submitHandler: function( form ) {
@@ -926,11 +935,11 @@
                     }
                 });
             }
-        });*/
+        });
 
-        /*$(document).on("click", ".btn-historial-lo", function(){
+        $(document).on("click", ".btn-historial-lo", function(){
             window.open(url+"Comisiones/getHistorialEmpresa", "_blank");
-        });*/
+        });
 
         function preview_info(archivo){
             $("#documento_preview .modal-dialog").html("");
@@ -973,13 +982,13 @@
             });
         }
 
-        /*function cleanComments(){
+        function cleanComments(){
             var myCommentsList = document.getElementById('documents');
             myCommentsList.innerHTML = '';
 
             var myFactura = document.getElementById('facturaInfo');
             myFactura.innerHTML = '';
-        }*/
+        }
 
         $("#form_multiples").submit( function(e) {
             $('#loader').removeClass('hidden');
@@ -1019,7 +1028,7 @@
     </script>
 
     <script>
-        /*$(document).ready( function(){
+        $(document).ready( function(){
             $.getJSON( url + "Comisiones/getReporteEmpresa").done( function( data ){
                 $(".report_empresa").html();
                 $.each( data, function( i, v){
@@ -1027,6 +1036,6 @@
 
                 });
             });
-        });*/
+        });
     </script>
 </body>

@@ -469,6 +469,7 @@ function getLeadersListForEdit(headquarter, type, leader){
             var sede = data[i]['id_sede'];
             if(id == leader){
                 $("#leader").append($('<option selected>').val(id).text(name));
+                $("#lastLI").val(id);
             } else{
                 $("#leader").append($('<option>').val(id).text(name));
             }
@@ -644,6 +645,7 @@ $('#'+id_user+'').prop('disabled', false);
 });*/
 
 $(document).on('click', '.edit-user-information', function(e){
+    // console.log('cámara enytraste al modal mi perro');
     id_usuario = $(this).attr("data-id-usuario");
     $.getJSON("getUserInformation/"+id_usuario).done( function( data ){
         $.each( data, function(i, v){
@@ -726,6 +728,11 @@ function fillFields (v) {
     $("#phone_number").val(v.telefono);
     $("#headquarter").val(v.id_sede);
     $("#member_type").val(v.id_rol);
+
+
+    $("#lastTM").val(v.id_rol);
+
+
     if(v.id_rol == 7 || v.id_rol== 3 || v.id_rol == 9){
         $('#ch'). show();
         document.getElementById("sedech").removeAttribute("required");

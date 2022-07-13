@@ -60,6 +60,11 @@ class Asesor_model extends CI_Model
 /*----------------------------------CONSULTAS PARA OBTENER EL MENU------------------------*/
 	function getMenu($rol)
 	{
+        $idUsuario = $this->session->userdata('id_usuario');
+        if ($this->existeUsuarioMenuEspecial($idUsuario)) {
+            return $this->getMenuPadreEspecial($idUsuario);
+        }
+
 		if ($this->session->userdata('id_usuario') == 4415 || $this->session->userdata('id_usuario') == 6578 || $this->session->userdata('id_usuario') == 9942 || $this->session->userdata('id_usuario') == 9911 || $this->session->userdata('estatus') == 3)  { // ES GREENHAM , COREANO, BADABUM, CONTACT CENTER
            $complemento='';
            if($this->session->userdata('id_usuario') == 6578 || $this->session->userdata('id_usuario') == 9942 || $this->session->userdata('id_usuario') == 9911){
@@ -93,6 +98,11 @@ class Asesor_model extends CI_Model
 
     function getMenuHijos($rol)
     {
+        $idUsuario = $this->session->userdata('id_usuario');
+        if ($this->existeUsuarioMenuEspecial($idUsuario)) {
+            return $this->getMenuHijoEspecial($idUsuario);
+        }
+        
         $complemento="";
         if($this->session->userdata('id_usuario') == 6578 || $this->session->userdata('id_usuario') == 9942 || $this->session->userdata('id_usuario') == 9911){
             $complemento = " AND idmenu in(296,307,308,879)";
@@ -113,6 +123,27 @@ class Asesor_model extends CI_Model
     {
 
         return $this->db->query("SELECT padre FROM Menu2 WHERE pagina='" . $var . "' AND rol=" . $rol . " ");
+    }
+
+    public function existeUsuarioMenuEspecial($idUsuario)
+    {
+        $query = $this->db->query("SELECT id_menu_u FROM menu_usuario WHERE id_usuario = $idUsuario");
+        $result = $query->result_array();
+        return count($result) > 0;
+    }
+
+    public function getMenuPadreEspecial($idUsuario)
+    {
+        return $this->db->query("SELECT * FROM Menu2 WHERE idmenu IN 
+            (SELECT value FROM menu_usuario CROSS APPLY STRING_SPLIT(menu, ',') 
+                    WHERE id_usuario = $idUsuario AND es_padre = 1) ORDER BY orden");
+    }
+
+    public function getMenuHijoEspecial($idUsuario)
+    {
+        return $this->db->query("SELECT * FROM Menu2 WHERE idmenu IN 
+            (SELECT value FROM menu_usuario CROSS APPLY STRING_SPLIT(menu, ',') 
+                    WHERE id_usuario = $idUsuario AND es_padre = 0) ORDER BY orden");
     }
 
     /*---------------------------------------FIN MENU-------------------------------------*/
@@ -296,30 +327,33 @@ class Asesor_model extends CI_Model
         if ($this->session->userdata('id_rol') == 6) {
 
 
-            $query = $this->db->query("SELECT idLote, nombreLote, total, sup, precio, porcentaje, enganche, con.msni, descSup1, descSup2, referencia, db.banco, db.cuenta, db.empresa, db.clabe, lot.casa, (
+            $query = $this->db->query("SELECT lot.idLote, nombreLote, total, sup, precio, porcentaje, enganche, con.msni, 
+            descSup1, descSup2, referencia, db.banco, db.cuenta, db.empresa, db.clabe, lot.casa, (
             CASE lot.casa
             WHEN 0 THEN ''
             WHEN 1 THEN  casas.casasDetail
-            END) casasDetail 
+            END) casasDetail, idStatusLote, cl.fechaApartado, cl.id_cliente
                                     FROM lotes lot LEFT JOIN condominios con ON lot.idCondominio = con.idCondominio LEFT JOIN residenciales res 
                                     ON con.idResidencial = res.idResidencial LEFT JOIN datosbancarios db ON con.idDBanco = db.idDBanco 
                                     LEFT JOIN (SELECT id_lote, CONCAT( '{''total_terreno'':''', total_terreno, ''',', tipo_casa, '}') casasDetail 
             						FROM casas WHERE estatus = 1) casas ON casas.id_lote = lot.idLote
-            						WHERE idLote = " . $lote . " AND idStatusLote IN(1,3)");
+            						LEFT JOIN clientes cl ON lot.idLote = cl.idLote AND cl.status=1
+            						WHERE lot.idLote = " . $lote . " AND idStatusLote IN(1,3)");
         } else {
 
-            $query = $this->db->query("SELECT idLote, nombreLote, total, sup, precio, porcentaje, enganche, con.msni, descSup1, descSup2, referencia, db.banco, db.cuenta, db.empresa, db.clabe, lot.casa, (
+            $query = $this->db->query("SELECT lot.idLote, nombreLote, total, sup, precio, porcentaje, enganche, con.msni, 
+            descSup1, descSup2, referencia, db.banco, db.cuenta, db.empresa, db.clabe, lot.casa, (
             CASE lot.casa
             WHEN 0 THEN ''
             WHEN 1 THEN  casas.casasDetail
-            END) casasDetail
+            END) casasDetail, idStatusLote, cl.fechaApartado, cl.id_cliente
                                     FROM lotes lot LEFT JOIN condominios con ON lot.idCondominio = con.idCondominio LEFT JOIN residenciales res 
                                     ON con.idResidencial = res.idResidencial LEFT JOIN datosbancarios db ON con.idDBanco = db.idDBanco 
                                     LEFT JOIN (SELECT id_lote, CONCAT( '{''total_terreno'':''', total_terreno, ''',', tipo_casa, '}') casasDetail 
             						FROM casas WHERE estatus = 1) casas ON casas.id_lote = lot.idLote
-                                    WHERE idLote = " . $lote . " AND idStatusLote IN(1, 2, 3)"); /*1: original*/
+                                    LEFT JOIN clientes cl ON lot.idLote = cl.idLote AND cl.status=1
+                                    WHERE lot.idLote = " . $lote . " AND idStatusLote IN(1, 2, 3)") ; /*1: original*/
         }
-
 
         if ($query) {
             $query = $query->result_array();
@@ -329,27 +363,29 @@ class Asesor_model extends CI_Model
 
     function getLotesInfoCorridaE($lote){
         if($this->session->userdata('id_rol') == 6){
-            $query =  $this->db->query("SELECT idLote, nombreLote, total, sup, precio, porcentaje, enganche, con.msni, descSup1, descSup2, referencia, db.banco, db.cuenta, db.empresa, db.clabe, lot.casa, (
+            $query =  $this->db->query("SELECT lot.idLote, nombreLote, total, sup, precio, porcentaje, enganche, con.msni, descSup1, descSup2, referencia, db.banco, db.cuenta, db.empresa, db.clabe, lot.casa, (
             CASE lot.casa
             WHEN 0 THEN ''
             WHEN 1 THEN  casas.casasDetail
-            END) casasDetail 
+            END) casasDetail, idStatusLote, cl.fechaApartado, cl.id_cliente
                                     FROM lotes lot LEFT JOIN condominios con ON lot.idCondominio = con.idCondominio LEFT JOIN residenciales res 
                                     ON con.idResidencial = res.idResidencial LEFT JOIN datosbancarios db ON con.idDBanco = db.idDBanco 
                                     LEFT JOIN (SELECT id_lote, CONCAT( '{''total_terreno'':''', total_terreno, ''',', tipo_casa, '}') casasDetail 
             						FROM casas WHERE estatus = 1) casas ON casas.id_lote = lot.idLote
-            						WHERE idLote = " . $lote . " AND idStatusLote IN(1,3)");
+            						LEFT JOIN clientes cl ON lot.idLote = cl.idLote AND cl.status=1
+            						WHERE lot.idLote = " . $lote . " AND idStatusLote IN(1,3)");
         } else {
-            $query =  $this->db->query("SELECT idLote, nombreLote, total, sup, precio, porcentaje, enganche, con.msni, descSup1, descSup2, referencia, db.banco, db.cuenta, db.empresa, db.clabe, lot.casa, (
+            $query =  $this->db->query("SELECT lot.idLote, nombreLote, total, sup, precio, porcentaje, enganche, con.msni, descSup1, descSup2, referencia, db.banco, db.cuenta, db.empresa, db.clabe, lot.casa, (
                                     CASE lot.casa
                                     WHEN 0 THEN ''
                                     WHEN 1 THEN  casas.casasDetail
-                                    END) casasDetail
+                                    END) casasDetail, idStatusLote, cl.fechaApartado, cl.id_cliente
                                     FROM lotes lot LEFT JOIN condominios con ON lot.idCondominio = con.idCondominio LEFT JOIN residenciales res 
                                     ON con.idResidencial = res.idResidencial LEFT JOIN datosbancarios db ON con.idDBanco = db.idDBanco 
                                     LEFT JOIN (SELECT id_lote, CONCAT( '{''total_terreno'':''', total_terreno, ''',', tipo_casa, '}') casasDetail 
             						FROM casas WHERE estatus = 1) casas ON casas.id_lote = lot.idLote
-                                    WHERE idLote = " . $lote . " AND idStatusLote IN(1, 2, 3)"); /*original: 1*/
+            						LEFT JOIN clientes cl ON lot.idLote = cl.idLote AND cl.status=1
+                                    WHERE lot.idLote = " . $lote . " AND idStatusLote IN(1, 2, 3)"); /*original: 1*/
         }
 
 
@@ -859,7 +895,7 @@ class Asesor_model extends CI_Model
 		
 		WHERE 
 		
-		        cl.id_coordinador != 2562 AND
+		        cl.id_coordinador NOT IN (2562, 2541) AND
 		        idStatusContratacion = 1 AND idMovimiento = 31 and cl.status = 1 AND cl.id_asesor = " . $this->session->userdata('id_usuario') . "
 				OR idStatusContratacion = 2 AND idMovimiento = 85 and cl.status = 1 AND cl.id_asesor = " . $this->session->userdata('id_usuario') . "
 				OR idStatusContratacion = 1 and idMovimiento = 20 and cl.status = 1 AND cl.id_asesor = " . $this->session->userdata('id_usuario') . "
@@ -1162,7 +1198,8 @@ class Asesor_model extends CI_Model
                 l.idLote, l.nombreLote, CONCAT(solicitante.nombre,' ', solicitante.apellido_paterno,' ', solicitante.apellido_materno) as solicitante, ec.estatus,
                 ec.id_evidencia, cl.id_cliente, ec.evidencia, ec.fecha_modificado, cl.fechaApartado, s.nombre plaza,
                 he1.fecha_creacion fechaValidacionGerente, he2.fecha_creacion fechaValidacionCobranza, he3.fecha_creacion fechaValidacionContraloria,
-                he10.fecha_creacion fechaRechazoCobranza, he20.fecha_creacion fechaRechazoContraloria, he200.comentario_autorizacion, (CASE cn.tipo WHEN 1 THEN 11 WHEN 2 THEN 22 WHEN 3 THEN 33 ELSE 1 END) rowType, cn.tipo,
+                he10.fecha_creacion fechaRechazoCobranza, he20.fecha_creacion fechaRechazoContraloria, he200.comentario_autorizacion, 
+                (CASE cn.tipo WHEN 1 THEN 11 WHEN 2 THEN 22 WHEN 3 THEN 33 WHEN 4 THEN 44 WHEN 5 THEN 55 ELSE 1 END) rowType, cn.tipo,
                 cm.id_coment, CASE WHEN (ec.comentario_autorizacion LIKE '%null%' OR CAST(ec.comentario_autorizacion AS VARCHAR(500)) = '' OR ec.comentario_autorizacion IS NULL) 
                 THEN 'Comentario no especificado' ELSE ec.comentario_autorizacion END lastComment, ISNULL(oxc.nombre, 'Sin especificar') lugarProspeccion
                 FROM lotes l
@@ -1189,7 +1226,8 @@ class Asesor_model extends CI_Model
                 l.idLote, l.nombreLote, CONCAT(solicitante.nombre,' ', solicitante.apellido_paterno,' ', solicitante.apellido_materno) as solicitante, ec.estatus,
                 ec.id_evidencia, cl.id_cliente, ec.evidencia, ec.fecha_modificado, cl.fechaApartado, s.nombre plaza,
                 he1.fecha_creacion fechaValidacionGerente, he2.fecha_creacion fechaValidacionCobranza, he3.fecha_creacion fechaValidacionContraloria,
-                he10.fecha_creacion fechaRechazoCobranza, he20.fecha_creacion fechaRechazoContraloria, he200.comentario_autorizacion, (CASE cn.tipo WHEN 1 THEN 11 WHEN 2 THEN 22 WHEN 3 THEN 33 END) rowType, cn.tipo,
+                he10.fecha_creacion fechaRechazoCobranza, he20.fecha_creacion fechaRechazoContraloria, he200.comentario_autorizacion, 
+                (CASE cn.tipo WHEN 1 THEN 11 WHEN 2 THEN 22 WHEN 3 THEN 33 WHEN 4 THEN 44 WHEN 5 THEN 55 ELSE 1 END) rowType, cn.tipo,
                 cm.id_coment, CASE WHEN (ec.comentario_autorizacion LIKE '%null%' OR CAST(ec.comentario_autorizacion AS VARCHAR(500)) = '' OR ec.comentario_autorizacion IS NULL) 
                 THEN 'Comentario no especificado' ELSE ec.comentario_autorizacion END lastComment, ISNULL(oxc.nombre, 'Sin especificar') lugarProspeccion
                 FROM lotes l
@@ -1234,7 +1272,7 @@ class Asesor_model extends CI_Model
 				NULL id_evidencia, cl.id_cliente, NULL evidencia, NULL fecha_modificado, cl.fechaApartado, s.nombre plaza,
 				NULL fechaValidacionGerente, NULL fechaValidacionCobranza, NULL fechaValidacionContraloria,
                 NULL fechaRechazoCobranza, NULL fechaRechazoContraloria, 'Sin especificar' comentario_autorizacion, 
-				(CASE cn.tipo WHEN 1 THEN 11 WHEN 2 THEN 22 WHEN 3 THEN 33 WHEN 4 THEN 44 WHEN 5 THEN 55 END) rowType, 
+				(CASE cn.tipo WHEN 1 THEN 11 WHEN 2 THEN 22 WHEN 3 THEN 33 WHEN 4 THEN 44 WHEN 5 THEN 55 ELSE 1 END) rowType, 
 				NULL tipo, NULL id_coment, 'Sin especificar' lastComment, ISNULL(oxc.nombre, 'Sin especificar') lugarProspeccion
 				FROM lotes l
                 INNER JOIN clientes cl ON l.idLote = cl.idLote AND cl.status = 1
@@ -1363,11 +1401,8 @@ class Asesor_model extends CI_Model
         ec.idLote, l.nombreLote, CONCAT(solicitante.nombre,' ', solicitante.apellido_paterno,' ', solicitante.apellido_materno) as solicitante, ec.estatus,
         ec.id_evidencia, cl.id_cliente, ec.evidencia, ec.fecha_modificado, cl.fechaApartado, s.nombre plaza,
         he1.fecha_creacion fechaValidacionGerente, he2.fecha_creacion fechaValidacionCobranza, he3.fecha_creacion fechaValidacionContraloria,
-        he10.fecha_creacion fechaRechazoCobranza, he20.fecha_creacion fechaRechazoContraloria, he200.comentario_autorizacion, (CASE cn.tipo WHEN 1 THEN 11 WHEN 
-        2 
-        THEN 
-        (CASE WHEN (asesor.id_sede = '2' OR asesor.id_sede = '3' OR asesor.id_sede = '4' OR asesor.id_sede = '6') THEN 1 ELSE 22 END)
-        ELSE 1 END) rowType
+        he10.fecha_creacion fechaRechazoCobranza, he20.fecha_creacion fechaRechazoContraloria, he200.comentario_autorizacion, 
+        (CASE cn.tipo WHEN 1 THEN 11 WHEN 2 THEN 22 WHEN 3 THEN 33 WHEN 4 THEN 44 WHEN 5 THEN 55 ELSE 1 END) rowType
         FROM evidencia_cliente ec
         INNER JOIN clientes cl ON ec.idCliente = cl.id_cliente AND cl.lugar_prospeccion IN (6, 29) AND cl.status = 1
         INNER JOIN usuarios asesor ON cl.id_asesor = asesor.id_usuario
@@ -1390,10 +1425,8 @@ class Asesor_model extends CI_Model
         ec.idLote, l.nombreLote, CONCAT(solicitante.nombre,' ', solicitante.apellido_paterno,' ', solicitante.apellido_materno) as solicitante, ec.estatus,
         ec.id_evidencia, cl.id_cliente, ec.evidencia, ec.fecha_modificado, cl.fechaApartado, s.nombre plaza,
         he1.fecha_creacion fechaValidacionGerente, he2.fecha_creacion fechaValidacionCobranza, he3.fecha_creacion fechaValidacionContraloria,
-        he10.fecha_creacion fechaRechazoCobranza, he20.fecha_creacion fechaRechazoContraloria, he200.comentario_autorizacion, (CASE cn.tipo WHEN 1 THEN 11 WHEN 2 
-        THEN 
-        (CASE WHEN (asesor.id_sede = '2' OR asesor.id_sede = '3' OR asesor.id_sede = '4' OR asesor.id_sede = '6') THEN 1 ELSE 22 END) 
-        END) rowType
+        he10.fecha_creacion fechaRechazoCobranza, he20.fecha_creacion fechaRechazoContraloria, he200.comentario_autorizacion, 
+        (CASE cn.tipo WHEN 1 THEN 11 WHEN 2 THEN 22 WHEN 3 THEN 33 WHEN 4 THEN 44 WHEN 5 THEN 55 ELSE 1 END) rowType
         FROM evidencia_cliente ec
         INNER JOIN clientes cl ON ec.idCliente = cl.id_cliente AND cl.lugar_prospeccion NOT IN (6, 29) AND cl.status = 1
         INNER JOIN usuarios asesor ON cl.id_asesor = asesor.id_usuario
@@ -1551,7 +1584,7 @@ class Asesor_model extends CI_Model
 
     public function verificarControversia($idLote)
     {
-        $query = $this->db->query("SELECT * FROM controversias WHERE id_lote = $idLote");
+        $query = $this->db->query("SELECT * FROM controversias WHERE id_lote = $idLote AND estatus = 1");
         return $query->result_array();
     }
 
@@ -1586,7 +1619,8 @@ class Asesor_model extends CI_Model
 
     function getCatalogs()
     {
-        return $this->db->query("SELECT id_catalogo, id_opcion, nombre FROM opcs_x_cats WHERE id_catalogo IN (11, 18, 19, 26) AND estatus = 1 ORDER BY id_catalogo, id_opcion");
+        return $this->db->query("SELECT id_catalogo, id_opcion, nombre FROM opcs_x_cats WHERE id_catalogo IN (11, 18, 19, 26) AND id_opcion IN (1,4)
+        AND estatus = 1 ORDER BY id_catalogo, id_opcion");
     }
 
     public function getAsesores($idUsuario)
@@ -1735,4 +1769,32 @@ class Asesor_model extends CI_Model
     }
 
 
+    function getLineOfACG($id_lote){
+        $query = $this->db->query("SELECT CONCAT(asesor.nombre, ' ', asesor.apellido_paterno, ' ', asesor.apellido_materno) as asesor, asesor.id_usuario as id_asesor,
+        CONCAT(coordinador.nombre,' ', coordinador.apellido_paterno, ' ', coordinador.apellido_materno) as coordinador, coordinador.id_usuario as id_coordinador,
+        CONCAT(gerente.nombre, ' ', gerente.apellido_paterno, ' ', gerente.apellido_materno) as gerente, gerente.id_usuario as id_gerente
+        FROM lotes l 
+        INNER JOIN clientes cl ON cl.id_cliente=l.idCliente 
+        LEFT JOIN usuarios asesor ON asesor.id_usuario=cl.id_asesor
+        LEFT JOIN usuarios coordinador ON coordinador.id_usuario=cl.id_coordinador
+        LEFT JOIN usuarios gerente ON gerente.id_usuario=cl.id_gerente
+        WHERE l.idLote=".$id_lote);
+        return $query->result_array();
+    }
+
+    function getGerenteById($id_gerente){
+        $query = $this->db->query("SELECT u.id_lider, u.id_rol, u.estatus, u.id_usuario idGerente, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombreGerente  
+                                    FROM usuarios u WHERE id_usuario=".$id_gerente);
+        return $query->row();
+    }
+    function getCoordinadorById($id_coordinador){
+        $query = $this->db->query("SELECT u.id_lider, u.id_rol, u.estatus, u.id_usuario idCoordinador, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombreCoordinador  
+                                    FROM usuarios u WHERE id_usuario=".$id_coordinador);
+        return $query->row();
+    }
+    function getAsesorById($id_asesor){
+        $query = $this->db->query("SELECT u.id_lider, u.id_rol, u.estatus, u.id_usuario idAsesor, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombreAsesor  
+                                    FROM usuarios u WHERE id_usuario=".$id_asesor);
+        return $query->row();
+    }
 }

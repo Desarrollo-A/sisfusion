@@ -73,7 +73,7 @@ class Contraloria_model extends CI_Model {
 			,(SELECT concat(usuarios.nombre,' ', usuarios.apellido_paterno, ' ', usuarios.apellido_materno)
 			from historial_lotes left join usuarios on historial_lotes.usuario = usuarios.id_usuario
 			where idHistorialLote =(SELECT MAX(idHistorialLote) FROM historial_lotes WHERE idLote in (l.idLote) and (perfil = '13' or perfil = '32' 
-			or perfil = 'contraloria') and status = 1)) as lastUc
+			or perfil = 'contraloria'or perfil = '17') and status = 1)) as lastUc
 
 
         FROM lotes l
@@ -103,7 +103,7 @@ class Contraloria_model extends CI_Model {
         concat(coordinador.nombre,' ', coordinador.apellido_paterno, ' ', coordinador.apellido_materno),
         concat(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno),
 		cond.idCondominio;");
-		return $query->result();
+		return $query->result_array();
 
 	}
 
@@ -176,7 +176,7 @@ class Contraloria_model extends CI_Model {
 			,(SELECT concat(usuarios.nombre,' ', usuarios.apellido_paterno, ' ', usuarios.apellido_materno)
 			from historial_lotes left join usuarios on historial_lotes.usuario = usuarios.id_usuario
 			where idHistorialLote =(SELECT MAX(idHistorialLote) FROM historial_lotes WHERE idLote in (l.idLote) and (perfil = '13' or perfil = '32' 
-			or perfil = 'contraloria') and status = 1)) as lastUc
+			or perfil = 'contraloria' OR perfil=17) and status = 1)) as lastUc
 
 
 	    FROM lotes l
@@ -1015,7 +1015,7 @@ class Contraloria_model extends CI_Model {
 			WHERE l.status = 1 AND (l.idStatusContratacion = 1 OR l.idMovimiento = 82) AND c.status = 1 AND c.id_gerente = ". $this->session->userdata('id_lider') ." AND l.idCondominio = $idCondominio
 			UNION ALL
             SELECT l.* FROM lotes l 
-			INNER JOIN clientes c ON c.id_cliente = l.idCliente AND c.id_coordinador = 2562
+			INNER JOIN clientes c ON c.id_cliente = l.idCliente AND c.id_coordinador IN (2562, 2541)
 			INNER JOIN usuarios u ON u.id_usuario = c.id_asesor
 			INNER JOIN usuarios uu ON uu.id_usuario = u.id_lider AND uu.id_lider = ". $this->session->userdata('id_lider') ."
             WHERE l.status = 1 AND (l.idStatusContratacion = 1 OR l.idMovimiento = 82) AND c.status = 1 AND l.idCondominio = $idCondominio");
@@ -1189,7 +1189,7 @@ class Contraloria_model extends CI_Model {
 									(SELECT CONCAT(usuarios.nombre,' ', usuarios.apellido_paterno, ' ', usuarios.apellido_materno)
 									FROM historial_lotes LEFT JOIN usuarios ON historial_lotes.usuario = usuarios.id_usuario
 									WHERE idHistorialLote =(SELECT MAX(idHistorialLote) FROM historial_lotes WHERE idLote IN (l.idLote) AND (perfil = '13' OR perfil = '32' 
-										OR perfil = 'contraloria') AND status = 1)) AS lastUc
+									OR perfil = 'contraloria' OR perfil = '17') AND status = 1)) AS lastUc
 
 	    							FROM lotes l
         								INNER JOIN clientes cl ON l.idLote=cl.idLote
@@ -1316,4 +1316,25 @@ class Contraloria_model extends CI_Model {
 		return $query->result();
 	}
 
+    public function getCamposHistorialDS($idCliente)
+    {
+        $query = $this->db->query("SELECT DISTINCT(col_afect) AS columna FROM auditoria WHERE id_parametro = $idCliente 
+            AND col_afect IN ('Nombre', 'Apellido paterno', 'Apellido materno', 'Correo electrónico', 'Celular', 
+                              'Estado civil', 'Ocupación', 'Puesto', 'Fecha 1° Aportación')");
+        return $query->result_array();
+    }
+
+    public function getDetalleCamposHistorialDS($idCliente, $columna)
+    {
+        $query = $this->db->query("SELECT au.anterior, au.nuevo, au.col_afect, CONVERT(NVARCHAR, au.fecha_creacion, 6) AS fecha,
+            (CASE WHEN u.id_usuario IS NOT null THEN CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) 
+            WHEN u2.id_usuario IS NOT null THEN CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno) 
+                ELSE au.creado_por END) usuario
+            FROM auditoria au
+            LEFT JOIN usuarios u ON CAST(au.creado_por AS VARCHAR(45)) = CAST(u.id_usuario AS VARCHAR(45))
+            LEFT JOIN usuarios u2 ON SUBSTRING(u2.usuario, 1, 20) = SUBSTRING(au.creado_por, 1, 20)
+            WHERE au.col_afect = '$columna' AND au.id_parametro = $idCliente
+            ORDER BY au.fecha_creacion DESC");
+        return $query->result_array();
+    }
 }

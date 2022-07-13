@@ -23,22 +23,23 @@ class Login extends CI_Controller
 	{
 
      switch ($this->session->userdata('id_rol')) {
-         case '':
-            $data['token'] = $this->token();
-            $data['titulo'] = 'Login con roles de usuario en codeigniter';
-            $this->load->view('login/login_view',$data);
-            //  $this->load->view('login/maintenance',$data);
-          break;
-          case '1': // DIRECTOR
-          case '2': // SUBDIRECTOR
-          case '3': // GERENTE
-          case '4': // ASISTENTE DIRECCIÓN
-          case '5': // ASISTENTE SUBDIRECCIÓN
-          case '6': // ASISTENTE GERENCIA
-          case '7': // ASESOR
-          case '9': // COORDINADOR
-              redirect(base_url().'Ventas');
-          break;
+		case '':
+		$data['token'] = $this->token();
+		$data['titulo'] = 'Login con roles de usuario en codeigniter';
+		$this->load->view('login/login_view',$data);
+		//  $this->load->view('login/maintenance',$data);
+		break;
+		case '1': // DIRECTOR
+		case '2': // SUBDIRECTOR
+		case '3': // GERENTE
+		case '4': // ASISTENTE DIRECCIÓN
+		case '5': // ASISTENTE SUBDIRECCIÓN
+		case '6': // ASISTENTE GERENCIA
+		case '7': // ASESOR
+		case '9': // COORDINADOR
+		case '18': // DIRECTOR MKTD
+            redirect(base_url().'Ventas');
+        break;
 
           case '11': // ADMINISTRACIÓN
 		  case '12': // CAJA
@@ -57,7 +58,6 @@ class Login extends CI_Controller
 
           case '8': // SOPORTE
 		  case '10': // EJECTUTIVO ADMINISTRATIVO MKTD
-          case '18': // DIRECTOR MKTD
           case '19': // SUBDIRECTOR MKTD
           case '20': // GERENTE MKTD
           case '21': // CLIENTE

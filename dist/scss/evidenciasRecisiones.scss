@@ -1,0 +1,138 @@
+@import "_base";
+
+.recisiones{
+    .miniCard{
+        background: HSLA(212, 57%, 25%, 1);
+        background: linear-gradient(135deg, HSLA(212, 57%, 25%, 1) 22%, HSLA(212, 62%, 25%, 1) 55%, HSLA(211, 57%, 21%, 1) 100%);
+        background: -moz-linear-gradient(135deg, HSLA(212, 57%, 25%, 1) 22%, HSLA(212, 62%, 25%, 1) 55%, HSLA(211, 57%, 21%, 1) 100%);
+        background: -webkit-linear-gradient(135deg, HSLA(212, 57%, 25%, 1) 22%, HSLA(212, 62%, 25%, 1) 55%, HSLA(211, 57%, 21%, 1) 100%);
+        box-shadow: none;
+        height: 160px;
+        margin: 10px 0;
+        padding: 15px;
+        .boxInfo{
+            color: $platinum;
+            .enfatize{
+                font-weight: 600;
+                color: $blueFrance;
+            }
+            .estatus{
+                border: 1px solid $shadowBlue;
+                border-radius: 27px;
+                padding: 3px 10px;
+                color: $shadowBlue;
+            }
+            .estatus2{
+                border: 1px solid $shadowBlue;
+                border-radius: 27px;
+                color: $shadowBlue;
+                font-size: 10px;
+                margin: 4px 0 0 0;
+                padding: 0 10px;
+            }
+            .titleMini{
+                color: $platinum;
+                font-size: 12px;
+                line-height: 10px;
+                font-weight: 100;
+            }
+            .data{
+                margin-top: 5px;
+                font-size: 14px;
+                font-weight: 500;
+                padding-bottom: 7px;
+                line-height: 13px;
+            }
+            .titleMonto{
+                font-size: 12px;
+                line-height: 16px;
+            }
+            .monto{
+                font-size: 20px;
+                font-weight: 500;
+            }
+            #generate{
+                color: $white;
+                button{
+                    background: none;
+                    border: none;
+                }
+                p{
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis; 
+                }
+                .iconCopy{
+                    cursor: pointer;
+                    -webkit-animation: breathing 5s ease-out infinite normal;
+                    animation: breathing 5s ease-out infinite normal;
+                }
+                @-webkit-keyframes breathing {
+                    0% {
+                      -webkit-transform: scale(0.9);
+                      transform: scale(0.9);
+                    }
+                  
+                    25% {
+                      -webkit-transform: scale(1);
+                      transform: scale(1);
+                    }
+                  
+                    60% {
+                      -webkit-transform: scale(0.9);
+                      transform: scale(0.9);
+                    }
+                  
+                    100% {
+                      -webkit-transform: scale(0.9);
+                      transform: scale(0.9);
+                    }
+                  }
+                  
+                  @keyframes breathing {
+                    0% {
+                      -webkit-transform: scale(0.9);
+                      -ms-transform: scale(0.9);
+                      transform: scale(0.9);
+                    }
+                  
+                    25% {
+                      -webkit-transform: scale(1);
+                      -ms-transform: scale(1);
+                      transform: scale(1);
+                    }
+                  
+                    60% {
+                      -webkit-transform: scale(0.9);
+                      -ms-transform: scale(0.9);
+                      transform: scale(0.9);
+                    }
+                  
+                    100% {
+                      -webkit-transform: scale(0.9);
+                      -ms-transform: scale(0.9);
+                      transform: scale(0.9);
+                    }
+                  }
+
+                #url{
+                    background: none;
+                    border: none;
+                    text-overflow: ellipsis; 
+                    width: 100%;
+                }
+            }
+            
+        }
+    }
+}
+.tokenArea{
+    textarea {
+        resize: none;
+    }
+}
+
+.tooltip.right .tooltip-arrow {
+   
+    border-right-color: #333333 !important; /* black */
+  }

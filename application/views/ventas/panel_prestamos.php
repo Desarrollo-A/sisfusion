@@ -22,7 +22,17 @@
 				</div>
 			</div>
 		</div>
+		<div class="modal fade modal-alertas" id="myModalDelete" role="dialog">
+			<div class="modal-dialog modal-md">
+				<div class="modal-content">
 
+					<form method="post" id="form_delete">
+						<div class="modal-body"></div>
+						<div class="modal-footer"></div>
+					</form>
+				</div>
+			</div>
+		</div>
 		<div class="modal fade modal-alertas" id="miModal" role="dialog">
 			<div class="modal-dialog">
 				<div class="modal-content">
@@ -33,13 +43,13 @@
 					<form method="post" id="form_prestamos">
 						<div class="modal-body">
 						<div class="form-group">
-								<label class="label">Tipo descuento</label>
+								<label class="label">Tipo descuento (<b class="text-danger">*</b>)</label>
 								<select class="selectpicker" name="tipo" id="tipo" required>
 								<option value="">----Seleccionar-----</option>
 								</select>
 							</div>
 							<div class="form-group">
-								<label class="label">Puesto del usuario</label>
+								<label class="label">Puesto del usuario(<b class="text-danger">*</b>)</label>
 								<select class="selectpicker" name="roles" id="roles" required>
 									<option value="">----Seleccionar-----</option>
 									<option value="7">Asesor</option>
@@ -51,11 +61,11 @@
 							<div class="form-group" id="users"></div>
 							<div class="form-group row">
 								<div class="col-md-4">
-									<label class="label">Monto prestado</label>
-									<input class="form-control" type="text" required onblur="verificar();" id="monto" name="monto">
+									<label class="label">Monto prestado (<b class="text-danger">*</b>)</label>
+									<input class="form-control" type="number" step="any" required onblur="verificar();" id="monto" name="monto">
 								</div>
 								<div class="col-md-4">
-									<label class="label">Número de pagos</label>
+									<label class="label">Número de pagos (<b class="text-danger">*</b>)</label>
 									<input class="form-control" id="numeroP" required onblur="verificar();" type="number" name="numeroP">
 								</div>
 								<div class="col-md-4">
@@ -64,8 +74,9 @@
 								</div>
 							</div>
 							<div class="form-group">
-								<label class="label">Comentario</label><b id="texto" style="font-size:12px;"></b>
-								<textarea id="comentario" name="comentario" required class="form-control" rows="3"></textarea>
+							<p>Nota(<b class="text-danger">*</b>):</label><b id="texto" style="font-size:12px;"></b></p>
+								<label class="label">Comentario</label>
+								<textarea id="comentario" name="comentario" required  class="form-control" rows="3"></textarea>
 							</div>
 
 							<div class="form-group">
@@ -83,7 +94,7 @@
         <div class="modal fade modal-alertas"
              id="detalle-prestamo-modal"
              role="dialog">
-            <div class="modal-dialog modal-lg">
+            <div class="modal-dialog modal-lg" style="width:70% !important;height:70% !important;">
                 <div class="modal-content">
                     <div class="modal-header bg-red">
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
@@ -135,11 +146,11 @@
 											<table class="table-striped table-hover" id="tabla_prestamos" name="tabla_prestamos">
 												<thead>
 													<tr>
-														<th>ID USUARIO</th>
+														<th>ID</th>
 														<th>USUARIO</th>
 														<th>MONTO</th>
-														<th>NÚM. PAGOS</th>
-														<th>PAGO CORRESPONDIENTE</th>
+														<th>N°</th>
+														<th>PAGO CORRESP.</th>
 														<th>ABONADO</th>
 														<th>PENDIENTE</th>
 														<th>COMENTARIO</th>
@@ -198,7 +209,7 @@
 			if(tipo == 18){
 				
 				//PRESTAMO
-				texto = 'Este es un pago recurrente, el cuál se hará cada mes hasta cubrir el monto prestado.'
+				texto = 'Esté es un pago recurrente, el cual se hará cada mes hasta cubrir el monto prestado.'
 
 				document.getElementById("numeroP").value = 1;
 				//document.getElementById("numeroP").readOnly = false;
@@ -208,7 +219,7 @@
 			
 					
 			}else{
-				texto = 'Este es un pago único que se hará en una sola exhibición.'
+				texto = 'Esté es un pago único que se hará en una sola exhibición.'
 				document.getElementById("numeroP").value = 1;
 			//	document.getElementById("numeroP").readOnly = true;
 				if(m != ''){
@@ -244,7 +255,7 @@
 						$('#tabla_prestamos').DataTable().ajax.reload(null, false);
 						closeModalEng();
 						$('#miModal').modal('hide');
-						alerts.showNotification("top", "right", "Prestamo registrado con exito.", "success");
+						alerts.showNotification("top", "right", "Préstamo registrado con éxito.", "success");
 						document.getElementById("form_abono").reset();
 					
 					} else if(data == 2) {
@@ -255,7 +266,34 @@
 					}else if(data == 3){
 						closeModalEng();
 						$('#miModal').modal('hide');
-						alerts.showNotification("top", "right", "El usuario seleccionado ya tiene un prestamo activo.", "warning");
+						alerts.showNotification("top", "right", "El usuario seleccionado ya tiene un préstamo activo.", "warning");
+					}
+				},
+				error: function(){
+					alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+				}
+			});
+		});
+		$("#form_delete").on('submit', function(e){ 
+			e.preventDefault();
+			let formData = new FormData(document.getElementById("form_delete"));
+			$.ajax({
+				url: 'BorrarPrestamo',
+				data: formData,
+				method: 'POST',
+				contentType: false,
+				cache: false,
+				processData:false,
+				success: function(data) {
+					if (data == 1) {
+						$('#tabla_prestamos').DataTable().ajax.reload(null, false);
+						$('#myModalDelete').modal('hide');
+						alerts.showNotification("top", "right", "Préstamo eliminado con éxito.", "success");
+						document.getElementById("form_delete").reset();
+					
+					} else{
+						$('#myModalDelete').modal('hide');
+						alerts.showNotification("top", "right", "Error.", "warning");
 					}
 				},
 				error: function(){
@@ -264,11 +302,12 @@
 			});
 		});
 
+
 		$("#tabla_prestamos").ready( function(){
 			let titulos = [];
 
 			$('#tabla_prestamos thead tr:eq(0) th').each( function (i) {
-				if(  i!=10){
+				if(  i!=11){
 					var title = $(this).text();
 					titulos.push(title);
 					$(this).html('<input type="text" class="textoshead" placeholder="'+title+'"/>' );
@@ -395,8 +434,10 @@
 
 						if(d.estatus == 1){
 							return '<span class="label label-danger" style="background:dodgerblue">ACTIVO</span>';
-						}else{
+						}else if(d.estatus == 3 || d.estatus == 2){
 							return '<span class="label label-danger" style="background:#27AE60">LIQUIDADO</span>';
+						}else if(d.estatus == 0){
+							return '<span class="label label-danger" style="background:#D52803">CANCELADO</span>';
 						}
 
 						
@@ -417,6 +458,8 @@
 							color='7282ED';
 						}else if(d.id_opcion == 22){ //MANTENIMIENTO
 							color='CA72ED';
+						}else if(d.id_opcion == 23){ //MANTENIMIENTO
+							color='CA15ED';
 						}
 
 						return '<p><span class="label" style="background:#'+color+';">'+d.tipo+'</span></p>';
@@ -445,7 +488,12 @@
 					"width": "6%",
 					"orderable": false,
 					"data": function( d ){
-                        return '<button href="#" value="'+d.id_prestamo+'" class="btn-data btn-blueMaderas detalle-prestamo" title="Hitorial"><i class="fas fa-info"></i></button>';
+						if(d.id_prestamo2 == null && d.estatus == 1){
+							return a = `<button href="#" value="${d.id_prestamo}" class="btn-data btn-blueMaderas detalle-prestamo" title="Hitorial"><i class="fas fa-info"></i></button>
+						<button href="#" value="${d.id_prestamo}" data-name="${d.nombre}" class="btn-data btn-warning delete-prestamo" title="Eliminar"><i class="fas fa-trash"></i></button>`;
+						}else{
+							return a = `<button href="#" value="${d.id_prestamo}" class="btn-data btn-blueMaderas detalle-prestamo" title="Hitorial"><i class="fas fa-info"></i></button>`;
+						}                        
 					}
 				}],
 				ajax: {
@@ -456,6 +504,26 @@
 					}
 				},
 			});
+			$('#tabla_prestamos tbody').on('click', '.delete-prestamo', function () {
+				const idPrestamo = $(this).val();
+				const nombreUsuario = $(this).attr("data-name");
+			//	$.getJSON(`${url}Comisiones/BorrarPrestamo/${idPrestamo}`).done(function (data) { 
+					const Modalbody = $('#myModalDelete .modal-body');
+					const Modalfooter = $('#myModalDelete .modal-footer');
+					Modalbody.html('');
+					Modalfooter.html('');
+					Modalbody.append(`<input type="hidden" value="${idPrestamo}" name="idPrestamo" id="idPrestamo"> <h4>¿Esta seguro que desea borrar el préstamo de ${nombreUsuario}?</h4>
+                           
+                        `);
+
+						Modalfooter.append(`<div class="row"><div class="col-md-3"></div><div class="col-md-3"><input type="submit" class="btn btn-success" name="disper_btn"  id="dispersar" value="Aceptar"></div><div class="col-md-3"><input type="button" class="btn btn-danger" data-dismiss="modal" value="CANCELAR"></div></div>`);
+
+					//console.log(data);
+					$("#myModalDelete").modal();
+				//	$('#tabla_prestamos').DataTable().ajax.reload(null, false);
+
+				//});
+			});
 
             $('#tabla_prestamos tbody').on('click', '.detalle-prestamo', function () {
 				$('#spiner-loader').removeClass('hide');
@@ -465,15 +533,16 @@
                 $.getJSON(`${url}Comisiones/getDetallePrestamo/${idPrestamo}`).done(function (data) {
                     const { general, detalle } = data;
 					$('#spiner-loader').addClass('hide');
-
-                    if (general.length === 0) {
-                        alerts.showNotification("top", "right", "No hay préstamos.", "warning");
+					console.log(detalle.length);
+                    if (detalle.length == 0) {
+                        alerts.showNotification("top", "right", "Este préstamo no tiene pagos aplicados.", "warning");
                     } else {
                         const detalleHeaderModal = $('#detalle-prestamo-modal .modal-header');
                         const detalleBodyModal = $('#detalle-prestamo-modal .modal-body');
 
                         detalleHeaderModal.html('');
                         detalleBodyModal.html('');
+						let numPagosReal = general.num_pago_act == general.num_pagos ? general.num_pago_act :  general.num_pago_act -1;
 
                         detalleHeaderModal.append('<h4 class="card-title"><b>Detalle del préstamo</b></h4>');
                         detalleBodyModal.append(`
@@ -485,7 +554,7 @@
                                     <h6>PAGO MENSUAL: <b>$${formatMoney(general.pago_individual)}</b></h6>
                                 </div>
                                 <div class="col col-xs-12 col-sm-4 col-md-4 col-lg-4">
-                                    <h6>PAGOS: <b>${general.num_pago_act} / ${general.num_pagos}</b></h6>
+                                    <h6>PAGOS APLICADOS: <b>${numPagosReal} / ${general.num_pagos} MENSUALIDADES</b></h6>
                                 </div>
                                 <div class="col col-xs-12 col-sm-4 col-md-4 col-lg-4">
                                     <h6>MONTO PRESTADO: <b>$${formatMoney(general.monto_prestado)}</b></h6>
@@ -504,22 +573,22 @@
                             htmlTableBody += '<tr>';
                             htmlTableBody += `<td scope="row">${detalle[i].np}</td>`;
                             htmlTableBody += `<td>${detalle[i].nombreLote}</td>`;
-                            htmlTableBody += `<td>${detalle[i].comentario}</td>`;
-                            htmlTableBody += `<td>${detalle[i].fecha_pago}</td>`;
+                            htmlTableBody += `<td style="width:50% !important;">${detalle[i].comentario}</td>`;
+                            htmlTableBody += `<td style="width:20% !important;">${detalle[i].fecha_pago}</td>`;
                             htmlTableBody += `<td>$${formatMoney(detalle[i].abono_neodata)}</td>`;
                             htmlTableBody += '</tr>';
                         }
 
                         detalleBodyModal.append(`
                             <div style="margin-top: 20px;" class="table-responsive">
-                                <table class="table">
+                                <table class="table table-striped table-hover" id="table_detalles">
                                     <thead>
                                         <tr>
                                             <th>#</th>
-                                            <th>Lote</th>
-                                            <th>Comentario</th>
-                                            <th>Fecha</th>
-                                            <th>Monto</th>
+                                            <th >Lote</th>
+                                            <th >Comentario</th>
+                                            <th >Fecha</th>
+                                            <th >Monto</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -528,8 +597,40 @@
                                 </table>
                             </div>
                         `);
+						
 
                         $("#detalle-prestamo-modal").modal();
+
+						$('#table_detalles thead tr:eq(0) th').each( function (i) {
+				if(  i!=10){
+					var title = $(this).text();
+					titulos.push(title);
+					$(this).html('<input type="text" class="textoshead" placeholder="'+title+'"/>' );
+					$( 'input', this ).on('keyup change', function () {
+						if (tableDetalles.column(i).search() !== this.value ) {
+							tableDetalles.column(i).search(this.value).draw();
+
+						}
+					});
+				}
+			});
+						var tableDetalles = $('#table_detalles').DataTable({
+                width: 'auto',
+				ordering: false,	
+				"pageLength": 5,
+				"lengthMenu": [ 5,10, 25, 50, 75, 100 ],
+                language: {
+                    url: "<?=base_url()?>/static/spanishLoader_v2.json",
+                    paginate: {
+                        previous: "<i class='fa fa-angle-left'>",
+                        next: "<i class='fa fa-angle-right'>"
+                    }
+                }
+                
+						});
+						tableDetalles
+                    .order([0, 'desc'])
+                    .draw();
                     }
                 });
             });

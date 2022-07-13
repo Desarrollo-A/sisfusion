@@ -107,7 +107,7 @@ $datos = array();
 
 	<?php
 	if($this->session->userdata('id_rol') == 7 || $this->session->userdata('id_rol') == 9 || $this->session->userdata('id_rol') == 3 || $this->session->userdata('id_rol') == 6 || $this->session->userdata('id_usuario') == 2752
-		|| $this->session->userdata('id_usuario') == 2826 || $this->session->userdata('id_usuario') == 2810 || $this->session->userdata('id_usuario') == 2855 AND $onlyView==0)
+		|| $this->session->userdata('id_usuario') == 2826 || $this->session->userdata('id_usuario') == 2810 || $this->session->userdata('id_usuario') == 2855  || $this->session->userdata('id_usuario') == 2815 AND $onlyView==0)
 	{
 		$readOnly = '';
 		$statsInput = '';
@@ -118,7 +118,7 @@ $datos = array();
 		$statsInput = 'disabled';
 	}
 	if($this->session->userdata('id_rol') == 7 || $this->session->userdata('id_rol') == 9 || $this->session->userdata('id_rol') == 3 || $this->session->userdata('id_rol') == 6 || $this->session->userdata('id_usuario') == 2752
-		|| $this->session->userdata('id_usuario') == 2826 || $this->session->userdata('id_usuario') == 2810)
+		|| $this->session->userdata('id_usuario') == 2826 || $this->session->userdata('id_usuario') == 2810  || $this->session->userdata('id_usuario') == 2815)
 	{
 		$readonlyNameToAsesor = 'readonly';
 	}
@@ -126,7 +126,6 @@ $datos = array();
 	{
 		$readonlyNameToAsesor='';
 	}
-	/*print_r($cliente)*/
 	?>
 	<div class="content">
 		<div class="container-fluid">
@@ -139,7 +138,11 @@ $datos = array();
 					<form method="post" class="form-horizontal" action="<?=base_url()?>index.php/Asesor/editar_ds/" target="_blank" enctype="multipart/form-data">
 						<!-- <div class="card-content" style="background-image: url('<?=base_url()?>dist/img/ar4c.png'); background-repeat: no-repeat;"> -->
 						<div class="card-content">
-							<h4 class="card-title"><B>Depósito de seriedad</B> - Formato </h4> 
+							<h4 class="card-title"><B>Depósito de seriedad</B> - Formato
+                                <?php if ($this->session->userdata('id_rol') == 17) { ?>
+                                    <span class="material-icons cursor-point" onclick="historial()">info</span>
+                                <?php }?>
+                            </h4>
 							
 							<h4 align="right"> <label>Fecha última modificación: <?php echo $cliente[0]->fecha_modificacion;?></label> </h4> 
 
@@ -1657,6 +1660,7 @@ $datos = array();
 														  id="observacion" name="observacion"><?php echo $cliente[0]->observacion; ?></textarea>
 									</div>
 								</div>
+
                                 <div class="col col-xs-12 col-md-12 col-lg-12 mt-4">
                                     <table class="table dataTable cell-border" id="table-corrida">
                                         <thead>
@@ -1674,6 +1678,8 @@ $datos = array();
                                             </tr>
                                         </thead>
                                         <tbody>
+                                        <?php
+                                        if( isset($corrida_financiera->precio_final)){?>
                                             <tr style="text-align: center">
                                                 <td>
                                                     <div class="formatter"><?php echo  $corrida_financiera->precio_final;?></div>
@@ -1713,6 +1719,17 @@ $datos = array();
                                                 </td>
 
                                             </tr>
+                                            <?php
+                                        }else{
+                                            ?>
+                                            <tr style="text-align: center">
+                                                <td colspan="7">
+                                                    No hay corrida financiera
+                                                </td>
+                                            </tr>
+                                            <?php
+                                        }
+                                        ?>
                                         </tbody>
                                     </table>
                                     <table class="table dataTable cell-border table-striped table-bordered" id="table-descuentos">
@@ -1737,6 +1754,9 @@ $datos = array();
                                         </thead>
                                         <tbody>
                                         <?php
+                                        if(count($descuentos_aplicados)>0){
+
+
                                             foreach ($descuentos_aplicados as $row){
                                                 echo '<tr>';
                                                 echo '    <td>';
@@ -1753,12 +1773,20 @@ $datos = array();
                                                 echo '    </td>';
                                                 echo '</tr>';
                                             }
+                                        }else{
+                                            echo '<tr>';
+                                            echo '    <td colspan="4">';
+                                            echo '        <div class="">No hay descuentos</div>';
+                                            echo '    </td>';
+                                            echo '</tr>';
+
+                                        }
                                         ?>
                                         </tbody>
                                     </table>
                                 </div>
 							</div>
-                            <?php print_r($corrida_financiera)?>
+                            <?php #print_r($corrida_financiera)?>
 
 
 							<div class="row"><br><br></div>
@@ -1930,7 +1958,7 @@ $datos = array();
 
 
 						<div class="card-footer text-center">
-							<?php if($this->session->userdata('id_rol') == 7 || $this->session->userdata('id_rol') == 9 || $this->session->userdata('id_rol') == 3 || $this->session->userdata('id_rol') == 6 || $this->session->userdata('id_usuario') == 2752 || $this->session->userdata('id_usuario') == 2826 || $this->session->userdata('id_usuario') == 2810 || $this->session->userdata('id_usuario') == 2855 AND $onlyView==0){?>
+							<?php if($this->session->userdata('id_rol') == 7 || $this->session->userdata('id_rol') == 9 || $this->session->userdata('id_rol') == 3 || $this->session->userdata('id_rol') == 6 || $this->session->userdata('id_usuario') == 2752 || $this->session->userdata('id_usuario') == 2826 || $this->session->userdata('id_usuario') == 2810 || $this->session->userdata('id_usuario') == 2855  || $this->session->userdata('id_usuario') == 2815 AND $onlyView==0){?>
 								<button type="submit" class="btn btn-primary btn-fill" onclick="validaTipoVivienda()">GUARDAR CAMBIOS</button>
 							<?php } else{?>
 
@@ -1959,14 +1987,30 @@ $datos = array();
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
 <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
-
+<!-- Modal general -->
+<script src="<?= base_url() ?>dist/js/core/modal-general.js"></script>
 <script>
+    const cliente = "<?=$cliente[0]->id_cliente?>";
     let x = document.querySelectorAll(".formatter");
     for (let i = 0, len = x.length; i < len; i++) {
         let num = Number(x[i].innerHTML)
             .toLocaleString('en');
         x[i].innerHTML = num;
         x[i].classList.add("currSign");
+    }
+
+    function historial() {
+        $.get(`${url}Asesor/getHistorialDS/${cliente}`, function (data) {
+            const info = JSON.parse(data);
+            if (info.length === 0) {
+                alerts.showNotification('top', 'right', 'No hay registro de movimientos', 'warning');
+                return;
+            }
+            changeSizeModal('modal-lg');
+            appendBodyModal(historialCampoHtml(info));
+            appendFooterModal(`<button type="button" class="btn btn-danger" onclick="hideModal()">Cerrar</button>`);
+            showModal();
+        });
     }
 
    function validafecha(date_input){
@@ -2006,6 +2050,46 @@ $datos = array();
 		}
 	}
 
+    function historialCampoHtml(data) {
+        let html = '<h3>Historial de movimientos</h3>';
+        data.forEach(columna => {
+            let dataTable = '';
+            columna.detalle.forEach(cambio => {
+                dataTable += `
+                <tr>
+                  <td>${(cambio.usuario) ? cambio.usuario : ''}</td>
+                  <td>${cambio.fecha}</td>
+                  <td>${cambio.anterior}</td>
+                  <td>${cambio.nuevo}</td>
+                </tr>`;
+            });
+
+            html += `
+                <div class="row">
+                    <div class="col-lg-12">
+                        <h4><b>Campo: ${columna.columna}</b></h4>
+                    </div>
+                    <div class="col-lg-12">
+                        <table class="table">
+                          <thead>
+                            <tr>
+                              <th scope="col">Usuario</th>
+                              <th scope="col">Modificación</th>
+                              <th scope="col">Valor Anterior</th>
+                              <th scope="col">Valor Nuevo</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            ${dataTable}
+                          </tbody>
+                        </table>
+                    </div>
+                </div>
+            `;
+        });
+
+        return html;
+    }
 
 	var url = "<?=base_url()?>";
 	var url2 = "<?=base_url()?>index.php/";

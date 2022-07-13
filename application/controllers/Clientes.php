@@ -2905,7 +2905,6 @@ public function getStatusMktdPreventa(){
         $normalize = intval(preg_replace('/[^0-9]+/', '', $string), 10);
         return $normalize;
     }
-
     public function getGrsBySub($idSubdir)
     {
         $data = $this->Clientes_model->getGrsBySub($idSubdir);

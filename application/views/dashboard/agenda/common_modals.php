@@ -28,7 +28,7 @@
                             <i class="fas fa-font iconMod fa-lg"></i>
                         </div>
                         <div class="col-xs-11 col-sm-11 col-md-11 col-lg-11 form-group m-0">
-                            <label class="label-gral m-0">Titulo</label>
+                            <label class="label-gral m-0">Título</label>
                             <input id="evtTitle2" name="evtTitle" type="text" class="form-control input-gral">
                         </div>
                         <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1 form-group m-0 pr-0">
@@ -92,7 +92,7 @@
                 <form id="insert_appointment_form" name="estatus_recordatorio_form" method="post">
                     <div class="container-fluid p-0">
                         <div class="col-lg-12 form-group m-0">
-                            <label class="label-gral m-0">Titulo</label>
+                            <label class="label-gral m-0">Título</label>
                             <input id="evtTitle" name="evtTitle" type="text" class="form-control input-gral" required>
                         </div>
                         <div class="col-lg-12 form-group m-0 overflow-hidden">
@@ -138,7 +138,7 @@
                     <i class="fas fa-font iconMod fa-lg"></i>
                 </div>
                 <div class="col-lg-11 form-group m-0">
-                    <label class="label-gral">Titulo</label>
+                    <label class="label-gral">Título</label>
                     <input id="evtTitle2" name="evtTitle" type="text" class="form-control input-gral" disabled>
                 </div>
                 <div class="col-lg-1 form-group m-0 pr-0">
@@ -186,3 +186,80 @@
         </div>
     </div>
 </div>
+<div class="modal fade" id="feedbackModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-sm" role="document">
+            <form id="feedback_form" name="feedback_form" method="post">
+                <div class="modal-content">                    
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <h3 class="modal-title text-center"><b>Evalúa este evento</b></h3>
+                        <p class="text-center">¿Cómo valorarías este evento?</p>
+                    </div>
+                    <div class="modal-body pt-0">
+                        <div class="radio-with-Icon pl-1 pr-1 pb-3 pt-3 d-flex justify-between">
+                            <p class="radioOption-Item">
+                                <input type="radio" name="rate" id="rateBad" value="2" class="d-none" aria-invalid="false">
+                                <label for="rateBad" class="cursor-point">
+                                    <i class="far fa-thumbs-down fa-3x"></i>
+                                </label>
+                            </p>
+                            <p class="radioOption-Item">
+                                <input type="radio" name="rate" id="rateGood" value="1" class="d-none" aria-invalid="false" checked>
+                                <label for="rateGood" class="cursor-point">
+                                    <i class="far fa-thumbs-up fa-3x"></i>
+                                </label>
+                            </p>
+                            <p class="radioOption-Item">
+                                <input type="radio" name="rate" id="rateCancel" value="3" class="d-none" aria-invalid="false">
+                                <label for="rateCancel" class="cursor-point">
+                                    <i class="fas fa-ban fa-3x"></i>
+                                </label>
+                            </p>
+                        </div>
+                        <p class="text-center">Agrega tus comentarios u observaciones adicionales a este evento.</p>
+                        <textarea class="text-modal" class="form-control" type="text" name="observaciones" id="observaciones" onkeyup="javascript:this.value=this.value.toUpperCase();"></textarea>
+                        <div class="d-flex justify-end">
+                            <button type="submit" class="btn btn-primary no-shadow rounded-circle finishS">Guardar</button>
+                            <button type="" class="btn btn-primary no-shadow rounded-circle" onclick="backToEvent()" style="background-color:white;">Regresar</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal fade" id="allAppointmentsModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">                    
+                <div class="modal-header pb-2">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body pt-2">
+                    <div class="material-datatables">
+                        <form name="appointmentsForm" id="appointmentsForm" method="post">
+                            <table id="appointments-datatable" class="table-striped table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>ID Evento</th>
+                                        <th>Nombre</th>
+                                        <th class="text-center">Estatus&nbsp;&nbsp;&nbsp;<i class="fas fa-info-circle" data-html="true" data-toggle="tooltip" data-placement="bottom" title="Positivo.<br/>Se identifica como estatus positivo a: la cita, llamada o recorrido con un prospecto, el cual sigue interesado y se encuentra más cerca del cierre de la venta.<br/><br/>Negativo.<br/>Se identifica como estatus negativo a: la cita, llamada o recorrido con un prospecto, el cual NO sigue interesado y No desea seguimiento para concretar la compra."></i></th>
+                                        <th class="text-center">Comentarios</th>
+                                        <th class="text-center">Fecha de cita</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                            <div class="d-flex justify-end">
+                                <button type="submit" class="btn btn-primary no-shadow rounded-circle finishS">Guardar</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>

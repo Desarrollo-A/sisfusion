@@ -1,5 +1,10 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
 <link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet"/>
+<style>
+    label.error {
+        color: red;
+    }
+</style>
 <body>
 <div class="wrapper">
 
@@ -275,6 +280,85 @@
         </div>
     </div>
 
+    <div class="modal fade" id="actualizar-descuento-modal" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form id="actualizar-descuento-form">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" data-toggle="modal"> &times;</button>
+                        <h4 class="modal-title">Actualizar descuento</h4>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden"
+                               name="id_descuento"
+                               id="id-descuento-pago-update">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <span id="usuario-update"></span>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="label">Monto Descuento *</label>
+                                    <input class="form-control"
+                                           type="number"
+                                           id="descuento-update"
+                                           name="descuento"
+                                           autocomplete="off"
+                                           min="1"
+                                           max="19000"
+                                           step=".01"
+                                           required
+                                    />
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="label">Número de Pagos *</label>
+                                    <select class="form-control" name="numero-pagos" id="numero-pagos-update" required>
+                                        <option value="" disabled="true" selected="selected">- Selecciona opción -</option>
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
+                                        <option value="5">5</option>
+                                        <option value="6">6</option>
+                                        <option value="7">7</option>
+                                        <option value="8">8</option>
+                                        <option value="9">9</option>
+                                        <option value="10">10</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="label" for="pago-ind-update">Monto a descontar</label>
+                                    <input class="form-control"
+                                           type="text"
+                                           id="pago-ind-update"
+                                           name="pago_ind"
+                                           readonly>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit"
+                                class="btn btn-primary">
+                            Guardar
+                        </button>
+                        <button type="button"
+                                class="btn btn-danger btn-simple"
+                                data-dismiss="modal">
+                            Cancelar
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <div class="modal fade modal-alertas" id="ModalBonos" role="dialog">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -286,7 +370,7 @@
                     <div class="modal-body">
 
                         <div class="form-group">
-                            <label class="label">Puesto del usuario</label>
+                            <label class="label">Puesto del usuario *</label>
                             <select class="selectpicker roles" name="roles" id="roles" required>
                                 <option value="">----Seleccionar-----</option>
                                 <option value="7">Asesor</option>
@@ -305,10 +389,17 @@
 
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label class="label">Monto Descuento</label>
-                                    <input class="form-control" type="text" id="descuento" required name="descuento"
-                                           maxlength="10" autocomplete="off" value=""
-                                           onkeypress="return filterFloat(event,this);"/>
+                                    <label class="label">Monto Descuento *</label>
+                                    <input class="form-control"
+                                           type="number"
+                                           id="descuento"
+                                           name="descuento"
+                                           autocomplete="off"
+                                           min="1"
+                                           max="19000"
+                                           step=".01"
+                                           required
+                                    />
                                 </div>
 
                             </div>
@@ -316,7 +407,7 @@
 
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label class="label">NÚmero de Pagos</label>
+                                    <label class="label">Número de Pagos *</label>
                                     <select class="form-control" name="numeroPagos" id="numeroPagos" required>
                                         <option value="" disabled="true" selected="selected">- Selecciona opción -
                                         </option>
@@ -348,7 +439,7 @@
 
                         <div class="form-group">
 
-                            <label class="label">Mótivo de descuento</label>
+                            <label class="label">Mótivo de descuento *</label>
                             <textarea id="comentario2" name="comentario2" class="form-control" rows="3"
                                       required></textarea>
 
@@ -521,7 +612,7 @@
 <!--<link href="<?= base_url() ?>dist/js/controllers/select2/select2.min.css" rel="stylesheet" />
 <script src="<?= base_url() ?>dist/js/controllers/select2/select2.min.js"></script>-->
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet"/>
-<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js">}</script>
 
 <script>
     var url = "<?=base_url()?>";
@@ -717,8 +808,12 @@
                     {
                         // Estatus
                         "data": function (d) {
+                            const primerDescuento = (d.no_descuentos == 1)
+                                ? '<br><div style="margin-top: 5px;"><span class="label" style="background:deepskyblue;">PRIMER DESCUENTO</span></div>'
+                                : '';
+
                             if ((d.status == 0 || d.status == 3) && (d.estatus != 2 && d.estatus != 3 && d.estatus != 4) ) {
-                                return '<span class="label" style="background:red;">BAJA</span>';
+                                return `<span class="label" style="background:red;">BAJA</span>${primerDescuento}`;
                             }
 
                             if (d.id_sede == 6) {
@@ -736,29 +831,29 @@
                             switch (d.estatus) {
                                 case 0:
                                     if ($RES === 0) {
-                                        return '<span class="label" style="background:#7F8C8D;">SIN SALDO DISPONIBLE</span>';
+                                        return `<span class="label" style="background:#7F8C8D;">SIN SALDO DISPONIBLE</span>${primerDescuento}`;
                                     }
-                                    return '<span class="label" style="background:#9B59B6;">DISPONIBLE</span>';
+                                    return `<span class="label" style="background:#9B59B6;">DISPONIBLE</span>${primerDescuento}`;
                                 case 1:
                                     if (d.pagos_activos == 0){
-                                        return '<span class="label" style="background:#7F8C8D;">REACTIVADO</span>';
+                                        return `<span class="label" style="background:#7F8C8D;">REACTIVADO</span>${primerDescuento}`;
                                     }
                                     if ($RES === 0){
-                                        return '<span class="label" style="background:#7F8C8D;">SIN SALDO DISPONIBLE</span>';
+                                        return `<span class="label" style="background:#7F8C8D;">SIN SALDO DISPONIBLE</span>${primerDescuento}`;
                                     }
-                                    return '<span class="label" style="background:#9B59B6;">DISPONIBLE</span>';
+                                    return `<span class="label" style="background:#9B59B6;">DISPONIBLE</span>${primerDescuento}`;
 
                                 case 2:
-                                    return '<span class="label" style="background:green;">DESCUENTO APLICADO</span>';
+                                    return `<span class="label" style="background:green;">DESCUENTO APLICADO</span>${primerDescuento}`;
 
                                 case 3:
-                                    return '<span class="label" style="background:#95A5A6;">LIQUIDADO EN CAJA</span>';
+                                    return `<span class="label" style="background:#95A5A6;">LIQUIDADO EN CAJA</span>${primerDescuento}`;
 
                                 case 4:
-                                    return '<span class="label" style="background:#34495E;">LIQUIDADO</span>';
+                                    return `<span class="label" style="background:#34495E;">LIQUIDADO</span>${primerDescuento}`;
 
                                 case 5:
-                                    return '<span class="label" style="background:#7F8C8D;">REACTIVADO</span>';
+                                    return `<span class="label" style="background:#7F8C8D;">REACTIVADO</span>${primerDescuento}`;
 
                                 default:
                                     return '<span class="label" style="background:#1ABC9C;">REVISAR CON SISTEMAS</span>';
@@ -842,7 +937,19 @@
                     {
                         // Acciones
                         "data": function (d) {
-                            if (d.estatusDU == 0) {
+                            const btnEliminarEditar = ((d.estatus == 1 || d.estatus == 2 || d.estatus == 5)
+                                && d.no_descuentos == 0 && d.pagado_caja == 0 && d.status == 1)
+                                ? `<button class="btn-data btn-warning btn-eliminar-descuento"
+                                    value="${d.id_descuento}">
+                                    <i class="fa fa-trash"></i>
+                                   </button>
+                                   <button class="btn-data btn-green btn-editar-descuento"
+                                    value="${d.id_descuento}">
+                                    <i class="fa fa-edit"></i>
+                                   </button>`
+                                : '';
+
+                            if (d.estatus == 0) {
                                 return `
                                         <div class="d-flex justify-center">
                                             <button value="${d.id_usuario}"
@@ -859,7 +966,7 @@
                                             </button>
                                         </div>
                                     `;
-                            } else if ((d.estatusDU == 1 || d.estatusDU == 5) && d.pagos_activos == 0) {
+                            } else if ((d.estatus == 1 || d.estatus == 5) && d.pagos_activos == 0) {
                                 return `
                                         <div class="d-flex justify-center">
                                             <button value="${d.id_usuario}"
@@ -868,7 +975,7 @@
                                                 class="btn-data btn-blueMaderas consultar_logs_asimilados"
                                                 title="Detalles">
                                                     <i class="fas fa-info-circle"></i>
-                                            </button>
+                                            </button>${btnEliminarEditar}
                                         </div>
                                     `;
                             } else if (tipoDescuento === '2' || tipoDescuento === '3') {
@@ -887,18 +994,41 @@
                                             class="btn-data btn-gray consultar_historial_pagos"
                                             title="Historial pagos">
                                                 <i class="fas fa-chart-bar"></i>
-                                        </button>
+                                        </button>${btnEliminarEditar}
                                     </div>`;
                             }
 
                             let tipo_descuento = d.queryType;
                             if(tipo_descuento == 2){
-                                return '<div class="d-flex justify-center"><button href="#" value="' + d.id_usuario + '" data-value="' + d.nombre + '" data-code="' + d.id_usuario + '" ' + 'class="btn-data btn-blueMaderas consultar_logs_asimilados" title="Detalles">' + '<span class="fas fa-info-circle"></span></button></div>';
+                                return `
+                                    <div class="d-flex justify-center">
+                                        <button value="${d.id_usuario}"
+                                                data-value="${d.nombre}"
+                                                data-code="${d.id_usuario}"
+                                                class="btn-data btn-blueMaderas consultar_logs_asimilados"
+                                                title="Detalles">
+                                                    <span class="fas fa-info-circle"></span>
+                                        </button>${btnEliminarEditar}
+                                    </div>`;
                             } else if(tipo_descuento == 1 ){
                                 if (d.status == 0) {
-                                    return '<div class="d-flex justify-center"><button href="#" value="' + d.id_usuario + '" data-value="' + d.nombre + '" data-code="' + d.id_usuario + '" ' + 'class="btn-data btn-blueMaderas consultar_logs_asimilados" title="Detalles">' + '<i class="fas fa-info-circle"></i></button>'+
-                                        '<button href="#" value="' + d.id_usuario + '" data-value="' + d.nombre + '" data-code="' + d.id_usuario + '" ' + 'class="btn-data btn-darkMaderas consultar_historial_pagos" title="Historial pagos">' + '<i class="fas fa-chart-bar"></i></button></div>';
-
+                                    return `
+                                        <div class="d-flex justify-center">
+                                            <button value="${d.id_usuario}"
+                                                data-value="${d.nombre}"
+                                                data-code="${d.id_usuario}"
+                                                class="btn-data btn-blueMaderas consultar_logs_asimilados"
+                                                title="Detalles">
+                                                <i class="fas fa-info-circle"></i>
+                                            </button>
+                                            <button value="${d.id_usuario}"
+                                                data-value="${d.nombre}"
+                                                data-code="${d.id_usuario}"
+                                                class="btn-data btn-darkMaderas consultar_historial_pagos"
+                                                title="Historial pagos">
+                                                <i class="fas fa-chart-bar"></i>
+                                            </button>${btnEliminarEditar}
+                                        </div>`;
                                 } else {
                                     OK = parseFloat(d.pago_individual * d.pagos_activos);
                                     OP = parseFloat(d.monto - d.aply);
@@ -943,12 +1073,51 @@
                                     }
 
                                     if (BOTON == 0) {
-                                        return '<div class="d-flex justify-center"><button href="#" value="' + d.id_usuario + '" data-value="' + d.nombre + '" data-code="' + d.id_usuario + '" ' + 'class="btn-data btn-blueMaderas consultar_logs_asimilados" title="Detalles">' + '<span class="fas fa-info-circle"></span></button><button href="#" value="' + d.id_usuario + '" data-value="' + d.aply + '" data-code="' + d.id_usuario + '" ' + 'class="btn-data btn-orangeYellow topar_descuentos" title="Detener descuentos">' + '<i class="fas fa-money"></i></button>'+
-                                            '<button href="#" value="' + d.id_usuario + '" data-value="' + d.nombre + '" data-code="' + d.id_usuario + '" ' + 'class="btn-data btn-gray consultar_historial_pagos" title="Historial pagos">' + '<i class="fas fa-chart-bar"></i></button></div>';
+                                        return `
+                                            <div class="d-flex justify-center">
+                                                <button value="${d.id_usuario}"
+                                                    data-value="${d.nombre}"
+                                                    data-code="${d.id_usuario}"
+                                                    class="btn-data btn-blueMaderas consultar_logs_asimilados"
+                                                    title="Detalles">
+                                                    <span class="fas fa-info-circle"></span>
+                                                </button>
+                                                <button value="${d.id_usuario}"
+                                                    data-value="${d.aply}"
+                                                    data-code="${d.id_usuario}"
+                                                    class="btn-data btn-orangeYellow topar_descuentos"
+                                                    title="Detener descuentos">
+                                                    <i class="fas fa-money"></i>
+                                                </button>
+                                                <button value="${d.id_usuario}"
+                                                    data-value="${d.nombre}"
+                                                    data-code="${d.id_usuario}"
+                                                    class="btn-data btn-gray consultar_historial_pagos"
+                                                    title="Historial pagos">
+                                                    <i class="fas fa-chart-bar"></i>
+                                                </button>${btnEliminarEditar}
+                                            </div>`;
                                     } else {
-                                        return '<div class="d-flex justify-center"><button href="#" value="' + d.id_usuario + '" data-value="' + pendiente + '"  ' +
-                                            'data-saldoCom="'+d.abono_nuevo+'" data-sede="' + d.id_sede + '" data-validate="' + validar + '" data-code="' + d.cbbtton + '" ' + 'class="btn-data btn-violetDeep agregar_nuevo_descuento"  title="Aplicar descuento">' + '<i class="fas fa-plus"></i></button>'+
-                                            '<button href="#" value="' + d.id_usuario + '" data-value="' + d.nombre + '" data-code="' + d.id_usuario + '" ' + 'class="btn-data btn-gray consultar_historial_pagos" title="Historial pagos">' + '<i class="fas fa-chart-bar"></i></button></div>';
+                                        return `
+                                            <div class="d-flex justify-center">
+                                                <button value="${d.id_usuario}"
+                                                    data-value="${pendiente}"
+                                                    data-saldoCom="${d.abono_nuevo}"
+                                                    data-sede="${d.id_sede}"
+                                                    data-validate="${validar}"
+                                                    data-code="${d.cbbtton}"
+                                                    class="btn-data btn-violetDeep agregar_nuevo_descuento"
+                                                    title="Aplicar descuento">
+                                                    <i class="fas fa-plus"></i>
+                                                </button>
+                                                <button value="${d.id_usuario}"
+                                                    data-value="${d.nombre}"
+                                                    data-code="${d.id_usuario}"
+                                                    class="btn-data btn-gray consultar_historial_pagos"
+                                                    title="Historial pagos">
+                                                    <i class="fas fa-chart-bar"></i>
+                                                </button>${btnEliminarEditar}
+                                            </div>`;
                                     }
                                 }
                             }
@@ -1075,6 +1244,44 @@
                 }, 'json');
 
 
+            });
+
+            $('#tabla-general tbody').on('click', '.btn-eliminar-descuento', function () {
+                const idDescuento = $(this).val();
+
+                $.ajax({
+                    type: 'POST',
+                    url: `eliminarDescuentoUniversidad/${idDescuento}`,
+                    contentType: false,
+                    cache: false,
+                    processData: false,
+                    success: function (data) {
+                        if (JSON.parse(data)) {
+                            alerts.showNotification("top", "right", "El registro se ha eliminado exitosamente.", "success");
+                            tablaGeneral.ajax.reload();
+                        } else {
+                            alerts.showNotification("top", "right", "Ocurrió un problema, vuelva a intentarlo más tarde.", "warning");
+                        }
+                    },
+                    error: function(){
+                        alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+                    }
+                });
+            });
+
+            $('#tabla-general tbody').on('click', '.btn-editar-descuento', function () {
+                const idDescuento = $(this).val();
+
+                $.get(`obtenerDescuentoUniversidad/${idDescuento}`, function (data) {
+                    const info = JSON.parse(data);
+
+                    $('#id-descuento-pago-update').val(info.id_descuento);
+                    $('#usuario-update').text("").text(`Usuario: ${info.usuario}`);
+                    $('#descuento-update').val(info.monto);
+                    $('#numero-pagos-update').val(info.no_pagos);
+                    $('#pago-ind-update').val(info.pago_individual);
+                    $('#actualizar-descuento-modal').modal();
+                });
             });
 
             let meses = [
@@ -1278,6 +1485,56 @@
             });
         }
     });
+
+    $('#actualizar-descuento-form')
+        .submit(function (e) {
+            e.preventDefault();
+        })
+        .validate({
+            rules: {
+                descuento: {
+                    required: true,
+                    number: true,
+                    min: 1,
+                    max: 19000
+                },
+                "numero-pagos": {
+                    required: true
+                }
+            },
+            messages: {
+                descuento: {
+                    required: '* Campo requerido.',
+                    number: 'Número no válido.',
+                    min: 'El valor mínimo debe ser 1',
+                    max: 'El valor máximo debe ser 19,000'
+                },
+                "numero-pagos": {
+                    required: '* Campo requerido.'
+                }
+            },
+            submitHandler: function (form) {
+                const data = new FormData($(form)[0]);
+
+                $.ajax({
+                    url: 'actualizarDescuentoUniversidad',
+                    data: data,
+                    method: 'POST',
+                    contentType: false,
+                    cache: false,
+                    processData: false,
+                    success: function (data) {
+                        console.log(data);
+                        $('#actualizar-descuento-modal').modal('hide');
+                        alerts.showNotification("top", "right", "Descuento actualizado con exito.", "success");
+                        $('#tabla-general').DataTable().ajax.reload(null, false);
+                    },
+                    error: function () {
+                        alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+                    }
+                });
+            }
+        });
 
     function getPagosByUser(user,mes, anio){
         document.getElementById('montito').innerHTML = 'Cargando...';
@@ -1494,16 +1751,48 @@
     });
 
     $("#form_nuevo").submit(function (e) {
-
         // $('#btn_abonar').attr('disabled', 'true');
         $('#btn_abonar').prop('disabled', true);
         document.getElementById('btn_abonar').disabled = true;
 
         e.preventDefault();
     }).validate({
+        rules: {
+            roles: {
+                required: true
+            },
+            descuento: {
+                required: true,
+                number: true,
+                min: 1,
+                max: 19000
+            },
+            numeroPagos: {
+                required: true
+            },
+            comentario2: {
+                required: true
+            }
+        },
+        messages: {
+            roles: {
+                required: '* Campo requerido'
+            },
+            descuento: {
+                required: '* Campo requerido.',
+                number: 'Número no válido.',
+                min: 'El valor mínimo debe ser 1',
+                max: 'El valor máximo debe ser 19,000'
+            },
+            numeroPagos: {
+                required: '* Campo requerido.'
+            },
+            comentario2: {
+                required: '* Campo requerido.'
+            }
+        },
         submitHandler: function (form) {
-
-            var data1 = new FormData($(form)[0]);
+            const data1 = new FormData($(form)[0]);
             $.ajax({
                 url: 'saveDescuentoch/',
                 data: data1,
@@ -1584,6 +1873,25 @@
                 }
             }
         });
+
+    $('#numero-pagos-update').change(function () {
+        const monto1 = replaceAll($('#descuento-update').val(), ',', '');
+        const monto = replaceAll(monto1, '$', '');
+        const cantidad = parseFloat($('#numero-pagos-update').val());
+        let resultado = 0;
+
+        if (isNaN(monto)) {
+            alerts.showNotification("top", "right", "Debe ingresar un monto valido.", "warning");
+            $('#pago-ind-update').val(resultado);
+        } else {
+            resultado = monto / cantidad;
+            if (resultado > 0) {
+                $('#pago-ind-update').val(formatMoney(resultado));
+            } else {
+                $('#pago-ind-update').val(formatMoney(0));
+            }
+        }
+    });
 
 
     function closeModalEng() {
@@ -1808,6 +2116,10 @@
 
         $('#ModalBonos').modal('show');
     }
+
+    $('#ModalBonos').on('hidden.bs.modal', function() {
+        $('#form_nuevo').trigger('reset');
+    });
 </script>
 
 

@@ -131,8 +131,10 @@ class Corrida extends CI_Controller {
 		$arreglo['status'] = 0;
         $arreglo["corrida_dump"]= json_encode($objDatos->corrida_dump);
         $arreglo["tipo_casa"]= $objDatos->tipo_casa;
+        $arreglo["id_cliente"]= $objDatos->id_cliente;
 
-
+        /*print_r($arreglo);
+        exit;*/
 
         $array_allPackages = json_decode($objDatos->allPackages);
         $arrayTocxp = array();
@@ -1860,9 +1862,8 @@ $pdf->Output(utf8_decode($namePDF), 'I');
     }
     /*COSAS DE LA CORRIDA Y DEL EXPORT DEL EXCEL*/
     public function excelFile($id_corrida){
-
-	    /*echo 'Estoy creadno el excel';
-	    exit;*/
+        //echo 'Estoy creadno el excel';
+        //exit;
         //$id_corrida = 76515;
         $data_corrida = $this->Corrida_model->getAllInfoCorrida($id_corrida);
         //print_r($data_corrida);
@@ -1937,8 +1938,10 @@ $pdf->Output(utf8_decode($namePDF), 'I');
                 }
             }
             array_push($extras_general, $extras);
-//            print_r($extras_general);
-//            exit;
+
+            if(count($extras_general) >0){
+                $precio_m2_casa = 16000;
+            }
             $i = 30;
             $range1 = 'C1';
             $range2 = 'I1';
@@ -1962,6 +1965,7 @@ $pdf->Output(utf8_decode($namePDF), 'I');
             $sheet->setCellValue('F4', 'Precio m2 casa');
             $sheet->setCellValue('G4', 'Precio casa');
             $sheet->setCellValue('H4', 'Plazo');
+            $sheet->setCellValue('I4', 'Apartado');
 //            $sheet->setCellValue('I4', '10% precio m2');
 
             #set values
@@ -1972,6 +1976,9 @@ $pdf->Output(utf8_decode($namePDF), 'I');
             $sheet->setCellValue('G5', $precio_casa);
             $sheet->getStyle('G5')->getNumberFormat()->setFormatCode(PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_CURRENCY_USD_SIMPLE);
             $sheet->setCellValue('H5', ($data_corrida->finalMesesp1 + $data_corrida->finalMesesp2 + $data_corrida->finalMesesp3));
+            $sheet->setCellValue('I5', $data_corrida->apartado);
+            $sheet->getStyle('I5')->getNumberFormat()->setFormatCode(PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_CURRENCY_USD_SIMPLE);
+
 
             $sheet->setCellValue('D6', 'Lote');
             $sheet->setCellValue('E6', 'No');
@@ -2010,44 +2017,46 @@ $pdf->Output(utf8_decode($namePDF), 'I');
             $sheet->getStyle( 'D6:I6' )->getFont()->setName('Arial');
             $sheet->getStyle('D7:H7')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('D9D9D9');
 
-            $sheet->mergeCells("D8:H8");
-            $sheet->setCellValue('D8', 'EXTRAS');
-            $sheet->getStyle( 'D8' )->getFont()->setBold( true );
-            $sheet->getStyle('D8:H8')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('D8E4BC');
+            //$sheet->mergeCells("D8:H8");
+            //$sheet->setCellValue('D8', 'EXTRAS');
+            //$sheet->getStyle( 'D8' )->getFont()->setBold( true );
+            //$sheet->getStyle('D8:H8')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('D8E4BC');
 
 //            print_r(count($extras_general));
 //            exit;
             $contador=10;
             $extras_total = 0;
             if(count($extras_general) >= 1){
-                $sheet->mergeCells("D9:F9");
-                $sheet->setCellValue('D9', "Nombre");
-                $sheet->mergeCells("G9:H9");
-                $sheet->setCellValue('G9', "Precio");
-                $sheet->getStyle("D9:H9")->getFont()->setSize(10);
-                $sheet->getStyle('D9:H9')->getFont()->getColor()->setARGB('4472C4');
-                $sheet->getStyle( 'D9:H9' )->getFont()->setBold( true );
-                $sheet->getStyle( 'D9:H9' )->getFont()->setName('Arial');
+                //$sheet->mergeCells("D9:F9");
+                //$sheet->setCellValue('D9', "Nombre");
+                //$sheet->mergeCells("G9:H9");
+                //$sheet->setCellValue('G9', "Precio");
+                //$sheet->getStyle("D9:H9")->getFont()->setSize(10);
+                //$sheet->getStyle('D9:H9')->getFont()->getColor()->setARGB('4472C4');
+                //$sheet->getStyle( 'D9:H9' )->getFont()->setBold( true );
+                //$sheet->getStyle( 'D9:H9' )->getFont()->setName('Arial');
 
                 foreach ($extras_general as $values){
-//                    print_r($values['tipo']);
-                    if($values['tipo']=='techado'){
-                        $sheet->mergeCells("D".$contador.":F".$contador);
-                        $sheet->setCellValue('D'.$contador, "Techado");
-                        $sheet->mergeCells("G".$contador.":H".$contador);
-                        $sheet->setCellValue('G'.$contador, $values['techado']);
-                        $sheet->getStyle('G'.$contador)->getNumberFormat()->setFormatCode(PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_CURRENCY_USD_SIMPLE);
+                    //print_r($values['tipo']);
+                    //if($values['tipo']=='techado'){
+                        //$sheet->mergeCells("D".$contador.":F".$contador);
+                        //$sheet->setCellValue('D'.$contador, "Techado");
+                        //$sheet->mergeCells("G".$contador.":H".$contador);
+                        //$sheet->setCellValue('G'.$contador, $values['techado']);
+                        //$sheet->getStyle('G'.$contador)->getNumberFormat()->setFormatCode(PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_CURRENCY_USD_SIMPLE);
 
-                    }
-                    $contador++;
+                    //}
+                    //$contador++;
                     $extras_total = $extras_total + $values['techado'];
-//                    print_r($values);
+                    //print_r($values);
 
                 }
             }else{
-                $sheet->mergeCells("D9:H9");
-                $sheet->setCellValue('D9', 'Sin extras');
+                //$sheet->mergeCells("D9:H9");
+                //$sheet->setCellValue('D9', 'Sin extras');
             }
+            $sheet->setCellValue('G5', $precio_casa + $extras_total); #se vuelve a setear el valor de la casa más los extras en un solo registro
+
 
             #Aqui se deben mostrar los resultados
             $sheet->mergeCells("D14:H14");
@@ -2080,7 +2089,16 @@ $pdf->Output(utf8_decode($namePDF), 'I');
 //                $sheet->getStyle('H'.$contador2)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('D9D9D9');
                 $flag_cell = 0;
                 $suma_descuentos=0;
+                $precio_final_excel=0;
+//                print_r(count($informacion_descCorrida));
+//                echo '<br>';
+                $nuevo_preciom2casa = $precio_m2_casa;
+                $descuento_variable = 0;
+                $descuento_variable2 = 0;
+                $nuevo_preciom2lote = $data_corrida->preciom2;
                 foreach($informacion_descCorrida as $item=>$value){
+//                    print_r($item+1);
+
                     //print_r($value['porcentaje']);
                     $contador2++;
                     #porcentaje
@@ -2108,11 +2126,28 @@ $pdf->Output(utf8_decode($namePDF), 'I');
                     /*print_r($value);
 
                     echo '<br>';*/
+//                    if(count($informacion_descCorrida) == ($item+1)){
+//                        $precio_final_excel = $value['pm'];
+//                        print_r();
+//                    }
+
+                    if($value['id_condicion']!=12){
+//                        print_r($value);
+                        $descuento_variable = ( $value['porcentaje'] * $nuevo_preciom2casa / 100);
+                        $nuevo_preciom2casa = $nuevo_preciom2casa - $descuento_variable;
+//                        echo '<br>';
+
+                        $descuento_variable2 = ($value['porcentaje'] * $nuevo_preciom2lote / 100);
+                        $nuevo_preciom2lote = $nuevo_preciom2lote - $descuento_variable2;
+
+                    }
 
                 }
+//                print_r($nuevo_preciom2casa);
+//                echo '<br>';
                 /*echo 'TOTAL DESCUENTOS:<br>';
-                print_r($suma_descuentos);
-                exit;*/
+                print_r($suma_descuentos);*/
+//                exit;
 
 
 
@@ -2123,15 +2158,30 @@ $pdf->Output(utf8_decode($namePDF), 'I');
                 $sheet->getStyle('D'.$contador2.':'.'D'.$contador2)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('D9D9D9');
 
             }
-//            exit;
 
+            $sheet->mergeCells("E21:F21");
+            $sheet->setCellValue('E21', 'PRECIO FINAL M2 CASA');
+            $sheet->getStyle('E21:F21')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('C4D79B');
+            $sheet->getStyle( 'E21')->getFont()->setBold( true );
+            $sheet->setCellValue('G21', $nuevo_preciom2casa);
+            $sheet->getStyle( 'G21')->getFont()->setBold( false );
+            $sheet->getStyle('G21')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('D8E4BC');
+            $sheet->getStyle('G21')->getNumberFormat()->setFormatCode(PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_CURRENCY_USD_SIMPLE);
 
-
+            #***********
+            $sheet->mergeCells("E22:F22");
+            $sheet->setCellValue('E22', 'PRECIO FINAL M2 LOTE');
+            $sheet->getStyle('E22:F22')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('DA9694');
+            $sheet->getStyle( 'E22')->getFont()->setBold( true );
+            $sheet->setCellValue('G22', $nuevo_preciom2lote);
+            $sheet->getStyle( 'G22')->getFont()->setBold( false );
+            $sheet->getStyle('G22')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('E6B8B7');
+            $sheet->getStyle('G22')->getNumberFormat()->setFormatCode(PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_CURRENCY_USD_SIMPLE);
 
 
             #saldos y tabla
-            $sheet->mergeCells("D22:F22");
-            $sheet->setCellValue('D22', 'SUBTOTAL (contrucción + extras)');
+            //$sheet->mergeCells("D22:F22");
+            //$sheet->setCellValue('D22', 'SUBTOTAL (contrucción + extras)');
             $sheet->mergeCells("D23:F23");
             $sheet->setCellValue('D23', 'SALDO CONSOLIDADO');
             $sheet->mergeCells("D24:F24");
@@ -2141,19 +2191,19 @@ $pdf->Output(utf8_decode($namePDF), 'I');
             $sheet->mergeCells("D26:F26");
             $sheet->setCellValue('D26', 'MENSUALIDAD');
 
-            $sheet->getStyle("D22:F22")->getFont()->setSize(13)->setName('Arial')->setBold(true)->getColor()->setARGB('000000');
+           // $sheet->getStyle("D22:F22")->getFont()->setSize(13)->setName('Arial')->setBold(true)->getColor()->setARGB('000000');
             $sheet->getStyle("D23:F23")->getFont()->setSize(13)->setName('Arial')->setBold(true)->getColor()->setARGB('000000');
             $sheet->getStyle("D24:F24")->getFont()->setSize(13)->setName('Arial')->setBold(true)->getColor()->setARGB('000000');
             $sheet->getStyle("D25:F25")->getFont()->setSize(13)->setName('Arial')->setBold(true)->getColor()->setARGB('000000');
             $sheet->getStyle("D26:F26")->getFont()->setSize(13)->setName('Arial')->setBold(true)->getColor()->setARGB('000000');
 
-            $sheet->mergeCells("G22:H22");
-            $sheet->getStyle('G22:H22')->getAlignment()->setHorizontal('left');
-            $sheet->getStyle('G22:H22')->getAlignment()->setVertical('left');
-            $sheet->setCellValue('G22', ($precio_casa + $extras_total));
-            $sheet->getStyle("G14:H22")->getFont()->setSize(13)->setBold( true );
-            $sheet->getStyle('G22')->getNumberFormat()->setFormatCode(PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_CURRENCY_USD_SIMPLE);
-            $sheet->getStyle('G22:H22')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('#D9D9D9');
+            //$sheet->mergeCells("G22:H22");
+            //$sheet->getStyle('G22:H22')->getAlignment()->setHorizontal('left');
+            //$sheet->getStyle('G22:H22')->getAlignment()->setVertical('left');
+            //$sheet->setCellValue('G22', ($precio_casa + $extras_total));
+            //$sheet->getStyle("G14:H22")->getFont()->setSize(13)->setBold( true );
+            //$sheet->getStyle('G22')->getNumberFormat()->setFormatCode(PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_CURRENCY_USD_SIMPLE);
+            //$sheet->getStyle('G22:H22')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('#D9D9D9');
 
 
             $sheet->mergeCells("G23:H23");
@@ -2250,7 +2300,7 @@ $pdf->Output(utf8_decode($namePDF), 'I');
             $range2 = 'I1';
             $sheet->mergeCells("$range1:$range2");
             $sheet->getStyle('C:I')->getAlignment()->setHorizontal('center');
-            $sheet->getStyle('C:I')->getAlignment()->setVertical('center');
+            $sheet->getStyle('C:I')->getAlignment()->setHorizontal('center');
             $sheet->getStyle("C1:I1")->getFont()->setSize(28);
             $spreadsheet->getActiveSheet()->getStyle('C1')->getFont()->getColor()->setARGB('808080');
 
@@ -2346,6 +2396,17 @@ $pdf->Output(utf8_decode($namePDF), 'I');
             $sheet->getStyle('F11')->getNumberFormat()->setFormatCode(PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_CURRENCY_USD_SIMPLE);
 
 
+            $sheet->setCellValue('G11', 'Apartado');
+            $sheet->getStyle( 'G11' )->getFont()->setName('Arial');
+            $sheet->getStyle( 'G11:H11' )->getFont()->setBold( true );
+            $sheet->getStyle("G11")->getFont()->setSize(10);
+            $sheet->getStyle("H11")->getFont()->setSize(12);
+            $sheet->setCellValue('H11', $data_corrida->apartado);
+            $sheet->getStyle( 'H11' )->getFont()->setName('Arial');
+            $sheet->getStyle('H11')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('D9D9D9');
+            $sheet->getStyle('H11')->getNumberFormat()->setFormatCode(PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_CURRENCY_USD_SIMPLE);
+
+
 
             $sheet->setCellValue('C13', 'Mensualidad sin/Int. ');
             $sheet->setCellValue('E13', $data_corrida->finalMesesp1);
@@ -2356,7 +2417,6 @@ $pdf->Output(utf8_decode($namePDF), 'I');
             $sheet->getStyle( 'C13:F13' )->getFont()->setName('Arial');
             $sheet->getStyle("C13")->getFont()->setSize(9);
             $sheet->getStyle('F13:F15')->getNumberFormat()->setFormatCode(PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_CURRENCY_USD_SIMPLE);
-
 
             $sheet->setCellValue('H13', '1er Mensualidad');
             $sheet->getStyle( 'H13:I13' )->getFont()->setName('Arial');
@@ -2373,7 +2433,6 @@ $pdf->Output(utf8_decode($namePDF), 'I');
             $sheet->getStyle('F14')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('D9D9D9');
             $sheet->getStyle( 'C14:F14' )->getFont()->setName('Arial');
             $sheet->getStyle("C14")->getFont()->setSize(9);
-
 
             $sheet->setCellValue('C15', 'Mensualidad Con/Int. SSI ');
             $sheet->setCellValue('D15', '1.25%');
@@ -2424,7 +2483,6 @@ $pdf->Output(utf8_decode($namePDF), 'I');
             $sheet->getStyle('C19:I19')->getBorders()->getAllBorders()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
             #termina encabezado
         }
-
 
 
 
@@ -2579,7 +2637,6 @@ $pdf->Output(utf8_decode($namePDF), 'I');
             "paquete" => $paquete
         );
 
-
         $arreglo =array();
         $arreglo["nombre"]= $objDatos->nombre;
         $arreglo["id_lote"]= $idLote;
@@ -2610,15 +2667,16 @@ $pdf->Output(utf8_decode($namePDF), 'I');
         $arreglo["finalMesesp2"]= $objDatos->finalMesesp2;
         $arreglo["finalMesesp3"]= $objDatos->finalMesesp3;
         $arreglo["observaciones"]= $objDatos->observaciones;
+        $arreglo["fecha_modificacion"] = date("Y-m-d H:i:s");
 
-
+        /*print_r($arreglo);
+        exit;*/
 
         /*print_r($arreglo["telefono"]);
         exit;*/
 
         $array_allPackages = json_decode($objDatos->allPackages);
         $arrayTocxp = array();
-
 
 
 
@@ -2632,15 +2690,11 @@ $pdf->Output(utf8_decode($namePDF), 'I');
                     $arrayTocxp[$key]['descuentos'][$key2]['prioridad'] = $value2->prioridad;
                     $arrayTocxp[$key]['descuentos'][$key2]['id_descuento'] = $value2->id_descuento;
                     //$arrayTocxp[$key]['descuentos'][$key2]['estatus'] =  0;
-
-
                     for ($i = 0; $i < count($arrayDescApply); $i++) {
                         if ($arrayDescApply[$i]->id_descuento == $value2->id_descuento && $arrayDescApply[$i]->id_paquete == $value->id_paquete) {
                             $arrayTocxp[$key]['descuentos'][$key2]['estatus'] = 1;
                         }
-
                     }
-
                 }
             }
 
@@ -2852,18 +2906,29 @@ $pdf->Output(utf8_decode($namePDF), 'I');
         $data_descuentos = $this->Corrida_model->getDescsByCondominio($id_condominio, $id_pxc);
 
 
-        $array_descuentos = explode(',', $data_descuentos->id_paquete, 999);
-
-        $data_descuentos->paquetes_array = $array_descuentos;
-
-//        print_r($array_descuentos);
 
 
+
+        $object_descuentos = json_decode($data_descuentos->id_paquete);
+        $array_descuentos = explode(',', $object_descuentos->paquetes, 999);
+        $tipo_superficie = $object_descuentos->tipo_superficie;
+        /*print_r($tipo_superficie->tipo);
+        exit;*/
+
+        #logica anterior
+        #$array_descuentos = explode(',', $data_descuentos->id_paquete, 999);
+        #$data_descuentos->paquetes_array = $array_descuentos;
+
+
+        //recibe un array separados por "," así: Array ( [0] => 326 [1] => 328 [2] => 334 )
         for($i=0; $i<count($array_descuentos); $i++){
             $paquete_info = $this->Corrida_model->getPaqById($array_descuentos[$i]);
             $paquete_view[$i] = array(
                 'id_paquete' => $paquete_info->id_paquete,
                 'descripcion' => $paquete_info->descripcion,
+                'aplicable_a' => $tipo_superficie->tipo,
+                'sup1'        => $tipo_superficie->sup1,
+                'sup2'        => $tipo_superficie->sup2,
                 //'estatus' => $paquete_info->estatus,
             );
 
@@ -2885,7 +2950,7 @@ $pdf->Output(utf8_decode($namePDF), 'I');
                 $paquete_view[$i]['response'][$q]['msi_descuento'] = (int)$data_descuento->msi_descuento;
             }
         }
-        print_r(json_encode($paquete_view));
+        print_r(json_encode($paquete_view, JSON_NUMERIC_CHECK ));
 
         exit;
     }
@@ -3010,5 +3075,10 @@ $pdf->Output(utf8_decode($namePDF), 'I');
         }
 
 //		$this->load->view("moratorioII"); //avance
+    }
+
+    public function moratorios()
+    {
+            $this->load->view("corrida/moratorios_nv");
     }
 }

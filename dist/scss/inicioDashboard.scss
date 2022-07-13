@@ -1,21 +1,46 @@
 @import "_base";
 
 #inicio{
-  .card{ box-shadow: none!important;}
-  .first-row{
+  .card{
+    box-shadow: none!important;
     height: 450px;
+    margin: 25px 0 0 0;
+    h4{
+      @media #{$smartphone}{
+        text-align: center!important;
+        margin-bottom: 10px;
+      }
+    }
+    @media #{$smartphone}{
+      height: inherit;
+    }
+    
+  }
+  .col-total{
+    height: 315px;
+    @media #{$smartphone}{
+      padding-bottom: 0;
+      height: inherit;
+    }
+    @media #{$tablets}{
+      padding-bottom: 0;
+      height: 250px;
+      margin-bottom: 25px;
+    }
+  }
+  .col-prospectos{ 
+    height: 135px;
     .cardProspectosVig{
-      background-color: #1D3566;
       p{
         font-size: 12px;
-        color: white;
+        color: $grayDark;
         span{
-          color: #2C93E7;
+          color: $blueFrance;
           font-weight: 700;
         }
       }
       .boxIcoProsp{
-        background-color: #ffffff3d;
+        background-color: #0089b73d;
         width: 25px;
         height: 25px;
         border-radius: 20px;
@@ -23,13 +48,20 @@
         align-items: center;
         justify-content: center;
         margin-right: 7px;
-        color: $white;
+        color: $grayDark;
       }
       .numberGraphic{
-        color: $white;
+        color: $grayDark;
         font-weight: 600;
-        font-size: 18px;
+        font-size: 16px;
       }
+    }
+    @media #{$smartphone}{
+      height: inherit;
+    }
+    @media #{$tablets}{
+      height: 250px!important;
+      margin-bottom: 25px;
     }
   }
   .back{
@@ -64,67 +96,58 @@
       }
     }
   }
-}
-
-.fadeInAnimation{
-  animation: fadeIn 0.5s ease-in both;
-}
-.fadeInAnimationDelay2{
-  animation: fadeIn 1s ease-in both;
-}
-.fadeInAnimationDelay3{
-  animation: fadeIn 1.5s ease-in both;
-}
-.fadeInAnimationDelay4{
-  animation: fadeIn 2s ease-in both;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translate3d(0, -20%, 0);
+  #estadisticas{
+    .container-fluid{
+      .row{
+        @media #{$smartphone}{
+          height: inherit;
+        }
+      }
+      .h-40{
+        .col-12{
+          padding-right: 15px!important;
+          padding-left: 0!important;
+        }
+      }
+      @media #{$smartphone}{
+        height: inherit;
+      }
+    }
+    .nav-pills>li.active>a, .nav-pills>li.active>a:focus{
+      color: $white;
+      background-color: $blueIndigo!important;
+    }
   }
-  to {
-    opacity: 1;
-    transform: translate3d(0, 0, 0);
+  .beginDates{
+    background-color: $platinum!important;
+    border-radius: 27px 0 0 27px!important;
+    background-image: initial!important;
+    text-align: right!important;
+  }
+  
+  .endDates {
+    background-color: $platinum!important;
+    border-radius: 0!important;
+    background-image: initial!important;
+    text-align: center!important;
+  }
+  
+  .btn-fab-mini {
+    border-radius: 0 27px 27px 0 !important;
+    background-color: $platinum !important;
+    box-shadow: none !important;
+    height: 45px !important;
+  }
+  .btn-fab-mini span {
+    color: $deepGray;
+  }
+
+  .labelTitle{
+    font-size: 1.2em!important;
+  }
+  .numberElement{
+    font-size: 1.2em!important;
+    font-weight: bold!important;
   }
 }
 
-
-@keyframes loading {
-  0% {
-    background-position: -100px;
-  }
-  100% {
-    background-position: 200px;
-  }
-}
-
-#beginDate{
-  background-color: $platinum;
-  border-radius: 27px 0 0 27px;
-  background-image: initial;
-  text-align: right;
-}
-
-#endDate {
-  background-color: $platinum;
-  border-radius: 0;
-  background-image: initial;
-  text-align: center;
-}
-
-.btn-fab-mini {
-  border-radius: 0 27px 27px 0 !important;
-  background-color: $platinum !important;
-  box-shadow: none !important;
-  height: 45px !important;
-}
-.btn-fab-mini span {
-  color: $deepGray;
-}
-
-.dot{
-  color: aquamarine;
-  font-size: 1.2rem;
-}

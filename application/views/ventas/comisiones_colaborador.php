@@ -541,23 +541,37 @@
                                                 }
                                                 ?>
 
-                                                <p class="card-title m-1">
-                                                    Para consultar mas detalles sobre el uso y funcionalidad del apartado
-                                                    de comisiones podrás visualizarlo en el siguiente tutorial
+                                                <?php if (($this->session->userdata('forma_pago') == 2 ||
+                                                    $this->session->userdata('forma_pago') == 3 ||
+                                                    $this->session->userdata('forma_pago') == 4 ||
+                                                    $this->session->userdata('forma_pago') == 5) &&
+                                                    ($this->session->userdata('id_rol') == 3 ||
+                                                    $this->session->userdata('id_rol') == 7 ||
+                                                    $this->session->userdata('id_rol') == 9)) { ?>
 
-                                                    <?php if ($this->session->userdata('forma_pago') == 2) { ?>
-                                                        <a href="https://youtu.be/YuZNsPk8-gY"
-                                                           target="_blank"><u>clic aquí</u></a>
-                                                    <?php } ?>
-                                                    <?php if ($this->session->userdata('forma_pago') == 3) { ?>
-                                                        <a href="https://youtu.be/LmmIdipDSEA"
-                                                           target="_blank"><u>clic aquí</u></a>
-                                                    <?php } ?>
-                                                    <?php if ($this->session->userdata('forma_pago') == 4) { ?>
-                                                        <a href="https://youtu.be/oRoJev_AZgs"
-                                                           target="_blank"><u>clic aquí</u></a>
-                                                    <?php } ?>
-                                                </p>
+                                                    <p class="card-title m-1">
+                                                        Para consultar mas detalles sobre el uso y funcionalidad del apartado
+                                                        de comisiones podrás visualizarlo en el siguiente tutorial
+
+                                                        <?php if ($this->session->userdata('forma_pago') == 2) { ?>
+                                                            <a href="https://youtu.be/YuZNsPk8-gY"
+                                                               target="_blank"><u>clic aquí</u></a>
+                                                        <?php } ?>
+                                                        <?php if ($this->session->userdata('forma_pago') == 3) { ?>
+                                                            <a href="https://youtu.be/LmmIdipDSEA"
+                                                               target="_blank"><u>clic aquí</u></a>
+                                                        <?php } ?>
+                                                        <?php if ($this->session->userdata('forma_pago') == 4) { ?>
+                                                            <a href="https://youtu.be/oRoJev_AZgs"
+                                                               target="_blank"><u>clic aquí</u></a>
+                                                        <?php } ?>
+                                                        <?php if ($this->session->userdata('forma_pago') == 5) { ?>
+                                                            <a href="https://youtu.be/4t0MNA8HxZ4"
+                                                               target="_blank"><u>clic aquí</u></a>
+                                                        <?php } ?>
+                                                    </p>
+
+                                                <?php } ?>
 
                                                 <?php if ($this->session->userdata('forma_pago') == 5) { ?>
                                                     <p class="card-title pl-1">Comprobantes fiscales emitidos por residentes en el <b>extranjero</b>

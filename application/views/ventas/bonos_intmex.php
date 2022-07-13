@@ -11,7 +11,7 @@
         ?>
 
         <!-- Modals -->
-        <!--<div class="modal fade modal-alertas" id="myModalEspera" role="dialog">
+        <div class="modal fade modal-alertas" id="myModalEspera" role="dialog">
             <div class="modal-dialog modal-sm">
                 <div class="modal-content">
                     <form method="post" id="form_espera_uno">
@@ -20,7 +20,7 @@
                     </form>
                 </div>
             </div>
-        </div>-->
+        </div>
 
         <div class="modal fade bd-example-modal-sm" id="myModalEnviadas" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-sm">
@@ -90,6 +90,7 @@
                                                         <th></th>
                                                         <th>ID</th>
                                                         <th>USUARIO</th>
+                                                        <th>RFC</th>
                                                         <th>PUESTO</th>
                                                         <th>PAGO</th>
                                                         <th>IMPUESTO</th>
@@ -196,7 +197,7 @@
                     className: 'btn buttons-excel',
                     titleAttr: 'Descargar archivo de Excel',
                     exportOptions: {
-                    columns: [1,2,3,4,5,6,7,8],
+                    columns: [1,2,3,4,5,6,7,8,9],
                     format: {
                         header:  function (d, columnIdx) {
                             if(columnIdx == 1){
@@ -207,15 +208,16 @@
                                 }else if(columnIdx == 3){
                                     return 'ROL ';
                                 }else if(columnIdx == 4){
-                                    return 'PAGO';
+                                    return 'ROL ';
                                 }else if(columnIdx == 5){
-                                    return 'IMPUESTO';
+                                    return 'PAGO';
                                 }else if(columnIdx == 6){
+                                    return 'IMPUESTO';
+                                }else if(columnIdx == 7){
                                     return 'TOTAL A PAGAR';
-                                }
-                                else if(columnIdx == 7){
-                                    return 'ESTATUS';
                                 }else if(columnIdx == 8){
+                                    return 'ESTATUS';
+                                }else if(columnIdx == 9){
                                     return 'COMENTARIO';
                                 }
                             
@@ -235,34 +237,40 @@
                 destroy: true,
                 ordering: false,
                 columns: [{
-                    "width": "3%",
+                    "width": "5%",
                 },
                 {
-                    "width": "3%",
+                    "width": "5%",
                     "data": function(d) {
                         return '<p class="m-0"><center>' + d.id_pago_bono + '</center></p>';
                     }
                 },
                 {
-                    "width": "9%",
+                    "width": "17%",
                     "data": function(d) {
                         return '<p class="m-0"><center>' + d.nombre + '</center></p>';
                     }
                 },
                 {
-                    "width": "7%",
+                    "width": "8%",
+                    "data": function(d) {
+                        return '<p class="m-0"><center>' + d.rfc + '</center></p>';
+                    }
+                },
+                {
+                    "width": "8%",
                     "data": function(d) {
                         return '<p class="m-0"><center>'+d.id_rol+'</center></p>';
                     }
                 },
                 {
-                    "width": "7%",
+                    "width": "8%",
                     "data": function(d) {
                         return '<p class="m-0"><center><b>$' + formatMoney(d.pago) + '</b></center></p>';
                     }
                 },
                 {
-                    "width": "5%",
+                    "width": "8%",
                     "data": function(d) {
                         if(parseFloat(d.pago) == parseFloat(d.impuesto1)){
                             return '<p class="m-0"><center><b>0%</b></center></p>';
@@ -273,7 +281,7 @@
                     }
                 },
                 {
-                    "width": "7%",
+                    "width": "8%",
                     "data": function(d) {
                         if(parseFloat(d.pago) == parseFloat(d.impuesto1)){
                             return '<p class="m-0"><center><b>$' + formatMoney(d.pago) + '</b></center></p>';
@@ -308,7 +316,7 @@
                     }
                 },
                 {
-                    "width": "5%",
+                    "width": "8%",
                     "orderable": false,
                     "data": function(d) {
                         if (d.estado == 3 || d.estado == 6) {
@@ -464,14 +472,14 @@
             });
         });
 
-        /*function mandar_espera(idLote, nombre) {
+        function mandar_espera(idLote, nombre) {
             idLoteespera = idLote;
             link_espera1 = "Comisiones/generar comisiones/";
             $("#myModalEspera .modal-footer").html("");
             $("#myModalEspera .modal-body").html("");
             $("#myModalEspera ").modal();
             $("#myModalEspera .modal-footer").append("<div class='btn-group'><button type='submit' class='btn btn-success'>GENERAR COMISIÓN</button></div>");
-        }*/
+        }
 
         // FUNCTION MORE
         $(window).resize(function(){
@@ -492,7 +500,7 @@
         };
 
 
-        /*$("#roles").change(function() {
+        $("#roles").change(function() {
             var parent = $(this).val();
 
             document.getElementById("users").innerHTML ='';
@@ -512,9 +520,9 @@
                 }
                 $("#usuarioid").selectpicker('refresh');
             }, 'json'); 
-        });*/
+        });
 
-        /*$("#numeroP").change(function(){
+        $("#numeroP").change(function(){
             let monto = parseFloat($('#monto').val());
             let cantidad = parseFloat($('#numeroP').val());
             let resultado=0;
@@ -526,6 +534,6 @@
                 resultado = monto /cantidad;
                 $('#pago').val(formatMoney(resultado));
             }
-        });*/
+        });
     </script>
 </bdoy>

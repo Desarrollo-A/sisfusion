@@ -21,7 +21,7 @@
 }
 
 .mb-0 {
-  margin-bottom: 0px;
+  margin-bottom: 0px !important;
 }
 
 .mb-1 {
@@ -41,7 +41,7 @@
 }
 
 .mt-0 {
-  margin-top: 0px;
+  margin-top: 0px !important;
 }
 
 .mt-1 {
@@ -199,7 +199,7 @@
 }
 
 .w-30 {
-  width: 30%;
+  width: 30% !important;
 }
 
 .w-20 {
@@ -210,8 +210,16 @@
   width: 10%;
 }
 
+.w-auto {
+  width: auto !important;
+}
+
+.h-auto {
+  height: auto !important;
+}
+
 .h-100 {
-  height: 100%;
+  height: 100% !important;
 }
 
 .h-90 {
@@ -223,27 +231,27 @@
 }
 
 .h-70 {
-  height: 70%;
+  height: 70% !important;
 }
 
 .h-60 {
-  height: 60%;
+  height: 60% !important;
 }
 
 .h-50 {
-  height: 50%;
+  height: 50% !important;
 }
 
 .h-40 {
-  height: 40%;
+  height: 40% !important;
 }
 
 .h-30 {
-  height: 30%;
+  height: 30% !important;
 }
 
 .h-25 {
-  height: 25%;
+  height: 25% !important;
 }
 
 .h-20 {
@@ -336,8 +344,16 @@
   display: none;
 }
 
+.d-block {
+  display: block;
+}
+
 .d-flex {
   display: flex;
+}
+
+.align-start {
+  align-items: flex-start;
 }
 
 .align-end {
@@ -368,6 +384,14 @@
   flex-direction: row-reverse;
 }
 
+.direction-column {
+  flex-direction: column;
+}
+
+.direction-row {
+  flex-direction: row;
+}
+
 /* END Flexbox */
 /* Text */
 .text-center {
@@ -380,6 +404,10 @@
 
 .text-right {
   text-align: right !important;
+}
+
+.text-justify {
+  text-align: justify !important;
 }
 
 .fw-100 {
@@ -435,6 +463,38 @@
 }
 
 /* END Estilos generales encabezado, datetime picker, calendar, input filtros, selects */
+.txt-lapisLazuli {
+  color: #22639B !important;
+}
+
+.txt-blueNCS {
+  color: #0089B7 !important;
+}
+
+.txt-viridianGreen {
+  color: #039590 !important;
+}
+
+.txt-tiffanyBlue {
+  color: #00ACB8 !important;
+}
+
+.txt-oceanGreen {
+  color: #4BBC8E !important;
+}
+
+.txt-caribbeanGreen {
+  color: #00CDA3 !important;
+}
+
+.txt-lightGreen {
+  color: #92E784 !important;
+}
+
+.txt-sunny {
+  color: #F9F871 !important;
+}
+
 .btn-a {
   border-radius: 25px !important;
   height: 37px !important;
@@ -1005,14 +1065,23 @@
 }
 
 /* tooltip styles */
+.tooltip {
+  width: fit-content;
+}
+
 .tooltip .tooltip-inner {
   padding: 5px 10px;
-  color: white;
+  color: #ffffff;
   background-color: #333333;
+  width: fit-content;
 }
 
 .tooltip.top .tooltip-arrow {
   border-top-color: #333333;
+}
+
+.tooltip.bottom .tooltip-arrow {
+  border-bottom-color: #333333;
 }
 
 /* tooltip styles */
@@ -1061,28 +1130,58 @@
 
 #inicio .card {
   box-shadow: none !important;
-}
-
-#inicio .first-row {
   height: 450px;
+  margin: 25px 0 0 0;
 }
 
-#inicio .first-row .cardProspectosVig {
-  background-color: #1D3566;
+@media (min-device-width: 320px) and (max-device-width: 480px) {
+  #inicio .card h4 {
+    text-align: center !important;
+    margin-bottom: 10px;
+  }
 }
 
-#inicio .first-row .cardProspectosVig p {
+@media (min-device-width: 320px) and (max-device-width: 480px) {
+  #inicio .card {
+    height: inherit;
+  }
+}
+
+#inicio .col-total {
+  height: 315px;
+}
+
+@media (min-device-width: 320px) and (max-device-width: 480px) {
+  #inicio .col-total {
+    padding-bottom: 0;
+    height: inherit;
+  }
+}
+
+@media (min-width: 480px) and (max-width: 991px) {
+  #inicio .col-total {
+    padding-bottom: 0;
+    height: 250px;
+    margin-bottom: 25px;
+  }
+}
+
+#inicio .col-prospectos {
+  height: 135px;
+}
+
+#inicio .col-prospectos .cardProspectosVig p {
   font-size: 12px;
-  color: white;
+  color: #191B1C;
 }
 
-#inicio .first-row .cardProspectosVig p span {
+#inicio .col-prospectos .cardProspectosVig p span {
   color: #2C93E7;
   font-weight: 700;
 }
 
-#inicio .first-row .cardProspectosVig .boxIcoProsp {
-  background-color: #ffffff3d;
+#inicio .col-prospectos .cardProspectosVig .boxIcoProsp {
+  background-color: #0089b73d;
   width: 25px;
   height: 25px;
   border-radius: 20px;
@@ -1090,13 +1189,26 @@
   align-items: center;
   justify-content: center;
   margin-right: 7px;
-  color: #ffffff;
+  color: #191B1C;
 }
 
-#inicio .first-row .cardProspectosVig .numberGraphic {
-  color: #ffffff;
+#inicio .col-prospectos .cardProspectosVig .numberGraphic {
+  color: #191B1C;
   font-weight: 600;
-  font-size: 18px;
+  font-size: 16px;
+}
+
+@media (min-device-width: 320px) and (max-device-width: 480px) {
+  #inicio .col-prospectos {
+    height: inherit;
+  }
+}
+
+@media (min-width: 480px) and (max-width: 991px) {
+  #inicio .col-prospectos {
+    height: 250px !important;
+    margin-bottom: 25px;
+  }
 }
 
 #inicio .back {
@@ -1137,68 +1249,58 @@
   background-color: #163960;
 }
 
-.fadeInAnimation {
-  animation: fadeIn 0.5s ease-in both;
-}
-
-.fadeInAnimationDelay2 {
-  animation: fadeIn 1s ease-in both;
-}
-
-.fadeInAnimationDelay3 {
-  animation: fadeIn 1.5s ease-in both;
-}
-
-.fadeInAnimationDelay4 {
-  animation: fadeIn 2s ease-in both;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translate3d(0, -20%, 0);
-  }
-  to {
-    opacity: 1;
-    transform: translate3d(0, 0, 0);
+@media (min-device-width: 320px) and (max-device-width: 480px) {
+  #inicio #estadisticas .container-fluid .row {
+    height: inherit;
   }
 }
 
-@keyframes loading {
-  0% {
-    background-position: -100px;
+#inicio #estadisticas .container-fluid .h-40 .col-12 {
+  padding-right: 15px !important;
+  padding-left: 0 !important;
+}
+
+@media (min-device-width: 320px) and (max-device-width: 480px) {
+  #inicio #estadisticas .container-fluid {
+    height: inherit;
   }
-  100% {
-    background-position: 200px;
-  }
 }
 
-#beginDate {
-  background-color: #eaeaea;
-  border-radius: 27px 0 0 27px;
-  background-image: initial;
-  text-align: right;
+#inicio #estadisticas .nav-pills > li.active > a, #inicio #estadisticas .nav-pills > li.active > a:focus {
+  color: #ffffff;
+  background-color: #103f75 !important;
 }
 
-#endDate {
-  background-color: #eaeaea;
-  border-radius: 0;
-  background-image: initial;
-  text-align: center;
+#inicio .beginDates {
+  background-color: #eaeaea !important;
+  border-radius: 27px 0 0 27px !important;
+  background-image: initial !important;
+  text-align: right !important;
 }
 
-.btn-fab-mini {
+#inicio .endDates {
+  background-color: #eaeaea !important;
+  border-radius: 0 !important;
+  background-image: initial !important;
+  text-align: center !important;
+}
+
+#inicio .btn-fab-mini {
   border-radius: 0 27px 27px 0 !important;
   background-color: #eaeaea !important;
   box-shadow: none !important;
   height: 45px !important;
 }
 
-.btn-fab-mini span {
+#inicio .btn-fab-mini span {
   color: #929292;
 }
 
-.dot {
-  color: aquamarine;
-  font-size: 1.2rem;
+#inicio .labelTitle {
+  font-size: 1.2em !important;
+}
+
+#inicio .numberElement {
+  font-size: 1.2em !important;
+  font-weight: bold !important;
 }

@@ -63,7 +63,7 @@
         </div>
 
 
-        <!--<div class="modal fade modal-alertas" id="modal_refresh" role="dialog">
+        <div class="modal fade modal-alertas" id="modal_refresh" role="dialog">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <form method="post" id="form_refresh">
@@ -71,7 +71,7 @@
                     </form>
                 </div>
             </div>
-        </div>-->
+        </div>
 
         <div class="modal fade modal-alertas" id="modal_multiples" role="dialog">
             <div class="modal-dialog modal-md">
@@ -86,9 +86,9 @@
         </div>
  
 
-        <!--<div class="modal fade modal-alertas" id="documento_preview" role="dialog">
+        <div class="modal fade modal-alertas" id="documento_preview" role="dialog">
             <div class="modal-dialog" style= "margin-top:20px;"></div>
-        </div>-->
+        </div>
 
 
         <div class="modal fade bd-example-modal-sm" id="myModalEnviadas" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
@@ -174,6 +174,7 @@
                                                         <th>A PAGAR</th>
                                                         <th>TIPO VENTA</th>
                                                         <th>USUARIO</th>
+                                                        <th>RFC</th>
                                                         <th>PUESTO</th>
                                                         <th>FEC. ENVÍO</th>
                                                         <th>MÁS</th>
@@ -375,7 +376,7 @@
                     titleAttr: 'Descargar archivo de Excel',
                     title: 'ASIMILADOS_INTERNOMEX_COMISIONES',
                     exportOptions: {
-                        columns: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17],
+                        columns: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18],
                         format: {
                             header:  function (d, columnIdx) {
                                 if(columnIdx == 0){
@@ -411,10 +412,12 @@
                                 }else if(columnIdx == 15){
                                     return 'COMISIONISTA';
                                 }else if(columnIdx == 16){
-                                    return 'PUESTO';
+                                    return 'RFC';
                                 }else if(columnIdx == 17){
+                                    return 'PUESTO';
+                                }else if(columnIdx == 18){
                                     return 'FECH. ENVÍO';
-                                } else if(columnIdx != 18 && columnIdx !=0){
+                                } else if(columnIdx != 19 && columnIdx !=0){
                                     return ' '+titulos[columnIdx-1] +' ';
                                 }
                             }
@@ -454,7 +457,7 @@
                     }
                 },
                 {
-                    "width": "8%",
+                    "width": "7%",
                     "data": function( d ){
                         return '<p class="m-0"><b>'+d.lote+'</b></p>';
                     }
@@ -467,7 +470,7 @@
                     }
                 },
                 {
-                    "width": "7%",
+                    "width": "6%",
                     "data": function( d ){
                         return '<p class="m-0">$'+formatMoney(d.precio_lote)+'</p>';
                     }
@@ -515,7 +518,7 @@
                     }
                 },
                 {
-                    "width": "8%",
+                    "width": "6%",
                     "data": function( d ){
                         if(d.lugar_prospeccion == 6){
                             return '<p class="m-0">COMISIÓN + MKTD <br><b> ('+d.porcentaje_decimal+'% de '+d.porcentaje_abono+'%)</b></p>';
@@ -527,9 +530,15 @@
                     }
                 },
                 {
-                    "width": "8%",
+                    "width": "6%",
                     "data": function( d ){
                         return '<p class="m-0"><b>'+d.usuario+'</b></i></p>';
+                    }
+                },
+                {
+                    "width": "6%",
+                    "data": function( d ){
+                        return '<p class="m-0"><b>'+d.rfc+'</b></i></p>';
                     }
                 },
 
@@ -668,9 +677,9 @@
             return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
         };
 
-        /*function cancela(){
+        function cancela(){
             $("#modal_nuevas").modal('toggle');
-        }*/
+        }
 
         $("#form_interes").submit( function(e) {
             e.preventDefault();
@@ -781,7 +790,7 @@
         });
 
         //Función para regresar a estatus 7 la solicitud
-        /*$("#form_refresh").submit( function(e) {
+        $("#form_refresh").submit( function(e) {
             e.preventDefault();
         }).validate({
             submitHandler: function( form ) {
@@ -814,20 +823,20 @@
                     }
                 });
             }
-        });*/
+        });
 
-        /*$(document).on("click", ".btn-historial-lo", function(){
+        $(document).on("click", ".btn-historial-lo", function(){
             window.open(url+"Comisiones/getHistorialEmpresa", "_blank");
-        });*/
+        });
 
 
-        /*function cleanComments(){
+        function cleanComments(){
             var myCommentsList = document.getElementById('documents');
             myCommentsList.innerHTML = '';
 
             var myFactura = document.getElementById('facturaInfo');
             myFactura.innerHTML = '';
-        }*/
+        }
 
         function selectAll(e) {
             tota2 = 0;
@@ -844,14 +853,14 @@
     </script>
 
     <script>
-        /*$(document).ready( function(){
+        $(document).ready( function(){
             $.getJSON( url + "Comisiones/getReporteEmpresa").done( function( data ){
                 $(".report_empresa").html();
                 $.each( data, function( i, v){
                     $(".report_empresa").append('<div class="col xol-xs-3 col-sm-3 col-md-3 col-lg-3"><label style="color: #00B397;">&nbsp;'+v.empresa+': $<input style="border-bottom: none; border-top: none; border-right: none;  border-left: none; background: white; color: #00B397; font-weight: bold;" value="'+formatMoney(v.porc_empresa)+'" disabled="disabled" readonly="readonly" type="text"  name="myText_FRO" id="myText_FRO"></label></div>');
                 });
             });
-        });*/
+        });
 
         $("#form_multiples").submit( function(e) {
             $('#spiner-loader').removeClass('hidden');
