@@ -1572,83 +1572,142 @@ class Postventa extends CI_Controller
     }
 
     function getData(){
+        $data = $this->Postventa_model->getData_contraloria()->result();
+        switch ($this->session->userdata('id_rol')){
+            case '32': //CONTRALORIA 
+                $columns = array(
+                    [
+                        "title" => 'ID',
+                        "data" => 'idSolicitud'
+                    ],
+                    [
+                        "title" => 'Lote',
+                        "data" => 'nombreLote'
+                    ],
+                    [
+                        "title" => 'Condominio',
+                        "data" => 'nombreCondominio'
+                    ],
+                    [
+                        "title" => 'Residencial',
+                        "data" => 'nombreResidencial'
+                    ],
+                    [
+                        "title" => 'Cliente',
+                        "data" => 'nombre'
+                    ],
+                    [
+                        "title" => 'Estatus',
+                        "data" => 'estatus'
+                    ],
+                    [
+                        "title" => 'Area',
+                        "data" => 'area'
+                    ],
+                    [
+                        "title" => 'Vigencia',
+                        "data" => 'atrasado'
+                    ],
+                    [
+                        "title" => 'Dias de atraso',
+                        "data" => 'diferencia'
+                    ],
+                    [
+                        "title" => 'Fecha del estatus',
+                        "data" => 'fecha_creacion'
+                    ],
+                );
+            break;
 
-        if($this->session->userdata('id_rol') == 32){
-            $columns = array(
-                [
-                    "title" => 'ID',
-                    "data" => 'idSolicitud'
-                ],
-                [
-                    "title" => 'Lote',
-                    "data" => 'nombreLote'
-                ],
-                [
-                    "title" => 'Condominio',
-                    "data" => 'nombreCondominio'
-                ],
-                [
-                    "title" => 'Residencial',
-                    "data" => 'nombreResidencial'
-                ],
-                [
-                    "title" => 'Cliente',
-                    "data" => 'nombre'
-                ],
-                [
-                    "title" => 'Estatus',
-                    "data" => 'estatus'
-                ],
-                [
-                    "title" => 'Area',
-                    "data" => 'area'
-                ],
-                [
-                    "title" => 'Vigencia',
-                    "data" => 'atrasado'
-                ],
-                [
-                    "title" => 'Dias de atraso',
-                    "data" => 'diferencia'
-                ],
-                [
-                    "title" => 'Fecha del estatus',
-                    "data" => 'fecha_creacion'
-                ],
-            );
-            $data = $this->Postventa_model->getData_contraloria()->result();
-        }else if($this->session->userdata('id_rol') == 57){
-            $columns = array(
-                [
-                    "title" => 'ID',
-                    "data" => 'idSolicitud'
-                ],
-                [
-                    "title" => 'Lote',
-                    "data" => 'nombreLote'
-                ],
-                [
-                    "title" => 'Condominio',
-                    "data" => 'nombreCondominio'
-                ],
-                [
-                    "title" => 'Residencial',
-                    "data" => 'nombreResidencial'
-                ],
-                [
-                    "title" => 'Cliente',
-                    "data" => 'nombre'
-                ],
-                [
-                    "title" => 'Estatus',
-                    "data" => 'estatus'
-                ],
-                [
-                    "title" => 'Area',
-                    "data" => 'area'
-                ],
-            );
-            $data = $this->Postventa_model->getData_titulacion()->result();
+            case 55: //POSTVENTA
+                $columns = array(
+                    [
+                        "title" => 'ID',
+                        "data" => 'idSolicitud'
+                    ],
+                    [
+                        "title" => 'Lote',
+                        "data" => 'nombreLote'
+                    ],
+                    [
+                        "title" => 'Condominio',
+                        "data" => 'nombreCondominio' 
+                    ],
+                    [
+                        "title" => 'Residencial',
+                        "data" => 'nombreResidencial'
+                    ],
+                    [
+                        "title" => 'Cliente',
+                        "data" => 'nombre'
+                    ],
+                    [
+                        "title" => 'Estatus',
+                        "data" => 'estatus'
+                    ],
+                    [
+                        "title" => 'Area',
+                        "data" => 'area'
+                    ],
+                    [
+                        "title" => 'Vigencia',
+                        "data" => 'atrasado'
+                    ],
+                    [
+                        "title" => 'Días de atraso',
+                        "data" => 'diferencia'
+                    ],
+                    [
+                        "title" => 'Fecha del estatus',
+                        "data" => 'fecha_creacion'
+                    ]
+                );
+            break;
+
+            case 57: //TITULACION
+                $columns = array(
+                    [
+                        "title" => 'ID',
+                        "data" => 'idSolicitud'
+                    ],
+                    [
+                        "title" => 'Lote',
+                        "data" => 'nombreLote'
+                    ],
+                    [
+                        "title" => 'Condominio',
+                        "data" => 'nombreCondominio'
+                    ],
+                    [
+                        "title" => 'Residencial',
+                        "data" => 'nombreResidencial'
+                    ],
+                    [
+                        "title" => 'Cliente',
+                        "data" => 'nombre'
+                    ],
+                    [
+                        "title" => 'Estatus',
+                        "data" => 'estatus'
+                    ],
+                    [
+                        "title" => 'Area',
+                        "data" => 'area'
+                    ],
+                    [
+                        "title" => 'Vigencia',
+                        "data" => 'atrasado'
+                    ],
+                    [
+                        "title" => 'Días de atraso',
+                        "data" => 'diferencia'
+                    ],
+                    [
+                        "title" => 'Fecha del estatus',
+                        "data" => 'fecha_creacion'
+                    ]
+                );
+            break;
         }
 
         $array = [

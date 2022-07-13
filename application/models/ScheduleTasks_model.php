@@ -225,4 +225,18 @@
 		$query = $this->db->query("DELETE FROM session_sisfusion WHERE id IN (SELECT id FROM session_sisfusion WHERE data LIKE '%id_usuario|i:$user%')");
 		return $query;
 	}
+
+	public function getPresupuestos(){
+		$mes = date('m');
+		$year = date('Y');
+
+		return $this->db->query("SELECT idPresupuesto, expediente, idSolicitud, estatus, tipo, fecha_creacion, creado_por, modificado_por, bandera
+		FROM Presupuestos
+		WHERE estatus = 0 AND tipo = 2 
+		AND idPresupuesto NOT IN 
+			(SELECT idPresupuesto 
+			FROM Presupuestos
+			WHERE fecha_creacion BETWEEN '$year-$mes-01 00:00:00' AND '$year-$mes-10 23:59:59')");
+									
+	}
 }
