@@ -2,7 +2,7 @@
 
 <div class="container-fluid p-0">
     <div class="row" id="mainRow">
-        <div class="col-12 col-sm-6 col-md-6 col-lg-6 inactivo flexible">
+        <div class="col-12 col-sm-12 col-md-12 col-lg-6 inactivo flexibleR">
             <div class="card">
                 <div class="container-fluid h-100">
                     <div class="row h-100">
@@ -16,13 +16,13 @@
                                         <span class="material-icons update-dataTable">search</span>
                                     </button>
                                 </div>
-                                <button class="btn-charts" onclick="toggleDatatable(this)"><i class="far fa-list-alt"></i></button>
+                                <button class="btn-charts" onclick="toggleDatatable(this)" rel="tooltip" data-placement="bottom" title="Mostrar tabla"><i class="far fa-list-alt"></i></button>
                             </div>
                             <div id="boxChart" class="h-80 boxChart">
                                 <div id="chart" class="chart"></div>
                             </div>
                             <div class="h-10">
-                                <h5 class="m-0 text-center">Ventas de apartados</h5>
+                                <h5 class="m-0 text-center titles">Ventas de apartados</h5>
                             </div>
                         </div>
                         <div id="Apartados" class="col-12 col-sm-6 col-md-6 col-lg-6 col-datatable hidden h-100 p-0">
@@ -31,7 +31,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-12 col-sm-6 col-md-6 col-lg-6 inactivo flexible">
+        <div class="col-12 col-sm-12 col-md-12 col-lg-6 inactivo flexibleR">
             <div class="card">
                 <div class="container-fluid h-100">
                     <div class="row h-100">
@@ -45,13 +45,13 @@
                                         <span class="material-icons update-dataTable">search</span>
                                     </button>
                                 </div>
-                                <button class="btn-charts" onclick="toggleDatatable(this)"><i class="far fa-list-alt"></i></button>
+                                <button class="btn-charts" onclick="toggleDatatable(this)" rel="tooltip" data-placement="bottom" title="Mostrar tabla"><i class="far fa-list-alt"></i></button>
                             </div>
                             <div id="boxChart2" class="h-80 boxChart">
                                 <div id="chart2" class="chart"></div>
                             </div>
                             <div class="h-10">
-                                <h5 class="m-0 text-center">Ventas con contrato</h5>
+                                <h5 class="m-0 text-center titles">Ventas con contrato</h5>
                             </div>
                         </div>
                         <div id="Contratados" class="col-12 col-sm-6 col-md-6 col-lg-6 col-datatable hidden">
@@ -60,7 +60,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-12 col-sm-6 col-md-6 col-lg-6 inactivo flexible">
+        <div class="col-12 col-sm-12 col-md-12 col-lg-6 inactivo flexibleR">
             <div class="card">
                 <div class="container-fluid h-100">
                     <div class="row h-100">
@@ -74,13 +74,13 @@
                                         <span class="material-icons update-dataTable">search</span>
                                     </button>
                                 </div>
-                                <button class="btn-charts" onclick="toggleDatatable(this)"><i class="far fa-list-alt"></i></button>
+                                <button class="btn-charts" onclick="toggleDatatable(this)" rel="tooltip" data-placement="bottom" title="Mostrar tabla"><i class="far fa-list-alt"></i></button>
                             </div>
                             <div id="boxChart3" class="h-80 boxChart">
                                 <div id="chart3" class="chart"></div>
                             </div>
                             <div class="h-10">
-                                <h5 class="m-0 text-center">Ventas con enganche</h5>
+                                <h5 class="m-0 text-center titles">Ventas con enganche</h5>
                             </div>
                         </div>
                         <div id="ConEnganche" class="col-12 col-sm-6 col-md-6 col-lg-6 col-datatable hidden">
@@ -89,7 +89,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-12 col-sm-6 col-md-6 col-lg-6 inactivo flexible">
+        <div class="col-12 col-sm-12 col-md-12 col-lg-6 inactivo flexibleR">
             <div class="card">
                 <div class="container-fluid h-100">
                     <div class="row h-100">
@@ -103,13 +103,13 @@
                                         <span class="material-icons update-dataTable">search</span>
                                     </button>
                                 </div>
-                                <button class="btn-charts" onclick="toggleDatatable(this)"><i class="far fa-list-alt"></i></button>
+                                <button type="btn" class="btn-charts"  rel="tooltip" data-placement="bottom" title="Mostrar tabla" onclick="toggleDatatable(this)"><i class="far fa-list-alt"></i></button>
                             </div>
                             <div id="boxChart4" class="h-80 boxChart">
                                 <div id="chart4" class="chart"></div>
                             </div>
                             <div class="h-10">
-                                <h5 class="m-0 text-center">Ventas sin enganche</h5>
+                                <h5 class="m-0 text-center titles">Ventas sin enganche</h5>
                             </div>
                         </div>
                         <div id="sinEnganche" class="col-12 col-sm-6 col-md-6 col-lg-6 col-datatable hidden">

@@ -347,6 +347,8 @@
 							color='7282ED';
 						}else if(d.id_opcion == 22){ //MANTENIMIENTO
 							color='CA72ED';
+						}else if(d.id_opcion == 23){ //MANTENIMIENTO
+							color='CA15ED';
 						}
 
 						return '<p><span class="label" style="background:#'+color+';">'+d.tipo+'</span></p>';

@@ -21,7 +21,7 @@
 }
 
 .mb-0 {
-  margin-bottom: 0px;
+  margin-bottom: 0px !important;
 }
 
 .mb-1 {
@@ -41,7 +41,7 @@
 }
 
 .mt-0 {
-  margin-top: 0px;
+  margin-top: 0px !important;
 }
 
 .mt-1 {
@@ -214,6 +214,10 @@
   width: auto !important;
 }
 
+.h-auto {
+  height: auto !important;
+}
+
 .h-100 {
   height: 100% !important;
 }
@@ -231,23 +235,23 @@
 }
 
 .h-60 {
-  height: 60%;
+  height: 60% !important;
 }
 
 .h-50 {
-  height: 50%;
+  height: 50% !important;
 }
 
 .h-40 {
-  height: 40%;
+  height: 40% !important;
 }
 
 .h-30 {
-  height: 30%;
+  height: 30% !important;
 }
 
 .h-25 {
-  height: 25%;
+  height: 25% !important;
 }
 
 .h-20 {
@@ -340,6 +344,10 @@
   display: none;
 }
 
+.d-block {
+  display: block;
+}
+
 .d-flex {
   display: flex;
 }
@@ -376,6 +384,14 @@
   flex-direction: row-reverse;
 }
 
+.direction-column {
+  flex-direction: column;
+}
+
+.direction-row {
+  flex-direction: row;
+}
+
 /* END Flexbox */
 /* Text */
 .text-center {
@@ -388,6 +404,10 @@
 
 .text-right {
   text-align: right !important;
+}
+
+.text-justify {
+  text-align: justify !important;
 }
 
 .fw-100 {
@@ -1045,14 +1065,23 @@
 }
 
 /* tooltip styles */
+.tooltip {
+  width: fit-content;
+}
+
 .tooltip .tooltip-inner {
   padding: 5px 10px;
-  color: white;
+  color: #ffffff;
   background-color: #333333;
+  width: fit-content;
 }
 
 .tooltip.top .tooltip-arrow {
   border-top-color: #333333;
+}
+
+.tooltip.bottom .tooltip-arrow {
+  border-bottom-color: #333333;
 }
 
 /* tooltip styles */
@@ -1135,6 +1164,16 @@
 .form1 .select-gral {
   border-radius: 27px !important;
   height: 45px;
+  -webkit-border-radius: 27px !important;
+  -moz-border-radius: 27px !important;
+  -ms-border-radius: 27px !important;
+  -o-border-radius: 27px !important;
+}
+
+.form1 .select-gral-sede {
+  border-radius: 27px !important;
+  height: 45px;
+  padding-bottom: 10%;
   -webkit-border-radius: 27px !important;
   -moz-border-radius: 27px !important;
   -ms-border-radius: 27px !important;
@@ -1329,7 +1368,7 @@ Licensed under MIT
   position: absolute;
   top: -10px;
   left: 125px;
-  font-size: 22px;
+  font-size: 18px;
   background: none;
   color: #5a6674;
   width: 110px;
@@ -1337,6 +1376,7 @@ Licensed under MIT
   border: none;
   appearance: none;
   outline: none;
+  text-align: center;
 }
 
 #ModalMsi .input-descuento::-webkit-search-cancel-button {
@@ -1358,9 +1398,62 @@ Licensed under MIT
   background: #FFF;
   border-radius: 10px;
   cursor: pointer;
-  margin: 20px 0;
+  margin: 40px 10px;
   padding: 5px 10px;
   transition: all 0.5s ease-out;
+  /*-------------------------------------------------------------------------------**/
+  /*-------------------------------------------------------------------------------*/
+}
+
+.rowCards .boxCard .check-box1 {
+  display: flex;
+  column-gap: .3em;
+  align-items: center;
+  font-family: sans-serif;
+  font-size: 13px;
+  margin-bottom: 25px;
+  --checked-color: rgb(44, 143, 197);
+  --unchecked-color: #aaa;
+  --checked-disabled-color: #73c3d8;
+  --unchecked-disabled-color: #ddd;
+  margin-top: 25px;
+}
+
+.rowCards .boxCard .check-box__switcher {
+  font-size: inherit;
+  appearance: none;
+  height: 1em;
+  width: 1.5em;
+  margin: 0;
+  border-radius: 1em;
+  background-color: var(--unchecked-color);
+  background-image: url('data:image/svg+xml,%3C%3Fxml version="1.0"%3F%3E%3Csvg width="20" height="20" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg"%3E%3Ccircle cx="10" cy="10" fill="%23ffffff" r="10"/%3E%3C/svg%3E');
+  background-repeat: no-repeat;
+  background-size: auto calc(100% - 4px);
+  background-position: center left 2px;
+  transition: background-position .2s ease-in, background-color 0s .1s;
+  cursor: pointer;
+}
+
+.rowCards .boxCard .check-box__switcher:checked {
+  background-position: center right 2px;
+  background-color: var(--checked-color);
+}
+
+.rowCards .boxCard .check-box__switcher:disabled:checked {
+  background-position: center right 2px;
+  background-color: var(--checked-disabled-color);
+  cursor: pointer;
+}
+
+.rowCards .boxCard .check-box__switcher:disabled {
+  background-position: center left 2px;
+  background-color: var(--unchecked-disabled-color);
+  cursor: pointer;
+}
+
+.rowCards .boxCard .title-plan {
+  padding-top: 15px;
 }
 
 .rowCards .boxCard .myCard {

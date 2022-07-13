@@ -603,9 +603,13 @@
 		function calculaMoratorio() {
             let fecha_input = new Date($scope.fechaField);
             let dayCorrect = (fecha_input.getDate() < 10) ? '0'+fecha_input.getDate() : fecha_input.getDate();
+            let monthCorrect = ((fecha_input.getMonth()+ 1) < 10) ? '0'+(fecha_input.getMonth()+ 1) : (fecha_input.getMonth()+ 1);
+            let yearCorrect = (fecha_input.getFullYear());
             console.log('fecha_input: ', fecha_input);
             console.log('día: ', dayCorrect);
             day = dayCorrect;
+            mes = monthCorrect;
+            yearc = yearCorrect;
 
 		    var saldoInsoluto = (document.getElementById('SIField').value).replace(/,/g, "");
 		    // console.log(saldoInsoluto.replace(/,/g, ""));
@@ -705,6 +709,8 @@
 
                         $scope.addCheckToArray = function()
                         {
+                            var checksArray = [];
+                            var arrayCheckAllPost = [];
                             var PositionPago = document.getElementsByName("pagoDiasRetPosicionJS")[0].value;
                             var checkPagoname = document.getElementsByName("checkPagoname")[0].value;
                             console.log('Add to array: position ' + checkPagoname);
@@ -755,6 +761,7 @@
 							//IM = ((importeSaldoI * (ope / 360)) * diasRetardo);
 							var intFinal = InteresM/100;
 							IM = (saldoInsoluto*intFinal/30.4)*diasRetardo;///30.4*diasRetardo
+
                             // console.log("este es un check de prueba: " + check);
 							<?php include("dist/js/controllers/calculoMoratorio.js"); ?>
 							console.log("Interes Moratorio en esta posicion " + IM);
@@ -812,9 +819,11 @@
                     ini2 = ($scope.mesesdiferir > 0) ? (range.length + $scope.mesesdiferir) : range.length;
 
                     if ($scope.infoMoratorio.mesesSinInteresP1 == 0) {
+
                         /*Cuanod el rango el II*/
 						$scope.addCheckToArray = function()
 						{
+                            var checksArray = [];
 							var PositionPago = document.getElementsByName("pagoDiasRetPosicionJS")[0].value;
 							var checkPagoname = document.getElementsByName("checkPagoname")[0].value;
 							console.log('Add to array: position ' + checkPagoname);
@@ -1049,6 +1058,8 @@
 
 							$scope.addCheckToArray = function()
 							{
+                                var checksArray = [];
+                                var arrayCheckAllPost = [];
 								var PositionPago = document.getElementsByName("pagoDiasRetPosicionJS")[0].value;
 								var checkPagoname = document.getElementsByName("checkPagoname")[0].value;
 								console.log('Add to array: position ' + checkPagoname);
@@ -1157,6 +1168,8 @@
                             // $scope.total2 = $scope.infoMoratorio.si;
 							$scope.addCheckToArray = function()
 							{
+                                var checksArray = [];
+                                var arrayCheckAllPost = [];
 								var PositionPago = document.getElementsByName("pagoDiasRetPosicionJS")[0].value;
 								var checkPagoname = document.getElementsByName("checkPagoname")[0].value;
 								console.log('Add to array: position ' + checkPagoname);
@@ -1388,6 +1401,8 @@
 
 							$scope.addCheckToArray = function()
 							{
+                                var checksArray = [];
+                                var arrayCheckAllPost = [];
 								var PositionPago = document.getElementsByName("pagoDiasRetPosicionJS")[0].value;
 								var checkPagoname = document.getElementsByName("checkPagoname")[0].value;
 								console.log('Add to array: position ' + checkPagoname);
@@ -1501,6 +1516,8 @@
 
 							$scope.addCheckToArray = function()
 							{
+                                var checksArray = [];
+                                var arrayCheckAllPost = [];
 								var PositionPago = document.getElementsByName("pagoDiasRetPosicionJS")[0].value;
 								var checkPagoname = document.getElementsByName("checkPagoname")[0].value;
 								console.log('Add to array: position ' + checkPagoname);

@@ -21,7 +21,7 @@
 }
 
 .mb-0 {
-  margin-bottom: 0px;
+  margin-bottom: 0px !important;
 }
 
 .mb-1 {
@@ -41,7 +41,7 @@
 }
 
 .mt-0 {
-  margin-top: 0px;
+  margin-top: 0px !important;
 }
 
 .mt-1 {
@@ -214,6 +214,10 @@
   width: auto !important;
 }
 
+.h-auto {
+  height: auto !important;
+}
+
 .h-100 {
   height: 100% !important;
 }
@@ -231,23 +235,23 @@
 }
 
 .h-60 {
-  height: 60%;
+  height: 60% !important;
 }
 
 .h-50 {
-  height: 50%;
+  height: 50% !important;
 }
 
 .h-40 {
-  height: 40%;
+  height: 40% !important;
 }
 
 .h-30 {
-  height: 30%;
+  height: 30% !important;
 }
 
 .h-25 {
-  height: 25%;
+  height: 25% !important;
 }
 
 .h-20 {
@@ -340,6 +344,10 @@
   display: none;
 }
 
+.d-block {
+  display: block;
+}
+
 .d-flex {
   display: flex;
 }
@@ -376,6 +384,14 @@
   flex-direction: row-reverse;
 }
 
+.direction-column {
+  flex-direction: column;
+}
+
+.direction-row {
+  flex-direction: row;
+}
+
 /* END Flexbox */
 /* Text */
 .text-center {
@@ -388,6 +404,10 @@
 
 .text-right {
   text-align: right !important;
+}
+
+.text-justify {
+  text-align: justify !important;
 }
 
 .fw-100 {
@@ -1045,14 +1065,23 @@
 }
 
 /* tooltip styles */
+.tooltip {
+  width: fit-content;
+}
+
 .tooltip .tooltip-inner {
   padding: 5px 10px;
-  color: white;
+  color: #ffffff;
   background-color: #333333;
+  width: fit-content;
 }
 
 .tooltip.top .tooltip-arrow {
   border-top-color: #333333;
+}
+
+.tooltip.bottom .tooltip-arrow {
+  border-bottom-color: #333333;
 }
 
 /* tooltip styles */
@@ -1099,9 +1128,21 @@
   background-color: #F1F1F1;
 }
 
+#allAppointmentsModal .table-striped thead > tr th {
+  white-space: nowrap !important;
+}
+
 .form-control[disabled] {
   border-bottom: none !important;
   opacity: .65;
+}
+
+.card {
+  box-shadow: 0px 2px 9px -12px RGB(0 0 0/42%), 0 4px 25px 0px RGB(0 0 0/12%), 0 8px 10px -5px RGB(0 0 0/20%);
+}
+
+#calendar table.dataTable > thead > tr > th, #calendar table.dataTable > tbody > tr > th, #calendar table.dataTable > tfoot > tr > th, #calendar table.dataTable > thead > tr > td, #calendar table.dataTable > tbody > tr > td, #calendar table.dataTable > tfoot > tr > td {
+  white-space: nowrap !important;
 }
 
 #calendar .fc-toolbar-chunk {
@@ -1123,7 +1164,7 @@
 }
 
 #calendar .fc-toolbar-chunk .fc-today-button, #calendar .fc-toolbar-chunk .fc-appointments-button, #calendar .fc-toolbar-chunk .fc-timeGridDay-button, #calendar .fc-toolbar-chunk .fc-timeGridWeek-button, #calendar .fc-toolbar-chunk .fc-dayGridMonth-button {
-  background-color: #D1EEFF;
+  background-color: #1341761a;
   border: none;
   box-shadow: none;
   border-radius: 27px;
@@ -1170,7 +1211,7 @@
 }
 
 #calendar .fc-toolbar-chunk .fc-button-active {
-  background-color: #00A0FF;
+  background-color: #103f75;
   color: #ffffff;
 }
 
@@ -1195,7 +1236,7 @@
 }
 
 #calendar .fc-view-harness .fc-scrollgrid .fc-day-today .fc-daygrid-day-top a {
-  background-color: #4382EF;
+  background-color: #103f75;
   height: 25px;
   width: 25px;
   border-radius: 25px;
@@ -1224,6 +1265,12 @@
 
 #calendar .fc-daygrid-event {
   padding-left: 4px;
+}
+
+@media (min-device-width: 320px) and (max-device-width: 480px) {
+  #calendar .selects .col-12 {
+    padding: 0 15px !important;
+  }
 }
 
 #feedbackModal .radio-with-Icon input[type="radio"]:checked ~ label i {
@@ -1281,9 +1328,10 @@
   border-right: 1px solid #c1c1c1;
 }
 
-#allAppointmentsModal .table-striped tbody tr td:nth-child(3) {
+#allAppointmentsModal .table-striped tbody tr td:nth-child(4) {
   display: flex;
   justify-content: center;
+  padding: 10px 0 !important;
 }
 
 #allAppointmentsModal .table-striped tbody tr td:nth-child(4):focus-within {
@@ -1300,7 +1348,7 @@
 }
 
 #allAppointmentsModal .table-striped tbody select {
-  width: 88% !important;
+  width: 100% !important;
   background-image: none;
   color: #003d82;
   -moz-appearance: none;

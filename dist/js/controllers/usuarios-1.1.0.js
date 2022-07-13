@@ -242,6 +242,16 @@ $(document).ready( function() {
 
                 var id_rol = id_rol_global;
                 // localStorage.getItem('id_rol');
+                if(id_rol == 8 && userId != 1297 && d.puesto == 'Contraloría' && d.estatus == 1){
+                    return '<div class="d-flex justify-center"><button class="btn-data btn-orangeYellow  see-changes-log" data-id-usuario="' + d.id_usuario +'" ><i class="fas fa-eye"></i> </button>' +
+                    '<button class="btn-data btn-green change-user-status" title="Dar de baja" id="' + d.id_usuario +'" data-estatus="0" data-id-usuario="' + d.id_usuario +'" data-name="'+d.nombre+'" data-rol="'+d.puesto+'"><i class="fas fa-lock-open"></i></button></div>';
+                }else{
+                    if(id_rol == 8 && userId != 1297 && d.puesto == 'Contraloría' && d.estatus == 0){
+                        return '<div class="d-flex justify-center"><button class="btn-data btn-orangeYellow  see-changes-log" data-id-usuario="' + d.id_usuario +'" ><i class="fas fa-eye"></i> </button>' +
+                        '<button class="btn-data btn-warning change-user-status" id="' + d.id_usuario +'" data-estatus="1" data-id-usuario="' + d.id_usuario +'" data-name="'+d.nombre+'" data-rol="'+d.puesto+'"><i class="fas fa-lock"></i></button></div>';
+                    }
+                }
+
                 if(id_rol==53){
                     return '<button class="btn-data btn-azure see-changes-log" data-id-usuario="' + d.id_usuario +'"><span class="material-icons">visibility</span> </button>';
                 }else if(id_rol == 41){
@@ -267,6 +277,7 @@ $(document).ready( function() {
                         }
 
                     }
+                    
                 }
 
                 }
@@ -587,7 +598,7 @@ if(estatus == 0 && (id_rol == 'Asesor' || id_rol == 'Gerente' || id_rol == 'Coor
     $('#id_rol').val(0);
     $('#status').val(0);
     if(estatus == 0){
-        document.getElementById('msj').innerHTML = '¿Esta seguro que desea dar de baja a ';
+        document.getElementById('msj').innerHTML = '¿Está seguro que desea dar de baja a ';
         document.getElementById('nameUs2').innerHTML = nameUser;
         //alert('baja');
         $('#iduser').val(id_user);
@@ -596,7 +607,7 @@ if(estatus == 0 && (id_rol == 'Asesor' || id_rol == 'Gerente' || id_rol == 'Coor
         $("#BajaConfirm").modal();
 
     }else{
-        document.getElementById('msj').innerHTML = '¿Esta seguro que desea dar de alta a ';
+        document.getElementById('msj').innerHTML = '¿Está seguro que desea dar de alta a ';
         document.getElementById('nameUs2').innerHTML = nameUser;
        // alert('alta');
         $('#iduser').val(id_user);

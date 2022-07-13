@@ -35,7 +35,7 @@ $(document).ready(function(){
 var options = {
     series: [],
     chart: {
-        height: 'auto',
+        height: '100%',
         type: 'bar',
         toolbar: {
             show: false
@@ -136,7 +136,7 @@ function buildChartsID(){
 }
 
 function toggleDatatable(e){
-    var columnaActiva = e.closest( '.flexible' );
+    var columnaActiva = e.closest( '.flexibleR' );
     var columnaChart = e.closest( '.col-chart' );
     var columnDatatable = $( e ).closest( '.row' ).find( '.col-datatable' );
     $( columnDatatable ).html('');
@@ -181,9 +181,8 @@ function buildEstructuraDT(dataName, dataApartados){
 }
 
 function reorderColumns(){
-    var principalColumns = document.getElementsByClassName("flexible");
+    var principalColumns = document.getElementsByClassName("flexibleR");
     var mainRow = document.getElementById('mainRow');
-   
     let opts = getCacheOptions();
     let dates = getCacheDates();
     var elements = document.createDocumentFragment();
@@ -236,8 +235,8 @@ function reorderColumns(){
                         buildEstructuraDT(id, dataConEnganche);
                         buildTableConEnganche(dataConEnganche);
                     }
-                    else if( id == 'SinEnganche' ){
-                        buildEstructuraDT(id, dataConEnganche);
+                    else if( id == 'sinEnganche' ){
+                        buildEstructuraDT(id, dataSinEnganche);
                         buildTableSinEnganche(dataSinEnganche);
                     }
                 }
@@ -252,7 +251,7 @@ function getRankings(general = false, typeRanking = null){
     let sede = getSede(typeRanking);
     $.ajax({
         type: 'POST',
-        url: `Ranking/getAllRankings`,
+        url: `${base_url}Ranking/getAllRankings`,
         data: {general: general, typeRanking: typeRanking,beginDate: dates.beginDate, endDate: dates.endDate, sede: sede},
         dataType: 'json',
         cache: false,
@@ -287,10 +286,10 @@ function divideRankingArrays(data){
             dataConEnganche = value;
         }
         else if(key == 'SinEnganche'){
-            dataConEnganche = value;
+            dataSinEnganche = value;
         }
     });
-    return {dataApartados:dataApartados, dataContratados:dataContratados, dataConEnganche:dataConEnganche, dataConEnganche:dataConEnganche}
+    return {dataApartados:dataApartados, dataContratados:dataContratados, dataConEnganche:dataConEnganche, dataSinEnganche:dataSinEnganche}
 }
 
 function buildTableApartados(data){
@@ -314,7 +313,7 @@ function buildTableApartados(data){
         ordering: false,
         scrollX: true,
         language: {
-            url: "static/spanishLoader_v2.json",
+            url: `${base_url}static/spanishLoader_v2.json`,
             paginate: {
                 previous: "<i class='fa fa-angle-left'>",
                 next: "<i class='fa fa-angle-right'>"
@@ -322,17 +321,35 @@ function buildTableApartados(data){
         },
         data: data,
         columns: [{
-            data: 'totalAT'
+            title: 'Totales',
+            data: function(d){
+                return d.totalAT
+            }
         },
         {
-            data: 'id_asesor'
+            title: 'Suma',
+            data: function(d){
+                return d.sumaTotal
+            }
         },
         {
-            data: 'nombreUsuario'
+            title: 'Nombre',
+            data: function(d){
+                return d.nombreUsuario
+            }
         },
         {
-            data: 'id_rol'
-        }],
+            title: 'Puesto',
+            data: function(d){
+                return d.rol
+            }
+        },
+        {
+            title: 'ID',
+            data: function(d){
+                return d.id_asesor
+            }
+        },],
         columnDefs: [{
             visible: false,
             searchable: false
@@ -361,7 +378,7 @@ function buildTableContratados(data){
         ordering: false,
         scrollX: true,
         language: {
-            url: "static/spanishLoader_v2.json",
+            url: `${base_url}static/spanishLoader_v2.json`,
             paginate: {
                 previous: "<i class='fa fa-angle-left'>",
                 next: "<i class='fa fa-angle-right'>"
@@ -369,17 +386,35 @@ function buildTableContratados(data){
         },
         data: data,
         columns: [{
-            data: 'totalConT'
+            title: 'Totales',
+            data: function(d){
+                return d.totalConT
+            }
         },
         {
-            data: 'id_asesor'
+            title: 'Suma',
+            data: function(d){
+                return d.sumaTotal
+            }
         },
         {
-            data: 'nombreUsuario'
+            title: 'Nombre',
+            data: function(d){
+                return d.nombreUsuario
+            }
         },
         {
-            data: 'id_rol'
-        }],
+            title: 'Puesto',
+            data: function(d){
+                return d.rol
+            }
+        },
+        {
+            title: 'ID',
+            data: function(d){
+                return d.id_asesor
+            }
+        },],
         columnDefs: [{
             visible: false,
             searchable: false
@@ -408,7 +443,7 @@ function buildTableConEnganche(data){
         ordering: false,
         scrollX: true,
         language: {
-            url: "static/spanishLoader_v2.json",
+            url: `${base_url}static/spanishLoader_v2.json`,
             paginate: {
                 previous: "<i class='fa fa-angle-left'>",
                 next: "<i class='fa fa-angle-right'>"
@@ -416,14 +451,35 @@ function buildTableConEnganche(data){
         },
         data: data,
         columns: [{
-            data: 'cuantos'
+            title: 'Totales',
+            data: function(d){
+                return d.cuantos
+            }
         },
         {
-            data: 'asesor'
+            title: 'Suma',
+            data: function(d){
+                return d.sumaTotal
+            }
         },
         {
-            data: 'id_asesor'
-        }],
+            title: 'Nombre',
+            data: function(d){
+                return d.asesor
+            }
+        },
+        {
+            title: 'Puesto',
+            data: function(d){
+                return d.rol
+            }
+        },
+        {
+            title: 'ID',
+            data: function(d){
+                return d.id_asesor
+            }
+        },],
         columnDefs: [{
             visible: false,
             searchable: false
@@ -432,18 +488,18 @@ function buildTableConEnganche(data){
 }
 
 function buildTableSinEnganche(data){
-    $('#tableSinEnganche thead tr:eq(0) th').each(function (i) {
+    $('#tablesinEnganche thead tr:eq(0) th').each(function (i) {
         const title = $(this).text();
         $(this).html('<input type="text" center;" class="textoshead"  placeholder="' + title + '"/>');
         $('input', this).on('keyup change', function () {
-            if ($("#tableSinEnganche").DataTable().column(i).search() !== this.value) {
-                $("#tableSinEnganche").DataTable().column(i)
+            if ($("#tablesinEnganche").DataTable().column(i).search() !== this.value) {
+                $("#tablesinEnganche").DataTable().column(i)
                     .search(this.value).draw();
             }
         });
     });
 
-    $("#tableSinEnganche").DataTable({
+    $("#tablesinEnganche").DataTable({
         dom: 'rt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         pagingType: "full_numbers",
         pageLength : 10,
@@ -452,7 +508,7 @@ function buildTableSinEnganche(data){
         ordering: false,
         scrollX: true,
         language: {
-            url: "static/spanishLoader_v2.json",
+            url: `${base_url}static/spanishLoader_v2.json`,
             paginate: {
                 previous: "<i class='fa fa-angle-left'>",
                 next: "<i class='fa fa-angle-right'>"
@@ -460,20 +516,35 @@ function buildTableSinEnganche(data){
         },
         data: data,
         columns: [{
-            data: 'id_usuario'
+            title: 'Totales',
+            data: function(d){
+                return d.cuantos
+            }
         },
         {
-            data: 'nombre'
+            title: 'Suma',
+            data: function(d){
+                return d.sumaTotal
+            }
         },
         {
-            data: 'apellido_paterno'
+            title: 'Nombre',
+            data: function(d){
+                return d.asesor
+            }
         },
         {
-            data: 'apellido_materno'
+            title: 'Puesto',
+            data: function(d){
+                return d.rol
+            }
         },
         {
-            data: 'telefono'
-        }],
+            title: 'ID',
+            data: function(d){
+                return d.id_asesor
+            }
+        },],
         columnDefs: [{
             visible: false,
             searchable: false
@@ -594,12 +665,13 @@ function setOptionsChart(series, categories){
                 show: false
             }
         },
+        colors: ['#0089B7','#039590', '#00ACB8', '#4BBC8E', '#00CDA3', '#92E784', '#F9F871'],
         plotOptions: {
             bar: {
                 horizontal: true,
                 borderRadius: 7,
                 barHeight: '50%',
-                distributed: false,
+                distributed: true,
                 dataLabels: {
                     show: true
                 },
@@ -643,6 +715,9 @@ function setOptionsChart(series, categories){
                     colors: []
                 }
             }
+        },
+        legend:{
+            show: false
         }
     }
     return options;
@@ -687,7 +762,7 @@ function getDates(typeRanking){
 function getSedes(){
     return $.ajax({
         type: 'POST',
-        url: `Ranking/getSedes`,
+        url: `${base_url}Ranking/getSedes`,
         data: {},
         dataType: 'json',
         cache: false,
@@ -719,6 +794,7 @@ function buildSelectSedes(dataSedes, selectsSede){
         var nombre = dataSedes[i]['nombre'];
         $(".sedes").append($('<option>').val(id_sede).text(nombre));
     }
+    $(".sedes").val(2);
     $(".sedes").selectpicker('refresh');
 
     if ( selectsSede != undefined ){
@@ -740,25 +816,25 @@ function setOptionsSelected(selectsSede){
 
 function validateToggledDatatable(typeRanking){
     if ( typeRanking == 'Apartados' ){
-        var columna = $("#"+typeRanking).closest( '.flexible' );
+        var columna = $("#"+typeRanking).closest( '.flexibleR' );
         if ($( columna ).hasClass('activo')){
             buildTableApartados(dataApartados);
         }
     }
     else if( typeRanking == 'Contratados' ){
-        var columna = $("#"+typeRanking).closest( '.flexible' );
+        var columna = $("#"+typeRanking).closest( '.flexibleR' );
         if ($( columna ).hasClass('activo')){
             buildTableContratados(dataContratados);
         }
     }
     else if( typeRanking == 'ConEnganche' ){
-        var columna = $("#"+typeRanking).closest( '.flexible' );
+        var columna = $("#"+typeRanking).closest( '.flexibleR' );
         if ($( columna ).hasClass('activo')){
             buildTableConEnganche(dataConEnganche);
         }
     }
     else if( typeRanking == 'SinEnganche' ){
-        var columna = $("#"+typeRanking).closest( '.flexible' );
+        var columna = $("#"+typeRanking).closest( '.flexibleR' );
         if ($( columna ).hasClass('activo')){
             buildTableSinEnganche(dataSinEnganche);
         }
@@ -869,3 +945,5 @@ function getSede(typeRanking){
     }
     return sede;
 }
+
+$('[data-toggle="tooltip"]').tooltip();

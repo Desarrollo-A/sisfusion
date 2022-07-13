@@ -8,14 +8,13 @@
 						<img class="w-100" src="../../static/images/logo.svg">
 					</div>
 					<div class="title d-flex justify-center">
-						<h2>ERROR</h2>
-						<h2 class="enfasis">&nbsp;404</h2>
+						<!-- <h2>ADVERTENCIA</h2> -->
+						<h2 class="enfasis">&nbsp;ADVERTENCIA</h2>
 					</div>
-					<h3 class="m-0">No encontramos la página a la que quieres acceder</h3>
+					<h3 class="m-0">Esta evidencia ya ha sido cargada anteriormente</h3>
 					<br>
 					<br>
 					<br>
-					<a href="<?=base_url()?>" class="enfasis"> <i class="fa fa-chevron-left"></i> Regresar </a>
 				</div>
 			</div>
 		</div>

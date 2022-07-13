@@ -19,10 +19,13 @@
   .col-total{
     height: 315px;
     @media #{$smartphone}{
+      padding-bottom: 0;
       height: inherit;
     }
     @media #{$tablets}{
-      height: inherit;
+      padding-bottom: 0;
+      height: 250px;
+      margin-bottom: 25px;
     }
   }
   .col-prospectos{ 
@@ -50,14 +53,15 @@
       .numberGraphic{
         color: $grayDark;
         font-weight: 600;
-        font-size: 18px;
+        font-size: 16px;
       }
     }
     @media #{$smartphone}{
       height: inherit;
     }
     @media #{$tablets}{
-      height: inherit!important;
+      height: 250px!important;
+      margin-bottom: 25px;
     }
   }
   .back{
@@ -137,4 +141,13 @@
   .btn-fab-mini span {
     color: $deepGray;
   }
+
+  .labelTitle{
+    font-size: 1.2em!important;
+  }
+  .numberElement{
+    font-size: 1.2em!important;
+    font-weight: bold!important;
+  }
 }
+

@@ -610,7 +610,7 @@
                                     if(data.tipo_doc == 8){
                                         file = '<a class="pdfLink3 btn-data btn-warning" data-Pdf="'+data.expediente+'" title= "Ver archivo" style="cursor:pointer;" data-nomExp="'+data.expediente+'"><i class="fas fa-file-pdf"></i></a>';
                                     } else {
-                                        <?php if($this->session->userdata('id_rol') == 13 || $this->session->userdata('id_rol') == 32){?>
+                                        <?php if($this->session->userdata('id_rol') == 13 || $this->session->userdata('id_rol') == 32 || $this->session->userdata('id_rol') == 17){?>
                                         if(data.idMovimiento == 31 || data.idMovimiento == 85 || data.idMovimiento == 20 || data.idMovimiento == 63 || data.idMovimiento == 73 || data.idMovimiento == 82 || data.idMovimiento == 92){
                                             file = '<a class="pdfLink btn-data btn-warning" data-Pdf="'+data.expediente+'" title= "Ver archivo" style="cursor:pointer;" data-nomExp="'+data.expediente+'"><i class="fas fa-file-pdf"></i></a> | <button type="button" title= "Eliminar archivo" id="deleteDoc" class="btn-data btn-warning delete" data-tipodoc="'+data.movimiento+'" data-iddoc="'+data.idDocumento+'" ><i class="fas fa-trash"></i></i></button>';
                                         } else {
@@ -628,7 +628,7 @@
                                     } else if(data.tipo_doc == 8){
                                         file = '<button type="button" title= "Contrato inhabilitado" style="cursor: pointer" class="btn-data btn-orangeYellow disabled" disabled><i class="fas fa-file"></i></button>';
                                     } else {
-                                        <?php if($this->session->userdata('id_rol') == 13 || $this->session->userdata('id_rol') == 32){?>
+                                        <?php if($this->session->userdata('id_rol') == 13 || $this->session->userdata('id_rol') == 32 || $this->session->userdata('id_rol') == 17){?>
                                         if(data.idMovimiento == 31 || data.idMovimiento == 85 || data.idMovimiento == 20 || data.idMovimiento == 63 || data.idMovimiento == 73 || data.idMovimiento == 82 || data.idMovimiento == 92){
                                             file = '<button type="button" id="updateDoc" style="cursor: pointer" title= "Adjuntar archivo" class="btn-data btn-green update" data-iddoc="'+data.idDocumento+'" data-tipodoc="'+data.tipo_doc+'" data-descdoc="'+data.movimiento+'" data-idCliente="'+data.idCliente+'" data-nombreResidencial="'+data.nombreResidencial+'" data-nombreCondominio="'+data.nombre+'" data-nombreLote="'+data.nombreLote+'" data-idCondominio="'+data.idCondominio+'" data-idLote="'+data.idLote+'"><i class="fas fa-cloud-upload-alt"></i></button>';
                                         } else {
@@ -648,7 +648,7 @@
                                 }
                                 else
                                 {
-                                    <?php if($this->session->userdata('id_rol') == 13 || $this->session->userdata('id_rol') == 32){?>
+                                    <?php if($this->session->userdata('id_rol') == 13 || $this->session->userdata('id_rol') == 32 || $this->session->userdata('id_rol') == 17){?>
                                     if(data.idMovimiento == 31 || data.idMovimiento == 85 || data.idMovimiento == 20 || data.idMovimiento == 63 || data.idMovimiento == 73 || data.idMovimiento == 82 || data.idMovimiento == 92){
                                         file = '<a class="pdfLink btn-data btn-acidGreen" style="cursor: pointer" data-Pdf="'+data.expediente+'" data-nomExp="'+data.expediente+'"><i class="fas fa-image"></i></a> | <button type="button" title= "Eliminar archivo" id="deleteDoc" class="btn-data btn-warning delete" data-tipodoc="'+data.movimiento+'" data-iddoc="'+data.idDocumento+'" ><i class="fas fa-trash"></i></i></button>';
                                     } else {
@@ -776,7 +776,7 @@
         });
     });
 
-    <?php if($this->session->userdata('id_rol') == 13 || $this->session->userdata('id_rol') == 32){?>
+    <?php if($this->session->userdata('id_rol') == 13 || $this->session->userdata('id_rol') == 32 || $this->session->userdata('id_rol') == 17){?>
     /*más querys alv*/
     var miArrayAddFile = new Array(8);
     var miArrayDeleteFile = new Array(1);

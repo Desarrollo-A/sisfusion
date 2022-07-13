@@ -7,7 +7,7 @@
                 <div class="container-fluid">
                     <div class="row pl-2 pt-2 pr-2">
                         <div class="col-xs-7 col-sm-7 col-md-7 col-lg-7 p-0 info">
-                            <p class="m-0">ventas<br> <span class="str">contratadas</span></p>
+                            <p class="m-0">Ventas<br> <span class="str">contratadas</span></p>
                         </div>
                         <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5 p-0 d-flex align-center justify-end">
                             <label class="selectMini m-0">4 meses <span class="material-icons">show_chart</span></label>
@@ -21,7 +21,7 @@
                     <div class="row">
                         <div class="p-0 col-12 col-sm-12 col-md-12 col-lg-12">
                             <div class="boxMiniCharts d-flex justify-center align-start" id="ventasContratadas">
-                                <img src="./dist/img/emptyChart.png" alt="Icono gráfica" class="h-70 w-auto">
+                                <img src= '<?=base_url('dist//img/emptyChart.png')?>' alt="Icono gráfica" class="h-70 w-auto">
                             </div>
                         </div>
                         <button type="btn" class="moreMiniChart d-flex justify-center align-center" data-toggle="tooltip" data-placement="bottom" title="Más detalle" onclick="chartDetail(this, 'vc')" data-name ="ventas_contratadas">  
@@ -37,7 +37,7 @@
                 <div class="container-fluid">
                     <div class="row pl-2 pt-2 pr-2">
                         <div class="col-xs-7 col-sm-7 col-md-7 col-lg-7 p-0 info">
-                            <p class="m-0">ventas<br><span class="str">apartadas</span></p>
+                            <p class="m-0">Ventas<br><span class="str">apartadas</span></p>
                         </div>
                         <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5 p-0 d-flex align-center justify-end">
                             <label class="selectMini m-0">4 meses <span class="material-icons">show_chart</span></label> 
@@ -51,7 +51,7 @@
                     <div class="row">
                         <div class="p-0 col-12 col-sm-12 col-md-12 col-lg-12">
                             <div class="boxMiniCharts d-flex justify-center align-start" id="ventasApartadas">
-                                <img src="./dist/img/emptyChart.png" alt="Icono gráfica" class="h-70 w-auto">
+                                <img src= '<?=base_url('dist//img/emptyChart.png')?>' alt="Icono gráfica" class="h-70 w-auto">
                             </div>
                         </div>
                         <button type="btn" class="moreMiniChart d-flex justify-center align-center" data-toggle="tooltip" data-placement="bottom" title="Más detalle" onclick="chartDetail(this, 'va')" data-name ="ventas_apartadas">  
@@ -66,7 +66,7 @@
                 <div class="container-fluid">
                     <div class="row pl-2 pt-2 pr-2">
                         <div class="col-xs-7 col-sm-7 col-md-7 col-lg-7 p-0 info">
-                            <p class="m-0">canceladas<br> <span class="str">contratadas</span></p>
+                            <p class="m-0">Canceladas<br> <span class="str">contratadas</span></p>
                         </div>
                         <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5 p-0 d-flex align-center justify-end">
                             <label class="selectMini m-0">4 meses <span class="material-icons">show_chart</span></label> 
@@ -80,7 +80,7 @@
                     <div class="row">
                         <div class="p-0 col-12 col-sm-12 col-md-12 col-lg-12">
                             <div class="boxMiniCharts d-flex justify-center align-start" id="canceladasContratadas">
-                                <img src="./dist/img/emptyChart.png" alt="Icono gráfica" class="h-70 w-auto">
+                                <img src= '<?=base_url('dist//img/emptyChart.png')?>' alt="Icono gráfica" class="h-70 w-auto">
                             </div>
                         </div>
                         <button type="btn" class="moreMiniChart d-flex justify-center align-center" data-toggle="tooltip" data-placement="bottom" title="Más detalle" onclick="chartDetail(this, 'cc')" data-name ="canceladas_contratadas">  
@@ -95,7 +95,7 @@
                 <div class="container-fluid">
                     <div class="row pl-2 pt-2 pr-2">
                         <div class="col-xs-7 col-sm-7 col-md-7 col-lg-7 p-0 info">
-                            <p class="m-0">canceladas<br> <span class="str">apartadas</span></p>
+                            <p class="m-0">Canceladas<br> <span class="str">apartadas</span></p>
                         </div>
                         <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5 p-0 d-flex align-center justify-end">
                             <label class="selectMini m-0">4 meses <span class="material-icons">show_chart</span></label> 
@@ -109,7 +109,7 @@
                     <div class="row">
                         <div class="p-0 col-12 col-sm-12 col-md-12 col-lg-12">
                             <div class="boxMiniCharts d-flex justify-center align-start" id="canceladasApartadas">
-                                <img src="./dist/img/emptyChart.png" alt="Icono gráfica" class="h-70 w-auto">
+                                <img src= '<?=base_url('dist//img/emptyChart.png')?>' alt="Icono gráfica" class="h-70 w-auto">
                             </div>
                         </div>
                         <button type="btn" class="moreMiniChart d-flex justify-center align-center" data-toggle="tooltip" data-placement="bottom" title="Más detalle" onclick="chartDetail(this, 'ca')" data-name ="canceladas_apartadas">  

@@ -1,7 +1,7 @@
 // AA: Obtener fecha inicial y cuatro meses atrás para mini charts.
 var endDate = moment().format("YYYY-MM-DD");
 var beginDate = moment(endDate).subtract(4, 'months').format("YYYY-MM-DD");
-var chart;
+var chart, datesMonths;
 var initialOptions = {
     series: [],
     chart: {
@@ -98,7 +98,7 @@ $('[data-toggle="tooltip"]').tooltip();
 async function init(){
     getLastSales(null, null);
     let rol = userType == 2 ? await getRolDR(idUser): userType;
-    fillBoxAccordions(rol == '1' ? 'director_regional': rol == '2' ? 'gerente' : rol == '3' ? 'coordinador' : rol == '59' ? 'subdirector':'asesor', rol, idUser, 1, 1);
+    fillBoxAccordions(rol == '1' || rol == '18' ? 'director_regional': rol == '2' ? 'gerente' : rol == '3' ? 'coordinador' : rol == '59' ? 'subdirector':'asesor', rol == 18 || rol == '18' ? 1:rol, idUser, 1, 1);
 }
 
 function createAccordions(option, render, rol){
@@ -141,6 +141,7 @@ function createAccordions(option, render, rol){
 
 function fillBoxAccordions(option, rol, id_usuario, render, transaction, dates=null){
     createAccordions(option, render, rol);
+    let newRol = newRoles(option);
     $(".js-accordion-title").addClass('open');
     $(".accordion-content").css("display", "block");
     if(render == 1){
@@ -149,10 +150,16 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, dates=n
     $('#table'+option+' thead tr:eq(0) th').each(function (i) {
         const title = $(this).text();
         $(this).html('<input type="text" center;" class="textoshead"  placeholder="' + title + '"/>');
+        if(i > 1 && i <10){
+            $('input', this)[0].type = 'number';
+            $('input', this).addClass('no-spin');
+        }
         $('input', this).on('keyup change', function () {
+            if(i != 0){
             if ($("#table"+option+"").DataTable().column(i).search() !== this.value) {
                 $("#table"+option+"").DataTable().column(i)
                     .search(this.value).draw();
+            }  
             }
         });
     });
@@ -169,7 +176,7 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, dates=n
         ordering: false,
         scrollX: true,
         language: {
-            url: "static/spanishLoader_v2.json",
+            url: `${base_url}static/spanishLoader_v2.json`,
             paginate: {
                 previous: "<i class='fa fa-angle-left'>",
                 next: "<i class='fa fa-angle-right'>"
@@ -179,7 +186,7 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, dates=n
             {
                 width: "2%",
                 data: function(d){
-                    return `<button type="btn" data-option="${option}" data-transaction="${transaction}" data-rol="${d.id_rol}" data-render="${render}" data-idUser="${d.userID}" id="details-${d.userID}" class="btnSub"><i class="fas fa-sitemap" data-toggle="tooltip" data-placement="bottom" title="Desglose a detalle"></i></button>`;
+                    return `<button type="btn" data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-idUser="${d.userID}" id="details-${d.userID}" class="btnSub"><i class="fas fa-sitemap" data-toggle="tooltip" data-placement="bottom" title="Desglose a detalle"></i></button>`;
                 }
             },
             {
@@ -188,22 +195,10 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, dates=n
                     return d.nombreUsuario;
                 }
             },
-            // {
-            //     width: "8%",
-            //     data: function (d) {
-            //         return "<b>" + d.sumaTotal+"</b>";
-            //     }
-            // },
-            // {
-            //     width: "8%",
-            //     data: function (d) {
-            //         return d.totalVentas;
-            //     }
-            // },
             {
                 width: "8%",
                 data: function (d) {
-                    return d.totalAT; //# APARTADOS
+                    return ((d.totalAT + d.totalCanA)).toLocaleString('es-MX'); //# APARTADOS
                 }
             },
             {
@@ -215,7 +210,7 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, dates=n
             {
                 width: "8%",
                 data: function (d) {
-                    return d.totalCanA; //# CANCELADOS APARTADOS
+                    return (d.totalCanA).toLocaleString('es-MX'); //# CANCELADOS APARTADOS
                 }
             },
             {
@@ -227,7 +222,7 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, dates=n
             {
                 width: "8%",
                 data: function (d) {
-                    return d.totalConT; //# CONTRATADOS
+                    return ((d.totalConT + d.totalCanC)).toLocaleString('es-MX'); //# CONTRATADOS
                 }
             },
             {
@@ -239,7 +234,7 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, dates=n
             {
                 width: "8%",
                 data: function (d) {
-                    return d.totalCanC; //# CANCELADOS CONTRATADOS
+                    return (d.totalCanC).toLocaleString('es-MX'); //# CANCELADOS CONTRATADOS
                 }
             },
             {
@@ -248,18 +243,6 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, dates=n
                     return d.porcentajeTotalCanC + "%"; //PORCENTAJE CANCELADOS CONTRATADOS
                 }
             },
-            // {
-            //     width: "8%",
-            //     data: function (d) {
-            //         return "<b>" + d.sumaCT+"</b>";
-            //     }
-            // },
-            // {
-            //     width: "8%",
-            //     data: function (d) {
-            //         return d.totalCT;
-            //     }
-            // },
             {
                 width: "8%",
                 data: function (d) {
@@ -268,11 +251,14 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, dates=n
             },
         ],
         columnDefs: [{
+            className: "delimetter", "targets": [ 5 ],
+        },{
+           
             visible: false,
             searchable: false
         }],
         ajax: {
-            url: 'Reporte/getInformation',
+            url: `${base_url}Reporte/getInformation`,
             type: "POST",
             cache: false,
             data: {
@@ -290,31 +276,14 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, dates=n
 }
 
 $(document).on('click', '.update-dataTable', function () {
+    let closestChild;
     const type = $(this).attr("data-type");
     const render = $(this).data("render");
-    const transaction = $(this).data("transaction");3
-    let closestChild = $(this).closest('.childTable');
-    console.log( closestChild.nextAll());
+    const transaction = $(this).data("transaction");
+    closestChild = $(this).closest('.childTable');
+    closestChild = closestChild.length == 0 ?  $(this).closest('.parentTable'):$(this).closest('.childTable');
     closestChild.nextAll().remove();
-
     let dates = transaction == 2 ?  {begin: $('#tableBegin').val(), end: $('#tableEnd').val()}:null;
-
-
-    // const beginDate = $("#beginDate").val();
-    // const endDate = $("#endDate").val();
-
-    // const saleType = $("#saleType").val();
-    // const where = $(this).val();
-    // let typeTransaction = 0;
-
-    // if (beginDate == '01/01/2022' && endDate == '01/01/2022' && saleType == null) // APLICA FILTRO AÑO ACTUAL
-    //     typeTransaction = 1;
-    // else if (beginDate == '01/01/2022' && endDate == '01/01/2022' && saleType != null) // APLICA FILTRO AÑO ACTUAL Y TIPO DE VENTA
-    //     typeTransaction = 2;
-    // else if ((beginDate != '01/01/2022' || endDate != '01/01/2022') && saleType == null) // APLICA FILTRO POR FECHA
-    //     typeTransaction = 3;
-    // else if ((beginDate != '01/01/2022' || endDate != '01/01/2022') && saleType != null) // APLICA FILTRO POR FECHA Y TIPO DE VENTA
-    //     typeTransaction = 4;
 
     if (type == 2) { // MJ: #sub->ger->coord
         if(render == 1){
@@ -339,23 +308,38 @@ $(document).on('click', '.update-dataTable', function () {
             fillBoxAccordions(table, 7, $(this).val(), 2, transaction, dates);
         }
     } else if (type == 59) { // MJ: #DirRegional->subdir->ger
-        const table = "gerente";
-        fillBoxAccordions(table, 3, $(this).val(), 2, transaction, dates);
+        if(render == 1){
+            const table = "gerente";
+            fillBoxAccordions(table, 3, $(this).val(), 2, transaction, dates);
+        }else{
+            const table = "subdirector";
+            fillBoxAccordions(table, 2, $(this).val(), 2, transaction, dates);
+        }
+    }else if(type == 1){
+        if(render == 1){
+            const table = "subdirector";
+            fillBoxAccordions(table, 2, $(this).val(), 2, transaction, dates);
+        }else{
+            const table = "regional";
+            fillBoxAccordions(table, 59, $(this).val(), 2, transaction, dates);
+        }
     }
 });
 
 function setOptionsChart(series, categories, miniChart, type= null){
-    (series.length > 1) ? colors = ["#2C93E7", "#d9c07b"] : colors = ["#2C93E7"];
+    (series.length > 1 && type == 1) ? colors=  ['#0089B7','#C25E5E', '#00CDA3', '#EB7B90']:(series.length > 1 && (type == 0 || type == null)) ? colors = ["#2C93E7", "#d9c07b"]:colors = ["#2C93E7"]
     var optionsMiniChart = {
         series: series,
         chart: {
             type: 'area',
-            height: '100%',
+            height:  type==1 ? '90%': '100%',
+            width:   type==1 ? '90%': '100%',
             toolbar: { show: false },
             zoom: { enabled: false },
             sparkline: {
-                enabled: true
-            }
+                enabled: type==1 ? false: true
+            },
+            offsetX: type==1 ? 0: 0
         },
         colors: colors,
         grid: { show: false},
@@ -366,21 +350,29 @@ function setOptionsChart(series, categories, miniChart, type= null){
             width: `${ ( miniChart == 0 ) ? 3 : 2 }`,
         },
         xaxis: {
+            show: type==1 ? true: false,
             categories: categories,
             labels: {show: false},
-            axisBorder: {show:false},
-            axisTicks: {show:false},
+            formatter: function (value) {
+                return '';
+            },
+            axisBorder: {show:type==1 ? true: false},
+            axisTicks: {show:type==1 ? true: false},
         },
         yaxis: {
             labels: {
-                show: false,
+                show: type==1 ? true: false,
                 formatter: function (value) {
                     let format = type != null ? value: "$" + formatMoney(value);
                     return format;
-                }
+                },
+                style: {
+                    colors: '#eaeaea',
+                },
+                offsetX: -15
             },
-            axisBorder: {show:false},
-            axisTicks: {show:false},
+            axisBorder: {show:type==1 ? true: false},
+            axisTicks: {show:type==1 ? true: false},
         },
         fill: {
             opacity: 1,
@@ -397,7 +389,12 @@ function setOptionsChart(series, categories, miniChart, type= null){
                 colorStops: []
             }
         },
-        tooltip: { enabled: true},
+        tooltip: { 
+            enabled: true,
+            y: {
+                formatter: (value) =>  type == 1 ? value.toLocaleString('es-MX'): "$" + formatMoney(value),
+            },
+        },
         markers: {
             size: `${ ( miniChart == 0 ) ? 5 : 0 }`,
             colors: '#143860',
@@ -410,7 +407,7 @@ function setOptionsChart(series, categories, miniChart, type= null){
     }
     return optionsMiniChart;
 }
-// $(document, '.js-accordion-title').unbind();
+
 $(document).off('click', '.js-accordion-title').on('click', '.js-accordion-title', function () {
     $(this).parent().parent().next().slideToggle(200);
     $(this).toggleClass('open', 200);
@@ -432,7 +429,6 @@ $(document).on('click', '.btnSub', function () {
         begin: formatDate($('#tableBegin').val()), 
         end: formatDate($('#tableEnd').val())
     }
-
     initDetailRow(data);
 });
 
@@ -441,7 +437,7 @@ $(document).on('click', '#searchByDateRangeTable', async function () {
     let dates = {begin: $('#tableBegin').val(), end: $('#tableEnd').val()};
     let rol = userType == 2 ? await getRolDR(idUser): userType;
 
-    fillBoxAccordions(rol == '1' ? 'director_regional': rol == '2' ? 'gerente' : rol == '3' ? 'coordinador' : rol == '59' ? 'subdirector':'asesor', rol, idUser, 1, 2, dates);
+    fillBoxAccordions(rol == '1' || rol == '18' ? 'director_regional': rol == '2' ? 'gerente' : rol == '3' ? 'coordinador' : rol == '59' ? 'subdirector':'asesor', rol, idUser, 1, 2, dates);
 
 });
 
@@ -449,17 +445,18 @@ $(document).on('click', '.chartButton', function () {
     $(".datesModal").hide();
     $("#modalChart .boxModalTitle .title").html('');
     $("#modalChart .boxModalTitle .total").html('');
-    $("#modalChart .boxModalTitle .title").append('Grafica general');
+    let option = $('#chartButton').data('option');
+    let title = getTitle(option);
+    $("#modalChart .boxModalTitle .title").append(`${title}`);
     $('#modalChart').modal();
     // $("#boxModalChart").html('');
-    let option = $('#chartButton').data('option');
     let table = $(`#table${option}`);
     var tableData = table.DataTable().rows().data().toArray();
     generalChart(tableData);
 });
 
 
-function chartDetail(e, tipoChart){
+async function chartDetail(e, tipoChart){
     // $("#boxModalChart").html('');
     $(".datesModal").show();
     $("#modalChart").modal();
@@ -469,17 +466,21 @@ function chartDetail(e, tipoChart){
 
     var nameChart = (titleCase($(e).data("name").replace(/_/g, " "))).split(" ");
     $(".boxModalTitle .title").append('<p class="mb-1">' + nameChart[0] + '<span class="enfatize"> '+ nameChart[1] +'</span></p>');
+    let datesMonths = await get4Months();
+    let finalBeginDate = [(datesMonths.firstDate).split('-')[2],  (datesMonths.firstDate).split('-')[1], (datesMonths.firstDate).split('-')[0]].join('/');
+    let finalEndDate = [(datesMonths.secondDate).split('-')[2],  (datesMonths.secondDate).split('-')[1], (datesMonths.secondDate).split('-')[0]].join('/');
 
-    $("#modalChart #beginDate").val(moment(beginDate).format('DD/MM/YYYY'));
-    $("#modalChart #endDate").val(moment(endDate).format('DD/MM/YYYY'));
+
+    $("#modalChart #beginDate").val(finalBeginDate);
+    $("#modalChart #endDate").val(finalEndDate);
     $("#modalChart #type").val(tipoChart);
-    getSpecificChart(tipoChart, beginDate, endDate);
+    getSpecificChart(tipoChart, formatDate(finalBeginDate), formatDate(finalEndDate));
 }
 
 function getSpecificChart(type, beginDate, endDate){
     $.ajax({
         type: "POST",
-        url: "Reporte/getDataChart",
+        url: `${base_url}Reporte/getDataChart`,
         data: {general: 0, tipoChart: type, beginDate: beginDate, endDate: endDate},
         dataType: 'json',
         cache: false,
@@ -491,18 +492,14 @@ function getSpecificChart(type, beginDate, endDate){
             $('#spiner-loader').addClass('hide');
             var orderedArray = orderedDataChart(data);
             let { categories, series } = orderedArray[0];
-            console.log('series',series);
             let total = 0;
             series.forEach(element => {
                 total = total + element.data.reduce((a, b) => parseFloat(a) + parseFloat(b), 0);
             });
-            console.log(total);
             $("#modalChart .boxModalTitle .total").html('');
             $("#modalChart .boxModalTitle .total").append('<p>$'+formatMoney(total)+'</p>');
             
             if ( total != 0 ){
-                $("#boxModalChart").removeClass('d-flex justify-center');
-                // var miniChart = new ApexCharts(document.querySelector("#boxModalChart"), setOptionsChart(series, categories, miniChart));
                 chart.updateOptions(setOptionsChart(series, categories, miniChart));
             }
             else{
@@ -510,8 +507,6 @@ function getSpecificChart(type, beginDate, endDate){
                 $("#boxModalChart").append('<img src="./dist/img/emptyChart.png" alt="Icono gráfica" class="h-70 w-auto">');
                 chart.updateOptions(setOptionsChart([], [], miniChart));
             }
-            // chart.render();
-
         },
         error: function() {
             $('#spiner-loader').addClass('hide');
@@ -523,7 +518,7 @@ function getSpecificChart(type, beginDate, endDate){
 function getLastSales(beginDate, endDate){
     $.ajax({
         type: "POST",
-        url: "Reporte/getDataChart",
+        url: `${base_url}Reporte/getDataChart`,
         data: {general: 1, tipoChart:'na', beginDate: beginDate, endDate: endDate},
         dataType: 'json',
         cache: false,
@@ -565,7 +560,6 @@ $(document).on("click", "#searchByDateRange", function () {
     var endDate = $("#modalChart #endDate").val();
     var type = $("#modalChart #type").val();
     $("#modalChart .boxModalTitle .total").html('');
-    console.log('trigger');
     getSpecificChart(type, formatDate(beginDate), formatDate(endDate));
 });
 
@@ -586,9 +580,7 @@ function orderedDataChart(data){
                     totalMes = [];
                     meses = [];
                 }
-                else{
-                    meses.push(monthName(mes) + ' ' + año);
-                }             
+                else meses.push(monthName(mes) + ' ' + año);         
             }
             else{
                 meses.push(monthName(mes) + ' ' + año);
@@ -645,7 +637,7 @@ function getRolDR(idUser){
     return new Promise(resolve => {      
         $.ajax({
             type: "POST",
-            url: "Reporte/getRolDR",
+            url: `${base_url}Reporte/getRolDR`,
             data: {idUser: idUser},
             dataType: 'json',
             cache: false,
@@ -745,6 +737,13 @@ function accordionToRemove(rol){
             $(".boxAccordions").find(`[data-rol='${3}']`).remove();
             $(".boxAccordions").find(`[data-rol='${9}']`).remove();
             $(".boxAccordions").find(`[data-rol='${7}']`).remove();
+            break;
+        case 18://dir
+            $(".boxAccordions").find(`[data-rol='${59}']`).remove();
+            $(".boxAccordions").find(`[data-rol='${2}']`).remove();
+            $(".boxAccordions").find(`[data-rol='${3}']`).remove();
+            $(".boxAccordions").find(`[data-rol='${9}']`).remove();
+            $(".boxAccordions").find(`[data-rol='${7}']`).remove();
             break; 
         case 59://dir regional
             $(".boxAccordions").find(`[data-rol='${2}']`).remove();
@@ -788,7 +787,7 @@ function initDetailRow(dataObj){
 }
 
 function createDetailRow(row, tr, dataObj){
-    $.post("Reporte/getDetails", {
+    $.post(`${base_url}Reporte/getDetails`, {
         id_usuario: dataObj.user,
         rol: dataObj.rol,
         render:  dataObj.render,
@@ -814,32 +813,32 @@ function buildTableDetail(data) {
     sedes += '<td>' + '<b>' + 'SEDE ' + '</b></td>';
     sedes += '<td>' + '<b>' + '# DE LOTES APARTADOS ' + '</b></td>';
     sedes += '<td>' + '<b>' + 'APARTADO ' + '</b></td>';
-    sedes += '<td>' + '<b>' + 'CANCELADO ' + '</b></td>';
-    sedes += '<td>' + '<b>' + '% CANCELADOS ' + '</b></td>';
+    sedes += '<td>' + '<b>' + 'CANCELADO APARTADOS ' + '</b></td>';
+    sedes += '<td>' + '<b>' + '% CANCELADOS APARTADOS ' + '</b></td>';
     sedes += '<td>' + '<b>' + '# DE LOTES CONTRATADOS ' + '</b></td>';
     sedes += '<td>' + '<b>' + 'CONTRATADOS ' + '</b></td>';
-    sedes += '<td>' + '<b>' + 'CANCELADOS ' + '</b></td>';
-    sedes += '<td>' + '<b>' + '% CANCELADOS ' + '</b></td>';
+    sedes += '<td>' + '<b>' + 'CANCELADOS CONTRATADOS ' + '</b></td>';
+    sedes += '<td>' + '<b>' + '% CANCELADOS CONTRATADOS ' + '</b></td>';
     sedes += '</tr>';
     $.each(data, function (i, v) {
         //i es el indice y v son los valores de cada fila
         sedes += '<tr>';
         sedes += '<td> ' + (i + 1) + ' </td>';
         sedes += '<td> ' + v.sede + ' </td>';
-        sedes += '<td> ' + v.totalAT + ' </td>';
+        sedes += '<td> ' + (v.totalAT + v.totalCanA).toLocaleString('es-MX') + ' </td>';
         sedes += '<td> ' + v.sumaAT + ' </td>';
-        sedes += '<td> ' + v.totalCanA + ' </td>';
+        sedes += '<td> ' + (v.totalCanA).toLocaleString('es-MX') + ' </td>';
         sedes += '<td> ' + v.porcentajeTotalCanA + '% </td>';
-        sedes += '<td> ' + v.totalConT + ' </td>';
+        sedes += '<td> ' + (v.totalConT + v.totalCanC).toLocaleString('es-MX') + ' </td>';
         sedes += '<td> ' + v.sumaConT + ' </td>';
-        sedes += '<td> ' + v.totalCanC + ' </td>';
+        sedes += '<td> ' + (v.totalCanC).toLocaleString('es-MX') + ' </td>';
         sedes += '<td> ' + v.porcentajeTotalCanC + ' </td>';
         sedes += '</tr>';
     });
     return sedes += '</table>';
 }
 
-function setInitialValues() {
+async function setInitialValues() {
     // BEGIN DATE
     const fechaInicio = new Date();
     // Iniciar en este año, este mes, en el día 1
@@ -850,8 +849,11 @@ function setInitialValues() {
     const endDate = new Date(fechaFin.getFullYear(), fechaFin.getMonth() + 1, 0);
     finalBeginDate = [beginDate.getFullYear(), ('0' + (beginDate.getMonth() + 1)).slice(-2), ('0' + beginDate.getDate()).slice(-2)].join('-');
     finalEndDate = [endDate.getFullYear(), ('0' + (endDate.getMonth() + 1)).slice(-2), ('0' + endDate.getDate()).slice(-2)].join('-');
-    finalBeginDate2 = [('0' + beginDate.getDate()).slice(-2), ('0' + (beginDate.getMonth() + 1)).slice(-2), beginDate.getFullYear()].join('/');
-    finalEndDate2 = [('0' + endDate.getDate()).slice(-2), ('0' + (endDate.getMonth() + 1)).slice(-2), endDate.getFullYear()].join('/');
+    let datesMonths = await get4Months();
+    finalBeginDate2 = [(datesMonths.firstDate).split('-')[2],  (datesMonths.firstDate).split('-')[1], (datesMonths.firstDate).split('-')[0]].join('/');
+    finalEndDate2 = [(datesMonths.secondDate).split('-')[2],  (datesMonths.secondDate).split('-')[1], (datesMonths.secondDate).split('-')[0]].join('/');
+
+
     
     $('#tableBegin').val(finalBeginDate2);
     $('#tableEnd').val(finalEndDate2);
@@ -866,14 +868,21 @@ function generalChart(data){
     let apartadosC = [];
     let contratados = [];
     let contratadosC = [];
-
+    console.log(data.length);
     data.forEach(element => {
-        x.push(element.nombreUsuario);
-        apartados.push(element.totalAT);
-        apartadosC.push(element.totalCanA);
-        contratados.push(element.totalConT);
-        contratadosC.push(element.totalCanC);
-
+        if(data.length>1){
+            x.push(element.nombreUsuario);
+            apartados.push(element.totalAT + element.totalCanA);
+            apartadosC.push(element.totalCanA);
+            contratados.push(element.totalConT + element.totalCanC);
+            contratadosC.push(element.totalCanC);    
+        }else{
+            x = ['', element.nombreUsuario, ''];
+            apartados=[0,element.totalAT + element.totalCanA,0];
+            apartadosC=[0,element.totalCanA,0];
+            contratados=[0,element.totalConT + element.totalCanC,0];
+            contratadosC=[0,element.totalCanC,0];    
+        }
     });
     let series = [
         {
@@ -895,4 +904,52 @@ function generalChart(data){
     ];
     chart.updateOptions(setOptionsChart(series, x, 0, 1));
     // chart.render();
+}
+
+
+function get4Months() {
+    let dates;
+    return new Promise(resolve => {
+        $.ajax({
+            type: "POST",
+            url: `${base_url}Reporte/get4MonthsRequest`,
+            dataType: 'json',
+            cache: false,
+            beforeSend: function() {
+                $('#spiner-loader').removeClass('hide');
+            },
+            success: function(data){
+                $('#spiner-loader').addClass('hide');
+                resolve(data);
+            },
+            error: function() {
+                $('#spiner-loader').addClass('hide');
+                alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+            }
+        });
+    });
+}
+
+function newRoles(option) {
+    var rol;
+    switch (option) {
+        case 'director_regional':
+            rol = 59;
+            break;
+        case 'gerente':
+            rol = 3;
+            break;
+        case 'coordinador':
+            rol = 9;
+            break;
+        case 'subdirector':
+            rol = 2;
+            break;
+        case 'asesor':
+            rol = 7;
+            break;
+        default:
+            rol = 'N/A';
+    }
+    return rol;
 }

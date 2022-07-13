@@ -22,7 +22,8 @@ class Reporte extends CI_Controller {
 
     public function getInformation(){
         if (isset($_POST) && !empty($_POST)) {
-            $typeTransaction = $this->input->post("typeTransaction");//si es consulta inicial = 1 o si es consulta con filtro de fechas = 2
+            $typeTransaction = $this->input->post("typeTransaction");
+            //si es consulta inicial = 1 o si es consulta con filtro de fechas = 2
             if( $typeTransaction==1){
                 $beginDate = $this->get4Months()['firstDate'];
                 $endDate = $this->get4Months()['secondDate'];
@@ -32,22 +33,13 @@ class Reporte extends CI_Controller {
             }
             $id_usuario = $this->input->post("id_usuario");
             $where = $this->input->post("where");
-            $rol = $this->input->post("type");//que rol es
+            $rol = $this->input->post("type");
             $render = $this->input->post("render");
             $currentYear = date("Y");
 
             $data['data'] = $this->Reporte_model->getGeneralInformation($beginDate, $endDate, $rol, $id_usuario, $render)->result_array();
 
-            // if ($rol == 1) { // GENERAL TABLE - director
-            //     $data['data'] = $this->Reporte_model->getGeneralInformation($typeTransaction, $beginDate, $endDate, $currentYear, $saleType)->result_array();
-            // } else if ($rol == 2) { // MANAGER TABLE - gerente
-            //     $data['data'] = $this->Reporte_model->getInformationByManager($typeTransaction, $beginDate, $endDate, $currentYear, $where, $saleType)->result_array();
-            // } else if ($rol == 9) { // COORDINATOR TABLE - coordinador
-            //     $data['data'] = $this->Reporte_model->getInformationByCoordinator($typeTransaction, $beginDate, $endDate, $currentYear, $where, $saleType)->result_array();
-            // } else if ($rol == 4) { // ADVISER TABLE -- asesor
-            //     $data['data'] = $this->Reporte_model->getInformationByAdviser($typeTransaction, $beginDate, $endDate, $currentYear, $where, $saleType)->result_array();
-            // }
-            echo json_encode($data);
+            echo json_encode($data, JSON_NUMERIC_CHECK);
         } else {
             json_encode(array());
         }
@@ -104,7 +96,7 @@ class Reporte extends CI_Controller {
         $data = $this->Reporte_model->getDataChart($general, $tipoChart, $rol, $condicion_x_rol, $coordinador, $coordinadorVC, $coordinadorVA, $coordinadorCC, $coordinadorCA, $beginDate, $endDate);
         
         if($data != null) {
-            echo json_encode($data);
+            echo json_encode($data, JSON_NUMERIC_CHECK);
         } else {
             echo json_encode(array());
         }
@@ -251,10 +243,10 @@ class Reporte extends CI_Controller {
     }
 
     public function get4Months(){
-        $dateTime = new DateTime('first day of this month');
-        $lastDate = new DateTime('first day of this month');
+        $dateTime = new DateTime();
+        $lastDate = new DateTime();
         $firstDate;
-        $lastDate->modify('-1 month');
+        // $lastDate->modify('-1 month');
         for ($i = 1; $i <= 4; $i++) {
             $firstDate = $dateTime->modify('-1 month');
         }
@@ -270,7 +262,7 @@ class Reporte extends CI_Controller {
         $idUser = $this->input->post('idUser');
         $data = $this->Reporte_model->validateRegional($idUser);
         if($data != null) {
-            echo json_encode($data);
+            echo json_encode($data, JSON_NUMERIC_CHECK);
         }
         else echo json_encode(array());
     }
@@ -285,15 +277,21 @@ class Reporte extends CI_Controller {
             $endDate = date("Y-m-d", strtotime($this->input->post("endDate")));
         }
         $id_usuario = $this->input->post("id_usuario");
-        $rol = $this->input->post("rol");//que rol es
+        $rol = $this->input->post("rol");
         $render = $this->input->post("render");
 
         $data = $this->Reporte_model->getDetails($beginDate, $endDate, $rol, $id_usuario, $render)->result_array();
         if($data != null) {
-            echo json_encode($data);
+            echo json_encode($data, JSON_NUMERIC_CHECK);
         } else {
             echo json_encode(array());
         }
     }
+    public function get4MonthsRequest(){
+        $data = $this->get4Months();
+        if($data != null) {
+            echo json_encode($data, JSON_NUMERIC_CHECK);
+        }
+        else echo json_encode(array());
+    }
 }
- 

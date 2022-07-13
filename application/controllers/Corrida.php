@@ -131,8 +131,10 @@ class Corrida extends CI_Controller {
 		$arreglo['status'] = 0;
         $arreglo["corrida_dump"]= json_encode($objDatos->corrida_dump);
         $arreglo["tipo_casa"]= $objDatos->tipo_casa;
+        $arreglo["id_cliente"]= $objDatos->id_cliente;
 
-
+        /*print_r($arreglo);
+        exit;*/
 
         $array_allPackages = json_decode($objDatos->allPackages);
         $arrayTocxp = array();
@@ -1963,6 +1965,7 @@ $pdf->Output(utf8_decode($namePDF), 'I');
             $sheet->setCellValue('F4', 'Precio m2 casa');
             $sheet->setCellValue('G4', 'Precio casa');
             $sheet->setCellValue('H4', 'Plazo');
+            $sheet->setCellValue('I4', 'Apartado');
 //            $sheet->setCellValue('I4', '10% precio m2');
 
             #set values
@@ -1973,6 +1976,9 @@ $pdf->Output(utf8_decode($namePDF), 'I');
             $sheet->setCellValue('G5', $precio_casa);
             $sheet->getStyle('G5')->getNumberFormat()->setFormatCode(PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_CURRENCY_USD_SIMPLE);
             $sheet->setCellValue('H5', ($data_corrida->finalMesesp1 + $data_corrida->finalMesesp2 + $data_corrida->finalMesesp3));
+            $sheet->setCellValue('I5', $data_corrida->apartado);
+            $sheet->getStyle('I5')->getNumberFormat()->setFormatCode(PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_CURRENCY_USD_SIMPLE);
+
 
             $sheet->setCellValue('D6', 'Lote');
             $sheet->setCellValue('E6', 'No');
@@ -2294,7 +2300,7 @@ $pdf->Output(utf8_decode($namePDF), 'I');
             $range2 = 'I1';
             $sheet->mergeCells("$range1:$range2");
             $sheet->getStyle('C:I')->getAlignment()->setHorizontal('center');
-            $sheet->getStyle('C:I')->getAlignment()->setVertical('center');
+            $sheet->getStyle('C:I')->getAlignment()->setHorizontal('center');
             $sheet->getStyle("C1:I1")->getFont()->setSize(28);
             $spreadsheet->getActiveSheet()->getStyle('C1')->getFont()->getColor()->setARGB('808080');
 
@@ -2390,6 +2396,17 @@ $pdf->Output(utf8_decode($namePDF), 'I');
             $sheet->getStyle('F11')->getNumberFormat()->setFormatCode(PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_CURRENCY_USD_SIMPLE);
 
 
+            $sheet->setCellValue('G11', 'Apartado');
+            $sheet->getStyle( 'G11' )->getFont()->setName('Arial');
+            $sheet->getStyle( 'G11:H11' )->getFont()->setBold( true );
+            $sheet->getStyle("G11")->getFont()->setSize(10);
+            $sheet->getStyle("H11")->getFont()->setSize(12);
+            $sheet->setCellValue('H11', $data_corrida->apartado);
+            $sheet->getStyle( 'H11' )->getFont()->setName('Arial');
+            $sheet->getStyle('H11')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('D9D9D9');
+            $sheet->getStyle('H11')->getNumberFormat()->setFormatCode(PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_CURRENCY_USD_SIMPLE);
+
+
 
             $sheet->setCellValue('C13', 'Mensualidad sin/Int. ');
             $sheet->setCellValue('E13', $data_corrida->finalMesesp1);
@@ -2400,7 +2417,6 @@ $pdf->Output(utf8_decode($namePDF), 'I');
             $sheet->getStyle( 'C13:F13' )->getFont()->setName('Arial');
             $sheet->getStyle("C13")->getFont()->setSize(9);
             $sheet->getStyle('F13:F15')->getNumberFormat()->setFormatCode(PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_CURRENCY_USD_SIMPLE);
-
 
             $sheet->setCellValue('H13', '1er Mensualidad');
             $sheet->getStyle( 'H13:I13' )->getFont()->setName('Arial');
@@ -2417,7 +2433,6 @@ $pdf->Output(utf8_decode($namePDF), 'I');
             $sheet->getStyle('F14')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('D9D9D9');
             $sheet->getStyle( 'C14:F14' )->getFont()->setName('Arial');
             $sheet->getStyle("C14")->getFont()->setSize(9);
-
 
             $sheet->setCellValue('C15', 'Mensualidad Con/Int. SSI ');
             $sheet->setCellValue('D15', '1.25%');
@@ -2468,7 +2483,6 @@ $pdf->Output(utf8_decode($namePDF), 'I');
             $sheet->getStyle('C19:I19')->getBorders()->getAllBorders()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
             #termina encabezado
         }
-
 
 
 
@@ -2623,7 +2637,6 @@ $pdf->Output(utf8_decode($namePDF), 'I');
             "paquete" => $paquete
         );
 
-
         $arreglo =array();
         $arreglo["nombre"]= $objDatos->nombre;
         $arreglo["id_lote"]= $idLote;
@@ -2654,15 +2667,16 @@ $pdf->Output(utf8_decode($namePDF), 'I');
         $arreglo["finalMesesp2"]= $objDatos->finalMesesp2;
         $arreglo["finalMesesp3"]= $objDatos->finalMesesp3;
         $arreglo["observaciones"]= $objDatos->observaciones;
+        $arreglo["fecha_modificacion"] = date("Y-m-d H:i:s");
 
-
+        /*print_r($arreglo);
+        exit;*/
 
         /*print_r($arreglo["telefono"]);
         exit;*/
 
         $array_allPackages = json_decode($objDatos->allPackages);
         $arrayTocxp = array();
-
 
 
 
@@ -2676,15 +2690,11 @@ $pdf->Output(utf8_decode($namePDF), 'I');
                     $arrayTocxp[$key]['descuentos'][$key2]['prioridad'] = $value2->prioridad;
                     $arrayTocxp[$key]['descuentos'][$key2]['id_descuento'] = $value2->id_descuento;
                     //$arrayTocxp[$key]['descuentos'][$key2]['estatus'] =  0;
-
-
                     for ($i = 0; $i < count($arrayDescApply); $i++) {
                         if ($arrayDescApply[$i]->id_descuento == $value2->id_descuento && $arrayDescApply[$i]->id_paquete == $value->id_paquete) {
                             $arrayTocxp[$key]['descuentos'][$key2]['estatus'] = 1;
                         }
-
                     }
-
                 }
             }
 
@@ -2896,18 +2906,29 @@ $pdf->Output(utf8_decode($namePDF), 'I');
         $data_descuentos = $this->Corrida_model->getDescsByCondominio($id_condominio, $id_pxc);
 
 
-        $array_descuentos = explode(',', $data_descuentos->id_paquete, 999);
-
-        $data_descuentos->paquetes_array = $array_descuentos;
-
-//        print_r($array_descuentos);
 
 
+
+        $object_descuentos = json_decode($data_descuentos->id_paquete);
+        $array_descuentos = explode(',', $object_descuentos->paquetes, 999);
+        $tipo_superficie = $object_descuentos->tipo_superficie;
+        /*print_r($tipo_superficie->tipo);
+        exit;*/
+
+        #logica anterior
+        #$array_descuentos = explode(',', $data_descuentos->id_paquete, 999);
+        #$data_descuentos->paquetes_array = $array_descuentos;
+
+
+        //recibe un array separados por "," así: Array ( [0] => 326 [1] => 328 [2] => 334 )
         for($i=0; $i<count($array_descuentos); $i++){
             $paquete_info = $this->Corrida_model->getPaqById($array_descuentos[$i]);
             $paquete_view[$i] = array(
                 'id_paquete' => $paquete_info->id_paquete,
                 'descripcion' => $paquete_info->descripcion,
+                'aplicable_a' => $tipo_superficie->tipo,
+                'sup1'        => $tipo_superficie->sup1,
+                'sup2'        => $tipo_superficie->sup2,
                 //'estatus' => $paquete_info->estatus,
             );
 
@@ -2929,7 +2950,7 @@ $pdf->Output(utf8_decode($namePDF), 'I');
                 $paquete_view[$i]['response'][$q]['msi_descuento'] = (int)$data_descuento->msi_descuento;
             }
         }
-        print_r(json_encode($paquete_view));
+        print_r(json_encode($paquete_view, JSON_NUMERIC_CHECK ));
 
         exit;
     }
@@ -3054,5 +3075,10 @@ $pdf->Output(utf8_decode($namePDF), 'I');
         }
 
 //		$this->load->view("moratorioII"); //avance
+    }
+
+    public function moratorios()
+    {
+            $this->load->view("corrida/moratorios_nv");
     }
 }

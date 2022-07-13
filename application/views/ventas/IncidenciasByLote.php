@@ -7,19 +7,22 @@
             switch ($this->session->userdata('id_usuario')) {
                 case 1: // corporativa
                 case 2815: // admin
-                case 2826: // ANA TOVAR
-                case 2807: // MARIELA
-                case 2767: // IRENE
-                    //case 2748:
                     $datos = array();
                     $datos = $datos4;
                     $datos = $datos2;
-                    $datos = $datos3;  
+                    $datos = $datos3;
                     $this->load->view('template/sidebar', $datos);
                     break;
                 default:
-                echo '<script>alert("ACCESSO DENEGADO"); window.location.href="' . base_url() . '";</script>';
-                break;
+                    if ($this->session->userdata('id_rol') == 17) {
+                        $datos = array();
+                        $datos = $datos4;
+                        $datos = $datos2;
+                        $datos = $datos3;
+                        $this->load->view('template/sidebar', $datos);
+                    } else {
+                        echo '<script>alert("ACCESSO DENEGADO"); window.location.href="' . base_url() . '";</script>';
+                    }
             }
         }
         else{
@@ -2215,7 +2218,7 @@
                 precioAnt=0;
             }
 
-            if(rol == 13 || rol == 8 || rol == 32){
+            if(rol == 8 || rol == 17){
                 if(isNaN(precioAnt) || parseFloat(precioAct) < 0){
                     document.getElementById('msj').innerHTML = 'Precio no válido';
                     document.getElementById('btn-save').disabled = true;

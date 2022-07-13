@@ -30,7 +30,7 @@
                                 <div class="row">
                                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-4">
                                         <div class="form-group label-floating select-is-empty">
-                                            <label class="control-label">Subdirector</label>
+                                            <label class="control-label">* Subdirector</label>
                                             <select name="subDir" id="subDir"
                                                     class="selectpicker select-gral m-0"
                                                     data-show-subtext="true"
@@ -43,7 +43,7 @@
                                     </div>
                                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-4">
                                         <div class="form-group label-floating select-is-empty">
-                                            <label class="control-label">Gerente</label>
+                                            <label class="control-label">* Gerente</label>
                                             <select name="gerente" id="gerente"
                                                     class="selectpicker select-gral m-0"
                                                     data-show-subtext="true"
@@ -85,8 +85,8 @@
                                             <div class="row">
                                                 <div class="col-md-12 p-r">
                                                     <div class="form-group d-flex">
-                                                        <input type="text" class="form-control datepicker" id="beginDate" value="01/01/2021" />
-                                                        <input type="text" class="form-control datepicker" id="endDate" value="01/01/2021" />
+                                                        <input type="text" class="form-control datepicker" id="beginDate" value="01/07/2022" />
+                                                        <input type="text" class="form-control datepicker" id="endDate" value="<?php echo date('d/m/Y')?>" />
                                                         <button class="btn btn-success btn-round btn-fab btn-fab-mini" id="searchByDateRange">
                                                             <span class="material-icons update-dataTable">search</span>
                                                         </button>
@@ -106,6 +106,7 @@
                                                 <tr>
                                                     <th class="disabled-sorting text-right"><center>ESTADO</center></th>
                                                     <th class="disabled-sorting text-right"><center>ETAPA</center></th>
+                                                    <th class="disabled-sorting text-right"><center>TIPO</center></th>
                                                     <th class="disabled-sorting text-right"><center>PROSPECTO</center></th>
                                                     <th class="disabled-sorting text-right"><center>ASESOR</center></th>
                                                     <th class="disabled-sorting text-right"><center>COORDINADOR</center></th>
@@ -189,6 +190,7 @@
                                                         <tr>
                                                             <th class="disabled-sorting text-right"><center>Estado</center></th>
                                                             <th class="disabled-sorting text-right"><center>Etapa</center></th>
+                                                            <th class="disabled-sorting text-right"><center>Tipo</center></th>
                                                             <th class="disabled-sorting text-right"><center>Prospecto</center></th>
                                                             <th class="disabled-sorting text-right"><center>Asesor</center></th>
                                                             <th class="disabled-sorting text-right"><center>Coordinador</center></th>
@@ -259,6 +261,7 @@
 
 
 <script>
+
     $(document).ready(function () {
         /*primera carga*/
 
@@ -289,7 +292,7 @@
     sp = { //  SELECT PICKER
         initFormExtendedDatetimepickers: function () {
             $('.datepicker').datetimepicker({
-                format: 'MM/DD/YYYY',
+                format: 'DD/MM/YYYY',
                 icons: {
                     time: "fa fa-clock-o",
                     date: "fa fa-calendar",
@@ -315,14 +318,17 @@
         const fechaFin = new Date();
         // Iniciar en este año, el siguiente mes, en el día 0 (así que así nos regresamos un día)
         const endDate = new Date(fechaFin.getFullYear(), fechaFin.getMonth() + 1, 0);
-        finalBeginDate = [beginDate.getFullYear(), ('0' + (beginDate.getMonth() + 1)).slice(-2), ('0' + beginDate.getDate()).slice(-2)].join('-');
-        finalEndDate = [endDate.getFullYear(), ('0' + (endDate.getMonth() + 1)).slice(-2), ('0' + endDate.getDate()).slice(-2)].join('-');
+        //finalBeginDate = [beginDate.getFullYear(), ('0' + (beginDate.getMonth() + 1)).slice(-2), ('0' + beginDate.getDate()).slice(-2)].join('-');
+        //finalEndDate = [endDate.getFullYear(), ('0' + (endDate.getMonth() + 1)).slice(-2), ('0' + endDate.getDate()).slice(-2)].join('-');
+        finalBeginDate2 = [('0' + beginDate.getDate()).slice(-2), ('0' + (beginDate.getMonth() + 1)).slice(-2), beginDate.getFullYear()].join('/');
+        finalEndDate2 = [('0' + endDate.getDate()).slice(-2), ('0' + (endDate.getMonth() + 1)).slice(-2), endDate.getFullYear()].join('/');
         // console.log('Fecha inicio: ', finalBeginDate);
         // console.log('Fecha final: ', finalEndDate);
-        $("#beginDate").val(convertDate(beginDate));
-        $("#endDate").val(convertDate(endDate));
-        // fillTable(1, finalBeginDate, finalEndDate, 0);
+        $("#beginDate").val(convert(beginDate));
+        $("#endDate").val(cpnvert(endDate));
+        // updateTable(1, finalBeginDate, finalEndDate, 0);
     }
+
 
     $(document).on("click", "#searchByDateRange", function () {
         let finalBeginDate = $("#beginDate").val();
@@ -480,7 +486,7 @@
                     titleAttr: 'Listado general de prospectos',
                     title:"Listado general de prospectos",
                     exportOptions: {
-                        columns: [0,1,2,3,4,5,6,7,8],
+                        columns: [0,1,2,3,4,5,6,7,8,9],
                         format: {
                             header: function (d, columnIdx) {
                                 switch (columnIdx) {
@@ -491,23 +497,26 @@
                                         return 'ETAPA';
                                         break;
                                     case 2:
-                                        return 'PROSPECTO';
+                                        return 'TIPO';
+                                        break;
                                     case 3:
+                                        return 'PROSPECTO';
+                                    case 4:
                                         return 'ASESOR';
                                         break;
-                                    case 4:
+                                    case 5:
                                         return 'COORDINADOR';
                                         break;
-                                    case 5:
+                                    case 6:
                                         return 'GERENTE';
                                         break;
-                                    case 6:
+                                    case 7:
                                         return 'LP';
                                         break;
-                                    case 7:
+                                    case 8:
                                         return 'CREACIÓN';
                                         break;
-                                    case 8:
+                                    case 9:
                                         return 'VENCIMIENTO';
                                         break;
                                 }
@@ -553,6 +562,14 @@
                             b = '<center><span class="label" style="background:#8A1350">Preventa</span><center>';
                         }
                         return b;
+                    }
+                },
+                {   data: function (d) {
+                        if (d.tipo == 0){
+                            return '<center><span class="label label-danger" style="background: #B7950B">Prospecto</span></center>';
+                        } else {
+                            return '<center><span class="label label-danger" style="background: #75DF8F">Cliente</span></center>';
+                        }
                     }
                 },
                 { data: function (d) {
@@ -613,8 +630,6 @@
             ]
         )*/
     }
-
-
 
 </script>
 <script src="<?=base_url()?>static/yadcf/jquery.dataTables.yadcf.js"></script>
