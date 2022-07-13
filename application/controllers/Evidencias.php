@@ -73,7 +73,7 @@ class Evidencias extends CI_Controller
 
     public function getDropboxToken(){
         $oauth_url = "https://x2lo5zybskv36p6:dkptwnk6hrbne2m@api.dropbox.com/oauth2/token";
-        $token = 'YqMXfhFHLigAAAAAAAAAAZXITQbwNILaIrwtKc1C9_6_ylucEPbR6FmZQQsppkp_'; // oauth token
+        $token = '-AA44PRdHUYAAAAAAAAAAV1bjrWAGsYa80flvAFtOqHlBROPsYnzInSrjDDHIJWX'; // oauth token
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $oauth_url);
         curl_setopt($ch, CURLOPT_POST, 1);
