@@ -96,7 +96,7 @@ class Reporte extends CI_Controller {
         $data = $this->Reporte_model->getDataChart($general, $tipoChart, $rol, $condicion_x_rol, $coordinador, $coordinadorVC, $coordinadorVA, $coordinadorCC, $coordinadorCA, $beginDate, $endDate);
         
         if($data != null) {
-            echo json_encode($data, JSON_NUMERIC_CHECK);
+            echo json_encode($data);
         } else {
             echo json_encode(array());
         }

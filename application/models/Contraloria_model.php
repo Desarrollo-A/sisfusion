@@ -73,7 +73,7 @@ class Contraloria_model extends CI_Model {
 			,(SELECT concat(usuarios.nombre,' ', usuarios.apellido_paterno, ' ', usuarios.apellido_materno)
 			from historial_lotes left join usuarios on historial_lotes.usuario = usuarios.id_usuario
 			where idHistorialLote =(SELECT MAX(idHistorialLote) FROM historial_lotes WHERE idLote in (l.idLote) and (perfil = '13' or perfil = '32' 
-			or perfil = 'contraloria') and status = 1)) as lastUc
+			or perfil = 'contraloria'or perfil = '17') and status = 1)) as lastUc
 
 
         FROM lotes l
@@ -1189,7 +1189,7 @@ class Contraloria_model extends CI_Model {
 									(SELECT CONCAT(usuarios.nombre,' ', usuarios.apellido_paterno, ' ', usuarios.apellido_materno)
 									FROM historial_lotes LEFT JOIN usuarios ON historial_lotes.usuario = usuarios.id_usuario
 									WHERE idHistorialLote =(SELECT MAX(idHistorialLote) FROM historial_lotes WHERE idLote IN (l.idLote) AND (perfil = '13' OR perfil = '32' 
-										OR perfil = 'contraloria') AND status = 1)) AS lastUc
+									OR perfil = 'contraloria' OR perfil = '17') AND status = 1)) AS lastUc
 
 	    							FROM lotes l
         								INNER JOIN clientes cl ON l.idLote=cl.idLote
