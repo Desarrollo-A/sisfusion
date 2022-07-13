@@ -54,12 +54,6 @@ class Usuarios extends CI_Controller
     public function updatePersonalInformation()
     {
         $data = array(
-            "nombre" => $_POST['name'],
-            "apellido_paterno" => $_POST['last_name'],
-            "apellido_materno" => $_POST['mothers_last_name'],
-            "rfc" => $_POST['rfc'],
-            "correo" => $_POST['email'],
-            "telefono" => $_POST['phone_number'],
             "contrasena" => encriptar($_POST['contrasena']),
             "fecha_modificacion" => date("Y-m-d H:i:s"),
             "modificado_por" => $this->session->userdata('id_usuario')
