@@ -682,9 +682,9 @@ class Reporte_model extends CI_Model {
         } else if ($type == 3 || $type == 33) { // MJ: CANCELADOS CONTRATADOS
             $filtroSede = $type == 33 ? "AND re.sede_residencial = $sede" : "";
             $query = $this->db->query("SELECT re.descripcion nombreResidencial, UPPER(co.nombre) nombreCondominio, UPPER(lo.nombreLote) nombreLote, 
-            UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) nombreCliente,
-            UPPER(CONCAT(ua.nombre, ' ', ua.apellido_paterno, ' ', ua.apellido_materno)) nombreAsesor,
-            cl.fechaApartado, '15. Acuse entregado (Contraloría)', 'Cancelado contratado' estatusLote
+            CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno) nombreCliente,
+            CONCAT(ua.nombre, ' ', ua.apellido_paterno, ' ', ua.apellido_materno) nombreAsesor,
+            cl.fechaApartado, '15. Acuse entregado (Contraloría)' nombreStatus, 'Cancelado contratado' estatusLote
             FROM clientes cl
             INNER JOIN lotes lo ON lo.idLote = cl.idLote
             INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
