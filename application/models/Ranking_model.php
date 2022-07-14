@@ -8,7 +8,7 @@ class Ranking_model extends CI_Model {
     }
 
     public function getRankingApartados($beginDate, $endDate, $sede){
-        return $this->db->query("SELECT
+        return $this->db->query("SELECT ROW_NUMBER() OVER (Order by (select 1)) AS ranking,
         FORMAT(SUM(CASE 
             WHEN tmpApT.totalNeto2 IS NULL THEN tmpApT.total 
             WHEN tmpApT.totalNeto2 = 0 THEN tmpApT.total 
@@ -26,7 +26,7 @@ class Ranking_model extends CI_Model {
     }
 
     public function getRankingContratados($beginDate, $endDate, $sede){
-        return $this->db->query("SELECT
+        return $this->db->query("SELECT ROW_NUMBER() OVER (Order by (select 1)) AS ranking,
         FORMAT(SUM(CASE 
             WHEN tmpConT.totalNeto2 IS NULL THEN tmpConT.total 
             WHEN tmpConT.totalNeto2 = 0 THEN tmpConT.total 
@@ -46,7 +46,7 @@ class Ranking_model extends CI_Model {
     }
 
     public function getRankingConEnganche($beginDate, $endDate, $sede){
-        return  $this->db->query("SELECT
+        return  $this->db->query("SELECT ROW_NUMBER() OVER (Order by (select 1)) AS ranking,
         FORMAT(SUM(CASE 
             WHEN isNULL(cl.totalNeto2_cl ,lo.totalNeto2) IS NULL THEN isNULL(cl.total_cl ,lo.total)
             WHEN isNULL(cl.totalNeto2_cl ,lo.totalNeto2) = 0 THEN isNULL(cl.total_cl ,lo.total)
@@ -62,7 +62,7 @@ class Ranking_model extends CI_Model {
     }
 
     public function getRankingSinEnganche($beginDate, $endDate, $sede){
-        return  $this->db->query("SELECT 
+        return  $this->db->query("SELECT  ROW_NUMBER() OVER (Order by (select 1)) AS ranking,
         FORMAT(SUM(CASE 
             WHEN isNULL(cl.totalNeto2_cl ,lo.totalNeto2) IS NULL THEN isNULL(cl.total_cl ,lo.total)
             WHEN isNULL(cl.totalNeto2_cl ,lo.totalNeto2) = 0 THEN isNULL(cl.total_cl ,lo.total)

@@ -322,6 +322,11 @@ function buildTableApartados(data){
         order: [[1, "desc"]],
         data: data,
         columns: [{
+            title: 'Ranking',
+            data: function(d){
+                return d.ranking
+            }
+        },{
             title: 'Totales',
             data: function(d){
                 return d.totalAT
@@ -388,6 +393,11 @@ function buildTableContratados(data){
         order: [[1, "desc"]],
         data: data,
         columns: [{
+            title: 'Ranking',
+            data: function(d){
+                return d.ranking
+            }
+        },{
             title: 'Totales',
             data: function(d){
                 return d.totalConT
@@ -454,6 +464,11 @@ function buildTableConEnganche(data){
         order: [[1, "desc"]],
         data: data,
         columns: [{
+            title: 'Ranking',
+            data: function(d){
+                return d.ranking
+            }
+        },{
             title: 'Totales',
             data: function(d){
                 return d.cuantos
@@ -520,6 +535,11 @@ function buildTableSinEnganche(data){
         order: [[1, "desc"]],
         data: data,
         columns: [{
+            title: 'Ranking',
+            data: function(d){
+                return d.ranking
+            }
+        },{
             title: 'Totales',
             data: function(d){
                 return d.cuantos
