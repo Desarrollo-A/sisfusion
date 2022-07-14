@@ -199,7 +199,6 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, dates=n
                 width: "8%",
                 data: function (d) {
                     return `<button style="background-color: #cfcdcd; border: none; border-radius: 5px; padding: 3px 12px;" type="btn" data-type="1" data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-idUser="${d.userID}" id="details-${d.userID}" class="btnModalDetails">${(d.totalAT).toLocaleString('es-MX')}</button>`//# APARTADOS;
-                    //return ((d.totalAT + d.totalCanA)).toLocaleString('es-MX'); //# APARTADOS
                 }
             },
             {
@@ -211,7 +210,6 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, dates=n
             {
                 width: "8%",
                 data: function (d) {
-                    //return `<button style="background-color: #cfcdcd; border: none; border-radius: 5px; padding: 3px 12px;" type="btn" data-type="4" data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-idUser="${d.userID}" id="details-${d.userID}" class="btnModalDetails">${(d.totalCanA).toLocaleString('es-MX')}</button>`//# CANCELADOS APARTADOS;
                     return (d.totalCanA).toLocaleString('es-MX'); //# CANCELADOS APARTADOS
                 }
             },
@@ -225,7 +223,6 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, dates=n
                 width: "8%",
                 data: function (d) {
                     return `<button style="background-color: #cfcdcd; border: none; border-radius: 5px; padding: 3px 12px;" type="btn" data-type="2" data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-idUser="${d.userID}" id="details-${d.userID}" class="btnModalDetails">${(d.totalConT).toLocaleString('es-MX')}</button>`//# CONTRATADOS;
-                    //return ((d.totalConT)).toLocaleString('es-MX'); //# CONTRATADOS
                 }
             },
             {
@@ -238,7 +235,6 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, dates=n
                 width: "8%",
                 data: function (d) {
                     return `<button style="background-color: #cfcdcd; border: none; border-radius: 5px; padding: 3px 12px;" type="btn" data-type="3" data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-idUser="${d.userID}" id="details-${d.userID}" class="btnModalDetails">${(d.totalCanC).toLocaleString('es-MX')}</button>`//# CANCELADOS CONTRATADOS;
-                    //return (d.totalCanC).toLocaleString('es-MX'); //# CANCELADOS CONTRATADOS
                 }
             },
             {
@@ -480,18 +476,16 @@ async function chartDetail(e, tipoChart){
 }
 
 function getSpecificChart(type, beginDate, endDate){
+    $('.loadChartModal').removeClass('d-none');
     $.ajax({
         type: "POST",
         url: `${base_url}Reporte/getDataChart`,
         data: {general: 0, tipoChart: type, beginDate: beginDate, endDate: endDate},
         dataType: 'json',
         cache: false,
-        beforeSend: function() {
-            $('#spiner-loader').removeClass('hide');
-        },
         success: function(data){
+            $('.loadChartModal').addClass('d-none');
             var miniChart = 0;
-            $('#spiner-loader').addClass('hide');
             var orderedArray = orderedDataChart(data);
             let { categories, series } = orderedArray[0];
             let total = 0;
@@ -500,36 +494,34 @@ function getSpecificChart(type, beginDate, endDate){
             });
             $("#modalChart .boxModalTitle .total").html('');
             $("#modalChart .boxModalTitle .total").append('<p>$'+formatMoney(total)+'</p>');
-            
             if ( total != 0 ){
                 chart.updateOptions(setOptionsChart(series, categories, miniChart));
             }
             else{
+                $("#boxModalChart").html('');
                 $("#boxModalChart").addClass('d-flex justify-center');
-                $("#boxModalChart").append('<img src="./dist/img/emptyChart.png" alt="Icono gráfica" class="h-70 w-auto">');
-                chart.updateOptions(setOptionsChart([], [], miniChart));
+                $("#boxModalChart").append('<img src="'+base_url+'dist/img/emptyCharts.png" alt="Icono gráfica" class="h-70 w-auto">');
+                // chart.updateOptions(setOptionsChart([], [], miniChart));
             }
         },
         error: function() {
-            $('#spiner-loader').addClass('hide');
+            $('.loadChartModal').addClass('d-none');
             alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
         }
     });
 }
 
 function getLastSales(beginDate, endDate){
+    $('.loadChartMini').removeClass('d-none');
     $.ajax({
         type: "POST",
         url: `${base_url}Reporte/getDataChart`,
         data: {general: 1, tipoChart:'na', beginDate: beginDate, endDate: endDate},
         dataType: 'json',
         cache: false,
-        beforeSend: function() {
-          $('#spiner-loader').removeClass('hide');
-        },
         success: function(data){
+            $('.loadChartMini').addClass('d-none');
             let miniChart = 1, total = 0;
-            $('#spiner-loader').addClass('hide');
             let orderedArray = orderedDataChart(data);
             for ( i=0; i<orderedArray.length; i++ ){
                 let { chart, categories, series } = orderedArray[i];
@@ -543,8 +535,6 @@ function getLastSales(beginDate, endDate){
                     $("#"+chart+"").html('');
                     $("#"+chart+"").removeClass('d-flex justify-center');
                     var miniChartApex = new ApexCharts(document.querySelector("#"+chart+""), setOptionsChart(series, categories, miniChart));
-                    // chart.updateOptions(setOptionsChart(series, categories, miniChart));
-
                     miniChartApex.render();
                 }
                 else $("#"+chart+"").addClass('d-flex justify-center');
@@ -855,8 +845,6 @@ async function setInitialValues() {
     finalBeginDate2 = [(datesMonths.firstDate).split('-')[2],  (datesMonths.firstDate).split('-')[1], (datesMonths.firstDate).split('-')[0]].join('/');
     finalEndDate2 = [(datesMonths.secondDate).split('-')[2],  (datesMonths.secondDate).split('-')[1], (datesMonths.secondDate).split('-')[0]].join('/');
 
-
-    
     $('#tableBegin').val(finalBeginDate2);
     $('#tableEnd').val(finalEndDate2);
 }
@@ -870,7 +858,6 @@ function generalChart(data){
     let apartadosC = [];
     let contratados = [];
     let contratadosC = [];
-    console.log(data.length);
     data.forEach(element => {
         if(data.length>1){
             x.push(element.nombreUsuario);
@@ -879,6 +866,9 @@ function generalChart(data){
             contratados.push(element.totalConT + element.totalCanC);
             contratadosC.push(element.totalCanC);    
         }else{
+            $("#boxModalChart").html('');
+            $("#boxModalChart").addClass('d-flex justify-center');
+            $("#boxModalChart").append('<img src="'+base_url+'dist/img/emptyCharts.png" alt="Icono gráfica" class="h-70 w-auto">');
             x = ['', element.nombreUsuario, ''];
             apartados=[0,element.totalAT + element.totalCanA,0];
             apartadosC=[0,element.totalCanA,0];
@@ -905,11 +895,11 @@ function generalChart(data){
         }
     ];
     chart.updateOptions(setOptionsChart(series, x, 0, 1));
+    $('.loadChartModal').addClass('d-none');
 }
 
 
 function get4Months() {
-    let dates;
     return new Promise(resolve => {
         $.ajax({
             type: "POST",
@@ -966,7 +956,6 @@ $(document).on('click', '.btnModalDetails', function () {
         begin: formatDate($('#tableBegin').val()), 
         end: formatDate($('#tableEnd').val())
     }
-    console.log(dataObj);
     fillTable(dataObj);
     $("#seeInformationModal").modal();
 });

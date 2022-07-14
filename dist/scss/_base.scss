@@ -93,7 +93,7 @@
 /* END utilities */
 
 /* Flexbox */
-.d-none          { display: none; }
+.d-none          { display: none!important; }
 .d-block         { display: block; }
 .d-flex          { display: flex; }
 .align-start     { align-items: flex-start; }

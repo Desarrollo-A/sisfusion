@@ -341,7 +341,7 @@
 /* END utilities */
 /* Flexbox */
 .d-none {
-  display: none;
+  display: none !important;
 }
 
 .d-block {
@@ -1236,6 +1236,15 @@
   height: 110px !important;
 }
 
+#reporte .boxMiniCharts .loadChartMini {
+  position: absolute;
+  background-color: #143860;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
+}
+
 #reporte .boxAccordions .bk {
   background-color: #ffffff;
   padding: 10px 10px 10px 10px;
@@ -1459,6 +1468,16 @@
 
 #modalChart .modal-dialog .modal-content .form-group .btn-fab-mini span {
   color: #eaeaea;
+}
+
+#modalChart .modal-dialog .modal-content .loadChartModal {
+  position: absolute;
+  top: 0;
+  background-color: #143860;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
 }
 
 @media (min-device-width: 320px) and (max-device-width: 480px), (min-width: 480px) and (max-width: 991px) {
