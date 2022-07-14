@@ -566,7 +566,7 @@ class Reporte_model extends CI_Model {
         return $query;
     }
 
-    public function getGeneralLotesInformation($beginDate, $endDate, $id_rol, $id_usuario, $render, $type) {
+    public function getGeneralLotesInformation($beginDate, $endDate, $id_rol, $id_usuario, $render, $type, $sede) {
         // PARA ASESOR, COORDINADOR, GERENTE, SUBDIRECTOR, REGIONAL Y DIRECCIÓN COMERCIAL
         $id_lider = $this->session->userdata('id_lider'); // PARA ASISTENTES
         $comodin2 = 'LEFT';
@@ -653,8 +653,17 @@ class Reporte_model extends CI_Model {
                 $comodin = "id_regional";//pendiente
             }
         }
-        if ($type == 1 || $type == 2) { // MJ: APARTADOS || CONTRATADOS
-            $statusLote = $type == 1 ? "!= 2" : "= 2";
+        /*
+        $type = 1 APARTADO FILA PAPÁ
+        $type = 11 APARTADO FILA ROW DETAIL POR SEDE
+        $type = 2 CONTRATADO FILA PAPÁ
+        $type = 22 CONTRATADO FILA ROW DETAIL POR SEDE
+        $type = 3 CANCELADO CONTRATADO FILA PAPÁ
+        $type = 33 CANCELADO CONTRATADO FILA ROW DETAIL POR SEDE
+        */
+        if ($type == 1 || $type == 2 || $type == 11 || $type == 22) { // MJ: APARTADOS || CONTRATADOS
+            $statusLote = ($type == 1 || $type == 11) ? "!= 2" : "= 2";
+            $filtroSede = ($type == 11 || $type == 22) ? "AND re.sede_residencial = $sede" : "";
             $query = $this->db->query("SELECT re.descripcion nombreResidencial, UPPER(co.nombre) nombreCondominio, UPPER(lo.nombreLote) nombreLote, 
             CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno) nombreCliente,
             CONCAT(ua.nombre, ' ', ua.apellido_paterno, ' ', ua.apellido_materno) nombreAsesor,
@@ -662,7 +671,7 @@ class Reporte_model extends CI_Model {
             FROM clientes cl
             INNER JOIN lotes lo ON lo.idLote = cl.idLote AND lo.idCliente = cl.id_cliente AND lo.idStatusLote $statusLote
             INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
-            INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
+            INNER JOIN residenciales re ON re.idResidencial = co.idResidencial $filtroSede
             INNER JOIN statusContratacion sc ON sc.idStatusContratacion = lo.idStatusContratacion
             INNER JOIN statusLote st ON st.idStatusLote = lo.idStatusLote
             $comodin2 JOIN usuarios us ON us.id_usuario = cl.$comodin
@@ -670,7 +679,8 @@ class Reporte_model extends CI_Model {
             WHERE isNULL(noRecibo, '') != 'CANCELADO' AND isNULL(isNULL(cl.tipo_venta_cl, lo.tipo_venta), 0) IN (0, 1, 2) AND cl.status = 1 
             $filtro
             ORDER BY cl.fechaApartado");
-        } else if ($type == 3) { // MJ: CANCELADOSS
+        } else if ($type == 3 || $type == 33) { // MJ: CANCELADOS CONTRATADOS
+            $filtroSede = $type == 33 ? "AND re.sede_residencial = $sede" : "";
             $query = $this->db->query("SELECT re.descripcion nombreResidencial, UPPER(co.nombre) nombreCondominio, UPPER(lo.nombreLote) nombreLote, 
             CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno) nombreCliente,
             CONCAT(ua.nombre, ' ', ua.apellido_paterno, ' ', ua.apellido_materno) nombreAsesor,
@@ -678,7 +688,7 @@ class Reporte_model extends CI_Model {
             FROM clientes cl
             INNER JOIN lotes lo ON lo.idLote = cl.idLote
             INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
-            INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
+            INNER JOIN residenciales re ON re.idResidencial = co.idResidencial $filtroSede
             $comodin2 JOIN usuarios us ON us.id_usuario = cl.$comodin
             LEFT JOIN usuarios ua ON ua.id_usuario = cl.id_asesor
             LEFT JOIN historial_liberacion hl ON hl.idLote = lo.idLote AND hl.tipo NOT IN (2, 5, 6) AND hl.id_cliente = cl.id_cliente
