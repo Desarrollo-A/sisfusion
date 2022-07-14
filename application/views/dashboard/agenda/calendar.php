@@ -39,6 +39,26 @@
                     <div class="col-12 col-sm-12 col-md-12 col-lg-12 p-0">
                         <div id='calendar'></div>
                     </div>
+                    <div class="col-12 col-sm-12 col-md-12 col-lg-12 p-0">
+                        <div class="boxCodigos d-flex">
+                            <div class="boxStatus d-flex">
+                                <i class="fas fa-circle codeFinish"></i>
+                                <p class="m-0">Cita finalizada</p>
+                            </div>
+                            <div class="boxStatus d-flex">
+                                <i class="fas fa-circle codeOpen"></i>
+                                <p class="m-0">Cita abierta</p>
+                            </div>
+                            <div class="boxStatus d-flex">
+                                <i class="fas fa-square codeAdviser"></i>
+                                <p class="m-0">Evento de asesor de ventas</p>
+                            </div>
+                            <div class="boxStatus d-flex">
+                                <i class="fas fa-square codeManager"></i>
+                                <p class="m-0">Evento de coordinador</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

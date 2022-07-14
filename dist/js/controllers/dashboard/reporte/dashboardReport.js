@@ -156,10 +156,10 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, dates=n
         }
         $('input', this).on('keyup change', function () {
             if(i != 0){
-            if ($("#table"+option+"").DataTable().column(i).search() !== this.value) {
-                $("#table"+option+"").DataTable().column(i)
-                    .search(this.value).draw();
-            }  
+                if ($("#table"+option+"").DataTable().column(i).search() !== this.value) {
+                    $("#table"+option+"").DataTable().column(i)
+                        .search(this.value).draw();
+                }  
             }
         });
     });
@@ -198,7 +198,8 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, dates=n
             {
                 width: "8%",
                 data: function (d) {
-                    return ((d.totalAT + d.totalCanA)).toLocaleString('es-MX'); //# APARTADOS
+                    return `<button style="background-color: #cfcdcd; border: none; border-radius: 5px; padding: 3px 12px;" type="btn" data-type="1" data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-idUser="${d.userID}" id="details-${d.userID}" class="btnModalDetails">${(d.totalAT).toLocaleString('es-MX')}</button>`//# APARTADOS;
+                    //return ((d.totalAT + d.totalCanA)).toLocaleString('es-MX'); //# APARTADOS
                 }
             },
             {
@@ -210,6 +211,7 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, dates=n
             {
                 width: "8%",
                 data: function (d) {
+                    //return `<button style="background-color: #cfcdcd; border: none; border-radius: 5px; padding: 3px 12px;" type="btn" data-type="4" data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-idUser="${d.userID}" id="details-${d.userID}" class="btnModalDetails">${(d.totalCanA).toLocaleString('es-MX')}</button>`//# CANCELADOS APARTADOS;
                     return (d.totalCanA).toLocaleString('es-MX'); //# CANCELADOS APARTADOS
                 }
             },
@@ -222,7 +224,8 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, dates=n
             {
                 width: "8%",
                 data: function (d) {
-                    return ((d.totalConT + d.totalCanC)).toLocaleString('es-MX'); //# CONTRATADOS
+                    return `<button style="background-color: #cfcdcd; border: none; border-radius: 5px; padding: 3px 12px;" type="btn" data-type="2" data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-idUser="${d.userID}" id="details-${d.userID}" class="btnModalDetails">${(d.totalConT).toLocaleString('es-MX')}</button>`//# CONTRATADOS;
+                    //return ((d.totalConT)).toLocaleString('es-MX'); //# CONTRATADOS
                 }
             },
             {
@@ -234,7 +237,8 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, dates=n
             {
                 width: "8%",
                 data: function (d) {
-                    return (d.totalCanC).toLocaleString('es-MX'); //# CANCELADOS CONTRATADOS
+                    return `<button style="background-color: #cfcdcd; border: none; border-radius: 5px; padding: 3px 12px;" type="btn" data-type="3" data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-idUser="${d.userID}" id="details-${d.userID}" class="btnModalDetails">${(d.totalCanC).toLocaleString('es-MX')}</button>`//# CANCELADOS CONTRATADOS;
+                    //return (d.totalCanC).toLocaleString('es-MX'); //# CANCELADOS CONTRATADOS
                 }
             },
             {
@@ -449,7 +453,6 @@ $(document).on('click', '.chartButton', function () {
     let title = getTitle(option);
     $("#modalChart .boxModalTitle .title").append(`${title}`);
     $('#modalChart').modal();
-    // $("#boxModalChart").html('');
     let table = $(`#table${option}`);
     var tableData = table.DataTable().rows().data().toArray();
     generalChart(tableData);
@@ -457,7 +460,6 @@ $(document).on('click', '.chartButton', function () {
 
 
 async function chartDetail(e, tipoChart){
-    // $("#boxModalChart").html('');
     $(".datesModal").show();
     $("#modalChart").modal();
     $("#modalChart .boxModalTitle .title").html('');
@@ -825,11 +827,11 @@ function buildTableDetail(data) {
         sedes += '<tr>';
         sedes += '<td> ' + (i + 1) + ' </td>';
         sedes += '<td> ' + v.sede + ' </td>';
-        sedes += '<td> ' + (v.totalAT + v.totalCanA).toLocaleString('es-MX') + ' </td>';
+        sedes += '<td> ' + (v.totalAT).toLocaleString('es-MX') + ' </td>';
         sedes += '<td> ' + v.sumaAT + ' </td>';
         sedes += '<td> ' + (v.totalCanA).toLocaleString('es-MX') + ' </td>';
         sedes += '<td> ' + v.porcentajeTotalCanA + '% </td>';
-        sedes += '<td> ' + (v.totalConT + v.totalCanC).toLocaleString('es-MX') + ' </td>';
+        sedes += '<td> ' + (v.totalConT).toLocaleString('es-MX') + ' </td>';
         sedes += '<td> ' + v.sumaConT + ' </td>';
         sedes += '<td> ' + (v.totalCanC).toLocaleString('es-MX') + ' </td>';
         sedes += '<td> ' + v.porcentajeTotalCanC + ' </td>';
@@ -903,7 +905,6 @@ function generalChart(data){
         }
     ];
     chart.updateOptions(setOptionsChart(series, x, 0, 1));
-    // chart.render();
 }
 
 
@@ -952,4 +953,158 @@ function newRoles(option) {
             rol = 'N/A';
     }
     return rol;
+}
+
+$(document).on('click', '.btnModalDetails', function () {
+    let dataObj = {
+        type: $(this).data("type"),
+        transaction: $(this).data("transaction"),
+        user: $(this).data("iduser"),
+        rol: $(this).data("rol"),
+        option: $(this).data("option"),
+        render: $(this).data("render"),
+        begin: formatDate($('#tableBegin').val()), 
+        end: formatDate($('#tableEnd').val())
+    }
+    console.log(dataObj);
+    fillTable(dataObj);
+    $("#seeInformationModal").modal();
+});
+
+$('#lotesInformationTable thead tr:eq(0) th').each(function (i) {
+    const title = $(this).text();
+    $(this).html('<input type="text" center;" class="textoshead"  placeholder="' + title + '"/>');
+    $('input', this).on('keyup change', function () {
+        if(i != 0){
+            if ($("#lotesInformationTable").DataTable().column(i).search() !== this.value) {
+                $("#lotesInformationTable").DataTable().column(i)
+                    .search(this.value).draw();
+            }
+        }
+    });
+});
+
+function fillTable(dataObject) {
+    generalDataTable = $('#lotesInformationTable').dataTable({
+        dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
+        width: '100%',
+        buttons: [
+            {
+                extend: 'excelHtml5',
+                text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
+                className: 'btn buttons-excel',
+                titleAttr: 'Descargar archivo de Excel',
+                exportOptions: {
+                    columns: [0, 1, 2, 3, 4, 5, 6, 7],
+                    format: {
+                        header: function (d, columnIdx) {
+                            switch (columnIdx) {
+                                case 0:
+                                    return 'Proyecto';
+                                    break;
+                                case 1:
+                                    return 'Condominio';
+                                    break;
+                                case 2:
+                                    return 'Lote'
+                                case 3:
+                                    return 'Cliente';
+                                    break;
+                                case 4:
+                                    return 'Asesor';
+                                    break;
+                                case 5:
+                                    return 'Fecha de apartado';
+                                    break;
+                                case 6:
+                                    return 'Estatus contratación';
+                                    break;
+                                case 7:
+                                    return 'Estatus lote';
+                                    break;
+                            }
+                        }
+                    }
+                }
+            }
+        ],
+        pagingType: "full_numbers",
+        lengthMenu: [
+            [10, 25, 50, -1],
+            [10, 25, 50, "Todos"]
+        ],
+        destroy: true,
+        ordering: false,
+        scrollX: true,
+        language: {
+            url: `${base_url}static/spanishLoader_v2.json`,
+            paginate: {
+                previous: "<i class='fa fa-angle-left'>",
+                next: "<i class='fa fa-angle-right'>"
+            }
+        },
+        destroy: true,
+        ordering: false,
+        columns: [
+            {
+                data: function (d) {
+                    return d.nombreResidencial;
+                }
+            },
+            {
+                data: function (d) {
+                    return d.nombreCondominio;
+                }
+            },
+            {
+                data: function (d) {
+                    return d.nombreLote;
+                }
+            },
+            {
+                data: function (d) {
+                    return d.nombreCliente;
+                }
+            },
+            {
+                data: function (d) {
+                    return d.nombreAsesor;
+                }
+            },
+            {
+                data: function (d) {
+                    return d.fechaApartado;
+                }
+            },
+            {
+                data: function (d) {
+                    return d.nombreStatus;
+                }
+            },
+            {
+                data: function (d) {
+                    return d.estatusLote;
+                }
+            }
+        ],
+        columnDefs: [{
+            visible: false,
+            searchable: false
+        }],
+        ajax: {
+            url: `${base_url}Reporte/getLotesInformation`,
+            type: "POST",
+            cache: false,
+            data: {
+                "type": dataObject.type,
+                "transaction": dataObject.transaction,
+                "user": dataObject.user,
+                "rol": dataObject.rol,
+                "render": dataObject.render,
+                "option": dataObject.option,
+                "beginDate": dataObject.begin,
+                "endDate": dataObject.end
+            }
+        }
+    });
 }

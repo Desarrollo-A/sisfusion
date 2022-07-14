@@ -161,11 +161,15 @@ var optionsProspClients = {
         y: {
             formatter: (value) => value.toLocaleString('es-MX'),
         },
+    },
+    noData: {
+        text: 'No hay informacion para mostrar...'
     }
 };
 
 var optionsWeekly = {
     series: [{
+        name: 'Cantidad',
         data: []
     }],
     chart: {
@@ -416,6 +420,8 @@ function getProspectsByYear(com2) {
              });
 
             $('#numberGraphic').text(count.toLocaleString('es-MX'));
+            document.getElementById('numberGraphic').title = count.toLocaleString('es-MX');
+            $('[data-toggle="tooltip"]').tooltip();
         }
     });
 }
@@ -471,7 +477,7 @@ function getClientsAndProspectsByYear(type = 1, beginDate = null, endDate= null)
                 xaxis: {
                    categories: monthsP.length >= monthsC.length ? monthsP:monthsC
                 },
-             });
+            });
 
             $('#spiner-loader').addClass('hide');
         }
@@ -526,7 +532,6 @@ function getDataFromDates(com2){
         dataType: 'json',
         beforeSend: function(){
             $('#spiner-loader').removeClass('hide');
-            $('.numberElement').addClass('subtitle_skeleton');
             cleanValues();
         },
         success : function (response) {
@@ -539,8 +544,6 @@ function getDataFromDates(com2){
 
             addTextFields(response);
             $('#spiner-loader').addClass('hide');
-            $('.numberElement').removeClass('subtitle_skeleton');
-
         }
     });
 }
@@ -556,19 +559,16 @@ function cicloVenta(com2){
         dataType: 'json',
         beforeSend: function(){
             $('#spiner-loader').removeClass('hide');
-            $('.numberElement2').addClass('subtitle_skeleton');
             cleanValues2();
         },
         success : function (response) {
             chartFunnel.updateSeries([
                response.totalProspectosCita, response.totalProspectosCitaSeguimiento, 
-                    response.totalApartados, response.prospectosNoInteresados
+                response.totalApartados, response.prospectosNoInteresados
             ]);
-
+            
             addTextFields2(response);
             $('#spiner-loader').addClass('hide');
-            $('.numberElement2').removeClass('subtitle_skeleton');
-
         }
     });
 }
