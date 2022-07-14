@@ -1154,12 +1154,16 @@
   height: 135px;
 }
 
-#inicio .col-prospectos .cardProspectosVig p {
-  font-size: 12px;
+#inicio .col-prospectos .cardProspectosVig .numberGraphic {
+  font-size: 13px;
+}
+
+#inicio .col-prospectos .cardProspectosVig .leyend {
+  font-size: 11px;
   color: #191B1C;
 }
 
-#inicio .col-prospectos .cardProspectosVig p span {
+#inicio .col-prospectos .cardProspectosVig .leyend span {
   color: #2C93E7;
   font-weight: 700;
 }

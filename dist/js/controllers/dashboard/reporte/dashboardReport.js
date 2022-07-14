@@ -156,10 +156,10 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, dates=n
         }
         $('input', this).on('keyup change', function () {
             if(i != 0){
-            if ($("#table"+option+"").DataTable().column(i).search() !== this.value) {
-                $("#table"+option+"").DataTable().column(i)
-                    .search(this.value).draw();
-            }  
+                if ($("#table"+option+"").DataTable().column(i).search() !== this.value) {
+                    $("#table"+option+"").DataTable().column(i)
+                        .search(this.value).draw();
+                }  
             }
         });
     });
@@ -449,7 +449,6 @@ $(document).on('click', '.chartButton', function () {
     let title = getTitle(option);
     $("#modalChart .boxModalTitle .title").append(`${title}`);
     $('#modalChart').modal();
-    // $("#boxModalChart").html('');
     let table = $(`#table${option}`);
     var tableData = table.DataTable().rows().data().toArray();
     generalChart(tableData);
@@ -457,7 +456,6 @@ $(document).on('click', '.chartButton', function () {
 
 
 async function chartDetail(e, tipoChart){
-    // $("#boxModalChart").html('');
     $(".datesModal").show();
     $("#modalChart").modal();
     $("#modalChart .boxModalTitle .title").html('');
@@ -903,7 +901,6 @@ function generalChart(data){
         }
     ];
     chart.updateOptions(setOptionsChart(series, x, 0, 1));
-    // chart.render();
 }
 
 

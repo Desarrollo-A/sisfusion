@@ -92,22 +92,24 @@
                 thead tr {
                     background-color: $blueIndigoDeep;
                     th{
-                        padding: 3px!important;
+                        padding: 0px!important;
                         input{
+                            margin: 4px;
                             border: 1px solid transparent;
                             border-radius: 5px;
                             color: $white;
                             text-align: center;
-                            font-weight: 500;
+                            font-weight: 300;
                             background-color: $blueIndigoDeep;
                             &:active{
-                                border: 1px solid $gray;
+                                border: 1px solid $white;
                             }
                             &:focus{
-                                border: 1px solid $gray;
+                                border: 1px solid $white;
                             }
                             &::placeholder{
                                 color: $white;
+                                text-transform: lowercase;
                             }
                         }
                     }

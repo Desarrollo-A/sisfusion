@@ -1212,28 +1212,13 @@
 #ranking .card .col-datatable table thead tr th {
   padding: 0px !important;
   text-align: center;
-}
-
-#ranking .card .col-datatable table thead tr th input {
   margin: 4px;
   border: 1px solid transparent;
-  border-radius: 5px;
   color: #ffffff;
   text-align: center;
   font-weight: 300;
   background-color: #143860;
-}
-
-#ranking .card .col-datatable table thead tr th input:active {
-  border: 1px solid #ffffff;
-}
-
-#ranking .card .col-datatable table thead tr th input:focus {
-  border: 1px solid #ffffff;
-}
-
-#ranking .card .col-datatable table thead tr th input::placeholder {
-  color: #ffffff;
+  text-transform: lowercase;
 }
 
 #ranking .card .col-datatable .dataTables_info {
