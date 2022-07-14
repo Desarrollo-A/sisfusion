@@ -319,7 +319,7 @@ function buildTableApartados(data){
                 next: "<i class='fa fa-angle-right'>"
             }
         },
-        order: [[1, "desc"]],
+        order: [[2, "desc"]],
         data: data,
         columns: [{
             title: 'Ranking',
@@ -390,7 +390,7 @@ function buildTableContratados(data){
                 next: "<i class='fa fa-angle-right'>"
             }
         },
-        order: [[1, "desc"]],
+        order: [[2, "desc"]],
         data: data,
         columns: [{
             title: 'Ranking',
@@ -461,7 +461,7 @@ function buildTableConEnganche(data){
                 next: "<i class='fa fa-angle-right'>"
             }
         },
-        order: [[1, "desc"]],
+        order: [[2, "desc"]],
         data: data,
         columns: [{
             title: 'Ranking',
@@ -532,7 +532,7 @@ function buildTableSinEnganche(data){
                 next: "<i class='fa fa-angle-right'>"
             }
         },
-        order: [[1, "desc"]],
+        order: [[2, "desc"]],
         data: data,
         columns: [{
             title: 'Ranking',
