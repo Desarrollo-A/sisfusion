@@ -4,7 +4,7 @@ var optionsTotalVentas = {
         height: '100%',
         type: 'radialBar',
     },
-    colors: ['#0089B7','#039590', '#00ACB8', '#4BBC8E', '#00CDA3', '#92E784', '#D9A9FB'],
+    colors: ['#103F75', '#006A9D', '#0089B7', '#039590', '#008EAB', '#00ACB8', '#16C0B4', '#4BBC8E', '#00CDA3', '#92E784'],
     plotOptions: {
         radialBar: {
             startAngle: -135,
@@ -182,7 +182,7 @@ var optionsWeekly = {
     noData: {
         text: 'No hay informacion para mostrar...'
       },
-    colors: ['#0089B7','#039590', '#00ACB8', '#4BBC8E', '#00CDA3', '#92E784', '#D9A9FB'],
+    colors: ['#103F75', '#006A9D', '#0089B7', '#039590', '#008EAB', '#00ACB8', '#16C0B4', '#4BBC8E', '#00CDA3', '#92E784'],
     grid:{
         show: true,
     },
@@ -226,7 +226,7 @@ var optionsFunnel = {
         height: '100%',
         type: 'polarArea',
     },
-    colors: ['#0089B7','#039590', '#00ACB8', '#4BBC8E', '#00CDA3', '#92E784', '#D9A9FB'],
+    colors: ['#103F75', '#006A9D', '#0089B7', '#039590', '#008EAB', '#00ACB8', '#16C0B4', '#4BBC8E', '#00CDA3', '#92E784'],
     stroke: {
         colors: ['#fff']
     },
@@ -347,12 +347,13 @@ function loadInit(){
         com2.append("typeTransaction", typeTransaction);
         getProspectsByYear(com2); 
         getSalesByYear(com2);
-        getClientsAndProspectsByYear(); 
         generalMetrics(typeTransaction); 
         cicloVenta(com2);
+        getClientsAndProspectsByYear(); 
 }
 
 function getSalesByYear(com2){
+    $('.loadTotalVentasChart').removeClass('d-none');
     $.ajax({
         url: `${base_url}Dashboard/totalVentasData`,
         data:com2,
@@ -361,9 +362,6 @@ function getSalesByYear(com2){
         processData: false,
         type: 'POST',
         dataType: 'json',
-        beforeSend: function () {
-            $('#spiner-loader').removeClass('hide');
-        },
         success: function (response) {
             let totalVentasArray = [
                 parseFloat(response.porcentajeTotal),
@@ -383,11 +381,13 @@ function getSalesByYear(com2){
              });
 
             totalVentasChart.toggleDataPointSelection (0);
+            $('.loadTotalVentasChart').addClass('d-none');
         }
     });
 }
 
 function getProspectsByYear(com2) {
+    $('.loadProspectosChart').removeClass('d-none');
     $.ajax({
         url: `${base_url}Dashboard/getProspectsByYear`,
         data:com2,
@@ -396,9 +396,6 @@ function getProspectsByYear(com2) {
         processData: false,
         type: 'POST',
         dataType: 'json',
-        beforeSend: function () {
-            $('#spiner-loader').removeClass('hide');
-        },
         success: function (response) {
             let months = [];
             let data = [];
@@ -421,7 +418,7 @@ function getProspectsByYear(com2) {
 
             $('#numberGraphic').text(count.toLocaleString('es-MX'));
             document.getElementById('numberGraphic').title = count.toLocaleString('es-MX');
-            $('[data-toggle="tooltip"]').tooltip();
+            $('.loadProspectosChart').addClass('d-none');
         }
     });
 }
@@ -433,7 +430,7 @@ function getClientsAndProspectsByYear(type = 1, beginDate = null, endDate= null)
     data.append("beginDate", beginDate);
     data.append("endDate", endDate);
     data.append("typeTransaction", typeTransaction);
-
+    $('.loadChartProspClients').removeClass('d-none');
     $.ajax({
         url: `${base_url}Dashboard/getClientsAndProspectsByYear`,
         cache: false,
@@ -442,9 +439,6 @@ function getClientsAndProspectsByYear(type = 1, beginDate = null, endDate= null)
         type: 'POST',
         data: data,
         dataType: 'json',
-        beforeSend: function () {
-            $('#spiner-loader').removeClass('hide');
-        },
         success: function (response) {
             let monthsP = [];
             let monthsC = [];
@@ -475,11 +469,10 @@ function getClientsAndProspectsByYear(type = 1, beginDate = null, endDate= null)
 
             chartProspClients.updateOptions({
                 xaxis: {
-                   categories: monthsP.length >= monthsC.length ? monthsP:monthsC
+                    categories: monthsP.length >= monthsC.length ? monthsP:monthsC
                 },
             });
-
-            $('#spiner-loader').addClass('hide');
+            $('.loadChartProspClients').addClass('d-none');
         }
     });
 }
@@ -522,6 +515,7 @@ function weekFilter(element){
 }
 
 function getDataFromDates(com2){
+    $('.loadChartWeekly').removeClass('d-none');
     $.ajax({
         url: `${base_url}Dashboard/getDataFromDates`,
         data:com2,
@@ -530,10 +524,6 @@ function getDataFromDates(com2){
         processData: false,
         type: 'POST',
         dataType: 'json',
-        beforeSend: function(){
-            $('#spiner-loader').removeClass('hide');
-            cleanValues();
-        },
         success : function (response) {
             const sumValues = obj => Object.values(obj).reduce((a, b) => a + b);
             let suma = sumValues(response)-response.prospTotales;
@@ -543,12 +533,13 @@ function getDataFromDates(com2){
             }]);
 
             addTextFields(response);
-            $('#spiner-loader').addClass('hide');
+            $('.loadChartWeekly').addClass('d-none');
         }
     });
 }
 
 function cicloVenta(com2){
+    $('.loadChartFunnel').removeClass('d-none');
     $.ajax({
         url: `${base_url}Dashboard/cicloVenta`,
         data:com2,
@@ -557,10 +548,6 @@ function cicloVenta(com2){
         processData: false,
         type: 'POST',
         dataType: 'json',
-        beforeSend: function(){
-            $('#spiner-loader').removeClass('hide');
-            cleanValues2();
-        },
         success : function (response) {
             chartFunnel.updateSeries([
                response.totalProspectosCita, response.totalProspectosCitaSeguimiento, 
@@ -568,7 +555,7 @@ function cicloVenta(com2){
             ]);
             
             addTextFields2(response);
-            $('#spiner-loader').addClass('hide');
+            $('.loadChartFunnel').addClass('d-none');
         }
     });
 }

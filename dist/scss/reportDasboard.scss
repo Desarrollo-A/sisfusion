@@ -68,6 +68,14 @@
     }
     .boxMiniCharts{
         height: 110px!important;
+        .loadChartMini{
+            position: absolute;
+            background-color: $blueIndigoDeep;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 10px;
+        }
     }
     .boxAccordions{
         .bk{
@@ -248,6 +256,15 @@
                         color: $platinum;
                     }
                 }
+            }
+            .loadChartModal{
+                position: absolute;
+                top: 0;
+                background-color: $blueIndigoDeep;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                border-radius: 10px;
             }
             @media #{$smartphone}, #{$tablets}{
                 height: inherit!important;
