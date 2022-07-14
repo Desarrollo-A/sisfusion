@@ -9,7 +9,7 @@ var optionBarInit = {
             show: false
         },
     },
-    colors: ['#0089B7', '#039590', '#00ACB8', '#4BBC8E', '#00CDA3', '#92E784', '#95E4FF'],
+    colors: ['#103F75', '#006A9D', '#0089B7', '#039590', '#008EAB', '#00ACB8', '#16C0B4', '#4BBC8E', '#00CDA3', '#92E784'],
     stroke: {
         colors: ['transparent'],
         width: 0,
@@ -97,7 +97,7 @@ var optionsDisponibilidad = {
             borderRadius: 10
         }
     },
-    colors: ['#0089B7', '#039590', '#00ACB8', '#4BBC8E', '#00CDA3', '#92E784', '#95E4FF'],
+    colors: ['#103F75', '#006A9D', '#0089B7', '#039590', '#008EAB', '#00ACB8', '#16C0B4', '#4BBC8E', '#00CDA3', '#92E784'],
     stroke: {
         colors: ['transparent'],
         width: 0,
@@ -147,7 +147,10 @@ var optionsDisponibilidad = {
         },
     },
     tooltip: { 
-        show: true,
+        enabled: true,
+        y: {
+            formatter: (value) =>  value.toLocaleString('es-MX'),
+        },
     },
 };
 
@@ -163,7 +166,7 @@ var optionLugar = {
             show: false
         },
     },
-    colors: ['#0089B7', '#039590', '#00ACB8', '#4BBC8E', '#00CDA3', '#92E784', '#95E4FF'],
+    colors: ['#103F75', '#006A9D', '#0089B7', '#039590', '#008EAB', '#00ACB8', '#16C0B4', '#4BBC8E', '#00CDA3', '#92E784'],
     stroke: {
         colors: ['transparent'],
         width: 5,
@@ -252,7 +255,7 @@ var optionsMedio = {
             show: false
         },
     },
-    colors: ['#0089B7', '#039590', '#00ACB8', '#4BBC8E', '#00CDA3', '#92E784', '#95E4FF'],
+    colors: ['#103F75', '#006A9D', '#0089B7', '#039590', '#008EAB', '#00ACB8', '#16C0B4', '#4BBC8E', '#00CDA3', '#92E784'],
     dataLabels: {
         enabled: false,
         formatter: function (val) {
@@ -287,7 +290,7 @@ var optionsVentasMetros = {
         height: '100%',
         type: 'area'
     },
-    colors: ['#0089B7', '#039590', '#00ACB8', '#4BBC8E', '#00CDA3', '#92E784', '#95E4FF'],
+    colors: ['#103F75', '#006A9D', '#0089B7', '#039590', '#008EAB', '#00ACB8', '#16C0B4', '#4BBC8E', '#00CDA3', '#92E784'],
     dataLabels: {
         enabled: false,
         formatter: function (val) {
@@ -483,13 +486,19 @@ function formatDisponibilidadData(data){
             series.push({
                 x: element.nombreResidencial,
                 y: element.ocupados,
-                z: element.restante,
                 goals: [{
                     name: 'Total',
                     value: element.totales,
                     strokeWidth: 2,
                     strokeHeight: 10,
                     strokeColor: '#775DD0'
+                },
+                {   
+                    name: 'Disponible',
+                    value: element.restante,
+                    strokeWidth: 0,
+                    strokeHeight: 0,
+                    strokeColor: '#FFFFFF'
                 }]
             });
             count++;
