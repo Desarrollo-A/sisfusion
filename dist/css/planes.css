@@ -1128,561 +1128,145 @@
   background-color: #F1F1F1;
 }
 
-.btn-circle.btn-lg {
-  width: 50px;
-  height: 50px;
-  padding: 10px 16px;
-  font-size: 18px;
-  line-height: 1.33;
-  border-radius: 25px;
+.cargarPlan .nav-tabs-cm {
+  background: #eeeeee;
+  padding: 0;
 }
 
-.btn-maderas {
-  background-color: #0a548b;
+.cargarPlan .nav-tabs-cm li > a {
+  color: #F1F1F1 !important;
+  padding: 5px 60px;
+  border-radius: 20px 20px 0 0;
+  background-color: #96843D;
+  box-shadow: inset 0px -6px 8px 0px #0000002c;
+  opacity: 0.6;
+  margin-right: 5px;
+  font-weight: 500;
 }
 
-.btn-maderas {
-  background-color: #0a548b;
+@media (min-width: 480px) and (max-width: 991px) {
+  .cargarPlan .nav-tabs-cm li > a {
+    padding: 7px 15px;
+  }
 }
 
-.btn-maderas:hover {
-  background: #0a548b;
+.cargarPlan .nav-tabs-cm li.active > a, .cargarPlan .nav-tabs-cm .nav-tabs > li.active > a:hover, .cargarPlan .nav-tabs-cm .nav-tabs-cm > li.active > a:focus {
+  background-color: #ffffff;
+  opacity: 1;
+  color: #333333 !important;
+  font-weight: 500;
+  box-shadow: none;
 }
 
-.formulario .none {
-  display: none;
+.cargarPlan .nav-tabs-cm li > a:hover {
+  background-color: #96843D;
+  opacity: 1;
+  color: #ffffff !important;
+  box-shadow: none;
 }
 
-.form1 .input-gral {
-  background-color: #eaeaea !important;
-  color: #929292 !important;
-  border-radius: 27px !important;
-  background-image: none !important;
-  padding-left: 20px;
+@media (min-device-width: 320px) and (max-device-width: 480px) {
+  .cargarPlan .nav-tabs-cm li {
+    width: 100%;
+  }
+  .cargarPlan .nav-tabs-cm li > a {
+    border-radius: 20px;
+    margin-bottom: 10px;
+    padding: 10px 0;
+    text-align: center;
+    box-shadow: none;
+  }
 }
 
-.form1 .select-gral {
-  border-radius: 27px !important;
-  height: 45px;
-  -webkit-border-radius: 27px !important;
-  -moz-border-radius: 27px !important;
-  -ms-border-radius: 27px !important;
-  -o-border-radius: 27px !important;
+.cargarPlan .tab-content {
+  padding: 15px;
 }
 
-.form1 .select-gral-sede {
-  border-radius: 27px !important;
-  height: 45px;
-  padding-bottom: 10%;
-  -webkit-border-radius: 27px !important;
-  -moz-border-radius: 27px !important;
-  -ms-border-radius: 27px !important;
-  -o-border-radius: 27px !important;
-}
-
-#ModalFormAddDescuentos .input-gral {
-  background-color: #eaeaea !important;
-  color: #929292 !important;
-  border-radius: 27px !important;
-  background-image: none !important;
-  padding-left: 20px;
-}
-
-#exampleModal {
-  /***
-Bootstrap Line Tabs by @keenthemes
-A component of Metronic Theme - #1 Selling Bootstrap 3 Admin Theme in Themeforest: http://j.mp/metronictheme
-Licensed under MIT
-***/
-  /* Tabs panel */
-  /* Default mode */
-  /* Below tabs mode */
-}
-
-#exampleModal .tabbable-panel {
-  border: 1px solid #eee;
-  padding: 10px;
-}
-
-#exampleModal .tabbable-line > .nav-tabs {
-  border: none;
-  margin: 0px;
-}
-
-#exampleModal .tabbable-line > .nav-tabs > li {
-  margin-right: 2px;
-}
-
-#exampleModal .tabbable-line > .nav-tabs > li > a {
-  border: 0;
-  margin-right: 0;
-  color: #737373;
-}
-
-#exampleModal .tabbable-line > .nav-tabs > li > a > i {
-  color: #a6a6a6;
-}
-
-#exampleModal .tabbable-line > .nav-tabs > li.open, #exampleModal .tabbable-line > .nav-tabs > li:hover {
-  border-bottom: 4px solid #d3d1d1;
-}
-
-#exampleModal .tabbable-line > .nav-tabs > li.open > a, #exampleModal .tabbable-line > .nav-tabs > li:hover > a {
-  border: 0;
-  background: none !important;
-  color: #333333;
-}
-
-#exampleModal .tabbable-line > .nav-tabs > li.open > a > i, #exampleModal .tabbable-line > .nav-tabs > li:hover > a > i {
-  color: #d3d1d1;
-}
-
-#exampleModal .tabbable-line > .nav-tabs > li.open .dropdown-menu, #exampleModal .tabbable-line > .nav-tabs > li:hover .dropdown-menu {
-  margin-top: 0px;
-}
-
-#exampleModal .tabbable-line > .nav-tabs > li.active {
-  border-bottom: 4px solid #a6a6a6;
-  position: relative;
-}
-
-#exampleModal .tabbable-line > .nav-tabs > li.active > a {
-  border: 0;
-  color: #333333;
-}
-
-#exampleModal .tabbable-line > .nav-tabs > li.active > a > i {
-  color: #404040;
-}
-
-#exampleModal .tabbable-line > .tab-content {
-  margin-top: -3px;
-  background-color: #fff;
-  border: 0;
-  border-top: 1px solid #eee;
-  padding: 15px 0;
-}
-
-#exampleModal .portlet .tabbable-line > .tab-content {
-  padding-bottom: 0;
-}
-
-#exampleModal .tabbable-line.tabs-below > .nav-tabs > li {
-  border-top: 4px solid transparent;
-}
-
-#exampleModal .tabbable-line.tabs-below > .nav-tabs > li > a {
-  margin-top: 0;
-}
-
-#exampleModal .tabbable-line.tabs-below > .nav-tabs > li:hover {
-  border-bottom: 0;
-  border-top: 4px solid #d3d1d1;
-}
-
-#exampleModal .tabbable-line.tabs-below > .nav-tabs > li.active {
-  margin-bottom: -2px;
-  border-bottom: 0;
-  border-top: 4px solid #a6a6a6;
-}
-
-#exampleModal .tabbable-line.tabs-below > .tab-content {
-  margin-top: -10px;
-  border-top: 0;
-  border-bottom: 1px solid #eee;
-  padding-bottom: 15px;
-}
-
-#ModalAlert .btn-circle {
-  width: 30px;
-  height: 30px;
-  text-align: center;
-  padding: 6px 0;
-  font-size: 12px;
-  line-height: 1.428571429;
-  border-radius: 15px;
-}
-
-#ModalAlert .btn-circle.btn-lg {
-  width: 50px;
-  height: 50px;
-  padding: 10px 16px;
-  font-size: 18px;
-  line-height: 1.33;
-  border-radius: 25px;
-}
-
-#ModalMsi {
-  /*.input-descuento {
-    background-color: #F9F7F7 !important;
-    color: #000 !important;
-    border-radius: 27px !important;
-    background-image: none !important;
-    width:60%;
-  }*/
-}
-
-#ModalMsi *,
-#ModalMsi *::before,
-#ModalMsi *::after {
-  box-sizing: border-box;
-}
-
-#ModalMsi .btn-circle {
-  width: 30px;
-  height: 30px;
-  text-align: center;
-  padding: 6px 0;
-  font-size: 12px;
-  line-height: 1.428571429;
-  border-radius: 15px;
-}
-
-#ModalMsi .btn-circle.btn-lg {
-  width: 50px;
-  height: 50px;
-  padding: 10px 16px;
-  font-size: 18px;
-  line-height: 1.33;
-  border-radius: 25px;
-}
-
-#ModalMsi .input-descuento {
-  position: relative;
-  top: 50%;
-  left: 50%;
-  width: 95px;
-  height: 40px;
-  border-radius: 40px;
-  box-shadow: 0 8px 10px rgba(0, 0, 0, 0.15);
-  transform: translate(-50%, -50%);
-  background: #fff;
-  transition: all 0.3s ease;
-}
-
-#ModalMsi .input-descuento.focus {
-  box-shadow: 0 3px 4px rgba(0, 0, 0, 0.15);
-}
-
-#ModalMsi .input-descuento {
-  position: absolute;
-  top: -10px;
-  left: 125px;
-  font-size: 18px;
-  background: none;
-  color: #5a6674;
-  width: 110px;
-  height: 40px;
-  border: none;
-  appearance: none;
-  outline: none;
-  text-align: center;
-}
-
-#ModalMsi .input-descuento::-webkit-search-cancel-button {
-  appearance: none;
-}
-
-.rowCards {
-  /*.boxCard:hover{
-      box-shadow: 0 0 6px $blueMaderas;
-      transform: scale(1.1);
-      -webkit-transform: scale(1.1);
-      -moz-transform: scale(1.1);
-      -ms-transform: scale(1.1);
-      -o-transform: scale(1.1);
-}*/
-}
-
-.rowCards .boxCard {
-  background: #FFF;
-  border-radius: 10px;
-  cursor: pointer;
-  margin: 40px 10px;
-  padding: 5px 10px;
-  transition: all 0.5s ease-out;
-  /*-------------------------------------------------------------------------------**/
-  /*-------------------------------------------------------------------------------*/
-}
-
-.rowCards .boxCard .check-box1 {
+.cargarPlan .tab-content .select2-selection--multiple {
   display: flex;
-  column-gap: .3em;
   align-items: center;
-  font-family: sans-serif;
-  font-size: 13px;
-  margin-bottom: 25px;
-  --checked-color: rgb(44, 143, 197);
-  --unchecked-color: #aaa;
-  --checked-disabled-color: #73c3d8;
-  --unchecked-disabled-color: #ddd;
-  margin-top: 25px;
+  background-color: #eaeaea !important;
+  border: none;
+  border-radius: 27px;
 }
 
-.rowCards .boxCard .check-box__switcher {
-  font-size: inherit;
-  appearance: none;
-  height: 1em;
-  width: 1.5em;
-  margin: 0;
-  border-radius: 1em;
-  background-color: var(--unchecked-color);
-  background-image: url('data:image/svg+xml,%3C%3Fxml version="1.0"%3F%3E%3Csvg width="20" height="20" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg"%3E%3Ccircle cx="10" cy="10" fill="%23ffffff" r="10"/%3E%3C/svg%3E');
-  background-repeat: no-repeat;
-  background-size: auto calc(100% - 4px);
-  background-position: center left 2px;
-  transition: background-position .2s ease-in, background-color 0s .1s;
-  cursor: pointer;
+.cargarPlan .tab-content .select2-selection--multiple .select2-selection__choice {
+  display: flex;
+  align-items: center;
+  background-color: #ffffff;
+  height: 25px;
+  border: none;
+  border-radius: 27px;
+  margin: 0 4px;
+  padding: 0 10px;
 }
 
-.rowCards .boxCard .check-box__switcher:checked {
-  background-position: center right 2px;
-  background-color: var(--checked-color);
+.cargarPlan .tab-content #fechainicio {
+  border-radius: 27px 0 0 27px;
+  padding-left: 8px;
 }
 
-.rowCards .boxCard .check-box__switcher:disabled:checked {
-  background-position: center right 2px;
-  background-color: var(--checked-disabled-color);
-  cursor: pointer;
+.cargarPlan .tab-content #fechafin {
+  border-radius: 0 27px 27px 0;
+  padding-right: 8px;
 }
 
-.rowCards .boxCard .check-box__switcher:disabled {
-  background-position: center left 2px;
-  background-color: var(--unchecked-disabled-color);
-  cursor: pointer;
-}
-
-.rowCards .boxCard .title-plan {
-  padding-top: 15px;
-}
-
-.rowCards .boxCard .myCard {
+.cargarPlan .tab-content .dates {
+  background-image: none;
+  background-color: #eaeaea;
+  text-align: center;
+  color: #929292;
   height: 100%;
 }
 
-.rowCards .boxCard .myCard .color_span {
-  background: #96843D;
+.cargarPlan .tab-content .radio-container {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  background-color: #eaeaea;
+  height: 40px;
+  border-radius: 27px;
 }
 
-.rowCards .boxCard .myCard .check-padding {
-  padding-top: 30px;
+.cargarPlan .tab-content .radio-container input {
+  appearance: none;
+  display: none;
 }
 
-.rowCards .boxCard .myCard .card-header {
-  padding: 5px 20px 0px !important;
-}
-
-.rowCards .boxCard .myCard .select-gral-number {
-  border-radius: 27px !important;
-  height: 45px;
-  -webkit-border-radius: 27px !important;
-  -moz-border-radius: 27px !important;
-  -ms-border-radius: 27px !important;
-  -o-border-radius: 27px !important;
-  width: 100%;
-}
-
-.rowCards .boxCard .myCard .btn-circle {
-  width: 30px;
-  height: 30px;
+.cargarPlan .tab-content .radio-container label {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: inherit;
+  width: 33%;
+  height: 90%;
   text-align: center;
-  padding: 6px 0;
-  font-size: 12px;
-  line-height: 1.428571429;
-  border-radius: 15px;
+  border-radius: 27px;
+  overflow: hidden;
+  transition: linear 0.3s;
+  color: #929292;
+  margin: 0;
+  cursor: pointer;
 }
 
-.rowCards .boxCard .myCard .input-gral {
-  background-color: #f3eeee !important;
-  color: #929292 !important;
-  border-radius: 27px !important;
-  background-image: none !important;
-  padding-left: 20px;
-}
-
-.rowCards .boxCard .myCard .select-gral {
-  border-radius: 27px !important;
-  height: 45px;
-  -webkit-border-radius: 27px !important;
-  -moz-border-radius: 27px !important;
-  -ms-border-radius: 27px !important;
-  -o-border-radius: 27px !important;
-}
-
-.rowCards .boxCard .myCard .custom-dropdown {
-  background-color: #0a548b;
-  color: #0a548b;
-}
-
-.rowCards .boxCard .myCard .select2-results__options {
-  background-color: #0a548b;
-  color: #0a548b;
-}
-
-.rowCards .boxCard .myCard .radio_container input[type="radio"]:checked + label {
+.cargarPlan .tab-content .radio-container input[type="radio"]:checked + label {
   background-color: #103f75;
   color: #ffffff;
   transition: 0.3s;
 }
 
-.rowCards .boxCard .myCard .checkbox {
-  display: block;
-  position: relative;
-  padding-left: 35px;
-  margin-bottom: 12px;
-  cursor: pointer;
-  font-size: 22px;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-}
-
-.rowCards .boxCard .mySubtitle {
+.cargarPlan .tab-content .btn-descuentos {
+  background-color: #1341761a;
+  color: #103f75;
+  width: 40px;
+  height: 40px;
+  border-radius: 27px;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 15px;
+  border: none;
   position: absolute;
-  bottom: 0;
-  height: 20%;
-}
-
-@media (max-width: 1706.67px) {
-  #snackbar {
-    visibility: hidden;
-    min-width: 320px;
-    margin-left: -125px;
-    background-color: #4caf50;
-    color: #fff;
-    text-align: center;
-    border-radius: 22px;
-    padding: 16px;
-    position: fixed;
-    z-index: 1;
-    left: 50%;
-    bottom: -450px;
-    opacity: 1;
-    -webkit-border-radius: 22px;
-    -moz-border-radius: 22px;
-    -ms-border-radius: 22px;
-    -o-border-radius: 22px;
-  }
-  /* Show the snackbar when clicking on a button (class added with JavaScript) */
-  #snackbar.show {
-    visibility: visible;
-    -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
-    animation: fadein 0.5s, fadeout 0.5s 2.5s;
-    -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
-  }
-  /* Animations to fade the snackbar in and out */
-  @-webkit-keyframes fadein {
-    from {
-      bottom: -450px;
-      opacity: 0;
-    }
-    to {
-      bottom: -400px;
-      opacity: 1;
-    }
-  }
-  @keyframes fadein {
-    from {
-      bottom: -450px;
-      opacity: 0;
-    }
-    to {
-      bottom: -400px;
-      opacity: 1;
-    }
-  }
-  @-webkit-keyframes fadeout {
-    from {
-      bottom: -400px;
-      opacity: 1;
-    }
-    to {
-      bottom: -450px;
-      opacity: 0;
-    }
-  }
-  @keyframes fadeout {
-    from {
-      bottom: -400px;
-      opacity: 1;
-    }
-    to {
-      bottom: -450px;
-      opacity: 0;
-    }
-  }
-}
-
-@media (max-width: 2133.33px) {
-  #snackbar {
-    visibility: hidden;
-    min-width: 320px;
-    margin-left: -125px;
-    background-color: #4caf50;
-    color: #fff;
-    text-align: center;
-    border-radius: 22px;
-    padding: 16px;
-    position: fixed;
-    z-index: 1;
-    left: 50%;
-    bottom: -50px;
-    opacity: 1;
-    -webkit-border-radius: 22px;
-    -moz-border-radius: 22px;
-    -ms-border-radius: 22px;
-    -o-border-radius: 22px;
-  }
-  /* Show the snackbar when clicking on a button (class added with JavaScript) */
-  #snackbar.show {
-    visibility: visible;
-    /*Showthesnackbar*/
-    /*Addanimation:;
-    Take0.5secondstofadeinandoutthesnackbar.However,delaythefadeoutprocessfor2.5seconds*/
-    -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
-    animation: fadein 0.5s, fadeout 0.5s 2.5s;
-    -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
-  }
-  /* Animations to fade the snackbar in and out */
-  @-webkit-keyframes fadein {
-    from {
-      bottom: -50px;
-      opacity: 0;
-    }
-    to {
-      bottom: -10px;
-      opacity: 1;
-    }
-  }
-  @keyframes fadein {
-    from {
-      bottom: -50px;
-      opacity: 0;
-    }
-    to {
-      bottom: -10px;
-      opacity: 1;
-    }
-  }
-  @-webkit-keyframes fadeout {
-    from {
-      bottom: -10px;
-      opacity: 1;
-    }
-    to {
-      bottom: -50px;
-      opacity: 0;
-    }
-  }
-  @keyframes fadeout {
-    from {
-      bottom: -10px;
-      opacity: 1;
-    }
-    to {
-      bottom: -50px;
-      opacity: 0;
-    }
-  }
+  right: 30px;
 }

@@ -1274,28 +1274,30 @@
 }
 
 #reporte .boxAccordions .bk table thead tr th {
-  padding: 3px !important;
+  padding: 0px !important;
 }
 
 #reporte .boxAccordions .bk table thead tr th input {
+  margin: 4px;
   border: 1px solid transparent;
   border-radius: 5px;
   color: #ffffff;
   text-align: center;
-  font-weight: 500;
+  font-weight: 300;
   background-color: #143860;
 }
 
 #reporte .boxAccordions .bk table thead tr th input:active {
-  border: 1px solid #333333;
+  border: 1px solid #ffffff;
 }
 
 #reporte .boxAccordions .bk table thead tr th input:focus {
-  border: 1px solid #333333;
+  border: 1px solid #ffffff;
 }
 
 #reporte .boxAccordions .bk table thead tr th input::placeholder {
   color: #ffffff;
+  text-transform: lowercase;
 }
 
 #reporte .boxAccordions .bk table td.delimetter {

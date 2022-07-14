@@ -77,24 +77,13 @@
                     th{
                         padding: 0px!important;
                         text-align: center;
-                        input{
-                            margin: 4px;
-                            border: 1px solid transparent;
-                            border-radius: 5px;
-                            color: $white;
-                            text-align: center;
-                            font-weight: 300;
-                            background-color: $blueIndigoDeep;
-                            &:active{
-                                border: 1px solid $white;
-                            }
-                            &:focus{
-                                border: 1px solid $white;
-                            }
-                            &::placeholder{
-                                color: $white;
-                            }
-                        }
+                        margin: 4px;
+                        border: 1px solid transparent;
+                        color: $white;
+                        text-align: center;
+                        font-weight: 300;
+                        background-color: $blueIndigoDeep;
+                        text-transform: lowercase;
                     }
                 }
             }
