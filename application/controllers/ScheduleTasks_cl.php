@@ -1509,4 +1509,19 @@ public function select_gph_maderas_64(){ //HACER INSERT DE LOS LOTES EN 0 Y PASA
         return $mail->ErrorInfo;
       }
     }
+
+    function updatePresupuestos() {
+      $getPresupuestos = $this->scheduleTasks_model->getPresupuestos()->result_array();
+      if (count($getPresupuestos) >= 1) {
+        for ($r = 0; $r < count($getPresupuestos); $r++) {
+          $data[] = array(
+            "idPresupuesto" => $getPresupuestos[$r]["idPresupuesto"],
+            "bandera" => 0, 
+            "modificado_por" => 1
+          );
+        }
+        $this->General_model->updateBatch('Presupuestos', $data, 'idPresupuesto');
+      }
+    }
+
 }
