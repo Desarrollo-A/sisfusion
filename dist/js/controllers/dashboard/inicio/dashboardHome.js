@@ -4,7 +4,7 @@ var optionsTotalVentas = {
         height: '100%',
         type: 'radialBar',
     },
-    colors: ['#0089B7','#039590', '#00ACB8', '#4BBC8E', '#00CDA3', '#92E784', '#F9F871'],
+    colors: ['#0089B7','#039590', '#00ACB8', '#4BBC8E', '#00CDA3', '#92E784', '#D9A9FB'],
     plotOptions: {
         radialBar: {
             startAngle: -135,
@@ -182,7 +182,7 @@ var optionsWeekly = {
     noData: {
         text: 'No hay informacion para mostrar...'
       },
-    colors: ['#0089B7','#039590', '#00ACB8', '#4BBC8E', '#00CDA3', '#92E784', '#F9F871'],
+    colors: ['#0089B7','#039590', '#00ACB8', '#4BBC8E', '#00CDA3', '#92E784', '#D9A9FB'],
     grid:{
         show: true,
     },
@@ -226,7 +226,7 @@ var optionsFunnel = {
         height: '100%',
         type: 'polarArea',
     },
-    colors: ['#0089B7','#039590', '#00ACB8', '#4BBC8E', '#00CDA3', '#92E784', '#F9F871'],
+    colors: ['#0089B7','#039590', '#00ACB8', '#4BBC8E', '#00CDA3', '#92E784', '#D9A9FB'],
     stroke: {
         colors: ['#fff']
     },

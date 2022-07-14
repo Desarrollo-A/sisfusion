@@ -9,24 +9,28 @@ var optionBarInit = {
             show: false
         },
     },
-    colors: ['#0089B7', '#039590', '#00ACB8', '#4BBC8E', '#00CDA3', '#92E784', '#F9F871'],
+    colors: ['#0089B7', '#039590', '#00ACB8', '#4BBC8E', '#00CDA3', '#92E784', '#95E4FF'],
     stroke: {
         colors: ['transparent'],
         width: 0,
     },
     plotOptions: {
         bar: {
-            distributed: false, // this line is mandatory
+            distributed: true, // this line is mandatory
             borderRadius: 10,
             horizontal: true,
-            barHeight: '40%',
+            barHeight: '45%',
         }
     },
     dataLabels: {
-        enabled: true,
-        formatter: function (val, opts) {
-            return val.toLocaleString('es-MX');
-        }
+        formatter: function (val, opt) {
+            const goals = opt.w.config.series[opt.seriesIndex].data[opt.dataPointIndex].goals;
+
+            if (goals && goals.length) {
+                return `${val.toLocaleString('es-MX')} / ${(goals[0].value).toLocaleString('es-MX')}`
+            }
+            return val.toLocaleString('es-MX')
+        },
     },
     legend: {
         show: false,
@@ -93,7 +97,7 @@ var optionsDisponibilidad = {
             borderRadius: 10
         }
     },
-    colors: ['#0089B7', '#039590', '#00ACB8', '#4BBC8E', '#00CDA3', '#92E784', '#F9F871'],
+    colors: ['#0089B7', '#039590', '#00ACB8', '#4BBC8E', '#00CDA3', '#92E784', '#95E4FF'],
     stroke: {
         colors: ['transparent'],
         width: 0,
@@ -159,7 +163,7 @@ var optionLugar = {
             show: false
         },
     },
-    colors: ['#0089B7', '#039590', '#00ACB8', '#4BBC8E', '#00CDA3', '#92E784', '#F9F871'],
+    colors: ['#0089B7', '#039590', '#00ACB8', '#4BBC8E', '#00CDA3', '#92E784', '#95E4FF'],
     stroke: {
         colors: ['transparent'],
         width: 5,
@@ -248,7 +252,7 @@ var optionsMedio = {
             show: false
         },
     },
-    colors: ['#0089B7', '#039590', '#00ACB8', '#4BBC8E', '#00CDA3', '#92E784', '#F9F871'],
+    colors: ['#0089B7', '#039590', '#00ACB8', '#4BBC8E', '#00CDA3', '#92E784', '#95E4FF'],
     dataLabels: {
         enabled: false,
         formatter: function (val) {
@@ -283,8 +287,12 @@ var optionsVentasMetros = {
         height: '100%',
         type: 'area'
     },
+    colors: ['#0089B7', '#039590', '#00ACB8', '#4BBC8E', '#00CDA3', '#92E784', '#95E4FF'],
     dataLabels: {
-        enabled: false
+        enabled: false,
+        formatter: function (val) {
+            return val.toLocaleString('es-MX');
+        }
     },
     stroke: {
         curve: 'smooth'
@@ -475,8 +483,9 @@ function formatDisponibilidadData(data){
             series.push({
                 x: element.nombreResidencial,
                 y: element.ocupados,
+                z: element.restante,
                 goals: [{
-                    name: 'Disponible',
+                    name: 'Total',
                     value: element.totales,
                     strokeWidth: 2,
                     strokeHeight: 10,
@@ -488,7 +497,7 @@ function formatDisponibilidadData(data){
     });
 
     disponibilidadChart.updateSeries([{
-        name: 'Ocupado',
+        name: 'Vendido',
         data: series
     }])
 }
