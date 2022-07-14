@@ -665,8 +665,8 @@ class Reporte_model extends CI_Model {
             $statusLote = ($type == 1 || $type == 11) ? "!= 2" : "= 2";
             $filtroSede = ($type == 11 || $type == 22) ? "AND re.sede_residencial = $sede" : "";
             $query = $this->db->query("SELECT re.descripcion nombreResidencial, UPPER(co.nombre) nombreCondominio, UPPER(lo.nombreLote) nombreLote, 
-            CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno) nombreCliente,
-            CONCAT(ua.nombre, ' ', ua.apellido_paterno, ' ', ua.apellido_materno) nombreAsesor,
+            UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) nombreCliente,
+            UPPER(CONCAT(ua.nombre, ' ', ua.apellido_paterno, ' ', ua.apellido_materno)) nombreAsesor,
             cl.fechaApartado, sc.nombreStatus, st.nombre estatusLote
             FROM clientes cl
             INNER JOIN lotes lo ON lo.idLote = cl.idLote AND lo.idCliente = cl.id_cliente AND lo.idStatusLote $statusLote

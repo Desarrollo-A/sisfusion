@@ -9,7 +9,7 @@ var optionBarInit = {
             show: false
         },
     },
-    colors: ['#0089B7', '#039590', '#00ACB8', '#4BBC8E', '#00CDA3', '#92E784', '#95E4FF'],
+    colors: ['#103F75', '#006A9D', '#0089B7', '#039590', '#008EAB', '#00ACB8', '#16C0B4', '#4BBC8E', '#00CDA3', '#92E784'],
     stroke: {
         colors: ['transparent'],
         width: 0,
@@ -97,7 +97,7 @@ var optionsDisponibilidad = {
             borderRadius: 10
         }
     },
-    colors: ['#0089B7', '#039590', '#00ACB8', '#4BBC8E', '#00CDA3', '#92E784', '#95E4FF'],
+    colors: ['#103F75', '#006A9D', '#0089B7', '#039590', '#008EAB', '#00ACB8', '#16C0B4', '#4BBC8E', '#00CDA3', '#92E784'],
     stroke: {
         colors: ['transparent'],
         width: 0,
@@ -147,7 +147,10 @@ var optionsDisponibilidad = {
         },
     },
     tooltip: { 
-        show: true,
+        enabled: true,
+        y: {
+            formatter: (value) =>  value.toLocaleString('es-MX'),
+        },
     },
 };
 
@@ -163,7 +166,7 @@ var optionLugar = {
             show: false
         },
     },
-    colors: ['#0089B7', '#039590', '#00ACB8', '#4BBC8E', '#00CDA3', '#92E784', '#95E4FF'],
+    colors: ['#103F75', '#006A9D', '#0089B7', '#039590', '#008EAB', '#00ACB8', '#16C0B4', '#4BBC8E', '#00CDA3', '#92E784'],
     stroke: {
         colors: ['transparent'],
         width: 5,
@@ -252,7 +255,7 @@ var optionsMedio = {
             show: false
         },
     },
-    colors: ['#0089B7', '#039590', '#00ACB8', '#4BBC8E', '#00CDA3', '#92E784', '#95E4FF'],
+    colors: ['#103F75', '#006A9D', '#0089B7', '#039590', '#008EAB', '#00ACB8', '#16C0B4', '#4BBC8E', '#00CDA3', '#92E784'],
     dataLabels: {
         enabled: false,
         formatter: function (val) {
@@ -287,7 +290,7 @@ var optionsVentasMetros = {
         height: '100%',
         type: 'area'
     },
-    colors: ['#0089B7', '#039590', '#00ACB8', '#4BBC8E', '#00CDA3', '#92E784', '#95E4FF'],
+    colors: ['#103F75', '#006A9D', '#0089B7', '#039590', '#008EAB', '#00ACB8', '#16C0B4', '#4BBC8E', '#00CDA3', '#92E784'],
     dataLabels: {
         enabled: false,
         formatter: function (val) {
@@ -335,7 +338,7 @@ var optionsVentasMetros = {
 
 $(document).ready(function () {
     $('[data-toggle="tooltip"]').tooltip();
-    init();
+    initMetrics();
 });
 
 $('#proyecto').off().on('change', function(){
@@ -347,8 +350,8 @@ $('#condominio').off().on('change', function(){
 });
 
 //Funciones
-function init(){
-    recreatApexChart(false);
+function initMetrics(){
+    recreatApexChartMetrics(false);
     getProyectos();
     getSuperficieVendida().then( response => {
         dataMetros = response;
@@ -483,13 +486,19 @@ function formatDisponibilidadData(data){
             series.push({
                 x: element.nombreResidencial,
                 y: element.ocupados,
-                z: element.restante,
                 goals: [{
                     name: 'Total',
                     value: element.totales,
                     strokeWidth: 2,
                     strokeHeight: 10,
                     strokeColor: '#775DD0'
+                },
+                {   
+                    name: 'Disponible',
+                    value: element.restante,
+                    strokeWidth: 0,
+                    strokeHeight: 0,
+                    strokeColor: '#FFFFFF'
                 }]
             });
             count++;
@@ -577,7 +586,7 @@ function toggleDatatable(e){
         columnaChart.classList.remove('col-lg-12');
         columnaChart.classList.add('col-lg-6');
         columnDatatable.removeClass('hidden');
-        reorderColumns();
+        reorderColumnsMetrics();
     }
     // La columna se contraera
     else{
@@ -586,11 +595,11 @@ function toggleDatatable(e){
         columnaChart.classList.remove('col-lg-6');
         columnaChart.classList.add('col-lg-12');
         columnDatatable.addClass('hidden');
-        reorderColumns();
+        reorderColumnsMetrics();
     }
 }
 
-function reorderColumns(){
+function reorderColumnsMetrics(){
     var principalColumns = document.getElementsByClassName("flexibleM");
     var mainRow = document.getElementById('mainRow');
 
@@ -614,7 +623,7 @@ function reorderColumns(){
     mainRow.innerHTML = null;
     mainRow.appendChild(elements);
 
-    recreatApexChart(true);
+    recreatApexChartMetrics(true);
 
     for( i = 1; i<=principalColumns.length; i++){
         (function(i){
@@ -625,19 +634,19 @@ function reorderColumns(){
                     var id = columnDatatable.attr('id');
                     $("#"+id).html('');
                     if( id == 'metros' ){
-                        buildEstructuraDT(id, dataMetros);
+                        buildEstructuraDTMetrics(id, dataMetros);
                         buildTableMetros(dataMetros);
                     }
                     else if( id == 'disponibilidad' ){
-                        buildEstructuraDT(id, dataDisponibilidad);
+                        buildEstructuraDTMetrics(id, dataDisponibilidad);
                         buildTableDisponibilidad(dataDisponibilidad);
                     }
                     else if( id == 'lugar' ){
-                        buildEstructuraDT(id, dataLugarProspeccion);
+                        buildEstructuraDTMetrics(id, dataLugarProspeccion);
                         buildTableLugarProspeccion(dataLugarProspeccion);
                     }
                     else if( id == 'medio' ){
-                        buildEstructuraDT(id, dataMedio);
+                        buildEstructuraDTMetrics(id, dataMedio);
                         buildTableMedio(dataMedio);
                     }
                 }
@@ -648,7 +657,7 @@ function reorderColumns(){
     $('[data-toggle="tooltip"]').tooltip();
 }
 
-function buildEstructuraDT(dataName, dataApartados){
+function buildEstructuraDTMetrics(dataName, dataApartados){
     var tableHeaders = '';
     var arrayHeaders = Object.keys(dataApartados[0]);
     for( i=0; i<arrayHeaders.length; i++ ){
@@ -909,10 +918,10 @@ function getCacheOptions(){
     return obj;
 }
 
-function recreatApexChart(estado){
+function recreatApexChartMetrics(estado){
     if(estado){
         $(".boxChart").html('');
-        buildChartsID();
+        buildChartsIDMetrics();
       
         metrosChart = new ApexCharts(document.querySelector("#metrosChart"), optionBarInit);
         metrosChart.render();
@@ -948,7 +957,7 @@ function recreatApexChart(estado){
     }
 }
 
-function buildChartsID(){
+function buildChartsIDMetrics(){
     var boxCharts = document.getElementsByClassName("boxChart");
     for ( var i = 0; i<boxCharts.length; i++ ){
         var id = boxCharts[i].id;

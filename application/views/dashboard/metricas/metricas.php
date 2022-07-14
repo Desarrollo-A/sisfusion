@@ -15,7 +15,7 @@
                                     <select class="selectpicker select-gral m-0 proyecto" id="proyecto" name="proyecto" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona un proyecto" data-size="7" data-container="body" required style="height:100%!important"></select>
                                 </div>
                                 <div class="col-12 col-sm-3 col-md-3 col-lg-3 m-0 overflow-hidden pl-0">
-                                    <select class="selectpicker select-gral m-0 condominio" id="condominio" name="condominio" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona un proyecto" data-size="7" data-container="body" required style="height:100%!important"></select>
+                                    <select class="selectpicker select-gral m-0 condominio" id="condominio" name="condominio" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona un condominio" data-size="7" data-container="body" required style="height:100%!important"></select>
                                 </div>
                             </div>
                         </div>
