@@ -14,7 +14,6 @@
     @media #{$smartphone}{
       height: inherit;
     }
-    
   }
   .col-total{
     height: 315px;
@@ -35,7 +34,7 @@
         font-size: 13px;
       }
       .leyend{
-        font-size: 11px;
+        font-size: 10px;
         color: $grayDark;
         span{
           color: $blueFrance;
@@ -151,6 +150,15 @@
   .numberElement{
     font-size: 1.2em!important;
     font-weight: bold!important;
+  }
+  .loadChart{
+    position: absolute;
+    top: 2px;
+    background: $white;
+    height: 100%!important;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 }
 
