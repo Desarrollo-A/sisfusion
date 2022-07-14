@@ -31,8 +31,11 @@
   .col-prospectos{ 
     height: 135px;
     .cardProspectosVig{
-      p{
-        font-size: 12px;
+      .numberGraphic{
+        font-size: 13px;
+      }
+      .leyend{
+        font-size: 11px;
         color: $grayDark;
         span{
           color: $blueFrance;

@@ -724,8 +724,8 @@ function setOptionsChart(series, categories){
 }
 
 function setInitialDates() {
-    var beginDt = moment().startOf('year').format('MM/DD/YYYY');
-    var endDt = moment().format('MM/DD/YYYY');
+    var beginDt = moment().startOf('year').format('DD/MM/YYYY');
+    var endDt = moment().format('DD/MM/YYYY');
     $('.beginDate').val(beginDt);
     $('.endDate').val(endDt);
 }

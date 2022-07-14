@@ -143,10 +143,7 @@ var optionsDisponibilidad = {
         },
     },
     tooltip: { 
-        enabled: true,
-        y: {
-            formatter: (value) =>  value.toLocaleString('es-MX'),
-        },
+        show: true,
     },
 };
 
@@ -459,7 +456,7 @@ function formatMetrosData(data){
     });
 
     metrosChart.updateSeries([{
-        name: '#',
+        name: 'Cantidad',
         data: series
     }])
 
@@ -548,7 +545,7 @@ function formatVentasM2(data){
         categories.push(`(${element.sup} m2)`);
     });
     ventasMetrosChart.updateSeries([{
-        name: '# de lotes: ',
+        name: 'No. de lotes: ',
         data: series
     }])
 
@@ -639,6 +636,7 @@ function reorderColumns(){
             }, 500 * i)
         }(i));
     }
+    $('[data-toggle="tooltip"]').tooltip();
 }
 
 function buildEstructuraDT(dataName, dataApartados){
