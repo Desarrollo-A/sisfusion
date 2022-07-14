@@ -3,6 +3,12 @@
  table.dataTable > thead > tr > th, #reporte table.dataTable > tbody > tr > th, #reporte table.dataTable > tfoot > tr > th, #reporte table.dataTable > thead > tr > td, #reporte table.dataTable > tbody > tr > td, #reporte table.dataTable > tfoot > tr > td {
   white-space: nowrap !important;
 }
+table.dataTable > tbody > tr > td{
+  white-space: nowrap !important;
+}
+table.dataTable > thead > tr > th{
+  padding: 1px 0px!important;
+}
 
 table {
   text-align: center;
@@ -12,29 +18,26 @@ table thead tr {
   background-color: #143860;
 }
 
-table thead tr th {
-  padding: 3px !important;
-}
-
 table thead tr th input {
   border: 1px solid transparent;
   border-radius: 5px;
   color: #ffffff;
   text-align: center;
-  font-weight: 500;
   background-color: #143860;
+  font-weight: 100;
 }
 
 table thead tr th input:active {
-  border: 1px solid #333333;
+  border: 1px solid #fff;
 }
 
 table thead tr th input:focus {
-  border: 1px solid #333333;
+  border: 1px solid #fff;
 }
 
 table thead tr th input::placeholder {
   color: #ffffff;
+  text-transform: undercase;
 }
 
 table td.delimetter {
