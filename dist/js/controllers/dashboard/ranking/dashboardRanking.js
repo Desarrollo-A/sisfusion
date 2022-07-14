@@ -310,7 +310,7 @@ function buildTableApartados(data){
         pageLength : 10,
         width: '100%',
         destroy: true,
-        ordering: false,
+        ordering: true,
         scrollX: true,
         language: {
             url: `${base_url}static/spanishLoader_v2.json`,
@@ -319,6 +319,7 @@ function buildTableApartados(data){
                 next: "<i class='fa fa-angle-right'>"
             }
         },
+        order: [[1, "desc"]],
         data: data,
         columns: [{
             title: 'Totales',
@@ -349,7 +350,7 @@ function buildTableApartados(data){
             data: function(d){
                 return d.id_asesor
             }
-        },],
+        }],
         columnDefs: [{
             visible: false,
             searchable: false
@@ -375,7 +376,7 @@ function buildTableContratados(data){
         pageLength : 10,
         width: '100%',
         destroy: true,
-        ordering: false,
+        ordering: true,
         scrollX: true,
         language: {
             url: `${base_url}static/spanishLoader_v2.json`,
@@ -384,6 +385,7 @@ function buildTableContratados(data){
                 next: "<i class='fa fa-angle-right'>"
             }
         },
+        order: [[1, "desc"]],
         data: data,
         columns: [{
             title: 'Totales',
@@ -440,7 +442,7 @@ function buildTableConEnganche(data){
         pageLength : 10,
         width: '100%',
         destroy: true,
-        ordering: false,
+        ordering: true,
         scrollX: true,
         language: {
             url: `${base_url}static/spanishLoader_v2.json`,
@@ -449,6 +451,7 @@ function buildTableConEnganche(data){
                 next: "<i class='fa fa-angle-right'>"
             }
         },
+        order: [[1, "desc"]],
         data: data,
         columns: [{
             title: 'Totales',
@@ -505,7 +508,7 @@ function buildTableSinEnganche(data){
         pageLength : 10,
         width: '100%',
         destroy: true,
-        ordering: false,
+        ordering: true,
         scrollX: true,
         language: {
             url: `${base_url}static/spanishLoader_v2.json`,
@@ -514,6 +517,7 @@ function buildTableSinEnganche(data){
                 next: "<i class='fa fa-angle-right'>"
             }
         },
+        order: [[1, "desc"]],
         data: data,
         columns: [{
             title: 'Totales',
@@ -665,7 +669,7 @@ function setOptionsChart(series, categories){
                 show: false
             }
         },
-        colors: ['#0089B7','#039590', '#00ACB8', '#4BBC8E', '#00CDA3', '#92E784', '#F9F871'],
+        colors: ['#0089B7','#039590', '#00ACB8', '#4BBC8E', '#00CDA3', '#92E784', '#95E4FF'],
         plotOptions: {
             bar: {
                 horizontal: true,
