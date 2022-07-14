@@ -198,8 +198,8 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, dates=n
             {
                 width: "8%",
                 data: function (d) {
-                    //return `<button style="background-color: #cfcdcd; border: none; border-radius: 5px; padding: 3px 12px;" type="btn" data-type="1" data-sede = 0 data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-idUser="${d.userID}" id="details-${d.userID}" class="btnModalDetails">${(d.totalAT).toLocaleString('es-MX')}</button>`//# APARTADOS;
-                    return ((d.totalAT + d.totalCanA)).toLocaleString('es-MX'); //# APARTADOS
+                    return `<button style="background-color: #cfcdcd; border: none; border-radius: 5px; padding: 3px 12px;" type="btn" data-type="1" data-sede = 0 data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-idUser="${d.userID}" id="details-${d.userID}" class="btnModalDetails">${(d.totalAT).toLocaleString('es-MX')}</button>`//# APARTADOS;
+                    //return ((d.totalAT + d.totalCanA)).toLocaleString('es-MX'); //# APARTADOS
                 }
             },
             {
@@ -224,8 +224,8 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, dates=n
             {
                 width: "8%",
                 data: function (d) {
-                    //return `<button style="background-color: #cfcdcd; border: none; border-radius: 5px; padding: 3px 12px;" type="btn" data-type="2" data-sede = 0 data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-idUser="${d.userID}" id="details-${d.userID}" class="btnModalDetails">${(d.totalConT).toLocaleString('es-MX')}</button>`//# CONTRATADOS;
-                    return ((d.totalConT)).toLocaleString('es-MX'); //# CONTRATADOS
+                    return `<button style="background-color: #cfcdcd; border: none; border-radius: 5px; padding: 3px 12px;" type="btn" data-type="2" data-sede = 0 data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-idUser="${d.userID}" id="details-${d.userID}" class="btnModalDetails">${(d.totalConT).toLocaleString('es-MX')}</button>`//# CONTRATADOS;
+                    //return ((d.totalConT)).toLocaleString('es-MX'); //# CONTRATADOS
                 }
             },
             {
@@ -237,8 +237,8 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, dates=n
             {
                 width: "8%",
                 data: function (d) {
-                    //return `<button style="background-color: #cfcdcd; border: none; border-radius: 5px; padding: 3px 12px;" type="btn" data-sede = 0 data-type="3" data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-idUser="${d.userID}" id="details-${d.userID}" class="btnModalDetails">${(d.totalCanC).toLocaleString('es-MX')}</button>`//# CANCELADOS CONTRATADOS;
-                    return (d.totalCanC).toLocaleString('es-MX'); //# CANCELADOS CONTRATADOS
+                    return `<button style="background-color: #cfcdcd; border: none; border-radius: 5px; padding: 3px 12px;" type="btn" data-sede = 0 data-type="3" data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-idUser="${d.userID}" id="details-${d.userID}" class="btnModalDetails">${(d.totalCanC).toLocaleString('es-MX')}</button>`//# CANCELADOS CONTRATADOS;
+                    //return (d.totalCanC).toLocaleString('es-MX'); //# CANCELADOS CONTRATADOS
                 }
             },
             {
@@ -396,7 +396,16 @@ function setOptionsChart(series, categories, miniChart, type= null){
         tooltip: { 
             enabled: true,
             y: {
-                formatter: (value) =>  type == 1 ? value.toLocaleString('es-MX'): "$" + formatMoney(value),
+                formatter: function(value, { series, seriesIndex, dataPointIndex, w }){
+                    let total = 0;
+                    series.forEach(function(element){
+                        total = total + element[dataPointIndex];
+                    })
+                    let percent = value * 100 / total;
+                    console.log(value * 100 / total);
+                    let ret = type == 1 ? `${value.toLocaleString('es-MX')} (${Math.trunc( percent )}%)`: "$" + formatMoney(value);
+                    return ret;
+                }  
             },
         },
         markers: {
@@ -441,7 +450,7 @@ $(document).on('click', '#searchByDateRangeTable', async function () {
     let dates = {begin: $('#tableBegin').val(), end: $('#tableEnd').val()};
     let rol = userType == 2 ? await getRolDR(idUser): userType;
 
-    fillBoxAccordions(rol == '1' || rol == '18' ? 'director_regional': rol == '2' ? 'gerente' : rol == '3' ? 'coordinador' : rol == '59' ? 'subdirector':'asesor', rol, idUser, 1, 2, dates);
+    fillBoxAccordions(rol == '1' || rol == '18' ? 'director_regional': rol == '2' ? 'gerente' : rol == '3' ? 'coordinador' : rol == '59' ? 'subdirector':'asesor', rol == 18 || rol == '18' ? 1:rol, idUser, 1, 2, dates);
 
 });
 
@@ -868,18 +877,18 @@ function generalChart(data){
     data.forEach(element => {
         if(data.length>1){
             x.push(element.nombreUsuario);
-            apartados.push(element.totalAT + element.totalCanA);
+            apartados.push(element.totalAT);
             apartadosC.push(element.totalCanA);
-            contratados.push(element.totalConT + element.totalCanC);
+            contratados.push(element.totalConT);
             contratadosC.push(element.totalCanC);    
         }else{
             $("#boxModalChart").html('');
             $("#boxModalChart").addClass('d-flex justify-center');
             $("#boxModalChart").append('<img src="'+base_url+'dist/img/emptyCharts.png" alt="Icono gráfica" class="h-70 w-auto">');
             x = ['', element.nombreUsuario, ''];
-            apartados=[0,element.totalAT + element.totalCanA,0];
+            apartados=[0,element.totalAT,0];
             apartadosC=[0,element.totalCanA,0];
-            contratados=[0,element.totalConT + element.totalCanC,0];
+            contratados=[0,element.totalConT,0];
             contratadosC=[0,element.totalCanC,0];    
         }
     });
