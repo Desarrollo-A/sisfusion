@@ -684,7 +684,7 @@ class Reporte_model extends CI_Model {
             $query = $this->db->query("SELECT re.descripcion nombreResidencial, UPPER(co.nombre) nombreCondominio, UPPER(lo.nombreLote) nombreLote, 
             CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno) nombreCliente,
             CONCAT(ua.nombre, ' ', ua.apellido_paterno, ' ', ua.apellido_materno) nombreAsesor,
-            cl.fechaApartado, '15. Acuse entregado (Contraloría)', 'Cancelado contratado' estatusLote
+            cl.fechaApartado, '15. Acuse entregado (Contraloría)' nombreStatus, 'Cancelado contratado' estatusLote
             FROM clientes cl
             INNER JOIN lotes lo ON lo.idLote = cl.idLote
             INNER JOIN condominios co ON co.idCondominio = lo.idCondominio

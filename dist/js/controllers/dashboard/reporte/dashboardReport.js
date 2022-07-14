@@ -396,7 +396,16 @@ function setOptionsChart(series, categories, miniChart, type= null){
         tooltip: { 
             enabled: true,
             y: {
-                formatter: (value) =>  type == 1 ? value.toLocaleString('es-MX'): "$" + formatMoney(value),
+                formatter: function(value, { series, seriesIndex, dataPointIndex, w }){
+                    let total = 0;
+                    series.forEach(function(element){
+                        total = total + element[dataPointIndex];
+                    })
+                    let percent = value * 100 / total;
+                    console.log(value * 100 / total);
+                    let ret = type == 1 ? `${value.toLocaleString('es-MX')} (${Math.trunc( percent )}%)`: "$" + formatMoney(value);
+                    return ret;
+                }  
             },
         },
         markers: {
@@ -877,15 +886,15 @@ function generalChart(data){
     data.forEach(element => {
         if(data.length>1){
             x.push(element.nombreUsuario);
-            apartados.push(element.totalAT + element.totalCanA);
+            apartados.push(element.totalAT);
             apartadosC.push(element.totalCanA);
-            contratados.push(element.totalConT + element.totalCanC);
+            contratados.push(element.totalConT);
             contratadosC.push(element.totalCanC);    
         }else{
             x = ['', element.nombreUsuario, ''];
-            apartados=[0,element.totalAT + element.totalCanA,0];
+            apartados=[0,element.totalAT,0];
             apartadosC=[0,element.totalCanA,0];
-            contratados=[0,element.totalConT + element.totalCanC,0];
+            contratados=[0,element.totalConT,0];
             contratadosC=[0,element.totalCanC,0];    
         }
     });
