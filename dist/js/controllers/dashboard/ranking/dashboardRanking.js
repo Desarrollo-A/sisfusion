@@ -319,9 +319,14 @@ function buildTableApartados(data){
                 next: "<i class='fa fa-angle-right'>"
             }
         },
-        order: [[1, "desc"]],
+        order: [[2, "desc"]],
         data: data,
         columns: [{
+            title: 'Ranking',
+            data: function(d){
+                return d.ranking
+            }
+        },{
             title: 'Totales',
             data: function(d){
                 return d.totalAT
@@ -385,9 +390,14 @@ function buildTableContratados(data){
                 next: "<i class='fa fa-angle-right'>"
             }
         },
-        order: [[1, "desc"]],
+        order: [[2, "desc"]],
         data: data,
         columns: [{
+            title: 'Ranking',
+            data: function(d){
+                return d.ranking
+            }
+        },{
             title: 'Totales',
             data: function(d){
                 return d.totalConT
@@ -451,9 +461,14 @@ function buildTableConEnganche(data){
                 next: "<i class='fa fa-angle-right'>"
             }
         },
-        order: [[1, "desc"]],
+        order: [[2, "desc"]],
         data: data,
         columns: [{
+            title: 'Ranking',
+            data: function(d){
+                return d.ranking
+            }
+        },{
             title: 'Totales',
             data: function(d){
                 return d.cuantos
@@ -517,9 +532,14 @@ function buildTableSinEnganche(data){
                 next: "<i class='fa fa-angle-right'>"
             }
         },
-        order: [[1, "desc"]],
+        order: [[2, "desc"]],
         data: data,
         columns: [{
+            title: 'Ranking',
+            data: function(d){
+                return d.ranking
+            }
+        },{
             title: 'Totales',
             data: function(d){
                 return d.cuantos
