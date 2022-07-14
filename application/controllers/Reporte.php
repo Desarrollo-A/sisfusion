@@ -304,7 +304,8 @@ class Reporte extends CI_Controller {
             $rol = $this->input->post("rol");
             //$rol = $this->session->userdata('id_rol');
             $render = $this->input->post("render");
-            $data['data'] = $this->Reporte_model->getGeneralLotesInformation($beginDate, $endDate, $rol, $id_usuario, $render, $type)->result_array();
+            $sede = $this->input->post("sede");
+            $data['data'] = $this->Reporte_model->getGeneralLotesInformation($beginDate, $endDate, $rol, $id_usuario, $render, $type, $sede)->result_array();
             echo json_encode($data, JSON_NUMERIC_CHECK);
         } else
             echo json_encode(array());
