@@ -1,15 +1,32 @@
-var data;
+var data, player, warningFlag= false;
 
 $(document).ready(function () {
-    console.log('info',information);
     $('#nombreCl').text(information.nombreCl);
     $('#nombreAs').text(information.nombreAs);
     $('#fechaApartado').text(information.fechaApartado);
     $('#nombreResidencial').text(information.nombreResidencial);
     $('#nombreCondominio').text(information.nombreCondominio);
     $('#nombreLote').text(information.nombreLote);
+    $('#client_name_text').text(information.nombreCl);
+    $('.vjs-icon-record-start').removeClass('vjs-hidden');
+    $('.vjs-record-button').prop('disabled', true);
+    $( ".vjs-record-button" ).attr( "data-intro", 'step no se' );
+
+    introJs().setOptions({
+        nextLabel: 'Siguiente',
+        prevLabel: 'Anterior',
+        doneLabel: 'Finalizar'
+    }).start();
+
+    introJs().addStep({
+        element: document.querySelectorAll('.vjs-record-button')[0],
+        intro: "Ok, wasn't that fun?",
+        position: 'right',
+        step: 6
+    });
 })
 $(document).on('click', '#upload',function (){
+    if(data != undefined){
     $('#spiner-loader').removeClass('hide');
     let formData = new FormData();
     formData.append('file', data, data.name);
@@ -33,7 +50,30 @@ $(document).on('click', '#upload',function (){
             $('#spiner-loader').addClass('hide');
         }
     });
+}else{
+    alert('No deberias hacer eso')
+}
+
 })
+
+$(document).on('click', '#continue', function(){
+    warningFlag = true;
+    if($('#check').is(":checked")){
+        $('.vjs-record-button').prop('disabled', false);
+        $('#upload').prop('disabled', false);
+        $('.fade-video').hide();
+        player.record().getDevice();
+    }
+})
+
+
+// $(document).on('click', '.vjs-record-button', function(){
+//    if(warningFlag == false){
+//         player.destroy();
+//         alert('No deberias hacer eso');
+//    }
+// })
+
 
 
 var options = {
@@ -53,14 +93,13 @@ var options = {
 // apply some workarounds for opera browser
 // applyVideoWorkaround();
 
-var player = videojs('myVideo', options, function() {
+player = videojs('myVideo', options, function() {
     // print version information at startup
     var msg = 'Using video.js ' + videojs.VERSION +
         ' with videojs-record ' + videojs.getPluginVersion('record') +
         ' and recordrtc ' + RecordRTC.version;
     videojs.log(msg);
 });
-
 // error handling
 player.on('deviceError', function() {
     console.log('device error:', player.deviceErrorCode);
@@ -69,6 +108,9 @@ player.on('deviceError', function() {
 player.on('error', function(element, error) {
     console.error(error);
 });
+player.on('deviceReady', () => {
+    console.log('device is ready!');
+  });
 
 // user clicked the record button and started recording
 player.on('startRecord', function() {

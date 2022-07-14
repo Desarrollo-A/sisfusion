@@ -3,6 +3,9 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
 <link href="https://vjs.zencdn.net/7.19.2/video-js.css" rel="stylesheet" />
 <link rel="stylesheet" href="//unpkg.com/videojs-record/dist/css/videojs.record.min.css">
+<link href="https://cdn.bootcdn.net/ajax/libs/intro.js/5.1.0/introjs.min.css" rel="stylesheet" />
+<!-- <link href="https://cdn.bootcdn.net/ajax/libs/intro.js/5.1.0/introjs-rtl.min.css" rel="stylesheet" /> -->
+
 <?php if($information == false){ 
     $this->load->view('evidencias/warning_view');
  }else{ ?>
@@ -26,7 +29,6 @@
     <div class="content evidencias">
         <div class="container-fluid">
             <div class="row">
-           
                 <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
                     <div class="card">
                         <div class="card-header card-header-icon" data-background-color="goldMaderas">
@@ -38,7 +40,7 @@
                                 <div class="row d-flex direction-row">
                                     <div class="col-12 col-sm-12 col-md-4 col-lg-4 d-flex direction-column">
                                         <div class="miniCard h-50 mt-0 d-flex align-center justify-center">
-                                            <div class="boxInfo">
+                                            <div class="boxInfo" data-intro='Hello step one!' data-step='1'>
                                                 <div class="row d-flex direction-row mb-1 p-1">
                                                     <div class="col-12 col-sm-12 col-md-2 col-lg-2 d-flex align-center justify-center font-size">
                                                         <i class="fas fa-user"></i>
@@ -72,7 +74,7 @@
                                         <div class="miniCard h-50 mt-0 d-flex align-center justify-center w-100 mb-0">
                                             <div class="boxInfo h-100 w-100">
                                                 <div class="col-12 col-sm-12 col-md-6 col-lg-6 h-100 d-flex align-center">
-                                                    <div class="row d-flex direction-column mb-1 p-1">
+                                                    <div class="row d-flex direction-column mb-1 p-1" data-intro='Hello step two!' data-step='2'>
                                                         <div class="d-flex direction-row mb-1">
                                                             
                                                             <div class="col-12 col-sm-12 col-md-12 col-lg-12 d-flex direction-column pl-0">
@@ -96,110 +98,36 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="col-12 col-sm-12 col-md-6 col-lg-6">
-                                                    <h3 CLASS="text-center ">Acción</h3>
-                                                    <p class="text-justify">Texto que puede leer el usuario o tambien pueden ser instrucciones</p>
+                                                <div class="col-12 col-sm-12 col-md-6 col-lg-6 instructions">
+                                                    <p class="text-center ">Lea el siguiente texto frente a su cámara</p>
+                                                    <p class="text-center quote">&ldquo;YO <span id="client_name_text"></span> DECLARO QUE...&rdquo;</p>
                                                 </div>
-                                                
-                                                <!-- <div class="row p-1 d-flex align-center justify-center direction-row">
-                                                    <div class="row d-flex direction-row mb-1 p-1">
-                                                       
-                                                        <div class="col-12 col-sm-12 col-md-12 col-lg-12 d-flex direction-column">
-                                                            <p class="titleMini m-0">Estatus lote</p>
-                                                        <p class="estatus2 w-100 overflow-text">Contratado</p>
-                                                        </div>
-                                                    </div>
-                                                    <div class="row d-flex direction-row mb-1 p-1">
-                                                       
-                                                        <div class="col-12 col-sm-12 col-md-12 col-lg-12 d-flex direction-column">
-                                                            <p class="titleMini m-0">Estatus comisión</p>
-                                                        <p class="estatus2 w-100 overflow-text">Recisión anterior (aún no se dispersa)</p>
-                                                        </div>
-                                                    </div>
-                                                </div> -->
-                                                <!-- <div class="row p-1 d-flex align-center justify-center direction-row">
-                                                    <div class="row d-flex direction-row mb-1 p-1">
-                                                       
-                                                        <div class="col-12 col-sm-12 col-md-12 col-lg-12 d-flex direction-column">
-                                                            <p class="titleMini m-0">Estatus contratación</p>
-                                                        <p class="estatus2 w-100 overflow-text">15. Acuse entregado (Contraloría)</p>
-                                                        </div>
-                                                    </div>
-                                                    <div class="row d-flex direction-row mb-1 p-1">
-                                                       
-                                                        <div class="col-12 col-sm-12 col-md-12 col-lg-12 d-flex direction-column">
-                                                            <p class="titleMini m-0">Estatus contratación</p>
-                                                            <p class="estatus2 w-100 overflow-text">15. Acuse entregado (Contraloría)</p>
-                                                        </div>
-                                                    </div>
-                                                </div> -->
                                             </div>
                                         </div>
-                                        <!-- <div class="miniCard h-50 mt-0 d-flex align-center justify-center w-100 mb-0">
-                                            <div class="boxInfo h-100 w-100">
-                                                <div class="row d-flex justify-between mb-1 p-1">
-                                                    <div class="d-flex direction-row">
-                                                        <div class="col-12 col-sm-12 col-md-2 col-lg-2 d-flex align-center justify-center font-size-price ">
-                                                            <i class="fas fa-dollar-sign"></i>
-                                                        </div>
-                                                        <div class="col-12 col-sm-12 col-md-10 col-lg-10 d-flex direction-column pl-0">
-                                                            <p class="titleMini-price m-0">Precio de lote</p>
-                                                            <p class="nombreCl data-price">1,051,193.47</p>
-                                                        </div>
-                                                    </div>
-                                                    <div class="d-flex direction-row">
-                                                        <div class="col-12 col-sm-12 col-md-2 col-lg-2 d-flex align-center justify-center font-size-price">
-                                                            <i class="fas fa-dollar-sign"></i>
-                                                        </div>
-                                                        <div class="col-12 col-sm-12 col-md-10 col-lg-10 d-flex direction-column pl-0">
-                                                            <p class="titleMini-price m-0">Enganche validado</p>
-                                                            <p class="nombreCl data-price">95,563.04</p>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="row p-1 d-flex align-center justify-center direction-row">
-                                                    <div class="row d-flex direction-row mb-1 p-1">
-                                                       
-                                                        <div class="col-12 col-sm-12 col-md-12 col-lg-12 d-flex direction-column">
-                                                            <p class="titleMini m-0">Estatus lote</p>
-                                                        <p class="estatus2 w-100 overflow-text">Contratado</p>
-                                                        </div>
-                                                    </div>
-                                                    <div class="row d-flex direction-row mb-1 p-1">
-                                                       
-                                                        <div class="col-12 col-sm-12 col-md-12 col-lg-12 d-flex direction-column">
-                                                            <p class="titleMini m-0">Estatus comisión</p>
-                                                        <p class="estatus2 w-100 overflow-text">Recisión anterior (aún no se dispersa)</p>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="row p-1 d-flex align-center justify-center direction-row">
-                                                    <div class="row d-flex direction-row mb-1 p-1">
-                                                       
-                                                        <div class="col-12 col-sm-12 col-md-12 col-lg-12 d-flex direction-column">
-                                                            <p class="titleMini m-0">Estatus contratación</p>
-                                                        <p class="estatus2 w-100 overflow-text">15. Acuse entregado (Contraloría)</p>
-                                                        </div>
-                                                    </div>
-                                                    <div class="row d-flex direction-row mb-1 p-1">
-                                                       
-                                                        <div class="col-12 col-sm-12 col-md-12 col-lg-12 d-flex direction-column">
-                                                            <p class="titleMini m-0">Estatus contratación</p>
-                                                            <p class="estatus2 w-100 overflow-text">15. Acuse entregado (Contraloría)</p>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div> -->
                                     </div>
-                                    <div class="col-12 col-sm-12 col-md-8 col-lg-8 d-flex align-center justify-center">
+                                    <div class="col-12 c    ol-sm-12 col-md-8 col-lg-8 d-flex align-center justify-center">
                                         <div class="w-100 d-flex justify-center" id="player">
-                                            <div id="actionButtons" class="action-buttons-inactive">
-                                                <button id="upload"><i class="fas fa-save"></i></button>
-                                                <!-- <button>Regrabar</button> -->
+                                            <div id="actionButtons" class="action-buttons-active">
+                                                <button id="upload" data-intro='Hello step seven!' data-step='7' disabled><i class="fas fa-save"></i> Guardar</button>
                                             </div>
                                             <video id="myVideo" playsinline class="vjs-custom video-js"></video>
                                         </div>
+                                        <div class="w-100 d-flex justify-center align-center row fade-video">
+                                            <div class="w-50 d-flex condition row" data-intro='Hello step three!' data-step='3'>
+                                                <div class="col-12 col-sm-12 col-md-2 col-lg-2 d-flex justify-end align-start">
+                                                    <input id="check" type="checkbox" data-intro='Hello step four!' data-step='4'></input>
+                                                </div>
+                                                <div class="col-12 col-sm-12 col-md-10 col-lg-10">
+                                                    <div class="col-12 col-sm-12 col-md-12 col-lg-12">
+                                                        <p>Acepto que Ciudad Maderas use este material para uso exclusivo...</p>
+                                                    </div>
+                                                    <div class="col-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-end">
+                                                        <button id="continue" data-intro='Hello step five!' data-step='5'>CONTINUAR <i class="fas fa-angle-right"></i></button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
                                         <div class="w-100" id="success">
                                             <i class="far fa-check-circle"></i>
                                             <h3>¡Tu video ha sido guardado con exito!</h3>
@@ -253,4 +181,7 @@ let typeTransaction = 0; // MJ: SELECTS MULTIPLES
 <!-- <script src="<?= base_url() ?>dist/js/controllers/general/main_services_dr.js"></script> -->
 <script src="<?= base_url() ?>dist/js/controllers/evidencias/user_evidencias.js"></script>
 </body>
+<script src="https://cdn.bootcdn.net/ajax/libs/intro.js/5.1.0/intro.min.js"></script>
+
+
 <?php } ?>
