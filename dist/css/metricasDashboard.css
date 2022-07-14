@@ -1340,3 +1340,8 @@
 #metricas #boxChart4 .apexcharts-legend {
   justify-content: space-between !important;
 }
+
+.apexcharts-tooltip-y-group {
+  display: flex;
+  justify-content: space-between;
+}
