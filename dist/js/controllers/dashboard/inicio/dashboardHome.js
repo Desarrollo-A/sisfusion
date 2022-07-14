@@ -256,6 +256,9 @@ var optionsFunnel = {
         enabled: true,
         y: {
             formatter: (value) => value.toLocaleString('es-MX'),
+            title: {
+                formatter: (seriesName) => 'Cantidad',
+            },
         },
     }
 };
