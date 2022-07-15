@@ -61,6 +61,7 @@
                                 <div class="col-12 col-sm-12 col-md-12 col-lg-12 h-100 p-0">
                                     <div id="totalVentasChart"></div>
                                     <div class="loadChart loadTotalVentasChart w-100 h-100 d-none">
+                                        <img src='<?=base_url('dist/img/emptyCharts.png')?>' alt="Icono gráfica" class="h-70 w-auto d-none">
                                         <img src= '<?=base_url('dist/img/chartLoading.gif')?>' alt="Icono gráfica" class="h-100 w-auto">
                                     </div>
                                 </div>

@@ -19,15 +19,21 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-12 col-sm-12 col-md-12 col-lg-12 h-90">
+                        <div class="col-12 col-sm-12 col-md-12 col-lg-12 h-90 p-0">
                             <div id="ventasMetrosChart"></div>
+                            <div class="loadChart emptyVentasMetrosChart w-100 h-100">
+                                <img src='<?=base_url('dist/img/emptyCharts.png')?>' alt="Icono gráfica" class="h-50 w-auto">
+                            </div>
+                            <div class="loadChart loadVentasMetrosChart w-100 h-100 d-none">
+                                <img src= '<?=base_url('dist/img/chartLoading.gif')?>' alt="Icono gráfica" class="h-100 w-auto">
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <div class="row" id="mainRow">
+    <div class="row" id="mainRowMetrics">
         <div class="col-12 col-sm-12 col-md-12 col-lg-6 flexibleM inactivo">
             <div class="card">
                 <div class="container-fluid h-100">
@@ -35,10 +41,13 @@
                         <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-chart h-100">
                             <div class="d-flex justify-between h-10 actions">
                                 <h4 class="text-center m-0 fw-400">Metros cuadrados (todos los proyectos)</h4>
-                                <button class="btn-charts" onclick="toggleDatatable(this)"><i class="far fa-list-alt"></i></button>
+                                <button class="btn-charts" onclick="toggleDatatableMetrics(this)"><i class="far fa-list-alt"></i></button>
                             </div>
-                            <div id="boxChart" class="h-90 boxChart" data-value="metros">
+                            <div id="boxChartM" class="h-90 boxChartMetrics" data-value="metros">
                                 <div id="metrosChart"></div>
+                                <div class="loadChart loadMetrosChart w-100 h-100">
+                                    <img src= '<?=base_url('dist/img/chartLoading.gif')?>' alt="Icono gráfica" class="h-100 w-auto">
+                                </div>
                             </div>
                         </div>
                         <div id="metros" class="col-12 col-sm-12 col-md-12 col-lg-6 col-datatable hidden h-100 p-0">
@@ -54,10 +63,13 @@
                         <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-chart h-100">
                             <div class="d-flex justify-between h-10 actions">
                                 <h4 class="text-center m-0 fw-400">Disponibilidad de lotes por proyecto</h4>
-                                <button class="btn-charts" onclick="toggleDatatable(this)"><i class="far fa-list-alt"></i></button>
+                                <button class="btn-charts" onclick="toggleDatatableMetrics(this)"><i class="far fa-list-alt"></i></button>
                             </div>
-                            <div id="boxChart2" class="h-90 boxChart" data-value="disponibilidad">
+                            <div id="boxChartM2" class="h-90 boxChartMetrics" data-value="disponibilidad">
                                 <div id="disponibilidadChart"></div>
+                                <div class="loadChart loadDisponibilidadChart w-100 h-100">
+                                    <img src= '<?=base_url('dist/img/chartLoading.gif')?>' alt="Icono gráfica" class="h-100 w-auto">
+                                </div>
                             </div>
                         </div>
                         <div id="disponibilidad" class="col-12 col-sm-12 col-md-12 col-lg-6 col-datatable hidden h-100 p-0">
@@ -73,10 +85,13 @@
                         <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-chart h-100">
                             <div class="d-flex justify-between h-10 actions">
                                 <h4 class="text-center m-0 fw-400">Lugar de prospección&nbsp;&nbsp;&nbsp;<i class="fas fa-info-circle" data-html="true" data-toggle="tooltip" data-placement="bottom" title="Datos representativos: Los datos reflejados en esta tabla se alimentan de la información proporcionada por el asesor al dar de alta al prospecto en CRM, por lo que pueden variar según la información proporcionada."></i></h4>
-                                <button class="btn-charts" onclick="toggleDatatable(this)"><i class="far fa-list-alt"></i></button>
+                                <button class="btn-charts" onclick="toggleDatatableMetrics(this)"><i class="far fa-list-alt"></i></button>
                             </div>
-                            <div id="boxChart3" class="h-90 boxChart" data-value="lugar">
+                            <div id="boxChartM3" class="h-90 boxChartMetrics" data-value="lugar">
                                 <div id="lugarChart"></div>
+                                <div class="loadChart loadLugarChart w-100 h-100">
+                                    <img src= '<?=base_url('dist/img/chartLoading.gif')?>' alt="Icono gráfica" class="h-100 w-auto">
+                                </div>
                             </div>
                         </div>
                         <div id="lugar" class="col-12 col-sm-12 col-md-12 col-lg-6 col-datatable hidden h-100 p-0">
@@ -92,10 +107,13 @@
                         <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-chart h-100">
                             <div class="d-flex justify-between h-10 actions">
                                 <h4 class="text-center m-0 fw-400">Medio de prospección&nbsp;&nbsp;&nbsp;<i class="fas fa-info-circle" data-html="true" data-toggle="tooltip" data-placement="bottom" title="Datos representativos: Los datos reflejados en esta tabla se alimentan de la información proporcionada por el asesor al dar de alta al prospecto en CRM, por lo que pueden variar según la información proporcionada."></i></h4>
-                                <button class="btn-charts" onclick="toggleDatatable(this)"><i class="far fa-list-alt"></i></button>
+                                <button class="btn-charts" onclick="toggleDatatableMetrics(this)"><i class="far fa-list-alt"></i></button>
                             </div>
-                            <div id="boxChart4" class="h-90 boxChart" data-value="medio">
+                            <div id="boxChartM4" class="h-90 boxChartMetrics" data-value="medio">
                                 <div id="medioChart"></div>
+                                <div class="loadChart loadMedioChart w-100 h-100">
+                                    <img src= '<?=base_url('dist/img/chartLoading.gif')?>' alt="Icono gráfica" class="h-100 w-auto">
+                                </div>
                             </div>
                         </div>
                         <div id="medio" class="col-12 col-sm-12 col-md-12 col-lg-6 col-datatable hidden h-100 p-0">

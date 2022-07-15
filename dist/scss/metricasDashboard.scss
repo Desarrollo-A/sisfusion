@@ -184,6 +184,14 @@
             justify-content: space-between!important;
         }
     }
+    .loadChart{
+        position: absolute;
+        top: 0;
+        background-color: $white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
 }
 .apexcharts-tooltip-y-group {
     display: flex;

@@ -136,7 +136,7 @@
 			<div class="modal-body" style="padding-botom:0px">
         <div class="row">
           <div class="col-md-12">
-            <table id="lotesInformationTable" class="table-striped table-hover">
+            <table id="lotesInformationTable" class="table-striped table-hover w-100">
                 <thead>
                     <tr>
                         <th>Proyecto</th>
