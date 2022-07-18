@@ -235,35 +235,35 @@
                     <div class="row h-50">
                         <div class="col-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-between pt-1 pl-0">
                             <div class="d-flex">
-                                <font color="#103F75"><i class="fas fa-circle pr-2 pl-2"></i></font>
+                                <font color="#103F75"><i class="fas fa-circle pr-1 pl-2"></i></font>
                                 <p class="m-0 labelTitle">Prospectos</p>
                             </div>
                             <h4 id="ac" class="numberElement m-0"></h4>
                         </div>
-                        <div class="col-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-between pt-1 pl-0">
+                        <div class="col-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-between pt-1 pl-0 mt-1">
                             <div class="d-flex">
-                                <font color="#006A9D"><i class="fas fa-circle pr-2 pl-2"></i></font>
+                                <font color="#006A9D"><i class="fas fa-circle pr-1 pl-2"></i></font>
                                 <p class="m-0 labelTitle">Cita</p>
                             </div>
                             <h4 id="cita" class="numberElement m-0"></h4>
                         </div>
-                        <div class="col-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-between pt-1 pl-0">
+                        <div class="col-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-between pt-1 pl-0 mt-1">
                             <div class="d-flex">
-                                <font color="#0089B7"><i class="fas fa-circle pr-2 pl-2"></i></font>
+                                <font color="#0089B7"><i class="fas fa-circle pr-1 pl-2"></i></font>
                                 <p class="m-0 labelTitle">Cita seguimiento</p>
                             </div>
                             <h4 id="cs" class="numberElement m-0"></h4>
                         </div>
-                        <div class="col-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-between pt-1 pl-0">
+                        <div class="col-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-between pt-1 pl-0 mt-1">
                             <div class="d-flex">
-                                <font color="#039590"><i class="fas fa-circle pr-2 pl-2"></i></font>
+                                <font color="#039590"><i class="fas fa-circle pr-1 pl-2"></i></font>
                                 <p class="m-0 labelTitle">No interesado</p>
                             </div>
                             <h4 id="ni" class="numberElement m-0"></h4>
                         </div>
-                        <div class="col-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-between pt-1 pl-0">
+                        <div class="col-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-between pt-1 pl-0 mt-1">
                             <div class="d-flex">
-                                <font color="#008EAB"><i class="fas fa-circle pr-2 pl-2"></i></font>
+                                <font color="#008EAB"><i class="fas fa-circle pr-1 pl-2"></i></font>
                                 <p class="m-0 labelTitle">Apartados</p>
                             </div>
                             <h4 id="ap" class="numberElement m-0"></h4>

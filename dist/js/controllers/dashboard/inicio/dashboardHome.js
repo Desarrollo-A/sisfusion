@@ -647,14 +647,14 @@ function cleanValues() {
 };
 
 function addTextFields(response){
-    $('#pt_card').text((response.prospTotales).toLocaleString('es-MX'));
-    $('#np_card').text((response.prospNuevos).toLocaleString('es-MX'));
-    $('#va_card').text((response.totalAT).toLocaleString('es-MX'));
-    $('#ca_card').text((response.totalCanA).toLocaleString('es-MX'));
-    $('#vc_card').text((response.totalConT).toLocaleString('es-MX'));
-    $('#cc_card').text((response.totalCanC).toLocaleString('es-MX'));
-    $('#ct_card').text((response.totalVentas).toLocaleString('es-MX'));
-    $('#pcc_card').text((response.prosCita).toLocaleString('es-MX'));
+    $('#pt_card').text(`${(response.prospTotales).toLocaleString('es-MX')} (${response.porcentaje_prospectosTotales}%)`);
+    $('#np_card').text(`${(response.prospNuevos).toLocaleString('es-MX')} (${response.porcentaje_prospectosNuevos}%)`);
+    $('#va_card').text(`${(response.totalAT).toLocaleString('es-MX')} (${response.porcentaje_totalApartado}%)`);
+    $('#ca_card').text(`${(response.totalCanA).toLocaleString('es-MX')} (${response.porcentaje_totalCanceladoapartado}%)`);
+    $('#vc_card').text(`${(response.totalConT).toLocaleString('es-MX')} (${response.porcentaje_totalContratado}%)`);
+    $('#cc_card').text(`${(response.totalCanC).toLocaleString('es-MX')} (${response.porcentaje_totalCanceladoContratado}%)`);
+    $('#ct_card').text(`${(response.totalVentas).toLocaleString('es-MX')} (${response.porcentaje_totalVentas}%)`);
+    $('#pcc_card').text(`${(response.prosCita).toLocaleString('es-MX')} (${response.porcentaje_prospectosCita}%)`);
 };
 
 function cleanValues2() {
@@ -669,10 +669,10 @@ function cleanValues2() {
 function addTextFields2(response){
     $('#ac').text((response.totalProspectos).toLocaleString('es-MX'));
     $('#cf').text((response.totalMitadProceso).toLocaleString('es-MX'));
-    $('#cita').text((response.totalProspectosCita).toLocaleString('es-MX'));
-    $('#cs').text((response.totalProspectosCitaSeguimiento).toLocaleString('es-MX'));
-    $('#ap').text((response.totalApartados).toLocaleString('es-MX'));
-    $('#ni').text((response.prospectosNoInteresados).toLocaleString('es-MX'));
+    $('#cita').text(`${(response.totalProspectosCita).toLocaleString('es-MX')} (${response.porcentaje_prospectosCita}%)`);
+    $('#cs').text(`${(response.totalProspectosCitaSeguimiento).toLocaleString('es-MX')} (${response.porcentaje_prospectosSeguimiento}%)`);
+    $('#ap').text(`${(response.totalApartados).toLocaleString('es-MX')} (${response.porcentaje_prospectosApartados}%)`);
+    $('#ni').text(`${(response.prospectosNoInteresados).toLocaleString('es-MX')} (${response.porcentaje_prospectosNoInteresado}%)`);
 };
 
 function getThisWeek() {
