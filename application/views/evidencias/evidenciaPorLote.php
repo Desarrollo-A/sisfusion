@@ -61,7 +61,7 @@
                                                 <div class="boxInfo">
                                                     <p class="m-0">Evidencia <span class="evidencia enfatize"></span></p>
                                                     <div id="evidencia" class="mb-2 hide">
-                                                        <p class="mb-1">Ver evidencia <i class="fas fa-eye"></i></p>
+                                                        <p id="view" class="mb-1">Ver evidencia <i class="fas fa-eye"></i></p>
                                                         <span class="estatus">Sin validar<span>
                                                     </div>
                                                     <div id="generate" class="row">
@@ -138,6 +138,7 @@
                                 <input type="hidden" id="nombreCondominio"></input>
                                 <input type="hidden" id="nombreLote"></input>
                                 <input type="hidden" id="fechaApartado"></input>
+                                <input type="hidden" id="videoNombre"></input>
                             </div>
                         </div>
                     </div>

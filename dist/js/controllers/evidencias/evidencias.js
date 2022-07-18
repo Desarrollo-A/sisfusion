@@ -41,6 +41,10 @@ $(document).on('click', '.iconCopy',function(){
     copyToClipboard();
 })
 
+$(document).on('click', '#view',function(){
+    verEvidencia();
+})
+
 
 
 function cleanSelects(action) {
@@ -79,6 +83,7 @@ function getClient(idLote){
             $('#nombreCondominio').val(response.nombreCondominio);
             $('#nombreLote').val(response.nombreLote);
             $('#fechaApartado').val(response.fechaApartado);
+            $('#videoNombre').val(response.nombre_archivo);
             $('#basic_info').removeClass('hide');
             $('#basic_info').show();
             if(response.evidencia == 1){
@@ -143,4 +148,44 @@ function copyToClipboard() {
   
     /* Alert the copied text */
     alerts.showNotification("top", "right", "Se ha copiado la url.", "success");
-  }
+}
+
+function verEvidencia(){
+    $.ajax({
+        url: "viewDropboxFile",
+        type: 'POST',
+        data: {videoNombre: $("#videoNombre").val()},
+        dataType: 'json',
+        success: function (response) {
+            console.log(JSON.parse(response));
+            let url = formatVideoURL(JSON.parse(response)); 
+            console.log('url',url);
+            var video = document.getElementById('video_preview');
+            var source = document.createElement('source');
+            source.setAttribute('src', url);
+            source.setAttribute('type', 'video/mp4');
+            video.appendChild(source);
+           
+            $("#nombre_lote").text( $('#nombreLote').val());
+            $('#videoPreview').modal();
+            $('#spiner-loader').addClass('hide');
+        }, error: function () {
+            $("#sendRequestButton").prop("disabled", false);
+            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+            $('#spiner-loader').addClass('hide');
+        }
+    });
+}
+
+function formatVideoURL(response){
+    let url;
+    if(response.error){
+        url = response.error.shared_link_already_exists.metadata.url;
+        url = url.replace("dl=0", "raw=1");
+    }else{
+        url = response.url;
+        url = url.replace("dl=0", "raw=1");
+    }
+
+    return url;
+}

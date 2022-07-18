@@ -28,7 +28,7 @@
         return $this->db->query("SELECT CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno) nombre, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombreAsesor,
         cl.fechaApartado, FORMAT(lo.totalNeto2,'C') totalLote, FORMAT(isNULL(cl.totalNeto_cl, lo.totalNeto), 'C') engancheValidado, sl.nombre estatus_lote,
         sc.nombreStatus, oxc.nombre estatus_comision, cl.id_cliente, lo.nombreLote,
-        cond.nombre nombreCondominio, res.nombreResidencial, ve.estatus evidencia FROM clientes cl
+        cond.nombre nombreCondominio, res.nombreResidencial, ve.estatus evidencia, ve.nombre_archivo FROM clientes cl
         INNER JOIN usuarios u ON u.id_usuario = cl.id_asesor
         INNER JOIN lotes lo ON lo.idLote = cl.idLote
         INNER JOIN condominios cond ON cond.idCondominio = lo.idCondominio
