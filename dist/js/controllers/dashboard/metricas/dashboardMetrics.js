@@ -298,7 +298,9 @@ var optionsVentasMetros = {
         }
     },
     stroke: {
-        curve: 'smooth'
+        width: 2,
+        curve: 'smooth',
+        opacity: 0.7
     },
     legend: {
         show: false,
@@ -440,22 +442,22 @@ function getMedioProspeccion(){
 }
 
 function getVentasM2(idCond){
+    $('.emptyVentasMetrosChart').addClass('d-none');
+    $('.loadVentasMetrosChart').removeClass('d-none');
     $.ajax({
         url: `${base_url}Metricas/getVentasM2`,
         data: {condominio: idCond},
         type: 'POST',
         dataType: 'json',
-        beforeSend: function () {
-            $('#spiner-loader').removeClass('hide');
-        },
         success: function (response) {
             formatVentasM2(response);
-            $('#spiner-loader').addClass('hide');
+            $('.loadVentasMetrosChart').addClass('d-none');
         }
     });
 }
 
 function formatMetrosData(data){
+    $('.loadMetrosChart').addClass('d-none');
     let series =[], categories = [];
     let count = 0;
     data.forEach(element => {
@@ -479,6 +481,7 @@ function formatMetrosData(data){
 }
 
 function formatDisponibilidadData(data){
+    $('.loadDisponibilidadChart').addClass('d-none');
     let series =[];
     let count = 0;
     data.forEach(element => {
@@ -512,6 +515,7 @@ function formatDisponibilidadData(data){
 }
 
 function formatLugarProspeccion(data){
+    $('.loadLugarChart').addClass('d-none');
     let series =[] ,series2 =[], categories = [];
     let count = 0;
     data.forEach(element => {
@@ -540,6 +544,7 @@ function formatLugarProspeccion(data){
 }
 
 function formatMedioProspeccion(data){
+    $('.loadMedioChart').addClass('d-none');
     let series =[] , categories = [];
     let count = 0;
     data.forEach(element => {
@@ -574,7 +579,7 @@ function formatVentasM2(data){
     });
 }
 
-function toggleDatatable(e){
+function toggleDatatableMetrics(e){
     var columnaActiva = e.closest( '.flexibleM' );
     var columnaChart = e.closest( '.col-chart' );
     var columnDatatable = $( e ).closest( '.row' ).find( '.col-datatable' );
@@ -601,7 +606,7 @@ function toggleDatatable(e){
 
 function reorderColumnsMetrics(){
     var principalColumns = document.getElementsByClassName("flexibleM");
-    var mainRow = document.getElementById('mainRow');
+    var mainRow = document.getElementById('mainRowMetrics');
 
     let opts = getCacheOptions();
     //Creamos nuevo fragmento en el DOM para insertar las columnas ordenadas
@@ -623,7 +628,7 @@ function reorderColumnsMetrics(){
     mainRow.innerHTML = null;
     mainRow.appendChild(elements);
 
-    recreatApexChartMetrics(true);
+    recreatApexChartMetrics(true, opts);
 
     for( i = 1; i<=principalColumns.length; i++){
         (function(i){
@@ -920,7 +925,7 @@ function getCacheOptions(){
 
 function recreatApexChartMetrics(estado){
     if(estado){
-        $(".boxChart").html('');
+        $(".boxChartMetrics").html('');
         buildChartsIDMetrics();
       
         metrosChart = new ApexCharts(document.querySelector("#metrosChart"), optionBarInit);
@@ -958,7 +963,7 @@ function recreatApexChartMetrics(estado){
 }
 
 function buildChartsIDMetrics(){
-    var boxCharts = document.getElementsByClassName("boxChart");
+    var boxCharts = document.getElementsByClassName("boxChartMetrics");
     for ( var i = 0; i<boxCharts.length; i++ ){
         var id = boxCharts[i].id;
         let type = boxCharts[i].getAttribute('data-value');

@@ -99,7 +99,7 @@ var options = {
 
 function recreatApexChart(estado, opts){
     if(estado){
-        $(".boxChart").html('');
+        $(".boxChartRanking").html('');
         buildChartsID();
       
         chartApartados = new ApexCharts(document.querySelector('#chart'), setOptionsChart(opts.seriesA[0], opts.categoriesA));
@@ -127,7 +127,7 @@ function recreatApexChart(estado, opts){
 }
 
 function buildChartsID(){
-    var boxCharts = document.getElementsByClassName("boxChart");
+    var boxCharts = document.getElementsByClassName("boxChartRanking");
     for ( var i = 0; i<boxCharts.length; i++ ){
         var id = boxCharts[i].id;
         var html = `<div id="chart`+(id.replace(/\D/g, ""))+`" class="chart"></div>`;
@@ -182,7 +182,7 @@ function buildEstructuraDT(dataName, dataApartados){
 
 function reorderColumns(){
     var principalColumns = document.getElementsByClassName("flexibleR");
-    var mainRow = document.getElementById('mainRow');
+    var mainRow = document.getElementById('mainRowRanking');
     let opts = getCacheOptions();
     let dates = getCacheDates();
     var elements = document.createDocumentFragment();

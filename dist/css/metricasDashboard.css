@@ -1341,6 +1341,15 @@
   justify-content: space-between !important;
 }
 
+#metricas .loadChart {
+  position: absolute;
+  top: 0;
+  background-color: #ffffff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .apexcharts-tooltip-y-group {
   display: flex;
   justify-content: space-between;
