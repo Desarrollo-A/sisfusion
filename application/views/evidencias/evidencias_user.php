@@ -40,7 +40,7 @@
                                 <div class="row d-flex direction-row">
                                     <div class="col-12 col-sm-12 col-md-4 col-lg-4 d-flex direction-column">
                                         <div class="miniCard h-50 mt-0 d-flex align-center justify-center">
-                                            <div class="boxInfo" data-intro='Hello step one!' data-step='1'>
+                                            <div class="boxInfo" data-intro='Por favor verifique que sus datos sean correctos (nombre, fecha de apartado y el nombre del asesor).' data-step='1'>
                                                 <div class="row d-flex direction-row mb-1 p-1">
                                                     <div class="col-12 col-sm-12 col-md-2 col-lg-2 d-flex align-center justify-center font-size">
                                                         <i class="fas fa-user"></i>
@@ -74,7 +74,7 @@
                                         <div class="miniCard h-50 mt-0 d-flex align-center justify-center w-100 mb-0">
                                             <div class="boxInfo h-100 w-100">
                                                 <div class="col-12 col-sm-12 col-md-6 col-lg-6 h-100 d-flex align-center">
-                                                    <div class="row d-flex direction-column mb-1 p-1" data-intro='Hello step two!' data-step='2'>
+                                                    <div class="row d-flex direction-column mb-1 p-1" data-intro='Por favor verifique que los datos del desarrollo, condominio, lote y número de lote sean correctos.' data-step='2'>
                                                         <div class="d-flex direction-row mb-1">
                                                             
                                                             <div class="col-12 col-sm-12 col-md-12 col-lg-12 d-flex direction-column pl-0">
@@ -98,7 +98,7 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="col-12 col-sm-12 col-md-6 col-lg-6 instructions">
+                                                <div class="col-12 col-sm-12 col-md-6 col-lg-6 instructions" data-intro='Lea el siguiente texto frente a su camara' data-step='6'>
                                                     <p class="text-center ">Lea el siguiente texto frente a su cámara</p>
                                                     <p class="text-center quote">&ldquo;YO <span id="client_name_text"></span> DECLARO QUE...&rdquo;</p>
                                                 </div>
@@ -108,21 +108,21 @@
                                     <div class="col-12 c    ol-sm-12 col-md-8 col-lg-8 d-flex align-center justify-center">
                                         <div class="w-100 d-flex justify-center" id="player">
                                             <div id="actionButtons" class="action-buttons-active">
-                                                <button id="upload" data-intro='Hello step seven!' data-step='7' disabled><i class="fas fa-save"></i> Guardar</button>
+                                                <button id="upload" data-intro='Una vez termine de grabar el video, dar click en guardar' data-step='7' disabled><i class="fas fa-save"></i> Guardar</button>
                                             </div>
                                             <video id="myVideo" playsinline class="vjs-custom video-js"></video>
                                         </div>
                                         <div class="w-100 d-flex justify-center align-center row fade-video">
-                                            <div class="w-50 d-flex condition row" data-intro='Hello step three!' data-step='3'>
+                                            <div class="w-50 d-flex condition row" data-intro='He leído y acepto los términos y condiciones de uso, así como el aviso de privacidad.' data-step='3'>
                                                 <div class="col-12 col-sm-12 col-md-2 col-lg-2 d-flex justify-end align-start">
-                                                    <input id="check" type="checkbox" data-intro='Hello step four!' data-step='4'></input>
+                                                    <input id="check" type="checkbox"></input>
                                                 </div>
                                                 <div class="col-12 col-sm-12 col-md-10 col-lg-10">
                                                     <div class="col-12 col-sm-12 col-md-12 col-lg-12">
                                                         <p>Acepto que Ciudad Maderas use este material para uso exclusivo...</p>
                                                     </div>
                                                     <div class="col-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-end">
-                                                        <button id="continue" data-intro='Hello step five!' data-step='5'>CONTINUAR <i class="fas fa-angle-right"></i></button>
+                                                        <button id="continue" data-intro='Dar clic para aceptar y continuar.' data-step='4'>CONTINUAR <i class="fas fa-angle-right"></i></button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -130,7 +130,7 @@
                                         
                                         <div class="w-100" id="success">
                                             <i class="far fa-check-circle"></i>
-                                            <h3>¡Tu video ha sido guardado con exito!</h3>
+                                            <h3>¡Tu video ha sido guardado con éxito!</h3>
                                         </div>
                                     </div>
                                 </div>
