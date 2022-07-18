@@ -238,7 +238,7 @@ class Dashboard_model extends CI_Model {
             }
         }
         else if ($id_rol == 1 || $id_rol == 4 || $id_rol == 18) // MJ: Director comercial
-            $filtro = "";
+            $filtro = " AND YEAR(cl.fechaApartado) = $year";
 
         $query = $this->db->query("SELECT 
             FORMAT(ISNULL(a.sumaTotal, 0), 'C') sumaTotal, ISNULL(a.totalVentas, 0) totalVentas, --TOTAL VENDIDO
@@ -553,7 +553,7 @@ class Dashboard_model extends CI_Model {
             if(count($getRol) > 1){
                 $filtro .= " AND (p.id_subdirector = $id_usuario OR p.id_regional = $id_usuario) AND YEAR(p.fecha_creacion) = $year";
             }else{
-                $filter = " AND p.id_subdirector = $id_usuario AND YEAR(p.fecha_creacion) = $year";
+                $filtro .= " AND p.id_subdirector = $id_usuario AND YEAR(p.fecha_creacion) = $year";
             }
         }
         else if ($id_rol == 5) // MJ: Asistente subdirección
@@ -562,11 +562,12 @@ class Dashboard_model extends CI_Model {
             if(count($getRol) > 1){
                 $filtro .= " AND (p.id_subdirector = $id_lider OR p.id_regional = $id_lider) AND YEAR(p.fecha_creacion) = $year";
             }else{
-                $filter = " AND p.id_subdirector = $id_lider AND YEAR(p.fecha_creacion) = $year";
+                $filtro .= " AND p.id_subdirector = $id_lider AND YEAR(p.fecha_creacion) = $year";
             }
         }
         else if ($id_rol == 1 || $id_rol == 4 || $id_rol == 18) // MJ: Director comercial
-            $filter = "";
+
+            $filtro .= " AND YEAR(p.fecha_creacion) = $year";
         $query = $this->db->query("SELECT
         ISNULL(a.totalProspectos, 0) totalProspectos, --TOTAL PROSPECTOS
         ISNULL(b.totalProspectosCita, 0) totalProspectosCita,  --TOTAL PROSPECTOS C/CITA
