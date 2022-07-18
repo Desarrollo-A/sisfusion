@@ -116,7 +116,7 @@ class Dashboard_model extends CI_Model {
          totalVentas, '1' opt FROM (
                 SELECT  lo.idLote, lo.nombreLote, cl.id_asesor, cl.id_coordinador, cl.id_gerente, cl.nombre, cl.apellido_paterno, cl.apellido_materno, isNULL(cl.totalNeto2_cl, lo.totalNeto2) totalNeto2, isNULL(cl.total_cl,lo.total) total FROM clientes cl
                 INNER JOIN lotes lo ON lo.idLote = cl.idLote
-                WHERE isNULL(noRecibo, '') != 'CANCELADO' AND isNULL(cl.tipo_venta_cl, lo.tipo_venta) IN(1, 2) $filtro
+                WHERE isNULL(noRecibo, '') != 'CANCELADO' AND isNULL(isNULL(cl.tipo_venta_cl, lo.tipo_venta), 0) IN (0, 1, 2) $filtro
                 GROUP BY lo.idLote, lo.nombreLote, cl.id_asesor, cl.id_coordinador, cl.id_gerente, cl.nombre, cl.apellido_paterno, cl.apellido_materno, isNULL(cl.totalNeto2_cl, lo.totalNeto2), isNULL(cl.total_cl,lo.total)
             ) tmpTotal) a
         --SUMA CANCELADOS TOTALES
@@ -132,7 +132,7 @@ class Dashboard_model extends CI_Model {
                 SELECT lo.idLote, lo.nombreLote, cl.id_asesor, cl.id_coordinador, cl.id_gerente, cl.nombre, cl.apellido_paterno, cl.apellido_materno, isNULL(cl.totalNeto2_cl, lo.totalNeto2) totalNeto2, isNULL(cl.total_cl,lo.total) total FROM clientes cl
                 INNER JOIN lotes lo ON lo.idLote = cl.idLote
                 LEFT JOIN historial_liberacion hl ON hl.idLote = lo.idLote AND hl.tipo NOT IN (2, 5, 6) AND hl.idLote = lo.idLote AND hl.id_cliente = cl.id_cliente
-                WHERE  isNULL(noRecibo, '') != 'CANCELADO' AND cl.status = 0 AND isNULL(cl.tipo_venta_cl, lo.tipo_venta) IN(1, 2) $filtro
+                WHERE  isNULL(noRecibo, '') != 'CANCELADO' AND cl.status = 0 AND isNULL(isNULL(cl.tipo_venta_cl, lo.tipo_venta), 0) IN (0, 1, 2) $filtro
                 GROUP BY lo.idLote, lo.nombreLote, cl.id_asesor, cl.id_coordinador, cl.id_gerente, cl.nombre, cl.apellido_paterno, cl.apellido_materno, isNULL(cl.totalNeto2_cl, lo.totalNeto2), isNULL(cl.total_cl,lo.total)
             ) tmpCanT) b ON b.opt = a.opt
         --SUMA CONTRATOS TOTALES
@@ -149,7 +149,7 @@ class Dashboard_model extends CI_Model {
                 INNER JOIN lotes lo ON lo.idLote = cl.idLote AND lo.idStatusLote = 2
                 INNER JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes WHERE idStatusContratacion = 15 AND idMovimiento = 45
                 GROUP BY idLote, idCliente) hl ON hl.idLote = lo.idLote AND hl.idCliente = cl.id_cliente
-                WHERE isNULL(noRecibo, '') != 'CANCELADO' AND cl.status = 1 AND isNULL(cl.tipo_venta_cl, lo.tipo_venta) IN(1, 2) $filtro
+                WHERE isNULL(noRecibo, '') != 'CANCELADO' AND cl.status = 1 AND isNULL(isNULL(cl.tipo_venta_cl, lo.tipo_venta), 0) IN (0, 1, 2) $filtro
                 GROUP BY lo.idLote, lo.nombreLote, cl.id_asesor, cl.id_coordinador, cl.id_gerente, cl.nombre, cl.apellido_paterno, cl.apellido_materno, isNULL(cl.totalNeto2_cl, lo.totalNeto2), isNULL(cl.total_cl,lo.total)
             ) tmpConT) c ON c.opt = a.opt
         --Suma apartados totales
@@ -164,7 +164,7 @@ class Dashboard_model extends CI_Model {
          totalAT, '1' opt FROM (
                 SELECT  lo.idLote, lo.nombreLote, cl.id_asesor, cl.id_coordinador, cl.id_gerente, cl.nombre, cl.apellido_paterno, cl.apellido_materno, isNULL(cl.totalNeto2_cl, lo.totalNeto2) totalNeto2, isNULL(cl.total_cl,lo.total) total FROM clientes cl
                 INNER JOIN lotes lo ON lo.idLote = cl.idLote AND lo.idStatusLote != 2
-                WHERE isNULL(noRecibo, '') != 'CANCELADO' AND cl.status = 1 AND isNULL(cl.tipo_venta_cl, lo.tipo_venta) IN(1, 2) $filtro
+                WHERE isNULL(noRecibo, '') != 'CANCELADO' AND cl.status = 1 AND isNULL(isNULL(cl.tipo_venta_cl, lo.tipo_venta), 0) IN (0, 1, 2) $filtro
                 GROUP BY lo.idLote, lo.nombreLote, cl.id_asesor, cl.id_coordinador, cl.id_gerente, cl.nombre, cl.apellido_paterno, cl.apellido_materno, isNULL(cl.totalNeto2_cl, lo.totalNeto2), isNULL(cl.total_cl,lo.total)
             ) tmpApT) d ON d.opt = c.opt
         --SUMA Cancelados contratados
@@ -182,7 +182,7 @@ class Dashboard_model extends CI_Model {
                 LEFT JOIN historial_liberacion hl ON hl.idLote = lo.idLote AND hl.tipo NOT IN (2, 5, 6) AND hl.id_cliente = cl.id_cliente
                 INNER JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes WHERE idStatusContratacion = 15 AND idMovimiento = 45
                 GROUP BY idLote, idCliente) hlo ON hlo.idLote = lo.idLote AND hlo.idCliente = cl.id_cliente
-                WHERE isNULL(noRecibo, '') != 'CANCELADO' AND cl.status = 0 AND isNULL(cl.tipo_venta_cl, lo.tipo_venta) IN(1, 2) $filtro
+                WHERE isNULL(noRecibo, '') != 'CANCELADO' AND cl.status = 0 AND isNULL(isNULL(cl.tipo_venta_cl, lo.tipo_venta), 0) IN (0, 1, 2) $filtro
                 GROUP BY lo.idLote, lo.nombreLote, cl.id_asesor, cl.id_coordinador, cl.id_gerente, cl.nombre, cl.apellido_paterno, cl.apellido_materno, isNULL(cl.totalNeto2_cl, lo.totalNeto2), isNULL(cl.total_cl,lo.total)
             ) tmpCC) e ON e.opt = d.opt
         INNER JOIN(SELECT COUNT(*) prospTotales, '1' opt FROM prospectos p $filter2) f ON f.opt = d.opt
@@ -267,7 +267,7 @@ class Dashboard_model extends CI_Model {
             totalVentas, '1' opt FROM (
                     SELECT  lo.idLote, lo.nombreLote,  cl.id_asesor, cl.id_coordinador, cl.id_gerente, cl.nombre, cl.apellido_paterno, cl.apellido_materno, isNULL(cl.totalNeto2_cl, lo.totalNeto2) totalNeto2, isNULL(cl.total_cl,lo.total) total FROM clientes cl
                     INNER JOIN lotes lo ON lo.idLote = cl.idLote
-                    WHERE isNULL(noRecibo, '') != 'CANCELADO' AND isNULL(cl.tipo_venta_cl, lo.tipo_venta) IN(1, 2) $filtro
+                    WHERE isNULL(noRecibo, '') != 'CANCELADO' AND isNULL(isNULL(cl.tipo_venta_cl, lo.tipo_venta), 0) IN (0, 1, 2) $filtro
                     GROUP BY lo.idLote, lo.nombreLote,  cl.id_asesor, cl.id_coordinador, cl.id_gerente, cl.nombre, cl.apellido_paterno, cl.apellido_materno, isNULL(cl.totalNeto2_cl, lo.totalNeto2), isNULL(cl.total_cl,lo.total)
                 ) tmpTotal) a
             --SUMA CANCELADOS TOTALES
@@ -283,7 +283,7 @@ class Dashboard_model extends CI_Model {
                     SELECT lo.idLote, lo.nombreLote,  cl.id_asesor, cl.id_coordinador, cl.id_gerente, cl.nombre, cl.apellido_paterno, cl.apellido_materno, isNULL(cl.totalNeto2_cl, lo.totalNeto2) totalNeto2, isNULL(cl.total_cl,lo.total) total FROM clientes cl
                     INNER JOIN lotes lo ON lo.idLote = cl.idLote
                     LEFT JOIN historial_liberacion hl ON hl.idLote = lo.idLote AND hl.tipo NOT IN (2, 5, 6) AND hl.idLote = lo.idLote AND hl.id_cliente = cl.id_cliente
-                    WHERE isNULL(noRecibo, '') != 'CANCELADO' AND cl.status = 0 AND isNULL(cl.tipo_venta_cl, lo.tipo_venta) IN(1, 2) $filtro
+                    WHERE isNULL(noRecibo, '') != 'CANCELADO' AND cl.status = 0 AND isNULL(isNULL(cl.tipo_venta_cl, lo.tipo_venta), 0) IN (0, 1, 2) $filtro
                     GROUP BY lo.idLote, lo.nombreLote,  cl.id_asesor, cl.id_coordinador, cl.id_gerente, cl.nombre, cl.apellido_paterno, cl.apellido_materno, isNULL(cl.totalNeto2_cl, lo.totalNeto2), isNULL(cl.total_cl,lo.total)
                 ) tmpCanT) b ON b.opt = a.opt
             --SUMA CONTRATOS TOTALES
@@ -300,7 +300,7 @@ class Dashboard_model extends CI_Model {
                     INNER JOIN lotes lo ON lo.idLote = cl.idLote AND lo.idStatusLote = 2
                     INNER JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes WHERE idStatusContratacion = 15 AND idMovimiento = 45
                     GROUP BY idLote, idCliente) hl ON hl.idLote = lo.idLote AND hl.idCliente = cl.id_cliente
-                    WHERE isNULL(noRecibo, '') != 'CANCELADO' AND cl.status = 1 AND isNULL(cl.tipo_venta_cl, lo.tipo_venta) IN(1, 2) $filtro
+                    WHERE isNULL(noRecibo, '') != 'CANCELADO' AND cl.status = 1 AND isNULL(isNULL(cl.tipo_venta_cl, lo.tipo_venta), 0) IN (0, 1, 2) $filtro
                     GROUP BY lo.idLote, lo.nombreLote,  cl.id_asesor, cl.id_coordinador, cl.id_gerente, cl.nombre, cl.apellido_paterno, cl.apellido_materno, isNULL(cl.totalNeto2_cl, lo.totalNeto2), isNULL(cl.total_cl,lo.total)
                 ) tmpConT) c ON c.opt = a.opt
             --Suma apartados totales
@@ -315,7 +315,7 @@ class Dashboard_model extends CI_Model {
             totalAT, '1' opt FROM (
                     SELECT  lo.idLote, lo.nombreLote,  cl.id_asesor, cl.id_coordinador, cl.id_gerente, cl.nombre, cl.apellido_paterno, cl.apellido_materno, isNULL(cl.totalNeto2_cl, lo.totalNeto2) totalNeto2, isNULL(cl.total_cl,lo.total) total FROM clientes cl
                     INNER JOIN lotes lo ON lo.idLote = cl.idLote AND lo.idStatusLote != 2
-                    WHERE isNULL(noRecibo, '') != 'CANCELADO' AND cl.status = 1 AND isNULL(cl.tipo_venta_cl, lo.tipo_venta) IN(1, 2) $filtro
+                    WHERE isNULL(noRecibo, '') != 'CANCELADO' AND cl.status = 1 AND isNULL(isNULL(cl.tipo_venta_cl, lo.tipo_venta), 0) IN (0, 1, 2) $filtro
                     GROUP BY lo.idLote, lo.nombreLote,  cl.id_asesor, cl.id_coordinador, cl.id_gerente, cl.nombre, cl.apellido_paterno, cl.apellido_materno, isNULL(cl.totalNeto2_cl, lo.totalNeto2), isNULL(cl.total_cl,lo.total)
                 ) tmpApT) d ON d.opt = c.opt
             --SUMA Cancelados contratados
@@ -333,7 +333,7 @@ class Dashboard_model extends CI_Model {
                     LEFT JOIN historial_liberacion hl ON hl.idLote = lo.idLote AND hl.tipo NOT IN (2, 5, 6) AND hl.id_cliente = cl.id_cliente
                     INNER JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes WHERE idStatusContratacion = 15 AND idMovimiento = 45
                     GROUP BY idLote, idCliente) hlo ON hlo.idLote = lo.idLote AND hlo.idCliente = cl.id_cliente
-                    WHERE isNULL(noRecibo, '') != 'CANCELADO' AND cl.status = 0 AND isNULL(cl.tipo_venta_cl, lo.tipo_venta) IN(1, 2) $filtro
+                    WHERE isNULL(noRecibo, '') != 'CANCELADO' AND cl.status = 0 AND isNULL(isNULL(cl.tipo_venta_cl, lo.tipo_venta), 0) IN (0, 1, 2) $filtro
                     GROUP BY lo.idLote, lo.nombreLote,  cl.id_asesor, cl.id_coordinador, cl.id_gerente, cl.nombre, cl.apellido_paterno, cl.apellido_materno, isNULL(cl.totalNeto2_cl, lo.totalNeto2), isNULL(cl.total_cl,lo.total)
         ) tmpCC) e ON e.opt = d.opt");
         return $query->row();
@@ -436,11 +436,11 @@ class Dashboard_model extends CI_Model {
         if($data['type'] == 2){
             $begin = $data['beginDate'];
             $end = $data['endDate'];
-            $filtro = "WHERE isNULL(noRecibo, '') != 'CANCELADO' AND isNULL(cl.tipo_venta_cl, lo.tipo_venta) IN(1, 2) AND cl.fecha_creacion BETWEEN '$begin 00:00:00' AND '$end 23:59:59' ";
+            $filtro = "WHERE isNULL(noRecibo, '') != 'CANCELADO' AND isNULL(isNULL(cl.tipo_venta_cl, lo.tipo_venta), 0) IN (0, 1, 2) AND cl.fecha_creacion BETWEEN '$begin 00:00:00' AND '$end 23:59:59' ";
         }else{
             $begin = "$year-01-01";
             $end = date("Y-m-d");
-            $filtro = "WHERE isNULL(noRecibo, '') != 'CANCELADO' AND isNULL(cl.tipo_venta_cl, lo.tipo_venta) IN(1, 2) AND cl.fecha_creacion BETWEEN '$begin 00:00:00' AND '$end 23:59:59'";
+            $filtro = "WHERE isNULL(noRecibo, '') != 'CANCELADO' AND isNULL(isNULL(cl.tipo_venta_cl, lo.tipo_venta), 0) IN (0, 1, 2) AND cl.fecha_creacion BETWEEN '$begin 00:00:00' AND '$end 23:59:59'";
         }
 
         if ($id_rol == 7) // MJ: Asesor
@@ -608,7 +608,7 @@ class Dashboard_model extends CI_Model {
             SELECT  COUNT(*) totalApartados, '1' opt FROM prospectos p
             INNER JOIN clientes cl ON  cl.id_prospecto = p.id_prospecto
             INNER JOIN lotes lo ON lo.idLote = cl.idLote AND lo.idStatusLote != 2
-            WHERE isNULL(noRecibo, '') != 'CANCELADO' AND cl.status = 1 AND isNULL(cl.tipo_venta_cl, lo.tipo_venta) IN(1, 2) $filtro
+            WHERE isNULL(noRecibo, '') != 'CANCELADO' AND cl.status = 1 AND isNULL(isNULL(cl.tipo_venta_cl, lo.tipo_venta), 0) IN (0, 1, 2) $filtro
         )e ON e.opt = d.opt
         --TOTAL PROSPECTOS NO INTERESADOS
         LEFT JOIN (

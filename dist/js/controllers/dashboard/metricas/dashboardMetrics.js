@@ -9,24 +9,28 @@ var optionBarInit = {
             show: false
         },
     },
-    colors: ['#0089B7', '#039590', '#00ACB8', '#4BBC8E', '#00CDA3', '#92E784', '#F9F871'],
+    colors: ['#103F75', '#006A9D', '#0089B7', '#039590', '#008EAB', '#00ACB8', '#16C0B4', '#4BBC8E', '#00CDA3', '#92E784'],
     stroke: {
         colors: ['transparent'],
         width: 0,
     },
     plotOptions: {
         bar: {
-            distributed: false, // this line is mandatory
+            distributed: true, // this line is mandatory
             borderRadius: 10,
             horizontal: true,
-            barHeight: '40%',
+            barHeight: '45%',
         }
     },
     dataLabels: {
-        enabled: true,
-        formatter: function (val, opts) {
-            return val.toLocaleString('es-MX');
-        }
+        formatter: function (val, opt) {
+            const goals = opt.w.config.series[opt.seriesIndex].data[opt.dataPointIndex].goals;
+
+            if (goals && goals.length) {
+                return `${val.toLocaleString('es-MX')} / ${(goals[0].value).toLocaleString('es-MX')}`
+            }
+            return val.toLocaleString('es-MX')
+        },
     },
     legend: {
         show: false,
@@ -93,7 +97,7 @@ var optionsDisponibilidad = {
             borderRadius: 10
         }
     },
-    colors: ['#0089B7', '#039590', '#00ACB8', '#4BBC8E', '#00CDA3', '#92E784', '#F9F871'],
+    colors: ['#103F75', '#006A9D', '#0089B7', '#039590', '#008EAB', '#00ACB8', '#16C0B4', '#4BBC8E', '#00CDA3', '#92E784'],
     stroke: {
         colors: ['transparent'],
         width: 0,
@@ -162,7 +166,7 @@ var optionLugar = {
             show: false
         },
     },
-    colors: ['#0089B7', '#039590', '#00ACB8', '#4BBC8E', '#00CDA3', '#92E784', '#F9F871'],
+    colors: ['#103F75', '#006A9D', '#0089B7', '#039590', '#008EAB', '#00ACB8', '#16C0B4', '#4BBC8E', '#00CDA3', '#92E784'],
     stroke: {
         colors: ['transparent'],
         width: 5,
@@ -251,7 +255,7 @@ var optionsMedio = {
             show: false
         },
     },
-    colors: ['#0089B7', '#039590', '#00ACB8', '#4BBC8E', '#00CDA3', '#92E784', '#F9F871'],
+    colors: ['#103F75', '#006A9D', '#0089B7', '#039590', '#008EAB', '#00ACB8', '#16C0B4', '#4BBC8E', '#00CDA3', '#92E784'],
     dataLabels: {
         enabled: false,
         formatter: function (val) {
@@ -286,11 +290,17 @@ var optionsVentasMetros = {
         height: '100%',
         type: 'area'
     },
+    colors: ['#103F75', '#006A9D', '#0089B7', '#039590', '#008EAB', '#00ACB8', '#16C0B4', '#4BBC8E', '#00CDA3', '#92E784'],
     dataLabels: {
-        enabled: false
+        enabled: false,
+        formatter: function (val) {
+            return val.toLocaleString('es-MX');
+        }
     },
     stroke: {
-        curve: 'smooth'
+        width: 2,
+        curve: 'smooth',
+        opacity: 0.7
     },
     legend: {
         show: false,
@@ -330,7 +340,7 @@ var optionsVentasMetros = {
 
 $(document).ready(function () {
     $('[data-toggle="tooltip"]').tooltip();
-    init();
+    initMetrics();
 });
 
 $('#proyecto').off().on('change', function(){
@@ -342,8 +352,8 @@ $('#condominio').off().on('change', function(){
 });
 
 //Funciones
-function init(){
-    recreatApexChart(false);
+function initMetrics(){
+    recreatApexChartMetrics(false);
     getProyectos();
     getSuperficieVendida().then( response => {
         dataMetros = response;
@@ -432,22 +442,22 @@ function getMedioProspeccion(){
 }
 
 function getVentasM2(idCond){
+    $('.emptyVentasMetrosChart').addClass('d-none');
+    $('.loadVentasMetrosChart').removeClass('d-none');
     $.ajax({
         url: `${base_url}Metricas/getVentasM2`,
         data: {condominio: idCond},
         type: 'POST',
         dataType: 'json',
-        beforeSend: function () {
-            $('#spiner-loader').removeClass('hide');
-        },
         success: function (response) {
             formatVentasM2(response);
-            $('#spiner-loader').addClass('hide');
+            $('.loadVentasMetrosChart').addClass('d-none');
         }
     });
 }
 
 function formatMetrosData(data){
+    $('.loadMetrosChart').addClass('d-none');
     let series =[], categories = [];
     let count = 0;
     data.forEach(element => {
@@ -459,7 +469,7 @@ function formatMetrosData(data){
     });
 
     metrosChart.updateSeries([{
-        name: '#',
+        name: 'Cantidad',
         data: series
     }])
 
@@ -471,6 +481,7 @@ function formatMetrosData(data){
 }
 
 function formatDisponibilidadData(data){
+    $('.loadDisponibilidadChart').addClass('d-none');
     let series =[];
     let count = 0;
     data.forEach(element => {
@@ -479,11 +490,18 @@ function formatDisponibilidadData(data){
                 x: element.nombreResidencial,
                 y: element.ocupados,
                 goals: [{
-                    name: 'Disponible',
+                    name: 'Total',
                     value: element.totales,
                     strokeWidth: 2,
                     strokeHeight: 10,
                     strokeColor: '#775DD0'
+                },
+                {   
+                    name: 'Disponible',
+                    value: element.restante,
+                    strokeWidth: 0,
+                    strokeHeight: 0,
+                    strokeColor: '#FFFFFF'
                 }]
             });
             count++;
@@ -491,12 +509,13 @@ function formatDisponibilidadData(data){
     });
 
     disponibilidadChart.updateSeries([{
-        name: 'Ocupado',
+        name: 'Vendido',
         data: series
     }])
 }
 
 function formatLugarProspeccion(data){
+    $('.loadLugarChart').addClass('d-none');
     let series =[] ,series2 =[], categories = [];
     let count = 0;
     data.forEach(element => {
@@ -525,6 +544,7 @@ function formatLugarProspeccion(data){
 }
 
 function formatMedioProspeccion(data){
+    $('.loadMedioChart').addClass('d-none');
     let series =[] , categories = [];
     let count = 0;
     data.forEach(element => {
@@ -548,7 +568,7 @@ function formatVentasM2(data){
         categories.push(`(${element.sup} m2)`);
     });
     ventasMetrosChart.updateSeries([{
-        name: '# de lotes: ',
+        name: 'No. de lotes: ',
         data: series
     }])
 
@@ -559,7 +579,7 @@ function formatVentasM2(data){
     });
 }
 
-function toggleDatatable(e){
+function toggleDatatableMetrics(e){
     var columnaActiva = e.closest( '.flexibleM' );
     var columnaChart = e.closest( '.col-chart' );
     var columnDatatable = $( e ).closest( '.row' ).find( '.col-datatable' );
@@ -571,7 +591,7 @@ function toggleDatatable(e){
         columnaChart.classList.remove('col-lg-12');
         columnaChart.classList.add('col-lg-6');
         columnDatatable.removeClass('hidden');
-        reorderColumns();
+        reorderColumnsMetrics();
     }
     // La columna se contraera
     else{
@@ -580,13 +600,13 @@ function toggleDatatable(e){
         columnaChart.classList.remove('col-lg-6');
         columnaChart.classList.add('col-lg-12');
         columnDatatable.addClass('hidden');
-        reorderColumns();
+        reorderColumnsMetrics();
     }
 }
 
-function reorderColumns(){
+function reorderColumnsMetrics(){
     var principalColumns = document.getElementsByClassName("flexibleM");
-    var mainRow = document.getElementById('mainRow');
+    var mainRow = document.getElementById('mainRowMetrics');
 
     let opts = getCacheOptions();
     //Creamos nuevo fragmento en el DOM para insertar las columnas ordenadas
@@ -608,7 +628,7 @@ function reorderColumns(){
     mainRow.innerHTML = null;
     mainRow.appendChild(elements);
 
-    recreatApexChart(true);
+    recreatApexChartMetrics(true, opts);
 
     for( i = 1; i<=principalColumns.length; i++){
         (function(i){
@@ -619,19 +639,19 @@ function reorderColumns(){
                     var id = columnDatatable.attr('id');
                     $("#"+id).html('');
                     if( id == 'metros' ){
-                        buildEstructuraDT(id, dataMetros);
+                        buildEstructuraDTMetrics(id, dataMetros);
                         buildTableMetros(dataMetros);
                     }
                     else if( id == 'disponibilidad' ){
-                        buildEstructuraDT(id, dataDisponibilidad);
+                        buildEstructuraDTMetrics(id, dataDisponibilidad);
                         buildTableDisponibilidad(dataDisponibilidad);
                     }
                     else if( id == 'lugar' ){
-                        buildEstructuraDT(id, dataLugarProspeccion);
+                        buildEstructuraDTMetrics(id, dataLugarProspeccion);
                         buildTableLugarProspeccion(dataLugarProspeccion);
                     }
                     else if( id == 'medio' ){
-                        buildEstructuraDT(id, dataMedio);
+                        buildEstructuraDTMetrics(id, dataMedio);
                         buildTableMedio(dataMedio);
                     }
                 }
@@ -639,9 +659,10 @@ function reorderColumns(){
             }, 500 * i)
         }(i));
     }
+    $('[data-toggle="tooltip"]').tooltip();
 }
 
-function buildEstructuraDT(dataName, dataApartados){
+function buildEstructuraDTMetrics(dataName, dataApartados){
     var tableHeaders = '';
     var arrayHeaders = Object.keys(dataApartados[0]);
     for( i=0; i<arrayHeaders.length; i++ ){
@@ -902,10 +923,10 @@ function getCacheOptions(){
     return obj;
 }
 
-function recreatApexChart(estado){
+function recreatApexChartMetrics(estado){
     if(estado){
-        $(".boxChart").html('');
-        buildChartsID();
+        $(".boxChartMetrics").html('');
+        buildChartsIDMetrics();
       
         metrosChart = new ApexCharts(document.querySelector("#metrosChart"), optionBarInit);
         metrosChart.render();
@@ -941,8 +962,8 @@ function recreatApexChart(estado){
     }
 }
 
-function buildChartsID(){
-    var boxCharts = document.getElementsByClassName("boxChart");
+function buildChartsIDMetrics(){
+    var boxCharts = document.getElementsByClassName("boxChartMetrics");
     for ( var i = 0; i<boxCharts.length; i++ ){
         var id = boxCharts[i].id;
         let type = boxCharts[i].getAttribute('data-value');

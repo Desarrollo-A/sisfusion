@@ -95,9 +95,10 @@ class Usuarios_modelo extends CI_Model {
                                         LEFT JOIN (SELECT id_usuario, id_lider AS id_lider3, CONCAT(apellido_paterno, ' ', apellido_materno, ' ', usuarios.nombre) lider_coord  
                                         FROM usuarios) AS lider_3 ON lider_3.id_usuario = lider_2.id_lid
                                         INNER JOIN sedes s ON CAST(s.id_sede AS VARCHAR(45)) = CAST(usuarios.id_sede AS VARCHAR(45))
-                                        WHERE ((id_lider = ".$this->session->userdata('id_lider')." OR id_lider_2 = ".$this->session->userdata('id_lider').") 
-                                        AND id_rol IN (7, 9) AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%') OR usuarios.id_usuario IN (9359, 9827)) OR usuarios.id_usuario = ".$this->session->userdata('id_lider')."
-                                        ORDER BY nombre");
+                                        WHERE (((id_lider = ".$this->session->userdata('id_lider')." OR id_lider_2 = ".$this->session->userdata('id_lider').") AND 
+                                        id_rol IN (7, 9) AND 
+                                        (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%'))
+                                        OR (usuarios.id_usuario IN (9359, 9827)) OR usuarios.id_usuario = ".$this->session->userdata('id_lider')." OR usuarios.gerente_id = ".$this->session->userdata('id_lider').")");
                 }
                 break;
             case '41': // GENERALISTA

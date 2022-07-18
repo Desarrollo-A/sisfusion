@@ -341,7 +341,7 @@
 /* END utilities */
 /* Flexbox */
 .d-none {
-  display: none;
+  display: none !important;
 }
 
 .d-block {
@@ -1228,28 +1228,13 @@
 #ranking .card .col-datatable table thead tr th {
   padding: 0px !important;
   text-align: center;
-}
-
-#ranking .card .col-datatable table thead tr th input {
   margin: 4px;
   border: 1px solid transparent;
-  border-radius: 5px;
   color: #ffffff;
   text-align: center;
   font-weight: 300;
   background-color: #143860;
-}
-
-#ranking .card .col-datatable table thead tr th input:active {
-  border: 1px solid #ffffff;
-}
-
-#ranking .card .col-datatable table thead tr th input:focus {
-  border: 1px solid #ffffff;
-}
-
-#ranking .card .col-datatable table thead tr th input::placeholder {
-  color: #ffffff;
+  text-transform: lowercase;
 }
 
 #ranking .card .col-datatable .dataTables_info {
@@ -1296,22 +1281,28 @@
   background-color: #929292;
 }
 
-#ranking .card .fadeInAnimationDelay1 {
+@media (min-device-width: 320px) and (max-device-width: 480px), (min-width: 480px) and (max-width: 991px) {
+  #ranking .card {
+    height: inherit !important;
+  }
+}
+
+.fadeInAnimationDelay1 {
   -webkit-animation: scale-up-center 0.5s cubic-bezier(0.39, 0.575, 0.565, 1) both;
   animation: scale-up-center 0.5s cubic-bezier(0.39, 0.575, 0.565, 1) both;
 }
 
-#ranking .card .fadeInAnimationDelay2 {
+.fadeInAnimationDelay2 {
   -webkit-animation: scale-up-center 1s cubic-bezier(0.39, 0.575, 0.565, 1) both;
   animation: scale-up-center 1s cubic-bezier(0.39, 0.575, 0.565, 1) both;
 }
 
-#ranking .card .fadeInAnimationDelay3 {
+.fadeInAnimationDelay3 {
   -webkit-animation: scale-up-center 1.5s cubic-bezier(0.39, 0.575, 0.565, 1) both;
   animation: scale-up-center 1.5s cubic-bezier(0.39, 0.575, 0.565, 1) both;
 }
 
-#ranking .card .fadeInAnimationDelay4 {
+.fadeInAnimationDelay4 {
   -webkit-animation: scale-up-center 2s cubic-bezier(0.39, 0.575, 0.565, 1) both;
   animation: scale-up-center 2s cubic-bezier(0.39, 0.575, 0.565, 1) both;
 }
@@ -1335,11 +1326,5 @@
   100% {
     -webkit-transform: scale(1);
     transform: scale(1);
-  }
-}
-
-@media (min-device-width: 320px) and (max-device-width: 480px), (min-width: 480px) and (max-width: 991px) {
-  #ranking .card {
-    height: inherit !important;
   }
 }

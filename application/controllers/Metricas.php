@@ -23,7 +23,7 @@ class Metricas extends CI_Controller {
     public function getSuperficieVendida(){
         $data = $this->Metricas_model->getSuperficieVendida();
         if($data != null) {
-            echo json_encode($data);
+            echo json_encode($data, JSON_NUMERIC_CHECK);
         } else {
             echo json_encode(array());
         }
@@ -32,7 +32,7 @@ class Metricas extends CI_Controller {
     public function getDisponibilidadProyecto(){
         $data = $this->Metricas_model->getDisponibilidadProyecto();
         if($data != null) {
-            echo json_encode($data);
+            echo json_encode($data, JSON_NUMERIC_CHECK);
         } else {
             echo json_encode(array());
         }
@@ -41,7 +41,7 @@ class Metricas extends CI_Controller {
     public function getVentasM2(){
         $data = $this->Metricas_model->getVentasM2($_POST['condominio']);
         if($data != null) {
-            echo json_encode($data);
+            echo json_encode($data, JSON_NUMERIC_CHECK);
         } else {
             echo json_encode(array());
         }
@@ -50,7 +50,7 @@ class Metricas extends CI_Controller {
     public function getLugarProspeccion(){
         $data = $this->Metricas_model->getLugarProspeccion();
         if($data != null) {
-            echo json_encode($data);
+            echo json_encode($data, JSON_NUMERIC_CHECK);
         } else {
             echo json_encode(array());
         }
@@ -59,7 +59,7 @@ class Metricas extends CI_Controller {
     public function getMedioProspeccion(){
         $data = $this->Metricas_model->getMedioProspeccion();
         if($data != null) {
-            echo json_encode($data);
+            echo json_encode($data, JSON_NUMERIC_CHECK);
         } else {
             echo json_encode(array());
         }

@@ -341,7 +341,7 @@
 /* END utilities */
 /* Flexbox */
 .d-none {
-  display: none;
+  display: none !important;
 }
 
 .d-block {
@@ -1339,4 +1339,18 @@
 
 #metricas #boxChart4 .apexcharts-legend {
   justify-content: space-between !important;
+}
+
+#metricas .loadChart {
+  position: absolute;
+  top: 0;
+  background-color: #ffffff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.apexcharts-tooltip-y-group {
+  display: flex;
+  justify-content: space-between;
 }

@@ -156,10 +156,10 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, dates=n
         }
         $('input', this).on('keyup change', function () {
             if(i != 0){
-            if ($("#table"+option+"").DataTable().column(i).search() !== this.value) {
-                $("#table"+option+"").DataTable().column(i)
-                    .search(this.value).draw();
-            }  
+                if ($("#table"+option+"").DataTable().column(i).search() !== this.value) {
+                    $("#table"+option+"").DataTable().column(i)
+                        .search(this.value).draw();
+                }  
             }
         });
     });
@@ -198,7 +198,8 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, dates=n
             {
                 width: "8%",
                 data: function (d) {
-                    return ((d.totalAT + d.totalCanA)).toLocaleString('es-MX'); //# APARTADOS
+                    return `<button style="background-color: #d8dde2; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="1" data-sede = 0 data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-idUser="${d.userID}" id="details-${d.userID}" class="btnModalDetails">${(d.totalAT).toLocaleString('es-MX')}</button>`//# APARTADOS;
+                    //return ((d.totalAT + d.totalCanA)).toLocaleString('es-MX'); //# APARTADOS
                 }
             },
             {
@@ -210,6 +211,7 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, dates=n
             {
                 width: "8%",
                 data: function (d) {
+                    //return `<button style="background-color: #d8dde2; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="4" data-sede = 0 data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-idUser="${d.userID}" id="details-${d.userID}" class="btnModalDetails">${(d.totalCanA).toLocaleString('es-MX')}</button>`//# CANCELADOS APARTADOS;
                     return (d.totalCanA).toLocaleString('es-MX'); //# CANCELADOS APARTADOS
                 }
             },
@@ -222,7 +224,8 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, dates=n
             {
                 width: "8%",
                 data: function (d) {
-                    return ((d.totalConT + d.totalCanC)).toLocaleString('es-MX'); //# CONTRATADOS
+                    return `<button style="background-color: #d8dde2; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="2" data-sede = 0 data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-idUser="${d.userID}" id="details-${d.userID}" class="btnModalDetails">${(d.totalConT).toLocaleString('es-MX')}</button>`//# CONTRATADOS;
+                    //return ((d.totalConT)).toLocaleString('es-MX'); //# CONTRATADOS
                 }
             },
             {
@@ -234,7 +237,8 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, dates=n
             {
                 width: "8%",
                 data: function (d) {
-                    return (d.totalCanC).toLocaleString('es-MX'); //# CANCELADOS CONTRATADOS
+                    return `<button style="background-color: #d8dde2; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-sede = 0 data-type="3" data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-idUser="${d.userID}" id="details-${d.userID}" class="btnModalDetails">${(d.totalCanC).toLocaleString('es-MX')}</button>`//# CANCELADOS CONTRATADOS;
+                    //return (d.totalCanC).toLocaleString('es-MX'); //# CANCELADOS CONTRATADOS
                 }
             },
             {
@@ -392,7 +396,16 @@ function setOptionsChart(series, categories, miniChart, type= null){
         tooltip: { 
             enabled: true,
             y: {
-                formatter: (value) =>  type == 1 ? value.toLocaleString('es-MX'): "$" + formatMoney(value),
+                formatter: function(value, { series, seriesIndex, dataPointIndex, w }){
+                    let total = 0;
+                    series.forEach(function(element){
+                        total = total + element[dataPointIndex];
+                    })
+                    let percent = value * 100 / total;
+                    console.log(value * 100 / total);
+                    let ret = type == 1 ? `${value.toLocaleString('es-MX')} (${Math.trunc( percent )}%)`: "$" + formatMoney(value);
+                    return ret;
+                }  
             },
         },
         markers: {
@@ -437,7 +450,7 @@ $(document).on('click', '#searchByDateRangeTable', async function () {
     let dates = {begin: $('#tableBegin').val(), end: $('#tableEnd').val()};
     let rol = userType == 2 ? await getRolDR(idUser): userType;
 
-    fillBoxAccordions(rol == '1' || rol == '18' ? 'director_regional': rol == '2' ? 'gerente' : rol == '3' ? 'coordinador' : rol == '59' ? 'subdirector':'asesor', rol, idUser, 1, 2, dates);
+    fillBoxAccordions(rol == '1' || rol == '18' ? 'director_regional': rol == '2' ? 'gerente' : rol == '3' ? 'coordinador' : rol == '59' ? 'subdirector':'asesor', rol == 18 || rol == '18' ? 1:rol, idUser, 1, 2, dates);
 
 });
 
@@ -449,7 +462,6 @@ $(document).on('click', '.chartButton', function () {
     let title = getTitle(option);
     $("#modalChart .boxModalTitle .title").append(`${title}`);
     $('#modalChart').modal();
-    // $("#boxModalChart").html('');
     let table = $(`#table${option}`);
     var tableData = table.DataTable().rows().data().toArray();
     generalChart(tableData);
@@ -457,7 +469,6 @@ $(document).on('click', '.chartButton', function () {
 
 
 async function chartDetail(e, tipoChart){
-    // $("#boxModalChart").html('');
     $(".datesModal").show();
     $("#modalChart").modal();
     $("#modalChart .boxModalTitle .title").html('');
@@ -478,18 +489,16 @@ async function chartDetail(e, tipoChart){
 }
 
 function getSpecificChart(type, beginDate, endDate){
+    $('.loadChartModal').removeClass('d-none');
     $.ajax({
         type: "POST",
         url: `${base_url}Reporte/getDataChart`,
         data: {general: 0, tipoChart: type, beginDate: beginDate, endDate: endDate},
         dataType: 'json',
         cache: false,
-        beforeSend: function() {
-            $('#spiner-loader').removeClass('hide');
-        },
         success: function(data){
+            $('.loadChartModal').addClass('d-none');
             var miniChart = 0;
-            $('#spiner-loader').addClass('hide');
             var orderedArray = orderedDataChart(data);
             let { categories, series } = orderedArray[0];
             let total = 0;
@@ -498,36 +507,34 @@ function getSpecificChart(type, beginDate, endDate){
             });
             $("#modalChart .boxModalTitle .total").html('');
             $("#modalChart .boxModalTitle .total").append('<p>$'+formatMoney(total)+'</p>');
-            
             if ( total != 0 ){
                 chart.updateOptions(setOptionsChart(series, categories, miniChart));
             }
             else{
+                $("#boxModalChart").html('');
                 $("#boxModalChart").addClass('d-flex justify-center');
-                $("#boxModalChart").append('<img src="./dist/img/emptyChart.png" alt="Icono gráfica" class="h-70 w-auto">');
-                chart.updateOptions(setOptionsChart([], [], miniChart));
+                $("#boxModalChart").append('<img src="'+base_url+'dist/img/emptyCharts.png" alt="Icono gráfica" class="h-70 w-auto">');
+                // chart.updateOptions(setOptionsChart([], [], miniChart));
             }
         },
         error: function() {
-            $('#spiner-loader').addClass('hide');
+            $('.loadChartModal').addClass('d-none');
             alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
         }
     });
 }
 
 function getLastSales(beginDate, endDate){
+    $('.loadChartMini').removeClass('d-none');
     $.ajax({
         type: "POST",
         url: `${base_url}Reporte/getDataChart`,
         data: {general: 1, tipoChart:'na', beginDate: beginDate, endDate: endDate},
         dataType: 'json',
         cache: false,
-        beforeSend: function() {
-          $('#spiner-loader').removeClass('hide');
-        },
         success: function(data){
+            $('.loadChartMini').addClass('d-none');
             let miniChart = 1, total = 0;
-            $('#spiner-loader').addClass('hide');
             let orderedArray = orderedDataChart(data);
             for ( i=0; i<orderedArray.length; i++ ){
                 let { chart, categories, series } = orderedArray[i];
@@ -541,8 +548,6 @@ function getLastSales(beginDate, endDate){
                     $("#"+chart+"").html('');
                     $("#"+chart+"").removeClass('d-flex justify-center');
                     var miniChartApex = new ApexCharts(document.querySelector("#"+chart+""), setOptionsChart(series, categories, miniChart));
-                    // chart.updateOptions(setOptionsChart(series, categories, miniChart));
-
                     miniChartApex.render();
                 }
                 else $("#"+chart+"").addClass('d-flex justify-center');
@@ -799,14 +804,14 @@ function createDetailRow(row, tr, dataObj){
         
         $(`#table${dataObj.option}`).DataTable().row(tr).data(row.data());
         row = $(`#table${dataObj.option}`).DataTable().row(tr);
-        row.child(buildTableDetail(row.data().sedesData)).show();
+        row.child(buildTableDetail(row.data().sedesData, dataObj)).show();
         tr.addClass('shown');
         dataObj.thisVar.parent().find('.animacion').removeClass("fa-caret-right").addClass("fa-caret-down");
         $('#spiner-loader').addClass('hide');
     }, 'json');
 }
 
-function buildTableDetail(data) {
+function buildTableDetail(data, dataObj) {
     var sedes = '<table class="table subBoxDetail">';
     sedes += '<tr style="border-bottom: 1px solid #fff; color: #4b4b4b;">';
     sedes += '<td>' + '<b>' + '# ' + '</b></td>';
@@ -825,13 +830,16 @@ function buildTableDetail(data) {
         sedes += '<tr>';
         sedes += '<td> ' + (i + 1) + ' </td>';
         sedes += '<td> ' + v.sede + ' </td>';
-        sedes += '<td> ' + (v.totalAT + v.totalCanA).toLocaleString('es-MX') + ' </td>';
+        sedes += `<td><button style="background-color: #cfcdcd; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="11" data-sede="${v.id_sede}" data-rol="${dataObj.rol}" data-render="${dataObj.render}" data-idUser="${dataObj.user}" id="details-${dataObj.user}" class="btnModalDetails">${(v.totalAT).toLocaleString('es-MX')}</button>`;
+        //sedes += '<td> ' + (v.totalAT).toLocaleString('es-MX') + ' </td>';
         sedes += '<td> ' + v.sumaAT + ' </td>';
         sedes += '<td> ' + (v.totalCanA).toLocaleString('es-MX') + ' </td>';
         sedes += '<td> ' + v.porcentajeTotalCanA + '% </td>';
-        sedes += '<td> ' + (v.totalConT + v.totalCanC).toLocaleString('es-MX') + ' </td>';
+        sedes += `<td><button style="background-color: #cfcdcd; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="22" data-sede="${v.id_sede}" data-rol="${dataObj.rol}" data-render="${dataObj.render}" data-idUser="${dataObj.user}" id="details-${dataObj.user}" class="btnModalDetails">${(v.totalConT).toLocaleString('es-MX')}</button>`;
+        //sedes += '<td> ' + (v.totalConT).toLocaleString('es-MX') + ' </td>';
         sedes += '<td> ' + v.sumaConT + ' </td>';
-        sedes += '<td> ' + (v.totalCanC).toLocaleString('es-MX') + ' </td>';
+        sedes += `<td><button style="background-color: #cfcdcd; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="33" data-sede="${v.id_sede}" data-rol="${dataObj.rol}" data-render="${dataObj.render}" data-idUser="${dataObj.user}" id="details-${dataObj.user}" class="btnModalDetails">${(v.totalCanC).toLocaleString('es-MX')}</button>`;
+        //sedes += '<td> ' + (v.totalCanC).toLocaleString('es-MX') + ' </td>';
         sedes += '<td> ' + v.porcentajeTotalCanC + ' </td>';
         sedes += '</tr>';
     });
@@ -853,8 +861,6 @@ async function setInitialValues() {
     finalBeginDate2 = [(datesMonths.firstDate).split('-')[2],  (datesMonths.firstDate).split('-')[1], (datesMonths.firstDate).split('-')[0]].join('/');
     finalEndDate2 = [(datesMonths.secondDate).split('-')[2],  (datesMonths.secondDate).split('-')[1], (datesMonths.secondDate).split('-')[0]].join('/');
 
-
-    
     $('#tableBegin').val(finalBeginDate2);
     $('#tableEnd').val(finalEndDate2);
 }
@@ -868,19 +874,21 @@ function generalChart(data){
     let apartadosC = [];
     let contratados = [];
     let contratadosC = [];
-    console.log(data.length);
     data.forEach(element => {
         if(data.length>1){
             x.push(element.nombreUsuario);
-            apartados.push(element.totalAT + element.totalCanA);
+            apartados.push(element.totalAT);
             apartadosC.push(element.totalCanA);
-            contratados.push(element.totalConT + element.totalCanC);
+            contratados.push(element.totalConT);
             contratadosC.push(element.totalCanC);    
         }else{
+            $("#boxModalChart").html('');
+            $("#boxModalChart").addClass('d-flex justify-center');
+            $("#boxModalChart").append('<img src="'+base_url+'dist/img/emptyCharts.png" alt="Icono gráfica" class="h-70 w-auto">');
             x = ['', element.nombreUsuario, ''];
-            apartados=[0,element.totalAT + element.totalCanA,0];
+            apartados=[0,element.totalAT,0];
             apartadosC=[0,element.totalCanA,0];
-            contratados=[0,element.totalConT + element.totalCanC,0];
+            contratados=[0,element.totalConT,0];
             contratadosC=[0,element.totalCanC,0];    
         }
     });
@@ -903,12 +911,11 @@ function generalChart(data){
         }
     ];
     chart.updateOptions(setOptionsChart(series, x, 0, 1));
-    // chart.render();
+    $('.loadChartModal').addClass('d-none');
 }
 
 
 function get4Months() {
-    let dates;
     return new Promise(resolve => {
         $.ajax({
             type: "POST",
@@ -952,4 +959,159 @@ function newRoles(option) {
             rol = 'N/A';
     }
     return rol;
+}
+
+$(document).on('click', '.btnModalDetails', function () {
+    let dataObj = {
+        type: $(this).data("type"),
+        sede: $(this).data("sede"),
+        transaction: $(this).data("transaction"),
+        user: $(this).data("iduser"),
+        rol: $(this).data("rol"),
+        option: $(this).data("option"),
+        render: $(this).data("render"),
+        begin: formatDate($('#tableBegin').val()), 
+        end: formatDate($('#tableEnd').val())
+    }
+    fillTable(dataObj);
+    $("#seeInformationModal").modal();
+});
+
+$('#lotesInformationTable thead tr:eq(0) th').each(function (i) {
+    const title = $(this).text();
+    $(this).html('<input type="text" center;" class="textoshead"  placeholder="' + title + '"/>');
+    $('input', this).on('keyup change', function () {
+        if(i != 0){
+            if ($("#lotesInformationTable").DataTable().column(i).search() !== this.value) {
+                $("#lotesInformationTable").DataTable().column(i)
+                    .search(this.value).draw();
+            }
+        }
+    });
+});
+
+function fillTable(dataObject) {
+    generalDataTable = $('#lotesInformationTable').dataTable({
+        dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
+        width: '100%',
+        buttons: [
+            {
+                extend: 'excelHtml5',
+                text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
+                className: 'btn buttons-excel',
+                titleAttr: 'Descargar archivo de Excel',
+                exportOptions: {
+                    columns: [0, 1, 2, 3, 4, 5, 6, 7],
+                    format: {
+                        header: function (d, columnIdx) {
+                            switch (columnIdx) {
+                                case 0:
+                                    return 'Proyecto';
+                                    break;
+                                case 1:
+                                    return 'Condominio';
+                                    break;
+                                case 2:
+                                    return 'Lote'
+                                case 3:
+                                    return 'Cliente';
+                                    break;
+                                case 4:
+                                    return 'Asesor';
+                                    break;
+                                case 5:
+                                    return 'Fecha de apartado';
+                                    break;
+                                case 6:
+                                    return 'Estatus contratación';
+                                    break;
+                                case 7:
+                                    return 'Estatus lote';
+                                    break;
+                            }
+                        }
+                    }
+                }
+            }
+        ],
+        pagingType: "full_numbers",
+        lengthMenu: [
+            [10, 25, 50, -1],
+            [10, 25, 50, "Todos"]
+        ],
+        destroy: true,
+        ordering: false,
+        scrollX: true,
+        language: {
+            url: `${base_url}static/spanishLoader_v2.json`,
+            paginate: {
+                previous: "<i class='fa fa-angle-left'>",
+                next: "<i class='fa fa-angle-right'>"
+            }
+        },
+        destroy: true,
+        ordering: false,
+        columns: [
+            {
+                data: function (d) {
+                    return d.nombreResidencial;
+                }
+            },
+            {
+                data: function (d) {
+                    return d.nombreCondominio;
+                }
+            },
+            {
+                data: function (d) {
+                    return d.nombreLote;
+                }
+            },
+            {
+                data: function (d) {
+                    return d.nombreCliente;
+                }
+            },
+            {
+                data: function (d) {
+                    return d.nombreAsesor;
+                }
+            },
+            {
+                data: function (d) {
+                    return d.fechaApartado;
+                }
+            },
+            {
+                data: function (d) {
+                    return d.nombreStatus;
+                }
+            },
+            {
+                data: function (d) {
+                    return d.estatusLote;
+                }
+            }
+        ],
+        columnDefs: [{
+            visible: false,
+            searchable: false
+        }],
+        ajax: {
+            url: `${base_url}Reporte/getLotesInformation`,
+            type: "POST",
+            cache: false,
+            data: {
+                "type": dataObject.type,
+                "sede": dataObject.sede,
+                "transaction": dataObject.transaction,
+                "user": dataObject.user,
+                "rol": dataObject.rol,
+                "render": dataObject.render,
+                "option": dataObject.option,
+                "beginDate": dataObject.begin,
+                "endDate": dataObject.end
+            }
+        }
+    });
 }

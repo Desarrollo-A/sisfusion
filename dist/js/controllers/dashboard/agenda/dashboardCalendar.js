@@ -150,8 +150,13 @@ document.querySelector('#insert_appointment_form').addEventListener('submit',asy
     new FormData(e.target)
   )
   rangeOfDates = validateDates(dataF);
-  if(!rangeOfDates){
-    alerts.showNotification("top", "right", "Rango de fechas inválido", "danger");
+  emptyTitle = $("#evtTitle").val().replace(/\s/g, '').length ;
+
+  if(!rangeOfDates || !emptyTitle){
+    if(!rangeOfDates)
+      alerts.showNotification("top", "right", "Rango de fechas inválido", "danger");
+    if(!emptyTitle)
+      alerts.showNotification("top", "right", "Título inválido", "danger");
   }
   else{
     if(gapi.auth2.getAuthInstance().isSignedIn.get() == true){
@@ -550,8 +555,8 @@ document.querySelector('#feedback_form').addEventListener('submit', e =>  {
 });
 
 function customizeIcon(){
-  $(".fc-googleSignIn-button").append("<img src='dist/img/googlecalendar.png'>");
-  $(".fc-googleLogout-button").append("<img src='dist/img/unsync.png'>");
+  $(".fc-googleSignIn-button").append("<img src='"+base_url+"dist/img/googlecalendar.png'>");
+  $(".fc-googleLogout-button").append("<img src='"+base_url+"dist/img/unsync.png'>");
 }
 
 function createTable(){
