@@ -2,8 +2,8 @@
   $(document).on('change','#gerente', function(e){
     let id = $("#gerente").val();
     getCoordinators(id);
+    $("#labelCoord").show();
     $("#coordinador").empty().selectpicker('refresh');
-    $("#asesor").empty().selectpicker('refresh');
   });
 
   $(document).on('change', '#coordinador', function(e){
@@ -15,6 +15,7 @@
         setSourceEventCRM(response);
       }).catch( error => { alerts.showNotification("top", "right", "Oops, algo salió mal. "+error, "danger"); });
     }).catch( error => { alerts.showNotification("top", "right", "Oops, algo salió mal. "+error, "danger"); });
+    $("#labelAses").show();
     $("#asesor").empty().selectpicker('refresh');
   });
 

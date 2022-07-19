@@ -157,6 +157,28 @@
       </div>
     </div>
 
+    <!-- modal  ENVIA A JURIDICO por rechazo 2-->
+    <div class="modal fade" id="modal_return1" data-backdrop="static" data-keyboard="false">
+      <div class="modal-dialog">
+          <div class="modal-content" >
+              <div class="modal-header">
+                  <center><h4 class="modal-title"><label>Integración de Expediente (Rechazo estatus 7 Jurídico) - <b><span class="lote"></span></b></label></h4></center>
+              </div>
+              <div class="modal-body">
+                  <label>Comentario:</label>
+                  <textarea class="form-control" id="comentario8" rows="3"></textarea>
+                  <br>
+              </div>
+              <div class="modal-footer">
+                  <button type="button" id="b_return1" class="btn btn-success"><span class="material-icons" >send</span> </i> Registrar</button>
+                  <button type="button" class="btn btn-danger" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> Cancelar</button>
+              </div>
+          </div>
+      </div>
+    </div>
+
+        <!-- modal -->
+
     <!-- modal  INSERT FILE-->
     <div class="modal fade" id="addFile" >
       <div class="modal-dialog">
@@ -311,6 +333,7 @@
     var getInfo2_3A = new Array(7);
     var getInfo2_7A = new Array(7);
     var getInfo5_2A = new Array(7);
+    var return1a = new Array(7);
     var aut;
     $(document).ready (function() {
       $(document).on('fileselect', '.btn-file :file', function(event, numFiles, label) {
@@ -437,6 +460,7 @@
               d.idMovimiento == 73 ?  d.comentario + "<br> <span class='label label-danger'>Rechazo Ventas estatus 8</span>":
               d.idMovimiento == 82 ?  d.comentario + "<br> <span class='label label-danger'>Rechazo Jurídico estatus 7</span>":
               d.idMovimiento == 92 ?  d.comentario + "<br> <span class='label label-danger'>Rechazo Contraloria estatus 5</span>":
+              d.idMovimiento == 96 ?  d.comentario + "<br> <span class='label label-danger'>Rechazo Jurídico estatus 7</span>":
               d.comentario;
               
               return comentario;
@@ -451,6 +475,7 @@
               d.idMovimiento == 73 ?  '<a href="#" data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="getInfo2_3 btn-data btn-green"><i class="fas fa-check"></i></a>':
               d.idMovimiento == 82 ?  '<a href="#" data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="getInfo2_7 btn-data btn-green"><i class="fas fa-check"></i></a':
               d.idMovimiento == 92 ?  '<a href="#" data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.modificado+'" class="getInfo5_2 btn-data btn-green"><i class="fas fa-check"></i></a>':
+              d.idMovimiento == 96 ?  '<a href="#" data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="btn-data btn-green return1"><i class="fas fa-check" title= "Enviar estatus"></i></a>':
               d.comentario;
               return buttonst;
             }
@@ -571,6 +596,21 @@
         $(".lote").html(nombreLote);
         $('#modal7').modal('show');
       });
+
+      $(document).on("click", ".return1", function(e){
+        e.preventDefault();
+        return1a[0] = $(this).attr("data-idCliente");
+        return1a[1] = $(this).attr("data-nombreResidencial");
+        return1a[2] = $(this).attr("data-nombreCondominio");
+        return1a[3] = $(this).attr("data-idCondominio");
+        return1a[4] = $(this).attr("data-nombreLote");
+        return1a[5] = $(this).attr("data-idLote");
+        return1a[6] = $(this).attr("data-fechavenc");
+        nombreLote = $(this).data("nomlote");
+        $(".lote").html(nombreLote);
+        $('#modal_return1').modal('show');
+      });
+
     });
 
   $(document).on('click', '#save1', function(e) {
@@ -983,6 +1023,67 @@
     }
   });
 
+  $(document).on('click', '#b_return1', function(e) {
+        e.preventDefault();
+
+        var comentario = $("#comentario8").val();
+
+        var validaComent = ($("#comentario8").val().length == 0) ? 0 : 1;
+
+        var dataExp8 = new FormData();
+
+        dataExp8.append("idCliente", return1a[0]);
+        dataExp8.append("nombreResidencial", return1a[1]);
+        dataExp8.append("nombreCondominio", return1a[2]);
+        dataExp8.append("idCondominio", return1a[3]);
+        dataExp8.append("nombreLote", return1a[4]);
+        dataExp8.append("idLote", return1a[5]);
+        dataExp8.append("comentario", comentario);
+        dataExp8.append("fechaVenc", return1a[6]);
+
+
+        if (validaComent == 0) {
+            alerts.showNotification("top", "right", "Ingresa un comentario.", "danger");
+        }
+
+        if (validaComent == 1) {
+            $('#b_return1').prop('disabled', true);
+            $.ajax({
+                url : '<?=base_url()?>index.php/asesor/return1aaj/',
+                data: dataExp8,
+                cache: false,
+                contentType: false,
+                processData: false,
+                type: 'POST',
+                success: function(data){
+                    response = JSON.parse(data);
+                    if(response.message == 'OK') {
+                        $('#b_return1').prop('disabled', false);
+                        $('#modal_return1').modal('hide');
+                        $('#tabla_deposito_seriedad').DataTable().ajax.reload();
+                        alerts.showNotification("top", "right", "Estatus enviado.", "success");
+                    } else if(response.message == 'FALSE'){
+                        $('#b_return1').prop('disabled', false);
+                        $('#modal_return1').modal('hide');
+                        $('#tabla_deposito_seriedad').DataTable().ajax.reload();
+                        alerts.showNotification("top", "right", "El status ya fue registrado.", "danger");
+                    } else if(response.message == 'ERROR'){
+                        $('#b_return1').prop('disabled', false);
+                        $('#modal_return1').modal('hide');
+                        $('#tabla_deposito_seriedad').DataTable().ajax.reload();
+                        alerts.showNotification("top", "right", "Error al enviar la solicitud.", "danger");
+                    }
+                },
+                error: function( data ){
+                    $('#b_return1').prop('disabled', false);
+                    $('#modal_return1').modal('hide');
+                    $('#tabla_deposito_seriedad').DataTable().ajax.reload();
+                    alerts.showNotification("top", "right", "Error al enviar la solicitud.", "danger");
+                }
+            });
+        }
+    });
+
   jQuery(document).ready(function(){
     jQuery('#modal1').on('hidden.bs.modal', function (e) {
       jQuery(this).removeData('bs.modal');
@@ -1017,6 +1118,11 @@
     jQuery('#modal7').on('hidden.bs.modal', function (e) {
       jQuery(this).removeData('bs.modal');
       jQuery(this).find('#comentario7').val('');
+    })
+
+    jQuery('#modal_return1').on('hidden.bs.modal', function (e) {
+      jQuery(this).removeData('bs.modal');
+      jQuery(this).find('#comentario8').val('');
     })
   })
   </script>

@@ -288,7 +288,27 @@ class Api extends CI_Controller
         }
     }
 
+    function generateTokenDropbox(){
+        $time = time();
+        $JwtSecretKey = $this->jwt_key->getSecretKey();
+        $data = array(
+            "iat" => $time, // Tiempo en que inició el token
+            "exp" => $time + (24 * 60 * 60), // Tiempo en el que expirará el token (24 horas)
+            "data" => array("idLote" => $_POST['idLote'], "idCliente" => $_POST['idCliente'],"nombreCl" => $_POST['nombreCl'],
+            "nombreAs"=>$_POST['nombreAs'],"fechaApartado"=>$_POST['fechaApartado'],"nombreResidencial"=>$_POST['nombreResidencial'],"nombreCondominio"=>$_POST['nombreCondominio'],
+            "nombreLote"=>$_POST['nombreLote'], "tipo" => 1),
+        );
+        $token = JWT::encode($data, $JwtSecretKey);
+        echo json_encode($token);
+    }
 
-
+    function clientsInformation()
+    {
+        $data = $this->Api_model->getClientsInformation();
+        if ($data != null)
+            echo json_encode($data);
+        else
+            echo json_encode(array("status" => 200, "message" => "Información no disponible, inténtalo más tarde."));
+    }
 
 }

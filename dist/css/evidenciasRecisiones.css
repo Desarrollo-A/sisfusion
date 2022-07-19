@@ -21,7 +21,7 @@
 }
 
 .mb-0 {
-  margin-bottom: 0px;
+  margin-bottom: 0px !important;
 }
 
 .mb-1 {
@@ -41,7 +41,7 @@
 }
 
 .mt-0 {
-  margin-top: 0px;
+  margin-top: 0px !important;
 }
 
 .mt-1 {
@@ -214,6 +214,10 @@
   width: auto !important;
 }
 
+.h-auto {
+  height: auto !important;
+}
+
 .h-100 {
   height: 100% !important;
 }
@@ -231,23 +235,23 @@
 }
 
 .h-60 {
-  height: 60%;
+  height: 60% !important;
 }
 
 .h-50 {
-  height: 50%;
+  height: 50% !important;
 }
 
 .h-40 {
-  height: 40%;
+  height: 40% !important;
 }
 
 .h-30 {
-  height: 30%;
+  height: 30% !important;
 }
 
 .h-25 {
-  height: 25%;
+  height: 25% !important;
 }
 
 .h-20 {
@@ -337,7 +341,7 @@
 /* END utilities */
 /* Flexbox */
 .d-none {
-  display: none;
+  display: none !important;
 }
 
 .d-block {
@@ -380,6 +384,14 @@
   flex-direction: row-reverse;
 }
 
+.direction-column {
+  flex-direction: column;
+}
+
+.direction-row {
+  flex-direction: row;
+}
+
 /* END Flexbox */
 /* Text */
 .text-center {
@@ -392,6 +404,10 @@
 
 .text-right {
   text-align: right !important;
+}
+
+.text-justify {
+  text-align: justify !important;
 }
 
 .fw-100 {
@@ -1171,4 +1187,83 @@
 .recisiones .miniCard .boxInfo .monto {
   font-size: 20px;
   font-weight: 500;
+}
+
+.recisiones .miniCard .boxInfo #generate {
+  color: #ffffff;
+}
+
+.recisiones .miniCard .boxInfo #generate button {
+  background: none;
+  border: none;
+}
+
+.recisiones .miniCard .boxInfo #generate p {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.recisiones .miniCard .boxInfo #generate .iconCopy {
+  cursor: pointer;
+  -webkit-animation: breathing 5s ease-out infinite normal;
+  animation: breathing 5s ease-out infinite normal;
+}
+
+@-webkit-keyframes breathing {
+  0% {
+    -webkit-transform: scale(0.9);
+    transform: scale(0.9);
+  }
+  25% {
+    -webkit-transform: scale(1);
+    transform: scale(1);
+  }
+  60% {
+    -webkit-transform: scale(0.9);
+    transform: scale(0.9);
+  }
+  100% {
+    -webkit-transform: scale(0.9);
+    transform: scale(0.9);
+  }
+}
+
+@keyframes breathing {
+  0% {
+    -webkit-transform: scale(0.9);
+    -ms-transform: scale(0.9);
+    transform: scale(0.9);
+  }
+  25% {
+    -webkit-transform: scale(1);
+    -ms-transform: scale(1);
+    transform: scale(1);
+  }
+  60% {
+    -webkit-transform: scale(0.9);
+    -ms-transform: scale(0.9);
+    transform: scale(0.9);
+  }
+  100% {
+    -webkit-transform: scale(0.9);
+    -ms-transform: scale(0.9);
+    transform: scale(0.9);
+  }
+}
+
+.recisiones .miniCard .boxInfo #generate #url {
+  background: none;
+  border: none;
+  text-overflow: ellipsis;
+  width: 100%;
+}
+
+.tokenArea textarea {
+  resize: none;
+}
+
+.tooltip.right .tooltip-arrow {
+  border-right-color: #333333 !important;
+  /* black */
 }

@@ -80,5 +80,19 @@ class Api_model extends CI_Model
             return $query->result_array();
 	}
 
+    function getClientsInformation()
+    {
+        return $this->db->query("SELECT * FROM sisfusion_pruebas.dbo.lotes LCRM 
+        INNER JOIN sisfusion_pruebas.dbo.clientes as CLCRM ON LCRM.idLote = CLCRM.idLote AND CLCRM.status = 1
+        INNER JOIN sisfusion_pruebas.dbo.tipo_venta TVCRM ON TVCRM.id_tventa = LCRM.tipo_venta
+        INNER JOIN sisfusion_pruebas.dbo.statusLote SLCRM ON SLCRM.idStatusLote = LCRM.idStatusLote
+        INNER JOIN sisfusion_pruebas.dbo.usuarios ACRM ON ACRM.id_usuario = CLCRM.id_asesor AND ACRM.estatus = 1
+        LEFT JOIN sisfusion_pruebas.dbo.usuarios COORDCRM ON COORDCRM.id_usuario = CLCRM.id_coordinador AND COORDCRM.estatus = 1
+        LEFT JOIN sisfusion_pruebas.dbo.usuarios GERCRM ON GERCRM.id_usuario = CLCRM.id_gerente AND GERCRM.estatus = 1
+        INNER JOIN sisfusion_pruebas.dbo.sedes AS SEDECRMAS ON CAST(SEDECRMAS.id_sede AS VARCHAR(45)) = CAST(ACRM.id_sede AS VARCHAR(45))
+        INNER JOIN sisfusion_pruebas.dbo.condominios CCRM ON CCRM.idCondominio = LCRM.idCondominio
+        INNER JOIN sisfusion_pruebas.dbo.residenciales RCRM ON RCRM.idResidencial = CCRM.idResidencial
+        WHERE LCRM.idStatusContratacion >= 15 AND LCRM.status = 1")->result_array();
+    }
 
 }

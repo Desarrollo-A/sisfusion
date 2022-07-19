@@ -1128,136 +1128,164 @@
   background-color: #F1F1F1;
 }
 
-@font-face {
-  font-family: Montserrat-Black;
-  src: url(../fonts/Montserrat/Montserrat-Black.ttf);
+.evidencias .container-fluid {
+  padding-right: 30px !important;
+  padding-left: 30px !important;
+  margin-right: auto !important;
+  margin-left: auto !important;
+  padding-top: 15px !important;
 }
 
-@font-face {
-  font-family: Montserrat-BlackItalic;
-  src: url(../fonts/Montserrat/Montserrat-BlackItalic.ttf);
-}
-
-@font-face {
-  font-family: Montserrat-Bold;
-  src: url(../fonts/Montserrat/Montserrat-Bold.ttf);
-}
-
-@font-face {
-  font-family: Montserrat-BoldItalic;
-  src: url(../fonts/Montserrat/Montserrat-BoldItalic.ttf);
-}
-
-@font-face {
-  font-family: Montserrat-ExtraBold;
-  src: url(../fonts/Montserrat/Montserrat-ExtraBold.ttf);
-}
-
-@font-face {
-  font-family: Montserrat-ExtraBoldItalic;
-  src: url(../fonts/Montserrat/Montserrat-ExtraBoldItalic.ttf);
-}
-
-@font-face {
-  font-family: Montserrat-ExtraLight;
-  src: url(../fonts/Montserrat/Montserrat-ExtraLight.ttf);
-}
-
-@font-face {
-  font-family: Montserrat-ExtraLightItalic;
-  src: url(../fonts/Montserrat/Montserrat-ExtraLightItalic.ttf);
-}
-
-@font-face {
-  font-family: Montserrat-Italic;
-  src: url(../fonts/Montserrat/Montserrat-Italic.ttf);
-}
-
-@font-face {
-  font-family: Montserrat-Light;
-  src: url(../fonts/Montserrat/Montserrat-Light.ttf);
-}
-
-@font-face {
-  font-family: Montserrat-LightItalic;
-  src: url(../fonts/Montserrat/Montserrat-LightItalic.ttf);
-}
-
-@font-face {
-  font-family: Montserrat-Medium;
-  src: url(../fonts/Montserrat/Montserrat-Medium.ttf);
-}
-
-@font-face {
-  font-family: Montserrat-MediumItalic;
-  src: url(../fonts/Montserrat/Montserrat-MediumItalic.ttf);
-}
-
-@font-face {
-  font-family: Montserrat-Regular;
-  src: url(../fonts/Montserrat/Montserrat-Regular.ttf);
-}
-
-@font-face {
-  font-family: Montserrat-SemiBold;
-  src: url(../fonts/Montserrat/Montserrat-SemiBold.ttf);
-}
-
-@font-face {
-  font-family: Montserrat-SemiBoldItalic;
-  src: url(../fonts/Montserrat/Montserrat-SemiBoldItalic.ttf);
-}
-
-@font-face {
-  font-family: Montserrat-Thin;
-  src: url(../fonts/Montserrat/Montserrat-Thin.ttf);
-}
-
-@font-face {
-  font-family: Montserrat-ThinItalic;
-  src: url(../fonts/Montserrat/Montserrat-ThinItalic.ttf);
-}
-
-@font-face {
-  font-family: Exo-ExtraBold;
-  src: url(../fonts/Montserrat/Exo-ExtraBold.ttf);
-}
-
-@font-face {
-  font-family: Bahnschrift;
-  src: url(../fonts/Montserrat/Bahnschrift.TTF);
-}
-
-@font-face {
-  font-family: JMHTypewriter;
-  src: url(../fonts/Montserrat/JMHTypewriter.ttf);
-}
-
-/* END import fonts */
-/* fonts vrbls */
-/* END fonts vrbls */
-.boxContent {
-  background-image: linear-gradient(RGB(0 0 0/80%), RGB(0 0 0/80%)), url(https://maderascrm.gphsis.com/dist/img/notFound.png);
-  background-position: center;
-  background-size: cover;
-  background-repeat: no-repeat;
+.evidencias .container-fluid .warning {
   display: flex;
+  width: 50%;
   justify-content: center;
+  border: 3px solid yellow;
   align-items: center;
+}
+
+.evidencias .miniCard {
+  background: HSLA(212, 57%, 25%, 1);
+  background: linear-gradient(135deg, HSLA(212, 57%, 25%, 1) 22%, HSLA(212, 62%, 25%, 1) 55%, HSLA(211, 57%, 21%, 1) 100%);
+  background: -moz-linear-gradient(135deg, HSLA(212, 57%, 25%, 1) 22%, HSLA(212, 62%, 25%, 1) 55%, HSLA(211, 57%, 21%, 1) 100%);
+  background: -webkit-linear-gradient(135deg, HSLA(212, 57%, 25%, 1) 22%, HSLA(212, 62%, 25%, 1) 55%, HSLA(211, 57%, 21%, 1) 100%);
+  box-shadow: none;
+  height: 160px;
+  margin: 10px 0;
+  padding: 15px;
+  border-radius: 15px;
+}
+
+.evidencias .miniCard .boxInfo {
+  color: #eaeaea;
+}
+
+.evidencias .miniCard .boxInfo .enfatize {
+  font-weight: 600;
+  color: #2C93E7;
+}
+
+.evidencias .miniCard .boxInfo .estatus {
+  border: 1px solid #7083A9;
+  border-radius: 15px;
+  padding: 3px 10px;
+  color: #7083A9;
+}
+
+.evidencias .miniCard .boxInfo .estatus2 {
+  border: 1px solid #7083A9;
+  border-radius: 15px;
+  color: #7083A9;
+  font-size: 10px;
+  margin: 4px 0 0 0;
+  padding: 0 10px;
+}
+
+.evidencias .miniCard .boxInfo .titleMini {
+  color: #eaeaea;
+  font-size: 12px;
+  line-height: 10px;
+  font-weight: 100;
+}
+
+.evidencias .miniCard .boxInfo .titleMini-price {
+  color: #eaeaea;
+  font-size: 15px;
+  line-height: 15px;
+  font-weight: 100;
+}
+
+.evidencias .miniCard .boxInfo .data {
+  margin-top: 5px;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  margin: 0;
+}
+
+.evidencias .miniCard .boxInfo .data-price {
+  margin-top: 5px;
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 20px;
+  margin: 0;
+}
+
+.evidencias .miniCard .boxInfo .titleMonto {
+  font-size: 12px;
+  line-height: 16px;
+}
+
+.evidencias .miniCard .boxInfo .monto {
+  font-size: 19px;
+  font-weight: 500;
+}
+
+.evidencias .action-buttons-active {
+  position: absolute;
+  z-index: 1;
+  width: 96%;
+  display: flex;
+  height: fit-content;
+  justify-content: flex-start;
+  padding: 4px;
+  border-radius: 15px 15px 0 0;
+  background: #000000b3;
+}
+
+.evidencias .action-buttons-active button {
+  background: none !important;
+  border: none !important;
+  padding: 4px 10px;
   color: #ffffff;
+  font-size: 1.2em;
+  margin: 0px 0px 0px 10px;
 }
 
-.boxContent h2, .boxContent h3 {
-  font-family: "Montserrat-ExtraLight";
-  color: #ffffff;
+.evidencias .action-buttons-inactive {
+  display: none;
 }
 
-.boxContent .enfasis {
-  color: #96843D !important;
-  font-weight: 700;
-  font-family: "Montserrat-SemiBold" !important;
+.evidencias .vjs-custom .vjs-control-bar {
+  display: flex;
+  border-radius: 0 0 15px 15px;
+  justify-content: center;
 }
 
-.boxContent p {
-  font-family: "Montserrat-Light";
+.evidencias .vjs-custom .vjs-tech {
+  border-radius: 15px !important;
+}
+
+.evidencias #myVideo {
+  border-radius: 15px !important;
+}
+
+.evidencias #success {
+  display: none;
+}
+
+.evidencias #success i {
+  font-size: 15rem;
+  color: #1A3D65;
+}
+
+.evidencias #success h3 {
+  color: #1A3D65;
+}
+
+.evidencias .myVideo-dimensions.vjs-fluid:not(.vjs-audio-only-mode) {
+  padding-top: 56% !important;
+}
+
+.evidencias .card {
+  border-radius: 15px !important;
+  padding: 0px 30px 30px 30px !important;
+}
+
+.evidencias .font-size {
+  font-size: 1.8em;
+}
+
+.evidencias .font-size-price {
+  font-size: 2.3em;
 }

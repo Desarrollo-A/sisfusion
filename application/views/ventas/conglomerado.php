@@ -579,6 +579,7 @@
                                                 <th>ESTATUS</th>
                                                 <th>PENDIENTE MES</th>
                                                 <th>DISPONIBLE DESC.</th>
+                                                <th>FEC. DESC. 1</th>
                                                 <th>FEC. CREACIÓN</th>
                                                 <th>ACCIONES</th>
                                             </tr>
@@ -926,6 +927,12 @@
                             }
 
                             return '<p style="font-size: 1em; color:gray"><b>$' + formatMoney(respuesta) + '</b></p>';
+                        }
+                    },
+                    {
+                        // Fecha primer descuento
+                        "data": function (d) {
+                            return `<p style="font-size: 1em">${(d.fecha_mov_1) ? d.fecha_mov_1 : ''}</p>`;
                         }
                     },
                     {
