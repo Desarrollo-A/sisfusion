@@ -36,7 +36,7 @@ class Ranking_model extends CI_Model {
             INNER JOIN lotes lo ON lo.idLote = cl.idLote AND lo.idStatusLote = 2
             INNER JOIN usuarios u ON u.id_usuario = cl.id_asesor
             INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = u.id_rol AND oxc.id_catalogo = 1
-            INNER JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes WHERE idStatusContratacion = 15 AND idMovimiento = 45
+            INNER JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes WHERE idStatusContratacion = 11 AND idMovimiento = 41
             GROUP BY idLote, idCliente) hl ON hl.idLote = lo.idLote AND hl.idCliente = cl.id_cliente
             WHERE isNULL(noRecibo, '') != 'CANCELADO' AND cl.status = 1 AND cl.id_sede = $sede
             AND cl.fechaApartado BETWEEN '$beginDate 00:00:00.000' AND '$endDate 23:59:00.000'
