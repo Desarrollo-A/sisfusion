@@ -1,9 +1,9 @@
-$('#tokensTable thead tr:eq(0) th').each(function (i) {
+$('#evidenceTable thead tr:eq(0) th').each(function (i) {
     const title = $(this).text();
     $(this).html('<input type="text" class="textoshead"  placeholder="' + title + '"/>');
     $('input', this).on('keyup change', function () {
-        if ($("#tokensTable").DataTable().column(i).search() !== this.value) {
-            $("#tokensTable").DataTable()
+        if ($("#evidenceTable").DataTable().column(i).search() !== this.value) {
+            $("#evidenceTable").DataTable()
                 .column(i)
                 .search(this.value)
                 .draw();
@@ -12,9 +12,9 @@ $('#tokensTable thead tr:eq(0) th').each(function (i) {
 
 });
 
-function fillTokensTable() {
+function fillevidenceTable() {
     let current_rol_user;
-    tokensTable = $("#tokensTable").dataTable({
+    evidenceTable = $("#evidenceTable").dataTable({
         dom: 'Brt' + "<'row'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'i><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>",
         width: "auto",
         buttons: [
@@ -58,6 +58,16 @@ function fillTokensTable() {
         destroy: true,
         ordering: false,
         columns: [
+            {
+                data: function (d) {
+                    let tipo;
+                    if (d.type == 1) // MJ: EVIDENCIA TOKEN BBVA
+                        tipo = `<span class="label" style="background: #AED6F1; color: #1F618D">${d.tipoEvidencia}</span>`;
+                    else if (d.type == 2) // MJ: EVIDENCIA VIDEO CLIENTE
+                        tipo = `<span class="label" style="background:#A2D9CE; color: #117A65">${d.tipoEvidencia}</span>`;
+                    return tipo;
+                }
+            },
             {
                 data: function (d) {
                     let lote;
@@ -104,12 +114,12 @@ function fillTokensTable() {
             },
             {
                 data: function (d) {
-                    return d.id_token;
+                    return d.asesor;
                 }
             },
             {
                 data: function (d) {
-                    return d.generado_para;
+                    return d.gerente;
                 }
             },
             {
@@ -119,24 +129,16 @@ function fillTokensTable() {
             },
             {
                 data: function (d) {
-                    return d.creado_por;
-                }
-            },
-            {
-                data: function (d) {
                     let estatus;
                     switch (d.estatus) {
                         case 0:
-                            estatus ='<label style="border-radius: 12px;color:white;background-color: grey; padding:1px 10px;font-size: 0.9em;font-weight: lighter">Sin validar</label>';
+                            estatus = `<span class="label" style="background: #CCD1D1; color: #616A6B">No validada</span>`;
                             break;
                         case 1:
-                            estatus ='<label style="border-radius: 12px;color:white;background-color: green; padding:1px 10px;font-size: 0.9em;font-weight: lighter">Aceptado</label>';
+                            estatus = `<span class="label" style="background: #A9DFBF; color: #1E8449">Aceptada</span>`;
                             break;
                         case 2:
-                            estatus ='<label style="border-radius: 12px;color:white;background-color: red; padding:1px 10px;font-size: 0.9em;font-weight: lighter">Rechazado</label>';
-                            break;
-                        default:
-                            estatus ='<label style="border-radius: 12px;color:white;background-color: grey; padding:1px 10px;font-size: 0.9em;font-weight: lighter">NA</label>';
+                            estatus = `<span class="label" style="background: #E6B0AA; color: #922B21">Rechazada</span>`;
                             break;
                     }
                     return estatus;
@@ -145,13 +147,14 @@ function fillTokensTable() {
             {
                 data: function (d) {
                     let btns = '<div class="d-flex align-center justify-center">' +
-                        '<button class="btn-data btn-gray reviewEvidenceToken" data-nombre-archivo="' + d.nombre_archivo + '" title="Ver evidencia"></body><i class="fas fa-eye"></i></button>' +
-                        '<button class="btn-data btn-green setToken" data-token-name="' + d.token + '" title="Copiar token"><i class="fas fa-copy"></i></button>';
+                        '<button class="btn-data btn-gray reviewEvidence" data-nombre-archivo="' + d.nombre_archivo + '" title="Ver evidencia"></body><i class="fas fa-eye"></i></button>';
+                    if (d.currentRol == 3 && d.type == 1)
+                        btns += `<button class="btn-data btn-green setToken" data-token-name="${d.token}" title="Copiar token"><i class="fas fa-copy"></i></button>`;
                     if (d.currentRol != 3){
                         if (d.estatus == 1)
-                            btns += '<button class="btn-data btn-warning validateToken" data-action="2" data-token-id="' + d.id_token + '" title="Rechazar token"><i class="fas fa-minus"></i></button>';
+                            btns += `<button class="btn-data btn-warning validateEvidence" data-type="${d.type}" data-action="2" data-id="${d.id}" title="Rechazar"><i class="fas fa-minus"></i></button>`;
                         if (d.estatus == 2 || d.estatus == 0)
-                            btns += '<button class="btn-data btn-green validateToken" data-action="1" data-token-id="' + d.id_token + '" title="Validar token"><i class="fas fa-check"></i></button>';
+                            btns += `<button class="btn-data btn-green validateEvidence" data-type="${d.type}" data-action="1" data-id="${d.id}" title="Aceptar"><i class="fas fa-check"></i></button>`;
                     }
                     btns += '</div>';
                     return btns;
@@ -163,7 +166,7 @@ function fillTokensTable() {
             searchable: false
         }],
         ajax: {
-            url: "getTokensInformation",
+            url: "getEvidencesInformation",
             type: "POST",
             cache: false
         }
@@ -207,7 +210,7 @@ function generateToken() {
                     if (response["status"] == 200) { // MJ: TOKEN GENERADO CON EXITO
                         $(".generated-token").val("https://ciudadmaderas.com/apartado/token.html?token=" + response["id_token"]);
                         $("#generateTokenModal").modal("hide");
-                        $("#tokensTable").DataTable().ajax.reload(null, false);
+                        $("#evidenceTable").DataTable().ajax.reload(null, false);
                     }
                 }, error: function () {
                     $('#spiner-loader').addClass('hide');
@@ -237,7 +240,7 @@ function copyToClipBoard() {
     }
 }
 
-$(document).on('click', '.reviewEvidenceToken', function () {
+$(document).on('click', '.reviewEvidence', function () {
     $("#img_actual").empty();
     let path = general_base_url + "static/documentos/evidence_token/" + $(this).attr("data-nombre-archivo");
     let img_cnt = '<img src="' + path + '" class="img-responsive zoom m-auto">';
@@ -251,19 +254,20 @@ $(document).on('click', '.setToken', function () {
     copyToClipBoard();
 });
 
-$(document).on('click', '.validateToken', function () {
+$(document).on('click', '.validateEvidence', function () {
     let action = $(this).attr("data-action");
     $.ajax({
         type: 'POST',
-        url: 'validarToken',
+        url: 'validateEvidence',
         data: {
             'action': action,
-            'id': $(this).attr("data-token-id")
+            'id': $(this).attr("data-id"),
+            'type': $(this).attr("data-type")
         },
         dataType: 'json',
         success: function (data) {
-            $("#tokensTable").DataTable().ajax.reload(null, false);
-            alerts.showNotification("top", "right", action == 2 ? "El token ha sido marcado como rechazado." : "El token ha sido marcado como aprobado.", "success");
+            $("#evidenceTable").DataTable().ajax.reload(null, false);
+            alerts.showNotification("top", "right", action == 2 ? "La evidencia ha sido marcada como rechazada." : "La evidencia ha sido marcada como aceptada.", "success");
         }, error: function () {
             alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
         }

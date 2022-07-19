@@ -41,22 +41,22 @@
                         </div>
                         <div class="card-content">
                             <div class="toolbar">
-                                <h3 class="card-title center-align">Revisar evidencia de token</h3>
+                                <h3 class="card-title center-align">Revisión de evidencias</h3>
                             </div>
                             <div class="table-responsive box-table">
                                 <input class="hide" id="generatedToken"/>
-                                <table id="tokensTable" name="tokensTable"
+                                <table id="evidenceTable" name="evidenceTable"
                                        class="table-striped table-hover">
                                     <thead>
                                     <tr>
+                                        <th>TIPO</th>
                                         <th>ID LOTE</th>
-                                        <th>NOMBRE LOTE</th>
+                                        <th>LOTE</th>
                                         <th>CLIENTE</th>
                                         <th>FECHA APARTADO</th>
-                                        <th>ID</th>
-                                        <th>GENERADO PARA</th>
+                                        <th>ASESOR</th>
+                                        <th>GERENTE</th>
                                         <th>FECHA ALTA</th>
-                                        <th>CREADO POR</th>
                                         <th>ESTATUS</th>
                                         <th>ACCIONES</th>
                                     </tr>
@@ -88,8 +88,7 @@
 
 <script>
     $(document).ready(function () {
-        fillTokensTable();
-        getAsesoresList();
+        fillevidenceTable();
     });
 </script>
 
