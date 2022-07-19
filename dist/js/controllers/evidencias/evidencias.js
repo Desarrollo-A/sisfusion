@@ -7,11 +7,13 @@ $(document).ready(function(){
 
 $(document).on('change', "#residenciales", function () {
     $('#basic_info').addClass('hide');
+    $('#generate').addClass('hide');
     getCondominios($(this).val());
 });
 
 $(document).on('change', "#condominios", function () {
     $('#basic_info').addClass('hide');
+    $('#generate').addClass('hide');
     getLotes($(this).val());
 });
 
@@ -19,6 +21,7 @@ $(document).on('change', "#lotes", function () {
     $("#url").val('');
     $('#copy_button').addClass('hide');
     $('#evidencia').addClass('hide');
+    $('#generate').addClass('hide');
     getClient($(this).val());
 });
 
@@ -86,12 +89,19 @@ function getClient(idLote){
             $('#videoNombre').val(response.nombre_archivo);
             $('#basic_info').removeClass('hide');
             $('#basic_info').show();
-            if(response.evidencia == 1){
+            if(response.evidencia == 1 || (response.evidencia == 0 && response.estatus_validacion != 0)){
                 $('.evidencia').text('cargada');
+                $('#evidencia_validacion').text(response.nombre_validacion);
                 $('#evidencia').removeClass('hide');
                 $('#evidencia').show();
+                if(response.estatus_validacion == 2){
+                    $('#generate').removeClass('hide');
+                    $('#generate').show();
+                }
             }else{
                 $('.evidencia').text('sin evidencia');
+                $('#generate').removeClass('hide');
+                $('#generate').show();
             }
             $('#spiner-loader').addClass('hide');
         }, error: function () {
