@@ -146,8 +146,8 @@ function fillevidenceTable() {
             },
             {
                 data: function (d) {
-                    let btns = '<div class="d-flex align-center justify-center">' +
-                        '<button class="btn-data btn-gray reviewEvidence" data-nombre-archivo="' + d.nombre_archivo + '" title="Ver evidencia"></body><i class="fas fa-eye"></i></button>';
+                    let btns = `<div class="d-flex align-center justify-center">`;
+                    btns += `<button class="btn-data btn-gray reviewEvidence" data-type="${d.type}" data-nombre-archivo="${d.nombre_archivo}" title="Ver evidencia"></body><i class="fas fa-eye"></i></button>`;
                     if (d.currentRol == 3 && d.type == 1)
                         btns += `<button class="btn-data btn-green setToken" data-token-name="${d.token}" title="Copiar token"><i class="fas fa-copy"></i></button>`;
                     if (d.currentRol != 3){
@@ -241,12 +241,17 @@ function copyToClipBoard() {
 }
 
 $(document).on('click', '.reviewEvidence', function () {
-    $("#img_actual").empty();
-    let path = general_base_url + "static/documentos/evidence_token/" + $(this).attr("data-nombre-archivo");
-    let img_cnt = '<img src="' + path + '" class="img-responsive zoom m-auto">';
-    $("#token_name").text($(this).attr("data-token-name"));
-    $("#img_actual").append(img_cnt);
-    $("#reviewTokenEvidence").modal()
+    let type = $(this).attr("data-type");
+    let fileName = $(this).attr("data-nombre-archivo");
+    if (type == 1) { // MJ: TOKEN BBVA
+        $("#img_actual").empty();
+        let path = general_base_url + "static/documentos/evidence_token/" + fileName;
+        let img_cnt = '<img src="' + path + '" class="img-responsive zoom m-auto">';
+        $("#token_name").text($(this).attr("data-token-name"));
+        $("#img_actual").append(img_cnt);
+        $("#reviewTokenEvidence").modal();
+    } else // MJ: EVIDENCIA VIDEO
+        verEvidencia(fileName);
 });
 
 $(document).on('click', '.setToken', function () {
@@ -273,3 +278,30 @@ $(document).on('click', '.validateEvidence', function () {
         }
     });
 });
+
+function verEvidencia(fileName){
+    $.ajax({
+        url: "viewDropboxFile",
+        type: 'POST',
+        data: {videoNombre: fileName},
+        dataType: 'json',
+        success: function (response) {
+            console.log(JSON.parse(response));
+            let url = formatVideoURL(JSON.parse(response)); 
+            console.log('url',url);
+            var video = document.getElementById('video_preview');
+            var source = document.createElement('source');
+            source.setAttribute('src', url);
+            source.setAttribute('type', 'video/mp4');
+            video.appendChild(source);
+           
+            $("#nombre_lote").text( $('#nombreLote').val());
+            $('#videoPreview').modal();
+            $('#spiner-loader').addClass('hide');
+        }, error: function () {
+            $("#sendRequestButton").prop("disabled", false);
+            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+            $('#spiner-loader').addClass('hide');
+        }
+    });
+}
