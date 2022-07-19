@@ -1,4 +1,4 @@
-<link href="<?= base_url() ?>dist/css/commonModals.css" rel="stylesheet"/>
+<link href="<?= base_url() ?>dist/css/evidenciasRecisiones.css" rel="stylesheet"/>
 
 <div class="modal fade" id="videoPreview" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">    
     <div class="modal-dialog">
