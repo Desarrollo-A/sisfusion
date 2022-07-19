@@ -21,12 +21,14 @@ class Reporte extends CI_Controller {
     }
 
     public function getInformation(){
+        $currentYear = date("Y");
+
         if (isset($_POST) && !empty($_POST)) {
             $typeTransaction = $this->input->post("typeTransaction");
             //si es consulta inicial = 1 o si es consulta con filtro de fechas = 2
             if( $typeTransaction==1){
-                $beginDate = $this->get4Months()['firstDate'];
-                $endDate = $this->get4Months()['secondDate'];
+                $beginDate = "$currentYear-01-01";
+                $endDate = date("Y-m-d");
             }else{
                 $beginDate = date("Y-m-d", strtotime($this->input->post("beginDate")));
                 $endDate = date("Y-m-d", strtotime($this->input->post("endDate")));
@@ -46,12 +48,14 @@ class Reporte extends CI_Controller {
     }
 
     public function getDataChart(){
+        $currentYear = date("Y");
+
         $coordinadorVC = ''; $coordinadorVA = ''; $coordinadorCC = ''; $coordinadorCA = ''; $coordinador = false;
         $general = $this->input->post('general');
         $tipoChart = $this->input->post('tipoChart');
         if( $this->input->post("beginDate")==null && $this->input->post("endDate") == null){
-            $beginDate = $this->get4Months()['firstDate'];
-            $endDate = $this->get4Months()['secondDate'];
+            $beginDate = "$currentYear-01-01";
+            $endDate = date("Y-m-d");
         }else{
             $beginDate = date("Y-m-d", strtotime($this->input->post("beginDate")));
             $endDate = date("Y-m-d", strtotime($this->input->post("endDate")));

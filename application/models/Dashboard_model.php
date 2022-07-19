@@ -103,17 +103,17 @@ class Dashboard_model extends CI_Model {
         ISNULL(b.totalCT, 0) - ISNULL(e.totalCanC, 0) totalCanA, --CANCELADOS APARTADOS
         f.prospTotales, --PROSPECTOS TOTALES
         g.prospNuevos, --PROSPECTOS NUEVOS
-        h.prosCita --PROSPECTOS C/CITA
+        h.prosCita, --PROSPECTOS C/CITA
         --porcentajes
-        CAST(isNULL(CAST(a.totalVentas*100 as float) / CAST(a.totalVentas as float),0)as decimal (10,2)) porcentaje_totalVentas,
-        CAST(isNULL(CAST(b.totalCT*100 as float) / CAST(a.totalVentas as float),0)as decimal (10,2)) porcentaje_totalCancelado,
-        CAST(isNULL(CAST(c.totalConT*100 as float) / CAST(a.totalVentas as float),0) as decimal(10,2)) porcentaje_totalContratado,
-        CAST(isNULL(CAST(d.totalAT*100 as float) / CASt(a.totalVentas as float),0)as decimal(10,2)) porcentaje_totalApartado,
-        CAST(isNULL(CAST(e.totalCanC*100 as float) / CAST(a.totalVentas as float),0)as decimal(10,2)) porcentaje_totalCanceladoContratado,
-        CAST(isNULL(CAST((ISNULL(b.totalCT, 0) - ISNULL(e.totalCanC, 0))*100 as float) / CAST(a.totalVentas as float),0)as decimal(10,2)) porcentaje_totalCanceladoapartado
-        CAST(isNULL(CAST(f.prospTotales*100 as float) / CAST(a.prospTotales as float),0)as decimal(10,2)) porcentaje_prospectosTotales,
-        CAST(isNULL(CAST(g.prospNuevos*100 as float) / CAST(a.prospTotales as float),0)as decimal(10,2)) porcentaje_prospectosNuevos,
-        CAST(isNULL(CAST(h.prosCita*100 as float) / CAST(a.prospTotales as float),0)as decimal(10,2)) porcentaje_prospectosCita
+        CAST(isNULL(CAST(a.totalVentas*100 as float) / NULLIF(CAST(a.totalVentas as float),0),0)as decimal (10,2)) porcentaje_totalVentas,
+        CAST(isNULL(CAST(b.totalCT*100 as float) / NULLIF(CAST(a.totalVentas as float),0),0)as decimal (10,2)) porcentaje_totalCancelado,
+        CAST(isNULL(CAST(c.totalConT*100 as float) / NULLIF(CAST(a.totalVentas as float),0),0) as decimal(10,2)) porcentaje_totalContratado,
+        CAST(isNULL(CAST(d.totalAT*100 as float) / NULLIF(CASt(a.totalVentas as float),0),0)as decimal(10,2)) porcentaje_totalApartado,
+        CAST(isNULL(CAST(e.totalCanC*100 as float) / NULLIF(CAST(a.totalVentas as float),0),0)as decimal(10,2)) porcentaje_totalCanceladoContratado,
+        CAST(isNULL(CAST((ISNULL(b.totalCT, 0) - ISNULL(e.totalCanC, 0))*100 as float) / NULLIF(CAST(a.totalVentas as float),0),0)as decimal(10,2)) porcentaje_totalCanceladoapartado,
+        CAST(isNULL(CAST(f.prospTotales*100 as float) / NULLIF(CAST(f.prospTotales as float),0),0)as decimal(10,2)) porcentaje_prospectosTotales,
+        CAST(isNULL(CAST(g.prospNuevos*100 as float) / NULLIF(CAST(f.prospTotales as float),0),0)as decimal(10,2)) porcentaje_prospectosNuevos,
+        CAST(isNULL(CAST(h.prosCita*100 as float) / NULLIF(CAST(f.prospTotales as float),0),0)as decimal(10,2)) porcentaje_prospectosCita
 
         FROM (
         --SUMA TOTAL

@@ -848,18 +848,18 @@ function buildTableDetail(data, dataObj) {
 
 async function setInitialValues() {
     // BEGIN DATE
-    const fechaInicio = new Date();
-    // Iniciar en este año, este mes, en el día 1
-    const beginDate = new Date(fechaInicio.getFullYear(), fechaInicio.getMonth(), 1);
-    // END DATE
-    const fechaFin = new Date();
-    // Iniciar en este año, el siguiente mes, en el día 0 (así que así nos regresamos un día)
-    const endDate = new Date(fechaFin.getFullYear(), fechaFin.getMonth() + 1, 0);
-    finalBeginDate = [beginDate.getFullYear(), ('0' + (beginDate.getMonth() + 1)).slice(-2), ('0' + beginDate.getDate()).slice(-2)].join('-');
-    finalEndDate = [endDate.getFullYear(), ('0' + (endDate.getMonth() + 1)).slice(-2), ('0' + endDate.getDate()).slice(-2)].join('-');
-    let datesMonths = await get4Months();
-    finalBeginDate2 = [(datesMonths.firstDate).split('-')[2],  (datesMonths.firstDate).split('-')[1], (datesMonths.firstDate).split('-')[0]].join('/');
-    finalEndDate2 = [(datesMonths.secondDate).split('-')[2],  (datesMonths.secondDate).split('-')[1], (datesMonths.secondDate).split('-')[0]].join('/');
+     // BEGIN DATE
+     const fechaInicio = new Date();
+     // Iniciar en este año, este mes, en el día 1
+     const beginDate = new Date(fechaInicio.getFullYear(), fechaInicio.getMonth(), 1);
+     // END DATE
+     const fechaFin = new Date();
+     // Iniciar en este año, el siguiente mes, en el día 0 (así que así nos regresamos un día)
+     const endDate = new Date(fechaFin.getFullYear(), fechaFin.getMonth() + 1, fechaFin.getDate());
+     finalBeginDate = [beginDate.getFullYear(), ('0' + (beginDate.getMonth() + 1)).slice(-2), ('0' + beginDate.getDate()).slice(-2)].join('-');
+     finalEndDate = [endDate.getFullYear(), ('0' + (endDate.getMonth() + 1)).slice(-2), ('0' + endDate.getDate()).slice(-2)].join('-');
+     finalBeginDate2 = ['01', '01', beginDate.getFullYear()].join('/');
+     finalEndDate2 = [('0' + endDate.getDate()).slice(-2), ('0' + (endDate.getMonth())).slice(-2), endDate.getFullYear()].join('/');
 
     $('#tableBegin').val(finalBeginDate2);
     $('#tableEnd').val(finalEndDate2);
