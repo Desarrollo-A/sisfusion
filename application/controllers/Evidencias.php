@@ -71,6 +71,7 @@ class Evidencias extends CI_Controller
         $api_url = 'https://content.dropboxapi.com/2/files/upload'; //dropbox api url
         $name = "Evidencia_".$data->idCliente."_".$data->idLote.date('Y-m-d').basename($file["name"]);
         $headers = array('Authorization: Bearer '. $token,
+            "Dropbox-API-Select-User: dbmid:AACiFGk3sK8Eozce52KTBVX5JuOUTQsWnYE",
             'Content-Type: application/octet-stream',
             'Dropbox-API-Arg: '.
             json_encode(
@@ -121,10 +122,12 @@ class Evidencias extends CI_Controller
     }
 
     public function viewDropboxFile(){
+        $videoNombre = $this->input->post("videoNombre");
         $token = $this->getDropboxToken()->access_token;
-        $parameters = array('path' => "/Test/Evidencia_87005_688152022-07-121657650130282.mkv");
+        $parameters = array('path' => "/Test/$videoNombre");
 
         $headers = array("Authorization: Bearer $token",
+                        "Dropbox-API-Select-User: dbmid:AACiFGk3sK8Eozce52KTBVX5JuOUTQsWnYE",
                         'Content-Type: application/json');
 
         $curlOptions = array(
@@ -139,9 +142,11 @@ class Evidencias extends CI_Controller
         curl_setopt_array($ch, $curlOptions);
 
         $response = curl_exec($ch);
-        echo $response;
 
         curl_close($ch);
+
+        echo json_encode($response);
+
     }
 
     public function generateToken()
