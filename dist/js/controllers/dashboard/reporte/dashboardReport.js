@@ -121,6 +121,7 @@ function createAccordions(option, render, rol){
                     <thead>
                         <tr>
                             <th class="detail">MÁS</th>
+                            <th>GRAN TOTAL</th>
                             <th class="encabezado">`+option.toUpperCase()+`</th>
                             <th># LOTES APARTADOS</th>
                             <th>APARTADO</th>
@@ -187,6 +188,12 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, dates=n
                 width: "2%",
                 data: function(d){
                     return `<button type="btn" data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-idUser="${d.userID}" id="details-${d.userID}" class="btnSub"><i class="fas fa-sitemap" data-toggle="tooltip" data-placement="bottom" title="Desglose a detalle"></i></button>`;
+                }
+            },
+            {
+                width: "26%",
+                data: function (d) {
+                    return `<button style="background-color: #d8dde2; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="5" data-sede = 0 data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-idUser="${d.userID}" id="details-${d.userID}" class="btnModalDetails">${(d.totalAT + d.totalConT).toLocaleString('es-MX')}</button>`//# APARTADOS;
                 }
             },
             {
@@ -815,6 +822,7 @@ function buildTableDetail(data, dataObj) {
     var sedes = '<table class="table subBoxDetail">';
     sedes += '<tr style="border-bottom: 1px solid #fff; color: #4b4b4b;">';
     sedes += '<td>' + '<b>' + '# ' + '</b></td>';
+    sedes += '<td>' + '<b>' + 'GRAN TOTAL ' + '</b></td>';
     sedes += '<td>' + '<b>' + 'SEDE ' + '</b></td>';
     sedes += '<td>' + '<b>' + '# DE LOTES APARTADOS ' + '</b></td>';
     sedes += '<td>' + '<b>' + 'APARTADO ' + '</b></td>';
@@ -829,6 +837,7 @@ function buildTableDetail(data, dataObj) {
         //i es el indice y v son los valores de cada fila
         sedes += '<tr>';
         sedes += '<td> ' + (i + 1) + ' </td>';
+        sedes += `<td><button style="background-color: #cfcdcd; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="55" data-sede="${v.id_sede}" data-rol="${dataObj.rol}" data-render="${dataObj.render}" data-idUser="${dataObj.user}" id="details-${dataObj.user}" class="btnModalDetails">${(v.totalAT + v.totalConT).toLocaleString('es-MX')}</button>`;
         sedes += '<td> ' + v.sede + ' </td>';
         sedes += `<td><button style="background-color: #cfcdcd; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="11" data-sede="${v.id_sede}" data-rol="${dataObj.rol}" data-render="${dataObj.render}" data-idUser="${dataObj.user}" id="details-${dataObj.user}" class="btnModalDetails">${(v.totalAT).toLocaleString('es-MX')}</button>`;
         //sedes += '<td> ' + (v.totalAT).toLocaleString('es-MX') + ' </td>';

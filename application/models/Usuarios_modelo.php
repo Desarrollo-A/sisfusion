@@ -658,7 +658,7 @@ function getAllFoldersPDF()
                                                   "idpuesto" => 7,
                                                   "idgerente" => $getLider[0]['lider2'],
                                                   "idcoordinador" => $id_lider,
-                                                  "idsubdirecor" => $id_lider,
+                                                  "idsubdirector" => $id_lider,
                                                   "idregional" => $id_lider,
                                                   "idsedech" => $sedeCH,
                                                   "idsucursalch" => $sucursal);
