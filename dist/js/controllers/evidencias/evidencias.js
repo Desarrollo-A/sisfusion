@@ -186,6 +186,5 @@ function formatVideoURL(response){
         url = response.url;
         url = url.replace("dl=0", "raw=1");
     }
-
     return url;
 }

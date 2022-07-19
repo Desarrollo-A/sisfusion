@@ -147,7 +147,7 @@ function fillevidenceTable() {
             {
                 data: function (d) {
                     let btns = `<div class="d-flex align-center justify-center">`;
-                    btns += `<button class="btn-data btn-gray reviewEvidence" data-type="${d.type}" data-nombre-archivo="${d.nombre_archivo}" title="Ver evidencia"></body><i class="fas fa-eye"></i></button>`;
+                    btns += `<button class="btn-data btn-gray reviewEvidence" data-lote ="${d.nombreLote}" data-type="${d.type}" data-nombre-archivo="${d.nombre_archivo}" title="Ver evidencia"></body><i class="fas fa-eye"></i></button>`;
                     if (d.currentRol == 3 && d.type == 1)
                         btns += `<button class="btn-data btn-green setToken" data-token-name="${d.token}" title="Copiar token"><i class="fas fa-copy"></i></button>`;
                     if (d.currentRol != 3){
@@ -243,6 +243,7 @@ function copyToClipBoard() {
 $(document).on('click', '.reviewEvidence', function () {
     let type = $(this).attr("data-type");
     let fileName = $(this).attr("data-nombre-archivo");
+    let lote = $(this).attr("data-lote");
     if (type == 1) { // MJ: TOKEN BBVA
         $("#img_actual").empty();
         let path = general_base_url + "static/documentos/evidence_token/" + fileName;
@@ -251,7 +252,7 @@ $(document).on('click', '.reviewEvidence', function () {
         $("#img_actual").append(img_cnt);
         $("#reviewTokenEvidence").modal();
     } else // MJ: EVIDENCIA VIDEO
-        verEvidencia(fileName);
+        verEvidencia(fileName, lote);
 });
 
 $(document).on('click', '.setToken', function () {
@@ -279,23 +280,20 @@ $(document).on('click', '.validateEvidence', function () {
     });
 });
 
-function verEvidencia(fileName){
+function verEvidencia(fileName, lote){
     $.ajax({
         url: "viewDropboxFile",
         type: 'POST',
         data: {videoNombre: fileName},
         dataType: 'json',
         success: function (response) {
-            console.log(JSON.parse(response));
             let url = formatVideoURL(JSON.parse(response)); 
-            console.log('url',url);
             var video = document.getElementById('video_preview');
             var source = document.createElement('source');
             source.setAttribute('src', url);
             source.setAttribute('type', 'video/mp4');
             video.appendChild(source);
-           
-            $("#nombre_lote").text( $('#nombreLote').val());
+            $("#nombre_lote").text(lote);
             $('#videoPreview').modal();
             $('#spiner-loader').addClass('hide');
         }, error: function () {
@@ -304,4 +302,16 @@ function verEvidencia(fileName){
             $('#spiner-loader').addClass('hide');
         }
     });
+}
+
+function formatVideoURL(response){
+    let url;
+    if(response.error){
+        url = response.error.shared_link_already_exists.metadata.url;
+        url = url.replace("dl=0", "raw=1");
+    }else{
+        url = response.url;
+        url = url.replace("dl=0", "raw=1");
+    }
+    return url;
 }

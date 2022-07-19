@@ -247,6 +247,7 @@ class Reporte_model extends CI_Model {
             FORMAT(ISNULL(e.sumaCanC, 0), 'C') sumaCanC, ISNULL(e.totalCanC, 0) totalCanC, --CANCELADOS CONTRATADOS
             FORMAT(ISNULL(b.sumaCT, 0) - ISNULL(e.sumaCanC, 0), 'C') sumaCanA, 
             ISNULL(b.totalCT, 0) - ISNULL(e.totalCanC, 0) totalCanA,
+            FORMAT((ISNULL(d.sumaAT, 0) + ISNULL(c.sumaConT, 0)), 'C') gran_total,
             ----PORCENTAJES
             ISNULL(CAST((a.totalVentas * 100) / NULLIF(a.totalVentas,0) AS decimal(16,2)), 0) porcentajeTotal, 
             ISNULL(CAST((b.totalCT * 100) / NULLIF(a.totalVentas,0) AS decimal(16,2)), 0) porcentajeTotalC, 
@@ -453,6 +454,7 @@ class Reporte_model extends CI_Model {
             FORMAT(ISNULL(e.sumaCanC, 0), 'C') sumaCanC, ISNULL(e.totalCanC, 0) totalCanC, --CANCELADOS CONTRATADOS
             FORMAT(ISNULL(b.sumaCT, 0) - ISNULL(e.sumaCanC, 0), 'C') sumaCanA, 
             ISNULL(b.totalCT, 0) - ISNULL(e.totalCanC, 0) totalCanA,
+            FORMAT((ISNULL(d.sumaAT, 0) + ISNULL(c.sumaConT, 0)), 'C') gran_total,
             ----PORCENTAJES
             ISNULL(CAST((a.totalVentas * 100) / NULLIF(a.totalVentas,0) AS decimal(16,2)), 0) porcentajeTotal, 
             ISNULL(CAST((b.totalCT * 100) / NULLIF(a.totalVentas,0) AS decimal(16,2)), 0) porcentajeTotalC, 
