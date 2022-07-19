@@ -62,9 +62,9 @@
                                                     <p class="m-0">Evidencia <span class="evidencia enfatize"></span></p>
                                                     <div id="evidencia" class="mb-2 hide">
                                                         <p id="view" class="mb-1">Ver evidencia <i class="fas fa-eye"></i></p>
-                                                        <span class="estatus">Sin validar<span>
+                                                        <span id="evidencia_validacion" class="estatus"><span>
                                                     </div>
-                                                    <div id="generate" class="row">
+                                                    <div id="generate" class="row hide">
                                                         <div class="col-12 col-sm-12 col-md-12 col-lg-12">
                                                             <button><i class="fas fa-link"></i>&nbsp;Generar URL</button>
                                                         </div>
