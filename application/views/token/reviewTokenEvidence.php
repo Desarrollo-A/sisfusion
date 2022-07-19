@@ -72,6 +72,7 @@
     <?php $this->load->view('template/footer_legend'); ?>
 </div>
 </div>
+<?php include 'common_modals.php' ?>
 
 <?php $this->load->view('template/footer'); ?>
 <!--DATATABLE BUTTONS DATA EXPORT-->
