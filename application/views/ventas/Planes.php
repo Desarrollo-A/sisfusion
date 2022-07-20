@@ -14,7 +14,7 @@
 		?>
 
 		<!-- Modals -->
-		<div class="modal fade modal-alertas" id="ModalMsi" role="dialog">
+		<!-- <div class="modal fade modal-alertas" id="ModalMsi" role="dialog">
 			<div class="modal-dialog modal-sm">
 				<div class="modal-content">
 					<form method="post" id="formMsi">
@@ -23,7 +23,7 @@
 					</form>
 				</div>
 			</div>
-		</div>
+		</div> -->
 
 		<div class="modal fade modal-alertas" id="ModalAlert" role="dialog">
 			<div class="modal-dialog modal-md">
@@ -307,7 +307,7 @@
 													</div>
 													<div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">          
 														<div class="form-group">
-															<label class="mb-1" for="sede">Rango fechas(<b class="text-danger">*</b>)</label>
+															<label class="mb-1" for="sede">Rango fechas (<b class="text-danger">*</b>)</label>
 															<div class="d-flex" style="height:40px">
 																<input class="form-control dates" name="fechainicio" id="fechainicio" type="date" required="true">
 																<input class="form-control dates" name="fechafin" id="fechafin" type="date" required="true">
@@ -342,18 +342,12 @@
 														</div>
 													</div>
 												</div>
+												<div class="row mt-4 mb-4" id="showPackage"></div>
 												<div class="row">
 													<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-														<div class="text-right">
-															<button type="submit" id="btn_save" class="btn btn-success">Guardar</button>
-														</div>
-													</div>
-													<div class="rowCards" id="showPackage"></div>
-												</div>
-												<div class="row">
-													<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-														<button type="button" class="btn btn-success btn-circle btn-lg" onclick="GenerarCard()">Agregar plan<i class="fas fa-plus"></i></button>
+														<button type="button" class="btn btn-success btn-circle" onclick="GenerarCard()">Agregar plan<i class="fas fa-plus"></i></button>
 														<input type="hidden" value="0" name="index" id="index">
+														<button type="submit" id="btn_save" class="btn btn-success">Guardar</button>
 													</div>
 												</div>
 											</div>
@@ -390,7 +384,7 @@
 				</div>
 			</div>
 		</div>
-		<div id="snackbar"><i class="fas fa-check"></i> ¡MSI agregado con éxito!</div>
+		<!-- <div id="snackbar"><i class="fas fa-check"></i> ¡MSI agregado con éxito!</div> -->
 		<?php $this->load->view('template/footer_legend');?>
 	</div>
 	</div>
@@ -897,14 +891,14 @@
 			return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
 		};
 
-		function myFunction() {
-			// Get the snackbar DIV
-			var x = document.getElementById("snackbar");
-			// Add the "show" class to DIV
-			x.className = "show";
-			// After 3 seconds, remove the show class from DIV
-			setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
-		}
+		// function myFunction() {
+		// 	// Get the snackbar DIV
+		// 	var x = document.getElementById("snackbar");
+		// 	// Add the "show" class to DIV
+		// 	x.className = "show";
+		// 	// After 3 seconds, remove the show class from DIV
+		// 	setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
+		// }
 
 		$(document).ready(function() {
 			$.post("<?=base_url()?>index.php/PaquetesCorrida/lista_sedes", function (data) {
@@ -991,30 +985,31 @@
 		}
 	
 		function GenerarCard(){
-			if($('#sede').val() != '' && $('#residencial').val() != '' && $('input[name="tipoLote"]').is(':checked') && $('#fechainicio').val() != '' && $('#fechafin').val() != '' && $('input[name="superficie"]').is(':checked') ){
+			// if($('#sede').val() != '' && $('#residencial').val() != '' && $('input[name="tipoLote"]').is(':checked') && $('#fechainicio').val() != '' && $('#fechafin').val() != '' && $('input[name="superficie"]').is(':checked') ){
 				var indexActual = document.getElementById('index');
 				var indexNext = (document.getElementById('index').value - 1) + 2;
 				indexActual.value = indexNext;
-				$('.rowCards').append(`	
-				<div class="card border-primary mb-3 boxCard" style="max-width: 45rem;" id="card_${indexNext}">
-					<div class="row">
-						<div class="col-md-8 text-center">
-							<h4 class="card-title title-plan"><b>Plan</b></h4>
-						</div>
-						<div class="col-md-4">
-							<div class="text-right">
-								<button type="button" class="btn btn-lg btn-danger btn-circle" data-toggle="tooltip" data-placement="top" title="Eliminar plan" id="btn_delete_${indexNext}" onclick="removeElementCard('card_${indexNext}')"><i class="fas fa-trash"></i></button>
+				$('#showPackage').append(`
+				<div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+					<div class="cardPlan m-0 scroll-styles" id="card_${indexNext}">
+						<div class="container-fluid">
+							<div class="row">
+								<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+									<div class="title d-flex justify-center align-center">
+										<h3 class="card-title">Plan</h3>
+										<button type="button" class="btn-trash" data-toggle="tooltip" data-placement="top" title="Eliminar plan" id="btn_delete_${indexNext}" onclick="removeElementCard('card_${indexNext}')"><i class="fas fa-trash"></i></button>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+									<input type="text" class="inputPlan" required name="descripcion_${indexNext}" id="descripcion_${indexNext}" placeholder="Descripción del plan (*)">
+									<div id="checks_${indexNext}">
+									</div>						
+									<div class="form-group col-md-12" id="tipo_descuento_select_${indexNext}" hidden>
+								</div>
 							</div>
 						</div>
-					</div>
-					<div class="card-body text-primary myCard">
-						<div class="form-group col-md-12" id="">
-							<label class="">Descripción plan(<b class="text-danger">*</b>):</label>
-							<input type="text" class="form-control input-gral" required name="descripcion_${indexNext}" id="descripcion_${indexNext}">
-						</div>
-						<div id="checks_${indexNext}">
-						</div>						
-						<div class="form-group col-md-12" id="tipo_descuento_select_${indexNext}">
 					</div>
 				</div>`);
 
@@ -1043,32 +1038,33 @@
 					$("#tipo_descuento_"+indexNext).append($('<option>').val("default").text("Seleccione una opción"));
 					var len = data.length;
 
-					$('#checks_'+indexNext).append(`
-					<div class="row">
-						<div class="col-md-4">
-						<b>Descuento a</b>
-						</div>
-						<div class="col-md-8 text-center">
-						<b>Descuentos</b>
-						</div>
-					</div>`);
+					// $('#checks_'+indexNext).append(`<div class="w-100"><label class="mt-2">Descuento a</label></div>`);
 					
 					for( var i = 0; i<len; i++){
 						var id = data[i]['id_tcondicion'];
 						var descripcion = data[i]['descripcion'];
 						$("#tipo_descuento_"+indexNext).append(`<option value='${id}'>${descripcion}</option>`);
 						$("#checks_"+indexNext).append(`
-						<div class="row" >
-							<div class="col-md-4" >
-								<label class="check-box1" for="inlineCheckbox1">
-								<input class="check-box__switcher" type="checkbox" onclick="PrintSelectDesc(${id},${i},${indexNext})" id="inlineCheckbox1_${indexNext}_${i}" value="${id}">
-								${descripcion}</label>
+						<div class="row boxAllDiscounts">
+							<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+								<div class="check__item" for="inlineCheckbox1">
+									<label>
+										<input type="checkbox" class="default__check d-none" id="inlineCheckbox1_${indexNext}_${i}" value="${id}" onclick="PrintSelectDesc(${id},${i},${indexNext})">
+										${descripcion}
+										<span class="custom__check"></span>
+									</label>
+								</div>
 							</div>
-							<div class="col-md-8"  id="selectDescuentos_${indexNext}_${i}"></div>
-							<div class="row">
-								<div class="col-md-1"></div>
-								<div class="col-md-10" id="listamsi_${indexNext}_${i}"></div>
-								<div class="col-md-1"></div>
+							<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+								<div class="boxDetailDiscount">
+									<div class="w-100 mb-1" id="selectDescuentos_${indexNext}_${i}"></div>
+									<div class="container-fluid">
+										<div class="col-xs-12 col-sm-12 col-md-8 col-lg-8"></div>
+										<div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 pr-0"><p class="m-0 txtMSI">msi</p></div>
+									</div>
+									<div class="container-fluid rowDetailDiscount" id="listamsi_${indexNext}_${i}">
+									</div>
+								</div>
 							</div>
 						</div>`);
 					}
@@ -1082,10 +1078,10 @@
 				$('.popover-dismiss').popover({
 					trigger: 'focus'
 				});
-			}
-			else{
-				alerts.showNotification("top", "left", "Debe llenar todos los campos requeridos.", "warning");
-			}
+			// }
+			// else{
+			// 	alerts.showNotification("top", "left", "Debe llenar todos los campos requeridos.", "warning");
+			// }
 		}
 
 		function ValidarOrden(indexN,i){
@@ -1154,21 +1150,21 @@
 			<span class="label label-success color_span" id="${indexN}_${id}_span" >${texto}% + ${valorMsi} MSI</span>
 			<input type="hidden" name="${indexN}_${id}_msi" id="${indexN}_${id}_msi" value="${id},${valorMsi}">`);
 
-			CloseModalMsi();
-			myFunction();
+			// CloseModalMsi();
+			// myFunction();
 			
 			let idDescuentoSeleccionado = $(`#${select}${indexN}_${i} option:selected`).val();
 			let TextDescuentoSeleccionado = $(`#${select}${indexN}_${i} option:selected`).text();
 		}
 
 
-		function CloseModalMsi(){
-			const Modalbody = $('#ModalMsi .modal-body');
-			const Modalfooter = $('#ModalMsi .modal-footer');
-			Modalbody.html('');
-			Modalfooter.html('');
-			$("#ModalMsi").modal('toggle');
-		}
+		// function CloseModalMsi(){
+		// 	const Modalbody = $('#ModalMsi .modal-body');
+		// 	const Modalfooter = $('#ModalMsi .modal-footer');
+		// 	Modalbody.html('');
+		// 	Modalfooter.html('');
+		// 	$("#ModalMsi").modal('toggle');
+		// }
 
 		function PrintSelectDesc(id,index,indexGral){
 			let tdescuento=0;
@@ -1184,10 +1180,9 @@
 					apply=1;			
 					///TOTAL DE LOTE
 					$(`#selectDescuentos_${indexGral}_${index}`).append(`
-					<div class="form-group d-flex justify-center align-center">
+					<div class="w-100 d-flex justify-center align-center">
 						<div id="divmsi_${indexGral}_${index}"></div>
-						<label>Descuento(<b class="text-danger">*</b>):</label>
-						<select id="ListaDescuentosTotal_${indexGral}_${index}" required   name="${indexGral}_${index}_ListaDescuentosTotal_[]" multiple="multiple" class="form-control"  required data-live-search="true"></select>
+						<select id="ListaDescuentosTotal_${indexGral}_${index}" required name="${indexGral}_${index}_ListaDescuentosTotal_[]" multiple class="form-control" required data-live-search="true"></select>
 					</div>`);
 
 					$.post('getDescuentosPorTotal',{ tdescuento: tdescuento, id_condicion: id_condicion,eng_top:eng_top,apply:apply }, function(data) {
@@ -1204,7 +1199,7 @@
 						$(`#ListaDescuentosTotal_${indexGral}_${index}`).selectpicker('refresh');
 					}, 'json');
 
-					$(`#ListaDescuentosTotal_${indexGral}_${index}`).select2({containerCssClass: "select-gral",dropdownCssClass: "custom-dropdown",tags: true,tokenSeparators: [',', ' ']});
+					$(`#ListaDescuentosTotal_${indexGral}_${index}`).select2({containerCssClass: "select-gral",dropdownCssClass: "custom-dropdown", tags: false, tokenSeparators: [',', ' '], closeOnSelect : false, placeholder : "Seleccione una opción", allowHtml: true, allowClear: true});
 
 					$(`#ListaDescuentosTotal_${indexGral}_${index}`).on("select2:select", function (evt){
 						var element = evt.params.data.element;
@@ -1212,7 +1207,7 @@
 						$element.detach();
 						$(this).append($element);
 						$(this).trigger("change");
-						ModalMsi(indexGral,index,'ListaDescuentosTotal_',$element[0].value,$element[0].label);
+						crearBoxDetailDescuentos(indexGral,index,'ListaDescuentosTotal_',$element[0].value,$element[0].label);
 					});
 
 					$(`#ListaDescuentosTotal_${indexGral}_${index}`).on("select2:unselecting", function (evt){
@@ -1243,8 +1238,7 @@
 				
 					///TOTAL DE ENGANCHE
 					$(`#selectDescuentos_${indexGral}_${index}`).append(`
-					<div class="form-group d-flex justify-center align-center">
-						<label>Descuento(<b class="text-danger">*</b>):</label>
+					<div class="w-100 d-flex justify-center align-center">
 						<select id="ListaDescuentosEnganche_${indexGral}_${index}" required  name="${indexGral}_${index}_ListaDescuentosEnganche_[]" multiple="multiple" class="form-control"  required data-live-search="true"></select>
 					</div>`);
 
@@ -1271,7 +1265,7 @@
 						$element.detach();
 						$(this).append($element);
 						$(this).trigger("change");
-						ModalMsi(indexGral,index,'ListaDescuentosEnganche_',$element[0].value,$element[0].label);
+						crearBoxDetailDescuentos(indexGral,index,'ListaDescuentosEnganche_',$element[0].value,$element[0].label);
 					});
 
 					$(`#ListaDescuentosEnganche_${indexGral}_${index}`).on("select2:unselecting", function (evt){
@@ -1294,6 +1288,7 @@
 					document.getElementById(`listamsi_${indexGral}_${index}`).innerHTML = "";
 				}
 			}else if(id == 5){
+				//Descuentos m2
 				if( $(`#inlineCheckbox1_${indexGral}_${index}`).is(':checked') ) {
 					$(`#orden_${indexGral}_${index}`).prop( "disabled", false );
 			
@@ -1301,10 +1296,8 @@
 					id_condicion=4;
 					apply=1;			
 				
-					///TOTAL DE ENGANCHE
 					$(`#selectDescuentos_${indexGral}_${index}`).append(`
-					<div class="form-group d-flex justify-center align-center">
-						<label>Descuento(<b class="text-danger">*</b>):</label>
+					<div class="w-100 d-flex justify-center align-center">
 						<select id="ListaDescuentosM2_${indexGral}_${index}" required name="${indexGral}_${index}_ListaDescuentosM2_[]" multiple="multiple" class="form-control"  required data-live-search="true"></select>
 					</div>`);
 
@@ -1330,7 +1323,7 @@
 						$element.detach();
 						$(this).append($element);
 						$(this).trigger("change");
-						ModalMsi(indexGral,index,'ListaDescuentosM2_',$element[0].value,$element[0].label,1);
+						crearBoxDetailDescuentos(indexGral,index,'ListaDescuentosM2_',$element[0].value,$element[0].label,1);
 					});
 
 					$(`#ListaDescuentosM2_${indexGral}_${index}`).on("select2:unselecting", function (evt){
@@ -1353,6 +1346,7 @@
 				}
 			}
 			else if(id == 12){
+				//Bono
 				if( $(`#inlineCheckbox1_${indexGral}_${index}`).is(':checked') ) {	
 					$(`#orden_${indexGral}_${index}`).prop( "disabled", false );
 					tdescuento=1;
@@ -1362,8 +1356,7 @@
 					
 					///TOTAL DE ENGANCHE
 					$(`#selectDescuentos_${indexGral}_${index}`).append(`
-					<div class="form-group d-flex justify-center align-center">
-						<label>Descuento(<b class="text-danger">*</b>):</label>
+					<div class="w-100 d-flex justify-center align-center">
 						<select id="ListaDescuentosBono_${indexGral}_${index}" required name="${indexGral}_${index}_ListaDescuentosBono_[]" multiple="multiple" class="form-control"  required data-live-search="true"></select>
 					</div>`);
 
@@ -1389,7 +1382,7 @@
 						$element.detach();
 						$(this).append($element);
 						$(this).trigger("change");
-						ModalMsi(indexGral,index,'ListaDescuentosBono_',$element[0].value,$element[0].label,1);
+						crearBoxDetailDescuentos(indexGral,index,'ListaDescuentosBono_',$element[0].value,$element[0].label,1);
 					});
 
 					$(`#ListaDescuentosBono_${indexGral}_${index}`).on("select2:unselecting", function (evt){
@@ -1412,6 +1405,7 @@
 				}
 			}
 			else if(id == 13){
+				//MSI
 				if( $(`#inlineCheckbox1_${indexGral}_${index}`).is(':checked') ) {	
 					$(`#orden_${indexGral}_${index}`).prop( "disabled", false );
 					tdescuento=1;
@@ -1421,8 +1415,7 @@
 					
 					///TOTAL DE ENGANCHE
 					$(`#selectDescuentos_${indexGral}_${index}`).append(`
-					<div class="form-group d-flex justify-center align-center">
-						<label>Descuento(<b class="text-danger">*</b>):</label>
+					<div class="w-100 d-flex justify-center align-center">
 						<select id="ListaDescuentosMSI_${indexGral}_${index}" required name="${indexGral}_${index}_ListaDescuentosMSI_[]" multiple="multiple" class="form-control"  required data-live-search="true"></select>
 					</div>`);
 					
@@ -1470,8 +1463,7 @@
 			}else if(tipoDescuento == 12){
 				//BONO
 			}
-		}
-			 
+		}	 
 
 		function selectSuperficie(tipoSup){
 			document.getElementById("printSuperficie").innerHTML ='';
@@ -1503,6 +1495,31 @@
 		function removeElementCard(divNum) {
 			$('#iddiv').val(divNum);
 			$('#ModalRemove').modal('show');
+		}
+
+		function crearBoxDetailDescuentos(indexN,i,select,id,text,pesos = 0){
+			// let valorMsi = $(`#input_msi_${indexN}_${i}`).val();
+			// let selecdes = $(`#${select}${indexN}_${i}`);
+			let texto = pesos == 2 ? text : (pesos == 1 ? '$'+formatMoney(text) : text + '%');
+			$(`#listamsi_${indexN}_${i}`).append(`
+				<div class="row d-flex align-center mb-1" id="${indexN}_${id}_span">
+					<div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 d-flex align-center">
+						<i class="fas fa-tag mr-1"></i><p class="m-0">${texto}</p>
+					</div>
+					<div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+						<div class="boxOnOff">
+							<input type="checkbox" id="${indexN}_${id}_msi" name="${indexN}_${id}_msi" class="switch-input d-none">
+							<label for="${indexN}_${id}_msi" class="switch-label"></label>
+							<input type="" value="0" id="iddiv" class="inputMSI">
+						</div>
+					</div>
+				</div>`);
+
+			// CloseModalMsi();
+			// myFunction();
+			
+			// let idDescuentoSeleccionado = $(`#${select}${indexN}_${i} option:selected`).val();
+			// let TextDescuentoSeleccionado = $(`#${select}${indexN}_${i} option:selected`).text();
 		}
 
 		function setInitialValues() {
