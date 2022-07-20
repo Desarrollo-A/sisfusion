@@ -3128,8 +3128,8 @@ $pdf->Output(utf8_decode($namePDF), 'I');
         $arreglo["pp_1"] = $objDatos->pp_1;
         $arreglo["pp_2"] = $objDatos->pp_2;
         $arreglo["pp_3"] = $objDatos->pp_3;
-        $arreglo["primer_mensualidad"] = $objDatos->primer_mensualidad;
-        $arreglo["fecha_creacion"] = date('Y-d-m H:i:s');
+        $arreglo["primer_mensualidad"] = (date("Y-m-d", strtotime($objDatos->primer_mensualidad) ) == '' || date("Y-m-d", strtotime($objDatos->primer_mensualidad) ) == NULL) ? null : date("Y-m-d", strtotime($objDatos->primer_mensualidad) ) ;
+        $arreglo["fecha_creacion"] = date('Y-m-d H:i:s');
         $arreglo["corrida_dump"] = json_encode($objDatos->corrida_dump);
         $arreglo["creado_por"] = $this->session->userdata('id_usuario');
 
