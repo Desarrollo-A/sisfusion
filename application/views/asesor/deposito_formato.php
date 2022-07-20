@@ -201,7 +201,7 @@ $datos = array();
 											<div class="radio">
 												<label style="font-size: 0.9em;">
 													<input type="radio" id="desarrollo" onclick="return false;" name="desarrollo" required <?php echo $statsInput; ?>
-														<?php if ($cliente[0]->desarrollo == 4 || $cliente[0]->desarrollo == 14 || $cliente[0]->desarrollo == 28) {
+														<?php if ($cliente[0]->desarrollo == 4 || $cliente[0]->desarrollo == 14 || $cliente[0]->desarrollo == 28 || $cliente[0]->desarrollo == 30) {
 															echo "checked=true";
 														}
 														?>  value="4" style="font-size: 0.9em;"/> San Luis Potosí

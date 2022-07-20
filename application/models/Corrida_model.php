@@ -443,6 +443,46 @@
         return $query->row();
     }
 
+    function getCorridasPCByLote($idLote){
+        $id_usuario = $this->session->userdata('id_usuario');
+        $query = $this->db->query("SELECT *, c.nombre as nombreCondominio, pc.fecha_creacion as fecha_creacionpc, 
+        CONCAT(u.nombre,' ', u.apellido_paterno,' ', u.apellido_materno) as nombre_creador
+        FROM pagos_capital pc
+        INNER JOIN lotes l ON l.idLote = pc.idLote
+        INNER JOIN condominios c ON c.idCondominio = l.idCondominio
+        INNER JOIN residenciales r ON r.idResidencial = c.idResidencial
+        /*INNER JOIN clientes cl ON l.idCliente = cl.id_cliente*/
+        INNER JOIN usuarios u ON u.id_usuario = pc.creado_por WHERE pc.idLote=".$idLote);
+        return $query->result_array();
+    }
+    public function getLotesPC($condominio,$residencial){
+        $query = $this->db->query("SELECT l.idLote, nombreLote, idStatusLote, pc.creado_por FROM  lotes l
+                        INNER JOIN pagos_capital pc ON l.idLote = pc.idLote
+                        /*INNER JOIN clientes cl ON cl.id_cliente = l.idCliente*/
+                        INNER JOIN usuarios u ON u.id_usuario = pc.creado_por
+                        WHERE l.idCondominio = ".$condominio." AND pc.creado_por=".$this->session->userdata('id_usuario')."
+                        GROUP BY l.idLote, nombreLote, idStatusLote, pc.creado_por;");
+        if($query){
+            $query = $query->result_array();
+            return $query;
+        }
+    }
+
+    public function getInfoPCyID($id_corrida){
+        $query = $this->db->query("SELECT  *, c.idCondominio, r.idResidencial, l.idLote, pc.estatus as corridaStatus, pc.fecha_creacion as creacionpc,
+        pc.porcentajeEng as porcentajePC, pc.engancheCantidad as enganchePC,
+        l.porcentaje as porcentajeLote, l.enganche as engancheLote,
+        CASE WHEN pc.apartado IS NULL THEN 0
+		ELSE pc.apartado END 
+		as apartado
+        FROM pagos_capital pc 
+        INNER JOIN lotes l ON pc.idLote = l.idLote
+        INNER JOIN condominios c ON l.idCondominio=c.idCondominio
+        INNER JOIN residenciales r ON c.idResidencial=r.idResidencial
+        /*INNER JOIN clientes cl ON cl.id_cliente = l.idCliente */
+        WHERE pc.id_pc = ".$id_corrida);
+        return $query->row();
+    }
 
 
 
