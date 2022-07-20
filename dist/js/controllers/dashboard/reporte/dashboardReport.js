@@ -1031,6 +1031,7 @@ function fillTable(dataObject) {
                                     break;
                                 case 2:
                                     return 'Lote'
+                                    break;
                                 case 3:
                                     return 'Cliente';
                                     break;
