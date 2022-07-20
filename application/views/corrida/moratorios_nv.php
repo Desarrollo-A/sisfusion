@@ -359,13 +359,13 @@
                     </div>
 
                     <div class="row">
-                        <div class="form-group col-sm-12 col-md-4 col-lg-4">
+                        <div class="form-group col-sm-12 col-md-4 col-lg-4 hide">
                             <label>Interés Ordinario Acumulado</label><br>
                             <input id="resOrdinarioAdeuto" style="border: 0px; border-bottom: 1px solid #ddd"
                                    type="tel" pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" data-type="currency" placeholder="$0.00">
                             <input type="hidden" id="acumuladoOrdinarioBruto">
                         </div>
-                        <div class="form-group  col-sm-12 col-md-4 col-lg-4">
+                        <div class="form-group  col-sm-12 col-md-4 col-lg-4 ">
                             <label>Interés Moratorio Acumulado</label><br>
                             <input id="resMoratorioAdeuto" style="border: 0px; border-bottom: 1px solid #ddd"
                                    type="tel" pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" data-type="currency" placeholder="$0.00">
