@@ -247,6 +247,7 @@ class Reporte_model extends CI_Model {
             FORMAT(ISNULL(e.sumaCanC, 0), 'C') sumaCanC, ISNULL(e.totalCanC, 0) totalCanC, --CANCELADOS CONTRATADOS
             FORMAT(ISNULL(b.sumaCT, 0) - ISNULL(e.sumaCanC, 0), 'C') sumaCanA, 
             ISNULL(b.totalCT, 0) - ISNULL(e.totalCanC, 0) totalCanA,
+            FORMAT((ISNULL(d.sumaAT, 0) + ISNULL(c.sumaConT, 0)), 'C') gran_total,
             ----PORCENTAJES
             ISNULL(CAST((a.totalVentas * 100) / NULLIF(a.totalVentas,0) AS decimal(16,2)), 0) porcentajeTotal, 
             ISNULL(CAST((b.totalCT * 100) / NULLIF(a.totalVentas,0) AS decimal(16,2)), 0) porcentajeTotalC, 
@@ -255,7 +256,7 @@ class Reporte_model extends CI_Model {
             ISNULL(CAST((e.totalCanC * 100) / NULLIF(a.totalVentas,0) AS decimal(16,2)), 0) porcentajeTotalCanC, 
             ISNULL(CAST(((ISNULL(b.totalCT, 0) - ISNULL(e.totalCanC, 0)) * 100) / NULLIF(a.totalVentas,0) AS decimal(16,2)), 0) porcentajeTotalCanA,
             a.userID,
-            CASE WHEN a.nombreUsuario = ' ' THEN 'ACUMULADO SUBDIRECCIÓN' ELSE a.nombreUsuario END nombreUsuario,
+            CASE WHEN a.nombreUsuario = ' ' THEN 'ACUMULADO SUBDIRECCIONES' ELSE a.nombreUsuario END nombreUsuario,
             ISNULL(a.id_rol, 0) id_rol
             FROM (
             --SUMA TOTAL
@@ -343,7 +344,8 @@ class Reporte_model extends CI_Model {
                     WHERE isNULL(noRecibo, '') != 'CANCELADO'  AND isNULL(isNULL(cl.tipo_venta_cl, lo.tipo_venta), 0) IN (0, 1, 2) AND cl.status = 0 $filtro
                     GROUP BY u.id_rol, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno),lo.idLote, lo.nombreLote, cl.id_asesor, cl.id_coordinador, cl.id_gerente, cl.id_subdirector, cl.id_regional, cl.nombre, cl.apellido_paterno, cl.apellido_materno, isNULL(cl.totalNeto2_cl ,lo.totalNeto2), isNULL(cl.total_cl ,lo.total)
         ) tmpCC GROUP BY $comodin, tmpCC.nombreUsuario, tmpCC.id_rol) e ON e.userID = a.userID
-        GROUP BY a.id_rol, a.userID,a.nombreUsuario, a.sumaTotal, b.sumaCT, c.sumaConT, d.sumaAT, e.sumaCanC, a.totalVentas, b.totalCT, c.totalConT, d.totalAT, e.totalCanC");
+        GROUP BY a.id_rol, a.userID,a.nombreUsuario, a.sumaTotal, b.sumaCT, c.sumaConT, d.sumaAT, e.sumaCanC, a.totalVentas, b.totalCT, c.totalConT, d.totalAT, e.totalCanC
+        ORDER BY a.nombreUsuario");
         return $query;
     }
 
@@ -452,6 +454,7 @@ class Reporte_model extends CI_Model {
             FORMAT(ISNULL(e.sumaCanC, 0), 'C') sumaCanC, ISNULL(e.totalCanC, 0) totalCanC, --CANCELADOS CONTRATADOS
             FORMAT(ISNULL(b.sumaCT, 0) - ISNULL(e.sumaCanC, 0), 'C') sumaCanA, 
             ISNULL(b.totalCT, 0) - ISNULL(e.totalCanC, 0) totalCanA,
+            FORMAT((ISNULL(d.sumaAT, 0) + ISNULL(c.sumaConT, 0)), 'C') gran_total,
             ----PORCENTAJES
             ISNULL(CAST((a.totalVentas * 100) / NULLIF(a.totalVentas,0) AS decimal(16,2)), 0) porcentajeTotal, 
             ISNULL(CAST((b.totalCT * 100) / NULLIF(a.totalVentas,0) AS decimal(16,2)), 0) porcentajeTotalC, 
@@ -660,10 +663,14 @@ class Reporte_model extends CI_Model {
         $type = 22 CONTRATADO FILA ROW DETAIL POR SEDE
         $type = 3 CANCELADO CONTRATADO FILA PAPÁ
         $type = 33 CANCELADO CONTRATADO FILA ROW DETAIL POR SEDE
+        $type = 4 CANCELADO CONTRATADO FILA PAPÁ
+        $type = 44 CANCELADO CONTRATADO FILA ROW DETAIL POR SEDE
+        $type = 5 APARTADOS + CONTRATADOS CONTRATADO FILA PAPÁ
+        $type = 55 APARTADOS + CONTRATADOS FILA ROW DETAIL POR SEDE
         */
-        if ($type == 1 || $type == 2 || $type == 11 || $type == 22) { // MJ: APARTADOS || CONTRATADOS
-            $statusLote = ($type == 1 || $type == 11) ? "!= 2" : "= 2";
-            $filtroSede = ($type == 11 || $type == 22) ? "AND re.sede_residencial = $sede" : "";
+        if ($type == 1 || $type == 2 || $type == 5 || $type == 11 || $type == 22 || $type == 55) { // MJ: APARTADOS || CONTRATADOS
+            $statusLote = ($type == 1 || $type == 11) ? "!= 2" : ($type == 2 || $type == 22) ? "= 2" : "IN (2, 3)";
+            $filtroSede = ($type == 11 || $type == 22 || $type == 55) ? "AND re.sede_residencial = $sede" : "";
             $query = $this->db->query("SELECT re.descripcion nombreResidencial, UPPER(co.nombre) nombreCondominio, UPPER(lo.nombreLote) nombreLote, 
             UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) nombreCliente,
             UPPER(CONCAT(ua.nombre, ' ', ua.apellido_paterno, ' ', ua.apellido_materno)) nombreAsesor,

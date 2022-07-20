@@ -1553,11 +1553,10 @@ class Asesor_model extends CI_Model
             1 PM
             2   PF
         */
-        if ($this->session->userdata('id_rol') == 32) {
+        if ($this->session->userdata('id_rol') == 17)
             $documentOptions = $legalPersonality == 2 ? '2, 3' : '2, 3, 4, 10, 11';
-        } else {
+        else
             $documentOptions = $legalPersonality == 2 ? '2, 3, 4' : '2, 3, 4, 10, 11, 12';
-        }
 
         $query = $this->db->query("SELECT expediente, idCliente, tipo_doc FROM historial_documento WHERE idLote IN ($idLote) AND 
         status = 1 AND expediente IS NOT NULL AND tipo_doc IN ($documentOptions)

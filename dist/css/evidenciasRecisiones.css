@@ -1259,6 +1259,10 @@
   width: 100%;
 }
 
+.recisiones .miniCard .boxInfo #view {
+  cursor: pointer;
+}
+
 .tokenArea textarea {
   resize: none;
 }
@@ -1266,4 +1270,39 @@
 .tooltip.right .tooltip-arrow {
   border-right-color: #333333 !important;
   /* black */
+}
+
+.preview_title {
+  color: #ffffff;
+}
+
+.preview_title span {
+  color: #96843D;
+  font-weight: 500;
+}
+
+.content_video {
+  background: HSLA(212, 57%, 25%, 1);
+  background: linear-gradient(135deg, HSLA(212, 57%, 25%, 1) 22%, HSLA(212, 62%, 25%, 1) 55%, HSLA(211, 57%, 21%, 1) 100%);
+  background: -moz-linear-gradient(135deg, HSLA(212, 57%, 25%, 1) 22%, HSLA(212, 62%, 25%, 1) 55%, HSLA(211, 57%, 21%, 1) 100%);
+  background: -webkit-linear-gradient(135deg, HSLA(212, 57%, 25%, 1) 22%, HSLA(212, 62%, 25%, 1) 55%, HSLA(211, 57%, 21%, 1) 100%);
+  box-shadow: none;
+  border-radius: 20px;
+}
+
+#modal-body-video {
+  padding-right: 10px !important;
+  padding-bottom: 5px !important;
+  padding-left: 10px !important;
+}
+
+#modal-body-video video {
+  border-radius: 0 0 10px 10px;
+}
+
+.close {
+  position: absolute !important;
+  right: 3% !important;
+  top: 3% !important;
+  font-size: 2em !important;
 }

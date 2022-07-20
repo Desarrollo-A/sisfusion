@@ -118,18 +118,18 @@
                                 <!--        Here you can write extra buttons/actions for the toolbar              -->
                             </div>
                             <div class="table-responsive box-table">
-                                <table id="tokensTable" name="tokensTable"
+                                <table id="evidenceTable" name="evidenceTable"
                                        class="table-striped table-hover">
                                     <thead>
                                         <tr>
+                                            <th>TIPO</th>
                                             <th>ID LOTE</th>
-                                            <th>NOMBRE LOTE</th>
+                                            <th>LOTE</th>
                                             <th>CLIENTE</th>
                                             <th>FECHA APARTADO</th>
-                                            <th>ID</th>
-                                            <th>GENERADO PARA</th>
+                                            <th>ASESOR</th>
+                                            <th>GERENTE</th>
                                             <th>FECHA ALTA</th>
-                                            <th>CREADO POR</th>
                                             <th>ESTATUS</th>
                                             <th>ACCIONES</th>
                                         </tr>
@@ -164,7 +164,7 @@
     let id_gerente = "<?=$this->session->userdata('id_usuario')?>";
     let current_rol_user = "<?=$this->session->userdata('id_rol')?>";
     $(document).ready(function () {
-        fillTokensTable();
+        fillevidenceTable();
         getAsesoresList();
     });
 

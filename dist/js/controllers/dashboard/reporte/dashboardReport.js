@@ -122,6 +122,8 @@ function createAccordions(option, render, rol){
                         <tr>
                             <th class="detail">MÁS</th>
                             <th class="encabezado">`+option.toUpperCase()+`</th>
+                            <th>GRAN TOTAL</th>
+                            <th>MONTO</th>
                             <th># LOTES APARTADOS</th>
                             <th>APARTADO</th>
                             <th>CANCELADOS</th>
@@ -196,6 +198,18 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, dates=n
                 }
             },
             {
+                width: "26%",
+                data: function (d) {
+                    return `<button style="background-color: #d8dde2; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="5" data-sede = 0 data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-idUser="${d.userID}" id="details-${d.userID}" class="btnModalDetails">${(d.totalAT + d.totalConT).toLocaleString('es-MX')}</button>`//# APARTADOS;
+                }
+            },
+            {
+                width: "8%",
+                data: function (d) {
+                    return "<b>" + d.gran_total +"</b>"; // MJ: SUMA GRAN TOTAL
+                }
+            },
+            {
                 width: "8%",
                 data: function (d) {
                     return `<button style="background-color: #d8dde2; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="1" data-sede = 0 data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-idUser="${d.userID}" id="details-${d.userID}" class="btnModalDetails">${(d.totalAT).toLocaleString('es-MX')}</button>`//# APARTADOS;
@@ -255,7 +269,7 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, dates=n
             },
         ],
         columnDefs: [{
-            className: "delimetter", "targets": [ 5 ],
+            className: "delimetter", "targets": [ 3, 7 ],
         },{
            
             visible: false,
@@ -816,6 +830,8 @@ function buildTableDetail(data, dataObj) {
     sedes += '<tr style="border-bottom: 1px solid #fff; color: #4b4b4b;">';
     sedes += '<td>' + '<b>' + '# ' + '</b></td>';
     sedes += '<td>' + '<b>' + 'SEDE ' + '</b></td>';
+    sedes += '<td>' + '<b>' + 'GRAN TOTAL ' + '</b></td>';
+    sedes += '<td>' + '<b>' + 'MONTO ' + '</b></td>';
     sedes += '<td>' + '<b>' + '# DE LOTES APARTADOS ' + '</b></td>';
     sedes += '<td>' + '<b>' + 'APARTADO ' + '</b></td>';
     sedes += '<td>' + '<b>' + 'CANCELADO APARTADOS ' + '</b></td>';
@@ -830,6 +846,8 @@ function buildTableDetail(data, dataObj) {
         sedes += '<tr>';
         sedes += '<td> ' + (i + 1) + ' </td>';
         sedes += '<td> ' + v.sede + ' </td>';
+        sedes += `<td><button style="background-color: #cfcdcd; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="55" data-sede="${v.id_sede}" data-rol="${dataObj.rol}" data-render="${dataObj.render}" data-idUser="${dataObj.user}" id="details-${dataObj.user}" class="btnModalDetails">${(v.totalAT + v.totalConT).toLocaleString('es-MX')}</button>`;
+        sedes += '<td> ' + v.gran_total + ' </td>';
         sedes += `<td><button style="background-color: #cfcdcd; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="11" data-sede="${v.id_sede}" data-rol="${dataObj.rol}" data-render="${dataObj.render}" data-idUser="${dataObj.user}" id="details-${dataObj.user}" class="btnModalDetails">${(v.totalAT).toLocaleString('es-MX')}</button>`;
         //sedes += '<td> ' + (v.totalAT).toLocaleString('es-MX') + ' </td>';
         sedes += '<td> ' + v.sumaAT + ' </td>';
@@ -1013,6 +1031,7 @@ function fillTable(dataObject) {
                                     break;
                                 case 2:
                                     return 'Lote'
+                                    break;
                                 case 3:
                                     return 'Cliente';
                                     break;
