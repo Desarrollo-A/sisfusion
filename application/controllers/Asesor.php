@@ -3610,11 +3610,10 @@ class Asesor extends CI_Controller
         $arreglo["modificado"] = date("Y-m-d H:i:s");
         $arreglo["comentario"] = $this->input->post('comentario');
 
-        if ($this->session->userdata('id_rol') == 32) {
+        if ($this->session->userdata('id_rol') == 17)
             $documentsNumber = 3;
-        } else {
+        else
             $documentsNumber = 4;
-        }
 
         $dataClient = $this->Asesor_model->getLegalPersonalityByLote($idLote);
         $documentsValidation = $this->Asesor_model->validateDocumentation($idLote, $dataClient[0]['personalidad_juridica']);

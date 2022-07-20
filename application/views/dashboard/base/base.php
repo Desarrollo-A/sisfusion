@@ -43,6 +43,7 @@
 </body>
 <?php $this->load->view('dashboard/agenda/common_modals'); ?>
 <?php $this->load->view('dashboard/reporte/common_modals'); ?>
+<?php $this->load->view('dashboard/ranking/common_modals'); ?>
 
 <?php $this->load->view('template/footer');?>
 <!--  Plugin for Date Time Picker and Full Calendar Plugin-->

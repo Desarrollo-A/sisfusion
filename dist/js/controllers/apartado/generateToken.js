@@ -151,7 +151,7 @@ function fillevidenceTable() {
                     if (d.currentRol == 3 && d.type == 1)
                         btns += `<button class="btn-data btn-green setToken" data-token-name="${d.token}" title="Copiar token"><i class="fas fa-copy"></i></button>`;
                     if (d.currentRol != 3){
-                        if (d.estatus == 1)
+                        if (d.estatus == 1 || d.estatus == 0)
                             btns += `<button class="btn-data btn-warning validateEvidence" data-type="${d.type}" data-action="2" data-id="${d.id}" title="Rechazar"><i class="fas fa-minus"></i></button>`;
                         if (d.estatus == 2 || d.estatus == 0)
                             btns += `<button class="btn-data btn-green validateEvidence" data-type="${d.type}" data-action="1" data-id="${d.id}" title="Aceptar"><i class="fas fa-check"></i></button>`;
