@@ -5312,6 +5312,10 @@
                         $scope.daysEnganche = '';
                         $scope.fechaEng = '';
                     }
+                    var porcentajeEnganche = angular.element( document.querySelector( '#porcentajeEnganche' ) );
+                    var cantidadEnganche = angular.element( document.querySelector( '#cantidadEnganche' ) );
+                    porcentajeEnganche.prop('disabled', false);
+                    cantidadEnganche.prop('disabled', false);
                 }
                 else
                 {
@@ -5320,6 +5324,12 @@
                     {
                         var apartado = angular.element( document.querySelector( '#aptdo' ) );
                         var mesesdiferidos = angular.element( document.querySelector( '#msdif' ) );
+                        var porcentajeEnganche = angular.element( document.querySelector( '#porcentajeEnganche' ) );
+                        var cantidadEnganche = angular.element( document.querySelector( '#cantidadEnganche' ) );
+                        if(porcentajeEnganche.val() >= 10){
+                            porcentajeEnganche.prop('disabled', true);
+                            cantidadEnganche.prop('disabled', true);
+                        }
 
                         $( '#aptdo' ).prop( "disabled", false );
                         $( '#msdif' ).prop( "disabled", false );
