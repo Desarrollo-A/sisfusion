@@ -3177,5 +3177,36 @@ $pdf->Output(utf8_decode($namePDF), 'I');
         $this->load->view("corrida/editarPC", $data_corrida);
     }
 
+    function updatePC(){
+        $objDatos = json_decode(file_get_contents("php://input"));
+        $id_pc = $objDatos->id_pc;
+        $corrida_dump = $objDatos->corrida_dump;
+        $data['corrida_dump'] = json_encode($corrida_dump);
+        $data['modificado_por'] = $this->session->userdata('id_usuario');
+        $data['fecha_modificacion'] = date('Y-m-d H:i:s');
+        $table = 'pagos_capital';
+        $key = 'id_pc';
+//        print_r($table);
+//        echo '<br>';
+//        print_r($data);
+//        echo '<br>';
+//        print_r($key);
+//        echo '<br>';
+//        print_r($id_pc);
+//        exit;
+
+        $data_response = $this->General_model->updateRecord($table, $data, $key, $id_pc); // MJ: ACTUALIZA LA INFORMACIÓN DE UN REGISTRO EN PARTICULAR, RECIBE 4 PARÁMETROS. TABLA, DATA A ACTUALIZAR, LLAVE (WHERE) Y EL VALOR DE LA LLAVE
+
+
+        if($data_response) {
+            $response['message'] = 'OK';
+            echo json_encode($response);
+        }else {
+            $response['message'] = 'ERROR';
+            echo json_encode($response);
+        }
+
+    }
+
 
 }
