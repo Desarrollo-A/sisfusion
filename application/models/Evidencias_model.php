@@ -23,7 +23,8 @@
             LEFT JOIN clientes cl ON cl.id_cliente = ve.idCliente
             LEFT JOIN lotes l ON l.idLote = ve.idLote
             LEFT JOIN usuarios u1 ON u1.id_usuario = cl.id_asesor
-            LEFT JOIN usuarios u2 ON u2.id_usuario = cl.id_gerente";
+            LEFT JOIN usuarios u2 ON u2.id_usuario = cl.id_gerente
+            WHERE ve.estatus = 1";
         }
         
         return $this->db->query("SELECT * FROM (SELECT tk.id_token id, tk.token, CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno) asesor,
