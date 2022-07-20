@@ -44,7 +44,11 @@
         return $this->db->query("SELECT CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno) nombre, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombreAsesor,
         cl.fechaApartado, FORMAT(lo.totalNeto2,'C') totalLote, FORMAT(isNULL(cl.totalNeto_cl, lo.totalNeto), 'C') engancheValidado, sl.nombre estatus_lote,
         sc.nombreStatus, oxc.nombre estatus_comision, cl.id_cliente, lo.nombreLote,
-        cond.nombre nombreCondominio, res.nombreResidencial, ve.estatus evidencia, ve.nombre_archivo FROM clientes cl
+        cond.nombre nombreCondominio, res.nombreResidencial, ve.estatus evidencia, ve.nombre_archivo, CASE
+            WHEN ve.estatus_validacion = 1 THEN 'ACEPTADA'
+            WHEN ve.estatus_validacion = 2 THEN 'RECHAZADA'
+            ELSE 'SIN VALIDAR'
+        END nombre_validacion, ve.estatus_validacion FROM clientes cl
         INNER JOIN usuarios u ON u.id_usuario = cl.id_asesor
         INNER JOIN lotes lo ON lo.idLote = cl.idLote
         INNER JOIN condominios cond ON cond.idCondominio = lo.idCondominio
@@ -52,7 +56,7 @@
         INNER JOIN statuslote sl ON sl.idStatusLote = lo.idStatusLote
         INNER JOIN statuscontratacion sc ON sc.idStatusContratacion = lo.idStatusContratacion
         INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = lo.registro_comision AND oxc.id_catalogo =23
-        LEFT JOIN video_evidencia ve ON ve.idCliente = cl.id_cliente AND ve.idLote = lo.idLote AND ve.estatus=1
+        LEFT JOIN video_evidencia ve ON ve.idCliente = cl.id_cliente AND ve.idLote = lo.idLote
         WHERE cl.idLote = $idLote AND cl.status = 1");
     }
 
