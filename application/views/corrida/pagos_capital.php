@@ -4693,7 +4693,7 @@
                         document.getElementById("aniotext").innerHTML ='Requerido';
                         $('#yearplan').css("border-color", "red");
                     }
-
+                    loaderDiv.addClass('hide');
 
                 } else {
 
