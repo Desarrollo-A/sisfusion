@@ -1,6 +1,9 @@
 @import "_base";
 
 .cargarPlan{
+  margin-top: 65px;
+  padding: 30px 15px;
+  min-height: calc(100vh - 65px);
   .nav-tabs-cm{
     background: $platinumLight;
     padding: 0;
@@ -45,253 +48,304 @@
   }
   .tab-content{
     padding: 15px;
-    .select2-selection--multiple{
-      display: flex;
-      align-items: center;
-      background-color: $platinum!important;
-      border: none;
-      border-radius: 27px;
-      .select2-selection__choice{
+    #boxMainForm{
+      height: 540px;
+      overflow: auto;
+      .select2-selection--multiple{
         display: flex;
         align-items: center;
-        background-color: $white;
-        height: 25px;
+        background-color: $platinum!important;
         border: none;
         border-radius: 27px;
-        margin: 0 4px;
-        padding: 0 10px;
-      }
-    }
-    #fechainicio{
-      border-radius: 27px 0 0 27px;
-      padding-left: 8px;
-    }
-    #fechafin{
-      border-radius: 0 27px 27px 0;
-      padding-right: 8px;
-    }
-    .dates{
-      background-image: none;
-      background-color: $platinum;
-      text-align: center;
-      color: $deepGray;
-      height: 100%;
-    }
-    .radio-container  {
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
-      background-color: $platinum;
-      height: 40px;
-      border-radius: 27px;
-      
-      input{
-        appearance: none;
-        display: none;
-      }
-      label {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        background-color: inherit;
-        width: 33%;
-        height: 90%;
-        text-align: center;
-        border-radius: 27px;
-        overflow: hidden;
-        transition: linear 0.3s;
-        color: $deepGray;
-        margin: 0;
-        cursor: pointer;
-      }
-      input[type="radio"]:checked + label {
-        background-color: $blueIndigo;
-        color: $white;
-        transition: 0.3s;
-      }
-    }
-    .btn-descuentos{
-      background-color: #1341761a;
-      color: $blueIndigo;
-      width: 40px;
-      height: 40px;
-      border-radius: 27px;
-      padding: 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-size: 15px;
-      border:none;
-      position: absolute;
-      right: 30px;
-      z-index: 999;
-    }
-    .input-gral {
-      background-color: $platinum !important;
-      color: $deepGray !important;
-      border-radius: 27px !important;
-      background-image: none !important;
-      padding-left: 20px;
-    }
-    .cardPlan{
-      // height: 600px;
-      // overflow: auto;
-      padding: 15px 0;
-      box-shadow: 0px 2px 9px -12px RGB(0 0 0/42%), 0 4px 25px 0px RGB(0 0 0/12%), 0 8px 10px -5px RGB(0 0 0/20%);
-      border-radius: 10px;
-      .title{
-        margin-bottom: 5px;
-        .title-plan{
-          color: $gray;
+        overflow: hidden !important;
+        height: auto !important;
+        .select2-selection__rendered{
+          padding: 0 10px 5px 10px;
+          .select2-selection__choice{
+            display: flex;
+            align-items: center;
+            background-color: $white;
+            height: 25px;
+            border: none;
+            border-radius: 27px;
+            padding: 0 10px;
+          }
         }
-        .btn-trash{
-          background-color: transparent;
-          color: $platinumScroll;
-          width: 35px;
-          height: 35px;
-          border-radius: 27px;
-          padding: 0;
+      }
+      #fechainicio{
+        padding: 0;
+        border-radius: 27px 0 0 27px;
+        padding-left: 8px;
+      }
+      #fechafin{
+        padding: 0;
+        border-radius: 0 27px 27px 0;
+        padding-right: 8px;
+      }
+      .dates{
+        background-image: none;
+        background-color: $platinum;
+        text-align: center;
+        color: $deepGray;
+        height: 100%;
+      }
+      .input-gral {
+        background-color: $platinum !important;
+        color: $deepGray !important;
+        border-radius: 27px !important;
+        background-image: none !important;
+        padding-left: 20px;
+      }
+      .radio-container {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        background-color: $platinum;
+        height: 40px;
+        border-radius: 27px;
+        
+        input{
+          appearance: none;
+          display: none;
+        }
+        label {
           display: flex;
           justify-content: center;
           align-items: center;
-          font-size: 13px;
-          border:none;
-          position: absolute;
-          right: 15px;
-          z-index: 999;
-          &:hover{
-            background-color: $platinum;
-          }
+          background-color: inherit;
+          width: 33%;
+          height: 90%;
+          text-align: center;
+          border-radius: 27px;
+          overflow: hidden;
+          transition: linear 0.3s;
+          color: $deepGray;
+          margin: 0;
+          cursor: pointer;
+        }
+        input[type="radio"]:checked + label {
+          background-color: $blueIndigo;
+          color: $white;
+          transition: 0.3s;
         }
       }
-      .inputPlan {
-        background-color: transparent;
-        color: $gray;
-        border-radius: 27px;
-        background-image: none;
-        padding: 8px 15px;
-        width: 100%;
-        border: 1px solid $platinumScroll;
-      }
-      .boxAllDiscounts{
-        margin-top: 15px;
-        .check__item{
-          label{
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 8px 10px;
-            border-radius: 27px;
-            margin: 5px 0;
-            cursor: pointer;
-            font-weight: 100;
+    }
+    #showPackage{
+      height: 520px;
+      padding: 11px 0;
+      overflow: auto;
+      .cardPlan{
+        height: 480px;
+        overflow: auto;
+        padding: 20px;
+        box-shadow: 0px 2px 9px -12px RGB(0 0 0/42%), 0 4px 20px 0px RGB(0 0 0/12%), 0 8px 10px -5px RGB(0 0 0/20%);
+        border-radius: 10px;
+        margin-bottom: 15px;
+        .title{
+          margin-bottom: 5px;
+          .title-plan{
             color: $gray;
+          }
+          .btn-trash{
+            background-color: transparent;
+            color: $platinumScroll;
+            width: 35px;
+            height: 35px;
+            border-radius: 27px;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 13px;
+            border:none;
+            position: absolute;
+            right: 15px;
+            z-index: 999;
             &:hover{
-              background-color: #1341761a;
+              background-color: $platinum;
             }
           }
         }
-        .boxDetailDiscount{
-          border-radius: 10px;
-          background-color: #5a98df1a;
-          padding: 8px 10px;
-          .txtMSI{
-            text-align: center;
-            font-weight: 400;
-            font-size: 12px;
-          }
-          .select-gral{
-            background-color: $white!important;
-            border-radius: 10px;
-            .select2-selection__choice{
-              background-color: #5a98df1a!important;
-              border-radius: 5px;
-              margin: 0;
-              margin-right: 5px;
-            }
-          }
-          .rowDetailDiscount{
-            color: $blueIndigo;
-            i{
-              color: #849ec1;
-            }
-            .boxOnOff{
-              width: 100%;
+        .inputPlan {
+          background-color: transparent;
+          color: $gray;
+          border-radius: 27px;
+          background-image: none;
+          padding: 8px 15px;
+          width: 100%;
+          border: 1px solid $platinumScroll;
+        }
+        .boxAllDiscounts{
+          .check__item{
+            label{
               display: flex;
-              background-color: $white;
-              padding: 5px 7px;
-              border-radius: 27px;
+              align-items: center;
               justify-content: space-between;
-              .switch-label{
-                cursor: pointer;
+              padding: 8px 10px;
+              border-radius: 27px;
+              margin: 5px 0;
+              cursor: pointer;
+              font-weight: 100;
+              color: $gray;
+              &:hover{
+                background-color: #1341761a;
               }
-              .inputMSI{
-                width: 50%;
+            }
+          }
+          .boxDetailDiscount{
+            border-radius: 10px;
+            background-color: #5a98df1a;
+            padding: 10px;
+            .txtMSI{
+              text-align: center;
+              font-weight: 400;
+              font-size: 12px;
+            }
+            .select-gral{
+              background-color: $white!important;
+              border-radius: 7px;
+              border: none;
+              display: flex;
+              align-items: center;
+              &:disabled{
+                background-color: $platinumScroll;
+              }
+              .select2-selection__clear{
+                margin-top: 0;
+              }
+              .select2-selection__choice{
                 border: none;
-                text-align: center;
+                background-color: #5a98df1a!important;
+                border-radius: 5px;
+                margin: 0;
+                margin-right: 5px;
+              }
+            }
+            .rowDetailDiscount{
+              color: $blueIndigo;
+              i{
+                color: #849ec1;
+              }
+              .boxOnOff{
+                width: 100%;
+                display: flex;
+                background-color: $white;
+                padding: 5px 7px;
+                border-radius: 27px;
+                justify-content: space-between;
+                .switch-label{
+                  cursor: pointer;
+                }
+                .inputMSI{
+                  width: 50%;
+                  border: none;
+                  text-align: center;
+                  &:read-only{
+                    color: $platinumScroll;
+                  }
+                }
               }
             }
           }
         }
+        .default__check[type=checkbox] ~ .custom__check{
+          display: flex;
+          align-items: center;
+          height: 16px;
+          border: 2px solid $blueIndigo;
+          position: relative;
+          transition: all 0.4s ease;
+          border-radius: 27px;
+        }
+        .default__check[type=checkbox]:not(.switchbox) ~ .custom__check {
+          justify-content: center;
+          width: 16px;
+        }
+        .default__check[type=checkbox]:checked ~ .custom__check{
+          background-color: $green;
+          border: 2px solid $green;
+        }
+        .loadCard{
+          height: 250px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
       }
-      
-      .default__check[type=checkbox] ~ .custom__check{
-        display: flex;
-        align-items: center;
-        height: 16px;
-        border: 2px solid $blueIndigo;
-        position: relative;
-        transition: all 0.4s ease;
-        border-radius: 27px;
+      .switch-label:before, .switch-label:after {
+        content: "";
+        position: absolute;
+        margin: 0;
+        outline: 0;
+        top: 50%;
+        transform: translate(0, -50%);
+        transition: all 0.3s ease;
       }
-      .default__check[type=checkbox]:not(.switchbox) ~ .custom__check {
-        justify-content: center;
-        width: 16px;
+      .switch-label:before {
+        width: 25%;
+        height: 14px;
+        background-color: $platinumScroll;
+        border-radius: 8px;
       }
-      .default__check[type=checkbox]:checked ~ .custom__check{
+      .switch-label:after {
+        width: 15px;
+        height: 15px;
+        background-color: $white;
+        border-radius: 50%;
+        box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.14), 0 2px 2px 0 rgba(0, 0, 0, 0.098), 0 1px 5px 0 rgba(0, 0, 0, 0.084);
+      }
+      .switch-label .toggle--on {
+        display: none;
+      }
+      .switch-label .toggle--off {
+        display: inline-block;
+      }
+      .switch-input:checked + .switch-label:before {
+        background-color: #A5D6A7;
+      }
+      .switch-input:checked + .switch-label:after {
         background-color: $green;
-        border: 2px solid $green;
+        transform: translate(80%, -50%);
       }
-      
+    }
+    .boxActionsCards{
+      position: absolute;
+      top: -40px;
+      right: 0px;
+      display: flex;
+      .btnAction{
+        background-color: #1341761a;
+        color: $blueIndigo;
+        width: 40px;
+        height: 40px;
+        border-radius: 27px;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 15px;
+        border:none;
+        margin-left: 5px;
+      }
     }
   }
-  
 }
-
-
-
-.switch-label:before, .switch-label:after {
-  content: "";
-  position: absolute;
-  margin: 0;
-  outline: 0;
-  top: 50%;
-  transform: translate(0, -50%);
-  transition: all 0.3s ease;
+.dataTables_scrollBody::-webkit-scrollbar-track{
+  border-radius: 10px;
+  background-color: transparent;
 }
-.switch-label:before {
-  width: 25%;
-  height: 14px;
+/* El background del scroll (border)*/
+.dataTables_scrollBody::-webkit-scrollbar{
+  width: 5px;
+  height: 5px;
+  background-color: transparent;
+}
+/* Color de la barra de desplazamiento */
+.dataTables_scrollBody::-webkit-scrollbar-thumb{
+  border-radius: 5px;
   background-color: $platinumScroll;
-  border-radius: 8px;
 }
-.switch-label:after {
-  width: 15px;
-  height: 15px;
-  background-color: $white;
-  border-radius: 50%;
-  box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.14), 0 2px 2px 0 rgba(0, 0, 0, 0.098), 0 1px 5px 0 rgba(0, 0, 0, 0.084);
-}
-.switch-label .toggle--on {
-  display: none;
-}
-.switch-label .toggle--off {
-  display: inline-block;
-}
-.switch-input:checked + .switch-label:before {
-  background-color: #A5D6A7;
-}
-.switch-input:checked + .switch-label:after {
-  background-color: $green;
-  transform: translate(80%, -50%);
-}
+/* Color del HOVER de barra de desplazamiento */
+.dataTables_scrollBody::-webkit-scrollbar-thumb:hover{
+  background-color: $deepGray;
+}  
