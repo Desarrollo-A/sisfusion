@@ -58,7 +58,7 @@
                                         </button>
                                     </div>
                                 </div>
-                                <button class="btn-charts" onclick="toggleLotesDetail(this)"><i class="far fa-list-alt"></i></button>
+                                <button class="btn-charts btnModalDetails" ><i class="far fa-list-alt"></i></button>
                             </div>
                             <div id="boxChartProm" class="h-80 boxChartPromedio" data-value="promedio">
                                 <div id="promedioChart"></div>
@@ -166,5 +166,4 @@
         </div>
     </div>
 </div>
-
 <script src="<?=base_url()?>dist/js/controllers/dashboard/metricas/dashboardMetrics.js"></script>

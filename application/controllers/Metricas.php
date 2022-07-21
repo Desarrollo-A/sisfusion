@@ -102,6 +102,16 @@ class Metricas extends CI_Controller {
         }
     }
 
+    public function getLotesInformation(){
+        $data = $this->Metricas_model->getLotesInformation($_POST['sede_residencial'], $_POST['idResidencial'], $_POST['beginDate'], $_POST['endDate']);
+        if($data != null) {
+            echo json_encode($data, JSON_NUMERIC_CHECK);
+        } else {
+            echo json_encode(array());
+        }
+    }
+
+
 
 }
  
