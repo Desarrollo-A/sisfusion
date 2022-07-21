@@ -302,7 +302,6 @@ class Reporte extends CI_Controller {
             $endDate = date("Y-m-d", strtotime($this->input->post("endDate")));
             $id_usuario = $this->input->post("user");
             $rol = $this->input->post("rol");
-            //$rol = $this->session->userdata('id_rol');
             $render = $this->input->post("render");
             $sede = $this->input->post("sede");
             $data['data'] = $this->Reporte_model->getGeneralLotesInformation($beginDate, $endDate, $rol, $id_usuario, $render, $type, $sede)->result_array();
