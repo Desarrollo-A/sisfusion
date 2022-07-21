@@ -140,76 +140,76 @@
                     <div class="row m-0 h-40">
                         <div class="col-12 col-sm-6 col-md-6 col-lg-6 pl-0">
                             <div class="d-flex" >
-                                <div class="w-80 d-flex align-center">
+                                <div class="w-70 d-flex align-center">
                                 <font color="#103F75"><i class="fas fa-circle pr-2 pl-2"></i></font>
                                 <p class="m-0 labelTitle">Prospectos totales</p>
                                 </div>
-                                <div class="w-20">
+                                <div class="w-30">
                                     <h4 id="pt_card" class="numberElement m-0"></h4>
                                 </div>
                             </div>
                             <div class="d-flex" >
-                                <div class="w-80 d-flex align-center">
+                                <div class="w-70 d-flex align-center">
                                 <font color="#006A9D"><i class="fas fa-circle pr-2 pl-2"></i></font>
                                 <p class="m-0 labelTitle">Nuevos prospectos</p>
                                 </div>
-                                <div class="w-20">
+                                <div class="w-30">
                                     <h4 id="np_card" class="numberElement m-0"></h4>
                                 </div>
                             </div>
                             <div class="d-flex" >
-                                <div class="w-80 d-flex align-center">
+                                <div class="w-70 d-flex align-center">
                                 <font color="#0089B7"><i class="fas fa-circle pr-2 pl-2"></i></font>
                                 <p class="m-0 labelTitle">Prospectos con cita</p>
                                 </div>
-                                <div class="w-20">
+                                <div class="w-30">
                                     <h4 id="pcc_card" class="numberElement m-0"></h4>
                                 </div>
                             </div>
                             <div class="d-flex" >
-                                <div class="w-80 d-flex align-center">
+                                <div class="w-70 d-flex align-center">
                                 <font color="#039590"><i class="fas fa-circle pr-2 pl-2"></i></font>
                                 <p class="m-0 labelTitle">Cierres totales</p>
                                 </div>
-                                <div class="w-20">
+                                <div class="w-30">
                                     <h4 id="ct_card" class="numberElement m-0"></h4>
                                 </div>
                             </div>
                         </div>
                         <div class="col-12 col-sm-6 col-md-6 col-lg-6 pr-0">
                             <div class="d-flex" >
-                                <div class="w-80 d-flex align-center">
+                                <div class="w-70 d-flex align-center">
                                 <font color="#008EAB"><i class="fas fa-circle pr-2 pl-2"></i></font>
                                 <p class="m-0 labelTitle">Ventas contratadas</p>
                                 </div>
-                                <div class="w-20">
+                                <div class="w-30">
                                     <h4 id="vc_card" class="numberElement m-0"></h4>
                                 </div>
                             </div>
                             <div class="d-flex" >
-                                <div class="w-80 d-flex align-center">
+                                <div class="w-70 d-flex align-center">
                                 <font color="#00ACB8"><i class="fas fa-circle pr-2 pl-2"></i></font>
                                 <p class="m-0 labelTitle">Ventas apartados</p>
                                 </div>
-                                <div class="w-20">
+                                <div class="w-30">
                                     <h4 id="va_card" class="numberElement m-0"></h4>
                                 </div>
                             </div>
                             <div class="d-flex" >
-                                <div class="w-80 d-flex align-center">
+                                <div class="w-70 d-flex align-center">
                                 <font color="#16C0B4"><i class="fas fa-circle pr-2 pl-2"></i></font>
                                 <p class="m-0 labelTitle">Cancelados contratados</p>
                                 </div>
-                                <div class="w-20">
+                                <div class="w-30">
                                     <h4 id="cc_card" class="numberElement m-0"></h4>
                                 </div>
                             </div>
                             <div class="d-flex" >
-                                <div class="w-80 d-flex align-center">
+                                <div class="w-70 d-flex align-center">
                                 <font color="#4BBC8E"><i class="fas fa-circle pr-2 pl-2"></i></font>
                                 <p class="m-0 labelTitle">Cancelados apartados</p>
                                 </div>
-                                <div class="w-20">
+                                <div class="w-30">
                                     <h4 id="ca_card" class="numberElement m-0"></h4>
                                 </div>
                             </div>
@@ -235,35 +235,35 @@
                     <div class="row h-50">
                         <div class="col-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-between pt-1 pl-0">
                             <div class="d-flex">
-                                <font color="#103F75"><i class="fas fa-circle pr-2 pl-2"></i></font>
+                                <font color="#103F75"><i class="fas fa-circle pr-1 pl-2"></i></font>
                                 <p class="m-0 labelTitle">Prospectos</p>
                             </div>
                             <h4 id="ac" class="numberElement m-0"></h4>
                         </div>
-                        <div class="col-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-between pt-1 pl-0">
+                        <div class="col-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-between pt-1 pl-0 mt-1">
                             <div class="d-flex">
-                                <font color="#006A9D"><i class="fas fa-circle pr-2 pl-2"></i></font>
+                                <font color="#006A9D"><i class="fas fa-circle pr-1 pl-2"></i></font>
                                 <p class="m-0 labelTitle">Cita</p>
                             </div>
                             <h4 id="cita" class="numberElement m-0"></h4>
                         </div>
-                        <div class="col-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-between pt-1 pl-0">
+                        <div class="col-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-between pt-1 pl-0 mt-1">
                             <div class="d-flex">
-                                <font color="#0089B7"><i class="fas fa-circle pr-2 pl-2"></i></font>
+                                <font color="#0089B7"><i class="fas fa-circle pr-1 pl-2"></i></font>
                                 <p class="m-0 labelTitle">Cita seguimiento</p>
                             </div>
                             <h4 id="cs" class="numberElement m-0"></h4>
                         </div>
-                        <div class="col-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-between pt-1 pl-0">
+                        <div class="col-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-between pt-1 pl-0 mt-1">
                             <div class="d-flex">
-                                <font color="#039590"><i class="fas fa-circle pr-2 pl-2"></i></font>
+                                <font color="#039590"><i class="fas fa-circle pr-1 pl-2"></i></font>
                                 <p class="m-0 labelTitle">No interesado</p>
                             </div>
                             <h4 id="ni" class="numberElement m-0"></h4>
                         </div>
-                        <div class="col-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-between pt-1 pl-0">
+                        <div class="col-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-between pt-1 pl-0 mt-1">
                             <div class="d-flex">
-                                <font color="#008EAB"><i class="fas fa-circle pr-2 pl-2"></i></font>
+                                <font color="#008EAB"><i class="fas fa-circle pr-1 pl-2"></i></font>
                                 <p class="m-0 labelTitle">Apartados</p>
                             </div>
                             <h4 id="ap" class="numberElement m-0"></h4>

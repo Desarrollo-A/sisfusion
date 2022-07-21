@@ -34,6 +34,48 @@
         </div>
     </div>
     <div class="row" id="mainRowMetrics">
+        <div class="col-12 col-sm-12 col-md-12 col-lg-12 flexibleM inactivo">
+            <div class="card p-2">
+                <div class="container-fluid h-100">
+                    <div class="row h-100">
+                        <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-chart h-100 pl-0">
+                            <div class="d-flex justify-between h-10 actions align-center">
+                                <div class="filters w-50 d-flex">
+                                    <div class="w-50 overflow-hidden sedes_box">
+                                        <select class="selectpicker select-gral m-0 proyecto" id="sedes" name="sedes" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona una sede" data-size="7" data-container="body" required style="height:100%!important"></select>
+                                    </div>
+                                    <div class="w-50 m-0 overflow-hidden pl-0 proyecto_box">
+                                        <select class="selectpicker select-gral m-0 proyecto" id="proyecto2" name="proyecto" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona un proyecto" data-size="7" data-container="body" required style="height:100%!important"></select>
+                                    </div>
+                                </div>
+                               
+                                <div class="w-40 m-0 pl-0 h-100">
+                                    <div class="form-group d-flex m-0">
+                                        <input type="text" class="form-control datepicker begin_promedioDates" id="tableBegin_promedio" value="" autocomplete='off'/>
+                                        <input type="text" class="form-control datepicker end_promedioDates" id="tableEnd_promedio" value="" autocomplete='off' />
+                                        <button class="btn btn-success btn-round btn-fab btn-fab-mini" id="searchByDateRangePromedio">
+                                            <span class="material-icons update-dataTable">search</span>
+                                        </button>
+                                    </div>
+                                </div>
+                                <button class="btn-charts" onclick="toggleLotesDetail(this)"><i class="far fa-list-alt"></i></button>
+                            </div>
+                            <div id="boxChartProm" class="h-80 boxChartPromedio" data-value="promedio">
+                                <div id="promedioChart"></div>
+                                <div class="loadChart loadPromedioChart w-100 h-100">
+                                    <img src= '<?=base_url('dist/img/chartLoading.gif')?>' alt="Icono gráfica" class="h-100 w-auto">
+                                </div>
+                            </div>
+                            <div class="h-10">
+                                <h5 class="text-center m-0 fw-400">Precio promedio por metro cuadrado</h5>
+                            </div>
+                        </div>
+                        <div id="promedio" class="col-12 col-sm-12 col-md-12 col-lg-6 col-datatable hidden h-100 p-0">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="col-12 col-sm-12 col-md-12 col-lg-6 flexibleM inactivo">
             <div class="card">
                 <div class="container-fluid h-100">

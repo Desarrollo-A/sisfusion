@@ -4,6 +4,7 @@ class Ventas extends CI_Controller {
 		parent::__construct();
         $this->load->model(array('Ventas_modelo', 'Statistics_model'));
                 $this->load->model('asesor/Asesor_model');
+        $this->load->library(array('get_menu'));
 		$this->load->helper(array('url','form'));
 		$this->load->database('default');
 	}
@@ -42,7 +43,8 @@ class Ventas extends CI_Controller {
         $datos['dataLeo'] = $dataPerSede[4];
         $datos['dataCan'] = $dataPerSede[5];
         $datos['monthlyProspects'] = $this->Statistics_model->getMonthlyProspects()->result();
-        
+        $datos['sub_menu'] = $this->get_menu->get_submenu_data($this->session->userdata('id_rol'), $this->session->userdata('id_usuario'));
+
         $this->load->view('template/header');
         //        $this->load->view('ventas/inicio_ventas');
         switch ($this->session->userdata('id_rol')) {

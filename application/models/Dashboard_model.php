@@ -104,7 +104,18 @@ class Dashboard_model extends CI_Model {
         --ISNULL(b.totalCT, 0) - ISNULL(e.totalCanC, 0) totalCanA, --CANCELADOS APARTADOS
         f.prospTotales, --PROSPECTOS TOTALES
         g.prospNuevos, --PROSPECTOS NUEVOS
-        h.prosCita --PROSPECTOS C/CITA
+        h.prosCita, --PROSPECTOS C/CITA
+        --porcentajes
+        CAST(isNULL(CAST(a.totalVentas*100 as float) / NULLIF(CAST(a.totalVentas as float),0),0)as decimal (10,2)) porcentaje_totalVentas,
+        CAST(isNULL(CAST(b.totalCT*100 as float) / NULLIF(CAST(a.totalVentas as float),0),0)as decimal (10,2)) porcentaje_totalCancelado,
+        CAST(isNULL(CAST(c.totalConT*100 as float) / NULLIF(CAST(a.totalVentas as float),0),0) as decimal(10,2)) porcentaje_totalContratado,
+        CAST(isNULL(CAST(d.totalAT*100 as float) / NULLIF(CASt(a.totalVentas as float),0),0)as decimal(10,2)) porcentaje_totalApartado,
+        CAST(isNULL(CAST(e.totalCanC*100 as float) / NULLIF(CAST(a.totalVentas as float),0),0)as decimal(10,2)) porcentaje_totalCanceladoContratado,
+        CAST(isNULL(CAST((ISNULL(b.totalCT, 0) - ISNULL(e.totalCanC, 0))*100 as float) / NULLIF(CAST(a.totalVentas as float),0),0)as decimal(10,2)) porcentaje_totalCanceladoapartado,
+        CAST(isNULL(CAST(f.prospTotales*100 as float) / NULLIF(CAST(f.prospTotales as float),0),0)as decimal(10,2)) porcentaje_prospectosTotales,
+        CAST(isNULL(CAST(g.prospNuevos*100 as float) / NULLIF(CAST(f.prospTotales as float),0),0)as decimal(10,2)) porcentaje_prospectosNuevos,
+        CAST(isNULL(CAST(h.prosCita*100 as float) / NULLIF(CAST(f.prospTotales as float),0),0)as decimal(10,2)) porcentaje_prospectosCita
+
         FROM (
         --SUMA TOTAL
         SELECT SUM(
@@ -264,7 +275,7 @@ class Dashboard_model extends CI_Model {
             }
         }
         else if ($id_rol == 1 || $id_rol == 4 || $id_rol == 18) // MJ: Director comercial
-            $filtro = "";
+            $filtro = " AND YEAR(cl.fechaApartado) = $year";
 
         $query = $this->db->query("SELECT 
             FORMAT(ISNULL(a.sumaTotal, 0), 'C') sumaTotal, ISNULL(a.totalVentas, 0) totalVentas, --TOTAL VENDIDO
@@ -605,7 +616,7 @@ class Dashboard_model extends CI_Model {
             if(count($getRol) > 1){
                 $filtro .= " AND (p.id_subdirector = $id_usuario OR p.id_regional = $id_usuario) AND YEAR(p.fecha_creacion) = $year";
             }else{
-                $filter = " AND p.id_subdirector = $id_usuario AND YEAR(p.fecha_creacion) = $year";
+                $filtro .= " AND p.id_subdirector = $id_usuario AND YEAR(p.fecha_creacion) = $year";
             }
         }
         else if ($id_rol == 5) // MJ: Asistente subdirección
@@ -614,18 +625,25 @@ class Dashboard_model extends CI_Model {
             if(count($getRol) > 1){
                 $filtro .= " AND (p.id_subdirector = $id_lider OR p.id_regional = $id_lider) AND YEAR(p.fecha_creacion) = $year";
             }else{
-                $filter = " AND p.id_subdirector = $id_lider AND YEAR(p.fecha_creacion) = $year";
+                $filtro .= " AND p.id_subdirector = $id_lider AND YEAR(p.fecha_creacion) = $year";
             }
         }
         else if ($id_rol == 1 || $id_rol == 4 || $id_rol == 18) // MJ: Director comercial
-            $filter = "";
+
+            $filtro .= " AND YEAR(p.fecha_creacion) = $year";
         $query = $this->db->query("SELECT
         ISNULL(a.totalProspectos, 0) totalProspectos, --TOTAL PROSPECTOS
         ISNULL(b.totalProspectosCita, 0) totalProspectosCita,  --TOTAL PROSPECTOS C/CITA
         ISNULL(c.totalProspectosCitaSeguimiento, 0) totalProspectosCitaSeguimiento, --TOTAL PROSPECTOS C/CITA SEGUIMIENTO
         ISNULL(d.totalMitadProceso, 0) totalMitadProceso, --TOTAL PROSPECTOS DESPUES DE CIERTO STATUS
         ISNULL(e.totalApartados, 0) totalApartados, --TOTAL PROSPECTOS C/APARTADO
-        ISNULL(f.prospectosNoInteresados, 0) prospectosNoInteresados --TOTAL PROSPECTOS NO INTERESADOS
+        ISNULL(f.prospectosNoInteresados, 0) prospectosNoInteresados, --TOTAL PROSPECTOS NO INTERESADOS
+        --porcentajes
+        CAST(isNULL(CAST(b.totalProspectosCita*100 as float) / CAST(a.totalProspectos as float),0)as decimal (10,2)) porcentaje_prospectosCita,
+        CAST(isNULL(CAST(c.totalProspectosCitaSeguimiento*100 as float) / CAST(a.totalProspectos as float),0) as decimal(10,2)) porcentaje_prospectosSeguimiento,
+        CAST(isNULL(CAST(e.totalApartados*100 as float) / CASt(a.totalProspectos as float),0)as decimal(10,2)) porcentaje_prospectosApartados,
+        CAST(isNULL(CAST(f.prospectosNoInteresados*100 as float) / CAST(a.totalProspectos as float),0)as decimal(10,2)) porcentaje_prospectosNoInteresado
+
         from(
         --TOTAL PROSPECTOS
         SELECT COUNT(*) totalProspectos, '1' opt FROM (
