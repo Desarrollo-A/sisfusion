@@ -4639,9 +4639,9 @@
                     var precioFinalc = $scope.precioFinal;
                     var fechaEngc = ($scope.fechaEng == undefined) ? 0 : $scope.fechaEng;
                     var engancheFinalc = $scope.engancheFinal;
-                    var msi_1p = ($scope.totalPrimerPlan == undefined) ? 0 : $scope.totalPrimerPlan;
-                    var msi_2p = ($scope.totalSegundoPlan == undefined) ? 0 : $scope.totalSegundoPlan;
-                    var msi_3p = ($scope.totalTercerPlan == undefined) ? 0 : $scope.totalTercerPlan;
+                    var msi_1p = ($scope.totalPrimerPlan == undefined || $scope.totalPrimerPlan == "") ? 0 : $scope.totalPrimerPlan;
+                    var msi_2p = ($scope.totalSegundoPlan == undefined || $scope.totalSegundoPlan == "") ? 0 : $scope.totalSegundoPlan;
+                    var msi_3p = ($scope.totalTercerPlan == undefined || $scope.totalTercerPlan == "") ? 0 : $scope.totalTercerPlan;
                     var primer_mensualidad = $scope.fechaPM;
 
                     var finalMesesp1 = ($scope.finalMesesp1 == 0 || $scope.finalMesesp1 == undefined) ? 0 : $scope.finalMesesp1;
@@ -5695,8 +5695,8 @@
                             $scope.dateCf = day + '-' + mes + '-' + yearc;
 
                             //nuevo codigo 2 marzo 20
-                            if (i == 0) {
-                                $scope.fechaPM = $scope.fechapago;
+                            if(i == 0){
+                                $scope.fechaPM = $scope.dateCf;
                             }
                             var interes = 0;
                             var total = 0;
@@ -5986,7 +5986,7 @@
                             }
                             $scope.dateCf = day + '-' + mes + '-' + yearc;
 
-                            if (i == 0) {
+                            if(i == 0){
                                 $scope.fechaPM = $scope.dateCf;
                             }
                             var newSaldoTable = 0;
@@ -6206,7 +6206,7 @@
                             }
                             $scope.dateCf = day + '-' + mes + '-' + yearc;
 
-                            if (i == 0) {
+                            if(i == 0){
                                 $scope.fechaPM = $scope.dateCf;
                             }
                             var newSaldoTable = 0;
@@ -6744,8 +6744,8 @@
                             $scope.dateCf = day + '-' + mes + '-' + yearc;
 
                             //nuevo codigo 2 marzo 20
-                            if (i == 0) {
-                                $scope.fechaPM = $scope.fechapago;
+                            if(i == 0){
+                                $scope.fechaPM = $scope.dateCf;
                             }
                             var interes = 0;
                             var total = 0;
@@ -7037,7 +7037,7 @@
                             }
                             $scope.dateCf = day + '-' + mes + '-' + yearc;
 
-                            if (i == 0) {
+                            if(i == 0){
                                 $scope.fechaPM = $scope.dateCf;
                             }
                             var newSaldoTable = 0;
@@ -7828,7 +7828,7 @@
                             }
                             $scope.dateCf = day + '-' + mes + '-' + yearc;
 
-                            if (i == 0) {
+                            if(i == 0){
                                 $scope.fechaPM = $scope.dateCf;
                             }
                             var newSaldoTable = 0;
@@ -8471,8 +8471,8 @@
 
                             //nueva version 11Marzo20
                             $scope.dateCf = day + '-' + mes + '-' + yearc;
-                            if (i == 0) {
-                                $scope.fechaPM = $scope.fechapago;
+                            if(i == 0){
+                                $scope.fechaPM = $scope.dateCf;
                             }
                             //nuevo codigo 21 FEB
                             var interes = 0;
@@ -9006,7 +9006,7 @@
                             }
                             $scope.dateCf = day + '-' + mes + '-' + yearc;
 
-                            if (i == 0) {
+                            if(i == 0){
                                 $scope.fechaPM = $scope.dateCf;
                             }
                             var newSaldoTable = 0;

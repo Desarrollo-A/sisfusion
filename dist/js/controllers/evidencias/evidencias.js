@@ -37,7 +37,12 @@ $(document).on('click', "#generate", function () {
         nombreLote: $('#nombreLote').val(),
     }
     console.log('obj', obj);
-    generateToken(obj);
+    if(obj.idCliente==''){
+        alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+
+    }else{
+        generateToken(obj);
+    }
 });
 
 $(document).on('click', '.iconCopy',function(){
