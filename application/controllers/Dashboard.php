@@ -36,7 +36,7 @@ class Dashboard extends CI_Controller
             redirect(base_url());
         }
         $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-       
+        $datos['sub_menu'] = $this->get_menu->get_submenu_data($this->session->userdata('id_rol'), $this->session->userdata('id_usuario'));
         $this->load->view('template/header');
         $this->load->view("dashboard/base/base", $datos);
     }

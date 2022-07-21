@@ -10,7 +10,7 @@
                             <p class="m-0">Ventas<br> <span class="str">contratadas</span></p>
                         </div>
                         <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5 p-0 d-flex align-center justify-end">
-                            <label class="selectMini m-0">4 meses <span class="material-icons">show_chart</span></label>
+                            <label class="selectMini m-0">Año en curso <span class="material-icons">show_chart</span></label>
                         </div>
                     </div>
                     <div class="row pl-2 pr-2">
@@ -43,7 +43,7 @@
                             <p class="m-0">Ventas<br><span class="str">apartadas</span></p>
                         </div>
                         <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5 p-0 d-flex align-center justify-end">
-                            <label class="selectMini m-0">4 meses <span class="material-icons">show_chart</span></label> 
+                            <label class="selectMini m-0">Año en curso <span class="material-icons">show_chart</span></label> 
                         </div>
                     </div>
                     <div class="row pl-2 pr-2">
@@ -75,7 +75,7 @@
                             <p class="m-0">Canceladas<br> <span class="str">contratadas</span></p>
                         </div>
                         <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5 p-0 d-flex align-center justify-end">
-                            <label class="selectMini m-0">4 meses <span class="material-icons">show_chart</span></label> 
+                            <label class="selectMini m-0">Año en curso <span class="material-icons">show_chart</span></label> 
                         </div>
                     </div>
                     <div class="row pl-2 pr-2">
@@ -107,7 +107,7 @@
                             <p class="m-0">Canceladas<br> <span class="str">apartadas</span></p>
                         </div>
                         <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5 p-0 d-flex align-center justify-end">
-                            <label class="selectMini m-0">4 meses <span class="material-icons">show_chart</span></label> 
+                            <label class="selectMini m-0">Año en curso <span class="material-icons">show_chart</span></label> 
                         </div>
                     </div>
                     <div class="row pl-2 pr-2">

@@ -200,4 +200,8 @@ class General_model extends CI_Model
         ORDER BY nombre")->result_array();
     }
 
+    public function get_submenu_data($id_rol, $id_usuario){
+        return $this->db->query("SELECT * FROm sub_menu WHERE id_rol = $id_rol OR id_usuario = $id_usuario");
+    }
+
 }
