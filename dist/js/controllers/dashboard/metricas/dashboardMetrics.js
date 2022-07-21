@@ -451,6 +451,17 @@ $('#searchByDateRangePromedio').off().on('click', function(){
 });
 
 
+$(document).on('click', '.btnModalDetails', function () {
+    let dataObj = {
+        sede_residencial: $('#sedes').val(),
+        idResidencial: $('#proyecto2').val(),
+        begin: formatDate($('#tableBegin_promedio').val()), 
+        end: formatDate($('#tableEnd_promedio').val())
+    }
+    fillTable(dataObj);
+    $("#seeLotesDetailModal").modal();
+});
+
 
 
 //Funciones
@@ -1328,12 +1339,80 @@ function buildSelect(selected, dataSelect){
     });
 
     $('#proyecto2').selectpicker('refresh');
-
-    // selected.proyecto_promedio !='' || selected.proyecto_promedio != null ? $('#proyecto2').val(selected.proyecto_promedio):'';
-    // selected.proyecto_promedio !='' || selected.proyecto_promedio != null ? $('#proyecto2').selectpicker('refresh'):'';
-    // selected.proyecto_promedio !='' || selected.proyecto_promedio != null ? $('#proyecto2').trigger('change'):'';
 }
 
-function toggleLotesDetail(){
-    
+function fillTable(dataObject) {
+    generalDataTable = $('#lotesDetailTable').dataTable({
+        dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
+        width: '100%',
+   
+        pagingType: "full_numbers",
+        lengthMenu: [
+            [10, 25, 50, -1],
+            [10, 25, 50, "Todos"]
+        ],
+        destroy: true,
+        ordering: false,
+        scrollX: true,
+        language: {
+            url: `${base_url}static/spanishLoader_v2.json`,
+            paginate: {
+                previous: "<i class='fa fa-angle-left'>",
+                next: "<i class='fa fa-angle-right'>"
+            }
+        },
+        columns: [
+            {
+                data: function (d) {
+                    return d.nombreResidencial;
+                }
+            },
+            {
+                data: function (d) {
+                    return d.nombreCondominio;
+                }
+            },
+            {
+                data: function (d) {
+                    return d.nombreLote;
+                }
+            },
+            {
+                data: function (d) {
+                    return d.nombreCliente;
+                }
+            },
+            {
+                data: function (d) {
+                    return d.nombreUsuario;
+                }
+            },
+            {
+                data: function (d) {
+                    return d.fechaApartado;
+                }
+            },
+            {
+                data: function (d) {
+                    return d.sup;
+                }
+            },
+            {
+                data: function (d) {
+                    return d.totalNeto2;
+                }
+            }
+        ],
+        ajax: {
+            url: `${base_url}Metricas/getLotesInformation`,
+            type: "POST",
+            data: {
+                "sede_residencial": dataObject.sede_residencial,
+                "idResidencial": dataObject.idResidencial,
+                "beginDate": dataObject.begin,
+                "endDate": dataObject.end
+            },
+            dataSrc: ""
+        }
+    });
 }

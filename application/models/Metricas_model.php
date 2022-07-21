@@ -191,4 +191,29 @@ class Metricas_model extends CI_Model {
         return $query->result_array();
     }
 
+    public function getLotesInformation($sede_residencial, $idResidencial, $beginDate, $endDate){
+        if($sede_residencial == ''){
+            $filtro = "";
+        }else if($idResidencial == ''){
+            $filtro = "AND res.sede_residencial = $sede_residencial";
+        }else{
+            $filtro = "AND res.sede_residencial = $sede_residencial AND res.idResidencial = $idResidencial";
+        }
+        $query = $this->db->query("SELECT lo.nombreLote, cond.nombre nombreCondominio, res.descripcion nombreResidencial, 
+        UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) nombreCliente,
+        UPPER(CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)) nombreUsuario,
+        cl.fechaApartado, lo.sup,  
+        FORMAT(isNULL(CASE 
+           WHEN isNULL(cl.totalNeto2_cl ,lo.totalNeto2) IS NULL THEN isNULL(cl.total_cl ,lo.total) 
+           WHEN isNULL(cl.totalNeto2_cl ,lo.totalNeto2) = 0 THEN isNULL(cl.total_cl ,lo.total) 
+           ELSE isNULL(cl.totalNeto2_cl ,lo.totalNeto2) 
+       END,0), 'C') totalNeto2 FROM lotes lo 
+       INNER JOIN clientes cl ON cl.id_cliente = lo.idCliente
+       INNER JOIN condominios cond ON cond.idCondominio = lo.idCondominio
+       INNER JOIN residenciales res ON res.idResidencial = cond.idResidencial
+       INNER JOIN usuarios us ON us.id_usuario = cl.id_asesor
+       WHERE cl.fechaApartado BETWEEN '$beginDate 00:00:00' AND '$endDate 23:59:59' 
+       AND cond.tipo_lote = 0 $filtro ");
+        return $query->result_array();
+    }
 }
