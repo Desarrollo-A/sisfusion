@@ -100,7 +100,8 @@ class Dashboard_model extends CI_Model {
         ISNULL(c.totalConT, 0) totalConT, --VENDIDO CONTRATADO
         ISNULL(d.totalAT, 0) totalAT, --VENDIDO APARTADO
         ISNULL(e.totalCanC, 0) totalCanC, --CANCELADOS CONTRATADOS
-        ISNULL(b.totalCT, 0) - ISNULL(e.totalCanC, 0) totalCanA, --CANCELADOS APARTADOS
+        ISNULL(i.totalCanA, 0) totalCanA, --CANCELADOS APARTADOS
+        --ISNULL(b.totalCT, 0) - ISNULL(e.totalCanC, 0) totalCanA, --CANCELADOS APARTADOS
         f.prospTotales, --PROSPECTOS TOTALES
         g.prospNuevos, --PROSPECTOS NUEVOS
         h.prosCita, --PROSPECTOS C/CITA
@@ -124,7 +125,7 @@ class Dashboard_model extends CI_Model {
                 ELSE tmpTotal.totalNeto2 
             END) sumaTotal, 
             COUNT(*)
-         totalVentas, '1' opt FROM (
+            totalVentas, '1' opt FROM (
                 SELECT  lo.idLote, lo.nombreLote, cl.id_asesor, cl.id_coordinador, cl.id_gerente, cl.nombre, cl.apellido_paterno, cl.apellido_materno, isNULL(cl.totalNeto2_cl, lo.totalNeto2) totalNeto2, isNULL(cl.total_cl,lo.total) total FROM clientes cl
                 INNER JOIN lotes lo ON lo.idLote = cl.idLote
                 WHERE isNULL(noRecibo, '') != 'CANCELADO' AND isNULL(isNULL(cl.tipo_venta_cl, lo.tipo_venta), 0) IN (0, 1, 2) $filtro
@@ -139,7 +140,7 @@ class Dashboard_model extends CI_Model {
                 ELSE tmpCanT.totalNeto2 
             END) sumaCT,
             COUNT(*)
-         totalCT, '1' opt FROM (
+            totalCT, '1' opt FROM (
                 SELECT lo.idLote, lo.nombreLote, cl.id_asesor, cl.id_coordinador, cl.id_gerente, cl.nombre, cl.apellido_paterno, cl.apellido_materno, isNULL(cl.totalNeto2_cl, lo.totalNeto2) totalNeto2, isNULL(cl.total_cl,lo.total) total FROM clientes cl
                 INNER JOIN lotes lo ON lo.idLote = cl.idLote
                 LEFT JOIN historial_liberacion hl ON hl.idLote = lo.idLote AND hl.tipo NOT IN (2, 5, 6) AND hl.idLote = lo.idLote AND hl.id_cliente = cl.id_cliente
@@ -155,12 +156,14 @@ class Dashboard_model extends CI_Model {
                 ELSE tmpConT.totalNeto2 
             END) sumaConT,
             COUNT(*)
-         totalConT, '1' opt FROM (
+            totalConT, '1' opt FROM (
                 SELECT lo.idLote, lo.nombreLote, cl.id_asesor, cl.id_coordinador, cl.id_gerente, cl.nombre, cl.apellido_paterno, cl.apellido_materno, isNULL(cl.totalNeto2_cl, lo.totalNeto2) totalNeto2, isNULL(cl.total_cl,lo.total) total FROM clientes cl
                 INNER JOIN lotes lo ON lo.idLote = cl.idLote AND lo.idStatusLote IN (2, 3)
-                INNER JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes WHERE idStatusContratacion = 11 AND idMovimiento = 41
-                GROUP BY idLote, idCliente) hl ON hl.idLote = lo.idLote AND hl.idCliente = cl.id_cliente
-                WHERE isNULL(noRecibo, '') != 'CANCELADO' AND cl.status = 1 AND isNULL(isNULL(cl.tipo_venta_cl, lo.tipo_venta), 0) IN (0, 1, 2) $filtro
+                INNER JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes GROUP BY idLote, idCliente) hlo ON hlo.idLote = lo.idLote AND hlo.idCliente = cl.id_cliente
+                INNER JOIN historial_lotes hlo2 ON hlo2.idLote = hlo.idLote AND hlo2.idCliente = hlo.idCliente AND hlo2.modificado = hlo.modificado
+                WHERE isNULL(noRecibo, '') != 'CANCELADO' AND cl.status = 1 AND isNULL(isNULL(cl.tipo_venta_cl, lo.tipo_venta), 0) IN (0, 1, 2) 
+                $filtro
+                AND hlo2.idStatusContratacion >= 11
                 GROUP BY lo.idLote, lo.nombreLote, cl.id_asesor, cl.id_coordinador, cl.id_gerente, cl.nombre, cl.apellido_paterno, cl.apellido_materno, isNULL(cl.totalNeto2_cl, lo.totalNeto2), isNULL(cl.total_cl,lo.total)
             ) tmpConT) c ON c.opt = a.opt
         --Suma apartados totales
@@ -172,9 +175,9 @@ class Dashboard_model extends CI_Model {
                 ELSE tmpApT.totalNeto2 
             END) sumaAT, 
             COUNT(*)
-         totalAT, '1' opt FROM (
+            totalAT, '1' opt FROM (
                 SELECT  lo.idLote, lo.nombreLote, cl.id_asesor, cl.id_coordinador, cl.id_gerente, cl.nombre, cl.apellido_paterno, cl.apellido_materno, isNULL(cl.totalNeto2_cl, lo.totalNeto2) totalNeto2, isNULL(cl.total_cl,lo.total) total FROM clientes cl
-                INNER JOIN lotes lo ON lo.idLote = cl.idLote AND lo.idStatusLote != 2
+                INNER JOIN lotes lo ON lo.idLote = cl.idLote AND lo.idStatusLote != 2 AND lo.idStatusContratacion < 11
                 WHERE isNULL(noRecibo, '') != 'CANCELADO' AND cl.status = 1 AND isNULL(isNULL(cl.tipo_venta_cl, lo.tipo_venta), 0) IN (0, 1, 2) $filtro
                 GROUP BY lo.idLote, lo.nombreLote, cl.id_asesor, cl.id_coordinador, cl.id_gerente, cl.nombre, cl.apellido_paterno, cl.apellido_materno, isNULL(cl.totalNeto2_cl, lo.totalNeto2), isNULL(cl.total_cl,lo.total)
             ) tmpApT) d ON d.opt = c.opt
@@ -187,18 +190,41 @@ class Dashboard_model extends CI_Model {
                 ELSE tmpCC.totalNeto2 
             END) sumaCanC, 
             COUNT(*)
-         totalCanC, '1' opt FROM (
+            totalCanC, '1' opt FROM (
                 SELECT  lo.idLote, lo.nombreLote, cl.id_asesor, cl.id_coordinador, cl.id_gerente, cl.nombre, cl.apellido_paterno, cl.apellido_materno, isNULL(cl.totalNeto2_cl, lo.totalNeto2) totalNeto2, isNULL(cl.total_cl,lo.total) total FROM clientes cl
                 INNER JOIN lotes lo ON lo.idLote = cl.idLote
                 LEFT JOIN historial_liberacion hl ON hl.idLote = lo.idLote AND hl.tipo NOT IN (2, 5, 6) AND hl.id_cliente = cl.id_cliente
-                INNER JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes WHERE idStatusContratacion = 11 AND idMovimiento = 41
-                GROUP BY idLote, idCliente) hlo ON hlo.idLote = lo.idLote AND hlo.idCliente = cl.id_cliente
-                WHERE isNULL(noRecibo, '') != 'CANCELADO' AND cl.status = 0 AND isNULL(isNULL(cl.tipo_venta_cl, lo.tipo_venta), 0) IN (0, 1, 2) $filtro
+                INNER JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes GROUP BY idLote, idCliente) hlo ON hlo.idLote = lo.idLote AND hlo.idCliente = cl.id_cliente
+                INNER JOIN historial_lotes hlo2 ON hlo2.idLote = hlo.idLote AND hlo2.idCliente = hlo.idCliente AND hlo2.modificado = hlo.modificado
+                WHERE isNULL(noRecibo, '') != 'CANCELADO' AND cl.status = 0 AND isNULL(isNULL(cl.tipo_venta_cl, lo.tipo_venta), 0) IN (0, 1, 2) 
+                $filtro
+                AND hlo2.idStatusContratacion >= 11
                 GROUP BY lo.idLote, lo.nombreLote, cl.id_asesor, cl.id_coordinador, cl.id_gerente, cl.nombre, cl.apellido_paterno, cl.apellido_materno, isNULL(cl.totalNeto2_cl, lo.totalNeto2), isNULL(cl.total_cl,lo.total)
             ) tmpCC) e ON e.opt = d.opt
+        --SUMA CANCELADOS APARTADOS
+        LEFT JOIN(
+        SELECT SUM(
+            CASE 
+                WHEN tmpCA.totalNeto2 IS NULL THEN tmpCA.total 
+                WHEN tmpCA.totalNeto2 = 0 THEN tmpCA.total 
+                ELSE tmpCA.totalNeto2 
+            END) sumaCanA, 
+            COUNT(*)
+            totalCanA, '1' opt FROM (
+                SELECT  lo.idLote, lo.nombreLote, cl.id_asesor, cl.id_coordinador, cl.id_gerente, cl.nombre, cl.apellido_paterno, cl.apellido_materno, isNULL(cl.totalNeto2_cl, lo.totalNeto2) totalNeto2, isNULL(cl.total_cl,lo.total) total FROM clientes cl
+                INNER JOIN lotes lo ON lo.idLote = cl.idLote
+                LEFT JOIN historial_liberacion hl ON hl.idLote = lo.idLote AND hl.tipo NOT IN (2, 5, 6) AND hl.id_cliente = cl.id_cliente
+                INNER JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes GROUP BY idLote, idCliente) hlo ON hlo.idLote = lo.idLote AND hlo.idCliente = cl.id_cliente
+                INNER JOIN historial_lotes hlo2 ON hlo2.idLote = hlo.idLote AND hlo2.idCliente = hlo.idCliente AND hlo2.modificado = hlo.modificado
+                WHERE isNULL(noRecibo, '') != 'CANCELADO' AND cl.status = 0 AND isNULL(isNULL(cl.tipo_venta_cl, lo.tipo_venta), 0) IN (0, 1, 2) 
+                $filtro
+                AND hlo2.idStatusContratacion < 11
+                GROUP BY lo.idLote, lo.nombreLote, cl.id_asesor, cl.id_coordinador, cl.id_gerente, cl.nombre, cl.apellido_paterno, cl.apellido_materno, isNULL(cl.totalNeto2_cl, lo.totalNeto2), isNULL(cl.total_cl,lo.total)
+            ) tmpCA) i ON i.opt = e.opt
         INNER JOIN(SELECT COUNT(*) prospTotales, '1' opt FROM prospectos p $filter2) f ON f.opt = d.opt
         INNER JOIN (SELECT COUNT(*) prospNuevos, '1' opt FROM prospectos p WHERE $filter) g ON g.opt = f.opt
-        INNER JOIN (SELECT COUNT(*) prosCita , '1' opt FROM prospectos p INNER JOIN agenda ag ON ag.idCliente = p.id_prospecto  WHERE $filter) h ON h.opt = g.opt");
+        INNER JOIN (SELECT COUNT(*) prosCita , '1' opt FROM prospectos p 
+        INNER JOIN agenda ag ON ag.idCliente = p.id_prospecto  WHERE $filter) h ON h.opt = g.opt");
         return $query->row();
     }
 
@@ -257,7 +283,8 @@ class Dashboard_model extends CI_Model {
             FORMAT(ISNULL(c.sumaConT, 0), 'C') sumaConT, ISNULL(c.totalConT, 0) totalConT, --VENDIDO CONTRATADO
             FORMAT(ISNULL(d.sumaAT, 0), 'C') sumaAT, ISNULL(d.totalAT, 0) totalAT, --VENDIDO APARTADO
             FORMAT(ISNULL(e.sumaCanC, 0), 'C') sumaCanC, ISNULL(e.totalCanC, 0) totalCanC, --CANCELADOS CONTRATADOS
-            FORMAT(ISNULL(b.sumaCT, 0) - ISNULL(e.sumaCanC, 0), 'C') sumaCanA, 
+            FORMAT(ISNULL(f.sumaCanA, 0), 'C') sumaCanA, ISNULL(f.totalCanA, 0) totalCanA, --CANCELADOS APARTADOS
+            --FORMAT(ISNULL(b.sumaCT, 0) - ISNULL(e.sumaCanC, 0), 'C') sumaCanA, 
             ISNULL(b.totalCT, 0) - ISNULL(e.totalCanC, 0) totalCanA,
             ----PORCENTAJES
             ISNULL(CAST((a.totalVentas * 100) / NULLIF(a.totalVentas,0) AS decimal(16,2)), 0) porcentajeTotal, 
@@ -265,7 +292,8 @@ class Dashboard_model extends CI_Model {
             ISNULL(CAST((c.totalConT * 100) / NULLIF(a.totalVentas,0) AS decimal(16,2)), 0) porcentajeTotalCont, 
             ISNULL(CAST((d.totalAT * 100) / NULLIF(a.totalVentas,0) AS decimal(16,2)), 0) porcentajeTotalAp, 
             ISNULL(CAST((e.totalCanC * 100) / NULLIF(a.totalVentas,0) AS decimal(16,2)), 0) porcentajeTotalCanC, 
-            ISNULL(CAST(((ISNULL(b.totalCT, 0) - ISNULL(e.totalCanC, 0)) * 100) / NULLIF(a.totalVentas,0) AS decimal(16,2)), 0) porcentajeTotalCanA 
+            ISNULL(CAST((f.totalCanA * 100) / NULLIF(a.totalVentas,0) AS decimal(16,2)), 0) porcentajeTotalCanA
+            --ISNULL(CAST(((ISNULL(b.totalCT, 0) - ISNULL(e.totalCanC, 0)) * 100) / NULLIF(a.totalVentas,0) AS decimal(16,2)), 0) porcentajeTotalCanA 
             FROM (
             --SUMA TOTAL
             SELECT SUM(
@@ -275,7 +303,7 @@ class Dashboard_model extends CI_Model {
                     ELSE tmpTotal.totalNeto2 
                 END) sumaTotal, 
                 COUNT(*)
-            totalVentas, '1' opt FROM (
+                totalVentas, '1' opt FROM (
                     SELECT  lo.idLote, lo.nombreLote,  cl.id_asesor, cl.id_coordinador, cl.id_gerente, cl.nombre, cl.apellido_paterno, cl.apellido_materno, isNULL(cl.totalNeto2_cl, lo.totalNeto2) totalNeto2, isNULL(cl.total_cl,lo.total) total FROM clientes cl
                     INNER JOIN lotes lo ON lo.idLote = cl.idLote
                     WHERE isNULL(noRecibo, '') != 'CANCELADO' AND isNULL(isNULL(cl.tipo_venta_cl, lo.tipo_venta), 0) IN (0, 1, 2) $filtro
@@ -290,7 +318,7 @@ class Dashboard_model extends CI_Model {
                     ELSE tmpCanT.totalNeto2 
                 END) sumaCT,
                 COUNT(*)
-            totalCT, '1' opt FROM (
+                totalCT, '1' opt FROM (
                     SELECT lo.idLote, lo.nombreLote,  cl.id_asesor, cl.id_coordinador, cl.id_gerente, cl.nombre, cl.apellido_paterno, cl.apellido_materno, isNULL(cl.totalNeto2_cl, lo.totalNeto2) totalNeto2, isNULL(cl.total_cl,lo.total) total FROM clientes cl
                     INNER JOIN lotes lo ON lo.idLote = cl.idLote
                     LEFT JOIN historial_liberacion hl ON hl.idLote = lo.idLote AND hl.tipo NOT IN (2, 5, 6) AND hl.idLote = lo.idLote AND hl.id_cliente = cl.id_cliente
@@ -306,12 +334,14 @@ class Dashboard_model extends CI_Model {
                     ELSE tmpConT.totalNeto2 
                 END) sumaConT,
                 COUNT(*)
-            totalConT, '1' opt FROM (
+                totalConT, '1' opt FROM (
                     SELECT lo.idLote, lo.nombreLote,  cl.id_asesor, cl.id_coordinador, cl.id_gerente, cl.nombre, cl.apellido_paterno, cl.apellido_materno, isNULL(cl.totalNeto2_cl, lo.totalNeto2) totalNeto2, isNULL(cl.total_cl,lo.total) total FROM clientes cl
                     INNER JOIN lotes lo ON lo.idLote = cl.idLote AND lo.idStatusLote IN (2, 3)
-                    INNER JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes WHERE idStatusContratacion = 11 AND idMovimiento = 41
-                    GROUP BY idLote, idCliente) hl ON hl.idLote = lo.idLote AND hl.idCliente = cl.id_cliente
-                    WHERE isNULL(noRecibo, '') != 'CANCELADO' AND cl.status = 1 AND isNULL(isNULL(cl.tipo_venta_cl, lo.tipo_venta), 0) IN (0, 1, 2) $filtro
+                    INNER JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes GROUP BY idLote, idCliente) hlo ON hlo.idLote = lo.idLote AND hlo.idCliente = cl.id_cliente
+                    INNER JOIN historial_lotes hlo2 ON hlo2.idLote = hlo.idLote AND hlo2.idCliente = hlo.idCliente AND hlo2.modificado = hlo.modificado
+                    WHERE isNULL(noRecibo, '') != 'CANCELADO' AND cl.status = 1 AND isNULL(isNULL(cl.tipo_venta_cl, lo.tipo_venta), 0) IN (0, 1, 2) 
+                    $filtro
+                    AND hlo2.idStatusContratacion >= 11
                     GROUP BY lo.idLote, lo.nombreLote,  cl.id_asesor, cl.id_coordinador, cl.id_gerente, cl.nombre, cl.apellido_paterno, cl.apellido_materno, isNULL(cl.totalNeto2_cl, lo.totalNeto2), isNULL(cl.total_cl,lo.total)
                 ) tmpConT) c ON c.opt = a.opt
             --Suma apartados totales
@@ -323,9 +353,9 @@ class Dashboard_model extends CI_Model {
                     ELSE tmpApT.totalNeto2 
                 END) sumaAT, 
                 COUNT(*)
-            totalAT, '1' opt FROM (
+                totalAT, '1' opt FROM (
                     SELECT  lo.idLote, lo.nombreLote,  cl.id_asesor, cl.id_coordinador, cl.id_gerente, cl.nombre, cl.apellido_paterno, cl.apellido_materno, isNULL(cl.totalNeto2_cl, lo.totalNeto2) totalNeto2, isNULL(cl.total_cl,lo.total) total FROM clientes cl
-                    INNER JOIN lotes lo ON lo.idLote = cl.idLote AND lo.idStatusLote != 2
+                    INNER JOIN lotes lo ON lo.idLote = cl.idLote AND lo.idStatusLote != 2 AND lo.idStatusContratacion < 11
                     WHERE isNULL(noRecibo, '') != 'CANCELADO' AND cl.status = 1 AND isNULL(isNULL(cl.tipo_venta_cl, lo.tipo_venta), 0) IN (0, 1, 2) $filtro
                     GROUP BY lo.idLote, lo.nombreLote,  cl.id_asesor, cl.id_coordinador, cl.id_gerente, cl.nombre, cl.apellido_paterno, cl.apellido_materno, isNULL(cl.totalNeto2_cl, lo.totalNeto2), isNULL(cl.total_cl,lo.total)
                 ) tmpApT) d ON d.opt = c.opt
@@ -338,15 +368,37 @@ class Dashboard_model extends CI_Model {
                     ELSE tmpCC.totalNeto2 
                 END) sumaCanC, 
                 COUNT(*)
-            totalCanC, '1' opt FROM (
+                totalCanC, '1' opt FROM (
                     SELECT  lo.idLote, lo.nombreLote,  cl.id_asesor, cl.id_coordinador, cl.id_gerente, cl.nombre, cl.apellido_paterno, cl.apellido_materno, isNULL(cl.totalNeto2_cl, lo.totalNeto2) totalNeto2, isNULL(cl.total_cl,lo.total) total FROM clientes cl
                     INNER JOIN lotes lo ON lo.idLote = cl.idLote
                     LEFT JOIN historial_liberacion hl ON hl.idLote = lo.idLote AND hl.tipo NOT IN (2, 5, 6) AND hl.id_cliente = cl.id_cliente
-                    INNER JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes WHERE idStatusContratacion = 11 AND idMovimiento = 41
-                    GROUP BY idLote, idCliente) hlo ON hlo.idLote = lo.idLote AND hlo.idCliente = cl.id_cliente
-                    WHERE isNULL(noRecibo, '') != 'CANCELADO' AND cl.status = 0 AND isNULL(isNULL(cl.tipo_venta_cl, lo.tipo_venta), 0) IN (0, 1, 2) $filtro
+                    INNER JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes GROUP BY idLote, idCliente) hlo ON hlo.idLote = lo.idLote AND hlo.idCliente = cl.id_cliente
+                    INNER JOIN historial_lotes hlo2 ON hlo2.idLote = hlo.idLote AND hlo2.idCliente = hlo.idCliente AND hlo2.modificado = hlo.modificado
+                    WHERE isNULL(noRecibo, '') != 'CANCELADO' AND cl.status = 0 AND isNULL(isNULL(cl.tipo_venta_cl, lo.tipo_venta), 0) IN (0, 1, 2) 
+                    $filtro
+                    AND hlo2.idStatusContratacion >= 11
                     GROUP BY lo.idLote, lo.nombreLote,  cl.id_asesor, cl.id_coordinador, cl.id_gerente, cl.nombre, cl.apellido_paterno, cl.apellido_materno, isNULL(cl.totalNeto2_cl, lo.totalNeto2), isNULL(cl.total_cl,lo.total)
-        ) tmpCC) e ON e.opt = d.opt");
+        ) tmpCC) e ON e.opt = d.opt
+        --SUMA Cancelados apartados
+        LEFT JOIN(
+            SELECT SUM(
+                CASE 
+                    WHEN tmpCA.totalNeto2 IS NULL THEN tmpCA.total 
+                    WHEN tmpCA.totalNeto2 = 0 THEN tmpCA.total 
+                    ELSE tmpCA.totalNeto2 
+                END) sumaCanA, 
+                COUNT(*)
+                totalCanA, '1' opt FROM (
+                    SELECT  lo.idLote, lo.nombreLote,  cl.id_asesor, cl.id_coordinador, cl.id_gerente, cl.nombre, cl.apellido_paterno, cl.apellido_materno, isNULL(cl.totalNeto2_cl, lo.totalNeto2) totalNeto2, isNULL(cl.total_cl,lo.total) total FROM clientes cl
+                    INNER JOIN lotes lo ON lo.idLote = cl.idLote
+                    LEFT JOIN historial_liberacion hl ON hl.idLote = lo.idLote AND hl.tipo NOT IN (2, 5, 6) AND hl.id_cliente = cl.id_cliente
+                    INNER JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes GROUP BY idLote, idCliente) hlo ON hlo.idLote = lo.idLote AND hlo.idCliente = cl.id_cliente
+                    INNER JOIN historial_lotes hlo2 ON hlo2.idLote = hlo.idLote AND hlo2.idCliente = hlo.idCliente AND hlo2.modificado = hlo.modificado
+                    WHERE isNULL(noRecibo, '') != 'CANCELADO' AND cl.status = 0 AND isNULL(isNULL(cl.tipo_venta_cl, lo.tipo_venta), 0) IN (0, 1, 2) 
+                    $filtro
+                    AND hlo2.idStatusContratacion < 11
+                    GROUP BY lo.idLote, lo.nombreLote,  cl.id_asesor, cl.id_coordinador, cl.id_gerente, cl.nombre, cl.apellido_paterno, cl.apellido_materno, isNULL(cl.totalNeto2_cl, lo.totalNeto2), isNULL(cl.total_cl,lo.total)
+        ) tmpCA) f ON f.opt = e.opt");
         return $query->row();
     }
 
@@ -625,7 +677,7 @@ class Dashboard_model extends CI_Model {
         LEFT JOIN(
             SELECT  COUNT(*) totalApartados, '1' opt FROM prospectos p
             INNER JOIN clientes cl ON  cl.id_prospecto = p.id_prospecto
-            INNER JOIN lotes lo ON lo.idLote = cl.idLote AND lo.idStatusLote != 2
+            INNER JOIN lotes lo ON lo.idLote = cl.idLote AND lo.idStatusLote != 2 AND lo.idStatusContratacion < 11
             WHERE isNULL(noRecibo, '') != 'CANCELADO' AND cl.status = 1 AND isNULL(isNULL(cl.tipo_venta_cl, lo.tipo_venta), 0) IN (0, 1, 2) $filtro
         )e ON e.opt = d.opt
         --TOTAL PROSPECTOS NO INTERESADOS

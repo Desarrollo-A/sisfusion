@@ -416,7 +416,6 @@ function setOptionsChart(series, categories, miniChart, type= null){
                         total = total + element[dataPointIndex];
                     })
                     let percent = value * 100 / total;
-                    console.log(value * 100 / total);
                     let ret = type == 1 ? `${value.toLocaleString('es-MX')} (${Math.trunc( percent )}%)`: "$" + formatMoney(value);
                     return ret;
                 }  
@@ -459,7 +458,8 @@ $(document).on('click', '.btnSub', function () {
     initDetailRow(data);
 });
 
-$(document).on('click', '#searchByDateRangeTable', async function () {
+$(document).on('click', '#searchByDateRangeTable', async function (e) {
+    e.preventDefault();
     $(".boxAccordions").html('');
     let dates = {begin: $('#tableBegin').val(), end: $('#tableEnd').val()};
     let rol = userType == 2 ? await getRolDR(idUser): userType;
@@ -859,7 +859,7 @@ function buildTableDetail(data, dataObj) {
         sedes += '<td> ' + v.sumaConT + ' </td>';
         sedes += `<td><button style="background-color: #cfcdcd; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="33" data-sede="${v.id_sede}" data-rol="${dataObj.rol}" data-render="${dataObj.render}" data-idUser="${dataObj.user}" id="details-${dataObj.user}" class="btnModalDetails">${(v.totalCanC).toLocaleString('es-MX')}</button>`;
         //sedes += '<td> ' + (v.totalCanC).toLocaleString('es-MX') + ' </td>';
-        sedes += '<td> ' + v.porcentajeTotalCanC + ' </td>';
+        sedes += '<td> ' + v.porcentajeTotalCanC + '% </td>';
         sedes += '</tr>';
     });
     return sedes += '</table>';
