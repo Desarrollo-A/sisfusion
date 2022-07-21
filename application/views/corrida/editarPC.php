@@ -5543,7 +5543,7 @@
 
                             //nuevo codigo 2 marzo 20
                             if (i == 0) {
-                                $scope.fechaPM = $scope.fechapago;
+                                $scope.fechaPM = $scope.dateCf;
                             }
                             var interes = 0;
                             var total = 0;
@@ -6592,7 +6592,7 @@
 
                             //nuevo codigo 2 marzo 20
                             if (i == 0) {
-                                $scope.fechaPM = $scope.fechapago;
+                                $scope.fechaPM = $scope.dateCf;
                             }
                             var interes = 0;
                             var total = 0;
@@ -8319,7 +8319,7 @@
                             //nueva version 11Marzo20
                             $scope.dateCf = day + '-' + mes + '-' + yearc;
                             if (i == 0) {
-                                $scope.fechaPM = $scope.fechapago;
+                                $scope.fechaPM = $scope.dateCf;
                             }
                             //nuevo codigo 21 FEB
                             var interes = 0;
