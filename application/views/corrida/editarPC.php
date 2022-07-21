@@ -517,14 +517,14 @@
                                             <label>Enganche (%): </label>
                                             <div class="input-group">
                                                 <span class="input-group-addon" id="basic-addon1">%</span>
-                                                <input type="number" ng-model="porcentaje" max="100" id="porcentajeEnganche" min="0" class="form-control" ng-change="selectPorcentajeEnganche()"  >
+                                                <input type="number" ng-model="porcentaje" max="100" id="porcentajeEnganche" min="0" class="form-control" ng-change="selectPorcentajeEnganche()"  disabled>
                                             </div>
                                         </div>
                                         <div class="col-md-12 form-group">
                                             <label>Enganche cantidad ($): </label>
                                             <div class="input-group">
                                                 <span class="input-group-addon" id="basic-addon1">$</span>
-                                                <input ng-model="cantidad" id="cantidadEnganche" type="number" class="form-control" min="0" ng-change="resultCantidad()" >
+                                                <input ng-model="cantidad" id="cantidadEnganche" type="number" class="form-control" min="0" ng-change="resultCantidad()" disabled>
                                             </div>
                                         </div>
                                     </div>
@@ -533,7 +533,7 @@
                                         <div class="col-md-12 form-group">
                                             <label>Días para pagar Enganche: </label>
                                             <select ng-model="day" id="day"
-                                                    class="form-control" ng-change="daysEng(); ChengecheckEngDif">
+                                                    class="form-control" ng-change="daysEng(); ChengecheckEngDif" disabled>
                                                 <option value=""> - Selecciona los días de enganche -</option>
                                                 <option ng-repeat="diasEnganche in diasEnganche "  ng-value="diasEnganche.day"
                                                         ng-selected="(diasEnganche.day == '<?php echo $data_corrida->diasPagoEng;?>') ? selected : ''">{{diasEnganche.day}}</option>
@@ -543,7 +543,7 @@
                                             <label>Apartado ($):</label>
                                             <div class="input-group" >
                                                 <span class="input-group-addon" id="basic-addon1">$</span>
-                                                <input input-currency ng-model="apartado" class="form-control" id="aptdo">
+                                                <input input-currency ng-model="apartado" class="form-control" id="aptdo" disabled>
                                             </div>
                                         </div>
                                         <div class="col-md-6 form-group">
@@ -551,7 +551,7 @@
                                             <div class="input-group">
                                                 <span class="input-group-addon" id="basic-addon1">#</span>
                                                 <select ng-model="mesesdiferir"
-                                                        class="form-control" ng-change="changeDaysEng()" id="msdif">
+                                                        class="form-control" ng-change="changeDaysEng()" id="msdif" disabled>
                                                     <option value=""> - Selecciona los años -</option>
                                                     <option ng-repeat="diasDiferidos in diasDiferidos "  ng-value="diasDiferidos"
                                                             ng-selected="(diasDiferidos == '<?php echo $data_corrida->mesesDiferir;?>') ? selected : ''">{{diasDiferidos}}</option>-->
@@ -886,8 +886,8 @@
             </div>
             <div style="float: right;bottom: 2%;right: 3%;position: fixed;display: inline-flex;align-content: center;
                             flex-wrap: wrap;flex-direction: column;">
-                <button class="btn-circle blue" ng-click="exportc()"
-                        data-toggle="tooltip" title="Guardar simulación"><i class="fas fa-print fa-lg"></i></button>
+                <button class="btn-circle green" ng-click="exportc()"
+                        data-toggle="tooltip" title="Guardar simulación"><i class="fas fa-save fa-lg"></i></button>
             </div>
         </div>
     </section>
@@ -1050,8 +1050,8 @@
                 cantidadEnganche.val(<?php echo $data_corrida->enganchePC;?>);
 
 
-                console.log('porcentajeEnganche', porcentajeEnganche.val());
-                console.log('cantidadEnganche', cantidadEnganche.val());
+                // console.log('porcentajeEnganche', porcentajeEnganche.val());
+                // console.log('cantidadEnganche', cantidadEnganche.val());
                 $scope.porcentaje = <?php echo $data_corrida->porcentajePC;?>;
                 $scope.cantidad = <?php echo $data_corrida->enganchePC;?>;
                 $scope.apartado = <?php echo $data_corrida->apartado;?>;
@@ -1067,7 +1067,7 @@
                 $scope.msni = <?php echo $data_corrida->msni;?>;
                 $scope.alphaNumeric = <?=$data_corrida->corrida_dump;?>;
 
-                console.log($scope.alphaNumeric);
+                // console.log($scope.alphaNumeric);
                 calcularCF();
             }
 
@@ -1119,12 +1119,10 @@
             }
 
             $scope.changeDaysEng = function(){
-                console.log('I"ll execute: ');
                 calcularCF();
             }
 
             function calcularCF(){
-                console.log('ejecutando 1..');
 
 ///////////////////////////////////////
 
@@ -1158,8 +1156,6 @@
                 var descEng = 0;
                 var enganche = 0;
                 var supLote = $scope.superficie;
-                console.log('r1: ', r1)
-                console.log('supLote: ', supLote);
 
 
 ////////////////////////////// VARIABLES DESCRIPCION DE DESCUENTOS
@@ -1179,7 +1175,6 @@
 
 ////////////////////////// FIN VARIABLES DESCRIPCION DE DESCUENTOS
 
-                console.log('ejecutando 2..');
 
                 if (porcentajeDeEnganche === 0 && orderEnganche.length === 0 && orderTotal.length === 0){
                     r1
@@ -1408,7 +1403,7 @@
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-                console.log('ejecutando 3..');
+//                 console.log('ejecutando 3..');
                 var ini;
                 var ini2;
                 var ini3;
@@ -1564,7 +1559,7 @@
                     fechaActual: $scope.date = new Date(),
                     engancheF: enganche,
                 };
-                console.log($scope.infoLote);
+                // console.log($scope.infoLote);
 
                 $scope.engancheFinal = ($scope.infoLote.engancheF);
                 $scope.saldoFinal = $scope.infoLote.precioTotal;
@@ -1847,7 +1842,7 @@
                         // $scope.alphaNumeric = $scope.range.concat($scope.range2);
 
                         $scope.validaEngDif = ($scope.mesesdiferir > 0) ? $scope.rangEd : [];
-                        $scope.alphaNumeric = $scope.validaEngDif.concat($scope.range).concat($scope.range2);
+                        $scope.alphaNumeric = <?=$data_corrida->corrida_dump;?>;
                         $scope.dtoptions = DTOptionsBuilder.newOptions().withOption('aaData', $scope.alphaNumeric).withOption('order', [1, 'asc']).withDisplayLength(240).withDOM("<'pull-right'B><l><t><'pull-left'i><p>").withButtons([
                                 {extend: 'copy', text: '<i class="fa fa-files-o"></i> Copiar'},
                                 {extend: 'print', text: '<i class="fa fa-print" aria-hidden="true"></i> Imprimir', titleAttr: 'Imprimir'},
@@ -1984,7 +1979,7 @@
                         $scope.range2= range2;
 
                         $scope.validaEngDif = ($scope.mesesdiferir > 0) ? $scope.rangEd : [];
-                        $scope.alphaNumeric = $scope.validaEngDif.concat($scope.range2);
+                        $scope.alphaNumeric = <?=$data_corrida->corrida_dump;?>;
                         // $scope.alphaNumeric = $scope.range2;
 
 
@@ -2168,7 +2163,7 @@
 
 
                         $scope.validaEngDif = ($scope.mesesdiferir > 0) ? $scope.rangEd : [];
-                        $scope.alphaNumeric = $scope.validaEngDif.concat($scope.range);
+                        $scope.alphaNumeric = <?=$data_corrida->corrida_dump;?>;
 
 
 
@@ -2424,7 +2419,7 @@
 
 
                         $scope.validaEngDif = ($scope.mesesdiferir > 0) ? $scope.rangEd : [];
-                        $scope.alphaNumeric = $scope.validaEngDif.concat($scope.range).concat($scope.range2);
+                        $scope.alphaNumeric = <?=$data_corrida->corrida_dump;?>;
 
                         // $scope.alphaNumeric = $scope.range.concat($scope.range2);
 
@@ -2682,7 +2677,7 @@
                         $scope.range2= range2;
 
                         $scope.validaEngDif = ($scope.mesesdiferir > 0) ? $scope.rangEd : [];
-                        $scope.alphaNumeric = $scope.validaEngDif.concat($scope.range2);
+                        $scope.alphaNumeric = <?=$data_corrida->corrida_dump;?>;
                         // $scope.alphaNumeric = $scope.range2;
 
 
@@ -3155,7 +3150,9 @@
 
 
                         $scope.validaEngDif = ($scope.mesesdiferir > 0) ? $scope.rangEd : [];
-                        $scope.alphaNumeric = $scope.validaEngDif.concat($scope.range).concat($scope.range2);
+                        // $scope.alphaNumeric = $scope.validaEngDif.concat($scope.range).concat($scope.range2);
+                        $scope.alphaNumeric = <?=$data_corrida->corrida_dump;?>;
+
 
 
 
@@ -4097,7 +4094,7 @@
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-                console.log("Flag: ", $scope.alphaNumeric);
+//                 console.log("Flag: ", $scope.alphaNumeric);
             }
 
 
@@ -4597,127 +4594,14 @@
 
 
             $scope.exportc = function() {
-
-                var id_lote = ($scope.lote == undefined) ? 0 : $scope.lote.idLote;
-                var plan = ($scope.plan == undefined) ? 0 : $scope.plan;
-                var proyecto = ($scope.proyecto == undefined) ? 0 : $scope.proyecto;
-                var condominio = ($scope.condominio == undefined) ? 0 : $scope.condominio;
-
-                if(plan == 'Crédito') {
-                    var anio = ($scope.yearplan == undefined) ? 0 : $scope.yearplan.yearplan;
-                } else if(plan == 'Contado'){
-                    var anio = 'Activo';
-                }
-                var anio2 = ($scope.yearplan == undefined) ? 0 : $scope.yearplan.yearplan;
-
-                var dias_pagar_enganche = ($scope.day == undefined) ? 0 : $scope.day.day;
-                var porcentaje_enganche = ($scope.porcentaje == undefined) ? 0 : $scope.porcentaje;
-                var cantidad_enganche = ($scope.cantidad == undefined) ? 0 : $scope.cantidad;
-                var meses_diferir = ($scope.mesesdiferir == undefined) ? 0 : $scope.mesesdiferir;
-                var apartado = ($scope.apartado == undefined) ? 0 : $scope.apartado;
-
-                var opcion_paquete = 0;
-                var precio_m2_final = $scope.preciom2;
-
-                if(id_lote > 0) {
-
-                    var saldoc = $scope.saldoFinal;
-                    var precioFinalc = $scope.precioFinal;
-                    var fechaEngc = ($scope.fechaEng == undefined) ? 0 : $scope.fechaEng;
-                    var engancheFinalc = $scope.engancheFinal;
-                    var msi_1p = ($scope.totalPrimerPlan == undefined) ? 0 : $scope.totalPrimerPlan;
-                    var msi_2p = ($scope.totalSegundoPlan == undefined) ? 0 : $scope.totalSegundoPlan;
-                    var msi_3p = ($scope.totalTercerPlan == undefined) ? 0 : $scope.totalTercerPlan;
-                    var primer_mensualidad = $scope.fechaPM;
-
-                    var finalMesesp1 = ($scope.finalMesesp1 == 0 || $scope.finalMesesp1 == undefined) ? 0 : $scope.finalMesesp1;
-                    var finalMesesp2 = ($scope.finalMesesp2 == 0 || $scope.finalMesesp2 == undefined) ? 0 : $scope.finalMesesp2;
-                    var finalMesesp3 = ($scope.finalMesesp3 == 0 || $scope.finalMesesp3 == undefined) ? 0 : $scope.finalMesesp3;
-
-
-                }
-
+                var id_pagoCapital = <?=$data_corrida->id_pc?>;
+                console.log("id_pc", id_pagoCapital);
 
                 var loaderDiv = angular.element(document.querySelector('#loaderDiv'));
                 loaderDiv.removeClass('hide');
-                if( id_lote == 0 || plan == 0 || anio == 0){
 
-
-                    $.confirm({
-                        title: '¡Alerta!',
-                        content: '¡El campo plan de crédito, años de crédito son obligatorios' + '!',
-                        typeAnimated: true,
-                        icon: 'fa fa-warning',
-                        theme: 'modern',
-                        closeIcon: true,
-                        animation: 'scale',
-                        type: 'orange',
-                        buttons: {
-                            cancel: {
-                                text: 'OK'
-                            }
-                        }
-                    });
-                    if (proyecto == 0) {
-                        document.getElementById("proyectotext").innerHTML ='Requerido';
-                        $('#proyectoS').css("border-color", "red");
-                    }
-                    if (condominio == 0) {
-                        document.getElementById("condominiotext").innerHTML ='Requerido';
-                        $('#condominioS').css("border-color", "red");
-                    }
-
-                    if (id_lote == 0) {
-                        document.getElementById("lotetext").innerHTML ='Requerido';
-                        $('#lote').css("border-color", "red");
-                    }
-                    if (plan == 0) {
-                        document.getElementById("plantext").innerHTML ='Requerido';
-                        $('#planSL').css("border-color", "red");
-                    }
-                    if (anio2 == 0) {
-                        document.getElementById("aniotext").innerHTML ='Requerido';
-                        $('#yearplan').css("border-color", "red");
-                    }
-
-
-                } else {
-
-                    anio = (anio == 'Activo') ? '0' : anio;
-                    let sup = $scope.superficie;
-                    var datapc = $scope.alphaNumeric;
-                    let cantidad_enganche = $('#cantidadEnganche').val();
-                    let porcentaje_engCliente = $('#porcentajeEnganche').val();
-
-                    // console.log("idLote", id_lote);
-                    // console.log("Plan", plan);
-                    // console.log("Año", anio);
-                    // console.log("Sup", sup);
-                    // console.log("Precio m2", precio_m2_final);
-                    // console.log("Total", precioFinalc);
-                    // console.log("Porcentaje", $scope.porcentajeInv);
-                    // console.log("Fecha actual", $scope.CurrentDate);
-                    // console.log("Enganche inventario", $scope.enganche);
-                    // console.log("Enganche porcentaje cliente", porcentaje_engCliente);
-                    // console.log("Enganche cantidad cliente", cantidad_enganche);
-                    // console.log("Días para pagar enganche", dias_pagar_enganche);
-                    // console.log("Apartado", apartado);
-                    // console.log("Meses a diferir", meses_diferir);
-                    // console.log("Plan pagos 1", msi_1p);
-                    // console.log("Plan pagos 2", msi_2p);
-                    // console.log("Plan pagos 3", msi_3p);
-                    // console.log("finalMesesp1:", finalMesesp1);
-                    // console.log("finalMesesp2:", finalMesesp2);
-                    // console.log("finalMesesp3:", finalMesesp3);
-                    // console.log("fecha limite:", fechaEngc);
-                    // console.log("Primer mensualidad", primer_mensualidad);
-                    // console.log("Data corrida pc ", datapc);
-
-                    $http.post('<?=base_url()?>index.php/corrida/insertPagoCapitalCorrida',{
-                        idLote: id_lote,  plan_pc: plan, anio:anio, precio_m2: precio_m2_final, total: precioFinalc,
-                        porcentajeEng:porcentaje_engCliente, engancheCantidad: cantidad_enganche, diasPagoEng:dias_pagar_enganche,
-                        apartado: apartado, mesesDiferir:meses_diferir, fecha_limite: fechaEngc, mplan_1: finalMesesp1, mplan_2: finalMesesp2,
-                        mplan_3:finalMesesp3, pp_1:msi_1p, pp_2:msi_2p, pp_3:msi_3p, primer_mensualidad:primer_mensualidad, corrida_dump:$scope.alphaNumeric
+                /**/ $http.post('<?=base_url()?>index.php/corrida/updatePC',{
+                        id_pc: id_pagoCapital, corrida_dump:$scope.alphaNumeric
                     }).then(
                         function(response){
                             if(response.data.message == 'OK') {
@@ -4731,45 +4615,6 @@
                         },
                         function(){
                         });
-                    /* $http.post('<?=base_url()?>index.php/corrida/editar_ds',{
-                        nombre: nombre, id_lote: id_lote, edad: edad, telefono: telefono, correo: correo, asesor: asesor,
-                        gerente: gerente, plan: plan, anio: anio, dias_pagar_enganche: dias_pagar_enganche,
-                        porcentaje_enganche: porcentaje_enganche, cantidad_enganche: cantidad_enganche, meses_diferir: meses_diferir,
-                        apartado: apartado, paquete: paquete, opcion_paquete: opcion_paquete, precio_m2_final: precio_m2_final,
-                        saldoc: saldoc, precioFinalc: precioFinalc, fechaEngc: fechaEngc, engancheFinalc: engancheFinalc,
-                        msi_1p: msi_1p, msi_2p: msi_2p, msi_3p: msi_3p, primer_mensualidad: primer_mensualidad,
-                        allDescuentos: allDescuentos, finalMesesp1: finalMesesp1, finalMesesp2: finalMesesp2, finalMesesp3: finalMesesp3,
-                        observaciones: observaciones }).then(
-                        function(response){
-
-                            if(response.data.message == 'OK') {
-
-                                var data = $scope.alphaNumeric;
-                                var id_corrida = response.data[0].id_corrida;
-
-                                $http.post('<?=base_url()?>index.php/corrida/insertCorrida',{data: data, id_corrida: id_corrida}).then(
-                                    function (data) {
-
-                                        $window.open("<?=base_url()?>index.php/corrida/caratula/" + id_corrida);
-                                        loaderDiv.addClass('hide');
-
-                                    },
-                                    function (response) {
-                                    });
-
-                                toastr.success('Corrida guardada exitosamente');
-                                loaderDiv.removeClass('hide');
-
-                            }
-                            else if(response.data.message == 'ERROR'){
-                                toastr.error('Error al guardar corrida');
-                            }
-                        },
-                        function(){
-                        });*/
-
-                }
-
             }
 
 
@@ -4937,7 +4782,7 @@
                                 // console.log($scope.alphaNumeric[posicionPago-1]['pago']   +" "+	posicionPago);
                                 // console.log('Estoy llegando aquí');
                                 // return "$ " + saldo;
-                                var inputCapital = "$" + ($scope.alphaNumeric[full['pago'] - 1]['pagoCapital'].toLocaleString('es-MX', {style: 'currency', currency: 'MXN'}));
+                                var inputCapital = "$" + ($scope.alphaNumeric[full['pago'] - 1]['pagoCapital']);
                                 var numberPay = '<input name="numberPay' + full["pago"] + '" type="hidden" id="payNum' + full["pago"] + '" value="' + full["pago"] + '">';
                                 return inputCapital + numberPay;
                             } else {
@@ -5698,7 +5543,7 @@
 
                             //nuevo codigo 2 marzo 20
                             if (i == 0) {
-                                $scope.fechaPM = $scope.fechapago;
+                                $scope.fechaPM = $scope.dateCf;
                             }
                             var interes = 0;
                             var total = 0;
@@ -6747,7 +6592,7 @@
 
                             //nuevo codigo 2 marzo 20
                             if (i == 0) {
-                                $scope.fechaPM = $scope.fechapago;
+                                $scope.fechaPM = $scope.dateCf;
                             }
                             var interes = 0;
                             var total = 0;
@@ -8474,7 +8319,7 @@
                             //nueva version 11Marzo20
                             $scope.dateCf = day + '-' + mes + '-' + yearc;
                             if (i == 0) {
-                                $scope.fechaPM = $scope.fechapago;
+                                $scope.fechaPM = $scope.dateCf;
                             }
                             //nuevo codigo 21 FEB
                             var interes = 0;
