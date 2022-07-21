@@ -115,13 +115,79 @@ class Metricas_model extends CI_Model {
         return $query->result_array();
     }
 
-    public function getProyectos(){
-        $query = $this->db->query("SELECT * FROM residenciales WHERE status = 1");
+    public function getProyectos($sede){
+        if($sede == ''){
+            $filtro = '';
+        }else{
+            $filtro = "AND sede_residencial=$sede";
+        }
+        $query = $this->db->query("SELECT * FROM residenciales WHERE status = 1 $filtro");
         return $query->result_array();
     }
 
     public function getCondominios($idProyecto){
         $query = $this->db->query("SELECT * FROM condominios WHERE idResidencial=$idProyecto AND status = 1");
+        return $query->result_array();
+    }
+
+    public function getPromedio($sede, $proyecto, $beginDate, $endDate){
+        if($sede == ''){
+            $filtro = "";
+        }else if($proyecto == ''){
+            $filtro = "AND res.sede_residencial = $sede";
+        }else{
+            $filtro = "AND res.sede_residencial = $sede AND res.idResidencial = $proyecto";
+        }
+
+        $query = $this->db->query("WITH cte AS(
+            SELECT CAST('2022-01-01 00:00:00' AS DATETIME) DateValue
+            UNION ALL
+            SELECT  DateValue + 1
+            FROM    cte   
+            WHERE   DateValue + 1 <= '2022-07-20 23:59:59')
+            SELECT 
+                (CASE 
+                    WHEN MONTH(DateValue) = '1' THEN 'Enero'
+                    WHEN MONTH(DateValue) = '2' THEN 'Febrero'
+                    WHEN MONTH(DateValue) = '3' THEN 'Marzo'
+                    WHEN MONTH(DateValue) = '4' THEN 'Abril'
+                    WHEN MONTH(DateValue) = '5' THEN 'Mayo'
+                    WHEN MONTH(DateValue) = '6' THEN 'Junio'
+                    WHEN MONTH(DateValue) = '7' THEN 'Julio'
+                    WHEN MONTH(DateValue) = '8' THEN 'Agosto'
+                    WHEN MONTH(DateValue) = '9' THEN 'Septiembre'
+                    WHEN MONTH(DateValue) = '10' THEN 'Octubre'
+                    WHEN MONTH(DateValue) = '11' THEN 'Noviembre'
+                    WHEN MONTH(DateValue) = '12' THEN 'Diciembre'
+                END) MONTH, YEAR(DateValue) año, isNULL(qu.superficieSUMA, 0) superficieSUMA, FORMAT(isNULL(qu.precioSUMA,0),'C') precioSUMA, CAST(isNULL(qu.promedio,0) AS decimal(16,2)) promedio FROM cte 
+            LEFT JOIN (
+            SELECT SUM(lo.sup) superficieSUMA,
+                SUM(
+                    CASE 
+                        WHEN isNULL(cl.totalNeto2_cl ,lo.totalNeto2) IS NULL THEN isNULL(cl.total_cl ,lo.total) 
+                        WHEN isNULL(cl.totalNeto2_cl ,lo.totalNeto2) = 0 THEN isNULL(cl.total_cl ,lo.total) 
+                        ELSE isNULL(cl.totalNeto2_cl ,lo.totalNeto2) 
+                    END) precioSUMA, 
+                SUM(
+                    CASE 
+                        WHEN isNULL(cl.totalNeto2_cl ,lo.totalNeto2) IS NULL THEN isNULL(cl.total_cl ,lo.total) 
+                        WHEN isNULL(cl.totalNeto2_cl ,lo.totalNeto2) = 0 THEN isNULL(cl.total_cl ,lo.total) 
+                        ELSE isNULL(cl.totalNeto2_cl ,lo.totalNeto2) 
+                    END)/SUM(lo.sup) promedio, MONTH(cl.fechaApartado) mes, YEAR(cl.fechaApartado) año
+            FROM lotes lo
+            INNER JOIN clientes cl ON cl.id_cliente = lo.idCliente
+            INNER JOIN condominios cond ON cond.idCondominio = lo.idCondominio
+            INNER JOIN residenciales res ON res.idResidencial = cond.idResidencial
+            WHERE cl.fechaApartado BETWEEN '$beginDate 00:00:00' AND '$endDate 23:59:59' AND cond.tipo_lote = 0 $filtro
+            GROUP BY MONTH(cl.fechaApartado), YEAR(cl.fechaApartado)) qu ON qu.mes = month(cte.DateValue) AND qu.año = year(cte.DateValue)
+            GROUP BY YEAR(DateValue), MONTH(DateValue), qu.superficieSUMA, qu.precioSUMA, qu.promedio
+            ORDER BY YEAR(DateValue), MONTH(DateValue)
+            OPTION (MAXRECURSION 0)");
+        return $query->result_array();
+    }
+
+    public function getSedes(){
+        $query = $this->db->query("SELECT * FROM sedes WHERE estatus = 1");
         return $query->result_array();
     }
 

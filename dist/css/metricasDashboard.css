@@ -1161,27 +1161,6 @@
   }
 }
 
-#metricas .card .col-chart .actions .form-group {
-  border-radius: 27px;
-  background-color: #eaeaea;
-}
-
-#metricas .card .col-chart .actions .form-group .datepicker {
-  background-image: none;
-  height: 100%;
-  padding: 0;
-  z-index: 9999;
-}
-
-#metricas .card .col-chart .actions .form-group .btn-search {
-  display: flex;
-  align-items: center;
-  height: 100%;
-  border: none;
-  background-color: transparent;
-  z-index: 9999;
-}
-
 #metricas .card .col-chart .actions .btn-charts {
   display: flex;
   justify-content: center;
@@ -1353,4 +1332,29 @@
 .apexcharts-tooltip-y-group {
   display: flex;
   justify-content: space-between;
+}
+
+.begin_promedioDates {
+  background-color: #eaeaea !important;
+  border-radius: 27px 0 0 27px !important;
+  background-image: initial !important;
+  text-align: right !important;
+}
+
+.end_promedioDates {
+  background-color: #eaeaea !important;
+  border-radius: 0 !important;
+  background-image: initial !important;
+  text-align: center !important;
+}
+
+.btn-fab-mini {
+  border-radius: 0 27px 27px 0 !important;
+  background-color: #eaeaea !important;
+  box-shadow: none !important;
+  height: 45px !important;
+}
+
+.btn-fab-mini span {
+  color: #929292;
 }
