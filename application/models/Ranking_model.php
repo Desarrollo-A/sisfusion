@@ -36,10 +36,10 @@ class Ranking_model extends CI_Model {
             ELSE tmpConT.totalNeto2 
         END),'C') sumaTotal, COUNT(*) totalConT, id_asesor, tmpConT.nombreUsuario, tmpConT.rol FROM (
             SELECT  oxc.nombre rol, u.id_rol, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombreUsuario, lo.idLote, lo.nombreLote, cl.id_cliente, cl.id_asesor, cl.id_coordinador, cl.id_gerente, cl.id_subdirector, cl.id_regional, cl.nombre, cl.apellido_paterno, cl.apellido_materno, isNULL(cl.totalNeto2_cl ,lo.totalNeto2) totalNeto2, isNULL(cl.total_cl ,lo.total) total FROM clientes cl
-            INNER JOIN lotes lo ON lo.idLote = cl.idLote AND lo.idStatusLote = 2
+            INNER JOIN lotes lo ON lo.idLote = cl.idLote AND lo.idStatusLote IN (2, 3)
             INNER JOIN usuarios u ON u.id_usuario = cl.id_asesor
             INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = u.id_rol AND oxc.id_catalogo = 1
-            INNER JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes WHERE idStatusContratacion = 15 AND idMovimiento = 45
+            INNER JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes WHERE idStatusContratacion = 11 AND idMovimiento = 41
             GROUP BY idLote, idCliente) hl ON hl.idLote = lo.idLote AND hl.idCliente = cl.id_cliente
             WHERE isNULL(noRecibo, '') != 'CANCELADO' 
             AND cl.status = 1 
@@ -100,7 +100,7 @@ class Ranking_model extends CI_Model {
         $type = 3 CON ENGANCHE
         $type = 4 SIN ENGANCHE
         */
-        $statusLote = $type == 1 ? "!= 2" : $type == 2 ? "= 2" : "IN (2, 3)";
+        $statusLote = $type == 1 ? "!= 2" : "IN (2, 3)";
         if ($type == 3) // MJ: CON ENGANCHE
             $filtroTotal = "AND (isNULL(cl.totalNeto_cl, lo.totalNeto) IS NOT NULL AND isNULL(cl.totalNeto_cl, lo.totalNeto) > 0.00)";
         else if ($type == 4) // MJ: SIN ENGANCHE
