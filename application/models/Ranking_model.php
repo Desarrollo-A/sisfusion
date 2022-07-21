@@ -15,7 +15,7 @@ class Ranking_model extends CI_Model {
             ELSE tmpApT.totalNeto2 
         END),'C') sumaTotal, COUNT(*) totalAT, id_asesor, tmpApT.nombreUsuario, tmpApT.rol FROM (
             SELECT  oxc.nombre rol, u.id_rol, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombreUsuario, lo.idLote, lo.nombreLote, cl.id_cliente, cl.id_asesor, cl.id_coordinador, cl.id_gerente, cl.id_subdirector, cl.id_regional, cl.nombre, cl.apellido_paterno, cl.apellido_materno, isNULL(cl.totalNeto2_cl ,lo.totalNeto2) totalNeto2, isNULL(cl.total_cl ,lo.total) total FROM clientes cl
-            INNER JOIN lotes lo ON lo.idLote = cl.idLote AND lo.idStatusLote != 2
+            INNER JOIN lotes lo ON lo.idLote = cl.idLote AND lo.idStatusLote != 2 AND lo.idStatusContratacion < 11
             INNER JOIN usuarios u ON u.id_usuario = cl.id_asesor
             INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = u.id_rol AND oxc.id_catalogo = 1
             WHERE isNULL(noRecibo, '') != 'CANCELADO' 
@@ -39,13 +39,14 @@ class Ranking_model extends CI_Model {
             INNER JOIN lotes lo ON lo.idLote = cl.idLote AND lo.idStatusLote IN (2, 3)
             INNER JOIN usuarios u ON u.id_usuario = cl.id_asesor
             INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = u.id_rol AND oxc.id_catalogo = 1
-            INNER JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes WHERE idStatusContratacion = 11 AND idMovimiento = 41
-            GROUP BY idLote, idCliente) hl ON hl.idLote = lo.idLote AND hl.idCliente = cl.id_cliente
+            INNER JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes GROUP BY idLote, idCliente) hlo ON hlo.idLote = lo.idLote AND hlo.idCliente = cl.id_cliente
+            INNER JOIN historial_lotes hlo2 ON hlo2.idLote = hlo.idLote AND hlo2.idCliente = hlo.idCliente AND hlo2.modificado = hlo.modificado
             WHERE isNULL(noRecibo, '') != 'CANCELADO' 
             AND cl.status = 1 
             AND isNULL(isNULL(cl.tipo_venta_cl, lo.tipo_venta), 0) IN (0, 1, 2)
             AND cl.id_sede = $sede
             AND cl.fechaApartado BETWEEN '$beginDate 00:00:00.000' AND '$endDate 23:59:00.000'
+            AND hlo2.idStatusContratacion >= 11
             GROUP BY  oxc.nombre, u. id_rol, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno), lo.idLote, lo.nombreLote, cl.id_cliente, cl.id_asesor, cl.id_coordinador, cl.id_gerente, cl.id_subdirector, cl.id_regional, cl.nombre, cl.apellido_paterno, cl.apellido_materno, isNULL(cl.totalNeto2_cl ,lo.totalNeto2), isNULL(cl.total_cl ,lo.total)
         )tmpConT GROUP BY id_asesor, tmpConT.nombreUsuario, tmpConT.rol
         ORDER BY totalConT DESC");
@@ -100,7 +101,13 @@ class Ranking_model extends CI_Model {
         $type = 3 CON ENGANCHE
         $type = 4 SIN ENGANCHE
         */
-        $statusLote = $type == 1 ? "!= 2" : "IN (2, 3)";
+        if ($type == 1) // MJ: APARTADOS
+            $statusLote = "!= 2 AND lo.idStatusContratacion < 11";
+        else if ($type == 2) // MJ: CONTRATADOS
+            $statusLote = "IN (2, 3) AND lo.idStatusContratacion >= 11";
+        else // MJ: // CON ENGANCHE / SIN ENGANCHE
+            $statusLote = "IN (2, 3)";
+
         if ($type == 3) // MJ: CON ENGANCHE
             $filtroTotal = "AND (isNULL(cl.totalNeto_cl, lo.totalNeto) IS NOT NULL AND isNULL(cl.totalNeto_cl, lo.totalNeto) > 0.00)";
         else if ($type == 4) // MJ: SIN ENGANCHE
