@@ -1099,6 +1099,12 @@
   background-color: #F1F1F1;
 }
 
+@media screen and (min-device-width: 1200px) and (max-device-width: 1600px) and (-webkit-min-device-pixel-ratio: 1) {
+  .card {
+    background-color: #444;
+  }
+}
+
 #inicio .card {
   box-shadow: none !important;
   height: 450px;
