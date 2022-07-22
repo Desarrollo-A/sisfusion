@@ -145,7 +145,6 @@ function generateToken(obj){
 }
 
 function buildURL(token){
-    console.log(base_url);
     let url = `${base_url}Evidencias/evidenciaUser/?jwt=${token}`;
     return url;
 }
@@ -162,7 +161,7 @@ function copyToClipboard() {
     navigator.clipboard.writeText(copyText.value);
   
     /* Alert the copied text */
-    alerts.showNotification("top", "right", "Se ha copiado la url.", "success");
+    alerts.showNotification("top", "right", "La URL ha sido copiada a su portapapeles.", "success");
 }
 
 function verEvidencia(){

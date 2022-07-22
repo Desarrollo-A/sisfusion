@@ -248,34 +248,34 @@
 																	<div class="form-group">
 																		<label class="mb-0" for="sede">Rango fechas (<b class="text-danger">*</b>)</label>
 																		<div class="d-flex">
-																			<input class="form-control dates" name="fechainicio" id="fechainicio" type="date" required="true">
-																			<input class="form-control dates" name="fechafin" id="fechafin" type="date" required="true">
+																			<input class="form-control dates" name="fechainicio" id="fechainicio" type="date" required="true" onchange="validateAllInForm()">
+																			<input class="form-control dates" name="fechafin" id="fechafin" type="date" required="true" onchange="validateAllInForm()">
 																		</div>
 																	</div>
 																</div>
 																<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 																	<div class="form-group">
 																		<label class="mb-0" for="sede">Sede (<b class="text-danger">*</b>)</label>
-																		<select name="sede" id="sede" class="select-gral mt-0" data-style="btn " data-show-subtext="true" data-live-search="true"  title="Selecciona una opción" data-size="7" required>
+																		<select name="sede" id="sede" class="select-gral mt-0" data-style="btn " data-show-subtext="true" data-live-search="true"  title="Selecciona una opción" data-size="7" required onchange="validateAllInForm()">
 																		</select>
 																	</div>
 																</div>
 																<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 																	<div class="form-group">
 																		<label class="mb-0" for="residencial">Proyecto (<b class="text-danger">*</b>)</label> 
-																		<select id="residencial" name="residencial[]" multiple="multiple" class="form-control multiSelect"  data-style="btn " data-show-subtext="true" data-live-search="true"  title="Selecciona una opción" data-size="7" required>
+																		<select id="residencial" name="residencial[]" multiple="multiple" class="form-control multiSelect"  data-style="btn " data-show-subtext="true" data-live-search="true"  title="Selecciona una opción" data-size="7" required onchange="validateAllInForm()">
 																		</select>
 																	</div>
 																</div>
 																<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 																	<div class="form-group">
 																		<label class="mb-0">Tipo de Lote (<b class="text-danger">*</b>):</label>
-																		<div class="radio-container">
-																			<input type="radio" id="customRadioInline1" value="1" name="tipoLote">
+																		<div class="radio-container boxTipoLote">
+																			<input type="radio" id="customRadioInline1" value="1" name="tipoLote" onchange="validateAllInForm()">
 																			<label class="custom-control-label" for="customRadioInline1">Habitacional</label>
-																			<input type="radio" id="customRadioInline2" value="2" name="tipoLote">
+																			<input type="radio" id="customRadioInline2" value="2" name="tipoLote" onchange="validateAllInForm()">
 																			<label class="custom-control-label" for="customRadioInline2">Comercial</label>
-																			<input type="radio" id="customRadioInline3" value="3" name="tipoLote">
+																			<input type="radio" id="customRadioInline3" value="3" name="tipoLote" onchange="validateAllInForm()">
 																			<label class="custom-control-label" for="customRadioInline3">Ambos</label>	
 																		</div>
 																	</div>
@@ -284,28 +284,39 @@
 																	<div class="form-group">
 																		<label class="mb-0">Superficie (<b class="text-danger">*</b>):</label>
 																		<div class="d-flex w-100">
-																			<div class="radio-container w-100">
-																				<input type="radio" id="customRadio1" value="1" name="superficie" onclick="selectSuperficie(1)">
+																			<div class="radio-container boxSuperficie w-100">
+																				<input type="radio" id="customRadio1" value="1" name="superficie" onclick="selectSuperficie(1)" onchange="validateAllInForm()">
 																				<label class="custom-control-label" for="customRadio1">Mayor a</label>
-																				<input type="radio" id="customRadio2" value="2" name="superficie" onclick="selectSuperficie(2)">
+																				<input type="radio" id="customRadio2" value="2" name="superficie" onclick="selectSuperficie(2)" onchange="validateAllInForm()">
 																				<label class="custom-control-label" for="customRadio2">Menor a</label>
-																				<input type="radio" id="customRadio3" value="3" name="superficie" onclick="selectSuperficie(3)">
+																				<input type="radio" id="customRadio3" value="3" name="superficie" onclick="selectSuperficie(3)" onchange="validateAllInForm()">
 																				<label class="custom-control-label" for="customRadio3">Cualquiera</label>
 																			</div>
 																			<div id="printSuperficie"></div>
 																		</div>
 																	</div>
 																</div>
+																<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 mt-2 boxActionsCards">
+																	<button type="button" id="btn_generate" class="btnAction d-none" onclick="GenerarCard()" rel="tooltip" data-placement="top" title="Agregar plan"><p class="mb-0 mr-1">Agregar plan</p><i class="fas fa-plus"></i></button>
+																	<input type="hidden" value="0" name="index" id="index">
+																	<button type="submit" id="btn_save" class="btnAction d-none" rel="tooltip" data-placement="top" title="Guardar planes"><p class="mb-0 mr-1">Guardar todo</p><i class="fas fa-save"></i></button>
+																</div>
 															</div>
 														</div>
 													</div>
 													<div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 mt-2">
-														<div class="row dataTables_scrollBody" id="showPackage"></div>
-														<div class="boxActionsCards">
-															<button type="button" class="btnAction" onclick="GenerarCard()" rel="tooltip" data-placement="top" title="Agregar plan"><i class="fas fa-plus"></i></button>
-															<input type="hidden" value="0" name="index" id="index">
-															<button type="submit" id="btn_save" class="btnAction" rel="tooltip" data-placement="top" title="Guardar planes"><i class="fas fa-save"></i></button>
-															<button type="button" data-toggle="modal" onclick="llenarTables();" data-target="#exampleModal" id="btn_open_modal" class="btnAction" rel="tooltip" data-placement="top" title="Ver descuentos"><i class="fas fa-tags" ></i></button>
+														<div class="boxInfoGral d-none">
+															<p class="m-0">(<span class="items"></span>) Planes añadidos</p>
+															<button type="button" data-toggle="modal" onclick="llenarTables();" data-target="#exampleModal" id="btn_open_modal" class="btnDescuento" rel="tooltip" data-placement="top" title="Ver descuentos"><i class="fas fa-tags" ></i></button>
+														</div>
+														<div class="row dataTables_scrollBody" id="showPackage">
+															<div class="emptyCards h-100 d-flex justify-center align-center pt-4">
+																<div class="h-100 text-center pt-4">
+																	<img src= '<?=base_url('dist/img/emptyFile.png')?>' alt="Icono gráfica" class="h-50 w-auto">
+																	<h3 class="titleEmpty">Aún no ha agregado ningún plan</h3>
+																	<div class="subtitleEmpty">Puede comenzar llenando el formulario de la izquierda <br>para después crear un nuevo plan</div>
+																</div>
+															</div>
 														</div>
 													</div>
 												</div>
@@ -619,7 +630,7 @@
 
 			//DESCUENTO AL ENGANCHE
 			table_enganche = $("#table_enganche").DataTable({
-				dom: 'Brt'+ "<'row'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'i><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>",
+				dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
 				width: "auto",
 				buttons: [{
 					extend: 'excelHtml5',
@@ -678,7 +689,7 @@
 
 			//DESCUENTO AL M2
 			table_m2 = $("#table_m2").DataTable({
-				dom: 'Brt'+ "<'row'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'i><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>",
+				dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
 				width: "auto",
 				buttons: [{
 					extend: 'excelHtml5',
@@ -736,7 +747,7 @@
 
 			//DESCUENTO POR BONO
 			table_bono = $("#table_bono").DataTable({
-				dom: 'Brt'+ "<'row'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'i><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>",
+				dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
 				width: "auto",
 				buttons: [{
 					extend: 'excelHtml5',
@@ -794,7 +805,7 @@
 
 			///DESCUENTO MSI
 			table_msi = $("#table_msi").DataTable({
-				dom: 'Brt'+ "<'row'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'i><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>",
+				dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
 				width: "auto",
 				buttons: [{
 					extend: 'excelHtml5',
@@ -881,10 +892,10 @@
                 $("#sede").selectpicker('refresh');
             }, 'json');
 			setInitialValues();
-			const startOfMonth = moment().startOf('month').format('DD-MM-YYYY');
-			const endOfMonth   = moment().endOf('month').format('DD-MM-YYYY');
-			// $('#fechainicio').val(startOfMonth);
-			// $('#fechafin').val(startOfMonth);
+			// const startOfMonth = moment().startOf('month').format('DD-MM-YYYY');
+			// const endOfMonth   = moment().endOf('month').format('DD-MM-YYYY');
+			// // $('#fechainicio').val(startOfMonth);
+			// // $('#fechafin').val(startOfMonth);
 
         });
 
@@ -957,7 +968,7 @@
 		}
 	
 		function GenerarCard(){
-			// if($('#sede').val() != '' && $('#residencial').val() != '' && $('input[name="tipoLote"]').is(':checked') && $('#fechainicio').val() != '' && $('#fechafin').val() != '' && $('input[name="superficie"]').is(':checked') ){
+			if($('#sede').val() != '' && $('#residencial').val() != '' && $('input[name="tipoLote"]').is(':checked') && $('#fechainicio').val() != '' && $('#fechafin').val() != '' && $('input[name="superficie"]').is(':checked') ){
 				var indexActual = document.getElementById('index');
 				var indexNext = (document.getElementById('index').value - 1) + 2;
 				indexActual.value = indexNext;
@@ -1056,10 +1067,12 @@
 				$('.popover-dismiss').popover({
 					trigger: 'focus'
 				});
-			// }
-			// else{
-			// 	alerts.showNotification("top", "left", "Debe llenar todos los campos requeridos.", "warning");
-			// }
+				
+				validateNonePlans();
+			}
+			else{
+				alerts.showNotification("top", "left", "Debe llenar todos los campos requeridos.", "warning");
+			}
 		}
 
 		function ValidarOrden(indexN,i){
@@ -1132,11 +1145,10 @@
 					$(`#selectDescuentos_${indexGral}_${index}`).append(`
 					<div class="w-100 d-flex justify-center align-center">
 						<div id="divmsi_${indexGral}_${index}"></div>
-						<select id="ListaDescuentosTotal_${indexGral}_${index}" required name="${indexGral}_${index}_ListaDescuentosTotal_[]" multiple class="form-control" data-live-search="true" disabled></select>
+						<select id="ListaDescuentosTotal_${indexGral}_${index}" required name="${indexGral}_${index}_ListaDescuentosTotal_[]" multiple class="form-control" data-live-search="true">
 					</div>`);
 
 					$.post('getDescuentosPorTotal',{ tdescuento: tdescuento, id_condicion: id_condicion,eng_top:eng_top,apply:apply }, function(data) {
-						$(`#ListaDescuentosTotal_${indexGral}_${index}`).prop("disabled", false)
 						$(`#ListaDescuentosTotal_${indexGral}_${index}`).append($('<option disabled>').val("default").text("Seleccione una opción"));
 						var len = data.length;
 						for( var i = 0; i<len; i++){
@@ -1195,7 +1207,7 @@
 					///TOTAL DE ENGANCHE
 					$(`#selectDescuentos_${indexGral}_${index}`).append(`
 					<div class="w-100 d-flex justify-center align-center">
-						<select id="ListaDescuentosEnganche_${indexGral}_${index}" required  name="${indexGral}_${index}_ListaDescuentosEnganche_[]" multiple="multiple" class="form-control"  required data-live-search="true"></select>
+						<select id="ListaDescuentosEnganche_${indexGral}_${index}" required name="${indexGral}_${index}_ListaDescuentosEnganche_[]" multiple="multiple" class="form-control" required data-live-search="true"></select>
 					</div>`);
 
 					$(`#ListaDescuentosEnganche_${indexGral}_${index}`).select2({containerCssClass: "select-gral", dropdownCssClass: "custom-dropdown", closeOnSelect : false, placeholder : "Seleccione una opción", allowHtml: true, allowClear: true, tags: false});
@@ -1445,6 +1457,7 @@
 			$('#ModalRemove').modal('toggle');
 			$("#" + divNum + "").remove();
 			$('#iddiv').val(0);
+			validateNonePlans();
 			return false;
 		}
 
@@ -1484,10 +1497,8 @@
 			finalBeginDate2 = [('0' + beginDate.getDate()).slice(-2), ('0' + (beginDate.getMonth() + 1)).slice(-2), beginDate.getFullYear()].join('/');
 			finalEndDate2 = [('0' + endDate.getDate()).slice(-2), ('0' + (endDate.getMonth() + 1)).slice(-2), endDate.getFullYear()].join('/');
 
-			$('#beginDate').val(finalBeginDate2);
-			$('#endDate').val(finalEndDate2);
-			$('#beginDate2').val(finalBeginDate2);
-			$('#endDate2').val(finalEndDate2);
+			$('#fechainicio').val(finalBeginDate);
+			$('#fechafin').val(finalEndDate);
 		}
 
 		function turnOnOff(e){
@@ -1512,12 +1523,38 @@
 			}
 		}
 
-		$(document).on('change','#fechainicio', function(e){
-			validateAllInForm();
-		});
-
 		function validateAllInForm(){
+			var dinicio = $('#fechainicio').val();
+			var dfin = $('#fechafin').val();
+			var sede = $('#sede').val();
+			var proyecto = $('#residencial').val();
+			var containerTipoLote = document.querySelector('.boxTipoLote');
+			var containerSup = document.querySelector('.boxSuperficie');
+			var checkedTipoLote = containerTipoLote.querySelectorAll('input[type="radio"]:checked').length;
+			var checkedSuper = containerSup.querySelectorAll('input[type="radio"]:checked').length;
 
+			if(dinicio != '' && dfin != '' && sede != '' && proyecto != '' && checkedTipoLote != 0 && checkedSuper != 0){
+				$("#btn_generate").removeClass('d-none');
+			}
+			else{
+				$("#btn_generate").addClass('d-none');
+				$("#btn_save").addClass('d-none');
+			}
+		}
+
+		function validateNonePlans(){
+			var plans = document.getElementsByClassName("cardPlan");
+			if (plans.length > 0 ){
+				$("#btn_save").removeClass('d-none');
+				$(".emptyCards").addClass('d-none');
+				$(".boxInfoGral").removeClass('d-none');
+				$(".items").text(plans.length);
+			}
+			else{
+				$("#btn_save").addClass('d-none');
+				$(".emptyCards").removeClass('d-none');	
+				$(".boxInfoGral").addClass('d-none');
+			}
 		}
 	</script>
 </body>
