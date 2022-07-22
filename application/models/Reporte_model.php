@@ -678,89 +678,72 @@ class Reporte_model extends CI_Model {
     return $query;
     }
 
-    public function getGeneralLotesInformation($beginDate, $endDate, $id_rol, $id_usuario, $render, $type, $sede) {
+    public function getGeneralLotesInformation($beginDate, $endDate, $id_rol, $id_usuario, $render, $type, $sede, $leader) {
         // PARA ASESOR, COORDINADOR, GERENTE, SUBDIRECTOR, REGIONAL Y DIRECCIÓN COMERCIAL
         $id_lider = $this->session->userdata('id_lider'); // PARA ASISTENTES
         $comodin2 = 'LEFT';
         $filtro=" AND cl.fechaApartado BETWEEN '$beginDate 00:00:00.000' AND '$endDate 23:59:00.000'";
-        if ($id_rol == 7) // MJ: Asesor
-        { 
-            if($render == 1)
+        if ($id_rol == 7) { // MJ: Asesor
+            if ($render == 1)
                 $filtro .= " AND cl.id_asesor = $id_usuario";
             else
-                $filtro .= " AND cl.id_asesor = $id_usuario";
+                $filtro .= " AND cl.id_coordinador = $leader AND cl.id_asesor = $id_usuario";
             $comodin = "id_asesor";
-        }
-        else if ($id_rol == 9) // MJ: Coordinador
-        { 
-            if($render == 1) {
+        } else if ($id_rol == 9) { // MJ: Coordinador 
+            if ($render == 1) {
                 $filtro .= " AND (cl.id_coordinador = $id_usuario OR cl.id_asesor = $id_usuario)";
                 $comodin = "id_asesor";
             } else {
-                $filtro .= " AND cl.id_coordinador = $id_usuario";
+                $filtro .= " AND cl.id_gerente = $leader AND cl.id_coordinador = $id_usuario";
                 $comodin = "id_coordinador";
             }
-        }
-        else if ($id_rol == 3) // MJ: Gerente
-        {
-            if($render == 1) {
+        } else if ($id_rol == 3) { // MJ: Gerente
+            if ($render == 1) {
                 $filtro .= " AND cl.id_gerente = $id_usuario";
                 $comodin = "id_coordinador";
             } else {
-                $filtro .= " AND cl.id_gerente = $id_usuario";
+                $filtro .= " AND cl.id_subdirector = $leader AND cl.id_gerente = $id_usuario";
                 $comodin = "id_gerente";
             }
-        }
-        else if ($id_rol == 6) // MJ: Asistente de gerencia
-        {
-            if($render == 1) {
+        } else if ($id_rol == 6) { // MJ: Asistente de gerencia
+            if ($render == 1) {
                 $filtro .= " AND cl.id_gerente = $id_usuario";
                 $comodin = "id_coordinador";
-            } else {
-                $filtro .= " AND cl.id_gerente = $id_usuario";
-                $comodin = "id_gerente";
 
+            } else {
+                $filtro .= " AND cl.id_subdirector = $id_usuario AND cl.id_gerente = $id_usuario";
+                $comodin = "id_gerente";
             }
-        }
-        else if ($id_rol == 2) // MJ: Subdirector
-        {
-            if($render == 1) {
+        } else if ($id_rol == 2) { // MJ: Subdirector
+            if ($render == 1) {
                 $filtro .= " AND cl.id_subdirector = $id_usuario";
                 $comodin = "id_gerente";
 
             } else {
-                $filtro .= " AND cl.id_subdirector = $id_usuario";
+                $filtro .= " AND cl.id_regional = $leader";
                 $comodin = "id_subdirector";
             }
-        }
-        else if ($id_rol == 5) // MJ: Asistente subdirección
-        {
-            if($render == 1){
+        } else if ($id_rol == 5) { // MJ: Asistente subdirección
+            if ($render == 1) {
                 $filtro .= " AND cl.id_subdirector = $id_usuario";
                 $comodin = "id_gerente";
             } else {
-                $filtro .= " AND cl.id_subdirector = $id_usuario";
+                $filtro .= " AND cl.id_regional = $leader";
                 $comodin = "id_subdirector";
             }
-        }
-        else if ($id_rol == 59) // MJ: Director regional
-        {
-            $comodin2 = "LEFT";
-            if($render == 1) {
+        } else if ($id_rol == 59) {// MJ: Director regional
+            $id_sede = "'" . implode("', '", explode(", ", $this->session->userdata('id_sede'))) . "'"; // MJ: ID sede separado por , como string
+            if ($render == 1) {
                 $filtro .= " AND (cl.id_regional = $id_usuario)";
-                $comodin = "id_regional";//pendiente
-            } else {
+                $comodin = "id_subdirector";//pendiente
+            } else
+                $filtro .= "";
+        } else if ($id_rol == 1 || $id_rol == 4 || $id_rol == 18) { // MJ: Director comercial 
+            $comodin2 = 'LEFT';
+            if($render == 1) {
                 $filtro .= "";
                 $comodin = "id_regional";//pendiente
-            }
-        }
-        else if ($id_rol == 1 || $id_rol == 4 || $id_rol == 18) // MJ: Director comercial
-        { 
-            $comodin2 = 'LEFT';
-            if($render == 1){
-                $filtro .= " AND (cl.id_regional = $id_usuario)";
-                $comodin = "id_regional";//pendiente
-            }else{
+            } else {
                 $filtro .= "";
                 $comodin = "id_regional";//pendiente
             }
@@ -804,7 +787,7 @@ class Reporte_model extends CI_Model {
             UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)),
             UPPER(CONCAT(ua.nombre, ' ', ua.apellido_paterno, ' ', ua.apellido_materno)),
             CONVERT(VARCHAR, cl.fechaApartado, 103), sc.nombreStatus, st.nombre
-            ORDER BY cl.fechaApartado");
+            ORDER BY sc.nombreStatus");
         } else if ($type == 3 || $type == 33 || $type == 4 || $type == 44) { // MJ: CANCELADOS CONTRATADOS / APARTADOS
             $statusLote = ($type == 4 || $type == 44) ? "<" : ">=";
             $filtroSede = ($type == 33 || $type == 44) ? "AND re.sede_residencial = $sede" : "";
