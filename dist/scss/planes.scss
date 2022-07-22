@@ -48,23 +48,6 @@
   }
   .tab-content{
     padding: 15px;
-    .btnDescuento{
-      position: absolute;
-      top: -40px;
-      right: 0;
-      background-color: #1341761a;
-      color: $blueIndigo;
-      width: 40px;
-      height: 40px;
-      border-radius: 27px;
-      padding: 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-size: 15px;
-      border:none;
-      margin-left: 5px;
-    }
     #boxMainForm{
       height: 540px;
       overflow: auto;
@@ -163,6 +146,35 @@
         }
       }
     }
+    .boxInfoGral{
+      position: absolute;
+      top: -40px;
+      right: 0;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      p{
+        font-size: 18px;
+        margin-right: 20px!important;
+      }
+      .items{
+        font-weight: 400;
+      }
+      .btnDescuento{
+        background-color: #1341761a;
+        color: $blueIndigo;
+        width: 40px;
+        height: 40px;
+        border-radius: 27px;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 15px;
+        border:none;
+        margin-left: 5px;
+      }
+    }
     #showPackage{
       height: 520px;
       padding: 11px 0;
@@ -247,6 +259,9 @@
               height: auto !important;
               .select2-selection__rendered{
                 padding: 0 10px 5px 10px;
+                .select2-search__field{
+                  width: 100%!important;
+                }
                 .select2-selection__choice{
                   border: none;
                   background-color: #5a98df1a!important;

@@ -1188,24 +1188,6 @@
   padding: 15px;
 }
 
-.cargarPlan .tab-content .btnDescuento {
-  position: absolute;
-  top: -40px;
-  right: 0;
-  background-color: #1341761a;
-  color: #103f75;
-  width: 40px;
-  height: 40px;
-  border-radius: 27px;
-  padding: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 15px;
-  border: none;
-  margin-left: 5px;
-}
-
 .cargarPlan .tab-content #boxMainForm {
   height: 540px;
   overflow: auto;
@@ -1317,6 +1299,39 @@
   border: none;
 }
 
+.cargarPlan .tab-content .boxInfoGral {
+  position: absolute;
+  top: -40px;
+  right: 0;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.cargarPlan .tab-content .boxInfoGral p {
+  font-size: 18px;
+  margin-right: 20px !important;
+}
+
+.cargarPlan .tab-content .boxInfoGral .items {
+  font-weight: 400;
+}
+
+.cargarPlan .tab-content .boxInfoGral .btnDescuento {
+  background-color: #1341761a;
+  color: #103f75;
+  width: 40px;
+  height: 40px;
+  border-radius: 27px;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 15px;
+  border: none;
+  margin-left: 5px;
+}
+
 .cargarPlan .tab-content #showPackage {
   height: 520px;
   padding: 11px 0;
@@ -1415,6 +1430,10 @@
 
 .cargarPlan .tab-content #showPackage .cardPlan .boxAllDiscounts .boxDetailDiscount .select2-selection--multiple .select2-selection__rendered {
   padding: 0 10px 5px 10px;
+}
+
+.cargarPlan .tab-content #showPackage .cardPlan .boxAllDiscounts .boxDetailDiscount .select2-selection--multiple .select2-selection__rendered .select2-search__field {
+  width: 100% !important;
 }
 
 .cargarPlan .tab-content #showPackage .cardPlan .boxAllDiscounts .boxDetailDiscount .select2-selection--multiple .select2-selection__rendered .select2-selection__choice {
