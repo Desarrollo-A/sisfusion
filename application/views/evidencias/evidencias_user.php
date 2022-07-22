@@ -98,7 +98,7 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="col-12 col-sm-12 col-md-6 col-lg-6 instructions" data-intro='Lea el siguiente texto frente a su camara' data-step='6'>
+                                                <div class="col-12 col-sm-12 col-md-6 col-lg-6 instructions" data-intro='Lea el siguiente texto frente a su cámara.' data-step='6'>
                                                     <p class="text-center ">Lea el siguiente texto frente a su cámara</p>
                                                     <p class="text-center quote">&ldquo;YO <span id="client_name_text"></span> DECLARO QUE...&rdquo;</p>
                                                 </div>
@@ -108,7 +108,7 @@
                                     <div class="col-12 c    ol-sm-12 col-md-8 col-lg-8 d-flex align-center justify-center">
                                         <div class="w-100 d-flex justify-center" id="player">
                                             <div id="actionButtons" class="action-buttons-active">
-                                                <button id="upload" data-intro='Una vez termine de grabar el video, dar click en guardar' data-step='7' disabled><i class="fas fa-save"></i> Guardar</button>
+                                                <button id="upload" data-intro='Una vez que termine de grabar el vídeo, dar click en guardar.' data-step='7' disabled><i class="fas fa-save"></i> Guardar</button>
                                             </div>
                                             <video id="myVideo" playsinline class="vjs-custom video-js"></video>
                                         </div>
@@ -130,7 +130,7 @@
                                         
                                         <div class="w-100" id="success">
                                             <i class="far fa-check-circle"></i>
-                                            <h3>¡Tu video ha sido guardado con éxito!</h3>
+                                            <h3>¡Tu vídeo ha sido guardado con éxito!</h3>
                                         </div>
                                     </div>
                                 </div>

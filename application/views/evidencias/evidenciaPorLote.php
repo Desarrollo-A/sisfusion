@@ -164,6 +164,7 @@
 
 <script>
     let url = "<?=base_url()?>";
+    let base_url = "<?=base_url()?>";
     let typeTransaction = 0; // MJ: SELECTS MULTIPLES
 </script>
 

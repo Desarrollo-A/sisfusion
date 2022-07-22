@@ -10,7 +10,7 @@ $(document).ready(function () {
     $('#client_name_text').text(information.nombreCl);
     $('.vjs-icon-record-start').removeClass('vjs-hidden');
     $('.vjs-record-button').prop('disabled', true);
-    $( ".vjs-record-button" ).attr( "data-intro", 'Dar click para empezar a grabar' );
+    $( ".vjs-record-button" ).attr( "data-intro", 'Dar click para empezar a grabar.' );
 
     introJs().setOptions({
         nextLabel: 'Siguiente',
