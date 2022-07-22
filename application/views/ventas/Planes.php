@@ -305,13 +305,16 @@
 														</div>
 													</div>
 													<div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 mt-2">
-														<button type="button" data-toggle="modal" onclick="llenarTables();" data-target="#exampleModal" id="btn_open_modal" class="btnDescuento" rel="tooltip" data-placement="top" title="Ver descuentos"><i class="fas fa-tags" ></i></button>
+														<div class="boxInfoGral d-none">
+															<p class="m-0">(<span class="items"></span>) Planes añadidos</p>
+															<button type="button" data-toggle="modal" onclick="llenarTables();" data-target="#exampleModal" id="btn_open_modal" class="btnDescuento" rel="tooltip" data-placement="top" title="Ver descuentos"><i class="fas fa-tags" ></i></button>
+														</div>
 														<div class="row dataTables_scrollBody" id="showPackage">
 															<div class="emptyCards h-100 d-flex justify-center align-center pt-4">
 																<div class="h-100 text-center pt-4">
 																	<img src= '<?=base_url('dist/img/emptyFile.png')?>' alt="Icono gráfica" class="h-50 w-auto">
 																	<h3 class="titleEmpty">Aún no ha agregado ningún plan</h3>
-																	<div class="subtitleEmpty">Puede comenzar llenado el formulario de la izquierda <br>para después crear un nuevo plan</div>
+																	<div class="subtitleEmpty">Puede comenzar llenando el formulario de la izquierda <br>para después crear un nuevo plan</div>
 																</div>
 															</div>
 														</div>
@@ -627,7 +630,7 @@
 
 			//DESCUENTO AL ENGANCHE
 			table_enganche = $("#table_enganche").DataTable({
-				dom: 'Brt'+ "<'row'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'i><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>",
+				dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
 				width: "auto",
 				buttons: [{
 					extend: 'excelHtml5',
@@ -686,7 +689,7 @@
 
 			//DESCUENTO AL M2
 			table_m2 = $("#table_m2").DataTable({
-				dom: 'Brt'+ "<'row'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'i><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>",
+				dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
 				width: "auto",
 				buttons: [{
 					extend: 'excelHtml5',
@@ -744,7 +747,7 @@
 
 			//DESCUENTO POR BONO
 			table_bono = $("#table_bono").DataTable({
-				dom: 'Brt'+ "<'row'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'i><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>",
+				dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
 				width: "auto",
 				buttons: [{
 					extend: 'excelHtml5',
@@ -802,7 +805,7 @@
 
 			///DESCUENTO MSI
 			table_msi = $("#table_msi").DataTable({
-				dom: 'Brt'+ "<'row'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'i><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>",
+				dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
 				width: "auto",
 				buttons: [{
 					extend: 'excelHtml5',
@@ -1543,12 +1546,14 @@
 			var plans = document.getElementsByClassName("cardPlan");
 			if (plans.length > 0 ){
 				$("#btn_save").removeClass('d-none');
-				$(".emptyCards").addClass('d-none');	
-	
+				$(".emptyCards").addClass('d-none');
+				$(".boxInfoGral").removeClass('d-none');
+				$(".items").text(plans.length);
 			}
 			else{
 				$("#btn_save").addClass('d-none');
 				$(".emptyCards").removeClass('d-none');	
+				$(".boxInfoGral").addClass('d-none');
 			}
 		}
 	</script>
