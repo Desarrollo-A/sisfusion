@@ -240,7 +240,6 @@ function reorderColumns(){
                         buildTableSinEnganche(dataSinEnganche);
                     }
                 }
-                $(principalColumns[i-1]).addClass('fadeInAnimationDelay'+i);
             }, 500 * i)
         }(i));
     }   
