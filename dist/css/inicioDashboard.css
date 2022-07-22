@@ -1275,6 +1275,37 @@
   background-color: #103f75 !important;
 }
 
+@media (min-width: 1025px) and (max-width: 1280px) {
+  #inicio #rowEmbudoChart {
+    height: 40% !important;
+  }
+}
+
+@media (min-width: 1025px) and (max-width: 1280px) {
+  #inicio #rowEmbudoData {
+    height: 60% !important;
+  }
+}
+
+@media (min-width: 1025px) and (max-width: 1280px) {
+  #inicio #rowEmbudoData .col-lg-12 .d-flex {
+    justify-content: space-between;
+  }
+}
+
+@media (min-width: 1025px) and (max-width: 1280px) {
+  #inicio #rowEmbudoData .col-lg-12 .numberElement {
+    text-align: end !important;
+  }
+}
+
+@media (min-width: 1025px) and (max-width: 1280px) {
+  #inicio #rowEmbudoData .col-lg-12 {
+    padding-top: 0 !important;
+    display: block;
+  }
+}
+
 #inicio .beginDates {
   background-color: #eaeaea !important;
   border-radius: 27px 0 0 27px !important;
@@ -1304,9 +1335,21 @@
   font-size: 1em !important;
 }
 
+@media (min-width: 1025px) and (max-width: 1280px) {
+  #inicio .labelTitle {
+    font-size: 12px !important;
+  }
+}
+
 #inicio .numberElement {
   font-size: 1em !important;
   font-weight: bold !important;
+}
+
+@media (min-width: 1025px) and (max-width: 1280px) {
+  #inicio .numberElement {
+    font-size: 12px !important;
+  }
 }
 
 #inicio .loadChart {

@@ -309,13 +309,15 @@ class Reporte extends CI_Controller {
 
     public function getDetails(){
         $typeTransaction = $this->input->post("transaction");//si es consulta inicial = 1 o si es consulta con filtro de fechas = 2
-        if( $typeTransaction==1){
+        /*if( $typeTransaction==1){
             $beginDate = $this->get4Months()['firstDate'];
             $endDate = $this->get4Months()['secondDate'];
         }else{
             $beginDate = date("Y-m-d", strtotime($this->input->post("beginDate")));
             $endDate = date("Y-m-d", strtotime($this->input->post("endDate")));
-        }
+        }*/
+        $beginDate = date("Y-m-d", strtotime($this->input->post("beginDate")));
+        $endDate = date("Y-m-d", strtotime($this->input->post("endDate")));
         $id_usuario = $this->input->post("id_usuario");
         $rol = $this->input->post("rol");
         $render = $this->input->post("render");
@@ -344,7 +346,8 @@ class Reporte extends CI_Controller {
             $rol = $this->input->post("rol");
             $render = $this->input->post("render");
             $sede = $this->input->post("sede");
-            $data['data'] = $this->Reporte_model->getGeneralLotesInformation($beginDate, $endDate, $rol, $id_usuario, $render, $type, $sede)->result_array();
+            $leader = $this->input->post("leader");
+            $data['data'] = $this->Reporte_model->getGeneralLotesInformation($beginDate, $endDate, $rol, $id_usuario, $render, $type, $sede, $leader)->result_array();
             echo json_encode($data, JSON_NUMERIC_CHECK);
         } else
             echo json_encode(array());

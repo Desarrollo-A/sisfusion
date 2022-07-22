@@ -10,6 +10,7 @@
 			case "28": // EJECUTIVO ADMINISTRATIVO MKTD
 			case "50": // GENERALISTA MKTD
 			case "58": // ANALISTA DE DATOS CI
+			case "18": // DIRECCIÓN TI
 				$datos = array();
 				$datos = $datos4;
 				$datos = $datos2;

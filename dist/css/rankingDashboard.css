@@ -1237,6 +1237,12 @@
   text-transform: lowercase;
 }
 
+@media (min-width: 1025px) and (max-width: 1280px) {
+  #ranking .card .col-datatable table tbody {
+    font-size: 11px;
+  }
+}
+
 #ranking .card .col-datatable .dataTables_info {
   padding: 0;
   font-size: 11px !important;
@@ -1287,44 +1293,8 @@
   }
 }
 
-.fadeInAnimationDelay1 {
-  -webkit-animation: scale-up-center 0.5s cubic-bezier(0.39, 0.575, 0.565, 1) both;
-  animation: scale-up-center 0.5s cubic-bezier(0.39, 0.575, 0.565, 1) both;
-}
-
-.fadeInAnimationDelay2 {
-  -webkit-animation: scale-up-center 1s cubic-bezier(0.39, 0.575, 0.565, 1) both;
-  animation: scale-up-center 1s cubic-bezier(0.39, 0.575, 0.565, 1) both;
-}
-
-.fadeInAnimationDelay3 {
-  -webkit-animation: scale-up-center 1.5s cubic-bezier(0.39, 0.575, 0.565, 1) both;
-  animation: scale-up-center 1.5s cubic-bezier(0.39, 0.575, 0.565, 1) both;
-}
-
-.fadeInAnimationDelay4 {
-  -webkit-animation: scale-up-center 2s cubic-bezier(0.39, 0.575, 0.565, 1) both;
-  animation: scale-up-center 2s cubic-bezier(0.39, 0.575, 0.565, 1) both;
-}
-
-@-webkit-keyframes scale-up-center {
-  0% {
-    -webkit-transform: scale(0.5);
-    transform: scale(0.5);
-  }
-  100% {
-    -webkit-transform: scale(1);
-    transform: scale(1);
-  }
-}
-
-@keyframes scale-up-center {
-  0% {
-    -webkit-transform: scale(0.5);
-    transform: scale(0.5);
-  }
-  100% {
-    -webkit-transform: scale(1);
-    transform: scale(1);
+@media (min-width: 1025px) and (max-width: 1280px) {
+  #ranking .card {
+    height: 480px !important;
   }
 }
