@@ -687,7 +687,7 @@ function setOptionsChart(series, categories){
     let options = { 
         series: [series],
         chart: {
-            height: 'auto',
+            height: '100%',
             type: 'bar',
             toolbar: {
                 show: false

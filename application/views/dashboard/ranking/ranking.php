@@ -19,7 +19,7 @@
                                 <button class="btn-charts" onclick="toggleDatatable(this)" rel="tooltip" data-placement="bottom" title="Mostrar tabla"><i class="far fa-list-alt"></i></button>
                             </div>
                             <div id="boxChart" class="h-80 boxChartRanking">
-                                <div id="chart" class="chart"></div>
+                                <div id="chart" class="chart h-100"></div>
                             </div>
                             <div class="h-10">
                                 <h5 class="m-0 text-center titles">Ventas de apartados</h5>
