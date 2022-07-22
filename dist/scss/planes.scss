@@ -48,6 +48,23 @@
   }
   .tab-content{
     padding: 15px;
+    .btnDescuento{
+      position: absolute;
+      top: -40px;
+      right: 0;
+      background-color: #1341761a;
+      color: $blueIndigo;
+      width: 40px;
+      height: 40px;
+      border-radius: 27px;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 15px;
+      border:none;
+      margin-left: 5px;
+    }
     #boxMainForm{
       height: 540px;
       overflow: auto;
@@ -129,11 +146,30 @@
           transition: 0.3s;
         }
       }
+      .boxActionsCards{
+        display: flex;
+        justify-content: space-between;
+        .btnAction{
+          width: 48%;
+          background-color: #1341761a;
+          color: $blueIndigo;
+          border-radius: 27px;
+          padding: 8px 12px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          font-size: 14px;
+          border:none;
+        }
+      }
     }
     #showPackage{
       height: 520px;
       padding: 11px 0;
       overflow: auto;
+      .emptyCards{
+        color: $deepGray;
+      }
       .cardPlan{
         height: 480px;
         overflow: auto;
@@ -201,24 +237,22 @@
               font-weight: 400;
               font-size: 12px;
             }
-            .select-gral{
-              background-color: $white!important;
-              border-radius: 7px;
-              border: none;
+            .select2-selection--multiple{
               display: flex;
               align-items: center;
-              &:disabled{
-                background-color: $platinumScroll;
-              }
-              .select2-selection__clear{
-                margin-top: 0;
-              }
-              .select2-selection__choice{
-                border: none;
-                background-color: #5a98df1a!important;
-                border-radius: 5px;
-                margin: 0;
-                margin-right: 5px;
+              background-color: $white!important;
+              border: none;
+              border-radius: 7px;
+              overflow: hidden !important;
+              height: auto !important;
+              .select2-selection__rendered{
+                padding: 0 10px 5px 10px;
+                .select2-selection__choice{
+                  border: none;
+                  background-color: #5a98df1a!important;
+                  border-radius: 5px;
+                  padding: 0 10px;
+                }
               }
             }
             .rowDetailDiscount{
@@ -306,26 +340,6 @@
       .switch-input:checked + .switch-label:after {
         background-color: $green;
         transform: translate(80%, -50%);
-      }
-    }
-    .boxActionsCards{
-      position: absolute;
-      top: -40px;
-      right: 0px;
-      display: flex;
-      .btnAction{
-        background-color: #1341761a;
-        color: $blueIndigo;
-        width: 40px;
-        height: 40px;
-        border-radius: 27px;
-        padding: 0;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        font-size: 15px;
-        border:none;
-        margin-left: 5px;
       }
     }
   }
