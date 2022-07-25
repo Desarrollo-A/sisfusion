@@ -143,8 +143,8 @@ public function activar_bandera_neo(){
                 if(!empty($data)){
                     if($data[$i]->Marca == 1){
                         if($data[$i]->Aplicado > ($datos[$i]['ultimo_pago']+100)){
-                            $this->ComisionesNeo_model->UpdateBanderaPagoComision($datos[$i]['id_lote'], $data[$i]->Bonificado);
-                            $contador ++;
+                            $this->ComisionesNeo_model->UpdateBanderaPagoComision($datos[$i]['id_lote'], $data[$i]->Bonificado, $data[$i]->FechaAplicado);
+                            // $contador ++;
                         }else{
                             $this->ComisionesNeo_model->UpdateBanderaPagoComisionNO($datos[$i]['id_lote']);
                         }
