@@ -22,14 +22,14 @@ class ComisionesNeo_model extends CI_Model {
         if($validate->num_rows()>0){
             $ref = $validate->row()->referencia;
             $des = $validate->row()->idResidencial;
-            return $this->gphsis->query("EXEC [GPHSIS].[dbo].[004VerificaconNeoBPrueba] @referencia = $ref, @iddesarrollo = $des");
+            return $this->gphsis->query("EXEC [GPHSIS].[dbo].[004VerificaconNeoPrueba2] @referencia = $ref, @iddesarrollo = $des");
         }else{
             return false;
         }
     }
 
     function getGeneralStatusFromNeodata($referencia, $desarrollo){
-        return $this->gphsis->query("EXEC [GPHSIS].[dbo].[004VerificaconNeoB] @referencia = $referencia, @iddesarrollo = $desarrollo")->row();
+        return $this->gphsis->query("EXEC [GPHSIS].[dbo].[004VerificaconNeoPrueba2] @referencia = $referencia, @iddesarrollo = $desarrollo")->row();
     }
 
     function getLotesByAdviser($proyecto, $condominio)
