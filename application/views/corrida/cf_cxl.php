@@ -812,11 +812,9 @@
                                     <td colspan="3"><label><b>{{apartado | currency }}</b></label></td>
                                 </tr>
                                 <tr ng-repeat= "i in rangEd">
-
                                     <td class="text-center">{{ i.fecha | date:'dd-mm-yyyy'}}</td>
                                     <td class="text-center">{{ i.pago }}</td>
                                     <td class="text-center">{{ i.total | currency }}</td>
-
                                 </tr>
 
 
@@ -1173,7 +1171,7 @@
                 porcentajeEnganche.val(parseFloat(cantidadToGetP).toFixed(2));
                 //termina nueva sección
 
-                if(porcentajeEnganche.val() >= 10 ){/*|| porcentajeEnganche.val() == 5*/
+                if(porcentajeEnganche.val() >= 10 || porcentajeEnganche.val() == 5){/**/
                     document.getElementById("day").disabled = false;
                     document.getElementById("aptdo").disabled = false;
                     document.getElementById("msdif").disabled = false;
@@ -1647,8 +1645,26 @@
                 var ini3;
 //INICIO FECHA
                 var day;
-                var month = (new Date($scope.fechaApartado).getMonth() + 1);
-                var yearc = new Date($scope.fechaApartado).getFullYear();
+                var condicion_mes;
+                let porc = $('#porcentajeEnganche').val();
+                let cant = $('#cantidadEnganche').val();
+                if(porc==1 || cant==5000){
+                    condicion_mes = 1;
+                    console.log('Debe empezar 1 mese despúes ',condicion_mes);
+                }else if(porc==10 || porc==5){
+                    condicion_mes = 2;
+                    console.log('Debe empezar 2 meses despúes ',condicion_mes);
+                }else{
+                    condicion_mes = 0;
+                }
+                var month = (new Date($scope.fechaApartado).getMonth() + (1 + condicion_mes));
+                var yearc;
+                if(month>12){
+                    yearc = new Date($scope.fechaApartado).getFullYear()+1;
+                    month=12;
+                }else{
+                    yearc = new Date($scope.fechaApartado).getFullYear();
+                }
 
 
                 if (month == 1){
@@ -1726,14 +1742,11 @@
                     day = 11;
                 }
                 if (month == 8){
-
-
                     if ($scope.cinco_milLM == 0){
                         day = 12;
                     } else if($scope.cinco_milLM == 1) {
                         day = 13;
                     }
-
                 }
                 if (month == 9){
                     day = 13;
@@ -1753,7 +1766,6 @@
                 if (month == 12){
                     day = 17;
                 }
-
 
                 if($scope.descDateEnero == 0 && $scope.descDateOctubre == 0 && $scope.descDateMayoMerida == 0 && $scope.descDateSeptiembreMerida == 0 && $scope.descDateEneroMerida == 0
                     && $scope.descDateEneroMeridaC == 0 && $scope.descDateMayoMeridaC == 0 && $scope.descDateSeptiembreMeridaC == 0 && $scope.descDateEneroLM1 == 0 && $scope.descDateEneroLM2 == 0
@@ -1778,7 +1790,7 @@
 
 
                 ){
-                    var mes = ($scope.apartado && $scope.mesesdiferir > 0) ? (new Date($scope.fechaApartado).getMonth() + 2) : (new Date($scope.fechaApartado).getMonth() + 3);
+                    var mes = ($scope.apartado && $scope.mesesdiferir > 0) ? (new Date($scope.fechaApartado).getMonth() + (2+condicion_mes)) : (new Date($scope.fechaApartado).getMonth() + (3+condicion_mes));
                 } else if ($scope.descDateEnero == 1 || $scope.descDateEneroMerida == 1 || $scope.descDateEneroMeridaC == 1 || $scope.descDateEneroLM1 == 1 || $scope.descDateEneroLM2 == 1
                     || $scope.descDateEneroLM3 == 1 || $scope.descDateEneroLM1C == 1 || $scope.descDateEneroLM2C == 1
                     || $scope.descDateEneroL1 == 1 || $scope.descDateEneroL2 == 1 || $scope.descDateEneroL3 == 1 || $scope.descDateEneroL4 == 1
@@ -1789,29 +1801,31 @@
                     || $scope.descDateEneroS1YS2 == 1
 
                 ){
-                    var mes = ($scope.apartado && $scope.mesesdiferir > 0) ? (new Date($scope.fechaApartado).getMonth() + 2) : (new Date($scope.fechaApartado).getMonth() + 9);
+                    var mes = ($scope.apartado && $scope.mesesdiferir > 0) ? (new Date($scope.fechaApartado).getMonth() + (2+condicion_mes)) : (new Date($scope.fechaApartado).getMonth() + (9+condicion_mes));
                 } else if ($scope.descDateOctubre == 1){
-                    var mes = ($scope.apartado && $scope.mesesdiferir > 0) ? (new Date($scope.fechaApartado).getMonth() + 2) : (new Date($scope.fechaApartado).getMonth() + 6);
+                    var mes = ($scope.apartado && $scope.mesesdiferir > 0) ? (new Date($scope.fechaApartado).getMonth() + (2+condicion_mes)) : (new Date($scope.fechaApartado).getMonth() + (6+condicion_mes));
                 } else if ($scope.descDateMayoMerida == 1 || $scope.descDateMayoMeridaC == 1 || $scope.descDateMayoAllQro1 == 1 || $scope.descDateMayoAllQro2 == 1 || $scope.descDateMayoSLP == 1 || $scope.helpMxMerida1 == 1 || $scope.helpMxMerida2 == 1 || $scope.helpMxMerida3 == 1 || $scope.helpMxMerida4 == 1){
-                    var mes = ($scope.apartado && $scope.mesesdiferir > 0) ? (new Date($scope.fechaApartado).getMonth() + 2) : (new Date($scope.fechaApartado).getMonth() + 1);
+                    var mes = ($scope.apartado && $scope.mesesdiferir > 0) ? (new Date($scope.fechaApartado).getMonth() + (2+condicion_mes)) : (new Date($scope.fechaApartado).getMonth() + (1+condicion_mes));
                 } else if ($scope.descDateSeptiembreMerida == 1 || $scope.descDateSeptiembreMeridaC == 1 || $scope.descDateSepLM4 == 1 || $scope.descDateSepLM3C == 1 || $scope.descDateSepLM4C == 1 || $scope.descDateSepL1 == 1
 
                     || $scope.descDateSepL2 == 1 || $scope.descDateSepL3 == 1 || $scope.descDateSepL4 == 1 || $scope.descDateSepL5 == 1
                     || $scope.descDateSepAllQro1 == 1 || $scope.descDateSepAllQro2 == 1
 
                 ){
-                    var mes = ($scope.apartado && $scope.mesesdiferir > 0) ? (new Date($scope.fechaApartado).getMonth() + 2) : (new Date($scope.fechaApartado).getMonth() + 5);
+                    var mes = ($scope.apartado && $scope.mesesdiferir > 0) ? (new Date($scope.fechaApartado).getMonth() + (2+condicion_mes)) : (new Date($scope.fechaApartado).getMonth() + (5+condicion_mes));
                 } else if ($scope.engancheCincoMilLM == 1 || $scope.engancheVeintiCincoMilLM == 1 || $scope.engancheCincoMilL1 == 1 || $scope.engancheCincoMilL2 == 1 || $scope.engancheVeintiCincoMilL == 1
                     || $scope.cinco_milLM == 1){
-                    var mes = ($scope.apartado && $scope.mesesdiferir > 0) ? (new Date($scope.fechaApartado).getMonth() + 2) : (new Date($scope.fechaApartado).getMonth() + 2);
+                    var mes = ($scope.apartado && $scope.mesesdiferir > 0) ? (new Date($scope.fechaApartado).getMonth() + (2+condicion_mes)) : (new Date($scope.fechaApartado).getMonth() + (2+condicion_mes));
                 }
-
                 else if ($scope.descMSI == 1 ){
-                    var mes = ($scope.apartado && $scope.mesesdiferir > 0) ? (new Date($scope.fechaApartado).getMonth() + 2) : (new Date($scope.fechaApartado).getMonth() + 5);
+                    var mes = ($scope.apartado && $scope.mesesdiferir > 0) ? (new Date($scope.fechaApartado).getMonth() + (2+condicion_mes)) : (new Date($scope.fechaApartado).getMonth() + (5+condicion_mes));
                 }
-
                 else if ($scope.veinteJ_milM == 1 || $scope.cinco_milM == 1 || $scope.veinticinco_milLM2 == 1){
-                    var mes = ($scope.apartado && $scope.mesesdiferir > 0) ? (new Date($scope.fechaApartado).getMonth() + 2) : (new Date($scope.fechaApartado).getMonth() + 2);
+                    var mes = ($scope.apartado && $scope.mesesdiferir > 0) ? (new Date($scope.fechaApartado).getMonth() + (2+condicion_mes)) : (new Date($scope.fechaApartado).getMonth() + (2+condicion_mes));
+                }
+                if(mes >12){
+                    mes = 0;
+                    mes = mes + condicion_mes;
                 }
 
 
@@ -5298,6 +5312,10 @@
                         $scope.daysEnganche = '';
                         $scope.fechaEng = '';
                     }
+                    var porcentajeEnganche = angular.element( document.querySelector( '#porcentajeEnganche' ) );
+                    var cantidadEnganche = angular.element( document.querySelector( '#cantidadEnganche' ) );
+                    porcentajeEnganche.prop('disabled', false);
+                    cantidadEnganche.prop('disabled', false);
                 }
                 else
                 {
@@ -5306,6 +5324,12 @@
                     {
                         var apartado = angular.element( document.querySelector( '#aptdo' ) );
                         var mesesdiferidos = angular.element( document.querySelector( '#msdif' ) );
+                        var porcentajeEnganche = angular.element( document.querySelector( '#porcentajeEnganche' ) );
+                        var cantidadEnganche = angular.element( document.querySelector( '#cantidadEnganche' ) );
+                        if(porcentajeEnganche.val() >= 10){
+                            porcentajeEnganche.prop('disabled', true);
+                            cantidadEnganche.prop('disabled', true);
+                        }
 
                         $( '#aptdo' ).prop( "disabled", false );
                         $( '#msdif' ).prop( "disabled", false );
@@ -5478,14 +5502,14 @@
                 }
                 /*termina nuevo*/
 
-                if(porcentajeEnganche.val() >= 10 ){/*|| porcentajeEnganche.val() == 5*/
-                    document.getElementById("day").disabled = false;
-                    document.getElementById("aptdo").disabled = false;
-                    document.getElementById("msdif").disabled = false;
+                if(porcentajeEnganche.val() >= 5){/* || porcentajeEnganche.val() == 5*/
+                    // document.getElementById("day").disabled = false;
+                    // document.getElementById("aptdo").disabled = false;
+                    // document.getElementById("msdif").disabled = false;
+                    $scope.diasEnganche = [{day: 15}, {day: 30}, {day: 'Diferido'}, {day:'Limpiar'}];
+
                 }else{
-                    document.getElementById("day").disabled = true;
-                    document.getElementById("aptdo").disabled = true;
-                    document.getElementById("msdif").disabled = true;
+                    $scope.diasEnganche = [{day: 15}, {day: 30}, {day:'Limpiar'}];
                 }
                 calcularCF();
             };
@@ -8600,10 +8624,7 @@
                         type: 'orange',
                         buttons: {
                             cancel: {
-                                text: 'OK',
-                                action: function () {
-                                    toastr.success('¡Ahora! Cotizemos.');
-                                }
+                                text: 'OK'
                             }
                         }
                     });

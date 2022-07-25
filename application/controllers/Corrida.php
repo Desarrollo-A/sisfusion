@@ -8,7 +8,7 @@ class Corrida extends CI_Controller {
 
 	public function __construct(){
 		parent::__construct();
-        $this->load->model('registrolote_modelo');
+        $this->load->model(array('registrolote_modelo', 'General_model'));
         $this->load->model('model_queryinventario');
         $this->load->model('Corrida_model');
         $this->load->database('default');
@@ -53,6 +53,9 @@ class Corrida extends CI_Controller {
 	public function cf2(){
 		$this->load->view("corrida/cf_view2");
 	}
+    public function pagos_capital(){
+        $this->load->view("corrida/pagos_capital");
+    }
 
 	public function cf3(){
 		$this->load->view("corrida/cf_view_PAC");
@@ -2610,9 +2613,8 @@ $pdf->Output(utf8_decode($namePDF), 'I');
             "nombre" => 'LOTE TEST'
         );
         $data_corrida['data_corrida'] = $this -> Corrida_model -> getInfoCorridaByID($id_corrida);
-
-//        print_r($data_corrida);
-//        exit;
+        //print_r($data_corrida);
+        //exit;
         $this->load->view("corrida/editar_corrida", $data_corrida);
     }
     function update_financialR(){
@@ -3081,4 +3083,130 @@ $pdf->Output(utf8_decode($namePDF), 'I');
     {
             $this->load->view("corrida/moratorios_nv");
     }
+
+    public function listado_corridaspc(){
+        /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/
+        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
+        /*-------------------------------------------------------------------------------*/
+        //$datos["registrosLoteContratacion"] = $this->registrolote_modelo->registroLote();
+        $datos["residencial"]= $this->registrolote_modelo->getResidencialQro();
+        $this->load->view('template/header');
+        $this->load->view("corrida/corridas_pagosc", $datos);
+    }
+    function getCorridasPCByLote($idLote){
+        $data_lotes = $this->Corrida_model->getCorridasPCByLote($idLote);
+        if($data_lotes != null) {
+            echo json_encode($data_lotes);
+        } else {
+            echo json_encode(array());
+        }
+    }
+    public function insertPagoCapitalCorrida()
+    {
+
+        #idLote: id_lote,  plan_pc: plan, anio:anio, precio_m2: precio_m2_final, total: precioFinalc,
+        #porcentajeEng:porcentaje_engCliente, engancheCantidad: cantidad_enganche, diasPagoEng:dias_pagar_enganche,
+        #apartado: apartado, mesesDiferir:meses_diferir, fecha_limite: fechaEngc, mplan_1: finalMesesp1, mplan_2: finalMesesp2,
+        #mplan_3:finalMesesp3, pp_1:msi_1p, pp_2:msi_2p, pp_3:msi_3p, primer_mensualidad:primer_mensualidad, corrida_dump:$scope.alphaNumeric
+
+        $objDatos = json_decode(file_get_contents("php://input"));
+        $idLote = (int)$objDatos->idLote;
+        $arreglo = array();
+        $arreglo["plan_pc"] = $objDatos->plan_pc;
+        $arreglo["idLote"] = $objDatos->idLote;
+        $arreglo["anio"] = $objDatos->anio;
+        $arreglo["precio_m2"] = $objDatos->precio_m2;
+        $arreglo["total"] = $objDatos->total;
+        $arreglo["porcentajeEng"] = $objDatos->porcentajeEng;
+        $arreglo["engancheCantidad"] = $objDatos->engancheCantidad;
+        $arreglo["diasPagoEng"] = $objDatos->diasPagoEng;
+        $arreglo["mesesDiferir"] = $objDatos->mesesDiferir;
+        $arreglo["fecha_limite"] = $objDatos->fecha_limite;
+        $arreglo["mplan_1"] = $objDatos->mplan_1;
+        $arreglo["mplan_2"] = $objDatos->mplan_2;
+        $arreglo["mplan_3"] = $objDatos->mplan_3;
+        $arreglo["pp_1"] = $objDatos->pp_1;
+        $arreglo["pp_2"] = $objDatos->pp_2;
+        $arreglo["pp_3"] = $objDatos->pp_3;
+        $arreglo["primer_mensualidad"] = $objDatos->primer_mensualidad;
+        $arreglo["fecha_creacion"] = date('Y-d-m H:i:s');
+        $arreglo["corrida_dump"] = json_encode($objDatos->corrida_dump);
+        $arreglo["creado_por"] = $this->session->userdata('id_usuario');
+
+
+        /*print_r(json_encode($arreglo['corrida_dump']));
+        exit;*/
+
+
+        //$response = $this->Corrida_model->insertPC($arreglo);#inserta el pago a capital
+        $data_response = $this->General_model->addRecord('pagos_capital', $arreglo);
+
+
+        if($data_response) {
+            $response['message'] = 'OK';
+            echo json_encode($response);
+        }else {
+            $response['message'] = 'ERROR';
+            echo json_encode($response);
+        }
+    }
+    function getLotesPC($condominio,$residencial)
+    {
+        $data['lotes'] = $this->Corrida_model->getLotesPC($condominio, $residencial);
+        //$data2 = array();
+        if(count($data['lotes'])<=0)
+        {
+            $data['lotes'][0]['idLote'] = 0;
+            $data['lotes'][0]['nombreLote'] = 'SIN CORRIDAS PARA ESTE LOTE';
+            echo json_encode($data['lotes']);
+        }
+        else{
+            echo json_encode($data['lotes']);
+        }
+    }
+
+    function editapc($id_corrida){
+        $data_corrida = array(
+            "id_corrida" => $id_corrida,
+            "nombre" => 'LOTE TEST'
+        );
+        $data_corrida['data_corrida'] = $this->Corrida_model->getInfoPCyID($id_corrida);
+
+//        print_r($data_corrida);
+//        exit;
+        $this->load->view("corrida/editarPC", $data_corrida);
+    }
+
+    function updatePC(){
+        $objDatos = json_decode(file_get_contents("php://input"));
+        $id_pc = $objDatos->id_pc;
+        $corrida_dump = $objDatos->corrida_dump;
+        $data['corrida_dump'] = json_encode($corrida_dump);
+        $data['modificado_por'] = $this->session->userdata('id_usuario');
+        $data['fecha_modificacion'] = date('Y-m-d H:i:s');
+        $table = 'pagos_capital';
+        $key = 'id_pc';
+//        print_r($table);
+//        echo '<br>';
+//        print_r($data);
+//        echo '<br>';
+//        print_r($key);
+//        echo '<br>';
+//        print_r($id_pc);
+//        exit;
+
+        $data_response = $this->General_model->updateRecord($table, $data, $key, $id_pc); // MJ: ACTUALIZA LA INFORMACIÓN DE UN REGISTRO EN PARTICULAR, RECIBE 4 PARÁMETROS. TABLA, DATA A ACTUALIZAR, LLAVE (WHERE) Y EL VALOR DE LA LLAVE
+
+
+        if($data_response) {
+            $response['message'] = 'OK';
+            echo json_encode($response);
+        }else {
+            $response['message'] = 'ERROR';
+            echo json_encode($response);
+        }
+
+    }
+
+
 }
