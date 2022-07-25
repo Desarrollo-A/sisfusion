@@ -34,7 +34,6 @@
                                                 <select name="proyecto" id="proyecto" class="selectpicker select-gral m-0"
                                                         data-style="btn" data-show-subtext="true"  title="Selecciona proyecto"
                                                         data-size="7" data-live-search="true" required>
-                                                    <option value="0">-SELECCIONA TODO-</option>
                                                 </select>
                                             </div>
                                         </div>
