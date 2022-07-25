@@ -58,8 +58,7 @@ class Postventa extends CI_Controller
         $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
         switch ($this->session->userdata('id_rol')) {
             case '11': // ADMON
-            case '13': // CONTRALORÏa
-            case '32': // CONTRALORÏa corporativa
+            case '17': // CONTRALORÍA corporativa
             case '55': // POSTVENTA
             case '56': // COMITÉ TÉCNICO
             case '57': // TITULACIÓN
@@ -1570,7 +1569,7 @@ class Postventa extends CI_Controller
         }
         $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
         switch ($this->session->userdata('id_rol')) {
-            case '32'://CONTRALORIA
+            case '17': // CONTRALORIA
             case '55': // POSTVENTA
             case '57': // TITULACIÓN
                 $this->load->view('template/header');
@@ -1586,7 +1585,7 @@ class Postventa extends CI_Controller
     function getData(){
         $data = $this->Postventa_model->getData_contraloria()->result();
         switch ($this->session->userdata('id_rol')){
-            case '32': //CONTRALORIA 
+            case '17': //CONTRALORIA 
                 $columns = array(
                     [
                         "title" => 'ID',

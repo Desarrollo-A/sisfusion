@@ -209,5 +209,26 @@ class Contratacion extends CI_Controller
         $this->validateSession();
         echo json_encode($this->Contratacion_model->getInventoryBylote($idLote)->result_array());
     }
+
+    public function completeInventory ()
+	{
+		$this->validateSession();
+		$this->load->view('template/header');
+		$this->load->view("contraloria/completeInventory", $this->get_menu->get_menu_data($this->session->userdata('id_rol')));
+	}
+
+    public function sedesPorDesarrollos()
+    {
+    	$this->validateSession();
+        echo json_encode($this->Contratacion_model->getSedesPorDesarrollos()->result_array());
+    }
+
+    public function downloadCompleteInventory () {
+        if (isset($_POST) && !empty($_POST)) {
+            $data['data'] = $this->Contratacion_model->getCompleteInventory($this->input->post("id_sede"))->result_array();
+            echo json_encode($data);
+        } else
+            echo json_encode(array());
+    }
     
 }

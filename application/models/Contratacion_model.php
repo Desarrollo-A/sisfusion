@@ -253,7 +253,7 @@ class Contratacion_model extends CI_Model {
                                   lot.totalValidado as cantidad_enganche, fechaSolicitudValidacion as fecha_validacion
                                   FROM lotes lot 
                                   INNER JOIN condominios con ON con.idCondominio = lot.idCondominio 
-                                  INNER JOIN residenciales res ON res.idResidencial = con.idResidencial 
+                                  INNER JOIN residenciales res ON res.idResidencial = con.idResidencial AND res.sede_residencial = 2
                                   INNER JOIN statuslote sl ON sl.idStatusLote = lot.idStatusLote 
                                   LEFT JOIN tipo_venta tv ON tv.id_tventa = lot.tipo_venta 
                                   LEFT JOIN clientes cl ON cl.id_cliente = lot.idCliente                
@@ -434,4 +434,43 @@ class Contratacion_model extends CI_Model {
                                 LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = cl.lugar_prospeccion AND oxc.id_catalogo = 9
                                 WHERE lot.status = 1 and lot.idLote = $idLote ORDER BY lot.idLote");
      }
+   
+   public function getSedesPorDesarrollos(){
+      return $this->db->query("SELECT re.sede_residencial id_sede, se.nombre FROM residenciales re
+      INNER JOIN sedes se ON se.id_sede = re.sede_residencial
+      WHERE re.status = 1 GROUP BY re.sede_residencial, se.nombre");
+   }
+
+   public function getCompleteInventory ($sede_residencial) {
+      return $this->db->query("SELECT lot.idLote, lot.nombreLote, con.nombre as nombreCondominio, lot.totalNeto2,
+      res.nombreResidencial, lot.idStatusLote, con.idCondominio, lot.sup as superficie, 
+      lot.total, lot.referencia, lot.comentario, lot.comentarioLiberacion, lot.observacionLiberacion,
+      CASE WHEN lot.casa = 1 THEN CONCAT(sl.nombre, ' casa') ELSE sl.nombre end as descripcion_estatus, sl.color, tv.tipo_venta, con.msni,
+      CONCAT(asesor.nombre,' ', asesor.apellido_paterno, ' ', asesor.apellido_materno) as asesor,
+      CONCAT(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno) as gerente,
+      CONCAT(coordinador.nombre,' ', coordinador.apellido_paterno, ' ', coordinador.apellido_materno) as coordinador,
+      CONCAT(asesor2.nombre,' ', asesor2.apellido_paterno, ' ', asesor2.apellido_materno) as asesor2,
+      CONCAT(coordinador2.nombre,' ', coordinador2.apellido_paterno, ' ', coordinador2.apellido_materno) as coordinador2,
+      CONCAT(gerente2.nombre,' ', gerente2.apellido_paterno, ' ', gerente2.apellido_materno) as gerente2, asesor2.id_rol,
+      lot.precio, lot.fecha_modst, cl.fechaApartado, lot.observacionContratoUrgente,
+      CONCAT(cl.nombre,' ', cl.apellido_paterno, ' ', cl.apellido_materno) as nombreCliente,lot.motivo_change_status,
+      ISNULL(oxc.nombre, 'Sin especificar') lugar_prospeccion, lot.fecha_creacion,
+      lot.totalValidado as cantidad_enganche, fechaSolicitudValidacion as fecha_validacion
+      FROM lotes lot 
+      INNER JOIN condominios con ON con.idCondominio = lot.idCondominio 
+      INNER JOIN residenciales res ON res.idResidencial = con.idResidencial AND res.sede_residencial = $sede_residencial
+      INNER JOIN statuslote sl ON sl.idStatusLote = lot.idStatusLote 
+      LEFT JOIN tipo_venta tv ON tv.id_tventa = lot.tipo_venta 
+      LEFT JOIN clientes cl ON cl.id_cliente = lot.idCliente                
+      LEFT JOIN usuarios asesor ON cl.id_asesor = asesor.id_usuario
+      LEFT JOIN usuarios coordinador ON cl.id_coordinador = coordinador.id_usuario
+      LEFT JOIN usuarios gerente ON cl.id_gerente = gerente.id_usuario                
+      LEFT JOIN usuarios asesor2 ON lot.idAsesor = asesor2.id_usuario
+      LEFT JOIN usuarios coordinador2 ON asesor2.id_lider = coordinador2.id_usuario
+      LEFT JOIN usuarios gerente2 ON coordinador2.id_lider = gerente2.id_usuario
+      LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = cl.lugar_prospeccion AND oxc.id_catalogo = 9          
+      WHERE lot.status = 1  ORDER BY con.nombre, lot.idLote");
+   }
+
+     
 }
