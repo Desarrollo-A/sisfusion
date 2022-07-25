@@ -1128,6 +1128,14 @@
   background-color: #F1F1F1;
 }
 
+.input-gral {
+  background-color: #eaeaea !important;
+  color: #929292 !important;
+  border-radius: 27px !important;
+  background-image: none !important;
+  padding-left: 20px;
+}
+
 .recisiones .miniCard {
   background: HSLA(212, 57%, 25%, 1);
   background: linear-gradient(135deg, HSLA(212, 57%, 25%, 1) 22%, HSLA(212, 62%, 25%, 1) 55%, HSLA(211, 57%, 21%, 1) 100%);
