@@ -1,14 +1,5 @@
 @import "_base";
 
-@media screen 
-  and (min-device-width: 1200px) 
-  and (max-device-width: 1600px) 
-  and (-webkit-min-device-pixel-ratio: 2)
-  and (min-resolution: 192dpi) { 
-    body {
-      background-color: #87ceeb;
-    }
-}
 .cargarPlan{
   margin-top: 65px;
   padding: 30px 15px;
@@ -98,13 +89,6 @@
         color: $deepGray;
         height: 100%;
       }
-      .input-gral {
-        background-color: $platinum !important;
-        color: $deepGray !important;
-        border-radius: 27px !important;
-        background-image: none !important;
-        padding-left: 20px;
-      }
       .radio-container {
         display: flex;
         justify-content: space-around;
@@ -154,21 +138,19 @@
           border:none;
         }
       }
+      @media #{$smartphone}, #{$tablets}{
+        height: auto!important;
+        overflow: hidden!important;
+      }
     }
     .boxInfoGral{
       position: absolute;
-      top: -40px;
-      right: 0;
+      top: 0;
+      right: 20px;
       display: flex;
       justify-content: space-around;
       align-items: center;
-      p{
-        font-size: 18px;
-        margin-right: 20px!important;
-      }
-      .items{
-        font-weight: 400;
-      }
+      z-index: 999;
       .btnDescuento{
         background-color: #1341761a;
         color: $blueIndigo;
@@ -184,12 +166,39 @@
         margin-left: 5px;
       }
     }
+    .leyendItems{
+      position: absolute;
+      top: -25px;
+      right: 65px;
+      font-size: 18px;
+      .items{
+        font-weight: 400;
+      }
+      @media #{$smartphone}{
+        top: 10px;
+        right: 15px;
+      }
+      @media #{$tablets}{
+        top: 0px;
+        right: 15px;
+      }
+    }
     #showPackage{
       height: 520px;
       padding: 11px 0;
       overflow: auto;
+      .pt-4{
+        @media #{$smartphone}, #{$tablets}{
+          padding-top: 0!important;
+        }
+      }
       .emptyCards{
-        color: $deepGray;
+        color: $deepGray; 
+        img{
+          @media #{$smartphone}, #{$tablets}{
+            width: 40%!important;
+          }
+        }
       }
       .cardPlan{
         height: 480px;
@@ -329,6 +338,9 @@
           align-items: center;
           justify-content: center;
         }
+        @media #{$smartphone}, #{$tablets}{
+          height: auto!important;
+        }
       }
       .switch-label:before, .switch-label:after {
         content: "";
@@ -365,7 +377,17 @@
         background-color: $green;
         transform: translate(80%, -50%);
       }
+      @media #{$smartphone}, #{$tablets}{
+        height: auto!important;
+        margin-top: 30px!important;
+      }
     }
+    @media #{$smartphone}, #{$tablets}{
+      margin-top: 30px!important;
+    }
+  }
+  @media #{$smartphone}, #{$tablets}{
+    height: auto!important;
   }
 }
 .dataTables_scrollBody::-webkit-scrollbar-track{
@@ -386,4 +408,7 @@
 /* Color del HOVER de barra de desplazamiento */
 .dataTables_scrollBody::-webkit-scrollbar-thumb:hover{
   background-color: $deepGray;
-}  
+}
+.btn-azure:hover span a{
+  color: $white!important;
+}

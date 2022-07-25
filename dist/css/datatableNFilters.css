@@ -1128,6 +1128,14 @@
   background-color: #F1F1F1;
 }
 
+.input-gral {
+  background-color: #eaeaea !important;
+  color: #929292 !important;
+  border-radius: 27px !important;
+  background-image: none !important;
+  padding-left: 20px;
+}
+
 .boxContent .nav-tabs-cm {
   background: #eeeeee;
   padding: 0;

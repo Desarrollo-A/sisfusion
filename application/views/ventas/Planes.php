@@ -13,22 +13,23 @@
 		$this->load->view('template/sidebar', $datos);
 		?>
 
-		<div class="modal fade modal-alertas" id="ModalAlert" role="dialog">
-			<div class="modal-dialog modal-md">
+		<div class="modal fade" id="ModalAlert" role="dialog">
+			<div class="modal-dialog modal-sm">
 				<div class="modal-content text-center">
 					<div class="modal-header">
-						<h4>Una vez guardados los planes <br> ya no se podrá modificar la información</h4>
+						<h5>Una vez guardados los planes ya no se podrá modificar la información.</h5>
 					</div>
-					<div class="row">
-						<div class="col-md-6 text-right">
-							<button type="button" data-toggle="tooltip" data-placement="right" title="Guardar" class="btn btn-success btn-circle btn-lg" onclick="SavePaquete();" name=""  id="">
-								<i class="fas fa-check"></i>
-							</button>
-						</div>
-						<div class="col-md-6 text-left">
-							<button type="button" data-toggle="tooltip" data-placement="right" title="Cancelar" class="btn btn-danger btn-circle btn-lg" data-dismiss="modal">
-								<i class="fas fa-times"></i>
-							</button>
+					<div class="container-fluid">
+						<div class="row mb-1 mt-1">
+							<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+								<button type="button" class="btnSave btn-gral-data" onclick="SavePaquete();">Guardar
+								</button>
+							</div>
+							<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+								
+								<button type="button" class="btn btn-danger btn-simple m-0" data-dismiss="modal">Cancelar
+								</button>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -36,18 +37,20 @@
 		</div>
 
 		<div class="modal fade modal-alertas" id="ModalRemove" role="dialog">
-			<div class="modal-dialog modal-md">
+			<div class="modal-dialog modal-sm">
 				<div class="modal-content text-center">
 					<div class="modal-header">
 						<h4>¿Desea remover este plan?</h4>
 					</div>
-					<div class="row">
-						<div class="col-md-6 text-right">
-							<input type="hidden" value="0" id="iddiv">
-							<button type="button" data-toggle="tooltip" data-placement="right" title="Guardar" class="btn btn-success btn-circle btn-lg" onclick="RemovePackage();" name=""  id=""><i class="fas fa-check"></i></button>
-						</div>
-						<div class="col-md-6 text-left">
-							<button type="button" data-toggle="tooltip" data-placement="right" title="Cancelar" class="btn btn-danger btn-circle btn-lg" data-dismiss="modal"><i class="fas fa-times"></i></button>
+					<div class="container-fluid">
+						<div class="row mb-1 mt-1">
+							<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+								<input type="hidden" value="0" id="iddiv">
+								<button type="button" class="btn-gral-data" onclick="RemovePackage();">Guardar</button>
+							</div>
+							<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+								<button type="button" class="btn btn-danger btn-simple m-0" data-dismiss="modal">Cancelar</button>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -187,13 +190,10 @@
 		</div>
 
 		<div class="modal fade modal-alertas" id="ModalFormAddDescuentos" role="dialog">
-			<div class="modal-dialog modal-md">
+			<div class="modal-dialog modal-sm">
 				<div class="modal-content">
 					<div class="modal-header">
-						<h5 class="modal-title">Cargar nuevo descuento</h5>
-						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-							<span aria-hidden="true">&times;</span>
-						</button>
+						<h5 class="modal-title text-center">Cargar nuevo descuento</h5>
 					</div>
 					<form id="addNewDesc">
 						<input type="hidden" value="0" name="tdescuento" id="tdescuento">
@@ -202,18 +202,20 @@
 						<input type="hidden" value="0" name="apply" id="apply">
 						<input type="hidden" value="0" name="boton" id="boton">
 						<input type="hidden" value="0" name="tipo_d" id="tipo_d">
-						<div class="form-group">
-							<label id="label_descuento"></label>
-							<input type="text"  class="input-gral" required  data-type="currency"   id="descuento" name="descuento">
+						<div class="form-group d-flex justify-center">
+							<div class="">
+								<p class="m-0" id="label_descuento"></p>
+								<input type="text" class="input-gral border-none w-100" required  data-type="currency"   id="descuento" name="descuento">
+							</div>
 						</div>
-						<div class="row">
-							<div class="col-md-3">
-							</div>
-							<div class="col-md-3">
-								<input type="submit" class="btn btn-success" name="disper_btn"  id="dispersar" value="Guardar">
-							</div>
-							<div class="col-md-3">
-								<input type="button" class="btn btn-danger" data-dismiss="modal" value="CANCELAR">
+						<div class="container-fluid">
+							<div class="row mt-1 mb-1">
+								<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+									<input type="submit" class="btn-gral-data" name="disper_btn"  id="dispersar" value="Guardar">
+								</div>
+								<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+									<input type="button" class="btn btn-danger btn-simple m-0" data-dismiss="modal" value="CANCELAR">
+								</div>
 							</div>
 						</div>
 					</form>
@@ -241,10 +243,13 @@
 										<form id="form-paquetes" class="formulario">
 											<div class="container-fluid">
 												<div class="row">
+													<div class="boxInfoGral">
+														<button type="button" data-toggle="modal" onclick="llenarTables();" data-target="#exampleModal" id="btn_open_modal" class="btnDescuento" rel="tooltip" data-placement="top" title="Ver descuentos"><i class="fas fa-tags" ></i></button>
+													</div>
 													<div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 p-0">
 														<div class="container-fluid" id="boxMainForm">
 															<div class="row">
-																<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">          
+																<div class="col-xs-12 col-sm-6 col-md-12 col-lg-12">          
 																	<div class="form-group">
 																		<label class="mb-0" for="sede">Rango fechas (<b class="text-danger">*</b>)</label>
 																		<div class="d-flex">
@@ -253,7 +258,7 @@
 																		</div>
 																	</div>
 																</div>
-																<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+																<div class="col-xs-12 col-sm-6 col-md-12 col-lg-12">
 																	<div class="form-group">
 																		<label class="mb-0" for="sede">Sede (<b class="text-danger">*</b>)</label>
 																		<select name="sede" id="sede" class="select-gral mt-0" data-style="btn " data-show-subtext="true" data-live-search="true"  title="Selecciona una opción" data-size="7" required onchange="validateAllInForm()">
@@ -267,9 +272,9 @@
 																		</select>
 																	</div>
 																</div>
-																<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+																<div class="col-xs-12 col-sm-6 col-md-12 col-lg-12">
 																	<div class="form-group">
-																		<label class="mb-0">Tipo de Lote (<b class="text-danger">*</b>):</label>
+																		<label class="mb-0">Tipo de lote (<b class="text-danger">*</b>):</label>
 																		<div class="radio-container boxTipoLote">
 																			<input type="radio" id="customRadioInline1" value="1" name="tipoLote" onchange="validateAllInForm()">
 																			<label class="custom-control-label" for="customRadioInline1">Habitacional</label>
@@ -280,7 +285,7 @@
 																		</div>
 																	</div>
 																</div>
-																<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+																<div class="col-xs-12 col-sm-6 col-md-12 col-lg-12">
 																	<div class="form-group">
 																		<label class="mb-0">Superficie (<b class="text-danger">*</b>):</label>
 																		<div class="d-flex w-100">
@@ -305,18 +310,8 @@
 														</div>
 													</div>
 													<div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 mt-2">
-														<div class="boxInfoGral d-none">
-															<p class="m-0">(<span class="items"></span>) Planes añadidos</p>
-															<button type="button" data-toggle="modal" onclick="llenarTables();" data-target="#exampleModal" id="btn_open_modal" class="btnDescuento" rel="tooltip" data-placement="top" title="Ver descuentos"><i class="fas fa-tags" ></i></button>
-														</div>
+														<p class="m-0 d-none leyendItems">Plan(es) añadido(s) (<span class="items"></span>)</p>
 														<div class="row dataTables_scrollBody" id="showPackage">
-															<div class="emptyCards h-100 d-flex justify-center align-center pt-4">
-																<div class="h-100 text-center pt-4">
-																	<img src= '<?=base_url('dist/img/emptyFile.png')?>' alt="Icono gráfica" class="h-50 w-auto">
-																	<h3 class="titleEmpty">Aún no ha agregado ningún plan</h3>
-																	<div class="subtitleEmpty">Puede comenzar llenando el formulario de la izquierda <br>para después crear un nuevo plan</div>
-																</div>
-															</div>
 														</div>
 													</div>
 												</div>
@@ -378,7 +373,7 @@
 				$('#apply').val(1);
 				$('#boton').val(boton);
 				$('#tipo_d').val(1);
-				document.getElementById('label_descuento').innerHTML = 'Agregar descuento al precio total (<b class="text-danger">*</b>):';
+				document.getElementById('label_descuento').innerHTML = 'Agregar descuento al precio total';
 			}else if(tipo == 2){
 				$('#descuento').val('');
 				$('#tdescuento').val(2);
@@ -387,7 +382,7 @@
 				$('#apply').val(0);
 				$('#boton').val(boton);
 				$('#tipo_d').val(2);
-				document.getElementById('label_descuento').innerHTML = 'Agregar descuento al enganche(<b class="text-danger">*</b>):';
+				document.getElementById('label_descuento').innerHTML = 'Agregar descuento al enganche';
 			}else if(tipo == 4){
 				$('#descuento').val('');
 				$('#tdescuento').val(1);
@@ -396,7 +391,7 @@
 				$('#apply').val(1);
 				$('#boton').val(boton);
 				$('#tipo_d').val(4);
-				document.getElementById('label_descuento').innerHTML = 'Agregar descuento al total por M2(<b class="text-danger">*</b>):';
+				document.getElementById('label_descuento').innerHTML = 'Agregar descuento al total por M2';
 			}else if(tipo == 12){
 				$('#descuento').val('');
 				$('#tdescuento').val(1);
@@ -405,7 +400,7 @@
 				$('#apply').val(1);
 				$('#boton').val(boton);
 				$('#tipo_d').val(12);
-				document.getElementById('label_descuento').innerHTML = 'Agregar descuento por bono(<b class="text-danger">*</b>):';
+				document.getElementById('label_descuento').innerHTML = 'Agregar descuento por bono';
 			}
 			else if(tipo == 13){
 				$('#descuento').val('');
@@ -415,7 +410,7 @@
 				$('#apply').val(1);
 				$('#boton').val(boton);
 				$('#tipo_d').val(13);
-				document.getElementById('label_descuento').innerHTML = 'Agregar descuento Meses sin intereses(<b class="text-danger">*</b>):';
+				document.getElementById('label_descuento').innerHTML = 'Agregar descuento meses sin intereses';
 			}
 			$('#ModalFormAddDescuentos').modal();
 		}
@@ -892,11 +887,7 @@
                 $("#sede").selectpicker('refresh');
             }, 'json');
 			setInitialValues();
-			// const startOfMonth = moment().startOf('month').format('DD-MM-YYYY');
-			// const endOfMonth   = moment().endOf('month').format('DD-MM-YYYY');
-			// // $('#fechainicio').val(startOfMonth);
-			// // $('#fechafin').val(startOfMonth);
-
+			noCreatedCards();
         });
 
 		$("#sede").change(function() {
@@ -937,7 +928,13 @@
 				contentType: false,
 				cache: false,
 				processData:false,
-				success: function(data) {	
+				beforeSend: function(){
+					$('#ModalAlert .btnSave').attr("disabled","disabled");
+					$('#ModalAlert .btnSave').css("opacity",".5");
+				},
+				success: function(data) {
+					$('#ModalAlert .btnSave').prop('disabled', false);
+					$('#ModalAlert .btnSave').css("opacity","1");
 					if(data == 1){
 						ClearAll();
 						alerts.showNotification("top", "right", "Planes almacenados correctamente.", "success");	
@@ -947,6 +944,8 @@
 				
 				},
 				error: function(){
+					$('#ModalAlert .btnSave').prop('disabled', false);
+					$('#ModalAlert .btnSave').css("opacity","1");
 					alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
 				},
 				async: false
@@ -965,6 +964,10 @@
 			$('#residencial option').remove();
 			document.getElementById('showPackage').innerHTML = '';
 			$('#index').val(0);	
+			setInitialValues();
+			noCreatedCards();
+			$(".leyendItems").addClass('d-none');
+			$("#btn_save").addClass('d-none');
 		}
 	
 		function GenerarCard(){
@@ -973,7 +976,7 @@
 				var indexNext = (document.getElementById('index').value - 1) + 2;
 				indexActual.value = indexNext;
 				$('#showPackage').append(`
-				<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6" id="card_${indexNext}">
+				<div class="col-xs-12 col-sm-6 col-md-6 col-lg-6" id="card_${indexNext}">
 					<div class="cardPlan dataTables_scrollBody">
 						<div class="container-fluid">
 							<div class="row">
@@ -1071,7 +1074,7 @@
 				validateNonePlans();
 			}
 			else{
-				alerts.showNotification("top", "left", "Debe llenar todos los campos requeridos.", "warning");
+				alerts.showNotification("top", "right", "Debe llenar todos los campos requeridos.", "warning");
 			}
 		}
 
@@ -1081,7 +1084,7 @@
 				if(m != i){
 					if( $(`#orden_${indexN}_${m}`).val() == seleccionado && seleccionado != ""){
 						$(`#orden_${indexN}_${i}`).val("");
-						alerts.showNotification("top", "left", "Este número ya se ha seleccionado.", "warning");
+						alerts.showNotification("top", "right", "Este número ya se ha seleccionado.", "warning");
 					}	
 				}
 			}
@@ -1330,7 +1333,6 @@
 					eng_top=1;
 					apply=1;			
 					
-					///TOTAL DE ENGANCHE
 					$(`#selectDescuentos_${indexGral}_${index}`).append(`
 					<div class="w-100 d-flex justify-center align-center">
 						<select id="ListaDescuentosBono_${indexGral}_${index}" required name="${indexGral}_${index}_ListaDescuentosBono_[]" multiple="multiple" class="form-control"  required data-live-search="true"></select>
@@ -1393,7 +1395,6 @@
 					eng_top=1;
 					apply=1;			
 					
-					///TOTAL DE ENGANCHE
 					$(`#selectDescuentos_${indexGral}_${index}`).append(`
 					<div class="w-100 d-flex justify-center align-center">
 						<select id="ListaDescuentosMSI_${indexGral}_${index}" required name="${indexGral}_${index}_ListaDescuentosMSI_[]" multiple="multiple" class="form-control"  required data-live-search="true"></select>
@@ -1406,7 +1407,7 @@
 						for( var i = 0; i<len; i++){
 							var name = data[i]['porcentaje'];
 							var id = data[i]['id_descuento']+','+data[i]['porcentaje'];
-							$(`#ListaDescuentosMSI_${indexGral}_${index}`).append(`<option value='${id}' label="${name}">${name}%</option>`);
+							$(`#ListaDescuentosMSI_${indexGral}_${index}`).append(`<option value='${id}' label="${name}">${name}</option>`);
 						}
 						if(len<=0){
 							$(`#ListaDescuentosMSI_${indexGral}_${index}`).append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
@@ -1437,19 +1438,20 @@
 			document.getElementById("printSuperficie").innerHTML ='';
 			if(tipoSup == 1){
 				$('#printSuperficie').append(`
-					<input type="number" class="form-control input-gral" name="fin" placeholder="Mayor a">
+					<input type="number" class="form-control input-gral p-0 text-center h-100" name="fin" placeholder="Mayor a" data-toggle="tooltip" data-placement="top" title="Mayor que 200">
 					<input type="hidden" class="form-control" value="0" name="inicio">`);
-				}
+			}
 			else if(tipoSup == 2){
 				$('#printSuperficie').append(`
-				<input type="number" class="form-control input-gral" name="fin" placeholder="Menor a">
+					<input type="number" class="form-control input-gral p-0 text-center h-100" name="fin" placeholder="Menor a" data-toggle="tooltip" data-placement="top" title="Menor que 199.99">
 					<input type="hidden" class="form-control" value="0" name="inicio">`);
 			}
 			else if(tipoSup == 3){
 				$('#printSuperficie').append(`
-				<input type="hidden" class="form-control" name="inicio" value="0">
-				<input type="hidden" class="form-control" name="fin" value="0">`);
-			}	
+					<input type="hidden" class="form-control" name="inicio" value="0">
+					<input type="hidden" class="form-control" name="fin" value="0">`);
+			}
+			$('[data-toggle="tooltip"]').tooltip();
 		}
 
 		function RemovePackage(){
@@ -1547,14 +1549,25 @@
 			if (plans.length > 0 ){
 				$("#btn_save").removeClass('d-none');
 				$(".emptyCards").addClass('d-none');
-				$(".boxInfoGral").removeClass('d-none');
+				$(".leyendItems").removeClass('d-none');
 				$(".items").text(plans.length);
 			}
 			else{
 				$("#btn_save").addClass('d-none');
 				$(".emptyCards").removeClass('d-none');	
-				$(".boxInfoGral").addClass('d-none');
+				$(".leyendItems").addClass('d-none');
 			}
+		}
+
+		function noCreatedCards(){
+			$('#showPackage').append(`
+				<div class="emptyCards h-100 d-flex justify-center align-center pt-4">
+					<div class="h-100 text-center pt-4">
+						<img src= '`+url+`dist/img/emptyFile.png' alt="Icono gráfica" class="h-50 w-auto">
+						<h3 class="titleEmpty">Aún no ha agregado ningún plan</h3>
+						<div class="subtitleEmpty">Puede comenzar llenando el formulario de la izquierda <br>para después crear un nuevo plan</div>
+					</div>
+				</div>`);
 		}
 	</script>
 </body>
