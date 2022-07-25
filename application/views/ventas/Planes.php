@@ -46,7 +46,7 @@
 						<div class="row mb-1 mt-1">
 							<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
 								<input type="hidden" value="0" id="iddiv">
-								<button type="button" class="btn-gral-data" onclick="RemovePackage();">Guardar</button>
+								<button type="button" class="btn-gral-data" onclick="RemovePackage();">Sí</button>
 							</div>
 							<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
 								<button type="button" class="btn btn-danger btn-simple m-0" data-dismiss="modal">Cancelar</button>
