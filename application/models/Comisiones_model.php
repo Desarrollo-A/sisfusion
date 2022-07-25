@@ -8392,7 +8392,8 @@ return $query->result();
         INNER JOIN pago_comision_ind pci ON pci.id_pago_i = rpp.id_pago_i AND pci.estatus IN(18,19,20,21,22,23) AND pci.descuento_aplicado = 1
         INNER JOIN comisiones c ON c.id_comision = pci.id_comision
         INNER JOIN lotes l ON l.idLote = c.id_lote
-        INNER JOIN historial_comisiones hc ON hc.id_pago_i = rpp.id_pago_i and (hc.comentario like 'DESCUENTO POR%' or hc.comentario like '%, POR MOTIVO DE PRESTAMO') and hc.estatus=1
+        INNER JOIN historial_comisiones hc ON hc.id_pago_i = rpp.id_pago_i 
+        and (hc.comentario like 'DESCUENTO POR%' or hc.comentario like '%, POR MOTIVO DE PRESTAMO' or hc.comentario like '%NOMINA%') and hc.estatus=1
         WHERE pa.id_prestamo = $idPrestamo
         ORDER BY np ASC");
         return $result->result_array();
@@ -8603,9 +8604,7 @@ return $query->result();
             WHERE id_rol = $rol");
         return $result->result_array();
     }
-/**----------------------------------------FIN BONOS Y PRESTAMOS------------------------------- */
-/**---------------------------------------------- */
-
+ 
     public function findAllPlanes()
     {
         $query = $this->db->query('SELECT id_plan, descripcion FROM plan_comision WHERE estatus = 1');
