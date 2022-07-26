@@ -1252,7 +1252,7 @@ gerente2.nombreGerente as gerente2, gerente3.nombreGerente as gerente3, gerente4
                                     concat(us.nombre,' ', us.apellido_paterno, ' ', us.apellido_materno) as asesor, idAsesor,
                                     concat(ge.nombre,' ', ge.apellido_paterno, ' ', ge.apellido_materno) as gerente, lotes.referencia FROM lotes as lotes
                                     INNER JOIN clientes as cl ON lotes.idLote=cl.idLote
-                                    INNER JOIN sedes AS s ON s.id_sede = cl.id_sede
+                                    LEFT JOIN sedes AS s ON s.id_sede = cl.id_sede
                                     INNER JOIN condominios as cond ON lotes.idCondominio=cond.idCondominio
                                     INNER JOIN residenciales as residencial ON cond.idResidencial=residencial.idResidencial
                                     LEFT JOIN usuarios us ON cl.id_asesor=us.id_usuario
