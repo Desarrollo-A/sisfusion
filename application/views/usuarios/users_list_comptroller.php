@@ -66,6 +66,116 @@
             </div>
         </div>
 
+        <div class="modal fade" id="changesRegsUsers" tabindex="-1" role="dialog" 
+                                                        aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+                                                
+                                                        <div class="modal-dialog modal-lg modal-dialog-scrollable" role="document">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header">
+                                                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                                                                        <i class="material-icons" onclick="cleanComments()">clear</i>
+                                                                    </button>
+                                                                    <h4 class="modal-title">Consulta información</h4>
+                                                                </div>
+                                                                <div class="modal-body">
+                                                                    <div role="tabpanel">
+                                                                        <!-- Nav tabs -->
+                                                                        <ul class="nav nav-tabs" role="tablist" style="background: #003d82;">
+                                                                            <li role="presentation" class="active"><a href="#changelogUsersTab" aria-controls="changelogUsersTab" role="tab" data-toggle="tab">Bitácora de cambios</a></li>
+                                                                        </ul>
+                                                                        <!-- Tab panes -->
+                                                                        <div class="tab-content">
+                                                                            <div role="tabpanel" class="tab-pane active" id="changelogUsersTab">
+                                                                                <div class="row">
+                                                                                    <div class="col-md-12">
+                                                                                        <div class="card card-plain">
+                                                                                            <div class="card-content">
+                                                                                                <ul class="timeline timeline-simple" id="changelogUsers"></ul>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <button type="button" class="btn btn-primary" data-dismiss="modal">Aceptar</button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal fade" id="editUserModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+                                                        <div class="modal-dialog">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header">
+                                                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                                                                        <i class="material-icons">clear</i>
+                                                                    </button>
+                                                                    <h4 class="modal-title">Edita su información</h4>
+                                                                </div>
+                                                                <form id="editUserForm" name="editUserForm" method="post">
+                                                                    <div class="modal-body">
+                                                                        <div class="col-sm-12">
+                                                                            <div class="form-group label-floating select-is-empty div_payment_method">
+                                                                                <label class="control-label">Forma de pago <small>(requerido)</small></label>
+                                                                                <select id="payment_method" name="payment_method" class="form-control payment_method" required></select>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-sm-3">
+                                                                            <div class="form-group">
+                                                                                <input id="id_usuario" name="id_usuario" type="hidden" class="form-control">
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="modal-footer">
+                                                                        <button type="submit" class="btn btn-primary">Aceptar</button>
+                                                                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                                                                    </div>
+                                                                </form>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="modal fade" id="seeInformationModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+                                                            <div class="modal-dialog modal-lg modal-dialog-scrollable" role="document">
+                                                                <div class="modal-content">
+                                                                    <div class="modal-header">
+                                                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                                                                            <i class="material-icons" onclick="cleanComments()">clear</i>
+                                                                        </button>
+                                                                        <h4 class="modal-title">Consulta información</h4>
+                                                                    </div>
+                                                                    <div class="modal-body">
+                                                                        <div role="tabpanel">
+                                                                            <!-- Nav tabs -->
+                                                                            <ul class="nav nav-tabs" role="tablist" style="background: #003d82;">
+                                                                                <li role="presentation" class="active"><a href="#changelogTab" aria-controls="changelogTab" role="tab" data-toggle="tab">Bitácora de cambios</a></li>
+                                                                            </ul>
+                                                                            <!-- Tab panes -->
+                                                                            <div class="tab-content">
+                                                                                <div role="tabpanel" class="tab-pane active" id="changelogTab">
+                                                                                    <div class="row">
+                                                                                        <div class="col-md-12">
+                                                                                            <div class="card card-plain">
+                                                                                                <div class="card-content">
+                                                                                                    <ul class="timeline timeline-simple" id="changelog"></ul>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <input type="hidden" name="prospecto_lbl" id="prospecto_lbl">
+                                                                    </div>
+                                                                    <div class="modal-footer">
+                                                                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" onclick="cleanComments()">Cerrar</button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
         <?php $this->load->view('template/footer_legend');?>
 
     </div>
