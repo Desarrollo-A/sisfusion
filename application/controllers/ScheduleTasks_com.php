@@ -114,7 +114,7 @@ public function LlenadoPlan(){ //CRON diario
 //REGRESAR SOLO SI TIENEN MAS DE $100 PESOS, DE 1 A 55 Y LAS QUE SON RECISIONES DE CONTRATO
 public function limpiar_bandera_neo(){
     $this->db->query("UPDATE pago_comision SET bandera = 1 WHERE bandera IN (55,0)");
-    $this->db->query("UPDATE pago_comision SET bandera = 0 WHERE id_lote in (select idLote from lotes where registro_comision = 1 and idStatusContratacion = 15) and bandera IN (1,55) and abonado<(total_comision-100) and abonado < (ultimo_pago-100)");
+    $this->db->query("UPDATE pago_comision SET bandera = 0, modificado_por = 1 WHERE id_lote in (select idLote from lotes where registro_comision = 1 and idStatusContratacion = 15) and bandera IN (1,55) and abonado<(total_comision-100) and abonado < (ultimo_pago-100)");
     $this->db->query("UPDATE pago_comision SET bandera = 0 WHERE id_lote in (select idLote from lotes where registro_comision = 8) and bandera NOT IN (0)");
     $this->db->query("UPDATE pago_comision SET bandera = 7 where pendiente <2 and bandera not in (7) and total_comision not in (0)");
     $this->db->query("UPDATE lotes SET registro_comision = 7 where registro_comision not in (7) and idLote in (select id_lote from pago_comision where bandera in (7))");

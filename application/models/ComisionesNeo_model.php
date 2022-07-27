@@ -249,7 +249,7 @@ class ComisionesNeo_model extends CI_Model {
     }
 
     public function UpdateBanderaPagoComision($idLote, $bonificacion, $FechaAplicado){
-        return $this->db->query("UPDATE pago_comision SET bandera = 0, bonificacion = ".$bonificacion.", fecha_neodata = ".$FechaAplicado.", modificado_por = 'NEO' WHERE id_lote = ".$idLote."");
+        return $this->db->query("UPDATE pago_comision SET bandera = 0, fecha_modificacion = GETDATE(), bonificacion = ".$bonificacion.", fecha_neodata = '".$FechaAplicado."', modificado_por = 'NEO' WHERE id_lote = ".$idLote."");
     }
 
     public function UpdateBanderaPagoComisionNO($idLote){
