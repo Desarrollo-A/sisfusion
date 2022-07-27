@@ -1,4 +1,4 @@
-/**/
+/*la corrección xd*/
 
 function calculoMoratorioII(IM, importeSaldoI, posPay, PositionPago, diasRetardo, saldoInsoluto, minVal, maxVal, arrayCheckAllPost)
 {
