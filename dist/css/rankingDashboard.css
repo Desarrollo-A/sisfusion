@@ -69,7 +69,7 @@
 }
 
 .ml-1 {
-  margin-left: 10px;
+  margin-left: 10px !important;
 }
 
 .ml-2 {
@@ -1134,6 +1134,11 @@
   border-radius: 27px !important;
   background-image: none !important;
   padding-left: 20px;
+}
+
+.isRequired {
+  color: #EA4335;
+  margin: 0 3px;
 }
 
 #ranking table.dataTable > thead > tr > th, #ranking table.dataTable > tbody > tr > th, #ranking table.dataTable > tfoot > tr > th, #ranking table.dataTable > thead > tr > td, #ranking table.dataTable > tbody > tr > td, #ranking table.dataTable > tfoot > tr > td {
