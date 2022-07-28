@@ -22,7 +22,9 @@ class Usuarios_modelo extends CI_Model {
     }
 
     function getUsersList(){
-        switch ($this->session->userdata('id_rol')) {
+        $id_rol = $this->session->userdata('id_rol');
+        $id_lider = $this->session->userdata('id_lider');
+        switch ($id_rol) {
             case '19': // SUBDIRECTOR MKTD
             case '20': // GERENTE MKTD
                 return $this->db->query("SELECT usuarios.id_usuario, id_rol, opcs_x_cats.nombre AS puesto, CONCAT(usuarios.nombre, ' ', apellido_paterno, ' ', apellido_materno) AS nombre, 
@@ -36,94 +38,54 @@ class Usuarios_modelo extends CI_Model {
                     WHERE (id_rol IN (3, 7, 9) AND rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%' AND ISNULL(correo, '' ) NOT LIKE '%OOAM%' AND correo NOT LIKE '%CASA%') ORDER BY nombre");
                 break;
             case '4': // ASISTENTE DIRECCIÓN
-                return $this->db->query("SELECT usuarios.id_usuario, id_rol, opcs_x_cats.nombre AS puesto, CONCAT(usuarios.nombre, ' ', apellido_paterno, ' ', apellido_materno) AS nombre, 
-                    (CASE id_rol WHEN 7 THEN lider ELSE lider_coord END) AS jefe_directo, telefono, correo, usuarios.estatus, id_lider, id_lider_2, 0 nuevo, 
-                    usuarios.fecha_creacion, s.nombre sede, contrasena
-                    FROM usuarios 
-                    INNER JOIN (SELECT * FROM opcs_x_cats WHERE id_catalogo = 1) opcs_x_cats ON usuarios.id_rol = opcs_x_cats.id_opcion 
-                    LEFT JOIN (SELECT id_usuario AS id_lid, id_lider AS id_lider_2, CONCAT(apellido_paterno, ' ', apellido_materno, ' ', usuarios.nombre) lider FROM usuarios) AS lider_2 ON lider_2.id_lid = usuarios.id_lider 
-                    LEFT JOIN (SELECT id_usuario, id_lider AS id_lider3, CONCAT(apellido_paterno, ' ', apellido_materno, ' ', usuarios.nombre) lider_coord FROM usuarios) AS lider_3 ON lider_3.id_usuario = lider_2.id_lid 
-                    INNER JOIN sedes s ON CAST(s.id_sede AS VARCHAR(45)) = CAST(usuarios.id_sede AS VARCHAR(45))  
-                    WHERE (id_rol IN (3, 7, 9) AND rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%' AND ISNULL(correo, '' ) NOT LIKE '%OOAM%' AND ISNULL(correo, '') NOT LIKE '%CASA%') ORDER BY nombre");                        
-                break;
             case '5': // ASISTENTE SUBDIRECCIÓN
-                if($this->session->userdata('id_usuario') == 6627) // JUANA VE 3 (MÉRIDA) Y 6 (CANCÚN)
-                    $id_sede = "(usuarios.id_sede LIKE ('%3%') OR usuarios.id_sede LIKE '%6%')";
-                else if($this->session->userdata('id_usuario') == 7097 || $this->session->userdata('id_usuario') == 7096) // GRISELL / EDGAR LEONARDO VE 4 (CIUDAD DE MÉXICO) Y 9 (SAN MIGUEL DE ALLENDE)
-                    $id_sede = "(usuarios.id_sede LIKE '%4%' OR usuarios.id_sede LIKE '%9%') AND usuarios.id_usuario != ".$this->session->userdata('id_lider_2')."";
-                else 
-                    $id_sede = "(usuarios.id_sede LIKE('%".$this->session->userdata('id_sede')."%'))";
-
-                if($this->session->userdata('id_usuario') == 29)
-                    $id_usuario = " OR usuarios.id_usuario IN (10105, 9585, 9704, 9404, 10107, 10106)";
-                else
-                    $id_usuario = "";
-
-                    return $this->db->query("SELECT usuarios.id_usuario, id_rol, opcs_x_cats.nombre AS puesto, CONCAT(usuarios.nombre, ' ', apellido_paterno, ' ', apellido_materno)
-                    AS nombre, (CASE id_rol WHEN 7 THEN lider ELSE lider_coord END) AS jefe_directo, telefono, correo, usuarios.estatus, 
-                    id_lider, id_lider_2, 0 nuevo, usuarios.fecha_creacion, s.nombre sede FROM usuarios 
-                    INNER JOIN (SELECT * FROM opcs_x_cats WHERE id_catalogo = 1) opcs_x_cats ON usuarios.id_rol = opcs_x_cats.id_opcion 
-                    LEFT JOIN (SELECT id_usuario AS id_lid, id_lider AS id_lider_2, CONCAT(apellido_paterno, ' ', apellido_materno, ' ', usuarios.nombre) lider  
-                    FROM usuarios) AS lider_2 ON lider_2.id_lid = usuarios.id_lider
-                    LEFT JOIN (SELECT id_usuario, id_lider AS id_lider3, CONCAT(apellido_paterno, ' ', apellido_materno, ' ', usuarios.nombre) lider_coord  
-                    FROM usuarios) AS lider_3 ON lider_3.id_usuario = lider_2.id_lid
-                    LEFT JOIN sedes s ON CAST(s.id_sede AS VARCHAR(45)) = CAST(usuarios.id_sede AS VARCHAR(45))
-                    WHERE ($id_sede AND id_rol IN (2, 3, 7, 9) AND rfc NOT LIKE '%TSTDD%' AND correo NOT LIKE '%test_%' AND correo NOT LIKE '%OOAM%' AND correo NOT LIKE '%CASA%')
-                    $id_usuario
-                    ORDER BY nombre");
-                break;
             case '6': // ASISTENTE GERENCIA
-                if ($this->session->userdata('id_usuario') == 895) { // MICHELLE
-                    return $this->db->query("SELECT usuarios.id_usuario, id_rol, opcs_x_cats.nombre AS puesto, CONCAT(usuarios.nombre, ' ', apellido_paterno, ' ', apellido_materno)
-                                        AS nombre, (CASE id_rol WHEN 7 THEN lider ELSE lider_coord END) AS jefe_directo, telefono, correo, usuarios.estatus, 
-                                        id_lider, id_lider_2, 0 nuevo, usuarios.fecha_creacion, s.nombre sede FROM usuarios 
-                                        INNER JOIN (SELECT * FROM opcs_x_cats WHERE id_catalogo = 1) opcs_x_cats ON usuarios.id_rol = opcs_x_cats.id_opcion 
-                                        LEFT JOIN (SELECT id_usuario AS id_lid, id_lider AS id_lider_2, CONCAT(apellido_paterno, ' ', apellido_materno, ' ', usuarios.nombre) lider  
-                                        FROM usuarios) AS lider_2 ON lider_2.id_lid = usuarios.id_lider
-                                        LEFT JOIN (SELECT id_usuario, id_lider AS id_lider3, CONCAT(apellido_paterno, ' ', apellido_materno, ' ', usuarios.nombre) lider_coord  
-                                        FROM usuarios) AS lider_3 ON lider_3.id_usuario = lider_2.id_lid
-                                        INNER JOIN sedes s ON CAST(s.id_sede AS VARCHAR(45)) = CAST(usuarios.id_sede AS VARCHAR(45))
-                                        WHERE ((id_lider = ".$this->session->userdata('id_lider')." OR id_lider_2 = ".$this->session->userdata('id_lider').") AND id_rol IN (7, 9) AND rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%') OR (usuarios.id_usuario = ".$this->session->userdata('id_lider')." OR usuarios.id_lider = 896)
-                                        ORDER BY nombre");
-                } else {
-                return $this->db->query("SELECT usuarios.id_usuario, id_rol, opcs_x_cats.nombre AS puesto, CONCAT(usuarios.nombre, ' ', apellido_paterno, ' ', apellido_materno)
-                                        AS nombre, (CASE id_rol WHEN 7 THEN lider ELSE lider_coord END) AS jefe_directo, telefono, correo, usuarios.estatus, 
-                                        id_lider, id_lider_2, 0 nuevo, usuarios.fecha_creacion, s.nombre sede FROM usuarios 
-                                        INNER JOIN (SELECT * FROM opcs_x_cats WHERE id_catalogo = 1) opcs_x_cats ON usuarios.id_rol = opcs_x_cats.id_opcion 
-                                        LEFT JOIN (SELECT id_usuario AS id_lid, id_lider AS id_lider_2, CONCAT(apellido_paterno, ' ', apellido_materno, ' ', usuarios.nombre) lider  
-                                        FROM usuarios) AS lider_2 ON lider_2.id_lid = usuarios.id_lider
-                                        LEFT JOIN (SELECT id_usuario, id_lider AS id_lider3, CONCAT(apellido_paterno, ' ', apellido_materno, ' ', usuarios.nombre) lider_coord  
-                                        FROM usuarios) AS lider_3 ON lider_3.id_usuario = lider_2.id_lid
-                                        INNER JOIN sedes s ON CAST(s.id_sede AS VARCHAR(45)) = CAST(usuarios.id_sede AS VARCHAR(45))
-                                        WHERE (((id_lider = ".$this->session->userdata('id_lider')." OR id_lider_2 = ".$this->session->userdata('id_lider').") AND 
-                                        id_rol IN (7, 9) AND 
-                                        (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%'))
-                                        OR (usuarios.id_usuario IN (9359, 9827)) OR usuarios.id_usuario = ".$this->session->userdata('id_lider')." OR usuarios.gerente_id = ".$this->session->userdata('id_lider').")");
-                }
+            case '53': // ANALISTA DE COMISIONES
+                if ($id_rol == 4 || $id_rol == 53)
+                    $where = "us.id_rol IN (3, 7, 9) AND us.rfc NOT LIKE '%TSTDD%' AND ISNULL(us.correo, '') NOT LIKE '%test_%' AND ISNULL(us.correo, '') NOT LIKE '%OOAM%' AND ISNULL(us.correo, '') NOT LIKE '%CASA%'";
+                else if ($id_rol == 4)
+                    $where = "us.subdirector_id = $id_lider OR us.regional_id = $id_lider OR us.id_usuario = $id_lider";
+                else
+                    $where = "us.gerente_id = $id_lider OR us.id_usuario = $id_lider";
+                
+                return $this->db->query("SELECT us.id_usuario, us.id_rol, oxc.nombre AS puesto, 
+                UPPER(CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)) nombre, 
+                UPPER(CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno)) coordinador, 
+                UPPER(CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno)) gerente, 
+                UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)) subdirector, 
+                UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)) regional, 
+                us.telefono, us.correo, us.estatus, 0 nuevo, us.fecha_creacion, se.nombre sede,
+                us.talla, us.sexo, us.hijos_12, us.fecha_reingreso, us.fecha_baja
+                FROM usuarios us
+                INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = us.id_rol AND oxc.id_catalogo = 1
+                LEFT JOIN sedes se ON CAST(se.id_sede AS VARCHAR(45)) = CAST(us.id_sede AS VARCHAR(45))
+                LEFT JOIN usuarios u1 ON u1.id_usuario = us.id_lider
+                LEFT JOIN usuarios u2 ON u2.id_usuario = us.gerente_id
+                LEFT JOIN usuarios u3 ON u3.id_usuario = us.subdirector_id
+                LEFT JOIN usuarios u4 ON u4.id_usuario = us.regional_id
+                WHERE $where 
+                ORDER BY nombre");                        
                 break;
-            case '41': // GENERALISTA
-                if($this->session->userdata('id_usuario') == 4585) // PAOLA HURTADO HERNANDEZ 4 (CIUDAD DE MÉXICO) Y 9 (SAN MIGUEL DE ALLENDE)
-                    $id_sede = "'4', '9'";
-                else 
-                    $id_sede = "'".$this->session->userdata('id_sede')."'";
-
-                return $this->db->query("SELECT u.estatus, u.id_usuario, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombre, u.correo,
-                                        u.telefono, oxc.nombre puesto, CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) jefe_directo, u.correo, CASE WHEN DAY(u.fecha_creacion) >= 6 AND MONTH(u.fecha_creacion) = MONTH(GETDATE()) AND YEAR(u.fecha_creacion) = YEAR(GETDATE()) THEN 1 ELSE 0 END as nuevo, u.fecha_creacion, s.nombre sede FROM usuarios u 
-                                        LEFT JOIN usuarios us ON us.id_usuario = u.id_lider
-                                        INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = u.id_rol
-                                        INNER JOIN sedes s ON CAST(s.id_sede AS VARCHAR(45)) = CAST(u.id_sede AS VARCHAR(45))
-                                        WHERE oxc.id_catalogo = 1 AND u.id_rol IN (7, 9, 3) AND u.id_sede IN ($id_sede) AND u.rfc NOT LIKE '%TSTDD%' AND ( u.correo IS NULL OR u.correo NOT LIKE '%test_%' ) ORDER BY nombre");
-                break;
-            case '13': // CONTRALORÍA
-            case '17': // SUBDIRECTOR CONTRALORÍA
-            case '32': // CONTRALORÍA CORPORATIVA
-            case '33': // CONSULTA (CONTROL INTERNO)
-                return $this->db->query("SELECT pci2.abono_pendiente ,CONVERT(varchar,u.fechaIngreso,103) fechaIngreso, u.estatus, u.id_usuario, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombre, u.correo,
-                u.telefono, oxc.nombre puesto, CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) jefe_directo, u.correo, oxc2.nombre forma_pago,
+            case '17': // CONTRALORÍA
+                return $this->db->query("SELECT pci2.abono_pendiente ,CONVERT(varchar,u.fechaIngreso,103) fechaIngreso, u.estatus, u.id_usuario, 
+                CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombre, u.correo,
+                u.telefono, oxc.nombre puesto, 
+                
+                UPPER(CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno)) coordinador, 
+                UPPER(CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno)) gerente, 
+                UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)) subdirector, 
+                UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)) regional, 
+                
+                u.correo, oxc2.nombre forma_pago,
                 s.nombre sede, CASE WHEN DAY(u.fecha_creacion) >= 6 AND MONTH(u.fecha_creacion) = MONTH(GETDATE()) AND YEAR(u.fecha_creacion) = YEAR(GETDATE()) THEN 1 ELSE 0 END as nuevo, u.fecha_creacion, u.ismktd,oxcN.nombre as nacionalidad,
                 CASE WHEN oxcN.id_opcion = 0 THEN '2D572C' ELSE 'aeaeae' END AS color,oxcn.id_opcion as id_nacionalidad,u.forma_pago as id_forma_pago
                 FROM usuarios u 
-                LEFT JOIN usuarios us ON us.id_usuario = u.id_lider
+                
+                LEFT JOIN usuarios u1 ON u1.id_usuario = u.id_lider
+                LEFT JOIN usuarios u2 ON u2.id_usuario = u.gerente_id
+                LEFT JOIN usuarios u3 ON u3.id_usuario = u.subdirector_id
+                LEFT JOIN usuarios u4 ON u4.id_usuario = u.regional_id
+
                 INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = u.id_rol AND oxc.id_catalogo = 1
                 LEFT JOIN opcs_x_cats oxc2 ON oxc2.id_opcion = u.forma_pago AND oxc2.id_catalogo = 16
                 LEFT JOIN opcs_x_cats oxcn ON oxcN.id_opcion = u.nacionalidad AND oxcN.id_catalogo = 11
@@ -134,62 +96,75 @@ class Usuarios_modelo extends CI_Model {
                 AND (u.rfc NOT LIKE '%TSTDD%' AND ISNULL(u.correo, '' ) NOT LIKE '%test_%') OR u.id_usuario IN (9359, 9827)
                 AND u.id_usuario NOT IN (821, 1366, 1923, 4340, 9623, 9624, 9625, 9626, 9627, 9628, 9629) ORDER BY nombre");
                 break;
-            case '26': // MERCADÓLOGO
-                return $this->db->query("SELECT u.estatus, u.id_usuario, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombre, u.correo,
-                                        u.telefono, oxc.nombre puesto, CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) jefe_directo, s.nombre sede,
-                                        CONCAT(us2.nombre, ' ', us2.apellido_paterno, ' ', us2.apellido_materno) jefe_directo2, 0 nuevo, u.fecha_creacion FROM usuarios u 
-                                        INNER JOIN sedes s ON s.id_sede = u.id_sede
-                                        LEFT JOIN usuarios us ON us.id_usuario = u.id_lider
-                                        LEFT JOIN usuarios us2 ON us2.id_usuario = us.id_lider
-                                        INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = u.id_rol
-                                        WHERE u.estatus = 1 AND u.id_rol NOT IN (1, 2, 4, 5, 18, 19) AND u.rfc NOT LIKE '%TSTDD%' AND ISNULL(u.correo, '') NOT LIKE '%test_%' AND oxc.id_catalogo = 1 ORDER BY s.nombre, nombre");
-                break;
-
-
             case '49': // CONSULTA (CAPITAL HUMANO DESCUENTOS UNIVERSIDAD)
                 return $this->db->query("SELECT CONVERT(varchar,u.fechaIngreso,103) fechaIngreso, u.estatus, u.id_usuario, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombre, u.correo,
-                                        u.telefono, oxc.nombre puesto, CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) jefe_directo, u.correo, oxc2.nombre forma_pago,
-                                        s.nombre sede, CASE WHEN DAY(u.fecha_creacion) >= 6 AND MONTH(u.fecha_creacion) = MONTH(GETDATE()) AND YEAR(u.fecha_creacion) = YEAR(GETDATE()) THEN 1 ELSE 0 END as nuevo, 
-                                        u.fecha_creacion, CASE WHEN du.id_usuario <> 0 THEN 1 ELSE 0 END as usuariouniv,
-                                        (SELECT (MAX(fecha_creacion)) FROM auditoria aud WHERE u.id_usuario = aud.id_parametro AND aud.tabla='usuarios' AND col_afect='estatus' and anterior='1' and (nuevo='0' OR nuevo='3')) as fecha_baja
-                                        FROM usuarios u 
-                                        LEFT JOIN usuarios us ON us.id_usuario = u.id_lider
-                                        INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = u.id_rol AND oxc.id_catalogo = 1
-                                        LEFT JOIN opcs_x_cats oxc2 ON oxc2.id_opcion = u.forma_pago AND oxc2.id_catalogo = 16
-                                        INNER JOIN sedes s ON s.id_sede = (CASE WHEN LEN (u.id_sede) > 1 THEN 2 ELSE u.id_sede END)
-                                        LEFT JOIN descuentos_universidad du ON du.id_usuario = u.id_usuario
-                                        --LEFT JOIN  (SELECT id_usuario FROM descuentos_universidad GROUP BY id_usuario) du ON du.id_usuario = u.id_usuario
-                                        WHERE u.id_usuario not in (select id_usuario_d from relacion_usuarios_duplicados) AND (u.id_rol IN (3, 7, 9) 
-                                        AND (u.rfc NOT LIKE '%TSTDD%' AND ISNULL(u.correo, '' ) NOT LIKE '%test_%') AND u.id_usuario NOT IN (821, 1366, 1923, 4340, 4062, 4064, 4065, 4067, 4068, 4069, 6578, 712 , 9942, 4415)) OR u.id_usuario IN (9359, 9827)
-                                        
-                                        ORDER BY nombre");
-                break;
+                u.telefono, oxc.nombre puesto, 
+                
+                UPPER(CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno)) coordinador, 
+                UPPER(CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno)) gerente, 
+                UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)) subdirector, 
+                UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)) regional,
+                
+                u.correo, oxc2.nombre forma_pago,
+                s.nombre sede, CASE WHEN DAY(u.fecha_creacion) >= 6 AND MONTH(u.fecha_creacion) = MONTH(GETDATE()) AND YEAR(u.fecha_creacion) = YEAR(GETDATE()) THEN 1 ELSE 0 END as nuevo, 
+                u.fecha_creacion, CASE WHEN du.id_usuario <> 0 THEN 1 ELSE 0 END as usuariouniv,
+                (SELECT (MAX(fecha_creacion)) FROM auditoria aud WHERE u.id_usuario = aud.id_parametro AND aud.tabla='usuarios' AND col_afect='estatus' and anterior='1' and (nuevo='0' OR nuevo='3')) as fecha_baja
+                FROM usuarios u 
+                
+                LEFT JOIN usuarios u1 ON u1.id_usuario = u.id_lider
+                LEFT JOIN usuarios u2 ON u2.id_usuario = u.gerente_id
+                LEFT JOIN usuarios u3 ON u3.id_usuario = u.subdirector_id
+                LEFT JOIN usuarios u4 ON u4.id_usuario = u.regional_id
 
+                INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = u.id_rol AND oxc.id_catalogo = 1
+                LEFT JOIN opcs_x_cats oxc2 ON oxc2.id_opcion = u.forma_pago AND oxc2.id_catalogo = 16
+                INNER JOIN sedes s ON s.id_sede = (CASE WHEN LEN (u.id_sede) > 1 THEN 2 ELSE u.id_sede END)
+                LEFT JOIN descuentos_universidad du ON du.id_usuario = u.id_usuario
+                --LEFT JOIN  (SELECT id_usuario FROM descuentos_universidad GROUP BY id_usuario) du ON du.id_usuario = u.id_usuario
+                WHERE u.id_usuario not in (select id_usuario_d from relacion_usuarios_duplicados) AND (u.id_rol IN (3, 7, 9) 
+                AND (u.rfc NOT LIKE '%TSTDD%' AND ISNULL(u.correo, '' ) NOT LIKE '%test_%') AND u.id_usuario NOT IN (821, 1366, 1923, 4340, 4062, 4064, 4065, 4067, 4068, 4069, 6578, 712 , 9942, 4415)) OR u.id_usuario IN (9359, 9827)
+                ORDER BY nombre");
+                break;
             case '8': //SOPORTE
                 if($this->session->userdata('id_usuario') != 1297)
                     $id_rol = "AND u.id_rol NOT IN ('18', '19', '20', '2', '1', '28')";
                 else 
-                    $id_rol = "";
-                    
+                    $id_rol = "";  
                 return $this->db->query("SELECT u.estatus, u.id_usuario, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombre, u.correo,
-                    u.telefono, oxc.nombre puesto, CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) jefe_directo, u.correo, CASE WHEN DAY(u.fecha_creacion) >= 6 AND MONTH(u.fecha_creacion) = MONTH(GETDATE()) AND YEAR(u.fecha_creacion) = YEAR(GETDATE()) THEN 1 ELSE 0 END as nuevo, u.fecha_creacion, s.nombre sede
-                    FROM usuarios u 
-                    LEFT JOIN usuarios us ON us.id_usuario = u.id_lider
-                    INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = u.id_rol AND oxc.id_catalogo = 1
-                    LEFT JOIN sedes s ON CAST(s.id_sede AS VARCHAR(45)) = CAST(u.id_sede AS VARCHAR(45))
-                    WHERE (u.rfc NOT LIKE '%TSTDD%' AND ISNULL(u.correo, '' ) NOT LIKE '%test_%') $id_rol OR u.id_usuario IN (9359, 9827) ORDER BY nombre");
-                    break;
-
+                u.telefono, oxc.nombre puesto, 
+                UPPER(CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno)) coordinador, 
+                UPPER(CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno)) gerente, 
+                UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)) subdirector, 
+                UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)) regional,
+                u.correo, CASE WHEN DAY(u.fecha_creacion) >= 6 AND MONTH(u.fecha_creacion) = MONTH(GETDATE()) AND YEAR(u.fecha_creacion) = YEAR(GETDATE()) THEN 1 ELSE 0 END as nuevo, u.fecha_creacion, s.nombre sede,
+                u.talla, u.sexo, u.hijos_12, u.fecha_reingreso, u.fecha_baja
+                FROM usuarios u 
+                LEFT JOIN usuarios u1 ON u1.id_usuario = u.id_lider
+                LEFT JOIN usuarios u2 ON u2.id_usuario = u.gerente_id
+                LEFT JOIN usuarios u3 ON u3.id_usuario = u.subdirector_id
+                LEFT JOIN usuarios u4 ON u4.id_usuario = u.regional_id
+                INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = u.id_rol AND oxc.id_catalogo = 1
+                LEFT JOIN sedes s ON CAST(s.id_sede AS VARCHAR(45)) = CAST(u.id_sede AS VARCHAR(45))
+                WHERE (u.rfc NOT LIKE '%TSTDD%' AND ISNULL(u.correo, '' ) NOT LIKE '%test_%') $id_rol ORDER BY nombre");
+                break;
             default: // VE TODOS LOS REGISTROS
             if($this->session->userdata('id_usuario') != 1)
                 $id_rol = " AND u.id_rol NOT IN ('18', '19', '20','2','1','17','13','32','28')";
             else
                 $id_rol = "";
-
             return $this->db->query("SELECT u.estatus, u.id_usuario, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombre, u.correo,
-            u.telefono, oxc.nombre puesto, CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) jefe_directo, u.correo, CASE WHEN DAY(u.fecha_creacion) >= 6 AND MONTH(u.fecha_creacion) = MONTH(GETDATE()) AND YEAR(u.fecha_creacion) = YEAR(GETDATE()) THEN 1 ELSE 0 END as nuevo, u.fecha_creacion, s.nombre sede
+            u.telefono, oxc.nombre puesto, 
+            UPPER(CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno)) coordinador, 
+            UPPER(CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno)) gerente, 
+            UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)) subdirector, 
+            UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)) regional,
+            u.correo, CASE WHEN DAY(u.fecha_creacion) >= 6 AND MONTH(u.fecha_creacion) = MONTH(GETDATE()) AND YEAR(u.fecha_creacion) = YEAR(GETDATE()) THEN 1 ELSE 0 END as nuevo, u.fecha_creacion, s.nombre sede,
+            u.talla, u.sexo, u.hijos_12, u.fecha_reingreso, u.fecha_baja
             FROM usuarios u 
-            LEFT JOIN usuarios us ON us.id_usuario = u.id_lider
+            LEFT JOIN usuarios u1 ON u1.id_usuario = u.id_lider
+            LEFT JOIN usuarios u2 ON u2.id_usuario = u.gerente_id
+            LEFT JOIN usuarios u3 ON u3.id_usuario = u.subdirector_id
+            LEFT JOIN usuarios u4 ON u4.id_usuario = u.regional_id
             INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = u.id_rol AND oxc.id_catalogo = 1
             LEFT JOIN sedes s ON CAST(s.id_sede AS VARCHAR(45)) = CAST(u.id_sede AS VARCHAR(45))
             WHERE (u.rfc NOT LIKE '%TSTDD%' AND ISNULL(u.correo, '' ) NOT LIKE '%test_%') $id_rol OR u.id_usuario IN (9359, 9827) ORDER BY nombre");

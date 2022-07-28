@@ -145,7 +145,7 @@
         $query = $this->db-> query("SELECT TOP(1)  'Depósito de seriedad versión anterior' expediente, 'DEPÓSITO DE SERIEDAD' movimiento,
 		'VENTAS-ASESOR' primerNom, 'VENTAS' ubic, l.nombreLote, CONCAT(cl.primerNombre, ' ', cl.segundoNombre) nomCliente, cl.apellidoPaterno apellido_paterno, cl.apellidoMaterno apellido_materno, cl.rfc,
 		cond.nombre, res.nombreResidencial, cl.fechaApartado, cl.idCliente id_cliente, cl.idCliente idDocumento, ds.fechaCrate modificado,
-        l.idLote
+        l.idLote, '' coordinador, '' gerente, '' subdirector, '' regional
 		FROM cliente_consulta cl
 		INNER JOIN lotes_consulta l ON l.idLote = cl.idLote
 		INNER JOIN deposito_seriedad_consulta ds ON ds.idCliente = cl.idCliente
@@ -5133,7 +5133,7 @@ WHERE idLote IN ('".$row['idLote']."') and nombreLote = '".$insert_csv['nombreLo
 		hd.expediente, hd.idDocumento, hd.modificado, hd.status, hd.idCliente, hd.idLote, lotes.nombreLote, 
 		cl.nombre as nomCliente, cl.apellido_paterno, cl.apellido_materno, cl.rfc, cond.nombre, res.nombreResidencial, 
 		u.nombre as primerNom, u.apellido_paterno as apellidoPa, u.apellido_materno as apellidoMa, sedes.abreviacion as ubic, 
-		hd.movimiento, hd.movimiento, cond.idCondominio, hd.tipo_doc, lotes.idMovimiento, cl.id_asesor, cl.flag_compartida
+		hd.movimiento, hd.movimiento, cond.idCondominio, hd.tipo_doc, lotes.idMovimiento, cl.id_asesor, cl.flag_compartida, UPPER(CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno)) coordinador, UPPER(CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno)) gerente, UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)) subdirector, UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)) regional
 		FROM historial_documento hd
 		INNER JOIN lotes ON lotes.idLote = hd.idLote
 		INNER JOIN clientes cl ON  hd.idCliente = cl.id_cliente
@@ -5141,6 +5141,10 @@ WHERE idLote IN ('".$row['idLote']."') and nombreLote = '".$insert_csv['nombreLo
 		INNER JOIN residenciales res ON res.idResidencial = cond.idResidencial
 		LEFT JOIN usuarios u ON hd.idUser = u.id_usuario
 		LEFT JOIN sedes ON lotes.ubicacion = sedes.id_sede
+		LEFT JOIN usuarios u1 ON u1.id_usuario = cl.id_coordinador
+		LEFT JOIN usuarios u2 ON u2.id_usuario = cl.id_gerente
+		LEFT JOIN usuarios u3 ON u3.id_usuario = cl.id_subdirector
+		LEFT JOIN usuarios u4 ON u4.id_usuario = cl.id_regional
 		WHERE $where");
 		return $query->result_array();
 	}
@@ -5187,12 +5191,19 @@ WHERE idLote IN ('".$row['idLote']."') and nombreLote = '".$insert_csv['nombreLo
 		}
 		$query = $this->db-> query("SELECT TOP(1)  'Depósito de seriedad' as expediente, 'DEPÓSITO DE SERIEDAD' as movimiento,
 		'VENTAS-ASESOR' AS primerNom, 'VENTAS' AS ubic, l.nombreLote, cl.nombre as nomCliente, cl.apellido_paterno, cl.apellido_materno, cl.rfc,
-		cond.nombre, res.nombreResidencial, cl.fechaApartado, cl.id_cliente, cl.id_cliente as idDocumento, ds.fechaCrate as modificado, l.idLote, cl.flag_compartida
+		cond.nombre, res.nombreResidencial, cl.fechaApartado, cl.id_cliente, cl.id_cliente as idDocumento, ds.fechaCrate as modificado, l.idLote, cl.flag_compartida, UPPER(CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno)) coordinador, 
+		UPPER(CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno)) gerente, 
+		UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)) subdirector, 
+		UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)) regional
 		FROM clientes cl
 		INNER JOIN lotes l ON l.idLote = cl.idLote
 		INNER JOIN deposito_seriedad ds ON ds.id_cliente = cl.id_cliente
 		INNER JOIN condominios cond ON cond.idCondominio = l.idCondominio
 		INNER JOIN residenciales res ON res.idResidencial = cond.idResidencial
+		LEFT JOIN usuarios u1 ON u1.id_usuario = cl.id_coordinador
+		LEFT JOIN usuarios u2 ON u2.id_usuario = cl.id_gerente
+		LEFT JOIN usuarios u3 ON u3.id_usuario = cl.id_subdirector
+		LEFT JOIN usuarios u4 ON u4.id_usuario = cl.id_regional
 		WHERE $where");
 		return $query->result_array();
 
@@ -5211,7 +5222,10 @@ WHERE idLote IN ('".$row['idLote']."') and nombreLote = '".$insert_csv['nombreLo
 		cl.nombre as nomCliente, cl.apellido_paterno, cl.apellido_materno, cl.rfc, cl.fechaApartado, cl.id_cliente, cl.id_cliente as idDocumento, cl.fechaApartado as modificado,
 		res.nombreResidencial, cond.nombre, l.nombreLote, aut.estatus, aut.autorizacion, aut.fecha_creacion, 
 		CONCAT(asesor.nombre,' ', asesor.apellido_paterno,' ', asesor.apellido_materno) as sol,
-		CONCAT(users1.nombre,' ', users1.apellido_paterno,' ', users1.apellido_materno) as aut, id_autorizacion, aut.idLote, cl.id_asesor, cl.flag_compartida
+		CONCAT(users1.nombre,' ', users1.apellido_paterno,' ', users1.apellido_materno) as aut, id_autorizacion, aut.idLote, cl.id_asesor, cl.flag_compartida, UPPER(CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno)) coordinador, 
+		UPPER(CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno)) gerente, 
+		UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)) subdirector, 
+		UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)) regional
 		FROM autorizaciones aut
 		INNER JOIN lotes l ON l.idLote = aut.idLote
 		INNER JOIN clientes cl ON aut.idCliente = cl.id_cliente
@@ -5219,6 +5233,10 @@ WHERE idLote IN ('".$row['idLote']."') and nombreLote = '".$insert_csv['nombreLo
 		INNER JOIN residenciales res ON res.idResidencial = cond.idResidencial
 		LEFT JOIN usuarios as asesor ON aut.id_sol = asesor.id_usuario
 		LEFT JOIN usuarios as users1 ON aut.id_aut = users1.id_usuario
+		LEFT JOIN usuarios u1 ON u1.id_usuario = cl.id_coordinador
+		LEFT JOIN usuarios u2 ON u2.id_usuario = cl.id_gerente
+		LEFT JOIN usuarios u3 ON u3.id_usuario = cl.id_subdirector
+		LEFT JOIN usuarios u4 ON u4.id_usuario = cl.id_regional
 		WHERE $where");
 		return $query->result_array();
 	}
@@ -5234,13 +5252,20 @@ WHERE idLote IN ('".$row['idLote']."') and nombreLote = '".$insert_csv['nombreLo
 		$query = $this->db->query("SELECT  'Prospecto' as expediente, 'PROSPECTO' as movimiento,
 		'VENTAS-ASESOR' AS primerNom, 'VENTAS' AS ubic, l.nombreLote, cl.nombre as nomCliente, cl.apellido_paterno, cl.apellido_materno, cl.rfc,
 		cond.nombre, res.nombreResidencial, cl.fechaApartado, cl.id_cliente, cl.id_cliente as idDocumento, ps.fecha_creacion as modificado,
-		ps.id_prospecto, cl.id_asesor, l.idLote, cl.lugar_prospeccion, cl.flag_compartida
+		ps.id_prospecto, cl.id_asesor, l.idLote, cl.lugar_prospeccion, cl.flag_compartida, UPPER(CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno)) coordinador, 
+		UPPER(CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno)) gerente, 
+		UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)) subdirector, 
+		UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)) regional
 		FROM clientes cl
 		INNER JOIN lotes l ON l.idLote = cl.idLote
 		INNER JOIN deposito_seriedad ds ON ds.id_cliente = cl.id_cliente
 		INNER JOIN condominios cond ON cond.idCondominio = l.idCondominio
 		INNER JOIN residenciales res ON res.idResidencial = cond.idResidencial
 		INNER JOIN prospectos ps ON cl.id_prospecto = ps.id_prospecto
+		LEFT JOIN usuarios u1 ON u1.id_usuario = cl.id_coordinador
+		LEFT JOIN usuarios u2 ON u2.id_usuario = cl.id_gerente
+		LEFT JOIN usuarios u3 ON u3.id_usuario = cl.id_subdirector
+		LEFT JOIN usuarios u4 ON u4.id_usuario = cl.id_regional
 		WHERE $where");
 		return $query->result_array();
 
@@ -5258,7 +5283,10 @@ WHERE idLote IN ('".$row['idLote']."') and nombreLote = '".$insert_csv['nombreLo
         CONCAT(asesor.nombre, ' ', asesor.apellido_paterno, ' ', asesor.apellido_materno) AS primerNom, 
         sedes.abreviacion as ubic, l.nombreLote, cl.nombre as nomCliente, cl.apellido_paterno, cl.apellido_materno, cl.rfc,
         cond.nombre, res.nombreResidencial, cl.fechaApartado, cl.id_cliente, cl.id_cliente as idDocumento, ec.fecha_creacion as modificado,
-        cl.id_prospecto, cl.id_asesor, l.idLote, cl.lugar_prospeccion, 66 as tipo_doc, cl.flag_compartida
+        cl.id_prospecto, cl.id_asesor, l.idLote, cl.lugar_prospeccion, 66 as tipo_doc, cl.flag_compartida, UPPER(CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno)) coordinador, 
+		UPPER(CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno)) gerente, 
+		UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)) subdirector, 
+		UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)) regional
         FROM clientes cl
         INNER JOIN lotes l ON l.idLote = cl.idLote
         INNER JOIN deposito_seriedad ds ON ds.id_cliente=cl.id_cliente
@@ -5267,6 +5295,10 @@ WHERE idLote IN ('".$row['idLote']."') and nombreLote = '".$insert_csv['nombreLo
         INNER JOIN residenciales res ON res.idResidencial= cond.idResidencial
         INNER JOIN evidencia_cliente ec ON cl.id_cliente=ec.idCliente
         LEFT JOIN sedes ON l.ubicacion = sedes.id_sede
+		LEFT JOIN usuarios u1 ON u1.id_usuario = cl.id_coordinador
+		LEFT JOIN usuarios u2 ON u2.id_usuario = cl.id_gerente
+		LEFT JOIN usuarios u3 ON u3.id_usuario = cl.id_subdirector
+		LEFT JOIN usuarios u4 ON u4.id_usuario = cl.id_regional
         WHERE cl.status=1 AND l.status=1 AND ec.estatus=3 AND cl.idLote=".$idLote. $complemento);
         return $query->result_array();
     }
