@@ -1,4 +1,4 @@
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
     <link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet"/>
 
     <style>
@@ -32,6 +32,11 @@
             top: 44px;
             right: 15px;
         }
+        .selectE{
+            background-color: #eaeaea!important;
+            border-radius: 27px!important;
+            background-image: none!important;
+        }
     </style>
     <div>
         <div class="wrapper">
@@ -61,7 +66,15 @@
                                                         <th class="disabled-sorting">TELÉFONO</th>
                                                         <th class="disabled-sorting">TIPO</th>
                                                         <th class="disabled-sorting">SEDE</th>
-                                                        <th class="disabled-sorting">JEFE DIRECTO</th>
+                                                        <th class="disabled-sorting">COORDINADOR</th>
+                                                        <th class="disabled-sorting">GERENTE</th>
+                                                        <th class="disabled-sorting">SUBDIRECTOR</th>
+                                                        <th class="disabled-sorting">DIRECTOR REGIONAL</th>
+                                                        <th class="disabled-sorting">TALLA</th>
+                                                        <th class="disabled-sorting">GÉNERO</th>
+                                                        <th class="disabled-sorting">HIJOS + 12</th>
+                                                        <th class="disabled-sorting">REINGRESO</th>
+                                                        <th class="disabled-sorting">BAJA</th>
                                                         <th class="disabled-sorting">ACCIONES</th>
                                                     </tr>
                                                 </thead>
@@ -153,34 +166,35 @@
                                                                 </div>
                                                             </div>
                                                             <div class="row">
-                                                                <div class="col-sm-4">
-                                                                    <div class="form-group label-floating">
+                                                                <div class="col-sm-3">
+                                                                    <div class="form-group label-floating select-is-empty div_talla">
                                                                         <label class="control-label">Talla</label>
-                                                                        <select class="selectpicker select-gral m-0" id="talla" name="talla" data-style="btn" data-show-subtext="true" data-live-search="true" title="Seleccione un talla" data-size="7" data-container="body" required>
-                                                                            <option value="0">xsm</option>
-                                                                            <option value="1">sm</option>
-                                                                            <option value="2">md</option>
-                                                                            <option value="3">lg</option>
-                                                                            <option value="4">xlg</option>
-                                                                        </select>
+                                                                        <input id="talla" name="talla" type="numeric" class="form-control input-gral pl-1 pr-1">
                                                                     </div>
                                                                 </div>
-                                                                <div class="col-sm-4">
+                                                                <div class="col-sm-3">
                                                                     <div class="form-group label-floating">
                                                                         <label class="control-label">Sexo</label>
                                                                         <select class="selectpicker select-gral m-0" id="sexo" name="sexo" data-style="btn" data-show-subtext="true" data-live-search="true" title="Seleccione una opción" data-size="7" data-container="body" required>
-                                                                            <option value="0">Masculino</option>
-                                                                            <option value="1">Femenino</option>
+                                                                            <option value="S">Sin especificar</option>
+                                                                            <option value="H">Masculino</option>
+                                                                            <option value="M">Femenino</option>
                                                                         </select>
                                                                     </div>
                                                                 </div>
-                                                                <div class="col-sm-4">
+                                                                <div class="col-sm-3">
                                                                     <div class="form-group label-floating select-is-empty div_leader">
                                                                         <label class="control-label">¿Hijos?</label>
                                                                         <select class="selectpicker select-gral m-0" id="hijos" name="hijos" data-style="btn" data-show-subtext="true" data-live-search="true" title="Seleccione una opción" data-size="7" data-container="body" required onchange="getLeadersList()()">
-                                                                            <option value="0">Si</option>
-                                                                            <option value="1">No</option>
+                                                                            <option value="S">Sin especificar</option><option value="SI">Sí</option>
+                                                                            <option value="NO">No</option>
                                                                         </select>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-sm-3">
+                                                                    <div class="form-group label-floating select-is-empty div_nohijos">
+                                                                        <label class="control-label">No. hijos</label>
+                                                                        <input id="noHijos" name="noHijos" type="numeric" class="form-control input-gral pl-1 pr-1">
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -198,7 +212,7 @@
                                                                         <div class="boxInfoEsp">
                                                                             <i class="fas fa-info" data-toggle="tooltip" data-placement="bottom" title="Sede de asignación del asesor"></i>
                                                                         </div>
-                                                                        <select id="sedech" name="sedech" class="form-control">
+                                                                        <select id="sedech" name="sedech" class="form-control selectE">
                                                                         </select>
                                                                     </div>
                                                                 </div>
@@ -208,7 +222,7 @@
                                                                         <div class="boxInfoEsp" data-toggle="tooltip" data-placement="bottom" title="Oficina en la que se encuentra ubicado el asesor">
                                                                             <i class="fas fa-info"></i>
                                                                         </div>
-                                                                        <select id="sucursal" name="sucursal" class="form-control sucursal"></select>
+                                                                        <select id="sucursal" name="sucursal" class="form-control sucursal selectE"></select>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -364,7 +378,6 @@
                     </div>
                 </div>
                 <?php $this->load->view('template/footer_legend'); ?>
-
             </div>
         </div>
     </div>

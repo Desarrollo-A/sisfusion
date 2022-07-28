@@ -49,7 +49,10 @@
                                                         <th><center>SEDE</center></th>
                                                         <th><center>FORMA PAGO</center></th>
                                                        <?php if($this->session->userdata('id_rol') != 49){ ?> <th><center>NACIONALIDAD</center></th> <?php } ?>
-                                                        <th><center>JEFE DIRECTO</center></th>
+                                                        <th><center>COORDINADOR</center></th>
+                                                        <th><center>GERENTE</center></th>
+                                                        <th><center>SUBDIRECTOR</center></th>
+                                                        <th><center>DIRECTOR REGIONAL</center></th>
                                                         <th><center>TIPO DE USUARIO</center></th>
                                                         <th><center>FECHA ALTA</center></th>
                                                         <th><center></center></th>
@@ -235,7 +238,7 @@
                 title:'Lista de usuarios',
                 exportOptions: {
                 
-                    columns: userType == 49 ? [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10] : [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10,11] ,
+                    columns: userType == 49 ? [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13] : [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14] ,
                     format: {
                         header: function (d, columnIdx) {
 
@@ -268,12 +271,21 @@
                                     return 'NACIONALIDAD';
                                     break;
                                 case 9:
-                                    return 'JEFE DIRECTO';
+                                    return 'COORDINADOR';
                                     break;
                                 case 10:
-                                    return 'TIPO DE USUARIO';
+                                    return 'GERENTE';
                                     break;
                                 case 11:
+                                    return 'SUBDIRECTOR';
+                                    break;
+                                case 12:
+                                    return 'DIRECTOR REGIONAL';
+                                    break;
+                                case 13:
+                                    return 'TIPO DE USUARIO';
+                                    break;
+                                case 14:
                                     return 'FECHA ALTA';
                                     break;
                             }
@@ -304,12 +316,21 @@
                                     return 'FORMA PAGO';
                                     break;
                                 case 8:
-                                    return 'JEFE DIRECTO';
+                                    return 'COORDINADOR';
                                     break;
                                 case 9:
-                                    return 'TIPO DE USUARIO';
+                                    return 'GERENTE';
                                     break;
                                 case 10:
+                                    return 'SUBDIRECTOR';
+                                    break;
+                                case 11:
+                                    return 'DIRECTOR REGIONAL';
+                                    break;
+                                case 12:
+                                    return 'TIPO DE USUARIO';
+                                    break;
+                                case 13:
                                     return 'FECHA ALTA';
                                     break;
                             }
@@ -493,7 +514,19 @@
                                         }
                                     ?>
             { data: function (d) {
-                    return d.jefe_directo;
+                    return d.coordinador == '  ' ? 'NO APLICA' : d.coordinador;
+                }
+            },
+            { data: function (d) {
+                    return d.gerente == '  ' ? 'NO APLICA' : d.gerente;
+                }
+            },
+            { data: function (d) {
+                    return d.subdirector == '  ' ? 'NO APLICA' : d.subdirector;
+                }
+            },
+            { data: function (d) {
+                    return d.regional == '  ' ? 'NO APLICA' : d.regional;
                 }
             },
             {
