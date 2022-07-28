@@ -320,9 +320,10 @@ class Usuarios extends CI_Controller
                 "gerente_id" => $id_gerente,
                 "subdirector_id" => $id_subdirector,
                 "regional_id" => $id_regional,
-                "talla" => $_POST['talla'],
-                "sexo" => $_POST['sexo'],
-                "hijos_12" => $_POST['hijos']    
+                "talla" => empty($_POST['talla']) ? 0 : $_POST['talla'],
+                "sexo" => !empty($_POST['sexo']) ? $_POST['sexo'] : 'S',
+                "tiene_hijos" => !empty($_POST['hijos']) ? $_POST['hijos'] : 0 ,
+                "hijos_12" => isset($_POST['noHijos']) ? $_POST['noHijos'] : 0    
                );
         }
         $response = $this->Usuarios_modelo->updateUser($data, $this->input->post("id_usuario"));
