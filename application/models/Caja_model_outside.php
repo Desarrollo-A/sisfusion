@@ -1419,7 +1419,7 @@
 
     public function getLider($id_gerente)
     {
-        $this->db->select('id_lider as id_subdirector, (CASE WHEN u.id_lider = 7092 THEN 3 WHEN u.id_lider = 9471 THEN 607 ELSE 0 END) id_regional');
+        $this->db->select('u.subdirector_id as id_subdirector, u.regional_id id_regional');
         $this->db->from('usuarios u');
         $this->db->where("u.id_usuario", $id_gerente);
         $query = $this->db->get();
