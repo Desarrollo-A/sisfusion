@@ -354,8 +354,7 @@
 					</div>
 					<div class="form-group">
 						<label for="SIField">Saldo insoluto</label>
-						<input type="tel" pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" value="" data-type="currency"  class="form-control" id="SIField" aria-describedby="siHelp" placeholder="230,000"
-						ng-model="SIField">
+						<input type="tel" pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" value="" data-type="currency"  class="form-control" id="SIField" aria-describedby="siHelp" placeholder="230,000">
 						<small id="siHelp" class="form-text text-muted"></small>
 					</div>
 					<div class="form-group" style="text-align: center">
@@ -449,6 +448,21 @@
 
 						<!--	</tr>-->
 						<!--</tbody>-->
+<!--                        <tfoot>-->
+<!--                            <tr>-->
+<!--                                <th>Fechas</th>-->
+<!--                                <th>Pagos</th>-->
+<!--                                <th>Pago #</th>-->
+<!--                                <th>Capital</th>-->
+<!--                                <th>Intereses</th>-->
+<!--                                <th>Importe</th>-->
+<!--                                <th>Días de retraso</th>-->
+<!--                                <th>Interés moratorio</th>-->
+<!--                                <th>Total</th>-->
+<!--                                <th>Saldo Moratorio</th>-->
+<!--                                <th>Saldo</th>-->
+<!--                            </tr>-->
+<!--                        </tfoot>-->
 					</table>
 				</div>
 			</div>
@@ -465,14 +479,25 @@
 
 
 <script>
+    'use strict';
     var myApp = angular.module ('myApp', ['checklist-model','datatables', 'datatables.buttons']);
+
     myApp.controller('myController', function ($scope, $http, $window, DTOptionsBuilder, DTColumnBuilder) {
-        $scope.dtoptions = DTOptionsBuilder;
+
+
+        // $scope.dtoptions = DTOptionsBuilder;
+
+        $scope.dtoptions = DTOptionsBuilder.newOptions().withOption('aaData', [])
+            .withLanguage({"url": "https://cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"})
+            .withOption("ordering", false)
+            .withOption('bFilter', true)
+            .withPaginationType('full_numbers');
         $scope.dtColumns = [
             DTColumnBuilder.newColumn('fecha').withTitle('Fechas'),
             DTColumnBuilder.newColumn('amc').withTitle('Pagados')
                 .renderWith(
                     function (data, type, full, meta) {
+
                         var inputCapital = '<input name="checkAd' + full["pago"] + '" type="checkbox" id="ckNoPay' + full["pago"] + '" onchange="noPayMen(' + full["pago"] + ')">';//onchange="pagoCapChange('+full["pago"]+')"
                         return inputCapital;
                     },
@@ -489,7 +514,7 @@
 				.renderWith(
                 function(data, type, full, meta)
                 {
-                    var inputCapital = '<input name="importe'+full["pago"]+'" type="number" id="idImporte'+full["pago"]+'"   placeholder="Importe" class="form-control">';//onchange="pagoCapChange('+full["pago"]+')"
+                    var inputCapital = '<input name="importe'+full["pago"]+'" id="idImporte'+full["pago"]+'"  type="tel" pattern="^\\$\\d{1,3}(,\\d{3})*(\\.\\d+)?$" value="" data-type="currency" placeholder="Importe" class="form-control">';//onchange="pagoCapChange('+full["pago"]+')"
                     var numberPay	 = '<input name="numberPay'+full["pago"]+'" type="hidden" id="payNum'+full["pago"]+'" value="'+full["pago"]+'">';
 
                     return inputCapital+numberPay;
@@ -541,10 +566,15 @@
 			DTColumnBuilder.newColumn('saldoNormal').withTitle('Saldo').renderWith(function (data, type, full)
 			{
 				var saldoInsolutoCRNormal = '<input name="siNormal'+full["pago"]+'" type="hidden" id="idSiNormal'+full["pago"]+'"  value="'+full['saldoNormal']+'" class="form-control">';//onchange="pagoCapChange('+full["pago"]+')"
-
 				return (data).toLocaleString('es-MX', {style: 'currency', currency: 'MXN'}) + saldoInsolutoCRNormal;
 			} ),
         ];
+
+
+
+
+
+
         /*Others Vars*/
         $scope.mesesdiferir = 0;
         //INICIO FECHA
@@ -614,18 +644,21 @@
 		    var saldoInsoluto = (document.getElementById('SIField').value).replace(/,/g, "");
 		    // console.log(saldoInsoluto.replace(/,/g, ""));
             // console.log(saldoInsoluto.replace(/./g, ""));
-            var numb = saldoInsoluto.match(/\d/g);
-            numb = numb.join("");
+            // var numb = saldoInsoluto.match(/\d/g);
+            // numb = numb.join("");
             // console.log(numb);
-            var last2digts = numb.slice(-2);
-            if(last2digts == "00")
-			{
-                $scope.SIField = numb.replace(last2digts,'');
-			}
-            else
-			{
-                $scope.SIField = numb;
-			}
+            // var last2digts = numb.slice(-2);
+            // console.log(parseInt(last2digts));
+            // if(parseInt(last2digts) <= 0)
+			// {
+            //     $scope.SIField = numb.replace(last2digts,'');
+			// }
+            // else
+			// {
+            //     $scope.SIField = numb;
+			// }
+            $scope.SIField = saldoInsoluto.replace('$', '');
+            // console.log($scope.SIField.replace('$', ''));
 
             $scope.infoMoratorio =
                 {
@@ -762,10 +795,14 @@
 							var intFinal = InteresM/100;
 							IM = (saldoInsoluto*intFinal/30.4)*diasRetardo;///30.4*diasRetardo
 
+                            //intFinal = 0.05;
+                            //(150000 * 0.05 /30.4) * 1
+                            //
+
                             // console.log("este es un check de prueba: " + check);
 							<?php include("dist/js/controllers/calculoMoratorio.js"); ?>
 							console.log("Interes Moratorio en esta posicion " + IM);
-                            calculoMoratorioII(IM, importeSaldoI, posPay, PositionPago, diasRetardo, saldoInsoluto, minVal, maxVal, arrayCheckAllPost);
+                           calculoMoratorioII(IM, importeSaldoI, posPay, PositionPago, diasRetardo, saldoInsoluto, minVal, maxVal, arrayCheckAllPost);
                         }
 
                         /*nuevo código 27 de noviembre*/
@@ -966,7 +1003,11 @@
                     $scope.validaEngDif = ($scope.mesesdiferir > 0) ? $scope.rangEd : [];
                     $scope.alphaNumeric = $scope.validaEngDif.concat($scope.range).concat($scope.range2);
                     // console.log($scope.alphaNumeric);
-                    $scope.dtoptions = DTOptionsBuilder.newOptions().withOption('aaData', $scope.alphaNumeric).withOption('order', [1, 'asc']).withDisplayLength(240).withDOM("<'pull-right'B><l><t><'pull-left'i><p>").withButtons([
+                    $scope.dtoptions = DTOptionsBuilder.newOptions().withOption('aaData', $scope.alphaNumeric)
+                        .withOption('order', [1, 'asc']).withDisplayLength(240)
+                        .withOption("ordering", false)
+                        .withDOM("<'pull-right'B><l><t><'pull-left'i><p>")
+                        .withButtons([
                             {extend: 'copy', text: '<i class="fa fa-files-o"></i> Copiar'},
                             {
                                 extend: 'print',
@@ -986,7 +1027,27 @@
                                 }
                             },
                         ]
-                    ).withLanguage({"url": "https://cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"});
+                    )
+                        .withLanguage({"url": "https://cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"});
+                    $scope.$on('event:dataTableLoaded', function(event, loadedDT) {
+                        // Setup - add a text input to each footer cell
+                        var id = '#' + loadedDT.id;
+                        $(id + ' tfoot th').each(function() {
+                            var title = $(id + ' thead th').eq($(this).index()).text();
+                            $(this).html('<input type="text" placeholder="Search ' + title + '" />');
+                        });
+
+                        var table = loadedDT.DataTable;
+                        // Apply the search
+                        table.columns().eq(0).each(function(colIdx) {
+                            $('input', table.column(colIdx).footer()).on('keyup change', function() {
+                                table
+                                    .column(colIdx)
+                                    .search(this.value)
+                                    .draw();
+                            });
+                        });
+                    });
                 }
             }
 

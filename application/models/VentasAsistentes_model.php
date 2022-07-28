@@ -203,8 +203,8 @@ class VentasAsistentes_model extends CI_Model {
 	
 
     public function registroStatusContratacion14 () {
-        if ($this->session->userdata('id_rol') == 32 || $this->session->userdata('id_rol') == 17) { // MJ: ES CONTRALORÍA CORPORATIVA
-            $where = "l.idStatusContratacion = 13 AND l.idMovimiento  = 43 AND cl.status = 1 AND l.tipo_venta = 4 OR l.idStatusContratacion = 13 AND l.idMovimiento  = 68 AND cl.status = 1 and l.tipo_venta IN (4, 6)";
+        if ($this->session->userdata('id_rol') == 17) { // MJ: ES CONTRALORÍA CORPORATIVA
+            $where = "l.idStatusContratacion = 13 AND l.idMovimiento IN (43, 68) AND cl.status = 1 AND l.tipo_venta IN (4, 6)";
         } else { // MJ: ES VENTAS
             if ($this->session->userdata('id_sede') == 9)
                 $id_sede = "'4', '" . $this->session->userdata('id_sede') . "')";

@@ -1,4 +1,4 @@
-/*la corrección xd*/
+/**/
 
 function calculoMoratorioII(IM, importeSaldoI, posPay, PositionPago, diasRetardo, saldoInsoluto, minVal, maxVal, arrayCheckAllPost)
 {
@@ -64,23 +64,23 @@ function calculoMoratorioII(IM, importeSaldoI, posPay, PositionPago, diasRetardo
 	mes = monthCorrect;
 	yearc = yearCorrect;
 	/*termina nuevooooo*/
-		$scope.infoMoratorio=
-			{
-				plazo:$scope.plazoField,
-				im:$scope.imField,
-				si:saldoInsoluto,
-				fechapago:$scope.fechaField,
-				mesesSinInteresP1: $scope.msiField,
-				mesesSinInteresP2: 120,
-				contadorInicial: 	0,
-				capital: ($scope.SIField/$scope.plazoField),
-				interes_p1: 0,
-				interes_p2: 0.01,
-				interes_p3: 0.0125,
-				saldoNormal:$scope.SIField,
-				precioTotal: $scope.SIField,
-			};
-		// console.log($scope.infoMoratorio);
+	$scope.infoMoratorio=
+		{
+			plazo:$scope.plazoField,
+			im:$scope.imField,
+			si:saldoInsoluto,
+			fechapago:$scope.fechaField,
+			mesesSinInteresP1: $scope.msiField,
+			mesesSinInteresP2: 120,
+			contadorInicial: 	0,
+			capital: ($scope.SIField/$scope.plazoField),
+			interes_p1: 0,
+			interes_p2: 0.01,
+			interes_p3: 0.0125,
+			saldoNormal:$scope.SIField,
+			precioTotal: $scope.SIField,
+		};
+	// console.log($scope.infoMoratorio);
 	/*cálculo de mensualidades*/
 	if ($scope.infoMoratorio.plazo > 0 && $scope.infoMoratorio.plazo <= 36) {
 		var range = [];
@@ -4725,54 +4725,54 @@ function calculoMoratorioII(IM, importeSaldoI, posPay, PositionPago, diasRetardo
 		}
 	}
 }
-	function sumaOrdinarios()
+function sumaOrdinarios()
+{
+	var sumaCompletaOrdinario=0;
+	for(var r=0; r<$scope.alphaNumeric.length; r++)
 	{
-		var sumaCompletaOrdinario=0;
-		for(var r=0; r<$scope.alphaNumeric.length; r++)
+		if($scope.alphaNumeric[r]['deudaOrdinario']!=0 && $scope.alphaNumeric[r]['deudaOrdinario']!=undefined)
 		{
-			if($scope.alphaNumeric[r]['deudaOrdinario']!=0 && $scope.alphaNumeric[r]['deudaOrdinario']!=undefined)
-			{
-				sumaCompletaOrdinario +=$scope.alphaNumeric[r]['deudaOrdinario'];
-				// alert($scope.alphaNumeric[r]['deudaOrdinario']);
-			}
+			sumaCompletaOrdinario +=$scope.alphaNumeric[r]['deudaOrdinario'];
+			// alert($scope.alphaNumeric[r]['deudaOrdinario']);
 		}
-		return sumaCompletaOrdinario;
 	}
-	// function checkAdeudoOrdinario()
-	// {
-	// 	var sumaAlv;
-	// 	for(var p=0; p<$scope.alphaNumeric.length; p++)
-	// 	{
-	// 		if($scope.alphaNumeric[p]['deudaOrdinario']!=0)
-	// 		{
-	// 			sumaAlv +=$scope.alphaNumeric[p]['deudaOrdinario'];
-	// 		}
-	// 	}
-	// 	return sumaAlv.toFixed(2);
-	// }
-	function limpiaAdeudoOrdinario()
+	return sumaCompletaOrdinario;
+}
+// function checkAdeudoOrdinario()
+// {
+// 	var sumaAlv;
+// 	for(var p=0; p<$scope.alphaNumeric.length; p++)
+// 	{
+// 		if($scope.alphaNumeric[p]['deudaOrdinario']!=0)
+// 		{
+// 			sumaAlv +=$scope.alphaNumeric[p]['deudaOrdinario'];
+// 		}
+// 	}
+// 	return sumaAlv.toFixed(2);
+// }
+function limpiaAdeudoOrdinario()
+{
+	for(var r=0; r<$scope.alphaNumeric.length; r++)
 	{
-		for(var r=0; r<$scope.alphaNumeric.length; r++)
-		{
-			// if($scope.alphaNumeric[r]['deudaOrdinario']!=0)
-			// {
-			// delete $scope.alphaNumeric[r]['deudaOrdinario'];
-			if($scope.alphaNumeric[r]['deudaOrdinario']==0 || $scope.alphaNumeric[r]['deudaOrdinario']==undefined) {
-				$scope.alphaNumeric[r]['deudaOrdinario'] = 0;
-				// alert("Resete los valores del arreglo en la posicion: "+r+ ": " + $scope.alphaNumeric[r]['deudaOrdinario']);
-			}
-			// }
+		// if($scope.alphaNumeric[r]['deudaOrdinario']!=0)
+		// {
+		// delete $scope.alphaNumeric[r]['deudaOrdinario'];
+		if($scope.alphaNumeric[r]['deudaOrdinario']==0 || $scope.alphaNumeric[r]['deudaOrdinario']==undefined) {
+			$scope.alphaNumeric[r]['deudaOrdinario'] = 0;
+			// alert("Resete los valores del arreglo en la posicion: "+r+ ": " + $scope.alphaNumeric[r]['deudaOrdinario']);
 		}
+		// }
+	}
 
-		// return $scope.alphaNumeric;
-	}
-	// function limpiaAdeudoMoratorio()
-	// {
-	// 	for(var r=0; r<$scope.alphaNumeric.length; r++)
-	// 	{
-	// 		// $scope.alphaNumeric[r]['deudaMoratorio'] = 0;
-	// 		$scope.alphaNumeric[r]['deudaMoratorio'].push(0);
-	// 	}
-	// 	// return $scope.alphaNumeric;
-	// 	alert("Resete los valores del arreglo moratorio " + $scope.alphaNumeric[r]['deudaMoratorio']);
-	// }
+	// return $scope.alphaNumeric;
+}
+// function limpiaAdeudoMoratorio()
+// {
+// 	for(var r=0; r<$scope.alphaNumeric.length; r++)
+// 	{
+// 		// $scope.alphaNumeric[r]['deudaMoratorio'] = 0;
+// 		$scope.alphaNumeric[r]['deudaMoratorio'].push(0);
+// 	}
+// 	// return $scope.alphaNumeric;
+// 	alert("Resete los valores del arreglo moratorio " + $scope.alphaNumeric[r]['deudaMoratorio']);
+// }

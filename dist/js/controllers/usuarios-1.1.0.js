@@ -782,9 +782,9 @@ $("#editUserForm").on('submit', function(e){
         },
         success: function(data) {
             if (data == 1) {
+                $allUsersTable.ajax.reload();
                 $('#editUserModal').modal("hide");
                 alerts.showNotification("top", "right", "El registro se ha actualizado exitosamente.", "success");
-                $allUsersTable.ajax.reload();
             } else {
                 alerts.showNotification("top", "right", "Asegúrate de haber llenado todos los campos mínimos requeridos.", "warning");
             }
