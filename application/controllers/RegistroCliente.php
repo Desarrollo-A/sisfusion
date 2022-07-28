@@ -5,7 +5,7 @@
 		$this->load->model('registrolote_modelo');
         $this->load->model('asesor/Asesor_model');
 		$this->load->library(array('session','form_validation'));
-      //LIBRERIA PARA LLAMAR OBTENER LAS CONSULTAS DE LAS  DEL MENÚ
+      //LIBRERIA PARA LLAMAR OBTENER LrAS CONSULTAS DE LAS  DEL MENÚ
       $this->load->library(array('session','form_validation', 'get_menu'));
 		$this->load->library('Pdf');
 		$this->load->library('phpmailer_lib');
@@ -8185,37 +8185,19 @@
 
 
   public function expedientesWS($lotes,$cliente = '') {
-
-    if($cliente == ''){
-      $query = $this->registrolote_modelo->getdp($lotes);
-      if(count($query) <= 0){
-          $query = $this->registrolote_modelo->getdp_DS($lotes);
-      } else {
-      }
-      $data = array_merge(
-              $query,
-              $this->registrolote_modelo->getExpedienteAll($lotes),
-              $this->registrolote_modelo->get_auts_by_loteAll($lotes),
-              $this->registrolote_modelo->getsProspeccionData($lotes),
-              $this->registrolote_modelo->getEVMTKTD($lotes)
-      );
-    }else{
       $query = $this->registrolote_modelo->getdp($lotes,$cliente);
         if(count($query) <= 0){
             $query = $this->registrolote_modelo->getdp_DS($lotes);
-        } else {
         }
+
         $data = array_merge(
-                $query,
-                $this->registrolote_modelo->getExpedienteAll($lotes,$cliente),
-                $this->registrolote_modelo->get_auts_by_loteAll($lotes,$cliente),
-                $this->registrolote_modelo->getsProspeccionData($lotes,$cliente),
-                $this->registrolote_modelo->getEVMTKTD($lotes,$clientes)
+          $query,
+          $this->registrolote_modelo->getExpedienteAll($lotes,$cliente),
+          $this->registrolote_modelo->get_auts_by_loteAll($lotes,$cliente),
+          $this->registrolote_modelo->getsProspeccionData($lotes,$cliente),
+          $this->registrolote_modelo->getEVMTKTD($lotes,$cliente)
         );
-    }
 
-
-        
         if($data != null) {
             echo json_encode($data);
         } else {
