@@ -177,7 +177,7 @@
                                                                 <div class="col-sm-4">
                                                                     <div class="form-group label-floating select-is-empty div_leader">
                                                                         <label class="control-label">¿Hijos?</label>
-                                                                        <select class="selectpicker select-gral m-0" id="hijos" name="hijos" data-style="btn" data-show-subtext="true" data-live-search="true" title="Seleccione una opción" data-size="7" data-container="body" required onchange="getLeadersList()()">
+                                                                        <select class="selectpicker select-gral m-0" id="hijos" name="hijos" data-style="btn" data-show-subtext="true" data-live-search="true" title="Seleccione una opción" data-size="7" data-container="body" required>
                                                                             <option value="0">Si</option>
                                                                             <option value="1">No</option>
                                                                         </select>

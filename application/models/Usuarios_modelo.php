@@ -637,7 +637,7 @@ function getAllFoldersPDF()
 
     public  function UpdateProspect($id_usuario,$id_lider,$rol_seleccionado,$rol_actual,$sedeCH,$sucursal){
 
-      $url='https://rh.gphsis.com/index.php/WS/movimiento_interno_asesor';
+      $url='https://prueba.gphsis.com/RHCV/index.php/WS/movimiento_interno_asesor';
          if($rol_seleccionado == $rol_actual){
              //ENTONCES NO HUBO UN CAMBIO DE ROL
              $query = $this->db->query("SELECT * FROM usuarios WHERE id_usuario = ".$id_usuario." and id_lider=".$id_lider." ")->result_array();
