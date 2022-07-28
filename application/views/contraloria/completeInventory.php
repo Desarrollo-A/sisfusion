@@ -48,9 +48,11 @@
                                             <th>TOTAL CON DESCUENTOS</th>
                                             <th>REFERENCIA</th>
                                             <th>MSNI</th>
-                                            <th>GERENTE</th>
-                                            <th>COORDINADOR</th>
                                             <th>ASESOR</th>
+                                            <th>COORDINADOR</th>
+                                            <th>GERENTE</th>
+                                            <th>SUBDIRECTOR</th>
+                                            <th>DIRECTOR REGIONAL</th>
                                             <th>ESTATUS</th>
                                             <th>FECHA.AP</th>
                                             <th>COMENTARIO</th>

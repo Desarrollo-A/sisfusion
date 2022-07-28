@@ -49,11 +49,11 @@ class Usuarios_modelo extends CI_Model {
                     $where = "us.gerente_id = $id_lider OR us.id_usuario = $id_lider";
                 
                 return $this->db->query("SELECT us.id_usuario, us.id_rol, oxc.nombre AS puesto, 
-                CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) nombre, 
-                CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno) coordinador, 
-                CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno) gerente, 
-                CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno) subdirector, 
-                CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno) regional, 
+                UPPER(CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)) nombre, 
+                UPPER(CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno)) coordinador, 
+                UPPER(CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno)) gerente, 
+                UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)) subdirector, 
+                UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)) regional, 
                 us.telefono, us.correo, us.estatus, 0 nuevo, us.fecha_creacion, se.nombre sede,
                 us.talla, us.sexo, us.hijos_12, us.fecha_reingreso, us.fecha_baja
                 FROM usuarios us
@@ -71,10 +71,10 @@ class Usuarios_modelo extends CI_Model {
                 CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombre, u.correo,
                 u.telefono, oxc.nombre puesto, 
                 
-                CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno) coordinador, 
-                CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno) gerente, 
-                CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno) subdirector, 
-                CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno) regional, 
+                UPPER(CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno)) coordinador, 
+                UPPER(CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno)) gerente, 
+                UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)) subdirector, 
+                UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)) regional, 
                 
                 u.correo, oxc2.nombre forma_pago,
                 s.nombre sede, CASE WHEN DAY(u.fecha_creacion) >= 6 AND MONTH(u.fecha_creacion) = MONTH(GETDATE()) AND YEAR(u.fecha_creacion) = YEAR(GETDATE()) THEN 1 ELSE 0 END as nuevo, u.fecha_creacion, u.ismktd,oxcN.nombre as nacionalidad,
@@ -100,10 +100,10 @@ class Usuarios_modelo extends CI_Model {
                 return $this->db->query("SELECT CONVERT(varchar,u.fechaIngreso,103) fechaIngreso, u.estatus, u.id_usuario, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombre, u.correo,
                 u.telefono, oxc.nombre puesto, 
                 
-                CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno) coordinador, 
-                CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno) gerente, 
-                CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno) subdirector, 
-                CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno) regional,
+                UPPER(CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno)) coordinador, 
+                UPPER(CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno)) gerente, 
+                UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)) subdirector, 
+                UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)) regional,
                 
                 u.correo, oxc2.nombre forma_pago,
                 s.nombre sede, CASE WHEN DAY(u.fecha_creacion) >= 6 AND MONTH(u.fecha_creacion) = MONTH(GETDATE()) AND YEAR(u.fecha_creacion) = YEAR(GETDATE()) THEN 1 ELSE 0 END as nuevo, 
@@ -132,10 +132,10 @@ class Usuarios_modelo extends CI_Model {
                     $id_rol = "";  
                 return $this->db->query("SELECT u.estatus, u.id_usuario, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombre, u.correo,
                 u.telefono, oxc.nombre puesto, 
-                CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno) coordinador, 
-                CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno) gerente, 
-                CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno) subdirector, 
-                CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno) regional,
+                UPPER(CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno)) coordinador, 
+                UPPER(CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno)) gerente, 
+                UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)) subdirector, 
+                UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)) regional,
                 u.correo, CASE WHEN DAY(u.fecha_creacion) >= 6 AND MONTH(u.fecha_creacion) = MONTH(GETDATE()) AND YEAR(u.fecha_creacion) = YEAR(GETDATE()) THEN 1 ELSE 0 END as nuevo, u.fecha_creacion, s.nombre sede,
                 u.talla, u.sexo, u.hijos_12, u.fecha_reingreso, u.fecha_baja
                 FROM usuarios u 
@@ -154,10 +154,10 @@ class Usuarios_modelo extends CI_Model {
                 $id_rol = "";
             return $this->db->query("SELECT u.estatus, u.id_usuario, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombre, u.correo,
             u.telefono, oxc.nombre puesto, 
-            CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno) coordinador, 
-            CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno) gerente, 
-            CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno) subdirector, 
-            CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno) regional,
+            UPPER(CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno)) coordinador, 
+            UPPER(CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno)) gerente, 
+            UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)) subdirector, 
+            UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)) regional,
             u.correo, CASE WHEN DAY(u.fecha_creacion) >= 6 AND MONTH(u.fecha_creacion) = MONTH(GETDATE()) AND YEAR(u.fecha_creacion) = YEAR(GETDATE()) THEN 1 ELSE 0 END as nuevo, u.fecha_creacion, s.nombre sede,
             u.talla, u.sexo, u.hijos_12, u.fecha_reingreso, u.fecha_baja
             FROM usuarios u 
