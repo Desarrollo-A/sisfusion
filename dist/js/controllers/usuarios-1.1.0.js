@@ -526,7 +526,7 @@ $(document).on('click', '.edit-user-information', function(e){
 $(document).on('change', '#sedech', function() {
     let id_sede = $('#sedech').val();
     $("#sucursal").empty();
-    $(".sucursal").append($('<option disabled selected>').val("").text("Seleccione una opción"));
+    $("#sucursal").append($('<option disabled selected>').val("").text("Seleccione una opción"));
     $.getJSON("getSucursalCH/"+id_sede).done( function( data ){
 
         var select = document.getElementsByName('sucursal')[0];
@@ -543,45 +543,49 @@ $(document).on('change', '#sedech', function() {
                 select.add(option);
 
         });
+        $('#sucursal').selectpicker('refresh');
     });
 });
 function getSedesCH(sede = 0,sucursal = 0){
     $("#sedech").empty();
-  sede == 0 ?  $(".sedech").append($('<option disabled selected>').val("").text("Seleccione una opción")) : '';
+    sede == 0 ?  $("#sedech").append($('<option disabled selected>').val("").text("Seleccione una opción")) : '';
     $('#sedech').prop('required', true);
-
 
     $.getJSON("getSedesCH").done( function( data ){
         var select = document.getElementsByName('sedech')[0];
         $.each( data.data, function(i, v){
             if(v.idsede != 7){
-                    var option = document.createElement("option");
-                    option.text = v.nom_sede;
-                    option.value = v.idsede;
-                    select.add(option);
-                    if(v.idsede == sede){
-                        option.selected =  v.idsede;
-                        $.getJSON("getSucursalCH/"+sede).done( function( data2 ){
+                var option = document.createElement("option");
+                option.text = v.nom_sede;
+                option.value = v.idsede;
+                select.add(option);
+                if(v.idsede == sede){
+                    // option.selected =  v.idsede;
+                    $('#sedech').val(v.idsede);
+        $('#sedech').selectpicker('refresh');
 
-                            var select = document.getElementsByName('sucursal')[0];
-                            $.each( data2.data, function(i, v){
-                                    var option = document.createElement("option");
-                                    option.text = v.nom_oficina;
-                                    option.value = v.idsucursal;
-                                    select.add(option);
-                                    if(v.idsucursal == sucursal){
-                                        option.selected = v.idsucursal;
-                                    }
+                    $.getJSON("getSucursalCH/"+sede).done( function( data2 ){
+
+                        var select = document.getElementsByName('sucursal')[0];
+                        $.each( data2.data, function(i, v){
+                                var option = document.createElement("option");
+                                option.text = v.nom_oficina;
+                                option.value = v.idsucursal;
+                                select.add(option);
+                                if(v.idsucursal == sucursal){
+                                    option.selected = v.idsucursal;
+                                }
 
 
 
-                            });
                         });
-                    }
+                    });
+                }
 
 
             }
         });
+        $('#sedech').selectpicker('refresh');
     });
 }
 function fillFields (v) {
