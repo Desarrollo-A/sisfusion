@@ -154,10 +154,10 @@ class Asesor_model extends CI_Model
         cl.creado_por, cl.fecha_modificacion, cl.modificado_por, cond.nombre as nombreCondominio, residencial.nombreResidencial as nombreResidencial,
         cl.status, nombreLote, lotes.comentario, lotes.idMovimiento, lotes.fechaVenc, lotes.modificado, lotes.observacionContratoUrgente as vl, lotes.idStatusContratacion, cl.concepto, cl.id_prospecto,
         cl.flag_compartida,
-        CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno) coordinador, 
-        CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno) gerente, 
-        CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno) subdirector, 
-        CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno) regional
+        UPPER(CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno)) coordinador, 
+        UPPER(CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno)) gerente, 
+        UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)) subdirector, 
+        UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)) regional
 		FROM clientes as cl
         LEFT JOIN usuarios as us ON cl.id_asesor=us.id_usuario
         LEFT JOIN lotes as lotes ON lotes.idLote=cl.idLote
@@ -194,10 +194,10 @@ class Asesor_model extends CI_Model
         cl.apellido_materno, cl.status ,cl.idLote, fechaApartado ,fechaVencimiento , cl.usuario, cond.idCondominio, cl.fecha_creacion, 
         cl.creado_por, cl.fecha_modificacion, cl.modificado_por, cond.nombre as nombreCondominio, residencial.nombreResidencial as nombreResidencial, cl.status, nombreLote, lotes.comentario, lotes.idMovimiento, lotes.fechaVenc, lotes.modificado, lotes.observacionContratoUrgente as vl, lotes.idStatusContratacion, cl.concepto, cl.id_prospecto,
         cl.flag_compartida,
-        CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno) coordinador, 
-        CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno) gerente, 
-        CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno) subdirector, 
-        CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno) regional
+        UPPER(CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno)) coordinador, 
+        UPPER(CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno)) gerente, 
+        UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)) subdirector, 
+        UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)) regional
 		FROM clientes as cl
         LEFT JOIN usuarios as us ON cl.id_asesor=us.id_usuario
         LEFT JOIN lotes as lotes ON lotes.idLote=cl.idLote

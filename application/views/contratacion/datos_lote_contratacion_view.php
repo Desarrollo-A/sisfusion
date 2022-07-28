@@ -691,9 +691,9 @@
 					data: function(d){
 						var asesor;
 						if(d.idStatusLote == 8 || d.idStatusLote == 9 || d.idStatusLote == 10)
-							asesor = myFunctions.validateEmptyField(d.asesor2);
+							asesor = d.asesor2 == '  ' ? 'SIN ESPECIFICAR' : d.asesor2;
 						else
-							asesor = myFunctions.validateEmptyField(d.asesor);
+							asesor = d.asesor == '  ' ? 'SIN ESPECIFICAR' : d.asesor;
 						return asesor;
 					}
 				},
@@ -701,15 +701,9 @@
 					data: function(d){
 						var coordinador;
 						if(d.idStatusLote == 8 || d.idStatusLote == 9 || d.idStatusLote == 10)
-						{
-							if(d.id_rol == 9)
-								coordinador = myFunctions.validateEmptyField(d.asesor2);
-							else
-								coordinador = myFunctions.validateEmptyField(d.coordinador2);
-						}
+							coordinador = d.coordinador2 == '  ' ? 'SIN ESPECIFICAR' : d.coordinador2;
 						else
-							coordinador = myFunctions.validateEmptyField(d.coordinador);
-						coordinador = coordinador = '' ? 'Sin registro' : coordinador;
+							coordinador = d.coordinador == '  ' ? 'SIN ESPECIFICAR' : d.coordinador;
 						return coordinador;
 					}
 				},
@@ -717,15 +711,30 @@
 					data: function(d){
 						var gerente;
 						if(d.idStatusLote == 8 || d.idStatusLote == 9 || d.idStatusLote == 10)
-						{
-							if(d.id_rol == 9)
-								gerente = myFunctions.validateEmptyField(d.coordinador2);
-							else
-								gerente = myFunctions.validateEmptyField(d.gerente2);
-						}
+							gerente = d.gerente2 == '  ' ? 'SIN ESPECIFICAR' : d.gerente2;
 						else
-							gerente = myFunctions.validateEmptyField(d.gerente);
+							gerente = d.gerente == '  ' ? 'SIN ESPECIFICAR' : d.gerente;
 						return gerente;
+					}
+				},
+				{
+					data: function(d){
+						var subdirector;
+						if(d.idStatusLote == 8 || d.idStatusLote == 9 || d.idStatusLote == 10)
+							subdirector = d.subdirector2 == '  ' ? 'SIN ESPECIFICAR' : d.subdirector2;
+						else
+							subdirector = d.subdirector == '  ' ? 'SIN ESPECIFICAR' : d.subdirector;
+						return subdirector;
+					}
+				},
+				{
+					data: function(d){
+						var regional;
+						if(d.idStatusLote == 8 || d.idStatusLote == 9 || d.idStatusLote == 10)
+							regional = d.regional2 == '  ' ? 'SIN ESPECIFICAR' : d.regional2;
+						else
+							regional = d.regional == '  ' ? 'SIN ESPECIFICAR' : d.regional;
+						return regional;
 					}
 				},
 				{

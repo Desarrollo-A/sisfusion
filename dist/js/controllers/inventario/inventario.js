@@ -39,7 +39,7 @@ function fillTableInventario(sede) {
             titleAttr: 'Inventario Lotes',
             title:"Inventario Lotes",
             exportOptions: {
-                columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18],
+                columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
                 format: {
                     header: function (d, columnIdx) {
                         switch (columnIdx) {
@@ -70,33 +70,39 @@ function fillTableInventario(sede) {
                                 return 'MSI';
                                 break;
                             case 9:
-                                return 'GERENTE';
+                                return 'ASESOR';
                                 break;
                             case 10:
                                 return 'COORDINADOR';
                                 break;
                             case 11:
-                                return 'ASESOR';
+                                return 'GERENTE';
                                 break;
-                            case 12:
+							case 12:
+								return 'SUBDIRECTOR';
+								break;
+							case 13:
+								return 'DIRECTOR REGIONAL';
+								break;
+                            case 14:
                                 return 'ESTATUS';
                                 break;
-                            case 13:
+                            case 15:
                                 return 'FECHA AP';
                                 break;
-                            case 14:
+                            case 16:
                                 return 'COMENTARIO';
                                 break;
-                            case 15:
+                            case 17:
                                 return 'LUGAR PROSPECCIÓN';
                                 break;
-                            case 16:
+                            case 18:
                                 return 'FECHA APERTURA';
                                 break;
-                            case 17:
+                            case 19:
 								return 'FECHA VALIDACION ENGANCHE';
 								break;
-							case 18:
+							case 20:
 								return 'CANTIDAD ENGANCHE PAGADO';
 								break;
                         }
@@ -275,46 +281,53 @@ function fillTableInventario(sede) {
 			data: 'msni'
 		},
 		{
-			"data": function(d){
-				var gerente;
+			data: function(d){
+				var asesor;
 				if(d.idStatusLote == 8 || d.idStatusLote == 9 || d.idStatusLote == 10)
-				{
-					gerente = myFunctions.validateEmptyField(d.gerente2);
-				}
+					asesor = d.asesor2 == '  ' ? 'SIN ESPECIFICAR' : d.asesor2;
 				else
-				{
-					gerente = myFunctions.validateEmptyField(d.gerente);
-				}
-				return gerente;
+					asesor = d.asesor == '  ' ? 'SIN ESPECIFICAR' : d.asesor;
+				return asesor;
 			}
 		},
 		{
-			"data": function(d){
+			data: function(d){
 				var coordinador;
 				if(d.idStatusLote == 8 || d.idStatusLote == 9 || d.idStatusLote == 10)
-				{
-					coordinador = myFunctions.validateEmptyField(d.coordinador2);
-				}
+					coordinador = d.coordinador2 == '  ' ? 'SIN ESPECIFICAR' : d.coordinador2;
 				else
-				{
-					coordinador = myFunctions.validateEmptyField(d.coordinador);
-				}
+					coordinador = d.coordinador == '  ' ? 'SIN ESPECIFICAR' : d.coordinador;
 				return coordinador;
 			}
 		},
 		{
-			"data": function(d){
-				return myFunctions.validateEmptyField(d.asesor);
-				var asesor;
+			data: function(d){
+				var gerente;
 				if(d.idStatusLote == 8 || d.idStatusLote == 9 || d.idStatusLote == 10)
-				{
-					asesor = myFunctions.validateEmptyField(d.asesor2);
-				}
+					gerente = d.gerente2 == '  ' ? 'SIN ESPECIFICAR' : d.gerente2;
 				else
-				{
-					asesor = myFunctions.validateEmptyField(d.asesor);
-				}
-				return asesor;
+					gerente = d.gerente == '  ' ? 'SIN ESPECIFICAR' : d.gerente;
+				return gerente;
+			}
+		},
+		{
+			data: function(d){
+				var subdirector;
+				if(d.idStatusLote == 8 || d.idStatusLote == 9 || d.idStatusLote == 10)
+					subdirector = d.subdirector2 == '  ' ? 'SIN ESPECIFICAR' : d.subdirector2;
+				else
+					subdirector = d.subdirector == '  ' ? 'SIN ESPECIFICAR' : d.subdirector;
+				return subdirector;
+			}
+		},
+		{
+			data: function(d){
+				var regional;
+				if(d.idStatusLote == 8 || d.idStatusLote == 9 || d.idStatusLote == 10)
+					regional = d.regional2 == '  ' ? 'SIN ESPECIFICAR' : d.regional2;
+				else
+					regional = d.regional == '  ' ? 'SIN ESPECIFICAR' : d.regional;
+				return regional;
 			}
 		},
 		{
