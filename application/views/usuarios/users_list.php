@@ -74,6 +74,7 @@
                                                         <th class="disabled-sorting">GÉNERO</th>
                                                         <th class="disabled-sorting">HIJOS + 12</th>
                                                         <th class="disabled-sorting">REINGRESO</th>
+                                                        <th class="disabled-sorting">BAJA</th>
                                                         <th class="disabled-sorting">ACCIONES</th>
                                                     </tr>
                                                 </thead>
@@ -166,7 +167,7 @@
                                                             </div>
                                                             <div class="row">
                                                                 <div class="col-sm-3">
-                                                                    <div class="form-group label-floating">
+                                                                    <div class="form-group label-floating select-is-empty div_talla">
                                                                         <label class="control-label">Talla</label>
                                                                         <input id="talla" name="talla" type="numeric" class="form-control input-gral pl-1 pr-1">
                                                                     </div>
@@ -175,8 +176,9 @@
                                                                     <div class="form-group label-floating">
                                                                         <label class="control-label">Sexo</label>
                                                                         <select class="selectpicker select-gral m-0" id="sexo" name="sexo" data-style="btn" data-show-subtext="true" data-live-search="true" title="Seleccione una opción" data-size="7" data-container="body" required>
-                                                                            <option value="h">Masculino</option>
-                                                                            <option value="m">Femenino</option>
+                                                                            <option value="S">Sin especificar</option>
+                                                                            <option value="H">Masculino</option>
+                                                                            <option value="M">Femenino</option>
                                                                         </select>
                                                                     </div>
                                                                 </div>
@@ -184,13 +186,13 @@
                                                                     <div class="form-group label-floating select-is-empty div_leader">
                                                                         <label class="control-label">¿Hijos?</label>
                                                                         <select class="selectpicker select-gral m-0" id="hijos" name="hijos" data-style="btn" data-show-subtext="true" data-live-search="true" title="Seleccione una opción" data-size="7" data-container="body" required onchange="getLeadersList()()">
-                                                                            <option value="SI">Sí</option>
+                                                                            <option value="S">Sin especificar</option><option value="SI">Sí</option>
                                                                             <option value="NO">No</option>
                                                                         </select>
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-sm-3">
-                                                                    <div class="form-group label-floating">
+                                                                    <div class="form-group label-floating select-is-empty div_nohijos">
                                                                         <label class="control-label">No. hijos</label>
                                                                         <input id="noHijos" name="noHijos" type="numeric" class="form-control input-gral pl-1 pr-1">
                                                                     </div>

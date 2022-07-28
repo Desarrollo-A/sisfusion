@@ -596,10 +596,15 @@ function fillFields (v) {
     $("#headquarter").val(v.id_sede);
     $("#member_type").val(v.id_rol);
     $("#lastTM").val(v.id_rol);
-
+    $("#talla").val(v.talla == null ? 0 : v.talla);
+    $("#sexo").val(v.sexo == null ? 'S' : v.sexo);
+    $("#hijos").val(v.tiene_hijos == null ? 'NO' : v.tiene_hijos);
+    $("#noHijos").val(v.hijos_12 == null ? 0 : v.hijos_12);
     $('#payment_method').selectpicker('refresh');
     $('#headquarter').selectpicker('refresh');
     $('#member_type').selectpicker('refresh');
+    $('#sexo').selectpicker('refresh');
+    $('#hijos').selectpicker('refresh');
 
     if(v.id_rol == 7 || v.id_rol== 3 || v.id_rol == 9){
         $('#ch'). show();
@@ -625,36 +630,31 @@ function fillFields (v) {
 }
 
 function validateEmptyFields (v) {
-    if (v.nombre != '') {
+    console.log(v);     
+    if (v.nombre != '')
         $(".div_name").removeClass("is-empty");
-    }
-    if (v.apellido_paterno != '') {
+    if (v.apellido_paterno != '')
         $(".div_last_name").removeClass("is-empty");
-    }
-    if (v.apellido_materno != '') {
+    if (v.apellido_materno != '')
         $(".div_mothers_last_name").removeClass("is-empty");
-    }
-    if (v.rfc != '') {
+    if (v.rfc != '')
         $(".div_rfc").removeClass("is-empty");
-    }
-    if (v.forma_pago != '') {
+    if (v.forma_pago != '')
         $(".div_payment_method").removeClass("is-empty");
-    }
-    if (v.correo != '') {
+    if (v.correo != '')
         $(".div_email").removeClass("is-empty");
-    }
-    if (v.telefono != '') {
+    if (v.telefono != '')
         $(".div_phone_number").removeClass("is-empty");
-    }
-    if (v.id_sede != '') {
+    if (v.id_sede != '')
         $(".div_headquarter").removeClass("is-empty");
-    }
-    if (v.id_rol != '') {
+    if (v.id_rol != '')
         $(".div_membertype").removeClass("is-empty");
-    }
-    if (v.id_lider != '') {
+    if (v.id_lider != '')
         $(".div_leader").removeClass("is-empty");
-    }
+    if (v.hijos_12 == '')
+        $(".div_nohijos").removeClass("is-empty");
+    if (v.talla != '')
+        $(".div_talla").removeClass("is-empty");
 }
 
 $("#editUserForm").on('submit', function(e){
