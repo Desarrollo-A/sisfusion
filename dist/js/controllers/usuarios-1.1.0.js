@@ -1,17 +1,20 @@
 $(document).ready( function() {
+    $('[data-toggle="tooltip"]').tooltip();
 
     $.getJSON("fillSelectsForUsers").done(function(data) {
-        $(".payment_method").append($('<option disabled selected>').val("").text("Seleccione una opción"));
-        $(".member_type").append($('<option disabled selected>').val("").text("Seleccione una opción"));
-        $(".headquarter").append($('<option disabled selected>').val("").text("Seleccione una opción"));
         for (let i = 0; i < data.length; i++) {
-            if (data[i]['id_catalogo'] == 16) // PAYMENT METHOD SELECT
-                $(".payment_method").append($('<option>').val(data[i]['id_opcion']).text(data[i]['nombre']));
+            if (data[i]['id_catalogo'] == 16){ // PAYMENT METHOD SELECT
+                $("#payment_method").append($('<option>').val(data[i]['id_opcion']).text(data[i]['nombre']));
+            }
             if (data[i]['id_catalogo'] == 1) // MEMBER TYPE SELECT
-                $(".member_type").append($('<option>').val(data[i]['id_opcion']).text(data[i]['nombre']));
+                $("#member_type").append($('<option>').val(data[i]['id_opcion']).text(data[i]['nombre']));
             if (data[i]['id_catalogo'] == 0) // HEADQUARTER SELECT
-                $(".headquarter").append($('<option>').val(data[i]['id_opcion']).text(data[i]['nombre']));
+                $("#headquarter").append($('<option>').val(data[i]['id_opcion']).text(data[i]['nombre']));
         }
+
+        $('#payment_method').selectpicker('refresh');
+        $('#headquarter').selectpicker('refresh');
+        $('#member_type').selectpicker('refresh');
     });
 
     $(".select-is-empty").removeClass("is-empty");
@@ -436,13 +439,12 @@ $(document).ready( function() {
 });
 
 function showPassword() {
-    var x = document.getElementById("contrasena");
-    if (x.type === "password") {
-        x.type = "text";
-    } else {
-        x.type = "password";
-    }
+    if ($("#contrasena").attr("type") == "password") $("#contrasena").attr("type", "text");
+    else $("#contrasena").attr("type", "password");    
+    
+    $("#showPass i").toggle();
 }
+
 $("#my_personal_info_form").on('submit', function(e){
     e.preventDefault();
     $.ajax({
@@ -503,7 +505,6 @@ function getLeadersList(){
     headquarter = $('#headquarter').val();
     type = $('#member_type').val();
     $("#leader").find("option").remove();
-    $("#leader").append($('<option disabled selected>').val("").text("Seleccione una opción"));
     $.post('getLeadersList/'+headquarter+'/'+type, function(data) {
         var len = data.length;
         for( var i = 0; i<len; i++)
@@ -517,13 +518,12 @@ function getLeadersList(){
         {
             $("#leader").append('<option selected="selected" value="0">NA</option>');
         }
+        $('#leader').selectpicker('refresh');
     }, 'json');
 }
 
 function getLeadersListForEdit(headquarter, type, leader){
     $("#leader").find("option").remove();
-    $("#leader").append($('<option disabled selected>').val("").text("Seleccione una opción"));
-    /*$("#leader").append($('<option>').val("0").text("PENDIENTE DEFINIR COORDINADOR"));*/
     $.post('getLeadersList/'+headquarter+'/'+type, function(data) {
         var len = data.length;
         for( var i = 0; i<len; i++)
@@ -542,7 +542,7 @@ function getLeadersListForEdit(headquarter, type, leader){
         {
             $("#leader").append('<option selected="selected" value="0">NA</option>');
         }
-
+        $('#leader').selectpicker('refresh');
     }, 'json');
 }
 
@@ -604,8 +604,6 @@ $("#BajaUserForm").on('submit', function(e){
 $("#BajaConfirmForm").on('submit', function(e){
     e.preventDefault();
     document.getElementById('btnSub').disabled = true;
-    //$('#btnSub').prop('disabled', true);
-
     $.ajax({
         type: 'POST',
         url: 'changeUserStatus',
@@ -637,8 +635,6 @@ $(document).on('click', '.change-user-status', function(e) {
     e.preventDefault();
     id_user = $(this).attr("data-id-usuario");
     $('#'+id_user+'').prop('disabled', true);
-
-//    document.getElementById(''+id_user+'').disabled = true;
     estatus = $(this).attr("data-estatus");
     id_rol = $(this).attr("data-rol");
     nameUser = $(this).attr("data-name");
@@ -652,8 +648,6 @@ if(estatus == 0 && (id_rol == 'Asesor' || id_rol == 'Gerente' || id_rol == 'Coor
     $('#id_user').val(id_user);
     $('#idrol').val(id_rol);
     $("#BajaUser").modal();
-   // $('#'+id_user+'').prop('disabled', false);
-
 }else{
     document.getElementById('nameUs2').innerHTML = '';
     document.getElementById('msj').innerHTML = '';
@@ -680,36 +674,11 @@ if(estatus == 0 && (id_rol == 'Asesor' || id_rol == 'Gerente' || id_rol == 'Coor
         $("#BajaConfirm").modal();
 
     }
-     /**/
 }
 $('#'+id_user+'').prop('disabled', false);
 });
-/*$(document).on('click', '.change-user-status', function() {
-    estatus = $(this).attr("data-estatus");
-    $.ajax({
-        type: 'POST',
-        url: 'changeUserStatus',
-        data: {'id_usuario': $(this).attr("data-id-usuario"), 'estatus': $(this).attr("data-estatus")},
-        dataType: 'json',
-        success: function(data){
-            if( data == 1 ){
-                if (estatus == 1) {
-                    alerts.showNotification("top", "right", "Se ha activado con éxito.", "success");
-                } else {
-                    alerts.showNotification("top", "right", "Se ha desactivado con éxito.", "success");
-                }
-                $allUsersTable.ajax.reload();
-            }else{
-                alerts.showNotification("top", "right", "Asegúrate de haber llenado todos los campos mínimos requeridos.", "warning");
-            }
-        },error: function( ){
-            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
-        }
-    });
-});*/
 
 $(document).on('click', '.edit-user-information', function(e){
-    // console.log('cámara enytraste al modal mi perro');
     id_usuario = $(this).attr("data-id-usuario");
     $.getJSON("getUserInformation/"+id_usuario).done( function( data ){
         $.each( data, function(i, v){
@@ -792,10 +761,11 @@ function fillFields (v) {
     $("#phone_number").val(v.telefono);
     $("#headquarter").val(v.id_sede);
     $("#member_type").val(v.id_rol);
-
-
     $("#lastTM").val(v.id_rol);
 
+    $('#payment_method').selectpicker('refresh');
+    $('#headquarter').selectpicker('refresh');
+    $('#member_type').selectpicker('refresh');
 
     if(v.id_rol == 7 || v.id_rol== 3 || v.id_rol == 9){
         $('#ch'). show();
@@ -816,7 +786,6 @@ function fillFields (v) {
                 $("#sucursal").empty();
             }
             $("#rol_actual").val(v.id_rol);
-    // $("#leader").val(v.id_lider);
     $("#username").val(v.usuario);
     $("#contrasena").val(v.contrasena);
 }

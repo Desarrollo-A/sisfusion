@@ -128,6 +128,10 @@
                                                 <th>CONDOMINIO</th>
                                                 <th>LOTE</th>
                                                 <th>CLIENTE</th>
+                                                <th>COORDINADOR</th>
+                                                <th>GERENTE</th>
+                                                <th>SUBDIRECTOR</th>
+                                                <th>REGIONAL</th>
                                                 <th>FECHA APARTADO</th>
                                                 <th>FECHA VENCIMIENTO</th>
                                                 <th>COMENTARIO</th>
@@ -146,324 +150,6 @@
         </div>
     </div>
 
-
-    <div class="content hide">
-        <div class="container-fluid">
-
-            <div class="row">
-                <div class="col xol-xs-12 col-sm-12 col-md-12 col-lg-12">
-                    <div class="card">
-
-                        <div class="card-header card-header-icon" data-background-color="gray" style=" background: linear-gradient(45deg, #AEA16E, #96843D);">
-                            <i class="material-icons">list</i>
-                        </div>
-
-                        <div class="card-content">
-
-                            <h4 class="card-title"><B>Tus ventas</B></h4>
-                            <div class="toolbar">
-                                <!--        Here you can write extra buttons/actions for the toolbar              -->
-                            </div>
-                            <div class="material-datatables">
-
-                                <div class="form-group">
-                                    <div class="table-responsive">
-                                        <!--   Registro de todos los clientes con y sin expediente.  -->
-
-                                        <table class="table table-responsive table-bordered table-striped table-hover"
-                                               id="tabla_deposito_seriedad" name="tabla_deposito_seriedad" style="text-align:center;">
-                                            <thead>
-                                            <tr>
-
-                                                <th style="font-size: .9em;text-align: center;">PROYECTO</th>
-                                                <th style="font-size: .9em;"><center>CONDOMINIO</center></th>
-                                                <th style="font-size: .9em;"><center>LOTE</center></th>
-                                                <th style="font-size: .9em;"><center>CLIENTE</center></th>
-                                                <th style="font-size: .9em;"><center>FECHA APARTADO</center></th>
-                                                <th style="font-size: .9em;"><center>FECHA VENCIMIENTO</center></th>
-                                                <th style="font-size: .9em;"><center>COMENTARIO</center></th>
-                                                <th style="font-size: .9em;"><center>ACCIONES</center></th>
-                                                <!-- <th style="font-size: .9em;"><center>DS</center></th>
-                                                <th style="font-size: .9em;"><center>VALIDAR</center></th> -->
-
-                                            </tr>
-                                            </thead>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-
-
-
-
-        <!-- modal  ENVIA A CONTRALORIA 2-->
-        <div class="modal fade" id="modal1" data-backdrop="static" data-keyboard="false">
-            <div class="modal-dialog">
-                <div class="modal-content" >
-                    <div class="modal-header">
-                        <center><h4 class="modal-title"><label>Integración de Expediente - <b><span class="lote"></span></b></label></h4></center>
-                    </div>
-                    <div class="modal-body">
-                        <label>Comentario:</label>
-                        <textarea class="form-control" id="comentario" rows="3"></textarea>
-                        <br>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" id="save1" class="btn btn-success"><span class="material-icons" >send</span> </i> Registrar</button>
-                        <button type="button" class="btn btn-danger" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> Cancelar</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- modal -->
-
-
-
-
-
-
-
-        <!-- modal  ENVIA A CONTRALORIA 5 por rechazo 1-->
-
-
-        <div class="modal fade" id="modal2" data-backdrop="static" data-keyboard="false">
-            <div class="modal-dialog">
-                <div class="modal-content" >
-                    <div class="modal-header">
-                        <center><h4 class="modal-title"><label>Integración de Expediente (Rechazo estatus 5 Contraloría) - <b><span class="lote"></span></b></label></h4></center>
-                    </div>
-                    <div class="modal-body">
-                        <label>Comentario:</label>
-                        <textarea class="form-control" id="comentario2" rows="3"></textarea>
-                        <br>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" id="save2" class="btn btn-success"><span class="material-icons" >send</span> </i> Registrar</button>
-                        <button type="button" class="btn btn-danger" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> Cancelar</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- modal -->
-
-
-
-
-
-
-
-
-
-
-
-
-        <!-- modal  ENVIA A CONTRALORIA 5 por rechazo 1-->
-
-
-        <div class="modal fade" id="modal3" data-backdrop="static" data-keyboard="false">
-            <div class="modal-dialog">
-                <div class="modal-content" >
-                    <div class="modal-header">
-                        <center><h4 class="modal-title"><label>Integración de Expediente (Rechazo estatus 5 Contraloría) - <b><span class="lote"></span></b></label></h4></center>
-                    </div>
-                    <div class="modal-body">
-                        <label>Comentario:</label>
-                        <textarea class="form-control" id="comentario3" rows="3"></textarea>
-                        <br>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" id="save3" class="btn btn-success"><span class="material-icons" >send</span> </i> Registrar</button>
-                        <button type="button" class="btn btn-danger" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> Cancelar</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- modal -->
-
-
-
-        <!-- modal  ENVIA A CONTRALORIA 6 por rechazo 1-->
-        <div class="modal fade" id="modal4" data-backdrop="static" data-keyboard="false">
-            <div class="modal-dialog">
-                <div class="modal-content" >
-                    <div class="modal-header">
-                        <center><h4 class="modal-title"><label>Integración de Expediente (Rechazo estatus 6 Contraloría) - <b><span class="lote"></span></b></label></h4></center>
-                    </div>
-                    <div class="modal-body">
-                        <label>Comentario:</label>
-                        <textarea class="form-control" id="comentario4" rows="3"></textarea>
-                        <br>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" id="save4" class="btn btn-success"><span class="material-icons" >send</span> </i> Registrar</button>
-                        <button type="button" class="btn btn-danger" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> Cancelar</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- modal -->
-
-
-
-
-
-        <!-- modal  ENVIA A VENTAS 8 por rechazo 1-->
-
-        <div class="modal fade" id="modal5" data-backdrop="static" data-keyboard="false">
-            <div class="modal-dialog">
-                <div class="modal-content" >
-                    <div class="modal-header">
-                        <center><h4 class="modal-title"><label>Integración de Expediente (Rechazo estatus 8 Ventas) - <b><span class="lote"></span></b></label></h4></center>
-                    </div>
-                    <div class="modal-body">
-                        <label>Comentario:</label>
-                        <textarea class="form-control" id="comentario5" rows="3"></textarea>
-                        <br>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" id="save5" class="btn btn-success"><span class="material-icons" >send</span> </i> Registrar</button>
-                        <button type="button" class="btn btn-danger" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> Cancelar</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- modal -->
-
-
-
-
-
-
-
-
-        <!-- modal  ENVIA A JURIDICO por rechazo 1-->
-        <div class="modal fade" id="modal6" data-backdrop="static" data-keyboard="false">
-            <div class="modal-dialog">
-                <div class="modal-content" >
-                    <div class="modal-header">
-                        <center><h4 class="modal-title"><label>Integración de Expediente (Rechazo estatus 7 Jurídico) - <b><span class="lote"></span></b></label></h4></center>
-                    </div>
-                    <div class="modal-body">
-                        <label>Comentario:</label>
-                        <textarea class="form-control" id="comentario6" rows="3"></textarea>
-                        <br>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" id="save6" class="btn btn-success"><span class="material-icons" >send</span> </i> Registrar</button>
-                        <button type="button" class="btn btn-danger" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> Cancelar</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- modal -->
-
-
-
-
-
-        <!-- modal  ENVIA A JURIDICO por rechazo 1-->
-
-        <div class="modal fade" id="modal7" data-backdrop="static" data-keyboard="false">
-            <div class="modal-dialog">
-                <div class="modal-content" >
-                    <div class="modal-header">
-                        <center><h4 class="modal-title"><label>Integración de Expediente (Rechazo estatus 5 Contraloría) - <b><span class="lote"></span></b></label></h4></center>
-                    </div>
-                    <div class="modal-body">
-                        <label>Comentario:</label>
-                        <textarea class="form-control" id="comentario7" rows="3"></textarea>
-                        <br>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" id="save7" class="btn btn-success"><span class="material-icons" >send</span> </i> Registrar</button>
-                        <button type="button" class="btn btn-danger" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> Cancelar</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-
-        <!-- modal -->
-
-
-
-        <!-- modal  ENVIA A JURIDICO por rechazo 2-->
-        <div class="modal fade" id="modal_return1" data-backdrop="static" data-keyboard="false">
-            <div class="modal-dialog">
-                <div class="modal-content" >
-                    <div class="modal-header">
-                        <center><h4 class="modal-title"><label>Integración de Expediente (Rechazo estatus 7 Jurídico) - <b><span class="lote"></span></b></label></h4></center>
-                    </div>
-                    <div class="modal-body">
-                        <label>Comentario:</label>
-                        <textarea class="form-control" id="comentario8" rows="3"></textarea>
-                        <br>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" id="b_return1" class="btn btn-success"><span class="material-icons" >send</span> </i> Registrar</button>
-                        <button type="button" class="btn btn-danger" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> Cancelar</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- modal -->
-
-        <!-- modal  Venta compartida-->
-        <div class="modal fade" id="ventaCompartida" data-keyboard="false" data-backdrop="static">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content card">
-                    <form class="card-content" id="formVentaCompartida" name="formVentaCompartida" method="post">
-                        <div class="modal-body text-center toolbar m-0 p-0">
-                            <h5 id="mainLabelText">Venta compartida</h5>
-                            <div class="container-fluid">
-                                <div class="row">
-                                    <div class="col-md-4 pr-0">
-                                        <div class="form-group label-floating is-focused">
-                                            <label class="control-label label-gral">¿La venta es compartida?</label>
-                                            <select class="selectpicker" data-style="btn btn-primary btn-round"
-                                                    title="¿La venta es compartida?" data-size="7" id="ventaC" name="ventaC"
-                                                    data-live-search="true">
-                                                    <option value ="default" selected disabled>Selecciona una opción</option>
-                                                    <option value="uno">Sí</option>
-                                                    <option value="dos">No</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div id="divAsesores" class="col-md-4 pr-0">
-
-                                    </div>
-                                    <div id="divAsesores2" class="col-md-4 pr-0">
-
-                                    </div>
-                                    <input type="hidden" id="id_cliente" name="id_cliente">
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-12 d-flex justify-end p-0">
-                                        <button type="submit" id="submitCompartida" class="btn btn-primary mt-2">Guardar</button>
-                                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cerrar</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-        <!-- modal -->
-
-    </div>
     <?php $this->load->view('template/footer_legend');?>
 </div>
 </div>
@@ -545,15 +231,27 @@
                                         return 'CLIENTE';
                                         break;
                                     case 4:
-                                        return 'FECHA APARTADO';
+                                        return 'COORDINADOR';
                                         break;
                                     case 5:
-                                        return 'FECHA VENCIMIENTO';
+                                        return 'GERENTE';
                                         break;
                                     case 6:
-                                        return 'COMENTARIO';
+                                        return 'SUBDIRECTOR';
+                                        break;
+                                    case 7:
+                                        return 'DIRECTOR REGIONAL';
+                                        break;
+                                    case 8:
+                                        return 'FECHA APARTADO';
                                         break;
                                     case 9:
+                                        return 'FECHA VENCIMIENTO';
+                                        break;
+                                    case 10:
+                                        return 'COMENTARIO';
+                                        break;
+                                    case 11:
                                         return 'VALIDAR';
                                         break;
                                 }
@@ -587,6 +285,26 @@
                 {
                     "data": function( d ){
                         return d.nombre+" "+d.apellido_paterno+" "+d.apellido_materno;
+                    }
+                },
+                {
+                    data: function( d ){
+                        return d.coordinador == '  ' ? 'NO APLICA' : d.coordinador;
+                    }
+                },
+                {
+                    data: function( d ){
+                        return d.gerente == '  ' ? 'NO APLICA' : d.gerente;
+                    }
+                },
+                {
+                    data: function( d ){
+                        return d.subdirector == '  ' ? 'NO APLICA' : d.subdirector;
+                    }
+                },
+                {
+                    data: function( d ){
+                        return d.regional == '  ' ? 'NO APLICA' : d.regional;
                     }
                 },
                 { "data": "fechaApartado" },
@@ -723,68 +441,7 @@
                         
                         return '<div class="d-flex justify-center align-center">'+buttonst+'</div>';
                     }
-                },
-            //     {
-            //         "data": function( d ){ // DATA FROM DEPOSITO_SERIEDAD NEW VERSION
-            //             // var atributo_button ='';
-            //             // var url_to_go  = '';
-            //             // if (d.idMovimiento == 31 && d.idStatusContratacion == 1) {
-            //             //     if (d.id_prospecto == 0 && d.concepto == 'APARTADO DESDE LA PAGINA DE CIUDAD MADERAS')/*APARTADO DESDE LA PAGINA DE CIUDAD MADERAS*/
-            //             //     {
-            //             //         atributo_button = 'disabled';
-            //             //         url_to_go  = '#';
-            //             //     } else {
-            //             //         atributo_button = '';
-            //             //         url_to_go  = '<?=base_url()?>index.php/Asesor/deposito_seriedad/'+d.id_cliente+'/0';
-            //             //     }
-            //             // }
-            //             // else {
-            //             //     atributo_button = '';
-            //             //     url_to_go  = '<?=base_url()?>index.php/Asesor/deposito_seriedad/'+d.id_cliente+'/0';
-            //             // }
-
-
-
-            //             // if(d.flag_compartida == 1){
-            //             //     if (d.dsType == 1){
-            //             //         return '<center><a class="btn-data btn-blueMaderas btn_ds'+d.id_cliente+'" '+atributo_button+' id="btn_ds'+d.id_cliente+'" href="'+url_to_go+'" title= "Depósito de seriedad"><i class="fas fa-print"></i></a></center>';
-            //             //     } else if(d.dsType == 2) { // DATA FROM DEPOSITO_SERIEDAD_CONSULTA OLD VERSION
-            //             //         return '<center><a class="btn-data btn-blueMaderas" href="<?=base_url()?>index.php/Asesor/deposito_seriedad_ds/'+d.id_cliente+'/0" title= "Depósito de seriedad"><i class="fas fa-print"></i></a></center>';
-            //             //     }
-            //             // }else{
-            //             //     return '';
-            //             // }
-
-            //         }
-            //     },
-            //     {
-            //         "data" : function(d){
-            //             // var action='';
-            //             // if(d.flag_compartida == 1){
-            //             //     if (d.dsType == 1) {
-            //             //         if (d.idMovimiento == 31 && d.idStatusContratacion == 1) {
-            //             //             if (d.id_prospecto == 0 && d.concepto == 'APARTADO DESDE LA PAGINA DE CIUDAD MADERAS')/*APARTADO DESDE LA PAGINA DE CIUDAD MADERAS*/
-            //             //             {
-            //             //                 var nombre_cliente = '';
-            //             //                 nombre_cliente = d.nombre + ' ' + d.apellido_paterno + ' ' + d.apellido_materno;
-            //             //                 action = '<center><button class="btn-data btn-green abrir_prospectos ' +
-            //             //                     'btn-fab btn-fab-mini" data-idCliente="'+d.id_cliente+'" data-nomCliente="'+nombre_cliente+'">' +
-            //             //                     '<i class="fas fa-user-check"></i></button></center><br>';
-            //             //                 action += 'Debes asignar el prospecto al cliente para poder acceder al depósito de seriedad o integrar el expediente';
-
-            //             //             } else {
-            //             //                 action = 'Validado correctamente';
-            //             //             }
-            //             //         }
-            //             //         else {
-            //             //             action = 'Validado correctamente';
-            //             //         }
-            //             //     }
-            //             // }else{
-            //             //     return action;
-            //             // }
-            //         }
-            //     }
+                }
             ],
 
             "ajax": {
