@@ -151,7 +151,7 @@ $(document).ready( function() {
                 titleAttr: 'Listado de usuarios',
                 title:'Listado de usuarios',
                 exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5, 6, 7],
+                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
                     format: {
                         header: function (d, columnIdx) {
                             switch (columnIdx) {
@@ -176,8 +176,32 @@ $(document).ready( function() {
                                     return 'SEDE';
                                     break;
                                 case 7:
-                                    return 'JEFE DIRECTO';
+                                    return 'COORDINADOR';
                                     break;
+                                case 8:
+                                    return 'GERENTE';
+                                    break;
+                                case 9:
+                                    return 'SUBDIRECTOR';
+                                    break;
+                                case 10:
+                                    return 'DIRECTOR REGIONAL';
+                                    break;
+                                case 11:
+                                    return 'TALLA';
+                                    break;
+                                case 12:
+                                    return 'GÉNERO';
+                                    break;
+                                case 13:
+                                    return 'HIJOS + 12';
+                                    break;
+                                case 14:
+                                    return 'REINGRESO';
+                                    break;
+                                case 15:
+                                    return 'BAJA';
+                                    break;        
                             }
                         }
                     }
@@ -235,13 +259,43 @@ $(document).ready( function() {
                 }
             },
             { data: function (d) {
-                    return d.jefe_directo;
+                    return d.coordinador == '  ' ? 'NO APLICA' : d.coordinador;
                 }
             },
             { data: function (d) {
-
+                return d.gerente == '  ' ? 'NO APLICA' : d.gerente;
+                }
+            },
+            { data: function (d) {
+                return d.subdirector == '  ' ? 'NO APLICA' : d.subdirector;
+            }
+            },
+            { data: function (d) {
+                return d.regional == '  ' ? 'NO APLICA' : d.regional;
+            }
+            },
+            { data: function (d) {
+                return d.talla == null ? 'SIN ESPECIFICAR' : d.talla;
+            }
+            },
+            { data: function (d) {
+                return d.sexo == null ? 'SIN ESPECIFICAR' : d.sexo;
+            }
+            },
+            { data: function (d) {
+                return d.hijos_12 == null ? 'SIN ESPECIFICAR' : d.hijos_12;
+            }
+            },
+            { data: function (d) {
+                return d.fecha_reingreso == null ? 'SIN ESPECIFICAR' : d.fecha_reingreso;
+            }
+            },
+            { data: function (d) {
+                return d.fecha_baja == null ? 'SIN ESPECIFICAR' : d.fecha_baja;
+            }
+            },
+            { data: function (d) {
                 var id_rol = id_rol_global;
-                // localStorage.getItem('id_rol');
                 if(id_rol == 8 && d.puesto == 'Contraloría' && d.estatus == 1){
                     if (userId == 1297 || userId == 1) {
                         return '<div class="d-flex justify-center"><button class="btn-data btn-blueMaderas edit-user-information" data-rol="'+d.id_rol+'" data-id-usuario="' + d.id_usuario +'"><i class="fas fa-pencil-alt"></i></button><button class="btn-data btn-orangeYellow  see-changes-log" data-id-usuario="' + d.id_usuario +'" ><i class="fas fa-eye"></i> </button>' +
