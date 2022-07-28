@@ -1278,7 +1278,7 @@ public function getStatusMktdPreventa(){
             "modificado_por" => $this->session->userdata('id_usuario')
         );
         // SE VALIDA SI ALGÚN MIEMBRO DE MKTD (GERENTE O SUBDIRECTOR INGRESAN UN PROSPECTO=
-        if (in_array($this->session->userdata('id_rol'), array("19", "20"))) {
+       /* if (in_array($this->session->userdata('id_rol'), array("19", "20"))) {
             $rol = $this->Clientes_model->getRole($_POST['asesor_prospecto'])->row();
             if ($rol->id_rol == 7) { // IS ASESOR
                 $informacion = $this->Clientes_model->getLeadersByAdviser($_POST['asesor_prospecto'])->row();
@@ -1298,7 +1298,7 @@ public function getStatusMktdPreventa(){
             } else {
                 $response = $this->Clientes_model->saveProspect($data);
             }
-        } else {
+        } else {*/
             $data["id_sede"] = $this->session->userdata('id_sede');
            
            
@@ -1317,7 +1317,7 @@ public function getStatusMktdPreventa(){
             }else{
                 $data["id_asesor"] = $this->session->userdata('id_usuario');
                 $data["id_coordinador"] = $this->session->userdata('id_lider');
-                $data["id_gerente"] = $this->session->userdata('id_lider_2');
+                $data["id_gerente"] = $this->session->userdata('id_lider_3');
                 $data["id_subdirector"] = $this->session->userdata('id_lider_4');
                 $data["id_regional"] = $this->session->userdata('id_lider_5');
 
@@ -1326,8 +1326,8 @@ public function getStatusMktdPreventa(){
             //COORDIDADOR
             $data["id_asesor"] = $this->session->userdata('id_usuario');
             $data["id_coordinador"] = $this->session->userdata('id_usuario');
-            $data["id_gerente"] = $this->session->userdata('id_lider');
-            $data["id_subdirector"] = $this->session->userdata('id_lider_3');
+            $data["id_gerente"] = $this->session->userdata('id_lider_3');
+            $data["id_subdirector"] = $this->session->userdata('id_lider_4');
             $data["id_regional"] = $this->session->userdata('id_lider_5');
 
         }else if($this->session->userdata('id_rol') == 3){
@@ -1335,10 +1335,10 @@ public function getStatusMktdPreventa(){
             $data["id_asesor"] = $this->session->userdata('id_usuario');
             $data["id_coordinador"] = $this->session->userdata('id_usuario');
             $data["id_gerente"] = $this->session->userdata('id_usuario');
-            $data["id_subdirector"] = $this->session->userdata('id_lider');
+            $data["id_subdirector"] = $this->session->userdata('id_lider_4');
             $data["id_regional"] = $this->session->userdata('id_lider_5');
 
-        }else if($this->session->userdata('id_rol') == 6){
+        }/*else if($this->session->userdata('id_rol') == 6){
             //ASISTENTE DE GERENTE
             $data["id_asesor"] = $this->session->userdata('id_usuario');
             $data["id_coordinador"] = $this->session->userdata('id_usuario');
@@ -1346,7 +1346,7 @@ public function getStatusMktdPreventa(){
             $data["id_subdirector"] = $this->session->userdata('id_lider_2');
             $data["id_regional"] = $this->session->userdata('id_lider_5');
 
-        }
+        }*/
            
            
             if ($_POST['prospecting_place'] == 6) {
@@ -1366,7 +1366,7 @@ public function getStatusMktdPreventa(){
             } else {
                 $response = $this->Clientes_model->saveProspect($data);
             }
-        }
+       // }
         echo json_encode($response);
     }
 

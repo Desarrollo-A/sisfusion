@@ -74,11 +74,15 @@ class PaquetesCorrida extends CI_Controller
          */
         if($superficie == 1){ //Mayor a
           $query_superdicie = 'and sup >= '.$fin.' ';
-        }else if($superficie == 2){ // Rango
+        }else if($superficie == 2){ // Menor a
           $query_superdicie = 'and sup < '.$fin.' ';
+          $inicio = $this->input->post("fin");
+          $fin = $this->input->post("inicio");
 
         }else if($superficie == 3){ // Cualquiera
           $query_superdicie = '';
+          $inicio = 0;
+          $fin = 0;
         }
         $Fechainicio = $this->input->post("fechainicio");
         $Fechafin = $this->input->post("fechafin");

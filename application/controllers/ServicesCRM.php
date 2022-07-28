@@ -36,10 +36,6 @@ class ServicesCRM extends CI_Controller
             }
     }
 
-function desc(){
-    echo 
-}
-
 
     function getNacionalidades(){
         $data = $this->Services_model->getNacionalidades();
@@ -55,6 +51,7 @@ function desc(){
                                        "message" => "El RFC ingresado ya se encuentra registrado.")));
     
             }else{
+                
                 $getLider = $this->Services_model->getLider($objDatos['id_lider'],$objDatos['id_rol']);
                 $id_gerente=0;
                 $id_subdirector=0;
@@ -74,8 +71,8 @@ function desc(){
                 else if($objDatos['id_rol'] == 3){
                     //Gerente
                     $id_gerente=0;
-                    $id_subdirector=$getLider[0]['id_subdirector'];
-                    $id_regional=$getLider[0]['id_regional'];
+                    $id_subdirector=0; //$getLider[0]['id_subdirector'];
+                    $id_regional=0; //$getLider[0]['id_regional'];
                 }
                 $data = array(
                     "nombre" => $objDatos['nombre'],
@@ -83,7 +80,6 @@ function desc(){
                     "apellido_materno" => $objDatos['apellido_materno'],
                     "forma_pago" => $objDatos['forma_pago'],
                     "rfc" => $objDatos['rfc'],
-                    "tiene_hijos" => 2,
                     "estatus" => 1,
                     "sesion_activa" => 1,
                     "imagen_perfil" => '',
@@ -104,7 +100,13 @@ function desc(){
                     "nacionalidad" => $objDatos['nacionalidad'],
                     "gerente_id" => $id_gerente,
                     "subdirector_id" => $id_subdirector,
-                    "regional_id" => $id_regional
+                    "regional_id" => $id_regional,
+                    "talla" => $_POST['talla'],
+                    "sexo" => $_POST['sexo'],
+                    "tiene_hijos" => $_POST['tiene_hijos'],
+                    "hijos_12" => $_POST['nHijos'],
+                    "fecha_reingreso" => NULL,
+                    "fecha_baja" => NULL 
                 );
                 //echo var_dump($data);
                 if (isset($objDatos) && !empty($objDatos)) {

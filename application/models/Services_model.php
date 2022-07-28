@@ -66,22 +66,22 @@ class Services_model extends CI_Model
     }
      function getLider($id_lider,$id_rol)
 	{
+
         if($id_rol == 7){
             //Asesor
-            $query = $this->db->query("SELECT coor.id_lider as id_gerente,u.id_lider as id_subdirector, (CASE WHEN u.id_lider = 7092 THEN 3 WHEN u.id_lider = 9471 THEN 607 ELSE 0 END) id_regional
+            $query = $this->db->query("SELECT u.id_lider as id_gerente,u.subdirector_id as id_subdirector,regional_id as id_regional
             FROM usuarios u
-            INNER JOIN usuarios coor on u.id_usuario=coor.id_lider
-            WHERE coor.id_usuario=$id_lider");
+            WHERE u.id_usuario=$id_lider");
             return $query->result_array();
         }else if($id_rol == 9){
             //Coordinador
-            $query = $this->db->query("SELECT u.id_lider as id_subdirector, (CASE WHEN u.id_lider = 7092 THEN 3 WHEN u.id_lider = 9471 THEN 607 ELSE 0 END) id_regional
+            $query = $this->db->query("SELECT u.id_lider as id_subdirector, u.regional_id as regional_id
             FROM usuarios u
             WHERE u.id_usuario=$id_lider");
             return $query->result_array();
         }else if($id_rol == 3){
             //Gerente
-            $query = $this->db->query("SELECT (CASE WHEN u.id_usuario = 7092 THEN 3 WHEN u.id_usuario = 9471 THEN 607 ELSE 0 END) id_regional
+            $query = $this->db->query("SELECT u.regional_id as id_regional
             FROM usuarios u
             WHERE u.id_usuario=$id_lider");
             return $query->result_array();
