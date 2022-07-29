@@ -618,7 +618,9 @@ function getAllFoldersPDF()
              $query = $this->db->query("SELECT * FROM usuarios WHERE id_usuario = ".$id_usuario." and id_lider=".$id_lider." ")->result_array();
              if(count($query) == 0){
                  //ENTONCES SI CAMBIO DE LIDER
-                 $getLider = $this->db->query("SELECT u.id_usuario as lider,u2.id_usuario as lider2 FROM usuarios u inner join usuarios u2 on u.id_lider=u2.id_usuario WHERE u.id_usuario = ".$id_lider." ")->result_array();
+                 $getLider = $this->db->query("SELECT u.gerente_id as lider2 
+                 FROM usuarios u 
+                 WHERE u.id_usuario = ".$id_lider." ")->result_array();
                              if($rol_actual == 7){
                                      //ASESOR, CONSULTAR LOS PROSPECTOS QUE TIENE ASIGNADOS DE TIPO 0 
                                   $data = array(
@@ -666,7 +668,9 @@ function getAllFoldersPDF()
                              }
              }else{
                  //NO CAMBIO DE LIDER Y TERMINA EL PROCESO, (SOLO SE ACTUALIZA SU INFO)
-                 $getLider = $this->db->query("SELECT u.id_usuario as lider,u2.id_usuario as lider2 FROM usuarios u inner join usuarios u2 on u.id_lider=u2.id_usuario WHERE u.id_usuario = ".$id_lider." ")->result_array();
+                 $getLider = $this->db->query("SELECT u.gerente_id as lider2 
+                 FROM usuarios u 
+                 WHERE u.id_usuario = ".$id_lider." ")->result_array();
                  $dataCH = array("idasesor" => $id_usuario,
                  "idpuesto" => $rol_actual,
                  "idgerente" => $getLider[0]['lider2'],
@@ -677,7 +681,9 @@ function getAllFoldersPDF()
              }
          }else{
              $resultado=false;
-             $getLider = $this->db->query("SELECT u.id_usuario as lider,u2.id_usuario as lider2 FROM usuarios u inner join usuarios u2 on u.id_lider=u2.id_usuario WHERE u.id_usuario = ".$id_lider." ")->result_array();
+             $getLider = $this->db->query("SELECT u.gerente_id as lider2 
+             FROM usuarios u 
+             WHERE u.id_usuario = ".$id_lider." ")->result_array();
              //SI HUBO UN CAMBIO DE ROL
              if($rol_actual == 7 && $rol_seleccionado == 9){
                      //SE CAMBIO DE ASESOR A COORDINADOR
