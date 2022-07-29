@@ -652,18 +652,15 @@
 	    cond.idCondominio, l.sup, l.precio, l.total, l.porcentaje, l.enganche, l.saldo, l.referencia, st.nombre, l.fecha_modst,
 		l.idAsesor
 
-
         FROM lotes l
         LEFT JOIN clientes cl ON l.idLote=cl.idLote and cl.status = 1
         INNER JOIN condominios cond ON l.idCondominio=cond.idCondominio
         INNER JOIN residenciales res ON cond.idResidencial = res.idResidencial
         LEFT JOIN statuslote st ON l.idStatusLote = st.idStatusLote
 
-
         LEFT JOIN usuarios asesor ON cl.id_asesor = asesor.id_usuario
-		LEFT JOIN usuarios coordinador ON asesor.id_lider = coordinador.id_usuario
-        LEFT JOIN usuarios gerente ON coordinador.id_lider = gerente.id_usuario
-
+		LEFT JOIN usuarios coordinador ON cl.id_coordinador = coordinador.id_usuario
+        LEFT JOIN usuarios gerente ON cl.id_gerente = gerente.id_usuario
 
         LEFT JOIN usuarios asesor2 ON l.idAsesor = asesor2.id_usuario
 		LEFT JOIN usuarios coordinador2 ON asesor2.id_lider = coordinador2.id_usuario
@@ -671,7 +668,6 @@
 
 	    WHERE l.status = 1 and l.idCondominio = " . $idCondominio . "
 
-			  
         GROUP BY l.idLote, cl.id_cliente, cl.nombre, cl.apellido_paterno, cl.apellido_materno,
         l.nombreLote, l.idStatusContratacion, l.idMovimiento, l.modificado, cl.rfc,
         CAST(l.comentario AS varchar(MAX)), l.fechaVenc, l.perfil, cond.nombre, res.nombreResidencial, l.ubicacion,
