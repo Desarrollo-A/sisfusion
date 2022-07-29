@@ -343,6 +343,7 @@
         ],
         ordering: false,
         paging: true,
+        scrollX: true,
         pagingType: "full_numbers",
         lengthMenu: [
             [10, 25, 50, -1],
@@ -359,9 +360,6 @@
         columns: [
             {
                 data: function (d) {
-
-                    // return '<center><span class="label label-danger" style="background:#27AE60">'+d.nuevo+'</span><center>';
-
                     if (d.nuevo == 1) {
                         return '<center><span class="label label-info" >Nuevo usuario</span><center>';
 
