@@ -212,7 +212,7 @@
                                                                         <div class="boxInfoEsp">
                                                                             <i class="fas fa-info" data-toggle="tooltip" data-placement="bottom" title="Sede de asignación del asesor"></i>
                                                                         </div>
-                                                                        <select id="sedech" name="sedech" class="form-control selectE">
+                                                                        <select class="selectpicker select-gral m-0" id="sedech" name="sedech" data-style="btn" data-show-subtext="true" data-live-search="true" title="Seleccione una opción" data-size="7" data-container="body" required>
                                                                         </select>
                                                                     </div>
                                                                 </div>
@@ -222,7 +222,8 @@
                                                                         <div class="boxInfoEsp" data-toggle="tooltip" data-placement="bottom" title="Oficina en la que se encuentra ubicado el asesor">
                                                                             <i class="fas fa-info"></i>
                                                                         </div>
-                                                                        <select id="sucursal" name="sucursal" class="form-control sucursal selectE"></select>
+                                                                        <select class="selectpicker select-gral m-0" id="sucursal" name="sucursal" data-style="btn" data-show-subtext="true" data-live-search="true" title="Seleccione una opción" data-size="7" data-container="body" required>
+                                                                        </select>
                                                                     </div>
                                                                 </div>
                                                             </div>

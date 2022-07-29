@@ -69,13 +69,13 @@ class Services_model extends CI_Model
 
         if($id_rol == 7){
             //Asesor
-            $query = $this->db->query("SELECT u.id_lider as id_gerente,u.subdirector_id as id_subdirector,regional_id as id_regional
+            $query = $this->db->query("SELECT u.gerente_id as id_gerente,u.subdirector_id as id_subdirector,regional_id as id_regional
             FROM usuarios u
             WHERE u.id_usuario=$id_lider");
             return $query->result_array();
         }else if($id_rol == 9){
             //Coordinador
-            $query = $this->db->query("SELECT u.id_lider as id_subdirector, u.regional_id as regional_id
+            $query = $this->db->query("SELECT u.subdirector_id as id_subdirector, u.regional_id as regional_id
             FROM usuarios u
             WHERE u.id_usuario=$id_lider");
             return $query->result_array();
