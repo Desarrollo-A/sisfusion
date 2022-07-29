@@ -39,7 +39,6 @@ $(document).ready( function() {
 });
 
 function fillUsersTable() {
-    console.log("in fill dt");
     $allUsersTable = $('#all_users_datatable').DataTable({
         dom: 'Brt' + "<'row'<'col-12 col-sm-12 col-md-6 col-lg-6'i><'col-12 col-sm-12 col-md-6 col-lg-6'p>>",
         buttons: [
@@ -109,6 +108,7 @@ function fillUsersTable() {
         ],
         ordering: false,
         paging: true,
+        scrollX: true,
         pagingType: "full_numbers",
         lengthMenu: [
             [10, 25, 50, -1],

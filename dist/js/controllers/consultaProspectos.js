@@ -1080,26 +1080,26 @@ $("#my_update_status_form").on('submit', function(e) {
         processData: false,
         beforeSend: function() {
             // Actions before send post
-            document.getElementById("finishS").disabled = true;
+            //document.getElementById("finishS").disabled = true;
         },
         success: function(data) {            
             if (data == 1) { // SUCCESS RESPONSE
-                document.getElementById("finishS").disabled = false;
+                //document.getElementById("finishS").disabled = false;
                 $('#myUpdateStatusModal').modal("hide");
                 $('#estatus_particular').val("0");
                 $("#estatus_particular").selectpicker("refresh");
                 $('#prospects-datatable').DataTable().ajax.reload(null, false);
                 alerts.showNotification("top", "right", "La actualización se ha llevado a cabo correctamente.", "success");
             } else if (data == 2) { // LOTE APARTADO
-                document.getElementById("finishS").disabled = false;
+                //document.getElementById("finishS").disabled = false;
                 alerts.showNotification("top", "right", "La asignación no se ha podido llevar a cabo debido a que el lote seleccionado ya se encuentra apartado.", "warning");
             } else { // ALGO LE FALTÓ
-                document.getElementById("finishS").disabled = false;
+                //document.getElementById("finishS").disabled = false;
                 alerts.showNotification("top", "right", "Asegúrate de haber llenado todos los campos mínimos requeridos.", "warning");
             }
         },
         error: function() {
-            document.getElementById("finishS").disabled = false;
+            //document.getElementById("finishS").disabled = false;
             alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
         }
     });}
