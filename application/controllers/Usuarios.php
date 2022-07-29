@@ -300,7 +300,7 @@ class Usuarios extends CI_Controller
                 //Gerente
                 $id_lider = 0;
                 $id_gerente=0;
-                $id_subdirector=$getLider[0]['id_subdirector'];
+                $id_subdirector=$_POST['leader']; //$getLider[0]['id_subdirector'];
                 $id_regional=$getLider[0]['id_regional'];
             }
 
