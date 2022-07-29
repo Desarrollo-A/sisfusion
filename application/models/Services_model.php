@@ -75,7 +75,7 @@ class Services_model extends CI_Model
             return $query->result_array();
         }else if($id_rol == 9){
             //Coordinador
-            $query = $this->db->query("SELECT u.subdirector_id as id_subdirector, u.regional_id as regional_id
+            $query = $this->db->query("SELECT u.subdirector_id as id_subdirector, u.regional_id as id_regional
             FROM usuarios u
             WHERE u.id_usuario=$id_lider");
             return $query->result_array();
