@@ -153,7 +153,7 @@
                                                                 <div class="col-sm-4">
                                                                     <div class="form-group label-floating select-is-empty div_membertype">
                                                                         <label class="control-label"><small class="isRequired">*</small>Tipo de miembro</label>
-                                                                        <select class="selectpicker select-gral m-0" id="member_type" name="member_type" data-style="btn" data-show-subtext="true" data-live-search="true" title="Seleccione una sede" data-size="7" data-container="body" required onchange="getLeadersList()()">
+                                                                        <select class="selectpicker select-gral m-0" id="member_type" name="member_type" data-style="btn" data-show-subtext="true" data-live-search="true" title="Seleccione una sede" data-size="7" data-container="body" required onchange="getLeadersList()">
                                                                         </select>
                                                                     </div>
                                                                 </div>
@@ -161,7 +161,7 @@
                                                                     <div class="form-group label-floating select-is-empty div_leader">
                                                                         <input type="hidden" name="rol_actual" id="rol_actual">
                                                                         <label class="control-label"><small class="isRequired">*</small>Líder</label>
-                                                                        <select class="selectpicker select-gral m-0" id="leader" name="leader" data-style="btn" data-show-subtext="true" data-live-search="true" title="Seleccione un lider" data-size="7" data-container="body" required onchange="getLeadersList()()"></select>
+                                                                        <select class="selectpicker select-gral m-0" id="leader" name="leader" data-style="btn" data-show-subtext="true" data-live-search="true" title="Seleccione un lider" data-size="7" data-container="body" required></select>
                                                                     </div>
                                                                 </div>
                                                             </div>
