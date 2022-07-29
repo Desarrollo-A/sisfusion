@@ -833,20 +833,32 @@ function calculoMoratorioII(IM, importeSaldoI, posPay, PositionPago, diasRetardo
 											{
 												// alert('ASDFGH ' + $scope.alphaNumeric[posPay]['importe']);
 												/*sí en la primera posición el interes moratorio es mayor que el imprte*/
-												var positivNumbe = Math.abs(provA);
-												var decNum = positivNumbe.toFixed(2);
+												var positivNumbe=Math.abs(provA);
+												var decNum= positivNumbe.toFixed(2);
 												total = $scope.alphaNumeric[posPay]['total'] = 0;
-												$scope.alphaNumeric[posPay]['interesMoratorio'] = positivNumbe;
+												$scope.alphaNumeric[posPay]['deudaMoratorio'] = positivNumbe;
 												interesMoratorio = IM;
 												console.log("IM " + IM);
+												console.log("positivNumbe:", positivNumbe);
 												deudaOrdinario = $scope.alphaNumeric[posPay]['deudaOrdinario'] = interes;
-												var resultado = 0;
-												for (var b = 0; b <= posPay; b++) {
+												var resultado=0;
+												for(var b=0; b<=posPay; b++)
+												{
 													// console.log("LAP: " + b);
 													// console.log($scope.alphaNumeric[b]['interesMoratorio']);
-													if ($scope.alphaNumeric[b]['interesMoratorio'] != 0 || $scope.alphaNumeric[b]['interesMoratorio'] != "") {
-														resultado += $scope.alphaNumeric[b]['interesMoratorio'];
-													} else {
+													if($scope.alphaNumeric[b]['deudaMoratorio'] != 0 || $scope.alphaNumeric[b]['deudaMoratorio'] != "")
+													{
+														// if(b==posPay){}
+														// 	if($scope.alphaNumeric[b]['interesMoratorio']>$scope.alphaNumeric[b]['importe']){
+														// 		resultado += (parseFloat($scope.alphaNumeric[b]['interesMoratorio'])-parseFloat($scope.alphaNumeric[b]['importe']));
+														// 	}else{
+														// 		resultado += (parseFloat($scope.alphaNumeric[b]['importe'])-parseFloat($scope.alphaNumeric[b]['interesMoratorio']));
+														// 	}
+
+														resultado += $scope.alphaNumeric[b]['deudaMoratorio'];//original
+													}
+													else
+													{
 														resultado += 0;
 														console.log("En la vuelta " + b + "sumer un cero porque no había nada alv");
 													}
@@ -860,13 +872,11 @@ function calculoMoratorioII(IM, importeSaldoI, posPay, PositionPago, diasRetardo
 												// $('#resMoratorioAdeuto').click();
 												/*simular el click para que se detone el evento y le de formato de money*/
 												document.getElementById('resMoratorioAdeuto').click();
-												deudaMoratorio = $scope.alphaNumeric[posPay]['deudaMoratorio'] = resultado;
+												// deudaMoratorio = $scope.alphaNumeric[posPay]['deudaMoratorio']=resultado;//original al 29072022
+												deudaMoratorio = positivNumbe;//original al 29072022
 												console.log($scope.alphaNumeric);
-												// saldo = $scope.alphaNumeric[x]['saldo'] = $scope.infoMoratorio.si =  saldo;
-												// interes
-												//Moratorio = resultado;
-												//
-												saldo = $scope.alphaNumeric[i]['saldo'];
+
+												saldo=$scope.alphaNumeric[posPay]['saldo'];
 
 											}
 											dispPC = $scope.alphaNumeric[posPay]['disp'] = 1; //$scope.alphaNumeric[posPay]['disp'] = 1;
@@ -3645,22 +3655,30 @@ function calculoMoratorioII(IM, importeSaldoI, posPay, PositionPago, diasRetardo
 												var positivNumbe=Math.abs(provA);
 												var decNum= positivNumbe.toFixed(2);
 												total = $scope.alphaNumeric[posPay]['total'] = 0;
-												$scope.alphaNumeric[posPay]['interesMoratorio'] = positivNumbe;
+												$scope.alphaNumeric[posPay]['deudaMoratorio'] = positivNumbe;
 												interesMoratorio = IM;
 												console.log("IM " + IM);
+												console.log("positivNumbe:", positivNumbe);
 												deudaOrdinario = $scope.alphaNumeric[posPay]['deudaOrdinario'] = interes;
 												var resultado=0;
 												for(var b=0; b<=posPay; b++)
 												{
 													// console.log("LAP: " + b);
 													// console.log($scope.alphaNumeric[b]['interesMoratorio']);
-													if($scope.alphaNumeric[b]['interesMoratorio'] != 0 || $scope.alphaNumeric[b]['interesMoratorio'] != "")
+													if($scope.alphaNumeric[b]['deudaMoratorio'] != 0 || $scope.alphaNumeric[b]['deudaMoratorio'] != "")
 													{
-														resultado += $scope.alphaNumeric[b]['interesMoratorio'];
+														// if(b==posPay){}
+														// 	if($scope.alphaNumeric[b]['interesMoratorio']>$scope.alphaNumeric[b]['importe']){
+														// 		resultado += (parseFloat($scope.alphaNumeric[b]['interesMoratorio'])-parseFloat($scope.alphaNumeric[b]['importe']));
+														// 	}else{
+														// 		resultado += (parseFloat($scope.alphaNumeric[b]['importe'])-parseFloat($scope.alphaNumeric[b]['interesMoratorio']));
+														// 	}
+
+														resultado += $scope.alphaNumeric[b]['deudaMoratorio'];//original
 													}
 													else
 													{
-														resultado +=0;
+														resultado += 0;
 														console.log("En la vuelta " + b + "sumer un cero porque no había nada alv");
 													}
 													console.log("Suma total de valores: " + resultado);
@@ -3673,12 +3691,10 @@ function calculoMoratorioII(IM, importeSaldoI, posPay, PositionPago, diasRetardo
 												// $('#resMoratorioAdeuto').click();
 												/*simular el click para que se detone el evento y le de formato de money*/
 												document.getElementById('resMoratorioAdeuto').click();
-												deudaMoratorio = $scope.alphaNumeric[posPay]['deudaMoratorio']=resultado;
+												// deudaMoratorio = $scope.alphaNumeric[posPay]['deudaMoratorio']=resultado;//original al 29072022
+												deudaMoratorio = positivNumbe;//original al 29072022
 												console.log($scope.alphaNumeric);
-												// saldo = $scope.alphaNumeric[x]['saldo'] = $scope.infoMoratorio.si =  saldo;
-												// interes
-												//Moratorio = resultado;
-												//
+
 												saldo=$scope.alphaNumeric[posPay]['saldo'];
 
 											}
