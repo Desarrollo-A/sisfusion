@@ -152,7 +152,7 @@ class Usuarios extends CI_Controller
     {
         date_default_timezone_set('America/Mexico_City');
         $hoy = date('Y-m-d H:i:s');
-        $url = 'https://rh.gphsis.com/index.php/WS/baja_asesor';
+        $url = 'https://prueba.gphsis.com/RHCV/index.php/WS/baja_asesor';
         if (isset($_POST) && !empty($_POST)) {
             if ($this->input->post("estatus") == 0) {
                 $estatus = 0;
@@ -199,13 +199,13 @@ class Usuarios extends CI_Controller
 
     public function getSedesCH()
     {
-        $user = file_get_contents('https://rh.gphsis.com/index.php/WS/getSedes');
+        $user = file_get_contents('https://prueba.gphsis.com/RHCV/index.php/WS/getSedes');
         echo base64_decode($user);
     }
 
     public function getSucursalCH($idsede)
     {
-        $url = 'https://rh.gphsis.com/index.php/WS/getSucursalesComerciales';
+        $url = 'https://prueba.gphsis.com/RHCV/index.php/WS/getSucursalesComerciales';
         $data = array(
             "idsede" => $idsede);
         $row = $this->Usuarios_modelo->ServicePostCH($url, $data);
@@ -250,8 +250,8 @@ class Usuarios extends CI_Controller
                         $data_update = array(
                             'regional_id' => $getLider[0]['id_regional'],
                             'subdirector_id' => $getLider[0]['id_subdirector'],
-                            'gerente_id' => $_POST['leader'],
-                            'id_lider' => 0
+                            'gerente_id' => 0,
+                            'id_lider' => $_POST['leader']
                         );
                         break;
                 }
@@ -266,7 +266,7 @@ class Usuarios extends CI_Controller
 
 
 
-                /*
+                /* 
                 SEDES CAPITAL HUMANO
                 9 -- cancun
                 4 ---cdmx
@@ -319,8 +319,12 @@ class Usuarios extends CI_Controller
                 "sucursalch" => $sucursal,
                 "gerente_id" => $id_gerente,
                 "subdirector_id" => $id_subdirector,
-                "regional_id" => $id_regional
-            );
+                "regional_id" => $id_regional,
+                "talla" => empty($_POST['talla']) ? 0 : $_POST['talla'],
+                "sexo" => !empty($_POST['sexo']) ? $_POST['sexo'] : 'S',
+                "tiene_hijos" => !empty($_POST['hijos']) ? $_POST['hijos'] : 0 ,
+                "hijos_12" => isset($_POST['noHijos']) ? $_POST['noHijos'] : 0    
+               );
         }
         $response = $this->Usuarios_modelo->updateUser($data, $this->input->post("id_usuario"));
         echo json_encode($response);

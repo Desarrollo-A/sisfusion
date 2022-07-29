@@ -124,9 +124,9 @@ class PaquetesCorrida_model extends CI_Model
 
         public function getPaquetesByLotes($desarrollos,$query_superdicie,$query_tipo_lote,$superficie,$inicio,$fin){
             date_default_timezone_set('America/Mexico_City');
-            $hoy2 = date('Y-d-m H:i:s');
+            $hoy2 = date('Y-m-d H:i:s');
 
-           $cuari1 =  $this->db->query("SELECT l.idCondominio
+           $cuari1 =  $this->db->query("SELECT distinct(l.idCondominio) idCondominio
             FROM lotes l
             INNER JOIN condominios c ON c.idCondominio = l.idCondominio 
             INNER JOIN residenciales r ON r.idResidencial = c.idResidencial
@@ -146,10 +146,18 @@ class PaquetesCorrida_model extends CI_Model
 
                         $getPaquetesByName = $this->getCondominioByPlan($arrCondominio); 
 
-                        $datosInsertar_x_condominio = array();           
+                        $datosInsertar_x_condominio = array(); 
+                        echo "<br>";
+                        echo "COUNT";
+                        echo count($getPaquetesByName)."<br>";
+                        echo "<br>";
+                        print_r($getPaquetesByName);       
                         for ($o=0; $o <count($getPaquetesByName) ; $o++) { 
                             $json = array();
-                            if(!empty($getPaquetesByName[$o]['paquetes'])){
+                            echo "<br>";
+                            print_r($getPaquetesByName[$o]['paquetes']);
+                            echo "<br>";
+                            if(!empty($getPaquetesByName[$o])){
                                 array_push($json,array( "paquetes" => $getPaquetesByName[$o]['paquetes'],
                                                     "tipo_superficie" => array("tipo" => $superficie,
                                                     "sup1" => $inicio,
