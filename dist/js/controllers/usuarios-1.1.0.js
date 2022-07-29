@@ -516,7 +516,14 @@ $(document).on('click', '.edit-user-information', function(e){
     id_usuario = $(this).attr("data-id-usuario");
     $.getJSON("getUserInformation/"+id_usuario).done( function( data ){
         $.each( data, function(i, v){
-            getLeadersListForEdit(v.id_sede, v.id_rol, v.id_lider);
+            let leader;
+            if (v.id_rol == 9)
+                leader = v.gerente_id
+            else if (v.id_rol == 3)
+                leader = v.subdirector_id
+            else
+                leader = v.id_lider;
+            getLeadersListForEdit(v.id_sede, v.id_rol, leader);
             $("#editUserModal").modal();
             fillFields(v);
             validateEmptyFields(v);
