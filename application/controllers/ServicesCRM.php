@@ -71,8 +71,8 @@ class ServicesCRM extends CI_Controller
                 else if($objDatos['id_rol'] == 3){
                     //Gerente
                     $id_gerente=0;
-                    $id_subdirector=0; //$getLider[0]['id_subdirector'];
-                    $id_regional=0; //$getLider[0]['id_regional'];
+                    $id_subdirector=0;//$getLider[0]['id_subdirector'];
+                    $id_regional=0;//$getLider[0]['id_regional'];
                 }
                 $data = array(
                     "nombre" => $objDatos['nombre'],
