@@ -380,13 +380,10 @@
 
     public function allAsesor()
     {
-        $query = $this->db->query("SELECT u.id_usuario id_asesor, uu.id_usuario id_coordinador, uuu.id_usuario id_gerente, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombre FROM usuarios u 
-                                    INNER JOIN usuarios uu ON uu.id_usuario = u.id_lider 
-                                    INNER JOIN usuarios uuu ON uuu.id_usuario = uu.id_lider WHERE u.id_rol = 7 AND u.estatus = 1 AND ISNULL(u.correo, '') NOT LIKE '%SINCO%' AND ISNULL(u.correo, '') NOT LIKE '%test_%'
-                                    UNION ALL
-                                    SELECT u.id_usuario id_asesor, u.id_usuario id_coordinador, u.id_lider id_gerente, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombre FROM usuarios u 
-                                    WHERE u.id_rol = 9 AND u.estatus = 1 AND ISNULL(u.correo, '') NOT LIKE '%SINCO%' AND ISNULL(u.correo, '') NOT LIKE '%test_%' ORDER BY nombre");
-        return $query->result();
+        return $this->db->query("SELECT u.id_usuario id_asesor, 
+        CASE WHEN (u.id_lider = 0 AND u.id_rol = 9) THEN u.id_usuario ELSE u.id_lider END id_coordinador, 
+        u.gerente_id id_gerente, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombre FROM usuarios u 
+        WHERE u.id_rol IN (7, 9) AND u.estatus = 1 AND ISNULL(u.correo, '') NOT LIKE '%SINCO%' AND ISNULL(u.correo, '') NOT LIKE '%test_%'")->result();
     }
 
 
@@ -707,9 +704,7 @@
                 concat(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno) as gerente,
                 concat(asesor2.nombre,' ', asesor2.apellido_paterno, ' ', asesor2.apellido_materno) as asesor2,
                 (CASE WHEN asesor2.id_rol = 9 THEN concat(asesor2.nombre,' ', asesor2.apellido_paterno, ' ', asesor2.apellido_materno) ELSE concat(coordinador2.nombre,' ', coordinador2.apellido_paterno, ' ', coordinador2.apellido_materno) END)coordinador2,
-                /*concat(coordinador2.nombre,' ', coordinador2.apellido_paterno, ' ', coordinador2.apellido_materno) as coordinador2x,*/
                 (CASE WHEN asesor2.id_rol = 9 THEN concat(coordinador2.nombre,' ', coordinador2.apellido_paterno, ' ', coordinador2.apellido_materno) ELSE concat(gerente2.nombre,' ', gerente2.apellido_paterno, ' ', gerente2.apellido_materno) END)gerente2,
-                /*concat(gerente2.nombre,' ', gerente2.apellido_paterno, ' ', gerente2.apellido_materno) as gerente2,*/
                 cond.idCondominio, l.sup, l.precio, l.total, l.porcentaje, l.enganche, l.saldo, l.referencia, st.nombre, l.fecha_modst, l.motivo_change_status comentario,
                 l.idAsesor, l.motivo_change_status, tv.tipo_venta, (CASE l.tipo_venta WHEN 1 THEN 1 ELSE 0 END) es_particular
                 FROM lotes l
@@ -734,9 +729,7 @@
                 concat(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno),
                 concat(asesor2.nombre,' ', asesor2.apellido_paterno, ' ', asesor2.apellido_materno),
                 (CASE WHEN asesor2.id_rol = 9 THEN concat(asesor2.nombre,' ', asesor2.apellido_paterno, ' ', asesor2.apellido_materno) ELSE concat(coordinador2.nombre,' ', coordinador2.apellido_paterno, ' ', coordinador2.apellido_materno) END),
-                /*concat(coordinador2.nombre,' ', coordinador2.apellido_paterno, ' ', coordinador2.apellido_materno),*/
                 (CASE WHEN asesor2.id_rol = 9 THEN concat(coordinador2.nombre,' ', coordinador2.apellido_paterno, ' ', coordinador2.apellido_materno) ELSE concat(gerente2.nombre,' ', gerente2.apellido_paterno, ' ', gerente2.apellido_materno) END),
-                /*concat(gerente2.nombre,' ', gerente2.apellido_paterno, ' ', gerente2.apellido_materno),*/
                 cond.idCondominio, l.sup, l.precio, l.total, l.porcentaje, l.enganche, l.saldo, l.referencia, st.nombre, l.fecha_modst, l.motivo_change_status,
                 l.idAsesor, tv.tipo_venta order by l.idLote;");
         return $query->result();
