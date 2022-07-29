@@ -541,17 +541,18 @@ $(document).on('change', '#sedech', function() {
                 option.text = v.nom_oficina;
                 option.value = v.idsucursal;
                 select.add(option);
-
         });
-        $('#sucursal').selectpicker('refresh');
     });
 });
 function getSedesCH(sede = 0,sucursal = 0){
+    $('#spiner-loader').removeClass('hide');
+    $('#sedech').selectpicker('refresh');
     $("#sedech").empty();
     sede == 0 ?  $("#sedech").append($('<option disabled selected>').val("").text("Seleccione una opción")) : '';
     $('#sedech').prop('required', true);
 
     $.getJSON("getSedesCH").done( function( data ){
+        $('#spiner-loader').addClass('hide');
         var select = document.getElementsByName('sedech')[0];
         $.each( data.data, function(i, v){
             if(v.idsede != 7){
@@ -560,12 +561,8 @@ function getSedesCH(sede = 0,sucursal = 0){
                 option.value = v.idsede;
                 select.add(option);
                 if(v.idsede == sede){
-                    // option.selected =  v.idsede;
                     $('#sedech').val(v.idsede);
-        $('#sedech').selectpicker('refresh');
-
                     $.getJSON("getSucursalCH/"+sede).done( function( data2 ){
-
                         var select = document.getElementsByName('sucursal')[0];
                         $.each( data2.data, function(i, v){
                                 var option = document.createElement("option");
@@ -573,16 +570,12 @@ function getSedesCH(sede = 0,sucursal = 0){
                                 option.value = v.idsucursal;
                                 select.add(option);
                                 if(v.idsucursal == sucursal){
-                                    option.selected = v.idsucursal;
+                                    $('#sucursal').selectpicker('refresh');
+                                $('#sucursal').selectpicker('val',v.idsucursal);
                                 }
-
-
-
                         });
                     });
                 }
-
-
             }
         });
         $('#sedech').selectpicker('refresh');
@@ -621,7 +614,9 @@ function fillFields (v) {
                 }else{
                     getSedesCH(v.sedech,v.sucursalch);
                 }
-            }else{
+                $('#sedech').selectpicker('refresh');
+            }
+            else{
                 $('#ch'). hide();
                 document.getElementById("sedech").removeAttribute("required");
                 $("#sedech").empty();
