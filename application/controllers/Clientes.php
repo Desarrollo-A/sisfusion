@@ -2940,6 +2940,24 @@ public function getStatusMktdPreventa(){
         }
         exit;
     }
+
+    public function prospectsReport(){
+        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
+        $this->load->view('template/header');
+        $this->load->view("marketing/prospectsReportMarketing", $datos);
+    }
+
+    public function getProspectsReportInformation()
+    {
+        if (isset($_POST) && !empty($_POST)) {
+            $typeTransaction = $this->input->post("typeTransaction");
+            $beginDate = date("Y-m-d", strtotime($this->input->post("beginDate")));
+            $endDate = date("Y-m-d", strtotime($this->input->post("endDate")));
+            $data['data'] = $this->Clientes_model->getProspectsReportInformation($typeTransaction, $beginDate, $endDate)->result_array();
+            echo json_encode($data);
+        } else
+            json_encode(array());
+    }
     
 }
 

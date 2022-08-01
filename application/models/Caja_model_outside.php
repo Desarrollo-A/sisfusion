@@ -695,7 +695,7 @@
         else
             $where = " AND res.idResidencial = $idResidencial";
 
-        $query = $this->db->query("SSELECT l.idLote, cl.id_cliente, cl.nombre, cl.apellido_paterno, cl.apellido_materno,
+        $query = $this->db->query("SELECT l.idLote, cl.id_cliente, cl.nombre, cl.apellido_paterno, cl.apellido_materno,
         l.nombreLote, l.idStatusContratacion, l.idMovimiento, l.modificado, cl.rfc,
         CAST(l.comentario AS varchar(MAX)) as comentario2, l.fechaVenc, l.perfil, cond.nombre as nombreCondominio, res.nombreResidencial, l.ubicacion,
         l.tipo_venta, cl.fechaApartado, l.idStatusLote,
