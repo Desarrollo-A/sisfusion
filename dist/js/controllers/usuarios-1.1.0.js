@@ -636,7 +636,6 @@ function fillFields (v) {
 }
 
 function validateEmptyFields (v) {
-    console.log(v);     
     if (v.nombre != '')
         $(".div_name").removeClass("is-empty");
     if (v.apellido_paterno != '')
