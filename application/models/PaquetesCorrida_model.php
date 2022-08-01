@@ -136,7 +136,7 @@ public function getPaquetesByLotes($desarrollos,$query_superdicie,$query_tipo_lo
   }
   $getPaquetesByName = $stack;
   
-  print_r( $getPaquetesByName);
+//   print_r( $getPaquetesByName);
   $datosInsertar_x_condominio = array();
   for ($o=0; $o <count($getPaquetesByName) ; $o++) {
     $json = array();
