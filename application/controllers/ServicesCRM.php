@@ -104,10 +104,10 @@ class ServicesCRM extends CI_Controller
                     "gerente_id" => $id_gerente,
                     "subdirector_id" => $id_subdirector,
                     "regional_id" => $id_regional,
-                    "talla" => $objDatos['talla'],
-                    "sexo" => $objDatos['sexo'],
-                    "tiene_hijos" => $objDatos['tiene_hijos'],
-                    "hijos_12" => !empty($objDatos['hijos_12']) ? $objDatos['hijos_12'] : 0,
+                    "talla" => "0",
+                    "sexo" => "S",
+                    "tiene_hijos" => 0,
+                    "hijos_12" => "0",
                     "fecha_reingreso" => NULL,
                     "fecha_baja" => NULL 
                 );
