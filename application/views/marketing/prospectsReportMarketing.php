@@ -2,14 +2,12 @@
 <link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet"/>
 <body>
     <div class="wrapper">
-        <?php //include 'sidebarParams_prospectsList.php'
-        /*-------------------------------------------------------*/
+        <?php 
         $datos = array();
         $datos = $datos4;
         $datos = $datos2;
         $datos = $datos3;  
         $this->load->view('template/sidebar', $datos);
-        /*--------------------------------------------------------*/
         ?>
 
         <div class="content boxContent">
@@ -22,7 +20,7 @@
                             </div>
                             <div class="card-content">
                                 <h3 class="card-title center-align">Listado general de prospectos</h3>
-                                <div class="toolbar" style="display:none">
+                                <div class="toolbar">
                                     <div class="row">
                                         <div class="col-12 col-sm-6 col-md-6 col-lg-6"></div>
                                         <div class="col-12 col-sm-6 col-md-6 col-lg-6">
@@ -47,27 +45,32 @@
                                 </div>
                                 <div class="table-responsive">
                                     <div class="material-datatables">
-                                        <table id="prospects-datatable" class="table-striped table-hover">
+                                        <table id="masterCobranzaTable" class="table-striped table-hover">
                                             <thead>
                                                 <tr>
-                                                    <!--<th>ESTADO</th>-->
                                                     <th>ETAPA</th>
-                                                    <th>PROSPECTO</th>
-                                                    <th>ASESOR</th>
-                                                    <th>COORDINADOR</th>
-                                                    <th>GERENTE</th>
-                                                    <th>SUBDIRECTOR</th>
-                                                    <th>DIRECTOR REGIONAL</th>
-                                                    <th>LUGAR PROSPECCIÓN</th>
-                                                    <th>CREACIÓN</th>
-                                                    <!--<th>VENCIMIENTO</th>-->
-                                                    <th>ACCIONES</th>
+                                                    <th>ETAPA</th>
+                                                    <th>ETAPA</th>
+                                                    <th>ETAPA</th>
+                                                    <th>ETAPA</th>
+                                                    <th>ETAPA</th>
+                                                    <th>ETAPA</th>
+                                                    <th>ETAPA</th>
+                                                    <th>ETAPA</th>
+                                                    <th>ETAPA</th>
+                                                    <th>ETAPA</th>
+                                                    <th>ETAPA</th>
+                                                    <th>ETAPA</th>
+                                                    <th>ETAPA</th>
+                                                    <th>ETAPA</th>
+                                                    <th>ETAPA</th>
+                                                    <th>ETAPA</th>
+                                                    <th>ETAPA</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                             </tbody>
                                         </table>
-                                        <?php include 'common_modals.php' ?>
                                     </div>
                                 </div>
                             </div>
@@ -97,8 +100,5 @@
         typeTransaction = 1;
     </script>
     <!-- MODAL WIZARD -->
-    <script src="<?=base_url()?>dist/js/modal-steps.min.js"></script>
-    <script src="<?=base_url()?>dist/js/moment.min.js"></script>
-    <script src="<?=base_url()?>dist/js/controllers/consultaProspectos.js"></script>
-    <script src="<?=base_url()?>dist/js/controllers/global_functions.js"></script>
+    <script src="<?=base_url()?>dist/js/controllers/marketing/marketing.js"></script>
 </body>
