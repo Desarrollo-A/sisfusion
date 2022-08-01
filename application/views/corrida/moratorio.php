@@ -52,6 +52,7 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/3.7.0/lodash.min.js"></script>
 	<script type="text/javascript" src="<?= base_url("static/js/angularjs-dropdown-multiselect.js")?>"></script>
 	<script type="text/javascript" src="<?= base_url("static/js/calcularAC.js")?>"></script>
+	<script type="text/javascript" src="<?= base_url("dist/js/controllers/fileServer.js")?>"></script>
 
 
 	<script type="text/javascript" src="https://cdn.jsdelivr.net/angular.checklist-model/0.1.3/checklist-model.min.js"></script>
@@ -228,28 +229,32 @@
 			}
 		}
 
-		.bkLoading
-		{
-			/* background:#000; *//*b3b3b3*/
-			background-image: linear-gradient(to bottom, #000, #000);
-			position:absolute;
-			top:0%;
-			left:0%;
-			width:100%;
-			height:100%;
-			z-index:3;
-			padding-top:200px;
-			color:white;
-			font-weight:300;
-			opacity: 0.5;
-
-
-			/* display:none; */
-		}
-		.hide
-		{
-			display:none;
-		}
+        .bkLoading
+        {
+            /* background:#000; *//*b3b3b3*/
+            background-image: linear-gradient(to bottom, #000, #000);
+            position:fixed;
+            top:0%;
+            left:0%;
+            width:100%;
+            height:100%;
+            z-index:999;
+            padding-top:200px;
+            color:white;
+            font-weight:300;
+            opacity: 0.5;
+            /* display:none; */
+        }
+        .center-align
+        {
+            text-align:center;
+            font-size:2em;
+            font-weight:lighter;
+        }
+        .hide
+        {
+            display:none !important;
+        }
 		.groupInputInteres input{
 			text-align: center;
 		}
@@ -262,11 +267,69 @@
 		{
 			border: 1px solid green !important;
 		}
+        .btn-circle {
+            width: 50px;
+            height: 50px;
+            padding: 6px 0px;
+            border-radius: 30px;
+            text-align: center;
+            font-size: 12px;
+            line-height: 1.42857;
+            background-color: rgb(52,199,89);
+            color: #fff;
+            border: 0px;
+            transition-duration: 0.3s;
+            margin:4px;
+        }
+        .btn-circle:hover{
+            background-color: rgb(54,166,77);
+            color: #fff;
+            transition-duration: 0.3s;
+        }
+        .btn-float{
+            float: right;
+            bottom: 2%;
+            right: 3%;
+            position: fixed;
+        }
+        .blue{
+            background-color:#337ab7;
+        }
+        .blue:hover{
+            background-color: #003e97;
+        }
+        .buttons-excel {
+            box-shadow: none !important;
+            padding: 7px 25px !important;
+            color: #209E63 !important;
+            background-color: #ffffff !important;
+            border: 1px solid #209E63 !important;
+            border-radius: 27px !important;
+            margin: -6px 18px 0px 0px !important
+        }
+
+        .buttons-excel i {
+            color: #209E63 !important;
+        }
+
+        .buttons-excel:hover {
+            background-color: #209E63 !important;
+            border: 1px solid #209E63 !important;
+            color:white !important;
+            background-image: none !important;
+        }
+
+        .buttons-excel:hover i {
+            color: #ffffff !important;
+        }
 		/*Terminan los nuevos estilos*/
+        .bodyOverFlow{
+            overflow-y: hidden !important;
+        }
 
 	</style>
 </head>
-<body class="hold-transition register-page" ng-controller = "myController">
+<body class="hold-transition register-page" ng-controller = "myController" id="bodyOverFlow">
 
 
 <div class="bkLoading hide" id="loaderDiv">
@@ -295,7 +358,7 @@
 <!--			</div>-->
 			<div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12 center-align">
 				<center><img src="<?=base_url()?>static/images/CMOF.png" class="img-responsive" width="30%"></center>
-				<h3 class="font-light titleMoratorio" style="text-align: center;font-size: 2.5em;padding-top: 15px;background: #0a548b;color:white;padding: 7px">
+				<h3 class="font-light titleMoratorio" style="text-align: center;padding-top: 15px;background: #0a548b;color:white;padding: 7px">
 					Cálculo de <b>Moratorios</b>
 				</h3>
 			</div>
@@ -308,6 +371,36 @@
 			</div>
 			<div class="container-fluid col-xs-12 col-sm-12 col-md-12 col-lg-12">
 				<hr>
+                <div class="col col-xs-12 col-sm-12 col-md-3 col-lg-3">
+                    <div class="form-group">
+                        <label for="proyectoField">Proyecto</label>
+                        <select id="proyectoS" ng-model = "proyecto" ng-options = "item.descripcion for item in residencial" ng-change="onSelectChangep(proyecto)" class="form-control" style="text-transform: uppercase;">
+                            <option value = ""> - Selecciona un Proyecto - </option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col col-xs-12 col-sm-12 col-md-3 col-lg-3">
+                    <div class="form-group">
+                        <label for="condominioField">Condominio</label>
+                        <select id="condominioS" ng-model="condominio" ng-options="item.nombre for item in condominios" ng-change="onSelectChangec(condominio)" class="form-control" style="text-transform: uppercase;">
+                            <option value = ""> - Selecciona un Condominio - </option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col col-xs-12 col-sm-12 col-md-3 col-lg-3">
+                    <div class="form-group">
+                        <label for="loteField">Lote</label>
+                        <select ng-model="lote" id="lote" ng-options="item.nombreLote for item in lotes" ng-change="onSelectChangel(lote)" class="form-control" style="text-transform: uppercase;">
+                            <option value = ""> - Selecciona un Lote - </option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col col-xs-12 col-sm-12 col-md-3 col-lg-3">
+                    <div class="form-group">
+                        <label for="loteField">Cliente</label>
+                        <input ng-model="nombre_cliente" id="nombre_cliente" class="form-control" />
+                    </div>
+                </div>
 				<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
 					<input type="hidden" ng-model="minArray" id="minValueId" name="minName">
 					<input type="hidden" ng-model="maxArray" id="maxValueId" name="maxName">
@@ -369,6 +462,10 @@
 					</div>
 				</div>
 			</div>
+            <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12 hide" style="text-align: right">
+                <button class="buttons-excel" ng-click="exportc()"
+                        data-toggle="tooltip" >Generar Excel</button>
+            </div>
 		</div>
 		<div class="row">
 			<div class="container-fluid">
@@ -482,7 +579,7 @@
     'use strict';
     var myApp = angular.module ('myApp', ['checklist-model','datatables', 'datatables.buttons']);
 
-    myApp.controller('myController', function ($scope, $http, $window, DTOptionsBuilder, DTColumnBuilder) {
+    myApp.controller('myController', function ($scope, $compile, $http, $window, DTOptionsBuilder, DTColumnBuilder) {
 
 
         // $scope.dtoptions = DTOptionsBuilder;
@@ -569,10 +666,140 @@
 				return (data).toLocaleString('es-MX', {style: 'currency', currency: 'MXN'}) + saldoInsolutoCRNormal;
 			} ),
         ];
+        $http.get("<?=base_url()?>index.php/Corrida/getResidencialDisponible").then(
+            function(data){
+                $scope.residencial = data.data;
+            },
+            function(data){
+            });
+        $scope.onSelectChangep = function(proyecto) {
+
+            $http.post('<?=base_url()?>index.php/corrida/getCondominioDisponibleAMora',{residencial: proyecto.idResidencial}).then(
+                function (response) {
+                    $scope.condominios = response.data;
+                },
+                function (response) {
+                });
+        }
+        $scope.onSelectChangec = function(condominio) {
+            $http.post('<?=base_url()?>index.php/corrida/getAllLotesY',{condominio: condominio.idCondominio}).then(
+                function (response) {
+                    $scope.lotes = response.data;
+                },
+                function (response) {
+                });
+        }
+        $scope.onSelectChangel = function(lote) {
+            // console.log("Lotes: ", lote);
+            $http.post('<?=base_url()?>index.php/corrida/getinfoLoteDisponibleYL',{lote: lote.idLote, tipo_casa:null}).then(
+                function (response) {
+                    $scope.id_clienteP = response.data[0].id_cliente;
+                    $scope.nombre_cliente = response.data[0].nombre_cliente;
+                },
+                function (response) {
+                });
+        }
+        $scope.exportc = function() {
+
+            var saldoInsoluto = (document.getElementById('SIField').value).replace(/,/g, "");
+            var resMoratorioAdeuto = (document.getElementById('resMoratorioAdeuto').value).replace(/,/g, "");
+            var resOrdinarioAdeuto = (document.getElementById('resOrdinarioAdeuto').value).replace(/,/g, "");
+            $scope.SIField = saldoInsoluto.replace('$', '');
+            $scope.ima = resMoratorioAdeuto.replace('$', '');
+            $scope.ioa = resOrdinarioAdeuto.replace('$', '');
+
+            const el = document.querySelector('#loaderDiv');
+            const body = document.querySelector('#bodyOverFlow');
+            el.classList.remove("hide");
+            body.classList.add('bodyOverFlow');
 
 
 
+            var proyecto = ($scope.proyecto == undefined) ? 0 : $scope.proyecto.descripcion;
+            var condominio = ($scope.condominio == undefined) ? 0 : $scope.condominio.nombre;
+            var lote = ($scope.lote == undefined) ? 0 : $scope.lote.idLote;
+            var nombreLote = ($scope.lote == undefined) ? 0 : $scope.lote.nombreLote;
+            var cliente = ($scope.nombre_cliente == undefined) ? 0 : $scope.nombre_cliente;
 
+            var plazo = ($scope.plazoField == undefined) ? 0 : $scope.plazoField;
+            var msi = ($scope.msiField == undefined) ? 0 : $scope.msiField;
+            var im = ($scope.imField == undefined) ? 0 : $scope.imField;
+            var fecha_pago = ($scope.fechaField == undefined) ? 0 : $scope.fechaField;
+            var saldo_insoluto = ($scope.SIField == undefined) ? 0 : $scope.SIField;
+
+
+            var IMA = ($scope.ima == undefined || $scope.ima=="") ? 0 : $scope.ima;
+            var IOA = ($scope.ioa == undefined || $scope.ioa=="") ? 0 : $scope.ioa;
+
+            $http({
+                url: '<?=base_url()?>index.php/corrida/excel_moratorios',
+                method: "POST",
+                headers: {'Content-type': 'application/json'},
+                data: {
+                    proyecto: proyecto,
+                    condominio: condominio,
+                    lote: lote,
+                    nombreLote: nombreLote,
+                    cliente: cliente,
+                    plazo:plazo,
+                    msi:msi,
+                    im:im,fecha_pago:fecha_pago,
+
+                    saldo_insoluto:saldo_insoluto,
+                    ima: IMA,
+                    ioa:IOA,
+                    data_corrida: $scope.alphaNumeric
+                },
+                responseType: 'arraybuffer'
+            }).success(function(data, status, headers){
+                console.log(data);
+                const dt = new Date();
+                const padL = (nr, len = 2, chr = `0`) => `${nr}`.padStart(2, chr);
+
+                let current_time = `${padL(dt.getDate())}/${padL(dt.getMonth()+1)}/${
+                    dt.getFullYear()}-${
+                    padL(dt.getHours())}:${
+                    padL(dt.getMinutes())}:${
+                    padL(dt.getSeconds())}`;
+
+                var file = new Blob([ data ], { type : 'application/vnd.ms-excel'});
+                var defaultFileName ="calculoMoratorios-"+cliente+"-"+current_time+".xlsx";
+                saveAs(file,defaultFileName);
+
+                el.classList.add("hide");
+                body.classList.remove('bodyOverFlow');
+
+            }).error(function(err) {
+                console.log('Error: ' + err);
+            });
+
+            //$http.post('<?//=base_url()?>//index.php/corrida/excel_moratorios',{
+            //    proyecto: proyecto,
+            //    condominio: condominio,
+            //    lote: lote,
+            //    cliente: cliente,
+            //    plazo:plazo,
+            //    msi:msi,
+            //    im:im,
+            //    fecha_pago:fecha_pago,
+            //    saldo_insoluto:saldo_insoluto,
+            //    data_corrida: $scope.alphaNumeric
+            //}).then(
+            //    function(response){
+            //        console.log(response);
+            //        if(response.data.message == 'OK') {
+            //
+            //            // toastr.success('Corrida guardada exitosamente');
+            //            // loaderDiv.removeClass('hide');
+            //
+            //        }
+            //        else if(response.data.message == 'ERROR'){
+            //            // toastr.error('Error al guardar corrida');
+            //        }
+            //    },
+            //    function(){
+            //    });
+        }
 
 
         /*Others Vars*/
@@ -1003,32 +1230,20 @@
                     $scope.validaEngDif = ($scope.mesesdiferir > 0) ? $scope.rangEd : [];
                     $scope.alphaNumeric = $scope.validaEngDif.concat($scope.range).concat($scope.range2);
                     // console.log($scope.alphaNumeric);
-                    $scope.dtoptions = DTOptionsBuilder.newOptions().withOption('aaData', $scope.alphaNumeric)
-                        .withOption('order', [1, 'asc']).withDisplayLength(240)
-                        .withOption("ordering", false)
-                        .withDOM("<'pull-right'B><l><t><'pull-left'i><p>")
-                        .withButtons([
-                            {extend: 'copy', text: '<i class="fa fa-files-o"></i> Copiar'},
+                    $scope.dtoptions = DTOptionsBuilder.newOptions().withOption('aaData', $scope.alphaNumeric).withDisplayLength(240)
+                        .withOption('bFilter', true)
+                        .withDOM("<'pull-right'f B><l><t><'pull-left'i><p>").withButtons([
                             {
-                                extend: 'print',
-                                text: '<i class="fa fa-print" aria-hidden="true"></i> Imprimir',
-                                titleAttr: 'Imprimir'
-                            },
-                            {extend: 'excel', text: '<i class="fa fa-file-excel-o"></i> Excel', titleAttr: 'Excel'},
-                            {
-                                extend: 'pdfHtml5',
-                                text: '<i class="fa fa-file-pdf-o" aria-hidden="true"></i> PDF',
-                                titleAttr: 'PDF',
-                                title: '',
-                                customize: function (doc) {
-                                    //pageMargins [left, top, right, bottom]
-                                    doc.pageMargins = [140, 40, 10, 50];
-                                    doc.alignment = 'center';
-                                }
+                                text: 'Generar Excel',
+                                action: function (e, dt, node, config) {
+                                    $scope.exportc();
+                                },
+                                className: 'buttons-excel',
                             },
                         ]
-                    )
-                        .withLanguage({"url": "https://cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"});
+                    ).withLanguage({"url": "https://cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"});
+
+
                     $scope.$on('event:dataTableLoaded', function(event, loadedDT) {
                         // Setup - add a text input to each footer cell
                         var id = '#' + loadedDT.id;
@@ -1369,24 +1584,15 @@
                         $scope.validaEngDif = ($scope.mesesdiferir > 0) ? $scope.rangEd : [];
                         $scope.alphaNumeric = $scope.validaEngDif.concat($scope.range).concat($scope.range2);
                         // console.log($scope.alphaNumeric);
-                        $scope.dtoptions = DTOptionsBuilder.newOptions().withOption('aaData', $scope.alphaNumeric).withOption('order', [1, 'asc']).withDisplayLength(240).withDOM("<'pull-right'B><l><t><'pull-left'i><p>").withButtons([
-                                {extend: 'copy', text: '<i class="fa fa-files-o"></i> Copiar'},
+                    $scope.dtoptions = DTOptionsBuilder.newOptions().withOption('aaData', $scope.alphaNumeric).withDisplayLength(240)
+                        .withOption('bFilter', true)
+                        .withDOM("<'pull-right'f B><l><t><'pull-left'i><p>").withButtons([
                                 {
-                                    extend: 'print',
-                                    text: '<i class="fa fa-print" aria-hidden="true"></i> Imprimir',
-                                    titleAttr: 'Imprimir'
-                                },
-                                {extend: 'excel', text: '<i class="fa fa-file-excel-o"></i> Excel', titleAttr: 'Excel'},
-                                {
-                                    extend: 'pdfHtml5',
-                                    text: '<i class="fa fa-file-pdf-o" aria-hidden="true"></i> PDF',
-                                    titleAttr: 'PDF',
-                                    title: '',
-                                    customize: function (doc) {
-                                        //pageMargins [left, top, right, bottom]
-                                        doc.pageMargins = [140, 40, 10, 50];
-                                        doc.alignment = 'center';
-                                    }
+                                    text: 'Generar Excel',
+                                    action: function (e, dt, node, config) {
+                                        $scope.exportc();
+                                    },
+                                    className: 'buttons-excel',
                                 },
                             ]
                         ).withLanguage({"url": "https://cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"});
@@ -1809,28 +2015,18 @@
                         $scope.validaEngDif = ($scope.mesesdiferir > 0) ? $scope.rangEd : [];
                         $scope.alphaNumeric = $scope.validaEngDif.concat($scope.range).concat($scope.range2).concat($scope.range3);
                         // console.log($scope.alphaNumeric);
-                        $scope.dtoptions = DTOptionsBuilder.newOptions().withOption('aaData', $scope.alphaNumeric).withOption('order', [1, 'asc']).withDisplayLength(240).withDOM("<'pull-right'B><l><t><'pull-left'i><p>").withButtons([
-                                {extend: 'copy', text: '<i class="fa fa-files-o"></i> Copiar'},
-                                {
-                                    extend: 'print',
-                                    text: '<i class="fa fa-print" aria-hidden="true"></i> Imprimir',
-                                    titleAttr: 'Imprimir'
-                                },
-                                {extend: 'excel', text: '<i class="fa fa-file-excel-o"></i> Excel', titleAttr: 'Excel'},
-                                {
-                                    extend: 'pdfHtml5',
-                                    text: '<i class="fa fa-file-pdf-o" aria-hidden="true"></i> PDF',
-                                    titleAttr: 'PDF',
-                                    title: '',
-                                    customize: function (doc) {
-                                        //pageMargins [left, top, right, bottom]
-                                        doc.pageMargins = [50, 10, 50, 10];
-                                        doc.alignment = 'center';
-                                        doc.orientation = 'portrait ';
-                                    }
-                                },
-                            ]
-                        ).withLanguage({"url": "https://cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"});
+                        $scope.dtoptions = DTOptionsBuilder.newOptions().withOption('aaData', $scope.alphaNumeric).withDisplayLength(240)
+                            .withOption('bFilter', true)
+                            .withDOM("<'pull-right'f B><l><t><'pull-left'i><p>").withButtons([
+                                    {
+                                        text: 'Generar Excel',
+                                        action: function (e, dt, node, config) {
+                                            $scope.exportc();
+                                        },
+                                        className: 'buttons-excel',
+                                    },
+                                ]
+                            ).withLanguage({"url": "https://cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"});
                     }
                     /*termina }calculo de mensualidades*/
                 }

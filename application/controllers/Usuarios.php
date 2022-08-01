@@ -224,12 +224,11 @@ class Usuarios extends CI_Controller
 
             $sedeCH = 0;
             $sucursal = 0;
-            $objDatos = json_decode(base64_decode(file_get_contents("php://input")), true);
             if ($_POST['member_type'] == 3 || $_POST['member_type'] == 7 || $_POST['member_type'] == 9) {
                 #actualizar los registros en caso de que haya modificado de lider o tipo de miembro
-                $getLider = $this->Services_model->getLider($_POST['leader'],$_POST['member_type']);
+                //$getLider = $this->Services_model->getLider($_POST['leader'],$_POST['member_type']);
                 $data_update = array();
-                switch ($_POST['member_type'] ){
+               /* switch ($_POST['member_type'] ){
                     case 3;
                         $data_update = array(
                             'regional_id' => $getLider[0]['id_regional'],
@@ -254,13 +253,13 @@ class Usuarios extends CI_Controller
                             'id_lider' => $_POST['leader']
                         );
                         break;
-                }
+                }*/
 
                 /*print_r($data_update);
                 echo 'data del post:<br><br>';
                 print_r($_POST);
                 exit;*/
-                $this->General_model->updateRecord('usuarios', $data_update, 'id_usuario', $_POST['id_usuario']);
+              //  $this->General_model->updateRecord('usuarios', $data_update, 'id_usuario', $_POST['id_usuario']);
                 #end of this part
 
 
@@ -280,24 +279,28 @@ class Usuarios extends CI_Controller
                 $sucursal = !isset($_POST['sucursal']) ? 0 : $_POST['sucursal'];
                 $this->Usuarios_modelo->UpdateProspect($this->input->post("id_usuario"), $_POST['leader'], $_POST['member_type'], $_POST['rol_actual'], $sedeCH, $sucursal);
             }
-            $getLider = $this->Services_model->getLider($objDatos['id_lider'],$objDatos['id_rol']);
+            $getLider = $this->Services_model->getLider($_POST['leader'],$_POST['member_type']);
+            $id_lider = 0;
             $id_gerente=0;
             $id_subdirector=0;
             $id_regional=0;
-            if($objDatos['id_rol'] == 7){
+            if($_POST['member_type'] == 7){
                 //Asesor
+                $id_lider = $_POST['leader'];
                 $id_gerente=$getLider[0]['id_gerente'];
                 $id_subdirector=$getLider[0]['id_subdirector'];
                 $id_regional=$getLider[0]['id_regional'];
-            }else if($objDatos['id_rol'] == 9){
+            }else if($_POST['member_type'] == 9){
                 //Coordinador
-                $id_gerente=0;
+                $id_lider = 0;
+                $id_gerente=$_POST['leader'];
                 $id_subdirector=$getLider[0]['id_subdirector'];
                 $id_regional=$getLider[0]['id_regional'];
-            }else if($objDatos['id_rol'] == 3){
+            }else if($_POST['member_type'] == 3){
                 //Gerente
+                $id_lider = 0;
                 $id_gerente=0;
-                $id_subdirector=$getLider[0]['id_subdirector'];
+                $id_subdirector=$_POST['leader']; //$getLider[0]['id_subdirector'];
                 $id_regional=$getLider[0]['id_regional'];
             }
 
@@ -310,7 +313,7 @@ class Usuarios extends CI_Controller
                 "telefono" => $_POST['phone_number'],
                 "id_sede" => $_POST['headquarter'],
                 "id_rol" => $_POST['member_type'],
-                "id_lider" => $_POST['leader'],
+                "id_lider" => $id_lider,
                 "usuario" => $_POST['username'],
                 "contrasena" => encriptar($_POST['contrasena']),
                 "fecha_modificacion" => date("Y-m-d H:i:s"),
@@ -323,7 +326,7 @@ class Usuarios extends CI_Controller
                 "talla" => empty($_POST['talla']) ? 0 : $_POST['talla'],
                 "sexo" => !empty($_POST['sexo']) ? $_POST['sexo'] : 'S',
                 "tiene_hijos" => !empty($_POST['hijos']) ? $_POST['hijos'] : 0 ,
-                "hijos_12" => isset($_POST['noHijos']) ? $_POST['noHijos'] : 0    
+                "hijos_12" => !empty($_POST['noHijos']) ? $_POST['noHijos'] : 0    
                );
         }
         $response = $this->Usuarios_modelo->updateUser($data, $this->input->post("id_usuario"));

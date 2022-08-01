@@ -1855,6 +1855,17 @@ $pdf->Output(utf8_decode($namePDF), 'I');
 			echo json_encode(array());
 		}
 	}
+    function getCondominioDisponibleAMora() {
+
+        $objDatos = json_decode(file_get_contents("php://input"));
+
+        $condominio = $this->Corrida_model->getCondominioDisMora($objDatos->residencial);
+        if($condominio != null) {
+            echo json_encode($condominio);
+        } else {
+            echo json_encode(array());
+        }
+    }
 	 public function validateSession()
     {
         if($this->session->userdata('id_usuario')=="" || $this->session->userdata('id_rol')=="")
@@ -3205,6 +3216,332 @@ $pdf->Output(utf8_decode($namePDF), 'I');
             $response['message'] = 'ERROR';
             echo json_encode($response);
         }
+
+    }
+
+    function getAllLotesY() {
+        $objDatos = json_decode(file_get_contents("php://input"));
+        $lotes = $this->Corrida_model->getAllLotesY($objDatos->condominio);
+        if($lotes != null) {
+            echo json_encode($lotes);
+        } else {
+            echo json_encode(array());
+        }
+    }
+    public function getinfoLoteDisponibleYL()
+    {
+        $objDatos = json_decode(file_get_contents("php://input"));
+        $data = $this->Corrida_model->getLotesInfoY($objDatos->lote);
+        if($data != null) {
+            echo json_encode($data);
+        } else {
+            echo json_encode(array());
+        }
+    }
+    function generateExcelMR($data_corrida){
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+
+//        print_r('printing...');
+        #imagen ciudad maderas
+        // Add a drawing to the worksheet
+        $drawing = new \PhpOffice\PhpSpreadsheet\Worksheet\Drawing();
+        $drawing->setName('Ciudad Maderas');
+        $drawing->setDescription('Ciudad Maderas');
+        $drawing->setPath(__DIR__.'/../../static/images/logo_ciudadmaderasAct.jpg');
+        $drawing->setHeight(100);
+        $drawing->setCoordinates('D1');
+        $drawing->setOffsetX(55);
+        $drawing->setOffsetY(20);
+        $drawing->setWorksheet($sheet);
+        $sheet->getRowDimension('1')->setRowHeight(100);
+        $sheet->setShowGridlines(true);
+
+        $range1 = 'C1';
+        $range2 = 'I1';
+        $sheet->mergeCells("$range1:$range2");
+        $sheet->getStyle('B:K')->getAlignment()->setHorizontal('center');
+        $sheet->getStyle('B:K')->getAlignment()->setVertical('center');
+        $sheet->getStyle("C1:I1")->getFont()->setSize(28);
+        $spreadsheet->getActiveSheet()->getStyle('C1')->getFont()->getColor()->setARGB('808080');
+
+        $i = 15;
+        #aqui empieza el rango de de las corridas normales
+        $range1 = 'C1';
+        $range2 = 'I1';
+        $sheet->mergeCells("$range1:$range2");
+        $sheet->getStyle('C:I')->getAlignment()->setHorizontal('center');
+        $sheet->getStyle('C:I')->getAlignment()->setHorizontal('center');
+        $sheet->getStyle("C1:I1")->getFont()->setSize(28);
+        $spreadsheet->getActiveSheet()->getStyle('C1')->getFont()->getColor()->setARGB('808080');
+
+        $sheet->setCellValue('C2', 'Cálculo de intereses moratorios');
+        $range12 = 'C2';
+        $range22 = 'I2';
+        $sheet->mergeCells("$range12:$range22");
+        $sheet->getStyle("C2:I2")->getFont()->setSize(26);
+        $sheet->getStyle('C2')->getFont()->getColor()->setARGB('FFFFFF');
+        $sheet->getStyle( 'C1:C2' )->getFont()->setName('Calibri');
+        $sheet->getStyle('C2')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('1F497D');
+
+
+
+        $sheet->setCellValue('D4', 'PROYECTO');
+        $sheet->setCellValue('E4', 'CONDOMINIO');
+        $sheet->setCellValue('F4', 'LOTE');
+        $sheet->setCellValue('G4', 'CLIENTE');
+        $sheet->setCellValue('H4', 'SALDO INSOLUTO');
+
+/*
+ *         $data = array(
+            'proyecto' => $proyecto,
+            'condominio' => $condominio,
+            'lote' => $lote,
+            'cliente' => $cliente,
+            'plazo' => $plazo,
+            'msi' => $msi,
+            'im' => $im,
+            'fecha_pago' => $fecha_pago,
+            'saldo_insoluto' => $saldo_insoluto,
+            'data_corrida' => $data_corrida
+
+        );*/
+        #set values
+        $sheet->setCellValue('D5', $data_corrida['proyecto']);
+        $sheet->setCellValue('E5', $data_corrida['condominio']);
+        $sheet->setCellValue('F5', $data_corrida['nombreLote']);
+        $sheet->setCellValue('G5', $data_corrida['cliente']);
+        $sheet->getStyle('H5')->getNumberFormat()->setFormatCode(PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_CURRENCY_USD_SIMPLE);
+        $sheet->setCellValue('H5', $data_corrida['saldo_insoluto']);
+//        $sheet->setCellValue('I5', 666);
+//        $sheet->getStyle('I5')->getNumberFormat()->setFormatCode(PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_CURRENCY_USD_SIMPLE);
+
+
+        $sheet->getStyle("D4:I4")->getFont()->setSize(10);
+        $sheet->getStyle('D4:I4')->getFont()->getColor()->setARGB('4472C4');
+        $sheet->getStyle( 'D4:I4' )->getFont()->setBold( true );
+        $sheet->getStyle( 'D4:I4' )->getFont()->setName('Arial');
+        $sheet->getColumnDimension('B')->setWidth(15);
+        $sheet->getColumnDimension('C')->setWidth(15);
+        $sheet->getColumnDimension('D')->setWidth(25);
+        $sheet->getColumnDimension('E')->setWidth(15);
+        $sheet->getColumnDimension('F')->setWidth(23);
+        $sheet->getColumnDimension('G')->setWidth(25);
+        $sheet->getColumnDimension('H')->setWidth(18);
+        $sheet->getColumnDimension('I')->setWidth(15);
+        $sheet->getColumnDimension('J')->setWidth(15);
+        $sheet->getColumnDimension('K')->setWidth(15);
+
+        $sheet->getStyle('D5:H5')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('D9D9D9');
+
+
+
+        $sheet->setCellValue('D7', 'PLAZO');
+        $sheet->setCellValue('E7', 'MSI');
+        $sheet->setCellValue('F7', 'INTERES MORATORIO');
+        $sheet->setCellValue('G7', 'FECHA PAGO');
+        $sheet->getStyle("D7:I7")->getFont()->setSize(10);
+        $sheet->getStyle('D7:I7')->getFont()->getColor()->setARGB('4472C4');
+        $sheet->getStyle( 'D7:I7' )->getFont()->setBold( true );
+        $sheet->getStyle( 'D7:I7' )->getFont()->setName('Arial');
+        $sheet->getStyle('D8:G8')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('D9D9D9');
+        #set values
+        $sheet->setCellValue('D8', $data_corrida['plazo']);
+        $sheet->setCellValue('E8', $data_corrida['msi']);
+        $sheet->setCellValue('F8', $data_corrida['im']);
+        $fecha_formateada = new DateTime($data_corrida['fecha_pago']);
+        $sheet->setCellValue('G8',  $fecha_formateada->format('d-m-Y'));
+
+
+        $sheet->setCellValue('F10', 'INTERES MORATORIO ACUMULADO');
+        $sheet->setCellValue('G10', 'INTERES ORDINARIO ACUMULADO');
+        $sheet->getStyle("F10:G10")->getFont()->setSize(10);
+        $sheet->getStyle("F10:G10")->getAlignment()->setWrapText(true);
+        $sheet->getStyle('F10:G10')->getFont()->getColor()->setARGB('4472C4');
+        $sheet->getStyle( 'F10:G10' )->getFont()->setBold( true );
+        $sheet->getStyle( 'F10:G10' )->getFont()->setName('Arial');
+        $sheet->setCellValue('F11', $data_corrida['ima']);
+        $sheet->setCellValue('G11', $data_corrida['ioa']);
+        $sheet->getStyle('F11:G11')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('D9D9D9');
+        $sheet->getStyle('F11:G11')->getNumberFormat()->setFormatCode(PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_CURRENCY_USD_SIMPLE);
+
+
+
+        /*encabezados de la tabla*/
+        $sheet->setCellValue('B15', 'FECHAS');
+        $sheet->setCellValue('C15', 'PAGO');
+        $sheet->setCellValue('D15', 'CAPITAL');
+        $sheet->setCellValue('E15', 'INTERESES');
+        $sheet->setCellValue('F15', 'IMPORTE');
+        $sheet->setCellValue('G15', 'DÍAS DE RETRASO');
+        $sheet->setCellValue('H15', 'INTERES MORATORIO');
+        $sheet->setCellValue('I15', 'TOTAL');
+        $sheet->setCellValue('J15', 'SALDO MORATORIO');
+        $sheet->setCellValue('K15', 'SALDO');
+        $sheet->getStyle( 'B15:K15' )->getFont()->setBold( true );
+        $sheet->getStyle('B15:K15')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('D9D9D9');
+        $sheet->getStyle('B195:K15')->getBorders()->getAllBorders()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+        $sheet->getStyle("H15")->getAlignment()->setWrapText(true);
+        $sheet->getStyle("J15")->getAlignment()->setWrapText(true);
+
+        #termina encabezado
+
+        $array_dump = json_encode($data_corrida['data_corrida']);
+        $array_dump = json_decode(($array_dump));
+        $total_array = count($array_dump);
+        foreach($array_dump as $item=>$value) {
+            $i++;
+
+            #fecha
+            $sheet->setCellValue('B'.$i, $value->fecha);
+            $sheet->getStyle('B'.$i)->getBorders()->getAllBorders()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+
+            #pago
+            $sheet->setCellValue('C'.$i, $value->pago);
+            $sheet->getStyle('C'.$i)->getBorders()->getAllBorders()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+
+            #capital
+            $sheet->setCellValue('D'.$i, $value->capital);
+            $sheet->getStyle('D'.$i)->getNumberFormat()->setFormatCode(PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_CURRENCY_USD_SIMPLE);
+            $sheet->getStyle('D'.$i)->getBorders()->getAllBorders()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+
+            #intereses
+            $sheet->setCellValue('E'.$i, $value->interes);
+            $sheet->getStyle('E'.$i)->getNumberFormat()->setFormatCode(PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_CURRENCY_USD_SIMPLE);
+            $sheet->getStyle('E'.$i)->getBorders()->getAllBorders()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+
+            #importe
+            $sheet->setCellValue('F'.$i, $value->importe);
+            $sheet->getStyle('F'.$i)->getNumberFormat()->setFormatCode(PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_CURRENCY_USD_SIMPLE);
+            $sheet->getStyle('F'.$i)->getBorders()->getAllBorders()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+
+            #dias_retraso
+            $sheet->setCellValue('G'.$i, $value->diasRetraso);
+            $sheet->getStyle('G'.$i)->getBorders()->getAllBorders()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+
+            #IM
+            $sheet->setCellValue('H'.$i, $value->interesMoratorio);
+            $sheet->getStyle('H'.$i)->getNumberFormat()->setFormatCode(PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_CURRENCY_USD_SIMPLE);
+            $sheet->getStyle('H'.$i)->getBorders()->getAllBorders()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+
+            #total
+            $sheet->setCellValue('I'.$i, $value->total);
+            $sheet->getStyle('I'.$i)->getNumberFormat()->setFormatCode(PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_CURRENCY_USD_SIMPLE);
+            $sheet->getStyle('I'.$i)->getBorders()->getAllBorders()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+
+            #saldo moratorio
+            $sheet->setCellValue('J'.$i, $value->saldo);
+            $sheet->getStyle('J'.$i)->getNumberFormat()->setFormatCode(PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_CURRENCY_USD_SIMPLE);
+            $sheet->getStyle('J'.$i)->getBorders()->getAllBorders()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+
+            #saldo
+            $sheet->setCellValue('K'.$i, $value->saldoNormal);
+            $sheet->getStyle('K'.$i)->getNumberFormat()->setFormatCode(PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_CURRENCY_USD_SIMPLE);
+            $sheet->getStyle('K'.$i)->getBorders()->getAllBorders()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+
+
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        $nombre_archivo = 'moratorios.xlsx';
+
+
+        $dir_2 = $_SERVER['DOCUMENT_ROOT'].'sisfusion/static/documentos/cliente/corrida/'.$nombre_archivo;
+        $dir_2 = str_replace("\ ", '/', $dir_2);
+
+        $writer = new Xlsx($spreadsheet);
+
+
+        header('Content-Type: application/vnd.ms-excel');
+        header('Content-Disposition: attachment;filename="'. $nombre_archivo .'"');
+        header('Cache-Control: max-age=0');
+
+        $writer->save("php://output");// download file
+//        $writer->save($dir_2);
+//        $data_response = array(
+//            'message' => 'Corrida generada en excel correctamente',
+//            'status' => 1,
+//            'corrida_generada' => $nombre_archivo
+//        );
+//        return $data_response;
+    }
+    public function excel_moratorios(){
+        $objDatos = json_decode(file_get_contents("php://input"));
+        $proyecto = $objDatos->proyecto;
+        $condominio = $objDatos->condominio;
+        $lote = $objDatos->lote;
+        $nombreLote = $objDatos->nombreLote;
+        $cliente = $objDatos->cliente;
+        $plazo = $objDatos->plazo;
+        $msi = $objDatos->msi;
+        $im = $objDatos->im;
+        $fecha_pago = $objDatos->fecha_pago;
+        $saldo_insoluto = $objDatos->saldo_insoluto;
+        $ima = $objDatos->ima;
+        $ioa = $objDatos->ioa;
+        $data_corrida = $objDatos->data_corrida;
+
+        $data = array(
+            'proyecto' => $proyecto,
+            'condominio' => $condominio,
+            'lote' => $lote,
+            'nombreLote' => $nombreLote,
+            'cliente' => $cliente,
+            'plazo' => $plazo,
+            'msi' => $msi,
+            'im' => $im,
+            'fecha_pago' => $fecha_pago,
+            'saldo_insoluto' => $saldo_insoluto,
+            'ima'=> $ima,
+            'ioa'=> $ioa,
+            'data_corrida' => $data_corrida
+
+        );
+//        echo __DIR__;
+//        exit;
+
+//        print_r($proyecto);
+//        echo '<br>';
+//        print_r($condominio);
+//        echo '<br>';
+//        print_r($lote);
+//        echo '<br>';
+//        print_r($cliente);
+//        echo '<br>';
+//        print_r($plazo);
+//        echo '<br>';
+//        print_r($msi);
+//        echo '<br>';
+//        print_r($im);
+//        echo '<br>';
+//        print_r($fecha_pago);
+//        echo '<br>';
+//        print_r($saldo_insoluto);
+//        echo '<br>';
+//        print_r($data_corrida);
+//        echo '<br>';
+
+        $responde = $this->generateExcelMR($data);
+
 
     }
 

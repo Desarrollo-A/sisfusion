@@ -380,13 +380,10 @@
 
     public function allAsesor()
     {
-        $query = $this->db->query("SELECT u.id_usuario id_asesor, uu.id_usuario id_coordinador, uuu.id_usuario id_gerente, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombre FROM usuarios u 
-                                    INNER JOIN usuarios uu ON uu.id_usuario = u.id_lider 
-                                    INNER JOIN usuarios uuu ON uuu.id_usuario = uu.id_lider WHERE u.id_rol = 7 AND u.estatus = 1 AND ISNULL(u.correo, '') NOT LIKE '%SINCO%' AND ISNULL(u.correo, '') NOT LIKE '%test_%'
-                                    UNION ALL
-                                    SELECT u.id_usuario id_asesor, u.id_usuario id_coordinador, u.id_lider id_gerente, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombre FROM usuarios u 
-                                    WHERE u.id_rol = 9 AND u.estatus = 1 AND ISNULL(u.correo, '') NOT LIKE '%SINCO%' AND ISNULL(u.correo, '') NOT LIKE '%test_%' ORDER BY nombre");
-        return $query->result();
+        return $this->db->query("SELECT u.id_usuario id_asesor, 
+        CASE WHEN (u.id_lider = 0 AND u.id_rol = 9) THEN u.id_usuario ELSE u.id_lider END id_coordinador, 
+        u.gerente_id id_gerente, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombre FROM usuarios u 
+        WHERE u.id_rol IN (7, 9) AND u.estatus = 1 AND ISNULL(u.correo, '') NOT LIKE '%SINCO%' AND ISNULL(u.correo, '') NOT LIKE '%test_%'")->result();
     }
 
 
@@ -695,46 +692,42 @@
             $where = " AND res.idResidencial = $idResidencial";
 
         $query = $this->db->query("SELECT l.idLote, cl.id_cliente, cl.nombre, cl.apellido_paterno, cl.apellido_materno,
-                l.nombreLote, l.idStatusContratacion, l.idMovimiento, l.modificado, cl.rfc,
-                CAST(l.comentario AS varchar(MAX)) as comentario2, l.fechaVenc, l.perfil, cond.nombre as nombreCondominio, res.nombreResidencial, l.ubicacion,
-                l.tipo_venta, cl.fechaApartado, l.idStatusLote,
-                concat(asesor.nombre,' ', asesor.apellido_paterno, ' ', asesor.apellido_materno) as asesor,
-                concat(coordinador.nombre,' ', coordinador.apellido_paterno, ' ', coordinador.apellido_materno) as coordinador,
-                concat(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno) as gerente,
-                concat(asesor2.nombre,' ', asesor2.apellido_paterno, ' ', asesor2.apellido_materno) as asesor2,
-                (CASE WHEN asesor2.id_rol = 9 THEN concat(asesor2.nombre,' ', asesor2.apellido_paterno, ' ', asesor2.apellido_materno) ELSE concat(coordinador2.nombre,' ', coordinador2.apellido_paterno, ' ', coordinador2.apellido_materno) END)coordinador2,
-                /*concat(coordinador2.nombre,' ', coordinador2.apellido_paterno, ' ', coordinador2.apellido_materno) as coordinador2x,*/
-                (CASE WHEN asesor2.id_rol = 9 THEN concat(coordinador2.nombre,' ', coordinador2.apellido_paterno, ' ', coordinador2.apellido_materno) ELSE concat(gerente2.nombre,' ', gerente2.apellido_paterno, ' ', gerente2.apellido_materno) END)gerente2,
-                /*concat(gerente2.nombre,' ', gerente2.apellido_paterno, ' ', gerente2.apellido_materno) as gerente2,*/
-                cond.idCondominio, l.sup, l.precio, l.total, l.porcentaje, l.enganche, l.saldo, l.referencia, st.nombre, l.fecha_modst, l.motivo_change_status comentario,
-                l.idAsesor, l.motivo_change_status, tv.tipo_venta, (CASE l.tipo_venta WHEN 1 THEN 1 ELSE 0 END) es_particular
-                FROM lotes l
-                LEFT JOIN clientes cl ON l.idLote=cl.idLote and l.idCliente = cl.id_cliente and cl.status = 1             
-                INNER JOIN condominios cond ON l.idCondominio=cond.idCondominio
-                INNER JOIN residenciales res ON cond.idResidencial = res.idResidencial
-                LEFT JOIN statuslote st ON l.idStatusLote = st.idStatusLote
-                LEFT JOIN usuarios asesor ON cl.id_asesor = asesor.id_usuario
-                LEFT JOIN usuarios coordinador ON cl.id_coordinador = coordinador.id_usuario
-                LEFT JOIN usuarios gerente ON cl.id_gerente = gerente.id_usuario
-                LEFT JOIN usuarios asesor2 ON l.idAsesor = asesor2.id_usuario
-                LEFT JOIN usuarios coordinador2 ON asesor2.id_lider = coordinador2.id_usuario
-                LEFT JOIN usuarios gerente2 ON coordinador2.id_lider = gerente2.id_usuario
-                LEFT JOIN tipo_venta tv ON tv.id_tventa = l.tipo_venta /*NUEVO*/
-                WHERE l.status = 1 $where
-                GROUP BY l.idLote, cl.id_cliente, cl.nombre, cl.apellido_paterno, cl.apellido_materno,
-                l.nombreLote, l.idStatusContratacion, l.idMovimiento, l.modificado, cl.rfc,
-                CAST(l.comentario AS varchar(MAX)), l.fechaVenc, l.perfil, cond.nombre, res.nombreResidencial, l.ubicacion,
-                l.tipo_venta, cl.fechaApartado, l.idStatusLote,
-                concat(asesor.nombre,' ', asesor.apellido_paterno, ' ', asesor.apellido_materno),
-                concat(coordinador.nombre,' ', coordinador.apellido_paterno, ' ', coordinador.apellido_materno),
-                concat(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno),
-                concat(asesor2.nombre,' ', asesor2.apellido_paterno, ' ', asesor2.apellido_materno),
-                (CASE WHEN asesor2.id_rol = 9 THEN concat(asesor2.nombre,' ', asesor2.apellido_paterno, ' ', asesor2.apellido_materno) ELSE concat(coordinador2.nombre,' ', coordinador2.apellido_paterno, ' ', coordinador2.apellido_materno) END),
-                /*concat(coordinador2.nombre,' ', coordinador2.apellido_paterno, ' ', coordinador2.apellido_materno),*/
-                (CASE WHEN asesor2.id_rol = 9 THEN concat(coordinador2.nombre,' ', coordinador2.apellido_paterno, ' ', coordinador2.apellido_materno) ELSE concat(gerente2.nombre,' ', gerente2.apellido_paterno, ' ', gerente2.apellido_materno) END),
-                /*concat(gerente2.nombre,' ', gerente2.apellido_paterno, ' ', gerente2.apellido_materno),*/
-                cond.idCondominio, l.sup, l.precio, l.total, l.porcentaje, l.enganche, l.saldo, l.referencia, st.nombre, l.fecha_modst, l.motivo_change_status,
-                l.idAsesor, tv.tipo_venta order by l.idLote;");
+        l.nombreLote, l.idStatusContratacion, l.idMovimiento, l.modificado, cl.rfc,
+        CAST(l.comentario AS varchar(MAX)) as comentario2, l.fechaVenc, l.perfil, cond.nombre as nombreCondominio, res.nombreResidencial, l.ubicacion,
+        l.tipo_venta, cl.fechaApartado, l.idStatusLote,
+        concat(u0.nombre,' ', u0.apellido_paterno, ' ', u0.apellido_materno) as asesor,
+        concat(u1.nombre,' ', u1.apellido_paterno, ' ', u1.apellido_materno) as coordinador,
+        concat(u2.nombre,' ', u2.apellido_paterno, ' ', u2.apellido_materno) as gerente,
+        concat(u00.nombre,' ', u00.apellido_paterno, ' ', u00.apellido_materno) as asesor2,
+        (CASE WHEN u00.id_rol = 9 THEN concat(u00.nombre,' ', u00.apellido_paterno, ' ', u00.apellido_materno) ELSE concat(u11.nombre,' ', u11.apellido_paterno, ' ', u11.apellido_materno) END) coordinador2,
+        (CASE WHEN u00.id_rol = 9 THEN concat(u11.nombre,' ', u11.apellido_paterno, ' ', u11.apellido_materno) ELSE concat(u22.nombre,' ', u22.apellido_paterno, ' ', u22.apellido_materno) END) gerente2,
+        cond.idCondominio, l.sup, l.precio, l.total, l.porcentaje, l.enganche, l.saldo, l.referencia, st.nombre, l.fecha_modst, l.motivo_change_status comentario,
+        l.idAsesor, l.motivo_change_status, tv.tipo_venta, (CASE l.tipo_venta WHEN 1 THEN 1 ELSE 0 END) es_particular
+        FROM lotes l
+        LEFT JOIN clientes cl ON l.idLote=cl.idLote and l.idCliente = cl.id_cliente and cl.status = 1             
+        INNER JOIN condominios cond ON l.idCondominio=cond.idCondominio
+        INNER JOIN residenciales res ON cond.idResidencial = res.idResidencial
+        LEFT JOIN statuslote st ON l.idStatusLote = st.idStatusLote
+        LEFT JOIN usuarios u0 ON u0.id_usuario = cl.id_asesor
+        LEFT JOIN usuarios u1 ON u1.id_usuario = cl.id_coordinador
+        LEFT JOIN usuarios u2 ON u2.id_usuario = cl.id_gerente
+        LEFT JOIN usuarios u00 ON u00.id_usuario = l.idAsesor
+        LEFT JOIN usuarios u11 ON u11.id_usuario = u00.id_lider
+        LEFT JOIN usuarios u22 ON u22.id_usuario = u11.gerente_id
+        LEFT JOIN tipo_venta tv ON tv.id_tventa = l.tipo_venta /*NUEVO*/
+        WHERE l.status = 1 $where
+        GROUP BY l.idLote, cl.id_cliente, cl.nombre, cl.apellido_paterno, cl.apellido_materno,
+        l.nombreLote, l.idStatusContratacion, l.idMovimiento, l.modificado, cl.rfc,
+        CAST(l.comentario AS varchar(MAX)), l.fechaVenc, l.perfil, cond.nombre, res.nombreResidencial, l.ubicacion,
+        l.tipo_venta, cl.fechaApartado, l.idStatusLote,
+        concat(u0.nombre,' ', u0.apellido_paterno, ' ', u0.apellido_materno),
+        concat(u1.nombre,' ', u1.apellido_paterno, ' ', u1.apellido_materno),
+        concat(u2.nombre,' ', u2.apellido_paterno, ' ', u2.apellido_materno),
+        concat(u00.nombre,' ', u00.apellido_paterno, ' ', u00.apellido_materno),
+        (CASE WHEN u00.id_rol = 9 THEN concat(u00.nombre,' ', u00.apellido_paterno, ' ', u00.apellido_materno) ELSE concat(u11.nombre,' ', u11.apellido_paterno, ' ', u11.apellido_materno) END),
+        (CASE WHEN u00.id_rol = 9 THEN concat(u11.nombre,' ', u11.apellido_paterno, ' ', u11.apellido_materno) ELSE concat(u22.nombre,' ', u22.apellido_paterno, ' ', u22.apellido_materno) END),
+        cond.idCondominio, l.sup, l.precio, l.total, l.porcentaje, l.enganche, l.saldo, l.referencia, st.nombre, l.fecha_modst, l.motivo_change_status,
+        l.idAsesor, tv.tipo_venta order by l.idLote;");
         return $query->result();
     }
 
