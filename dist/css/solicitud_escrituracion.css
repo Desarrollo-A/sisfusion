@@ -69,7 +69,7 @@
 }
 
 .ml-1 {
-  margin-left: 10px !important;
+  margin-left: 10px;
 }
 
 .ml-2 {
@@ -1164,149 +1164,74 @@
   background-color: #F1F1F1;
 }
 
-.input-gral {
-  background-color: #eaeaea !important;
-  color: #929292 !important;
-  border-radius: 27px !important;
-  background-image: none !important;
-  padding-left: 20px;
+.boxContent td .bootstrap-select button {
+  background-color: #c3c3c3 !important;
 }
 
-.isRequired {
-  color: #EA4335;
-  margin: 0 3px;
+.boxContent td .icon-save {
+  font-size: 1.5em;
+  cursor: pointer;
+  color: #929292;
 }
 
-@font-face {
-  font-family: Montserrat-Black;
-  src: url(../fonts/Montserrat/Montserrat-Black.ttf);
+.boxContent td .active {
+  display: block !important;
 }
 
-@font-face {
-  font-family: Montserrat-BlackItalic;
-  src: url(../fonts/Montserrat/Montserrat-BlackItalic.ttf);
+.boxContent td .inactive {
+  display: none !important;
 }
 
-@font-face {
-  font-family: Montserrat-Bold;
-  src: url(../fonts/Montserrat/Montserrat-Bold.ttf);
+.boxContent .subBoxDetail .notaria-select {
+  width: 50% !important;
 }
 
-@font-face {
-  font-family: Montserrat-BoldItalic;
-  src: url(../fonts/Montserrat/Montserrat-BoldItalic.ttf);
+.modal-content .cardUpload {
+  box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.14);
+  border-radius: 6px;
+  color: rgba(0, 0, 0, 0.87);
+  background: #fff;
+  margin: 10px;
+  padding: 10px;
 }
 
-@font-face {
-  font-family: Montserrat-ExtraBold;
-  src: url(../fonts/Montserrat/Montserrat-ExtraBold.ttf);
+.modal-content .uploadIcon_modal {
+  color: #929292;
 }
 
-@font-face {
-  font-family: Montserrat-ExtraBoldItalic;
-  src: url(../fonts/Montserrat/Montserrat-ExtraBoldItalic.ttf);
+.modal-content .uploadIcon_modal:hover {
+  color: #103f75;
+  cursor: pointer;
 }
 
-@font-face {
-  font-family: Montserrat-ExtraLight;
-  src: url(../fonts/Montserrat/Montserrat-ExtraLight.ttf);
+.modal-content .watchIcon_modal {
+  color: #103f75;
 }
 
-@font-face {
-  font-family: Montserrat-ExtraLightItalic;
-  src: url(../fonts/Montserrat/Montserrat-ExtraLightItalic.ttf);
+.modal-content .watchIcon_modal:hover {
+  cursor: pointer;
 }
 
-@font-face {
-  font-family: Montserrat-Italic;
-  src: url(../fonts/Montserrat/Montserrat-Italic.ttf);
+.modal-content .nodata_icon {
+  color: #929292;
 }
 
-@font-face {
-  font-family: Montserrat-Light;
-  src: url(../fonts/Montserrat/Montserrat-Light.ttf);
+#uploadModal {
+  z-index: 9999 !important;
 }
 
-@font-face {
-  font-family: Montserrat-LightItalic;
-  src: url(../fonts/Montserrat/Montserrat-LightItalic.ttf);
+#sb-container {
+  z-index: 9999 !important;
 }
 
-@font-face {
-  font-family: Montserrat-Medium;
-  src: url(../fonts/Montserrat/Montserrat-Medium.ttf);
+.table-responsive {
+  overflow: inherit !important;
 }
 
-@font-face {
-  font-family: Montserrat-MediumItalic;
-  src: url(../fonts/Montserrat/Montserrat-MediumItalic.ttf);
+.bootstrap-table {
+  overflow: inherit !important;
 }
 
-@font-face {
-  font-family: Montserrat-Regular;
-  src: url(../fonts/Montserrat/Montserrat-Regular.ttf);
-}
-
-@font-face {
-  font-family: Montserrat-SemiBold;
-  src: url(../fonts/Montserrat/Montserrat-SemiBold.ttf);
-}
-
-@font-face {
-  font-family: Montserrat-SemiBoldItalic;
-  src: url(../fonts/Montserrat/Montserrat-SemiBoldItalic.ttf);
-}
-
-@font-face {
-  font-family: Montserrat-Thin;
-  src: url(../fonts/Montserrat/Montserrat-Thin.ttf);
-}
-
-@font-face {
-  font-family: Montserrat-ThinItalic;
-  src: url(../fonts/Montserrat/Montserrat-ThinItalic.ttf);
-}
-
-@font-face {
-  font-family: Exo-ExtraBold;
-  src: url(../fonts/Montserrat/Exo-ExtraBold.ttf);
-}
-
-@font-face {
-  font-family: Bahnschrift;
-  src: url(../fonts/Montserrat/Bahnschrift.TTF);
-}
-
-@font-face {
-  font-family: JMHTypewriter;
-  src: url(../fonts/Montserrat/JMHTypewriter.ttf);
-}
-
-/* END import fonts */
-/* fonts vrbls */
-/* END fonts vrbls */
-.boxContent {
-  background-image: linear-gradient(RGB(0 0 0/80%), RGB(0 0 0/80%)), url(https://maderascrm.gphsis.com/dist/img/notFound.png);
-  background-position: center;
-  background-size: cover;
-  background-repeat: no-repeat;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: #ffffff;
-}
-
-.boxContent h2, .boxContent h3 {
-  font-family: "Montserrat-ExtraLight";
-  color: #ffffff;
-}
-
-.boxContent .enfasis {
-  color: #96843D !important;
-  font-weight: 700;
-  font-family: "Montserrat-SemiBold" !important;
-}
-
-.boxContent p {
-  font-family: "Montserrat-Light";
+.fixed-table-body {
+  overflow: inherit !important;
 }
