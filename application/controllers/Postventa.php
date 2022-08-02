@@ -1720,12 +1720,26 @@ class Postventa extends CI_Controller
                 );
             break;
         }
+        $data = json_decode(json_encode($data), True);
+
+        for ($i = 0; $i < count($data); $i++) {
+            if ( $data[$i]['dias'] == 0 || $data[$i]['dias'] == null ){
+                $data[$i]['atrasado']  = 'EN TIEMPO';
+                $data[$i]['diferencia']  = 0;
+            }
+            else{
+                $endDate = date('m/d/Y h:i:s a', time());
+
+                $result = getWorkingDays($data[$i]['fecha_creacion'], $endDate);
+                $data[$i]['atrasado'] = $result['atrasado'];
+                $data[$i]['diferencia'] = $result['diferencia'];
+            }
+        }
 
         $array = [
             "columns" => $columns,
             "data" => $data
         ];
-        // $newData = array_merge($columns, $data);
         if ($data != null)
             echo json_encode($array);
         else
@@ -1744,6 +1758,20 @@ class Postventa extends CI_Controller
     public function getFullReportContraloria(){
         $idSolicitud = $_POST['idEscritura'];
         $data = $this->Postventa_model->getFullReportContraloria($idSolicitud);
+        for ($i = 0; $i < count($data); $i++) {
+            if ( $data[$i]['tiempo'] != 0 ){
+                $startDate = $data[$i]['fecha_creacion'];
+                $endDate = ( $i+1 < count($data) ) ? $data[$i+1]['fecha_creacion'] : date('m/d/Y h:i:s a', time());
+
+                $result = getWorkingDays($startDate, $endDate);
+                $data[$i]['atrasado'] = $result['atrasado'];
+                $data[$i]['diferencia'] = $result['diferencia'];
+            }
+            else{
+                $data[$i]['atrasado'] = "En tiempo";
+                $data[$i]['diferencia'] = 0;
+            }
+        }
         if ($data != null)
             echo json_encode($data);
         else
@@ -1807,5 +1835,46 @@ class Postventa extends CI_Controller
         // $resultado = file_get_contents($url, false, $contexto);
         $resDecode = json_decode(base64_decode($result));
         return $resDecode; 
+    }
+}
+
+function getWorkingDays($startDate, $endDate){
+    $dataTime=[];
+    $begin = strtotime($startDate);
+    $end   = strtotime($endDate);
+    if ($begin > $end) {
+        return 0;
+    } else {
+        $no_days  = 0;
+        $weekends = 0;
+        while ($begin < $end) {
+            $no_days++; // no of days in the given interval
+            $what_day = date("N", $begin);
+            if ($what_day > 5) { // 6 and 7 are weekend days
+                $weekends++;
+            };
+            $begin += 86400; // +1 day
+        };
+        $working_days = $no_days - $weekends;
+
+        $dt = new DateTime($startDate);
+        $dt2 = new DateTime($endDate);    
+        $timeStart = $dt->format('h:i:s A');
+        $timeEnd = $dt2->format('h:i:s A');
+        $st_time    =   strtotime($timeStart);
+        $end_time   =   strtotime($timeEnd);
+
+        if( $end_time <= $st_time ){
+            $dataTime['atrasado'] = "En tiempo";
+            $dataTime['diferencia'] = $working_days - 1;
+
+            return $dataTime;
+        }
+        else{
+            $dataTime['atrasado'] = "Atrasado";
+            $dataTime['diferencia'] = ( $working_days != 0 ) ? $working_days - 1 : $working_days;
+
+            return $dataTime;
+        }        
     }
 }
