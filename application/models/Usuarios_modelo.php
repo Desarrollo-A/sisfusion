@@ -43,7 +43,7 @@ class Usuarios_modelo extends CI_Model {
             case '53': // ANALISTA DE COMISIONES
                 if ($id_rol == 4 || $id_rol == 53)
                     $where = "us.id_rol IN (3, 7, 9) AND us.rfc NOT LIKE '%TSTDD%' AND ISNULL(us.correo, '') NOT LIKE '%test_%' AND ISNULL(us.correo, '') NOT LIKE '%OOAM%' AND ISNULL(us.correo, '') NOT LIKE '%CASA%'";
-                else if ($id_rol == 4)
+                else if ($id_rol == 5)
                     $where = "us.subdirector_id = $id_lider OR us.regional_id = $id_lider OR us.id_usuario = $id_lider";
                 else
                     $where = "us.gerente_id = $id_lider OR us.id_usuario = $id_lider";
