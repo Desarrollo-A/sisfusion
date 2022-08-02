@@ -90,6 +90,7 @@
 .l-auto{ left: auto;}
 .z-1030{z-index: 1030;}
 .f-bolder{font-weight: bolder;}
+.fl-r {float: right;}
 /* END utilities */
 
 /* Flexbox */
@@ -106,6 +107,9 @@
 .row-reverse     { flex-direction: row-reverse}
 .direction-column {flex-direction: column;}
 .direction-row {flex-direction: row;}
+.gg-1           { grid-gap: 10px}
+.gg-15          { grid-gap: 15px}
+.gg-2           { grid-gap: 20px}
 
 /* END Flexbox */
 
@@ -123,6 +127,11 @@
 .fw-700         { font-weight: 700; }
 .fw-800         { font-weight: 800; }
 .fw-900         { font-weight: 900; }
+.fs-1           { font-size: 1rem;}
+.fs-2           { font-size: 2rem;}
+.fs-3           { font-size: 3rem;}
+.fs-4           { font-size: 4rem;}
+.fs-5           { font-size: 5rem;}
 
 /* Text */
 
