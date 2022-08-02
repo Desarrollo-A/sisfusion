@@ -16,7 +16,7 @@
 .mt-4 { margin-top: 40px; }
 .mr-1{ margin-right: 10px; }
 .mr-2{ margin-right: 20px!important; }
-.ml-1{ margin-left: 10px; }
+.ml-1{ margin-left: 10px!important; }
 .ml-2{ margin-left: 20px!important; }
 .p-0  { padding: 0!important; }
 .p-1  { padding: 10px; }
@@ -786,4 +786,16 @@ $tv                 : "(min-width: 1280px)";
         color: $deepGray;
         background-color: $grayDisabled;
     }
+}
+
+.input-gral {
+    background-color: $platinum !important;
+    color: $deepGray !important;
+    border-radius: 27px !important;
+    background-image: none !important;
+    padding-left: 20px;
+}
+.isRequired{
+    color: $redGoogle;
+    margin: 0 3px;
 }

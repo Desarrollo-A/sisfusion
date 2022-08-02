@@ -1,4 +1,12 @@
 @import "_base";
+@media screen
+and (min-device-width: 1200px)
+and (max-device-width: 1600px)
+and (-webkit-min-device-pixel-ratio: 1) {
+  .card{
+    background-color: #444;
+  }
+}
 
 // //Mini desktop
 // @media (min-width: 1025px) and (max-width: 1280px){

@@ -9,7 +9,7 @@ $(document).ready(function()
             titleAttr: 'Lista nuevos clientes',
             title:'Lista nuevos clientes',
             exportOptions: {
-                columns: [0, 1, 2, 3, 4, 5, 6, 7, 8],
+                columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
                 format: {
                     header: function (d, columnIdx) {
                         switch (columnIdx) {
@@ -34,9 +34,15 @@ $(document).ready(function()
                                 return 'GERENTE';
                                 break;
                             case 7:
-                                return 'CREACIÓN';
+                                return 'SUBDIRECTOR';
                                 break;
                             case 8:
+                                return 'DIRECTOR REGIONAL';
+                                break;
+                            case 9:
+                                return 'CREACIÓN';
+                                break;
+                            case 10:
                                 return 'FECHA CLIENTE';
                                 break;
                         }
@@ -57,9 +63,10 @@ $(document).ready(function()
             }
         },
         destroy: true,
+        ordering: false,
         columns: [{
                 data: function(d) {
-                    return d.nombre;
+                    return d.nombre + '<br>' +'<span class="label" style="background:#1ABC9C">'+ d.id_prospecto +'</span>';
                 }
             },
             {
@@ -74,7 +81,7 @@ $(document).ready(function()
             },
             {
                 data: function(d) {
-                    return d.lp;
+                    return d.nombre_lp;
                 }
             },
             {
@@ -83,13 +90,23 @@ $(document).ready(function()
                 }
             },
             {
-                data: function(d) {
-                    return d.coordinador;
+                data: function (d) {
+                    return d.coordinador == '  ' ? 'SIN ESPECIFICAR' : d.coordinador;
                 }
             },
             {
-                data: function(d) {
-                    return d.gerente;
+                data: function (d) {
+                    return d.gerente == '  ' ? 'SIN ESPECIFICAR' : d.gerente;
+                }
+            },
+            {
+                data: function (d) {
+                    return d.subdirector == '  ' ? 'SIN ESPECIFICAR' : d.subdirector;
+                }
+            },
+            {
+                data: function (d) {
+                    return d.regional == '  ' ? 'SIN ESPECIFICAR' : d.regional;
                 }
             },
             {
@@ -112,11 +129,11 @@ $(document).ready(function()
                 }
             }
         ],
-        "ajax": {
-            "url": "getClientsList",
-            "type": "POST",
+        ajax: {
+            url: "getClientsList",
+            type: "POST",
             cache: false,
-            "data": function(d) {}
+            data: function(d) {}
         }
     });
 

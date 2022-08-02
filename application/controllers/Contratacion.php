@@ -71,30 +71,18 @@ class Contratacion extends CI_Controller
     {
 		$this->validateSession();
         $a = 'null';
-
-        if ($estatus != $a && $condominio != $a && $proyecto != $a) {
+        if ($estatus != $a && $condominio != $a && $proyecto != $a)
             echo json_encode($this->Contratacion_model->get_datos_inventario($estatus, $condominio)->result_array());
-        }
-
-        if ($proyecto != $a && $condominio == $a && $estatus != $a) {
+        if ($proyecto != $a && $condominio == $a && $estatus != $a)
             echo json_encode($this->Contratacion_model->get_datos_inventario_pe($proyecto, $estatus)->result_array());
-        }
-
-        if ($proyecto == $a && $condominio == $a && $estatus != $a) {
+        if ($proyecto == $a && $condominio == $a && $estatus != $a)
             echo json_encode($this->Contratacion_model->get_datos_inventario_e($estatus)->result_array());
-        }
-
-        if ($proyecto != $a && $condominio == $a && $estatus == $a) {
+        if ($proyecto != $a && $condominio == $a && $estatus == $a)
             echo json_encode($this->Contratacion_model->get_datos_inventario_p($proyecto)->result_array());
-        }
-
-        if ($proyecto != $a && $condominio != $a && $estatus == $a) {
+        if ($proyecto != $a && $condominio != $a && $estatus == $a)
             echo json_encode($this->Contratacion_model->get_datos_inventario_pc($proyecto, $condominio)->result_array());
-        }
-
-        if ($proyecto == $a && $condominio == $a && $estatus == $a) {
+        if ($proyecto == $a && $condominio == $a && $estatus == $a)
             echo json_encode($this->Contratacion_model->get_todo_inventario()->result_array());
-        }
     }
 
     public function obtener_liberacion($idLote)

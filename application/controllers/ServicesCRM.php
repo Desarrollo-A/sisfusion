@@ -36,10 +36,6 @@ class ServicesCRM extends CI_Controller
             }
     }
 
-function desc(){
-    echo 
-}
-
 
     function getNacionalidades(){
         $data = $this->Services_model->getNacionalidades();
@@ -55,27 +51,31 @@ function desc(){
                                        "message" => "El RFC ingresado ya se encuentra registrado.")));
     
             }else{
+                
                 $getLider = $this->Services_model->getLider($objDatos['id_lider'],$objDatos['id_rol']);
                 $id_gerente=0;
                 $id_subdirector=0;
                 $id_regional=0;
+                $id_lider=0;
                 if($objDatos['id_rol'] == 7){
                     //Asesor
+                    $id_lider  = $objDatos['id_lider'];
                     $id_gerente=$getLider[0]['id_gerente'];
                     $id_subdirector=$getLider[0]['id_subdirector'];
                     $id_regional=$getLider[0]['id_regional'];
                 }
                 else if($objDatos['id_rol'] == 9){
                     //Coordinador
-                    $id_gerente=0;
+                    $id_lider  = 0;
+                    $id_gerente=$objDatos['id_lider'];
                     $id_subdirector=$getLider[0]['id_subdirector'];
                     $id_regional=$getLider[0]['id_regional'];
                 }
                 else if($objDatos['id_rol'] == 3){
                     //Gerente
                     $id_gerente=0;
-                    $id_subdirector=$getLider[0]['id_subdirector'];
-                    $id_regional=$getLider[0]['id_regional'];
+                    $id_subdirector=0;//$getLider[0]['id_subdirector'];
+                    $id_regional=0;//$getLider[0]['id_regional'];
                 }
                 $data = array(
                     "nombre" => $objDatos['nombre'],
@@ -83,7 +83,6 @@ function desc(){
                     "apellido_materno" => $objDatos['apellido_materno'],
                     "forma_pago" => $objDatos['forma_pago'],
                     "rfc" => $objDatos['rfc'],
-                    "tiene_hijos" => 2,
                     "estatus" => 1,
                     "sesion_activa" => 1,
                     "imagen_perfil" => '',
@@ -91,7 +90,7 @@ function desc(){
                     "telefono" => $objDatos['telefono'],
                     "id_sede" => $objDatos['id_sede'],
                     "id_rol" => $objDatos['id_rol'],
-                    "id_lider" => $objDatos['id_lider'],
+                    "id_lider" => $id_lider,
                     "usuario" => $objDatos['usuario'],
                     "contrasena" => encriptar($objDatos['contrasena']),
                     "fecha_creacion" => date("Y-m-d H:i:s"),
@@ -104,7 +103,13 @@ function desc(){
                     "nacionalidad" => $objDatos['nacionalidad'],
                     "gerente_id" => $id_gerente,
                     "subdirector_id" => $id_subdirector,
-                    "regional_id" => $id_regional
+                    "regional_id" => $id_regional,
+                    "talla" => "0",
+                    "sexo" => "S",
+                    "tiene_hijos" => 0,
+                    "hijos_12" => "0",
+                    "fecha_reingreso" => NULL,
+                    "fecha_baja" => NULL 
                 );
                 //echo var_dump($data);
                 if (isset($objDatos) && !empty($objDatos)) {

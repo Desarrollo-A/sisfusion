@@ -2620,7 +2620,7 @@ function getDatosRevisionFactura($proyecto,$condominio){
             $respuesta =  $this->db->query("UPDATE pago_comision SET total_comision = ".$sumaComi.", abonado = ".$sumaDispo.", porcentaje_abono = ".$porcentaje.", pendiente = ".$resta.", creado_por = ".$id_user.", fecha_modificacion = GETDATE(), ultimo_pago = ".$pagado.", bonificacion = ".$bonificacion." WHERE id_lote = ".$lote."");
         }
         else{
-            $respuesta =  $this->db->query("INSERT INTO pago_comision ([id_lote], [total_comision], [abonado], [porcentaje_abono], [pendiente], [creado_por], [fecha_modificacion], [fecha_abono],[bandera],[ultimo_pago],[bonificacion]) VALUES (".$lote.", ".$sumaComi.", ".$sumaDispo.",".$porcentaje.",".$resta.",".$id_user.", GETDATE(), GETDATE(),1,".$pagado.",".$bonificacion.")");
+            $respuesta =  $this->db->query("INSERT INTO pago_comision ([id_lote], [total_comision], [abonado], [porcentaje_abono], [pendiente], [creado_por], [fecha_modificacion], [fecha_abono],[bandera],[ultimo_pago],[bonificacion],[fecha_neodata],[modificado_por]) VALUES (".$lote.", ".$sumaComi.", ".$sumaDispo.",".$porcentaje.",".$resta.",".$id_user.", GETDATE(), GETDATE(),1,".$pagado.",".$bonificacion.", null, null)");
 
         }
     if (! $respuesta ) {
@@ -8392,7 +8392,8 @@ return $query->result();
         INNER JOIN pago_comision_ind pci ON pci.id_pago_i = rpp.id_pago_i AND pci.estatus IN(18,19,20,21,22,23) AND pci.descuento_aplicado = 1
         INNER JOIN comisiones c ON c.id_comision = pci.id_comision
         INNER JOIN lotes l ON l.idLote = c.id_lote
-        INNER JOIN historial_comisiones hc ON hc.id_pago_i = rpp.id_pago_i and (hc.comentario like 'DESCUENTO POR%' or hc.comentario like '%, POR MOTIVO DE PRESTAMO') and hc.estatus=1
+        INNER JOIN historial_comisiones hc ON hc.id_pago_i = rpp.id_pago_i 
+        and (hc.comentario like 'DESCUENTO POR%' or hc.comentario like '%, POR MOTIVO DE PRESTAMO' or hc.comentario like '%NOMINA%') and hc.estatus=1
         WHERE pa.id_prestamo = $idPrestamo
         ORDER BY np ASC");
         return $result->result_array();
@@ -8603,9 +8604,7 @@ return $query->result();
             WHERE id_rol = $rol");
         return $result->result_array();
     }
-/**----------------------------------------FIN BONOS Y PRESTAMOS------------------------------- */
-/**---------------------------------------------- */
-
+ 
     public function findAllPlanes()
     {
         $query = $this->db->query('SELECT id_plan, descripcion FROM plan_comision WHERE estatus = 1');

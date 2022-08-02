@@ -69,7 +69,7 @@
 }
 
 .ml-1 {
-  margin-left: 10px;
+  margin-left: 10px !important;
 }
 
 .ml-2 {
@@ -1164,10 +1164,17 @@
   background-color: #F1F1F1;
 }
 
-@media screen and (min-device-width: 1200px) and (max-device-width: 1600px) and (-webkit-min-device-pixel-ratio: 2) and (min-resolution: 192dpi) {
-  body {
-    background-color: #87ceeb;
-  }
+.input-gral {
+  background-color: #eaeaea !important;
+  color: #929292 !important;
+  border-radius: 27px !important;
+  background-image: none !important;
+  padding-left: 20px;
+}
+
+.isRequired {
+  color: #EA4335;
+  margin: 0 3px;
 }
 
 .cargarPlan {
@@ -1279,14 +1286,6 @@
   height: 100%;
 }
 
-.cargarPlan .tab-content #boxMainForm .input-gral {
-  background-color: #eaeaea !important;
-  color: #929292 !important;
-  border-radius: 27px !important;
-  background-image: none !important;
-  padding-left: 20px;
-}
-
 .cargarPlan .tab-content #boxMainForm .radio-container {
   display: flex;
   justify-content: space-around;
@@ -1341,22 +1340,21 @@
   border: none;
 }
 
+@media (min-device-width: 320px) and (max-device-width: 480px), (min-width: 480px) and (max-width: 991px) {
+  .cargarPlan .tab-content #boxMainForm {
+    height: auto !important;
+    overflow: hidden !important;
+  }
+}
+
 .cargarPlan .tab-content .boxInfoGral {
   position: absolute;
-  top: -40px;
-  right: 0;
+  top: 0;
+  right: 20px;
   display: flex;
   justify-content: space-around;
   align-items: center;
-}
-
-.cargarPlan .tab-content .boxInfoGral p {
-  font-size: 18px;
-  margin-right: 20px !important;
-}
-
-.cargarPlan .tab-content .boxInfoGral .items {
-  font-weight: 400;
+  z-index: 999;
 }
 
 .cargarPlan .tab-content .boxInfoGral .btnDescuento {
@@ -1374,14 +1372,51 @@
   margin-left: 5px;
 }
 
+.cargarPlan .tab-content .leyendItems {
+  position: absolute;
+  top: -25px;
+  right: 65px;
+  font-size: 18px;
+}
+
+.cargarPlan .tab-content .leyendItems .items {
+  font-weight: 400;
+}
+
+@media (min-device-width: 320px) and (max-device-width: 480px) {
+  .cargarPlan .tab-content .leyendItems {
+    top: 10px;
+    right: 15px;
+  }
+}
+
+@media (min-width: 480px) and (max-width: 991px) {
+  .cargarPlan .tab-content .leyendItems {
+    top: 0px;
+    right: 15px;
+  }
+}
+
 .cargarPlan .tab-content #showPackage {
   height: 520px;
   padding: 11px 0;
   overflow: auto;
 }
 
+@media (min-device-width: 320px) and (max-device-width: 480px), (min-width: 480px) and (max-width: 991px) {
+  .cargarPlan .tab-content #showPackage .pt-4 {
+    padding-top: 0 !important;
+  }
+}
+
 .cargarPlan .tab-content #showPackage .emptyCards {
   color: #929292;
+}
+
+@media (min-device-width: 320px) and (max-device-width: 480px), (min-width: 480px) and (max-width: 991px) {
+  .cargarPlan .tab-content #showPackage .emptyCards img {
+    width: 40% !important;
+  }
 }
 
 .cargarPlan .tab-content #showPackage .cardPlan {
@@ -1543,6 +1578,12 @@
   justify-content: center;
 }
 
+@media (min-device-width: 320px) and (max-device-width: 480px), (min-width: 480px) and (max-width: 991px) {
+  .cargarPlan .tab-content #showPackage .cardPlan {
+    height: auto !important;
+  }
+}
+
 .cargarPlan .tab-content #showPackage .switch-label:before, .cargarPlan .tab-content #showPackage .switch-label:after {
   content: "";
   position: absolute;
@@ -1585,6 +1626,25 @@
   transform: translate(80%, -50%);
 }
 
+@media (min-device-width: 320px) and (max-device-width: 480px), (min-width: 480px) and (max-width: 991px) {
+  .cargarPlan .tab-content #showPackage {
+    height: auto !important;
+    margin-top: 30px !important;
+  }
+}
+
+@media (min-device-width: 320px) and (max-device-width: 480px), (min-width: 480px) and (max-width: 991px) {
+  .cargarPlan .tab-content {
+    margin-top: 30px !important;
+  }
+}
+
+@media (min-device-width: 320px) and (max-device-width: 480px), (min-width: 480px) and (max-width: 991px) {
+  .cargarPlan {
+    height: auto !important;
+  }
+}
+
 .dataTables_scrollBody::-webkit-scrollbar-track {
   border-radius: 10px;
   background-color: transparent;
@@ -1606,4 +1666,8 @@
 /* Color del HOVER de barra de desplazamiento */
 .dataTables_scrollBody::-webkit-scrollbar-thumb:hover {
   background-color: #929292;
+}
+
+.btn-azure:hover span a {
+  color: #ffffff !important;
 }
