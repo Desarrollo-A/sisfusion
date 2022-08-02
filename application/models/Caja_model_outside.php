@@ -659,9 +659,9 @@
 		LEFT JOIN usuarios coordinador ON cl.id_coordinador = coordinador.id_usuario
         LEFT JOIN usuarios gerente ON cl.id_gerente = gerente.id_usuario
 
-        LEFT JOIN usuarios asesor2 ON l.idAsesor = asesor2.id_usuario
-		LEFT JOIN usuarios coordinador2 ON asesor2.id_lider = coordinador2.id_usuario
-        LEFT JOIN usuarios gerente2 ON coordinador2.id_lider = gerente2.id_usuario
+        LEFT JOIN usuarios asesor2 ON asesor2.id_usuario = l.idAsesor
+		LEFT JOIN usuarios coordinador2 ON coordinador2.id_usuario = asesor2.id_lider
+        LEFT JOIN usuarios gerente2 ON gerente2.id_usuario = coordinador2.gerente_id
 
 	    WHERE l.status = 1 and l.idCondominio = " . $idCondominio . "
 
