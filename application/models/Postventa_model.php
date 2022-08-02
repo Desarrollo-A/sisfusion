@@ -72,9 +72,12 @@ class Postventa_model extends CI_Model
             $this->db->query("INSERT INTO documentos_escrituracion VALUES('creacion de rama', null, GETDATE(), 1,  $insert_id,
             $idUsuario, $opcion, $idUsuario, $idUsuario, GETDATE(), NULL, NULL, NULL);");
         }
-        for($x=0;$x<3;$x++){
-            $this->db->query("INSERT INTO Presupuestos VALUES('', $insert_id, 0, $x+1,  GETDATE(),
-            $idUsuario, $idUsuario);");
+        $y=0;
+
+        for($x=0;$x<9;$x++){
+            $y = $y<3 ? $y+1:1;
+            $this->db->query("INSERT INTO Presupuestos (expediente, idSolicitud, estatus, tipo, fecha_creacion, creado_por, modificado_por, bandera) 
+            VALUES('', $insert_id, 0, $y,  GETDATE(), $idUsuario, $idUsuario, NULL);");
         }
 
         return $this->db->query("INSERT INTO control_estatus VALUES(0, 59, 4, GETDATE(), 1,$insert_id, $rol,0,'','');");
@@ -131,7 +134,10 @@ class Postventa_model extends CI_Model
             if ($estatus == 90) {
                 $newStatus = 16;
                 $next = $newStatus + 1;
-            } else {
+            }elseif($estatus == 92){
+                $newStatus = 4;
+                $next = $newStatus + 1;
+            }else {
                 $newStatus = $estatus + 1;
                 $next = $newStatus + 1;
             }
@@ -150,6 +156,14 @@ class Postventa_model extends CI_Model
             if($estatus == 12){
                 $newStatus = 10;
                 $next = 11;
+            }
+        }elseif($type == 5){
+            if ($estatus == 0) {
+                $newStatus = 91;
+                $next = 92;
+            } else if($estatus == 91 || $estatus == 92) {
+                $newStatus = 92;
+                $next = 4;
             }
         }
 
@@ -256,7 +270,7 @@ class Postventa_model extends CI_Model
         (CASE WHEN CONCAT(us2.nombre, ' ', us2.apellido_paterno, ' ', us2.apellido_materno) = '' THEN 'Sin especificar' ELSE CONCAT(us2.nombre, ' ', us2.apellido_paterno, ' ', us2.apellido_materno) END),
         de.estatus_validacion, de.editado
             UNION ALL
-            SELECT pr.idPresupuesto idDocumento, CONCAT('Presupuesto ', oxc.nombre) nombre, pr.expediente, 13 tipo_documento, pr.idSolicitud,  CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) creado_por, pr.fecha_creacion, 
+            SELECT pr.idPresupuesto idDocumento, CONCAT('Presupuesto ', oxc.nombre, ' - ', nota.nombre_notaria) nombre, pr.expediente, 13 tipo_documento, pr.idSolicitud,  CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) creado_por, pr.fecha_creacion, 
             se.estatus estatusActual,
             (CASE WHEN de.estatus_validacion IS NULL THEN 'Sin validar' WHEN de.estatus_validacion = 1 THEN 'Validado OK' WHEN de.estatus_validacion = 2 THEN 'Rechazado' END) estatus_validacion,
             (CASE WHEN de.estatus_validacion IS NULL THEN '#566573' WHEN de.estatus_validacion = 1 THEN '#239B56' WHEN de.estatus_validacion = 2 THEN '#C0392B' END) colour,
@@ -275,6 +289,8 @@ class Postventa_model extends CI_Model
             LEFT JOIN motivos_rechazo_x_documento mrxd ON mrxd.id_documento = de.idDocumento AND mrxd.estatus = 1 
             LEFT JOIN motivos_rechazo mr ON mr.id_motivo = mrxd.id_motivo
             INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = pr.tipo AND oxc.id_catalogo = 69
+            INNER JOIN notarias_x_usuario nxu ON nxu.idNxS = pr.idNxS
+			INNER JOIN Notarias nota ON nota.idNotaria = nxu.id_notaria
             WHERE pr.idSolicitud = $idSolicitud AND pr.expediente != ''
              GROUP BY
         pr.idPresupuesto , pr.expediente, pr.idSolicitud, oxc.nombre, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno), pr.fecha_creacion, 
@@ -282,7 +298,7 @@ class Postventa_model extends CI_Model
             (CASE WHEN de.estatus_validacion IS NULL THEN 'Sin validar' WHEN de.estatus_validacion = 1 THEN 'Validado OK' WHEN de.estatus_validacion = 2 THEN 'Rechazado' END),
             (CASE WHEN de.estatus_validacion IS NULL THEN '#566573' WHEN de.estatus_validacion = 1 THEN '#239B56' WHEN de.estatus_validacion = 2 THEN '#C0392B' END) ,
             (CASE WHEN CONCAT(us2.nombre, ' ', us2.apellido_paterno, ' ', us2.apellido_materno) = '' THEN 'Sin especificar' ELSE CONCAT(us2.nombre, ' ', us2.apellido_paterno, ' ', us2.apellido_materno) END),
-            de.estatus_validacion, pr.estatus");
+            de.estatus_validacion, pr.estatus,nota.nombre_notaria");
         return $query->result();
     }
 
@@ -468,9 +484,9 @@ function checkBudgetInfo($idSolicitud){
 		WHERE idSolicitud = $id_solicitud");
     }
 
-    function addPresupuesto($updateDocumentData, $idSolicitud, $presupuestoType)
+    function addPresupuesto($updateDocumentData, $idSolicitud, $presupuestoType, $idPresupuesto = null)
     {
-        $response = $this->db->update("Presupuestos", $updateDocumentData, array("idSolicitud" => $idSolicitud, "tipo" =>$presupuestoType));
+        $response = $this->db->update("Presupuestos", $updateDocumentData, array("idSolicitud" => $idSolicitud, "tipo" =>$presupuestoType, "idPresupuesto"=> $idPresupuesto));
         if (!$response) {
             return 0;
         } else {
@@ -571,5 +587,31 @@ function checkBudgetInfo($idSolicitud){
         $query = $this->db->query("SELECT * FROM opcs_x_cats WHERE id_catalogo = 70");
         return $query->result_array();
     }
+
+    function getNotariasXUsuario($idSolicitud)
+    {
+        $query = $this->db->query("SELECT nxu.*, n.nombre_notaria, n.direccion FROM notarias_x_usuario nxu 
+        INNER JOIN Notarias n ON n.idNotaria = nxu.id_notaria
+        WHERE id_solicitud = $idSolicitud AND estatus = 1");
+        return $query->result_array();
+    }
+
+    function getPresupuestosUpload($idNxS)
+    {
+        $query = $this->db->query("SELECT  TOP (3) oxc.nombre, pres.idPresupuesto, pres.expediente,pres.tipo, pres.idNxS,  nxu.* FROM notarias_x_usuario nxu
+        INNER JOIN Presupuestos pres ON pres.idSolicitud = nxu.id_solicitud AND (pres.idNxS = nxu.idNxS OR pres.idNxs IS NULL)
+        INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = pres.tipo AND oxc.id_catalogo = 69
+        WHERE nxu.idNxS = $idNxS");
+        return $query->result_array();
+    }
+
+    function updatePresupuestosNXU($idSolicitud, $idNotaria)
+    {
+        $response = $this->db->query("UPDATE Presupuestos SET idNxS = (SELECT idNxS FROM notarias_x_usuario WHERE id_notaria = $idNotaria AND id_solicitud = $idSolicitud) 
+        WHERE idPresupuesto IN (SELECT MIN(idPresupuesto) id FROM Presupuestos WHERE idSolicitud = $idSolicitud AND idNxS IS NULL
+            GROUP BY tipo, idNxS)");
+    }
+    
+
     
 }

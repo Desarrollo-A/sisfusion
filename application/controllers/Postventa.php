@@ -642,7 +642,7 @@ class Postventa extends CI_Controller
     {
         $id_solicitud = $_POST['id_solicitud'];
         $type = $_POST['type'];
-        if ($type == 1 || $type == 3 || $type == 4) {
+        if ($type == 1 || $type == 3 || $type == 4 || $type == 5) {
             $comentarios = $_POST['comentarios'];
             $informacion = $this->Postventa_model->changeStatus($id_solicitud, $type, $comentarios, 0);
         }elseif ($type == 2) {
@@ -663,8 +663,12 @@ class Postventa extends CI_Controller
         $idSolicitud = $this->input->post('idSolicitud');
         $documentType = $this->input->post('documentType');
         $presupuestoType = null;
+        $idPresupuesto = null;
+        $idNxS = null;
         if( $documentType == 13){
             $presupuestoType = $this->input->post('presupuestoType');
+            $idPresupuesto = $this->input->post('idPresupuesto');
+            $idNxS = $this->input->post('idNxS');
         }
         $documentName = $this->Postventa_model->generateFilename($idSolicitud, $documentType)->row();
         $documentInfo = $documentName;
@@ -674,7 +678,7 @@ class Postventa extends CI_Controller
             $documentName = $documentName->fileName . '.' . substr(strrchr($_FILES["uploadedDocument"]["name"], '.'), 1);
         }
         $folder = $this->getFolderFile($documentType);
-        $this->updateDocumentBranch($file, $folder, $documentName, $idSolicitud, $documentType, $documentInfo->expediente, $documentInfo->idDocumento, $presupuestoType, $documentInfo->estatus_validacion);
+        $this->updateDocumentBranch($file, $folder, $documentName, $idSolicitud, $documentType, $documentInfo->expediente, $documentInfo->idDocumento, $presupuestoType, $documentInfo->estatus_validacion, $idPresupuesto, $idNxS);
     }
 
     public function uploadFile2()
@@ -755,7 +759,7 @@ class Postventa extends CI_Controller
         return $folder;
     }
 
-    function updateDocumentBranch($file, $folder, $documentName, $idSolicitud, $documentType, $exists, $idDocumento, $presupuestoType = null, $estatus_validacion = null)
+    function updateDocumentBranch($file, $folder, $documentName, $idSolicitud, $documentType, $exists, $idDocumento, $presupuestoType = null, $estatus_validacion = null, $idPresupuesto = null, $idNxS= null)
     {
         $movement = move_uploaded_file($file["tmp_name"], $folder . $documentName);
         $validateMovement = $movement == FALSE ? 0 : 1;
@@ -788,8 +792,9 @@ class Postventa extends CI_Controller
                 $updateDocumentData = array(
                     "expediente" => $documentName,
                     "modificado_por" => $idUsuario,
+                    "idNxS" => $idNxS
                 );
-                $response = $this->Postventa_model->addPresupuesto($updateDocumentData, $idSolicitud, $presupuestoType);
+                $response = $this->Postventa_model->addPresupuesto($updateDocumentData, $idSolicitud, $presupuestoType, $idPresupuesto);
             }
             echo json_encode($response);
         } else if ($exists == 99) {
@@ -1808,4 +1813,47 @@ class Postventa extends CI_Controller
         $resDecode = json_decode(base64_decode($result));
         return $resDecode; 
     }
+
+    function getNotariasXUsuario(){
+        $idSolicitud = $_POST['idSolicitud'];
+        if($idSolicitud != ''){
+            $data = $this->Postventa_model->getNotariasXUsuario($idSolicitud);
+        }else{
+            $data = null;
+        }
+        if ($data != null)
+            echo json_encode($data);
+        else
+            echo json_encode(array());
+    }
+
+    function saveNotaria(){
+        $idSolicitud = $_POST['idSolicitud'];
+        $idNotaria = $_POST['idNotaria'];
+        $arrayData = array(
+            "id_solicitud" => $idSolicitud,
+            "id_notaria" => $idNotaria,
+            "estatus" => 1
+        );
+        $data = $this->General_model->addRecord('notarias_x_usuario', $arrayData);
+        $data2 = $this->updatePresupuestosNXU($idSolicitud, $idNotaria);
+        if ($data != null)
+            echo json_encode($data);
+        else
+            echo json_encode(array());
+    }
+
+    function getPresupuestosUpload(){
+        $idNxS = $_POST['idNxS'];
+        $data = $this->Postventa_model->getPresupuestosUpload($idNxS);
+        if ($data != null)
+            echo json_encode($data);
+        else
+            echo json_encode(array());
+    }
+
+    function updatePresupuestosNXU($idSolicitud, $idNotaria){
+        $data = $this->Postventa_model->updatePresupuestosNXU($idSolicitud, $idNotaria);
+    }
+    
 }
