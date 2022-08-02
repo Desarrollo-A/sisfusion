@@ -52,8 +52,8 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/3.7.0/lodash.min.js"></script>
 	<script type="text/javascript" src="<?= base_url("static/js/angularjs-dropdown-multiselect.js")?>"></script>
 	<script type="text/javascript" src="<?= base_url("static/js/calcularAC.js")?>"></script>
-	<script type="text/javascript" src="<?= base_url("dist/js/controllers/fileServer.js")?>"></script>
-
+<!--	<script type="text/javascript" src="--><?//= base_url("dist/js/controllers/fileServer.js")?><!--"></script>-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/1.3.8/FileSaver.js"></script>
 
 	<script type="text/javascript" src="https://cdn.jsdelivr.net/angular.checklist-model/0.1.3/checklist-model.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.22/pdfmake.min.js"></script>
