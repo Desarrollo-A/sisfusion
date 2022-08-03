@@ -302,6 +302,7 @@
         var tr;
         
         $("#form_descuentos").on('submit', function(e){ 
+            $("#idloteorigen").prop("disabled", false);
             e.preventDefault();
             document.getElementById('btn_abonar').disabled=true;
             let formData = new FormData(document.getElementById("form_descuentos"));
@@ -353,6 +354,7 @@
         });
 
         $("#form_descuentos2").on('submit', function(e){ 
+            $("#idloteorigen2").prop("disabled", false);
             e.preventDefault();
             document.getElementById('btn_abonar2').disabled=true;
 
@@ -742,6 +744,7 @@
             var parent = $(this).val();
             document.getElementById('monto').value = ''; 
             document.getElementById('idmontodisponible').value = ''; 
+            document.getElementById('comentario').value = '';
 
             $('#usuarioid option').remove();
             $.post('getUsuariosRol/'+parent+"/"+1, function(data) {
@@ -764,6 +767,7 @@
             var parent = $(this).val();
             document.getElementById('monto2').value = ''; 
             document.getElementById('idmontodisponible2').value = '';
+            document.getElementById('comentario2').value = '';
             $('#usuarioid2 option').remove();
     
             $.post('getUsuariosRol/'+parent, function(data) {
@@ -791,7 +795,9 @@
         $("#usuarioid").change(function() {
             document.getElementById('monto').value = ''; 
             document.getElementById('idmontodisponible').value = ''; 
-            
+            document.getElementById('comentario').value = '';
+            document.getElementById('montodisponible').innerHTML = '';
+
             var user = $(this).val();
             $('#idloteorigen option').remove(); // clear all values
             $.post('getLotesOrigen/'+user+'/'+1, function(data) {
@@ -809,14 +815,24 @@
 
                 if(len<=0){
                     $("#idloteorigen").append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
+                }else{
+                    console.log('dfsdfsf');
+                    //$('#idloteorigen').select2('data').disabled = true;
+                    $("#idloteorigen").prop("disabled", true);
+                    
+                //    $("#idloteorigen").selectpicker('refresh');
                 }
                 $("#idloteorigen").selectpicker('refresh');
-            }, 'json');      
+            }, 'json');   
+            document.getElementById("monto").focus();
+            alerts.showNotification("top", "right", "Debe ingresar el monto a descontar, antes de seleccionar pagos.", "warning");
         });
         
         $("#usuarioid2").change(function() {
             document.getElementById('monto2').value = ''; 
             document.getElementById('idmontodisponible2').value = ''; 
+            document.getElementById('comentario2').value = '';
+            document.getElementById('montodisponible2').innerHTML = '';
 
             var user = $(this).val();
             $('#idloteorigen2 option').remove(); // clear all values
@@ -835,6 +851,8 @@
 
                 if(len<=0){
                     $("#idloteorigen2").append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
+                }else{
+                    $("#idloteorigen2").prop("disabled", true);
                 }
 
                 $("#idloteorigen2").selectpicker('refresh');
@@ -843,6 +861,8 @@
 
         /**--------------------------------------------------- */
         $("#idloteorigen").change(function() {
+           
+
             let cuantos = $('#idloteorigen').val().length;
             let suma =0;
             
@@ -852,7 +872,7 @@
                     datos = comision[index].split(',');
                     let id = datos[0];
                     let monto = datos[1];
-                    document.getElementById('monto').value = ''; 
+                    //document.getElementById('monto').value = ''; 
                     
                     $.post('getInformacionData/'+id+'/'+1, function(data) {
                         var disponible = (data[0]['comision_total']-data[0]['abono_pagado']);
@@ -869,6 +889,7 @@
                         }
                         
                         $("#montodisponible").selectpicker('refresh');
+                        verificarMontos();
                     }, 'json');
                 }
             }
@@ -877,7 +898,7 @@
                 datos = comision[0].split(',');
                 let id = datos[0];
                 let monto = datos[1];
-                document.getElementById('monto').value = ''; 
+              //  document.getElementById('monto').value = ''; 
                 $.post('getInformacionData/'+id+'/'+1, function(data) {
                     var disponible = (data[0]['comision_total']-data[0]['abono_pagado']);
                     var idecomision = data[0]['id_pago_i'];
@@ -894,8 +915,10 @@
                     }
 
                     $("#montodisponible").selectpicker('refresh');
+                    verificarMontos();
                 }, 'json'); 
             }
+           
         });
 
         $("#idloteorigen2").change(function() {
@@ -907,7 +930,7 @@
                     datos = comision[index].split(',');
                     let id = datos[0];
                     let monto = datos[1];
-                    document.getElementById('monto2').value = ''; 
+                    //document.getElementById('monto2').value = ''; 
                     $.post('getInformacionData/'+id+'/'+2, function(data) {
                         var disponible = (data[0]['comision_total']-data[0]['abono_pagado']);
                         var idecomision = data[0]['id_pago_i'];
@@ -923,7 +946,9 @@
                         }
                         
                         $("#montodisponible2").selectpicker('refresh');
+                        verificarMontos2();
                     }, 'json');
+                    
                 }
             }
             else{
@@ -931,7 +956,7 @@
                 datos = comision[0].split(',');
                 let id = datos[0];
                 let monto = datos[1];
-                document.getElementById('monto2').value = ''; 
+                //document.getElementById('monto2').value = ''; 
                 $.post('getInformacionData/'+id+'/'+2, function(data) {
                     var disponible = (data[0]['comision_total']-data[0]['abono_pagado']);
                     var idecomision = data[0]['id_pago_i'];
@@ -947,7 +972,9 @@
                         $("#idmontodisponible2").val('$'+formatMoney(0));
                     }
                     $("#montodisponible2").selectpicker('refresh');
+                    verificarMontos2();
                 }, 'json'); 
+                
 
             }
         });
@@ -1000,87 +1027,167 @@
                 }
             }
         });
-
-        function verificar(){
-            let disponible = parseFloat($('#valor_comision').val()).toFixed(2);
-            let monto = parseFloat($('#monto').val()).toFixed(2);
-            if(monto < 1 || isNaN(monto)){
-                alerts.showNotification("top", "right", "Debe ingresar un monto mayor a 0.", "warning");
-                document.getElementById('btn_abonar').disabled=true; 
-            }
-            else{
-                if(parseFloat(monto) <= parseFloat(disponible) ){
+        function replaceAll(text, busca, reemplaza) {
+        while (text.toString().indexOf(busca) != -1)
+            text = text.toString().replace(busca, reemplaza);
+        return text;
+         }
+        function verificarMontos(){
+            
+           // let disponible = parseFloat($('#valor_comision').val()).toFixed(2);
+            let disponible = replaceAll($('#valor_comision').val(), '$', '');
+            disponible = replaceAll(disponible, ',', '');
+           // let monto = parseFloat($('#monto').val()).toFixed(2);
+            let monto = replaceAll($('#monto').val(), ',', '');
+            //monto = replaceAll(monto, ',', '');
+            let cuantos = $('#idloteorigen').val().length;
+            console.log(monto);
+            console.log(disponible);
+            if(parseFloat(monto) <= parseFloat(disponible) ){
+                $("#idloteorigen").prop("disabled", true);
+                $("#btn_abonar").prop("disabled", false);    
                     let cantidad = parseFloat($('#numeroP').val());
                     resultado = monto /cantidad;
                     $('#pago').val(formatMoney(resultado));
                     document.getElementById('btn_abonar').disabled=false;
 
-                    let cuantos = $('#idloteorigen').val().length;
+                  
                     let cadena = '';
                     var data = $('#idloteorigen').select2('data')
                     for (let index = 0; index < cuantos; index++) {
                         let datos = data[index].id;
                         let montoLote = datos.split(',');
-                        let abono_neo = montoLote[1];
+                        /*let abono_neo = montoLote[1];
                         if(parseFloat(abono_neo) > parseFloat(monto) && cuantos > 1){
                             document.getElementById('msj2').innerHTML="El monto ingresado se cubre con la comisión "+data[index].text;
                             document.getElementById('btn_abonar').disabled=true; 
                             break;  
-                        }
+                        }*/
                         cadena = cadena+' , '+data[index].text;
                         document.getElementById('msj2').innerHTML='';
                     }
                     $('#comentario').val('Lotes involucrados en el descuento: '+cadena+'. Por la cantidad de: $'+formatMoney(monto));
                 }
                 else if(parseFloat(monto) > parseFloat(disponible) ){
-                    alerts.showNotification("top", "right", "Monto a descontar mayor a lo disponible", "danger");
+                   // alerts.showNotification("top", "right", "Monto a descontar mayor a lo disponible", "danger");
                     
-                    document.getElementById('monto').value = ''; 
+                    //document.getElementById('monto').value = ''; 
                     document.getElementById('btn_abonar').disabled=true; 
                 }
-            }      
         }
+        /*function verificar(){
+            let disponible = replaceAll($('#valor_comision').val(), '$', '');
+            disponible = replaceAll(disponible, ',', '');
+            let monto = replaceAll($('#monto').val(), ',', '');
+           
+            if(parseFloat(monto) < 1 || isNaN(monto)){
+                alerts.showNotification("top", "right", "Debe ingresar un monto mayor a 0.", "warning");
+                document.getElementById('btn_abonar').disabled=true; 
+            }
+            else{
+                console.log(disponible)
+                console.log(monto)
+
+                if(parseFloat(disponible) > parseFloat(monto)){
+                    $("#idloteorigen").prop("disabled", true);
+                }else{
+                    $("#idloteorigen").prop("disabled", false);
+                }
+                console.log('essfsf');     
+            }      
+        }*/
+
+         function verificar(){
+            let disponible = $('#valor_comision').val();
+            //
+            let monto = replaceAll($('#monto').val(), ',', '');
+            
+            // let monto = parseFloat($('#monto').val()).toFixed(2);
+             if(monto < 1 || isNaN(monto)){
+                 alerts.showNotification("top", "right", "Debe ingresar un monto mayor a 0.", "warning");
+                 document.getElementById('btn_abonar').disabled=true; 
+             }
+             else{
+                console.log(disponible)
+                console.log(monto)
+                if(disponible !== '' && disponible !== undefined && disponible !== 'undefined'){
+                    disponible = replaceAll($('#valor_comision').val(), '$', '');
+                    disponible = replaceAll(disponible, ',', '');
+                    if(parseFloat(disponible) > parseFloat(monto)){
+                    $("#idloteorigen").prop("disabled", true);
+                    }else{
+                        $("#idloteorigen").prop("disabled", false);
+                    }
+                }else{
+                    $("#idloteorigen").prop("disabled", false);
+                }
+                
+                
+             }      
+         }
+         function verificarMontos2(){
+            
+            // let disponible = parseFloat($('#valor_comision').val()).toFixed(2);
+             let disponible = replaceAll($('#valor_comision2').val(), '$', '');
+             disponible = replaceAll(disponible, ',', '');
+            // let monto = parseFloat($('#monto').val()).toFixed(2);
+             let monto = replaceAll($('#monto2').val(), ',', '');
+             //monto = replaceAll(monto, ',', '');
+             let cuantos = $('#idloteorigen2').val().length;
+             console.log(monto);
+             console.log(disponible);
+             if(parseFloat(monto) <= parseFloat(disponible) ){
+                 $("#idloteorigen2").prop("disabled", true);
+                 $("#btn_abonar2").prop("disabled", false);
+                     let cantidad = parseFloat($('#numeroP2').val());
+                     resultado = monto /cantidad;
+                     $('#pago2').val(formatMoney(resultado));
+                     document.getElementById('btn_abonar2').disabled=false;
+ 
+                   
+                     let cadena = '';
+                     var data = $('#idloteorigen2').select2('data')
+                     for (let index = 0; index < cuantos; index++) {
+                         let datos = data[index].id;
+                         let montoLote = datos.split(',');
+                         /*let abono_neo = montoLote[1];
+                         if(parseFloat(abono_neo) > parseFloat(monto) && cuantos > 1){
+                             document.getElementById('msj2').innerHTML="El monto ingresado se cubre con la comisión "+data[index].text;
+                             document.getElementById('btn_abonar').disabled=true; 
+                             break;  
+                         }*/
+                         cadena = cadena+' , '+data[index].text;
+                         document.getElementById('msj').innerHTML='';
+                     }
+                     $('#comentario2').val('Lotes involucrados en el descuento: '+cadena+'. Por la cantidad de: $'+formatMoney(monto));
+                 }
+                 else if(parseFloat(monto) > parseFloat(disponible) ){
+                    // alerts.showNotification("top", "right", "Monto a descontar mayor a lo disponible", "danger");
+                     
+                     //document.getElementById('monto').value = ''; 
+                     document.getElementById('btn_abonar2').disabled=true; 
+                 }
+         }
 
         function verificar2(){
-            let disponible = parseFloat($('#valor_comision2').val()).toFixed(2);
+            let disponible = $('#valor_comision2').val();
             let monto = parseFloat($('#monto2').val()).toFixed(2);
             if(monto < 1 || isNaN(monto)){
                 alerts.showNotification("top", "right", "Debe ingresar un monto mayor a 0.", "warning");
                 document.getElementById('btn_abonar2').disabled=true; 
             }
             else{
-                if(parseFloat(monto) <= parseFloat(disponible) ){
-                    let cantidad = parseFloat($('#numeroP2').val());
-                    resultado = monto /cantidad;
-                    $('#pago2').val(formatMoney(resultado));
-                    document.getElementById('btn_abonar2').disabled=false;
-
-                    let cuantos = $('#idloteorigen2').val().length;
-                    let cadena = '';
-                    var data = $('#idloteorigen2').select2('data');
-                    $suma = 0;
-                    for (let index = 0; index < cuantos; index++) {
-                        let datos = data[index].id;
-                        let montoLote = datos.split(',');
-                        let abono_neo = montoLote[1];
-                        if(parseFloat(abono_neo) > parseFloat(monto) && cuantos > 1){
-                            document.getElementById('msj').innerHTML="El monto ingresado se cubre con la comisión "+data[index].text;
-                            document.getElementById('btn_abonar2').disabled=true; 
-                            break;  
-                        }
-                    
-                        cadena = cadena+' , '+data[index].text;
-                        document.getElementById('msj').innerHTML='';
+                console.log(disponible)
+                if(disponible != '' && disponible !== undefined && disponible != 'undefined'){
+                    disponible = replaceAll($('#valor_comision').val(), '$', '');
+                    if(parseFloat(disponible) > parseFloat(monto)){
+                    $("#idloteorigen2").prop("disabled", true);
+                    }else{
+                        $("#idloteorigen2").prop("disabled", false);
                     }
-                    $('#comentario2').val('Lotes involucrados en el descuento: '+cadena+'. Por la cantidad de: $'+formatMoney(monto));
-                }
-                else if(parseFloat(monto) > parseFloat(disponible) ){
-                    alerts.showNotification("top", "right", "Monto a descontar mayor a lo disponible", "danger");
-                    
-                    document.getElementById('monto2').value = ''; 
-                    document.getElementById('btn_abonar2').disabled=true; 
-                }
-            }    
+                }else{
+                    $("#idloteorigen2").prop("disabled", false);
+                }            }    
         }
     </script>
 </body>
