@@ -2307,7 +2307,7 @@ class Caja_outside extends CI_Controller
         $salesPartnerInformation = $this->caja_model_outside->getSalesPartnerInformation($data->id_cliente)->result_array();
 
         if (COUNT($salesPartnerInformation) >= 1) { // SÍ EXISTEN REGISTROS EN VENTAS COMPARTIDAS
-            echo 'ENTRA IF DE SÍ HAY REGISTROS <br>';
+            // echo 'ENTRA IF DE SÍ HAY REGISTROS <br>';
             if ($clientInformation->id_asesor == $data->id_asesor) { // LOS REGISTROS SON IGUALES (ASESOR)
                 $response['message'] = 'ERROR';
             } else {
@@ -2325,7 +2325,7 @@ class Caja_outside extends CI_Controller
                 }
             }
         } else { // NO EXISTEN REGISTROS EN VENTAS COMPARTIDAS
-            echo 'ENTRA ELSE DE NO HAY REGISTROS<br>';
+            // echo 'ENTRA ELSE DE NO HAY REGISTROS<br>';
             if ($clientInformation->id_asesor == $data->id_asesor) { // LOS REGISTROS SON IGUALES (ASESOR)
                 $response['message'] = 'ERROR';
             } else {
@@ -2443,7 +2443,7 @@ class Caja_outside extends CI_Controller
             $data_request_prospecto = $this->caja_model_outside->getProspectByIdClient($id_cliente);
             $id_prospecto = $data_request_prospecto[0]['id_prospecto'];
 
-            $request_update_prospecto = updateProspectoCTN($id_prospecto, $dato);
+            $request_update_prospecto =  $this->caja_model_outside->updateProspectoCTN($id_prospecto, $dato);
             if ($request_update_prospecto >= 1) {
                 $response['message_upd_prospecto'] = 'Se actualizó correctamente el prospecto.';
             }
@@ -2619,36 +2619,6 @@ class Caja_outside extends CI_Controller
                     echo json_encode(array("status" => 400, "message" => "Oops, algo salió mal. Inténtalo más tarde."), JSON_UNESCAPED_UNICODE);
             }
         }
-    }
-
-    public function generateToken()
-    {
-        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-        $this->load->view('template/header');
-        $this->load->view("token/generateToken", $datos);
-    }
-
-    public function getTokensInformation()
-    {
-        $data['data'] = $this->caja_model_outside->getTokensInformation()->result_array();
-        echo json_encode($data, JSON_NUMERIC_CHECK);
-    }
-
-    public function reviewTokenEvidence()
-    {
-        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-        $this->load->view('template/header');
-        $this->load->view("token/reviewTokenEvidence", $datos);
-    }
-
-    public function validarToken()
-    {
-        if(isset($_POST) && !empty($_POST)){
-            $data = array ("estatus" => $this->input->post("action"));
-            $response = $this->General_model->updateRecord('tokens',  $data, 'id_token', $this->input->post("id"));
-            echo json_encode($response);
-        }
-
     }
 
     public function getEmpresasLargoList()

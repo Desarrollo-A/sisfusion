@@ -235,6 +235,11 @@
         // $query = $this->db->get();
         // return $query->result_array();
     }
+    public function getCondominioDisMora($residencial) {
+        $query = $this->db->query("SELECT con.idCondominio, con.nombre FROM [condominios] con JOIN [lotes] ON con.idCondominio = lotes.idCondominio 
+                                    WHERE lotes.idStatusLote in ('1', '3') AND con.status = '1' AND idResidencial = ".$residencial." GROUP BY con.idCondominio, con.nombre ORDER BY con.nombre ASC");
+        return $query->result_array();
+    }
 
 
     public function getRol($id_asesor) {
@@ -443,7 +448,72 @@
         return $query->row();
     }
 
+    function getCorridasPCByLote($idLote){
+        $id_usuario = $this->session->userdata('id_usuario');
+        $query = $this->db->query("SELECT *, c.nombre as nombreCondominio, pc.fecha_creacion as fecha_creacionpc, 
+        CONCAT(u.nombre,' ', u.apellido_paterno,' ', u.apellido_materno) as nombre_creador
+        FROM pagos_capital pc
+        INNER JOIN lotes l ON l.idLote = pc.idLote
+        INNER JOIN condominios c ON c.idCondominio = l.idCondominio
+        INNER JOIN residenciales r ON r.idResidencial = c.idResidencial
+        /*INNER JOIN clientes cl ON l.idCliente = cl.id_cliente*/
+        INNER JOIN usuarios u ON u.id_usuario = pc.creado_por WHERE pc.idLote=".$idLote);
+        return $query->result_array();
+    }
+    public function getLotesPC($condominio,$residencial){
+        $query = $this->db->query("SELECT l.idLote, nombreLote, idStatusLote, pc.creado_por FROM  lotes l
+                        INNER JOIN pagos_capital pc ON l.idLote = pc.idLote
+                        /*INNER JOIN clientes cl ON cl.id_cliente = l.idCliente*/
+                        INNER JOIN usuarios u ON u.id_usuario = pc.creado_por
+                        WHERE l.idCondominio = ".$condominio." AND pc.creado_por=".$this->session->userdata('id_usuario')."
+                        GROUP BY l.idLote, nombreLote, idStatusLote, pc.creado_por;");
+        if($query){
+            $query = $query->result_array();
+            return $query;
+        }
+    }
 
+    public function getInfoPCyID($id_corrida){
+        $query = $this->db->query("SELECT  *, c.idCondominio, r.idResidencial, l.idLote, pc.estatus as corridaStatus, pc.fecha_creacion as creacionpc,
+        pc.porcentajeEng as porcentajePC, pc.engancheCantidad as enganchePC,
+        l.porcentaje as porcentajeLote, l.enganche as engancheLote,
+        CASE WHEN pc.apartado IS NULL THEN 0
+		ELSE pc.apartado END 
+		as apartado
+        FROM pagos_capital pc 
+        INNER JOIN lotes l ON pc.idLote = l.idLote
+        INNER JOIN condominios c ON l.idCondominio=c.idCondominio
+        INNER JOIN residenciales r ON c.idResidencial=r.idResidencial
+        /*INNER JOIN clientes cl ON cl.id_cliente = l.idCliente */
+        WHERE pc.id_pc = ".$id_corrida);
+        return $query->row();
+    }
+
+    function getAllLotesY($idCondominio){
+        $query = $this->db->query("SELECT lo.idLote, lo.nombreLote, lo.total, lo.sup FROM lotes lo
+			LEFT JOIN clientes cl ON cl.idLote = lo.idLote AND cl.id_cliente = lo.idCliente 
+			WHERE lo.idCondominio IN (".$idCondominio.")");
+        return $query->result();
+    }
+    public function getLotesInfoY($lote)
+    {
+            $query = $this->db->query("SELECT lot.idLote, nombreLote, total, sup, precio, porcentaje, enganche, con.msni, 
+            descSup1, descSup2, referencia, db.banco, db.cuenta, db.empresa, db.clabe, lot.casa, (
+            CASE lot.casa
+            WHEN 0 THEN ''
+            WHEN 1 THEN  casas.casasDetail
+            END) casasDetail, idStatusLote, cl.fechaApartado, cl.id_cliente, CONCAT(cl.nombre,'', cl.apellido_paterno,' ', cl.apellido_materno) as nombre_cliente
+                                    FROM lotes lot LEFT JOIN condominios con ON lot.idCondominio = con.idCondominio LEFT JOIN residenciales res 
+                                    ON con.idResidencial = res.idResidencial LEFT JOIN datosbancarios db ON con.idDBanco = db.idDBanco 
+                                    LEFT JOIN (SELECT id_lote, CONCAT( '{''total_terreno'':''', total_terreno, ''',', tipo_casa, '}') casasDetail 
+            						FROM casas WHERE estatus = 1) casas ON casas.id_lote = lot.idLote
+                                    LEFT JOIN clientes cl ON lot.idLote = cl.idLote AND cl.status=1
+                                    WHERE lot.idLote = ".$lote ) ; /*1: original*/
+        if ($query) {
+            $query = $query->result_array();
+            return $query;
+        }
+    }
 
 
 }

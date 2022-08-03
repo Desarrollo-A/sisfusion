@@ -14,6 +14,8 @@
                 <div class="modal-body">
                     <textarea class="text-modal scroll-styles" type="text" name="observations" id="observations" autofocus="true" onkeyup="javascript:this.value=this.value.toUpperCase();" placeholder="Escriba aquí su comentario"></textarea>
                     <input type="hidden" name="id_solicitud" id="id_solicitud">
+                    <input type="hidden" name="type" id="type">
+
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
@@ -82,7 +84,9 @@
                 <input type="text" class="hide" id="action">
                 <input type="text" class="hide" id="details">
                 <input type="text" class="hide" id="presupuestoType">
-                
+                <input type="text" class="hide" id="idPresupuesto">
+                <input type="text" class="hide" id="idNxS">
+
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
@@ -702,6 +706,22 @@
                     </div>
                 </div>
             </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="loadPresupuestos" data-keyboard="false" data-backdrop="static">
+    <div class="modal-dialog modal-md boxContent">
+        <div class="modal-content">
+            <div class="modal-header text-center">
+                <i data-dismiss="modal" class="fas fa-times fl-r"></i>
+                <h4 class="modal-title card-title fw-500 ">CARGA DE PRESUPUESTOS</h4>
+            </div>
+            <div class="modal-body text-center toolbar m-0 p-0">
+                <input type="text" class="hide" id="idNxS">
+                <div class="d-flex direction-row  p-1 gg-1" id="body_uploads">
+                </div>
+            </div>
         </div>
     </div>
 </div>

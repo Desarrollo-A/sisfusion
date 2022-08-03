@@ -1,6 +1,9 @@
 @import "_base";
 
 .cargarPlan{
+  margin-top: 65px;
+  padding: 30px 15px;
+  min-height: calc(100vh - 65px);
   .nav-tabs-cm{
     background: $platinumLight;
     padding: 0;
@@ -45,524 +48,367 @@
   }
   .tab-content{
     padding: 15px;
-    .select2-selection--multiple{
-      display: flex;
-      align-items: center;
-      background-color: $platinum!important;
-      border: none;
-      border-radius: 27px;
-      .select2-selection__choice{
+    #boxMainForm{
+      height: 540px;
+      overflow: auto;
+      .select2-selection--multiple{
         display: flex;
         align-items: center;
-        background-color: $white;
-        height: 25px;
+        background-color: $platinum!important;
         border: none;
         border-radius: 27px;
-        margin: 0 4px;
-        padding: 0 10px;
+        overflow: hidden !important;
+        height: auto !important;
+        .select2-selection__rendered{
+          padding: 0 10px 5px 10px;
+          .select2-selection__choice{
+            display: flex;
+            align-items: center;
+            background-color: $white;
+            height: 25px;
+            border: none;
+            border-radius: 27px;
+            padding: 0 10px;
+          }
+        }
+      }
+      #fechainicio{
+        padding: 0;
+        border-radius: 27px 0 0 27px;
+        padding-left: 8px;
+      }
+      #fechafin{
+        padding: 0;
+        border-radius: 0 27px 27px 0;
+        padding-right: 8px;
+      }
+      .dates{
+        background-image: none;
+        background-color: $platinum;
+        text-align: center;
+        color: $deepGray;
+        height: 100%;
+      }
+      .radio-container {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        background-color: $platinum;
+        height: 40px;
+        border-radius: 27px;
+        
+        input{
+          appearance: none;
+          display: none;
+        }
+        label {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          background-color: inherit;
+          width: 33%;
+          height: 90%;
+          text-align: center;
+          border-radius: 27px;
+          overflow: hidden;
+          transition: linear 0.3s;
+          color: $deepGray;
+          margin: 0;
+          cursor: pointer;
+        }
+        input[type="radio"]:checked + label {
+          background-color: $blueIndigo;
+          color: $white;
+          transition: 0.3s;
+        }
+      }
+      .boxActionsCards{
+        display: flex;
+        justify-content: space-between;
+        .btnAction{
+          width: 48%;
+          background-color: #1341761a;
+          color: $blueIndigo;
+          border-radius: 27px;
+          padding: 8px 12px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          font-size: 14px;
+          border:none;
+        }
+      }
+      @media #{$smartphone}, #{$tablets}{
+        height: auto!important;
+        overflow: hidden!important;
       }
     }
-    #fechainicio{
-      border-radius: 27px 0 0 27px;
-      padding-left: 8px;
-    }
-    #fechafin{
-      border-radius: 0 27px 27px 0;
-      padding-right: 8px;
-    }
-    .dates{
-      background-image: none;
-      background-color: $platinum;
-      text-align: center;
-      color: $deepGray;
-      height: 100%;
-    }
-    .radio-container  {
+    .boxInfoGral{
+      position: absolute;
+      top: 0;
+      right: 20px;
       display: flex;
       justify-content: space-around;
       align-items: center;
-      background-color: $platinum;
-      height: 40px;
-      border-radius: 27px;
-      
-      input{
-        appearance: none;
-        display: none;
-      }
-      label {
+      z-index: 999;
+      .btnDescuento{
+        background-color: #1341761a;
+        color: $blueIndigo;
+        width: 40px;
+        height: 40px;
+        border-radius: 27px;
+        padding: 0;
         display: flex;
         justify-content: center;
         align-items: center;
-        background-color: inherit;
-        width: 33%;
-        height: 90%;
-        text-align: center;
-        border-radius: 27px;
-        overflow: hidden;
-        transition: linear 0.3s;
-        color: $deepGray;
-        margin: 0;
-        cursor: pointer;
-      }
-      input[type="radio"]:checked + label {
-        background-color: $blueIndigo;
-        color: $white;
-        transition: 0.3s;
+        font-size: 15px;
+        border:none;
+        margin-left: 5px;
       }
     }
-    .btn-descuentos{
-      background-color: #1341761a;
-      color: $blueIndigo;
-      width: 40px;
-      height: 40px;
-      border-radius: 27px;
-      padding: 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-size: 15px;
-      border:none;
+    .leyendItems{
       position: absolute;
-      right: 30px;
+      top: -25px;
+      right: 65px;
+      font-size: 18px;
+      .items{
+        font-weight: 400;
+      }
+      @media #{$smartphone}{
+        top: 10px;
+        right: 15px;
+      }
+      @media #{$tablets}{
+        top: 0px;
+        right: 15px;
+      }
+    }
+    #showPackage{
+      height: 520px;
+      padding: 11px 0;
+      overflow: auto;
+      .pt-4{
+        @media #{$smartphone}, #{$tablets}{
+          padding-top: 0!important;
+        }
+      }
+      .emptyCards{
+        color: $deepGray; 
+        img{
+          @media #{$smartphone}, #{$tablets}{
+            width: 40%!important;
+          }
+        }
+      }
+      .cardPlan{
+        height: 480px;
+        overflow: auto;
+        padding: 20px;
+        box-shadow: 0px 2px 9px -12px RGB(0 0 0/42%), 0 4px 20px 0px RGB(0 0 0/12%), 0 8px 10px -5px RGB(0 0 0/20%);
+        border-radius: 10px;
+        margin-bottom: 15px;
+        .title{
+          margin-bottom: 5px;
+          .title-plan{
+            color: $gray;
+          }
+          .btn-trash{
+            background-color: transparent;
+            color: $platinumScroll;
+            width: 35px;
+            height: 35px;
+            border-radius: 27px;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 13px;
+            border:none;
+            position: absolute;
+            right: 15px;
+            z-index: 999;
+            &:hover{
+              background-color: $platinum;
+            }
+          }
+        }
+        .inputPlan {
+          background-color: transparent;
+          color: $gray;
+          border-radius: 27px;
+          background-image: none;
+          padding: 8px 15px;
+          width: 100%;
+          border: 1px solid $platinumScroll;
+        }
+        .boxAllDiscounts{
+          .check__item{
+            label{
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+              padding: 8px 10px;
+              border-radius: 27px;
+              margin: 5px 0;
+              cursor: pointer;
+              font-weight: 100;
+              color: $gray;
+              &:hover{
+                background-color: #1341761a;
+              }
+            }
+          }
+          .boxDetailDiscount{
+            border-radius: 10px;
+            background-color: #5a98df1a;
+            padding: 10px;
+            .txtMSI{
+              text-align: center;
+              font-weight: 400;
+              font-size: 12px;
+            }
+            .select2-selection--multiple{
+              display: flex;
+              align-items: center;
+              background-color: $white!important;
+              border: none;
+              border-radius: 7px;
+              overflow: hidden !important;
+              height: auto !important;
+              .select2-selection__rendered{
+                padding: 0 10px 5px 10px;
+                .select2-search__field{
+                  width: 100%!important;
+                }
+                .select2-selection__choice{
+                  border: none;
+                  background-color: #5a98df1a!important;
+                  border-radius: 5px;
+                  padding: 0 10px;
+                }
+              }
+            }
+            .rowDetailDiscount{
+              color: $blueIndigo;
+              i{
+                color: #849ec1;
+              }
+              .boxOnOff{
+                width: 100%;
+                display: flex;
+                background-color: $white;
+                padding: 5px 7px;
+                border-radius: 27px;
+                justify-content: space-between;
+                .switch-label{
+                  cursor: pointer;
+                }
+                .inputMSI{
+                  width: 50%;
+                  border: none;
+                  text-align: center;
+                  &:read-only{
+                    color: $platinumScroll;
+                  }
+                }
+              }
+            }
+          }
+        }
+        .default__check[type=checkbox] ~ .custom__check{
+          display: flex;
+          align-items: center;
+          height: 16px;
+          border: 2px solid $blueIndigo;
+          position: relative;
+          transition: all 0.4s ease;
+          border-radius: 27px;
+        }
+        .default__check[type=checkbox]:not(.switchbox) ~ .custom__check {
+          justify-content: center;
+          width: 16px;
+        }
+        .default__check[type=checkbox]:checked ~ .custom__check{
+          background-color: $green;
+          border: 2px solid $green;
+        }
+        .loadCard{
+          height: 250px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+        @media #{$smartphone}, #{$tablets}{
+          height: auto!important;
+        }
+      }
+      .switch-label:before, .switch-label:after {
+        content: "";
+        position: absolute;
+        margin: 0;
+        outline: 0;
+        top: 50%;
+        transform: translate(0, -50%);
+        transition: all 0.3s ease;
+      }
+      .switch-label:before {
+        width: 25%;
+        height: 14px;
+        background-color: $platinumScroll;
+        border-radius: 8px;
+      }
+      .switch-label:after {
+        width: 15px;
+        height: 15px;
+        background-color: $white;
+        border-radius: 50%;
+        box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.14), 0 2px 2px 0 rgba(0, 0, 0, 0.098), 0 1px 5px 0 rgba(0, 0, 0, 0.084);
+      }
+      .switch-label .toggle--on {
+        display: none;
+      }
+      .switch-label .toggle--off {
+        display: inline-block;
+      }
+      .switch-input:checked + .switch-label:before {
+        background-color: #A5D6A7;
+      }
+      .switch-input:checked + .switch-label:after {
+        background-color: $green;
+        transform: translate(80%, -50%);
+      }
+      @media #{$smartphone}, #{$tablets}{
+        height: auto!important;
+        margin-top: 30px!important;
+      }
+    }
+    @media #{$smartphone}, #{$tablets}{
+      margin-top: 30px!important;
     }
   }
+  @media #{$smartphone}, #{$tablets}{
+    height: auto!important;
+  }
 }
-// }
-// .btn-circle.btn-lg {
-//   width: 50px;
-//   height: 50px;
-//   padding: 10px 16px;
-//   font-size: 18px;
-//   line-height: 1.33;
-//   border-radius: 25px;
-// }
-// .formulario{
-//   .none{
-//     display: none;
-//   }
-
-// }
-// #ModalFormAddDescuentos{
-//   .input-gral {
-//     background-color: #eaeaea !important;
-//     color: #929292 !important;
-//     border-radius: 27px !important;
-//     background-image: none !important;
-//     padding-left: 20px;
-//   } 
-// }
-// #exampleModal{
-// /* Tabs panel */
-// .tabbable-panel {
-//   border:1px solid #eee;
-//   padding: 10px;
-// }
-
-// /* Default mode */
-// .tabbable-line > .nav-tabs {
-//   border: none;
-//   margin: 0px;
-// }
-// .tabbable-line > .nav-tabs > li {
-//   margin-right: 2px;
-// }
-// .tabbable-line > .nav-tabs > li > a {
-//   border: 0;
-//   margin-right: 0;
-//   color: #737373;
-// }
-// .tabbable-line > .nav-tabs > li > a > i {
-//   color: #a6a6a6;
-// }
-// .tabbable-line > .nav-tabs > li.open, .tabbable-line > .nav-tabs > li:hover {
-//   border-bottom: 4px solid #d3d1d1;
-// }
-// .tabbable-line > .nav-tabs > li.open > a, .tabbable-line > .nav-tabs > li:hover > a {
-//   border: 0;
-//   background: none !important;
-//   color: #333333;
-// }
-// .tabbable-line > .nav-tabs > li.open > a > i, .tabbable-line > .nav-tabs > li:hover > a > i {
-//   color: #d3d1d1;
-// }
-// .tabbable-line > .nav-tabs > li.open .dropdown-menu, .tabbable-line > .nav-tabs > li:hover .dropdown-menu {
-//   margin-top: 0px;
-// }
-// .tabbable-line > .nav-tabs > li.active {
-//   border-bottom: 4px solid #a6a6a6;
-//   position: relative;
-// }
-// .tabbable-line > .nav-tabs > li.active > a {
-//   border: 0;
-//   color: #333333;
-// }
-// .tabbable-line > .nav-tabs > li.active > a > i {
-//   color: #404040;
-// }
-// .tabbable-line > .tab-content {
-//   margin-top: -3px;
-//   background-color: #fff;
-//   border: 0;
-//   border-top: 1px solid #eee;
-//   padding: 15px 0;
-// }
-// .portlet .tabbable-line > .tab-content {
-//   padding-bottom: 0;
-// }
-
-// /* Below tabs mode */
-
-// .tabbable-line.tabs-below > .nav-tabs > li {
-//   border-top: 4px solid transparent;
-// }
-// .tabbable-line.tabs-below > .nav-tabs > li > a {
-//   margin-top: 0;
-// }
-// .tabbable-line.tabs-below > .nav-tabs > li:hover {
-//   border-bottom: 0;
-//   border-top: 4px solid #d3d1d1;
-// }
-// .tabbable-line.tabs-below > .nav-tabs > li.active {
-//   margin-bottom: -2px;
-//   border-bottom: 0;
-//   border-top: 4px solid #a6a6a6;
-// }
-// .tabbable-line.tabs-below > .tab-content {
-//   margin-top: -10px;
-//   border-top: 0;
-//   border-bottom: 1px solid #eee;
-//   padding-bottom: 15px;
-// }
-// }
-// #ModalAlert{
-//   .btn-circle{
-//     width: 30px;
-//     height: 30px;
-//     text-align: center;
-//     padding: 6px 0;
-//     font-size: 12px;
-//     line-height: 1.428571429;
-//     border-radius: 15px;
-//   }
-//   .btn-circle.btn-lg {
-//     width: 50px;
-//     height: 50px;
-//     padding: 10px 16px;
-//     font-size: 18px;
-//     line-height: 1.33;
-//     border-radius: 25px;
-//   }
-// }
-// #ModalMsi{
-//   *,
-//   *::before,
-//   *::after {
-//     box-sizing: border-box;
-//   }
-  
-//   $color: #e24040;
-//   .btn-circle{
-//     width: 30px;
-//     height: 30px;
-//     text-align: center;
-//     padding: 6px 0;
-//     font-size: 12px;
-//     line-height: 1.428571429;
-//     border-radius: 15px;
-//   }
-//   .btn-circle.btn-lg {
-//     width: 50px;
-//     height: 50px;
-//     padding: 10px 16px;
-//     font-size: 18px;
-//     line-height: 1.33;
-//     border-radius: 25px;
-//   }
-//   .input-descuento{
-//       position: relative;
-//       top: 50%;
-//       left: 50%;
-//       width: 95px;
-//       height: 40px;
-//       border-radius: 40px;
-//       box-shadow: 0 8px 10px rgba(0, 0, 0, 0.15);
-//       transform: translate(-50%, -50%);
-//       background: #fff;
-//       transition: all 0.3s ease;
-    
-//       &.focus {
-//         box-shadow: 0 3px 4px rgba(0, 0, 0, 0.15);
-//       }
-//     }
-    
-//     .input-descuento {
-//       position: absolute;
-//       top: -10px;
-//       left: 125px;
-//       font-size: 18px;
-//       background: none;
-//       color: #5a6674;
-//       width: 110px;
-//       height: 40px;
-//       border: none;
-//       appearance: none;
-//       outline: none;
-//       text-align: center;
-    
-//       &::-webkit-search-cancel-button {
-//         appearance: none;
-//       }
-//     }
-// }
-
-
-// .rowCards{
-//     .boxCard{
-//       background: #FFF;
-//       border-radius: 10px; 
-//       cursor: pointer;
-//       margin: 40px 10px;
-//       padding: 5px 10px;
-//       transition: all 0.5s ease-out;
-//       .check-box1 {
-//         display: flex;
-//         column-gap: .3em;
-//         align-items: center;
-//         font-family: sans-serif;
-//         font-size: 13px;
-//         margin-bottom: 25px;
-//         --checked-color: rgb(44, 143, 197);
-//         --unchecked-color: #aaa;
-//         --checked-disabled-color: #73c3d8;
-//         --unchecked-disabled-color: #ddd;
-//         margin-top: 25px;
-//       }
-      
-//       .check-box__switcher {
-//         font-size: inherit;
-//         appearance: none;
-//         height: 1em;
-//         width: 1.5em;
-//         margin: 0;
-//         border-radius: 1em;
-//         background-color: var(--unchecked-color);
-//         background-image: url('data:image/svg+xml,%3C%3Fxml version="1.0"%3F%3E%3Csvg width="20" height="20" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg"%3E%3Ccircle cx="10" cy="10" fill="%23ffffff" r="10"/%3E%3C/svg%3E');
-//         background-repeat: no-repeat;
-//         background-size: auto calc(100% - 4px);
-//         background-position: center left 2px;
-//         transition: background-position .2s ease-in, background-color 0s .1s;
-//         cursor: pointer;
-//       }
-      
-//       .check-box__switcher:checked {
-//         background-position: center right 2px;
-//         background-color: var(--checked-color);
-//       }
-      
-//       .check-box__switcher:disabled:checked {
-//         background-position: center right 2px;
-//         background-color: var(--checked-disabled-color);
-//         cursor: pointer;
-//       }
-      
-//       .check-box__switcher:disabled {
-//         background-position: center left 2px;
-//         background-color: var(--unchecked-disabled-color);
-//         cursor: pointer;
-//       }
-//       /*-------------------------------------------------------------------------------*/
-//       .title-plan{
-//         padding-top: 15px;
-//       }
-//         .myCard{
-//         height: 100%;
-        
-//     .color_span{
-//       background:$goldMaderas;
-//     }
-//         .check-padding{
-//           padding-top: 30px;
-//         }
-//           .card-header{
-//             padding: 5px 20px 0px !important;
-//           }
-
-//           .select-gral-number{
-//             border-radius: 27px !important;
-//         height: 45px;
-//         -webkit-border-radius: 27px !important;
-//         -moz-border-radius: 27px !important;
-//         -ms-border-radius: 27px !important;
-//         -o-border-radius: 27px !important;
-//             width: 100%;
-//           }
-        
-     
-//         .btn-circle{
-//           width: 30px;
-//           height: 30px;
-//           text-align: center;
-//           padding: 6px 0;
-//           font-size: 12px;
-//           line-height: 1.428571429;
-//           border-radius: 15px;
-//         }
-//         .input-gral {
-//             background-color: rgb(243, 238, 238) !important;
-//             color: #929292 !important;
-//             border-radius: 27px !important;
-//             background-image: none !important;
-//             padding-left: 20px;
-//           }
-//           .select-gral {
-//             border-radius: 27px !important;
-//             height: 45px;
-//             -webkit-border-radius: 27px !important;
-//             -moz-border-radius: 27px !important;
-//             -ms-border-radius: 27px !important;
-//             -o-border-radius: 27px !important;
-//             }
-//             .custom-dropdown {
-//                 background-color: $blueMaderas;
-//                 color: $blueMaderas;
-//             }
-//             .select2-results__options{
-//                 background-color: $blueMaderas;
-//                 color: $blueMaderas;  
-//             }
-//           .radio_container input[type="radio"]:checked + label {
-//             background-color: #103f75;
-//             color: #ffffff;
-//             transition: 0.3s;
-//           }
-//           .checkbox{
-//             display: block;
-//             position: relative;
-//             padding-left: 35px;
-//             margin-bottom: 12px;
-//             cursor: pointer;
-//             font-size: 22px;
-//             -webkit-user-select: none;
-//             -moz-user-select: none;
-//             -ms-user-select: none;
-//             user-select: none;
-//           }
-          
-          
-
-//         }
-//         .mySubtitle{
-//             position: absolute;
-//             bottom: 0;
-//             height: 20%;
-    
-//         }
-
-        
-//     }
-// }
-
-// @media (max-width: 1706.670px) {
-//   #snackbar {
-//     visibility: hidden;
-//     min-width: 320px;
-//     margin-left: -125px;
-//     background-color: #4caf50;
-//     color: #fff;
-//     text-align: center;
-//     border-radius: 22px;
-//     padding: 16px;
-//     position: fixed;
-//     z-index: 1;
-//     left: 50%;
-//     bottom: -450px;
-//     opacity: 1;
-//     -webkit-border-radius: 22px;
-//     -moz-border-radius: 22px;
-//     -ms-border-radius: 22px;
-//     -o-border-radius: 22px;
-// }
-  
-//   /* Show the snackbar when clicking on a button (class added with JavaScript) */
-//   #snackbar.show {
-//     visibility: visible;
-//    -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
-//     animation: fadein 0.5s, fadeout 0.5s 2.5s;
-//     -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
-//   }
-  
-//   /* Animations to fade the snackbar in and out */
-//   @-webkit-keyframes fadein {
-//     from {bottom: -450px; opacity: 0;}
-//     to {bottom: -400px; opacity: 1;}
-//   }
-  
-//   @keyframes fadein {
-//     from {bottom: -450px; opacity: 0;}
-//     to {bottom: -400px; opacity: 1;}
-//   }
-  
-//   @-webkit-keyframes fadeout {
-//     from {bottom: -400px; opacity: 1;}
-//     to {bottom: -450px; opacity: 0;}
-//   }
-  
-//   @keyframes fadeout {
-//     from {bottom: -400px; opacity: 1;}
-//     to {bottom: -450px; opacity: 0;}
-//   }
-  
-// }
-// @media (max-width: 2133.33px) {
-//   #snackbar {
-//     visibility: hidden;
-//     min-width: 320px;
-//     margin-left: -125px;
-//     background-color: #4caf50;
-//     color: #fff;
-//     text-align: center;
-//     border-radius: 22px;
-//     padding: 16px;
-//     position: fixed;
-//     z-index: 1;
-//     left: 50%;
-//     bottom: -50px;
-//     opacity: 1;
-//     -webkit-border-radius: 22px;
-//     -moz-border-radius: 22px;
-//     -ms-border-radius: 22px;
-//     -o-border-radius: 22px;
-// }
-  
-//   /* Show the snackbar when clicking on a button (class added with JavaScript) */
-//   #snackbar.show {
-//     visibility: visible;
-//     /*Showthesnackbar*//*Addanimation:;
-//     Take0.5secondstofadeinandoutthesnackbar.However,delaythefadeoutprocessfor2.5seconds*/-webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
-//     animation: fadein 0.5s, fadeout 0.5s 2.5s;
-//     -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
-//   }
-  
-//   /* Animations to fade the snackbar in and out */
-//   @-webkit-keyframes fadein {
-//     from {bottom: -50px; opacity: 0;}
-//     to {bottom: -10px; opacity: 1;}
-//   }
-  
-//   @keyframes fadein {
-//     from {bottom: -50px; opacity: 0;}
-//     to {bottom: -10px; opacity: 1;}
-//   }
-  
-//   @-webkit-keyframes fadeout {
-//     from {bottom: -10px; opacity: 1;}
-//     to {bottom: -50px; opacity: 0;}
-//   }
-  
-//   @keyframes fadeout {
-//     from {bottom: -10px; opacity: 1;}
-//     to {bottom: -50px; opacity: 0;}
-//   }
-  
-// }
-
+.dataTables_scrollBody::-webkit-scrollbar-track{
+  border-radius: 10px;
+  background-color: transparent;
+}
+/* El background del scroll (border)*/
+.dataTables_scrollBody::-webkit-scrollbar{
+  width: 5px;
+  height: 5px;
+  background-color: transparent;
+}
+/* Color de la barra de desplazamiento */
+.dataTables_scrollBody::-webkit-scrollbar-thumb{
+  border-radius: 5px;
+  background-color: $platinumScroll;
+}
+/* Color del HOVER de barra de desplazamiento */
+.dataTables_scrollBody::-webkit-scrollbar-thumb:hover{
+  background-color: $deepGray;
+}
+.btn-azure:hover span a{
+  color: $white!important;
+}

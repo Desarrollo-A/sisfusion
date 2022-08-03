@@ -1,4 +1,26 @@
 @import "_base";
+@media screen
+and (min-device-width: 1200px)
+and (max-device-width: 1600px)
+and (-webkit-min-device-pixel-ratio: 1) {
+  .card{
+    background-color: #444;
+  }
+}
+
+// //Mini desktop
+// @media (min-width: 1025px) and (max-width: 1280px){
+//   .card {
+//       background-color: green;
+//   }
+// }
+
+// /* Media Query for Large screens */
+// @media (min-width: 1281px) {
+//   body {
+//       background-color: red;
+//   }
+// }
 
 #inicio{
   .card{
@@ -14,7 +36,6 @@
     @media #{$smartphone}{
       height: inherit;
     }
-    
   }
   .col-total{
     height: 315px;
@@ -35,7 +56,7 @@
         font-size: 13px;
       }
       .leyend{
-        font-size: 11px;
+        font-size: 10px;
         color: $grayDark;
         span{
           color: $blueFrance;
@@ -121,6 +142,32 @@
       background-color: $blueIndigo!important;
     }
   }
+  #rowEmbudoChart{
+    @media #{$minidesktop}{
+      height: 40%!important;
+    }
+  }
+  #rowEmbudoData{
+    @media #{$minidesktop}{
+      height: 60%!important;
+    }
+    .col-lg-12{
+      .d-flex{
+        @media #{$minidesktop}{
+          justify-content: space-between;
+        } 
+      }
+      .numberElement {
+        @media #{$minidesktop}{
+          text-align: end!important;
+        }
+      }
+      @media #{$minidesktop}{
+        padding-top: 0!important;
+        display: block;
+      }
+    }
+  }
   .beginDates{
     background-color: $platinum!important;
     border-radius: 27px 0 0 27px!important;
@@ -146,11 +193,26 @@
   }
 
   .labelTitle{
-    font-size: 1.2em!important;
+    font-size: 1em!important;
+    @media #{$minidesktop}{
+      font-size: 12px!important;
+    }
   }
   .numberElement{
-    font-size: 1.2em!important;
+    font-size: 1em!important;
     font-weight: bold!important;
+    @media #{$minidesktop}{
+      font-size: 12px!important;
+    }
+  }
+  .loadChart{
+    position: absolute;
+    top: 2px;
+    background: $white;
+    height: 100%!important;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 }
 

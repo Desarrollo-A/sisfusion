@@ -706,6 +706,8 @@
                             etiqueta = '<p><span class="label" style="background:#7282ED;">DESCUENTO LINEA TELEFÓNICA</span></p>';
                         }else if((d.id_estatus_actual == 22) && d.descuento_aplicado == 1 ){
                             etiqueta = '<p><span class="label" style="background:#CA72ED;">DESCUENTO MANTENIMIENTO</span></p>';
+                        }else if((d.id_estatus_actual == 23) && d.descuento_aplicado == 1 ){
+                            etiqueta = '<p><span class="label" style="background:#CA72ED;">DESCUENTO NÓMINA</span></p>';
                         }else{
                             switch(d.id_estatus_actual){
                                 case '1':

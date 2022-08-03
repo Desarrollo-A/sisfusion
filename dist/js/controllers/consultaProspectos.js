@@ -8,7 +8,7 @@ $(document).ready(function() {
 
     $('#prospects-datatable thead tr:eq(0) th').each(function (i) {
         const title = $(this).text();
-        if ( i != 9 ){
+        if (i != 9){
             $(this).html('<input type="text" class="textoshead"  placeholder="' + title + '"/>');
             $('input', this).on('keyup change', function () {
                 if ($("#prospects-datatable").DataTable().column(i).search() !== this.value) {
@@ -22,7 +22,8 @@ $(document).ready(function() {
         prospectsTable = $('#prospects-datatable').DataTable({
             dom: 'rt'+ "<'row'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'i><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>",
             width: 'auto',
-            columns: [{
+            columns: [
+            /*{
                 data: function(d) {
                     if (d.estatus == 1) {
                         return '<center><span class="label label-danger" style="background:#27AE60">Vigente</span><center>';
@@ -31,27 +32,25 @@ $(document).ready(function() {
                     }
                 }
 
-            },
+            },*/
             {
                 data: function(d) {
-
-                    if (d.estatus_particular == 1) { // DESCARTADO
-                        b = '<center><span class="label" style="background:#E74C3C">Descartado</span><center>';
-                    } else if (d.estatus_particular == 2) { // INTERESADO SIN CITA
-                        b = '<center><span class="label" style="background:#B7950B">Interesado sin cita</span><center>';
-                    } else if (d.estatus_particular == 3) { // CON CITA
-                        b = '<center><span class="label" style="background:#27AE60">Con cita</span><center>';
-                    } else if (d.estatus_particular == 4) { // SIN ESPECIFICAR
-                        b = '<center><span class="label" style="background:#5D6D7E">Sin especificar</span><center>';
-                    } else if (d.estatus_particular == 5) { // PAUSADO
-                        b = '<center><span class="label" style="background:#2E86C1">Pausado</span><center>';
-                    } else if (d.estatus_particular == 6) { // PREVENTA
-                        b = '<center><span class="label" style="background:#8A1350">Preventa</span><center>';
-                    } else if (d.estatus_particular == 7) { // CLIENTE
-                        b = '<center><span class="label" style="background:#27AE60">Cliente</span><center>';
-                    } else { // CLIENTE
-                        b = '<center><span class="label" style="background:#A569BD">Sin especificar</span><center>';
-                    }
+                    if (d.estatus_particular == 1) // DESCARTADO
+                        b = '<center><span class="label" style="background:#E59866; color:#6E2C00">Descartado</span><center>';
+                    else if (d.estatus_particular == 2) // INTERESADO SIN CITA
+                        b = '<center><span class="label" style="background:#D98880; color:#641E16">Interesado sin cita</span><center>';
+                    else if (d.estatus_particular == 3) // CON CITA
+                        b = '<center><span class="label" style="background:#F7DC6F; color:#7D6608">Con cita</span><center>';
+                    else if (d.estatus_particular == 4) // SIN ESPECIFICAR
+                        b = '<center><span class="label" style="background:#808B96; color:#17202A">Sin especificar</span><center>';
+                    else if (d.estatus_particular == 5) // PAUSADO
+                        b = '<center><span class="label" style="background:#C39BD3; color:#512E5F">Pausado</span><center>';
+                    else if (d.estatus_particular == 6) // PREVENTA
+                        b = '<center><span class="label" style="background:#7FB3D5; color:#154360">Preventa</span><center>';
+                    else if (d.estatus_particular == 7) // CLIENTE
+                        b = '<center><span class="label" style="background:#73C6B6; color:#0B5345">Cliente</span><center>';
+                    else // CLIENTE
+                        b = '<center><span class="label" style="background:#808B96; color:#17202A">Sin especificar</span><center>';
                     return b;
                 }
             },
@@ -66,13 +65,23 @@ $(document).ready(function() {
                 }
             },
             {
-                data: function(d) {
-                    return d.coordinador;
+                data: function (d) {
+                    return d.coordinador == '  ' ? 'SIN ESPECIFICAR' : d.coordinador;
                 }
             },
             {
-                data: function(d) {
-                    return d.gerente;
+                data: function (d) {
+                    return d.gerente == '  ' ? 'SIN ESPECIFICAR' : d.gerente;
+                }
+            },
+            {
+                data: function (d) {
+                    return d.subdirector == '  ' ? 'SIN ESPECIFICAR' : d.subdirector;
+                }
+            },
+            {
+                data: function (d) {
+                    return d.regional == '  ' ? 'SIN ESPECIFICAR' : d.regional;
                 }
             },
             {
@@ -85,11 +94,11 @@ $(document).ready(function() {
                     return d.fecha_creacion;
                 }
             },
-            {
+            /*{
                 data: function(d) {
                     return d.fecha_vencimiento;
                 }
-            },
+            },*/
             {
                 data: function(d) {
                     if (typeTransaction == 0) { // Marketing
@@ -201,6 +210,7 @@ $(document).ready(function() {
             },
             destroy: true,
             ordering: false,
+            scrollX: true,
             columnDefs: [{
                     "searchable": true,
                     "orderable": false,
@@ -1080,26 +1090,26 @@ $("#my_update_status_form").on('submit', function(e) {
         processData: false,
         beforeSend: function() {
             // Actions before send post
-            document.getElementById("finishS").disabled = true;
+            //document.getElementById("finishS").disabled = true;
         },
         success: function(data) {            
             if (data == 1) { // SUCCESS RESPONSE
-                document.getElementById("finishS").disabled = false;
+                //document.getElementById("finishS").disabled = false;
                 $('#myUpdateStatusModal').modal("hide");
                 $('#estatus_particular').val("0");
                 $("#estatus_particular").selectpicker("refresh");
                 $('#prospects-datatable').DataTable().ajax.reload(null, false);
                 alerts.showNotification("top", "right", "La actualización se ha llevado a cabo correctamente.", "success");
             } else if (data == 2) { // LOTE APARTADO
-                document.getElementById("finishS").disabled = false;
+                //document.getElementById("finishS").disabled = false;
                 alerts.showNotification("top", "right", "La asignación no se ha podido llevar a cabo debido a que el lote seleccionado ya se encuentra apartado.", "warning");
             } else { // ALGO LE FALTÓ
-                document.getElementById("finishS").disabled = false;
+                //document.getElementById("finishS").disabled = false;
                 alerts.showNotification("top", "right", "Asegúrate de haber llenado todos los campos mínimos requeridos.", "warning");
             }
         },
         error: function() {
-            document.getElementById("finishS").disabled = false;
+            //document.getElementById("finishS").disabled = false;
             alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
         }
     });}

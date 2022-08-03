@@ -50,15 +50,17 @@
                                         <table id="prospects-datatable" class="table-striped table-hover">
                                             <thead>
                                                 <tr>
-                                                    <th>ESTADO</th>
+                                                    <!--<th>ESTADO</th>-->
                                                     <th>ETAPA</th>
                                                     <th>PROSPECTO</th>
                                                     <th>ASESOR</th>
                                                     <th>COORDINADOR</th>
                                                     <th>GERENTE</th>
-                                                    <th>LP</th>
+                                                    <th>SUBDIRECTOR</th>
+                                                    <th>DIRECTOR REGIONAL</th>
+                                                    <th>LUGAR PROSPECCIÓN</th>
                                                     <th>CREACIÓN</th>
-                                                    <th>VENCIMIENTO</th>
+                                                    <!--<th>VENCIMIENTO</th>-->
                                                     <th>ACCIONES</th>
                                                 </tr>
                                             </thead>
@@ -93,10 +95,7 @@
         userType = <?= $this->session->userdata('id_rol') ?> ;
         idUser = <?= $this->session->userdata('id_usuario') ?> ;
         typeTransaction = 1;
-        console.log(idUser);
-
     </script>
-
     <!-- MODAL WIZARD -->
     <script src="<?=base_url()?>dist/js/modal-steps.min.js"></script>
     <script src="<?=base_url()?>dist/js/moment.min.js"></script>

@@ -8,17 +8,41 @@ class Metricas_model extends CI_Model {
     }
     public function getSuperficieVendida($data = null){
         $year = date("Y");
-        $query = $this->db->query("SELECT COUNT(lo.sup) cantidad, lo.sup superficie,  
-        FORMAT(SUM(
-            CASE 
-                WHEN isNULL(cl.totalNeto2_cl ,lo.totalNeto2) IS NULL THEN isNULL(cl.total_cl, lo.total)
-                WHEN isNULL(cl.totalNeto2_cl ,lo.totalNeto2) = 0 THEN isNULL(cl.total_cl, lo.total)
-                ELSE isNULL(cl.totalNeto2_cl ,lo.totalNeto2) 
-            END), 'C') suma FROM clientes cl 
-        INNER JOIN lotes lo ON lo.idCliente = cl.id_cliente
-        WHERE isNULL(noRecibo, '') != 'CANCELADO' AND cl.status = 1 AND YEAR(cl.fechaApartado)= $year
-        GROUP BY lo.sup
-        ORDER BY cantidad DESC");
+        $query = $this->db->query("SELECT t.range AS [superficie], COUNT(*) as [cantidad], 
+                FORMAT(SUM(CASE WHEN (t.totalNeto2 IS NULL OR t.totalNeto2 = 0.00) THEN t.total ELSE t.totalNeto2 END), 'C') [precio]
+                FROM (
+                      SELECT
+                         CASE 
+                            WHEN sup >= 0 AND sup <= 100 THEN '0-100'
+                            WHEN sup >= 101 AND sup <= 110 THEN '101-110'
+                            WHEN sup >= 111 AND sup <= 120 THEN '111-120'
+                            WHEN sup >= 121 AND sup <= 130 THEN '121-130'
+                            WHEN sup >= 131 AND sup <= 140 THEN '131-140'
+                            WHEN sup >= 141 AND sup <= 150 THEN '141-150'
+                            WHEN sup >= 151 AND sup <= 160 THEN '151-160'
+                            WHEN sup >= 161 AND sup <= 170 THEN '161-170'
+                            WHEN sup >= 171 AND sup <= 180 THEN '171-180'
+                            WHEN sup >= 181 AND sup <= 190 THEN '181-190'
+                            WHEN sup >= 191 AND sup <= 200 THEN '191-200'
+                            WHEN sup >= 201 AND sup <= 210 THEN '201-210'
+                            WHEN sup >= 211 AND sup <= 220 THEN '211-220'
+                            WHEN sup >= 221 AND sup <= 230 THEN '221-230'
+                            WHEN sup >= 231 AND sup <= 240 THEN '231-240'
+                            WHEN sup >= 241 AND sup <= 250 THEN '241-250'
+                            WHEN sup >= 251 AND sup <= 260 THEN '251-260'
+                            WHEN sup >= 261 AND sup <= 270 THEN '261-270'
+                            WHEN sup >= 271 AND sup <= 280 THEN '271-280'
+                            WHEN sup >= 281 AND sup <= 290 THEN '281-290'
+                            WHEN sup >= 291 AND sup <= 300 THEN '291-300'
+                            ELSE '300 +' 
+                        END AS range,
+                        totalNeto2, total
+                     FROM lotes lo
+                     INNER JOIN clientes cl ON cl.id_cliente = lo.idCliente
+                     WHERE lo.status = 1 AND idStatusLote IN (2, 3) AND isNULL(noRecibo, '') != 'CANCELADO' AND cl.status = 1 
+                     AND YEAR(cl.fechaApartado)= $year AND isNULL(isNULL(cl.tipo_venta_cl, lo.tipo_venta), 0) IN (0, 1, 2)) t 
+                GROUP BY t.range
+                ORDER BY cantidad DESC");
         return $query->result_array();
     }
 
@@ -91,8 +115,13 @@ class Metricas_model extends CI_Model {
         return $query->result_array();
     }
 
-    public function getProyectos(){
-        $query = $this->db->query("SELECT * FROM residenciales WHERE status = 1");
+    public function getProyectos($sede){
+        if($sede == ''){
+            $filtro = '';
+        }else{
+            $filtro = "AND sede_residencial=$sede";
+        }
+        $query = $this->db->query("SELECT * FROM residenciales WHERE status = 1 $filtro");
         return $query->result_array();
     }
 
@@ -101,4 +130,90 @@ class Metricas_model extends CI_Model {
         return $query->result_array();
     }
 
+    public function getPromedio($sede, $proyecto, $beginDate, $endDate){
+        if($sede == ''){
+            $filtro = "";
+        }else if($proyecto == ''){
+            $filtro = "AND res.sede_residencial = $sede";
+        }else{
+            $filtro = "AND res.sede_residencial = $sede AND res.idResidencial = $proyecto";
+        }
+
+        $query = $this->db->query("WITH cte AS(
+            SELECT CAST('$beginDate 00:00:00' AS DATETIME) DateValue
+            UNION ALL
+            SELECT  DateValue + 1
+            FROM    cte   
+            WHERE   DateValue + 1 <= '$endDate 23:59:59')
+            SELECT 
+                (CASE 
+                    WHEN MONTH(DateValue) = '1' THEN 'Enero'
+                    WHEN MONTH(DateValue) = '2' THEN 'Febrero'
+                    WHEN MONTH(DateValue) = '3' THEN 'Marzo'
+                    WHEN MONTH(DateValue) = '4' THEN 'Abril'
+                    WHEN MONTH(DateValue) = '5' THEN 'Mayo'
+                    WHEN MONTH(DateValue) = '6' THEN 'Junio'
+                    WHEN MONTH(DateValue) = '7' THEN 'Julio'
+                    WHEN MONTH(DateValue) = '8' THEN 'Agosto'
+                    WHEN MONTH(DateValue) = '9' THEN 'Septiembre'
+                    WHEN MONTH(DateValue) = '10' THEN 'Octubre'
+                    WHEN MONTH(DateValue) = '11' THEN 'Noviembre'
+                    WHEN MONTH(DateValue) = '12' THEN 'Diciembre'
+                END) MONTH, YEAR(DateValue) año, isNULL(qu.superficieSUMA, 0) superficieSUMA, FORMAT(isNULL(qu.precioSUMA,0),'C') precioSUMA, CAST(isNULL(qu.promedio,0) AS decimal(16,2)) promedio FROM cte 
+            LEFT JOIN (
+            SELECT SUM(lo.sup) superficieSUMA,
+                SUM(
+                    CASE 
+                        WHEN isNULL(cl.totalNeto2_cl ,lo.totalNeto2) IS NULL THEN isNULL(cl.total_cl ,lo.total) 
+                        WHEN isNULL(cl.totalNeto2_cl ,lo.totalNeto2) = 0 THEN isNULL(cl.total_cl ,lo.total) 
+                        ELSE isNULL(cl.totalNeto2_cl ,lo.totalNeto2) 
+                    END) precioSUMA, 
+                SUM(
+                    CASE 
+                        WHEN isNULL(cl.totalNeto2_cl ,lo.totalNeto2) IS NULL THEN isNULL(cl.total_cl ,lo.total) 
+                        WHEN isNULL(cl.totalNeto2_cl ,lo.totalNeto2) = 0 THEN isNULL(cl.total_cl ,lo.total) 
+                        ELSE isNULL(cl.totalNeto2_cl ,lo.totalNeto2) 
+                    END)/SUM(lo.sup) promedio, MONTH(cl.fechaApartado) mes, YEAR(cl.fechaApartado) año
+            FROM lotes lo
+            INNER JOIN clientes cl ON cl.id_cliente = lo.idCliente
+            INNER JOIN condominios cond ON cond.idCondominio = lo.idCondominio
+            INNER JOIN residenciales res ON res.idResidencial = cond.idResidencial
+            WHERE cl.fechaApartado BETWEEN '$beginDate 00:00:00' AND '$endDate 23:59:59' AND cond.tipo_lote = 0 $filtro
+            GROUP BY MONTH(cl.fechaApartado), YEAR(cl.fechaApartado)) qu ON qu.mes = month(cte.DateValue) AND qu.año = year(cte.DateValue)
+            GROUP BY YEAR(DateValue), MONTH(DateValue), qu.superficieSUMA, qu.precioSUMA, qu.promedio
+            ORDER BY YEAR(DateValue), MONTH(DateValue)
+            OPTION (MAXRECURSION 0)");
+        return $query->result_array();
+    }
+
+    public function getSedes(){
+        $query = $this->db->query("SELECT * FROM sedes WHERE estatus = 1");
+        return $query->result_array();
+    }
+
+    public function getLotesInformation($sede_residencial, $idResidencial, $beginDate, $endDate){
+        if($sede_residencial == ''){
+            $filtro = "";
+        }else if($idResidencial == ''){
+            $filtro = "AND res.sede_residencial = $sede_residencial";
+        }else{
+            $filtro = "AND res.sede_residencial = $sede_residencial AND res.idResidencial = $idResidencial";
+        }
+        $query = $this->db->query("SELECT lo.nombreLote, cond.nombre nombreCondominio, res.descripcion nombreResidencial, 
+        UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) nombreCliente,
+        UPPER(CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)) nombreUsuario,
+        cl.fechaApartado, lo.sup,  
+        FORMAT(isNULL(CASE 
+           WHEN isNULL(cl.totalNeto2_cl ,lo.totalNeto2) IS NULL THEN isNULL(cl.total_cl ,lo.total) 
+           WHEN isNULL(cl.totalNeto2_cl ,lo.totalNeto2) = 0 THEN isNULL(cl.total_cl ,lo.total) 
+           ELSE isNULL(cl.totalNeto2_cl ,lo.totalNeto2) 
+       END,0), 'C') totalNeto2 FROM lotes lo 
+       INNER JOIN clientes cl ON cl.id_cliente = lo.idCliente
+       INNER JOIN condominios cond ON cond.idCondominio = lo.idCondominio
+       INNER JOIN residenciales res ON res.idResidencial = cond.idResidencial
+       INNER JOIN usuarios us ON us.id_usuario = cl.id_asesor
+       WHERE cl.fechaApartado BETWEEN '$beginDate 00:00:00' AND '$endDate 23:59:59' 
+       AND cond.tipo_lote = 0 $filtro ");
+        return $query->result_array();
+    }
 }

@@ -49,7 +49,10 @@
                                                         <th><center>SEDE</center></th>
                                                         <th><center>FORMA PAGO</center></th>
                                                        <?php if($this->session->userdata('id_rol') != 49){ ?> <th><center>NACIONALIDAD</center></th> <?php } ?>
-                                                        <th><center>JEFE DIRECTO</center></th>
+                                                        <th><center>COORDINADOR</center></th>
+                                                        <th><center>GERENTE</center></th>
+                                                        <th><center>SUBDIRECTOR</center></th>
+                                                        <th><center>DIRECTOR REGIONAL</center></th>
                                                         <th><center>TIPO DE USUARIO</center></th>
                                                         <th><center>FECHA ALTA</center></th>
                                                         <th><center></center></th>
@@ -65,6 +68,116 @@
                 </div>
             </div>
         </div>
+
+        <div class="modal fade" id="changesRegsUsers" tabindex="-1" role="dialog" 
+                                                        aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+                                                
+                                                        <div class="modal-dialog modal-lg modal-dialog-scrollable" role="document">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header">
+                                                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                                                                        <i class="material-icons" onclick="cleanComments()">clear</i>
+                                                                    </button>
+                                                                    <h4 class="modal-title">Consulta información</h4>
+                                                                </div>
+                                                                <div class="modal-body">
+                                                                    <div role="tabpanel">
+                                                                        <!-- Nav tabs -->
+                                                                        <ul class="nav nav-tabs" role="tablist" style="background: #003d82;">
+                                                                            <li role="presentation" class="active"><a href="#changelogUsersTab" aria-controls="changelogUsersTab" role="tab" data-toggle="tab">Bitácora de cambios</a></li>
+                                                                        </ul>
+                                                                        <!-- Tab panes -->
+                                                                        <div class="tab-content">
+                                                                            <div role="tabpanel" class="tab-pane active" id="changelogUsersTab">
+                                                                                <div class="row">
+                                                                                    <div class="col-md-12">
+                                                                                        <div class="card card-plain">
+                                                                                            <div class="card-content">
+                                                                                                <ul class="timeline timeline-simple" id="changelogUsers"></ul>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <button type="button" class="btn btn-primary" data-dismiss="modal">Aceptar</button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal fade" id="editUserModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+                                                        <div class="modal-dialog">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header">
+                                                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                                                                        <i class="material-icons">clear</i>
+                                                                    </button>
+                                                                    <h4 class="modal-title">Edita su información</h4>
+                                                                </div>
+                                                                <form id="editUserForm" name="editUserForm" method="post">
+                                                                    <div class="modal-body">
+                                                                        <div class="col-sm-12">
+                                                                            <div class="form-group label-floating select-is-empty div_payment_method">
+                                                                                <label class="control-label">Forma de pago <small>(requerido)</small></label>
+                                                                                <select id="payment_method" name="payment_method" class="form-control payment_method" required></select>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-sm-3">
+                                                                            <div class="form-group">
+                                                                                <input id="id_usuario" name="id_usuario" type="hidden" class="form-control">
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="modal-footer">
+                                                                        <button type="submit" class="btn btn-primary">Aceptar</button>
+                                                                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                                                                    </div>
+                                                                </form>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="modal fade" id="seeInformationModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+                                                            <div class="modal-dialog modal-lg modal-dialog-scrollable" role="document">
+                                                                <div class="modal-content">
+                                                                    <div class="modal-header">
+                                                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                                                                            <i class="material-icons" onclick="cleanComments()">clear</i>
+                                                                        </button>
+                                                                        <h4 class="modal-title">Consulta información</h4>
+                                                                    </div>
+                                                                    <div class="modal-body">
+                                                                        <div role="tabpanel">
+                                                                            <!-- Nav tabs -->
+                                                                            <ul class="nav nav-tabs" role="tablist" style="background: #003d82;">
+                                                                                <li role="presentation" class="active"><a href="#changelogTab" aria-controls="changelogTab" role="tab" data-toggle="tab">Bitácora de cambios</a></li>
+                                                                            </ul>
+                                                                            <!-- Tab panes -->
+                                                                            <div class="tab-content">
+                                                                                <div role="tabpanel" class="tab-pane active" id="changelogTab">
+                                                                                    <div class="row">
+                                                                                        <div class="col-md-12">
+                                                                                            <div class="card card-plain">
+                                                                                                <div class="card-content">
+                                                                                                    <ul class="timeline timeline-simple" id="changelog"></ul>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <input type="hidden" name="prospecto_lbl" id="prospecto_lbl">
+                                                                    </div>
+                                                                    <div class="modal-footer">
+                                                                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" onclick="cleanComments()">Cerrar</button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
 
         <?php $this->load->view('template/footer_legend');?>
 
@@ -125,7 +238,7 @@
                 title:'Lista de usuarios',
                 exportOptions: {
                 
-                    columns: userType == 49 ? [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10] : [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10,11] ,
+                    columns: userType == 49 ? [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13] : [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14] ,
                     format: {
                         header: function (d, columnIdx) {
 
@@ -158,12 +271,21 @@
                                     return 'NACIONALIDAD';
                                     break;
                                 case 9:
-                                    return 'JEFE DIRECTO';
+                                    return 'COORDINADOR';
                                     break;
                                 case 10:
-                                    return 'TIPO DE USUARIO';
+                                    return 'GERENTE';
                                     break;
                                 case 11:
+                                    return 'SUBDIRECTOR';
+                                    break;
+                                case 12:
+                                    return 'DIRECTOR REGIONAL';
+                                    break;
+                                case 13:
+                                    return 'TIPO DE USUARIO';
+                                    break;
+                                case 14:
                                     return 'FECHA ALTA';
                                     break;
                             }
@@ -194,12 +316,21 @@
                                     return 'FORMA PAGO';
                                     break;
                                 case 8:
-                                    return 'JEFE DIRECTO';
+                                    return 'COORDINADOR';
                                     break;
                                 case 9:
-                                    return 'TIPO DE USUARIO';
+                                    return 'GERENTE';
                                     break;
                                 case 10:
+                                    return 'SUBDIRECTOR';
+                                    break;
+                                case 11:
+                                    return 'DIRECTOR REGIONAL';
+                                    break;
+                                case 12:
+                                    return 'TIPO DE USUARIO';
+                                    break;
+                                case 13:
                                     return 'FECHA ALTA';
                                     break;
                             }
@@ -212,6 +343,7 @@
         ],
         ordering: false,
         paging: true,
+        scrollX: true,
         pagingType: "full_numbers",
         lengthMenu: [
             [10, 25, 50, -1],
@@ -228,9 +360,6 @@
         columns: [
             {
                 data: function (d) {
-
-                    // return '<center><span class="label label-danger" style="background:#27AE60">'+d.nuevo+'</span><center>';
-
                     if (d.nuevo == 1) {
                         return '<center><span class="label label-info" >Nuevo usuario</span><center>';
 
@@ -383,7 +512,19 @@
                                         }
                                     ?>
             { data: function (d) {
-                    return d.jefe_directo;
+                    return d.coordinador == '  ' ? 'NO APLICA' : d.coordinador;
+                }
+            },
+            { data: function (d) {
+                    return d.gerente == '  ' ? 'NO APLICA' : d.gerente;
+                }
+            },
+            { data: function (d) {
+                    return d.subdirector == '  ' ? 'NO APLICA' : d.subdirector;
+                }
+            },
+            { data: function (d) {
+                    return d.regional == '  ' ? 'NO APLICA' : d.regional;
                 }
             },
             {

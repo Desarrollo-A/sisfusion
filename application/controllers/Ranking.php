@@ -58,5 +58,19 @@ class Ranking extends CI_Controller {
         $data = $this->Ranking_model->getSedes()->result_array();
         echo json_encode($data);
     }
+
+    public function getLotesInformation() {
+        $type = $this->input->post('type');
+        $asesor = $this->input->post('asesor');
+        $sede = $this->input->post('sede');
+        $beginDate = date("Y-m-d", strtotime($this->input->post("beginDate")));
+        $endDate = date("Y-m-d", strtotime($this->input->post("endDate")));
+        $data['data'] = $this->Ranking_model->getGeneralLotesInformation($type, $asesor, $sede, $beginDate, $endDate)->result_array();
+        if($data != null)
+            echo json_encode($data);
+        else
+            echo json_encode(array());
+    }
+
 }
  

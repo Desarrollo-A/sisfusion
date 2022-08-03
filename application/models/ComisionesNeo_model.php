@@ -22,14 +22,14 @@ class ComisionesNeo_model extends CI_Model {
         if($validate->num_rows()>0){
             $ref = $validate->row()->referencia;
             $des = $validate->row()->idResidencial;
-            return $this->gphsis->query("EXEC [GPHSIS].[dbo].[004VerificaconNeoBPrueba] @referencia = $ref, @iddesarrollo = $des");
+            return $this->gphsis->query("EXEC [GPHSIS].[dbo].[004VerificaconNeoPrueba2] @referencia = $ref, @iddesarrollo = $des");
         }else{
             return false;
         }
     }
 
     function getGeneralStatusFromNeodata($referencia, $desarrollo){
-        return $this->gphsis->query("EXEC [GPHSIS].[dbo].[004VerificaconNeoB] @referencia = $referencia, @iddesarrollo = $desarrollo")->row();
+        return $this->gphsis->query("EXEC [GPHSIS].[dbo].[004VerificaconNeoPrueba2] @referencia = $referencia, @iddesarrollo = $desarrollo")->row();
     }
 
     function getLotesByAdviser($proyecto, $condominio)
@@ -248,16 +248,16 @@ class ComisionesNeo_model extends CI_Model {
             WHERE p.bandera = 1 AND l.registro_comision = 1 AND l.idStatusContratacion = 15 AND p.ultimo_pago > 0 AND r.idResidencial = $res");
     }
 
-    public function UpdateBanderaPagoComision($idLote, $bonificacion){
-        return $this->db->query("UPDATE pago_comision SET bandera = 0, bonificacion = ".$bonificacion." WHERE id_lote = ".$idLote."");
+    public function UpdateBanderaPagoComision($idLote, $bonificacion, $FechaAplicado){
+        return $this->db->query("UPDATE pago_comision SET bandera = 0, fecha_modificacion = GETDATE(), bonificacion = ".$bonificacion.", fecha_neodata = '".$FechaAplicado."', modificado_por = 'NEO' WHERE id_lote = ".$idLote."");
     }
 
     public function UpdateBanderaPagoComisionNO($idLote){
-        return $this->db->query("UPDATE pago_comision SET bandera = 55 WHERE id_lote = $idLote");
+        return $this->db->query("UPDATE pago_comision SET bandera = 55, modificado_por = 'NEO' WHERE id_lote = $idLote");
     }
 
     public function UpdateBanderaPagoComisionAnticipo(){
-        return $this->db->query(" UPDATE pago_comision SET bandera = 0, fecha_modificacion = GETDATE() FROM pago_comision P INNER JOIN lotes l ON l.idLote = p.id_lote WHERE p.bandera not in (0,8) AND l.registro_comision = 1 AND l.idStatusContratacion = 15 AND p.ultimo_pago > 0 AND p.pendiente > 1 AND p.ultimo_pago > p.total_comision");
+        return $this->db->query("UPDATE pago_comision SET bandera = 0, fecha_modificacion = GETDATE(), modificado_por = 'NEO' FROM pago_comision P INNER JOIN lotes l ON l.idLote = p.id_lote WHERE p.bandera not in (0,8) AND l.registro_comision = 1 AND l.idStatusContratacion = 15 AND p.ultimo_pago > 0 AND p.pendiente > 1 AND p.ultimo_pago > p.total_comision");
     }
 
     public function getPrioridad($prioridad){
@@ -291,7 +291,7 @@ class ComisionesNeo_model extends CI_Model {
     }
 
     public function updateFlag($a, $b, $c){
-        return $this->db->query("UPDATE pago_comision SET total_comision = $b, bandera = $c WHERE id_lote in ($a)");
+        return $this->db->query("UPDATE pago_comision SET total_comision = $b, bandera = $c, modificado_por = 'NEO' WHERE id_lote in ($a)");
     }
 
     public function getFlagAbonado(){
@@ -305,7 +305,7 @@ class ComisionesNeo_model extends CI_Model {
     }
 
     public function updateFlagAbonado($a, $b, $c){
-        return $this->db->query("UPDATE pago_comision SET abonado = $b, bandera = $c WHERE id_lote in ($a)");
+        return $this->db->query("UPDATE pago_comision SET abonado = $b, bandera = $c, modificado_por = 'NEO' WHERE id_lote in ($a)");
     }
 
     public function getFlagPendiente(){
@@ -313,11 +313,11 @@ class ComisionesNeo_model extends CI_Model {
     }
     
     public function updateFlagPendiente($a, $b){
-        $this->db->query("UPDATE pago_comision SET pendiente = total_comision - abonado, bandera = $b WHERE id_lote in ($a)");
+        $this->db->query("UPDATE pago_comision SET pendiente = total_comision - abonado, bandera = $b, modificado_por = 'NEO' WHERE id_lote in ($a)");
     }
 
     public function updateFlagPendienteDistintos(){
-        $this->db->query("UPDATE pago_comision SET pendiente = total_comision - abonado WHERE total_comision not in (0) and bandera not in (100, 150, 110, 170) ");
+        $this->db->query("UPDATE pago_comision SET pendiente = total_comision - abonado, modificado_por = 'NEO' WHERE total_comision not in (0) and bandera not in (100, 150, 110, 170) ");
     }
 
 

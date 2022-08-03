@@ -99,7 +99,7 @@ var options = {
 
 function recreatApexChart(estado, opts){
     if(estado){
-        $(".boxChart").html('');
+        $(".boxChartRanking").html('');
         buildChartsID();
       
         chartApartados = new ApexCharts(document.querySelector('#chart'), setOptionsChart(opts.seriesA[0], opts.categoriesA));
@@ -127,7 +127,7 @@ function recreatApexChart(estado, opts){
 }
 
 function buildChartsID(){
-    var boxCharts = document.getElementsByClassName("boxChart");
+    var boxCharts = document.getElementsByClassName("boxChartRanking");
     for ( var i = 0; i<boxCharts.length; i++ ){
         var id = boxCharts[i].id;
         var html = `<div id="chart`+(id.replace(/\D/g, ""))+`" class="chart"></div>`;
@@ -182,7 +182,7 @@ function buildEstructuraDT(dataName, dataApartados){
 
 function reorderColumns(){
     var principalColumns = document.getElementsByClassName("flexibleR");
-    var mainRow = document.getElementById('mainRow');
+    var mainRow = document.getElementById('mainRowRanking');
     let opts = getCacheOptions();
     let dates = getCacheDates();
     var elements = document.createDocumentFragment();
@@ -240,7 +240,6 @@ function reorderColumns(){
                         buildTableSinEnganche(dataSinEnganche);
                     }
                 }
-                $(principalColumns[i-1]).addClass('fadeInAnimationDelay'+i);
             }, 500 * i)
         }(i));
     }   
@@ -329,7 +328,8 @@ function buildTableApartados(data){
         },{
             title: 'Totales',
             data: function(d){
-                return d.totalAT
+                return `<button style="background-color: #d8dde2; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="1" data-asesor="${d.id_asesor}" class="btnModalDetailsRanking">${d.totalAT}</button>`; // APARTADOS
+                //return d.totalAT
             }
         },
         {
@@ -400,7 +400,8 @@ function buildTableContratados(data){
         },{
             title: 'Totales',
             data: function(d){
-                return d.totalConT
+                return `<button style="background-color: #d8dde2; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="2" data-asesor="${d.id_asesor}" class="btnModalDetailsRanking">${d.totalConT}</button>`; // CONTRATADOS
+                //return d.totalConT
             }
         },
         {
@@ -471,7 +472,8 @@ function buildTableConEnganche(data){
         },{
             title: 'Totales',
             data: function(d){
-                return d.cuantos
+                return `<button style="background-color: #d8dde2; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="3" data-asesor="${d.id_asesor}" class="btnModalDetailsRanking">${d.cuantos}</button>`; // CON ENGANCHE
+                //return d.cuantos
             }
         },
         {
@@ -542,7 +544,8 @@ function buildTableSinEnganche(data){
         },{
             title: 'Totales',
             data: function(d){
-                return d.cuantos
+                return `<button style="background-color: #d8dde2; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="4" data-asesor="${d.id_asesor}" class="btnModalDetailsRanking">${d.cuantos}</button>`; // SIN ENGANCHE
+                //return d.cuantos
             }
         },
         {
@@ -683,7 +686,7 @@ function setOptionsChart(series, categories){
     let options = { 
         series: [series],
         chart: {
-            height: 'auto',
+            height: '100%',
             type: 'bar',
             toolbar: {
                 show: false
@@ -875,7 +878,6 @@ function formatDate(date) {
         month = '0' + month;
     if (day.length < 2)
         day = '0' + day;
-
     return [year, month, day].join('-');
 }
 
@@ -971,3 +973,164 @@ function getSede(typeRanking){
 }
 
 $('[data-toggle="tooltip"]').tooltip();
+
+$(document).on('click', '.btnModalDetailsRanking', function () {
+    console.log("IN");
+    let type = $(this).data("type");
+    let dates = getDates(type == 1 ? 'Apartados' : type == 2 ? 'Contratados' : type == 3 ? 'ConEnganche' : 'SinEnganche');
+    let sede = getSede(type == 1 ? 'Apartados' : type == 2 ? 'Contratados' : type == 3 ? 'ConEnganche' : 'SinEnganche');
+    let dataObj = {
+        type: type,
+        asesor: $(this).data("asesor"),
+        begin: dates.beginDate,
+        end: dates.endDate,
+        sede: sede
+    }
+    fillTable(dataObj);
+    console.log(dataObj);
+    $("#seeInformationModalRanking").modal();
+});
+
+$('#lotesInformationTableRanking thead tr:eq(0) th').each(function (i) {
+    const title = $(this).text();
+    $(this).html('<input type="text" center;" class="textoshead"  placeholder="' + title + '"/>');
+    $('input', this).on('keyup change', function () {
+        if(i != 0){
+            if ($("#lotesInformationTableRanking").DataTable().column(i).search() !== this.value) {
+                $("#lotesInformationTableRanking").DataTable().column(i)
+                    .search(this.value).draw();
+            }
+        }
+    });
+});
+
+function fillTable(dataObject) {
+    generalDataTable = $('#lotesInformationTableRanking').dataTable({
+        dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
+        width: '100%',
+        buttons: [
+            {
+                extend: 'excelHtml5',
+                text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
+                className: 'btn buttons-excel',
+                titleAttr: 'Descargar archivo de Excel',
+                exportOptions: {
+                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8],
+                    format: {
+                        header: function (d, columnIdx) {
+                            switch (columnIdx) {
+                                case 0:
+                                    return 'Proyecto';
+                                    break;
+                                case 1:
+                                    return 'Condominio';
+                                    break;
+                                case 2:
+                                    return 'Lote'
+                                    break;
+                                case 3:
+                                    return 'Precio';
+                                    break;
+                                case 4:
+                                    return 'Cliente';
+                                    break;
+                                case 5:
+                                    return 'Asesor';
+                                    break;
+                                case 6:
+                                    return 'Fecha de apartado';
+                                    break;
+                                case 7:
+                                    return 'Estatus contratación';
+                                    break;
+                                case 8:
+                                    return 'Estatus lote';
+                                    break;
+                            }
+                        }
+                    }
+                }
+            }
+        ],
+        pagingType: "full_numbers",
+        lengthMenu: [
+            [10, 25, 50, -1],
+            [10, 25, 50, "Todos"]
+        ],
+        destroy: true,
+        ordering: false,
+        scrollX: true,
+        language: {
+            url: `${base_url}static/spanishLoader_v2.json`,
+            paginate: {
+                previous: "<i class='fa fa-angle-left'>",
+                next: "<i class='fa fa-angle-right'>"
+            }
+        },
+        destroy: true,
+        ordering: false,
+        columns: [
+            {
+                data: function (d) {
+                    return d.nombreResidencial;
+                }
+            },
+            {
+                data: function (d) {
+                    return d.nombreCondominio;
+                }
+            },
+            {
+                data: function (d) {
+                    return d.nombreLote;
+                }
+            },
+            {
+                data: function (d) {
+                    return d.total;
+                }
+            },
+            {
+                data: function (d) {
+                    return d.nombreCliente;
+                }
+            },
+            {
+                data: function (d) {
+                    return d.nombreAsesor;
+                }
+            },
+            {
+                data: function (d) {
+                    return d.fechaApartado;
+                }
+            },
+            {
+                data: function (d) {
+                    return d.nombreStatus;
+                }
+            },
+            {
+                data: function (d) {
+                    return d.estatusLote;
+                }
+            }
+        ],
+        columnDefs: [{
+            visible: false,
+            searchable: false
+        }],
+        ajax: {
+            url: `${base_url}Ranking/getLotesInformation`,
+            type: "POST",
+            cache: false,
+            data: {
+                "type": dataObject.type,
+                "asesor": dataObject.asesor,
+                "beginDate": dataObject.begin,
+                "endDate": dataObject.end,
+                "sede": dataObject.sede
+            }
+        }
+    });
+}

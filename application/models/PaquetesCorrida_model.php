@@ -73,6 +73,7 @@ class PaquetesCorrida_model extends CI_Model
             return $finalAnswer = 1;
         }
     }
+
     public function ValidarDescuento($tdescuento,$id_condicion,$eng_top,$apply,$descuento)
     {
         return $this->db->query("SELECT c.descripcion,d.id_tdescuento,d.inicio,d.fin,d.id_condicion,d.eng_top,d.apply,max(d.id_descuento) AS id_descuento,d.porcentaje 
@@ -87,104 +88,88 @@ class PaquetesCorrida_model extends CI_Model
         group by c.descripcion,d.id_tdescuento,d.inicio,d.fin,d.id_condicion,d.eng_top,d.apply,d.porcentaje 
         order by d.porcentaje");
     }
-    function getCondominioByPlan($arrCondominio){
-        $this->db->query("SET LANGUAGE Español;");
-        $union = ' UNION ALL ';
-     return  $this->db->query("
-        DECLARE @condominio varchar(200), @i INT, @count varchar(200), @tags VARCHAR(MAX);
-        SET @i = 1 
-        SET @count = 0 
-        SET @count = (SELECT COUNT(*) FROM condominios WHERE idCondominio IN ($arrCondominio))
-        SET @condominio = (SELECT STRING_AGG(idCondominio, '|') FROM condominios WHERE idCondominio IN ($arrCondominio))
-        WHILE LEN(@condominio) > 0
-        BEGIN
-            IF PATINDEX('%|%', @condominio) > 0
-            BEGIN
-                SET @count = SUBSTRING(@condominio, 0, PATINDEX('%|%', @condominio))
-        
-        /*INICIO DEL PROCESO*/
-            SET @tags = (SELECT STRING_AGG(CONVERT(VARCHAR(MAX),(id_descuento) ), ',') FROM lotes l INNER JOIN condominios c ON c.idCondominio = l.idCondominio INNER JOIN residenciales r ON r.idResidencial = c.idResidencial WHERE c.idCondominio IN (@count)) 
-            
-            SELECT @count condominio, STRING_AGG(id_paquete, ',') paquetes, fecha_inicio, fecha_fin, UPPER(CONCAT('PAQUETE ', DATENAME(MONTH, fecha_inicio), ' ', YEAR(fecha_inicio))) descripcion FROM paquetes WHERE id_paquete in (SELECT DISTINCT(value) FROM STRING_SPLIT(@tags, ',') WHERE RTRIM(value) <> '') GROUP BY fecha_inicio, fecha_fin 
+ 
 
-        /*FIN DEL PROCESO*/
+public function getPaquetesByLotes($desarrollos,$query_superdicie,$query_tipo_lote,$superficie,$inicio,$fin){
+    date_default_timezone_set('America/Mexico_City');
+    $hoy2 = date('Y-d-m H:i:s');
+    
+    $cuari1 =  $this->db->query("SELECT DISTINCT(l.idCondominio) FROM lotes l
+        INNER JOIN condominios c ON c.idCondominio = l.idCondominio 
+        INNER JOIN residenciales r ON r.idResidencial = c.idResidencial
+        WHERE r.idResidencial IN ($desarrollos)
+        $query_superdicie
+        $query_tipo_lote 
+        GROUP BY l.idCondominio")->result_array();
         
-        SET @condominio = SUBSTRING(@condominio, LEN(@count + '|') + 1, LEN(@condominio))
-        END
-        
-        ELSE
-            BEGIN
-            SET @count = @condominio
-            SET @condominio = NULL
-            SELECT @count
-            END
-        END")->result_array();
-
+    $imploded = array();
+    foreach($cuari1 as $array) {
+        $imploded[] = implode(',', $array);
     }
-
-        public function getPaquetesByLotes($desarrollos,$query_superdicie,$query_tipo_lote,$superficie,$inicio,$fin){
-            date_default_timezone_set('America/Mexico_City');
-            $hoy2 = date('Y-m-d H:i:s');
-
-           $cuari1 =  $this->db->query("SELECT l.idCondominio
-            FROM lotes l
-            INNER JOIN condominios c ON c.idCondominio = l.idCondominio 
-            INNER JOIN residenciales r ON r.idResidencial = c.idResidencial
-            WHERE 
-            r.idResidencial IN ($desarrollos) 
-            $query_superdicie
-            $query_tipo_lote
-            GROUP BY l.idCondominio")->result_array();
-            //print_r($cuari1);
-                    $imploded = array();
-                    foreach($cuari1 as $array) {
-                        $imploded[] = implode(',', $array);
-                    }
-                    $arrCondominio= implode(",", $imploded);
-                    //print_r($arrCondominio);
-                    if(!empty($arrCondominio)){
-
-                        $getPaquetesByName = $this->getCondominioByPlan($arrCondominio); 
-
-                        $datosInsertar_x_condominio = array();           
-                        for ($o=0; $o <count($getPaquetesByName) ; $o++) { 
-                            $json = array();
-                            if(!empty($getPaquetesByName[$o]['paquetes'])){
-                                array_push($json,array( "paquetes" => $getPaquetesByName[$o]['paquetes'],
-                                                    "tipo_superficie" => array("tipo" => $superficie,
-                                                    "sup1" => $inicio,
-                                                    "sup2" => $fin) ));
-                                                    
-            
-                                                   $json =  json_encode($json);
-            
-                                                  $json = ltrim($json,'[');
-                                                  $json = rtrim($json,']');
-            
-                                                    $array_x_condominio =array(
-                                                        'id_condominio' => $getPaquetesByName[$o]['condominio'],
-                                                        'id_paquete' => $json,
-                                                        'nombre' => $getPaquetesByName[$o]['descripcion'],
-                                                        'fecha_inicio' =>  $getPaquetesByName[$o]['fecha_inicio'],
-                                                        'fecha_fin' =>  $getPaquetesByName[$o]['fecha_fin'],
-                                                        'estatus' => 1,
-                                                        'creado_por' => $this->session->userdata('id_usuario'),
-                                                        'fecha_modificacion' =>  $hoy2,
-                                                        'modificado_por' => $this->session->userdata('id_usuario'),
-                                                        'list_paquete' => $getPaquetesByName[$o]['paquetes']
-                                                        );
-                                                        array_push($datosInsertar_x_condominio,$array_x_condominio);
-
-                            }                 
-                        }
-                       if(count($datosInsertar_x_condominio) > 0){
-                        $this->PaquetesCorrida_model->insertBatch('paquetes_x_condominios',$datosInsertar_x_condominio);
-                       }
-
-                    }
+    
+    $stack= array();
+  
+    for ($i=0; $i < sizeof($cuari1); $i++) {
+        $arrCondominio= implode(",", $cuari1[$i]);
+        $queryRes =  $this->db->query("DECLARE @condominio varchar(200), @tags VARCHAR(MAX); 
+        SET @condominio = ($arrCondominio) 
+      
+        /*INICIO DEL PROCESO*/ 
+        SET @tags = (SELECT STRING_AGG(CONVERT(VARCHAR(MAX),(id_descuento) ), ',') 
+        FROM lotes l 
+        INNER JOIN condominios c ON c.idCondominio = l.idCondominio 
+        INNER JOIN residenciales r ON r.idResidencial = c.idResidencial 
+        WHERE c.idCondominio IN (@condominio)) 
+      
+        (SELECT 
+        @condominio condominio, STRING_AGG(id_paquete, ',') paquetes, fecha_inicio, fecha_fin, 
+        UPPER(CONCAT('PAQUETE ', DATENAME(MONTH, fecha_inicio), ' ', YEAR(fecha_inicio))) descripcion 
+        FROM paquetes 
+        WHERE id_paquete in (SELECT DISTINCT(value) FROM STRING_SPLIT(@tags, ',') WHERE RTRIM(value) <> '') 
+        GROUP BY fecha_inicio, fecha_fin)");
         
-           
+        foreach ($queryRes->result() as  $valor) {
+  
+        array_push($stack, array('condominio' => $valor->condominio, 'paquetes' => $valor->paquetes, 'fecha_inicio' => $valor->fecha_inicio, 'fecha_fin' => $valor->fecha_fin, 'descripcion' => $valor->descripcion));
+  
+    }
+  }
+  $getPaquetesByName = $stack;
+  
+//   print_r( $getPaquetesByName);
+  $datosInsertar_x_condominio = array();
+  for ($o=0; $o <count($getPaquetesByName) ; $o++) {
+    $json = array();
+    if(!empty($getPaquetesByName[$o]['paquetes'])){
+        array_push($json,array( 
+            "paquetes" => $getPaquetesByName[$o]['paquetes'],
+            "tipo_superficie" => array("tipo" => $superficie,
+            "sup1" => $inicio,
+            "sup2" => $fin) ));
+            
+            $json = json_encode($json);
+            $json = ltrim($json,'[');
+            $json = rtrim($json,']');
+            
+            $array_x_condominio =array(
+                'id_condominio' => $getPaquetesByName[$o]['condominio'],
+                'id_paquete' => $json,
+                'nombre' => $getPaquetesByName[$o]['descripcion'],
+                'fecha_inicio' =>  $getPaquetesByName[$o]['fecha_inicio'],
+                'fecha_fin' =>  $getPaquetesByName[$o]['fecha_fin'],
+                'estatus' => 1,
+                'creado_por' => $this->session->userdata('id_usuario'),
+                'fecha_modificacion' =>  $hoy2,
+                'modificado_por' => $this->session->userdata('id_usuario'),
+                'list_paquete' => $getPaquetesByName[$o]['paquetes']);
+                
+                array_push($datosInsertar_x_condominio,$array_x_condominio);
+            }
         }
+        if(count($datosInsertar_x_condominio) > 0){
+            $this->PaquetesCorrida_model->insertBatch('paquetes_x_condominios',$datosInsertar_x_condominio);
+        }
+    }
     
 
 

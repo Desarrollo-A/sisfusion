@@ -1,3 +1,6 @@
+var mediaqueryList = window.matchMedia("(min-width: 200px)");
+console.log("m1",mediaqueryList);
+
 var optionsTotalVentas = {
     series: [],
     chart: {
@@ -256,6 +259,9 @@ var optionsFunnel = {
         enabled: true,
         y: {
             formatter: (value) => value.toLocaleString('es-MX'),
+            title: {
+                formatter: (seriesName) => 'Cantidad',
+            },
         },
     }
 };
@@ -347,12 +353,13 @@ function loadInit(){
         com2.append("typeTransaction", typeTransaction);
         getProspectsByYear(com2); 
         getSalesByYear(com2);
-        getClientsAndProspectsByYear(); 
         generalMetrics(typeTransaction); 
         cicloVenta(com2);
+        getClientsAndProspectsByYear(); 
 }
 
 function getSalesByYear(com2){
+    $('.loadTotalVentasChart').removeClass('d-none');
     $.ajax({
         url: `${base_url}Dashboard/totalVentasData`,
         data:com2,
@@ -361,9 +368,6 @@ function getSalesByYear(com2){
         processData: false,
         type: 'POST',
         dataType: 'json',
-        beforeSend: function () {
-            $('#spiner-loader').removeClass('hide');
-        },
         success: function (response) {
             let totalVentasArray = [
                 parseFloat(response.porcentajeTotal),
@@ -383,11 +387,13 @@ function getSalesByYear(com2){
              });
 
             totalVentasChart.toggleDataPointSelection (0);
+            $('.loadTotalVentasChart').addClass('d-none');
         }
     });
 }
 
 function getProspectsByYear(com2) {
+    $('.loadProspectosChart').removeClass('d-none');
     $.ajax({
         url: `${base_url}Dashboard/getProspectsByYear`,
         data:com2,
@@ -396,9 +402,6 @@ function getProspectsByYear(com2) {
         processData: false,
         type: 'POST',
         dataType: 'json',
-        beforeSend: function () {
-            $('#spiner-loader').removeClass('hide');
-        },
         success: function (response) {
             let months = [];
             let data = [];
@@ -421,7 +424,7 @@ function getProspectsByYear(com2) {
 
             $('#numberGraphic').text(count.toLocaleString('es-MX'));
             document.getElementById('numberGraphic').title = count.toLocaleString('es-MX');
-            $('[data-toggle="tooltip"]').tooltip();
+            $('.loadProspectosChart').addClass('d-none');
         }
     });
 }
@@ -433,7 +436,7 @@ function getClientsAndProspectsByYear(type = 1, beginDate = null, endDate= null)
     data.append("beginDate", beginDate);
     data.append("endDate", endDate);
     data.append("typeTransaction", typeTransaction);
-
+    $('.loadChartProspClients').removeClass('d-none');
     $.ajax({
         url: `${base_url}Dashboard/getClientsAndProspectsByYear`,
         cache: false,
@@ -442,9 +445,6 @@ function getClientsAndProspectsByYear(type = 1, beginDate = null, endDate= null)
         type: 'POST',
         data: data,
         dataType: 'json',
-        beforeSend: function () {
-            $('#spiner-loader').removeClass('hide');
-        },
         success: function (response) {
             let monthsP = [];
             let monthsC = [];
@@ -475,11 +475,10 @@ function getClientsAndProspectsByYear(type = 1, beginDate = null, endDate= null)
 
             chartProspClients.updateOptions({
                 xaxis: {
-                   categories: monthsP.length >= monthsC.length ? monthsP:monthsC
+                    categories: monthsP.length >= monthsC.length ? monthsP:monthsC
                 },
             });
-
-            $('#spiner-loader').addClass('hide');
+            $('.loadChartProspClients').addClass('d-none');
         }
     });
 }
@@ -522,6 +521,7 @@ function weekFilter(element){
 }
 
 function getDataFromDates(com2){
+    $('.loadChartWeekly').removeClass('d-none');
     $.ajax({
         url: `${base_url}Dashboard/getDataFromDates`,
         data:com2,
@@ -530,10 +530,6 @@ function getDataFromDates(com2){
         processData: false,
         type: 'POST',
         dataType: 'json',
-        beforeSend: function(){
-            $('#spiner-loader').removeClass('hide');
-            cleanValues();
-        },
         success : function (response) {
             const sumValues = obj => Object.values(obj).reduce((a, b) => a + b);
             let suma = sumValues(response)-response.prospTotales;
@@ -543,12 +539,13 @@ function getDataFromDates(com2){
             }]);
 
             addTextFields(response);
-            $('#spiner-loader').addClass('hide');
+            $('.loadChartWeekly').addClass('d-none');
         }
     });
 }
 
 function cicloVenta(com2){
+    $('.loadChartFunnel').removeClass('d-none');
     $.ajax({
         url: `${base_url}Dashboard/cicloVenta`,
         data:com2,
@@ -557,10 +554,6 @@ function cicloVenta(com2){
         processData: false,
         type: 'POST',
         dataType: 'json',
-        beforeSend: function(){
-            $('#spiner-loader').removeClass('hide');
-            cleanValues2();
-        },
         success : function (response) {
             chartFunnel.updateSeries([
                response.totalProspectosCita, response.totalProspectosCitaSeguimiento, 
@@ -568,7 +561,7 @@ function cicloVenta(com2){
             ]);
             
             addTextFields2(response);
-            $('#spiner-loader').addClass('hide');
+            $('.loadChartFunnel').addClass('d-none');
         }
     });
 }
@@ -657,14 +650,14 @@ function cleanValues() {
 };
 
 function addTextFields(response){
-    $('#pt_card').text((response.prospTotales).toLocaleString('es-MX'));
-    $('#np_card').text((response.prospNuevos).toLocaleString('es-MX'));
-    $('#va_card').text((response.totalAT).toLocaleString('es-MX'));
-    $('#ca_card').text((response.totalCanA).toLocaleString('es-MX'));
-    $('#vc_card').text((response.totalConT).toLocaleString('es-MX'));
-    $('#cc_card').text((response.totalCanC).toLocaleString('es-MX'));
-    $('#ct_card').text((response.totalVentas).toLocaleString('es-MX'));
-    $('#pcc_card').text((response.prosCita).toLocaleString('es-MX'));
+    $('#pt_card').text(`${(response.prospTotales).toLocaleString('es-MX')} (${response.porcentaje_prospectosTotales}%)`);
+    $('#np_card').text(`${(response.prospNuevos).toLocaleString('es-MX')} (${response.porcentaje_prospectosNuevos}%)`);
+    $('#va_card').text(`${(response.totalAT).toLocaleString('es-MX')} (${response.porcentaje_totalApartado}%)`);
+    $('#ca_card').text(`${(response.totalCanA).toLocaleString('es-MX')} (${response.porcentaje_totalCanceladoapartado}%)`);
+    $('#vc_card').text(`${(response.totalConT).toLocaleString('es-MX')} (${response.porcentaje_totalContratado}%)`);
+    $('#cc_card').text(`${(response.totalCanC).toLocaleString('es-MX')} (${response.porcentaje_totalCanceladoContratado}%)`);
+    $('#ct_card').text(`${(response.totalVentas).toLocaleString('es-MX')} (${response.porcentaje_totalVentas}%)`);
+    $('#pcc_card').text(`${(response.prosCita).toLocaleString('es-MX')} (${response.porcentaje_prospectosCita}%)`);
 };
 
 function cleanValues2() {
@@ -679,10 +672,10 @@ function cleanValues2() {
 function addTextFields2(response){
     $('#ac').text((response.totalProspectos).toLocaleString('es-MX'));
     $('#cf').text((response.totalMitadProceso).toLocaleString('es-MX'));
-    $('#cita').text((response.totalProspectosCita).toLocaleString('es-MX'));
-    $('#cs').text((response.totalProspectosCitaSeguimiento).toLocaleString('es-MX'));
-    $('#ap').text((response.totalApartados).toLocaleString('es-MX'));
-    $('#ni').text((response.prospectosNoInteresados).toLocaleString('es-MX'));
+    $('#cita').text(`${(response.totalProspectosCita).toLocaleString('es-MX')} (${response.porcentaje_prospectosCita}%)`);
+    $('#cs').text(`${(response.totalProspectosCitaSeguimiento).toLocaleString('es-MX')} (${response.porcentaje_prospectosSeguimiento}%)`);
+    $('#ap').text(`${(response.totalApartados).toLocaleString('es-MX')} (${response.porcentaje_prospectosApartados}%)`);
+    $('#ni').text(`${(response.prospectosNoInteresados).toLocaleString('es-MX')} (${response.porcentaje_prospectosNoInteresado}%)`);
 };
 
 function getThisWeek() {
@@ -711,7 +704,7 @@ function setInitialValues() {
     const endDate = new Date(fechaFin.getFullYear(), fechaFin.getMonth() + 1, 0);
     finalBeginDate = [beginDate.getFullYear(), ('0' + (beginDate.getMonth() + 1)).slice(-2), ('0' + beginDate.getDate()).slice(-2)].join('-');
     finalEndDate = [endDate.getFullYear(), ('0' + (endDate.getMonth() + 1)).slice(-2), ('0' + endDate.getDate()).slice(-2)].join('-');
-    finalBeginDate2 = [('0' + beginDate.getDate()).slice(-2), ('0' + (beginDate.getMonth() + 1)).slice(-2), beginDate.getFullYear()].join('/');
+    finalBeginDate2 = ['01', '01', beginDate.getFullYear()].join('/');
     finalEndDate2 = [('0' + endDate.getDate()).slice(-2), ('0' + (endDate.getMonth() + 1)).slice(-2), endDate.getFullYear()].join('/');
 
     $('#beginDate').val(finalBeginDate2);

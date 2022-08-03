@@ -7,16 +7,26 @@
             $datos = $datos4;
             $datos = $datos2;
             $datos = $datos3;
+
             $this->load->view('template/sidebar', $datos);
         ?>
 
         <div class="content boxContent pt-0">
             <div class="container-fluid">
                 <ul class="nav nav-pills nav-pills-gray dashboard-nav-pills d-flex justify-center">
-                    <li class="active menuTab" id="inicioOption">
-                        <a href="#inicio" data-toggle="tab"><div class="iconBox"><i class="fas fa-home p-0"></i></div><p class="m-0">Inicio</p></a>
-                    </li>
-                    <li class="menuTab" id="reporteOption">
+                    <?php 
+                    $li = '';
+                    foreach($sub_menu as $menu){
+                        $activeClass = $menu->active == 1 ? 'active menuTab':'menuTab';
+                        $li .= "<li class='$activeClass' id='$menu->id_li'>";
+                        $li .= "<a href='#$menu->href' data-toggle='tab'><div class='iconBox'><i class='$menu->icono p-0'></i></div><p class='m-0'>$menu->nombre</p></a>";
+                        $li .= "</li>";
+                    }      
+                    echo $li;
+
+                    ?>
+                  
+                    <!-- <li class="menuTab" id="reporteOption">
                         <a href="#reporte" data-toggle="tab"><div class="iconBox"><i class="fas fa-file-alt p-0"></i></div><p class="m-0">Reporte</p></a>
                     </li>
                     <li class="menuTab" id="agendaOption">
@@ -27,14 +37,24 @@
                     </li>
                     <li class="menuTab" id="metricasOption">
                         <a href="#metricas" data-toggle="tab"><div class="iconBox"><i class="far fa-chart-bar p-0"></i></div><p class="m-0">Métricas</p></a>
-                    </li>
+                    </li> -->
                 </ul>
                 <div class="tab-content">
-                    <div class="tab-pane active" id="inicio"></div>
+
+                <?php 
+                     $div = '';
+                     foreach($sub_menu as $menu){
+                         $activeClass = $menu->active == 1 ? 'tab-pane active':'tab-pane';
+                         $div .= "<div class='$activeClass' id='$menu->id_content'>";
+                         $div .= "</div>";
+                     }      
+                     echo $div;
+                ?>
+                    <!-- <div class="tab-pane active" id="inicio"></div>
                     <div class="tab-pane" id="reporte"></div>
                     <div class="tab-pane" id="agenda"></div>
                     <div class="tab-pane" id="ranking"></div>
-                    <div class="tab-pane" id="metricas"></div>
+                    <div class="tab-pane" id="metricas"></div> -->
                 </div>
             </div>
         </div>
@@ -43,6 +63,8 @@
 </body>
 <?php $this->load->view('dashboard/agenda/common_modals'); ?>
 <?php $this->load->view('dashboard/reporte/common_modals'); ?>
+<?php $this->load->view('dashboard/ranking/common_modals'); ?>
+<?php $this->load->view('dashboard/metricas/common_modals'); ?>
 
 <?php $this->load->view('template/footer');?>
 <!--  Plugin for Date Time Picker and Full Calendar Plugin-->

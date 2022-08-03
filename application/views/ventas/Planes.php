@@ -13,34 +13,23 @@
 		$this->load->view('template/sidebar', $datos);
 		?>
 
-		<!-- Modals -->
-		<div class="modal fade modal-alertas" id="ModalMsi" role="dialog">
+		<div class="modal fade" id="ModalAlert" role="dialog">
 			<div class="modal-dialog modal-sm">
-				<div class="modal-content">
-					<form method="post" id="formMsi">
-						<div class="modal-body"></div>
-						<div class="modal-footer"></div>
-					</form>
-				</div>
-			</div>
-		</div>
-
-		<div class="modal fade modal-alertas" id="ModalAlert" role="dialog">
-			<div class="modal-dialog modal-md">
 				<div class="modal-content text-center">
 					<div class="modal-header">
-						<h4>Una vez guardados los planes <br> ya no se podrá modificar la información</h4>
+						<h5>Una vez guardados los planes ya no se podrá modificar la información.</h5>
 					</div>
-					<div class="row">
-						<div class="col-md-6 text-right">
-							<button type="button" data-toggle="tooltip" data-placement="right" title="Guardar" class="btn btn-success btn-circle btn-lg" onclick="SavePaquete();" name=""  id="">
-								<i class="fas fa-check"></i>
-							</button>
-						</div>
-						<div class="col-md-6 text-left">
-							<button type="button" data-toggle="tooltip" data-placement="right" title="Cancelar" class="btn btn-danger btn-circle btn-lg" data-dismiss="modal">
-								<i class="fas fa-times"></i>
-							</button>
+					<div class="container-fluid">
+						<div class="row mb-1 mt-1">
+							<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+								<button type="button" class="btnSave btn-gral-data" onclick="SavePaquete();">Guardar
+								</button>
+							</div>
+							<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+								
+								<button type="button" class="btn btn-danger btn-simple m-0" data-dismiss="modal">Cancelar
+								</button>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -48,18 +37,20 @@
 		</div>
 
 		<div class="modal fade modal-alertas" id="ModalRemove" role="dialog">
-			<div class="modal-dialog modal-md">
+			<div class="modal-dialog modal-sm">
 				<div class="modal-content text-center">
 					<div class="modal-header">
 						<h4>¿Desea remover este plan?</h4>
 					</div>
-					<div class="row">
-						<div class="col-md-6 text-right">
-							<input type="hidden" value="0" id="iddiv">
-							<button type="button" data-toggle="tooltip" data-placement="right" title="Guardar" class="btn btn-success btn-circle btn-lg" onclick="RemovePackage();" name=""  id=""><i class="fas fa-check"></i></button>
-						</div>
-						<div class="col-md-6 text-left">
-							<button type="button" data-toggle="tooltip" data-placement="right" title="Cancelar" class="btn btn-danger btn-circle btn-lg" data-dismiss="modal"><i class="fas fa-times"></i></button>
+					<div class="container-fluid">
+						<div class="row mb-1 mt-1">
+							<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+								<input type="hidden" value="0" id="iddiv">
+								<button type="button" class="btn-gral-data" onclick="RemovePackage();">Sí</button>
+							</div>
+							<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+								<button type="button" class="btn btn-danger btn-simple m-0" data-dismiss="modal">Cancelar</button>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -112,117 +103,82 @@
 							</ul>
 							<div class="tab-content">
 								<div class="tab-pane active" id="tab_default_1">
-									<h4>Descuentos al total</h4>
-									<p>
-										<a class="btn btn-success" href="#" onclick="OpenModal(1,'tab_default_1');" >
-											Agregar nuevo descuento
-										</a>
-									</p>
-									<div class="material-datatables">
-										<div class="form-group">
-											<div class="table-responsive">
-												<table class="table-striped table-hover" id="table_total" name="table_total">
-													<thead>
-														<tr>
-															<th>ID DESCUENTO</th>
-															<th>PORCENTAJE</th>
-															<th>DESCUENTO A</th>
-														</tr>
-													</thead>
-												</table>
-											</div>
+									<!-- Precio total -->
+									<div class="material-datatables p-2">
+										<div class="table-responsive">
+											<table class="table-striped table-hover" id="table_total" name="table_total">
+												<thead>
+													<tr>
+														<th>ID DESCUENTO</th>
+														<th>PORCENTAJE</th>
+														<th>DESCUENTO A</th>
+													</tr>
+												</thead>
+											</table>
 										</div>
 									</div>
 								</div>
 								<div class="tab-pane" id="tab_default_2">
-									<h4>Descuentos al enganche</h4>
-									<p>
-										<a class="btn btn-success" href="#" onclick="OpenModal(2,'tab_default_2');">
-											Agregar nuevo descuento
-										</a>
-									</p>
-									<div class="material-datatables">
-										<div class="form-group">
-											<div class="table-responsive">
-												<table class="table-striped table-hover" id="table_enganche" name="table_enganche">
-													<thead>
-														<tr>
-															<th>ID DESCUENTO</th>
-															<th>PORCENTAJE</th>
-															<th>DESCUENTO A</th>
-														</tr>
-													</thead>
-												</table>
-											</div>
+									<!-- Enganche -->
+									<div class="material-datatables p-2">
+										<div class="table-responsive">
+											<table class="table-striped table-hover" id="table_enganche" name="table_enganche">
+												<thead>
+													<tr>
+														<th>ID DESCUENTO</th>
+														<th>PORCENTAJE</th>
+														<th>DESCUENTO A</th>
+													</tr>
+												</thead>
+											</table>
 										</div>
 									</div>
 								</div>
 								<div class="tab-pane" id="tab_default_3">
-									<h4>Descuentos por M2</h4>
-									<p>
-										<a class="btn btn-success" href="#" onclick="OpenModal(4,'tab_default_3');">
-											Agregar nuevo descuento
-										</a>
-									</p>
-									<div class="material-datatables">
-										<div class="form-group">
-											<div class="table-responsive">
-												<table class="table-striped table-hover" id="table_m2" name="table_m2">
-													<thead>
-														<tr>
-															<th>ID DESCUENTO</th>
-															<th>PORCENTAJE</th>
-															<th>DESCUENTO A</th>
-														</tr>
-													</thead>
-												</table>
-											</div>
+									<!-- Precio por M2 -->
+									<div class="material-datatables p-2">
+										<div class="table-responsive">
+											<table class="table-striped table-hover" id="table_m2" name="table_m2">
+												<thead>
+													<tr>
+														<th>ID DESCUENTO</th>
+														<th>PORCENTAJE</th>
+														<th>DESCUENTO A</th>
+													</tr>
+												</thead>
+											</table>
 										</div>
 									</div>
 								</div>
 								<div class="tab-pane" id="tab_default_4">
-									<h4>Descuentos por bono</h4>
-									<p>
-										<a class="btn btn-success" href="#" onclick="OpenModal(12,'tab_default_4');">
-											Agregar nuevo descuento
-										</a>
-									</p>
-									<div class="material-datatables">
-										<div class="form-group">
-											<div class="table-responsive">
-												<table class="table-striped table-hover" id="table_bono" name="table_bono">
-													<thead>
-														<tr>
-															<th>ID DESCUENTO</th>
-															<th>PORCENTAJE</th>
-															<th>DESCUENTO A</th>
-														</tr>
-													</thead>
-												</table>
-											</div>
+									<!-- Precio por bono -->
+									<div class="material-datatables p-2">
+										<div class="table-responsive">
+											<table class="table-striped table-hover" id="table_bono" name="table_bono">
+												<thead>
+													<tr>
+														<th>ID DESCUENTO</th>
+														<th>PORCENTAJE</th>
+														<th>DESCUENTO A</th>
+													</tr>
+												</thead>
+											</table>
 										</div>
 									</div>
 								</div>
 								<div class="tab-pane" id="tab_default_5">
-									<h4>Descuentos MSI</h4>
-									<p>
-										<a class="btn btn-success" href="#" onclick="OpenModal(13,'tab_default_5');">
-											Agregar nuevo descuento
-										</a>
-									</p>
-									<div class="material-datatables">
-										<div class="form-group">
-											<div class="table-responsive">
-												<table class="table-striped table-hover" id="table_msi" name="table_msi">
-													<thead>
-														<tr>
-															<th>ID DESCUENTO</th>
-															<th>PORCENTAJE</th>
-															<th>DESCUENTO A</th>
-														</tr>
-													</thead>
-												</table>
-											</div>
+									<!-- MSI -->
+									<div class="material-datatables p-2">
+										<div class="table-responsive">
+											<table class="table-striped table-hover" id="table_msi" name="table_msi">
+												<thead>
+													<tr>
+														<th>ID DESCUENTO</th>
+														<th>PORCENTAJE</th>
+														<th>DESCUENTO A</th>
+													</tr>
+												</thead>
+											</table>
 										</div>
 									</div>
 								</div>
@@ -234,13 +190,10 @@
 		</div>
 
 		<div class="modal fade modal-alertas" id="ModalFormAddDescuentos" role="dialog">
-			<div class="modal-dialog modal-md">
+			<div class="modal-dialog modal-sm">
 				<div class="modal-content">
 					<div class="modal-header">
-						<h5 class="modal-title">Cargar nuevo descuento</h5>
-						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-							<span aria-hidden="true">&times;</span>
-						</button>
+						<h5 class="modal-title text-center">Cargar nuevo descuento</h5>
 					</div>
 					<form id="addNewDesc">
 						<input type="hidden" value="0" name="tdescuento" id="tdescuento">
@@ -249,18 +202,20 @@
 						<input type="hidden" value="0" name="apply" id="apply">
 						<input type="hidden" value="0" name="boton" id="boton">
 						<input type="hidden" value="0" name="tipo_d" id="tipo_d">
-						<div class="form-group">
-							<label id="label_descuento"></label>
-							<input type="text"  class="input-gral" required  data-type="currency"   id="descuento" name="descuento">
+						<div class="form-group d-flex justify-center">
+							<div class="">
+								<p class="m-0" id="label_descuento"></p>
+								<input type="text" class="input-gral border-none w-100" required  data-type="currency"   id="descuento" name="descuento">
+							</div>
 						</div>
-						<div class="row">
-							<div class="col-md-3">
-							</div>
-							<div class="col-md-3">
-								<input type="submit" class="btn btn-success" name="disper_btn"  id="dispersar" value="Guardar">
-							</div>
-							<div class="col-md-3">
-								<input type="button" class="btn btn-danger" data-dismiss="modal" value="CANCELAR">
+						<div class="container-fluid">
+							<div class="row mt-1 mb-1">
+								<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+									<input type="submit" class="btn-gral-data" name="disper_btn"  id="dispersar" value="Guardar">
+								</div>
+								<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+									<input type="button" class="btn btn-danger btn-simple m-0" data-dismiss="modal" value="CANCELAR">
+								</div>
 							</div>
 						</div>
 					</form>
@@ -268,7 +223,7 @@
 			</div>
 		</div>
 
-		<div class="content cargarPlan">
+		<div class="cargarPlan">
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">  
@@ -286,74 +241,78 @@
 								<div class="tab-content">
 									<div class="tab-pane active" id="nuevas-1">
 										<form id="form-paquetes" class="formulario">
-											<div class="d-flex justify-center align-center">
-												<button type="button" data-toggle="modal" onclick="llenarTables();" data-target="#exampleModal" id="btn_open_modal" class="btn-descuentos" rel="tooltip" data-placement="left" title="Ver descuentos"><i class="fas fa-tags" ></i></button>
-											</div>
 											<div class="container-fluid">
 												<div class="row">
-													<div class="col-xs-12 col-sm-12 col-md-2 col-lg-2">
-														<div class="form-group">
-															<label class="m-0" for="sede">Sede (<b class="text-danger">*</b>)</label>
-															<select name="sede" id="sede" class="select-gral" data-style="btn " data-show-subtext="true" data-live-search="true"  title="Selecciona una opción" data-size="7" required>
-															</select>
-														</div>
+													<div class="boxInfoGral">
+														<button type="button" data-toggle="modal" onclick="llenarTables();" data-target="#exampleModal" id="btn_open_modal" class="btnDescuento" rel="tooltip" data-placement="top" title="Ver descuentos"><i class="fas fa-tags" ></i></button>
 													</div>
-													<div class="col-xs-12 col-sm-12 col-md-7 col-lg-7">
-														<div class="form-group">
-															<label class="mb-1" for="residencial">Proyecto (<b class="text-danger">*</b>)</label> 
-															<select id="residencial" name="residencial[]" multiple="multiple" class="form-control multiSelect"  data-style="btn " data-show-subtext="true" data-live-search="true"  title="Selecciona una opción" data-size="7" required>
-															</select>
-														</div>
-													</div>
-													<div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">          
-														<div class="form-group">
-															<label class="mb-1" for="sede">Rango fechas(<b class="text-danger">*</b>)</label>
-															<div class="d-flex" style="height:40px">
-																<input class="form-control dates" name="fechainicio" id="fechainicio" type="date" required="true">
-																<input class="form-control dates" name="fechafin" id="fechafin" type="date" required="true">
+													<div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 p-0">
+														<div class="container-fluid" id="boxMainForm">
+															<div class="row">
+																<div class="col-xs-12 col-sm-6 col-md-12 col-lg-12">          
+																	<div class="form-group">
+																		<label class="mb-0" for="sede">Rango fechas (<b class="text-danger">*</b>)</label>
+																		<div class="d-flex">
+																			<input class="form-control dates" name="fechainicio" id="fechainicio" type="date" required="true" onchange="validateAllInForm()">
+																			<input class="form-control dates" name="fechafin" id="fechafin" type="date" required="true" onchange="validateAllInForm()">
+																		</div>
+																	</div>
+																</div>
+																<div class="col-xs-12 col-sm-6 col-md-12 col-lg-12">
+																	<div class="form-group">
+																		<label class="mb-0" for="sede">Sede (<b class="text-danger">*</b>)</label>
+																		<select name="sede" id="sede" class="select-gral mt-0" data-style="btn " data-show-subtext="true" data-live-search="true"  title="Selecciona una opción" data-size="7" required onchange="validateAllInForm()">
+																		</select>
+																	</div>
+																</div>
+																<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+																	<div class="form-group">
+																		<label class="mb-0" for="residencial">Proyecto (<b class="text-danger">*</b>)</label> 
+																		<select id="residencial" name="residencial[]" multiple="multiple" class="form-control multiSelect"  data-style="btn " data-show-subtext="true" data-live-search="true"  title="Selecciona una opción" data-size="7" required onchange="validateAllInForm()">
+																		</select>
+																	</div>
+																</div>
+																<div class="col-xs-12 col-sm-6 col-md-12 col-lg-12">
+																	<div class="form-group">
+																		<label class="mb-0">Tipo de lote (<b class="text-danger">*</b>):</label>
+																		<div class="radio-container boxTipoLote">
+																			<input type="radio" id="customRadioInline1" value="1" name="tipoLote" onchange="validateAllInForm()">
+																			<label class="custom-control-label" for="customRadioInline1">Habitacional</label>
+																			<input type="radio" id="customRadioInline2" value="2" name="tipoLote" onchange="validateAllInForm()">
+																			<label class="custom-control-label" for="customRadioInline2">Comercial</label>
+																			<input type="radio" id="customRadioInline3" value="3" name="tipoLote" onchange="validateAllInForm()">
+																			<label class="custom-control-label" for="customRadioInline3">Ambos</label>	
+																		</div>
+																	</div>
+																</div>
+																<div class="col-xs-12 col-sm-6 col-md-12 col-lg-12">
+																	<div class="form-group">
+																		<label class="mb-0">Superficie (<b class="text-danger">*</b>):</label>
+																		<div class="d-flex w-100">
+																			<div class="radio-container boxSuperficie w-100">
+																				<input type="radio" id="customRadio1" value="1" name="superficie" onclick="selectSuperficie(1)" onchange="validateAllInForm()">
+																				<label class="custom-control-label" for="customRadio1">Mayor a</label>
+																				<input type="radio" id="customRadio2" value="2" name="superficie" onclick="selectSuperficie(2)" onchange="validateAllInForm()">
+																				<label class="custom-control-label" for="customRadio2">Menor a</label>
+																				<input type="radio" id="customRadio3" value="3" name="superficie" onclick="selectSuperficie(3)" onchange="validateAllInForm()">
+																				<label class="custom-control-label" for="customRadio3">Cualquiera</label>
+																			</div>
+																			<div id="printSuperficie"></div>
+																		</div>
+																	</div>
+																</div>
+																<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 mt-2 boxActionsCards">
+																	<button type="button" id="btn_generate" class="btnAction d-none" onclick="GenerarCard()" rel="tooltip" data-placement="top" title="Agregar plan"><p class="mb-0 mr-1">Agregar plan</p><i class="fas fa-plus"></i></button>
+																	<input type="hidden" value="0" name="index" id="index">
+																	<button type="submit" id="btn_save" class="btnAction d-none" rel="tooltip" data-placement="top" title="Guardar planes"><p class="mb-0 mr-1">Guardar todo</p><i class="fas fa-save"></i></button>
+																</div>
 															</div>
 														</div>
 													</div>
-												</div>
-												<div class="row">
-													<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-														<label class="mb-1">Tipo de Lote (<b class="text-danger">*</b>):</label>
-														<div class="radio-container">
-															<input type="radio" id="customRadioInline1" value="1" name="tipoLote">
-															<label class="custom-control-label" for="customRadioInline1">Habitacional</label>
-															<input type="radio" id="customRadioInline2" value="2" name="tipoLote">
-															<label class="custom-control-label" for="customRadioInline2">Comercial</label>
-															<input type="radio" id="customRadioInline3" value="3" name="tipoLote">
-															<label class="custom-control-label" for="customRadioInline3">Ambos</label>	
+													<div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 mt-2">
+														<p class="m-0 d-none leyendItems">Plan(es) añadido(s) (<span class="items"></span>)</p>
+														<div class="row dataTables_scrollBody" id="showPackage">
 														</div>
-													</div>
-													<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-														<label class="mb-1">Superficie (<b class="text-danger">*</b>):</label>
-														<div class="d-flex w-100">
-															<div class="radio-container w-100">
-																<input type="radio" id="customRadio1" value="1" name="superficie" onclick="selectSuperficie(1)">
-																<label class="custom-control-label" for="customRadio1">Mayor a</label>
-																<input type="radio" id="customRadio2" value="2" name="superficie" onclick="selectSuperficie(2)">
-																<label class="custom-control-label" for="customRadio2">Rango</label>
-																<input type="radio" id="customRadio3" value="3" name="superficie" onclick="selectSuperficie(3)">
-																<label class="custom-control-label" for="customRadio3">Cualquiera</label>
-															</div>
-															<div id="printSuperficie"></div>
-														</div>
-													</div>
-												</div>
-												<div class="row">
-													<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-														<div class="text-right">
-															<button type="submit" id="btn_save" class="btn btn-success">Guardar</button>
-														</div>
-													</div>
-													<div class="rowCards" id="showPackage"></div>
-												</div>
-												<div class="row">
-													<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-														<button type="button" class="btn btn-success btn-circle btn-lg" onclick="GenerarCard()">Agregar plan<i class="fas fa-plus"></i></button>
-														<input type="hidden" value="0" name="index" id="index">
 													</div>
 												</div>
 											</div>
@@ -389,9 +348,7 @@
 					</div>
 				</div>
 			</div>
-		</div>
-		<div id="snackbar"><i class="fas fa-check"></i> ¡MSI agregado con éxito!</div>
-		<?php $this->load->view('template/footer_legend');?>
+		</div>		
 	</div>
 	</div>
 	<?php $this->load->view('template/footer');?>
@@ -416,7 +373,7 @@
 				$('#apply').val(1);
 				$('#boton').val(boton);
 				$('#tipo_d').val(1);
-				document.getElementById('label_descuento').innerHTML = 'Agregar descuento al precio total (<b class="text-danger">*</b>):';
+				document.getElementById('label_descuento').innerHTML = 'Agregar descuento al precio total';
 			}else if(tipo == 2){
 				$('#descuento').val('');
 				$('#tdescuento').val(2);
@@ -425,7 +382,7 @@
 				$('#apply').val(0);
 				$('#boton').val(boton);
 				$('#tipo_d').val(2);
-				document.getElementById('label_descuento').innerHTML = 'Agregar descuento al enganche(<b class="text-danger">*</b>):';
+				document.getElementById('label_descuento').innerHTML = 'Agregar descuento al enganche';
 			}else if(tipo == 4){
 				$('#descuento').val('');
 				$('#tdescuento').val(1);
@@ -434,7 +391,7 @@
 				$('#apply').val(1);
 				$('#boton').val(boton);
 				$('#tipo_d').val(4);
-				document.getElementById('label_descuento').innerHTML = 'Agregar descuento al total por M2(<b class="text-danger">*</b>):';
+				document.getElementById('label_descuento').innerHTML = 'Agregar descuento al total por M2';
 			}else if(tipo == 12){
 				$('#descuento').val('');
 				$('#tdescuento').val(1);
@@ -443,7 +400,7 @@
 				$('#apply').val(1);
 				$('#boton').val(boton);
 				$('#tipo_d').val(12);
-				document.getElementById('label_descuento').innerHTML = 'Agregar descuento por bono(<b class="text-danger">*</b>):';
+				document.getElementById('label_descuento').innerHTML = 'Agregar descuento por bono';
 			}
 			else if(tipo == 13){
 				$('#descuento').val('');
@@ -453,7 +410,7 @@
 				$('#apply').val(1);
 				$('#boton').val(boton);
 				$('#tipo_d').val(13);
-				document.getElementById('label_descuento').innerHTML = 'Agregar descuento Meses sin intereses(<b class="text-danger">*</b>):';
+				document.getElementById('label_descuento').innerHTML = 'Agregar descuento meses sin intereses';
 			}
 			$('#ModalFormAddDescuentos').modal();
 		}
@@ -610,7 +567,7 @@
 		
 		function llenarTables(){
 			table_total = $("#table_total").DataTable({
-				dom: 'Brt'+ "<'row'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'i><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>",
+				dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
 				width: "auto",
 				buttons: [{
 					extend: 'excelHtml5',
@@ -618,6 +575,10 @@
 					className: 'btn buttons-excel',
 					titleAttr: 'Descargar archivo de Excel',
 					title: 'DESCUENTOS AL PRECIO TOTAL',
+				},
+				{
+					text: `<a href="#" onclick="OpenModal(1, 'tab_default_1');" >Agregar descuento</a>`,
+					className: 'btn-azure',
 				}],
 				pagingType: "full_numbers",
 				language: {
@@ -664,7 +625,7 @@
 
 			//DESCUENTO AL ENGANCHE
 			table_enganche = $("#table_enganche").DataTable({
-				dom: 'Brt'+ "<'row'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'i><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>",
+				dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
 				width: "auto",
 				buttons: [{
 					extend: 'excelHtml5',
@@ -672,6 +633,10 @@
 					className: 'btn buttons-excel',
 					titleAttr: 'Descargar archivo de Excel',
 					title: 'DESCUENTOS AL ENGANCHE',
+				},
+				{
+					text: `<a href="#" onclick="OpenModal(2, 'tab_default_2');" >Agregar descuento</a>`,
+					className: 'btn-azure',
 				}],
 				pagingType: "full_numbers",
 				language: {
@@ -719,7 +684,7 @@
 
 			//DESCUENTO AL M2
 			table_m2 = $("#table_m2").DataTable({
-				dom: 'Brt'+ "<'row'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'i><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>",
+				dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
 				width: "auto",
 				buttons: [{
 					extend: 'excelHtml5',
@@ -727,6 +692,10 @@
 					className: 'btn buttons-excel',
 					titleAttr: 'Descargar archivo de Excel',
 					title: 'DESCUENTOS AL TOTAL POR M2',
+				},
+				{
+					text: `<a href="#" onclick="OpenModal(4,'tab_default_3')" >Agregar descuento</a>`,
+					className: 'btn-azure',
 				}],
 				pagingType: "full_numbers",
 				language: {
@@ -773,7 +742,7 @@
 
 			//DESCUENTO POR BONO
 			table_bono = $("#table_bono").DataTable({
-				dom: 'Brt'+ "<'row'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'i><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>",
+				dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
 				width: "auto",
 				buttons: [{
 					extend: 'excelHtml5',
@@ -781,6 +750,10 @@
 					className: 'btn buttons-excel',
 					titleAttr: 'Descargar archivo de Excel',
 					title: 'DESCUENTOS POR BONO',
+				},
+				{
+					text: `<a href="#" onclick="OpenModal(12,'tab_default_4');" >Agregar descuento</a>`,
+					className: 'btn-azure',
 				}],
 				pagingType: "full_numbers",
 				language: {
@@ -827,7 +800,7 @@
 
 			///DESCUENTO MSI
 			table_msi = $("#table_msi").DataTable({
-				dom: 'Brt'+ "<'row'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'i><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>",
+				dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
 				width: "auto",
 				buttons: [{
 					extend: 'excelHtml5',
@@ -835,6 +808,10 @@
 					className: 'btn buttons-excel',
 					titleAttr: 'Descargar archivo de Excel',
 					title: 'DESCUENTOS MSI',
+				},
+				{
+					text: `<a href="#" onclick="OpenModal(13,'tab_default_5');" >Agregar descuento</a>`,
+					className: 'btn-azure',
 				}],
 				pagingType: "full_numbers",
 				language: {
@@ -897,15 +874,6 @@
 			return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
 		};
 
-		function myFunction() {
-			// Get the snackbar DIV
-			var x = document.getElementById("snackbar");
-			// Add the "show" class to DIV
-			x.className = "show";
-			// After 3 seconds, remove the show class from DIV
-			setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
-		}
-
 		$(document).ready(function() {
 			$.post("<?=base_url()?>index.php/PaquetesCorrida/lista_sedes", function (data) {
 				$('[data-toggle="tooltip"]').tooltip()
@@ -919,18 +887,18 @@
                 $("#sede").selectpicker('refresh');
             }, 'json');
 			setInitialValues();
+			noCreatedCards();
         });
 
 		$("#sede").change(function() {
+			$('#spiner-loader').removeClass('hide');
 			$('#residencial option').remove();
 			var parent = $(this).val();
 			var	datos = parent.split(',')
 			var	id_sede = datos[0];
-			console.log("parent", parent);
-			console.log("datos", datos);
-			console.log("id_sede", id_sede);
 
 			$.post('getResidencialesList/'+id_sede, function(data) {
+				$('#spiner-loader').addClass('hide');
                 $("#residencial").append($('<option disabled>').val("default").text("Seleccione una opción"));
                 var len = data.length;
                 for( var i = 0; i<len; i++){
@@ -960,7 +928,13 @@
 				contentType: false,
 				cache: false,
 				processData:false,
-				success: function(data) {	
+				beforeSend: function(){
+					$('#ModalAlert .btnSave').attr("disabled","disabled");
+					$('#ModalAlert .btnSave').css("opacity",".5");
+				},
+				success: function(data) {
+					$('#ModalAlert .btnSave').prop('disabled', false);
+					$('#ModalAlert .btnSave').css("opacity","1");
 					if(data == 1){
 						ClearAll();
 						alerts.showNotification("top", "right", "Planes almacenados correctamente.", "success");	
@@ -970,6 +944,8 @@
 				
 				},
 				error: function(){
+					$('#ModalAlert .btnSave').prop('disabled', false);
+					$('#ModalAlert .btnSave').css("opacity","1");
 					alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
 				},
 				async: false
@@ -988,6 +964,10 @@
 			$('#residencial option').remove();
 			document.getElementById('showPackage').innerHTML = '';
 			$('#index').val(0);	
+			setInitialValues();
+			noCreatedCards();
+			$(".leyendItems").addClass('d-none');
+			$("#btn_save").addClass('d-none');
 		}
 	
 		function GenerarCard(){
@@ -995,26 +975,30 @@
 				var indexActual = document.getElementById('index');
 				var indexNext = (document.getElementById('index').value - 1) + 2;
 				indexActual.value = indexNext;
-				$('.rowCards').append(`	
-				<div class="card border-primary mb-3 boxCard" style="max-width: 45rem;" id="card_${indexNext}">
-					<div class="row">
-						<div class="col-md-8 text-center">
-							<h4 class="card-title title-plan"><b>Plan</b></h4>
-						</div>
-						<div class="col-md-4">
-							<div class="text-right">
-								<button type="button" class="btn btn-lg btn-danger btn-circle" data-toggle="tooltip" data-placement="top" title="Eliminar plan" id="btn_delete_${indexNext}" onclick="removeElementCard('card_${indexNext}')"><i class="fas fa-trash"></i></button>
+				$('#showPackage').append(`
+				<div class="col-xs-12 col-sm-6 col-md-6 col-lg-6" id="card_${indexNext}">
+					<div class="cardPlan dataTables_scrollBody">
+						<div class="container-fluid">
+							<div class="row">
+								<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+									<div class="title d-flex justify-center align-center">
+										<h3 class="card-title">Plan</h3>
+										<button type="button" class="btn-trash" data-toggle="tooltip" data-placement="left" title="Eliminar plan" id="btn_delete_${indexNext}" onclick="removeElementCard('card_${indexNext}')"><i class="fas fa-trash"></i></button>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+									<input type="text" class="inputPlan" required name="descripcion_${indexNext}" id="descripcion_${indexNext}" placeholder="Descripción del plan (*)">
+									<div class="mt-1" id="checks_${indexNext}">
+										<div class="loadCard w-100">
+											<img src= '`+url+`dist/img/loadingMini.gif' alt="Icono gráfica" class="w-30">
+										</div>
+									</div>						
+									<div class="form-group col-md-12" id="tipo_descuento_select_${indexNext}" hidden>
+								</div>
 							</div>
 						</div>
-					</div>
-					<div class="card-body text-primary myCard">
-						<div class="form-group col-md-12" id="">
-							<label class="">Descripción plan(<b class="text-danger">*</b>):</label>
-							<input type="text" class="form-control input-gral" required name="descripcion_${indexNext}" id="descripcion_${indexNext}">
-						</div>
-						<div id="checks_${indexNext}">
-						</div>						
-						<div class="form-group col-md-12" id="tipo_descuento_select_${indexNext}">
 					</div>
 				</div>`);
 
@@ -1040,35 +1024,39 @@
 
 				/**-----------TIPO DESCUENTO------------------ */
 				$.post('getTipoDescuento', function(data) {
+					$("#checks_"+indexNext).html('');
 					$("#tipo_descuento_"+indexNext).append($('<option>').val("default").text("Seleccione una opción"));
 					var len = data.length;
 
-					$('#checks_'+indexNext).append(`
-					<div class="row">
-						<div class="col-md-4">
-						<b>Descuento a</b>
-						</div>
-						<div class="col-md-8 text-center">
-						<b>Descuentos</b>
-						</div>
-					</div>`);
+					// $('#checks_'+indexNext).append(`<div class="w-100"><label class="mt-2">Descuento a</label></div>`);
 					
 					for( var i = 0; i<len; i++){
 						var id = data[i]['id_tcondicion'];
 						var descripcion = data[i]['descripcion'];
 						$("#tipo_descuento_"+indexNext).append(`<option value='${id}'>${descripcion}</option>`);
 						$("#checks_"+indexNext).append(`
-						<div class="row" >
-							<div class="col-md-4" >
-								<label class="check-box1" for="inlineCheckbox1">
-								<input class="check-box__switcher" type="checkbox" onclick="PrintSelectDesc(${id},${i},${indexNext})" id="inlineCheckbox1_${indexNext}_${i}" value="${id}">
-								${descripcion}</label>
+						<div class="row boxAllDiscounts">
+							<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+								<div class="check__item" for="inlineCheckbox1">
+									<label>
+										<input type="checkbox" class="default__check d-none" id="inlineCheckbox1_${indexNext}_${i}" value="${id}" onclick="PrintSelectDesc(this, ${id},${i},${indexNext})">
+										${descripcion}
+										<span class="custom__check"></span>
+									</label>
+								</div>
 							</div>
-							<div class="col-md-8"  id="selectDescuentos_${indexNext}_${i}"></div>
-							<div class="row">
-								<div class="col-md-1"></div>
-								<div class="col-md-10" id="listamsi_${indexNext}_${i}"></div>
-								<div class="col-md-1"></div>
+							<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+								<div class="boxDetailDiscount hidden">
+									<div class="w-100 mb-1" id="selectDescuentos_${indexNext}_${i}"></div>
+									<div class="container-fluid rowDetailDiscount hidden">
+										<div class="row">
+											<div class="col-xs-12 col-sm-12 col-md-8 col-lg-8"></div>
+											<div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 pr-0"><p class="m-0 txtMSI">msi</p></div>
+										</div>
+										<div class="container-flluid" id="listamsi_${indexNext}_${i}">
+										</div>
+									</div>
+								</div>
 							</div>
 						</div>`);
 					}
@@ -1082,9 +1070,11 @@
 				$('.popover-dismiss').popover({
 					trigger: 'focus'
 				});
+				
+				validateNonePlans();
 			}
 			else{
-				alerts.showNotification("top", "left", "Debe llenar todos los campos requeridos.", "warning");
+				alerts.showNotification("top", "right", "Debe llenar todos los campos requeridos.", "warning");
 			}
 		}
 
@@ -1094,7 +1084,7 @@
 				if(m != i){
 					if( $(`#orden_${indexN}_${m}`).val() == seleccionado && seleccionado != ""){
 						$(`#orden_${indexN}_${i}`).val("");
-						alerts.showNotification("top", "left", "Este número ya se ha seleccionado.", "warning");
+						alerts.showNotification("top", "right", "Este número ya se ha seleccionado.", "warning");
 					}	
 				}
 			}
@@ -1140,54 +1130,25 @@
 			$('[data-toggle="tooltip"]').tooltip()
 		}
 
-		function otra(indexN,i,select,id,text2){
-			$(`#${select}${indexN}_${i}`).on(async function (evt){
-				var s = document.getElementById(id);
-			});
-		}
-
-		function AddMsi(indexN,i,select,id,text2,pesos = 0){
-			let valorMsi = $(`#input_msi_${indexN}_${i}`).val();
-			let selecdes = $(`#${select}${indexN}_${i}`);
-			let texto = pesos != 0 ? '$'+formatMoney(text2) : text2;
-			$(`#listamsi_${indexN}_${i}`).append(`
-			<span class="label label-success color_span" id="${indexN}_${id}_span" >${texto}% + ${valorMsi} MSI</span>
-			<input type="hidden" name="${indexN}_${id}_msi" id="${indexN}_${id}_msi" value="${id},${valorMsi}">`);
-
-			CloseModalMsi();
-			myFunction();
-			
-			let idDescuentoSeleccionado = $(`#${select}${indexN}_${i} option:selected`).val();
-			let TextDescuentoSeleccionado = $(`#${select}${indexN}_${i} option:selected`).text();
-		}
-
-
-		function CloseModalMsi(){
-			const Modalbody = $('#ModalMsi .modal-body');
-			const Modalfooter = $('#ModalMsi .modal-footer');
-			Modalbody.html('');
-			Modalfooter.html('');
-			$("#ModalMsi").modal('toggle');
-		}
-
-		function PrintSelectDesc(id,index,indexGral){
+		function PrintSelectDesc(e, id,index,indexGral){
 			let tdescuento=0;
 			let id_condicion=0;
 			let eng_top=0;
 			let apply=0;
-
+			var boxDetail = $(e).closest( '.boxAllDiscounts' ).find( '.boxDetailDiscount');
+			boxDetail.removeClass('hidden');
+			let rowDetail = boxDetail.find( '.rowDetailDiscount');
 			if(id == 1){
-				if($(`#inlineCheckbox1_${indexGral}_${index}`).is(':checked')){	
+				if($(`#inlineCheckbox1_${indexGral}_${index}`).is(':checked')){
 					$(`#orden_${indexGral}_${index}`).prop( "disabled", false );
 					tdescuento=1;
 					id_condicion=1;
 					apply=1;			
 					///TOTAL DE LOTE
 					$(`#selectDescuentos_${indexGral}_${index}`).append(`
-					<div class="form-group d-flex justify-center align-center">
+					<div class="w-100 d-flex justify-center align-center">
 						<div id="divmsi_${indexGral}_${index}"></div>
-						<label>Descuento(<b class="text-danger">*</b>):</label>
-						<select id="ListaDescuentosTotal_${indexGral}_${index}" required   name="${indexGral}_${index}_ListaDescuentosTotal_[]" multiple="multiple" class="form-control"  required data-live-search="true"></select>
+						<select id="ListaDescuentosTotal_${indexGral}_${index}" required name="${indexGral}_${index}_ListaDescuentosTotal_[]" multiple class="form-control" data-live-search="true">
 					</div>`);
 
 					$.post('getDescuentosPorTotal',{ tdescuento: tdescuento, id_condicion: id_condicion,eng_top:eng_top,apply:apply }, function(data) {
@@ -1204,7 +1165,7 @@
 						$(`#ListaDescuentosTotal_${indexGral}_${index}`).selectpicker('refresh');
 					}, 'json');
 
-					$(`#ListaDescuentosTotal_${indexGral}_${index}`).select2({containerCssClass: "select-gral",dropdownCssClass: "custom-dropdown",tags: true,tokenSeparators: [',', ' ']});
+					$(`#ListaDescuentosTotal_${indexGral}_${index}`).select2({containerCssClass: "select-gral", dropdownCssClass: "custom-dropdown", tags: false, tokenSeparators: [',', ' '], closeOnSelect : false, placeholder : "Seleccione una opción", allowHtml: true, allowClear: true});
 
 					$(`#ListaDescuentosTotal_${indexGral}_${index}`).on("select2:select", function (evt){
 						var element = evt.params.data.element;
@@ -1212,7 +1173,9 @@
 						$element.detach();
 						$(this).append($element);
 						$(this).trigger("change");
-						ModalMsi(indexGral,index,'ListaDescuentosTotal_',$element[0].value,$element[0].label);
+						crearBoxDetailDescuentos(indexGral,index,'ListaDescuentosTotal_',$element[0].value,$element[0].label);
+						
+						rowDetail.removeClass('hidden');
 					});
 
 					$(`#ListaDescuentosTotal_${indexGral}_${index}`).on("select2:unselecting", function (evt){
@@ -1229,6 +1192,9 @@
 					});
 				}
 				else{
+					boxDetail.addClass('hidden');
+					rowDetail.addClass('hidden');
+
 					$(`#orden_${indexGral}_${index}`).val("");
 					$(`#orden_${indexGral}_${index}`).prop( "disabled", true );
 					document.getElementById(`selectDescuentos_${indexGral}_${index}`).innerHTML = "";
@@ -1243,12 +1209,11 @@
 				
 					///TOTAL DE ENGANCHE
 					$(`#selectDescuentos_${indexGral}_${index}`).append(`
-					<div class="form-group d-flex justify-center align-center">
-						<label>Descuento(<b class="text-danger">*</b>):</label>
-						<select id="ListaDescuentosEnganche_${indexGral}_${index}" required  name="${indexGral}_${index}_ListaDescuentosEnganche_[]" multiple="multiple" class="form-control"  required data-live-search="true"></select>
+					<div class="w-100 d-flex justify-center align-center">
+						<select id="ListaDescuentosEnganche_${indexGral}_${index}" required name="${indexGral}_${index}_ListaDescuentosEnganche_[]" multiple="multiple" class="form-control" required data-live-search="true"></select>
 					</div>`);
 
-					$(`#ListaDescuentosEnganche_${indexGral}_${index}`).select2({containerCssClass: "select-gral",dropdownCssClass: "custom-dropdown",	});
+					$(`#ListaDescuentosEnganche_${indexGral}_${index}`).select2({containerCssClass: "select-gral", dropdownCssClass: "custom-dropdown", closeOnSelect : false, placeholder : "Seleccione una opción", allowHtml: true, allowClear: true, tags: false});
 					$.post('getDescuentosPorTotal',{ tdescuento: tdescuento, id_condicion: id_condicion,eng_top:eng_top,apply:apply }, function(data) {
 						$(`#ListaDescuentosEnganche_${indexGral}_${index}`).append($('<option disabled>').val("default").text("Seleccione una opción"));
 						var len = data.length;
@@ -1263,7 +1228,7 @@
 						$(`#ListaDescuentosEnganche_${indexGral}_${index}`).selectpicker('refresh');
 					}, 'json');
 				
-					$(`#ListaDescuentosEnganche_${indexGral}_${index}`).select2({containerCssClass: "select-gral",dropdownCssClass: "custom-dropdown",tags: true });
+					$(`#ListaDescuentosEnganche_${indexGral}_${index}`).select2({containerCssClass: "select-gral", dropdownCssClass: "custom-dropdown", closeOnSelect : false, placeholder : "Seleccione una opción", allowHtml: true, allowClear: true, tags: false});
 					$(`#ListaDescuentosEnganche_${indexGral}_${index}`).on("select2:select", function (evt) {
 						var element = evt.params.data.element;
 						var $element = $(element);
@@ -1271,7 +1236,8 @@
 						$element.detach();
 						$(this).append($element);
 						$(this).trigger("change");
-						ModalMsi(indexGral,index,'ListaDescuentosEnganche_',$element[0].value,$element[0].label);
+						crearBoxDetailDescuentos(indexGral,index,'ListaDescuentosEnganche_',$element[0].value,$element[0].label);
+						rowDetail.removeClass('hidden');
 					});
 
 					$(`#ListaDescuentosEnganche_${indexGral}_${index}`).on("select2:unselecting", function (evt){
@@ -1288,12 +1254,16 @@
 					});
 				}
 				else{
+					boxDetail.addClass('hidden');
+					rowDetail.addClass('hidden');
+
 					$(`#orden_${indexGral}_${index}`).val("");
 					$(`#orden_${indexGral}_${index}`).prop( "disabled", true );
 					document.getElementById(`selectDescuentos_${indexGral}_${index}`).innerHTML = "";
 					document.getElementById(`listamsi_${indexGral}_${index}`).innerHTML = "";
 				}
 			}else if(id == 5){
+				//Descuentos m2
 				if( $(`#inlineCheckbox1_${indexGral}_${index}`).is(':checked') ) {
 					$(`#orden_${indexGral}_${index}`).prop( "disabled", false );
 			
@@ -1301,10 +1271,8 @@
 					id_condicion=4;
 					apply=1;			
 				
-					///TOTAL DE ENGANCHE
 					$(`#selectDescuentos_${indexGral}_${index}`).append(`
-					<div class="form-group d-flex justify-center align-center">
-						<label>Descuento(<b class="text-danger">*</b>):</label>
+					<div class="w-100 d-flex justify-center align-center">
 						<select id="ListaDescuentosM2_${indexGral}_${index}" required name="${indexGral}_${index}_ListaDescuentosM2_[]" multiple="multiple" class="form-control"  required data-live-search="true"></select>
 					</div>`);
 
@@ -1322,7 +1290,7 @@
 						$(`#ListaDescuentosM2_${indexGral}_${index}`).selectpicker('refresh');
 					}, 'json');
 
-					$(`#ListaDescuentosM2_${indexGral}_${index}`).select2({containerCssClass: "select-gral",dropdownCssClass: "custom-dropdown",tags: true	});
+					$(`#ListaDescuentosM2_${indexGral}_${index}`).select2({containerCssClass: "select-gral", dropdownCssClass: "custom-dropdown", closeOnSelect : false, placeholder : "Seleccione una opción", allowHtml: true, allowClear: true, tags: false});
 					$(`#ListaDescuentosM2_${indexGral}_${index}`).on("select2:select", function (evt) {
 						var element = evt.params.data.element;
 						var $element = $(element);
@@ -1330,7 +1298,8 @@
 						$element.detach();
 						$(this).append($element);
 						$(this).trigger("change");
-						ModalMsi(indexGral,index,'ListaDescuentosM2_',$element[0].value,$element[0].label,1);
+						crearBoxDetailDescuentos(indexGral,index,'ListaDescuentosM2_',$element[0].value,$element[0].label,1);
+						rowDetail.removeClass('hidden');
 					});
 
 					$(`#ListaDescuentosM2_${indexGral}_${index}`).on("select2:unselecting", function (evt){
@@ -1346,6 +1315,9 @@
 						}
 					});
 				}else{
+					boxDetail.addClass('hidden');
+					rowDetail.addClass('hidden');
+
 					$(`#orden_${indexGral}_${index}`).val("");
 					$(`#orden_${indexGral}_${index}`).prop( "disabled", true );
 					document.getElementById(`selectDescuentos_${indexGral}_${index}`).innerHTML = "";
@@ -1353,6 +1325,7 @@
 				}
 			}
 			else if(id == 12){
+				//Bono
 				if( $(`#inlineCheckbox1_${indexGral}_${index}`).is(':checked') ) {	
 					$(`#orden_${indexGral}_${index}`).prop( "disabled", false );
 					tdescuento=1;
@@ -1360,14 +1333,12 @@
 					eng_top=1;
 					apply=1;			
 					
-					///TOTAL DE ENGANCHE
 					$(`#selectDescuentos_${indexGral}_${index}`).append(`
-					<div class="form-group d-flex justify-center align-center">
-						<label>Descuento(<b class="text-danger">*</b>):</label>
+					<div class="w-100 d-flex justify-center align-center">
 						<select id="ListaDescuentosBono_${indexGral}_${index}" required name="${indexGral}_${index}_ListaDescuentosBono_[]" multiple="multiple" class="form-control"  required data-live-search="true"></select>
 					</div>`);
 
-					$(`#ListaDescuentosBono_${indexGral}_${index}`).select2({containerCssClass: "select-gral",dropdownCssClass: "custom-dropdown",tags: true});
+					$(`#ListaDescuentosBono_${indexGral}_${index}`).select2({containerCssClass: "select-gral",dropdownCssClass: "custom-dropdown", closeOnSelect : false, placeholder : "Seleccione una opción", allowHtml: true, allowClear: true, tags: false});
 					$.post('getDescuentosPorTotal',{ tdescuento: tdescuento, id_condicion: id_condicion,eng_top:eng_top,apply:apply }, function(data) {
 						$(`#ListaDescuentosBono_${indexGral}_${index}`).append($('<option disabled>').val("default").text("Seleccione una opción"));
 						var len = data.length;
@@ -1382,14 +1353,15 @@
 						$(`#ListaDescuentosBono_${indexGral}_${index}`).selectpicker('refresh');
 					}, 'json');
 
-					$(`#ListaDescuentosBono_${indexGral}_${index}`).select2({containerCssClass: "select-gral",dropdownCssClass: "custom-dropdown",tags: true });
+					$(`#ListaDescuentosBono_${indexGral}_${index}`).select2({containerCssClass: "select-gral",dropdownCssClass: "custom-dropdown", closeOnSelect : false, placeholder : "Seleccione una opción", allowHtml: true, allowClear: true, tags: false });
 					$(`#ListaDescuentosBono_${indexGral}_${index}`).on("select2:select", function (evt) {
 						var element = evt.params.data.element;
 						var $element = $(element);
 						$element.detach();
 						$(this).append($element);
 						$(this).trigger("change");
-						ModalMsi(indexGral,index,'ListaDescuentosBono_',$element[0].value,$element[0].label,1);
+						crearBoxDetailDescuentos(indexGral,index,'ListaDescuentosBono_',$element[0].value,$element[0].label,1);
+						rowDetail.removeClass('hidden');
 					});
 
 					$(`#ListaDescuentosBono_${indexGral}_${index}`).on("select2:unselecting", function (evt){
@@ -1405,6 +1377,9 @@
 						}
 					});
 				}else{
+					boxDetail.addClass('hidden');
+					rowDetail.addClass('hidden');
+
 					$(`#orden_${indexGral}_${index}`).val("");
 					$(`#orden_${indexGral}_${index}`).prop( "disabled", true );
 					document.getElementById(`selectDescuentos_${indexGral}_${index}`).innerHTML = "";
@@ -1412,6 +1387,7 @@
 				}
 			}
 			else if(id == 13){
+				//MSI
 				if( $(`#inlineCheckbox1_${indexGral}_${index}`).is(':checked') ) {	
 					$(`#orden_${indexGral}_${index}`).prop( "disabled", false );
 					tdescuento=1;
@@ -1419,28 +1395,26 @@
 					eng_top=1;
 					apply=1;			
 					
-					///TOTAL DE ENGANCHE
 					$(`#selectDescuentos_${indexGral}_${index}`).append(`
-					<div class="form-group d-flex justify-center align-center">
-						<label>Descuento(<b class="text-danger">*</b>):</label>
+					<div class="w-100 d-flex justify-center align-center">
 						<select id="ListaDescuentosMSI_${indexGral}_${index}" required name="${indexGral}_${index}_ListaDescuentosMSI_[]" multiple="multiple" class="form-control"  required data-live-search="true"></select>
 					</div>`);
 					
-					$(`#ListaDescuentosMSI_${indexGral}_${index}`).select2({containerCssClass: "select-gral",dropdownCssClass: "custom-dropdown",tags: true});
+					$(`#ListaDescuentosMSI_${indexGral}_${index}`).select2({containerCssClass: "select-gral",dropdownCssClass: "custom-dropdown", closeOnSelect : false, placeholder : "Seleccione una opción", allowHtml: true, allowClear: true, tags: false});
 					$.post('getDescuentosPorTotal',{ tdescuento: tdescuento, id_condicion: id_condicion,eng_top:eng_top,apply:apply }, function(data) {
 						$(`#ListaDescuentosMSI_${indexGral}_${index}`).append($('<option disabled>').val("default").text("Seleccione una opción"));
 						var len = data.length;
 						for( var i = 0; i<len; i++){
 							var name = data[i]['porcentaje'];
 							var id = data[i]['id_descuento']+','+data[i]['porcentaje'];
-							$(`#ListaDescuentosMSI_${indexGral}_${index}`).append(`<option value='${id}' label="${name}">${name}%</option>`);
+							$(`#ListaDescuentosMSI_${indexGral}_${index}`).append(`<option value='${id}' label="${name}">${name}</option>`);
 						}
 						if(len<=0){
 							$(`#ListaDescuentosMSI_${indexGral}_${index}`).append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
 						}
 						$(`#ListaDescuentosMSI_${indexGral}_${index}`).selectpicker('refresh');
 					}, 'json');
-					$(`#ListaDescuentosMSI_${indexGral}_${index}`).select2({containerCssClass: "select-gral",dropdownCssClass: "custom-dropdown",tags: true	});
+					$(`#ListaDescuentosMSI_${indexGral}_${index}`).select2({containerCssClass: "select-gral",dropdownCssClass: "custom-dropdown", closeOnSelect : false, placeholder : "Seleccione una opción", allowHtml: true, allowClear: true, tags: false	});
 					$(`#ListaDescuentosMSI_${indexGral}_${index}`).on("select2:select", function (evt) {
 						var element = evt.params.data.element;
 						var $element = $(element);
@@ -1449,6 +1423,9 @@
 						$(this).trigger("change");
 					});
 				}else{
+					boxDetail.addClass('hidden');
+					rowDetail.addClass('hidden');
+
 					$(`#orden_${indexGral}_${index}`).val("");
 					$(`#orden_${indexGral}_${index}`).prop( "disabled", true );
 					document.getElementById(`selectDescuentos_${indexGral}_${index}`).innerHTML = "";
@@ -1457,39 +1434,24 @@
 			}
 		}
 
-		function changeTipoDescuento(index){
-			let tipoDescuento = $('#tipo_descuento_'+index).val();
-			document.getElementById("tipo_descuento_select_"+index).innerHTML ='';
-			if(tipoDescuento == 1){
-				//TOTAL LOTE
-				$('#tipo_descuento_select_'+index).append(`cacacac`);
-			}else if(tipoDescuento == 2){
-				//ENGANCHE
-			}else if(tipoDescuento == 4){
-				//M2
-			}else if(tipoDescuento == 12){
-				//BONO
-			}
-		}
-			 
-
 		function selectSuperficie(tipoSup){
 			document.getElementById("printSuperficie").innerHTML ='';
 			if(tipoSup == 1){
 				$('#printSuperficie').append(`
-					<input type="number" class="form-control input-gral" name="fin" placeholder="Mayor a">
+					<input type="number" class="form-control input-gral p-0 text-center h-100" name="fin" placeholder="Mayor a" data-toggle="tooltip" data-placement="top" title="Mayor que 200">
 					<input type="hidden" class="form-control" value="0" name="inicio">`);
-				}
+			}
 			else if(tipoSup == 2){
 				$('#printSuperficie').append(`
-				<input type="number" class="form-control input-gral" name="fin" placeholder="Menor a">
+					<input type="number" class="form-control input-gral p-0 text-center h-100" name="fin" placeholder="Menor a" data-toggle="tooltip" data-placement="top" title="Menor que 199.99">
 					<input type="hidden" class="form-control" value="0" name="inicio">`);
 			}
 			else if(tipoSup == 3){
 				$('#printSuperficie').append(`
-				<input type="hidden" class="form-control" name="inicio" value="0">
-				<input type="hidden" class="form-control" name="fin" value="0">`);
-			}	
+					<input type="hidden" class="form-control" name="inicio" value="0">
+					<input type="hidden" class="form-control" name="fin" value="0">`);
+			}
+			$('[data-toggle="tooltip"]').tooltip();
 		}
 
 		function RemovePackage(){
@@ -1497,12 +1459,30 @@
 			$('#ModalRemove').modal('toggle');
 			$("#" + divNum + "").remove();
 			$('#iddiv').val(0);
+			validateNonePlans();
 			return false;
 		}
 
 		function removeElementCard(divNum) {
 			$('#iddiv').val(divNum);
 			$('#ModalRemove').modal('show');
+		}
+
+		function crearBoxDetailDescuentos(indexN,i,select,id,text,pesos = 0){
+			let texto = pesos == 2 ? text : (pesos == 1 ? '$'+formatMoney(text) : text + '%');
+			$(`#listamsi_${indexN}_${i}`).append(`
+				<div class="row d-flex align-center mb-1" id="${indexN}_${id}_span">
+					<div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 d-flex align-center">
+						<i class="fas fa-tag mr-1"></i><p class="m-0">${texto}</p>
+					</div>
+					<div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 pr-0">
+						<div class="boxOnOff">
+							<input type="checkbox" id="${indexN}_${id}_msiC" name="${indexN}_${id}_msiC" class="switch-input d-none" onclick="turnOnOff(this)">
+							<label for="${indexN}_${id}_msiC" class="switch-label"></label>
+							<input value="0" id="${indexN}_${id}_msi" name="${indexN}_${id}_msi" class="inputMSI" onkeyup="numberMask(this);" required readonly>
+						</div>
+					</div>
+				</div>`);
 		}
 
 		function setInitialValues() {
@@ -1519,10 +1499,75 @@
 			finalBeginDate2 = [('0' + beginDate.getDate()).slice(-2), ('0' + (beginDate.getMonth() + 1)).slice(-2), beginDate.getFullYear()].join('/');
 			finalEndDate2 = [('0' + endDate.getDate()).slice(-2), ('0' + (endDate.getMonth() + 1)).slice(-2), endDate.getFullYear()].join('/');
 
-			$('#beginDate').val(finalBeginDate2);
-			$('#endDate').val(finalEndDate2);
-			$('#beginDate2').val(finalBeginDate2);
-			$('#endDate2').val(finalEndDate2);
+			$('#fechainicio').val(finalBeginDate);
+			$('#fechafin').val(finalEndDate);
+		}
+
+		function turnOnOff(e){
+			let inputMSI = $(e).closest( '.boxOnOff' ).find( '.inputMSI');
+			if (e.checked == true) {
+				inputMSI.attr("readonly", false); 
+				inputMSI.val('');
+				inputMSI.focus();
+			}
+			else{
+				inputMSI.attr("readonly", true); 
+				inputMSI.val(0);
+			}
+		}
+
+		function numberMask(e) {
+			let arr = e.value.replace(/[^\dA-Z]/g, '').replace(/[\s-)(]/g, '').split('');
+			e.value = arr.toString().replace(/[,]/g, '');
+			if ( e.value > 12 ){
+				e.value = '';
+				alerts.showNotification("top", "right", "La cantidad ingresada es mayor.", "danger");
+			}
+		}
+
+		function validateAllInForm(){
+			var dinicio = $('#fechainicio').val();
+			var dfin = $('#fechafin').val();
+			var sede = $('#sede').val();
+			var proyecto = $('#residencial').val();
+			var containerTipoLote = document.querySelector('.boxTipoLote');
+			var containerSup = document.querySelector('.boxSuperficie');
+			var checkedTipoLote = containerTipoLote.querySelectorAll('input[type="radio"]:checked').length;
+			var checkedSuper = containerSup.querySelectorAll('input[type="radio"]:checked').length;
+
+			if(dinicio != '' && dfin != '' && sede != '' && proyecto != '' && checkedTipoLote != 0 && checkedSuper != 0){
+				$("#btn_generate").removeClass('d-none');
+			}
+			else{
+				$("#btn_generate").addClass('d-none');
+				$("#btn_save").addClass('d-none');
+			}
+		}
+
+		function validateNonePlans(){
+			var plans = document.getElementsByClassName("cardPlan");
+			if (plans.length > 0 ){
+				$("#btn_save").removeClass('d-none');
+				$(".emptyCards").addClass('d-none');
+				$(".leyendItems").removeClass('d-none');
+				$(".items").text(plans.length);
+			}
+			else{
+				$("#btn_save").addClass('d-none');
+				$(".emptyCards").removeClass('d-none');	
+				$(".leyendItems").addClass('d-none');
+			}
+		}
+
+		function noCreatedCards(){
+			$('#showPackage').append(`
+				<div class="emptyCards h-100 d-flex justify-center align-center pt-4">
+					<div class="h-100 text-center pt-4">
+						<img src= '`+url+`dist/img/emptyFile.png' alt="Icono gráfica" class="h-50 w-auto">
+						<h3 class="titleEmpty">Aún no ha agregado ningún plan</h3>
+						<div class="subtitleEmpty">Puede comenzar llenando el formulario de la izquierda <br>para después crear un nuevo plan</div>
+					</div>
+				</div>`);
 		}
 	</script>
 </body>

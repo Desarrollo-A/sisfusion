@@ -34,7 +34,6 @@
                                                 <select name="proyecto" id="proyecto" class="selectpicker select-gral m-0"
                                                         data-style="btn" data-show-subtext="true"  title="Selecciona proyecto"
                                                         data-size="7" data-live-search="true" required>
-                                                    <option value="0">-SELECCIONA TODO-</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -76,9 +75,11 @@
                                             <th>TOTAL CON DESCUENTOS</th>
                                             <th>REFERENCIA</th>
                                             <th>MSNI</th>
-                                            <th>GERENTE</th>
-                                            <th>COORDINADOR</th>
                                             <th>ASESOR</th>
+                                            <th>COORDINADOR</th>
+                                            <th>GERENTE</th>
+                                            <th>SUBDIRECTOR</th>
+                                            <th>DIRECTOR REGIONAL</th>
                                             <th>ESTATUS</th>
                                             <th>FECHA.AP</th>
                                             <th>COMENTARIO</th>
@@ -602,9 +603,11 @@
                                             <th style="font-size: .9em;">TOTAL CON DESCUENTOS</th>
                                             <th style="font-size: .9em;">REFERENCIA</th>
                                             <th style="font-size: .9em;">MSNI</th>
-                                            <th style="font-size: .9em;">GERENTE</th>
-                                            <th style="font-size: .9em;">COORDINADOR</th>
                                             <th style="font-size: .9em;">ASESOR</th>
+                                            <th style="font-size: .9em;">COORDINADOR</th>
+                                            <th style="font-size: .9em;">GERENTE</th>
+                                            <th style="font-size: .9em;">SUBDIRECTOR</th>
+                                            <th style="font-size: .9em;">DIRECTOR REGIONAL</th>
                                             <th style="font-size: .9em;">ESTATUS</th>
                                             <th style="font-size: .9em;">FECHA.AP</th>
                                             <th style="font-size: .9em;">COMENTARIO</th>
@@ -640,20 +643,6 @@
 <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
 <script>
-
-	   /* $('#tabla_inventario_contraloria thead tr:eq(0) th').each(function (i) {
-	    	var title = $(this).text();
-        	$(this).html('<input type="text" style="width:100%; background:#003D82; color:white; border: 0; font-weight: 500;" class="textoshead" placeholder="' + title + '" title="' + title + '"/>');
-        	$('input', this).on('keyup change', function () {
-            	if ($('#tabla_inventario_contraloria').DataTable().column(i).search() !== this.value) {
-                	$('#tabla_inventario_contraloria').DataTable()
-                    .column(i)
-                    .search(this.value)
-                    .draw();
-            	}
-        	});
-    	});*/
-
 
 var url = "<?=base_url()?>";
 var url2 = "<?=base_url()?>/index.php/";
@@ -738,7 +727,7 @@ $(document).on('change','#proyecto, #condominio, #estatus', function() {
                     titleAttr: 'Inventario Lotes',
                     title:"Inventario Lotes",
                     exportOptions: {
-                        columns: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18],
+                        columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
                         format: {
                             header: function (d, columnIdx) {
                                 switch (columnIdx) {
@@ -769,33 +758,39 @@ $(document).on('change','#proyecto, #condominio, #estatus', function() {
                                         return 'MSI';
                                         break;
                                     case 9:
-                                        return 'GERENTE';
+                                        return 'ASESOR';
                                         break;
                                     case 10:
                                         return 'COORDINADOR';
                                         break;
                                     case 11:
-                                        return 'ASESOR';
+                                        return 'GERENTE';
                                         break;
                                     case 12:
-                                        return 'ESTATUS';
+                                        return 'SUBDIRECTOR';
                                         break;
                                     case 13:
-                                        return 'FECHA AP';
+                                        return 'DIRECTOR REGIONAL';
                                         break;
                                     case 14:
-                                        return 'COMENTARIO';
+                                        return 'ESTATUS';
                                         break;
                                     case 15:
-                                        return 'LUGAR PROSPECCIÓN';
+                                        return 'FECHA AP';
                                         break;
                                     case 16:
-                                        return 'FECHA APERTURA';
+                                        return 'COMENTARIO';
                                         break;
                                     case 17:
+                                        return 'LUGAR PROSPECCIÓN';
+                                        break;
+                                    case 18:
+                                        return 'FECHA APERTURA';
+                                        break;
+                                    case 19:
 										return 'FECHA VALIDACION ENGANCHE';
 										break;
-									case 18:
+									case 20:
 										return 'CANTIDAD ENGANCHE PAGADO';
 										break;
                                 }
@@ -812,7 +807,7 @@ $(document).on('change','#proyecto, #condominio, #estatus', function() {
                     orientation: 'landscape',
                     pageSize: 'LEGAL',
                     exportOptions: {
-                        columns: [0,1,2,3,4,5,6,7,8,11,12,13,14,15,16,17,18],
+                        columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
                         format: {
                             header: function (d, columnIdx) {
                                 switch (columnIdx) {
@@ -842,28 +837,40 @@ $(document).on('change','#proyecto, #condominio, #estatus', function() {
                                     case 8:
                                         return 'MSI';
                                         break;
-                                    case 11:
+                                    case 9:
                                         return 'ASESOR';
                                         break;
+                                    case 10:
+                                        return 'COORDINADOR';
+                                        break;
+                                    case 11:
+                                        return 'GERENTE';
+                                        break;
                                     case 12:
-                                        return 'ESTATUS';
+                                        return 'SUBDIRECTOR';
                                         break;
                                     case 13:
-                                        return 'FECHA AP';
+                                        return 'DIRECTOR REGIONAL';
                                         break;
                                     case 14:
-                                        return 'COMENTARIO';
+                                        return 'ESTATUS';
                                         break;
                                     case 15:
-                                        return 'LUGAR PROSPECCIÓN';
+                                        return 'FECHA AP';
                                         break;
                                     case 16:
+                                        return 'COMENTARIO';
+                                        break;
+                                    case 17:
+                                        return 'LUGAR PROSPECCIÓN';
+                                        break;
+                                    case 18:
                                         return 'FECHA APERTURA';
                                         break;
-                                        case 17:
+                                    case 19:
 										return 'FECHA VALIDACION ENGANCHE';
 										break;
-									case 18:
+									case 20:
 										return 'CANTIDAD ENGANCHE PAGADO';
 										break;
                                 }
@@ -879,23 +886,23 @@ $(document).on('change','#proyecto, #condominio, #estatus', function() {
                 next: "<i class='fa fa-angle-right'>"
             }
         },
-		"processing": true,
-		"pageLength": 10,
-		"bAutoWidth": false,
-		"bLengthChange": false,
-		"scrollX": true,
-		"bInfo": true,
-		"searching": true,
-		"paging": true,
-		"ordering": true,
-		"fixedColumns": true,
+		processing: true,
+		pageLength: 10,
+		bAutoWidth: false,
+		bLengthChange: false,
+		scrollX: true,
+		bInfo: true,
+		searching: true,
+		paging: true,
+		ordering: true,
+		fixedColumns: true,
 		columnDefs: [{
                 defaultContent: "",
                 targets: "_all",
                 searchable: true,
                 orderable: false
             }],
-		"columns":
+		columns:
 		[{
 			"width": "10%",
 			data: 'nombreResidencial'
@@ -1043,46 +1050,53 @@ $(document).on('change','#proyecto, #condominio, #estatus', function() {
 			data: 'msni'
 		},
 		{
-			"data": function(d){
-				var gerente;
+			data: function(d){
+				var asesor;
 				if(d.idStatusLote == 8 || d.idStatusLote == 9 || d.idStatusLote == 10)
-				{
-					gerente = myFunctions.validateEmptyField(d.gerente2);
-				}
+					asesor = d.asesor2 == '  ' ? 'SIN ESPECIFICAR' : d.asesor2;
 				else
-				{
-					gerente = myFunctions.validateEmptyField(d.gerente);
-				}
-				return gerente;
+					asesor = d.asesor == '  ' ? 'SIN ESPECIFICAR' : d.asesor;
+				return asesor;
 			}
 		},
 		{
-			"data": function(d){
+			data: function(d){
 				var coordinador;
 				if(d.idStatusLote == 8 || d.idStatusLote == 9 || d.idStatusLote == 10)
-				{
-					coordinador = myFunctions.validateEmptyField(d.coordinador2);
-				}
+					coordinador = d.coordinador2 == '  ' ? 'SIN ESPECIFICAR' : d.coordinador2;
 				else
-				{
-					coordinador = myFunctions.validateEmptyField(d.coordinador);
-				}
+					coordinador = d.coordinador == '  ' ? 'SIN ESPECIFICAR' : d.coordinador;
 				return coordinador;
 			}
 		},
 		{
-			"data": function(d){
-				return myFunctions.validateEmptyField(d.asesor);
-				var asesor;
+			data: function(d){
+				var gerente;
 				if(d.idStatusLote == 8 || d.idStatusLote == 9 || d.idStatusLote == 10)
-				{
-					asesor = myFunctions.validateEmptyField(d.asesor2);
-				}
+					gerente = d.gerente2 == '  ' ? 'SIN ESPECIFICAR' : d.gerente2;
 				else
-				{
-					asesor = myFunctions.validateEmptyField(d.asesor);
-				}
-				return asesor;
+					gerente = d.gerente == '  ' ? 'SIN ESPECIFICAR' : d.gerente;
+				return gerente;
+			}
+		},
+		{
+			data: function(d){
+				var subdirector;
+				if(d.idStatusLote == 8 || d.idStatusLote == 9 || d.idStatusLote == 10)
+					subdirector = d.subdirector2 == '  ' ? 'SIN ESPECIFICAR' : d.subdirector2;
+				else
+					subdirector = d.subdirector == '  ' ? 'SIN ESPECIFICAR' : d.subdirector;
+				return subdirector;
+			}
+		},
+		{
+			data: function(d){
+				var regional;
+				if(d.idStatusLote == 8 || d.idStatusLote == 9 || d.idStatusLote == 10)
+					regional = d.regional2 == '  ' ? 'SIN ESPECIFICAR' : d.regional2;
+				else
+					regional = d.regional == '  ' ? 'SIN ESPECIFICAR' : d.regional;
+				return regional;
 			}
 		},
 		{

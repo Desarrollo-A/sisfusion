@@ -1,7 +1,7 @@
 <link href="<?= base_url() ?>dist/css/rankingDashboard.css" rel="stylesheet"/>
 
 <div class="container-fluid p-0">
-    <div class="row" id="mainRow">
+    <div class="row" id="mainRowRanking">
         <div class="col-12 col-sm-12 col-md-12 col-lg-6 inactivo flexibleR">
             <div class="card">
                 <div class="container-fluid h-100">
@@ -18,8 +18,8 @@
                                 </div>
                                 <button class="btn-charts" onclick="toggleDatatable(this)" rel="tooltip" data-placement="bottom" title="Mostrar tabla"><i class="far fa-list-alt"></i></button>
                             </div>
-                            <div id="boxChart" class="h-80 boxChart">
-                                <div id="chart" class="chart"></div>
+                            <div id="boxChart" class="h-80 boxChartRanking">
+                                <div id="chart" class="chart h-100"></div>
                             </div>
                             <div class="h-10">
                                 <h5 class="m-0 text-center titles">Ventas de apartados</h5>
@@ -47,7 +47,7 @@
                                 </div>
                                 <button class="btn-charts" onclick="toggleDatatable(this)" rel="tooltip" data-placement="bottom" title="Mostrar tabla"><i class="far fa-list-alt"></i></button>
                             </div>
-                            <div id="boxChart2" class="h-80 boxChart">
+                            <div id="boxChart2" class="h-80 boxChartRanking">
                                 <div id="chart2" class="chart"></div>
                             </div>
                             <div class="h-10">
@@ -76,7 +76,7 @@
                                 </div>
                                 <button class="btn-charts" onclick="toggleDatatable(this)" rel="tooltip" data-placement="bottom" title="Mostrar tabla"><i class="far fa-list-alt"></i></button>
                             </div>
-                            <div id="boxChart3" class="h-80 boxChart">
+                            <div id="boxChart3" class="h-80 boxChartRanking">
                                 <div id="chart3" class="chart"></div>
                             </div>
                             <div class="h-10">
@@ -105,7 +105,7 @@
                                 </div>
                                 <button type="btn" class="btn-charts"  rel="tooltip" data-placement="bottom" title="Mostrar tabla" onclick="toggleDatatable(this)"><i class="far fa-list-alt"></i></button>
                             </div>
-                            <div id="boxChart4" class="h-80 boxChart">
+                            <div id="boxChart4" class="h-80 boxChartRanking">
                                 <div id="chart4" class="chart"></div>
                             </div>
                             <div class="h-10">

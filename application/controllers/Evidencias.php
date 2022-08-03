@@ -48,29 +48,6 @@ class Evidencias extends CI_Controller
         
     }
 
-    public function getTokensInformation()
-    {
-        $data['data'] = $this->caja_model_outside->getTokensInformation()->result_array();
-        echo json_encode($data, JSON_NUMERIC_CHECK);
-    }
-
-    public function reviewTokenEvidence()
-    {
-        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-        $this->load->view('template/header');
-        $this->load->view("token/reviewTokenEvidence", $datos);
-    }
-
-    public function validarToken()
-    {
-        if(isset($_POST) && !empty($_POST)){
-            $data = array ("estatus" => $this->input->post("action"));
-            $response = $this->General_model->updateRecord('tokens',  $data, 'id_token', $this->input->post("id"));
-            echo json_encode($response);
-        }
-
-    }
-
     public function getDropboxToken(){
         $oauth_url = "https://x2lo5zybskv36p6:dkptwnk6hrbne2m@api.dropbox.com/oauth2/token";
         $token = '-AA44PRdHUYAAAAAAAAAAV1bjrWAGsYa80flvAFtOqHlBROPsYnzInSrjDDHIJWX'; // oauth token
@@ -94,6 +71,7 @@ class Evidencias extends CI_Controller
         $api_url = 'https://content.dropboxapi.com/2/files/upload'; //dropbox api url
         $name = "Evidencia_".$data->idCliente."_".$data->idLote.date('Y-m-d').basename($file["name"]);
         $headers = array('Authorization: Bearer '. $token,
+            "Dropbox-API-Select-User: dbmid:AACiFGk3sK8Eozce52KTBVX5JuOUTQsWnYE",
             'Content-Type: application/octet-stream',
             'Dropbox-API-Arg: '.
             json_encode(
@@ -144,10 +122,12 @@ class Evidencias extends CI_Controller
     }
 
     public function viewDropboxFile(){
+        $videoNombre = $this->input->post("videoNombre");
         $token = $this->getDropboxToken()->access_token;
-        $parameters = array('path' => "/Test/Evidencia_87005_688152022-07-121657650130282.mkv");
+        $parameters = array('path' => "/Test/$videoNombre");
 
         $headers = array("Authorization: Bearer $token",
+                        "Dropbox-API-Select-User: dbmid:AACiFGk3sK8Eozce52KTBVX5JuOUTQsWnYE",
                         'Content-Type: application/json');
 
         $curlOptions = array(
@@ -162,9 +142,44 @@ class Evidencias extends CI_Controller
         curl_setopt_array($ch, $curlOptions);
 
         $response = curl_exec($ch);
-        echo $response;
 
         curl_close($ch);
+
+        echo json_encode($response);
+
+    }
+
+    public function generateToken()
+    {
+        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
+        $this->load->view('template/header');
+        $this->load->view("token/generateToken", $datos);
+    }
+
+    public function getEvidencesInformation()
+    {
+        $data['data'] = $this->Evidencias_model->getEvidencesInformation()->result_array();
+        echo json_encode($data, JSON_NUMERIC_CHECK);
+    }
+
+    public function reviewEvidences()
+    {
+        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
+        $this->load->view('template/header');
+        $this->load->view("token/reviewTokenEvidence", $datos);
+    }
+
+    public function validateEvidence()
+    {
+        if(isset($_POST) && !empty($_POST)){
+            $type = $this->input->post("type");
+            $action = $this->input->post("action");
+            if ($type == 1) // MJ: EVIDENCIA BBVA
+                $response = $this->General_model->updateRecord('tokens',  array ("estatus" => $action), 'id_token', $this->input->post("id"));
+            else if ($type == 2) // MJ: EVIDENCIA VIDEO
+                $response = $this->General_model->updateRecord('video_evidencia',  $action == 2 ? array ("estatus" => 0, "estatus_validacion" => $action) : array ("estatus_validacion" => $action), 'id_video', $this->input->post("id"));
+            echo json_encode($response);
+        }
     }
 
 }

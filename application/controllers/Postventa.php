@@ -58,8 +58,7 @@ class Postventa extends CI_Controller
         $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
         switch ($this->session->userdata('id_rol')) {
             case '11': // ADMON
-            case '13': // CONTRALORÏa
-            case '32': // CONTRALORÏa corporativa
+            case '17': // CONTRALORÍA corporativa
             case '55': // POSTVENTA
             case '56': // COMITÉ TÉCNICO
             case '57': // TITULACIÓN
@@ -644,7 +643,7 @@ class Postventa extends CI_Controller
     {
         $id_solicitud = $_POST['id_solicitud'];
         $type = $_POST['type'];
-        if ($type == 1 || $type == 3 || $type == 4) {
+        if ($type == 1 || $type == 3 || $type == 4 || $type == 5) {
             $comentarios = $_POST['comentarios'];
             $informacion = $this->Postventa_model->changeStatus($id_solicitud, $type, $comentarios, 0);
         }elseif ($type == 2) {
@@ -665,8 +664,12 @@ class Postventa extends CI_Controller
         $idSolicitud = $this->input->post('idSolicitud');
         $documentType = $this->input->post('documentType');
         $presupuestoType = null;
+        $idPresupuesto = null;
+        $idNxS = null;
         if( $documentType == 13){
             $presupuestoType = $this->input->post('presupuestoType');
+            $idPresupuesto = $this->input->post('idPresupuesto');
+            $idNxS = $this->input->post('idNxS');
         }
         $documentName = $this->Postventa_model->generateFilename($idSolicitud, $documentType)->row();
         $documentInfo = $documentName;
@@ -676,7 +679,7 @@ class Postventa extends CI_Controller
             $documentName = $documentName->fileName . '.' . substr(strrchr($_FILES["uploadedDocument"]["name"], '.'), 1);
         }
         $folder = $this->getFolderFile($documentType);
-        $this->updateDocumentBranch($file, $folder, $documentName, $idSolicitud, $documentType, $documentInfo->expediente, $documentInfo->idDocumento, $presupuestoType, $documentInfo->estatus_validacion);
+        $this->updateDocumentBranch($file, $folder, $documentName, $idSolicitud, $documentType, $documentInfo->expediente, $documentInfo->idDocumento, $presupuestoType, $documentInfo->estatus_validacion, $idPresupuesto, $idNxS);
     }
 
     public function uploadFile2()
@@ -763,7 +766,7 @@ class Postventa extends CI_Controller
         return $folder;
     }
 
-    function updateDocumentBranch($file, $folder, $documentName, $idSolicitud, $documentType, $exists, $idDocumento, $presupuestoType = null, $estatus_validacion = null)
+    function updateDocumentBranch($file, $folder, $documentName, $idSolicitud, $documentType, $exists, $idDocumento, $presupuestoType = null, $estatus_validacion = null, $idPresupuesto = null, $idNxS= null)
     {
         $movement = move_uploaded_file($file["tmp_name"], $folder . $documentName);
         $validateMovement = $movement == FALSE ? 0 : 1;
@@ -796,8 +799,9 @@ class Postventa extends CI_Controller
                 $updateDocumentData = array(
                     "expediente" => $documentName,
                     "modificado_por" => $idUsuario,
+                    "idNxS" => $idNxS
                 );
-                $response = $this->Postventa_model->addPresupuesto($updateDocumentData, $idSolicitud, $presupuestoType);
+                $response = $this->Postventa_model->addPresupuesto($updateDocumentData, $idSolicitud, $presupuestoType, $idPresupuesto);
             }
             echo json_encode($response);
         } else if ($exists == 99) {
@@ -1623,7 +1627,7 @@ class Postventa extends CI_Controller
         }
         $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
         switch ($this->session->userdata('id_rol')) {
-            case '32'://CONTRALORIA
+            case '17': // CONTRALORIA
             case '55': // POSTVENTA
             case '57': // TITULACIÓN
                 $this->load->view('template/header');
@@ -1639,7 +1643,7 @@ class Postventa extends CI_Controller
     function getData(){
         $data = $this->Postventa_model->getData_contraloria()->result();
         switch ($this->session->userdata('id_rol')){
-            case '32': //CONTRALORIA 
+            case '17': //CONTRALORIA 
                 $columns = array(
                     [
                         "title" => 'ID',
@@ -1774,12 +1778,26 @@ class Postventa extends CI_Controller
                 );
             break;
         }
+        $data = json_decode(json_encode($data), True);
+
+        for ($i = 0; $i < count($data); $i++) {
+            if ( $data[$i]['dias'] == 0 || $data[$i]['dias'] == null ){
+                $data[$i]['atrasado']  = 'EN TIEMPO';
+                $data[$i]['diferencia']  = 0;
+            }
+            else{
+                $endDate = date('m/d/Y h:i:s a', time());
+
+                $result = getWorkingDays($data[$i]['fecha_creacion'], $endDate);
+                $data[$i]['atrasado'] = $result['atrasado'];
+                $data[$i]['diferencia'] = $result['diferencia'];
+            }
+        }
 
         $array = [
             "columns" => $columns,
             "data" => $data
         ];
-        // $newData = array_merge($columns, $data);
         if ($data != null)
             echo json_encode($array);
         else
@@ -1798,6 +1816,20 @@ class Postventa extends CI_Controller
     public function getFullReportContraloria(){
         $idSolicitud = $_POST['idEscritura'];
         $data = $this->Postventa_model->getFullReportContraloria($idSolicitud);
+        for ($i = 0; $i < count($data); $i++) {
+            if ( $data[$i]['tiempo'] != 0 ){
+                $startDate = $data[$i]['fecha_creacion'];
+                $endDate = ( $i+1 < count($data) ) ? $data[$i+1]['fecha_creacion'] : date('m/d/Y h:i:s a', time());
+
+                $result = getWorkingDays($startDate, $endDate);
+                $data[$i]['atrasado'] = $result['atrasado'];
+                $data[$i]['diferencia'] = $result['diferencia'];
+            }
+            else{
+                $data[$i]['atrasado'] = "En tiempo";
+                $data[$i]['diferencia'] = 0;
+            }
+        }
         if ($data != null)
             echo json_encode($data);
         else
@@ -1892,4 +1924,86 @@ class Postventa extends CI_Controller
             echo json_encode(array());
     }
 
+function getWorkingDays($startDate, $endDate){
+    $dataTime=[];
+    $begin = strtotime($startDate);
+    $end   = strtotime($endDate);
+    if ($begin > $end) {
+        return 0;
+    } else {
+        $no_days  = 0;
+        $weekends = 0;
+        while ($begin < $end) {
+            $no_days++; // no of days in the given interval
+            $what_day = date("N", $begin);
+            if ($what_day > 5) { // 6 and 7 are weekend days
+                $weekends++;
+            };
+            $begin += 86400; // +1 day
+        };
+        $working_days = $no_days - $weekends;
+
+        $dt = new DateTime($startDate);
+        $dt2 = new DateTime($endDate);    
+        $timeStart = $dt->format('h:i:s A');
+        $timeEnd = $dt2->format('h:i:s A');
+        $st_time    =   strtotime($timeStart);
+        $end_time   =   strtotime($timeEnd);
+
+        if( $end_time <= $st_time ){
+            $dataTime['atrasado'] = "En tiempo";
+            $dataTime['diferencia'] = $working_days - 1;
+
+            return $dataTime;
+        }
+        else{
+            $dataTime['atrasado'] = "Atrasado";
+            $dataTime['diferencia'] = ( $working_days != 0 ) ? $working_days - 1 : $working_days;
+
+            return $dataTime;
+        }        
+    }
+}
+
+function getNotariasXUsuario(){
+    $idSolicitud = $_POST['idSolicitud'];
+    if($idSolicitud != ''){
+        $data = $this->Postventa_model->getNotariasXUsuario($idSolicitud);
+    }else{
+        $data = null;
+    }
+    if ($data != null)
+        echo json_encode($data);
+    else
+        echo json_encode(array());
+}
+
+function saveNotaria(){
+    $idSolicitud = $_POST['idSolicitud'];
+    $idNotaria = $_POST['idNotaria'];
+    $arrayData = array(
+        "id_solicitud" => $idSolicitud,
+        "id_notaria" => $idNotaria,
+        "estatus" => 1
+    );
+    $data = $this->General_model->addRecord('notarias_x_usuario', $arrayData);
+    $data2 = $this->updatePresupuestosNXU($idSolicitud, $idNotaria);
+    if ($data != null)
+        echo json_encode($data);
+    else
+        echo json_encode(array());
+}
+
+function getPresupuestosUpload(){
+    $idNxS = $_POST['idNxS'];
+    $data = $this->Postventa_model->getPresupuestosUpload($idNxS);
+    if ($data != null)
+        echo json_encode($data);
+    else
+        echo json_encode(array());
+}
+
+function updatePresupuestosNXU($idSolicitud, $idNotaria){
+    $data = $this->Postventa_model->updatePresupuestosNXU($idSolicitud, $idNotaria);
+}
 }

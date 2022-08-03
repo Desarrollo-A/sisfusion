@@ -74,11 +74,15 @@ class PaquetesCorrida extends CI_Controller
          */
         if($superficie == 1){ //Mayor a
           $query_superdicie = 'and sup >= '.$fin.' ';
-        }else if($superficie == 2){ // Rango
-          $query_superdicie = 'and (sup >= '.$inicio.' and sup <= '.$fin.') ';
+        }else if($superficie == 2){ // Menor a
+          $query_superdicie = 'and sup < '.$fin.' ';
+          $inicio = $this->input->post("fin");
+          $fin = $this->input->post("inicio");
 
         }else if($superficie == 3){ // Cualquiera
           $query_superdicie = '';
+          $inicio = 0;
+          $fin = 0;
         }
         $Fechainicio = $this->input->post("fechainicio");
         $Fechafin = $this->input->post("fechafin");
@@ -109,8 +113,7 @@ class PaquetesCorrida extends CI_Controller
             //VALIDAR SI EXISTE PAQUETE EN EL FORM
             if(isset($_POST["descripcion_".$i])){
               $descripcion_paquete = $_POST["descripcion_".$i];
-              $indice = $i.'.-';
-              $query_paquete = $this->db->query("INSERT INTO paquetes(descripcion,id_descuento,fecha_inicio,fecha_fin,estatus,sede,desarrollos,tipo_lote,super1,super2) VALUES('$indice $descripcion_paquete',0,'$Fechainicio','$Fechafin',1,'".$datos_sede[1]."','$desarrollos',$TipoLote,$inicio,$fin) ");
+              $query_paquete = $this->db->query("INSERT INTO paquetes(descripcion,id_descuento,fecha_inicio,fecha_fin,estatus,sede,desarrollos,tipo_lote,super1,super2) VALUES('$descripcion_paquete',0,'$Fechainicio','$Fechafin',1,'".$datos_sede[1]."','$desarrollos',$TipoLote,$inicio,$fin) ");
               $id_paquete = $this->db->insert_id();
               array_push($ArrPAquetes,$id_paquete);
                // echo $_POST["descripcion_".$i];
@@ -124,14 +127,10 @@ class PaquetesCorrida extends CI_Controller
                     for ($j=0; $j < count($descuentos) ; $j++) { 
                       $meses_s_i=0;
                       if(isset($_POST[$i.'_'.$descuentos[$j].'_msi'])){
-                        $msi = $_POST[$i.'_'.$descuentos[$j].'_msi'];
+                        $msi = $descuentos[$j] . ',' . $_POST[$i.'_'.$descuentos[$j].'_msi'];
                         $msi = explode(",",$msi);
                         $meses_s_i = $msi[1];
-                       //  echo "<br>";
                       }
-                     // echo "_______________ <br>";
-                     // echo $descuentos[$j];
-                     // echo "_______________ <br>";
 
                       $data_descuento=array(
                         'id_paquete' => $id_paquete,
@@ -144,20 +143,16 @@ class PaquetesCorrida extends CI_Controller
                         'modificado_por' => $this->session->userdata('id_usuario'),
                       );
                        array_push($datosInsertar,$data_descuento);
-                     // echo $descuentos[$j];
                     }
                   }
                   if(isset($_POST[$i."_1_ListaDescuentosEnganche_"])){
-                  //  print_r($_POST[$i."_1_ListaDescuentosEnganche_"]);
                     $descuentos = $_POST[$i."_1_ListaDescuentosEnganche_"];
                     for ($j=0; $j < count($descuentos) ; $j++) { 
                       $meses_s_i=0;
                       if(isset($_POST[$i.'_'.$descuentos[$j].'_msi'])){
-                      //  echo $_POST[$i.'_'.$descuentos[$j].'_msi'];
-                        $msi = $_POST[$i.'_'.$descuentos[$j].'_msi'];
+                        $msi = $descuentos[$j] . ',' . $_POST[$i.'_'.$descuentos[$j].'_msi'];
                         $msi = explode(",",$msi);
                         $meses_s_i = $msi[1];
-                     //    echo "<br>";
                       }
                       $data_descuento=array(
                         'id_paquete' => $id_paquete,
@@ -170,22 +165,17 @@ class PaquetesCorrida extends CI_Controller
                         'modificado_por' => $this->session->userdata('id_usuario'),
                       );
                        array_push($datosInsertar,$data_descuento);
-                    //  echo $descuentos[$j];
                     }
-                  //  echo "<br>";
                   }
                   if(isset($_POST[$i."_2_ListaDescuentosM2_"])){
-                  //  print_r($_POST[$i."_2_ListaDescuentosM2_"]);
                     $descuentos = $_POST[$i."_2_ListaDescuentosM2_"];
                     
                     for ($j=0; $j < count($descuentos) ; $j++) { 
                       if(isset($_POST[$i.'_'.$descuentos[$j].'_msi'])){
                         $meses_s_i=0;
-                      //  echo $_POST[$i.'_'.$descuentos[$j].'_msi'];
-                        $msi = $_POST[$i.'_'.$descuentos[$j].'_msi'];
+                        $msi = $descuentos[$j] . ',' . $_POST[$i.'_'.$descuentos[$j].'_msi'];
                         $msi = explode(",",$msi);
                         $meses_s_i = $msi[1];
-                      //   echo "<br>";
                       }
                       $data_descuento=array(
                         'id_paquete' => $id_paquete,
@@ -198,21 +188,16 @@ class PaquetesCorrida extends CI_Controller
                         'modificado_por' => $this->session->userdata('id_usuario'),
                       );
                        array_push($datosInsertar,$data_descuento);
-                   //   echo $descuentos[$j];
                     }
-                   // echo "<br>";
                   }
                   if(isset($_POST[$i."_3_ListaDescuentosBono_"])){
-                    //print_r($_POST[$i."_3_ListaDescuentosBono_"]);
                     $descuentos = $_POST[$i."_3_ListaDescuentosBono_"];
                     for ($j=0; $j < count($descuentos) ; $j++) { 
                       $meses_s_i=0;
                       if(isset($_POST[$i.'_'.$descuentos[$j].'_msi'])){
-                       // echo $_POST[$i.'_'.$descuentos[$j].'_msi'];
-                        $msi = $_POST[$i.'_'.$descuentos[$j].'_msi'];
+                        $msi = $descuentos[$j] . ',' . $_POST[$i.'_'.$descuentos[$j].'_msi'];
                         $msi = explode(",",$msi);
                         $meses_s_i = $msi[1];
-                         //echo "<br>";
                       }
                       $data_descuento=array(
                         'id_paquete' => $id_paquete,
@@ -225,12 +210,9 @@ class PaquetesCorrida extends CI_Controller
                         'modificado_por' => $this->session->userdata('id_usuario'),
                       );
                        array_push($datosInsertar,$data_descuento);
-                     // echo $descuentos[$j];
                     }
-                   // echo "<br>";
                   }
                   if(isset($_POST[$i."_4_ListaDescuentosMSI_"])){
-                    //print_r($_POST[$i."_3_ListaDescuentosBono_"]);
                     $descuentos = $_POST[$i."_4_ListaDescuentosMSI_"];
                     for ($j=0; $j < count($descuentos) ; $j++){ 
                       $datos =explode(",",$descuentos[$j]);
@@ -247,7 +229,6 @@ class PaquetesCorrida extends CI_Controller
                         'modificado_por' => $this->session->userdata('id_usuario'),
                       );
                        array_push($datosInsertar,$data_descuento);
-                     // echo $descuentos[$j];
                     }
                    // echo "<br>";
                   }
@@ -379,6 +360,155 @@ class PaquetesCorrida extends CI_Controller
             echo json_encode($response = $this->PaquetesCorrida_model->SaveNewDescuento($tdescuento,$id_condicion,$eng_top,$apply,$descuento));
           }
     }
+
+
+//     function kelFunction(){
+//       $this->db->query("SET LANGUAGE Español;");
+      
+//       $cuari1 =  $this->db->query("SELECT l.idCondominio
+//       FROM lotes l
+//       INNER JOIN condominios c ON c.idCondominio = l.idCondominio 
+//       INNER JOIN residenciales r ON r.idResidencial = c.idResidencial
+//       WHERE r.idResidencial IN (1) GROUP BY l.idCondominio")->result_array();
+//       //print_r($cuari1);
+      
+//       $imploded = array();
+//                     foreach($cuari1 as $array) {
+//                         $imploded[] = implode(',', $array);
+//                         // echo $imploded[];
+//                     }
+      
+ 
+//    echo(sizeof($cuari1));
+//    $stack= array();
+
+//    for ($i=0; $i < sizeof($cuari1); $i++) { 
+//     # code...
+//     $arrCondominio= implode(",", $cuari1[$i]);
+ 
+//     $queryRes =  $this->db->query("DECLARE @condominio varchar(200), @tags VARCHAR(MAX); 
+//     SET @condominio = ($arrCondominio) 
+    
+//     /*INICIO DEL PROCESO*/ 
+//     SET @tags = (SELECT STRING_AGG(CONVERT(VARCHAR(MAX),(id_descuento) ), ',') 
+//     FROM lotes l 
+//     INNER JOIN condominios c ON c.idCondominio = l.idCondominio 
+//     INNER JOIN residenciales r ON r.idResidencial = c.idResidencial 
+//     WHERE c.idCondominio IN (@condominio)) 
+    
+//     (SELECT 
+//     @condominio condominio, STRING_AGG(id_paquete, ',') paquetes, fecha_inicio, fecha_fin, 
+//     UPPER(CONCAT('PAQUETE ', DATENAME(MONTH, fecha_inicio), ' ', YEAR(fecha_inicio))) descripcion 
+//     FROM paquetes 
+//     WHERE id_paquete in (SELECT DISTINCT(value) FROM STRING_SPLIT(@tags, ',') WHERE RTRIM(value) <> '') 
+//     GROUP BY fecha_inicio, fecha_fin)");
+
+//     foreach ($queryRes->result() as  $valor) {
+
+//       array_push($stack, array($valor->condominio, $valor->paquetes, $valor->fecha_inicio, $valor->fecha_fin, $valor->descripcion));
+
+//   }
+
+// }
+     
+// print_r($stack);
+
+
+
+// }
+
+
+
+
+public function kelFunction($desarrollos = 1,$query_superdicie = '',$query_tipo_lote = '',$superficie = 1,$inicio = 1,$fin = 1){
+  date_default_timezone_set('America/Mexico_City');
+  $hoy2 = date('Y-d-m H:i:s');
+  
+  $cuari1 =  $this->db->query("SELECT l.idCondominio
+              FROM lotes l
+              INNER JOIN condominios c ON c.idCondominio = l.idCondominio 
+              INNER JOIN residenciales r ON r.idResidencial = c.idResidencial
+              WHERE r.idResidencial IN ($desarrollos)
+              $query_superdicie
+              $query_tipo_lote 
+              GROUP BY l.idCondominio")->result_array();
+//print_r($cuari1);
+
+$imploded = array();
+foreach($cuari1 as $array) {
+  $imploded[] = implode(',', $array);
+}
+
+echo(sizeof($cuari1));
+$stack= array();
+
+for ($i=0; $i < sizeof($cuari1); $i++) { 
+  $arrCondominio= implode(",", $cuari1[$i]);
+  $queryRes =  $this->db->query("DECLARE @condominio varchar(200), @tags VARCHAR(MAX); 
+  
+  SET @condominio = ($arrCondominio) 
+  /*INICIO DEL PROCESO*/ 
+  SET @tags = (SELECT STRING_AGG(CONVERT(VARCHAR(MAX),(id_descuento) ), ',') 
+  FROM lotes l 
+  INNER JOIN condominios c ON c.idCondominio = l.idCondominio 
+  INNER JOIN residenciales r ON r.idResidencial = c.idResidencial 
+  WHERE c.idCondominio IN (@condominio)) 
+
+  (SELECT 
+  @condominio condominio, STRING_AGG(id_paquete, ',') paquetes, fecha_inicio, fecha_fin, 
+  UPPER(CONCAT('PAQUETE ', DATENAME(MONTH, fecha_inicio), ' ', YEAR(fecha_inicio))) descripcion 
+  FROM paquetes 
+  WHERE id_paquete in (SELECT DISTINCT(value) FROM STRING_SPLIT(@tags, ',') WHERE RTRIM(value) <> '') 
+  GROUP BY fecha_inicio, fecha_fin)");
+  
+  foreach ($queryRes->result() as  $valor) {
+    array_push($stackiD, array($valor->condominio));
+    array_push($stack, array($valor->condominio, $valor->paquetes, $valor->fecha_inicio, $valor->fecha_fin, $valor->descripcion));
+  }
+}
+
+// $imploded = array();
+// foreach($stack as $array) {
+//   $imploded[] = implode(',', $array);
+// }
+
+$arrCondominio= implode(",", $imploded);
+//print_r($arrCondominio);
+if(!empty($arrCondominio)){
+  $getPaquetesByName =  $stackiD;
+  $datosInsertar_x_condominio = array();
+  for ($o=0; $o <count($getPaquetesByName) ; $o++) {
+    $json = array();
+    if(!empty($getPaquetesByName[$o]['paquetes'])){
+      array_push($json,array( "paquetes" => $getPaquetesByName[$o]['paquetes'],
+      "tipo_superficie" => array("tipo" => $superficie,
+      "sup1" => $inicio,
+      "sup2" => $fin) ));
+      
+      $json = json_encode($json);
+      $json = ltrim($json,'[');
+      $json = rtrim($json,']');
+      $array_x_condominio =array(
+        'id_condominio' => $getPaquetesByName[$o]['condominio'],
+        'id_paquete' => $json,
+        'nombre' => $getPaquetesByName[$o]['descripcion'],
+        'fecha_inicio' =>  $getPaquetesByName[$o]['fecha_inicio'],
+        'fecha_fin' =>  $getPaquetesByName[$o]['fecha_fin'],
+        'estatus' => 1,
+        'creado_por' => $this->session->userdata('id_usuario'),
+        'fecha_modificacion' =>  $hoy2,
+        'modificado_por' => $this->session->userdata('id_usuario'),
+        'list_paquete' => $getPaquetesByName[$o]['paquetes']);
+        array_push($datosInsertar_x_condominio,$array_x_condominio);
+      }                 
+    }
+    
+    if(count($datosInsertar_x_condominio) > 0){
+      $this->PaquetesCorrida_model->insertBatch('paquetes_x_condominios',$datosInsertar_x_condominio);
+    }
+  }
+}
+
 
 
 }

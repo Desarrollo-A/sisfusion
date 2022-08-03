@@ -66,7 +66,8 @@ class Metricas extends CI_Controller {
     }
 
     public function getProyectos(){
-        $data = $this->Metricas_model->getProyectos();
+        $sede = $_POST['idSede'];
+        $data = $this->Metricas_model->getProyectos($sede);
         if($data != null) {
             echo json_encode($data);
         } else {
@@ -82,6 +83,34 @@ class Metricas extends CI_Controller {
             echo json_encode(array());
         }
     }
+
+    public function getPromedio(){
+        $data = $this->Metricas_model->getPromedio($_POST['sede'], $_POST['proyecto'], $_POST['beginDate'], $_POST['endDate']);
+        if($data != null) {
+            echo json_encode($data, JSON_NUMERIC_CHECK);
+        } else {
+            echo json_encode(array());
+        }
+    }
+
+    public function getSedes(){
+        $data = $this->Metricas_model->getSedes();
+        if($data != null) {
+            echo json_encode($data);
+        } else {
+            echo json_encode(array());
+        }
+    }
+
+    public function getLotesInformation(){
+        $data = $this->Metricas_model->getLotesInformation($_POST['sede_residencial'], $_POST['idResidencial'], $_POST['beginDate'], $_POST['endDate']);
+        if($data != null) {
+            echo json_encode($data, JSON_NUMERIC_CHECK);
+        } else {
+            echo json_encode(array());
+        }
+    }
+
 
 
 }
