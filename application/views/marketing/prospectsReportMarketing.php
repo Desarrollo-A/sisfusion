@@ -29,9 +29,8 @@
                                                     <div class="col-md-12 p-r">
                                                         <div class="form-group d-flex">
                                                             <input type="text" class="form-control datepicker"
-                                                                id="beginDate" value="01/01/2021"/>
-                                                            <input type="text" class="form-control datepicker" id="endDate"
-                                                                value="01/01/2021"/>
+                                                                id="beginDate"/>
+                                                            <input type="text" class="form-control datepicker" id="endDate"/>
                                                             <button class="btn btn-success btn-round btn-fab btn-fab-mini"
                                                                     id="searchByDateRange">
                                                                 <span class="material-icons update-dataTable">search</span>
@@ -43,35 +42,33 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="table-responsive">
-                                    <div class="material-datatables">
-                                        <table id="masterCobranzaTable" class="table-striped table-hover">
-                                            <thead>
-                                                <tr>
-                                                    <th>ETAPA</th>
-                                                    <th>ETAPA</th>
-                                                    <th>ETAPA</th>
-                                                    <th>ETAPA</th>
-                                                    <th>ETAPA</th>
-                                                    <th>ETAPA</th>
-                                                    <th>ETAPA</th>
-                                                    <th>ETAPA</th>
-                                                    <th>ETAPA</th>
-                                                    <th>ETAPA</th>
-                                                    <th>ETAPA</th>
-                                                    <th>ETAPA</th>
-                                                    <th>ETAPA</th>
-                                                    <th>ETAPA</th>
-                                                    <th>ETAPA</th>
-                                                    <th>ETAPA</th>
-                                                    <th>ETAPA</th>
-                                                    <th>ETAPA</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                            </tbody>
-                                        </table>
-                                    </div>
+                                <div class="material-datatables">
+                                    <table id="masterCobranzaTable" class="table-striped table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>TIPO</th>
+                                                <th>NOMBRE</th>
+                                                <th>FECHA NACIMIENTO</th>
+                                                <th>TELÉFONO</th>
+                                                <th>CORREO</th>
+                                                <th>LUGAR PROSPECCIÓN</th>
+                                                <th>FECHA APARTADO</th>
+                                                <th>ASESOR</th>
+                                                <th>COORDINADOR</th>
+                                                <th>GERENTE</th>
+                                                <th>SUBDIRECTOR</th>
+                                                <th>DIRECTOR REGIONAL</th>
+                                                <th>RESIDENCIAL</th>
+                                                <th>CONDOMINIO</th>
+                                                <th>LOTE</th>
+                                                <th>FECHA CREACION</th>
+                                                <th>DÍAS CIERRE</th>
+                                                <th>DIRECCIÓN</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
                         </div>
@@ -94,6 +91,10 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
+    <script src="<?= base_url() ?>dist/js/es.js"></script>
+    <!-- DateTimePicker Plugin -->
+    <script src="<?= base_url() ?>dist/js/bootstrap-datetimepicker.js"></script>
+    <!--  Full Calendar Plugin    -->
     <script>
         userType = <?= $this->session->userdata('id_rol') ?> ;
         idUser = <?= $this->session->userdata('id_usuario') ?> ;
