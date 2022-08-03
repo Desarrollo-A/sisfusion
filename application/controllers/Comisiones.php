@@ -4582,6 +4582,7 @@ echo json_encode($respuesta);
             }
             // UPDATE CLIENT PROSPECTING PLACE
             $clientes_data["lugar_prospeccion"] = 6;
+            $clientes_data["plan_comision"] = 0;
             $this->Comisiones_model->updateRecord("clientes", $clientes_data, "id_cliente", $lote_data[0]['idCliente']); // MJ: LLEVA 4 PARÁMETROS $table, $data, $key, $value
             echo json_encode(1);   
         } else if ($type_transaction == 2) { // REMOVE MKTD
