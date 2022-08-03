@@ -181,7 +181,7 @@
                                                         </div>
                                                         <div class="col-md-3 pl-0">
                                                             <div class="form-group label-floating is-focused">
-                                                                <label class="control-label label-gral">Codigo postal</label>
+                                                                <label class="control-label label-gral">Código postal</label>
                                                                 <input id="cpf" name="cpf" class="form-control input-gral" type="text">
                                                             </div>
                                                         </div>

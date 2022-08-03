@@ -15,7 +15,7 @@ class Postventa extends CI_Controller
 
     public function index()
     {
-        if ($this->session->userdata('id_rol') == FALSE || $this->session->userdata('id_rol') != '55' && $this->session->userdata('id_rol') != '56' && $this->session->userdata('id_rol') != '57' && $this->session->userdata('id_rol') != '13')
+        if ($this->session->userdata('id_rol') == FALSE || $this->session->userdata('id_rol') != '55' && $this->session->userdata('id_rol') != '56' && $this->session->userdata('id_rol') != '57' && $this->session->userdata('id_rol') != '13' && $this->session->userdata('id_rol') != '62')
             redirect(base_url() . 'login');
         $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
         $this->load->view('template/header');
@@ -62,6 +62,7 @@ class Postventa extends CI_Controller
             case '55': // POSTVENTA
             case '56': // COMITÉ TÉCNICO
             case '57': // TITULACIÓN
+            case '62': // PROYECTOS
                 $this->load->view('template/header');
                 $this->load->view("postventa/solicitudes_escrituracion", $datos);
                 break;
@@ -195,7 +196,7 @@ class Postventa extends CI_Controller
                                                     ' . $informacion->nombre . '
                                                     </td>
                                                     <td style="font-size: 1em;">
-                                                    <b>Ocupacíon:</b><br>
+                                                    <b>Ocupación:</b><br>
                                                     ' . $informacion->ocupacion . '
                                                     </td>
                                                     <td style="font-size: 1em;">
@@ -286,7 +287,7 @@ class Postventa extends CI_Controller
                                                 </tr>
                                                 <tr>
                                                     <td colspan="3" style="font-size: 0.9em;border: 1px solid #ddd;">
-                                                        3) Comprobante de domicilio actual luz, agua o telefonia fija(antiguedad menor a 2 meses)
+                                                        3) Comprobante de domicilio actual luz, agua o telefonía fija(antiguedad menor a 2 meses)
                                                     </td>
                                                     <td colspan="1"  style="font-size: 0.9em;border: 1px solid #ddd;">
                                                         <b></b>
@@ -318,7 +319,7 @@ class Postventa extends CI_Controller
                                                 </tr>
                                                 <tr>
                                                     <td colspan="3" style="font-size: 0.9em;border: 1px solid #ddd;">
-                                                        7) Formas de pago (todos los comprobantes de pago a mensialidades / estados de cuenta bancarios) **
+                                                        7) Formas de pago (todos los comprobantes de pago a mensualidades / estados de cuenta bancarios) **
                                                     </td>
                                                     <td colspan="1"  style="font-size: 0.9em;border: 1px solid #ddd;">
                                                         <b></b>
@@ -403,11 +404,11 @@ class Postventa extends CI_Controller
                                                 <td colspan="2" style="padding: 3px 6px; ">
                                                     <b style="font-size: .8em; ">
                                                         Estimado ' . $data['nombre'] . '<br>
-                                                        En seguimiento a su visita en oficina de Ciudad Maderas Querétaro, envio la informacion para iniciar con el proceso de escrituración
-                                                        como primer paso es la solicitud del presupuesto para conocer el monto a pagar por la escritura y asignar notaria<br>
-                                                        El presupuesto que envió es informativo, sin valor avalúo por parte del perito y es con el costo estimado, tambien aprovecho y envió el check list
+                                                        En seguimiento a su visita en oficina de Ciudad Maderas Querétaro, envio la información para iniciar con el proceso de escrituración
+                                                        como primer paso es la solicitud del presupuesto para conocer el monto a pagar por la escritura y asignar Notaria<br>
+                                                        El presupuesto que envió es informativo, sin valor avalúo por parte del perito y es con el costo estimado, también aprovecho y envió el check list
                                                         en solicitud a la recepción de todos los documentos al momento de escriturar, estos documentos deben ser necesarios para efectuar la entrega del proyecto de escrituración 
-                                                        con la notaria:
+                                                        con la Notaria:
                                                     </b>
                                                 </td>
                                             </tr>
@@ -515,7 +516,7 @@ class Postventa extends CI_Controller
                                                 </tr>
                                                 <tr>
                                                     <td colspan="3" style="font-size: 0.9em;border: 1px solid #ddd;">
-                                                        3) Comprobante de domicilio actual luz, agua o telefonia fija(antiguedad menor a 2 meses)
+                                                        3) Comprobante de domicilio actual luz, agua o telefonia fija(antigüedad menor a 2 meses)
                                                     </td>
                                                     <td colspan="1"  style="font-size: 0.9em;border: 1px solid #ddd;">
                                                         <b></b>
@@ -755,6 +756,12 @@ class Postventa extends CI_Controller
             case 19:
                 $folder = "static/documentos/postventa/escrituracion/ACTA_CONSTITUTIVA/";
                 break;
+            case 20:
+                $folder = "static/documentos/postventa/escrituracion/OTROS/";
+                break;
+            case 21:
+                $folder = "static/documentos/postventa/escrituracion/CONTRATO/";
+                break;
         }
         return $folder;
     }
@@ -950,6 +957,21 @@ class Postventa extends CI_Controller
             echo json_encode($data);
         else
             echo json_encode(array());
+
+        if ($_POST['not'] == 'yes'){
+            $idSolicitud = $_POST['id_solicitud3'];
+            $nombre_notaria = $_POST['nombre_notaria'];
+            $nombre_notario = $_POST['nombre_notario'];
+            $direccion = $_POST['direccion'];
+            $correo = $_POST['correo'];
+            $telefono = $_POST['telefono'];
+
+            $informacion = $this->Postventa_model->newNotaria($nombre_notaria, $nombre_notario, $direccion, $correo, $telefono, 0, 2);
+            return $informacion;
+    
+            return $this->Postventa_model->newNotaria($idSolicitud);
+        }   
+
     }
 
     public function mailNotaria()
@@ -970,7 +992,7 @@ class Postventa extends CI_Controller
             // print_r(' / ');
             $this->email->attach($folder . $row['expediente']);
         }
-        $mail->message('Buen dia, se anexa documentacion de completa para proceder con escrituracion como compraventa del lote citado  al rubro a nombre de ' . $info->nombre_escrituras . ' existe dueño beneficiario, es la señora _____ pido de favor, en su caso, actualizar la cotizacion antes de  la firma, saludos cordiales.');
+        $mail->message('Buen día, se anexa documentación de completa para proceder con escrituración como compraventa del lote citado  al rubro a nombre de ' . $info->nombre_escrituras . ' existe dueño beneficiario, es la señora _____ pido de favor, en su caso, actualizar la cotizacion antes de  la firma, saludos cordiales.');
         $response = $mail->send();
         // echo $this->email->print_debugger();
 
@@ -998,8 +1020,8 @@ class Postventa extends CI_Controller
         $pdf = new TCPDF('P', 'mm', 'LETTER', 'UTF-8', false);
         $pdf->SetCreator(PDF_CREATOR);
         // $pdf->SetAuthor('Sistemas Victor Manuel Sanchez Ramirez');
-        $pdf->SetTitle('Presupuesto Escrituracion.');
-        $pdf->SetSubject('Escrituracion (CRM)');
+        $pdf->SetTitle('Presupuesto Escrituración.');
+        $pdf->SetSubject('Escrituración (CRM)');
         $pdf->SetKeywords('CRM, escrituracion, PERSONAL, presupuesto');
         // se pueden modificar en el archivo tcpdf_config.php de libraries/config
         $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
@@ -1198,7 +1220,7 @@ class Postventa extends CI_Controller
         $mail->from('noreply@ciudadmaderas.com', 'Ciudad Maderas');
         $mail->to('programador.analista18@ciudadmaderas.com');
         $mail->Subject(utf8_decode("Solicitud de presupuesto y valores"));
-        $mail->message('Buen dia me apoyan con el pre-avaluo con valor actual y referido  del lote que se menciona  en la tabla que se anexa ?');
+        $mail->message('Buen dia me apoyan con el pre-avaluo con valor actual y referido  del lote que se menciona en la tabla que se anexa ?');
         $this->email->attach(__DIR__ . "/../../static/documentos/postventa/escrituracion/SOLICITUD_PRESUPUESTO/".$documentName->expediente);
 
         $response = $mail->send();
@@ -1358,6 +1380,37 @@ class Postventa extends CI_Controller
                                                             <td style="font-size: 1em;">
                                                                 <b>RFC del titular anterior:</b><br>
                                                                 ' . $data->RFC . '
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                </div>
+                                                ';
+                                            }
+
+                                            if($data->pertenece == 2){
+                                                $html .= '
+                                                <div class="row">
+                                                    <table width="100%" style="padding:10px 3px;height: 45px; border: 1px solid #ddd; text-aling: center;" width="690">
+                                                        <tr>
+                                                            <td style="font-size: 1em;">
+                                                                <b>Nombre de la Notaría</b><br>
+                                                                ' . $data->nombre_notaria . '
+                                                            </td>
+                                                            <td style="font-size: 1em;">
+                                                                <b>Nombre del notario</b><br>
+                                                                ' . $data->nombre_notario . ' 
+                                                            </td>
+                                                            <td style="font-size: 1em;">
+                                                                <b>Correo</b>
+                                                                ' . $data->correo . '
+                                                            </td>
+                                                            <td style="font-size: 1em;">
+                                                                <b>Teléfono</b><br>
+                                                                ' . $data->telefono . '
+                                                            </td>
+                                                            <td style="font-size: 1e;">
+                                                                <b>Dirección</b><br>
+                                                                ' . $data->direccion . '
                                                             </td>
                                                         </tr>
                                                     </table>
@@ -1840,6 +1893,35 @@ class Postventa extends CI_Controller
         // $resultado = file_get_contents($url, false, $contexto);
         $resDecode = json_decode(base64_decode($result));
         return $resDecode; 
+    }
+
+    //INFORMACIÓN ADMIN
+    public function newInformacion()
+    {
+        $data = $_POST;
+
+        $id_solicitud = $data['idSolicitud'];
+
+        $updateData = array(
+            "aportaciones" => $data['aportaciones'],
+            "descuentos" => $data['descuentos']
+        );
+
+        $data = $this->Postventa_model->updateInformacion($updateData, $id_solicitud);
+        if ($data != null)
+            echo json_encode($data);
+        else
+            echo json_encode(array());
+    }
+
+    public function checkBudgetInformacion()
+    {
+        $idSolicitud = $this->input->post('idSolicitud');
+        $data = $this->Postventa_model->checkBudgetInformacion($idSolicitud)->row();
+        if ($data != null)
+            echo json_encode($data);
+        else
+            echo json_encode(array());
     }
 
 function getWorkingDays($startDate, $endDate){
