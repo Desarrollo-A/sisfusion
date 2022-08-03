@@ -1438,28 +1438,28 @@
   -webkit-box-shadow: none;
 }
 
-.table-responsive .table-striped {
+.table-striped {
   border: none;
   text-align: center;
   width: 100% !important;
   font-size: 13px;
 }
 
-.table-responsive .table-striped tbody > tr.selected, .table-responsive .table-striped tbody > tr > .selected {
+.table-striped tbody > tr.selected, .table-striped tbody > tr > .selected {
   background-color: #96843D !important;
   opacity: 0.6;
   color: #ffffff !important;
 }
 
-.table-responsive .table-striped tbody td.select-checkbox:before, .table-responsive .table-striped tbody th.select-checkbox:before {
+.table-striped tbody td.select-checkbox:before, .table-striped tbody th.select-checkbox:before {
   display: none;
 }
 
-.table-responsive .table-striped tr.selected td.select-checkbox:after, .table-responsive .table-striped tr.selected th.select-checkbox:after {
+.table-striped tr.selected td.select-checkbox:after, .table-striped tr.selected th.select-checkbox:after {
   display: none;
 }
 
-.table-responsive .table-striped thead > tr > th {
+.table-striped thead > tr > th {
   background-color: #103f75;
   border: none;
   color: #ffffff;
@@ -1468,7 +1468,7 @@
   font-weight: 100;
 }
 
-.table-responsive .table-striped thead > tr > th .textoshead {
+.table-striped thead > tr > th .textoshead {
   width: 100%;
   background: #103f75;
   font-weight: 100;
@@ -1480,11 +1480,11 @@
   border-radius: 8px;
 }
 
-.table-responsive .table-striped thead > tr > th .textoshead::placeholder {
+.table-striped thead > tr > th .textoshead::placeholder {
   color: #eaeaea;
 }
 
-.table-responsive .table-striped .toggle-subTable {
+.table-striped .toggle-subTable {
   color: #96843D;
   border-radius: 27px;
   width: 27px;
@@ -1494,53 +1494,53 @@
   justify-content: center;
 }
 
-.table-responsive .table-striped .toggle-subTable:hover {
+.table-striped .toggle-subTable:hover {
   background-color: #96843D;
   color: #ffffff;
 }
 
-.table-responsive .table-striped .subBoxDetail {
+.table-striped .subBoxDetail {
   background-color: #eaeaea;
   border-radius: 10px;
   padding: 15px 0;
 }
 
-.table-responsive .table-striped .subBoxDetail label {
+.table-striped .subBoxDetail label {
   color: #333333;
   font-weight: 100;
 }
 
-.table-responsive .table-striped .boxSBtns {
+.table-striped .boxSBtns {
   background-color: #eaeaea;
   border-radius: 30px;
   padding: 10px;
 }
 
-.table-responsive .dt-buttons {
+.dt-buttons {
   text-align: left;
 }
 
-.table-responsive .paginate_button i {
+.paginate_button i {
   font-size: 18px;
 }
 
-.table-responsive .pagination > li > a:hover, .table-responsive .pagination > li > span:hover, .table-responsive .pagination > li > a:focus, .table-responsive .pagination > li > span:focus {
+.pagination > li > a:hover, .pagination > li > span:hover, .pagination > li > a:focus, .pagination > li > span:focus {
   background-color: transparent !important;
   color: #96843D !important;
 }
 
-.table-responsive .paginate_button .active a {
+.paginate_button .active a {
   box-shadow: none !important;
 }
 
-.table-responsive .dataTables_filter label {
+.dataTables_filter label {
   display: flex;
   align-items: center;
   justify-content: end;
   position: relative;
 }
 
-.table-responsive .dataTables_filter label input {
+.dataTables_filter label input {
   border: 0px !important;
   background: #eaeaea;
   border-radius: 27px;
@@ -1549,7 +1549,7 @@
   text-align: left;
 }
 
-.table-responsive .dataTables_filter label #input_img {
+.dataTables_filter label #input_img {
   position: absolute;
   bottom: 2px;
   right: 12px;
@@ -1557,11 +1557,11 @@
   height: 24px;
 }
 
-.table-responsive .dataTables_length label {
+.dataTables_length label {
   color: #333;
 }
 
-.table-responsive .dataTables_length label select {
+.dataTables_length label select {
   background-image: none;
   border: 1px solid #929292;
   border-radius: 27px;

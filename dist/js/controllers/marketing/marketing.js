@@ -15,10 +15,10 @@ $(document).ready(function () {
 	setInitialValues();
 });
 
-sp = { // MJ: SELECT PICKER
+sp = { //  SELECT PICKER
 	initFormExtendedDatetimepickers: function () {
 		$('.datepicker').datetimepicker({
-			format: 'DD/MM/YYYY',
+			format: 'MM/DD/YYYY',
 			icons: {
 				time: "fa fa-clock-o",
 				date: "fa fa-calendar",
@@ -50,7 +50,8 @@ $('#masterCobranzaTable thead tr:eq(0) th').each(function (i) {
 	}
 });
 
-function fillTable(typeTransaction, beginDate, endDate) {
+function fillTable(beginDate, endDate) {
+
 	generalDataTable = $('#masterCobranzaTable').dataTable({
 		dom: 'Brt'+ "<'row'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'i><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>",
 		width: "auto",
@@ -61,50 +62,59 @@ function fillTable(typeTransaction, beginDate, endDate) {
 				className: 'btn buttons-excel',
 				titleAttr: 'Descargar archivo de Excel',
 				exportOptions: {
-					columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+					columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16],
 					format: {
 						header: function (d, columnIdx) {
 							switch (columnIdx) {
 								case 0:
-									return '';
+									return 'TIPO';
 									break;
 								case 1:
 									return 'NOMBRE';
 									break;
 								case 2:
-									return 'MONTO TOTAL'
+									return 'FECHA NACIMIENTO'
 								case 3:
-									return 'FECHA APARTADO';
+									return 'TELÉFONO';
 									break;
 								case 4:
-									return 'PLAZA';
+									return 'CORREO';
 									break;
 								case 5:
-									return 'SOLICITUD PAGO';
+									return 'LUGAR PROSPECCIÓN';
 									break;
 								case 6:
-									return 'ESTATUS EVIDENCIA';
+									return 'FECHA APARTADO';
 									break;
 								case 7:
-									return 'ESTATUS CONTRATACIÓN';
+									return 'COORDINADOR';
 									break;
 								case 8:
-									return 'ESTATUS CONTRATACIÓN';
+									return 'GERENTE';
 									break;
 								case 9:
-									return 'ESTATUS COMISIÓN';
+									return 'SUBDIRECTOR';
 									break;
 								case 10:
-									return 'TOTAL COMISIÓN';
+									return 'DIRECTOR REGIONAL';
 									break;
 								case 11:
-									return 'TOTAL DISPERSADO';
+									return 'RESIDENCIAL';
 									break;
 								case 12:
-									return 'TOTAL PAGADO';
+									return 'CONDOMINIO';
 									break;
 								case 13:
-									return 'LUGAR PROSPECCIÓN';
+									return 'LOTE';
+									break;
+								case 14:
+									return 'FECHA CREACIÓN';
+									break;
+								case 15:
+									return 'DÍAS CIERRE';
+									break;
+								case 16:
+									return 'DIRECCIÓN';
 									break;
 							}
 						}
@@ -149,7 +159,7 @@ function fillTable(typeTransaction, beginDate, endDate) {
 			},
 			{
 				data: function (d) {
-					if (d.id_cliente  = null) {
+					if (d.id_cliente == null) {
 						if (d.fn2 == '' || d.fn2  == '01/01/1900')
 						{
 							if (d.fn1 == '' || d.fn1  == '01/01/1900') {
@@ -175,12 +185,12 @@ function fillTable(typeTransaction, beginDate, endDate) {
 			},
 			{
 				data: function (d) {
-					return d.lugar_prospeccion;
+					return d.lugar_prospeccion2;
 				}
 			},
 			{
 				data: function (d) {
-					d.fechaApartado
+					return d.fechaApartado
 				}
 			},
 			{
@@ -215,7 +225,7 @@ function fillTable(typeTransaction, beginDate, endDate) {
 			},
 			{
 				data: function (d) {
-					d.condominio
+					return d.condominio
 				}
 			},
 			{
@@ -225,7 +235,7 @@ function fillTable(typeTransaction, beginDate, endDate) {
             },
 			{
 				data: function (d) {
-					d.fecha_creacion
+					return d.fecha_creacion
 				}
 			},
 			{
@@ -248,7 +258,6 @@ function fillTable(typeTransaction, beginDate, endDate) {
 			type: "POST",
 			cache: false,
 			data: {
-				"typeTransaction": typeTransaction,
 				"beginDate": beginDate,
 				"endDate": endDate
 			}
@@ -259,7 +268,7 @@ function fillTable(typeTransaction, beginDate, endDate) {
 $(document).on("click", "#searchByDateRange", function () {
 	let finalBeginDate = $("#beginDate").val();
 	let finalEndDate = $("#endDate").val();
-	fillTable(2, finalBeginDate, finalEndDate, 0);
+	fillTable(finalBeginDate, finalEndDate);
 });
 
 function setInitialValues() {
@@ -273,15 +282,16 @@ function setInitialValues() {
 	const endDate = new Date(fechaFin.getFullYear(), fechaFin.getMonth() + 1, 0);
 	finalBeginDate = [beginDate.getFullYear(), ('0' + (beginDate.getMonth() + 1)).slice(-2), ('0' + beginDate.getDate()).slice(-2)].join('-');
 	finalEndDate = [endDate.getFullYear(), ('0' + (endDate.getMonth() + 1)).slice(-2), ('0' + endDate.getDate()).slice(-2)].join('-');
-	fillTable(1, finalBeginDate, finalEndDate, 0);
+	$("#beginDate").val(convertDate(beginDate));
+	$("#endDate").val(convertDate(endDate));
+	fillTable(finalBeginDate, finalEndDate);
 }
+
 
 $(document).on("click", ".reset-initial-values", function () {
 	setInitialValues();
 	$(".idLote").val('');
 	$(".textoshead").val('');
-	$("#beginDate").val('01/01/2022');
-	$("#endDate").val('01/01/2022');
 });
 
 $(document).on('click', '#requestCommissionPayment', function () {
