@@ -4019,6 +4019,8 @@ if(floatval($valor) == 1){
   $usuario = $this->input->post("usuarioid");
   $comentario = $this->input->post("comentario");
   $pagos_apli = 0;
+  $descuent0 = str_replace(",",'',$descuento);
+     $descuento = str_replace("$",'',$descuent0);
   
 }else if(floatval($valor) == 2){
 
@@ -4027,11 +4029,12 @@ if(floatval($valor) == 1){
   $usuario = $this->input->post("usuarioid2");
   $comentario = $this->input->post("comentario2");
   $pagos_apli = 0;
- 
+  $descuent0 = str_replace(",",'',$descuento);
+  $descuento = str_replace("$",'',$descuent0);
 }
 else if(floatval($valor) == 3){
 
-  /**DESCUENTOS UNIVERSIDAD*/
+  //DESCUENTOS UNIVERSIDAD
   $datos =  $this->input->post("idloteorigen[]");
   $desc =  $this->input->post("monto");
   $usuario = $this->input->post("usuarioid");
@@ -4063,8 +4066,8 @@ else if(floatval($valor) == 3){
           $id = $formatear[0]; 
           $monto = $formatear[1];
           $pago_neodata = $formatear[2];
-         $montoAinsertar = $descuento - $sumaMontos;
-         $Restante = $monto - $montoAinsertar;
+          $montoAinsertar = $descuento - $sumaMontos;
+          $Restante = $monto - $montoAinsertar;
          $comision = $this->Comisiones_model->obtenerID($id)->result_array();
         if($valor == 2){
           $dat =  $this->Comisiones_model->update_descuentoEsp($id,$Restante,$comentario, $this->session->userdata('id_usuario'),$valor,$usuario);
@@ -4079,13 +4082,13 @@ else if(floatval($valor) == 3){
            }else{
             $comentario = $this->input->post("comentario");
           }
-          $dat =  $this->Comisiones_model->update_descuento($id,$montoAinsertar,$comentario, $saldo_comisiones, $this->session->userdata('id_usuario'),$valor,$usuario,$pagos_apli);
+         $dat =  $this->Comisiones_model->update_descuento($id,$montoAinsertar,$comentario, $saldo_comisiones, $this->session->userdata('id_usuario'),$valor,$usuario,$pagos_apli);
          $dat =  $this->Comisiones_model->insertar_descuento($usuario,$Restante,$comision[0]['id_comision'],$comentario,$this->session->userdata('id_usuario'),$pago_neodata,$valor);
         }
         }else{
           $formatear = explode(",",$datos[$i]);
            $id=$formatear[0];
-          $monto = $formatear[1]; 
+           $monto = $formatear[1]; 
           $pago_neodata = $formatear[2];
           if($comentario == 0 && floatval($valor) == 3){
           $nameLote = $formatear[3];
@@ -4118,8 +4121,8 @@ else if(floatval($valor) == 3){
          $dat =  $this->Comisiones_model->update_descuentoEsp($id,$montoAinsertar,$comentario, $this->session->userdata('id_usuario'),$valor,$usuario);
           $dat =  $this->Comisiones_model->insertar_descuentoEsp($usuario,$Restante,$comision[0]['id_comision'],$comentario,$this->session->userdata('id_usuario'),$pago_neodata,$valor);
          }else{
-          $dat =  $this->Comisiones_model->update_descuento($id,$descuento,$comentario, $saldo_comisiones, $this->session->userdata('id_usuario'),$valor,$usuario,$pagos_apli);
-          $dat =  $this->Comisiones_model->insertar_descuento($usuario,$montoAinsertar,$comision[0]['id_comision'],$comentario,$this->session->userdata('id_usuario'),$pago_neodata,$valor);
+         $dat =  $this->Comisiones_model->update_descuento($id,$descuento,$comentario, $saldo_comisiones, $this->session->userdata('id_usuario'),$valor,$usuario,$pagos_apli);
+         $dat =  $this->Comisiones_model->insertar_descuento($usuario,$montoAinsertar,$comision[0]['id_comision'],$comentario,$this->session->userdata('id_usuario'),$pago_neodata,$valor);
  
          }
     }
