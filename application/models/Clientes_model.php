@@ -4232,10 +4232,17 @@ function getStatusMktdPreventa(){
         return $query->result();
     }
 
-    public function getProspectsReportInformation($typeTransaction, $beginDate, $endDate) {
-        $filter = " AND cl.fechaApartado BETWEEN '$beginDate 00:00:00' AND '$endDate 23:59:59'";
-        return $this->db->query("SELECT pr.tipo, CONCAT(pr.nombre, ' ', pr.apellido_paterno, ' ', pr.apellido_materno) nombreProspecto, pr.id_prospecto,
-        pr.fecha_creacion, pr.becameClient, pr.lugar_prospeccion,  
+    public function getProspectsReportInformation($beginDate, $endDate){
+        ini_set('memory_limit', -1);
+
+
+        $a = $this->input->post("beginDate");
+        $b = $this->input->post("endDate");
+        $beginDate = date("Y-m-d", strtotime($this->input->post("beginDate")));
+        $endDate = date("Y-m-d", strtotime($this->input->post("endDate")));
+
+        $filter = "pr.fecha_creacion BETWEEN '$beginDate 00:00:00' AND '$endDate 23:59:59'";
+        return $this->db->query("SELECT pr.tipo, CONCAT(pr.nombre, ' ', pr.apellido_paterno, ' ', pr.apellido_materno) nombreProspecto, pr.id_prospecto, pr.fecha_creacion, pr.becameClient, pr.lugar_prospeccion,  
         UPPER(CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno)) asesor, 
         UPPER(CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno)) coordinador, 
         UPPER(CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno)) gerente, 
@@ -4246,9 +4253,8 @@ function getStatusMktdPreventa(){
         CASE WHEN cl.id_cliente IS NULL THEN pr.correo ELSE cl.correo END correo,
         CASE WHEN cl.id_cliente IS NULL THEN pr.domicilio_particular ELSE cl.domicilio_particular END direccion,
         CONVERT(varchar, pr.fecha_nacimiento, 103) fn1, CONVERT(varchar, cl.fecha_nacimiento, 103) fn2, pr.domicilio_particular dp1, cl.domicilio_particular dp2,
-        CASE WHEN CHARINDEX('(especificar)', oxc.nombre) != 0 THEN CONCAT(oxc.nombre, ' - ', pr.otro_lugar) ELSE oxc.nombre END lugar_prospeccion,
-        CASE WHEN pr.source = '0' THEN 'PROSPECCIÓN ASESOR' ELSE pr.source END medio,
-        re.descripcion residemcial, cn.nombre condominio, lo.nombreLote lote
+        CASE WHEN CHARINDEX('(especificar)', oxc.nombre) != 0 THEN CONCAT(oxc.nombre, ' - ', pr.otro_lugar) ELSE oxc.nombre END lugar_prospeccion2,
+        CASE WHEN pr.source = '0' THEN 'PROSPECCIÓN ASESOR' ELSE pr.source END medio, re.descripcion residemcial, cn.nombre condominio, lo.nombreLote lote
         FROM prospectos pr
         INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = pr.lugar_prospeccion AND oxc.id_catalogo = 9
         INNER JOIN clientes cl ON cl.id_prospecto = pr.id_prospecto AND cl.status = 1
@@ -4260,10 +4266,32 @@ function getStatusMktdPreventa(){
         LEFT JOIN usuarios u2 ON u2.id_usuario = cl.id_gerente
         LEFT JOIN usuarios u3 ON u3.id_usuario = cl.id_subdirector
         LEFT JOIN usuarios u4 ON u4.id_usuario = cl.id_regional
-        WHERE pr.tipo = 1 AND (pr.fecha_creacion BETWEEN '2021-12-31 23:59:59.999' AND '2022-01-10 23:59:59.999' AND pr.lugar_prospeccion != 6) OR 
-        (pr.fecha_creacion > '2022-01-19 23:59:59.999' AND (pr.fecha_creacion BETWEEN '2021-12-31 23:59:59.999' AND '2022-01-10 23:59:59.999' AND pr.lugar_prospeccion = 6))");
+        WHERE pr.tipo = 1 AND ($filter AND pr.lugar_prospeccion != 6) OR 
+        (pr.fecha_creacion > '2022-01-19 23:59:59.999' AND ($filter AND pr.lugar_prospeccion = 6))
+        UNION ALL
+        SELECT pr.tipo, CONCAT(pr.nombre, ' ', pr.apellido_paterno, ' ', pr.apellido_materno) nombreProspecto, pr.id_prospecto,
+        pr.fecha_creacion, pr.becameClient, pr.lugar_prospeccion,  
+        UPPER(CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno)) asesor, 
+        UPPER(CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno)) coordinador, 
+        UPPER(CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno)) gerente, 
+        UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)) subdirector, 
+        UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)) regional,
+        null fechaApartado, 0 dias_cierre,
+        CASE WHEN pr.telefono IS NULL THEN '' ELSE pr.telefono END telefono,
+        CASE WHEN pr.correo IS NULL THEN '' ELSE pr.correo END correo,
+        CASE WHEN pr.domicilio_particular IS NULL THEN '' ELSE pr.domicilio_particular END direccion,
+        CONVERT(varchar, pr.fecha_nacimiento, 103) fn1, null fn2, pr.domicilio_particular dp1, 'N/A' dp2,
+        CASE WHEN CHARINDEX('(especificar)', oxc.nombre) != 0 THEN CONCAT(oxc.nombre, ' - ', pr.otro_lugar) ELSE oxc.nombre END lugar_prospeccion,
+        CASE WHEN pr.source = '0' THEN 'PROSPECCIÓN ASESOR' ELSE pr.source END medio,
+        'N/A' residemcial, 'N/A' condominio, 'N/A' lote
+        FROM prospectos pr
+        INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = pr.lugar_prospeccion AND oxc.id_catalogo = 9
+        INNER JOIN usuarios u0 ON u0.id_usuario = pr.id_asesor
+        LEFT JOIN usuarios u1 ON u1.id_usuario = pr.id_coordinador
+        LEFT JOIN usuarios u2 ON u2.id_usuario = pr.id_gerente
+        LEFT JOIN usuarios u3 ON u3.id_usuario = pr.id_subdirector
+        LEFT JOIN usuarios u4 ON u4.id_usuario = pr.id_regional
+        WHERE pr.tipo = 0 AND ($filter AND pr.lugar_prospeccion != 6) OR 
+        (pr.fecha_creacion > '2022-01-19 23:59:59.999' AND ($filter AND pr.lugar_prospeccion = 6))");
     }
-
-
-
 }
