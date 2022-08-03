@@ -447,7 +447,7 @@
 							{
 								data: null,
 								render: function ( data, type, row ){
-									if(data.flag_compartida == 1){
+									// if(data.flag_compartida == 1){
 										datos = data.id_asesor;
 										if (getFileExtension(data.expediente) == "pdf") {
 											if(data.tipo_doc == 8){
@@ -536,9 +536,9 @@
 
 										}
 										return '<div class="d-flex justify-center">' + file + '</div>';
-									}else{
-										return '<span class="label label-success">Se necesita especificar si es venta compartida</span>';
-									}
+									// }else{
+									// 	return '<span class="label label-success">Se necesita especificar si es venta compartida</span>';
+									// }
 								}
 							},
 							{
