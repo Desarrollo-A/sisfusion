@@ -81,7 +81,7 @@ class Services_model extends CI_Model
             return $query->result_array();
         }else if($id_rol == 3){
             //Gerente
-            $query = $this->db->query("SELECT u.regional_id as id_regional
+            $query = $this->db->query("SELECT u.id_lider,u.regional_id as id_regional
             FROM usuarios u
             WHERE u.id_usuario=$id_lider");
             return $query->result_array();
