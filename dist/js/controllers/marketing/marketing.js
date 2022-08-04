@@ -76,6 +76,7 @@ function fillProspectos(beginDate, endDate) {
 									break;
 								case 1:
 									return 'FECHA NACIMIENTO'
+									break;
 								case 2:
 									return 'TELÉFONO';
 									break;
@@ -86,27 +87,24 @@ function fillProspectos(beginDate, endDate) {
 									return 'LUGAR PROSPECCIÓN';
 									break;
 								case 5:
-									return 'FECHA APARTADO';
-									break;
-								case 6:
 									return 'ASESOR';
 									break;
-								case 7:
+								case 6:
 									return 'COORDINADOR';
 									break;
-								case 8:
+								case 7:
 									return 'GERENTE';
 									break;
-								case 9:
+								case 8:
 									return 'SUBDIRECTOR';
 									break;
-								case 10:
+								case 9:
 									return 'DIRECTOR REGIONAL';
 									break;
-								case 11:
+								case 10:
 									return 'FECHA CREACIÓN';
 									break;
-								case 12:
+								case 11:
 									return 'DIRECCIÓN';
 									break;
 							}
@@ -144,18 +142,11 @@ function fillProspectos(beginDate, endDate) {
 			},
 			{
 				data: function (d) {
-					if (d.id_cliente == null) {
-						if (d.fn2 == '' || d.fn2  == '01/01/1900')
-						{
-							if (d.fn1 == '' || d.fn1  == '01/01/1900') {
-								return 'Sin especificar';
-							}
-							else 
-								return d.fn1;
-						} 
-						else
-							return d.fn2;
-					}
+					if (d.fn == '' || d.fn  == '01/01/1900' || d.fn == null){
+						return 'Sin especificar';
+					} 
+					else 
+						return d.fn;
 				}
 			},
 			{
@@ -171,11 +162,6 @@ function fillProspectos(beginDate, endDate) {
 			{
 				data: function (d) {
 					return d.lugar_prospeccion2;
-				}
-			},
-			{
-				data: function (d) {
-					return d.fechaApartado
 				}
 			},
 			{
@@ -333,9 +319,9 @@ function fillClientes(beginDate, endDate) {
 			{
 				data: function (d) {
 					if (d.id_cliente == null) {
-						if (d.fn2 == '' || d.fn2  == '01/01/1900')
+						if (d.fn2 == '' || d.fn2  == '1900-01-01 00:00:00.000' || d.fn2 == null)
 						{
-							if (d.fn1 == '' || d.fn1  == '01/01/1900') {
+							if (d.fn1 == '' || d.fn1  == '01/01/1900' || d.fn1 == null) {
 								return 'Sin especificar';
 							}
 							else 
@@ -344,6 +330,7 @@ function fillClientes(beginDate, endDate) {
 						else
 							return d.fn2;
 					}
+					
 				}
 			},
 			{
@@ -358,12 +345,12 @@ function fillClientes(beginDate, endDate) {
 			},
 			{
 				data: function (d) {
-					return d.lugar_prospeccion2;
+					return d.lugar_prospeccion;
 				}
 			},
 			{
 				data: function (d) {
-					return d.fechaApartado
+					return d.fechaApartado;
 				}
 			},
 			{
@@ -477,13 +464,13 @@ function setInitialValues(type){
 }
 
 $(document).on("click", ".reset-clientes", function () {
-	setInitialValues(type);
+	setInitialValues(1);
 	$(".idLote").val('');
 	$(".textoshead").val('');
 });
 
 $(document).on("click", ".reset-prospectos", function () {
-	setInitialValues(type);
+	setInitialValues(0);
 	$(".idLote").val('');
 	$(".textoshead").val('');
 });
