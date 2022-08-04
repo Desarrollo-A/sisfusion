@@ -874,6 +874,26 @@ class Postventa extends CI_Controller
             echo json_encode(array());
     }
 
+    public function getDocumentsClientOtros()
+    {
+        $idEscritura = $_POST['idEscritura'];
+        $data = $this->Postventa_model->getDocumentsClientOtros($idEscritura);
+        if ($data != null)
+            echo json_encode($data);
+        else
+            echo json_encode(array());
+    }
+
+    public function getDocumentsClientPago()
+    {
+        $idEscritura = $_POST['idEscritura'];
+        $data = $this->Postventa_model->getDocumentsClientPago($idEscritura);
+        if ($data != null)
+            echo json_encode($data);
+        else
+            echo json_encode(array());
+    }
+
     public function getNotarias()
     {
         $data = $this->Postventa_model->getNotarias();
@@ -1914,10 +1934,10 @@ class Postventa extends CI_Controller
             echo json_encode(array());
     }
 
-    public function checkBudgetInformacion()
+    public function getBudgetInformacion()
     {
         $idSolicitud = $this->input->post('idSolicitud');
-        $data = $this->Postventa_model->checkBudgetInformacion($idSolicitud)->row();
+        $data = $this->Postventa_model->getBudgetInformacion($idSolicitud)->row();
         if ($data != null)
             echo json_encode($data);
         else
