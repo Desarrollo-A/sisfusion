@@ -4068,29 +4068,21 @@ function getDatosEnviadasADirectorMK($filtro){
                 GROUP BY cl.fechaApartado,lo.nombreLote, re.nombreResidencial, sed.nombre, sed.id_sede, lo.totalNeto2, com.comision_total, com.porcentaje_decimal, pci1.abono_neodata, pci1.pago_neodata, oxc.nombre, pci1.estatus, sed2.nombre, cl.personalidad_juridica, pac.porcentaje_abono, com.id_lote, pci1.id_pago_i, pci1.id_usuario, pci1.id_comision, lo.idLote, mk.idc_mktd, sd1.nombre, sd2.nombre, pac.bonificacion, re.empresa, co.nombre, lo.referencia, pci1.fecha_pago_intmex, u.nombre, u.apellido_paterno, u.apellido_materno)");
 } 
 
-
-
- 
- 
-
 function getLotesOrigen($user,$valor){
-
-  if($user == 1988){//fernanda
-    $cadena = " AND cl.id_asesor in (select id_usuario from usuarios where id_rol in (7,9) and 
-    id_sede like '%1%' or id_sede like '%5%')";
-    $user_vobo = 4394;
-
-  }else if($user == 1981){//maricela
-    $cadena = " AND cl.id_asesor in (select id_usuario from usuarios where id_rol in (7,9) and 
-    id_sede like '%2%' or id_sede like '%3%' or id_sede like '%4%' or id_sede like '%6%')";
-    $user_vobo = 4394;
-
-
-  }else{
-    $cadena = '';
-    $user_vobo = $user;
-
-  }
+    if($user == 1988){//fernanda
+        $cadena = " AND cl.id_asesor in (select id_usuario from usuarios where id_rol in (7,9) and 
+        id_sede like '%1%' or id_sede like '%5%')";
+        $user_vobo = 4394;
+    }
+    else if($user == 1981){//maricela
+        $cadena = " AND cl.id_asesor in (select id_usuario from usuarios where id_rol in (7,9) and 
+        id_sede like '%2%' or id_sede like '%3%' or id_sede like '%4%' or id_sede like '%6%')";
+        $user_vobo = 4394;
+    }
+    else{
+        $cadena = '';
+        $user_vobo = $user;
+    }
 
     if($valor == 1){
         return $this->db->query(" SELECT l.idLote, l.nombreLote, pci.id_pago_i, pci.abono_neodata as comision_total, 0 abono_pagado,pci.pago_neodata 

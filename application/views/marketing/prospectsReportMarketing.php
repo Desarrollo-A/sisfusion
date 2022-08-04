@@ -78,56 +78,6 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="tab-pane" id="generalClientes">
-                                            <div class="text-center">
-                                                <h3 class="card-title center-align">Listado general de clientes</h3>
-                                            </div>
-                                            <div class="toolbar">
-                                                <div class="container-fluid">
-                                                    <div class="row">
-                                                        <div class="col-md-8"></div>
-                                                        <div class="col-md-4 p-r">
-                                                            <div class="form-group d-flex">
-                                                                <input type="text" class="form-control datepicker"
-                                                                    id="beginDate"/>
-                                                                <input type="text" class="form-control datepicker" id="endDate"/>
-                                                                <button class="btn btn-success btn-round btn-fab btn-fab-mini" id="searchByDateRange">
-                                                                    <span class="material-icons update-dataTable">search</span>
-                                                                </button>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="material-datatables">
-                                                        <table id="masterCobranzaTable" class="table-striped table-hover">
-                                                            <thead>
-                                                                <tr>
-                                                                    <th>TIPO</th>
-                                                                    <th>NOMBRE</th>
-                                                                    <th>FECHA NACIMIENTO</th>
-                                                                    <th>TELÉFONO</th>
-                                                                    <th>CORREO</th>
-                                                                    <th>LUGAR PROSPECCIÓN</th>
-                                                                    <th>FECHA APARTADO</th>
-                                                                    <th>ASESOR</th>
-                                                                    <th>COORDINADOR</th>
-                                                                    <th>GERENTE</th>
-                                                                    <th>SUBDIRECTOR</th>
-                                                                    <th>DIRECTOR REGIONAL</th>
-                                                                    <th>RESIDENCIAL</th>
-                                                                    <th>CONDOMINIO</th>
-                                                                    <th>LOTE</th>
-                                                                    <th>FECHA CREACION</th>
-                                                                    <th>DÍAS CIERRE</th>
-                                                                    <th>DIRECCIÓN</th>
-                                                                </tr>
-                                                            </thead>
-                                                            <tbody>
-                                                            </tbody>
-                                                        </table>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
                                     </div>
                                 </div>
                             </div>
