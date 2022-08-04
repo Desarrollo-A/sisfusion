@@ -56,6 +56,7 @@ $('#clientesTable thead tr:eq(0) th').each(function (i) {
 });
 
 function fillProspectos(beginDate, endDate) {
+	console.log("prospectos");
 	prospectosTable = $('#prospectosTable').dataTable({
 		dom: 'Brt'+ "<'row'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'i><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>",
 		width: "auto",
@@ -169,7 +170,7 @@ function fillProspectos(beginDate, endDate) {
 			},
 			{
 				data: function (d) {
-					return d.lugar_prospeccion;
+					return d.lugar_prospeccion2;
 				}
 			},
 			{
@@ -357,7 +358,7 @@ function fillClientes(beginDate, endDate) {
 			},
 			{
 				data: function (d) {
-					return d.lugar_prospeccion;
+					return d.lugar_prospeccion2;
 				}
 			},
 			{
@@ -439,6 +440,7 @@ function fillClientes(beginDate, endDate) {
 }
 
 $(document).on("click", "#searchByDateRangeProspectos", function () {
+	console.log("prospectos");
 	let finalBeginDate = $("#beginDate").val();
 	let finalEndDate = $("#endDate").val();
 	fillProspectos(finalBeginDate, finalEndDate);
@@ -461,10 +463,17 @@ function setInitialValues(type){
 	const endDate = new Date(fechaFin.getFullYear(), fechaFin.getMonth() + 1, 0);
 	finalBeginDate = [beginDate.getFullYear(), ('0' + (beginDate.getMonth() + 1)).slice(-2), ('0' + beginDate.getDate()).slice(-2)].join('-');
 	finalEndDate = [endDate.getFullYear(), ('0' + (endDate.getMonth() + 1)).slice(-2), ('0' + endDate.getDate()).slice(-2)].join('-');
-	$(".beginDate").val(convertDate(beginDate));
-	$(".endDate").val(convertDate(endDate));
-	if ( type == 0 ) fillProspectos(finalBeginDate, finalEndDate);
-	else fillClientes(finalBeginDate, finalEndDate);
+	
+	if ( type == 0 ){
+		fillProspectos(finalBeginDate, finalEndDate);
+		$("#beginDate").val(convertDate(beginDate));
+		$("#endDate").val(convertDate(endDate));
+	}
+	else{
+		fillClientes(finalBeginDate, finalEndDate);
+		$("#beginDateD").val(convertDate(beginDate));
+		$("#endDateD").val(convertDate(endDate));
+	}
 }
 
 $(document).on("click", ".reset-clientes", function () {
@@ -477,10 +486,4 @@ $(document).on("click", ".reset-prospectos", function () {
 	setInitialValues(type);
 	$(".idLote").val('');
 	$(".textoshead").val('');
-});
-
-$(document).on('click', '#requestCommissionPayment', function () {
-	let idLote = $(this).attr("data-idLote");
-	$("#idLote").val(idLote);
-	$("#modalConfirmRequest").modal();
 });
