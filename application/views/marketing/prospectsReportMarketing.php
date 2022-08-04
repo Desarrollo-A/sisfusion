@@ -21,8 +21,8 @@
                 <div class="row">
                     <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
                         <ul class="nav nav-tabs nav-tabs-cm" role="tablist">
-                            <li class="active"><a href="#generalProspectos" role="tab" data-toggle="tab">LISTADO PROSPECTOS</a></li>
-                            <li><a href="#generalClientes" role="tab" data-toggle="tab">LISTADO CLIENTES</a></li>
+                            <li class="active menuTab" id="prospectosTab"><a href="#generalProspectos" role="tab" data-toggle="tab">LISTADO PROSPECTOS</a></li>
+                            <li class="menuTab" id="clientesTab"><a href="#generalClientes" role="tab" data-toggle="tab">LISTADO CLIENTES</a></li>
                         </ul>
                         <div class="card no-shadow m-0">
                             <div class="card-content p-0">
@@ -38,20 +38,63 @@
                                                         <div class="col-md-8"></div>
                                                         <div class="col-md-4 p-r">
                                                             <div class="form-group d-flex">
-                                                                <input type="text" class="form-control datepicker"
-                                                                    id="beginDate"/>
-                                                                <input type="text" class="form-control datepicker" id="endDate"/>
-                                                                <button class="btn btn-success btn-round btn-fab btn-fab-mini" id="searchByDateRange">
+                                                                <input type="text" class="form-control datepicker beginDate" id="beginDate"/>
+                                                                <input type="text" class="form-control datepicker endDate" id="endDate"/>
+                                                                <button class="btn btn-success btn-round btn-fab btn-fab-mini" id="searchByDateRangeProspectos">
                                                                     <span class="material-icons update-dataTable">search</span>
                                                                 </button>
                                                             </div>
                                                         </div>
                                                     </div>
                                                     <div class="material-datatables">
-                                                        <table id="masterCobranzaTable" class="table-striped table-hover">
+                                                        <table id="prospectosTable" class="table-striped table-hover">
                                                             <thead>
                                                                 <tr>
-                                                                    <th>TIPO</th>
+                                                                    <th>NOMBRE</th>
+                                                                    <th>FECHA NACIMIENTO</th>
+                                                                    <th>TELÉFONO</th>
+                                                                    <th>CORREO</th>
+                                                                    <th>LUGAR PROSPECCIÓN</th>
+                                                                    <th>FECHA APARTADO</th>
+                                                                    <th>ASESOR</th>
+                                                                    <th>COORDINADOR</th>
+                                                                    <th>GERENTE</th>
+                                                                    <th>SUBDIRECTOR</th>
+                                                                    <th>DIRECTOR REGIONAL</th>
+                                                                    <th>FECHA CREACIÓN</th>
+                                                                    <th>DIRECCIÓN</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane" id="generalClientes">
+                                            <div class="text-center">
+                                                <h3 class="card-title center-align">Listado general de clientes</h3>
+                                            </div>
+                                            <div class="toolbar">
+                                                <div class="container-fluid">
+                                                    <div class="row">
+                                                        <div class="col-md-8"></div>
+                                                        <div class="col-md-4 p-r">
+                                                            <div class="form-group d-flex">
+                                                                <input type="text" class="form-control datepicker beginDate"
+                                                                    id="beginDateD"/>
+                                                                <input type="text" class="form-control datepicker endDate" id="endDateD"/>
+                                                                <button class="btn btn-success btn-round btn-fab btn-fab-mini" id="searchByDateRangeClientes">
+                                                                    <span class="material-icons update-dataTable">search</span>
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="material-datatables">
+                                                        <table id="clientesTable" class="table-striped table-hover">
+                                                            <thead>
+                                                                <tr>
                                                                     <th>NOMBRE</th>
                                                                     <th>FECHA NACIMIENTO</th>
                                                                     <th>TELÉFONO</th>
@@ -66,7 +109,7 @@
                                                                     <th>RESIDENCIAL</th>
                                                                     <th>CONDOMINIO</th>
                                                                     <th>LOTE</th>
-                                                                    <th>FECHA CREACION</th>
+                                                                    <th>FECHA CREACIÓN</th>
                                                                     <th>DÍAS CIERRE</th>
                                                                     <th>DIRECCIÓN</th>
                                                                 </tr>
