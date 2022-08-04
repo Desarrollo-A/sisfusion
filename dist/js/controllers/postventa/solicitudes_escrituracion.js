@@ -792,9 +792,6 @@ function fillTable(beginDate, endDate, estatus) {
                                 exp = 1;
                                 permiso = 3;
                             }
-                            if (d.tipo_documento == 7 && d.expediente != null) {
-                                newBtn += `<button id="informacion" class="btn-data btn-blueMaderas" data-toggle="tooltip" data-placement="top" title="Información"><i class="fas fa-money-bill-wave"></i></button>`;
-                            }
                             aditional = 1
                         }else if(userType == 11){
                             if(d.expediente != null && d.flagEstLot == 0){
