@@ -4232,9 +4232,9 @@ function getStatusMktdPreventa(){
         return $query->result();
     }
 
-    public function getProspectsReportInformation($beginDate, $endDate){
+    public function getProspectsReportInformation($type, $beginDate, $endDate){
+        //$type = 0 Hace referencia a prospectos; type = 1 Hace referencia a clientes
         ini_set('memory_limit', -1);
-
 
         $a = $this->input->post("beginDate");
         $b = $this->input->post("endDate");
@@ -4242,6 +4242,12 @@ function getStatusMktdPreventa(){
         $endDate = date("Y-m-d", strtotime($this->input->post("endDate")));
 
         $filter = "pr.fecha_creacion BETWEEN '$beginDate 00:00:00' AND '$endDate 23:59:59'";
+        if ( $type == 0 ){
+            
+        }
+        else{
+            ( $type == 1 )
+        }
         return $this->db->query("SELECT pr.tipo, CONCAT(pr.nombre, ' ', pr.apellido_paterno, ' ', pr.apellido_materno) nombreProspecto, pr.id_prospecto, pr.fecha_creacion, pr.becameClient, pr.lugar_prospeccion,  
         UPPER(CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno)) asesor, 
         UPPER(CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno)) coordinador, 

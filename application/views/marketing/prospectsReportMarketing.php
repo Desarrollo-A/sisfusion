@@ -1,6 +1,12 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
 <link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet"/>
+<style>
+        table.dataTable > thead > tr > th, table.dataTable > tbody > tr > th, table.dataTable > tfoot > tr > th, table.dataTable > thead > tr > td, table.dataTable > tbody > tr > td, table.dataTable > tfoot > tr > td {
+        white-space: nowrap!important;
+    }
+    </style>
 <body>
+    
     <div class="wrapper">
         <?php 
         $datos = array();
@@ -14,61 +20,115 @@
             <div class="container-fluid">
                 <div class="row">
                     <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                        <div class="card">
-                            <div class="card-header card-header-icon" data-background-color="goldMaderas">
-                                <i class="fas fa-address-book fa-2x"></i>
-                            </div>
-                            <div class="card-content">
-                                <h3 class="card-title center-align">Listado general de prospectos</h3>
-                                <div class="toolbar">
-                                    <div class="row">
-                                        <div class="col-12 col-sm-6 col-md-6 col-lg-6"></div>
-                                        <div class="col-12 col-sm-6 col-md-6 col-lg-6">
-                                            <div class="container-fluid p-0">
-                                                <div class="row">
-                                                    <div class="col-md-12 p-r">
-                                                        <div class="form-group d-flex">
-                                                            <input type="text" class="form-control datepicker"
-                                                                id="beginDate"/>
-                                                            <input type="text" class="form-control datepicker" id="endDate"/>
-                                                            <button class="btn btn-success btn-round btn-fab btn-fab-mini"
-                                                                    id="searchByDateRange">
-                                                                <span class="material-icons update-dataTable">search</span>
-                                                            </button>
+                        <ul class="nav nav-tabs nav-tabs-cm" role="tablist">
+                            <li class="active"><a href="#generalProspectos" role="tab" data-toggle="tab">LISTADO PROSPECTOS</a></li>
+                            <li><a href="#generalClientes" role="tab" data-toggle="tab">LISTADO CLIENTES</a></li>
+                        </ul>
+                        <div class="card no-shadow m-0">
+                            <div class="card-content p-0">
+                                <div class="nav-tabs-custom">
+                                    <div class="tab-content p-2">
+                                        <div class="tab-pane active" id="generalProspectos">
+                                            <div class="text-center">
+                                                <h3 class="card-title center-align">Listado general de prospectos</h3>
+                                            </div>
+                                            <div class="toolbar">
+                                                <div class="container-fluid">
+                                                    <div class="row">
+                                                        <div class="col-md-8"></div>
+                                                        <div class="col-md-4 p-r">
+                                                            <div class="form-group d-flex">
+                                                                <input type="text" class="form-control datepicker"
+                                                                    id="beginDate"/>
+                                                                <input type="text" class="form-control datepicker" id="endDate"/>
+                                                                <button class="btn btn-success btn-round btn-fab btn-fab-mini" id="searchByDateRange">
+                                                                    <span class="material-icons update-dataTable">search</span>
+                                                                </button>
+                                                            </div>
                                                         </div>
+                                                    </div>
+                                                    <div class="material-datatables">
+                                                        <table id="masterCobranzaTable" class="table-striped table-hover">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>TIPO</th>
+                                                                    <th>NOMBRE</th>
+                                                                    <th>FECHA NACIMIENTO</th>
+                                                                    <th>TELÉFONO</th>
+                                                                    <th>CORREO</th>
+                                                                    <th>LUGAR PROSPECCIÓN</th>
+                                                                    <th>FECHA APARTADO</th>
+                                                                    <th>ASESOR</th>
+                                                                    <th>COORDINADOR</th>
+                                                                    <th>GERENTE</th>
+                                                                    <th>SUBDIRECTOR</th>
+                                                                    <th>DIRECTOR REGIONAL</th>
+                                                                    <th>RESIDENCIAL</th>
+                                                                    <th>CONDOMINIO</th>
+                                                                    <th>LOTE</th>
+                                                                    <th>FECHA CREACION</th>
+                                                                    <th>DÍAS CIERRE</th>
+                                                                    <th>DIRECCIÓN</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane" id="generalClientes">
+                                            <div class="text-center">
+                                                <h3 class="card-title center-align">Listado general de clientes</h3>
+                                            </div>
+                                            <div class="toolbar">
+                                                <div class="container-fluid">
+                                                    <div class="row">
+                                                        <div class="col-md-8"></div>
+                                                        <div class="col-md-4 p-r">
+                                                            <div class="form-group d-flex">
+                                                                <input type="text" class="form-control datepicker"
+                                                                    id="beginDate"/>
+                                                                <input type="text" class="form-control datepicker" id="endDate"/>
+                                                                <button class="btn btn-success btn-round btn-fab btn-fab-mini" id="searchByDateRange">
+                                                                    <span class="material-icons update-dataTable">search</span>
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="material-datatables">
+                                                        <table id="masterCobranzaTable" class="table-striped table-hover">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>TIPO</th>
+                                                                    <th>NOMBRE</th>
+                                                                    <th>FECHA NACIMIENTO</th>
+                                                                    <th>TELÉFONO</th>
+                                                                    <th>CORREO</th>
+                                                                    <th>LUGAR PROSPECCIÓN</th>
+                                                                    <th>FECHA APARTADO</th>
+                                                                    <th>ASESOR</th>
+                                                                    <th>COORDINADOR</th>
+                                                                    <th>GERENTE</th>
+                                                                    <th>SUBDIRECTOR</th>
+                                                                    <th>DIRECTOR REGIONAL</th>
+                                                                    <th>RESIDENCIAL</th>
+                                                                    <th>CONDOMINIO</th>
+                                                                    <th>LOTE</th>
+                                                                    <th>FECHA CREACION</th>
+                                                                    <th>DÍAS CIERRE</th>
+                                                                    <th>DIRECCIÓN</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                            </tbody>
+                                                        </table>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="material-datatables">
-                                    <table id="masterCobranzaTable" class="table-striped table-hover">
-                                        <thead>
-                                            <tr>
-                                                <th>TIPO</th>
-                                                <th>NOMBRE</th>
-                                                <th>FECHA NACIMIENTO</th>
-                                                <th>TELÉFONO</th>
-                                                <th>CORREO</th>
-                                                <th>LUGAR PROSPECCIÓN</th>
-                                                <th>FECHA APARTADO</th>
-                                                <th>ASESOR</th>
-                                                <th>COORDINADOR</th>
-                                                <th>GERENTE</th>
-                                                <th>SUBDIRECTOR</th>
-                                                <th>DIRECTOR REGIONAL</th>
-                                                <th>RESIDENCIAL</th>
-                                                <th>CONDOMINIO</th>
-                                                <th>LOTE</th>
-                                                <th>FECHA CREACION</th>
-                                                <th>DÍAS CIERRE</th>
-                                                <th>DIRECCIÓN</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                        </tbody>
-                                    </table>
                                 </div>
                             </div>
                         </div>
