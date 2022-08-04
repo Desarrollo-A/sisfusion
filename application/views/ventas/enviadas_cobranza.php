@@ -1,5 +1,10 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
 <link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet"/>
+<style>
+    table.dataTable > thead > tr > th, table.dataTable > tbody > tr > th, table.dataTable > tfoot > tr > th, table.dataTable > thead > tr > td, table.dataTable > tbody > tr > td, table.dataTable > tfoot > tr > td {
+        white-space: nowrap!important;
+    }
+</style>
 <body>
     <div class="wrapper">
         <?php
@@ -89,7 +94,7 @@
                             <li><a href="#proceso-1" role="tab" data-toggle="tab">DISPERSADOS DIRECCIÓN MKTD</a></li>
                         </ul>
                         
-                        <div class="card no-shadow m-0 border-conntent__tabs">
+                        <div class="card no-shadow m-0">
                             <div class="card-content p-0">
                                 <div class="nav-tabs-custom">
                                     <div class="tab-content p-2">
