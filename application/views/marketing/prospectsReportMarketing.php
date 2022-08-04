@@ -55,7 +55,6 @@
                                                                     <th>TELÉFONO</th>
                                                                     <th>CORREO</th>
                                                                     <th>LUGAR PROSPECCIÓN</th>
-                                                                    <th>FECHA APARTADO</th>
                                                                     <th>ASESOR</th>
                                                                     <th>COORDINADOR</th>
                                                                     <th>GERENTE</th>

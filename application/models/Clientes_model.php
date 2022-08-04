@@ -4251,12 +4251,12 @@ function getStatusMktdPreventa(){
             UPPER(CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno)) asesor, 
             UPPER(CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno)) coordinador, 
             UPPER(CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno)) gerente, 
-            UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)) subdirector, 
+            UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)) subdirector,
             UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)) regional,
             CASE WHEN pr.telefono IS NULL THEN '' ELSE pr.telefono END telefono,
             CASE WHEN pr.correo IS NULL THEN '' ELSE pr.correo END correo,
             CASE WHEN pr.domicilio_particular IS NULL THEN '' ELSE pr.domicilio_particular END direccion,
-            CONVERT(varchar, pr.fecha_nacimiento, 103) fn1, null fn2, pr.domicilio_particular dp1,
+            CONVERT(varchar, pr.fecha_nacimiento, 103) fn, pr.domicilio_particular dp1,
             CASE WHEN CHARINDEX('(especificar)', oxc.nombre) != 0 THEN CONCAT(oxc.nombre, ' - ', pr.otro_lugar) ELSE oxc.nombre END lugar_prospeccion2,
             CASE WHEN pr.source = '0' THEN 'PROSPECCIÓN ASESOR' ELSE pr.source END medio
             FROM prospectos pr
@@ -4280,7 +4280,7 @@ function getStatusMktdPreventa(){
             CASE WHEN cl.id_cliente IS NULL THEN pr.telefono ELSE cl.telefono1 END telefono,
             CASE WHEN cl.id_cliente IS NULL THEN pr.correo ELSE cl.correo END correo,
             CASE WHEN cl.id_cliente IS NULL THEN pr.domicilio_particular ELSE cl.domicilio_particular END direccion,
-            CONVERT(varchar, pr.fecha_nacimiento, 103) fn1, CONVERT(varchar, cl.fecha_nacimiento, 103) fn2, pr.domicilio_particular dp1, cl.domicilio_particular dp2,
+            CONVERT(varchar, pr.fecha_nacimiento, 103) fn, CONVERT(varchar, cl.fecha_nacimiento, 103) fn2, pr.domicilio_particular dp1, cl.domicilio_particular dp2,
             CASE WHEN CHARINDEX('(especificar)', oxc.nombre) != 0 THEN CONCAT(oxc.nombre, ' - ', pr.otro_lugar) ELSE oxc.nombre END lugar_prospeccion2,
             CASE WHEN pr.source = '0' THEN 'PROSPECCIÓN ASESOR' ELSE pr.source END medio, re.descripcion residemcial, cn.nombre condominio, lo.nombreLote lote
             FROM prospectos pr
