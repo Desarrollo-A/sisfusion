@@ -132,7 +132,7 @@
             font-size:15px;
             color:#fff;
             margin-bottom: 30px;
-
+            overflow-y: auto;
         }
         p{
             font-family: 'Open Sans', sans-serif;
@@ -416,7 +416,7 @@
                                     <div class="row">
                                         <div class="col-md-3 form-group">
                                             <label>Nombre:<span class="required-label">*</span> </label>
-                                            <input type="text" ng-model="nombre" id="nombre" required="text" class="form-control">
+                                            <input type="text" ng-model="nombre" id="nombre" required="text" class="form-control" autocomplete="off">
                                             <p id="nombretext" style="color:red;"></p>
                                         </div >
                                         <div class="col-md-3 form-group" >
@@ -430,7 +430,7 @@
                                             <label>Teléfono:</label>
                                             <!-- <input type="text" ng-model="telefono" class="form-control"> -->
                                             <input type="tel" ng-model="telefono" class="form-control"
-                                                   placeholder="442-256-5963" maxlength="12" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}">
+                                                   placeholder="442-256-5963" maxlength="12" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" autocomplete="off">
                                             <small>Formato: 442-485-6978</small><br><br>
                                         </div>
 
@@ -1033,9 +1033,9 @@
         <div style="float: right;bottom: 2%;right: 3%;position: fixed;display: inline-flex;align-content: center;
                             flex-wrap: wrap;flex-direction: column;">
             <button class="btn-circle blue" ng-click="exportc()"
-                    data-toggle="tooltip" title="Guardar + Imprimir Caratula"><i class="fas fa-print fa-lg"></i></button>
+                    data-toggle="tooltip" title="Guardar + Imprimir Carátula"><i class="fas fa-print fa-lg"></i></button>
             <button class="btn-circle dark-blue" ng-click="exportcf()"
-                    data-toggle="tooltip" title="Guardar + Imprimir Caratula y Corrida Financiera"><i class="fas fa-money-check-alt fa-lg"></i></button>
+                    data-toggle="tooltip" title="Guardar + Imprimir Carátula y Corrida Financiera"><i class="fas fa-money-check-alt fa-lg"></i></button>
             <button class="btn-circle hide" ng-click="updateCorrida()"
                     data-toggle="tooltip" title="Guardar"><i class="fa fa-save fa-lg fa-lg"></i></button>
         </div>
@@ -5786,7 +5786,7 @@
                                             var el = angular.element(document.querySelector('#data_acg'));
                                             el.empty();
                                             dataInnerHTML = '                       <div class="col-md-4 form-group">\n' +
-                                                '                                        <label>Gerente:</label>\n' +
+                                                '                                        <label>Gerente:<span class="required-label">*</span></label>\n' +
                                                 '                                        <select ng-model="gerente" id="gerente"\n' +
                                                 '                                                ng-change="onSelectChangegerente(gerente)" class="form-control" >\n' +
                                                 '                                            <option value=""> - Selecciona un Gerente -</option>\n' +
@@ -5796,7 +5796,7 @@
                                                 '                                        <p id="gerentetext" style="color: red;"></p>\n' +
                                                 '                                    </div>';
                                             dataInnerHTML += '                     <div class="col-md-4 form-group">\n' +
-                                                '                                        <label>Coordinador:</label>\n' +
+                                                '                                        <label>Coordinador:<span class="required-label">*</span></label>\n' +
                                                 '                                        <!--ng-options="item.nombreCoordinador for item in coordinadores"-->\n' +
                                                 '                                        <select ng-model="coordinador"\n' +
                                                 '                                                ng-change="onSelectChangecoord(coordinador)" class="form-control"\n' +
@@ -5804,13 +5804,14 @@
                                                 '                                            <option value=""> - Selecciona un Coordinador -</option>\n' +
                                                 '                                            <option ng-repeat="coordinadores in coordinadores"  ng-value="coordinadores.idCoordinador"\n' +
                                                 '                                                    ng-selected="(coordinadores.idCoordinador== '+id_coordinador+') ? selected : false">{{coordinadores.nombreCoordinador}}</option>\n' +
-                                                '                                        </select>\n' +
+                                                '                                        </select>' +
+                                                                                        '<p id="cordinadortext" style="color:red;"></p>\n' +
                                                 '                                    </div>';
                                             dataInnerHTML += '                      <div class="col-md-4 form-group">\n' +
-                                                '                                        <label>Asesor:</label>\n' +
+                                                '                                        <label>Asesor:<span class="required-label">*</span></label>\n' +
                                                 '                                        <!--ng-options="item.nombreAsesor for item in asesores"-->\n' +
                                                 '                                        <select ng-model="asesor" id="asesor"\n' +
-                                                '                                                class="form-control">\n' +
+                                                '                                                class="form-control"  ng-change="onSelectChangeAsesor(asesor)">\n' +
                                                 '                                            <option value="" > - Selecciona un Asesor -</option>\n' +
                                                 '                                            <option ng-repeat="asesores in asesores"  ng-value="asesores.idAsesor"\n' +
                                                 '                                                    ng-selected="(asesores.idAsesor== '+id_asesor+') ? selected : \'\'">{{asesores.nombreAsesor}}</option>\n' +
@@ -5900,7 +5901,7 @@
                                 '                                    </div>\n' +
                                 '                                    <div class="col-md-4 form-group" >\n' +
                                 '                                        <label>Asesor:<span class="required-label">*</span></label>\n' +
-                                '                                        <select ng-model="asesor" id="asesor" ng-options="item.nombreAsesor for item in asesores" class="form-control">\n' +
+                                '                                        <select ng-model="asesor" id="asesor" ng-options="item.nombreAsesor for item in asesores" class="form-control"  ng-change="onSelectChangeAsesor(asesorView)">\n' +
                                 '                                            <option value = ""> - Selecciona un Asesor - </option>\n' +
                                 '                                        </select>\n' +
                                 '                                        <p id="asesortext" style="color: red;"></p>\n' +
@@ -7142,7 +7143,7 @@
                                             '                                        <label>Asesor:<span class="required-label">*</span></label>\n' +
                                             '                                        <!--ng-options="item.nombreAsesor for item in asesores"-->\n' +
                                             '                                        <select ng-model="asesorView" id="asesor"\n' +
-                                            '                                                class="form-control" >\n' +
+                                            '                                                class="form-control" ng-change="onSelectChangeAsesor(asesorView)">\n' +
                                             '                                            <option value="" > - Selecciona un Asesor -</option>\n' +
                                             '                                            <option ng-repeat="asesores in asesores"  ng-value="asesores.idAsesor"\n' +
                                             '                                                    ng-selected="(asesores.idAsesor== '+id_asesor+') ? selected : \'\'">{{asesores.nombreAsesor}}</option>\n' +
@@ -7226,7 +7227,7 @@
                                 '                                    </div>\n' +
                                 '                                    <div class="col-md-4 form-group" >\n' +
                                 '                                        <label>Asesor:<span class="required-label">*</span></label>\n' +
-                                '                                        <select ng-model="asesor" id="asesor" ng-options="item.nombreAsesor for item in asesores" class="form-control">\n' +
+                                '                                        <select ng-model="asesor" id="asesor" ng-options="item.nombreAsesor for item in asesores" class="form-control"  ng-change="onSelectChangeAsesor(asesorView)">\n' +
                                 '                                            <option value = ""> - Selecciona un Asesor - </option>\n' +
                                 '                                        </select>\n' +
                                 '                                        <p id="asesortext" style="color: red;"></p>\n' +
@@ -8184,7 +8185,8 @@
                                             $scope.cincoCL = 1;
                                         }
 
-                                    } else if (descuentos.id_paquete != 261 || descuentos.id_paquete != 151 || descuentos.id_paquete != 368 || descuentos.id_paquete != 369 || descuentos.id_paquete != 263 || descuentos.id_paquete != 268
+                                    }
+                                    else if (descuentos.id_paquete != 261 || descuentos.id_paquete != 151 || descuentos.id_paquete != 368 || descuentos.id_paquete != 369 || descuentos.id_paquete != 263 || descuentos.id_paquete != 268
                                         || descuentos.id_paquete != 269 || descuentos.id_paquete != 265 || descuentos.id_paquete != 270 || descuentos.id_paquete != 271 || descuentos.id_paquete != 272
                                         || descuentos.id_paquete != 273 || descuentos.id_paquete != 274 || descuentos.id_paquete != 275 || descuentos.id_paquete != 276
                                         || descuentos.id_paquete != 278 || descuentos.id_paquete != 279 || descuentos.id_paquete != 280 || descuentos.id_paquete != 281
@@ -8436,8 +8438,11 @@
                 let coordParam;
                 if($scope.id_clienteP == undefined){
                     coordParam = coordinador.idCoordinador;
+                    console.log('Entré aqui');
                 }else{
                     coordParam = coordinador;
+                    console.log('Entré aqui II');
+                    document.getElementById("cordinadortext").innerHTML ='';
                 }
 
                 $http.post('<?=base_url()?>index.php/corrida/getAsesor',{coordinador: coordParam}).then(
@@ -8448,6 +8453,11 @@
                     });
             }
 
+            $scope.onSelectChangeAsesor = function(asesor){
+                document.getElementById("asesortext").innerHTML ='';
+                $('#asesor').css("border-color", "");
+                console.log("asesor:", asesor);
+            };
 
             $scope.payPlan = function() {
                 var planPay = $scope.plan;
@@ -8690,6 +8700,7 @@
                         telefono: telefono,
                         correo: correo,
                         asesor: asesor,
+                        coordinador: coordinador,
                         gerente: gerente,
                         plan: plan,
                         anio: anio,
@@ -8779,6 +8790,9 @@
                 var apartado = ($scope.apartado == undefined) ? 0 : $scope.apartado;
 
                 var paquete = ($scope.descApply == undefined) ? 0 : $scope.descApply[0].id_paquete;
+                console.log("PAKETE");
+                console.log(paquete);
+
 
                 if(paquete > 0) {
                     var paqueteEach = $scope.descApply;
@@ -8827,7 +8841,7 @@
 
                     var saldoc = $scope.saldoFinal;
                     var precioFinalc = $scope.precioFinal;
-                    var fechaEngc = ($scope.fechaEng == undefined) ? 0 : $scope.fechaEng
+                    var fechaEngc = ($scope.fechaEng == undefined) ? 0 : $scope.fechaEng;
                     var engancheFinalc = $scope.engancheFinal;
                     var msi_1p = ($scope.totalPrimerPlan == undefined) ? 0 : $scope.totalPrimerPlan;
                     var msi_2p = ($scope.totalSegundoPlan == undefined) ? 0 : $scope.totalSegundoPlan;
@@ -8859,10 +8873,7 @@
                         type: 'orange',
                         buttons: {
                             cancel: {
-                                text: 'OK',
-                                action: function () {
-                                    toastr.success('¡Ahora! Cotizemos.');
-                                }
+                                text: 'OK'
                             }
                         }
                     });
@@ -8928,6 +8939,7 @@
                         correo: correo,
                         asesor: asesor,
                         gerente: gerente,
+                        coordinador: coordinador,
                         plan: plan,
                         anio: anio,
                         dias_pagar_enganche: dias_pagar_enganche,

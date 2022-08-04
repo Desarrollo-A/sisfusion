@@ -1776,8 +1776,8 @@ class Asesor_model extends CI_Model
         FROM lotes l 
         INNER JOIN clientes cl ON cl.id_cliente=l.idCliente 
         LEFT JOIN usuarios asesor ON asesor.id_usuario=cl.id_asesor
-        LEFT JOIN usuarios coordinador ON coordinador.id_usuario=cl.id_coordinador
-        LEFT JOIN usuarios gerente ON gerente.id_usuario=cl.id_gerente
+        LEFT JOIN usuarios coordinador ON coordinador.id_usuario=asesor.id_lider
+        LEFT JOIN usuarios gerente ON gerente.id_usuario=coordinador.id_lider
         WHERE l.idLote=".$id_lote);
         return $query->result_array();
     }
