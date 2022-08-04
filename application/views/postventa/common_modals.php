@@ -575,7 +575,7 @@
                             </select>
                         </div>      
                         <div class="col-12 col-sm-12 col-md-6 col-lg-6">
-                            <select id="observacionesS" class="selectpicker" data-style="btn btn-primary btn-round" title="Observaciones" data-size="7" data-live-search="true">
+                            <select id="observacionesS" class="selectpicker" data-style="btn btn-primary btn-round" title="Observaciones" data-size="7" data-live-search="true" required>
                                 <option value="Corrección Documentos">Corrección documentos</option>
                                 <option value="Documentación Correcta">Documentación correcta</option>  
                             </select>
@@ -659,12 +659,12 @@
                                     <input id="descuentos" name="descuentos" class="form-control input-gral" type="text" required>
                                 </div>
                             </div>
-                            <div class="col-sm-6 pr-0">
+                            <div class="col-md-6 pr-0">
                                 <div class="form-group text-left m-0">
-                                    <label class="control-label label-gral">¿Tenemos cliente anterior?</label>
+                                    <label class="control-label label-gral m-0">¿Tenemos cliente anterior?</label>
                                     <select class="selectpicker m-0" data-style="btn btn-primary btn-round"
                                             title="¿Tenemos cliente anterior?" data-size="7" id="cliente" name="cliente"
-                                            data-live-search="true" disabled>
+                                            data-live-search="true">
                                             <option value ="default" selected disabled>Seleccione una opción</option>
                                             <option value="uno">Sí</option>
                                             <option value="dos">No</option>
@@ -672,6 +672,7 @@
                                 </div>
                             </div>
                             <!-- estos input solo se muestran si es si el select anterior -->
+                            <div id="ifInformacion" style="display:none">
                                 <div class="col-md-12 pr-0 pr-0">
                                     <div class="form-group label-floating is-focused">
                                         <label class="control-label label-gral">Nombre del titular anterior</label>
@@ -690,7 +691,7 @@
                                         <input id="rfcDatos" name="rfcDatos" class="form-control input-gral" type="text" disabled>
                                     </div>
                                 </div>
-                            
+                            </div>
                             <div class="col-sm-12 pr-0">
                                 <div class="form-group text-left m-0">
                                     <p>*Estos campos son obligatorios</p>

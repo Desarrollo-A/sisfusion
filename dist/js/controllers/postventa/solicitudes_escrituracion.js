@@ -363,6 +363,14 @@ $(document).on("click", "#sendRequestButton", function (e) {
                         // var tr = $(`#treePresupuesto${idSolicitud}`).closest('tr');
                         // var row = prospectsTable.row(tr);
                         // createDocRowPresupuesto(row, tr, $(`#treePresupuesto${idSolicitud}`));
+                    }else if(details == 3){
+                        var tr = $(`#docs${idSolicitud}`).closest('tr');
+                        var row = prospectsTable.row(tr);
+                        createDocRowOtros(row, tr, $(`#docs${idSolicitud}`));
+                    }else if(details == 4){
+                        var tr = $(`#pago${idSolicitud}`).closest('tr');
+                        var row = prospectsTable.row(tr);
+                        createDocRowOtros(row, tr, $(`#pago${idSolicitud}`));
                     }
                     else{
                         prospectsTable.ajax.reload();
@@ -596,6 +604,50 @@ $(document).on('click', '.details-control', function () {
     }
 });
 
+$(document).on('click', '.details-control-otros', function () {
+    var detailRows = [];
+    var tr = $(this).closest('tr');
+    var row = prospectsTable.row(tr);
+    var idx = $.inArray(tr.attr('id'), detailRows);
+    if (row.child.isShown()) {
+        tr.removeClass('details');
+        row.child.hide();
+
+        // Remove from the 'open' array
+        detailRows.splice(idx, 1);
+    } else {
+        $('#spiner-loader').removeClass('hide');
+        tr.addClass('details');
+        createDocRowOtros(row, tr, $(this));
+        // Add to the 'open' array
+        if (idx === -1) {
+            detailRows.push(tr.attr('id'));
+        }
+    }
+});
+
+$(document).on('click', '.details-control-pago', function () {
+    var detailRows = [];
+    var tr = $(this).closest('tr');
+    var row = prospectsTable.row(tr);
+    var idx = $.inArray(tr.attr('id'), detailRows);
+    if (row.child.isShown()) {
+        tr.removeClass('details');
+        row.child.hide();
+
+        // Remove from the 'open' array
+        detailRows.splice(idx, 1);
+    } else {
+        $('#spiner-loader').removeClass('hide');
+        tr.addClass('details');
+        createDocRowPago(row, tr, $(this));
+        // Add to the 'open' array
+        if (idx === -1) {
+            detailRows.push(tr.attr('id'));
+        }
+    }
+});
+
 $(document).on('click', '#estatusL', function () {
     var data = prospectsTable.row($(this).parents('tr')).data();
     $('#id_solicitudEstatus').val(data.idSolicitud);
@@ -794,9 +846,9 @@ function fillTable(beginDate, endDate, estatus) {
                             }
                             aditional = 1
                         }else if(userType == 11){
-                            if(d.expediente != null && d.flagEstLot == 0){
+                            if(d.expediente != null && d.aportaciones == null && d.descuentos == null){
                                 permiso = 2;
-                            }else{
+                            }else {
                                 permiso = d.permisos;
                             }
                             if (d.tipo_documento == 7 && d.expediente != null) {
@@ -831,7 +883,7 @@ function fillTable(beginDate, endDate, estatus) {
                         //     break;
                         case 4:
                             if (userType == 55) {
-                                newBtn += `<button id="trees${d.idSolicitud}" data-idSolicitud=${d.idSolicitud} class="btn-data btn-details-grey details-control" data-permisos="1" data-id-prospecto="" data-toggle="tooltip" data-placement="top" title="Desglose documentos"><i class="fas fa-chevron-down"></i></button>`;
+                                newBtn += `<button id="docs${d.idSolicitud}" data-idSolicitud=${d.idSolicitud} class="btn-data btn-details-grey details-control-otros" data-permisos="1" data-id-prospecto="" data-toggle="tooltip" data-placement="top" title="Desglose documentos"><i class="fas fa-chevron-down"></i></button>`;
                                 newBtn += `<button id="presupuesto" class="btn-data btn-blueMaderas" data-toggle="tooltip" data-placement="top" title="Presupuesto"><i class="fas fa-money-bill-wave"></i></button>`;
                                 newBtn += `<button id="reject" class="btn-data btn-warning" data-toggle="tooltip" data-placement="top" title="Rechazar"><i class="fas fa-ban"></i></button>`;
                                 if(d.Spresupuesto == 1){
@@ -843,13 +895,11 @@ function fillTable(beginDate, endDate, estatus) {
                         case 5:
                             if (d.pertenece == 2){
                                 newBtn += `<button id="notaria" data-idSolicitud=${d.idSolicitud} class="btn-data btn-green" data-permisos="2" data-id-prospecto="" data-toggle="tooltip" data-placement="top" title="Notaría"><i class="fas fa-user-tie"></i></button>`;
-                                newBtn += '<button id="request" class="btn-data btn-green" data-toggle="tooltip" data-placement="top" title="Aprobar"><i class="far fa-paper-plane"></i></button>';
                             } 
-                            else{
-                                newBtn += `<button id="reject" class="btn-data btn-warning" data-toggle="tooltip" data-placement="top" title="Rechazar"><i class="fas fa-ban"></i></button>`;
-                                newBtn += `<button id="trees${d.idSolicitud}" data-idSolicitud=${d.idSolicitud} class="btn-data btn-details-grey details-control" data-permisos="2" data-id-prospecto="" data-toggle="tooltip" data-placement="top" title="Desglose documentos"><i class="fas fa-chevron-down"></i></button>`;
-                                newBtn += '<button id="request" class="btn-data btn-green" data-toggle="tooltip" data-placement="top" title="Aprobar"><i class="far fa-paper-plane"></i></button>';
-                            }
+                            newBtn += `<button id="reject" class="btn-data btn-warning" data-toggle="tooltip" data-placement="top" title="Rechazar"><i class="fas fa-ban"></i></button>`;
+                            newBtn += `<button id="docs${d.idSolicitud}" data-idSolicitud=${d.idSolicitud} class="btn-data btn-details-grey details-control-otros" data-permisos="2" data-id-prospecto="" data-toggle="tooltip" data-placement="top" title="Desglose documentos"><i class="fas fa-chevron-down"></i></button>`;
+                            newBtn += '<button id="request" class="btn-data btn-green" data-toggle="tooltip" data-placement="top" title="Aprobar"><i class="far fa-paper-plane"></i></button>';
+                            
                             group_buttons += permisos(d.permisos, d.expediente, d.idDocumento, d.tipo_documento, d.idSolicitud, 1, newBtn);
                             break;
                         case 6:
@@ -920,7 +970,7 @@ function fillTable(beginDate, endDate, estatus) {
                             break;
                         case 13://14
                             if (userType == 57) { // MJ: ANTES 56
-                                newBtn += `<button id="trees${d.idSolicitud}" data-idSolicitud=${d.idSolicitud} class="btn-data btn-details-grey details-control" data-permisos="1" data-id-prospecto="" data-toggle="tooltip" data-placement="top" title="Desglose documentos"><i class="fas fa-chevron-down"></i></button>`;
+                                newBtn += `<button id="pago${d.idSolicitud}" data-idSolicitud=${d.idSolicitud} class="btn-data btn-details-grey details-control-pago" data-permisos="1" data-id-prospecto="" data-toggle="tooltip" data-placement="top" title="Desglose documentos"><i class="fas fa-chevron-down"></i></button>`;
                                 newBtn += `<button id="createDate" data-idSolicitud=${d.idSolicitud} data-action="3" data-idNotaria=${d.idNotaria} class="btn-data btn-green" data-id-prospecto="" data-toggle="tooltip" data-placement="top" title="Fecha para firma"><i class="far fa-calendar-alt"></i></button>`;
                             }
                             group_buttons += permisos(d.permisos, d.expediente, d.idDocumento, d.tipo_documento, d.idSolicitud, 1, newBtn);
@@ -1361,7 +1411,7 @@ function buildTableDetail(data, permisos) {
 
         solicitudes += '<td><div class="d-flex justify-center">';
         // MJ: TIENE PERMISOS (ESCRITURA) && (LA RAMA ESTÁ SIN VALIDAR O RECHAZADA) && VALIDACIÓN ESTATUS
-        if (permisos == 1 && (v.ev == null || v.ev == 2) && v.estatusActual == 10 && (v.tipo_documento == 7 || v.tipo_documento == 13)){
+        if (permisos == 1 && (v.ev == null || v.ev == 2) && v.estatusActual == 10 && (v.tipo_documento == 7 || v.tipo_documento == 13 || v.tipo_documento == 21)){
             solicitudes += ``;
             if(v.tipo_documento == 13){
                 if(v.estatusPropuesta == null || v.estatusPropuesta == 0){
@@ -1382,7 +1432,7 @@ function buildTableDetail(data, permisos) {
         else if(permisos == 1 && (v.ev == null || v.ev == 2) && v.estatusActual == 10){
             solicitudes += `<button data-idDocumento="${v.idDocumento}" data-documentType="${v.tipo_documento}" data-idSolicitud=${v.idSolicitud} data-details ="1" data-action=${v.expediente == null || v.expediente == '' ? 1 : 2} class="btn-data btn-${v.expediente == null || v.expediente == '' ? 'blueMaderas' : 'warning'} upload" data-toggle="tooltip" data-placement="top" title=${v.expediente == null || v.expediente == '' ? 'Cargar' : 'Eliminar'}>${v.expediente == null || v.expediente == '' ? '<i class="fas fa-cloud-upload-alt"></i>' : '<i class="far fa-trash-alt"></i>'}</button>`;
         }else if (permisos == 2 && v.estatusActual == 11) {
-            if(v.tipo_documento == 13 || v.tipo_documento == 7){
+            if(v.tipo_documento == 13 || v.tipo_documento == 7 || v.tipo_documento == 20 || v.tipo_documento == 21){
                 solicitudes += ``;
             }else{
                 if (v.ev == 1) // MJ: VALIDADO OK
@@ -1636,7 +1686,7 @@ $(document).on("submit", '#observacionesForm', function (e) {
 
 $(document).on('click', '#observacionesSubmit', function (e) {
     e.preventDefault();
-    let idSolicitud = ("#idSolicitud").val();
+    let idSolicitud = $("#idSolicitud").val();
     let data = new FormData($(this)[0]);
     data.append("idSolicitud", idSolicitud);
 
@@ -1795,17 +1845,17 @@ function getTipoEscrituracion() {
 $(document).on('click', '#informacion', function () {
     var data = prospectsTable.row($(this).parents('tr')).data();
 
-    checkBudgetInformacion(data.idSolicitud);
+    getBudgetInformacion(data.idSolicitud);
     $('#idSolicitud').val(data.idSolicitud);
 
     $("#informacionModal").modal();
 });
 
-function checkBudgetInformacion(idSolicitud) {
+function getBudgetInformacion(idSolicitud){
     $('#spiner-loader').removeClass('hide');
-    $.post('checkBudgetInformacion', {
-        idSolicitud : idSolicitud
-    }, function (data) {
+    $.post('getBudgetInformacion',{
+        idSolicitud:idSolicitud
+    }, function(data) {
         $('#liquidado').val(data.nombrePago);
         $('#cliente').val(data.cliente_anterior == 1 ? 'uno':'dos').trigger('change');
         $("#cliente").selectpicker('refresh');
@@ -1970,5 +2020,33 @@ function buildUploadCards(idNxS){
           $('#spiner-loader').addClass('hide');
 
         }
+    });
+}
+
+function createDocRowOtros(row, tr, thisVar){
+    $.post("getDocumentsClientOtros", {
+        idEscritura: row.data().idSolicitud
+    }).done(function (data) {
+        row.data().solicitudes = JSON.parse(data);
+        prospectsTable.row(tr).data(row.data());
+        row = prospectsTable.row(tr);
+        row.child(buildTableDetail(row.data().solicitudes, $('.details-control').attr('data-permisos'))).show();
+        tr.addClass('shown');
+        thisVar.parent().find('.animacion').removeClass("fa-caret-right").addClass("fa-caret-down");
+        $('#spiner-loader').addClass('hide');
+    });
+}
+
+function createDocRowPago(row, tr, thisVar){
+    $.post("getDocumentsClientPago", {
+        idEscritura: row.data().idSolicitud
+    }).done(function (data) {
+        row.data().solicitudes = JSON.parse(data);
+        prospectsTable.row(tr).data(row.data());
+        row = prospectsTable.row(tr);
+        row.child(buildTableDetail(row.data().solicitudes, $('.details-control').attr('data-permisos'))).show();
+        tr.addClass('shown');
+        thisVar.parent().find('.animacion').removeClass("fa-caret-right").addClass("fa-caret-down");
+        $('#spiner-loader').addClass('hide');
     });
 }
