@@ -3335,9 +3335,9 @@ public function LiquidarLote(){
                     $this->db->query("INSERT INTO historial_comisiones VALUES (".$consulta_comisiones[$i]['id_pago_i'].", ".$id_user_Vl.", GETDATE(), 1, 'RECHAZO SUBDIRECTOR MKTD')");
                     echo json_encode(1); // RECHAZADO
                 } else {
-                    if($id_user_Vl == 1981)$estatus = 51; // ES MARICELA
-                    else if($id_user_Vl == 1988)$estatus = 52; // ES FERNANDA
-                    $this->Comisiones_model->updateIndividualCommission($consulta_comisiones[$i]['id_pago_i'], $estatus);
+                    //if($id_user_Vl == 1981)$estatus = 51; // ES MARICELA
+                    //else if($id_user_Vl == 1988)$estatus = 52; // ES FERNANDA
+                    //$this->Comisiones_model->updateIndividualCommission($consulta_comisiones[$i]['id_pago_i'], $estatus);
                     $this->db->query("INSERT INTO historial_comisiones VALUES (".$consulta_comisiones[$i]['id_pago_i'].", ".$id_user_Vl.", GETDATE(), 1, 'VALIDÓ SUBDIRECTOR MKTD')");
                     $this->Comisiones_model->updateLotes($lotes[$i]['idLote'], $plaza);
                     echo json_encode(2); // LOTE ASIGNADO
@@ -7016,4 +7016,20 @@ for ($d=0; $d <count($dos) ; $d++) {
 
         echo json_encode(true);
     }
+    
+  public function sendCommissionToPay() {
+    for ($i = 0; $i < count($this->input->post("id_lote")); $i++) {
+      $insertToData[$i] = array(
+          "id_lote" => $_POST['id_lote'][$i],
+          "precio" => 0,
+          "dispersion" => 1,
+          "estatus" => 1,
+          "creado_por" => $this->session->userdata('id_usuario'),
+          "fecha_creacion" => date("Y-m-d H:i:s")
+      );
+    }
+    $insertResponse = $this->General_model->insertBatch("reportes_marketing", $insertToData);
+    echo json_encode($insertResponse);
+  }
+
 }
