@@ -130,7 +130,11 @@ class Postventa_model extends CI_Model
 
         $estatus = $this->db->query("SELECT estatus FROM solicitud_escrituracion WHERE idSolicitud = $id_solicitud")->row()->estatus;
 
-        $pertenece = $this->db->query("SELECT pertenece FROM solicitud_escrituracion se INNER JOIN Notarias n ON n.idNotaria = se.idNotaria WHERE idSolicitud = $id_solicitud")->row()->pertenece;
+        $notaria = $this->db->query("SELECT idNotaria FROM solicitud_escrituracion WHERE idSolicitud = $id_solicitud")->row()->idNotaria;
+
+        if($notaria != NULL){
+            $pertenece = $this->db->query("SELECT pertenece FROM solicitud_escrituracion se INNER JOIN Notarias n ON n.idNotaria = se.idNotaria WHERE idSolicitud = $id_solicitud")->row()->pertenece;
+        }
 
         if ($type == 1) { //OK
             if ($estatus == 90) {
