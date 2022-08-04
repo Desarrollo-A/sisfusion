@@ -11,11 +11,6 @@ $(document).on('click', '.menuTab', function(e){
 //functions
 function changePill(element){
     if(element == 'inicioOption'){
-        $('.box1Inicio1').addClass('fadeInAnimation');
-        $('.box1Inicio2').addClass('fadeInAnimationDelay2');
-        $('.box1Inicio3').addClass('fadeInAnimationDelay3');
-        $('.box1Inicio4').addClass('fadeInAnimationDelay3');
-        $('.boxNavPills').addClass('fadeInAnimationDelay4');
         $('#inicio').html("");
         $('#inicio').load(`${base_url}Inicio/index`);
     }

@@ -2948,10 +2948,13 @@ public function getStatusMktdPreventa(){
     }
 
     public function getProspectsReportInformation(){
+        $a = 0;
         if (isset($_POST) && !empty($_POST)) {
             $beginDate = date("Y-m-d", strtotime($this->input->post("beginDate")));
             $endDate = date("Y-m-d", strtotime($this->input->post("endDate")));
-            $data['data'] = $this->Clientes_model->getProspectsReportInformation($beginDate, $endDate)->result_array();
+            $type = $this->input->post("type");
+
+            $data['data'] = $this->Clientes_model->getProspectsReportInformation($type, $beginDate, $endDate)->result_array();
             echo json_encode($data);
         } else
             json_encode(array());
