@@ -639,7 +639,7 @@ function getStatusMktdPreventa(){
         $id_rol = $this->session->userdata('id_rol');
         $id_usuario = $this->session->userdata('id_usuario');
         $id_lider = $this->session->userdata('id_lider');
-
+        $and = "AND ((pr.lugar_prospeccion != 6) OR (pr.fecha_creacion > '2022-01-19 23:59:59.999' AND pr.lugar_prospeccion = 6))";
         if ($id_rol == 3 || $id_rol == 6) // MJ: GERENTE
             $where = "pr.id_gerente = $id_usuario";
         else if ($id_rol == 6) // MJ: ASISTENTE DE GERENTE
@@ -647,6 +647,7 @@ function getStatusMktdPreventa(){
         else if ($id_rol == 9) // MJ: COORDINADOR
             $where = "(pr.id_asesor = $id_usuario OR pr.id_coordinador = $id_usuario)";
         else if ($id_rol == 7) { // MJ: ASESOR
+            $and = "";
             if ($id_usuario == 6578) // MJ: COREANO VLOGS
                 $where = "pr.lugar_prospeccion IN (26)";
             else if ($id_usuario == 9942) // MJ: BADABUN
@@ -669,7 +670,7 @@ function getStatusMktdPreventa(){
         LEFT JOIN usuarios u3 ON u3.id_usuario = pr.id_subdirector
         LEFT JOIN usuarios u4 ON u4.id_usuario = pr.id_regional
         LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = pr.lugar_prospeccion AND oxc.id_catalogo = 9
-        WHERE $where AND pr.tipo = 0 ORDER BY pr.fecha_creacion DESC");
+        WHERE $where AND pr.tipo = 0 $and ORDER BY pr.fecha_creacion DESC");
     }
 
     function getClientsList(){
@@ -682,7 +683,7 @@ function getStatusMktdPreventa(){
         $id_usuario = $this->session->userdata('id_usuario');
         $id_lider = $this->session->userdata('id_lider');
         $id_sede = $this->session->userdata('id_sede');
-
+        $lugar_prospeccion = "AND ((pr.lugar_prospeccion != 6) OR (pr.lugar_prospeccion = 6 AND pr.fecha_creacion < '2022-01-20 23:59:59.999'))";
         if ($id_rol == 3 || $id_rol == 6) // MJ: GERENTE
             $where = "pr.id_gerente = $id_usuario";
         else if ($id_rol == 6) // MJ: ASISTENTE DE GERENTE
@@ -690,6 +691,7 @@ function getStatusMktdPreventa(){
         else if ($id_rol == 9) // MJ: COORDINADOR
             $where = "(pr.id_asesor = $id_usuario OR pr.id_coordinador = $id_usuario)";
         else if ($id_rol == 7) { // MJ: ASESOR
+            $lugar_prospeccion = "";
             if ($id_usuario == 6578) // MJ: COREANO VLOGS
                 $where = "pr.lugar_prospeccion IN (26)";
             else if ($id_usuario == 9942) // MJ: BADABUN
@@ -702,7 +704,6 @@ function getStatusMktdPreventa(){
         else if ($id_rol == 2 || $id_rol == 5) // MJ: SUBDIRECCIÓN / ASISTENTES SUBDIRECCIÓN
             $where = "pr.id_sede IN ($id_sede)";
 
-        $lugar_prospeccion = "AND ((pr.lugar_prospeccion != 6) OR (pr.lugar_prospeccion = 6 AND pr.fecha_creacion < '2022-01-20 23:59:59.999'))";
 
         return $this->db->query("SELECT pr.id_prospecto, CONCAT (pr.nombre, ' ', pr.apellido_paterno, ' ', pr.apellido_materno) nombre, pr.vigencia,
         UPPER(CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno)) asesor, 
