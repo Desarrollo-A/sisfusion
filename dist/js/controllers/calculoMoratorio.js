@@ -409,6 +409,7 @@ function calculoMoratorioII(IM, importeSaldoI, posPay, PositionPago, diasRetardo
 						}
 						else {
 							$scope.alphaNumeric[i]['deudaMoratorio'] = 0;
+							saldo = $scope.alphaNumeric[i]['saldo'];
 							// var saldoNormal =  $scope.infoMoratorio.precioTotal = $scope.infoMoratorio.precioTotal - $scope.infoMoratorio.capital;
 							if ($scope.alphaNumeric[posPay]['interesMoratorio'] == 0)/*posionPago*/
 							{/*Hace el calculo cuando es apartir de la tercera posición*/
@@ -906,6 +907,7 @@ function calculoMoratorioII(IM, importeSaldoI, posPay, PositionPago, diasRetardo
 					}
 					else {
 						$scope.alphaNumeric[i]['deudaMoratorio'] = 0;
+						saldo = $scope.alphaNumeric[i]['saldo'];
 						deudaOrdinario = 0;
 						if ($scope.alphaNumeric[posPay]['interesMoratorio'] == 0) {
 							//Hace el calculo cuando es apartir de la tercera posición
@@ -1654,6 +1656,7 @@ function calculoMoratorioII(IM, importeSaldoI, posPay, PositionPago, diasRetardo
 						else
 						{
 							$scope.alphaNumeric[i]['deudaMoratorio'] = 0;
+							saldo = $scope.alphaNumeric[i]['saldo'];
 							// var saldoNormal =  $scope.infoMoratorio.precioTotal = $scope.infoMoratorio.precioTotal - $scope.infoMoratorio.capital;
 							if ($scope.alphaNumeric[posPay]['interesMoratorio'] == 0)/*posionPago*/
 							{/*Hace el calculo cuando es apartir de la tercera posición*/
@@ -1863,7 +1866,7 @@ function calculoMoratorioII(IM, importeSaldoI, posPay, PositionPago, diasRetardo
 							console.log('FIRST POSTICONASD');
 							// var siVal = document.getElementsByName("si"+posPay)[0].value;
 							capital = $scope.alphaNumeric[i]['capital'] ; //$scope.capital2 = ($scope.p2 - $scope.interes_plan2);
-
+							saldo = $scope.alphaNumeric[i]['capital'];
 							interes = $scope.alphaNumeric[i]['interes'];//$scope.alphaNumeric[posPay]['interes'] = siVal*$scope.infoMoratorio.interes_p2
 							deudaOrdinario=0;
 							console.log('INTERESSSSSSS', interes);
@@ -2390,6 +2393,7 @@ function calculoMoratorioII(IM, importeSaldoI, posPay, PositionPago, diasRetardo
 					else
 					{
 						$scope.alphaNumeric[i]['deudaMoratorio'] = 0;
+						saldo = $scope.alphaNumeric[i]['saldo'];
 						deudaOrdinario=0;
 						if ($scope.alphaNumeric[posPay]['interesMoratorio'] == 0)
 						{
@@ -3188,6 +3192,7 @@ function calculoMoratorioII(IM, importeSaldoI, posPay, PositionPago, diasRetardo
 						else
 						{
 							$scope.alphaNumeric[i]['deudaMoratorio'] = 0;
+							saldo = $scope.alphaNumeric[i]['saldo'];
 							// var saldoNormal =  $scope.infoMoratorio.precioTotal = $scope.infoMoratorio.precioTotal - $scope.infoMoratorio.capital;
 							if ($scope.alphaNumeric[posPay]['interesMoratorio'] == 0)/*posionPago*/
 							{/*Hace el calculo cuando es apartir de la tercera posición*/
@@ -3744,6 +3749,7 @@ function calculoMoratorioII(IM, importeSaldoI, posPay, PositionPago, diasRetardo
 					else
 					{
 						$scope.alphaNumeric[i]['deudaMoratorio'] = 0;
+						saldo = $scope.alphaNumeric[i]['saldo'];
 						deudaOrdinario=0;
 						if ($scope.alphaNumeric[posPay]['interesMoratorio'] == 0)
 						{
@@ -4342,6 +4348,7 @@ function calculoMoratorioII(IM, importeSaldoI, posPay, PositionPago, diasRetardo
 					else
 					{
 						$scope.alphaNumeric[i]['deudaMoratorio'] = 0;
+						saldo = $scope.alphaNumeric[i]['saldo'];
 						deudaOrdinario=0;
 						if ($scope.alphaNumeric[posPay]['interesMoratorio'] == 0)
 						{

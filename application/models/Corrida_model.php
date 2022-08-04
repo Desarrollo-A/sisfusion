@@ -20,26 +20,32 @@
 
     public function getGerente(){
         $query = $this->db-> query("SELECT u.id_rol, u.estatus, u.id_usuario idGerente, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombreGerente 
-                                FROM usuarios u WHERE u.id_rol = 3 AND u.estatus = 1 ORDER BY nombreGerente");
+                                FROM usuarios u WHERE  u.estatus = 1 ORDER BY nombreGerente");
+        //u.id_rol = 3 AND
         return $query->result_array();
     }
 
     public function getCoordinador($gerent){
         $query = $this->db->query("SELECT u.id_lider, u.id_rol, u.estatus, u.id_usuario idCoordinador, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombreCoordinador 
-                                FROM usuarios u WHERE u.id_rol = 9 AND u.estatus = 1 AND u.id_lider IN (".$gerent.")
+                                FROM usuarios u WHERE u.estatus = 1 AND u.id_lider IN (".$gerent.")
                                 UNION ALL
                                 SELECT u.id_lider, u.id_rol, u.estatus, u.id_usuario idCoordinador, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombreCoordinador 
-                                FROM usuarios u WHERE u.id_rol = 3 AND u.estatus = 1 AND u.id_usuario IN (".$gerent.") ORDER BY nombreCoordinador");
+                                FROM usuarios u WHERE u.estatus = 1 AND u.id_usuario IN (".$gerent.") ORDER BY nombreCoordinador");
+        //u.id_rol = 9 AND
+        // u.id_rol = 3 AND
         return $query->result_array();
     }
 
     public function getAsesores($coordinador){
         $query = $this->db->query("SELECT u.id_lider, u.id_rol, u.estatus, u.id_usuario idAsesor, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombreAsesor 
-                                FROM usuarios u WHERE u.id_rol = 7 AND u.estatus = 1 AND u.id_lider IN (".$coordinador.")
+                                FROM usuarios u WHERE  u.estatus = 1 AND u.id_lider IN (".$coordinador.")
                                 UNION SELECT u.id_lider, u.id_rol, u.estatus, u.id_usuario idAsesor, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombreAsesor 
-								FROM usuarios u WHERE u.id_rol = 9 AND u.estatus = 1 AND u.id_usuario IN (".$coordinador.")
+								FROM usuarios u WHERE u.estatus = 1 AND u.id_usuario IN (".$coordinador.")
 								UNION SELECT u.id_lider, u.id_rol, u.estatus, u.id_usuario idAsesor, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombreAsesor 
-								FROM usuarios u WHERE u.id_rol = 3 AND u.estatus = 1 AND u.id_usuario IN (".$coordinador.") ORDER BY nombreAsesor");
+								FROM usuarios u WHERE u.estatus = 1 AND u.id_usuario IN (".$coordinador.") ORDER BY nombreAsesor");
+        //u.id_rol = 7 AND
+        // u.id_rol = 9 AND
+        //u.id_rol = 3 AND
         return $query->result_array();
     }
 
@@ -265,12 +271,15 @@
 		CASE WHEN cf.tipo_casa IS NULL THEN 0
 		ELSE cf.tipo_casa END 
 		as tipo_casa,
-		CASE WHEN cl.id_asesor IS NULL THEN cf.id_asesor
-		ELSE cl.id_asesor END 
+		CASE WHEN cf.id_asesor IS NULL THEN cf.id_asesor
+		ELSE cf.id_asesor END 
 		as id_asesor, 
-		CASE WHEN cl.id_gerente IS NULL THEN cf.id_gerente
-        ELSE cl.id_gerente END 
+		CASE WHEN cf.id_gerente IS NULL THEN cf.id_gerente
+        ELSE cf.id_gerente END 
         as id_gerente,
+		CASE WHEN cf.id_coordinador IS NULL THEN cf.id_coordinador
+        ELSE cf.id_coordinador END 
+        as id_coordinador,
         CASE WHEN cl.status IS NULL THEN 0
         ELSE cl.status END 
         as status, cl.id_cliente
@@ -334,13 +343,13 @@
                         INNER JOIN corridas_financieras cf ON l.idLote = cf.id_lote
                         /*INNER JOIN clientes cl ON cl.id_cliente = l.idCliente*/
                         INNER JOIN usuarios u ON u.id_usuario = cf.id_asesor
-                        WHERE l.idCondominio = ".$condominio." AND cf.id_asesor=".$this->session->userdata('id_usuario')."
+                        WHERE l.idCondominio = ".$condominio." AND cf.created_by=".$this->session->userdata('id_usuario')."
                         GROUP BY l.idLote, nombreLote, idStatusLote, cf.id_asesor;");
 
                 break;
             default: // SEE EVERYTHING
-                $query = $this->db->query("SELECT lotes.idLote, nombreLote, idStatusLote, clientes.id_asesor FROM sisfusion.dbo.lotes
-                                        INNER JOIN sisfusion.dbo.clientes ON clientes.idLote = lotes.idLote WHERE lotes.status = 1
+                $query = $this->db->query("SELECT lotes.idLote, nombreLote, idStatusLote, clientes.id_asesor FROM lotes
+                                        INNER JOIN clientes ON clientes.idLote = lotes.idLote WHERE lotes.status = 1
                                         AND clientes.status = 1 AND lotes.idCondominio = $condominio ORDER BY lotes.idLote");
                 break;
         }
@@ -350,7 +359,14 @@
         }
     }
     function getCorridasByLote($idLote){
+        $id_rol = $this->session->userdata('id_rol');
         $id_usuario = $this->session->userdata('id_usuario');
+        $condicion='';
+        if($id_rol == 7){
+            $condicion='AND cf.created_by='.$id_usuario;
+        }else{
+            $condicion='';
+        }
         $query = $this->db->query("SELECT *,c.nombre as nombreCondominio,
         cf.nombre as nombreCliente,
         CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno ) as nombreAsesor,
@@ -360,8 +376,7 @@
         INNER JOIN condominios c ON c.idCondominio = l.idCondominio
         INNER JOIN residenciales r ON r.idResidencial = c.idResidencial
         /*INNER JOIN clientes cl ON l.idCliente = cl.id_cliente*/
-        INNER JOIN usuarios u ON u.id_usuario = cf.id_asesor WHERE id_lote=".$idLote." 
-        AND cf.id_asesor=".$id_usuario);
+        INNER JOIN usuarios u ON u.id_usuario = cf.id_asesor WHERE id_lote=".$idLote." ".$condicion);
         return $query->result_array();
     }
     function updateCF($id_corrida, $arreglo){
