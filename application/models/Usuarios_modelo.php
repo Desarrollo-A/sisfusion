@@ -167,7 +167,7 @@ class Usuarios_modelo extends CI_Model {
             LEFT JOIN usuarios u4 ON u4.id_usuario = u.regional_id
             INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = u.id_rol AND oxc.id_catalogo = 1
             LEFT JOIN sedes s ON CAST(s.id_sede AS VARCHAR(45)) = CAST(u.id_sede AS VARCHAR(45))
-            WHERE (u.rfc NOT LIKE '%TSTDD%' AND ISNULL(u.correo, '' ) NOT LIKE '%test_%') $id_rol OR u.id_usuario IN (9359, 9827) ORDER BY nombre");
+            WHERE (u.rfc NOT LIKE '%TSTDD%' AND ISNULL(u.correo, '') NOT LIKE '%test_%' AND ISNULL(u.correo, '') NOT LIKE '%OOAM%' AND ISNULL(u.correo, '') NOT LIKE '%CASA%') $id_rol OR u.id_usuario IN (9359, 9827) ORDER BY nombre");
             break;
         }
     }
@@ -758,22 +758,31 @@ function getAllFoldersPDF()
           */   
          }
 
-         function getUsersListByLeader($idUsuario){
-            return $this->db->query("DECLARE @user INT 
-            SELECT @user = $idUsuario
-            SELECT u.id_usuario, u.id_rol, opcs_x_cats.nombre AS puesto, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno)
-            AS nombre, CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) AS jefe_directo, u.telefono, u.correo, u.estatus, 
+        function getUsersListByLeader($idUsuario){
+            $id_rol = $this->session->userdata('id_rol');
+            if ($id_rol == 2) // MJ: SUBDIRECTOR / REGIONAL
+                $where = "u.subdirector_id = $idUsuario OR u.regional_id = $idUsuario ";
+            else if ($id_rol == 3) // MJ: GERENTE
+                $where = "u.gerente_id = $idUsuario ";
+            else if ($id_rol == 9) // MJ: COORDINADOR
+                $where = "u.id_lider = $idUsuario ";
+            return $this->db->query("SELECT u.id_usuario, u.id_rol, opcs_x_cats.nombre AS puesto, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombre, 
+            UPPER(CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno)) coordinador, 
+            UPPER(CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno)) gerente, 
+            UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)) subdirector, 
+            UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)) regional, 
+            u.telefono, u.correo, u.estatus, 
             u.id_lider, 0 nuevo, u.fecha_creacion, s.nombre sede 
             FROM usuarios u
             INNER JOIN opcs_x_cats ON u.id_rol = opcs_x_cats.id_opcion and id_catalogo = 1
             INNER JOIN sedes s ON CAST(s.id_sede AS VARCHAR(45)) = CAST(u.id_sede AS VARCHAR(45))
-            INNER JOIN usuarios us ON us.id_usuario= u.id_lider
-            where u.id_rol in(1,2,3,7,9) and u.rfc NOT LIKE '%TSTDD%' AND u.correo NOT LIKE '%test_%'
-            AND (u.id_lider = @user  
-            OR u.id_lider in (select u2.id_usuario from usuarios u2 where id_lider = @user )
-            OR u.id_lider in (select u2.id_usuario from usuarios u2 where id_lider in (select u2.id_usuario from usuarios u2 where id_lider = @user )))
+            LEFT JOIN usuarios u1 ON u1.id_usuario = u.id_lider
+            LEFT JOIN usuarios u2 ON u2.id_usuario = u.gerente_id
+            LEFT JOIN usuarios u3 ON u3.id_usuario = u.subdirector_id
+            LEFT JOIN usuarios u4 ON u4.id_usuario = u.regional_id
+            WHERE $where
             ORDER BY u.id_rol");
-         }
+        }
 
          function VerificarComision($idUsuario){
             return $this->db->query("SELECT SUM(abono_neodata) abono_pendiente, id_usuario 

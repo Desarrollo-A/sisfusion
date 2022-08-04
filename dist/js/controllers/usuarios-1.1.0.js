@@ -20,7 +20,7 @@ $(document).ready( function() {
     $(".select-is-empty").removeClass("is-empty");
 
     $('#all_users_datatable thead tr:eq(0) th').each(function (i) {
-        if (i != 8) {
+        if (i != 16) {
             var title = $(this).text();
             $(this).html('<input type="text" style="width:100%; background:#003D82; color:white; border: 0; font-weight: 500;" class="textoshead"  placeholder="' + title + '"/>');
             $('input', this).on('keyup change', function () {
@@ -549,6 +549,7 @@ $(document).on('change', '#sedech', function() {
                 option.value = v.idsucursal;
                 select.add(option);
         });
+        $('#sucursal').selectpicker('refresh');
     });
 });
 function getSedesCH(sede = 0,sucursal = 0){
