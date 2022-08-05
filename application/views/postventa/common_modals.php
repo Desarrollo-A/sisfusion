@@ -575,7 +575,7 @@
                             </select>
                         </div>      
                         <div class="col-12 col-sm-12 col-md-6 col-lg-6">
-                            <select id="observacionesS" class="selectpicker" data-style="btn btn-primary btn-round" title="Observaciones" data-size="7" data-live-search="true" required>
+                            <select id="observacionesS" name="observacionesS" class="selectpicker" data-style="btn btn-primary btn-round" title="Observaciones" data-size="7" data-live-search="true" required>
                                 <option value="Corrección Documentos">Corrección documentos</option>
                                 <option value="Documentación Correcta">Documentación correcta</option>  
                             </select>
@@ -583,19 +583,10 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <div id="postventa" style="display:none">
-                        <button type="submit" class="btn btn-primary">Enviar</button>
-                    </div>
+                    <button type="submit" class="btn btn-primary">Enviar</button>
+                    <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
                 </div>
             </form>
-            <div class="modal-footer">
-                <div id="proyectos" style="display:none">
-                    <input type="text" class="hide" id="idSolicitud" name="idSolicitud">
-                    <input type="text" class="hide" id="action" name="action">
-                    <button type="button" id="observacionesSubmit" class="btn btn-primary">Enviar</button>
-                </div>
-                <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
-            </div>
         </div>
     </div>
 </div>            
@@ -649,22 +640,10 @@
                             </div>
                             <div class="col-md-6 pr-0">
                                 <div class="form-group text-left m-0">
-                                    <label class="control-label label-gral">Aportaciones a la fecha (solo capital) *</label>
-                                    <input id="aportaciones" name="aportaciones" class="form-control input-gral" type="text" required>
-                                </div>
-                            </div>
-                            <div class="col-md-6 pr-0">
-                                <div class="form-group text-left m-0">
-                                    <label class="control-label label-gral">Descuentos *</label>
-                                    <input id="descuentos" name="descuentos" class="form-control input-gral" type="text" required>
-                                </div>
-                            </div>
-                            <div class="col-md-6 pr-0">
-                                <div class="form-group text-left m-0">
-                                    <label class="control-label label-gral m-0">¿Tenemos cliente anterior?</label>
-                                    <select class="selectpicker m-0" data-style="btn btn-primary btn-round"
-                                            title="¿Tenemos cliente anterior?" data-size="7" id="cliente" name="cliente"
-                                            data-live-search="true">
+                                    <label class="control-label label-gral">¿Tenemos cliente anterior?</label>
+                                    <select class="selectpicker" data-style="btn btn-primary btn-round"
+                                            title="¿Tenemos cliente anterior?" data-size="7" id="clienteI" name="clienteI"
+                                            data-live-search="true" disabled>
                                             <option value ="default" selected disabled>Seleccione una opción</option>
                                             <option value="uno">Sí</option>
                                             <option value="dos">No</option>
@@ -673,23 +652,35 @@
                             </div>
                             <!-- estos input solo se muestran si es si el select anterior -->
                             <div id="ifInformacion" style="display:none">
-                                <div class="col-md-12 pr-0 pr-0">
+                                <div class="col-md-12 pr-0">
                                     <div class="form-group label-floating is-focused">
                                         <label class="control-label label-gral">Nombre del titular anterior</label>
-                                        <input id="nombreT" name="nombreT" class="form-control input-gral" type="text" disabled>
+                                        <input id="nombreI" name="nombreI" class="form-control input-gral" type="text" disabled>
                                     </div>
                                 </div>
                                 <div class="col-md-6 pr-0">
                                     <div class="form-group label-floating is-focused">
                                         <label class="control-label label-gral">Fecha del contrato anterior</label>
-                                        <input type="text" class="form-control datepicker" id="fechaCA" name="fechaCA" disabled>
+                                        <input type="text" class="form-control datepicker" id="fechaCAI" name="fechaCAI" disabled>
                                     </div>
                                 </div>
                                 <div class="col-md-6 pr-0">
                                     <div class="form-group label-floating is-focused">
                                         <label class="control-label label-gral">RFC / Datos personales</label>
-                                        <input id="rfcDatos" name="rfcDatos" class="form-control input-gral" type="text" disabled>
+                                        <input id="rfcDatosI" name="rfcDatosI" class="form-control input-gral" type="text" disabled>
                                     </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 pr-0">
+                                <div class="form-group text-left m-0">
+                                    <label class="control-label label-gral">Aportaciones a la fecha (solo capital) *</label>
+                                    <input id="aportaciones" name="aportaciones" class="form-control input-gral" type="text" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6 pr-0">
+                                <div class="form-group text-left m-0">
+                                    <label class="control-label label-gral">Descuentos *</label>
+                                    <textarea class="text-modal scroll-styles form-control input-gral" type="text" name="descuentos" id="descuentos" autofocus="true" require></textarea>
                                 </div>
                             </div>
                             <div class="col-sm-12 pr-0">
