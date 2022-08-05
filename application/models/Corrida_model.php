@@ -291,7 +291,7 @@
         INNER JOIN condominios c ON l.idCondominio=c.idCondominio
         INNER JOIN residenciales r ON c.idResidencial=r.idResidencial
         /*INNER JOIN clientes cl ON cl.id_cliente = l.idCliente */
-        INNER JOIN usuarios coord ON coord.id_usuario = cf.id_asesor/*test*/
+        INNER JOIN usuarios coord ON coord.id_usuario = cf.id_coordinador/*test*/
         INNER JOIN corridas_x_lotes cpl ON cf.id_corrida = cpl.id_corrida
         LEFT JOIN clientes cl ON cl.id_cliente=cf.id_cliente
         WHERE cf.id_corrida =  ".$id_corrida);
@@ -373,7 +373,7 @@
         $query = $this->db->query("SELECT *,c.nombre as nombreCondominio,
         cf.nombre as nombreCliente,
         CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno ) as nombreAsesor,
-        cf.status as status
+        cf.status as status, cf.fecha_creacion as creacion_corrida
         FROM corridas_financieras cf
         INNER JOIN lotes l ON l.idLote = cf.id_lote
         INNER JOIN condominios c ON c.idCondominio = l.idCondominio
@@ -532,6 +532,33 @@
             return $query;
         }
     }
+
+    public function getGerenteByID($id_gerente){
+            $query = $this->db-> query("SELECT u.id_rol, u.estatus, u.id_usuario idGerente, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombreGerente 
+                                FROM usuarios u WHERE u.id_usuario=".$id_gerente." ORDER BY nombreGerente");
+            //u.id_rol = 3 AND
+            return $query->result_array();
+
+    }
+    public function getCoordinadorByID($coordinador){
+        $query = $this->db->query("SELECT u.id_lider, u.id_rol, u.estatus, u.id_usuario idCoordinador, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombreCoordinador 
+                                FROM usuarios u WHERE u.estatus = 1 AND u.id_usuario = ".$coordinador."
+                                UNION ALL
+                                SELECT u.id_lider, u.id_rol, u.estatus, u.id_usuario idCoordinador, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombreCoordinador 
+                                FROM usuarios u WHERE u.estatus = 1 AND u.id_usuario = ".$coordinador." ORDER BY nombreCoordinador");
+        //u.id_rol = 9 AND
+        // u.id_rol = 3 AND
+        return $query->result_array();
+    }
+    public function getAsesorByID($asesor){
+        $query = $this->db->query("SELECT u.id_lider, u.id_rol, u.estatus, u.id_usuario idAsesor, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombreAsesor 
+								FROM usuarios u WHERE u.estatus = 1 AND u.id_usuario = ".$asesor." ORDER BY nombreAsesor");
+        //u.id_rol = 7 AND
+        // u.id_rol = 9 AND
+        //u.id_rol = 3 AND
+        return $query->result_array();
+    }
+
 
 
 }

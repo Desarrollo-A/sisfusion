@@ -2523,14 +2523,14 @@
                     haciendoo...*/
 
 
-                $http.post('<?=base_url()?>index.php/corrida/getCoordinador', {gerente: <?php echo $data_corrida->id_gerente;?>}).then(
+                $http.post('<?=base_url()?>index.php/corrida/getCoordinadorByID', {coordinador: <?php echo $data_corrida->id_coordinador;?>}).then(
                     function (response) {
                         $scope.coordinadores = response.data;
                     },
                     function (response) {
                     });
 
-                $http.post('<?=base_url()?>index.php/corrida/getAsesor', {coordinador: <?php echo $data_corrida->id_coordinador;?>}).then(
+                $http.post('<?=base_url()?>index.php/corrida/getAsesorByID', {asesor: <?php echo $data_corrida->id_asesor;?>}).then(
                     function (response) {
                         $scope.asesores = response.data;
                     },
@@ -8615,7 +8615,7 @@
                     });
             }
 
-            $http.get("<?=base_url()?>index.php/corrida/getGerente").then(
+            $http.post("<?=base_url()?>index.php/corrida/getGerenteByID", {gerente: <?=$data_corrida->id_gerente?>}).then(
                 function (data) {
                     $scope.gerentes = data.data;
                 },
@@ -8623,7 +8623,7 @@
                 });
 
             $scope.onSelectChangegerente = function (gerente) {
-                $http.post('<?=base_url()?>index.php/corrida/getCoordinador', {gerente: gerente}).then(
+                $http.post('<?=base_url()?>index.php/corrida/getCoordinadorByID', {coordinador: coordinador.idCoordinador}).then(
                     function (response) {
                         $scope.coordinadores = response.data;
                     },
