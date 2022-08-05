@@ -134,7 +134,7 @@
             font-size: 15px;
             color: #fff;
             margin-bottom: 30px;
-
+            overflow-y: auto;
         }
 
     </style>
