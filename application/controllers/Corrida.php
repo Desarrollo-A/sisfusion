@@ -139,9 +139,16 @@ class Corrida extends CI_Controller {
         $arreglo["id_cliente"]= $objDatos->id_cliente;
         $arreglo["created_by"]= $this->session->userdata('id_usuario');
 
-        /*print_r($arreglo);
+        /*
+        echo 'asesor:<br>';
+        print_r($id_asesor);
+        echo '<br>coordinador:<br>';
+        print_r($id_coordinador);
+        echo '<br>gerente:<br>';
+        print_r($id_gerente);
+        echo '<br>arreglo update:<br>';
+        print_r($arreglo);
         exit;*/
-
         $array_allPackages = json_decode($objDatos->allPackages);
         $arrayTocxp = array();
 
@@ -3544,5 +3551,35 @@ legend {
 
     }
 
+    function getGerenteByID(){
+        $objDatos = json_decode(file_get_contents("php://input"));
+        $id_gerente = $objDatos->gerente;
+        $data= $this->Corrida_model->getGerenteByID($id_gerente);
+        if($data != null) {
+            echo json_encode($data);
+        } else {
+            echo json_encode(array());
+        }
+    }
+
+    public function getCoordinadorByID() {
+        $objDatos = json_decode(file_get_contents("php://input"));
+        $data= $this->Corrida_model->getCoordinadorByID($objDatos->coordinador);
+        if($data != null) {
+            echo json_encode($data);
+        } else {
+            echo json_encode(array());
+        }
+    }
+
+    public function getAsesorByID() {
+        $objDatos = json_decode(file_get_contents("php://input"));
+        $data= $this->Corrida_model->getAsesorByID($objDatos->asesor);
+        if($data != null) {
+            echo json_encode($data);
+        } else {
+            echo json_encode(array());
+        }
+    }
 
 }

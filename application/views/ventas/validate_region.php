@@ -96,10 +96,9 @@
     <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
     <script>
-        var url = "<?= base_url() ?>";
-        var url2 = "<?= base_url() ?>index.php/";
         var totaPen = 0;
         var tr;
+    
         function formatMoney(n) {
             var c = isNaN(c = Math.abs(c)) ? 2 : c,
                 d = d == undefined ? "." : d,
@@ -116,7 +115,7 @@
                 var idcomision = $(tabla_validar_comisiones.$('input[name="idT[]"]:checked')).map(function () {
                     return this.value;
                 }).get();
-                $.get(url + "Comisiones/updatePlaza/" + idcomision + "/" + e).done(function (data) {
+                $.get(`${general_base_url}Comisiones/updatePlaza/` + idcomision + "/" + e).done(function (data) {
                     $('#spiner-loader').addClass('hide');
                     if (data == 1) { // COMISIÓN RECHAZADA
                         alerts.showNotification("top", "right", "La comisión ha sido regresada correctamente para su validación.", "success");
@@ -291,7 +290,7 @@
                         if (full.ubicacion_dos != null)
                             return '';
                         else
-                            return '<input type="checkbox" name="idT[]" style="width:20px; height:20px;" value="' + full.id_pago_i + '">';
+                            return '<input type="checkbox" class="input-check" name="idT[]" style="width:20px; height:20px;" value="' + full.id_pago_i + '">';
                     },
                     select: {
                         style: 'os',
@@ -301,7 +300,7 @@
                 pagingType: "full_numbers",
                 fixedHeader: true,
                 language: {
-                    url: "<?=base_url()?>/static/spanishLoader_v2.json",
+                    url: `${general_base_url}static/spanishLoader_v2.json`,
                     paginate: {
                         previous: "<i class='fa fa-angle-left'>",
                         next: "<i class='fa fa-angle-right'>"
@@ -310,7 +309,7 @@
                 destroy: true,
                 ordering: false,
                 ajax: {
-                    url: url2 + "Comisiones/getCommissionsToValidate/",
+                    url: `${general_base_url}Comisiones/getCommissionsToValidate/`,
                     type: "POST",
                     cache: false,
                     data: function (d) {
