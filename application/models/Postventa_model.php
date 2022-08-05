@@ -97,7 +97,7 @@ class Postventa_model extends CI_Model
         return $this->db->query("SELECT oxc2.nombre area, se.idSolicitud, oxc.nombre estatus, se.fecha_creacion, l.nombreLote, se.estatus idEstatus,
         se.nombre, cond.nombre nombreCondominio, r.nombreResidencial, de.expediente,
         ctrl.tipo_documento, de.idDocumento, ctrl.permisos, de2.result, cee.tipo, cee.comentarios, mr.motivo motivos_rechazo, de2.estatusValidacion, de3.Spresupuesto,
-        de2.no_rechazos, n.pertenece, se2.flagEstLot, pr.flagPresupuesto, pr2.approvedPresupuesto, se.idNotaria, se.aportaciones, se.descuentos FROM solicitud_escrituracion se 
+        de2.no_rechazos, n.pertenece, se2.flagEstLot, pr.flagPresupuesto, pr2.approvedPresupuesto, se.idNotaria, de4.contrato, se3.aportacion, se4.descuento, se.descuentos, se.aportaciones FROM solicitud_escrituracion se 
         LEFT JOIN Notarias n ON n.idNotaria = se.idNotaria 
         INNER JOIN lotes l ON se.idLote = l.idLote 
         INNER JOIN condominios cond ON cond.idCondominio = l.idCondominio 
@@ -113,11 +113,15 @@ class Postventa_model extends CI_Model
         FROM documentos_escrituracion WHERE tipo_documento NOT IN (7,9,10, 11, 12, 13,14,15,16,17) GROUP BY idSolicitud) de2 ON de2.idSolicitud = se.idSolicitud
         LEFT JOIN (SELECT idSolicitud,  CASE WHEN COUNT(*) != COUNT(CASE WHEN expediente IS NOT NULL THEN 1 END) THEN 0 ELSE 1 END Spresupuesto
         FROM documentos_escrituracion WHERE tipo_documento = 11 GROUP BY idSolicitud) de3 ON de3.idSolicitud = se.idSolicitud
+        LEFT JOIN (SELECT idSolicitud, CASE WHEN COUNT(*) != COUNT(CASE WHEN expediente IS NOT NULL THEN 1 END) THEN 0 ELSE 1 END contrato
+        FROM documentos_escrituracion WHERE tipo_documento = 21 GROUP BY idSolicitud) de4 ON de4.idSolicitud = se.idSolicitud
         LEFT JOIN (SELECT idEscrituracion, max(fecha_creacion) fecha_creacion FROM control_estatus GROUP BY idEscrituracion) ce ON ce.idEscrituracion = se.idSolicitud
         LEFT JOIN control_estatus cee ON cee.idEscrituracion = ce.idEscrituracion AND cee.fecha_creacion = ce.fecha_creacion
         LEFT JOIN motivos_rechazo mr ON mr.id_motivo = cee.motivos_rechazo
         LEFT JOIN usuarios us ON us.id_usuario = de.validado_por
         LEFT JOIN (SELECT idSolicitud, CASE WHEN estatus_construccion IS NULL THEN 0 ELSE 1 END flagEstLot FROM solicitud_escrituracion) se2 ON se2.idSolicitud = se.idSolicitud
+        LEFT JOIN (SELECT idSolicitud, CASE WHEN aportaciones IS NULL THEN 0 ELSE 1 END aportacion FROM solicitud_escrituracion) se3 ON se3.idSolicitud = se.idSolicitud
+        LEFT JOIN (SELECT idSolicitud, CASE WHEN descuentos IS NULL THEN 0 ELSE 1 END descuento FROM solicitud_escrituracion) se4 ON se4.idSolicitud = se.idSolicitud
         LEFT JOIN (SELECT idSolicitud, CASE WHEN COUNT(*) > 0 THEN 1 ELSE 0 END flagPresupuesto FROM Presupuestos WHERE expediente != '' GROUP BY idSolicitud) pr ON pr.idSolicitud = se.idSolicitud
         LEFT JOIN (SELECT idSolicitud, CASE WHEN COUNT(*) > 0 THEN 1 ELSE 0 END approvedPresupuesto FROM Presupuestos WHERE estatus = 1 GROUP BY idSolicitud) pr2 ON pr2.idSolicitud = se.idSolicitud
         WHERE (se.fecha_creacion BETWEEN '$begin 00:00:00' AND '$end 23:59:59') $where");
@@ -473,20 +477,22 @@ function checkBudgetInfo($idSolicitud){
     //OBSERVACIONES
     function updateObservacionesPostventa() {
         $idSolicitud = $_POST['idSolicitud'];
+        $observaciones = $_POST['observacionesS'];
         $rol = $this->session->userdata('id_rol');
 
         $this->db->query("UPDATE solicitud_escrituracion SET estatus = 10 WHERE idSolicitud = $idSolicitud;");
 
-        return $this->db->query("INSERT INTO control_estatus VALUES(13, 59, 3, GETDATE(), 14, $idSolicitud, $rol, 10, 'Corrección Documentos', 0);");
+        return $this->db->query("INSERT INTO control_estatus VALUES(13, 59, 3, GETDATE(), 14, $idSolicitud, $rol, 10, '$observaciones', 0);");
     }
 
     function updateObservacionesProyectos() {
         $idSolicitud = $_POST['idSolicitud'];
+        $observaciones = $_POST['observacionesS'];
         $rol = $this->session->userdata('id_rol');
 
         $this->db->query("UPDATE solicitud_escrituracion SET estatus = 93 WHERE idSolicitud = $idSolicitud;");
 
-        return $this->db->query("INSERT INTO control_estatus VALUES(13, 59, 3, GETDATE(), 14, $idSolicitud, $rol, 10, 'Se envío correo a Proyectos', 0);");
+        return $this->db->query("INSERT INTO control_estatus VALUES(13, 59, 3, GETDATE(), 14, $idSolicitud, $rol, 10, '$observaciones', 0);");
     }
  
     function getSolicitudEscrituracion($idSolicitud)
@@ -648,7 +654,9 @@ function checkBudgetInfo($idSolicitud){
 
     function getBudgetInformacion($idSolicitud){
         return $this->db->query("SELECT se.*, hl.modificado,
-        cond.nombre nombreCondominio, r.nombreResidencial, l.nombreLote, oxc2.nombre nombreConst, oxc.nombre nombrePago, oxc3.nombre tipoEscritura FROM solicitud_escrituracion se 
+        cond.nombre nombreCondominio, r.nombreResidencial, l.nombreLote, oxc2.nombre nombreConst, oxc.nombre nombrePago, oxc3.nombre tipoEscritura,
+        CASE se.cliente_anterior WHEN 1 THEN 'SÍ' ELSE 'NO' END cli_anterior
+        FROM solicitud_escrituracion se 
         INNER JOIN clientes c ON c.id_cliente = se.idCliente
         INNER JOIN (SELECT idLote, MAX(modificado) modificado FROM historial_lotes WHERE idStatusContratacion = 15 AND idMovimiento = 45 GROUP BY idLote) hl ON hl.idLote=se.idLote
         INNER JOIN lotes l ON se.idLote = l.idLote 
