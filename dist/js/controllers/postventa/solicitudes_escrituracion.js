@@ -840,23 +840,35 @@ function fillTable(beginDate, endDate, estatus) {
                             if(d.flagEstLot == 0 || d.expediente == null){
                                 exp = null;
                                 permiso = 3
-                            }else{
-                                exp = 1;
-                                permiso = 3;
+                            }else if(d.expediente != null && d.flagEstLot == 1){
+                                if(d.aportaciones == null && d.descuentos == null) {
+                                    permiso = 3;
+                                    newBtn += `<button class="btn-data btn-details-grey" title="No podra avanzar hasta que Administración suba la información faltante."><i class="far fa-paper-plane"></i></button>`;
+                                    aditional = 1
+                                } else if(d.aportaciones != null && d.descuentos != null){
+                                    exp = 1;
+                                    permiso = 3
+                                }
                             }
                             aditional = 1
                         }else if(userType == 11){
-                            if(d.expediente != null && d.aportaciones == null && d.descuentos == null){
+                            if(d.expediente != null && d.flagEstLot == 0){
                                 permiso = 2;
-                            }else {
-                                permiso = d.permisos;
-                            }
-                            if (d.tipo_documento == 7 && d.expediente != null) {
                                 newBtn += `<button id="informacion" class="btn-data btn-blueMaderas" data-toggle="tooltip" data-placement="top" title="Información"><i class="fas fa-info"></i></button>`;
                                 aditional = 1
-                            }
-                            else {
-                                aditional = 2
+                                if(d.aportaciones != null && d.descuentos != null){
+                                    newBtn += `<button class="btn-data btn-details-grey" title="No podra avanzar hasta que Comité Técnico suba el estatus de construcción."><i class="far fa-paper-plane"></i></button>`;
+                                    aditional = 1
+                                }
+                            } else if(d.expediente != null && d.flagEstLot == 1){
+                                permiso = 2;
+                                newBtn += `<button id="informacion" class="btn-data btn-blueMaderas" data-toggle="tooltip" data-placement="top" title="Información"><i class="fas fa-info"></i></button>`;
+                                aditional = 1
+                                if(d.aportaciones != null && d.descuentos != null){
+                                    permiso = d.permisos;
+                                }
+                            } else{
+                                permiso = d.permisos;
                             }
                             exp = d.expediente;
                             
@@ -884,7 +896,9 @@ function fillTable(beginDate, endDate, estatus) {
                         case 4:
                             if (userType == 55) {
                                 newBtn += `<button id="docs${d.idSolicitud}" data-idSolicitud=${d.idSolicitud} class="btn-data btn-details-grey details-control-otros" data-permisos="1" data-id-prospecto="" data-toggle="tooltip" data-placement="top" title="Desglose documentos"><i class="fas fa-chevron-down"></i></button>`;
-                                newBtn += `<button id="presupuesto" class="btn-data btn-blueMaderas" data-toggle="tooltip" data-placement="top" title="Presupuesto"><i class="fas fa-money-bill-wave"></i></button>`;
+                                if(d.contrato == 1){
+                                    newBtn += `<button id="presupuesto" class="btn-data btn-blueMaderas" data-toggle="tooltip" data-placement="top" title="Presupuesto"><i class="fas fa-money-bill-wave"></i></button>`;
+                                }
                                 newBtn += `<button id="reject" class="btn-data btn-warning" data-toggle="tooltip" data-placement="top" title="Rechazar"><i class="fas fa-ban"></i></button>`;
                                 if(d.Spresupuesto == 1){
                                     newBtn += '<button id="request" class="btn-data btn-green" data-toggle="tooltip" data-placement="top" title="Aprobar"><i class="far fa-paper-plane"></i></button>';
@@ -898,7 +912,6 @@ function fillTable(beginDate, endDate, estatus) {
                             } 
                             newBtn += `<button id="reject" class="btn-data btn-warning" data-toggle="tooltip" data-placement="top" title="Rechazar"><i class="fas fa-ban"></i></button>`;
                             newBtn += `<button id="docs${d.idSolicitud}" data-idSolicitud=${d.idSolicitud} class="btn-data btn-details-grey details-control-otros" data-permisos="2" data-id-prospecto="" data-toggle="tooltip" data-placement="top" title="Desglose documentos"><i class="fas fa-chevron-down"></i></button>`;
-                            newBtn += '<button id="request" class="btn-data btn-green" data-toggle="tooltip" data-placement="top" title="Aprobar"><i class="far fa-paper-plane"></i></button>';
                             
                             group_buttons += permisos(d.permisos, d.expediente, d.idDocumento, d.tipo_documento, d.idSolicitud, 1, newBtn);
                             break;
@@ -1649,59 +1662,48 @@ $(document).on('click', '#observacionesButton', function () {
 });
 
 $(document).on('change', '#pertenece', function () {
-    if($(this).val() == 'Postventa') {
-        $('#postventa').show();
-    }else {
-        $('#postventa').hide();
+    if($(this).val() == 'Postventa'){
+        $(document).on("submit", "#observacionesForm", function (e) {
+            e.preventDefault();
+            let idSolicitud = $("#idSolicitud").val();
+            let data = new FormData($(this)[0]);
+            data.append("idSolicitud", idSolicitud);
+
+            $.ajax({
+                url: "observacionesPostventa",
+                data: data,
+                cache: false,
+                contentType: false,
+                processData: false,
+                type: 'POST',
+                success: function (response) {
+                    $("#viewObservaciones").modal("hide");
+                    prospectsTable.ajax.reload();
+                }
+            });
+        });
     }
-});
+    else if ($(this).val() == 'Proyectos'){
+        $(document).on("submit", "#observacionesForm", function (e) {
+            e.preventDefault();
+            let idSolicitud = $("#idSolicitud").val();
+            let data = new FormData($(this)[0]);
+            data.append("idSolicitud", idSolicitud);
 
-$(document).on('change', '#pertenece', function () {
-    if($(this).val() == 'Proyectos') {
-        $('#proyectos').show();
-    }else {
-        $('#proyectos').hide();
+            $.ajax({
+                url: "observacionesProyectos",
+                data: data,
+                cache: false,
+                contentType: false,
+                processData: false,
+                type: 'POST',
+                success: function (response) {
+                    $("#viewObservaciones").modal("hide");
+                    prospectsTable.ajax.reload();
+                }
+            });
+        });
     }
-});
-
-$(document).on("submit", '#observacionesForm', function (e) {
-    e.preventDefault();
-    let idSolicitud = $("#idSolicitud").val();
-    let data = new FormData($(this)[0]);
-    data.append("idSolicitud", idSolicitud);
-
-    $.ajax({
-        url: "observacionesPostventa",
-        data: data,
-        cache: false,
-        contentType: false,
-        processData: false,
-        type: 'POST',
-        success: function (response) {
-            $("#viewObservaciones").modal("hide");
-            prospectsTable.ajax.reload();
-        }
-    });
-});
-
-$(document).on('click', '#observacionesSubmit', function (e) {
-    e.preventDefault();
-    let idSolicitud = $("#idSolicitud").val();
-    let data = new FormData($(this)[0]);
-    data.append("idSolicitud", idSolicitud);
-
-    $.ajax({
-        url: "observacionesProyectos",
-        data: data,
-        cache: false,
-        contentType: false, 
-        processData: false,
-        type: 'POST',
-        success: function (response) {
-            $("#viewObservaciones").modal("hide");
-            prospectsTable.ajax.reload();
-        }
-    });
 });
 
 function saveEstatusLote(idSolicitud, data){
@@ -1847,7 +1849,7 @@ $(document).on('click', '#informacion', function () {
 
     getBudgetInformacion(data.idSolicitud);
     $('#idSolicitud').val(data.idSolicitud);
-
+    ;
     $("#informacionModal").modal();
 });
 
@@ -1857,18 +1859,18 @@ function getBudgetInformacion(idSolicitud){
         idSolicitud:idSolicitud
     }, function(data) {
         $('#liquidado').val(data.nombrePago);
-        $('#cliente').val(data.cliente_anterior == 1 ? 'uno':'dos').trigger('change');
-        $("#cliente").selectpicker('refresh');
-        $('#nombreT').val(data.nombre_anterior);
-        $('#fechaCA').val(data.fecha_anterior);
-        $('#rfcDatos').val(data.RFC);
+        $('#clienteI').val(data.cliente_anterior == 1 ? 'uno':'dos').trigger('change');
+        $("#clienteI").selectpicker('refresh');
+        $('#nombreI').val(data.nombre_anterior);
+        $('#fechaCAI').val(data.fecha_anterior);
+        $('#rfcDatosI').val(data.RFC);
         $('#aportaciones').val(data.aportaciones);
         $('#descuentos').val(data.descuentos);
         $('#spiner-loader').addClass('hide');
     }, 'json');
 }
 
-$(document).on('change', '#cliente', function () {
+$(document).on('change', '#clienteI', function () {
     if ($(this).val() == 'uno') {
         $('#ifInformacion').show();
     } else {
