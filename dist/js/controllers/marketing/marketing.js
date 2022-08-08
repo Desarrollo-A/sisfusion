@@ -151,12 +151,12 @@ function fillProspectos(beginDate, endDate) {
 			},
 			{
 				data: function (d) {
-					return d.telefono;
+					return d.telefono == '' ? 'Sin especificar' : d.telefono;
 				}
 			},
 			{
 				data: function (d) {
-					return d.correo;
+					return d.correo == '' ? 'Sin especificar' : d.correo;
 				}
 			},
 			{
@@ -171,22 +171,22 @@ function fillProspectos(beginDate, endDate) {
             },
             {
                 data: function (d) {
-                    return d.coordinador == '  ' ? 'SIN ESPECIFICAR' : d.coordinador;
+                    return d.coordinador == '' ? 'Sin especificar' : d.coordinador;
                 }
             },
             {
                 data: function (d) {
-                    return d.gerente == '  ' ? 'SIN ESPECIFICAR' : d.gerente;
+                    return d.gerente == '' ? 'Sin especificar' : d.gerente;
                 }
             },
             {
                 data: function (d) {
-                    return d.subdirector == '  ' ? 'SIN ESPECIFICAR' : d.subdirector;
+                    return d.subdirector == '' ? 'Sin especificar' : d.subdirector;
                 }
             },
             {
                 data: function (d) {
-                    return d.regional == '  ' ? 'SIN ESPECIFICAR' : d.regional;
+                    return d.regional == '' ? 'Sin especificar' : d.regional;
                 }
             },
 			{
@@ -196,7 +196,7 @@ function fillProspectos(beginDate, endDate) {
 			},
 			{
                 data: function(d) {
-                    return d.direccion;
+                    return d.direccion == '' ? 'Sin especificar' : d.direccion;
                 }
             },
 		],
