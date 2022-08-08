@@ -4238,11 +4238,10 @@ function getStatusMktdPreventa(){
         //$type = 1 Hace referencia a clientes;
 
         ini_set('memory_limit', -1);
-
-        $a = $this->input->post("beginDate");
-        $b = $this->input->post("endDate");
-        $beginDate = date("Y-m-d", strtotime($this->input->post("beginDate")));
-        $endDate = date("Y-m-d", strtotime($this->input->post("endDate")));
+        $dateA = str_replace('/', '-', $this->input->post("beginDate"));
+        $dateB = str_replace('/', '-', $this->input->post("endDate"));
+        $beginDate = date('Y-m-d', strtotime($dateA));
+        $endDate = date('Y-m-d', strtotime($dateB));
 
         $filter = "pr.fecha_creacion BETWEEN '$beginDate 00:00:00' AND '$endDate 23:59:59'";
         if ( $type == 0 ){
