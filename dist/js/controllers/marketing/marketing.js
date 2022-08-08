@@ -18,7 +18,7 @@ function changeTab(tab){
 sp = { //  SELECT PICKER
 	initFormExtendedDatetimepickers: function () {
 		$('.datepicker').datetimepicker({
-			format: 'MM/DD/YYYY',
+			format: 'DD/MM/YYYY',
 			icons: {
 				time: "fa fa-clock-o",
 				date: "fa fa-calendar",
@@ -448,18 +448,18 @@ function setInitialValues(type){
 	const fechaFin = new Date();
 	// Iniciar en este año, el siguiente mes, en el día 0 (así que así nos regresamos un día)
 	const endDate = new Date(fechaFin.getFullYear(), fechaFin.getMonth() + 1, 0);
-	finalBeginDate = [beginDate.getFullYear(), ('0' + (beginDate.getMonth() + 1)).slice(-2), ('0' + beginDate.getDate()).slice(-2)].join('-');
-	finalEndDate = [endDate.getFullYear(), ('0' + (endDate.getMonth() + 1)).slice(-2), ('0' + endDate.getDate()).slice(-2)].join('-');
+	finalBeginDate = [('0' + beginDate.getDate()).slice(-2), ('0' + (beginDate.getMonth() + 1)).slice(-2), beginDate.getFullYear()].join('/');
+	finalEndDate = [('0' + endDate.getDate()).slice(-2), ('0' + (endDate.getMonth() + 1)).slice(-2), endDate.getFullYear()].join('/');
 	
 	if ( type == 0 ){
 		fillProspectos(finalBeginDate, finalEndDate);
-		$("#beginDate").val(convertDate(beginDate));
-		$("#endDate").val(convertDate(endDate));
+		$("#beginDate").val(finalBeginDate);
+		$("#endDate").val(finalEndDate);
 	}
 	else{
 		fillClientes(finalBeginDate, finalEndDate);
-		$("#beginDateD").val(convertDate(beginDate));
-		$("#endDateD").val(convertDate(endDate));
+		$("#beginDateD").val(finalBeginDate);
+		$("#endDateD").val(finalEndDate);
 	}
 }
 
