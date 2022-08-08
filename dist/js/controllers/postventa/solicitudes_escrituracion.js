@@ -840,6 +840,11 @@ function fillTable(beginDate, endDate, estatus) {
                             if(d.flagEstLot == 0 || d.expediente == null){
                                 exp = null;
                                 permiso = 3
+                                if(d.expediente == null && d.flagEstLot == 1) {
+                                    permiso = 3;
+                                    newBtn += `<button class="btn-data btn-details-grey" title="No podra avanzar hasta que Administración suba la información faltante."><i class="far fa-paper-plane"></i></button>`;
+                                    aditional = 1
+                                }
                             }else if(d.expediente != null && d.flagEstLot == 1){
                                 if(d.aportaciones == null && d.descuentos == null) {
                                     permiso = 3;
