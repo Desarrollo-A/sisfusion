@@ -370,7 +370,7 @@ $(document).on("click", "#sendRequestButton", function (e) {
                     }else if(details == 4){
                         var tr = $(`#pago${idSolicitud}`).closest('tr');
                         var row = prospectsTable.row(tr);
-                        createDocRowOtros(row, tr, $(`#pago${idSolicitud}`));
+                        createDocRowPago(row, tr, $(`#pago${idSolicitud}`));
                     }
                     else{
                         prospectsTable.ajax.reload();
@@ -2032,7 +2032,7 @@ function createDocRowOtros(row, tr, thisVar){
         row.data().solicitudes = JSON.parse(data);
         prospectsTable.row(tr).data(row.data());
         row = prospectsTable.row(tr);
-        row.child(buildTableDetail(row.data().solicitudes, $('.details-control').attr('data-permisos'))).show();
+        row.child(buildTableDetail(row.data().solicitudes, $('.details-control-otros').attr('data-permisos'))).show();
         tr.addClass('shown');
         thisVar.parent().find('.animacion').removeClass("fa-caret-right").addClass("fa-caret-down");
         $('#spiner-loader').addClass('hide');
@@ -2046,7 +2046,7 @@ function createDocRowPago(row, tr, thisVar){
         row.data().solicitudes = JSON.parse(data);
         prospectsTable.row(tr).data(row.data());
         row = prospectsTable.row(tr);
-        row.child(buildTableDetail(row.data().solicitudes, $('.details-control').attr('data-permisos'))).show();
+        row.child(buildTableDetail(row.data().solicitudes, $('.details-control-pago').attr('data-permisos'))).show();
         tr.addClass('shown');
         thisVar.parent().find('.animacion').removeClass("fa-caret-right").addClass("fa-caret-down");
         $('#spiner-loader').addClass('hide');
