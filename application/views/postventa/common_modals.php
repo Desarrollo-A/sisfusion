@@ -674,7 +674,7 @@
                             <div class="col-md-6 pr-0">
                                 <div class="form-group text-left m-0">
                                     <label class="control-label label-gral">Aportaciones a la fecha (solo capital) *</label>
-                                    <input id="aportaciones" name="aportaciones" class="form-control input-gral" type="text" required>
+                                    <input id="aportaciones" name="aportaciones" class="form-control input-gral" type="number" required>
                                 </div>
                             </div>
                             <div class="col-md-6 pr-0">
