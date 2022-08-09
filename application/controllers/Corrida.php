@@ -1,7 +1,7 @@
 <?php
-//    require_once 'static/autoload.php';
-//    use PhpOffice\PhpSpreadsheet\Spreadsheet;
-//    use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+    require_once 'static/autoload.php';
+    use PhpOffice\PhpSpreadsheet\Spreadsheet;
+    use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 
 class Corrida extends CI_Controller {
@@ -94,13 +94,25 @@ class Corrida extends CI_Controller {
 	public function editar_ds(){
 
 		$objDatos = json_decode(file_get_contents("php://input"));
-		
+//        echo '$objDatos';
+//        print_r($objDatos);
+//        exit;
+
+
 		$idLote = (int)$objDatos->id_lote;
 		$id_asesor = (int)$objDatos->asesor;
 		$id_gerente = (int)$objDatos->gerente;
 		$id_coordinador = (int)$objDatos->coordinador;
 		$cantidad_enganche = (int)$objDatos->cantidad_enganche;
 		$paquete = (int)$objDatos->paquete;
+
+//		echo 'Asesor';
+//		print_r($id_asesor);
+//		echo '<br>Coordinador<br>';
+//        print_r($id_coordinador);
+//        echo '<br>Gerente<br>';
+//        print_r($id_gerente);
+//        exit;
 
 
 		$arreglo =array();
@@ -193,7 +205,7 @@ class Corrida extends CI_Controller {
         exit;*/
 
 
-		
+
 		$response = $this->Corrida_model->insertCf($arreglo);
 
         $data_tocxl = array(
@@ -1251,6 +1263,7 @@ $pdf->Output(utf8_decode($namePDF), 'I');
         } else { // IS GERENTE
             $informacion_vendedor = $this->Corrida_model->getGerenteCorrida($informacion_corrida->id_asesor, $informacion_corrida->id_gerente);
         }
+
 
 
         $informacion_plan = $this->Corrida_model->getPlanCorrida($this->uri->segment(3));
