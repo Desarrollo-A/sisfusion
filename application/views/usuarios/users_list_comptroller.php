@@ -213,7 +213,7 @@
 
     $('#all_users_datatable thead tr:eq(0) th').each( function (i) {
 
-         if(i != 11){
+         if(i != 14){
         var title = $(this).text();
         $(this).html('<input type="text" style="width:100%; background:#003D82; color:white; border: 0; font-weight: 500; text-align: center;" class="textoshead"  placeholder="'+title+'"/>' );
         $( 'input', this ).on('keyup change', function () {

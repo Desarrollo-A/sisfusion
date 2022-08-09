@@ -56,15 +56,18 @@ class ServicesCRM extends CI_Controller
                 $id_gerente=0;
                 $id_subdirector=0;
                 $id_regional=0;
+                $id_lider=0;
                 if($objDatos['id_rol'] == 7){
                     //Asesor
+                    $id_lider  = $objDatos['id_lider'];
                     $id_gerente=$getLider[0]['id_gerente'];
                     $id_subdirector=$getLider[0]['id_subdirector'];
                     $id_regional=$getLider[0]['id_regional'];
                 }
                 else if($objDatos['id_rol'] == 9){
                     //Coordinador
-                    $id_gerente=0;
+                    $id_lider  = 0;
+                    $id_gerente=$objDatos['id_lider'];
                     $id_subdirector=$getLider[0]['id_subdirector'];
                     $id_regional=$getLider[0]['id_regional'];
                 }
@@ -87,7 +90,7 @@ class ServicesCRM extends CI_Controller
                     "telefono" => $objDatos['telefono'],
                     "id_sede" => $objDatos['id_sede'],
                     "id_rol" => $objDatos['id_rol'],
-                    "id_lider" => $objDatos['id_lider'],
+                    "id_lider" => $id_lider,
                     "usuario" => $objDatos['usuario'],
                     "contrasena" => encriptar($objDatos['contrasena']),
                     "fecha_creacion" => date("Y-m-d H:i:s"),
@@ -101,10 +104,10 @@ class ServicesCRM extends CI_Controller
                     "gerente_id" => $id_gerente,
                     "subdirector_id" => $id_subdirector,
                     "regional_id" => $id_regional,
-                    "talla" => $_POST['talla'],
-                    "sexo" => $_POST['sexo'],
-                    "tiene_hijos" => $_POST['tiene_hijos'],
-                    "hijos_12" => $_POST['nHijos'],
+                    "talla" => "0",
+                    "sexo" => "S",
+                    "tiene_hijos" => "NO",
+                    "hijos_12" => "0",
                     "fecha_reingreso" => NULL,
                     "fecha_baja" => NULL 
                 );

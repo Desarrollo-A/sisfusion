@@ -26,7 +26,7 @@ function tableUsers(){
                 className: 'btn buttons-excel',
                 titleAttr: 'Descargar archivo de Excel',
                 exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+                    columns: [0, 1, 2, 3, 4, 5, 6, 7],
                     format: {
                         header: function (d, columnIdx) {
                             switch (columnIdx) {
@@ -48,18 +48,9 @@ function tableUsers(){
                                     return 'TIPO';
                                     break;
                                 case 6:
-                                    return 'COORDINADOR';
+                                    return 'JEFE DIRECTO';
                                     break;
                                 case 7:
-                                    return 'GERENTE';
-                                    break;
-                                case 8:
-                                    return 'SUBDIRECTOR';
-                                    break;
-                                case 9:
-                                    return 'DIRECTOR REGIONAL';
-                                    break;
-                                case 10:
                                     return 'SEDE';
                                     break;
                             }
@@ -109,24 +100,8 @@ function tableUsers(){
                     return d.puesto;
                 }
             },
-            {
-                data: function (d) {
-                    return d.coordinador == '  ' ? 'NO APLICA' : d.coordinador;
-                }
-            },
-            {
-                data: function (d) {
-                    return d.gerente == '  ' ? 'NO APLICA' : d.gerente;
-                }
-            },
-            {
-                data: function (d) {
-                    return d.subdirector == '  ' ? 'NO APLICA' : d.subdirector;
-                }
-            },
-            {
-                data: function (d) {
-                    return d.regional == '  ' ? 'NO APLICA' : d.regional;
+            { data: function (d) {
+                    return d.jefe_directo;
                 }
             },
             { data: function (d) {

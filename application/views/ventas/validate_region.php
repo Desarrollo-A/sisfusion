@@ -30,40 +30,29 @@
                             <div class="card-content">
                                 <div class="encabezadoBox">
                                     <h3 class="card-title center-align">Validar región de comisiones</h3>
-                                    <p class="card-title pl-1">(Valida la región y asigna un gerente a la venta.)</p>
+                                    <!--<p class="card-title pl-1">(Valida la región y asigna un gerente a la venta.)</p>-->
                                 </div>
                                 <div class="toolbar">
-                                    <?php if ($this->session->userdata('id_usuario') == 1981) { ?> <!--ES MARICELA-->
                                     <div class="row">
                                         <div class="col-12 col-sm-12 col-md-2 col-lg-2 pr-0">    
-                                            <button type="button" value="6" class="btn-data-gral btn-s-violetLight" style="box-shadow: 0px 5px 6px RGB(0, 0, 0, 0.3)" id="validation_button" onclick="assignManager(this.value)">Cancún</button>
+                                            <button type="button" value="6" class="btn-data-gral" style="background-color:#4BBC8E; color:#FFF;" onclick="assignManager(this.value)">Cancún</button>
                                         </div>
                                         <div class="col-12 col-sm-12 col-md-2 col-lg-2 pr-0">
-                                            <button type="button" value="4" class="btn-data-gral btn-s-orangeLight" style="box-shadow: 0px 5px 6px RGB(0, 0, 0, 0.3)" id="validation_button" onclick="assignManager(this.value)">Ciudad de México</button>
+                                            <button type="button" value="4" class="btn-data-gral" style="background-color:#1FA592; color:#FFF;" onclick="assignManager(this.value)">Ciudad de México</button>
                                         </div>
                                         <div class="col-12 col-sm-12 col-md-2 col-lg-2 pr-0">
-                                            <button type="button" value="2" class="btn-data-gral btn-s-aqua" style="box-shadow: 0px 5px 6px RGB(0, 0, 0, 0.3)" id="validation_button" onclick="assignManager(this.value)">Querétaro</button> 
+                                            <button type="button" value="2" class="btn-data-gral" style="background-color:#008E8E; color:#FFF;" onclick="assignManager(this.value)">Querétaro</button> 
                                         </div>
                                         <div class="col-12 col-sm-12 col-md-2 col-lg-2 pr-0">
-                                            <button type="button" value="3" class="btn-data-gral btn-s-acidGreen" style="box-shadow: 0px 5px 6px RGB(0, 0, 0, 0.3)" id="validation_button" onclick="assignManager(this.value)">Península</button>
+                                            <button type="button" value="3" class="btn-data-gral" style="background-color:#137683; color:#FFF;" onclick="assignManager(this.value)">Península</button>
                                         </div>
-                                        <div class="col-12 col-sm-12 col-md-2 col-lg-2 pr-0">
-                                            <button type="button" value="0" class="btn-data-gral btn-s-red"  style="box-shadow: 0px 5px 6px RGB(0, 0, 0, 0.3)" id="validation_button" onclick="assignManager(this.value)">Regresar como inválida</button>  
-                                        </div>
-                                    </div>
-                                    <?php } else if ($this->session->userdata('id_usuario') == 1988) { ?> <!--ES FERNANDA-->
-                                    <div class="row">
                                         <div class="col-12 col-sm-12 col-md-2 col-lg-2">
-                                            <button type="button" value="5" class="btn-data-gral" style="box-shadow: 0px 5px 6px RGB(0, 0, 0, 0.3)" id="validation_button" onclick="assignManager(this.value)">León</button>
+                                            <button type="button" value="5" class="btn-data-gral" style="background-color:#275E70; color:#FFF;" onclick="assignManager(this.value)">León</button>
                                         </div>
                                         <div class="col-12 col-sm-12 col-md-2 col-lg-2 pr-0">
-                                            <button type="button" value="1" class="btn-data-gral" style="box-shadow: 0px 5px 6px RGB(0, 0, 0, 0.3)" id="validation_button" onclick="assignManager(this.value)">San Luis Potosí</button>
-                                        </div>
-                                        <div class="col-12 col-sm-12 col-md-2 col-lg-2 pr-0">
-                                            <button type="button" value="0" class="btn-gral-data" style="box-shadow: 0px 5px 6px RGB(0, 0, 0, 0.3)" id="validation_button" onclick="assignManager(this.value)">Regresar como inválida</button>
+                                            <button type="button" value="1" class="btn-data-gral" style="background-color:#2F4858; color:#FFF;" onclick="assignManager(this.value)">San Luis Potosí</button>
                                         </div>
                                     </div>
-                                    <?php } ?>
                                 </div>
                                 <div class="material-datatables">
                                     <div class="form-group">
@@ -73,6 +62,7 @@
                                                     <tr>
                                                         <th></th>
                                                         <th>ID PAGO</th>
+                                                        <th>ABONO</th>
                                                         <th>ID LOTE</th>
                                                         <th>PROYECTO</th>
                                                         <th>LOTE</th>
@@ -106,10 +96,9 @@
     <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
     <script>
-        var url = "<?= base_url() ?>";
-        var url2 = "<?= base_url() ?>index.php/";
         var totaPen = 0;
         var tr;
+    
         function formatMoney(n) {
             var c = isNaN(c = Math.abs(c)) ? 2 : c,
                 d = d == undefined ? "." : d,
@@ -121,11 +110,13 @@
         };
 
         function assignManager(e) {
+            $('#spiner-loader').removeClass('hide');
             if ($('input[name="idT[]"]:checked').length > 0) {
                 var idcomision = $(tabla_validar_comisiones.$('input[name="idT[]"]:checked')).map(function () {
                     return this.value;
                 }).get();
-                $.get(url + "Comisiones/updatePlaza/" + idcomision + "/" + e).done(function (data) {
+                $.get(`${general_base_url}Comisiones/updatePlaza/` + idcomision + "/" + e).done(function (data) {
+                    $('#spiner-loader').addClass('hide');
                     if (data == 1) { // COMISIÓN RECHAZADA
                         alerts.showNotification("top", "right", "La comisión ha sido regresada correctamente para su validación.", "success");
                     } else if (data == 2) { // COMISIÓN ASIGNADA
@@ -191,7 +182,7 @@
                         className: 'btn buttons-excel',
                         titleAttr: 'Descargar archivo de Excel',
                         exportOptions: {
-                            columns: [1, 2, 3, 4, 5, 6, 7, 8],
+                            columns: [1, 2, 3, 4, 5, 6, 7, 8, 9],
                             format: {
                                 header: function (d, columnIdx) {
                                     switch (columnIdx) {
@@ -199,29 +190,37 @@
                                             return 'ID PAGO';
                                             break;
                                         case 2:
-                                            return 'ID LOTE'
+                                            return 'ABONO';
+                                            break;
                                         case 3:
+                                            return 'ID LOTE'
+                                        case 4:
                                             return 'PROYECTO';
                                             break;
-                                        case 4:
+                                        case 5:
                                             return 'LOTE';
                                             break;
-                                        case 5:
+                                        case 6:
                                             return 'SEDE';
                                             break;
-                                        case 6:
+                                        case 7:
                                             return 'APARTADO ';
                                             break;
-                                        case 7:
+                                        case 8:
                                             return 'SEDE COMISIÓN';
                                             break;
-                                        case 8:
+                                        case 9:
                                             return 'ESTATUS';
                                             break;
                                     }
                                 }
                             }
                         }
+                    },
+                    {
+                        text: "Enviar comisiones para pago",
+                        titleAttr: 'Enviar comisiones para pago',
+                        className: "btn btn-azure send-commissions-to-pay",
                     }
                 ],
                 columns: [
@@ -233,7 +232,12 @@
                     },
                     {
                         data: function (d) {
-                            return '<p class="m-0">' + d.id_lote + '</p>';
+                            return d.pago_cliente;
+                        }
+                    },
+                    {
+                        data: function (d) {
+                            return d.id_lote;
                         }
                     },
                     {
@@ -258,29 +262,19 @@
                     },
                     {
                         data: function (d) {
-                            if (d.ubicacion_dos == null) {
+                            if (d.ubicacion_dos == null)
                                 return '<p class="m-0">Sin lugar de venta asignado</p>';
-                            } else {
+                            else
                                 return '<p class="m-0">' + d.ubicacion_dos + '</p>';
-                            }
                         }
                     },
                     {
                         data: function (d) {
                             var lblStats;
-                            if (d.estatus == 41 || d.estatus == '41') {
-                                lblStats = '<span class="label" style="background:blue;">ENVIADA A REGIÓN 2</span>';
-                            } else if (d.estatus == 42 || d.estatus == '42') {
-                                lblStats = '<span class="label" style="background:#7095E5;">ENVIADA A REGIÓN 1</span>';
-                            } else if (d.estatus == 51 || d.estatus == '51') {
-                                lblStats = '<span class="label" style="background:green;">ACEPTÓ REGIÓN 2</span>';
-                            } else if (d.estatus == 52 || d.estatus == '52') {
-                                lblStats = '<span class="label" style="background:#6BD06E;">ACEPTÓ REGIÓN 1</span>';
-                            } else if (d.estatus == 61 || d.estatus == '61') {
-                                lblStats = '<span class="label" style="background:red;">RECHAZO REGIÓN 2</span>';
-                            } else if (d.estatus == 62 || d.estatus == '62') {
-                                lblStats = '<span class="label" style="background:red;">RECHAZO REGIÓN 1</span>';
-                            }
+                            if (d.ubicacion_dos == null)
+                                lblStats = '<span class="label" style="background-color:#D17FC5; color:;">PENDIENTE ASIGNAR SEDE</span>';
+                            else
+                                lblStats = '<span class="label" style="background-color:#765FA4; color:;">SEDE ASIGNADA</span>';
                             return lblStats;
                         }
                     }
@@ -292,11 +286,11 @@
                     targets: 0,
                     'searchable': false,
                     'render': function (d, type, full, meta) {
-                        if (full.estatus != 41 && full.estatus != 42) {
+                        //if (full.estatus != 41 && full.estatus != 42) {
+                        if (full.ubicacion_dos != null)
                             return '';
-                        } else {
-                            return '<input type="checkbox" name="idT[]" style="width:20px; height:20px;" value="' + full.id_pago_i + '">';
-                        }
+                        else
+                            return '<input type="checkbox" class="input-check" name="idT[]" style="width:20px; height:20px;" value="' + full.id_pago_i + '">';
                     },
                     select: {
                         style: 'os',
@@ -306,7 +300,7 @@
                 pagingType: "full_numbers",
                 fixedHeader: true,
                 language: {
-                    url: "<?=base_url()?>/static/spanishLoader_v2.json",
+                    url: `${general_base_url}static/spanishLoader_v2.json`,
                     paginate: {
                         previous: "<i class='fa fa-angle-left'>",
                         next: "<i class='fa fa-angle-right'>"
@@ -315,7 +309,7 @@
                 destroy: true,
                 ordering: false,
                 ajax: {
-                    url: url2 + "Comisiones/getCommissionsToValidate/",
+                    url: `${general_base_url}Comisiones/getCommissionsToValidate/`,
                     type: "POST",
                     cache: false,
                     data: function (d) {
@@ -323,6 +317,39 @@
                 }
             });
 
+        });
+
+        $(document).on("click", ".send-commissions-to-pay", function (e) {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+            let id_lote = [];
+            tabla_validar_comisiones.column(3).data().unique().sort().each(function(value, index) { 
+                id_lote.push(value); 
+            });            
+            $.ajax({
+                type: 'POST',
+                url: 'sendCommissionToPay',
+                data: {
+                    'id_lote': id_lote
+                },
+                dataType: 'json',
+                beforeSend: function() {
+                    $('#spiner-loader').removeClass('hide');
+                },
+                success: function (data) {
+                    if (data == true) {
+                        alerts.showNotification("top", "right", "Los registros se han enviado de manera exitosa.", "success");
+                        $("#tabla_validar_comisiones").DataTable().ajax.reload();
+                        $('#spiner-loader').addClass('hide');
+                    } else {
+                        $('#spiner-loader').addClass('hide');
+                        alerts.showNotification("top", "right", "Oops, algo salió mal.", "warning");
+                    }
+                }, error: function () {
+                    $('#spiner-loader').addClass('hide');
+                    alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+                }
+            });
         });
     </script>
 </body>

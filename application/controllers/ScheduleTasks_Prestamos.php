@@ -47,6 +47,10 @@ class ScheduleTasks_Prestamos extends CI_Controller
     $insertArrayData = array();
     for ($m=0; $m <count($data); $m++) {
         $pagoMensual = $data[$m]['pago_individual'] + $data[$m]['pendiente'];
+        $VerificarCierre = $this->CierrePrestamo($data[$m]['id_prestamo']);
+        if(($pagoMensual + $VerificarCierre[0]['pagado']) > ($data[$m]['monto'] - 0.50)){
+            $pagoMensual =  $data[$m]['monto'] - $VerificarCierre[0]['pagado'];
+        }
             $tipo_prestamo = $data[$m]['tipo'];
         $PagosByUSer = $this->db->query("select * from pago_comision_ind where id_usuario=".$data[$m]['id_usuario']." and estatus=1 order by abono_neodata desc")->result_array();
         $Suma = 0;
@@ -56,10 +60,7 @@ class ScheduleTasks_Prestamos extends CI_Controller
                     $commonData = array();
                     $commonData2 = array();
                     $Suma = $Suma + $PagosByUSer[$n]['abono_neodata'];
-                   /* $VerificarCierre = $this->CierrePrestamo($data[$m]['id_prestamo']);
-                    if(($pagoMensual + $VerificarCierre[0]['pagado']) > ($data[$m]['monto'] - 0.50)){
-                        $pagoMensual =  $data[$m]['monto'] - $VerificarCierre[0]['pagado'];
-                    }*/
+                   /* */
 
                         if($Suma >= $pagoMensual)
                         {
@@ -71,13 +72,13 @@ class ScheduleTasks_Prestamos extends CI_Controller
                            
                            $this->db->query("UPDATE pago_comision_ind SET estatus=$tipo_prestamo,descuento_aplicado=1,abono_neodata=$MontoAdescontar,modificado_por=1 WHERE id_pago_i = ".$PagosByUSer[$n]['id_pago_i']." ");
                            $this->db->query("INSERT INTO relacion_pagos_prestamo(id_prestamo,id_pago_i,estatus,creado_por,fecha_creacion,modificado_por,fecha_modificacion,np) values(".$data[$m]['id_prestamo'].",".$PagosByUSer[$n]['id_pago_i'].",1,1,GETDATE(),1,GETDATE(),".$data[$m]['n_p'].")");
-                           $this->db->query("INSERT INTO historial_comisiones values(".$PagosByUSer[$n]['id_pago_i'].",1,GETDATE(),1,'A ESTE PAGO DE ".number_format($PagosByUSer[$n]['abono_neodata'], 2, '.', ',').", SE LE DESCONTO LA CANTIDAD DE ".number_format($pagoMensual, 2, '.', '').", POR MOTIVO DE PRESTAMO')");
+                           $this->db->query("INSERT INTO historial_comisiones values(".$PagosByUSer[$n]['id_pago_i'].",1,GETDATE(),1,'DESCUENTO POR ".$data[$m]['nombre'].", TOTAL A DESCONTAR $".number_format($data[$m]['monto'], 2, '.', ',')." A ".$data[$m]['num_pagos']." MES(ES), MOTIVO DESCUENTO: ".$data[$m]['comentario']."')");
                            if($restante > 0){
                                                $this->db->query("INSERT INTO pago_comision_ind (id_comision, id_usuario, abono_neodata, fecha_abono, fecha_pago_intmex, estatus, pago_neodata, creado_por, comentario,modificado_por) VALUES (".$PagosByUSer[$n]['id_comision'].", ".$PagosByUSer[$n]['id_usuario'].", ".$restante.", GETDATE(), GETDATE(), 1, ".$neodata.",1, 'ESTE MONTO ES EL RESTANTE DEL PAGO CON ID ".$PagosByUSer[$n]['id_pago_i']."',1)");            
                                                $insert_id = $this->db->insert_id();
                                             }
-                            $this->db->query("INSERT INTO  historial_comisiones VALUES ($insert_id, 1, GETDATE(), 1, 'ESTE MONTO ES EL RESTANTE DEL PAGO CON ID ".$PagosByUSer[$n]['id_pago_i']." DISPONIBLE PARA COBRO')");
-                            //Proceso para cerrar el prestamo, si es que ya se pago por completo
+                                            $this->db->query("INSERT INTO  historial_comisiones VALUES ($insert_id, 1, GETDATE(), 1, 'ESTE ES EL RESTANTE A UN DESCUENTO, SALDO DISPONIBLE PARA COBRO')");
+                                            //Proceso para cerrar el prestamo, si es que ya se pago por completo
                             $CierrePrestamo = $this->CierrePrestamo($data[$m]['id_prestamo']);
                             if($CierrePrestamo[0]['pagado'] > ($data[$m]['monto'] - 0.50)){
                                 $this->db->query("UPDATE prestamos_aut SET modificado_por=1,pendiente=0,fecha_modificacion=GETDATE(),estatus=3 WHERE id_prestamo=".$data[$m]['id_prestamo']."");
@@ -95,14 +96,14 @@ class ScheduleTasks_Prestamos extends CI_Controller
                                 }
                                 $this->db->query("UPDATE pago_comision_ind SET estatus=$tipo_prestamo,descuento_aplicado=1,modificado_por=1 WHERE id_pago_i = ".$PagosByUSer[$n]['id_pago_i']." ");
                                 $this->db->query("INSERT INTO relacion_pagos_prestamo(id_prestamo,id_pago_i,estatus,creado_por,fecha_creacion,modificado_por,fecha_modificacion,np) values(".$data[$m]['id_prestamo'].",".$PagosByUSer[$n]['id_pago_i'].",1,1,GETDATE(),1,GETDATE(),".$data[$m]['n_p'].")");
-                                $this->db->query("INSERT INTO historial_comisiones values(".$PagosByUSer[$n]['id_pago_i'].",1,GETDATE(),1,'MOTIVO ".$data[$m]['nombre']." DE ".number_format($data[$m]['monto'], 2, '.', ',')." ')");
+                                $this->db->query("INSERT INTO historial_comisiones values(".$PagosByUSer[$n]['id_pago_i'].",1,GETDATE(),1,'DESCUENTO POR ".$data[$m]['nombre'].", TOTAL A DESCONTAR $".number_format($data[$m]['monto'], 2, '.', ',')." A ".$data[$m]['num_pagos']." MES(ES), MOTIVO DESCUENTO: ".$data[$m]['comentario']."')");
                                 $this->db->query("UPDATE prestamos_aut SET n_p=n_p+1,modificado_por=1,fecha_modificacion=GETDATE(),pendiente=$pendiente WHERE id_prestamo=".$data[$m]['id_prestamo']."");
                                 break;
                             }else{
                                 /**EL SUMA ACOMULADA NO CUBRE EL MONTO CORRESPONDIENTE AL MES, Y SE TOMA POR COMPLETO EL PAGO*/
                                 $this->db->query("UPDATE pago_comision_ind SET estatus=$tipo_prestamo,descuento_aplicado=1,modificado_por=1 WHERE id_pago_i = ".$PagosByUSer[$n]['id_pago_i']." ");
                                 $this->db->query("INSERT INTO relacion_pagos_prestamo(id_prestamo,id_pago_i,estatus,creado_por,fecha_creacion,modificado_por,fecha_modificacion,np) values(".$data[$m]['id_prestamo'].",".$PagosByUSer[$n]['id_pago_i'].",1,1,GETDATE(),1,GETDATE(),".$data[$m]['n_p'].")");
-                                $this->db->query("INSERT INTO historial_comisiones values(".$PagosByUSer[$n]['id_pago_i'].",1,GETDATE(),1,'MOTIVO ".$data[$m]['nombre']." DE ".number_format($data[$m]['monto'], 2, '.', ',')." ')");
+                                $this->db->query("INSERT INTO historial_comisiones values(".$PagosByUSer[$n]['id_pago_i'].",1,GETDATE(),1,'DESCUENTO POR ".$data[$m]['nombre'].", TOTAL A DESCONTAR $".number_format($data[$m]['monto'], 2, '.', ',')." A ".$data[$m]['num_pagos']." MES(ES), MOTIVO DESCUENTO: ".$data[$m]['comentario']."')");
                             }
                         }
                 }
