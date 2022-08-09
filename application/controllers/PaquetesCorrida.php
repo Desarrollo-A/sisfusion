@@ -420,96 +420,40 @@ class PaquetesCorrida extends CI_Controller
 
 
 
-public function kelFunction($desarrollos = 1,$query_superdicie = '',$query_tipo_lote = '',$superficie = 1,$inicio = 1,$fin = 1){
+public function kelFunction(){
   date_default_timezone_set('America/Mexico_City');
-  $hoy2 = date('Y-d-m H:i:s');
-  
-  $cuari1 =  $this->db->query("SELECT l.idCondominio
-              FROM lotes l
-              INNER JOIN condominios c ON c.idCondominio = l.idCondominio 
-              INNER JOIN residenciales r ON r.idResidencial = c.idResidencial
-              WHERE r.idResidencial IN ($desarrollos)
-              $query_superdicie
-              $query_tipo_lote 
-              GROUP BY l.idCondominio")->result_array();
-//print_r($cuari1);
-
-$imploded = array();
-foreach($cuari1 as $array) {
-  $imploded[] = implode(',', $array);
-}
+   
+  $cuari1 =  $this->db->query("SELECT DISTINCT(value) FROM lotes CROSS APPLY STRING_SPLIT(id_descuento, ',')")->result_array();
+ 
 
 echo(sizeof($cuari1));
 $stack= array();
 
 for ($i=0; $i < sizeof($cuari1); $i++) { 
-  $arrCondominio= implode(",", $cuari1[$i]);
-  $queryRes =  $this->db->query("DECLARE @condominio varchar(200), @tags VARCHAR(MAX); 
-  
-  SET @condominio = ($arrCondominio) 
-  /*INICIO DEL PROCESO*/ 
-  SET @tags = (SELECT STRING_AGG(CONVERT(VARCHAR(MAX),(id_descuento) ), ',') 
-  FROM lotes l 
-  INNER JOIN condominios c ON c.idCondominio = l.idCondominio 
-  INNER JOIN residenciales r ON r.idResidencial = c.idResidencial 
-  WHERE c.idCondominio IN (@condominio)) 
+  // $arrCondominio= implode(",",  $cuari1[$i]);
+  // var_dump($arrCondominio);
+  print_r($cuari1[$i]['value'].'<br>');
+  // echo $cuari1[$i];
+  $queryRes =  $this->db->query("SELECT l.idCondominio, l.id_descuento, p.id_paquete ,c.nombre, r.nombreResidencial, 
+  p.descripcion, p.fecha_inicio, p.fecha_fin, 
+  UPPER(CONCAT('PAQUETE ', DATENAME(MONTH, p.fecha_inicio), ' ', YEAR(p.fecha_inicio))) descripcion 
+   FROM lotes l
+   INNER JOIN condominios c ON c.idCondominio = l.idCondominio
+   INNER JOIN residenciales r ON r.idResidencial = c.idResidencial 
+   INNER JOIN paquetes p ON p.id_paquete = ".$cuari1[$i]['value']." AND l.id_descuento like '%".$cuari1[$i]['value']."%'
+   WHERE l.id_descuento is not null 
+   GROUP BY l.idCondominio, l.id_descuento, c.nombre, r.nombreResidencial, p.descripcion, p.id_paquete, p.fecha_inicio, p.fecha_fin");
 
-  (SELECT 
-  @condominio condominio, STRING_AGG(id_paquete, ',') paquetes, fecha_inicio, fecha_fin, 
-  UPPER(CONCAT('PAQUETE ', DATENAME(MONTH, fecha_inicio), ' ', YEAR(fecha_inicio))) descripcion 
-  FROM paquetes 
-  WHERE id_paquete in (SELECT DISTINCT(value) FROM STRING_SPLIT(@tags, ',') WHERE RTRIM(value) <> '') 
-  GROUP BY fecha_inicio, fecha_fin)");
   
   foreach ($queryRes->result() as  $valor) {
-    array_push($stackiD, array($valor->condominio));
-    array_push($stack, array($valor->condominio, $valor->paquetes, $valor->fecha_inicio, $valor->fecha_fin, $valor->descripcion));
+    // array_push($stackiD, array($valor->condominio));
+    array_push($stack, array($valor->idCondominio, $valor->id_descuento, $valor->id_paquete, $valor->nombre, $valor->nombreResidencial, $valor->descripcion, $valor->fecha_inicio, $valor->fecha_fin));
   }
 }
 
-// $imploded = array();
-// foreach($stack as $array) {
-//   $imploded[] = implode(',', $array);
-// }
-
-$arrCondominio= implode(",", $imploded);
-//print_r($arrCondominio);
-if(!empty($arrCondominio)){
-  $getPaquetesByName =  $stackiD;
-  $datosInsertar_x_condominio = array();
-  for ($o=0; $o <count($getPaquetesByName) ; $o++) {
-    $json = array();
-    if(!empty($getPaquetesByName[$o]['paquetes'])){
-      array_push($json,array( "paquetes" => $getPaquetesByName[$o]['paquetes'],
-      "tipo_superficie" => array("tipo" => $superficie,
-      "sup1" => $inicio,
-      "sup2" => $fin) ));
-      
-      $json = json_encode($json);
-      $json = ltrim($json,'[');
-      $json = rtrim($json,']');
-      $array_x_condominio =array(
-        'id_condominio' => $getPaquetesByName[$o]['condominio'],
-        'id_paquete' => $json,
-        'nombre' => $getPaquetesByName[$o]['descripcion'],
-        'fecha_inicio' =>  $getPaquetesByName[$o]['fecha_inicio'],
-        'fecha_fin' =>  $getPaquetesByName[$o]['fecha_fin'],
-        'estatus' => 1,
-        'creado_por' => $this->session->userdata('id_usuario'),
-        'fecha_modificacion' =>  $hoy2,
-        'modificado_por' => $this->session->userdata('id_usuario'),
-        'list_paquete' => $getPaquetesByName[$o]['paquetes']);
-        array_push($datosInsertar_x_condominio,$array_x_condominio);
-      }                 
-    }
-    
-    if(count($datosInsertar_x_condominio) > 0){
-      $this->PaquetesCorrida_model->insertBatch('paquetes_x_condominios',$datosInsertar_x_condominio);
-    }
-  }
+var_dump($stack);
 }
 
-
-
+ 
 }
 
