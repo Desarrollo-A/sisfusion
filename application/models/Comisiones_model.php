@@ -3483,7 +3483,6 @@ public function validateDispersionCommissions($idlote){
     
    
     function getDatosNuevasMktd(){
- // AND cl.id_asesor IN (SELECT id_usuario FROM usuarios WHERE id_sede IN (1,5) AND id_rol IN (7,9)) 
         $filtro = " AND lo.ubicacion_dos IN (1,5,9) 
         AND lo.idLote NOT IN (select id_lote from compartidas_mktd) AND lo.idLote NOT IN (select id_lote from compartidas_mktd)";
 
