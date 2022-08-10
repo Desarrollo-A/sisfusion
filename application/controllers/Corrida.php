@@ -556,21 +556,53 @@ class Corrida extends CI_Controller {
 		$informacion_corrida = $this->Corrida_model->getinfoCorrida($this->uri->segment(3));
 		$informacion_loteCorrida = $this->Corrida_model->getinfoLoteCorrida($informacion_corrida->id_lote);
 		$informacion_descCorrida = $this->Corrida_model->getinfoDescLoteCorrida($informacion_corrida->id_lote, $this->uri->segment(3));
-		
-		$getRol = $this->Corrida_model->getRol($informacion_corrida->id_asesor);
 
-		
+		/*$getRol = $this->Corrida_model->getRol($informacion_corrida->id_asesor);
+
+
 			if($getRol->id_rol == 7) { // IS ASESOR
 				$informacion_vendedor = $this->Corrida_model->getAsesorCorrida($informacion_corrida->id_asesor, $informacion_corrida->id_gerente);
 			} else if($getRol->id_rol == 9) { // IS COORDINADOR
 				$informacion_vendedor = $this->Corrida_model->getCoordCorrida($informacion_corrida->id_asesor, $informacion_corrida->id_gerente);
 			} else { // IS GERENTE
 				$informacion_vendedor = $this->Corrida_model->getGerenteCorrida($informacion_corrida->id_asesor, $informacion_corrida->id_gerente);
-			}
+			}*/
 
 		$informacion_plan = $this->Corrida_model->getPlanCorrida($this->uri->segment(3));
 		$informacion_diferidos = array_slice($informacion_plan, 0, $informacion_corrida->meses_diferir);
 
+        if($informacion_corrida->id_asesor!=0){
+            $data_asesor = $this->Corrida_model->getDataAsesorToPR($informacion_corrida->id_asesor);
+        }
+        if($informacion_corrida->id_coordinador!=0){
+            $data_coord = $this->Corrida_model->getDataCoordToPR($informacion_corrida->id_coordinador);
+        }
+        if($informacion_corrida->id_gerente!=0){
+            $data_gerente = $this->Corrida_model->getDataGerToPR($informacion_corrida->id_gerente);
+        }
+//        echo 'asesor:<br>';
+//        print_r($data_asesor);
+//        echo '<br>';
+//        echo ' coordinador:<br>';
+//        print_r($data_coord);
+//        echo '<br>';
+//        echo 'gerente:<br>';
+//        print_r($data_gerente);
+//        echo '<br>';
+        $informacion_vendedor = array(
+            "idAsesor" => ($data_asesor->idAsesor=="")?'NA':$data_asesor->idAsesor,
+            "nombreAsesor" => ($data_asesor->nombreAsesor=="")?'NA':$data_asesor->nombreAsesor,
+            "idCoordinador" => ($data_coord->idCoordinador=="")?'NA':$data_coord->idCoordinador,
+            "nombreCoordinador" => ($data_coord->nombreCoordinador=="")?'NA':$data_coord->nombreCoordinador,
+            "idGerente" => ($data_gerente->idGerente=="")?'NA':$data_gerente->idGerente,
+            "nombreGerente" => ($data_gerente->nombreGerente=="")?'NA':$data_gerente->nombreGerente
+        );
+        $informacion_vendedor = (object) $informacion_vendedor;
+
+
+
+//        print_r($informacion_vendedor);
+//        exit;
 
 
 		$pdf = new TCPDF('P', 'mm', 'LETTER', 'UTF-8', false);
@@ -1253,7 +1285,7 @@ $pdf->Output(utf8_decode($namePDF), 'I');
         $informacion_loteCorrida = $this->Corrida_model->getinfoLoteCorrida($informacion_corrida->id_lote);
         $informacion_descCorrida = $this->Corrida_model->getinfoDescLoteCorrida($informacion_corrida->id_lote, $this->uri->segment(3));
 
-        $getRol = $this->Corrida_model->getRol($informacion_corrida->id_asesor);
+        /*$getRol = $this->Corrida_model->getRol($informacion_corrida->id_asesor);
 
 
         if ($getRol->id_rol == 7) { // IS ASESOR
@@ -1262,14 +1294,43 @@ $pdf->Output(utf8_decode($namePDF), 'I');
             $informacion_vendedor = $this->Corrida_model->getCoordCorrida($informacion_corrida->id_asesor, $informacion_corrida->id_gerente);
         } else { // IS GERENTE
             $informacion_vendedor = $this->Corrida_model->getGerenteCorrida($informacion_corrida->id_asesor, $informacion_corrida->id_gerente);
+        }*/
+
+        if($informacion_corrida->id_asesor!=0){
+            $data_asesor = $this->Corrida_model->getDataAsesorToPR($informacion_corrida->id_asesor);
         }
-
-
+        if($informacion_corrida->id_coordinador!=0){
+            $data_coord = $this->Corrida_model->getDataCoordToPR($informacion_corrida->id_coordinador);
+        }
+        if($informacion_corrida->id_gerente!=0){
+            $data_gerente = $this->Corrida_model->getDataGerToPR($informacion_corrida->id_gerente);
+        }
+//        echo 'asesor:<br>';
+//        print_r($data_asesor);
+//        echo '<br>';
+//        echo ' coordinador:<br>';
+//        print_r($data_coord);
+//        echo '<br>';
+//        echo 'gerente:<br>';
+//        print_r($data_gerente);
+//        echo '<br>';
+        $informacion_vendedor = array(
+            "idAsesor" => ($data_asesor->idAsesor=="")?'NA':$data_asesor->idAsesor,
+            "nombreAsesor" => ($data_asesor->nombreAsesor=="")?'NA':$data_asesor->nombreAsesor,
+            "idCoordinador" => ($data_coord->idCoordinador=="")?'NA':$data_coord->idCoordinador,
+            "nombreCoordinador" => ($data_coord->nombreCoordinador=="")?'NA':$data_coord->nombreCoordinador,
+            "idGerente" => ($data_gerente->idGerente=="")?'NA':$data_gerente->idGerente,
+            "nombreGerente" => ($data_gerente->nombreGerente=="")?'NA':$data_gerente->nombreGerente
+        );
+        $informacion_vendedor = (object) $informacion_vendedor;
 
         $informacion_plan = $this->Corrida_model->getPlanCorrida($this->uri->segment(3));
         $informacion_plan = json_decode($informacion_plan[0]['corrida_dump']);
 
         $informacion_diferidos = array_slice($informacion_plan, 0, $informacion_corrida->meses_diferir);
+
+
+
 
 
         $pdf = new TCPDF('P', 'mm', 'LETTER', 'UTF-8', false);

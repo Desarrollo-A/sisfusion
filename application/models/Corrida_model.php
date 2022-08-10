@@ -551,6 +551,41 @@
         return $query->result_array();
     }
 
+    function getDataAsesorToPR($id_asesor){
+        //SELECT u.id_usuario idAsesor, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombreAsesor, uu.id_usuario idCoordinador,
+        //CONCAT(uu.nombre, ' ', uu.apellido_paterno, ' ', uu.apellido_materno) nombreCoordinador, uuu.id_usuario idGerente, CONCAT(uuu.nombre, ' ', uuu.apellido_paterno, ' ', uuu.apellido_materno) nombreGerente
+        // FROM [usuarios] u INNER JOIN [usuarios] uu ON uu.id_usuario = u.id_lider
+        //INNER JOIN [usuarios] uuu ON uuu.id_usuario = uu.id_lider WHERE u.id_rol = 7 AND u.estatus = 1 AND u.id_usuario = ".$id_asesor." AND uuu.id_usuario
+            $query=$this->db->query("SELECT id_usuario as idAsesor,  
+            CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombreAsesor
+            FROM usuarios u WHERE id_usuario=".$id_asesor);
+            return $query->row();
+    }
+
+    function getDataCoordToPR($id_coordinador){
+//SELECT u.id_usuario idAsesor, uu.id_usuario idCoordinador,
+//		                           CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombreAsesor,
+//                                   CONCAT(uu.nombre, ' ', uu.apellido_paterno, ' ', uu.apellido_materno) nombreGerente
+//                                   FROM [usuarios] u
+//								   INNER JOIN [usuarios] uu ON uu.id_usuario = u.id_lider
+//								   WHERE u.id_rol = 9 AND u.estatus = 1 AND u.id_usuario = ".$id_asesor." AND uu.id_usuario =  ".$id_gerente.""
+        $query=$this->db->query("SELECT id_usuario as idCoordinador,  
+            CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombreCoordinador
+            FROM usuarios u WHERE id_usuario=".$id_coordinador);
+        return $query->row();
+    }
+    function getDataGerToPR($id_gerente){
+        //"SELECT u.id_usuario idAsesor, uu.id_usuario idCoordinador,
+        //		                           CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombreAsesor,
+        //                                   CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombreGerente
+        //                                   FROM [usuarios] u
+        //								   INNER JOIN [usuarios] uu ON uu.id_usuario = u.id_lider
+        //								   WHERE u.id_rol = 3 AND u.estatus = 1 AND u.id_usuario =
+        $query=$this->db->query("SELECT id_usuario as idGerente,  
+            CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombreGerente
+            FROM usuarios u WHERE id_usuario=".$id_gerente);
+        return $query->row();
+    }
 
 
 }
