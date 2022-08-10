@@ -136,7 +136,7 @@
     });
 });
 </script>
-<script src="<?= base_url() ?>dist/js/controllers/usuarios-1.1.0.js"></script>
+<!--<script src="<?= base_url() ?>dist/js/controllers/usuarios-1.1.0.js"></script>-->
 
 
 </html>
