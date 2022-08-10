@@ -4266,7 +4266,8 @@ function getStatusMktdPreventa(){
             LEFT JOIN usuarios u3 ON u3.id_usuario = pr.id_subdirector
             LEFT JOIN usuarios u4 ON u4.id_usuario = pr.id_regional
             WHERE pr.tipo = 0 AND ($filter  AND pr.lugar_prospeccion != 6) OR 
-            (pr.fecha_creacion > '2022-01-19 23:59:59.999' AND ($filter  AND pr.lugar_prospeccion = 6))");
+            (pr.fecha_creacion > '2022-01-19 23:59:59.999' AND ($filter  AND pr.lugar_prospeccion = 6))
+            ORDER BY pr.fecha_creacion");
         }
         else{
             return $this->db->query("SELECT CONCAT(pr.nombre, ' ', pr.apellido_paterno, ' ', pr.apellido_materno) nombreProspecto, pr.id_prospecto, pr.fecha_creacion, pr.becameClient, pr.lugar_prospeccion,  
@@ -4275,7 +4276,7 @@ function getStatusMktdPreventa(){
             UPPER(CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno)) gerente, 
             UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)) subdirector, 
             UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)) regional,
-            cl.fechaApartado, DATEDIFF(DAY, pr.fecha_creacion, cl.fechaApartado) dias_cierre,
+            cl.fechaApartado, DATEDIFF(DAY, cl.fechaApartado, pr.fecha_creacion) dias_cierre,
             CASE WHEN cl.id_cliente IS NULL THEN pr.telefono ELSE cl.telefono1 END telefono,
             CASE WHEN cl.id_cliente IS NULL THEN pr.correo ELSE cl.correo END correo,
             CASE WHEN cl.id_cliente IS NULL THEN pr.domicilio_particular ELSE cl.domicilio_particular END direccion,

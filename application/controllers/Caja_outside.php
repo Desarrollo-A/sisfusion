@@ -1738,6 +1738,7 @@ class Caja_outside extends CI_Controller
             $arreglo["fecha_modst"] = date("Y-m-d H:i:s");
             $arreglo["userstatus"] = $usuario;
             $arreglo["usuario"] = $usuario;
+            $arreglo["observacionContratoUrgente"] = NULL;
             $arreglo["motivo_change_status"] = $motivo_change_status;
 
 
@@ -1762,6 +1763,7 @@ class Caja_outside extends CI_Controller
             $arreglo["fecha_modst"] = date("Y-m-d H:i:s");
             $arreglo["userstatus"] = $usuario;
             $arreglo["usuario"] = $usuario;
+            $arreglo["observacionContratoUrgente"] = NULL;
             $arreglo["motivo_change_status"] = $motivo_change_status;
 
             $datos["lote"] = $this->caja_model_outside->infoBloqueos($idLote);
@@ -1797,6 +1799,7 @@ class Caja_outside extends CI_Controller
             $arreglo["fecha_modst"] = date("Y-m-d H:i:s");
             $arreglo["userstatus"] = $usuario;
             $arreglo["usuario"] = $usuario;
+            $arreglo["observacionContratoUrgente"] = NULL;
             $arreglo["motivo_change_status"] = $motivo_change_status;
 
 
@@ -1819,6 +1822,7 @@ class Caja_outside extends CI_Controller
             $arreglo["fecha_modst"] = date("Y-m-d H:i:s");
             $arreglo["userstatus"] = $usuario;
             $arreglo["usuario"] = $usuario;
+            $arreglo["observacionContratoUrgente"] = NULL;
             $arreglo["motivo_change_status"] = $motivo_change_status;
 
 
