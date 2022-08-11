@@ -1179,17 +1179,17 @@
 
 @font-face {
   font-family: Montserrat-ExtraLight;
-  src: url(../css/fonts/Montserrat/Montserrat-ExtraLight.ttf);
+  src: url(../fonts/Montserrat/Montserrat-ExtraLight.ttf);
 }
 
 @font-face {
   font-family: Montserrat-Light;
-  src: url(../css/fonts/Montserrat/Montserrat-Light.ttf);
+  src: url(../fonts/Montserrat/Montserrat-Light.ttf);
 }
 
 @font-face {
   font-family: Montserrat-SemiBold;
-  src: url(../css/fonts/Montserrat/Montserrat-SemiBold.ttf);
+  src: url(../fonts/Montserrat/Montserrat-SemiBold.ttf);
 }
 
 /* END import fonts */
@@ -1206,7 +1206,7 @@
   color: #ffffff;
 }
 
-.boxUnauthorized h2 {
+.boxUnauthorized h4 {
   font-family: "Montserrat-ExtraLight";
 }
 
@@ -1214,8 +1214,4 @@
   color: #96843D;
   font-weight: 700;
   font-family: "Montserrat-SemiBold" !important;
-}
-
-.boxUnauthorized p {
-  font-family: "Montserrat-Light";
 }

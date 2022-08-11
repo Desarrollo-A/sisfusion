@@ -25,16 +25,13 @@
 		<div class="container vh-100 w-100 p-0">
 			<div class="boxUnauthorized h-100 d-flex justify-center align-center">
 				<div class="center text-center">
-					<div class="box-img d-flex justify-center">
+					<div class="box-img d-flex justify-center mb-5">
 						<img class="w-100" src="<?= base_url() ?>static/images/logo.svg">
 					</div>
 					<div class="title d-flex justify-center">
 						<h2 class="enfasis">&nbsp;ADVERTENCIA</h2>
 					</div>
-					<h3 class="m-0">No tiene los permisos para acceder a este apartado.</h3>
-					<br>
-					<br>
-					<br>
+					<h4 class="m-0">No tiene los permisos para acceder a este apartado.</h4>
 				</div>
 			</div>
 		</div>
