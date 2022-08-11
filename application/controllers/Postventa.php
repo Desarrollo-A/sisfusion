@@ -9,6 +9,7 @@ class Postventa extends CI_Controller
         parent::__construct();
         $this->load->model(array('Postventa_model', 'Documentacion_model', 'General_model'));
         $this->load->library(array('session', 'form_validation', 'get_menu'));
+        $this->jwt_actions->authorize('1',$this->input->request_headers());
         $this->validateSession();
         date_default_timezone_set('America/Mexico_City');
     }
