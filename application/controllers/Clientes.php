@@ -2948,7 +2948,6 @@ public function getStatusMktdPreventa(){
     }
 
     public function getProspectsReportInformation(){
-        $a = 0;
         if (isset($_POST) && !empty($_POST)) {
             $beginDate = date("Y-m-d", strtotime($this->input->post("beginDate")));
             $endDate = date("Y-m-d", strtotime($this->input->post("endDate")));
@@ -2958,7 +2957,6 @@ public function getStatusMktdPreventa(){
             echo json_encode($data);
         } else
             json_encode(array());
-    }
-    
+    } 
 }
 

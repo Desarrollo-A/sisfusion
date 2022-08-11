@@ -1177,74 +1177,45 @@
   margin: 0 3px;
 }
 
-.boxContent td .bootstrap-select button {
-  background-color: #c3c3c3 !important;
+@font-face {
+  font-family: Montserrat-ExtraLight;
+  src: url(../css/fonts/Montserrat/Montserrat-ExtraLight.ttf);
 }
 
-.boxContent td .icon-save {
-  font-size: 1.5em;
-  cursor: pointer;
-  color: #929292;
+@font-face {
+  font-family: Montserrat-Light;
+  src: url(../css/fonts/Montserrat/Montserrat-Light.ttf);
 }
 
-.boxContent td .active {
-  display: block !important;
+@font-face {
+  font-family: Montserrat-SemiBold;
+  src: url(../css/fonts/Montserrat/Montserrat-SemiBold.ttf);
 }
 
-.boxContent td .inactive {
-  display: none !important;
+/* END import fonts */
+/* fonts vrbls */
+/* END fonts vrbls */
+.boxUnauthorized {
+  background-image: linear-gradient(RGB(0 0 0/80%), RGB(0 0 0/80%)), url(https://maderascrm.gphsis.com/dist/img/notFound.png);
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #ffffff;
 }
 
-.boxContent .subBoxDetail .notaria-select {
-  width: 50% !important;
+.boxUnauthorized h2 {
+  font-family: "Montserrat-ExtraLight";
 }
 
-.modal-content .cardUpload {
-  box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.14);
-  border-radius: 6px;
-  color: rgba(0, 0, 0, 0.87);
-  background: #fff;
-  margin: 10px;
-  padding: 10px;
+.boxUnauthorized .enfasis {
+  color: #96843D;
+  font-weight: 700;
+  font-family: "Montserrat-SemiBold" !important;
 }
 
-.modal-content .uploadIcon_modal {
-  color: #929292;
-}
-
-.modal-content .uploadIcon_modal:hover {
-  color: #103f75;
-  cursor: pointer;
-}
-
-.modal-content .watchIcon_modal {
-  color: #103f75;
-}
-
-.modal-content .watchIcon_modal:hover {
-  cursor: pointer;
-}
-
-.modal-content .nodata_icon {
-  color: #929292;
-}
-
-#uploadModal {
-  z-index: 9999 !important;
-}
-
-#sb-container {
-  z-index: 9999 !important;
-}
-
-.table-responsive {
-  overflow: inherit !important;
-}
-
-.bootstrap-table {
-  overflow: inherit !important;
-}
-
-.fixed-table-body {
-  overflow: inherit !important;
+.boxUnauthorized p {
+  font-family: "Montserrat-Light";
 }
