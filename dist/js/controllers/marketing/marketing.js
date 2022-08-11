@@ -345,7 +345,7 @@ function fillClientes(beginDate, endDate) {
 			},
 			{
 				data: function (d) {
-					return d.lugar_prospeccion;
+					return d.lugar_prospeccion2;
 				}
 			},
 			{

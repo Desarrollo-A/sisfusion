@@ -1302,7 +1302,7 @@ function getDatosColabMktd2($sede, $plan){
                  // AND cl.id_asesor IN (SELECT id_usuario FROM usuarios WHERE id_sede LIKE '".$sede."' AND id_rol IN (7,9)) 
 
 
-    return $this->db->query("SELECT SUM (pci.abono_neodata) suma_f01, STRING_AGG(pci.id_pago_i, ', ') AS valor_obtenido, res.empresa, res.nombreResidencial
+    return $this->db->query("SELECT SUM (pci.abono_neodata) suma_f01, STRING_AGG(pci.id_pago_i, ', ') AS valor_obtenido, res.empresa, res.nombreResidencial 
                                 FROM pago_comision_ind pci 
                                 INNER JOIN comisiones com ON com.id_comision = pci.id_comision
                                 INNER JOIN lotes lo ON lo.idLote = com.id_lote
@@ -3483,7 +3483,8 @@ public function validateDispersionCommissions($idlote){
     
    
     function getDatosNuevasMktd(){
-        $filtro = " AND lo.ubicacion_dos IN (1,5,9) 
+ // AND cl.id_asesor IN (SELECT id_usuario FROM usuarios WHERE id_sede IN (1,5) AND id_rol IN (7,9)) 
+        $filtro = " AND lo.ubicacion_dos IN (1,5,8,9) 
         AND lo.idLote NOT IN (select id_lote from compartidas_mktd) AND lo.idLote NOT IN (select id_lote from compartidas_mktd)";
 
         return $this->db->query(" SELECT pci.id_usuario, lo.ubicacion_dos, plm.id_plan, s.nombre as sede, us.nombre, us.apellido_paterno, SUM(pci.abono_neodata) total, res.empresa, res.idResidencial, CAST(res.descripcion AS VARCHAR(MAX)) descripcion
@@ -6910,7 +6911,7 @@ function UpdateVcUser($usuarioOld,$newColab,$rolSelect,$idLote,$idCliente,$comen
 
     function getLideres($lider){
         return $this->db->query("select u.id_usuario as id_usuario1,CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) as name_user,u2.id_usuario as id_usuario2,CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno) as name_user2,
-        u3.id_usuario as id_usuario3,CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno) as name_user3 from usuarios u inner join usuarios u2 on u.id_lider=u2.id_usuario inner join usuarios u3 on u3.id_usuario=u2.id_lider where u.id_usuario=$lider");
+        u3.id_usuario as id_usuario3,CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno) as name_user3 from usuarios u inner join usuarios u2 on u.id_lider=u2.id_usuario inner join usuarios u3 on u3.id_usuario=u2.gerente_id where u.id_usuario=$lider");
     }
 
     function AddVentaCompartida($id_asesor,$coor,$ger,$sub,$id_cliente,$id_lote){

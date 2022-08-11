@@ -19,38 +19,29 @@
 
 
     public function getGerente(){
-		$query = $this->db-> query("SELECT u.id_rol, u.estatus, u.id_usuario idGerente, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombreGerente 
-                                FROM usuarios u WHERE u.id_rol = 3 AND u.estatus = 1 
-								AND (u.rfc NOT LIKE '%TSTDD%' AND ISNULL(u.correo, '') NOT LIKE '%test_%' AND ISNULL(u.correo, '') NOT LIKE '%OOAM%' AND ISNULL(u.correo, '') NOT LIKE '%CASA%')
-								ORDER BY nombreGerente");
-		return $query->result_array();
-	}
+        $query = $this->db-> query("SELECT u.id_rol, u.estatus, u.id_usuario idGerente, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombreGerente 
+                                FROM usuarios u WHERE u.id_rol = 3 AND u.estatus = 1 ORDER BY nombreGerente");
+        return $query->result_array();
+    }
 
-	public function getCoordinador($gerent){
-		$query = $this->db->query("SELECT u.id_lider, u.id_rol, u.estatus, u.id_usuario idCoordinador, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombreCoordinador 
-                                FROM usuarios u WHERE u.id_rol = 9 AND u.estatus = 1 AND u.gerente_id IN ($gerent)
-								AND (u.rfc NOT LIKE '%TSTDD%' AND ISNULL(u.correo, '') NOT LIKE '%test_%' AND ISNULL(u.correo, '') NOT LIKE '%OOAM%' AND ISNULL(u.correo, '') NOT LIKE '%CASA%')
+    public function getCoordinador($gerent){
+        $query = $this->db->query("SELECT u.id_lider, u.id_rol, u.estatus, u.id_usuario idCoordinador, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombreCoordinador 
+                                FROM usuarios u WHERE u.id_rol = 9 AND u.estatus = 1 AND u.id_lider IN (".$gerent.")
                                 UNION ALL
                                 SELECT u.id_lider, u.id_rol, u.estatus, u.id_usuario idCoordinador, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombreCoordinador 
-                                FROM usuarios u WHERE u.id_rol = 3 AND u.estatus = 1 AND u.id_usuario IN ($gerent) 
-								AND (u.rfc NOT LIKE '%TSTDD%' AND ISNULL(u.correo, '') NOT LIKE '%test_%' AND ISNULL(u.correo, '') NOT LIKE '%OOAM%' AND ISNULL(u.correo, '') NOT LIKE '%CASA%')
-								ORDER BY nombreCoordinador");
-		return $query->result_array();
-	}
+                                FROM usuarios u WHERE u.id_rol = 3 AND u.estatus = 1 AND u.id_usuario IN (".$gerent.") ORDER BY nombreCoordinador");
+        return $query->result_array();
+    }
 
-	public function getAsesores($coordinador){
-		$query = $this->db->query("SELECT u.id_lider, u.id_rol, u.estatus, u.id_usuario idAsesor, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombreAsesor 
-                                FROM usuarios u WHERE u.id_rol = 7 AND u.estatus = 1 AND u.id_lider IN ($coordinador)
-								AND (u.rfc NOT LIKE '%TSTDD%' AND ISNULL(u.correo, '') NOT LIKE '%test_%' AND ISNULL(u.correo, '') NOT LIKE '%OOAM%' AND ISNULL(u.correo, '') NOT LIKE '%CASA%')
+    public function getAsesores($coordinador){
+        $query = $this->db->query("SELECT u.id_lider, u.id_rol, u.estatus, u.id_usuario idAsesor, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombreAsesor 
+                                FROM usuarios u WHERE u.id_rol = 7 AND u.estatus = 1 AND u.id_lider IN (".$coordinador.")
                                 UNION SELECT u.id_lider, u.id_rol, u.estatus, u.id_usuario idAsesor, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombreAsesor 
-								FROM usuarios u WHERE u.id_rol = 9 AND u.estatus = 1 AND u.id_usuario IN ($coordinador)
-								AND (u.rfc NOT LIKE '%TSTDD%' AND ISNULL(u.correo, '') NOT LIKE '%test_%' AND ISNULL(u.correo, '') NOT LIKE '%OOAM%' AND ISNULL(u.correo, '') NOT LIKE '%CASA%')
+								FROM usuarios u WHERE u.id_rol = 9 AND u.estatus = 1 AND u.id_usuario IN (".$coordinador.")
 								UNION SELECT u.id_lider, u.id_rol, u.estatus, u.id_usuario idAsesor, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombreAsesor 
-								FROM usuarios u WHERE u.id_rol = 3 AND u.estatus = 1 AND u.id_usuario IN ($coordinador)
-								AND (u.rfc NOT LIKE '%TSTDD%' AND ISNULL(u.correo, '') NOT LIKE '%test_%' AND ISNULL(u.correo, '') NOT LIKE '%OOAM%' AND ISNULL(u.correo, '') NOT LIKE '%CASA%')
-								ORDER BY nombreAsesor");
-		return $query->result_array();
-	}
+								FROM usuarios u WHERE u.id_rol = 3 AND u.estatus = 1 AND u.id_usuario IN (".$coordinador.") ORDER BY nombreAsesor");
+        return $query->result_array();
+    }
 
 
 
@@ -82,7 +73,7 @@
 
     }
     public function getinfoCorrida($id_corrida) {
-        $query = $this->db->query("SELECT id_lote, nombre, edad, telefono, correo, id_asesor, id_gerente, plan_corrida, anio, dias_pagar_enganche, porcentaje_enganche, cantidad_enganche, 
+        $query = $this->db->query("SELECT id_lote, nombre, edad, telefono, correo, id_asesor, id_coordinador, id_gerente, plan_corrida, anio, dias_pagar_enganche, porcentaje_enganche, cantidad_enganche, 
                             meses_diferir, apartado, paquete, opcion_paquete, precio_m2_final, saldo, precio_final, fecha_limite, pago_enganche, msi_1p, msi_2p, msi_3p, primer_mensualidad, observaciones, 
                             finalMesesp1, finalMesesp2, finalMesesp3 FROM corridas_financieras WHERE id_corrida = ".$id_corrida);
         return $query->row();
@@ -153,6 +144,7 @@
 								   WHERE u.id_rol = 3 AND u.estatus = 1 AND u.id_usuario = ".$id_asesor."");
         return $query->row();
     }
+
 
     public function getPlanCorrida_mala($id_corrida) {
         return $this->db->query("SELECT id_cd, fecha, pago, capital, interes, total, saldo, id_corrida FROM corrida_dump WHERE id_corrida = ".$id_corrida."");
@@ -274,13 +266,13 @@
 		CASE WHEN cf.tipo_casa IS NULL THEN 0
 		ELSE cf.tipo_casa END 
 		as tipo_casa,
-		CASE WHEN cf.id_asesor IS NULL THEN cf.id_asesor
+		CASE WHEN cf.id_asesor IS NULL THEN 0
 		ELSE cf.id_asesor END 
 		as id_asesor, 
-		CASE WHEN cf.id_gerente IS NULL THEN cf.id_gerente
+		CASE WHEN cf.id_gerente IS NULL THEN 0
         ELSE cf.id_gerente END 
         as id_gerente,
-		CASE WHEN cf.id_coordinador IS NULL THEN cf.id_coordinador
+		CASE WHEN cf.id_coordinador IS NULL THEN 0
         ELSE cf.id_coordinador END 
         as id_coordinador,
         CASE WHEN cl.status IS NULL THEN 0
@@ -342,12 +334,12 @@
                         GROUP BY l.idLote, nombreLote, idStatusLote, cl.id_asesor;");
                 break;
             case '7': // ASESOR
-                $query = $this->db->query("SELECT l.idLote, nombreLote, idStatusLote, cf.id_asesor FROM  lotes l
+                $query = $this->db->query("SELECT l.idLote, nombreLote, idStatusLote FROM  lotes l
                         INNER JOIN corridas_financieras cf ON l.idLote = cf.id_lote
                         /*INNER JOIN clientes cl ON cl.id_cliente = l.idCliente*/
                         INNER JOIN usuarios u ON u.id_usuario = cf.id_asesor
                         WHERE l.idCondominio = ".$condominio." AND cf.created_by=".$this->session->userdata('id_usuario')."
-                        GROUP BY l.idLote, nombreLote, idStatusLote, cf.id_asesor;");
+                        GROUP BY l.idLote, nombreLote, idStatusLote;");
 
                 break;
             default: // SEE EVERYTHING
@@ -559,6 +551,41 @@
         return $query->result_array();
     }
 
+    function getDataAsesorToPR($id_asesor){
+        //SELECT u.id_usuario idAsesor, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombreAsesor, uu.id_usuario idCoordinador,
+        //CONCAT(uu.nombre, ' ', uu.apellido_paterno, ' ', uu.apellido_materno) nombreCoordinador, uuu.id_usuario idGerente, CONCAT(uuu.nombre, ' ', uuu.apellido_paterno, ' ', uuu.apellido_materno) nombreGerente
+        // FROM [usuarios] u INNER JOIN [usuarios] uu ON uu.id_usuario = u.id_lider
+        //INNER JOIN [usuarios] uuu ON uuu.id_usuario = uu.id_lider WHERE u.id_rol = 7 AND u.estatus = 1 AND u.id_usuario = ".$id_asesor." AND uuu.id_usuario
+            $query=$this->db->query("SELECT id_usuario as idAsesor,  
+            CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombreAsesor
+            FROM usuarios u WHERE id_usuario=".$id_asesor);
+            return $query->row();
+    }
+
+    function getDataCoordToPR($id_coordinador){
+//SELECT u.id_usuario idAsesor, uu.id_usuario idCoordinador,
+//		                           CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombreAsesor,
+//                                   CONCAT(uu.nombre, ' ', uu.apellido_paterno, ' ', uu.apellido_materno) nombreGerente
+//                                   FROM [usuarios] u
+//								   INNER JOIN [usuarios] uu ON uu.id_usuario = u.id_lider
+//								   WHERE u.id_rol = 9 AND u.estatus = 1 AND u.id_usuario = ".$id_asesor." AND uu.id_usuario =  ".$id_gerente.""
+        $query=$this->db->query("SELECT id_usuario as idCoordinador,  
+            CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombreCoordinador
+            FROM usuarios u WHERE id_usuario=".$id_coordinador);
+        return $query->row();
+    }
+    function getDataGerToPR($id_gerente){
+        //"SELECT u.id_usuario idAsesor, uu.id_usuario idCoordinador,
+        //		                           CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombreAsesor,
+        //                                   CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombreGerente
+        //                                   FROM [usuarios] u
+        //								   INNER JOIN [usuarios] uu ON uu.id_usuario = u.id_lider
+        //								   WHERE u.id_rol = 3 AND u.estatus = 1 AND u.id_usuario =
+        $query=$this->db->query("SELECT id_usuario as idGerente,  
+            CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombreGerente
+            FROM usuarios u WHERE id_usuario=".$id_gerente);
+        return $query->row();
+    }
 
 
 }
