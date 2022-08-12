@@ -2,107 +2,107 @@
 
 @font-face {
     font-family: Montserrat-Black;
-    src: url(../css/fonts/Montserrat/Montserrat-Black.ttf);
+    src: url(../fonts/Montserrat/Montserrat-Black.ttf);
 }
 
 @font-face {
     font-family: Montserrat-BlackItalic;
-    src: url(../css/fonts/Montserrat/Montserrat-BlackItalic.ttf);
+    src: url(../fonts/Montserrat/Montserrat-BlackItalic.ttf);
 }
 
 @font-face {
     font-family: Montserrat-Bold;
-    src: url(../css/fonts/Montserrat/Montserrat-Bold.ttf);
+    src: url(../fonts/Montserrat/Montserrat-Bold.ttf);
 }
 
 @font-face {
     font-family: Montserrat-BoldItalic;
-    src: url(../css/fonts/Montserrat/Montserrat-BoldItalic.ttf);
+    src: url(../fonts/Montserrat/Montserrat-BoldItalic.ttf);
 }
 
 @font-face {
     font-family: Montserrat-ExtraBold;
-    src: url(../css/fonts/Montserrat/Montserrat-ExtraBold.ttf);
+    src: url(../fonts/Montserrat/Montserrat-ExtraBold.ttf);
 }
 
 @font-face {
     font-family: Montserrat-ExtraBoldItalic;
-    src: url(../css/fonts/Montserrat/Montserrat-ExtraBoldItalic.ttf);
+    src: url(../fonts/Montserrat/Montserrat-ExtraBoldItalic.ttf);
 }
 
 @font-face {
     font-family: Montserrat-ExtraLight;
-    src: url(../css/fonts/Montserrat/Montserrat-ExtraLight.ttf);
+    src: url(../fonts/Montserrat/Montserrat-ExtraLight.ttf);
 }
 
 @font-face {
     font-family: Montserrat-ExtraLightItalic;
-    src: url(../css/fonts/Montserrat/Montserrat-ExtraLightItalic.ttf);
+    src: url(../fonts/Montserrat/Montserrat-ExtraLightItalic.ttf);
 }
 
 @font-face {
     font-family: Montserrat-Italic;
-    src: url(../css/fonts/Montserrat/Montserrat-Italic.ttf);
+    src: url(../fonts/Montserrat/Montserrat-Italic.ttf);
 }
 
 @font-face {
     font-family: Montserrat-Light;
-    src: url(../css/fonts/Montserrat/Montserrat-Light.ttf);
+    src: url(../fonts/Montserrat/Montserrat-Light.ttf);
 }
 
 @font-face {
     font-family: Montserrat-LightItalic;
-    src: url(../css/fonts/Montserrat/Montserrat-LightItalic.ttf);
+    src: url(../fonts/Montserrat/Montserrat-LightItalic.ttf);
 }
 
 @font-face {
     font-family: Montserrat-Medium;
-    src: url(../css/fonts/Montserrat/Montserrat-Medium.ttf);
+    src: url(../fonts/Montserrat/Montserrat-Medium.ttf);
 }
 
 @font-face {
     font-family: Montserrat-MediumItalic;
-    src: url(../css/fonts/Montserrat/Montserrat-MediumItalic.ttf);
+    src: url(../fonts/Montserrat/Montserrat-MediumItalic.ttf);
 }
 
 @font-face {
     font-family: Montserrat-Regular;
-    src: url(../css/fonts/Montserrat/Montserrat-Regular.ttf);
+    src: url(../fonts/Montserrat/Montserrat-Regular.ttf);
 }
 
 @font-face {
     font-family: Montserrat-SemiBold;
-    src: url(../css/fonts/Montserrat/Montserrat-SemiBold.ttf);
+    src: url(../fonts/Montserrat/Montserrat-SemiBold.ttf);
 }
 
 @font-face {
     font-family: Montserrat-SemiBoldItalic;
-    src: url(../css/fonts/Montserrat/Montserrat-SemiBoldItalic.ttf);
+    src: url(../fonts/Montserrat/Montserrat-SemiBoldItalic.ttf);
 }
 
 @font-face {
     font-family: Montserrat-Thin;
-    src: url(../css/fonts/Montserrat/Montserrat-Thin.ttf);
+    src: url(../fonts/Montserrat/Montserrat-Thin.ttf);
 }
 
 @font-face {
     font-family: Montserrat-ThinItalic;
-    src: url(../css/fonts/Montserrat/Montserrat-ThinItalic.ttf);
+    src: url(../fonts/Montserrat/Montserrat-ThinItalic.ttf);
 }
 
 @font-face {
     font-family: Exo-ExtraBold;
-    src: url(../css/fonts/Montserrat/Exo-ExtraBold.ttf);
+    src: url(../fonts/Montserrat/Exo-ExtraBold.ttf);
 }
 
 @font-face {
     font-family: Bahnschrift;
-    src: url(../css/fonts/Montserrat/Bahnschrift.TTF);
+    src: url(../fonts/Montserrat/Bahnschrift.TTF);
 }
 
 @font-face {
     font-family: JMHTypewriter;
-    src: url(../css/fonts/Montserrat/JMHTypewriter.ttf);
+    src: url(../fonts/Montserrat/JMHTypewriter.ttf);
 }
 /* END import fonts */
 
@@ -130,19 +130,17 @@ $montserratThinItalic      : 'Montserrat-ThinItalic';
 
 
 .boxHome{
-//    background: linear-gradient((15deg, #103f75, #103e72, #0f3c70, #0f3b6d, #0f396a, #0e3868, #0e3765, #0e3562, #0e3460, #0d335d, #0d315b, #0d3058),);
-//    background-image: linear-gradient(RGB(16, 63, 117 / 8%), RGB(16, 62, 114 / 85%)), url(https://maderascrm.gphsis.com/assets/img/img_4.jpeg);
-background-image: linear-gradient(RGB(0 0 0/80%),RGB(0 0 0/80%)),url(https://maderascrm.gphsis.com/assets/img/img_4.jpeg);
+    background-image: linear-gradient(RGB(0 0 0/80%),RGB(0 0 0/80%)),url(https://maderascrm.gphsis.com/dist/img/img_4.jpeg);
     background-position: center;
     background-size: cover;
     background-repeat: no-repeat;
     display: flex;
     justify-content: center;
     align-items: center;
-   color: $white;
-   h2{
-    font-family: $montserratExtraLight ;
-   }
+    color: $white;
+    h2{
+        font-family: $montserratExtraLight ;
+    }
    .enfasis{
        color: $goldMaderas;
        font-weight: 700;

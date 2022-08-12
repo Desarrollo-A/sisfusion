@@ -18,25 +18,25 @@
     <!--     Fonts and icons     -->
     <link href="<?=base_url()?>dist/css/font-awesome.css" rel="stylesheet" />
     <link href="<?=base_url()?>dist/css/google-roboto-300-700.css" rel="stylesheet" />
-    <link href="<?= base_url() ?>dist/css/maintenance.css" rel="stylesheet"/>
+    <link href="<?= base_url() ?>dist/css/unauthorized.css" rel="stylesheet"/>
 </head>
-
 <body>
-    <div class="container vh-100 w-100 p-0">
-        <div class="boxHome h-100 d-flex justify-center align-center">
-            <div class="center text-center">
-                <div class="box-img d-flex justify-center">
-                    <img class="w-80" src="<?= base_url() ?>static/images/logo.svg">
-                </div>
-                <div class="title d-flex justify-center">
-                    <h2>ESTAMOS EN</h2>
-                    <h2 class="enfasis">&nbsp; MANTENIMIENTO</h2>
-                </div>
-                <p class="m-0">Por el momento se están realizando actualizaciones en el sistema, agradecemos tu comprensión.</p>
-                <p class="m-0">Estamos trabajando para mejorar.</p>
-            </div>
-        </div>
-    </div>
+	<div class="wrapper">
+		<div class="container vh-100 w-100 p-0">
+			<div class="boxUnauthorized h-100 d-flex justify-center align-center">
+				<div class="center text-center">
+					<div class="box-img d-flex justify-center mb-5">
+						<img class="w-100" src="<?= base_url() ?>static/images/logo.svg">
+					</div>
+					<div class="title d-flex justify-center">
+						<h2 class="enfasis">&nbsp;ADVERTENCIA</h2>
+					</div>
+					<h4 class="m-0">No tiene los permisos para acceder a este apartado.</h4>
+				</div>
+			</div>
+		</div>
+	</div>
+	</div><!--main-panel close-->
 </body>
 
 </html>

@@ -301,7 +301,7 @@ class Usuarios extends CI_Controller
                 $id_lider = 0;
                 $id_gerente=0;
                 $id_subdirector=$_POST['leader']; //$getLider[0]['id_subdirector'];
-                $id_regional=$getLider[0]['id_regional'];
+                $id_regional=$getLider[0]['id_lider'];
             }
 
             $data = array(
@@ -325,8 +325,8 @@ class Usuarios extends CI_Controller
                 "regional_id" => $id_regional,
                 "talla" => empty($_POST['talla']) ? 0 : $_POST['talla'],
                 "sexo" => !empty($_POST['sexo']) ? $_POST['sexo'] : 'S',
-                "tiene_hijos" => !empty($_POST['hijos']) ? $_POST['hijos'] : 0 ,
-                "hijos_12" => !empty($_POST['noHijos']) ? $_POST['noHijos'] : 0    
+                "tiene_hijos" => !empty($_POST['hijos']) ? $_POST['hijos'] : "NO" ,
+                "hijos_12" => !empty($_POST['noHijos']) ? $_POST['noHijos'] : 0   
                );
         }
         $response = $this->Usuarios_modelo->updateUser($data, $this->input->post("id_usuario"));

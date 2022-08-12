@@ -137,18 +137,18 @@
                     line-height: 1.5!important;
                     
                 }
-                #beginDate, #idLote {
-                    background-color: $platinum;
-                    border-radius: 27px 0 0 27px;
-                    background-image: initial;
-                    text-align: center;
+                .beginDate, #beginDate, #idLote {
+                    background-color: $platinum!important;
+                    border-radius: 27px 0 0 27px!important;
+                    background-image: initial!important;
+                    text-align: center!important;
                 }
                 
-                #endDate {
-                    background-color: $platinum;
-                    border-radius: 0;
-                    background-image: initial;
-                    text-align: center;
+                .endDate, #endDate {
+                    background-color: $platinum!important;
+                    border-radius: 0!important;
+                    background-image: initial!important;
+                    text-align: center!important;
                 }
                 .select-gral button{
                     border-radius: 27px;
@@ -258,7 +258,6 @@
         -webkit-box-shadow: none;
     }
 }
-.table-responsive{
     .table-striped{
         border: none;
         text-align: center;
@@ -371,5 +370,3 @@
             margin: 0 5px;
         }
     }
-}
-  

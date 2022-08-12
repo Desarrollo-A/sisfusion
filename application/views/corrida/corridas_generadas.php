@@ -402,7 +402,7 @@
                                 return data.nombreCliente;
                             },
                         },
-                        {data: 'modificado'},
+                        {data: 'creacion_corrida'},
                         /*{data: 'ubic'},*/
                         {
                             data: null,

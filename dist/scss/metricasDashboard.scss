@@ -23,24 +23,6 @@
                     height: 100%;
                     @media #{$smartphone}{ font-size: 12px!important; }
                 }
-                // .form-group{
-                //     border-radius: 27px;
-                //     background-color: $platinum;
-                //     .datepicker{
-                //         background-image: none;
-                //         height: 100%;
-                //         padding: 0;
-                //         z-index: 9999;
-                //     }
-                //     .btn-search{
-                //         display: flex;
-                //         align-items: center;
-                //         height: 100%;
-                //         border: none;
-                //         background-color: transparent;
-                //         z-index: 9999;
-                //     }
-                // }
                 .btn-charts{
                     display: flex;
                     justify-content: center;

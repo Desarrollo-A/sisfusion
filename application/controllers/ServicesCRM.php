@@ -106,7 +106,7 @@ class ServicesCRM extends CI_Controller
                     "regional_id" => $id_regional,
                     "talla" => "0",
                     "sexo" => "S",
-                    "tiene_hijos" => 0,
+                    "tiene_hijos" => "NO",
                     "hijos_12" => "0",
                     "fecha_reingreso" => NULL,
                     "fecha_baja" => NULL 

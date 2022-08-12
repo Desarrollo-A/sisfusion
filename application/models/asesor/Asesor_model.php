@@ -1785,14 +1785,14 @@ class Asesor_model extends CI_Model
 
 
     function getLineOfACG($id_lote){
-        $query = $this->db->query("SELECT CONCAT(asesor.nombre, ' ', asesor.apellido_paterno, ' ', asesor.apellido_materno) as asesor, asesor.id_usuario as id_asesor,
-        CONCAT(coordinador.nombre,' ', coordinador.apellido_paterno, ' ', coordinador.apellido_materno) as coordinador, coordinador.id_usuario as id_coordinador,
-        CONCAT(gerente.nombre, ' ', gerente.apellido_paterno, ' ', gerente.apellido_materno) as gerente, gerente.id_usuario as id_gerente
+        $query = $this->db->query("SELECT CONCAT(asesor.nombre, ' ', asesor.apellido_paterno, ' ', asesor.apellido_materno) as asesor, asesor.id_usuario as id_asesor, asesor.id_rol as rol_asesor,
+        CONCAT(coordinador.nombre,' ', coordinador.apellido_paterno, ' ', coordinador.apellido_materno) as coordinador, coordinador.id_usuario as id_coordinador, coordinador.id_rol as rol_coord,
+        CONCAT(gerente.nombre, ' ', gerente.apellido_paterno, ' ', gerente.apellido_materno) as gerente, gerente.id_usuario as id_gerente, gerente.id_rol as rol_gerente
         FROM lotes l 
         INNER JOIN clientes cl ON cl.id_cliente=l.idCliente 
         LEFT JOIN usuarios asesor ON asesor.id_usuario=cl.id_asesor
-        LEFT JOIN usuarios coordinador ON coordinador.id_usuario=cl.id_coordinador
-        LEFT JOIN usuarios gerente ON gerente.id_usuario=cl.id_gerente
+        LEFT JOIN usuarios coordinador ON coordinador.id_usuario=asesor.id_lider
+        LEFT JOIN usuarios gerente ON gerente.id_usuario=coordinador.id_lider
         WHERE l.idLote=".$id_lote);
         return $query->result_array();
     }

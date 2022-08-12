@@ -1713,9 +1713,7 @@ class Caja_outside extends CI_Controller
     }
 
 
-    public function changeEstatusLote()
-    {
-
+    public function changeEstatusLote(){
         $lote = json_decode(file_get_contents("php://input"));
 
         $idLote = $lote->idLote;
@@ -1724,8 +1722,6 @@ class Caja_outside extends CI_Controller
         $idAsesor2 = $lote->idAsesor2;
         $motivo_change_status = $lote->motivo_change_status;
         $usuario = $lote->id_usuario;
-
-
         $idInvolucrados = $lote->idInvolucrados;
 
 
@@ -1738,8 +1734,8 @@ class Caja_outside extends CI_Controller
             $arreglo["fecha_modst"] = date("Y-m-d H:i:s");
             $arreglo["userstatus"] = $usuario;
             $arreglo["usuario"] = $usuario;
+            $arreglo["observacionContratoUrgente"] = NULL;
             $arreglo["motivo_change_status"] = $motivo_change_status;
-
 
             $update = $this->caja_model_outside->editaEstatus($idLote, $arreglo);
 
@@ -1750,11 +1746,7 @@ class Caja_outside extends CI_Controller
                 $response['message'] = 'ERROR';
                 echo json_encode($response);
             }
-
-
         } else if ($idStatusLote == 8) {
-
-
             $arreglo = array();
             $arreglo["idStatusLote"] = $idStatusLote;
             $arreglo["idAsesor"] = $idAsesor;
@@ -1762,12 +1754,11 @@ class Caja_outside extends CI_Controller
             $arreglo["fecha_modst"] = date("Y-m-d H:i:s");
             $arreglo["userstatus"] = $usuario;
             $arreglo["usuario"] = $usuario;
+            $arreglo["observacionContratoUrgente"] = NULL;
             $arreglo["motivo_change_status"] = $motivo_change_status;
-
             $datos["lote"] = $this->caja_model_outside->infoBloqueos($idLote);
 
             $data = array();
-
             $data["idResidencial"] = $datos["lote"]->idResidencial;
             $data["idCondominio"] = $datos["lote"]->idCondominio;
             $data["idLote"] = $datos["lote"]->idLoteL;
@@ -1797,6 +1788,7 @@ class Caja_outside extends CI_Controller
             $arreglo["fecha_modst"] = date("Y-m-d H:i:s");
             $arreglo["userstatus"] = $usuario;
             $arreglo["usuario"] = $usuario;
+            $arreglo["observacionContratoUrgente"] = NULL;
             $arreglo["motivo_change_status"] = $motivo_change_status;
 
 
@@ -1819,6 +1811,7 @@ class Caja_outside extends CI_Controller
             $arreglo["fecha_modst"] = date("Y-m-d H:i:s");
             $arreglo["userstatus"] = $usuario;
             $arreglo["usuario"] = $usuario;
+            $arreglo["observacionContratoUrgente"] = NULL;
             $arreglo["motivo_change_status"] = $motivo_change_status;
 
 
