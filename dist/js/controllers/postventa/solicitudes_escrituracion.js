@@ -951,7 +951,7 @@ function fillTable(beginDate, endDate, estatus) {
                             break;
                         case 10:
                             exp = d.expediente;
-                            if (d.result == 1 && d.approvedPresupuesto == 1) {
+                            if (d.result == 1 && (d.approvedPresupuesto == 1 || d.pertenece ==2)) {
                                 exp = 1;
                             }
                             newBtn += `<button id="trees${d.idSolicitud}" data-idSolicitud=${d.idSolicitud} class="btn-data btn-details-grey details-control" data-permisos="1" data-id-prospecto="" data-toggle="tooltip" data-placement="top" title="Desglose documentos"><i class="fas fa-chevron-down"></i></button>`;
