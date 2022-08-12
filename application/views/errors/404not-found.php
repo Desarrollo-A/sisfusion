@@ -1,11 +1,11 @@
 <link href="<?= base_url() ?>dist/css/notFound.css" rel="stylesheet"/>
-<body>
+<body class="m-0">
 	<div class="wrapper">
 		<div class="container vh-100 w-100 p-0">
 			<div class="boxContent h-100 d-flex justify-center align-center">
 				<div class="center text-center">
 					<div class="box-img d-flex justify-center">
-						<img class="w-100" src="../../static/images/logo.svg">
+						<img class="w-100" src="<?= base_url() ?>static/images/logo.svg">
 					</div>
 					<div class="title d-flex justify-center">
 						<h2>ERROR</h2>

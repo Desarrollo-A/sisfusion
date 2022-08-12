@@ -1,5 +1,5 @@
 <?php
-//    require_once 'static/autoload.php';
+    require_once 'static/autoload.php';
     use PhpOffice\PhpSpreadsheet\Spreadsheet;
     use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
@@ -94,12 +94,25 @@ class Corrida extends CI_Controller {
 	public function editar_ds(){
 
 		$objDatos = json_decode(file_get_contents("php://input"));
-		
+//        echo '$objDatos';
+//        print_r($objDatos);
+//        exit;
+
+
 		$idLote = (int)$objDatos->id_lote;
 		$id_asesor = (int)$objDatos->asesor;
 		$id_gerente = (int)$objDatos->gerente;
+		$id_coordinador = (int)$objDatos->coordinador;
 		$cantidad_enganche = (int)$objDatos->cantidad_enganche;
 		$paquete = (int)$objDatos->paquete;
+
+//		echo 'Asesor';
+//		print_r($id_asesor);
+//		echo '<br>Coordinador<br>';
+//        print_r($id_coordinador);
+//        echo '<br>Gerente<br>';
+//        print_r($id_gerente);
+//        exit;
 
 
 		$arreglo =array();
@@ -109,6 +122,7 @@ class Corrida extends CI_Controller {
 		$arreglo["telefono"]= $objDatos->telefono;
 		$arreglo["correo"]= $objDatos->correo;
 		$arreglo["id_asesor"]= $id_asesor;
+		$arreglo["id_coordinador"] = $id_coordinador;
 		$arreglo["id_gerente"]= $id_gerente;
 		$arreglo["plan_corrida"]= $objDatos->plan;
 		$arreglo["anio"]= $objDatos->anio;
@@ -135,15 +149,24 @@ class Corrida extends CI_Controller {
         $arreglo["corrida_dump"]= json_encode($objDatos->corrida_dump);
         $arreglo["tipo_casa"]= $objDatos->tipo_casa;
         $arreglo["id_cliente"]= $objDatos->id_cliente;
+        $arreglo["created_by"]= $this->session->userdata('id_usuario');
 
-        /*print_r($arreglo);
+        /*
+        echo 'asesor:<br>';
+        print_r($id_asesor);
+        echo '<br>coordinador:<br>';
+        print_r($id_coordinador);
+        echo '<br>gerente:<br>';
+        print_r($id_gerente);
+        echo '<br>arreglo update:<br>';
+        print_r($arreglo);
         exit;*/
-
         $array_allPackages = json_decode($objDatos->allPackages);
         $arrayTocxp = array();
 
 
         $arrayDescApply = ($objDatos->descApply == null || $objDatos->descApply == 'undefined') ? array(): $objDatos->descApply;
+
         if(count($arrayDescApply)>0){
             foreach ($array_allPackages as $key => $value) { //recorre todos los paquetes
                 $arrayTocxp[$key]['id_paquete'] = $value->id_paquete;
@@ -172,14 +195,17 @@ class Corrida extends CI_Controller {
             }
 
 
-            /*echo '<br><br>';
-            print_r(json_encode($arrayTocxp));*/
+
 
         }
 
 
+        /*echo '<br><br>';
+        print_r(json_encode($arrayTocxp));
+        exit;*/
 
-		
+
+
 		$response = $this->Corrida_model->insertCf($arreglo);
 
         $data_tocxl = array(
@@ -191,7 +217,7 @@ class Corrida extends CI_Controller {
             'modificado_por' => 1,
             'id_corrida' => $response[0]['id_corrida']
         );
-
+        #console.log();
 		if($response) {
 			$this->Corrida_model->insertPreciosAll($objDatos->allDescuentos, $idLote, $response[0]['id_corrida']);
 			$response['message'] = 'OK';
@@ -199,12 +225,9 @@ class Corrida extends CI_Controller {
 			echo json_encode($response);
 
 		}else {
-
 			$response['message'] = 'ERROR';
 			echo json_encode($response);
 		}
-
-
 	}
 
 
@@ -533,21 +556,53 @@ class Corrida extends CI_Controller {
 		$informacion_corrida = $this->Corrida_model->getinfoCorrida($this->uri->segment(3));
 		$informacion_loteCorrida = $this->Corrida_model->getinfoLoteCorrida($informacion_corrida->id_lote);
 		$informacion_descCorrida = $this->Corrida_model->getinfoDescLoteCorrida($informacion_corrida->id_lote, $this->uri->segment(3));
-		
-		$getRol = $this->Corrida_model->getRol($informacion_corrida->id_asesor);
 
-		
+		/*$getRol = $this->Corrida_model->getRol($informacion_corrida->id_asesor);
+
+
 			if($getRol->id_rol == 7) { // IS ASESOR
 				$informacion_vendedor = $this->Corrida_model->getAsesorCorrida($informacion_corrida->id_asesor, $informacion_corrida->id_gerente);
 			} else if($getRol->id_rol == 9) { // IS COORDINADOR
 				$informacion_vendedor = $this->Corrida_model->getCoordCorrida($informacion_corrida->id_asesor, $informacion_corrida->id_gerente);
 			} else { // IS GERENTE
 				$informacion_vendedor = $this->Corrida_model->getGerenteCorrida($informacion_corrida->id_asesor, $informacion_corrida->id_gerente);
-			}
+			}*/
 
 		$informacion_plan = $this->Corrida_model->getPlanCorrida($this->uri->segment(3));
 		$informacion_diferidos = array_slice($informacion_plan, 0, $informacion_corrida->meses_diferir);
 
+        if($informacion_corrida->id_asesor!=0){
+            $data_asesor = $this->Corrida_model->getDataAsesorToPR($informacion_corrida->id_asesor);
+        }
+        if($informacion_corrida->id_coordinador!=0){
+            $data_coord = $this->Corrida_model->getDataCoordToPR($informacion_corrida->id_coordinador);
+        }
+        if($informacion_corrida->id_gerente!=0){
+            $data_gerente = $this->Corrida_model->getDataGerToPR($informacion_corrida->id_gerente);
+        }
+//        echo 'asesor:<br>';
+//        print_r($data_asesor);
+//        echo '<br>';
+//        echo ' coordinador:<br>';
+//        print_r($data_coord);
+//        echo '<br>';
+//        echo 'gerente:<br>';
+//        print_r($data_gerente);
+//        echo '<br>';
+        $informacion_vendedor = array(
+            "idAsesor" => ($data_asesor->idAsesor=="")?'NA':$data_asesor->idAsesor,
+            "nombreAsesor" => ($data_asesor->nombreAsesor=="")?'NA':$data_asesor->nombreAsesor,
+            "idCoordinador" => ($data_coord->idCoordinador=="")?'NA':$data_coord->idCoordinador,
+            "nombreCoordinador" => ($data_coord->nombreCoordinador=="")?'NA':$data_coord->nombreCoordinador,
+            "idGerente" => ($data_gerente->idGerente=="")?'NA':$data_gerente->idGerente,
+            "nombreGerente" => ($data_gerente->nombreGerente=="")?'NA':$data_gerente->nombreGerente
+        );
+        $informacion_vendedor = (object) $informacion_vendedor;
+
+
+
+//        print_r($informacion_vendedor);
+//        exit;
 
 
 		$pdf = new TCPDF('P', 'mm', 'LETTER', 'UTF-8', false);
@@ -1221,62 +1276,89 @@ $pdf->Output(utf8_decode($namePDF), 'I');
 
 	$pdf->Output(utf8_decode($namePDF), 'I');
 }
-	public function caratulacf(){
-		setlocale(LC_MONETARY, 'en_US.UTF-8');
+    public function caratulacf(){
+        setlocale(LC_MONETARY, 'en_US.UTF-8');
 
-		$informacion_corrida = $this->Corrida_model->getinfoCorrida($this->uri->segment(3));
-		/*print_r($informacion_corrida);
-		exit;*/
-		$informacion_loteCorrida = $this->Corrida_model->getinfoLoteCorrida($informacion_corrida->id_lote);
-		$informacion_descCorrida = $this->Corrida_model->getinfoDescLoteCorrida($informacion_corrida->id_lote, $this->uri->segment(3));
+        $informacion_corrida = $this->Corrida_model->getinfoCorrida($this->uri->segment(3));
+        /*print_r($informacion_corrida);
+        exit;*/
+        $informacion_loteCorrida = $this->Corrida_model->getinfoLoteCorrida($informacion_corrida->id_lote);
+        $informacion_descCorrida = $this->Corrida_model->getinfoDescLoteCorrida($informacion_corrida->id_lote, $this->uri->segment(3));
 
-		$getRol = $this->Corrida_model->getRol($informacion_corrida->id_asesor);
+        /*$getRol = $this->Corrida_model->getRol($informacion_corrida->id_asesor);
 
-		
-			if($getRol->id_rol == 7){ // IS ASESOR
-				$informacion_vendedor = $this->Corrida_model->getAsesorCorrida($informacion_corrida->id_asesor, $informacion_corrida->id_gerente);
-			} else if($getRol->id_rol == 9){ // IS COORDINADOR
-				$informacion_vendedor = $this->Corrida_model->getCoordCorrida($informacion_corrida->id_asesor, $informacion_corrida->id_gerente);
-			} else { // IS GERENTE
-				$informacion_vendedor = $this->Corrida_model->getGerenteCorrida($informacion_corrida->id_asesor, $informacion_corrida->id_gerente);
-			}	
-		
-		
-		$informacion_plan = $this->Corrida_model->getPlanCorrida($this->uri->segment(3));
+
+        if ($getRol->id_rol == 7) { // IS ASESOR
+            $informacion_vendedor = $this->Corrida_model->getAsesorCorrida($informacion_corrida->id_asesor, $informacion_corrida->id_gerente);
+        } else if ($getRol->id_rol == 9) { // IS COORDINADOR
+            $informacion_vendedor = $this->Corrida_model->getCoordCorrida($informacion_corrida->id_asesor, $informacion_corrida->id_gerente);
+        } else { // IS GERENTE
+            $informacion_vendedor = $this->Corrida_model->getGerenteCorrida($informacion_corrida->id_asesor, $informacion_corrida->id_gerente);
+        }*/
+
+        if($informacion_corrida->id_asesor!=0){
+            $data_asesor = $this->Corrida_model->getDataAsesorToPR($informacion_corrida->id_asesor);
+        }
+        if($informacion_corrida->id_coordinador!=0){
+            $data_coord = $this->Corrida_model->getDataCoordToPR($informacion_corrida->id_coordinador);
+        }
+        if($informacion_corrida->id_gerente!=0){
+            $data_gerente = $this->Corrida_model->getDataGerToPR($informacion_corrida->id_gerente);
+        }
+//        echo 'asesor:<br>';
+//        print_r($data_asesor);
+//        echo '<br>';
+//        echo ' coordinador:<br>';
+//        print_r($data_coord);
+//        echo '<br>';
+//        echo 'gerente:<br>';
+//        print_r($data_gerente);
+//        echo '<br>';
+        $informacion_vendedor = array(
+            "idAsesor" => ($data_asesor->idAsesor=="")?'NA':$data_asesor->idAsesor,
+            "nombreAsesor" => ($data_asesor->nombreAsesor=="")?'NA':$data_asesor->nombreAsesor,
+            "idCoordinador" => ($data_coord->idCoordinador=="")?'NA':$data_coord->idCoordinador,
+            "nombreCoordinador" => ($data_coord->nombreCoordinador=="")?'NA':$data_coord->nombreCoordinador,
+            "idGerente" => ($data_gerente->idGerente=="")?'NA':$data_gerente->idGerente,
+            "nombreGerente" => ($data_gerente->nombreGerente=="")?'NA':$data_gerente->nombreGerente
+        );
+        $informacion_vendedor = (object) $informacion_vendedor;
+
+        $informacion_plan = $this->Corrida_model->getPlanCorrida($this->uri->segment(3));
         $informacion_plan = json_decode($informacion_plan[0]['corrida_dump']);
 
-		$informacion_diferidos = array_slice($informacion_plan, 0, $informacion_corrida->meses_diferir);
+        $informacion_diferidos = array_slice($informacion_plan, 0, $informacion_corrida->meses_diferir);
 
 
 
 
-		$pdf = new TCPDF('P', 'mm', 'LETTER', 'UTF-8', false);
+
+        $pdf = new TCPDF('P', 'mm', 'LETTER', 'UTF-8', false);
 
 
-$pdf->SetCreator(PDF_CREATOR);
-$pdf->SetAuthor('Ciudad Maderas');
-$pdf->SetTitle('Corrida Financiera');
-$pdf->SetSubject('Corrida Financiera');
-$pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
-$pdf->SetAutoPageBreak(TRUE, 0);
-$pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
-$pdf->setPrintHeader(false);
-$pdf->setPrintFooter(false);
-$pdf->setFontSubsetting(true);
-$pdf->SetFont('Helvetica', '', 10, '', true);
+        $pdf->SetCreator(PDF_CREATOR);
+        $pdf->SetAuthor('Ciudad Maderas');
+        $pdf->SetTitle('Corrida Financiera');
+        $pdf->SetSubject('Corrida Financiera');
+        $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
+        $pdf->SetAutoPageBreak(TRUE, 0);
+        $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
+        $pdf->setPrintHeader(false);
+        $pdf->setPrintFooter(false);
+        $pdf->setFontSubsetting(true);
+        $pdf->SetFont('Helvetica', '', 10, '', true);
 // $pdf->SetMargins(15, 20, 15, true);
-$pdf->AddPage('P', 'LEGAL');
-$pdf->SetFont('Helvetica', '', 5, '', true);
-$pdf->SetFooterMargin(0);
-$bMargin = $pdf->getBreakMargin();
-$auto_page_break = $pdf->getAutoPageBreak();
-$pdf->Image('static/images/ar4c.png', 120, 0, 300, 0, 'PNG', '', '', false, 150, '', false, false, 0, false, false, false);
-$pdf->setPageMark();
-$pdf->writeHTML(date("d-m-Y H:i:s"));
+        $pdf->AddPage('P', 'LEGAL');
+        $pdf->SetFont('Helvetica', '', 5, '', true);
+        $pdf->SetFooterMargin(0);
+        $bMargin = $pdf->getBreakMargin();
+        $auto_page_break = $pdf->getAutoPageBreak();
+        $pdf->Image('static/images/ar4c.png', 120, 0, 300, 0, 'PNG', '', '', false, 150, '', false, false, 0, false, false, false);
+        $pdf->setPageMark();
+        $pdf->writeHTML(date("d-m-Y H:i:s"));
 
 
-
-$html = '
+        $html = '
 
 <style>
 
@@ -1320,16 +1402,16 @@ legend {
                       <table width="100%" style="height: 45px; border: 1px solid #ddd; text-align: left;" width="690">
 							<tr>
 								<td style="font-size: 1.4em;">
-                             	<b>Nombre:</b> '.$informacion_corrida->nombre.' 
+                             	<b>Nombre:</b> ' . $informacion_corrida->nombre . ' 
 								</td>
 								<td style="font-size: 1.4em;">
-								<b>Edad:</b> '.$informacion_corrida->edad.'
+								<b>Edad:</b> ' . $informacion_corrida->edad . '
 								</td> 
 								<td style="font-size: 1.4em;">
-								<b>Teléfono:</b> '.$informacion_corrida->telefono.'
+								<b>Teléfono:</b> ' . $informacion_corrida->telefono . '
 								</td>
 								<td style="font-size: 1.4em;">
-								<b>Email:</b> '.$informacion_corrida->correo.'
+								<b>Email:</b> ' . $informacion_corrida->correo . '
 								</td>
 							</tr>
 						</table>
@@ -1343,10 +1425,10 @@ legend {
                       <table width="100%" style="height: 45px; border: 1px solid #ddd; text-align: left;" width="690">
 							<tr>
 								<td style="font-size: 1.4em;">
-								<b>Gerente:</b> '.$informacion_vendedor->nombreGerente.'
+								<b>Gerente:</b> ' . $informacion_vendedor->nombreGerente . '
 								</td>
 								<td style="font-size: 1.4em;">
-								<b>Asesor:</b> '.$informacion_vendedor->nombreAsesor.'
+								<b>Asesor:</b> ' . $informacion_vendedor->nombreAsesor . '
 								</td>			
 							</tr>
 					  </table>
@@ -1354,19 +1436,19 @@ legend {
                       <table width="100%" style="height: 45px; border: 1px solid #ddd; text-align: left;" width="690">
 							<tr>
 								<td style="font-size: 1.4em;">
-						    	<b>Proyecto:</b> '.$informacion_loteCorrida->nombreResidencial.'
+						    	<b>Proyecto:</b> ' . $informacion_loteCorrida->nombreResidencial . '
 								</td>
 								<td style="font-size: 1.4em;">
-								<b>Condominio:</b> '.$informacion_loteCorrida->nombreCondominio.'
+								<b>Condominio:</b> ' . $informacion_loteCorrida->nombreCondominio . '
 								</td> 
 								<td style="font-size: 1.4em;">
-								<b>Lote:</b> '.$informacion_loteCorrida->nombreLote.'
+								<b>Lote:</b> ' . $informacion_loteCorrida->nombreLote . '
 								</td>
 								<td style="font-size: 1.4em;">
-								<b>Plan:</b> '.$informacion_corrida->plan_corrida.'
+								<b>Plan:</b> ' . $informacion_corrida->plan_corrida . '
 								</td>
 								<td style="font-size: 1.4em;">
-								<b>Años:</b> '.$informacion_corrida->anio.'
+								<b>Años:</b> ' . $informacion_corrida->anio . '
 								</td>
 							</tr>							
 					  </table>
@@ -1374,39 +1456,39 @@ legend {
                       <table width="100%" style="height: 45px; border: 1px solid #ddd; text-align: left;" width="690">
 							<tr>
 								<td style="font-size: 1.4em;">
-								<b>Superficie:</b> '.$informacion_loteCorrida->sup.'m<sup>2</sup>
+								<b>Superficie:</b> ' . $informacion_loteCorrida->sup . 'm<sup>2</sup>
 								</td>
 								<td style="font-size: 1.4em;">
-								<b>Precio m2:</b> '.money_format('%(#10n',$informacion_loteCorrida->precio).' 
+								<b>Precio m2:</b> ' . money_format('%(#10n', $informacion_loteCorrida->precio) . ' 
 								</td> 
 								<td style="font-size: 1.4em;">
-								<b>Total:</b> '.money_format('%(#10n',$informacion_loteCorrida->total).'
+								<b>Total:</b> ' . money_format('%(#10n', $informacion_loteCorrida->total) . '
 								</td>
 								<td style="font-size: 1.4em;">
-								<b>Porcentaje:</b> '.$informacion_loteCorrida->porcentaje.'%
+								<b>Porcentaje:</b> ' . $informacion_loteCorrida->porcentaje . '%
 								</td>
 							
 								<td style="font-size: 1.4em;">
-								<b>Enganche:</b> '.money_format('%(#10n',$informacion_loteCorrida->enganche).'
+								<b>Enganche:</b> ' . money_format('%(#10n', $informacion_loteCorrida->enganche) . '
 								</td>
 							</tr>		
 					  </table>
                       <table width="100%" style="height: 45px; border: 1px solid #ddd; text-align: left;" width="690">
 						  <tr>		
 								<td style="font-size: 1.4em;">
-								<b>Días para pagar Enganche:</b> '.$informacion_corrida->dias_pagar_enganche.'
+								<b>Días para pagar Enganche:</b> ' . $informacion_corrida->dias_pagar_enganche . '
 						    	</td>
 								<td style="font-size: 1.4em;">
-								<b>Enganche (%):</b> '.$informacion_corrida->porcentaje_enganche.'%
+								<b>Enganche (%):</b> ' . $informacion_corrida->porcentaje_enganche . '%
 						    	</td>
 								<td style="font-size: 1.4em;">
-                        		<b>Enganche cantidad ($):</b> '.money_format('%(#10n',$informacion_corrida->cantidad_enganche).'
+                        		<b>Enganche cantidad ($):</b> ' . money_format('%(#10n', $informacion_corrida->cantidad_enganche) . '
 						    	</td>							
 								<td style="font-size: 1.4em;">
-								<b>Apartado ($):</b> '.money_format('%(#10n',$informacion_corrida->apartado).'
+								<b>Apartado ($):</b> ' . money_format('%(#10n', $informacion_corrida->apartado) . '
 						    	</td>
 								<td style="font-size: 1.4em;">
-								<b>Meses a diferir:</b> '.$informacion_corrida->meses_diferir.'
+								<b>Meses a diferir:</b> ' . $informacion_corrida->meses_diferir . '
 							    </td>
 						 </tr>		
 					  </table>
@@ -1433,46 +1515,45 @@ legend {
 					  </table>
 					  
                       <table width="100%" style="height: 45px; border: 1px solid #ddd;" width="690">';
-                      
-                          foreach ($informacion_descCorrida as $row){
-                              $html .='
+
+        foreach ($informacion_descCorrida as $row) {
+            $html .= '
                               <tr align="center">
-							  <td style="color:#27AE60; font-size: 1.4em;"><b>'; 
-							  
-							  if ($row['id_condicion'] == 1 || $row['id_condicion'] == 2){
-							  $html .='
-							   '.$row['porcentaje'].'%
+							  <td style="color:#27AE60; font-size: 1.4em;"><b>';
+
+            if ($row['id_condicion'] == 1 || $row['id_condicion'] == 2) {
+                $html .= '
+							   ' . $row['porcentaje'] . '%
                               ';
-							   }else if($row['id_condicion'] == 12){
-                                  $html .=' Bono descuento al m2 $'.$row['porcentaje'].'';
-                              }
+            } else if ($row['id_condicion'] == 12) {
+                $html .= ' Bono descuento al m2 $' . $row['porcentaje'] . '';
+            }
 
 
+            if ($row['id_condicion'] == 3 || $row['id_condicion'] == 4) {
+                $html .= ' ' . money_format('%(#10n', $row['porcentaje']) . ' ';
+            }
 
-                              if ($row['id_condicion'] == 3 || $row['id_condicion'] == 4){
-							  $html .=' '.money_format('%(#10n',$row['porcentaje']).' ';							 
-							  }
-							  
-							  if ($row['id_condicion'] == 6){
-							  $html .=' MENSUALIDAD JULIO';
-							  }
-							  
-							  if ($row['id_condicion'] == 7){
-							  $html .='Enganche diferido sin descontar MSI';
-							  }
-                              if ($row['id_condicion'] == 12){
-                                  $html .='Bono ('.money_format('%(#10n',$row['porcentaje']).') de descuento al m2';
-                              }
-							  
-							  
-							  $html .='</b></td>
-							  <td style="color:#2E86C1; font-size: 1.4em;"><b> '.money_format('%(#10n',$row['pm']).' </b></td>
-							  <td style="color:#2E86C1; font-size: 1.4em;"><b> '.money_format('%(#10n',$row['pt']).' </b></td>
-							  <td style="color:#27AE60; font-size: 1.4em;"><b> '.money_format('%(#10n',$row['ahorro']).' </b></td>
+            if ($row['id_condicion'] == 6) {
+                $html .= ' MENSUALIDAD JULIO';
+            }
+
+            if ($row['id_condicion'] == 7) {
+                $html .= 'Enganche diferido sin descontar MSI';
+            }
+            if ($row['id_condicion'] == 12) {
+                $html .= 'Bono (' . money_format('%(#10n', $row['porcentaje']) . ') de descuento al m2';
+            }
+
+
+            $html .= '</b></td>
+							  <td style="color:#2E86C1; font-size: 1.4em;"><b> ' . money_format('%(#10n', $row['pm']) . ' </b></td>
+							  <td style="color:#2E86C1; font-size: 1.4em;"><b> ' . money_format('%(#10n', $row['pt']) . ' </b></td>
+							  <td style="color:#27AE60; font-size: 1.4em;"><b> ' . money_format('%(#10n', $row['ahorro']) . ' </b></td>
                               </tr>';
-                          }
-                          
-                        $html .='</table>
+        }
+
+        $html .= '</table>
                         
                         <br>
                         <br>
@@ -1495,17 +1576,17 @@ legend {
 					  </table>
 
                       <table width="100%" style="height: 45px; border: 1px solid #ddd;" width="690">';
-                      
-                          foreach ($informacion_diferidos as $row){
-                              $html .='
+
+        foreach ($informacion_diferidos as $row) {
+            $html .= '
                               <tr align="center">
-							  <td style="font-size: 1.4em;">'.$row['fecha'].'</td>
-							  <td style="font-size: 1.4em;">'.$row['pago'].'</td>
-							  <td style="font-size: 1.4em;">'.money_format('%(#10n',$row['total']).'</td>
+							  <td style="font-size: 1.4em;">' . $row['fecha'] . '</td>
+							  <td style="font-size: 1.4em;">' . $row['pago'] . '</td>
+							  <td style="font-size: 1.4em;">' . money_format('%(#10n', $row['total']) . '</td>
                               </tr>';
-                          }
-                          
-                        $html .='</table>
+        }
+
+        $html .= '</table>
                         
                         <br>
                         <br>
@@ -1516,10 +1597,10 @@ legend {
 							<tr align="center">
 								<td>
 								<b style="font-size:10px">Saldo </b><br>
-								<label style="font-size:10px">'.money_format('%(#10n',$informacion_corrida->saldo).'</label>
+								<label style="font-size:10px">' . money_format('%(#10n', $informacion_corrida->saldo) . '</label>
 								<BR><BR>
 								<b style="font-size:15px">PRECIO FINAL</b><br>
-								<label style="font-size:15px">'.money_format('%(#10n',$informacion_corrida->precio_final).'</label><br>
+								<label style="font-size:15px">' . money_format('%(#10n', $informacion_corrida->precio_final) . '</label><br>
 								</td>
 							</tr>
 					  </table>
@@ -1538,19 +1619,19 @@ legend {
                       <table width="100%" style="height: 45px; border: 1px solid #ddd;" width="690">
 							<tr>
 								<td style="font-size: 1.4em;"><b>Días pago enganche</b></td>
-								<td style="font-size: 1.4em;">'.$informacion_corrida->dias_pagar_enganche.'</td>
+								<td style="font-size: 1.4em;">' . $informacion_corrida->dias_pagar_enganche . '</td>
 								<td style="font-size: 1.4em;"><b>Mensualidades SIN interés</b></td>
-								<td style="font-size: 1.4em;"> <b>'.$informacion_corrida->finalMesesp1.' </b> '.money_format('%(#10n',$informacion_corrida->msi_1p).'</td>
+								<td style="font-size: 1.4em;"> <b>' . $informacion_corrida->finalMesesp1 . ' </b> ' . money_format('%(#10n', $informacion_corrida->msi_1p) . '</td>
 								<td style="font-size: 1.4em;"><b>Primer mensualidad</b></td>
-								<td style="font-size: 1.4em;">'.$informacion_corrida->primer_mensualidad.'</td>
+								<td style="font-size: 1.4em;">' . $informacion_corrida->primer_mensualidad . '</td>
 							</tr>
 					  </table>
                       <table width="100%" style="height: 45px; border: 1px solid #ddd;" width="690">
 							<tr>
 								<td style="font-size: 1.4em;"><b>Fecha Límite</b></td>
-								<td style="font-size: 1.4em;">'.$informacion_corrida->fecha_limite.'</td>
+								<td style="font-size: 1.4em;">' . $informacion_corrida->fecha_limite . '</td>
 								<td style="font-size: 1.4em;"><b>Mensualidades con interés (1% S.S.I.) </b></td>
-								<td style="font-size: 1.4em;"> <b>'.$informacion_corrida->finalMesesp2.' </b> '.money_format('%(#10n',$informacion_corrida->msi_2p).'</td>
+								<td style="font-size: 1.4em;"> <b>' . $informacion_corrida->finalMesesp2 . ' </b> ' . money_format('%(#10n', $informacion_corrida->msi_2p) . '</td>
 								<td style="font-size: 1.4em;"></td>
 								<td style="font-size: 1.4em;"></td>
 								</tr>
@@ -1560,9 +1641,9 @@ legend {
 
 							<tr>
 								<td style="font-size: 1.4em;"><b>Pago Enganche</b></td>
-								<td style="font-size: 1.4em;">'.money_format('%(#10n',$informacion_corrida->pago_enganche).'<br></td>
+								<td style="font-size: 1.4em;">' . money_format('%(#10n', $informacion_corrida->pago_enganche) . '<br></td>
 								<td style="font-size: 1.4em;"><b>Mensualidades con interés (1.25% S.S.I.) </b></td>
-								<td style="font-size: 1.4em;"> <b>'.$informacion_corrida->finalMesesp3.' </b> '.money_format('%(#10n',$informacion_corrida->msi_3p).'</td>
+								<td style="font-size: 1.4em;"> <b>' . $informacion_corrida->finalMesesp3 . ' </b> ' . money_format('%(#10n', $informacion_corrida->msi_3p) . '</td>
 								<td style="font-size: 1.4em;"></td>
 								<td style="font-size: 1.4em;"></td>
 							</tr>
@@ -1589,11 +1670,11 @@ legend {
                         </tr>
 
                         <tr>
-                        <td style="font-size: 1.4em;">'.$informacion_loteCorrida->banco.'</td>
-                        <td style="font-size: 1.4em;">'.$informacion_loteCorrida->empresa.'</td>
-                        <td style="font-size: 1.4em;">'.$informacion_loteCorrida->cuenta.'</td>
-                        <td style="font-size: 1.4em;">'.$informacion_loteCorrida->clabe.'</td>
-                        <td style="font-size: 1.4em;">'.$informacion_loteCorrida->referencia.'</td>
+                        <td style="font-size: 1.4em;">' . $informacion_loteCorrida->banco . '</td>
+                        <td style="font-size: 1.4em;">' . $informacion_loteCorrida->empresa . '</td>
+                        <td style="font-size: 1.4em;">' . $informacion_loteCorrida->cuenta . '</td>
+                        <td style="font-size: 1.4em;">' . $informacion_loteCorrida->clabe . '</td>
+                        <td style="font-size: 1.4em;">' . $informacion_loteCorrida->referencia . '</td>
                         </tr>
                         
                         
@@ -1607,14 +1688,14 @@ legend {
                       <table width="100%" style="height: 45px; border: 1px solid #ddd;" width="690">
 							<tr>
 								<td style="font-size: 1.4em;"><b>Asesor</b></td>
-								<td style="font-size: 1.4em;">'.$informacion_vendedor->nombreAsesor.'</td>
+								<td style="font-size: 1.4em;">' . $informacion_vendedor->nombreAsesor . '</td>
 							</tr>
 						</table>
 
                       <table width="100%" style="height: 45px; border: 1px solid #ddd;" width="690">
 							<tr>
 								<td style="font-size: 1.4em;"><b>Observaciones</b></td>
-								<td style="font-size: 1.4em;">'.$informacion_corrida->observaciones.'</td>
+								<td style="font-size: 1.4em;">' . $informacion_corrida->observaciones . '</td>
 							</tr>
 						</table>
                       <table width="100%" style="height: 45px; border: 1px solid #ddd;" width="690">
@@ -1644,19 +1725,19 @@ legend {
 
                       <table width="100%" style="height: 45px; border: 1px solid #ddd;" width="690">';
 
-                          foreach ($informacion_plan as $row){
-                              $html .='
+        foreach ($informacion_plan as $row) {
+            $html .= '
                               <tr align="center">
-							  <td style="border:1px solid #ddd; font-size: 1.4em;">'.$row->fecha.'</td>
-							  <td style="border:1px solid #ddd; font-size: 1.4em;">'.$row->pago.'</td>
-							  <td style="border:1px solid #ddd; font-size: 1.4em;">'.money_format('%(#10n',$row->capital).'</td>
-							  <td style="border:1px solid #ddd; font-size: 1.4em;">'.money_format('%(#10n',$row->interes).'</td>
-							  <td style="border:1px solid #ddd; font-size: 1.4em;">'.money_format('%(#10n',$row->total).'</td>
-							  <td style="border:1px solid #ddd; font-size: 1.4em;">'.money_format('%(#10n',$row->saldo).'</td>
+							  <td style="border:1px solid #ddd; font-size: 1.4em;">' . $row->fecha . '</td>
+							  <td style="border:1px solid #ddd; font-size: 1.4em;">' . $row->pago . '</td>
+							  <td style="border:1px solid #ddd; font-size: 1.4em;">' . money_format('%(#10n', $row->capital) . '</td>
+							  <td style="border:1px solid #ddd; font-size: 1.4em;">' . money_format('%(#10n', $row->interes) . '</td>
+							  <td style="border:1px solid #ddd; font-size: 1.4em;">' . money_format('%(#10n', $row->total) . '</td>
+							  <td style="border:1px solid #ddd; font-size: 1.4em;">' . money_format('%(#10n', $row->saldo) . '</td>
                               </tr>';
-                          }
-                          
-                        $html .='</table>
+        }
+
+        $html .= '</table>
                         
                         <br>
                         <br>
@@ -1671,18 +1752,17 @@ legend {
 
 ';
 
-$pdf->writeHTMLCell(0, 0, $x = '', $y = '', $html, $border = 0, $ln = 1, $fill = 0, $reseth = true, $align = '', $autopadding = true);
+        $pdf->writeHTMLCell(0, 0, $x = '', $y = '', $html, $border = 0, $ln = 1, $fill = 0, $reseth = true, $align = '', $autopadding = true);
 
 
-$namePDF = utf8_decode('CORRIDA_FINANCIERA.pdf');
+        $namePDF = utf8_decode('CORRIDA_FINANCIERA.pdf');
+
+
+        $pdf->Output(utf8_decode($namePDF), 'I');
 
 
 
-$pdf->Output(utf8_decode($namePDF), 'I');
-
-
-
-}
+    }
 
 	/*
 	That it is an implementation of the function money_format for the
@@ -1855,6 +1935,17 @@ $pdf->Output(utf8_decode($namePDF), 'I');
 			echo json_encode(array());
 		}
 	}
+    function getCondominioDisponibleAMora() {
+
+        $objDatos = json_decode(file_get_contents("php://input"));
+
+        $condominio = $this->Corrida_model->getCondominioDisMora($objDatos->residencial);
+        if($condominio != null) {
+            echo json_encode($condominio);
+        } else {
+            echo json_encode(array());
+        }
+    }
 	 public function validateSession()
     {
         if($this->session->userdata('id_usuario')=="" || $this->session->userdata('id_rol')=="")
@@ -3208,5 +3299,361 @@ $pdf->Output(utf8_decode($namePDF), 'I');
 
     }
 
+    function getAllLotesY() {
+        $objDatos = json_decode(file_get_contents("php://input"));
+        $lotes = $this->Corrida_model->getAllLotesY($objDatos->condominio);
+        if($lotes != null) {
+            echo json_encode($lotes);
+        } else {
+            echo json_encode(array());
+        }
+    }
+    public function getinfoLoteDisponibleYL()
+    {
+        $objDatos = json_decode(file_get_contents("php://input"));
+        $data = $this->Corrida_model->getLotesInfoY($objDatos->lote);
+        if($data != null) {
+            echo json_encode($data);
+        } else {
+            echo json_encode(array());
+        }
+    }
+    function generateExcelMR($data_corrida){
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+
+//        print_r('printing...');
+        #imagen ciudad maderas
+        // Add a drawing to the worksheet
+        $drawing = new \PhpOffice\PhpSpreadsheet\Worksheet\Drawing();
+        $drawing->setName('Ciudad Maderas');
+        $drawing->setDescription('Ciudad Maderas');
+        $drawing->setPath(__DIR__.'/../../static/images/logo_ciudadmaderasAct.jpg');
+        $drawing->setHeight(100);
+        $drawing->setCoordinates('D1');
+        $drawing->setOffsetX(55);
+        $drawing->setOffsetY(20);
+        $drawing->setWorksheet($sheet);
+        $sheet->getRowDimension('1')->setRowHeight(100);
+        $sheet->setShowGridlines(true);
+
+        $range1 = 'C1';
+        $range2 = 'I1';
+        $sheet->mergeCells("$range1:$range2");
+        $sheet->getStyle('B:K')->getAlignment()->setHorizontal('center');
+        $sheet->getStyle('B:K')->getAlignment()->setVertical('center');
+        $sheet->getStyle("C1:I1")->getFont()->setSize(28);
+        $spreadsheet->getActiveSheet()->getStyle('C1')->getFont()->getColor()->setARGB('808080');
+
+        $i = 15;
+        #aqui empieza el rango de de las corridas normales
+        $range1 = 'C1';
+        $range2 = 'I1';
+        $sheet->mergeCells("$range1:$range2");
+        $sheet->getStyle('C:I')->getAlignment()->setHorizontal('center');
+        $sheet->getStyle('C:I')->getAlignment()->setHorizontal('center');
+        $sheet->getStyle("C1:I1")->getFont()->setSize(28);
+        $spreadsheet->getActiveSheet()->getStyle('C1')->getFont()->getColor()->setARGB('808080');
+
+        $sheet->setCellValue('C2', 'Cálculo de intereses moratorios');
+        $range12 = 'C2';
+        $range22 = 'I2';
+        $sheet->mergeCells("$range12:$range22");
+        $sheet->getStyle("C2:I2")->getFont()->setSize(26);
+        $sheet->getStyle('C2')->getFont()->getColor()->setARGB('FFFFFF');
+        $sheet->getStyle( 'C1:C2' )->getFont()->setName('Calibri');
+        $sheet->getStyle('C2')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('1F497D');
+
+
+
+        $sheet->setCellValue('D4', 'PROYECTO');
+        $sheet->setCellValue('E4', 'CONDOMINIO');
+        $sheet->setCellValue('F4', 'LOTE');
+        $sheet->setCellValue('G4', 'CLIENTE');
+        $sheet->setCellValue('H4', 'SALDO INSOLUTO');
+
+/*
+ *         $data = array(
+            'proyecto' => $proyecto,
+            'condominio' => $condominio,
+            'lote' => $lote,
+            'cliente' => $cliente,
+            'plazo' => $plazo,
+            'msi' => $msi,
+            'im' => $im,
+            'fecha_pago' => $fecha_pago,
+            'saldo_insoluto' => $saldo_insoluto,
+            'data_corrida' => $data_corrida
+
+        );*/
+        #set values
+        $sheet->setCellValue('D5', $data_corrida['proyecto']);
+        $sheet->setCellValue('E5', $data_corrida['condominio']);
+        $sheet->setCellValue('F5', $data_corrida['nombreLote']);
+        $sheet->setCellValue('G5', $data_corrida['cliente']);
+        $sheet->getStyle('H5')->getNumberFormat()->setFormatCode(PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_CURRENCY_USD_SIMPLE);
+        $sheet->setCellValue('H5', $data_corrida['saldo_insoluto']);
+//        $sheet->setCellValue('I5', 666);
+//        $sheet->getStyle('I5')->getNumberFormat()->setFormatCode(PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_CURRENCY_USD_SIMPLE);
+
+
+        $sheet->getStyle("D4:I4")->getFont()->setSize(10);
+        $sheet->getStyle('D4:I4')->getFont()->getColor()->setARGB('4472C4');
+        $sheet->getStyle( 'D4:I4' )->getFont()->setBold( true );
+        $sheet->getStyle( 'D4:I4' )->getFont()->setName('Arial');
+        $sheet->getColumnDimension('B')->setWidth(15);
+        $sheet->getColumnDimension('C')->setWidth(15);
+        $sheet->getColumnDimension('D')->setWidth(25);
+        $sheet->getColumnDimension('E')->setWidth(15);
+        $sheet->getColumnDimension('F')->setWidth(23);
+        $sheet->getColumnDimension('G')->setWidth(25);
+        $sheet->getColumnDimension('H')->setWidth(18);
+        $sheet->getColumnDimension('I')->setWidth(15);
+        $sheet->getColumnDimension('J')->setWidth(15);
+        $sheet->getColumnDimension('K')->setWidth(15);
+
+        $sheet->getStyle('D5:H5')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('D9D9D9');
+
+
+
+        $sheet->setCellValue('D7', 'PLAZO');
+        $sheet->setCellValue('E7', 'MSI');
+        $sheet->setCellValue('F7', 'INTERES MORATORIO');
+        $sheet->setCellValue('G7', 'FECHA PAGO');
+        $sheet->getStyle("D7:I7")->getFont()->setSize(10);
+        $sheet->getStyle('D7:I7')->getFont()->getColor()->setARGB('4472C4');
+        $sheet->getStyle( 'D7:I7' )->getFont()->setBold( true );
+        $sheet->getStyle( 'D7:I7' )->getFont()->setName('Arial');
+        $sheet->getStyle('D8:G8')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('D9D9D9');
+        #set values
+        $sheet->setCellValue('D8', $data_corrida['plazo']);
+        $sheet->setCellValue('E8', $data_corrida['msi']);
+        $sheet->setCellValue('F8', $data_corrida['im']);
+        $fecha_formateada = new DateTime($data_corrida['fecha_pago']);
+        $sheet->setCellValue('G8',  $fecha_formateada->format('d-m-Y'));
+
+
+        $sheet->setCellValue('F10', 'INTERES MORATORIO ACUMULADO');
+        $sheet->setCellValue('G10', 'INTERES ORDINARIO ACUMULADO');
+        $sheet->getStyle("F10:G10")->getFont()->setSize(10);
+        $sheet->getStyle("F10:G10")->getAlignment()->setWrapText(true);
+        $sheet->getStyle('F10:G10')->getFont()->getColor()->setARGB('4472C4');
+        $sheet->getStyle( 'F10:G10' )->getFont()->setBold( true );
+        $sheet->getStyle( 'F10:G10' )->getFont()->setName('Arial');
+        $sheet->setCellValue('F11', $data_corrida['ima']);
+        $sheet->setCellValue('G11', $data_corrida['ioa']);
+        $sheet->getStyle('F11:G11')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('D9D9D9');
+        $sheet->getStyle('F11:G11')->getNumberFormat()->setFormatCode(PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_CURRENCY_USD_SIMPLE);
+
+
+
+        /*encabezados de la tabla*/
+        $sheet->setCellValue('B15', 'FECHAS');
+        $sheet->setCellValue('C15', 'PAGO');
+        $sheet->setCellValue('D15', 'CAPITAL');
+        $sheet->setCellValue('E15', 'INTERESES');
+        $sheet->setCellValue('F15', 'IMPORTE');
+        $sheet->setCellValue('G15', 'DÍAS DE RETRASO');
+        $sheet->setCellValue('H15', 'INTERES MORATORIO');
+        $sheet->setCellValue('I15', 'TOTAL');
+        $sheet->setCellValue('J15', 'SALDO MORATORIO');
+        $sheet->setCellValue('K15', 'SALDO');
+        $sheet->getStyle( 'B15:K15' )->getFont()->setBold( true );
+        $sheet->getStyle('B15:K15')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('D9D9D9');
+        $sheet->getStyle('B195:K15')->getBorders()->getAllBorders()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+        $sheet->getStyle("H15")->getAlignment()->setWrapText(true);
+        $sheet->getStyle("J15")->getAlignment()->setWrapText(true);
+
+        #termina encabezado
+
+        $array_dump = json_encode($data_corrida['data_corrida']);
+        $array_dump = json_decode(($array_dump));
+        $total_array = count($array_dump);
+        foreach($array_dump as $item=>$value) {
+            $i++;
+
+            #fecha
+            $sheet->setCellValue('B'.$i, $value->fecha);
+            $sheet->getStyle('B'.$i)->getBorders()->getAllBorders()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+
+            #pago
+            $sheet->setCellValue('C'.$i, $value->pago);
+            $sheet->getStyle('C'.$i)->getBorders()->getAllBorders()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+
+            #capital
+            $sheet->setCellValue('D'.$i, $value->capital);
+            $sheet->getStyle('D'.$i)->getNumberFormat()->setFormatCode(PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_CURRENCY_USD_SIMPLE);
+            $sheet->getStyle('D'.$i)->getBorders()->getAllBorders()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+
+            #intereses
+            $sheet->setCellValue('E'.$i, $value->interes);
+            $sheet->getStyle('E'.$i)->getNumberFormat()->setFormatCode(PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_CURRENCY_USD_SIMPLE);
+            $sheet->getStyle('E'.$i)->getBorders()->getAllBorders()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+
+            #importe
+            $sheet->setCellValue('F'.$i, $value->importe);
+            $sheet->getStyle('F'.$i)->getNumberFormat()->setFormatCode(PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_CURRENCY_USD_SIMPLE);
+            $sheet->getStyle('F'.$i)->getBorders()->getAllBorders()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+
+            #dias_retraso
+            $sheet->setCellValue('G'.$i, $value->diasRetraso);
+            $sheet->getStyle('G'.$i)->getBorders()->getAllBorders()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+
+            #IM
+            $sheet->setCellValue('H'.$i, $value->interesMoratorio);
+            $sheet->getStyle('H'.$i)->getNumberFormat()->setFormatCode(PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_CURRENCY_USD_SIMPLE);
+            $sheet->getStyle('H'.$i)->getBorders()->getAllBorders()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+
+            #total
+            $sheet->setCellValue('I'.$i, $value->total);
+            $sheet->getStyle('I'.$i)->getNumberFormat()->setFormatCode(PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_CURRENCY_USD_SIMPLE);
+            $sheet->getStyle('I'.$i)->getBorders()->getAllBorders()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+
+            #saldo moratorio
+            $sheet->setCellValue('J'.$i, $value->saldo);
+            $sheet->getStyle('J'.$i)->getNumberFormat()->setFormatCode(PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_CURRENCY_USD_SIMPLE);
+            $sheet->getStyle('J'.$i)->getBorders()->getAllBorders()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+
+            #saldo
+            $sheet->setCellValue('K'.$i, $value->saldoNormal);
+            $sheet->getStyle('K'.$i)->getNumberFormat()->setFormatCode(PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_CURRENCY_USD_SIMPLE);
+            $sheet->getStyle('K'.$i)->getBorders()->getAllBorders()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+
+
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        $nombre_archivo = 'moratorios.xlsx';
+
+
+        $dir_2 = $_SERVER['DOCUMENT_ROOT'].'sisfusion/static/documentos/cliente/corrida/'.$nombre_archivo;
+        $dir_2 = str_replace("\ ", '/', $dir_2);
+
+        $writer = new Xlsx($spreadsheet);
+
+
+        header('Content-Type: application/vnd.ms-excel');
+        header('Content-Disposition: attachment;filename="'. $nombre_archivo .'"');
+        header('Cache-Control: max-age=0');
+
+        $writer->save("php://output");// download file
+//        $writer->save($dir_2);
+//        $data_response = array(
+//            'message' => 'Corrida generada en excel correctamente',
+//            'status' => 1,
+//            'corrida_generada' => $nombre_archivo
+//        );
+//        return $data_response;
+    }
+    public function excel_moratorios(){
+        $objDatos = json_decode(file_get_contents("php://input"));
+        $proyecto = $objDatos->proyecto;
+        $condominio = $objDatos->condominio;
+        $lote = $objDatos->lote;
+        $nombreLote = $objDatos->nombreLote;
+        $cliente = $objDatos->cliente;
+        $plazo = $objDatos->plazo;
+        $msi = $objDatos->msi;
+        $im = $objDatos->im;
+        $fecha_pago = $objDatos->fecha_pago;
+        $saldo_insoluto = $objDatos->saldo_insoluto;
+        $ima = $objDatos->ima;
+        $ioa = $objDatos->ioa;
+        $data_corrida = $objDatos->data_corrida;
+
+        $data = array(
+            'proyecto' => $proyecto,
+            'condominio' => $condominio,
+            'lote' => $lote,
+            'nombreLote' => $nombreLote,
+            'cliente' => $cliente,
+            'plazo' => $plazo,
+            'msi' => $msi,
+            'im' => $im,
+            'fecha_pago' => $fecha_pago,
+            'saldo_insoluto' => $saldo_insoluto,
+            'ima'=> $ima,
+            'ioa'=> $ioa,
+            'data_corrida' => $data_corrida
+
+        );
+//        echo __DIR__;
+//        exit;
+
+//        print_r($proyecto);
+//        echo '<br>';
+//        print_r($condominio);
+//        echo '<br>';
+//        print_r($lote);
+//        echo '<br>';
+//        print_r($cliente);
+//        echo '<br>';
+//        print_r($plazo);
+//        echo '<br>';
+//        print_r($msi);
+//        echo '<br>';
+//        print_r($im);
+//        echo '<br>';
+//        print_r($fecha_pago);
+//        echo '<br>';
+//        print_r($saldo_insoluto);
+//        echo '<br>';
+//        print_r($data_corrida);
+//        echo '<br>';
+
+        $responde = $this->generateExcelMR($data);
+
+
+    }
+
+    function getGerenteByID(){
+        $objDatos = json_decode(file_get_contents("php://input"));
+        $id_gerente = $objDatos->gerente;
+        $data= $this->Corrida_model->getGerenteByID($id_gerente);
+        if($data != null) {
+            echo json_encode($data);
+        } else {
+            echo json_encode(array());
+        }
+    }
+
+    public function getCoordinadorByID() {
+        $objDatos = json_decode(file_get_contents("php://input"));
+        $data= $this->Corrida_model->getCoordinadorByID($objDatos->coordinador);
+        if($data != null) {
+            echo json_encode($data);
+        } else {
+            echo json_encode(array());
+        }
+    }
+
+    public function getAsesorByID() {
+        $objDatos = json_decode(file_get_contents("php://input"));
+        $data= $this->Corrida_model->getAsesorByID($objDatos->asesor);
+        if($data != null) {
+            echo json_encode($data);
+        } else {
+            echo json_encode(array());
+        }
+    }
 
 }

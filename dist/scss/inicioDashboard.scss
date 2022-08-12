@@ -120,6 +120,32 @@
       background-color: $blueIndigo!important;
     }
   }
+  #rowEmbudoChart{
+    @media #{$minidesktop}{
+      height: 40%!important;
+    }
+  }
+  #rowEmbudoData{
+    @media #{$minidesktop}{
+      height: 60%!important;
+    }
+    .col-lg-12{
+      .d-flex{
+        @media #{$minidesktop}{
+          justify-content: space-between;
+        } 
+      }
+      .numberElement {
+        @media #{$minidesktop}{
+          text-align: end!important;
+        }
+      }
+      @media #{$minidesktop}{
+        padding-top: 0!important;
+        display: block;
+      }
+    }
+  }
   .beginDates{
     background-color: $platinum!important;
     border-radius: 27px 0 0 27px!important;
@@ -146,10 +172,16 @@
 
   .labelTitle{
     font-size: 1em!important;
+    @media #{$minidesktop}{
+      font-size: 12px!important;
+    }
   }
   .numberElement{
     font-size: 1em!important;
     font-weight: bold!important;
+    @media #{$minidesktop}{
+      font-size: 12px!important;
+    }
   }
   .loadChart{
     position: absolute;

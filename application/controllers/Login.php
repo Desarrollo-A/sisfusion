@@ -28,6 +28,7 @@ class Login extends CI_Controller
 		$data['titulo'] = 'Login con roles de usuario en codeigniter';
 		$this->load->view('login/login_view',$data);
 		//  $this->load->view('login/maintenance',$data);
+		// $this->load->view('errors/404not-found');
 		break;
 		case '1': // DIRECTOR
 		case '2': // SUBDIRECTOR
@@ -103,6 +104,7 @@ class Login extends CI_Controller
 		case '55': // POSTVENTA
 		case '56': // COMITÉ TÉCNICO
 		case '57': // TITULACIÓN
+		case '62': //PROYECTOS
 			redirect(base_url() . 'Postventa');
 		break;
          default:

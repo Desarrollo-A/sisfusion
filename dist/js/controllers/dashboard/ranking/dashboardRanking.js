@@ -240,7 +240,6 @@ function reorderColumns(){
                         buildTableSinEnganche(dataSinEnganche);
                     }
                 }
-                $(principalColumns[i-1]).addClass('fadeInAnimationDelay'+i);
             }, 500 * i)
         }(i));
     }   
@@ -687,7 +686,7 @@ function setOptionsChart(series, categories){
     let options = { 
         series: [series],
         chart: {
-            height: 'auto',
+            height: '100%',
             type: 'bar',
             toolbar: {
                 show: false

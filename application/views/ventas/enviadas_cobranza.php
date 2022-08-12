@@ -1,5 +1,10 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
 <link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet"/>
+<style>
+    table.dataTable > thead > tr > th, table.dataTable > tbody > tr > th, table.dataTable > tfoot > tr > th, table.dataTable > thead > tr > td, table.dataTable > tbody > tr > td, table.dataTable > tfoot > tr > td {
+        white-space: nowrap!important;
+    }
+</style>
 <body>
     <div class="wrapper">
         <?php
@@ -16,18 +21,6 @@
                 echo '<script>alert("ACCESSO DENEGADO"); window.location.href="'.base_url().'";</script>';
             }
         ?>
-    
-        <!-- Modals -->
-        <!--<div class="modal fade modal-alertas" id="modal_users" role="dialog">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-            
-                    <form method="post" id="form_interes">
-                        <div class="modal-body"></div>
-                    </form>
-                </div>
-            </div>
-        </div>-->
 
         <div class="modal fade modal-alertas" id="modal_colaboradores" role="dialog">
             <div class="modal-dialog modal-md">
@@ -56,21 +49,6 @@
                 </div>
             </div>
         </div>
-
-        <!--<div class="modal fade modal-alertas" id="modalParcialidad" role="dialog">
-            <div class="modal-dialog modal-sm">
-                <div class="modal-content">
-                    <div class="modal-header bg-red">
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        <h4 class="modal-title">SOLICITAR PARCIALIDAD DE PAGO</h4>
-                    </div>
-                    <form method="post" id="form_parcialidad">
-                        <div class="modal-body"></div>
-                    </form>
-                </div>
-            </div>
-        </div>-->
-
 
         <div class="modal fade" id="seeInformationModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog modal-md modal-dialog-scrollable" role="document">
@@ -107,30 +85,6 @@
             </div>
         </div>
 
-        <!--<div class="modal fade modal-alertas" id="modal_documentacion" role="dialog">
-            <div class="modal-dialog" style="width:800px; margin-top:20px">
-                <div class="modal-content">
-                    <div class="modal-body">
-                        <div class="row">
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>-->
-
-        <!--<div class="modal fade bd-example-modal-sm" id="myModalEnviadas" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-sm">
-                <div class="modal-content">
-                    <div class="modal-body"></div>
-                </div>
-            </div>
-        </div>-->
-
-        <!--<div class="modal fade modal-alertas" id="documento_preview" role="dialog">
-            <div class="modal-dialog" style= "margin-top:20px;"></div>
-        </div>-->
-        <!-- END Modals -->
-
         <div class="content boxContent">
             <div class="container-fluid">
                 <div class="row">
@@ -140,7 +94,7 @@
                             <li><a href="#proceso-1" role="tab" data-toggle="tab">DISPERSADOS DIRECCIÓN MKTD</a></li>
                         </ul>
                         
-                        <div class="card no-shadow m-0 border-conntent__tabs">
+                        <div class="card no-shadow m-0">
                             <div class="card-content p-0">
                                 <div class="nav-tabs-custom">
                                     <div class="tab-content p-2">
@@ -161,10 +115,9 @@
                                                     </div>
                                                     <div class="row">
                                                         <div class="col-12 col-sm-12 col-md-12 col-lg-6">
-                                                            <div class="form-group">
+                                                            <div class="form-group overflow-hidden">
                                                                 <label class="m-0" for="proyecto">Sedes</label>
-                                                                <select name="filtro33" id="filtro33" class="selectpicker select-gral m-0" data-style="btn " data-show-subtext="true" data-live-search="true"  title="Selecciona una sede" data-size="7" required> <option value="0">Seleccione todo</option>
-                                                                </select>
+                                                                <select class="selectpicker select-gral m-0" name="filtro33" id="filtro33" data-style="btn" data-show-subtext="true" data-live-search="true" title="Seleccione una sede" data-size="7" data-container="body" required></select>
                                                             </div>
                                                         </div>
                                                         <div class="col-12 col-sm-12 col-md-12 col-lg-6">
@@ -261,6 +214,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
+    
     <script>
         $(document).ready(function() {
             $("#tabla_asimilados").prop("hidden", true);
@@ -771,19 +725,11 @@
                         return '<p class="m-0"><b>'+d.usuario+'</b></i></p>';
                     }
                 },
-                // {
-                //     "width": "6%",
-                //     "data": function( d ){
-                //         return '<p class="m-0"><i> '+d.puesto+'</i></p>';
-                //     }
-                // },
                  {
                     "width": "6%",
                     "data": function( d ){
                         return '<p  class="m-0">' + d.sede + '</p>';
-                         // return '<span class="label label-warning">Compartida</span><br><br>'+'<p class="m-0"><b>' +d.sd1+' / '+d.sd2+ '</b></p>';
-                        }
-                    
+                    }                    
                 },
                 {
                     "width": "5%",
@@ -840,124 +786,6 @@
                 });
             });
         });
- 
-        // FUNCTION MORE
-        /*$(document).on( "click", ".nuevo_plan", function(){
-            $("#modal_mktd .modal-body").html("");
-            $("#modal_mktd .modal-footer").html("");
-
-            $.getJSON( url + "Comisiones/getDatosNuevo/").done( function( data1 ){
-                $("#modal_mktd .modal-body").append('<div class="row"><div class="col-md-6"><label>Fecha inicio: </label><input type="date" class="form-control ng-pristine ng-invalid ng-invalid-required ng-touched" name="fecha_inicio" id="fecha_inicio" required=""></div></div>');
-
-                $.each( data1, function( i, v){
-                    $("#modal_mktd .modal-body").append('<div class="row">'
-                            +'<div class="col-md-3"><br><input class="form-contol ng-invalid ng-invalid-required" style="border: 1px solid white; outline: none;" value="'+v.puesto+'"  readonly><input id="puesto" name="puesto[]" value="'+v.id_rol+'" type="hidden"></div>'
-
-                            +'<div class="col-md-3"><select id="userMKTDSelect'+i+'" name="userMKTDSelect[]" class="form-control userMKTDSelect ng-invalid ng-invalid-required" required data-live-search="true"></select></div>'
-
-                            +'<div class="col-md-2"><input id="porcentajeUserMk'+i+'" name="porcentajeUserMk[]" class="form-control porcentajeUserMk ng-invalid ng-invalid-required" required placeholder="%" value="0"></div>'
-
-                            +'<div class="col-md-2"><select id="plazaMKTDSelect'+i+'" name="plazaMKTDSelect[]" class="form-control plazaMKTDSelect ng-invalid ng-invalid-required"   data-live-search="true"></select></div>'
-
-                            +'<div class="col-md-2"><select id="sedeMKTDSelect'+i+'" name="sedeMKTDSelect[]" class="form-control sedeMKTDSelect ng-invalid ng-invalid-required"   data-live-search="true"></select></div></div>');
-
-                            $.post('getUserMk', function(data) {
-                            $("#userMKTDSelect"+i+"").append($('<option disabled>').val("default").text("Seleccione una opción"))
-                            var len = data.length;
-                            for( var j = 0; j<len; j++)
-                            {
-                                var id = data[j]['id_usuario'];
-                                var name = data[j]['name_user'];
-                                // var sede = data[i]['id_sede'];
-                                // alert(name);
-                                $("#userMKTDSelect"+i+"").append($('<option>').val(id).attr('data-value', id).text(name));
-                            }
-                            if(len<=0)
-                            {
-                            $("#userMKTDSelect"+i+"").append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
-                            }
-                            
-                            $("#userMKTDSelect"+i+"").val(data1[i].id_usuario);                     
-    
-                            $("#userMKTDSelect"+i+"").selectpicker('refresh');
-                        }, 'json');
-
-
-
-                        $.post('getPlazasMk', function(data) {
-                            $("#plazaMKTDSelect"+i+"").append($('<option disabled>').val("default").text("Seleccione una opción"))
-                            var len = data.length;
-                            for( var j = 0; j<len; j++)
-                            {
-                                var id = data[j]['id_opcion'];
-                                var name = data[j]['nombre'];
-                                // var sede = data[i]['id_sede'];
-                                // alert(name);
-                                $("#plazaMKTDSelect"+i+"").append($('<option>').val(id).attr('data-value', id).text(name));
-                            }
-                            if(len<=0)
-                            {
-                            $("#plazaMKTDSelect"+i+"").append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
-                            }
-                    
-                                    $("#plazaMKTDSelect"+i+"").val(1); 
-        
-                            $("#plazaMKTDSelect"+i+"").selectpicker('refresh');
-                        }, 'json');
-
-
-
-                        $.post('getSedeMk', function(data) {
-                            $("#sedeMKTDSelect"+i+"").append($('<option disabled>').val("default").text("Seleccione una opción"))
-                            var len = data.length;
-                            for( var j = 0; j<len; j++)
-                            {
-                                var id = data[j]['id_sede'];
-                                var name = data[j]['nombre'];
-                                
-                                $("#sedeMKTDSelect"+i+"").append($('<option>').val(id).attr('data-value', id).text(name));
-                            }
-                            if(len<=0)
-                            {
-                            $("#sedeMKTDSelect"+i+"").append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
-                            }
-                            console.log(data1[i].id_sede);
-
-                            if(data1[i].id_rol=='20'){
-                                
-                                $("#sedeMKTDSelect"+i+"").val(data1[i].id_sede);
-
-                            }else{
-                                    $("#sedeMKTDSelect"+i+"").val(2); 
-                            }
-
-
-                                // $("#sedeMKTDSelect"+i+"").val(data1[i].id_usuario);
-                            $("#sedeMKTDSelect"+i+"").selectpicker('refresh');
-                        }, 'json'); 
-                });
-            });
-
-            $("#modal_mktd .modal-footer").append('<br><div class="row"><div class="col-md-12"><center><input type="submit" id="btnsubmit" class="btn btn-success" value="GUARDAR"></center></div></div>');
-            $("#modal_mktd").modal();
-        });*/
-
-        function formatMoney( n ) {
-            var c = isNaN(c = Math.abs(c)) ? 2 : c,
-            d = d == undefined ? "." : d,
-            t = t == undefined ? "," : t,
-            s = n < 0 ? "-" : "",
-            i = String(parseInt(n = Math.abs(Number(n) || 0).toFixed(c))),
-            j = (j = i.length) > 3 ? j % 3 : 0;
-            return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
-        };
-
-        /*$(document).on( "click", ".subir_factura", function(){
-            resear_formulario();
-            id_comision = $(this).val();
-            link_post = "Comisiones/guardar_solicitud/"+id_comision;
-            $("#modal_formulario_solicitud").modal( {backdrop: 'static', keyboard: false} );
-            });*/
 
         //FUNCION PARA LIMPIAR EL FORMULARIO CON DE PAGOS A PROVEEDOR.
         function resear_formulario(){
@@ -969,64 +797,9 @@
             var validator = $( "#frmnewsol" ).validate();
             validator.resetForm();
             $( "#frmnewsol div" ).removeClass("has-error");
-
         }
- 
-        /*$("#cargar_xml").click( function(){
-            subir_xml( $("#xmlfile") );
-        });*/
 
         var justificacion_globla = "";
-
-        /*function subir_xml( input ){
-            var data = new FormData();
-            documento_xml = input[0].files[0];
-            var xml = documento_xml;
-
-            data.append("xmlfile", documento_xml);
-            resear_formulario();
-            $.ajax({
-                url: url + "Comisiones/cargaxml",
-                data: data,
-                cache: false,
-                contentType: false,
-                processData: false,
-                dataType: 'json',
-                method: 'POST',
-                type: 'POST', // For jQuery < 1.9
-                success: function(data){
-                    if( data.respuesta[0] ){
-                        documento_xml = xml;
-                        var informacion_factura = data.datos_xml;
-                        cargar_info_xml( informacion_factura );
-                        $("#solobs").val( justificacion_globla );
-                    }
-                    else{
-                        input.val('');
-                        alert( data.respuesta[1] );
-                    }
-                },
-                error: function( data ){
-                    input.val('');
-                    alert("ERROR INTENTE COMUNICARSE CON EL PROVEEDOR");
-                }
-            });
-        }*/
-
-        /*function cargar_info_xml( informacion_factura ){
-            $("#emisor").val( ( informacion_factura.nameEmisor ? informacion_factura.nameEmisor[0] : '') ).attr('readonly',true);
-            $("#rfcemisor").val( ( informacion_factura.rfcemisor ? informacion_factura.rfcemisor[0] : '') ).attr('readonly',true);
-            $("#receptor").val( ( informacion_factura.namereceptor ? informacion_factura.namereceptor[0] : '') ).attr('readonly',true);
-            $("#rfcreceptor").val( ( informacion_factura.rfcreceptor ? informacion_factura.rfcreceptor[0] : '') ).attr('readonly',true);
-            $("#regimenFiscal").val( ( informacion_factura.regimenFiscal ? informacion_factura.regimenFiscal[0] : '') ).attr('readonly',true);
-            $("#formaPago").val( ( informacion_factura.formaPago ? informacion_factura.formaPago[0] : '') ).attr('readonly',true);
-            $("#total").val( ('$ '+informacion_factura.total ? '$ '+informacion_factura.total[0] : '') ).attr('readonly',true);
-            $("#cfdi").val( ( informacion_factura.usocfdi ? informacion_factura.usocfdi[0] : '') ).attr('readonly',true);
-            $("#metodopago").val( ( informacion_factura.metodoPago ? informacion_factura.metodoPago[0] : '') ).attr('readonly',true);
-            $("#unidad").val( ( informacion_factura.claveUnidad ? informacion_factura.claveUnidad[0] : '') ).attr('readonly',true);
-            $("#clave").val( ( informacion_factura.claveProdServ ? informacion_factura.claveProdServ[0] : '') ).attr('readonly',true);
-            $("#obse").val( ( informacion_factura.descripcion ? informacion_factura.descripcion[0] : '') ).attr('readonly',true);
-        }*/
 
         $("#form_colaboradores").submit( function(e) {
             e.preventDefault();
@@ -1150,45 +923,6 @@
                 });   
             }
         });
-
-        /*function calcularMontoParcialidad() {
-            $precioFinal = parseFloat($('#value_pago_cliente').val());
-            $precioNuevo = parseFloat($('#new_value_parcial').val());
-            if ($precioNuevo >= $precioFinal) {
-                $('#label_estado').append('<label>MONTO NO VALIDO</label>');
-            }
-            else if ($precioNuevo < $precioFinal) {
-                $('#label_estado').append('<label>MONTO VALIDO</label>');
-            }
-        }*/
-
-        /*function preview_info(archivo){
-            $("#documento_preview .modal-dialog").html("");
-            $("#documento_preview").css('z-index', 9999);
-            archivo = url+"dist/documentos/"+archivo+"";
-            var re = /(?:\.([^.]+))?$/;
-            var ext = re.exec(archivo)[1];
-            elemento = "";
-            if (ext == 'pdf'){
-                elemento += '<iframe src="'+archivo+'" style="overflow:hidden; width: 100%; height: -webkit-fill-available">';
-                elemento += '</iframe>';
-                $("#documento_preview .modal-dialog").append(elemento);
-                $("#documento_preview").modal();
-            }
-            if(ext == 'jpg' || ext == 'jpeg'){
-                elemento += '<div class="modal-content" style="background-color: #333; display:flex; justify-content: center; padding:20px 0">';
-                elemento += '<img src="'+archivo+'" style="overflow:hidden; width: 40%;">';
-                elemento += '</div>';
-                $("#documento_preview .modal-dialog").append(elemento);
-                $("#documento_preview").modal();
-            }
-            if(ext == 'xlsx'){
-                elemento += '<div class="modal-content">';
-                elemento += '<iframe src="'+archivo+'"></iframe>';
-                elemento += '</div>';
-                $("#documento_preview .modal-dialog").append(elemento);
-            }
-        }*/
  
         function cleanComments() {
             var myCommentsList = document.getElementById('comments-list-asimilados');

@@ -71,7 +71,7 @@ function buildTable (columns, data){
         fnRowCallback: function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
            console.log('atrasado',aData['atrasado']);
         }
-      });
+    });
 }
 
 function createDocRow(row, tr, thisVar){

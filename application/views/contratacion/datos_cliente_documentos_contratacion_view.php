@@ -190,6 +190,10 @@
 												<th>ID LOTE</th>
 												<th>LOTE</th>
 												<th>CLIENTE</th>
+												<th>COORDINADOR</th>
+												<th>GERENTE</th>
+												<th>SUBDIRECTOR</th>
+												<th>REGIONAL</th>
 												<th>NOMBRE DE DOCUMENTO</th>
 												<th>HORA/FECHA</th>
 												<th>DOCUMENTO</th>
@@ -360,15 +364,27 @@
 												return 'CLIENTE';
 												break;
 											case 5:
-												return 'NOMBRE DE DOCUMENTO';
+												return 'COORDINADOR';
 												break;
 											case 6:
-												return 'HORA/FECHA';
+												return 'GERENTE';
+												break;
+											case 7:
+												return 'SUBDIRECTOR';
 												break;
 											case 8:
-												return 'RESPONSABLE';
+												return 'REGIONAL';
 												break;
 											case 9:
+												return 'NOMBRE DE DOCUMENTO';
+												break;
+											case 10:
+												return 'HORA/FECHA';
+												break;
+											case 12:
+												return 'RESPONSABLE';
+												break;
+											case 13:
 												return 'UBICACIÓN';
 												break;
 										}
@@ -398,12 +414,40 @@
 									return data.nomCliente +' ' +data.apellido_paterno+' '+data.apellido_materno;
 								},
 							},
+							{
+								data: null,
+								render: function( data, type, row )
+								{
+									return (data.coordinador == '  ' ? 'No aplica' : data.coordinador);
+								}
+							},
+							{
+								data: null,
+								render: function( data, type, row )
+								{
+									return (data.gerente == '  ' ? 'No aplica' : data.gerente);
+								}
+							},
+							{
+								data: null,
+								render: function( data, type, row )
+								{
+									return (data.subdirector == '  ' ? 'No aplica' : data.subdirector);
+								}
+							},
+							{
+								data: null,
+								render: function( data, type, row )
+								{
+									return (data.regional == '  ' ? 'No aplica' : data.regional);
+								}
+							},
 							{data: 'movimiento'},
 							{data: 'modificado'},
 							{
 								data: null,
 								render: function ( data, type, row ){
-									if(data.flag_compartida == 1){
+									// if(data.flag_compartida == 1){
 										datos = data.id_asesor;
 										if (getFileExtension(data.expediente) == "pdf") {
 											if(data.tipo_doc == 8){
@@ -492,9 +536,9 @@
 
 										}
 										return '<div class="d-flex justify-center">' + file + '</div>';
-									}else{
-										return '<span class="label label-success">Se necesita especificar si es venta compartida</span>';
-									}
+									// }else{
+									// 	return '<span class="label label-success">Se necesita especificar si es venta compartida</span>';
+									// }
 								}
 							},
 							{

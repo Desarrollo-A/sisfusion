@@ -69,7 +69,7 @@
 }
 
 .ml-1 {
-  margin-left: 10px;
+  margin-left: 10px !important;
 }
 
 .ml-2 {
@@ -338,6 +338,10 @@
   font-weight: bolder;
 }
 
+.fl-r {
+  float: right;
+}
+
 /* END utilities */
 /* Flexbox */
 .d-none {
@@ -392,6 +396,18 @@
   flex-direction: row;
 }
 
+.gg-1 {
+  grid-gap: 10px;
+}
+
+.gg-15 {
+  grid-gap: 15px;
+}
+
+.gg-2 {
+  grid-gap: 20px;
+}
+
 /* END Flexbox */
 /* Text */
 .text-center {
@@ -444,6 +460,26 @@
 
 .fw-900 {
   font-weight: 900;
+}
+
+.fs-1 {
+  font-size: 1rem;
+}
+
+.fs-2 {
+  font-size: 2rem;
+}
+
+.fs-3 {
+  font-size: 3rem;
+}
+
+.fs-4 {
+  font-size: 4rem;
+}
+
+.fs-5 {
+  font-size: 5rem;
 }
 
 /* Text */
@@ -1128,116 +1164,129 @@
   background-color: #F1F1F1;
 }
 
+.input-gral {
+  background-color: #eaeaea !important;
+  color: #929292 !important;
+  border-radius: 27px !important;
+  background-image: none !important;
+  padding-left: 20px;
+}
+
+.isRequired {
+  color: #EA4335;
+  margin: 0 3px;
+}
+
 @font-face {
   font-family: Montserrat-Black;
-  src: url(../css/fonts/Montserrat/Montserrat-Black.ttf);
+  src: url(../fonts/Montserrat/Montserrat-Black.ttf);
 }
 
 @font-face {
   font-family: Montserrat-BlackItalic;
-  src: url(../css/fonts/Montserrat/Montserrat-BlackItalic.ttf);
+  src: url(../fonts/Montserrat/Montserrat-BlackItalic.ttf);
 }
 
 @font-face {
   font-family: Montserrat-Bold;
-  src: url(../css/fonts/Montserrat/Montserrat-Bold.ttf);
+  src: url(../fonts/Montserrat/Montserrat-Bold.ttf);
 }
 
 @font-face {
   font-family: Montserrat-BoldItalic;
-  src: url(../css/fonts/Montserrat/Montserrat-BoldItalic.ttf);
+  src: url(../fonts/Montserrat/Montserrat-BoldItalic.ttf);
 }
 
 @font-face {
   font-family: Montserrat-ExtraBold;
-  src: url(../css/fonts/Montserrat/Montserrat-ExtraBold.ttf);
+  src: url(../fonts/Montserrat/Montserrat-ExtraBold.ttf);
 }
 
 @font-face {
   font-family: Montserrat-ExtraBoldItalic;
-  src: url(../css/fonts/Montserrat/Montserrat-ExtraBoldItalic.ttf);
+  src: url(../fonts/Montserrat/Montserrat-ExtraBoldItalic.ttf);
 }
 
 @font-face {
   font-family: Montserrat-ExtraLight;
-  src: url(../css/fonts/Montserrat/Montserrat-ExtraLight.ttf);
+  src: url(../fonts/Montserrat/Montserrat-ExtraLight.ttf);
 }
 
 @font-face {
   font-family: Montserrat-ExtraLightItalic;
-  src: url(../css/fonts/Montserrat/Montserrat-ExtraLightItalic.ttf);
+  src: url(../fonts/Montserrat/Montserrat-ExtraLightItalic.ttf);
 }
 
 @font-face {
   font-family: Montserrat-Italic;
-  src: url(../css/fonts/Montserrat/Montserrat-Italic.ttf);
+  src: url(../fonts/Montserrat/Montserrat-Italic.ttf);
 }
 
 @font-face {
   font-family: Montserrat-Light;
-  src: url(../css/fonts/Montserrat/Montserrat-Light.ttf);
+  src: url(../fonts/Montserrat/Montserrat-Light.ttf);
 }
 
 @font-face {
   font-family: Montserrat-LightItalic;
-  src: url(../css/fonts/Montserrat/Montserrat-LightItalic.ttf);
+  src: url(../fonts/Montserrat/Montserrat-LightItalic.ttf);
 }
 
 @font-face {
   font-family: Montserrat-Medium;
-  src: url(../css/fonts/Montserrat/Montserrat-Medium.ttf);
+  src: url(../fonts/Montserrat/Montserrat-Medium.ttf);
 }
 
 @font-face {
   font-family: Montserrat-MediumItalic;
-  src: url(../css/fonts/Montserrat/Montserrat-MediumItalic.ttf);
+  src: url(../fonts/Montserrat/Montserrat-MediumItalic.ttf);
 }
 
 @font-face {
   font-family: Montserrat-Regular;
-  src: url(../css/fonts/Montserrat/Montserrat-Regular.ttf);
+  src: url(../fonts/Montserrat/Montserrat-Regular.ttf);
 }
 
 @font-face {
   font-family: Montserrat-SemiBold;
-  src: url(../css/fonts/Montserrat/Montserrat-SemiBold.ttf);
+  src: url(../fonts/Montserrat/Montserrat-SemiBold.ttf);
 }
 
 @font-face {
   font-family: Montserrat-SemiBoldItalic;
-  src: url(../css/fonts/Montserrat/Montserrat-SemiBoldItalic.ttf);
+  src: url(../fonts/Montserrat/Montserrat-SemiBoldItalic.ttf);
 }
 
 @font-face {
   font-family: Montserrat-Thin;
-  src: url(../css/fonts/Montserrat/Montserrat-Thin.ttf);
+  src: url(../fonts/Montserrat/Montserrat-Thin.ttf);
 }
 
 @font-face {
   font-family: Montserrat-ThinItalic;
-  src: url(../css/fonts/Montserrat/Montserrat-ThinItalic.ttf);
+  src: url(../fonts/Montserrat/Montserrat-ThinItalic.ttf);
 }
 
 @font-face {
   font-family: Exo-ExtraBold;
-  src: url(../css/fonts/Montserrat/Exo-ExtraBold.ttf);
+  src: url(../fonts/Montserrat/Exo-ExtraBold.ttf);
 }
 
 @font-face {
   font-family: Bahnschrift;
-  src: url(../css/fonts/Montserrat/Bahnschrift.TTF);
+  src: url(../fonts/Montserrat/Bahnschrift.TTF);
 }
 
 @font-face {
   font-family: JMHTypewriter;
-  src: url(../css/fonts/Montserrat/JMHTypewriter.ttf);
+  src: url(../fonts/Montserrat/JMHTypewriter.ttf);
 }
 
 /* END import fonts */
 /* fonts vrbls */
 /* END fonts vrbls */
 .boxHome {
-  background-image: linear-gradient(RGB(0 0 0/80%), RGB(0 0 0/80%)), url(https://maderascrm.gphsis.com/assets/img/img_4.jpeg);
+  background-image: linear-gradient(RGB(0 0 0/80%), RGB(0 0 0/80%)), url(https://maderascrm.gphsis.com/dist/img/img_4.jpeg);
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;

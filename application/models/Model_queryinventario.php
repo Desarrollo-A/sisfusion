@@ -84,21 +84,39 @@
         // $this->db->where('lotes.status','1');
         $statusLoteVar = '';
         $idAsesor = '';
+        $statuscl = '';
+        $statuslt = '';
 
         if($this->session->userdata('id_rol') == 6){
 
             // $this->db->where_in('idStatusLote', array('1', '3'));
             $statusLoteVar = '1, 3';
+            $statuscl = ' AND cl.status = 1';
+            $statuslt = ' lo.status = 1 AND ';
 
 
         } else if($this->session->userdata('id_rol') == 7){
             $statusLoteVar = '1, 3';
             $idAsesor = " AND id_asesor=".$this->session->userdata('id_usuario');
+            $statuscl = ' AND cl.status = 1';
+            $statuslt = ' lo.status = 1 AND ';
 
-        }else {
+
+        }else if( $this->session->userdata('id_rol')==33) {
+            $statusLoteVar = '1, 3';
+            $idAsesor = "";
+            $statuscl = '';
+            $statuslt = 'lo.status IN (0,1,2,3) AND';
+
+
+        }
+        else{
 
             // $this->db->where_in('idStatusLote', array('1'));
             $statusLoteVar = '1';
+            $statuscl = '  AND cl.status = 1';
+            $statuslt = ' lo.status = 1 AND ';
+
 
         }
 
@@ -106,8 +124,8 @@
 
 
         $query = $this->db->query("SELECT lo.idLote, lo.nombreLote, lo.total, lo.sup FROM lotes lo
-			LEFT JOIN clientes cl ON cl.idLote = lo.idLote AND cl.id_cliente = lo.idCliente AND cl.status = 1 ".$idAsesor."
-			WHERE lo.status = 1 AND idStatusLote IN (".$statusLoteVar.") AND lo.idCondominio IN (".$condominio.")");
+			LEFT JOIN clientes cl ON cl.idLote = lo.idLote AND cl.id_cliente = lo.idCliente ".$statuscl." ".$idAsesor."
+			WHERE ".$statuslt." idStatusLote IN (".$statusLoteVar.") AND lo.idCondominio IN (".$condominio.")");
         return $query->result();
         // if($query){
         // $query = $query->result_array();

@@ -69,7 +69,7 @@
 }
 
 .ml-1 {
-  margin-left: 10px;
+  margin-left: 10px !important;
 }
 
 .ml-2 {
@@ -338,6 +338,10 @@
   font-weight: bolder;
 }
 
+.fl-r {
+  float: right;
+}
+
 /* END utilities */
 /* Flexbox */
 .d-none {
@@ -392,6 +396,18 @@
   flex-direction: row;
 }
 
+.gg-1 {
+  grid-gap: 10px;
+}
+
+.gg-15 {
+  grid-gap: 15px;
+}
+
+.gg-2 {
+  grid-gap: 20px;
+}
+
 /* END Flexbox */
 /* Text */
 .text-center {
@@ -444,6 +460,26 @@
 
 .fw-900 {
   font-weight: 900;
+}
+
+.fs-1 {
+  font-size: 1rem;
+}
+
+.fs-2 {
+  font-size: 2rem;
+}
+
+.fs-3 {
+  font-size: 3rem;
+}
+
+.fs-4 {
+  font-size: 4rem;
+}
+
+.fs-5 {
+  font-size: 5rem;
 }
 
 /* Text */
@@ -1126,6 +1162,19 @@
   border: none;
   color: #929292;
   background-color: #F1F1F1;
+}
+
+.input-gral {
+  background-color: #eaeaea !important;
+  color: #929292 !important;
+  border-radius: 27px !important;
+  background-image: none !important;
+  padding-left: 20px;
+}
+
+.isRequired {
+  color: #EA4335;
+  margin: 0 3px;
 }
 
 #metricas table.dataTable > thead > tr > th, #metricas table.dataTable > tbody > tr > th, #metricas table.dataTable > tfoot > tr > th, #metricas table.dataTable > thead > tr > td, #metricas table.dataTable > tbody > tr > td, #metricas table.dataTable > tfoot > tr > td {

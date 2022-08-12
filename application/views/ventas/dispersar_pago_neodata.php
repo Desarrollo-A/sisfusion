@@ -313,7 +313,8 @@
                                                         <th>MODALIDAD</th>
                                                         <th>CONTRATACIÓN</th>
                                                         <th>PLAN VENTA</th>
-                                                        <th>F. NEODATA</th>
+                                                        <th>FEC. SISTEMA</th>
+                                                        <th>FEC. NEODATA</th>
                                                         <th>MÁS</th>
                                                     </tr>
                                                 </thead>
@@ -605,6 +606,22 @@
                     }
                     else {
                         lblStats ='<span class="label label-info">'+d.date_final+'</span>';
+                    }
+                    return lblStats;
+                }
+            },
+            {
+                "width": "8%",
+                "data": function( d ){
+                    var lblStats;
+
+                    if(d.fecha_modificacion <= '2021-01-01' || d.fecha_modificacion == null ) {
+                        lblStats ='';
+                    }else if (d.registro_comision == 8){
+                        lblStats ='<span class="label label-gray" style="color:gray;">Recisión Nueva Venta</span>';
+                    }
+                    else {
+                        lblStats ='<span class="label label-info">'+d.date_neodata+'</span>';
                     }
                     return lblStats;
                 }

@@ -24,7 +24,7 @@ var optionBarInit = {
     series: [],
     chart: {
         type: 'bar',
-        height: 'auto',
+        height: '100%',
         toolbar: {
             show: false
         },
@@ -103,7 +103,7 @@ var optionBarInit = {
 var optionsDisponibilidad = {
     series: [],
     chart: {
-        height: 'auto',
+        height: '100%',
         type: 'bar',
         toolbar: {
             show: false
@@ -181,7 +181,7 @@ var optionLugar = {
     }],
     chart: {
         type: 'bar',
-        height: 'auto',
+        height: '100%',
         toolbar: {
             show: false
         },
@@ -269,7 +269,7 @@ var optionLugar = {
 var optionsMedio = {
     series: [],
     chart: {
-        height: 'auto',
+        height: '100%',
         type: 'polarArea',
         toolbar: {
             show: false
@@ -282,15 +282,18 @@ var optionsMedio = {
           return val.toLocaleString('es-MX');
         }
       },
-    responsive: [{
-        breakpoint: 480,
+      responsive: [{
+        breakpoint: 500,
         options: {
             chart: {
-                width: 200
+                height: '100%'
             },
-            legend: {
-                position: 'bottom'
-            }
+            legend:{
+                show:false
+            },
+            yaxis: {
+                show: false
+              },
         }
     }],
     tooltip: { 

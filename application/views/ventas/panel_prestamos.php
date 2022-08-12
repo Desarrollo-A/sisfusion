@@ -347,7 +347,7 @@
 					text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
 					className: 'btn buttons-excel',
 					titleAttr: 'Descargar archivo de Excel',
-					titleAttr: 'Excel',
+					title: 'PRÉSTAMOS Y PENALIZACIONES',
 					exportOptions: {
 						columns: [0,1,2,3,4,5,6,7,8,9,10],
 						format: {
@@ -468,7 +468,7 @@
 				{
 					"width": "12%",
 					"data": function( d ){
-                        if (d.fecha_creacion_referencia !== null) {
+                        if (d.fecha_creacion_referencia !== null && d.estatus == 1) {
                             const fecha = new Date(d.fecha_creacion_referencia);
                             const now = new Date();
                             const mesesDif = monthDiff(fecha, now);
@@ -553,8 +553,11 @@
                                 <div class="col col-xs-12 col-sm-4 col-md-4 col-lg-4">
                                     <h6>PAGO MENSUAL: <b>$${formatMoney(general.pago_individual)}</b></h6>
                                 </div>
-                                <div class="col col-xs-12 col-sm-4 col-md-4 col-lg-4">
-                                    <h6>PAGOS APLICADOS: <b>${numPagosReal} / ${general.num_pagos} MENSUALIDADES</b></h6>
+                                <div class="col col-xs-12 col-sm-2 col-md-2 col-lg-2">
+                                    <h6>PAGOS APLICADOS: <b>${numPagosReal}</b></h6>
+                                </div>
+                                <div class="col col-xs-12 col-sm-2 col-md-2 col-lg-2">
+                                    <h6>MENSUALIDADES: <b>${general.num_pagos}</b></h6>
                                 </div>
                                 <div class="col col-xs-12 col-sm-4 col-md-4 col-lg-4">
                                     <h6>MONTO PRESTADO: <b>$${formatMoney(general.monto_prestado)}</b></h6>

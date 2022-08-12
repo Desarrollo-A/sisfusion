@@ -1,6 +1,7 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
 <link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet" />
 <link rel="stylesheet" type="text/css" href="<?=base_url()?>dist/css/shadowbox.css">
+<link href="<?= base_url() ?>dist/css/solicitud_escrituracion.css" rel="stylesheet" />
 
 <body>
     <div class="wrapper">
@@ -121,5 +122,9 @@
 <script src="<?=base_url()?>static/yadcf/jquery.dataTables.yadcf.js"></script>
 <script src="<?=base_url()?>dist/js/controllers/general/main_services.js"></script>
 <script src="<?=base_url()?>dist/js/controllers/postventa/solicitudes_escrituracion.js"></script>
+<!-- <script  src="<?=base_url()?>dist/js/controllers/postventa/Escrituracion/Classes/actionButtonsClass.js"></script>
+<script  src="<?=base_url()?>dist/js/controllers/postventa/Escrituracion/Helpers/helpers.js"></script>
+<script  src="<?=base_url()?>dist/js/controllers/postventa/Escrituracion/Services/services.js"></script>
+<script  src="<?=base_url()?>dist/js/controllers/postventa/Escrituracion/escrituracion.js"></script> -->
 
 </html>

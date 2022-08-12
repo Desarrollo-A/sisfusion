@@ -132,7 +132,7 @@
             font-size:15px;
             color:#fff;
             margin-bottom: 30px;
-
+            overflow-y: auto;
         }
         p{
             font-family: 'Open Sans', sans-serif;
@@ -416,7 +416,7 @@
                                     <div class="row">
                                         <div class="col-md-3 form-group">
                                             <label>Nombre:<span class="required-label">*</span> </label>
-                                            <input type="text" ng-model="nombre" id="nombre" required="text" class="form-control">
+                                            <input type="text" ng-model="nombre" id="nombre" required="text" class="form-control" autocomplete="off">
                                             <p id="nombretext" style="color:red;"></p>
                                         </div >
                                         <div class="col-md-3 form-group" >
@@ -430,7 +430,7 @@
                                             <label>Teléfono:</label>
                                             <!-- <input type="text" ng-model="telefono" class="form-control"> -->
                                             <input type="tel" ng-model="telefono" class="form-control"
-                                                   placeholder="442-256-5963" maxlength="12" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}">
+                                                   placeholder="442-256-5963" maxlength="12" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" autocomplete="off">
                                             <small>Formato: 442-485-6978</small><br><br>
                                         </div>
 
@@ -1033,9 +1033,9 @@
         <div style="float: right;bottom: 2%;right: 3%;position: fixed;display: inline-flex;align-content: center;
                             flex-wrap: wrap;flex-direction: column;">
             <button class="btn-circle blue" ng-click="exportc()"
-                    data-toggle="tooltip" title="Guardar + Imprimir Caratula"><i class="fas fa-print fa-lg"></i></button>
+                    data-toggle="tooltip" title="Guardar + Imprimir Carátula"><i class="fas fa-print fa-lg"></i></button>
             <button class="btn-circle dark-blue" ng-click="exportcf()"
-                    data-toggle="tooltip" title="Guardar + Imprimir Caratula y Corrida Financiera"><i class="fas fa-money-check-alt fa-lg"></i></button>
+                    data-toggle="tooltip" title="Guardar + Imprimir Carátula y Corrida Financiera"><i class="fas fa-money-check-alt fa-lg"></i></button>
             <button class="btn-circle hide" ng-click="updateCorrida()"
                     data-toggle="tooltip" title="Guardar"><i class="fa fa-save fa-lg fa-lg"></i></button>
         </div>
@@ -5765,6 +5765,9 @@
                         let id_gerente;
                         let id_coordinador;
                         let id_asesor;
+                        let gerente_array_manejo=[];
+                        let coordinador_array_manejo=[];
+                        let asesor_array_manejo=[];
                         // console.log("cámara mis perros", response);
                         if(response.data[0].idStatusLote == 3){
                             // console.log('KAMARA MI PERRROOO');
@@ -5774,11 +5777,36 @@
                                 function (response) {
                                     // console.log("Vámonos: ", response.data);
                                     if(response.data.length>0){
+                                        //nueva parte 090822
+                                        if(response.data[0].rol_gerente != 3){
+                                            var myObj = {
+                                                'id_usuario':   response.data[0].id_gerente,
+                                                'nombreGerente' : response.data[0].gerente
+                                            };
+                                            gerente_array_manejo.push(myObj);
+                                        }
+                                        if(response.data[0].rol_coord != 9){
+                                            var myObjC = {
+                                                'idCoordinador':   response.data[0].id_coordinador,
+                                                'nombreCoordinador' : response.data[0].coordinador
+                                            };
+                                            coordinador_array_manejo.push(myObjC);
+                                        }
+                                        if(response.data[0].rol_asesor != 7){
+                                            var myObjC = {
+                                                'idAsesor':   response.data[0].id_asesor,
+                                                'nombreAsesor' : response.data[0].asesor
+                                            };
+                                            asesor_array_manejo.push(myObjC);
+                                        }
+                                        //termina parte
                                         // console.log("información del lote: ", response);
-                                        id_gerente = response.data[0].id_gerente;
+                                        id_gerente = (response.data[0].id_gerente == 0) ? undefined : response.data[0].id_gerente;
                                         id_coordinador = response.data[0].id_coordinador;
                                         id_asesor = response.data[0].id_asesor;
-                                        // console.log(id_gerente);
+                                        console.log("FROM GTE", id_gerente);
+                                        console.log("FROM COO", id_coordinador);
+                                        // console.log("viene vacio:", id_gerente);
                                         // console.log(id_coordinador);
                                         // console.log(id_asesor);
                                         // angular.element(document.querySelector('#data_acg')).append($compile('')($scope)); //angular directive
@@ -5786,59 +5814,75 @@
                                             var el = angular.element(document.querySelector('#data_acg'));
                                             el.empty();
                                             dataInnerHTML = '                       <div class="col-md-4 form-group">\n' +
-                                                '                                        <label>Gerente:</label>\n' +
+                                                '                                        <label>Gerente:<span class="required-label">*</span></label>\n' +
                                                 '                                        <select ng-model="gerente" id="gerente"\n' +
                                                 '                                                ng-change="onSelectChangegerente(gerente)" class="form-control" >\n' +
                                                 '                                            <option value=""> - Selecciona un Gerente -</option>\n' +
-                                                '                                            <option ng-repeat="gerentes in gerentes"  ng-value="gerentes.idGerente"\n' +
-                                                '                                                    ng-selected="(gerentes.idGerente== '+id_gerente+') ? selected :  false ">{{gerentes.nombreGerente}}</option>\n' +
+                                                '                                            <option ng-repeat="gerentes in gerentes"  ng-value="gerentes.id_usuario"\n' +
+                                                '                                                    ng-selected="(gerentes.id_usuario== '+id_gerente+') ? selected :  false ">{{gerentes.nombreGerente}}</option>\n' +
                                                 '                                        </select>\n' +
                                                 '                                        <p id="gerentetext" style="color: red;"></p>\n' +
                                                 '                                    </div>';
                                             dataInnerHTML += '                     <div class="col-md-4 form-group">\n' +
-                                                '                                        <label>Coordinador:</label>\n' +
+                                                '                                        <label>Coordinador:<span class="required-label">*</span></label>\n' +
                                                 '                                        <!--ng-options="item.nombreCoordinador for item in coordinadores"-->\n' +
-                                                '                                        <select ng-model="coordinador"\n' +
+                                                '                                        <select ng-model="coordinador" id="coordinador"\n' +
                                                 '                                                ng-change="onSelectChangecoord(coordinador)" class="form-control"\n' +
                                                 '                                                style="text-transform: uppercase;" >\n' +
                                                 '                                            <option value=""> - Selecciona un Coordinador -</option>\n' +
                                                 '                                            <option ng-repeat="coordinadores in coordinadores"  ng-value="coordinadores.idCoordinador"\n' +
                                                 '                                                    ng-selected="(coordinadores.idCoordinador== '+id_coordinador+') ? selected : false">{{coordinadores.nombreCoordinador}}</option>\n' +
-                                                '                                        </select>\n' +
+                                                '                                        </select>' +
+                                                                                        '<p id="cordinadortext" style="color:red;"></p>\n' +
                                                 '                                    </div>';
                                             dataInnerHTML += '                      <div class="col-md-4 form-group">\n' +
-                                                '                                        <label>Asesor:</label>\n' +
+                                                '                                        <label>Asesor:<span class="required-label">*</span></label>\n' +
                                                 '                                        <!--ng-options="item.nombreAsesor for item in asesores"-->\n' +
                                                 '                                        <select ng-model="asesor" id="asesor"\n' +
-                                                '                                                class="form-control">\n' +
+                                                '                                                class="form-control"  ng-change="onSelectChangeAsesor(asesor)">\n' +
                                                 '                                            <option value="" > - Selecciona un Asesor -</option>\n' +
                                                 '                                            <option ng-repeat="asesores in asesores"  ng-value="asesores.idAsesor"\n' +
                                                 '                                                    ng-selected="(asesores.idAsesor== '+id_asesor+') ? selected : \'\'">{{asesores.nombreAsesor}}</option>\n' +
                                                 '                                        </select>\n' +
                                                 '                                        <p id="asesortext" style="color: red;"></p>\n' +
                                                 '                                    </div>';
+                                            console.log("ARREGLO COMBINADO", $scope.coordinadores);
+                                            $scope.gerente = id_gerente;
+                                            $scope.coordinador = id_coordinador;
+                                            $scope.asesor = id_asesor;
+
                                             angular.element(document.querySelector('#data_acg')).append($compile(dataInnerHTML)($scope)); //angular directive
                                         },1000);
 
-                                        $http.post('<?=base_url()?>index.php/Asesor/getGerenteById',{gerente: id_gerente}).then(
+                                        $http.post('<?=base_url()?>index.php/Asesor/getGerente',{gerente: id_gerente}).then(
                                             function (response) {
                                                 // $scope.coordinadores = response.data;
-                                                $scope.gerente = response.data;
+                                                response.data.map((element, index)=>{
+                                                    gerente_array_manejo.push(element);
+                                                });
+                                                $scope.gerentes = gerente_array_manejo;
+                                                // console.log("Data gerentes: ", $scope.gerentes);
+
                                                 // console.log($scope.coordinadores);
                                             },
                                             function (response) {
                                             });
 
+
+
                                         $http.post('<?=base_url()?>index.php/corrida/getCoordinador',{gerente: id_gerente}).then(
                                             function (response) {
-                                                $scope.coordinadores = response.data;
+                                                // $scope.coordinadores = response.data; //last
                                                 // $scope.coordinador = response.data;
                                                 // console.log($scope.coordinadores);
+                                                response.data.map((element, index)=>{
+                                                    coordinador_array_manejo.push(element);
+                                                });
+                                                $scope.coordinadores = coordinador_array_manejo;
                                                 $http.post('<?=base_url()?>index.php/Asesor/getCoordinadorById',{coordinador: id_coordinador}).then(
                                                     function (response) {
                                                         // $scope.coordinadores = response.data;
-                                                        $scope.coordinador = response.data;
-                                                        // console.log($scope.coordinadores);
+                                                        $scope.coordinador = response.data.idCoordinador;
                                                     },
                                                     function (response) {
                                                     });
@@ -5850,8 +5894,14 @@
                                         $http.post('<?=base_url()?>index.php/Corrida/getAsesor',{coordinador: id_coordinador}).then(
                                             function (response) {
                                                 // console.log("Asesores: ", response);
-                                                $scope.asesores = response.data;
+                                                //$scope.asesores = response.data;//lastest
                                                 // $scope.asesor = response.data;
+
+
+                                                response.data.map((element, index)=>{
+                                                    asesor_array_manejo.push(element);
+                                                });
+                                                $scope.asesores = asesor_array_manejo;
                                                 $http.post('<?=base_url()?>index.php/Asesor/getAsesorById',{asesor: id_asesor}).then(
                                                     function (response) {
                                                         // console.log("Asesores: ", response);
@@ -5865,11 +5915,6 @@
                                             },
                                             function (response) {
                                             });
-
-
-
-
-
                                     }else{
                                         // console.log('no hay');
                                     }
@@ -5900,7 +5945,7 @@
                                 '                                    </div>\n' +
                                 '                                    <div class="col-md-4 form-group" >\n' +
                                 '                                        <label>Asesor:<span class="required-label">*</span></label>\n' +
-                                '                                        <select ng-model="asesor" id="asesor" ng-options="item.nombreAsesor for item in asesores" class="form-control">\n' +
+                                '                                        <select ng-model="asesor" id="asesor" ng-options="item.nombreAsesor for item in asesores" class="form-control"  ng-change="onSelectChangeAsesor(asesorView)">\n' +
                                 '                                            <option value = ""> - Selecciona un Asesor - </option>\n' +
                                 '                                        </select>\n' +
                                 '                                        <p id="asesortext" style="color: red;"></p>\n' +
@@ -7097,6 +7142,9 @@
                         let id_gerente;
                         let id_coordinador;
                         let id_asesor;
+                        let gerente_array_manejo=[];
+                        let coordinador_array_manejo=[];
+                        let asesor_array_manejo=[];
 
                         if(response.data[0].idStatusLote == 3){
                             $scope.id_clienteP = response.data[0].id_cliente;
@@ -7104,7 +7152,7 @@
                             $http.post('<?=base_url()?>index.php/Asesor/getLineOfACG',{lote: response.data[0].idLote}).then(
                                 function (response) {
                                     // console.log("información del lote: ", response);
-                                    id_gerente = response.data[0].id_gerente;
+                                    id_gerente =(response.data[0].id_gerente == 0) ? undefined :response.data[0].id_gerente;
                                     id_coordinador = response.data[0].id_coordinador;
                                     id_asesor = response.data[0].id_asesor;
                                     // $scope.gerente.id_gerente = id_gerente;
@@ -7112,6 +7160,27 @@
                                     // $scope.asesor.id_asesor = id_asesor;
                                     // angular.element(document.querySelector('#data_acg')).append($compile('')($scope)); //angular directive
 
+                                        if(response.data[0].rol_gerente != 3){
+                                            var myObj = {
+                                                'id_usuario':   response.data[0].id_gerente,
+                                                'nombreGerente' : response.data[0].gerente
+                                            };
+                                            gerente_array_manejo.push(myObj);
+                                        }
+                                        if(response.data[0].rol_coord != 9){
+                                            var myObjC = {
+                                                'idCoordinador':   response.data[0].id_coordinador,
+                                                'nombreCoordinador' : response.data[0].coordinador
+                                            };
+                                            coordinador_array_manejo.push(myObjC);
+                                        }
+                                        if(response.data[0].rol_asesor != 7){
+                                            var myObjC = {
+                                                'idAsesor':   response.data[0].id_asesor,
+                                                'nombreAsesor' : response.data[0].asesor
+                                            };
+                                            asesor_array_manejo.push(myObjC);
+                                        }
 
                                     setTimeout(()=>{
                                         var el = angular.element(document.querySelector('#data_acg'));
@@ -7142,14 +7211,16 @@
                                             '                                        <label>Asesor:<span class="required-label">*</span></label>\n' +
                                             '                                        <!--ng-options="item.nombreAsesor for item in asesores"-->\n' +
                                             '                                        <select ng-model="asesorView" id="asesor"\n' +
-                                            '                                                class="form-control" >\n' +
+                                            '                                                class="form-control" ng-change="onSelectChangeAsesor(asesorView)">\n' +
                                             '                                            <option value="" > - Selecciona un Asesor -</option>\n' +
                                             '                                            <option ng-repeat="asesores in asesores"  ng-value="asesores.idAsesor"\n' +
                                             '                                                    ng-selected="(asesores.idAsesor== '+id_asesor+') ? selected : \'\'">{{asesores.nombreAsesor}}</option>\n' +
                                             '                                        </select>\n' +
                                             '                                        <p id="asesortext" style="color: red;"></p>\n' +
                                             '                                    </div>';
-
+                                        $scope.gerente = id_gerente;
+                                        $scope.coordinador = id_coordinador;
+                                        $scope.asesor = id_asesor;
                                         angular.element(document.querySelector('#data_acg')).append($compile(dataInnerHTML)($scope)); //angular directive
                                         // $scope.gerente = id_gerente;
                                         // $scope.coordinador = id_coordinador;
@@ -7159,6 +7230,10 @@
                                         function (response) {
                                             // $scope.coordinadores = response.data;
                                             $scope.gerente = response.data;
+
+
+
+
                                             // console.log($scope.coordinadores);
                                         },
                                         function (response) {
@@ -7166,7 +7241,11 @@
 
                                     $http.post('<?=base_url()?>index.php/corrida/getCoordinador',{gerente: id_gerente}).then(
                                         function (response) {
-                                            $scope.coordinadores = response.data;
+                                            // $scope.coordinadores = response.data;
+                                            response.data.map((element, index)=>{
+                                                coordinador_array_manejo.push(element);
+                                            });
+                                            $scope.coordinadores = coordinador_array_manejo;
                                             // $scope.coordinador = response.data;
                                             // console.log($scope.coordinadores);
                                             $http.post('<?=base_url()?>index.php/Asesor/getCoordinadorById',{coordinador: id_coordinador}).then(
@@ -7185,7 +7264,11 @@
                                     $http.post('<?=base_url()?>index.php/Corrida/getAsesor',{coordinador: id_coordinador}).then(
                                         function (response) {
                                             // console.log("Asesores: ", response);
-                                            $scope.asesores = response.data;
+                                            response.data.map((element, index)=>{
+                                                asesor_array_manejo.push(element);
+                                            });
+                                            $scope.asesores = asesor_array_manejo;
+
                                             // $scope.asesor = response.data;
                                             $http.post('<?=base_url()?>index.php/Asesor/getAsesorById',{asesor: id_asesor}).then(
                                                 function (response) {
@@ -7226,7 +7309,7 @@
                                 '                                    </div>\n' +
                                 '                                    <div class="col-md-4 form-group" >\n' +
                                 '                                        <label>Asesor:<span class="required-label">*</span></label>\n' +
-                                '                                        <select ng-model="asesor" id="asesor" ng-options="item.nombreAsesor for item in asesores" class="form-control">\n' +
+                                '                                        <select ng-model="asesor" id="asesor" ng-options="item.nombreAsesor for item in asesores" class="form-control"  ng-change="onSelectChangeAsesor(asesorView)">\n' +
                                 '                                            <option value = ""> - Selecciona un Asesor - </option>\n' +
                                 '                                        </select>\n' +
                                 '                                        <p id="asesortext" style="color: red;"></p>\n' +
@@ -8184,7 +8267,8 @@
                                             $scope.cincoCL = 1;
                                         }
 
-                                    } else if (descuentos.id_paquete != 261 || descuentos.id_paquete != 151 || descuentos.id_paquete != 368 || descuentos.id_paquete != 369 || descuentos.id_paquete != 263 || descuentos.id_paquete != 268
+                                    }
+                                    else if (descuentos.id_paquete != 261 || descuentos.id_paquete != 151 || descuentos.id_paquete != 368 || descuentos.id_paquete != 369 || descuentos.id_paquete != 263 || descuentos.id_paquete != 268
                                         || descuentos.id_paquete != 269 || descuentos.id_paquete != 265 || descuentos.id_paquete != 270 || descuentos.id_paquete != 271 || descuentos.id_paquete != 272
                                         || descuentos.id_paquete != 273 || descuentos.id_paquete != 274 || descuentos.id_paquete != 275 || descuentos.id_paquete != 276
                                         || descuentos.id_paquete != 278 || descuentos.id_paquete != 279 || descuentos.id_paquete != 280 || descuentos.id_paquete != 281
@@ -8415,16 +8499,23 @@
 
             $scope.onSelectChangegerente = function(gerente) {
                 console.log("Gerente: ", gerente);
+                console.log("id_ClienteP:", $scope.id_clienteP);
                 let gerenteParam;
                 if($scope.id_clienteP == undefined){
                     gerenteParam = gerente.idGerente;
+                    console.log('variante1', gerenteParam);
                 }else{
                     gerenteParam = gerente;
+                    console.log('variante2', gerenteParam);
                 }
+
+
                 // console.log("$scope.idcliete", $scope.id_clienteP);
+                console.log('gerenteParam', gerenteParam);
                 $http.post('<?=base_url()?>index.php/corrida/getCoordinador',{gerente: gerenteParam}).then(
                     function (response) {
                         $scope.coordinadores = response.data;
+                        console.log("asfsafsdfsdf:", response.data);
                     },
                     function (response) {
                     });
@@ -8436,8 +8527,11 @@
                 let coordParam;
                 if($scope.id_clienteP == undefined){
                     coordParam = coordinador.idCoordinador;
+                    console.log('Entré aqui');
                 }else{
                     coordParam = coordinador;
+                    console.log('Entré aqui II');
+                    document.getElementById("cordinadortext").innerHTML ='';
                 }
 
                 $http.post('<?=base_url()?>index.php/corrida/getAsesor',{coordinador: coordParam}).then(
@@ -8448,6 +8542,11 @@
                     });
             }
 
+            $scope.onSelectChangeAsesor = function(asesor){
+                document.getElementById("asesortext").innerHTML ='';
+                $('#asesor').css("border-color", "");
+                console.log("asesor:", asesor);
+            };
 
             $scope.payPlan = function() {
                 var planPay = $scope.plan;
@@ -8494,13 +8593,31 @@
                 var edad = ($scope.age == undefined) ? 0 : $scope.age.age;
                 var telefono = ($scope.telefono == undefined) ? 0 : $scope.telefono;
                 var correo = ($scope.email == undefined) ? 0 : $scope.email;
-                var asesor = ($scope.asesor == undefined) ? 0 : $scope.asesor.idAsesor;//
-                var coordinador = ($scope.coordinador == undefined) ? 0 : $scope.coordinador.idCoordinador;//
-                var gerente = ($scope.gerente == undefined) ? 0 : $scope.gerente.idGerente;//
-                // console.log("$scope.asesor: ", $scope.asesor);
-                // console.log("$scope.coordinador: ", $scope.coordinador);
-                // console.log("$scope.gerente: ", $scope.gerente);
+                var asesor; // ($scope.asesor == undefined) ? 0 : $scope.asesor.idAsesor;
+                var coordinador;// ($scope.coordinador == undefined) ? 0 : $scope.coordinador.idCoordinador;//
+                var gerente; //($scope.gerente == undefined) ? 0 : $scope.gerente.idGerente;//
 
+                if($scope.id_clienteP == undefined){
+                    gerenteParam = gerente;
+                    console.log('variante1', gerenteParam);
+                    asesor = ($scope.asesor == undefined) ? 0 : $scope.asesor.idAsesor;//
+                    coordinador = ($scope.coordinador == undefined) ? 0 : $scope.coordinador.idCoordinador;//
+                    gerente = ($scope.gerente == undefined) ? 0 : $scope.gerente.idGerente;//
+                }else{
+                    gerenteParam = gerente;
+                    console.log('variante2', gerenteParam);
+                    asesor = ($scope.asesor == undefined) ? 0 : $scope.asesor;//
+                    coordinador = ($scope.coordinador == undefined) ? 0 : $scope.coordinador;//
+                    gerente = ($scope.gerente == undefined) ? 0 : $scope.gerente;//
+                }
+
+                console.log("$scope.asesor: ", $scope.asesor);
+                console.log("$scope.coordinador: ", $scope.coordinador);
+                console.log("$scope.gerente: ", $scope.gerente);
+                console.log('camaraaaazbanda');
+                console.log('Asesor', asesor);
+                console.log("Coordinador ", coordinador);
+                console.log("Gerente ", gerente);
 
                 var plan = ($scope.plan == undefined) ? 0 : $scope.plan;
                 var proyecto = ($scope.proyecto == undefined) ? 0 : $scope.proyecto;
@@ -8609,7 +8726,8 @@
 
                 var loaderDiv = angular.element(document.querySelector('#loaderDiv'));
 
-                if(nombre == 0 || edad == 0 || id_lote == 0 || plan == 0 || anio2 == 0 || gerente == 0 || asesor == 0 || coordinador==0 || proyecto==0 || condominio==0){
+                if(nombre == 0 || edad == 0 || id_lote == 0 || plan == 0 || anio2 == 0 || gerente == 0 || asesor == 0 || coordinador==0 || proyecto==0 || condominio==0)
+                {
 
 
 
@@ -8678,7 +8796,8 @@
 
 
 
-                } else {
+                }
+                else {
 
                     anio = (anio == 'Activo') ? '0' : anio;
 
@@ -8690,6 +8809,7 @@
                         telefono: telefono,
                         correo: correo,
                         asesor: asesor,
+                        coordinador: coordinador,
                         gerente: gerente,
                         plan: plan,
                         anio: anio,
@@ -8771,6 +8891,9 @@
                 } else if(plan == 'Contado'){
                     var anio = 'Activo';
                 }
+                console.log("$scope.asesor: ", $scope.asesor);
+                console.log("$scope.coordinador: ", $scope.coordinador);
+                console.log("$scope.gerente: ", $scope.gerente);
 
                 var dias_pagar_enganche = ($scope.day == undefined) ? 0 : $scope.day.day;
                 var porcentaje_enganche = ($scope.porcentaje == undefined) ? 0 : $scope.porcentaje;
@@ -8779,6 +8902,9 @@
                 var apartado = ($scope.apartado == undefined) ? 0 : $scope.apartado;
 
                 var paquete = ($scope.descApply == undefined) ? 0 : $scope.descApply[0].id_paquete;
+                console.log("PAKETE");
+                console.log(paquete);
+
 
                 if(paquete > 0) {
                     var paqueteEach = $scope.descApply;
@@ -8827,7 +8953,7 @@
 
                     var saldoc = $scope.saldoFinal;
                     var precioFinalc = $scope.precioFinal;
-                    var fechaEngc = ($scope.fechaEng == undefined) ? 0 : $scope.fechaEng
+                    var fechaEngc = ($scope.fechaEng == undefined) ? 0 : $scope.fechaEng;
                     var engancheFinalc = $scope.engancheFinal;
                     var msi_1p = ($scope.totalPrimerPlan == undefined) ? 0 : $scope.totalPrimerPlan;
                     var msi_2p = ($scope.totalSegundoPlan == undefined) ? 0 : $scope.totalSegundoPlan;
@@ -8859,10 +8985,7 @@
                         type: 'orange',
                         buttons: {
                             cancel: {
-                                text: 'OK',
-                                action: function () {
-                                    toastr.success('¡Ahora! Cotizemos.');
-                                }
+                                text: 'OK'
                             }
                         }
                     });
@@ -8928,6 +9051,7 @@
                         correo: correo,
                         asesor: asesor,
                         gerente: gerente,
+                        coordinador: coordinador,
                         plan: plan,
                         anio: anio,
                         dias_pagar_enganche: dias_pagar_enganche,

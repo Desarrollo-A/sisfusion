@@ -74,11 +74,15 @@ class PaquetesCorrida extends CI_Controller
          */
         if($superficie == 1){ //Mayor a
           $query_superdicie = 'and sup >= '.$fin.' ';
-        }else if($superficie == 2){ // Rango
+        }else if($superficie == 2){ // Menor a
           $query_superdicie = 'and sup < '.$fin.' ';
+          $inicio = $this->input->post("fin");
+          $fin = $this->input->post("inicio");
 
         }else if($superficie == 3){ // Cualquiera
           $query_superdicie = '';
+          $inicio = 0;
+          $fin = 0;
         }
         $Fechainicio = $this->input->post("fechainicio");
         $Fechafin = $this->input->post("fechafin");
@@ -358,5 +362,148 @@ class PaquetesCorrida extends CI_Controller
     }
 
 
+//     function kelFunction(){
+//       $this->db->query("SET LANGUAGE Español;");
+      
+//       $cuari1 =  $this->db->query("SELECT l.idCondominio
+//       FROM lotes l
+//       INNER JOIN condominios c ON c.idCondominio = l.idCondominio 
+//       INNER JOIN residenciales r ON r.idResidencial = c.idResidencial
+//       WHERE r.idResidencial IN (1) GROUP BY l.idCondominio")->result_array();
+//       //print_r($cuari1);
+      
+//       $imploded = array();
+//                     foreach($cuari1 as $array) {
+//                         $imploded[] = implode(',', $array);
+//                         // echo $imploded[];
+//                     }
+      
+ 
+//    echo(sizeof($cuari1));
+//    $stack= array();
+
+//    for ($i=0; $i < sizeof($cuari1); $i++) { 
+//     # code...
+//     $arrCondominio= implode(",", $cuari1[$i]);
+ 
+//     $queryRes =  $this->db->query("DECLARE @condominio varchar(200), @tags VARCHAR(MAX); 
+//     SET @condominio = ($arrCondominio) 
+    
+//     /*INICIO DEL PROCESO*/ 
+//     SET @tags = (SELECT STRING_AGG(CONVERT(VARCHAR(MAX),(id_descuento) ), ',') 
+//     FROM lotes l 
+//     INNER JOIN condominios c ON c.idCondominio = l.idCondominio 
+//     INNER JOIN residenciales r ON r.idResidencial = c.idResidencial 
+//     WHERE c.idCondominio IN (@condominio)) 
+    
+//     (SELECT 
+//     @condominio condominio, STRING_AGG(id_paquete, ',') paquetes, fecha_inicio, fecha_fin, 
+//     UPPER(CONCAT('PAQUETE ', DATENAME(MONTH, fecha_inicio), ' ', YEAR(fecha_inicio))) descripcion 
+//     FROM paquetes 
+//     WHERE id_paquete in (SELECT DISTINCT(value) FROM STRING_SPLIT(@tags, ',') WHERE RTRIM(value) <> '') 
+//     GROUP BY fecha_inicio, fecha_fin)");
+
+//     foreach ($queryRes->result() as  $valor) {
+
+//       array_push($stack, array($valor->condominio, $valor->paquetes, $valor->fecha_inicio, $valor->fecha_fin, $valor->descripcion));
+
+//   }
+
+// }
+     
+// print_r($stack);
+
+
+
+// }
+
+
+
+ // $queryRes =  $this->db->query("SELECT l.idCondominio, l.id_descuento, p.id_paquete ,c.nombre, r.nombreResidencial, 
+  // p.descripcion, p.fecha_inicio, p.fecha_fin, 
+  // UPPER(CONCAT('PAQUETE ', DATENAME(MONTH, p.fecha_inicio), ' ', YEAR(p.fecha_inicio))) descripcion 
+  //  FROM lotes l
+  //  INNER JOIN condominios c ON c.idCondominio = l.idCondominio
+  //  INNER JOIN residenciales r ON r.idResidencial = c.idResidencial 
+  //  INNER JOIN paquetes p ON p.id_paquete = ".$cuari1[$i]['value']." AND l.id_descuento like '%".$cuari1[$i]['value']."%'
+  //  WHERE l.id_descuento is not null 
+  //  GROUP BY l.idCondominio, l.id_descuento, c.nombre, r.nombreResidencial, p.descripcion, p.id_paquete, p.fecha_inicio, p.fecha_fin");
+
+
+public function kelFunction(){
+  date_default_timezone_set('America/Mexico_City');
+  $cuari1 =  $this->db->query("SELECT DISTINCT(value) FROM lotes CROSS APPLY STRING_SPLIT(id_descuento, ',')")->result_array();
+  $stack= array();
+  
+  for ($i=0; $i < sizeof($cuari1); $i++) {
+    $queryRes =  $this->db->query("SELECT r.nombreResidencial, c.nombre_condominio, 
+    (CASE 
+    WHEN p.super1 = '0' AND p.super2 = '0' THEN 'Cualquiera'
+    WHEN p.super1 = '0' AND p.super2 != '0' THEN concat('Mayor igual a ',p.super2 )
+    WHEN p.super1 != '0' AND p.super2 = '0' THEN concat('Menor a ',p.super2 )
+    ELSE 'NA' END) superficie, 
+    
+    (CASE 
+WHEN p.super1 = 0 AND p.super2 = 0 THEN '#2874A6'
+WHEN p.super1 = 0 AND p.super2 != 0 THEN '#3498DB'
+WHEN p.super1 != 0 AND p.super2 = 0 THEN '#85C1E9'
+ELSE 'blue'
+END) color_superficie,
+
+(CASE 
+WHEN p.tipo_lote = 1 THEN 'HABITACIONAL'
+WHEN p.tipo_lote = 2 THEN 'COMERCIAL'
+WHEN p.tipo_lote = 3 THEN 'AMBOS'
+ELSE '-'
+END) tipo_lote,
+
+p.descripcion, 
+    (CASE WHEN d.id_tdescuento = 1 AND d.id_condicion = 1 AND d.eng_top = 0 AND d.apply = 1 THEN 'TOTAL DE LOTE'
+    WHEN d.id_tdescuento = 2 AND d.id_condicion = 2 AND d.eng_top = 0 AND d.apply = 0 THEN 'ENGANCHE'
+    WHEN d.id_tdescuento = 1 AND d.id_condicion = 4 AND d.eng_top = 0 AND d.apply = 1 THEN 'M2'
+    WHEN d.id_tdescuento = 1 AND d.id_condicion = 12 AND d.eng_top = 1 AND d.apply = 1 THEN 'BONO'
+    WHEN d.id_tdescuento = 1 AND d.id_condicion = 13 AND d.eng_top = 1 AND d.apply = 1 THEN 'MSI'
+    END) tipo, 
+
+    (CASE WHEN d.id_tdescuento = 1 AND d.id_condicion = 1 AND d.eng_top = 0 AND d.apply = 1 THEN 1
+WHEN d.id_tdescuento = 2 AND d.id_condicion = 2 AND d.eng_top = 0 AND d.apply = 0 THEN 2
+WHEN d.id_tdescuento = 1 AND d.id_condicion = 4 AND d.eng_top = 0 AND d.apply = 1 THEN 3
+WHEN d.id_tdescuento = 1 AND d.id_condicion = 12 AND d.eng_top = 1 AND d.apply = 1 THEN 4
+WHEN d.id_tdescuento = 1 AND d.id_condicion = 13 AND d.eng_top = 1 AND d.apply = 1 THEN 5
+END) tipo_check,
+
+
+    (CASE WHEN d.id_condicion = 13 THEN rl.msi_descuento ELSE d.porcentaje END) porcentaje, rl.msi_descuento, 
+    (CASE WHEN d.id_condicion != 13 AND rl.msi_descuento NOT IN (0) THEN rl.msi_descuento ELSE 0 END) msi_extra  
+   FROM lotes l
+   INNER JOIN condominios c ON c.idCondominio = l.idCondominio
+   INNER JOIN residenciales r ON r.idResidencial = c.idResidencial 
+   INNER JOIN paquetes p ON p.id_paquete = ".$cuari1[$i]['value']." AND l.id_descuento LIKE '%".$cuari1[$i]['value']."%'
+   INNER JOIN relaciones rl ON rl.id_paquete = p.id_paquete
+   INNER JOIN descuentos d ON d.id_descuento = rl.id_descuento
+   WHERE l.id_descuento is not null --AND p.tipo_lote IS NOT NULL
+   GROUP BY r.nombreResidencial, c.nombre_condominio, p.descripcion, p.super1, p.super2, d.id_tdescuento,
+   d.id_condicion, d.eng_top, d.apply, rl.msi_descuento, d.porcentaje, p.tipo_lote");
+
+  foreach ($queryRes->result() as  $valor) {
+     array_push($stack, array(
+      'nombreResidencial'=>$valor->nombreResidencial, 
+      'nombre_condominio'=>$valor->nombre_condominio, 
+      'superficie'=>$valor->superficie, 
+      'descripcion'=>$valor->descripcion, 
+      'tipo'=>$valor->tipo, 
+      'porcentaje'=>$valor->porcentaje, 
+      'msi_descuento'=>$valor->msi_descuento, 
+      'color_superficie'=>$valor->color_superficie, 
+      'tipo_lote'=>$valor->tipo_lote, 
+      'tipo_check'=>$valor->tipo_check, 
+      'msi_extra'=>$valor->msi_extra));
+  }
+}
+echo json_encode(array("data"=>$stack));
+
+}
+
+ 
 }
 

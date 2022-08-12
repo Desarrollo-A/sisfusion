@@ -16,7 +16,7 @@
 .mt-4 { margin-top: 40px; }
 .mr-1{ margin-right: 10px; }
 .mr-2{ margin-right: 20px!important; }
-.ml-1{ margin-left: 10px; }
+.ml-1{ margin-left: 10px!important; }
 .ml-2{ margin-left: 20px!important; }
 .p-0  { padding: 0!important; }
 .p-1  { padding: 10px; }
@@ -90,6 +90,7 @@
 .l-auto{ left: auto;}
 .z-1030{z-index: 1030;}
 .f-bolder{font-weight: bolder;}
+.fl-r {float: right;}
 /* END utilities */
 
 /* Flexbox */
@@ -106,6 +107,9 @@
 .row-reverse     { flex-direction: row-reverse}
 .direction-column {flex-direction: column;}
 .direction-row {flex-direction: row;}
+.gg-1           { grid-gap: 10px}
+.gg-15          { grid-gap: 15px}
+.gg-2           { grid-gap: 20px}
 
 /* END Flexbox */
 
@@ -123,6 +127,11 @@
 .fw-700         { font-weight: 700; }
 .fw-800         { font-weight: 800; }
 .fw-900         { font-weight: 900; }
+.fs-1           { font-size: 1rem;}
+.fs-2           { font-size: 2rem;}
+.fs-3           { font-size: 3rem;}
+.fs-4           { font-size: 4rem;}
+.fs-5           { font-size: 5rem;}
 
 /* Text */
 
@@ -181,7 +190,7 @@ $sunny         : #F9F871;
 $smartphone         : "(min-device-width : 320px) and (max-device-width : 480px)";
 $smartphoneLandscape: "(min-width : 321px)";
 $tablets            : "(min-width: 480px) and (max-width: 991px)";
-$minidesktop        : "(min-width: 992px) and (max-width: 1199px)";
+$minidesktop        : "(min-width: 1025px) and (max-width: 1280px)";
 $desktop            : "(min-width: 992px)";
 $tv                 : "(min-width: 1280px)";
 /* END size devices */
@@ -777,4 +786,16 @@ $tv                 : "(min-width: 1280px)";
         color: $deepGray;
         background-color: $grayDisabled;
     }
+}
+
+.input-gral {
+    background-color: $platinum !important;
+    color: $deepGray !important;
+    border-radius: 27px !important;
+    background-image: none !important;
+    padding-left: 20px;
+}
+.isRequired{
+    color: $redGoogle;
+    margin: 0 3px;
 }

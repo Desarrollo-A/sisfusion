@@ -1713,9 +1713,7 @@ class Caja_outside extends CI_Controller
     }
 
 
-    public function changeEstatusLote()
-    {
-
+    public function changeEstatusLote(){
         $lote = json_decode(file_get_contents("php://input"));
 
         $idLote = $lote->idLote;
@@ -1724,8 +1722,6 @@ class Caja_outside extends CI_Controller
         $idAsesor2 = $lote->idAsesor2;
         $motivo_change_status = $lote->motivo_change_status;
         $usuario = $lote->id_usuario;
-
-
         $idInvolucrados = $lote->idInvolucrados;
 
 
@@ -1738,8 +1734,8 @@ class Caja_outside extends CI_Controller
             $arreglo["fecha_modst"] = date("Y-m-d H:i:s");
             $arreglo["userstatus"] = $usuario;
             $arreglo["usuario"] = $usuario;
+            $arreglo["observacionContratoUrgente"] = NULL;
             $arreglo["motivo_change_status"] = $motivo_change_status;
-
 
             $update = $this->caja_model_outside->editaEstatus($idLote, $arreglo);
 
@@ -1750,11 +1746,7 @@ class Caja_outside extends CI_Controller
                 $response['message'] = 'ERROR';
                 echo json_encode($response);
             }
-
-
         } else if ($idStatusLote == 8) {
-
-
             $arreglo = array();
             $arreglo["idStatusLote"] = $idStatusLote;
             $arreglo["idAsesor"] = $idAsesor;
@@ -1762,12 +1754,11 @@ class Caja_outside extends CI_Controller
             $arreglo["fecha_modst"] = date("Y-m-d H:i:s");
             $arreglo["userstatus"] = $usuario;
             $arreglo["usuario"] = $usuario;
+            $arreglo["observacionContratoUrgente"] = NULL;
             $arreglo["motivo_change_status"] = $motivo_change_status;
-
             $datos["lote"] = $this->caja_model_outside->infoBloqueos($idLote);
 
             $data = array();
-
             $data["idResidencial"] = $datos["lote"]->idResidencial;
             $data["idCondominio"] = $datos["lote"]->idCondominio;
             $data["idLote"] = $datos["lote"]->idLoteL;
@@ -1797,6 +1788,7 @@ class Caja_outside extends CI_Controller
             $arreglo["fecha_modst"] = date("Y-m-d H:i:s");
             $arreglo["userstatus"] = $usuario;
             $arreglo["usuario"] = $usuario;
+            $arreglo["observacionContratoUrgente"] = NULL;
             $arreglo["motivo_change_status"] = $motivo_change_status;
 
 
@@ -1819,6 +1811,7 @@ class Caja_outside extends CI_Controller
             $arreglo["fecha_modst"] = date("Y-m-d H:i:s");
             $arreglo["userstatus"] = $usuario;
             $arreglo["usuario"] = $usuario;
+            $arreglo["observacionContratoUrgente"] = NULL;
             $arreglo["motivo_change_status"] = $motivo_change_status;
 
 
@@ -2307,7 +2300,7 @@ class Caja_outside extends CI_Controller
         $salesPartnerInformation = $this->caja_model_outside->getSalesPartnerInformation($data->id_cliente)->result_array();
 
         if (COUNT($salesPartnerInformation) >= 1) { // SÍ EXISTEN REGISTROS EN VENTAS COMPARTIDAS
-            echo 'ENTRA IF DE SÍ HAY REGISTROS <br>';
+            // echo 'ENTRA IF DE SÍ HAY REGISTROS <br>';
             if ($clientInformation->id_asesor == $data->id_asesor) { // LOS REGISTROS SON IGUALES (ASESOR)
                 $response['message'] = 'ERROR';
             } else {
@@ -2325,7 +2318,7 @@ class Caja_outside extends CI_Controller
                 }
             }
         } else { // NO EXISTEN REGISTROS EN VENTAS COMPARTIDAS
-            echo 'ENTRA ELSE DE NO HAY REGISTROS<br>';
+            // echo 'ENTRA ELSE DE NO HAY REGISTROS<br>';
             if ($clientInformation->id_asesor == $data->id_asesor) { // LOS REGISTROS SON IGUALES (ASESOR)
                 $response['message'] = 'ERROR';
             } else {
@@ -2443,7 +2436,7 @@ class Caja_outside extends CI_Controller
             $data_request_prospecto = $this->caja_model_outside->getProspectByIdClient($id_cliente);
             $id_prospecto = $data_request_prospecto[0]['id_prospecto'];
 
-            $request_update_prospecto = updateProspectoCTN($id_prospecto, $dato);
+            $request_update_prospecto =  $this->caja_model_outside->updateProspectoCTN($id_prospecto, $dato);
             if ($request_update_prospecto >= 1) {
                 $response['message_upd_prospecto'] = 'Se actualizó correctamente el prospecto.';
             }

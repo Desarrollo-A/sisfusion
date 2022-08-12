@@ -288,9 +288,11 @@
 												<th>M2</th>
 												<th>REFERENCIA</th>
 												<th>MSI</th>
-												<th>GERENTE</th>
-												<th>COORDINADOR</th>
 												<th>ASESOR</th>
+												<th>COORDINADOR</th>
+												<th>GERENTE</th>
+												<th>SUBDIRECTOR</th>
+												<th>DIRECTOR REGIONAL</th>
 												<th>ESTATUS</th>
 												<th>APARTADO</th>
 												<th>COMENTARIO</th>
@@ -405,7 +407,7 @@
 							titleAttr: 'Descargar archivo de Excel',
 							title: 'MADERAS_CRM_INVENTARIO',
 							exportOptions: {
-							columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18],
+							columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
 							format: {
 								header: function (d, columnIdx) {
 									switch (columnIdx) {
@@ -440,30 +442,36 @@
 											return 'MSI';
 											break;
 										case 10:
-											return 'GERENTE';
+											return 'ASESOR';
 											break;
 										case 11:
 											return 'COORDINADOR';
 											break;
 										case 12:
-											return 'ASESOR';
+											return 'GERENTE';
 											break;
 										case 13:
-											return 'ESTATUS';
+											return 'SUBDIREECTOR';
 											break;
 										case 14:
-											return 'APARTADO';
+											return 'DIRECTOR REGIONAL';
 											break;
 										case 15:
-											return 'COMENTARIO';
+											return 'ESTATUS';
 											break;
 										case 16:
-											return 'LUGAR PROSPECCIÓN';
+											return 'APARTADO';
 											break;
 										case 17:
-											return 'FECHA VALIDACION ENGANCHE';
+											return 'COMENTARIO';
 											break;
 										case 18:
+											return 'LUGAR PROSPECCIÓN';
+											break;
+										case 19:
+											return 'FECHA VALIDACION ENGANCHE';
+											break;
+										case 20:
 											return 'CANTIDAD ENGANCHE PAGADO';
 											break;
 									}
@@ -680,55 +688,53 @@
 					data: 'msni'
 				},
 				{
-					"data": function(d){
-						var gerente;
+					data: function(d){
+						var asesor;
 						if(d.idStatusLote == 8 || d.idStatusLote == 9 || d.idStatusLote == 10)
-						{
-							if(d.id_rol == 9){
-								gerente = myFunctions.validateEmptyField(d.coordinador2);
-							} else {
-								gerente = myFunctions.validateEmptyField(d.gerente2);
-							}
-						}
+							asesor = d.asesor2 == '  ' ? 'SIN ESPECIFICAR' : d.asesor2;
 						else
-						{
-							gerente = myFunctions.validateEmptyField(d.gerente);
-						}
-						return gerente;
+							asesor = d.asesor == '  ' ? 'SIN ESPECIFICAR' : d.asesor;
+						return asesor;
 					}
 				},
 				{
-					"data": function(d){
+					data: function(d){
 						var coordinador;
 						if(d.idStatusLote == 8 || d.idStatusLote == 9 || d.idStatusLote == 10)
-						{
-							if(d.id_rol == 9){
-								coordinador = myFunctions.validateEmptyField(d.asesor2);
-							} else {
-								coordinador = myFunctions.validateEmptyField(d.coordinador2);
-							}
-						}
+							coordinador = d.coordinador2 == '  ' ? 'SIN ESPECIFICAR' : d.coordinador2;
 						else
-						{
-							coordinador = myFunctions.validateEmptyField(d.coordinador);
-						}
-
-						coordinador = coordinador = '' ? 'Sin registro' : coordinador;
+							coordinador = d.coordinador == '  ' ? 'SIN ESPECIFICAR' : d.coordinador;
 						return coordinador;
 					}
 				},
 				{
-					"data": function(d){
-						var asesor;
+					data: function(d){
+						var gerente;
 						if(d.idStatusLote == 8 || d.idStatusLote == 9 || d.idStatusLote == 10)
-						{
-							asesor = myFunctions.validateEmptyField(d.asesor2);
-						}
+							gerente = d.gerente2 == '  ' ? 'SIN ESPECIFICAR' : d.gerente2;
 						else
-						{
-							asesor = myFunctions.validateEmptyField(d.asesor);
-						}
-						return asesor;
+							gerente = d.gerente == '  ' ? 'SIN ESPECIFICAR' : d.gerente;
+						return gerente;
+					}
+				},
+				{
+					data: function(d){
+						var subdirector;
+						if(d.idStatusLote == 8 || d.idStatusLote == 9 || d.idStatusLote == 10)
+							subdirector = d.subdirector2 == '  ' ? 'SIN ESPECIFICAR' : d.subdirector2;
+						else
+							subdirector = d.subdirector == '  ' ? 'SIN ESPECIFICAR' : d.subdirector;
+						return subdirector;
+					}
+				},
+				{
+					data: function(d){
+						var regional;
+						if(d.idStatusLote == 8 || d.idStatusLote == 9 || d.idStatusLote == 10)
+							regional = d.regional2 == '  ' ? 'SIN ESPECIFICAR' : d.regional2;
+						else
+							regional = d.regional == '  ' ? 'SIN ESPECIFICAR' : d.regional;
+						return regional;
 					}
 				},
 				{

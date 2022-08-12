@@ -1,3 +1,6 @@
+var mediaqueryList = window.matchMedia("(min-width: 200px)");
+console.log("m1",mediaqueryList);
+
 var optionsTotalVentas = {
     series: [],
     chart: {

@@ -140,11 +140,11 @@ class Metricas_model extends CI_Model {
         }
 
         $query = $this->db->query("WITH cte AS(
-            SELECT CAST('2022-01-01 00:00:00' AS DATETIME) DateValue
+            SELECT CAST('$beginDate 00:00:00' AS DATETIME) DateValue
             UNION ALL
             SELECT  DateValue + 1
             FROM    cte   
-            WHERE   DateValue + 1 <= '2022-07-20 23:59:59')
+            WHERE   DateValue + 1 <= '$endDate 23:59:59')
             SELECT 
                 (CASE 
                     WHEN MONTH(DateValue) = '1' THEN 'Enero'

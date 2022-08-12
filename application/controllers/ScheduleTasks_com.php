@@ -22,11 +22,14 @@ class ScheduleTasks_com extends CI_Controller
 
   // ScheduleTasks_com/CleanMonthly
   public function CleanMonthly(){ //CRON JOB 1 DE CADA MES
-    $this->db->query("UPDATE descuentos_universidad SET estatus = 4, pagos_activos = 0 WHERE estatus NOT IN (3,4,5) AND id_descuento IN (SELECT du.id_descuento FROM descuentos_universidad du INNER JOIN usuarios us ON us.id_usuario = du.id_usuario INNER JOIN usuarios ua ON ua.id_usuario = du.creado_por INNER JOIN opcs_x_cats opc ON opc.id_opcion = us.id_rol AND opc.id_catalogo = 1 LEFT JOIN (SELECT SUM(abono_neodata) abono_pagado, id_usuario FROM pago_comision_ind WHERE estatus in (17) GROUP BY id_usuario) pci2 ON du.id_usuario = pci2.id_usuario GROUP BY du.id_usuario, us.nombre, us.apellido_paterno, us.apellido_materno, opc.nombre, pci2.abono_pagado, du.pagado_caja, du.monto, du.id_descuento HAVING(pci2.abono_pagado + du.pagado_caja - du.monto) >-1 and (pci2.abono_pagado + du.pagado_caja - du.monto) <1 )");
+    $this->db->query("UPDATE descuentos_universidad SET estatus = 4, pagos_activos = 0 WHERE estatus IN(0,1,2) AND id_descuento IN (SELECT du.id_descuento FROM descuentos_universidad du INNER JOIN usuarios us ON us.id_usuario = du.id_usuario INNER JOIN usuarios ua ON ua.id_usuario = du.creado_por INNER JOIN opcs_x_cats opc ON opc.id_opcion = us.id_rol AND opc.id_catalogo = 1 LEFT JOIN (SELECT SUM(abono_neodata) abono_pagado, id_usuario FROM pago_comision_ind WHERE estatus in (17) GROUP BY id_usuario) pci2 ON du.id_usuario = pci2.id_usuario GROUP BY du.id_usuario, us.nombre, us.apellido_paterno, us.apellido_materno, opc.nombre, pci2.abono_pagado, du.pagado_caja, du.monto, du.id_descuento HAVING(pci2.abono_pagado + du.pagado_caja - du.monto) >-1 and (pci2.abono_pagado + du.pagado_caja - du.monto) <1 )");
     $this->db->query("UPDATE descuentos_universidad SET estatus = 1, pagos_activos = pagos_activos + 1 WHERE estatus IN (1,2) and pagos_activos < 7");
     $this->db->query("UPDATE descuentos_universidad SET estatus = 1, pagos_activos = 1 WHERE estatus = 5 AND YEAR(GETDATE()) = YEAR(fecha_modificacion) AND MONTH(GETDATE()) = MONTH(fecha_modificacion)");
     // $this->db->query("UPDATE descuentos_universidad SET pagos_activos = 0 WHERE estatus IN (3)");
     $this->db->query("UPDATE opinion_cumplimiento SET estatus = 0  WHERE estatus IN (1,2)");
+    $this->db->query("UPDATE pago_comision_ind SET abono_neodata = 0 WHERE id_comision in (SELECT id_comision FROM comisiones WHERE estatus = 0 and rol_generado not in (38))");
+    $this->db->query("UPDATE facturas set id_comision = 0 where total = 0 and id_comision not in (0)");
+    
 }
 
 //EDITAR EL TOTAL COMISION EN BANDERAS
@@ -71,14 +74,15 @@ public function flagPendiente(){
     }
 }
 
-public function flagPendienteDistintos(){
-    $this->ComisionesNeo_model->updateFlagPendienteDistintos()->result_array();
-}
+// public function flagPendienteDistintos(){
+//     $this->ComisionesNeo_model->updateFlagPendienteDistintos()->result_array();
+// }
 
+// ScheduleTasks_com/topar_bandera_neo
 public function topar_bandera_neo(){
     $this->flag();
     $this->flagAbonado();
-    $this->flagPendienteDistintos();
+    // $this->flagPendienteDistintos();
     $this->flagPendiente();
 
     //UPDATE BANDERA QUE DEBEN ESTAR EN 7 Y ESTAN EN OTRO ESTATUS
@@ -102,6 +106,7 @@ public function LlenadoPlan(){ //CRON diario
             }
         }else{
             echo NULL;
+
         }
     }
 }
@@ -109,10 +114,14 @@ public function LlenadoPlan(){ //CRON diario
 //REGRESAR SOLO SI TIENEN MAS DE $100 PESOS, DE 1 A 55 Y LAS QUE SON RECISIONES DE CONTRATO
 public function limpiar_bandera_neo(){
     $this->db->query("UPDATE pago_comision SET bandera = 1 WHERE bandera IN (55,0)");
-    $this->db->query("UPDATE pago_comision SET bandera = 0 WHERE id_lote in (select idLote from lotes where registro_comision = 1 and idStatusContratacion = 15) and bandera IN (1,55) and abonado<(total_comision-100) and abonado < (ultimo_pago-100)");
+    $this->db->query("UPDATE pago_comision SET bandera = 0, modificado_por = 1 WHERE id_lote in (select idLote from lotes where registro_comision = 1 and idStatusContratacion = 15) and bandera IN (1,55) and abonado<(total_comision-100) and abonado < (ultimo_pago-100)");
     $this->db->query("UPDATE pago_comision SET bandera = 0 WHERE id_lote in (select idLote from lotes where registro_comision = 8) and bandera NOT IN (0)");
     $this->db->query("UPDATE pago_comision SET bandera = 7 where pendiente <2 and bandera not in (7) and total_comision not in (0)");
     $this->db->query("UPDATE lotes SET registro_comision = 7 where registro_comision not in (7) and idLote in (select id_lote from pago_comision where bandera in (7))");
+
+    $this->db->query("UPDATE pago_comision SET bandera = 0 WHERE bandera = 10");
+    $this->db->query("UPDATE pago_comision SET bandera = 1 WHERE bandera = 15");
+    $this->db->query("UPDATE pago_comision SET bandera = 7 WHERE bandera = 17");
 
     $this->LlenadoPlan();
 }
@@ -134,8 +143,8 @@ public function activar_bandera_neo(){
                 if(!empty($data)){
                     if($data[$i]->Marca == 1){
                         if($data[$i]->Aplicado > ($datos[$i]['ultimo_pago']+100)){
-                            $this->ComisionesNeo_model->UpdateBanderaPagoComision($datos[$i]['id_lote'], $data[$i]->Bonificado);
-                            $contador ++;
+                            $this->ComisionesNeo_model->UpdateBanderaPagoComision($datos[$i]['id_lote'], $data[$i]->Bonificado, $data[$i]->FechaAplicado);
+                            // $contador ++;
                         }else{
                             $this->ComisionesNeo_model->UpdateBanderaPagoComisionNO($datos[$i]['id_lote']);
                         }

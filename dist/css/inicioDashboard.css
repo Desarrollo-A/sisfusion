@@ -69,7 +69,7 @@
 }
 
 .ml-1 {
-  margin-left: 10px;
+  margin-left: 10px !important;
 }
 
 .ml-2 {
@@ -338,6 +338,10 @@
   font-weight: bolder;
 }
 
+.fl-r {
+  float: right;
+}
+
 /* END utilities */
 /* Flexbox */
 .d-none {
@@ -392,6 +396,18 @@
   flex-direction: row;
 }
 
+.gg-1 {
+  grid-gap: 10px;
+}
+
+.gg-15 {
+  grid-gap: 15px;
+}
+
+.gg-2 {
+  grid-gap: 20px;
+}
+
 /* END Flexbox */
 /* Text */
 .text-center {
@@ -444,6 +460,26 @@
 
 .fw-900 {
   font-weight: 900;
+}
+
+.fs-1 {
+  font-size: 1rem;
+}
+
+.fs-2 {
+  font-size: 2rem;
+}
+
+.fs-3 {
+  font-size: 3rem;
+}
+
+.fs-4 {
+  font-size: 4rem;
+}
+
+.fs-5 {
+  font-size: 5rem;
 }
 
 /* Text */
@@ -1128,6 +1164,19 @@
   background-color: #F1F1F1;
 }
 
+.input-gral {
+  background-color: #eaeaea !important;
+  color: #929292 !important;
+  border-radius: 27px !important;
+  background-image: none !important;
+  padding-left: 20px;
+}
+
+.isRequired {
+  color: #EA4335;
+  margin: 0 3px;
+}
+
 #inicio .card {
   box-shadow: none !important;
   height: 450px;
@@ -1275,6 +1324,37 @@
   background-color: #103f75 !important;
 }
 
+@media (min-width: 1025px) and (max-width: 1280px) {
+  #inicio #rowEmbudoChart {
+    height: 40% !important;
+  }
+}
+
+@media (min-width: 1025px) and (max-width: 1280px) {
+  #inicio #rowEmbudoData {
+    height: 60% !important;
+  }
+}
+
+@media (min-width: 1025px) and (max-width: 1280px) {
+  #inicio #rowEmbudoData .col-lg-12 .d-flex {
+    justify-content: space-between;
+  }
+}
+
+@media (min-width: 1025px) and (max-width: 1280px) {
+  #inicio #rowEmbudoData .col-lg-12 .numberElement {
+    text-align: end !important;
+  }
+}
+
+@media (min-width: 1025px) and (max-width: 1280px) {
+  #inicio #rowEmbudoData .col-lg-12 {
+    padding-top: 0 !important;
+    display: block;
+  }
+}
+
 #inicio .beginDates {
   background-color: #eaeaea !important;
   border-radius: 27px 0 0 27px !important;
@@ -1304,9 +1384,21 @@
   font-size: 1em !important;
 }
 
+@media (min-width: 1025px) and (max-width: 1280px) {
+  #inicio .labelTitle {
+    font-size: 12px !important;
+  }
+}
+
 #inicio .numberElement {
   font-size: 1em !important;
   font-weight: bold !important;
+}
+
+@media (min-width: 1025px) and (max-width: 1280px) {
+  #inicio .numberElement {
+    font-size: 12px !important;
+  }
 }
 
 #inicio .loadChart {
