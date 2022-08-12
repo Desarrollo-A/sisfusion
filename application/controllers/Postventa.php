@@ -1565,10 +1565,21 @@ class Postventa extends CI_Controller
         $idSolicitud = $_POST['idSolicitud'];
         $rol = $this->session->userdata('id_rol');
 
-        $informacion = $this->Postventa_model->rechazarNotaria($idSolicitud);
-        return $informacion;
+        $estatus = $this->db->query("SELECT estatus FROM solicitud_escrituracion WHERE idSolicitud = $idSolicitud")->row()->estatus;
 
-        return $this->Postventa_model->rechazarNotaria($idSolicitud, $rol);
+        if($estatus == 5){
+            $informacion = $this->Postventa_model->rechazarNotaria5($idSolicitud);
+            return $informacion;
+
+            return $this->Postventa_model->rechazarNotaria5($idSolicitud, $rol);
+        } else if($estatus == 11){
+            $informacion = $this->Postventa_model->rechazarNotaria($idSolicitud);
+            return $informacion;
+
+            return $this->Postventa_model->rechazarNotaria($idSolicitud, $rol);
+        }
+
+        
     }
 
     //OBSERVACIONES
