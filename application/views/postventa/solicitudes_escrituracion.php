@@ -63,8 +63,8 @@
                                 <div class="material-datatables">
                                     <div class="form-group">
                                         <div class="table-responsive">
-                                            <table class="table-striped table-hover" id="solicitudes-datatable"
-                                                name="solicitudes-datatable">
+                                            <table class="table-striped table-hover" id="rospects-datatable"
+                                                name="rospects-datatable">
                                                 <thead>
                                                     <tr>
                                                         <th>ID SOLICITUD</th>
