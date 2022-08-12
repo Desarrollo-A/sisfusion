@@ -1833,7 +1833,7 @@ function getEstatusEscrituracion(){
 function getTipoEscrituracion() {
     $('#spiner-loader').removeClass('hide');
     $("#tipoE").find("option").remove();
-    $("#tipoE").append($('<option disabled selected>').val("0").text("Seleccione una opción"));
+    $("#tipoE").append($('<option disabled selected>').val("").text("Seleccione una opción"));
     $.post('getTipoEscrituracion', function(data) {
         var len = data.length;
         for (var i = 0; i < len; i++) {
