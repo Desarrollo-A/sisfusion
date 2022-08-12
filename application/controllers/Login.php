@@ -26,9 +26,9 @@ class Login extends CI_Controller
 		case '':
 		$data['token'] = $this->token();
 		$data['titulo'] = 'Login con roles de usuario en codeigniter';
-		// $this->load->view('login/login_view',$data);
+		$this->load->view('login/login_view',$data);
 		//  $this->load->view('login/maintenance',$data);
-		$this->load->view('errors/404not-found');
+		// $this->load->view('errors/404not-found');
 		break;
 		case '1': // DIRECTOR
 		case '2': // SUBDIRECTOR
