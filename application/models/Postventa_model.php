@@ -107,7 +107,7 @@ class Postventa_model extends CI_Model
         INNER JOIN control_procesos ctrl ON ctrl.estatus = se.estatus AND ctrl.idRol = $rol
         LEFT JOIN documentos_escrituracion de ON de.idSolicitud=se.idSolicitud AND de.tipo_documento = ctrl.tipo_documento
         LEFT JOIN (SELECT idSolicitud, CASE WHEN COUNT(*) != COUNT(CASE WHEN expediente IS NOT NULL THEN 1 END) 
-        THEN 0 ELSE 1 END result, 
+        THEN 0 ELSE 1 END result,  
         CASE WHEN COUNT(*) != COUNT(CASE WHEN estatus_validacion = 1 THEN 1 END) THEN 0 ELSE 1 END estatusValidacion,
         COUNT(CASE WHEN estatus_validacion = 2 THEN 1 END) no_rechazos
         FROM documentos_escrituracion WHERE tipo_documento NOT IN (7,9,10, 11, 12, 13,14,15,16,17,20,21) GROUP BY idSolicitud) de2 ON de2.idSolicitud = se.idSolicitud
@@ -459,7 +459,16 @@ function checkBudgetInfo($idSolicitud){
         
         $this->db->query("UPDATE solicitud_escrituracion SET idNotaria = '', estatus = 10 WHERE idSolicitud = $idSolicitud;");
         
-        return $this->db->query("INSERT INTO control_estatus VALUES(11, 59, 2, GETDATE(), 12, $idSolicitud, $rol, 10, 'Se rechazo la Notaria', 0);");
+        return $this->db->query("INSERT INTO control_estatus VALUES(11, 59, 2, GETDATE(), 12, $idSolicitud, $rol, 10, 'Se rechazo la Notaría', 0);");
+    }
+
+    function rechazarNotaria5(){
+        $idSolicitud = $_POST['idSolicitud'];
+        $rol = $this->session->userdata('id_rol');
+        
+        $this->db->query("UPDATE solicitud_escrituracion SET idNotaria = '', estatus = 4 WHERE idSolicitud = $idSolicitud;");
+        
+        return $this->db->query("INSERT INTO control_estatus VALUES(5, 57, 2, GETDATE(), 6, $idSolicitud, $rol, 4, 'Se rechazo la Notaría', 0);");
     }
 
     function getEstatusConstruccion()
