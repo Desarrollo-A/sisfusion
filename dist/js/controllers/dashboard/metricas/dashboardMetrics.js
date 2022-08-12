@@ -888,7 +888,7 @@ function buildTableMetros(data){
             data: 'superficie'
         },
         {
-            data: 'suma'
+            data: 'precio'
         }],
         columnDefs: [{
             visible: false,
