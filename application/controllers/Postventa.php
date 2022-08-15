@@ -1345,7 +1345,7 @@ class Postventa extends CI_Controller
                                                     ' . $data->nombre . '
                                                 </td>
                                                 <td style="font-size: 1em;">
-                                                    <b>Tipo de escrituración:</b><br>
+                                                    <b>Nombre a quien escritura:</b><br>
                                                     ' . $data->nombre_escrituras . '
                                                 </td>
                                                 <td style="font-size: 1em;">
