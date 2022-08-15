@@ -402,7 +402,24 @@
                                 return data.nombreCliente;
                             },
                         },
-                        {data: 'creacion_corrida'},
+                        {
+                            // data: 'creacion_corrida'
+                            data: null,
+                            render: function ( data, type, row )
+                            {
+                                // return data.creacion_corrida;
+                                let d = new Date(data.creacion_corrida);
+                                let month = (d.getMonth() + 1).toString().padStart(2, '0');
+                                let day = d.getDate().toString().padStart(2, '0');
+                                let year = d.getFullYear();
+                                let hr = d.getHours().toString().padStart(2, '0');;
+                                let min = d.getMinutes().toString().padStart(2, '0');;
+                                let segs = d.getSeconds().toString().padStart(2, '0');;
+                                let fecha = [year, month, day].join('-');
+                                let hrs = [hr, min, segs].join(':');
+                                return fecha+' '+hrs;
+                            },
+                        },
                         /*{data: 'ubic'},*/
                         {
                             data: null,
