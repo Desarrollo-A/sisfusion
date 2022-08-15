@@ -1817,14 +1817,14 @@ class Postventa extends CI_Controller
         $data = json_decode(json_encode($data), True);
 
         for ($i = 0; $i < count($data); $i++) {
+            $a = 0;
             if ( $data[$i]['dias'] == 0 || $data[$i]['dias'] == null ){
                 $data[$i]['atrasado']  = 'EN TIEMPO';
                 $data[$i]['diferencia']  = 0;
             }
             else{
                 $endDate = date('m/d/Y h:i:s a', time());
-
-                $result = $this->getWorkingDays($data[$i]['fecha_creacion'], $endDate);
+                $result = $this->getWorkingDays($data[$i]['fecha_creacion'], $endDate, $data[$i]['dias']);
                 $data[$i]['atrasado'] = $result['atrasado'];
                 $data[$i]['diferencia'] = $result['diferencia'];
             }
@@ -1853,11 +1853,13 @@ class Postventa extends CI_Controller
         $idSolicitud = $_POST['idEscritura'];
         $data = $this->Postventa_model->getFullReportContraloria($idSolicitud);
         for ($i = 0; $i < count($data); $i++) {
+            $a = 0;
             if ( $data[$i]['tiempo'] != 0 && $data[$i]['tiempo'] != null){
                 $startDate = $data[$i]['fecha_creacion'];
                 $endDate = ( $i+1 < count($data) ) ? $data[$i+1]['fecha_creacion'] : date('m/d/Y h:i:s a', time());
 
-                $result = $this->getWorkingDays($startDate, $endDate);
+
+                $result = $this->getWorkingDays($startDate, $endDate, $data[$i]['tiempo']);
                 $data[$i]['atrasado'] = $result['atrasado'];
                 $data[$i]['diferencia'] = $result['diferencia'];
             }
@@ -1960,16 +1962,18 @@ class Postventa extends CI_Controller
             echo json_encode(array());
     }
 
-function getWorkingDays($startDate, $endDate){
+function getWorkingDays($startDate, $endDate, $tiempo){
     $dataTime=[];
+    $stop_date = date('Y-m-d H:i:s', strtotime($startDate . ' +'.$tiempo.' day'));
     $begin = strtotime($startDate);
     $end   = strtotime($endDate);
-    if ($begin > $end) {
+    $stop = strtotime($stop_date);
+    if ($begin > $stop) {
         return 0;
     } else {
         $no_days  = 0;
         $weekends = 0;
-        while ($begin < $end) {
+        while ($begin < $stop) {
             $no_days++; // no of days in the given interval
             $what_day = date("N", $begin);
             if ($what_day > 5) { // 6 and 7 are weekend days
@@ -1980,7 +1984,7 @@ function getWorkingDays($startDate, $endDate){
         $working_days = $no_days - $weekends;
 
         $dt = new DateTime($startDate);
-        $dt2 = new DateTime($endDate);    
+        $dt2 = new DateTime($stop_date);    
         $timeStart = $dt->format('h:i:s A');
         $timeEnd = $dt2->format('h:i:s A');
         $st_time    =   strtotime($timeStart);
@@ -1988,7 +1992,7 @@ function getWorkingDays($startDate, $endDate){
 
         if( $end_time <= $st_time ){
             $dataTime['atrasado'] = "En tiempo";
-            $dataTime['diferencia'] = $working_days - 1;
+            $dataTime['diferencia'] = 0;
 
             return $dataTime;
         }

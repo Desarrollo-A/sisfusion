@@ -311,4 +311,13 @@ class Api extends CI_Controller
             echo json_encode(array("status" => 200, "message" => "Información no disponible, inténtalo más tarde."));
     }
 
+    public function external_dashboard()
+    {
+        print_r(apache_request_headers()["Authorization"]);
+        $tkn = apache_request_headers()["Authorization"];
+        // $datos['sub_menu'] = $this->get_menu->get_submenu_data($this->session->userdata('id_rol'), $this->session->userdata('id_usuario'));
+        // $this->load->view('template/header');
+        // $this->load->view("dashboard/base/base", $datos);
+    }
+
 }

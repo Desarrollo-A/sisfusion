@@ -559,7 +559,7 @@
                                     </div>
                                     <div class="col-md-2 form-group">
                                         <label>Plan:</label>
-                                        <select ng-model="plan" class="form-control" id="planSL" ng-change="payPlan()">
+                                        <select ng-model="plan" class="form-control" id="planSL" ng-change="payPlan()" disabled>
                                             <option value=""> - Selecciona un plan -</option>
                                             <option value="Crédito" ng-selected="<?php echo ($data_corrida->plan_corrida =='Crédito') ? 'selected' : '' ?>" > Crédito</option>
                                             <option value="Contado" ng-selected="<?php echo ($data_corrida->plan_corrida =='Contado') ? 'selected' : '' ?>" > Contado</option>
@@ -1214,9 +1214,9 @@
                             flex-wrap: wrap;flex-direction: column;">
 
                             <button class="btn-circle blue" ng-click="printCover()"
-                                    data-toggle="tooltip" title="Imprimir Caratula"><i class="fas fa-print fa-lg"></i></button>
+                                    data-toggle="tooltip" title="Imprimir Carátula"><i class="fas fa-print fa-lg"></i></button>
                             <button class="btn-circle dark-blue" ng-click="printCoverCF()"
-                                    data-toggle="tooltip" title="Imprimir Caratula + Corrida Financiera"><i class="fas fa-money-check-alt fa-lg"></i></button>
+                                    data-toggle="tooltip" title="Imprimir Carátula + Corrida Financiera"><i class="fas fa-money-check-alt fa-lg"></i></button>
                             <button class="btn-circle" ng-click="updateCorrida()"
                                     data-toggle="tooltip" title="Guardar"><i class="fa fa-save fa-lg fa-lg"></i></button>
                         </div>
@@ -9147,12 +9147,12 @@
              * ***************/
             $scope.printCover = function(){
                 let id_corrida = <?php echo $data_corrida->id_corrida;?>;
-                toastr.success('Generando caratula...');
+                toastr.success('Generando carátula...');
                 $window.open("<?=base_url()?>index.php/corrida/caratula/" + id_corrida);
             }
             $scope.printCoverCF = function(){
                 let id_corrida = <?php echo $data_corrida->id_corrida;?>;
-                toastr.success('Generando caratula...');
+                toastr.success('Generando carátula...');
                 $window.open("<?=base_url()?>index.php/corrida/caratulacf/" + id_corrida);
             }
             $scope.updateCorrida = function () {
