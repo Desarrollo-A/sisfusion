@@ -1849,7 +1849,7 @@ class Postventa extends CI_Controller
         $idSolicitud = $_POST['idEscritura'];
         $data = $this->Postventa_model->getFullReportContraloria($idSolicitud);
         for ($i = 0; $i < count($data); $i++) {
-            if ( $data[$i]['tiempo'] != 0 ){
+            if ( $data[$i]['tiempo'] != 0 && $data[$i]['tiempo'] != null){
                 $startDate = $data[$i]['fecha_creacion'];
                 $endDate = ( $i+1 < count($data) ) ? $data[$i+1]['fecha_creacion'] : date('m/d/Y h:i:s a', time());
 
