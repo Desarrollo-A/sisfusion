@@ -79,7 +79,6 @@ class Corrida extends CI_Controller {
 			echo json_encode(array());
 		}
 	}
-
 	public function getAsesor() {
 		$objDatos = json_decode(file_get_contents("php://input"));
 		$data= $this->Corrida_model->getAsesores($objDatos->coordinador);
