@@ -1962,9 +1962,11 @@ class Postventa extends CI_Controller
 
 function getWorkingDays($startDate, $endDate, $tiempo){
     $dataTime=[];
+    $stop_date = date('Y-m-d H:i:s', strtotime($startDate . ' +'.$tiempo.' day'));
     $begin = strtotime($startDate);
     $end   = strtotime($endDate);
-    if ($begin > $end) {
+    $stop = strtotime($endDate);
+    if ($begin > $stop) {
         return 0;
     } else {
         $no_days  = 0;
@@ -1980,7 +1982,7 @@ function getWorkingDays($startDate, $endDate, $tiempo){
         $working_days = $no_days - $weekends;
 
         $dt = new DateTime($startDate);
-        $dt2 = new DateTime($endDate);    
+        $dt2 = new DateTime($stop_date);    
         $timeStart = $dt->format('h:i:s A');
         $timeEnd = $dt2->format('h:i:s A');
         $st_time    =   strtotime($timeStart);
