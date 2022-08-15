@@ -972,6 +972,10 @@ class Postventa extends CI_Controller
             "tipo_escritura" => $data['tipoE']
         );
         ($data['fechaCA2'] == '' || $data['fechaCA2'] == null || $data['fechaCA2'] == 'null') ? '': $updateData['fecha_anterior'] =  $data['fechaCA2'];
+        
+        if($_POST['not'] == 'nou'){
+            $updateData['idNotaria'] = 0;
+        }
 
         $data = $this->Postventa_model->updatePresupuesto($updateData, $id_solicitud);
         if ($data != null)
@@ -1820,7 +1824,7 @@ class Postventa extends CI_Controller
             else{
                 $endDate = date('m/d/Y h:i:s a', time());
 
-                $result = $this->getWorkingDays($data[$i]['fecha_creacion'], $endDate);
+                $result = getWorkingDays($data[$i]['fecha_creacion'], $endDate);
                 $data[$i]['atrasado'] = $result['atrasado'];
                 $data[$i]['diferencia'] = $result['diferencia'];
             }
@@ -1853,7 +1857,7 @@ class Postventa extends CI_Controller
                 $startDate = $data[$i]['fecha_creacion'];
                 $endDate = ( $i+1 < count($data) ) ? $data[$i+1]['fecha_creacion'] : date('m/d/Y h:i:s a', time());
 
-                $result = $this->getWorkingDays($startDate, $endDate);
+                $result = getWorkingDays($startDate, $endDate);
                 $data[$i]['atrasado'] = $result['atrasado'];
                 $data[$i]['diferencia'] = $result['diferencia'];
             }
