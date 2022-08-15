@@ -816,8 +816,8 @@ function fillTable(beginDate, endDate, estatus) {
             },
             {
                 data: function (d) {
-                    return `<center><span><b>${d.idEstatus} - ${d.estatus}</b></span><center>
-                    <center><span>(${d.area})</span><center>`;   
+                    return `<center><span><b>${d.idEstatus == 91 ? '1/2':d.idEstatus == 92 ? 3:d.idEstatus} - ${d.estatus}</b></span><center>`;   
+                    // <center><span>(${d.area})</span><center></center>
                 }
             },
             {
@@ -1181,9 +1181,9 @@ function getDocumentsClient(idEscritura) {
 
 function getNotarias(datos=null) {
     $('#spiner-loader').removeClass('hide');
-    $("#notaria").find("option").remove();
+    // $("#notaria").find("option").remove();
     $(".notaria-select").find("option").remove();
-    $("#notaria").append($('<option disabled>').val("0").text("Seleccione una opción"));
+    // $("#notaria").append($('<option disabled>').val("0").text("Seleccione una opción"));
     $(".notaria-select").append($('<option disabled>').val("0").text("Seleccione una opción"));
 
     $.post('getNotarias', function (data) {
@@ -1191,16 +1191,16 @@ function getNotarias(datos=null) {
         for (var i = 0; i < len; i++) {
             var id = data[i]['idNotaria'];
             var name = data[i]['nombre_notaria'];
-            $("#notaria").append($('<option>').val(id).text(name));
+            // $("#notaria").append($('<option>').val(id).text(name));
             $(".notaria-select").append($('<option>').val(id).text(name));
 
         }
         if (len <= 0) {
-            $("#notaria").append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
+            // $("#notaria").append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
             $(".notaria-select").append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
         }
        
-        $("#notaria").selectpicker('refresh');
+        // $("#notaria").selectpicker('refresh');
         $(".notaria-select").selectpicker('refresh');
         if(datos != null){
             let selects = $(`#notarias-${datos.idSolicitud}`).find('.selectpicker.notaria-select');

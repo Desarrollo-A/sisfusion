@@ -628,7 +628,7 @@ function checkBudgetInfo($idSolicitud){
 
     function getFullReportContraloria($idSolicitud){
         $query = $this->db->query("SELECT ce.idEscrituracion, max(ce.fecha_creacion) fecha_creacion, 
-        ce.newStatus, l.nombreLote, cond.nombre nombreCondominio, r.nombreResidencial, se.nombre, 
+        ce.idStatus, l.nombreLote, cond.nombre nombreCondominio, r.nombreResidencial, se.nombre, 
         oxc.nombre estatus, oxc2.nombre area, cp.tiempo
         FROM control_estatus ce
         INNER JOIN solicitud_escrituracion se ON se.idSolicitud = ce.idEscrituracion
@@ -636,12 +636,12 @@ function checkBudgetInfo($idSolicitud){
         INNER JOIN condominios cond ON cond.idCondominio = l.idCondominio 
         INNER JOIN residenciales r ON r.idResidencial = cond.idResidencial 
         INNER JOIN clientes c ON c.id_cliente = se.idCliente AND c.status = 1
-        INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = ce.newStatus AND oxc.id_catalogo = 59 
+        INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = ce.idStatus AND oxc.id_catalogo = 59 
         INNER JOIN opcs_x_cats oxc2 ON oxc2.id_opcion = ce.idArea AND oxc2.id_catalogo = 1
-        INNER JOIN control_procesos cp ON cp.estatus=ce.newStatus AND cp.idRol = ce.idArea
+        INNER JOIN control_procesos cp ON cp.estatus=ce.idStatus AND cp.idRol = ce.idArea
         WHERE ce.idEscrituracion = $idSolicitud
-        GROUP BY ce.idEscrituracion, ce.newStatus, l.nombreLote,cond.nombre, 
-        r.nombreResidencial, CONCAT(c.nombre, ' ', c.apellido_paterno, ' ', c.apellido_materno), oxc.nombre, oxc2.nombre, cp.tiempo, ce.fecha_creacion,  se.nombre, se.nombre, ce.idStatus");
+        GROUP BY ce.idEscrituracion, ce.idStatus, l.nombreLote,cond.nombre, 
+        r.nombreResidencial, CONCAT(c.nombre, ' ', c.apellido_paterno, ' ', c.apellido_materno), oxc.nombre, oxc2.nombre, cp.tiempo,   se.nombre, ce.idStatus");
                 
         return $query->result_array();
     }

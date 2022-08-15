@@ -199,4 +199,16 @@ class Documentacion_model extends CI_Model
         WHERE mr.tipo_documento = $id_documento AND mr.tipo_proceso = $tipo_proceso");
     }
 
+
+    function getDocumentsInformation_Escrituracion($idLote){
+        return $this->db->query("SELECT se.idSolicitud, de.* FROM solicitud_escrituracion se
+        INNER JOIN documentos_escrituracion de ON de.idSolicitud = se.idSolicitud
+        WHERE se.idLote = $idLote");
+    }
+
+    function getLotesList_escrituracion($idCondominio){
+        return $this->db->query("SELECT * FROM lotes lo
+        INNER JOIN solicitud_escrituracion se ON se.idLote = lo.idLote
+        WHERE lo.idCondominio = $idCondominio");
+    }
 }

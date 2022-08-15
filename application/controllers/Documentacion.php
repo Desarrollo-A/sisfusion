@@ -305,4 +305,23 @@ class Documentacion extends CI_Controller
                 echo json_encode(array("status" => 500, "message" => "Oops, algo salió mal. Inténtalo más tarde."));
         }
     }
+
+    function getDocumentsInformation_Escrituracion(){
+        $idLote = $this->input->post("idLote");
+        $data = $this->Documentacion_model->getDocumentsInformation_Escrituracion($idLote)->result_array();
+        if ($data != null)
+            echo json_encode($data);
+        else
+            echo json_encode(array());
+    }
+
+    function getLotesList_escrituracion()
+    {
+        $idCondominio = $this->input->post("idCondominio");
+        $data = $this->Documentacion_model->getLotesList_escrituracion($idCondominio)->result_array();
+        if ($data != null)
+            echo json_encode($data);
+        else
+            echo json_encode(array());
+    }
 }
