@@ -136,7 +136,7 @@ class Postventa_model extends CI_Model
 
         $notaria = $this->db->query("SELECT idNotaria FROM solicitud_escrituracion WHERE idSolicitud = $id_solicitud")->row()->idNotaria;
 
-        if($notaria != NULL){
+        if($notaria != NULL || $notaria != 0){
             $pertenece = $this->db->query("SELECT pertenece FROM solicitud_escrituracion se INNER JOIN Notarias n ON n.idNotaria = se.idNotaria WHERE idSolicitud = $id_solicitud")->row()->pertenece;
         }
 
@@ -263,8 +263,8 @@ class Postventa_model extends CI_Model
     {
         $query = $this->db->query("	SELECT de.idDocumento, oxc.nombre, de.expediente, de.tipo_documento, de.idSolicitud,
         CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) creado_por, de.fecha_creacion, se.estatus estatusActual,
-        (CASE WHEN de.estatus_validacion IS NULL THEN 'Sin validar' WHEN de.estatus_validacion = 1 THEN 'Validado OK' WHEN de.estatus_validacion = 2 THEN 'Rechazado' END) estatus_validacion,
-        (CASE WHEN de.estatus_validacion IS NULL THEN '#566573' WHEN de.estatus_validacion = 1 THEN '#239B56' WHEN de.estatus_validacion = 2 THEN '#C0392B' END) colour,
+        (CASE WHEN (de.estatus_validacion IS NULL OR de.estatus_validacion = 0) THEN 'Sin validar' WHEN de.estatus_validacion = 1 THEN 'Validado OK' WHEN de.estatus_validacion = 2 THEN 'Rechazado' END) estatus_validacion,
+        (CASE WHEN (de.estatus_validacion IS NULL OR de.estatus_validacion = 0) THEN '#566573' WHEN de.estatus_validacion = 1 THEN '#239B56' WHEN de.estatus_validacion = 2 THEN '#C0392B' END) colour,
         (CASE WHEN CONCAT(us2.nombre, ' ', us2.apellido_paterno, ' ', us2.apellido_materno) = '' THEN 'Sin especificar' ELSE CONCAT(us2.nombre, ' ', us2.apellido_paterno, ' ', us2.apellido_materno) END) validado_por,
         de.estatus_validacion ev,
         (CASE 
