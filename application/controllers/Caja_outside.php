@@ -5,16 +5,11 @@ class Caja_outside extends CI_Controller
     public function __construct()
     {
         parent::__construct();
-        header('Access-Control-Allow-Origin: *');
-        header('Access-Control-Allow-Headers: Content-Type');
-
-
-        //$this->load->model('caja_model_outside');
-        $this->load->model(array('Clientes_model', 'caja_model_outside','General_model'));
-        $this->load->library(array('session', 'form_validation', 'get_menu'));
+        $this->load->model(array('Clientes_model', 'caja_model_outside', 'General_model'));
+        $this->load->library(array('session', 'form_validation', 'get_menu', 'Jwt_actions'));
         $this->load->helper(array('url', 'form'));
         $this->load->database('default');
-        
+        $this->jwt_actions->authorize_externals('6489', apache_request_headers()["Authorization"]);
     }
 
     public function index()
@@ -1822,7 +1817,6 @@ class Caja_outside extends CI_Controller
             $arreglo["fecha_modst"] = date("Y-m-d H:i:s");
             $arreglo["userstatus"] = $usuario;
             $arreglo["usuario"] = $usuario;
-            $arreglo["observacionContratoUrgente"] = NULL;
             $arreglo["motivo_change_status"] = $motivo_change_status;
 
 
