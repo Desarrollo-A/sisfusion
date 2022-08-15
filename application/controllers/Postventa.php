@@ -1111,7 +1111,7 @@ class Postventa extends CI_Controller
                                             </tr>
                                             <tr>
                                                 <td style="font-size: 1em;width: 50%;border: 1px solid #333;background-color: #D9E1F2; vertical-align:middle;height:fit-content">
-                                                    <div>Nombre a quien escritura:</div>
+                                                    <div>Tipo de escrituración:</div>
                                                 </td>
                                                 <td style="border: 1px solid #333;width: 50%;text-align: initial; display:flex; align-items: center;">
                                                     <div style ="width: 100%;border: 1px solid #F1F4FF;">' . $data->nombre_escrituras . '</div>
@@ -1345,11 +1345,11 @@ class Postventa extends CI_Controller
                                                     ' . $data->nombre . '
                                                 </td>
                                                 <td style="font-size: 1em;">
-                                                    <b>Nombre a quien escritura:</b><br>
+                                                    <b>Tipo de escrituración:</b><br>
                                                     ' . $data->nombre_escrituras . '
                                                 </td>
                                                 <td style="font-size: 1em;">
-                                                    <b>Nombre a quien escritura:</b><br>
+                                                    <b>Tipo de escrituración:</b><br>
                                                     ' . $data->tipoEscritura . '
                                                 </td>
                                                 <td style="font-size: 1em;">

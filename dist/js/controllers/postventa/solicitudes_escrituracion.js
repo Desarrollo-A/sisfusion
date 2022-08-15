@@ -1459,7 +1459,7 @@ function buildTableDetail(data, permisos) {
                     solicitudes += `<button data-idDocumento="${v.idDocumento}" data-documentType="${v.tipo_documento}" data-idSolicitud=${v.idSolicitud} data-details ="1" data-action="4" class="btn-data btn-warning upload" data-toggle="tooltip" data-placement="top" title="Documento NOK"><i class="fas fa-thumbs-down"></i></button>`;
                 else if (v.ev == 2) // MJ: VALIDADO NOK
                     solicitudes += `<button data-idDocumento="${v.idDocumento}" data-documentType="${v.tipo_documento}" data-idSolicitud=${v.idSolicitud} data-details ="1" data-action="3" class="btn-data btn-green upload" data-toggle="tooltip" data-placement="top" title="Documento OK"><i class="fas fa-thumbs-up"></i></button>`;
-                else { // MJ: SIN VALIDAR
+                else if (v.expediente != null) { // MJ: SIN VALIDAR
                     solicitudes += `<button data-idDocumento="${v.idDocumento}" data-documentType="${v.tipo_documento}" data-idSolicitud=${v.idSolicitud} data-details ="1" data-action="3" class="btn-data btn-gray upload" data-toggle="tooltip" data-placement="top" title="Sin validar OK"><i class="fas fa-thumbs-up"></i></button>`;
                     solicitudes += `<button data-idDocumento="${v.idDocumento}" data-documentType="${v.tipo_documento}" data-idSolicitud=${v.idSolicitud} data-details ="1" data-action="4" class="btn-data btn-gray upload" data-toggle="tooltip" data-placement="top" title="Sin validar NOK"><i class="fas fa-thumbs-down"></i></button>`;
                 }
