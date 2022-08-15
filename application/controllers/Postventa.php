@@ -1824,7 +1824,7 @@ class Postventa extends CI_Controller
             else{
                 $endDate = date('m/d/Y h:i:s a', time());
 
-                $result = getWorkingDays($data[$i]['fecha_creacion'], $endDate);
+                $result = $this->getWorkingDays($data[$i]['fecha_creacion'], $endDate, $data[$i]['dias']);
                 $data[$i]['atrasado'] = $result['atrasado'];
                 $data[$i]['diferencia'] = $result['diferencia'];
             }
@@ -1857,7 +1857,7 @@ class Postventa extends CI_Controller
                 $startDate = $data[$i]['fecha_creacion'];
                 $endDate = ( $i+1 < count($data) ) ? $data[$i+1]['fecha_creacion'] : date('m/d/Y h:i:s a', time());
 
-                $result = getWorkingDays($startDate, $endDate);
+                $result = $this->getWorkingDays($startDate, $endDate, $data[$i]['tiempo']);
                 $data[$i]['atrasado'] = $result['atrasado'];
                 $data[$i]['diferencia'] = $result['diferencia'];
             }
@@ -1960,7 +1960,7 @@ class Postventa extends CI_Controller
             echo json_encode(array());
     }
 
-function getWorkingDays($startDate, $endDate){
+function getWorkingDays($startDate, $endDate, $tiempo){
     $dataTime=[];
     $begin = strtotime($startDate);
     $end   = strtotime($endDate);
