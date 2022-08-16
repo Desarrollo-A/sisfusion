@@ -430,7 +430,7 @@ class PaquetesCorrida extends CI_Controller
   //  GROUP BY l.idCondominio, l.id_descuento, c.nombre, r.nombreResidencial, p.descripcion, p.id_paquete, p.fecha_inicio, p.fecha_fin");
 
 
-public function kelFunction(){
+public function listaDescuentos(){
   date_default_timezone_set('America/Mexico_City');
   $cuari1 =  $this->db->query("SELECT DISTINCT(value) FROM lotes CROSS APPLY STRING_SPLIT(id_descuento, ',')")->result_array();
   $stack= array();

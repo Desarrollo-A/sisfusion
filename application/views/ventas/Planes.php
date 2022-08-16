@@ -588,7 +588,7 @@ $("#table_planes").ready(function() {
                 }],
                 columnDefs: [{}],
                 ajax: {
-                    "url": url2 + "PaquetesCorrida/kelFunction",
+                    "url": url2 + "PaquetesCorrida/listaDescuentos",
                     "type": "POST",
                     cache: false,
                     "data": function(d) {}
