@@ -453,7 +453,8 @@ $(document).on('click', '.btnSub', function () {
         thisVar: $(this),
         option: $(this).data("option"),
         begin: formatDate($('#tableBegin').val()), 
-        end: formatDate($('#tableEnd').val())
+        end: formatDate($('#tableEnd').val()),
+        leader: $(this).data("leader")
     }
     initDetailRow(data);
 });
@@ -813,7 +814,8 @@ function createDetailRow(row, tr, dataObj){
         render:  dataObj.render,
         transaction: dataObj.transaction,
         beginDate: dataObj.begin,
-        endDate: dataObj.end
+        endDate: dataObj.end,
+        leader: dataObj.leader
     }).done(function (response) {
         row.data().sedesData = JSON.parse(response);
         
