@@ -568,13 +568,13 @@ $("#table_planes").ready(function() {
                     "width": "10%",
                     "data": function( d ){
 						switch(d.tipo_check){
-							case 1:
-							case 2:
+							case '1':
+							case '2':
 								return '<p class="m-0"><b>'+(d.porcentaje)+'%</b></p>';
 							break;
 
-							case 3:
-							case 4:
+							case '3':
+							case '4':
 								return '<p class="m-0"><b>$'+formatMoney(d.porcentaje)+'</b></p>';
 							break;
 
