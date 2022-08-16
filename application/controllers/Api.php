@@ -13,7 +13,7 @@ class Api extends CI_Controller
             parent::__construct();
             date_default_timezone_set('America/Mexico_City');
             $this->load->helper(array('form'));
-            $this->load->library(array('jwt_key'));
+            $this->load->library(array('jwt_key', 'get_menu'));
             $this->load->model(array('Api_model', 'General_model'));
     }
 
@@ -344,6 +344,8 @@ class Api extends CI_Controller
             $datos['external'] = true;
             $this->load->view('template/header');
             $this->load->view("dashboard/base/base", $datos);
+        }else{
+            die("Acceso denegado");
         }
       
     }
