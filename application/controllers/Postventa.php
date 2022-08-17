@@ -868,7 +868,8 @@ class Postventa extends CI_Controller
     public function getDocumentsClient()
     {
         $idEscritura = $_POST['idEscritura'];
-        $data = $this->Postventa_model->getDocumentsClient($idEscritura);
+        $idEstatus = $_POST['idEstatus'];
+        $data = $this->Postventa_model->getDocumentsClient($idEscritura, $idEstatus);
         if ($data != null)
             echo json_encode($data);
         else
@@ -1706,7 +1707,7 @@ class Postventa extends CI_Controller
                         "data" => 'estatus'
                     ],
                     [
-                        "title" => 'Area',
+                        "title" => 'Área',
                         "data" => 'area'
                     ],
                     [
@@ -1751,7 +1752,7 @@ class Postventa extends CI_Controller
                         "data" => 'estatus'
                     ],
                     [
-                        "title" => 'Area',
+                        "title" => 'Área',
                         "data" => 'area'
                     ],
                     [
@@ -1991,13 +1992,13 @@ function getWorkingDays($startDate, $endDate, $tiempo){
         $end_time   =   strtotime($timeEnd);
 
         if( $end_time <= $st_time ){
-            $dataTime['atrasado'] = "En tiempo";
+            $dataTime['atrasado'] = "EN TIEMPO";
             $dataTime['diferencia'] = 0;
 
             return $dataTime;
         }
         else{
-            $dataTime['atrasado'] = "Atrasado";
+            $dataTime['atrasado'] = "ATRASADO";
             $dataTime['diferencia'] = ( $working_days != 0 ) ? $working_days - 1 : $working_days;
 
             return $dataTime;

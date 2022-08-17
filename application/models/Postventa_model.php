@@ -260,12 +260,20 @@ class Postventa_model extends CI_Model
         return $query->result();
     }
 
-    function getDocumentsClient($idSolicitud)
+    function getDocumentsClient($idSolicitud, $status)
     {
+        if($status == 10 || $status == 11){
+            $tipo_doc = 'NOT IN (11, 12, 13, 14, 15, 16, 17)';
+        }elseif($status == 3){
+            $tipo_doc = 'IN (7,20,21)';
+        }elseif($estatus == 11){
+            $tipo_doc = 'IN (7)';
+        }
+
         $query = $this->db->query("	SELECT de.idDocumento, oxc.nombre, de.expediente, de.tipo_documento, de.idSolicitud,
         CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) creado_por, de.fecha_creacion, se.estatus estatusActual,
-        (CASE WHEN (de.estatus_validacion IS NULL OR de.estatus_validacion = 0) THEN 'Sin validar' WHEN de.estatus_validacion = 1 THEN 'Validado OK' WHEN de.estatus_validacion = 2 THEN 'Rechazado' END) estatus_validacion,
-        (CASE WHEN (de.estatus_validacion IS NULL OR de.estatus_validacion = 0) THEN '#566573' WHEN de.estatus_validacion = 1 THEN '#239B56' WHEN de.estatus_validacion = 2 THEN '#C0392B' END) colour,
+        (CASE WHEN de.estatus_validacion IS NULL THEN 'Sin validar' WHEN de.estatus_validacion = 1 THEN 'Validado OK' WHEN de.estatus_validacion = 2 THEN 'Rechazado' END) estatus_validacion,
+        (CASE WHEN de.estatus_validacion IS NULL THEN '#566573' WHEN de.estatus_validacion = 1 THEN '#239B56' WHEN de.estatus_validacion = 2 THEN '#C0392B' END) colour,
         (CASE WHEN CONCAT(us2.nombre, ' ', us2.apellido_paterno, ' ', us2.apellido_materno) = '' THEN 'Sin especificar' ELSE CONCAT(us2.nombre, ' ', us2.apellido_paterno, ' ', us2.apellido_materno) END) validado_por,
         de.estatus_validacion ev,
         (CASE 
@@ -280,7 +288,7 @@ class Postventa_model extends CI_Model
         LEFT JOIN motivos_rechazo_x_documento mrxd ON mrxd.id_documento = de.idDocumento AND mrxd.estatus = 1 
         LEFT JOIN motivos_rechazo mr ON mr.id_motivo = mrxd.id_motivo
         LEFT JOIN control_estatus ce ON ce.idEscrituracion = se.idSolicitud AND ce.idStatus = se.estatus AND de.estatus_validacion = 2
-        WHERE de.idSolicitud = $idSolicitud AND de.tipo_documento NOT IN (11, 12, 13, 14, 15, 16, 17)
+        WHERE de.idSolicitud = $idSolicitud AND de.tipo_documento $tipo_doc
         GROUP BY
         de.idDocumento, oxc.nombre, de.expediente, de.tipo_documento, de.idSolicitud,
         CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno), de.fecha_creacion, se.estatus,
@@ -311,13 +319,12 @@ class Postventa_model extends CI_Model
             INNER JOIN notarias_x_usuario nxu ON nxu.idNxS = pr.idNxS
 			INNER JOIN Notarias nota ON nota.idNotaria = nxu.id_notaria
             WHERE pr.idSolicitud = $idSolicitud AND pr.expediente != ''
-             GROUP BY
-        pr.idPresupuesto , pr.expediente, pr.idSolicitud, oxc.nombre, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno), pr.fecha_creacion, 
-            se.estatus,
+             GROUP BY pr.idPresupuesto , pr.expediente, pr.idSolicitud, oxc.nombre, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno), pr.fecha_creacion, se.estatus,
             (CASE WHEN de.estatus_validacion IS NULL THEN 'Sin validar' WHEN de.estatus_validacion = 1 THEN 'Validado OK' WHEN de.estatus_validacion = 2 THEN 'Rechazado' END),
             (CASE WHEN de.estatus_validacion IS NULL THEN '#566573' WHEN de.estatus_validacion = 1 THEN '#239B56' WHEN de.estatus_validacion = 2 THEN '#C0392B' END) ,
             (CASE WHEN CONCAT(us2.nombre, ' ', us2.apellido_paterno, ' ', us2.apellido_materno) = '' THEN 'Sin especificar' ELSE CONCAT(us2.nombre, ' ', us2.apellido_paterno, ' ', us2.apellido_materno) END),
-            de.estatus_validacion, pr.estatus,nota.nombre_notaria");
+            de.estatus_validacion, pr.estatus,nota.nombre_notaria
+            ORDER BY oxc.nombre");
         return $query->result();
     }
 
@@ -628,22 +635,25 @@ function checkBudgetInfo($idSolicitud){
     // }
 
     function getFullReportContraloria($idSolicitud){
-        $query = $this->db->query("SELECT ce.idEscrituracion, max(ce.fecha_creacion) fecha_creacion, 
-        ce.idStatus, l.nombreLote, cond.nombre nombreCondominio, r.nombreResidencial, se.nombre, 
-        oxc.nombre estatus, oxc2.nombre area, cp.tiempo
-        FROM control_estatus ce
-        INNER JOIN solicitud_escrituracion se ON se.idSolicitud = ce.idEscrituracion
-        INNER JOIN lotes l ON se.idLote = l.idLote 
+        $query = $this->db->query("WITH cte AS(
+            SELECT MAX(fecha_creacion) fecha_creacion, idStatus, idEscrituracion
+            FROM control_estatus 
+            WHERE idEscrituracion = $idSolicitud GROUP BY idStatus, idEscrituracion
+        )
+        SELECT cte.*, lag(MAX(ce.fecha_creacion)) OVER (ORDER BY cte.idStatus) fechados,
+        l.nombreLote, cond.nombre nombreCondominio, r.nombreResidencial, se.nombre, 
+        oxc.nombre estatus, oxc2.nombre area FROM cte
+        INNER JOIN control_estatus ce ON ce.idEscrituracion = cte.idEscrituracion AND ce.fecha_creacion = cte.fecha_creacion
+        INNER JOIN solicitud_escrituracion se ON se.idSolicitud = cte.idEscrituracion
+        INNER JOIN lotes l ON se.idLote = l.idLote
         INNER JOIN condominios cond ON cond.idCondominio = l.idCondominio 
         INNER JOIN residenciales r ON r.idResidencial = cond.idResidencial 
         INNER JOIN clientes c ON c.id_cliente = se.idCliente AND c.status = 1
-        INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = ce.idStatus AND oxc.id_catalogo = 59 
+        INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = cte.idStatus AND oxc.id_catalogo = 59 
         INNER JOIN opcs_x_cats oxc2 ON oxc2.id_opcion = ce.idArea AND oxc2.id_catalogo = 1
         INNER JOIN control_procesos cp ON cp.estatus=ce.idStatus AND cp.idRol = ce.idArea
-        WHERE ce.idEscrituracion = $idSolicitud
-        GROUP BY ce.idEscrituracion, ce.idStatus, l.nombreLote,cond.nombre, 
-        r.nombreResidencial, CONCAT(c.nombre, ' ', c.apellido_paterno, ' ', c.apellido_materno), oxc.nombre, oxc2.nombre, cp.tiempo,   se.nombre, ce.idStatus");
-                
+        GROUP BY cte.idStatus, cte.idEscrituracion, cte.fecha_creacion, l.nombreLote, cond.nombre, r.nombreResidencial, se.nombre, 
+        oxc.nombre, oxc2.nombre");
         return $query->result_array();
     }
 

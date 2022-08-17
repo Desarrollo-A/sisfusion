@@ -516,7 +516,7 @@ $(document).on('click', '#sendMail', function () {
 
 $(document).on('click', '#tree', function () {
     var data = prospectsTable.row($(this).parents('tr')).data();
-    getDocumentsClient(data.idSolicitud);
+    getDocumentsClient(data.idSolicitud, data.idEstatus);
     $("#documentTree").modal();
 });
 
@@ -1163,7 +1163,8 @@ function getDocumentsClient(idEscritura) {
     $("#documents").find("option").remove();
     $("#documents").append($('<option disabled>').val("0").text("Seleccione una opción"));
     $.post('getDocumentsClient', {
-        idEscritura: idEscritura
+        idEscritura: idEscritura,
+        idEstatus:idEstatus
     }, function (data) {        
         var len = data.length;
         for (var i = 0; i < len; i++) {
@@ -1649,7 +1650,8 @@ function getEstatusPago() {
 
 function createDocRow(row, tr, thisVar){
     $.post("getDocumentsClient", {
-        idEscritura: row.data().idSolicitud
+        idEscritura: row.data().idSolicitud,
+        idEstatus: row.data().idEstatus
     }).done(function (data) {
         row.data().solicitudes = JSON.parse(data);
         prospectsTable.row(tr).data(row.data());
@@ -2033,8 +2035,9 @@ function buildUploadCards(idNxS){
 }
 
 function createDocRowOtros(row, tr, thisVar){
-    $.post("getDocumentsClientOtros", {
-        idEscritura: row.data().idSolicitud
+    $.post("getDocumentsClient", {
+        idEscritura: row.data().idSolicitud,
+        idEstatus:row.data().idEstatus
     }).done(function (data) {
         row.data().solicitudes = JSON.parse(data);
         prospectsTable.row(tr).data(row.data());
@@ -2047,7 +2050,7 @@ function createDocRowOtros(row, tr, thisVar){
 }
 
 function createDocRowPago(row, tr, thisVar){
-    $.post("getDocumentsClientPago", {
+    $.post("getDocumentsClient", {
         idEscritura: row.data().idSolicitud
     }).done(function (data) {
         row.data().solicitudes = JSON.parse(data);
