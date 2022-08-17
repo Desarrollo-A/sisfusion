@@ -1865,7 +1865,7 @@ class Postventa extends CI_Controller
                 $data[$i]['diferencia'] = $result['diferencia'];
             }
             else{
-                $data[$i]['atrasado'] = "En tiempo";
+                $data[$i]['atrasado'] = "EN TIEMPO";
                 $data[$i]['diferencia'] = 0;
             }
         }
