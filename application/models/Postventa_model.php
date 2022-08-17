@@ -640,9 +640,9 @@ function checkBudgetInfo($idSolicitud){
             FROM control_estatus 
             WHERE idEscrituracion = $idSolicitud GROUP BY idStatus, idEscrituracion
         )
-        SELECT cte.*, lag(MAX(ce.fecha_creacion)) OVER (ORDER BY cte.idStatus) fechados,
+        SELECT cte.*, isNULL(lag(MAX(ce.fecha_creacion)) OVER (ORDER BY cte.idStatus), cte.fecha_creacion) fechados,
         l.nombreLote, cond.nombre nombreCondominio, r.nombreResidencial, se.nombre, 
-        oxc.nombre estatus, oxc2.nombre area FROM cte
+        oxc.nombre estatus, oxc2.nombre area, cp.tiempo FROM cte
         INNER JOIN control_estatus ce ON ce.idEscrituracion = cte.idEscrituracion AND ce.fecha_creacion = cte.fecha_creacion
         INNER JOIN solicitud_escrituracion se ON se.idSolicitud = cte.idEscrituracion
         INNER JOIN lotes l ON se.idLote = l.idLote
@@ -653,7 +653,7 @@ function checkBudgetInfo($idSolicitud){
         INNER JOIN opcs_x_cats oxc2 ON oxc2.id_opcion = ce.idArea AND oxc2.id_catalogo = 1
         INNER JOIN control_procesos cp ON cp.estatus=ce.idStatus AND cp.idRol = ce.idArea
         GROUP BY cte.idStatus, cte.idEscrituracion, cte.fecha_creacion, l.nombreLote, cond.nombre, r.nombreResidencial, se.nombre, 
-        oxc.nombre, oxc2.nombre");
+        oxc.nombre, oxc2.nombre, cp.tiempo");
         return $query->result_array();
     }
 

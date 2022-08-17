@@ -1,12 +1,4 @@
-$('#reports-datatable thead tr:eq(0) th').each( function (i) {
-    var title = $(this).text();
-    $(this).html('<input class="textoshead"  placeholder="'+title+'"/>' );
-    $( 'input', this ).on('keyup change', function () {
-        if ($('#reports-datatable').DataTable().column(i).search() !== this.value ) {
-            $('#reports-datatable').DataTable().column(i).search(this.value).draw();
-        }
-    });
-});
+
 $(document).ready(function () {
     getData();
 })
@@ -73,13 +65,23 @@ function buildTable (columns, data){
         {
             targets: 0,
             render: function (data, type, full, meta){
-                return `<div><button id="details" class="btn-unstyled details w-50" data-toggle="tooltip" data-placement="top" title="Desglose detallado"><i class="fas fa-caret-right"></i></button><a class="w-50">${data}</a></div>`;
+                return `<div class="row"><button id="details" class="btn-unstyled details" data-toggle="tooltip" data-placement="top" title="Desglose detallado"><i class="fas fa-caret-right"></i></button><a>${data}</a></div>`;
 
             }
         }],
         fnRowCallback: function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
            console.log('atrasado',aData['atrasado']);
         }
+    });
+
+    $('#reports-datatable thead tr:eq(0) th').each( function (i) {
+        var title = $(this).text();
+        $(this).html('<input class="textoshead"  placeholder="'+title+'"/>' );
+        $( 'input', this ).on('keyup change', function () {
+            if ($('#reports-datatable').DataTable().column(i).search() !== this.value ) {
+                $('#reports-datatable').DataTable().column(i).search(this.value).draw();
+            }
+        });
     });
 }
 
