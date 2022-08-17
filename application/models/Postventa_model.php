@@ -80,7 +80,8 @@ class Postventa_model extends CI_Model
             VALUES('', $insert_id, 0, $y,  GETDATE(), $idUsuario, $idUsuario, NULL);");
         }
 
-        return $this->db->query("INSERT INTO control_estatus VALUES(0, 59, 4, GETDATE(), 1,$insert_id, $rol,0,'','');");
+        return $this->db->query("INSERT INTO control_estatus (idStatus, idCatalogo, tipo, fecha_creacion, next, idEscrituracion, idArea, newStatus, comentarios, motivos_rechazo, modificado_por)
+         VALUES(0, 59, 4, GETDATE(), 1,$insert_id, $rol,0,'','', $idUsuario);");
     }
 
     function getSolicitudes($begin, $end, $estatus)
@@ -187,7 +188,8 @@ class Postventa_model extends CI_Model
         }
 
         $this->db->query("UPDATE solicitud_escrituracion SET estatus = ($newStatus), idArea = $rol  WHERE idSolicitud = $id_solicitud");
-        return $this->db->query("INSERT INTO control_estatus VALUES(($estatus), 59, $type, GETDATE(), ($next), $id_solicitud, $rol, ($newStatus), '$comentarios', $motivos_rechazo);");
+        return $this->db->query("INSERT INTO control_estatus (idStatus, idCatalogo, tipo, fecha_creacion, next, idEscrituracion, idArea, newStatus, comentarios, motivos_rechazo, modificado_por)
+         VALUES(($estatus), 59, $type, GETDATE(), ($next), $id_solicitud, $rol, ($newStatus), '$comentarios', $motivos_rechazo, $idUsuario);");
     }
 
     function generateFilename($idSolicitud, $tipoDoc)
@@ -427,6 +429,7 @@ function checkBudgetInfo($idSolicitud){
 
     //INSERT NUEVA NOTARIA
     function insertNewNotaria($nombre_notaria, $nombre_notario, $direccion, $correo, $telefono){
+        $idUsuario = $this->session->userdata('id_usuario');
         $this->db->query("INSERT INTO Notarias(nombre_notaria, nombre_notario, direccion, correo, telefono, sede, pertenece)
         VALUES('$nombre_notaria', '$nombre_notario', '$direccion', '$correo', '$telefono', 0, 2);");
         $insert_id = $this->db->insert_id();
@@ -435,7 +438,8 @@ function checkBudgetInfo($idSolicitud){
         $estatus = $this->db->query("SELECT estatus FROM solicitud_escrituracion WHERE idSolicitud = $idSolicitud")->row()->estatus;
         //print_r("UPDATE solicitud_escrituracion SET idNotaria= $insert_id WHERE idSolicitud = $idSolicitud;");
         $this->db->query("UPDATE solicitud_escrituracion SET idNotaria= $insert_id, estatus = 10 WHERE idSolicitud = $idSolicitud;");
-        return $this->db->query("INSERT INTO control_estatus VALUES(($estatus), 59, 1, GETDATE(), 12, $idSolicitud, $rol, 11, 'Cambio de Notaria', 0);");
+        return $this->db->query("INSERT INTO control_estatus (idStatus, idCatalogo, tipo, fecha_creacion, next, idEscrituracion, idArea, newStatus, comentarios, motivos_rechazo, modificado_por)
+        VALUES(($estatus), 59, 1, GETDATE(), 12, $idSolicitud, $rol, 11, 'Cambio de Notaria', 0, $idUsuario);");
     }
 
     //INSERT NOTARIA DESDE POSTVENTA Y PASA AL STATUS 5
@@ -445,10 +449,12 @@ function checkBudgetInfo($idSolicitud){
         $insert_id = $this->db->insert_id();
         $idSolicitud = $_POST['idSolicitud'];
         $rol = $this->session->userdata('id_rol');
+        $idUsuario = $this->session->userdata('id_usuario');
         $estatus = $this->db->query("SELECT estatus FROM solicitud_escrituracion WHERE idSolicitud = $idSolicitud")->row()->estatus;
 
         $this->db->query("UPDATE solicitud_escrituracion SET idNotaria= $insert_id, estatus = 5, idArea = 57 WHERE idSolicitud = $idSolicitud;");
-        return $this->db->query("INSERT INTO control_estatus VALUES(($estatus), 57, 1, GETDATE(), 7, $idSolicitud, $rol, 6, 'Se trabajara con Notaría externa', 0);");
+        return $this->db->query("INSERT INTO control_estatus (idStatus, idCatalogo, tipo, fecha_creacion, next, idEscrituracion, idArea, newStatus, comentarios, motivos_rechazo, modificado_por)
+         VALUES(($estatus), 57, 1, GETDATE(), 7, $idSolicitud, $rol, 6, 'Se trabajara con Notaría externa', 0, $idUsuario);");
     }
 
     //GESTION NOTARIA CLIENTE
@@ -464,19 +470,21 @@ function checkBudgetInfo($idSolicitud){
     function rechazarNotaria(){
         $idSolicitud = $_POST['idSolicitud'];
         $rol = $this->session->userdata('id_rol');
-        
+        $idUsuario = $this->session->userdata('id_usuario');
         $this->db->query("UPDATE solicitud_escrituracion SET idNotaria = '', estatus = 10 WHERE idSolicitud = $idSolicitud;");
         
-        return $this->db->query("INSERT INTO control_estatus VALUES(11, 59, 2, GETDATE(), 12, $idSolicitud, $rol, 10, 'Se rechazo la Notaría', 0);");
+        return $this->db->query("INSERT INTO control_estatus (idStatus, idCatalogo, tipo, fecha_creacion, next, idEscrituracion, idArea, newStatus, comentarios, motivos_rechazo, modificado_por)
+         VALUES(11, 59, 2, GETDATE(), 12, $idSolicitud, $rol, 10, 'Se rechazo la Notaría', 0, $idUsuario);");
     }
 
     function rechazarNotaria5(){
         $idSolicitud = $_POST['idSolicitud'];
         $rol = $this->session->userdata('id_rol');
-        
+        $idUsuario = $this->session->userdata('id_usuario');
         $this->db->query("UPDATE solicitud_escrituracion SET idNotaria = '', estatus = 4 WHERE idSolicitud = $idSolicitud;");
         
-        return $this->db->query("INSERT INTO control_estatus VALUES(5, 57, 2, GETDATE(), 6, $idSolicitud, $rol, 4, 'Se rechazo la Notaría', 0);");
+        return $this->db->query("INSERT INTO control_estatus (idStatus, idCatalogo, tipo, fecha_creacion, next, idEscrituracion, idArea, newStatus, comentarios, motivos_rechazo, modificado_por)
+         VALUES(5, 57, 2, GETDATE(), 6, $idSolicitud, $rol, 4, 'Se rechazo la Notaría', 0, $idUsuario);");
     }
 
     function getEstatusConstruccion()
@@ -496,20 +504,22 @@ function checkBudgetInfo($idSolicitud){
         $idSolicitud = $_POST['idSolicitud'];
         $observaciones = $_POST['observacionesS'];
         $rol = $this->session->userdata('id_rol');
-
+        $idUsuario = $this->session->userdata('id_usuario');
         $this->db->query("UPDATE solicitud_escrituracion SET estatus = 10 WHERE idSolicitud = $idSolicitud;");
 
-        return $this->db->query("INSERT INTO control_estatus VALUES(13, 59, 3, GETDATE(), 14, $idSolicitud, $rol, 10, '$observaciones', 0);");
+        return $this->db->query("INSERT INTO control_estatus (idStatus, idCatalogo, tipo, fecha_creacion, next, idEscrituracion, idArea, newStatus, comentarios, motivos_rechazo, modificado_por)
+         VALUES(13, 59, 3, GETDATE(), 14, $idSolicitud, $rol, 10, '$observaciones', 0, $idUsuario);");
     }
 
     function updateObservacionesProyectos() {
         $idSolicitud = $_POST['idSolicitud'];
         $observaciones = $_POST['observacionesS'];
         $rol = $this->session->userdata('id_rol');
-
+        $idUsuario = $this->session->userdata('id_usuario');
         $this->db->query("UPDATE solicitud_escrituracion SET estatus = 93 WHERE idSolicitud = $idSolicitud;");
 
-        return $this->db->query("INSERT INTO control_estatus VALUES(13, 59, 3, GETDATE(), 14, $idSolicitud, $rol, 10, '$observaciones', 0);");
+        return $this->db->query("INSERT INTO control_estatus (idStatus, idCatalogo, tipo, fecha_creacion, next, idEscrituracion, idArea, newStatus, comentarios, motivos_rechazo, modificado_por)
+         VALUES(13, 59, 3, GETDATE(), 14, $idSolicitud, $rol, 10, '$observaciones', 0, $idUsuario);");
     }
  
     function getSolicitudEscrituracion($idSolicitud)
