@@ -71,17 +71,18 @@ function buildTable (columns, data){
         }],
         fnRowCallback: function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
            console.log('atrasado',aData['atrasado']);
+        },
+        initComplete: function(settings, json) {
+            $('#reports-datatable thead tr:eq(0) th').each( function (i) {
+                var title = $(this).text();
+                $(this).html('<input class="textoshead"  placeholder="'+title+'"/>' );
+                $( 'input', this ).on('keyup change', function () {
+                    if ($('#reports-datatable').DataTable().column(i).search() !== this.value ) {
+                        $('#reports-datatable').DataTable().column(i).search(this.value).draw();
+                    }
+                });
+            });
         }
-    });
-
-    $('#reports-datatable thead tr:eq(0) th').each( function (i) {
-        var title = $(this).text();
-        $(this).html('<input class="textoshead"  placeholder="'+title+'"/>' );
-        $( 'input', this ).on('keyup change', function () {
-            if ($('#reports-datatable').DataTable().column(i).search() !== this.value ) {
-                $('#reports-datatable').DataTable().column(i).search(this.value).draw();
-            }
-        });
     });
 }
 
