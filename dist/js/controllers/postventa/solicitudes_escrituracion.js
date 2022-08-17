@@ -767,7 +767,7 @@ function fillTable(beginDate, endDate, estatus) {
         width: "auto",
         pagingType: "full_numbers",
         language: {
-            url: "../static/spanishLoader.json",
+            url: "../static/spanishLoader_v2.json",
             paginate: {
                 previous: "<i class='fa fa-angle-left'>",
                 next: "<i class='fa fa-angle-right'>"
