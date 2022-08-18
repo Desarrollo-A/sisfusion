@@ -1968,41 +1968,44 @@ function getWorkingDays($startDate, $endDate, $tiempo){
     $begin = strtotime($startDate);
     $end   = strtotime($endDate);
     $stop = strtotime($stop_date);
-    if ($begin > $stop) {
-        return 0;
-    } else {
-        $no_days  = 0;
-        $weekends = 0;
-        while ($begin < $stop) {
-            $no_days++; // no of days in the given interval
-            $what_day = date("N", $begin);
-            if ($what_day > 5) { // 6 and 7 are weekend days
-                $weekends++;
-            };
-            $begin += 86400; // +1 day
-        };
-        $working_days = $no_days - $weekends;
+    $validDays = 0;
 
-        $dt = new DateTime($startDate);
-        $dt2 = new DateTime($stop_date);    
-        $timeStart = $dt->format('h:i:s A');
-        $timeEnd = $dt2->format('h:i:s A');
-        $st_time    =   strtotime($timeStart);
-        $end_time   =   strtotime($timeEnd);
-
-        if( $end_time <= $st_time ){
-            $dataTime['atrasado'] = "En tiempo";
-            $dataTime['diferencia'] = 0;
-
-            return $dataTime;
+    $no_days  = 0;
+    $weekends = 0;
+    while ( $validDays != $tiempo ){
+         // no of days in the given interval
+        $what_day = date("N", $begin);
+        // 6 and 7 are weekend days
+        if ($what_day > 5) { 
+            $weekends++;
         }
-        else{
-            $dataTime['atrasado'] = "Atrasado";
-            $dataTime['diferencia'] = ( $working_days != 0 ) ? $working_days - 1 : $working_days;
-
-            return $dataTime;
-        }        
+        else $no_days++;
+        $begin += 86400; // +1 day
     }
+    while ($begin < $stop) {
+        
+    };
+    $working_days = $no_days - $weekends;
+
+    $dt = new DateTime($startDate);
+    $dt2 = new DateTime($stop_date);    
+    $timeStart = $dt->format('h:i:s A');
+    $timeEnd = $dt2->format('h:i:s A');
+    $st_time    =   strtotime($timeStart);
+    $end_time   =   strtotime($timeEnd);
+
+    if( $end_time <= $st_time ){
+        $dataTime['atrasado'] = "En tiempo";
+        $dataTime['diferencia'] = 0;
+
+        return $dataTime;
+    }
+    else{
+        $dataTime['atrasado'] = "Atrasado";
+        $dataTime['diferencia'] = ( $working_days != 0 ) ? $working_days - 1 : $working_days;
+
+        return $dataTime;
+    }        
 }
 
 function getNotariasXUsuario(){
