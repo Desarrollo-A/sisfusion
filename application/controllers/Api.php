@@ -367,8 +367,6 @@ class Api extends CI_Controller
             $this->load->view("dashboard/base/base", $datos);
         }else{
             die("Acceso denegado");
-        }
-      
+        } 
     }
-
 }
