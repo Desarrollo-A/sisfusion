@@ -348,4 +348,25 @@ class Api extends CI_Controller
         }
     }
 
+    public function external_dashboardAu()
+    {
+        preg_match('/Bearer\s(\S+)/', apache_request_headers()['Authorization'], $matches);
+        $tkn = $matches[1];
+        $validate = json_decode($this->validateToken_dashboard($tkn));
+
+        if($validate->status == 200){
+            $this->session->set_userdata(array(
+                'id_rol'  => $validate->data->data->rol,
+                'id_usuario' => $validate->data->data->id_usuario
+            ));
+            $datos['sub_menu'] = $this->get_menu->get_submenu_data($this->session->userdata('id_rol'), $this->session->userdata('id_usuario'));
+            $datos['external'] = true;
+            $this->load->view('template/header');
+            $this->load->view("dashboard/base/base", $datos);
+        }else{
+            die("Acceso denegado");
+        }
+      
+    }
+
 }
