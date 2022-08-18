@@ -216,13 +216,13 @@
                                         <input type="text" id="nombre_notaria" name="nombre_notaria" class="form-control input-gral">
                                     </div>
                                 </div>
-                                <div class="col-sm-6 pr-0">
+                                <div class="col-sm-12 pr-0">
                                     <div class="form-group label-floating is-focused">
                                         <label class="control-label label-gral">Nombre del notario</label>
                                         <input type="text" id="nombre_notario" name="nombre_notario" class="form-control input-gral">
                                     </div>
                                 </div>
-                                <div class="col-sm-6 pr-0">
+                                <div class="col-sm-12 pr-0">
                                     <div class="form-group label-floating is-focused">
                                         <label class="control-label label-gral">Dirección</label>
                                         <input type="text" id="direccion" name="direccion" class="form-control input-gral">

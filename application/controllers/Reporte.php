@@ -321,8 +321,9 @@ class Reporte extends CI_Controller {
         $id_usuario = $this->input->post("id_usuario");
         $rol = $this->input->post("rol");
         $render = $this->input->post("render");
+        $leader = $this->input->post("leader");
 
-        $data = $this->Reporte_model->getDetails($beginDate, $endDate, $rol, $id_usuario, $render)->result_array();
+        $data = $this->Reporte_model->getDetails($beginDate, $endDate, $rol, $id_usuario, $render, $leader)->result_array();
         if($data != null) {
             echo json_encode($data, JSON_NUMERIC_CHECK);
         } else {

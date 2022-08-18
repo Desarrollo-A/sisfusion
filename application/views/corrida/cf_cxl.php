@@ -430,7 +430,7 @@
                                             <label>Teléfono:</label>
                                             <!-- <input type="text" ng-model="telefono" class="form-control"> -->
                                             <input type="tel" ng-model="telefono" class="form-control"
-                                                   placeholder="442-256-5963" maxlength="12" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" autocomplete="off">
+                                                   placeholder="442-256-5963" id="telefono_number" maxlength="12" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" autocomplete="off">
                                             <small>Formato: 442-485-6978</small><br><br>
                                         </div>
 
@@ -8591,7 +8591,7 @@
                 var nombre = ($scope.nombre == undefined) ? 0 : $scope.nombre;
                 var id_lote = ($scope.lote == undefined) ? 0 : $scope.lote.idLote;
                 var edad = ($scope.age == undefined) ? 0 : $scope.age.age;
-                var telefono = ($scope.telefono == undefined) ? 0 : $scope.telefono;
+                var telefono = (document.getElementById("telefono_number").value == undefined) ? 0 : document.getElementById("telefono_number").value;
                 var correo = ($scope.email == undefined) ? 0 : $scope.email;
                 var asesor; // ($scope.asesor == undefined) ? 0 : $scope.asesor.idAsesor;
                 var coordinador;// ($scope.coordinador == undefined) ? 0 : $scope.coordinador.idCoordinador;//
@@ -8876,15 +8876,35 @@
                 var nombre = ($scope.nombre == undefined) ? 0 : $scope.nombre;
                 var id_lote = ($scope.lote == undefined) ? 0 : $scope.lote.idLote;
                 var edad = ($scope.age == undefined) ? 0 : $scope.age.age;
-                var telefono = ($scope.telefono == undefined) ? 0 : $scope.telefono;
+                var telefono = (document.getElementById("telefono_number").value == undefined) ? 0 : document.getElementById("telefono_number").value;
                 var correo = ($scope.email == undefined) ? 0 : $scope.email;
-                var asesor = ($scope.asesor == undefined) ? 0 : $scope.asesor.idAsesor;
-                var coordinador = ($scope.coordinador == undefined) ? 0 : $scope.coordinador.idCoordinador;
-                var gerente = ($scope.gerente == undefined) ? 0 : $scope.gerente.idGerente;
+                // var asesor = ($scope.asesor == undefined) ? 0 : $scope.asesor.idAsesor;
+                // var coordinador = ($scope.coordinador == undefined) ? 0 : $scope.coordinador.idCoordinador;
+                // var gerente = ($scope.gerente == undefined) ? 0 : $scope.gerente.idGerente;
                 var plan = ($scope.plan == undefined) ? 0 : $scope.plan;
                 var anio = ($scope.yearplan == undefined) ? 0 : $scope.yearplan.yearplan;
                 var proyecto = ($scope.proyecto == undefined) ? 0 : $scope.proyecto;
                 var condominio = ($scope.condominio == undefined) ? 0 : $scope.condominio;
+
+
+                var asesor; // ($scope.asesor == undefined) ? 0 : $scope.asesor.idAsesor;
+                var coordinador;// ($scope.coordinador == undefined) ? 0 : $scope.coordinador.idCoordinador;//
+                var gerente; //($scope.gerente == undefined) ? 0 : $scope.gerente.idGerente;//
+
+                if($scope.id_clienteP == undefined){
+                    gerenteParam = gerente;
+                    console.log('variante1', gerenteParam);
+                    asesor = ($scope.asesor == undefined) ? 0 : $scope.asesor.idAsesor;//
+                    coordinador = ($scope.coordinador == undefined) ? 0 : $scope.coordinador.idCoordinador;//
+                    gerente = ($scope.gerente == undefined) ? 0 : $scope.gerente.idGerente;//
+                }else{
+                    gerenteParam = gerente;
+                    console.log('variante2', gerenteParam);
+                    asesor = ($scope.asesor == undefined) ? 0 : $scope.asesor;//
+                    coordinador = ($scope.coordinador == undefined) ? 0 : $scope.coordinador;//
+                    gerente = ($scope.gerente == undefined) ? 0 : $scope.gerente;//
+                }
+
 
                 if(plan == 'Crédito') {
                     var anio = ($scope.yearplan == undefined) ? 0 : $scope.yearplan.yearplan;

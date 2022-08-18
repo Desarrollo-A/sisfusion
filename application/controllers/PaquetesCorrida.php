@@ -430,13 +430,13 @@ class PaquetesCorrida extends CI_Controller
   //  GROUP BY l.idCondominio, l.id_descuento, c.nombre, r.nombreResidencial, p.descripcion, p.id_paquete, p.fecha_inicio, p.fecha_fin");
 
 
-public function kelFunction(){
+public function listaDescuentos(){
   date_default_timezone_set('America/Mexico_City');
   $cuari1 =  $this->db->query("SELECT DISTINCT(value) FROM lotes CROSS APPLY STRING_SPLIT(id_descuento, ',')")->result_array();
   $stack= array();
   
   for ($i=0; $i < sizeof($cuari1); $i++) {
-    $queryRes =  $this->db->query("SELECT r.nombreResidencial, c.nombre_condominio, 
+    $queryRes =  $this->db->query("SELECT r.nombreResidencial, 
     (CASE 
     WHEN p.super1 = '0' AND p.super2 = '0' THEN 'Cualquiera'
     WHEN p.super1 = '0' AND p.super2 != '0' THEN concat('Mayor igual a ',p.super2 )
@@ -482,7 +482,7 @@ END) tipo_check,
    INNER JOIN relaciones rl ON rl.id_paquete = p.id_paquete
    INNER JOIN descuentos d ON d.id_descuento = rl.id_descuento
    WHERE l.id_descuento is not null --AND p.tipo_lote IS NOT NULL
-   GROUP BY r.nombreResidencial, c.nombre_condominio, p.descripcion, p.super1, p.super2, d.id_tdescuento,
+   GROUP BY r.nombreResidencial, p.descripcion, p.super1, p.super2, d.id_tdescuento,
    d.id_condicion, d.eng_top, d.apply, rl.msi_descuento, d.porcentaje, p.tipo_lote");
 
   foreach ($queryRes->result() as  $valor) {

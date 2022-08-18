@@ -1,3 +1,4 @@
+
 $(document).ready(function () {
     getData();
 })
@@ -46,7 +47,7 @@ function buildTable (columns, data){
         width: "auto",
         pagingType: "full_numbers",
         language: {
-            url: "../static/spanishLoader.json",
+            url: "../static/spanishLoader_v2.json",
             paginate: {
                 previous: "<i class='fa fa-angle-left'>",
                 next: "<i class='fa fa-angle-right'>"
@@ -64,12 +65,23 @@ function buildTable (columns, data){
         {
             targets: 0,
             render: function (data, type, full, meta){
-                return `<div><button id="details" class="btn-unstyled details" data-toggle="tooltip" data-placement="top" title="Desglose detallado"><i class="fas fa-caret-right"></i></button><a>${data}</a></div>`;
+                return `<div class="row"><button id="details" class="btn-unstyled details" data-toggle="tooltip" data-placement="top" title="Desglose detallado"><i class="fas fa-caret-right"></i></button><a>${data}</a></div>`;
 
             }
         }],
         fnRowCallback: function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
            console.log('atrasado',aData['atrasado']);
+        },
+        initComplete: function(settings, json) {
+            $('#reports-datatable thead tr:eq(0) th').each( function (i) {
+                var title = $(this).text();
+                $(this).html('<input class="textoshead"  placeholder="'+title+'"/>' );
+                $( 'input', this ).on('keyup change', function () {
+                    if ($('#reports-datatable').DataTable().column(i).search() !== this.value ) {
+                        $('#reports-datatable').DataTable().column(i).search(this.value).draw();
+                    }
+                });
+            });
         }
     });
 }
@@ -100,6 +112,8 @@ function buildTableDetail(data) {
     solicitudes += '<td>' + '<b>' + '# ' + '</b></td>';
     solicitudes += '<td>' + '<b>' + 'ESTATUS' + '</b></td>';
     solicitudes += '<td>' + '<b>' + 'AREA' + '</b></td>';
+    solicitudes += '<td>' + '<b>' + 'FECHA INICIAL ESTATUS' + '</b></td>';
+    solicitudes += '<td>' + '<b>' + 'FECHA FINAL ESTATUS' + '</b></td>';
     solicitudes += '<td>' + '<b>' + 'VIGENCIA ' + '</b></td>';
     solicitudes += '<td>' + '<b>' + 'DÍAS DE ATRASO ' + '</b></td>';
     solicitudes += '</tr>';
@@ -109,6 +123,8 @@ function buildTableDetail(data) {
         solicitudes += '<td> ' + i + ' </td>';
         solicitudes += '<td> ' + v.estatus + ' </td>';
         solicitudes += '<td> ' + v.area + ' </td>';
+        solicitudes += '<td> ' + v.fechados + ' </td>';
+        solicitudes += '<td> ' + v.fecha_creacion + ' </td>';
         solicitudes += '<td> ' + v.atrasado + '</td>';
         solicitudes += '<td> ' + v.diferencia + '</td>';
     });
