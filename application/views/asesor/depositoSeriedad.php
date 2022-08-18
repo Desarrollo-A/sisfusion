@@ -420,13 +420,16 @@
                                 if (d.idMovimiento == 31 && d.idStatusContratacion == 1) {
                                     if (d.id_prospecto == 0)/*APARTADO DESDE LA PAGINA DE CIUDAD MADERAS*/
                                     {
-                                        var nombre_cliente = '';
-                                        nombre_cliente = d.nombre + ' ' + d.apellido_paterno + ' ' + d.apellido_materno;
-                                        buttonst += '<button class="btn-data btn-green abrir_prospectos ' +
+                                        if (d.id_coordinador == 10807 || d.id_coordinador == 10806 || d.id_gerente == 10807 || d.id_gerente == 10806)
+                                            action = 'Asignado correctamente';
+                                        else {
+                                            var nombre_cliente = '';
+                                            nombre_cliente = d.nombre + ' ' + d.apellido_paterno + ' ' + d.apellido_materno;
+                                            action = '<center><button class="btn-data btn-green abrir_prospectos ' +
                                             'btn-fab btn-fab-mini" data-idCliente="'+d.id_cliente+'" data-nomCliente="'+nombre_cliente+'">' +
-                                            '<i class="fas fa-user-check"></i></button><br>';
-                                            buttonst += '<br><div><span class="label label-success">Debes asignar el prospecto al cliente para poder acceder al depósito de seriedad o integrar el expediente</span></div>';
-
+                                            '<i class="fas fa-user-check"></i></button></center><br>';
+                                            action += 'Debes asignar el prospecto al cliente para poder acceder al depósito de seriedad o integrar el expediente';
+                                        }
                                     } else {
                                         buttonst += '<br><div><span class="label label-success">Validado correctamente</span></div>';
                                     }
