@@ -266,7 +266,7 @@ class Postventa_model extends CI_Model
     {
         if($status == 10 || $status == 11){
             $tipo_doc = 'NOT IN (11, 12, 13, 14, 15, 16, 17)';
-        }elseif($status == 3 || $status == 4){
+        }elseif($status == 3 || $status == 4 || $status == 5){
             $tipo_doc = 'IN (7,20,21)';
         }elseif($status == 11){
             $tipo_doc = 'IN (7)';

@@ -3,19 +3,13 @@
 <body class="">
     <div class="wrapper ">
         <?php
-              if(!$external){
+            if(!ISSET($external)){
                 $datos = array();
                 $datos = $datos4;
                 $datos = $datos2;
                 $datos = $datos3;
                 $this->load->view('template/sidebar', $datos);
             }
-
-            // $datos = array();
-            // $datos = $datos4;
-            // $datos = $datos2;
-            // $datos = $datos3;
-            // $this->load->view('template/sidebar', $datos);
         ?>
 
         <div class="content boxContent pt-0">
