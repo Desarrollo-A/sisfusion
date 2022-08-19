@@ -149,6 +149,8 @@ class Asesor_model extends CI_Model
     /*---------------------------------------FIN MENU-------------------------------------*/
     public function getDataDs1($id_cliente)
     { // DATA FROM DEPOSITO_SERIEDAD
+        ini_set('max_execution_time', 300);
+        set_time_limit(300);
         $query = $this->db->query("SELECT '1' qry, '1' dsType, cl.id_cliente, id_asesor, id_coordinador, id_gerente, cl.id_sede, cl.nombre, cl.apellido_paterno, 
         cl.apellido_materno, cl.status ,cl.idLote, fechaApartado ,fechaVencimiento , cl.usuario, cond.idCondominio, cl.fecha_creacion, 
         cl.creado_por, cl.fecha_modificacion, cl.modificado_por, cond.nombre as nombreCondominio, residencial.nombreResidencial as nombreResidencial,
@@ -174,6 +176,8 @@ class Asesor_model extends CI_Model
 
     public function getDataDs2($id_cliente)
     { // DATA FROM DEPOSITO_SERIEDAD_CONSULTA
+        ini_set('max_execution_time', 300);
+        set_time_limit(300);
         $query = $this->db->query("SELECT '2' qry, '2' dsType, cl.idCliente as id_cliente, cl.idAsesor id_asesor, '0' id_coordinador,cl.idGerente id_gerente, '0' id_sede, CONCAT(cl.primerNombre, ' ', cl.segundoNombre) nombre, cl.apellidoPaterno apellido_paterno, 
         cl.apellidoMaterno apellido_materno, cl.status ,cl.idLote, fechaApartado ,fechaVencimiento , cl.usuario, cond.idCondominio, cl.fechaApartado fecha_creacion, 
         cl.creado_por, cl.fechaApartado fecha_modificacion, cl.usuario modificado_por, cond.nombre as nombreCondominio, residencial.nombreResidencial as nombreResidencial,
@@ -190,6 +194,8 @@ class Asesor_model extends CI_Model
 
     public function getDataDs3($id_cliente)
     { // DATA FROM DEPOSITO_SERIEDAD WHEN NO ENCONTRÓ NOTHING IN getDataDs1 & getDataDs2
+        ini_set('max_execution_time', 300);
+        set_time_limit(300);
         $query = $this->db->query("SELECT '3' qry, '1' dsType, cl.id_cliente, id_asesor, id_coordinador, id_gerente, cl.id_sede, cl.nombre, cl.apellido_paterno, 
         cl.apellido_materno, cl.status ,cl.idLote, fechaApartado ,fechaVencimiento , cl.usuario, cond.idCondominio, cl.fecha_creacion, 
         cl.creado_por, cl.fecha_modificacion, cl.modificado_por, cond.nombre as nombreCondominio, residencial.nombreResidencial as nombreResidencial, cl.status, nombreLote, lotes.comentario, lotes.idMovimiento, lotes.fechaVenc, lotes.modificado, lotes.observacionContratoUrgente as vl, lotes.idStatusContratacion, cl.concepto, cl.id_prospecto,
@@ -890,41 +896,27 @@ class Asesor_model extends CI_Model
     }
 
 
-    public function registroClienteDS()
-    {
-        $query = $this->db->query("		
-		SELECT cl.id_cliente, id_asesor, id_coordinador, id_gerente, cl.id_sede, cl.nombre, cl.apellido_paterno, 
+    public function registroClienteDS($id_condominio) {
+        ini_set('max_execution_time', 300);
+        set_time_limit(300);
+        if ($id_condominio != 0 && $this->session->userdata('id_usuario') == 9651)
+            $where = "AND cond.idCondominio = $id_condominio";
+        else
+            $where = "";
+		$query = $this->db-> query("SELECT cl.id_cliente, id_asesor, id_coordinador, id_gerente, cl.id_sede, cl.nombre, cl.apellido_paterno, 
         cl.apellido_materno, cl.status ,cl.idLote, fechaApartado ,fechaVencimiento , cl.usuario, cond.idCondominio, cl.fecha_creacion, 
         cl.creado_por, cl.fecha_modificacion, cl.modificado_por, cond.nombre as nombreCondominio, residencial.nombreResidencial as nombreResidencial,
         cl.status, nombreLote, lotes.comentario, lotes.idMovimiento, lotes.fechaVenc, lotes.modificado
-		
-		FROM clientes as cl
-				
-        LEFT JOIN usuarios as us on cl.id_asesor=us.id_usuario
-        LEFT JOIN lotes as lotes on lotes.idLote=cl.idLote and lotes.idCliente = cl.id_cliente AND lotes.idStatusLote = 3
-		
-        LEFT JOIN condominios as cond on lotes.idCondominio=cond.idCondominio
-        LEFT JOIN residenciales as residencial on cond.idResidencial=residencial.idResidencial
-		LEFT JOIN deposito_seriedad as ds on ds.id_cliente = cl.id_cliente	
-
-		
-		
-		WHERE 
-		
-		        cl.id_coordinador NOT IN (2562, 2541) AND
-		        idStatusContratacion = 1 AND idMovimiento = 31 and cl.status = 1 AND cl.id_asesor = " . $this->session->userdata('id_usuario') . "
-				OR idStatusContratacion = 2 AND idMovimiento = 85 and cl.status = 1 AND cl.id_asesor = " . $this->session->userdata('id_usuario') . "
-				OR idStatusContratacion = 1 and idMovimiento = 20 and cl.status = 1 AND cl.id_asesor = " . $this->session->userdata('id_usuario') . "
-				OR idStatusContratacion = 1 and idMovimiento = 63 and cl.status = 1 AND cl.id_asesor = " . $this->session->userdata('id_usuario') . "
-				OR idStatusContratacion = 1 and idMovimiento = 73 and cl.status = 1 AND cl.id_asesor = " . $this->session->userdata('id_usuario') . "
-				OR idStatusContratacion = 3 and idMovimiento = 82 and cl.status = 1 AND cl.id_asesor = " . $this->session->userdata('id_usuario') . "
-				OR idStatusContratacion = 1 and idMovimiento = 92 and cl.status = 1 AND cl.id_asesor = " . $this->session->userdata('id_usuario') . "
-				OR idStatusContratacion = 1 and idMovimiento = 96 and cl.status = 1 AND cl.id_asesor = " . $this->session->userdata('id_usuario') . "
-
-				
-		AND cl.status = 1 ORDER BY cl.id_Cliente ASC");
-        return $query->result_array();
-    }
+        FROM clientes AS cl			
+        INNER JOIN usuarios AS us ON cl.id_asesor = us.id_usuario
+        INNER JOIN lotes AS lotes ON lotes.idLote = cl.idLote AND lotes.idCliente = cl.id_cliente AND lotes.idStatusLote = 3
+        INNER JOIN condominios AS cond ON lotes.idCondominio = cond.idCondominio $where
+        INNER JOIN residenciales AS residencial ON cond.idResidencial=residencial.idResidencial
+        LEFT JOIN deposito_seriedad AS ds ON ds.id_cliente = cl.id_cliente	
+        WHERE cl.id_coordinador NOT IN(2562, 2541) AND idStatusContratacion IN (1, 2) AND idMovimiento IN (31, 85, 20, 63, 73, 82, 92, 96) AND 
+        cl.status = 1 AND cl.id_asesor = ".$this->session->userdata('id_usuario')." AND cl.status = 1 ORDER BY cl.id_Cliente ASC");
+		return $query->result_array();
+	}
 
 
 

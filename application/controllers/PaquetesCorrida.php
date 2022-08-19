@@ -488,7 +488,7 @@ END) tipo_check,
   foreach ($queryRes->result() as  $valor) {
      array_push($stack, array(
       'nombreResidencial'=>$valor->nombreResidencial, 
-      'nombre_condominio'=>$valor->nombre_condominio, 
+      // 'nombre_condominio'=>$valor->nombre_condominio, 
       'superficie'=>$valor->superficie, 
       'descripcion'=>$valor->descripcion, 
       'tipo'=>$valor->tipo, 
