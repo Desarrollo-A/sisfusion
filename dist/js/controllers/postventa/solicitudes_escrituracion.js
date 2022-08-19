@@ -2051,7 +2051,9 @@ function createDocRowOtros(row, tr, thisVar){
 
 function createDocRowPago(row, tr, thisVar){
     $.post("getDocumentsClient", {
-        idEscritura: row.data().idSolicitud
+        idEscritura: row.data().idSolicitud,
+        idEstatus:row.data().idEstatus
+        
     }).done(function (data) {
         row.data().solicitudes = JSON.parse(data);
         prospectsTable.row(tr).data(row.data());
