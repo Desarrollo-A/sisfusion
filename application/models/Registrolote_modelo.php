@@ -4946,24 +4946,31 @@ WHERE idLote IN ('".$row['idLote']."') and nombreLote = '".$insert_csv['nombreLo
                                         WHERE vc.estatus = 1 AND clientes.status = 1 AND lotes.status = 1 AND lotes.idCondominio = $condominio ORDER BY lotes.idLote");
                 break;
             case '5': // ASISTENTE SUBDIRECTOR
-
-			    if ($this->session->userdata('id_usuario') == 30) // MJ: VALERIA PALACIOS VERÁ LO DE SLP + TIJUANA
+			    /*if ($this->session->userdata('id_usuario') == 30) // MJ: VALERIA PALACIOS VERÁ LO DE SLP + TIJUANA
 					$sede = "'".$this->session->userdata('id_sede')."', '8'";
 				else if ($this->session->userdata('id_usuario') == 7096 || $this->session->userdata('id_usuario') == 7097) // MJ: EDGAR Y GRISELL VERÁN LO DE CDMX + SMA
 					$sede = "'".$this->session->userdata('id_sede')."', '9'";
 				else
-					$sede = ($this->session->userdata('id_sede') == 3 || $this->session->userdata('id_sede') == 6) ? "'3', '6'" : "'".$this->session->userdata('id_sede')."'";
+					$sede = ($this->session->userdata('id_sede') == 3 || $this->session->userdata('id_sede') == 6) ? "'3', '6'" : "'".$this->session->userdata('id_sede')."'";*/
+				if ($this->session->userdata('id_usuario') == 30) // MJ: VALERIA PALACIOS VERÁ LO DE SLP + TIJUANA
+				$where = "(SELECT id_usuario FROM usuarios WHERE id_rol = 3 AND id_sede IN ('".$this->session->userdata('id_sede')."', '8'))";
+				else if ($this->session->userdata('id_usuario') == 7096 || $this->session->userdata('id_usuario') == 7097) // MJ: EDGAR Y GRISELL VERÁN LO DE CDMX + SMA
+					$where = "(SELECT id_usuario FROM usuarios WHERE id_rol = 3 AND id_sede IN ('".$this->session->userdata('id_sede')."', '9'))";
+				else if ($this->session->userdata('id_usuario') == 29) // MJ: FERNANDA MONJARAZ VE CINTHYA TANDAZO
+					$where = "(SELECT id_usuario FROM usuarios WHERE id_rol = 3 AND id_sede IN ('".$this->session->userdata('id_sede')."') OR id_usuario = 666)";
+				else
+					$where = ($this->session->userdata('id_sede') == 3 || $this->session->userdata('id_sede') == 6) ? "(SELECT id_usuario FROM usuarios WHERE id_rol = 3 AND id_sede IN ('3', '6'))" : "(SELECT id_usuario FROM usuarios WHERE id_rol = 3 AND id_sede IN ('".$this->session->userdata('id_sede')."'))";
 
-                $query = $this->db->query("SELECT lotes.idLote, nombreLote, idStatusLote, clientes.id_asesor, '1' venta_compartida  FROM lotes
-                                        INNER JOIN clientes ON clientes.idLote = lotes.idLote WHERE clientes.id_gerente IN (SELECT id_usuario FROM usuarios WHERE id_rol = 3 AND id_sede IN ($sede)) 
-                                        AND lotes.status = 1 AND clientes.status = 1 AND lotes.idCondominio = $condominio
-                                        UNION ALL
-                                        SELECT lotes.idLote, nombreLote, idStatusLote, vc.id_asesor, '2' venta_compartida FROM lotes
-                                        INNER JOIN clientes ON clientes.idLote = lotes.idLote 
-                                        INNER JOIN ventas_compartidas vc ON vc.id_cliente = clientes.id_cliente
-                                        WHERE vc.id_gerente IN (SELECT id_usuario FROM usuarios WHERE id_rol = 3 AND id_sede IN ($sede))  AND vc.estatus = 1 AND 
-                                        clientes.status = 1 AND lotes.status = 1 AND lotes.idCondominio = $condominio ORDER BY lotes.idLote");
-                break;
+				$query = $this->db->query("SELECT lotes.idLote, nombreLote, idStatusLote, clientes.id_asesor, '1' venta_compartida  FROM lotes
+				INNER JOIN clientes ON clientes.idLote = lotes.idLote WHERE clientes.id_gerente IN $where
+				AND lotes.status = 1 AND clientes.status = 1 AND lotes.idCondominio = $condominio
+				UNION ALL
+				SELECT lotes.idLote, nombreLote, idStatusLote, vc.id_asesor, '2' venta_compartida FROM lotes
+				INNER JOIN clientes ON clientes.idLote = lotes.idLote 
+				INNER JOIN ventas_compartidas vc ON vc.id_cliente = clientes.id_cliente
+				WHERE vc.id_gerente IN $where AND vc.estatus = 1 AND 
+				clientes.status = 1 AND lotes.status = 1 AND lotes.idCondominio = $condominio ORDER BY lotes.idLote");
+				break;
             case '6': // ASISTENTE GERENTE
                 $query = $this->db->query("SELECT lotes.idLote, nombreLote, idStatusLote, clientes.id_asesor, '1' venta_compartida  FROM lotes
                                         INNER JOIN clientes ON clientes.idLote = lotes.idLote WHERE (clientes.id_asesor = ".$this->session->userdata('id_lider')." OR 

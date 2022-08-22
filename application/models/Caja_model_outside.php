@@ -925,15 +925,15 @@
     function getSharedSalesList($id_cliente)
     {
         return $this->db->query("SELECT vcp.id_vcompartida, p.id_cliente, CONCAT (p.nombre, ' ', p.apellido_paterno, ' ', p.apellido_materno) nombre_prospecto,
-                                        vcp.id_asesor, CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombre_asesor,
-                                        vcp.id_coordinador, CONCAT (uu.nombre, ' ', uu.apellido_paterno, ' ', uu.apellido_materno) nombre_coordinador,
-                                        vcp.id_gerente, CONCAT (uuu.nombre, ' ', uuu.apellido_paterno, ' ', uuu.apellido_materno) nombre_gerente,
-                                        vcp.fecha_creacion, vcp.estatus FROM clientes p
-                                        INNER JOIN ventas_compartidas vcp ON vcp.id_cliente = p.id_cliente
-                                        INNER JOIN usuarios u ON u.id_usuario = vcp.id_asesor
-                                        LEFT JOIN usuarios uu ON uu.id_usuario = vcp.id_coordinador
-                                        INNER JOIN usuarios uuu ON uuu.id_usuario = vcp.id_gerente
-										WHERE vcp.id_cliente = " . $id_cliente . " AND vcp.estatus = 1")->result_array();
+        vcp.id_asesor, CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombre_asesor,
+        vcp.id_coordinador, CONCAT (uu.nombre, ' ', uu.apellido_paterno, ' ', uu.apellido_materno) nombre_coordinador,
+        vcp.id_gerente, CONCAT (uuu.nombre, ' ', uuu.apellido_paterno, ' ', uuu.apellido_materno) nombre_gerente,
+        vcp.fecha_creacion, 1 estatus FROM clientes p
+        INNER JOIN ventas_compartidas vcp ON vcp.id_cliente = p.id_cliente
+        INNER JOIN usuarios u ON u.id_usuario = vcp.id_asesor
+        LEFT JOIN usuarios uu ON uu.id_usuario = vcp.id_coordinador
+        INNER JOIN usuarios uuu ON uuu.id_usuario = vcp.id_gerente
+		WHERE vcp.id_cliente = " . $id_cliente . " AND vcp.estatus IN (1, 2)")->result_array();
 
     }
 
