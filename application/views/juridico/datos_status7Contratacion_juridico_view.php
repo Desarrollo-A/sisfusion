@@ -652,7 +652,7 @@ if(data.vl == '1') {
                         'class="btn-data btn-blueMaderas barcode" title="Ver código">' +
                     '<i class="fas fa-barcode"></i></button></li><br></center>';
                      
-                 } else if (data.idStatusContratacion == 6 && data.idMovimiento == 36 && (data.perfil == 32 || data.perfil == 13 || data.perfil == 17) || data.idStatusContratacion == 6 && data.idMovimiento == 6 && (data.perfil == 32 || data.perfil == 13 || data.perfil == 17) ||
+                 } else if (data.idStatusContratacion == 6 && data.idMovimiento == 36 && (data.perfil == 32 || data.perfil == 13 || data.perfil == 17 || data.perfil == 7) || data.idStatusContratacion == 6 && data.idMovimiento == 6 && (data.perfil == 32 || data.perfil == 13 || data.perfil == 17) ||
                      data.idStatusContratacion == 7 && data.idMovimiento == 83) { 
 
                     cntActions = '<center><li><button href="#" data-idLote="'+data.idLote+'" data-nomLote="'+data.nombreLote+'" data-idCond="'+data.idCondominio+'"' +

@@ -913,50 +913,10 @@ class Asesor_model extends CI_Model
         INNER JOIN condominios AS cond ON lotes.idCondominio = cond.idCondominio $where
         INNER JOIN residenciales AS residencial ON cond.idResidencial=residencial.idResidencial
         LEFT JOIN deposito_seriedad AS ds ON ds.id_cliente = cl.id_cliente	
-        WHERE cl.id_coordinador NOT IN(2562, 2541) AND idStatusContratacion IN (1, 2) AND idMovimiento IN (31, 85, 20, 63, 73, 82, 92, 96) AND 
+        WHERE cl.id_coordinador NOT IN(2562, 2541) AND idStatusContratacion IN (1, 2, 3) AND idMovimiento IN (31, 85, 20, 63, 73, 82, 92, 96) AND 
         cl.status = 1 AND cl.id_asesor = ".$this->session->userdata('id_usuario')." AND cl.status = 1 ORDER BY cl.id_Cliente ASC");
 		return $query->result_array();
 	}
-
-
-
-
-
-
-
-
-
-
-
-    // public function registroClienteDS() {
-
-    // $this->db->select("cl.id_cliente, id_asesor, id_coordinador, id_gerente, cl.id_sede, cl.nombre, cl.apellido_paterno,
-    // cl.apellido_materno, cl.status ,cl.idLote, fechaApartado ,fechaVencimiento , cl.usuario, cond.idCondominio, cl.fecha_creacion,
-    // cl.creado_por, cl.fecha_modificacion, cl.modificado_por, cond.nombre as nombreCondominio, residencial.nombreResidencial as nombreResidencial,
-    // cl.status, nombreLote, lotes.comentario, lotes.idMovimiento, lotes.fechaVenc, lotes.modificado");
-
-    // $this->db->join('usuarios as us', 'cl.id_asesor=us.id_usuario', 'LEFT');
-    // $this->db->join('lotes as lotes', 'lotes.idLote=cl.idLote', 'LEFT');
-    // $this->db->join('condominios as cond', 'lotes.idCondominio=cond.idCondominio', 'LEFT');
-    // $this->db->join('residenciales as residencial', 'cond.idResidencial=residencial.idResidencial', 'LEFT');
-    // $this->db->join('deposito_seriedad as ds', 'ds.id_cliente = cl.id_cliente', 'LEFT');
-
-    // $this->db->where('cl.status', 1);
-    // $this->db->where("(cl.id_asesor = '".$this->session->userdata('id_usuario')."')");
-    // $this->db->where("( idStatusContratacion = 1 AND idMovimiento = 31
-    // OR idStatusContratacion = 2 AND idMovimiento = 85
-    // OR idStatusContratacion = 1 and idMovimiento = 20
-    // OR idStatusContratacion = 1 and idMovimiento = 63
-    // OR idStatusContratacion = 1 and idMovimiento = 73
-    // OR idStatusContratacion = 3 and idMovimiento = 82
-    // OR idStatusContratacion = 1 and idMovimiento = 92 )");
-
-
-    // $this->db->order_by('cl.id_Cliente', 'ASC');
-    // $query = $this->db->get('clientes as cl');
-    // return $query->result();
-
-    // }
 
 
     public function validateSt2($idLote)
