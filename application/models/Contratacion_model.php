@@ -417,17 +417,17 @@ class Contratacion_model extends CI_Model {
         return $this->db->query("SELECT idLote, idCliente FROM lotes WHERE idLote = $idLote");
     }
 
-    function getCoSallingAdvisers($id_cliente){
-        $query = $this->db-> query("SELECT id_cliente, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) asesor,
-                                CONCAT(uu.nombre, ' ', uu.apellido_paterno, ' ', uu.apellido_materno) coordinador,
-                                CONCAT(uuu.nombre, ' ', uuu.apellido_paterno, ' ', uuu.apellido_materno) gerente,
-                                vc.fecha_creacion, (CASE vc.creado_por WHEN '1297' THEN 'Control interno' ELSE vc.creado_por END) creado_por FROM ventas_compartidas vc 
-                                LEFT JOIN usuarios u ON u.id_usuario = vc.id_asesor
-                                LEFT JOIN usuarios uu ON uu.id_usuario = vc.id_coordinador
-                                LEFT JOIN usuarios uuu ON uuu.id_usuario = vc.id_gerente
-                                WHERE vc.estatus = 1 AND vc.id_cliente = $id_cliente ORDER BY vc.id_cliente");
+   function getCoSallingAdvisers($id_cliente){
+      $query = $this->db-> query("SELECT id_cliente, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) asesor,
+      CONCAT(uu.nombre, ' ', uu.apellido_paterno, ' ', uu.apellido_materno) coordinador,
+      CONCAT(uuu.nombre, ' ', uuu.apellido_paterno, ' ', uuu.apellido_materno) gerente,
+      vc.fecha_creacion, (CASE vc.creado_por WHEN '1297' THEN 'Control interno' ELSE vc.creado_por END) creado_por FROM ventas_compartidas vc 
+      LEFT JOIN usuarios u ON u.id_usuario = vc.id_asesor
+      LEFT JOIN usuarios uu ON uu.id_usuario = vc.id_coordinador
+      LEFT JOIN usuarios uuu ON uuu.id_usuario = vc.id_gerente
+      WHERE vc.estatus IN (1, 2) AND vc.id_cliente = $id_cliente ORDER BY vc.id_cliente");
         return $query->result_array();
-    }
+   }
 
     function getClauses($lote){
          return $this->db->query("SELECT * FROM clausulas WHERE id_lote = $lote AND estatus = 1");                        

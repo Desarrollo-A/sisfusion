@@ -114,10 +114,38 @@
                                 <h3 class="card-title center-align">Tus ventas</h3>
                                 <p class="card-title pl-1"></p>
                             </div>
-                            <div class="toolbar">
-                                <div class="row">
+                            <?php
+                            if($this->session->userdata('id_usuario') == 9651) {
+                            ?>
+                                <div class="toolbar">
+                                    <div class="row">
+                                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                            <div class="col-md-4 form-group">
+                                                <div class="form-group label-floating select-is-empty">
+                                                    <label class="control-label">Proyecto</label>
+                                                    <select name="proyecto" id="proyecto" class="selectpicker select-gral m-0"
+                                                            data-style="btn" data-show-subtext="true"  title="Selecciona un proyecto"
+                                                            data-size="7" data-live-search="true" required>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4 form-group">
+                                                <div class="form-group label-floating select-is-empty">
+                                                    <label class="control-label">Condominio</label>
+                                                    <select name="condominio" id="condominio" class="selectpicker select-gral m-0"
+                                                            data-style="btn" data-show-subtext="true"  title="Selecciona condominio"
+                                                            data-size="7" data-live-search="true" required>
+                                                        <option disabled selected>Selecciona un condominio</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
+                            <?php
+                            }
+                            ?>
+
                             <div class="material-datatables">
                                 <div class="table-responsive">
                                     <table id="tabla_deposito_seriedad" name="tabla_deposito_seriedad"
@@ -128,16 +156,12 @@
                                                 <th>CONDOMINIO</th>
                                                 <th>LOTE</th>
                                                 <th>CLIENTE</th>
-                                                <th>COORDINADOR</th>
-                                                <th>GERENTE</th>
-                                                <th>SUBDIRECTOR</th>
-                                                <th>REGIONAL</th>
                                                 <th>FECHA APARTADO</th>
                                                 <th>FECHA VENCIMIENTO</th>
                                                 <th>COMENTARIO</th>
-                                                <th>ACCIONES</th>
-                                                <!-- <th>DS</th>
-                                                <th>VALIDAR</th> -->
+                                                <th>EXPEDIENTE</th>
+                                                <th>DS</th>
+                                                <th>PROSPECTO</th>
                                             </tr>
                                         </thead>
                                     </table>
@@ -150,6 +174,178 @@
         </div>
     </div>
 
+
+    <div class="content hide">
+
+        <!-- modal  ENVIA A CONTRALORIA 2-->
+        <div class="modal fade" id="modal1" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog">
+                <div class="modal-content" >
+                    <div class="modal-header">
+                        <center><h4 class="modal-title"><label>Integración de Expediente - <b><span class="lote"></span></b></label></h4></center>
+                    </div>
+                    <div class="modal-body">
+                        <label>Comentario:</label>
+                        <textarea class="form-control" id="comentario" rows="3"></textarea>
+                        <br>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" id="save1" class="btn btn-success"><span class="material-icons" >send</span> </i> Registrar</button>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> Cancelar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- modal -->
+
+        <!-- modal  ENVIA A CONTRALORIA 5 por rechazo 1-->
+        <div class="modal fade" id="modal2" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog">
+                <div class="modal-content" >
+                    <div class="modal-header">
+                        <center><h4 class="modal-title"><label>Integración de Expediente (Rechazo estatus 5 Contraloría) - <b><span class="lote"></span></b></label></h4></center>
+                    </div>
+                    <div class="modal-body">
+                        <label>Comentario:</label>
+                        <textarea class="form-control" id="comentario2" rows="3"></textarea>
+                        <br>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" id="save2" class="btn btn-success"><span class="material-icons" >send</span> </i> Registrar</button>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> Cancelar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- modal -->
+
+        <!-- modal  ENVIA A CONTRALORIA 5 por rechazo 1-->
+        <div class="modal fade" id="modal3" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog">
+                <div class="modal-content" >
+                    <div class="modal-header">
+                        <center><h4 class="modal-title"><label>Integración de Expediente (Rechazo estatus 5 Contraloría) - <b><span class="lote"></span></b></label></h4></center>
+                    </div>
+                    <div class="modal-body">
+                        <label>Comentario:</label>
+                        <textarea class="form-control" id="comentario3" rows="3"></textarea>
+                        <br>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" id="save3" class="btn btn-success"><span class="material-icons" >send</span> </i> Registrar</button>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> Cancelar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- modal -->
+
+        <!-- modal  ENVIA A CONTRALORIA 6 por rechazo 1-->
+        <div class="modal fade" id="modal4" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog">
+                <div class="modal-content" >
+                    <div class="modal-header">
+                        <center><h4 class="modal-title"><label>Integración de Expediente (Rechazo estatus 6 Contraloría) - <b><span class="lote"></span></b></label></h4></center>
+                    </div>
+                    <div class="modal-body">
+                        <label>Comentario:</label>
+                        <textarea class="form-control" id="comentario4" rows="3"></textarea>
+                        <br>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" id="save4" class="btn btn-success"><span class="material-icons" >send</span> </i> Registrar</button>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> Cancelar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- modal -->
+
+        <!-- modal  ENVIA A VENTAS 8 por rechazo 1-->
+        <div class="modal fade" id="modal5" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog">
+                <div class="modal-content" >
+                    <div class="modal-header">
+                        <center><h4 class="modal-title"><label>Integración de Expediente (Rechazo estatus 8 Ventas) - <b><span class="lote"></span></b></label></h4></center>
+                    </div>
+                    <div class="modal-body">
+                        <label>Comentario:</label>
+                        <textarea class="form-control" id="comentario5" rows="3"></textarea>
+                        <br>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" id="save5" class="btn btn-success"><span class="material-icons" >send</span> </i> Registrar</button>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> Cancelar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- modal -->
+
+        <!-- modal  ENVIA A JURIDICO por rechazo 1-->
+        <div class="modal fade" id="modal6" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog">
+                <div class="modal-content" >
+                    <div class="modal-header">
+                        <center><h4 class="modal-title"><label>Integración de Expediente (Rechazo estatus 7 Jurídico) - <b><span class="lote"></span></b></label></h4></center>
+                    </div>
+                    <div class="modal-body">
+                        <label>Comentario:</label>
+                        <textarea class="form-control" id="comentario6" rows="3"></textarea>
+                        <br>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" id="save6" class="btn btn-success"><span class="material-icons" >send</span> </i> Registrar</button>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> Cancelar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- modal -->
+
+        <!-- modal  ENVIA A JURIDICO por rechazo 1-->
+        <div class="modal fade" id="modal7" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog">
+                <div class="modal-content" >
+                    <div class="modal-header">
+                        <center><h4 class="modal-title"><label>Integración de Expediente (Rechazo estatus 5 Contraloría) - <b><span class="lote"></span></b></label></h4></center>
+                    </div>
+                    <div class="modal-body">
+                        <label>Comentario:</label>
+                        <textarea class="form-control" id="comentario7" rows="3"></textarea>
+                        <br>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" id="save7" class="btn btn-success"><span class="material-icons" >send</span> </i> Registrar</button>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> Cancelar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- modal -->
+
+        <!-- modal  ENVIA A JURIDICO por rechazo 2-->
+        <div class="modal fade" id="modal_return1" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog">
+                <div class="modal-content" >
+                    <div class="modal-header">
+                        <center><h4 class="modal-title"><label>Integración de Expediente (Rechazo estatus 7 Jurídico) - <b><span class="lote"></span></b></label></h4></center>
+                    </div>
+                    <div class="modal-body">
+                        <label>Comentario:</label>
+                        <textarea class="form-control" id="comentario8" rows="3"></textarea>
+                        <br>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" id="b_return1" class="btn btn-success"><span class="material-icons" >send</span> </i> Registrar</button>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> Cancelar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- modal -->
+
+    </div>
     <?php $this->load->view('template/footer_legend');?>
 </div>
 </div>
@@ -167,7 +363,51 @@
 <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
 <link rel="stylesheet" type="text/css" href="<?=base_url()?>dist/css/shadowbox.css">
 <script type="text/javascript" src="<?=base_url()?>dist/js/shadowbox.js"></script>
+
 <script type="text/javascript">
+
+let id_usuario = <?= $this->session->userdata('id_usuario') ?> ;
+
+$(document).ready(function() {
+    if (id_usuario == 9651) { // MJ: ERNESTO DEL PINO SILVA
+        $.post(`${general_base_url}Contratacion/lista_proyecto`, function(data) {
+            var len = data.length;
+            for(var i = 0; i<len; i++)
+            {
+                var id = data[i]['idResidencial'];
+                var name = data[i]['descripcion'];
+                $("#proyecto").append($('<option>').val(id).text(name.toUpperCase()));
+            }
+            $("#proyecto").selectpicker('refresh');
+        }, 'json');
+    }
+    else // MJ: PARA LOS DEMÁS SÍ CARGA EN EL READY
+        fillDataTable(0);
+});
+
+$('#proyecto').change( function(){
+	index_proyecto = $(this).val();
+	$("#condominio").html("");
+	$(document).ready(function(){
+		$.post(`${general_base_url}Contratacion/lista_condominio/`+index_proyecto, function(data) {
+			var len = data.length;
+			$("#condominio").append($('<option disabled selected>Selecciona un codominio</option>'));
+
+			for( var i = 0; i<len; i++)
+			{
+				var id = data[i]['idCondominio'];
+				var name = data[i]['nombre'];
+				$("#condominio").append($('<option>').val(id).text(name.toUpperCase()));
+			}
+			$("#condominio").selectpicker('refresh');
+		}, 'json');
+	});
+});
+
+$('#condominio').change( function(){
+	let id_condominio = $(this).val();
+    fillDataTable(id_condominio);
+});
     Shadowbox.init();
 
 
@@ -201,260 +441,7 @@
             }
         });
     });
-
     $("#tabla_deposito_seriedad").ready( function(){
-
-        tabla_valores_ds = $("#tabla_deposito_seriedad").DataTable({
-            width: 'auto',
-            dom: 'Brt'+ "<'row'<'col-12 col-sm-12 col-md-6 col-lg-6'i><'col-12 col-sm-12 col-md-6 col-lg-6'p>>",
-            buttons: [
-                {
-                    extend: 'excelHtml5',
-                    text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
-                    className: 'btn buttons-excel',
-                    titleAttr: 'Tus ventas',
-                    title:"Tus ventas",
-                    exportOptions: {
-                        columns: [0,1,2,3,4,5,6,9],
-                        format: {
-                            header: function (d, columnIdx) {
-                                switch (columnIdx) {
-                                    case 0:
-                                        return 'PROYECTO';
-                                        break;
-                                    case 1:
-                                        return 'CONDOMINIO';
-                                        break;
-                                    case 2:
-                                        return 'LOTE';
-                                    case 3:
-                                        return 'CLIENTE';
-                                        break;
-                                    case 4:
-                                        return 'COORDINADOR';
-                                        break;
-                                    case 5:
-                                        return 'GERENTE';
-                                        break;
-                                    case 6:
-                                        return 'SUBDIRECTOR';
-                                        break;
-                                    case 7:
-                                        return 'DIRECTOR REGIONAL';
-                                        break;
-                                    case 8:
-                                        return 'FECHA APARTADO';
-                                        break;
-                                    case 9:
-                                        return 'FECHA VENCIMIENTO';
-                                        break;
-                                    case 10:
-                                        return 'COMENTARIO';
-                                        break;
-                                    case 11:
-                                        return 'VALIDAR';
-                                        break;
-                                }
-                            }
-                        }
-                    }
-                }
-            ],
-            columnDefs: [{
-                defaultContent: "",
-                targets: "_all",
-                searchable: true,
-                orderable: false
-            }],
-            "pageLength": 10,
-            "bAutoWidth": false,
-            "fixedColumns": true,
-            "ordering": false,
-            language: {
-                url: "<?=base_url()?>/static/spanishLoader_v2.json",
-                paginate: {
-                    previous: "<i class='fa fa-angle-left'>",
-                    next: "<i class='fa fa-angle-right'>"
-                }
-            },
-            "order": [[4, "desc"]],
-            columns: [
-                { "data": "nombreResidencial" },
-                { "data": "nombreCondominio" },
-                { "data": "nombreLote" },
-                {
-                    "data": function( d ){
-                        return d.nombre+" "+d.apellido_paterno+" "+d.apellido_materno;
-                    }
-                },
-                {
-                    data: function( d ){
-                        return d.coordinador == '  ' ? 'NO APLICA' : d.coordinador;
-                    }
-                },
-                {
-                    data: function( d ){
-                        return d.gerente == '  ' ? 'NO APLICA' : d.gerente;
-                    }
-                },
-                {
-                    data: function( d ){
-                        return d.subdirector == '  ' ? 'NO APLICA' : d.subdirector;
-                    }
-                },
-                {
-                    data: function( d ){
-                        return d.regional == '  ' ? 'NO APLICA' : d.regional;
-                    }
-                },
-                { "data": "fechaApartado" },
-                {
-                    "data": function( d ){
-                        fv = (d.idMovimiento == 73 || d.idMovimiento == 92 || d.idMovimiento == 96) ?  d.modificado: d.fechaVenc;
-                        return fv;
-                    }
-                },
-                {
-                    "data": function( d ){
-
-                        comentario = d.idMovimiento == 31 ? d.comentario + "<br> <span class='label label-success'>Nuevo apartado</span>":
-                            d.idMovimiento == 85 ?  d.comentario + "<br> <span class='label label-danger'>Rechazo Contraloria estatus 2</span>":
-                                d.idMovimiento == 20 ?  d.comentario + "<br> <span class='label label-danger'>Rechazo Contraloria estatus 5</span>":
-                                    d.idMovimiento == 63 ?  d.comentario + "<br> <span class='label label-danger'>Rechazo Contraloria estatus 6</span>":
-                                        d.idMovimiento == 73 ?  d.comentario + "<br> <span class='label label-danger'>Rechazo Ventas estatus 8</span>":
-                                            d.idMovimiento == 82 ?  d.comentario + "<br> <span class='label label-danger'>Rechazo Jurídico estatus 7</span>":
-                                                d.idMovimiento == 92 ?  d.comentario + "<br> <span class='label label-danger'>Rechazo Contraloria estatus 5</span>":
-                                                    d.idMovimiento == 96 ?  d.comentario + "<br> <span class='label label-danger'>Rechazo Jurídico estatus 7</span>":
-                                                        d.comentario;
-                        return comentario;
-                    }
-
-                },
-                {
-                    "data": function( d ){
-                        var atributo_button1 ='';
-                        var buttonst = '';
-                        var atributo_button2 ='';
-                        var url_to_go  = '';
-                        var action='';
-
-                        if (d.idMovimiento == 31 && d.idStatusContratacion == 1) {
-                            if (d.id_prospecto == 0)/*APARTADO DESDE LA PAGINA DE CIUDAD MADERAS*/
-                            {
-                                atributo_button2 = 'disabled';
-                                url_to_go  = '#';
-                            } else {
-                                atributo_button2 = '';
-                                url_to_go  = '<?=base_url()?>index.php/Asesor/deposito_seriedad/'+d.id_cliente+'/0';
-                            }
-                        }
-                        else {
-                            atributo_button2 = '';
-                            url_to_go  = '<?=base_url()?>index.php/Asesor/deposito_seriedad/'+d.id_cliente+'/0';
-                        }
-
-
-                        if(d.flag_compartida == 1){
-                            if(d.vl == '1') {
-                            buttonst += 'En proceso de Liberación';
-                            } else {
-                                if (d.idMovimiento == 31 && d.idStatusContratacion == 1) {
-                                    if (d.id_prospecto == 0)/*APARTADO DESDE LA PAGINA DE CIUDAD MADERAS*/
-                                    {
-                                        buttonst += d.idMovimiento == 31 ?  '<a href="#" disabled  data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="btn-data btn-green disabled">  <i class="fas fa-check" title= "Enviar estatus"></i></a>':
-                                            d.idMovimiento == 85 ?  '<a href="#" disabled  data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="btn-data btn-green disabled"><i class="fas fa-check" title= "Enviar estatus"></i></a>':
-                                                d.idMovimiento == 20 ?  '<a href="#" disabled  data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="btn-data btn-green disabled">  <i class="fas fa-check" title= "Enviar estatus"></i></a>':
-                                                    d.idMovimiento == 63 ?  '<a href="#" disabled  data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="btn-data btn-green disabled">  <i class="fas fa-check" title= "Enviar estatus"></i></a>':
-                                                        d.idMovimiento == 73 ?  '<a href="#" disabled  data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="btn-data btn-green disabled"><i class="fas fa-check" title= "Enviar estatus"></i></a>':
-                                                            d.idMovimiento == 82 ?  '<a href="#" disabled  data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="btn-data btn-green disabled"><i class="fas fa-check" title= "Enviar estatus"></i></a>':
-                                                                d.idMovimiento == 92 ?  '<a href="#" disabled  data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.modificado+'" class="btn-data btn-green disabled"><i class="fas fa-check" title= "Enviar estatus"></i></a>':
-                                                                    d.idMovimiento == 96 ?  '<a href="#" disabled  data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="btn-data btn-green disabled"><i class="fas fa-check" title= "Enviar estatus"></i></a>':
-                                                                        d.comentario;
-                                    } else {
-                                        buttonst += d.idMovimiento == 31 ?  '<a href="" '+atributo_button1+' data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="btn-data btn-green getInfo2">  <i class="fas fa-check" title= "Enviar estatus"></i></a>':
-                                            d.idMovimiento == 85 ?  '<a href="" '+atributo_button1+' data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="btn-data btn-green getInfo2_2"><i class="fas fa-check" title= "Enviar estatus"></i></a>':
-                                                d.idMovimiento == 20 ?  '<a href="" '+atributo_button1+' data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="btn-data btn-green getInfo5">  <i class="fas fa-check" title= "Enviar estatus"></i></a>':
-                                                    d.idMovimiento == 63 ?  '<a href="" '+atributo_button1+' data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="btn-data btn-green getInfo6">  <i class="fas fa-check" title= "Enviar estatus"></i></a>':
-                                                        d.idMovimiento == 73 ?  '<a href="" '+atributo_button1+' data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="btn-data btn-green getInfo2_3"><i class="fas fa-check" title= "Enviar estatus"></i></a>':
-                                                            d.idMovimiento == 82 ?  '<a href="" '+atributo_button1+' data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="btn-data btn-green getInfo2_7"><i class="fas fa-check" title= "Enviar estatus"></i></a>':
-                                                                d.idMovimiento == 92 ?  '<a href="" '+atributo_button1+' data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.modificado+'" class="btn-data btn-green getInfo5_2"><i class="fas fa-check" title= "Enviar estatus"></i></a>':
-                                                                    d.idMovimiento == 96 ?  '<a href="" '+atributo_button1+' data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="btn-data btn-green return1"><i class="fas fa-check" title= "Enviar estatus"></i></a>':
-                                                                        d.comentario;
-                                    }
-                                }
-                                else
-                                {
-                                    buttonst += d.idMovimiento == 31 ?  '<a href="" '+atributo_button1+' data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="btn-data btn-green getInfo2">  <i class="fas fa-check" title= "Enviar estatus"></i></a>':
-                                        d.idMovimiento == 85 ?  '<a href="" '+atributo_button1+' data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="btn-data btn-green getInfo2_2"><i class="fas fa-check" title= "Enviar estatus"></i></a>':
-                                            d.idMovimiento == 20 ?  '<a href="" '+atributo_button1+' data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="btn-data btn-green getInfo5">  <i class="fas fa-check" title= "Enviar estatus"></i></a>':
-                                                d.idMovimiento == 63 ?  '<a href="" '+atributo_button1+' data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="btn-data btn-green getInfo6">  <i class="fas fa-check" title= "Enviar estatus"></i></a>':
-                                                    d.idMovimiento == 73 ?  '<a href="" '+atributo_button1+' data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="btn-data btn-green getInfo2_3"><i class="fas fa-check" title= "Enviar estatus"></i></a>':
-                                                        d.idMovimiento == 82 ?  '<a href="" '+atributo_button1+' data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="btn-data btn-green getInfo2_7"><i class="fas fa-check" title= "Enviar estatus"></i></a>':
-                                                            d.idMovimiento == 92 ?  '<a href="" '+atributo_button1+' data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.modificado+'" class="btn-data btn-green getInfo5_2"><i class="fas fa-check" title= "Enviar estatus"></i></a>':
-                                                                d.idMovimiento == 96 ?  '<a href="" '+atributo_button1+' data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="btn-data btn-green return1"><i class="fas fa-check" title= "Enviar estatus"></i></a>':
-
-                                                                    d.comentario;
-                                }
-
-                            /* buttonst = d.idMovimiento == 31 ?  '<a href="" '+atributo_button+' data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="btn btn-success btn-round btn-fab btn-fab-mini getInfo2">  <i class="material-icons" title= "Enviar estatus">check</i></a>':
-                                    d.idMovimiento == 85 ?  '<a href="" '+atributo_button+' data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="btn btn-success btn-round btn-fab btn-fab-mini getInfo2_2"><i class="material-icons" title= "Enviar estatus">check</i></a>':
-                                        d.idMovimiento == 20 ?  '<a href="" '+atributo_button+' data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="btn btn-success btn-round btn-fab btn-fab-mini getInfo5">  <i class="material-icons" title= "Enviar estatus">check</i></a>':
-                                            d.idMovimiento == 63 ?  '<a href="" '+atributo_button+' data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="btn btn-success btn-round btn-fab btn-fab-mini getInfo6">  <i class="material-icons" title= "Enviar estatus">check</i></a>':
-                                                d.idMovimiento == 73 ?  '<a href="" '+atributo_button+' data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="btn btn-success btn-round btn-fab btn-fab-mini getInfo2_3"><i class="material-icons" title= "Enviar estatus">check</i></a>':
-                                                    d.idMovimiento == 82 ?  '<a href="" '+atributo_button+' data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="btn btn-success btn-round btn-fab btn-fab-mini getInfo2_7"><i class="material-icons" title= "Enviar estatus">check</i></a>':
-                                                        d.idMovimiento == 92 ?  '<a href="" '+atributo_button+' data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.modificado+'" class="btn btn-success btn-round btn-fab btn-fab-mini getInfo5_2"><i class="material-icons" title= "Enviar estatus">check</i></a>':
-                                                            d.idMovimiento == 96 ?  '<a href="" '+atributo_button+' data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="btn btn-success btn-round btn-fab btn-fab-mini return1"><i class="material-icons" title= "Enviar estatus">check</i></a>':
-
-                                                                d.comentario;*/
-                            }
-                            // return buttonst;
-                            //boton dos
-                            if (d.dsType == 1){
-                                buttonst +='<a class="btn-data btn-blueMaderas btn_ds'+d.id_cliente+'" '+atributo_button2+' id="btn_ds'+d.id_cliente+'" href="'+url_to_go+'" title= "Depósito de seriedad"><i class="fas fa-print"></i></a>';
-                            } else if(d.dsType == 2) { // DATA FROM DEPOSITO_SERIEDAD_CONSULTA OLD VERSION
-                                buttonst +='<a class="btn-data btn-blueMaderas" href="<?=base_url()?>index.php/Asesor/deposito_seriedad_ds/'+d.id_cliente+'/0" title= "Depósito de seriedad"><i class="fas fa-print"></i></a>';
-                            }
-
-                            //buton tres
-                            if (d.dsType == 1) {
-                                if (d.idMovimiento == 31 && d.idStatusContratacion == 1) {
-                                    if (d.id_prospecto == 0)/*APARTADO DESDE LA PAGINA DE CIUDAD MADERAS*/
-                                    {
-                                        var nombre_cliente = '';
-                                        nombre_cliente = d.nombre + ' ' + d.apellido_paterno + ' ' + d.apellido_materno;
-                                        buttonst += '<button class="btn-data btn-green abrir_prospectos ' +
-                                            'btn-fab btn-fab-mini" data-idCliente="'+d.id_cliente+'" data-nomCliente="'+nombre_cliente+'">' +
-                                            '<i class="fas fa-user-check"></i></button><br>';
-                                            buttonst += '<br><div><span class="label label-success">Debes asignar el prospecto al cliente para poder acceder al depósito de seriedad o integrar el expediente</span></div>';
-
-                                    } else {
-                                        buttonst += '<br><div><span class="label label-success">Validado correctamente</span></div>';
-                                    }
-                                }
-                                else {
-                                    buttonst += '<br><div><span class="label label-success">Validado correctamente</span></div>';
-                                }
-                            }
-                        }else{
-                            buttonst += '<a href="" title= "Asignación de ventas compartidas" id="vCompartida" data-idCliente="'+d.id_cliente+'" data-idLote="'+d.idLote+'" class="btn-data btn-green"><i class="fas fa-users"></i></a>'
-                        }
-                        
-                        return '<div class="d-flex justify-center align-center">'+buttonst+'</div>';
-                    }
-                }
-            ],
-
-            "ajax": {
-                "url": "<?=base_url()?>index.php/Asesor/tableClienteDS/",
-                "dataSrc": "",
-                "type": "POST",
-                cache: false,
-                "data": function( d ){
-                }
-            },
-
-        });
-
         $(document).on('click', '.abrir_prospectos', function () {
             $('#nom_cliente').html('');
             $('#id_cliente_asignar').val(0);
@@ -478,6 +465,15 @@
                         className: 'btn buttons-excel',
                         titleAttr: 'Prospectos',
                         title:"Prospectos",
+                    },
+                    {
+                        extend: 'pdfHtml5',
+                        text: '<i class="fa fa-file-pdf" aria-hidden="true"></i>',
+                        className: 'btn buttons-pdf',
+                        titleAttr: 'Prospectos',
+                        title:"Prospectos",
+                        orientation: 'landscape',
+                        pageSize: 'LEGAL',
                     }
                 ],
                 columnDefs: [{
@@ -605,9 +601,6 @@
             });
         });
 
-
-
-
         $(document).on('click', '.pdfLink2', function () {
             var $itself = $(this);
             Shadowbox.open({
@@ -630,167 +623,399 @@
             });
         });
 
-
-        $("#tabla_deposito_seriedad tbody").on("click", ".getInfo2", function(e){
-            e.preventDefault();
-
-            getInfo2A[0] = $(this).attr("data-idCliente");
-            getInfo2A[1] = $(this).attr("data-nombreResidencial");
-            getInfo2A[2] = $(this).attr("data-nombreCondominio");
-            getInfo2A[3] = $(this).attr("data-idCondominio");
-            getInfo2A[4] = $(this).attr("data-nombreLote");
-            getInfo2A[5] = $(this).attr("data-idLote");
-            getInfo2A[6] = $(this).attr("data-fechavenc");
-
-            nombreLote = $(this).data("nomlote");
-            $(".lote").html(nombreLote);
-
-
-            $('#modal1').modal('show');
-
-        });
-
-
-
-        $("#tabla_deposito_seriedad tbody").on("click", ".getInfo2_2", function(e){
-            e.preventDefault();
-
-            getInfo2_2A[0] = $(this).attr("data-idCliente");
-            getInfo2_2A[1] = $(this).attr("data-nombreResidencial");
-            getInfo2_2A[2] = $(this).attr("data-nombreCondominio");
-            getInfo2_2A[3] = $(this).attr("data-idCondominio");
-            getInfo2_2A[4] = $(this).attr("data-nombreLote");
-            getInfo2_2A[5] = $(this).attr("data-idLote");
-            getInfo2_2A[6] = $(this).attr("data-fechavenc");
-
-            nombreLote = $(this).data("nomlote");
-            $(".lote").html(nombreLote);
-
-            $('#modal2').modal('show');
-
-        });
-
-
-        $("#tabla_deposito_seriedad tbody").on("click", ".getInfo5", function(e){
-            e.preventDefault();
-
-            getInfo5A[0] = $(this).attr("data-idCliente");
-            getInfo5A[1] = $(this).attr("data-nombreResidencial");
-            getInfo5A[2] = $(this).attr("data-nombreCondominio");
-            getInfo5A[3] = $(this).attr("data-idCondominio");
-            getInfo5A[4] = $(this).attr("data-nombreLote");
-            getInfo5A[5] = $(this).attr("data-idLote");
-            getInfo5A[6] = $(this).attr("data-fechavenc");
-
-            nombreLote = $(this).data("nomlote");
-            $(".lote").html(nombreLote);
-
-            $('#modal3').modal('show');
-
-        });
-
-
-        $("#tabla_deposito_seriedad tbody").on("click", ".getInfo6", function(e){
-            e.preventDefault();
-
-            getInfo6A[0] = $(this).attr("data-idCliente");
-            getInfo6A[1] = $(this).attr("data-nombreResidencial");
-            getInfo6A[2] = $(this).attr("data-nombreCondominio");
-            getInfo6A[3] = $(this).attr("data-idCondominio");
-            getInfo6A[4] = $(this).attr("data-nombreLote");
-            getInfo6A[5] = $(this).attr("data-idLote");
-            getInfo6A[6] = $(this).attr("data-fechavenc");
-
-            nombreLote = $(this).data("nomlote");
-            $(".lote").html(nombreLote);
-
-
-            $('#modal4').modal('show');
-
-        });
-
-
-
-        $("#tabla_deposito_seriedad tbody").on("click", ".getInfo2_3", function(e){
-            e.preventDefault();
-
-            getInfo2_3A[0] = $(this).attr("data-idCliente");
-            getInfo2_3A[1] = $(this).attr("data-nombreResidencial");
-            getInfo2_3A[2] = $(this).attr("data-nombreCondominio");
-            getInfo2_3A[3] = $(this).attr("data-idCondominio");
-            getInfo2_3A[4] = $(this).attr("data-nombreLote");
-            getInfo2_3A[5] = $(this).attr("data-idLote");
-            getInfo2_3A[6] = $(this).attr("data-fechavenc");
-
-            nombreLote = $(this).data("nomlote");
-            $(".lote").html(nombreLote);
-
-
-            $('#modal5').modal('show');
-
-        });
-
-
-        $("#tabla_deposito_seriedad tbody").on("click", ".getInfo2_7", function(e){
-            e.preventDefault();
-
-            getInfo2_7A[0] = $(this).attr("data-idCliente");
-            getInfo2_7A[1] = $(this).attr("data-nombreResidencial");
-            getInfo2_7A[2] = $(this).attr("data-nombreCondominio");
-            getInfo2_7A[3] = $(this).attr("data-idCondominio");
-            getInfo2_7A[4] = $(this).attr("data-nombreLote");
-            getInfo2_7A[5] = $(this).attr("data-idLote");
-            getInfo2_7A[6] = $(this).attr("data-fechavenc");
-
-            nombreLote = $(this).data("nomlote");
-            $(".lote").html(nombreLote);
-
-            $('#modal6').modal('show');
-
-        });
-
-
-
-        $("#tabla_deposito_seriedad tbody").on("click", ".getInfo5_2", function(e){
-            e.preventDefault();
-
-            getInfo5_2A[0] = $(this).attr("data-idCliente");
-            getInfo5_2A[1] = $(this).attr("data-nombreResidencial");
-            getInfo5_2A[2] = $(this).attr("data-nombreCondominio");
-            getInfo5_2A[3] = $(this).attr("data-idCondominio");
-            getInfo5_2A[4] = $(this).attr("data-nombreLote");
-            getInfo5_2A[5] = $(this).attr("data-idLote");
-            getInfo5_2A[6] = $(this).attr("data-fechavenc");
-
-            nombreLote = $(this).data("nomlote");
-            $(".lote").html(nombreLote);
-
-            $('#modal7').modal('show');
-
-        });
-
-
-        $("#tabla_deposito_seriedad tbody").on("click", ".return1", function(e){
-            e.preventDefault();
-
-            return1a[0] = $(this).attr("data-idCliente");
-            return1a[1] = $(this).attr("data-nombreResidencial");
-            return1a[2] = $(this).attr("data-nombreCondominio");
-            return1a[3] = $(this).attr("data-idCondominio");
-            return1a[4] = $(this).attr("data-nombreLote");
-            return1a[5] = $(this).attr("data-idLote");
-            return1a[6] = $(this).attr("data-fechavenc");
-
-            nombreLote = $(this).data("nomlote");
-            $(".lote").html(nombreLote);
-
-            $('#modal_return1').modal('show');
-
-        });
-
     });
 
 
+    $(document).on("click", ".getInfo2", function (e) {
+    //$("#tabla_deposito_seriedad tbody").on("click", ".getInfo2", function(e){
+        e.preventDefault();
+        console.log("in");
+        getInfo2A[0] = $(this).attr("data-idCliente");
+        getInfo2A[1] = $(this).attr("data-nombreResidencial");
+        getInfo2A[2] = $(this).attr("data-nombreCondominio");
+        getInfo2A[3] = $(this).attr("data-idCondominio");
+        getInfo2A[4] = $(this).attr("data-nombreLote");
+        getInfo2A[5] = $(this).attr("data-idLote");
+        getInfo2A[6] = $(this).attr("data-fechavenc");
+        nombreLote = $(this).data("nomlote");
+        $(".lote").html(nombreLote);
+        $('#modal1').modal('show');
+    });
+
+    $(document).on("click", ".getInfo2_2", function (e) {
+    //$("#tabla_deposito_seriedad tbody").on("click", ".getInfo2_2", function(e){
+        e.preventDefault();
+        getInfo2_2A[0] = $(this).attr("data-idCliente");
+        getInfo2_2A[1] = $(this).attr("data-nombreResidencial");
+        getInfo2_2A[2] = $(this).attr("data-nombreCondominio");
+        getInfo2_2A[3] = $(this).attr("data-idCondominio");
+        getInfo2_2A[4] = $(this).attr("data-nombreLote");
+        getInfo2_2A[5] = $(this).attr("data-idLote");
+        getInfo2_2A[6] = $(this).attr("data-fechavenc");
+        nombreLote = $(this).data("nomlote");
+        $(".lote").html(nombreLote);
+        $('#modal2').modal('show');
+    });
+
+    $(document).on("click", ".getInfo5", function (e) {
+    //$("#tabla_deposito_seriedad tbody").on("click", ".getInfo5", function(e){
+        e.preventDefault();
+        getInfo5A[0] = $(this).attr("data-idCliente");
+        getInfo5A[1] = $(this).attr("data-nombreResidencial");
+        getInfo5A[2] = $(this).attr("data-nombreCondominio");
+        getInfo5A[3] = $(this).attr("data-idCondominio");
+        getInfo5A[4] = $(this).attr("data-nombreLote");
+        getInfo5A[5] = $(this).attr("data-idLote");
+        getInfo5A[6] = $(this).attr("data-fechavenc");
+        nombreLote = $(this).data("nomlote");
+        $(".lote").html(nombreLote);
+        $('#modal3').modal('show');
+    });
+
+    $(document).on("click", ".getInfo6", function (e) {
+    //$("#tabla_deposito_seriedad tbody").on("click", ".getInfo6", function(e){
+        e.preventDefault();
+        getInfo6A[0] = $(this).attr("data-idCliente");
+        getInfo6A[1] = $(this).attr("data-nombreResidencial");
+        getInfo6A[2] = $(this).attr("data-nombreCondominio");
+        getInfo6A[3] = $(this).attr("data-idCondominio");
+        getInfo6A[4] = $(this).attr("data-nombreLote");
+        getInfo6A[5] = $(this).attr("data-idLote");
+        getInfo6A[6] = $(this).attr("data-fechavenc");
+        nombreLote = $(this).data("nomlote");
+        $(".lote").html(nombreLote);
+        $('#modal4').modal('show');
+    });
+
+    $(document).on("click", ".getInfo2_3", function (e) {
+    //$("#tabla_deposito_seriedad tbody").on("click", ".getInfo2_3", function(e){
+        e.preventDefault();
+        getInfo2_3A[0] = $(this).attr("data-idCliente");
+        getInfo2_3A[1] = $(this).attr("data-nombreResidencial");
+        getInfo2_3A[2] = $(this).attr("data-nombreCondominio");
+        getInfo2_3A[3] = $(this).attr("data-idCondominio");
+        getInfo2_3A[4] = $(this).attr("data-nombreLote");
+        getInfo2_3A[5] = $(this).attr("data-idLote");
+        getInfo2_3A[6] = $(this).attr("data-fechavenc");
+        nombreLote = $(this).data("nomlote");
+        $(".lote").html(nombreLote);
+        $('#modal5').modal('show');
+    });
+
+    $(document).on("click", ".getInfo2_7", function (e) {
+    //$("#tabla_deposito_seriedad tbody").on("click", ".getInfo2_7", function(e){
+        e.preventDefault();
+        getInfo2_7A[0] = $(this).attr("data-idCliente");
+        getInfo2_7A[1] = $(this).attr("data-nombreResidencial");
+        getInfo2_7A[2] = $(this).attr("data-nombreCondominio");
+        getInfo2_7A[3] = $(this).attr("data-idCondominio");
+        getInfo2_7A[4] = $(this).attr("data-nombreLote");
+        getInfo2_7A[5] = $(this).attr("data-idLote");
+        getInfo2_7A[6] = $(this).attr("data-fechavenc");
+        nombreLote = $(this).data("nomlote");
+        $(".lote").html(nombreLote);
+        $('#modal6').modal('show');
+    });
+
+    $(document).on("click", ".getInfo5_2", function (e) {
+    //$("#tabla_deposito_seriedad tbody").on("click", ".getInfo5_2", function(e){
+        e.preventDefault();
+        getInfo5_2A[0] = $(this).attr("data-idCliente");
+        getInfo5_2A[1] = $(this).attr("data-nombreResidencial");
+        getInfo5_2A[2] = $(this).attr("data-nombreCondominio");
+        getInfo5_2A[3] = $(this).attr("data-idCondominio");
+        getInfo5_2A[4] = $(this).attr("data-nombreLote");
+        getInfo5_2A[5] = $(this).attr("data-idLote");
+        getInfo5_2A[6] = $(this).attr("data-fechavenc");
+        nombreLote = $(this).data("nomlote");
+        $(".lote").html(nombreLote);
+        $('#modal7').modal('show');
+    });
+
+    $(document).on("click", ".return1", function (e) {
+    //$("#tabla_deposito_seriedad tbody").on("click", ".return1", function(e){
+        e.preventDefault();
+        return1a[0] = $(this).attr("data-idCliente");
+        return1a[1] = $(this).attr("data-nombreResidencial");
+        return1a[2] = $(this).attr("data-nombreCondominio");
+        return1a[3] = $(this).attr("data-idCondominio");
+        return1a[4] = $(this).attr("data-nombreLote");
+        return1a[5] = $(this).attr("data-idLote");
+        return1a[6] = $(this).attr("data-fechavenc");
+        nombreLote = $(this).data("nomlote");
+        $(".lote").html(nombreLote);
+        $('#modal_return1').modal('show');
+    });
+
+    function fillDataTable(id_condominio) {
+        tabla_valores_ds = $("#tabla_deposito_seriedad").DataTable({
+            width: 'auto',
+            dom: 'Brt'+ "<'row'<'col-12 col-sm-12 col-md-6 col-lg-6'i><'col-12 col-sm-12 col-md-6 col-lg-6'p>>",
+            buttons: [
+                {
+                    extend: 'excelHtml5',
+                    text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
+                    className: 'btn buttons-excel',
+                    titleAttr: 'Tus ventas',
+                    title:"Tus ventas",
+                    exportOptions: {
+                        columns: [0,1,2,3,4,5,6,9],
+                        format: {
+                            header: function (d, columnIdx) {
+                                switch (columnIdx) {
+                                    case 0:
+                                        return 'PROYECTO';
+                                        break;
+                                    case 1:
+                                        return 'CONDOMINIO';
+                                        break;
+                                    case 2:
+                                        return 'LOTE';
+                                    case 3:
+                                        return 'CLIENTE';
+                                        break;
+                                    case 4:
+                                        return 'FECHA APARTADO';
+                                        break;
+                                    case 5:
+                                        return 'FECHA VENCIMIENTO';
+                                        break;
+                                    case 6:
+                                        return 'COMENTARIO';
+                                        break;
+                                    case 9:
+                                        return 'PROSPECTO';
+                                        break;
+                                }
+                            }
+                        }
+                    }
+                },
+                {
+                    extend: 'pdfHtml5',
+                    text: '<i class="fa fa-file-pdf" aria-hidden="true"></i>',
+                    className: 'btn buttons-pdf',
+                    titleAttr: 'Tus ventas',
+                    title:"Tus ventas",
+                    orientation: 'landscape',
+                    pageSize: 'LEGAL',
+                    exportOptions: {
+                        columns: [0,1,2,3,4,5,6,9],
+                        format: {
+                            header: function (d, columnIdx) {
+                                switch (columnIdx) {
+                                    case 0:
+                                        return 'PROYECTO';
+                                        break;
+                                    case 1:
+                                        return 'CONDOMINIO';
+                                        break;
+                                    case 2:
+                                        return 'LOTE';
+                                    case 3:
+                                        return 'CLIENTE';
+                                        break;
+                                    case 4:
+                                        return 'FECHA APARTADO';
+                                        break;
+                                    case 5:
+                                        return 'FECHA VENCIMIENTO';
+                                        break;
+                                    case 6:
+                                        return 'COMENTARIO';
+                                        break;
+                                    case 9:
+                                        return 'PROSPECTO';
+                                        break;
+                                }
+                            }
+                        }
+                    }
+                }
+            ],
+            columnDefs: [{
+                defaultContent: "",
+                targets: "_all",
+                searchable: true,
+                orderable: false
+            }],
+            pageLength: 10,
+            bAutoWidth: false,
+            fixedColumns: true,
+            ordering: false,
+            language: {
+                url: "<?=base_url()?>/static/spanishLoader_v2.json",
+                paginate: {
+                    previous: "<i class='fa fa-angle-left'>",
+                    next: "<i class='fa fa-angle-right'>"
+                }
+            },
+            order: [[4, "desc"]],
+            destroy: true,
+            columns: [
+                { "data": "nombreResidencial" },
+                { "data": "nombreCondominio" },
+                { "data": "nombreLote" },
+                {
+                    "data": function( d ){
+                        return d.nombre+" "+d.apellido_paterno+" "+d.apellido_materno;
+                    }
+                },
+                { "data": "fechaApartado" },
+                {
+                    "data": function( d ){
+                        fv = (d.idMovimiento == 73 || d.idMovimiento == 92 || d.idMovimiento == 96) ?  d.modificado: d.fechaVenc;
+                        return fv;
+                    }
+                },
+                {
+                    "data": function( d ){
+
+                        comentario = d.idMovimiento == 31 ? d.comentario + "<br> <span class='label label-success'>Nuevo apartado</span>":
+                        d.idMovimiento == 85 ?  d.comentario + "<br> <span class='label label-danger'>Rechazo Contraloria estatus 2</span>":
+                        d.idMovimiento == 20 ?  d.comentario + "<br> <span class='label label-danger'>Rechazo Contraloria estatus 5</span>":
+                        d.idMovimiento == 63 ?  d.comentario + "<br> <span class='label label-danger'>Rechazo Contraloria estatus 6</span>":
+                        d.idMovimiento == 73 ?  d.comentario + "<br> <span class='label label-danger'>Rechazo Ventas estatus 8</span>":
+                        d.idMovimiento == 82 ?  d.comentario + "<br> <span class='label label-danger'>Rechazo Jurídico estatus 7</span>":
+                        d.idMovimiento == 92 ?  d.comentario + "<br> <span class='label label-danger'>Rechazo Contraloria estatus 5</span>":
+                        d.idMovimiento == 96 ?  d.comentario + "<br> <span class='label label-danger'>Rechazo Jurídico estatus 7</span>":
+                        d.comentario;
+                        return comentario;
+                    }
+
+                },
+                {
+                    "data": function( d ){
+                        var atributo_button ='';
+                        var buttonst;
+                        if(d.vl == '1') {
+                            buttonst = 'En proceso de Liberación';
+                        } else {
+                            if (d.idMovimiento == 31 && d.idStatusContratacion == 1) {
+                                if (d.id_prospecto == 0 )/*&& d.concepto =='APARTADO DESDE LA PAGINA DE CIUDAD' MADERAS*/
+                                {
+                                    if (d.id_coordinador == 10807 || d.id_coordinador == 10806 || d.id_gerente == 10807 || d.id_gerente == 10806) {
+                                        buttonst = d.idMovimiento == 31 ?  '<center><a href="#" '+atributo_button+' data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="btn-data btn-green getInfo2">  <i class="fas fa-check" title= "Enviar estatus"></i></a></center>':
+                                        d.idMovimiento == 85 ?  '<center><a href="#" '+atributo_button+' data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="btn-data btn-green getInfo2_2"><i class="fas fa-check" title= "Enviar estatus"></i></a></center>':
+                                        d.idMovimiento == 20 ?  '<center><a href="#" '+atributo_button+' data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="btn-data btn-green getInfo5">  <i class="fas fa-check" title= "Enviar estatus"></i></a></center>':
+                                        d.idMovimiento == 63 ?  '<center><a href="#" '+atributo_button+' data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="btn-data btn-green getInfo6">  <i class="fas fa-check" title= "Enviar estatus"></i></a></center>':
+                                        d.idMovimiento == 73 ?  '<center><a href="#" '+atributo_button+' data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="btn-data btn-green getInfo2_3"><i class="fas fa-check" title= "Enviar estatus"></i></a></center>':
+                                        d.idMovimiento == 82 ?  '<center><a href="#" '+atributo_button+' data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="btn-data btn-green getInfo2_7"><i class="fas fa-check" title= "Enviar estatus"></i></a></center>':
+                                        d.idMovimiento == 92 ?  '<center><a href="#" '+atributo_button+' data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.modificado+'" class="btn-data btn-green getInfo5_2"><i class="fas fa-check" title= "Enviar estatus"></i></a></center>':
+                                        d.idMovimiento == 96 ?  '<center><a href="#" '+atributo_button+' data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="btn-data btn-green return1"><i class="fas fa-check" title= "Enviar estatus"></i></a></center>':
+                                        d.comentario;
+                                    } else {
+                                        buttonst = d.idMovimiento == 31 ?  '<center><a href="#" disabled  data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="btn-data btn-green disabled">  <i class="fas fa-check" title= "Enviar estatus"></i></a></center>':
+                                        d.idMovimiento == 85 ?  '<center><a href="#" disabled  data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="btn-data btn-green disabled"><i class="fas fa-check" title= "Enviar estatus"></i></a></center>':
+                                        d.idMovimiento == 20 ?  '<center><a href="#" disabled  data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="btn-data btn-green disabled">  <i class="fas fa-check" title= "Enviar estatus"></i></a></center>':
+                                        d.idMovimiento == 63 ?  '<center><a href="#" disabled  data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="btn-data btn-green disabled">  <i class="fas fa-check" title= "Enviar estatus"></i></a></center>':
+                                        d.idMovimiento == 73 ?  '<center><a href="#" disabled  data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="btn-data btn-green disabled"><i class="fas fa-check" title= "Enviar estatus"></i></a></center>':
+                                        d.idMovimiento == 82 ?  '<center><a href="#" disabled  data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="btn-data btn-green disabled"><i class="fas fa-check" title= "Enviar estatus"></i></a></center>':
+                                        d.idMovimiento == 92 ?  '<center><a href="#" disabled  data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.modificado+'" class="btn-data btn-green disabled"><i class="fas fa-check" title= "Enviar estatus"></i></a></center>':
+                                        d.idMovimiento == 96 ?  '<center><a href="#" disabled  data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="btn-data btn-green disabled"><i class="fas fa-check" title= "Enviar estatus"></i></a></center>':
+                                        d.comentario;
+                                    }
+                                } else {
+                                    buttonst = d.idMovimiento == 31 ?  '<center><a href="#" '+atributo_button+' data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="btn-data btn-green getInfo2">  <i class="fas fa-check" title= "Enviar estatus"></i></a></center>':
+                                    d.idMovimiento == 85 ?  '<center><a href="#" '+atributo_button+' data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="btn-data btn-green getInfo2_2"><i class="fas fa-check" title= "Enviar estatus"></i></a></center>':
+                                    d.idMovimiento == 20 ?  '<center><a href="#" '+atributo_button+' data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="btn-data btn-green getInfo5">  <i class="fas fa-check" title= "Enviar estatus"></i></a></center>':
+                                    d.idMovimiento == 63 ?  '<center><a href="#" '+atributo_button+' data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="btn-data btn-green getInfo6">  <i class="fas fa-check" title= "Enviar estatus"></i></a></center>':
+                                    d.idMovimiento == 73 ?  '<center><a href="#" '+atributo_button+' data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="btn-data btn-green getInfo2_3"><i class="fas fa-check" title= "Enviar estatus"></i></a></center>':
+                                    d.idMovimiento == 82 ?  '<center><a href="#" '+atributo_button+' data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="btn-data btn-green getInfo2_7"><i class="fas fa-check" title= "Enviar estatus"></i></a></center>':
+                                    d.idMovimiento == 92 ?  '<center><a href="#" '+atributo_button+' data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.modificado+'" class="btn-data btn-green getInfo5_2"><i class="fas fa-check" title= "Enviar estatus"></i></a></center>':
+                                    d.idMovimiento == 96 ?  '<center><a href="#" '+atributo_button+' data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="btn-data btn-green return1"><i class="fas fa-check" title= "Enviar estatus"></i></a></center>':
+                                    d.comentario;
+                                }
+                            }                            
+                            else 
+                            {
+                                buttonst = d.idMovimiento == 31 ?  '<center><a href="#" '+atributo_button+' data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="btn-data btn-green getInfo2">  <i class="fas fa-check" title= "Enviar estatus"></i></a></center>':
+                                d.idMovimiento == 85 ?  '<center><a href="#" '+atributo_button+' data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="btn-data btn-green getInfo2_2"><i class="fas fa-check" title= "Enviar estatus"></i></a></center>':
+                                d.idMovimiento == 20 ?  '<center><a href="#" '+atributo_button+' data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="btn-data btn-green getInfo5">  <i class="fas fa-check" title= "Enviar estatus"></i></a></center>':
+                                d.idMovimiento == 63 ?  '<center><a href="#" '+atributo_button+' data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="btn-data btn-green getInfo6">  <i class="fas fa-check" title= "Enviar estatus"></i></a></center>':
+                                d.idMovimiento == 73 ?  '<center><a href="#" '+atributo_button+' data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="btn-data btn-green getInfo2_3"><i class="fas fa-check" title= "Enviar estatus"></i></a></center>':
+                                d.idMovimiento == 82 ?  '<center><a href="#" '+atributo_button+' data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="btn-data btn-green getInfo2_7"><i class="fas fa-check" title= "Enviar estatus"></i></a></center>':
+                                d.idMovimiento == 92 ?  '<center><a href="#" '+atributo_button+' data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.modificado+'" class="btn-data btn-green getInfo5_2"><i class="fas fa-check" title= "Enviar estatus"></i></a></center>':
+                                d.idMovimiento == 96 ?  '<center><a href="#" '+atributo_button+' data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="btn-data btn-green return1"><i class="fas fa-check" title= "Enviar estatus"></i></a></center>':
+                                d.comentario;
+                            }
+                        }
+                        return buttonst;
+                    }
+
+                },
+                {
+                    "data": function( d ){ // DATA FROM DEPOSITO_SERIEDAD NEW VERSION
+                        var atributo_button ='';
+                        var url_to_go  = '';
+                        if (d.idMovimiento == 31 && d.idStatusContratacion == 1) {
+                            if (d.id_prospecto == 0)/*APARTADO DESDE LA PAGINA DE CIUDAD MADERAS*/
+                            {
+                                if (d.id_coordinador == 10807 || d.id_coordinador == 10806 || d.id_gerente == 10807 || d.id_gerente == 10806) {
+                                    atributo_button = '';
+                                    url_to_go  = '<?=base_url()?>index.php/Asesor/deposito_seriedad/'+d.id_cliente+'/0';
+                                } else {
+                                    atributo_button = 'disabled';
+                                    url_to_go  = '#';
+                                }
+                            } else {
+                                atributo_button = '';
+                                url_to_go  = '<?=base_url()?>index.php/Asesor/deposito_seriedad/'+d.id_cliente+'/0';
+                            }
+                        }
+                        else {
+                            atributo_button = '';
+                            url_to_go  = '<?=base_url()?>index.php/Asesor/deposito_seriedad/'+d.id_cliente+'/0';
+                        }
+                        if (d.dsType == 1){
+                            return '<center><a class="btn-data btn-blueMaderas btn_ds'+d.id_cliente+'" '+atributo_button+' id="btn_ds'+d.id_cliente+'" href="'+url_to_go+'" title= "Depósito de seriedad"><i class="fas fa-print"></i></a></center>';
+                        } else if(d.dsType == 2) { // DATA FROM DEPOSITO_SERIEDAD_CONSULTA OLD VERSION
+                            return '<center><a class="btn-data btn-blueMaderas" href="<?=base_url()?>index.php/Asesor/deposito_seriedad_ds/'+d.id_cliente+'/0" title= "Depósito de seriedad"><i class="fas fa-print"></i></a></center>';
+                        }
+                    }
+                },
+                {
+                    "data" : function(d){
+                        var action='';
+                        if (d.dsType == 1) {
+                            if (d.idMovimiento == 31 && d.idStatusContratacion == 1) {
+                                if (d.id_prospecto == 0)/*APARTADO DESDE LA PAGINA DE CIUDAD MADERAS*/
+                                {
+                                    if (d.id_coordinador == 10807 || d.id_coordinador == 10806 || d.id_gerente == 10807 || d.id_gerente == 10806)
+                                        action = 'Asignado correctamente';
+                                    else {
+                                        var nombre_cliente = '';
+                                        nombre_cliente = d.nombre + ' ' + d.apellido_paterno + ' ' + d.apellido_materno;
+                                        action = '<center><button class="btn-data btn-green abrir_prospectos ' +
+                                        'btn-fab btn-fab-mini" data-idCliente="'+d.id_cliente+'" data-nomCliente="'+nombre_cliente+'">' +
+                                        '<i class="fas fa-user-check"></i></button></center><br>';
+                                        action += 'Debes asignar el prospecto al cliente para poder acceder al depósito de seriedad o integrar el expediente';
+                                    }
+
+                                } else {
+                                    action = 'Asignado correctamente';
+                                }
+                            }
+                             else {
+                                    action = 'Asignado correctamente';
+                                }
+                        }
+                        return action;
+                    }
+                }
+            ],
+            ajax: {
+                url: "<?=base_url()?>index.php/Asesor/tableClienteDS/",
+                dataSrc: "",
+                type: "POST",
+                cache: false,
+                data: {
+                    "id_condominio": id_condominio,
+                }
+            },
+
+        });
+    }
 
 
     $(document).on('click', '#save1', function(e) {
@@ -842,7 +1067,9 @@
                         $('#save1').prop('disabled', false);
                         $('#modal1').modal('hide');
                         $('#tabla_deposito_seriedad').DataTable().ajax.reload();
+                        
                         alerts.showNotification("top", "right", "Asegúrate de incluir los documentos: IDENTIFICACIÓN OFICIAL, COMPROBANTE DE DOMICILIO, RECIBOS DE APARTADO Y ENGANCHE Y DEPÓSITO DE SERIEDAD Y AUTORIZACIONES VALIDADAS antes de llevar a cabo el avance.", "danger");
+
                     } else if(response.message == 'ERROR'){
                         $('#save1').prop('disabled', false);
                         $('#modal1').modal('hide');
@@ -871,6 +1098,20 @@
         }
 
     });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     $(document).on('click', '#save2', function(e) {
         e.preventDefault();
@@ -942,6 +1183,18 @@
     });
 
 
+
+
+
+
+
+
+
+
+
+
+
+
     $(document).on('click', '#save3', function(e) {
         e.preventDefault();
 
@@ -1008,6 +1261,11 @@
         }
     });
 
+
+
+
+
+
     $(document).on('click', '#save4', function(e) {
         e.preventDefault();
 
@@ -1068,6 +1326,7 @@
             });
         }
     });
+
 
 
     $(document).on('click', '#save5', function(e) {
@@ -1364,108 +1623,6 @@
         })
     })
 
-    $(document).on('click', '#vCompartida', function(e) {
-        e.preventDefault();
-        var data = tabla_valores_ds.row($(this).parents('tr')).data();
-        $('#id_cliente').val(data.id_cliente);
-        $("#ventaC").val("");
-        $("#ventaC").trigger('change');
-        $("#ventaC").selectpicker('refresh');
-        $('#ventaCompartida').modal('show');
-    });
-
-    $(document).on('change', '#ventaC', function(e) {
-        e.preventDefault();
-        console.log($(this).val());
-        createFirstSelect($(this).val());
-    });
-
-    $(document).on('change', '#asesor1', function(e) {
-        e.preventDefault();
-        console.log($(this).val());
-        createSecondSelect($(this).val());
-    });
-
-    $(document).on('submit', '#formVentaCompartida', function(e) {
-        e.preventDefault();
-        console.log($('#ventaC').val());
-        if ($('#asesor1').val() == '')
-            alerts.showNotification("top", "right", "El campo del primer asesor es requerido.", "warning");
-        else if($('#ventaC').val() ==  null){
-            alerts.showNotification("top", "right", "El campo de venta compartida es requerido.", "warning");
-        }else{
-            var form = $(this);
-            $.ajax({
-                type: "POST",
-                url: 'saveVentaCompartida',
-                data: form.serialize(),
-                success: function(data){
-                    console.log(data);
-                    alerts.showNotification("top", "right", "Se ha guardado el registro correctamente.", "success");
-                    $('#ventaCompartida').modal('hide');
-                    tabla_valores_ds.ajax.reload();
-                }
-            });
-        }
-    });
-
-    function createSecondSelect(value){
-        $('#spiner-loader').removeClass('hide');
-        $('#divAsesores2').html(`<div class="form-group label-floating is-focused">
-                                        <label class="control-label label-gral">Asesor 2</label>
-                                        <select class="selectpicker" data-style="btn btn-primary btn-round"
-                                                title="Selecciona el segundo asesor" data-size="7" id="asesor2" name="asesor2"
-                                                data-live-search="true">
-                                        </select>
-                                    </div>`);
-        $("#asesor2").empty().selectpicker('refresh');
-        $.ajax({
-            url: 'getAsesores2',
-            type: 'post',
-            dataType: 'json',
-            data: {value: value},
-            success: function (response) {
-                var len = response.length;
-                for (var i = 0; i < len; i++) {
-                    $("#asesor2").append($('<option>').val(response[i]['id_usuario']).text(response[i]['nombre']));
-                }
-                $("#asesor2").selectpicker('refresh');
-                $('#spiner-loader').addClass('hide');
-
-            }
-        });
-    }
-
-    function createFirstSelect(value){
-        $('#spiner-loader').removeClass('hide');
-        if(value == 'uno'){
-            $('#divAsesores').html(`<div class="form-group label-floating is-focused">
-                                        <label class="control-label label-gral">Asesor 1</label>
-                                        <select class="selectpicker" data-style="btn btn-primary btn-round"
-                                                title="Selecciona el primer asesor" data-size="7" id="asesor1" name="asesor1"
-                                                data-live-search="true">
-                                        </select>
-                                    </div>`);
-        }else{
-            $('#divAsesores').html('');
-            $('#divAsesores2').html('');
-        }
-
-        $("#asesor1").empty().selectpicker('refresh');
-        $.ajax({
-            url: 'getAsesores',
-            type: 'post',
-            dataType: 'json',
-            success: function (response) {
-                $('#spiner-loader').addClass('hide');
-                var len = response.length;
-                for (var i = 0; i < len; i++) {
-                    $("#asesor1").append($('<option>').val(response[i]['id_usuario']).text(response[i]['nombre']));
-                }
-                $("#asesor1").selectpicker('refresh');
-            }
-        });
-    }
 
 </script>
 

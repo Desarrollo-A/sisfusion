@@ -516,7 +516,7 @@ $(document).on('click', '#sendMail', function () {
 
 $(document).on('click', '#tree', function () {
     var data = prospectsTable.row($(this).parents('tr')).data();
-    getDocumentsClient(data.idSolicitud);
+    getDocumentsClient(data.idSolicitud, data.idEstatus);
     $("#documentTree").modal();
 });
 
@@ -767,7 +767,7 @@ function fillTable(beginDate, endDate, estatus) {
         width: "auto",
         pagingType: "full_numbers",
         language: {
-            url: "../static/spanishLoader.json",
+            url: "../static/spanishLoader_v2.json",
             paginate: {
                 previous: "<i class='fa fa-angle-left'>",
                 next: "<i class='fa fa-angle-right'>"
@@ -816,8 +816,8 @@ function fillTable(beginDate, endDate, estatus) {
             },
             {
                 data: function (d) {
-                    return `<center><span><b>${d.idEstatus} - ${d.estatus}</b></span><center>
-                    <center><span>(${d.area})</span><center>`;   
+                    return `<center><span><b>${d.idEstatus == 91 ? '1/2':d.idEstatus == 92 ? 3:d.idEstatus} - ${d.estatus}</b></span><center>`;   
+                    // <center><span>(${d.area})</span><center></center>
                 }
             },
             {
@@ -1163,7 +1163,8 @@ function getDocumentsClient(idEscritura) {
     $("#documents").find("option").remove();
     $("#documents").append($('<option disabled>').val("0").text("Seleccione una opción"));
     $.post('getDocumentsClient', {
-        idEscritura: idEscritura
+        idEscritura: idEscritura,
+        idEstatus:idEstatus
     }, function (data) {        
         var len = data.length;
         for (var i = 0; i < len; i++) {
@@ -1181,9 +1182,9 @@ function getDocumentsClient(idEscritura) {
 
 function getNotarias(datos=null) {
     $('#spiner-loader').removeClass('hide');
-    $("#notaria").find("option").remove();
+    // $("#notaria").find("option").remove();
     $(".notaria-select").find("option").remove();
-    $("#notaria").append($('<option disabled>').val("0").text("Seleccione una opción"));
+    // $("#notaria").append($('<option disabled>').val("0").text("Seleccione una opción"));
     $(".notaria-select").append($('<option disabled>').val("0").text("Seleccione una opción"));
 
     $.post('getNotarias', function (data) {
@@ -1191,16 +1192,16 @@ function getNotarias(datos=null) {
         for (var i = 0; i < len; i++) {
             var id = data[i]['idNotaria'];
             var name = data[i]['nombre_notaria'];
-            $("#notaria").append($('<option>').val(id).text(name));
+            // $("#notaria").append($('<option>').val(id).text(name));
             $(".notaria-select").append($('<option>').val(id).text(name));
 
         }
         if (len <= 0) {
-            $("#notaria").append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
+            // $("#notaria").append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
             $(".notaria-select").append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
         }
        
-        $("#notaria").selectpicker('refresh');
+        // $("#notaria").selectpicker('refresh');
         $(".notaria-select").selectpicker('refresh');
         if(datos != null){
             let selects = $(`#notarias-${datos.idSolicitud}`).find('.selectpicker.notaria-select');
@@ -1459,7 +1460,7 @@ function buildTableDetail(data, permisos) {
                     solicitudes += `<button data-idDocumento="${v.idDocumento}" data-documentType="${v.tipo_documento}" data-idSolicitud=${v.idSolicitud} data-details ="1" data-action="4" class="btn-data btn-warning upload" data-toggle="tooltip" data-placement="top" title="Documento NOK"><i class="fas fa-thumbs-down"></i></button>`;
                 else if (v.ev == 2) // MJ: VALIDADO NOK
                     solicitudes += `<button data-idDocumento="${v.idDocumento}" data-documentType="${v.tipo_documento}" data-idSolicitud=${v.idSolicitud} data-details ="1" data-action="3" class="btn-data btn-green upload" data-toggle="tooltip" data-placement="top" title="Documento OK"><i class="fas fa-thumbs-up"></i></button>`;
-                else { // MJ: SIN VALIDAR
+                else if (v.expediente != null) { // MJ: SIN VALIDAR
                     solicitudes += `<button data-idDocumento="${v.idDocumento}" data-documentType="${v.tipo_documento}" data-idSolicitud=${v.idSolicitud} data-details ="1" data-action="3" class="btn-data btn-gray upload" data-toggle="tooltip" data-placement="top" title="Sin validar OK"><i class="fas fa-thumbs-up"></i></button>`;
                     solicitudes += `<button data-idDocumento="${v.idDocumento}" data-documentType="${v.tipo_documento}" data-idSolicitud=${v.idSolicitud} data-details ="1" data-action="4" class="btn-data btn-gray upload" data-toggle="tooltip" data-placement="top" title="Sin validar NOK"><i class="fas fa-thumbs-down"></i></button>`;
                 }
@@ -1649,7 +1650,8 @@ function getEstatusPago() {
 
 function createDocRow(row, tr, thisVar){
     $.post("getDocumentsClient", {
-        idEscritura: row.data().idSolicitud
+        idEscritura: row.data().idSolicitud,
+        idEstatus: row.data().idEstatus
     }).done(function (data) {
         row.data().solicitudes = JSON.parse(data);
         prospectsTable.row(tr).data(row.data());
@@ -2033,8 +2035,9 @@ function buildUploadCards(idNxS){
 }
 
 function createDocRowOtros(row, tr, thisVar){
-    $.post("getDocumentsClientOtros", {
-        idEscritura: row.data().idSolicitud
+    $.post("getDocumentsClient", {
+        idEscritura: row.data().idSolicitud,
+        idEstatus:row.data().idEstatus
     }).done(function (data) {
         row.data().solicitudes = JSON.parse(data);
         prospectsTable.row(tr).data(row.data());
@@ -2047,8 +2050,10 @@ function createDocRowOtros(row, tr, thisVar){
 }
 
 function createDocRowPago(row, tr, thisVar){
-    $.post("getDocumentsClientPago", {
-        idEscritura: row.data().idSolicitud
+    $.post("getDocumentsClient", {
+        idEscritura: row.data().idSolicitud,
+        idEstatus:row.data().idEstatus
+        
     }).done(function (data) {
         row.data().solicitudes = JSON.parse(data);
         prospectsTable.row(tr).data(row.data());

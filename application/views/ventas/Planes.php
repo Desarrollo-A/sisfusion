@@ -328,7 +328,7 @@
 													<thead>
 														<tr>
 														<th>PROYECTO</th>
-														<th>CONDOMINIO</th>
+														<!-- <th>CONDOMINIO</th> -->
 														<th>TIPO LOTE</th>
 														<th>SUPERFICIE</th>
 														<th>DESCRIPCIÓN</th>
@@ -458,17 +458,17 @@ $("#table_planes").ready(function() {
                 destroy: true,
                 ordering: false,
                 columns: [{  
-                    "width": "8%",
+                    "width": "10%",
                     "data": function( d ){
                         return '<p class="m-0">'+d.nombreResidencial+'</p>';
                     }
                 },
-                {  
-                    "width": "15%",
-                    "data": function( d ){
-                        return '<p class="m-0">'+d.nombre_condominio+'</p>';
-                    }
-                },
+                // {  
+                //     "width": "15%",
+                //     "data": function( d ){
+                //         return '<p class="m-0">'+d.nombre_condominio+'</p>';
+                //     }
+                // },
 				{  
                     "width": "10%",
                     "data": function( d ){
@@ -568,13 +568,13 @@ $("#table_planes").ready(function() {
                     "width": "10%",
                     "data": function( d ){
 						switch(d.tipo_check){
-							case 1:
-							case 2:
+							case '1':
+							case '2':
 								return '<p class="m-0"><b>'+(d.porcentaje)+'%</b></p>';
 							break;
 
-							case 3:
-							case 4:
+							case '3':
+							case '4':
 								return '<p class="m-0"><b>$'+formatMoney(d.porcentaje)+'</b></p>';
 							break;
 
@@ -588,7 +588,7 @@ $("#table_planes").ready(function() {
                 }],
                 columnDefs: [{}],
                 ajax: {
-                    "url": url2 + "PaquetesCorrida/kelFunction",
+                    "url": url2 + "PaquetesCorrida/listaDescuentos",
                     "type": "POST",
                     cache: false,
                     "data": function(d) {}

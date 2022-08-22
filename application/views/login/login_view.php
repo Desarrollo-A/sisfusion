@@ -187,7 +187,7 @@ if($this->input->get('error')) : ?>
 <!-- Material Dashboard DEMO methods, don't include it in your project! -->
 <script src="<?=base_url()?>dist/js/demo.js"></script>
 
-<script src="<?=base_url()?>dist/js/controllers/usuarios-1.1.0.js"></script>
+<!-- <script src="<?=base_url()?>dist/js/controllers/usuarios-1.1.0.js"></script> -->
 
 <script type="text/javascript">
     $(document).ready(function() {

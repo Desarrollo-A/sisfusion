@@ -868,7 +868,8 @@ class Postventa extends CI_Controller
     public function getDocumentsClient()
     {
         $idEscritura = $_POST['idEscritura'];
-        $data = $this->Postventa_model->getDocumentsClient($idEscritura);
+        $idEstatus = $_POST['idEstatus'];
+        $data = $this->Postventa_model->getDocumentsClient($idEscritura, $idEstatus);
         if ($data != null)
             echo json_encode($data);
         else
@@ -1111,7 +1112,7 @@ class Postventa extends CI_Controller
                                             </tr>
                                             <tr>
                                                 <td style="font-size: 1em;width: 50%;border: 1px solid #333;background-color: #D9E1F2; vertical-align:middle;height:fit-content">
-                                                    <div>Nombre a quien escritura:</div>
+                                                    <div>Tipo de escrituración:</div>
                                                 </td>
                                                 <td style="border: 1px solid #333;width: 50%;text-align: initial; display:flex; align-items: center;">
                                                     <div style ="width: 100%;border: 1px solid #F1F4FF;">' . $data->nombre_escrituras . '</div>
@@ -1349,7 +1350,7 @@ class Postventa extends CI_Controller
                                                     ' . $data->nombre_escrituras . '
                                                 </td>
                                                 <td style="font-size: 1em;">
-                                                    <b>Nombre a quien escritura:</b><br>
+                                                    <b>Tipo de escrituración:</b><br>
                                                     ' . $data->tipoEscritura . '
                                                 </td>
                                                 <td style="font-size: 1em;">
@@ -1706,7 +1707,7 @@ class Postventa extends CI_Controller
                         "data" => 'estatus'
                     ],
                     [
-                        "title" => 'Area',
+                        "title" => 'Área',
                         "data" => 'area'
                     ],
                     [
@@ -1751,7 +1752,7 @@ class Postventa extends CI_Controller
                         "data" => 'estatus'
                     ],
                     [
-                        "title" => 'Area',
+                        "title" => 'Área',
                         "data" => 'area'
                     ],
                     [
@@ -1817,14 +1818,14 @@ class Postventa extends CI_Controller
         $data = json_decode(json_encode($data), True);
 
         for ($i = 0; $i < count($data); $i++) {
+            $a = 0;
             if ( $data[$i]['dias'] == 0 || $data[$i]['dias'] == null ){
                 $data[$i]['atrasado']  = 'EN TIEMPO';
                 $data[$i]['diferencia']  = 0;
             }
             else{
                 $endDate = date('m/d/Y h:i:s a', time());
-
-                $result = getWorkingDays($data[$i]['fecha_creacion'], $endDate);
+                $result = $this->getWorkingDays($data[$i]['fecha_creacion'], $endDate, $data[$i]['dias']);
                 $data[$i]['atrasado'] = $result['atrasado'];
                 $data[$i]['diferencia'] = $result['diferencia'];
             }
@@ -1853,16 +1854,18 @@ class Postventa extends CI_Controller
         $idSolicitud = $_POST['idEscritura'];
         $data = $this->Postventa_model->getFullReportContraloria($idSolicitud);
         for ($i = 0; $i < count($data); $i++) {
-            if ( $data[$i]['tiempo'] != 0 ){
+            $a = 0;
+            if ( $data[$i]['tiempo'] != 0 && $data[$i]['tiempo'] != null){
                 $startDate = $data[$i]['fecha_creacion'];
                 $endDate = ( $i+1 < count($data) ) ? $data[$i+1]['fecha_creacion'] : date('m/d/Y h:i:s a', time());
 
-                $result = getWorkingDays($startDate, $endDate);
+
+                $result = $this->getWorkingDays($startDate, $endDate, $data[$i]['tiempo']);
                 $data[$i]['atrasado'] = $result['atrasado'];
                 $data[$i]['diferencia'] = $result['diferencia'];
             }
             else{
-                $data[$i]['atrasado'] = "En tiempo";
+                $data[$i]['atrasado'] = "EN TIEMPO";
                 $data[$i]['diferencia'] = 0;
             }
         }
@@ -1960,45 +1963,57 @@ class Postventa extends CI_Controller
             echo json_encode(array());
     }
 
-function getWorkingDays($startDate, $endDate){
+function getWorkingDays($startDate, $endDate, $tiempo){
     $dataTime=[];
+    $stop_date = date('Y-m-d H:i:s', strtotime($startDate . ' +'.$tiempo.' day'));
     $begin = strtotime($startDate);
     $end   = strtotime($endDate);
-    if ($begin > $end) {
-        return 0;
-    } else {
-        $no_days  = 0;
-        $weekends = 0;
-        while ($begin < $end) {
-            $no_days++; // no of days in the given interval
-            $what_day = date("N", $begin);
-            if ($what_day > 5) { // 6 and 7 are weekend days
-                $weekends++;
-            };
-            $begin += 86400; // +1 day
-        };
-        $working_days = $no_days - $weekends;
+    $stop = strtotime($stop_date);
+    $validDays = 0;
 
         $dt = new DateTime($startDate);
-        $dt2 = new DateTime($endDate);    
+        $dt2 = new DateTime($stop_date);    
         $timeStart = $dt->format('h:i:s A');
         $timeEnd = $dt2->format('h:i:s A');
         $st_time    =   strtotime($timeStart);
         $end_time   =   strtotime($timeEnd);
 
         if( $end_time <= $st_time ){
-            $dataTime['atrasado'] = "En tiempo";
-            $dataTime['diferencia'] = $working_days - 1;
+            $dataTime['atrasado'] = "EN TIEMPO";
+            $dataTime['diferencia'] = 0;
 
             return $dataTime;
         }
         else{
-            $dataTime['atrasado'] = "Atrasado";
+            $dataTime['atrasado'] = "ATRASADO";
             $dataTime['diferencia'] = ( $working_days != 0 ) ? $working_days - 1 : $working_days;
 
             return $dataTime;
         }        
+    // while ($begin < $stop) {
+        
+    // };
+    $working_days = $no_days - $weekends;
+
+    $dt = new DateTime($startDate);
+    $dt2 = new DateTime($stop_date);    
+    $timeStart = $dt->format('h:i:s A');
+    $timeEnd = $dt2->format('h:i:s A');
+    $st_time    =   strtotime($timeStart);
+    $end_time   =   strtotime($timeEnd);
+
+    if( $end_time <= $st_time ){
+        $dataTime['atrasado'] = "En tiempo";
+        $dataTime['diferencia'] = 0;
+
+        return $dataTime;
     }
+    else{
+        $dataTime['atrasado'] = "Atrasado";
+        $dataTime['diferencia'] = ( $working_days != 0 ) ? $working_days - 1 : $working_days;
+
+        return $dataTime;
+    }        
 }
 
 function getNotariasXUsuario(){

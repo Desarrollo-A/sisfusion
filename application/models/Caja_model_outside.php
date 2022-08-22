@@ -764,19 +764,17 @@
 
         $query = $this->db->query("SELECT id_usuario, CONCAT(id_usuario,' - ',nombre, ' ', apellido_paterno, ' ', apellido_materno) nombre FROM usuarios 
 			WHERE (id_rol IN (7, 9, 3) AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%') AND estatus = 1) OR 
-            (id_usuario IN (2567, 4064, 4068, 2588, 4065, 4069, 2541, 2583, 2562, 2593,2580,2597, 1917, 2591, 9827, 5))  ORDER BY nombre");
+            (id_usuario IN (2567, 4064, 4068, 2588, 4065, 4069, 2541, 2583, 2562, 2593,2580,2597, 1917, 2591, 9827, 5, 6626))  ORDER BY nombre");
 
         return $query->result_array();
     }
 
-    public function getAsesorSpecial()
-    {
-        $query = $this->db->query("SELECT u.id_usuario id_asesor, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombre_asesor, 
-                                        uu.id_usuario id_coordinador, uuu.id_usuario id_gerente FROM usuarios u 
-                                        INNER JOIN usuarios uu ON uu.id_usuario = u.id_lider
-                                        INNER JOIN usuarios uuu ON uuu.id_usuario = uu.id_lider
-                                        WHERE u.id_usuario IN (2583, 2593)");
-        return $query->result_array();
+    public function getAsesorSpecial() {
+        return $this->db->query("SELECT u.id_usuario id_asesor, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombre_asesor, 
+        uu.id_usuario id_coordinador, uuu.id_usuario id_gerente FROM usuarios u 
+        INNER JOIN usuarios uu ON uu.id_usuario = u.id_lider
+        INNER JOIN usuarios uuu ON uuu.id_usuario = uu.id_lider
+        WHERE u.id_usuario IN (2583, 2593, 10808)")->result_array();
     }
 
 
@@ -827,7 +825,7 @@
 
     public function get_sede()
     {
-        return $this->db->query("SELECT * FROM sedes WHERE id_sede IN (1,2,3,4,5) AND estatus = 1");
+        return $this->db->query("SELECT * FROM sedes WHERE estatus = 1");
     }
 
 
@@ -927,15 +925,15 @@
     function getSharedSalesList($id_cliente)
     {
         return $this->db->query("SELECT vcp.id_vcompartida, p.id_cliente, CONCAT (p.nombre, ' ', p.apellido_paterno, ' ', p.apellido_materno) nombre_prospecto,
-                                        vcp.id_asesor, CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombre_asesor,
-                                        vcp.id_coordinador, CONCAT (uu.nombre, ' ', uu.apellido_paterno, ' ', uu.apellido_materno) nombre_coordinador,
-                                        vcp.id_gerente, CONCAT (uuu.nombre, ' ', uuu.apellido_paterno, ' ', uuu.apellido_materno) nombre_gerente,
-                                        vcp.fecha_creacion, vcp.estatus FROM clientes p
-                                        INNER JOIN ventas_compartidas vcp ON vcp.id_cliente = p.id_cliente
-                                        INNER JOIN usuarios u ON u.id_usuario = vcp.id_asesor
-                                        LEFT JOIN usuarios uu ON uu.id_usuario = vcp.id_coordinador
-                                        INNER JOIN usuarios uuu ON uuu.id_usuario = vcp.id_gerente
-										WHERE vcp.id_cliente = " . $id_cliente . " AND vcp.estatus = 1")->result_array();
+        vcp.id_asesor, CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombre_asesor,
+        vcp.id_coordinador, CONCAT (uu.nombre, ' ', uu.apellido_paterno, ' ', uu.apellido_materno) nombre_coordinador,
+        vcp.id_gerente, CONCAT (uuu.nombre, ' ', uuu.apellido_paterno, ' ', uuu.apellido_materno) nombre_gerente,
+        vcp.fecha_creacion, 1 estatus FROM clientes p
+        INNER JOIN ventas_compartidas vcp ON vcp.id_cliente = p.id_cliente
+        INNER JOIN usuarios u ON u.id_usuario = vcp.id_asesor
+        LEFT JOIN usuarios uu ON uu.id_usuario = vcp.id_coordinador
+        INNER JOIN usuarios uuu ON uuu.id_usuario = vcp.id_gerente
+		WHERE vcp.id_cliente = " . $id_cliente . " AND vcp.estatus IN (1, 2)")->result_array();
 
     }
 
