@@ -325,7 +325,16 @@ class Api extends CI_Controller
         } else if ($result == 'ALR014') {
             return json_encode(array("timestamp" => $time, "status" => 401, "error" => "No autorizado", "exception" => "Token caducado", "message" => "El tiempo de vida del token ha expirado."));
         } else {
-            return json_encode(array("status" => 200, "message" => "Autenticado con éxito.", "data"=> $result));
+            $validate= true;
+        
+            if($result->data->rol != 18 || $result->data->id_usuario != 1980 || $result->data->sistema != md5('Cu3nT45+_P0r_+P4G4r$$')){
+                $validate = false;
+            }
+            if($validate){
+                return json_encode(array("status" => 200, "message" => "Autenticado con éxito.", "data"=> $result));
+            }else{
+                return json_encode(array("timestamp" => $time, "status" => 401, "error" => "No autorizado", "exception" => "Verificación de firma fallida", "message" => "Estructura no válida del token enviado."));
+            }
         }
     }
 
