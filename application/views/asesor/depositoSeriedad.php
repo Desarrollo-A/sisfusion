@@ -1067,13 +1067,25 @@ $('#condominio').change( function(){
                         $('#save1').prop('disabled', false);
                         $('#modal1').modal('hide');
                         $('#tabla_deposito_seriedad').DataTable().ajax.reload();
-                        alerts.showNotification("top", "right", "Asegúrate de incluir los documentos; IDENTIFICACIÓN OFICIAL, COMPROBANTE DE DOMICILIO, RECIBOS DE APARTADO Y ENGANCHE y DEPÓSITO DE SERIEDAD antes de llevar a cabo el avance.", "danger");
+                        
+                        alerts.showNotification("top", "right", "Asegúrate de incluir los documentos: IDENTIFICACIÓN OFICIAL, COMPROBANTE DE DOMICILIO, RECIBOS DE APARTADO Y ENGANCHE Y DEPÓSITO DE SERIEDAD Y AUTORIZACIONES VALIDADAS antes de llevar a cabo el avance.", "danger");
+
                     } else if(response.message == 'ERROR'){
                         $('#save1').prop('disabled', false);
                         $('#modal1').modal('hide');
                         $('#tabla_deposito_seriedad').DataTable().ajax.reload();
-                        alerts.showNotification("top", "right", "Error al enviar la solicitud.", "danger");
-                    } 
+                        alerts.showNotification("top", "right", "Error al envial la solicitud.", "danger");
+                    } else if(response.message == 'MISSING_DOCUMENTS_AUTORIZACION'){
+                        $('#save1').prop('disabled', false);
+                        $('#modal1').modal('hide');
+                        $('#tabla_deposito_seriedad').DataTable().ajax.reload();
+                        alerts.showNotification("top", "right", "En proceso de autorización. Asegúrate de incluir los documentos: IDENTIFICACIÓN OFICIAL, COMPROBANTE DE DOMICILIO y DEPÓSITO DE SERIEDAD antes de llevar a cabo el avance.", "danger");
+                    } else if(response.message == 'MISSING_AUTORIZACION'){
+                        $('#save1').prop('disabled', false);
+                        $('#modal1').modal('hide');
+                        $('#tabla_deposito_seriedad').DataTable().ajax.reload();
+                        alerts.showNotification("top", "right", "En proceso de autorización.", "danger");
+                    }
                 },
                 error: function( data ){
                     $('#save1').prop('disabled', false);
