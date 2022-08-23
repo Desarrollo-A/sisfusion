@@ -147,6 +147,19 @@ class Asistente_gerente extends CI_Controller {
 	public function lista_lote($condominio){
       echo json_encode($this->VentasAsistentes_model->get_lote_lista($condominio)->result_array());
 	}
+
+  public function lista_proyecto_usu(){
+    echo json_encode($this->VentasAsistentes_model->get_proyecto_lista_usu()->result_array());
+  }
+
+  public function lista_condominio_usu($proyecto){
+    echo json_encode($this->VentasAsistentes_model->get_condominio_lista_usu($proyecto)->result_array());
+  }
+
+  public function lista_lote_usu($condominio){
+    echo json_encode($this->VentasAsistentes_model->get_lote_lista_usu($condominio)->result_array());
+  }
+
 	public function get_lote_autorizacion($lote){
       echo json_encode($this->VentasAsistentes_model->get_datos_lote_aut($lote)->result_array());
 	}
