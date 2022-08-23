@@ -23,18 +23,22 @@ class Suma extends CI_Controller
                 echo json_encode(array("status" => 401, "message" => "Algún parámetro no tiene un valor especificado. Verifique que todos los parámetros contengan un valor especificado."), JSON_UNESCAPED_UNICODE);
             else {
                 $result = $this->Suma_model->getUserInformation($data->id_asesor, encriptar($data->contrasena));
-                if ($result->id_rol != 7)
-                    echo json_encode(array("status" => 401, "message" => "Los datos ingresados no corresponde a un ID de usuario con rol de asesor."), JSON_UNESCAPED_UNICODE);
+                if (!isset($result->id_rol))
+                    echo json_encode(array("status" => 401, "message" => "No se logró autenticar el usuario."), JSON_UNESCAPED_UNICODE);
                 else {
-                    if ($result->estatus != 1)
-                        echo json_encode(array("status" => 401, "message" => "El usuario ingresado no se encuentra activo."), JSON_UNESCAPED_UNICODE);
+                    if ($result->id_rol != 7)
+                        echo json_encode(array("status" => 401, "message" => "Los datos ingresados no corresponde a un ID de usuario con rol de asesor."), JSON_UNESCAPED_UNICODE);
                     else {
-                        echo json_encode(array("status" => 200, "message" => "Autenticado exitosamente.", 
-                        "id_asesor" => $result->id_asesor, "nombre_asesor" => $result->nombre_asesor,
-                        "id_coordinador" => $result->id_coordinador, "nombre_coordinador" => $result->nombre_coordinador,
-                        "id_gerente" => $result->id_gerente, "nombre_gerente" => $result->nombre_gerente,
-                        "id_subdirector" => $result->id_subdirector, "nombre_subdirector" => $result->nombre_subdirector,
-                        "id_regional" => $result->id_regional, "nombre_regional" => $result->nombre_regional), JSON_UNESCAPED_UNICODE);
+                        if ($result->estatus != 1)
+                            echo json_encode(array("status" => 401, "message" => "El usuario ingresado no se encuentra activo."), JSON_UNESCAPED_UNICODE);
+                        else {
+                            echo json_encode(array("status" => 200, "message" => "Autenticado exitosamente.", 
+                            "id_asesor" => $result->id_asesor, "nombre_asesor" => $result->nombre_asesor,
+                            "id_coordinador" => $result->id_coordinador, "nombre_coordinador" => $result->nombre_coordinador,
+                            "id_gerente" => $result->id_gerente, "nombre_gerente" => $result->nombre_gerente,
+                            "id_subdirector" => $result->id_subdirector, "nombre_subdirector" => $result->nombre_subdirector,
+                            "id_regional" => $result->id_regional, "nombre_regional" => $result->nombre_regional), JSON_UNESCAPED_UNICODE);
+                        }
                     }
                 }
             }
