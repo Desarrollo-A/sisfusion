@@ -432,11 +432,6 @@ class Reporte_model extends CI_Model {
         { 
          $filtro .= " AND cl.id_asesor = $id_usuario AND cl.id_coordinador = $leader";
 
-         // if($render == 1){
-         //     $filtro .= " AND cl.id_asesor = $id_usuario";
-         // }else{
-         //     $filtro .= " AND cl.id_coordinador = $id_usuario";
-         // }
          $comodin = "id_asesor";}
      else if ($id_rol == 9) // MJ: Coordinador
         { 
