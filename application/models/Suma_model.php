@@ -11,7 +11,7 @@ class Suma_model extends CI_Model
         parent::__construct();
     }
 
-    function getUserInformation($username, $password)
+    function getUserInformation($id_asesor)
     {
         $query = $this->db->query("SELECT u0.id_rol, u0.estatus,
         u0.id_usuario id_asesor, UPPER(CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno)) nombre_asesor,
@@ -24,7 +24,7 @@ class Suma_model extends CI_Model
         LEFT JOIN usuarios u2 ON u2.id_usuario = u1.id_lider
         LEFT JOIN usuarios u3 ON u3.id_usuario = u2.id_lider
         LEFT JOIN usuarios u4 ON u4.id_usuario = u3.id_lider
-        WHERE u0.usuario = '$username' AND u0.contrasena = '$password'");
+        WHERE u0.id_usuario = $id_asesor");
 
         if($query->num_rows() > 0)
             return $query->row();
