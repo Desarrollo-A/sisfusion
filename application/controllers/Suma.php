@@ -16,13 +16,13 @@ class Suma extends CI_Controller
 
     public function validateUserAccess() {
         $data = json_decode(file_get_contents("php://input"));
-        if (!isset($data->id_asesor))
+        if (!isset($data->id_asesor) || !isset($data->contrasena))
             echo json_encode(array("status" => 401, "message" => "Algún parámetro no viene informado. Verifique que todos los parámetros requeridos se incluyan en la petición."), JSON_UNESCAPED_UNICODE);
         else {
-            if ($data->id_asesor == '')
+            if ($data->id_asesor == '' || $data->contrasena == '')
                 echo json_encode(array("status" => 401, "message" => "Algún parámetro no tiene un valor especificado. Verifique que todos los parámetros contengan un valor especificado."), JSON_UNESCAPED_UNICODE);
             else {
-                $result = $this->Suma_model->getUserInformation($data->id_asesor);
+                $result = $this->Suma_model->getUserInformation($data->id_asesor, encriptar($data->contrasena));
                 if ($result->id_rol != 7)
                     echo json_encode(array("status" => 401, "message" => "Los datos ingresados no corresponde a un ID de usuario con rol de asesor."), JSON_UNESCAPED_UNICODE);
                 else {
