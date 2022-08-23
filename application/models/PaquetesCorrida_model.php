@@ -92,7 +92,7 @@ class PaquetesCorrida_model extends CI_Model
 
 public function getPaquetesByLotes($desarrollos,$query_superdicie,$query_tipo_lote,$superficie,$inicio,$fin){
     date_default_timezone_set('America/Mexico_City');
-    $hoy2 = date('Y-d-m H:i:s');
+    $hoy2 = date('Y-m-d H:i:s');
     
     $cuari1 =  $this->db->query("SELECT DISTINCT(l.idCondominio) FROM lotes l
         INNER JOIN condominios c ON c.idCondominio = l.idCondominio 

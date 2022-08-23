@@ -75,13 +75,13 @@
                                     <div class="container-fluid">
                                         <div class="row">
                                             <div class="col-12 col-sm-12 col-md-4 col-lg-4">
-                                                <select class="selectpicker select-gral" data-style="btn btn-primary btn-round" title="Selecciona un proyecto" data-size="7" id="residenciales" data-live-search="true"></select>
+                                                <select class="selectpicker select-gral" data-style="btn btn-primary btn-round" title="Selecciona un proyecto" data-size="7" id="residenciales_escrituracion" data-live-search="true"></select>
                                             </div>
                                             <div class="col-12 col-sm-12 col-md-4 col-lg-4">
-                                                <select class="selectpicker select-gral" data-style="btn btn-primary btn-round" title="Selecciona un condominio" data-size="7" id="condominios" data-live-search="true"></select>
+                                                <select class="selectpicker select-gral condominios_escrituracion" data-style="btn btn-primary btn-round" title="Selecciona un condominio" data-size="7" id="condominios_escrituracion" data-live-search="true"></select>
                                             </div>
                                             <div class="col-12 col-sm-12 col-md-4 col-lg-4">
-                                                <select class="selectpicker select-gral" data-style="btn btn-primary btn-round" title="Selecciona un lote" data-size="7" id="lotes" data-live-search="true"></select>
+                                                <select class="selectpicker select-gral" data-style="btn btn-primary btn-round" title="Selecciona un lote" data-size="7" id="lotes_escrituracion" data-live-search="true"></select>
                                             </div>
                                         </div>
                                     </div>
@@ -212,7 +212,7 @@
     <script src="<?= base_url() ?>dist/js/controllers/general/main_services_dr.js"></script>
     <script>
         let url = "<?=base_url()?>";
-        let typeTransaction = 1; // MJ: SELECTS MULTIPLES
+        let typeTransaction = 0; // MJ: SELECTS MULTIPLES
         var allDocuments = [];
         $(document).ready(function () {
             var allDocuments = [];
@@ -232,7 +232,7 @@
                 label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
                 input.trigger('fileselect', [numFiles, label]);
             });
-            getResidenciales();
+            getResidenciales_escrituracion();
             //getRejectionReasons();
 
             // $("#mainBody").addClass("sidebar-mini");
@@ -240,18 +240,18 @@
             // $("#mainPanel").removeClass("ps-container ps-theme-default ps-active-y");
         });
 
-        $(document).on('change', "#residenciales", function() {
-            getCondominios($(this).val());
+        $(document).on('change', "#residenciales_escrituracion", function() {
+            getCondominios_escrituracion($(this).val());
             $(".boxDocument").removeClass("hide");
         });
 
-        $(document).on('change', "#condominios", function() {
-            getLotes($(this).val());
+        $(document).on('change', "#condominios_escrituracion", function() {
+            getLotes_escrituracion($(this).val());
             $(".boxDocument").addClass("hide");
             $(".boxDocumentEmpty").removeClass("hide");
         });
 
-        $('#lotes').change(function (e) {
+        $('#lotes_escrituracion').change(function (e) {
             e.preventDefault();
             getDocumentsInformation($(this).val());
             $(".boxDocument").addClass("hide");
@@ -285,17 +285,23 @@
             $('#spiner-loader').removeClass('hide');
             $.ajax({
                 type: 'POST',
-                url: 'getDocumentsInformation',
+                url: 'getDocumentsInformation_Escrituracion',
                 data: {
                     'idLote': idLote
                 },
                 dataType: 'json',
                 success: function (data) {
-                    $.each(data['documentation'], function (i, v) {
-                        fillDocumentsList(v, i);
-                        allDocuments.push(v);
-                        $('#spiner-loader').addClass('hide');
-                    });
+                    if(data.length > 0){
+                        $.each(data, function (i, v) {
+                            fillDocumentsList(v, i);
+                            allDocuments.push(v);
+                        });
+                    }else{
+                        alerts.showNotification("top", "right", "No hay documentos que mostrar.", "warning");
+                    }
+                   
+                    $('#spiner-loader').addClass('hide');
+
                 }, error: function () {
                     alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
                     $('#spiner-loader').addClass('hide');
@@ -304,8 +310,8 @@
         }
 
         function fillDocumentsList(v, i) {
-                $("#documentsList").append('<a class="list-group-item viewDocument border-none" data-file="' + v.fileName + '" data-type="' + v.documentType + '" data-name="' + v.name + '" data-idCliente="' + v.idCliente + '" data-lp="' + v.lugar_prospeccion + '" data-idDocumento="' + v.idDocumento + '" data-indice="'+i+'">\n' +
-                '        <h4 class="list-group-item-heading m-0 w-100 overflow-text" data-toggle="tooltip" data-placement="top" title="' + v.name + '">\n' + '<i class="fas fa-folder mr-1"></i>' + v.name + '</h4></a>');
+                $("#documentsList").append('<a class="list-group-item viewDocument border-none" data-file="' + v.expediente + '" data-type="' + v.tipo_documento + '" data-name="' + v.expediente + '" data-idSolicitud="' + v.idSolicitud + '" data-idDocumento="' + v.idDocumento + '" data-indice="'+i+'">\n' +
+                '        <h4 class="list-group-item-heading m-0 w-100 overflow-text" data-toggle="tooltip" data-placement="top" title="' + v.expediente + '">\n' + '<i class="fas fa-folder mr-1"></i>' + (v.expediente == null ? 'Sin documento': v.expediente) + '</h4></a>');
 
                 $('[data-toggle="tooltip"]').tooltip();
                 $(".boxDocumentEmpty").removeClass("hide");
@@ -491,6 +497,12 @@
                 });
             }
         });
+        $(document).on("change", "#condominios_escrituracion", function (e) {
+            console.log($(this).val());
+            getLotes_escrituracion($(this).val());
+        })
+
+        
 
         function filterSelectOptions(documentType) {
             $("#rejectionReasons option").each(function() {
@@ -519,6 +531,66 @@
             
             $("#modalInfo .modal-body").append('<div class="container-fluid"><div class="row"><div class="col-12 col-sm-12 col-md-12 col-lg-12 d-flex mb-1"><i class="fas fa-user fa-lg"></i><p class="m-0 mr-2 ml-2">'+userName+'</p></div><div class="col-12 col-sm-12 col-md-12 col-lg-12 d-flex mb-1"><i class="fas fa-clock fa-lg"></i><p class="m-0 mr-2 ml-2">'+lastModify+'</p></div></div></div>');
         });
+
+        function getLotes_escrituracion(idCondominio){
+            $('#spiner-loader').removeClass('hide');
+            $("#lotes_escrituracion").empty().selectpicker('refresh');
+            $.ajax({
+                url: 'getLotesList_escrituracion',
+                type: 'post',
+                dataType: 'json',
+                data: {
+                    "idCondominio": idCondominio,
+                },
+                success: function (response) {
+                    $('#spiner-loader').addClass('hide');
+                    var len = response.length;
+                    for (var i = 0; i < len; i++) {
+                        $("#lotes_escrituracion").append($('<option>').val(response[i]['idLote']).text(response[i]['nombreLote']));
+                    }
+                    $("#lotes_escrituracion").selectpicker('refresh');
+                }
+            });
+        }
+
+        function getResidenciales_escrituracion() {
+            $('#spiner-loader').removeClass('hide');
+            $("#residenciales_escrituracion").empty().selectpicker('refresh');
+            $.ajax({
+                url: url + 'General/getResidencialesList',
+                type: 'post',
+                dataType: 'json',
+                success: function (response) {
+                    $('#spiner-loader').addClass('hide');
+                    var len = response.length;
+                    for (var i = 0; i < len; i++) {
+                        $("#residenciales_escrituracion").append($('<option>').val(response[i]['idResidencial']).attr('data-empresa', response[i]['empresa']).text(response[i]['descripcion']));
+                    }
+                    $("#residenciales_escrituracion").selectpicker('refresh');
+                }
+            });
+        }
+
+        function getCondominios_escrituracion(idResidencial) {
+            $('#spiner-loader').removeClass('hide');
+            $("#condominios_escrituracion").empty().selectpicker('refresh');
+            $.ajax({
+                url: url + 'General/getCondominiosList',
+                type: 'post',
+                dataType: 'json',
+                data: {
+                    "idResidencial": idResidencial
+                },
+                success: function (response) {
+                    $('#spiner-loader').addClass('hide');
+                    var len = response.length;
+                    for (var i = 0; i < len; i++) {
+                        $("#condominios_escrituracion").append($('<option>').val(response[i]['idCondominio']).text(response[i]['nombre']));
+                    }
+                    $("#condominios_escrituracion").selectpicker('refresh');
+                }
+            });
+        }
     </script>
 </body>
 

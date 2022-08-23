@@ -13,7 +13,7 @@ class Api extends CI_Controller
             parent::__construct();
             date_default_timezone_set('America/Mexico_City');
             $this->load->helper(array('form'));
-            $this->load->library(array('jwt_key'));
+            $this->load->library(array('jwt_key', 'get_menu'));
             $this->load->model(array('Api_model', 'General_model'));
     }
 
@@ -33,7 +33,7 @@ class Api extends CI_Controller
                     $data = array(
                         "iat" => $time, // Tiempo en que inició el token
                         "exp" => $time + (24 * 60 * 60), // Tiempo en el que expirará el token (24 horas)
-                        "data" => array("id" => "0", "username" => "caja", "descripcion" => ""),
+                        "data" => array("username" => "suma_outs_9346"),
                     );
                     $token = JWT::encode($data, $JwtSecretKey);
                     echo json_encode(array("id_token" => $token));
@@ -311,4 +311,69 @@ class Api extends CI_Controller
             echo json_encode(array("status" => 200, "message" => "Información no disponible, inténtalo más tarde."));
     }
 
+    function validateToken_dashboard($token)
+    {
+        $time = time();
+        $JwtSecretKey = '571335_8549+3668_';
+        $result = JWT::decode($token, $JwtSecretKey, array('HS256'));
+        if (in_array($result, array('ALR001', 'ALR003', 'ALR004', 'ALR005', 'ALR006', 'ALR007', 'ALR008', 'ALR009', 'ALR010', 'ALR012', 'ALR013'))) {
+            return json_encode(array("timestamp" => $time, "status" => 503, "error" => "Servicio no disponible", "exception" => "Servicio no disponible", "message" => "El servidor no está listo para manejar la solicitud. Por favor, inténtelo de nuevo más tarde."));
+        } else if ($result == 'ALR002') {
+            return json_encode(array("timestamp" => $time, "status" => 400, "error" => "Solicitud incorrecta", "exception" => "Número incorrecto de parámetros", "message" => "Verifique la estructura del token enviado."));
+        } else if ($result == 'ALR011') {
+            return json_encode(array("timestamp" => $time, "status" => 401, "error" => "No autorizado", "exception" => "Verificación de firma fallida", "message" => "Estructura no válida del token enviado."));
+        } else if ($result == 'ALR014') {
+            return json_encode(array("timestamp" => $time, "status" => 401, "error" => "No autorizado", "exception" => "Token caducado", "message" => "El tiempo de vida del token ha expirado."));
+        } else {
+            $validate= true;
+        
+            if($result->data->rol != 18 || $result->data->id_usuario != 1980 || $result->data->sistema != md5('Cu3nT45+_P0r_+P4G4r$$')){
+                $validate = false;
+            }
+            if($validate){
+                return json_encode(array("status" => 200, "message" => "Autenticado con éxito.", "data"=> $result));
+            }else{
+                return json_encode(array("timestamp" => $time, "status" => 401, "error" => "No autorizado", "exception" => "Verificación de firma fallida", "message" => "Estructura no válida del token enviado."));
+            }
+        }
+    }
+
+   
+    public function external_dashboard()
+    {
+        $response = $this->validateToken_dashboard($_GET['tkn']);
+        $res = json_decode($response);
+        if($res->status == 200){
+            $this->session->set_userdata(array(
+                'id_rol'  => $res->data->data->rol,
+                'id_usuario' => $res->data->data->id_usuario
+            ));
+            $datos['sub_menu'] = $this->get_menu->get_submenu_data($this->session->userdata('id_rol'), $this->session->userdata('id_usuario'));
+            $datos['external'] = true;
+            $this->load->view('template/header');
+            $this->load->view("dashboard/base/base", $datos);
+        }else{
+            die("Inicio de sesion caducado.");
+        }
+    }
+
+    public function external_dashboardAu()
+    {
+        preg_match('/Bearer\s(\S+)/', apache_request_headers()['Authorization'], $matches);
+        $tkn = $matches[1];
+        $validate = json_decode($this->validateToken_dashboard($tkn));
+
+        if($validate->status == 200){
+            $this->session->set_userdata(array(
+                'id_rol'  => $validate->data->data->rol,
+                'id_usuario' => $validate->data->data->id_usuario
+            ));
+            $datos['sub_menu'] = $this->get_menu->get_submenu_data($this->session->userdata('id_rol'), $this->session->userdata('id_usuario'));
+            $datos['external'] = true;
+            $this->load->view('template/header');
+            $this->load->view("dashboard/base/base", $datos);
+        }else{
+            die("Acceso denegado");
+        } 
+    }
 }

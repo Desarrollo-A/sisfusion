@@ -224,8 +224,6 @@ class Documentacion extends CI_Controller
 
     function reasonsForRejectionByDocument()
     {
-        if ($this->session->userdata('id_rol') == FALSE)
-            redirect(base_url());
         $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
         $this->load->view('template/header');
         $this->load->view("documentacion/reasonsForRejectionByDocument", $datos);
@@ -233,7 +231,7 @@ class Documentacion extends CI_Controller
 
     function getReasonsForRejectionByDocument()
     {
-        if ($this->input->post("id_documento") == '' || $this->input->post("id_documento") == undefined || $this->input->post("tipo_proceso") == '' || $this->input->post("tipo_proceso") == undefined)
+        if ($this->input->post("id_documento") == '' || $this->input->post("tipo_proceso") == '')
             echo json_encode(array());
         else {
             $data['data'] = $this->Documentacion_model->getReasonsForRejectionByDocument($this->input->post("id_documento"), $this->input->post('tipo_proceso'))->result_array();
@@ -304,5 +302,24 @@ class Documentacion extends CI_Controller
             else
                 echo json_encode(array("status" => 500, "message" => "Oops, algo salió mal. Inténtalo más tarde."));
         }
+    }
+
+    function getDocumentsInformation_Escrituracion(){
+        $idLote = $this->input->post("idLote");
+        $data = $this->Documentacion_model->getDocumentsInformation_Escrituracion($idLote)->result_array();
+        if ($data != null)
+            echo json_encode($data);
+        else
+            echo json_encode(array());
+    }
+
+    function getLotesList_escrituracion()
+    {
+        $idCondominio = $this->input->post("idCondominio");
+        $data = $this->Documentacion_model->getLotesList_escrituracion($idCondominio)->result_array();
+        if ($data != null)
+            echo json_encode($data);
+        else
+            echo json_encode(array());
     }
 }

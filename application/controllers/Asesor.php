@@ -1051,7 +1051,7 @@ class Asesor extends CI_Controller
     public function tableClienteDS()
     {
         $objDatos = json_decode(file_get_contents("php://input"));
-        $dato = $this->Asesor_model->registroClienteDS();
+        $dato = $this->Asesor_model->registroClienteDS($this->input->post('id_condominio'));
         $data = array();
 
         for ($i = 0; $i < COUNT($dato); $i++) {
