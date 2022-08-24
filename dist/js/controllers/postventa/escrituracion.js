@@ -117,7 +117,6 @@ function getClient(idLote) {
     $.post('getClient', {
         idLote: idLote
     }, function (data) {
-        console.log(data);
         if(data){
             $('#nombre').val(data.ncliente);
             $('#nombre2').val(data.ncliente);
