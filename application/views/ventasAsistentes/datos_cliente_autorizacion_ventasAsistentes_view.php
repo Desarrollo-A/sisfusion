@@ -54,7 +54,7 @@
                                         <div class="form-group label-floating select-is-empty">
                                             <label class="control-label">Proyecto</label>
                                             <select name="proyecto" id="proyecto" class="selectpicker select-gral m-0"
-                                                    data-style="btn" data-show-subtext="true"  title="Selecciona proyecto" data-size="7" required>
+                                                    data-style="btn btn-second" data-show-subtext="true" data-live-search="true" title="Selecciona proyecto" data-size="7" required>
                                                 <option disabled selected>Selecciona proyecto</option>
                                             </select>
                                         </div>
@@ -63,7 +63,7 @@
                                         <div class="form-group label-floating select-is-empty">
                                             <label class="control-label">Condominio</label>
                                             <select name="condominio" id="condominio" class="selectpicker select-gral m-0"
-                                                    data-style="btn" data-show-subtext="true"  title="Selecciona condominio" data-size="7" required>
+                                                    data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona condominio" data-size="7" required>
                                                 <option disabled selected>Selecciona condominio</option>
                                             </select>
                                         </div>
@@ -72,7 +72,7 @@
                                         <div class="form-group label-floating select-is-empty">
                                             <label class="control-label">Lote</label>
                                             <select name="lote" id="lote" class="selectpicker select-gral m-0"
-                                                    data-style="btn" data-show-subtext="true"  title="Selecciona lote" data-size="7" required>
+                                                    data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona lote" data-size="7" required>
                                                 <option disabled selected>Selecciona lote</option>
                                             </select>
                                         </div>
@@ -82,8 +82,7 @@
                             <div class="material-datatables">
                                 <div class="form-group">
                                     <div class="table-responsive">
-                                        <table class="table-striped table-hover"
-                                               id="tabla_autorizaciones_ventas" name="tabla_autorizaciones_ventas">
+										<table class="table-striped table-hover" id="tabla_autorizaciones_ventas" name="tabla_autorizaciones_ventas">
                                             <thead>
                                             <tr>
                                                 <th>LOTE</th>
@@ -163,11 +162,11 @@
                                         <thead>
                                             <tr>
                                                 <!-- <th></th> -->
-                                                <th style="font-size: .9em;">LOTE</th>
-                                                <th style="font-size: .9em;">CONDOMINIO</th>
-                                                <th style="font-size: .9em;">PROYECTO</th>
-                                                <th style="font-size: .9em;">CLIENTE</th>
-                                                <th style="font-size: .9em;">AUTORIZACIÓN</th>
+                                                <th>LOTE</th>
+                                                <th>CONDOMINIO</th>
+                                                <th>PROYECTO</th>
+                                                <th>CLIENTE</th>
+                                                <th>AUTORIZACIÓN</th>
                                             </tr>
                                         </thead>
                                     </table>
@@ -205,7 +204,7 @@ var urlimg = "<?=base_url()?>img/";
  
 
 $(document).ready(function(){
-		$.post(url + "Asistente_gerente/lista_proyecto", function(data) {
+		$.post(url + "Asistente_gerente/lista_proyecto_usu", function(data) {
 			var len = data.length;
 			for( var i = 0; i<len; i++)
 			{
@@ -221,7 +220,7 @@ $(document).ready(function(){
    	index_proyecto = $(this).val();
    	$("#condominio").html("");
    	$(document).ready(function(){
-		$.post(url + "Asistente_gerente/lista_condominio/"+index_proyecto, function(data) {
+		$.post(url + "Asistente_gerente/lista_condominio_usu/"+index_proyecto, function(data) {
 			var len = data.length;
 			$("#condominio").append($('<option disabled selected>- SELECCIONA CONDOMINIO -</option>'));
 			for( var i = 0; i<len; i++)
@@ -241,7 +240,7 @@ $(document).ready(function(){
    	index_condominio = $(this).val();
    	$("#lote").html("");
    	$(document).ready(function(){
-		$.post(url + "Asistente_gerente/lista_lote/"+index_condominio, function(data) {
+		$.post(url + "Asistente_gerente/lista_lote_usu/"+index_condominio, function(data) {
 			var len = data.length;
 			$("#lote").append($('<option disabled selected>- SELECCIONA LOTE -</option>'));
 			for( var i = 0; i<len; i++)

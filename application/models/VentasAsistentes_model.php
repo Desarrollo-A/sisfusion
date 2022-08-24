@@ -15,6 +15,41 @@ class VentasAsistentes_model extends CI_Model {
     function get_lote_lista($condominio){
         return $this->db->query("SELECT * FROM [lotes] WHERE status = 1 AND idCondominio =  ".$condominio." AND idCliente in (SELECT idCliente FROM clientes ) AND (idCliente <> 0 AND idCliente <>'')");
     }
+
+    //Función para traer proyecto por usuario
+    function get_proyecto_lista_usu(){
+        return $this->db->query('SELECT r.idResidencial, r.nombreResidencial, CAST(r.descripcion AS varchar(80)) descripcion 
+                                FROM clientes cli INNER JOIN usuarios u ON cli.id_asesor = u.id_usuario
+                                    INNER JOIN lotes l ON l.idCliente = cli.id_cliente
+                                    INNER JOIN condominios con ON con.idCondominio = cli.idCondominio
+                                    INNER JOIN residenciales r ON con.idResidencial = r.idResidencial
+                                WHERE u.id_usuario = ' . $this->session->userdata('id_usuario') . ' AND r.status = 1
+                                GROUP BY r.idResidencial, r.nombreResidencial, CAST(r.descripcion AS varchar(80))
+                                ORDER BY CAST(r.descripcion AS varchar(80))');
+    }
+
+    //Función para traer condominio por usuario
+    function get_condominio_lista_usu($proyecto){
+        return $this->db->query('SELECT con.idCondominio, con.nombre
+                                FROM clientes cli INNER JOIN usuarios u ON cli.id_asesor = u.id_usuario
+                                    INNER JOIN lotes l ON l.idCliente = cli.id_cliente
+                                    INNER JOIN condominios con ON con.idCondominio = cli.idCondominio
+                                    INNER JOIN residenciales r ON con.idResidencial = r.idResidencial
+                                    WHERE u.id_usuario = ' . $this->session->userdata('id_usuario') . ' AND r.status = 1 AND r.idResidencial = '.$proyecto.'
+                                    GROUP BY con.idCondominio, con.nombre
+                                    ORDER BY con.nombre');
+    }
+
+    //Función para traer los lotes por usuario
+    function get_lote_lista_usu($condominio){
+        return $this->db->query('SELECT l.idLote, l.nombreLote
+                                FROM clientes cli INNER JOIN usuarios u ON cli.id_asesor = u.id_usuario
+                                    INNER JOIN lotes l ON l.idCliente = cli.id_cliente
+                                    INNER JOIN condominios con ON con.idCondominio = cli.idCondominio
+                                    WHERE u.id_usuario = ' . $this->session->userdata('id_usuario') . ' AND con.idCondominio = '.$condominio.'
+                                    GROUP BY l.idLote, l.nombreLote');
+    }
+
     function get_datos_lote_aut($lote){
         return $this->db->query("SELECT cli.id_cliente, cli.nombre, con.idCondominio,  cli.apellido_paterno, cli.apellido_materno, cli.idLote, lot.nombreLote, con.nombre as condominio, res.nombreResidencial 
                                 FROM clientes cli INNER JOIN [lotes] lot ON lot.idLote = cli.idLote 
