@@ -25,7 +25,7 @@
                                 <i class="material-icons">list</i>
                             </div>
                             <div class="card-content">
-                                <h3 class="card-title center-align">Reporte</h3>
+                                <h3 class="card-title center-align">Reporte de ventas</h3>
                                 <div class="row">
                                     <div class="toolbar">
                                         <div class="col-md-8"></div>
@@ -44,7 +44,7 @@
                                     <table class="table-striped table-hover" id="ventasRecision"name="ventasRecision">
                                         <thead>
                                             <tr>
-                                                <th>ID</th>
+                                                <th>ID LOTE</th>
                                                 <th>RESIDENCIAL</th>
                                                 <th>CONDOMINIO</th>
                                                 <th>LOTE</th>
@@ -53,7 +53,7 @@
                                                 <th>ASESOR</th>
                                                 <th>COORDINADOR</th>
                                                 <th>GERENTE</th>
-                                                <th>ÚLTIMO ESTATUS CONTRATACIÓN</th>
+                                                <th>ÚLTIMO ESTATUS</th>
                                                 <th>ESTATUS ACTUAL</th>
                                                 <th>PLAZA VENTA</th>
                                                 <th>TIPO VENTA</th>
