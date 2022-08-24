@@ -1427,7 +1427,7 @@ class Postventa extends CI_Controller
                                                                 ' . $data->nombre_notario . ' 
                                                             </td>
                                                             <td style="font-size: 1em;">
-                                                                <b>Correo</b>
+                                                                <b>Correo</b><br>
                                                                 ' . $data->correo . '
                                                             </td>
                                                             <td style="font-size: 1em;">
