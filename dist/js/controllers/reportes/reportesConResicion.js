@@ -89,7 +89,7 @@ function fillVentas(beginDate, endDate) {
                     header: function (d, columnIdx) {
                         switch (columnIdx) {
                             case 0:
-                                return 'ID';
+                                return 'ID LOTE';
                                 break;
                             case 1:
                                 return 'RESIDENCIAL'
@@ -156,7 +156,7 @@ function fillVentas(beginDate, endDate) {
         },
         columns:
             [
-                {data: 'idCliente'},
+                {data: 'idLote'},
                 {data: 'nombreResidencial'},
                 {data: 'nombreCondominio'},
                 {data: 'nombreLote'},
@@ -172,8 +172,16 @@ function fillVentas(beginDate, endDate) {
                 {data: 'referencia'},
                 {data: 'esCompartida'},
                 {data: 'precioFinal'},
-                {data: 'estatus9'},
-                {data: 'estatus11'},
+                { 
+                    data: function (d) {
+                        return (d.estatus9 == '' || d.estatus9 == null) ? 'SIN ESPECIFICAR' : d.estatus9
+                    }
+                },
+                { 
+                    data: function (d) {
+                        return (d.estatus11 == '' || d.estatus11 == null) ? 'SIN ESPECIFICAR' : d.estatus11
+                    }
+                },
             ]
     });
 }

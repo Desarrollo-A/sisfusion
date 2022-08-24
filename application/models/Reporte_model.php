@@ -813,14 +813,14 @@ class Reporte_model extends CI_Model {
     }
     
     public function getVentasConSinRecision($beginDate, $endDate){
-        $data = $this->db->query("SELECT cl.id_cliente idCliente, CAST(re.descripcion AS VARCHAR(150)) nombreResidencial, UPPER(co.nombre) nombreCondominio, UPPER(lo.nombreLote) nombreLote, 
+        $data = $this->db->query("SELECT lo.idLote idLote, CAST(re.descripcion AS VARCHAR(150)) nombreResidencial, UPPER(co.nombre) nombreCondominio, UPPER(lo.nombreLote) nombreLote, 
         UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) nombreCliente,
         UPPER(CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno)) nombreAsesor,
         CASE CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno) WHEN '  ' THEN 'SIN ESPECIFICAR' 
         ELSE UPPER(CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno)) END nombreCoordinador,
-        UPPER(CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno)) nombreGerente, fechaApartado, st.nombreStatus ultimoEstatusContratacion, 
-        CASE cl.status WHEN 1 THEN 'ACTIVO' ELSE 'CANCELADO' END estatusActualCliente, ISNULL(se.nombre, 'Sin especificar') plazaVenta, 
-        ISNULL (tv.tipo_venta, 'Sin especificar') tipoVenta, lo.referencia, 
+        UPPER(CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno)) nombreGerente, fechaApartado, UPPER(st.nombreStatus) ultimoEstatusContratacion, 
+        CASE cl.status WHEN 1 THEN 'ACTIVO' ELSE 'CANCELADO' END estatusActualCliente, UPPER(ISNULL(se.nombre, 'Sin especificar')) plazaVenta, 
+        UPPER(ISNULL (tv.tipo_venta, 'Sin especificar')) tipoVenta, lo.referencia, 
         CASE WHEN vc.id_cliente IS NULL THEN 'SIN COMPARTIR' ELSE 'ES COMPARTIDA' END esCompartida,
         CASE WHEN cl.status = 0 
         THEN CASE WHEN (cl.totalNeto2_cl IS NULL OR cl.totalNeto2_cl = 0.00) 
@@ -828,7 +828,7 @@ class Reporte_model extends CI_Model {
         ELSE CASE WHEN (lo.totalNeto2 IS NULL OR lo.totalNeto2 = 0.00) THEN 
         (CASE WHEN (cl.totalNeto2_cl IS NULL OR cl.totalNeto2_cl = 0.00) THEN FORMAT(lo.total, 'C') 
         ELSE FORMAT(cl.totalNeto2_cl, 'C') END) ELSE FORMAT(lo.totalNeto2, 'C') END END precioFinal,
-        cl.fechaApartado, ISNULL(st2.nombreStatus, 'Sin especificar') estatus9 , ISNULL(st3.nombreStatus, 'Sin especificar') estatus11
+        cl.fechaApartado, hlo4.modificado estatus9 , hlo6.modificado estatus11
         FROM clientes cl
         INNER JOIN lotes lo ON lo.idLote = cl.idLote
         INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
@@ -845,20 +845,20 @@ class Reporte_model extends CI_Model {
         
         LEFT JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes WHERE idStatusContratacion = 9 AND idMovimiento = 39 GROUP BY idLote, idCliente) hlo3 ON hlo3.idLote = lo.idLote AND hlo.idCliente = cl.id_cliente
         LEFT JOIN historial_lotes hlo4 ON hlo4.idLote = hlo3.idLote AND hlo4.idCliente = hlo3.idCliente AND hlo4.modificado = hlo3.modificado
-        LEFT JOIN statuscontratacion st2 ON st2.idStatusContratacion = hlo4.idStatusContratacion
+        
         
         LEFT JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes WHERE idStatusContratacion = 11 AND idMovimiento = 41 GROUP BY idLote, idCliente) hlo5 ON hlo5.idLote = lo.idLote AND hlo.idCliente = cl.id_cliente
         LEFT JOIN historial_lotes hlo6 ON hlo6.idLote = hlo5.idLote AND hlo6.idCliente = hlo5.idCliente AND hlo6.modificado = hlo5.modificado
-        LEFT JOIN statuscontratacion st3 ON st3.idStatusContratacion = hlo6.idStatusContratacion
+        
         
         WHERE isNULL(noRecibo, '') != 'CANCELADO' AND cl.fechaApartado BETWEEN '$beginDate 00:00:00.000' AND '$endDate 23:59:00.000'
-        GROUP BY cl.id_cliente, CAST(re.descripcion AS VARCHAR(150)), UPPER(co.nombre), UPPER(lo.nombreLote), 
+        GROUP BY lo.idLote, CAST(re.descripcion AS VARCHAR(150)), UPPER(co.nombre), UPPER(lo.nombreLote), 
         CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno),
         CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno),
         CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno),
         CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno),
         CONVERT(VARCHAR, cl.fechaApartado, 103), st.nombreStatus, cl.status, se.nombre, tv.tipo_venta, lo.referencia, vc.id_cliente,
-        lo.total, lo.totalNeto2, cl.totalNeto2_cl, cl.fechaApartado, st2.nombreStatus, st3.nombreStatus
+        lo.total, lo.totalNeto2, cl.totalNeto2_cl, cl.fechaApartado, hlo4.modificado, hlo6.modificado
         ORDER BY st.nombreStatus"); 
         return $data;
     }
