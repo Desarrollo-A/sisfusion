@@ -302,4 +302,22 @@ class Reporte extends CI_Controller {
             echo json_encode(array());
     }
 
+    public function reporteConRecisiones(){
+		$this->validateSession();
+
+   		$datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
+		$this->load->view('template/header');
+		$this->load->view("reportes/reporteConRecisiones",$datos);
+	}
+
+    public function getVentasConSinRecision(){
+        $beginDate = $this->input->post("beginDate");
+        $endDate = $this->input->post("endDate");
+        $data = $this->Reporte_model->getVentasConSinRecision($beginDate, $endDate)->result_array();
+        if($data != null) {
+            echo json_encode($data);
+        } else {
+            echo json_encode(array());
+        }
+    }
 }
