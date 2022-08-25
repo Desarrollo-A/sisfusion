@@ -1084,7 +1084,7 @@ $('#condominio').change( function(){
                         $('#save1').prop('disabled', false);
                         $('#modal1').modal('hide');
                         $('#tabla_deposito_seriedad').DataTable().ajax.reload();
-                        alerts.showNotification("top", "right", "En proceso de autorización.", "danger");
+                        alerts.showNotification("top", "right", "EN PROCESO DE AUTORIZACIÓN. Hasta que la autorización no haya sido aceptada o rechazada, no podrás avanzar la solicitud.", "danger");
                     }
                 },
                 error: function( data ){
