@@ -22,15 +22,12 @@ class Corrida extends CI_Controller {
 	}
 
 	public function descuentos() {
-
 		$objDatos = json_decode(file_get_contents("php://input"));
 		$idLote = $objDatos->lote;
 		/*print_r($idLote);
 		exit;*/
 		$paquetes = $this->Corrida_model->getPaquetes($idLote);
 		$response = $this->Corrida_model->getDescuentos();
-
-
 		for( $i = 0; $i < count($paquetes); $i++ ){
 			$array = array();
 			for( $c = 0; $c < count( $response ); $c++ ){
@@ -3321,7 +3318,7 @@ legend {
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
 
-//        print_r('printing...');
+        //        print_r('printing...');
         #imagen ciudad maderas
         // Add a drawing to the worksheet
         $drawing = new \PhpOffice\PhpSpreadsheet\Worksheet\Drawing();
@@ -3339,8 +3336,8 @@ legend {
         $range1 = 'C1';
         $range2 = 'I1';
         $sheet->mergeCells("$range1:$range2");
-        $sheet->getStyle('B:K')->getAlignment()->setHorizontal('center');
-        $sheet->getStyle('B:K')->getAlignment()->setVertical('center');
+        $sheet->getStyle('B:L')->getAlignment()->setHorizontal('center');
+        $sheet->getStyle('B:L')->getAlignment()->setVertical('center');
         $sheet->getStyle("C1:I1")->getFont()->setSize(28);
         $spreadsheet->getActiveSheet()->getStyle('C1')->getFont()->getColor()->setARGB('808080');
 
@@ -3410,6 +3407,7 @@ legend {
         $sheet->getColumnDimension('I')->setWidth(15);
         $sheet->getColumnDimension('J')->setWidth(15);
         $sheet->getColumnDimension('K')->setWidth(15);
+        $sheet->getColumnDimension('L')->setWidth(15);
 
         $sheet->getStyle('D5:H5')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('D9D9D9');
 
@@ -3452,14 +3450,15 @@ legend {
         $sheet->setCellValue('D15', 'CAPITAL');
         $sheet->setCellValue('E15', 'INTERESES');
         $sheet->setCellValue('F15', 'IMPORTE');
-        $sheet->setCellValue('G15', 'DÍAS DE RETRASO');
-        $sheet->setCellValue('H15', 'INTERES MORATORIO');
-        $sheet->setCellValue('I15', 'TOTAL');
-        $sheet->setCellValue('J15', 'SALDO MORATORIO');
-        $sheet->setCellValue('K15', 'SALDO');
-        $sheet->getStyle( 'B15:K15' )->getFont()->setBold( true );
-        $sheet->getStyle('B15:K15')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('D9D9D9');
-        $sheet->getStyle('B195:K15')->getBorders()->getAllBorders()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+        $sheet->setCellValue('G15', 'FECHA PAGO');
+        $sheet->setCellValue('H15', 'DÍAS DE RETRASO');
+        $sheet->setCellValue('I15', 'INTERES MORATORIO');
+        $sheet->setCellValue('J15', 'TOTAL');
+        $sheet->setCellValue('K15', 'SALDO MORATORIO');
+        $sheet->setCellValue('L15', 'SALDO');
+        $sheet->getStyle( 'B15:L15' )->getFont()->setBold( true );
+        $sheet->getStyle('B15:L15')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('D9D9D9');
+        $sheet->getStyle('B15:L15')->getBorders()->getAllBorders()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
         $sheet->getStyle("H15")->getAlignment()->setWrapText(true);
         $sheet->getStyle("J15")->getAlignment()->setWrapText(true);
 
@@ -3494,29 +3493,33 @@ legend {
             $sheet->getStyle('F'.$i)->getNumberFormat()->setFormatCode(PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_CURRENCY_USD_SIMPLE);
             $sheet->getStyle('F'.$i)->getBorders()->getAllBorders()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
 
-            #dias_retraso
-            $sheet->setCellValue('G'.$i, $value->diasRetraso);
+            #fecha pago
+            $sheet->setCellValue('G'.$i, $value->fechaPago);
             $sheet->getStyle('G'.$i)->getBorders()->getAllBorders()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
 
-            #IM
-            $sheet->setCellValue('H'.$i, $value->interesMoratorio);
-            $sheet->getStyle('H'.$i)->getNumberFormat()->setFormatCode(PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_CURRENCY_USD_SIMPLE);
+            #dias_retraso
+            $sheet->setCellValue('H'.$i, $value->diasRetraso);
             $sheet->getStyle('H'.$i)->getBorders()->getAllBorders()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
 
-            #total
-            $sheet->setCellValue('I'.$i, $value->total);
+            #IM
+            $sheet->setCellValue('I'.$i, $value->interesMoratorio);
             $sheet->getStyle('I'.$i)->getNumberFormat()->setFormatCode(PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_CURRENCY_USD_SIMPLE);
             $sheet->getStyle('I'.$i)->getBorders()->getAllBorders()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
 
-            #saldo moratorio
-            $sheet->setCellValue('J'.$i, $value->saldo);
+            #total
+            $sheet->setCellValue('J'.$i, $value->total);
             $sheet->getStyle('J'.$i)->getNumberFormat()->setFormatCode(PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_CURRENCY_USD_SIMPLE);
             $sheet->getStyle('J'.$i)->getBorders()->getAllBorders()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
 
-            #saldo
-            $sheet->setCellValue('K'.$i, $value->saldoNormal);
+            #saldo moratorio
+            $sheet->setCellValue('K'.$i, $value->saldo);
             $sheet->getStyle('K'.$i)->getNumberFormat()->setFormatCode(PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_CURRENCY_USD_SIMPLE);
             $sheet->getStyle('K'.$i)->getBorders()->getAllBorders()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+
+            #saldo
+            $sheet->setCellValue('L'.$i, $value->saldoNormal);
+            $sheet->getStyle('L'.$i)->getNumberFormat()->setFormatCode(PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_CURRENCY_USD_SIMPLE);
+            $sheet->getStyle('L'.$i)->getBorders()->getAllBorders()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
 
 
         }
@@ -3593,7 +3596,6 @@ legend {
             'ima'=> $ima,
             'ioa'=> $ioa,
             'data_corrida' => $data_corrida
-
         );
 //        echo __DIR__;
 //        exit;
