@@ -438,7 +438,6 @@ class Caja_outside extends CI_Controller
             exit;
         }
         $data['prospecto'] = $this->caja_model_outside->consultByProspect($id_prospecto);
-        /*update validacion 26-11-2020*/
         if (count($data['prospecto']) <= 0) {
             $dataError['ERROR'] = array(
                 'titulo' => 'ERROR',
@@ -462,17 +461,9 @@ class Caja_outside extends CI_Controller
             $voBoCoord = $datosView->id_coordinador;
         }
 
-        // 'id_coordinador' => $datosView->id_coordinador == $datosView->id_asesor ? 0 : $datosView->id_coordinador == $datosView->id_gerente ? 0 : $datosView->id_coordinador,
-
-
         $data['lote'] = $id_lote;
         $data['condominio'] = $this->caja_model_outside->getCondominioByIdLote($id_lote);
         $data['lider'] = $this->caja_model_outside->getLider($datosView->id_gerente);
-
-        // echo 'id gerente data '.$datosView->id_gerente;
-        // echo 'id regional data '.$data['lider'][0]['id_regional'];
-
-        // exit;
 
         $dataInsertCliente = array(
             'id_asesor' => $datosView->id_asesor,/* $data['prospecto'][0]['id_asesor']*/
@@ -524,16 +515,14 @@ class Caja_outside extends CI_Controller
             'id_prospecto' => $id_prospecto,
             'fecha_modificacion' => date('Y-m-d H:i:s'),
             'id_subdirector' => $data['lider'][0]['id_subdirector'],
-            'id_regional' => $data['lider'][0]['id_regional']
-
+            'id_regional' => $data['lider'][0]['id_regional'],
+            'flag_compartida' =>$datosView->flag_compartida
         );
         /*Inserta cliente*/
-        //echo 'se debe insertar esto:<br>';
         $last_id = '';
-        //print_r($last_id);
         $currentUSer = $this->session->userdata('usuario');
         if ($idClienteInsert = $this->caja_model_outside->insertClient($dataInsertCliente)) {
-            $last_id = $idClienteInsert[0]["lastId"];//ultimo id guardado /*dont works this: $this->db->insert_id()*/
+            $last_id = $idClienteInsert[0]["lastId"];//ultimo id guardado
             date_default_timezone_set('America/Mexico_City');
             $horaActual = date('H:i:s');
             $horaInicio = date("08:00:00");
@@ -1771,11 +1760,7 @@ class Caja_outside extends CI_Controller
                 $response['message'] = 'ERROR';
                 echo json_encode($response);
             }
-
-
         } else if ($idStatusLote == 1) { // 1 DISPONIBLE
-
-
             $arreglo = array();
             $arreglo["idStatusLote"] = $idStatusLote;
             $arreglo["idAsesor"] = NULL;
@@ -1963,6 +1948,7 @@ class Caja_outside extends CI_Controller
                         }
 
                         $arreglo["fechaVencimiento"] = $fecha;
+                        $arreglo["flag_compartida"] = 2;
                         /*********************************************************************************************/
 
                         if ($this->caja_model_outside->validar_aOnline($value->idLote) == 1) {

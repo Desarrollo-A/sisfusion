@@ -1121,8 +1121,7 @@
         $this->db->trans_begin();
         //Intenta insertar un cliente.    
         $this->db->insert('clientes', $data);
-        //Recuperamos el id del cliente registrado.    
-        //$cliente_id = $this->db->last_id();
+        //Recuperamos el id del cliente registrado.
         $cliente_id = $this->db->query("SELECT IDENT_CURRENT('clientes') as lastId")->row()->lastId;
 
         ###UPDATE id_cliente, id_lote

@@ -9,9 +9,6 @@
         $datos = $datos3;
         $this->load->view('template/sidebar', $datos);
     ?>
-    <style>
-        .textoshead::placeholder { color: white; }
-    </style>
     <div class="modal fade" id="modal_pregunta" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"
          data-backdrop="static" data-keyboard="false" style="z-index: 1600;top: 30%;" >
         <div class="modal-dialog modal-sm" role="document">
