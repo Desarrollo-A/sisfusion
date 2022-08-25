@@ -1098,6 +1098,7 @@ class Asesor extends CI_Controller
             $data[$i]['gerente'] = $query[0]->gerente;
             $data[$i]['subdirector'] = $query[0]->subdirector;
             $data[$i]['regional'] = $query[0]->regional;
+            $data[$i]['estatus'] = $query[0]->estatus;
         }
 
 
@@ -3612,18 +3613,18 @@ class Asesor extends CI_Controller
             $documentsNumber = 3;
         else
             $documentsNumber = 4;
-
+        
         $dataClient = $this->Asesor_model->getLegalPersonalityByLote($idLote);
         $documentsValidation = $this->Asesor_model->validateDocumentation($idLote, $dataClient[0]['personalidad_juridica']);
-        $validacion = $this->Asesor_model->getAutorizaciones($idLote, 'estatus') ;
+        $validacion = $this->Asesor_model->getAutorizaciones($idLote);
 
-        if (COUNT($documentsValidation) < $documentsNumber && $validacion['estatus'] == 1) {
-            $data['message'] = 'MISSING_DOCUMENTS_AUTORIZACION';
+        if ((COUNT($documentsValidation) < $documentsNumber) && ($validacion)) {
+            $data['message'] = 'MISSING_DOCUMENTS';
             echo json_encode($data);
         } else if(COUNT($documentsValidation) < $documentsNumber) {
             $data['message'] = 'MISSING_DOCUMENTS';
             echo json_encode($data);
-        } else if($validacion['estatus'] == 1) {
+        } else if($validacion) {
             $data['message'] = 'MISSING_AUTORIZACION';
             echo json_encode($data);
         } else {
