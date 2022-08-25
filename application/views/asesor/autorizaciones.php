@@ -506,7 +506,7 @@
 				},
 				{
 					"data": function( d ){
-						if((d.idStatusContratacion === 1 || d.idStatusContratacion === 2 || d.idStatusContratacion === 3) && (d.idMovimiento === 31 || d.idMovimiento === 85 || d.idMovimiento === 20 || d.idMovimiento === 63 || d.idMovimiento === 73 || d.idMovimiento === 82 || d.idMovimiento === 92 || d.idMovimiento === 96)){
+						if((d.idStatusContratacion == 1 || d.idStatusContratacion == 2 || d.idStatusContratacion == 3) && (d.idMovimiento == 31 || d.idMovimiento == 85 || d.idMovimiento == 20 || d.idMovimiento == 63 || d.idMovimiento == 73 || d.idMovimiento == 82 || d.idMovimiento == 92 || d.idMovimiento == 96)){
 							aut = '<a href="#" class="btn-data btn-blueMaderas addAutorizacionAsesor" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" title="Solicitar Autorización"><i class="far fa-handshake"></i></a>';
 							return '<div class="d-flex justify-center">'+aut+'</div>';
 						}
