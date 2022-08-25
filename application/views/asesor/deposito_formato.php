@@ -289,46 +289,46 @@ $datos = array();
 
 
 
-                            <div class="row">
-                                <label class="col-sm-2 label-on-left" style="font-weight: bold;color:#545454">DESCUENTO MARTHA DEBAYLE:</label>
-                                <div class="col-sm-10 checkbox-radios">
-                                    <div class="col-md-2 checkbox-radios required">
-                                        <div class="radio">
-                                            <label style="font-size: 0.9em;">
-                                                <input type="radio" name="descuento_mdb"  id="descuento_mdb" value="1" <?php echo $statsInput; ?>
-                                                    <?php if ($cliente[0]->descuento_mdb == 1  && $cliente[0]->descuento_mdb!=NULL) {
-                                                        echo "checked=true";
-                                                    }
-                                                    ?>
-                                                    <?php if ($cliente[0]->lugar_prospeccion == 26  || $cliente[0]->lugar_prospeccion == 29 ||
-                                                    $cliente[0]->lugar_prospeccion==32) {
-                                                        echo "disabled";
-                                                    }
-                                                    ?>
-                                                    > SÍ
-                                            </label>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-md-3 checkbox-radios required">
-                                        <div class="radio">
-                                            <label style="font-size: 0.9em;">
-                                                <input type="radio" name="descuento_mdb"  id="descuento_mdb" value="0" <?php echo $statsInput; ?>
-                                                    <?php if ($cliente[0]->descuento_mdb == 0  && $cliente[0]->descuento_mdb!=NULL) {
-                                                        echo "checked=true";
-                                                    }
-                                                    ?>
-                                                    <?php if ($cliente[0]->lugar_prospeccion == 26  || $cliente[0]->lugar_prospeccion == 29 ||
-                                                    $cliente[0]->lugar_prospeccion==32) {
-                                                        echo "disabled";
-                                                    }
-                                                    ?>
-                                                    > NO
-                                            </label>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+<!--                            <div class="row">-->
+<!--                                <label class="col-sm-2 label-on-left" style="font-weight: bold;color:#545454">DESCUENTO MARTHA DEBAYLE:</label>-->
+<!--                                <div class="col-sm-10 checkbox-radios">-->
+<!--                                    <div class="col-md-2 checkbox-radios required">-->
+<!--                                        <div class="radio">-->
+<!--                                            <label style="font-size: 0.9em;">-->
+<!--                                                <input type="radio" name="descuento_mdb"  id="descuento_mdb" value="1" --><?php //echo $statsInput; ?>
+<!--                                                    --><?php //if ($cliente[0]->descuento_mdb == 1  && $cliente[0]->descuento_mdb!=NULL) {
+//                                                        echo "checked=true";
+//                                                    }
+//                                                    ?>
+<!--                                                    --><?php //if ($cliente[0]->lugar_prospeccion == 26  || $cliente[0]->lugar_prospeccion == 29 ||
+//                                                    $cliente[0]->lugar_prospeccion==32) {
+//                                                        echo "disabled";
+//                                                    }
+//                                                    ?>
+<!--                                                    > SÍ-->
+<!--                                            </label>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+<!---->
+<!--                                    <div class="col-md-3 checkbox-radios required">-->
+<!--                                        <div class="radio">-->
+<!--                                            <label style="font-size: 0.9em;">-->
+<!--                                                <input type="radio" name="descuento_mdb"  id="descuento_mdb" value="0" --><?php //echo $statsInput; ?>
+<!--                                                    --><?php //if ($cliente[0]->descuento_mdb == 0  && $cliente[0]->descuento_mdb!=NULL) {
+//                                                        echo "checked=true";
+//                                                    }
+//                                                    ?>
+<!--                                                    --><?php //if ($cliente[0]->lugar_prospeccion == 26  || $cliente[0]->lugar_prospeccion == 29 ||
+//                                                    $cliente[0]->lugar_prospeccion==32) {
+//                                                        echo "disabled";
+//                                                    }
+//                                                    ?>
+<!--                                                    > NO-->
+<!--                                            </label>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                            </div>-->
 
 							<div class="row">
 								<label class="col-sm-2 label-on-left">DOCUMENTACIÓN:</label>
