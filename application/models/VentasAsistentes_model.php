@@ -95,49 +95,42 @@ class VentasAsistentes_model extends CI_Model {
    
 
 	public function registroStatusContratacion8 () {
+        $id_sede = $this->session->userdata('id_sede');
         if ($this->session->userdata('id_rol') == 32 || $this->session->userdata('id_rol') == 17) { // MJ: ES CONTRALORÍA CORPORATIVA
-            $where = "(l.idStatusContratacion = '7' and l.idMovimiento  = '37'
-            or l.idStatusContratacion = '7' and l.idMovimiento  = '7' and cl.status = 1
-            or l.idStatusContratacion = '7' and l.idMovimiento  = '64' and cl.status = 1
-            or l.idStatusContratacion = '7' and l.idMovimiento  = '66' and cl.status = 1
-            or l.idStatusContratacion = '7' and l.idMovimiento  = '77' and cl.status = 1) AND l.tipo_venta IN (4, 6)";
+            $where = "l.idStatusContratacion IN ('7') AND l.idMovimiento IN ('37', '7', '64', '66', '77') AND cl.status = 1 AND l.tipo_venta IN (4, 6)";
         } else { // MJ: ES VENTAS
             if ($this->session->userdata('id_sede') == 9)
-                $id_sede = "'4', '" . $this->session->userdata('id_sede') . "'";
+                $filtroSede = "'4', '$id_sede'";
             else
-                $id_sede = "'" . $this->session->userdata('id_sede') . "'";
-                $where = "l.idStatusContratacion = '7' and l.idMovimiento  = '37' and l.ubicacion IN($id_sede)
-                or l.idStatusContratacion = '7' and l.idMovimiento  = '7' and cl.status = 1 and l.ubicacion IN($id_sede)
-                or l.idStatusContratacion = '7' and l.idMovimiento  = '64' and cl.status = 1 and l.ubicacion IN($id_sede)
-                or l.idStatusContratacion = '7' and l.idMovimiento  = '66' and cl.status = 1 and l.ubicacion  IN($id_sede)
-                or l.idStatusContratacion = '7' and l.idMovimiento  = '77' and cl.status = 1 and l.ubicacion  IN($id_sede)";
+                $filtroSede = "'$id_sede'";
+            
+                $where = "l.idStatusContratacion IN ('7') AND l.idMovimiento IN ('37', '7', '64', '66', '77') AND cl.status = 1 AND l.ubicacion IN ($filtroSede)";
         }
 
 		$query = $this->db-> query("SELECT l.idLote, cl.id_cliente, cl.nombre, cl.apellido_paterno, cl.apellido_materno,
-                                        l.nombreLote, l.idStatusContratacion, l.idMovimiento, l.modificado, cl.rfc,
-                                        CAST(l.comentario AS varchar(MAX)) as comentario, l.fechaVenc, l.perfil, cond.nombre as nombreCondominio, res.nombreResidencial, l.ubicacion,
-                                        l.tipo_venta, l.observacionContratoUrgente as vl,
-                                        CONCAT(asesor.nombre,' ', asesor.apellido_paterno, ' ', asesor.apellido_materno) as asesor,
-                                        CONCAT(coordinador.nombre,' ', coordinador.apellido_paterno, ' ', coordinador.apellido_materno) as coordinador,
-                                        CONCAT(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno) as gerente,
-                                        cond.idCondominio, cl.expediente
-                                    FROM lotes l
-                                        INNER JOIN clientes cl ON l.idLote=cl.idLote and cl.status = 1
-                                        INNER JOIN condominios cond ON l.idCondominio=cond.idCondominio
-                                        INNER JOIN residenciales res ON cond.idResidencial = res.idResidencial
-                                        LEFT JOIN usuarios asesor ON cl.id_asesor = asesor.id_usuario
-                                        LEFT JOIN usuarios coordinador ON cl.id_coordinador = coordinador.id_usuario
-                                        LEFT JOIN usuarios gerente ON cl.id_gerente = gerente.id_usuario
-                                    WHERE $where
-                                    GROUP BY l.idLote, cl.id_cliente, cl.nombre, cl.apellido_paterno, cl.apellido_materno,
-                                        l.nombreLote, l.idStatusContratacion, l.idMovimiento, l.modificado, cl.rfc,
-                                        CAST(l.comentario AS varchar(MAX)), l.fechaVenc, l.perfil, cond.nombre, res.nombreResidencial, l.ubicacion,
-                                        l.tipo_venta, l.observacionContratoUrgente,   
-                                        CONCAT(asesor.nombre,' ', asesor.apellido_paterno, ' ', asesor.apellido_materno),
-                                        CONCAT(coordinador.nombre,' ', coordinador.apellido_paterno, ' ', coordinador.apellido_materno),
-                                        CONCAT(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno),
-                                        cond.idCondominio, cl.expediente");
-
+        l.nombreLote, l.idStatusContratacion, l.idMovimiento, l.modificado, cl.rfc,
+        CAST(l.comentario AS varchar(MAX)) as comentario, l.fechaVenc, l.perfil, cond.nombre as nombreCondominio, res.nombreResidencial, l.ubicacion,
+        l.tipo_venta, l.observacionContratoUrgente as vl,
+        CONCAT(asesor.nombre,' ', asesor.apellido_paterno, ' ', asesor.apellido_materno) as asesor,
+        CONCAT(coordinador.nombre,' ', coordinador.apellido_paterno, ' ', coordinador.apellido_materno) as coordinador,
+        CONCAT(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno) as gerente,
+        cond.idCondominio, cl.expediente
+        FROM lotes l
+        INNER JOIN clientes cl ON l.idLote=cl.idLote and cl.status = 1
+        INNER JOIN condominios cond ON l.idCondominio=cond.idCondominio
+        INNER JOIN residenciales res ON cond.idResidencial = res.idResidencial
+        LEFT JOIN usuarios asesor ON cl.id_asesor = asesor.id_usuario
+        LEFT JOIN usuarios coordinador ON cl.id_coordinador = coordinador.id_usuario
+        LEFT JOIN usuarios gerente ON cl.id_gerente = gerente.id_usuario
+        WHERE $where
+        GROUP BY l.idLote, cl.id_cliente, cl.nombre, cl.apellido_paterno, cl.apellido_materno,
+        l.nombreLote, l.idStatusContratacion, l.idMovimiento, l.modificado, cl.rfc,
+        CAST(l.comentario AS varchar(MAX)), l.fechaVenc, l.perfil, cond.nombre, res.nombreResidencial, l.ubicacion,
+        l.tipo_venta, l.observacionContratoUrgente,   
+        CONCAT(asesor.nombre,' ', asesor.apellido_paterno, ' ', asesor.apellido_materno),
+        CONCAT(coordinador.nombre,' ', coordinador.apellido_paterno, ' ', coordinador.apellido_materno),
+        CONCAT(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno),
+        cond.idCondominio, cl.expediente");
 		return $query->result();
 
 	}
@@ -145,13 +138,7 @@ class VentasAsistentes_model extends CI_Model {
     public function validateSt8($idLote){
         $this->db->where("idLote",$idLote);
         $this->db->where_in('idStatusLote', 3);
-
-        $this->db->where("( idStatusContratacion = 7 AND idMovimiento = 37 
-            OR idStatusContratacion = 7 AND idMovimiento = 7 
-            OR idStatusContratacion = 7 and idMovimiento = 64
-            OR idStatusContratacion = 7 and idMovimiento = 66
-            OR idStatusContratacion = 7 and idMovimiento = 77 )");	
-
+        $this->db->where("(idStatusContratacion IN (7) AND idMovimiento IN (37, 7, 64, 66, 77))");	
         $query = $this->db->get('lotes');
         $valida = (empty($query->result())) ? 0 : 1;
         return $valida;
@@ -241,52 +228,48 @@ class VentasAsistentes_model extends CI_Model {
         if ($this->session->userdata('id_rol') == 17) { // MJ: ES CONTRALORÍA CORPORATIVA
             $where = "l.idStatusContratacion = 13 AND l.idMovimiento IN (43, 68) AND cl.status = 1 AND l.tipo_venta IN (4, 6)";
         } else { // MJ: ES VENTAS
-            if ($this->session->userdata('id_sede') == 9)
-                $id_sede = "'4', '" . $this->session->userdata('id_sede') . "')";
-            else {
-                if ($this->session->userdata('id_usuario') == 6831)
-                    $id_sede = "'4', '" . $this->session->userdata('id_sede') . "') AND cl.id_gerente = 690";
-                else
-                    $id_sede = "'" . $this->session->userdata('id_sede') . "')";
-            }
+            $id_sede = $this->session->userdata('id_sede');
+            if ($id_sede == 9)
+                $filtroSede = "AND l.ubicacion IN ('4', '$id_sede')";
+            else if ($id_sede == 8)
+                $filtroSede = "AND l.ubicacion IN ('$id_sede', '10')";
 
-            $where = "l.idStatusContratacion = 13 AND l.idMovimiento  = 43 AND cl.status = 1 and l.ubicacion IN($id_sede OR l.idStatusContratacion = 13 AND l.idMovimiento  = 68 AND cl.status = 1 and l.ubicacion IN($id_sede";
+            if ($this->session->userdata('id_usuario') == 6831)
+                $filtroGerente = "AND cl.id_gerente = 690";
+
+            $where = "l.idStatusContratacion = 13 AND l.idMovimiento IN (43, 68) AND cl.status = 1 $filtroSede $filtroGerente";
         }
         $query = $this->db->query(" SELECT l.idLote, cl.id_cliente, cl.nombre, cl.apellido_paterno, cl.apellido_materno,
-                                        l.nombreLote, l.idStatusContratacion, l.idMovimiento, l.modificado, cl.rfc,
-                                        CAST(l.comentario AS VARCHAR(MAX)) AS comentario, l.fechaVenc, l.perfil, cond.nombre AS nombreCondominio, res.nombreResidencial, l.ubicacion,
-                                        l.tipo_venta,
-                                        CONCAT(asesor.nombre, ' ', asesor.apellido_paterno, ' ', asesor.apellido_materno) AS asesor,
-                                        CONCAT(coordinador.nombre, ' ', coordinador.apellido_paterno, ' ', coordinador.apellido_materno) AS coordinador,
-                                        CONCAT(gerente.nombre, ' ', gerente.apellido_paterno, ' ', gerente.apellido_materno) AS gerente,
-                                        cond.idCondominio, l.observacionContratoUrgente AS vl
-                                    FROM lotes l
-                                        INNER JOIN cliente cl ON l.idLote=cl.idLote
-                                        INNER JOIN condominios cond ON l.idCondominio=cond.idCondominio
-                                        INNER JOIN residenciales res ON cond.idResidencial = res.idResidencial
-                                        LEFT JOIN usuarios asesor ON cl.id_asesor = asesor.id_usuario
-                                        LEFT JOIN usuarios coordinador ON cl.id_coordinador = coordinador.id_usuario
-                                        LEFT JOIN usuarios gerente ON cl.id_gerente = gerente.id_usuario
-                                    WHERE $where
-                                    GROUP BY l.idLote, cl.id_cliente, cl.nombre, cl.apellido_paterno, cl.apellido_materno,
-                                        l.nombreLote, l.idStatusContratacion, l.idMovimiento, l.modificado, cl.rfc,
-                                        CAST(l.comentario AS VARCHAR(MAX)), l.fechaVenc, l.perfil, cond.nombre, res.nombreResidencial, l.ubicacion,
-                                        l.tipo_venta, CONCAT(asesor.nombre,' ',asesor.apellido_paterno, ' ', asesor.apellido_materno),
-                                        CONCAT(coordinador.nombre,' ', coordinador.apellido_paterno, ' ', coordinador.apellido_materno),
-                                        CONCAT(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno),
-                                        cond.idCondominio, l.observacionContratoUrgente;");
+        l.nombreLote, l.idStatusContratacion, l.idMovimiento, l.modificado, cl.rfc,
+        CAST(l.comentario AS VARCHAR(MAX)) AS comentario, l.fechaVenc, l.perfil, cond.nombre AS nombreCondominio, res.nombreResidencial, l.ubicacion,
+        l.tipo_venta,
+        CONCAT(asesor.nombre, ' ', asesor.apellido_paterno, ' ', asesor.apellido_materno) AS asesor,
+        CONCAT(coordinador.nombre, ' ', coordinador.apellido_paterno, ' ', coordinador.apellido_materno) AS coordinador,
+        CONCAT(gerente.nombre, ' ', gerente.apellido_paterno, ' ', gerente.apellido_materno) AS gerente,
+        cond.idCondominio, l.observacionContratoUrgente AS vl
+        FROM lotes l
+        INNER JOIN cliente cl ON l.idLote=cl.idLote
+        INNER JOIN condominios cond ON l.idCondominio=cond.idCondominio
+        INNER JOIN residenciales res ON cond.idResidencial = res.idResidencial
+        LEFT JOIN usuarios asesor ON cl.id_asesor = asesor.id_usuario
+        LEFT JOIN usuarios coordinador ON cl.id_coordinador = coordinador.id_usuario
+        LEFT JOIN usuarios gerente ON cl.id_gerente = gerente.id_usuario
+        WHERE $where
+        GROUP BY l.idLote, cl.id_cliente, cl.nombre, cl.apellido_paterno, cl.apellido_materno,
+        l.nombreLote, l.idStatusContratacion, l.idMovimiento, l.modificado, cl.rfc,
+        CAST(l.comentario AS VARCHAR(MAX)), l.fechaVenc, l.perfil, cond.nombre, res.nombreResidencial, l.ubicacion,
+        l.tipo_venta, CONCAT(asesor.nombre,' ',asesor.apellido_paterno, ' ', asesor.apellido_materno),
+        CONCAT(coordinador.nombre,' ', coordinador.apellido_paterno, ' ', coordinador.apellido_materno),
+        CONCAT(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno),
+        cond.idCondominio, l.observacionContratoUrgente;");
 		return $query->result();
-
 	}
 
 
 	public function validateSt14($idLote){
         $this->db->where("idLote",$idLote);
         $this->db->where_in('idStatusLote', 3);
-  
-        $this->db->where("(idStatusContratacion = 13 and idMovimiento  = 43
-            OR idStatusContratacion = 13 and idMovimiento = 68)");	
-  
+        $this->db->where("(idStatusContratacion IN (13) idMovimiento IN (43, 68))");	
         $query = $this->db->get('lotes');
         $valida = (empty($query->result())) ? 0 : 1;
         return $valida;

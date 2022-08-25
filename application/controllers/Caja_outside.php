@@ -2621,21 +2621,15 @@ class Caja_outside extends CI_Controller
     public function updateCondominio()
     {
         $data = json_decode((file_get_contents("php://input")));
-//        var_dump(json_decode($data));
-
         if (!isset($data->idCondominio) || !isset($data->nombre) || !isset($data->nombre_condominio) || !isset($data->abreviatura) || !isset($data->tipo_lote) ||
             !isset($data->idEtapa) || !isset($data->idDBanco) || !isset($data->idResidencial)){
             echo json_encode(array("status" => 400, "message" => "Algún parámetro no tiene un valor especificado o no viene informado."), JSON_UNESCAPED_UNICODE);
-            echo 'flag1';}
+        }
         else {
             if ($data->idCondominio == "" || $data->nombre == "" || $data->nombre_condominio == "" || $data->abreviatura == "" || $data->tipo_lote == "" ||
                 $data->idEtapa == "" || $data->idDBanco == "" || $data->idResidencial=="")
-               {
                    echo json_encode(array("status" => 400, "message" => "Algún parámetro no tiene un valor especificado o no viene informado..."), JSON_UNESCAPED_UNICODE);
-                    echo 'flag2';
-               }
             else {
-                echo 'flag3';
                 $updateData = array(
                     "nombre" => $data->nombre,
                     "nombre_condominio" => $data->nombre_condominio,

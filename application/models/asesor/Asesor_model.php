@@ -923,20 +923,10 @@ class Asesor_model extends CI_Model
     {
         $this->db->where("idLote", $idLote);
         $this->db->where_in('idStatusLote', 3);
-
-        $this->db->where("( idStatusContratacion = 1 AND idMovimiento = 31 
-				OR idStatusContratacion = 2 AND idMovimiento = 85 
-				OR idStatusContratacion = 1 and idMovimiento = 20
-				OR idStatusContratacion = 1 and idMovimiento = 63
-				OR idStatusContratacion = 1 and idMovimiento = 73
-				OR idStatusContratacion = 3 and idMovimiento = 82
-				OR idStatusContratacion = 1 and idMovimiento = 92
-                OR idStatusContratacion = 1 and idMovimiento = 96 )");
-
+        $this->db->where("(idStatusContratacion IN (1, 2, 3) AND idMovimiento IN (31, 85, 20, 63, 73, 82, 92, 96))");
         $query = $this->db->get('lotes');
         $valida = (empty($query->result())) ? 0 : 1;
         return $valida;
-
     }
 
 
