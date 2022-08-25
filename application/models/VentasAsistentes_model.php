@@ -99,12 +99,15 @@ class VentasAsistentes_model extends CI_Model {
         if ($this->session->userdata('id_rol') == 32 || $this->session->userdata('id_rol') == 17) { // MJ: ES CONTRALORÍA CORPORATIVA
             $where = "l.idStatusContratacion IN ('7') AND l.idMovimiento IN ('37', '7', '64', '66', '77') AND cl.status = 1 AND l.tipo_venta IN (4, 6)";
         } else { // MJ: ES VENTAS
-            if ($this->session->userdata('id_sede') == 9)
-                $filtroSede = "'4', '$id_sede'";
+            $id_sede = $this->session->userdata('id_sede');
+            if ($id_sede == 9)
+                $filtroSede = "AND l.ubicacion IN ('4', '$id_sede')";
             else
-                $filtroSede = "'$id_sede'";
-            
-                $where = "l.idStatusContratacion IN ('7') AND l.idMovimiento IN ('37', '7', '64', '66', '77') AND cl.status = 1 AND l.ubicacion IN ($filtroSede)";
+                $filtroSede = "AND l.ubicacion IN ('$id_sede')";
+
+            if ($this->session->userdata('id_usuario') == 6831)
+                $filtroGerente = "AND cl.id_gerente = 690";
+            $where = "l.idStatusContratacion IN ('7') AND l.idMovimiento IN ('37', '7', '64', '66', '77') AND cl.status = 1 $filtroSede $filtroGerente";
         }
 
 		$query = $this->db-> query("SELECT l.idLote, cl.id_cliente, cl.nombre, cl.apellido_paterno, cl.apellido_materno,
@@ -231,11 +234,13 @@ class VentasAsistentes_model extends CI_Model {
             $id_sede = $this->session->userdata('id_sede');
             if ($id_sede == 9)
                 $filtroSede = "AND l.ubicacion IN ('4', '$id_sede')";
-            else if ($id_sede == 8)
-                $filtroSede = "AND l.ubicacion IN ('$id_sede', '10')";
+            else
+                $filtroSede = "AND l.ubicacion IN ('$id_sede')";
 
             if ($this->session->userdata('id_usuario') == 6831)
                 $filtroGerente = "AND cl.id_gerente = 690";
+            else
+                $filtroGerente = "";
 
             $where = "l.idStatusContratacion = 13 AND l.idMovimiento IN (43, 68) AND cl.status = 1 $filtroSede $filtroGerente";
         }
@@ -269,7 +274,7 @@ class VentasAsistentes_model extends CI_Model {
 	public function validateSt14($idLote){
         $this->db->where("idLote",$idLote);
         $this->db->where_in('idStatusLote', 3);
-        $this->db->where("(idStatusContratacion IN (13) idMovimiento IN (43, 68))");	
+        $this->db->where("(idStatusContratacion IN (13) AND idMovimiento IN (43, 68))");	
         $query = $this->db->get('lotes');
         $valida = (empty($query->result())) ? 0 : 1;
         return $valida;
