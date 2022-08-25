@@ -33,7 +33,7 @@ class Api extends CI_Controller
                     $data = array(
                         "iat" => $time, // Tiempo en que inició el token
                         "exp" => $time + (24 * 60 * 60), // Tiempo en el que expirará el token (24 horas)
-                        "data" => array("id" => "0", "username" => "caja", "descripcion" => ""),
+                        "data" => array("username" => "suma_outs_9346"),
                     );
                     $token = JWT::encode($data, $JwtSecretKey);
                     echo json_encode(array("id_token" => $token));

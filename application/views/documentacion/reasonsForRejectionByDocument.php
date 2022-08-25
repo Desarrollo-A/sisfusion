@@ -50,7 +50,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
-                    <button type="submit" class="btn btn-primary" onclick="saveRejectReason()">Aceptar</button>
+                    <button type="submit" id="btn_save" class="btn btn-primary" onclick="saveRejectReason()">Aceptar</button>
                 </div>
             </div>
         </div>
@@ -214,14 +214,18 @@
     });
 
     function saveRejectReason() {
+        $('#btn_save').prop('disabled', true);
+        $('#spiner-loader').removeClass('hidden');
         let id_documento = $("#id_documento").val();
         let id_motivo = $("#id_motivo").val();
         let action = $("#action").val();
         let reject_reason = $("#rejectReason").val();
         let documentName = $("#documentos option:selected").text();
-        if ((action == 0 && (reject_reason == '' || id_documento == '')) || (action == 1 && (reject_reason == '' || id_motivo == '')))
+        if ((action == 0 && (reject_reason == '' || id_documento == '')) || (action == 1 && (reject_reason == '' || id_motivo == ''))){
             alerts.showNotification("top", "right", "Asegúrate de ingresar un motivo de rechazo para el documento <b>" + documentName + "</b>.", "warning");
-        else {
+            $('#btn_save').prop('disabled', false);
+            $('#spiner-loader').addClass('hidden');
+        }else {
             $.ajax({
                 type: 'POST',
                 url: url + 'Documentacion/saveRejectReason',
@@ -238,9 +242,13 @@
                         $("#reasonsForRejectionTable").DataTable().ajax.reload(null, false);
                         $("#addRejectReasonModal").modal("hide");
                     }
+                    $('#btn_save').prop('disabled', false);
+                    $('#spiner-loader').addClass('hidden');
                 },
                 error: function () {
                     alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+                    $('#btn_save').prop('disabled', false);
+                    $('#spiner-loader').addClass('hidden');
                 }
             });
         }

@@ -38,9 +38,9 @@
                                                         <div class="col-md-8"></div>
                                                         <div class="col-md-4 p-r">
                                                             <div class="form-group d-flex">
-                                                                <input type="text" class="form-control datepicker beginDate" id="beginDate"/>
-                                                                <input type="text" class="form-control datepicker endDate" id="endDate"/>
-                                                                <button class="btn btn-success btn-round btn-fab btn-fab-mini" id="searchByDateRangeProspectos">
+                                                                <input type="text" class="form-control datepicker beginDates" id="beginDate" value="" autocomplete='off'/>
+                                                                <input type="text" class="form-control datepicker endDates" id="endDate" value="" autocomplete='off' />
+                                                                <button class="btn btn-success btn-round btn-fab btn-fab-mini" id="searchByDateRangeCP">
                                                                     <span class="material-icons update-dataTable">search</span>
                                                                 </button>
                                                             </div>
