@@ -539,7 +539,7 @@ return $query->result();
             else{
                 $filtro_00 = ' AND co.idCondominio = '.$condominio.' ';
             }
-                        $filtro_estatus = ' pci1.estatus IN (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 51, 52, 88,16,17, 41,42,18,19,20,21,22,23) ';
+                        $filtro_estatus = ' pci1.estatus IN (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 51, 52, 88,16,17, 41,42,18,19,20,21,22,23,24,25,26) ';
 
 
         switch ($this->session->userdata('id_rol')) {
@@ -4947,8 +4947,8 @@ function TieneAbonos($id){
 
      /**-----------NUEVO PROCESO DE PRESTAMOS AUTOMATICOS---------------------- */
 
-     function getPrestamoxUser($id){
-        return $this->db->query("SELECT id_usuario FROM prestamos_aut WHERE id_usuario=$id AND estatus=1");
+     function getPrestamoxUser($id,$tipo){
+        return $this->db->query("SELECT id_usuario FROM prestamos_aut WHERE id_usuario=$id AND estatus=1 and tipo=$tipo");
     }
 
         function TienePago($id){
@@ -4984,7 +4984,7 @@ function TieneAbonos($id){
                 FROM prestamos_aut p 
                 INNER JOIN usuarios u ON u.id_usuario=p.id_usuario 
 				LEFT JOIN relacion_pagos_prestamo rpp ON rpp.id_prestamo = p.id_prestamo
-				LEFT JOIN pago_comision_ind pci ON pci.id_pago_i = rpp.id_pago_i AND pci.estatus in (18,19,20,21,22) AND pci.descuento_aplicado = 1
+				LEFT JOIN pago_comision_ind pci ON pci.id_pago_i = rpp.id_pago_i AND pci.estatus in (18,19,20,21,22,23,24,25,26) AND pci.descuento_aplicado = 1
                 left join opcs_x_cats opc on opc.id_opcion=p.tipo and opc.id_catalogo=23
                 WHERE p.estatus in(1,2,3,0)
 				group by rpp.id_prestamo, u.nombre,u.apellido_paterno,u.apellido_materno,p.id_prestamo,p.id_usuario,p.monto,p.num_pagos,p.estatus,p.comentario,p.fecha_creacion,p.pago_individual,pendiente,opc.nombre,opc.id_opcion");
@@ -7103,7 +7103,7 @@ SELECT 7 AS idEstatus, 'PAGADAS' as nombre ");
             break;
 
             case '5':
-            $filtro_estatus = " pci1.estatus IN (11,16,17,0,18,19,20,21,22,23) AND pci1.descuento_aplicado = 1 ";
+            $filtro_estatus = " pci1.estatus IN (11,16,17,0,18,19,20,21,22,23,24,25,26) AND pci1.descuento_aplicado = 1 ";
                 break;
 
             case '6':
@@ -8301,7 +8301,7 @@ return $query->result();
             JOIN usuarios u ON u.id_usuario = pa.id_usuario
             JOIN relacion_pagos_prestamo rpp ON rpp.id_prestamo = pa.id_prestamo
             JOIN pago_comision_ind pci ON pci.id_pago_i = rpp.id_pago_i 
-            AND pci.estatus IN(18,19,20,21,22,23) AND pci.descuento_aplicado = 1
+            AND pci.estatus IN(18,19,20,21,22,23,24,25,26) AND pci.descuento_aplicado = 1
             WHERE pa.id_prestamo = $idPrestamo
             GROUP BY u.nombre, u.apellido_paterno, u.apellido_materno, pa.monto, pa.pago_individual, pa.num_pagos, pa.n_p");
         return $result->row();
@@ -8313,7 +8313,7 @@ return $query->result();
         FROM prestamos_aut pa
         INNER JOIN usuarios u ON u.id_usuario = pa.id_usuario
         INNER JOIN relacion_pagos_prestamo rpp ON rpp.id_prestamo = pa.id_prestamo
-        INNER JOIN pago_comision_ind pci ON pci.id_pago_i = rpp.id_pago_i AND pci.estatus IN(18,19,20,21,22,23) AND pci.descuento_aplicado = 1
+        INNER JOIN pago_comision_ind pci ON pci.id_pago_i = rpp.id_pago_i AND pci.estatus IN(18,19,20,21,22,23,24,25,26) AND pci.descuento_aplicado = 1
         INNER JOIN comisiones c ON c.id_comision = pci.id_comision
         INNER JOIN lotes l ON l.idLote = c.id_lote
         INNER JOIN historial_comisiones hc ON hc.id_pago_i = rpp.id_pago_i 
@@ -8346,14 +8346,14 @@ return $query->result();
             JOIN pago_comision_ind pci ON pci.id_pago_i = rpp.id_pago_i 
             JOIN opcs_x_cats oxc ON oxc.id_opcion = u.id_rol AND oxc.id_catalogo = 1
             JOIN opcs_x_cats oxc2 ON oxc2.id_opcion = pa.tipo AND oxc2.id_catalogo = 23
-            AND pci.estatus in(18,19,20,21,22,23) AND pci.descuento_aplicado = 1
+            AND pci.estatus in(18,19,20,21,22,23,24,25,26) AND pci.descuento_aplicado = 1
             AND u.id_rol = $rol $whereUserClause
             ORDER BY pa.id_usuario ASC, pa.id_prestamo ASC");
         return $result->result_array();
     }
 
     function lista_estatus_descuentos(){
-        return $this->db->query(" SELECT * FROM opcs_x_cats where id_catalogo=23 and id_opcion in(18,19,20,21,22)");
+        return $this->db->query(" SELECT * FROM opcs_x_cats where id_catalogo=23 and id_opcion in(18,19,20,21,22,23,24,25,26)");
     }
 
     public function updatePagoReactivadoMismoDiaMes($idDescuento, $fecha)

@@ -347,8 +347,14 @@
 							color='7282ED';
 						}else if(d.id_opcion == 22){ //MANTENIMIENTO
 							color='CA72ED';
-						}else if(d.id_opcion == 23){ //MANTENIMIENTO
+						}else if(d.id_opcion == 23){ //NÓMINA - ANALISTAS DE COMISIONES
 							color='CA15ED';
+						}else if(d.id_opcion == 24){ //NÓMINA - ASISTENTES CDMX
+							color='CA9315';
+						}else if(d.id_opcion == 25){ //NÓMINA - IMSS
+							color='34A25C';
+						}else if(d.id_opcion == 26){ //NÓMINA -LIDER DE PROYECTO E INNOVACIÓN
+							color='165879';
 						}
 
 						return '<p><span class="label" style="background:#'+color+';">'+d.tipo+'</span></p>';
