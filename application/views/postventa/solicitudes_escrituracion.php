@@ -58,6 +58,9 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        <div class="col-12 col-sm-9 col-md-9 col-lg-9">
+                                            <button class="btn btn-default btn-round btn-sm" onclick="location.reload()"><i class="fas fa-redo"></i></button>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="material-datatables">
