@@ -6566,7 +6566,7 @@ for ($d=0; $d <count($dos) ; $d++) {
     {
       $this->input->post("pago");
       $pesos=str_replace(",", "", $this->input->post("monto"));
-      $dato = $this->Comisiones_model->getPrestamoxUser($this->input->post("usuarioid"))->result_array();
+      $dato = $this->Comisiones_model->getPrestamoxUser($this->input->post("usuarioid"),$this->input->post("tipo"))->result_array();
       $tipo = $this->input->post("tipo");
 
       if(empty($dato)){

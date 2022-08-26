@@ -76,7 +76,7 @@ class Asesor_model extends CI_Model
                 if ($this->session->userdata('id_usuario') == 2896) { // ES PATRICIA MAYA
                     return $this->db->query("SELECT * FROM Menu2 WHERE rol = $rol AND estatus = 1 order by orden asc");
                 } else { // ES OTRO USUARIO DE CONSULTA Y NO VE COMISIONES
-                    return $this->db->query("SELECT * FROM Menu2 WHERE rol = $rol AND nombre NOT IN ('Inicio', 'Comisiones') AND estatus = 1 order by orden asc");
+                    return $this->db->query("SELECT * FROM Menu2 WHERE rol = $rol AND nombre NOT IN ('Inicio', 'Comisiones','Usuarios') AND estatus = 1 order by orden asc");
                 }
             } else {
                 if ($this->session->userdata('id_usuario') == 2762) {
