@@ -508,11 +508,11 @@
 <div class="modal fade" id="gestionNotaria" data-keyboard="false" data-backdrop="static">
     <div class="modal-dialog">
         <div class="modal-content">
-            <div class="modal-header"><h5 id="mainLabelText" aling="center"><b>Información Notaría</b></h5></div>
+            <div class="modal-header"><h5 id="mainLabelText"><center><b>Información Notaría</b></center></h5></div>
             <div class="modal-body text-center">
                <form method="post" id="rechazar" name="rechazar">
                     <input type="text" class="hide" id="idSolicitud" name="idSolicitud">
-                    <div class="modal-body">
+                    <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label class="control-label label-gral">Nombre de la Notaría</label>
@@ -547,7 +547,7 @@
                     <div class="row">
                         <div class="col-md-12 d-flex justify-end p-0">
                         <button type="button" class="btn btn-danger btn-simple mt-2" data-dismiss="modal">Cancelar</button>
-                        <button type="submit" id="observacionesSubmit" class="btn btn-primary">Rechazar</button>
+                        <button type="submit" id="observacionesSubmit" class="btn btn-primary btn-round btn-sm">Rechazar</button>
                         </div>
                     </div>
                    

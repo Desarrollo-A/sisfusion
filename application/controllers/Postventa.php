@@ -241,7 +241,7 @@ class Postventa extends CI_Controller
                                                     </td>
                                                     <td style="font-size: 1em;">
                                                         <b>Correo electrónico:</b><br>
-                                                        ' . $informacion->correo . '
+                                                        <center>' . $informacion->correo . '</center>
                                                     </td>
                                                 </tr>
                                             </table>
