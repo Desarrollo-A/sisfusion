@@ -15,6 +15,9 @@ class ServicesCRM extends CI_Controller
             $urls = array('https://prueba.gphsis.com','prueba.gphsis.com','localhost','http://localhost','127.0.0.1','https://rh.gphsis.com','rh.gphsis.com','https://maderascrm.gphsis.com','maderascrm.gphsis.com');
             date_default_timezone_set('America/Mexico_City');
             
+           //print_r(getallheaders()['Authorization']);
+           // $header = getallheaders();
+           // echo $header['Authorization'];
 
             //echo $_SERVER['HTTP_ORIGIN'];
             if(isset($this->input->request_headers()['origin'])){
@@ -32,7 +35,8 @@ class ServicesCRM extends CI_Controller
             $this->load->library(array('jwt_key'));
             $this->load->model(array('Services_model', 'General_model'));
             }else{
-                die ("Access Denied");       
+                die ("Access Denied");     
+                exit;  
             }
     }
 
@@ -91,8 +95,8 @@ class ServicesCRM extends CI_Controller
                     "id_sede" => $objDatos['id_sede'],
                     "id_rol" => $objDatos['id_rol'],
                     "id_lider" => $id_lider,
-                    "usuario" => $objDatos['usuario'],
-                    "contrasena" => encriptar($objDatos['contrasena']),
+                    "usuario" => trim($objDatos['usuario']),
+                    "contrasena" => encriptar(trim($objDatos['contrasena'])),
                     "fecha_creacion" => date("Y-m-d H:i:s"),
                     "creado_por" => $objDatos['creado_por'],
                     "fecha_modificacion" => date("Y-m-d H:i:s"),
@@ -126,6 +130,6 @@ class ServicesCRM extends CI_Controller
         
     }
 
-
+ 
 
 }

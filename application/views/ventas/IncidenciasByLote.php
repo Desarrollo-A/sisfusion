@@ -23,9 +23,9 @@
                     } else {
                         echo '<script>alert("ACCESSO DENEGADO"); window.location.href="' . base_url() . '";</script>';
                     }
+                    break;
             }
-        }
-        else{
+        } else{
             echo '<script>alert("ACCESSO DENEGADO"); window.location.href="' . base_url() . '";</script>';
         }
         ?>
@@ -86,6 +86,7 @@
                 </div>
             </div>
         </div>
+
         <div class="modal fade modal-alertas"  id="addEmpresa" style="overflow:auto !important;" role="dialog">
             <div class="modal-dialog modal-md">
                 <div class="modal-content">
@@ -501,7 +502,6 @@
                             <div class="form-group" id="users7">
                                 <label class="label">Subdirector</label>
                                 <select id="usuarioid8" name="usuarioid8" class="form-control ger ng-invalid ng-invalid-required" required data-live-search="true" required></select>
-                                <p><b>Si deseas agregar un subdirector regional, favor de subir ticket a sistemas.</b></p>
                             </div>
                             <div class="form-group">
                                 <center>
@@ -600,7 +600,7 @@
         let rol  = "<?=$this->session->userdata('id_rol')?>";
         var urlimg = "<?=base_url()?>/img/";
         var idLote = 0;
-
+        var id_user  = "<?=$this->session->userdata('id_usuario')?>";
         $("#modal_avisos").draggable({
             handle: ".modal-header"
         }); 
@@ -702,9 +702,6 @@
                             let id_l = parent.split(',');
                             console.log(id_l);
                             $.post('getLideres/'+id_l[1], function(data) {
-
-                                console.log(data[1]);
-                                console.log(data[1][0][0]['name_user']);
                                 $('#usuarioid6 option').remove(); 
                                 $('#usuarioid7 option').remove(); 
                                 $('#usuarioid8 option').remove(); 
@@ -721,19 +718,16 @@
                                 $("#usuarioid7").append($('<option>').val("0").text("Seleccione una opción"));
                                 $("#usuarioid8").append($('<option>').val("0").text("Seleccione una opción"));
                                 var len = data.length;
-                                if(len > 0){
-                                    var id = data[0][0][0]['id_usuario1'];
-                                    var name = data[0][0][0]['name_user'];
-                                    var id2 = data[0][0][0]['id_usuario2'];
-                                    var name2 = data[0][0][0]['name_user2'];
-                                    var id3 = data[0][0][0]['id_usuario3'];
-                                    var name3 = data[0][0][0]['name_user3'];
+                                if(len == 1){
+                                    var id = data[0]['id_usuario1'];
+                                    var name = data[0]['name_user'];
+                                    var id2 = data[0]['id_usuario2'];
+                                    var name2 = data[0]['name_user2'];
+                                    var id3 = data[0]['id_usuario3'];
+                                    var name3 = data[0]['name_user3'];
                                     $("#usuarioid6").append($('<option>').val(id).attr('data-value', id).text(name));
                                     $("#usuarioid7").append($('<option>').val(id2).attr('data-value', id2).text(name2));
-                                    for (let s = 0; s < data[1][0].length; s++) {
-                                        $("#usuarioid8").append($('<option>').val(data[1][0][s]['id_usuario']).attr('data-value', data[1][0][s]['id_usuario']).text(data[1][0][s]['name_user']));
-
-                                    }
+                                    $("#usuarioid8").append($('<option>').val(id3).attr('data-value', id3).text(name3));
                                 }
                                 if(len<=0){
                                     $("#usuarioid6").append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
@@ -1022,7 +1016,7 @@
         }
 
         /**-----------------------------INVENTARIO---------------------------------------- */
-        /*function cambiarUsuarioInven(idCliente,idLote,ase,coor,ger,asesor,coordinador,gerente){
+        function cambiarUsuarioInven(idCliente,idLote,ase,coor,ger,asesor,coordinador,gerente){
             $("#miModalInventario .invent").html('');
 
             $('#miModalInventario .invent').append(`
@@ -1036,7 +1030,7 @@
             <input type="hidden" value="${idCliente}" id="idCliente" name="idCliente">
             `);
             $("#miModalInventario").modal();
-        }*/
+        }
     /**------------------------------------------------------------------------------- */
 
         var getInfo1 = new Array(6);
@@ -1243,7 +1237,6 @@
         }
 
         function SaveAjuste(i){
-         //   alert(i);
             $('#spiner-loader').removeClass('hidden');
             $('#btn_'+i).removeClass('btn-success');
             $('#btn_'+i).addClass('btn-default');
@@ -1276,11 +1269,11 @@
             });
         }
 
-        /*$('#filtro44').change(function(ruta){
+        $('#filtro44').change(function(ruta){
             conodominio = $('#filtro44').val();
             $("#filtro55").empty().selectpicker('refresh');
             $.ajax({
-                url: '<?//=base_url()?>Comisiones/lista_lote/'+conodominio,
+                url: '<?=base_url()?>Comisiones/lista_lote/'+conodominio,
                 type: 'post',
                 dataType: 'json',
                 success:function(response){
@@ -1294,13 +1287,13 @@
                     $("#filtro55").selectpicker('refresh');
                 }
             });
-        });*/
+        });
 
-        /*$('#filtro55').change(function(ruta){
+        $('#filtro55').change(function(ruta){
             infolote = $('#filtro55').val();
             datos = infolote.split(',');
             idLote = datos[0];
-            $.post("<//?=base_url()?>index.php/Comisiones/getComisionesLoteSelected/"+idLote, function (data) {
+            $.post("<?=base_url()?>index.php/Comisiones/getComisionesLoteSelected/"+idLote, function (data) {
                 if( data.length < 1){
                     document.getElementById('msj').innerHTML = '';
                     document.getElementById('btn-aceptar').disabled  = false;
@@ -1316,7 +1309,7 @@
                     document.getElementById('msj').innerHTML = 'El lote seleccionado tiene comisiones registradas.';
                 }    
             }, 'json');
-        });*/
+        });
 
         let titulos = [];
         function onKeyUp(event) {
@@ -1602,8 +1595,9 @@
                 }                      
             }); 
 
-            /**--------------------------AGREGAR EMPRESA---------------------------- */
-            $("#tabla_inventario_contraloria tbody").on("click", ".addEmpresa", function(e){
+
+    /**--------------------------AGREGAR EMPRESA---------------------------- */
+    $("#tabla_inventario_contraloria tbody").on("click", ".addEmpresa", function(e){
                 e.preventDefault();
                 e.stopImmediatePropagation();
 
@@ -1618,13 +1612,10 @@
                 $('#PrecioLoteE').val(precioAnt);
 
                 $("#addEmpresa").modal();
-
-
-
-
-                                 
+                           
             }); 
             /**--------------------------------------------------------------------- */
+
     
             $("#tabla_inventario_contraloria tbody").on("click", ".verify_neodata", function(e){
                 e.preventDefault();
@@ -1642,7 +1633,7 @@
                 $("#modal_NEODATA .modal-body").html("");
                 $("#modal_NEODATA .modal-footer").html("");
                 
-                $.getJSON( url + "ComisionesNeo/getStatusNeodata/"+idLote).done( function(data){
+                $.getJSON( url + "ComisionesNeo/getStatusNeodata/"+idLote).done( function( data ){
                     if(data.length > 0){
                         switch (data[0].Marca) {
                             case 0:
@@ -1663,7 +1654,8 @@
                                         }
 
                                         var counts=0;
-                                        $("#modal_NEODATA .modal-body").append('<div class="row"><div class="col-md-12"><h4><b>Precio lote: $'+formatMoney(data1[0].totalNeto2)+'</b></h4></div></div>');
+                                        /*<div class="col-md-6">Aplicado: '+formatMoney(total0)+'</div>*/ 
+                                        $("#modal_NEODATA .modal-body").append('<div class="row"><div class="col-md-6"><h4><b>Precio lote: $'+formatMoney(data1[0].totalNeto2)+'</b></h4></div><div class="col-md-6">Aplicado: '+formatMoney(total0)+'</div></div>');
                                         if(parseFloat(data[0].Bonificado) > 0){
                                             cadena = '<h4>Bonificación: <b style="color:#D84B16;">$'+formatMoney(data[0].Bonificado)+'</b></h4>';
                                         }
@@ -1773,18 +1765,21 @@
                                                     }
                                                 }                   
 
+                                                let boton = `<button type="button" id="btn_${i}" ${(id_user != 1 && id_user != 2767 && id_user != 2826 && id_user != 4878) ? 'disabled' : ''} onclick="SaveAjuste(${i})" ${v.descuento == 1 || v.descuento > 1  ? 'disabled' : ''}  data-toggle="tooltip" data-placement="top" title="GUARDAR PORCENTAJE" class="btn btn-dark btn-round btn-fab btn-fab-mini"><span class="material-icons">check</span></button>`;
+
                                                 $("#modal_NEODATA .modal-body").append(`<div class="row">
                                                 <div class="col-md-2"><input id="id_disparador" type="hidden" name="id_disparador" value="1"><input type="hidden" name="pago_neo" id="pago_neo" value="${total.toFixed(3)}"><input type="hidden" name="id_rol" id="id_rol_${i}" value="${v.rol_generado}"><input type="hidden" name="pending" id="pending" value="${pending}">
                                                 <input type="hidden" name="idLote" id="idLote" value="${idLote}"><input id="id_comision_${i}" type="hidden" name="id_comision_${i}" value="${v.id_comision}"><input id="id_usuario_${i}" type="hidden" name="id_usuario_${i}" value="${v.id_usuario}">
                                                 <input class="form-control ng-invalid ng-invalid-required" required readonly="true" value="${v.colaborador}" style="font-size:12px; ${v.descuento == 1 ? 'color:red;' : ''} "><b><p style="font-size:12px; ${v.descuento == 1 ? 'color:red;' : ''} ">${ v.descuento == "1" ? v.rol+' Incorrecto' : v.rol}</b> <b style="color:${v.descuento > 1 && v.observaciones != 'COMISIÓN CEDIDA'  ? 'red' : 'green'};font-size:10px;">${v.observaciones == 'COMISIÓN CEDIDA' ? '(COMISIÓN CEDIDA)' : ''} ${v.descuento > 1 && v.observaciones != 'COMISIÓN CEDIDA'  ? '(CEDIÓ COMISIÓN)' : ''}<b></p></div>
-                                                <div class="col-md-1"><input class="form-control ng-invalid ng-invalid-required" style="${v.descuento == 1 ? 'color:red;' : ''}" ${v.descuento == 1 || v.descuento > 1 ? 'disabled' : ''} id="porcentaje_${i}" ${(v.rol_generado == 1 || v.rol_generado == 2 || v.rol_generado == 3 || v.rol_generado == 9 || v.rol_generado == 45 || v.rol_generado == 38) ? 'max="1"' : 'max="4"'}   onblur="Editar(${i},${precioAnt},${v.id_usuario})" value="${parseFloat(v.porcentaje_decimal)}"><input type="hidden" id="porcentaje_ant_${i}" name="porcentaje_ant_${i}" value="${v.porcentaje_decimal}"><br>
+                                                <div class="col-md-1"><input class="form-control ng-invalid ng-invalid-required" ${(id_user != 1 && id_user != 2767 && id_user != 2826 && id_user != 4878) ? 'readonly="true"' : ''} style="${v.descuento == 1 ? 'color:red;' : ''}" ${v.descuento == 1 || v.descuento > 1 ? 'disabled' : ''} id="porcentaje_${i}" ${(v.rol_generado == 1 || v.rol_generado == 2 || v.rol_generado == 3 || v.rol_generado == 9 || v.rol_generado == 45 || v.rol_generado == 38) ? 'max="1"' : 'max="4"'}   onblur="Editar(${i},${precioAnt},${v.id_usuario})" value="${parseFloat(v.porcentaje_decimal)}"><input type="hidden" id="porcentaje_ant_${i}" name="porcentaje_ant_${i}" value="${v.porcentaje_decimal}"><br>
                                                 <b id="msj_${i}" style="color:red;"></b>
                                                 </div>
                                                 <div class="col-md-2"><input class="form-control ng-invalid ng-invalid-required" style="${v.descuento == 1 ? 'color:red;' : ''}" readonly="true" id="comision_total_${i}" value="${formatMoney(v.comision_total)}"></div>
                                                 <div class="col-md-2"><input class="form-control ng-invalid ng-invalid-required" style="${v.descuento == 1 ? 'color:red;' : ''}" readonly="true" id="abonado_${i}" value="${formatMoney(v.abono_pagado)}"></div>
-                                                <div class="col-md-2"><input class="form-control ng-invalid ng-invalid-required" required readonly="true" id="pendiente_${i}" value="${formatMoney(v.comision_total-v.abono_pagado)}"></div>
-                                                <div class="col-md-3 botones">  
-                                                <button type="button" id="btn_${i}" onclick="SaveAjuste(${i})" ${v.descuento == 1 || v.descuento > 1  ? 'disabled' : ''}  data-toggle="tooltip" data-placement="top" title="GUARDAR PORCENTAJE" class="btn btn-dark btn-round btn-fab btn-fab-mini"><span class="material-icons">check</span></button>
+                                                <div class="col-md-2"><input class="form-control ng-invalid ng-invalid-required" required readonly="true"  id="pendiente_${i}" value="${formatMoney(v.comision_total-v.abono_pagado)}"></div>
+                                                <div class="col-md-3 botones">
+                                                ${(id_user != 1 && id_user != 2767 && id_user != 2826 && id_user != 4878) ? '' : boton}  
+                                                
                                                 <button type="button" id="btnTopar_${i}"  data-toggle="tooltip" data-placement="top" title="TOPAR COMISIÓN" ${v.descuento == 1 || v.descuento > 1 ? 'disabled' : ''} onclick="Confirmacion(${i} ,'${v.colaborador}')" class="btn btn-danger btn-round btn-fab btn-fab-mini"><span class="material-icons">pan_tool</span></button>
                                                 <button type="button" id="btnAdd_${i}"  data-toggle="tooltip" data-placement="top" title="AGREGAR PAGO" ${v.descuento == 1 || v.descuento > 1  ? 'disabled' : ''} onclick="AgregarPago(${i}, ${pending},'${v.colaborador}','${v.rol}')" class="btn btn-dark btn-success btn-fab btn-fab-mini"><span class="material-icons">add</span></button>
                                                 <button type="button" id="btnReload_${i}"  data-toggle="tooltip" data-placement="top" ${v.descuento == 0 || v.descuento > 1 ? 'disabled' : ''} title="Regresar" onclick="Regresar(${i}, ${v.porcentaje_decimal},'${v.colaborador}','${v.rol}',${data1[0].totalNeto2})" class="btn btn-dark btn-info btn-fab btn-fab-mini"><span class="material-icons">cached</span></button>
@@ -1950,7 +1945,7 @@
         //         pagingType: "full_numbers",
         //         fixedHeader: true,
         //         language: {
-        //             url: "<//?=base_url()?>/static/spanishLoader_v2.json",
+        //             url: "<?=base_url()?>/static/spanishLoader_v2.json",
         //             paginate: {
         //                 previous: "<i class='fa fa-angle-left'>",
         //                 next: "<i class='fa fa-angle-right'>"
@@ -2002,7 +1997,7 @@
         //         pagingType: "full_numbers",
         //         fixedHeader: true,
         //         language: {
-        //             url: "<//?=base_url()?>/static/spanishLoader_v2.json",
+        //             url: "<?=base_url()?>/static/spanishLoader_v2.json",
         //             paginate: {
         //                 previous: "<i class='fa fa-angle-left'>",
         //                 next: "<i class='fa fa-angle-right'>"
@@ -2051,7 +2046,7 @@
         //         pagingType: "full_numbers",
         //         fixedHeader: true,
         //         language: {
-        //             url: "<//?=base_url()?>/static/spanishLoader_v2.json",
+        //             url: "<?=base_url()?>/static/spanishLoader_v2.json",
         //             paginate: {
         //                 previous: "<i class='fa fa-angle-left'>",
         //                 next: "<i class='fa fa-angle-right'>"
@@ -2218,7 +2213,7 @@
                 precioAnt=0;
             }
 
-            if(rol == 8 || rol == 17){
+            if(rol == 13 || rol == 8 || rol == 17){
                 if(isNaN(precioAnt) || parseFloat(precioAct) < 0){
                     document.getElementById('msj').innerHTML = 'Precio no válido';
                     document.getElementById('btn-save').disabled = true;
@@ -2236,9 +2231,12 @@
         function verifica_pago(precio){
             let precioAnt = parseFloat(precio);
             let  precioAct =  replaceAll($('#monotAdd').val(), ',','');
+         
 
-            if(rol == 13 || rol == 32 || rol == 8){
-                if(parseFloat(precioAct).toFixed(2) <= parseFloat(precioAnt).toFixed(2)){
+            if(rol == 13 || rol == 17 || rol == 8){
+                console.log(parseFloat(precioAct).toFixed(2));
+            console.log(parseFloat(precioAnt).toFixed(2));
+                if(parseFloat(precioAct) <= parseFloat(precioAnt)){
                     document.getElementById('btn-save2').disabled = false;
                     document.getElementById('msj2').innerHTML = '';
                 }
@@ -2288,7 +2286,7 @@
     
         }
 
-        /*function VlidarNuevos(i,usuario){
+        function VlidarNuevos(i,usuario){           
             $('#modal_quitar .modal-header').html(''); 
             $('#modal_quitar .modal-body').html(''); 
             $('#modal_quitar .modal-footer').html(''); 
@@ -2316,94 +2314,94 @@
                 }
             });
             $('#modal_quitar').modal('show');
-        }*/
+        }
 
         function ToparComision(i){
 
-var comentario = $('#comentario_topaT_'+i).val();
+            var comentario = $('#comentario_topaT_'+i).val();
 console.log(i);
 
 console.log($('#comentario_topaT_'+i).val());
 
 
-$('#modal_avisos .modal-body').html('');
-$('#modal_avisos .modal-footer').html('');
+            $('#modal_avisos .modal-body').html('');
+            $('#modal_avisos .modal-footer').html('');
 
 
-//  var formData = new FormData();
-// formData.append("comentario", $('#comentario_topa').val());
-let idLote = $('#idLote').val();
+          //  var formData = new FormData();
+         // formData.append("comentario", $('#comentario_topa').val());
+            let idLote = $('#idLote').val();
 
 
-let id_comision = $('#id_comision_'+i).val();
-let abonado = replaceAll($('#abonado_'+i).val(), ',','');
-var dataPost = "comentario=" + comentario;
+            let id_comision = $('#id_comision_'+i).val();
+            let abonado = replaceAll($('#abonado_'+i).val(), ',','');
+            var dataPost = "comentario=" + comentario;
 
-$.ajax({
-    url: '<?=base_url()?>Comisiones/ToparComision/'+id_comision+'/'+idLote,
-    data: dataPost,
-type: 'POST',
-dataType: 'html',
-    success:function(response){
-        console.log(JSON.parse(response));
-        console.log(JSON.parse(response).length)
-        var len =JSON.parse(response).length; //response.length;
-        console.log(len);
-        response = JSON.parse(response);
-        if(len == 0){
-            document.getElementById('btnTopar_'+i).disabled = true;
-            document.getElementById('btn_'+i).disabled = true;
-            document.getElementById('btnAdd_'+i).disabled = true;
-            document.getElementById('btnReload_'+i).disabled = false;
-            document.getElementById('porcentaje_'+i).disabled = true;
+            $.ajax({
+                url: '<?=base_url()?>Comisiones/ToparComision/'+id_comision+'/'+idLote,
+                data: dataPost,
+        type: 'POST',
+        dataType: 'html',
+                success:function(response){
+                    console.log(JSON.parse(response));
+                    console.log(JSON.parse(response).length)
+                    var len =JSON.parse(response).length; //response.length;
+                    console.log(len);
+                    response = JSON.parse(response);
+                    if(len == 0){
+                        document.getElementById('btnTopar_'+i).disabled = true;
+                        document.getElementById('btn_'+i).disabled = true;
+                        document.getElementById('btnAdd_'+i).disabled = true;
+                        document.getElementById('btnReload_'+i).disabled = false;
+                        document.getElementById('porcentaje_'+i).disabled = true;
 
-            let por = document.getElementById('porcentaje_'+i);
-            por.setAttribute('readonly','true');
-            let btn = document.getElementById('btnTopar_'+i);
-            btn.setAttribute('style','background:#FED2C9;');
-            $('#comision_total_'+i).val(formatMoney(abonado));
-            let pendiente = parseFloat(abonado - abonado);
-            $('#pendiente_'+i).val(formatMoney(pendiente));
+                        let por = document.getElementById('porcentaje_'+i);
+                        por.setAttribute('readonly','true');
+                        let btn = document.getElementById('btnTopar_'+i);
+                        btn.setAttribute('style','background:#FED2C9;');
+                        $('#comision_total_'+i).val(formatMoney(abonado));
+                        let pendiente = parseFloat(abonado - abonado);
+                        $('#pendiente_'+i).val(formatMoney(pendiente));
 
-            $('#modal_avisos').modal('hide');
-            alerts.showNotification("top", "right", "Comisión detenida con éxito.", "success");
+                        $('#modal_avisos').modal('hide');
+                        alerts.showNotification("top", "right", "Comisión detenida con éxito.", "success");
+                    }
+                    else{
+                        let suma = 0;
+                        document.getElementById('btnTopar_'+i).disabled = true;
+                        document.getElementById('btn_'+i).disabled = true;
+                        document.getElementById('btnAdd_'+i).disabled = true;
+                        document.getElementById('btnReload_'+i).disabled = false;
+                        document.getElementById('porcentaje_'+i).disabled = true;
+                        let por = document.getElementById('porcentaje_'+i);
+                        por.setAttribute('readonly','true');
+                        let btn = document.getElementById('btnTopar_'+i);
+                        btn.setAttribute('style','background:#FED2C9;');
+            
+                        $('#modal_avisos .modal-body').append(`<h6>Pagos eliminados</h6>`);
+                        $('#modal_avisos .modal-body').append(`<table class="table table-hover">
+                        <thead><tr><th>ID pago</th><th>Monto</th><th>Usuario</th><th>Estatus</th></tr></thead><tbody>`);
+
+                        for( var j = 0; j<len; j++){
+                            suma = suma + response[j]['abono_neodata'];
+                            $('#modal_avisos .modal-body .table').append(`<tr>
+                            <td>${response[j]['id_pago_i']}</td>
+                            <td>$${formatMoney(response[j]['abono_neodata'])}</td>
+                            <td>${response[j]['usuario']}</td>
+                            <td>${response[j]['nombre']}</td></tr>`);
+                        }
+
+                        $('#comision_total_'+i).val(formatMoney(abonado-suma));
+                        let pendiente = parseFloat((abonado-suma) - abonado);
+                        $('#pendiente_'+i).val(formatMoney(pendiente));
+                        $('#modal_avisos .modal-body').append(`</tbody></table>`);
+                        $('#modal_avisos .modal-body').append(`<div class="row"><div class="col-md-12"><center><input type="button" style="background:#003D82;" data-dismiss="modal" id="btn-save" class="btn btn-success" value="ACEPTAR"><input type="button" class="btn btn-danger"  data-dismiss="modal" value="CERRAR"></center></div></div>`);
+                    }
+                }
+            });
+            
+            $('#modal_avisos').modal('show');
         }
-        else{
-            let suma = 0;
-            document.getElementById('btnTopar_'+i).disabled = true;
-            document.getElementById('btn_'+i).disabled = true;
-            document.getElementById('btnAdd_'+i).disabled = true;
-            document.getElementById('btnReload_'+i).disabled = false;
-            document.getElementById('porcentaje_'+i).disabled = true;
-            let por = document.getElementById('porcentaje_'+i);
-            por.setAttribute('readonly','true');
-            let btn = document.getElementById('btnTopar_'+i);
-            btn.setAttribute('style','background:#FED2C9;');
-
-            $('#modal_avisos .modal-body').append(`<h6>Pagos eliminados</h6>`);
-            $('#modal_avisos .modal-body').append(`<table class="table table-hover">
-            <thead><tr><th>ID pago</th><th>Monto</th><th>Usuario</th><th>Estatus</th></tr></thead><tbody>`);
-
-            for( var j = 0; j<len; j++){
-                suma = suma + response[j]['abono_neodata'];
-                $('#modal_avisos .modal-body .table').append(`<tr>
-                <td>${response[j]['id_pago_i']}</td>
-                <td>$${formatMoney(response[j]['abono_neodata'])}</td>
-                <td>${response[j]['usuario']}</td>
-                <td>${response[j]['nombre']}</td></tr>`);
-            }
-
-            $('#comision_total_'+i).val(formatMoney(abonado-suma));
-            let pendiente = parseFloat((abonado-suma) - abonado);
-            $('#pendiente_'+i).val(formatMoney(pendiente));
-            $('#modal_avisos .modal-body').append(`</tbody></table>`);
-            $('#modal_avisos .modal-body').append(`<div class="row"><div class="col-md-12"><center><input type="button" style="background:#003D82;" data-dismiss="modal" id="btn-save" class="btn btn-success" value="ACEPTAR"><input type="button" class="btn btn-danger"  data-dismiss="modal" value="CERRAR"></center></div></div>`);
-        }
-    }
-});
-
-$('#modal_avisos').modal('show');
-}
 
         function GuardarPago(i){
             document.getElementById('btn-save2').disabled = true;
@@ -2473,9 +2471,7 @@ $('#modal_avisos').modal('show');
             });
         }
 
-//ESTA ES LA FUNCIÓN LA BUENA
         function Editar(i,precio,id_usuario){
-            //alert(1);
             $('#modal_avisos .modal-body').html('');
             let precioLote = parseFloat(precio);
             let nuevoPorce1 = replaceAll($('#porcentaje_'+i).val(), ',',''); 
@@ -2485,6 +2481,12 @@ $('#modal_avisos').modal('show');
             let id_rol = $('#id_rol_'+i).val();
             let porcentaje_ant = $('#porcentaje_ant_'+i).val();
             let pendiente = replaceAll($('#pendiente_'+i).val(), ',',''); 
+console.log('ENTRO AQUI');
+console.log(id_usuario);
+console.log(id_rol);
+console.log(nuevoPorce);
+console.log(parseFloat(nuevoPorce));
+
 
             if(id_rol == 1 || id_rol == 2 || id_rol == 3 || id_rol == 9 || id_rol == 38 || id_rol == 45){
                 if(id_usuario == "7689" || id_usuario == 7689 || id_usuario == "6739" || id_usuario == 6739 ){
@@ -2597,6 +2599,7 @@ $('#modal_avisos').modal('show');
         function SaveAjuste(i){
             $('#btn_'+i).removeClass('btn-success');
             $('#btn_'+i).addClass('btn-default');
+
             let id_comision = $('#id_comision_'+i).val();
             let id_usuario = $('#id_usuario_'+i).val();
             let id_lote = $('#idLote').val();
@@ -2815,6 +2818,7 @@ if( $('#usuarioid6').val() != 0 && $('#usuarioid7').val() != 0 && $('#usuarioid8
         }
         });
 
+
         $("#form_empresa").on('submit', function(e){ 
             e.preventDefault();
             document.getElementById('btn_add').disabled=true;
@@ -2862,5 +2866,8 @@ if( $('#usuarioid6').val() != 0 && $('#usuarioid7').val() != 0 && $('#usuarioid8
                 }
             });
         });
+
+
+        
     </script>
 </body>
