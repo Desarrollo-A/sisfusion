@@ -1355,6 +1355,7 @@
   color: #ffffff;
   text-align: center;
   font-weight: 300;
+  font-size: 10px !important;
   background-color: #143860;
   text-transform: uppercase;
 }
@@ -1369,7 +1370,6 @@
 
 #reporte .boxAccordions .bk table thead tr th input::placeholder {
   color: #ffffff;
-  text-transform: uppercase;
 }
 
 #reporte .boxAccordions .bk table td.delimetter {
