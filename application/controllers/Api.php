@@ -327,10 +327,10 @@ class Api extends CI_Controller
         } else {
             $validate= true;
         
-            if($result->data->rol != 18 || $result->data->id_usuario != 1980 || $result->data->sistema != md5('Cu3nT45+_P0r_+P4G4r$$')){
+            if($result->data->id_rol != 1 || $result->data->id_usuario != 1){
                 $validate = false;
             }
-            if($validate){
+            if($validate == 1){                
                 return json_encode(array("status" => 200, "message" => "Autenticado con éxito.", "data"=> $result));
             }else{
                 return json_encode(array("timestamp" => $time, "status" => 401, "error" => "No autorizado", "exception" => "Verificación de firma fallida", "message" => "Estructura no válida del token enviado."));
@@ -344,8 +344,8 @@ class Api extends CI_Controller
         $res = json_decode($response);
         if($res->status == 200){
             $this->session->set_userdata(array(
-                'id_rol'  => $res->data->data->rol,
-                'id_usuario' => $res->data->data->id_usuario
+                'id_rol'  => 18,
+                'id_usuario' => 1980
             ));
             $datos['sub_menu'] = $this->get_menu->get_submenu_data($this->session->userdata('id_rol'), $this->session->userdata('id_usuario'));
             $datos['external'] = true;
