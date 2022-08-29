@@ -841,7 +841,7 @@ function buildEstructuraDTMedio(dataName){
         <table class="table-striped table-hover" id="table`+dataName+`" name="table">
             <thead>
                 <tr>
-                    <th>NOMBRE</th
+                    <th>NOMBRE</th>
                     <th>CANTIDAD</th>
                 </tr>
             </thead>
@@ -1065,7 +1065,9 @@ function buildTableMedio(data){
             data: 'nombre'
         },
         {
-            data: 'cantidad'
+            data: function (d) {
+                return '$' + formatMoney(d.cantidad);
+            }
         }],
         columnDefs: [{
             visible: false,
