@@ -26,6 +26,7 @@
   color: #ffffff;
   text-align: center;
   font-weight: 300;
+  font-size: 10px!important;
   background-color: #143860;
   width: 100%;
   text-transform: uppercase;

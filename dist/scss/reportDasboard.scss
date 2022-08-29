@@ -115,6 +115,7 @@
                             color: $white;
                             text-align: center;
                             font-weight: 300;
+                            font-size: 10px!important;
                             background-color: $blueIndigoDeep;
                             text-transform: uppercase;
                             &:active{
@@ -125,7 +126,6 @@
                             }
                             &::placeholder{
                                 color: $white;
-                                text-transform: uppercase;
                             }
                         }
                     }

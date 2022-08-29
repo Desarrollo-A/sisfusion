@@ -26,8 +26,10 @@
   color: #ffffff;
   text-align: center;
   font-weight: 300;
+  font-size: 10px;
   background-color: #143860;
   width: 100%;
+  text-transform: uppercase;
 }
 
 #seeInformationModalRanking table thead tr th input:active {
