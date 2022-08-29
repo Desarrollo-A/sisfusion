@@ -121,7 +121,7 @@ class Ranking_model extends CI_Model {
         cl.fechaApartado, sc.nombreStatus, st.nombre estatusLote, 
         FORMAT(CASE WHEN (lo.totalNeto2 IS NULL OR lo.totalNeto2 = 0.00) THEN lo.total ELSE lo.totalNeto2 END, 'C') total
         FROM clientes cl
-        INNER JOIN lotes lo ON lo.idLote = cl.idLote AND lo.idCliente = cl.id_cliente AND lo.idStatusLote $statusLote
+        INNER JOIN lotes lo ON lo.idLote = cl.idLote AND lo.idCliente = cl.id_cliente AND lo.idStatusLote $statusLote $filtroTotal
         INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
         INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
         INNER JOIN statusContratacion sc ON sc.idStatusContratacion = lo.idStatusContratacion
