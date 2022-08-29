@@ -173,7 +173,7 @@ class Metricas_model extends CI_Model {
             GROUP BY MONTH(cl.fechaApartado), YEAR(cl.fechaApartado)) qu ON qu.mes = month(cte.DateValue) AND qu.año = year(cte.DateValue)
             GROUP BY YEAR(DateValue), MONTH(DateValue), qu.superficieSUMA, qu.precioSUMA, qu.promedio
             ORDER BY YEAR(DateValue), MONTH(DateValue)
-            OPTION (MAXRECURSION 0)d");
+            OPTION (MAXRECURSION 0)");
         return $query->result_array();
     }
 
