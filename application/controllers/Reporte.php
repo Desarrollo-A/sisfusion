@@ -3,10 +3,11 @@ class Reporte extends CI_Controller {
 	public function __construct() {
 		parent::__construct();
         $this->load->model(array('Reporte_model', 'General_model'));
-        $this->load->library(array('session','form_validation', 'get_menu', 'Email'));
+        $this->load->library(array('session','form_validation', 'get_menu', 'Email', 'Jwt_actions'));
 		$this->load->helper(array('url','form'));
 		$this->load->database('default');
         date_default_timezone_set('America/Mexico_City');
+        $this->jwt_actions->authorize('9717', $_SERVER['HTTP_HOST']);
         $this->validateSession();
 	}
 
@@ -37,10 +38,13 @@ class Reporte extends CI_Controller {
             $where = $this->input->post("where");
             $rol = $this->input->post("type");
             $render = $this->input->post("render");
+            $asesor = $this->input->post("asesor");
+            $coordinador = $this->input->post("coordinador");
+            $gerente = $this->input->post("gerente");
+            $subdirector = $this->input->post("subdirector");
+            $regional = $this->input->post("regional");
             $currentYear = date("Y");
-
-            $data['data'] = $this->Reporte_model->getGeneralInformation($beginDate, $endDate, $rol, $id_usuario, $render)->result_array();
-
+            $data['data'] = $this->Reporte_model->getGeneralInformation($beginDate, $endDate, $rol, $id_usuario, $render, [$asesor, $coordinador, $gerente, $subdirector, $regional])->result_array();
             echo json_encode($data, JSON_NUMERIC_CHECK);
         } else {
             json_encode(array());
@@ -162,7 +166,7 @@ class Reporte extends CI_Controller {
         AND hlo2.idStatusContratacion < 11
         GROUP BY MONTH(cl.fechaApartado), YEAR(cl.fechaApartado)) qu ON qu.mes = month(cte.DateValue) AND qu.año = year(cte.DateValue)
         GROUP BY Month(DateValue), YEAR(DateValue), cantidad, total";
-        
+
         array_push($coordinadorAll, $coordinadorVC, $coordinadorVA, $coordinadorCC, $coordinadorCA);
         return $coordinadorAll;
     }
@@ -223,7 +227,7 @@ class Reporte extends CI_Controller {
         AND hlo2.idStatusContratacion < 11
         GROUP BY MONTH(cl.fechaApartado), YEAR(cl.fechaApartado)) qu ON qu.mes = month(cte.DateValue) AND qu.año = year(cte.DateValue)
         GROUP BY Month(DateValue), YEAR(DateValue), cantidad, total";
-
+        
         array_push($subdirectorAll, $subdirectorVC, $subdirectorVA, $subdirectorCC, $subdirectorCA);
         return $subdirectorAll;
     }
@@ -270,8 +274,13 @@ class Reporte extends CI_Controller {
         $rol = $this->input->post("rol");
         $render = $this->input->post("render");
         $leader = $this->input->post("leader");
+        $asesor = $this->input->post("asesor");
+        $coordinador = $this->input->post("coordinador");
+        $gerente = $this->input->post("gerente");
+        $subdirector = $this->input->post("subdirector");
+        $regional = $this->input->post("regional");
 
-        $data = $this->Reporte_model->getDetails($beginDate, $endDate, $rol, $id_usuario, $render, $leader)->result_array();
+        $data = $this->Reporte_model->getDetails($beginDate, $endDate, $rol, $id_usuario, $render, $leader, [$asesor, $coordinador, $gerente, $subdirector, $regional])->result_array();
         if($data != null) {
             echo json_encode($data, JSON_NUMERIC_CHECK);
         } else {
@@ -296,7 +305,12 @@ class Reporte extends CI_Controller {
             $render = $this->input->post("render");
             $sede = $this->input->post("sede");
             $leader = $this->input->post("leader");
-            $data['data'] = $this->Reporte_model->getGeneralLotesInformation($beginDate, $endDate, $rol, $id_usuario, $render, $type, $sede, $leader)->result_array();
+            $asesor = $this->input->post("asesor");
+            $coordinador = $this->input->post("coordinador");
+            $gerente = $this->input->post("gerente");
+            $subdirector = $this->input->post("subdirector");
+            $regional = $this->input->post("regional");
+            $data['data'] = $this->Reporte_model->getGeneralLotesInformation($beginDate, $endDate, $rol, $id_usuario, $render, $type, $sede, $leader, [$asesor, $coordinador, $gerente, $subdirector, $regional])->result_array();
             echo json_encode($data, JSON_NUMERIC_CHECK);
         } else
             echo json_encode(array());

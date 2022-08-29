@@ -39,8 +39,6 @@ class Administracion_model extends CI_Model {
 
 	}
 
-
-
     public function get_datos_admon($condominio){
     	return $this->db->query("SELECT lot.idCliente, lot.nombreLote, con.nombre as nombreCondominio, res.nombreResidencial, lot.idStatusLote, lot.comentarioLiberacion, lot.fechaLiberacion, 
                                 con.idCondominio, lot.sup as superficie, lot.saldo, lot.precio, lot.enganche, lot.porcentaje, lot.total, lot.referencia, lot.comentario, lot.comentarioLiberacion, lot.observacionLiberacion, 
@@ -49,8 +47,6 @@ class Administracion_model extends CI_Model {
                                 INNER JOIN [residenciales] res ON res.idResidencial = con.idResidencial 
                                 INNER JOIN [statuslote] sl ON sl.idStatusLote = lot.idStatusLote WHERE lot.idCondominio = ".$condominio."");
     }
-
-
 
 	public function validateSt11($idLote){
       $this->db->where("idLote",$idLote);

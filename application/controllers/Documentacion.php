@@ -157,7 +157,8 @@ class Documentacion extends CI_Controller
 
     function getRejectionReasons()
     {
-        $data = $this->Documentacion_model->getRejectionReasons($this->input->post('tipo_proceso'));
+        $tipo_proceso = $this->input->post('tipo_proceso');
+        $data = $this->Documentacion_model->getRejectionReasons($tipo_proceso);
         if ($data != null)
             echo json_encode($data);
         else

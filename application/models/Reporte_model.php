@@ -162,101 +162,86 @@ class Reporte_model extends CI_Model {
         return $data->result_array();    
     }
 
-    public function getGeneralInformation($beginDate, $endDate, $id_rol, $id_usuario, $render) {
+    public function getGeneralInformation($beginDate, $endDate, $id_rol, $id_usuario, $render, $leadersList) {
         // PARA ASESOR, COORDINADOR, GERENTE, SUBDIRECTOR, REGIONAL Y DIRECCIÓN COMERCIAL
         $id_lider = $this->session->userdata('id_lider'); // PARA ASISTENTES
         $comodin2 = 'LEFT';
         $filtro=" AND cl.fechaApartado BETWEEN '$beginDate 00:00:00.000' AND '$endDate 23:59:00.000'";
-        if ($id_rol == 7) // MJ: Asesor
-           { 
-            if($render == 1){
+        if ($id_rol == 7) { // MJ: Asesor
+            if ($render == 1) {
                 $filtro .= " AND cl.id_asesor = $id_usuario";
-            }else{
-                $filtro .= " AND cl.id_coordinador = $id_usuario";
+            } else {
+                $filtro .= " AND cl.id_coordinador = $leadersList[1] AND cl.id_gerente = $leadersList[2] AND cl.id_subdirector = $leadersList[3] AND cl.id_regional = $leadersList[4]";
             }
-            $comodin = "id_asesor";}
-        else if ($id_rol == 9) // MJ: Coordinador
-           { 
-            if($render == 1){
+            $comodin = "id_asesor";
+        }
+        else if ($id_rol == 9) { // MJ: Coordinador
+            if ($render == 1) {
                 $filtro .= " AND (cl.id_coordinador = $id_usuario OR cl.id_asesor = $id_usuario)";
                 $comodin = "id_asesor";
-            }else{
-                $filtro .= " AND cl.id_gerente = $id_usuario";
+            } else {
+                $filtro .= " AND cl.id_gerente = $leadersList[2] AND cl.id_subdirector = $leadersList[3] AND cl.id_regional = $leadersList[4]";
                 $comodin = "id_coordinador";
             }
         }
-        else if ($id_rol == 3) // MJ: Gerente
-            {
-            if($render == 1){
+        else if ($id_rol == 3) { // MJ: Gerente
+            if ($render == 1) {
                 $filtro .= " AND cl.id_gerente = $id_usuario";
                 $comodin = "id_coordinador";
-
-            }else{
-                $filtro .= " AND cl.id_subdirector = $id_usuario";
+            } else {
+                $filtro .= " AND cl.id_subdirector = $leadersList[3] AND cl.id_regional = $leadersList[4]";
                 $comodin = "id_gerente";
-
             }
         }
-        else if ($id_rol == 6) // MJ: Asistente de gerencia
-           {
-            if($render == 1){
+        else if ($id_rol == 6) { // MJ: Asistente de gerencia
+            if ($render == 1) {
                 $filtro .= " AND cl.id_gerente = $id_usuario";
                 $comodin = "id_coordinador";
-
-            }else{
+            } else {
                 $filtro .= " AND cl.id_subdirector = $id_usuario";
                 $comodin = "id_gerente";
-
             }
         }
-        else if ($id_rol == 2) // MJ: Subdirector
-           {
-            if($render == 1){
+        else if ($id_rol == 2) { // MJ: Subdirector
+            if ($render == 1) {
+                $filtro .= " AND cl.id_subdirector = $id_usuario";
+                $comodin = "id_gerente";
+            } else {
+                $filtro .= " AND cl.id_regional = $leadersList[4]";
+                $comodin = "id_subdirector";
+            }
+        }
+        else if ($id_rol == 5) { // MJ: Asistente subdirección
+            if ($render == 1) {
                 $filtro .= " AND cl.id_subdirector = $id_usuario";
                 $comodin = "id_gerente";
 
-            }else{
+            } else {
                 $filtro .= " AND cl.id_regional = $id_usuario";
                 $comodin = "id_subdirector";
             }
         }
-        else if ($id_rol == 5) // MJ: Asistente subdirección
-            {
-                if($render == 1){
-                    $filtro .= " AND cl.id_subdirector = $id_usuario";
-                    $comodin = "id_gerente";
-    
-                }else{
-                    $filtro .= " AND cl.id_regional = $id_usuario";
-                    $comodin = "id_subdirector";
-                }
-            }
-        else if ($id_rol == 59) {// MJ: Director regional
+        else if ($id_rol == 59) { // MJ: Director regional
             $id_sede = "'" . implode("', '", explode(", ", $this->session->userdata('id_sede'))) . "'"; // MJ: ID sede separado por , como string
-            if($render == 1){
+            if ($render == 1) {
                 $filtro .= " AND (cl.id_regional = $id_usuario OR cl.id_subdirector = $id_usuario)";
                 $comodin = "id_subdirector";//pendiente
-
-            }else{
+            } else {
                 $filtro .= "";
             }
         }
-        else if ($id_rol == 1 || $id_rol == 4 || $id_rol == 18) // MJ: Director comercial
-           { 
-
+        else if ($id_rol == 1 || $id_rol == 4 || $id_rol == 18) { // MJ: Director comercial
             $comodin2 = 'LEFT';
-
-            if($render == 1){
+            if ($render == 1) {
                 $filtro .= "";
                 $comodin = "id_regional";//pendiente
-            }else{
+            } else {
                 $filtro .= "";
                 $comodin = "id_regional";//pendiente
             }
-         
-            }
+        }
 
-        $query = $this->db->query("SELECT 
+        $query = $this->db->query("SELECT
             FORMAT(ISNULL(a.sumaTotal, 0), 'C') sumaTotal, ISNULL(a.totalVentas, 0) totalVentas, --TOTAL VENDIDO
             FORMAT(ISNULL(b.sumaCT, 0), 'C') sumaCT, ISNULL(b.totalCT, 0) totalCT,  --TOTAL CANCELADO
             FORMAT(ISNULL(c.sumaConT, 0), 'C') sumaConT, ISNULL(c.totalConT, 0) totalConT, --VENDIDO CONTRATADO
@@ -275,7 +260,7 @@ class Reporte_model extends CI_Model {
             ISNULL(CAST((f.totalCanA * 100) / NULLIF(a.totalVentas,0) AS decimal(16,2)), 0) porcentajeTotalCanA, 
             --ISNULL(CAST(((ISNULL(b.totalCT, 0) - ISNULL(e.totalCanC, 0)) * 100) / NULLIF(a.totalVentas,0) AS decimal(16,2)), 0) porcentajeTotalCanA,
             a.userID,
-            CASE WHEN a.nombreUsuario = ' ' THEN 'ACUMULADO SUBDIRECCIONES' ELSE a.nombreUsuario END nombreUsuario,
+            CASE WHEN a.nombreUsuario = ' ' THEN 'ACUMULADO SIN ESPECIFICAR' ELSE a.nombreUsuario END nombreUsuario,
             ISNULL(a.id_rol, 0) id_rol
             FROM (
             --SUMA TOTAL
@@ -333,7 +318,7 @@ class Reporte_model extends CI_Model {
                     SELECT  u.id_rol, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombreUsuario, lo.idLote, lo.nombreLote, cl.id_asesor, cl.id_coordinador, cl.id_gerente, cl.id_subdirector, cl.id_regional, cl.nombre, cl.apellido_paterno, cl.apellido_materno, isNULL(cl.totalNeto2_cl ,lo.totalNeto2) totalNeto2, isNULL(cl.total_cl ,lo.total) total FROM clientes cl
                     INNER JOIN lotes lo ON lo.idLote = cl.idLote AND lo.idStatusLote IN (2, 3) AND lo.idStatusContratacion >= 11
                     $comodin2 JOIN usuarios u ON u.id_usuario = cl.$comodin
-                    INNER JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes WHERE idStatusContratacion = 11 AND idMovimiento = 41
+                    INNER JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes WHERE idStatusContratacion >= 11
                     GROUP BY idLote, idCliente) hl ON hl.idLote = lo.idLote AND hl.idCliente = cl.id_cliente
                     WHERE isNULL(noRecibo, '') != 'CANCELADO'  AND isNULL(isNULL(cl.tipo_venta_cl, lo.tipo_venta), 0) IN (0, 1, 2) AND cl.status = 1 
                     $filtro
@@ -423,93 +408,78 @@ class Reporte_model extends CI_Model {
         return $data->result_array();    
     }
 
-    public function getDetails($beginDate, $endDate, $id_rol, $id_usuario, $render, $leader){
+    public function getDetails($beginDate, $endDate, $id_rol, $id_usuario, $render, $leader, $leadersList) {
         $id_lider = $this->session->userdata('id_lider'); // PARA ASISTENTES
         $comodin2 = 'LEFT';
 
         $filtro=" AND cl.fechaApartado BETWEEN '$beginDate 00:00:00.000' AND '$endDate 23:59:00.000'";
-        if ($id_rol == 7) // MJ: Asesor
-        { 
-         $filtro .= " AND cl.id_asesor = $id_usuario AND cl.id_coordinador = $leader";
-
-         $comodin = "id_asesor";}
-     else if ($id_rol == 9) // MJ: Coordinador
-        { 
-         if($render == 1){
-             $filtro .= " AND (cl.id_coordinador = $id_usuario) AND cl.id_gerente = $leader";
-             $comodin = "id_coordinador";
-         }else{
-             $filtro .= " AND cl.id_coordinador = $id_usuario AND cl.id_gerente = $leader";
-             $comodin = "id_coordinador";
-         }
-     }
-     else if ($id_rol == 3) // MJ: Gerente
-         {
-         if($render == 1){
-             $filtro .= " AND cl.id_gerente = $id_usuario AND cl.id_subdirector = $leader";
-             $comodin = "id_gerente";
-
-         }else{
-             $filtro .= " AND cl.id_gerente = $id_usuario AND cl.id_subdirector = $leader";
-             $comodin = "id_gerente";
-
-         }
-     }
-     else if ($id_rol == 6) // MJ: Asistente de gerencia
-        {
-         if($render == 1){
-             $filtro .= " AND cl.id_gerente = $id_usuario AND cl.id_subdirector = $leader";
-             $comodin = "id_gerente";
-
-         }else{
-             $filtro .= " AND cl.id_gerente = $id_usuario AND cl.id_subdirector = $leader";
-             $comodin = "id_gerente";
-
-         }
-     }
-     else if ($id_rol == 2) // MJ: Subdirector
-        {
-         if($render == 1){
-             $filtro .= " AND cl.id_subdirector = $id_usuario AND cl.id_regional = $leader";
-             $comodin = "id_subdirector";
-
-         }else{
-             $filtro .= " AND cl.id_subdirector = $id_usuario AND cl.id_regional = $leader";
-             $comodin = "id_subdirector";
-         }
-     }
-     else if ($id_rol == 5) // MJ: Asistente subdirección
-         {
-             if($render == 1){
-                 $filtro .= " AND cl.id_subdirector = $id_usuario AND cl.id_regional = $leader";
-                 $comodin = "id_subdirector";
- 
-             }else{
-                 $filtro .= " AND cl.id_subdirector = $id_usuario AND cl.id_regional = $leader";
-                 $comodin = "id_subdirector";
-             }
-         }
-     else if ($id_rol == 59 || $id_rol == 60) {// MJ: Director regional
-         $id_sede = "'" . implode("', '", explode(", ", $this->session->userdata('id_sede'))) . "'"; // MJ: ID sede separado por , como string
-         if($render == 1){
-             $filtro .= " AND cl.id_regional = $id_usuario";
-             $comodin = "id_subdirector";//pendiente
-
-         }else{
-             $filtro .= "";
-         }
-     }
-     else if ($id_rol == 1 || $id_rol == 4) // MJ: Director comercial
-     { 
-         $comodin2 = 'LEFT';
-         if($render == 1){
-             $filtro .= "";
-             $comodin = "id_regional";//pendiente
-         }else{
-             $filtro .= "";
-             $comodin = "id_regional";//pendiente
-         }
-     }
+        if ($id_rol == 7) { // MJ: Asesor
+            $filtro .= " AND cl.id_asesor = $leadersList[0] AND cl.id_coordinador = $leadersList[1] AND cl.id_gerente = $leadersList[2] AND cl.id_subdirector = $leadersList[3] AND cl.id_regional = $leadersList[4]";
+            $comodin = "id_asesor";}
+        else if ($id_rol == 9) { // MJ: Coordinador
+            if ($render == 1) {
+                $filtro .= " AND (cl.id_coordinador = $id_usuario) AND cl.id_gerente = $leader";
+                $comodin = "id_coordinador";
+            } else {
+                $filtro .= " AND cl.id_coordinador = $leadersList[1] AND cl.id_gerente = $leadersList[2] AND cl.id_subdirector = $leadersList[3] AND cl.id_regional = $leadersList[4]";
+                $comodin = "id_coordinador";
+            }
+        }
+        else if ($id_rol == 3) { // MJ: Gerente
+            if ($render == 1) {
+                $filtro .= " AND cl.id_gerente = $id_usuario AND cl.id_subdirector = $leader";
+                $comodin = "id_gerente";
+            } else {
+                $filtro .= " AND cl.id_gerente = $leadersList[2] AND cl.id_subdirector = $leadersList[3] AND cl.id_regional = $leadersList[4]";
+                $comodin = "id_gerente";
+            }
+        }
+        else if ($id_rol == 6) { // MJ: Asistente de gerencia
+            if ($render == 1) {
+                $filtro .= " AND cl.id_gerente = $id_usuario AND cl.id_subdirector = $leader";
+                $comodin = "id_gerente";
+            } else {
+                $filtro .= " AND cl.id_gerente = $id_usuario AND cl.id_subdirector = $leader";
+                $comodin = "id_gerente";
+            }
+        }
+        else if ($id_rol == 2) { // MJ: Subdirector
+            if ($render == 1) {
+                $filtro .= " AND cl.id_subdirector = $id_usuario AND cl.id_regional = $leader";
+                $comodin = "id_subdirector";
+            } else {
+                $filtro .= " AND cl.id_subdirector = $leadersList[3] AND cl.id_regional = $leadersList[4]";
+                $comodin = "id_subdirector";
+            }
+        }
+        else if ($id_rol == 5) { // MJ: Asistente subdirección
+            if ($render == 1) {
+                $filtro .= " AND cl.id_subdirector = $id_usuario AND cl.id_regional = $leader";
+                $comodin = "id_subdirector";
+            } else {
+                $filtro .= " AND cl.id_subdirector = $id_usuario AND cl.id_regional = $leader";
+                $comodin = "id_subdirector";
+            }
+        }
+        else if ($id_rol == 59 || $id_rol == 60) { // MJ: Director regional
+            $id_sede = "'" . implode("', '", explode(", ", $this->session->userdata('id_sede'))) . "'"; // MJ: ID sede separado por , como string
+            if ($render == 1) {
+                $filtro .= " AND cl.id_regional = $leadersList[4]";
+                $comodin = "id_subdirector";//pendiente
+            } else {
+                $filtro .= "";
+            }
+        }
+        else if ($id_rol == 1 || $id_rol == 4) { // MJ: Director comercial
+            $comodin2 = 'LEFT';
+            if ($render == 1) {
+                $filtro .= "";
+                $comodin = "id_regional";//pendiente
+            } else {
+                $filtro .= "";
+                $comodin = "id_regional";//pendiente
+            }
+        }
         $query = $this->db->query("SELECT 
         FORMAT(ISNULL(a.sumaTotal, 0), 'C') sumaTotal, ISNULL(a.totalVentas, 0) totalVentas, --TOTAL VENDIDO
         FORMAT(ISNULL(b.sumaCT, 0), 'C') sumaCT, ISNULL(b.totalCT, 0) totalCT,  --TOTAL CANCELADO
@@ -546,7 +516,7 @@ class Reporte_model extends CI_Model {
                 INNER JOIN condominios cn ON cn.idCondominio = lo.idCondominio
                 INNER JOIN residenciales r ON r.idResidencial = cn.idResidencial
                 LEFT JOIN sedes ss ON ss.id_sede = r.sede_residencial
-                WHERE isNULL(noRecibo, '') != 'CANCELADO'  AND isNULL(isNULL(cl.tipo_venta_cl, lo.tipo_venta), 0) IN (0, 1, 2)  $filtro
+                WHERE isNULL(noRecibo, '') != 'CANCELADO'  AND isNULL(isNULL(cl.tipo_venta_cl, lo.tipo_venta), 0) IN (0, 1, 2) $filtro
                 GROUP BY  ss.nombre, ss.id_sede, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno),lo.idLote, lo.nombreLote, cl.id_asesor, cl.id_coordinador, cl.id_gerente, cl.id_subdirector, cl.id_regional, cl.nombre, cl.apellido_paterno, cl.apellido_materno, isNULL(cl.totalNeto2_cl ,lo.totalNeto2), isNULL(cl.total_cl ,lo.total)
             ) tmpTotal GROUP BY tmpTotal.sede, tmpTotal.id_sede) a
         --SUMA CANCELADOS TOTALES
@@ -586,7 +556,7 @@ class Reporte_model extends CI_Model {
                 SELECT  ss.nombre sede, ss.id_sede, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombreUsuario, lo.idLote, lo.nombreLote, cl.id_asesor, cl.id_coordinador, cl.id_gerente, cl.id_subdirector, cl.id_regional, cl.nombre, cl.apellido_paterno, cl.apellido_materno, isNULL(cl.totalNeto2_cl ,lo.totalNeto2) totalNeto2, isNULL(cl.total_cl ,lo.total) total FROM clientes cl
                 INNER JOIN lotes lo ON lo.idLote = cl.idLote AND lo.idStatusLote IN (2, 3) AND lo.idStatusContratacion >= 11
                 $comodin2 JOIN usuarios u ON u.id_usuario = cl.$comodin
-                INNER JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes WHERE idStatusContratacion = 11 AND idMovimiento = 41
+                INNER JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes WHERE idStatusContratacion >= 11
                 GROUP BY idLote, idCliente) hl ON hl.idLote = lo.idLote AND hl.idCliente = cl.id_cliente
                 INNER JOIN condominios cn ON cn.idCondominio = lo.idCondominio
                 INNER JOIN residenciales r ON r.idResidencial = cn.idResidencial
@@ -673,7 +643,7 @@ class Reporte_model extends CI_Model {
     return $query;
     }
 
-    public function getGeneralLotesInformation($beginDate, $endDate, $id_rol, $id_usuario, $render, $type, $sede, $leader) {
+    public function getGeneralLotesInformation($beginDate, $endDate, $id_rol, $id_usuario, $render, $type, $sede, $leader, $leadersList) {
         // PARA ASESOR, COORDINADOR, GERENTE, SUBDIRECTOR, REGIONAL Y DIRECCIÓN COMERCIAL
         $id_lider = $this->session->userdata('id_lider'); // PARA ASISTENTES
         $comodin2 = 'LEFT';
@@ -682,14 +652,14 @@ class Reporte_model extends CI_Model {
             if ($render == 1)
                 $filtro .= " AND cl.id_asesor = $id_usuario";
             else
-                $filtro .= " AND cl.id_coordinador = $leader AND cl.id_asesor = $id_usuario";
+                $filtro .= " AND cl.id_asesor = $leadersList[0] AND cl.id_coordinador = $leadersList[1] AND cl.id_gerente = $leadersList[2] AND cl.id_subdirector = $leadersList[3] AND cl.id_regional = $leadersList[4]";
             $comodin = "id_asesor";
         } else if ($id_rol == 9) { // MJ: Coordinador 
             if ($render == 1) {
                 $filtro .= " AND (cl.id_coordinador = $id_usuario OR cl.id_asesor = $id_usuario)";
                 $comodin = "id_asesor";
             } else {
-                $filtro .= " AND cl.id_gerente = $leader AND cl.id_coordinador = $id_usuario";
+                $filtro .= " AND cl.id_coordinador = $leadersList[1] AND cl.id_gerente = $leadersList[2] AND cl.id_subdirector = $leadersList[3] AND cl.id_regional = $leadersList[4]";
                 $comodin = "id_coordinador";
             }
         } else if ($id_rol == 3) { // MJ: Gerente
@@ -697,14 +667,13 @@ class Reporte_model extends CI_Model {
                 $filtro .= " AND cl.id_gerente = $id_usuario";
                 $comodin = "id_coordinador";
             } else {
-                $filtro .= " AND cl.id_subdirector = $leader AND cl.id_gerente = $id_usuario";
+                $filtro .= " AND cl.id_gerente = $leadersList[2] AND cl.id_subdirector = $leadersList[3] AND cl.id_regional = $leadersList[4]";
                 $comodin = "id_gerente";
             }
         } else if ($id_rol == 6) { // MJ: Asistente de gerencia
             if ($render == 1) {
                 $filtro .= " AND cl.id_gerente = $id_usuario";
                 $comodin = "id_coordinador";
-
             } else {
                 $filtro .= " AND cl.id_subdirector = $id_usuario AND cl.id_gerente = $id_usuario";
                 $comodin = "id_gerente";
@@ -713,9 +682,8 @@ class Reporte_model extends CI_Model {
             if ($render == 1) {
                 $filtro .= " AND cl.id_subdirector = $id_usuario";
                 $comodin = "id_gerente";
-
             } else {
-                $filtro .= " AND cl.id_regional = $leader";
+                $filtro .= " AND cl.id_subdirector = $leadersList[3] AND cl.id_regional = $leadersList[4]";
                 $comodin = "id_subdirector";
             }
         } else if ($id_rol == 5) { // MJ: Asistente subdirección
@@ -735,7 +703,7 @@ class Reporte_model extends CI_Model {
                 $filtro .= "";
         } else if ($id_rol == 1 || $id_rol == 4 || $id_rol == 18) { // MJ: Director comercial 
             $comodin2 = 'LEFT';
-            if($render == 1) {
+            if ($render == 1) {
                 $filtro .= "";
                 $comodin = "id_regional";//pendiente
             } else {
@@ -765,7 +733,11 @@ class Reporte_model extends CI_Model {
             $filtroSede = ($type == 11 || $type == 22 || $type == 55) ? "AND re.sede_residencial = $sede" : "";
             $query = $this->db->query("SELECT CAST(re.descripcion AS VARCHAR(150)) nombreResidencial, UPPER(co.nombre) nombreCondominio, UPPER(lo.nombreLote) nombreLote, 
             UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) nombreCliente,
-            UPPER(CONCAT(ua.nombre, ' ', ua.apellido_paterno, ' ', ua.apellido_materno)) nombreAsesor,
+            UPPER(CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno)) nombreAsesor,
+            CASE UPPER(CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno)) WHEN '  ' THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno)) END nombreCoordinador,
+            CASE UPPER(CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno)) WHEN '  ' THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno)) END nombreGerente,
+            CASE UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)) WHEN '  ' THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)) END nombreSubdirector,
+            CASE UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)) WHEN '  ' THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)) END nombreRegional,
             CONVERT(VARCHAR, cl.fechaApartado, 103) fechaApartado, sc.nombreStatus, st.nombre estatusLote
             FROM clientes cl
             INNER JOIN lotes lo ON lo.idLote = cl.idLote AND lo.idCliente = cl.id_cliente AND lo.idStatusLote $statusLote
@@ -774,28 +746,44 @@ class Reporte_model extends CI_Model {
             INNER JOIN statusContratacion sc ON sc.idStatusContratacion = lo.idStatusContratacion
             INNER JOIN statusLote st ON st.idStatusLote = lo.idStatusLote
             $comodin2 JOIN usuarios us ON us.id_usuario = cl.$comodin
-            LEFT JOIN usuarios ua ON ua.id_usuario = cl.id_asesor
+            LEFT JOIN usuarios u0 ON u0.id_usuario = cl.id_asesor
+            LEFT JOIN usuarios u1 ON u1.id_usuario = cl.id_coordinador
+            LEFT JOIN usuarios u2 ON u2.id_usuario = cl.id_gerente
+            LEFT JOIN usuarios u3 ON u3.id_usuario = cl.id_subdirector
+            LEFT JOIN usuarios u4 ON u4.id_usuario = cl.id_regional
             WHERE isNULL(noRecibo, '') != 'CANCELADO' AND isNULL(isNULL(cl.tipo_venta_cl, lo.tipo_venta), 0) IN (0, 1, 2) AND cl.status = 1 
             $filtro
             GROUP BY
             CAST(re.descripcion AS VARCHAR(150)), UPPER(co.nombre), UPPER(lo.nombreLote), 
             UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)),
-            UPPER(CONCAT(ua.nombre, ' ', ua.apellido_paterno, ' ', ua.apellido_materno)),
+            UPPER(CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno)),
+            UPPER(CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno)),
+            UPPER(CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno)),
+            UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)),
+            UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)),
             CONVERT(VARCHAR, cl.fechaApartado, 103), sc.nombreStatus, st.nombre
             ORDER BY sc.nombreStatus");
         } else if ($type == 3 || $type == 33 || $type == 4 || $type == 44) { // MJ: CANCELADOS CONTRATADOS / APARTADOS
             $statusLote = ($type == 4 || $type == 44) ? "<" : ">=";
             $filtroSede = ($type == 33 || $type == 44) ? "AND re.sede_residencial = $sede" : "";
             $query = $this->db->query("SELECT CAST(re.descripcion AS VARCHAR(150)) nombreResidencial, UPPER(co.nombre) nombreCondominio, UPPER(lo.nombreLote) nombreLote, 
-            CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno) nombreCliente,
-            CONCAT(ua.nombre, ' ', ua.apellido_paterno, ' ', ua.apellido_materno) nombreAsesor,
+            UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) nombreCliente,
+            UPPER(CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno)) nombreAsesor,
+            CASE UPPER(CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno)) WHEN '  ' THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno)) END nombreCoordinador,
+            CASE UPPER(CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno)) WHEN '  ' THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno)) END nombreGerente,
+            CASE UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)) WHEN '  ' THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)) END nombreSubdirector,
+            CASE UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)) WHEN '  ' THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)) END nombreRegional,
             CONVERT(VARCHAR, cl.fechaApartado, 103) fechaApartado, st.nombreStatus, 'Cancelado' estatusLote
             FROM clientes cl
             INNER JOIN lotes lo ON lo.idLote = cl.idLote
             INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
             INNER JOIN residenciales re ON re.idResidencial = co.idResidencial $filtroSede
             $comodin2 JOIN usuarios us ON us.id_usuario = cl.$comodin
-            LEFT JOIN usuarios ua ON ua.id_usuario = cl.id_asesor
+            LEFT JOIN usuarios u0 ON u0.id_usuario = cl.id_asesor
+            LEFT JOIN usuarios u1 ON u1.id_usuario = cl.id_coordinador
+            LEFT JOIN usuarios u2 ON u2.id_usuario = cl.id_gerente
+            LEFT JOIN usuarios u3 ON u3.id_usuario = cl.id_subdirector
+            LEFT JOIN usuarios u4 ON u4.id_usuario = cl.id_regional
             LEFT JOIN historial_liberacion hl ON hl.idLote = lo.idLote AND hl.tipo NOT IN (2, 5, 6) AND hl.id_cliente = cl.id_cliente
             INNER JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes GROUP BY idLote, idCliente) hlo ON hlo.idLote = lo.idLote AND hlo.idCliente = cl.id_cliente
 			INNER JOIN historial_lotes hlo2 ON hlo2.idLote = hlo.idLote AND hlo2.idCliente = hlo.idCliente AND hlo2.modificado = hlo.modificado
@@ -804,14 +792,19 @@ class Reporte_model extends CI_Model {
             AND hlo2.idStatusContratacion $statusLote 11
             $filtro
 			GROUP BY CAST(re.descripcion AS VARCHAR(150)), UPPER(co.nombre), UPPER(lo.nombreLote), 
-            CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno),
-            CONCAT(ua.nombre, ' ', ua.apellido_paterno, ' ', ua.apellido_materno),
-            CONVERT(VARCHAR, cl.fechaApartado, 103), st.nombreStatus
+            UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)),
+            UPPER(CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno)),
+            UPPER(CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno)),
+            UPPER(CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno)),
+            UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)),
+            UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)),
+            CONVERT(VARCHAR, cl.fechaApartado, 103), st.nombreStatus,
+            cl.id_asesor, cl.id_coordinador, cl.id_gerente, cl.id_subdirector, cl.id_regional
             ORDER BY st.nombreStatus");
         }
         return $query;       
     }
-    
+
     public function getVentasConSinRecision($beginDate, $endDate){
         $data = $this->db->query("SELECT lo.idLote idLote, CAST(re.descripcion AS VARCHAR(150)) nombreResidencial, UPPER(co.nombre) nombreCondominio, UPPER(lo.nombreLote) nombreLote, 
         UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) nombreCliente,

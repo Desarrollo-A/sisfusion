@@ -144,6 +144,10 @@
                         <th>Lote</th>
                         <th>Cliente</th>
                         <th>Asesor</th>
+                        <th>Coordinador</th>
+                        <th>Gerente</th>
+                        <th>Subdirector</th>
+                        <th>Director regional</th>
                         <th>Fecha de apartado</th>
                         <th>Estatus contratación</th>
                         <th>Estatus lote</th>
