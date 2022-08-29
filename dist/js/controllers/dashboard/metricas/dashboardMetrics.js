@@ -1387,7 +1387,27 @@ function fillTable(dataObject) {
             },
             {
                 data: function (d) {
-                    return d.nombreUsuario;
+                    return d.nombreAsesor;
+                }
+            },
+            {
+                data: function (d) {
+                    return d.nombreCoordinador;
+                }
+            },
+            {
+                data: function (d) {
+                    return d.nombreGerente;
+                }
+            },
+            {
+                data: function (d) {
+                    return d.nombreSubdirector;
+                }
+            },
+            {
+                data: function (d) {
+                    return d.nombreRegional;
                 }
             },
             {
