@@ -137,7 +137,6 @@ class Contraloria_model extends CI_Model {
 
 
 	public function registroStatusContratacion6 () {
-
 		$query = $this->db-> query("SELECT l.idLote, cl.id_cliente, cl.nombre, cl.apellido_paterno, cl.apellido_materno,
         l.nombreLote, l.idStatusContratacion, l.idMovimiento, l.modificado, cl.rfc,
         CAST(l.comentario AS varchar(MAX)) as comentario, l.fechaVenc, l.perfil, cond.nombre as nombreCondominio, res.nombreResidencial, l.ubicacion,
@@ -277,11 +276,9 @@ class Contraloria_model extends CI_Model {
         $this->db->where("idLote",$idLote);
 		$this->db->where_in('idStatusLote', 3);
 		$this->db->where("(idStatusContratacion IN (8) AND idMovimiento IN (38, 65))");	
-
 		$query = $this->db->get('lotes');
 		$valida = (empty($query->result())) ? 0 : 1;
 		return $valida;
-
 	}
 
 	public function findCount(){
@@ -358,7 +355,6 @@ class Contraloria_model extends CI_Model {
 		return $query->result();
 	}
 	
-	
 	public function registroStatusContratacion12 () {
 		$id_sede = $this->session->userdata('id_sede');
 	    if($this->session->userdata('id_usuario') == 2749 || $this->session->userdata('id_usuario') == 2807 || $this->session->userdata('id_rol') == 63) // MJ: VE TODO: CI - ARIADNA MARTINEZ MARTINEZ - MARIELA SANCHEZ SANCHEZ
@@ -383,7 +379,6 @@ class Contraloria_model extends CI_Model {
 		res.nombreResidencial, l.numContrato, l.ubicacion, l.totalValidado, l.totalNeto, l.tipo_venta, l.observacionContratoUrgente;");
 		return $query->result();
 	}
-
 
 	public function selectRegistroPorContratoStatus12($numContrato) {
 		$this->db->select("cl.id_cliente, l.nombreLote, l.idLote, l.usuario, l.perfil, l.fechaVenc, l.idCondominio, l.modificado, l.fechaSolicitudValidacion, l.fechaRecepcionContrato,
@@ -459,7 +454,6 @@ class Contraloria_model extends CI_Model {
 			return $query->result();
 		}
 
-
 		public function validateSt13($idLote){
 			$this->db->where("idLote",$idLote);
 			$this->db->where_in('idStatusLote', 3);
@@ -508,8 +502,6 @@ class Contraloria_model extends CI_Model {
 			return $query->result();
 		}
 
-
-
 		public function validateSt15($idLote){
 			$this->db->where("idLote",$idLote);
 			$this->db->where_in('idStatusLote', 3);
@@ -520,8 +512,7 @@ class Contraloria_model extends CI_Model {
 		}
 
 
-		public function getAllDsByLote($idLote)
-		{
+		public function getAllDsByLote($idLote) {
 			$query = $this->db->query("	SELECT cl.id_cliente, id_asesor, id_coordinador, id_gerente, cl.id_sede, cl.nombre, cl.apellido_paterno,
 			cl.apellido_materno, cl.status, cl.idLote, fechaApartado, fechaVencimiento, cl.usuario, cond.idCondominio, cl.fecha_creacion,
 			cl.creado_por, cl.fecha_modificacion, cl.modificado_por, cond.nombre AS nombreCondominio, residencial.nombreResidencial AS nombreResidencial,

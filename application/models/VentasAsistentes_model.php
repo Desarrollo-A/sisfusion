@@ -135,7 +135,6 @@ class VentasAsistentes_model extends CI_Model {
         CONCAT(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno),
         cond.idCondominio, cl.expediente");
 		return $query->result();
-
 	}
 
     public function validateSt8($idLote){
@@ -145,7 +144,6 @@ class VentasAsistentes_model extends CI_Model {
         $query = $this->db->get('lotes');
         $valida = (empty($query->result())) ? 0 : 1;
         return $valida;
-
     }
 
     public function updateSt($idLote,$arreglo,$arreglo2){
@@ -253,7 +251,7 @@ class VentasAsistentes_model extends CI_Model {
         CONCAT(gerente.nombre, ' ', gerente.apellido_paterno, ' ', gerente.apellido_materno) AS gerente,
         cond.idCondominio, l.observacionContratoUrgente AS vl
         FROM lotes l
-        INNER JOIN cliente cl ON l.idLote=cl.idLote
+        INNER JOIN clientes cl ON l.idLote=cl.idLote
         INNER JOIN condominios cond ON l.idCondominio=cond.idCondominio
         INNER JOIN residenciales res ON cond.idResidencial = res.idResidencial
         LEFT JOIN usuarios asesor ON cl.id_asesor = asesor.id_usuario
@@ -278,7 +276,7 @@ class VentasAsistentes_model extends CI_Model {
         $query = $this->db->get('lotes');
         $valida = (empty($query->result())) ? 0 : 1;
         return $valida;
-  
+
     }
 
 	public function get_lp($idLote){
