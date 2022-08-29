@@ -201,19 +201,27 @@ class Metricas_model extends CI_Model {
         }
         $query = $this->db->query("SELECT lo.nombreLote, cond.nombre nombreCondominio, res.descripcion nombreResidencial, 
         UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) nombreCliente,
-        UPPER(CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)) nombreUsuario,
+        UPPER(CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno)) nombreAsesor,
+        UPPER(CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno)) nombreCoordinador,
+        UPPER(CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno)) nombreGerente,
+        UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)) nombreSubdirector,
+        UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)) nombreRegional,
         cl.fechaApartado, lo.sup,  
         FORMAT(isNULL(CASE 
-           WHEN isNULL(cl.totalNeto2_cl ,lo.totalNeto2) IS NULL THEN isNULL(cl.total_cl ,lo.total) 
-           WHEN isNULL(cl.totalNeto2_cl ,lo.totalNeto2) = 0 THEN isNULL(cl.total_cl ,lo.total) 
-           ELSE isNULL(cl.totalNeto2_cl ,lo.totalNeto2) 
-       END,0), 'C') totalNeto2 FROM lotes lo 
-       INNER JOIN clientes cl ON cl.id_cliente = lo.idCliente
-       INNER JOIN condominios cond ON cond.idCondominio = lo.idCondominio
-       INNER JOIN residenciales res ON res.idResidencial = cond.idResidencial
-       INNER JOIN usuarios us ON us.id_usuario = cl.id_asesor
-       WHERE cl.fechaApartado BETWEEN '$beginDate 00:00:00' AND '$endDate 23:59:59' 
-       AND cond.tipo_lote = 0 $filtro ");
+        WHEN isNULL(cl.totalNeto2_cl ,lo.totalNeto2) IS NULL THEN isNULL(cl.total_cl ,lo.total) 
+        WHEN isNULL(cl.totalNeto2_cl ,lo.totalNeto2) = 0 THEN isNULL(cl.total_cl ,lo.total) 
+        ELSE isNULL(cl.totalNeto2_cl ,lo.totalNeto2) 
+        END,0), 'C') totalNeto2 FROM lotes lo 
+        INNER JOIN clientes cl ON cl.id_cliente = lo.idCliente
+        INNER JOIN condominios cond ON cond.idCondominio = lo.idCondominio
+        INNER JOIN residenciales res ON res.idResidencial = cond.idResidencial
+        INNER JOIN usuarios u0 ON u0.id_usuario = cl.id_asesor
+        LEFT JOIN usuarios u1 ON u1.id_usuario = cl.id_coordinador
+        LEFT JOIN usuarios u2 ON u2.id_usuario = cl.id_gerente
+        LEFT JOIN usuarios u3 ON u3.id_usuario = cl.id_subdirector
+        LEFT JOIN usuarios u4 ON u4.id_usuario = cl.id_regional
+        WHERE cl.fechaApartado BETWEEN '$beginDate 00:00:00' AND '$endDate 23:59:59' 
+        AND cond.tipo_lote = 0 $filtro ");
         return $query->result_array();
     }
 }

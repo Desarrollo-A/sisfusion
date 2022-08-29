@@ -327,15 +327,30 @@
 												<table class="table-striped table-hover" id="table_planes" name="table_planes">
 													<thead>
 														<tr>
-															<th>SUPERFICIE</th>
+														<th>PROYECTO</th>
+														<!-- <th>CONDOMINIO</th> -->
+														<th>TIPO LOTE</th>
+														<th>SUPERFICIE</th>
+														<th>DESCRIPCIÓN</th>
+														<th>TIPO DESCUENTO</th>
+														<th>TOTAL</th>
+														<th>ENGANCHE</th>
+														<th>M2</th>
+														<th>BONO</th>
+														<th>MSI</th>
+														<th>VALOR</th>
+														<!-- <th>SUPERFICIE</th>
+														<th>SUPERFICIE</th>
+														<th>SUPERFICIE</th>
+														<th>SUPERFICIE</th>
+														<th>SUPERFICIE</th>
 															<th>PLAN</th>
 															<th>TOTAL</th>
 															<th>ENGANCHE</th>
 															<th>M2</th>
-															<th>BONO</th>
-															<th>MSI</th>
+															
 															<th>DESARROLLO</th>
-															<th>TOT. COM.</th>
+															<th>TOT. COM.</th> -->
 														</tr>
 													</thead>
 												</table>
@@ -362,6 +377,231 @@
 	<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
 	<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
 	<script>
+
+
+
+$("#table_planes").ready(function() {
+            let titulos = [];
+            $('#table_planes thead tr:eq(0) th').each( function (i) {
+                // if(i != 0){
+                    var title = $(this).text();
+                    titulos.push(title);
+
+                    $(this).html('<input type="text"  class="textoshead" placeholder="' + title + '"/>');
+                    $('input', this).on('keyup change', function() {
+
+                        if (tabla_nuevas.column(i).search() !== this.value) {
+                            tabla_nuevas
+                                .column(i)
+                                .search(this.value)
+                                .draw();
+
+                            var total = 0;
+                            var index = tabla_nuevas.rows({
+                                selected: true,
+                                search: 'applied'
+                            }).indexes();
+                            var data = tabla_nuevas.rows(index).data();
+
+                            // $.each(data, function(i, v) {
+                            //     total += parseFloat(v.pago_cliente);
+                            // });
+                            // var to1 = formatMoney(total);
+                            // document.getElementById("myText_nuevas").value = '$' + formatMoney(total);
+                        }
+                    });
+                // }
+            });
+
+            // $('#table_planes').on('xhr.dt', function(e, settings, json, xhr) {
+            //     var total = 0;
+            //     $.each(json.data, function(i, v) {
+            //         total += parseFloat(v.pago_cliente);
+            //     });
+            //     var to = formatMoney(total);
+            //     // document.getElementById("myText_nuevas").value = to;
+            // });
+
+            tabla_nuevas = $("#table_planes").DataTable({
+                dom: 'Brt'+ "<'row'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'i><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>",
+                width: 'auto',
+                buttons: [{
+                    extend: 'excelHtml5',
+                    text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
+                    className: 'btn buttons-excel',
+                    titleAttr: 'Descargar archivo de Excel',
+                    title: 'PAQUETES DESCUENTOS',
+                    exportOptions: {
+                        columns: [0,1,2,3,4,5,6,7,8,9],
+                        format: {
+                            header:  function (d, columnIdx) {
+                                if(columnIdx == 0){
+                                    return ' '+d +' ';
+                                }
+                                else{
+                                        return ' '+titulos[columnIdx-1] +' ';
+                                    }
+                                 
+                            }
+                        }
+                    },
+                } ],
+                pagingType: "full_numbers",
+                fixedHeader: true,
+                language: {
+                    url: "<?=base_url()?>/static/spanishLoader_v2.json",
+                    paginate: {
+                        previous: "<i class='fa fa-angle-left'>",
+                        next: "<i class='fa fa-angle-right'>"
+                    }
+                },
+                destroy: true,
+                ordering: false,
+                columns: [{  
+                    "width": "10%",
+                    "data": function( d ){
+                        return '<p class="m-0">'+d.nombreResidencial+'</p>';
+                    }
+                },
+                // {  
+                //     "width": "15%",
+                //     "data": function( d ){
+                //         return '<p class="m-0">'+d.nombre_condominio+'</p>';
+                //     }
+                // },
+				{  
+                    "width": "10%",
+                    "data": function( d ){
+                        return '<p class="m-0"><span class="label" style="background:'+d.color_superficie+';">'+d.tipo_lote+'</span></p>';
+                    }
+                },
+				{  
+                    "width": "10%",
+                    "data": function( d ){
+                        return '<p class="m-0"><span class="label" style="background:'+d.color_superficie+';">'+d.superficie+'</span></p>';
+                    }
+                },
+                {
+                    "width": "15%",
+                    "data": function( d ){
+                        return '<p class="m-0"><b>'+d.descripcion+'</b></p>';
+                    }
+                },
+				{
+                    "width": "10%",
+                    "data": function( d ){
+                        return '<p class="m-0"><span class="label" style="background:#48C9B0;">'+d.tipo+'</span></p>';
+                    }
+                },
+				{  
+                    "width": "5%",
+                    "data": function( d ){
+
+						if(d.tipo_check == 1){
+							if(d.msi_extra!=0){
+								return '<center><button class="btn btn btn-round btn-fab btn-fab-mini" title="MSI:'+d.msi_extra+'" style="background-color:#C2DCF0;color:#0a548b"><i class="material-icons">check</i></button></center>';
+							}else{
+								return '<center><button class="btn btn btn-round btn-fab btn-fab-mini" title="SIN MSI" style="background-color:white;color:#0a548b"><i class="material-icons">check</i></button></center>';
+							}
+						}else{
+							return '';
+						}
+                    }
+                },
+                {
+                    "width": "5%",
+                    "data": function( d ){
+                        if(d.tipo_check == 2){
+							if(d.msi_extra!=0){
+								return '<center><button class="btn btn btn-round btn-fab btn-fab-mini" title="MSI:'+d.msi_extra+'" style="background-color:#C2DCF0;color:#0a548b"><i class="material-icons">check</i></button></center>';
+							}else{
+								return '<center><button class="btn btn btn-round btn-fab btn-fab-mini" title="SIN MSI" style="background-color:white;color:#0a548b"><i class="material-icons">check</i></button></center>';
+							}
+						}else{
+							return '';
+						}
+                    }
+                },
+				{  
+                    "width": "5%",
+                    "data": function( d ){
+                        if(d.tipo_check == 3){
+							if(d.msi_extra!=0){
+								return '<center><button class="btn btn btn-round btn-fab btn-fab-mini" title="MSI:'+d.msi_extra+'" style="background-color:#C2DCF0;color:#0a548b"><i class="material-icons">check</i></button></center>';
+							}else{
+								return '<center><button class="btn btn btn-round btn-fab btn-fab-mini" title="SIN MSI" style="background-color:white;color:#0a548b"><i class="material-icons">check</i></button></center>';
+							}
+						}else{
+							return '';
+						}
+                    }
+                },
+                {
+                    "width": "5%",
+                    "data": function( d ){
+                        if(d.tipo_check == 4){
+							if(d.msi_extra!=0){
+								return '<center><button class="btn btn btn-round btn-fab btn-fab-mini" title="MSI:'+d.msi_extra+'" style="background-color:#C2DCF0;color:#0a548b"><i class="material-icons">check</i></button></center>';
+							}else{
+								return '<center><button class="btn btn btn-round btn-fab btn-fab-mini" title="SIN MSI" style="background-color:white;color:#0a548b"><i class="material-icons">check</i></button></center>';
+							}
+						}else{
+							return '';
+						}
+                    }
+                },
+				{  
+                    "width": "5%",
+                    "data": function( d ){
+                        if(d.tipo_check == 5){
+							if(d.msi_extra!=0){
+								return '<center><button class="btn btn btn-round btn-fab btn-fab-mini" title="MSI:'+d.msi_extra+'" style="background-color:#C2DCF0;color:#0a548b"><i class="material-icons">check</i></button></center>';
+							}else{
+								return '<center><button class="btn btn btn-round btn-fab btn-fab-mini" title="SIN MSI" style="background-color:white;color:#0a548b"><i class="material-icons">check</i></button></center>';
+							}
+						}else{
+							return '';
+						}
+                    }
+                },
+                {
+                    "width": "10%",
+                    "data": function( d ){
+						switch(d.tipo_check){
+							case '1':
+							case '2':
+								return '<p class="m-0"><b>'+(d.porcentaje)+'%</b></p>';
+							break;
+
+							case '3':
+							case '4':
+								return '<p class="m-0"><b>$'+formatMoney(d.porcentaje)+'</b></p>';
+							break;
+
+							default:
+								return '<p class="m-0"><b>'+(d.porcentaje)+'%</b></p>';
+							break;
+
+						}
+                        
+                    }
+                }],
+                columnDefs: [{}],
+                ajax: {
+                    "url": url2 + "PaquetesCorrida/listaDescuentos",
+                    "type": "POST",
+                    cache: false,
+                    "data": function(d) {}
+                },
+                order: [
+                    [1, 'asc']
+                ]
+            });
+ 
+        });
+
+
+		
 		$('[data-toggle="tooltip"]').tooltip();
 		const arr = [];
 		function OpenModal(tipo,boton){

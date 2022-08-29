@@ -26,8 +26,10 @@
   color: #ffffff;
   text-align: center;
   font-weight: 300;
+  font-size: 10px!important;
   background-color: #143860;
   width: 100%;
+  text-transform: uppercase;
 }
 
 #seeInformationModal table thead tr th input:active {
@@ -144,6 +146,10 @@
                         <th>Lote</th>
                         <th>Cliente</th>
                         <th>Asesor</th>
+                        <th>Coordinador</th>
+                        <th>Gerente</th>
+                        <th>Subdirector</th>
+                        <th>Director regional</th>
                         <th>Fecha de apartado</th>
                         <th>Estatus contratación</th>
                         <th>Estatus lote</th>

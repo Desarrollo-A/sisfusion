@@ -217,9 +217,9 @@
                                                     <a role="button" id="print" name="print">
                                                         <i class="material-icons">print</i>
                                                     </a>
-                                                    <a role="button" id="email" name="email">
+                                                    <!-- <a role="button" id="email" name="email">
                                                         <i class="material-icons">email</i>
-                                                    </a>
+                                                    </a> -->
                                                 </div>
                                                 <div class="col-md-7 d-flex justify-end">
                                                     <div class="w-50">

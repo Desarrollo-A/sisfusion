@@ -71,3 +71,7 @@
 .fixed-table-body{
     overflow: inherit!important;
 }
+
+.btn-group.bootstrap-select select {
+    width: 1px !important;
+}

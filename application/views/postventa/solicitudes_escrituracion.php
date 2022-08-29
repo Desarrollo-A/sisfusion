@@ -58,6 +58,9 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        <div class="col-12 col-sm-9 col-md-9 col-lg-9">
+                                            <button class="btn btn-default btn-round btn-sm" onclick="location.reload()"><i class="fas fa-redo"></i></button>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="material-datatables">
@@ -122,5 +125,9 @@
 <script src="<?=base_url()?>static/yadcf/jquery.dataTables.yadcf.js"></script>
 <script src="<?=base_url()?>dist/js/controllers/general/main_services.js"></script>
 <script src="<?=base_url()?>dist/js/controllers/postventa/solicitudes_escrituracion.js"></script>
+<!-- <script  src="<?=base_url()?>dist/js/controllers/postventa/Escrituracion/Classes/actionButtonsClass.js"></script>
+<script  src="<?=base_url()?>dist/js/controllers/postventa/Escrituracion/Helpers/helpers.js"></script>
+<script  src="<?=base_url()?>dist/js/controllers/postventa/Escrituracion/Services/services.js"></script>
+<script  src="<?=base_url()?>dist/js/controllers/postventa/Escrituracion/escrituracion.js"></script> -->
 
 </html>

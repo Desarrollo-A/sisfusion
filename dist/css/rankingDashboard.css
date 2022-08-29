@@ -1186,7 +1186,7 @@
 }
 
 #ranking .card {
-  height: 440px;
+  height: 485px;
   margin-bottom: 0;
 }
 
@@ -1282,8 +1282,9 @@
   color: #ffffff;
   text-align: center;
   font-weight: 300;
+  font-size: 10px;
   background-color: #143860;
-  text-transform: lowercase;
+  text-transform: uppercase;
 }
 
 @media (min-width: 1025px) and (max-width: 1280px) {

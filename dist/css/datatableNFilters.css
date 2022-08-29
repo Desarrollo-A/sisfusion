@@ -1338,18 +1338,18 @@
   line-height: 1.5 !important;
 }
 
-.boxContent .card .card-content .toolbar #beginDate, .boxContent .card .card-content .toolbar #idLote {
-  background-color: #eaeaea;
-  border-radius: 27px 0 0 27px;
-  background-image: initial;
-  text-align: center;
+.boxContent .card .card-content .toolbar .beginDate, .boxContent .card .card-content .toolbar #beginDate, .boxContent .card .card-content .toolbar #idLote {
+  background-color: #eaeaea !important;
+  border-radius: 27px 0 0 27px !important;
+  background-image: initial !important;
+  text-align: center !important;
 }
 
-.boxContent .card .card-content .toolbar #endDate {
-  background-color: #eaeaea;
-  border-radius: 0;
-  background-image: initial;
-  text-align: center;
+.boxContent .card .card-content .toolbar .endDate, .boxContent .card .card-content .toolbar #endDate {
+  background-color: #eaeaea !important;
+  border-radius: 0 !important;
+  background-image: initial !important;
+  text-align: center !important;
 }
 
 .boxContent .card .card-content .toolbar .select-gral button {
@@ -1474,6 +1474,10 @@
   -webkit-box-shadow: none;
 }
 
+table.dataTable > thead > tr > th {
+  padding: 0 !important;
+}
+
 .table-striped {
   border: none;
   text-align: center;
@@ -1514,10 +1518,12 @@
   border: 1px solid #143860;
   box-shadow: inset 0 0 12px 2px #143860;
   border-radius: 8px;
+  text-transform: uppercase;
 }
 
 .table-striped thead > tr > th .textoshead::placeholder {
   color: #eaeaea;
+  text-transform: uppercase;
 }
 
 .table-striped .toggle-subTable {

@@ -9,7 +9,6 @@ class Juridico_model extends CI_Model {
  
 	
 	public function registroStatusContratacion7 ($typeTransaction = "", $beginDate = "", $endDate = "", $idResidencial = "",$idCondominio = '') {
-
 	    if($this->session->userdata('id_usuario') == 2762 || $this->session->userdata('id_usuario') == 6096){
 	    	$whereOne = "";
         	$whereTwo = "";
@@ -24,12 +23,10 @@ class Juridico_model extends CI_Model {
 					$complemento = ' AND cond.idCondominio='.$idCondominio; 
 
 				}
-
                 $whereOne = "";
                 $whereTwo = "AND res.idResidencial = $idResidencial $complemento";
                 $number = 1000;
             }
-
 		$query = $this->db-> query("SELECT TOP($number) l.idLote, cl.id_cliente, cl.fechaApartado, cl.nombre, cl.apellido_paterno, cl.apellido_materno, l.nombreLote, l.idStatusContratacion,
         l.idMovimiento, l.modificado, cl.rfc, CAST(l.comentario AS varchar(MAX)) as comentario, l.fechaVenc, l.perfil, cond.nombre as nombreCondominio, res.nombreResidencial, l.ubicacion,
         l.tipo_venta, cond.idCondominio, l.observacionContratoUrgente as vl, et.descripcion as etapa,
@@ -37,39 +34,37 @@ class Juridico_model extends CI_Model {
         concat(coordinador.nombre,' ', coordinador.apellido_paterno, ' ', coordinador.apellido_materno) as coordinador,
         concat(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno) as gerente,
         concat(juridico.nombre,' ', juridico.apellido_paterno, ' ', juridico.apellido_materno) as juridico
-		
 		FROM lotes l
         INNER JOIN clientes cl ON cl.idLote=l.idLote $whereOne
         INNER JOIN condominios cond ON l.idCondominio=cond.idCondominio
         INNER JOIN residenciales res ON cond.idResidencial=res.idResidencial $whereTwo
-
 		LEFT JOIN etapas et ON et.idEtapa = cond.idEtapa
-
-
 		LEFT JOIN usuarios asesor ON cl.id_asesor = asesor.id_usuario
 		LEFT JOIN usuarios coordinador ON cl.id_coordinador = coordinador.id_usuario
 		LEFT JOIN usuarios gerente ON cl.id_gerente = gerente.id_usuario
 		LEFT JOIN usuarios juridico ON l.asig_jur = juridico.id_usuario
-
-        WHERE l.idStatusContratacion=6 AND l.idMovimiento=36 AND cl.status=1
-        OR l.idStatusContratacion=6 AND l.idMovimiento=6 AND cl.status=1
-        OR l.idStatusContratacion=6 AND l.idMovimiento=23 AND cl.status=1
-        OR l.idStatusContratacion=6 AND l.idMovimiento=76 AND cl.status=1
-        OR l.idStatusContratacion=7 AND l.idMovimiento=83 AND cl.status=1
-        OR l.idStatusContratacion=6 AND l.idMovimiento=95 AND cl.status=1
-        OR l.idStatusContratacion=6 AND l.idMovimiento=97 AND cl.status=1
-        group by 
-        l.idLote, cl.id_cliente, cl.fechaApartado, cl.nombre, cl.apellido_paterno, cl.apellido_materno, l.nombreLote, l.idStatusContratacion,
-        l.idMovimiento, l.modificado, cl.rfget_users_reassingc, CAST(l.comentario AS varchar(MAX)), l.fechaVenc, l.perfil, cond.nombre, res.nombreResidencial, l.ubicacion,
+        WHERE l.idStatusContratacion IN (6, 7) AND l.idMovimiento IN (36, 6, 23, 76, 83, 95, 97) AND cl.status = 1
+        GROUP BY l.idLote, cl.id_cliente, cl.fechaApartado, cl.nombre, cl.apellido_paterno, cl.apellido_materno, l.nombreLote, l.idStatusContratacion,
+        l.idMovimiento, l.modificado, cl.rfc, CAST(l.comentario AS varchar(MAX)), l.fechaVenc, l.perfil, cond.nombre, res.nombreResidencial, l.ubicacion,
         l.tipo_venta, cond.idCondominio, l.observacionContratoUrgente, et.descripcion,
 		concat(asesor.nombre,' ', asesor.apellido_paterno, ' ', asesor.apellido_materno),
         concat(coordinador.nombre,' ', coordinador.apellido_paterno, ' ', coordinador.apellido_materno),
         concat(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno),
 		concat(juridico.nombre,' ', juridico.apellido_paterno, ' ', juridico.apellido_materno)
         ORDER BY l.modificado DESC");
-		
-		} else if(in_array($this->session->userdata('id_usuario'), array("2765", "2776", "10463", "2820", "2876", "10437"))){
-
+		} 
+		else {
+			$id_sede = $this->session->userdata('id_sede');
+			$id_usuario = $this->session->userdata('id_usuario');
+			if(in_array($this->session->userdata('id_usuario'), array("2765", "2776", "10463", "2820", "2876", "10437")))
+				$filtroAsignacion = "AND l.asig_jur = $id_usuario";
+			else
+				$filtroAsignacion = "";
+			
+			if($id_sede == 8) // CONTRALORÍA TIJUANA TAMBIÉN VE EXPEDIENTES DE Texas USA
+				$filtroSede = "AND l.ubicacion IN ('$id_sede', '10')";
+			else
+				$filtroSede = "AND l.ubicacion IN ('$id_sede')";
 
 			$query = $this->db-> query("SELECT l.idLote, cl.id_cliente, cl.fechaApartado, cl.nombre, cl.apellido_paterno, cl.apellido_materno, l.nombreLote, l.idStatusContratacion,
 			l.idMovimiento, l.modificado, cl.rfc, CAST(l.comentario AS varchar(MAX)) as comentario, l.fechaVenc, l.perfil, cond.nombre as nombreCondominio, res.nombreResidencial, l.ubicacion,
@@ -82,26 +77,13 @@ class Juridico_model extends CI_Model {
 			INNER JOIN clientes cl ON cl.idLote=l.idLote
 			INNER JOIN condominios cond ON l.idCondominio=cond.idCondominio
 			INNER JOIN residenciales res ON cond.idResidencial=res.idResidencial
-			
 			LEFT JOIN etapas et ON et.idEtapa = cond.idEtapa
-	
-	
 			LEFT JOIN usuarios asesor ON cl.id_asesor = asesor.id_usuario
 			LEFT JOIN usuarios coordinador ON cl.id_coordinador = coordinador.id_usuario
 			LEFT JOIN usuarios gerente ON cl.id_gerente = gerente.id_usuario
 			LEFT JOIN usuarios juridico ON l.asig_jur = juridico.id_usuario
-
-			WHERE 
-			   l.idStatusContratacion=6 AND l.idMovimiento=36 AND cl.status=1 and l.ubicacion = ".$this->session->userdata('id_sede')." and l.asig_jur = ".$this->session->userdata('id_usuario')."
-			OR l.idStatusContratacion=6 AND l.idMovimiento=6 AND cl.status=1 and l.ubicacion = ".$this->session->userdata('id_sede')." and l.asig_jur = ".$this->session->userdata('id_usuario')."
-			OR l.idStatusContratacion=6 AND l.idMovimiento=23 AND cl.status=1 and l.ubicacion = ".$this->session->userdata('id_sede')." and l.asig_jur = ".$this->session->userdata('id_usuario')."
-			OR l.idStatusContratacion=6 AND l.idMovimiento=76 AND cl.status=1 and l.ubicacion = ".$this->session->userdata('id_sede')." and l.asig_jur = ".$this->session->userdata('id_usuario')."
-			OR l.idStatusContratacion=7 AND l.idMovimiento=83 AND cl.status=1 and l.ubicacion = ".$this->session->userdata('id_sede')." and l.asig_jur = ".$this->session->userdata('id_usuario')."
-			OR l.idStatusContratacion=6 AND l.idMovimiento=95 AND cl.status=1 and l.ubicacion = ".$this->session->userdata('id_sede')." and l.asig_jur = ".$this->session->userdata('id_usuario')."
-			OR l.idStatusContratacion=6 AND l.idMovimiento=97 AND cl.status=1 and l.ubicacion = ".$this->session->userdata('id_sede')." and l.asig_jur = ".$this->session->userdata('id_usuario')."
-	
-			group by 
-			l.idLote, cl.id_cliente, cl.fechaApartado, cl.nombre, cl.apellido_paterno, cl.apellido_materno, l.nombreLote, l.idStatusContratacion,
+			WHERE l.idStatusContratacion IN (6, 7) AND l.idMovimiento IN (36, 6, 23, 76, 83, 95, 97) AND cl.status = 1 $filtroSede $filtroAsignacion
+			GROUP BY l.idLote, cl.id_cliente, cl.fechaApartado, cl.nombre, cl.apellido_paterno, cl.apellido_materno, l.nombreLote, l.idStatusContratacion,
 			l.idMovimiento, l.modificado, cl.rfc, CAST(l.comentario AS varchar(MAX)), l.fechaVenc, l.perfil, cond.nombre, res.nombreResidencial, l.ubicacion,
 			l.tipo_venta, cond.idCondominio, l.observacionContratoUrgente, et.descripcion,
 			concat(asesor.nombre,' ', asesor.apellido_paterno, ' ', asesor.apellido_materno),
@@ -109,76 +91,18 @@ class Juridico_model extends CI_Model {
 			concat(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno),
 			concat(juridico.nombre,' ', juridico.apellido_paterno, ' ', juridico.apellido_materno)
 			ORDER BY l.modificado DESC");
-			
-		} else {
-
-			// if ($this->session->userdata('id_usuario') == 2764) // MJ: JESUS ALFREDO MONTEJANO VERÁ LO DE SLP + TIJUANA
-			// 	$id_sede = "'".$this->session->userdata('id_sede')."', '8'";
-			// else
-			$id_sede = "'".$this->session->userdata('id_sede')."'";
-		
-			$query = $this->db-> query("SELECT l.idLote, cl.id_cliente, cl.fechaApartado, cl.nombre, cl.apellido_paterno, cl.apellido_materno, l.nombreLote, l.idStatusContratacion,
-			l.idMovimiento, l.modificado, cl.rfc, CAST(l.comentario AS varchar(MAX)) as comentario, l.fechaVenc, l.perfil, cond.nombre as nombreCondominio, res.nombreResidencial, l.ubicacion,
-			l.tipo_venta, cond.idCondominio, l.observacionContratoUrgente as vl, et.descripcion as etapa,
-			concat(asesor.nombre,' ', asesor.apellido_paterno, ' ', asesor.apellido_materno) as asesor,
-			concat(coordinador.nombre,' ', coordinador.apellido_paterno, ' ', coordinador.apellido_materno) as coordinador,
-			concat(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno) as gerente,
-			concat(juridico.nombre,' ', juridico.apellido_paterno, ' ', juridico.apellido_materno) as juridico
-			
-			FROM lotes l
-			INNER JOIN clientes cl ON cl.idLote=l.idLote
-			INNER JOIN condominios cond ON l.idCondominio=cond.idCondominio
-			INNER JOIN residenciales res ON cond.idResidencial=res.idResidencial
-			
-			LEFT JOIN etapas et ON et.idEtapa = cond.idEtapa
-
-
-			LEFT JOIN usuarios asesor ON cl.id_asesor = asesor.id_usuario
-			LEFT JOIN usuarios coordinador ON cl.id_coordinador = coordinador.id_usuario
-			LEFT JOIN usuarios gerente ON cl.id_gerente = gerente.id_usuario
-			LEFT JOIN usuarios juridico ON l.asig_jur = juridico.id_usuario
-
-			WHERE l.idStatusContratacion=6 AND l.idMovimiento=36 AND cl.status=1 and l.ubicacion IN ($id_sede)
-			OR l.idStatusContratacion=6 AND l.idMovimiento=6 AND cl.status=1 and l.ubicacion IN ($id_sede)
-			OR l.idStatusContratacion=6 AND l.idMovimiento=23 AND cl.status=1 and l.ubicacion IN ($id_sede)
-			OR l.idStatusContratacion=6 AND l.idMovimiento=76 AND cl.status=1 and l.ubicacion IN ($id_sede)
-			OR l.idStatusContratacion=7 AND l.idMovimiento=83 AND cl.status=1 and l.ubicacion IN ($id_sede)
-			OR l.idStatusContratacion=6 AND l.idMovimiento=95 AND cl.status=1 and l.ubicacion IN ($id_sede)
-			OR l.idStatusContratacion=6 AND l.idMovimiento=97 AND cl.status=1 and l.ubicacion IN ($id_sede)
-
-			group by 
-			l.idLote, cl.id_cliente, cl.fechaApartado, cl.nombre, cl.apellido_paterno, cl.apellido_materno, l.nombreLote, l.idStatusContratacion,
-			l.idMovimiento, l.modificado, cl.rfc, CAST(l.comentario AS varchar(MAX)), l.fechaVenc, l.perfil, cond.nombre, res.nombreResidencial, l.ubicacion,
-			l.tipo_venta, cond.idCondominio, l.observacionContratoUrgente, et.descripcion,
-			concat(asesor.nombre,' ', asesor.apellido_paterno, ' ', asesor.apellido_materno),
-			concat(coordinador.nombre,' ', coordinador.apellido_paterno, ' ', coordinador.apellido_materno),
-			concat(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno),
-			concat(juridico.nombre,' ', juridico.apellido_paterno, ' ', juridico.apellido_materno)
-			ORDER BY l.modificado DESC");
-		
 		}
-		
 		return $query->result();
-
     }
     
 
     public function validateSt7($idLote){
         $this->db->where("idLote",$idLote);
 		$this->db->where_in('idStatusLote', 3);
-
-		$this->db->where("(idStatusContratacion=6 AND idMovimiento=36
-        OR idStatusContratacion=6 AND idMovimiento=6
-        OR idStatusContratacion=6 AND idMovimiento=23
-        OR idStatusContratacion=6 AND idMovimiento=76
-        OR idStatusContratacion=7 AND idMovimiento=83
-		OR idStatusContratacion=6 AND idMovimiento=95
-		OR idStatusContratacion=6 AND idMovimiento=97)");	
-
+		$this->db->where("(idStatusContratacion IN (6, 7) AND idMovimiento IN (36, 6, 23, 76, 83, 95, 97))");	
 		$query = $this->db->get('lotes');
 		$valida = (empty($query->result())) ? 0 : 1;
 		return $valida;
-
 	}
 
 

@@ -309,7 +309,7 @@ function buildTableApartados(data){
         pageLength : 10,
         width: '100%',
         destroy: true,
-        ordering: true,
+        ordering: false,
         scrollX: true,
         language: {
             url: `${base_url}static/spanishLoader_v2.json`,
@@ -318,7 +318,6 @@ function buildTableApartados(data){
                 next: "<i class='fa fa-angle-right'>"
             }
         },
-        order: [[2, "desc"]],
         data: data,
         columns: [{
             title: 'Ranking',
@@ -975,7 +974,6 @@ function getSede(typeRanking){
 $('[data-toggle="tooltip"]').tooltip();
 
 $(document).on('click', '.btnModalDetailsRanking', function () {
-    console.log("IN");
     let type = $(this).data("type");
     let dates = getDates(type == 1 ? 'Apartados' : type == 2 ? 'Contratados' : type == 3 ? 'ConEnganche' : 'SinEnganche');
     let sede = getSede(type == 1 ? 'Apartados' : type == 2 ? 'Contratados' : type == 3 ? 'ConEnganche' : 'SinEnganche');

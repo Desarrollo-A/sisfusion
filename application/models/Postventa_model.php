@@ -80,7 +80,8 @@ class Postventa_model extends CI_Model
             VALUES('', $insert_id, 0, $y,  GETDATE(), $idUsuario, $idUsuario, NULL);");
         }
 
-        return $this->db->query("INSERT INTO control_estatus VALUES(0, 59, 4, GETDATE(), 1,$insert_id, $rol,0,'','');");
+        return $this->db->query("INSERT INTO control_estatus (idStatus, idCatalogo, tipo, fecha_creacion, next, idEscrituracion, idArea, newStatus, comentarios, motivos_rechazo, modificado_por)
+         VALUES(0, 59, 4, GETDATE(), 1,$insert_id, $rol,0,'','', $idUsuario);");
     }
 
     function getSolicitudes($begin, $end, $estatus)
@@ -97,7 +98,7 @@ class Postventa_model extends CI_Model
         return $this->db->query("SELECT oxc2.nombre area, se.idSolicitud, oxc.nombre estatus, se.fecha_creacion, l.nombreLote, se.estatus idEstatus,
         se.nombre, cond.nombre nombreCondominio, r.nombreResidencial, de.expediente,
         ctrl.tipo_documento, de.idDocumento, ctrl.permisos, de2.result, cee.tipo, cee.comentarios, mr.motivo motivos_rechazo, de2.estatusValidacion, de3.Spresupuesto,
-        de2.no_rechazos, n.pertenece, se2.flagEstLot, pr.flagPresupuesto, pr2.approvedPresupuesto, se.idNotaria FROM solicitud_escrituracion se 
+        de2.no_rechazos, n.pertenece, se2.flagEstLot, pr.flagPresupuesto, pr2.approvedPresupuesto, se.idNotaria, de4.contrato, se3.aportacion, se4.descuento, se.descuentos, se.aportaciones FROM solicitud_escrituracion se 
         LEFT JOIN Notarias n ON n.idNotaria = se.idNotaria 
         INNER JOIN lotes l ON se.idLote = l.idLote 
         INNER JOIN condominios cond ON cond.idCondominio = l.idCondominio 
@@ -107,17 +108,21 @@ class Postventa_model extends CI_Model
         INNER JOIN control_procesos ctrl ON ctrl.estatus = se.estatus AND ctrl.idRol = $rol
         LEFT JOIN documentos_escrituracion de ON de.idSolicitud=se.idSolicitud AND de.tipo_documento = ctrl.tipo_documento
         LEFT JOIN (SELECT idSolicitud, CASE WHEN COUNT(*) != COUNT(CASE WHEN expediente IS NOT NULL THEN 1 END) 
-        THEN 0 ELSE 1 END result, 
+        THEN 0 ELSE 1 END result,  
         CASE WHEN COUNT(*) != COUNT(CASE WHEN estatus_validacion = 1 THEN 1 END) THEN 0 ELSE 1 END estatusValidacion,
         COUNT(CASE WHEN estatus_validacion = 2 THEN 1 END) no_rechazos
-        FROM documentos_escrituracion WHERE tipo_documento NOT IN (7,9,10, 11, 12, 13,14,15,16,17) GROUP BY idSolicitud) de2 ON de2.idSolicitud = se.idSolicitud
+        FROM documentos_escrituracion WHERE tipo_documento NOT IN (7,9,10, 11, 12, 13,14,15,16,17,20,21) GROUP BY idSolicitud) de2 ON de2.idSolicitud = se.idSolicitud
         LEFT JOIN (SELECT idSolicitud,  CASE WHEN COUNT(*) != COUNT(CASE WHEN expediente IS NOT NULL THEN 1 END) THEN 0 ELSE 1 END Spresupuesto
         FROM documentos_escrituracion WHERE tipo_documento = 11 GROUP BY idSolicitud) de3 ON de3.idSolicitud = se.idSolicitud
+        LEFT JOIN (SELECT idSolicitud, CASE WHEN COUNT(*) != COUNT(CASE WHEN expediente IS NOT NULL THEN 1 END) THEN 0 ELSE 1 END contrato
+        FROM documentos_escrituracion WHERE tipo_documento = 21 GROUP BY idSolicitud) de4 ON de4.idSolicitud = se.idSolicitud
         LEFT JOIN (SELECT idEscrituracion, max(fecha_creacion) fecha_creacion FROM control_estatus GROUP BY idEscrituracion) ce ON ce.idEscrituracion = se.idSolicitud
         LEFT JOIN control_estatus cee ON cee.idEscrituracion = ce.idEscrituracion AND cee.fecha_creacion = ce.fecha_creacion
         LEFT JOIN motivos_rechazo mr ON mr.id_motivo = cee.motivos_rechazo
         LEFT JOIN usuarios us ON us.id_usuario = de.validado_por
         LEFT JOIN (SELECT idSolicitud, CASE WHEN estatus_construccion IS NULL THEN 0 ELSE 1 END flagEstLot FROM solicitud_escrituracion) se2 ON se2.idSolicitud = se.idSolicitud
+        LEFT JOIN (SELECT idSolicitud, CASE WHEN aportaciones IS NULL THEN 0 ELSE 1 END aportacion FROM solicitud_escrituracion) se3 ON se3.idSolicitud = se.idSolicitud
+        LEFT JOIN (SELECT idSolicitud, CASE WHEN descuentos IS NULL THEN 0 ELSE 1 END descuento FROM solicitud_escrituracion) se4 ON se4.idSolicitud = se.idSolicitud
         LEFT JOIN (SELECT idSolicitud, CASE WHEN COUNT(*) > 0 THEN 1 ELSE 0 END flagPresupuesto FROM Presupuestos WHERE expediente != '' GROUP BY idSolicitud) pr ON pr.idSolicitud = se.idSolicitud
         LEFT JOIN (SELECT idSolicitud, CASE WHEN COUNT(*) > 0 THEN 1 ELSE 0 END approvedPresupuesto FROM Presupuestos WHERE estatus = 1 GROUP BY idSolicitud) pr2 ON pr2.idSolicitud = se.idSolicitud
         WHERE (se.fecha_creacion BETWEEN '$begin 00:00:00' AND '$end 23:59:59') $where");
@@ -132,8 +137,11 @@ class Postventa_model extends CI_Model
 
         $notaria = $this->db->query("SELECT idNotaria FROM solicitud_escrituracion WHERE idSolicitud = $id_solicitud")->row()->idNotaria;
 
-        if($notaria != NULL){
-            $pertenece = $this->db->query("SELECT pertenece FROM solicitud_escrituracion se INNER JOIN Notarias n ON n.idNotaria = se.idNotaria WHERE idSolicitud = $id_solicitud")->row()->pertenece;
+        if($notaria != NULL || $notaria != 0){
+            $pertenece = $this->db->query("SELECT pertenece FROM solicitud_escrituracion se INNER JOIN Notarias n ON n.idNotaria = se.idNotaria WHERE idSolicitud = $id_solicitud")->row();
+
+            $pertenece ? $pertenece->pertenece : 1;
+
         }
 
         if ($type == 1) { //OK
@@ -182,7 +190,8 @@ class Postventa_model extends CI_Model
         }
 
         $this->db->query("UPDATE solicitud_escrituracion SET estatus = ($newStatus), idArea = $rol  WHERE idSolicitud = $id_solicitud");
-        return $this->db->query("INSERT INTO control_estatus VALUES(($estatus), 59, $type, GETDATE(), ($next), $id_solicitud, $rol, ($newStatus), '$comentarios', $motivos_rechazo);");
+        return $this->db->query("INSERT INTO control_estatus (idStatus, idCatalogo, tipo, fecha_creacion, next, idEscrituracion, idArea, newStatus, comentarios, motivos_rechazo, modificado_por)
+         VALUES(($estatus), 59, $type, GETDATE(), ($next), $id_solicitud, $rol, ($newStatus), '$comentarios', $motivos_rechazo, $idUsuario);");
     }
 
     function generateFilename($idSolicitud, $tipoDoc)
@@ -255,8 +264,16 @@ class Postventa_model extends CI_Model
         return $query->result();
     }
 
-    function getDocumentsClient($idSolicitud)
+    function getDocumentsClient($idSolicitud, $status)
     {
+        if($status == 10 || $status == 11){
+            $tipo_doc = 'NOT IN (11, 12, 13, 14, 15, 16, 17)';
+        }elseif($status == 3 || $status == 4 || $status == 5){
+            $tipo_doc = 'IN (7,20,21)';
+        }elseif($status == 11){
+            $tipo_doc = 'IN (7)';
+        }
+
         $query = $this->db->query("	SELECT de.idDocumento, oxc.nombre, de.expediente, de.tipo_documento, de.idSolicitud,
         CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) creado_por, de.fecha_creacion, se.estatus estatusActual,
         (CASE WHEN de.estatus_validacion IS NULL THEN 'Sin validar' WHEN de.estatus_validacion = 1 THEN 'Validado OK' WHEN de.estatus_validacion = 2 THEN 'Rechazado' END) estatus_validacion,
@@ -275,7 +292,7 @@ class Postventa_model extends CI_Model
         LEFT JOIN motivos_rechazo_x_documento mrxd ON mrxd.id_documento = de.idDocumento AND mrxd.estatus = 1 
         LEFT JOIN motivos_rechazo mr ON mr.id_motivo = mrxd.id_motivo
         LEFT JOIN control_estatus ce ON ce.idEscrituracion = se.idSolicitud AND ce.idStatus = se.estatus AND de.estatus_validacion = 2
-        WHERE de.idSolicitud = $idSolicitud AND de.tipo_documento NOT IN (11, 12, 13, 14, 15, 16, 17)
+        WHERE de.idSolicitud = $idSolicitud AND de.tipo_documento $tipo_doc
         GROUP BY
         de.idDocumento, oxc.nombre, de.expediente, de.tipo_documento, de.idSolicitud,
         CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno), de.fecha_creacion, se.estatus,
@@ -306,13 +323,12 @@ class Postventa_model extends CI_Model
             INNER JOIN notarias_x_usuario nxu ON nxu.idNxS = pr.idNxS
 			INNER JOIN Notarias nota ON nota.idNotaria = nxu.id_notaria
             WHERE pr.idSolicitud = $idSolicitud AND pr.expediente != ''
-             GROUP BY
-        pr.idPresupuesto , pr.expediente, pr.idSolicitud, oxc.nombre, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno), pr.fecha_creacion, 
-            se.estatus,
+             GROUP BY pr.idPresupuesto , pr.expediente, pr.idSolicitud, oxc.nombre, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno), pr.fecha_creacion, se.estatus,
             (CASE WHEN de.estatus_validacion IS NULL THEN 'Sin validar' WHEN de.estatus_validacion = 1 THEN 'Validado OK' WHEN de.estatus_validacion = 2 THEN 'Rechazado' END),
             (CASE WHEN de.estatus_validacion IS NULL THEN '#566573' WHEN de.estatus_validacion = 1 THEN '#239B56' WHEN de.estatus_validacion = 2 THEN '#C0392B' END) ,
             (CASE WHEN CONCAT(us2.nombre, ' ', us2.apellido_paterno, ' ', us2.apellido_materno) = '' THEN 'Sin especificar' ELSE CONCAT(us2.nombre, ' ', us2.apellido_paterno, ' ', us2.apellido_materno) END),
-            de.estatus_validacion, pr.estatus,nota.nombre_notaria");
+            de.estatus_validacion, pr.estatus,nota.nombre_notaria
+            ORDER BY oxc.nombre");
         return $query->result();
     }
 
@@ -415,6 +431,7 @@ function checkBudgetInfo($idSolicitud){
 
     //INSERT NUEVA NOTARIA
     function insertNewNotaria($nombre_notaria, $nombre_notario, $direccion, $correo, $telefono){
+        $idUsuario = $this->session->userdata('id_usuario');
         $this->db->query("INSERT INTO Notarias(nombre_notaria, nombre_notario, direccion, correo, telefono, sede, pertenece)
         VALUES('$nombre_notaria', '$nombre_notario', '$direccion', '$correo', '$telefono', 0, 2);");
         $insert_id = $this->db->insert_id();
@@ -423,7 +440,8 @@ function checkBudgetInfo($idSolicitud){
         $estatus = $this->db->query("SELECT estatus FROM solicitud_escrituracion WHERE idSolicitud = $idSolicitud")->row()->estatus;
         //print_r("UPDATE solicitud_escrituracion SET idNotaria= $insert_id WHERE idSolicitud = $idSolicitud;");
         $this->db->query("UPDATE solicitud_escrituracion SET idNotaria= $insert_id, estatus = 10 WHERE idSolicitud = $idSolicitud;");
-        return $this->db->query("INSERT INTO control_estatus VALUES(($estatus), 59, 1, GETDATE(), 12, $idSolicitud, $rol, 11, 'Cambio de Notaria', 0);");
+        return $this->db->query("INSERT INTO control_estatus (idStatus, idCatalogo, tipo, fecha_creacion, next, idEscrituracion, idArea, newStatus, comentarios, motivos_rechazo, modificado_por)
+        VALUES(($estatus), 59, 1, GETDATE(), 12, $idSolicitud, $rol, 11, 'Cambio de Notaria', 0, $idUsuario);");
     }
 
     //INSERT NOTARIA DESDE POSTVENTA Y PASA AL STATUS 5
@@ -433,10 +451,12 @@ function checkBudgetInfo($idSolicitud){
         $insert_id = $this->db->insert_id();
         $idSolicitud = $_POST['idSolicitud'];
         $rol = $this->session->userdata('id_rol');
+        $idUsuario = $this->session->userdata('id_usuario');
         $estatus = $this->db->query("SELECT estatus FROM solicitud_escrituracion WHERE idSolicitud = $idSolicitud")->row()->estatus;
 
         $this->db->query("UPDATE solicitud_escrituracion SET idNotaria= $insert_id, estatus = 5, idArea = 57 WHERE idSolicitud = $idSolicitud;");
-        return $this->db->query("INSERT INTO control_estatus VALUES(($estatus), 57, 1, GETDATE(), 7, $idSolicitud, $rol, 6, 'Se trabajara con Notaría externa', 0);");
+        return $this->db->query("INSERT INTO control_estatus (idStatus, idCatalogo, tipo, fecha_creacion, next, idEscrituracion, idArea, newStatus, comentarios, motivos_rechazo, modificado_por)
+         VALUES(($estatus), 57, 1, GETDATE(), 7, $idSolicitud, $rol, 6, 'Se trabajara con Notaría externa', 0, $idUsuario);");
     }
 
     //GESTION NOTARIA CLIENTE
@@ -452,10 +472,21 @@ function checkBudgetInfo($idSolicitud){
     function rechazarNotaria(){
         $idSolicitud = $_POST['idSolicitud'];
         $rol = $this->session->userdata('id_rol');
-        
+        $idUsuario = $this->session->userdata('id_usuario');
         $this->db->query("UPDATE solicitud_escrituracion SET idNotaria = '', estatus = 10 WHERE idSolicitud = $idSolicitud;");
         
-        return $this->db->query("INSERT INTO control_estatus VALUES(11, 59, 2, GETDATE(), 12, $idSolicitud, $rol, 10, 'Se rechazo la Notaria', 0);");
+        return $this->db->query("INSERT INTO control_estatus (idStatus, idCatalogo, tipo, fecha_creacion, next, idEscrituracion, idArea, newStatus, comentarios, motivos_rechazo, modificado_por)
+         VALUES(11, 59, 2, GETDATE(), 12, $idSolicitud, $rol, 10, 'Se rechazo la Notaría', 0, $idUsuario);");
+    }
+
+    function rechazarNotaria5(){
+        $idSolicitud = $_POST['idSolicitud'];
+        $rol = $this->session->userdata('id_rol');
+        $idUsuario = $this->session->userdata('id_usuario');
+        $this->db->query("UPDATE solicitud_escrituracion SET idNotaria = '', estatus = 4 WHERE idSolicitud = $idSolicitud;");
+        
+        return $this->db->query("INSERT INTO control_estatus (idStatus, idCatalogo, tipo, fecha_creacion, next, idEscrituracion, idArea, newStatus, comentarios, motivos_rechazo, modificado_por)
+         VALUES(5, 57, 2, GETDATE(), 6, $idSolicitud, $rol, 4, 'Se rechazo la Notaría', 0, $idUsuario);");
     }
 
     function getEstatusConstruccion()
@@ -473,20 +504,24 @@ function checkBudgetInfo($idSolicitud){
     //OBSERVACIONES
     function updateObservacionesPostventa() {
         $idSolicitud = $_POST['idSolicitud'];
+        $observaciones = $_POST['observacionesS'];
         $rol = $this->session->userdata('id_rol');
-
+        $idUsuario = $this->session->userdata('id_usuario');
         $this->db->query("UPDATE solicitud_escrituracion SET estatus = 10 WHERE idSolicitud = $idSolicitud;");
 
-        return $this->db->query("INSERT INTO control_estatus VALUES(13, 59, 3, GETDATE(), 14, $idSolicitud, $rol, 10, 'Corrección Documentos', 0);");
+        return $this->db->query("INSERT INTO control_estatus (idStatus, idCatalogo, tipo, fecha_creacion, next, idEscrituracion, idArea, newStatus, comentarios, motivos_rechazo, modificado_por)
+         VALUES(13, 59, 3, GETDATE(), 14, $idSolicitud, $rol, 10, '$observaciones', 0, $idUsuario);");
     }
 
     function updateObservacionesProyectos() {
         $idSolicitud = $_POST['idSolicitud'];
+        $observaciones = $_POST['observacionesS'];
         $rol = $this->session->userdata('id_rol');
-
+        $idUsuario = $this->session->userdata('id_usuario');
         $this->db->query("UPDATE solicitud_escrituracion SET estatus = 93 WHERE idSolicitud = $idSolicitud;");
 
-        return $this->db->query("INSERT INTO control_estatus VALUES(13, 59, 3, GETDATE(), 14, $idSolicitud, $rol, 10, 'Se envío correo a Proyectos', 0);");
+        return $this->db->query("INSERT INTO control_estatus (idStatus, idCatalogo, tipo, fecha_creacion, next, idEscrituracion, idArea, newStatus, comentarios, motivos_rechazo, modificado_por)
+         VALUES(13, 59, 3, GETDATE(), 14, $idSolicitud, $rol, 10, '$observaciones', 0, $idUsuario);");
     }
  
     function getSolicitudEscrituracion($idSolicitud)
@@ -612,22 +647,25 @@ function checkBudgetInfo($idSolicitud){
     // }
 
     function getFullReportContraloria($idSolicitud){
-        $query = $this->db->query("SELECT ce.idEscrituracion, max(ce.fecha_creacion) fecha_creacion, 
-        ce.newStatus, l.nombreLote, cond.nombre nombreCondominio, r.nombreResidencial, se.nombre, 
-        oxc.nombre estatus, oxc2.nombre area, cp.tiempo
-        FROM control_estatus ce
-        INNER JOIN solicitud_escrituracion se ON se.idSolicitud = ce.idEscrituracion
-        INNER JOIN lotes l ON se.idLote = l.idLote 
+        $query = $this->db->query("WITH cte AS(
+            SELECT MAX(fecha_creacion) fecha_creacion, idStatus, idEscrituracion
+            FROM control_estatus 
+            WHERE idEscrituracion = $idSolicitud GROUP BY idStatus, idEscrituracion
+        )
+        SELECT cte.*, isNULL(lag(MAX(ce.fecha_creacion)) OVER (ORDER BY cte.idStatus), cte.fecha_creacion) fechados,
+        l.nombreLote, cond.nombre nombreCondominio, r.nombreResidencial, se.nombre, 
+        oxc.nombre estatus, oxc2.nombre area, cp.tiempo FROM cte
+        INNER JOIN control_estatus ce ON ce.idEscrituracion = cte.idEscrituracion AND ce.fecha_creacion = cte.fecha_creacion
+        INNER JOIN solicitud_escrituracion se ON se.idSolicitud = cte.idEscrituracion
+        INNER JOIN lotes l ON se.idLote = l.idLote
         INNER JOIN condominios cond ON cond.idCondominio = l.idCondominio 
         INNER JOIN residenciales r ON r.idResidencial = cond.idResidencial 
         INNER JOIN clientes c ON c.id_cliente = se.idCliente AND c.status = 1
-        INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = ce.newStatus AND oxc.id_catalogo = 59 
+        INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = cte.idStatus AND oxc.id_catalogo = 59 
         INNER JOIN opcs_x_cats oxc2 ON oxc2.id_opcion = ce.idArea AND oxc2.id_catalogo = 1
-        INNER JOIN control_procesos cp ON cp.estatus=ce.newStatus AND cp.idRol = ce.idArea
-        WHERE ce.idEscrituracion = $idSolicitud
-        GROUP BY ce.idEscrituracion, ce.newStatus, l.nombreLote,cond.nombre, 
-        r.nombreResidencial, CONCAT(c.nombre, ' ', c.apellido_paterno, ' ', c.apellido_materno), oxc.nombre, oxc2.nombre, cp.tiempo, ce.fecha_creacion,  se.nombre, se.nombre, ce.idStatus");
-                
+        INNER JOIN control_procesos cp ON cp.estatus=ce.idStatus AND cp.idRol = ce.idArea
+        GROUP BY cte.idStatus, cte.idEscrituracion, cte.fecha_creacion, l.nombreLote, cond.nombre, r.nombreResidencial, se.nombre, 
+        oxc.nombre, oxc2.nombre, cp.tiempo");
         return $query->result_array();
     }
 
@@ -646,9 +684,11 @@ function checkBudgetInfo($idSolicitud){
             return $finalAnswer = 1;
     }
 
-    function checkBudgetInformacion($idSolicitud){
+    function getBudgetInformacion($idSolicitud){
         return $this->db->query("SELECT se.*, hl.modificado,
-        cond.nombre nombreCondominio, r.nombreResidencial, l.nombreLote, oxc2.nombre nombreConst, oxc.nombre nombrePago, oxc3.nombre tipoEscritura FROM solicitud_escrituracion se 
+        cond.nombre nombreCondominio, r.nombreResidencial, l.nombreLote, oxc2.nombre nombreConst, oxc.nombre nombrePago, oxc3.nombre tipoEscritura,
+        CASE se.cliente_anterior WHEN 1 THEN 'SÍ' ELSE 'NO' END cli_anterior
+        FROM solicitud_escrituracion se 
         INNER JOIN clientes c ON c.id_cliente = se.idCliente
         INNER JOIN (SELECT idLote, MAX(modificado) modificado FROM historial_lotes WHERE idStatusContratacion = 15 AND idMovimiento = 45 GROUP BY idLote) hl ON hl.idLote=se.idLote
         INNER JOIN lotes l ON se.idLote = l.idLote 
@@ -659,6 +699,7 @@ function checkBudgetInfo($idSolicitud){
         LEFT JOIN opcs_x_cats oxc3 ON oxc3.id_opcion = se.tipo_escritura AND oxc3.id_catalogo = 70
         WHERE se.idSolicitud = $idSolicitud");
     }
+
     function getNotariasXUsuario($idSolicitud)
     {
         $query = $this->db->query("SELECT nxu.*, n.nombre_notaria, n.direccion FROM notarias_x_usuario nxu 
@@ -683,6 +724,126 @@ function checkBudgetInfo($idSolicitud){
             GROUP BY tipo, idNxS)");
     }
     
+    function getDocumentsClientOtros($idSolicitud)
+    {
+        $query = $this->db->query("	SELECT de.idDocumento, oxc.nombre, de.expediente, de.tipo_documento, de.idSolicitud,
+        CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) creado_por, de.fecha_creacion, se.estatus estatusActual,
+        (CASE WHEN de.estatus_validacion IS NULL THEN 'Sin validar' WHEN de.estatus_validacion = 1 THEN 'Validado OK' WHEN de.estatus_validacion = 2 THEN 'Rechazado' END) estatus_validacion,
+        (CASE WHEN de.estatus_validacion IS NULL THEN '#566573' WHEN de.estatus_validacion = 1 THEN '#239B56' WHEN de.estatus_validacion = 2 THEN '#C0392B' END) colour,
+        (CASE WHEN CONCAT(us2.nombre, ' ', us2.apellido_paterno, ' ', us2.apellido_materno) = '' THEN 'Sin especificar' ELSE CONCAT(us2.nombre, ' ', us2.apellido_paterno, ' ', us2.apellido_materno) END) validado_por,
+        de.estatus_validacion ev,
+        (CASE 
+        WHEN de.estatus_validacion = 2 THEN STRING_AGG (mr.motivo, '')
+        ELSE 'SIN  MOTIVOS DE RECHAZO'
+        END) motivos_rechazo, 0 estatusPropuesta, de.editado
+        FROM documentos_escrituracion de 
+        INNER JOIN solicitud_escrituracion se ON se.idSolicitud = de.idSolicitud
+        INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = de.tipo_documento AND oxc.id_catalogo = (CASE WHEN isNULL(se.personalidad,0) = 1 THEN 72 ELSE 60 END)
+        LEFT JOIN usuarios us ON us.id_usuario = de.creado_por
+        LEFT JOIN usuarios us2 ON us2.id_usuario = de.validado_por
+        LEFT JOIN motivos_rechazo_x_documento mrxd ON mrxd.id_documento = de.idDocumento AND mrxd.estatus = 1 
+        LEFT JOIN motivos_rechazo mr ON mr.id_motivo = mrxd.id_motivo
+        LEFT JOIN control_estatus ce ON ce.idEscrituracion = se.idSolicitud AND ce.idStatus = se.estatus AND de.estatus_validacion = 2
+        WHERE de.idSolicitud = $idSolicitud AND de.tipo_documento NOT IN (1, 2, 3, 4, 5, 6, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17)
+        GROUP BY
+        de.idDocumento, oxc.nombre, de.expediente, de.tipo_documento, de.idSolicitud,
+        CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno), de.fecha_creacion, se.estatus,
+        (CASE WHEN de.estatus_validacion IS NULL THEN 'Sin validar' WHEN de.estatus_validacion = 1 THEN 'Validado OK' WHEN de.estatus_validacion = 2 THEN 'Rechazado' END),
+        (CASE WHEN de.estatus_validacion IS NULL THEN '#566573' WHEN de.estatus_validacion = 1 THEN '#239B56' WHEN de.estatus_validacion = 2 THEN '#C0392B' END) ,
+        (CASE WHEN CONCAT(us2.nombre, ' ', us2.apellido_paterno, ' ', us2.apellido_materno) = '' THEN 'Sin especificar' ELSE CONCAT(us2.nombre, ' ', us2.apellido_paterno, ' ', us2.apellido_materno) END),
+        de.estatus_validacion, de.editado
+            UNION ALL
+            SELECT pr.idPresupuesto idDocumento, CONCAT('Presupuesto ', oxc.nombre, ' - ', nota.nombre_notaria) nombre, pr.expediente, 13 tipo_documento, pr.idSolicitud,  CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) creado_por, pr.fecha_creacion, 
+            se.estatus estatusActual,
+            (CASE WHEN de.estatus_validacion IS NULL THEN 'Sin validar' WHEN de.estatus_validacion = 1 THEN 'Validado OK' WHEN de.estatus_validacion = 2 THEN 'Rechazado' END) estatus_validacion,
+            (CASE WHEN de.estatus_validacion IS NULL THEN '#566573' WHEN de.estatus_validacion = 1 THEN '#239B56' WHEN de.estatus_validacion = 2 THEN '#C0392B' END) colour,
+            (CASE WHEN CONCAT(us2.nombre, ' ', us2.apellido_paterno, ' ', us2.apellido_materno) = '' THEN 'Sin especificar' ELSE CONCAT(us2.nombre, ' ', us2.apellido_paterno, ' ', us2.apellido_materno) END) validado_por,
+            de.estatus_validacion ev,
+            (CASE 
+            WHEN de.estatus_validacion = 2 THEN STRING_AGG (mr.motivo, '')
+            ELSE 'SIN  MOTIVOS DE RECHAZO'
+            END) motivos_rechazo, pr.estatus estatusPropuesta, null editado
+    
+            from Presupuestos pr
+            INNER JOIN usuarios u ON u.id_usuario = pr.creado_por
+            INNER JOIN solicitud_escrituracion se ON se.idSolicitud = pr.idSolicitud
+            INNER JOIN documentos_escrituracion de ON de.idSolicitud = se.idSolicitud AND de.tipo_documento = 13
+            LEFT JOIN usuarios us2 ON us2.id_usuario = de.validado_por
+            LEFT JOIN motivos_rechazo_x_documento mrxd ON mrxd.id_documento = de.idDocumento AND mrxd.estatus = 1 
+            LEFT JOIN motivos_rechazo mr ON mr.id_motivo = mrxd.id_motivo
+            INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = pr.tipo AND oxc.id_catalogo = 69
+            INNER JOIN notarias_x_usuario nxu ON nxu.idNxS = pr.idNxS
+			INNER JOIN Notarias nota ON nota.idNotaria = nxu.id_notaria
+            WHERE pr.idSolicitud = $idSolicitud AND pr.expediente != ''
+             GROUP BY
+        pr.idPresupuesto , pr.expediente, pr.idSolicitud, oxc.nombre, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno), pr.fecha_creacion, 
+            se.estatus,
+            (CASE WHEN de.estatus_validacion IS NULL THEN 'Sin validar' WHEN de.estatus_validacion = 1 THEN 'Validado OK' WHEN de.estatus_validacion = 2 THEN 'Rechazado' END),
+            (CASE WHEN de.estatus_validacion IS NULL THEN '#566573' WHEN de.estatus_validacion = 1 THEN '#239B56' WHEN de.estatus_validacion = 2 THEN '#C0392B' END) ,
+            (CASE WHEN CONCAT(us2.nombre, ' ', us2.apellido_paterno, ' ', us2.apellido_materno) = '' THEN 'Sin especificar' ELSE CONCAT(us2.nombre, ' ', us2.apellido_paterno, ' ', us2.apellido_materno) END),
+            de.estatus_validacion, pr.estatus,nota.nombre_notaria");
+        return $query->result();
+    }
 
+    function getDocumentsClientPago($idSolicitud)
+    {
+        $query = $this->db->query("	SELECT de.idDocumento, oxc.nombre, de.expediente, de.tipo_documento, de.idSolicitud,
+        CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) creado_por, de.fecha_creacion, se.estatus estatusActual,
+        (CASE WHEN de.estatus_validacion IS NULL THEN 'Sin validar' WHEN de.estatus_validacion = 1 THEN 'Validado OK' WHEN de.estatus_validacion = 2 THEN 'Rechazado' END) estatus_validacion,
+        (CASE WHEN de.estatus_validacion IS NULL THEN '#566573' WHEN de.estatus_validacion = 1 THEN '#239B56' WHEN de.estatus_validacion = 2 THEN '#C0392B' END) colour,
+        (CASE WHEN CONCAT(us2.nombre, ' ', us2.apellido_paterno, ' ', us2.apellido_materno) = '' THEN 'Sin especificar' ELSE CONCAT(us2.nombre, ' ', us2.apellido_paterno, ' ', us2.apellido_materno) END) validado_por,
+        de.estatus_validacion ev,
+        (CASE 
+        WHEN de.estatus_validacion = 2 THEN STRING_AGG (mr.motivo, '')
+        ELSE 'SIN  MOTIVOS DE RECHAZO'
+        END) motivos_rechazo, 0 estatusPropuesta, de.editado
+        FROM documentos_escrituracion de 
+        INNER JOIN solicitud_escrituracion se ON se.idSolicitud = de.idSolicitud
+        INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = de.tipo_documento AND oxc.id_catalogo = (CASE WHEN isNULL(se.personalidad,0) = 1 THEN 72 ELSE 60 END)
+        LEFT JOIN usuarios us ON us.id_usuario = de.creado_por
+        LEFT JOIN usuarios us2 ON us2.id_usuario = de.validado_por
+        LEFT JOIN motivos_rechazo_x_documento mrxd ON mrxd.id_documento = de.idDocumento AND mrxd.estatus = 1 
+        LEFT JOIN motivos_rechazo mr ON mr.id_motivo = mrxd.id_motivo
+        LEFT JOIN control_estatus ce ON ce.idEscrituracion = se.idSolicitud AND ce.idStatus = se.estatus AND de.estatus_validacion = 2
+        WHERE de.idSolicitud = $idSolicitud AND de.tipo_documento NOT IN (1, 2, 3, 4, 5, 6, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 20, 21)
+        GROUP BY
+        de.idDocumento, oxc.nombre, de.expediente, de.tipo_documento, de.idSolicitud,
+        CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno), de.fecha_creacion, se.estatus,
+        (CASE WHEN de.estatus_validacion IS NULL THEN 'Sin validar' WHEN de.estatus_validacion = 1 THEN 'Validado OK' WHEN de.estatus_validacion = 2 THEN 'Rechazado' END),
+        (CASE WHEN de.estatus_validacion IS NULL THEN '#566573' WHEN de.estatus_validacion = 1 THEN '#239B56' WHEN de.estatus_validacion = 2 THEN '#C0392B' END) ,
+        (CASE WHEN CONCAT(us2.nombre, ' ', us2.apellido_paterno, ' ', us2.apellido_materno) = '' THEN 'Sin especificar' ELSE CONCAT(us2.nombre, ' ', us2.apellido_paterno, ' ', us2.apellido_materno) END),
+        de.estatus_validacion, de.editado
+            UNION ALL
+            SELECT pr.idPresupuesto idDocumento, CONCAT('Presupuesto ', oxc.nombre, ' - ', nota.nombre_notaria) nombre, pr.expediente, 13 tipo_documento, pr.idSolicitud,  CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) creado_por, pr.fecha_creacion, 
+            se.estatus estatusActual,
+            (CASE WHEN de.estatus_validacion IS NULL THEN 'Sin validar' WHEN de.estatus_validacion = 1 THEN 'Validado OK' WHEN de.estatus_validacion = 2 THEN 'Rechazado' END) estatus_validacion,
+            (CASE WHEN de.estatus_validacion IS NULL THEN '#566573' WHEN de.estatus_validacion = 1 THEN '#239B56' WHEN de.estatus_validacion = 2 THEN '#C0392B' END) colour,
+            (CASE WHEN CONCAT(us2.nombre, ' ', us2.apellido_paterno, ' ', us2.apellido_materno) = '' THEN 'Sin especificar' ELSE CONCAT(us2.nombre, ' ', us2.apellido_paterno, ' ', us2.apellido_materno) END) validado_por,
+            de.estatus_validacion ev,
+            (CASE 
+            WHEN de.estatus_validacion = 2 THEN STRING_AGG (mr.motivo, '')
+            ELSE 'SIN  MOTIVOS DE RECHAZO'
+            END) motivos_rechazo, pr.estatus estatusPropuesta, null editado
+    
+            from Presupuestos pr
+            INNER JOIN usuarios u ON u.id_usuario = pr.creado_por
+            INNER JOIN solicitud_escrituracion se ON se.idSolicitud = pr.idSolicitud
+            INNER JOIN documentos_escrituracion de ON de.idSolicitud = se.idSolicitud AND de.tipo_documento = 13
+            LEFT JOIN usuarios us2 ON us2.id_usuario = de.validado_por
+            LEFT JOIN motivos_rechazo_x_documento mrxd ON mrxd.id_documento = de.idDocumento AND mrxd.estatus = 1 
+            LEFT JOIN motivos_rechazo mr ON mr.id_motivo = mrxd.id_motivo
+            INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = pr.tipo AND oxc.id_catalogo = 69
+            INNER JOIN notarias_x_usuario nxu ON nxu.idNxS = pr.idNxS
+			INNER JOIN Notarias nota ON nota.idNotaria = nxu.id_notaria
+            WHERE pr.idSolicitud = $idSolicitud AND pr.expediente != ''
+             GROUP BY
+        pr.idPresupuesto , pr.expediente, pr.idSolicitud, oxc.nombre, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno), pr.fecha_creacion, 
+            se.estatus,
+            (CASE WHEN de.estatus_validacion IS NULL THEN 'Sin validar' WHEN de.estatus_validacion = 1 THEN 'Validado OK' WHEN de.estatus_validacion = 2 THEN 'Rechazado' END),
+            (CASE WHEN de.estatus_validacion IS NULL THEN '#566573' WHEN de.estatus_validacion = 1 THEN '#239B56' WHEN de.estatus_validacion = 2 THEN '#C0392B' END) ,
+            (CASE WHEN CONCAT(us2.nombre, ' ', us2.apellido_paterno, ' ', us2.apellido_materno) = '' THEN 'Sin especificar' ELSE CONCAT(us2.nombre, ' ', us2.apellido_paterno, ' ', us2.apellido_materno) END),
+            de.estatus_validacion, pr.estatus,nota.nombre_notaria");
+        return $query->result();
+    }
     
 }

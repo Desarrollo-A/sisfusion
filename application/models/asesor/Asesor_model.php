@@ -76,7 +76,7 @@ class Asesor_model extends CI_Model
                 if ($this->session->userdata('id_usuario') == 2896) { // ES PATRICIA MAYA
                     return $this->db->query("SELECT * FROM Menu2 WHERE rol = $rol AND estatus = 1 order by orden asc");
                 } else { // ES OTRO USUARIO DE CONSULTA Y NO VE COMISIONES
-                    return $this->db->query("SELECT * FROM Menu2 WHERE rol = $rol AND nombre NOT IN ('Inicio', 'Comisiones') AND estatus = 1 order by orden asc");
+                    return $this->db->query("SELECT * FROM Menu2 WHERE rol = $rol AND nombre NOT IN ('Inicio', 'Comisiones','Usuarios') AND estatus = 1 order by orden asc");
                 }
             } else {
                 if ($this->session->userdata('id_usuario') == 2762) {
@@ -149,15 +149,17 @@ class Asesor_model extends CI_Model
     /*---------------------------------------FIN MENU-------------------------------------*/
     public function getDataDs1($id_cliente)
     { // DATA FROM DEPOSITO_SERIEDAD
+        ini_set('max_execution_time', 300);
+        set_time_limit(300);
         $query = $this->db->query("SELECT '1' qry, '1' dsType, cl.id_cliente, id_asesor, id_coordinador, id_gerente, cl.id_sede, cl.nombre, cl.apellido_paterno, 
         cl.apellido_materno, cl.status ,cl.idLote, fechaApartado ,fechaVencimiento , cl.usuario, cond.idCondominio, cl.fecha_creacion, 
         cl.creado_por, cl.fecha_modificacion, cl.modificado_por, cond.nombre as nombreCondominio, residencial.nombreResidencial as nombreResidencial,
         cl.status, nombreLote, lotes.comentario, lotes.idMovimiento, lotes.fechaVenc, lotes.modificado, lotes.observacionContratoUrgente as vl, lotes.idStatusContratacion, cl.concepto, cl.id_prospecto,
-        cl.flag_compartida,
+        cl.flag_compartida, aut.estatus,
         UPPER(CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno)) coordinador, 
         UPPER(CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno)) gerente, 
         UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)) subdirector, 
-        UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)) regional
+        UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)) regional 
 		FROM clientes as cl
         LEFT JOIN usuarios as us ON cl.id_asesor=us.id_usuario
         LEFT JOIN lotes as lotes ON lotes.idLote=cl.idLote
@@ -167,6 +169,7 @@ class Asesor_model extends CI_Model
         LEFT JOIN usuarios u2 ON u2.id_usuario = cl.id_gerente
         LEFT JOIN usuarios u3 ON u3.id_usuario = cl.id_subdirector
         LEFT JOIN usuarios u4 ON u4.id_usuario = cl.id_regional
+        LEFT JOIN autorizaciones AS aut ON cl.id_cliente = aut.idCliente AND lotes.idLote = aut.idLote
         INNER JOIN deposito_seriedad as ds ON ds.id_cliente = cl.id_cliente
         WHERE lotes.idStatusLote = 3 AND cl.status = 1 AND cl.id_cliente = $id_cliente AND ds.desarrollo IS NOT NULL");
         return $query->result();
@@ -174,26 +177,31 @@ class Asesor_model extends CI_Model
 
     public function getDataDs2($id_cliente)
     { // DATA FROM DEPOSITO_SERIEDAD_CONSULTA
+        ini_set('max_execution_time', 300);
+        set_time_limit(300);
         $query = $this->db->query("SELECT '2' qry, '2' dsType, cl.idCliente as id_cliente, cl.idAsesor id_asesor, '0' id_coordinador,cl.idGerente id_gerente, '0' id_sede, CONCAT(cl.primerNombre, ' ', cl.segundoNombre) nombre, cl.apellidoPaterno apellido_paterno, 
         cl.apellidoMaterno apellido_materno, cl.status ,cl.idLote, fechaApartado ,fechaVencimiento , cl.usuario, cond.idCondominio, cl.fechaApartado fecha_creacion, 
         cl.creado_por, cl.fechaApartado fecha_modificacion, cl.usuario modificado_por, cond.nombre as nombreCondominio, residencial.nombreResidencial as nombreResidencial,
         cl.status, nombreLote, lotes.comentario, lotes.idMovimiento, lotes.fechaVenc, lotes.modificado, lotes.observacionContratoUrgente as vl, lotes.idStatusContratacion, cl.concepto, '666' as id_prospecto,
-        cl.flag_compartida, '  ' coordinador, '  ' gerente, '  ' subdirector, '  ' regional
+        cl.flag_compartida, '  ' coordinador, '  ' gerente, '  ' subdirector, '  ' regional, aut.estatus as estatus
 		FROM cliente_consulta as cl
         LEFT JOIN lotes as lotes ON lotes.idLote=cl.idLote
         LEFT JOIN condominios as cond ON lotes.idCondominio=cond.idCondominio
         LEFT JOIN residenciales as residencial ON cond.idResidencial=residencial.idResidencial
         INNER JOIN deposito_seriedad_consulta as ds ON ds.idCliente = cl.idCliente
+        LEFT JOIN autorizaciones AS aut ON cl.idCliente = aut.idCliente AND lotes.idLote = aut.idLote
         WHERE lotes.idStatusLote = 3 AND cl.status = 1 AND cl.idCliente = $id_cliente");
         return $query->result();
     }
 
     public function getDataDs3($id_cliente)
     { // DATA FROM DEPOSITO_SERIEDAD WHEN NO ENCONTRÓ NOTHING IN getDataDs1 & getDataDs2
+        ini_set('max_execution_time', 300);
+        set_time_limit(300);
         $query = $this->db->query("SELECT '3' qry, '1' dsType, cl.id_cliente, id_asesor, id_coordinador, id_gerente, cl.id_sede, cl.nombre, cl.apellido_paterno, 
         cl.apellido_materno, cl.status ,cl.idLote, fechaApartado ,fechaVencimiento , cl.usuario, cond.idCondominio, cl.fecha_creacion, 
         cl.creado_por, cl.fecha_modificacion, cl.modificado_por, cond.nombre as nombreCondominio, residencial.nombreResidencial as nombreResidencial, cl.status, nombreLote, lotes.comentario, lotes.idMovimiento, lotes.fechaVenc, lotes.modificado, lotes.observacionContratoUrgente as vl, lotes.idStatusContratacion, cl.concepto, cl.id_prospecto,
-        cl.flag_compartida,
+        cl.flag_compartida, aut.estatus as estatus,
         UPPER(CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno)) coordinador, 
         UPPER(CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno)) gerente, 
         UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)) subdirector, 
@@ -208,6 +216,7 @@ class Asesor_model extends CI_Model
         LEFT JOIN usuarios u2 ON u2.id_usuario = cl.id_gerente
         LEFT JOIN usuarios u3 ON u3.id_usuario = cl.id_subdirector
         LEFT JOIN usuarios u4 ON u4.id_usuario = cl.id_regional
+        LEFT JOIN autorizaciones AS aut ON cl.id_cliente = aut.idCliente AND lotes.idLote = aut.idLote
         WHERE lotes.idStatusLote = 3 AND cl.status = 1 AND cl.id_cliente = $id_cliente");
         return $query->result();
     }
@@ -865,18 +874,18 @@ class Asesor_model extends CI_Model
 
     public function get_sol_aut()
     {
-        $query = $this->db->query('		
-		SELECT cliente.id_cliente, nombreLote, cliente.rfc, nombreResidencial, condominio.nombre as nombreCondominio, 
+        $query = $this->db->query('SELECT cliente.id_cliente, nombreLote, cliente.rfc, nombreResidencial, condominio.nombre as nombreCondominio, 
 		cliente.status, cliente.id_asesor, condominio.idCondominio, lotes.idLote, cliente.autorizacion, cliente.fechaApartado 
-		FROM clientes as cliente
+		lotes.idStatusContratacion, lotes.idMovimiento FROM clientes as cliente
 		INNER JOIN lotes ON cliente.idLote = lotes.idLote
 		INNER JOIN condominios as condominio ON lotes.idCondominio = condominio.idCondominio
 		INNER JOIN residenciales as residencial ON condominio.idResidencial = residencial.idResidencial
 		INNER JOIN deposito_seriedad ON deposito_seriedad.id_cliente = cliente.id_cliente
-		WHERE cliente.status = 1 AND cliente.id_asesor = ' . $this->session->userdata('id_usuario') . '
+		WHERE cliente.status = 1 AND cliente.id_asesor = ' . $this->session->userdata('id_usuario') . ' 
 		GROUP BY lotes.idLote,
 		cliente.id_cliente, nombreLote, cliente.rfc, nombreResidencial, condominio.nombre, 
-		cliente.status, cliente.id_asesor, condominio.idCondominio, lotes.idLote, cliente.autorizacion, cliente.fechaApartado
+		cliente.status, cliente.id_asesor, condominio.idCondominio, lotes.idLote, cliente.autorizacion, cliente.fechaApartado,
+        lotes.idStatusContratacion, lotes.idMovimiento
 		ORDER BY cliente.fechaApartado DESC');
         return $query->result_array();
     }
@@ -890,101 +899,37 @@ class Asesor_model extends CI_Model
     }
 
 
-    public function registroClienteDS()
-    {
-        $query = $this->db->query("		
-		SELECT cl.id_cliente, id_asesor, id_coordinador, id_gerente, cl.id_sede, cl.nombre, cl.apellido_paterno, 
+    public function registroClienteDS($id_condominio) {
+        ini_set('max_execution_time', 300);
+        set_time_limit(300);
+        if ($id_condominio != 0 && $this->session->userdata('id_usuario') == 9651)
+            $where = "AND cond.idCondominio = $id_condominio";
+        else
+            $where = "";
+		$query = $this->db-> query("SELECT cl.id_cliente, id_asesor, id_coordinador, id_gerente, cl.id_sede, cl.nombre, cl.apellido_paterno, 
         cl.apellido_materno, cl.status ,cl.idLote, fechaApartado ,fechaVencimiento , cl.usuario, cond.idCondominio, cl.fecha_creacion, 
         cl.creado_por, cl.fecha_modificacion, cl.modificado_por, cond.nombre as nombreCondominio, residencial.nombreResidencial as nombreResidencial,
-        cl.status, nombreLote, lotes.comentario, lotes.idMovimiento, lotes.fechaVenc, lotes.modificado
-		
-		FROM clientes as cl
-				
-        LEFT JOIN usuarios as us on cl.id_asesor=us.id_usuario
-        LEFT JOIN lotes as lotes on lotes.idLote=cl.idLote and lotes.idCliente = cl.id_cliente AND lotes.idStatusLote = 3
-		
-        LEFT JOIN condominios as cond on lotes.idCondominio=cond.idCondominio
-        LEFT JOIN residenciales as residencial on cond.idResidencial=residencial.idResidencial
-		LEFT JOIN deposito_seriedad as ds on ds.id_cliente = cl.id_cliente	
-
-		
-		
-		WHERE 
-		
-		        cl.id_coordinador NOT IN (2562, 2541) AND
-		        idStatusContratacion = 1 AND idMovimiento = 31 and cl.status = 1 AND cl.id_asesor = " . $this->session->userdata('id_usuario') . "
-				OR idStatusContratacion = 2 AND idMovimiento = 85 and cl.status = 1 AND cl.id_asesor = " . $this->session->userdata('id_usuario') . "
-				OR idStatusContratacion = 1 and idMovimiento = 20 and cl.status = 1 AND cl.id_asesor = " . $this->session->userdata('id_usuario') . "
-				OR idStatusContratacion = 1 and idMovimiento = 63 and cl.status = 1 AND cl.id_asesor = " . $this->session->userdata('id_usuario') . "
-				OR idStatusContratacion = 1 and idMovimiento = 73 and cl.status = 1 AND cl.id_asesor = " . $this->session->userdata('id_usuario') . "
-				OR idStatusContratacion = 3 and idMovimiento = 82 and cl.status = 1 AND cl.id_asesor = " . $this->session->userdata('id_usuario') . "
-				OR idStatusContratacion = 1 and idMovimiento = 92 and cl.status = 1 AND cl.id_asesor = " . $this->session->userdata('id_usuario') . "
-				OR idStatusContratacion = 1 and idMovimiento = 96 and cl.status = 1 AND cl.id_asesor = " . $this->session->userdata('id_usuario') . "
-
-				
-		AND cl.status = 1 ORDER BY cl.id_Cliente ASC");
-        return $query->result_array();
-    }
+        cl.status, nombreLote, lotes.comentario, lotes.idMovimiento, lotes.fechaVenc, lotes.modificado, aut.estatus 
+        FROM clientes AS cl			
+        INNER JOIN usuarios AS us ON cl.id_asesor = us.id_usuario
+        INNER JOIN lotes AS lotes ON lotes.idLote = cl.idLote AND lotes.idCliente = cl.id_cliente AND lotes.idStatusLote = 3
+        INNER JOIN condominios AS cond ON lotes.idCondominio = cond.idCondominio $where
+        INNER JOIN residenciales AS residencial ON cond.idResidencial=residencial.idResidencial
+        INNER JOIN autorizaciones AS aut ON cl.id_cliente = aut.idCliente AND lotes.idLote = aut.idLote
+        LEFT JOIN deposito_seriedad AS ds ON ds.id_cliente = cl.id_cliente	
+        WHERE cl.id_coordinador NOT IN(2562, 2541) AND idStatusContratacion IN (1, 2, 3) AND idMovimiento IN (31, 85, 20, 63, 73, 82, 92, 96) AND 
+        cl.status = 1 AND cl.id_asesor = ".$this->session->userdata('id_usuario')." AND cl.status = 1 ORDER BY cl.id_Cliente ASC");
+		return $query->result_array();
+	}
 
 
-
-
-
-
-
-
-
-
-
-    // public function registroClienteDS() {
-
-    // $this->db->select("cl.id_cliente, id_asesor, id_coordinador, id_gerente, cl.id_sede, cl.nombre, cl.apellido_paterno,
-    // cl.apellido_materno, cl.status ,cl.idLote, fechaApartado ,fechaVencimiento , cl.usuario, cond.idCondominio, cl.fecha_creacion,
-    // cl.creado_por, cl.fecha_modificacion, cl.modificado_por, cond.nombre as nombreCondominio, residencial.nombreResidencial as nombreResidencial,
-    // cl.status, nombreLote, lotes.comentario, lotes.idMovimiento, lotes.fechaVenc, lotes.modificado");
-
-    // $this->db->join('usuarios as us', 'cl.id_asesor=us.id_usuario', 'LEFT');
-    // $this->db->join('lotes as lotes', 'lotes.idLote=cl.idLote', 'LEFT');
-    // $this->db->join('condominios as cond', 'lotes.idCondominio=cond.idCondominio', 'LEFT');
-    // $this->db->join('residenciales as residencial', 'cond.idResidencial=residencial.idResidencial', 'LEFT');
-    // $this->db->join('deposito_seriedad as ds', 'ds.id_cliente = cl.id_cliente', 'LEFT');
-
-    // $this->db->where('cl.status', 1);
-    // $this->db->where("(cl.id_asesor = '".$this->session->userdata('id_usuario')."')");
-    // $this->db->where("( idStatusContratacion = 1 AND idMovimiento = 31
-    // OR idStatusContratacion = 2 AND idMovimiento = 85
-    // OR idStatusContratacion = 1 and idMovimiento = 20
-    // OR idStatusContratacion = 1 and idMovimiento = 63
-    // OR idStatusContratacion = 1 and idMovimiento = 73
-    // OR idStatusContratacion = 3 and idMovimiento = 82
-    // OR idStatusContratacion = 1 and idMovimiento = 92 )");
-
-
-    // $this->db->order_by('cl.id_Cliente', 'ASC');
-    // $query = $this->db->get('clientes as cl');
-    // return $query->result();
-
-    // }
-
-
-    public function validateSt2($idLote)
-    {
+    public function validateSt2($idLote) {
         $this->db->where("idLote", $idLote);
         $this->db->where_in('idStatusLote', 3);
-
-        $this->db->where("( idStatusContratacion = 1 AND idMovimiento = 31 
-				OR idStatusContratacion = 2 AND idMovimiento = 85 
-				OR idStatusContratacion = 1 and idMovimiento = 20
-				OR idStatusContratacion = 1 and idMovimiento = 63
-				OR idStatusContratacion = 1 and idMovimiento = 73
-				OR idStatusContratacion = 3 and idMovimiento = 82
-				OR idStatusContratacion = 1 and idMovimiento = 92
-                OR idStatusContratacion = 1 and idMovimiento = 96 )");
-
+        $this->db->where("(idStatusContratacion IN (1, 2, 3) AND idMovimiento IN (31, 85, 20, 63, 73, 82, 92, 96))");
         $query = $this->db->get('lotes');
         $valida = (empty($query->result())) ? 0 : 1;
         return $valida;
-
     }
 
 
@@ -1681,7 +1626,8 @@ class Asesor_model extends CI_Model
     }
 
     public function getAutorizaciones($idLote){
-        $query = $this->db->query("SELECT estatus FROM autorizaciones WHERE idLote = ".$idLote.";");
+        return $this->db->query("SELECT * FROM autorizaciones WHERE idLote = ".$idLote." AND estatus=1;")->result_array();
+        //return $query->result_array();
     }
     function getlotesRechazados(){
         $id_currentUser = $this->session->userdata('id_usuario');

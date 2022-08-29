@@ -69,7 +69,7 @@
 }
 
 .ml-1 {
-  margin-left: 10px;
+  margin-left: 10px !important;
 }
 
 .ml-2 {
@@ -1164,6 +1164,19 @@
   background-color: #F1F1F1;
 }
 
+.input-gral {
+  background-color: #eaeaea !important;
+  color: #929292 !important;
+  border-radius: 27px !important;
+  background-image: none !important;
+  padding-left: 20px;
+}
+
+.isRequired {
+  color: #EA4335;
+  margin: 0 3px;
+}
+
 .boxContent td .bootstrap-select button {
   background-color: #c3c3c3 !important;
 }
@@ -1234,4 +1247,8 @@
 
 .fixed-table-body {
   overflow: inherit !important;
+}
+
+.btn-group.bootstrap-select select {
+  width: 1px !important;
 }

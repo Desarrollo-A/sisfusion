@@ -65,7 +65,7 @@
 							<center><h4 class="modal-title">Solicitar autorización</h4></center>
 						</div>
 						<div class="modal-body">
-							<label>Autoriza:</label><br>
+							<label>Autoriza: *</label><br>
 							<select name="id_aut" id="dirAutoriza" class="selectpicker" data-style="btn btn-primary" title="TIPO USUARIO" data-size="7">
 								<option value="0">--SELECCIONA--</option>
 								<option value="2401">Ing. Jesús Torre</option>
@@ -73,7 +73,7 @@
 								<option value="2403">Lic. Francisco Martínez</option>
 								<option value="2404">Lic. Adriana Mañas</option>
 							</select><br><br><br>
-							<label>Observaciones : </label>
+							<label>Observaciones: *</label>
 							<textarea class="form-control" id="comentario_0" name="comentario_0" rows="3" style="width:100%;"
 									placeholder="Ingresa tu comentario" maxlength="100" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"></textarea>
 							<input type="hidden" id="tamanocer" name="tamanocer" value="1" style="color: black">
@@ -241,7 +241,7 @@
 				error: function(){
 					$('#btnSubmit').prop('disabled', false);
 					$('#btnSubmit').css("opacity","1");
-					alerts.showNotification('top', 'right', 'ops, algo salió mal, intentalo de nuevo', 'danger');
+					alerts.showNotification('top', 'right', '¡OPS!, ALGO SALIÓ MAL, INTÉNTALO DE NUEVO.', 'danger');
 				}
 			});
 		});
@@ -506,8 +506,13 @@
 				},
 				{
 					"data": function( d ){
-						aut = '<a href="#" class="btn-data btn-blueMaderas addAutorizacionAsesor" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" title="Solicitar Autorización"><i class="far fa-handshake"></i></a>';
-						return '<div class="d-flex justify-center">'+aut+'</div>';
+						if((d.idStatusContratacion == 1 || d.idStatusContratacion == 2 || d.idStatusContratacion == 3) && (d.idMovimiento == 31 || d.idMovimiento == 85 || d.idMovimiento == 20 || d.idMovimiento == 63 || d.idMovimiento == 73 || d.idMovimiento == 82 || d.idMovimiento == 92 || d.idMovimiento == 96)){
+							aut = '<a href="#" class="btn-data btn-blueMaderas addAutorizacionAsesor" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" title="Solicitar Autorización"><i class="far fa-handshake"></i></a>';
+							return '<div class="d-flex justify-center">'+aut+'</div>';
+						}
+						else{
+							return '';
+						}
 					}
 				}],
 				ajax: {

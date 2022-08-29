@@ -2612,6 +2612,8 @@ public function getStatusMktdPreventa(){
             case '4': // ASISTENTE GERENTE
             case '53': // ANALISTA COMISIONES
             case '13': // CONTRALORÍA
+            case '13': // CONTRALORÍA
+            case '17': // CONTROL INTERNO
                 $this->load->view("clientes/clients_report_ventas", $datos);
             break;
         }
@@ -2951,11 +2953,12 @@ public function getStatusMktdPreventa(){
         if (isset($_POST) && !empty($_POST)) {
             $beginDate = date("Y-m-d", strtotime($this->input->post("beginDate")));
             $endDate = date("Y-m-d", strtotime($this->input->post("endDate")));
-            $data['data'] = $this->Clientes_model->getProspectsReportInformation($beginDate, $endDate)->result_array();
+            $type = $this->input->post("type");
+
+            $data['data'] = $this->Clientes_model->getProspectsReportInformation($type, $beginDate, $endDate)->result_array();
             echo json_encode($data);
         } else
             json_encode(array());
-    }
-    
+    } 
 }
 
