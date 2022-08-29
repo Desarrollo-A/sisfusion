@@ -28,6 +28,7 @@
   font-weight: 300;
   background-color: #143860;
   width: 100%;
+  text-transform: uppercase;
 }
 
 #seeInformationModal table thead tr th input:active {

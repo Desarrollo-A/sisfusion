@@ -116,6 +116,7 @@
                             text-align: center;
                             font-weight: 300;
                             background-color: $blueIndigoDeep;
+                            text-transform: uppercase;
                             &:active{
                                 border: 1px solid $white;
                             }
@@ -124,7 +125,7 @@
                             }
                             &::placeholder{
                                 color: $white;
-                                text-transform: lowercase;
+                                text-transform: uppercase;
                             }
                         }
                     }
