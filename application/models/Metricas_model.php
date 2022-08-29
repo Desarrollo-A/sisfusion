@@ -162,27 +162,18 @@ class Metricas_model extends CI_Model {
                 END) MONTH, YEAR(DateValue) año, isNULL(qu.superficieSUMA, 0) superficieSUMA, FORMAT(isNULL(qu.precioSUMA,0),'C') precioSUMA, CAST(isNULL(qu.promedio,0) AS decimal(16,2)) promedio FROM cte 
             LEFT JOIN (
             SELECT SUM(lo.sup) superficieSUMA,
-                SUM(
-                    CASE 
-                        WHEN isNULL(cl.totalNeto2_cl ,lo.totalNeto2) IS NULL THEN isNULL(cl.total_cl ,lo.total) 
-                        WHEN isNULL(cl.totalNeto2_cl ,lo.totalNeto2) = 0 THEN isNULL(cl.total_cl ,lo.total) 
-                        ELSE isNULL(cl.totalNeto2_cl ,lo.totalNeto2) 
-                    END) precioSUMA, 
-                SUM(
-                    CASE 
-                        WHEN isNULL(cl.totalNeto2_cl ,lo.totalNeto2) IS NULL THEN isNULL(cl.total_cl ,lo.total) 
-                        WHEN isNULL(cl.totalNeto2_cl ,lo.totalNeto2) = 0 THEN isNULL(cl.total_cl ,lo.total) 
-                        ELSE isNULL(cl.totalNeto2_cl ,lo.totalNeto2) 
-                    END)/SUM(lo.sup) promedio, MONTH(cl.fechaApartado) mes, YEAR(cl.fechaApartado) año
+                SUM(lo.totalNeto2) precioSUMA, 
+                SUM(lo.totalNeto2)/SUM(lo.sup) promedio, MONTH(cl.fechaApartado) mes, YEAR(cl.fechaApartado) año
             FROM lotes lo
             INNER JOIN clientes cl ON cl.id_cliente = lo.idCliente
             INNER JOIN condominios cond ON cond.idCondominio = lo.idCondominio
             INNER JOIN residenciales res ON res.idResidencial = cond.idResidencial
             WHERE cl.fechaApartado BETWEEN '$beginDate 00:00:00' AND '$endDate 23:59:59' AND cond.tipo_lote = 0 $filtro
+            AND lo.totalNeto2>0.00
             GROUP BY MONTH(cl.fechaApartado), YEAR(cl.fechaApartado)) qu ON qu.mes = month(cte.DateValue) AND qu.año = year(cte.DateValue)
             GROUP BY YEAR(DateValue), MONTH(DateValue), qu.superficieSUMA, qu.precioSUMA, qu.promedio
             ORDER BY YEAR(DateValue), MONTH(DateValue)
-            OPTION (MAXRECURSION 0)");
+            OPTION (MAXRECURSION 0)d");
         return $query->result_array();
     }
 
