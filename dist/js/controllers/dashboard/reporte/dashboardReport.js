@@ -151,7 +151,7 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, dates=n
     }
     $('#table'+option+' thead tr:eq(0) th').each(function (i) {
         const title = $(this).text();
-        $(this).html('<input type="text" class="textoshead"  placeholder="' + title + '"/>');
+        $(this).html('<input type="text" class="w-100 textoshead"  placeholder="' + title + '"/>');
         if(i > 1 && i <10){
             $('input', this)[0].type = 'number';
             $('input', this).addClass('no-spin');

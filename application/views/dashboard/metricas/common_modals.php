@@ -11,14 +11,14 @@
             <table id="lotesDetailTable" class="table-striped table-hover w-100">
                 <thead>
                     <tr>
-                        <th class="text-center">Proyecto</th>
-                        <th class="text-center">Condominio</th>
-                        <th class="text-center">Lote</th>
-                        <th class="text-center">Cliente</th>
-                        <th class="text-center">Asesor</th>
-                        <th class="text-center">Fecha de apartado</th>
-                        <th class="text-center">Superficie</th>
-                        <th class="text-center">Total</th>
+                        <th>Proyecto</th>
+                        <th>Condominio</th>
+                        <th>Lote</th>
+                        <th>Cliente</th>
+                        <th>Asesor</th>
+                        <th>Fecha de apartado</th>
+                        <th>Superficie</th>
+                        <th>Total</th>
                     </tr>
                 </thead>
             </table>
