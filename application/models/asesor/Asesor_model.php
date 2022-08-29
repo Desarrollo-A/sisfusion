@@ -874,11 +874,9 @@ class Asesor_model extends CI_Model
 
     public function get_sol_aut()
     {
-        $query = $this->db->query('		
-		SELECT cliente.id_cliente, nombreLote, cliente.rfc, nombreResidencial, condominio.nombre as nombreCondominio, 
-		cliente.status, cliente.id_asesor, condominio.idCondominio, lotes.idLote, cliente.autorizacion, cliente.fechaApartado,
-        lotes.idStatusContratacion, lotes.idMovimiento
-		FROM clientes as cliente
+        $query = $this->db->query('SELECT cliente.id_cliente, nombreLote, cliente.rfc, nombreResidencial, condominio.nombre as nombreCondominio, 
+		cliente.status, cliente.id_asesor, condominio.idCondominio, lotes.idLote, cliente.autorizacion, cliente.fechaApartado 
+		lotes.idStatusContratacion, lotes.idMovimiento FROM clientes as cliente
 		INNER JOIN lotes ON cliente.idLote = lotes.idLote
 		INNER JOIN condominios as condominio ON lotes.idCondominio = condominio.idCondominio
 		INNER JOIN residenciales as residencial ON condominio.idResidencial = residencial.idResidencial
@@ -925,8 +923,7 @@ class Asesor_model extends CI_Model
 	}
 
 
-    public function validateSt2($idLote)
-    {
+    public function validateSt2($idLote) {
         $this->db->where("idLote", $idLote);
         $this->db->where_in('idStatusLote', 3);
         $this->db->where("(idStatusContratacion IN (1, 2, 3) AND idMovimiento IN (31, 85, 20, 63, 73, 82, 92, 96))");
