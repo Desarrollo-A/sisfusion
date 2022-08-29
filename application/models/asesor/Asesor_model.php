@@ -1812,4 +1812,9 @@ class Asesor_model extends CI_Model
                                     FROM usuarios u WHERE id_usuario=".$id_asesor);
         return $query->row();
     }
+
+    function getWstatus1($id_lote){
+        $query = $this->db->query("SELECT * FROM autorizaciones WHERE estatus=1 AND idLote=".$id_lote);
+        return $query->result_array();
+    }
 }

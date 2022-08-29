@@ -991,7 +991,13 @@
                         $('#modal3').modal('hide');
                         $('#tabla_deposito_seriedad').DataTable().ajax.reload();
                         alerts.showNotification("top", "right", "Asegúrate de incluir los documentos; IDENTIFICACIÓN OFICIAL, COMPROBANTE DE DOMICILIO, RECIBOS DE APARTADO Y ENGANCHE y DEPÓSITO DE SERIEDAD antes de llevar a cabo el avance.", "danger");
-                    } else if(response.message == 'ERROR'){
+                    }else if(response.message == 'PENDIENT_AUTHORIZATION'){
+                        $('#save3').prop('disabled', false);
+                        $('#modal3').modal('hide');
+                        $('#tabla_deposito_seriedad').DataTable().ajax.reload();
+                        alerts.showNotification("top", "right", "Aún tienes una autorización pendiente para este lote, revisala para poder seguir el proceso", "danger");
+                    }
+                    else if(response.message == 'ERROR'){
                         $('#save3').prop('disabled', false);
                         $('#modal3').modal('hide');
                         $('#tabla_deposito_seriedad').DataTable().ajax.reload();

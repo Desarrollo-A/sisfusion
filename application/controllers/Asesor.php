@@ -3997,11 +3997,16 @@ class Asesor extends CI_Controller
         }
 
         $documentsValidation = $this->Asesor_model->validateDocumentation($idLote, $dataClient[0]['personalidad_juridica']);
+        $dataBackTest = $this->Asesor_model->getWstatus1($idLote);
 
         if (COUNT($documentsValidation) < $documentsNumber) {
             $data['message'] = 'MISSING_DOCUMENTS';
             echo json_encode($data);
-        } else {
+        } elseif(count($dataBackTest)<=0){
+            $data['message'] = 'PENDIENT_AUTHORIZATION';
+            echo json_encode($data);
+        }
+        else {
             $arreglo = array();
             $arreglo["idStatusContratacion"] = 2;
             $arreglo["idMovimiento"] = 4;
@@ -4077,7 +4082,8 @@ class Asesor extends CI_Controller
 
                 }
 
-            } elseif ($horaActual < $horaInicio || $horaActual > $horaFin) {
+            }
+            elseif ($horaActual < $horaInicio || $horaActual > $horaFin) {
 
                 $fechaAccion = date("Y-m-d H:i:s");
                 $hoy_strtotime2 = strtotime($fechaAccion);
