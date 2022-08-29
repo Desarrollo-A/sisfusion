@@ -236,22 +236,6 @@ class Reporte extends CI_Controller {
         return $where;
     }
 
-    public function get4Months(){
-        $dateTime = new DateTime();
-        $lastDate = new DateTime();
-        $firstDate;
-        // $lastDate->modify('-1 month');
-        for ($i = 1; $i <= 4; $i++) {
-            $firstDate = $dateTime->modify('-1 month');
-        }
-       
-        $dates = array(
-            'firstDate' => $firstDate->format('Y-m-d'),
-            'secondDate' => $lastDate->format('Y-m-d')
-        );
-        return $dates;
-    }
-
     public function getRolDR(){
         $idUser = $this->input->post('idUser');
         $data = $this->Reporte_model->validateRegional($idUser);

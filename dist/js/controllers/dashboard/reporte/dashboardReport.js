@@ -151,7 +151,7 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, dates=n
     }
     $('#table'+option+' thead tr:eq(0) th').each(function (i) {
         const title = $(this).text();
-        $(this).html('<input type="text" center;" class="textoshead"  placeholder="' + title + '"/>');
+        $(this).html('<input type="text" class="textoshead"  placeholder="' + title + '"/>');
         if(i > 1 && i <10){
             $('input', this)[0].type = 'number';
             $('input', this).addClass('no-spin');
@@ -493,15 +493,24 @@ async function chartDetail(e, tipoChart){
 
     var nameChart = (titleCase($(e).data("name").replace(/_/g, " "))).split(" ");
     $(".boxModalTitle .title").append('<p class="mb-1">' + nameChart[0] + '<span class="enfatize"> '+ nameChart[1] +'</span></p>');
-    let datesMonths = await get4Months();
-    let finalBeginDate = [(datesMonths.firstDate).split('-')[2],  (datesMonths.firstDate).split('-')[1], (datesMonths.firstDate).split('-')[0]].join('/');
-    let finalEndDate = [(datesMonths.secondDate).split('-')[2],  (datesMonths.secondDate).split('-')[1], (datesMonths.secondDate).split('-')[0]].join('/');
+    // let datesMonths = await get4Months();
+    const fechaInicio = new Date();
+     // Iniciar en este año, este mes, en el día 1
+     const beginDate = new Date(fechaInicio.getFullYear(), fechaInicio.getMonth(), 1);
+     // END DATE
+     const fechaFin = new Date();
+     // Iniciar en este año, el siguiente mes, en el día 0 (así que así nos regresamos un día)
+     const endDate = new Date(fechaFin.getFullYear(), fechaFin.getMonth() + 1, fechaFin.getDate());
+     finalBeginDate = [beginDate.getFullYear(), ('0' + (beginDate.getMonth() + 1)).slice(-2), ('0' + beginDate.getDate()).slice(-2)].join('-');
+     finalEndDate = [endDate.getFullYear(), ('0' + (endDate.getMonth() + 1)).slice(-2), ('0' + endDate.getDate()).slice(-2)].join('-');
+     finalBeginDate2 = ['01', '01', beginDate.getFullYear()].join('/');
+     finalEndDate2 = [('0' + endDate.getDate()).slice(-2), ('0' + (endDate.getMonth())).slice(-2), endDate.getFullYear()].join('/');
 
 
-    $("#modalChart #beginDate").val(finalBeginDate);
-    $("#modalChart #endDate").val(finalEndDate);
+    $("#modalChart #beginDate").val(finalBeginDate2);
+    $("#modalChart #endDate").val(finalEndDate2);
     $("#modalChart #type").val(tipoChart);
-    getSpecificChart(tipoChart, formatDate(finalBeginDate), formatDate(finalEndDate));
+    getSpecificChart(tipoChart, formatDate(finalBeginDate2), formatDate(finalEndDate2));
 }
 
 function getSpecificChart(type, beginDate, endDate){
@@ -1002,7 +1011,7 @@ $(document).on('click', '.btnModalDetails', function () {
 
 $('#lotesInformationTable thead tr:eq(0) th').each(function (i) {
     const title = $(this).text();
-    $(this).html('<input type="text" center;" class="textoshead"  placeholder="' + title + '"/>');
+    $(this).html('<input type="text" class="textoshead"  placeholder="' + title + '"/>');
     $('input', this).on('keyup change', function () {
         if(i != 0){
             if ($("#lotesInformationTable").DataTable().column(i).search() !== this.value) {
