@@ -239,7 +239,7 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, dates=n
             {
                 width: "2%",
                 data: function(d){
-                    let leaders = getLeadersLine(leadersList, d.userID); 
+                    let leaders = getLeadersLine(leadersList, d.userID, d.id_usuario); 
                     return `<button type="btn" data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-idUser="${d.userID}" id="details-${d.userID}" data-leader="${id_usuario}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-dr="${leaders[5]}" class="btnSub"><i class="fas fa-sitemap" data-toggle="tooltip" data-placement="bottom" title="Desglose a detalle"></i></button>`;
                 }
             },
@@ -252,7 +252,7 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, dates=n
             {
                 width: "26%",
                 data: function (d) {
-                    let leaders = getLeadersLine(leadersList, d.userID); 
+                    let leaders = getLeadersLine(leadersList, d.userID, d.id_usuario); 
                     return `<button style="background-color: #d8dde2; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="5" data-sede = 0 data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-idUser="${d.userID}" id="details-${d.userID}" data-leader="${id_usuario}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-dr="${leaders[5]}" class="btnModalDetails">${(d.totalAT + d.totalConT).toLocaleString('es-MX')}</button>`; //# APARTADOS;
                 }
             },
@@ -265,7 +265,7 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, dates=n
             {
                 width: "8%",
                 data: function (d) {
-                    let leaders = getLeadersLine(leadersList, d.userID); 
+                    let leaders = getLeadersLine(leadersList, d.userID, d.id_usuario); 
                     return `<button style="background-color: #d8dde2; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="1" data-sede = 0 data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-idUser="${d.userID}" id="details-${d.userID}" data-leader="${id_usuario}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-dr="${leaders[5]}" class="btnModalDetails">${(d.totalAT).toLocaleString('es-MX')}</button>`; //# GRAN TOTAL;
                     //return ((d.totalAT + d.totalCanA)).toLocaleString('es-MX'); //# APARTADOS
                 }
@@ -279,7 +279,7 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, dates=n
             {
                 width: "8%",
                 data: function (d) {
-                    let leaders = getLeadersLine(leadersList, d.userID); 
+                    let leaders = getLeadersLine(leadersList, d.userID, d.id_usuario); 
                     return `<button style="background-color: #d8dde2; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="4" data-sede = 0 data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-idUser="${d.userID}" id="details-${d.userID}" data-leader="${id_usuario}" data-leader="${id_usuario}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-dr="${leaders[5]}" class="btnModalDetails">${(d.totalCanA).toLocaleString('es-MX')}</button>`; //# CANCELADOS APARTADOS;
                     //return (d.totalCanA).toLocaleString('es-MX'); //# CANCELADOS APARTADOS
                 }
@@ -293,7 +293,7 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, dates=n
             {
                 width: "8%",
                 data: function (d) {
-                    let leaders = getLeadersLine(leadersList, d.userID); 
+                    let leaders = getLeadersLine(leadersList, d.userID, d.id_usuario); 
                     return `<button style="background-color: #d8dde2; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="2" data-sede = 0 data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-idUser="${d.userID}" id="details-${d.userID}" data-leader="${id_usuario}" data-leader="${id_usuario}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-dr="${leaders[5]}" class="btnModalDetails">${(d.totalConT).toLocaleString('es-MX')}</button>`; //# CONTRATADOS;
                     //return ((d.totalConT)).toLocaleString('es-MX'); //# CONTRATADOS
                 }
@@ -307,7 +307,7 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, dates=n
             {
                 width: "8%",
                 data: function (d) {
-                    let leaders = getLeadersLine(leadersList, d.userID); 
+                    let leaders = getLeadersLine(leadersList, d.userID, d.id_usuario); 
                     return `<button style="background-color: #d8dde2; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-sede = 0 data-type="3" data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-idUser="${d.userID}" id="details-${d.userID}" data-leader="${id_usuario}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-dr="${leaders[5]}" class="btnModalDetails">${(d.totalCanC).toLocaleString('es-MX')}</button>`; //# CANCELADOS CONTRATADOS;
                     //return (d.totalCanC).toLocaleString('es-MX'); //# CANCELADOS CONTRATADOS
                 }
@@ -321,7 +321,7 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, dates=n
             {
                 width: "8%",
                 data: function (d) {
-                    let leaders = getLeadersLine(leadersList, d.userID);                    
+                    let leaders = getLeadersLine(leadersList, d.userID, d.id_usuario);                    
                     return  rol == 7 || (rol == 9 && render == 1) ? '' : `<div class="d-flex justify-center"><button class="btn-data btn-blueMaderas update-dataTable" data-transaction="${transaction}" data-type="${rol}" data-render="${render}" value="${d.userID}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-dr="${leaders[5]}"><i class="fas fa-sign-in-alt"></i></button></div>`;
                 }
             },
@@ -356,7 +356,7 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, dates=n
     $('[data-toggle="tooltip"]').tooltip();
 }
 
-function getLeadersLine (leadersList, id_usuario) {
+function getLeadersLine (leadersList, id_usuario, id_lider) {
     if (leadersList[0] == 0) // PRIMER NIVEL: SÓLO TENEMOS EL ID REGIONAL
         leadersList[5] = id_usuario;
     else if (leadersList[0] == 2) // SEGUNDO NIVEL: TENEMOS EL ID SUBDIRECTOR
@@ -367,6 +367,12 @@ function getLeadersLine (leadersList, id_usuario) {
         leadersList[2] = id_usuario;
     else if (leadersList[0] == 7) // 5 NIVEL: TENEMOS EL ID COORDINADOR
         leadersList[1] = id_usuario;
+    else if (leadersList[0] == 59) { // PRIMER NIVEL: TENEMOS ID REGIONAL Y ID SUBDIRECTOR
+        leadersList[5] = id_lider;
+        leadersList[4] = id_usuario;
+    } else if (leadersList[0] == 593) { // PRIMER NIVEL: TENEMOS ID REGIONAL Y ID SUBDIRECTOR
+        leadersList[3] = id_usuario;
+    }
     return leadersList;
 }
 
@@ -412,10 +418,10 @@ $(document).on('click', '.update-dataTable', function (e) {
     } else if (type == 59) { // MJ: #DirRegional->subdir->ger
         if (render == 1) {
             const table = "gerente";
-            fillBoxAccordions(table, 3, $(this).val(), 2, transaction, dates);
+            fillBoxAccordions(table, 3, $(this).val(), 2, transaction, dates, [593, asesor, coordinador, gerente, subdirector, regional]);
         } else {
             const table = "subdirector";
-            fillBoxAccordions(table, 2, $(this).val(), 2, transaction, dates);
+            fillBoxAccordions(table, 2, $(this).val(), 2, transaction, dates, [59, asesor, coordinador, gerente, subdirector, regional]); // VA POR LOS SUBDIRECTORES: CONSULTA REGIONAL
         }
     } else if (type == 1) {
         if (render == 1) {
