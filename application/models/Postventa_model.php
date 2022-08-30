@@ -648,7 +648,7 @@ function checkBudgetInfo($idSolicitud){
 
     function getFullReportContraloria($idSolicitud){
         $query = $this->db->query("WITH cte AS(
-            SELECT MAX(fecha_creacion) fecha_creacion, (case when idStatus = 91 or idStatus = 92 then idStatus-90  when idStatus = 0 then idStatus else idStatus-1 end) idStatus, idEscrituracion
+            SELECT MAX(fecha_creacion) fecha_creacion, (case when idStatus = 91 or idStatus = 92 then idStatus-89 when idStatus = 0 then idStatus+1 else idStatus end) idStatus, idEscrituracion
             FROM control_estatus 
             WHERE idEscrituracion = $idSolicitud GROUP BY idStatus, idEscrituracion
         )
