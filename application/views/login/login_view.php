@@ -77,9 +77,9 @@
         <div class="navbar-header">
             <a class="navbar-brand" href="#">INICIAR SESIÓN</a>
         </div>
-        <div class="collapse navbar-collapse">
+        <div class="collapse navbar-collapse hide">
             <ul class="nav navbar-nav navbar-right">
-				<li class=" active">
+				<!--<li class=" active">
 					<a href="#">
 						<i class="material-icons">lock_outline</i> Login
 					</a>
@@ -88,7 +88,7 @@
                     <a href="#">
                         <i class="material-icons">settings_backup_restore</i> Recuperar contraseña
                     </a>
-                </li>
+                </li>-->
             </ul>
         </div>
     </div>

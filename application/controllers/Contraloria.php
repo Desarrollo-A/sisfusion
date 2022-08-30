@@ -2172,6 +2172,8 @@ $i = 0;
 
 	$validate = $this->Contraloria_model->validateSt9($idLote);
 
+	$this->Contraloria_model->validate90Dias($idLote,$idCliente,$this->session->userdata('id_usuario'));
+
 	if($validate == 1){
 		if ($this->Contraloria_model->updateSt($idLote,$arreglo,$arreglo2) == TRUE){ 
 				$data['message'] = 'OK';

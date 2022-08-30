@@ -4040,7 +4040,9 @@ function getStatusMktdPreventa(){
 
             case '4': // ASISTENTE GERENTE
             case '13': // CONTRALORÍA
-            $query = $this->db->query("SELECT r.descripcion nombreResidencial, cn.nombre nombreCondominio, l.nombreLote, l.idLote,
+            case '17': // CONTRALORÍA
+            case '63': // CONTROL INTERNO
+                $query = $this->db->query("SELECT r.descripcion nombreResidencial, cn.nombre nombreCondominio, l.nombreLote, l.idLote,
                 CONCAT(c.nombre, ' ', c.apellido_paterno, ' ', c.apellido_materno) nombreCliente,
                 ISNULL(c.telefono1, '') telefono, ISNULL(c.otro_lugar, '') medioProspeccion, oxc2.nombre lp, l.totalNeto2,
                 s.nombre plaza, CONVERT(VARCHAR(10), c.fechaApartado, 111) fechaApartado, 

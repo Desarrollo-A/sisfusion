@@ -87,6 +87,7 @@
                                 <select id="idloteorigen"  name="idloteorigen[]" multiple="multiple" class="form-control directorSelect2 js-example-theme-multiple" style="width: 100%;height:200px !important;"  required data-live-search="true"></select>
                             </div>
                             <b id="msj2" style="color: red;"></b>
+                            <b id="sumaReal"></b>
                             <div class="form-group row">
                                 <div class="col-md-6">
                                     <div class="form-group" >
@@ -155,7 +156,8 @@
                                         <label class="label">Monto disponible</label>
                                         <input class="form-control" type="text" id="idmontodisponible2" readonly name="idmontodisponible2" value="">
                                     </div>
-                                    <div id="montodisponible2"></div>   
+                                    <div id="montodisponible2"></div>
+                                    <b id="sumaReal2"></b>   
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
@@ -558,7 +560,7 @@
                     orderable: false,
                     className: 'select-checkbox',
                     targets:   0,
-                    searchable:false,
+                    searchable:true,
                     className: 'dt-body-center'
                 }],
                 ajax: {
@@ -730,7 +732,7 @@
         });
 
         function formatMoney( n ) {
-            var c = isNaN(c = Math.abs(c)) ? 2 : c,
+            var c = isNaN(c = Math.abs(c)) ? 3 : c,
                 d = d == undefined ? "." : d,
                 t = t == undefined ? "," : t,
                 s = n < 0 ? "-" : "",
@@ -745,6 +747,8 @@
             document.getElementById('monto').value = ''; 
             document.getElementById('idmontodisponible').value = ''; 
             document.getElementById('comentario').value = '';
+            document.getElementById('sumaReal').innerHTML = '';
+            $('#idloteorigen option').remove();
 
             $('#usuarioid option').remove();
             $.post('getUsuariosRol/'+parent+"/"+1, function(data) {
@@ -767,8 +771,10 @@
             var parent = $(this).val();
             document.getElementById('monto2').value = ''; 
             document.getElementById('idmontodisponible2').value = '';
+            document.getElementById('sumaReal2').innerHTML = '';
             document.getElementById('comentario2').value = '';
             $('#usuarioid2 option').remove();
+            $('#idloteorigen2 option').remove();
     
             $.post('getUsuariosRol/'+parent, function(data) {
                 $("#usuarioid2").append($('<option>').val("0").text("Seleccione una opción"));
@@ -797,6 +803,7 @@
             document.getElementById('idmontodisponible').value = ''; 
             document.getElementById('comentario').value = '';
             document.getElementById('montodisponible').innerHTML = '';
+            document.getElementById('sumaReal').innerHTML = '';
 
             var user = $(this).val();
             $('#idloteorigen option').remove(); // clear all values
@@ -810,7 +817,7 @@
                     let comtotal = data[i]['comision_total'] -data[i]['abono_pagado'];
 
                     
-                    $("#idloteorigen").append(`<option value='${comision},${comtotal.toFixed(2)},${pago_neodata}'>${name}  -   $${ formatMoney(comtotal.toFixed(2))}</option>`);
+                    $("#idloteorigen").append(`<option value='${comision},${comtotal.toFixed(3)},${pago_neodata}'>${name}  -   $${ formatMoney(comtotal.toFixed(3))}</option>`);
                 }
 
                 if(len<=0){
@@ -833,6 +840,7 @@
             document.getElementById('idmontodisponible2').value = ''; 
             document.getElementById('comentario2').value = '';
             document.getElementById('montodisponible2').innerHTML = '';
+            document.getElementById('sumaReal2').innerHTML = '';
 
             var user = $(this).val();
             $('#idloteorigen2 option').remove(); // clear all values
@@ -846,7 +854,7 @@
                     var pago_neodata = data[i]['pago_neodata'];
                     let comtotal = data[i]['comision_total'] -data[i]['abono_pagado'];
                     
-                    $("#idloteorigen2").append(`<option value='${comision},${comtotal.toFixed(2)},${pago_neodata}'>${name}  -   $${ formatMoney(comtotal.toFixed(2))}</option>`);
+                    $("#idloteorigen2").append(`<option value='${comision},${comtotal.toFixed(3)},${pago_neodata}'>${name}  -   $${ formatMoney(comtotal.toFixed(3))}</option>`);
                 }
 
                 if(len<=0){
@@ -879,8 +887,9 @@
                         var idecomision = data[0]['id_pago_i'];
                         suma = suma + disponible;
                         document.getElementById('montodisponible').innerHTML = '';
+                        document.getElementById('sumaReal').innerHTML = 'Suma real:'+suma;
                         $("#idmontodisponible").val('$'+formatMoney(suma));
-                        $("#montodisponible").append('<input type="hidden" name="valor_comision" id="valor_comision" value="'+suma.toFixed(2)+'">');
+                        $("#montodisponible").append('<input type="hidden" name="valor_comision" id="valor_comision" value="'+suma.toFixed(3)+'">');
                         $("#montodisponible").append('<input type="hidden" name="ide_comision" id="ide_comision" value="'+idecomision+'">');
             
                         var len = data.length;
@@ -904,6 +913,7 @@
                     var idecomision = data[0]['id_pago_i'];
                 
                     document.getElementById('montodisponible').innerHTML = '';
+                    document.getElementById('sumaReal').innerHTML = 'Suma real:'+disponible;
                     $("#montodisponible").append('<input type="hidden" name="valor_comision" id="valor_comision" value="'+disponible+'">');
                     $("#idmontodisponible").val('$'+formatMoney(disponible));
                 
@@ -936,8 +946,9 @@
                         var idecomision = data[0]['id_pago_i'];
                         suma = suma + disponible;
                         document.getElementById('montodisponible2').innerHTML = '';
+                        document.getElementById('sumaReal2').innerHTML = 'Suma real:'+suma;
                         $("#idmontodisponible2").val('$'+formatMoney(suma));
-                        $("#montodisponible2").append('<input type="hidden" name="valor_comision2" id="valor_comision2" value="'+suma.toFixed(2)+'">');
+                        $("#montodisponible2").append('<input type="hidden" name="valor_comision2" id="valor_comision2" value="'+suma.toFixed(3)+'">');
                         $("#montodisponible2").append('<input type="hidden" name="ide_comision2" id="ide_comision2" value="'+idecomision+'">');
                     
                         var len = data.length;
@@ -959,9 +970,9 @@
                 //document.getElementById('monto2').value = ''; 
                 $.post('getInformacionData/'+id+'/'+2, function(data) {
                     var disponible = (data[0]['comision_total']-data[0]['abono_pagado']);
-                    var idecomision = data[0]['id_pago_i'];
-                
+                    var idecomision = data[0]['id_pago_i'];                
                     document.getElementById('montodisponible2').innerHTML = '';
+                    document.getElementById('sumaReal2').innerHTML = 'Suma real:'+disponible;
                     $("#montodisponible2").append('<input type="hidden" name="valor_comision2" id="valor_comision2" value="'+disponible+'">');
                     $("#idmontodisponible2").val('$'+formatMoney(disponible));
                 
@@ -1115,6 +1126,7 @@
                     disponible = replaceAll(disponible, ',', '');
                     if(parseFloat(disponible) > parseFloat(monto)){
                     $("#idloteorigen").prop("disabled", true);
+                    document.getElementById('btn_abonar').disabled=false; 
                     }else{
                         $("#idloteorigen").prop("disabled", false);
                     }
@@ -1169,9 +1181,12 @@
                  }
          }
 
+
+         
+
         function verificar2(){
             let disponible = $('#valor_comision2').val();
-            let monto = parseFloat($('#monto2').val()).toFixed(2);
+            let monto = parseFloat($('#monto2').val()).toFixed(3);
             if(monto < 1 || isNaN(monto)){
                 alerts.showNotification("top", "right", "Debe ingresar un monto mayor a 0.", "warning");
                 document.getElementById('btn_abonar2').disabled=true; 
@@ -1180,8 +1195,11 @@
                 console.log(disponible)
                 if(disponible != '' && disponible !== undefined && disponible != 'undefined'){
                     disponible = replaceAll($('#valor_comision').val(), '$', '');
+                    disponible = replaceAll(disponible, ',', '');
+
                     if(parseFloat(disponible) > parseFloat(monto)){
                     $("#idloteorigen2").prop("disabled", true);
+                    document.getElementById('btn_abonar2').disabled=false; 
                     }else{
                         $("#idloteorigen2").prop("disabled", false);
                     }

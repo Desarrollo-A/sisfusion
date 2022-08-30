@@ -98,7 +98,7 @@ $('[data-toggle="tooltip"]').tooltip();
 async function init(){
     getLastSales(null, null);
     let rol = userType == 2 ? await getRolDR(idUser): userType;
-    fillBoxAccordions(rol == '1' || rol == '18' ? 'director_regional': rol == '2' ? 'gerente' : rol == '3' ? 'coordinador' : rol == '59' ? 'subdirector':'asesor', rol == 18 || rol == '18' ? 1:rol, idUser, 1, 1);
+    fillBoxAccordions(rol == '1' || rol == '18' ? 'director_regional': rol == '2' ? 'gerente' : rol == '3' ? 'coordinador' : rol == '59' ? 'subdirector':'asesor', rol == 18 || rol == '18' ? 1:rol, idUser, 1, 1, null, [0, null, null, null, null, null]);
 }
 
 function createAccordions(option, render, rol){
@@ -141,7 +141,7 @@ function createAccordions(option, render, rol){
     $(".boxAccordions").append(html);
 }
 
-function fillBoxAccordions(option, rol, id_usuario, render, transaction, dates=null){
+function fillBoxAccordions(option, rol, id_usuario, render, transaction, dates=null, leadersList){
     createAccordions(option, render, rol);
     let newRol = newRoles(option);
     $(".js-accordion-title").addClass('open');
@@ -151,7 +151,7 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, dates=n
     }
     $('#table'+option+' thead tr:eq(0) th').each(function (i) {
         const title = $(this).text();
-        $(this).html('<input type="text" center;" class="textoshead"  placeholder="' + title + '"/>');
+        $(this).html('<input type="text" class="w-100 textoshead"  placeholder="' + title + '"/>');
         if(i > 1 && i <10){
             $('input', this)[0].type = 'number';
             $('input', this).addClass('no-spin');
@@ -167,8 +167,59 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, dates=n
     });
 
     generalDataTable = $("#table"+option).DataTable({
-        dom: 'rt'+ "<'container-fluid pt-1 pb-1'<'row d-flex align-center'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'i><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>>",
+        dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
+        //dom: 'rt'+ "<'container-fluid pt-1 pb-1'<'row d-flex align-center'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'i><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>>",
         width: '100%',
+        buttons: [
+            {
+                extend: 'excelHtml5',
+                text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
+                className: 'btn buttons-excel',
+                titleAttr: 'Descargar archivo de Excel',
+                exportOptions: {
+                    columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+                    format: {
+                        header: function (d, columnIdx) {
+                            switch (columnIdx) {
+                                case 1:
+                                    return option;
+                                    break;
+                                case 2:
+                                    return 'Gran total'
+                                    break;
+                                case 3:
+                                    return 'Monto';
+                                    break;
+                                case 4:
+                                    return '# lotes apartados';
+                                    break;
+                                case 5:
+                                    return 'Apartado';
+                                    break;
+                                case 6:
+                                    return 'Cancelados';
+                                    break;
+                                case 7:
+                                    return '% cancelados';
+                                    break;
+                                case 8:
+                                    return '# lotes contratados';
+                                    break;
+                                case 9:
+                                    return 'Contratados';
+                                    break;
+                                case 10:
+                                    return 'Cancelados';
+                                    break;
+                                case 11:
+                                    return '% cancelados';
+                                    break;
+                            }
+                        }
+                    }
+                }
+            }
+        ],
         pagingType: "full_numbers",
         lengthMenu: [
             [10, 25, 50, -1],
@@ -188,7 +239,8 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, dates=n
             {
                 width: "2%",
                 data: function(d){
-                    return `<button type="btn" data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-idUser="${d.userID}" id="details-${d.userID}" class="btnSub"><i class="fas fa-sitemap" data-toggle="tooltip" data-placement="bottom" title="Desglose a detalle"></i></button>`;
+                    let leaders = getLeadersLine(leadersList, d.userID, d.id_usuario); 
+                    return `<button type="btn" data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-idUser="${d.userID}" id="details-${d.userID}" data-leader="${id_usuario}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-dr="${leaders[5]}" class="btnSub"><i class="fas fa-sitemap" data-toggle="tooltip" data-placement="bottom" title="Desglose a detalle"></i></button>`;
                 }
             },
             {
@@ -200,7 +252,8 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, dates=n
             {
                 width: "26%",
                 data: function (d) {
-                    return `<button style="background-color: #d8dde2; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="5" data-sede = 0 data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-idUser="${d.userID}" id="details-${d.userID}" data-leader="${id_usuario}" class="btnModalDetails">${(d.totalAT + d.totalConT).toLocaleString('es-MX')}</button>`; //# APARTADOS;
+                    let leaders = getLeadersLine(leadersList, d.userID, d.id_usuario); 
+                    return `<button style="background-color: #d8dde2; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="5" data-sede = 0 data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-idUser="${d.userID}" id="details-${d.userID}" data-leader="${id_usuario}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-dr="${leaders[5]}" class="btnModalDetails">${(d.totalAT + d.totalConT).toLocaleString('es-MX')}</button>`; //# APARTADOS;
                 }
             },
             {
@@ -212,7 +265,8 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, dates=n
             {
                 width: "8%",
                 data: function (d) {
-                    return `<button style="background-color: #d8dde2; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="1" data-sede = 0 data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-idUser="${d.userID}" id="details-${d.userID}" data-leader="${id_usuario}" class="btnModalDetails">${(d.totalAT).toLocaleString('es-MX')}</button>`; //# GRAN TOTAL;
+                    let leaders = getLeadersLine(leadersList, d.userID, d.id_usuario); 
+                    return `<button style="background-color: #d8dde2; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="1" data-sede = 0 data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-idUser="${d.userID}" id="details-${d.userID}" data-leader="${id_usuario}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-dr="${leaders[5]}" class="btnModalDetails">${(d.totalAT).toLocaleString('es-MX')}</button>`; //# GRAN TOTAL;
                     //return ((d.totalAT + d.totalCanA)).toLocaleString('es-MX'); //# APARTADOS
                 }
             },
@@ -225,7 +279,8 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, dates=n
             {
                 width: "8%",
                 data: function (d) {
-                    return `<button style="background-color: #d8dde2; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="4" data-sede = 0 data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-idUser="${d.userID}" id="details-${d.userID}" data-leader="${id_usuario}" data-leader="${id_usuario}" class="btnModalDetails">${(d.totalCanA).toLocaleString('es-MX')}</button>`; //# CANCELADOS APARTADOS;
+                    let leaders = getLeadersLine(leadersList, d.userID, d.id_usuario); 
+                    return `<button style="background-color: #d8dde2; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="4" data-sede = 0 data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-idUser="${d.userID}" id="details-${d.userID}" data-leader="${id_usuario}" data-leader="${id_usuario}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-dr="${leaders[5]}" class="btnModalDetails">${(d.totalCanA).toLocaleString('es-MX')}</button>`; //# CANCELADOS APARTADOS;
                     //return (d.totalCanA).toLocaleString('es-MX'); //# CANCELADOS APARTADOS
                 }
             },
@@ -238,7 +293,8 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, dates=n
             {
                 width: "8%",
                 data: function (d) {
-                    return `<button style="background-color: #d8dde2; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="2" data-sede = 0 data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-idUser="${d.userID}" id="details-${d.userID}" data-leader="${id_usuario}" data-leader="${id_usuario}" class="btnModalDetails">${(d.totalConT).toLocaleString('es-MX')}</button>`; //# CONTRATADOS;
+                    let leaders = getLeadersLine(leadersList, d.userID, d.id_usuario); 
+                    return `<button style="background-color: #d8dde2; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="2" data-sede = 0 data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-idUser="${d.userID}" id="details-${d.userID}" data-leader="${id_usuario}" data-leader="${id_usuario}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-dr="${leaders[5]}" class="btnModalDetails">${(d.totalConT).toLocaleString('es-MX')}</button>`; //# CONTRATADOS;
                     //return ((d.totalConT)).toLocaleString('es-MX'); //# CONTRATADOS
                 }
             },
@@ -251,7 +307,8 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, dates=n
             {
                 width: "8%",
                 data: function (d) {
-                    return `<button style="background-color: #d8dde2; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-sede = 0 data-type="3" data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-idUser="${d.userID}" id="details-${d.userID}" data-leader="${id_usuario}" class="btnModalDetails">${(d.totalCanC).toLocaleString('es-MX')}</button>`; //# CANCELADOS CONTRATADOS;
+                    let leaders = getLeadersLine(leadersList, d.userID, d.id_usuario); 
+                    return `<button style="background-color: #d8dde2; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-sede = 0 data-type="3" data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-idUser="${d.userID}" id="details-${d.userID}" data-leader="${id_usuario}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-dr="${leaders[5]}" class="btnModalDetails">${(d.totalCanC).toLocaleString('es-MX')}</button>`; //# CANCELADOS CONTRATADOS;
                     //return (d.totalCanC).toLocaleString('es-MX'); //# CANCELADOS CONTRATADOS
                 }
             },
@@ -264,7 +321,8 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, dates=n
             {
                 width: "8%",
                 data: function (d) {
-                    return  rol == 7 || (rol == 9 && render == 1) ? '':'<div class="d-flex justify-center"><button class="btn-data btn-blueMaderas update-dataTable" data-transaction="'+transaction+'" data-type="' + rol + '" data-render="' + render + '" value="' + d.userID + '"><i class="fas fa-sign-in-alt"></i></button></div>';
+                    let leaders = getLeadersLine(leadersList, d.userID, d.id_usuario);                    
+                    return  rol == 7 || (rol == 9 && render == 1) ? '' : `<div class="d-flex justify-center"><button class="btn-data btn-blueMaderas update-dataTable" data-transaction="${transaction}" data-type="${rol}" data-render="${render}" value="${d.userID}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-dr="${leaders[5]}"><i class="fas fa-sign-in-alt"></i></button></div>`;
                 }
             },
         ],
@@ -286,15 +344,47 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, dates=n
                 "where": '1',
                 "type": rol,
                 "id_usuario": id_usuario,
-                "render": render
+                "render": render,
+                "asesor": leadersList[1],
+                "coordinador": leadersList[2],
+                "gerente": leadersList[3],
+                "subdirector": leadersList[4],
+                "regional": leadersList[5]
             }
         }
     });
     $('[data-toggle="tooltip"]').tooltip();
 }
 
-$(document).on('click', '.update-dataTable', function () {
+function getLeadersLine (leadersList, id_usuario, id_lider) {
+    if (leadersList[0] == 0) // PRIMER NIVEL: SÓLO TENEMOS EL ID REGIONAL
+        leadersList[5] = id_usuario;
+    else if (leadersList[0] == 2) // SEGUNDO NIVEL: TENEMOS EL ID SUBDIRECTOR
+        leadersList[4] = id_usuario;
+    else if (leadersList[0] == 3) // TERCER NIVEL: TENEMOS EL ID GERENTE
+        leadersList[3] = id_usuario;
+    else if (leadersList[0] == 9) // CUARTO NIVEL: TENEMOS EL ID COORDINADOR
+        leadersList[2] = id_usuario;
+    else if (leadersList[0] == 7) // 5 NIVEL: TENEMOS EL ID COORDINADOR
+        leadersList[1] = id_usuario;
+    else if (leadersList[0] == 59) { // PRIMER NIVEL: TENEMOS ID REGIONAL Y ID SUBDIRECTOR
+        leadersList[5] = id_lider;
+        leadersList[4] = id_usuario;
+    } else if (leadersList[0] == 593) { // PRIMER NIVEL: TENEMOS ID REGIONAL Y ID SUBDIRECTOR
+        leadersList[3] = id_usuario;
+    }
+    return leadersList;
+}
+
+$(document).on('click', '.update-dataTable', function (e) {
+    e.preventDefault();
+    e.stopImmediatePropagation();
     let closestChild;
+    const asesor = $(this).attr("data-as");
+    const coordinador = $(this).attr("data-co");
+    const gerente = $(this).attr("data-ge");
+    const subdirector = $(this).attr("data-su");
+    const regional = $(this).attr("data-dr");
     const type = $(this).attr("data-type");
     const render = $(this).data("render");
     const transaction = $(this).data("transaction");
@@ -304,40 +394,40 @@ $(document).on('click', '.update-dataTable', function () {
     let dates = transaction == 2 ?  {begin: $('#tableBegin').val(), end: $('#tableEnd').val()}:null;
 
     if (type == 2) { // MJ: #sub->ger->coord
-        if(render == 1){
+        if (render == 1) {
             const table = "coordinador";
             fillBoxAccordions(table, 9, $(this).val(), 2, transaction, dates);
-        }else{
+        } else {
             const table = "gerente";
-            fillBoxAccordions(table, 3, $(this).val(), 2, transaction, dates);
+            fillBoxAccordions(table, 3, $(this).val(), 2, transaction, dates, [3, asesor, coordinador, gerente, subdirector, regional]); // VA POR LOS GERENTES
         }
     } else if (type == 3) { // MJ: #gerente->coord->asesor
-        if(render == 1){
+        if (render == 1) {
             const table = "asesor";
             fillBoxAccordions(table, 7, $(this).val(), 2, transaction, dates);
-        }else{
+        } else {
             const table = "coordinador";
-            fillBoxAccordions(table, 9, $(this).val(), 2, transaction, dates);
+            fillBoxAccordions(table, 9, $(this).val(), 2, transaction, dates, [9, asesor, coordinador, gerente, subdirector, regional]); // VA POR LOS COORDINADORES
         }
     } else if (type == 9) { // MJ: #coordinatorTable -> asesor
-        if(render == 1){
-        }else{
+        if (render == 1) {
+        } else {
             const table = "asesor";
-            fillBoxAccordions(table, 7, $(this).val(), 2, transaction, dates);
+            fillBoxAccordions(table, 7, $(this).val(), 2, transaction, dates, [7, asesor, coordinador, gerente, subdirector, regional]); // VA POR LOS ASESORES
         }
     } else if (type == 59) { // MJ: #DirRegional->subdir->ger
-        if(render == 1){
+        if (render == 1) {
             const table = "gerente";
-            fillBoxAccordions(table, 3, $(this).val(), 2, transaction, dates);
-        }else{
+            fillBoxAccordions(table, 3, $(this).val(), 2, transaction, dates, [593, asesor, coordinador, gerente, subdirector, regional]);
+        } else {
             const table = "subdirector";
-            fillBoxAccordions(table, 2, $(this).val(), 2, transaction, dates);
+            fillBoxAccordions(table, 2, $(this).val(), 2, transaction, dates, [59, asesor, coordinador, gerente, subdirector, regional]); // VA POR LOS SUBDIRECTORES: CONSULTA REGIONAL
         }
-    }else if(type == 1){
-        if(render == 1){
+    } else if (type == 1) {
+        if (render == 1) {
             const table = "subdirector";
-            fillBoxAccordions(table, 2, $(this).val(), 2, transaction, dates);
-        }else{
+            fillBoxAccordions(table, 2, $(this).val(), 2, transaction, dates, [2, asesor, coordinador, gerente, subdirector, regional]); // VA POR LOS SUBDIRECTORES
+        } else {
             const table = "regional";
             fillBoxAccordions(table, 59, $(this).val(), 2, transaction, dates);
         }
@@ -454,7 +544,12 @@ $(document).on('click', '.btnSub', function () {
         option: $(this).data("option"),
         begin: formatDate($('#tableBegin').val()), 
         end: formatDate($('#tableEnd').val()),
-        leader: $(this).data("leader")
+        leader: $(this).data("leader"),
+        asesor: $(this).data("as"),
+        coordinador: $(this).data("co"),
+        gerente: $(this).data("ge"),
+        subdirector: $(this).data("su"),
+        regional: $(this).data("dr")
     }
     initDetailRow(data);
 });
@@ -466,7 +561,7 @@ $(document).on('click', '#searchByDateRangeTable', async function (e) {
     let dates = {begin: $('#tableBegin').val(), end: $('#tableEnd').val()};
     let rol = userType == 2 ? await getRolDR(idUser): userType;
 
-    fillBoxAccordions(rol == '1' || rol == '18' ? 'director_regional': rol == '2' ? 'gerente' : rol == '3' ? 'coordinador' : rol == '59' ? 'subdirector':'asesor', rol == 18 || rol == '18' ? 1:rol, idUser, 1, 2, dates);
+    fillBoxAccordions(rol == '1' || rol == '18' ? 'director_regional': rol == '2' ? 'gerente' : rol == '3' ? 'coordinador' : rol == '59' ? 'subdirector':'asesor', rol == 18 || rol == '18' ? 1:rol, idUser, 1, 2, dates, [0, null, null, null, null, null]);
 
 });
 
@@ -493,15 +588,24 @@ async function chartDetail(e, tipoChart){
 
     var nameChart = (titleCase($(e).data("name").replace(/_/g, " "))).split(" ");
     $(".boxModalTitle .title").append('<p class="mb-1">' + nameChart[0] + '<span class="enfatize"> '+ nameChart[1] +'</span></p>');
-    let datesMonths = await get4Months();
-    let finalBeginDate = [(datesMonths.firstDate).split('-')[2],  (datesMonths.firstDate).split('-')[1], (datesMonths.firstDate).split('-')[0]].join('/');
-    let finalEndDate = [(datesMonths.secondDate).split('-')[2],  (datesMonths.secondDate).split('-')[1], (datesMonths.secondDate).split('-')[0]].join('/');
+    // let datesMonths = await get4Months();
+    const fechaInicio = new Date();
+     // Iniciar en este año, este mes, en el día 1
+     const beginDate = new Date(fechaInicio.getFullYear(), fechaInicio.getMonth(), 1);
+     // END DATE
+     const fechaFin = new Date();
+     // Iniciar en este año, el siguiente mes, en el día 0 (así que así nos regresamos un día)
+     const endDate = new Date(fechaFin.getFullYear(), fechaFin.getMonth() + 1, fechaFin.getDate());
+     finalBeginDate = [beginDate.getFullYear(), ('0' + (beginDate.getMonth() + 1)).slice(-2), ('0' + beginDate.getDate()).slice(-2)].join('-');
+     finalEndDate = [endDate.getFullYear(), ('0' + (endDate.getMonth() + 1)).slice(-2), ('0' + endDate.getDate()).slice(-2)].join('-');
+     finalBeginDate2 = ['01', '01', beginDate.getFullYear()].join('/');
+     finalEndDate2 = [('0' + endDate.getDate()).slice(-2), ('0' + (endDate.getMonth())).slice(-2), endDate.getFullYear()].join('/');
 
 
-    $("#modalChart #beginDate").val(finalBeginDate);
-    $("#modalChart #endDate").val(finalEndDate);
+    $("#modalChart #beginDate").val(finalBeginDate2);
+    $("#modalChart #endDate").val(finalEndDate2);
     $("#modalChart #type").val(tipoChart);
-    getSpecificChart(tipoChart, formatDate(finalBeginDate), formatDate(finalEndDate));
+    getSpecificChart(tipoChart, formatDate(finalBeginDate2), formatDate(finalEndDate2));
 }
 
 function getSpecificChart(type, beginDate, endDate){
@@ -815,7 +919,12 @@ function createDetailRow(row, tr, dataObj){
         transaction: dataObj.transaction,
         beginDate: dataObj.begin,
         endDate: dataObj.end,
-        leader: dataObj.leader
+        leader: dataObj.leader,
+        asesor: dataObj.asesor,
+        coordinador: dataObj.coordinador,
+        gerente: dataObj.gerente,
+        subdirector: dataObj.subdirector,
+        regional: dataObj.regional
     }).done(function (response) {
         row.data().sedesData = JSON.parse(response);
         
@@ -849,18 +958,18 @@ function buildTableDetail(data, dataObj) {
         sedes += '<tr>';
         sedes += '<td> ' + (i + 1) + ' </td>';
         sedes += '<td> ' + v.sede + ' </td>';
-        sedes += `<td><button style="background-color: #cfcdcd; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="55" data-sede="${v.id_sede}" data-rol="${dataObj.rol}" data-render="${dataObj.render}" data-idUser="${dataObj.user}" id="details-${dataObj.user}" class="btnModalDetails">${(v.totalAT + v.totalConT).toLocaleString('es-MX')}</button>`;
+        sedes += `<td><button style="background-color: #cfcdcd; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="55" data-sede="${v.id_sede}" data-rol="${dataObj.rol}" data-render="${dataObj.render}" data-idUser="${dataObj.user}" data-leader="${dataObj.leader}" data-as="${dataObj.asesor}" data-co="${dataObj.coordinador}" data-ge="${dataObj.gerente}" data-su="${dataObj.subdirector}" data-dr="${dataObj.regional}" id="details-${dataObj.user}" class="btnModalDetails">${(v.totalAT + v.totalConT).toLocaleString('es-MX')}</button>`;
         sedes += '<td> ' + v.gran_total + ' </td>';
-        sedes += `<td><button style="background-color: #cfcdcd; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="11" data-sede="${v.id_sede}" data-rol="${dataObj.rol}" data-render="${dataObj.render}" data-idUser="${dataObj.user}" id="details-${dataObj.user}" class="btnModalDetails">${(v.totalAT).toLocaleString('es-MX')}</button>`;
+        sedes += `<td><button style="background-color: #cfcdcd; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="11" data-sede="${v.id_sede}" data-rol="${dataObj.rol}" data-render="${dataObj.render}" data-idUser="${dataObj.user}" id="details-${dataObj.user}" data-as="${dataObj.asesor}" data-co="${dataObj.coordinador}" data-ge="${dataObj.gerente}" data-su="${dataObj.subdirector}" data-dr="${dataObj.regional}" class="btnModalDetails">${(v.totalAT).toLocaleString('es-MX')}</button>`;
         //sedes += '<td> ' + (v.totalAT).toLocaleString('es-MX') + ' </td>';
         sedes += '<td> ' + v.sumaAT + ' </td>';
-        sedes += `<td><button style="background-color: #cfcdcd; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="44" data-sede="${v.id_sede}" data-rol="${dataObj.rol}" data-render="${dataObj.render}" data-idUser="${dataObj.user}" id="details-${dataObj.user}" class="btnModalDetails">${(v.totalCanA).toLocaleString('es-MX')}</button>`;
+        sedes += `<td><button style="background-color: #cfcdcd; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="44" data-sede="${v.id_sede}" data-rol="${dataObj.rol}" data-render="${dataObj.render}" data-idUser="${dataObj.user}" id="details-${dataObj.user}" data-as="${dataObj.asesor}" data-co="${dataObj.coordinador}" data-ge="${dataObj.gerente}" data-su="${dataObj.subdirector}" data-dr="${dataObj.regional}" class="btnModalDetails">${(v.totalCanA).toLocaleString('es-MX')}</button>`;
         //sedes += '<td> ' + (v.totalCanA).toLocaleString('es-MX') + ' </td>';
         sedes += '<td> ' + v.porcentajeTotalCanA + '% </td>';
-        sedes += `<td><button style="background-color: #cfcdcd; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="22" data-sede="${v.id_sede}" data-rol="${dataObj.rol}" data-render="${dataObj.render}" data-idUser="${dataObj.user}" id="details-${dataObj.user}" class="btnModalDetails">${(v.totalConT).toLocaleString('es-MX')}</button>`;
+        sedes += `<td><button style="background-color: #cfcdcd; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="22" data-sede="${v.id_sede}" data-rol="${dataObj.rol}" data-render="${dataObj.render}" data-idUser="${dataObj.user}" id="details-${dataObj.user}" data-as="${dataObj.asesor}" data-co="${dataObj.coordinador}" data-ge="${dataObj.gerente}" data-su="${dataObj.subdirector}" data-dr="${dataObj.regional}" class="btnModalDetails">${(v.totalConT).toLocaleString('es-MX')}</button>`;
         //sedes += '<td> ' + (v.totalConT).toLocaleString('es-MX') + ' </td>';
         sedes += '<td> ' + v.sumaConT + ' </td>';
-        sedes += `<td><button style="background-color: #cfcdcd; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="33" data-sede="${v.id_sede}" data-rol="${dataObj.rol}" data-render="${dataObj.render}" data-idUser="${dataObj.user}" id="details-${dataObj.user}" class="btnModalDetails">${(v.totalCanC).toLocaleString('es-MX')}</button>`;
+        sedes += `<td><button style="background-color: #cfcdcd; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="33" data-sede="${v.id_sede}" data-rol="${dataObj.rol}" data-render="${dataObj.render}" data-idUser="${dataObj.user}" id="details-${dataObj.user}" data-as="${dataObj.asesor}" data-co="${dataObj.coordinador}" data-ge="${dataObj.gerente}" data-su="${dataObj.subdirector}" data-dr="${dataObj.regional}" class="btnModalDetails">${(v.totalCanC).toLocaleString('es-MX')}</button>`;
         //sedes += '<td> ' + (v.totalCanC).toLocaleString('es-MX') + ' </td>';
         sedes += '<td> ' + v.porcentajeTotalCanC + '% </td>';
         sedes += '</tr>';
@@ -984,7 +1093,7 @@ function newRoles(option) {
 }
 
 $(document).on('click', '.btnModalDetails', function () {
-    let dataObj = {
+    let dataObject = {
         type: $(this).data("type"),
         sede: $(this).data("sede"),
         leader: $(this).data("leader"),
@@ -994,15 +1103,23 @@ $(document).on('click', '.btnModalDetails', function () {
         option: $(this).data("option"),
         render: $(this).data("render"),
         begin: formatDate($('#tableBegin').val()), 
-        end: formatDate($('#tableEnd').val())
+        end: formatDate($('#tableEnd').val()),
+        asesor: $(this).data("as"),
+        coordinador: $(this).data("co"),
+        gerente: $(this).data("ge"),
+        subdirector: $(this).data("su"),
+        regional: $(this).data("dr")
     }
-    fillTable(dataObj);
-    $("#seeInformationModal").modal();
+    fillTable(dataObject);
+    if (dataObject.type != 3 && dataObject.type != 33 && dataObject.type != 4 && dataObject.type != 4)
+        $("#seeInformationModal").modal();
+    else
+        $("#seeInformationModalCancelados").modal();
 });
 
 $('#lotesInformationTable thead tr:eq(0) th').each(function (i) {
     const title = $(this).text();
-    $(this).html('<input type="text" center;" class="textoshead"  placeholder="' + title + '"/>');
+    $(this).html('<input type="text" class="textoshead"  placeholder="' + title + '"/>');
     $('input', this).on('keyup change', function () {
         if(i != 0){
             if ($("#lotesInformationTable").DataTable().column(i).search() !== this.value) {
@@ -1014,129 +1131,349 @@ $('#lotesInformationTable thead tr:eq(0) th').each(function (i) {
 });
 
 function fillTable(dataObject) {
-    generalDataTable = $('#lotesInformationTable').dataTable({
-        dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
-        width: '100%',
-        buttons: [
-            {
-                extend: 'excelHtml5',
-                text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
-                className: 'btn buttons-excel',
-                titleAttr: 'Descargar archivo de Excel',
-                exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5, 6, 7],
-                    format: {
-                        header: function (d, columnIdx) {
-                            switch (columnIdx) {
-                                case 0:
-                                    return 'Proyecto';
-                                    break;
-                                case 1:
-                                    return 'Condominio';
-                                    break;
-                                case 2:
-                                    return 'Lote'
-                                    break;
-                                case 3:
-                                    return 'Cliente';
-                                    break;
-                                case 4:
-                                    return 'Asesor';
-                                    break;
-                                case 5:
-                                    return 'Fecha de apartado';
-                                    break;
-                                case 6:
-                                    return 'Estatus contratación';
-                                    break;
-                                case 7:
-                                    return 'Estatus lote';
-                                    break;
+    if (dataObject.type != 3 && dataObject.type != 33 && dataObject.type != 4 && dataObject.type != 4) {
+        generalDataTable = $('#lotesInformationTable').dataTable({
+            dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
+            width: '100%',
+            buttons: [
+                {
+                    extend: 'excelHtml5',
+                    text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
+                    className: 'btn buttons-excel',
+                    titleAttr: 'Descargar archivo de Excel',
+                    exportOptions: {
+                        columns: [0, 1, 2, 3, 4, 5, 6, 7,8, 9, 10, 11],
+                        format: {
+                            header: function (d, columnIdx) {
+                                switch (columnIdx) {
+                                    case 0:
+                                        return 'Proyecto';
+                                        break;
+                                    case 1:
+                                        return 'Condominio';
+                                        break;
+                                    case 2:
+                                        return 'Lote'
+                                        break;
+                                    case 3:
+                                        return 'Cliente';
+                                        break;
+                                    case 4:
+                                        return 'Asesor';
+                                        break;
+                                    case 5:
+                                        return 'Coordinador';
+                                        break;
+                                    case 6:
+                                        return 'Gerente';
+                                        break;
+                                    case 7:
+                                        return 'Subdirector';
+                                        break;
+                                    case 8:
+                                        return 'Director regional';
+                                        break;
+                                    case 9:
+                                        return 'Fecha de apartado';
+                                        break;
+                                    case 10:
+                                        return 'Estatus contratación';
+                                        break;
+                                    case 11:
+                                        return 'Estatus lote';
+                                        break;
+                                }
                             }
                         }
                     }
                 }
+            ],
+            pagingType: "full_numbers",
+            lengthMenu: [
+                [10, 25, 50, -1],
+                [10, 25, 50, "Todos"]
+            ],
+            destroy: true,
+            ordering: false,
+            scrollX: true,
+            language: {
+                url: `${base_url}static/spanishLoader_v2.json`,
+                paginate: {
+                    previous: "<i class='fa fa-angle-left'>",
+                    next: "<i class='fa fa-angle-right'>"
+                }
+            },
+            destroy: true,
+            ordering: false,
+            columns: [
+                {
+                    data: function (d) {
+                        return d.nombreResidencial;
+                    }
+                },
+                {
+                    data: function (d) {
+                        return d.nombreCondominio;
+                    }
+                },
+                {
+                    data: function (d) {
+                        return d.nombreLote;
+                    }
+                },
+                {
+                    data: function (d) {
+                        return d.nombreCliente;
+                    }
+                },
+                {
+                    data: function (d) {
+                        return d.nombreAsesor;
+                    }
+                },
+                {
+                    data: function (d) {
+                        return d.nombreCoordinador;
+                    }
+                },
+                {
+                    data: function (d) {
+                        return d.nombreGerente;
+                    }
+                },
+                {
+                    data: function (d) {
+                        return d.nombreSubdirector;
+                    }
+                },
+                {
+                    data: function (d) {
+                        return d.nombreRegional;
+                    }
+                },
+
+                {
+                    data: function (d) {
+                        return d.fechaApartado;
+                    }
+                },
+                {
+                    data: function (d) {
+                        return d.nombreStatus;
+                    }
+                },
+                {
+                    data: function (d) {
+                        return d.estatusLote;
+                    }
+                }
+            ],
+            columnDefs: [{
+                visible: false,
+                searchable: false
+            }],
+            ajax: {
+                url: `${base_url}Reporte/getLotesInformation`,
+                type: "POST",
+                cache: false,
+                data: {
+                    "type": dataObject.type,
+                    "sede": dataObject.sede,
+                    "leader": dataObject.leader,
+                    "transaction": dataObject.transaction,
+                    "user": dataObject.user,
+                    "rol": dataObject.rol,
+                    "render": dataObject.render,
+                    "option": dataObject.option,
+                    "beginDate": dataObject.begin,
+                    "endDate": dataObject.end,
+                    "asesor": dataObject.asesor,
+                    "coordinador": dataObject.coordinador,
+                    "gerente": dataObject.gerente,
+                    "subdirector": dataObject.subdirector,
+                    "regional": dataObject.regional
+                }
             }
-        ],
-        pagingType: "full_numbers",
-        lengthMenu: [
-            [10, 25, 50, -1],
-            [10, 25, 50, "Todos"]
-        ],
-        destroy: true,
-        ordering: false,
-        scrollX: true,
-        language: {
-            url: `${base_url}static/spanishLoader_v2.json`,
-            paginate: {
-                previous: "<i class='fa fa-angle-left'>",
-                next: "<i class='fa fa-angle-right'>"
+        });
+    } else{
+        generalDataTable = $('#lotesInformationTableCancelados').dataTable({
+            dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
+            width: '100%',
+            buttons: [
+                {
+                    extend: 'excelHtml5',
+                    text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
+                    className: 'btn buttons-excel',
+                    titleAttr: 'Descargar archivo de Excel',
+                    exportOptions: {
+                        columns: [0, 1, 2, 3, 4, 5, 6, 7,8, 9, 10, 11, 12, 13],
+                        format: {
+                            header: function (d, columnIdx) {
+                                switch (columnIdx) {
+                                    case 0:
+                                        return 'Proyecto';
+                                        break;
+                                    case 1:
+                                        return 'Condominio';
+                                        break;
+                                    case 2:
+                                        return 'Lote'
+                                        break;
+                                    case 3:
+                                        return 'Cliente';
+                                        break;
+                                    case 4:
+                                        return 'Asesor';
+                                        break;
+                                    case 5:
+                                        return 'Coordinador';
+                                        break;
+                                    case 6:
+                                        return 'Gerente';
+                                        break;
+                                    case 7:
+                                        return 'Subdirector';
+                                        break;
+                                    case 8:
+                                        return 'Director regional';
+                                        break;
+                                    case 9:
+                                        return 'Fecha de apartado';
+                                        break;
+                                    case 10:
+                                        return 'Estatus contratación';
+                                        break;
+                                    case 11:
+                                        return 'Estatus lote';
+                                        break;
+                                    case 12:
+                                        return 'Fecha liberación';
+                                        break;
+                                    case 13:
+                                        return 'Motivo';
+                                        break;
+                                }
+                            }
+                        }
+                    }
+                }
+            ],
+            pagingType: "full_numbers",
+            lengthMenu: [
+                [10, 25, 50, -1],
+                [10, 25, 50, "Todos"]
+            ],
+            destroy: true,
+            ordering: false,
+            scrollX: true,
+            language: {
+                url: `${base_url}static/spanishLoader_v2.json`,
+                paginate: {
+                    previous: "<i class='fa fa-angle-left'>",
+                    next: "<i class='fa fa-angle-right'>"
+                }
+            },
+            destroy: true,
+            ordering: false,
+            columns: [
+                {
+                    data: function (d) {
+                        return d.nombreResidencial;
+                    }
+                },
+                {
+                    data: function (d) {
+                        return d.nombreCondominio;
+                    }
+                },
+                {
+                    data: function (d) {
+                        return d.nombreLote;
+                    }
+                },
+                {
+                    data: function (d) {
+                        return d.nombreCliente;
+                    }
+                },
+                {
+                    data: function (d) {
+                        return d.nombreAsesor;
+                    }
+                },
+                {
+                    data: function (d) {
+                        return d.nombreCoordinador;
+                    }
+                },
+                {
+                    data: function (d) {
+                        return d.nombreGerente;
+                    }
+                },
+                {
+                    data: function (d) {
+                        return d.nombreSubdirector;
+                    }
+                },
+                {
+                    data: function (d) {
+                        return d.nombreRegional;
+                    }
+                },
+
+                {
+                    data: function (d) {
+                        return d.fechaApartado;
+                    }
+                },
+                {
+                    data: function (d) {
+                        return d.nombreStatus;
+                    }
+                },
+                {
+                    data: function (d) {
+                        return d.estatusLote;
+                    }
+                },
+                {
+                    data: function (d) {
+                        return d.fechaLiberacion;
+                    }
+                },
+                {
+                    data: function (d) {
+                        return d.motivoLiberacion;
+                    }
+                }
+            ],
+            columnDefs: [{
+                visible: false,
+                searchable: false
+            }],
+            ajax: {
+                url: `${base_url}Reporte/getLotesInformation`,
+                type: "POST",
+                cache: false,
+                data: {
+                    "type": dataObject.type,
+                    "sede": dataObject.sede,
+                    "leader": dataObject.leader,
+                    "transaction": dataObject.transaction,
+                    "user": dataObject.user,
+                    "rol": dataObject.rol,
+                    "render": dataObject.render,
+                    "option": dataObject.option,
+                    "beginDate": dataObject.begin,
+                    "endDate": dataObject.end,
+                    "asesor": dataObject.asesor,
+                    "coordinador": dataObject.coordinador,
+                    "gerente": dataObject.gerente,
+                    "subdirector": dataObject.subdirector,
+                    "regional": dataObject.regional
+                }
             }
-        },
-        destroy: true,
-        ordering: false,
-        columns: [
-            {
-                data: function (d) {
-                    return d.nombreResidencial;
-                }
-            },
-            {
-                data: function (d) {
-                    return d.nombreCondominio;
-                }
-            },
-            {
-                data: function (d) {
-                    return d.nombreLote;
-                }
-            },
-            {
-                data: function (d) {
-                    return d.nombreCliente;
-                }
-            },
-            {
-                data: function (d) {
-                    return d.nombreAsesor;
-                }
-            },
-            {
-                data: function (d) {
-                    return d.fechaApartado;
-                }
-            },
-            {
-                data: function (d) {
-                    return d.nombreStatus;
-                }
-            },
-            {
-                data: function (d) {
-                    return d.estatusLote;
-                }
-            }
-        ],
-        columnDefs: [{
-            visible: false,
-            searchable: false
-        }],
-        ajax: {
-            url: `${base_url}Reporte/getLotesInformation`,
-            type: "POST",
-            cache: false,
-            data: {
-                "type": dataObject.type,
-                "sede": dataObject.sede,
-                "leader": dataObject.leader,
-                "transaction": dataObject.transaction,
-                "user": dataObject.user,
-                "rol": dataObject.rol,
-                "render": dataObject.render,
-                "option": dataObject.option,
-                "beginDate": dataObject.begin,
-                "endDate": dataObject.end
-            }
-        }
-    });
+        });
+    }
 }

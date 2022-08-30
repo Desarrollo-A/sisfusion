@@ -707,7 +707,13 @@
                         }else if((d.id_estatus_actual == 22) && d.descuento_aplicado == 1 ){
                             etiqueta = '<p><span class="label" style="background:#CA72ED;">DESCUENTO MANTENIMIENTO</span></p>';
                         }else if((d.id_estatus_actual == 23) && d.descuento_aplicado == 1 ){
-                            etiqueta = '<p><span class="label" style="background:#CA72ED;">DESCUENTO NÓMINA</span></p>';
+                            etiqueta = '<p><span class="label" style="background:#CA15ED;">DESCUENTO NÓMINA - ANALISTAS DE COMISIONES</span></p>';
+                        }else if((d.id_estatus_actual == 24) && d.descuento_aplicado == 1 ){
+                            etiqueta = '<p><span class="label" style="background:#CA9315;">DESCUENTO NÓMINA - ASISTENTES CDMX</span></p>';
+                        }else if((d.id_estatus_actual == 25) && d.descuento_aplicado == 1 ){
+                            etiqueta = '<p><span class="label" style="background:#34A25C;">DESCUENTO NÓMINA - IMSS</span></p>';
+                        }else if((d.id_estatus_actual == 26) && d.descuento_aplicado == 1 ){
+                            etiqueta = '<p><span class="label" style="background:#165879;">NÓMINA -LIDER DE PROYECTO E INNOVACIÓN</span></p>';
                         }else{
                             switch(d.id_estatus_actual){
                                 case '1':

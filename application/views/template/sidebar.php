@@ -170,6 +170,8 @@ foreach($datos2 as $datos)
         }   
         
         if($this->session->userdata('estatus') == 1){
+            $id_user = $this->session->userdata('id_usuario');
+   if( $id_user == 1875 || $id_user == 2748 || $id_user == 2807 || $id_user == 5229 || $id_user == 5107 || $id_user == 2792 || $id_user == 2845 || $id_user == 1980) {        
 ?>
 <!---CÓDIGO PARA ABRIR EL SITEMA DE TICKETS------------->
 <li class="nav-item ">
@@ -185,7 +187,8 @@ foreach($datos2 as $datos)
         </ul>
     </div>
 </li>
-<?php } ?>
+
+<?php } } ?>
 <!----------FIN DEL CÓDIGO------------------------------>
 </ul>
 	</div>

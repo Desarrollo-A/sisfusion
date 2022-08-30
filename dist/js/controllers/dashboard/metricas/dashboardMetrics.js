@@ -432,7 +432,6 @@ $('#condominio').off().on('change', function(){
 });
 
 $('#sedes').off().on('change', function(){
-    console.log('changeeee');
     getProyectos($(this).val());
     getPromedio($(this).val(), null, formatDate($('#tableBegin_promedio').val()),formatDate($('#tableEnd_promedio').val())).then( response => { 
         dataPromedio = response;
@@ -748,7 +747,6 @@ function reorderColumnsMetrics(){
         }
         elements.appendChild(principalColumns[idx].cloneNode(true));
     });
-    console.log('reorder', inactivos);
     mainRow.innerHTML = null;
     mainRow.appendChild(elements);
     buildDatePikcer(dates);
@@ -765,19 +763,19 @@ function reorderColumnsMetrics(){
                     var id = columnDatatable.attr('id');
                     $("#"+id).html('');
                     if( id == 'metros' ){
-                        buildEstructuraDTMetrics(id, dataMetros);
+                        buildEstructuraDTMetros(id);
                         buildTableMetros(dataMetros);
                     }
                     else if( id == 'disponibilidad' ){
-                        buildEstructuraDTMetrics(id, dataDisponibilidad);
+                        buildEstructuraDTDisponibilidad(id);
                         buildTableDisponibilidad(dataDisponibilidad);
                     }
                     else if( id == 'lugar' ){
-                        buildEstructuraDTMetrics(id, dataLugarProspeccion);
+                        buildEstructuraDTLP(id);
                         buildTableLugarProspeccion(dataLugarProspeccion);
                     }
                     else if( id == 'medio' ){
-                        buildEstructuraDTMetrics(id, dataMedio);
+                        buildEstructuraDTMedio(id);
                         buildTableMedio(dataMedio);
                     } else if( id == 'promedio' ){
                         buildEstructuraDTMetrics(id, dataPromedio);
@@ -791,23 +789,64 @@ function reorderColumnsMetrics(){
     $('[data-toggle="tooltip"]').tooltip();
 }
 
-function buildEstructuraDTMetrics(dataName, dataApartados){
-    var tableHeaders = '';
-    var arrayHeaders = Object.keys(dataApartados[0]);
-    for( i=0; i<arrayHeaders.length; i++ ){
-        tableHeaders += '<th>' + arrayHeaders[i] + '</th>';
-    }
-
-    var id = 'table'+dataName;
+function buildEstructuraDTMetros(dataName){
     var estructura = `<div class="container-fluid p-0" style="padding:15px!important">
-                        <table class="table-striped table-hover" id="`+id+`" name="table">
-                            <thead>
-                                <tr>
-                                    `+tableHeaders+`
-                                </tr>
-                            </thead>
-                        </table>
-                    </div>`;
+        <table class="table-striped table-hover" id="table`+dataName+`" name="table">
+            <thead>
+                <tr>
+                    <th>SUPERFICIE</th>
+                    <th>CANTIDAD</th>
+                    <th>PRECIO</th>
+                </tr>
+            </thead>
+        </table>
+    </div>`;
+    $("#"+dataName).html(estructura);
+}
+
+function buildEstructuraDTDisponibilidad(dataName){
+    var estructura = `<div class="container-fluid p-0" style="padding:15px!important">
+        <table class="table-striped table-hover" id="table`+dataName+`" name="table">
+            <thead>
+                <tr>
+                    <th>NOMBRE RESIDENCIAL</th>
+                    <th>DESCRIPCIÓN</th>
+                    <th>TOTALES</th>
+                    <th>OCUPADOS</th>
+                    <th>RESTANTES</th>
+                </tr>
+            </thead>
+        </table>
+    </div>`;
+    $("#"+dataName).html(estructura);
+}
+
+function buildEstructuraDTLP(dataName){
+    var estructura = `<div class="container-fluid p-0" style="padding:15px!important">
+        <table class="table-striped table-hover" id="table`+dataName+`" name="table">
+            <thead>
+                <tr>
+                    <th>NOMBRE</th>
+                    <th>PROSPECTOS</th>
+                    <th>CLIENTES</th>
+                </tr>
+            </thead>
+        </table>
+    </div>`;
+    $("#"+dataName).html(estructura);
+}
+
+function buildEstructuraDTMedio(dataName){
+    var estructura = `<div class="container-fluid p-0" style="padding:15px!important">
+        <table class="table-striped table-hover" id="table`+dataName+`" name="table">
+            <thead>
+                <tr>
+                    <th>NOMBRE</th>
+                    <th>CANTIDAD</th>
+                </tr>
+            </thead>
+        </table>
+    </div>`;
     $("#"+dataName).html(estructura);
 }
 
@@ -823,7 +862,7 @@ function getCondominios(idProyecto){
         },
         success: function (response) {
             response.forEach(element => {
-                $("#condominio").append($(`<option data-name='${element.idCondominio}'>`).val(element.idCondominio).text(element.nombre_condominio));
+                $("#condominio").append($(`<option data-name='${element.idCondominio}'>`).val(element.idCondominio).text(element.nombre));
             });
             $("#condominio").selectpicker('refresh');
             $('#spiner-loader').addClass('hide');
@@ -1026,10 +1065,9 @@ function buildTableMedio(data){
             data: 'nombre'
         },
         {
-            data: 'lugar_prospeccion'
-        },
-        {
-            data: 'cantidad'
+            data: function (d) {
+                return '$' + formatMoney(d.cantidad);
+            }
         }],
         columnDefs: [{
             visible: false,
@@ -1113,15 +1151,12 @@ function buildChartsIDMetrics(){
 
 function formatPromedio(data){
     $('.loadPromedioChart').addClass('d-none');
-    console.warn(data);
     let months = [];
     let dataPromedio = [];
     data.forEach(element => {
         months.push(`${element.MONTH} ${element.año}`);
         dataPromedio.push(element.promedio);
     });
-
-    console.warn(months, dataPromedio);
 
     promedioMetrosChart.updateSeries([{
         name: 'Promedio',
@@ -1167,7 +1202,7 @@ function getSedes(selected=null){
             response.forEach(element => {
                 $("#sedes").append($(`<option data-name='${element.nombre}'>`).val(element.id_sede).text(element.nombre));
             });
-            console.log('selected',$("#sedes").val(selected));
+
             selected != null ? $("#sedes").val(selected):'';
             $("#sedes").selectpicker('refresh');
             $('#spiner-loader').addClass('hide');
@@ -1331,9 +1366,6 @@ function buildSelect(selected, dataSelect){
     $('.proyecto_box').html('');
     $('.proyecto_box').append(`<select class="selectpicker select-gral m-0 proyecto" id="proyecto2" name="proyecto" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona un proyecto" data-size="7" data-container="body" required style="height:100%!important"></select>`);
     getSedes(selected.sede_promedio);
-   
-    // console.log(parseInt(selected.sede_promedio));
-    // $('#sedes').val(parseInt(selected.sede_promedio));
     $('#sedes').selectpicker('refresh');
     getProyectos(selected.sede_promedio, selected.proyecto_promedio);
     getPromedio(selected.sede_promedio, selected.proyecto_promedio, formatDate($('#tableBegin_promedio').val()),formatDate($('#tableEnd_promedio').val())).then( response => { 
@@ -1387,7 +1419,27 @@ function fillTable(dataObject) {
             },
             {
                 data: function (d) {
-                    return d.nombreUsuario;
+                    return d.nombreAsesor;
+                }
+            },
+            {
+                data: function (d) {
+                    return d.nombreCoordinador;
+                }
+            },
+            {
+                data: function (d) {
+                    return d.nombreGerente;
+                }
+            },
+            {
+                data: function (d) {
+                    return d.nombreSubdirector;
+                }
+            },
+            {
+                data: function (d) {
+                    return d.nombreRegional;
                 }
             },
             {
