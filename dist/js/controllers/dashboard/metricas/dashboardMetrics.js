@@ -763,19 +763,19 @@ function reorderColumnsMetrics(){
                     var id = columnDatatable.attr('id');
                     $("#"+id).html('');
                     if( id == 'metros' ){
-                        buildEstructuraDTMetrics(id, dataMetros);
+                        buildEstructuraDTMetros(id);
                         buildTableMetros(dataMetros);
                     }
                     else if( id == 'disponibilidad' ){
-                        buildEstructuraDTMetrics(id, dataDisponibilidad);
+                        buildEstructuraDTDisponibilidad(id);
                         buildTableDisponibilidad(dataDisponibilidad);
                     }
                     else if( id == 'lugar' ){
-                        buildEstructuraDTMetrics(id, dataLugarProspeccion);
+                        buildEstructuraDTLP(id);
                         buildTableLugarProspeccion(dataLugarProspeccion);
                     }
                     else if( id == 'medio' ){
-                        buildEstructuraDTMetrics(id, dataMedio);
+                        buildEstructuraDTMedio(id);
                         buildTableMedio(dataMedio);
                     } else if( id == 'promedio' ){
                         buildEstructuraDTMetrics(id, dataPromedio);
@@ -789,23 +789,64 @@ function reorderColumnsMetrics(){
     $('[data-toggle="tooltip"]').tooltip();
 }
 
-function buildEstructuraDTMetrics(dataName, dataApartados){
-    var tableHeaders = '';
-    var arrayHeaders = Object.keys(dataApartados[0]);
-    for( i=0; i<arrayHeaders.length; i++ ){
-        tableHeaders += '<th>' + arrayHeaders[i] + '</th>';
-    }
-
-    var id = 'table'+dataName;
+function buildEstructuraDTMetros(dataName){
     var estructura = `<div class="container-fluid p-0" style="padding:15px!important">
-                        <table class="table-striped table-hover" id="`+id+`" name="table">
-                            <thead>
-                                <tr>
-                                    `+tableHeaders+`
-                                </tr>
-                            </thead>
-                        </table>
-                    </div>`;
+        <table class="table-striped table-hover" id="table`+dataName+`" name="table">
+            <thead>
+                <tr>
+                    <th>SUPERFICIE</th>
+                    <th>CANTIDAD</th>
+                    <th>PRECIO</th>
+                </tr>
+            </thead>
+        </table>
+    </div>`;
+    $("#"+dataName).html(estructura);
+}
+
+function buildEstructuraDTDisponibilidad(dataName){
+    var estructura = `<div class="container-fluid p-0" style="padding:15px!important">
+        <table class="table-striped table-hover" id="table`+dataName+`" name="table">
+            <thead>
+                <tr>
+                    <th>NOMBRE RESIDENCIAL</th>
+                    <th>DESCRIPCIÓN</th>
+                    <th>TOTALES</th>
+                    <th>OCUPADOS</th>
+                    <th>RESTANTES</th>
+                </tr>
+            </thead>
+        </table>
+    </div>`;
+    $("#"+dataName).html(estructura);
+}
+
+function buildEstructuraDTLP(dataName){
+    var estructura = `<div class="container-fluid p-0" style="padding:15px!important">
+        <table class="table-striped table-hover" id="table`+dataName+`" name="table">
+            <thead>
+                <tr>
+                    <th>NOMBRE</th>
+                    <th>PROSPECTOS</th>
+                    <th>CLIENTES</th>
+                </tr>
+            </thead>
+        </table>
+    </div>`;
+    $("#"+dataName).html(estructura);
+}
+
+function buildEstructuraDTMedio(dataName){
+    var estructura = `<div class="container-fluid p-0" style="padding:15px!important">
+        <table class="table-striped table-hover" id="table`+dataName+`" name="table">
+            <thead>
+                <tr>
+                    <th>NOMBRE</th>
+                    <th>CANTIDAD</th>
+                </tr>
+            </thead>
+        </table>
+    </div>`;
     $("#"+dataName).html(estructura);
 }
 
@@ -1024,10 +1065,9 @@ function buildTableMedio(data){
             data: 'nombre'
         },
         {
-            data: 'lugar_prospeccion'
-        },
-        {
-            data: 'cantidad'
+            data: function (d) {
+                return '$' + formatMoney(d.cantidad);
+            }
         }],
         columnDefs: [{
             visible: false,
