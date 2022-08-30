@@ -241,7 +241,7 @@
 				error: function(){
 					$('#btnSubmit').prop('disabled', false);
 					$('#btnSubmit').css("opacity","1");
-					alerts.showNotification('top', 'right', '¡OPS!, ALGO SALIÓ MAL, INTÉNTALO DE NUEVO.', 'danger');
+					alerts.showNotification('top', 'right', 'Oops! Algo salió mal, inténtalo de nuevo.', 'danger');
 				}
 			});
 		});
