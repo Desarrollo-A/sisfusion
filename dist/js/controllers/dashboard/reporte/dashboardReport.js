@@ -1087,7 +1087,7 @@ function newRoles(option) {
 }
 
 $(document).on('click', '.btnModalDetails', function () {
-    let dataObj = {
+    let dataObject = {
         type: $(this).data("type"),
         sede: $(this).data("sede"),
         leader: $(this).data("leader"),
@@ -1104,8 +1104,11 @@ $(document).on('click', '.btnModalDetails', function () {
         subdirector: $(this).data("su"),
         regional: $(this).data("dr")
     }
-    fillTable(dataObj);
-    $("#seeInformationModal").modal();
+    fillTable(dataObject);
+    if (dataObject.type != 3 && dataObject.type != 33 && dataObject.type != 4 && dataObject.type != 4)
+        $("#seeInformationModal").modal();
+    else
+        $("#seeInformationModalCancelados").modal();
 });
 
 $('#lotesInformationTable thead tr:eq(0) th').each(function (i) {
@@ -1122,167 +1125,349 @@ $('#lotesInformationTable thead tr:eq(0) th').each(function (i) {
 });
 
 function fillTable(dataObject) {
-    generalDataTable = $('#lotesInformationTable').dataTable({
-        dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
-        width: '100%',
-        buttons: [
-            {
-                extend: 'excelHtml5',
-                text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
-                className: 'btn buttons-excel',
-                titleAttr: 'Descargar archivo de Excel',
-                exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5, 6, 7,8, 9, 10, 11],
-                    format: {
-                        header: function (d, columnIdx) {
-                            switch (columnIdx) {
-                                case 0:
-                                    return 'Proyecto';
-                                    break;
-                                case 1:
-                                    return 'Condominio';
-                                    break;
-                                case 2:
-                                    return 'Lote'
-                                    break;
-                                case 3:
-                                    return 'Cliente';
-                                    break;
-                                case 4:
-                                    return 'Asesor';
-                                    break;
-                                case 5:
-                                    return 'Coordinador';
-                                    break;
-                                case 6:
-                                    return 'Gerente';
-                                    break;
-                                case 7:
-                                    return 'Subdirector';
-                                    break;
-                                case 8:
-                                    return 'Director regional';
-                                    break;
-                                case 9:
-                                    return 'Fecha de apartado';
-                                    break;
-                                case 10:
-                                    return 'Estatus contratación';
-                                    break;
-                                case 11:
-                                    return 'Estatus lote';
-                                    break;
+    if (dataObject.type != 3 && dataObject.type != 33 && dataObject.type != 4 && dataObject.type != 4) {
+        generalDataTable = $('#lotesInformationTable').dataTable({
+            dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
+            width: '100%',
+            buttons: [
+                {
+                    extend: 'excelHtml5',
+                    text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
+                    className: 'btn buttons-excel',
+                    titleAttr: 'Descargar archivo de Excel',
+                    exportOptions: {
+                        columns: [0, 1, 2, 3, 4, 5, 6, 7,8, 9, 10, 11],
+                        format: {
+                            header: function (d, columnIdx) {
+                                switch (columnIdx) {
+                                    case 0:
+                                        return 'Proyecto';
+                                        break;
+                                    case 1:
+                                        return 'Condominio';
+                                        break;
+                                    case 2:
+                                        return 'Lote'
+                                        break;
+                                    case 3:
+                                        return 'Cliente';
+                                        break;
+                                    case 4:
+                                        return 'Asesor';
+                                        break;
+                                    case 5:
+                                        return 'Coordinador';
+                                        break;
+                                    case 6:
+                                        return 'Gerente';
+                                        break;
+                                    case 7:
+                                        return 'Subdirector';
+                                        break;
+                                    case 8:
+                                        return 'Director regional';
+                                        break;
+                                    case 9:
+                                        return 'Fecha de apartado';
+                                        break;
+                                    case 10:
+                                        return 'Estatus contratación';
+                                        break;
+                                    case 11:
+                                        return 'Estatus lote';
+                                        break;
+                                }
                             }
                         }
                     }
                 }
-            }
-        ],
-        pagingType: "full_numbers",
-        lengthMenu: [
-            [10, 25, 50, -1],
-            [10, 25, 50, "Todos"]
-        ],
-        destroy: true,
-        ordering: false,
-        scrollX: true,
-        language: {
-            url: `${base_url}static/spanishLoader_v2.json`,
-            paginate: {
-                previous: "<i class='fa fa-angle-left'>",
-                next: "<i class='fa fa-angle-right'>"
-            }
-        },
-        destroy: true,
-        ordering: false,
-        columns: [
-            {
-                data: function (d) {
-                    return d.nombreResidencial;
+            ],
+            pagingType: "full_numbers",
+            lengthMenu: [
+                [10, 25, 50, -1],
+                [10, 25, 50, "Todos"]
+            ],
+            destroy: true,
+            ordering: false,
+            scrollX: true,
+            language: {
+                url: `${base_url}static/spanishLoader_v2.json`,
+                paginate: {
+                    previous: "<i class='fa fa-angle-left'>",
+                    next: "<i class='fa fa-angle-right'>"
                 }
             },
-            {
-                data: function (d) {
-                    return d.nombreCondominio;
-                }
-            },
-            {
-                data: function (d) {
-                    return d.nombreLote;
-                }
-            },
-            {
-                data: function (d) {
-                    return d.nombreCliente;
-                }
-            },
-            {
-                data: function (d) {
-                    return d.nombreAsesor;
-                }
-            },
-            {
-                data: function (d) {
-                    return d.nombreCoordinador;
-                }
-            },
-            {
-                data: function (d) {
-                    return d.nombreGerente;
-                }
-            },
-            {
-                data: function (d) {
-                    return d.nombreSubdirector;
-                }
-            },
-            {
-                data: function (d) {
-                    return d.nombreRegional;
-                }
-            },
+            destroy: true,
+            ordering: false,
+            columns: [
+                {
+                    data: function (d) {
+                        return d.nombreResidencial;
+                    }
+                },
+                {
+                    data: function (d) {
+                        return d.nombreCondominio;
+                    }
+                },
+                {
+                    data: function (d) {
+                        return d.nombreLote;
+                    }
+                },
+                {
+                    data: function (d) {
+                        return d.nombreCliente;
+                    }
+                },
+                {
+                    data: function (d) {
+                        return d.nombreAsesor;
+                    }
+                },
+                {
+                    data: function (d) {
+                        return d.nombreCoordinador;
+                    }
+                },
+                {
+                    data: function (d) {
+                        return d.nombreGerente;
+                    }
+                },
+                {
+                    data: function (d) {
+                        return d.nombreSubdirector;
+                    }
+                },
+                {
+                    data: function (d) {
+                        return d.nombreRegional;
+                    }
+                },
 
-            {
-                data: function (d) {
-                    return d.fechaApartado;
+                {
+                    data: function (d) {
+                        return d.fechaApartado;
+                    }
+                },
+                {
+                    data: function (d) {
+                        return d.nombreStatus;
+                    }
+                },
+                {
+                    data: function (d) {
+                        return d.estatusLote;
+                    }
                 }
-            },
-            {
-                data: function (d) {
-                    return d.nombreStatus;
-                }
-            },
-            {
-                data: function (d) {
-                    return d.estatusLote;
+            ],
+            columnDefs: [{
+                visible: false,
+                searchable: false
+            }],
+            ajax: {
+                url: `${base_url}Reporte/getLotesInformation`,
+                type: "POST",
+                cache: false,
+                data: {
+                    "type": dataObject.type,
+                    "sede": dataObject.sede,
+                    "leader": dataObject.leader,
+                    "transaction": dataObject.transaction,
+                    "user": dataObject.user,
+                    "rol": dataObject.rol,
+                    "render": dataObject.render,
+                    "option": dataObject.option,
+                    "beginDate": dataObject.begin,
+                    "endDate": dataObject.end,
+                    "asesor": dataObject.asesor,
+                    "coordinador": dataObject.coordinador,
+                    "gerente": dataObject.gerente,
+                    "subdirector": dataObject.subdirector,
+                    "regional": dataObject.regional
                 }
             }
-        ],
-        columnDefs: [{
-            visible: false,
-            searchable: false
-        }],
-        ajax: {
-            url: `${base_url}Reporte/getLotesInformation`,
-            type: "POST",
-            cache: false,
-            data: {
-                "type": dataObject.type,
-                "sede": dataObject.sede,
-                "leader": dataObject.leader,
-                "transaction": dataObject.transaction,
-                "user": dataObject.user,
-                "rol": dataObject.rol,
-                "render": dataObject.render,
-                "option": dataObject.option,
-                "beginDate": dataObject.begin,
-                "endDate": dataObject.end,
-                "asesor": dataObject.asesor,
-                "coordinador": dataObject.coordinador,
-                "gerente": dataObject.gerente,
-                "subdirector": dataObject.subdirector,
-                "regional": dataObject.regional
+        });
+    } else{
+        generalDataTable = $('#lotesInformationTableCancelados').dataTable({
+            dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
+            width: '100%',
+            buttons: [
+                {
+                    extend: 'excelHtml5',
+                    text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
+                    className: 'btn buttons-excel',
+                    titleAttr: 'Descargar archivo de Excel',
+                    exportOptions: {
+                        columns: [0, 1, 2, 3, 4, 5, 6, 7,8, 9, 10, 11, 12, 13],
+                        format: {
+                            header: function (d, columnIdx) {
+                                switch (columnIdx) {
+                                    case 0:
+                                        return 'Proyecto';
+                                        break;
+                                    case 1:
+                                        return 'Condominio';
+                                        break;
+                                    case 2:
+                                        return 'Lote'
+                                        break;
+                                    case 3:
+                                        return 'Cliente';
+                                        break;
+                                    case 4:
+                                        return 'Asesor';
+                                        break;
+                                    case 5:
+                                        return 'Coordinador';
+                                        break;
+                                    case 6:
+                                        return 'Gerente';
+                                        break;
+                                    case 7:
+                                        return 'Subdirector';
+                                        break;
+                                    case 8:
+                                        return 'Director regional';
+                                        break;
+                                    case 9:
+                                        return 'Fecha de apartado';
+                                        break;
+                                    case 10:
+                                        return 'Estatus contratación';
+                                        break;
+                                    case 11:
+                                        return 'Estatus lote';
+                                        break;
+                                    case 12:
+                                        return 'Fecha liberación';
+                                        break;
+                                    case 13:
+                                        return 'Motivo';
+                                        break;
+                                }
+                            }
+                        }
+                    }
+                }
+            ],
+            pagingType: "full_numbers",
+            lengthMenu: [
+                [10, 25, 50, -1],
+                [10, 25, 50, "Todos"]
+            ],
+            destroy: true,
+            ordering: false,
+            scrollX: true,
+            language: {
+                url: `${base_url}static/spanishLoader_v2.json`,
+                paginate: {
+                    previous: "<i class='fa fa-angle-left'>",
+                    next: "<i class='fa fa-angle-right'>"
+                }
+            },
+            destroy: true,
+            ordering: false,
+            columns: [
+                {
+                    data: function (d) {
+                        return d.nombreResidencial;
+                    }
+                },
+                {
+                    data: function (d) {
+                        return d.nombreCondominio;
+                    }
+                },
+                {
+                    data: function (d) {
+                        return d.nombreLote;
+                    }
+                },
+                {
+                    data: function (d) {
+                        return d.nombreCliente;
+                    }
+                },
+                {
+                    data: function (d) {
+                        return d.nombreAsesor;
+                    }
+                },
+                {
+                    data: function (d) {
+                        return d.nombreCoordinador;
+                    }
+                },
+                {
+                    data: function (d) {
+                        return d.nombreGerente;
+                    }
+                },
+                {
+                    data: function (d) {
+                        return d.nombreSubdirector;
+                    }
+                },
+                {
+                    data: function (d) {
+                        return d.nombreRegional;
+                    }
+                },
+
+                {
+                    data: function (d) {
+                        return d.fechaApartado;
+                    }
+                },
+                {
+                    data: function (d) {
+                        return d.nombreStatus;
+                    }
+                },
+                {
+                    data: function (d) {
+                        return d.estatusLote;
+                    }
+                },
+                {
+                    data: function (d) {
+                        return d.fechaLiberacion;
+                    }
+                },
+                {
+                    data: function (d) {
+                        return d.motivoLiberacion;
+                    }
+                }
+            ],
+            columnDefs: [{
+                visible: false,
+                searchable: false
+            }],
+            ajax: {
+                url: `${base_url}Reporte/getLotesInformation`,
+                type: "POST",
+                cache: false,
+                data: {
+                    "type": dataObject.type,
+                    "sede": dataObject.sede,
+                    "leader": dataObject.leader,
+                    "transaction": dataObject.transaction,
+                    "user": dataObject.user,
+                    "rol": dataObject.rol,
+                    "render": dataObject.render,
+                    "option": dataObject.option,
+                    "beginDate": dataObject.begin,
+                    "endDate": dataObject.end,
+                    "asesor": dataObject.asesor,
+                    "coordinador": dataObject.coordinador,
+                    "gerente": dataObject.gerente,
+                    "subdirector": dataObject.subdirector,
+                    "regional": dataObject.regional
+                }
             }
-        }
-    });
+        });
+    }
 }
