@@ -1996,12 +1996,15 @@ class Caja_outside extends CI_Controller
         ON clientes.idLote = lt.idLote WHERE idStatusLote IN (99)");
 
             //ACTUALIZAMOS EL NUMERO DE RECIBO DEL CLIENTE PARA EL CONTROL
-            $this->db->query("  UPDATE cl
+        $this->db->query("  UPDATE cl
         SET cl.noRecibo = '$data->folio'
         FROM clientes cl INNER JOIN ( SELECT lot.idLote, res.idResidencial FROM ( SELECT idLote, idCondominio FROM lotes ) lot
         INNER JOIN ( SELECT idCondominio, idResidencial FROM condominios ) con ON con.idCondominio = lot.idCondominio
         INNER JOIN ( SELECT idResidencial FROM residenciales ) res ON res.idResidencial = con.idResidencial ) res ON res.idLote = cl.idLote
         WHERE cl.noRecibo LIKE 'CONFPAGO%' AND cl.noRecibo LIKE '%" . $data->num_operacion . "'");
+
+        $this->db->query("INSERT INTO logs_banco (confirmacion, fecha_creacion) VALUES ('".$data->num_operacion."', GETDATE())");
+
         }
 
     }

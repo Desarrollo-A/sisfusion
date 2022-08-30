@@ -547,11 +547,11 @@ class Dashboard_model extends CI_Model {
         else if ($id_rol == 1 || $id_rol == 4 || $id_rol == 18) // MJ: Director comercial
             $filtro .= "";
         $query = $this->db->query("WITH cte AS(
-            SELECT CAST('2022-01-01 00:00:00' AS DATETIME) DateValue
+            SELECT CAST('$begin 00:00:00' AS DATETIME) DateValue
             UNION ALL
             SELECT  DateValue + 1
             FROM    cte   
-            WHERE   DateValue + 1 <= '2022-07-04 00:00:00')
+            WHERE   DateValue + 1 <= '$end 23:59:59')
 
 			SELECT 
 				(CASE 
