@@ -842,14 +842,14 @@ class Asesor_model extends CI_Model
     }
 
 
-    public function get_autorizaciones()
-    {
+    public function get_autorizaciones () {
         /*id_autorizacion, autorizaciones.fecha_creacion,autorizaciones.autorizacion,*/
-        $query = $this->db->query('		
-		SELECT  residencial.nombreResidencial, condominio.nombre as nombreCondominio, 
+        $query = $this->db->query('SELECT  residencial.nombreResidencial, condominio.nombre as nombreCondominio, 
 		lotes.nombreLote, MAX(autorizaciones.estatus) as estatus,  MAX(id_autorizacion) as id_autorizacion, MAX(autorizaciones.fecha_creacion) as fecha_creacion,
 		MAX(autorizaciones.autorizacion) as autorizacion, 
-		users.usuario as sol, users1.usuario as aut,  autorizaciones.idLote
+		UPPER(CONCAT(users.nombre, ' ', users.apellido_paterno, ' ', users.apellido_materno)) as sol, 
+        UPPER(CONCAT(users1.nombre, ' ', users1.apellido_paterno, ' ', users1.apellido_materno)) as aut,  
+        autorizaciones.idLote
 		FROM autorizaciones 
 		inner join lotes on lotes.idLote = autorizaciones.idLote 
 		inner join condominios as condominio on condominio.idCondominio = lotes.idCondominio 
@@ -859,7 +859,9 @@ class Asesor_model extends CI_Model
 		where autorizaciones.id_sol = ' . $this->session->userdata('id_usuario') . '  
 		GROUP BY residencial.nombreResidencial, condominio.nombre, 
 		lotes.nombreLote, 
-		users.usuario, users1.usuario, autorizaciones.idLote');
+		UPPER(CONCAT(users.nombre, ' ', users.apellido_paterno, ' ', users.apellido_materno)), 
+        UPPER(CONCAT(users1.nombre, ' ', users1.apellido_paterno, ' ', users1.apellido_materno)), 
+        autorizaciones.idLote');
         return $query->result();
     }
 
