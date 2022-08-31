@@ -112,7 +112,7 @@ class Postventa_model extends CI_Model
         THEN 0 ELSE 1 END result,  
         CASE WHEN COUNT(*) != COUNT(CASE WHEN estatus_validacion = 1 THEN 1 END) THEN 0 ELSE 1 END estatusValidacion,
         COUNT(CASE WHEN estatus_validacion = 2 THEN 1 END) no_rechazos
-        FROM documentos_escrituracion WHERE tipo_documento NOT IN (7,9,10, 11, 12, 13,14,15,16,17,20,21) GROUP BY idSolicitud) de2 ON de2.idSolicitud = se.idSolicitud
+        FROM documentos_escrituracion WHERE tipo_documento NOT IN (7,9,10, 11, 12, 13,14,15,16,17,20,21,22) GROUP BY idSolicitud) de2 ON de2.idSolicitud = se.idSolicitud
         LEFT JOIN (SELECT idSolicitud,  CASE WHEN COUNT(*) != COUNT(CASE WHEN expediente IS NOT NULL THEN 1 END) THEN 0 ELSE 1 END Spresupuesto
         FROM documentos_escrituracion WHERE tipo_documento = 11 GROUP BY idSolicitud) de3 ON de3.idSolicitud = se.idSolicitud
         LEFT JOIN (SELECT idSolicitud, CASE WHEN COUNT(*) != COUNT(CASE WHEN expediente IS NOT NULL THEN 1 END) THEN 0 ELSE 1 END contrato
@@ -141,8 +141,7 @@ class Postventa_model extends CI_Model
         $pertenece = 0;
         if($notaria != NULL || $notaria != 0){
             $pertenece = $this->db->query("SELECT pertenece FROM solicitud_escrituracion se INNER JOIN Notarias n ON n.idNotaria = se.idNotaria WHERE idSolicitud = $id_solicitud")->row();
-
-            $pertenece = ($pertenece) ? $pertenece->pertenece : 1;
+            $pertenece = ($pertenece->pertenece) ? $pertenece->pertenece : 1;
 
         }
 
@@ -269,7 +268,7 @@ class Postventa_model extends CI_Model
     function getDocumentsClient($idSolicitud, $status)
     {
         if($status == 10 || $status == 11){
-            $tipo_doc = 'NOT IN (11, 12, 13, 14, 15, 16, 17)';
+            $tipo_doc = 'NOT IN (11, 12, 13, 14, 15, 16, 17,22)';
         }elseif($status == 3 || $status == 4 || $status == 5){
             $tipo_doc = 'IN (7,20,21)';
         }elseif($status == 11){
