@@ -120,7 +120,7 @@ function buildTableDetail(data) {
     $.each(data, function (i, v) {
         //i es el indice y v son los valores de cada fila
         solicitudes += '<tr>';
-        solicitudes += '<td> ' + i + ' </td>';
+        solicitudes += '<td> ' + v.idStatus + ' </td>';
         solicitudes += '<td> ' + v.estatus + ' </td>';
         solicitudes += '<td> ' + v.area + ' </td>';
         solicitudes += '<td> ' + v.fechados + ' </td>';

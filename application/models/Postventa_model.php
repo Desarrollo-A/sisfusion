@@ -48,7 +48,7 @@ class Postventa_model extends CI_Model
         WHERE l.idLote = $idLote");
     }
 
-    function setEscrituracion( $personalidad, $idLote,$idCliente, $idPostventa, $data)
+    function setEscrituracion( $personalidad, $idLote,$idCliente, $idPostventa, $data, $idJuridico)
     {
         $idUsuario = $this->session->userdata('id_usuario');
         $rol = $this->session->userdata('id_rol');
@@ -62,8 +62,9 @@ class Postventa_model extends CI_Model
       
         $this->db->query("INSERT INTO solicitud_escrituracion (idLote, idCliente, estatus, fecha_creacion
         , creado_por, fecha_modificacion, modificado_por, idArea, idPostventa, estatus_pago, clave_catastral, cliente_anterior,
-        nombre_anterior, RFC, nombre, personalidad)
-         VALUES($idLote, $idCliente, 0, GETDATE(), $idUsuario, GETDATE(),$idUsuario, $rol, $idPostventa, $idEstatus, '$claveCat', $clienteAnterior, '$nombreClienteAnterior', '$rfcAnterior', '$nombre', $personalidad);");
+        nombre_anterior, RFC, nombre, personalidad, id_juridico)
+         VALUES($idLote, $idCliente, 0, GETDATE(), $idUsuario, GETDATE(),$idUsuario, $rol, $idPostventa, $idEstatus, '$claveCat', 
+                $clienteAnterior, '$nombreClienteAnterior', '$rfcAnterior', '$nombre', $personalidad, $idJuridico);");
         $insert_id = $this->db->insert_id();
         $opcion = $personalidad == 2 || $personalidad == '' || $personalidad == null ? 60:72;
         $opciones = $this->db->query("SELECT * FROM opcs_x_cats WHERE id_catalogo =  $opcion")->result_array();
@@ -137,10 +138,11 @@ class Postventa_model extends CI_Model
 
         $notaria = $this->db->query("SELECT idNotaria FROM solicitud_escrituracion WHERE idSolicitud = $id_solicitud")->row()->idNotaria;
 
+        $pertenece = 0;
         if($notaria != NULL || $notaria != 0){
             $pertenece = $this->db->query("SELECT pertenece FROM solicitud_escrituracion se INNER JOIN Notarias n ON n.idNotaria = se.idNotaria WHERE idSolicitud = $id_solicitud")->row();
 
-            $pertenece ? $pertenece->pertenece : 1;
+            $pertenece = ($pertenece) ? $pertenece->pertenece : 1;
 
         }
 
@@ -648,7 +650,7 @@ function checkBudgetInfo($idSolicitud){
 
     function getFullReportContraloria($idSolicitud){
         $query = $this->db->query("WITH cte AS(
-            SELECT MAX(fecha_creacion) fecha_creacion, idStatus, idEscrituracion
+            SELECT MAX(fecha_creacion) fecha_creacion, (case when idStatus = 91 or idStatus = 92 then idStatus-89 when idStatus = 0 then idStatus+1 else idStatus end) idStatus, idEscrituracion
             FROM control_estatus 
             WHERE idEscrituracion = $idSolicitud GROUP BY idStatus, idEscrituracion
         )
@@ -845,5 +847,21 @@ function checkBudgetInfo($idSolicitud){
             de.estatus_validacion, pr.estatus,nota.nombre_notaria");
         return $query->result();
     }
-    
+
+    public function obtenerJuridicoAsignacion()
+    {
+        $query = $this->db->query('SELECT id_usuario FROM solicitud_juridico WHERE orden = (SELECT TOP 1 MIN(orden) 
+                                          FROM solicitud_juridico WHERE esta_activo = 0)');
+        return $query->row();
+    }
+
+    public function asignarJuridicoActivo($usuarioId)
+    {
+        $this->db->query("UPDATE solicitud_juridico SET esta_activo = 1 WHERE id_usuario = $usuarioId");
+    }
+
+    public function restablecerJuridicosAsignados()
+    {
+        $this->db->query('UPDATE solicitud_juridico set esta_activo = 0');
+    }
 }

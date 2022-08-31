@@ -738,20 +738,19 @@ class Contraloria_model extends CI_Model {
 		return $query->row();
 	}
 
-	public function getLotesAllAssistant($idCondominio)
-		{
-			$query = $this->db-> query("SELECT l.* FROM lotes l 
-			INNER JOIN clientes c ON c.id_cliente = l.idCliente
-			INNER JOIN usuarios u ON u.id_usuario = c.id_asesor AND u.estatus IN (0,1,3)
-			WHERE l.status = 1 AND (l.idStatusContratacion = 1 OR l.idMovimiento = 82) AND c.status = 1 AND c.id_gerente = ". $this->session->userdata('id_lider') ." AND l.idCondominio = $idCondominio
-			UNION ALL
-            SELECT l.* FROM lotes l 
-			INNER JOIN clientes c ON c.id_cliente = l.idCliente AND c.id_coordinador IN (2562, 2541)
-			INNER JOIN usuarios u ON u.id_usuario = c.id_asesor
-			INNER JOIN usuarios uu ON uu.id_usuario = u.id_lider AND uu.id_lider = ". $this->session->userdata('id_lider') ."
-            WHERE l.status = 1 AND (l.idStatusContratacion = 1 OR l.idMovimiento = 82) AND c.status = 1 AND l.idCondominio = $idCondominio");
-			return $query->result_array();
-		}
+	public function getLotesAllAssistant($idCondominio){
+		$query = $this->db-> query("SELECT l.* FROM lotes l 
+		INNER JOIN clientes c ON c.id_cliente = l.idCliente
+		INNER JOIN usuarios u ON u.id_usuario = c.id_asesor AND u.estatus IN (0, 1, 3)
+		WHERE l.status = 1 AND l.idStatusContratacion IN (1, 2, 3) AND l.idMovimiento IN (31, 85, 20, 63, 73, 82, 92, 96) AND c.status = 1 AND c.id_gerente = ". $this->session->userdata('id_lider') ." AND l.idCondominio = $idCondominio
+		UNION ALL
+        SELECT l.* FROM lotes l 
+		INNER JOIN clientes c ON c.id_cliente = l.idCliente AND c.id_coordinador IN (2562, 2541)
+		INNER JOIN usuarios u ON u.id_usuario = c.id_asesor
+		INNER JOIN usuarios uu ON uu.id_usuario = u.id_lider AND uu.id_lider = ". $this->session->userdata('id_lider') ."
+        WHERE l.status = 1 AND l.idStatusContratacion IN (1, 2, 3) AND l.idMovimiento IN (31, 85, 20, 63, 73, 82, 92, 96) AND c.status = 1 AND l.idCondominio = $idCondominio");
+		return $query->result_array();
+	}
 
 	public function getLotesTwo($idCondominio)
 	{
@@ -1051,4 +1050,30 @@ class Contraloria_model extends CI_Model {
             ORDER BY au.fecha_creacion DESC");
         return $query->result_array();
     }
+	public function validate90Dias($idLote,$idCliente,$usuario){
+		$validation90 = $this->db->query("SELECT c.fechaApartado,DATEDIFF(DAY, c.fechaApartado, GETDATE()) AS dias 
+		FROM clientes c 
+		INNER JOIN lotes l on l.idCliente=c.id_cliente 
+		WHERE c.id_cliente=$idCliente AND l.idLote=$idLote")->result_array();
+		if(count($validation90) > 0){
+			if($validation90[0]['dias'] > 89){
+				$dias = $validation90[0]['dias'];
+				$validationPorcentage = $this->db->query("SELECT * FROM porcentajes_penalizaciones WHERE inicio <= $dias AND fin >= $dias AND estatus=1")->result_array();
+				$estatus= $validationPorcentage[0]['id_porcentaje_penalizacion'] == 4 ? 4 : 1;
+				$datos = array(
+					'id_lote' => $idLote,
+					'id_cliente' => $idCliente,
+					'dias_atraso' => $dias,
+					'estatus' => $estatus,
+					'fecha_aprobacion' => date('Y-m-d H:i:s'),
+					'id_porcentaje_penalizacion' => $validationPorcentage[0]['id_porcentaje_penalizacion'],
+					'creado_por' => $usuario,
+					'fecha_creacion' => date('Y-m-d H:i:s'),
+					'modificado_por' => $usuario,
+				);
+				$this->db->insert('penalizaciones',$datos);
+			}
+		}
+		
+	}
 }
