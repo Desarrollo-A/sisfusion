@@ -139,7 +139,7 @@ class Postventa_model extends CI_Model
         if($notaria != NULL || $notaria != 0){
             $pertenece = $this->db->query("SELECT pertenece FROM solicitud_escrituracion se INNER JOIN Notarias n ON n.idNotaria = se.idNotaria WHERE idSolicitud = $id_solicitud")->row();
 
-            $pertenece = ($pertenece->pertenece) ? $pertenece->pertenece : 1;
+            $pertenece = ($pertenece) ? $pertenece->pertenece : 1;
 
         }
 
