@@ -7,7 +7,7 @@ $('#prospects-datatable thead tr:eq(0) th').each( function (i) {
         }
     });
 });
-
+ 
 sp = { // MJ: SELECT PICKER
     initFormExtendedDatetimepickers: function () {
         $('.datepicker').datetimepicker({
@@ -186,6 +186,9 @@ $(document).on("click", "#preview", function () {
         case '21':
             folder = 'CONTRATO';
             break;
+        case '22':
+            folder = 'COPIA_CERTIFICADA';
+       break;
         default:
             break;
     }
@@ -753,6 +756,12 @@ $(document).on('click', '.modalPresupuestos', function(){
     $('#loadPresupuestos').modal();
 })
 
+$(document).on('click', '.modalCopiaCertificada', function(){
+    let idNxS = $(this).attr('data-idNxS2');
+    $("#idNxS2").val(idNxS);
+    buildUploadCards(idNxS);
+    $('#loadPresupuestos').modal();
+})
 // $(document).on('click', '.watchIcon_modal', function(){
 //     let idNxS = $(this).attr('data-idNxS');
    
@@ -1036,7 +1045,13 @@ function fillTable(beginDate, endDate, estatus) {
                             group_buttons += permisos(d.permisos, d.expediente, d.idDocumento, d.tipo_documento, d.idSolicitud, 1, newBtn);
                             break;
                         case 22:
-                            group_buttons += permisos(d.permisos, d.expediente, d.idDocumento, d.tipo_documento, d.idSolicitud, 2, newBtn);
+                            if(d.expediente != '' || d.expediente != null){
+                                newBtn += `<button data-idDocumento="${d.idDocumento}" data-documentType="${d.tipo_documento}" data-idSolicitud=${d.idSolicitud} data-action=${d.expediente == null || d.expediente == '' ? 1 : 2} class="btn-data ${d.expediente == null || d.expediente == '' ? "btn-sky" : "btn-gray"} upload" data-toggle="tooltip" data-placement="top" title=${d.expediente == null || d.expediente == '' ? 'Cargar' : 'Eliminar'}>${d.expediente == null || d.expediente == '' ? '<i class="fas fa-cloud-upload-alt"></i>' : '<i class="far fa-trash-alt"></i>'}</button>`;
+                                group_buttons += permisos(d.permisos, d.expediente, d.idDocumento, d.tipo_documento, d.idSolicitud, 2, newBtn);
+                                ///group_buttons += permisos(d.permisos, d.expediente, d.idDocumento, d.tipo_documento, d.idSolicitud, 3, newBtn);
+                            }else{
+                                group_buttons += permisos(d.permisos, d.expediente, d.idDocumento, d.tipo_documento, d.idSolicitud, 2, newBtn);
+                            }
                             break;
                         case 23:
                             group_buttons += permisos(d.permisos, d.expediente, d.idDocumento, d.tipo_documento, d.idSolicitud, 2, newBtn);
@@ -1345,6 +1360,7 @@ function permisos(permiso, expediente, idDocumento, tipo_documento, idSolicitud,
         case 1: //escritura
             if (expediente == null || expediente == '' || expediente == 'null') {
                 if (aditional == 2) {
+                    //modal paso 22
                     botones += `<button data-idDocumento="${idDocumento}" data-documentType="${tipo_documento}" data-idSolicitud=${idSolicitud} data-action=${expediente == null || expediente == '' ? 1 : 2} class="btn-data ${expediente == null || expediente == '' ? "btn-sky" : "btn-gray"} upload" data-toggle="tooltip" data-placement="top" title=${expediente == null || expediente == '' ? 'Cargar' : 'Eliminar'}>${expediente == null || expediente == '' ? '<i class="fas fa-cloud-upload-alt"></i>' : '<i class="far fa-trash-alt"></i>'}</button>`;
                 } else {
                     botones += `<button data-idDocumento="${idDocumento}" data-documentType="${tipo_documento}" data-idSolicitud=${idSolicitud} data-action=${expediente == null || expediente == '' ? 1 : 2} class="btn-data ${expediente == null || expediente == '' ? "btn-sky" : "btn-gray"} upload" data-toggle="tooltip" data-placement="top" title=${expediente == null || expediente == '' ? 'Cargar' : 'Eliminar'}>${expediente == null || expediente == '' ? '<i class="fas fa-cloud-upload-alt"></i>' : '<i class="far fa-trash-alt"></i>'}</button>`;
@@ -1357,7 +1373,10 @@ function permisos(permiso, expediente, idDocumento, tipo_documento, idSolicitud,
                     botones += `<button data-idDocumento="${idDocumento}" data-documentType="${tipo_documento}" data-idSolicitud=${idSolicitud} data-action=${expediente == null || expediente == '' ? 1 : 2} class="btn-data ${expediente == null || expediente == '' ? "btn-sky" : "btn-gray"} upload" data-toggle="tooltip" data-placement="top" title=${expediente == null || expediente == '' ? 'Cargar' : 'Eliminar'}>${expediente == null || expediente == '' ? '<i class="fas fa-cloud-upload-alt"></i>' : '<i class="far fa-trash-alt"></i>'}</button>`;
                     botones += newBtn;
                 }
+                //VISTA PREVIA DOCUEMENTOS
                 botones += `<button id="preview" data-doc="${expediente}" data-documentType="${tipo_documento}" class="btn-data btn-details-grey" data-toggle="tooltip" data-placement="top" title="Vista previa"><i class="fas fa-eye"></i></button>`;
+                //SI YA SE CARGO LA COPIA CERTIFICADA AGREGAR BOTON PARA CARGAR OTRO ARCHIVO Y BLOQUEAR LA ACCIÓN DE ENVIAR
+                //botones += `<button data-idDocumento="${idDocumento}" data-documentType="${tipo_documento}" data-idSolicitud=${idSolicitud} data-action="1" class="btn-data btn-sky upload" data-toggle="tooltip" data-placement="top" title="Cargar"><i class="far fa-trash-alt"></i></button>`;
                 botones += '<button id="request" class="btn-data btn-green" data-toggle="tooltip" data-placement="top" title="Enviar"><i class="far fa-paper-plane"></i></button>';
             }
             break;
@@ -1443,6 +1462,7 @@ function buildTableDetail(data, permisos) {
             }
         }
         else if(permisos == 1 && (v.ev == null || v.ev == 2) && v.estatusActual == 4 && (v.tipo_documento == 20 || v.tipo_documento == 21) ) {
+
             solicitudes += `<button data-idDocumento="${v.idDocumento}" data-documentType="${v.tipo_documento}" data-idSolicitud=${v.idSolicitud} data-details ="3" data-action=${v.expediente == null || v.expediente == '' ? 1 : 2} class="btn-data btn-${v.expediente == null || v.expediente == '' ? 'blueMaderas' : 'warning'} upload" data-toggle="tooltip" data-placement="top" title=${v.expediente == null || v.expediente == '' ? 'Cargar' : 'Eliminar'}>${v.expediente == null || v.expediente == '' ? '<i class="fas fa-cloud-upload-alt"></i>' : '<i class="far fa-trash-alt"></i>'}</button>`;
         }
         else if (permisos == 2 && v.estatusActual == 5) {
@@ -1451,6 +1471,7 @@ function buildTableDetail(data, permisos) {
             }
         }
         else if(permisos == 1 && (v.ev == null || v.ev == 2) && v.estatusActual == 10){
+
             solicitudes += `<button data-idDocumento="${v.idDocumento}" data-documentType="${v.tipo_documento}" data-idSolicitud=${v.idSolicitud} data-details ="1" data-action=${v.expediente == null || v.expediente == '' ? 1 : 2} class="btn-data btn-${v.expediente == null || v.expediente == '' ? 'blueMaderas' : 'warning'} upload" data-toggle="tooltip" data-placement="top" title=${v.expediente == null || v.expediente == '' ? 'Cargar' : 'Eliminar'}>${v.expediente == null || v.expediente == '' ? '<i class="fas fa-cloud-upload-alt"></i>' : '<i class="far fa-trash-alt"></i>'}</button>`;
         }else if (permisos == 2 && v.estatusActual == 11) {
             if(v.tipo_documento == 13 || v.tipo_documento == 7 || v.tipo_documento == 20 || v.tipo_documento == 21){
@@ -1798,6 +1819,7 @@ function buildTableDetailP(data, permisos) {
         
         solicitudes += '<td><div class="d-flex justify-center">';
         if(permisos == 1){
+            alert(8)
             solicitudes += `<button data-idDocumento="${v.idPresupuesto}" data-documentType="13" data-presupuestoType="${v.tipo}" data-idSolicitud=${v.idSolicitud} data-details ="2" data-action=${v.expediente == null || v.expediente == '' ? 1 : 2} class="btn-data btn-${v.expediente == null || v.expediente == '' ? 'blueMaderas' : 'warning'} upload" data-toggle="tooltip" data-placement="top" title=${v.expediente == null || v.expediente == '' ? 'Cargar' : 'Eliminar'}>${v.expediente == null || v.expediente == '' ? '<i class="fas fa-cloud-upload-alt"></i>' : '<i class="far fa-trash-alt"></i>'}</button>`;
         }
   

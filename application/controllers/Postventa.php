@@ -677,6 +677,11 @@ class Postventa extends CI_Controller
         if($documentType == 13){
             $documentName = $documentName->fileName . '.' . $presupuestoType . '.' . substr(strrchr($_FILES["uploadedDocument"]["name"], '.'), 1);
         }else{
+            /*if($documentInfo->estatus == 22){
+
+            }else{
+
+            }*/
             $documentName = $documentName->fileName . '.' . substr(strrchr($_FILES["uploadedDocument"]["name"], '.'), 1);
         }
         $folder = $this->getFolderFile($documentType);
@@ -762,6 +767,9 @@ class Postventa extends CI_Controller
                 break;
             case 21:
                 $folder = "static/documentos/postventa/escrituracion/CONTRATO/";
+                break;
+            case 22:
+                $folder = "static/documentos/postventa/escrituracion/COPIA_CERTIFICADA/";
                 break;
         }
         return $folder;
