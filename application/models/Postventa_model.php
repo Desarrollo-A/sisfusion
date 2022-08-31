@@ -164,7 +164,13 @@ class Postventa_model extends CI_Model
                 $next = $newStatus + 1;
             }
         } elseif ($type == 2) {//REJECT
-            $newStatus = $estatus - 1;
+            if ($estatus === 16) { // ENVÍO / RECEPCIÓN DE PROYECTO
+                $newStatus = 13;
+                $estatus = 12;
+            } else {
+                $newStatus = $estatus - 1;
+            }
+
             $next = $newStatus + 1;
         } elseif ($type == 3) {//comodin fecha
             if ($estatus == 90) {
@@ -270,7 +276,7 @@ class Postventa_model extends CI_Model
             $tipo_doc = 'NOT IN (11, 12, 13, 14, 15, 16, 17,22)';
         }elseif($status == 3 || $status == 4 || $status == 5){
             $tipo_doc = 'IN (7,20,21)';
-        }elseif($status == 11){
+        }elseif($status == 11 || $status == 13){
             $tipo_doc = 'IN (7)';
         }
 
