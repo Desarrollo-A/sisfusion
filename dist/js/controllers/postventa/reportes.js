@@ -114,6 +114,7 @@ function buildTableDetail(data) {
     solicitudes += '<td>' + '<b>' + 'AREA' + '</b></td>';
     solicitudes += '<td>' + '<b>' + 'FECHA INICIAL ESTATUS' + '</b></td>';
     solicitudes += '<td>' + '<b>' + 'FECHA FINAL ESTATUS' + '</b></td>';
+    solicitudes += '<td>' + '<b>' + 'COMENTARIOS' + '</b></td>';
     solicitudes += '<td>' + '<b>' + 'VIGENCIA ' + '</b></td>';
     solicitudes += '<td>' + '<b>' + 'DÍAS DE ATRASO ' + '</b></td>';
     solicitudes += '</tr>';
@@ -125,6 +126,7 @@ function buildTableDetail(data) {
         solicitudes += '<td> ' + v.area + ' </td>';
         solicitudes += '<td> ' + v.fechados + ' </td>';
         solicitudes += '<td> ' + v.fecha_creacion + ' </td>';
+        solicitudes += '<td> ' + v.comentarios + ' </td>';
         solicitudes += '<td> ' + v.atrasado + '</td>';
         solicitudes += '<td> ' + v.diferencia + '</td>';
     });

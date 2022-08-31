@@ -648,11 +648,11 @@ function checkBudgetInfo($idSolicitud){
 
     function getFullReportContraloria($idSolicitud){
         $query = $this->db->query("WITH cte AS(
-            SELECT MAX(fecha_creacion) fecha_creacion, (case when idStatus = 91 or idStatus = 92 then idStatus-89 when idStatus = 0 then idStatus+1 else idStatus end) idStatus, idEscrituracion
+            SELECT MAX(fecha_creacion) fecha_creacion, comentarios, (CASE WHEN idStatus = 91 or idStatus = 92 THEN idStatus-89 WHEN idStatus = 0 THEN idStatus+1 WHEN idStatus = 90 THEN '15.1' ELSE idStatus END) idStatus, idEscrituracion
             FROM control_estatus 
-            WHERE idEscrituracion = $idSolicitud GROUP BY idStatus, idEscrituracion
+            WHERE idEscrituracion = $idSolicitud GROUP BY idStatus, idEscrituracion , comentarios
         )
-        SELECT cte.*, isNULL(lag(MAX(ce.fecha_creacion)) OVER (ORDER BY cte.idStatus), cte.fecha_creacion) fechados,
+		SELECT cte.*, isNULL(lag(MAX(ce.fecha_creacion)) OVER (ORDER BY cte.idStatus), cte.fecha_creacion) fechados,
         l.nombreLote, cond.nombre nombreCondominio, r.nombreResidencial, se.nombre, 
         oxc.nombre estatus, oxc2.nombre area, cp.tiempo FROM cte
         INNER JOIN control_estatus ce ON ce.idEscrituracion = cte.idEscrituracion AND ce.fecha_creacion = cte.fecha_creacion
@@ -664,8 +664,7 @@ function checkBudgetInfo($idSolicitud){
         INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = cte.idStatus AND oxc.id_catalogo = 59 
         INNER JOIN opcs_x_cats oxc2 ON oxc2.id_opcion = ce.idArea AND oxc2.id_catalogo = 1
         INNER JOIN control_procesos cp ON cp.estatus=ce.idStatus AND cp.idRol = ce.idArea
-        GROUP BY cte.idStatus, cte.idEscrituracion, cte.fecha_creacion, l.nombreLote, cond.nombre, r.nombreResidencial, se.nombre, 
-        oxc.nombre, oxc2.nombre, cp.tiempo");
+        GROUP BY cte.idStatus, cte.idEscrituracion, cte.fecha_creacion, l.nombreLote, cond.nombre, r.nombreResidencial, se.nombre, oxc.nombre, oxc2.nombre, cp.tiempo, cte.comentarios");
         return $query->result_array();
     }
 
