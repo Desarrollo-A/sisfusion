@@ -619,7 +619,16 @@ class Postventa extends CI_Controller
         $dataFiscal = base64_encode(json_encode($dataFiscal));
         $responseInsert = $this->insertPostventaDF($dataFiscal);
         if($responseInsert->resultado == 1){
-            $informacion = $this->Postventa_model->setEscrituracion( $personalidad, $idLote,$idCliente, $idPostventa, $resDecode->data[0]);
+            $usuarioJuridico = $this->Postventa_model->obtenerJuridicoAsignacion();
+            if (!$usuarioJuridico) {
+                $this->Postventa_model->restablecerJuridicosAsignados();
+                $usuarioJuridico = $this->Postventa_model->obtenerJuridicoAsignacion();
+            }
+
+            $this->Postventa_model->asignarJuridicoActivo($usuarioJuridico->id_usuario);
+
+            $informacion = $this->Postventa_model->setEscrituracion( $personalidad, $idLote,$idCliente, $idPostventa,
+                $resDecode->data[0], $usuarioJuridico->id_usuario);
             echo json_encode($informacion);
         }else{
             echo json_encode(false);
