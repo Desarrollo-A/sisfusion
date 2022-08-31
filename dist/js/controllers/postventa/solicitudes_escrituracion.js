@@ -731,19 +731,22 @@ $(document).on('click', '.approve', function(){
     });
 })
 $(document).on('change', '.selectpicker.notaria-select', async function(e){
-    let descripcion = {};
-    let iconSave = $(this).parent().next().find('.icon-save');
-    iconSave.removeClass('inactive');
-    iconSave.addClass('active');
-    descripcion= await getDescriptionNotaria($(this).val());
-    $(this).parent().parent().next().text(descripcion.direccion);
-    console.log($(this).parent().parent());
+    if ($(this).val()) {
+        let descripcion = {};
+        let iconSave = $(this).parent().next().find('.icon-save');
+        iconSave.removeClass('inactive');
+        iconSave.addClass('active');
+        descripcion = await getDescriptionNotaria($(this).val());
+        $(this).parent().parent().next().text(descripcion.direccion);
+    }
 })
 
-$(document).on('click', '.saveNotaria', function(){
+$(document).on('click', '.saveNotaria', function() {
     let tr = $(this).closest('tr');
     let select = tr.find('select').val();
-    saveNotaria($(this).attr('data-idSolicitud'), select, $(this));
+    if (tr.find('select').val()) {
+        saveNotaria($(this).attr('data-idSolicitud'), select, $(this));
+    }
 })
 
 $(document).on('click', '.modalPresupuestos', function(){
