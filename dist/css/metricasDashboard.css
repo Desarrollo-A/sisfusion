@@ -1191,7 +1191,7 @@
 }
 
 #metricas .card .col-chart .actions {
-  margin-top: 15px !important;
+  padding-top: 15px !important;
 }
 
 #metricas .card .col-chart .actions .selectMini button {
