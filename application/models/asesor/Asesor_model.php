@@ -844,7 +844,7 @@ class Asesor_model extends CI_Model
 
     public function get_autorizaciones () {
         /*id_autorizacion, autorizaciones.fecha_creacion,autorizaciones.autorizacion,*/
-        $query = $this->db->query('SELECT  residencial.nombreResidencial, condominio.nombre as nombreCondominio, 
+        $query = $this->db->query("SELECT  residencial.nombreResidencial, condominio.nombre as nombreCondominio, 
 		lotes.nombreLote, MAX(autorizaciones.estatus) as estatus,  MAX(id_autorizacion) as id_autorizacion, MAX(autorizaciones.fecha_creacion) as fecha_creacion,
 		MAX(autorizaciones.autorizacion) as autorizacion, 
 		UPPER(CONCAT(users.nombre, ' ', users.apellido_paterno, ' ', users.apellido_materno)) as sol, 
@@ -861,7 +861,7 @@ class Asesor_model extends CI_Model
 		lotes.nombreLote, 
 		UPPER(CONCAT(users.nombre, ' ', users.apellido_paterno, ' ', users.apellido_materno)), 
         UPPER(CONCAT(users1.nombre, ' ', users1.apellido_paterno, ' ', users1.apellido_materno)), 
-        autorizaciones.idLote');
+        autorizaciones.idLote");
         return $query->result();
     }
 

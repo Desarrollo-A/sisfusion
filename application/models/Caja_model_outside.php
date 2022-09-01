@@ -1418,4 +1418,12 @@
         return $this->db->query("SELECT id_opcion, id_catalogo, nombre FROM opcs_x_cats WHERE id_catalogo = 73 AND estatis = 1")->result_array();
     }
 
+    public function validateCurrentLoteStatus($idLote){
+        return $this->db->query("SELECT lo.idLote, lo.nombreLote, lo.idStatusContratacion, lo.idStatusLote, 
+        UPPER(sc.nombreStatus) nombreStatusContratacion, st.nombre nombreStatusLote FROM lotes lo
+        LEFT JOIN statuscontratacion sc ON sc.idStatusContratacion = lo.idStatusContratacion
+        LEFT JOIN statuslote st ON st.idStatusLote = lo.idStatusLote
+        WHERE lo.idLote IN ($idLote)");
+    }
+
 }
