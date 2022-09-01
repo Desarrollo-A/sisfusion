@@ -273,7 +273,7 @@ class Postventa_model extends CI_Model
             $tipo_doc = 'NOT IN (11, 12, 13, 14, 15, 16, 17,22)';
         }elseif($status == 3 || $status == 4 || $status == 5){
             $tipo_doc = 'IN (7,20,21)';
-        }elseif($status == 22){
+        }elseif($status == 22 || $status == 23){
             $tipo_doc = 'IN (16,22)';
         }elseif($status == 11){
             $tipo_doc = 'IN (7)';
@@ -320,7 +320,7 @@ class Postventa_model extends CI_Model
             from Presupuestos pr
             INNER JOIN usuarios u ON u.id_usuario = pr.creado_por
             INNER JOIN solicitud_escrituracion se ON se.idSolicitud = pr.idSolicitud
-            INNER JOIN documentos_escrituracion de ON de.idSolicitud = se.idSolicitud AND de.tipo_documento = 13  and se.estatus !=22
+            INNER JOIN documentos_escrituracion de ON de.idSolicitud = se.idSolicitud AND de.tipo_documento = 13  and se.estatus  NOT IN(22,23)  
             LEFT JOIN usuarios us2 ON us2.id_usuario = de.validado_por
             LEFT JOIN motivos_rechazo_x_documento mrxd ON mrxd.id_documento = de.idDocumento AND mrxd.estatus = 1 
             LEFT JOIN motivos_rechazo mr ON mr.id_motivo = mrxd.id_motivo
