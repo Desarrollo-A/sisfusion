@@ -72,7 +72,7 @@ class Login extends CI_Controller
 		  case '22': // MKTD
 		  case '53': // ANALISTA COMISIONES
 		  case '61': // ANSESOR CONSULTA
-		  case '63': // CONTROL INTERNO AUDITORIA 
+		  case '63': //CI AUDITORIA
               redirect(base_url().'Administracion');
          break;
 

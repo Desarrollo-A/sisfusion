@@ -4040,7 +4040,9 @@ function getStatusMktdPreventa(){
 
             case '4': // ASISTENTE GERENTE
             case '13': // CONTRALORÍA
-            $query = $this->db->query("SELECT r.descripcion nombreResidencial, cn.nombre nombreCondominio, l.nombreLote, l.idLote,
+            case '17': // CONTRALORÍA
+            case '63': // CONTROL INTERNO
+                $query = $this->db->query("SELECT r.descripcion nombreResidencial, cn.nombre nombreCondominio, l.nombreLote, l.idLote,
                 CONCAT(c.nombre, ' ', c.apellido_paterno, ' ', c.apellido_materno) nombreCliente,
                 ISNULL(c.telefono1, '') telefono, ISNULL(c.otro_lugar, '') medioProspeccion, oxc2.nombre lp, l.totalNeto2,
                 s.nombre plaza, CONVERT(VARCHAR(10), c.fechaApartado, 111) fechaApartado, 
@@ -4238,12 +4240,14 @@ function getStatusMktdPreventa(){
         //$type = 1 Hace referencia a clientes;
 
         ini_set('memory_limit', -1);
-        $dateA = str_replace('/', '-', $this->input->post("beginDate"));
-        $dateB = str_replace('/', '-', $this->input->post("endDate"));
-        $beginDate = date('Y-m-d', strtotime($dateA));
-        $endDate = date('Y-m-d', strtotime($dateB));
 
-        $filter = "pr.fecha_creacion BETWEEN '$beginDate 00:00:00' AND '$endDate 23:59:59'";
+        $a = $this->input->post("beginDate");
+        $b = $this->input->post("endDate");
+        $beginDate = date("Y-m-d", strtotime($this->input->post("beginDate")));
+        $endDate = date("Y-m-d", strtotime($this->input->post("endDate")));
+
+        $filter = "AND pr.fecha_creacion BETWEEN '$beginDate 00:00:00' AND '$endDate 23:59:59'";
+
         if ( $type == 0 ){
             return $this->db->query("SELECT CONCAT(pr.nombre, ' ', pr.apellido_paterno, ' ', pr.apellido_materno) nombreProspecto, pr.id_prospecto,
             pr.fecha_creacion, pr.becameClient, pr.lugar_prospeccion,  
@@ -4265,8 +4269,7 @@ function getStatusMktdPreventa(){
             LEFT JOIN usuarios u2 ON u2.id_usuario = pr.id_gerente
             LEFT JOIN usuarios u3 ON u3.id_usuario = pr.id_subdirector
             LEFT JOIN usuarios u4 ON u4.id_usuario = pr.id_regional
-            WHERE pr.tipo = 0 AND ($filter  AND pr.lugar_prospeccion != 6) OR 
-            (pr.fecha_creacion > '2022-01-19 23:59:59.999' AND ($filter  AND pr.lugar_prospeccion = 6))
+            WHERE pr.source = 'DragonCEM' AND pr.tipo = 0 $filter
             ORDER BY pr.fecha_creacion");
         }
         else{
@@ -4294,8 +4297,8 @@ function getStatusMktdPreventa(){
             LEFT JOIN usuarios u2 ON u2.id_usuario = cl.id_gerente
             LEFT JOIN usuarios u3 ON u3.id_usuario = cl.id_subdirector
             LEFT JOIN usuarios u4 ON u4.id_usuario = cl.id_regional
-            WHERE pr.tipo = 1 AND ($filter AND pr.lugar_prospeccion != 6) OR 
-            (pr.fecha_creacion > '2022-01-19 23:59:59.999' AND ($filter AND pr.lugar_prospeccion = 6))");
+            WHERE pr.source = 'DragonCEM' AND pr.tipo = 1 $filter
+            ORDER BY pr.fecha_creacion");
         }
     }
 }

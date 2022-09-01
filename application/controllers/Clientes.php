@@ -2612,6 +2612,8 @@ public function getStatusMktdPreventa(){
             case '4': // ASISTENTE GERENTE
             case '53': // ANALISTA COMISIONES
             case '13': // CONTRALORÍA
+            case '13': // CONTRALORÍA
+            case '17': // CONTROL INTERNO
                 $this->load->view("clientes/clients_report_ventas", $datos);
             break;
         }

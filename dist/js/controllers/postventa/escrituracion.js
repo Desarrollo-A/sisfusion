@@ -73,6 +73,8 @@ function aportaciones(data) {
                 $("#lotes").selectpicker('refresh');
                 clearInputs();
                 getLotes($('#condominio').val());
+                $('#aportaciones').prop('disabled', false);
+                $('#aportaciones').css('background-color', '');
             }else{
                 alerts.showNotification("top", "right", "Oops, algo salio mal.", "error");
             }
@@ -117,7 +119,6 @@ function getClient(idLote) {
     $.post('getClient', {
         idLote: idLote
     }, function (data) {
-        console.log(data);
         if(data){
             $('#nombre').val(data.ncliente);
             $('#nombre2').val(data.ncliente);

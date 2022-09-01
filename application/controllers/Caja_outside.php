@@ -438,7 +438,6 @@ class Caja_outside extends CI_Controller
             exit;
         }
         $data['prospecto'] = $this->caja_model_outside->consultByProspect($id_prospecto);
-        /*update validacion 26-11-2020*/
         if (count($data['prospecto']) <= 0) {
             $dataError['ERROR'] = array(
                 'titulo' => 'ERROR',
@@ -462,17 +461,9 @@ class Caja_outside extends CI_Controller
             $voBoCoord = $datosView->id_coordinador;
         }
 
-        // 'id_coordinador' => $datosView->id_coordinador == $datosView->id_asesor ? 0 : $datosView->id_coordinador == $datosView->id_gerente ? 0 : $datosView->id_coordinador,
-
-
         $data['lote'] = $id_lote;
         $data['condominio'] = $this->caja_model_outside->getCondominioByIdLote($id_lote);
         $data['lider'] = $this->caja_model_outside->getLider($datosView->id_gerente);
-
-        // echo 'id gerente data '.$datosView->id_gerente;
-        // echo 'id regional data '.$data['lider'][0]['id_regional'];
-
-        // exit;
 
         $dataInsertCliente = array(
             'id_asesor' => $datosView->id_asesor,/* $data['prospecto'][0]['id_asesor']*/
@@ -524,16 +515,14 @@ class Caja_outside extends CI_Controller
             'id_prospecto' => $id_prospecto,
             'fecha_modificacion' => date('Y-m-d H:i:s'),
             'id_subdirector' => $data['lider'][0]['id_subdirector'],
-            'id_regional' => $data['lider'][0]['id_regional']
-
+            'id_regional' => $data['lider'][0]['id_regional'],
+            'flag_compartida' =>$datosView->flag_compartida
         );
         /*Inserta cliente*/
-        //echo 'se debe insertar esto:<br>';
         $last_id = '';
-        //print_r($last_id);
         $currentUSer = $this->session->userdata('usuario');
         if ($idClienteInsert = $this->caja_model_outside->insertClient($dataInsertCliente)) {
-            $last_id = $idClienteInsert[0]["lastId"];//ultimo id guardado /*dont works this: $this->db->insert_id()*/
+            $last_id = $idClienteInsert[0]["lastId"];//ultimo id guardado
             date_default_timezone_set('America/Mexico_City');
             $horaActual = date('H:i:s');
             $horaInicio = date("08:00:00");
@@ -1708,9 +1697,8 @@ class Caja_outside extends CI_Controller
     }
 
 
-    public function changeEstatusLote(){
+    public function changeEstatusLote() {
         $lote = json_decode(file_get_contents("php://input"));
-
         $idLote = $lote->idLote;
         $idStatusLote = $lote->idStatusLote;
         $idAsesor = $lote->idAsesor;
@@ -1718,112 +1706,78 @@ class Caja_outside extends CI_Controller
         $motivo_change_status = $lote->motivo_change_status;
         $usuario = $lote->id_usuario;
         $idInvolucrados = $lote->idInvolucrados;
-
-
-        if ($idStatusLote == 9 || $idStatusLote == 10 || $idStatusLote == 7 || $idStatusLote == 6 || $idStatusLote == 11 || $idStatusLote == 12) { // 12 INTERCAMBIO ESCRITURADO
-
-            $arreglo = array();
-            $arreglo["idStatusLote"] = $idStatusLote;
-            $arreglo["idAsesor"] = $idAsesor;
-            $arreglo["idAsesor2"] = $idAsesor2;
-            $arreglo["fecha_modst"] = date("Y-m-d H:i:s");
-            $arreglo["userstatus"] = $usuario;
-            $arreglo["usuario"] = $usuario;
-            $arreglo["observacionContratoUrgente"] = NULL;
-            $arreglo["motivo_change_status"] = $motivo_change_status;
-
-            $update = $this->caja_model_outside->editaEstatus($idLote, $arreglo);
-
-            if ($update == TRUE) {
-                $response['message'] = 'SUCCESS';
-                echo json_encode($response);
-            } else {
-                $response['message'] = 'ERROR';
-                echo json_encode($response);
-            }
-        } else if ($idStatusLote == 8) {
-            $arreglo = array();
-            $arreglo["idStatusLote"] = $idStatusLote;
-            $arreglo["idAsesor"] = $idAsesor;
-            $arreglo["idAsesor2"] = $idAsesor2;
-            $arreglo["fecha_modst"] = date("Y-m-d H:i:s");
-            $arreglo["userstatus"] = $usuario;
-            $arreglo["usuario"] = $usuario;
-            $arreglo["observacionContratoUrgente"] = NULL;
-            $arreglo["motivo_change_status"] = $motivo_change_status;
-            $datos["lote"] = $this->caja_model_outside->infoBloqueos($idLote);
-
-            $data = array();
-            $data["idResidencial"] = $datos["lote"]->idResidencial;
-            $data["idCondominio"] = $datos["lote"]->idCondominio;
-            $data["idLote"] = $datos["lote"]->idLoteL;
-            $data["usuario"] = $usuario;
-            $data["idAsesor"] = $idAsesor;
-            $data["idAsesor2"] = $idAsesor2;
-
-            $update = $this->caja_model_outside->editaEstatus($idLote, $arreglo);
-
-            if ($update == TRUE) {
-                $this->caja_model_outside->insert_bloqueos($data);
-                $response['message'] = 'SUCCESS';
-                echo json_encode($response);
-            } else {
-                $response['message'] = 'ERROR';
-                echo json_encode($response);
-            }
-
-
-        } else if ($idStatusLote == 1) { // 1 DISPONIBLE
-
-
-            $arreglo = array();
-            $arreglo["idStatusLote"] = $idStatusLote;
-            $arreglo["idAsesor"] = NULL;
-            $arreglo["idAsesor2"] = NULL;
-            $arreglo["fecha_modst"] = date("Y-m-d H:i:s");
-            $arreglo["userstatus"] = $usuario;
-            $arreglo["usuario"] = $usuario;
-            $arreglo["observacionContratoUrgente"] = NULL;
-            $arreglo["motivo_change_status"] = $motivo_change_status;
-
-
-            $update = $this->caja_model_outside->editaEstatus($idLote, $arreglo);
-
-            if ($update == TRUE) {
-                $response['message'] = 'SUCCESS';
-                echo json_encode($response);
-            } else {
-                $response['message'] = 'ERROR';
-                echo json_encode($response);
-            }
-
-
-        } else if ($idStatusLote == 2) { // 2 CONTRATADO
-
-
-            $arreglo = array();
-            $arreglo["idStatusLote"] = $idStatusLote;
-            $arreglo["fecha_modst"] = date("Y-m-d H:i:s");
-            $arreglo["userstatus"] = $usuario;
-            $arreglo["usuario"] = $usuario;
-            $arreglo["motivo_change_status"] = $motivo_change_status;
-
-
-            $update = $this->caja_model_outside->editaEstatus($idLote, $arreglo);
-
-            if ($update == TRUE) {
-                $response['message'] = 'SUCCESS';
-                echo json_encode($response);
-            } else {
-                $response['message'] = 'ERROR';
-                echo json_encode($response);
-            }
-
-
-        } else {
-            $response['message'] = 'ERROR';
-            echo json_encode($response);
+        /*
+            1  DISPONIBLE
+            2  CONTRATADO
+            6  INTERCAMBIO
+            7  DIRECCIÓN
+            8  BLOQUEADO
+            9  CONTRATADO POR INTERCAMBIO
+            10 APARTADO CASAS
+            11 DONACIÓN
+            12 INTERCAMBIO ESCRITURADO
+        */
+        $getCurrentLoteStatus = $this->caja_model_outside->validateCurrentLoteStatus($idLote)->row();
+        if ($getCurrentLoteStatus->idStatusLote == 2 || $getCurrentLoteStatus->idStatusLote == 3 || $getCurrentLoteStatus->idStatusLote == 99) {
+            if ($getCurrentLoteStatus->idStatusLote == 2)
+                echo json_encode(array("message" => "Acción no válida. El lote actualmente se encuentra CONTRATADO."), JSON_UNESCAPED_UNICODE);
+            else if ($getCurrentLoteStatus->idStatusLote == 3)
+                echo json_encode(array("message" => "Acción no válida. El lote actualmente se encuentra APARTADO en el estatus " . $getCurrentLoteStatus->nombreStatusContratacion), JSON_UNESCAPED_UNICODE);
+            else if ($getCurrentLoteStatus->idStatusLote == 99)
+                echo json_encode(array("message" => "Acción no válida. El lote se encuentra en proceso de confirmación de pago (apartado en línea)."), JSON_UNESCAPED_UNICODE);
         }
+        else {
+            if ($idStatusLote == 1 || $idStatusLote == 2 || $idStatusLote == 6 || $idStatusLote == 7  || $idStatusLote == 8 || $idStatusLote == 9 || $idStatusLote == 10 || $idStatusLote == 11 || $idStatusLote == 12) {
+                $arreglo = array();
+                $arreglo["idStatusLote"] = $idStatusLote;
+                $arreglo["fecha_modst"] = date("Y-m-d H:i:s");
+                $arreglo["userstatus"] = $usuario;
+                $arreglo["usuario"] = $usuario;
+                if ($idStatusLote == 9 || $idStatusLote == 10 || $idStatusLote == 7 || $idStatusLote == 6 || $idStatusLote == 11 || $idStatusLote == 12) {
+                    $arreglo["idAsesor"] = $idAsesor;
+                    $arreglo["idAsesor2"] = $idAsesor2;
+                    $arreglo["observacionContratoUrgente"] = NULL;
+                    $arreglo["motivo_change_status"] = $motivo_change_status;
+                } else if ($idStatusLote == 8) {
+                    $arreglo["idAsesor"] = $idAsesor;
+                    $arreglo["idAsesor2"] = $idAsesor2;
+                    $arreglo["observacionContratoUrgente"] = NULL;
+                    $arreglo["motivo_change_status"] = $motivo_change_status;
+                    $datos["lote"] = $this->caja_model_outside->infoBloqueos($idLote);
+                    $data = array();
+                    $data["idResidencial"] = $datos["lote"]->idResidencial;
+                    $data["idCondominio"] = $datos["lote"]->idCondominio;
+                    $data["idLote"] = $datos["lote"]->idLoteL;
+                    $data["usuario"] = $usuario;
+                    $data["idAsesor"] = $idAsesor;
+                    $data["idAsesor2"] = $idAsesor2;
+                    $update = $this->caja_model_outside->editaEstatus($idLote,$arreglo);
+                    if($update == TRUE) {
+                        $this->caja_model_outside->insert_bloqueos($data);
+                        $response['message'] = 'El estatus del lotes ha sido modificado correctamente.';
+                        echo json_encode($response);
+                    } else {
+                        $response['message'] = 'No se ha podido modificar el estatus, verifica la acción o vuelve a intentarlo.';
+                        echo json_encode($response);
+                    }
+                } else if ($idStatusLote == 1) {          
+                    $arreglo["idAsesor"] = NULL;
+                    $arreglo["idAsesor2"] = NULL;
+                    $arreglo["observacionContratoUrgente"] = NULL;
+                    $arreglo["motivo_change_status"] = $motivo_change_status;
+                } else if ($idStatusLote == 2) {
+                    $arreglo["motivo_change_status"] = $motivo_change_status;
+                } 
+                if ($idStatusLote != 8) {
+                    $update = $this->caja_model_outside->editaEstatus($idLote, $arreglo);
+                    if($update == TRUE)
+                        echo json_encode(array("message" => "El estatus del lotes ha sido modificado correctamente."), JSON_UNESCAPED_UNICODE);
+                    else 
+                        echo json_encode(array("message" => "No se ha podido modificar el estatus, verifica la acción o vuelve a intentarlo."), JSON_UNESCAPED_UNICODE);
+                }
+            } else
+                echo json_encode(array("message" => "Estatus no válido, verifica la acción o vuelve a intentarlo."), JSON_UNESCAPED_UNICODE);
+        } 
     }
 
     public function getGerente()
@@ -1963,6 +1917,7 @@ class Caja_outside extends CI_Controller
                         }
 
                         $arreglo["fechaVencimiento"] = $fecha;
+                        $arreglo["flag_compartida"] = 2;
                         /*********************************************************************************************/
 
                         if ($this->caja_model_outside->validar_aOnline($value->idLote) == 1) {
@@ -2010,12 +1965,15 @@ class Caja_outside extends CI_Controller
         ON clientes.idLote = lt.idLote WHERE idStatusLote IN (99)");
 
             //ACTUALIZAMOS EL NUMERO DE RECIBO DEL CLIENTE PARA EL CONTROL
-            $this->db->query("  UPDATE cl
+        $this->db->query("  UPDATE cl
         SET cl.noRecibo = '$data->folio'
         FROM clientes cl INNER JOIN ( SELECT lot.idLote, res.idResidencial FROM ( SELECT idLote, idCondominio FROM lotes ) lot
         INNER JOIN ( SELECT idCondominio, idResidencial FROM condominios ) con ON con.idCondominio = lot.idCondominio
         INNER JOIN ( SELECT idResidencial FROM residenciales ) res ON res.idResidencial = con.idResidencial ) res ON res.idLote = cl.idLote
         WHERE cl.noRecibo LIKE 'CONFPAGO%' AND cl.noRecibo LIKE '%" . $data->num_operacion . "'");
+
+        $this->db->query("INSERT INTO logs_banco (confirmacion, fecha_creacion) VALUES ('".$data->num_operacion."', GETDATE())");
+
         }
 
     }
@@ -2621,21 +2579,13 @@ class Caja_outside extends CI_Controller
     public function updateCondominio()
     {
         $data = json_decode((file_get_contents("php://input")));
-//        var_dump(json_decode($data));
-
-        if (!isset($data->idCondominio) || !isset($data->nombre) || !isset($data->nombre_condominio) || !isset($data->abreviatura) || !isset($data->tipo_lote) ||
-            !isset($data->idEtapa) || !isset($data->idDBanco) || !isset($data->idResidencial)){
+        if (!isset($data->idCondominio) || !isset($data->nombre) || !isset($data->nombre_condominio) || !isset($data->abreviatura) || !isset($data->tipo_lote) || !isset($data->idEtapa) || !isset($data->idDBanco) || !isset($data->idResidencial))
             echo json_encode(array("status" => 400, "message" => "Algún parámetro no tiene un valor especificado o no viene informado."), JSON_UNESCAPED_UNICODE);
-            echo 'flag1';}
         else {
             if ($data->idCondominio == "" || $data->nombre == "" || $data->nombre_condominio == "" || $data->abreviatura == "" || $data->tipo_lote == "" ||
                 $data->idEtapa == "" || $data->idDBanco == "" || $data->idResidencial=="")
-               {
                    echo json_encode(array("status" => 400, "message" => "Algún parámetro no tiene un valor especificado o no viene informado..."), JSON_UNESCAPED_UNICODE);
-                    echo 'flag2';
-               }
             else {
-                echo 'flag3';
                 $updateData = array(
                     "nombre" => $data->nombre,
                     "nombre_condominio" => $data->nombre_condominio,
@@ -2656,21 +2606,11 @@ class Caja_outside extends CI_Controller
 
     public function dataBankTask(){
         $data = json_decode((file_get_contents("php://input")));
-//        print_r($data);
-//        exit;
-
-        if (!isset($data->idDBanco) || !isset($data->empresa) || !isset($data->banco) || !isset($data->cuenta) || !isset($data->clabe) ||
-            !isset($data->estatus)) {
+        if (!isset($data->idDBanco) || !isset($data->empresa) || !isset($data->banco) || !isset($data->cuenta) || !isset($data->clabe) || !isset($data->estatus))
             echo json_encode(array("status" => 400, "message" => "Algún parámetro no tiene un valor especificado o no viene informado."), JSON_UNESCAPED_UNICODE);
-//            echo 'flag1';}
-        }
         else {
-            if ($data->idDBanco < 0 || $data->empresa == "" || $data->banco == "" || $data->cuenta == "" || $data->clabe == "" ||
-                $data->estatus == "")
-            {
+            if ($data->idDBanco < 0 || $data->empresa == "" || $data->banco == "" || $data->cuenta == "" || $data->clabe == "" || $data->estatus == "")
                 echo json_encode(array("status" => 400, "message" => "Algún parámetro no tiene un valor especificado o no viene informado..."), JSON_UNESCAPED_UNICODE);
-//                echo 'flag2';
-            }
             else {
                 $idDBanco = (int) $data->idDBanco;
                 $data_action = array(
@@ -2680,16 +2620,10 @@ class Caja_outside extends CI_Controller
                     "clabe"     => $data->clabe,
                     "estatus"   => $data->estatus
                 );
-
-
-                if($idDBanco==0){
-                    #SE DEBE HACER EL INSERT DE LA DATA BANCO
+                if($idDBanco==0)
                     $result = $this->General_model->addRecord("datosbancarios", $data_action);
-
-                }else{
-                    #SE DEBE HACER EL UPDATE
+                else
                     $result = $this->General_model->updateRecord("datosbancarios", $data_action, "idDBanco", $idDBanco);
-                }
 
                 if ($result == true)
                     echo json_encode(array("status" => 200, "message" => "El registro se ha actualizado de manera exitosa."), JSON_UNESCAPED_UNICODE);
@@ -2697,7 +2631,6 @@ class Caja_outside extends CI_Controller
                     echo json_encode(array("status" => 400, "message" => "Oops, algo salió mal. Inténtalo más tarde."), JSON_UNESCAPED_UNICODE);
             }
         }
-
     }
 
 }

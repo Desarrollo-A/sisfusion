@@ -3,10 +3,11 @@ class Reporte extends CI_Controller {
 	public function __construct() {
 		parent::__construct();
         $this->load->model(array('Reporte_model', 'General_model'));
-        $this->load->library(array('session','form_validation', 'get_menu', 'Email'));
+        $this->load->library(array('session','form_validation', 'get_menu', 'Email', 'Jwt_actions'));
 		$this->load->helper(array('url','form'));
 		$this->load->database('default');
         date_default_timezone_set('America/Mexico_City');
+        $this->jwt_actions->authorize('9717', $_SERVER['HTTP_HOST']);
         $this->validateSession();
 	}
 
@@ -37,10 +38,13 @@ class Reporte extends CI_Controller {
             $where = $this->input->post("where");
             $rol = $this->input->post("type");
             $render = $this->input->post("render");
+            $asesor = $this->input->post("asesor");
+            $coordinador = $this->input->post("coordinador");
+            $gerente = $this->input->post("gerente");
+            $subdirector = $this->input->post("subdirector");
+            $regional = $this->input->post("regional");
             $currentYear = date("Y");
-
-            $data['data'] = $this->Reporte_model->getGeneralInformation($beginDate, $endDate, $rol, $id_usuario, $render)->result_array();
-
+            $data['data'] = $this->Reporte_model->getGeneralInformation($beginDate, $endDate, $rol, $id_usuario, $render, [$asesor, $coordinador, $gerente, $subdirector, $regional], $typeTransaction)->result_array();
             echo json_encode($data, JSON_NUMERIC_CHECK);
         } else {
             json_encode(array());
@@ -63,11 +67,16 @@ class Reporte extends CI_Controller {
         $id = $this->session->userdata('id_usuario');
         $rol = $this->session->userdata('id_rol');
         
+
         if( $rol == 2 || $rol == 5){
+            if ( $rol == 5 ) $id = $this->session->userdata('id_lider'); //Se asignara id de su lider (para asistentes de dirección y subdirección)
+
             $condicion_x_rol = $this->validateRegional($id);
             $getRol = $this->Reporte_model->validateRegional($id);
+
             if(count($getRol) > 1){
-                $rol = 59;
+                if( ( $rol == 5 || $rol == 2 ) && ( $id == 28 || $id == 30 ) ) $rol = 59; //Se asigna rol de dto. regional y  subdto.
+                
                 $coordinador = true;
                 $arraySalesBySubdir = $this->chartRegional($id, $beginDate, $endDate);
                 $coordinadorVC = $arraySalesBySubdir[0];
@@ -75,8 +84,14 @@ class Reporte extends CI_Controller {
                 $coordinadorCC = $arraySalesBySubdir[2];
                 $coordinadorCA = $arraySalesBySubdir[3]; 
             }
+            else $rol = 2;//Validación para asistentes de dto. regional, se asigna rol especial
+
         }
-        else if( $rol == 3 ){
+        else if( $rol == 3 || $rol == 6 ){
+            if( $rol == 6 ){ //Validación para asistente gte
+                $id = $this->session->userdata('id_lider');
+                $rol = 3;
+            }
             $condicion_x_rol = ' AND cl.id_gerente = ' . $id;
         }
         else if( $rol == 7 ){
@@ -96,7 +111,6 @@ class Reporte extends CI_Controller {
             $condicion_x_rol = '';
         }
 
-        if( $rol == 4 || $rol == 5 || $rol == 6 ) $id = $this->session->userdata('id_lider');
         $data = $this->Reporte_model->getDataChart($general, $tipoChart, $rol, $condicion_x_rol, $coordinador, $coordinadorVC, $coordinadorVA, $coordinadorCC, $coordinadorCA, $beginDate, $endDate);
         
         if($data != null) {
@@ -162,7 +176,7 @@ class Reporte extends CI_Controller {
         AND hlo2.idStatusContratacion < 11
         GROUP BY MONTH(cl.fechaApartado), YEAR(cl.fechaApartado)) qu ON qu.mes = month(cte.DateValue) AND qu.año = year(cte.DateValue)
         GROUP BY Month(DateValue), YEAR(DateValue), cantidad, total";
-        
+
         array_push($coordinadorAll, $coordinadorVC, $coordinadorVA, $coordinadorCC, $coordinadorCA);
         return $coordinadorAll;
     }
@@ -223,7 +237,7 @@ class Reporte extends CI_Controller {
         AND hlo2.idStatusContratacion < 11
         GROUP BY MONTH(cl.fechaApartado), YEAR(cl.fechaApartado)) qu ON qu.mes = month(cte.DateValue) AND qu.año = year(cte.DateValue)
         GROUP BY Month(DateValue), YEAR(DateValue), cantidad, total";
-
+        
         array_push($subdirectorAll, $subdirectorVC, $subdirectorVA, $subdirectorCC, $subdirectorCA);
         return $subdirectorAll;
     }
@@ -234,22 +248,6 @@ class Reporte extends CI_Controller {
         else $where = " AND cl.id_subdirector = " . $id;
 
         return $where;
-    }
-
-    public function get4Months(){
-        $dateTime = new DateTime();
-        $lastDate = new DateTime();
-        $firstDate;
-        // $lastDate->modify('-1 month');
-        for ($i = 1; $i <= 4; $i++) {
-            $firstDate = $dateTime->modify('-1 month');
-        }
-       
-        $dates = array(
-            'firstDate' => $firstDate->format('Y-m-d'),
-            'secondDate' => $lastDate->format('Y-m-d')
-        );
-        return $dates;
     }
 
     public function getRolDR(){
@@ -270,8 +268,13 @@ class Reporte extends CI_Controller {
         $rol = $this->input->post("rol");
         $render = $this->input->post("render");
         $leader = $this->input->post("leader");
+        $asesor = $this->input->post("asesor");
+        $coordinador = $this->input->post("coordinador");
+        $gerente = $this->input->post("gerente");
+        $subdirector = $this->input->post("subdirector");
+        $regional = $this->input->post("regional");
 
-        $data = $this->Reporte_model->getDetails($beginDate, $endDate, $rol, $id_usuario, $render, $leader)->result_array();
+        $data = $this->Reporte_model->getDetails($beginDate, $endDate, $rol, $id_usuario, $render, $leader, [$asesor, $coordinador, $gerente, $subdirector, $regional])->result_array();
         if($data != null) {
             echo json_encode($data, JSON_NUMERIC_CHECK);
         } else {
@@ -296,10 +299,33 @@ class Reporte extends CI_Controller {
             $render = $this->input->post("render");
             $sede = $this->input->post("sede");
             $leader = $this->input->post("leader");
-            $data['data'] = $this->Reporte_model->getGeneralLotesInformation($beginDate, $endDate, $rol, $id_usuario, $render, $type, $sede, $leader)->result_array();
+            $asesor = $this->input->post("asesor");
+            $coordinador = $this->input->post("coordinador");
+            $gerente = $this->input->post("gerente");
+            $subdirector = $this->input->post("subdirector");
+            $regional = $this->input->post("regional");
+            $data['data'] = $this->Reporte_model->getGeneralLotesInformation($beginDate, $endDate, $rol, $id_usuario, $render, $type, $sede, $leader, [$asesor, $coordinador, $gerente, $subdirector, $regional])->result_array();
             echo json_encode($data, JSON_NUMERIC_CHECK);
         } else
             echo json_encode(array());
     }
 
+    public function reporteConRecisiones(){
+		$this->validateSession();
+
+   		$datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
+		$this->load->view('template/header');
+		$this->load->view("reportes/reporteConRecisiones",$datos);
+	}
+
+    public function getVentasConSinRecision(){
+        $beginDate = $this->input->post("beginDate");
+        $endDate = $this->input->post("endDate");
+        $data = $this->Reporte_model->getVentasConSinRecision($beginDate, $endDate)->result_array();
+        if($data != null) {
+            echo json_encode($data);
+        } else {
+            echo json_encode(array());
+        }
+    }
 }

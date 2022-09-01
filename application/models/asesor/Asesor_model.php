@@ -76,7 +76,7 @@ class Asesor_model extends CI_Model
                 if ($this->session->userdata('id_usuario') == 2896) { // ES PATRICIA MAYA
                     return $this->db->query("SELECT * FROM Menu2 WHERE rol = $rol AND estatus = 1 order by orden asc");
                 } else { // ES OTRO USUARIO DE CONSULTA Y NO VE COMISIONES
-                    return $this->db->query("SELECT * FROM Menu2 WHERE rol = $rol AND nombre NOT IN ('Inicio', 'Comisiones') AND estatus = 1 order by orden asc");
+                    return $this->db->query("SELECT * FROM Menu2 WHERE rol = $rol AND nombre NOT IN ('Inicio', 'Comisiones','Usuarios') AND estatus = 1 order by orden asc");
                 }
             } else {
                 if ($this->session->userdata('id_usuario') == 2762) {
@@ -842,24 +842,26 @@ class Asesor_model extends CI_Model
     }
 
 
-    public function get_autorizaciones()
-    {
+    public function get_autorizaciones () {
         /*id_autorizacion, autorizaciones.fecha_creacion,autorizaciones.autorizacion,*/
-        $query = $this->db->query('		
-		SELECT  residencial.nombreResidencial, condominio.nombre as nombreCondominio, 
+        $query = $this->db->query("SELECT  residencial.nombreResidencial, condominio.nombre as nombreCondominio, 
 		lotes.nombreLote, MAX(autorizaciones.estatus) as estatus,  MAX(id_autorizacion) as id_autorizacion, MAX(autorizaciones.fecha_creacion) as fecha_creacion,
 		MAX(autorizaciones.autorizacion) as autorizacion, 
-		users.usuario as sol, users1.usuario as aut,  autorizaciones.idLote
+		UPPER(CONCAT(users.nombre, ' ', users.apellido_paterno, ' ', users.apellido_materno)) as sol, 
+        UPPER(CONCAT(users1.nombre, ' ', users1.apellido_paterno, ' ', users1.apellido_materno)) as aut,  
+        autorizaciones.idLote
 		FROM autorizaciones 
 		inner join lotes on lotes.idLote = autorizaciones.idLote 
 		inner join condominios as condominio on condominio.idCondominio = lotes.idCondominio 
 		inner join residenciales as residencial on residencial.idResidencial = condominio.idResidencial
 		inner join usuarios as users on autorizaciones.id_sol = users.id_usuario
 		inner join usuarios as users1 on autorizaciones.id_aut = users1.id_usuario
-		where autorizaciones.id_sol = ' . $this->session->userdata('id_usuario') . '  
+		where autorizaciones.id_sol = " . $this->session->userdata('id_usuario') . " 
 		GROUP BY residencial.nombreResidencial, condominio.nombre, 
 		lotes.nombreLote, 
-		users.usuario, users1.usuario, autorizaciones.idLote');
+		UPPER(CONCAT(users.nombre, ' ', users.apellido_paterno, ' ', users.apellido_materno)), 
+        UPPER(CONCAT(users1.nombre, ' ', users1.apellido_paterno, ' ', users1.apellido_materno)), 
+        autorizaciones.idLote");
         return $query->result();
     }
 
@@ -874,11 +876,9 @@ class Asesor_model extends CI_Model
 
     public function get_sol_aut()
     {
-        $query = $this->db->query('		
-		SELECT cliente.id_cliente, nombreLote, cliente.rfc, nombreResidencial, condominio.nombre as nombreCondominio, 
-		cliente.status, cliente.id_asesor, condominio.idCondominio, lotes.idLote, cliente.autorizacion, cliente.fechaApartado,
-        lotes.idStatusContratacion, lotes.idMovimiento
-		FROM clientes as cliente
+        $query = $this->db->query('SELECT cliente.id_cliente, nombreLote, cliente.rfc, nombreResidencial, condominio.nombre as nombreCondominio, 
+		cliente.status, cliente.id_asesor, condominio.idCondominio, lotes.idLote, cliente.autorizacion, cliente.fechaApartado 
+		lotes.idStatusContratacion, lotes.idMovimiento FROM clientes as cliente
 		INNER JOIN lotes ON cliente.idLote = lotes.idLote
 		INNER JOIN condominios as condominio ON lotes.idCondominio = condominio.idCondominio
 		INNER JOIN residenciales as residencial ON condominio.idResidencial = residencial.idResidencial
@@ -925,24 +925,13 @@ class Asesor_model extends CI_Model
 	}
 
 
-    public function validateSt2($idLote)
-    {
+    public function validateSt2($idLote) {
         $this->db->where("idLote", $idLote);
         $this->db->where_in('idStatusLote', 3);
-
-        $this->db->where("( idStatusContratacion = 1 AND idMovimiento = 31 
-				OR idStatusContratacion = 2 AND idMovimiento = 85 
-				OR idStatusContratacion = 1 and idMovimiento = 20
-				OR idStatusContratacion = 1 and idMovimiento = 63
-				OR idStatusContratacion = 1 and idMovimiento = 73
-				OR idStatusContratacion = 3 and idMovimiento = 82
-				OR idStatusContratacion = 1 and idMovimiento = 92
-                OR idStatusContratacion = 1 and idMovimiento = 96 )");
-
+        $this->db->where("(idStatusContratacion IN (1, 2, 3) AND idMovimiento IN (31, 85, 20, 63, 73, 82, 92, 96))");
         $query = $this->db->get('lotes');
         $valida = (empty($query->result())) ? 0 : 1;
         return $valida;
-
     }
 
 
