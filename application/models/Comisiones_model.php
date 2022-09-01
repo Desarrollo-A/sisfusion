@@ -883,7 +883,7 @@ function getDatosHistorialPagoRP($id_usuario){
              return $this->db->query("(SELECT COUNT(l.idLote) lotes_vendidos, CASE WHEN SUM(l.totalNeto2) = '0' THEN 0 WHEN SUM(l.totalNeto2) IS NULL THEN 0 ELSE  SUM(l.totalNeto2) END as monto_vendido, ase.id_usuario, cl.status,
                 CONCAT(ase.nombre,' ',ase.apellido_paterno,' ',ase.apellido_materno) as asesor,
                 CONCAT(ger.nombre,' ',ger.apellido_paterno,' ',ger.apellido_materno) as gerente,se.nombre,
-                REPLACE(oxc.nombre, ' (especificar)', '') lugar_prospeccion, pro.fecha_creacion as fecha_prospeccion
+                REPLACE(oxc.nombre, ' (especificar)', '') lugar_prospeccion, ISNULL(CONVERT(VARCHAR(25), pro.fecha_creacion, 121), 'SIN ESPECIFICAR') fecha_prospeccion
                 FROM lotes l
                 INNER JOIN clientes cl ON cl.id_cliente = l.idCliente AND cl.status = 1 
                 INNER JOIN condominios con ON con.idCondominio = l.idCondominio
@@ -896,7 +896,7 @@ function getDatosHistorialPagoRP($id_usuario){
                 LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = cl.lugar_prospeccion AND oxc.id_catalogo = 9
                 WHERE l.status = 1 $filtro
                 GROUP BY ase.id_usuario, ase.nombre, ase.apellido_paterno, ase.apellido_materno, ger.nombre, 
-                ger.apellido_paterno, ger.apellido_materno,se.nombre, cl.status, REPLACE(oxc.nombre, ' (especificar)', ''), pro.fecha_creacion as fecha_prospeccion
+                ger.apellido_paterno, ger.apellido_materno,se.nombre, cl.status, REPLACE(oxc.nombre, ' (especificar)', ''), pro.fecha_creacion
                 HAVING COUNT(l.idLote) > 0)
 
                 UNION
@@ -905,7 +905,7 @@ function getDatosHistorialPagoRP($id_usuario){
                 0 ELSE  SUM(l.totalNeto2) END as monto_vendido, ase.id_usuario, cl.status,
                 CONCAT(ase.nombre,' ',ase.apellido_paterno,' ',ase.apellido_materno) as asesor,
                 CONCAT(ger.nombre,' ',ger.apellido_paterno,' ',ger.apellido_materno) as gerente,se.nombre,
-                REPLACE(oxc.nombre, ' (especificar)', '') lugar_prospeccion, pro.fecha_creacion as fecha_prospeccion
+                REPLACE(oxc.nombre, ' (especificar)', '') lugar_prospeccion, ISNULL(CONVERT(VARCHAR(25), pro.fecha_creacion, 121), 'SIN ESPECIFICAR') fecha_prospeccion
                 FROM lotes l
                 INNER JOIN clientes cl ON cl.idLote = l.idLote AND cl.status = 0 
                 INNER JOIN condominios con ON con.idCondominio = l.idCondominio
@@ -918,7 +918,7 @@ function getDatosHistorialPagoRP($id_usuario){
                 LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = cl.lugar_prospeccion AND oxc.id_catalogo = 9
                 WHERE l.status = 1 $filtro
                 GROUP BY ase.id_usuario, ase.nombre, ase.apellido_paterno, ase.apellido_materno, ger.nombre, 
-                ger.apellido_paterno, ger.apellido_materno,se.nombre, cl.status, REPLACE(oxc.nombre, ' (especificar)', ''), pro.fecha_creacion as fecha_prospeccion
+                ger.apellido_paterno, ger.apellido_materno,se.nombre, cl.status, REPLACE(oxc.nombre, ' (especificar)', ''), pro.fecha_creacion 
                 HAVING COUNT(l.idLote) > 0)");
          }
 

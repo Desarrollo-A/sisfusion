@@ -8612,7 +8612,7 @@
    z-index: 2;
  }
  .full-page:before {
-   background-color: rgba(0, 0, 0, 0.5);
+   background-color: rgba(0, 0, 0, 0.3);
  }
  .full-page[filter-color="purple"]:after, .full-page[filter-color="primary"]:after {
    background: rgba(225, 190, 231, 0.56);

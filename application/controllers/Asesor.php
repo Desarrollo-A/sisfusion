@@ -3998,11 +3998,16 @@ class Asesor extends CI_Controller
         }
 
         $documentsValidation = $this->Asesor_model->validateDocumentation($idLote, $dataClient[0]['personalidad_juridica']);
+        $dataBackTest = $this->Asesor_model->getWstatus1($idLote);
 
         if (COUNT($documentsValidation) < $documentsNumber) {
             $data['message'] = 'MISSING_DOCUMENTS';
             echo json_encode($data);
-        } else {
+        } elseif(count($dataBackTest)<=0){
+            $data['message'] = 'PENDIENT_AUTHORIZATION';
+            echo json_encode($data);
+        }
+        else {
             $arreglo = array();
             $arreglo["idStatusContratacion"] = 2;
             $arreglo["idMovimiento"] = 4;
@@ -4078,7 +4083,8 @@ class Asesor extends CI_Controller
 
                 }
 
-            } elseif ($horaActual < $horaInicio || $horaActual > $horaFin) {
+            }
+            elseif ($horaActual < $horaInicio || $horaActual > $horaFin) {
 
                 $fechaAccion = date("Y-m-d H:i:s");
                 $hoy_strtotime2 = strtotime($fechaAccion);
@@ -5618,5 +5624,18 @@ class Asesor extends CI_Controller
             echo json_encode($data);
         else
             echo json_encode(array());
+    }
+
+    public function reporteAsesores(){
+        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
+        /*-------------------------------------------------------------------------------*/
+        $this->load->view('template/header');
+        $this->load->view("asesor/reporte_asesores_view", $datos);
+
+    }
+
+    public function getReporteAsesores(){
+        $data['data'] = $this->Asesor_model->reporteAsesor()->result_array();
+        echo json_encode($data);
     }
 }

@@ -6194,10 +6194,10 @@ WHERE idLote IN ('".$row['idLote']."') and nombreLote = '".$insert_csv['nombreLo
 
 	public function getClientByLote($lote){
 
-		$result = $this->db->query('select id_cliente,nombre, apellido_paterno, apellido_materno from clientes where idLote='.$lote.'')->result_array();
+		$result = $this->db->query('select id_cliente,nombre, apellido_paterno, apellido_materno, status from clientes where idLote='.$lote.' ORDER BY status DESC')->result_array();
 
 		//print_r($result->result_array());
-		return count($result) > 0 ? $result: NULL;
+		return count($result) > 0 ? $result: array();
 
 	}
 

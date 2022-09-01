@@ -166,7 +166,7 @@ class Reporte_model extends CI_Model {
         if ($id_rol == 7) { // ASESOR
             if ($render == 1) {
                 if ($typeTransaction == null) // SE CONSULTA DESDE EL ROWDETAIL O LA MODAL QUE SE TRAE EL DETALLE DE LOS LOTES
-                    $filtro .= " AND (cl.id_asesor = $id_usuario AND cl.id_coordinador = $leader)";
+                    $filtro .= " AND cl.id_asesor = $id_usuario";
                 else // SE CONSULTA DESDE LA TABLA PAPÁ
                     $filtro .= " AND (cl.id_asesor = $id_usuario OR cl.id_coordinador = $id_usuario)";
             }
@@ -448,7 +448,7 @@ class Reporte_model extends CI_Model {
         $comodin2 = 'LEFT';
         $filtro=" AND cl.fechaApartado BETWEEN '$beginDate 00:00:00.000' AND '$endDate 23:59:00.000'";
         
-        list($filtro, $comodin, $comodin2) = $this->setFilters($id_rol, $render, $filtro, $leadersList, $comodin2, $id_usuario, $id_lider);
+        list($filtro, $comodin, $comodin2) = $this->setFilters($id_rol, $render, $filtro, $leadersList, $comodin2, $id_usuario, $id_lider, null, leader);
 
         $query = $this->db->query("SELECT 
         FORMAT(ISNULL(a.sumaTotal, 0), 'C') sumaTotal, ISNULL(a.totalVentas, 0) totalVentas, --TOTAL VENDIDO
