@@ -99,9 +99,9 @@ class Postventa_model extends CI_Model
 
         $where = "";
         if($estatus == 0){
-            $where = "AND ctrl.idRol = $rol AND ctrl.permisos != 0"+$Addwhere;
+            $where = "AND ctrl.idRol = $rol AND ctrl.permisos != 0";
         }else{
-            $where = ""+$Addwhere;
+            $where = "";
         }
         return $this->db->query("SELECT oxc2.nombre area, se.idSolicitud,  CASE WHEN oxc.nombre = 'RECEPCIÓN DE TESTIMONIO' THEN 'COPIA CERTIFICADA - RECEPCIÓN DE TESTIMONIO' ELSE oxc.nombre END AS estatus, se.fecha_creacion, l.nombreLote, se.estatus idEstatus,
         se.nombre, cond.nombre nombreCondominio, r.nombreResidencial, de.expediente,
@@ -137,7 +137,7 @@ class Postventa_model extends CI_Model
         LEFT JOIN (SELECT idSolicitud, CASE WHEN descuentos IS NULL THEN 0 ELSE 1 END descuento FROM solicitud_escrituracion) se4 ON se4.idSolicitud = se.idSolicitud
         LEFT JOIN (SELECT idSolicitud, CASE WHEN COUNT(*) > 0 THEN 1 ELSE 0 END flagPresupuesto FROM Presupuestos WHERE expediente != '' GROUP BY idSolicitud) pr ON pr.idSolicitud = se.idSolicitud
         LEFT JOIN (SELECT idSolicitud, CASE WHEN COUNT(*) > 0 THEN 1 ELSE 0 END approvedPresupuesto FROM Presupuestos WHERE estatus = 1 GROUP BY idSolicitud) pr2 ON pr2.idSolicitud = se.idSolicitud
-        WHERE (se.fecha_creacion BETWEEN '$begin 00:00:00' AND '$end 23:59:59') $where AND se.id_juridico = $idUsuario");
+        WHERE (se.fecha_creacion BETWEEN '$begin 00:00:00' AND '$end 23:59:59') $where $Addwhere");
     }
 
     function changeStatus($id_solicitud, $type, $comentarios, $motivos_rechazo)
