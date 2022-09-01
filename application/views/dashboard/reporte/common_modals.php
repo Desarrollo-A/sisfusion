@@ -55,6 +55,11 @@
 
 #seeInformationModalCancelados table.dataTable > thead > tr > th{
   padding: 1px 0px!important;
+    font-weight: lighter;
+    text-align: center;
+    font-size: 10px;
+    text-transform: uppercase;
+
 }
 
 #seeInformationModalCancelados table {
