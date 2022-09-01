@@ -250,6 +250,7 @@ $(document).on("click", "#dateSubmit", function () {
 });
 
 $(document).on("click", ".upload", function () {
+    $('#spiner-loader').removeClass('hidden');
     let idDocumento = $(this).attr("data-idDocumento");
     let documentType = $(this).attr("data-documentType");
     let action = $(this).data("action");
@@ -300,6 +301,7 @@ $(document).on("click", ".upload", function () {
         }
         relatedTarget.val(fileName);
     });
+    $('#spiner-loader').addClass('hidden');
 });
 
 $(document).on("click", "#sendRequestButton", function (e) {
@@ -1050,7 +1052,7 @@ function fillTable(beginDate, endDate, estatus) {
                         case 22:
                                 exp = d.expediente;
                                 if (userType == 57) {
-                                    newBtn += `<button id="docs${d.idSolicitud}" data-idSolicitud=${d.idSolicitud} class="btn-data btn-details-grey details-control-otros" data-permisos="1" data-toggle="tooltip" data-placement="top" title="Desglose documentos"><i class="fas fa-chevron-down"></i></button>`;
+                                    newBtn += `<button id="docs${d.idSolicitud}" data-idSolicitud=${d.idSolicitud} class="btn-data btn-details-grey details-control-otros" data-permisos="2" data-toggle="tooltip" data-placement="top" title="Desglose documentos"><i class="fas fa-chevron-down"></i></button>`;
                                     if(d.copia_cer == 1 && d.testimonio == 1){
                                         exp = 1;
                                      }
@@ -1493,11 +1495,7 @@ function buildTableDetail(data, permisos) {
         }
         else if (permisos == 1 && v.ev == null && v.estatusActual == 13 && v.tipo_documento == 7){
             solicitudes += `<button data-idDocumento="${v.idDocumento}" data-documentType="${v.tipo_documento}" data-idSolicitud=${v.idSolicitud} data-details ="1" data-action=${v.expediente == null || v.expediente == '' ? 1 : 2} class="btn-data btn-${v.expediente == null || v.expediente == '' ? 'blueMaderas' : 'warning'} upload" data-toggle="tooltip" data-placement="top" title=${v.expediente == null || v.expediente == '' ? 'Cargar' : 'Eliminar'}>${v.expediente == null || v.expediente == '' ? '<i class="fas fa-cloud-upload-alt"></i>' : '<i class="far fa-trash-alt"></i>'}</button>`;
-        }else if (permisos == 1 && v.ev == null && v.estatusActual == 22 && (v.tipo_documento == 16 || v.tipo_documento == 22)){
-            console.log(v.expediente)
-            if(v.expediente != null || v.expediente != ''){
-                cont_22 ++;
-            }
+        }else if (permisos == 2 && v.ev == null && v.estatusActual == 22 && (v.tipo_documento == 16 || v.tipo_documento == 22)){            
             solicitudes += `<button data-idDocumento="${v.idDocumento}" data-documentType="${v.tipo_documento}" data-idSolicitud=${v.idSolicitud} data-details ="3" data-action=${v.expediente == null || v.expediente == '' ? 1 : 2} class="btn-data btn-${v.expediente == null || v.expediente == '' ? 'blueMaderas' : 'warning'} upload" data-toggle="tooltip" data-placement="top" title=${v.expediente == null || v.expediente == '' ? 'Cargar' : 'Eliminar'}>${v.expediente == null || v.expediente == '' ? '<i class="fas fa-cloud-upload-alt"></i>' : '<i class="far fa-trash-alt"></i>'}</button>`;   
         }
 
@@ -2073,6 +2071,7 @@ function createDocRowOtros(row, tr, thisVar){
         row.data().solicitudes = JSON.parse(data);
         prospectsTable.row(tr).data(row.data());
         row = prospectsTable.row(tr);
+        console.log($('.details-control-pago').attr('data-permisos'));
         row.child(buildTableDetail(row.data().solicitudes, $('.details-control-otros').attr('data-permisos'))).show();
         tr.addClass('shown');
         thisVar.parent().find('.animacion').removeClass("fa-caret-right").addClass("fa-caret-down");
@@ -2089,6 +2088,7 @@ function createDocRowPago(row, tr, thisVar){
         row.data().solicitudes = JSON.parse(data);
         prospectsTable.row(tr).data(row.data());
         row = prospectsTable.row(tr);
+        console.log()
         row.child(buildTableDetail(row.data().solicitudes, $('.details-control-pago').attr('data-permisos'))).show();
         tr.addClass('shown');
         thisVar.parent().find('.animacion').removeClass("fa-caret-right").addClass("fa-caret-down");
