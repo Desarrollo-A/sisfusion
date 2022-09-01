@@ -856,7 +856,7 @@ class Asesor_model extends CI_Model
 		inner join residenciales as residencial on residencial.idResidencial = condominio.idResidencial
 		inner join usuarios as users on autorizaciones.id_sol = users.id_usuario
 		inner join usuarios as users1 on autorizaciones.id_aut = users1.id_usuario
-		where autorizaciones.id_sol = ' . $this->session->userdata('id_usuario') . '  
+		where autorizaciones.id_sol = " . $this->session->userdata('id_usuario') . " 
 		GROUP BY residencial.nombreResidencial, condominio.nombre, 
 		lotes.nombreLote, 
 		UPPER(CONCAT(users.nombre, ' ', users.apellido_paterno, ' ', users.apellido_materno)), 

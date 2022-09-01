@@ -1697,7 +1697,7 @@ class Caja_outside extends CI_Controller
     }
 
 
-    public function changeEstatusLote(){
+    public function changeEstatusLote() {
         $lote = json_decode(file_get_contents("php://input"));
         $idLote = $lote->idLote;
         $idStatusLote = $lote->idStatusLote;
