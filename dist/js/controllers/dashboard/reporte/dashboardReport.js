@@ -1566,4 +1566,29 @@ function fillTable(dataObject) {
             }
         });
     }
+    $('#lotesInformationTable thead tr:eq(0) th').each(function (i) {
+        const title = $(this).text();
+        $(this).html('<input type="text" class="textoshead"  placeholder="' + title + '"/>');
+        $('input', this).on('keyup change', function () {
+            if(i != 0){
+                if ($("#lotesInformationTable").DataTable().column(i).search() !== this.value) {
+                    $("#lotesInformationTable").DataTable().column(i)
+                        .search(this.value).draw();
+                }
+            }
+        });
+    });
+
+    $('#lotesInformationTableCancelados thead tr:eq(0) th').each(function (i) {
+        const title = $(this).text();
+        $(this).html('<input type="text" class="textoshead"  placeholder="' + title + '"/>');
+        $('input', this).on('keyup change', function () {
+            if(i != 0){
+                if ($("#lotesInformationTableCancelados").DataTable().column(i).search() !== this.value) {
+                    $("#lotesInformationTableCancelados").DataTable().column(i)
+                        .search(this.value).draw();
+                }
+            }
+        });
+    });
 }
