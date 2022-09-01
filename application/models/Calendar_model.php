@@ -9,8 +9,8 @@ class Calendar_model extends CI_Model {
 
     function getEvents($idSource, $idUsuario){
         $query = $this->db->query("SELECT a.titulo as title, a.fecha_cita as start, a.fecha_final as 'end', 'fab fa-google' as icon, a.id_cita as id, a.idOrganizador, 'transparent' as borderColor,
-        CASE u.id_rol WHEN 7 THEN '#dfdac4a3' ELSE '#103f7533' END backgroundColor,
-        CASE u.id_rol WHEN 7 THEN '#96843D' ELSE '#103f75' END textColor,
+        CASE u.id_rol WHEN 7 THEN '#103f7533' ELSE '#dfdac4a3' END backgroundColor,
+        CASE u.id_rol WHEN 7 THEN '#103f75' ELSE '#96843D' END textColor,
         CASE u.id_rol WHEN 7 THEN (CASE a.estatus WHEN 1 THEN 'evtAbierto asesor' WHEN 2 THEN 'evtFinalizado asesor' END ) 
 		ELSE(CASE a.estatus WHEN 1 THEN 'evtAbierto coordinador' WHEN 2 THEN 'evtFinalizado coordinador' END ) END className
         FROM agenda a

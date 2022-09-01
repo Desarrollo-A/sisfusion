@@ -14,7 +14,7 @@
                         <button class="" type="button" id="menuModal" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="background-color: transparent; border:none; color: #999"><i class="fas fa-ellipsis-v"></i></button>
                         <ul class="dropdown-menu dropdown-menu-right p-0" aria-labelledby="menuModal">
                             <li><a class="m-0" onclick="finalizarCita()">Finalizar evento</a></li>
-                            <li><a class="m-0" onclick="deleteCita()">Eliminar evento</a></li>
+                            <li><a class="m-0" onclick="confirmDelete()">Eliminar evento</a></li>
                             <li><a class="m-0" data-dismiss="modal" style="border-top: 1px solid #eaeaea;">Cerrar ventana</a></li>
                         </ul>
                     </div>
@@ -67,9 +67,6 @@
                             <label class="label-gral m-0">Descripción</label>
                             <textarea class="text-modal" class="form-control" type="text" name="description" id="description2" onkeyup="javascript:this.value=this.value.toUpperCase();"></textarea>
                         </div>
-
-                        <input type="hidden" name="idAgenda" id="idAgenda2">
-                        <input type="hidden" name="idGoogle" id="idGoogle">
 
                         <div class="modal-footer">
                             <button type="submit" class="btn btn-primary finishS">Guardar</button>
@@ -221,8 +218,8 @@
                         <p class="text-center">Agrega tus comentarios u observaciones adicionales a este evento.</p>
                         <textarea class="text-modal" class="form-control" type="text" name="observaciones" id="observaciones" onkeyup="javascript:this.value=this.value.toUpperCase();"></textarea>
                         <div class="d-flex justify-end">
+                            <button type="button" class="btn btn-danger btn-simple" onclick="backToEvent()" style="background-color:white;">Regresar</button>
                             <button type="submit" class="btn btn-primary no-shadow rounded-circle finishS">Guardar</button>
-                            <button type="" class="btn btn-primary no-shadow rounded-circle" onclick="backToEvent()" style="background-color:white;">Regresar</button>
                         </div>
                     </div>
                 </div>
@@ -256,6 +253,29 @@
                             </table>
                             <div class="d-flex justify-end">
                                 <button type="submit" class="btn btn-primary no-shadow rounded-circle finishS">Guardar</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modalDeleteEvt" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-md" role="document">
+            <div class="modal-content">
+                <div class="modal-body pt-2">
+                    <div class="material-datatables">
+                        <form name="" id="" method="post">
+                            <div>
+                                <h3 class="m-0 text-center">Eliminar evento</h3>
+                                <p class="text-center">Estás a punto de remover el evento seleccionado ¿Deseas continuar?</p>
+                                <input type="hidden" name="idAgenda" id="idAgenda2">
+                                <input type="hidden" name="idGoogle" id="idGoogle">
+                            </div>
+                            <div class="d-flex justify-end">
+                                <button type="button" class="btn btn-danger btn-simple" style="background-color:white;">Regresar</button>
+                                <button type="button" class="btn btn-primary no-shadow rounded-circle" onclick="deleteCita()">Confirmar</button>
                             </div>
                         </form>
                     </div>
