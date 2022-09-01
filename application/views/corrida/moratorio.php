@@ -1487,11 +1487,13 @@
 								$scope.total2 = saldoInsoluto;
 								console.log("FECHA DEL PAGO AQUI", fechaDelPago);
 								var posPay = PositionPago - 1;
+                                console.log("PositionPago:", PositionPago);
 								/*se hace el segundo calculo y se manipula la tabla*/
 								/*termina la edicion*/
 								<?php include("dist/js/controllers/calculoMoratorio.js"); ?>
-								calculoMoratorioII(IM, importeSaldoI, posPay, PositionPago, diasRetardo, saldoInsoluto, minVal, maxVal, arrayCheckAllPost, fechaDelPago);
-							}
+                                calculoMoratorioII(IM, importeSaldoI, posPay, PositionPago, diasRetardo, saldoInsoluto, minVal, maxVal, arrayCheckAllPost, fechaDelPago);
+
+                            }
                         }
                         //////////
                         $scope.p2 = ($scope.infoMoratorio.interes_p2 * Math.pow(1 + $scope.infoMoratorio.interes_p2, $scope.infoMoratorio.plazo - $scope.infoMoratorio.mesesSinInteresP1) * $scope.infoMoratorio.saldoNormal) / (Math.pow(1 + $scope.infoMoratorio.interes_p2, $scope.infoMoratorio.plazo - $scope.infoMoratorio.mesesSinInteresP1) - 1);

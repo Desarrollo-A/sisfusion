@@ -1761,6 +1761,7 @@ class Asesor_model extends CI_Model
         return $query->row();
     }
 
+
     function reporteAsesor(){
         if ($this->session->userdata('id_rol') == 17 || $this->session->userdata('id_usuario') == 1875){ //Contraloria y Vicky 
             $where = "";
@@ -1784,4 +1785,10 @@ class Asesor_model extends CI_Model
 
         
     }
+    function getWstatus1($id_lote){
+        $query = $this->db->query("SELECT * FROM autorizaciones WHERE estatus=1 AND idLote=".$id_lote);
+        return $query->result_array();
+    }
 }
+    
+
