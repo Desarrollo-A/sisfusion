@@ -7,6 +7,7 @@
             case '19': // SUBDIRECTOR MKTD
             case '28': // EJECUTIVO ADMINISTRATIVO MKTD
             case '50': // GENERALISTA MKTD
+            case '63': // CONTROL INTERNO AUDITORIA 
                 $datos = array();
                 $datos = $datos4;
                 $datos = $datos2;
@@ -118,7 +119,7 @@
                                                     <th title="TOTAL ABONADO">TOTAL ABONADO</th>
                                                     <th title="TOTAL PAGADO">TOTAL PAGADO</th>
                                                     <th title="LUGAR PROSPECCIÓN">LUGAR PROSPECCIÓN</th>
-                                                    <th tile="FECHA PROSPECCIÓN">FECHA PROSPECCIÓN</th>
+                                                    <th title="FECHA PROSPECCIÓN">FECHA PROSPECCIÓN</th>
                                                     <th></th>
                                                 </tr>
                                                 </thead>

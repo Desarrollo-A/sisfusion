@@ -1760,4 +1760,28 @@ class Asesor_model extends CI_Model
                                     FROM usuarios u WHERE id_usuario=".$id_asesor);
         return $query->row();
     }
+
+    function reporteAsesor(){
+        if ($this->session->userdata('id_rol') == 17 || $this->session->userdata('id_usuario') == 1875){ //Contraloria y Vicky 
+            $where = "";
+        } else if ($this->session->userdata('id_rol') == 3 || $this->session->userdata('id_rol') == 6){ //Gerente y Asistente
+            $where = "AND DATEDIFF(MONTH, ase.fecha_creacion, GETDATE()) <= 5";
+        } else if ($this->session->userdata('id_rol') == 2 || $this->session->userdata('id_rol') == 5 ){ //Subdirector y Asistente
+            $where = "AND DATEDIFF(MONTH, ase.fecha_creacion, GETDATE()) >= 6 AND DATEDIFF(MONTH, ase.fecha_creacion, GETDATE()) <= 8";
+        } else if ($this->session->userdata('id_rol') == 1 || $this->session->userdata('id_rol') == 4){ //Direccion Comercial y Asistentes
+            $where = "AND DATEDIFF(MONTH, ase.fecha_creacion, GETDATE()) >= 9";
+        }
+
+        return $this->db->query("SELECT CONCAT(ase.nombre,' ',ase.apellido_paterno,' ',ase.apellido_materno) AS asesor, ase.id_usuario, ase.fecha_creacion,
+                                        CASE WHEN SUM(lot.totalNeto2) = '0.00' THEN SUM(lot.total) WHEN SUM(lot.totalNeto2) IS NULL THEN SUM(lot.total) ELSE SUM(lot.totalNeto2) END AS monto_vendido,
+                                        DATEDIFF(MONTH, ase.fecha_creacion, GETDATE()) meses, ase.estatus
+                                   FROM lotes lot
+                                        INNER JOIN clientes cl ON cl.id_cliente = lot.idCliente AND cl.status = 1
+                                        INNER JOIN usuarios ase ON ase.id_usuario = cl.id_asesor
+                                    WHERE ase.fecha_creacion >= cl.fechaApartado $where
+                                    GROUP BY CONCAT(ase.nombre,' ',ase.apellido_paterno,' ',ase.apellido_materno), ase.id_usuario, ase.fecha_creacion, ase.estatus
+                                    HAVING SUM(CASE WHEN lot.totalNeto2 = '0.00' THEN lot.total WHEN lot.totalNeto2 IS NULL THEN lot.total ELSE lot.totalNeto2 END) <= '500000.00'");
+
+        
+    }
 }

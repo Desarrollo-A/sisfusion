@@ -3,7 +3,7 @@
 <body>
     <div class="wrapper">
         <?php
-            if($this->session->userdata('id_rol')=="28" ||$this->session->userdata('id_rol')=="18"||$this->session->userdata('id_rol')=="19")//contraloria
+            if($this->session->userdata('id_rol')=="28" ||$this->session->userdata('id_rol')=="18"||$this->session->userdata('id_rol')=="19"||$this->session->userdata('id_rol')=="63")//contraloria
 
         {/*-------------------------------------------------------*/
             $datos = array();
@@ -26,7 +26,7 @@
                             </div>
                             <div class="card-content">
                                 <div class="encabezadoBox">
-                                    <h3 class="card-title center-align" >Reporte dinámico mktd</h3>
+                                    <h3 class="card-title center-align" >Reporte dinámico</h3>
                                     <p class="card-title pl-1">(Concentrado de lotes con apartado por fecha, gerencias y plazas)</p>
                                 </div>
                                 <div class="toolbar">
