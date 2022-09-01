@@ -1,9 +1,12 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
 <link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet"/>
+<meta http-equiv='cache-control' content='no-cache'>
+<meta http-equiv='expires' content='0'>
+<meta http-equiv='pragma' content='no-cache'>
 <body>
     <div class="wrapper">
         <?php
-        if($this->session->userdata('id_rol')=="13" || $this->session->userdata('id_rol')=="17"  || $this->session->userdata('id_rol')=="28" || $this->session->userdata('id_rol')=="32"|| $this->session->userdata('id_rol')=="18"|| $this->session->userdata('id_rol')=="1"|| $this->session->userdata('id_rol')=="2"|| $this->session->userdata('id_rol')=="3"|| $this->session->userdata('id_rol')=="7" || $this->session->userdata('id_rol')=="9" || $this->session->userdata('id_rol')=="31" )//contraloria
+        if($this->session->userdata('id_rol')=="63" || $this->session->userdata('id_rol')=="17"  || $this->session->userdata('id_rol')=="28" || $this->session->userdata('id_rol')=="32"|| $this->session->userdata('id_rol')=="18"|| $this->session->userdata('id_rol')=="1"|| $this->session->userdata('id_rol')=="2"|| $this->session->userdata('id_rol')=="3"|| $this->session->userdata('id_rol')=="7" || $this->session->userdata('id_rol')=="9" || $this->session->userdata('id_rol')=="31" )//contraloria
         {/*-------------------------------------------------------*/
             $datos = array();
             $datos = $datos4;
@@ -15,8 +18,7 @@
         }
         ?>
 
-        <div class="modal fade" id="seeInformationModalAsimilados" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-             aria-hidden="true" data-backdrop="static" data-keyboard="false">
+        <div class="modal fade" id="seeInformationModalAsimilados" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog modal-md modal-dialog-scrollable" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -51,7 +53,7 @@
             </div>
         </div>
 
-        <!--<div class="modal fade modal-alertas" id="modal_nuevas" role="dialog">
+        <div class="modal fade modal-alertas" id="modal_nuevas" role="dialog">
             <div class="modal-dialog">
                 <div class="modal-content">
 
@@ -60,7 +62,8 @@
                     </form>
                 </div>
             </div>
-        </div>-->
+        </div>
+
 
         <div class="modal fade modal-alertas" id="modal_informacion" role="dialog">
             <div class="modal-dialog modal-lg">
@@ -109,28 +112,30 @@
                                 </div>
                                 <div class="toolbar">
                                     <div class="row">
+ 
+
                                         <div class="col-12 col-sm-12 col-md-12 col-lg-6">
                                             <div class="form-group">
-                                                <label for="proyecto">Proyecto</label>
-                                                <select name="filtro33" id="filtro33" class="selectpicker select-gral" data-style="btn " data-show-subtext="true" data-live-search="true"  title="Selecciona un proyecto" data-size="7" required> <option value="0">Seleccione todo</option>
-                                                </select>
+                                                <label for="proyecto">Año</label>
+                                                <select name="filtro33" id="filtro33" class="selectpicker select-gral" data-style="btn " data-show-subtext="true" data-live-search="true" title="Selecciona año" data-size="7" required>
+                                                        <?php
+                                                        setlocale(LC_ALL, 'es_ES');
+                                                        for ($i = 2019; $i <= 2022; $i++) {
+                                                            $yearName  = $i;
+                                                            echo '<option value="' . $i . '">' . $yearName . '</option>';
+                                                        }
+                                                        ?>
+                                                    </select>
                                             </div>
                                         </div>
-                                        <?php
-                                            if($this->session->userdata('id_rol') == 13 || $this->session->userdata('id_rol') == 32 || $this->session->userdata('id_rol') == 17){
-                                                ?>
-                                                <input type="hidden" id="param" name="param" value="0"> 
-                                                <?php 
-                                            }else{
-                                                ?>
-                                                <input type="hidden" id="param" name="param" value="1">
-                                                <?php
-                                            }
-                                        ?>
+                        
                                         <div class="col-12 col-sm-12 col-md-12 col-lg-6">
                                             <div class="form-group">
-                                                <label>Condominio</label>
+                                                <!-- <label>Condominio</label>
                                                 <select class="selectpicker select-gral" id="filtro44" name="filtro44[]" data-style="btn " data-show-subtext="true" data-live-search="true" title="Selecciona un condominio" data-size="7" required/>
+                                                </select> -->
+                                                <label for="proyecto">Proyecto</label>
+                                                <select name="filtro44" id="filtro44" class="selectpicker select-gral" data-style="btn " data-show-subtext="true" data-live-search="true"  title="Selecciona un proyecto" data-size="7" required> <option value="0">Seleccione todo</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -182,53 +187,56 @@
     <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
     <script>
-        $(document).ready(function() {
-            $("#tabla_historialGral").prop("hidden", true);
-            var url = "<?=base_url()?>/index.php/";
-            $.post("<?=base_url()?>index.php/Contratacion/lista_proyecto_dos", function (data) {
-                var len = data.length;
-                for (var i = 0; i < len; i++) {
-                    var id = data[i]['idResidencial'];
-                    var name = data[i]['descripcion'];
-                    $("#filtro33").append($('<option>').val(id).text(name.toUpperCase()));
-                }
-                $("#filtro33").selectpicker('refresh');
-            }, 'json');       
-        });
+        // $(document).ready(function() {
+        //     $("#tabla_historialGral").prop("hidden", true);
+        //     var url = "<?=base_url()?>/index.php/";
+        //     $.post("<?=base_url()?>index.php/Contratacion/lista_proyecto_dos", function (data) {
+        //         var len = data.length;
+        //         for (var i = 0; i < len; i++) {
+        //             var id = data[i]['idResidencial'];
+        //             var name = data[i]['descripcion'];
+        //             $("#filtro33").append($('<option>').val(id).text(name.toUpperCase()));
+        //         }
+        //         $("#filtro33").selectpicker('refresh');
+        //     }, 'json');       
+        // });
     
         $('#filtro33').change(function(ruta){
+                         
+
         residencial = $('#filtro33').val();
         param = $('#param').val();
         $("#filtro44").empty().selectpicker('refresh');
+        // setTimeout(function(){}, 10000);
             $.ajax({
-                url: '<?=base_url()?>Contratacion/lista_condominio_dos/'+residencial,
+                url: '<?=base_url()?>Contratacion/lista_proyecto_dos/',
                 type: 'post',
                 dataType: 'json',
                 success:function(response){
                     var len = response.length;
                     for( var i = 0; i<len; i++){
-                        var id = response[i]['idCondominio'];
-                        var name = response[i]['nombre'];
-                        $("#filtro44").append($('<option>').val(id).text(name));
+                        var id = response[i]['idResidencial'];
+                        var name = response[i]['descripcion'];
+                        $("#filtro44").append($('<option>').val(id).text(name.toUpperCase()));
                     }
                     $("#filtro44").selectpicker('refresh');
                 }
             });
         });
 
-        $('#filtro33').change(function(ruta){
-            proyecto = $('#filtro33').val();
-            condominio = $('#filtro44').val();
-            if(condominio == '' || condominio == null || condominio == undefined){
-                condominio = 0;
-            }
-            if(proyecto == 11 || proyecto == 12){
-                console.log(proyecto);
-            }
-            else{
-                getAssimilatedCommissions(proyecto, condominio);
-            }
-        });
+        // $('#filtro33').change(function(ruta){
+        //     proyecto = $('#filtro33').val();
+        //     condominio = $('#filtro44').val();
+        //     if(condominio == '' || condominio == null || condominio == undefined){
+        //         condominio = 0;
+        //     }
+        //     if(proyecto != 0){
+        //         console.log(proyecto);
+        //     }
+        //     else{
+        //         getAssimilatedCommissions(proyecto, condominio);
+        //     }
+        // });
 
         $('#filtro44').change(function(ruta){
             proyecto = $('#filtro33').val();
@@ -236,7 +244,17 @@
             if(condominio == '' || condominio == null || condominio == undefined){
                 condominio = 0;
             }
+            if(tabla_historialGral2){
+                 tabla_historialGral2.destroy();
+
+                 // tabla_historialGral2 = $("#tabla_historialGral").DataTable();
+
+             }
+                 // setTimeout(function(){getAssimilatedCommissions(proyecto, condominio)}, 20000);
+
+
             getAssimilatedCommissions(proyecto, condominio);
+            // 
         });
 
         function cleanCommentsAsimilados() {
@@ -280,17 +298,17 @@
             $("#tabla_historialGral").prop("hidden", false);
             tabla_historialGral2 = $("#tabla_historialGral").DataTable({
                 dom: 'Brt'+ "<'row'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'i><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>",
-                width: 'auto',
+                width: 'auto',                
                 buttons: [
-                    {
-                        text: '<i class="fa fa-table" aria-hidden="true"></i>',
-                        className: 'btn buttons-general-dt ver-info-asesor',
-                        titleAttr: 'Reporte pagos UM',
-                    },
-                    {
+                // {
+                //     text: '<i class="fa fa-table" aria-hidden="true"></i>',
+                //     className: 'btn buttons-general-dt ver-info-asesor',
+                //     titleAttr: 'Reporte pagos UM',
+                // },
+                {
                     extend: 'excelHtml5',
                     text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
-                    className: 'btn buttons-excel ',
+                    className: 'btn buttons-excel',
                     titleAttr: 'Descargar archivo de Excel',
                     title: 'HISTORIAL_GENERAL_SISTEMA_COMISIONES',
                     exportOptions: {
@@ -345,7 +363,8 @@
                     }
                 },
                 destroy: true,
-                ordering: false,
+                deferRender: true,
+
                 columns: [{
                     "width": "5%",
                     "data": function( d ){
@@ -418,7 +437,7 @@
                             return '<p class="m-0">$'+formatMoney(d.restante)+'</p>';
                         }
                     }
-                },
+                }, 
                 {
                     "width": "7%",
                     "data": function( d ){
@@ -460,7 +479,7 @@
                     "width": "7%",
                     "data": function( d ){
                         var etiqueta;
-
+                            
                         if((d.id_estatus_actual == 11) && d.descuento_aplicado == 1 ){
                             etiqueta = '<p><span class="label" style="background:#ED7D72;">DESCUENTO</span></p>';
                         }else if((d.id_estatus_actual == 12) && d.descuento_aplicado == 1 ){
@@ -474,17 +493,22 @@
                         }else if((d.id_estatus_actual == 18) && d.descuento_aplicado == 1 ){
                             etiqueta = '<p><span class="label" style="background:#89C86C;">DESCUENTO PRÉSTAMO</span></p>';
                         }else if((d.id_estatus_actual == 19) && d.descuento_aplicado == 1 ){
-                            etiqueta = '<p><span class="label" style="background:#72EDD6;">DESCUENTO SCIO</span></p>';
+                            etiqueta = '<p><span class="label" style="background:#3BC6AC;">DESCUENTO SCIO</span></p>';
                         }else if((d.id_estatus_actual == 20) && d.descuento_aplicado == 1 ){
                             etiqueta = '<p><span class="label" style="background:#72CBED;">DESCUENTO PLAZA</span></p>';
                         }else if((d.id_estatus_actual == 21) && d.descuento_aplicado == 1 ){
                             etiqueta = '<p><span class="label" style="background:#7282ED;">DESCUENTO LINEA TELEFÓNICA</span></p>';
                         }else if((d.id_estatus_actual == 22) && d.descuento_aplicado == 1 ){
-                            etiqueta = '<p><span class="label" style="background:#CA72ED;">DESCUENTO MANTENIMIENTO</span></p>';
+                            etiqueta = '<p><span class="label" style="background:#CA72EH;">DESCUENTO MANTENIMIENTO</span></p>';
                         }else if((d.id_estatus_actual == 23) && d.descuento_aplicado == 1 ){
-                            etiqueta = '<p><span class="label" style="background:#CA72ED;">DESCUENTO NÓMINA</span></p>';
+                            etiqueta = '<p><span class="label" style="background:#CA72ED;">NÓMINA - ANALISTAS DE COMISIONES</span></p>';
+                        }else if((d.id_estatus_actual == 24) && d.descuento_aplicado == 1 ){
+                            etiqueta = '<p><span class="label" style="background:#CA72ED;">NÓMINA - ASISTENTES CDMX</span></p>';
+                        }else if((d.id_estatus_actual == 25) && d.descuento_aplicado == 1 ){
+                            etiqueta = '<p><span class="label" style="background:#CA72ED;">NÓMINA - IMSS</span></p>';
+                        }else if((d.id_estatus_actual == 26) && d.descuento_aplicado == 1 ){
+                            etiqueta = '<p><span class="label" style="background:#CA72ED;">NÓMINA -LIDER DE PROYECTO E INNOVACIÓN</span></p>';
                         }else{
-
                             switch(d.id_estatus_actual){
                                 case '1':
                                 case 1:
@@ -570,7 +594,7 @@
                         return etiqueta;
                     }
                 },
-                {
+                { 
                     "width": "2%",
                     "orderable": false,
                     "data": function( data ){
@@ -594,6 +618,7 @@
                     },
                 }],
                 ajax: {
+
                     "url": url2 + "Comisiones/getDatosHistorialPago/" + proyecto + "/" + condominio,
                     "type": "POST",
                     cache: false,
@@ -618,7 +643,7 @@
                 });
             });
 
-            /*$("#tabla_historialGral tbody").on("click", ".actualizar_pago", function(){
+            $("#tabla_historialGral tbody").on("click", ".actualizar_pago", function(){
                 var tr = $(this).closest('tr');
                 var row = tabla_historialGral2.row( tr );
 
@@ -630,9 +655,9 @@
                 $("#modal_nuevas .modal-body").append('<input type="hidden" name="id_pago" value="'+row.data().id_pago_i+'">');
                 $("#modal_nuevas .modal-body").append('<div class="row"><div class="col-md-6"></div><div class="col-md-3"><input type="submit" class="btn btn-primary" value="ACTIVAR"></div><div class="col-md-3"><button type="button" class="btn btn-danger" data-dismiss="modal">CANCELAR</button></div></div>');
                 $("#modal_nuevas").modal();
-            });*/
+            });
 
-            /*$("#tabla_historialGral tbody").on("click", ".agregar_pago", function(){
+            $("#tabla_historialGral tbody").on("click", ".agregar_pago", function(){
                 var tr = $(this).closest('tr');
                 var row = tabla_historialGral2.row( tr );
 
@@ -644,7 +669,7 @@
                 $("#modal_nuevas .modal-body").append('<input type="hidden" name="id_pago" value="'+row.data().id_pago_i+'">');
                 $("#modal_nuevas .modal-body").append('<div class="row"><div class="col-md-6"></div><div class="col-md-3"><input type="submit" class="btn btn-primary" value="ACTIVAR"></div><div class="col-md-3"><button type="button" class="btn btn-danger" data-dismiss="modal">CANCELAR</button></div></div>');
                 $("#modal_nuevas").modal();
-            });*/
+            });
         }
 
         //FIN TABLA  ****************************************************************************************
@@ -662,12 +687,12 @@
             return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
         };
 
-        /*function cancela(){
+        function cancela(){
             $("#modal_nuevas").modal('toggle');
-        }*/
+        }
 
         //Función para pausar la solicitud
-        /*$("#form_interes").submit( function(e) {
+        $("#form_interes").submit( function(e) {
             e.preventDefault();
         }).validate({
             submitHandler: function( form ) {
@@ -699,19 +724,20 @@
                     }
                 });
             }
-        });*/
+        });
 
-        /*$(document).on("click", ".btn-historial-lo", function(){
+        $(document).on("click", ".btn-historial-lo", function(){
             window.open(url+"Comisiones/getHistorialEmpresa", "_blank");
-        });*/
+        });
 
-        /*function cleanComments(){
+        function cleanComments(){
             var myCommentsList = document.getElementById('documents');
             myCommentsList.innerHTML = '';
 
             var myFactura = document.getElementById('facturaInfo');
             myFactura.innerHTML = '';
-        }*/
+        }
+
 
 
         $(document).on('click', '.ver-info-asesor', function(){
@@ -785,6 +811,7 @@
                     targets:   0,
                     'searchable':false,
                     'className': 'dt-body-center',
+
                     select: {
                         style:    'os',
                         selector: 'td:first-child'
@@ -800,9 +827,5 @@
             });
             /*TABLA MODAL END*/
         });
-
-
-
-
     </script>
 </body>

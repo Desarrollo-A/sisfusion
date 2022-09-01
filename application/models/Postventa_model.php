@@ -130,7 +130,7 @@ class Postventa_model extends CI_Model
         LEFT JOIN (SELECT idSolicitud, CASE WHEN descuentos IS NULL THEN 0 ELSE 1 END descuento FROM solicitud_escrituracion) se4 ON se4.idSolicitud = se.idSolicitud
         LEFT JOIN (SELECT idSolicitud, CASE WHEN COUNT(*) > 0 THEN 1 ELSE 0 END flagPresupuesto FROM Presupuestos WHERE expediente != '' GROUP BY idSolicitud) pr ON pr.idSolicitud = se.idSolicitud
         LEFT JOIN (SELECT idSolicitud, CASE WHEN COUNT(*) > 0 THEN 1 ELSE 0 END approvedPresupuesto FROM Presupuestos WHERE estatus = 1 GROUP BY idSolicitud) pr2 ON pr2.idSolicitud = se.idSolicitud
-        WHERE (se.fecha_creacion BETWEEN '$begin 00:00:00' AND '$end 23:59:59') $where");
+        WHERE (se.fecha_creacion BETWEEN '$begin 00:00:00' AND '$end 23:59:59') $where AND se.id_juridico = $idUsuario");
     }
 
     function changeStatus($id_solicitud, $type, $comentarios, $motivos_rechazo)
