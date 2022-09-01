@@ -619,7 +619,16 @@ class Postventa extends CI_Controller
         $dataFiscal = base64_encode(json_encode($dataFiscal));
         $responseInsert = $this->insertPostventaDF($dataFiscal);
         if($responseInsert->resultado == 1){
-            $informacion = $this->Postventa_model->setEscrituracion( $personalidad, $idLote,$idCliente, $idPostventa, $resDecode->data[0]);
+            $usuarioJuridico = $this->Postventa_model->obtenerJuridicoAsignacion();
+            if (!$usuarioJuridico) {
+                $this->Postventa_model->restablecerJuridicosAsignados();
+                $usuarioJuridico = $this->Postventa_model->obtenerJuridicoAsignacion();
+            }
+
+            $this->Postventa_model->asignarJuridicoActivo($usuarioJuridico->id_usuario);
+
+            $informacion = $this->Postventa_model->setEscrituracion( $personalidad, $idLote,$idCliente, $idPostventa,
+                $resDecode->data[0], $usuarioJuridico->id_usuario);
             echo json_encode($informacion);
         }else{
             echo json_encode(false);
@@ -677,6 +686,11 @@ class Postventa extends CI_Controller
         if($documentType == 13){
             $documentName = $documentName->fileName . '.' . $presupuestoType . '.' . substr(strrchr($_FILES["uploadedDocument"]["name"], '.'), 1);
         }else{
+            /*if($documentInfo->estatus == 22){
+
+            }else{
+
+            }*/
             $documentName = $documentName->fileName . '.' . substr(strrchr($_FILES["uploadedDocument"]["name"], '.'), 1);
         }
         $folder = $this->getFolderFile($documentType);
@@ -762,6 +776,9 @@ class Postventa extends CI_Controller
                 break;
             case 21:
                 $folder = "static/documentos/postventa/escrituracion/CONTRATO/";
+                break;
+            case 22:
+                $folder = "static/documentos/postventa/escrituracion/COPIA_CERTIFICADA/";
                 break;
         }
         return $folder;

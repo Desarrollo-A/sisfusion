@@ -48,7 +48,7 @@ class Postventa_model extends CI_Model
         WHERE l.idLote = $idLote");
     }
 
-    function setEscrituracion( $personalidad, $idLote,$idCliente, $idPostventa, $data)
+    function setEscrituracion( $personalidad, $idLote,$idCliente, $idPostventa, $data, $idJuridico)
     {
         $idUsuario = $this->session->userdata('id_usuario');
         $rol = $this->session->userdata('id_rol');
@@ -62,8 +62,9 @@ class Postventa_model extends CI_Model
       
         $this->db->query("INSERT INTO solicitud_escrituracion (idLote, idCliente, estatus, fecha_creacion
         , creado_por, fecha_modificacion, modificado_por, idArea, idPostventa, estatus_pago, clave_catastral, cliente_anterior,
-        nombre_anterior, RFC, nombre, personalidad)
-         VALUES($idLote, $idCliente, 0, GETDATE(), $idUsuario, GETDATE(),$idUsuario, $rol, $idPostventa, $idEstatus, '$claveCat', $clienteAnterior, '$nombreClienteAnterior', '$rfcAnterior', '$nombre', $personalidad);");
+        nombre_anterior, RFC, nombre, personalidad, id_juridico)
+         VALUES($idLote, $idCliente, 0, GETDATE(), $idUsuario, GETDATE(),$idUsuario, $rol, $idPostventa, $idEstatus, '$claveCat', 
+                $clienteAnterior, '$nombreClienteAnterior', '$rfcAnterior', '$nombre', $personalidad, $idJuridico);");
         $insert_id = $this->db->insert_id();
         $opcion = $personalidad == 2 || $personalidad == '' || $personalidad == null ? 60:72;
         $opciones = $this->db->query("SELECT * FROM opcs_x_cats WHERE id_catalogo =  $opcion")->result_array();
@@ -111,7 +112,7 @@ class Postventa_model extends CI_Model
         THEN 0 ELSE 1 END result,  
         CASE WHEN COUNT(*) != COUNT(CASE WHEN estatus_validacion = 1 THEN 1 END) THEN 0 ELSE 1 END estatusValidacion,
         COUNT(CASE WHEN estatus_validacion = 2 THEN 1 END) no_rechazos
-        FROM documentos_escrituracion WHERE tipo_documento NOT IN (7,9,10, 11, 12, 13,14,15,16,17,20,21) GROUP BY idSolicitud) de2 ON de2.idSolicitud = se.idSolicitud
+        FROM documentos_escrituracion WHERE tipo_documento NOT IN (7,9,10, 11, 12, 13,14,15,16,17,20,21,22) GROUP BY idSolicitud) de2 ON de2.idSolicitud = se.idSolicitud
         LEFT JOIN (SELECT idSolicitud,  CASE WHEN COUNT(*) != COUNT(CASE WHEN expediente IS NOT NULL THEN 1 END) THEN 0 ELSE 1 END Spresupuesto
         FROM documentos_escrituracion WHERE tipo_documento = 11 GROUP BY idSolicitud) de3 ON de3.idSolicitud = se.idSolicitud
         LEFT JOIN (SELECT idSolicitud, CASE WHEN COUNT(*) != COUNT(CASE WHEN expediente IS NOT NULL THEN 1 END) THEN 0 ELSE 1 END contrato
@@ -137,10 +138,11 @@ class Postventa_model extends CI_Model
 
         $notaria = $this->db->query("SELECT idNotaria FROM solicitud_escrituracion WHERE idSolicitud = $id_solicitud")->row()->idNotaria;
 
+        $pertenece = 0;
         if($notaria != NULL || $notaria != 0){
             $pertenece = $this->db->query("SELECT pertenece FROM solicitud_escrituracion se INNER JOIN Notarias n ON n.idNotaria = se.idNotaria WHERE idSolicitud = $id_solicitud")->row();
 
-            $pertenece ? $pertenece->pertenece : 1;
+            $pertenece = ($pertenece) ? $pertenece->pertenece : 1;
 
         }
 
@@ -164,7 +166,13 @@ class Postventa_model extends CI_Model
                 $next = $newStatus + 1;
             }
         } elseif ($type == 2) {//REJECT
-            $newStatus = $estatus - 1;
+            if ($estatus === 16) { // ENVÍO / RECEPCIÓN DE PROYECTO
+                $newStatus = 13;
+                $estatus = 12;
+            } else {
+                $newStatus = $estatus - 1;
+            }
+
             $next = $newStatus + 1;
         } elseif ($type == 3) {//comodin fecha
             if ($estatus == 90) {
@@ -267,10 +275,10 @@ class Postventa_model extends CI_Model
     function getDocumentsClient($idSolicitud, $status)
     {
         if($status == 10 || $status == 11){
-            $tipo_doc = 'NOT IN (11, 12, 13, 14, 15, 16, 17)';
+            $tipo_doc = 'NOT IN (11, 12, 13, 14, 15, 16, 17,22)';
         }elseif($status == 3 || $status == 4 || $status == 5){
             $tipo_doc = 'IN (7,20,21)';
-        }elseif($status == 11){
+        }elseif($status == 11 || $status == 13){
             $tipo_doc = 'IN (7)';
         }
 
@@ -648,11 +656,11 @@ function checkBudgetInfo($idSolicitud){
 
     function getFullReportContraloria($idSolicitud){
         $query = $this->db->query("WITH cte AS(
-            SELECT MAX(fecha_creacion) fecha_creacion, idStatus, idEscrituracion
+            SELECT MAX(fecha_creacion) fecha_creacion, comentarios, (CASE WHEN idStatus = 91 or idStatus = 92 THEN idStatus-89 WHEN idStatus = 0 THEN idStatus+1 WHEN idStatus = 90 THEN '15.1' ELSE idStatus END) idStatus, idEscrituracion
             FROM control_estatus 
-            WHERE idEscrituracion = $idSolicitud GROUP BY idStatus, idEscrituracion
+            WHERE idEscrituracion = $idSolicitud GROUP BY idStatus, idEscrituracion , comentarios
         )
-        SELECT cte.*, isNULL(lag(MAX(ce.fecha_creacion)) OVER (ORDER BY cte.idStatus), cte.fecha_creacion) fechados,
+		SELECT cte.*, isNULL(lag(MAX(ce.fecha_creacion)) OVER (ORDER BY cte.idStatus), cte.fecha_creacion) fechados,
         l.nombreLote, cond.nombre nombreCondominio, r.nombreResidencial, se.nombre, 
         oxc.nombre estatus, oxc2.nombre area, cp.tiempo FROM cte
         INNER JOIN control_estatus ce ON ce.idEscrituracion = cte.idEscrituracion AND ce.fecha_creacion = cte.fecha_creacion
@@ -664,8 +672,7 @@ function checkBudgetInfo($idSolicitud){
         INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = cte.idStatus AND oxc.id_catalogo = 59 
         INNER JOIN opcs_x_cats oxc2 ON oxc2.id_opcion = ce.idArea AND oxc2.id_catalogo = 1
         INNER JOIN control_procesos cp ON cp.estatus=ce.idStatus AND cp.idRol = ce.idArea
-        GROUP BY cte.idStatus, cte.idEscrituracion, cte.fecha_creacion, l.nombreLote, cond.nombre, r.nombreResidencial, se.nombre, 
-        oxc.nombre, oxc2.nombre, cp.tiempo");
+        GROUP BY cte.idStatus, cte.idEscrituracion, cte.fecha_creacion, l.nombreLote, cond.nombre, r.nombreResidencial, se.nombre, oxc.nombre, oxc2.nombre, cp.tiempo, cte.comentarios");
         return $query->result_array();
     }
 
@@ -845,5 +852,21 @@ function checkBudgetInfo($idSolicitud){
             de.estatus_validacion, pr.estatus,nota.nombre_notaria");
         return $query->result();
     }
-    
+
+    public function obtenerJuridicoAsignacion()
+    {
+        $query = $this->db->query('SELECT id_usuario FROM solicitud_juridico WHERE orden = (SELECT TOP 1 MIN(orden) 
+                                          FROM solicitud_juridico WHERE esta_activo = 0)');
+        return $query->row();
+    }
+
+    public function asignarJuridicoActivo($usuarioId)
+    {
+        $this->db->query("UPDATE solicitud_juridico SET esta_activo = 1 WHERE id_usuario = $usuarioId");
+    }
+
+    public function restablecerJuridicosAsignados()
+    {
+        $this->db->query('UPDATE solicitud_juridico set esta_activo = 0');
+    }
 }

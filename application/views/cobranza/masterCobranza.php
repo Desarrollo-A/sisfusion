@@ -118,6 +118,7 @@
                                                     <th title="TOTAL ABONADO">TOTAL ABONADO</th>
                                                     <th title="TOTAL PAGADO">TOTAL PAGADO</th>
                                                     <th title="LUGAR PROSPECCIÓN">LUGAR PROSPECCIÓN</th>
+                                                    <th tile="FECHA PROSPECCIÓN">FECHA PROSPECCIÓN</th>
                                                     <th></th>
                                                 </tr>
                                                 </thead>
@@ -223,7 +224,7 @@
                         className: 'btn buttons-excel',
                         titleAttr: 'Descargar archivo de Excel',
                         exportOptions: {
-                            columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+                            columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14],
                             format: {
                                 header: function (d, columnIdx) {
                                     switch (columnIdx) {
@@ -267,6 +268,9 @@
                                             break;
                                         case 13:
                                             return 'LUGAR PROSPECCIÓN';
+                                            break;
+                                        case 14:
+                                            return 'FECHA PROSPECCIÓN';
                                             break;
                                     }
                                 }
@@ -481,6 +485,11 @@
                                 return d.lugar_prospeccion + ' Martha Debayle';
                             else
                                 return d.lugar_prospeccion;
+                        }
+                    },
+                    {
+                        data: function (d) {
+                            return d.fecha_prospeccion;
                         }
                     },
                     {

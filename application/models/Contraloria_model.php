@@ -1050,4 +1050,30 @@ class Contraloria_model extends CI_Model {
             ORDER BY au.fecha_creacion DESC");
         return $query->result_array();
     }
+	public function validate90Dias($idLote,$idCliente,$usuario){
+		$validation90 = $this->db->query("SELECT c.fechaApartado,DATEDIFF(DAY, c.fechaApartado, GETDATE()) AS dias 
+		FROM clientes c 
+		INNER JOIN lotes l on l.idCliente=c.id_cliente 
+		WHERE c.id_cliente=$idCliente AND l.idLote=$idLote")->result_array();
+		if(count($validation90) > 0){
+			if($validation90[0]['dias'] > 89){
+				$dias = $validation90[0]['dias'];
+				$validationPorcentage = $this->db->query("SELECT * FROM porcentajes_penalizaciones WHERE inicio <= $dias AND fin >= $dias AND estatus=1")->result_array();
+				$estatus= $validationPorcentage[0]['id_porcentaje_penalizacion'] == 4 ? 4 : 1;
+				$datos = array(
+					'id_lote' => $idLote,
+					'id_cliente' => $idCliente,
+					'dias_atraso' => $dias,
+					'estatus' => $estatus,
+					'fecha_aprobacion' => date('Y-m-d H:i:s'),
+					'id_porcentaje_penalizacion' => $validationPorcentage[0]['id_porcentaje_penalizacion'],
+					'creado_por' => $usuario,
+					'fecha_creacion' => date('Y-m-d H:i:s'),
+					'modificado_por' => $usuario,
+				);
+				$this->db->insert('penalizaciones',$datos);
+			}
+		}
+		
+	}
 }
