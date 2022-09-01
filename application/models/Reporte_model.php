@@ -162,49 +162,53 @@ class Reporte_model extends CI_Model {
         return $data->result_array();    
     }
 
-    public function getGeneralInformation($beginDate, $endDate, $id_rol, $id_usuario, $render, $leadersList) {
-        // PARA ASESOR, COORDINADOR, GERENTE, SUBDIRECTOR, REGIONAL Y DIRECCIÓN COMERCIAL
-        $id_lider = $this->session->userdata('id_lider'); // PARA ASISTENTES
-        $comodin2 = 'LEFT';
-        $filtro=" AND cl.fechaApartado BETWEEN '$beginDate 00:00:00.000' AND '$endDate 23:59:00.000'";
-
-        if ($id_rol == 7) { // MJ: Asesor
+    public function setFilters($id_rol, $render, $filtro, $leadersList, $comodin2, $id_usuario, $id_lider, $typeTransaction = null, $leader = null) {
+        if ($id_rol == 7) { // ASESOR
             if ($render == 1) {
-                $filtro .= " AND cl.id_asesor = $id_usuario";
+                if ($typeTransaction == null) // SE CONSULTA DESDE EL ROWDETAIL O LA MODAL QUE SE TRAE EL DETALLE DE LOS LOTES
+                    $filtro .= " AND (cl.id_asesor = $id_usuario AND cl.id_coordinador = $leader)";
+                else // SE CONSULTA DESDE LA TABLA PAPÁ
+                    $filtro .= " AND (cl.id_asesor = $id_usuario OR cl.id_coordinador = $id_usuario)";
             }
             else{
-                if ($leadersList[4] == 0)
-                    $filtro .= " AND cl.id_asesor = $leadersList[0] AND cl.id_coordinador = $leadersList[1] AND cl.id_gerente = $leadersList[2] AND cl.id_subdirector = $leadersList[3] AND cl.id_regional = $leadersList[4]";
-                else
-                    $filtro .= " AND cl.id_asesor = $leadersList[0] AND cl.id_coordinador = $leadersList[1] AND cl.id_gerente = $leadersList[2] AND cl.id_subdirector = $leadersList[3] AND cl.id_regional = $leadersList[4]";
+                if ($typeTransaction == null) // SE CONSULTA DESDE EL ROWDETAIL O LA MODAL QUE SE TRAE EL DETALLE DE LOS LOTES
+                    if ($leadersList[4] == 0) // NO TIENE REGIONAL NI SUBDIRECTOR
+                        $filtro .= " AND cl.id_asesor = $leadersList[0] AND cl.id_coordinador = $leadersList[1] AND cl.id_gerente = $leadersList[2]";
+                    else // ESTE SÍ TIENE SUBDIRECTOR
+                        $filtro .= " AND cl.id_asesor = $leadersList[0] AND cl.id_coordinador = $leadersList[1] AND cl.id_gerente = $leadersList[2] AND cl.id_subdirector = $leadersList[3]";
+                else { // SE CONSULTA DESDE LA TABLA PAPÁ
+                    if ($leadersList[4] == 0) // NO TIENE REGIONAL NI SUBDIRECTOR
+                        $filtro .= " AND cl.id_coordinador = $leadersList[1] AND cl.id_gerente = $leadersList[2]";
+                    else // ESTE SÍ TIENE SUBDIRECTOR
+                        $filtro .= " AND cl.id_coordinador = $leadersList[1] AND cl.id_gerente = $leadersList[2] AND cl.id_subdirector = $leadersList[3]";
+                }
             }
             $comodin = "id_asesor";
         }
-        else if ( $id_rol == 9 ) { // MJ: Coordinador
-            if ($render == 1) {
-                $filtro .= " AND (cl.id_coordinador = $id_usuario OR cl.id_asesor = $id_usuario) AND (cl.id_gerente = $leader )";
+        else if ($id_rol == 9) { // COORDINADORES: VA POR ELLOS
+            if ($render == 1) {  // CONSULTADA POR ASISTENTE DE GERENCIA
+                if ($typeTransaction == null) // SE CONSULTA DESDE EL ROWDETAIL O LA MODAL QUE SE TRAE EL DETALLE DE LOS LOTES
+                    $filtro .= " AND cl.id_coordinador = $leadersList[1] AND cl.id_gerente = $leadersList[2]";
+                else // SE CONSULTA DESDE LA TABLA PAPÁ
+                    $filtro .= " AND cl.id_gerente = $id_lider";                
                 $comodin = "id_asesor";
-            } else {
-                if( $this->session->userdata('id_rol') == $id_rol ){
+            } else { // CONSULTA DIRECTOR GENERAL, ASISTENTE DE DIRECCIÓN, FAB Y ABUELITO, SUBDIRECTOR REGIONAL, ASISTENTES DE SUBDIRECCIÓN REGIONAL
+                if ($typeTransaction == null) // SE CONSULTA DESDE EL ROWDETAIL O LA MODAL QUE SE TRAE EL DETALLE DE LOS LOTES
                     $filtro .= " AND cl.id_coordinador = $leadersList[1] AND cl.id_gerente = $leadersList[2] AND cl.id_subdirector = $leadersList[3] AND cl.id_regional = $leadersList[4]";
-                }
-                else{
+                else // SE CONSULTA DESDE LA TABLA PAPÁ
                     $filtro .= " AND cl.id_gerente = $leadersList[2] AND cl.id_subdirector = $leadersList[3] AND cl.id_regional = $leadersList[4]";
-                }
                 $comodin = "id_coordinador";
             }
         }
-        else if ($id_rol == 3) { // MJ: Gerente
+        else if ($id_rol == 3) { // GERENTES: VA POR ELLOS
             if ($render == 1) {
                 $filtro .= " AND cl.id_gerente = $id_usuario";
                 $comodin = "id_coordinador";
-            } else {
-                if ($this->session->userdata('id_rol') == $id_rol ){
+            } else {  // CONSULTA DIRECTOR GENERAL, ASISTENTE DE DIRECCIÓN, FAB Y ABUELITO, SUBDIRECTOR REGIONAL, ASISTENTES DE SUBDIRECCIÓN REGIONAL
+                if ($typeTransaction == null) // SE CONSULTA DESDE EL ROWDETAIL O LA MODAL QUE SE TRAE EL DETALLE DE LOS LOTES
                     $filtro .= " AND cl.id_gerente = $leadersList[2] AND cl.id_subdirector = $leadersList[3] AND cl.id_regional = $leadersList[4]";
-                }
-                else{
+                else // SE CONSULTA DESDE LA TABLA PAPÁ
                     $filtro .= " AND cl.id_subdirector = $leadersList[3] AND cl.id_regional = $leadersList[4]";
-                }
                 $comodin = "id_gerente";
             }
         }
@@ -217,12 +221,12 @@ class Reporte_model extends CI_Model {
                 $comodin = "id_gerente";
             }
         }
-        else if ($id_rol == 2) { // MJ: Subdirector
-            if ($render == 1) {
+        else if ($id_rol == 2) { // CONSULTA DE SUBDIRECTORES
+            if ($render == 1) { // SE TRAE LOS GERENTES
                 $filtro .= " AND cl.id_subdirector = $id_usuario";
                 $comodin = "id_gerente";
-            } else {
-                $filtro .= " AND cl.id_regional = $leadersList[4]";
+            } else { // CONSULTA NIVEL MÁS ALTO DIRECTOR GENERAL, ASISTENTE DE DIRECCIÓN, FAB Y ABUELITO
+                $filtro .= " AND cl.id_regional = $leadersList[4]"; // CON BASE EN UN REGIONAL SE TRAE LAS SUBDIRECCIONES
                 $comodin = "id_subdirector";
             }
         }
@@ -235,9 +239,8 @@ class Reporte_model extends CI_Model {
                 $filtro .= "";
             }
         }
-        else if ($id_rol == 5 && ($id_usuario != 28 || $id_usuario != 30)) { 
-            // MJ: Asistente subdirección
-            if ($render == 1) {
+        else if ($id_rol == 5 && ($id_usuario != 28 || $id_usuario != 30)) { // CONSULTA DE ASISTENTES DE SUBDIRECCIÓN
+            if ($render == 1) { // SE TRAE LOS GERENTES
                 $filtro .= " AND cl.id_subdirector = $id_lider";
                 $comodin = "id_gerente";
             } else {
@@ -245,26 +248,33 @@ class Reporte_model extends CI_Model {
                 $comodin = "id_subdirector";
             }
         }
-        else if ($id_rol == 59) { 
-            // MJ: Director regional
-            $id_sede = "'" . implode("', '", explode(", ", $this->session->userdata('id_sede'))) . "'"; // MJ: ID sede separado por , como string
-            if ($render == 1) {
+        else if ($id_rol == 59) { // CONSULTA UN DIRECTOR REGIONAL Y VA POR LOS SUBDIRECTORES
+            if ($render == 1) { // CONSULTA LO DE SU REGION Y SI ES SUBDIRECTOR DE UNA SEDE TAMBIÉN TRAE LOS REGISTROS
                 $filtro .= " AND (cl.id_regional = $id_usuario OR cl.id_subdirector = $id_usuario)";
-                $comodin = "id_subdirector";//pendiente
-            } else {
+                $comodin = "id_subdirector";
+            } else
                 $filtro .= "";
-            }
         }
-        else if ($id_rol == 1 || $id_rol == 4 || $id_rol == 18) { // MJ: Director comercial
+        else if ($id_rol == 1 || $id_rol == 4 || $id_rol == 18) { // CONSULTA DIRECTOR, ASISTENTE DE DIRECCIÓN, FAB Y ABUELITO
             $comodin2 = 'LEFT';
-            if ($render == 1) {
+            if ($render == 1) { // PRIMERA CARGA
                 $filtro .= "";
-                $comodin = "id_regional";//pendiente
+                $comodin = "id_regional";
             } else {
                 $filtro .= "";
-                $comodin = "id_regional";//pendiente
+                $comodin = "id_regional";
             }
         }
+        return [$filtro, $comodin, $comodin2];
+    }
+
+    public function getGeneralInformation($beginDate, $endDate, $id_rol, $id_usuario, $render, $leadersList, $typeTransaction) {
+        // PARA ASESOR, COORDINADOR, GERENTE, SUBDIRECTOR, REGIONAL Y DIRECCIÓN COMERCIAL
+        $id_lider = $this->session->userdata('id_lider'); // PARA ASISTENTES
+        $comodin2 = 'LEFT';
+        $filtro = " AND cl.fechaApartado BETWEEN '$beginDate 00:00:00.000' AND '$endDate 23:59:00.000'";
+
+        list($filtro, $comodin, $comodin2) = $this->setFilters($id_rol, $render, $filtro, $leadersList, $comodin2, $id_usuario, $id_lider, $typeTransaction);
 
         $query = $this->db->query("SELECT
             FORMAT(ISNULL(a.sumaTotal, 0), 'C') sumaTotal, ISNULL(a.totalVentas, 0) totalVentas, --TOTAL VENDIDO
@@ -436,75 +446,10 @@ class Reporte_model extends CI_Model {
     public function getDetails($beginDate, $endDate, $id_rol, $id_usuario, $render, $leader, $leadersList) {
         $id_lider = $this->session->userdata('id_lider'); // PARA ASISTENTES
         $comodin2 = 'LEFT';
-
         $filtro=" AND cl.fechaApartado BETWEEN '$beginDate 00:00:00.000' AND '$endDate 23:59:00.000'";
-        if ($id_rol == 7) { // MJ: Asesor
-            $filtro .= " AND cl.id_asesor = $leadersList[0] AND cl.id_coordinador = $leadersList[1] AND cl.id_gerente = $leadersList[2] AND cl.id_subdirector = $leadersList[3] AND cl.id_regional = $leadersList[4]";
-            $comodin = "id_asesor";}
-        else if ($id_rol == 9) { // MJ: Coordinador
-            if ($render == 1) {
-                $filtro .= " AND (cl.id_coordinador = $id_usuario) AND cl.id_gerente = $leader";
-                $comodin = "id_coordinador";
-            } else {
-                $filtro .= " AND cl.id_coordinador = $leadersList[1] AND cl.id_gerente = $leadersList[2] AND cl.id_subdirector = $leadersList[3] AND cl.id_regional = $leadersList[4]";
-                $comodin = "id_coordinador";
-            }
-        }
-        else if ($id_rol == 3) { // MJ: Gerente
-            if ($render == 1) {
-                $filtro .= " AND cl.id_gerente = $id_usuario AND cl.id_subdirector = $leader";
-                $comodin = "id_gerente";
-            } else {
-                $filtro .= " AND cl.id_gerente = $leadersList[2] AND cl.id_subdirector = $leadersList[3] AND cl.id_regional = $leadersList[4]";
-                $comodin = "id_gerente";
-            }
-        }
-        else if ($id_rol == 6) { // MJ: Asistente de gerencia
-            if ($render == 1) {
-                $filtro .= " AND cl.id_gerente = $id_usuario AND cl.id_subdirector = $leader";
-                $comodin = "id_gerente";
-            } else {
-                $filtro .= " AND cl.id_gerente = $id_usuario AND cl.id_subdirector = $leader";
-                $comodin = "id_gerente";
-            }
-        }
-        else if ($id_rol == 2) { // MJ: Subdirector
-            if ($render == 1) {
-                $filtro .= " AND cl.id_subdirector = $id_usuario AND cl.id_regional = $leader";
-                $comodin = "id_subdirector";
-            } else {
-                $filtro .= " AND cl.id_subdirector = $leadersList[3] AND cl.id_regional = $leadersList[4]";
-                $comodin = "id_subdirector";
-            }
-        }
-        else if ($id_rol == 5) { // MJ: Asistente subdirección
-            if ($render == 1) {
-                $filtro .= " AND cl.id_subdirector = $id_usuario AND cl.id_regional = $leader";
-                $comodin = "id_subdirector";
-            } else {
-                $filtro .= " AND cl.id_subdirector = $id_usuario AND cl.id_regional = $leader";
-                $comodin = "id_subdirector";
-            }
-        }
-        else if ($id_rol == 59 || $id_rol == 60) { // MJ: Director regional
-            $id_sede = "'" . implode("', '", explode(", ", $this->session->userdata('id_sede'))) . "'"; // MJ: ID sede separado por , como string
-            if ($render == 1) {
-                $filtro .= " AND cl.id_regional = $leadersList[4]";
-                $comodin = "id_subdirector";//pendiente
-            } else {
-                $filtro .= "";
-            }
-        }
-        else if ($id_rol == 1 || $id_rol == 4) { // MJ: Director comercial
-            $comodin2 = 'LEFT';
-            if ($render == 1) {
-                $filtro .= "";
-                $comodin = "id_regional";//pendiente
-            } else {
-                $filtro .= "";
-                $comodin = "id_regional";//pendiente
-            }
-        }
+        
+        list($filtro, $comodin, $comodin2) = $this->setFilters($id_rol, $render, $filtro, $leadersList, $comodin2, $id_usuario, $id_lider);
+
         $query = $this->db->query("SELECT 
         FORMAT(ISNULL(a.sumaTotal, 0), 'C') sumaTotal, ISNULL(a.totalVentas, 0) totalVentas, --TOTAL VENDIDO
         FORMAT(ISNULL(b.sumaCT, 0), 'C') sumaCT, ISNULL(b.totalCT, 0) totalCT,  --TOTAL CANCELADO
@@ -673,99 +618,9 @@ class Reporte_model extends CI_Model {
         $id_lider = $this->session->userdata('id_lider'); // PARA ASISTENTES
         $comodin2 = 'LEFT';
         $filtro=" AND cl.fechaApartado BETWEEN '$beginDate 00:00:00.000' AND '$endDate 23:59:00.000'";
-        if ($id_rol == 7) { // MJ: Asesor
-            if ($render == 1)
-                $filtro .= " AND cl.id_asesor = $id_usuario";
-            else{
-                if ($leadersList[4] == 0)
-                    $filtro .= " AND cl.id_asesor = $leadersList[0] AND cl.id_coordinador = $leadersList[1] AND cl.id_gerente = $leadersList[2] AND cl.id_subdirector = $leadersList[3] AND cl.id_regional = $leadersList[4]";
-                else
-                    $filtro .= " AND cl.id_asesor = $leadersList[0] AND cl.id_coordinador = $leadersList[1] AND cl.id_gerente = $leadersList[2] AND cl.id_subdirector = $leadersList[3] AND cl.id_regional = $leadersList[4]";
-            }
-            $comodin = "id_asesor";
-        } else if ($id_rol == 9) { // MJ: Coordinador 
-            if ($render == 1) {
-                $filtro .= " AND (cl.id_coordinador = $id_usuario OR cl.id_asesor = $id_usuario) AND (cl.id_gerente = $leader )";
-                $comodin = "id_asesor";
-            } else {
-                if( $this->session->userdata('id_rol') == $id_rol ){
-                    
-                    $filtro .= " AND cl.id_coordinador = $leadersList[1] AND cl.id_gerente = $leadersList[2] AND cl.id_subdirector = $leadersList[3] AND cl.id_regional = $leadersList[4]";
-                }
-                else{
-                    
-                    $filtro .= "AND cl.id_coordinador = $leadersList[1] AND cl.id_gerente = $leadersList[2] AND cl.id_subdirector = $leadersList[3] AND cl.id_regional = $leadersList[4]";
-                }
-                $comodin = "id_coordinador";
-            }
-        } else if ($id_rol == 3) { // MJ: Gerente
-            if ($render == 1) {  // Cuando entra subdto y consulta detail de un gte
-                $filtro .= " AND cl.id_gerente = $leadersList[2] AND cl.id_subdirector = $leadersList[3] AND cl.id_regional = $leadersList[4]";
-                $comodin = "id_coordinador";
-            } else {
-                if( $this->session->userdata('id_rol') == $id_rol ){
-                    $filtro .= " AND cl.id_subdirector = $leadersList[3] AND cl.id_regional = $leadersList[4]";
-                }
-                else{
-                    $filtro .= "AND cl.id_gerente = $leadersList[2] AND cl.id_subdirector = $leadersList[3] AND cl.id_regional = $leadersList[4]";
-                }
-                $comodin = "id_gerente";
-            }
-        } else if ($id_rol == 6) { // MJ: Asistente de gerencia
-            if ($render == 1) {
-                $filtro .= " AND cl.id_gerente = $leadersList[2] AND cl.id_subdirector = $leadersList[3] AND cl.id_regional = $leadersList[4]";
-                $comodin = "id_coordinador";
-            } else {
-                $filtro .= " AND cl.id_subdirector = $id_usuario AND cl.id_gerente = $id_usuario";
-                $comodin = "id_gerente";
-            }
-        } else if ($id_rol == 2) { // MJ: Subdirector
-            if ($render == 1) {
-                $filtro .= " AND cl.id_subdirector = $id_usuario";
-                $comodin = "id_gerente";
-            } else {
-                $filtro .= " AND cl.id_subdirector = $leadersList[3] AND cl.id_regional = $leadersList[4]";
-                $comodin = "id_subdirector";
-            }
-        } 
-        else if ($id_rol == 5 && ($id_usuario == 28 || $id_usuario == 30)) { 
-            // MJ: Asistente dirección regional
-            if ($render == 1) {
-                $filtro .= " AND (cl.id_regional = $id_lider OR cl.id_subdirector = $id_lider)";
-                $comodin = "id_subdirector";
-            } else {
-                $filtro .= "";
-            }
-        }
-        else if ($id_rol == 5 && ($id_usuario != 28 || $id_usuario != 30)) { 
-            // MJ: Asistente subdirección
-            if ($render == 1) {
-                $filtro .= " AND cl.id_subdirector = $id_lider";
-                $comodin = "id_gerente";
-            } else {
-                $filtro .= " AND cl.id_regional = $leadersList[4]";
-                $comodin = "id_subdirector";
-            }
-        }
-        else if ($id_rol == 59) {
-            // MJ: Director regional
-            $id_sede = "'" . implode("', '", explode(", ", $this->session->userdata('id_sede'))) . "'"; // MJ: ID sede separado por , como string
-            if ($render == 1) {
-                $filtro .= " AND (cl.id_regional = $id_usuario OR cl.id_subdirector = $id_usuario)";
-                $comodin = "id_subdirector";//pendiente
-            } else
-                $filtro .= "";
-        }
-        else if ($id_rol == 1 || $id_rol == 4 || $id_rol == 18) { // MJ: Director comercial 
-            $comodin2 = 'LEFT';
-            if ($render == 1) {
-                $filtro .= "";
-                $comodin = "id_regional";//pendiente
-            } else {
-                $filtro .= "";
-                $comodin = "id_regional";//pendiente
-            }
-        }
+        
+        list($filtro, $comodin, $comodin2) = $this->setFilters($id_rol, $render, $filtro, $leadersList, $comodin2, $id_usuario, $id_lider, null, $leader);
+
         /*
         $type = 1 APARTADO FILA PAPÁ
         $type = 11 APARTADO FILA ROW DETAIL POR SEDE
