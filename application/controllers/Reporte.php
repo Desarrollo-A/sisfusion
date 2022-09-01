@@ -44,7 +44,7 @@ class Reporte extends CI_Controller {
             $subdirector = $this->input->post("subdirector");
             $regional = $this->input->post("regional");
             $currentYear = date("Y");
-            $data['data'] = $this->Reporte_model->getGeneralInformation($beginDate, $endDate, $rol, $id_usuario, $render, [$asesor, $coordinador, $gerente, $subdirector, $regional])->result_array();
+            $data['data'] = $this->Reporte_model->getGeneralInformation($beginDate, $endDate, $rol, $id_usuario, $render, [$asesor, $coordinador, $gerente, $subdirector, $regional], $typeTransaction)->result_array();
             echo json_encode($data, JSON_NUMERIC_CHECK);
         } else {
             json_encode(array());
