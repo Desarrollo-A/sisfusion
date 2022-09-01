@@ -637,7 +637,19 @@ $(document).on('click', '#searchByDateRangeTable', async function (e) {
     let dates = {begin: $('#tableBegin').val(), end: $('#tableEnd').val()};
     let rol = userType == 2 ? await getRolDR(idUser): userType;
 
-    fillBoxAccordions(rol == '1' || rol == '18' ? 'director_regional': rol == '2' ? 'gerente' : rol == '3' ? 'coordinador' : rol == '59' ? 'subdirector':'asesor', rol == 18 || rol == '18' ? 1:rol, idUser, 1, 2, dates, [0, null, null, null, null, null, rol]);
+    let rolString;
+    if ( rol == '1' || rol == '18' || rol == '4')
+        rolString = 'director_regional';
+    else if ( rol == '2' || (rol == '5' && ( idUser != '28' || idUser != '30' )))
+        rolString = 'gerente';
+    else if ( rol == '3' || rol == '6' )
+        rolString = 'coordinador';
+    else if ( rol == '59' || (rol == '5' && ( idUser == '28' || idUser == '30' )))
+        rolString = 'subdirector';
+    else 
+        rolString = 'asesor';
+
+    fillBoxAccordions(rolString, idUser, 1, 2, dates, [0, null, null, null, null, null, rol]);
 
 });
 
