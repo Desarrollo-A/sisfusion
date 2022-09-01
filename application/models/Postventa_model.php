@@ -96,10 +96,10 @@ class Postventa_model extends CI_Model
         }else{
             $where = "";
         }
-        return $this->db->query("SELECT oxc2.nombre area, se.idSolicitud, oxc.nombre estatus, se.fecha_creacion, l.nombreLote, se.estatus idEstatus,
+        return $this->db->query("SELECT oxc2.nombre area, se.idSolicitud,  CASE WHEN oxc.nombre = 'RECEPCIÓN DE TESTIMONIO' THEN 'COPIA CERTIFICADA - RECEPCIÓN DE TESTIMONIO' ELSE oxc.nombre END AS estatus, se.fecha_creacion, l.nombreLote, se.estatus idEstatus,
         se.nombre, cond.nombre nombreCondominio, r.nombreResidencial, de.expediente,
         ctrl.tipo_documento, de.idDocumento, ctrl.permisos, de2.result, cee.tipo, cee.comentarios, mr.motivo motivos_rechazo, de2.estatusValidacion, de3.Spresupuesto,
-        de2.no_rechazos, n.pertenece, se2.flagEstLot, pr.flagPresupuesto, pr2.approvedPresupuesto, se.idNotaria, de4.contrato, se3.aportacion, se4.descuento, se.descuentos, se.aportaciones FROM solicitud_escrituracion se 
+        de2.no_rechazos, n.pertenece, se2.flagEstLot, pr.flagPresupuesto, pr2.approvedPresupuesto, se.idNotaria, de4.contrato,de5.copia_cer,de6.testimonio, se3.aportacion, se4.descuento, se.descuentos, se.aportaciones FROM solicitud_escrituracion se 
         LEFT JOIN Notarias n ON n.idNotaria = se.idNotaria 
         INNER JOIN lotes l ON se.idLote = l.idLote 
         INNER JOIN condominios cond ON cond.idCondominio = l.idCondominio 
@@ -117,6 +117,10 @@ class Postventa_model extends CI_Model
         FROM documentos_escrituracion WHERE tipo_documento = 11 GROUP BY idSolicitud) de3 ON de3.idSolicitud = se.idSolicitud
         LEFT JOIN (SELECT idSolicitud, CASE WHEN COUNT(*) != COUNT(CASE WHEN expediente IS NOT NULL THEN 1 END) THEN 0 ELSE 1 END contrato
         FROM documentos_escrituracion WHERE tipo_documento = 21 GROUP BY idSolicitud) de4 ON de4.idSolicitud = se.idSolicitud
+        LEFT JOIN (SELECT idSolicitud, CASE WHEN COUNT(*) != COUNT(CASE WHEN expediente IS NOT NULL THEN 1 END) THEN 0 ELSE 1 END testimonio
+        FROM documentos_escrituracion WHERE tipo_documento = 16 GROUP BY idSolicitud) de6 ON de6.idSolicitud = se.idSolicitud
+        LEFT JOIN (SELECT idSolicitud, CASE WHEN COUNT(*) != COUNT(CASE WHEN expediente IS NOT NULL THEN 1 END) THEN 0 ELSE 1 END copia_cer
+        FROM documentos_escrituracion WHERE tipo_documento = 22 GROUP BY idSolicitud) de5 ON de5.idSolicitud = se.idSolicitud
         LEFT JOIN (SELECT idEscrituracion, max(fecha_creacion) fecha_creacion FROM control_estatus GROUP BY idEscrituracion) ce ON ce.idEscrituracion = se.idSolicitud
         LEFT JOIN control_estatus cee ON cee.idEscrituracion = ce.idEscrituracion AND cee.fecha_creacion = ce.fecha_creacion
         LEFT JOIN motivos_rechazo mr ON mr.id_motivo = cee.motivos_rechazo
@@ -278,6 +282,8 @@ class Postventa_model extends CI_Model
             $tipo_doc = 'NOT IN (11, 12, 13, 14, 15, 16, 17,22)';
         }elseif($status == 3 || $status == 4 || $status == 5){
             $tipo_doc = 'IN (7,20,21)';
+        }elseif($status == 22){
+            $tipo_doc = 'IN (16,22)';
         }elseif($status == 11 || $status == 13){
             $tipo_doc = 'IN (7)';
         }
@@ -323,7 +329,7 @@ class Postventa_model extends CI_Model
             from Presupuestos pr
             INNER JOIN usuarios u ON u.id_usuario = pr.creado_por
             INNER JOIN solicitud_escrituracion se ON se.idSolicitud = pr.idSolicitud
-            INNER JOIN documentos_escrituracion de ON de.idSolicitud = se.idSolicitud AND de.tipo_documento = 13
+            INNER JOIN documentos_escrituracion de ON de.idSolicitud = se.idSolicitud AND de.tipo_documento = 13  and se.estatus !=22
             LEFT JOIN usuarios us2 ON us2.id_usuario = de.validado_por
             LEFT JOIN motivos_rechazo_x_documento mrxd ON mrxd.id_documento = de.idDocumento AND mrxd.estatus = 1 
             LEFT JOIN motivos_rechazo mr ON mr.id_motivo = mrxd.id_motivo
