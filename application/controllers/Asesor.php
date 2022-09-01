@@ -5619,4 +5619,17 @@ class Asesor extends CI_Controller
         else
             echo json_encode(array());
     }
+
+    public function reporteAsesores(){
+        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
+        /*-------------------------------------------------------------------------------*/
+        $this->load->view('template/header');
+        $this->load->view("asesor/reporte_asesores_view", $datos);
+
+    }
+
+    public function getReporteAsesores(){
+        $data['data'] = $this->Asesor_model->reporteAsesor()->result_array();
+        echo json_encode($data);
+    }
 }

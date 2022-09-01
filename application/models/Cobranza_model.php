@@ -18,7 +18,7 @@ class Cobranza_model extends CI_Model {
             $filterTwo = " AND l.idLote = $where";
         }
 
-        if ($this->session->userdata('id_rol') == 19) { // SUBDIRECTOR MKTD
+        if ($this->session->userdata('id_rol') == 19 || $this->session->userdata('id_rol') == 63) { // SUBDIRECTOR MKTD
             $id_sede = explode(", ", $this->session->userdata('id_sede'));
             $result = "'" . implode("', '", $id_sede) . "'";
         } else { // COBRANZA
@@ -91,8 +91,7 @@ class Cobranza_model extends CI_Model {
         ec.estatus, (CASE l.idStatusContratacion WHEN '1' THEN '01' WHEN '2' THEN '02' WHEN '3' THEN '03' WHEN '4' THEN '04' WHEN '5' THEN '05' WHEN '6' THEN '06' 
 		 WHEN '7' THEN '07' WHEN '8' THEN '08' WHEN '9' THEN '09' WHEN '10' THEN '10' WHEN '11' THEN '11' WHEN '12' THEN '12' 
 		 WHEN '13' THEN '13' WHEN '14' THEN '14' WHEN '15' THEN '15' END), idStatusLote, pc.bandera, cm.comision_total, 
-        pci3.abonoDispersado, pci2.abonoPagado, l.registro_comision, cm.estatus, l.total, cl.descuento_mdb, REPLACE(oxc.nombre, ' (especificar)', ''), pr.fecha_creacion
-        ORDER BY r.nombreResidencial, cn.nombre, l.nombreLote");
+        pci3.abonoDispersado, pci2.abonoPagado, l.registro_comision, cm.estatus, l.total, cl.descuento_mdb, REPLACE(oxc.nombre, ' (especificar)', ''), pr.fecha_creacion");
     }
 
     public function updateRecord($table, $data, $key, $value) // MJ: ACTUALIZA LA INFORMACIÓN DE UN REGISTRO EN PARTICULAR, RECIBE 4 PARÁMETROS. TABLA, DATA A ACTUALIZAR, LLAVE (WHERE) Y EL VALOR DE LA LLAVE
