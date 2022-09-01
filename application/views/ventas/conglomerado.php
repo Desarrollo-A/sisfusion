@@ -488,83 +488,141 @@
                         <div class="card-header card-header-icon" data-background-color="goldMaderas">
                             <i class="material-icons">reorder</i>
                         </div>
+                        <div class="card-content">
+                            <div class="toolbar">
+                                <div class="container">
+                                    <div id="title-activo">
+                                        <div class="col-lg-12 text-center mt-1 p-0">
+                                            <h3 class="card-title center-align">Descuentos Universidad</h3>
+                                            <p class="card-title pl-1">(Descuentos activos, una vez liquidados podrás consultarlos en el Historial de descuentos)</p><br>
+                                        </div>
+                                        <div class="col-lg-4">
+                                            <h5 class="card-title center-align">
+                                                Total<b>:</b> $
+                                                <input style="border-bottom: none; border-top: none; border-right: none; border-left: none; background: white; color: #0a548b; font-weight: bold;" disabled="disabled" readonly="readonly" type="text" id="total-activo">
+                                            </h5>
+                                        </div>
 
-                        <div class="toolbar">
-                            <div class="container">
-                                <div id="title-activo">
-                                    <div class="col-lg-12 text-center mt-1">
-                                        <h3 class="card-title center-align">Descuentos Universidad</h3>
-                                        <p class="card-title pl-1">(Descuentos activos, una vez liquidados podrás consultarlos en el Historial de descuentos)</p><br>
+                                        <div class="col-lg-4">
+                                            <h5 class="card-title center-align">
+                                                Abonado<b>:</b> $
+                                                <input style="border-bottom: none; border-top: none; border-right: none; border-left: none; background: white; color: #0a548b; font-weight: bold;" disabled="disabled" readonly="readonly" type="text" id="total-abonado">
+                                            </h5>
+                                        </div>
+
+                                        <div class="col-lg-4">
+                                            <h5 class="card-title center-align">
+                                                Pendiente<b>:</b> $
+                                                <input style="border-bottom: none; border-top: none; border-right: none; border-left: none; background: white; color: #0a548b; font-weight: bold;" disabled="disabled" readonly="readonly" type="text" id="total-pendiente">
+                                            </h5>
+                                        </div>
                                     </div>
+
+                                    <div id="title-baja" hidden>
+                                        <div class="col-lg-12 text-center mt-1 p-0">
+                                            <h3 class="card-title center-align">Descuentos Universidad</h3>
+                                            <p class="card-title pl-1">(Listado de descuentos de usuarios inactivos)</p><br>
+                                        </div>
+                                        <div class="col-lg-4">
+                                            <h5 class="card-title center-align">
+                                                Total<b>:</b> $
+                                                <input style="border-bottom: none; border-top: none; border-right: none; border-left: none; background: white; color: #0a548b; font-weight: bold;" disabled="disabled" readonly="readonly" type="text" id="total-baja">
+                                            </h5>
+                                        </div>
+
+                                        <div class="col-lg-4">
+                                            <h5 class="card-title center-align">
+                                                Abonado<b>:</b> $
+                                                <input style="border-bottom: none; border-top: none; border-right: none; border-left: none; background: white; color: #0a548b; font-weight: bold;" disabled="disabled" readonly="readonly" type="text" id="abonado-baja">
+                                            </h5>
+                                        </div>
+
+                                        <div class="col-lg-4">
+                                            <h5 class="card-title center-align">
+                                                Pendiente<b>:</b> $
+                                                <input style="border-bottom: none; border-top: none; border-right: none; border-left: none; background: white; color: #0a548b; font-weight: bold;" disabled="disabled" readonly="readonly" type="text" id="pendiente-baja">
+                                            </h5>
+                                        </div>
+                                    </div>
+
+                                    <div id="title-liquidado" hidden>
+                                        <div class="col-lg-12 text-center mt-1 p-0">
+                                            <h3 class="card-title center-align">Descuentos Universidad - <b>Liquidados</b></h3>
+                                            <p class="card-title pl-1">(Listado de descuentos completos o liquidados en caja)</p><br>
+                                        </div>
+                                         
+
+                                        <div class="col-lg-4">
+                                            <h5 class="card-title center-align">
+                                                Total<b>:</b> $
+                                                <input style="border-bottom: none; border-top: none; border-right: none; border-left: none; background: white; color: #0a548b; font-weight: bold;" disabled="disabled" readonly="readonly" type="text" id="total-liquidado">
+                                            </h5>
+                                        </div>
+
+                                        <div class="col-lg-4">
+                                            <h5 class="card-title center-align">
+                                                Abonado<b>:</b> $
+                                                <input style="border-bottom: none; border-top: none; border-right: none; border-left: none; background: white; color: #0a548b; font-weight: bold;" disabled="disabled" readonly="readonly" type="text" id="abonado-liquidado">
+                                            </h5>
+                                        </div>
+
+                                        <div class="col-lg-4">
+                                            <h5 class="card-title center-align">
+                                                Pendiente<b>:</b> $
+                                                <input style="border-bottom: none; border-top: none; border-right: none; border-left: none; background: white; color: #0a548b; font-weight: bold;" disabled="disabled" readonly="readonly" type="text" id="pendiente-liquidado">
+                                            </h5>
+                                        </div>
+
+
+
+                                    </div>
+
+                                    <div id="title-conglomerado" hidden>
+                                        <div class="col-lg-12 text-center mt-1 p-0">
+                                            <h3 class="card-title center-align">Descuentos Universidad y Liquidados</h3>
+                                        </div>
+                                        <div class="col-lg-4">
+                                            <h5 class="card-title center-align">
+                                                Total<b>:</b> $
+                                                <input style="border-bottom: none; border-top: none; border-right: none; border-left: none; background: white; color: #0a548b; font-weight: bold;" disabled="disabled" readonly="readonly" type="text" id="total-conglomerado">
+                                            </h5>
+                                        </div>
+
+                                        <div class="col-lg-4">
+                                            <h5 class="card-title center-align">
+                                                Abonado<b>:</b> $
+                                                <input style="border-bottom: none; border-top: none; border-right: none; border-left: none; background: white; color: #0a548b; font-weight: bold;" disabled="disabled" readonly="readonly" type="text" id="abonado-conglomerado">
+                                            </h5>
+                                        </div>
+
+                                        <div class="col-lg-4">
+                                            <h5 class="card-title center-align">
+                                                Pendiente<b>:</b> $
+                                                <input style="border-bottom: none; border-top: none; border-right: none; border-left: none; background: white; color: #0a548b; font-weight: bold;" disabled="disabled" readonly="readonly" type="text" id="pendiente-conglomerado">
+                                            </h5>
+                                        </div>
+                                    </div>
+
                                     <div class="col-lg-12">
-                                        <h5 class="card-title center-align">
-                                            Total descuentos<b>:</b> $<input style="border-bottom: none; border-top: none; border-right: none;
-                                            border-left: none; background: white; color: #0a548b; font-weight: bold;" disabled="disabled"
-                                                                             readonly="readonly" type="text" id="total-activo">
-                                        </h5>
-                                    </div>
-                                </div>
-
-                                <div id="title-baja" hidden>
-                                    <div class="col-lg-12 text-center mt-1">
-                                        <h3 class="card-title center-align">Descuentos Universidad</h3>
-                                        <p class="card-title pl-1">(Listado de descuentos de usuarios inactivos)</p><br>
-                                    </div>
-                                    <div class="col-lg-12">
-                                        <h5 class="card-title center-align">
-                                            Total descuentos<b>:</b> $<input style="border-bottom: none; border-top: none; border-right: none;
-                                            border-left: none; background: white; color: #0a548b; font-weight: bold;" disabled="disabled"
-                                                                             readonly="readonly" type="text" id="total-baja">
-                                        </h5>
-                                    </div>
-                                </div>
-
-                                <div id="title-liquidado" hidden>
-                                    <div class="col-lg-12 text-center mt-1">
-                                        <h3 class="card-title center-align">Descuentos Universidad - <b>Liquidados</b></h3>
-                                        <p class="card-title pl-1">(Listado de descuentos completos o liquidados en caja)</p><br>
-                                    </div>
-                                    <div class="col-lg-12">
-                                        <h5 class="card-title center-align">
-                                            Total descuentos<b>:</b> $<input style="border-bottom: none; border-top: none; border-right: none;  border-left: none; background: white; color: #0a548b; font-weight: bold;" disabled="disabled" readonly="readonly" type="text" id="total-liquidado">
-                                        </h5>
-                                    </div>
-                                </div>
-
-                                <div id="title-conglomerado" hidden>
-                                    <div class="col-lg-12 mt-1">
-                                        <h3 class="card-title center-align">Descuentos Universidad y Liquidados</h3>
-                                    </div>
-                                    <div class="col-lg-12">
-                                        <h5 class="card-title center-align">
-                                            Total descuentos (liquidadas y descuentos)<b>:</b> $<input style="border-bottom: none; border-top: none; border-right: none;  border-left: none; background: white; color: #0a548b; font-weight: bold;" disabled="disabled" readonly="readonly"
-                                                                                                       type="text" id="total-conglomerado">
-                                        </h5>
-                                    </div>
-                                </div>
-
-                                <div class="col-12 col-sm-12 col-md-12 col-lg-12">
-                                    <div class="form-group">
-                                        <label for="proyecto">Tipo descuento:</label>
-                                        <select name="tipo_descuento" id="tipo_descuento" class="selectpicker select-gral" data-style="btn " data-show-subtext="true"
-                                                data-live-search="true"  title="Selecciona el tipo de descuento" data-size="7" required onChange="checkTypeOfDesc()">
-                                            <!--<option value="0">Seleccione all</option>-->
-                                            <option value="1" selected>Activo</option>
-                                            <option value="2">Baja</option>
-                                            <option value="3">Liquidado</option>
-                                            <option value="4">Conglomerado</option>
-                                        </select>
+                                        <div class="form-group is-empty">
+                                            <label for="proyecto">Tipo descuento:</label>
+                                            <select name="tipo_descuento" id="tipo_descuento" class="selectpicker select-gral" data-style="btn " data-show-subtext="true"
+                                                    data-live-search="true"  title="Selecciona el tipo de descuento" data-size="7" required onChange="checkTypeOfDesc()">
+                                                <!--<option value="0">Seleccione all</option>-->
+                                                <option value="1" selected>Activo</option>
+                                                <option value="2">Baja</option>
+                                                <option value="3">Liquidado</option>
+                                                <option value="4">Conglomerado</option>
+                                            </select>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-
-                        <div class="card-content">
                             <div class="material-datatables">
                                 <div class="table-responsive">
                                     <table id="tabla-general"
-                                           class="table-striped table-hover"
-                                           style="text-align: center;">
+                                            class="table-striped table-hover"
+                                            style="text-align: center;">
                                         <thead>
                                             <tr>
                                                 <th>ID</th>
@@ -639,10 +697,23 @@
 
                         $.each(data, function (i, v) {
                             totalDescuento += parseFloat(v.monto);
+
+                            if (v.aply == null || v.aply <= 1) {
+                                totalAbonado += parseFloat(v.pagado_caja);
+                            } else {
+                                totalAbonado += parseFloat(v.aply);
+                            }
+                            totalPendiente += parseFloat(v.monto - v.aply);
+
+
                         });
 
                         const tipoDescuento = $('#tipo_descuento').val();
                         document.getElementById(getInputTotalId(tipoDescuento)).value = formatMoney(totalDescuento);
+
+                        document.getElementById(getInputAbonadoId(tipoDescuento)).value = formatMoney(totalAbonado);
+
+                        document.getElementById(getInputPendienteId(tipoDescuento)).value = formatMoney(totalPendiente);
                     }
                 });
             }
@@ -684,10 +755,25 @@
         $('#tabla-general').ready(function () {
             $('#tabla-general').on('xhr.dt', function (e, settings, json, xhr) {
                 let total = 0;
+                let abonado = 0;
+                let pendiente = 0;
                 $.each(json.data, function (i, v) {
                     total += parseFloat(v.monto);
+
+                    if (v.aply == null || v.aply <= 1) {
+                        abonado += parseFloat(v.pagado_caja);
+                    } else {
+                        abonado += parseFloat(v.aply);
+                    }
+
+                    pendiente += parseFloat(v.monto - v.aply);
+
+
+
                 });
                 document.getElementById(getInputTotalId(tipoDescuento)).value = formatMoney(total);
+                document.getElementById(getInputAbonadoId(tipoDescuento)).value = formatMoney(abonado);
+                document.getElementById(getInputPendienteId(tipoDescuento)).value = formatMoney(pendiente);
             });
 
             tablaGeneral = $('#tabla-general').DataTable({
@@ -830,34 +916,34 @@
                             }
 
                             switch (d.estatus) {
-                                case 0:
-                                    if ($RES === 0) {
-                                        return `<span class="label" style="background:#7F8C8D;">SIN SALDO DISPONIBLE</span>${primerDescuento}`;
+                                case '0':
+                                    if ($RES == 0) {
+                                        return `<span class="label" style="background:#7F8C8D;">SIN SALDO *</span>${primerDescuento}`;
                                     }
                                     return `<span class="label" style="background:#9B59B6;">DISPONIBLE</span>${primerDescuento}`;
-                                case 1:
+                                case '1':
                                     if (d.pagos_activos == 0){
                                         return `<span class="label" style="background:#7F8C8D;">REACTIVADO</span>${primerDescuento}`;
                                     }
-                                    if ($RES === 0){
-                                        return `<span class="label" style="background:#7F8C8D;">SIN SALDO DISPONIBLE</span>${primerDescuento}`;
+                                    if ($RES == 0){
+                                        return `<span class="label" style="background:#7F8C8D;">SIN SALDO *</span>${primerDescuento}`;
                                     }
                                     return `<span class="label" style="background:#9B59B6;">DISPONIBLE</span>${primerDescuento}`;
 
-                                case 2:
+                                case '2':
                                     return `<span class="label" style="background:green;">DESCUENTO APLICADO</span>${primerDescuento}`;
 
-                                case 3:
+                                case '3':
                                     return `<span class="label" style="background:#95A5A6;">LIQUIDADO EN CAJA</span>${primerDescuento}`;
 
-                                case 4:
+                                case '4':
                                     return `<span class="label" style="background:#34495E;">LIQUIDADO</span>${primerDescuento}`;
 
-                                case 5:
+                                case '5':
                                     return `<span class="label" style="background:#7F8C8D;">REACTIVADO</span>${primerDescuento}`;
 
                                 default:
-                                    return '<span class="label" style="background:#1ABC9C;">REVISAR CON SISTEMAS</span>';
+                                     return `<span class="label" style="background:#7F8C8D;">REACTIVADO</span>${primerDescuento}`;
                             }
                         }
                     },
@@ -1036,6 +1122,7 @@
                                                 <i class="fas fa-chart-bar"></i>
                                             </button>${btnEliminarEditar}
                                         </div>`;
+
                                 } else {
                                     OK = parseFloat(d.pago_individual * d.pagos_activos);
                                     OP = parseFloat(d.monto - d.aply);
@@ -1448,7 +1535,7 @@
 
     function getInputTotalId(tipoDescuento) {
         if (tipoDescuento === '1') {
-            return 'total-activo';
+            return 'total-activo'; 
         } else if (tipoDescuento === '2') {
             return 'total-baja';
         } else if (tipoDescuento === '3') {
@@ -1458,6 +1545,33 @@
         }
         return '';
     }
+
+    function getInputAbonadoId(tipoDescuento) {
+        if (tipoDescuento === '1') {
+            return 'total-abonado';
+        } else if (tipoDescuento === '2') {
+            return 'abonado-baja';
+        } else if (tipoDescuento === '3') {
+            return 'abonado-liquidado'
+        } else if (tipoDescuento === '4') {
+            return 'abonado-conglomerado';
+        }
+        return '';
+    }
+
+    function getInputPendienteId(tipoDescuento) {
+        if (tipoDescuento === '1') {
+            return 'total-pendiente';
+        } else if (tipoDescuento === '2') {
+            return 'pendiente-baja';
+        } else if (tipoDescuento === '3') {
+            return 'pendiente-liquidado'
+        } else if (tipoDescuento === '4') {
+            return 'pendiente-conglomerado';
+        }
+        return '';
+    }
+
 
     $('#activar-pago-form').on('submit', function (e) {
         e.preventDefault();
@@ -1542,6 +1656,25 @@
                 });
             }
         });
+
+    $('#numero-pagos-update').change(function () {
+        const monto1 = replaceAll($('#descuento-update').val(), ',', '');
+        const monto = replaceAll(monto1, '$', '');
+        const cantidad = parseFloat($('#numero-pagos-update').val());
+        let resultado = 0;
+
+        if (isNaN(monto)) {
+            alerts.showNotification("top", "right", "Debe ingresar un monto valido.", "warning");
+            $('#pago-ind-update').val(resultado);
+        } else {
+            resultado = monto / cantidad;
+            if (resultado > 0) {
+                $('#pago-ind-update').val(formatMoney(resultado));
+            } else {
+                $('#pago-ind-update').val(formatMoney(0));
+            }
+        }
+    });
 
     function getPagosByUser(user,mes, anio){
         document.getElementById('montito').innerHTML = 'Cargando...';
@@ -1758,6 +1891,7 @@
     });
 
     $("#form_nuevo").submit(function (e) {
+
         // $('#btn_abonar').attr('disabled', 'true');
         $('#btn_abonar').prop('disabled', true);
         document.getElementById('btn_abonar').disabled = true;
@@ -1786,19 +1920,20 @@
                 required: '* Campo requerido'
             },
             descuento: {
-                required: '* Campo requerido.',
+                required: '* Campo requerido',
                 number: 'Número no válido.',
                 min: 'El valor mínimo debe ser 1',
                 max: 'El valor máximo debe ser 19,000'
             },
             numeroPagos: {
-                required: '* Campo requerido.'
+                required: '* Campo requerido'
             },
             comentario2: {
-                required: '* Campo requerido.'
+                required: '* Campo requerido'
             }
         },
         submitHandler: function (form) {
+
             const data1 = new FormData($(form)[0]);
             $.ajax({
                 url: 'saveDescuentoch/',
@@ -1880,25 +2015,6 @@
                 }
             }
         });
-
-    $('#numero-pagos-update').change(function () {
-        const monto1 = replaceAll($('#descuento-update').val(), ',', '');
-        const monto = replaceAll(monto1, '$', '');
-        const cantidad = parseFloat($('#numero-pagos-update').val());
-        let resultado = 0;
-
-        if (isNaN(monto)) {
-            alerts.showNotification("top", "right", "Debe ingresar un monto valido.", "warning");
-            $('#pago-ind-update').val(resultado);
-        } else {
-            resultado = monto / cantidad;
-            if (resultado > 0) {
-                $('#pago-ind-update').val(formatMoney(resultado));
-            } else {
-                $('#pago-ind-update').val(formatMoney(0));
-            }
-        }
-    });
 
 
     function closeModalEng() {
@@ -2128,5 +2244,3 @@
         $('#form_nuevo').trigger('reset');
     });
 </script>
-
-
