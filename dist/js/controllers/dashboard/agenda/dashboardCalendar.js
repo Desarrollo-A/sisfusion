@@ -191,14 +191,30 @@ document.querySelector('#insert_appointment_form').addEventListener('submit',asy
 });
 
 $(document).on('submit', '#edit_appointment_form', function(e) {
-  e.preventDefault();
-  const dataF = Object.fromEntries(
-    new FormData(e.target)
-  );
-  updateGoogleEvent(dataF);
+    e.preventDefault();
+    const dataF = Object.fromEntries(
+      new FormData(e.target)
+    );
+    
+    rangeOfDates = validateDates(dataF);
+
+    if(!rangeOfDates)
+      alerts.showNotification("top", "right", "Rango de fechas inválido", "danger");
+    else 
+      updateGoogleEvent(dataF);
 });
 
-function deleteCita(e){
+function backToEvent(){
+  $('#feedbackModal').modal('toggle');
+  $('#modalEvent').modal();
+}
+
+function confirmDelete(){
+  $('#modalDeleteEvt').modal();
+  $('#modalEvent').modal('toggle');
+}
+
+function deleteCita(){
   let idAgenda = $("#idAgenda2").val();
   let idGoogle = $("#idGoogle").val();
   deleteEvent(idAgenda,idGoogle);
@@ -238,11 +254,14 @@ function getAppointmentData(idAgenda){
       $("#description2").val(appointment.descripcion);
       $("#idAgenda2").val(idAgenda);
       $("#idGoogle").val(appointment.idGoogle)
+
       var medio = $("#estatus_recordatorio2").val();
       var box = $("#comodinDIV2");
+      
       validateNCreate(appointment, medio, box);
-      if(idUser != appointment.idOrganizador) disabledEditModal(true, appointment.estatus);
+      if(idUser != appointment.idOrganizador || appointment.estatus == 2 ) disabledEditModal(true, appointment.estatus);
       else disabledEditModal(false, appointment.estatus);
+
       $(".dotStatusAppointment").css('color', `${appointment.estatus == 1 ? '#06B025' : '#e52424'}`);
     },
     error: function() {
@@ -460,7 +479,7 @@ function disabledEditModal(value, estatus){
     $("#prospectoE").prop("disabled", true);
     $("#id_direccion").prop("disabled", true);
     $("#estatus_recordatorio2").prop("disabled", true);
-    $(".finishS").addClass("d-none");
+    $("#modalEvent .finishS").addClass("d-none");
   }
   else{
     var menuModal = $("#modalEvent #menuModal");
@@ -470,7 +489,7 @@ function disabledEditModal(value, estatus){
     $("#prospectoE").prop("disabled", false);
     $("#id_direccion").prop("disabled", false);
     $("#estatus_recordatorio2").prop("disabled", false);
-    var btnSave = $(".finishS");
+    var btnSave = $("#modalEvent .finishS");
     ( estatus == 1 ? btnSave.removeClass('d-none') : btnSave.addClass('d-none'));
   }
   $("#prospectoE").selectpicker('refresh');
@@ -490,10 +509,10 @@ async function deleteEvent(idAgenda, idGoogle){
     success: function(data) {
       $('#spiner-loader').addClass('hide');
         if (data == 1) {
-            $('#modalEvent').modal("hide");
+            $('#modalDeleteEvt').modal("hide");
             removeCRMEvents();
             getUsersAndEvents(userType, idUser, false);
-            alerts.showNotification("top", "right", "La actualización se ha llevado a cabo correctamente.", "success");
+            alerts.showNotification("top", "right", "Se ha eliminado el registro de manera de exitosa.", "success");
             if(idGoogle != ''){
               deleteGoogleEvent(idGoogle);
             }
