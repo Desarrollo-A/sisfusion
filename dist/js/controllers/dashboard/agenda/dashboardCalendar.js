@@ -209,14 +209,19 @@ function backToEvent(){
   $('#modalEvent').modal();
 }
 
+function backFromDelete(){
+  $('#modalDeleteEvt').modal('toggle');
+  $('#modalEvent').modal();
+}
+
 function confirmDelete(){
   $('#modalDeleteEvt').modal();
   $('#modalEvent').modal('toggle');
 }
 
 function deleteCita(){
-  let idAgenda = $("#idAgenda2").val();
-  let idGoogle = $("#idGoogle").val();
+  let idAgenda = $(".idAgenda2").val();
+  let idGoogle = $(".idGoogle").val();
   deleteEvent(idAgenda,idGoogle);
 }
 
@@ -252,8 +257,8 @@ function getAppointmentData(idAgenda){
       $("#dateStart2").val(moment(appointment.fecha_cita).format().substring(0,19));
       $("#dateEnd2").val(moment(appointment.fecha_final).format().substring(0,19));
       $("#description2").val(appointment.descripcion);
-      $("#idAgenda2").val(idAgenda);
-      $("#idGoogle").val(appointment.idGoogle)
+      $(".idAgenda2").val(idAgenda);
+      $(".idGoogle").val(appointment.idGoogle)
 
       var medio = $("#estatus_recordatorio2").val();
       var box = $("#comodinDIV2");
@@ -342,8 +347,8 @@ function getAppointmentSidebarCalendar(idAgenda){
       $("#dateStart2").val(moment(appointment.fecha_cita).format().substring(0,19));
       $("#dateEnd2").val(moment(appointment.fecha_final).format().substring(0,19));
       $("#description2").val(appointment.description);
-      $("#idAgenda2").val(idAgenda);
-      $("#idGoogle").val(appointment.idGoogle);
+      $(".idAgenda2").val(idAgenda);
+      $(".idGoogle").val(appointment.idGoogle);
 
       var medio = $("#estatus_recordatorio2").val();
       var box = $("comodinDIV2");
@@ -538,7 +543,7 @@ function deleteGoogleEvent(idGoogle){
 $(document).on('submit', '#feedback_form', function(e) {
   e.preventDefault();
   let data = new FormData($(this)[0]);
-  data.append("idAgenda", $("#idAgenda2").val());
+  data.append("idAgenda", $(".idAgenda2").val());
 });
 
 document.querySelector('#feedback_form').addEventListener('submit', e =>  {
@@ -546,7 +551,7 @@ document.querySelector('#feedback_form').addEventListener('submit', e =>  {
   const data = Object.fromEntries(
     new FormData(e.target)
   )
-  data['idAgenda'] = $("#idAgenda2").val();
+  data['idAgenda'] = $(".idAgenda2").val();
   $.ajax({
     type: 'POST',
     url: `${base_url}Calendar/setAppointmentRate`,
