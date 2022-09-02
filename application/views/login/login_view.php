@@ -74,9 +74,9 @@
 <body>
 <nav class="navbar navbar-primary navbar-transparent navbar-absolute">
     <div class="container">
-        <div class="navbar-header">
+        <!-- <div class="navbar-header">
             <a class="navbar-brand" href="#">INICIAR SESIÓN</a>
-        </div>
+        </div> -->
         <div class="collapse navbar-collapse hide">
             <ul class="nav navbar-nav navbar-right">
 				<!--<li class=" active">
