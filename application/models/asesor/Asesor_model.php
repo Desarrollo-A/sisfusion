@@ -877,7 +877,7 @@ class Asesor_model extends CI_Model
     public function get_sol_aut()
     {
         $query = $this->db->query('SELECT cliente.id_cliente, nombreLote, cliente.rfc, nombreResidencial, condominio.nombre as nombreCondominio, 
-		cliente.status, cliente.id_asesor, condominio.idCondominio, lotes.idLote, cliente.autorizacion, cliente.fechaApartado 
+		cliente.status, cliente.id_asesor, condominio.idCondominio, lotes.idLote, cliente.autorizacion, cliente.fechaApartado,
 		lotes.idStatusContratacion, lotes.idMovimiento FROM clientes as cliente
 		INNER JOIN lotes ON cliente.idLote = lotes.idLote
 		INNER JOIN condominios as condominio ON lotes.idCondominio = condominio.idCondominio
