@@ -48,6 +48,7 @@
                                                 <th>F.MODIFICADO</th>
                                                 <th>F.VENCIMIENTO</th>
                                                 <th>ASIGANADO A</th>
+                                                <th>UBICACIÓN</th>
                                                 <th></th>
                                             </tr>
                                             </thead>
@@ -62,305 +63,226 @@
         </div>
     </div>
 
-
-    <div class="content hide">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col xol-xs-12 col-sm-12 col-md-12 col-lg-12">
-                    <div class="card">
-                        <div class="card-header card-header-icon" data-background-color="goldMaderas">
-                            <i class="material-icons">reorder</i>
-                        </div>
-                        <div class="card-content">
-                            <h4 class="card-title center-align"> Registro estatus (7. Contrato elaborado)</h4>
-                            <div class="toolbar">
-                             </div>
-                            <div class="material-datatables"> 
-
-                                <div class="form-group">
-                                    <div class="">
- 
-                                        <table class="table table-responsive table-bordered table-striped table-hover" id="Jtabla" name="Jtabla"
-                                               style="text-align:center;">
-                                        <thead>
-                                            <tr>
-                                                <th></th>
-                                                <th></th>
-                                                <th style="font-size: .9em;">PROYECTO</th>
-                                                <th style="font-size: .9em;">CONDOMINIO</th>
-                                                <th style="font-size: .9em;">LOTE</th>
-                                                <th style="font-size: .9em;">GERENTE</th>
-                                                <th style="font-size: .9em;">CLIENTE</th>
-                                                <th style="font-size: .9em;">F.MODIFICADO</th>
-                                                <th style="font-size: .9em;">F.VENCIMIENTO</th>
-                                                <th style="font-size: .9em;">ASIGNADO A</th>
-                                                <th style="font-size: .9em;"></th>
-                                            </tr>
-                                        </thead>
-                                    </table>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+    <!-- modal  ENVIA A CONTRALORIA 7-->
+    <div class="modal fade" id="editReg" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog">
+                <div class="modal-content" >
+                    <div class="modal-header">
+                        <center><h4 class="modal-title"><label>Registro estatus 7 (Ventas)- <b><span class="lote"></span></b></label></h4></center>
                     </div>
+                    <div class="modal-body">
+                        <label>Comentario:</label>
+                        <textarea class="form-control" id="comentario" rows="3"></textarea>
+                        <br>              
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" id="save1" class="btn btn-success"><span class="material-icons" >send</span> </i> Registrar</button>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> Cancelar</button>
+                    </div>
+            </div>
+        </div>
+    </div>
+    <!-- modal -->
+
+    <!-- modal  ENVIA A CONTRALORIA 7-->
+    <div class="modal fade" id="editLoteRev" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog">
+                <div class="modal-content" >
+                    <div class="modal-header">
+                        <center><h4 class="modal-title"><label>Registro estatus 7 (Ventas)- <b><span class="lote"></span></b></label></h4></center>
+                    </div>
+                    <div class="modal-body">
+                        <label>Comentario:</label>
+                        <textarea class="form-control" id="comentario2" rows="3"></textarea>
+                        <br>              
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" id="save2" class="btn btn-success"><span class="material-icons" >send</span> </i> Registrar</button>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> Cancelar</button>
+                    </div>
+            </div>
+        </div>
+    </div>
+    <!-- modal -->
+
+    <!-- modal  rechazar A CONTRALORIA 7-->
+    <div class="modal fade" id="rechReg" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog">
+                <div class="modal-content" >
+                    <div class="modal-header">
+                        <center><h4 class="modal-title"><label>Rechazo estatus 7 (Contraloría)- <b><span class="lote"></span></b></label></h4></center>
+                    </div>
+                    <div class="modal-body">
+                        <label>Comentario:</label>
+                        <textarea class="form-control" id="comentario3" rows="3"></textarea>
+                        <br>              
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" id="save3" class="btn btn-success"><span class="material-icons" >send</span> </i> Registrar</button>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> Cancelar</button>
+                    </div>
+            </div>
+        </div>
+    </div>
+    <!-- modal -->
+
+    <!-- modal  rechazar A asesor 7-->
+    <div class="modal fade" id="rechazoAs" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog">
+                <div class="modal-content" >
+                    <div class="modal-header">
+                        <center><h4 class="modal-title"><label>Rechazo estatus 7 (Asesor)- <b><span class="lote"></span></b></label></h4></center>
+                    </div>
+                    <div class="modal-body">
+                        <label>Comentario:</label>
+                        <textarea class="form-control" id="comentario4" rows="3"></textarea>
+                        <br>              
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" id="save4" class="btn btn-success"><span class="material-icons" >send</span> </i> Registrar</button>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> Cancelar</button>
+                    </div>
+            </div>
+        </div>
+    </div>
+    <!-- modal -->
+
+    <!-- modal  ENVIA A CONTRALORIA 7-->
+    <div class="modal fade" id="rev8" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog">
+                <div class="modal-content" >
+                    <div class="modal-header">
+                        <center><h4 class="modal-title"><label>Registro estatus 7 (Ventas) - <b><span class="lote"></span></b></label></h4></center>
+                    </div>
+                    <div class="modal-body">
+                        <label>Comentario:</label>
+                        <textarea class="form-control" id="comentario5" rows="3"></textarea>
+                        <br>              
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" id="save5" class="btn btn-success"><span class="material-icons" >send</span> </i> Registrar</button>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> Cancelar</button>
+                    </div>
+            </div>
+        </div>
+    </div>
+    <!-- modal -->
+
+    <!--modal del codigo de barras-->
+    <div class="barc modal fade" id="codeB" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog">
+            <div class="modal-content" style="padding: 40px;background-color: rgba(255,255,255,1);color:  #FFF;">
+                <div class="modal-body">
+                    <center>
+                        <img id="imgBar" class="img-responsive">
+                    </center>
+                </div>
+                <div class="modal-footer" style="text-align: center">
+                    <br>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal"><span class="material-icons">done</span> cerrar</button>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- modal change sede-->
+    <div class="modal fade" id="change_s" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog">
+                <div class="modal-content" >
+                    <div class="modal-header">
+                        <center><h4 class="modal-title"><label>Modificación de sede - <b><span class="lote"></span></b></label></h4></center>
+                    </div>
+                    <div class="modal-body">
+                    <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                
 
-
-
-
-
-
-
-
-<!-- modal  ENVIA A CONTRALORIA 7-->
-<div class="modal fade" id="editReg" data-backdrop="static" data-keyboard="false">
-        <div class="modal-dialog">
-            <div class="modal-content" >
-                <div class="modal-header">
-                    <center><h4 class="modal-title"><label>Registro estatus 7 (Ventas)- <b><span class="lote"></span></b></label></h4></center>
-                </div>
-                <div class="modal-body">
-                    <label>Comentario:</label>
-                      <textarea class="form-control" id="comentario" rows="3"></textarea>
-                      <br>              
-                </div>
-                <div class="modal-footer">
-                    <button type="button" id="save1" class="btn btn-success"><span class="material-icons" >send</span> </i> Registrar</button>
-                    <button type="button" class="btn btn-danger" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> Cancelar</button>
-                </div>
-        </div>
-    </div>
-</div>
-<!-- modal -->
-
-
-
-
-<!-- modal  ENVIA A CONTRALORIA 7-->
-<div class="modal fade" id="editLoteRev" data-backdrop="static" data-keyboard="false">
-        <div class="modal-dialog">
-            <div class="modal-content" >
-                <div class="modal-header">
-                    <center><h4 class="modal-title"><label>Registro estatus 7 (Ventas)- <b><span class="lote"></span></b></label></h4></center>
-                </div>
-                <div class="modal-body">
-                    <label>Comentario:</label>
-                      <textarea class="form-control" id="comentario2" rows="3"></textarea>
-                      <br>              
-                </div>
-                <div class="modal-footer">
-                    <button type="button" id="save2" class="btn btn-success"><span class="material-icons" >send</span> </i> Registrar</button>
-                    <button type="button" class="btn btn-danger" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> Cancelar</button>
-                </div>
-        </div>
-    </div>
-</div>
-<!-- modal -->
-
-
-
-
-<!-- modal  rechazar A CONTRALORIA 7-->
-<div class="modal fade" id="rechReg" data-backdrop="static" data-keyboard="false">
-        <div class="modal-dialog">
-            <div class="modal-content" >
-                <div class="modal-header">
-                    <center><h4 class="modal-title"><label>Rechazo estatus 7 (Contraloría)- <b><span class="lote"></span></b></label></h4></center>
-                </div>
-                <div class="modal-body">
-                    <label>Comentario:</label>
-                      <textarea class="form-control" id="comentario3" rows="3"></textarea>
-                      <br>              
-                </div>
-                <div class="modal-footer">
-                    <button type="button" id="save3" class="btn btn-success"><span class="material-icons" >send</span> </i> Registrar</button>
-                    <button type="button" class="btn btn-danger" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> Cancelar</button>
-                </div>
-        </div>
-    </div>
-</div>
-<!-- modal -->
-
-
-
-
-<!-- modal  rechazar A asesor 7-->
-<div class="modal fade" id="rechazoAs" data-backdrop="static" data-keyboard="false">
-        <div class="modal-dialog">
-            <div class="modal-content" >
-                <div class="modal-header">
-                    <center><h4 class="modal-title"><label>Rechazo estatus 7 (Asesor)- <b><span class="lote"></span></b></label></h4></center>
-                </div>
-                <div class="modal-body">
-                    <label>Comentario:</label>
-                      <textarea class="form-control" id="comentario4" rows="3"></textarea>
-                      <br>              
-                </div>
-                <div class="modal-footer">
-                    <button type="button" id="save4" class="btn btn-success"><span class="material-icons" >send</span> </i> Registrar</button>
-                    <button type="button" class="btn btn-danger" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> Cancelar</button>
-                </div>
-        </div>
-    </div>
-</div>
-<!-- modal -->
-
-
-
-
-<!-- modal  ENVIA A CONTRALORIA 7-->
-<div class="modal fade" id="rev8" data-backdrop="static" data-keyboard="false">
-        <div class="modal-dialog">
-            <div class="modal-content" >
-                <div class="modal-header">
-                    <center><h4 class="modal-title"><label>Registro estatus 7 (Ventas) - <b><span class="lote"></span></b></label></h4></center>
-                </div>
-                <div class="modal-body">
-                    <label>Comentario:</label>
-                      <textarea class="form-control" id="comentario5" rows="3"></textarea>
-                      <br>              
-                </div>
-                <div class="modal-footer">
-                    <button type="button" id="save5" class="btn btn-success"><span class="material-icons" >send</span> </i> Registrar</button>
-                    <button type="button" class="btn btn-danger" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> Cancelar</button>
-                </div>
-        </div>
-    </div>
-</div>
-<!-- modal -->
-
-
-
-
-                    <!--modal del codigo de barras-->
-                    <div class="barc modal fade" id="codeB" data-backdrop="static" data-keyboard="false">
-                        <div class="modal-dialog">
-                            <div class="modal-content" style="padding: 40px;background-color: rgba(255,255,255,1);color:  #FFF;">
-                                <div class="modal-body">
-                                    <center>
-                                        <img id="imgBar" class="img-responsive">
-                                    </center>
-                                </div>
-                                <div class="modal-footer" style="text-align: center">
-                                    <br>
-                                    <button type="button" class="btn btn-primary" data-dismiss="modal"><span class="material-icons">done</span> cerrar</button>
-                                </div>
+                            <div class="col col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                            <label id="tvLbl">Sede</label>
+                                <select required="required" name="ubicacion" id="ubicacion"
+                                        class="selectpicker" data-style="btn" title="SELECCIONA UBICACIÓN" data-size="7">
+                                </select>
                             </div>
                         </div>
                     </div>
-
-
-
-
-<!-- modal change sede-->
-<div class="modal fade" id="change_s" data-backdrop="static" data-keyboard="false">
-        <div class="modal-dialog">
-            <div class="modal-content" >
-                <div class="modal-header">
-                    <center><h4 class="modal-title"><label>Modificación de sede - <b><span class="lote"></span></b></label></h4></center>
-                </div>
-                <div class="modal-body">
-                <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
-            
-
-                        <div class="col col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                        <label id="tvLbl">Sede</label>
-                            <select required="required" name="ubicacion" id="ubicacion"
-                                    class="selectpicker" data-style="btn" title="SELECCIONA UBICACIÓN" data-size="7">
-                            </select>
-                        </div>
+                    <div class="modal-footer"></div>
+                    <div class="modal-footer">
+                        <button type="button" id="savecs" class="btn btn-success"><span class="material-icons" >send</span> </i> Registrar</button>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> Cancelar</button>
                     </div>
-                </div>
-                <div class="modal-footer"></div>
-                <div class="modal-footer">
-                    <button type="button" id="savecs" class="btn btn-success"><span class="material-icons" >send</span> </i> Registrar</button>
-                    <button type="button" class="btn btn-danger" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> Cancelar</button>
-                </div>
+            </div>
         </div>
     </div>
-</div>
-<!-- modal -->
+    <!-- modal -->
 
-<!-- modal reasignacion -->
-<div class="modal fade" id="change_u" data-backdrop="static" data-keyboard="false">
+    <!-- modal reasignacion -->
+    <div class="modal fade" id="change_u" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog">
             <div class="modal-content" >
                 <div class="modal-header">
-                    <center><h4 class="modal-title"><label>Reasignacion de contrato - <b><span class="userJ"></span></b></label></h4></center>
+                    <center><h4 class="modal-title"><label>Reasignación de contrato - <b><span class="userJ"></span></b></label></h4></center>
                 </div>
                 <div class="modal-body">
-                <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
-            
-
-                        <div class="col col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                        <label id="tvLbl">Nuevo usuario</label>
+                    <div class="row">
+                        <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                            <label id="tvLbl">Nuevo usuario:</label>
                             <select required="required" name="user_re" id="user_re"
-                                    class="selectpicker" data-style="btn" title="SELECCIONA USUARIO" data-size="7">
+                                    class="selectpicker select-gral m-0" data-style="btn" data-live-search="true" title="Selecciona un usuario" data-size="7">
                             </select>
                         </div>
                     </div>
                 </div>
-                <div class="modal-footer"></div>
                 <div class="modal-footer">
-                    <button type="button" id="reassing" class="btn btn-success"><span class="material-icons" >send</span> </i> Reasignar</button>
-                    <button type="button" class="btn btn-danger" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> Cancelar</button>
+                    <button type="button" class="btn btn-danger btn-simple mt-1" data-dismiss="modal">Cancelar
+                    <button type="button" id="reassing" class="btn btn-primary mt-1">Reasignar</button>
+                    <!--<button type="button" id="reassing" class="btn btn-success"><span class="material-icons" >send</span> </i> Reasignar</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> Cancelar</button>-->
                 </div>
+            </div>
         </div>
     </div>
-</div>
-<!-- fin modal reas -->
+    <!-- fin modal reas -->
 
-
-
-<!-- modal  rechazar A asesor contra-->
-<div class="modal fade" id="return1" data-backdrop="static" data-keyboard="false">
-        <div class="modal-dialog">
-            <div class="modal-content" >
-                <div class="modal-header">
-                    <center><h4 class="modal-title"><label>Rechazo estatus 7 (Contraloría)- <b><span class="lote"></span></b></label></h4></center>
-                </div>
-                <div class="modal-body">
-                    <label>Comentario:</label>
-                      <textarea class="form-control" id="comentario6" rows="3"></textarea>
-                      <br>              
-                </div>
-                <div class="modal-footer">
-                    <button type="button" id="save6" class="btn btn-success"><span class="material-icons" >send</span> </i> Registrar</button>
-                    <button type="button" class="btn btn-danger" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> Cancelar</button>
-                </div>
+    <!-- modal  rechazar A asesor contra-->
+    <div class="modal fade" id="return1" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog">
+                <div class="modal-content" >
+                    <div class="modal-header">
+                        <center><h4 class="modal-title"><label>Rechazo estatus 7 (Contraloría)- <b><span class="lote"></span></b></label></h4></center>
+                    </div>
+                    <div class="modal-body">
+                        <label>Comentario:</label>
+                        <textarea class="form-control" id="comentario6" rows="3"></textarea>
+                        <br>              
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" id="save6" class="btn btn-success"><span class="material-icons" >send</span> </i> Registrar</button>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> Cancelar</button>
+                    </div>
+            </div>
         </div>
     </div>
-</div>
-<!-- modal -->
+    <!-- modal -->
 
-
-<!-- modal  rechazar A asesor-->
-<div class="modal fade" id="return2" data-backdrop="static" data-keyboard="false">
-        <div class="modal-dialog">
-            <div class="modal-content" >
-                <div class="modal-header">
-                    <center><h4 class="modal-title"><label>Rechazo estatus 7 (Asesor)- <b><span class="lote"></span></b></label></h4></center>
-                </div>
-                <div class="modal-body">
-                    <label>Comentario:</label>
-                      <textarea class="form-control" id="comentario7" rows="3"></textarea>
-                      <br>              
-                </div>
-                <div class="modal-footer">
-                    <button type="button" id="save7" class="btn btn-success"><span class="material-icons" >send</span> </i> Registrar</button>
-                    <button type="button" class="btn btn-danger" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> Cancelar</button>
-                </div>
+    <!-- modal  rechazar A asesor-->
+    <div class="modal fade" id="return2" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog">
+                <div class="modal-content" >
+                    <div class="modal-header">
+                        <center><h4 class="modal-title"><label>Rechazo estatus 7 (Asesor)- <b><span class="lote"></span></b></label></h4></center>
+                    </div>
+                    <div class="modal-body">
+                        <label>Comentario:</label>
+                        <textarea class="form-control" id="comentario7" rows="3"></textarea>
+                        <br>              
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" id="save7" class="btn btn-success"><span class="material-icons" >send</span> </i> Registrar</button>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> Cancelar</button>
+                    </div>
+            </div>
         </div>
     </div>
-</div>
-<!-- modal -->
-
-
-
+    <!-- modal -->
 
     <?php $this->load->view('template/footer_legend');?>
 </div>
@@ -415,8 +337,8 @@ $(document).ready(function(){
         var len = data.length;
         for(var i = 0; i<len; i++) {
             var id = data[i]['id_usuario'];
-            var name = data[i]['nombre'];
-            $("#user_re").append($('<option>').val(id).text(name.toUpperCase()));
+            var name = data[i]['nombreUsuario'];
+            $("#user_re").append($('<option>').val(id).text(name));
         }
         $("#user_re").selectpicker('refresh');
     }, 'json');
@@ -469,7 +391,7 @@ tabla_6 = $("#Jtabla").DataTable({
                     titleAttr: 'Registro de clientes',
                     title: 'Registro de cilentes',
                     exportOptions: {
-                        columns: [2,3,4,5,6,7,8,9 ],
+                        columns: [2, 3, 4, 5, 6, 7, 8, 9, 10],
                         format: {
                             header: function (d, columnIdx) {
                                 switch (columnIdx) {
@@ -496,6 +418,9 @@ tabla_6 = $("#Jtabla").DataTable({
                                         break;
                                     case 9:
                                         return 'ASIGNADO A';
+                                        break;
+                                    case 10:
+                                        return 'UBICACIÓN';
                                         break;
                                 }
                             }
@@ -616,6 +541,35 @@ tabla_6 = $("#Jtabla").DataTable({
         return '<p class="m-0">'+d.juridico+'</p>';
     }
 }, 
+{
+    width: "17%",
+    data: function( d ){
+        let ubicacionExpediente;
+        if (d.ubicacion == "1")
+            ubicacionExpediente = `<span class="label" style="background: #F1948A; color: #78281F">${d.nombreSede}</span>`;
+        else if (d.ubicacion == "2")
+            ubicacionExpediente = `<span class="label" style="background: #C39BD3; color: #512E5F">${d.nombreSede}</span>`;
+        else if (d.ubicacion == "3")
+            ubicacionExpediente = `<span class="label" style="background: #7FB3D5; color: #154360">${d.nombreSede}</span>`;
+        else if (d.ubicacion == "4")
+            ubicacionExpediente = `<span class="label" style="background: #76D7C4; color: #0E6251">${d.nombreSede}</span>`;
+        else if (d.ubicacion == "5")
+            ubicacionExpediente = `<span class="label" style="background: #82E0AA; color: #186A3B">${d.nombreSede}</span>`;
+        else if (d.ubicacion == "6")
+            ubicacionExpediente = `<span class="label" style="background: #F7DC6F; color: #7D6608">${d.nombreSede}</span>`;
+        else if (d.ubicacion == "7")
+            ubicacionExpediente = `<span class="label" style="background: #85C1E9; color: #1B4F72">${d.nombreSede}</span>`;
+        else if (d.ubicacion == "8")
+            ubicacionExpediente = `<span class="label" style="background: #E59866; color: #6E2C00">${d.nombreSede}</span>`;
+        else if (d.ubicacion == "9")
+            ubicacionExpediente = `<span class="label" style="background: #D7DBDD; color: #626567">${d.nombreSede}</span>`;
+        else if (d.ubicacion == "10")
+            ubicacionExpediente = `<span class="label" style="background: #5D6D7E; color: #1B2631">${d.nombreSede}</span>`;
+        else
+            ubicacionExpediente = `<span class="label" style="background: #F8C471; color: #7E5109">${d.nombreSede}</span>`;
+        return ubicacionExpediente;
+    }
+}, 
 { 
     "width": "5%",
     "orderable": true,
@@ -709,7 +663,7 @@ if(data.vl == '1') {
 
                 }
                 
-                if((data.ubicacion == 2 || data.ubicacion == 4) && (data.user == 2762 || data.user == 2845 || data.user == 2747 || user == 6096 || user == 6864)){
+                if((data.ubicacion == 1 || data.ubicacion == 2 || data.ubicacion == 4 || data.ubicacion == 5) && (data.user == 2762 || data.user == 2845 || data.user == 2747 || user == 6096 || user == 6864)){
                     cntActions += '<li><button href="#" title= "Reasignacion" data-nomLote="'+data.nombreLote+'" data-usuario="'+data.juridico+'" data-lote="'+data.idLote+'" class="btn btn-warning btn-round btn-fab btn-fab-mini change_user"><span class="material-icons">find_replace</span></button></li><br>';
                 }   
                 var color = (data.idMovimiento == 36) ? '#58D68D' :

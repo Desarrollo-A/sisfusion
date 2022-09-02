@@ -73,6 +73,7 @@ class Juridico extends CI_Controller
   			$dataPer[$i]['etapa']=$data[$i]->etapa;
 			$dataPer[$i]['user']=$this->session->userdata('id_usuario');
 			$dataPer[$i]['juridico']=$data[$i]->juridico;
+			$dataPer[$i]['nombreSede']=$data[$i]->nombreSede;
 
 			$proyecto = str_replace(' ', '',$data[$i]->nombreResidencial);
 			$cluster = strtoupper($data[$i]->nombreCondominio);
