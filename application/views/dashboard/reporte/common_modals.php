@@ -158,7 +158,7 @@
                             <span>-</span>
                             <input type="text" class="form-control datepicker text-center " id="endDate"/>
                             <button class="btn btn-success btn-round btn-fab btn-fab-mini" id="searchByDateRange">
-                                <span class="material-icons update-dataTable">search</span>
+                                <span class="material-icons">search</span>
                             </button>
                         </div>
                     </div>
