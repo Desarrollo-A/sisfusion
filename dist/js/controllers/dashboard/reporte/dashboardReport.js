@@ -1,7 +1,7 @@
 // AA: Obtener fecha inicial y cuatro meses atrás para mini charts.
 var endDate = moment().format("YYYY-MM-DD");
 var beginDate = moment(endDate).subtract(4, 'months').format("YYYY-MM-DD");
-var chart, datesMonths;
+var chart;
 var initialOptions = {
     series: [],
     chart: {
@@ -109,6 +109,7 @@ async function init(){
         rolString = 'subdirector';
     else 
         rolString = 'asesor';
+        
     fillBoxAccordions(rolString, rol == 18 || rol == '18' ? 1 : rol, idUser, 1, 1, null, [0, null, null, null, null, null, rol]);
 }
 
@@ -153,6 +154,7 @@ function createAccordions(option, render, rol){
 }
 
 function fillBoxAccordions(option, rol, id_usuario, render, transaction, dates=null, leadersList){
+    console.log("fillBoxAccordions dates", dates);
     if( rol == 5 && (idUser == 28 && idUser == 30) )
         rolEspecial = 59;
     else if( rol == 5 && (idUser != 28 && idUser != 30) )
@@ -649,8 +651,7 @@ $(document).on('click', '#searchByDateRangeTable', async function (e) {
     else 
         rolString = 'asesor';
 
-    fillBoxAccordions(rolString, idUser, 1, 2, dates, [0, null, null, null, null, null, rol]);
-
+    fillBoxAccordions(rolString, rol, idUser, 1, 2, dates, [0, null, null, null, null, null, rol]);
 });
 
 $(document).on('click', '.chartButton', function () {
@@ -666,7 +667,6 @@ $(document).on('click', '.chartButton', function () {
     generalChart(tableData);
 });
 
-
 async function chartDetail(e, tipoChart){
     $(".datesModal").show();
     $("#modalChart").modal();
@@ -676,18 +676,18 @@ async function chartDetail(e, tipoChart){
 
     var nameChart = (titleCase($(e).data("name").replace(/_/g, " "))).split(" ");
     $(".boxModalTitle .title").append('<p class="mb-1">' + nameChart[0] + '<span class="enfatize"> '+ nameChart[1] +'</span></p>');
-    // let datesMonths = await get4Months();
+
     const fechaInicio = new Date();
      // Iniciar en este año, este mes, en el día 1
      const beginDate = new Date(fechaInicio.getFullYear(), fechaInicio.getMonth(), 1);
      // END DATE
      const fechaFin = new Date();
      // Iniciar en este año, el siguiente mes, en el día 0 (así que así nos regresamos un día)
-     const endDate = new Date(fechaFin.getFullYear(), fechaFin.getMonth() + 1, fechaFin.getDate());
+     const endDate = new Date(fechaFin.getFullYear(), fechaFin.getMonth() + 1, 0);
      finalBeginDate = [beginDate.getFullYear(), ('0' + (beginDate.getMonth() + 1)).slice(-2), ('0' + beginDate.getDate()).slice(-2)].join('-');
      finalEndDate = [endDate.getFullYear(), ('0' + (endDate.getMonth() + 1)).slice(-2), ('0' + endDate.getDate()).slice(-2)].join('-');
      finalBeginDate2 = ['01', '01', beginDate.getFullYear()].join('/');
-     finalEndDate2 = [('0' + endDate.getDate()).slice(-2), ('0' + (endDate.getMonth())).slice(-2), endDate.getFullYear()].join('/');
+     finalEndDate2 = [('0' + endDate.getDate()).slice(-2), ('0' + (endDate.getMonth() + 1)).slice(-2), endDate.getFullYear()].join('/');
 
 
     $("#modalChart #beginDate").val(finalBeginDate2);
@@ -1075,11 +1075,11 @@ async function setInitialValues() {
      // END DATE
      const fechaFin = new Date();
      // Iniciar en este año, el siguiente mes, en el día 0 (así que así nos regresamos un día)
-     const endDate = new Date(fechaFin.getFullYear(), fechaFin.getMonth() + 1, fechaFin.getDate());
+     const endDate = new Date(fechaFin.getFullYear(), fechaFin.getMonth() + 1, 0);
      finalBeginDate = [beginDate.getFullYear(), ('0' + (beginDate.getMonth() + 1)).slice(-2), ('0' + beginDate.getDate()).slice(-2)].join('-');
      finalEndDate = [endDate.getFullYear(), ('0' + (endDate.getMonth() + 1)).slice(-2), ('0' + endDate.getDate()).slice(-2)].join('-');
      finalBeginDate2 = ['01', '01', beginDate.getFullYear()].join('/');
-     finalEndDate2 = [('0' + endDate.getDate()).slice(-2), ('0' + (endDate.getMonth())).slice(-2), endDate.getFullYear()].join('/');
+     finalEndDate2 = [('0' + endDate.getDate()).slice(-2), ('0' + (endDate.getMonth() + 1)).slice(-2), endDate.getFullYear()].join('/');
 
     $('#tableBegin').val(finalBeginDate2);
     $('#tableEnd').val(finalEndDate2);

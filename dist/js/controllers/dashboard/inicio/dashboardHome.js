@@ -1,5 +1,4 @@
 var mediaqueryList = window.matchMedia("(min-width: 200px)");
-console.log("m1",mediaqueryList);
 
 var optionsTotalVentas = {
     series: [],
@@ -71,9 +70,6 @@ var optionsProspectos = {
     },
     yaxis: {
         type: 'numeric',
-        formatter: function(w){
-            console.lo(w);
-        },
         labels: {show: false},
         axisBorder: {show:false},
         axisTicks: {show:false},

@@ -146,7 +146,7 @@
                     <input type="text" class="form-control datepicker tableDates" id="tableBegin" value="" autocomplete='off'/>
                     <input type="text" class="form-control datepicker tableDates" id="tableEnd" value="" autocomplete='off' />
                     <button class="btn btn-success btn-round btn-fab btn-fab-mini tableSearch" id="searchByDateRangeTable">
-                        <span class="material-icons update-dataTable">search</span>
+                        <span class="material-icons">search</span>
                     </button>
                 </div>
             </div>

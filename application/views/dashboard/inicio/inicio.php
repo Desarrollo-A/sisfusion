@@ -31,7 +31,7 @@
                                 <input type="text" class="form-control datepicker beginDates" id="beginDate" value="" autocomplete='off'/>
                                 <input type="text" class="form-control datepicker endDates" id="endDate" value="" autocomplete='off' />
                                 <button class="btn btn-success btn-round btn-fab btn-fab-mini" id="searchByDateRangeCP">
-                                    <span class="material-icons update-dataTable">search</span>
+                                    <span class="material-icons">search</span>
                                 </button>
                             </div>
                         </div>
@@ -111,7 +111,7 @@
                                 <input type="text" class="form-control datepicker beginDates" id="beginDate2" value="" autocomplete='off'/>
                                 <input type="text" class="form-control datepicker endDates" id="endDate2" value="" autocomplete='off'/>
                                 <button class="btn btn-success btn-round btn-fab btn-fab-mini" id="searchByDateRange2">
-                                    <span class="material-icons update-dataTable">search</span>
+                                    <span class="material-icons">search</span>
                                 </button>
                             </div>
                         </div>

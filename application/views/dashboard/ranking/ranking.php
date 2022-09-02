@@ -13,7 +13,7 @@
                                     <input type="text" class="form-control datepicker text-center pl-1 beginDate" id="beginDateApartados"/>
                                     <input type="text" class="form-control datepicker text-center endDate" id="endDateApartados"/>
                                     <button class="btn-search" id="searchByDateRangeRanking" onclick="getRankings(false, 'Apartados')">
-                                        <span class="material-icons update-dataTable">search</span>
+                                        <span class="material-icons">search</span>
                                     </button>
                                 </div>
                                 <button class="btn-charts" onclick="toggleDatatable(this)" rel="tooltip" data-placement="bottom" title="Mostrar tabla"><i class="far fa-list-alt"></i></button>
@@ -42,7 +42,7 @@
                                     <input type="text" class="form-control datepicker text-center pl-1 beginDate" id="beginDateContratados"/>
                                     <input type="text" class="form-control datepicker text-center endDate" id="endDateContratados"/>
                                     <button class="btn-search" id="searchByDateRangeRanking">
-                                        <span class="material-icons update-dataTable">search</span>
+                                        <span class="material-icons">search</span>
                                     </button>
                                 </div>
                                 <button class="btn-charts" onclick="toggleDatatable(this)" rel="tooltip" data-placement="bottom" title="Mostrar tabla"><i class="far fa-list-alt"></i></button>
@@ -71,7 +71,7 @@
                                     <input type="text" class="form-control datepicker text-center pl-1 beginDate" id="beginDateConEnganche"/>
                                     <input type="text" class="form-control datepicker text-center endDate" id="endDateConEnganche"/>
                                     <button class="btn-search" id="searchByDateRangeRanking">
-                                        <span class="material-icons update-dataTable">search</span>
+                                        <span class="material-icons">search</span>
                                     </button>
                                 </div>
                                 <button class="btn-charts" onclick="toggleDatatable(this)" rel="tooltip" data-placement="bottom" title="Mostrar tabla"><i class="far fa-list-alt"></i></button>
@@ -100,7 +100,7 @@
                                     <input type="text" class="form-control datepicker text-center pl-1 beginDate" id="beginDateSinEnganche"/>
                                     <input type="text" class="form-control datepicker text-center endDate" id="endDateSinEnganche"/>
                                     <button class="btn-search" id="searchByDateRangeRanking">
-                                        <span class="material-icons update-dataTable">search</span>
+                                        <span class="material-icons">search</span>
                                     </button>
                                 </div>
                                 <button type="btn" class="btn-charts"  rel="tooltip" data-placement="bottom" title="Mostrar tabla" onclick="toggleDatatable(this)"><i class="far fa-list-alt"></i></button>
