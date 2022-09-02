@@ -68,6 +68,9 @@
                             <textarea class="text-modal" class="form-control" type="text" name="description" id="description2" onkeyup="javascript:this.value=this.value.toUpperCase();"></textarea>
                         </div>
 
+                        <input type="hidden" name="idAgenda" class="idAgenda2">
+                        <input type="hidden" name="idGoogle" class="idGoogle">
+
                         <div class="modal-footer">
                             <button type="submit" class="btn btn-primary finishS">Guardar</button>
                             <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cerrar</button>
@@ -173,8 +176,6 @@
                     <textarea class="text-modal" class="form-control" type="text" name="description" id="description2" onkeyup="javascript:this.value=this.value.toUpperCase();" disables></textarea>
                 </div>
 
-                <input type="hidden" name="idAgenda" id="idAgenda2">
-
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-primary finishS">Aceptar</button>
                     <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
@@ -261,7 +262,7 @@
         </div>
     </div>
 
-    <div class="modal fade" id="modalDeleteEvt" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal fade" id="modalDeleteEvt" tabindex="-1" role="dialog" aria-labelldby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog modal-md" role="document">
             <div class="modal-content">
                 <div class="modal-body pt-2">
@@ -270,11 +271,11 @@
                             <div>
                                 <h3 class="m-0 text-center">Eliminar evento</h3>
                                 <p class="text-center">Estás a punto de remover el evento seleccionado ¿Deseas continuar?</p>
-                                <input type="hidden" name="idAgenda" id="idAgenda2">
-                                <input type="hidden" name="idGoogle" id="idGoogle">
+                                <input type="hidden" name="idAgenda" class="idAgenda2">
+                                <input type="hidden" name="idGoogle" class="idGoogle">
                             </div>
                             <div class="d-flex justify-end">
-                                <button type="button" class="btn btn-danger btn-simple" style="background-color:white;">Regresar</button>
+                                <button type="button" class="btn btn-danger btn-simple" onclick="backFromDelete()" style="background-color:white;">Regresar</button>
                                 <button type="button" class="btn btn-primary no-shadow rounded-circle" onclick="deleteCita()">Confirmar</button>
                             </div>
                         </form>
