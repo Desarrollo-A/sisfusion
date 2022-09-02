@@ -33,11 +33,12 @@ class Juridico_model extends CI_Model {
 		concat(asesor.nombre,' ', asesor.apellido_paterno, ' ', asesor.apellido_materno) as asesor,
         concat(coordinador.nombre,' ', coordinador.apellido_paterno, ' ', coordinador.apellido_materno) as coordinador,
         concat(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno) as gerente,
-        concat(juridico.nombre,' ', juridico.apellido_paterno, ' ', juridico.apellido_materno) as juridico
+        concat(juridico.nombre,' ', juridico.apellido_paterno, ' ', juridico.apellido_materno) as juridico, se.nombre nombreSede
 		FROM lotes l
         INNER JOIN clientes cl ON cl.idLote=l.idLote $whereOne
         INNER JOIN condominios cond ON l.idCondominio=cond.idCondominio
         INNER JOIN residenciales res ON cond.idResidencial=res.idResidencial $whereTwo
+		INNER JOIN sedes se ON se.id_sede = l.ubicacion
 		LEFT JOIN etapas et ON et.idEtapa = cond.idEtapa
 		LEFT JOIN usuarios asesor ON cl.id_asesor = asesor.id_usuario
 		LEFT JOIN usuarios coordinador ON cl.id_coordinador = coordinador.id_usuario
@@ -50,13 +51,13 @@ class Juridico_model extends CI_Model {
 		concat(asesor.nombre,' ', asesor.apellido_paterno, ' ', asesor.apellido_materno),
         concat(coordinador.nombre,' ', coordinador.apellido_paterno, ' ', coordinador.apellido_materno),
         concat(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno),
-		concat(juridico.nombre,' ', juridico.apellido_paterno, ' ', juridico.apellido_materno)
+		concat(juridico.nombre,' ', juridico.apellido_paterno, ' ', juridico.apellido_materno), se.nombre
         ORDER BY l.modificado DESC");
 		} 
 		else {
 			$id_sede = $this->session->userdata('id_sede');
 			$id_usuario = $this->session->userdata('id_usuario');
-			if(in_array($this->session->userdata('id_usuario'), array("2765", "2776", "10463", "2820", "2876", "10437")))
+			if(in_array($this->session->userdata('id_usuario'), array("2765", "2776", "10463", "2820", "2876", "10437", "2763", "5468", "2764", "6856", "2746", "2800", "2761", "2792")))
 				$filtroAsignacion = "AND l.asig_jur = $id_usuario";
 			else
 				$filtroAsignacion = "";
@@ -65,6 +66,9 @@ class Juridico_model extends CI_Model {
 				$filtroSede = "AND l.ubicacion IN ('$id_sede', '10')";
 			else
 				$filtroSede = "AND l.ubicacion IN ('$id_sede')";
+			
+			if ($this->session->userdata('id_usuario') == 2747)
+				$filtroSede = "AND l.ubicacion IN ('$id_sede', '1', '5')";
 
 			$query = $this->db-> query("SELECT l.idLote, cl.id_cliente, cl.fechaApartado, cl.nombre, cl.apellido_paterno, cl.apellido_materno, l.nombreLote, l.idStatusContratacion,
 			l.idMovimiento, l.modificado, cl.rfc, CAST(l.comentario AS varchar(MAX)) as comentario, l.fechaVenc, l.perfil, cond.nombre as nombreCondominio, res.nombreResidencial, l.ubicacion,
@@ -72,11 +76,12 @@ class Juridico_model extends CI_Model {
 			concat(asesor.nombre,' ', asesor.apellido_paterno, ' ', asesor.apellido_materno) as asesor,
 			concat(coordinador.nombre,' ', coordinador.apellido_paterno, ' ', coordinador.apellido_materno) as coordinador,
 			concat(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno) as gerente,
-	        concat(juridico.nombre,' ', juridico.apellido_paterno, ' ', juridico.apellido_materno) as juridico
+	        concat(juridico.nombre,' ', juridico.apellido_paterno, ' ', juridico.apellido_materno) as juridico, se.nombre nombreSede
 			FROM lotes l
 			INNER JOIN clientes cl ON cl.idLote=l.idLote
 			INNER JOIN condominios cond ON l.idCondominio=cond.idCondominio
 			INNER JOIN residenciales res ON cond.idResidencial=res.idResidencial
+			INNER JOIN sedes se ON se.id_sede = l.ubicacion
 			LEFT JOIN etapas et ON et.idEtapa = cond.idEtapa
 			LEFT JOIN usuarios asesor ON cl.id_asesor = asesor.id_usuario
 			LEFT JOIN usuarios coordinador ON cl.id_coordinador = coordinador.id_usuario
@@ -89,7 +94,7 @@ class Juridico_model extends CI_Model {
 			concat(asesor.nombre,' ', asesor.apellido_paterno, ' ', asesor.apellido_materno),
 			concat(coordinador.nombre,' ', coordinador.apellido_paterno, ' ', coordinador.apellido_materno),
 			concat(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno),
-			concat(juridico.nombre,' ', juridico.apellido_paterno, ' ', juridico.apellido_materno)
+			concat(juridico.nombre,' ', juridico.apellido_paterno, ' ', juridico.apellido_materno), se.nombre
 			ORDER BY l.modificado DESC");
 		}
 		return $query->result();

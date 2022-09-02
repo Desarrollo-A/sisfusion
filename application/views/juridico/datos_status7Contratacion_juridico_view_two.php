@@ -78,6 +78,7 @@
                                                 <th>F.MODIFICADO</th>
                                                 <th>F.VENCIMIENTO</th>
                                                 <th>ASIGANADO A</th>
+                                                <th>UBICACIÓN</th>
                                                 <th></th>
                                             </tr>
                                             </thead>
@@ -287,29 +288,25 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <center><h4 class="modal-title"><label>Reasignacion de contrato - <b><span class="userJ"></span></b></label>
+                    <center><h4 class="modal-title"><label>Reasignación de contrato - <b><span class="userJ"></span></b></label>
                         </h4></center>
                 </div>
                 <div class="modal-body">
-                    <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
-
-
+                    <div class="row">
                         <div class="col col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                            <label id="tvLbl">Nuevo usuario</label>
+                            <label id="tvLbl">Nuevo usuario:</label>
                             <select required="required" name="user_re" id="user_re"
-                                    class="selectpicker" data-style="btn" title="SELECCIONA USUARIO" data-size="7">
+                                    class="selectpicker select-gral m-0" data-style="btn" data-live-search="true" title="Selecciona un usuario" data-size="7">
                             </select>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer"></div>
                 <div class="modal-footer">
-                    <button type="button" id="reassing" class="btn btn-success"><span
-                                class="material-icons">send</span> </i> Reasignar
-                    </button>
-                    <button type="button" class="btn btn-danger" data-dismiss="modal"><span
-                                class="glyphicon glyphicon-remove"></span> Cancelar
-                    </button>
+                    <button type="button" class="btn btn-danger btn-simple mt-1" data-dismiss="modal">Cancelar
+                    <button type="button" id="reassing" class="btn btn-primary mt-1">Reasignar</button>
+                    <!--<button type="button" id="reassing" class="btn btn-success"><span class="material-icons">send</span> </i> Reasignar</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> Cancelar</button>-->
                 </div>
             </div>
         </div>
@@ -643,6 +640,35 @@ if(idResidencial == 27 ){
                     }
                 },
                 {
+                    width: "17%",
+                    data: function( d ){
+                        let ubicacionExpediente;
+                        if (d.ubicacion == "1")
+                            ubicacionExpediente = `<span class="label" style="background: #F1948A; color: #78281F">${d.nombreSede}</span>`;
+                        else if (d.ubicacion == "2")
+                            ubicacionExpediente = `<span class="label" style="background: #C39BD3; color: #512E5F">${d.nombreSede}</span>`;
+                        else if (d.ubicacion == "3")
+                            ubicacionExpediente = `<span class="label" style="background: #7FB3D5; color: #154360">${d.nombreSede}</span>`;
+                        else if (d.ubicacion == "4")
+                            ubicacionExpediente = `<span class="label" style="background: #76D7C4; color: #0E6251">${d.nombreSede}</span>`;
+                        else if (d.ubicacion == "5")
+                            ubicacionExpediente = `<span class="label" style="background: #82E0AA; color: #186A3B">${d.nombreSede}</span>`;
+                        else if (d.ubicacion == "6")
+                            ubicacionExpediente = `<span class="label" style="background: #F7DC6F; color: #7D6608">${d.nombreSede}</span>`;
+                        else if (d.ubicacion == "7")
+                            ubicacionExpediente = `<span class="label" style="background: #85C1E9; color: #1B4F72">${d.nombreSede}</span>`;
+                        else if (d.ubicacion == "8")
+                            ubicacionExpediente = `<span class="label" style="background: #E59866; color: #6E2C00">${d.nombreSede}</span>`;
+                        else if (d.ubicacion == "9")
+                            ubicacionExpediente = `<span class="label" style="background: #D7DBDD; color: #626567">${d.nombreSede}</span>`;
+                        else if (d.ubicacion == "10")
+                            ubicacionExpediente = `<span class="label" style="background: #5D6D7E; color: #1B2631">${d.nombreSede}</span>`;
+                        else
+                            ubicacionExpediente = `<span class="label" style="background: #F8C471; color: #7E5109">${d.nombreSede}</span>`;
+                        return ubicacionExpediente;
+                    }
+                },
+                {
                     "width": "5%",
                     "orderable": true,
                     "data": function (data) {
@@ -735,7 +761,7 @@ if(idResidencial == 27 ){
 
                             }
 
-                            if ((data.ubicacion == 2 || data.ubicacion == 4) && (data.user == 2762 || data.user == 2845 || data.user == 2747 || user == 6096 || user == 6864)) {
+                            if ((data.ubicacion == 1 || data.ubicacion == 2 || data.ubicacion == 4 || data.ubicacion == 5) && (data.user == 2762 || data.user == 2845 || data.user == 2747 || user == 6096 || user == 6864)) {
                                 cntActions += '<li><button href="#" title= "Reasignacion" data-nomLote="' + data.nombreLote + '" data-usuario="' + data.juridico + '" data-lote="' + data.idLote + '" class="btn btn-warning btn-round btn-fab btn-fab-mini change_user"><span class="material-icons">find_replace</span></button></li><br>';
                             }
                             var color = (data.idMovimiento == 36) ? '#58D68D' :
