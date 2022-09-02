@@ -1207,37 +1207,21 @@ $(document).on('click', '.btnModalDetails', function () {
         $("#seeInformationModalCancelados").modal();
 });
 
-$('#lotesInformationTable thead tr:eq(0) th').each(function (i) {
-    const title = $(this).text();
-    $(this).html('<input type="text" class="textoshead"  placeholder="' + title + '"/>');
-    $('input', this).on('keyup change', function () {
-        if(i != 0){
-            if ($("#lotesInformationTable").DataTable().column(i).search() !== this.value) {
-                $("#lotesInformationTable").DataTable().column(i)
-                    .search(this.value).draw();
-            }
-        }
-    });
-});
-
-
-$('#lotesInformationTableCancelados thead tr:eq(0) th').each(function (i) {
-    const title = $(this).text();
-    $(this).html('<input type="text" class="textoshead"  placeholder="' + title + '"/>');
-    $('input', this).on('keyup change', function () {
-        if(i != 0){
-            if ($("#lotesInformationTableCancelados").DataTable().column(i).search() !== this.value) {
-                $("#lotesInformationTableCancelados").DataTable().column(i)
-                    .search(this.value).draw();
-            }
-        }
-    });
-});
-
-
-
 function fillTable(dataObject) {
     if (dataObject.type != 3 && dataObject.type != 33 && dataObject.type != 4 && dataObject.type != 4) {
+        $('#lotesInformationTable thead tr:eq(0) th').each(function (i) {
+            const title = $(this).text();
+            $(this).html('<input type="text" class="textoshead"  placeholder="' + title + '"/>');
+            $('input', this).on('keyup change', function () {
+                if(i != 0){
+                    if ($("#lotesInformationTable").DataTable().column(i).search() !== this.value) {
+                        $("#lotesInformationTable").DataTable().column(i)
+                            .search(this.value).draw();
+                    }
+                }
+            });
+        });
+
         generalDataTable = $('#lotesInformationTable').dataTable({
             dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
             width: '100%',
@@ -1402,6 +1386,20 @@ function fillTable(dataObject) {
             }
         });
     } else{
+
+        $('#lotesInformationTableCancelados thead tr:eq(0) th').each(function (i) {
+            const title = $(this).text();
+            $(this).html('<input type="text" class="textoshead"  placeholder="' + title + '"/>');
+            $('input', this).on('keyup change', function () {
+                if(i != 0){
+                    if ($("#lotesInformationTableCancelados").DataTable().column(i).search() !== this.value) {
+                        $("#lotesInformationTableCancelados").DataTable().column(i)
+                            .search(this.value).draw();
+                    }
+                }
+            });
+        });
+
         generalDataTable = $('#lotesInformationTableCancelados').dataTable({
             dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
             width: '100%',
@@ -1582,29 +1580,4 @@ function fillTable(dataObject) {
             }
         });
     }
-    $('#lotesInformationTable thead tr:eq(0) th').each(function (i) {
-        const title = $(this).text();
-        $(this).html('<input type="text" class="textoshead"  placeholder="' + title + '"/>');
-        $('input', this).on('keyup change', function () {
-            if(i != 0){
-                if ($("#lotesInformationTable").DataTable().column(i).search() !== this.value) {
-                    $("#lotesInformationTable").DataTable().column(i)
-                        .search(this.value).draw();
-                }
-            }
-        });
-    });
-
-    $('#lotesInformationTableCancelados thead tr:eq(0) th').each(function (i) {
-        const title = $(this).text();
-        $(this).html('<input type="text" class="textoshead"  placeholder="' + title + '"/>');
-        $('input', this).on('keyup change', function () {
-            if(i != 0){
-                if ($("#lotesInformationTableCancelados").DataTable().column(i).search() !== this.value) {
-                    $("#lotesInformationTableCancelados").DataTable().column(i)
-                        .search(this.value).draw();
-                }
-            }
-        });
-    });
 }
