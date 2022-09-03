@@ -1452,28 +1452,29 @@ public function get_sede(){
 		  $data_asig = $this->Contraloria_model->get_id_asig($assigned_location);
 		  $id_asig = $data_asig->contador;
 		  $arreglo["asig_jur"] = $id_asig == 2820 ? 10437 : ($id_asig == 10437 ? 2876 : 2820);
-	  } else if ($assigned_location == 1) { // EXPEDIENTES SAN LUIS POTOSÍ
-		  $id_sede_jur = 1;
-		  $data_asig = $this->Contraloria_model->get_id_asig($assigned_location);
-		  $id_asig = $data_asig->contador;
-		  $arreglo["asig_jur"] = $id_asig == 2763 ? 5468 : ($id_asig == 5468 ? 2764 : 2763);
-	  } else if ($assigned_location == 5) { // EXPEDIENTES LEÓN
-		  $id_sede_jur = 5;
-		  $data_asig = $this->Contraloria_model->get_id_asig($assigned_location);
-		  $id_asig = $data_asig->contador;
-		  if ($id_asig == 6856)
-			  $assigned_user = 2746;
-		  else if ($id_asig == 2746)
-			  $assigned_user = 2800;
-		  else if ($id_asig == 2800)
-			  $assigned_user = 2761;
-		  else if ($id_asig == 2761)
-			  $assigned_user = 2792;
-		  else if ($id_asig == 2792)
-			  $assigned_user = 6856;
-		  
-		  $arreglo["asig_jur"] = $assigned_user;
-	  }
+		} else if ($assigned_location == 1) { // EXPEDIENTES SAN LUIS POTOSÍ
+			$id_sede_jur = 1;
+			$data_asig = $this->Contraloria_model->get_id_asig($assigned_location);
+        	$id_asig = $data_asig->contador;
+			
+			if ($id_asig == 5468)
+				$assigned_user = 2764;
+			else if ($id_asig == 2764)
+				$assigned_user = 5468;
+
+			$arreglo["asig_jur"] = $assigned_user;
+		} else if ($assigned_location == 5) { // EXPEDIENTES LEÓN
+			$id_sede_jur = 5;
+			$data_asig = $this->Contraloria_model->get_id_asig($assigned_location);
+        	$id_asig = $data_asig->contador;
+
+			if ($id_asig == 6856)
+				$assigned_user = 2800;
+			else if ($id_asig == 2800)
+				$assigned_user = 6856;
+			
+			$arreglo["asig_jur"] = $assigned_user;
+		}
 	  
 	  $validate = $this->Contraloria_model->validateSt6($idLote);
 

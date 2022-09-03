@@ -4986,14 +4986,16 @@ WHERE idLote IN ('".$row['idLote']."') and nombreLote = '".$insert_csv['nombreLo
                 break;
             case '7': // ASESOR
 										$query = $this->db->query("SELECT lotes.idLote, nombreLote, idStatusLote, clientes.id_asesor, '1' venta_compartida FROM lotes
-										INNER JOIN clientes ON clientes.idLote = lotes.idLote WHERE clientes.id_coordinador != 2562 AND (clientes.id_asesor = ".$this->session->userdata('id_usuario')." OR 
+										INNER JOIN clientes ON clientes.idLote = lotes.idLote 
+										WHERE (clientes.id_coordinador NOT IN (2562, 2541) OR (clientes.id_coordinador IN (2562, 2541) AND clientes.id_asesor = 1908 AND clientes.id_asesor = ".$this->session->userdata('id_usuario')."))
+										AND (clientes.id_asesor = ".$this->session->userdata('id_usuario')." OR 
 										clientes.id_coordinador = ".$this->session->userdata('id_usuario')." OR clientes.id_gerente = ".$this->session->userdata('id_usuario').") AND lotes.status = 1
 										AND clientes.status = 1 AND lotes.idCondominio = $condominio
 										UNION ALL
 										SELECT lotes.idLote, nombreLote, idStatusLote, vc.id_asesor, '2' venta_compartida FROM lotes
 										INNER JOIN clientes ON clientes.idLote = lotes.idLote 
 										INNER JOIN ventas_compartidas vc ON vc.id_cliente = clientes.id_cliente
-										WHERE clientes.id_coordinador != 2562 AND (vc.id_asesor = ".$this->session->userdata('id_usuario')." OR vc.id_coordinador = ".$this->session->userdata('id_usuario')." 
+										WHERE clientes.id_coordinador NOT IN (2562, 2541) AND (vc.id_asesor = ".$this->session->userdata('id_usuario')." OR vc.id_coordinador = ".$this->session->userdata('id_usuario')." 
 										OR vc.id_gerente = ".$this->session->userdata('id_usuario').") AND vc.estatus = 1 AND 
 										clientes.status = 1 AND lotes.status = 1 AND lotes.idCondominio = $condominio ORDER BY lotes.idLote");
                 break;
@@ -6134,7 +6136,7 @@ WHERE idLote IN ('".$row['idLote']."') and nombreLote = '".$insert_csv['nombreLo
             WHERE l.status = 1 AND l.idStatusContratacion IN (1, 2, 3) AND l.idMovimiento IN (31, 85, 20, 63, 73, 82, 92, 96) AND c.status = 1 AND c.id_gerente = ". $this->session->userdata('id_lider') ." AND l.idCondominio = $condominio
             UNION ALL
             SELECT l.* FROM lotes l 
-			INNER JOIN clientes c ON c.id_cliente = l.idCliente AND c.id_coordinador IN (2562, 2541)
+			INNER JOIN clientes c ON c.id_cliente = l.idCliente AND c.id_coordinador IN (2562, 2541) AND c.id_asesor != 1908
 			INNER JOIN usuarios u ON u.id_usuario = c.id_asesor
 			INNER JOIN usuarios uu ON uu.id_usuario = u.id_lider AND uu.id_lider = ". $this->session->userdata('id_lider') ."
             WHERE l.status = 1 AND l.idStatusContratacion IN (1, 2, 3) AND l.idMovimiento IN (31, 85, 20, 63, 73, 82, 92, 96) AND c.status = 1 AND l.idCondominio = $condominio");
