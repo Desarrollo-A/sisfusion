@@ -780,6 +780,9 @@ class Postventa extends CI_Controller
             case 22:
                 $folder = "static/documentos/postventa/escrituracion/COPIA_CERTIFICADA/";
                 break;
+            case 23:
+                $folder = "static/documentos/postventa/escrituracion/PRESUPUESTO_NOTARÍA_EXTERNA/";
+                break;
         }
         return $folder;
     }
@@ -886,7 +889,8 @@ class Postventa extends CI_Controller
     {
         $idEscritura = $_POST['idEscritura'];
         $idEstatus = $_POST['idEstatus'];
-        $data = $this->Postventa_model->getDocumentsClient($idEscritura, $idEstatus);
+        $notariaExterna = $this->Postventa_model->existNotariaExterna($idEscritura);
+        $data = $this->Postventa_model->getDocumentsClient($idEscritura, $idEstatus, $notariaExterna);
         if ($data != null)
             echo json_encode($data);
         else

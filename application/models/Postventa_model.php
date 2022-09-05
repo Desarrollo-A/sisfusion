@@ -283,10 +283,19 @@ class Postventa_model extends CI_Model
         return $query->result();
     }
 
-    function getDocumentsClient($idSolicitud, $status)
+    function existNotariaExterna($idSolicitud)
     {
+        $notariaExterna = $this->db->query("SELECT idControl FROM control_estatus WHERE idEscrituracion = $idSolicitud 
+                                        AND comentarios LIKE '%Se trabajara con Notaría externa%'");
+        return $notariaExterna->row();
+    }
+
+    function getDocumentsClient($idSolicitud, $status, $notariaExterna)
+    {
+        $docNotariaExterna = ($notariaExterna) ? '' : ',23';
+
         if($status == 10 || $status == 11){
-            $tipo_doc = 'NOT IN (11, 12, 13, 14, 15, 16, 17,22)';
+            $tipo_doc = "NOT IN (11, 12, 13, 14, 15, 16, 17, 22 $docNotariaExterna)";
         }elseif($status == 3 || $status == 4 || $status == 5){
             $tipo_doc = 'IN (7,20,21)';
         }elseif($status == 22 || $status == 23){
