@@ -781,7 +781,7 @@ class Postventa extends CI_Controller
                 $folder = "static/documentos/postventa/escrituracion/COPIA_CERTIFICADA/";
                 break;
             case 23:
-                $folder = "static/documentos/postventa/escrituracion/PRESUPUESTO_NOTARÍA_EXTERNA/";
+                $folder = "static/documentos/postventa/escrituracion/PRESUPUESTO_NOTARIA_EXTERNA/";
                 break;
         }
         return $folder;
