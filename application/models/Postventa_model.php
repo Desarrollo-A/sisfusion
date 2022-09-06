@@ -364,7 +364,7 @@ class Postventa_model extends CI_Model
 
     function getNotarias()
     {
-        $query = $this->db->query("SELECT * FROM Notarias");
+        $query = $this->db->query("SELECT * FROM Notarias WHERE sede != 0");
         return $query->result();
     }
 
@@ -683,7 +683,7 @@ function checkBudgetInfo($idSolicitud){
     function getFullReportContraloria($idSolicitud){
         $query = $this->db->query("WITH cte AS(
             SELECT MAX(fecha_creacion) fecha_creacion, comentarios,
-            CAST((CASE WHEN idStatus = 91 or idStatus = 92 THEN idStatus-89 WHEN idStatus = 0 THEN idStatus+1 WHEN idStatus = 90 THEN 15.1 ELSE idStatus END) AS FLOAT) idStatus, idEscrituracion
+            CAST((CASE WHEN idStatus = 91 or idStatus = 92 THEN idStatus-89 WHEN idStatus = 0 THEN idStatus+1 WHEN idStatus = 90 THEN 15.1 ELSE idStatus END) AS INT) idStatus, idEscrituracion
             FROM control_estatus 
             WHERE idEscrituracion = $idSolicitud GROUP BY idStatus, idEscrituracion , comentarios
         )
@@ -895,5 +895,12 @@ function checkBudgetInfo($idSolicitud){
     public function restablecerJuridicosAsignados()
     {
         $this->db->query('UPDATE solicitud_juridico set esta_activo = 0');
+    }
+
+    public function existeNotariaSolicitud($idSolicitud, $idNotaria)
+    {
+        $query = $this->db->query("SELECT idNxS FROM notarias_x_usuario 
+             WHERE id_solicitud = $idSolicitud AND id_notaria = $idNotaria");
+        return $query->row();
     }
 }

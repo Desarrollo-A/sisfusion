@@ -2053,6 +2053,13 @@ function getNotariasXUsuario(){
 function saveNotaria(){
     $idSolicitud = $_POST['idSolicitud'];
     $idNotaria = $_POST['idNotaria'];
+
+    $result = $this->Postventa_model->existeNotariaSolicitud($idSolicitud, $idNotaria);
+    if ($result) {
+        echo json_encode(array('message' => 'Notaría ya registrada. Favor de seleccionar otra'));
+        return;
+    }
+
     $arrayData = array(
         "id_solicitud" => $idSolicitud,
         "id_notaria" => $idNotaria,

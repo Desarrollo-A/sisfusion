@@ -2024,14 +2024,18 @@ function saveNotaria(idSolicitud, idNotaria, thisVar){
         type: 'POST',
         dataType:'json',
         success: function (response) {
-            var tr = $(`#treePresupuesto${idSolicitud}`).closest('tr');
-            var row = prospectsTable.row(tr);
-            console.log('tr', tr);
-            console.log('rowSave2', row.data());
+            if (response.message) {
+                alerts.showNotification("top", "right", response.message, "danger");
+                $('#spiner-loader').addClass('hide');
+            } else {
+                const tr = $(`#treePresupuesto${idSolicitud}`).closest('tr');
+                const row = prospectsTable.row(tr);
+                console.log('tr', tr);
+                console.log('rowSave2', row.data());
 
-            createRowNotarias(row, tr, $(`#trees${idSolicitud}`), idSolicitud);
-          $('#spiner-loader').addClass('hide');
-
+                createRowNotarias(row, tr, $(`#trees${idSolicitud}`), idSolicitud);
+                $('#spiner-loader').addClass('hide');
+            }
         }
     });
 }
