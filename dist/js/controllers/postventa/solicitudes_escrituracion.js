@@ -188,7 +188,10 @@ $(document).on("click", "#preview", function () {
             break;
         case '22':
             folder = 'COPIA_CERTIFICADA';
-       break;
+        break;
+        case '23':
+            folder = 'PRESUPUESTO_NOTARIA_EXTERNA';
+            break;
         default:
             break;
     }
