@@ -166,7 +166,7 @@ class Reporte_model extends CI_Model {
         if ($id_rol == 7) { // ASESOR
             if ($render == 1) {
                 if ($typeTransaction == null) // SE CONSULTA DESDE EL ROWDETAIL O LA MODAL QUE SE TRAE EL DETALLE DE LOS LOTES
-                    $filtro .= " AND (cl.id_asesor = $id_usuario AND cl.id_coordinador = $leader)";
+                    $filtro .= " AND cl.id_asesor = $id_usuario";
                 else // SE CONSULTA DESDE LA TABLA PAPÁ
                     $filtro .= " AND (cl.id_asesor = $id_usuario OR cl.id_coordinador = $id_usuario)";
             }

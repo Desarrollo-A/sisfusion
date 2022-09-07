@@ -1191,19 +1191,9 @@
                                                     <i class="fas fa-chart-bar"></i>
                                                 </button>${btnEliminarEditar}
                                             </div>`;
-                                    } else {
+                                    } else if (d.estatus == 5) {
                                         return `
                                             <div class="d-flex justify-center">
-                                                <button value="${d.id_usuario}"
-                                                    data-value="${pendiente}"
-                                                    data-saldoCom="${d.abono_nuevo}"
-                                                    data-sede="${d.id_sede}"
-                                                    data-validate="${validar}"
-                                                    data-code="${d.cbbtton}"
-                                                    class="btn-data btn-violetDeep agregar_nuevo_descuento"
-                                                    title="Aplicar descuento">
-                                                    <i class="fas fa-plus"></i>
-                                                </button>
                                                 <button value="${d.id_usuario}"
                                                     data-value="${d.nombre}"
                                                     data-code="${d.id_usuario}"
@@ -1212,6 +1202,26 @@
                                                     <i class="fas fa-chart-bar"></i>
                                                 </button>${btnEliminarEditar}
                                             </div>`;
+                                    } else {
+                                        <div class="d-flex justify-center">
+                                            <button value="${d.id_usuario}"
+                                                    data-value="${pendiente}"
+                                                    data-saldoCom="${d.abono_nuevo}"
+                                                    data-sede="${d.id_sede}"
+                                                    data-validate="${validar}"
+                                                    data-code="${d.cbbtton}"
+                                                    class="btn-data btn-violetDeep agregar_nuevo_descuento"
+                                                    title="Aplicar descuento">
+                                                <i class="fas fa-plus"></i>
+                                            </button>
+                                            <button value="${d.id_usuario}"
+                                                    data-value="${d.nombre}"
+                                                    data-code="${d.id_usuario}"
+                                                    class="btn-data btn-gray consultar_historial_pagos"
+                                                    title="Historial pagos">
+                                                <i class="fas fa-chart-bar"></i>
+                                            </button>${btnEliminarEditar}
+                                        </div>
                                     }
                                 }
                             }

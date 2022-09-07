@@ -904,7 +904,8 @@ class Asesor_model extends CI_Model
     public function registroClienteDS($id_condominio) {
         ini_set('max_execution_time', 300);
         set_time_limit(300);
-        if ($id_condominio != 0 && $this->session->userdata('id_usuario') == 9651)
+        $id_asesor = $this->session->userdata('id_usuario');
+        if ($id_condominio != 0 && $id_asesor == 9651)
             $where = "AND cond.idCondominio = $id_condominio";
         else
             $where = "";
@@ -919,8 +920,9 @@ class Asesor_model extends CI_Model
         INNER JOIN residenciales AS residencial ON cond.idResidencial=residencial.idResidencial
         INNER JOIN autorizaciones AS aut ON cl.id_cliente = aut.idCliente AND lotes.idLote = aut.idLote
         LEFT JOIN deposito_seriedad AS ds ON ds.id_cliente = cl.id_cliente	
-        WHERE cl.id_coordinador NOT IN(2562, 2541) AND idStatusContratacion IN (1, 2, 3) AND idMovimiento IN (31, 85, 20, 63, 73, 82, 92, 96) AND 
-        cl.status = 1 AND cl.id_asesor = ".$this->session->userdata('id_usuario')." AND cl.status = 1 ORDER BY cl.id_Cliente ASC");
+        WHERE ((cl.id_coordinador NOT IN (2562, 2541)) OR (cl.id_coordinador IN (2562, 2541) AND cl.id_asesor = 1908 AND cl.id_asesor = $id_asesor))
+        AND idStatusContratacion IN (1, 2, 3) AND idMovimiento IN (31, 85, 20, 63, 73, 82, 92, 96) AND 
+        cl.status = 1 AND cl.id_asesor = $id_asesor AND cl.status = 1 ORDER BY cl.id_Cliente ASC");
 		return $query->result_array();
 	}
 

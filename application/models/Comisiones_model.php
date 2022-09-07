@@ -8350,19 +8350,18 @@ return $query->result();
         $result = $this->db->query("SELECT pci.id_pago_i, pa.id_prestamo, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', 
             u .apellido_materno) AS nombre_completo, 
             oxc.nombre as puesto, pa.id_usuario, pa.monto as monto_prestado, pci.abono_neodata, pa.pago_individual, 
-            rpp.id_relacion_pp,oxc2.nombre as tipo, oxc2.id_opcion,
-            (SELECT (pa1.monto - SUM(pci1.abono_neodata)) as pendiente
-            FROM prestamos_aut pa1
-            JOIN relacion_pagos_prestamo rpp1 ON rpp1.id_prestamo = pa1.id_prestamo
-            JOIN pago_comision_ind pci1 ON pci1.id_pago_i = rpp1.id_pago_i 
-            WHERE pa1.id_usuario = pa.id_usuario
-            GROUP BY pa1.monto) pendiente
+            rpp.id_relacion_pp,oxc2.nombre as tipo, oxc2.id_opcion, pend.pendiente
             FROM prestamos_aut pa
             JOIN usuarios u ON u.id_usuario = pa.id_usuario
             JOIN relacion_pagos_prestamo rpp ON rpp.id_prestamo = pa.id_prestamo
             JOIN pago_comision_ind pci ON pci.id_pago_i = rpp.id_pago_i 
             JOIN opcs_x_cats oxc ON oxc.id_opcion = u.id_rol AND oxc.id_catalogo = 1
             JOIN opcs_x_cats oxc2 ON oxc2.id_opcion = pa.tipo AND oxc2.id_catalogo = 23
+            JOIN (SELECT (pa1.monto - SUM(pci1.abono_neodata)) as pendiente, pa1.id_usuario
+                FROM prestamos_aut pa1
+                JOIN relacion_pagos_prestamo rpp1 ON rpp1.id_prestamo = pa1.id_prestamo
+                JOIN pago_comision_ind pci1 ON pci1.id_pago_i = rpp1.id_pago_i 
+                GROUP BY pa1.monto, pa1.id_usuario) pend ON pend.id_usuario = pa.id_usuario
             AND pci.estatus in(18,19,20,21,22,23,24,25,26) AND pci.descuento_aplicado = 1
             AND u.id_rol = $rol $whereUserClause
             ORDER BY pa.id_usuario ASC, pa.id_prestamo ASC");
@@ -8866,8 +8865,8 @@ return $query->result();
         LEFT JOIN (SELECT SUM(abono_neodata) abono_pagado, id_usuario FROM pago_comision_ind WHERE estatus in (17) GROUP BY id_usuario) pci2 ON du.id_usuario = pci2.id_usuario
         LEFT JOIN (SELECT SUM(abono_neodata) abono_nuevo, id_usuario FROM pago_comision_ind WHERE estatus in (1) GROUP BY id_usuario) pci3 ON du.id_usuario = pci3.id_usuario 
         LEFT JOIN sedes se ON se.id_sede = Try_Cast(us.id_sede  As int)
-        LEFT JOIN (SELECT COUNT(DISTINCT(CAST(fecha_abono AS DATE))) no_descuentos, id_usuario 
-            FROM pago_comision_ind WHERE estatus = 17 AND id_usuario = 9480 GROUP BY id_usuario, CAST(fecha_abono AS DATE)) des 
+        LEFT JOIN (SELECT COUNT(DISTINCT(CAST(fecha_abono AS DATE))) no_descuentos, id_usuario
+                   FROM pago_comision_ind WHERE estatus = 17 GROUP BY id_usuario) des 
             ON des.id_usuario = du.id_usuario
         LEFT JOIN (SELECT MIN(hc.fecha_movimiento) fecha_mov, pci.id_usuario
             FROM pago_comision_ind pci 

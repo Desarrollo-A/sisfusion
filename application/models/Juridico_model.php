@@ -57,7 +57,7 @@ class Juridico_model extends CI_Model {
 		else {
 			$id_sede = $this->session->userdata('id_sede');
 			$id_usuario = $this->session->userdata('id_usuario');
-			if(in_array($this->session->userdata('id_usuario'), array("2765", "2776", "10463", "2820", "2876", "10437", "2763", "5468", "2764", "6856", "2746", "2800", "2761", "2792")))
+			if(in_array($this->session->userdata('id_usuario'), array("2765", "2776", "10463", "2820", "2876", "10437", "5468", "2764", "6856", "2800")))
 				$filtroAsignacion = "AND l.asig_jur = $id_usuario";
 			else
 				$filtroAsignacion = "";
@@ -66,9 +66,6 @@ class Juridico_model extends CI_Model {
 				$filtroSede = "AND l.ubicacion IN ('$id_sede', '10')";
 			else
 				$filtroSede = "AND l.ubicacion IN ('$id_sede')";
-			
-			if ($this->session->userdata('id_usuario') == 2747)
-				$filtroSede = "AND l.ubicacion IN ('$id_sede', '1', '5')";
 
 			$query = $this->db-> query("SELECT l.idLote, cl.id_cliente, cl.fechaApartado, cl.nombre, cl.apellido_paterno, cl.apellido_materno, l.nombreLote, l.idStatusContratacion,
 			l.idMovimiento, l.modificado, cl.rfc, CAST(l.comentario AS varchar(MAX)) as comentario, l.fechaVenc, l.perfil, cond.nombre as nombreCondominio, res.nombreResidencial, l.ubicacion,
@@ -220,8 +217,11 @@ class Juridico_model extends CI_Model {
 	
 	
 	public function get_users_reassing(){
-		$query = $this->db->query("SELECT * FROM usuarios WHERE id_usuario IN (2776, 10463, 2765, 2820, 2876, 10437);");
-		return $query->result_array();
+		return $this->db->query("SELECT us.id_usuario, CONCAT(UPPER(us.nombre), ' ', UPPER(us.apellido_paterno), ' ', 
+		UPPER(us.apellido_materno), ' (', se.nombre, ')') nombreUsuario FROM usuarios us 
+		INNER JOIN sedes se ON se.id_sede = us.id_sede
+		WHERE us.id_usuario IN (2776, 10463, 2765, 2820, 2876, 10437, 5468, 2764, 6856, 2800) AND us.id_rol = 15 AND us.estatus = 1 
+		ORDER BY us.id_sede, nombreUsuario")->result_array();
 	}
 
 	public function changeUs($iduser, $idLote){
