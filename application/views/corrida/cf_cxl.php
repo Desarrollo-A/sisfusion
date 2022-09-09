@@ -562,8 +562,10 @@
                                         <input type="date" ng-model="CurrentDate" class="form-control" value="{{CurrentDate | date:'dd-MM-yyyy'}}" ng-readonly="true">
                                     </div>
                                     <div class="col-md-2 form-group" >
-                                        <label>Fecha Apartado:</label>
-                                        <input type="date" ng-model="fechaApartado" class="form-control" value="{{fechaApartado | date:'yyyy-MM-dd'}}" ng-readonly="true">
+                                        <div id="labelFA">
+                                            <label>Fecha Apartado:</label>
+                                            <input type="date" ng-model="fechaApartado" class="form-control" value="{{fechaApartado | date:'yyyy-MM-dd'}}" ng-readonly="true" id="fechaApartado">
+                                        </div>
                                     </div>
                                     <div class="col-md-2 form-group" >
                                         <label>Enganche:</label>
@@ -5668,6 +5670,10 @@
                     });
             }
 
+
+            $scope.provFTRE = function(){
+                calcularCF();
+            };
             $scope.onSelectChangec = function(condominio) {
                 $http.post('<?=base_url()?>index.php/queryInventario/getLoteDisponibleA',{condominio: condominio.idCondominio}).then(
                     function (response) {
@@ -5769,8 +5775,18 @@
                         let coordinador_array_manejo=[];
                         let asesor_array_manejo=[];
                         // console.log("cámara mis perros", response);
+                        if(response.data[0].idStatusContratacion==2 && resopnse.data[0].idMovimiento==84){//colocamos las validaciones cuando venga el estatus en esa actual vista
+                            console.log('Vamos a hacerlo', response.data[0].idStatusLote);
+                            document.getElementById("labelFA").innerHTML = '<label><span class="required-label" style="color:#32D74C;vertical-align: text-bottom;">&bull;</span> Fecha Apartado:</label>';
+                            document.getElementById("labelFA").innerHTML += '<input type="date" ng-model="fechaApartado" ng-change="provFTRE()" class="form-control" value="{{fechaApartado | date:\'yyyy-MM-dd\'}}" id="fechaApartado">\n';
+                            $compile( document.getElementById('labelFA') )($scope);
+                        }else{
+                            $('#fechaApartado').attr('readonly',true);
+                            document.getElementById("labelFA").innerHTML = '<label>Fecha Apartado</label>';
+                            document.getElementById("labelFA").innerHTML += '<input type="date" ng-model="fechaApartado" class="form-control" value="{{fechaApartado | date:\'yyyy-MM-dd\'}}" ng-readonly="true" id="fechaApartado">\n';
+                            $compile( document.getElementById('labelFA') )($scope);
+                        }
                         if(response.data[0].idStatusLote == 3){
-                            // console.log('KAMARA MI PERRROOO');
                             $scope.id_clienteP = response.data[0].id_cliente;
                             // console.log("Este lote está apartado o disponible alv, prellenar asesor, coord y gerente: ", response.data[0].idStatusLote);
                             $http.post('<?=base_url()?>index.php/Asesor/getLineOfACG',{lote: response.data[0].idLote}).then(
@@ -7138,6 +7154,8 @@
                         // console.log("APARTADO FIELD: ", response);
                         // console.log("accediendo: ", response.data[0].idStatusLote);
 
+                        console.log("idStatusContratacion", response.data[0].idStatusLote);
+                        console.log("idMovimiento", response.data[0].idStatusLote);
                         let dataInnerHTML;
                         let id_gerente;
                         let id_coordinador;
@@ -8520,6 +8538,7 @@
                     function (response) {
                     });
             }
+
 
             $scope.onSelectChangecoord = function(coordinador) {
                 console.log("coordinador: ", coordinador);
