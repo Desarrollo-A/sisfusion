@@ -51,11 +51,11 @@
         {
             border-bottom: 1px solid red !important;
         }
-               #canvas {
+        #canvas {
            border: 1px solid black;
            position: absolute;
            z-index: 10000;
-       }
+        }
 
        #flake {
            color: #fff;
