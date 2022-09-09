@@ -469,6 +469,7 @@
 					<div class="form-group" style="text-align: center">
 						<br>
 						<button class="btn btnCalcular" type="button" ng-click="showVals()">CALCULAR</button>
+						<button class="btn" type="button" ng-click="showArray()">PROVISIONAL</button>
 					</div>
 					<div class="form-group" style="padding-top: 15px;text-align: left" class="groupInputInteres">
 						<label>Interés Ordinario Acumulado</label><br>
@@ -600,6 +601,10 @@
 
         // $scope.dtoptions = DTOptionsBuilder;
         //Es que
+        $scope.showArray= function(){
+            console.log('Current array:')
+            console.log($scope.alphaNumeric);
+        }
         $scope.dtoptions = DTOptionsBuilder.newOptions().withOption('aaData', [])
             .withLanguage({"url": "https://cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"})
             .withOption("ordering", false)

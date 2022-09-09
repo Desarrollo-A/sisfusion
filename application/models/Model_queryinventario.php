@@ -102,7 +102,7 @@
             $statuslt = ' lo.status = 1 AND ';
 
 
-        }else if( $this->session->userdata('id_rol')==33) {
+        }else if( $this->session->userdata('id_rol')==33 || $this->session->userdata('id_rol') == 17) {
             $statusLoteVar = '1, 3';
             $idAsesor = "";
             $statuscl = '';

@@ -1348,6 +1348,7 @@
                 var datos = [];
 
 
+
                 $.ajax({
                     url: "<?=base_url()?>index.php/Corrida/getResidencialDisponible",
                     cache: false,
@@ -2573,10 +2574,10 @@
                                         var apartado = angular.element(document.querySelector('#aptdo'));
                                         var mesesdiferidos = angular.element(document.querySelector('#msdif'));
                                         apartado.val(<?php echo $data_corrida->apartado;?>);
-                                        //mesesdiferidos.val(<?php //echo $data_corrida->meses_diferir ?>//);
+                                        //mesesdiferidos.val(<?php //echo $data_corrida->meses_diferiruyhg ?>//);
 
                                         $scope.age_plan = <?php echo $data_corrida-> anio?>;
-
+                                        $scope.fechaPM = ' <?php echo $data_corrida-> primer_mensualidad?>';
 
                                         // $scope.age_plan = $scope.yearplan.yearplan;
                                         descuentosAplicados = [];
@@ -5961,6 +5962,7 @@
 
                                 if (i == 12) {
                                     $scope.fechaPM = $scope.dateCf;
+
                                 }
 
 
