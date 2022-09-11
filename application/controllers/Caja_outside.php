@@ -946,7 +946,7 @@ class Caja_outside extends CI_Controller
         $response['Titulo'] = 'Prospecto - cliente';
         $response['resultado'] = TRUE;
         $response['message'] = 'Proceso realizado correctamente ' . date('y-m-d H:i:s');
-        //$response['evidencia_cliente'] = $rspns;
+        $response['id_cliente'] = $last_id;
         echo json_encode($response);
     }
 
