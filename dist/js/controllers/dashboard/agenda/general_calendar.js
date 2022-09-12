@@ -6,7 +6,6 @@
   });
 
   $(document).on('change', '#coordinador', function(e){
-    removeEvents();
     var idCoordinador = $("#coordinador").val();
     getAsesores(idCoordinador, true).then( response => {
       var arrayId = idCoordinador;
@@ -19,7 +18,7 @@
   });
 
   $(document).on('change','#asesor', function(e){
-    removeEvents();
+    console.log("change");
     if(userType == 9) var arrayId = idUser + ', ' + $("#asesor").val();
     else var arrayId = $("#coordinador").val() + ', ' +$("#asesor").val();
     
