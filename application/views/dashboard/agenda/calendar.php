@@ -66,5 +66,4 @@
             </div>
         </div>
     </div>
-    <script src="<?=base_url()?>dist/js/controllers/dashboard/agenda/general_calendar.js"></script>
     <script src="<?=base_url()?>dist/js/controllers/dashboard/agenda/dashboardCalendar.js"></script>
