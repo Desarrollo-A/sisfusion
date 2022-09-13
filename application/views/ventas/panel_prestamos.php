@@ -624,6 +624,25 @@
 				}
 			});
 						var tableDetalles = $('#table_detalles').DataTable({
+							dom: 'Brt'+ "<'row'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'i><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>",
+                width: 'auto',
+				buttons: [{
+					extend: 'excelHtml5',
+					text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
+					className: 'btn buttons-excel',
+					titleAttr: 'Descargar archivo de Excel',
+					title: 'PRÉSTAMOS Y PENALIZACIONES',
+					exportOptions: {
+						columns: [0,1,2,3,4,5],
+						format: {
+							header:  function (d, columnIdx) {
+								if(columnIdx >= 0){
+									return ' '+titulos[columnIdx] +' ';
+								}  
+							}
+						}
+					}
+				}],
                 width: 'auto',
 				ordering: false,	
 				"pageLength": 5,

@@ -52,7 +52,7 @@ class Api_model extends CI_Model
     function updateUserContratacion($datos, $id_usuario)
     {
          $this->db->update("usuarios", $datos, "id_usuario = $id_usuario");
-        if ($this->db->affected_rows() > 0)
+        if ($this->db->affected_rows() >= 0)
         {
           return 1;
         }

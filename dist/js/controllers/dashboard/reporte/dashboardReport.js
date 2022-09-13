@@ -154,7 +154,6 @@ function createAccordions(option, render, rol){
 }
 
 function fillBoxAccordions(option, rol, id_usuario, render, transaction, dates=null, leadersList){
-    console.log("fillBoxAccordions dates", dates);
     if( rol == 5 && (idUser == 28 && idUser == 30) )
         rolEspecial = 59;
     else if( rol == 5 && (idUser != 28 && idUser != 30) )
@@ -1158,7 +1157,6 @@ function get4Months() {
 }
 
 function newRoles(option) {
-    console.log("fn New roles", option);
     var rol;
     switch (option) {
         case 'director_regional':

@@ -985,7 +985,6 @@ $(document).on('click', '.btnModalDetailsRanking', function () {
         sede: sede
     }
     fillTable(dataObj);
-    console.log(dataObj);
     $("#seeInformationModalRanking").modal();
 });
 
