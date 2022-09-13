@@ -28,6 +28,7 @@
                                 <h3 class="card-title center-align">Envío contrato a RL </h3>
                                 <p class="card-title pl-1">(estatus 10)</p>
                             </div>
+                            
                             <div  class="toolbar">
                                 <div class="row">
                                     <div class="col col-xs-12 col-sm-12 col-md-3 col-lg-3 pb-5">
@@ -35,6 +36,8 @@
                                     </div>
                                 </div>
                             </div>
+
+
                             <div class="material-datatables">
                                 <div class="table-responsive">
                                     <table id="tabla_envio_RL" name="tabla_envio_RL" class="table-striped table-hover">
