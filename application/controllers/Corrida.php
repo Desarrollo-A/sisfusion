@@ -3415,7 +3415,7 @@ legend {
 
         $sheet->setCellValue('D7', 'PLAZO');
         $sheet->setCellValue('E7', 'MSI');
-        $sheet->setCellValue('F7', 'INTERES MORATORIO');
+        $sheet->setCellValue('F7', 'INTERÉS MORATORIO');
         $sheet->setCellValue('G7', 'FECHA PAGO');
         $sheet->getStyle("D7:I7")->getFont()->setSize(10);
         $sheet->getStyle('D7:I7')->getFont()->getColor()->setARGB('4472C4');
@@ -3430,8 +3430,8 @@ legend {
         $sheet->setCellValue('G8',  $fecha_formateada->format('d-m-Y'));
 
 
-        $sheet->setCellValue('F10', 'INTERES MORATORIO ACUMULADO');
-        $sheet->setCellValue('G10', 'INTERES ORDINARIO ACUMULADO');
+        $sheet->setCellValue('F10', 'INTERÉS MORATORIO ACUMULADO');
+        $sheet->setCellValue('G10', 'INTERÉS ORDINARIO ACUMULADO');
         $sheet->getStyle("F10:G10")->getFont()->setSize(10);
         $sheet->getStyle("F10:G10")->getAlignment()->setWrapText(true);
         $sheet->getStyle('F10:G10')->getFont()->getColor()->setARGB('4472C4');
@@ -3452,7 +3452,7 @@ legend {
         $sheet->setCellValue('F15', 'IMPORTE');
         $sheet->setCellValue('G15', 'FECHA PAGO');
         $sheet->setCellValue('H15', 'DÍAS DE RETRASO');
-        $sheet->setCellValue('I15', 'INTERES MORATORIO');
+        $sheet->setCellValue('I15', 'INTERÉS MORATORIO');
         $sheet->setCellValue('J15', 'TOTAL');
         $sheet->setCellValue('K15', 'SALDO MORATORIO');
         $sheet->setCellValue('L15', 'SALDO');
