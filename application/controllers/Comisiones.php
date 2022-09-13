@@ -7151,4 +7151,59 @@ for ($d=0; $d <count($dos) ; $d++) {
     echo json_encode($insertResponse);
   }
 
+  public function historial_estatus_descuentos()
+  {
+
+    $datos = array();
+    $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
+    $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
+    $val = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
+    $salida = str_replace('' . base_url() . '', '', $val);
+    $datos["datos4"] = $this->Asesor_model->getActiveBtn($salida, $this->session->userdata('id_rol'))->result();
+    $this->load->view('template/header');
+    $this->load->view("ventas/historial_estatus_descuentos", $datos);
+  }
+  public function lista_estatus_desc()
+    {
+        $data = $this->Comisiones_model->getListaEstatusHistorialEstatus_desc();
+        echo json_encode($data);
+    }
+    public function getDatosHistorialPagoEstatus_desc($proyecto,$status, $usuario){
+
+      ini_set('max_execution_time',0);
+          set_time_limit(0);
+          ini_set('memory_limit','-1');
+            
+      $dat =  $this->Comisiones_model->getDatosHistorialPagoEstatus_desc($proyecto, $status, $usuario)->result_array();
+     echo json_encode( array( "data" => $dat));
+    }
+    public function cambiarEstatusPagosDescuentos()
+    {
+      $apli = 1;
+
+        $idPagos = explode(',', $this->input->post('idPagos'));
+        $userId = $this->session->userdata('id_usuario');
+        $estatus = $_POST['estatus'];
+        $comentario = $_POST['comentario'];
+        $historiales = array();
+        if($estatus == 1 || $estatus == 4){
+          $apli = 0;
+        }
+
+        foreach($idPagos as $pago) {
+            $historiales[] = array(
+                'id_pago_i' => $pago,
+                'id_usuario' =>  $userId,
+                'fecha_movimiento' => date('Y-m-d H:i:s'),
+                'estatus' => $estatus,
+                'comentario' => $comentario
+            );
+        }
+
+        $resultUpdate = $this->Comisiones_model->massiveUpdateEstatusComisionIndDescuento(implode(',', $idPagos), $estatus,$apli);
+        $resultMassiveInsert = $this->Comisiones_model->insert_phc($historiales);
+
+        echo ($resultUpdate && $resultMassiveInsert);
+    }
+
 }

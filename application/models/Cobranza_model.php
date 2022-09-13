@@ -38,12 +38,12 @@ class Cobranza_model extends CI_Model {
         FORMAT(ISNULL(cm.comision_total, '0.00'), 'C') comisionTotal, 
         FORMAT(ISNULL(pci3.abonoDispersado, '0.00'), 'C') abonoDispersado, 
         FORMAT(ISNULL(pci2.abonoPagado, '0.00'), 'C') abonoPagado, l.registro_comision registroComision, cm.estatus as rec, cl.descuento_mdb,
-        REPLACE(oxc.nombre, ' (especificar)', '') lugar_prospeccion, pr.fecha_creacion as fecha_prospeccion
+        REPLACE(oxc.nombre, ' (especificar)', '') lugar_prospeccion
         FROM lotes l
         INNER JOIN condominios cn ON cn.idCondominio = l.idCondominio
         INNER JOIN residenciales r ON r.idResidencial = cn.idResidencial
         LEFT JOIN evidencia_cliente ec ON ec.idLote = l.idLote AND ec.idCliente = l.idCliente
-        INNER JOIN clientes cl ON cl.id_cliente = l.idCliente AND cl.status = 1 AND (cl.lugar_prospeccion IN(SELECT id_opcion FROM opcs_x_cats WHERE id_catalogo = 9) OR cl.descuento_mdb = 1) $filter
+        INNER JOIN clientes cl ON cl.id_cliente = l.idCliente AND cl.status = 1 AND (cl.lugar_prospeccion IN(6,29) OR cl.descuento_mdb = 1 OR (ec.estatus = 3 and cl.lugar_prospeccion not IN(6,29)) ) $filter
         INNER JOIN prospectos pr ON pr.id_prospecto = cl.id_prospecto AND pr.fecha_creacion <= '2022-01-20 00:00:00.000'
         INNER JOIN usuarios u ON u.id_usuario = cl.id_asesor AND u.id_sede IN ($result) 
         --INNER JOIN sedes s ON CAST(s.id_sede AS VARCHAR(15)) = CAST(u.id_sede AS VARCHAR(15))
@@ -54,11 +54,6 @@ class Cobranza_model extends CI_Model {
         LEFT JOIN (SELECT SUM(abono_neodata) abonoDispersado, id_comision FROM pago_comision_ind GROUP BY id_comision) pci3 ON cm.id_comision = pci3.id_comision
         LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = cl.lugar_prospeccion AND oxc.id_catalogo = 9
         WHERE l.status = 1 $filterTwo
-        GROUP BY r.nombreResidencial, cn.nombre, l.nombreLote, l.idLote, l.totalNeto2, cl.fechaApartado, s.nombre,
-        ec.estatus, (CASE l.idStatusContratacion WHEN '1' THEN '01' WHEN '2' THEN '02' WHEN '3' THEN '03' WHEN '4' THEN '04' WHEN '5' THEN '05' WHEN '6' THEN '06' 
-		 WHEN '7' THEN '07' WHEN '8' THEN '08' WHEN '9' THEN '09' WHEN '10' THEN '10' WHEN '11' THEN '11' WHEN '12' THEN '12' 
-		 WHEN '13' THEN '13' WHEN '14' THEN '14' WHEN '15' THEN '15' END), idStatusLote, pc.bandera, cm.comision_total, 
-        pci3.abonoDispersado, pci2.abonoPagado, l.registro_comision, cm.estatus, l.total, cl.descuento_mdb, REPLACE(oxc.nombre, ' (especificar)', ''), pr.fecha_creacion
         UNION ALL
         SELECT r.nombreResidencial, UPPER(cn.nombre) nombreCondominio, UPPER(l.nombreLote) nombreLote, l.idLote,
         FORMAT(ISNULL(l.totalNeto2, '0.00'), 'C') precioTotalLote, FORMAT(l.total, 'C') total_sindesc, cl.fechaApartado, UPPER(s.nombre) plaza,
@@ -70,7 +65,7 @@ class Cobranza_model extends CI_Model {
         FORMAT(ISNULL(cm.comision_total, '0.00'), 'C') comisionTotal, 
         FORMAT(ISNULL(pci3.abonoDispersado, '0.00'), 'C') abonoDispersado, 
         FORMAT(ISNULL(pci2.abonoPagado, '0.00'), 'C') abonoPagado, l.registro_comision registroComision, cm.estatus as rec, cl.descuento_mdb,
-        REPLACE(oxc.nombre, ' (especificar)', '') lugar_prospeccion, pr.fecha_creacion as fecha_prospeccion
+        REPLACE(oxc.nombre, ' (especificar)', '') lugar_prospeccion
         FROM lotes l
         INNER JOIN condominios cn ON cn.idCondominio = l.idCondominio
         INNER JOIN residenciales r ON r.idResidencial = cn.idResidencial
@@ -86,12 +81,7 @@ class Cobranza_model extends CI_Model {
         LEFT JOIN (SELECT SUM(abono_neodata) abonoPagado, id_comision FROM pago_comision_ind WHERE estatus IN (11) GROUP BY id_comision) pci2 ON cm.id_comision = pci2.id_comision
         LEFT JOIN (SELECT SUM(abono_neodata) abonoDispersado, id_comision FROM pago_comision_ind GROUP BY id_comision) pci3 ON cm.id_comision = pci3.id_comision
         LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = cl.lugar_prospeccion AND oxc.id_catalogo = 9
-        WHERE l.status = 1 $filterTwo
-        GROUP BY r.nombreResidencial, cn.nombre, l.nombreLote, l.idLote, l.totalNeto2, cl.fechaApartado, s.nombre,
-        ec.estatus, (CASE l.idStatusContratacion WHEN '1' THEN '01' WHEN '2' THEN '02' WHEN '3' THEN '03' WHEN '4' THEN '04' WHEN '5' THEN '05' WHEN '6' THEN '06' 
-		 WHEN '7' THEN '07' WHEN '8' THEN '08' WHEN '9' THEN '09' WHEN '10' THEN '10' WHEN '11' THEN '11' WHEN '12' THEN '12' 
-		 WHEN '13' THEN '13' WHEN '14' THEN '14' WHEN '15' THEN '15' END), idStatusLote, pc.bandera, cm.comision_total, 
-        pci3.abonoDispersado, pci2.abonoPagado, l.registro_comision, cm.estatus, l.total, cl.descuento_mdb, REPLACE(oxc.nombre, ' (especificar)', ''), pr.fecha_creacion");
+        WHERE l.status = 1 $filterTwo");
     }
 
     public function updateRecord($table, $data, $key, $value) // MJ: ACTUALIZA LA INFORMACIÓN DE UN REGISTRO EN PARTICULAR, RECIBE 4 PARÁMETROS. TABLA, DATA A ACTUALIZAR, LLAVE (WHERE) Y EL VALOR DE LA LLAVE

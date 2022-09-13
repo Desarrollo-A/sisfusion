@@ -483,9 +483,9 @@
                     {
                         data: function (d) {
                             if (d.descuento_mdb == 1) 
-                                return d.lugar_prospeccion + ' Martha Debayle';
+                                return d.lp + ' Martha Debayle';
                             else
-                                return d.lugar_prospeccion;
+                                return d.lp;
                         }
                     },
                     {
