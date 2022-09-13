@@ -701,7 +701,6 @@ function formatVentasM2(data){
 }
 
 function toggleDatatableMetrics(e){
-    console.log('Ya lo veía venir');
     var columnaActiva = e.closest( '.flexibleM' );
     var columnaChart = e.closest( '.col-chart' );
     var columnDatatable = $( e ).closest( '.row' ).find( '.col-datatable' );

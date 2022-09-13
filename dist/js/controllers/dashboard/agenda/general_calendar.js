@@ -18,7 +18,6 @@
   });
 
   $(document).on('change','#asesor', function(e){
-    console.log("change");
     if(userType == 9) var arrayId = idUser + ', ' + $("#asesor").val();
     else var arrayId = $("#coordinador").val() + ', ' +$("#asesor").val();
     
