@@ -344,8 +344,8 @@ class Api extends CI_Controller
         $res = json_decode($response);
         if($res->status == 200){
             $this->session->set_userdata(array(
-                'id_rol'  => 18,
-                'id_usuario' => 1980
+                'id_rol'  => 1,
+                'id_usuario' => 2
             ));
             $datos['sub_menu'] = $this->get_menu->get_submenu_data($this->session->userdata('id_rol'), $this->session->userdata('id_usuario'));
             $datos['external'] = true;
