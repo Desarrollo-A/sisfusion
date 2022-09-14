@@ -250,7 +250,7 @@ class Reporte_model extends CI_Model {
         }
         else if ($id_rol == 59) { // CONSULTA UN DIRECTOR REGIONAL Y VA POR LOS SUBDIRECTORES
             if ($render == 1) { // CONSULTA LO DE SU REGION Y SI ES SUBDIRECTOR DE UNA SEDE TAMBIÉN TRAE LOS REGISTROS
-                $filtro .= " AND (cl.id_regional = $id_usuario OR cl.id_subdirector = $id_usuario)";
+                $filtro .= " AND (cl.id_regional = $id_usuario /*OR cl.id_subdirector = $id_usuario*/)";
                 $comodin = "id_subdirector";
             } else
                 $filtro .= "";
@@ -426,12 +426,24 @@ class Reporte_model extends CI_Model {
                     LEFT JOIN historial_liberacion hl ON hl.idLote = lo.idLote AND hl.tipo NOT IN (2, 5, 6) AND hl.id_cliente = cl.id_cliente
                     INNER JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes GROUP BY idLote, idCliente) hlo ON hlo.idLote = lo.idLote AND hlo.idCliente = cl.id_cliente
                     INNER JOIN historial_lotes hlo2 ON hlo2.idLote = hlo.idLote AND hlo2.idCliente = hlo.idCliente AND hlo2.modificado = hlo.modificado
+                    LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = hl.tipo AND oxc.id_catalogo = 48
                     WHERE isNULL(noRecibo, '') != 'CANCELADO'  AND isNULL(isNULL(cl.tipo_venta_cl, lo.tipo_venta), 0) IN (0, 1, 2) AND cl.status = 0 
                     $filtro AND hlo2.idStatusContratacion < 11
-                    GROUP BY u.id_rol, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno),lo.idLote, lo.nombreLote, cl.id_asesor, cl.id_coordinador, 
-                    cl.id_gerente, cl.id_subdirector, cl.id_regional, 
+                    GROUP BY 
+                    u.id_rol, 
+                    CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno),
+                    lo.idLote, 
+                    lo.nombreLote, 
+                    cl.id_asesor, 
+                    cl.id_coordinador, 
+                    cl.id_gerente, 
+                    cl.id_subdirector, 
+                    cl.id_regional, 
                     UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)),
-                    isNULL(cl.totalNeto2_cl ,lo.totalNeto2), isNULL(cl.total_cl ,lo.total), CONVERT(VARCHAR, cl.fechaApartado, 103)
+                    isNULL(cl.totalNeto2_cl ,lo.totalNeto2), 
+                    isNULL(cl.total_cl ,lo.total), 
+                    CONVERT(VARCHAR, cl.fechaApartado, 103),
+                    CONVERT(VARCHAR, hl.modificado, 103), oxc.nombre
         ) tmpCA GROUP BY $comodin, tmpCA.nombreUsuario, tmpCA.id_rol) f ON f.userID = a.userID
         GROUP BY a.id_rol, a.userID,a.nombreUsuario, a.sumaTotal, b.sumaCT, c.sumaConT, d.sumaAT, e.sumaCanC, f.sumaCanA, a.totalVentas, b.totalCT, c.totalConT, d.totalAT, e.totalCanC, f.totalCanA
         ORDER BY a.nombreUsuario");
