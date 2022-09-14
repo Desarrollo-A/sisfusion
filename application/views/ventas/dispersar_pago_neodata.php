@@ -614,6 +614,11 @@
                 "width": "8%",
                 "data": function( d ){
                     var lblStats;
+                    var lblPenalizacion = '';
+
+                    if (d.penalizacion == 1){
+                        lblPenalizacion ='<span class="label label-warning" style="color:red;">Penalización + 90 días</span>';
+                    }
 
                     if(d.fecha_modificacion <= '2021-01-01' || d.fecha_modificacion == null ) {
                         lblStats ='';
@@ -623,7 +628,7 @@
                     else {
                         lblStats ='<span class="label label-info">'+d.date_neodata+'</span>';
                     }
-                    return lblStats;
+                    return lblStats+lblPenalizacion;
                 }
             },
             {
@@ -632,6 +637,21 @@
                 "data": function( data ){
                     var BtnStats = '';
                     var RegresaActiva = '';
+                    
+
+                    if(data.penalizacion == 1) {
+                        BtnStats += `
+                                <button href="#"
+                                    value="${data.idLote}"
+                                    data-value="${data.nombreLote}"
+                                    class="btn-data btn-blueMaderas btn-detener btn-warning"
+                                    title="Aprobar Penalización">
+                                    <i class="material-icons">check</i>
+                                </button>`;
+
+
+                    }else{
+
                     
                     if(data.totalNeto2==null || data.totalNeto2==''|| data.totalNeto2==0) {
                         BtnStats = 'Asignar Precio';
@@ -668,6 +688,7 @@
                                 </button>`;
                         
                     }
+                }
                     return '<div class="d-flex justify-center">'+BtnStats+'</div>';
                 }
                 // +'<button class="btn-data btn-orangeYellow marcar_pagada" title="Marcar como liquidada" value="' + data.idLote +'"><i class="material-icons">how_to_reg</i></button>'  data-estatus  ;
