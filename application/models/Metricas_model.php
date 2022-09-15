@@ -99,7 +99,7 @@ class Metricas_model extends CI_Model {
         $query = $this->db->query("SELECT s.nombre, COUNT(pros.id_prospecto) prospectos, COUNT(cl.id_cliente) clientes FROM sedes s
         INNER JOIN prospectos pros ON pros.id_sede =s.id_sede
         LEFT JOIN (SELECT id_sede, id_cliente, id_prospecto FROM clientes WHERE status = 1) cl ON cl.id_prospecto = pros.id_prospecto
-        WHERE pros.estatus = 1 AND YEAR(pros.fecha_creacion)= $year
+        WHERE YEAR(pros.fecha_creacion)= $year
         GROUP BY s.nombre
         ORDER BY prospectos DESC");
         return $query->result_array();
@@ -109,7 +109,7 @@ class Metricas_model extends CI_Model {
         $year = date("Y");
         $query = $this->db->query("SELECT oxc.nombre,pros.lugar_prospeccion, COUNT(*) cantidad FROM prospectos pros
         INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = pros.lugar_prospeccion AND oxc.id_catalogo = 9 AND oxc.estatus = 1
-        WHERE pros.estatus = 1 AND YEAR(pros.fecha_creacion)= $year
+        WHERE YEAR(pros.fecha_creacion)= $year
         GROUP BY oxc.nombre,pros.lugar_prospeccion
         ORDER BY cantidad DESC");
         return $query->result_array();
