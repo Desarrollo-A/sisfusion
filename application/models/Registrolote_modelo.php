@@ -4955,7 +4955,7 @@ WHERE idLote IN ('".$row['idLote']."') and nombreLote = '".$insert_csv['nombreLo
 				if ($this->session->userdata('id_usuario') == 30) // MJ: VALERIA PALACIOS VERÁ LO DE SLP + TIJUANA
 				$where = "(SELECT id_usuario FROM usuarios WHERE id_rol = 3 AND id_sede IN ('".$this->session->userdata('id_sede')."', '8'))";
 				else if ($this->session->userdata('id_usuario') == 7096 || $this->session->userdata('id_usuario') == 7097) // MJ: EDGAR Y GRISELL VERÁN LO DE CDMX + SMA
-					$where = "(SELECT id_usuario FROM usuarios WHERE id_rol = 3 AND id_sede IN ('".$this->session->userdata('id_sede')."', '9'))";
+					$where = "(SELECT id_usuario FROM usuarios WHERE (id_rol = 3 AND id_sede IN ('".$this->session->userdata('id_sede')."', '9')) OR id_usuario = 7092)";
 				else if ($this->session->userdata('id_usuario') == 29) // MJ: FERNANDA MONJARAZ VE CINTHYA TANDAZO
 					$where = "(SELECT id_usuario FROM usuarios WHERE id_rol = 3 AND id_sede IN ('".$this->session->userdata('id_sede')."') OR id_usuario = 666)";
 				else
@@ -6157,7 +6157,7 @@ WHERE idLote IN ('".$row['idLote']."') and nombreLote = '".$insert_csv['nombreLo
             cl.fecha_modificacion, cl.modificado_por, cond.nombre as nombreCondominio, residencial.nombreResidencial as nombreResidencial, cl.status, nombreLote,
             (SELECT CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)) AS asesor,
             (SELECT CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) FROM usuarios WHERE cl.id_gerente=id_usuario ) AS gerente ,
-            (SELECT CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) FROM usuarios WHERE cl.id_coordinador=id_usuario) AS coordinador
+            (SELECT CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) FROM usuarios WHERE cl.id_coordinador=id_usuario) AS coordinador, lotes.referencia
             FROM clientes as cl
             LEFT JOIN usuarios as us on cl.id_asesor=us.id_usuario
             LEFT JOIN lotes as lotes on lotes.idLote=cl.idLote
@@ -6174,7 +6174,7 @@ WHERE idLote IN ('".$row['idLote']."') and nombreLote = '".$insert_csv['nombreLo
             cl.fecha_modificacion, cl.modificado_por, cond.nombre as nombreCondominio, residencial.nombreResidencial as nombreResidencial, cl.status, nombreLote,
             (SELECT CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)) AS asesor,
             (SELECT CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) FROM usuarios WHERE cl.id_gerente=id_usuario ) AS gerente ,
-            (SELECT CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) FROM usuarios WHERE cl.id_coordinador=id_usuario) AS coordinador
+            (SELECT CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) FROM usuarios WHERE cl.id_coordinador=id_usuario) AS coordinador, lotes.referencia
             FROM clientes as cl
             LEFT JOIN usuarios as us on cl.id_asesor=us.id_usuario
             LEFT JOIN lotes as lotes on lotes.idLote=cl.idLote
