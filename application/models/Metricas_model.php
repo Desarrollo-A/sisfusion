@@ -58,7 +58,6 @@ class Metricas_model extends CI_Model {
     }
 
     public function getVentasM2($ídCondo){
-        $year = date("Y");
         $query = $this->db->query("SELECT t.range AS [sup], COUNT(*) as [cantidad], 
         FORMAT(SUM(CASE WHEN (t.totalNeto2 IS NULL OR t.totalNeto2 = 0.00) THEN t.total ELSE t.totalNeto2 END), 'C') [precio]
         FROM (
@@ -96,12 +95,18 @@ class Metricas_model extends CI_Model {
 
     public function getLugarProspeccion($data = null){
         $year = date("Y");
-        $query = $this->db->query("SELECT s.nombre, COUNT(pros.id_prospecto) prospectos, COUNT(cl.id_cliente) clientes FROM sedes s
-        INNER JOIN prospectos pros ON pros.id_sede =s.id_sede
-        LEFT JOIN (SELECT id_sede, id_cliente, id_prospecto FROM clientes WHERE status = 1) cl ON cl.id_prospecto = pros.id_prospecto
-        WHERE pros.estatus = 1 AND YEAR(pros.fecha_creacion)= $year
-        GROUP BY s.nombre
-        ORDER BY prospectos DESC");
+        $query = $this->db->query("SELECT t1.nombre, t1.prospectos, t2.clientes FROM (
+        (SELECT se.nombre, COUNT(*) prospectos FROM prospectos pr
+        INNER JOIN sedes se ON se.id_sede = pr.id_sede
+        WHERE YEAR(pr.fecha_creacion) = 2022
+        GROUP BY se.nombre) t1
+        LEFT JOIN
+        (SELECT se.nombre, COUNT(DISTINCT(cl.id_prospecto)) clientes FROM clientes cl
+        INNER JOIN prospectos pr ON pr.id_prospecto = cl.id_prospecto AND YEAR(pr.fecha_creacion) = 2022
+        INNER JOIN sedes se ON se.id_sede = pr.id_sede
+        WHERE cl.status = 1
+        GROUP BY se.nombre) t2 ON (t1.nombre = t2.nombre)
+        ) ORDER BY t1.prospectos DESC");
         return $query->result_array();
     }
 
@@ -162,13 +167,13 @@ class Metricas_model extends CI_Model {
                 END) MONTH, YEAR(DateValue) año, isNULL(qu.superficieSUMA, 0) superficieSUMA, FORMAT(isNULL(qu.precioSUMA,0),'C') precioSUMA, CAST(isNULL(qu.promedio,0) AS decimal(16,2)) promedio FROM cte 
             LEFT JOIN (
             SELECT SUM(lo.sup) superficieSUMA,
-                SUM(lo.totalNeto2) precioSUMA, 
-                SUM(lo.totalNeto2)/SUM(lo.sup) promedio, MONTH(cl.fechaApartado) mes, YEAR(cl.fechaApartado) año
+            SUM(CASE WHEN (lo.totalNeto2 IS NULL OR lo.totalNeto2 = 0.00) THEN lo.total ELSE lo.totalNeto2 END) precioSUMA, 
+            SUM(CASE WHEN (lo.totalNeto2 IS NULL OR lo.totalNeto2 = 0.00) THEN lo.total ELSE lo.totalNeto2 END) /SUM(lo.sup) promedio, MONTH(cl.fechaApartado) mes, YEAR(cl.fechaApartado) año
             FROM lotes lo
             INNER JOIN clientes cl ON cl.id_cliente = lo.idCliente
             INNER JOIN condominios cond ON cond.idCondominio = lo.idCondominio
             INNER JOIN residenciales res ON res.idResidencial = cond.idResidencial
-            WHERE cl.fechaApartado BETWEEN '$beginDate 00:00:00' AND '$endDate 23:59:59' AND cond.tipo_lote = 0 $filtro
+            WHERE cl.fechaApartado BETWEEN '$beginDate 00:00:00' AND '$endDate 23:59:59' AND cond.tipo_lote = 0 $filtro AND cl.status = 1
             AND lo.totalNeto2>0.00
             GROUP BY MONTH(cl.fechaApartado), YEAR(cl.fechaApartado)) qu ON qu.mes = month(cte.DateValue) AND qu.año = year(cte.DateValue)
             GROUP BY YEAR(DateValue), MONTH(DateValue), qu.superficieSUMA, qu.precioSUMA, qu.promedio
