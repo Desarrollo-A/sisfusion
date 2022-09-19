@@ -83,6 +83,13 @@ function formatMoney( n ) {
 	return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
 };
 
+//AA: Fn fomat thounsand
+function formatAsThousands(number){
+	number = number.toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g,'$1,');
+	number = number.split('').reverse().join('').replace(/^[\.]/,'');
+	return number;
+}
+
 // AA: Fn change full date to format (dd/mm/yyyy)
 function convertDate(inputFormat) {
 	function pad(s) { return (s < 10) ? '0' + s : s; }

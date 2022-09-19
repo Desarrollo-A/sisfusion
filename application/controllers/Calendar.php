@@ -211,9 +211,9 @@ class Calendar extends CI_Controller {
         }
     }
 
-    public function side_bar_calendar(){
-        $this->load->view('template/calendar_sidebar');
-    }
+    // public function side_bar_calendar(){
+    //     $this->load->view('template/calendar_sidebar');
+    // }
 
     public function updateNFinishAppointments(){
         $response = $this->General_model->updateBatch("agenda", json_decode(file_get_contents("php://input")), "id_cita"); // MJ: SE MANDA CORRER EL UPDATE BATCH
