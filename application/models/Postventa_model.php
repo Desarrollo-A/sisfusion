@@ -18,7 +18,7 @@ class Postventa_model extends CI_Model
 
     function getCondominios($idResidencial)
     {
-        return $this->db->query("SELECT * FROM condominios WHERE status = 1 AND idResidencial = $idResidencial");
+        return $this->db->query("SELECT * FROM condominios WHERE status = 1 AND idResidencial = $idResidencial ORDER BY nombre");
     }
 
     function getLotes($idCondominio)
