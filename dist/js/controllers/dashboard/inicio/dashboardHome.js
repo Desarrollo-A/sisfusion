@@ -30,8 +30,13 @@ var optionsTotalVentas = {
                     offsetY: 120,
                     formatter: function (w) {
                         // By default this function returns the average of all series. The below is just an example to show the use of custom formatter function
-                        let val = parseInt((w.globals.labels[0]).split(": ")[1]);
-                        return `Gran total: ${val.toLocaleString('es-MX')}`;
+                        // if (w.globals.labels[0] != '' || w.globals.labels[0] != undefined){
+                            // console.log(w.globals.labels[0]);
+                            // let val = parseInt((w.globals.labels[0]).split(": ")[1]);
+                            let val = w.globals.labels[0];
+
+                            return `${val.toLocaleString('es-MX')}`;
+                        // }
                     }
                 }
             },
@@ -375,10 +380,10 @@ function getSalesByYear(com2){
 
             totalVentasChart.updateOptions({
               labels: [
-                `Gran total: ${response.totalVentas}`,
-                `Contratado: ${response.totalConT}`,
-                `Apartado: ${response.totalAT}`,
-                `Cancelado: ${response.totalCT}`
+                `Gran total: ${formatAsThousands(response.totalVentas)}`,
+                `Contratado: ${formatAsThousands(response.totalConT)}`,
+                `Apartado: ${formatAsThousands(response.totalAT)}`,
+                `Cancelado: ${formatAsThousands(response.totalCT)}`
                 ]
              });
 
