@@ -86,32 +86,17 @@
             lotes.idCondominio = $condominio")->result_array();
     }
 
-
-    /////////
-    public function getLotesDis2($condominio, $rol)
-    {
-
-        $val_idStatusLote = ($rol == 8 || $rol == 4) ? ('1,101,102') : ('1');
-
-        /*return $query = $this->db->query("SELECT lotes.idLote, lotes.nombreLote, lotes.precio, lotes.total, lotes.sup, condominios.tipo_lote, lotes.referencia
+    public function getLotesDis2($condominio, $rol) {
+        $val_idStatusLote = ($rol == 8 || $rol == 4) ? ('1, 101, 102') : ('1');
+        return $query = $this->db->query("SELECT lotes.idLote, lotes.nombreLote, lotes.precio, lotes.total, lotes.sup, condominios.tipo_lote, lotes.referencia, lotes.casa, (
+        CASE lotes.casa WHEN 0 THEN '' WHEN 1 THEN  casas.casasDetail END) casasDetail, re.empresa
         FROM lotes
         INNER JOIN condominios ON lotes.idCondominio = condominios.idCondominio
-        WHERE lotes.status = 1 AND lotes.idStatusLote in (".$val_idStatusLote.") AND lotes.idCondominio = '$condominio'")->result_array();*/
-        return $query = $this->db->query("SELECT lotes.idLote, lotes.nombreLote, lotes.precio, lotes.total, lotes.sup, condominios.tipo_lote, lotes.referencia, lotes.casa, (
-            CASE lotes.casa
-            WHEN 0 THEN ''
-            WHEN 1 THEN  casas.casasDetail
-            END
-            ) casasDetail
-            FROM lotes
-            INNER JOIN condominios ON lotes.idCondominio = condominios.idCondominio
-            LEFT JOIN (SELECT id_lote, CONCAT( '{''total_terreno'':''', total_terreno, ''',', tipo_casa, '}') casasDetail 
-            FROM casas WHERE estatus = 1) casas ON casas.id_lote = lotes.idLote
-            WHERE lotes.status = 1 AND lotes.idStatusLote in (" . $val_idStatusLote . ") AND lotes.idCondominio = '$condominio'")->result_array();
+        INNER JOIN residenciales re ON re.idResidencial = condominios.idResidencial
+        LEFT JOIN (SELECT id_lote, CONCAT( '{''total_terreno'':''', total_terreno, ''',', tipo_casa, '}') casasDetail 
+        FROM casas WHERE estatus = 1) casas ON casas.id_lote = lotes.idLote
+        WHERE lotes.status = 1 AND lotes.idStatusLote in ($val_idStatusLote) AND lotes.idCondominio = $condominio")->result_array();
     }
-
-    /////////
-
 
     public function getResidencial()
     {
@@ -869,42 +854,31 @@
     }
 
 
-    public function data_cliente2($idCondominio)
-    {
-
+    public function data_cliente2($idCondominio){
         $query = $this->db->query("SELECT cl.id_cliente ,id_asesor ,id_coordinador ,id_gerente ,cl.id_sede, cl.nombre ,cl.apellido_paterno, cl.apellido_materno,
-		                        lotes.referencia ,personalidad_juridica ,cl.nacionalidad ,cl.rfc ,curp ,cl.correo ,telefono1, us.rfc, cl.id_prospecto
-                                ,telefono2 ,telefono3 ,fecha_nacimiento ,lugar_prospeccion ,medio_publicitario ,otro_lugar ,plaza_venta ,tp.tipo ,estado_civil ,regimen_matrimonial ,nombre_conyuge  
-                                ,domicilio_particular ,tipo_vivienda ,ocupacion ,cl.empresa ,puesto ,edadFirma ,antiguedad ,domicilio_empresa ,telefono_empresa  ,noRecibo
-                                ,engancheCliente ,concepto ,fechaEnganche ,cl.idTipoPago ,expediente ,cl.status ,cl.idLote ,fechaApartado ,fechaVencimiento , cl.usuario, cond.idCondominio, cl.fecha_creacion, cl.creado_por,
-								CASE
-								WHEN (registro_comision != 1) THEN 0
-                                WHEN (cl.lugar_prospeccion IN(27, 28)) THEN 0
-								ELSE registro_comision
-								END AS registro_comision,
-                                cl.fecha_modificacion, cl.modificado_por, cond.nombre as nombreCondominio, residencial.nombreResidencial as nombreResidencial, residencial.descripcion , cl.status, nombreLote,
-
-
-                                (SELECT CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) AS ncliente,
-
-
-                                (SELECT CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)) AS asesor,
-                                (SELECT CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) FROM usuarios WHERE cl.id_gerente=id_usuario ) AS gerente ,
-                                (SELECT CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) FROM usuarios WHERE cl.id_coordinador=id_usuario) AS coordinador,
-                                /*(CASE lotes.idStatusContratacion WHEN 1 THEN 1 ELSE 0 END)*/ '1' changePermission, lotes.idStatusContratacion, lotes.idMovimiento
-								
-								
-								
-                                FROM clientes as cl
-                                LEFT JOIN usuarios as us on cl.id_asesor=us.id_usuario
-                                LEFT JOIN lotes as lotes on lotes.idLote=cl.idLote
-                                LEFT JOIN condominios as cond on lotes.idCondominio=cond.idCondominio
-                                LEFT JOIN residenciales as residencial on cond.idResidencial=residencial.idResidencial
-                                LEFT JOIN tipopago as tp on cl.idTipoPago=tp.idTipoPago
-                                where lotes.idCondominio = " . $idCondominio . " AND cl.status = 1 AND lotes.idStatusLote <> 99 order by cl.id_cliente desc");
-
+		lotes.referencia ,personalidad_juridica ,cl.nacionalidad ,cl.rfc ,curp ,cl.correo ,telefono1, us.rfc, cl.id_prospecto
+        ,telefono2 ,telefono3 ,fecha_nacimiento ,lugar_prospeccion ,medio_publicitario ,otro_lugar ,plaza_venta ,tp.tipo ,estado_civil ,regimen_matrimonial ,nombre_conyuge  
+        ,domicilio_particular ,tipo_vivienda ,ocupacion ,cl.empresa ,puesto ,edadFirma ,antiguedad ,domicilio_empresa ,telefono_empresa  ,noRecibo
+        ,engancheCliente ,concepto ,fechaEnganche ,cl.idTipoPago ,expediente ,cl.status ,cl.idLote ,fechaApartado ,fechaVencimiento , cl.usuario, cond.idCondominio, cl.fecha_creacion, cl.creado_por,
+		CASE
+		WHEN (registro_comision != 1) THEN 0
+        WHEN (cl.lugar_prospeccion IN(27, 28)) THEN 0
+		ELSE registro_comision
+		END AS registro_comision,
+        cl.fecha_modificacion, cl.modificado_por, cond.nombre as nombreCondominio, residencial.nombreResidencial as nombreResidencial, residencial.descripcion , cl.status, nombreLote,
+        (SELECT CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) AS ncliente,
+        (SELECT CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)) AS asesor,
+        (SELECT CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) FROM usuarios WHERE cl.id_gerente=id_usuario ) AS gerente ,
+        (SELECT CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) FROM usuarios WHERE cl.id_coordinador=id_usuario) AS coordinador,
+        /*(CASE lotes.idStatusContratacion WHEN 1 THEN 1 ELSE 0 END)*/ '1' changePermission, lotes.idStatusContratacion, lotes.idMovimiento, residencial.empresa
+        FROM clientes as cl
+        LEFT JOIN usuarios as us on cl.id_asesor=us.id_usuario
+        LEFT JOIN lotes as lotes on lotes.idLote=cl.idLote
+        LEFT JOIN condominios as cond on lotes.idCondominio=cond.idCondominio
+        LEFT JOIN residenciales as residencial on cond.idResidencial=residencial.idResidencial
+        LEFT JOIN tipopago as tp on cl.idTipoPago=tp.idTipoPago
+        where lotes.idCondominio = " . $idCondominio . " AND cl.status = 1 AND lotes.idStatusLote <> 99 order by cl.id_cliente desc");
         return $query->result();
-
     }
 
 

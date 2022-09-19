@@ -2456,18 +2456,13 @@ class Caja_outside extends CI_Controller
     }
 
 
-    function getregistrosClientes2()
-    {
-
+    public function getregistrosClientes2(){
         $data = json_decode(file_get_contents("php://input"));
-
         $dato = $this->caja_model_outside->data_cliente2($data->idCondominio);
-
-        if ($dato != null) {
+        if ($dato != null)
             echo json_encode($dato);
-        } else {
+        else
             echo json_encode(array());
-        }
     }
 
 
