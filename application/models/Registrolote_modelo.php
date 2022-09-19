@@ -2229,7 +2229,7 @@ gerente2.nombreGerente as gerente2, gerente3.nombreGerente as gerente3, gerente4
 
 
     public function lotesContratados(){
-        $query = $this->db->query("SELECT lotes.idLote, s.nombre AS nombreSede, cl.id_cliente, cl.nombre, cl.apellido_paterno, cl.apellido_materno, lotes.nombreLote, 
+        $query = $this->db->query("SELECT lotes.idLote, ISNULL(s.nombre, 'Sin especificar') AS nombreSede, cl.id_cliente, cl.nombre, cl.apellido_paterno, cl.apellido_materno, lotes.nombreLote, 
             lotes.idStatusContratacion, lotes.idMovimiento, lotes.modificado, CAST(lotes.comentario AS varchar(MAX)) as comentario, 
             lotes.fechaVenc, lotes.perfil, residencial.nombreResidencial, cond.nombre as nombreCondominio, lotes.ubicacion, lotes.tipo_venta,
             lotes.fechaSolicitudValidacion, lotes.firmaRL, lotes.validacionEnganche, cl.fechaApartado,
@@ -2239,7 +2239,7 @@ gerente2.nombreGerente as gerente2, gerente3.nombreGerente as gerente3, gerente4
             CONCAT(u.nombre,' ', u.apellido_paterno, ' ', u.apellido_materno) END) nombreUsuario
             FROM lotes as lotes
             INNER JOIN clientes as cl ON lotes.idLote=cl.idLote AND cl.status=1
-            INNER JOIN sedes AS s ON s.id_sede = cl.id_sede
+            LEFT JOIN sedes AS s ON s.id_sede = cl.id_sede
             INNER JOIN condominios as cond ON lotes.idCondominio=cond.idCondominio
             INNER JOIN residenciales as residencial ON cond.idResidencial=residencial.idResidencial
             LEFT JOIN usuarios us ON cl.id_asesor=us.id_usuario
