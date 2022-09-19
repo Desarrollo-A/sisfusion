@@ -139,6 +139,53 @@
                 </div>
             </div>
         </div>
+
+
+
+        <div class="modal fade modal-alertas"
+             id="penalizacion-modal"
+             role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header bg-red">
+                        <button type="button"
+                                class="close"
+                                data-dismiss="modal"
+                                aria-hidden="true">
+                            <i class="material-icons">clear</i>
+                        </button>
+                    </div>
+
+                    <form method="post"
+                          class="row"
+                          id="detenidos-form"
+                          autocomplete="off">
+                        <div class="modal-body">
+                            <input type="hidden"
+                                   name="id_pagoc"
+                                   id="id-lote-detenido">
+                                   <input type="hidden"
+                                   name="statusLote"
+                                   id="statusLote">
+ 
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="submit"
+                                    class="btn btn-primary">
+                                Aceptar
+                            </button>
+                            <button type="button"
+                                    class="btn btn-danger btn-simple"
+                                    data-dismiss="modal">
+                                Cancelar
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
         <!-- END Modals -->
         <div class="modal fade modal-alertas" id="modal_pagadas" role="dialog">
             <div class="modal-dialog modal-md">
@@ -617,7 +664,7 @@
                     var lblPenalizacion = '';
 
                     if (d.penalizacion == 1){
-                        lblPenalizacion ='<span class="label label-warning" style="color:red;">Penalización + 90 días</span>';
+                        lblPenalizacion ='<br><span class="label label-warning" style="color:red;">+ 90 días</span>';
                     }
 
                     if(d.fecha_modificacion <= '2021-01-01' || d.fecha_modificacion == null ) {
@@ -644,7 +691,7 @@
                                 <button href="#"
                                     value="${data.idLote}"
                                     data-value="${data.nombreLote}"
-                                    class="btn-data btn-blueMaderas btn-detener btn-warning"
+                                    class="btn-data btn-blueMaderas btn-penalizacion btn-warning"
                                     title="Aprobar Penalización">
                                     <i class="material-icons">check</i>
                                 </button>`;
@@ -743,6 +790,21 @@
 
                 $("#detenciones-modal").modal();
             });
+
+            $("#tabla_ingresar_9 tbody").on('click', '.btn-penalizacion', function () {
+                const idLote = $(this).val();
+                const nombreLote = $(this).attr("data-value");
+                const statusLote = $(this).attr("data-statusLote");
+
+                $('#id-lote-detenido').val(idLote);
+                $('#statusLote').val(statusLote);
+
+                $("#penalizacion-modal .modal-header").html("");
+                $("#penalizacion-modal .modal-header").append('<h4 class="modal-title">Motivo de controversia para <b>'+nombreLote+'</b></h4>');
+
+                $("#penalizacion-modal").modal();
+            });
+
         $("#tabla_ingresar_9 tbody").on("click", ".verify_neodata", async function(){ 
  
             $("#modal_NEODATA .modal-header").html("");
