@@ -274,7 +274,3 @@
         </div>
     </div>
 </div>
-<script>
-    rol = <?= $this->session->userdata('id_rol') ?> ;
-</script>
-<script src="<?=base_url()?>dist/js/controllers/dashboard/inicio/dashboardHome.js"></script>
