@@ -1,7 +1,7 @@
-var calendar;
+var calendar, eventsTable;
 var appointment = '';
 var exists = 1;
-var eventsTable;
+
 $(document).ready(function() {
   arrayEvents = [];
   getUsersAndEvents(userType, idUser, true);    

@@ -64,38 +64,18 @@ var initialOptions = {
     }
 }
 
-sp = { // MJ: SELECT PICKER
-    initFormExtendedDatetimepickers: function () {
-        $('.datepicker').datetimepicker({
-            format: 'DD/MM/YYYY',
-            icons: {
-                time: "fa fa-clock-o",
-                date: "fa fa-calendar",
-                up: "fa fa-chevron-up",
-                down: "fa fa-chevron-down",
-                previous: 'fa fa-chevron-left',
-                next: 'fa fa-chevron-right',
-                today: 'fa fa-screenshot',
-                clear: 'fa fa-trash',
-                close: 'fa fa-remove',
-                inline: true
-            }
-        });
-    }
-}
-
-$(document).ready(function(){
+function readyReport(){
     sp.initFormExtendedDatetimepickers();
     $('.datepicker').datetimepicker({locale: 'es'});
-    init();
-    setInitialValues();
+    initMetrics();
+    setInitialValuesReporte();
     chart = new ApexCharts(document.querySelector("#boxModalChart"), initialOptions);
     chart.render();
-});
 
-$('[data-toggle="tooltip"]').tooltip();
+    $('[data-toggle="tooltip"]').tooltip();
+}
 
-async function init(){
+async function initMetrics(){
     getLastSales(null, null);
     let rol = userType == 2 ? await getRolDR(idUser): userType;
     let rolString;
@@ -513,6 +493,12 @@ $(document).on('click', '.update-dataTable', function (e) {
 
 function setOptionsChart(series, categories, miniChart, type= null){
     (series.length > 1 && type == 1) ? colors=  ['#0089B7','#C25E5E', '#00CDA3', '#EB7B90']:(series.length > 1 && (type == 0 || type == null)) ? colors = ["#2C93E7", "#d9c07b"]:colors = ["#2C93E7"]
+
+    console.log("series2", series);
+    console.log("categories2", categories);
+    console.log("miniChart2", miniChart);
+    console.log("type2", type);
+
     var optionsMiniChart = {
         series: series,
         chart: {
@@ -752,6 +738,10 @@ function getLastSales(beginDate, endDate){
 
                 $("#tot"+chart).text("$"+formatMoney(total));
                 if ( total != 0 ){
+                    console.log("series", series);
+    console.log("categories", categories);
+    console.log("miniChart", chart);
+    
                     $("#"+chart+"").html('');
                     $("#"+chart+"").removeClass('d-flex justify-center');
                     var miniChartApex = new ApexCharts(document.querySelector("#"+chart+""), setOptionsChart(series, categories, miniChart));
@@ -1065,7 +1055,7 @@ function buildTableDetail(data, dataObj) {
     return sedes += '</table>';
 }
 
-async function setInitialValues() {
+async function setInitialValuesReporte() {
     // BEGIN DATE
      // BEGIN DATE
      const fechaInicio = new Date();

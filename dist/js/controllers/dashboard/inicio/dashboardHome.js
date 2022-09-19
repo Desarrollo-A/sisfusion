@@ -1,3 +1,4 @@
+var totalVentasChart, prospectosChart, chartProspClients, chartWeekly, chartFunnel;
 var mediaqueryList = window.matchMedia("(min-width: 200px)");
 
 var optionsTotalVentas = {
@@ -30,13 +31,8 @@ var optionsTotalVentas = {
                     offsetY: 120,
                     formatter: function (w) {
                         // By default this function returns the average of all series. The below is just an example to show the use of custom formatter function
-                        // if (w.globals.labels[0] != '' || w.globals.labels[0] != undefined){
-                            // console.log(w.globals.labels[0]);
-                            // let val = parseInt((w.globals.labels[0]).split(": ")[1]);
-                            let val = w.globals.labels[0];
-
-                            return `${val.toLocaleString('es-MX')}`;
-                        // }
+                        let val = parseInt((w.globals.labels[0]).split(": ")[1]);
+                        return `Gran total: ${val.toLocaleString('es-MX')}`;
                     }
                 }
             },
@@ -267,49 +263,31 @@ var optionsFunnel = {
     }
 };
 
-var totalVentasChart = new ApexCharts(document.querySelector("#totalVentasChart"), optionsTotalVentas);
-totalVentasChart.render();
-
-var prospectosChart = new ApexCharts(document.querySelector("#prospectosChart"), optionsProspectos);
-prospectosChart.render();
-
-var chartProspClients = new ApexCharts(document.querySelector("#chartProspClients"), optionsProspClients);
-chartProspClients.render();
-
-var chartWeekly = new ApexCharts(document.querySelector("#chartWeekly"), optionsWeekly);
-chartWeekly.render();
-
-var chartFunnel = new ApexCharts(document.querySelector("#chartFunnel"), optionsFunnel);
-chartFunnel.render();
-
-sp = { // MJ: SELECT PICKER
-    initFormExtendedDatetimepickers: function () {
-        $('.datepicker').datetimepicker({
-            format: 'DD/MM/YYYY',
-            icons: {
-                time: "fa fa-clock-o",
-                date: "fa fa-calendar",
-                up: "fa fa-chevron-up",
-                down: "fa fa-chevron-down",
-                previous: 'fa fa-chevron-left',
-                next: 'fa fa-chevron-right',
-                today: 'fa fa-screenshot',
-                clear: 'fa fa-trash',
-                close: 'fa fa-remove',
-                inline: true
-            }
-        });
-    }
-}
-
-// jquery
-$(document).ready(function(){
-    rol != 9 ? $('#buttonsCoord').hide():'';
+function readyHome(){
+    userType != 9 ? $('#buttonsCoord').hide():'';
     sp.initFormExtendedDatetimepickers();
     $('.datepicker').datetimepicker({locale: 'es'});
-    setInitialValues();
+    setInitialValuesHome();
     loadInit();
-});
+    loadApexChart();
+}
+
+function loadApexChart(){
+    totalVentasChart = new ApexCharts(document.querySelector("#totalVentasChart"), optionsTotalVentas);
+    totalVentasChart.render();
+
+    prospectosChart = new ApexCharts(document.querySelector("#prospectosChart"), optionsProspectos);
+    prospectosChart.render();
+
+    chartProspClients = new ApexCharts(document.querySelector("#chartProspClients"), optionsProspClients);
+    chartProspClients.render();
+
+    chartWeekly = new ApexCharts(document.querySelector("#chartWeekly"), optionsWeekly);
+    chartWeekly.render();
+
+    chartFunnel = new ApexCharts(document.querySelector("#chartFunnel"), optionsFunnel);
+    chartFunnel.render();
+}
 
 $(document).on('click', '.week', function(e){
     e.preventDefault();
@@ -380,10 +358,10 @@ function getSalesByYear(com2){
 
             totalVentasChart.updateOptions({
               labels: [
-                `Gran total: ${formatAsThousands(response.totalVentas)}`,
-                `Contratado: ${formatAsThousands(response.totalConT)}`,
-                `Apartado: ${formatAsThousands(response.totalAT)}`,
-                `Cancelado: ${formatAsThousands(response.totalCT)}`
+                `Gran total: ${response.totalVentas}`,
+                `Contratado: ${response.totalConT}`,
+                `Apartado: ${response.totalAT}`,
+                `Cancelado: ${response.totalCT}`
                 ]
              });
 
@@ -694,7 +672,7 @@ function getThisWeek() {
     return {fin_semana: fin_semana, inicio_semana: inicio_semana}
 }
 
-function setInitialValues() {
+function setInitialValuesHome() {
     // BEGIN DATE
     const fechaInicio = new Date();
     // Iniciar en este año, este mes, en el día 1
