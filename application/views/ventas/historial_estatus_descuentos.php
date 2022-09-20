@@ -459,11 +459,11 @@
             let at='';
             let texto='';
             if(status == 3 || status == 4){
-                at = 'disabled'; 
-                texto='DESCUENTOS';
+                at = ''; 
+                texto='REGRESAR DESCUENTOS';
             }else{
                 at='';
-                texto='REGRESAR DESCUENTO';
+                texto='DESCUENTOS';
             }
             let titulos = [];
             $("#tabla_historialGral").prop("hidden", false);
@@ -494,7 +494,6 @@
                     attr: {
                         class: 'btn btn-azure',
                         style: 'position: relative; float: right;',
-                        id: "btn-desc"
                     }
                 },
                 {
@@ -809,7 +808,7 @@
                     'className': 'dt-body-center',
                     'render': function (d, type, full) {
                         const estatus = $('#filtro44').val();
-                        if (estatus === '3' || estatus === '5' || estatus === '6' || estatus === '7') {
+                        if ( estatus === '5' || estatus === '6' || estatus === '7') {
                             return '';
                         } else if (estatus === '7' && (full.estatus === '1' || full.estatus === '6')) {
                             return '<input type="checkbox" name="idTQ[]" style="width:20px;height:20px;"  value="' + full.id_pago_i + '">';
@@ -861,7 +860,6 @@
             e.preventDefault();
 
             const estatusId = $('#filtro44').val();
-            alert(estatusId)
             let tipo_desc = 0;
             let comentario = $('#comentario').val();
             if (estatusId == 1) {
@@ -889,7 +887,9 @@
                 success: function (response) {
                     if (JSON.parse(response)) {
                         $('#movimiento-modal').modal('hide');
-                        appendBodyModal(`
+                        alerts.showNotification("top", "right", "Datos actualizados correctamente", "success");
+
+                       /* appendBodyModal(`
                             <div class="row">
                                 <div class="col-lg-12 text-center">
                                     <h3 style='color:#676767;'>Se cambiaron los estatus de los pagos seleccionados</h3>
@@ -898,7 +898,7 @@
                                 </div>
                             </div>
                         `);
-                        showModal();
+                        showModal();*/
                         tabla_historialGral2.ajax.reload();
                     } else {
                         $('#movimiento-modal').modal('hide');

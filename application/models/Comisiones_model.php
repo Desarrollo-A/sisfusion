@@ -8309,17 +8309,22 @@ return $query->result();
     public function getDetailPrestamo($idPrestamo)
     {
         $this->db->query("SET LANGUAGE Español;");
-        $result = $this->db->query("SELECT hc.comentario, l.nombreLote, CONVERT(NVARCHAR, rpp.fecha_creacion, 6) as fecha_pago, pci.abono_neodata, rpp.np 
-        FROM prestamos_aut pa
-        INNER JOIN usuarios u ON u.id_usuario = pa.id_usuario
-        INNER JOIN relacion_pagos_prestamo rpp ON rpp.id_prestamo = pa.id_prestamo
-        INNER JOIN pago_comision_ind pci ON pci.id_pago_i = rpp.id_pago_i AND pci.estatus IN(18,19,20,21,22,23,24,25,26) AND pci.descuento_aplicado = 1
-        INNER JOIN comisiones c ON c.id_comision = pci.id_comision
-        INNER JOIN lotes l ON l.idLote = c.id_lote
-        INNER JOIN historial_comisiones hc ON hc.id_pago_i = rpp.id_pago_i 
-        and (hc.comentario like 'DESCUENTO POR%' or hc.comentario like '%, POR MOTIVO DE PRESTAMO' or hc.comentario like '%NOMINA%') and hc.estatus=1
-        WHERE pa.id_prestamo = $idPrestamo
-        ORDER BY np ASC");
+        $result = $this->db->query("SELECT pci.id_pago_i,hc.comentario, l.nombreLote, CONVERT(NVARCHAR, rpp.fecha_creacion, 6) as fecha_pago, pci.abono_neodata, rpp.np,pcs.nombre as tipo,re.nombreResidencial,
+        CASE WHEN pa.estatus=1 THEN 'Activo' WHEN pa.estatus=2 THEN 'Liquidado' WHEN pa.estatus=3 THEN 'Liquidado' END AS estatus,se.nombre as sede
+                FROM prestamos_aut pa
+                INNER JOIN usuarios u ON u.id_usuario = pa.id_usuario
+                INNER JOIN sedes se ON se.id_sede=u.id_sede
+                INNER JOIN opcs_x_cats pcs ON pcs.id_opcion=pa.tipo AND pcs.id_catalogo=23
+                INNER JOIN relacion_pagos_prestamo rpp ON rpp.id_prestamo = pa.id_prestamo
+                INNER JOIN pago_comision_ind pci ON pci.id_pago_i = rpp.id_pago_i AND pci.estatus IN(18,19,20,21,22,23,24,25,26) AND pci.descuento_aplicado = 1
+                INNER JOIN comisiones c ON c.id_comision = pci.id_comision
+                INNER JOIN lotes l ON l.idLote = c.id_lote
+                INNER JOIN condominios con ON con.idCondominio=l.idCondominio
+                INNER JOIN residenciales re ON re.idResidencial=con.idResidencial
+                INNER JOIN historial_comisiones hc ON hc.id_pago_i = rpp.id_pago_i 
+                and (hc.comentario like 'DESCUENTO POR%' or hc.comentario like '%, POR MOTIVO DE PRESTAMO' or hc.comentario like '%NOMINA%') and hc.estatus=1
+                WHERE pa.id_prestamo = $idPrestamo
+                ORDER BY np ASC");
         return $result->result_array();
     }
 
