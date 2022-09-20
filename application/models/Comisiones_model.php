@@ -8396,7 +8396,6 @@ return $query->result();
     public function getDetailPrestamo($idPrestamo)
     {
         $this->db->query("SET LANGUAGE Español;");
- 
         $result = $this->db->query("SELECT pci.id_pago_i,hc.comentario, l.nombreLote, CONVERT(NVARCHAR, rpp.fecha_creacion, 6) as fecha_pago, pci.abono_neodata, rpp.np,pcs.nombre as tipo,re.nombreResidencial,
         CASE WHEN pa.estatus=1 THEN 'Activo' WHEN pa.estatus=2 THEN 'Liquidado' WHEN pa.estatus=3 THEN 'Liquidado' END AS estatus,se.nombre as sede
                 FROM prestamos_aut pa
@@ -8413,7 +8412,7 @@ return $query->result();
                 and (hc.comentario like 'DESCUENTO POR%' or hc.comentario like '%, POR MOTIVO DE PRESTAMO' or hc.comentario like '%NOMINA%') and hc.estatus=1
                 WHERE pa.id_prestamo = $idPrestamo
                 ORDER BY np ASC");
-         return $result->result_array();
+        return $result->result_array();
     }
 
     public function getPrestamosTable($rol, $user)
