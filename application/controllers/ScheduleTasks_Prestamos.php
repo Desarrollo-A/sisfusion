@@ -53,7 +53,7 @@ class ScheduleTasks_Prestamos extends CI_Controller
     $data = $this->db->query("SELECT p.*,opc.nombre 
     FROM prestamos_aut p 
     INNER JOIN opcs_x_cats opc ON opc.id_opcion=p.tipo AND opc.id_catalogo=23 
-    WHERE p.estatus=1 AND p.id_prestamo=133
+    WHERE p.estatus=1
     ORDER BY monto ASC")->result_array();
     for ($m=0; $m <count($data); $m++){
         $pagoMensual = $data[$m]['pago_individual'] + $data[$m]['pendiente'];
@@ -172,7 +172,11 @@ function SendMailPrestamos($data){
     var_dump($data);
     $mail = $this->phpmailer_lib->load();
     $mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
-    $mail->addAddress('programador.analista5@ciudadmaderas.com,programador.analista16@ciudadmaderas.com');
+    $mail->addAddress('programador.analista5@ciudadmaderas.com');
+    $mail->addAddress('programador.analista16@ciudadmaderas.com');
+    $mail->addAddress('tester.ti2@ciudadmaderas.com');
+
+
    $cadena='';
    for ($i=0; $i <count($data) ; $i++) { 
     $id_p = $data[$i]['id_prestamo'];
@@ -224,7 +228,7 @@ function SendMailPrestamos($data){
       <tr colspan='3'><td class='navbar navbar-inverse' align='center'>
           <table width='750px' cellspacing='0' cellpadding='3' class='container'>
               <tr class='navbar navbar-inverse encabezados'><td>
-                  <img src='https://www.ciudadmaderas.com/assets/img/logo.png' width='100%' class='img-fluid'/><p><a href='#'>PANEL DE PRÉSTAMOS</a></p>
+                  <img src='https://www.ciudadmaderas.com/assets/img/logo.png' width='100%' class='img-fluid'/>
               </td></tr>
           </table>
       </td></tr>
@@ -246,7 +250,7 @@ function SendMailPrestamos($data){
   
 
 
-  $mail->Subject = utf8_decode('PRÉSTAMOS NO APLICADOS EL DIA '.date('Y-m-d'));
+  $mail->Subject = utf8_decode('PRÉSTAMOS NO APLICADOS EL DÍA '.date('Y-m-d'));
   $mail->isHTML(true);
   $mail->send();
 }
