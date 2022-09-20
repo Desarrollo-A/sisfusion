@@ -120,4 +120,3 @@
         </div>
     </div>
 </div>
-<script src="<?=base_url()?>dist/js/controllers/dashboard/ranking/dashboardRanking.js"></script>

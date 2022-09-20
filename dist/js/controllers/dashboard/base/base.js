@@ -1,4 +1,4 @@
-let contInicio = 0, conReporte = 0, contAgenda = 0, contRanking = 0, contMetricas = 0;
+let contInicio = 0, contReporte = 0, contAgenda = 0, contRanking = 0, contMetricas = 0;
 
 sp = { // MJ: SELECT PICKER
     initFormExtendedDatetimepickers: function () {
@@ -43,10 +43,10 @@ function changePill(element){
         });
     }
     else if(element == 'reporteOption'){
-        conReporte++;
+        contReporte++;
         $('#reporte').html("");
         $('#reporte').load(`${base_url}Reporte/reporte`, function(){
-            if(conReporte <= 1 )
+            if(contReporte <= 1 )
                 $.getScript(base_url+"dist/js/controllers/dashboard/reporte/dashboardReport.js", function(){
                     readyReport();
                 });  
@@ -54,15 +54,36 @@ function changePill(element){
         });
     }
     else if(element == 'agendaOption'){
+        contAgenda++;
         $('#agenda').html("");
-        $('#agenda').load(`${base_url}Calendar/calendar`);
+        $('#agenda').load(`${base_url}Calendar/calendar`, function(){
+            if(contAgenda <= 1 )
+                $.getScript(base_url+"dist/js/controllers/dashboard/agenda/dashboardCalendar.js", function(){
+                    readyAgenda();
+                });
+            else readyAgenda();
+        });
     }
     else if(element == 'rankingOption'){
+        contRanking++;
         $('#ranking').html("");
-        $('#ranking').load(`${base_url}Ranking/ranking`);
+        $('#ranking').load(`${base_url}Ranking/ranking`, function(){
+            if(contRanking <= 1 )
+                $.getScript(base_url+"dist/js/controllers/dashboard/ranking/dashboardRanking.js", function(){
+                    readyRanking();
+                });
+            else readyRanking();
+        });
     }
     else if(element == 'metricasOption'){
+        contMetricas++;
         $('#metricas').html("");
-        $('#metricas').load(`${base_url}Metricas/metricas`);
+        $('#metricas').load(`${base_url}Metricas/metricas`, function(){
+            if( contMetricas <= 1 )
+                $.getScript(base_url+"dist/js/controllers/dashboard/metricas/dashboardMetrics.js", function(){
+                    readyMetrics();
+                });
+            else readyMetrics();
+        });
     }
 }

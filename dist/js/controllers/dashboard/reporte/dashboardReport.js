@@ -1,6 +1,4 @@
 // AA: Obtener fecha inicial y cuatro meses atrás para mini charts.
-var endDate = moment().format("YYYY-MM-DD");
-var beginDate = moment(endDate).subtract(4, 'months').format("YYYY-MM-DD");
 var chart;
 var initialOptions = {
     series: [],
@@ -67,7 +65,7 @@ var initialOptions = {
 function readyReport(){
     sp.initFormExtendedDatetimepickers();
     $('.datepicker').datetimepicker({locale: 'es'});
-    initMetrics();
+    initReport();
     setInitialValuesReporte();
     chart = new ApexCharts(document.querySelector("#boxModalChart"), initialOptions);
     chart.render();
@@ -75,7 +73,7 @@ function readyReport(){
     $('[data-toggle="tooltip"]').tooltip();
 }
 
-async function initMetrics(){
+async function initReport(){
     getLastSales(null, null);
     let rol = userType == 2 ? await getRolDR(idUser): userType;
     let rolString;
@@ -255,7 +253,7 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, dates=n
                 width: "26%",
                 data: function (d) {
                     let leaders = getLeadersLine(leadersList, d.userID, id_usuario); 
-                    return `<button style="background-color: #d8dde2; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="5" data-sede = 0 data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-idUser="${d.userID}" id="details-${d.userID}" data-leader="${id_usuario}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-dr="${leaders[5]}" class="btnModalDetails">${(d.totalAT + d.totalConT).toLocaleString('es-MX')}</button>`; //# APARTADOS;
+                    return `<button style="background-color: #d8dde2; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="5" data-sede = 0 data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-idUser="${d.userID}" id="details-${d.userID}" data-leader="${id_usuario}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-dr="${leaders[5]}" class="btnModalDetails">${(d.totalAT + d.totalConT).toLocaleString('es-MX')}</button>`;
                 }
             },
             {
@@ -268,8 +266,7 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, dates=n
                 width: "8%",
                 data: function (d) {
                     let leaders = getLeadersLine(leadersList, d.userID, id_usuario); 
-                    return `<button style="background-color: #d8dde2; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="1" data-sede = 0 data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-idUser="${d.userID}" id="details-${d.userID}" data-leader="${id_usuario}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-dr="${leaders[5]}" class="btnModalDetails">${(d.totalAT).toLocaleString('es-MX')}</button>`; //# GRAN TOTAL;
-                    //return ((d.totalAT + d.totalCanA)).toLocaleString('es-MX'); //# APARTADOS
+                    return `<button style="background-color: #d8dde2; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="1" data-sede = 0 data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-idUser="${d.userID}" id="details-${d.userID}" data-leader="${id_usuario}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-dr="${leaders[5]}" class="btnModalDetails">${(d.totalAT).toLocaleString('es-MX')}</button>`;
                 }
             },
             {
@@ -283,7 +280,6 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, dates=n
                 data: function (d) {
                     let leaders = getLeadersLine(leadersList, d.userID, id_usuario); 
                     return `<button style="background-color: #d8dde2; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="4" data-sede = 0 data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-idUser="${d.userID}" id="details-${d.userID}" data-leader="${id_usuario}" data-leader="${id_usuario}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-dr="${leaders[5]}" class="btnModalDetails">${(d.totalCanA).toLocaleString('es-MX')}</button>`; //# CANCELADOS APARTADOS;
-                    //return (d.totalCanA).toLocaleString('es-MX'); //# CANCELADOS APARTADOS
                 }
             },
             {
@@ -297,7 +293,6 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, dates=n
                 data: function (d) {
                     let leaders = getLeadersLine(leadersList, d.userID, id_usuario); 
                     return `<button style="background-color: #d8dde2; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="2" data-sede = 0 data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-idUser="${d.userID}" id="details-${d.userID}" data-leader="${id_usuario}" data-leader="${id_usuario}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-dr="${leaders[5]}" class="btnModalDetails">${(d.totalConT).toLocaleString('es-MX')}</button>`; //# CONTRATADOS;
-                    //return ((d.totalConT)).toLocaleString('es-MX'); //# CONTRATADOS
                 }
             },
             {
@@ -311,7 +306,6 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, dates=n
                 data: function (d) {
                     let leaders = getLeadersLine(leadersList, d.userID, id_usuario); 
                     return `<button style="background-color: #d8dde2; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-sede = 0 data-type="3" data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-idUser="${d.userID}" id="details-${d.userID}" data-leader="${id_usuario}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-dr="${leaders[5]}" class="btnModalDetails">${(d.totalCanC).toLocaleString('es-MX')}</button>`; //# CANCELADOS CONTRATADOS;
-                    //return (d.totalCanC).toLocaleString('es-MX'); //# CANCELADOS CONTRATADOS
                 }
             },
             {
@@ -491,13 +485,8 @@ $(document).on('click', '.update-dataTable', function (e) {
 });
 
 
-function setOptionsChart(series, categories, miniChart, type= null){
+function setOptionsChartReport(series, categories, miniChart, type= null){
     (series.length > 1 && type == 1) ? colors=  ['#0089B7','#C25E5E', '#00CDA3', '#EB7B90']:(series.length > 1 && (type == 0 || type == null)) ? colors = ["#2C93E7", "#d9c07b"]:colors = ["#2C93E7"]
-
-    console.log("series2", series);
-    console.log("categories2", categories);
-    console.log("miniChart2", miniChart);
-    console.log("type2", type);
 
     var optionsMiniChart = {
         series: series,
@@ -701,13 +690,12 @@ function getSpecificChart(type, beginDate, endDate){
             $("#modalChart .boxModalTitle .total").html('');
             $("#modalChart .boxModalTitle .total").append('<p>$'+formatMoney(total)+'</p>');
             if ( total != 0 ){
-                chart.updateOptions(setOptionsChart(series, categories, miniChart));
+                chart.updateOptions(setOptionsChartReport(series, categories, miniChart));
             }
             else{
                 $("#boxModalChart").html('');
                 $("#boxModalChart").addClass('d-flex justify-center');
                 $("#boxModalChart").append('<img src="'+base_url+'dist/img/emptyCharts.png" alt="Icono gráfica" class="h-70 w-auto">');
-                // chart.updateOptions(setOptionsChart([], [], miniChart));
             }
         },
         error: function() {
@@ -738,13 +726,9 @@ function getLastSales(beginDate, endDate){
 
                 $("#tot"+chart).text("$"+formatMoney(total));
                 if ( total != 0 ){
-                    console.log("series", series);
-    console.log("categories", categories);
-    console.log("miniChart", chart);
-    
                     $("#"+chart+"").html('');
                     $("#"+chart+"").removeClass('d-flex justify-center');
-                    var miniChartApex = new ApexCharts(document.querySelector("#"+chart+""), setOptionsChart(series, categories, miniChart));
+                    var miniChartApex = new ApexCharts(document.querySelector("#"+chart+""), setOptionsChartReport(series, categories, miniChart));
                     miniChartApex.render();
                 }
                 else $("#"+chart+"").addClass('d-flex justify-center');
@@ -819,16 +803,6 @@ function buildAllDataChart(allData, nameTypeChart, series, meses){
         categories : meses
     });
 }
-
-function formatMoney(n) {
-    var c = isNaN(c = Math.abs(c)) ? 2 : c,
-        d = d == undefined ? "." : d,
-        t = t == undefined ? "," : t,
-        s = n < 0 ? "-" : "",
-        i = String(parseInt(n = Math.abs(Number(n) || 0).toFixed(c))),
-        j = (j = i.length) > 3 ? j % 3 : 0;
-    return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
-};
 
 function monthName(mon){
     var monthName = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'][mon - 1];
@@ -1119,31 +1093,8 @@ function generalChart(data){
             data: contratadosC
         }
     ];
-    chart.updateOptions(setOptionsChart(series, x, 0, 1));
+    chart.updateOptions(setOptionsChartReport(series, x, 0, 1));
     $('.loadChartModal').addClass('d-none');
-}
-
-
-function get4Months() {
-    return new Promise(resolve => {
-        $.ajax({
-            type: "POST",
-            url: `${base_url}Reporte/get4MonthsRequest`,
-            dataType: 'json',
-            cache: false,
-            beforeSend: function() {
-                $('#spiner-loader').removeClass('hide');
-            },
-            success: function(data){
-                $('#spiner-loader').addClass('hide');
-                resolve(data);
-            },
-            error: function() {
-                $('#spiner-loader').addClass('hide');
-                alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
-            }
-        });
-    });
 }
 
 function newRoles(option) {
@@ -1188,14 +1139,14 @@ $(document).on('click', '.btnModalDetails', function () {
         subdirector: $(this).data("su"),
         regional: $(this).data("dr")
     }
-    fillTable(dataObject);
+    fillTableReport(dataObject);
     if (dataObject.type != 3 && dataObject.type != 33 && dataObject.type != 4 && dataObject.type != 4)
-        $("#seeInformationModal").modal();
+        $("#seeInformationModalReport").modal();
     else
         $("#seeInformationModalCancelados").modal();
 });
 
-function fillTable(dataObject) {
+function fillTableReport(dataObject) {
     if (dataObject.type != 3 && dataObject.type != 33 && dataObject.type != 4 && dataObject.type != 4) {
         $('#lotesInformationTable thead tr:eq(0) th').each(function (i) {
             const title = $(this).text();
