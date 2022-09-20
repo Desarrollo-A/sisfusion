@@ -337,11 +337,9 @@ class Dashboard_model extends CI_Model {
                 totalConT, '1' opt FROM (
                     SELECT lo.idLote, lo.nombreLote,  cl.id_asesor, cl.id_coordinador, cl.id_gerente, cl.nombre, cl.apellido_paterno, cl.apellido_materno, isNULL(cl.totalNeto2_cl, lo.totalNeto2) totalNeto2, isNULL(cl.total_cl,lo.total) total FROM clientes cl
                     INNER JOIN lotes lo ON lo.idLote = cl.idLote AND lo.idStatusLote IN (2, 3)
-                    INNER JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes GROUP BY idLote, idCliente) hlo ON hlo.idLote = lo.idLote AND hlo.idCliente = cl.id_cliente
-                    INNER JOIN historial_lotes hlo2 ON hlo2.idLote = hlo.idLote AND hlo2.idCliente = hlo.idCliente AND hlo2.modificado = hlo.modificado
+                    INNER JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes WHERE idStatusContratacion >= 11 GROUP BY idLote, idCliente) hlo ON hlo.idLote = lo.idLote AND hlo.idCliente = cl.id_cliente
                     WHERE isNULL(noRecibo, '') != 'CANCELADO' AND cl.status = 1 AND isNULL(isNULL(cl.tipo_venta_cl, lo.tipo_venta), 0) IN (0, 1, 2) 
                     $filtro
-                    AND hlo2.idStatusContratacion >= 11
                     GROUP BY lo.idLote, lo.nombreLote,  cl.id_asesor, cl.id_coordinador, cl.id_gerente, cl.nombre, cl.apellido_paterno, cl.apellido_materno, isNULL(cl.totalNeto2_cl, lo.totalNeto2), isNULL(cl.total_cl,lo.total)
                 ) tmpConT) c ON c.opt = a.opt
             --Suma apartados totales
