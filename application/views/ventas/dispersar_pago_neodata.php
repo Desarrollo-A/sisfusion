@@ -158,15 +158,15 @@
 
                     <form method="post"
                           class="row"
-                          id="detenidos-form"
+                          id="penalizacion-form"
                           autocomplete="off">
                         <div class="modal-body">
                             <input type="hidden"
-                                   name="id_pagoc"
-                                   id="id-lote-detenido">
+                                   name="id_lote"
+                                   id="id-lote-penalizacion">
                                    <input type="hidden"
-                                   name="statusLote"
-                                   id="statusLote">
+                                   name="id_cliente"
+                                   id="id-cliente-penalizacion">
  
                         </div>
 
@@ -360,7 +360,7 @@
                                                         <th>MODALIDAD</th>
                                                         <th>CONTRATACIÓN</th>
                                                         <th>PLAN VENTA</th>
-                                                        <th>FEC. SISTEMA</th>
+                                                        <!-- <th>FEC. SISTEMA</th> -->
                                                         <th>FEC. NEODATA</th>
                                                         <th>MÁS</th>
                                                     </tr>
@@ -590,12 +590,12 @@
                 "data": function( d ){
                     var lblType;
                     if(d.tipo_venta==1) {
-                        lblType ='<span class="label label-danger">Venta Particular</span>';
+                        lblType ='<span class="label label-danger">Particular</span>';
                     }else if(d.tipo_venta==2) {
-                        lblType ='<span class="label label-success">Venta normal</span>';
+                        lblType ='<span class="label label-success">normal</span>';
                     }
                     else if(d.tipo_venta==7) {
-                        lblType ='<span class="label label-warning">Venta especial</span>';
+                        lblType ='<span class="label label-warning">especial</span>';
                     }else{
                         lblType ='<span class="label label-danger">SIN TIPO DE VENTA</span>';
                     }
@@ -631,6 +631,12 @@
                 "width": "8%",
                 "data": function( d ){
                     var lblStats;
+                    var lblPenalizacion = '';
+
+if (d.penalizacion == 1){
+    lblPenalizacion ='<br><span class="label label-warning" style="color:red;">+ 90 días</span>';
+}
+
                     if(d.totalNeto2==null) {
                         lblStats ='<span class="label label-danger">Sin precio lote</span>';
                     } else if(d.registro_comision == 2){
@@ -638,35 +644,30 @@
                     }else{
                         lblStats = `<span onclick="showDetailModal(${d.plan_comision})" style="cursor: pointer;">${d.plan_descripcion}</span>`;
                     }
-                    return lblStats;
+                    return lblStats+lblPenalizacion;
                 }
             },
+            // {
+            //     "width": "8%",
+            //     "data": function( d ){
+            //         var lblStats;
+
+            //         if(d.fecha_modificacion <= '2021-01-01' || d.fecha_modificacion == null ) {
+            //             lblStats ='';
+            //         }else if (d.registro_comision == 8){
+            //             lblStats ='<span class="label label-gray" style="color:gray;">Recisión Nueva Venta</span>';
+            //         }
+            //         else {
+            //             lblStats ='<span class="label label-info">'+d.date_final+'</span>';
+            //         }
+            //         return lblStats;
+            //     }
+            // },
             {
                 "width": "8%",
                 "data": function( d ){
                     var lblStats;
-
-                    if(d.fecha_modificacion <= '2021-01-01' || d.fecha_modificacion == null ) {
-                        lblStats ='';
-                    }else if (d.registro_comision == 8){
-                        lblStats ='<span class="label label-gray" style="color:gray;">Recisión Nueva Venta</span>';
-                    }
-                    else {
-                        lblStats ='<span class="label label-info">'+d.date_final+'</span>';
-                    }
-                    return lblStats;
-                }
-            },
-            {
-                "width": "8%",
-                "data": function( d ){
-                    var lblStats;
-                    var lblPenalizacion = '';
-
-                    if (d.penalizacion == 1){
-                        lblPenalizacion ='<br><span class="label label-warning" style="color:red;">+ 90 días</span>';
-                    }
-
+                   
                     if(d.fecha_modificacion <= '2021-01-01' || d.fecha_modificacion == null ) {
                         lblStats ='';
                     }else if (d.registro_comision == 8){
@@ -675,7 +676,7 @@
                     else {
                         lblStats ='<span class="label label-info">'+d.date_neodata+'</span>';
                     }
-                    return lblStats+lblPenalizacion;
+                    return lblStats;
                 }
             },
             {
@@ -686,19 +687,29 @@
                     var RegresaActiva = '';
                     
 
-                    if(data.penalizacion == 1) {
+                    if(data.penalizacion == 1 && data.bandera_penalizacion == 0 && data.estatus_penalizacion != 4) {
                         BtnStats += `
                                 <button href="#"
                                     value="${data.idLote}"
                                     data-value="${data.nombreLote}"
+                                    data-cliente="${data.id_cliente}"
                                     class="btn-data btn-blueMaderas btn-penalizacion btn-warning"
                                     title="Aprobar Penalización">
                                     <i class="material-icons">check</i>
                                 </button>`;
 
+                    }else if(data.penalizacion == 1 && data.bandera_penalizacion == 0 && data.estatus_penalizacion == 4) {
+                        BtnStats += `
+                                <button href="#"
+                                    value="${data.idLote}"
+                                    data-value="${data.nombreLote}"
+                                    data-cliente="${data.id_cliente}"
+                                    class="btn-data btn-blueMaderas btn-penalizacion btn-warning"
+                                    title="Aprobar Penalización">
+                                    <i class="material-icons">check</i>
+                                </button>`;
 
                     }else{
-
                     
                     if(data.totalNeto2==null || data.totalNeto2==''|| data.totalNeto2==0) {
                         BtnStats = 'Asignar Precio';
@@ -738,7 +749,7 @@
                 }
                     return '<div class="d-flex justify-center">'+BtnStats+'</div>';
                 }
-                // +'<button class="btn-data btn-orangeYellow marcar_pagada" title="Marcar como liquidada" value="' + data.idLote +'"><i class="material-icons">how_to_reg</i></button>'  data-estatus  ;
+             
             }],
             columnDefs: [{
                 "searchable": false,
@@ -794,13 +805,13 @@
             $("#tabla_ingresar_9 tbody").on('click', '.btn-penalizacion', function () {
                 const idLote = $(this).val();
                 const nombreLote = $(this).attr("data-value");
-                const statusLote = $(this).attr("data-statusLote");
+                const idCliente = $(this).attr("data-cliente");
 
-                $('#id-lote-detenido').val(idLote);
-                $('#statusLote').val(statusLote);
+                $('#id-lote-penalizacion').val(idLote);
+                $('#id-cliente-penalizacion').val(idCliente);
 
                 $("#penalizacion-modal .modal-header").html("");
-                $("#penalizacion-modal .modal-header").append('<h4 class="modal-title">Motivo de controversia para <b>'+nombreLote+'</b></h4>');
+                $("#penalizacion-modal .modal-header").append('<h4 class="modal-title">Penalización + 90 días, al lote <b>'+nombreLote+'</b></h4><BR><P>Al aprobar esta penalización no se podrán revertir los descuentos y se dispersara el pago de comisiones con los porcentajes correspondientes.</P>');
 
                 $("#penalizacion-modal").modal();
             });
@@ -1173,6 +1184,36 @@
                 }
             });
         });
+
+
+        $('#penalizacion-form').on('submit', function (e) {
+            e.preventDefault();
+
+            $.ajax({
+                type: 'POST',
+                url: 'changeLoteToPenalizacion',
+                data: new FormData(this),
+                contentType: false,
+                cache: false,
+                processData:false,
+                success: function (data) {
+                    if (data) {
+                        $('#penalizacion-modal').modal("hide");
+                        $("#id-lote-penalizacion").val("");
+                        $("#id-cliente-penalizacion").val("");
+                        alerts.showNotification("top", "right", "El registro se ha actualizado exitosamente.", "success");
+                        tabla_1.ajax.reload();
+                    } else {
+                        alerts.showNotification("top", "right", "Ocurrió un problema, vuelva a intentarlo más tarde.", "warning");
+                    }
+                },
+                error: function(){
+                    alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+                }
+            });
+        });
+
+
     $("#form_NEODATA").submit( function(e) {
         $('#dispersar').prop('disabled', true);
         document.getElementById('dispersar').disabled = true;
@@ -1335,21 +1376,6 @@
             return false;
         }
     }
-
-    // function function_totales(){
-    //     $.getJSON( url + "Comisiones/getMontoDispersado").done( function( data ){
-    //         $cadena = '<b>$'+formatMoney(data[0].monto)+'</b>';
-    //         document.getElementById("monto_label").innerHTML = $cadena ;
-    //     });
-    //     $.getJSON( url + "Comisiones/getPagosDispersado").done( function( data ){
-    //         $cadena01 = '<b>'+data[0].pagos+'</b>';
-    //         document.getElementById("pagos_label").innerHTML = $cadena01 ;
-    //     });
-    //     $.getJSON( url + "Comisiones/getLotesDispersado").done( function( data ){
-    //         $cadena02 = '<b>'+data[0].lotes+'</b>';
-    //         document.getElementById("lotes_label").innerHTML = $cadena02 ;
-    //     });  
-    // }
 
     $('#fecha1').change( function(){
         fecha1 = $(this).val(); 
