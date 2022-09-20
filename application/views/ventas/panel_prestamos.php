@@ -580,11 +580,17 @@
                         let htmlTableBody = '';
                         for (let i = 0; i < detalle.length; i++) {
                             htmlTableBody += '<tr>';
-                            htmlTableBody += `<td scope="row">${detalle[i].np}</td>`;
+							htmlTableBody += `<td scope="row">${general.nombre_completo}</td>`;
+							htmlTableBody += `<td scope="row">${detalle[i].sede}</td>`;
+							htmlTableBody += `<td scope="row">${detalle[i].tipo}</td>`;
+                            htmlTableBody += `<td scope="row"><b>${detalle[i].np}</b></td>`;
+							htmlTableBody += `<td scope="row">${detalle[i].nombreResidencial}</td>`;
                             htmlTableBody += `<td>${detalle[i].nombreLote}</td>`;
+							htmlTableBody += `<td scope="row"><b>${detalle[i].id_pago_i}</b></td>`;
                             htmlTableBody += `<td style="width:50% !important;">${detalle[i].comentario}</td>`;
                             htmlTableBody += `<td style="width:20% !important;">${detalle[i].fecha_pago}</td>`;
-                            htmlTableBody += `<td>$${formatMoney(detalle[i].abono_neodata)}</td>`;
+                            htmlTableBody += `<td><b>$${formatMoney(detalle[i].abono_neodata)}</b></td>`;
+							htmlTableBody += `<td style="width:20% !important;">${detalle[i].estatus}</td>`;
                             htmlTableBody += '</tr>';
                         }
 
@@ -593,11 +599,17 @@
                                 <table class="table table-striped table-hover" id="table_detalles">
                                     <thead>
                                         <tr>
+											<th>Usuario</th>
+											<th>Sede</th>
+											<th>Tipo</th>
                                             <th>#</th>
-                                            <th >Lote</th>
+											<th>Proyecto</th>
+											<th>Lote</th>
+                                            <th >Id pago</th>
                                             <th >Comentario</th>
                                             <th >Fecha</th>
                                             <th >Monto</th>
+											<th>Estatus</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -605,12 +617,12 @@
                                     </tbody>
                                 </table>
                             </div>
-                        `);
-						
+                        `);						
 
                         $("#detalle-prestamo-modal").modal();
 
 						$('#table_detalles thead tr:eq(0) th').each( function (i) {
+
 				if(  i!=10){
 					var title = $(this).text();
 					titulos.push(title);
@@ -633,12 +645,33 @@
 					titleAttr: 'Descargar archivo de Excel',
 					title: 'PRÉSTAMOS Y PENALIZACIONES',
 					exportOptions: {
-						columns: [0,1,2,3,4,5],
+						columns: [0,1,2,3,4,5,6,7,8,9,10],
 						format: {
 							header:  function (d, columnIdx) {
-								if(columnIdx >= 0){
-									return ' '+titulos[columnIdx] +' ';
-								}  
+								if(columnIdx == 0){
+                                    return ' USUARIOS ';
+                                }else if(columnIdx == 1){
+                                    return 'SEDE';
+                                }else if(columnIdx == 2){
+                                    return 'TIPO';
+                                }else if(columnIdx == 3){
+                                    return '#';
+                                }else if(columnIdx == 4){
+                                    return 'PROYECTO';
+                                }else if(columnIdx == 5){
+                                    return 'LOTE';
+                                }else if(columnIdx == 6){
+                                    return 'ID PAGO';
+                                }else if(columnIdx == 7){
+                                    return 'COMENTARIO';
+                                }else if(columnIdx == 8){
+                                    return 'FECHA';
+                                }else if(columnIdx == 9){
+                                    return 'MONTO';
+                                }else if(columnIdx == 10){
+                                    return 'ESTATUS';
+                                }
+
 							}
 						}
 					}
