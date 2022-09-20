@@ -8412,7 +8412,6 @@ return $query->result();
                 and (hc.comentario like 'DESCUENTO POR%' or hc.comentario like '%, POR MOTIVO DE PRESTAMO' or hc.comentario like '%NOMINA%') and hc.estatus=1
                 WHERE pa.id_prestamo = $idPrestamo
                 ORDER BY np ASC");
-
         return $result->result_array();
     }
 
