@@ -54,15 +54,8 @@ function changePill(element){
         });
     }
     else if(element == 'agendaOption'){
-        contAgenda++;
         $('#agenda').html("");
-        $('#agenda').load(`${base_url}Calendar/calendar`, function(){
-            if(contAgenda <= 1 )
-                $.getScript(base_url+"dist/js/controllers/dashboard/agenda/dashboardCalendar.js", function(){
-                    readyAgenda();
-                });
-            else readyAgenda();
-        });
+        $('#agenda').load("Calendar/calendar");
     }
     else if(element == 'rankingOption'){
         contRanking++;
