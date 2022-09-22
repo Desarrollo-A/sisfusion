@@ -311,7 +311,7 @@
 			let titulos = [];
 
 			$('#tabla_prestamos thead tr:eq(0) th').each( function (i) {
-				if(  i!=11){
+				if(  i!=12){
 					var title = $(this).text();
 					titulos.push(title);
 					$(this).html('<input type="text" class="textoshead" placeholder="'+title+'"/>' );
