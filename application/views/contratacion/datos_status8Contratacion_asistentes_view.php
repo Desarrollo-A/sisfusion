@@ -214,7 +214,7 @@
 
                 $('#Jtabla thead tr:eq(0) th').each( function (i) {
 
-                if(i != 0 && i != 7){
+                if(i != 0 && i != 8){
                     var title = $(this).text();
                     $(this).html('<input type="text" class="textoshead" placeholder="'+title+'"/>' );
                     $( 'input', this ).on('keyup change', function () {
@@ -334,13 +334,13 @@
                 {
                     "width": "20%",
                     "data": function( d ){
-                        return '<p class="m-0">'+d.nombreCliente'</p>';
+                        return '<p class="m-0">'+d.nombreCliente+'</p>';
                     }
                 },
                 {
                     "width": "20%",
                     "data": function( d ){
-                        return '<p class="m-0">'+d.descripcion'</p>';
+                        return '<p class="m-0">'+d.descripcion+'</p>';
                     }
                 }
                 <?php
@@ -356,7 +356,7 @@
                                 cntActions = 'En proceso de Liberación';
                             } 
                             else {
-                                if ((data.idStatusContratacion == 7 && data.idMovimiento == 64 && (data.perfil == 32 || data.perfil == 13 || data.perfil == 17)) || (data.idStatusContratacion == 11 && data.idMovimiento == 41 && data.perfil == 11)) {
+                                if (data.idStatusContratacion == 7 && data.idMovimiento == 64 && (data.perfil == 32 || data.perfil == 13 || data.perfil == 17)) {
                                     cntActions = '<button href="#" data-idLote="'+data.idLote+'" data-nomLote="'+data.nombreLote+'" data-idCond="'+data.idCondominio+'"' +
                                     'data-idCliente="'+data.id_cliente+'" data-fecVen="'+data.fechaVenc+'" data-ubic="'+data.ubicacion+'" data-code="'+data.cbbtton+'" ' +
                                     'class="btn-data btn-orangeYellow editReg2" title="Registrar estatus">' +
@@ -372,7 +372,8 @@
                                     'class="btn-data btn-orangeYellow cancelAs" title="Rechazo/regreso estatus (Asesor)">' +
                                     '<i class="far fa-thumbs-down"></i></button>';              
                                 } 
-                                else if (data.idStatusContratacion == 7 && data.idMovimiento == 37 && data.perfil == 15 || data.idStatusContratacion == 7 && data.idMovimiento == 7 && data.perfil == 15 || data.idStatusContratacion == 7 && data.idMovimiento == 77 && data.perfil == 15) {
+                                else if ((data.idStatusContratacion == 7 && data.idMovimiento == 37 && data.perfil == 15 || data.idStatusContratacion == 7 && data.idMovimiento == 7 && data.perfil == 15 || data.idStatusContratacion == 7 && data.idMovimiento == 77 && data.perfil == 15)
+                                || (data.idStatusContratacion == 11 && data.idMovimiento == 41 && data.perfil == 11)) {
                                     cntActions = '<button href="#" data-idLote="'+data.idLote+'" data-nomLote="'+data.nombreLote+'" data-idCond="'+data.idCondominio+'"' +
                                     'data-idCliente="'+data.id_cliente+'" data-fecVen="'+data.fechaVenc+'" data-ubic="'+data.ubicacion+'" data-code="'+data.cbbtton+'" ' +
                                     'class="btn-data btn-green editReg" title="Registrar estatus">' +
