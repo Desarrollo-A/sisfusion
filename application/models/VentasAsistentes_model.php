@@ -143,7 +143,7 @@ class VentasAsistentes_model extends CI_Model {
     public function validateSt8($idLote){
         $this->db->where("idLote",$idLote);
         $this->db->where_in('idStatusLote', 3);
-        $this->db->where("(idStatusContratacion IN (7) AND idMovimiento IN (37, 7, 64, 66, 77))");	
+        $this->db->where("(idStatusContratacion IN (7, 11) AND idMovimiento IN (37, 7, 64, 66, 77, 41) AND status8Flag = 0)");	
         $query = $this->db->get('lotes');
         $valida = (empty($query->result())) ? 0 : 1;
         return $valida;
