@@ -93,4 +93,10 @@ class Services_model extends CI_Model
         return $query->result_array();
     }
 
+    function getSubdirectores(){
+        $query = $this->db->query("SELECT id_usuario,CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) AS nombre FROM usuarios WHERE id_rol=2 and estatus=1");
+        return $query->result_array();
+    }
+
+
 }

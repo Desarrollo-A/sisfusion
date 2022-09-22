@@ -8310,10 +8310,22 @@ return $query->result();
     {
         $this->db->query("SET LANGUAGE Español;");
         $result = $this->db->query("SELECT pci.id_pago_i,hc.comentario, l.nombreLote, CONVERT(NVARCHAR, rpp.fecha_creacion, 6) as fecha_pago, pci.abono_neodata, rpp.np,pcs.nombre as tipo,re.nombreResidencial,
-        CASE WHEN pa.estatus=1 THEN 'Activo' WHEN pa.estatus=2 THEN 'Liquidado' WHEN pa.estatus=3 THEN 'Liquidado' END AS estatus,se.nombre as sede
+        CASE WHEN pa.estatus=1 THEN 'Activo' WHEN pa.estatus=2 THEN 'Liquidado' WHEN pa.estatus=3 THEN 'Liquidado' END AS estatus,sed.nombre as sede
                 FROM prestamos_aut pa
                 INNER JOIN usuarios u ON u.id_usuario = pa.id_usuario
-                INNER JOIN sedes se ON se.id_sede=u.id_sede
+                INNER JOIN sedes sed ON sed.id_sede = (CASE u.id_usuario 
+                 WHEN 2 THEN 2 
+                 WHEN 3 THEN 2 
+                 WHEN 1980 THEN 2 
+                 WHEN 1981 THEN 2 
+                 WHEN 1982 THEN 2 
+                 WHEN 1988 THEN 2 
+                 WHEN 4 THEN 5
+                 WHEN 5 THEN 3
+                 WHEN 607 THEN 1 
+                 WHEN 7092 THEN 4
+                     WHEN 9629 THEN 2
+                 ELSE u.id_sede END) and sed.estatus = 1
                 INNER JOIN opcs_x_cats pcs ON pcs.id_opcion=pa.tipo AND pcs.id_catalogo=23
                 INNER JOIN relacion_pagos_prestamo rpp ON rpp.id_prestamo = pa.id_prestamo
                 INNER JOIN pago_comision_ind pci ON pci.id_pago_i = rpp.id_pago_i AND pci.estatus IN(18,19,20,21,22,23,24,25,26) AND pci.descuento_aplicado = 1
