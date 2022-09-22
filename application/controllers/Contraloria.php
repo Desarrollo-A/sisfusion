@@ -2203,6 +2203,7 @@ $i = 0;
     $arreglo["usuario"]=$this->session->userdata('id_usuario');
     $arreglo["perfil"]=$this->session->userdata('id_rol');
     $arreglo["modificado"]=date("Y-m-d H:i:s");
+	$arreglo["status8Flag"] = 0;
 
     $arreglo2=array();
     $arreglo2["idStatusContratacion"]=7;
@@ -2216,7 +2217,6 @@ $i = 0;
     $arreglo2["idLote"]= $idLote;  
     $arreglo2["idCondominio"]= $idCondominio;          
     $arreglo2["idCliente"]= $idCliente;    
-
 
 	$validate = $this->Contraloria_model->validateSt9($idLote);
 

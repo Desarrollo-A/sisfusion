@@ -482,7 +482,7 @@ class Administracion extends CI_Controller{
 		 $arreglo["perfil"]=$this->session->userdata('id_rol');
 		 $arreglo["modificado"]=date("Y-m-d H:i:s");
 		 $arreglo["fechaVenc"]=date("Y-m-d H:i:s");
-
+		 $arreglo["status8Flag"] = 0;
 	 
 		 $arreglo2=array();
 		 $arreglo2["idStatusContratacion"]=7;
