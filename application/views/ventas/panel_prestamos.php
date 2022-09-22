@@ -74,8 +74,8 @@
 								</div>
 							</div>
 							<div class="form-group">
-							<p>Nota(<b class="text-danger">*</b>):</label><b id="texto" style="font-size:12px;"></b></p>
-								<label class="label">Comentario</label>
+							<p>Nota:</label><b id="texto" style="font-size:12px;"></b></p>
+								<label class="label">Comentario(<b class="text-danger">*</b>)</label>
 								<textarea id="comentario" name="comentario" required  class="form-control" rows="3"></textarea>
 							</div>
 
@@ -146,7 +146,8 @@
 											<table class="table-striped table-hover" id="tabla_prestamos" name="tabla_prestamos">
 												<thead>
 													<tr>
-														<th>ID</th>
+														<th>ID PRÉSTAMO</th>
+														<th>ID USUARIO</th>
 														<th>USUARIO</th>
 														<th>MONTO</th>
 														<th>N°</th>
@@ -231,6 +232,9 @@
         });
 		function closeModalEng(){
 			document.getElementById("form_prestamos").reset();
+			$("#tipo").selectpicker("refresh");
+			$("#roles").selectpicker("refresh");
+			document.getElementById("users").innerHTML = '';
 			$("#miModal").modal('toggle');	
 		}
 
@@ -349,7 +353,7 @@
 					titleAttr: 'Descargar archivo de Excel',
 					title: 'PRÉSTAMOS Y PENALIZACIONES',
 					exportOptions: {
-						columns: [0,1,2,3,4,5,6,7,8,9,10],
+						columns: [0,1,2,3,4,5,6,7,8,9,10,11],
 						format: {
 							header:  function (d, columnIdx) {
 								if(columnIdx >= 0){
@@ -371,9 +375,14 @@
                 destroy: true,
                 ordering: false,
 				columns: [
-					
 					{
-					"width": "3%",
+					"width": "4%",
+					"data": function( d ){
+						return '<p class="m-0">'+d.id_prestamo+'</p>';
+					}
+				},
+					{
+					"width": "4%",
 					"data": function( d ){
 						return '<p class="m-0">'+d.id_usuario+'</p>';
 					}
@@ -444,7 +453,7 @@
 					} 
 				},
 				{
-					"width": "10%",
+					"width": "8%",
 					"data": function( d ){
 						let etiqueta = '';
 						color='000';
@@ -495,10 +504,10 @@
 					"orderable": false,
 					"data": function( d ){
 						if(d.id_prestamo2 == null && d.estatus == 1){
-							return a = `<button href="#" value="${d.id_prestamo}" class="btn-data btn-blueMaderas detalle-prestamo" title="Hitorial"><i class="fas fa-info"></i></button>
+							return a = `<button href="#" value="${d.id_prestamo}" class="btn-data btn-blueMaderas detalle-prestamo" title="Historial"><i class="fas fa-info"></i></button>
 						<button href="#" value="${d.id_prestamo}" data-name="${d.nombre}" class="btn-data btn-warning delete-prestamo" title="Eliminar"><i class="fas fa-trash"></i></button>`;
 						}else{
-							return a = `<button href="#" value="${d.id_prestamo}" class="btn-data btn-blueMaderas detalle-prestamo" title="Hitorial"><i class="fas fa-info"></i></button>`;
+							return a = `<button href="#" value="${d.id_prestamo}" class="btn-data btn-blueMaderas detalle-prestamo" title="Historial"><i class="fas fa-info"></i></button>`;
 						}                        
 					}
 				}],
@@ -518,7 +527,7 @@
 					const Modalfooter = $('#myModalDelete .modal-footer');
 					Modalbody.html('');
 					Modalfooter.html('');
-					Modalbody.append(`<input type="hidden" value="${idPrestamo}" name="idPrestamo" id="idPrestamo"> <h4>¿Esta seguro que desea borrar el préstamo de ${nombreUsuario}?</h4>
+					Modalbody.append(`<input type="hidden" value="${idPrestamo}" name="idPrestamo" id="idPrestamo"> <h4>¿Ésta seguro que desea borrar el préstamo de ${nombreUsuario}?</h4>
                            
                         `);
 
@@ -535,7 +544,7 @@
 				$('#spiner-loader').removeClass('hide');
 
                 const idPrestamo = $(this).val();
-
+				let importacion='';
                 $.getJSON(`${url}Comisiones/getDetallePrestamo/${idPrestamo}`).done(function (data) {
                     const { general, detalle } = data;
 					$('#spiner-loader').addClass('hide');
@@ -545,12 +554,19 @@
                     } else {
                         const detalleHeaderModal = $('#detalle-prestamo-modal .modal-header');
                         const detalleBodyModal = $('#detalle-prestamo-modal .modal-body');
+						console.log(idPrestamo);
+						const importaciones = [20,19,18,17,16,15,14,13,12,11];
+						console.log(importaciones.indexOf(idPrestamo));
+						if(importaciones.indexOf(parseInt(idPrestamo)) >= 0 ){
+							importacion = 'Importación contraloría';
+						}
 
                         detalleHeaderModal.html('');
                         detalleBodyModal.html('');
 						let numPagosReal = general.num_pago_act == general.num_pagos ? general.num_pago_act :  general.num_pago_act -1;
-
-                        detalleHeaderModal.append('<h4 class="card-title"><b>Detalle del préstamo</b></h4>');
+                        
+                        detalleHeaderModal.append(`<div class="text-right"><button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button></div>`);
+                        detalleHeaderModal.append(`<h4 class="card-title"><b>Detalle del préstamo</b><br><p>${importacion}</p></h4>`);
                         detalleBodyModal.append(`
                             <div class="row">
                                 <div class="col col col-xs-12 col-sm-4 col-md-4 col-lg-4">
@@ -623,7 +639,7 @@
 
 						$('#table_detalles thead tr:eq(0) th').each( function (i) {
 
-				if(  i!=10){
+				if(  i!=12){
 					var title = $(this).text();
 					titulos.push(title);
 					$(this).html('<input type="text" class="textoshead" placeholder="'+title+'"/>' );
