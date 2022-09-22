@@ -336,7 +336,8 @@
 						if (d.idStatusContratacion == 10 && d.idMovimiento == 40 || d.idStatusContratacion == 8 && d.idMovimiento == 67 ||
 						d.idStatusContratacion == 12 && d.idMovimiento == 42 || d.idStatusContratacion == 7 && d.idMovimiento == 37 ||
 						d.idStatusContratacion == 7 && d.idMovimiento == 7 || d.idStatusContratacion == 7 && d.idMovimiento == 64 ||
-						d.idStatusContratacion == 7 && d.idMovimiento == 66 || d.idStatusContratacion == 7 && d.idMovimiento == 67) {
+						d.idStatusContratacion == 7 && d.idMovimiento == 77 ||
+						d.idStatusContratacion == 8 && d.idMovimiento == 38 || d.idStatusContratacion == 8 && d.idMovimiento == 65) {
 							fechaVenc = d.fechaVenc2;
 						} 
 						else {
@@ -412,8 +413,9 @@
 								data.idStatusContratacion == 7 && data.idMovimiento == 37 ||
 								data.idStatusContratacion == 7 && data.idMovimiento == 7 ||
 								data.idStatusContratacion == 7 && data.idMovimiento == 64 ||
-								data.idStatusContratacion == 7 && data.idMovimiento == 66 ||
-								data.idStatusContratacion == 7 && data.idMovimiento == 67
+								data.idStatusContratacion == 7 && data.idMovimiento == 77 ||
+								data.idStatusContratacion == 8 && data.idMovimiento == 38 ||
+								data.idStatusContratacion == 8 && data.idMovimiento == 65
 								){
 									cntActions = '<button href="#" data-idLote="'+data.idLote+'" data-nomLote="'+data.nombreLote+'" data-idCond="'+data.idCondominio+'"' +
 									'data-idCliente="'+data.id_cliente+'" data-fecVen="'+data.fechaVenc+'" data-ubic="'+data.ubicacion+'" data-tot="'+data.totalNeto+'" ' +
@@ -460,21 +462,10 @@
 				else {
 					var status;
 					var fechaVenc;
-					if (row.data().idStatusContratacion == 10 && row.data().idMovimiento == 40) {
-						status = 'Status 10 listo (Contraloría)';
-					}
-					else if (row.data().idStatusContratacion == 8 && row.data().idMovimiento == 67 ) {
-						status = 'Status 11 enviado a Revisión (Asistentes de Gerentes)';
-					}
-					else if (row.data().idStatusContratacion == 12 && row.data().idMovimiento == 42 ) {
-						status = 'Status 12 Listo (Contraloría)';
-					}
-					else{
-						status='N/A';
-					}
+
+					status = row.data().descripcion;
 					
 					var informacion_adicional = '<div class="container subBoxDetail"><div class="row"><div class="col-12 col-sm-12 col-sm-12 col-lg-12" style="border-bottom: 2px solid #fff; color: #4b4b4b; margin-bottom: 7px"><label><b>Información colaboradores</b></label></div><div class="col-12 col-sm-12 col-md-12 col-lg-12"><label><b>Estatus: </b>' +status+ '</label></div><div class="col-12 col-sm-12 col-md-12 col-lg-12"><label><b>Comentario: </b>' + row.data().comentario + '</label></div><div class="col-12 col-sm-12 col-md-12 col-lg-12"><label><b>Coordinador: </b>' +row.data().coordinador+ '</label></div><div class="col-12 col-sm-12 col-md-12 col-lg-12"><label><b>Asesor: </b>' + row.data().asesor + '</label></div></div></div>';
-
 
 					row.child(informacion_adicional).show();
 					tr.addClass('shown');

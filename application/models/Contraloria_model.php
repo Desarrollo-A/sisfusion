@@ -261,8 +261,7 @@ class Contraloria_model extends CI_Model {
 		LEFT JOIN usuarios coordinador ON cl.id_coordinador = coordinador.id_usuario
 		LEFT JOIN usuarios gerente ON cl.id_gerente = gerente.id_usuario
 		WHERE (l.idStatusContratacion IN (8, 11) AND l.idMovimiento IN (38, 65, 41) 
-		AND l.status8Flag = 1 AND (l.validacionEnganche != 'NULL' OR l.validacionEnganche IS NOT NULL) OR (idStatusContratacion IN (8) AND idMovimiento IN (38, 65)) 
-		OR (idStatusContratacion IN (8) AND idMovimiento IN (38, 65)))
+		AND l.status8Flag = 1 AND l.validacionEnganche != 'NULL' AND l.validacionEnganche IS NOT NULL /*OR (idStatusContratacion IN (8) AND idMovimiento IN (38, 65))*/)
 		AND cl.status = 1 $filtroSede
 		GROUP BY l.idLote, cl.id_cliente, cl.nombre, cl.apellido_paterno, cl.apellido_materno,
 		l.nombreLote, l.idStatusContratacion, l.idMovimiento, l.modificado, cl.rfc,
@@ -278,7 +277,7 @@ class Contraloria_model extends CI_Model {
 	public function validateSt9($idLote){
         $this->db->where("idLote",$idLote);
 		$this->db->where_in('idStatusLote', 3);
-		$this->db->where("(idStatusContratacion IN (8, 11) AND idMovimiento IN (38, 65, 41) AND status8Flag = 1 AND (validacionEnganche != 'NULL' OR validacionEnganche IS NOT NULL)) OR (idStatusContratacion IN (8) AND idMovimiento IN (38, 65))");	
+		$this->db->where("(idStatusContratacion IN (8, 11) AND idMovimiento IN (38, 65, 41) AND status8Flag = 1 AND (validacionEnganche != 'NULL' OR validacionEnganche IS NOT NULL))");	
 		$query = $this->db->get('lotes');
 		$valida = (empty($query->result())) ? 0 : 1;
 		return $valida;
