@@ -565,7 +565,7 @@
                         detalleBodyModal.html('');
 						let numPagosReal = general.num_pago_act == general.num_pagos ? general.num_pago_act :  general.num_pago_act -1;
                         
-                        detalleHeaderModal.append(`<div class="text-right"><button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button></div>`);
+                        detalleHeaderModal.append(`<div class="text-right"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button></div>`);
                         detalleHeaderModal.append(`<h4 class="card-title"><b>Detalle del préstamo</b><br><p>${importacion}</p></h4>`);
                         detalleBodyModal.append(`
                             <div class="row">
