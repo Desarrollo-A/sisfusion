@@ -260,7 +260,9 @@ class Contraloria_model extends CI_Model {
 		LEFT JOIN usuarios asesor ON cl.id_asesor = asesor.id_usuario
 		LEFT JOIN usuarios coordinador ON cl.id_coordinador = coordinador.id_usuario
 		LEFT JOIN usuarios gerente ON cl.id_gerente = gerente.id_usuario
-		WHERE l.idStatusContratacion IN (8) AND l.idMovimiento IN (38, 65) AND cl.status = 1 $filtroSede
+		WHERE l.idStatusContratacion IN (8, 11) AND l.idMovimiento IN (38, 65, 41) 
+		AND l.status8Flag = 1 AND (l.validacionEnganche != 'NULL' OR l.validacionEnganche IS NOT NULL)
+		AND cl.status = 1 $filtroSede
 		GROUP BY l.idLote, cl.id_cliente, cl.nombre, cl.apellido_paterno, cl.apellido_materno,
 		l.nombreLote, l.idStatusContratacion, l.idMovimiento, l.modificado, cl.rfc,
 		CAST(l.comentario AS varchar(MAX)), l.fechaVenc, l.perfil, cond.nombre, res.nombreResidencial, l.ubicacion,
@@ -275,7 +277,7 @@ class Contraloria_model extends CI_Model {
 	public function validateSt9($idLote){
         $this->db->where("idLote",$idLote);
 		$this->db->where_in('idStatusLote', 3);
-		$this->db->where("(idStatusContratacion IN (8) AND idMovimiento IN (38, 65))");	
+		$this->db->where("(idStatusContratacion IN (8, 11) AND idMovimiento IN (38, 65, 41) AND status8Flag = 1 AND (validacionEnganche != 'NULL' OR validacionEnganche IS NOT NULL))");	
 		$query = $this->db->get('lotes');
 		$valida = (empty($query->result())) ? 0 : 1;
 		return $valida;
@@ -373,7 +375,7 @@ class Contraloria_model extends CI_Model {
 		INNER JOIN clientes cl ON cl.idLote = l.idLote
 		INNER JOIN condominios cond ON l.idCondominio = cond.idCondominio
 		INNER JOIN residenciales res ON cond.idResidencial = res.idResidencial
-		WHERE l.idStatusContratacion IN (11, 10, 7, 8) AND l.idMovimiento IN (41, 40, 66, 67) AND (l.firmaRL = 'NULL' OR l.firmaRL=' ' OR l.firmaRL IS NULL) AND cl.status = 1 $filtroSede
+		WHERE l.idStatusContratacion IN (10) AND l.idMovimiento IN (40) AND (l.firmaRL = 'NULL' OR l.firmaRL=' ' OR l.firmaRL IS NULL) AND cl.status = 1 $filtroSede
 		GROUP BY l.idLote, cl.id_cliente, cl.nombre, cl.apellido_paterno, cl.apellido_materno, l.fechaSolicitudValidacion, l.nombreLote, l.idStatusContratacion,
 		l.idMovimiento, l.modificado, cl.rfc, CAST(l.comentario AS varchar(MAX)), l.fechaVenc, l.perfil, cond.nombre, 
 		res.nombreResidencial, l.numContrato, l.ubicacion, l.totalValidado, l.totalNeto, l.tipo_venta, l.observacionContratoUrgente;");
@@ -386,7 +388,7 @@ class Contraloria_model extends CI_Model {
 		l.fechaRL, l.idStatusContratacion, l.idMovimiento, l.firmaRL, cl.status, l.validacionEnganche");
 		$this->db->join('clientes cl', 'cl.idLote = l.idLote ');
 		$this->db->where("l.numContrato",$numContrato);
-		$this->db->where("(l.idStatusContratacion IN (11, 10) AND l.idMovimiento IN (41, 40) AND (l.firmaRL='NULL' OR l.firmaRL IS NULL))");
+		$this->db->where("(l.idStatusContratacion IN (10) AND l.idMovimiento IN (40) AND (l.firmaRL='NULL' OR l.firmaRL IS NULL))");
 		$query = $this->db->get('lotes l');
 		return $query->row();
 	}
@@ -442,7 +444,7 @@ class Contraloria_model extends CI_Model {
 			LEFT JOIN usuarios asesor ON cl.id_asesor = asesor.id_usuario
 			LEFT JOIN usuarios coordinador ON cl.id_coordinador = coordinador.id_usuario
 			LEFT JOIN usuarios gerente ON cl.id_gerente = gerente.id_usuario
-			WHERE l.idStatusContratacion IN (12, 11) AND l.idMovimiento IN (42, 41) AND cl.status = 1 $filtroSede
+			WHERE l.idStatusContratacion IN (12) AND l.idMovimiento IN (42) AND cl.status = 1 $filtroSede
 			GROUP BY l.idLote, cl.id_cliente, cl.nombre, cl.apellido_paterno, cl.apellido_materno,
 			l.nombreLote, l.idStatusContratacion, l.idMovimiento, l.modificado, cl.rfc,
 			CAST(l.comentario AS varchar(MAX)), l.fechaVenc, l.perfil, cond.nombre, res.nombreResidencial, l.ubicacion,
@@ -457,7 +459,7 @@ class Contraloria_model extends CI_Model {
 		public function validateSt13($idLote){
 			$this->db->where("idLote",$idLote);
 			$this->db->where_in('idStatusLote', 3);
-			$this->db->where("(idStatusContratacion IN (12, 11) AND idMovimiento IN (42, 41))");	
+			$this->db->where("(idStatusContratacion IN (12) AND idMovimiento IN (42))");	
 			$query = $this->db->get('lotes');
 			$valida = (empty($query->result())) ? 0 : 1;
 			return $valida;

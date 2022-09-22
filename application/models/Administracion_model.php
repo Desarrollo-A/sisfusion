@@ -25,8 +25,10 @@ class Administracion_model extends CI_Model {
 		LEFT JOIN usuarios asesor ON cl.id_asesor = asesor.id_usuario
 		LEFT JOIN usuarios coordinador ON cl.id_coordinador = coordinador.id_usuario
 		LEFT JOIN usuarios gerente ON cl.id_gerente = gerente.id_usuario
-        WHERE (l.idStatusContratacion IN ('8', '10') and l.idMovimiento IN ('40', '10', '67') AND cl.status = 1) OR
-        (l.idStatusContratacion IN ('12') AND l.idMovimiento IN ('42') AND (l.validacionEnganche = 'NULL' OR l.validacionEnganche IS NULL) AND cl.status = 1)
+        WHERE ((l.idStatusContratacion IN (8, 10) AND l.idMovimiento IN (40, 10, 67)) OR
+        (l.idStatusContratacion = 12 AND l.idMovimiento = 42 AND (l.validacionEnganche = 'NULL' OR l.validacionEnganche IS NULL)) OR
+        (l.idStatusContratacion IN (7) AND l.idMovimiento IN (37, 7, 64, 66, 77) AND (l.validacionEnganche = 'NULL' OR l.validacionEnganche IS NULL)))
+        AND cl.status = 1)
 	    GROUP BY l.idLote, cl.id_cliente, cl.nombre, cl.apellido_paterno, cl.apellido_materno,
         l.nombreLote, l.idStatusContratacion, l.idMovimiento, l.modificado, cl.rfc, l.totalNeto, l.fechaSolicitudValidacion,
         CAST(l.comentario AS varchar(MAX)), l.fechaVenc, l.perfil, cond.nombre, res.nombreResidencial, l.ubicacion,
@@ -52,7 +54,8 @@ class Administracion_model extends CI_Model {
       $this->db->where("idLote",$idLote);
       $this->db->where_in('idStatusLote', 3);
       $this->db->where("((idStatusContratacion IN (8, 10) AND idMovimiento IN (40, 10, 67)) OR
-      (idStatusContratacion = 12 and idMovimiento = 42 AND (validacionEnganche = 'NULL' OR validacionEnganche IS NULL)))");
+      (idStatusContratacion = 12 and idMovimiento = 42 AND (validacionEnganche = 'NULL' OR validacionEnganche IS NULL)) OR
+      (idStatusContratacion IN (7) AND idMovimiento IN (37, 7, 64, 66, 77) AND (validacionEnganche = 'NULL' OR validacionEnganche IS NULL)))");
       $query = $this->db->get('lotes');
       $valida = (empty($query->result())) ? 0 : 1;
       return $valida;
