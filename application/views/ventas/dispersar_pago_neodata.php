@@ -163,11 +163,11 @@
                           autocomplete="off">
                         <div class="modal-body">
                              <input type="hidden"
-                                   name="id_lote"
-                                   id="id-lote-penalizacion">
+                                   name="id_lote4"
+                                   id="id-lote-penalizacionC">
                                    <input type="hidden"
-                                   name="id_cliente"
-                                   id="id-cliente-penalizacion">
+                                   name="id_cliente4"
+                                   id="id-cliente-penalizacionC">
   
 
                             <div class="col-lg-4">
@@ -905,8 +905,8 @@ if (d.penalizacion == 1){
                 const nombreLote = $(this).attr("data-value");
                 const idCliente = $(this).attr("data-cliente");
 
-                $('#id-lote-penalizacion').val(idLote);
-                $('#id-cliente-penalizacion').val(idCliente);
+                $('#id-lote-penalizacionC').val(idLote);
+                $('#id-cliente-penalizacionC').val(idCliente);
 
                 $("#penalizacion4-modal .modal-header").html("");
                 $("#penalizacion4-modal .modal-header").append('<h4 class="modal-title">Penalización + 160 días, al lote <b>'+nombreLote+'</b></h4><BR><P>Al aprobar esta penalización no se podrán revertir los descuentos y se dispersara el pago de comisiones con los porcentajes asignados.</P>');
@@ -1333,8 +1333,13 @@ if (d.penalizacion == 1){
                 success: function (data) {
                     if (data) {
                         $('#penalizacion4-modal').modal("hide");
-                        $("#id-lote-penalizacion").val("");
-                        $("#id-cliente-penalizacion").val("");
+                        $("#id-lote-penalizacionC").val("");
+                        $("#id-cliente-penalizacionC").val("");
+
+                        $("#asesor").val("");
+                        $("#coordinador").val("");
+                        $("#gerente").val("");
+
                         alerts.showNotification("top", "right", "El registro se ha actualizado exitosamente.", "success");
                         tabla_1.ajax.reload();
                     } else {
