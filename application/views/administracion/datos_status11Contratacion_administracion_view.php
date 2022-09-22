@@ -191,7 +191,7 @@
 
 		$("#tabla_ingresar_11").ready( function(){
 			$('#tabla_ingresar_11 thead tr:eq(0) th').each( function (i) {
-				if(i != 0 && i != 11){
+				if(i != 0 && i != 12){
 					var title = $(this).text();
 					$(this).html('<input type="text" class="textoshead" placeholder="'+title+'"/>' );
 					$( 'input', this ).on('keyup change', function () {
@@ -271,8 +271,11 @@
 						else if(d.tipo_venta==5) {
 							lblStats ='<span class="label label-info">Intercambio</span>';
 						}
+						else if(d.tipo_venta==6) {
+							lblStats ='<span class="label label-secondary">Reubicación</span>';
+						}
 						else if(d.tipo_venta==7) {
-							lblStats ='<span class="label label-secondary">Intercambio</span>';
+							lblStats ='<span class="label label-secondary">Venta especial</span>';
 						}
 						else if(d.tipo_venta== null) {
 							lblStats ='<span class="label label-info"></span>';
@@ -309,7 +312,7 @@
 				{
 					"width": "12%",
 					"data": function( d ){
-						return '<p class="m-0">'+d.nombreCliente'</p>';
+						return '<p class="m-0">'+d.nombreCliente+'</p>';
 					}
 				}, 
 				{
