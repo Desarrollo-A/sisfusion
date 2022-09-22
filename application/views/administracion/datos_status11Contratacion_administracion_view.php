@@ -155,6 +155,7 @@
 														<th>FECHA REALIZADO</th>
 														<th>FECHA VENC</th>
 														<th>DÍAS TRANSC</th>
+														<th>ESTATUS ACTUAL</th>
 														<th></th>
 													</tr>
 												</thead>
@@ -222,7 +223,7 @@
                     className: 'btn buttons-excel',
                     titleAttr: 'Descargar archivo de Excel',
 					exportOptions: {
-						columns: [1,2,3,4,5,6,7,8,9,10],
+						columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
 						format: {
 							header:  function (d, columnIdx) {
 								if(columnIdx == 0){
@@ -308,7 +309,7 @@
 				{
 					"width": "12%",
 					"data": function( d ){
-						return '<p class="m-0">'+d.nombre+" "+d.apellido_paterno+" "+d.apellido_materno+'</p>';
+						return '<p class="m-0">'+d.nombreCliente'</p>';
 					}
 				}, 
 				{
@@ -330,7 +331,9 @@
 					"data": function( d ){
 						var fechaVenc;
 						if (d.idStatusContratacion == 10 && d.idMovimiento == 40 || d.idStatusContratacion == 8 && d.idMovimiento == 67 ||
-							d.idStatusContratacion == 12 && d.idMovimiento == 42 ) {
+						d.idStatusContratacion == 12 && d.idMovimiento == 42 || d.idStatusContratacion == 7 && d.idMovimiento == 37 ||
+						d.idStatusContratacion == 7 && d.idMovimiento == 7 || d.idStatusContratacion == 7 && d.idMovimiento == 64 ||
+						d.idStatusContratacion == 7 && d.idMovimiento == 66 || d.idStatusContratacion == 7 && d.idMovimiento == 67) {
 							fechaVenc = d.fechaVenc2;
 						} 
 						else {
@@ -383,6 +386,13 @@
 					    }
 					}
 				}, 
+				{
+					"width": "8%",
+					"data": function( d ){
+						return '<p class="m-0">'+d.descripcion+'</p>';
+
+					}
+				},
 				{ 
 					"width": "30%",
 					"orderable": false,
@@ -395,7 +405,13 @@
 						else {
 							if(data.idStatusContratacion == 10 && data.idMovimiento == 40 ||
 								data.idStatusContratacion == 8 && data.idMovimiento == 67 ||
-								data.idStatusContratacion == 12 && data.idMovimiento == 42){
+								data.idStatusContratacion == 12 && data.idMovimiento == 42 ||
+								data.idStatusContratacion == 7 && data.idMovimiento == 37 ||
+								data.idStatusContratacion == 7 && data.idMovimiento == 7 ||
+								data.idStatusContratacion == 7 && data.idMovimiento == 64 ||
+								data.idStatusContratacion == 7 && data.idMovimiento == 66 ||
+								data.idStatusContratacion == 7 && data.idMovimiento == 67
+								){
 									cntActions = '<button href="#" data-idLote="'+data.idLote+'" data-nomLote="'+data.nombreLote+'" data-idCond="'+data.idCondominio+'"' +
 									'data-idCliente="'+data.id_cliente+'" data-fecVen="'+data.fechaVenc+'" data-ubic="'+data.ubicacion+'" data-tot="'+data.totalNeto+'" ' +
 									'class="btn-data btn-green editReg" title="Registrar estatus">' +

@@ -10,25 +10,26 @@ class Administracion_model extends CI_Model {
 
 
 	public function get_datos_lote_11 () {
-		$query = $this->db-> query("SELECT l.idLote, cl.id_cliente, cl.nombre, cl.apellido_paterno, cl.apellido_materno,
+		$query = $this->db-> query("SELECT l.idLote, cl.id_cliente, UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) nombreCliente,
         l.nombreLote, l.idStatusContratacion, l.idMovimiento, l.modificado, cl.rfc, l.totalNeto, l.fechaSolicitudValidacion,
         CAST(l.comentario AS varchar(MAX)) as comentario, l.fechaVenc, l.perfil, cond.nombre as nombreCondominio, res.nombreResidencial, l.ubicacion,
         l.tipo_venta, l.observacionContratoUrgente as vl,
 		concat(asesor.nombre,' ', asesor.apellido_paterno, ' ', asesor.apellido_materno) as asesor,
         concat(coordinador.nombre,' ', coordinador.apellido_paterno, ' ', coordinador.apellido_materno) as coordinador,
         concat(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno) as gerente,
-		cond.idCondominio, cl.expediente
+		cond.idCondominio, cl.expediente, mo.descripcion
 	    FROM lotes l
         INNER JOIN clientes cl ON l.idLote=cl.idLote
         INNER JOIN condominios cond ON l.idCondominio=cond.idCondominio
         INNER JOIN residenciales res ON cond.idResidencial = res.idResidencial
+        INNER JOIN movimientos mo ON mo.idMovimiento = l.idMovimiento
 		LEFT JOIN usuarios asesor ON cl.id_asesor = asesor.id_usuario
 		LEFT JOIN usuarios coordinador ON cl.id_coordinador = coordinador.id_usuario
 		LEFT JOIN usuarios gerente ON cl.id_gerente = gerente.id_usuario
         WHERE ((l.idStatusContratacion IN (8, 10) AND l.idMovimiento IN (40, 10, 67)) OR
         (l.idStatusContratacion = 12 AND l.idMovimiento = 42 AND (l.validacionEnganche = 'NULL' OR l.validacionEnganche IS NULL)) OR
         (l.idStatusContratacion IN (7) AND l.idMovimiento IN (37, 7, 64, 66, 77) AND (l.validacionEnganche = 'NULL' OR l.validacionEnganche IS NULL)))
-        AND cl.status = 1)
+        AND cl.status = 1
 	    GROUP BY l.idLote, cl.id_cliente, cl.nombre, cl.apellido_paterno, cl.apellido_materno,
         l.nombreLote, l.idStatusContratacion, l.idMovimiento, l.modificado, cl.rfc, l.totalNeto, l.fechaSolicitudValidacion,
         CAST(l.comentario AS varchar(MAX)), l.fechaVenc, l.perfil, cond.nombre, res.nombreResidencial, l.ubicacion,

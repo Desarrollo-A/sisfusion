@@ -162,6 +162,7 @@
                                                         <th>LOTE</th>
                                                         <th>GERENTE</th>
                                                         <th>CLIENTE</th>
+                                                        <th>ESTATUS ACTUAL</th>
                                                         <?php
                                                         if($this->session->userdata('id_rol')!=53){
                                                         ?>
@@ -244,7 +245,7 @@
                     className: 'btn buttons-excel',
                     titleAttr: 'Descargar archivo de Excel',
                     exportOptions: {
-                    columns: [1,2,3,4,5,6],
+                    columns: [1, 2, 3, 4, 5, 6, 7],
                     format: {
                         header:  function (d, columnIdx) {
                             if(columnIdx == 0){
@@ -333,7 +334,13 @@
                 {
                     "width": "20%",
                     "data": function( d ){
-                        return '<p class="m-0">'+d.nombre+" "+d.apellido_paterno+" "+d.apellido_materno+'</p>';
+                        return '<p class="m-0">'+d.nombreCliente'</p>';
+                    }
+                },
+                {
+                    "width": "20%",
+                    "data": function( d ){
+                        return '<p class="m-0">'+d.descripcion'</p>';
                     }
                 }
                 <?php
@@ -349,7 +356,7 @@
                                 cntActions = 'En proceso de Liberación';
                             } 
                             else {
-                                if (data.idStatusContratacion == 7 && data.idMovimiento == 64 && (data.perfil == 32 || data.perfil == 13 || data.perfil == 17)) {
+                                if ((data.idStatusContratacion == 7 && data.idMovimiento == 64 && (data.perfil == 32 || data.perfil == 13 || data.perfil == 17)) || (data.idStatusContratacion == 11 && data.idMovimiento == 41 && data.perfil == 11)) {
                                     cntActions = '<button href="#" data-idLote="'+data.idLote+'" data-nomLote="'+data.nombreLote+'" data-idCond="'+data.idCondominio+'"' +
                                     'data-idCliente="'+data.id_cliente+'" data-fecVen="'+data.fechaVenc+'" data-ubic="'+data.ubicacion+'" data-code="'+data.cbbtton+'" ' +
                                     'class="btn-data btn-orangeYellow editReg2" title="Registrar estatus">' +
