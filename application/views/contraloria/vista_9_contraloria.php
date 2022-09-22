@@ -58,57 +58,6 @@
     </div>
 
 
-
-
-    <div class="content hide">
-        <div class="container-fluid">
- 
-            <div class="row">
-                <div class="col xol-xs-12 col-sm-12 col-md-12 col-lg-12">
-                    <div class="card">
-                        <div class="card-header card-header-icon" data-background-color="goldMaderas">
-                            <i class="material-icons">reorder</i>
-                        </div>
-                        <div class="card-content">
-                            <h4 class="card-title center-align">Registro estatus 9 (contrato recibido con firma del cliente)</h4>
-                            <div class="toolbar">
-                             </div>
-                            <div class="material-datatables"> 
-
-                                <div class="form-group">
-                                    <div class="table-responsive">
- 
-                                    <table class="table table-responsive table-bordered table-striped table-hover"
-                                           id="tabla_ingresar_9" name="tabla_ingresar_9">
-
-                                        <thead>
-                                            <tr>
-                                                <th></th>
-                                                <th></th>
-                                                <th style="font-size: .9em;">PROYECTO</th>
-                                                <th style="font-size: .9em;">CONDOMINIO</th>
-                                                <th style="font-size: .9em;">LOTE</th>
-                                                <th style="font-size: .9em;">GERENTE</th>
-                                                <th style="font-size: .9em;">CLIENTE</th>
-                                                <th style="font-size: .9em;"></th>
-                                            </tr>
-                                        </thead>
-                                    </table>
-
- 
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-
-
 <!-- modal  ENVIA A CONTRALORIA 7-->
 <div class="modal fade" id="editReg" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog">
@@ -359,6 +308,12 @@ tabla_9 = $("#tabla_ingresar_9").DataTable({
             else if(d.tipo_venta==5) {
                 lblStats ='<span class="label label-info">Intercambio</span>';
             }
+            else if(d.tipo_venta==6) {
+                lblStats ='<span class="label label-info">Reubicación</span>';
+            }
+            else if(d.tipo_venta==7) {
+                lblStats ='<span class="label label-info">Venta especial</span>';
+            }
             else if(d.tipo_venta== null) {
                     lblStats ='<span class="label label-info"></span>';
             }
@@ -410,7 +365,7 @@ if(data.vl == '1') {
 
 } else {
     
-    if(data.idStatusContratacion == 8 && data.idMovimiento == 38 || data.idStatusContratacion == 8 && data.idMovimiento == 65 ) {
+    if(data.idStatusContratacion == 8 && data.idMovimiento == 38 || data.idStatusContratacion == 8 && data.idMovimiento == 65 || data.idStatusContratacion == 11 && data.idMovimiento == 41) {
 
             cntActions = '<button href="#" data-idLote="'+data.idLote+'" data-nomLote="'+data.nombreLote+'" data-idCond="'+data.idCondominio+'"' +
              'data-idCliente="'+data.id_cliente+'" data-fecVen="'+data.fechaVenc+'" data-ubic="'+data.ubicacion+'" data-code="'+data.cbbtton+'" ' +
