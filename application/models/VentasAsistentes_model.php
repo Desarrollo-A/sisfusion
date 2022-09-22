@@ -135,7 +135,8 @@ class VentasAsistentes_model extends CI_Model {
         CONCAT(asesor.nombre,' ', asesor.apellido_paterno, ' ', asesor.apellido_materno),
         CONCAT(coordinador.nombre,' ', coordinador.apellido_paterno, ' ', coordinador.apellido_materno),
         CONCAT(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno),
-        cond.idCondominio, cl.expediente");
+        cond.idCondominio, cl.expediente, mo.descripcion
+        ORDER BY l.nombreLote");
 		return $query->result();
 	}
 

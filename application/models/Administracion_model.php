@@ -37,7 +37,8 @@ class Administracion_model extends CI_Model {
         concat(asesor.nombre,' ', asesor.apellido_paterno, ' ', asesor.apellido_materno),
         concat(coordinador.nombre,' ', coordinador.apellido_paterno, ' ', coordinador.apellido_materno),
         concat(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno),
-        cond.idCondominio, cl.expediente");
+        cond.idCondominio, cl.expediente, mo.descripcion
+        ORDER BY l.nombreLote");
 		return $query->result();
 
 	}
