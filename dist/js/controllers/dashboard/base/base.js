@@ -55,7 +55,7 @@ function changePill(element){
     }
     else if(element == 'agendaOption'){
         $('#agenda').html("");
-        $('#agenda').load("Calendar/calendar");
+        $('#agenda').load(`${base_url}Calendar/calendar`);
     }
     else if(element == 'rankingOption'){
         contRanking++;
