@@ -82,6 +82,7 @@ class ServicesCRM extends CI_Controller
                 }
                 else if($objDatos['id_rol'] == 3){
                     //Gerente
+                    $id_lider  = $objDatos['id_lider'];
                     $id_gerente=0;
                     $id_subdirector=0;//$getLider[0]['id_subdirector'];
                     $id_regional=0;//$getLider[0]['id_regional'];
