@@ -84,7 +84,7 @@ function fillVentas(beginDate, endDate) {
             className: 'btn buttons-excel',
             titleAttr: 'Descargar archivo de Excel',
             exportOptions: {
-                columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17],
+                columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18],
                 format: {
                     header: function (d, columnIdx) {
                         switch (columnIdx) {
@@ -116,30 +116,33 @@ function fillVentas(beginDate, endDate) {
                                 return 'GERENTE';
                                 break;
                             case 9:
-                                return 'ÚLTIMO ESTATUS CONTRATACIÓN';
+                                return 'TIPO LOTE';
                                 break;
                             case 10:
-                                return 'ESTATUS ACTUAL';
+                                return 'CASA';
                                 break;
                             case 11:
-                                return 'PLAZA VENTA';
+                                return 'ESTATUS ACTUAL';
                                 break;
                             case 12:
-                                return 'TIPO VENTA';
+                                return 'PLAZA VENTA';
                                 break;
                             case 13:
-                                return 'REFERENCIA';
+                                return 'TIPO VENTA';
                                 break;
                             case 14:
-                                return 'COMPARTIDA';
+                                return 'REFERENCIA';
                                 break;
                             case 15:
-                                return 'PRECIO FINAL';
+                                return 'COMPARTIDA';
                                 break;
                             case 16:
-                                return 'ESTATUS 9';
+                                return 'PRECIO FINAL';
                                 break;
                             case 17:
+                                return 'ESTATUS 9';
+                                break;
+                            case 18:
                                 return 'ESTATUS 11';
                                 break;
                         }
@@ -165,7 +168,8 @@ function fillVentas(beginDate, endDate) {
                 {data: 'nombreAsesor'},
                 {data: 'nombreCoordinador'},
                 {data: 'nombreGerente'},
-                {data: 'ultimoEstatusContratacion'},
+                {data: 'tipoLote'},
+                {data: 'esCasa'},
                 {data: 'estatusActualCliente'},
                 {data: 'plazaVenta'},
                 {data: 'tipoVenta'},

@@ -302,12 +302,12 @@ class Login extends CI_Controller
     //   $response = $this->Chat_modelo->FinalizarSesionMsj($estado3,$this->session->userdata('id_usuario'));	
 			$this->session->sess_destroy();
 			//		$this->index();
-					redirect(base_url().'login');	
+					redirect(base_url());	
 		}else{
 			$this->session->sess_destroy();
 //		$this->index();
 			echo '<script>localStorage.clear()</script>';
-		redirect(base_url().'login');
+		redirect(base_url());
 		}
 	}
 
