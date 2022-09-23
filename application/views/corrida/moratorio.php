@@ -483,7 +483,9 @@
                         <b><i>*Este sistema simula las operaciones de intereses moratorios e
                                 intereses ordinados, puede ser diferente al cálculo real<br>
                             <small>- No ingresar pagos salteados</small><br>
-                            <small>- No ingresar pagos en posiciones anteriores al último que se ingreso</small><br></i></b>
+                            <small>- No ingresar pagos en posiciones anteriores al último pago que se ingreso</small><br>
+                            <small>- Cuando una mensualidad haya sido pagada en el dia establecido, se debe ingresar para
+                                que esa mensualidad descuente al saldo insoluto</small><br></i></b>
                     </comment>
                 </div>
 			</div>

@@ -159,17 +159,15 @@ function calculoMoratorioII(IM, importeSaldoI, posPay, PositionPago, diasRetardo
 					else
 					{
 						check=0;
-						// console.log("Entré aqui II");
 					}
 					capital = $scope.alphaNumeric[i]['capital'];
 					interes=0;
 					total = $scope.alphaNumeric[i]['capital'] + $scope.infoMoratorio.interes_p1;
-					diasRetraso=$scope.alphaNumeric[i]['diasRetraso'];
-					fecha_del_pago=$scope.alphaNumeric[i]['fechaPago'];
 					// interesMoratorio = $scope.alphaNumeric[i]['interesMoratorio'] = IM;
 					/*new part 21219*/
 					var alphaOriginal=[];
 					alphaOriginal=$scope.alphaNumeric;
+					var saldoMoraManipulable;
 					if($scope.alphaNumeric[i]['disp'] != 1 || $scope.alphaNumeric[posPay]['disp']==1)
 					{
 						/*Para verfificar donde se puso el pago a capital*/
@@ -180,9 +178,7 @@ function calculoMoratorioII(IM, importeSaldoI, posPay, PositionPago, diasRetardo
 							fecha_del_pago = $scope.alphaNumeric[posPay]['fechaPago'] = fechaDelPago;
 							if (posicionPago == 1)
 							{
-								console.log("Sigo aqui", posicionPago);
-								console.log("$scope.alphaNumeric[posPay]['check']", $scope.alphaNumeric[posPay]['diasRetraso']);
-								fecha_del_pago = $scope.alphaNumeric[i]['fechaPago'] = fechaDelPago;
+								fecha_del_pago = fechaDelPago;
 								if($scope.alphaNumeric[posPay]['check'] ==1)
 								{
 									/*si hay un check (osea que no está pagado) dejar el total*/
@@ -197,254 +193,533 @@ function calculoMoratorioII(IM, importeSaldoI, posPay, PositionPago, diasRetardo
 									// interesMoratorio = $scope.alphaNumeric[posPay]['interesMoratorio'] = $scope.infoMoratorio.interesMoratorio=IM;// $scope.alphaNumeric[posPay]['interesMoratorio'] = IM;
 									// console.log('se descuenta de la primera posicion');
 									saldo = $scope.infoMoratorio.si = $scope.alphaNumeric[posPay]['saldo'];//$scope.alphaNumeric[posPay]['saldo']=saldoInsoluto-$scope.alphaNumeric[posPay]['total']
-									importe			=	 $scope.alphaNumeric[posPay]['importe'] = $scope.infoMoratorio.importe	= importeSaldoI;//$scope.alphaNumeric[posPay]['importe']
+									importe			=	 ($scope.alphaNumeric[posPay]['importe'] = $scope.infoMoratorio.importe	= importeSaldoI).replace(',','');//$scope.alphaNumeric[posPay]['importe']
 									diasRetraso		=	 $scope.alphaNumeric[posPay]['diasRetraso'] = $scope.infoMoratorio.diasRetraso = diasRetardo; //$scope.alphaNumeric[posPay]['diasRetraso']
+									dispPC		= $scope.infoMoratorio.disp	= $scope.alphaNumeric[posPay]['disp'] = 1;
 									// console.log(saldo);
+									saldoMoraManipulable = saldo = $scope.infoMoratorio.si = $scope.alphaNumeric[posPay]['saldo'];//$scope.alphaNumeric[posPay]['saldo']=saldoInsoluto-$scope.alphaNumeric[posPay]['total']
+
 									if(IM > 0)
 									{
 										if($scope.alphaNumeric[posPay]['disp']!=0 || $scope.alphaNumeric[posPay]['disp']==1)
 										{
-											// console.log(IM);
-											var provA = $scope.alphaNumeric[posPay]['importe'] - IM;
-											// total = $scope.alphaNumeric[posPay]['total'] = $scope.infoMoratorio.total = interesMoratorio + total;
+											var provA = importe - IM;
+											// console.log(suma);
 											if(provA>0)
 											{
-												console.log("deudaMoratorio", $scope.alphaNumeric[posPay]['deudaMoratorio']);
-												console.log("provA", provA);
-												// resultado=$scope.alphaNumeric[posPay]['deudaMoratorio']-provA;
+												//si entró aqui quiere decir que pago all the moratorio de esta posicion
+												deudaMoratorio = $scope.alphaNumeric[posPay]['deudaMoratorio'] = 0;
+												interesMoratorio = $scope.alphaNumeric[posPay]['interesMoratorio'] = IM;
+												// cerrar declaraciones
 
-												if($scope.alphaNumeric[posPay]['deudaMoratorio']<provA){
-													resultado=provA-$scope.alphaNumeric[posPay]['deudaMoratorio'];
-												}else{
-													resultado=$scope.alphaNumeric[posPay]['deudaMoratorio']-provA;
+												//revisamos si hay interes ordinario
+												if(interes>0){
+													//si hay lo descontamos a lo restante del importe menos el moratorio
+													provA = provA - interes;
 												}
-												total = resultado;//total = $scope.alphaNumeric[posPay]['total'] - provA
-												// console.log(provA);
-												saldo = $scope.alphaNumeric[posPay]['saldo'] = $scope.infoMoratorio.si =  saldo - provA;//saldo = $scope.alphaNumeric[posPay]['saldo'] = $scope.infoMoratorio.si =  saldo+$scope.alphaNumeric[posPay]['total'];
-												// $scope.alphaNumeric[posPay]['interesMoratorio'] = IM;
-												$scope.alphaNumeric[i]['total'] = 0;
-												interesMoratorio = IM;
-												// console.log("interes Moratoprio: " + $scope.alphaNumeric[i]['interesMoratorio']);
-												// $scope.alphaNumeric[posPay]['interesMoratorio'] = 0;
-												deudaMoratorio = $scope.alphaNumeric[posPay]['deudaMoratorio']=0;
-												console.log($scope.alphaNumeric);
+
+												if(provA>0){
+													//si llega aqui quiere decir que liquido el interes ord y moratorio
+													//EN ESTA POSICION, y se debe checar si hay adeudos en otras posiciones
+													//primero en Moratorios y luego en ordinarios
+													let checkMoratorios = sumaMaratorios();
+													let checkOrdinarios = sumaOrdinarios();
+													let sumInArray;
+													if(checkMoratorios>0 || checkOrdinarios>0){
+														let provAOrd;
+														if(checkMoratorios>0){
+															//recorremos el arreglo para ver exactamente en que poscion hay adeudo
+															//para restarle lo que nos sobro
+
+															$scope.alphaNumeric.map((element, index)=>{
+																if(element.deudaMoratorio!=0 || element.deudaMoratorio!='' || element.deudaMoratorio!=undefined){
+																	//en realidad se debe de dejar los adeudos nos e pueden borrar
+																	//se debe de colocar un valor negativo que al sumarlo de la igualación
+																	sumInArray =+ element.deudaMoratorio;
+																}
+															});
+
+															//NO MOVERLE
+															let restantePago;
+															let checkMoratoriosII = sumaMaratorios();
+															let provAOrd;
+															if(provA>checkMoratoriosII){
+																restantePago = parseFloat(provA - checkMoratoriosII);
+
+																deudaMoratorio = $scope.alphaNumeric[posPay]['deudaMoratorio'] = -(provA- restantePago);
+																// console.log('1', deudaMoratorio);
+																// console.log('checkMoratoriosII', checkMoratoriosII);
+																// console.log('provAOrd', restantePago);
+																//AQUI SE DEBE DE EMPEZAR A DESCONTAR LOS ORDINARIOS
+																let checkMoratoriosIII = sumaMaratorios();
+																if(checkMoratoriosIII==0){
+																	provAOrd = restantePago;
+																	console.log('vamo a descontar ordinarios [',checkOrdinarios,'] al restante ->', provAOrd);
+																	if(checkOrdinarios > provAOrd){
+																		//quiere decir que son más los adeudos que lo que queda pa restar
+																		deudaOrdinario = $scope.alphaNumeric[posPay]['deudaOrdinario'] = -provAOrd;
+																		total = $scope.alphaNumeric[posPay]['total'] = 0;
+																	}
+																	else if(provAOrd > checkOrdinarios){
+																		let restanteIT = provAOrd - checkOrdinarios;
+																		console.log('|||restanteIT:', restanteIT);
+																		console.log('provAOrd:', provAOrd);
+																		if(checkOrdinarios<=0){
+																			//se pagan los ordinarios y alcanza para capital
+																			console.log('checkOrdinariosII', checkOrdinarios);
+
+																			total = $scope.alphaNumeric[posPay]['total'] = provAOrd - checkOrdinarios;
+																			saldo = $scope.alphaNumeric[posPay]['saldo'] = $scope.alphaNumeric[posPay]['saldo'] - (provAOrd - checkOrdinarios);
+																			deudaOrdinario = $scope.alphaNumeric[posPay]['deudaOrdinario'] = -checkOrdinarios;
+																			saldoMoraManipulable = saldo;
+																		}
+																	}
+
+																}
+																//CLOSE DESCONTAR ORDINARIOS
+															}
+															else{
+																restantePago = parseFloat(sumInArray - provA);
+																deudaMoratorio = $scope.alphaNumeric[posPay]['deudaMoratorio'] = restantePago;
+																// console.log('2', deudaMoratorio);
+																// console.log('checkMoratoriosII', checkMoratoriosII);
+																total = $scope.alphaNumeric[posPay]['total'] = 666;
+
+															}
+															// total = $scope.alphaNumeric[posPay]['total'] = 0;
+
+														}
+														else{
+															//checamos adeudos ordinarios
+															let checkMoratoriosIII = sumaMaratorios();
+															if(checkMoratoriosIII==0){
+
+																console.log('vamo a descontar ordinarios [',checkOrdinarios,'] al restante ->', provA);
+																if(checkOrdinarios > provA){
+																	//quiere decir que son más los adeudos que lo que queda pa restar
+																	deudaOrdinario = $scope.alphaNumeric[posPay]['deudaOrdinario'] = -provA;
+																	total = $scope.alphaNumeric[posPay]['total'] = 0;
+																}else if(provA > checkOrdinarios){
+																	let restanteIT = provA - checkOrdinarios;
+																	if(checkOrdinarios>0){
+																		//se pagan los ordinarios y alcanza para capital
+																		total = $scope.alphaNumeric[posPay]['total'] = restanteIT;
+																		saldo = $scope.alphaNumeric[posPay]['saldo'] = $scope.alphaNumeric[posPay]['saldo'] -restanteIT;
+																		deudaOrdinario = $scope.alphaNumeric[posPay]['deudaOrdinario'] = -checkOrdinarios;
+																	}
+																}
+
+															}
+															saldoMoraManipulable = saldo;
+														}
+
+
+													}
+													else{
+														//en caso de que no haya adeudos en otras posiciones
+														deudaOrdinario = $scope.alphaNumeric[posPay]['deudaOrdinario'] = 0;
+														total = $scope.alphaNumeric[posPay]['total'] = provA;
+														saldo = $scope.alphaNumeric[posPay]['saldo'] = $scope.alphaNumeric[posPay]['saldo'] - provA;
+														saldoMoraManipulable = saldo;
+													}
+
+													//por ultimo sumados el nuevo array para ver si hay cosas por pagar
+													let sumatoriaMoratoriosIT = sumaMaratorios();
+													console.log('sumatoriaMoratoriosIT', sumatoriaMoratoriosIT);
+													$('#acumuladoBruto').val(sumatoriaMoratoriosIT.toFixed(2));
+													// /*setear el valor al input de prueba*/
+													$('#resMoratorioAdeuto').val(sumatoriaMoratoriosIT);
+													$('#resMoratorioAdeuto').click();
+													if(sumatoriaMoratoriosIT == 0){
+														//por ultimo sumados los ordinarios para ver si se desconto algo
+														let sumatoriaOrdiIT = sumaOrdinarios();
+														console.log('sumatoriaMoratoriosIT', sumatoriaOrdiIT);
+														$('#acumuladoOrdinarioBruto').val(sumatoriaOrdiIT.toFixed(2));
+														$('#resOrdinarioAdeuto').val(sumatoriaOrdiIT);
+														$('#resOrdinarioAdeuto').click();
+
+													}
+
+
+												}
+												else{
+													//el restante de la resta de Importe menos interes moratorio
+													//no cubrio todos los intereses y se queda como adeudo
+													deudaOrdinario = $scope.alphaNumeric[posPay]['deudaOrdinario'] = Math.abs(provA);
+													total = $scope.alphaNumeric[posPay]['total'] = 0;
+													saldo = $scope.alphaNumeric[posPay]['saldo'] = saldoMoraManipulable;
+												}
+
 											}
 											else
-											{
-												/*sí en la primera posición el interes moratorio es mayor que el imprte*/
-
+											{	/*sí en la primera posición el interes moratorio es mayor que el imprte*/
+												//Acumulacion de adeudos
+												console.log("from else: " + provA);
+												// break;
 												var positivNumbe=Math.abs(provA);
-												saldo = $scope.alphaNumeric[posPay]['saldo'] = $scope.infoMoratorio.si =  saldo;
-												var decNum= positivNumbe.toFixed(2);
-												total = $scope.alphaNumeric[posPay]['total'] = 0;
-												interesMoratorio = IM;
-												$scope.alphaNumeric[i]['interesMoratorio'] = positivNumbe;
-												deudaMoratorio = $scope.alphaNumeric[posPay]['deudaMoratorio'] = positivNumbe;
+												var decNum= positivNumbe.toFixed( 2);
+												//Se le setea 0 al total ya que no abono nada a la capital, genero más adeudo el moratorio
+												total = $scope.alphaNumeric[i]['total'] = 0;
+												saldo = $scope.alphaNumeric[i]['saldo'] = saldoMoraManipulable;
 
-												$('#resMoratorioAdeuto').val(positivNumbe);
+												interesMoratorio = IM;
+												deudaMoratorio = $scope.alphaNumeric[i]['deudaMoratorio'] = positivNumbe;
+
+												// console.log("IM " + IM);
+												var sumAdeudos=0;
+												for(var b=0; b < $scope.alphaNumeric.length; b++)
+												{
+													if (posPay != b) {
+														$scope.alphaNumeric[i]['interesMoratorio'] = 0;
+														$scope.alphaNumeric[i]['deudaMoratorio'] = 0;
+														// delete $scope.alphaNumeric[i]["deudaMoratorio"];
+														// delete $scope.alphaNumeric[i]["interesMoratorio"];
+														// delete $scope.alphaNumeric[i]["deudaMoratorio"];
+													}
+													else
+													{
+														interesMoratorio = $scope.alphaNumeric[b]['interesMoratorio'] = IM;
+														// $scope.alphaNumeric[i]['deudaMoratorio'] = positivNumbe;
+														deudaMoratorio = $scope.alphaNumeric[b]['deudaMoratorio'] = positivNumbe;
+													}
+													//
+													if($scope.alphaNumeric[b]['deudaMoratorio'] != undefined)
+													{
+														sumAdeudos += $scope.alphaNumeric[b]['deudaMoratorio'];
+													}
+												}
+												console.log("Suma total de valores: " + sumAdeudos);
+												$('#acumuladoBruto').val(sumAdeudos.toFixed(2));
+												/*setear el valor al input de prueba*/
+												$('#resMoratorioAdeuto').val(sumAdeudos);
 												$('#resMoratorioAdeuto').click();
-												// console.log("interes Moratoprio: " + $scope.alphaNumeric[i]['interesMoratorio']);
+												/*simular el click para que se detone el evento y le de formato de money*/
+												document.getElementById('resMoratorioAdeuto').click();
+
+												deudaOrdinario = $scope.alphaNumeric[posPay]['deudaOrdinario'] = interes;
+												var sumaAdeudosOrdinario = sumaOrdinarios();
+												$('#resOrdinarioAdeuto').val(sumaAdeudosOrdinario);
+												$('#acumuladoOrdinarioBruto').val(sumaAdeudosOrdinario.toFixed(2));
+												$('#resOrdinarioAdeuto').click();//darle formato a ese campo
 											}
 											dispPC = $scope.alphaNumeric[posPay]['disp']=  1; //$scope.alphaNumeric[posPay]['disp'] = 1;
+											saldo= $scope.alphaNumeric[i]['saldo'];
 										}
+									}
+									else
+									{
+										var provA = $scope.alphaNumeric[posPay]['importe'];
+										deudaMoratorio = $scope.alphaNumeric[posPay]['deudaMoratorio'] =0;
+										if(interes>=0){
+											provA = provA - interes;
+										}
+										console.log('provA: ', provA);
+										if(provA>0){
+											//si llega aqui quiere decir que liquido el interes ord y moratorio
+											//EN ESTA POSICION, y se debe checar si hay adeudos en otras posiciones
+											//primero en Moratorios y luego en ordinarios
+											let checkMoratorios = sumaMaratorios();
+											let checkOrdinarios = sumaOrdinarios();
+											let sumInArray;
+											if(checkMoratorios>0 || checkOrdinarios>0){
+												let provAOrd;
+												if(checkMoratorios>0){
+													//recorremos el arreglo para ver exactamente en que poscion hay adeudo
+													//para restarle lo que nos sobro
+													console.log('checkMoratorios', checkMoratorios);
+													$scope.alphaNumeric.map((element, index)=>{
+														if(element.deudaMoratorio!=0 || element.deudaMoratorio!='' || element.deudaMoratorio!=undefined){
+															//en realidad se debe de dejar los adeudos nos e pueden borrar
+															//se debe de colocar un valor negativo que al sumarlo de la igualación
+															sumInArray =+ element.deudaMoratorio;
+														}
+													});
+
+													//NO MOVERLE
+													let restantePago;
+													let checkMoratoriosII = sumaMaratorios();
+													let provAOrd;
+													if(provA>checkMoratoriosII){
+														restantePago = parseFloat(provA - checkMoratoriosII);
+
+														deudaMoratorio = $scope.alphaNumeric[posPay]['deudaMoratorio'] = -(provA- restantePago);
+														total = $scope.alphaNumeric[posPay]['total'] = 0;
+														// console.log('1', deudaMoratorio);
+														// console.log('checkMoratoriosII', checkMoratoriosII);
+														// console.log('provAOrd', restantePago);
+														//AQUI SE DEBE DE EMPEZAR A DESCONTAR LOS ORDINARIOS
+														let checkMoratoriosIII = sumaMaratorios();
+														if(checkMoratoriosIII==0){
+															provAOrd = restantePago;
+															console.log('vamo a descontar ordinarios [',checkOrdinarios,'] al restante ->', provAOrd);
+															if(checkOrdinarios > provAOrd){
+																//quiere decir que son más los adeudos que lo que queda pa restar
+																deudaOrdinario = $scope.alphaNumeric[posPay]['deudaOrdinario'] = -provAOrd;
+																total = $scope.alphaNumeric[posPay]['total'] = 0;
+															}else if(provAOrd > checkOrdinarios){
+																let restanteIT = provAOrd - checkOrdinarios;
+																console.log('restanteIT', restanteIT);
+																console.log('provA', provAOrd);
+																console.log('checkOrdinarios', checkOrdinarios);
+																console.log('restantePago', restantePago);
+																if(checkOrdinarios<=0){
+																	//se pagan los ordinarios y alcanza para capital
+																	console.log('checkOrdinariosII', checkOrdinarios);
+
+																	total = $scope.alphaNumeric[posPay]['total'] = provAOrd - checkOrdinarios;
+																	saldo = $scope.alphaNumeric[posPay]['saldo'] = $scope.alphaNumeric[posPay]['saldo'] - (provAOrd - checkOrdinarios);
+																	deudaOrdinario = $scope.alphaNumeric[posPay]['deudaOrdinario'] = -checkOrdinarios;
+																	saldoMoraManipulable = saldo;
+																}
+															}
+
+														}
+														//CLOSE DESCONTAR ORDINARIOS
+													}
+													else{
+														restantePago = parseFloat(sumInArray - provA);
+														deudaMoratorio = $scope.alphaNumeric[posPay]['deudaMoratorio'] = restantePago;
+														// console.log('2', deudaMoratorio);
+														// console.log('checkMoratoriosII', checkMoratoriosII);
+														total = $scope.alphaNumeric[posPay]['total'] = 0;
+
+													}
+
+												}
+												else{
+													//checamos adeudos ordinarios
+													let checkMoratoriosIII = sumaMaratorios();
+													if(checkMoratoriosIII==0){
+
+														console.log('vamo a descontar ordinarios [',checkOrdinarios,'] al restante ->', provA);
+														if(checkOrdinarios > provA){
+															//quiere decir que son más los adeudos que lo que queda pa restar
+															deudaOrdinario = $scope.alphaNumeric[posPay]['deudaOrdinario'] = -provA;
+															total = $scope.alphaNumeric[posPay]['total'] = 0;
+														}else if(provA > checkOrdinarios){
+															let restanteIT = provA - checkOrdinarios;
+															console.log('restanteIT', restanteIT);
+															console.log('provA', provA);
+															console.log('checkOrdinarios', checkOrdinarios);
+
+															if(checkOrdinarios>0){
+																//se pagan los ordinarios y alcanza para capital
+																console.log('checkOrdinariosII', checkOrdinarios);
+																total = $scope.alphaNumeric[posPay]['total'] = restanteIT;
+																saldo = $scope.alphaNumeric[posPay]['saldo'] = $scope.alphaNumeric[posPay]['saldo'] -restanteIT;
+																deudaOrdinario = $scope.alphaNumeric[posPay]['deudaOrdinario'] = -checkOrdinarios;
+															}
+														}
+
+													}
+													saldoMoraManipulable = saldo;
+												}
+
+
+											}
+											else{
+												//en caso de que no haya adeudos en otras posiciones
+												deudaOrdinario = $scope.alphaNumeric[posPay]['deudaOrdinario'] = 0;
+												total = $scope.alphaNumeric[posPay]['total'] = provA;
+												saldo = $scope.alphaNumeric[posPay]['saldo'] = $scope.alphaNumeric[posPay]['saldo'] - provA;
+												saldoMoraManipulable = saldo;
+											}
+
+											//por ultimo sumados el nuevo array para ver si hay cosas por pagar
+											let sumatoriaMoratoriosIT = sumaMaratorios();
+											console.log('sumatoriaMoratoriosIT', sumatoriaMoratoriosIT);
+											$('#acumuladoBruto').val(sumatoriaMoratoriosIT.toFixed(2));
+											// /*setear el valor al input de prueba*/
+											$('#resMoratorioAdeuto').val(sumatoriaMoratoriosIT);
+											$('#resMoratorioAdeuto').click();
+											if(sumatoriaMoratoriosIT == 0){
+												//por ultimo sumados los ordinarios para ver si se desconto algo
+												let sumatoriaOrdiIT = sumaOrdinarios();
+												console.log('sumatoriaMoratoriosIT', sumatoriaOrdiIT);
+												$('#acumuladoOrdinarioBruto').val(sumatoriaOrdiIT.toFixed(2));
+												$('#resOrdinarioAdeuto').val(sumatoriaOrdiIT);
+												$('#resOrdinarioAdeuto').click();
+
+											}
+
+
+										}
+										else{
+											//el restante de la resta de Importe menos interes moratorio
+											//no cubrio todos los intereses y se queda como adeudo
+											deudaOrdinario = $scope.alphaNumeric[posPay]['deudaOrdinario'] = Math.abs(provA);
+											total = $scope.alphaNumeric[posPay]['total'] = 0;
+											saldo = $scope.alphaNumeric[posPay]['saldo'] = saldoMoraManipulable;
+										}
+										console.log('ending...', $scope.alphaNumeric);
+
+
 									}
 								}
 							}
 							else
 							{
 								/* Este else es para ver si se descuenta apartir de la segunda posicion*/
-								// if(i<posPay){
-								//
-								// }
-								console.log('chequeo pospay', posPay);
 								console.log("Segunda posicion");
 								importe			= $scope.infoMoratorio.importe		= $scope.alphaNumeric[posPay]['importe'] = importeSaldoI;
 								diasRetraso		= $scope.infoMoratorio.diasRetraso	= $scope.alphaNumeric[posPay]['diasRetraso'] = diasRetardo;
 								dispPC		= $scope.infoMoratorio.disp	= $scope.alphaNumeric[posPay]['disp'] = 1;
+
+								saldoMoraManipulable = saldo = $scope.infoMoratorio.si = $scope.alphaNumeric[posPay]['saldo'];//$scope.alphaNumeric[posPay]['saldo']=saldoInsoluto-$scope.alphaNumeric[posPay]['total']
+
+
+
 								if(IM > 0)
 								{
 									if($scope.alphaNumeric[posPay]['disp']!=0 || $scope.alphaNumeric[posPay]['disp']==1)
 									{
 										var provA = $scope.alphaNumeric[posPay]['importe'] - IM;
-										var billMoratorio;
-										if($scope.alphaNumeric[posPay]['deudaMoratorio']!=undefined)
-										{
-											var cumuloMoratorio = $('#acumuladoBruto').val();
-											billMoratorio = cumuloMoratorio - provA;
-										}
-										else
-										{
-											// var neg = provA;
-											billMoratorio = (-provA);
-											// billMoratorio = Math.sign(billMoratorio);
-										}
 										// console.log(suma);
 										if(provA>0)
 										{
-											// alert("PROVA: " + provA + "===== DEUDA MORATORIO " +  $('#resMoratorioAdeuto').val());
-											// console.log("Deudas de moratorios: " + $scope.alphaNumeric[posPay]['deudaMoratorio']);
-											interesMoratorio = IM;
-											/*newcode*/
-											if($scope.alphaNumeric[posPay]['deudaMoratorio']>=0 || $scope.alphaNumeric[posPay]['deudaMoratorio']!="")
-											{
-												resultado= $scope.alphaNumeric[posPay]['deudaMoratorio'] = 0;
-												// alert($scope.alphaNumeric[posPay]['deudaMoratorio']);
-												// alert(provA);
-												// saldo=$scope.infoMoratorio.si=$scope.alphaNumeric[x]['saldo']=$scope.alphaNumeric[x]['saldo'];
-												console.log('Llegue a descontar a los adeudos moratorios');
+											//si entró aqui quiere decir que pago all the moratorio de esta posicion
+											deudaMoratorio = $scope.alphaNumeric[posPay]['deudaMoratorio'] = 0;
+											interesMoratorio = $scope.alphaNumeric[posPay]['interesMoratorio'] = IM;
+											// cerrar declaraciones
 
-												// var positivRes=Math.abs(resultado);
-												if(resultado >= 0)
-												{
-													console.log("Este debe de ser positivo: " + resultado);
-													// $('#resMoratorioAdeuto').val(resultado);
-													// $('#resMoratorioAdeuto').click();
-													deudaMoratorio =$scope.alphaNumeric[posPay]['deudaMoratorio'] = -provA;
-													total = $scope.alphaNumeric[posPay]['total'] = 0;
-													saldo = $scope.alphaNumeric[posPay]['saldo']; //dejar el saldo moratorio tal cual
-													deudaOrdinario = $scope.alphaNumeric[posPay]['deudaOrdinario'] = interes;
-													var resultadoSum=0;
-													for(var b=0; b<=posPay; b++)
-													{
-														// console.log("LAP: " + b);
-														// console.log($scope.alphaNumeric[b]['interesMoratorio']);
-														if($scope.alphaNumeric[b]['deudaMoratorio'] != 0 || $scope.alphaNumeric[b]['deudaMoratorio'] != "")
-														{
-															// if(b==posPay){}
-															// 	if($scope.alphaNumeric[b]['interesMoratorio']>$scope.alphaNumeric[b]['importe']){
-															// 		resultado += (parseFloat($scope.alphaNumeric[b]['interesMoratorio'])-parseFloat($scope.alphaNumeric[b]['importe']));
-															// 	}else{
-															// 		resultado += (parseFloat($scope.alphaNumeric[b]['importe'])-parseFloat($scope.alphaNumeric[b]['interesMoratorio']));
-															// 	}
+											//revisamos si hay interes ordinario
+											if(interes>0){
+												//si hay lo descontamos a lo restante del importe menos el moratorio
+												provA = provA - interes;
+											}
 
-															resultadoSum += $scope.alphaNumeric[b]['deudaMoratorio'];//original
+											if(provA>0){
+												//si llega aqui quiere decir que liquido el interes ord y moratorio
+												//EN ESTA POSICION, y se debe checar si hay adeudos en otras posiciones
+												//primero en Moratorios y luego en ordinarios
+												let checkMoratorios = sumaMaratorios();
+												let checkOrdinarios = sumaOrdinarios();
+												let sumInArray;
+												if(checkMoratorios>0 || checkOrdinarios>0){
+													let provAOrd;
+													if(checkMoratorios>0){
+														//recorremos el arreglo para ver exactamente en que poscion hay adeudo
+														//para restarle lo que nos sobro
+
+														$scope.alphaNumeric.map((element, index)=>{
+															if(element.deudaMoratorio!=0 || element.deudaMoratorio!='' || element.deudaMoratorio!=undefined){
+																//en realidad se debe de dejar los adeudos nos e pueden borrar
+																//se debe de colocar un valor negativo que al sumarlo de la igualación
+																sumInArray =+ element.deudaMoratorio;
+															}
+														});
+
+														//NO MOVERLE
+														let restantePago;
+														let checkMoratoriosII = sumaMaratorios();
+														let provAOrd;
+														if(provA>checkMoratoriosII){
+															restantePago = parseFloat(provA - checkMoratoriosII);
+
+															deudaMoratorio = $scope.alphaNumeric[posPay]['deudaMoratorio'] = -(provA- restantePago);
+															// console.log('1', deudaMoratorio);
+															// console.log('checkMoratoriosII', checkMoratoriosII);
+															// console.log('provAOrd', restantePago);
+															//AQUI SE DEBE DE EMPEZAR A DESCONTAR LOS ORDINARIOS
+															let checkMoratoriosIII = sumaMaratorios();
+															if(checkMoratoriosIII==0){
+																provAOrd = restantePago;
+																console.log('vamo a descontar ordinarios [',checkOrdinarios,'] al restante ->', provAOrd);
+																if(checkOrdinarios > provAOrd){
+																	//quiere decir que son más los adeudos que lo que queda pa restar
+																	deudaOrdinario = $scope.alphaNumeric[posPay]['deudaOrdinario'] = -provAOrd;
+																	total = $scope.alphaNumeric[posPay]['total'] = 0;
+																}
+																else if(provAOrd > checkOrdinarios){
+																	let restanteIT = provAOrd - checkOrdinarios;
+																	console.log('|||restanteIT:', restanteIT);
+																	console.log('provAOrd:', provAOrd);
+																	if(checkOrdinarios<=0){
+																		//se pagan los ordinarios y alcanza para capital
+																		console.log('checkOrdinariosII', checkOrdinarios);
+
+																		total = $scope.alphaNumeric[posPay]['total'] = provAOrd - checkOrdinarios;
+																		saldo = $scope.alphaNumeric[posPay]['saldo'] = $scope.alphaNumeric[posPay]['saldo'] - (provAOrd - checkOrdinarios);
+																		deudaOrdinario = $scope.alphaNumeric[posPay]['deudaOrdinario'] = -checkOrdinarios;
+																		saldoMoraManipulable = saldo;
+																	}
+																}
+
+															}
+															//CLOSE DESCONTAR ORDINARIOS
 														}
-														else
-														{
-															resultadoSum += 0;
+														else{
+															restantePago = parseFloat(sumInArray - provA);
+															deudaMoratorio = $scope.alphaNumeric[posPay]['deudaMoratorio'] = restantePago;
+															// console.log('2', deudaMoratorio);
+															// console.log('checkMoratoriosII', checkMoratoriosII);
+															total = $scope.alphaNumeric[posPay]['total'] = 666;
+
 														}
+														// total = $scope.alphaNumeric[posPay]['total'] = 0;
+
 													}
+													else{
+														//checamos adeudos ordinarios
+														let checkMoratoriosIII = sumaMaratorios();
+														if(checkMoratoriosIII==0){
 
-													$('#resMoratorioAdeuto').val(resultadoSum.toFixed(2));
-													document.getElementById('resMoratorioAdeuto').click();
-													var sumaAdeudosOrdinario = sumaOrdinarios();
-													$('#resOrdinarioAdeuto').val(sumaAdeudosOrdinario);
-													$('#resOrdinarioAdeuto').click();//darle formato a ese campo
-												}
-												else
-												{
-													// alert('QQQ');
-													// console.log("Este dbe ser negativo: " + resultado);
-													var abonoLimpio = Math.abs(resultado);
-													$('#resMoratorioAdeuto').val(0);
-													$('#resMoratorioAdeuto').click();
-													deudaMoratorio = $scope.alphaNumeric[posPay]['deudaMoratorio'] = 0;
-													// limpiaAdeudoMoratorio();
-													console.log("Libres para abonar a capital: " + abonoLimpio);
-													total = 0;//total = $scope.alphaNumeric[posPay]['total'] + abonoLimpio
-													// alert('Esto se debe descontar al interes ordinario ' + abonoLimpio);
-													//vamoaver
-													var intLessAbonoLimpio = interes - abonoLimpio;
-													console.log('LOG: ' + intLessAbonoLimpio);
-													var cumuloOrdinario = $('#resOrdinarioAdeuto').val();
-													var deudaOrdinario;
-													var deudaOrdinarioSuma;
-													if (Math.sign(intLessAbonoLimpio) == 1)//si el numero es positivo
-													{
-
-														// alert('hanumaaaaaa MATH.SIGN');
-														//si sale positivo es porque quedo interes por pagar
-														deudaOrdinario = $scope.alphaNumeric[posPay]['deudaOrdinario'] = intLessAbonoLimpio;
-														deudaOrdinarioSuma=sumaOrdinarios();
-														$('#resOrdinarioAdeuto').val(deudaOrdinarioSuma);
-														$('#resOrdinarioAdeuto').click();
-														saldo = $scope.infoMoratorio.si = $scope.alphaNumeric[posPay]['saldo'] = $scope.alphaNumeric[posPay]['saldo'];
-														console.log($scope.alphaNumeric);
-
-													}
-													else
-													{
-														//si sale negativo es porque quedo algo libre para capital
-														// saldo=$scope.infoMoratorio.si=$scope.alphaNumeric[x]['saldo']=$scope.alphaNumeric[x]['saldo']-intLessAbonoLimpio;
-														// alert(intLessAbonoLimpio + " MATH.ABS: " + Math.abs(intLessAbonoLimpio) + " deudaORD" + deudaOrdinario);
-														// alert("PARA CAPITAL " + (Math.abs(intLessAbonoLimpio) - deudaOrdinarioSuma));
-														/*VERIFICAR SI DIO NEGATIVO Y POSITIVO ALV, SI SALE NEGATIVO AUN QUEDA DEUDA, SI SALE POSITIVO QUEDA LIBRE*/
-														// deudaMoratorio = $scope.alphaNumeric[posPay]['deudaMoratorio'] = 0;
-														var posintLessAbonoLimpio;
-														if(deudaOrdinarioSuma>0)
-														{
-															posintLessAbonoLimpio = Math.abs(intLessAbonoLimpio) - deudaOrdinarioSuma;
-														}
-														else
-														{
-															posintLessAbonoLimpio = Math.abs(intLessAbonoLimpio);
-														}
-
-
-														if (posintLessAbonoLimpio >= 0)
-														{
-															posintLessAbonoLimpio = Math.abs(posintLessAbonoLimpio);
-															if(sumaOrdinarios()>0)
-															{
-																// alert('SMN HDTRPM LLEGASTE AQUI');
-																posintLessAbonoLimpio = posintLessAbonoLimpio - sumaOrdinarios();
+															console.log('vamo a descontar ordinarios [',checkOrdinarios,'] al restante ->', provA);
+															if(checkOrdinarios > provA){
+																//quiere decir que son más los adeudos que lo que queda pa restar
+																deudaOrdinario = $scope.alphaNumeric[posPay]['deudaOrdinario'] = -provA;
+																total = $scope.alphaNumeric[posPay]['total'] = 0;
+															}else if(provA > checkOrdinarios){
+																let restanteIT = provA - checkOrdinarios;
+																if(checkOrdinarios>0){
+																	//se pagan los ordinarios y alcanza para capital
+																	total = $scope.alphaNumeric[posPay]['total'] = restanteIT;
+																	saldo = $scope.alphaNumeric[posPay]['saldo'] = $scope.alphaNumeric[posPay]['saldo'] -restanteIT;
+																	deudaOrdinario = $scope.alphaNumeric[posPay]['deudaOrdinario'] = -checkOrdinarios;
+																}
 															}
 
-															// posintLessAbonoLimpio = Math.abs(posintLessAbonoLimpio);
-															// alert("ALV JAJA" + $('#resMoratorioAdeuto').val());
-															// alert('POSITIVO ' + posintLessAbonoLimpio);
-															$('#resOrdinarioAdeuto').val(0);
-															$('#resOrdinarioAdeuto').click();
-															limpiaAdeudoOrdinario();
-															total = posintLessAbonoLimpio;
-															saldo = $scope.infoMoratorio.si = $scope.alphaNumeric[posPay]['saldo'] = $scope.alphaNumeric[posPay]['saldo'] - posintLessAbonoLimpio;
-
-															// alert('CHECKPOINT');
-
-															//ORIGINAL12FEB
-															// posintLessAbonoLimpio = Math.abs(posintLessAbonoLimpio);
-															// alert("ALV JAJA" + $('#resMoratorioAdeuto').val());
-															// alert('POSITIVO ' + posintLessAbonoLimpio);
-															// $('#resOrdinarioAdeuto').val(0);
-															// $('#resOrdinarioAdeuto').click();
-															// limpiaAdeudoOrdinario();
-															// total = posintLessAbonoLimpio;
-															// saldo = $scope.infoMoratorio.si = $scope.alphaNumeric[x]['saldo'] = $scope.alphaNumeric[x]['saldo'] - posintLessAbonoLimpio;
 														}
-														else
-														{
-															// posintLessAbonoLimpio = Math.abs(posintLessAbonoLimpio);
-															// alert('AUN QUEDA DEUDA NEGATIVO ' + posintLessAbonoLimpio);
-															$('#resOrdinarioAdeuto').val(posintLessAbonoLimpio);
-															$('#resOrdinarioAdeuto').click();
-														}
-
-
-
-
-														/*var posintLessAbonoLimpio = Math.abs(intLessAbonoLimpio) - deudaOrdinarioSuma;
-                                                        alert(posintLessAbonoLimpio);
-                                                        posintLessAbonoLimpio = Math.abs(posintLessAbonoLimpio);
-                                                        saldo=$scope.infoMoratorio.si=$scope.alphaNumeric[x]['saldo']=$scope.alphaNumeric[x]['saldo']-posintLessAbonoLimpio;
-                                                        deudaOrdinario = $scope.alphaNumeric[posPay]['deudaOrdinario']=0;
-                                                        limpiaAdeudoOrdinario();
-                                                        total = posintLessAbonoLimpio;
-                                                        $('#resOrdinarioAdeuto').val(0);
-                                                        $('#resOrdinarioAdeuto').click();*/
+														saldoMoraManipulable = saldo;
 													}
-													//vamoaver
+
+
+												}
+												else{
+													//en caso de que no haya adeudos en otras posiciones
+													deudaOrdinario = $scope.alphaNumeric[posPay]['deudaOrdinario'] = 0;
+													total = $scope.alphaNumeric[posPay]['total'] = provA;
+													saldo = $scope.alphaNumeric[posPay]['saldo'] = $scope.alphaNumeric[posPay]['saldo'] - provA;
+													saldoMoraManipulable = saldo;
 												}
 
+												//por ultimo sumados el nuevo array para ver si hay cosas por pagar
+												let sumatoriaMoratoriosIT = sumaMaratorios();
+												console.log('sumatoriaMoratoriosIT', sumatoriaMoratoriosIT);
+												$('#acumuladoBruto').val(sumatoriaMoratoriosIT.toFixed(2));
+												// /*setear el valor al input de prueba*/
+												$('#resMoratorioAdeuto').val(sumatoriaMoratoriosIT);
+												$('#resMoratorioAdeuto').click();
+												if(sumatoriaMoratoriosIT == 0){
+													//por ultimo sumados los ordinarios para ver si se desconto algo
+													let sumatoriaOrdiIT = sumaOrdinarios();
+													console.log('sumatoriaMoratoriosIT', sumatoriaOrdiIT);
+													$('#acumuladoOrdinarioBruto').val(sumatoriaOrdiIT.toFixed(2));
+													$('#resOrdinarioAdeuto').val(sumatoriaOrdiIT);
+													$('#resOrdinarioAdeuto').click();
+
+												}
+
+
 											}
-											else
-											{
-												// total = $scope.infoMoratorio.total =total-provA; /*orioginal de la funcion*/
-												total = $scope.alphaNumeric[posPay]['total'] - provA;
-												saldo=$scope.infoMoratorio.si=$scope.alphaNumeric[x]['saldo']=$scope.alphaNumeric[x]['saldo']+provA;
-												console.log('Llegue a NO descontar a los adeudos moratorios');
-												interesMoratorio = IM;
+											else{
+												//el restante de la resta de Importe menos interes moratorio
+												//no cubrio todos los intereses y se queda como adeudo
+												deudaOrdinario = $scope.alphaNumeric[posPay]['deudaOrdinario'] = Math.abs(provA);
+												total = $scope.alphaNumeric[posPay]['total'] = 0;
+												saldo = $scope.alphaNumeric[posPay]['saldo'] = saldoMoraManipulable;
 											}
-											/*exitcode*/
+
 										}
 										else
 										{	/*sí en la primera posición el interes moratorio es mayor que el imprte*/
@@ -455,7 +730,7 @@ function calculoMoratorioII(IM, importeSaldoI, posPay, PositionPago, diasRetardo
 											var decNum= positivNumbe.toFixed( 2);
 											//Se le setea 0 al total ya que no abono nada a la capital, genero más adeudo el moratorio
 											total = $scope.alphaNumeric[i]['total'] = 0;
-											saldo = $scope.alphaNumeric[i]['saldo'];
+											saldo = $scope.alphaNumeric[i]['saldo'] = saldoMoraManipulable;
 
 											interesMoratorio = IM;
 											deudaMoratorio = $scope.alphaNumeric[i]['deudaMoratorio'] = positivNumbe;
@@ -464,10 +739,9 @@ function calculoMoratorioII(IM, importeSaldoI, posPay, PositionPago, diasRetardo
 											var sumAdeudos=0;
 											for(var b=0; b < $scope.alphaNumeric.length; b++)
 											{
-												console.log(posPay + " <--pospay - postionB --> " + b);
 												if (posPay != b) {
-
-
+													$scope.alphaNumeric[i]['interesMoratorio'] = 0;
+													$scope.alphaNumeric[i]['deudaMoratorio'] = 0;
 													// delete $scope.alphaNumeric[i]["deudaMoratorio"];
 													// delete $scope.alphaNumeric[i]["interesMoratorio"];
 													// delete $scope.alphaNumeric[i]["deudaMoratorio"];
@@ -479,14 +753,7 @@ function calculoMoratorioII(IM, importeSaldoI, posPay, PositionPago, diasRetardo
 													deudaMoratorio = $scope.alphaNumeric[b]['deudaMoratorio'] = positivNumbe;
 												}
 												//
-												console.log(b);
-												//AKIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII
-												console.log($scope.alphaNumeric[b]['fechaPago']);
-												console.log($scope.alphaNumeric[b]['importe']);
-												console.log($scope.alphaNumeric[b]['deudaMoratorio']);
-												console.log($scope.alphaNumeric[b]['interesMoratorio']);
-
-												if($scope.alphaNumeric[b]['deudaMoratorio'] != undefined && $scope.alphaNumeric[b]['interesMoratorio'] != 0)
+												if($scope.alphaNumeric[b]['deudaMoratorio'] != undefined)
 												{
 													sumAdeudos += $scope.alphaNumeric[b]['deudaMoratorio'];
 												}
@@ -498,24 +765,168 @@ function calculoMoratorioII(IM, importeSaldoI, posPay, PositionPago, diasRetardo
 											$('#resMoratorioAdeuto').click();
 											/*simular el click para que se detone el evento y le de formato de money*/
 											document.getElementById('resMoratorioAdeuto').click();
-											// console.log($scope.alphaNumeric);
-											// alert("Llegue aqui");
-											// var chMD=$('#acumuladoBruto').val();
-											// if(chMD == 0 || chMD =="")
-											// {
-											// 	deudaMoratorio = $scope.alphaNumeric[b]['deudaMoratorio'] = 0;
-											// 	// delete $scope.alphaNumeric[g]["deudaMoratorio"];
-											// 	// sumAdeudos=0;
-											// }
+
+											deudaOrdinario = $scope.alphaNumeric[posPay]['deudaOrdinario'] = interes;
+											var sumaAdeudosOrdinario = sumaOrdinarios();
+											$('#resOrdinarioAdeuto').val(sumaAdeudosOrdinario);
+											$('#acumuladoOrdinarioBruto').val(sumaAdeudosOrdinario.toFixed(2));
+											$('#resOrdinarioAdeuto').click();//darle formato a ese campo
 										}
 										dispPC = $scope.alphaNumeric[posPay]['disp']=  1; //$scope.alphaNumeric[posPay]['disp'] = 1;
 										saldo= $scope.alphaNumeric[i]['saldo'];
 									}
-
-									/*end new*/
-
-									// console.log("Adeudos hasta este punto: " + $scope.alphaNumeric[x]['deudaMoratorio']);
 								}
+								else
+								{
+									var provA = $scope.alphaNumeric[posPay]['importe'];
+									deudaMoratorio = $scope.alphaNumeric[posPay]['deudaMoratorio'] =0;
+									if(interes>=0){
+										provA = provA - interes;
+									}
+									console.log('provA: ', provA);
+									if(provA>0){
+										//si llega aqui quiere decir que liquido el interes ord y moratorio
+										//EN ESTA POSICION, y se debe checar si hay adeudos en otras posiciones
+										//primero en Moratorios y luego en ordinarios
+										let checkMoratorios = sumaMaratorios();
+										let checkOrdinarios = sumaOrdinarios();
+										let sumInArray;
+										if(checkMoratorios>0 || checkOrdinarios>0){
+											let provAOrd;
+											if(checkMoratorios>0){
+												//recorremos el arreglo para ver exactamente en que poscion hay adeudo
+												//para restarle lo que nos sobro
+												console.log('checkMoratorios', checkMoratorios);
+												$scope.alphaNumeric.map((element, index)=>{
+													if(element.deudaMoratorio!=0 || element.deudaMoratorio!='' || element.deudaMoratorio!=undefined){
+														//en realidad se debe de dejar los adeudos nos e pueden borrar
+														//se debe de colocar un valor negativo que al sumarlo de la igualación
+														sumInArray =+ element.deudaMoratorio;
+													}
+												});
+
+												//NO MOVERLE
+												let restantePago;
+												let checkMoratoriosII = sumaMaratorios();
+												let provAOrd;
+												if(provA>checkMoratoriosII){
+													restantePago = parseFloat(provA - checkMoratoriosII);
+
+													deudaMoratorio = $scope.alphaNumeric[posPay]['deudaMoratorio'] = -(provA- restantePago);
+													total = $scope.alphaNumeric[posPay]['total'] = 0;
+													// console.log('1', deudaMoratorio);
+													// console.log('checkMoratoriosII', checkMoratoriosII);
+													// console.log('provAOrd', restantePago);
+													//AQUI SE DEBE DE EMPEZAR A DESCONTAR LOS ORDINARIOS
+													let checkMoratoriosIII = sumaMaratorios();
+													if(checkMoratoriosIII==0){
+														provAOrd = restantePago;
+														console.log('vamo a descontar ordinarios [',checkOrdinarios,'] al restante ->', provAOrd);
+														if(checkOrdinarios > provAOrd){
+															//quiere decir que son más los adeudos que lo que queda pa restar
+															deudaOrdinario = $scope.alphaNumeric[posPay]['deudaOrdinario'] = -provAOrd;
+															total = $scope.alphaNumeric[posPay]['total'] = 0;
+														}else if(provAOrd > checkOrdinarios){
+															let restanteIT = provAOrd - checkOrdinarios;
+															console.log('restanteIT', restanteIT);
+															console.log('provA', provAOrd);
+															console.log('checkOrdinarios', checkOrdinarios);
+															console.log('restantePago', restantePago);
+															if(checkOrdinarios<=0){
+																//se pagan los ordinarios y alcanza para capital
+																console.log('checkOrdinariosII', checkOrdinarios);
+
+																total = $scope.alphaNumeric[posPay]['total'] = provAOrd - checkOrdinarios;
+																saldo = $scope.alphaNumeric[posPay]['saldo'] = $scope.alphaNumeric[posPay]['saldo'] - (provAOrd - checkOrdinarios);
+																deudaOrdinario = $scope.alphaNumeric[posPay]['deudaOrdinario'] = -checkOrdinarios;
+																saldoMoraManipulable = saldo;
+															}
+														}
+
+													}
+													//CLOSE DESCONTAR ORDINARIOS
+												}
+												else{
+													restantePago = parseFloat(sumInArray - provA);
+													deudaMoratorio = $scope.alphaNumeric[posPay]['deudaMoratorio'] = restantePago;
+													// console.log('2', deudaMoratorio);
+													// console.log('checkMoratoriosII', checkMoratoriosII);
+													total = $scope.alphaNumeric[posPay]['total'] = 0;
+
+												}
+
+											}
+											else{
+												//checamos adeudos ordinarios
+												let checkMoratoriosIII = sumaMaratorios();
+												if(checkMoratoriosIII==0){
+
+													console.log('vamo a descontar ordinarios [',checkOrdinarios,'] al restante ->', provA);
+													if(checkOrdinarios > provA){
+														//quiere decir que son más los adeudos que lo que queda pa restar
+														deudaOrdinario = $scope.alphaNumeric[posPay]['deudaOrdinario'] = -provA;
+														total = $scope.alphaNumeric[posPay]['total'] = 0;
+													}else if(provA > checkOrdinarios){
+														let restanteIT = provA - checkOrdinarios;
+														console.log('restanteIT', restanteIT);
+														console.log('provA', provA);
+														console.log('checkOrdinarios', checkOrdinarios);
+
+														if(checkOrdinarios>0){
+															//se pagan los ordinarios y alcanza para capital
+															console.log('checkOrdinariosII', checkOrdinarios);
+															total = $scope.alphaNumeric[posPay]['total'] = restanteIT;
+															saldo = $scope.alphaNumeric[posPay]['saldo'] = $scope.alphaNumeric[posPay]['saldo'] -restanteIT;
+															deudaOrdinario = $scope.alphaNumeric[posPay]['deudaOrdinario'] = -checkOrdinarios;
+														}
+													}
+
+												}
+												saldoMoraManipulable = saldo;
+											}
+
+
+										}
+										else{
+											//en caso de que no haya adeudos en otras posiciones
+											deudaOrdinario = $scope.alphaNumeric[posPay]['deudaOrdinario'] = 0;
+											total = $scope.alphaNumeric[posPay]['total'] = provA;
+											saldo = $scope.alphaNumeric[posPay]['saldo'] = $scope.alphaNumeric[posPay]['saldo'] - provA;
+											saldoMoraManipulable = saldo;
+										}
+
+										//por ultimo sumados el nuevo array para ver si hay cosas por pagar
+										let sumatoriaMoratoriosIT = sumaMaratorios();
+										console.log('sumatoriaMoratoriosIT', sumatoriaMoratoriosIT);
+										$('#acumuladoBruto').val(sumatoriaMoratoriosIT.toFixed(2));
+										// /*setear el valor al input de prueba*/
+										$('#resMoratorioAdeuto').val(sumatoriaMoratoriosIT);
+										$('#resMoratorioAdeuto').click();
+										if(sumatoriaMoratoriosIT == 0){
+											//por ultimo sumados los ordinarios para ver si se desconto algo
+											let sumatoriaOrdiIT = sumaOrdinarios();
+											console.log('sumatoriaMoratoriosIT', sumatoriaOrdiIT);
+											$('#acumuladoOrdinarioBruto').val(sumatoriaOrdiIT.toFixed(2));
+											$('#resOrdinarioAdeuto').val(sumatoriaOrdiIT);
+											$('#resOrdinarioAdeuto').click();
+
+										}
+
+
+									}
+									else{
+										//el restante de la resta de Importe menos interes moratorio
+										//no cubrio todos los intereses y se queda como adeudo
+										deudaOrdinario = $scope.alphaNumeric[posPay]['deudaOrdinario'] = Math.abs(provA);
+										total = $scope.alphaNumeric[posPay]['total'] = 0;
+										saldo = $scope.alphaNumeric[posPay]['saldo'] = saldoMoraManipulable;
+									}
+									console.log('ending...', $scope.alphaNumeric);
+
+
+								}
+
+
 
 							}
 						}
@@ -524,7 +935,7 @@ function calculoMoratorioII(IM, importeSaldoI, posPay, PositionPago, diasRetardo
 							fecha_del_pago = 0;
 							$scope.alphaNumeric[i]['fechaPago'] = 0;
 							$scope.alphaNumeric[i]['deudaMoratorio'] = 0;
-							saldo = $scope.alphaNumeric[i]['saldo'];
+							// saldo = $scope.alphaNumeric[i]['saldo'] = 666;
 							// var saldoNormal =  $scope.infoMoratorio.precioTotal = $scope.infoMoratorio.precioTotal - $scope.infoMoratorio.capital;
 							if ($scope.alphaNumeric[posPay]['interesMoratorio'] == 0)/*posionPago*/
 							{/*Hace el calculo cuando es apartir de la tercera posición*/
@@ -535,13 +946,15 @@ function calculoMoratorioII(IM, importeSaldoI, posPay, PositionPago, diasRetardo
 								diasRetraso		= $scope.alphaNumeric[posPay]['diasRetraso']=0;
 								interesMoratorio = $scope.alphaNumeric[i]['interesMoratorio']=0;
 								deudaMoratorio = $scope.alphaNumeric[i]['deudaMoratorio'] = 0;
+								// console.log("DDKEE");
 								if($scope.alphaNumeric[posPay]['importe'] ==0 && $scope.alphaNumeric[posPay]['diasRetraso']==0)
 								{
+
 									if($scope.alphaNumeric[i]['pago'] > posicionPago) //coloca un total moratorio - en el restante del actual hacia abajo
 									{
-										saldo = $scope.alphaNumeric[posPay]['saldo'];//saldo =  $scope.infoMoratorio.si =(($scope.infoMoratorio.si-$scope.alphaNumeric[posPay]['total']) + $scope.alphaNumeric[posPay]['interesMoratorio']);
+										console.log('TU SABIA', saldoMoraManipulable);
+										saldo =  $scope.alphaNumeric[i]['saldo'] = saldoMoraManipulable;
 										deudaMoratorio = $scope.alphaNumeric[i]['deudaMoratorio'];
-
 									}
 									else
 									{
@@ -570,11 +983,12 @@ function calculoMoratorioII(IM, importeSaldoI, posPay, PositionPago, diasRetardo
 								else
 								{
 									saldo =  $scope.infoMoratorio.si =$scope.infoMoratorio.si-$scope.alphaNumeric[posPay]['total'];//saldo =  $scope.infoMoratorio.si =$scope.infoMoratorio.si-$scope.alphaNumeric[posPay]['total']
-									deudaMoratorio = $scope.alphaNumeric[i]['deudaMoratorio'] = 0;
+									deudaMoratorio = $scope.alphaNumeric[i]['deudaMoratorio'] ;
 								}
 							}
 							else
 							{
+
 								if ($scope.alphaNumeric[posPay]['pago'] >= posicionPago || $scope.alphaNumeric[posPay]['pago'] <= posicionPago)
 								{
 									if ($scope.alphaNumeric[posicionPago]['disp'] == 1)
@@ -593,11 +1007,6 @@ function calculoMoratorioII(IM, importeSaldoI, posPay, PositionPago, diasRetardo
 										dispPC = $scope.alphaNumeric[posPay]['disp'] = 0;
 										//saldo = $scope.infoMoratorio.si = $scope.alphaNumeric[i]['saldo']
 										deudaMoratorio = $scope.alphaNumeric[i]['deudaMoratorio'] = $scope.alphaNumeric[i]['deudaMoratorio'];
-										diasRetraso = $scope.alphaNumeric[i]['diasRetraso'];
-
-
-
-
 									}
 								}
 								else
@@ -608,7 +1017,10 @@ function calculoMoratorioII(IM, importeSaldoI, posPay, PositionPago, diasRetardo
 								}
 							}
 
+							// saldo = $scope.alphaNumeric[i-1]['saldo'];
 						}
+
+
 						range.push({
 							"fecha" :$scope.fechapago,
 							"pago" : i + 1,
@@ -630,26 +1042,23 @@ function calculoMoratorioII(IM, importeSaldoI, posPay, PositionPago, diasRetardo
 					}
 					else
 					{
-						console.log(i, 'Entró aqui');
 						/*Entra cuando te saltas espacios despues de la primera posicion*/
-							range.push({
-								"fecha" :$scope.fechapago,
-								"pago" : i + 1,
-								"capital" : $scope.alphaNumeric[i]['capital'],
-								"interes" : $scope.alphaNumeric[i]['interes'],
-								"importe" : $scope.alphaNumeric[i]['importe'],
-								"diasRetraso" :  $scope.alphaNumeric[i]['diasRetraso'],
-								"fechaPago" : $scope.alphaNumeric[i]['fechaPago'],
-								"interesMoratorio" : $scope.alphaNumeric[i]['interesMoratorio'],
-								"deudaMoratorio" : $scope.alphaNumeric[i]['deudaMoratorio'],
-								"total" : $scope.alphaNumeric[i]['total'], //$scope.infoMoratorio.capital + $scope.infoMoratorio.interes_p1
-								"saldo" : $scope.alphaNumeric[i]['saldo'],//$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
-								"saldoNormal":  $scope.alphaNumeric[i]['saldoNormal'],//$scope.alphaNumeric[i]['saldoNormal']
-								"disp" : $scope.alphaNumeric[i]['disp'],
-								"check" : $scope.alphaNumeric[i]['check']
-							});
-
-
+						range.push({
+							"fecha" :$scope.fechapago,
+							"pago" : i + 1,
+							"capital" : $scope.alphaNumeric[i]['capital'],
+							"interes" : $scope.alphaNumeric[i]['interes'],
+							"importe" : $scope.alphaNumeric[i]['importe'],
+							"diasRetraso" :  $scope.alphaNumeric[i]['diasRetraso'],
+							"fechaPago" : $scope.alphaNumeric[i]['fechaPago'],
+							"interesMoratorio" : $scope.alphaNumeric[i]['interesMoratorio'],
+							"deudaMoratorio": $scope.alphaNumeric[i]['deudaMoratorio'],
+							"total" : $scope.alphaNumeric[i]['total'], //$scope.infoMoratorio.capital + $scope.infoMoratorio.interes_p1
+							"saldo" : $scope.alphaNumeric[i]['saldo'],//$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
+							"saldoNormal":  $scope.alphaNumeric[i]['saldoNormal'],//$scope.alphaNumeric[i]['saldoNormal']
+							"disp" : $scope.alphaNumeric[i]['disp'],
+							"check" : $scope.alphaNumeric[i]['check']
+						});
 					}
 				}
 				mes++;
@@ -672,74 +1081,792 @@ function calculoMoratorioII(IM, importeSaldoI, posPay, PositionPago, diasRetardo
 			// alert($scope.total2);
 			var range2 = [];
 			for (var i = ini2; i < $scope.infoMoratorio.plazo; i++) {
-				if (mes == 13) {
+				if(mes == 13){
 					mes = '01';
 					yearc++;
 				}
-				if (mes == 2) {
+				if(mes == 2){
 					mes = '02';
 				}
-				if (mes == 3) {
+				if(mes == 3){
 					mes = '03';
 				}
-				if (mes == 4) {
+				if(mes == 4){
 					mes = '04';
 				}
-				if (mes == 5) {
+				if(mes == 5){
 					mes = '05';
 				}
-				if (mes == 6) {
+				if(mes == 6){
 					mes = '06';
 				}
-				if (mes == 7) {
+				if(mes == 7){
 					mes = '07';
 				}
-				if (mes == 8) {
+				if(mes == 8){
 					mes = '08';
 				}
 				/**/
-				if (mes == 9) {
+				if(mes == 9){
 					mes = '09';
 				}
-				if (mes == 10) {
+				if(mes == 10){
 					mes = '10';
 				}
-				if (mes == 11) {
+				if(mes == 11){
 					mes = '11';
 				}
-				if (mes == 12) {
+				if(mes == 12){
 					mes = '12';
 				}
 
 
 				$scope.fechapago = day + '-' + mes + '-' + yearc;
-				if (i == 0) {
+				if(i == 0){
 					$scope.fechaPM = $scope.fechapago;
 				}
 				var interes = 0;
 				var total = 0;
-				var capital = 0;
-				var saldo = 0;
-				var importe = 0;
-				var diasRetraso = 0;
-				var interesMoratorio = 0;
-				var check = 0;
+				var capital =0;
+				var saldo=0;
+				var	importe=0;
+				var diasRetraso=0;
+				var interesMoratorio=0;
+				var check=0;
 				var fecha_del_pago=0;
 				// if($scope.infoMoratorio.mesesSinInteresP1 == 0)
 				// {
 				// $scope.interes_plan2 = $scope.total2*($scope.infoMoratorio.interes_p2);
-
+				// interes = $scope.interes_plan2=$scope.infoMoratorio.saldoNormal*$scope.infoMoratorio.interes_p2;
 				interes = $scope.alphaNumeric[i]['interes'];
 				// capital = 999;
 				capital = $scope.alphaNumeric[i]['capital'] ; //$scope.capital2 = ($scope.p2 - $scope.interes_plan2);
-				// capital = $scope.capital2 = ($scope.p2 - $scope.interes_plan2);
-				total = $scope.p2;
+				total = $scope.alphaNumeric[i]['total'];
 				var deudaMoratorio;
 				/*new part 21219*/
-				var alphaOriginal = [];
-				alphaOriginal = $scope.alphaNumeric;
-				if ($scope.alphaNumeric[i]['disp'] != 1  || $scope.alphaNumeric[posPay]['disp']==1) {
+				var alphaOriginal=[];
+				alphaOriginal=$scope.alphaNumeric;
+				var saldoMoraManipulable;
+				if($scope.alphaNumeric[i]['disp'] != 1 || $scope.alphaNumeric[posPay]['disp']==1)
+				{
 					/*Para verfificar donde se puso el pago a capital*/
+					var vuelta = (i + 1);
+					var posicionPago = (posPay + 1);
+					if (vuelta == posicionPago)
+					{
+						fecha_del_pago =  $scope.alphaNumeric[posPay]['fechaPago'] = fechaDelPago;
+						if (posicionPago == 1)
+						{
+							fecha_del_pago = fechaDelPago;
+							console.log('FIRST POSTICONASD');
+							// var siVal = document.getElementsByName("si"+posPay)[0].value;
+							capital = $scope.alphaNumeric[i]['capital'] ; //$scope.capital2 = ($scope.p2 - $scope.interes_plan2);
+							saldo = $scope.alphaNumeric[i]['capital'];
+							interes = $scope.alphaNumeric[i]['interes'];//$scope.alphaNumeric[posPay]['interes'] = siVal*$scope.infoMoratorio.interes_p2
+							deudaOrdinario=0;
+							console.log('INTERESSSSSSS', interes);
+
+
+
+							importe			= ($scope.infoMoratorio.importe		= $scope.alphaNumeric[posPay]['importe'] = importeSaldoI).replace(',','');
+							diasRetraso		= $scope.infoMoratorio.diasRetraso	= $scope.alphaNumeric[posPay]['diasRetraso'] = diasRetardo;
+							dispPC		= $scope.infoMoratorio.disp	= $scope.alphaNumeric[posPay]['disp'] = 1;
+							interesMoratorio = $scope.alphaNumeric[posPay]['interesMoratorio'] = IM;
+							if(IM > 0)
+							{
+								if($scope.alphaNumeric[posPay]['disp']!=0 || $scope.alphaNumeric[posPay]['disp']==1)
+								{
+									var provA = importe - IM;
+									if(provA>0)
+									{
+										// alert("PROVA: " + provA + "===== DEUDA MORATORIO " +  $('#resMoratorioAdeuto').val());
+										// console.log("Deudas de moratorios: " + $scope.alphaNumeric[posPay]['deudaMoratorio']);
+										interesMoratorio = IM;
+										/*newcode*/
+										if($scope.alphaNumeric[posPay]['deudaMoratorio']>=0 || $scope.alphaNumeric[posPay]['deudaMoratorio']!="")
+										{
+											resultado=$scope.alphaNumeric[posPay]['deudaMoratorio']-provA;
+											// alert($scope.alphaNumeric[posPay]['deudaMoratorio']);
+											// alert(provA);
+											// saldo=$scope.infoMoratorio.si=$scope.alphaNumeric[x]['saldo']=$scope.alphaNumeric[x]['saldo'];
+											console.log('Llegue a descontar a los adeudos moratorios');
+
+											// var positivRes=Math.abs(resultado);
+											if(resultado > 0)
+											{
+												console.log("Este debe de ser positivo: " + resultado);
+												$('#resMoratorioAdeuto').val(resultado);
+												$('#resMoratorioAdeuto').click();
+												deudaMoratorio =$scope.alphaNumeric[posPay]['deudaMoratorio'] = resultado;
+												total = $scope.alphaNumeric[posPay]['total'] = 0;
+												alert('HERE I', deudaMoratorio);
+											}
+											else
+											{
+												// alert('QQQ');
+												// console.log("Este dbe ser negativo: " + resultado);
+												var abonoLimpio = Math.abs(resultado);
+												$('#resMoratorioAdeuto').val(0);
+												$('#resMoratorioAdeuto').click();
+												deudaMoratorio = $scope.alphaNumeric[posPay]['deudaMoratorio'] = 0;
+												// limpiaAdeudoMoratorio();
+												console.log("Libres para abonar a capital: " + abonoLimpio);
+												total = 0;//total = $scope.alphaNumeric[posPay]['total'] + abonoLimpio
+												saldo = $scope.alphaNumeric[posPay]['saldo'] = $scope.alphaNumeric[posPay]['saldo'] - total;
+
+												// alert('Esto se debe descontar al interes ordinario ' + abonoLimpio);
+												//vamoaver
+												var intLessAbonoLimpio = interes - abonoLimpio;
+												console.log('LOG: ' + intLessAbonoLimpio);
+												var cumuloOrdinario = $('#resOrdinarioAdeuto').val();
+												var deudaOrdinario;
+												var deudaOrdinarioSuma;
+												if (Math.sign(intLessAbonoLimpio) == 1)//si el numero es positivo
+												{
+
+													// alert('hanumaaaaaa MATH.SIGN');
+													//si sale positivo es porque quedo interes por pagar
+													deudaOrdinario = $scope.alphaNumeric[posPay]['deudaOrdinario'] = intLessAbonoLimpio;
+													deudaOrdinarioSuma=sumaOrdinarios();
+													$('#resOrdinarioAdeuto').val(deudaOrdinarioSuma);
+													$('#resOrdinarioAdeuto').click();
+													saldo = $scope.alphaNumeric[i]['saldo'] = $scope.alphaNumeric[x]['saldo'];
+													console.log($scope.alphaNumeric);
+												}
+												else
+												{
+													//si sale negativo es porque quedo algo libre para capital
+													// saldo=$scope.infoMoratorio.si=$scope.alphaNumeric[x]['saldo']=$scope.alphaNumeric[x]['saldo']-intLessAbonoLimpio;
+													// alert(intLessAbonoLimpio + " MATH.ABS: " + Math.abs(intLessAbonoLimpio) + " deudaORD" + deudaOrdinario);
+													// alert("PARA CAPITAL " + (Math.abs(intLessAbonoLimpio) - deudaOrdinarioSuma));
+													/*VERIFICAR SI DIO NEGATIVO Y POSITIVO ALV, SI SALE NEGATIVO AUN QUEDA DEUDA, SI SALE POSITIVO QUEDA LIBRE*/
+													// deudaMoratorio = $scope.alphaNumeric[posPay]['deudaMoratorio'] = 0;
+													var posintLessAbonoLimpio;
+													if(deudaOrdinarioSuma>0)
+													{
+														posintLessAbonoLimpio = Math.abs(intLessAbonoLimpio) - deudaOrdinarioSuma;
+													}
+													else
+													{
+														posintLessAbonoLimpio = Math.abs(intLessAbonoLimpio);
+													}
+
+
+													if (posintLessAbonoLimpio >= 0)
+													{
+														posintLessAbonoLimpio = Math.abs(posintLessAbonoLimpio);
+														if(sumaOrdinarios()>0)
+														{
+															// alert('SMN HDTRPM LLEGASTE AQUI');
+															posintLessAbonoLimpio = posintLessAbonoLimpio - sumaOrdinarios();
+														}
+
+														// posintLessAbonoLimpio = Math.abs(posintLessAbonoLimpio);
+														// alert("ALV JAJA" + $('#resMoratorioAdeuto').val());
+														// alert('POSITIVO ' + posintLessAbonoLimpio);
+														$('#resOrdinarioAdeuto').val(0);
+														$('#resOrdinarioAdeuto').click();
+														limpiaAdeudoOrdinario();
+														total = posintLessAbonoLimpio;
+														saldo = $scope.alphaNumeric[posPay]['saldo'] - posintLessAbonoLimpio;
+														saldoMoraManipulable = saldo;
+
+														// alert('CHECKPOINT');
+
+														//ORIGINAL12FEB
+														// posintLessAbonoLimpio = Math.abs(posintLessAbonoLimpio);
+														// alert("ALV JAJA" + $('#resMoratorioAdeuto').val());
+														// alert('POSITIVO ' + posintLessAbonoLimpio);
+														// $('#resOrdinarioAdeuto').val(0);
+														// $('#resOrdinarioAdeuto').click();
+														// limpiaAdeudoOrdinario();
+														// total = posintLessAbonoLimpio;
+														// saldo = $scope.infoMoratorio.si = $scope.alphaNumeric[x]['saldo'] = $scope.alphaNumeric[x]['saldo'] - posintLessAbonoLimpio;
+													}
+													else
+													{
+														// posintLessAbonoLimpio = Math.abs(posintLessAbonoLimpio);
+														// alert('AUN QUEDA DEUDA NEGATIVO ' + posintLessAbonoLimpio);
+														$('#resOrdinarioAdeuto').val(posintLessAbonoLimpio);
+														$('#resOrdinarioAdeuto').click();
+													}
+
+
+
+
+													/*var posintLessAbonoLimpio = Math.abs(intLessAbonoLimpio) - deudaOrdinarioSuma;
+													alert(posintLessAbonoLimpio);
+													posintLessAbonoLimpio = Math.abs(posintLessAbonoLimpio);
+													saldo=$scope.infoMoratorio.si=$scope.alphaNumeric[x]['saldo']=$scope.alphaNumeric[x]['saldo']-posintLessAbonoLimpio;
+													deudaOrdinario = $scope.alphaNumeric[posPay]['deudaOrdinario']=0;
+													limpiaAdeudoOrdinario();
+													total = posintLessAbonoLimpio;
+													$('#resOrdinarioAdeuto').val(0);
+													$('#resOrdinarioAdeuto').click();*/
+												}
+												// saldoMoraManipulable = saldo - total;
+												//vamoaver
+											}
+											// console.log("resultado tratado" + resultado);
+											// console.log(provA);
+											// console.log($scope.alphaNumeric[posPay]['deudaMoratorio']);
+										}
+										else
+										{
+											// total = $scope.infoMoratorio.total =total-provA; /*orioginal de la funcion*/
+											total = $scope.alphaNumeric[posPay]['total'] - provA;
+											saldo=$scope.infoMoratorio.si=$scope.alphaNumeric[x]['saldo']=$scope.alphaNumeric[x]['saldo']+provA;
+											// console.log('Llegue a NO descontar a los adeudos moratorios');
+											saldoMoraManipulable = saldo;
+											interesMoratorio = IM;
+										}
+										/*exitcode*/
+									}
+									else
+									{
+										/*sí en la segunda posición el interes moratorio es mayor que el importe*/
+										//empieza val
+										if($scope.alphaNumeric[posPay]['disp']!=0 || $scope.alphaNumeric[posPay]['disp']==1)
+										{
+											if(provA>0)
+											{
+												// alert('QWERTY');
+												total = provA;
+												saldo = $scope.alphaNumeric[posPay]['saldo'] = $scope.infoMoratorio.si =  saldo+provA;
+												$scope.alphaNumeric[i]['interesMoratorio'] = 0;
+												console.log("interes Moratoprio: " + $scope.alphaNumeric[i]['interesMoratorio']);
+												$scope.alphaNumeric[posPay]['interesMoratorio'] = 0;
+												deudaMoratorio = $scope.alphaNumeric[posPay]['deudaMoratorio']=0;
+												interesMoratorio = IM;
+											}
+											else/*5654.61;*/
+											{
+												// alert('ASDFGH ' + $scope.alphaNumeric[posPay]['importe']);
+												/*sí en la primera posición el interes moratorio es mayor que el imprte*/
+
+												var positivNumbe=Math.abs(provA);
+												console.log('positivNumbe', positivNumbe);
+												console.log('provA', provA);
+												console.log('IM', IM);
+
+												total = $scope.alphaNumeric[posPay]['total'] = 0;
+												deudaMoratorio = $scope.alphaNumeric[posPay]['deudaMoratorio'] = positivNumbe;
+												interesMoratorio = IM;
+												deudaOrdinario = $scope.alphaNumeric[posPay]['deudaOrdinario'] = interes;
+												var resultado=0;
+												for(var b=0; b<=posPay; b++)
+												{
+													// console.log("LAP: " + b);
+													// console.log($scope.alphaNumeric[b]['interesMoratorio']);
+													if($scope.alphaNumeric[b]['deudaMoratorio'] != 0 || $scope.alphaNumeric[b]['deudaMoratorio'] != "")
+													{
+														resultado += $scope.alphaNumeric[b]['deudaMoratorio'];
+													}
+													else
+													{
+														resultado +=0;
+														console.log("En la vuelta " + b + "sumer un cero porque no había nada alv");
+													}
+													console.log("Suma total de valores: " + resultado);
+												}
+												/*setear el valor al input de prueba*/
+												var sumaAdeudosOrdinario = sumaOrdinarios();
+												$('#resMoratorioAdeuto').val(resultado.toFixed(2));
+												$('#resOrdinarioAdeuto').val(sumaAdeudosOrdinario);
+												$('#resOrdinarioAdeuto').click();//darle formato a ese campo
+												// $('#resMoratorioAdeuto').click();
+												/*simular el click para que se detone el evento y le de formato de money*/
+												document.getElementById('resMoratorioAdeuto').click();
+												deudaMoratorio = $scope.alphaNumeric[posPay]['deudaMoratorio']=resultado;
+												console.log($scope.alphaNumeric);
+												// saldo = $scope.alphaNumeric[x]['saldo'] = $scope.infoMoratorio.si =  saldo;
+												// interes
+												//Moratorio = resultado;
+												//
+												saldo=$scope.alphaNumeric[posPay]['saldo'];
+
+											}
+											dispPC = $scope.alphaNumeric[posPay]['disp']=  1; //$scope.alphaNumeric[posPay]['disp'] = 1;
+										}
+										//termina val
+									}
+									console.log("El cúmulo de interes hasta el punto es: " + $scope.alphaNumeric[i]['deudaMoratorio']);
+								}
+							}
+							else{
+								saldoMoraManipulable = saldo = $scope.alphaNumeric[i]['saldoNormal'];
+							}
+						}
+						else
+						{/* Este else es para ver si se descuenta apartir de la segunda posicion*/
+							// alert("Segunda posicion");
+
+							console.log('SEUNGA POSTICONASD');
+							importe			= $scope.infoMoratorio.importe		= $scope.alphaNumeric[posPay]['importe'] = importeSaldoI;
+							diasRetraso		= $scope.infoMoratorio.diasRetraso	= $scope.alphaNumeric[posPay]['diasRetraso'] = diasRetardo;
+							dispPC		= $scope.infoMoratorio.disp	= $scope.alphaNumeric[posPay]['disp'] = 1;
+
+							saldoMoraManipulable = saldo = $scope.infoMoratorio.si = $scope.alphaNumeric[posPay]['saldo'];//$scope.alphaNumeric[posPay]['saldo']=saldoInsoluto-$scope.alphaNumeric[posPay]['total']
+
+
+
+							console.log('interes moratorio hereeeee',i,':', IM);
+							if(IM > 0)
+							{
+								if($scope.alphaNumeric[posPay]['disp']!=0 || $scope.alphaNumeric[posPay]['disp']==1)
+								{
+									var provA = $scope.alphaNumeric[posPay]['importe'] - IM;
+									// console.log(suma);
+									if(provA>0)
+									{
+										//si entró aqui quiere decir que pago all the moratorio de esta posicion
+										deudaMoratorio = $scope.alphaNumeric[posPay]['deudaMoratorio'] = 0;
+										interesMoratorio = $scope.alphaNumeric[posPay]['interesMoratorio'] = IM;
+										// cerrar declaraciones
+
+										//revisamos si hay interes ordinario
+										if(interes>0){
+											//si hay lo descontamos a lo restante del importe menos el moratorio
+											provA = provA - interes;
+										}
+
+										if(provA>0){
+											//si llega aqui quiere decir que liquido el interes ord y moratorio
+											//EN ESTA POSICION, y se debe checar si hay adeudos en otras posiciones
+											//primero en Moratorios y luego en ordinarios
+											let checkMoratorios = sumaMaratorios();
+											let checkOrdinarios = sumaOrdinarios();
+											let sumInArray;
+											if(checkMoratorios>0 || checkOrdinarios>0){
+												if(checkMoratorios>0){
+													//recorremos el arreglo para ver exactamente en que poscion hay adeudo
+													//para restarle lo que nos sobro
+													$scope.alphaNumeric.map((element, index)=>{
+														if(element.adeudoMoratorio!=0 || element.adeudoMoratorio!='' || element.adeudoMoratorio!=undefined){
+															if(provA>=element.adeudoMoratorio){
+																let restaPR1 = provA - element.adeudoMoratorio;
+																if(restaPR1>0){
+																	//si es positivo va a seguir buscando adeudos hasta que quede en 0
+																	provA = restaPR1;
+																	element.adeudoMoratorio = 0;
+																}else{
+																	element.deudaMoratorio = Math.abs(restaPR1);
+																}
+
+																//en realidad se debe de dejar los adeudos nos e pueden borrar
+																//se debe de colocar un valor negativo que al sumarlo de la igualación
+																sumInArray =+ element.deudaMoratorio;
+															}
+
+
+
+														}
+													});
+
+												}
+												else{
+													//checamos adeudos ordinarios
+													console.log('NOMAMSYACASIIIIII');
+													let checkMoratoriosIII = sumaMaratorios();
+													if(checkMoratoriosIII==0){
+
+														console.log('vamo a descontar ordinarios [',checkOrdinarios,'] al restante ->', provA);
+														if(checkOrdinarios > provA){
+															//quiere decir que son más los adeudos que lo que queda pa restar
+															deudaOrdinario = $scope.alphaNumeric[posPay]['deudaOrdinario'] = -provA;
+															total = $scope.alphaNumeric[posPay]['total'] = 0;
+														}else if(provA > checkOrdinarios){
+															let restanteIT = provA - checkOrdinarios;
+															if(checkOrdinarios>0){
+																//se pagan los ordinarios y alcanza para capital
+																total = $scope.alphaNumeric[posPay]['total'] = restanteIT;
+																saldo = $scope.alphaNumeric[posPay]['saldo'] = $scope.alphaNumeric[posPay]['saldo'] -restanteIT;
+																deudaOrdinario = $scope.alphaNumeric[posPay]['deudaOrdinario'] = -checkOrdinarios;
+															}
+														}
+
+													}
+													saldoMoraManipulable = saldo;
+
+												}
+												console.log('sumInArray', sumInArray);
+												console.log('provA', provA);
+												console.log('sumInArray-provA', sumInArray-provA);
+
+												console.log('final de operaciones ', provA);
+											}
+											else{
+												//en caso de que no haya adeudos en otras posiciones
+												deudaOrdinario = $scope.alphaNumeric[posPay]['deudaOrdinario'] = 0;
+												total = $scope.alphaNumeric[posPay]['total'] = provA;
+												saldo = $scope.alphaNumeric[posPay]['saldo'] = $scope.alphaNumeric[posPay]['saldo'] - provA;
+												saldoMoraManipulable = saldo;
+											}
+										}
+										else{
+											//el restante de la resta de Importe menos interes moratorio
+											//no cubrio todos los intereses y se queda como adeudo
+											deudaOrdinario = $scope.alphaNumeric[posPay]['deudaOrdinario'] = Math.abs(provA);
+											total = $scope.alphaNumeric[posPay]['total'] = 0;
+											saldo = $scope.alphaNumeric[posPay]['saldo'] = saldoMoraManipulable;
+											var sumaAdeudosOrdinario = sumaOrdinarios();
+											$('#resOrdinarioAdeuto').val(sumaAdeudosOrdinario);
+											$('#acumuladoOrdinarioBruto').val(sumaAdeudosOrdinario.toFixed(2));
+											$('#resOrdinarioAdeuto').click();//darle formato a ese campo
+										}
+										let sumatoriaMoratoriosIT = sumaMaratorios();
+										if(sumatoriaMoratoriosIT == 0){
+											//por ultimo sumados los ordinarios para ver si se desconto algo
+											let sumatoriaOrdiIT = sumaOrdinarios();
+											console.log('sumatoriaMoratoriosIT', sumatoriaOrdiIT);
+											$('#acumuladoOrdinarioBruto').val(sumatoriaOrdiIT.toFixed(2));
+											$('#resOrdinarioAdeuto').val(sumatoriaOrdiIT);
+											$('#resOrdinarioAdeuto').click();
+
+										}
+
+									}
+									else
+									{	/*sí en la primera posición el interes moratorio es mayor que el imprte*/
+										//Acumulacion de adeudos
+										console.log("from else: " + provA);
+										// break;
+										var positivNumbe=Math.abs(provA);
+										var decNum= positivNumbe.toFixed( 2);
+										//Se le setea 0 al total ya que no abono nada a la capital, genero más adeudo el moratorio
+										total = $scope.alphaNumeric[i]['total'] = 0;
+										saldo = $scope.alphaNumeric[i]['saldo'] = saldoMoraManipulable;
+
+										interesMoratorio = IM;
+										deudaMoratorio = $scope.alphaNumeric[i]['deudaMoratorio'] = positivNumbe;
+
+										// console.log("IM " + IM);
+										var sumAdeudos=0;
+										for(var b=0; b < $scope.alphaNumeric.length; b++)
+										{
+											if (posPay != b) {
+												$scope.alphaNumeric[i]['interesMoratorio'] = 0;
+												$scope.alphaNumeric[i]['deudaMoratorio'] = 0;
+												// delete $scope.alphaNumeric[i]["deudaMoratorio"];
+												// delete $scope.alphaNumeric[i]["interesMoratorio"];
+												// delete $scope.alphaNumeric[i]["deudaMoratorio"];
+											}
+											else
+											{
+												interesMoratorio = $scope.alphaNumeric[b]['interesMoratorio'] = IM;
+												// $scope.alphaNumeric[i]['deudaMoratorio'] = positivNumbe;
+												deudaMoratorio = $scope.alphaNumeric[b]['deudaMoratorio'] = positivNumbe;
+											}
+											//
+											if($scope.alphaNumeric[b]['deudaMoratorio'] != undefined)
+											{
+												sumAdeudos += $scope.alphaNumeric[b]['deudaMoratorio'];
+											}
+										}
+										console.log("Suma total de valores: " + sumAdeudos);
+										$('#acumuladoBruto').val(sumAdeudos.toFixed(2));
+										/*setear el valor al input de prueba*/
+										$('#resMoratorioAdeuto').val(sumAdeudos);
+										$('#resMoratorioAdeuto').click();
+										/*simular el click para que se detone el evento y le de formato de money*/
+										document.getElementById('resMoratorioAdeuto').click();
+
+										deudaOrdinario = $scope.alphaNumeric[posPay]['deudaOrdinario'] = interes;
+										var sumaAdeudosOrdinario = sumaOrdinarios();
+										$('#resOrdinarioAdeuto').val(sumaAdeudosOrdinario);
+										$('#acumuladoOrdinarioBruto').val(sumaAdeudosOrdinario.toFixed(2));
+										$('#resOrdinarioAdeuto').click();//darle formato a ese campo
+									}
+									dispPC = $scope.alphaNumeric[posPay]['disp']=  1; //$scope.alphaNumeric[posPay]['disp'] = 1;
+									saldo= $scope.alphaNumeric[i]['saldo'];
+								}
+							}
+							else
+							{
+								var provA = $scope.alphaNumeric[posPay]['importe'];
+								deudaMoratorio = $scope.alphaNumeric[posPay]['deudaMoratorio'] =0;
+								if(interes>=0){
+									provA = provA - interes;
+								}
+								if(provA>0){
+									//si llega aqui quiere decir que liquido el interes ord y moratorio
+									//EN ESTA POSICION, y se debe checar si hay adeudos en otras posiciones
+									//primero en Moratorios y luego en ordinarios
+									let checkMoratorios = sumaMaratorios();
+									let checkOrdinarios = sumaOrdinarios();
+									let sumInArray;
+									if(checkMoratorios>0 || checkOrdinarios>0){
+										let provAOrd;
+										if(checkMoratorios>0){
+											//recorremos el arreglo para ver exactamente en que poscion hay adeudo
+											//para restarle lo que nos sobro
+
+											$scope.alphaNumeric.map((element, index)=>{
+												if(element.deudaMoratorio!=0 || element.deudaMoratorio!='' || element.deudaMoratorio!=undefined){
+													//en realidad se debe de dejar los adeudos nos e pueden borrar
+													//se debe de colocar un valor negativo que al sumarlo de la igualación
+													sumInArray =+ element.deudaMoratorio;
+												}
+											});
+
+											//NO MOVERLE
+											let restantePago;
+											let checkMoratoriosII = sumaMaratorios();
+											let provAOrd;
+											if(provA>checkMoratoriosII){
+												restantePago = parseFloat(provA - checkMoratoriosII);
+
+												deudaMoratorio = $scope.alphaNumeric[posPay]['deudaMoratorio'] = -(provA- restantePago);
+												// console.log('1', deudaMoratorio);
+												// console.log('checkMoratoriosII', checkMoratoriosII);
+												// console.log('provAOrd', restantePago);
+												//AQUI SE DEBE DE EMPEZAR A DESCONTAR LOS ORDINARIOS
+												let checkMoratoriosIII = sumaMaratorios();
+												if(checkMoratoriosIII==0){
+													provAOrd = restantePago;
+													console.log('vamo a descontar ordinarios [',checkOrdinarios,'] al restante ->', provAOrd);
+													if(checkOrdinarios > provAOrd){
+														//quiere decir que son más los adeudos que lo que queda pa restar
+														deudaOrdinario = $scope.alphaNumeric[posPay]['deudaOrdinario'] = -provAOrd;
+													}else if(provAOrd > checkOrdinarios){
+														let restanteIT = provAOrd - checkOrdinarios;
+														console.log('restanteIT', restanteIT);
+														console.log('provA', provAOrd);
+														console.log('checkOrdinarios', checkOrdinarios);
+														console.log('restantePago', restantePago);
+														if(checkOrdinarios<=0){
+															//se pagan los ordinarios y alcanza para capital
+															console.log('checkOrdinariosII', checkOrdinarios);
+
+															total = $scope.alphaNumeric[posPay]['total'] = provAOrd - checkOrdinarios;
+															saldo = $scope.alphaNumeric[posPay]['saldo'] = $scope.alphaNumeric[posPay]['saldo'] - (provAOrd - checkOrdinarios);
+															deudaOrdinario = $scope.alphaNumeric[posPay]['deudaOrdinario'] = -checkOrdinarios;
+															saldoMoraManipulable = saldo;
+														}else{
+															total = $scope.alphaNumeric[posPay]['total'] = provAOrd - checkOrdinarios;
+															saldo = $scope.alphaNumeric[posPay]['saldo'] = $scope.alphaNumeric[posPay]['saldo'] - (provAOrd - checkOrdinarios);
+															deudaOrdinario = $scope.alphaNumeric[posPay]['deudaOrdinario'] = -checkOrdinarios;
+															saldoMoraManipulable = saldo;
+														}
+													}
+
+												}
+												//CLOSE DESCONTAR ORDINARIOS
+											}
+											else{
+												restantePago = parseFloat(sumInArray - provA);
+												deudaMoratorio = $scope.alphaNumeric[posPay]['deudaMoratorio'] = restantePago;
+												// console.log('2', deudaMoratorio);
+												// console.log('checkMoratoriosII', checkMoratoriosII);
+
+
+											}
+											// total = $scope.alphaNumeric[posPay]['total'] = 0;
+
+										}
+										else{
+											//checamos adeudos ordinarios
+											let checkMoratoriosIII = sumaMaratorios();
+											if(checkMoratoriosIII==0){
+
+												console.log('vamo a descontar ordinarios [',checkOrdinarios,'] al restante ->', provA);
+												if(checkOrdinarios > provA){
+													//quiere decir que son más los adeudos que lo que queda pa restar
+													deudaOrdinario = $scope.alphaNumeric[posPay]['deudaOrdinario'] = -provA;
+													total = $scope.alphaNumeric[posPay]['total'] = 0;
+												}else if(provA > checkOrdinarios){
+													let restanteIT = provA - checkOrdinarios;
+													if(checkOrdinarios>0){
+														//se pagan los ordinarios y alcanza para capital
+														total = $scope.alphaNumeric[posPay]['total'] = restanteIT;
+														saldo = $scope.alphaNumeric[posPay]['saldo'] = $scope.alphaNumeric[posPay]['saldo'] -restanteIT;
+														deudaOrdinario = $scope.alphaNumeric[posPay]['deudaOrdinario'] = -checkOrdinarios;
+													}
+												}
+
+											}
+											saldoMoraManipulable = saldo;
+										}
+
+
+									}
+									else{
+										//en caso de que no haya adeudos en otras posiciones
+										deudaOrdinario = $scope.alphaNumeric[posPay]['deudaOrdinario'] = 0;
+										total = $scope.alphaNumeric[posPay]['total'] = provA;
+										saldo = $scope.alphaNumeric[posPay]['saldo'] = $scope.alphaNumeric[posPay]['saldo'] - provA;
+										saldoMoraManipulable = saldo;
+									}
+
+									//por ultimo sumados el nuevo array para ver si hay cosas por pagar
+									let sumatoriaMoratoriosIT = sumaMaratorios();
+									console.log('sumatoriaMoratoriosIT', sumatoriaMoratoriosIT);
+									$('#acumuladoBruto').val(sumatoriaMoratoriosIT.toFixed(2));
+									// /*setear el valor al input de prueba*/
+									$('#resMoratorioAdeuto').val(sumatoriaMoratoriosIT);
+									$('#resMoratorioAdeuto').click();
+									if(sumatoriaMoratoriosIT == 0){
+										//por ultimo sumados los ordinarios para ver si se desconto algo
+										let sumatoriaOrdiIT = sumaOrdinarios();
+										console.log('sumatoriaMoratoriosIT', sumatoriaOrdiIT);
+										$('#acumuladoOrdinarioBruto').val(sumatoriaOrdiIT.toFixed(2));
+										$('#resOrdinarioAdeuto').val(sumatoriaOrdiIT);
+										$('#resOrdinarioAdeuto').click();
+
+									}
+
+
+								}
+								else{
+									//el restante de la resta de Importe menos interes moratorio
+									//no cubrio todos los intereses y se queda como adeudo
+									deudaOrdinario = $scope.alphaNumeric[posPay]['deudaOrdinario'] = Math.abs(provA);
+									total = $scope.alphaNumeric[posPay]['total'] = 0;
+									saldo = $scope.alphaNumeric[posPay]['saldo'] = saldoMoraManipulable;
+								}
+								console.log('ending...', $scope.alphaNumeric);
+
+
+							}
+
+						}
+					}
+					else
+					{
+						//en este else se coloca el valor a las posiciones restantes
+						//apartir de donde se coloco el pago
+						console.log(i, 'saldo: ', saldoMoraManipulable);
+						// console.log('saldoMoraManipulable', saldoMoraManipulable);
+						// fechaDelPago = 0;
+						// $scope.alphaNumeric[i]['fechaPago'] = 0;
+						saldo = $scope.alphaNumeric[i]['saldo'] = saldoMoraManipulable;
+						// console.log('saldoMoraManipulable', i, ':', saldoMoraManipulable);
+						deudaOrdinario=0;
+						deudaMoratorio=0;
+						if ($scope.alphaNumeric[posPay]['interesMoratorio'] == 0)
+						{
+							//Hace el calculo cuando es apartir de la tercera posición
+							dispPC = $scope.alphaNumeric[posPay]['disp'] =0;
+							importe			= $scope.alphaNumeric[posPay]['importe']=0;
+							diasRetraso		= $scope.alphaNumeric[posPay]['diasRetraso']=0;
+							interesMoratorio = $scope.alphaNumeric[posPay]['interesMoratorio']=0;
+							// interes = $scope.alphaNumeric[i]['interes'];
+							capital = $scope.alphaNumeric[i]['capital'];
+
+							var siVal =$scope.infoMoratorio.si;
+							interes = $scope.alphaNumeric[i]['interes'];
+							// saldo = $scope.infoMoratorio.si = $scope.alphaNumeric[posPay]['saldo'];
+							total = $scope.infoMoratorio.total= $scope.alphaNumeric[i]['capital'] + $scope.alphaNumeric[i]['interes'];
+
+							if($scope.alphaNumeric[posPay]['importe'] == 0 && $scope.alphaNumeric[posPay]['diasRetraso']==0)
+							{
+								if($scope.alphaNumeric[i]['pago'] > posicionPago)
+								{
+									//despues del pago se coloca este contenido
+									//$scope.infoMoratorio.si
+									//saldo =  $scope.infoMoratorio.si =(($scope.infoMoratorio.si-$scope.alphaNumeric[i]['capital']))
+
+									if($('#msiField').val()< posicionPago )
+									{
+										if ($scope.alphaNumeric[i]['pago'] > posicionPago) {
+											saldo = $scope.alphaNumeric[posPay]['saldo'];
+											fechaDelPago=$scope.alphaNumeric[posPay]['fechaPago'];
+
+										}else{
+											saldo=$scope.alphaNumeric[x]['saldo'];
+											fechaDelPago=$scope.alphaNumeric[x]['fechaPago'];
+
+										}
+									}
+									else
+									{
+
+										saldo=$scope.alphaNumeric[posPay]['saldo'];
+										fechaDelPago=$scope.alphaNumeric[posPay]['fechaPago'];
+
+
+									}
+								}
+								else
+								{
+									for(var x=0; x < posicionPago ; x++)
+									{
+										saldo= $scope.infoMoratorio.si = $scope.alphaNumeric[i]['saldo'];
+										//test fields
+										// total = $scope.alphaNumeric[i]['capital']+$scope.alphaNumeric[i]['interes'];
+										// interes = $scope.alphaNumeric[i]['interes'];
+										// capital = $scope.alphaNumeric[i]['capital'];
+										// total = $scope.alphaNumeric[i]['total'];
+									}
+								}
+							}
+							else
+							{
+								saldo =  $scope.infoMoratorio.si =$scope.infoMoratorio.si-$scope.alphaNumeric[posPay]['total'];
+							}
+						}
+						else
+						{
+							if ($scope.alphaNumeric[posPay]['pago'] >= posicionPago || $scope.alphaNumeric[posPay]['pago'] <= posicionPago)
+							{
+								// console.log('LASE1');
+								/*AQUI REVISAR EL PUNTO QUE NO MENCIONARON PERO QUE ENCONTRÉ*/
+								if ($scope.alphaNumeric[posicionPago]['disp'] == 1)
+								{
+									console.log('LASE1.1');
+									//aqui se coloca cuando se hay pagos abajo del nuevo, ejemplo Pago 5:550 y se quiere colocar uno en el 2
+									dispPC = $scope.alphaNumeric[posPay]['disp']=  1;
+									saldo =  $scope.infoMoratorio.si =$scope.alphaNumeric[i]['saldo'];
+									importe			= $scope.alphaNumeric[posPay]['importe'] = $scope.alphaNumeric[posPay]['importe'];
+									diasRetraso		= $scope.alphaNumeric[posPay]['diasRetraso'] = $scope.alphaNumeric[posPay]['diasRetraso'];
+									interesMoratorio = $scope.alphaNumeric[posPay]['interesMoratorio'] = $scope.alphaNumeric[posPay]['interesMoratorio'];
+
+
+								}
+								else
+								{//se coloca un valor cuando nohay nada(el resto de los campos, apartir de la segunda posicion, else de la primera posicion
+									dispPC = $scope.alphaNumeric[posPay]['disp'] = 0;
+									// console.log('LASE1.2', $scope.alphaNumeric[posPay-1]['saldo']);
+									saldo = $scope.alphaNumeric[i]['saldo'];
+									console.log('checar alv');
+								}
+							}
+							else
+							{
+								// console.log('LASE2');
+								// cuando se salta un espacio en la tabla
+								saldo =  $scope.alphaNumeric[i]['saldo'];
+								total = 90;
+
+
+
+							}
+						}
+					}
+
+					$scope.interes_plan2 =$scope.alphaNumeric[i]['saldoNormal']* ($scope.infoMoratorio.interes_p2);
+					$scope.capital2 = ($scope.p2 - $scope.interes_plan2);
+					range2.push({
+						"fecha" :$scope.fechapago,
+						"pago" : i + 1,
+						"capital" :capital,
+						"interes" : interes,
+						"importe" : importe,
+						"diasRetraso" : diasRetraso,
+						"fechaPago": fecha_del_pago,
+						"interesMoratorio" : interesMoratorio,
+						"deudaMoratorio": deudaMoratorio,
+						"deudaOrdinario" : deudaOrdinario,
+						"total" : total, //$scope.infoMoratorio.capital + $scope.infoMoratorio.interes_p1
+						"saldo" : saldo,//$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
+						"saldoNormal" : $scope.alphaNumeric[i]['saldoNormal'],
+						"disp" : dispPC,
+						"min" : minVal,
+						"max": maxVal
+					});
+				}
+				else
+				{
 					var vuelta = (i + 1);
 					var posicionPago = (posPay + 1);
 					if (vuelta == posicionPago)
@@ -780,7 +1907,7 @@ function calculoMoratorioII(IM, importeSaldoI, posPay, PositionPago, diasRetardo
 									{
 										// alert('II');
 										// $scope.p2 = ($scope.infoMoratorio.interes_p2 *  Math.pow(1 + $scope.infoMoratorio.interes_p2, $scope.infoMoratorio.plazo - $scope.infoMoratorio.mesesSinInteresP1) * $scope.alphaNumeric[(posPay-1)]['saldoNormal']) / ( Math.pow(1 + $scope.infoMoratorio.interes_p2, $scope.infoMoratorio.plazo - $scope.infoMoratorio.mesesSinInteresP1 )-1);
-										// interes = $scope.alphaNumeric[(posPay)]['saldoNormal'] * $scope.infoMoratorio.interes_p2;//$scope.alphaNumeric.sal* $scope.infoMoratorio.interes_p2
+										// interes = $scope.alphaNumeric[(posPay-1)]['saldoNormal'] * $scope.infoMoratorio.interes_p2;//$scope.alphaNumeric.sal* $scope.infoMoratorio.interes_p2
 										capital=$scope.alphaNumeric[i]['capital'];
 									}
 									console.log("INteres 2", interes);
@@ -808,7 +1935,7 @@ function calculoMoratorioII(IM, importeSaldoI, posPay, PositionPago, diasRetardo
 												$('#resMoratorioAdeuto').click();
 												deudaMoratorio =$scope.alphaNumeric[posPay]['deudaMoratorio'] = resultado;
 												total = $scope.alphaNumeric[posPay]['total'] = 0;
-												alert('PPP');
+												alert('HERE I', deudaMoratorio);
 											}
 											else
 											{
@@ -876,6 +2003,7 @@ function calculoMoratorioII(IM, importeSaldoI, posPay, PositionPago, diasRetardo
 														limpiaAdeudoOrdinario();
 														total = posintLessAbonoLimpio;
 														saldo = $scope.infoMoratorio.si = $scope.alphaNumeric[posPay]['saldo'] = $scope.alphaNumeric[posPay]['saldo'] - posintLessAbonoLimpio;
+
 														// alert('CHECKPOINT');
 
 														//ORIGINAL12FEB
@@ -1009,12 +2137,13 @@ function calculoMoratorioII(IM, importeSaldoI, posPay, PositionPago, diasRetardo
 						{/* Este else es para ver si se descuenta apartir de la segunda posicion*/
 							// alert("Segunda posicion");
 
-							console.log('SEUNGA POSTICONASD');
+							console.log('Segunda posicion else');
 							var siVal = document.getElementsByName("si"+posPay)[0].value
 							capital = $scope.alphaNumeric[i]['capital'] ; //$scope.capital2 = ($scope.p2 - $scope.interes_plan2);
 
 							interes = $scope.alphaNumeric[i]['interes'];//$scope.alphaNumeric[posPay]['interes'] = siVal*$scope.infoMoratorio.interes_p2
 							deudaOrdinario=0;
+							deudaMoratorio=0;
 
 
 
@@ -1191,14 +2320,14 @@ function calculoMoratorioII(IM, importeSaldoI, posPay, PositionPago, diasRetardo
 
 
 													/*var posintLessAbonoLimpio = Math.abs(intLessAbonoLimpio) - deudaOrdinarioSuma;
-                                                    alert(posintLessAbonoLimpio);
-                                                    posintLessAbonoLimpio = Math.abs(posintLessAbonoLimpio);
-                                                    saldo=$scope.infoMoratorio.si=$scope.alphaNumeric[x]['saldo']=$scope.alphaNumeric[x]['saldo']-posintLessAbonoLimpio;
-                                                    deudaOrdinario = $scope.alphaNumeric[posPay]['deudaOrdinario']=0;
-                                                    limpiaAdeudoOrdinario();
-                                                    total = posintLessAbonoLimpio;
-                                                    $('#resOrdinarioAdeuto').val(0);
-                                                    $('#resOrdinarioAdeuto').click();*/
+													alert(posintLessAbonoLimpio);
+													posintLessAbonoLimpio = Math.abs(posintLessAbonoLimpio);
+													saldo=$scope.infoMoratorio.si=$scope.alphaNumeric[x]['saldo']=$scope.alphaNumeric[x]['saldo']-posintLessAbonoLimpio;
+													deudaOrdinario = $scope.alphaNumeric[posPay]['deudaOrdinario']=0;
+													limpiaAdeudoOrdinario();
+													total = posintLessAbonoLimpio;
+													$('#resOrdinarioAdeuto').val(0);
+													$('#resOrdinarioAdeuto').click();*/
 												}
 												//vamoaver
 											}
@@ -1239,10 +2368,10 @@ function calculoMoratorioII(IM, importeSaldoI, posPay, PositionPago, diasRetardo
 												var positivNumbe=Math.abs(provA);
 												var decNum= positivNumbe.toFixed(2);
 												total = $scope.alphaNumeric[posPay]['total'] = 0;
-												$scope.alphaNumeric[i]['deudaMoratorio'] = positivNumbe;
+												$scope.alphaNumeric[posPay]['deudaMoratorio'] = positivNumbe;
 												interesMoratorio = IM;
 												console.log("IM " + IM);
-												console.log("positivNumbe:", positivNumbe);
+												console.log("positivNumbe:", decNum);
 												deudaOrdinario = $scope.alphaNumeric[posPay]['deudaOrdinario'] = interes;
 												var resultado=0;
 												for(var b=0; b<=posPay; b++)
@@ -1257,12 +2386,14 @@ function calculoMoratorioII(IM, importeSaldoI, posPay, PositionPago, diasRetardo
 														// 	}else{
 														// 		resultado += (parseFloat($scope.alphaNumeric[b]['importe'])-parseFloat($scope.alphaNumeric[b]['interesMoratorio']));
 														// 	}
-
+														console.log('Suma['+b+']:', $scope.alphaNumeric[b]['deudaMoratorio']);
 														resultado += $scope.alphaNumeric[b]['deudaMoratorio'];//original
 													}
 													else
 													{
 														resultado += 0;
+														console.log('Suma['+b+']:', $scope.alphaNumeric[b]['deudaMoratorio']);
+
 														console.log("En la vuelta " + b + "sumer un cero porque no había nada alv");
 													}
 													console.log("Suma total de valores: " + resultado);
@@ -1276,7 +2407,7 @@ function calculoMoratorioII(IM, importeSaldoI, posPay, PositionPago, diasRetardo
 												/*simular el click para que se detone el evento y le de formato de money*/
 												document.getElementById('resMoratorioAdeuto').click();
 												// deudaMoratorio = $scope.alphaNumeric[posPay]['deudaMoratorio']=resultado;//original al 29072022
-												deudaMoratorio = positivNumbe;//original al 29072022
+												deudaMoratorio = $scope.alphaNumeric[posPay]['deudaMoratorio'] = positivNumbe;//original al 29072022
 												console.log($scope.alphaNumeric);
 
 												saldo=$scope.alphaNumeric[posPay]['saldo'];
@@ -1300,13 +2431,17 @@ function calculoMoratorioII(IM, importeSaldoI, posPay, PositionPago, diasRetardo
 								end new*/
 								console.log("disp de esta posicion:" + $scope.alphaNumeric[posPay]['disp']);
 							}
+
+
 							/*fin de new part*/
 						}
 					}
 					else
 					{
+						console.log('ELSE DE VUELTA==PISIONPAGO', i);
 						// fechaDelPago = 0;
-						$scope.alphaNumeric[i]['deudaMoratorio'] = 0;
+						$scope.alphaNumeric[i]['deudaMoratorio'];
+						console.log('vuelta',i,':', $scope.alphaNumeric[i]['deudaMoratorio']);
 						// $scope.alphaNumeric[i]['fechaPago'] = 0;
 						saldo = $scope.alphaNumeric[i]['saldo'];
 						deudaOrdinario=0;
@@ -1392,6 +2527,7 @@ function calculoMoratorioII(IM, importeSaldoI, posPay, PositionPago, diasRetardo
 						{
 							if ($scope.alphaNumeric[posPay]['pago'] >= posicionPago || $scope.alphaNumeric[posPay]['pago'] <= posicionPago)
 							{
+								/*AQUI REVISAR EL PUNTO QUE NO MENCIONARON PERO QUE ENCONTRÉ*/
 								if ($scope.alphaNumeric[posicionPago]['disp'] == 1)
 								{
 									//aqui se coloca cuando se hay pagos abajo del nuevo, ejemplo Pago 5:550 y se quiere colocar uno en el 2
@@ -1408,37 +2544,19 @@ function calculoMoratorioII(IM, importeSaldoI, posPay, PositionPago, diasRetardo
 							}
 							else
 							{
-								//cuando se salta un espacio en la tabla
+								// cuando se salta un espacio en la tabla
 								saldo =  $scope.alphaNumeric[posPay]['saldo'] = $scope.infoMoratorio.si = 1;
 								total = 90;
+
+
+
 							}
 						}
-					}
 
-					// var siVal = document.getElementsByName("si"+i)[0].value
-					// interes = siVal*$scope.infoMoratorio.interes_p2
-					$scope.interes_plan2 = $scope.alphaNumeric[i]['saldoNormal'] * ($scope.infoMoratorio.interes_p2);
-					$scope.capital2 = ($scope.p2 - $scope.interes_plan2);
-					range2.push({
-						"fecha": $scope.fechapago,
-						"pago": i + 1,
-						"capital": capital,
-						"interes": interes,
-						"importe": importe,
-						"diasRetraso": diasRetraso,
-						"fechaPago": fecha_del_pago,
-						"interesMoratorio": interesMoratorio,
-						"deudaMoratorio": deudaMoratorio,
-						"deudaOrdinario": deudaOrdinario,
-						"total": total, //$scope.infoMoratorio.capital + $scope.infoMoratorio.interes_p1
-						"saldo": saldo,//$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
-						"saldoNormal": $scope.alphaNumeric[i]['saldoNormal'],
-						"disp": dispPC,
-						"min": minVal,
-						"max": maxVal
-					});
-				}
-				else {
+
+
+
+					}
 					/*Entra cuando te saltas espacios despues de la primera posicion*/
 					range2.push({
 						"fecha": $scope.fechapago,
@@ -1447,54 +2565,22 @@ function calculoMoratorioII(IM, importeSaldoI, posPay, PositionPago, diasRetardo
 						"interes": $scope.alphaNumeric[i]['interes'],
 						"importe": $scope.alphaNumeric[i]['importe'],
 						"diasRetraso": $scope.alphaNumeric[i]['diasRetraso'],
-						"fechaPago": $scope.alphaNumeric[i]['fechaPago'],
+						"fechaPago" : $scope.alphaNumeric[i]['fechaPago'],
 						"interesMoratorio": $scope.alphaNumeric[i]['interesMoratorio'],
-						"deudaMoratorio": $scope.alphaNumeric[i]['deudaMoratorio'],
-						"deudaOrdinario": $scope.alphaNumeric[i]['deudaOrdinario'],
+						"deudaMoratorio" : $scope.alphaNumeric[i]['deudaMoratorio'],
+						"deudaOrdinario" : $scope.alphaNumeric[i]['deudaOrdinario'],
 						"total": $scope.alphaNumeric[i]['total'], //$scope.infoMoratorio.capital + $scope.infoMoratorio.interes_p1
 						"saldo": $scope.alphaNumeric[i]['saldo'],//$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
-						"saldoNormal": $scope.alphaNumeric[i]['saldoNormal'],
+						"saldoNormal" : $scope.alphaNumeric[i]['saldoNormal'],
 						"disp": $scope.alphaNumeric[i]['disp']
 					});
 				}
-				// }
-				// else
-				// {
-				// 	/*Cuando estén combinados MSI y MCI*/
-				// 	range2.push({
-				// 			"fecha" :$scope.fechapago,
-				// 			"pago" : i+1,
-				// 			"capital" : ($scope.infoMoratorio.capital=($scope.p2 - $scope.interes_plan2)),
-				// 			"interes" : ($scope.interes_plan2=($scope.total2*$scope.infoMoratorio.interes_p2)),
-				// 			"importe" : 0,
-				// 			"diasRetraso" : 0,
-				// 			"interesMoratorio" : 0,
-				// 			"total" : $scope.p2,
-				// 			"saldo" : $scope.total2=($scope.total2 - $scope.capital2),//$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
-				// 			"disp" : disp
-				// 		});
-				// }
 
-
-				/*original*/
-				// $scope.interes_plan2 = $scope.total2*($scope.infoMoratorio.interes_p2);
-				// $scope.capital2 = ($scope.p2 - $scope.interes_plan2);
-				// range2.push({
-				// 	"fecha" :$scope.fechapago,
-				// 	"pago" : i+1,
-				// 	"capital" : ($scope.infoMoratorio.capital=($scope.p2 - $scope.interes_plan2)),
-				// 	"interes" : ($scope.interes_plan2=($scope.total2*$scope.infoMoratorio.interes_p2)),
-				// 	"importe" : 0,
-				// 	"diasRetraso" : 0,
-				// 	"interesMoratorio" : 0,
-				// 	"total" : $scope.p2,
-				// 	"saldo" : $scope.total2=($scope.total2 - $scope.capital2),//$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
-				// 	"disp" : disp
-				// });
-
+				console.log("Part of range II de JS EXTERNO");
 				mes++;
 
-				if (i == ($scope.infoMoratorio.plazo - 1)) {
+				if (i == ($scope.infoMoratorio.plazo - 1))
+				{
 					$scope.totalSegundoPlan = $scope.p2;
 				}
 				$scope.finalMesesp2 = (range2.length);
@@ -1663,7 +2749,7 @@ function calculoMoratorioII(IM, importeSaldoI, posPay, PositionPago, diasRetardo
 								}
 								else
 								{
-									var inputCapital = '<input name="importe' + full["pago"] + '" type="number" id="idImporte' + full["pago"] + '"   placeholder="Importe" class="form-control">';//onchange="pagoCapChange('+full["pago"]+')"
+									var inputCapital = '<input name="importe' + full["pago"] + '" type="number" id="idImporte' + full["pago"] + '"  pattern="^\\$\\d{1,3}(,\\d{3})*(\\.\\d+)?$"  placeholder="Importe" class="form-control">';//onchange="pagoCapChange('+full["pago"]+')"
 									var numberPay = '<input name="numberPay' + full["pago"] + '" type="hidden" id="payNum' + full["pago"] + '"  value="'+full["pago"]+'">';
 									return inputCapital + numberPay;
 								}
@@ -1995,7 +3081,7 @@ function calculoMoratorioII(IM, importeSaldoI, posPay, PositionPago, diasRetardo
 									// interesMoratorio = $scope.alphaNumeric[posPay]['interesMoratorio'] = $scope.infoMoratorio.interesMoratorio=IM;// $scope.alphaNumeric[posPay]['interesMoratorio'] = IM;
 									// console.log('se descuenta de la primera posicion');
 									saldo = $scope.infoMoratorio.si = $scope.alphaNumeric[posPay]['saldo'];//$scope.alphaNumeric[posPay]['saldo']=saldoInsoluto-$scope.alphaNumeric[posPay]['total']
-									importe			=	 $scope.alphaNumeric[posPay]['importe'] = $scope.infoMoratorio.importe	= importeSaldoI;//$scope.alphaNumeric[posPay]['importe']
+									importe			=	 ($scope.alphaNumeric[posPay]['importe'] = $scope.infoMoratorio.importe	= importeSaldoI).replace(',','');//$scope.alphaNumeric[posPay]['importe']
 									diasRetraso		=	 $scope.alphaNumeric[posPay]['diasRetraso'] = $scope.infoMoratorio.diasRetraso = diasRetardo; //$scope.alphaNumeric[posPay]['diasRetraso']
 									dispPC		= $scope.infoMoratorio.disp	= $scope.alphaNumeric[posPay]['disp'] = 1;
 									// console.log(saldo);
@@ -2004,7 +3090,7 @@ function calculoMoratorioII(IM, importeSaldoI, posPay, PositionPago, diasRetardo
 										if($scope.alphaNumeric[posPay]['disp']!=0 || $scope.alphaNumeric[posPay]['disp']==1)
 										{
 											// console.log(IM);
-											var provA = $scope.alphaNumeric[posPay]['importe'] - IM;
+											var provA = importe - IM;
 											// total = $scope.alphaNumeric[posPay]['total'] = $scope.infoMoratorio.total = interesMoratorio + total;
 											if(provA>0)
 											{
@@ -2017,11 +3103,10 @@ function calculoMoratorioII(IM, importeSaldoI, posPay, PositionPago, diasRetardo
 												}else{
 													resultado=$scope.alphaNumeric[posPay]['deudaMoratorio']-provA;
 												}
-												total = resultado;//total = $scope.alphaNumeric[posPay]['total'] - provA
+												total = $scope.alphaNumeric[posPay]['total'] = resultado;//total = $scope.alphaNumeric[posPay]['total'] - provA
 												// console.log(provA);
 												saldo = $scope.alphaNumeric[posPay]['saldo'] = $scope.infoMoratorio.si =  saldo - provA;//saldo = $scope.alphaNumeric[posPay]['saldo'] = $scope.infoMoratorio.si =  saldo+$scope.alphaNumeric[posPay]['total'];
 												// $scope.alphaNumeric[posPay]['interesMoratorio'] = IM;
-												$scope.alphaNumeric[i]['total'] = 0;
 												interesMoratorio = IM;
 												// console.log("interes Moratoprio: " + $scope.alphaNumeric[i]['interesMoratorio']);
 												// $scope.alphaNumeric[posPay]['interesMoratorio'] = 0;
@@ -2031,8 +3116,12 @@ function calculoMoratorioII(IM, importeSaldoI, posPay, PositionPago, diasRetardo
 											else
 											{
 												/*sí en la primera posición el interes moratorio es mayor que el imprte*/
-
+												console.log('lo que quedó como adeudo moratorio:', provA);
 												var positivNumbe=Math.abs(provA);
+												console.log('lo mismo pero en positivo:', positivNumbe);
+												console.log('IM:', IM);
+												console.log('importe:', importe);
+
 												saldo = $scope.alphaNumeric[posPay]['saldo'] = $scope.infoMoratorio.si =  saldo;
 												var decNum= positivNumbe.toFixed(2);
 												total = $scope.alphaNumeric[posPay]['total'] = 0;
@@ -2123,6 +3212,7 @@ function calculoMoratorioII(IM, importeSaldoI, posPay, PositionPago, diasRetardo
 																if(checkOrdinarios > provAOrd){
 																	//quiere decir que son más los adeudos que lo que queda pa restar
 																	deudaOrdinario = $scope.alphaNumeric[posPay]['deudaOrdinario'] = -provAOrd;
+																	total = $scope.alphaNumeric[posPay]['total'] = 0;
 																}
 																else if(provAOrd > checkOrdinarios){
 																	let restanteIT = provAOrd - checkOrdinarios;
@@ -2147,10 +3237,10 @@ function calculoMoratorioII(IM, importeSaldoI, posPay, PositionPago, diasRetardo
 															deudaMoratorio = $scope.alphaNumeric[posPay]['deudaMoratorio'] = restantePago;
 															// console.log('2', deudaMoratorio);
 															// console.log('checkMoratoriosII', checkMoratoriosII);
-
+															total = $scope.alphaNumeric[posPay]['total'] = 666;
 
 														}
-														total = $scope.alphaNumeric[posPay]['total'] = 0;
+														// total = $scope.alphaNumeric[posPay]['total'] = 0;
 
 													}
 													else{
@@ -2277,6 +3367,7 @@ function calculoMoratorioII(IM, importeSaldoI, posPay, PositionPago, diasRetardo
 									if(interes>=0){
 										provA = provA - interes;
 									}
+									console.log('provA: ', provA);
 									if(provA>0){
 										//si llega aqui quiere decir que liquido el interes ord y moratorio
 										//EN ESTA POSICION, y se debe checar si hay adeudos en otras posiciones
@@ -2289,7 +3380,7 @@ function calculoMoratorioII(IM, importeSaldoI, posPay, PositionPago, diasRetardo
 											if(checkMoratorios>0){
 												//recorremos el arreglo para ver exactamente en que poscion hay adeudo
 												//para restarle lo que nos sobro
-
+												console.log('checkMoratorios', checkMoratorios);
 												$scope.alphaNumeric.map((element, index)=>{
 													if(element.deudaMoratorio!=0 || element.deudaMoratorio!='' || element.deudaMoratorio!=undefined){
 														//en realidad se debe de dejar los adeudos nos e pueden borrar
@@ -2306,6 +3397,7 @@ function calculoMoratorioII(IM, importeSaldoI, posPay, PositionPago, diasRetardo
 													restantePago = parseFloat(provA - checkMoratoriosII);
 
 													deudaMoratorio = $scope.alphaNumeric[posPay]['deudaMoratorio'] = -(provA- restantePago);
+													total = $scope.alphaNumeric[posPay]['total'] = 0;
 													// console.log('1', deudaMoratorio);
 													// console.log('checkMoratoriosII', checkMoratoriosII);
 													// console.log('provAOrd', restantePago);
@@ -2343,10 +3435,9 @@ function calculoMoratorioII(IM, importeSaldoI, posPay, PositionPago, diasRetardo
 													deudaMoratorio = $scope.alphaNumeric[posPay]['deudaMoratorio'] = restantePago;
 													// console.log('2', deudaMoratorio);
 													// console.log('checkMoratoriosII', checkMoratoriosII);
-
+													total = $scope.alphaNumeric[posPay]['total'] = 0;
 
 												}
-												// total = $scope.alphaNumeric[posPay]['total'] = 0;
 
 											}
 											else{
