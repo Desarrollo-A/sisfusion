@@ -54,56 +54,6 @@
         </div>
     </div>
 
-
-    <div class="content hide">
-        <div class="container-fluid">
-
-            <div class="row">
-                <div class="col xol-xs-12 col-sm-12 col-md-12 col-lg-12">
-                    <div class="card">
-                        <div class="card-header card-header-icon" data-background-color="goldMaderas">
-                            <i class="material-icons">reorder</i>
-                        </div>
-                        <div class="card-content">
-                            <h4 class="card-title center-align">Registro estatus 13 (Contrato listo y entregado
-                                asesores)</h4>
-                            <div class="toolbar">
-                            </div>
-                            <div class="material-datatables">
-
-                                <div class="form-group">
-                                    <div class="table-responsive">
-
-                                        <table class="table table-responsive table-bordered table-striped table-hover"
-                                               id="tabla_ingresar_13" name="tabla_ingresar_13"
-                                               style="text-align:center;">
-
-                                            <thead>
-                                            <tr>
-                                                <th></th>
-                                                <th></th>
-                                                <th style="font-size: .9em;">PROYECTO</th>
-                                                <th style="font-size: .9em;">CONDOMINIO</th>
-                                                <th style="font-size: .9em;">LOTE</th>
-                                                <th style="font-size: .9em;">GERENTE</th>
-                                                <th style="font-size: .9em;">CLIENTE</th>
-                                                <th style="font-size: .9em;"></th>
-                                            </tr>
-                                            </thead>
-                                        </table>
-
-
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
     <!-- modal  rechazar A CONTRALORIA 7-->
     <div class="modal fade" id="editReg" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog">
@@ -301,6 +251,10 @@
                             lblStats = '<span class="label label-primary">Donación</span>';
                         } else if (d.tipo_venta == 5) {
                             lblStats = '<span class="label label-info">Intercambio</span>';
+                        } else if(d.tipo_venta==6) {
+                            lblStats ='<span class="label label-info">Reubicación</span>';
+                        } else if(d.tipo_venta==7) {
+                            lblStats ='<span class="label label-info">Venta especial</span>';
                         } else if (d.tipo_venta == null) {
                             lblStats = '<span class="label label-info"></span>';
                         }
@@ -376,6 +330,12 @@
                                     'data-idCliente="' + data.id_cliente + '" data-fecVen="' + data.fechaVenc + '" data-ubic="' + data.ubicacion + '" ' +
                                     'class="boton_1 btn-data btn-orangeYellow" title="Sin tiempo" id="limi1">' +
                                     '<i class="fas fa-exclamation"></i></button>';
+                            } else if (data.idStatusContratacion == 10 && data.idMovimiento == 40) {
+                                cntActions = '<button href="#" data-idLote="' + data.idLote + '" data-nomLote="' + data.nombreLote + '" data-idCond="' + data.idCondominio + '"' +
+                                    'data-idCliente="' + data.id_cliente + '" data-fecVen="' + data.fechaVenc + '" data-ubic="' + data.ubicacion + '" data-code="' + data.cbbtton + '" ' +
+                                    'class="btn-data btn-green editReg" title="Registrar estatus">' +
+                                    '<i class="fas fa-thumbs-up"></i></button>';
+
                             } else {
                                 cntActions = 'N/A';
                             }

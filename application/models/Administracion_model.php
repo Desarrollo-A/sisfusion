@@ -41,16 +41,15 @@ class Administracion_model extends CI_Model {
         cond.idCondominio, cl.expediente, mo.descripcion
         ORDER BY l.nombreLote");
 		return $query->result();
-
 	}
 
     public function get_datos_admon($condominio){
     	return $this->db->query("SELECT lot.idCliente, lot.nombreLote, con.nombre as nombreCondominio, res.nombreResidencial, lot.idStatusLote, lot.comentarioLiberacion, lot.fechaLiberacion, 
-                                con.idCondominio, lot.sup as superficie, lot.saldo, lot.precio, lot.enganche, lot.porcentaje, lot.total, lot.referencia, lot.comentario, lot.comentarioLiberacion, lot.observacionLiberacion, 
-                                sl.nombre as descripcion_estatus, sl.color FROM [lotes] lot 
-                                INNER JOIN [condominios] con ON con.idCondominio = lot.idCondominio 
-                                INNER JOIN [residenciales] res ON res.idResidencial = con.idResidencial 
-                                INNER JOIN [statuslote] sl ON sl.idStatusLote = lot.idStatusLote WHERE lot.idCondominio = ".$condominio."");
+        con.idCondominio, lot.sup as superficie, lot.saldo, lot.precio, lot.enganche, lot.porcentaje, lot.total, lot.referencia, lot.comentario, lot.comentarioLiberacion, lot.observacionLiberacion, 
+        sl.nombre as descripcion_estatus, sl.color FROM [lotes] lot 
+        INNER JOIN [condominios] con ON con.idCondominio = lot.idCondominio 
+        INNER JOIN [residenciales] res ON res.idResidencial = con.idResidencial 
+        INNER JOIN [statuslote] sl ON sl.idStatusLote = lot.idStatusLote WHERE lot.idCondominio = ".$condominio."");
     }
 
 	public function validateSt11($idLote){
@@ -59,7 +58,7 @@ class Administracion_model extends CI_Model {
       $this->db->where("((idStatusContratacion IN (8, 10) AND idMovimiento IN (40, 10, 67)) OR
       (idStatusContratacion = 12 and idMovimiento = 42 AND (validacionEnganche = 'NULL' OR validacionEnganche IS NULL)) OR
       (idStatusContratacion IN (7) AND idMovimiento IN (37, 7, 64, 77) AND (validacionEnganche = 'NULL' OR validacionEnganche IS NULL)) OR
-      (idStatusContratacion IN (8) AND idMovimiento IN (38, 65) AND (validacionEnganche = 'NULL' OR validacionEnganche IS NULL)))");
+      (idStatusContratacion IN (8) AND idMovimiento IN (38, 65, 67) AND (validacionEnganche = 'NULL' OR validacionEnganche IS NULL)))");
       $query = $this->db->get('lotes');
       $valida = (empty($query->result())) ? 0 : 1;
       return $valida;

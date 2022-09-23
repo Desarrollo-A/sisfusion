@@ -268,7 +268,7 @@
                 }
                 $this->db->query("UPDATE lotes SET idStatusContratacion = 0, nombreLote = REPLACE(REPLACE(nombreLote, ' AURA', ''), ' STELLA', ''),
                 idMovimiento = 0, comentario = 'NULL', idCliente = 0, usuario = 'NULL', perfil = 'NULL ', 
-                fechaVenc = null, modificado = null, 
+                fechaVenc = null, modificado = null, status8Flag = 0, 
                 ubicacion = 0, totalNeto = 0, totalNeto2 = 0,
                 totalValidado = 0, validacionEnganche = 'NULL', 
                 fechaSolicitudValidacion = null, 
@@ -287,7 +287,7 @@
                 } else if ($datos['activeLE'] == 1){
                     $this->db->query("UPDATE lotes SET idStatusContratacion = 0, 
                     idMovimiento = 0, comentario = 'NULL', idCliente = 0, usuario = 'NULL', perfil = 'NULL ', 
-                    fechaVenc = null, modificado = null,
+                    fechaVenc = null, modificado = null, status8Flag = 0,
                     ubicacion = 0, totalNeto = 0, totalNeto2 = 0,
                     totalValidado = 0, validacionEnganche = 'NULL', 
                     fechaSolicitudValidacion = null,
