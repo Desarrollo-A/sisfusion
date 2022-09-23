@@ -3442,6 +3442,20 @@ legend {
         $sheet->getStyle('F11:G11')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('D9D9D9');
         $sheet->getStyle('F11:G11')->getNumberFormat()->setFormatCode(PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_CURRENCY_USD_SIMPLE);
 
+        #leyenda....
+        $sheet->setCellValue('C13', '*Este sistema simula las operaciones de intereses moratorios e intereses ordinados, puede ser diferente al cálculo real');
+        $rangel = 'C13';
+        $rangel2 = 'I13';
+        $sheet->mergeCells("$rangel:$rangel2");
+        $sheet->getStyle("C13:I13")->getFont()->setSize(11);
+        $sheet->getStyle('C13')->getFont()->getColor()->setARGB('ddd');
+        $sheet->getStyle( 'C13:I13' )->getFont()->setName('Calibri');
+        $sheet->getStyle("C13:I13")->getAlignment()->setWrapText(true);
+        $sheet->getStyle( 'C13:I13' )->getFont()->setBold( true );
+        $sheet->getStyle('C13:I13')->getBorders()->getAllBorders()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+
+
+
 
 
         /*encabezados de la tabla*/
@@ -3454,7 +3468,7 @@ legend {
         $sheet->setCellValue('H15', 'DÍAS DE RETRASO');
         $sheet->setCellValue('I15', 'INTERÉS MORATORIO');
         $sheet->setCellValue('J15', 'TOTAL');
-        $sheet->setCellValue('K15', 'SALDO MORATORIO');
+        $sheet->setCellValue('K15', 'SALDO INSOLUTO');
         $sheet->setCellValue('L15', 'SALDO');
         $sheet->getStyle( 'B15:L15' )->getFont()->setBold( true );
         $sheet->getStyle('B15:L15')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('D9D9D9');
