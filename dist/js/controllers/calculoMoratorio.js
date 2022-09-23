@@ -1760,8 +1760,11 @@ function calculoMoratorioII(IM, importeSaldoI, posPay, PositionPago, diasRetardo
 
 							if($scope.alphaNumeric[posPay]['importe'] == 0 && $scope.alphaNumeric[posPay]['diasRetraso']==0)
 							{
+								// console.log("saldo..1", saldo);
 								if($scope.alphaNumeric[i]['pago'] > posicionPago)
 								{
+									// console.log("saldo..2", saldo);
+
 									//despues del pago se coloca este contenido
 									//$scope.infoMoratorio.si
 									//saldo =  $scope.infoMoratorio.si =(($scope.infoMoratorio.si-$scope.alphaNumeric[i]['capital']))
@@ -1769,12 +1772,13 @@ function calculoMoratorioII(IM, importeSaldoI, posPay, PositionPago, diasRetardo
 									if($('#msiField').val()< posicionPago )
 									{
 										if ($scope.alphaNumeric[i]['pago'] > posicionPago) {
-											saldo = $scope.alphaNumeric[posPay]['saldo'];
+											saldo = $scope.alphaNumeric[posPay]['saldo'] = saldoMoraManipulable;
 											fechaDelPago=$scope.alphaNumeric[posPay]['fechaPago'];
 
 										}else{
 											saldo=$scope.alphaNumeric[x]['saldo'];
 											fechaDelPago=$scope.alphaNumeric[x]['fechaPago'];
+
 
 										}
 									}
@@ -1783,12 +1787,11 @@ function calculoMoratorioII(IM, importeSaldoI, posPay, PositionPago, diasRetardo
 
 										saldo=$scope.alphaNumeric[posPay]['saldo'];
 										fechaDelPago=$scope.alphaNumeric[posPay]['fechaPago'];
-
-
 									}
 								}
 								else
 								{
+
 									for(var x=0; x < posicionPago ; x++)
 									{
 										saldo= $scope.infoMoratorio.si = $scope.alphaNumeric[i]['saldo'];
@@ -1827,7 +1830,7 @@ function calculoMoratorioII(IM, importeSaldoI, posPay, PositionPago, diasRetardo
 								{//se coloca un valor cuando nohay nada(el resto de los campos, apartir de la segunda posicion, else de la primera posicion
 									dispPC = $scope.alphaNumeric[posPay]['disp'] = 0;
 									// console.log('LASE1.2', $scope.alphaNumeric[posPay-1]['saldo']);
-									saldo = $scope.alphaNumeric[i]['saldo'];
+									saldo = (saldoMoraManipulable!=undefined)  ? $scope.alphaNumeric[i]['saldo'] = saldoMoraManipulable: $scope.alphaNumeric[i]['saldo'] ;
 									console.log('checar alv');
 								}
 							}
@@ -3112,6 +3115,7 @@ function calculoMoratorioII(IM, importeSaldoI, posPay, PositionPago, diasRetardo
 												// $scope.alphaNumeric[posPay]['interesMoratorio'] = 0;
 												deudaMoratorio = $scope.alphaNumeric[posPay]['deudaMoratorio']=0;
 												console.log($scope.alphaNumeric);
+												saldoMoraManipulable = saldo;
 											}
 											else
 											{
@@ -3780,7 +3784,6 @@ function calculoMoratorioII(IM, importeSaldoI, posPay, PositionPago, diasRetardo
 												$('#resMoratorioAdeuto').click();
 												deudaMoratorio =$scope.alphaNumeric[posPay]['deudaMoratorio'] = resultado;
 												total = $scope.alphaNumeric[posPay]['total'] = 0;
-												alert('HERE I', deudaMoratorio);
 											}
 											else
 											{
@@ -3848,7 +3851,7 @@ function calculoMoratorioII(IM, importeSaldoI, posPay, PositionPago, diasRetardo
 														limpiaAdeudoOrdinario();
 														total = posintLessAbonoLimpio;
 														saldo = $scope.infoMoratorio.si = $scope.alphaNumeric[posPay]['saldo'] = $scope.alphaNumeric[posPay]['saldo'] - posintLessAbonoLimpio;
-
+														saldoMoraManipulable = saldo;
 														// alert('CHECKPOINT');
 
 														//ORIGINAL12FEB
@@ -4297,6 +4300,7 @@ function calculoMoratorioII(IM, importeSaldoI, posPay, PositionPago, diasRetardo
 					}
 					else
 					{
+						console.log('quechale')
 						//en este else se coloca el valor a las posiciones restantes
 						//apartir de donde se coloco el pago
 						// console.log(i, 'saldo: ', $scope.alphaNumeric[i]['saldo']);
@@ -4391,8 +4395,10 @@ function calculoMoratorioII(IM, importeSaldoI, posPay, PositionPago, diasRetardo
 								{//se coloca un valor cuando nohay nada(el resto de los campos, apartir de la segunda posicion, else de la primera posicion
 									dispPC = $scope.alphaNumeric[posPay]['disp'] = 0;
 									// console.log('LASE1.2', $scope.alphaNumeric[posPay-1]['saldo']);
-									saldo = $scope.alphaNumeric[i]['saldo'];
+									saldo = (saldoMoraManipulable!=undefined)  ? $scope.alphaNumeric[i]['saldo'] = saldoMoraManipulable: $scope.alphaNumeric[i]['saldo'] ;
 									console.log('checar alv');
+									console.log('saldoMoraManipulable', saldoMoraManipulable);
+									console.log('$scope.alphaNumeric[i][\'saldo\']', $scope.alphaNumeric[i]['saldo']);
 								}
 							}
 							else
