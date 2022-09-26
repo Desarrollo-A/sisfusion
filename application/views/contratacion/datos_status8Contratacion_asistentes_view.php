@@ -162,6 +162,7 @@
                                                         <th>LOTE</th>
                                                         <th>GERENTE</th>
                                                         <th>CLIENTE</th>
+                                                        <th>ESTATUS ACTUAL</th>
                                                         <?php
                                                         if($this->session->userdata('id_rol')!=53){
                                                         ?>
@@ -213,7 +214,7 @@
 
                 $('#Jtabla thead tr:eq(0) th').each( function (i) {
 
-                if(i != 0 && i != 7){
+                if(i != 0 && i != 8){
                     var title = $(this).text();
                     $(this).html('<input type="text" class="textoshead" placeholder="'+title+'"/>' );
                     $( 'input', this ).on('keyup change', function () {
@@ -244,7 +245,7 @@
                     className: 'btn buttons-excel',
                     titleAttr: 'Descargar archivo de Excel',
                     exportOptions: {
-                    columns: [1,2,3,4,5,6],
+                    columns: [1, 2, 3, 4, 5, 6, 7],
                     format: {
                         header:  function (d, columnIdx) {
                             if(columnIdx == 0){
@@ -333,7 +334,13 @@
                 {
                     "width": "20%",
                     "data": function( d ){
-                        return '<p class="m-0">'+d.nombre+" "+d.apellido_paterno+" "+d.apellido_materno+'</p>';
+                        return '<p class="m-0">'+d.nombreCliente+'</p>';
+                    }
+                },
+                {
+                    "width": "20%",
+                    "data": function( d ){
+                        return '<p class="m-0">'+d.descripcion+'</p>';
                     }
                 }
                 <?php
@@ -365,7 +372,8 @@
                                     'class="btn-data btn-orangeYellow cancelAs" title="Rechazo/regreso estatus (Asesor)">' +
                                     '<i class="far fa-thumbs-down"></i></button>';              
                                 } 
-                                else if (data.idStatusContratacion == 7 && data.idMovimiento == 37 && data.perfil == 15 || data.idStatusContratacion == 7 && data.idMovimiento == 7 && data.perfil == 15 || data.idStatusContratacion == 7 && data.idMovimiento == 77 && data.perfil == 15) {
+                                else if ((data.idStatusContratacion == 7 && data.idMovimiento == 37 && data.perfil == 15 || data.idStatusContratacion == 7 && data.idMovimiento == 7 && data.perfil == 15 || data.idStatusContratacion == 7 && data.idMovimiento == 77 && data.perfil == 15)
+                                || (data.idStatusContratacion == 11 && data.idMovimiento == 41 && data.perfil == 11)) {
                                     cntActions = '<button href="#" data-idLote="'+data.idLote+'" data-nomLote="'+data.nombreLote+'" data-idCond="'+data.idCondominio+'"' +
                                     'data-idCliente="'+data.id_cliente+'" data-fecVen="'+data.fechaVenc+'" data-ubic="'+data.ubicacion+'" data-code="'+data.cbbtton+'" ' +
                                     'class="btn-data btn-green editReg" title="Registrar estatus">' +

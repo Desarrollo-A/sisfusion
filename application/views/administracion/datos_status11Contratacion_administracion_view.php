@@ -155,6 +155,7 @@
 														<th>FECHA REALIZADO</th>
 														<th>FECHA VENC</th>
 														<th>DÍAS TRANSC</th>
+														<th>ESTATUS ACTUAL</th>
 														<th></th>
 													</tr>
 												</thead>
@@ -190,7 +191,7 @@
 
 		$("#tabla_ingresar_11").ready( function(){
 			$('#tabla_ingresar_11 thead tr:eq(0) th').each( function (i) {
-				if(i != 0 && i != 11){
+				if(i != 0 && i != 12){
 					var title = $(this).text();
 					$(this).html('<input type="text" class="textoshead" placeholder="'+title+'"/>' );
 					$( 'input', this ).on('keyup change', function () {
@@ -222,7 +223,7 @@
                     className: 'btn buttons-excel',
                     titleAttr: 'Descargar archivo de Excel',
 					exportOptions: {
-						columns: [1,2,3,4,5,6,7,8,9,10],
+						columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
 						format: {
 							header:  function (d, columnIdx) {
 								if(columnIdx == 0){
@@ -270,8 +271,11 @@
 						else if(d.tipo_venta==5) {
 							lblStats ='<span class="label label-info">Intercambio</span>';
 						}
+						else if(d.tipo_venta==6) {
+							lblStats ='<span class="label label-secondary">Reubicación</span>';
+						}
 						else if(d.tipo_venta==7) {
-							lblStats ='<span class="label label-secondary">Intercambio</span>';
+							lblStats ='<span class="label label-secondary">Venta especial</span>';
 						}
 						else if(d.tipo_venta== null) {
 							lblStats ='<span class="label label-info"></span>';
@@ -308,7 +312,7 @@
 				{
 					"width": "12%",
 					"data": function( d ){
-						return '<p class="m-0">'+d.nombre+" "+d.apellido_paterno+" "+d.apellido_materno+'</p>';
+						return '<p class="m-0">'+d.nombreCliente+'</p>';
 					}
 				}, 
 				{
@@ -330,7 +334,10 @@
 					"data": function( d ){
 						var fechaVenc;
 						if (d.idStatusContratacion == 10 && d.idMovimiento == 40 || d.idStatusContratacion == 8 && d.idMovimiento == 67 ||
-							d.idStatusContratacion == 12 && d.idMovimiento == 42 ) {
+						d.idStatusContratacion == 12 && d.idMovimiento == 42 || d.idStatusContratacion == 7 && d.idMovimiento == 37 ||
+						d.idStatusContratacion == 7 && d.idMovimiento == 7 || d.idStatusContratacion == 7 && d.idMovimiento == 64 ||
+						d.idStatusContratacion == 7 && d.idMovimiento == 77 ||
+						d.idStatusContratacion == 8 && d.idMovimiento == 38 || d.idStatusContratacion == 8 && d.idMovimiento == 65) {
 							fechaVenc = d.fechaVenc2;
 						} 
 						else {
@@ -383,6 +390,13 @@
 					    }
 					}
 				}, 
+				{
+					"width": "8%",
+					"data": function( d ){
+						return '<p class="m-0">'+d.descripcion+'</p>';
+
+					}
+				},
 				{ 
 					"width": "30%",
 					"orderable": false,
@@ -395,7 +409,14 @@
 						else {
 							if(data.idStatusContratacion == 10 && data.idMovimiento == 40 ||
 								data.idStatusContratacion == 8 && data.idMovimiento == 67 ||
-								data.idStatusContratacion == 12 && data.idMovimiento == 42){
+								data.idStatusContratacion == 12 && data.idMovimiento == 42 ||
+								data.idStatusContratacion == 7 && data.idMovimiento == 37 ||
+								data.idStatusContratacion == 7 && data.idMovimiento == 7 ||
+								data.idStatusContratacion == 7 && data.idMovimiento == 64 ||
+								data.idStatusContratacion == 7 && data.idMovimiento == 77 ||
+								data.idStatusContratacion == 8 && data.idMovimiento == 38 ||
+								data.idStatusContratacion == 8 && data.idMovimiento == 65
+								){
 									cntActions = '<button href="#" data-idLote="'+data.idLote+'" data-nomLote="'+data.nombreLote+'" data-idCond="'+data.idCondominio+'"' +
 									'data-idCliente="'+data.id_cliente+'" data-fecVen="'+data.fechaVenc+'" data-ubic="'+data.ubicacion+'" data-tot="'+data.totalNeto+'" ' +
 									'class="btn-data btn-green editReg" title="Registrar estatus">' +
@@ -441,21 +462,10 @@
 				else {
 					var status;
 					var fechaVenc;
-					if (row.data().idStatusContratacion == 10 && row.data().idMovimiento == 40) {
-						status = 'Status 10 listo (Contraloría)';
-					}
-					else if (row.data().idStatusContratacion == 8 && row.data().idMovimiento == 67 ) {
-						status = 'Status 11 enviado a Revisión (Asistentes de Gerentes)';
-					}
-					else if (row.data().idStatusContratacion == 12 && row.data().idMovimiento == 42 ) {
-						status = 'Status 12 Listo (Contraloría)';
-					}
-					else{
-						status='N/A';
-					}
+
+					status = row.data().descripcion;
 					
 					var informacion_adicional = '<div class="container subBoxDetail"><div class="row"><div class="col-12 col-sm-12 col-sm-12 col-lg-12" style="border-bottom: 2px solid #fff; color: #4b4b4b; margin-bottom: 7px"><label><b>Información colaboradores</b></label></div><div class="col-12 col-sm-12 col-md-12 col-lg-12"><label><b>Estatus: </b>' +status+ '</label></div><div class="col-12 col-sm-12 col-md-12 col-lg-12"><label><b>Comentario: </b>' + row.data().comentario + '</label></div><div class="col-12 col-sm-12 col-md-12 col-lg-12"><label><b>Coordinador: </b>' +row.data().coordinador+ '</label></div><div class="col-12 col-sm-12 col-md-12 col-lg-12"><label><b>Asesor: </b>' + row.data().asesor + '</label></div></div></div>';
-
 
 					row.child(informacion_adicional).show();
 					tr.addClass('shown');

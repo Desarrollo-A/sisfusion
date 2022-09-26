@@ -78,9 +78,7 @@ class Administracion extends CI_Controller{
 		  $dataPer[$i]['idLote']=$data[$i]->idLote;
 		  $dataPer[$i]['idCondominio']=$data[$i]->idCondominio;
 		  $dataPer[$i]['id_cliente']=$data[$i]->id_cliente;
-		  $dataPer[$i]['nombre']=$data[$i]->nombre;
-		  $dataPer[$i]['apellido_paterno']=$data[$i]->apellido_paterno;
-		  $dataPer[$i]['apellido_materno']=$data[$i]->apellido_materno;
+		  $dataPer[$i]['nombreCliente']=$data[$i]->nombreCliente;
 		  $dataPer[$i]['nombreLote']=$data[$i]->nombreLote;
 		  $dataPer[$i]['idStatusContratacion']=$data[$i]->idStatusContratacion;
 		  $dataPer[$i]['idMovimiento']=$data[$i]->idMovimiento;
@@ -96,6 +94,7 @@ class Administracion extends CI_Controller{
 		  $dataPer[$i]['asesor']=$data[$i]->asesor;
 		  $dataPer[$i]['coordinador']=$data[$i]->coordinador;
 		  $dataPer[$i]['tipo_venta']=$data[$i]->tipo_venta;
+		  $dataPer[$i]['descripcion']=$data[$i]->descripcion;
 		  $dataPer[$i]['totalNeto']=$data[$i]->totalNeto;
 		  $dataPer[$i]['vl']=$data[$i]->vl;
 		  $horaInicio = date("08:00:00");
@@ -482,7 +481,7 @@ class Administracion extends CI_Controller{
 		 $arreglo["perfil"]=$this->session->userdata('id_rol');
 		 $arreglo["modificado"]=date("Y-m-d H:i:s");
 		 $arreglo["fechaVenc"]=date("Y-m-d H:i:s");
-
+		 $arreglo["status8Flag"] = 0;
 	 
 		 $arreglo2=array();
 		 $arreglo2["idStatusContratacion"]=7;

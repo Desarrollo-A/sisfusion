@@ -142,6 +142,89 @@
 
 
 
+
+        <div class="modal fade modal-alertas"
+             id="penalizacion4-modal"
+             role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header bg-red">
+                        <button type="button"
+                                class="close"
+                                data-dismiss="modal"
+                                aria-hidden="true">
+                            <i class="material-icons">clear</i>
+                        </button>
+                    </div>
+
+                    <form method="post"
+                          class="row"
+                          id="penalizacion4-form"
+                          autocomplete="off">
+                        <div class="modal-body">
+                             <input type="hidden"
+                                   name="id_lote4"
+                                   id="id-lote-penalizacionC">
+                                   <input type="hidden"
+                                   name="id_cliente4"
+                                   id="id-cliente-penalizacionC">
+  
+
+                            <div class="col-lg-4">
+                                <div class="form-group is-empty">
+                                    <label for="asesor" class="control-label label-gral">Asesor</label>
+                                    <input id="asesor"
+                                           name="asesor"
+                                           type="number" step="any" 
+                                           class="form-control input-gral"
+                                           placeholder="% Asesor"
+                                            required />
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4">
+                                <div class="form-group is-empty">
+                                    <label for="coordinador" class="control-label label-gral">Coordinador</label>
+                                    <input id="coordinador"
+                                           name="coordinador"
+                                           type="number" step="any" 
+                                           class="form-control input-gral"
+                                           placeholder="% Coordinador"
+                                            required />
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4">
+                                <div class="form-group is-empty">
+                                    <label for="gerente" class="control-label label-gral">Gerente</label>
+                                    <input id="gerente"
+                                           name="gerente"
+                                           type="number" step="any" 
+                                           class="form-control input-gral"
+                                           placeholder="% Gerente"
+                                            required />
+                                </div>
+                            </div>
+ 
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="submit"
+                                    class="btn btn-primary">
+                                Aceptar
+                            </button>
+                            <button type="button"
+                                    class="btn btn-danger btn-simple"
+                                    data-dismiss="modal">
+                                Cancelar
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+
         <div class="modal fade modal-alertas"
              id="penalizacion-modal"
              role="dialog">
@@ -347,7 +430,7 @@
                                 <div class="material-datatables">
                                     <div class="form-group">
                                         <div class="table-responsive">
-                                            <table class="table-striped table-hover" id="tabla_ingresar_9" name="tabla_ingresar_9">
+                                            <table class="table-striped table-hover" id="tabla_dispersar_comisiones" name="tabla_dispersar_comisiones">
                                                 <thead>
                                                     <tr>
                                                         <th></th>
@@ -488,9 +571,9 @@
         }
     });
 
-    $("#tabla_ingresar_9").ready( function(){
+    $("#tabla_dispersar_comisiones").ready( function(){
         let titulos = [];
-        $('#tabla_ingresar_9 thead tr:eq(0) th').each( function (i) {
+        $('#tabla_dispersar_comisiones thead tr:eq(0) th').each( function (i) {
             if(i != 0 && i != 12){
                 var title = $(this).text();
                 titulos.push(title);
@@ -507,7 +590,7 @@
             }
         });
 
-        tabla_1 = $("#tabla_ingresar_9").DataTable({
+        tabla_1 = $("#tabla_dispersar_comisiones").DataTable({
             dom: 'Brt'+ "<'row'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'i><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>",
             width: 'auto',
             buttons: [{
@@ -687,7 +770,7 @@ if (d.penalizacion == 1){
                     var RegresaActiva = '';
                     
 
-                    if(data.penalizacion == 1 && data.bandera_penalizacion == 0 && data.estatus_penalizacion != 4) {
+                    if(data.penalizacion == 1 && data.bandera_penalizacion == 0 && data.id_porcentaje_penalizacion != '4') {
                         BtnStats += `
                                 <button href="#"
                                     value="${data.idLote}"
@@ -698,13 +781,13 @@ if (d.penalizacion == 1){
                                     <i class="material-icons">check</i>
                                 </button>`;
 
-                    }else if(data.penalizacion == 1 && data.bandera_penalizacion == 0 && data.estatus_penalizacion == 4) {
+                    }else if(data.penalizacion == 1 && data.bandera_penalizacion == 0 && data.id_porcentaje_penalizacion == '4') {
                         BtnStats += `
                                 <button href="#"
                                     value="${data.idLote}"
                                     data-value="${data.nombreLote}"
                                     data-cliente="${data.id_cliente}"
-                                    class="btn-data btn-blueMaderas btn-penalizacion btn-warning"
+                                    class="btn-data btn-blueMaderas btn-penalizacion4 btn-info"
                                     title="Aprobar Penalización">
                                     <i class="material-icons">check</i>
                                 </button>`;
@@ -734,7 +817,7 @@ if (d.penalizacion == 1){
                             RegresaActiva = '<button href="#" data-param="1" data-idpagoc="' + data.idLote + '" data-nombreLote="' + data.nombreLote + '"  ' +'class="btn-data btn-violetChin update_bandera" title="Regresar a activas">' +'<i class="fas fa-undo-alt"></i></button>';
                         }
                         
-                        BtnStats = '<button href="#" value="'+data.idLote+'" data-value="'+data.registro_comision+'" data-totalNeto2 = "'+data.totalNeto2+'" data-estatus="'+data.idStatusContratacion+'" data-cliente="'+data.id_cliente+'" data-plan="'+data.plan_comision+'"  data-tipov="'+data.tipo_venta+'"data-descplan="'+data.plan_descripcion+'" data-code="'+data.cbbtton+'" ' +'class="btn-data '+varColor+' verify_neodata" title="Verificar en NEODATA">'+'<span class="material-icons">verified_user</span></button> '+RegresaActiva+'';
+                        BtnStats = '<button href="#" value="'+data.idLote+'" data-value="'+data.registro_comision+'" data-totalNeto2 = "'+data.totalNeto2+'" data-estatus="'+data.idStatusContratacion+'"  data-penalizacion="'+data.penalizacion+'" data-cliente="'+data.id_cliente+'" data-plan="'+data.plan_comision+'"  data-tipov="'+data.tipo_venta+'"data-descplan="'+data.plan_descripcion+'" data-code="'+data.cbbtton+'" ' +'class="btn-data '+varColor+' verify_neodata" title="Verificar en NEODATA">'+'<span class="material-icons">verified_user</span></button> '+RegresaActiva+'';
                        
                         BtnStats += `
                                 <button href="#"
@@ -766,7 +849,7 @@ if (d.penalizacion == 1){
             }
         });
 
-        $('#tabla_ingresar_9 tbody').on('click', 'td.details-control', function () {
+        $('#tabla_dispersar_comisiones tbody').on('click', 'td.details-control', function () {
             var tr = $(this).closest('tr');
             var row = tabla_1.row(tr);
             if (row.child.isShown()) {
@@ -788,7 +871,7 @@ if (d.penalizacion == 1){
                 $(this).parent().find('.animacion').removeClass("fas fa-chevron-down").addClass("fas fa-chevron-up");
             }
         });
-        $("#tabla_ingresar_9 tbody").on('click', '.btn-detener', function () {
+        $("#tabla_dispersar_comisiones tbody").on('click', '.btn-detener', function () {
                 const idLote = $(this).val();
                 const nombreLote = $(this).attr("data-value");
                 const statusLote = $(this).attr("data-statusLote");
@@ -802,7 +885,7 @@ if (d.penalizacion == 1){
                 $("#detenciones-modal").modal();
             });
 
-            $("#tabla_ingresar_9 tbody").on('click', '.btn-penalizacion', function () {
+            $("#tabla_dispersar_comisiones tbody").on('click', '.btn-penalizacion', function () {
                 const idLote = $(this).val();
                 const nombreLote = $(this).attr("data-value");
                 const idCliente = $(this).attr("data-cliente");
@@ -815,8 +898,26 @@ if (d.penalizacion == 1){
 
                 $("#penalizacion-modal").modal();
             });
+            
 
-        $("#tabla_ingresar_9 tbody").on("click", ".verify_neodata", async function(){ 
+            $("#tabla_dispersar_comisiones tbody").on('click', '.btn-penalizacion4', function () {
+                const idLote = $(this).val();
+                const nombreLote = $(this).attr("data-value");
+                const idCliente = $(this).attr("data-cliente");
+
+                $('#id-lote-penalizacionC').val(idLote);
+                $('#id-cliente-penalizacionC').val(idCliente);
+
+                $("#penalizacion4-modal .modal-header").html("");
+                $("#penalizacion4-modal .modal-header").append('<h4 class="modal-title">Penalización + 160 días, al lote <b>'+nombreLote+'</b></h4><BR><P>Al aprobar esta penalización no se podrán revertir los descuentos y se dispersara el pago de comisiones con los porcentajes asignados.</P>');
+
+                $("#penalizacion4-modal").modal();
+            });
+
+            
+
+
+        $("#tabla_dispersar_comisiones tbody").on("click", ".verify_neodata", async function(){ 
  
             $("#modal_NEODATA .modal-header").html("");
             $("#modal_NEODATA .modal-body").html("");
@@ -827,6 +928,7 @@ if (d.penalizacion == 1){
             let cadena = '';
             idLote = $(this).val();
             registro_comision = $(this).attr("data-value");
+            penalizacion = $(this).attr("data-penalizacion");
             totalNeto2 = $(this).attr("data-totalNeto2");
             id_estatus = $(this).attr("data-estatus");
             idCliente = $(this).attr("data-cliente");
@@ -870,7 +972,11 @@ if (d.penalizacion == 1){
                                         }
                                         // FINAL BONIFICACION *********************************
 
-                                        $("#modal_NEODATA .modal-body").append(`<div class="row"><div class="col-md-12 text-center"><h3>Lote: <b>${row.data().nombreLote}</b></h3><l style='color:gray;'>Plan de venta: <b>${descripcion_plan}</b></l></div></div><div class="row"><div class="col-md-3 p-0"><h5>Precio lote: <b>$${formatMoney(totalNeto2)}</b></h5></div><div class="col-md-3 p-0"><h5>$ Neodata: <b style="color:${data[0].Aplicado <= 0 ? 'black' : 'blue'};">$${formatMoney(data[0].Aplicado)}</b></h5></div><div class="col-md-3 p-0"><h5>Disponible: <b style="color:green;">$${formatMoney(total0)}</b></h5></div><div class="col-md-3 p-0">${cadena}</div></div><br>`);
+                                        let labelPenalizacion = '';
+
+                                        if(penalizacion == 1){labelPenalizacion = ' <b style = "color:orange">(Penalización + 90 días)</b>';}
+
+                                        $("#modal_NEODATA .modal-body").append(`<div class="row"><div class="col-md-12 text-center"><h3>Lote: <b>${row.data().nombreLote}${labelPenalizacion}</b></h3><l style='color:gray;'>Plan de venta: <b>${descripcion_plan}</b></l></div></div><div class="row"><div class="col-md-3 p-0"><h5>Precio lote: <b>$${formatMoney(totalNeto2)}</b></h5></div><div class="col-md-3 p-0"><h5>$ Neodata: <b style="color:${data[0].Aplicado <= 0 ? 'black' : 'blue'};">$${formatMoney(data[0].Aplicado)}</b></h5></div><div class="col-md-3 p-0"><h5>Disponible: <b style="color:green;">$${formatMoney(total0)}</b></h5></div><div class="col-md-3 p-0">${cadena}</div></div><br>`);
  
                                         
                                         // OPERACION PARA SACAR 5% *********************************
@@ -889,7 +995,7 @@ if (d.penalizacion == 1){
                                             // console.log("SOLO DISPERSA LO PROPORCIONAL*******");
                                             bandera_anticipo = 0;
                                         }
-                                        else if((  total>(new_validate-1) && total<(new_validate+1) && (id_estatus == 9 || id_estatus == 10 || id_estatus == 11 || id_estatus == 12 || id_estatus == 13 || id_estatus == 14)) || (id_estatus == 15)  ){
+                                        else if((total>(new_validate-1) && total<(new_validate+1) && (id_estatus == 9 || id_estatus == 10 || id_estatus == 11 || id_estatus == 12 || id_estatus == 13 || id_estatus == 14)) || (id_estatus == 15)  ){
                                             // console.log("SOLO DISPERSA 5% *******");
                                             $("#modal_NEODATA .modal-body").append('<div class="row"><div class="col-md-12"><h3><i class="fa fa-info-circle" style="color:gray;"></i><b style="color:blue;"> Anticipo 5%</b> disponible <i>'+row.data().nombreLote+'</i></h3></div></div><br><br>');
                                             bandera_anticipo = 2;
@@ -1214,6 +1320,39 @@ if (d.penalizacion == 1){
         });
 
 
+        $('#penalizacion4-form').on('submit', function (e) {
+            e.preventDefault();
+
+            $.ajax({
+                type: 'POST',
+                url: 'changeLoteToPenalizacionCuatro',
+                data: new FormData(this),
+                contentType: false,
+                cache: false,
+                processData:false,
+                success: function (data) {
+                    if (data) {
+                        $('#penalizacion4-modal').modal("hide");
+                        $("#id-lote-penalizacionC").val("");
+                        $("#id-cliente-penalizacionC").val("");
+
+                        $("#asesor").val("");
+                        $("#coordinador").val("");
+                        $("#gerente").val("");
+
+                        alerts.showNotification("top", "right", "El registro se ha actualizado exitosamente.", "success");
+                        tabla_1.ajax.reload();
+                    } else {
+                        alerts.showNotification("top", "right", "Ocurrió un problema, vuelva a intentarlo más tarde.", "warning");
+                    }
+                },
+                error: function(){
+                    alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+                }
+            });
+        });
+
+
     $("#form_NEODATA").submit( function(e) {
         $('#dispersar').prop('disabled', true);
         document.getElementById('dispersar').disabled = true;
@@ -1241,7 +1380,6 @@ if (d.penalizacion == 1){
                         function_totales();
                         $('#dispersar').prop('disabled', false);
         document.getElementById('dispersar').disabled = false;
-
                     }else if (data == 2) {
                         $('#spiner-loader').addClass('hidden');
                         alerts.showNotification("top", "right", "Ya se dispersó por otra persona o es una recisión", "warning");
@@ -1285,7 +1423,6 @@ if (d.penalizacion == 1){
                         $("#modal_pagadas").modal('toggle');
                         tabla_1.ajax.reload();
                         alert("¡Se agregó con éxito!");
-
 
                     }else{
                         alert("NO SE HA PODIDO COMPLETAR LA SOLICITUD");

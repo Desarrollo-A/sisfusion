@@ -362,7 +362,7 @@ public function getDataDispersionPago($val = '') {
             CONCAT(su.nombre, ' ', su.apellido_paterno, ' ', su.apellido_materno) as subdirector, 
             (CASE WHEN re.id_usuario IN (0) OR re.id_usuario IS NULL THEN 'NA' ELSE CONCAT(re.nombre, ' ', re.apellido_paterno, ' ', re.apellido_materno) END) regional,
             CONCAT(di.nombre, ' ', di.apellido_paterno, ' ', di.apellido_materno) as director, 
-            (CASE WHEN cl.plan_comision IN (0) OR cl.plan_comision IS NULL THEN '-' ELSE pl.descripcion END) AS plan_descripcion, cl.plan_comision,cl.id_subdirector, cl.id_sede, cl.id_prospecto, l.tipo_venta, cl.lugar_prospeccion, (CASE WHEN pe.id_penalizacion IS NOT NULL THEN 1 ELSE 0 END) penalizacion, pe.bandera as bandera_penalizacion
+            (CASE WHEN cl.plan_comision IN (0) OR cl.plan_comision IS NULL THEN '-' ELSE pl.descripcion END) AS plan_descripcion, cl.plan_comision,cl.id_subdirector, cl.id_sede, cl.id_prospecto, l.tipo_venta, cl.lugar_prospeccion, (CASE WHEN pe.id_penalizacion IS NOT NULL THEN 1 ELSE 0 END) penalizacion, pe.bandera as bandera_penalizacion, pe.id_porcentaje_penalizacion
             FROM lotes l
             INNER JOIN clientes cl ON cl.id_cliente = l.idCliente
             INNER JOIN condominios cond ON l.idCondominio=cond.idCondominio
@@ -965,50 +965,26 @@ WHERE oxc.id_catalogo = 1 AND pcm.estatus = 11 AND pcm.id_usuario =  ".$this->se
     function getDatosComisionesAsesor($estado){
         $user_data = $this->session->userdata('id_usuario');
         $sede = $this->session->userdata('id_sede');
-        
-        return $this->db->query("(SELECT pci1.id_pago_i, pci1.id_comision, lo.nombreLote as lote, re.nombreResidencial as proyecto, lo.totalNeto2 precio_lote, com.comision_total, com.porcentaje_decimal, pci1.abono_neodata pago_cliente, pci1.pago_neodata, pci1.estatus, pci1.fecha_abono fecha_creacion, pci1.id_usuario, oxcpj.nombre as pj_name, u.forma_pago, pac.porcentaje_abono, 0 as factura, 1 expediente, oxcC.nombre as estatus_actual, (CASE u.forma_pago WHEN 3 THEN (((100-sed.impuesto)/100)*pci1.abono_neodata) ELSE pci1.abono_neodata END) impuesto, pac.bonificacion, 0 lugar_prospeccion,
-            pci1.fecha_abono, opt.fecha_creacion as fecha_opinion, opt.estatus as estatus_opinion
-            FROM pago_comision_ind pci1 
-            INNER JOIN comisiones com ON pci1.id_comision = com.id_comision 
-            INNER JOIN lotes lo ON lo.idLote = com.id_lote AND lo.status = 1
-            INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
-            INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
-            INNER JOIN usuarios u ON u.id_usuario = com.id_usuario  
-            INNER JOIN opcs_x_cats oxcpj ON oxcpj.id_opcion = u.forma_pago AND oxcpj.id_catalogo = 16 
-            LEFT JOIN pago_comision pac ON pac.id_lote = com.id_lote
-            INNER JOIN opcs_x_cats oxcC ON pci1.estatus = oxcC.id_opcion and oxcC.id_catalogo = 23
-            LEFT JOIN sedes sed ON sed.id_sede = $sede and sed.estatus = 1
-            LEFT JOIN (SELECT id_usuario, fecha_creacion, estatus FROM opinion_cumplimiento WHERE estatus = 1)
-                opt ON opt.id_usuario = com.id_usuario
-            WHERE pci1.estatus IN ($estado) AND ( (lo.idStatusContratacion < 9 AND com.estatus IN (1,8)) OR (lo.idStatusContratacion > 8 AND com.estatus IN (8))) AND com.id_usuario = $user_data
 
-            GROUP BY pci1.id_comision, lo.nombreLote, re.nombreResidencial, lo.totalNeto2, com.comision_total, 
-            com.porcentaje_decimal, pci1.abono_neodata, pci1.pago_neodata,
-            pci1.estatus, pci1.fecha_abono, pci1.id_usuario, oxcpj.nombre, 
-            u.forma_pago,pci1.id_pago_i, pac.porcentaje_abono, oxcC.nombre, sed.impuesto, pac.bonificacion, opt.fecha_creacion, opt.estatus)
-            UNION
-            (SELECT pci1.id_pago_i, pci1.id_comision, lo.nombreLote as lote, re.nombreResidencial as proyecto, lo.totalNeto2 precio_lote, com.comision_total, com.porcentaje_decimal, pci1.abono_neodata pago_cliente, pci1.pago_neodata, pci1.estatus, pci1.fecha_abono fecha_creacion, pci1.id_usuario, oxcpj.nombre as pj_name, u.forma_pago, pac.porcentaje_abono, 0 as factura, 1 expediente, oxcC.nombre as estatus_actual, (CASE u.forma_pago WHEN 3 THEN (((100-sed.impuesto)/100)*pci1.abono_neodata) ELSE pci1.abono_neodata END) impuesto, pac.bonificacion, cl.lugar_prospeccion,
-            pci1.fecha_abono, opt.fecha_creacion AS fecha_opinion, opt.estatus as estatus_opinion
-            FROM pago_comision_ind pci1 
-            INNER JOIN comisiones com ON pci1.id_comision = com.id_comision
-            INNER JOIN lotes lo ON lo.idLote = com.id_lote AND lo.status = 1
-            INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
-            INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
-            INNER JOIN clientes cl ON cl.idLote = lo.idLote AND cl.status = 1
-            INNER JOIN usuarios u ON u.id_usuario = com.id_usuario  
-            INNER JOIN opcs_x_cats oxcpj ON oxcpj.id_opcion = u.forma_pago AND oxcpj.id_catalogo = 16 
-            LEFT JOIN pago_comision pac ON pac.id_lote = com.id_lote
-            INNER JOIN opcs_x_cats oxcC ON pci1.estatus = oxcC.id_opcion and oxcC.id_catalogo = 23
-            INNER JOIN sedes sed ON sed.id_sede = $sede and sed.estatus = 1
-            LEFT JOIN (SELECT id_usuario, fecha_creacion, estatus FROM opinion_cumplimiento WHERE estatus = 1)
-                opt ON opt.id_usuario = com.id_usuario
-            WHERE pci1.estatus IN ($estado) AND com.estatus in (1) AND lo.idStatusContratacion > 8   AND com.id_usuario = $user_data
-            GROUP BY pci1.id_comision, lo.nombreLote, re.nombreResidencial, lo.totalNeto2, com.comision_total, 
-            com.porcentaje_decimal, pci1.abono_neodata, pci1.pago_neodata,
-            pci1.estatus, pci1.fecha_abono, pci1.id_usuario, oxcpj.nombre, 
-            u.forma_pago,pci1.id_pago_i, pac.porcentaje_abono, oxcC.nombre, sed.impuesto, pac.bonificacion, cl.lugar_prospeccion, opt.fecha_creacion,
-            opt.estatus)");
-        }
+        return $this->db->query("SELECT pci1.id_pago_i, pci1.id_comision, lo.nombreLote as lote, re.nombreResidencial as proyecto, lo.totalNeto2 precio_lote, com.comision_total, com.porcentaje_decimal, pci1.abono_neodata pago_cliente, pci1.pago_neodata, pci1.estatus, pci1.id_usuario, u.forma_pago, pac.porcentaje_abono, oxcC.nombre as estatus_actual, (CASE u.forma_pago WHEN 3 THEN (((100-sed.impuesto)/100)*pci1.abono_neodata) ELSE pci1.abono_neodata END) impuesto, pac.bonificacion, (CASE WHEN cl.lugar_prospeccion IS NULL THEN 0 ELSE cl.lugar_prospeccion END) lugar_prospeccion, pci1.fecha_abono, opt.fecha_creacion AS fecha_opinion, (CASE WHEN pe.id_penalizacion IS NOT NULL THEN 1 ELSE 0 END) penalizacion 
+        FROM pago_comision_ind pci1 
+        LEFT JOIN (SELECT SUM(abono_neodata) abono_pagado, id_comision FROM pago_comision_ind WHERE (estatus in (11,3) OR descuento_aplicado = 1) GROUP BY id_comision) pci2 ON pci1.id_comision = pci2.id_comision
+        INNER JOIN comisiones com ON pci1.id_comision = com.id_comision
+        INNER JOIN lotes lo ON lo.idLote = com.id_lote AND lo.status = 1 
+        INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
+        INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
+        INNER JOIN usuarios u ON u.id_usuario = com.id_usuario
+ 		INNER JOIN opcs_x_cats oxcC ON pci1.estatus = oxcC.id_opcion and oxcC.id_catalogo = 23
+        LEFT JOIN clientes cl ON cl.idLote = lo.idLote AND cl.status = 1 AND lo.idStatusContratacion > 8
+        INNER JOIN opcs_x_cats oprol ON oprol.id_opcion = com.rol_generado AND oprol.id_catalogo = 1
+        INNER JOIN pago_comision pac ON pac.id_lote = com.id_lote
+        INNER JOIN opcs_x_cats oxcest ON oxcest.id_opcion = pci1.estatus AND oxcest.id_catalogo = 23
+		INNER JOIN sedes sed ON sed.id_sede = $sede and sed.estatus = 1
+		LEFT JOIN (SELECT id_usuario, fecha_creacion, estatus FROM opinion_cumplimiento WHERE estatus = 1) opt ON opt.id_usuario = com.id_usuario
+		LEFT JOIN penalizaciones pe ON pe.id_lote = lo.idLote AND pe.id_cliente = lo.idCliente
+        WHERE pci1.estatus IN ($estado) AND com.estatus in (1) AND lo.idStatusContratacion > 8 AND com.id_usuario = $user_data
+        GROUP BY pci1.id_comision, lo.nombreLote, re.nombreResidencial, lo.totalNeto2, com.comision_total, com.porcentaje_decimal, pci1.abono_neodata, pci1.pago_neodata, pci1.estatus, pci1.fecha_abono, pci1.id_usuario, u.forma_pago,pci1.id_pago_i, pac.porcentaje_abono, oxcC.nombre, sed.impuesto, pac.bonificacion, cl.lugar_prospeccion, opt.fecha_creacion, opt.estatus, pe.id_penalizacion");
+    }
 
 
 
@@ -7627,25 +7603,34 @@ if(count($row2) != 0 && $compartida == 1){
  
 public function porcentajes($clienteData, $tipoVenta){
 
+    $valInner = $this->db->query("SELECT COALESCE(id_porcentaje_penalizacion,0) val FROM penalizaciones WHERE id_cliente = $clienteData");
+
+    $stringInner  = '';
+ 
+    if(empty($valInner->row()->val) || $valInner->row()->val != '4' || $valInner->row()->val != 4){
+        $stringInner  = ' LEFT JOIN porcentajes_penalizaciones pp ON pp.id_porcentaje_penalizacion = pe.id_porcentaje_penalizacion ';
+    }else{
+        $stringInner  = ' LEFT JOIN distribucion_penalizaciones pp ON pp.id_penalizacion = pe.id_penalizacion ';
+    }
+
     $addCondition = " UNION  /* DIRECTOR */
-    (SELECT DISTINCT(u1.id_usuario) AS id_usuario, pl.comDi porcentaje_decimal, ((lo.totalNeto2/100)*(pl.comDi)) comision_total, (pl.neoDi) porcentaje_neodata, CONCAT(u1.nombre,' ',u1.apellido_paterno,' ',u1.apellido_materno) AS nombre, pl.director as id_rol, 'Director' detail_rol, 1 as rolVal
+    (SELECT DISTINCT(u1.id_usuario) AS id_usuario, pl.comDi porcentaje_decimal, ((lo.totalNeto2/100)*(pl.comDi)) comision_total, (pl.neoDi) porcentaje_neodata, CONCAT(u1.nombre,' ',u1.apellido_paterno,' ',u1.apellido_materno) AS nombre, pl.director as id_rol, 'Director' detail_rol, 1 as rolVal 
     FROM clientes cA 
     INNER JOIN lotes lo ON lo.idCliente = cA.id_cliente 
-    INNER JOIN usuarios u1 ON u1.id_usuario = 2
-    INNER JOIN plan_comision pl ON pl.id_plan = cA.plan_comision and pl.director not in (0)
-    WHERE cA.id_cliente = @idCliente)
+    INNER JOIN usuarios u1 ON u1.id_usuario = 2 
+    INNER JOIN plan_comision pl ON pl.id_plan = cA.plan_comision and pl.director not in (0) 
+    WHERE cA.id_cliente = @idCliente) 
     
     UNION  /* MARKETING */
-    (SELECT DISTINCT(u1.id_usuario) AS id_usuario, pl.comMk porcentaje_decimal, ((lo.totalNeto2/100)*(pl.comMk)) comision_total, (pl.neoMk) porcentaje_neodata, CONCAT(u1.nombre,' ',u1.apellido_paterno,' ',u1.apellido_materno) AS nombre, pl.mktd as id_rol, 'Marketing' detail_rol, 6 as rolVal
+    (SELECT DISTINCT(u1.id_usuario) AS id_usuario, pl.comMk porcentaje_decimal, ((lo.totalNeto2/100)*(pl.comMk)) comision_total, (pl.neoMk) porcentaje_neodata, CONCAT(u1.nombre,' ',u1.apellido_paterno,' ',u1.apellido_materno) AS nombre, pl.mktd as id_rol, 'Marketing' detail_rol, 6 as rolVal 
     FROM clientes cA 
     INNER JOIN lotes lo ON lo.idCliente = cA.id_cliente 
-    INNER JOIN usuarios u1 ON u1.id_usuario = 4394
-    INNER JOIN plan_comision pl ON pl.id_plan = cA.plan_comision and pl.mktd not in (0)
-    WHERE cA.id_cliente = @idCliente)
+    INNER JOIN usuarios u1 ON u1.id_usuario = 4394 
+    INNER JOIN plan_comision pl ON pl.id_plan = cA.plan_comision and pl.mktd not in (0) 
+    WHERE cA.id_cliente = @idCliente) 
 
     UNION  /* OTRO PRIMERO */
     (SELECT DISTINCT(u1.id_usuario) AS id_usuario, 
-    
     (CASE WHEN pl.otro = 45 THEN (pl.comOt+COALESCE(pp.total_penalizacion,0)) ELSE (pl.comOt) END) porcentaje_decimal,
 	(CASE WHEN pl.otro = 45 THEN ((lo.totalNeto2/100)*(pl.comOt+COALESCE(pp.total_penalizacion,0))) ELSE ((lo.totalNeto2/100)*(pl.comOt)) END) comision_total,
 	(CASE WHEN pl.otro = 45 THEN (pl.neoOt+(12.5*COALESCE(pp.total_penalizacion,0))) ELSE (pl.neoOt) END) porcentaje_neodata,
@@ -7657,7 +7642,7 @@ public function porcentajes($clienteData, $tipoVenta){
     INNER JOIN usuarios u1 ON u1.id_usuario = pl.id_o
     INNER JOIN opcs_x_cats opc ON opc.id_opcion = u1.id_rol AND opc.id_catalogo = 1
     LEFT JOIN penalizaciones pe ON pe.id_cliente = @idCliente
-    LEFT JOIN porcentajes_penalizaciones pp ON pp.id_porcentaje_penalizacion = pe.id_porcentaje_penalizacion
+    $stringInner
     WHERE cA.id_cliente = @idCliente)
     
     UNION  /* OTRO SEGUNDO */
@@ -7673,20 +7658,20 @@ public function porcentajes($clienteData, $tipoVenta){
     INNER JOIN usuarios u1 ON u1.id_usuario = pl.id_o2
     INNER JOIN opcs_x_cats opc ON opc.id_opcion = u1.id_rol AND opc.id_catalogo = 1
     LEFT JOIN penalizaciones pe ON pe.id_cliente = @idCliente
-    LEFT JOIN porcentajes_penalizaciones pp ON pp.id_porcentaje_penalizacion = pe.id_porcentaje_penalizacion
+    $stringInner
     WHERE cA.id_cliente = @idCliente) ";
 
     $numAs = $this->db->query("(SELECT (COUNT(distinct(u1.id_usuario))) i FROM clientes cl INNER JOIN ventas_compartidas v1 ON v1.id_cliente = cl.id_cliente AND v1.estatus = 1 AND cl.status = 1 INNER JOIN usuarios u1 ON u1.id_usuario = cl.id_asesor or  u1.id_usuario = v1.id_asesor WHERE cl.id_cliente = $clienteData)");
-    $numCo = $this->db->query("(SELECT (COUNT(distinct(u1.id_usuario))) i FROM clientes cl LEFT JOIN ventas_compartidas v1 ON v1.id_cliente = cl.id_cliente AND v1.estatus = 1 AND cl.status = 1 INNER JOIN usuarios u1 ON u1.id_usuario = cl.id_coordinador or  u1.id_usuario = v1.id_coordinador WHERE cl.id_cliente = $clienteData)");
+    $numCo = $this->db->query("(SELECT (COUNT(distinct(u1.id_usuario))) i FROM clientes cl LEFT JOIN ventas_compartidas v1 ON v1.id_cliente = cl.id_cliente AND v1.estatus = 1 AND cl.status = 1 INNER JOIN usuarios u1 ON u1.id_usuario = cl.id_coordinador or u1.id_usuario = v1.id_coordinador WHERE cl.id_cliente = $clienteData)");
     $numGe = $this->db->query("(SELECT (COUNT(u1.id_usuario)) i FROM clientes cl LEFT JOIN ventas_compartidas v1 ON v1.id_cliente = cl.id_cliente AND v1.estatus = 1 AND cl.status = 1 INNER JOIN usuarios u1 ON u1.id_usuario = cl.id_gerente or  u1.id_usuario = v1.id_gerente WHERE cl.id_cliente = $clienteData)");
-    $numSu = $this->db->query("(SELECT distinct(COUNT(u1.id_usuario)) i FROM clientes cl LEFT JOIN ventas_compartidas v1 ON v1.id_cliente = cl.id_cliente AND v1.estatus = 1 AND cl.status = 1 INNER JOIN usuarios u1 ON u1.id_usuario = cl.id_subdirector or  u1.id_usuario = v1.id_subdirector  WHERE cl.id_cliente = $clienteData)");
+    $numSu = $this->db->query("(SELECT distinct(COUNT(u1.id_usuario)) i FROM clientes cl LEFT JOIN ventas_compartidas v1 ON v1.id_cliente = cl.id_cliente AND v1.estatus = 1 AND cl.status = 1 INNER JOIN usuarios u1 ON u1.id_usuario = cl.id_subdirector or u1.id_usuario = v1.id_subdirector WHERE cl.id_cliente = $clienteData)");
 
     $numAsesores = $numAs->row()->i;
     $numCoordinadores = $numCo->row()->i;
     $numGerente = $numGe->row()->i;
     $numSubdir = $numSu->row()->i;
+ 
   
-
   return $this->db->query("DECLARE @idCliente INTEGER, @numAsesores INTEGER, @numCoordinadores INTEGER, @numGerente INTEGER,
   @numSubdir INTEGER, @numDir INTEGER, @tipo INTEGER
   
@@ -7715,7 +7700,7 @@ public function porcentajes($clienteData, $tipoVenta){
     INNER JOIN usuarios u1 ON u1.id_usuario = v1.id_asesor OR u1.id_usuario = cA.id_asesor
     INNER JOIN plan_comision pl ON pl.id_plan = cA.plan_comision and pl.asesor not in (0)
     LEFT JOIN penalizaciones pe ON pe.id_cliente = @idCliente
-    LEFT JOIN porcentajes_penalizaciones pp ON pp.id_porcentaje_penalizacion = pe.id_porcentaje_penalizacion 
+    $stringInner  
     WHERE cA.id_cliente = @idCliente)
   
     UNION  /* COORDINADORES */
@@ -7734,7 +7719,7 @@ public function porcentajes($clienteData, $tipoVenta){
     INNER JOIN usuarios u1 ON u1.id_usuario = v1.id_coordinador OR u1.id_usuario = cA.id_coordinador
     INNER JOIN plan_comision pl ON pl.id_plan = cA.plan_comision and pl.coordinador not in (0) 
     LEFT JOIN penalizaciones pe ON pe.id_cliente = @idCliente
-    LEFT JOIN porcentajes_penalizaciones pp ON pp.id_porcentaje_penalizacion = pe.id_porcentaje_penalizacion
+    $stringInner 
     WHERE cA.id_cliente = @idCliente)
     
     UNION  /* GERENTES */
@@ -7753,7 +7738,7 @@ public function porcentajes($clienteData, $tipoVenta){
     INNER JOIN usuarios u1 ON u1.id_usuario = v1.id_gerente OR u1.id_usuario = cA.id_gerente
     INNER JOIN plan_comision pl ON pl.id_plan = cA.plan_comision and pl.gerente not in (0) 
     LEFT JOIN penalizaciones pe ON pe.id_cliente = @idCliente
-    LEFT JOIN porcentajes_penalizaciones pp ON pp.id_porcentaje_penalizacion = pe.id_porcentaje_penalizacion
+    $stringInner 
     WHERE cA.id_cliente = @idCliente)
     
     UNION  /* SUBDIRECTORES */
@@ -7803,7 +7788,7 @@ public function porcentajes($clienteData, $tipoVenta){
     INNER JOIN usuarios u1 ON u1.id_usuario = cA.id_asesor
     INNER JOIN plan_comision pl ON pl.id_plan = cA.plan_comision and pl.asesor not in (0)
     LEFT JOIN penalizaciones pe ON pe.id_cliente = @idCliente
-    LEFT JOIN porcentajes_penalizaciones pp ON pp.id_porcentaje_penalizacion = pe.id_porcentaje_penalizacion
+    $stringInner 
     WHERE cA.id_cliente = @idCliente)
   
     UNION  /* COORDINADOR */
@@ -7819,7 +7804,7 @@ public function porcentajes($clienteData, $tipoVenta){
     INNER JOIN usuarios u1 ON u1.id_usuario = cA.id_coordinador
     INNER JOIN plan_comision pl ON pl.id_plan = cA.plan_comision and pl.coordinador not in (0)
     LEFT JOIN penalizaciones pe ON pe.id_cliente = @idCliente
-    LEFT JOIN porcentajes_penalizaciones pp ON pp.id_porcentaje_penalizacion = pe.id_porcentaje_penalizacion
+    $stringInner 
     WHERE cA.id_cliente = @idCliente)
     
     UNION  /* GERENTE */
@@ -7835,7 +7820,7 @@ public function porcentajes($clienteData, $tipoVenta){
     INNER JOIN usuarios u1 ON u1.id_usuario = cA.id_gerente
     INNER JOIN plan_comision pl ON pl.id_plan = cA.plan_comision and pl.gerente not in (0)
     LEFT JOIN penalizaciones pe ON pe.id_cliente = @idCliente
-    LEFT JOIN porcentajes_penalizaciones pp ON pp.id_porcentaje_penalizacion = pe.id_porcentaje_penalizacion
+    $stringInner 
     WHERE cA.id_cliente = @idCliente)
     
     UNION  /* SUBDIRECTOR */
@@ -7930,8 +7915,6 @@ public function getBonoXUser($user,$comentario,$estatus,$f1,$f2){
 
 
 function getDatosNuevasMontos($proyecto,$condominio){
-
-    // if( $this->session->userdata('id_rol') == 17 ){
 
       $filtro = " pci1.estatus IN (1) AND com.id_usuario = $condominio ";
 
@@ -8397,10 +8380,22 @@ return $query->result();
     {
         $this->db->query("SET LANGUAGE Español;");
         $result = $this->db->query("SELECT pci.id_pago_i,hc.comentario, l.nombreLote, CONVERT(NVARCHAR, rpp.fecha_creacion, 6) as fecha_pago, pci.abono_neodata, rpp.np,pcs.nombre as tipo,re.nombreResidencial,
-        CASE WHEN pa.estatus=1 THEN 'Activo' WHEN pa.estatus=2 THEN 'Liquidado' WHEN pa.estatus=3 THEN 'Liquidado' END AS estatus,se.nombre as sede
+        CASE WHEN pa.estatus=1 THEN 'Activo' WHEN pa.estatus=2 THEN 'Liquidado' WHEN pa.estatus=3 THEN 'Liquidado' END AS estatus,sed.nombre as sede
                 FROM prestamos_aut pa
                 INNER JOIN usuarios u ON u.id_usuario = pa.id_usuario
-                INNER JOIN sedes se ON se.id_sede=u.id_sede
+                INNER JOIN sedes sed ON sed.id_sede = (CASE u.id_usuario 
+                 WHEN 2 THEN 2 
+                 WHEN 3 THEN 2 
+                 WHEN 1980 THEN 2 
+                 WHEN 1981 THEN 2 
+                 WHEN 1982 THEN 2 
+                 WHEN 1988 THEN 2 
+                 WHEN 4 THEN 5
+                 WHEN 5 THEN 3
+                 WHEN 607 THEN 1 
+                 WHEN 7092 THEN 4
+                     WHEN 9629 THEN 2
+                 ELSE u.id_sede END) and sed.estatus = 1
                 INNER JOIN opcs_x_cats pcs ON pcs.id_opcion=pa.tipo AND pcs.id_catalogo=23
                 INNER JOIN relacion_pagos_prestamo rpp ON rpp.id_prestamo = pa.id_prestamo
                 INNER JOIN pago_comision_ind pci ON pci.id_pago_i = rpp.id_pago_i AND pci.estatus IN(18,19,20,21,22,23,24,25,26) AND pci.descuento_aplicado = 1
@@ -8743,6 +8738,13 @@ return $query->result();
 
     public function updatePenalizacion($idLote, $idCliente)
     {
+        return (bool)($this->db->query("UPDATE penalizaciones SET bandera = 1 WHERE bandera = 0 AND id_lote = $idLote AND id_cliente = $idCliente"));
+    }
+
+    public function updatePenalizacionCuatro($idLote, $idCliente, $a, $c, $g)
+    {
+        $penalizacion = $this->db->query("SELECT id_penalizacion FROM penalizaciones WHERE id_lote = $idLote AND id_cliente = $idCliente");
+        $this->db->query("INSERT INTO distribucion_penalizaciones values (".$penalizacion->row()->id_penalizacion.",$a,$c,$g,1,($a+$c+$g),1,GETDATE())");
         return (bool)($this->db->query("UPDATE penalizaciones SET bandera = 1 WHERE bandera = 0 AND id_lote = $idLote AND id_cliente = $idCliente"));
     }
 

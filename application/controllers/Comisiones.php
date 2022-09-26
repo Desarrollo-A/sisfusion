@@ -7061,6 +7061,17 @@ for ($d=0; $d <count($dos) ; $d++) {
 
          echo json_encode($response);
     }
+
+    public function changeLoteToPenalizacionCuatro()
+    {
+        $response = $this->Comisiones_model->insertHistorialLog($_POST['id_lote4'], $this->session->userdata('id_usuario'), 1, 'SE ACEPTÓ PENALIZACIÓN + 160 DÍAS',
+                'penalizaciones', 'NULL');
+        if ($response) {
+          $response = $this->Comisiones_model->updatePenalizacionCuatro($_POST['id_lote4'], $_POST['id_cliente4'], $_POST['asesor'], $_POST['coordinador'], $_POST['gerente']);
+        }
+
+         echo json_encode($response);
+    }
     
 
     public function getFormasPago()

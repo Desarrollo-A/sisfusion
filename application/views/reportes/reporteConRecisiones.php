@@ -53,7 +53,8 @@
                                                 <th>ASESOR</th>
                                                 <th>COORDINADOR</th>
                                                 <th>GERENTE</th>
-                                                <th>ÚLTIMO ESTATUS</th>
+                                                <th>TIPO LOTE</th>
+                                                <th>CASA</th>
                                                 <th>ESTATUS ACTUAL</th>
                                                 <th>PLAZA VENTA</th>
                                                 <th>TIPO VENTA</th>
