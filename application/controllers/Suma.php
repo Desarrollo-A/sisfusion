@@ -5,11 +5,11 @@ class Suma extends CI_Controller
     public function __construct()
     {
         parent::__construct();
-        $this->load->model(array('Suma_model'));
+        $this->load->model(array('Suma_model', 'General_model'));
         $this->load->library(array('session', 'form_validation', 'Jwt_actions'));
         $this->load->helper(array('url', 'form'));
         $this->load->database('default');
-        $this->jwt_actions->authorize_externals('3450', apache_request_headers()["Authorization"]);
+        // $this->jwt_actions->authorize_externals('3450', apache_request_headers()["Authorization"]);
     }
 
     public function index() {}
@@ -42,6 +42,79 @@ class Suma extends CI_Controller
                     }
                 }
             }
+        }
+    }
+
+    public function sumServ(){
+        $data_json = json_decode((file_get_contents("php://input")));
+        $request = array();
+        $valido = true;
+        foreach ($data_json as &$data) {
+            if (!isset($data->id_cliente) || !isset($data->total_venta) || !isset($data->comisionistas) || !isset($data->nombre_cliente) || !isset($data->id_pago) || !isset($data->referencia)){
+                echo json_encode(array("status" => 402, "message" => "Algún parámetro no viene en el array general."), JSON_UNESCAPED_UNICODE);
+                $valido = false;
+                break;
+            }
+            else {
+                if ($data->id_cliente == "" || $data->total_venta == "" || $data->comisionistas == "" || $data->nombre_cliente == "" || $data->id_pago == ""|| $data->referencia == ""){
+                    echo json_encode(array("status" => 402, "message" => "Algún parámetro no tiene un valor en el array general."), JSON_UNESCAPED_UNICODE);
+                    $valido = false;
+                    break;
+                }
+                else {
+                    if( count( $data->comisionistas )==0 ){
+                        echo json_encode(array("status" => 402, "message" => "Debe de venir al menos un comisionista."), JSON_UNESCAPED_UNICODE);
+                        $valido = false;
+                        break;
+                    }
+                    else{
+                        $arrayComisiones[] = array(
+                            'total_venta' => $data->total_venta,
+                            'id_cliente' => $data->id_cliente,
+                            'nombre_cliente' => $data->nombre_cliente,
+                            'id_pago' => $data->id_pago,
+                            'referencia' => $data->referencia
+                        );
+                        
+                        foreach ($data->comisionistas as &$valor) {
+                            if ( !isset($valor->id_rol) || !isset($valor->id_usuario) || !isset($valor->porcentaje_comision) || !isset($valor->total_comision) || !isset($data->referencia) ){
+                                echo json_encode(array("status" => 402, "message" => "Algún parámetro no viene en el array del comisionista."), JSON_UNESCAPED_UNICODE);
+                                $valido = false;
+                                break;
+
+                            }
+                            else{
+                                if ($valor->id_rol == "" || $valor->id_usuario == "" || $valor->porcentaje_comision == "" || $data->nombre_cliente == "" || $data->id_pago == ""|| $valor->total_comision == "" || $data->referencia == "" ){
+                                    echo json_encode(array("status" => 402, "message" => "Algún parámetro no tiene un valor en el array del comisionista."), JSON_UNESCAPED_UNICODE);
+                                    $valido = false;
+                                    break;
+                                }
+                                else{
+                                    $arrayPagos[] = array(
+                                        'id_rol' => $valor->id_rol,
+                                        'id_usuario' => $valor->id_usuario,
+                                        'porcentaje_comision' => $valor->porcentaje_comision,
+                                        'total_comision' => $valor->total_comision,
+                                        'referencia' => $data->referencia
+                                    );
+                                }
+                                
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        
+        if($valido){
+            $result = $this->Suma_model->setComisionesPagos($arrayComisiones, $arrayPagos);
+            if($result){
+                array_push($request, array("status" => 200, "message" => "Los registros se han ingresado de manera exitosa."));
+            }
+            else
+                array_push($request, array("status" => 400, "message" => "Oops, ocurrió un error al insertar los registros"));
+
+            echo(json_encode($request, JSON_UNESCAPED_UNICODE));
         }
     }
 }

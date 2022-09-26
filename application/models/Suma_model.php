@@ -32,4 +32,17 @@ class Suma_model extends CI_Model
         else
             return false;
     }
+
+    function setComisionesPagos($dataComisiones, $dataPagos){
+        $this->db->trans_begin();
+        $this->db->insert_batch('comisiones_suma', $dataComisiones);
+        $this->db->insert_batch('pagos_suma', $dataPagos);
+        if ($this->db->trans_status() === FALSE) { // Hubo errores en la consulta, entonces se cancela la transacción.
+            $this->db->trans_rollback();
+            return false;
+        } else { // Se realize primer insert correctamente
+            $this->db->trans_commit();
+            return true;
+        }
+    }
 }
