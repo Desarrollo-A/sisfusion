@@ -594,7 +594,7 @@
 
                                                                     foreach ($query->result() as $row){
                                                                         $number = $row->nuevo_general;
-                                                                        echo '' . number_format($number, 3).'';
+                                                                        echo '' .$number.'';
                                                                     }
                                                                     ?>
                                                                 </p>
@@ -1056,17 +1056,11 @@
                         var hora = hoy.getHours();
                         var minuto = hoy.getMinutes();
 
-                      /*   if (((mes == 2 && dia == 7) || (mes == 2 && dia == 8 && hora <= 13)) ||
-                        ((mes == 3 && dia == 7) || (mes == 3 && dia == 8 && hora <= 13)) ||
-                        ((mes == 4 && dia == 11) || (mes == 4 && dia == 12 && hora <= 13)) ||
-                        ((mes == 5 && dia == 9) || (mes == 5 && dia == 10 && hora <= 13)) ||
-                        ((mes == 6 && dia == 13) || (mes == 6 && dia == 14 && hora <= 13)) ||
-                        ((mes == 7 && dia == 11) || (mes == 7 && dia == 12 && hora <= 13)) ||
-                        ((mes == 8 && dia == 8) || (mes == 8 && dia == 9 && hora <= 13)) ||
-                        ((mes == 9 && dia == 12) || (mes == 9 && dia == 13 && hora <= 13)) ||
+                
+                         if (
                         ((mes == 10 && dia == 10) || (mes == 10 && dia == 11 && hora <= 13)) ||
                         ((mes == 11 && dia == 7) || (mes == 11 && dia == 8 && hora <= 13)) ||
-                        ((mes == 12 && dia == 12) || (mes == 12 && dia == 13 && hora <= 13))){*/
+                        ((mes == 12 && dia == 12) || (mes == 12 && dia == 13 && hora <= 13))){
 
                             if ($('input[name="idT[]"]:checked').length > 0) {
                                 $('#spiner-loader').removeClass('hide');
@@ -1096,6 +1090,12 @@
 
                                             tabla_nuevas.ajax.reload();
                                             tabla_revision.ajax.reload();
+                                        }else if(data == 2) {
+                                            $('#spiner-loader').addClass('hide');
+                                            $("#all").prop('checked', false);
+                                            var fecha = new Date();
+
+                                            alerts.showNotification("top", "right", "ESTÁS FUERA DE TIEMPO PARA ENVIAR TUS SOLICITUDES.", "warning");
                                         } else {
                                             $('#spiner-loader').addClass('hide');
                                             alerts.showNotification("top", "right", "Error al enviar comisiones, intentalo más tarde", "danger");
@@ -1107,11 +1107,11 @@
                                     }
                                 });
                             }
-                       /* }
+                        }
                         else{
                             $('#spiner-loader').addClass('hide');
                             alerts.showNotification("top", "right", "No se pueden enviar comisiones, esperar al siguiente corte", "warning");      
-                        }*/
+                        }
                     },
                     attr: {
                         class: 'btn btn-azure',
@@ -1316,14 +1316,7 @@
                         // ((mes == 11 && dia == 8) || (mes == 11 && dia == 9 && hora <= 13)) || 
                         // ((mes == 12 && dia == 6) || (mes == 12 && dia == 7 && hora <= 13))){ 
 
-                        if ((userID == 66 || userID == 50) || ((mes == 2 && dia == 7) || (mes == 2 && dia == 8 && hora <= 13)) ||
-                        ((mes == 3 && dia == 7) || (mes == 3 && dia == 8 && hora <= 13)) ||
-                        ((mes == 4 && dia == 11) || (mes == 4 && dia == 12 && hora <= 13)) ||
-                        ((mes == 5 && dia == 9) || (mes == 5 && dia == 10 && hora <= 13)) ||
-                        ((mes == 6 && dia == 13) || (mes == 6 && dia == 14 && hora <= 13)) ||
-                        ((mes == 7 && dia == 11) || (mes == 7 && dia == 12 && hora <= 13)) ||
-                        ((mes == 8 && dia == 8) || (mes == 8 && dia == 9 && hora <= 13)) ||
-                        ((mes == 9 && dia == 12) || (mes == 9 && dia == 13 && hora <= 13)) ||
+                        if (
                         ((mes == 10 && dia == 10) || (mes == 10 && dia == 11 && hora <= 13)) ||
                         ((mes == 11 && dia == 7) || (mes == 11 && dia == 8 && hora <= 13)) ||
                         ((mes == 12 && dia == 12) || (mes == 12 && dia == 13 && hora <= 13)))
@@ -2335,14 +2328,7 @@
             var hora = hoy.getHours();
             var minuto = hoy.getMinutes();
     
-             if (userID == 49 || ((mes == 2 && dia == 7) || (mes == 2 && dia == 8 && hora <= 13)) ||
-                        ((mes == 3 && dia == 7) || (mes == 3 && dia == 8 && hora <= 13)) ||
-                        ((mes == 4 && dia == 11) || (mes == 4 && dia == 12 && hora <= 13)) ||
-                        ((mes == 5 && dia == 9) || (mes == 5 && dia == 10 && hora <= 13)) ||
-                        ((mes == 6 && dia == 13) || (mes == 6 && dia == 14 && hora <= 13)) ||
-                        ((mes == 7 && dia == 11) || (mes == 7 && dia == 12 && hora <= 13)) ||
-                        ((mes == 8 && dia == 8) || (mes == 8 && dia == 9 && hora <= 13)) ||
-                        ((mes == 9 && dia == 12) || (mes == 9 && dia == 13 && hora <= 13)) ||
+             if (userID == 49 || 
                         ((mes == 10 && dia == 10) || (mes == 10 && dia == 11 && hora <= 13)) ||
                         ((mes == 11 && dia == 7) || (mes == 11 && dia == 8 && hora <= 13)) ||
                         ((mes == 12 && dia == 12) || (mes == 12 && dia == 13 && hora <= 13)))
