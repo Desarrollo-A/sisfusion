@@ -4384,7 +4384,7 @@ function getInformacionDataResguardo($var){
     }
 
     function update_descuento($id_pago_i,$monto, $comentario, $saldo_comisiones, $usuario,$valor,$user,$pagos_aplicados){
-        $estatus = 0;
+        $estatus = 27;
         $uni='DESCUENTO';
         if($valor == 2){
     $estatus =16;

@@ -1128,14 +1128,7 @@
                         var hora = hoy.getHours();
                         var minuto = hoy.getMinutes();
 
-                        if (((mes == 2 && dia == 7) || (mes == 2 && dia == 8 && hora <= 13)) ||
-                        ((mes == 3 && dia == 7) || (mes == 3 && dia == 8 && hora <= 13)) ||
-                        ((mes == 4 && dia == 11) || (mes == 4 && dia == 12 && hora <= 13)) ||
-                        ((mes == 5 && dia == 9) || (mes == 5 && dia == 10 && hora <= 13)) ||
-                        ((mes == 6 && dia == 13) || (mes == 6 && dia == 14 && hora <= 13)) ||
-                        ((mes == 7 && dia == 11) || (mes == 7 && dia == 12 && hora <= 13)) ||
-                        ((mes == 8 && dia == 8) || (mes == 8 && dia == 9 && hora <= 13)) ||
-                        ((mes == 9 && dia == 12) || (mes == 9 && dia == 13 && hora <= 13)) ||
+                        if (
                         ((mes == 10 && dia == 10) || (mes == 10 && dia == 11 && hora <= 13)) ||
                         ((mes == 11 && dia == 7) || (mes == 11 && dia == 8 && hora <= 13)) ||
                         ((mes == 12 && dia == 12) || (mes == 12 && dia == 13 && hora <= 13))){
@@ -1168,6 +1161,12 @@
 
                                             tabla_nuevas.ajax.reload();
                                             tabla_revision.ajax.reload();
+                                        }else if(data == 2) {
+                                            $('#spiner-loader').addClass('hide');
+                                            $("#all").prop('checked', false);
+                                            var fecha = new Date();
+
+                                            alerts.showNotification("top", "right", "ESTÁS FUERA DE TIEMPO PARA ENVIAR TUS SOLICITUDES.", "warning");
                                         }
                                         else {
                                             $('#spiner-loader').addClass('hide');
@@ -1201,14 +1200,7 @@
                         var hora = hoy.getHours();
                         var minuto = hoy.getMinutes();
 
-                         if (userID == 4 || ((mes == 2 && dia == 9) || (mes == 2 && dia == 10 && hora <= 13)) ||
-                        ((mes == 3 && dia == 9) || (mes == 3 && dia == 10 && hora <= 13)) ||
-                        ((mes == 4 && dia == 13) || (mes == 4 && dia == 14 && hora <= 13)) ||
-                        ((mes == 5 && dia == 11) || (mes == 5 && dia == 12 && hora <= 13)) ||
-                        ((mes == 6 && dia == 15) || (mes == 6 && dia == 16 && hora <= 13)) ||
-                        ((mes == 7 && dia == 13) || (mes == 7 && dia == 14 && hora <= 13)) ||
-                        ((mes == 8 && dia == 10) || (mes == 8 && dia == 11 && hora <= 13)) ||
-                        ((mes == 9 && dia == 14) || (mes == 9 && dia == 15 && hora <= 13)) ||
+                         if (
                         ((mes == 10 && dia == 12) || (mes == 10 && dia == 13 && hora <= 13)) ||
                         ((mes == 11 && dia == 9) || (mes == 11 && dia == 10 && hora <= 13)) ||
                         ((mes == 12 && dia == 14) || (mes == 12 && dia == 15 && hora <= 13))){
@@ -1445,29 +1437,7 @@
                         var hora = hoy.getHours();
                         var minuto = hoy.getMinutes();
 
-                        if (userID == 4 || ((mes == 2 && dia == 7) || (mes == 2 && dia == 8 && hora <= 13)) ||
-                            ((mes == 2 && dia == 9) || (mes == 2 && dia == 10 && hora <= 13)) ||
-
-                        ((mes == 3 && dia == 7) || (mes == 3 && dia == 8 && hora <= 13)) ||
-                        ((mes == 3 && dia == 9) || (mes == 3 && dia == 10 && hora <= 13)) ||
-
-                        ((mes == 4 && dia == 11) || (mes == 4 && dia == 12 && hora <= 13)) ||
-                        ((mes == 4 && dia == 13) || (mes == 4 && dia == 14 && hora <= 13)) ||
-
-                        ((mes == 5 && dia == 9) || (mes == 5 && dia == 10 && hora <= 13)) ||
-                        ((mes == 5 && dia == 11) || (mes == 5 && dia == 12 && hora <= 13)) ||
-
-                        ((mes == 6 && dia == 13) || (mes == 6 && dia == 14 && hora <= 13)) ||
-                        ((mes == 6 && dia == 15) || (mes == 6 && dia == 16 && hora <= 13)) ||
-
-                        ((mes == 7 && dia == 11) || (mes == 7 && dia == 12 && hora <= 13)) ||
-                        ((mes == 7 && dia == 13) || (mes == 7 && dia == 14 && hora <= 13)) ||
-
-                        ((mes == 8 && dia == 8) || (mes == 8 && dia == 9 && hora <= 13)) ||
-                        ((mes == 8 && dia == 10) || (mes == 8 && dia == 11 && hora <= 13)) ||
-
-                        ((mes == 9 && dia == 12) || (mes == 9 && dia == 13 && hora <= 13)) ||
-                        ((mes == 9 && dia == 14) || (mes == 9 && dia == 15 && hora <= 13)) ||
+                        if (
 
                         ((mes == 10 && dia == 10) || (mes == 10 && dia == 11 && hora <= 13)) ||
                         ((mes == 10 && dia == 12) || (mes == 10 && dia == 13 && hora <= 13)) ||
@@ -2665,14 +2635,7 @@
             var hora = hoy.getHours();
             var minuto = hoy.getMinutes();
 
-            if (((mes == 2 && dia == 7) || (mes == 2 && dia == 8 && hora <= 13)) ||
-                        ((mes == 3 && dia == 7) || (mes == 3 && dia == 8 && hora <= 13)) ||
-                        ((mes == 4 && dia == 11) || (mes == 4 && dia == 12 && hora <= 13)) ||
-                        ((mes == 5 && dia == 9) || (mes == 5 && dia == 10 && hora <= 13)) ||
-                        ((mes == 6 && dia == 13) || (mes == 6 && dia == 14 && hora <= 13)) ||
-                        ((mes == 7 && dia == 11) || (mes == 7 && dia == 12 && hora <= 13)) ||
-                        ((mes == 8 && dia == 8) || (mes == 8 && dia == 9 && hora <= 13)) ||
-                        ((mes == 9 && dia == 12) || (mes == 9 && dia == 13 && hora <= 13)) ||
+            if (
                         ((mes == 10 && dia == 10) || (mes == 10 && dia == 11 && hora <= 13)) ||
                         ((mes == 11 && dia == 7) || (mes == 11 && dia == 8 && hora <= 13)) ||
                         ((mes == 12 && dia == 12) || (mes == 12 && dia == 13 && hora <= 13)))

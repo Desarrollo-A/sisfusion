@@ -905,6 +905,12 @@
 
                                             tabla_nuevas.ajax.reload();
                                             tabla_revision.ajax.reload();
+                                        }else if(data == 2) {
+                                            $('#spiner-loader').addClass('hide');
+                                            $("#all").prop('checked', false);
+                                            var fecha = new Date();
+
+                                            alerts.showNotification("top", "right", "ESTÁS FUERA DE TIEMPO PARA ENVIAR TUS SOLICITUDES.", "warning");
                                         } else {
                                             $('#spiner-loader').addClass('hide');
                                             alerts.showNotification("top", "right", "Error al enviar comisiones, intentalo más tarde", "danger");

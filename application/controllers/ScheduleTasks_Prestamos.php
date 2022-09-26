@@ -64,8 +64,6 @@ class ScheduleTasks_Prestamos extends CI_Controller
             $tipo_prestamo = $data[$m]['tipo'];
         $PagosByUSer = $this->db->query("SELECT * FROM pago_comision_ind WHERE id_usuario=".$data[$m]['id_usuario']." AND estatus=1 ORDER BY abono_neodata DESC")->result_array();
         $Suma = 0;
-       // var_dump($VerificarCierre);
-        //echo $VerificarCierre[0]['modificado'];
         $FechaUltimoAbono = $VerificarCierre[0]['modificado'] != 0 ?  explode(" ",$VerificarCierre[0]['modificado']) : explode(" ",'2022-01-01 00:00:00');
 
         //SI LAS FECHAS SON DIFERENTES => ENTONCES NO SE HA APLICADO EL PRÉSTAMO AUN, APLICARLO
@@ -174,7 +172,7 @@ function SendMailPrestamos($data){
     $mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
     $mail->addAddress('programador.analista5@ciudadmaderas.com');
     $mail->addAddress('programador.analista16@ciudadmaderas.com');
-    $mail->addAddress('tester.ti2@ciudadmaderas.com');
+    //$mail->addAddress('tester.ti2@ciudadmaderas.com');
 
 
    $cadena='';
