@@ -5,24 +5,11 @@
     <div class="wrapper">
         <?php
         switch ($this->session->userdata('id_rol')) {
-            case '1': // DIRECTOR
-            case '2': // SUBDIRECTOR VENTAS
+
             case '3': // GERENTE
             case '7': // ASESOR
             case '9': // COORDINADORmultiple
-            case '13': // CONTRALORÍA
-            case '18': // DIRECTOR MKTD
-            case '19': // SUBDIRECTOR MKTD
-            case '20': // GERENTE MKTD
-            case '22': // EJECUTIVO CLUB MADERAS
-            case '23': // SUBDIRECTOR CLUB MADERAS
-            case '25': // ASESOR DE CONTENIDO RRSS
-            case '26': // MERCADOLÓGO
-            case '27': // COMMUNITY MANAGER
-            case '28': // EJECUTIVO ADMINISTRATIVO
-            case '30': // DESARROLLADOR WEB
-            case '32': // CONTRALORÍA CORPORATIVA
-            case '36': // asistente mktd
+
                 $datos = array();
                 $datos = $datos4;
                 $datos = $datos2;
@@ -42,14 +29,14 @@
             $forma_pago = $row->forma_pago;
             if( $forma_pago  == 2 ||  $forma_pago == '2'){
                 if(count($opn_cumplimiento) == 0){
-                    $cadena = '<a href="'.base_url().'index.php/Usuarios/configureProfile"> <span class="label label-danger" style="background:red;">  SIN OPINIÓN DE CUMPLIMIENTO, CLIC AQUI PARA SUBIRLA ></span> </a>';
+                    $cadena = '<a href="https://maderascrm.gphsis.com/index.php/Usuarios/configureProfile"> <span class="label label-danger" style="background:red;">  SIN OPINIÓN DE CUMPLIMIENTO, CLIC AQUI PARA SUBIRLA ></span> </a>';
                 } 
                 else{
                     if($opn_cumplimiento[0]['estatus'] == 1){
                         $cadena = '<button type="button" class="btn btn-info subir_factura_multiple" >SUBIR FACTURAS</button>';
                     }
                     else if($opn_cumplimiento[0]['estatus'] == 0){
-                        $cadena ='<a href="'.base_url().'index.php/Usuarios/configureProfile"> <span class="label label-danger" style="background:orange;">  SIN OPINIÓN DE CUMPLIMIENTO, CLIC AQUI PARA SUBIRLA</span> </a>';
+                        $cadena ='<a href="https://maderascrm.gphsis.com/index.php/Usuarios/configureProfile"> <span class="label label-danger" style="background:orange;">  SIN OPINIÓN DE CUMPLIMIENTO, CLIC AQUI PARA SUBIRLA</span> </a>';
 
                     }
                     else if($opn_cumplimiento[0]['estatus'] == 2){
@@ -62,7 +49,6 @@
                 } else if($opn_cumplimiento[0]['estatus'] == 0) {
                     $cadena = '<button type="button" class="btn btn-info subir-archivo">SUBIR DOCUMENTO FISCAL</button>';
                 } else if ($opn_cumplimiento[0]['estatus'] == 1) {
-                    $idDoc = $opn_cumplimiento[0]["id_opn"];
                     $cadena = '<p><b>Documento fiscal cargado con éxito</b>
                                 <a href="#" class="verPDFExtranjero" 
                                     title="Documento fiscal"
@@ -94,7 +80,7 @@
             </div>
         </div>
 
-        <!--<div class="modal fade modal-alertas" id="modalQuitarFactura" role="dialog">
+        <div class="modal fade modal-alertas" id="modalQuitarFactura" role="dialog">
             <div class="modal-dialog modal-sm">
                 <div class="modal-content">
                     <div class="modal-header bg-red">
@@ -105,7 +91,7 @@
                     </form>
                 </div>
             </div>
-        </div>-->
+        </div>
 
         <div class="modal fade" id="seeInformationModalAsimilados" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog modal-md modal-dialog-scrollable" role="document">
@@ -164,7 +150,7 @@
             </div>
         </div>
 
-        <!--<div class="modal fade modal-alertas" id="modal_documentacion" role="dialog">
+        <div class="modal fade modal-alertas" id="modal_documentacion" role="dialog">
             <div class="modal-dialog" style="width:800px; margin-top:20px">
                 <div class="modal-content">
                     <div class="modal-body">
@@ -172,18 +158,18 @@
                     </div>
                 </div>
             </div>
-        </div>-->
+        </div>
 
-        <!--<div class="modal fade bd-example-modal-sm" id="myModalEnviadas" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+        <div class="modal fade bd-example-modal-sm" id="myModalEnviadas" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-sm">
                 <div class="modal-content">
                     <div class="modal-body"></div>
                 </div>
             </div>
-        </div>-->
+        </div>
 
         <!-- inicia modal subir factura -->
-        <div id="modal_formulario_solicitud" class="modal" style="position:fixed; top:0; left:0; margin-bottom: 1%;  margin-top: -5%;">
+        <div id="modal_formulario_solicitud_multiple" class="modal" style="position:fixed; top:0; left:0; margin-bottom: 1%;  margin-top: -5%;">
             <div class="modal-dialog modal-md">
                 <div class="modal-content">
                     <div class="modal-body">
@@ -191,108 +177,8 @@
                             <div class="active tab-pane" id="generar_solicitud">
                                 <div class="row">
                                     <div class="col-lg-12">
-                                        <div class="row">
-                                            <div class="col-lg-5">
-                                                <div class="fileinput fileinput-new text-center" data-provides="fileinput">
-                                                    <div><br>
-                                                        <span class="fileinput-new">Selecciona archivo</span>
-                                                        <input type="file" name="xmlfile" id="xmlfile" accept="application/xml">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-7">
-                                                <center>
-                                                    <button class="btn btn-warning" type="button" id="cargar_xml"><i class="fa fa-upload"></i> CARGAR</button>
-                                                </center>
-                                            </div>
-                                            <p id=totalxml style="color: red;"></p>
-                                        </div>
-                
-                                        <form id="frmnewsol" method="post" action="#">
-                                            <div class="row">
-                                                <div class="col-lg-4 form-group">
-                                                    <label for="emisor">Emisor:<span class="text-danger">*</span></label>
-                                                    <input type="text" class="form-control" id="emisor" name="emisor" placeholder="Emisor" value="" required>
-                                                </div>
-                                                <div class="col-lg-4 form-group">
-                                                    <label for="rfcemisor">RFC Emisor:<span class="text-danger">*</span></label>
-                                                    <input type="text" class="form-control" id="rfcemisor" name="rfcemisor" placeholder="RFC Emisor" value="" required>
-                                                </div>
-                                                <div class="col-lg-4 form-group">
-                                                    <label for="receptor">Receptor:<span class="text-danger">*</span></label>
-                                                    <input type="text" class="form-control" id="receptor" name="receptor" placeholder="Receptor" value="" required>
-                                                </div>
-                                                <div class="col-lg-4 form-group">
-                                                    <label for="rfcreceptor">RFC Receptor:<span class="text-danger">*</span></label>
-                                                    <input type="text" class="form-control" id="rfcreceptor" name="rfcreceptor" placeholder="RFC Receptor" value="" required>
-                                                </div>
-                                                <div class="col-lg-3 form-group">
-                                                    <label for="regimenFiscal">Régimen Fiscal:<span class="text-danger">*</span></label>
-                                                    <input type="text" class="form-control" id="regimenFiscal" name="regimenFiscal" placeholder="Regimen Fiscal" value="" required>
-                                                </div>
-                                                <div class="col-lg-3 form-group">
-                                                    <label for="total">Monto:<span class="text-danger">*</span></label>
-                                                    <input type="text" class="form-control" id="total" name="total" placeholder="Total" value="" required>
-                                                    <b style="font-size: 10px;" id="cantidadSeleccionadaMal2"></b>
-                                                </div>
-                                                <div class="col-lg-3 form-group">
-                                                    <label for="formaPago">Forma Pago:</label>
-                                                    <input type="text" class="form-control" placeholder="Forma Pago" id="formaPago" name="formaPago" value="">
-                                                </div>
-                                                <div class="col-lg-3 form-group">
-                                                    <label for="cfdi">Uso del CFDI:</label>
-                                                    <input type="text" class="form-control" placeholder="Uso de CFDI" id="cfdi" name="cfdi" value="">
-                                                </div>
-                                                <div class="col-lg-3 form-group">
-                                                    <label for="metodopago">Método de Pago:</label>
-                                                    <input type="text" class="form-control" id="metodopago" name="metodopago" placeholder="Método de Pago" value="" readonly>
-                                                </div>
-                                                <div class="col-lg-3 form-group">
-                                                    <label for="unidad">Unidad:</label>
-                                                    <input type="text" class="form-control" id="unidad" name="unidad" placeholder="Unidad" value="" readonly>
-                                                </div>
-                                                <div class="col-lg-3 form-group">
-                                                    <label for="clave">Clave Prod/Serv:<span class="text-danger">*</span></label>
-                                                    <input type="text" class="form-control" id="clave" name="clave" placeholder="Clave" value="" required>
-                                                </div>
-                                            </div>
-
-                                            <div class="row">
-                                                <div class="col-lg-12 form-group">
-                                                    <label for="obse">OBSERVACIONES FACTURA <i class="fa fa-question-circle faq" tabindex="0" data-container="body" data-trigger="focus" data-toggle="popover" title="Observaciones de la factura" data-content="En este campo pueden ser ingresados datos opcionales como descuentos, observaciones, descripción de la operación, etc." data-placement="right"></i></label><br>
-                                                    <textarea class="form-control" rows='1' data-min-rows='1' id="obse" name="obse" placeholder="Observaciones"></textarea>
-                                                </div>
-                                            </div>
-
-                                            <div class="row">
-                                                <div class="col-lg-12 form-group"></div>
-                                                <div class="col-lg-6 form-group">
-                                                    <button type="submit" id="btnIndi" class="btn btn-primary btn-block">GUARDAR</button>
-                                                </div>
-                                                <div class="col-lg-6 form-group">
-                                                    <button type="button" onclick="closeModalEng()" class=" btn btn-danger btn-block" data-dismiss="modal">CANCELAR</button>
-                                                </div>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!--<div id="modal_formulario_solicitud_multiple" class="modal" style="position:fixed; top:0; left:0; margin-bottom: 1%;  margin-top: -5%;">
-            <div class="modal-dialog modal-md">
-                <div class="modal-content">
-                    <div class="modal-body">
-                        <div class="tab-content">
-                            <div class="active tab-pane" id="generar_solicitud">
-                                <div class="row">
-                                    <div class="col-lg-12">-->
                                         <!-- //poner modal -->
-                                        <!--<div class="row">
+                                        <div class="row">
                                             <div class="col-lg-5">
                                                 <div class="fileinput fileinput-new text-center" data-provides="fileinput">
                                                     <div><br>
@@ -375,7 +261,7 @@
                     </div>
                 </div>
             </div>
-        </div>-->
+        </div>
 
         <div class="modal fade modal-alertas" id="addFileExtranjero" role="dialog">
             <div class="modal-dialog">
@@ -442,15 +328,15 @@
                             <b>II.</b> Número de identificación fiscal, o su equivalente, de quien lo expide.
                         </p>
                         <p>
-                              USA se llama Tax Id o ITIN (Taxpayer Identification Number).
+                              USA se llama Tax Id o ITIN (Taxpayer Identification Number).
                             <br>
-                              Canadá: Tax Id o Business Number.
+                              Canadá: Tax Id o Business Number.
                             <br>
-                              Ecuador: RUC (Registro Único de Contribuyentes).
+                              Ecuador: RUC (Registro Único de Contribuyentes).
                             <br>
-                              Colombia: RUT (Registro Único Tributario).
+                              Colombia: RUT (Registro Único Tributario).
                             <br>
-                              Otros países: el número de registro que se utiliza en su país para el pago de impuesto.
+                              Otros países: el número de registro que se utiliza en su país para el pago de impuesto.
                         </p>
                         <p>
                             <b>III.</b> Lugar y fecha de expedición.
@@ -459,10 +345,10 @@
                             <b>IV.</b> Clave de RFC de la persona a favor de quien se expida o, en su defecto, nombre, denominación o razón social de dicha persona.
                         </p>
                         <p>
-                            <b>V.</b>   Servicio y descripción del mismo. (cantidad en caso de aplicar).
+                            <b>V.</b>   Servicio y descripción del mismo. (cantidad en caso de aplicar).
                         </p>
                         <p>
-                            <b>VI.</b>  Valor unitario consignado en número e importe total consignado en número o letra.
+                            <b>VI.</b>  Valor unitario consignado en número e importe total consignado en número o letra.
                         </p>
                     </div>
                     <div class="modal-footer">
@@ -481,18 +367,17 @@
                             <li class="active">
                                 <a href="#nuevas-1" role="tab"  data-toggle="tab">Nuevas</a>
                             </li>
-
                             <li>
-                                <a href="#proceso-1" role="tab"  data-toggle="tab">EN REVISIÓN</a>
+                                <a href="#proceso-1" role="tab"  data-toggle="tab">En revisión</a>
                             </li>
                             <li>
                                 <a href="#proceso-2" role="tab"  data-toggle="tab">Por pagar</a>
                             </li>
                             <li>
-                                <a href="#otras-1" role="tab"  data-toggle="tab">PAUSADAS</a>
+                                <a href="#otras-1" role="tab"  data-toggle="tab">Pausadas</a>
                             </li>
                             <li>
-                                <a href="#sin_pago_neodata" role="tab" data-toggle="tab">Sin pago en NEODATA</a>
+                                <a href="#sin_pago_neodata" role="tab" data-toggle="tab">Sin pago en Neodata</a>
                             </li>
                         </ul>
                         <div class="card no-shadow m-0">
@@ -501,42 +386,28 @@
                                     <div class="tab-content p-2">
                                         <div class="tab-pane active" id="nuevas-1">
                                             <div class="encabezadoBox">
-                                                <p class="card-title pl-1">Comisiones nuevas disponibles para solicitar tu pago, si requieres ver más detalles como lo pagado y lo pendiente, podrás consultarlo en el <a href="<?=base_url()?>Comisiones/historial_colaborador"><b>historial</b></a>.</p>
+                                                <p class="card-title pl-2">Comisiones nuevas disponibles para solicitar tu pago, para ver más detalles podrás consultarlo en el historial. <a href="https://maderascrm.gphsis.com/Comisiones/historial_colaborador"><b>clic para ir al historial</b></a>.</p>
                                                 
                                                 <?php
                                                 if($this->session->userdata('forma_pago') == 3){
                                                 ?>
-                                                <p style="color:#0a548b;"><i class="fa fa-info-circle" aria-hidden="true"></i> Recuerda que el <b>impuesto estatal</b> sobre tu pago de comisiones es de 
+                                                <p style="color:#0a548b;"><i class="fa fa-info-circle" aria-hidden="true"></i> Al monto mostrado habrá que descontar el <b>impuesto estatal</b> del 
                                                 <?php
-                                                switch($this->session->userdata('id_usuario')){
-                                                    case 2:
-                                                    case 3:
-                                                    case 1980:
-                                                    case 1981:
-                                                    case 1982:
-                                                        $sede = 2;
-                                                        break;
-                                                    case 4:
-                                                        $sede = 5;
-                                                        break;
-                                                    case 5:
-                                                        $sede = 3;
-                                                        break;
-                                                    case 607:
-                                                        $sede = 1;
-                                                        break;
-                                                default:
+                                                 
                                                 $sede = $this->session->userdata('id_sede');
-                                                        break;
-                                                    }
+                                                      
                                                 $query = $this->db->query("SELECT * FROM sedes WHERE estatus in (1) AND id_sede = ".$sede."");
 
                                                 foreach ($query->result() as $row){
                                                     $number = $row->impuesto;
-                                                    echo '<b>' .number_format($number,2).'%</b> (PARA USUARIOS ASIMILADOS) y el impuesto varia segun el estado en que te encuentres laborando.';
+                                                    echo '<b>' .number_format($number,2).'%</b> e ISR de acuerdo a las tablas publicadas en el SAT.';
                                                 }
                                                 ?>
                                                 </p>
+                                                <?php
+                                                }else if($this->session->userdata('forma_pago') == 4){
+                                                    ?>
+                                                <p style="color:#0a548b;"><i class="fa fa-info-circle" aria-hidden="true"></i> La cantidad mostrada es menos las deducciones aplicables para el régimen de <b>Remanente Distribuible.</b>
                                                 <?php
                                                 }
                                                 ?>
@@ -550,7 +421,7 @@
                                                     $this->session->userdata('id_rol') == 9)) { ?>
 
                                                     <p class="card-title m-1">
-                                                        Para consultar mas detalles sobre el uso y funcionalidad del apartado
+                                                        Para consultar más detalles sobre el uso y funcionalidad del apartado
                                                         de comisiones podrás visualizarlo en el siguiente tutorial
 
                                                         <?php if ($this->session->userdata('forma_pago') == 2) { ?>
@@ -574,7 +445,7 @@
                                                 <?php } ?>
 
                                                 <?php if ($this->session->userdata('forma_pago') == 5) { ?>
-                                                    <p class="card-title pl-1">Comprobantes fiscales emitidos por residentes en el <b>extranjero</b>
+                                                    <p class="card-title pl-2">Comprobantes fiscales emitidos por residentes en el <b>extranjero</b>
                                                         sin establecimiento permanente en México.
                                                         <a data-toggle="modal" data-target="#info-modal" style="cursor: pointer;">
                                                             <u>Clic aquí para más información</u>
@@ -585,25 +456,11 @@
                                             <div class="toolbar">
                                                 <div class="container-fluid p-0">
                                                     <div class="row">
+                                                       
                                                         <div class="col-12 col-sm-12 col-md-4 col-lg-4">
                                                             <div class="form-group text-center">
                                                                 <h4 class="title-tot center-align m-0">Saldo sin impuestos:</h4>
-                                                                <p class="input-tot pl-1">
-                                                                    <?php
-                                                                    $query = $this->db->query("SELECT SUM (abono_neodata) nuevo_general FROM pago_comision_ind WHERE estatus in (1) AND id_usuario = ".$this->session->userdata('id_usuario')."  AND id_comision IN (select id_comision from comisiones)");
-
-                                                                    foreach ($query->result() as $row){
-                                                                        $number = $row->nuevo_general;
-                                                                        echo '' . number_format($number, 3).'';
-                                                                    }
-                                                                    ?>
-                                                                </p>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-12 col-sm-12 col-md-4 col-lg-4">
-                                                            <div class="form-group text-center">
-                                                                <h4 class="title-tot center-align m-0">Total a cobrar:</h4>
-                                                                <p class="input-tot pl-1" name="myText_nuevas" id="myText_nuevas">$0.00</p>
+                                                                <p class="input-tot pl-2" name="myText_nuevas" id="myText_nuevas">$0.00</p>
                                                             </div>
                                                         </div>
                                                         <div class="col-12 col-sm-12 col-md-4 col-lg-4">
@@ -648,29 +505,15 @@
                                         </div>
                                         <div class="tab-pane" id="proceso-1">
                                             <div class="encabezadoBox">
-                                                <p class="card-title pl-1">Comisiones en revision,  enviadas a contraloria para aplicar tu pago, si requieres ver más detalles como lo pagado y lo pendiente, podrás consultarlo en el <a href="<?=base_url()?>Comisiones/historial_colaborador"><b>historial</b></a>.</p>
+                                                <p class="card-title pl-1">Comisiones enviadas a contraloría para su revisión antes de aplicar tu pago, si requieres ver más detalles como lo pagado y lo pendiente podrás consultarlo en el historial. <a href="https://maderascrm.gphsis.com/Comisiones/historial_colaborador"><b>clic para ir al historial</b></a>.</p>
                                             </div>
                                             <div class="toolbar">
                                                 <div class="container-fluid p-0">
                                                     <div class="row">
+                                                        
                                                         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                                                             <div class="form-group d-flex justify-center align-center">
-                                                                <h4 class="title-tot center-align m-0">Saldo sin impuestos:</h4>
-                                                                <p class="input-tot pl-1">
-                                                                    <?php
-                                                                        $query = $this->db->query("SELECT SUM (abono_neodata) nuevo_general FROM pago_comision_ind WHERE estatus in (4) AND id_usuario = ".$this->session->userdata('id_usuario')."  AND id_comision IN (select id_comision from comisiones)");
-
-                                                                        foreach ($query->result() as $row){
-                                                                            $number = $row->nuevo_general;
-                                                                            echo '' . number_format($number, 3).'';
-                                                                        }
-                                                                    ?>
-                                                                </p>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                                                            <div class="form-group d-flex justify-center align-center">
-                                                                <h4 class="title-tot center-align m-0">Total solicitado:</h4>
+                                                                <h4 class="title-tot center-align m-0">Solicitado sin impuestos:</h4>
                                                                 <p class="input-tot pl-1" name="myText_revision" id="myText_revision">$0.00</p>
                                                             </div>
                                                         </div>
@@ -700,29 +543,15 @@
                                         </div>
                                         <div class="tab-pane" id="proceso-2">
                                             <div class="encabezadoBox">
-                                                <p class="card-title pl-1">Comisiones en proceso de pago por parte de INTERNOMEX. Si requieres ver más detalles como lo pagado y lo pendiente, podrás consultarlo en el <a href="<?=base_url()?>Comisiones/historial_colaborador"><b>historial</b></a>.</p>
+                                                <p class="card-title pl-1">Comisiones en proceso de pago por parte de INTERNOMEX. Si requieres ver más detalles como lo pagado y lo pendiente, podrás consultarlo en el historial. <a href="https://maderascrm.gphsis.com/Comisiones/historial_colaborador"><b>clic para ir al historial</b></a>.</p>
                                             </div>
                                             <div class="toolbar">
                                                 <div class="container-fluid p-0">
                                                     <div class="row">
+                                                         
                                                         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                                                             <div class="form-group d-flex justify-center align-center">
-                                                                <h4 class="title-tot center-align m-0">Saldo sin impuestos:</h4>
-                                                                <p class="input-tot pl-1">
-                                                                    <?php
-                                                                    $query = $this->db->query("SELECT SUM (abono_neodata) nuevo_general FROM pago_comision_ind WHERE estatus in (8) AND id_usuario = ".$this->session->userdata('id_usuario')."  AND id_comision IN (select id_comision from comisiones)");
-
-                                                                    foreach ($query->result() as $row){
-                                                                        $number = $row->nuevo_general;
-                                                                        echo '' . number_format($number, 3).'';
-                                                                    }
-                                                                    ?>
-                                                                </p>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                                                            <div class="form-group d-flex justify-center align-center">
-                                                                <h4 class="title-tot center-align m-0">Saldo sin impuestos:</h4>
+                                                                <h4 class="title-tot center-align m-0">Por pagar sin impuestos:</h4>
                                                                 <p class="input-tot pl-1" name="myText_pagadas" id="myText_pagadas">$0.00</p>
                                                             </div>
                                                         </div>
@@ -752,26 +581,12 @@
                                         </div>
                                         <div class="tab-pane" id="otras-1">
                                             <div class="encabezadoBox">
-                                                <p class="card-title pl-1">Comisiones pausadas, para ver el motivo puede verlo en el botón de detalles. Si requieres ver más detalles como lo pagado y lo pendiente, podrás consultarlo en el <a href="<?=base_url()?>Comisiones/historial_colaborador"><b>historial</b></a>.</p>
+                                                <p class="card-title pl-1">Comisiones pausadas, para ver el motivo da clic el botón de información. Si requieres ver más detalles como lo pagado y lo pendiente, podrás consultarlo en el historial. <a href="https://maderascrm.gphsis.com/Comisiones/historial_colaborador"><b>clic para ir al historial</b></a>.</p>
                                             </div>
                                             <div class="toolbar">
                                                 <div class="container-fluid p-0">
                                                     <div class="row">
-                                                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                                                            <div class="form-group d-flex justify-center align-center">
-                                                                <h4 class="title-tot center-align m-0">Saldo sin impuestos:</h4>
-                                                                <p class="input-tot pl-1">
-                                                                    <?php
-                                                                    $query = $this->db->query("SELECT SUM (abono_neodata) nuevo_general FROM pago_comision_ind WHERE estatus in (6) AND id_usuario = ".$this->session->userdata('id_usuario')."  AND id_comision IN (select id_comision from comisiones)");
-
-                                                                    foreach ($query->result() as $row){
-                                                                        $number = $row->nuevo_general;
-                                                                        echo '' . number_format($number, 3).'';
-                                                                    }
-                                                                    ?>
-                                                                </p>
-                                                            </div>
-                                                        </div>
+                                                     
                                                         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                                                             <div class="form-group d-flex justify-center align-center">
                                                                 <h4 class="title-tot center-align m-0">Total pausado:</h4>
@@ -803,14 +618,17 @@
                                             </div>
                                         </div>
                                         <div class="tab-pane" id="sin_pago_neodata">
-                                            <div class="encabezadoBox">
+                                            <!-- <div class="encabezadoBox">
                                                 <h3 class="card-title center-align">Estatus comisiones</h3>
                                                 <p class="card-title pl-1">(Comisiones sin pago reflejado en NEODATA)</p>
+                                            </div> -->
+                                            <div class="encabezadoBox">
+                                                <p class="card-title pl-1">Comisiones sin pago reflejado en NEODATA y que por ello no se han dispersado ciertos lotes con tus comisiones.</p>
                                             </div>
                                             <div class="toolbar">
                                                 <div class="container-fluid p-0">
                                                     <div class="row">
-                                                        <div class="col-12 col-sm-12 col-md-6 col-lg-6">
+                                                        <div class="col-6 col-sm-6 col-md-4 col-lg-3">
                                                             <div class="form-group">
                                                                 <label class="m-0" for="proyecto">Proyecto</label>
                                                                 <select name="proyecto_wp" id="proyecto_wp" class="selectpicker select-gral" data-style="btn btn-second"data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" required>
@@ -818,7 +636,7 @@
                                                                 </select>
                                                             </div>
                                                         </div>
-                                                        <div class="col-12 col-sm-12 col-md-6 col-lg-6">
+                                                        <div class="col-6 col-sm-6 col-md-4 col-lg-3">
                                                             <div class="form-group">
                                                                 <label class="m-0" for="proyecto">Condominio</label>
                                                                 <select name="condominio_wp" id="condominio_wp" class="selectpicker select-gral" data-style="btn btn-second"data-show-subtext="true" data-live-search="true"  title="Selecciona una opción" data-size="7" required>
@@ -874,7 +692,6 @@
     <script>
         userType = <?= $this->session->userdata('id_rol') ?>;
         userSede = <?= $this->session->userdata('id_sede') ?>;
-        userID = <?= $this->session->userdata('id_usuario') ?>;
 
         $("#file-upload-extranjero").on('change', function() {
             $('#archivo-extranjero').val('');
@@ -1017,7 +834,7 @@
                             var data = tabla_nuevas.rows(index).data();
 
                             $.each(data, function(i, v) {
-                                total += parseFloat(v.impuesto);
+                                total += parseFloat(v.pago_cliente);
                             });
                             var to1 = formatMoney(total);
                             document.getElementById("myText_nuevas").textContent = formatMoney(total);
@@ -1031,7 +848,7 @@
             $('#tabla_nuevas_comisiones').on('xhr.dt', function(e, settings, json, xhr) {
                 var total = 0;
                 $.each(json.data, function(i, v) {
-                    total += parseFloat(v.impuesto);
+                    total += parseFloat(v.pago_cliente);
                 });
                 var to = formatMoney(total);
                 document.getElementById("myText_nuevas").textContent = '$' + to;
@@ -1056,17 +873,9 @@
                         var hora = hoy.getHours();
                         var minuto = hoy.getMinutes();
 
-                      /*   if (((mes == 2 && dia == 7) || (mes == 2 && dia == 8 && hora <= 13)) ||
-                        ((mes == 3 && dia == 7) || (mes == 3 && dia == 8 && hora <= 13)) ||
-                        ((mes == 4 && dia == 11) || (mes == 4 && dia == 12 && hora <= 13)) ||
-                        ((mes == 5 && dia == 9) || (mes == 5 && dia == 10 && hora <= 13)) ||
-                        ((mes == 6 && dia == 13) || (mes == 6 && dia == 14 && hora <= 13)) ||
-                        ((mes == 7 && dia == 11) || (mes == 7 && dia == 12 && hora <= 13)) ||
-                        ((mes == 8 && dia == 8) || (mes == 8 && dia == 9 && hora <= 13)) ||
-                        ((mes == 9 && dia == 12) || (mes == 9 && dia == 13 && hora <= 13)) ||
-                        ((mes == 10 && dia == 10) || (mes == 10 && dia == 11 && hora <= 13)) ||
+                         if (((mes == 10 && dia == 10) || (mes == 10 && dia == 11 && hora <= 13)) ||
                         ((mes == 11 && dia == 7) || (mes == 11 && dia == 8 && hora <= 13)) ||
-                        ((mes == 12 && dia == 12) || (mes == 12 && dia == 13 && hora <= 13))){*/
+                        ((mes == 12 && dia == 12) || (mes == 12 && dia == 13 && hora <= 13))){
 
                             if ($('input[name="idT[]"]:checked').length > 0) {
                                 $('#spiner-loader').removeClass('hide');
@@ -1107,11 +916,11 @@
                                     }
                                 });
                             }
-                       /* }
+                        }
                         else{
                             $('#spiner-loader').addClass('hide');
                             alerts.showNotification("top", "right", "No se pueden enviar comisiones, esperar al siguiente corte", "warning");      
-                        }*/
+                        }
                     },
                     attr: {
                         class: 'btn btn-azure',
@@ -1231,6 +1040,12 @@
                 {
                     "width": "8%",
                     "data": function( d ){
+                        var lblPenalizacion = '';
+
+                        if (d.penalizacion == 1){
+                            lblPenalizacion ='<p class="m-0" title="Penalización + 90 días"><span class="label" style="background:orange;">Penalización + 90 días</span></p>';
+                        }
+
                         if(d.bonificacion >= 1){
                             p1 = '<p class="m-0" title="Lote con bonificación en NEODATA"><span class="label" style="background:pink;color: black;">Bon. $'+formatMoney(d.bonificacion)+'</span></p>';
                         }
@@ -1245,7 +1060,7 @@
                             p2 = '';
                         }
                         
-                        return p1 + p2;;
+                        return p1 + p2 + lblPenalizacion;
                     }
                 },
                 {
@@ -1275,7 +1090,6 @@
                                         <span class="label" style="background:#0080FF;">FACTURA EXTRANJERO</span>
                                     </p>
                                 `;
-
                             default:
                                 return '<p class="mb-1"><span class="label" style="background:#B3B4B4;">DOCUMENTACIÓN FALTANTE</span><br><span class="label" style="background:#EED943; color:black;">REVISAR CON RH</span></p>';
                         }
@@ -1308,23 +1122,9 @@
                         var hora = hoy.getHours();
                         var minuto = hoy.getMinutes();
     
-                        // if (((mes == 6 && dia == 24) || (mes == 6 && dia == 25 && hora <= 13)) ||  
-                        // ((mes == 7 && dia == 12) || (mes == 7 && dia == 13 && hora < 13)) || 
-                        // ((mes == 8 && dia == 9) || (mes == 8 && dia == 10 && hora <= 13)) || 
-                        // ((mes == 9 && dia == 6) || (mes == 9 && dia == 7 && hora <= 13)) || 
-                        // ((mes == 10 && dia == 11) || (mes == 10 && dia == 12 && hora <= 13)) || 
-                        // ((mes == 11 && dia == 8) || (mes == 11 && dia == 9 && hora <= 13)) || 
-                        // ((mes == 12 && dia == 6) || (mes == 12 && dia == 7 && hora <= 13))){ 
 
-                        if ((userID == 66 || userID == 50) || ((mes == 2 && dia == 7) || (mes == 2 && dia == 8 && hora <= 13)) ||
-                        ((mes == 3 && dia == 7) || (mes == 3 && dia == 8 && hora <= 13)) ||
-                        ((mes == 4 && dia == 11) || (mes == 4 && dia == 12 && hora <= 13)) ||
-                        ((mes == 5 && dia == 9) || (mes == 5 && dia == 10 && hora <= 13)) ||
-                        ((mes == 6 && dia == 13) || (mes == 6 && dia == 14 && hora <= 13)) ||
-                        ((mes == 7 && dia == 11) || (mes == 7 && dia == 12 && hora <= 13)) ||
-                        ((mes == 8 && dia == 8) || (mes == 8 && dia == 9 && hora <= 13)) ||
-                        ((mes == 9 && dia == 12) || (mes == 9 && dia == 13 && hora <= 13)) ||
-                        ((mes == 10 && dia == 10) || (mes == 10 && dia == 11 && hora <= 13)) ||
+
+                        if (((mes == 10 && dia == 10) || (mes == 10 && dia == 11 && hora <= 13)) ||
                         ((mes == 11 && dia == 7) || (mes == 11 && dia == 8 && hora <= 13)) ||
                         ((mes == 12 && dia == 12) || (mes == 12 && dia == 13 && hora <= 13)))
                         {
@@ -1356,9 +1156,11 @@
 
                                 if (full.id_usuario == 5028  || full.id_usuario == 4773 || full.id_usuario == 5381 ){
                                     return '<span class="material-icons" style="color: #DCDCDC;">block</span>';
+
                                 } else {
                                     return '<input type="checkbox" name="idT[]" style="width:20px;height:20px;"  value="' + full.id_pago_i + '">';
                                 }
+                                break;
                             }
                         } else {
                             return '<span class="material-icons" style="color: #DCDCDC;">block</span>';
@@ -1435,7 +1237,7 @@
                             var data = tabla_revision.rows(index).data();
 
                             $.each(data, function(i, v) {
-                                total += parseFloat(v.impuesto);
+                                total += parseFloat(v.pago_cliente);
                             });
                             var to1 = formatMoney(total);
                             document.getElementById("myText_revision").textContent = formatMoney(total);
@@ -1447,7 +1249,7 @@
             $('#tabla_revision_comisiones').on('xhr.dt', function(e, settings, json, xhr) {
                 var total = 0;
                 $.each(json.data, function(i, v) {
-                    total += parseFloat(v.impuesto);
+                    total += parseFloat(v.pago_cliente);
                 });
 
                 var to = formatMoney(total);
@@ -1565,21 +1367,27 @@
                     "width": "8%",
                     "data": function( d ){
 
+                        var lblPenalizacion = '';
+
+                        if (d.penalizacion == 1){
+                            lblPenalizacion ='<p class="m-0" title="Penalización + 90 días"><span class="label" style="background:orange;">Penalización + 90 días</span></p>';
+                        }
+
                         if(d.bonificacion >= 1){
-                            p1 = '<p class="mb-1"><span class="label" style="background:pink;color: black;">Bonificación $'+formatMoney(d.bonificacion)+'</span></p>';
+                            p1 = '<p class="m-0" title="Lote con bonificación en NEODATA"><span class="label" style="background:pink;color: black;">Bon. $'+formatMoney(d.bonificacion)+'</span></p>';
                         }
                         else{
                             p1 = '';
                         }
 
                         if(d.lugar_prospeccion == 0){
-                            p2 = '<p class="mb-1"><span class="label" style="background:RED;">Recisión de contrato</span></p>';
+                            p2 = '<p class="m-0" title="Lote con cancelación de CONTRATO"><span class="label" style="background:RED;">Recisión</span></p>';
                         }
                         else{
                             p2 = '';
                         }
-
-                        return p1 + p2;;
+                        
+                        return p1 + p2 + lblPenalizacion;
                     }
                 },
                 {
@@ -1654,7 +1462,7 @@
                             var data = tabla_pagadas.rows(index).data();
 
                             $.each(data, function(i, v) {
-                                total += parseFloat(v.impuesto);
+                                total += parseFloat(v.pago_cliente);
                             });
                             var to1 = formatMoney(total);
                             document.getElementById("myText_pagadas").textContent = formatMoney(total);
@@ -1666,7 +1474,7 @@
             $('#tabla_pagadas_comisiones').on('xhr.dt', function(e, settings, json, xhr) {
                 var total = 0;
                 $.each(json.data, function(i, v) {
-                    total += parseFloat(v.impuesto);
+                    total += parseFloat(v.pago_cliente);
                 });
                 var to = formatMoney(total);
                 document.getElementById("myText_pagadas").textContent = '$' + to;
@@ -1782,21 +1590,27 @@
                 {
                     "width": "8%",
                     "data": function( d ){
+                        var lblPenalizacion = '';
+
+                        if (d.penalizacion == 1){
+                            lblPenalizacion ='<p class="m-0" title="Penalización + 90 días"><span class="label" style="background:orange;">Penalización + 90 días</span></p>';
+                        }
+
                         if(d.bonificacion >= 1){
-                            p1 = '<p class="mb-1"><span class="label" style="background:pink;color: black;">Bonificación $'+formatMoney(d.bonificacion)+'</span></p>';
+                            p1 = '<p class="m-0" title="Lote con bonificación en NEODATA"><span class="label" style="background:pink;color: black;">Bon. $'+formatMoney(d.bonificacion)+'</span></p>';
                         }
                         else{
                             p1 = '';
                         }
 
                         if(d.lugar_prospeccion == 0){
-                            p2 = '<p class="mb-1"><span class="label" style="background:RED;">Recisión de contrato</span></p>';
+                            p2 = '<p class="m-0" title="Lote con cancelación de CONTRATO"><span class="label" style="background:RED;">Recisión</span></p>';
                         }
                         else{
                             p2 = '';
                         }
-
-                        return p1 + p2;
+                        
+                        return p1 + p2 + lblPenalizacion;
                     }
                 },
                 {
@@ -1872,7 +1686,7 @@
                             var data = tabla_otras.rows(index).data();
 
                             $.each(data, function(i, v) {
-                                total += parseFloat(v.impuesto);
+                                total += parseFloat(v.pago_cliente);
                             });
                             var to1 = formatMoney(total);
                             document.getElementById("myText_pausadas").textContent = formatMoney(total);
@@ -1884,7 +1698,7 @@
             $('#tabla_otras_comisiones').on('xhr.dt', function(e, settings, json, xhr) {
                 var total = 0;
                 $.each(json.data, function(i, v) {
-                    total += parseFloat(v.impuesto);
+                    total += parseFloat(v.pago_cliente);
                 });
 
                 var to = formatMoney(total);
@@ -2001,21 +1815,27 @@
                 {
                     "width": "8%",
                     "data": function( d ){
+                        var lblPenalizacion = '';
+
+                        if (d.penalizacion == 1){
+                            lblPenalizacion ='<p class="m-0" title="Penalización + 90 días"><span class="label" style="background:orange;">Penalización + 90 días</span></p>';
+                        }
+
                         if(d.bonificacion >= 1){
-                            p1 = '<p class="m-0"><span class="label" style="background:pink;color: black;">Bonificación $'+formatMoney(d.bonificacion)+'</span></p>';
+                            p1 = '<p class="m-0" title="Lote con bonificación en NEODATA"><span class="label" style="background:pink;color: black;">Bon. $'+formatMoney(d.bonificacion)+'</span></p>';
                         }
                         else{
                             p1 = '';
                         }
 
                         if(d.lugar_prospeccion == 0){
-                            p2 = '<p class="m-0"><span class="label" style="background:RED;">Recisión de contrato</span></p>';
+                            p2 = '<p class="m-0" title="Lote con cancelación de CONTRATO"><span class="label" style="background:RED;">Recisión</span></p>';
                         }
                         else{
                             p2 = '';
                         }
-
-                        return p1 + p2;;
+                        
+                        return p1 + p2 + lblPenalizacion;
                     }
                 },
                 {
@@ -2193,7 +2013,7 @@
             return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
         };
 
-        /*$(document).on("click", ".subir_factura", function() {
+        $(document).on("click", ".subir_factura", function() {
             resear_formulario();
             id_comision = $(this).val();
             total = $(this).attr("data-total");
@@ -2204,7 +2024,7 @@
             });
             $("#modal_formulario_solicitud .modal-body #frmnewsol").append(`<div id="inputhidden"><input type="hidden" id="comision_xml" name="comision_xml" value="${ id_comision}">
             <input type="hidden" id="pago_cliente" name="pago_cliente" value="${ parseFloat(total).toFixed(2) }"></div>`);
-        });*/
+        });
 
     
         let c = 0;
@@ -2246,7 +2066,7 @@
             });
         }
 
-        /*$(document).on("click", ".quitar_factura", function() {
+        $(document).on("click", ".quitar_factura", function() {
             resear_formulario();
             id_comision = $(this).val();
             $("#modalQuitarFactura .modal-body").html('');
@@ -2260,11 +2080,11 @@
                 backdrop: 'static',
                 keyboard: false
             });
-        });*/
+        });
 
         /** ----------------------------------------*/
 
-        /*$(document).on("click", ".EnviarMultiple", function() {
+        $(document).on("click", ".EnviarMultiple", function() {
             $("#ModalEnviar .modal-body").html("");
             $("#ModalEnviar .modal-header").html("");
 
@@ -2304,7 +2124,7 @@
             </div></div>`);
 
             $("#ModalEnviar").modal();
-        });*/
+        });
         /** -------------------------------------------------------------*/
 
         function todos(){
@@ -2335,17 +2155,9 @@
             var hora = hoy.getHours();
             var minuto = hoy.getMinutes();
     
-             if (userID == 49 || ((mes == 2 && dia == 7) || (mes == 2 && dia == 8 && hora <= 13)) ||
-                        ((mes == 3 && dia == 7) || (mes == 3 && dia == 8 && hora <= 13)) ||
-                        ((mes == 4 && dia == 11) || (mes == 4 && dia == 12 && hora <= 13)) ||
-                        ((mes == 5 && dia == 9) || (mes == 5 && dia == 10 && hora <= 13)) ||
-                        ((mes == 6 && dia == 13) || (mes == 6 && dia == 14 && hora <= 13)) ||
-                        ((mes == 7 && dia == 11) || (mes == 7 && dia == 12 && hora <= 13)) ||
-                        ((mes == 8 && dia == 8) || (mes == 8 && dia == 9 && hora <= 13)) ||
-                        ((mes == 9 && dia == 12) || (mes == 9 && dia == 13 && hora <= 13)) ||
-                        ((mes == 10 && dia == 10) || (mes == 10 && dia == 11 && hora <= 13)) ||
-                        ((mes == 11 && dia == 7) || (mes == 11 && dia == 8 && hora <= 13)) ||
-                        ((mes == 12 && dia == 12) || (mes == 12 && dia == 13 && hora <= 13)))
+             if (((mes == 10 && dia == 10) || (mes == 10 && dia == 11 && hora <= 13)) ||
+                ((mes == 11 && dia == 7) || (mes == 11 && dia == 8 && hora <= 13)) ||
+                ((mes == 12 && dia == 12) || (mes == 12 && dia == 13 && hora <= 13)))
             {
 
                 $("#modal_multiples .modal-body").html("");
@@ -2532,7 +2344,7 @@
             });
         }
 
-        /*$("#eliminar_factura").submit(function(e) {
+        $("#eliminar_factura").submit(function(e) {
             e.preventDefault();
         }).validate({
             submitHandler: function(form) {
@@ -2561,7 +2373,7 @@
                     }
                 });
             }
-        });*/
+        });
 
         function closeModalEng(){
             document.getElementById("frmnewsol").reset();
@@ -2738,6 +2550,7 @@
                         tabla_nuevas.ajax.reload();
                         $("#modal_multiples .modal-body").html("");
                         $("#modal_multiples .header").html("");
+
                     } else if (data == 4) {
                         alert("EL TOTAL DE LA FACTURA NO COINCIDE CON EL TOTAL DE COMISIONES SELECCIONADAS");
                         $('#loader').addClass('hidden');
@@ -2825,7 +2638,7 @@
             }
         });
 
-        /*function calcularMontoParcialidad() {
+        function calcularMontoParcialidad() {
             $precioFinal = parseFloat($('#value_pago_cliente').val());
             $precioNuevo = parseFloat($('#new_value_parcial').val());
             if ($precioNuevo >= $precioFinal) {
@@ -2833,9 +2646,9 @@
             } else if ($precioNuevo < $precioFinal) {
                 $('#label_estado').append('<label>MONTO VALIDO</label>');
             }
-        }*/
+        }
 
-        /*function preview_info(archivo) {
+        function preview_info(archivo) {
             $("#documento_preview .modal-dialog").html("");
             $("#documento_preview").css('z-index', 9999);
             archivo = url + "dist/documentos/" + archivo + "";
@@ -2861,15 +2674,15 @@
                 elemento += '</div>';
                 $("#documento_preview .modal-dialog").append(elemento);
             }
-        }*/
+        }
 
 
-        /*function cleanComments() {
+        function cleanComments() {
             var myCommentsList = document.getElementById('comments-list-factura');
             myCommentsList.innerHTML = '';
             var myFactura = document.getElementById('facturaInfo');
             myFactura.innerHTML = '';
-        }*/
+        }
 
     
         function cleanCommentsAsimilados() {
