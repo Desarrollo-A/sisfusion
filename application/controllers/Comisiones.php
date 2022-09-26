@@ -714,54 +714,86 @@ function update_estatus(){
     $opinionCumplimiento = $this->Comisiones_model->findOpinionActiveByIdUsuario($id_user_Vl);
    
       if( $consulta_comisiones->num_rows() > 0 ){
-        $consulta_comisiones = $consulta_comisiones->result_array();
-        
-          $sep = ',';
-          $id_pago_i = '';
 
-          $data=array();
-          $pagoInvoice = array();
+        $validar_sede = $this->session->userdata('id_sede');
+        date_default_timezone_set('America/Mexico_City');       
+        $fecha_actual = strtotime(date("d-m-Y H:i:00"));
+          //fecha inicio
+          $fecha_entrada10 = strtotime("10-10-2022 00:00:00");
+          $fecha_entrada11 = strtotime("07-11-2022 00:00:00");
+          $fecha_entrada12 = strtotime("12-12-2022 00:00:00");
+          //fecha fin
+          
+          if($validar_sede == 8){
+            $fecha_entrada100 = strtotime("11-10-2022 15:59:00");
+            $fecha_entrada111 = strtotime("08-11-2022 15:59:00");
+            $fecha_entrada122 = strtotime("13-12-2022 15:59:00");
+          }else{
 
-          foreach ($consulta_comisiones as $row) {
-            $id_pago_i .= implode($sep, $row);
-            $id_pago_i .= $sep;
+            $fecha_entrada99 = strtotime("13-09-2022 13:59:00");
+            $fecha_entrada100 = strtotime("11-10-2022 13:59:00");
+            $fecha_entrada111 = strtotime("08-11-2022 13:59:00");
+            $fecha_entrada122 = strtotime("13-12-2022 13:59:00");
+    
+          }
+          //$resultado = array("resultado" => 3);
+          if( 
+            ($fecha_actual >= $fecha_entrada10 && $fecha_actual <=$fecha_entrada100) ||
+            ($fecha_actual >= $fecha_entrada11 && $fecha_actual <=$fecha_entrada111) ||
+            ($fecha_actual >= $fecha_entrada12 && $fecha_actual <=$fecha_entrada122))
+            {
+                        $consulta_comisiones = $consulta_comisiones->result_array();
+                  
+                        $sep = ',';
+                        $id_pago_i = '';
+              
+                        $data=array();
+                        $pagoInvoice = array();
+              
+                        foreach ($consulta_comisiones as $row) {
+                          $id_pago_i .= implode($sep, $row);
+                          $id_pago_i .= $sep;
+              
+                          $row_arr=array(
+                            'id_pago_i' => $row['id_pago_i'],
+                            'id_usuario' =>  $id_user_Vl,
+                            'fecha_movimiento' => date('Y-m-d H:i:s'),
+                            'estatus' => 1,
+                            'comentario' =>  'COLABORADOR ENVÍO A CONTRALORÍA' 
+                          );
+                          array_push($data,$row_arr);
+              
+                          if ($formaPagoUsuario == 5) { // Pago extranjero
+                              $pagoInvoice[] = array(
+                                  'id_pago_i' => $row['id_pago_i'],
+                                  'nombre_archivo' => $opinionCumplimiento->archivo_name,
+                                  'estatus' => 1,
+                                  'modificado_por' => $id_user_Vl,
+                                  'fecha_registro' => date('Y-m-d H:i:s')
+                              );
+                          }
+                        }
+                        $id_pago_i = rtrim($id_pago_i, $sep);
+                    
+                          $up_b = $this->Comisiones_model->update_acepta_solicitante($id_pago_i);
+                          $ins_b = $this->Comisiones_model->insert_phc($data);
+                          $this->Comisiones_model->changeEstatusOpinion($id_user_Vl);
+                          if ($formaPagoUsuario == 5) {
+                              $this->PagoInvoice_model->insertMany($pagoInvoice);
+                          }
+                    
+                    if($up_b == true && $ins_b == true){
+                      $data_response = 1;
+                      echo json_encode($data_response);
+                    } else {
+                      $data_response = 0;
+                      echo json_encode($data_response);
+                    } 
 
-            $row_arr=array(
-              'id_pago_i' => $row['id_pago_i'],
-              'id_usuario' =>  $id_user_Vl,
-              'fecha_movimiento' => date('Y-m-d H:i:s'),
-              'estatus' => 1,
-              'comentario' =>  'COLABORADOR ENVÍO A CONTRALORÍA' 
-            );
-             array_push($data,$row_arr);
-
-            if ($formaPagoUsuario == 5) { // Pago extranjero
-              $pagoInvoice[] = array(
-                'id_pago_i' => $row['id_pago_i'],
-                'nombre_archivo' => $opinionCumplimiento->archivo_name,
-                'estatus' => 1,
-                'modificado_por' => $id_user_Vl,
-                'fecha_registro' => date('Y-m-d H:i:s')
-              );
+            }else{
+              $data_response = 2;
+              echo json_encode($data_response);
             }
-          }
-          $id_pago_i = rtrim($id_pago_i, $sep);
-      
-          $up_b = $this->Comisiones_model->update_acepta_solicitante($id_pago_i);
-          $ins_b = $this->Comisiones_model->insert_phc($data);
-          $this->Comisiones_model->changeEstatusOpinion($id_user_Vl);
-          if ($formaPagoUsuario == 5) {
-            $this->PagoInvoice_model->insertMany($pagoInvoice);
-          }
-      
-      if($up_b == true && $ins_b == true){
-        $data_response = 1;
-        echo json_encode($data_response);
-      } else {
-        $data_response = 0;
-        echo json_encode($data_response);
-      } 
-        
       }
       else{
         $data_response = 0;
