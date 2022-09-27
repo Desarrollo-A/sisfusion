@@ -359,8 +359,15 @@ public function getDataDispersionPago($val = '') {
             LEFT JOIN plan_comision pl ON pl.id_plan = cl.plan_comision
             LEFT JOIN sedes se ON se.id_sede = cl.id_sede 
             LEFT JOIN penalizaciones pe ON pe.id_lote = l.idLote AND pe.id_cliente = l.idCliente
-            WHERE l.idStatusContratacion BETWEEN 11 AND 15 AND cl.status = 1 AND l.status = 1
-            AND (l.registro_comision in (0,8,2)  or (l.registro_comision in (1,8) AND pc.bandera in (0))) AND (tipo_venta IS NULL OR tipo_venta IN (0,1,2)) AND cl.fechaApartado >= '2020-03-01' ORDER BY l.idLote");
+            WHERE  ((l.idStatusContratacion IN (9, 10, 11, 12, 13, 14, 15)
+AND l.status8Flag = 1 AND l.validacionEnganche != 'NULL' AND l.validacionEnganche IS NOT NULL
+AND l.totalNeto2 != 0.00 AND l.totalNeto2 != '0.00' AND l.totalNeto2 > 0.00) 
+            OR 
+(l.idStatusContratacion IN (9, 10, 11, 12, 13, 14, 15) AND l.status8Flag = 1 AND (l.validacionEnganche = 'NULL' OR l.validacionEnganche IS NULL OR l.validacionEnganche = 'VALIDADO')
+AND (l.totalNeto2 = 0.00 OR l.totalNeto2 = '0.00' OR l.totalNeto2 > 0.00 OR l.totalNeto2 IS NULL))) AND cl.status = 1 AND l.status = 1
+            AND (l.registro_comision in (0,8,2)  or (l.registro_comision in (1,8) AND pc.bandera in (0))) AND (tipo_venta IS NULL OR tipo_venta IN (0,1,2))
+            AND cl.fechaApartado >= '2020-03-01'
+            ORDER BY l.idLote");
             return $query->result();
         }
     
