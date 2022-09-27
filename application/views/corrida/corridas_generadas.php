@@ -36,6 +36,7 @@
         case '13': // CONTRALORÍA
         case '15': // JURÍDICO
         case '16': // CONTRATACIÓN
+        case '17': // contraloria
         case '28': // EJECUTIVO ADMINISTRATIVO MKTD
         case '32': // CONTRALORÍA CORPORATIVA
         case '33': // CONSULTA
