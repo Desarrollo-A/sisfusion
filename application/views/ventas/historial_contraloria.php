@@ -131,9 +131,6 @@
                         
                                         <div class="col-12 col-sm-12 col-md-12 col-lg-6">
                                             <div class="form-group">
-                                                <!-- <label>Condominio</label>
-                                                <select class="selectpicker select-gral" id="filtro44" name="filtro44[]" data-style="btn " data-show-subtext="true" data-live-search="true" title="Selecciona un condominio" data-size="7" required/>
-                                                </select> -->
                                                 <label for="proyecto">Proyecto</label>
                                                 <select name="filtro44" id="filtro44" class="selectpicker select-gral" data-style="btn " data-show-subtext="true" data-live-search="true"  title="Selecciona un proyecto" data-size="7" required> <option value="0">Seleccione todo</option>
                                                 </select>
@@ -187,19 +184,7 @@
     <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
     <script>
-        // $(document).ready(function() {
-        //     $("#tabla_historialGral").prop("hidden", true);
-        //     var url = "<?=base_url()?>/index.php/";
-        //     $.post("<?=base_url()?>index.php/Contratacion/lista_proyecto_dos", function (data) {
-        //         var len = data.length;
-        //         for (var i = 0; i < len; i++) {
-        //             var id = data[i]['idResidencial'];
-        //             var name = data[i]['descripcion'];
-        //             $("#filtro33").append($('<option>').val(id).text(name.toUpperCase()));
-        //         }
-        //         $("#filtro33").selectpicker('refresh');
-        //     }, 'json');       
-        // });
+
     
         $('#filtro33').change(function(ruta){
                          
@@ -207,7 +192,6 @@
         residencial = $('#filtro33').val();
         param = $('#param').val();
         $("#filtro44").empty().selectpicker('refresh');
-        // setTimeout(function(){}, 10000);
             $.ajax({
                 url: '<?=base_url()?>Contratacion/lista_proyecto_dos/',
                 type: 'post',
@@ -224,19 +208,6 @@
             });
         });
 
-        // $('#filtro33').change(function(ruta){
-        //     proyecto = $('#filtro33').val();
-        //     condominio = $('#filtro44').val();
-        //     if(condominio == '' || condominio == null || condominio == undefined){
-        //         condominio = 0;
-        //     }
-        //     if(proyecto != 0){
-        //         console.log(proyecto);
-        //     }
-        //     else{
-        //         getAssimilatedCommissions(proyecto, condominio);
-        //     }
-        // });
 
         $('#filtro44').change(function(ruta){
             proyecto = $('#filtro33').val();
@@ -246,12 +217,7 @@
             }
             if(tabla_historialGral2){
                  tabla_historialGral2.destroy();
-
-                 // tabla_historialGral2 = $("#tabla_historialGral").DataTable();
-
-             }
-                 // setTimeout(function(){getAssimilatedCommissions(proyecto, condominio)}, 20000);
-
+            }
 
             getAssimilatedCommissions(proyecto, condominio);
             // 
@@ -310,7 +276,7 @@
                     text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
                     className: 'btn buttons-excel',
                     titleAttr: 'Descargar archivo de Excel',
-                    title: 'HISTORIAL_GENERAL_SISTEMA_COMISIONES',
+                    title: 'HISTORIAL_GENERAL_COMISIONES',
                     exportOptions: {
                         columns: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14],
                         format: {
@@ -458,139 +424,41 @@
                 {
                     "width": "7%",
                     "data": function( d ){
+                        var lblPenalizacion = '';
+
+                        if (d.penalizacion == 1){
+                            lblPenalizacion ='<p class="m-0" title="Penalización + 90 días"><span class="label" style="background:orange;">Penalización + 90 días</span></p>';
+                        }
+
                         if(d.bonificacion >= 1){
-                            p1 = '<p class="m-0"><span class="label" style="background:pink;color: black;">Bonificación $'+formatMoney(d.bonificacion)+'</span></p>';
+                            p1 = '<p class="m-0" title="Lote con bonificación en NEODATA"><span class="label" style="background:pink;color: black;">Bon. $'+formatMoney(d.bonificacion)+'</span></p>';
                         }
                         else{
                             p1 = '';
                         }
 
                         if(d.lugar_prospeccion == 0){
-                            p2 = '<p class="m-0"><span class="label" style="background:RED;">Recisión de contrato</span></p>';
+                            p2 = '<p class="m-0" title="Lote con cancelación de CONTRATO"><span class="label" style="background:RED;">Recisión</span></p>';
                         }
                         else{
                             p2 = '';
                         }
-
-                        return p1 + p2;;
+                        
+                        return p1 + p2 + lblPenalizacion;
                     }
                 },
                 {
                     "width": "7%",
                     "data": function( d ){
                         var etiqueta;
-                            
-                        if((d.id_estatus_actual == 11) && d.descuento_aplicado == 1 ){
-                            etiqueta = '<p><span class="label" style="background:#ED7D72;">DESCUENTO</span></p>';
-                        }else if((d.id_estatus_actual == 12) && d.descuento_aplicado == 1 ){
-                            etiqueta = '<p><span class="label" style="background:#EDB172;">DESCUENTO RESGUARDO</span></p>';
-                        }else if((d.id_estatus_actual == 0) && d.descuento_aplicado == 1 ){
-                            etiqueta = '<p><span class="label" style="background:#ED8172;">DESCUENTO EN PROCESO</span></p>';
-                        }else if((d.id_estatus_actual == 16) && d.descuento_aplicado == 1 ){
-                            etiqueta = '<p><span class="label" style="background:#ED8172;">DESCUENTO DE PAGO</span></p>';
-                        }else if((d.id_estatus_actual == 17) && d.descuento_aplicado == 1 ){
-                            etiqueta = '<p><span class="label" style="background:#ED72B9;">DESCUENTO UNIVERSIDAD</span></p>';
-                        }else if((d.id_estatus_actual == 18) && d.descuento_aplicado == 1 ){
-                            etiqueta = '<p><span class="label" style="background:#89C86C;">DESCUENTO PRÉSTAMO</span></p>';
-                        }else if((d.id_estatus_actual == 19) && d.descuento_aplicado == 1 ){
-                            etiqueta = '<p><span class="label" style="background:#3BC6AC;">DESCUENTO SCIO</span></p>';
-                        }else if((d.id_estatus_actual == 20) && d.descuento_aplicado == 1 ){
-                            etiqueta = '<p><span class="label" style="background:#72CBED;">DESCUENTO PLAZA</span></p>';
-                        }else if((d.id_estatus_actual == 21) && d.descuento_aplicado == 1 ){
-                            etiqueta = '<p><span class="label" style="background:#7282ED;">DESCUENTO LINEA TELEFÓNICA</span></p>';
-                        }else if((d.id_estatus_actual == 22) && d.descuento_aplicado == 1 ){
-                            etiqueta = '<p><span class="label" style="background:#CA72EH;">DESCUENTO MANTENIMIENTO</span></p>';
-                        }else if((d.id_estatus_actual == 23) && d.descuento_aplicado == 1 ){
-                            etiqueta = '<p><span class="label" style="background:#CA72ED;">NÓMINA - ANALISTAS DE COMISIONES</span></p>';
-                        }else if((d.id_estatus_actual == 24) && d.descuento_aplicado == 1 ){
-                            etiqueta = '<p><span class="label" style="background:#CA72ED;">NÓMINA - ASISTENTES CDMX</span></p>';
-                        }else if((d.id_estatus_actual == 25) && d.descuento_aplicado == 1 ){
-                            etiqueta = '<p><span class="label" style="background:#CA72ED;">NÓMINA - IMSS</span></p>';
-                        }else if((d.id_estatus_actual == 26) && d.descuento_aplicado == 1 ){
-                            etiqueta = '<p><span class="label" style="background:#CA72ED;">NÓMINA -LIDER DE PROYECTO E INNOVACIÓN</span></p>';
-                        }else{
-                            switch(d.id_estatus_actual){
-                                case '1':
-                                case 1:
-                                case '2':
-                                case 2:
-                                case '12':
-                                case 12:
-                                case '14':
-                                case 14:
-                                case '13':
-                                case 13:
-                                case '14':
-                                case 14:
-                                case '51':
-                                case 51:
-                                case '52':
-                                case 52:
-                                    etiqueta = '<p><span class="label" style="background:#29A2CC;">'+d.estatus_actual+'</span></p>';
-                                break;
-
-                                case '3':
-                                case 3:
-                                    etiqueta = '<p><span class="label" style="background:#CC6C29;">'+d.estatus_actual+'</span></p>';
-                                break;
-
-                                case '4':
-                                case 4:
-                                    etiqueta = '<p><span class="label" style="background:#9129CC;">'+d.estatus_actual+'</span></p>';
-                                break;
-
-                                case '5':
-                                case 5:
-                                    etiqueta = '<p><span class="label" style="background:#CC2976;">'+d.estatus_actual+'</span></p>';
-                                break;
-
-                                case '6':
-                                case 6:
-                                    etiqueta = '<p><span class="label" style="background:#81BFBE;">'+d.estatus_actual+'</span></p>';
-                                break;
-
-                                case '7':
-                                case 7:
-                                    etiqueta = '<p><span class="label" style="background:#28A255;">'+d.estatus_actual+'</span></p>';
-                                break;
-
-                                case '8':
-                                case 8:
-                                    etiqueta = '<p><span class="label" style="background:#4D7FA1;">'+d.estatus_actual+'</span></p>';
-                                break;
-
-                                case '9':
-                                case 9:
-                                    etiqueta = '<p><span class="label" style="background:#E86606;">'+d.estatus_actual+'</span></p>';
-                                break;
-
-                                case '10':
-                                case 10:
-                                    etiqueta = '<p><span class="label" style="background:#E89606;">'+d.estatus_actual+'</span></p>';
-                                break;
-
-                                case '11':
-                                case 11:
-
+     
                                 if(d.pago_neodata < 1){
-                                    etiqueta = '<p><span class="label" style="background:#05A134;">'+d.estatus_actual+'</span></p><p><span class="label" style="background:#5FD482;">IMPORTACIÓN</span></p>';
+                                    etiqueta = '<p class="m-0"><span class="label" style="background:'+d.color+';">'+d.estatus_actual+'</span></p><p class="m-0"><span class="label" style="background:#5FD482;">IMPORTACIÓN</span></p>';
                                 }else{
 
-                                    etiqueta = '<p><span class="label" style="background:#05A134;">'+d.estatus_actual+'</span></p>';
+                                    etiqueta = '<p class="m-0"><span class="label" style="background:'+d.color+';">'+d.estatus_actual+'</span></p>';
                                 }
-                                break;
-
-                                case '88':
-                                case 88:
-                                    etiqueta = '<p><span class="label" style="background:#A1055A;">'+d.estatus_actual+'</span></p>';
-                                break;
-
-                                default:
-                                    etiqueta = '';
-                                break;
-                            }
-                        }
-
+ 
                         return etiqueta;
                     }
                 },
@@ -641,34 +509,6 @@
                         $("#comments-list-asimilados").append('<div class="col-lg-12"><p><i style="color:gray;">'+v.comentario+'</i><br><b style="color:#3982C0">'+v.fecha_movimiento+'</b><b style="color:gray;"> - '+v.nombre_usuario+'</b></p></div>');
                     });
                 });
-            });
-
-            $("#tabla_historialGral tbody").on("click", ".actualizar_pago", function(){
-                var tr = $(this).closest('tr');
-                var row = tabla_historialGral2.row( tr );
-
-                id_pago_i = $(this).val();
-
-                $("#modal_nuevas .modal-body").html("");
-                $("#modal_nuevas .modal-body").append('<div class="row"><div class="col-lg-12"><p> Actualizar pago <b>'+row.data().nombreLote+'</b> para el <b>'+(row.data().puesto).toUpperCase()+':</b> <i>'+row.data().user_names+'</i>?</p></div></div>');
-                $("#modal_nuevas .modal-body").append('<div class="row"><div class="col-lg-12"><input type="hidden" name="value_pago" value="2"><input type="number" class="form-control observaciones" name="observaciones" required placeholder="Monto a editar"></input></div></div>');
-                $("#modal_nuevas .modal-body").append('<input type="hidden" name="id_pago" value="'+row.data().id_pago_i+'">');
-                $("#modal_nuevas .modal-body").append('<div class="row"><div class="col-md-6"></div><div class="col-md-3"><input type="submit" class="btn btn-primary" value="ACTIVAR"></div><div class="col-md-3"><button type="button" class="btn btn-danger" data-dismiss="modal">CANCELAR</button></div></div>');
-                $("#modal_nuevas").modal();
-            });
-
-            $("#tabla_historialGral tbody").on("click", ".agregar_pago", function(){
-                var tr = $(this).closest('tr');
-                var row = tabla_historialGral2.row( tr );
-
-                id_pago_i = $(this).val();
-
-                $("#modal_nuevas .modal-body").html("");
-                $("#modal_nuevas .modal-body").append('<div class="row"><div class="col-lg-12"><p>Agregar nuevo pago a <b>'+row.data().nombreLote+'</b> para el <b>'+(row.data().puesto).toUpperCase()+':</b> <i>'+row.data().user_names+'</i>?</p></div></div>');
-                $("#modal_nuevas .modal-body").append('<div class="row"><div class="col-lg-12"><input type="hidden" name="value_pago" value="3"><input type="number" class="form-control observaciones" name="observaciones" required placeholder="Monto a agregar"></input></div></div>');
-                $("#modal_nuevas .modal-body").append('<input type="hidden" name="id_pago" value="'+row.data().id_pago_i+'">');
-                $("#modal_nuevas .modal-body").append('<div class="row"><div class="col-md-6"></div><div class="col-md-3"><input type="submit" class="btn btn-primary" value="ACTIVAR"></div><div class="col-md-3"><button type="button" class="btn btn-danger" data-dismiss="modal">CANCELAR</button></div></div>');
-                $("#modal_nuevas").modal();
             });
         }
 
@@ -724,10 +564,6 @@
                     }
                 });
             }
-        });
-
-        $(document).on("click", ".btn-historial-lo", function(){
-            window.open(url+"Comisiones/getHistorialEmpresa", "_blank");
         });
 
         function cleanComments(){

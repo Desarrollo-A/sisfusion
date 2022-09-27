@@ -115,17 +115,7 @@
                 </div>
             </div>
         </div>
-
-        <!--<div class="modal fade modal-alertas" id="modal_nuevas" role="dialog">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <form method="post" id="form_interes">
-                        <div class="modal-body"></div>
-                    </form>
-                </div>
-            </div>
-        </div>-->
-
+ 
         <div class="content boxContent">
             <div class="container-fluid">
                 <div class="row">
@@ -514,7 +504,7 @@
                     text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
                     className: 'btn buttons-excel',
                     titleAttr: 'Descargar archivo de Excel',
-                    title: 'HISTORIAL_GENERAL_SISTEMA_COMISIONES',
+                    title: 'HISTORIAL_ESTATUS_COMISIONES',
                     exportOptions: {
                         columns: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15],
                         format: {
@@ -664,139 +654,41 @@
                 {
                     "width": "5%",
                     "data": function( d ){
+                        var lblPenalizacion = '';
+
+                        if (d.penalizacion == 1){
+                            lblPenalizacion ='<p class="m-0" title="Penalización + 90 días"><span class="label" style="background:orange;">Penalización + 90 días</span></p>';
+                        }
+
                         if(d.bonificacion >= 1){
-                            p1 = '<p class=""m-0><span class="label" style="background:pink;color: black;">Bonificación $'+formatMoney(d.bonificacion)+'</span></p>';
+                            p1 = '<p class="m-0" title="Lote con bonificación en NEODATA"><span class="label" style="background:pink;color: black;">Bon. $'+formatMoney(d.bonificacion)+'</span></p>';
                         }
                         else{
                             p1 = '';
                         }
 
                         if(d.lugar_prospeccion == 0){
-                            p2 = '<p class=""m-0><span class="label" style="background:RED;">Recisión de contrato</span></p>';
+                            p2 = '<p class="m-0" title="Lote con cancelación de CONTRATO"><span class="label" style="background:RED;">Recisión</span></p>';
                         }
                         else{
                             p2 = '';
                         }
-
-                        return p1 + p2;;
+                        
+                        return p1 + p2 + lblPenalizacion;
                     }
                 },
                 {
                     "width": "5%",
                     "data": function( d ){
                         var etiqueta;
-                            
-                        if((d.id_estatus_actual == 11) && d.descuento_aplicado == 1 ){
-                            etiqueta = '<p class=""m-0><span class="label" style="background:#ED7D72;">DESCUENTO</span></p>';
-                        }else if((d.id_estatus_actual == 12) && d.descuento_aplicado == 1 ){
-                            etiqueta = '<p class=""m-0><span class="label" style="background:#EDB172;">DESCUENTO RESGUARDO</span></p>';
-                        }else if((d.id_estatus_actual == 0) && d.descuento_aplicado == 1 ){
-                            etiqueta = '<p class=""m-0><span class="label" style="background:#ED8172;">DESCUENTO EN PROCESO</span></p>';
-                        }else if((d.id_estatus_actual == 16) && d.descuento_aplicado == 1 ){
-                            etiqueta = '<p class=""m-0><span class="label" style="background:#ED8172;">DESCUENTO DE PAGO</span></p>';
-                        }else if((d.id_estatus_actual == 17) && d.descuento_aplicado == 1 ){
-                            etiqueta = '<p class=""m-0><span class="label" style="background:#ED72B9;">DESCUENTO UNIVERSIDAD</span></p>';
-                        }else if((d.id_estatus_actual == 18) && d.descuento_aplicado == 1 ){
-                            etiqueta = '<p><span class="label" style="background:#89C86C;">DESCUENTO PRÉSTAMO</span></p>';
-                        }else if((d.id_estatus_actual == 19) && d.descuento_aplicado == 1 ){
-                            etiqueta = '<p><span class="label" style="background:#3BC6AC;">DESCUENTO SCIO</span></p>';
-                        }else if((d.id_estatus_actual == 20) && d.descuento_aplicado == 1 ){
-                            etiqueta = '<p><span class="label" style="background:#72CBED;">DESCUENTO PLAZA</span></p>';
-                        }else if((d.id_estatus_actual == 21) && d.descuento_aplicado == 1 ){
-                            etiqueta = '<p><span class="label" style="background:#7282ED;">DESCUENTO LINEA TELEFÓNICA</span></p>';
-                        }else if((d.id_estatus_actual == 22) && d.descuento_aplicado == 1 ){
-                            etiqueta = '<p><span class="label" style="background:#CA72ED;">DESCUENTO MANTENIMIENTO</span></p>';
-                        }else if((d.id_estatus_actual == 23) && d.descuento_aplicado == 1 ){
-                            etiqueta = '<p><span class="label" style="background:#CA15ED;">DESCUENTO NÓMINA - ANALISTAS DE COMISIONES</span></p>';
-                        }else if((d.id_estatus_actual == 24) && d.descuento_aplicado == 1 ){
-                            etiqueta = '<p><span class="label" style="background:#CA9315;">DESCUENTO NÓMINA - ASISTENTES CDMX</span></p>';
-                        }else if((d.id_estatus_actual == 25) && d.descuento_aplicado == 1 ){
-                            etiqueta = '<p><span class="label" style="background:#34A25C;">DESCUENTO NÓMINA - IMSS</span></p>';
-                        }else if((d.id_estatus_actual == 26) && d.descuento_aplicado == 1 ){
-                            etiqueta = '<p><span class="label" style="background:#165879;">NÓMINA -LIDER DE PROYECTO E INNOVACIÓN</span></p>';
-                        }else{
-                            switch(d.id_estatus_actual){
-                                case '1':
-                                case 1:
-                                case '2':
-                                case 2:
-                                case '12':
-                                case 12:
-                                case '14':
-                                case 14:
-                                
-                                case '14':
-                                case 14:
-                                case '51':
-                                case 51:
-                                case '52':
-                                case 52:
-                                    etiqueta = '<p class="m-0"><span class="label" style="background:#29A2CC;">'+d.estatus_actual+'</span></p>';
-                                break;
-
-                                case '3':
-                                case 3:
-                                    etiqueta = '<p class="m-0"><span class="label" style="background:#CC6C29;">'+d.estatus_actual+'</span></p>';
-                                break;
-
-                                case '13':
-                                case 13:
-                                case '4':
-                                case 4:
-                                    etiqueta = '<p class="m-0"><span class="label" style="background:#9129CC;">'+d.estatus_actual+'</span></p>';
-                                break;
-
-                                case '5':
-                                case 5:
-                                    etiqueta = '<p class="m-0"><span class="label" style="background:#CC2976;">'+d.estatus_actual+'</span></p>';
-                                break;
-
-                                case '6':
-                                case 6:
-                                    etiqueta = '<p class="m-0"><span class="label" style="background:#81BFBE;">'+d.estatus_actual+'</span></p>';
-                                break;
-
-                                case '7':
-                                case 7:
-                                    etiqueta = '<p class="m-0"><span class="label" style="background:#28A255;">'+d.estatus_actual+'</span></p>';
-                                break;
-
-                                case '8':
-                                case 8:
-                                    etiqueta = '<p class="m-0"><span class="label" style="background:#4D7FA1;">'+d.estatus_actual+'</span></p>';
-                                break;
-
-                                case '9':
-                                case 9:
-                                    etiqueta = '<p class="m-0"><span class="label" style="background:#E86606;">'+d.estatus_actual+'</span></p>';
-                                break;
-
-                                case '10':
-                                case 10:
-                                    etiqueta = '<p class="m-0"><span class="label" style="background:#E89606;">'+d.estatus_actual+'</span></p>';
-                                break;
-
-                                case '11':
-                                case 11:
-
+     
                                 if(d.pago_neodata < 1){
-                                    etiqueta = '<p class="m-0"><span class="label" style="background:#05A134;">'+d.estatus_actual+'</span></p><p class="m-0"><span class="label" style="background:#5FD482;">IMPORTACIÓN</span></p>';
+                                    etiqueta = '<p class="m-0"><span class="label" style="background:'+d.color+';">'+d.estatus_actual+'</span></p><p class="m-0"><span class="label" style="background:#5FD482;">IMPORTACIÓN</span></p>';
                                 }else{
 
-                                    etiqueta = '<p class="m-0"><span class="label" style="background:#05A134;">'+d.estatus_actual+'</span></p>';
+                                    etiqueta = '<p class="m-0"><span class="label" style="background:'+d.color+';">'+d.estatus_actual+'</span></p>';
                                 }
-                                break;
-
-                                case '88':
-                                case 88:
-                                    etiqueta = '<p class="m-0"><span class="label" style="background:#A1055A;">'+d.estatus_actual+'</span></p>';
-                                break;
-
-                                default:
-                                    etiqueta = '';
-                                break;
-                            }
-                        }
+ 
                         return etiqueta;
                     }
                 },
