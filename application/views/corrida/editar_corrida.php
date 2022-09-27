@@ -10,7 +10,7 @@
 
 
     <?php
-    if ($this->session->userdata('id_rol') == FALSE || $this->session->userdata('id_rol') != '7' && $this->session->userdata('id_rol') != '3' && $this->session->userdata('id_rol') != '9' && $this->session->userdata('id_rol') != '16' && $this->session->userdata('id_rol') != '6' && $this->session->userdata('id_rol') != '2' && $this->session->userdata('id_rol') != '5' && $this->session->userdata('id_rol') != '33' && $this->session->userdata('id_rol') != '17' && $this->session->userdata('id_rol') != '19' && $this->session->userdata('id_rol') != '20') {
+    if ($this->session->userdata('id_rol') == FALSE || $this->session->userdata('id_rol') != '7' && $this->session->userdata('id_rol') != '3' && $this->session->userdata('id_rol') != '9' && $this->session->userdata('id_rol') != '16' && $this->session->userdata('id_rol') != '6' && $this->session->userdata('id_rol') != '2' && $this->session->userdata('id_rol') != '5' && $this->session->userdata('id_rol') != '33' && $this->session->userdata('id_rol') != '17' && $this->session->userdata('id_rol') != '19' && $this->session->userdata('id_rol') != '20'  && $this->session->userdata('id_rol') != '13' && $this->session->userdata('id_rol') != '32') {
         redirect(base_url() . 'login');
     }
     ?>
@@ -677,8 +677,10 @@
                                                value="{{CurrentDate | date:'dd-MM-yyyy'}}" ng-readonly="true">
                                     </div>
                                     <div class="col-md-2 form-group" >
-                                        <label>Fecha Apartado:</label>
-                                        <input type="date" ng-model="fechaApartado" class="form-control" value="{{fechaApartado | date:'yyyy-MM-dd'}}" ng-readonly="true">
+                                        <div id="labelFA">
+                                            <label>Fecha Apartado:</label>
+                                            <input type="date" ng-model="fechaApartado" class="form-control" value="{{fechaApartado | date:'yyyy-MM-dd'}}" ng-readonly="true">
+                                        </div>
                                     </div>
                                     <div class="col-md-2 form-group">
                                         <label>Enganche:</label>
@@ -1320,7 +1322,7 @@
         }]);
 
 
-        myApp.controller('myController', function ($scope, $http, $window, DTOptionsBuilder, DTColumnBuilder) {
+        myApp.controller('myController', function ($scope,$compile, $http, $window, DTOptionsBuilder, DTColumnBuilder) {
 
             var descuentosAplicados = [];
             chargeInnitialInfo();
@@ -2538,6 +2540,10 @@
                     function (response) {
                     });
 
+                $scope.provFTRE = function(){
+                    calcularCF();
+                };
+                
                 $http.post('<?=base_url()?>index.php/corrida/getCondominioDisponibleA', {residencial: <?php echo $data_corrida->idResidencial;?>}).then(
                     function (response) {
 
@@ -2755,16 +2761,32 @@
                                         $scope.referencia = response.data[0].referencia;
                                         $scope.msni = parseInt(response.data[0].msni);
                                         // calcularCF(); NO NECESARIO
-                                        if(response.data[0].idStatusLote==3){
-                                            let fecha_pre = new Date(response.data[0].fechaApartado);
-                                            let dia_final = (fecha_pre.getDate() < 10 ) ? '0'+fecha_pre.getDate() : fecha_pre.getDate();
-                                            let mes_final = ((fecha_pre.getMonth()-1) < 10) ? '0'+(fecha_pre.getMonth()-1) : (fecha_pre.getMonth()-1);
-                                            let fecha_final = fecha_pre.getFullYear()+'-'+ mes_final +'-'+ dia_final;
-                                            $scope.fechaApartado = fecha_pre;
-                                            console.log("$scope.fechaApartado: ", $scope.fechaApartado);
-                                            console.log("fecha_final: ", fecha_final);
+                                        console.log('Fecha Apartado:', '<?php echo $data_corrida->fechaApartadoCF;?>');
+                                        console.log('Fecha Apartado ii:', '<?php echo $data_corrida->fechaApartado;?>');
+
+
+                                        let fechaApartadoProcess = ('<?php echo $data_corrida->fechaApartadoCF;?>' == 0) ? '<?php echo $data_corrida->fechaApartado;?>': '<?php echo $data_corrida->fechaApartadoCF;?>';
+
+                                        let fecha_pre = new Date(fechaApartadoProcess);
+                                        let dia_final = (fecha_pre.getDate() < 10 ) ? '0'+fecha_pre.getDate() : fecha_pre.getDate();
+                                        let mes_final = ((fecha_pre.getMonth()-1) < 10) ? '0'+(fecha_pre.getMonth()-1) : (fecha_pre.getMonth()-1);
+                                        let fecha_final = fecha_pre.getFullYear()+'-'+ mes_final +'-'+ dia_final;
+                                        $scope.fechaApartado = fecha_pre;
+
+
+                                        // $scope.fechaApartado = (fechaApartadoProcess != undefined || fechaApartadoProcess !='NULL' || fechaApartadoProcess !='') ? response.data[0].fechaApartado : fechaApartadoProcess;
+
+
+                                        if((response.data[0].idStatusContratacion==2 || response.data[0].idStatusContratacion==5) && (response.data[0].idMovimiento==35 || response.data[0].idMovimiento==22 || response.data[0].idMovimiento==62 || response.data[0].idMovimiento==75 || response.data[0].idMovimiento==94) && (<?php echo $this->session->userdata('id_rol');?> == 32 || <?php echo $this->session->userdata('id_rol');?> == 17)){//colocamos las validaciones cuando venga el estatus en esa actual vista
+                                            console.log('Vamos a hacerlo', response.data[0].idStatusLote);
+                                            document.getElementById("labelFA").innerHTML = '<label><span class="required-label" style="color:#32D74C;vertical-align: text-bottom;">&bull;</span> Fecha Apartado:</label>';
+                                            document.getElementById("labelFA").innerHTML += '<input type="date" ng-model="fechaApartado" ng-change="provFTRE()" class="form-control" value="{{$scope.fechaApartado | date:\'yyyy-MM-dd\'}}" id="fechaApartado">\n';
+                                            $compile( document.getElementById('labelFA') )($scope);
                                         }else{
-                                            $scope.fechaApartado = new Date();
+                                            $('#fechaApartado').attr('readonly',true);
+                                            document.getElementById("labelFA").innerHTML = '<label>Fecha Apartado</label>';
+                                            document.getElementById("labelFA").innerHTML += '<input type="date" ng-model="fechaApartado" class="form-control" value="{{$scope.fechaApartado | date:\'yyyy-MM-dd\'}}" ng-readonly="true" id="fechaApartado">\n';
+                                            $compile( document.getElementById('labelFA') )($scope);
                                         }
 
 
@@ -2895,6 +2917,10 @@
                 $scope.nombre = '<?php echo $data_corrida->nombre;?>';
                 $scope.nombre = '<?php echo $data_corrida->nombre;?>';*/
             }
+
+            // $scope.$watch('fechaApartado', function() {
+            //     calcularCF();
+            // }, true);
 
             function setAgePlan(currentAge){
                 $scope.age_view = $scope.age.age;
@@ -9172,6 +9198,7 @@
                 var coordinador = ($scope.coordinador == undefined) ? 0 : $scope.coordinador;
                 var gerente = ($scope.gerente == undefined) ? 0 : $scope.gerente;
                 var plan = ($scope.plan == undefined) ? 0 : $scope.plan;
+                var fechaApartadoI = ($scope.fechaApartado == undefined) ? 0 : $scope.fechaApartado;
 
 
                 //-------
@@ -9382,7 +9409,8 @@
                         observaciones: observaciones,
                         allPackages: localStorage.getItem('allPackages'),
                         descApply: ($scope.descApply != undefined) ? $scope.descApply : null,
-                        status: <?php echo $data_corrida->status;?>
+                        status: <?php echo $data_corrida->status;?>,
+                        fechaApartado: fechaApartadoI
                     }).then(
                         function (response) {
 

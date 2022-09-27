@@ -371,7 +371,7 @@ class Asesor_model extends CI_Model
             CASE lot.casa
             WHEN 0 THEN ''
             WHEN 1 THEN  casas.casasDetail
-            END) casasDetail, idStatusLote, cl.fechaApartado, cl.id_cliente
+            END) casasDetail, idStatusLote, cl.fechaApartado, cl.id_cliente, lot.idStatusContratacion, lot.idMovimiento
                                     FROM lotes lot LEFT JOIN condominios con ON lot.idCondominio = con.idCondominio LEFT JOIN residenciales res 
                                     ON con.idResidencial = res.idResidencial LEFT JOIN datosbancarios db ON con.idDBanco = db.idDBanco 
                                     LEFT JOIN (SELECT id_lote, CONCAT( '{''total_terreno'':''', total_terreno, ''',', tipo_casa, '}') casasDetail 
@@ -404,7 +404,7 @@ class Asesor_model extends CI_Model
                                     CASE lot.casa
                                     WHEN 0 THEN ''
                                     WHEN 1 THEN  casas.casasDetail
-                                    END) casasDetail, idStatusLote, cl.fechaApartado, cl.id_cliente
+                                    END) casasDetail, idStatusLote, cl.fechaApartado, cl.id_cliente, lot.idStatusContratacion, lot.idMovimiento
                                     FROM lotes lot LEFT JOIN condominios con ON lot.idCondominio = con.idCondominio LEFT JOIN residenciales res 
                                     ON con.idResidencial = res.idResidencial LEFT JOIN datosbancarios db ON con.idDBanco = db.idDBanco 
                                     LEFT JOIN (SELECT id_lote, CONCAT( '{''total_terreno'':''', total_terreno, ''',', tipo_casa, '}') casasDetail 
