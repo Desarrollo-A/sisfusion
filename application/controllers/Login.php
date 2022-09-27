@@ -56,7 +56,6 @@ class Login extends CI_Controller
           case '40': // COBRANZA
           case '54': // SUBDIRECCIÓN CONSULTA
           case '58': // ANALISTA DE DATOS CI
-
           case '8': // SOPORTE
 		  case '10': // EJECTUTIVO ADMINISTRATIVO MKTD
           case '19': // SUBDIRECTOR MKTD
@@ -72,7 +71,8 @@ class Login extends CI_Controller
 		  case '22': // MKTD
 		  case '53': // ANALISTA COMISIONES
 		  case '61': // ANSESOR CONSULTA
-		  case '63': //CI AUDITORIA
+		  case '63': // CI AUDITORIA
+		  case '64': // ASISTENTE DIRECCIÓN ADMINISTRACIÓN
               redirect(base_url().'Administracion');
          break;
 

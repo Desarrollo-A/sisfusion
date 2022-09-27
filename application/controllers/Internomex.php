@@ -105,11 +105,37 @@
   else{
    $consulta_comisiones = array();
   }
-  } 
-
-
-
-
-
-
   }
+
+  public function loadFinalPayment()
+  {
+    $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
+    $this->load->view('template/header');
+    $this->load->view("internomex/load_final_payment", $datos);
+  }
+
+  public function getPaymentsListByCommissionAgent()
+  {
+    $data = $this->Internomex_model->getCommissions()->result_array();
+    echo json_encode($data);
+  }
+
+  public function insertInformation() {
+    if (!isset($_POST))
+      echo json_encode(array("status" => 400, "message" => "Algún parámetro no viene informado."));
+    else {
+      if ($this->input->post("data") == "")
+        echo json_encode(array("status" => 400, "message" => "Algún parámetro no tiene un valor especificado."), JSON_UNESCAPED_UNICODE);
+      else {
+        $data = $this->input->post("data");
+        echo $data;
+      }
+    }
+ }
+
+
+
+
+
+
+}
