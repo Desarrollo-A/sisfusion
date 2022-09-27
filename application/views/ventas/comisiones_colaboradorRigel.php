@@ -7,22 +7,7 @@
         switch ($this->session->userdata('id_rol')) {
             case '1': // DIRECTOR
             case '2': // SUBDIRECTOR VENTAS
-            case '3': // GERENTE
-            case '7': // ASESOR
-            case '9': // COORDINADORmultiple
-            case '13': // CONTRALORÍA
-            case '18': // DIRECTOR MKTD
-            case '19': // SUBDIRECTOR MKTD
-            case '20': // GERENTE MKTD
-            case '22': // EJECUTIVO CLUB MADERAS
-            case '23': // SUBDIRECTOR CLUB MADERAS
-            case '25': // ASESOR DE CONTENIDO RRSS
-            case '26': // MERCADOLÓGO
-            case '27': // COMMUNITY MANAGER
-            case '28': // EJECUTIVO ADMINISTRATIVO
-            case '30': // DESARROLLADOR WEB
-            case '32': // CONTRALORÍA CORPORATIVA
-            case '36': // asistente mktd
+            
                 $datos = array();
                 $datos = $datos4;
                 $datos = $datos2;
@@ -42,33 +27,8 @@
         </style>
 
         <!-- Modals -->
-        <div class="modal fade modal-alertas" id="modal_nuevas" role="dialog">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header bg-red">
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        <h4 class="modal-title">DETALLES COMISIÓN</h4>
-                    </div>
-                    <form method="post" id="form_interes">
-                        <div class="modal-body"></div>
-                    </form>
-                </div>
-            </div>
-        </div>
-
-        <div class="modal fade modal-alertas" id="modalQuitarFactura" role="dialog">
-            <div class="modal-dialog modal-sm">
-                <div class="modal-content">
-                    <div class="modal-header bg-red">
-                        <button type="button" class="close btn" data-dismiss="modal"><span>&times;</span></button>
-                    </div>
-                    <form method="post" id="eliminar_factura">
-                        <div class="modal-body"></div>
-                    </form>
-                </div>
-            </div>
-        </div>
-
+ 
+ 
         <div class="modal fade" id="seeInformationModalAsimilados" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog modal-md modal-dialog-scrollable" role="document">
                 <div class="modal-content">
@@ -125,124 +85,9 @@
                 </div>
             </div>
         </div>
-
-        <div class="modal fade modal-alertas" id="modal_documentacion" role="dialog">
-            <div class="modal-dialog" style="width:800px; margin-top:20px">
-                <div class="modal-content">
-                    <div class="modal-body">
-                        <div class="row"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="modal fade bd-example-modal-sm" id="myModalEnviadas" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-sm">
-                <div class="modal-content">
-                    <div class="modal-body"></div>
-                </div>
-            </div>
-        </div>
-    
+ 
         <!-- inicia modal subir factura -->
-        <div id="modal_formulario_solicitud" class="modal" style="position:fixed; top:0; left:0; margin-bottom: 1%;  margin-top: -5%;">
-            <div class="modal-dialog modal-md">
-                <div class="modal-content">
-                    <div class="modal-body">
-                        <div class="tab-content">
-                            <div class="active tab-pane" id="generar_solicitud">
-                                <div class="row">
-                                    <div class="col-lg-12">
-                                        <div class="row">
-                                            <div class="col-lg-5">
-                                                <div class="fileinput fileinput-new text-center" data-provides="fileinput">
-                                                    <div><br>
-                                                        <span class="fileinput-new">Selecciona archivo</span>
-                                                        <input type="file" name="xmlfile" id="xmlfile" accept="application/xml">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-7">
-                                                <center>
-                                                    <button class="btn btn-warning" type="button" id="cargar_xml"><i class="fa fa-upload"></i> CARGAR</button>
-                                                </center>
-                                            </div>
-                                            <p id=totalxml style="color: red;"></p>
-                                        </div>
-                                        <form id="frmnewsol" method="post" action="#">
-                                            <div class="row">
-                                                <div class="col-lg-4 form-group">
-                                                    <label for="emisor">Emisor:<span class="text-danger">*</span></label>
-                                                    <input type="text" class="form-control" id="emisor" name="emisor" placeholder="Emisor" value="" required>
-                                                </div>
-                                                <div class="col-lg-4 form-group">
-                                                    <label for="rfcemisor">RFC Emisor:<span class="text-danger">*</span></label>
-                                                    <input type="text" class="form-control" id="rfcemisor" name="rfcemisor" placeholder="RFC Emisor" value="" required>
-                                                </div>
-                                                <div class="col-lg-4 form-group">
-                                                    <label for="receptor">Receptor:<span class="text-danger">*</span></label>
-                                                    <input type="text" class="form-control" id="receptor" name="receptor" placeholder="Receptor" value="" required>
-                                                </div>
-                                                <div class="col-lg-4 form-group">
-                                                    <label for="rfcreceptor">RFC Receptor:<span class="text-danger">*</span></label>
-                                                    <input type="text" class="form-control" id="rfcreceptor" name="rfcreceptor" placeholder="RFC Receptor" value="" required>
-                                                </div>
-                                                <div class="col-lg-3 form-group">
-                                                    <label for="regimenFiscal">Régimen Fiscal:<span class="text-danger">*</span></label>
-                                                    <input type="text" class="form-control" id="regimenFiscal" name="regimenFiscal" placeholder="Regimen Fiscal" value="" required>
-                                                </div>
-                                                <div class="col-lg-3 form-group">
-                                                    <label for="total">Monto:<span class="text-danger">*</span></label>
-                                                    <input type="text" class="form-control" id="total" name="total" placeholder="Total" value="" required>
-                                                <b style="font-size: 10px;" id="cantidadSeleccionadaMal2"></b>
-                                                </div>
-                                                <div class="col-lg-3 form-group">
-                                                    <label for="formaPago">Forma Pago:</label>
-                                                    <input type="text" class="form-control" placeholder="Forma Pago" id="formaPago" name="formaPago" value="">
-                                                </div>
-                                                <div class="col-lg-3 form-group">
-                                                    <label for="cfdi">Uso del CFDI:</label>
-                                                    <input type="text" class="form-control" placeholder="Uso de CFDI" id="cfdi" name="cfdi" value="">
-                                                </div>
-                                                <div class="col-lg-3 form-group">
-                                                    <label for="metodopago">Método de Pago:</label>
-                                                    <input type="text" class="form-control" id="metodopago" name="metodopago" placeholder="Método de Pago" value="" readonly>
-                                                </div>
-                                                <div class="col-lg-3 form-group">
-                                                    <label for="unidad">Unidad:</label>
-                                                    <input type="text" class="form-control" id="unidad" name="unidad" placeholder="Unidad" value="" readonly>
-                                                </div>
-                                                <div class="col-lg-3 form-group">
-                                                    <label for="clave">Clave Prod/Serv:<span class="text-danger">*</span></label>
-                                                    <input type="text" class="form-control" id="clave" name="clave" placeholder="Clave" value="" required>
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-lg-12 form-group">
-                                                    <label for="obse">OBSERVACIONES FACTURA <i class="fa fa-question-circle faq" tabindex="0" data-container="body" data-trigger="focus" data-toggle="popover" title="Observaciones de la factura" data-content="En este campo pueden ser ingresados datos opcionales como descuentos, observaciones, descripción de la operación, etc." data-placement="right"></i></label><br>
-                                                    <textarea class="form-control" rows='1' data-min-rows='1' id="obse" name="obse" placeholder="Observaciones"></textarea>
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-lg-12 form-group"></div>
-                                                <div class="col-lg-6 form-group">
-                                                    <button type="submit" id="btnIndi" class="btn btn-primary btn-block">GUARDAR</button>
-                                                </div>
-                                                <div class="col-lg-6 form-group">
-                                                    <button type="button" onclick="closeModalEng()" class=" btn btn-danger btn-block" data-dismiss="modal">CANCELAR</button>
-                                                </div>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div id="modal_formulario_solicitud_multiple" class="modal" style="position:fixed; top:0; left:0; margin-bottom: 1%;  margin-top: -5%;">
+         <div id="modal_formulario_solicitud_multiple" class="modal" style="position:fixed; top:0; left:0; margin-bottom: 1%;  margin-top: -5%;">
             <div class="modal-dialog modal-md">
                 <div class="modal-content">
                     <div class="modal-body">
@@ -364,7 +209,7 @@
                                     <div class="tab-content p-2">
                                         <div class="tab-pane active" id="nuevas-1">
                                             <div class="encabezadoBox">
-                                                <p class="card-title pl-1">Comisiones nuevas disponibles para solicitar tu pago, si requieres ver más detalles como lo pagado y lo pendiente, podrás consultarlo en el <a href="https://maderascrm.gphsis.com/Comisiones/historial_colaborador"><b>historial</b></a>.</p>
+                                            <p class="card-title pl-2">Comisiones nuevas disponibles para solicitar tu pago, para ver más detalles podrás consultarlo en el historial. <a href="https://maderascrm.gphsis.com/Comisiones/historial_colaborador"><b>clic para ir al historial</b></a>.</p>
                                                                                 
                                                 <?php
                                                 if($this->session->userdata('forma_pago') == 3){
@@ -415,7 +260,7 @@
                                                                 <h4 class="title-tot center-align m-0">Saldo total:</h4>
                                                                 <p class="input-tot pl-1">
                                                                     <?php
-                                                                        $query = $this->db->query("SELECT SUM (abono_neodata) nuevo_general FROM pago_comision_ind WHERE estatus in (1) AND id_comision IN (select id_comision from comisiones) AND id_usuario = ".$this->session->userdata('id_usuario')."");
+                                                                        $query = $this->db->query("SELECT Coalesce(SUM (abono_neodata),0) nuevo_general FROM pago_comision_ind WHERE estatus in (1) AND id_comision IN (select id_comision from comisiones) AND id_usuario = ".$this->session->userdata('id_usuario')."");
 
                                                                         foreach ($query->result() as $row)
                                                                         {
@@ -440,7 +285,7 @@
                                                         </div>
                                                     </div>
                                                     <div class="row">
-                                                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                                                        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-3">
                                                             <div class="form-group">
                                                                 <label  class="m-0" for="proyecto1">Proyecto</label>
                                                                 <select name="proyecto1" id="proyecto1" class="selectpicker select-gral" data-style="btn btn-second"data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" required>
@@ -448,7 +293,7 @@
                                                                 </select>
                                                             </div>
                                                         </div>
-                                                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                                                        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-3">
                                                             <div class="form-group">
                                                                 <label for="condominio1">Condominio</label>
                                                                 <select name="condominio1" id="condominio1" class="selectpicker select-gral" data-style="btn btn-second"data-show-subtext="true" data-live-search="true"  title="Selecciona una opción" data-size="7" required>
@@ -518,17 +363,17 @@
                                         </div>
                                         <div class="tab-pane" id="proceso-1">
                                             <div class="encabezadoBox">
-                                                <p class="card-title pl-1">Comisiones en revisión,  enviadas a contraloria para aplicar tu pago, si requieres ver más detalles como lo pagado y lo pendiente, podrás consultarlo en el <a href="https://maderascrm.gphsis.com/Comisiones/historial_colaborador"><b>historial</b></a>.</p>
+                                            <p class="card-title pl-1">Comisiones enviadas a contraloría para su revisión antes de aplicar tu pago, si requieres ver más detalles como lo pagado y lo pendiente podrás consultarlo en el historial. <a href="https://maderascrm.gphsis.com/Comisiones/historial_colaborador"><b>clic para ir al historial</b></a>.</p>
                                             </div>
                                             <div class="toolbar">
                                                 <div class="container-fluid p-0">
                                                     <div class="row">
-                                                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                                                        <!-- <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
                                                             <div class="form-group d-flex justify-center align-center">
                                                                 <h4 class="title-tot center-align m-0">Saldo total:</h4>
                                                                 <p class="input-tot pl-1">
                                                                     <?php
-                                                                    $query = $this->db->query("SELECT SUM (abono_neodata) nuevo_general FROM pago_comision_ind WHERE estatus in (4) AND id_comision IN (select id_comision from comisiones) AND id_usuario = ".$this->session->userdata('id_usuario')."");
+                                                                    $query = $this->db->query("SELECT Coalesce(SUM (abono_neodata),0) nuevo_general FROM pago_comision_ind WHERE estatus in (4) AND id_comision IN (select id_comision from comisiones) AND id_usuario = ".$this->session->userdata('id_usuario')."");
 
                                                                     foreach ($query->result() as $row)
                                                                     {
@@ -538,8 +383,8 @@
                                                                     ?>
                                                                 </p>
                                                             </div>
-                                                        </div>
-                                                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                                                        </div> -->
+                                                        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
                                                             <div class="form-group d-flex justify-center align-center">
                                                                 <h4 class="title-tot center-align m-0">Total solicitado:</h4>
                                                                 <p class="input-tot pl-1" name="myText_proceso" id="myText_proceso">$0.00</p>
@@ -547,13 +392,13 @@
                                                         </div>
                                                     </div>
                                                     <div class="row">
-                                                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                                                        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-3">
                                                             <label class="m-0" for="proyecto2">Proyecto</label>
                                                             <select name="proyecto2" id="proyecto2" class="selectpicker select-gral" data-style="btn btn-second"data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" required>
                                                                 <option value="0">Selecciona una opción</option>
                                                             </select>
                                                         </div>
-                                                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                                                        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-3">
                                                             <label class="m-0" for="condominio2">Condominio</label>
                                                             <select name="condominio2" id="condominio2" class="selectpicker select-gral" data-style="btn btn-second"data-show-subtext="true" data-live-search="true"  title="Selecciona una opción" data-size="7" required>
                                                                 <option disabled selected>Selecciona una opción</option>
@@ -585,17 +430,19 @@
                                         </div>
                                         <div class="tab-pane" id="resguardo-1">
                                             <div class="encabezadoBox">
-                                                <p class="card-title pl-1">Comisiones en resguardo personal, si requieres ver más detalles como lo pagado y lo pendiente, podrás consultarlo en el <a href="https://maderascrm.gphsis.com/Comisiones/historial_colaborador"><b>historial</b></a>.</p>
+                                        
+                                            <p class="card-title pl-1">Comisiones en resguardo, si requieres ver más detalles como lo pagado y lo pendiente podrás consultarlo en el historial. <a href="https://maderascrm.gphsis.com/Comisiones/historial_colaborador"><b>clic para ir al historial</b></a>.</p>
+
                                             </div>
                                             <div class="toolbar">
                                                 <div class="container-fluid p-0">
                                                     <div class="row">
-                                                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                                                    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
                                                             <div class="form-group d-flex justify-center align-center">
                                                                 <h4 class="title-tot center-align m-0">Saldo total:</h4>
                                                                 <p class="input-tot pl-1">
                                                                     <?php
-                                                                    $query = $this->db->query("SELECT SUM (abono_neodata) nuevo_general FROM pago_comision_ind WHERE estatus in (3) AND id_comision IN (select id_comision from comisiones) AND id_usuario = ".$this->session->userdata('id_usuario')."");
+                                                                    $query = $this->db->query("SELECT Coalesce(SUM (abono_neodata),0) nuevo_general FROM pago_comision_ind WHERE estatus in (3) AND id_comision IN (select id_comision from comisiones) AND id_usuario = ".$this->session->userdata('id_usuario')."");
 
                                                                     foreach ($query->result() as $row)
                                                                     {
@@ -606,7 +453,7 @@
                                                                 </p>
                                                             </div>
                                                         </div>
-                                                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                                                        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
                                                             <div class="form-group d-flex justify-center align-center">
                                                                 <h4 class="title-tot center-align m-0">Total:</h4>
                                                                 <p class="input-tot pl-1" name="myText_resguardo" id="myText_resguardo">$0.00</p>
@@ -614,7 +461,7 @@
                                                         </div>
                                                     </div>
                                                     <div class="row">
-                                                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                                                        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-3">
                                                             <div class="form-group">
                                                                 <label class="m-0" for="proyecto28">Proyecto</label>
                                                                 <select name="proyecto28" id="proyecto28" class="selectpicker select-gral" data-style="btn btn-second"data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" required>
@@ -622,7 +469,7 @@
                                                                 </select>
                                                             </div>
                                                         </div>
-                                                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                                                        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-3">
                                                             <div class="form-group">
                                                                 <label class="m-0" for="condominio28">Condominio</label>
                                                                 <select name="condominio28" id="condominio28" class="selectpicker select-gral" data-style="btn btn-second"data-show-subtext="true" data-live-search="true"  title="Selecciona una opción" data-size="7" required>
@@ -656,17 +503,17 @@
                                         </div>
                                         <div class="tab-pane" id="proceso-2">
                                             <div class="encabezadoBox">
-                                                <p class="card-title pl-1">Comisiones en proceso de pago por parte de INTERNOMEX. Si requieres ver más detalles como lo pagado y lo pendiente, podrás consultarlo en el <a href="https://maderascrm.gphsis.com/Comisiones/historial_colaborador"><b>historial</b></a>.</p>
+                                            <p class="card-title pl-1">Comisiones en proceso de pago por parte de INTERNOMEX. Si requieres ver más detalles como lo pagado y lo pendiente, podrás consultarlo en el historial. <a href="https://maderascrm.gphsis.com/Comisiones/historial_colaborador"><b>clic para ir al historial</b></a>.</p>
                                             </div>
                                             <div class="toolbar">
                                                 <div class="container-fluid p-0">
                                                     <div class="row">
-                                                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                                                        <!-- <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
                                                             <div class="form-group d-flex justify-center align-center">
                                                                 <h4 class="title-tot center-align m-0">Saldo total:</h4>
                                                                 <p class="input-tot pl-1">
                                                                     <?php
-                                                                    $query = $this->db->query("SELECT SUM (abono_neodata) nuevo_general FROM pago_comision_ind WHERE estatus in (8) AND id_comision IN (select id_comision from comisiones) AND id_usuario = ".$this->session->userdata('id_usuario')."");
+                                                                    $query = $this->db->query("SELECT Coalesce(SUM (abono_neodata),0) nuevo_general FROM pago_comision_ind WHERE estatus in (8) AND id_comision IN (select id_comision from comisiones) AND id_usuario = ".$this->session->userdata('id_usuario')."");
 
                                                                     foreach ($query->result() as $row)
                                                                     {
@@ -676,8 +523,8 @@
                                                                     ?>
                                                                 </p>
                                                             </div>
-                                                        </div>
-                                                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                                                        </div> -->
+                                                        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
                                                             <div class="form-group d-flex justify-center align-center">
                                                                 <h4 class="title-tot center-align m-0">Total:</h4>
                                                                 <p class="input-tot pl-1" name="myText_pagadas" id="myText_pagadas">$0.00</p>
@@ -685,13 +532,13 @@
                                                         </div>
                                                     </div>
                                                     <div class="row">
-                                                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">                      
+                                                        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-3">                      
                                                             <label class="m-0" for="proyecto3">Proyecto</label>
                                                             <select name="proyecto3" id="proyecto3" class="selectpicker select-gral" data-style="btn btn-second"data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" required>
                                                                 <option value="0">Selecciona una opción</option>
                                                             </select>
                                                         </div>
-                                                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                                                        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-3">
                                                             <label class="m-0" for="condominio3">Condominio</label>
                                                             <select name="condominio3" id="condominio3" class="selectpicker select-gral" data-style="btn btn-second"data-show-subtext="true" data-live-search="true"  title="Selecciona una opción" data-size="7" required>
                                                                 <option disabled selected>Selecciona una opción</option>
@@ -724,17 +571,17 @@
                                         <!-- /////////////// -->
                                         <div class="tab-pane" id="otras-1">
                                             <div class="encabezadoBox">
-                                                <p class="card-title pl-1">Comisiones pausadas para ver el motivo puede verlo en el botón de detalles. Si requieres ver más detalles como lo pagado y lo pendiente, podrás consultarlo en el <a href="https://maderascrm.gphsis.com/Comisiones/historial_colaborador"><b>historial</b></a>.</p>
+                                            <p class="card-title pl-1">Comisiones pausadas, para ver el motivo da clic el botón de información. Si requieres ver más detalles como lo pagado y lo pendiente, podrás consultarlo en el historial. <a href="https://maderascrm.gphsis.com/Comisiones/historial_colaborador"><b>clic para ir al historial</b></a>.</p>
                                             </div>
                                             <div class="toolbar">
                                                 <div class="container-fluid p-0">
                                                     <div class="row">
-                                                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                                                        <!-- <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
                                                             <div class="form-group d-flex justify-center align-center">
                                                                 <h4 class="title-tot center-align m-0">Saldo total:</h4>
                                                                 <p class="input-tot pl-1">
                                                                 <?php
-                                                                    $query = $this->db->query("SELECT SUM (abono_neodata) nuevo_general FROM pago_comision_ind WHERE estatus in (6) AND id_comision IN (select id_comision from comisiones) AND id_usuario = ".$this->session->userdata('id_usuario')."");
+                                                                    $query = $this->db->query("SELECT Coalesce(SUM (abono_neodata),0) nuevo_general FROM pago_comision_ind WHERE estatus in (6) AND id_comision IN (select id_comision from comisiones) AND id_usuario = ".$this->session->userdata('id_usuario')."");
 
                                                                     foreach ($query->result() as $row)
                                                                     {
@@ -744,8 +591,8 @@
                                                                     ?>
                                                                 </p>
                                                             </div>
-                                                        </div>
-                                                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                                                        </div> -->
+                                                        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
                                                             <div class="form-group d-flex justify-center align-center">
                                                                 <h4 class="title-tot center-align m-0">Total pausado:</h4>
                                                                 <p class="input-tot pl-1" name="myText_otras" id="myText_otras">$0.00</p>
@@ -753,13 +600,13 @@
                                                         </div>
                                                     </div>
                                                     <div class="row">
-                                                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                                                        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-3">
                                                             <label class="m-0" for="proyecto4">Proyecto</label>
                                                             <select name="proyecto4" id="proyecto4" class="selectpicker select-gral" data-style="btn btn-second"data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" required>
                                                                 <option value="0">Selecciona una opción</option>
                                                             </select>
                                                         </div>
-                                                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                                                        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-3">
                                                             <label class="m-0" for="condominio4">Condominio</label>
                                                             <select name="condominio4" id="condominio4" class="selectpicker select-gral" data-style="btn btn-second"data-show-subtext="true" data-live-search="true"  title="Selecciona una opción" data-size="7" required>
                                                                 <option disabled selected>Selecciona una opción</option>
@@ -791,14 +638,13 @@
                                         </div>
                                         <div class="tab-pane" id="sin_pago_neodata">
                                             <div class="encabezadoBox">
-                                                <h3 class="card-title center-align">Estatus comisiones</h3>
-                                                <p class="card-title pl-1">(Comisiones sin pago reflejado en NEODATA)</p>
+                                            <p class="card-title pl-1">Comisiones sin pago reflejado en NEODATA y que por ello no se han dispersado ciertos lotes con tus comisiones.</p>
                                             </div>
                                             <div class="toolbar">
                                                 <div class="container-fluid p-0">
                                                     <?php ?>
                                                         <div class="row">
-                                                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                                                            <div class="col-xs-12 col-sm-6 col-md-6 col-lg-3">
                                                                 <div class="form-group">
                                                                     <label class="m-0" for="proyecto">Proyecto</label>
                                                                     <select name="proyecto" id="proyecto" class="selectpicker select-gral" data-style="btn btn-second"data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" required>
@@ -806,7 +652,7 @@
                                                                     </select>
                                                                 </div>
                                                             </div>
-                                                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                                                            <div class="col-xs-12 col-sm-6 col-md-6 col-lg-3">
                                                                 <div class="form-group">
                                                                     <label class="m-0" for="condominio">Condominio</label>
                                                                     <select name="condominio" id="condominio" class="selectpicker select-gral" data-style="btn btn-second"data-show-subtext="true" data-live-search="true"  title="Selecciona una opción" data-size="7" required>
@@ -1369,21 +1215,27 @@
                 {
                     "width": "8%",
                     "data": function( d ){
+                        var lblPenalizacion = '';
+
+                        if (d.penalizacion == 1){
+                            lblPenalizacion ='<p class="m-0" title="Penalización + 90 días"><span class="label" style="background:orange;">Penalización + 90 días</span></p>';
+                        }
+
                         if(d.bonificacion >= 1){
-                            p1 = '<p class="m-0"><span class="label" style="background:pink;color: black;">Bonificación $'+formatMoney(d.bonificacion)+'</span></p>';
+                            p1 = '<p class="m-0" title="Lote con bonificación en NEODATA"><span class="label" style="background:pink;color: black;">Bon. $'+formatMoney(d.bonificacion)+'</span></p>';
                         }
                         else{
                             p1 = '';
                         }
 
                         if(d.lugar_prospeccion == 0){
-                            p2 = '<p class="m-0"><span class="label" style="background:RED;">Recisión de contrato</span></p>';
+                            p2 = '<p class="m-0" title="Lote con cancelación de CONTRATO"><span class="label" style="background:RED;">Recisión</span></p>';
                         }
                         else{
                             p2 = '';
                         }
-
-                        return p1 + p2;;
+                        
+                        return p1 + p2 + lblPenalizacion;
                     }
                 },
                 {
@@ -1659,20 +1511,27 @@
                 {
                     "width": "8%",
                     "data": function( d ){
+                        var lblPenalizacion = '';
+
+                        if (d.penalizacion == 1){
+                            lblPenalizacion ='<p class="m-0" title="Penalización + 90 días"><span class="label" style="background:orange;">Penalización + 90 días</span></p>';
+                        }
+
                         if(d.bonificacion >= 1){
-                            p1 = '<p class="m-0"><span class="label" style="background:pink;color: black;">Bonificación $'+formatMoney(d.bonificacion)+'</span></p>';
+                            p1 = '<p class="m-0" title="Lote con bonificación en NEODATA"><span class="label" style="background:pink;color: black;">Bon. $'+formatMoney(d.bonificacion)+'</span></p>';
                         }
                         else{
                             p1 = '';
                         }
 
                         if(d.lugar_prospeccion == 0){
-                            p2 = '<p class="m-0"><span class="label" style="background:RED;">Recisión de contrato</span></p>';
+                            p2 = '<p class="m-0" title="Lote con cancelación de CONTRATO"><span class="label" style="background:RED;">Recisión</span></p>';
                         }
                         else{
                             p2 = '';
                         }
-                        return p1 + p2;;
+                        
+                        return p1 + p2 + lblPenalizacion;
                     }
                 },
                 {
@@ -1873,21 +1732,27 @@
                 {
                     "width": "8%",
                     "data": function( d ){
+                        var lblPenalizacion = '';
+
+                        if (d.penalizacion == 1){
+                            lblPenalizacion ='<p class="m-0" title="Penalización + 90 días"><span class="label" style="background:orange;">Penalización + 90 días</span></p>';
+                        }
+
                         if(d.bonificacion >= 1){
-                            p1 = '<p class="m-0"><span class="label" style="background:pink;color: black;">Bonificación $'+formatMoney(d.bonificacion)+'</span></p>';
+                            p1 = '<p class="m-0" title="Lote con bonificación en NEODATA"><span class="label" style="background:pink;color: black;">Bon. $'+formatMoney(d.bonificacion)+'</span></p>';
                         }
                         else{
                             p1 = '';
                         }
 
                         if(d.lugar_prospeccion == 0){
-                            p2 = '<p class="m-0"><span class="label" style="background:RED;">Recisión de contrato</span></p>';
+                            p2 = '<p class="m-0" title="Lote con cancelación de CONTRATO"><span class="label" style="background:RED;">Recisión</span></p>';
                         }
                         else{
                             p2 = '';
                         }
-
-                        return p1 + p2;;
+                        
+                        return p1 + p2 + lblPenalizacion;
                     }
                 },
                 {
@@ -2089,21 +1954,27 @@
                 {
                     "width": "8%",
                     "data": function( d ){
+                        var lblPenalizacion = '';
+
+                        if (d.penalizacion == 1){
+                            lblPenalizacion ='<p class="m-0" title="Penalización + 90 días"><span class="label" style="background:orange;">Penalización + 90 días</span></p>';
+                        }
+
                         if(d.bonificacion >= 1){
-                            p1 = '<p class="m-0"><span class="label" style="background:pink;color: black;">Bonificación $'+formatMoney(d.bonificacion)+'</span></p>';
+                            p1 = '<p class="m-0" title="Lote con bonificación en NEODATA"><span class="label" style="background:pink;color: black;">Bon. $'+formatMoney(d.bonificacion)+'</span></p>';
                         }
                         else{
                             p1 = '';
                         }
 
                         if(d.lugar_prospeccion == 0){
-                            p2 = '<p class="m-0"><span class="label" style="background:RED;">Recisión de contrato</span></p>';
+                            p2 = '<p class="m-0" title="Lote con cancelación de CONTRATO"><span class="label" style="background:RED;">Recisión</span></p>';
                         }
                         else{
                             p2 = '';
                         }
-
-                        return p1 + p2;;
+                        
+                        return p1 + p2 + lblPenalizacion;
                     }
                 },
                 {
@@ -2308,21 +2179,27 @@
                     "width": "8%",
                     "data": function( d ){
 
+                        var lblPenalizacion = '';
+
+                        if (d.penalizacion == 1){
+                            lblPenalizacion ='<p class="m-0" title="Penalización + 90 días"><span class="label" style="background:orange;">Penalización + 90 días</span></p>';
+                        }
+
                         if(d.bonificacion >= 1){
-                            p1 = '<p class="m-0"><span class="label" style="background:pink;color: black;">Bonificación $'+formatMoney(d.bonificacion)+'</span></p>';
+                            p1 = '<p class="m-0" title="Lote con bonificación en NEODATA"><span class="label" style="background:pink;color: black;">Bon. $'+formatMoney(d.bonificacion)+'</span></p>';
                         }
                         else{
                             p1 = '';
                         }
 
                         if(d.lugar_prospeccion == 0){
-                            p2 = '<p class="m-0"><span class="label" style="background:RED;">Recisión de contrato</span></p>';
+                            p2 = '<p class="m-0" title="Lote con cancelación de CONTRATO"><span class="label" style="background:RED;">Recisión</span></p>';
                         }
                         else{
                             p2 = '';
                         }
-
-                        return p1 + p2;;
+                        
+                        return p1 + p2 + lblPenalizacion;
                     }
                 },
                 {
@@ -2551,64 +2428,10 @@
                 }
             });
         }
-
-        $(document).on("click", ".quitar_factura", function() {
-            resear_formulario();
-            id_comision = $(this).val();
-
-            $("#modalQuitarFactura .modal-body").html('');
-            $("#modalQuitarFactura .modal-body").append('<input type="hidden" name="delete_fact" value="' + id_comision + '">');
-
-            $("#modalQuitarFactura .modal-body").append('<div class="row"><div class="col-md-12"><p>¿Estás seguro de eliminar esta factura?</p></div></div>');
-            $("#modalQuitarFactura .modal-body").append('<div class="row"><div class="col-md-12"><button type="submit" class="btn btn-success btn-block">ELIMINAR</button> <button type="button" data-dismiss="modal" class="btn btn-danger btn-block close_modal_fact">SALIR</button></div></div>');
-
-            $("#modalQuitarFactura").modal({
-                backdrop: 'static',
-                keyboard: false
-            });
-        });
+ 
 
         /** -----------------------------------------*/
-
-        $(document).on("click", ".EnviarMultiple", function() {
-            $("#ModalEnviar .modal-body").html("");
-            $("#ModalEnviar .modal-header").html("");
-
-            $("#ModalEnviar .modal-header").append(`<div class="row"><div class="col-md-12">
-            <form id="selectDesa">
-            <b class="">Seleccione un desarrollo</b>
-            <select id="desarrolloSelect2" name="desarrolloSelect2" class="form-control desarrolloSelect ng-invalid ng-invalid-required" required data-live-search="true">
-            </select>
-            </div></div>`);
-
-            $.post('getDesarrolloSelect', function(data) {
-                c = 0;
-                $("#desarrolloSelect2").append($('<option disabled>').val("default").text("Seleccione una opción"))
-                var len = data.length;
-                let id2 = 1000;
-                let name2='TODOS';
-                $("#desarrolloSelect2").append($('<option>').val(id2).attr('data-value', id2).text(name2));
-                for (var i = 0; i < len; i++) {
-                    var id = data[i]['id_usuario'];
-                    var name = data[i]['descripcion'];
-                    $("#desarrolloSelect2").append($('<option>').val(id).attr('data-value', id).text(name));
-                }
-                if (len <= 0) {
-                    $("#desarrolloSelect2").append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
-                }
-                $("#desarrolloSelect2").val(0);
-                $("#desarrolloSelect2").selectpicker('refresh');
-            }, 'json');
-            $("#ModalEnviar .modal-header").append(`<div class="row"><div class="col-md-12">
-            <center>
-            <button type="submit" id="btn_EnviarM" onclick="EnviarDesarrollos()" class="btn btn-success">ENVIAR</button>
-                        <button class="btn btn-danger" type="button" data-dismiss="modal" >CANCELAR</button>
-                        </center>
-            </form>
-            </div></div>`);
-
-            $("#ModalEnviar").modal();
-        });
+ 
 
         function todos(){
             if($(".checkdata1:checked").length == 0){
@@ -2816,38 +2639,7 @@
                 }
             });
         }
-
-        $("#eliminar_factura").submit(function(e) {
-            e.preventDefault();
-        }).validate({
-            submitHandler: function(form) {
-                var data = new FormData($(form)[0]);
-                $.ajax({
-                    url: url + "Comisiones/borrar_factura",
-                    data: data,
-                    cache: false,
-                    contentType: false,
-                    processData: false,
-                    dataType: 'json',
-                    method: 'POST',
-                    type: 'POST', // For jQuery < 1.9
-                    success: function(data) {
-                        if (true) {
-                            $("#modalQuitarFactura").modal('toggle');
-                            tabla_nuevas.ajax.reload();
-                            alert("SE ELIMINÓ EL ARCHIVO");
-                        }
-                        else {
-                            alert("NO SE HA PODIDO COMPLETAR LA SOLICITUD");
-                        }
-                    },
-                    error: function() {
-                        alert("ERROR EN EL SISTEMA");
-                    }
-                });
-            }
-        });
-
+ 
         function closeModalEng(){
             document.getElementById("frmnewsol").reset();
             document.getElementById("xmlfile").value = "";
@@ -3141,11 +2933,7 @@
             var myCommentsList = document.getElementById('comments-list-asimilados');
             myCommentsList.innerHTML = '';
         }
-
-        function close_modal_xml() {
-            $("#modal_nuevas").modal('toggle');
-        }
-
+ 
         function selectAll(e) {
             tota2 = 0;
             $(tabla_nuevas.$('input[type="checkbox"]')).each(function (i, v) {
