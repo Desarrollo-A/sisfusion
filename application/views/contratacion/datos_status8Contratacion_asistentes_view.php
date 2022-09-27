@@ -364,7 +364,7 @@
 
                                     cntActions += '<button href="#" data-idLote="'+data.idLote+'" data-nomLote="'+data.nombreLote+'" data-idCond="'+data.idCondominio+'"' +
                                     'data-idCliente="'+data.id_cliente+'" data-fecVen="'+data.fechaVenc+'" data-ubic="'+data.ubicacion+'" data-code="'+data.cbbtton+'"  ' +
-                                    'class="btn-data btn-warning cancelReg" title="Rechazo/regreso estatus (Juridico)">' +
+                                    'class="btn-data btn-warning cancelReg" title="Rechazo/regreso estatus (Jurídico)">' +
                                     '<i class="far fa-thumbs-down"></i></button>';
 
                                     cntActions += '<button href="#" data-idLote="'+data.idLote+'" data-nomLote="'+data.nombreLote+'" data-idCond="'+data.idCondominio+'"' +
@@ -381,7 +381,7 @@
 
                                     cntActions += '<button href="#" data-idLote="'+data.idLote+'" data-nomLote="'+data.nombreLote+'" data-idCond="'+data.idCondominio+'"' +
                                     'data-idCliente="'+data.id_cliente+'" data-fecVen="'+data.fechaVenc+'" data-ubic="'+data.ubicacion+'" data-code="'+data.cbbtton+'"  ' +
-                                    'class="btn-data btn-warning cancelReg" title="Rechazo/regreso estatus (Juridico)">' +
+                                    'class="btn-data btn-warning cancelReg" title="Rechazo/regreso estatus (Jurídico)">' +
                                     '<i class="far fa-thumbs-down"></i></button>';
 
                                     cntActions += '<button href="#" data-idLote="'+data.idLote+'" data-nomLote="'+data.nombreLote+'" data-idCond="'+data.idCondominio+'"' +
