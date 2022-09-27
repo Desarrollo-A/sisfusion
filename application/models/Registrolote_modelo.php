@@ -2230,7 +2230,7 @@ gerente2.nombreGerente as gerente2, gerente3.nombreGerente as gerente3, gerente4
 
     public function lotesContratados(){
         $query = $this->db->query("SELECT lotes.idLote, ISNULL(s.nombre, 'Sin especificar') AS nombreSede, cl.id_cliente, cl.nombre, cl.apellido_paterno, cl.apellido_materno, lotes.nombreLote, 
-            lotes.idStatusContratacion, lotes.idMovimiento, lotes.modificado, CAST(lotes.comentario AS varchar(MAX)) as comentario, 
+            lotes.idStatusContratacion, lotes.idMovimiento, hd.modificado, CAST(lotes.comentario AS varchar(MAX)) as comentario, 
             lotes.fechaVenc, lotes.perfil, residencial.nombreResidencial, cond.nombre as nombreCondominio, lotes.ubicacion, lotes.tipo_venta,
             lotes.fechaSolicitudValidacion, lotes.firmaRL, lotes.validacionEnganche, cl.fechaApartado,
             concat(us.nombre,' ', us.apellido_paterno, ' ', us.apellido_materno) as asesor, idAsesor,
@@ -2251,8 +2251,8 @@ gerente2.nombreGerente as gerente2, gerente3.nombreGerente as gerente3, gerente4
             LEFT JOIN usuarios u ON CAST(u.id_usuario AS VARCHAR(45)) = CAST(hd.usuario AS VARCHAR(45))
             WHERE lotes.status = 1 AND lotes.idStatusContratacion = 15 AND lotes.idMovimiento = 45
             GROUP BY lotes.idLote, s.nombre, cl.id_cliente, cl.nombre, cl.apellido_materno, cl.apellido_paterno,
-            lotes.nombreLote, lotes.idStatusContratacion, lotes.idMovimiento, lotes.modificado,
-            lotes.modificado, CAST(lotes.comentario AS varchar(MAX)), lotes.fechaVenc, lotes.perfil,
+            lotes.nombreLote, lotes.idStatusContratacion, lotes.idMovimiento, hd.modificado,
+            CAST(lotes.comentario AS varchar(MAX)), lotes.fechaVenc, lotes.perfil,
             residencial.nombreResidencial, cond.nombre, lotes.ubicacion, lotes.tipo_venta,
             cl.id_gerente, cl.id_coordinador, concat(us.nombre,' ', us.apellido_paterno, ' ', us.apellido_materno),
             concat(ge.nombre,' ', ge.apellido_paterno,' ', ge.apellido_materno), idAsesor, lotes.fechaSolicitudValidacion, lotes.firmaRL,
