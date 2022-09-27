@@ -2700,8 +2700,8 @@ legend {
             "nombre" => 'LOTE TEST'
         );
         $data_corrida['data_corrida'] = $this -> Corrida_model -> getInfoCorridaByID($id_corrida);
-        //print_r($data_corrida);
-        //exit;
+//        print_r($data_corrida);
+//        exit;
         $this->load->view("corrida/editar_corrida", $data_corrida);
     }
     function update_financialR(){
@@ -2757,6 +2757,7 @@ legend {
         $arreglo["finalMesesp3"]= $objDatos->finalMesesp3;
         $arreglo["observaciones"]= $objDatos->observaciones;
         $arreglo["fecha_modificacion"] = date("Y-m-d H:i:s");
+        $arreglo["fechaApartado"] = $objDatos->fechaApartado;
 
         /*print_r($arreglo);
         exit;*/

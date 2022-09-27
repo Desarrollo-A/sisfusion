@@ -11,7 +11,7 @@
 
 
     <?php
-    if($this->session->userdata('id_rol') == FALSE || $this->session->userdata('id_rol') != '7' && $this->session->userdata('id_rol') != '3' && $this->session->userdata('id_rol') != '9' && $this->session->userdata('id_rol') != '16' && $this->session->userdata('id_rol') != '6' && $this->session->userdata('id_rol') != '2' && $this->session->userdata('id_rol') != '5' && $this->session->userdata('id_rol') != '33' && $this->session->userdata('id_rol') != '17' && $this->session->userdata('id_rol') != '19' && $this->session->userdata('id_rol') != '20')
+    if($this->session->userdata('id_rol') == FALSE || $this->session->userdata('id_rol') != '7' && $this->session->userdata('id_rol') != '3' && $this->session->userdata('id_rol') != '9' && $this->session->userdata('id_rol') != '16' && $this->session->userdata('id_rol') != '6' && $this->session->userdata('id_rol') != '2' && $this->session->userdata('id_rol') != '5' && $this->session->userdata('id_rol') != '33' && $this->session->userdata('id_rol') != '17' && $this->session->userdata('id_rol') != '19' && $this->session->userdata('id_rol') != '20' && $this->session->userdata('id_rol') != '13' && $this->session->userdata('id_rol') != '32')
     {
         redirect(base_url().'login');
     }
@@ -5774,8 +5774,7 @@
                         let gerente_array_manejo=[];
                         let coordinador_array_manejo=[];
                         let asesor_array_manejo=[];
-                        // console.log("cámara mis perros", response);
-                        if(response.data[0].idStatusContratacion==2 && resopnse.data[0].idMovimiento==84){//colocamos las validaciones cuando venga el estatus en esa actual vista
+                        if(response.data[0].idStatusContratacion==2 && response.data[0].idMovimiento==84){//colocamos las validaciones cuando venga el estatus en esa actual vista
                             console.log('Vamos a hacerlo', response.data[0].idStatusLote);
                             document.getElementById("labelFA").innerHTML = '<label><span class="required-label" style="color:#32D74C;vertical-align: text-bottom;">&bull;</span> Fecha Apartado:</label>';
                             document.getElementById("labelFA").innerHTML += '<input type="date" ng-model="fechaApartado" ng-change="provFTRE()" class="form-control" value="{{fechaApartado | date:\'yyyy-MM-dd\'}}" id="fechaApartado">\n';

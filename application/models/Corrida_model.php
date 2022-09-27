@@ -276,8 +276,11 @@
         ELSE cf.id_coordinador END 
         as id_coordinador,
         CASE WHEN cl.status IS NULL THEN 0
-        ELSE cl.status END 
-        as status, cl.id_cliente
+        ELSE cl.status END
+        as status,
+        CASE WHEN cf.fechaApartado IS NULL THEN '0'
+        ELSE cf.fechaApartado END as fechaApartadoCF,
+        cl.id_cliente
         FROM corridas_financieras cf 
         INNER JOIN lotes l ON cf.id_lote = l.idLote
         INNER JOIN condominios c ON l.idCondominio=c.idCondominio
@@ -365,7 +368,7 @@
         $query = $this->db->query("SELECT *,c.nombre as nombreCondominio,
         cf.nombre as nombreCliente,
         CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno ) as nombreAsesor,
-        cf.status as status, cf.fecha_creacion as creacion_corrida
+        cf.status as status, cf.fecha_creacion as creacion_corrida, l.idStatusContratacion, l.idMovimiento
         FROM corridas_financieras cf
         INNER JOIN lotes l ON l.idLote = cf.id_lote
         INNER JOIN condominios c ON c.idCondominio = l.idCondominio
