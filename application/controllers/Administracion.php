@@ -106,136 +106,146 @@ class Administracion extends CI_Controller{
 		  $sig_fecha_feriado2 = date('d-m', $hoy_strtotime2);
 		  $time = date('H:i:s', $hoy_strtotime2);
 		  
-		
-		  if ($time > $horaInicio and $time < $horaFin) {
 
-		  if($sig_fecha_dia2 == "Sat" || $sig_fecha_dia2 == "Sun" || 
-			   $sig_fecha_feriado2 == "01-01" || $sig_fecha_feriado2 == "06-02" ||
-			   $sig_fecha_feriado2 == "20-03" || $sig_fecha_feriado2 == "01-05" ||
-			   $sig_fecha_feriado2 == "16-09" || $sig_fecha_feriado2 == "20-11" || $sig_fecha_feriado2 == "19-11" ||
-			   $sig_fecha_feriado2 == "25-12" ) {
-		  
-		  $fecha = $fechaAccion;
-		  
-		  $z = 0;
-			  while($z <= 1) {
-			$hoy_strtotime = strtotime($fecha);
-			$sig_strtotime = strtotime('+1 days', $hoy_strtotime);
-			$sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
-			$sig_fecha_dia = date('D', $sig_strtotime);
-			  $sig_fecha_feriado = date('d-m', $sig_strtotime);
 
-			if( $sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" || 
-			   $sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
-			   $sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
-			   $sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" || $sig_fecha_feriado == "19-11" ||
-			   $sig_fecha_feriado == "25-12") {
-				 }
-				   else {
-						   $arregloFechas[$z] = $sig_fecha;
-						   $z++;
-						} 
-			  $fecha = $sig_fecha;
-					 }
-		  
-				$d= end($arregloFechas);
-				$dataPer[$i]['fechaVenc2']=$d;
 
-				 }else{
+          if($data[$i]->fechaSolicitudValidacion=='' || empty($data[$i]->fechaSolicitudValidacion)){
+              $dataPer[$i]['fechaVenc2'] = 'N/A';
+          }else{
+              if ($time > $horaInicio and $time < $horaFin) {
+                  if ($sig_fecha_dia2 == "Sat" || $sig_fecha_dia2 == "Sun" ||
+                      $sig_fecha_feriado2 == "01-01" || $sig_fecha_feriado2 == "06-02" ||
+                      $sig_fecha_feriado2 == "20-03" || $sig_fecha_feriado2 == "01-05" ||
+                      $sig_fecha_feriado2 == "16-09" || $sig_fecha_feriado2 == "20-11" || $sig_fecha_feriado2 == "19-11" ||
+                      $sig_fecha_feriado2 == "25-12") {
 
-		  $fecha = $fechaAccion;
-		  $z = 0;
-			  while($z <= 0) {
-			$hoy_strtotime = strtotime($fecha);
-			$sig_strtotime = strtotime('+1 days', $hoy_strtotime);
-			$sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
-			$sig_fecha_dia = date('D', $sig_strtotime);
-			  $sig_fecha_feriado = date('d-m', $sig_strtotime);
-		  
+                      $fecha = $fechaAccion;
 
-			if( $sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" || 
-			   $sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
-			   $sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
-			   $sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" || $sig_fecha_feriado == "19-11" ||
-			   $sig_fecha_feriado == "25-12") {
-				 }
-				   else {
-						   $arregloFechas[$z] = $sig_fecha;
-						   $z++;
-						} 
-			  $fecha = $sig_fecha;
-					 }
+                      $z = 0;
+                      while ($z <= 1) {
+                          $hoy_strtotime = strtotime($fecha);
+                          $sig_strtotime = strtotime('+1 days', $hoy_strtotime);
+                          $sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
+                          $sig_fecha_dia = date('D', $sig_strtotime);
+                          $sig_fecha_feriado = date('d-m', $sig_strtotime);
 
-					 $d= end($arregloFechas);
-					 $dataPer[$i]['fechaVenc2']=$d;
+                          if ($sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" ||
+                              $sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
+                              $sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
+                              $sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" || $sig_fecha_feriado == "19-11" ||
+                              $sig_fecha_feriado == "25-12") {
+                          } else {
+                              $arregloFechas[$z] = $sig_fecha;
+                              $z++;
+                          }
+                          $fecha = $sig_fecha;
+                      }
 
-				 }
-		  }
+                      $d = end($arregloFechas);
+                      $dataPer[$i]['fechaVenc2'] = $d;
 
-			elseif ($time < $horaInicio || $time > $horaFin) {
+                  } else {
 
-		  if($sig_fecha_dia2 == "Sat" || $sig_fecha_dia2 == "Sun" || 
-			   $sig_fecha_feriado2 == "01-01" || $sig_fecha_feriado2 == "06-02" ||
-			   $sig_fecha_feriado2 == "20-03" || $sig_fecha_feriado2 == "01-05" ||
-			   $sig_fecha_feriado2 == "16-09" || $sig_fecha_feriado2 == "20-11" || $sig_fecha_feriado2 == "19-11" ||
-			   $sig_fecha_feriado2 == "25-12" ) {
+                      $fecha = $fechaAccion;
+                      $z = 0;
+                      while ($z <= 0) {
+                          $hoy_strtotime = strtotime($fecha);
+                          $sig_strtotime = strtotime('+1 days', $hoy_strtotime);
+                          $sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
+                          $sig_fecha_dia = date('D', $sig_strtotime);
+                          $sig_fecha_feriado = date('d-m', $sig_strtotime);
 
-		  $fecha = $fechaAccion;
 
-		  $z = 0;
-			  while($z <= 1) {
-			$hoy_strtotime = strtotime($fecha);
-			$sig_strtotime = strtotime('+1 days', $hoy_strtotime);
-			$sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
-			$sig_fecha_dia = date('D', $sig_strtotime);
-			  $sig_fecha_feriado = date('d-m', $sig_strtotime);
+                          if ($sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" ||
+                              $sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
+                              $sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
+                              $sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" || $sig_fecha_feriado == "19-11" ||
+                              $sig_fecha_feriado == "25-12") {
+                          } else {
+                              $arregloFechas[$z] = $sig_fecha;
+                              $z++;
+                          }
+                          $fecha = $sig_fecha;
+                      }
 
-			if( $sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" || 
-			   $sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
-			   $sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
-			   $sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" || $sig_fecha_feriado == "19-11" ||
-			   $sig_fecha_feriado == "25-12") {
-				 }
-				   else {
-						   $arregloFechas[$z] = $sig_fecha;
-						   $z++;
-						} 
-			  $fecha = $sig_fecha;
-					 }
+                      $d = end($arregloFechas);
+                      $dataPer[$i]['fechaVenc2'] = $d;
 
-				$d= end($arregloFechas);
-				$dataPer[$i]['fechaVenc2']=$d;		  
-				 }else{
-		  
-		  $fecha = $fechaAccion;
+                  }
+              }
+              elseif ($time < $horaInicio || $time > $horaFin) {
 
-		  $z = 0;
-			  while($z <= 1) {
-			$hoy_strtotime = strtotime($fecha);
-			$sig_strtotime = strtotime('+1 days', $hoy_strtotime);
-			$sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
-			$sig_fecha_dia = date('D', $sig_strtotime);
-			  $sig_fecha_feriado = date('d-m', $sig_strtotime);
+                  if ($sig_fecha_dia2 == "Sat" || $sig_fecha_dia2 == "Sun" ||
+                      $sig_fecha_feriado2 == "01-01" || $sig_fecha_feriado2 == "06-02" ||
+                      $sig_fecha_feriado2 == "20-03" || $sig_fecha_feriado2 == "01-05" ||
+                      $sig_fecha_feriado2 == "16-09" || $sig_fecha_feriado2 == "20-11" || $sig_fecha_feriado2 == "19-11" ||
+                      $sig_fecha_feriado2 == "25-12")
+                  {
 
-			if( $sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" || 
-			   $sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
-			   $sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
-			   $sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" || $sig_fecha_feriado == "19-11" ||
-			   $sig_fecha_feriado == "25-12") {
-				 }
-				   else {
-						   $arregloFechas[$z] = $sig_fecha;
-						   $z++;
-						} 
-			  $fecha = $sig_fecha;
-					 }
+                      $fecha = $fechaAccion;
 
-					 $d= end($arregloFechas);
-					 $dataPer[$i]['fechaVenc2']=$d;		  
-					}
-		  
-				 }
+                      $z = 0;
+                      while ($z <= 1) {
+                          $hoy_strtotime = strtotime($fecha);
+                          $sig_strtotime = strtotime('+1 days', $hoy_strtotime);
+                          $sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
+                          $sig_fecha_dia = date('D', $sig_strtotime);
+                          $sig_fecha_feriado = date('d-m', $sig_strtotime);
+
+                          if ($sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" ||
+                              $sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
+                              $sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
+                              $sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" || $sig_fecha_feriado == "19-11" ||
+                              $sig_fecha_feriado == "25-12") {
+                          } else {
+                              $arregloFechas[$z] = $sig_fecha;
+                              $z++;
+                          }
+                          $fecha = $sig_fecha;
+                      }
+
+                      $d = end($arregloFechas);
+                      $dataPer[$i]['fechaVenc2'] = $d;
+                      echo 'aqui<br>';
+
+                  }
+                  else {
+
+                      $fecha = $fechaAccion;
+
+                      $z = 0;
+                      while ($z <= 1) {
+                          $hoy_strtotime = strtotime($fecha);
+                          $sig_strtotime = strtotime('+1 days', $hoy_strtotime);
+                          $sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
+                          $sig_fecha_dia = date('D', $sig_strtotime);
+                          $sig_fecha_feriado = date('d-m', $sig_strtotime);
+
+                          if ($sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" ||
+                              $sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
+                              $sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
+                              $sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" || $sig_fecha_feriado == "19-11" ||
+                              $sig_fecha_feriado == "25-12") {
+
+                          } else {
+                              $arregloFechas[$z] = $sig_fecha;
+                              $z++;
+                          }
+                          $fecha = $sig_fecha;
+                      }
+
+                      $d = end($arregloFechas);
+                      $dataPer[$i]['fechaVenc2'] = $d;
+                  }
+
+              }
+          }
+
 	  }
+
+
+
+
 		  if($dataPer != null) {
 			  echo json_encode($dataPer);
 		  } else {
