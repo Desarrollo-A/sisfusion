@@ -360,27 +360,31 @@
 						
 						return '<p class="m-0">'+ res +'</p>';*/
 
-						var dateFuture = new Date(d.fechaVenc2);
-					    var dateNow = new Date();
+                        if(d.fechaVenc2=='N/A'){
+                            return '<p class="m-0">N/A</p>';
+                        }else{
+                            var dateFuture = new Date(d.fechaVenc2);
+                            var dateNow = new Date();
 
-					    /*console.log("TF: " + dateFuture);
-					    console.log(dateNow);*/
+                            /*console.log("TF: " + dateFuture);
+                            console.log(dateNow);*/
 
-					    var seconds = Math.floor((dateFuture - (dateNow))/1000);
-					    var minutes = Math.floor(seconds/60);
-					    var hours = Math.floor(minutes/60);
-					    var days = Math.floor(hours/24);
+                            var seconds = Math.floor((dateFuture - (dateNow))/1000);
+                            var minutes = Math.floor(seconds/60);
+                            var hours = Math.floor(minutes/60);
+                            var days = Math.floor(hours/24);
 
-					    hours = hours-(days*24);
-					    minutes = minutes-(days*24*60)-(hours*60);
-					    seconds = seconds-(days*24*60*60)-(hours*60*60)-(minutes*60);
+                            hours = hours-(days*24);
+                            minutes = minutes-(days*24*60)-(hours*60);
+                            seconds = seconds-(days*24*60*60)-(hours*60*60)-(minutes*60);
 
-					    if(days < 0){
-					        return 'Vencido';
-					    }else{
-
-					        return '<p style="font-size: .9em">Vence en:' + days + ' día(s), ' + hours + ' hora(s), ' + minutes + ' minuto(s)</p>';
-					    }
+                            if(days < 0){
+                                return 'Vencido';
+                            }
+                            else{
+                                return '<p style="font-size: .9em">Vence en:' + days + ' día(s), ' + hours + ' hora(s), ' + minutes + ' minuto(s)</p>';
+                            }
+                        }
 					}
 				}, 
 				{ 
