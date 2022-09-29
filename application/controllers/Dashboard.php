@@ -30,8 +30,7 @@ class Dashboard extends CI_Controller
         }
     }
 
-    public function dashboard()
-    {
+    public function dashboard(){
         if ($this->session->userdata('id_rol') == FALSE) {
             redirect(base_url());
         }

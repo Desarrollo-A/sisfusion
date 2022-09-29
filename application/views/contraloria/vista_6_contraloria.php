@@ -25,7 +25,10 @@
 							<textarea class="form-control" name="comentario" id="comentarioregCor" rows="3"></textarea>
                              <br>
 						</div>
-				
+                        <div class="col col-xs-12 col-sm-12 col-md-6 col-lg-12">
+                            <label id="tvLbl">Enganche:</label>
+                            <input type="text" class="form-control" name="totalNeto" id="totalNeto" oncopy="return false" onpaste="return false" onkeypress="return SoloNumeros(event)">
+                        </div>
 						<input type="hidden" name="idLote" id="idLoteregCor" >
 						<input type="hidden" name="idCliente" id="idClienteregCor" >
 						<input type="hidden" name="idCondominio" id="idCondominioregCor" >
@@ -298,53 +301,6 @@
                                             </tr>
                                         </thead>
                                     </table>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-    <div class="content hide">
-        <div class="container-fluid">
-            <!--<h5 style="text-align: center">REGISTRO ESTATUS 6 (Corrida elaborada)</h5>-->
-            <div class="row">
-                <div class="col xol-xs-12 col-sm-12 col-md-12 col-lg-12">
-                    <div class="card">
-                        <div class="card-header card-header-icon" data-background-color="goldMaderas">
-                            <i class="material-icons">reorder</i>
-                        </div>
-                        <div class="card-content">
-                            <h4 class="card-title center-align">Registro estatus 6 (corrida elaborada)</h4>
-                            <div class="toolbar">
-                             </div>
-                            <div class="material-datatables"> 
-
-                                <div class="form-group">
-                                    <div class="table-responsive">
-									<table class="table table-responsive table-bordered table-striped table-hover"
-                                           id="tabla_ingresar_6" name="tabla_ingresar_6" style="text-align:center;">
-                                        <thead>
-                                            <tr>
-                                                <th></th>
-                                                <th></th>
-												<th style="font-size: .9em;">PROYECTO</th>
-												<th style="font-size: .9em;">CONDOMINIO</th>
-                                                <th style="font-size: .9em;">LOTE</th>
-                                                <th style="font-size: .9em;">GERENTE</th>
-                                                <th style="font-size: .9em;">CLIENTE</th>
-                                                <th style="font-size: .9em;">F.MOD</th>
-                                                <th style="font-size: .9em;">F.VENC</th>
-												<th style="font-size: .9em;">UC</th>
-                                                <th style="font-size: .9em;"></th>
-                                            </tr>
-                                        </thead>
-                                    </table>
-
-                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -898,7 +854,8 @@ columnDefs: [
 		var idCliente = $("#idClienteregCor").val();
 		var fechaVenc = $("#fechaVencregCor").val();
 		var comentario = $("#comentarioregCor").val();
-
+		var enganche = $("#enganche").val();
+        var totalNeto = $("#totalNeto").val();
 
 		var parametros = {
 			"idLote": idLote,
@@ -907,16 +864,14 @@ columnDefs: [
 			"idStatusContratacion": idStatusContratacion,
 			"idCliente": idCliente,
 			"fechaVenc": fechaVenc,
-			"comentario": comentario
+			"comentario": comentario,
+			"totalNeto": totalNeto
 		};
 
 
-		if (comentario.length <= 0 ) {
-
-			alerts.showNotification('top', 'right', 'Ingresa un comentario.', 'danger');
-
-		} else if (comentario.length > 0) {
-
+		if (comentario.length <= 0 || $("#totalNeto").val().length == 0)
+			alerts.showNotification('top', 'right', 'Los campos Comentario y Enganche son requeridos.', 'danger');
+		else if (comentario.length > 0) {
 		     	$('#enviarAContraloriaGuardar').prop('disabled', true);
 				$.ajax({
 					data: parametros,
@@ -1330,6 +1285,20 @@ jQuery(document).ready(function(){
 	})
 	
 })
+
+function SoloNumeros(evt){
+    if(window.event)
+        keynum = evt.keyCode; 
+    else
+        keynum = evt.which;
+
+    if((keynum > 47 && keynum < 58) || keynum == 8 || keynum == 13 || keynum == 6 || keynum == 46 )
+        return true;
+    else {
+        alerts.showNotification("top", "left", "Recuerda sólo ingresar números.", "danger");
+        return false;
+    }
+}
 
 
 
