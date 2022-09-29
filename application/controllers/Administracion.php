@@ -758,6 +758,24 @@ class Administracion extends CI_Controller{
             return $mail->ErrorInfo;
         }
     }
+
+    public function status11Validado(){
+        /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/
+        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
+        /*-------------------------------------------------------------------------------*/
+        $this->load->view('template/header');
+        $this->load->view("administracion/validadoStatus11", $datos);
+    }
+
+    public function getDateStatus11(){
+	    $data = $this->Administracion_model->getDateStatus11();
+	    if($data == TRUE){
+            $response['message'] = 'OK';
+        }else{
+            $response['message'] = 'ERROR';
+        }
+        echo json_encode($data);
+    }
 }
 
 

@@ -130,4 +130,19 @@ class Administracion_model extends CI_Model {
         return $query->row();
      }
 
+    public function getDateStatus11(){
+        $query = $this->db->query("SELECT r.descripcion, c.nombre, l.idLote, nombreLote, idStatusContratacion, idMovimiento, idStatusLote, perfil, 
+        validacionEnganche, status8Flag, comentario, firmaRL, totalNeto2, l.idCliente, totalNeto, 
+        totalValidado, hl.modificado as fecha_status_11,
+        CONCAT(cl.nombre,' ', cl.apellido_paterno, ' ', cl.apellido_materno) as nombreCliente 
+        FROM lotes l
+        INNER JOIN clientes cl ON cl.idLote = l.idLote
+        INNER JOIN condominios c ON c.idCondominio = l.idCondominio
+        INNER JOIN residenciales r ON r.idResidencial = c.idResidencial
+        INNER JOIN (SELECT idLote, idCliente, MAX(modificado) as modificado FROM historial_lotes WHERE idStatusContratacion = 11 AND idMovimiento = 41 
+        GROUP BY idLote, idCliente) hl ON hl.idLote = l.idLote AND hl.idCliente = cl.id_cliente
+        WHERE status8Flag = 0 AND validacionEnganche = 'VALIDADO';");
+        return $query->result_array();
+    }
+
 }
