@@ -35,8 +35,8 @@ class Suma_model extends CI_Model
 
     function setComisionesPagos($dataComisiones, $dataPagos){
         $this->db->trans_begin();
-        $this->db->insert_batch('comisiones_suma', $dataComisiones);
-        $this->db->insert_batch('pagos_suma', $dataPagos);
+        $c = $this->db->insert_batch('comisiones_suma', $dataComisiones);
+        $b = $this->db->insert_batch('pagos_suma', $dataPagos);
         if ($this->db->trans_status() === FALSE) { // Hubo errores en la consulta, entonces se cancela la transacción.
             $this->db->trans_rollback();
             return false;
@@ -45,4 +45,40 @@ class Suma_model extends CI_Model
             return true;
         }
     }
+
+    function getComisionesByStatus($estatus){
+        $query = $this->db->query("SELECT cs.id_cliente, cs.nombre_cliente, cs.id_pago,  cs.estatus, cs.referencia, ps.id_pago_suma, ps.id_usuario,
+        CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) nombre_comisionista, se.nombre sede, oxc.nombre forma_pago, 
+        us.forma_pago id_forma_pago, ps.total_comision, ps.porcentaje_comision, cs.total_venta,
+        (CASE us.forma_pago WHEN 3 THEN (((100-se.impuesto)/100)* ps.total_comision) ELSE ps.total_comision END) impuesto
+        FROM comisiones_suma cs
+        INNER JOIN pagos_suma ps ON ps.referencia = cs.referencia
+        INNER JOIN usuarios us ON us.id_usuario = ps.id_usuario
+        INNER JOIN sedes se ON se.id_sede = us.id_sede
+        INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = us.forma_pago AND oxc.id_catalogo = 16
+        WHERE ps.estatus = $estatus");
+
+        return $query->result_array();
+    }
+
+    function getHistorial($idPago){
+        $result = $this->db->query("SELECT hs.fecha_movimiento, hs.comentario, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) modificado_por
+        FROM historial_suma hs
+        INNER JOIN usuarios u ON u.id_usuario = hs.id_usuario 
+        WHERE id_pago = $idPago
+        ORDER BY hs.fecha_movimiento DESC");
+
+        return $result;
+    }
+
+    function insert_historial($data){
+        $this->db->insert_batch('historial_suma', $data);
+        return true;
+    }
+
+    function update_acepta_solicitante($idsol) {
+        $query = $this->db->query("UPDATE pagos_suma SET estatus = 2 WHERE id_pago_suma IN (".$idsol.")");
+
+        return true;
+    }  
 }
