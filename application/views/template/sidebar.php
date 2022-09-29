@@ -210,6 +210,8 @@ foreach($datos2 as $datos)
 </div>
 
 <?php $this->load->view('template/calendar_sidebar');?>
+
+<?php $this->load->view('template/novedadesModal');?>
 <div class="main-panel">
 	<nav class="navbar navbar-transparent navbar-absolute">
 		<div class="container-fluid">

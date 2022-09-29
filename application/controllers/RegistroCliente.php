@@ -8377,10 +8377,12 @@
 
             }
 
-        } else if ($validaDelete == 0) {
+        }
+        else if ($validaDelete == 0) {
             $response['message'] = 'ERROR';
             echo json_encode($response);
-        } else {
+        }
+        else {
             $response['message'] = 'ERROR';
             echo json_encode($response);
         }
@@ -8488,7 +8490,7 @@
 
 	}
 	
-  public function getcop() {
+    public function getcop() {
       $id_cliente = $this->input->post("id_cliente");
       $response['data'] = $this->registrolote_modelo->getcop($id_cliente);
       echo json_encode($response);
