@@ -819,6 +819,7 @@ c                                    </span>
 	
 	
 	$(document).on("click", ".delete", function (e) {
+	    console.log('this is de plan');
 		e.preventDefault();
 		var iddoc = $(this).data("iddoc");
 		var tipodoc = $(this).data("tipodoc");
