@@ -72,32 +72,17 @@
                             <textarea class="form-control" id="comentario" rows="3"></textarea>
                              <br>
                         </div>
-
-                        <div class="col col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                            <label id="tvLbl">Enganche:</label>
-                            <input type="text" class="form-control" name="totalNeto" id="totalNeto" oncopy="return false" onpaste="return false" onkeypress="return SoloNumeros(event)">
-                        </div>
-
-
-                        <div class="col col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                        <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
                             <label id="tvLbl">Total Neto:</label>
                             <input type="text" class="form-control" name="totalNeto2" id="totalNeto2" oncopy="return false" onpaste="return false" onkeypress="return SoloNumeros(event)">
                         </div>
                     </div>
-
-                    <!-- ADDED DIV WITH COMMISSION PLAN -->
-                    <div class="col col-xs-12 col-sm-12 col-md-6 col-lg-12">
-                        <label>Plan de comisión</label>
-                        <select class="selectpicker" name="commission_plan" id="commission_plan" data-style="select-with-transition" data-live-search="true" title="Seleccione una opción" data-size="7" required></select>
-                        <br>
-                    </div>
-
                 </div>
 
                 <div class="modal-footer"></div>
                 <div class="modal-footer">
                     <button type="button" id="save1" class="btn btn-success"><span class="material-icons" >send</span> </i> Registrar</button>
-                    <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="cleanSelects()"><span class="glyphicon glyphicon-remove"></span> Cancelar</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> Cancelar</button>
                 </div>
         </div>
     </div>
@@ -158,29 +143,6 @@
     }
 
 });
-    
-
-    function cleanSelects() {
-        $('#commission_plan').val("");
-        $("#commission_plan").selectpicker("refresh");
-    }
-
-    // ADDED COMMISSION POST TO GET DATA FROM OPCS_X_CATS
-    $.post('getCommissionPlans', function(data) {
-        $("#commission_plan").append($('<option disabled selected>').val("0").text("Seleccione una opción"));
-        var len = data.length;
-        for( var i = 0; i<len; i++)
-        {
-            var id = data[i]['id_opcion'];
-            var name = data[i]['nombre'];
-            $("#commission_plan").append($('<option>').val(id).text(name));
-        }
-        if(len<=0)
-        {
-            $("#commission_plan").append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
-        }
-        $("#commission_plan").selectpicker('refresh');
-    }, 'json');
 
 var url = "<?=base_url()?>";
 var url2 = "<?=base_url()?>index.php/";
@@ -532,15 +494,10 @@ $(document).on('click', '#save1', function(e) {
 e.preventDefault();
 
     var comentario = $("#comentario").val();
-    var totalNeto = $("#totalNeto").val();
     var totalNeto2 = $("#totalNeto2").val();
-    var commissionPlan = $("#commission_plan").val();
-
+    
     var validaComent = ($("#comentario").val().length == 0) ? 0 : 1;
-    var validatn = ($("#totalNeto").val().length == 0) ? 0 : 1;
-    var validatn2 = ($("#totalNeto2").val().length == 0) ? 0 : 1;
-    var validateCommissionPlan = ($("#commission_plan").val() == null) ? 0 : 1;
-
+    var validatn = ($("#totalNeto2").val().length == 0) ? 0 : 1;
 
     var dataExp1 = new FormData();
 
@@ -552,17 +509,12 @@ e.preventDefault();
     dataExp1.append("idLote", getInfo1[5]);
     dataExp1.append("comentario", comentario);
     dataExp1.append("fechaVenc", getInfo1[6]);
-    dataExp1.append("totalNeto", totalNeto);
     dataExp1.append("totalNeto2", totalNeto2);
-    dataExp1.append("commissionPlan", commissionPlan);
 
-
-      if (validaComent == 0 || validatn == 0 || validatn2 == 0 || validateCommissionPlan == 0) {
-                alerts.showNotification("top", "right", "Todos los campos son obligatorios.", "danger");
+      if (validaComent == 0 || validatn == 0) {
+        alerts.showNotification("top", "right", "Todos los campos son obligatorios.", "danger");
       }
-      
-      if (validaComent == 1 && validatn == 1 && validatn2 == 1 && validateCommissionPlan == 1) {
-
+      if (validaComent == 1 && validatn == 1) {
         $('#save1').prop('disabled', true);
             $.ajax({
               url : '<?=base_url()?>index.php/Contraloria/editar_registro_lote_contraloria_proceceso9/',
@@ -578,7 +530,6 @@ e.preventDefault();
                     $('#save1').prop('disabled', false);
                     $('#editReg').modal('hide');
                     $('#tabla_ingresar_9').DataTable().ajax.reload();
-                    cleanSelects();
                     alerts.showNotification("top", "right", "Estatus enviado.", "success");
                 } else if(response.message == 'FALSE'){
                     $('#save1').prop('disabled', false);

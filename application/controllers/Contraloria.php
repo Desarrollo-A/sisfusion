@@ -1301,8 +1301,8 @@ public function get_sede(){
 	  $modificado = date('Y-m-d H:i:s');
 	  $fechaVenc = $this->input->post('fechaVenc');
 	  $fechaVenStatus = $this->input->post('fechaVenStatus');
-	  // ADDED LINE
-	  $commission_plan = $this->input->post('commission_plan');
+	  $totalNeto = $this->input->post('totalNeto');
+	  
 	  $arreglo = array();
 	  $arreglo["idStatusContratacion"] = 6;
 	  $arreglo["idMovimiento"] = 36;
@@ -1310,8 +1310,8 @@ public function get_sede(){
 	  $arreglo["usuario"] = $this->session->userdata('id_usuario');
 	  $arreglo["perfil"] = $this->session->userdata('id_rol');
 	  $arreglo["modificado"] = date("Y-m-d H:i:s");
-	  // ADDED LINE
-	  $arreglo["plan_enganche"] = $commission_plan;
+	  $arreglo["totalNeto"] = $totalNeto;
+
 	  $horaActual = date('H:i:s');
 	  $horaInicio = date("08:00:00");
 	  $horaFin = date("16:00:00");
@@ -2129,10 +2129,7 @@ $i = 0;
     $comentario=$this->input->post('comentario');
     $modificado=date("Y-m-d H:i:s");
     $fechaVenc=$this->input->post('fechaVenc');
-    $totalNeto=$this->input->post('totalNeto');
     $totalNeto2=$this->input->post('totalNeto2');
-    $commissionPlan=$this->input->post('commissionPlan');
-
 
     $arreglo=array();
     $arreglo["idStatusContratacion"]=9;
@@ -2142,10 +2139,7 @@ $i = 0;
     $arreglo["perfil"]=$this->session->userdata('id_rol');
     $arreglo["modificado"]=date("Y-m-d H:i:s");
     $arreglo["fechaVenc"]= $modificado;
-    $arreglo["totalNeto"]=$totalNeto;
     $arreglo["totalNeto2"]=$totalNeto2;
-    $arreglo["plan_enganche"]=$commissionPlan;
-
 
     $arreglo2=array();
     $arreglo2["idStatusContratacion"]=9;
@@ -2272,7 +2266,6 @@ $i = 0;
 							  $updateStatus10["usuario"] = $this->session->userdata('id_usuario');
 							  $updateStatus10["perfil"] = $this->session->userdata('id_rol');
 							  $updateStatus10["modificado"] = date("Y-m-d H:i:s");
-							  $updateStatus10["fechaSolicitudValidacion"] = date('Y-m-d H:i:s');
 							  $updateStatus10["fechaRL"] = date('Y-m-d H:i:s');
 
 
