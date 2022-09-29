@@ -144,7 +144,8 @@ class Internomex_model extends CI_Model {
         return $this->db->query("SELECT u0.id_usuario, UPPER(CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno)) nombreUsuario, 
         se.nombre sede, oxc0.nombre tipoUsuario, oxc2.nombre formaPago, u0.rfc,oxc1.nombre nacionalidad, 
         FORMAT(SUM(pci.abono_neodata), 'C') montoSinDescuentos,
-        (CASE u0.forma_pago WHEN 3 THEN FORMAT(SUM(pci.abono_neodata) - ((SUM(pci.abono_neodata) * se.impuesto) / 100), 'C') ELSE FORMAT(SUM(pci.abono_neodata), 'C') END) montoConDescuentosSede
+        (CASE u0.forma_pago WHEN 3 THEN FORMAT(SUM(pci.abono_neodata) - ((SUM(pci.abono_neodata) * se.impuesto) / 100), 'C') 
+        ELSE FORMAT(SUM(pci.abono_neodata), 'C') END) montoConDescuentosSede, 0.00 montoFinal
         FROM pago_comision_ind pci
         INNER JOIN comisiones co ON co.id_comision = pci.id_comision
         INNER JOIN lotes lo ON lo.idLote = co.id_lote

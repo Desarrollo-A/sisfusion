@@ -124,7 +124,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
 <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
-<script type="text/javascript" src="//unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
+<!--<script type="text/javascript" src="//unpkg.com/xlsx/dist/xlsx.full.min.js"></script>-->
+<script type="text/javascript" src="<?= base_url() ?>dist/js/xlsx/xlsx.full.min.js"></script>
 <script src="<?= base_url() ?>dist/js/jwt/hmac-sha256.js"></script>
 <script src="<?= base_url() ?>dist/js/jwt/enc-base64-min.js"></script>
 <script src="<?= base_url() ?>dist/js/controllers/general/main_services.js"></script>

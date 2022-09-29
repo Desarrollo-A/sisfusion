@@ -144,7 +144,7 @@ $(document).on('click', '#downloadFile', function () {
         success: function (response) {
             var len = response.length;
             var createXLSLFormatObj = [];
-            var xlsHeader = ["id_usuario", "nombreUsuario", 'sede', "tipoUsuario", "formaPago", "rfc", "nacionalidad", "montoSinDescuentos", "montoConDescuentosSede"];
+            var xlsHeader = ["id_usuario", "nombreUsuario", 'sede', "tipoUsuario", "formaPago", "rfc", "nacionalidad", "montoSinDescuentos", "montoConDescuentosSede", "montoFinal"];
             xlsHeader.push($(this).data('name'));
             createXLSLFormatObj.push(xlsHeader);
             for (var i = 0; i < len; i++) {
@@ -158,6 +158,7 @@ $(document).on('click', '#downloadFile', function () {
                 innerRowData.push(response[i]['nacionalidad']);
                 innerRowData.push(response[i]['montoSinDescuentos']);
                 innerRowData.push(response[i]['montoConDescuentosSede']);
+                innerRowData.push(response[i]['montoFinal']);
                 createXLSLFormatObj.push(innerRowData);
             }
             /* File Name */

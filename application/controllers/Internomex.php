@@ -10,11 +10,8 @@
     public function __construct()
     {
       parent::__construct();
-      $this->load->model('Internomex_model');
-      $this->load->model('asesor/Asesor_model');
-  //LIBRERIA PARA LLAMAR OBTENER LAS CONSULTAS DE LAS  DEL MENÚ
-      $this->load->library(array('session','form_validation', 'get_menu'));
-      $this->load->library(array('session', 'form_validation'));
+      $this->load->model(array('Internomex_model', 'asesor/Asesor_model'));
+      $this->load->library(array('session','form_validation', 'get_menu', 'Jwt_actions'));
       $this->load->helper(array('url', 'form'));
       $this->load->database('default');
     }
@@ -128,7 +125,24 @@
         echo json_encode(array("status" => 400, "message" => "Algún parámetro no tiene un valor especificado."), JSON_UNESCAPED_UNICODE);
       else {
         $data = $this->input->post("data");
-        echo $data;
+        $decodedData = $this->jwt_actions->decodeData('4582', $data);
+        if (in_array($decodedData, array('ALR001', 'ALR003', 'ALR004', 'ALR005', 'ALR006', 'ALR007', 'ALR008', 'ALR009', 'ALR010', 'ALR012', 'ALR013', 'ALR002', 'ALR011', 'ALR014')))
+          echo json_encode(array("status" => 500, "message" => "No se logró decodificar la data."), JSON_UNESCAPED_UNICODE);
+        else {
+          $insertAuditoriaData = array("fecha_creacion" => date("Y-m-d H:i:s"), "creado_por" => $this->session->userdata('id_usuario'));
+          for ($i = 0; $i < count($decodedData); $i++) { 
+            $commonData = array();
+            $commonData += (isset($decodedData[$i]->nombreUsuario) && !empty($decodedData[$i]->nombreUsuario)) ? array("nombreUsuario" => $decodedData[$i]->nombreUsuario) : array("nombreUsuario" => NULL);
+            $commonData += (isset($decodedData[$i]->montoSinDescuentos) && !empty($decodedData[$i]->montoSinDescuentos)) ? array("montoSinDescuentos" => $decodedData[$i]->montoSinDescuentos) : array("montoSinDescuentos" => NULL);
+            $commonData += (isset($decodedData[$i]->montoConDescuentosSede) && !empty($decodedData[$i]->montoConDescuentosSede)) ? array("montoConDescuentosSede" => $decodedData[$i]->montoConDescuentosSede) : array("montoConDescuentosSede" => NULL);
+            $commonData += (isset($decodedData[$i]->montoFinal) && !empty($decodedData[$i]->montoFinal)) ? array("montoFinal" => $decodedData[$i]->montoFinal) : array("montoFinal" => NULL);
+            array_push($insertArrayData, $commonData);
+          }
+          if (count($insertArrayData) > 0)
+            echo $insertAuditoriaData;
+          else
+            echo json_encode(array("status" => 500, "message" => "Alguno de los registros no tiene un valor establecido."), JSON_UNESCAPED_UNICODE);
+        }
       }
     }
  }
