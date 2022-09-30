@@ -1301,8 +1301,12 @@ public function get_sede(){
 	  $modificado = date('Y-m-d H:i:s');
 	  $fechaVenc = $this->input->post('fechaVenc');
 	  $fechaVenStatus = $this->input->post('fechaVenStatus');
+	  //quitar las cosas que le daban formato
+      $charactersNoPermit = array('$',',');
 	  $totalNeto = $this->input->post('totalNeto');
-	  
+	  $totalNeto = str_replace($charactersNoPermit, '', $totalNeto);
+
+
 	  $arreglo = array();
 	  $arreglo["idStatusContratacion"] = 6;
 	  $arreglo["idMovimiento"] = 36;
@@ -1311,6 +1315,8 @@ public function get_sede(){
 	  $arreglo["perfil"] = $this->session->userdata('id_rol');
 	  $arreglo["modificado"] = date("Y-m-d H:i:s");
 	  $arreglo["totalNeto"] = $totalNeto;
+
+
 
 	  $horaActual = date('H:i:s');
 	  $horaInicio = date("08:00:00");
@@ -2130,6 +2136,8 @@ $i = 0;
     $modificado=date("Y-m-d H:i:s");
     $fechaVenc=$this->input->post('fechaVenc');
     $totalNeto2=$this->input->post('totalNeto2');
+    $charactersNoPermit = array('$',',');
+    $totalNeto2 = str_replace($charactersNoPermit, '', $totalNeto2);
 
     $arreglo=array();
     $arreglo["idStatusContratacion"]=9;

@@ -8309,6 +8309,8 @@
                 $mail->AddAddress('karen.pina@ciudadmaderas.com');
                 $mail->AddAddress('coord.administrativo4@ciudadmaderas.com');
                 $mail->AddAddress('coord.administrativo5@ciudadmaderas.com');
+                $mail->AddAddress('coord.administrativo7@ciudadmaderas.com');
+                $mail->AddAddress('asistente.admon@ciudadmaderas.com');
                 $mail->Subject = utf8_decode('MODIFICACIÓN DE CORRIDA FINANCIERA');
                 $mail->isHTML(true);
                 $mailContent = utf8_decode("<html><head>
