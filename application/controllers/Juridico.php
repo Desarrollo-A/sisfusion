@@ -298,6 +298,7 @@ class Juridico extends CI_Controller
 		$arreglo["perfil"]=$this->session->userdata('id_rol');
 		$arreglo["modificado"]=date("Y-m-d H:i:s");
 		$arreglo["numContrato"]=$numContrato;
+		$arreglo["fechaSolicitudValidacion"] = date('Y-m-d H:i:s');
 	
 	
 	$horaActual = date('H:i:s');

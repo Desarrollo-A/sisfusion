@@ -5,8 +5,8 @@ class Suma extends CI_Controller
     public function __construct()
     {
         parent::__construct();
-        $this->load->model(array('Suma_model', 'General_model'));
-        $this->load->library(array('session', 'form_validation', 'Jwt_actions'));
+        $this->load->model(array('Suma_model', 'General_model', 'Comisiones_model', 'PagoInvoice_model'));
+        $this->load->library(array('session', 'form_validation', 'Jwt_actions', 'get_menu'));
         $this->load->helper(array('url', 'form'));
         $this->load->database('default');
         // $this->jwt_actions->authorize_externals('3450', apache_request_headers()["Authorization"]);
@@ -43,6 +43,20 @@ class Suma extends CI_Controller
                 }
             }
         }
+    }
+
+    public function comisiones_suma(){
+        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
+        $datos['sub_menu'] = $this->get_menu->get_submenu_data($this->session->userdata('id_rol'), $this->session->userdata('id_usuario'));
+    
+        
+        $this->load->view('template/header');
+        $this->load->view("Ventas/comisiones_suma", $datos);
+    }
+
+    public function getComisionesByStatus(){
+        $data = $this->Suma_model->getComisionesByStatus($_POST['estatus']);
+        echo json_encode($data);
     }
 
     public function sumServ(){
@@ -115,6 +129,72 @@ class Suma extends CI_Controller
                 array_push($request, array("status" => 400, "message" => "Oops, ocurrió un error al insertar los registros"));
 
             echo(json_encode($request, JSON_UNESCAPED_UNICODE));
+        }
+    }
+
+    public function getHistorial($pago){
+        echo json_encode($this->Suma_model->getHistorial($pago)->result_array());
+    }
+
+    public function acepto_comisiones_user(){
+        $id_user_Vl = $this->session->userdata('id_usuario');
+        $formaPagoUsuario = $this->session->userdata('forma_pago');
+        $sol=$this->input->post('idcomision');  
+        $consulta_comisiones = $this->db->query("SELECT id_pago_suma FROM pagos_suma where id_pago_suma IN (".$sol.")");
+        $opinionCumplimiento = $this->Comisiones_model->findOpinionActiveByIdUsuario($id_user_Vl);
+       
+        if( $consulta_comisiones->num_rows() > 0 ){
+            $consulta_comisiones = $consulta_comisiones->result_array();
+            $sep = ',';
+            $id_pago_i = '';
+
+            $data=array();
+            $pagoInvoice = array();
+
+            foreach ($consulta_comisiones as $row) {
+                $id_pago_i .= implode($sep, $row);
+                $id_pago_i .= $sep;
+
+                $row_arr=array(
+                    'id_pago' => $row['id_pago_suma'],
+                    'id_usuario' =>  $id_user_Vl,
+                    'fecha_movimiento' => date('Y-m-d H:i:s'),
+                    'estatus' => 2,
+                    'comentario' =>  'COLABORADOR ENVÍO A CONTRALORÍA' 
+                );
+                array_push($data,$row_arr);
+
+                if ($formaPagoUsuario == 5) { // Pago extranjero
+                    $pagoInvoice[] = array(
+                    'id_pago_i' => $row['id_pago_suma'],
+                    'nombre_archivo' => $opinionCumplimiento->archivo_name,
+                    'estatus' => 2,
+                    'modificado_por' => $id_user_Vl,
+                    'fecha_registro' => date('Y-m-d H:i:s')
+                    );
+                }
+            }
+            $id_pago_i = rtrim($id_pago_i, $sep);
+        
+            $up_b = $this->Suma_model->update_acepta_solicitante($id_pago_i);
+            $ins_b = $this->Suma_model->insert_historial($data);
+            // $this->Comisiones_model->changeEstatusOpinion($id_user_Vl);
+            if ($formaPagoUsuario == 5) {
+                $this->PagoInvoice_model->insertMany($pagoInvoice);
+            }
+          
+            if($up_b == true && $ins_b == true){
+                $data_response = 1;
+                echo json_encode($data_response);
+            } else {
+                $data_response = 0;
+                echo json_encode($data_response);
+            } 
+            
+        }
+        else{
+            $data_response = 0;
+            echo json_encode($data_response);
         }
     }
 }

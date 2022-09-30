@@ -55,7 +55,7 @@ class Administracion_model extends CI_Model {
 	public function validateSt11($idLote){
       $this->db->where("idLote",$idLote);
       $this->db->where_in('idStatusLote', 3);
-      $this->db->where("((idStatusContratacion IN (8, 10) AND idMovimiento IN (40, 10, 67)) OR
+      $this->db->where("((idStatusContratacion IN (8, 10) AND idMovimiento IN (40, 10, 67) AND (validacionEnganche = 'NULL' OR validacionEnganche IS NULL)) OR
       (idStatusContratacion = 12 and idMovimiento = 42 AND (validacionEnganche = 'NULL' OR validacionEnganche IS NULL)) OR
       (idStatusContratacion IN (7) AND idMovimiento IN (37, 7, 64, 77) AND (validacionEnganche = 'NULL' OR validacionEnganche IS NULL)) OR
       (idStatusContratacion IN (8) AND idMovimiento IN (38, 65, 67) AND (validacionEnganche = 'NULL' OR validacionEnganche IS NULL)))");
