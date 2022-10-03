@@ -69,7 +69,7 @@ $("#tabla_nuevas_comisiones").ready(function() {
                             com2.append("idcomision", idcomision); 
 
                             $.ajax({
-                                url : url2 + 'Suma/acepto_comisiones_user/',
+                                url : general_base_url + 'Suma/acepto_comisiones_user/',
                                 data: com2,
                                 cache: false,
                                 contentType: false,
@@ -312,7 +312,7 @@ $("#tabla_nuevas_comisiones").ready(function() {
             },
         }],
         ajax: {
-            url: url2 + "Suma/getComisionesByStatus",
+            url: general_base_url + "Suma/getComisionesByStatus",
             type: "POST",
             data: {estatus: 1},
             dataType: 'json',
@@ -511,7 +511,7 @@ $("#tabla_revision_comisiones").ready(function() {
             }
         }],
         ajax: {
-            url: url2 + "Suma/getComisionesByStatus",
+            url: general_base_url + "Suma/getComisionesByStatus",
             type: "POST",
             data: {estatus: 2},
             dataType: 'json',
@@ -708,7 +708,7 @@ $("#tabla_pagadas_comisiones").ready(function() {
             }
         }],
         ajax: {
-            url: url2 + "Suma/getComisionesByStatus",
+            url: general_base_url + "Suma/getComisionesByStatus",
             type: "POST",
             data: {estatus: 3},
             dataType: 'json',
@@ -733,3 +733,434 @@ $("#tabla_pagadas_comisiones").ready(function() {
         });
     });
 });
+
+function mandarFacturas() {
+    document.getElementById('btng').disabled=true;
+    guardarSolicitud();
+}
+
+function todos(){
+    if($(".checkdata1:checked").length == 0){
+        $(".checkdata1").prop("checked", true);
+        sumCheck();
+
+    }else if($(".checkdata1:checked").length < $(".checkdata1").length){
+        $(".checkdata1").prop("checked", true);
+        sumCheck();
+    
+    }else if($(".checkdata1:checked").length == $(".checkdata1").length){
+        $(".checkdata1").prop("checked", false);
+        sumCheck();
+    }
+}
+
+$(document).on("click", ".subir_factura_multiple", function() {
+    let actual=13;
+    if(userSede == 8){
+        actual=15;
+    }
+
+    var hoy = new Date();
+    var dia = hoy.getDate();
+    var mes = hoy.getMonth()+1;
+    var anio = hoy.getFullYear();
+    var hora = hoy.getHours();
+    var minuto = hoy.getMinutes();
+
+    // if (((mes == 10 && dia == 10) || (mes == 10 && dia == 11 && hora <= 13)) || ((mes == 11 && dia == 7) || (mes == 11 && dia == 8 && hora <= 13)) || ((mes == 12 && dia == 12) || (mes == 12 && dia == 13 && hora <= 13))){
+
+    $("#modal_multiples .modal-body").html("");
+    $("#modal_multiples .modal-header").html("");
+
+    $("#modal_multiples .modal-header").append(`<div class="row">
+        <div class="col-md-12 text-right">
+            <button type="button" class="close close_modal_xml" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true" style="font-size:40px;">&times;</span>
+            </button>
+        </div>
+    </div>`);
+    
+    c=0;
+    $.ajax({
+        type: 'POST',
+        url: `${base_url}Suma/getComisionesByStatus`,
+        data: {estatus: 1},
+        dataType: 'json',
+        beforeSend: function() {
+          $('#spiner-loader').removeClass('hide');
+        },
+        success: function(data) {
+            $("#modal_multiples .modal-body").html("");
+            let sumaComision = 0;
+            if (!data) {
+                $("#modal_multiples .modal-body").append('<div class="row"><div class="col-md-12">SIN DATOS A MOSTRAR</div></div>');
+            }
+            else {
+                if(data.length > 0){
+                    $("#modal_multiples .modal-body").append(`<div class="row">
+                    <div class="col-md-1"><input type="checkbox" class="form-control" onclick="todos();" id="btn_all"></div><div class="col-md-10 text-left"><b>MARCAR / DESMARCAR TODO</b></div>`);                    
+                }
+                $.each(data, function(i, v) {
+                    c++;
+
+                    abono_asesor = (v.total_comision);
+                    $("#modal_multiples .modal-body").append('<div class="row">'+
+                    '<div class="col-md-1"><input type="checkbox" class="form-control ng-invalid ng-invalid-required data1 checkdata1" onclick="sumCheck()" id="comisiones_facura_mult' + i + '" name="comisiones_facura_mult"></div><div class="col-md-4"><input id="data1' + i + '" name="data1' + i + '" value="' + v.id_pago_suma + '" class="form-control data1 ng-invalid ng-invalid-required" required placeholder="%"></div><div class="col-md-4"><input type="hidden" id="idpago-' + i + '" name="idpago-' + i + '" value="' + v.id_pago_suma + '"><input id="data2' + i + '" name="data2' + i + '" value="' + "" + parseFloat(abono_asesor).toFixed(2) + '" class="form-control data1 ng-invalid ng-invalid-required" readonly="" required placeholder="%"></div></div>');
+                });
+
+                $("#modal_multiples .modal-body").append('<div class="row"><div class="col-md-12 text-left"><b style="color:green;" class="text-left" id="sumacheck"> Suma seleccionada: 0</b></div><div class="col-lg-5"><div class="fileinput fileinput-new text-center" data-provides="fileinput"><div><br><span class="fileinput-new">Selecciona archivo</span><input type="file" name="xmlfile2" id="xmlfile2" accept="application/xml"></div></div></div><div class="col-lg-7"><center><button class="btn btn-warning" type="button" onclick="xml2()" id="cargar_xml2"><i class="fa fa-upload"></i> VERIFICAR Y CARGAR</button></center></div></div>');
+
+                $("#modal_multiples .modal-body").append('<p id="cantidadSeleccionada"></p>');
+                $("#modal_multiples .modal-body").append('<b id="cantidadSeleccionadaMal"></b>');
+                $("#modal_multiples .modal-body").append('<form id="frmnewsol2" method="post">' +
+                '<div class="row"><div class="col-lg-3 form-group"><label for="emisor">Emisor:<span class="text-danger">*</span></label><input type="text" class="form-control" id="emisor" name="emisor" placeholder="Emisor" value="" required></div>' +
+                '<div class="col-lg-3 form-group"><label for="rfcemisor">RFC Emisor:<span class="text-danger">*</span></label><input type="text" class="form-control" id="rfcemisor" name="rfcemisor" placeholder="RFC Emisor" value="" required></div><div class="col-lg-3 form-group"><label for="receptor">Receptor:<span class="text-danger">*</span></label><input type="text" class="form-control" id="receptor" name="receptor" placeholder="Receptor" value="" required></div>' +
+                '<div class="col-lg-3 form-group"><label for="rfcreceptor">RFC Receptor:<span class="text-danger">*</span></label><input type="text" class="form-control" id="rfcreceptor" name="rfcreceptor" placeholder="RFC Receptor" value="" required></div>' +
+                '<div class="col-lg-3 form-group"><label for="regimenFiscal">Régimen Fiscal:<span class="text-danger">*</span></label><input type="text" class="form-control" id="regimenFiscal" name="regimenFiscal" placeholder="Regimen Fiscal" value="" required></div>' +
+                '<div class="col-lg-3 form-group"><label for="total">Monto:<span class="text-danger">*</span></label><input type="text" class="form-control" id="total" name="total" placeholder="Total" value="" required></div>' +
+                '<div class="col-lg-3 form-group"><label for="formaPago">Forma Pago:</label><input type="text" class="form-control" placeholder="Forma Pago" id="formaPago" name="formaPago" value=""></div>' +
+                '<div class="col-lg-3 form-group"><label for="cfdi">Uso del CFDI:</label><input type="text" class="form-control" placeholder="Uso de CFDI" id="cfdi" name="cfdi" value=""></div>' +
+                '<div class="col-lg-3 form-group"><label for="metodopago">Método de Pago:</label><input type="text" class="form-control" id="metodopago" name="metodopago" placeholder="Método de Pago" value="" readonly></div><div class="col-lg-3 form-group"><label for="unidad">Unidad:</label><input type="text" class="form-control" id="unidad" name="unidad" placeholder="Unidad" value="" readonly> </div>' +
+                '<div class="col-lg-3 form-group"> <label for="clave">Clave Prod/Serv:<span class="text-danger">*</span></label> <input type="text" class="form-control" id="clave" name="clave" placeholder="Clave" value="" required> </div> </div>' +
+                ' <div class="row"> <div class="col-lg-12 form-group"> <label for="obse">OBSERVACIONES FACTURA <i class="fa fa-question-circle faq" tabindex="0" data-container="body" data-trigger="focus" data-toggle="popover" title="Observaciones de la factura" data-content="En este campo pueden ser ingresados datos opcionales como descuentos, observaciones, descripción de la operación, etc." data-placement="right"></i></label><br><textarea class="form-control" rows="1" data-min-rows="1" id="obse" name="obse" placeholder="Observaciones"></textarea> </div> </div><div class="row">  <div class="col-md-4"><button type="button" id="btng" onclick="mandarFacturas();" disabled class="btn btn-primary btn-block">GUARDAR</button></div><div class="col-md-4"></div><div class="col-md-4"> <button type="button" data-dismiss="modal"  class="btn btn-danger btn-block close_modal_xml">CANCELAR</button></div></div></form>');
+            }
+            $('#spiner-loader').addClass('hide');
+        },
+        error: function() {
+            $('#spiner-loader').addClass('hide');
+            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+        }
+      });
+
+        $("#modal_multiples").modal({
+            backdrop: 'static',
+            keyboard: false
+        });
+    // }
+    // else{
+    //     alert("NO PUEDES SUBIR FACTURAS HASTA EL PRÓXIMO CORTE.");
+    // }
+});
+
+//FUNCION PARA LIMPIAR EL FORMULARIO CON DE PAGOS A PROVEEDOR.
+function resear_formulario() {
+    $("#modal_formulario_solicitud input.form-control").prop("readonly", false).val("");
+    $("#modal_formulario_solicitud textarea").html('');
+    $("#modal_formulario_solicitud #obse").val('');
+
+    var validator = $("#frmnewsol").validate();
+    validator.resetForm();
+    $("#frmnewsol div").removeClass("has-error");
+}
+
+$("#cargar_xml").click(function() {
+    subir_xml($("#xmlfile"));
+});
+
+function xml2() {
+    subir_xml2($("#xmlfile2"));
+}
+
+var justificacion_globla = "";
+
+function subir_xml(input) {
+    var data = new FormData();
+    documento_xml = input[0].files[0];
+    var xml = documento_xml;
+
+    data.append("xmlfile", documento_xml);
+    resear_formulario();
+    $.ajax({
+        url: general_base_url + "Comisiones/cargaxml",
+        data: data,
+        cache: false,
+        contentType: false,
+        processData: false,
+        dataType: 'json',
+        method: 'POST',
+        type: 'POST', // For jQuery < 1.9
+        success: function(data) {
+            if (data.respuesta[0]) {
+                documento_xml = xml;
+                var informacion_factura = data.datos_xml;
+                cargar_info_xml(informacion_factura);
+                $("#solobs").val(justificacion_globla);
+            } 
+            else {
+                input.val('');
+                alert(data.respuesta[1]);
+            }
+        },
+        error: function(data) {
+            input.val('');
+            alert("ERROR INTENTE COMUNICARSE CON EL PROVEEDOR");
+        }
+    });
+}
+
+function subir_xml2(input) {
+    var data = new FormData();
+    documento_xml = input[0].files[0];
+    var xml = documento_xml;
+
+    data.append("xmlfile", documento_xml);
+    resear_formulario();
+    $.ajax({
+        url: general_base_url + "Comisiones/cargaxml2",
+        data: data,
+        cache: false,
+        contentType: false,
+        processData: false,
+        dataType: 'json',
+        method: 'POST',
+        type: 'POST', // For jQuery < 1.9
+        success: function(data) {
+            if (data.respuesta[0]) {
+                documento_xml = xml;
+                var informacion_factura = data.datos_xml;
+
+                cargar_info_xml2(informacion_factura);
+                $("#solobs").val(justificacion_globla);
+            } 
+            else {
+                input.val('');
+                alert(data.respuesta[1]);
+            }
+        },
+        error: function(data) {
+            input.val('');
+            alert("ERROR INTENTE COMUNICARSE CON EL PROVEEDOR");
+        }
+    });
+}
+
+$("#eliminar_factura").submit(function(e) {
+    e.preventDefault();
+}).validate({
+    submitHandler: function(form) {
+        var data = new FormData($(form)[0]);
+        $.ajax({
+            url: general_base_url + "Comisiones/borrar_factura",
+            data: data,
+            cache: false,
+            contentType: false,
+            processData: false,
+            dataType: 'json',
+            method: 'POST',
+            type: 'POST', // For jQuery < 1.9
+            success: function(data) {
+                if (true) {
+                    $("#modalQuitarFactura").modal('toggle');
+                    tabla_nuevas.ajax.reload();
+                    alert("SE ELIMINÓ EL ARCHIVO");
+                } 
+                else {
+                    alert("NO SE HA PODIDO COMPLETAR LA SOLICITUD");
+                }
+            },
+            error: function() {
+                alert("ERROR EN EL SISTEMA");
+            }
+        });
+    }
+});
+
+function closeModalEng(){
+    document.getElementById("frmnewsol").reset();
+    document.getElementById("xmlfile").value = "";
+    document.getElementById("totalxml").innerHTML = '';
+
+    a = document.getElementById('inputhidden');
+    padre = a.parentNode;
+    padre.removeChild(a);
+    $("#modal_formulario_solicitud").modal('toggle');
+}
+
+function cargar_info_xml(informacion_factura) {
+    let cantidadXml = Number.parseFloat(informacion_factura.total[0]);
+    let pago_cliente = $('#pago_cliente').val();
+    let pago1 = parseFloat(pago_cliente) + .05;
+    let pago2 = parseFloat(pago_cliente ) - .05;
+    
+    if (parseFloat(pago1).toFixed(2) >= cantidadXml.toFixed(2) && cantidadXml.toFixed(2) >= parseFloat(pago2).toFixed(2)) {
+        alerts.showNotification("top", "right", "Cantidad correcta.", "success abc");
+        document.getElementById('btnIndi').disabled = false;
+        document.getElementById("totalxml").innerHTML = '';
+        disabled();
+    }
+    else {
+        document.getElementById("totalxml").innerHTML = 'Cantidad incorrecta:'+ cantidadXml;
+        let elemento = document.querySelector('#total');
+        elemento.setAttribute('color', 'red');
+        document.getElementById('btnIndi').disabled = true;
+        alerts.showNotification("top", "right", "Cantidad incorrecta.", "warning");
+    }
+    
+    $("#emisor").val((informacion_factura.nameEmisor ? informacion_factura.nameEmisor[0] : '')).attr('readonly', true);
+    $("#rfcemisor").val((informacion_factura.rfcemisor ? informacion_factura.rfcemisor[0] : '')).attr('readonly', true);
+
+    $("#receptor").val((informacion_factura.namereceptor ? informacion_factura.namereceptor[0] : '')).attr('readonly', true);
+    $("#rfcreceptor").val((informacion_factura.rfcreceptor ? informacion_factura.rfcreceptor[0] : '')).attr('readonly', true);
+
+    $("#regimenFiscal").val((informacion_factura.regimenFiscal ? informacion_factura.regimenFiscal[0] : '')).attr('readonly', true);
+
+    $("#formaPago").val((informacion_factura.formaPago ? informacion_factura.formaPago[0] : '')).attr('readonly', true);
+    $("#total").val(('$ ' + informacion_factura.total ? '$ ' + informacion_factura.total[0] : '')).attr('readonly', true);
+
+    $("#cfdi").val((informacion_factura.usocfdi ? informacion_factura.usocfdi[0] : '')).attr('readonly', true);
+
+    $("#metodopago").val((informacion_factura.metodoPago ? informacion_factura.metodoPago[0] : '')).attr('readonly', true);
+
+    $("#unidad").val((informacion_factura.claveUnidad ? informacion_factura.claveUnidad[0] : '')).attr('readonly', true);
+
+    $("#clave").val((informacion_factura.claveProdServ ? informacion_factura.claveProdServ[0] : '')).attr('readonly', true);
+
+    $("#obse").val((informacion_factura.descripcion ? informacion_factura.descripcion[0] : '')).attr('readonly', true);
+}
+
+let pagos = [];
+
+function cargar_info_xml2(informacion_factura) {
+    pagos.length = 0;
+    let suma = 0;
+    let cantidad = 0;
+    for (let index = 0; index < c; index++) {
+        if (document.getElementById("comisiones_facura_mult" + index).checked == true) {
+            pagos[index] = $("#idpago-" + index).val();
+            cantidad = Number.parseFloat($("#data2" + index).val());
+            suma += cantidad;
+        }
+    }
+
+    var myCommentsList = document.getElementById('cantidadSeleccionada');
+    myCommentsList.innerHTML = '';
+    let cantidadXml = Number.parseFloat(informacion_factura.total[0]);
+    let cantidadXml2 = Number.parseFloat(informacion_factura.total[0]);
+    var myCommentsList = document.getElementById('cantidadSeleccionadaMal');
+    myCommentsList.setAttribute('style', 'color:green;');
+    myCommentsList.innerHTML = 'Cantidad correcta';
+
+    console.log('suma:'+suma);
+    console.log('xml:'+cantidadXml);
+    if (((suma + .50).toFixed(2) >= cantidadXml.toFixed(2) && cantidadXml.toFixed(2) >= (suma - .50).toFixed(2) ) ||  (cantidadXml.toFixed(2) == (suma).toFixed(2))) {
+        alerts.showNotification("top", "right", "Cantidad correcta.", "success abc");
+        document.getElementById('btng').disabled = false;
+        console.log("Cantidad correcta");
+        disabled();
+    } 
+    else {
+        var elemento = document.querySelector('#total');
+        elemento.setAttribute('color', 'red');
+        document.getElementById('btng').disabled = true;
+        var myCommentsList = document.getElementById('cantidadSeleccionadaMal');
+        myCommentsList.setAttribute('style', 'color:red;');
+        myCommentsList.innerHTML = 'Cantidad incorrecta';
+        alerts.showNotification("top", "right", "Cantidad incorrecta.", "warning");
+        console.log("cantidad incorrecta");
+    }
+
+    $("#emisor").val((informacion_factura.nameEmisor ? informacion_factura.nameEmisor[0] : '')).attr('readonly', true);
+    $("#rfcemisor").val((informacion_factura.rfcemisor ? informacion_factura.rfcemisor[0] : '')).attr('readonly', true);
+
+    $("#receptor").val((informacion_factura.namereceptor ? informacion_factura.namereceptor[0] : '')).attr('readonly', true);
+    $("#rfcreceptor").val((informacion_factura.rfcreceptor ? informacion_factura.rfcreceptor[0] : '')).attr('readonly', true);
+
+    $("#regimenFiscal").val((informacion_factura.regimenFiscal ? informacion_factura.regimenFiscal[0] : '')).attr('readonly', true);
+
+    $("#formaPago").val((informacion_factura.formaPago ? informacion_factura.formaPago[0] : '')).attr('readonly', true);
+    $("#total").val(('$ ' + informacion_factura.total ? '$ ' + informacion_factura.total[0] : '')).attr('readonly', true);
+
+    $("#cfdi").val((informacion_factura.usocfdi ? informacion_factura.usocfdi[0] : '')).attr('readonly', true);
+
+    $("#metodopago").val((informacion_factura.metodoPago ? informacion_factura.metodoPago[0] : '')).attr('readonly', true);
+
+    $("#unidad").val((informacion_factura.claveUnidad ? informacion_factura.claveUnidad[0] : '')).attr('readonly', true);
+
+    $("#clave").val((informacion_factura.claveProdServ ? informacion_factura.claveProdServ[0] : '')).attr('readonly', true);
+
+    $("#obse").val((informacion_factura.descripcion ? informacion_factura.descripcion[0] : '')).attr('readonly', true);
+}
+
+function sumCheck(){
+    pagos.length = 0;
+    let suma = 0;
+    let cantidad = 0;
+    for (let index = 0; index < c; index++) {
+        if (document.getElementById("comisiones_facura_mult" + index).checked == true) {
+            pagos[index] = $("#idpago-" + index).val();
+            cantidad = Number.parseFloat($("#data2" + index).val());
+            suma += cantidad;
+
+        }
+    }
+    var myCommentsList = document.getElementById('sumacheck');
+    myCommentsList.innerHTML = 'Suma seleccionada: $ ' + formatMoney(suma.toFixed(3));
+} 
+
+function disabled(){
+    for (let index = 0; index < c; index++) {
+        if (document.getElementById("comisiones_facura_mult" + index).checked == false) {
+            document.getElementById("comisiones_facura_mult" + index).disabled = true;
+            document.getElementById("btn_all").disabled = true;
+        }
+    }
+} 
+
+function guardarSolicitud() {
+    let formData = new FormData(document.getElementById("frmnewsol2"));
+    const labelSum = $('#sumacheck').text();
+    const total = Number(labelSum.split('$')[1].trim().replace(',', ''));
+
+    formData.append("dato", "valor");
+    formData.append("xmlfile", documento_xml);
+    formData.append("pagos",pagos);
+    formData.append('total', total);
+
+    $.ajax({
+        url: general_base_url + 'Suma/guardar_solicitud',
+        data: formData,
+        cache: false,
+        contentType: false,
+        processData: false,
+        dataType: 'json',
+        method: 'POST',
+        type: 'POST', // For jQuery < 1.9
+        success: function(data) {
+            document.getElementById('btng').disabled=false;
+            if (data.resultado) {
+                alert("LA FACTURA SE SUBIÓ CORRECTAMENTE");
+                $("#modal_multiples").modal('toggle');
+                tabla_nuevas.ajax.reload();
+                tabla_revision.ajax.reload();
+                $("#modal_multiples .modal-body").html("");
+                $("#modal_multiples .header").html("");
+            }else if(data == 3){
+                alert("ESTÁS FUERA DE TIEMPO PARA ENVIAR TUS SOLICITUDES");
+                $('#loader').addClass('hidden');
+                $("#modal_multiples").modal('toggle');
+                tabla_nuevas.ajax.reload();
+                $("#modal_multiples .modal-body").html("");
+                $("#modal_multiples .header").html("");
+
+            } else if (data == 4) {
+                alert("EL TOTAL DE LA FACTURA NO COINCIDE CON EL TOTAL DE COMISIONES SELECCIONADAS");
+                $('#loader').addClass('hidden');
+                $("#modal_multiples").modal('toggle');
+                tabla_nuevas.ajax.reload();
+                $("#modal_multiples .modal-body").html("");
+                $("#modal_multiples .header").html("");
+            } else {
+                alert("NO SE HA PODIDO COMPLETAR LA SOLICITUD");
+                $('#loader').addClass('hidden');
+                $("#modal_multiples").modal('toggle');
+                tabla_nuevas.ajax.reload();
+                $("#modal_multiples .modal-body").html("");
+                $("#modal_multiples .header").html("");
+            }
+        },
+        error: function() {
+            document.getElementById('btng').disabled=false;
+            alert("ERROR EN EL SISTEMA");
+        }
+    });
+}

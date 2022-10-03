@@ -4,15 +4,164 @@
 <body>
     <div class="wrapper">
         <?php
-            /*-------------------------------------------------------*/
             $datos = array();
             $datos = $datos4;
             $datos = $datos2;
             $datos = $datos3;  
             $this->load->view('template/sidebar', $datos);
-            /*--------------------------------------------------------*/
+
+            $usuarioid =  $this->session->userdata('id_usuario');
+            $query = $this->db->query("SELECT forma_pago FROM usuarios WHERE id_usuario=".$usuarioid."");
+            
+            $cadena ='';
+
+            foreach ($query->result() as $row){
+                $forma_pago = $row->forma_pago;
+                if( $forma_pago  == 2 ||  $forma_pago == '2'){
+                    if(count($opn_cumplimiento) == 0){
+                        $cadena = '<a href="https://maderascrm.gphsis.com/index.php/Usuarios/configureProfile"> <span class="label label-danger" style="background:red;">  SIN OPINIÓN DE CUMPLIMIENTO, CLIC AQUI PARA SUBIRLA ></span> </a>';
+                    } 
+                    else{
+                        if($opn_cumplimiento[0]['estatus'] == 1){
+                            $cadena = '<button type="button" class="btn btn-info subir_factura_multiple" >SUBIR FACTURAS</button>';
+                        }
+                        else if($opn_cumplimiento[0]['estatus'] == 0){
+                            $cadena ='<a href="https://maderascrm.gphsis.com/index.php/Usuarios/configureProfile"> <span class="label label-danger" style="background:orange;">  SIN OPINIÓN DE CUMPLIMIENTO, CLIC AQUI PARA SUBIRLA</span> </a>';
+
+                        }
+                        else if($opn_cumplimiento[0]['estatus'] == 2){
+                            $cadena = '<button type="button" class="btn btn-info subir_factura_multiple" >SUBIR FACTURAS</button>';
+                        }
+                    }
+                } else if ($forma_pago == 5) {
+                    if(count($opn_cumplimiento) == 0){
+                        $cadena = '<button type="button" class="btn btn-info subir-archivo">SUBIR DOCUMENTO FISCAL</button>';
+                    } else if($opn_cumplimiento[0]['estatus'] == 0) {
+                        $cadena = '<button type="button" class="btn btn-info subir-archivo">SUBIR DOCUMENTO FISCAL</button>';
+                    } else if ($opn_cumplimiento[0]['estatus'] == 1) {
+                        $cadena = '<p><b>Documento fiscal cargado con éxito</b>
+                                    <a href="#" class="verPDFExtranjero" 
+                                        title="Documento fiscal"
+                                        data-usuario="'.$opn_cumplimiento[0]["archivo_name"].'" 
+                                        style="cursor: pointer;">
+                                        <u>Ver documento</u>
+                                    </a>
+                                </p>';
+                    } else if($opn_cumplimiento[0]['estatus'] == 2) {
+                        $cadena = '<p style="color: #02B50C;">Documento fiscal bloqueado, hay comisiones asociadas.</p>';
+                    }
+                }
+            }
         ?>
 
+        <div class="modal fade modal-alertas" id="modal_multiples" role="dialog">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header bg-red">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                    <form method="post" id="form_multiples">
+                        <div class="modal-body"></div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- inicia modal subir factura -->
+        <div id="modal_formulario_solicitud_multiple" class="modal" style="position:fixed; top:0; left:0; margin-bottom: 1%;  margin-top: -5%;">
+            <div class="modal-dialog modal-md">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <div class="tab-content">
+                            <div class="active tab-pane" id="generar_solicitud">
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <!-- //poner modal -->
+                                        <div class="row">
+                                            <div class="col-lg-5">
+                                                <div class="fileinput fileinput-new text-center" data-provides="fileinput">
+                                                    <div><br>
+                                                        <span class="fileinput-new">Selecciona archivo</span>
+                                                        <input type="file" name="xmlfile" id="xmlfile" accept="application/xml">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-7">
+                                                <center>
+                                                    <button class="btn btn-warning" type="button" id="cargar_xml"><i class="fa fa-upload"></i> CARGAR</button>
+                                                </center>
+                                            </div>
+                                        </div>
+                                        <form id="frmnewsol" method="post" action="#">
+                                            <div class="row">
+                                                <div class="col-lg-4 form-group">
+                                                    <label for="emisor">Emisor:<span class="text-danger">*</span></label>
+                                                    <input type="text" class="form-control" id="emisor" name="emisor" placeholder="Emisor" value="" required>
+                                                </div>
+                                                <div class="col-lg-4 form-group">
+                                                    <label for="rfcemisor">RFC Emisor:<span class="text-danger">*</span></label>
+                                                    <input type="text" class="form-control" id="rfcemisor" name="rfcemisor" placeholder="RFC Emisor" value="" required>
+                                                </div>
+                                                <div class="col-lg-4 form-group">
+                                                    <label for="receptor">Receptor:<span class="text-danger">*</span></label>
+                                                    <input type="text" class="form-control" id="receptor" name="receptor" placeholder="Receptor" value="" required>
+                                                </div>
+                                                <div class="col-lg-4 form-group">
+                                                    <label for="rfcreceptor">RFC Receptor:<span class="text-danger">*</span></label>
+                                                    <input type="text" class="form-control" id="rfcreceptor" name="rfcreceptor" placeholder="RFC Receptor" value="" required>
+                                                </div>
+                                                <div class="col-lg-3 form-group">
+                                                    <label for="regimenFiscal">Régimen Fiscal:<span class="text-danger">*</span></label>
+                                                    <input type="text" class="form-control" id="regimenFiscal" name="regimenFiscal" placeholder="Regimen Fiscal" value="" required>
+                                                </div>
+                                                <div class="col-lg-3 form-group">
+                                                    <label for="total">Monto:<span class="text-danger">*</span></label>
+                                                    <input type="text" class="form-control" id="total" name="total" placeholder="Total" value="" required>
+                                                </div>
+                                                <div class="col-lg-3 form-group">
+                                                    <label for="formaPago">Forma Pago:</label>
+                                                    <input type="text" class="form-control" placeholder="Forma Pago" id="formaPago" name="formaPago" value="">
+                                                </div>
+                                                <div class="col-lg-3 form-group">
+                                                    <label for="cfdi">Uso del CFDI:</label>
+                                                    <input type="text" class="form-control" placeholder="Uso de CFDI" id="cfdi" name="cfdi" value="">
+                                                </div>
+                                                <div class="col-lg-3 form-group">
+                                                    <label for="metodopago">Método de Pago:</label>
+                                                    <input type="text" class="form-control" id="metodopago" name="metodopago" placeholder="Método de Pago" value="" readonly>
+                                                </div>
+                                                <div class="col-lg-3 form-group">
+                                                    <label for="unidad">Unidad:</label>
+                                                    <input type="text" class="form-control" id="unidad" name="unidad" placeholder="Unidad" value="" readonly>
+                                                </div>
+                                                <div class="col-lg-3 form-group">
+                                                    <label for="clave">Clave Prod/Serv:<span class="text-danger">*</span></label>
+                                                    <input type="text" class="form-control" id="clave" name="clave" placeholder="Clave" value="" required>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-lg-12 form-group">
+                                                    <label for="obse">OBSERVACIONES FACTURA <i class="fa fa-question-circle faq" tabindex="0" data-container="body" data-trigger="focus" data-toggle="popover" title="Observaciones de la factura" data-content="En este campo pueden ser ingresados datos opcionales como descuentos, observaciones, descripción de la operación, etc." data-placement="right"></i></label><br>
+                                                    <textarea class="form-control" rows='1' data-min-rows='1' id="obse" name="obse" placeholder="Observaciones"></textarea>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-lg-4 form-group"></div>
+                                                <div class="col-lg-4 form-group">
+                                                    <button type="submit" class="btn btn-primary btn-block">GUARDAR</button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
         <div class="modal fade" id="seeInformationModalAsimilados" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog modal-md modal-dialog-scrollable" role="document">
                 <div class="modal-content">
@@ -153,11 +302,11 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <!-- <div class="row">
+                                            <div class="row">
                                                 <div class="col-lg-12 text-left mt-1">
                                                     <?= $cadena ?>
                                                 </div>
-                                            </div> -->
+                                            </div>
                                             <div class="material-datatables">
                                                 <div class="form-group">
                                                     <div class="table-responsive">

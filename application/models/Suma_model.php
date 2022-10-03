@@ -81,4 +81,27 @@ class Suma_model extends CI_Model
 
         return true;
     }  
+
+    function insertar_factura( $id_comision, $datos_factura,$usuarioid){
+        $VALOR_TEXT = $datos_factura['textoxml'];
+        $data = array(
+            "fecha_factura"  => $datos_factura['fecha'],
+            "folio_factura"  => $datos_factura['folio'],
+            "descripcion" => $datos_factura['descripcion'],
+            "subtotal" => $datos_factura['subTotal'],
+            "total"  => $datos_factura['total'],
+            "metodo_pago"  => $datos_factura['metodoPago'],
+            "uuid" => $datos_factura['uuidV'],
+            "nombre_archivo" => $datos_factura['nombre_xml'],
+            "id_usuario" => $usuarioid,
+            "id_pago_suma" => $id_comision,
+            "regimen" => $datos_factura['regimenFiscal'],
+            "forma_pago" => $datos_factura['formaPago'],
+            "cfdi" => $datos_factura['usocfdi'],
+            "unidad" => $datos_factura['claveUnidad'],
+            "claveProd" => $datos_factura['claveProdServ']
+        );
+        
+        return $this->db->insert("facturas_suma", $data);
+    }
 }
