@@ -37,8 +37,8 @@
                                                 <th>REFERENCIA</th>
                                                 <th>GERENTE</th>
                                                 <th>ASESOR(ES)</th>
-                                                <th>PROCESO CONTRATACIÓN</th>
                                                 <th>ESTATUS</th>
+                                                <th>PROCESO CONTRATACIÓN</th>
                                                 <th>COMENTARIO</th>
                                                 <th>FECHA APARTADO</th>
                                                 <th>DÍAS VENCIDOS</th>
@@ -214,9 +214,9 @@
                                 case 6:
                                     return 'ASESOR(ES)';
                                 case 7:
-                                    return 'PROCESO CONTRATACIÓN';
-                                case 8:
                                     return 'ESTATUS';
+                                case 8:
+                                    return 'PROCESO CONTRATACIÓN';
                                 case 9:
                                     return 'COMENTARIO';
                                 case 10:
@@ -281,6 +281,20 @@
 						return as1;
 					}
 				},
+                {
+                    // data: 'status'
+                    data : function(data)
+                    {
+                        if(data.status==null || data.status=="")
+                        {
+                            return "N/A";
+                        }
+                        else
+                        {
+                            return data.status;
+                        }
+                    }
+                },
 				{
 					// data: 'procesoContratacion'
 					data : function(data)
@@ -292,20 +306,6 @@
 						else
 						{
 							return data.procesoContratacion;
-						}
-					}
-				},
-				{
-					// data: 'status'
-					data : function(data)
-					{
-						if(data.status==null || data.status=="")
-						{
-							return "N/A";
-						}
-						else
-						{
-							return data.status;
 						}
 					}
 				},

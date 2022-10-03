@@ -312,20 +312,20 @@
                                     'class="btn-data btn-green editReg" title="Registrar estatus">' +
                                     '<i class="fas fa-thumbs-up"></i></button>';
 
-                            } else if (data.idStatusContratacion == 11 && data.idMovimiento == 41 && data.firmaRL == 'FIRMADO' && data.validacionEnganche == 'VALIDADO') {
+                            } else if (data.idStatusContratacion == 11 && data.idMovimiento == 41 && data.validacionEnganche == 'VALIDADO') {
                                 cntActions = '<button href="#" data-idLote="' + data.idLote + '" data-nomLote="' + data.nombreLote + '" data-idCond="' + data.idCondominio + '"' +
                                     'data-idCliente="' + data.id_cliente + '" data-fecVen="' + data.fechaVenc + '" data-ubic="' + data.ubicacion + '" data-code="' + data.cbbtton + '" ' +
                                     'class="btn-data btn-green editReg" title="Registrar estatus">' +
                                     '<i class="fas fa-thumbs-up"></i></button>';
 
-                            } else if (data.idStatusContratacion == 11 && data.idMovimiento == 41 && data.validacionEnganche == 'VALIDADO' && (data.firmaRL == 'NULL' || data.firmaRL == null)) {
+                            } /*else if (data.idStatusContratacion == 11 && data.idMovimiento == 41 && data.validacionEnganche == 'VALIDADO' && (data.firmaRL == 'NULL' || data.firmaRL == null)) {
                                 cntActions = '<button href="#" data-idLote="' + data.idLote + '" data-nomLote="' + data.nombreLote + '" data-idCond="' + data.idCondominio + '"' +
                                     'data-idCliente="' + data.id_cliente + '" data-fecVen="' + data.fechaVenc + '" data-ubic="' + data.ubicacion + '" ' +
                                     'class="boton btn-data btn-orangeYellow" title="Sin tiempo" id="limit">' +
                                     '<i class="fas fa-exclamation"></i></button>';
 
 
-                            } else if (data.idStatusContratacion == 12 && data.idMovimiento == 42 && data.firmaRL == 'FIRMADO' && (data.validacionEnganche == 'NULL' || data.validacionEnganche == null)) {
+                            } */else if (data.idStatusContratacion == 12 && data.idMovimiento == 42 && data.firmaRL == 'FIRMADO' && (data.validacionEnganche == 'NULL' || data.validacionEnganche == null)) {
                                 cntActions = '<button href="#" data-idLote="' + data.idLote + '" data-nomLote="' + data.nombreLote + '" data-idCond="' + data.idCondominio + '"' +
                                     'data-idCliente="' + data.id_cliente + '" data-fecVen="' + data.fechaVenc + '" data-ubic="' + data.ubicacion + '" ' +
                                     'class="boton_1 btn-data btn-orangeYellow" title="Sin tiempo" id="limi1">' +
