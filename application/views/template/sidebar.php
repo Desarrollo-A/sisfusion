@@ -19,6 +19,9 @@ if($rol == 1 || $rol == 2 || $rol == 3 || $rol == 4 || $rol == 5 || $rol == 6 ||
 {
     $url2 = base_url()."Ventas";
 }
+elseif ($rol == 55 || $rol == 56 || $rol == 57) {
+    $url2 = base_url()."Postventa";
+}
 elseif ($rol == 11 || $rol == 23 || $rol == 26 || $rol == 34 || $rol == 35 || $rol == 38 || $rol == 41 || $rol == 49 || $rol == 50 || $rol == 40 || $rol == 54 || $rol == 58
 || $rol == 8 || $rol == 10 || $rol == 19 || $rol == 20 || $rol == 21 || $rol == 23 || $rol == 28 || $rol == 33 || $rol == 25 || $rol == 27 || $rol == 30
  || $rol == 36 || $rol == 22 || $rol == 53 || $rol == 8 || $rol == 12 || $rol == 61 || $rol == 31 || $rol == 63 || $rol == 64) {
@@ -210,6 +213,8 @@ foreach($datos2 as $datos)
 </div>
 
 <?php $this->load->view('template/calendar_sidebar');?>
+
+<?php $this->load->view('template/novedadesModal');?>
 <div class="main-panel">
 	<nav class="navbar navbar-transparent navbar-absolute">
 		<div class="container-fluid">

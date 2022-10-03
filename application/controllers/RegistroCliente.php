@@ -8309,6 +8309,8 @@
                 $mail->AddAddress('karen.pina@ciudadmaderas.com');
                 $mail->AddAddress('coord.administrativo4@ciudadmaderas.com');
                 $mail->AddAddress('coord.administrativo5@ciudadmaderas.com');
+                $mail->AddAddress('coord.administrativo7@ciudadmaderas.com');
+                $mail->AddAddress('asistente.admon@ciudadmaderas.com');
                 $mail->Subject = utf8_decode('MODIFICACIÓN DE CORRIDA FINANCIERA');
                 $mail->isHTML(true);
                 $mailContent = utf8_decode("<html><head>
@@ -8377,10 +8379,12 @@
 
             }
 
-        } else if ($validaDelete == 0) {
+        }
+        else if ($validaDelete == 0) {
             $response['message'] = 'ERROR';
             echo json_encode($response);
-        } else {
+        }
+        else {
             $response['message'] = 'ERROR';
             echo json_encode($response);
         }
@@ -8488,7 +8492,7 @@
 
 	}
 	
-  public function getcop() {
+    public function getcop() {
       $id_cliente = $this->input->post("id_cliente");
       $response['data'] = $this->registrolote_modelo->getcop($id_cliente);
       echo json_encode($response);
