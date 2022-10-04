@@ -133,54 +133,81 @@
           $decodedData1 = explode(",", $decodedData);
 
           $insertAuditoriaData = array("fecha_creacion" => date("Y-m-d H:i:s"), "creado_por" => $this->session->userdata('id_usuario'));
-          echo json_encode($decodedData1);         
-        
-          $flag = 0 ;
-          $bande = true;
+          //echo json_encode($decodedData1);         
+          $infos = array();
+          $infos2 = array();
+          $infos3 = array();
+          $infos4 = array();
+          $clave =0 ;
+          $UserYaAgregados = array();
+          $flag   = 0 ;
+          $bande  = true;
+          $banda  = true;
+          $year   = date("Y");
+          $mes    = date("m");
+         
+          echo json_encode($fecha_actual);             
           for ($i = 0; $i < count($decodedData1) ; $i++) { 
-            $commonData = array();
             if($flag == 0){
-              $idUser = substr($decodedData1[$i],5, 1);
-              (isset($decodedData1[$i]) && !empty($decodedData1[$i]) ) ? array ("id_usuario" => $idUser)
-               
-              //$commonData += (isset(id) && !empty($decodedData[$i]->nombreUsuario)) ? array("nombreUsuario" => $decodedData[$i]->nombreUsuario) : array("nombreUsuario" => NULL);
+              if($banda){
+                $idUser = substr($decodedData1[$i],15);
+                $banda = false;  
+              }else{ 
+                $idUser = substr($decodedData1[$i],14);
+                    }
+             if(isset($decodedData1[$i]) && !empty($decodedData1[$i]) ) {
+              $clave = $idUser ;
+                $infoIdUser = array ("id_usurio" => $idUser);
+            }  
               $bande = true;
             }else if($flag == 1){
-              $nombreUsuario      = substr($decodedData1[$i], 17 , -1);    
-            }else if($flag == 2){ 
-              $tipoUsuario        = substr($decodedData1[$i], 15, -1);     
-            }else if($flag == 3){
+              $nombreUsuario      = substr($decodedData1[$i], 17 , -1);  
+            }else if($flag == 2){  
+              $tipoUsuario        = substr($decodedData1[$i], 15, -1);      
+            }else if($flag == 3){ 
               $sede               = substr($decodedData1[$i], 8, -1);     
             }else if($flag == 4){
               $formaPago          = substr($decodedData1[$i], 13, -1);    
+             $resultado = $this->Internomex_model->formaDePago($formaPago); 
+              $FormaPagos = array ("forma_pago" => $resultado->id_opcion );
+            
             }else if($flag == 5){ 
               $rfc                = substr($decodedData1[$i], 7, -1);    
             }else if($flag == 6){
               $nacionalidad       = substr($decodedData1[$i], 16, -1);    
             }else if($flag == 7){
+            
               $montoSinDescuento  = substr($decodedData1[$i], 21, -1);    
+              $infos2SinDescuento = array ("monto_sin_descuento" => $montoSinDescuento );
             }else if($flag == 8){
               $montoConDescuento  = substr($decodedData1[$i], 25, -1);    
+              $infos3MontoConDescuento = array ("monto_con_descuento" => $montoConDescuento );
             }else if($flag == 9){
-              $montoFinal         = substr($decodedData1[$i], 13, -1);
+              $montoFinal         = substr($decodedData1[$i], 13, -2);
+              $infos4MontoFinal = array ("monto_internomex" => $montoFinal );
               $flag   = 0 ;
               $bande  = false;
-            }
-
-            if ($bande){ $flag ++;}
-            
-
-
-           // $commonData += (isset($decodedData1[$i]->montoSinDescuentos) && !empty($decodedData[$i]->montoSinDescuentos)) ? array("montoSinDescuentos" => $decodedData[$i]->montoSinDescuentos) : array("montoSinDescuentos" => NULL);
-           // $commonData += (isset($decodedData1[$i]->montoConDescuentosSede) && !empty($decodedData[$i]->montoConDescuentosSede)) ? array("montoConDescuentosSede" => $decodedData[$i]->montoConDescuentosSede) : array("montoConDescuentosSede" => NULL);
-            
-            //  array_push($insertArrayData, $commonData);
-          }
+              $insertAuditoriaData ;
+              $dataReal = array_merge($insertAuditoriaData,$infos2SinDescuento,$infos3MontoConDescuento,$infos4MontoFinal, $FormaPagos, $infoIdUser);
+              //echo json_encode($infoIdUser);
+              //$data =  $this->Internomex_model->existeUserPorMes($infoIdUsers);
+              if($this->Internomex_model->existeUserPorMes($clave)){
+                $UserYaAgregados[$i] = $infoIdUser;
+              }else{
+                $respuesta = $this->Internomex_model->insertMontoFinalPago($dataReal); 
+              } 
+            }//fin del if 9
+            if ($bande){ $flag ++;} //bandera if
+          }//fin ciclo
+          //$claves,$mes,$fecha
+          $usuarios = $this->Internomex_model->getuser($hoy );
         
-          //if (count($insertArrayData) > 0)
-          // echo $insertAuditoriaData;
-         // else
+          if (count($dataReal) > 0){
+            
+          }else
+          {
             echo json_encode(array("status" => 500, "message" => "Alguno de los registros no tiene un valor establecido."), JSON_UNESCAPED_UNICODE);
+          }
        }
       }
     }

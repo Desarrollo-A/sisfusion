@@ -159,7 +159,39 @@ class Internomex_model extends CI_Model {
         se.nombre, oxc0.nombre, oxc2.nombre, u0.rfc,oxc1.nombre, u0.forma_pago, se.impuesto, u0.id_rol
         ORDER BY CASE u0.id_rol WHEN 3 THEN 4 WHEN 9 THEN 5 WHEN 7 THEN 6 ELSE u0.id_rol END");
     }
-
+    public function existeUserPorMes($idUsu){
+        $cmd = "SELECT * from dbo.pagos_internomex where id_usurio = $idUsu  and fecha_creacion >= '2016-02-19 00:00:00: 000') ";
+        $query = $this->db->query($cmd);
+        
+        return $query->num_rows() > 0 ? true : false;
     
+        //return $this->db->count_all_results() > 0;
+
+        // 
+        //return $query->result() !== [];
+        
+    }
+    public function insertMontoFinalPago($data){
+
+         $this->db->insert('dbo.pagos_internomex', $data);    
+        return $this->db->affected_rows();
+
+        //  $this->db->where('id_comida', $id_comida);
+      //  $this->db->set("status", 2);
+      //  $this->db->update('menu');
+      //  return $this->db->affected_rows();
+    }
+    public function getuser($claves,$mes,$fecha){
+        //claves es necesario para barrer todos los numeros
+        $cmd("SELECT * FROM auditoria WHERE id_parametro IN $claves AND YEAR(fecha_creacion) = $mes AND MONTH(fecha_creacion) = $fecha");
+        $query = $this->db->query($cmd);
+
+
+    }
+    public function formaDePago($filtro){
+        $cmd = ("SELECT * FROM opcs_x_cats WHERE id_catalogo = 16 and opcs_x_cats.nombre =  '$filtro' ");
+        $query = $this->db->query($cmd);
+        return $query->num_rows() > 0 ? $query->row() : false; 
+    }
 
 }
