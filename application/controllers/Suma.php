@@ -23,10 +23,10 @@ class Suma extends CI_Controller
                 echo json_encode(array("status" => 401, "message" => "Algún parámetro no tiene un valor especificado. Verifique que todos los parámetros contengan un valor especificado."), JSON_UNESCAPED_UNICODE);
             else {
                 $result = $this->Suma_model->getUserInformation($data->id_asesor, encriptar($data->contrasena));
-                if (!isset($result->id_rol))
+                if (!isset($result->rol_asesor))
                     echo json_encode(array("status" => 401, "message" => "No se logró autenticar el usuario."), JSON_UNESCAPED_UNICODE);
                 else {
-                    if ($result->id_rol != 7)
+                    if ($result->rol_asesor != 7)
                         echo json_encode(array("status" => 401, "message" => "Los datos ingresados no corresponde a un ID de usuario con rol de asesor."), JSON_UNESCAPED_UNICODE);
                     else {
                         if ($result->estatus != 1)
