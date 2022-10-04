@@ -55,7 +55,8 @@ class Suma extends CI_Controller
     }
 
     public function getComisionesByStatus(){
-        $data = $this->Suma_model->getComisionesByStatus($_POST['estatus']);
+        $user = $this->session->userdata('id_usuario');
+        $data = $this->Suma_model->getComisionesByStatus($_POST['estatus'], $user);
         echo json_encode($data);
     }
 
