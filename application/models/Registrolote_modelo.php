@@ -1786,7 +1786,7 @@ gerente2.nombreGerente as gerente2, gerente3.nombreGerente as gerente3, gerente4
 			$lider = "AND ge.id_usuario = $id_lider";
 		else if($id_rol == 2 || $id_rol == 53) // DIRECCIÓN REGIONAL || SUDDIRECCIÓN
 			$lider = "cl.id_subdirector = $id_usuario";
-		else if($id_rol == 2) // ASISTENTES DIRECCIÓN REGIONAL || ASISTENTES DE SUBDIRECCIÓN
+		else if($id_rol == 5) // ASISTENTES DIRECCIÓN REGIONAL || ASISTENTES DE SUBDIRECCIÓN
 			$lider = "cl.id_subdirector = $id_lider";
 		
 		$query = $this->db->query("SELECT idHistorialLote, hd.nombreLote, hd.idStatusContratacion, hd.idMovimiento, hd.modificado, hd.fechaVenc, lotes.idLote, 
