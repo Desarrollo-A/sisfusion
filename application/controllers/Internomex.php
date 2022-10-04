@@ -129,20 +129,59 @@
         if (in_array($decodedData, array('ALR001', 'ALR003', 'ALR004', 'ALR005', 'ALR006', 'ALR007', 'ALR008', 'ALR009', 'ALR010', 'ALR012', 'ALR013', 'ALR002', 'ALR011', 'ALR014')))
           echo json_encode(array("status" => 500, "message" => "No se logró decodificar la data."), JSON_UNESCAPED_UNICODE);
         else {
+
+          $decodedData1 = explode(",", $decodedData);
+
           $insertAuditoriaData = array("fecha_creacion" => date("Y-m-d H:i:s"), "creado_por" => $this->session->userdata('id_usuario'));
-          for ($i = 0; $i < count($decodedData); $i++) { 
+          echo json_encode($decodedData1);         
+        
+          $flag = 0 ;
+          $bande = true;
+          for ($i = 0; $i < count($decodedData1) ; $i++) { 
             $commonData = array();
-            $commonData += (isset($decodedData[$i]->nombreUsuario) && !empty($decodedData[$i]->nombreUsuario)) ? array("nombreUsuario" => $decodedData[$i]->nombreUsuario) : array("nombreUsuario" => NULL);
-            $commonData += (isset($decodedData[$i]->montoSinDescuentos) && !empty($decodedData[$i]->montoSinDescuentos)) ? array("montoSinDescuentos" => $decodedData[$i]->montoSinDescuentos) : array("montoSinDescuentos" => NULL);
-            $commonData += (isset($decodedData[$i]->montoConDescuentosSede) && !empty($decodedData[$i]->montoConDescuentosSede)) ? array("montoConDescuentosSede" => $decodedData[$i]->montoConDescuentosSede) : array("montoConDescuentosSede" => NULL);
-            $commonData += (isset($decodedData[$i]->montoFinal) && !empty($decodedData[$i]->montoFinal)) ? array("montoFinal" => $decodedData[$i]->montoFinal) : array("montoFinal" => NULL);
-            array_push($insertArrayData, $commonData);
+            if($flag == 0){
+              $idUser = substr($decodedData1[$i],5, 1);
+              (isset($decodedData1[$i]) && !empty($decodedData1[$i]) ) ? array ("id_usuario" => $idUser)
+               
+              //$commonData += (isset(id) && !empty($decodedData[$i]->nombreUsuario)) ? array("nombreUsuario" => $decodedData[$i]->nombreUsuario) : array("nombreUsuario" => NULL);
+              $bande = true;
+            }else if($flag == 1){
+              $nombreUsuario      = substr($decodedData1[$i], 17 , -1);    
+            }else if($flag == 2){ 
+              $tipoUsuario        = substr($decodedData1[$i], 15, -1);     
+            }else if($flag == 3){
+              $sede               = substr($decodedData1[$i], 8, -1);     
+            }else if($flag == 4){
+              $formaPago          = substr($decodedData1[$i], 13, -1);    
+            }else if($flag == 5){ 
+              $rfc                = substr($decodedData1[$i], 7, -1);    
+            }else if($flag == 6){
+              $nacionalidad       = substr($decodedData1[$i], 16, -1);    
+            }else if($flag == 7){
+              $montoSinDescuento  = substr($decodedData1[$i], 21, -1);    
+            }else if($flag == 8){
+              $montoConDescuento  = substr($decodedData1[$i], 25, -1);    
+            }else if($flag == 9){
+              $montoFinal         = substr($decodedData1[$i], 13, -1);
+              $flag   = 0 ;
+              $bande  = false;
+            }
+
+            if ($bande){ $flag ++;}
+            
+
+
+           // $commonData += (isset($decodedData1[$i]->montoSinDescuentos) && !empty($decodedData[$i]->montoSinDescuentos)) ? array("montoSinDescuentos" => $decodedData[$i]->montoSinDescuentos) : array("montoSinDescuentos" => NULL);
+           // $commonData += (isset($decodedData1[$i]->montoConDescuentosSede) && !empty($decodedData[$i]->montoConDescuentosSede)) ? array("montoConDescuentosSede" => $decodedData[$i]->montoConDescuentosSede) : array("montoConDescuentosSede" => NULL);
+            
+            //  array_push($insertArrayData, $commonData);
           }
-          if (count($insertArrayData) > 0)
-            echo $insertAuditoriaData;
-          else
+        
+          //if (count($insertArrayData) > 0)
+          // echo $insertAuditoriaData;
+         // else
             echo json_encode(array("status" => 500, "message" => "Alguno de los registros no tiene un valor establecido."), JSON_UNESCAPED_UNICODE);
-        }
+       }
       }
     }
  }
