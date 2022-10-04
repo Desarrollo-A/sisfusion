@@ -1771,14 +1771,24 @@ gerente2.nombreGerente as gerente2, gerente3.nombreGerente as gerente3, gerente4
 	// }
 
 	public function report($typeTransaction, $beginDate, $endDate, $where){
-		if ($typeTransaction == 1 || $typeTransaction == 3) {
+		if ($typeTransaction == 1 || $typeTransaction == 3)
             $filter = " AND hd.modificado BETWEEN '$beginDate 00:00:00' AND '$endDate 23:59:59'";
-        }
 
-		if($this->session->userdata('id_rol') == 2){
-			$lider = "AND ge.id_lider = ".$this->session->userdata('id_usuario');
-		}
+		$id_usuario = $this->session->userdata('id_usuario');
+		$id_lider = $this->session->userdata('id_lider');
+		$id_rol = $this->session->userdata('id_rol');
 
+		if($id_rol == 2 || $id_rol == 4) // DIRECCIÓN COMERCIAL || ASISTENTE DE DIRECCIÓN COMERCIAL
+			$lider = "";
+		else if ($id_rol == 3) // GERENTE
+			$lider = "AND ge.id_usuario = $id_usuario";
+		else if ($id_rol == 6) // ASISTENTE DE GERENTE
+			$lider = "AND ge.id_usuario = $id_lider";
+		else if($id_rol == 2 || $id_rol == 53) // DIRECCIÓN REGIONAL || SUDDIRECCIÓN
+			$lider = "cl.id_subdirector = $id_usuario";
+		else if($id_rol == 2) // ASISTENTES DIRECCIÓN REGIONAL || ASISTENTES DE SUBDIRECCIÓN
+			$lider = "cl.id_subdirector = $id_lider";
+		
 		$query = $this->db->query("SELECT idHistorialLote, hd.nombreLote, hd.idStatusContratacion, hd.idMovimiento, hd.modificado, hd.fechaVenc, lotes.idLote, 
 		CAST(lotes.comentario AS varchar(MAX)) as comentario, hd.status, lotes.totalNeto, totalValidado, lotes.totalNeto2, 
 		concat(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_paterno) as asesor, concat(ge.nombre, ' ', ge.apellido_paterno, ' ', ge.apellido_paterno) as gerente 
