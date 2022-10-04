@@ -68,12 +68,8 @@
                     <br>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" id="save1" class="btn btn-success"><span
-                                class="material-icons">send</span> </i> Registrar
-                    </button>
-                    <button type="button" class="btn btn-danger" data-dismiss="modal"><span
-                                class="glyphicon glyphicon-remove"></span> Cancelar
-                    </button>
+                    <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                    <button type="button" id="save1" class="btn btn-primary">Registrar</button>
                 </div>
             </div>
         </div>
@@ -93,7 +89,7 @@
                 <div class="modal-body">
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-success" data-dismiss="modal"><span class="material-icons">done_outline</span> </i>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">
                         Aceptar
                     </button>
                 </div>
@@ -118,7 +114,6 @@
 <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
 <script>
-
     var url = "<?=base_url()?>";
     var url2 = "<?=base_url()?>index.php/";
 

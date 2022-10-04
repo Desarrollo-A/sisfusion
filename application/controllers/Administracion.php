@@ -286,8 +286,7 @@ class Administracion extends CI_Controller{
 		$arreglo["perfil"]=$this->session->userdata('id_rol');
 		$arreglo["modificado"]=date("Y-m-d H:i:s");	
 		$arreglo["validacionEnganche"]= "VALIDADO";
-		$arreglo["totalValidado"]= $totalValidado;
-	
+		$arreglo["totalValidado"]= str_replace(array('$', ','),'', $totalValidado);
 	
 	$horaActual = date('H:i:s');
 	$horaInicio = date("08:00:00");
@@ -445,8 +444,7 @@ class Administracion extends CI_Controller{
 	
 
 		$validate = $this->Administracion_model->validateSt11($idLote);
-		print_r($validate);
-		exit;
+
 
 		if($validate == 1){
 
@@ -555,22 +553,12 @@ class Administracion extends CI_Controller{
         //print_r($data_eviRec['comentario']);
           #PROVICIONAL TESTING
 
+//          print_r($correos_submit);
+//          exit;
 
-
-          /*$data_enviar_mail = $this->notifyRejEv($correos_submit, $data_eviRec, $data_mail);
-          exit;*/
 
 
           $validate = $this->Administracion_model->validateSt11($idLote);
-
-          $data_enviar_mail = $this->notifyRejEv($correos_submit, $data_eviRec, $data_mail);
-          if ($data_enviar_mail > 0) {
-              $data['status_msg'] = 'Correo enviado correctamente';
-          } else {
-              $data['status_msg'] = 'Correo no enviado '.$data_enviar_mail;
-          }
-          print_r($data);
-          exit;
 
 		 if($validate == 1){
 		 if ($this->Administracion_model->updateSt($idLote,$arreglo,$arreglo2) == TRUE){ 

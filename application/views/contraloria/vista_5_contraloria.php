@@ -60,8 +60,8 @@ $datos = array();
 				<div class="modal-footer"></div>
 
 				<div class="modal-footer">
-					<button type="button" id="enviarenvARevCE" onClick="preguntaenvARevCE()" class="btn btn-success"><span class="material-icons" >send</span> </i> Registrar</button>
-                    <button type="button" class="btn btn-danger" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> Cancelar</button>
+                    <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                    <button type="button" id="enviarenvARevCE" onClick="preguntaenvARevCE()" class="btn btn-primary">Registrar</button>
 				</div>
 			</div>
 		</div>
@@ -84,9 +84,9 @@ $datos = array();
 					</div>
 				</div>
 				<div class="modal-footer"></div>
-				<div class="modal-footer">			
-					<button type="button" id="guardar" class="btn btn-success"><span class="material-icons" >send</span> </i> Registrar</button>
-                    <button type="button" class="btn btn-danger" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> Cancelar</button>
+				<div class="modal-footer">
+                    <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                    <button type="button" id="guardar" class="btn btn-primary">Registrar</button>
 				</div>
 			</div>
 		</div>
@@ -106,9 +106,9 @@ $datos = array();
 						  <textarea class="form-control" id="comentario2" rows="3"></textarea>
 						  <br>              
 					</div>
-					<div class="modal-footer">              
-						<button type="button" id="save2" class="btn btn-success"><span class="material-icons" >send</span> </i> Registrar</button>
-						<button type="button" class="btn btn-danger" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> Cancelar</button>
+					<div class="modal-footer">
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                        <button type="button" id="save2" class="btn btn-primary">Registrar</button>
 					</div>
 		</div>
 	  </div>
@@ -133,9 +133,9 @@ $datos = array();
 						  <textarea class="form-control" id="comentario1" rows="3"></textarea>
 						  <br>              
 					</div>
-					<div class="modal-footer">              
-						<button type="button" id="save1" class="btn btn-success"><span class="material-icons" >send</span> </i> Registrar</button>
-						<button type="button" class="btn btn-danger" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> Cancelar</button>
+					<div class="modal-footer">
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                        <button type="button" id="save1" class="btn btn-primary"> Registrar</button>
 					</div>
 		</div>
 	  </div>
@@ -184,52 +184,6 @@ $datos = array();
                                             </tr>
                                         </thead>
                                     </table>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-    <div class="content hide">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col xol-xs-12 col-sm-12 col-md-12 col-lg-12">
-                    <div class="card">
-                        <div class="card-header card-header-icon" data-background-color="goldMaderas">
-                            <i class="material-icons">reorder</i>
-                        </div>
-                        <div class="card-content">
-                            <h4 class="card-title center-align">Registro estatus 5 (revisión 100%)</h4>
-                            <div class="toolbar">
-                             </div>
-                            <div class="material-datatables"> 
-
-                                <div class="form-group">
-                                    <div class="table-responsive">
- 
-                                        <table class="table table-responsive table-bordered table-striped table-hover"
-                                               id="tabla_ingresar_5" name="tabla_ingresar_5" style="text-align:center;">
-                                        <thead>
-                                            <tr>
-                                                <th></th>
-                                                <th></th>
-												<th style="font-size: .9em;">PROYECTO</th>
-												<th style="font-size: .9em;">CONDOMINIO</th>
-                                                <th style="font-size: .9em;">LOTE</th>
-                                                <th style="font-size: .9em;">GERENTE</th>
-                                                <th style="font-size: .9em;">CLIENTE</th>
-                                                <th style="font-size: .9em;">F.MOD</th>
-                                                <th style="font-size: .9em;">F.VENC</th>
-                                                <th style="font-size: .9em;">UC</th>
-                                                <th style="font-size: .9em;"></th>
-                                            </tr>
-                                        </thead>
-                                    </table>
-                                    </div>
                                 </div>
                             </div>
                         </div>

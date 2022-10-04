@@ -71,8 +71,8 @@ $datos = array();
                                             </div>
                                         </div>
                                         <div class="modal-footer">
-                                            <button type="button" id="btn_show" class="btn btn-success"><span class="material-icons">send</span> </i> Enviar Contratos</button>
-                                            <button type="button" class="btn btn-danger" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> Cancelar</button>
+                                            <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                                            <button type="button" id="btn_show" class="btn btn-primary">Enviar Contratos</button>
                                             <br>
                                         </div>
                                     </div>
@@ -85,80 +85,6 @@ $datos = array();
         </div>
     </div>
 
-
-
-<div class="content hide">
-        <div class="container-fluid">
- 
-            <div class="row">
-
-                <div class="col xol-xs-12 col-sm-12 col-md-12 col-lg-12">
-                    <div class="card">
-                        <div class="card-header card-header-icon" data-background-color="goldMaderas">
-                            <i class="material-icons">reorder</i>
-                        </div>
-                        <div class="card-content">
-                            <h4 class="card-title center-align">Contrato firmado (estatus 12)</h4>
-                            <div class="toolbar">
-                                <!--        Here you can write extra buttons/actions for the toolbar              -->
-                            </div>
-                            <div class="material-datatables">
-                                <div class="form-group">
-									<!-- modal para rechazar estatus-->
-									<div class="modal fade" id="enviarContratos" data-backdrop="static" data-keyboard="false">
-										<div class="modal-dialog modal-md">
-											<div class="modal-content" >
-												<div class="modal-body">
-													<div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
-														<label>Ingresa los códigos de los contratos firmados: </label>
-														<textarea name="txt" id="contratos" onkeydown="saltoLinea(value);
-														return true;" class="form-control" style="text-transform:uppercase;
-														min-height: 400px;width: 100%"></textarea><br><br>
-													</div>
-												</div>
-												<div class="modal-footer">												
-													<button type="button" id="btn_show" class="btn btn-success"><span class="material-icons">send</span> </i> Enviar Contratos</button>
-					                            	<button type="button" class="btn btn-danger" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> Cancelar</button>
-													<br>
-												</div>
-											</div>
-										</div>
-									</div>
-
-
-                                <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
-									<button class="btn btn-primary sendCont">Enviar contratos <span class="material-icons">chevron_right</span></button>
-                                        <div class="table-responsive">
-                                        <table class="table table-responsive table-bordered table-striped table-hover"
-                                               id="tabla_ingresar_12" name="tabla_ingresar_12" style="text-align:center;">
-                                        <thead>
-                                            <tr>
-                                                <th></th>
-                                                <th></th>
-												<th style="font-size: .9em;">PROYECTO</th>
-												<th style="font-size: .9em;">CONDOMINIO</th>
-                                                <th style="font-size: .9em;">LOTE</th>
-                                                <th style="font-size: .9em;">CÓDIGO</th>
-                                                <th style="font-size: .9em;">CLIENTE</th>
-                                                <th style="font-size: .9em;">TOTAL NETO</th>
-                                                <th style="font-size: .9em;">TOTAL VALIDADO</th>
-
-                                            </tr>
-                                        </thead>
-                                    </table>
-                                    </div>
-                                </div>
-                                </div>
-
-
-
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
     <?php $this->load->view('template/footer_legend');?>
 </div>
 </div>
