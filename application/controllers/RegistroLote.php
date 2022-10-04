@@ -16124,6 +16124,7 @@ tr td:hover { background: #666; color: #FFF; }
 			$date1 = new DateTime($data[$i]->fechaApartado);
 			$date2 = new DateTime(date('Y-m-d'));
 			$diff = $date1->diff($date2);
+
 			if ($diff->days>=45)
 			{
 					$datos[$i]['referencia'] = $data[$i]->referencia;
