@@ -3625,7 +3625,7 @@ class Asesor extends CI_Controller
             $data['message'] = 'MISSING_DOCUMENTS';
             echo json_encode($data);
         } else if($validacion) {
-            $data['message'] = 'MISSING_AUTORIZACION';
+            $data['message'] = 'MISSING_AUTORIZATION';
             echo json_encode($data);
         } else {
             date_default_timezone_set('America/Mexico_City');

@@ -150,7 +150,7 @@
         return $this->db->query("SELECT id_cd, fecha, pago, capital, interes, total, saldo, id_corrida FROM corrida_dump WHERE id_corrida = ".$id_corrida."");
     }
     public function getPlanCorrida($id_corrida) {
-//		$query = $this->db->query("SELECT id_cd, fecha, pago, capital, interes, total, saldo, id_corrida FROM corrida_dump WHERE id_corrida = ".$id_corrida."");
+        //$query = $this->db->query("SELECT id_cd, fecha, pago, capital, interes, total, saldo, id_corrida FROM corrida_dump WHERE id_corrida = ".$id_corrida."");
         $query = $this->db->query("SELECT corrida_dump FROM corridas_financieras WHERE id_corrida = ".$id_corrida);
         return $query->result_array();
     }
@@ -329,6 +329,9 @@
             case '5': // ASISTENTE SUBDIRECTOR
             case '6': // ASISTENTE GERENTE
             case '9': // COORDINADOR
+            case '13': // CONTRALORIA
+            case '17': // CONTRALORIA
+            case '32': // CONTRALORIA
                 $query = $this->db->query("SELECT l.idLote, nombreLote, idStatusLote, cl.id_asesor FROM  lotes l
                         INNER JOIN corridas_financieras cf ON l.idLote = cf.id_lote
                         INNER JOIN clientes cl ON cl.id_cliente = l.idCliente
@@ -360,10 +363,16 @@
         $id_rol = $this->session->userdata('id_rol');
         $id_usuario = $this->session->userdata('id_usuario');
         $condicion='';
+        $valInner = '';
+
         if($id_rol == 7){
             $condicion='AND cf.created_by='.$id_usuario;
         }else{
             $condicion='';
+        }
+
+        if($id_rol == 13 || $id_rol==17 || $id_rol==32){
+            $valInner = 'INNER JOIN clientes cl ON l.idCliente = cl.id_cliente';
         }
         $query = $this->db->query("SELECT *,c.nombre as nombreCondominio,
         cf.nombre as nombreCliente,
@@ -374,6 +383,7 @@
         INNER JOIN condominios c ON c.idCondominio = l.idCondominio
         INNER JOIN residenciales r ON r.idResidencial = c.idResidencial
         /*INNER JOIN clientes cl ON l.idCliente = cl.id_cliente*/
+        $valInner
         INNER JOIN usuarios u ON u.id_usuario = cf.id_asesor WHERE id_lote=".$idLote." ".$condicion);
         return $query->result_array();
     }
