@@ -76,8 +76,8 @@
                         <br>              
                     </div>
                     <div class="modal-footer">
-                        <button type="button" id="save1" class="btn btn-success"><span class="material-icons" >send</span> </i> Registrar</button>
-                        <button type="button" class="btn btn-danger" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> Cancelar</button>
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                        <button type="button" id="save1" class="btn btn-primary">Registrar</button>
                     </div>
             </div>
         </div>
@@ -97,8 +97,8 @@
                         <br>              
                     </div>
                     <div class="modal-footer">
-                        <button type="button" id="save2" class="btn btn-success"><span class="material-icons" >send</span> </i> Registrar</button>
-                        <button type="button" class="btn btn-danger" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> Cancelar</button>
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                        <button type="button" id="save2" class="btn btn-primary">Registrar</button>
                     </div>
             </div>
         </div>
@@ -118,8 +118,8 @@
                         <br>              
                     </div>
                     <div class="modal-footer">
-                        <button type="button" id="save3" class="btn btn-success"><span class="material-icons" >send</span> </i> Registrar</button>
-                        <button type="button" class="btn btn-danger" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> Cancelar</button>
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                        <button type="button" id="save3" class="btn btn-primary">Registrar</button>
                     </div>
             </div>
         </div>
@@ -139,8 +139,8 @@
                         <br>              
                     </div>
                     <div class="modal-footer">
-                        <button type="button" id="save4" class="btn btn-success"><span class="material-icons" >send</span> </i> Registrar</button>
-                        <button type="button" class="btn btn-danger" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> Cancelar</button>
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                        <button type="button" id="save4" class="btn btn-primary">Registrar</button>
                     </div>
             </div>
         </div>
@@ -160,8 +160,8 @@
                         <br>              
                     </div>
                     <div class="modal-footer">
-                        <button type="button" id="save5" class="btn btn-success"><span class="material-icons" >send</span> </i> Registrar</button>
-                        <button type="button" class="btn btn-danger" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> Cancelar</button>
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                        <button type="button" id="save5" class="btn btn-primary">Registrar</button>
                     </div>
             </div>
         </div>
@@ -179,7 +179,7 @@
                 </div>
                 <div class="modal-footer" style="text-align: center">
                     <br>
-                    <button type="button" class="btn btn-primary" data-dismiss="modal"><span class="material-icons">done</span> cerrar</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">cerrar</button>
                 </div>
             </div>
         </div>
@@ -206,8 +206,8 @@
                     </div>
                     <div class="modal-footer"></div>
                     <div class="modal-footer">
-                        <button type="button" id="savecs" class="btn btn-success"><span class="material-icons" >send</span> </i> Registrar</button>
-                        <button type="button" class="btn btn-danger" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> Cancelar</button>
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                        <button type="button" id="savecs" class="btn btn-primary">Registrar</button>
                     </div>
             </div>
         </div>
@@ -255,8 +255,8 @@
                         <br>              
                     </div>
                     <div class="modal-footer">
-                        <button type="button" id="save6" class="btn btn-success"><span class="material-icons" >send</span> </i> Registrar</button>
-                        <button type="button" class="btn btn-danger" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> Cancelar</button>
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                        <button type="button" id="save6" class="btn btn-primary">Registrar</button>
                     </div>
             </div>
         </div>
@@ -276,8 +276,8 @@
                         <br>              
                     </div>
                     <div class="modal-footer">
-                        <button type="button" id="save7" class="btn btn-success"><span class="material-icons" >send</span> </i> Registrar</button>
-                        <button type="button" class="btn btn-danger" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> Cancelar</button>
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                        <button type="button" id="save7" class="btn btn-primary">Registrar</button>
                     </div>
             </div>
         </div>
