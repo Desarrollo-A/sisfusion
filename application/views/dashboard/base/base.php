@@ -1,5 +1,11 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
 
+<style>
+    .u2be i{
+        color: red;
+    }
+</style>
+
 <body id="mainDashboard">
     <div class="wrapper ">
         <?php
@@ -26,6 +32,30 @@
                     echo $li;
 
                     ?>
+
+                    
+                    <?php if ( $this->session->userdata('id_rol') == 7 ){
+                        $liVideo = '<li class="ml-3 d-flex align-center justify-center u2be">';
+                        $liVideo .= '<a href="https://www.youtube.com/watch?v=WcwAguxb0Mo" class="p-0" target="_blank">';
+                        $liVideo .= '<i class="fab fa-youtube p-0" rel="tooltip" data-placement="top" title="Tutorial" style="font-size:25px!important"></i></a></li>';
+
+                        echo $liVideo;
+                    } ?>
+                    <?php if ( $this->session->userdata('id_rol') == 9 ){
+                        $liVideo = '<li class="ml-3 d-flex align-center justify-center u2be">';
+                        $liVideo .= '<a href="https://www.youtube.com/watch?v=6-JuxuJhsZA" class="p-0" target="_blank">';
+                        $liVideo .= '<i class="fab fa-youtube p-0" rel="tooltip" data-placement="top" title="Tutorial" style="font-size:25px!important"></i></a></li>';
+
+                        echo $liVideo;
+                    } ?>
+                    <?php if ( $this->session->userdata('id_rol') == 3 ){
+                        $liVideo = '<li class="ml-3 d-flex align-center justify-center u2be">';
+                        $liVideo .= '<a href="https://www.youtube.com/watch?v=to8YvNoyD9g&feature=youtu.be" class="p-0" target="_blank">';
+                        $liVideo .= '<i class="fab fa-youtube p-0" rel="tooltip" data-placement="top" title="Tutorial" style="font-size:25px!important"></i></a></li>';
+
+                        echo $liVideo;
+                    } ?>
+                           
                 </ul>
                 <div class="tab-content">
 
