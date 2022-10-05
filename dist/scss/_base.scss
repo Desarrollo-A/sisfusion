@@ -18,6 +18,10 @@
 .mr-2{ margin-right: 20px!important; }
 .ml-1{ margin-left: 10px!important; }
 .ml-2{ margin-left: 20px!important; }
+.ml-3{ margin-left: 30px!important; }
+.ml-4{ margin-left: 40px!important; }
+.ml-5{ margin-left: 50px!important; }
+
 .p-0  { padding: 0!important; }
 .p-1  { padding: 10px; }
 .p-2  { padding: 20px; }
@@ -96,7 +100,7 @@
 /* Flexbox */
 .d-none          { display: none!important; }
 .d-block         { display: block; }
-.d-flex          { display: flex; }
+.d-flex          { display: flex!important; }
 .align-start     { align-items: flex-start; }
 .align-end       { align-items: flex-end; }
 .align-center    { align-items: center;}
@@ -127,11 +131,11 @@
 .fw-700         { font-weight: 700; }
 .fw-800         { font-weight: 800; }
 .fw-900         { font-weight: 900; }
-.fs-1           { font-size: 1rem;}
-.fs-2           { font-size: 2rem;}
-.fs-3           { font-size: 3rem;}
-.fs-4           { font-size: 4rem;}
-.fs-5           { font-size: 5rem;}
+.fs-1           { font-size: 1rem!important;}
+.fs-2           { font-size: 2rem!important;}
+.fs-3           { font-size: 3rem!important;}
+.fs-4           { font-size: 4rem!important;}
+.fs-5           { font-size: 5rem!important;}
 
 /* Text */
 

@@ -210,7 +210,7 @@ $("#tabla_nuevas_comisiones").ready(function() {
         {
             "width": "9%",
             "data": function(d) {
-                switch (d.forma_pago) {
+                switch (d.id_forma_pago) {
                     case '1': //SIN DEFINIR
                     case 1: //SIN DEFINIr
                         return '<p class="mb-1"><span class="label" style="background:#B3B4B4;">SIN DEFINIR FORMA DE PAGO</span><br><span class="label" style="background:#EED943; color:black;">REVISAR CON RH</span></p>';
@@ -273,7 +273,7 @@ $("#tabla_nuevas_comisiones").ready(function() {
                 ((mes == 12 && dia == 12) || (mes == 12 && dia == 13 && hora <= 13)))
                 {
 
-                    switch (full.forma_pago) {
+                    switch (full.id_forma_pago) {
                         case '1': //SIN DEFINIR
                         case 1: //SIN DEFINIR
                         case '2': //FACTURA
@@ -473,7 +473,7 @@ $("#tabla_revision_comisiones").ready(function() {
         {
             "width": "9%",
             "data": function(d) {
-                switch (d.forma_pago) {
+                switch (d.id_forma_pago) {
                     case '1': //SIN DEFINIR
                     case 1: //SIN DEFINIr
                         return '<p class="mb-1"><span class="label" style="background:#B3B4B4;">SIN DEFINIR FORMA DE PAGO</span><br><span class="label" style="background:#EED943; color:black;">REVISAR CON RH</span></p>';
@@ -670,7 +670,7 @@ $("#tabla_pagadas_comisiones").ready(function() {
         {
             "width": "9%",
             "data": function(d) {
-                switch (d.forma_pago) {
+                switch (d.id_forma_pago) {
                     case '1': //SIN DEFINIR
                     case 1: //SIN DEFINIr
                         return '<p class="mb-1"><span class="label" style="background:#B3B4B4;">SIN DEFINIR FORMA DE PAGO</span><br><span class="label" style="background:#EED943; color:black;">REVISAR CON RH</span></p>';
