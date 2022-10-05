@@ -329,16 +329,16 @@ class Usuarios extends CI_Controller
             }
 
             $data = array(
-                "nombre" => $_POST['name'],
-                "apellido_paterno" => $_POST['last_name'],
-                "apellido_materno" => $_POST['mothers_last_name'],
-                "rfc" => $_POST['rfc'],
-                "correo" => $_POST['email'],
-                "telefono" => $_POST['phone_number'],
+                "nombre" => $this->formatter->eliminar_tildes(strtoupper(trim($_POST['name']))),
+                "apellido_paterno" => $this->formatter->eliminar_tildes(strtoupper(trim($_POST['last_name']))),
+                "apellido_materno" => $this->formatter->eliminar_tildes(strtoupper(trim($_POST['mothers_last_name']))),
+                "rfc" => strtoupper(trim($_POST['rfc'])),
+                "correo" => strtoupper(trim($_POST['email'])),
+                "telefono" => strtoupper(trim($_POST['phone_number'])),
                 "id_sede" => $_POST['headquarter'],
                 "id_rol" => $_POST['member_type'],
                 "id_lider" => $id_lider,
-                "usuario" => $_POST['username'],
+                "usuario" => trim($_POST['username']),
                 "contrasena" => encriptar($_POST['contrasena']),
                 "fecha_modificacion" => date("Y-m-d H:i:s"),
                 "modificado_por" => $this->session->userdata('id_usuario'),
