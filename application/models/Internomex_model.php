@@ -138,7 +138,13 @@ class Internomex_model extends CI_Model {
             $this->db->query("INSERT INTO historial_comisiones VALUES ($idsol, ".$this->session->userdata('id_usuario').", GETDATE(), 1, 'SE APLICÓ PAGO DE INTERNOMEX')");
             return $this->db->query("UPDATE pago_comision_ind SET estatus = 9 WHERE id_pago_i IN (".$idsol.")");
     }
-
+    public function getMFPagos( $year,$mes){
+        $cmd = "SELECT p.id_usuario,p.monto_con_descuento,p.monto_sin_descuento,p.monto_internomex,CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombre
+        FROM  pagos_internomex p  INNER JOIN usuarios u on u.id_usuario = p.id_usuario
+        WHERE YEAR(p.fecha_creacion) = $year and MONTH(p.fecha_creacion) = $mes";
+       $query = $this->db->query($cmd);
+        return $query  ;
+    }
     public function getCommissions()
     {
         return $this->db->query("SELECT u0.id_usuario, UPPER(CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno)) nombreUsuario, 
