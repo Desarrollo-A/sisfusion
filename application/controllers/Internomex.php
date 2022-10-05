@@ -133,19 +133,42 @@
           $decodedData = json_decode($decodedData); // SE CONVIERTE A UN ARRAY
           $insertAuditoriaData = array("fecha_creacion" => date("Y-m-d H:i:s"), "creado_por" => (int)$this->session->userdata('id_usuario')); // SE CREA ARREGLO CON DATOS BASE (QUE LLEVAN TODOS LOS REGISTROS)
           if (count($decodedData) > 0) { // SE VALIDA QUE EL ARRAY AL MENOS TENGA DATOS
-            for ($i = 0; $i < count($decodedData); $i++) { // CICLO PARA RECORRER ARRAY DE DATOS Y ARMAR ARRAY PARA EL BATCH INSERT
-              $commonData = array();
+            $id_usuario = array();
+            for ($i = 0; $i < count($decodedData); $i++) { // CICLO PARA VALIDACIÓN DE DATOS (CHECAR QUE LOS REGISTROS NOS SE HAYAN INSERTADO YA)
               // SE VERIFICA QUE LA FILA DE DATOS CONTEGA LA INFORMACIÓN QUE SE VA A INSERTAR Y QUE NO VENGA VACÍA
               if (isset($decodedData[$i]->id_usuario) && !empty($decodedData[$i]->id_usuario) && isset($decodedData[$i]->formaPago) && !empty($decodedData[$i]->formaPago) && isset($decodedData[$i]->montoSinDescuentos) && !empty($decodedData[$i]->montoSinDescuentos) &&
-              isset($decodedData[$i]->montoConDescuentosSede) && !empty($decodedData[$i]->montoConDescuentosSede) && isset($decodedData[$i]->montoFinal) && !empty($decodedData[$i]->montoFinal)) {   
-                $commonData += array("id_usuario" => (int)$decodedData[$i]->id_usuario, 
-                "forma_pago" => $this->formatter->convertPaymentMethod($decodedData[$i]->formaPago), 
-                "monto_sin_descuento" => (float)$this->formatter->removeNumberFormat($decodedData[$i]->montoSinDescuentos), 
-                "monto_con_descuento" => (float)$this->formatter->removeNumberFormat($decodedData[$i]->montoConDescuentosSede), 
-                "monto_internomex" => (float)$this->formatter->removeNumberFormat($decodedData[$i]->montoFinal));
-                $commonData += $insertAuditoriaData; // SE CONCATENA LA DATA BASE + LA DATA DEL ARRAY PRINCIPAL
-                array_push($insertArrayData, $commonData); // 
+              isset($decodedData[$i]->montoConDescuentosSede) && !empty($decodedData[$i]->montoConDescuentosSede) && isset($decodedData[$i]->montoFinal) && !empty($decodedData[$i]->montoFinal))
+                $id_usuario[$i] = (int)$decodedData[$i]->id_usuario;
+              else {
+                unset($decodedData[$i]); // SE ELIMINA LA POSICIÓN QUE YA SE INSERTÓ ANTERIORMENTE
+                $decodedData = array_values($decodedData); // SE REORDENA EL ARRAY
               }
+            }
+            $verifiedData = array();
+            if (count($id_usuario) > 0) {
+              $id_usuario = implode(", ", $id_usuario); // SE CONVIERTE ARRAY DE ID DE USARIO A UN STRING SEPARADO POR COMMA PARA LA CONSULTA
+              $verifiedData = $this->Internomex_model->verifyData($id_usuario);
+            }
+            for ($i = 0; $i < count($decodedData); $i++) { // CICLO PARA RECORRER ARRAY DE DATOS Y ARMAR ARRAY PARA EL BATCH INSERT
+              $commonData = array();
+              if (count($verifiedData) > 0) { // SE ENCONTRARON REGISTROS YA INSERTADOS EN EL MES
+                for($e = 0; $e < count($verifiedData); $e++){
+                  if((int)$decodedData[$i]->id_usuario === (int)$verifiedData[$e]->id_usuario)
+                    unset($decodedData[$i]); // SE ELIMINA LA POSICIÓN QUE YA SE INSERTÓ ANTERIORMENTE
+                    $decodedData = array_values($decodedData); // SE REORDENA EL ARRAY
+                }
+              }
+              if (count($decodedData) > 0) {
+                $commonData += array("id_usuario" => (int)$decodedData[$i]->id_usuario, 
+                  "forma_pago" => $this->formatter->convertPaymentMethod($decodedData[$i]->formaPago), 
+                  "monto_sin_descuento" => (float)$this->formatter->removeNumberFormat($decodedData[$i]->montoSinDescuentos), 
+                  "monto_con_descuento" => (float)$this->formatter->removeNumberFormat($decodedData[$i]->montoConDescuentosSede), 
+                  "monto_internomex" => (float)$this->formatter->removeNumberFormat($decodedData[$i]->montoFinal));
+                $commonData += $insertAuditoriaData; // SE CONCATENA LA DATA BASE + LA DATA DEL ARRAY PRINCIPAL
+                array_push($insertArrayData, $commonData);
+              }
+              else
+                echo json_encode(array("status" => 500, "message" => "No hay información para procesar (vacío)."), JSON_UNESCAPED_UNICODE);
             }
             if (count($insertArrayData) > 0) { // AL TERMINAR EL CICLO SE EVALÚA SI EL ARRAY DE DATOS PARA EL BATCH INSERT TIENE DATA VA Y TIRA EL BATCH
               $insertResponse = $this->General_model->insertBatch("pagos_internomex", $insertArrayData);
