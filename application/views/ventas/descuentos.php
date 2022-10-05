@@ -267,6 +267,7 @@
                                                         <th>LOTE</th>
                                                         <th>MOTIVO</th>
                                                         <th>ESTATUS</th>
+                                                        <th>TIPO</th>
                                                         <th>CREADO POR</th>
                                                         <th>FECHA CAPTURA</th>
                                                         <th>OPCIONES</th>
@@ -453,7 +454,7 @@
                     titleAttr: 'Descargar archivo de Excel',
                     title: 'DESCUENTOS_SIN_APPLICAR',
                     exportOptions: {
-                        columns: [0,1,2,3,4,5,6,7],
+                        columns: [0,1,2,3,4,5,6,7,8],
                         format: {
                             header:  function (d, columnIdx) {
                                 if(columnIdx == 0){
@@ -469,10 +470,12 @@
                                 }else if(columnIdx == 5){
                                     return 'ESTATUS';
                                 }else if(columnIdx == 6){
-                                    return 'CREADO POR';
+                                    return 'TOPO';
                                 }else if(columnIdx == 7){
+                                    return 'CREADO POR';
+                                }else if(columnIdx == 8){
                                     return 'FECHA CAPTURA';
-                                }else if(columnIdx != 8 && columnIdx !=0){
+                                }else if(columnIdx != 9 && columnIdx !=0){
                                     return ' '+titulos[columnIdx-1] +' ';
                                 }
                             }

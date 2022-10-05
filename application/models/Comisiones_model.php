@@ -4372,7 +4372,7 @@ function getInformacionDataResguardo($var){
     }
 
     function update_descuento($id_pago_i,$monto, $comentario, $saldo_comisiones, $usuario,$valor,$user,$pagos_aplicados){
-        $estatus = 27;
+        $estatus = 0;
         $uni='DESCUENTO';
         if($valor == 2){
     $estatus =16;
@@ -4567,7 +4567,7 @@ return 1;
 }
 
 function UpdateDescuento($id_bono){
-$respuesta = $this->db->query("UPDATE pago_comision_ind SET estatus = 11,modificado_por='".$this->session->userdata('id_usuario')."' WHERE estatus = 0 AND descuento_aplicado = 1 AND id_pago_i = $id_bono");
+$respuesta = $this->db->query("UPDATE pago_comision_ind SET estatus = 27,modificado_por='".$this->session->userdata('id_usuario')."' WHERE estatus = 0 AND descuento_aplicado = 1 AND id_pago_i = $id_bono");
 if (! $respuesta ) {
 return 0;
 } else {

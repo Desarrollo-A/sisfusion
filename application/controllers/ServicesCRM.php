@@ -32,7 +32,7 @@ class ServicesCRM extends CI_Controller
             }
             if(in_array($origin,$urls) || strpos($origin,"192.168")){
             $this->load->helper(array('form'));
-            $this->load->library(array('jwt_key'));
+            $this->load->library(array('jwt_key','formatter'));
             $this->load->model(array('Services_model', 'General_model'));
             }else{
                 die ("Access Denied");     
@@ -51,8 +51,9 @@ class ServicesCRM extends CI_Controller
 
     public function saveUserCH()
     {
-            $objDatos = json_decode(base64_decode(file_get_contents("php://input")), true);
+            $objDatos = json_decode(utf8_encode(base64_decode(file_get_contents("php://input"))), true);
             $getRFC = $this->Services_model->getRFC($objDatos['rfc']);
+           
             if(count($getRFC) > 0 ){
                 echo base64_encode(json_encode(array("result" => false,
                                        "message" => "El RFC ingresado ya se encuentra registrado.")));
@@ -88,16 +89,16 @@ class ServicesCRM extends CI_Controller
                     $id_regional=0;//$getLider[0]['id_regional'];
                 }
                 $data = array(
-                    "nombre" => $objDatos['nombre'],
-                    "apellido_paterno" => $objDatos['apellido_paterno'],
-                    "apellido_materno" => $objDatos['apellido_materno'],
+                    "nombre" => $this->formatter->eliminar_tildes(strtoupper(trim($objDatos['nombre']))),
+                    "apellido_paterno" => $this->formatter->eliminar_tildes(strtoupper(trim($objDatos['apellido_paterno']))),
+                    "apellido_materno" =>$this->formatter->eliminar_tildes(strtoupper(trim($objDatos['apellido_materno']))),
                     "forma_pago" => $objDatos['forma_pago'],
-                    "rfc" => $objDatos['rfc'],
+                    "rfc" => $this->formatter->eliminar_tildes(strtoupper(trim($objDatos['rfc']))),
                     "estatus" => 1,
                     "sesion_activa" => 1,
                     "imagen_perfil" => '',
-                    "correo" => $objDatos['correo'],
-                    "telefono" => $objDatos['telefono'],
+                    "correo" => $this->formatter->eliminar_tildes(strtoupper(trim($objDatos['correo']))),
+                    "telefono" => trim($objDatos['telefono']),
                     "id_sede" => $objDatos['id_sede'],
                     "id_rol" => $objDatos['id_rol'],
                     "id_lider" => $id_lider,
