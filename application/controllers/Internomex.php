@@ -117,7 +117,11 @@
     echo json_encode($data);
   }
   public function getPagosFinal(){
-    
+    $year   = date("Y");
+    $mes    = date("m");
+
+    $data['data'] = $this->Internomex_model->getMFPagos($year ,$mes)->result_array();
+    echo json_encode($data);
   }
 
   public function insertInformation() {

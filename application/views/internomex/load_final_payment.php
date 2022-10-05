@@ -71,38 +71,21 @@
                                         </div>
                                     </div>
                                 </div>
-
-
                             </div>
                             <div class="table-responsive box-table hide">
                                 <table id="tableLotificacion" name="tableLotificacion" class="table-striped table-hover">
                                     <thead>
                                     <tr>
-                                        <th>CLIENTE</th>
-                                        <th>LOTE</th>
-                                        <th>SUPERFICIE</th>
-                                        <th>PRECIO POR M2</th>
-                                        <th>TOTAL</th>
-                                        <th>FECHA DE CONTRATO</th>
-                                        <th>FECHA DE FIRMA</th>
-                                        <th>ADENDUM</th>
-                                        <th>SUPERFICIE CONTRATO</th>
-                                        <th>COSTO POR M2</th>
-                                        <th>PARCELA</th>
-                                        <th>SUPERFICIE PROYECTOS</th>
-                                        <th>PRESUPUESTO DE OBRA</th>
-                                        <th>PRESUPUESTO A PLAZOS</th>
-                                        <th>$ M2 TERRENO</th>
-                                        <th>COSTO TERRENO</th>
-                                        <th>UNIDAD</th>
-                                        <th>CALLE EXACTA</th>
-                                        <th># EXTERIOR</th>
-                                        <th>CODIGO POSTAL</th>
-                                        <th>COLONIA</th>
-                                        <th>FOLIO REAL</th>
-                                        <th>OBSERVACIONES</th>
+                                        <th>Nombre</th>                                     
+                                        <th>Monto s/n descuento</th>
+                                        <th>Monto con descuento</th>
+                                        <th>Monto internomex</th>
+                                        <th>Monto internomex</th>
+
                                     </tr>
                                     </thead>
+                                    <tbody>
+                                    </tbody>
                                 </table>
                             </div>
                         </div>

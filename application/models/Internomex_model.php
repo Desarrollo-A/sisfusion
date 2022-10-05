@@ -171,6 +171,13 @@ class Internomex_model extends CI_Model {
         //return $query->result() !== [];
         
     }
+    public function getMFPagos( $year,$mes){
+        $cmd = "SELECT p.id_usuario,p.monto_con_descuento,p.monto_sin_descuento,p.monto_internomex,CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombre
+        FROM  pagos_internomex p  INNER JOIN usuarios u on u.id_usuario = p.id_usuario
+        WHERE YEAR(p.fecha_creacion) = $year and MONTH(p.fecha_creacion) = $mes";
+       $query = $this->db->query($cmd);
+        return $query  ;
+    }
     public function insertMontoFinalPago($data){
 
          $this->db->insert('dbo.pagos_internomex', $data);    

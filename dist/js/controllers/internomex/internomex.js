@@ -5,6 +5,7 @@ $(document).ready(function () {
         var fileName = target[0].files[0].name;
         relatedTarget.val(fileName);
     });
+
 });
 $('#tableLotificacion thead tr:eq(0) th').each(function (i) {
     const title = $(this).text();
@@ -22,7 +23,7 @@ $('#tableLotificacion thead tr:eq(0) th').each(function (i) {
 });
 
 function fillTableLotificacion() {
-    $(".box-table").removeClass('hide');
+    //$(".box-table").removeClass('hide');
     generalDataTable = $('#tableLotificacion').dataTable({
         dom: 'Brt' + "<'row'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'i><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>",
         width: "auto",
@@ -33,27 +34,23 @@ function fillTableLotificacion() {
                 className: 'btn buttons-excel',
                 titleAttr: 'Descargar archivo de Excel',
                 exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5],
+                    columns: [0, 1, 2, 3,4],
                     format: {
                         header: function (d, columnIdx) {
+                    
                             switch (columnIdx) {
                                 case 0:
-                                    return "NOMBRE CLIENTE";
+                                    return "id_usuario";
                                     break;
                                 case 1:
-                                    return "NOMBRE LOTE";
+                                    return "monto_con_descuento";
                                     break;
                                 case 2:
-                                    return "SUPERFICIE"
+                                    return "monto sin descuento"
                                 case 3:
-                                    return "PRECIO POR M2";
+                                    return "monto internomex";
                                     break;
-                                case 4:
-                                    return "TOTAL";
-                                    break;
-                                case 5:
-                                    return "MODIFICADO";
-                                    break;
+
                             }
                         }
                     }
@@ -78,55 +75,55 @@ function fillTableLotificacion() {
         columns: [
             {
                 data: function (d) {
-                    return d.nombreCliente;
+               
+                    return d.id_usuario;
                 }
             },
             {
                 data: function (d) {
-                    return d.nombreLote;
+                    return d.monto_con_descuento;
                 }
             },
             {
                 data: function (d) {
-                    return d.superficie;
+                    return d.monto_sin_descuento;
                 }
             },
             {
                 data: function (d) {
-                    return d.preciom2;
+                    return d.monto_internomex;
                 }
             },
             {
                 data: function (d) {
-                    return d.total;
+                    return d.nombre;
                 }
             },
-            {
-                data: function (d) {
-                    return d.modificado;
-                }
-            }
         ],
         columnDefs: [{
             visible: false,
             searchable: false
         }],
         ajax: {
-            url: "getInformation",
+            url: "getPagosFinal",
             type: "POST",
-            cache: false
+            cache: false,
         }
     });
 }
 
 $(document).on('click', '.find-results', function () {
     $(".row-load").addClass("hide");
+   // $(".row-load").removeClass("hide");
+    $(".box-table").removeClass("hide");
     //fillTableLotificacion();
+    fillTableLotificacion();
 });
 
 $(document).on('click', '.generate', function () {
     $(".row-load").removeClass("hide");
     $(".box-table").addClass("hide");
+    
 });
 
 $(document).on('click', '#downloadFile', function () {
