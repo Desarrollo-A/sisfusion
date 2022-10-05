@@ -61,9 +61,9 @@
                 || $this->session->userdata('id_rol') == 4 || $this->session->userdata('id_rol') == 5
                 || $this->session->userdata('id_rol') == 6 || $this->session->userdata('id_rol') == 9)
             { }
-                if ($this->session->userdata('no_show_modal_info')==0) {
-                    echo '$("#avisoNovedades").modal("toggle");';
-                }
+//                if ($this->session->userdata('no_show_modal_info')==0) {
+//                    echo '$("#avisoNovedades").modal("toggle");';
+//                }
 
          ?>
 	});
