@@ -16202,6 +16202,7 @@ tr td:hover { background: #666; color: #FFF; }
 					if($data[$i]->idStatusContratacion == 7 AND $data[$i]->idMovimiento == 64 ){$datos[$i]['status']="Status 8 Rechazado (Por Contraloría)";}
 					if($data[$i]->idStatusContratacion == 1 AND $data[$i]->idMovimiento == 63 ){$datos[$i]['status']="Status 2 Rechazado (Por Contraloría)";}
 			}
+			
 		}
 		$datos = array_values($datos);
 //		print_r($datos[0]['fechaApartado']);
