@@ -160,7 +160,7 @@ class Internomex_model extends CI_Model {
         ORDER BY CASE u0.id_rol WHEN 3 THEN 4 WHEN 9 THEN 5 WHEN 7 THEN 6 ELSE u0.id_rol END");
     }
     public function existeUserPorMes($idUsu){
-        $cmd = "SELECT * from dbo.pagos_internomex where id_usurio = $idUsu  and fecha_creacion >= '2016-02-19 00:00:00: 000') ";
+        $cmd = "SELECT * from dbo.pagos_internomex where id_usuario = $idUsu  ";
         $query = $this->db->query($cmd);
         
         return $query->num_rows() > 0 ? true : false;

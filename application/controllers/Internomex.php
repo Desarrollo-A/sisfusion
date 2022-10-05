@@ -116,6 +116,9 @@
     $data = $this->Internomex_model->getCommissions()->result_array();
     echo json_encode($data);
   }
+  public function getPagosFinal(){
+    
+  }
 
   public function insertInformation() {
     if (!isset($_POST))
@@ -146,7 +149,7 @@
           $year   = date("Y");
           $mes    = date("m");
          
-          echo json_encode($fecha_actual);             
+         
           for ($i = 0; $i < count($decodedData1) ; $i++) { 
             if($flag == 0){
               if($banda){
@@ -157,7 +160,7 @@
                     }
              if(isset($decodedData1[$i]) && !empty($decodedData1[$i]) ) {
               $clave = $idUser ;
-                $infoIdUser = array ("id_usurio" => $idUser);
+                $infoIdUser = array ("id_usuario" => $idUser);
             }  
               $bande = true;
             }else if($flag == 1){
@@ -168,7 +171,9 @@
               $sede               = substr($decodedData1[$i], 8, -1);     
             }else if($flag == 4){
               $formaPago          = substr($decodedData1[$i], 13, -1);    
-             $resultado = $this->Internomex_model->formaDePago($formaPago); 
+              
+              $resultado = $this->Internomex_model->formaDePago($formaPago); 
+
               $FormaPagos = array ("forma_pago" => $resultado->id_opcion );
             
             }else if($flag == 5){ 
@@ -188,19 +193,23 @@
               $flag   = 0 ;
               $bande  = false;
               $insertAuditoriaData ;
+
               $dataReal = array_merge($insertAuditoriaData,$infos2SinDescuento,$infos3MontoConDescuento,$infos4MontoFinal, $FormaPagos, $infoIdUser);
+              
               //echo json_encode($infoIdUser);
               //$data =  $this->Internomex_model->existeUserPorMes($infoIdUsers);
+              
               if($this->Internomex_model->existeUserPorMes($clave)){
                 $UserYaAgregados[$i] = $infoIdUser;
               }else{
-                $respuesta = $this->Internomex_model->insertMontoFinalPago($dataReal); 
+                // $this->db->insert_batch('pagos_internomex',$dataReal);
+               $this->Internomex_model->insertMontoFinalPago($dataReal);
               } 
             }//fin del if 9
             if ($bande){ $flag ++;} //bandera if
           }//fin ciclo
           //$claves,$mes,$fecha
-          $usuarios = $this->Internomex_model->getuser($hoy );
+          //$usuarios = $this->Internomex_model->getuser($hoy );
         
           if (count($dataReal) > 0){
             
