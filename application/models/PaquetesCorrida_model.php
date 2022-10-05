@@ -170,6 +170,28 @@ public function getPaquetesByLotes($desarrollos,$query_superdicie,$query_tipo_lo
             $this->PaquetesCorrida_model->insertBatch('paquetes_x_condominios',$datosInsertar_x_condominio);
         }
     }
+    public function getPaquetes($query_tipo_lote,$query_superdicie,$desarrollos){
+        
+        return  $this->db->query("SELECT DISTINCT(id_descuento)
+        from lotes l
+        inner join condominios c on c.idCondominio=l.idCondominio 
+        inner join residenciales r on r.idResidencial=c.idResidencial
+        where r.idResidencial in($desarrollos) AND id_descuento is not null
+        $query_superdicie
+        $query_tipo_lote")->result_array();
+    }
+
+    public function getPaquetesById($id_paquete){
+        return  $this->db->query("SELECT * FROM paquetes WHERE id_paquete in($id_paquete)")->result_array();
+    }
+
+    public function getDescuentosByPlan($id_paquete,$id_tcondicion){
+        return  $this->db->query("select r.*,d.*,c.descripcion from relaciones r 
+        inner join descuentos d on d.id_descuento=r.id_descuento
+        inner join condiciones c on c.id_condicion = d.id_condicion
+        inner join tipos_condiciones tc on tc.id_tcondicion=c.id_tcondicion
+        where r.id_paquete in ($id_paquete) and c.id_tcondicion=$id_tcondicion  order by tc.id_tcondicion asc")->result_array();
+    }
     
 
 
