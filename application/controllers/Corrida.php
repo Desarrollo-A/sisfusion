@@ -1272,7 +1272,9 @@ $pdf->Output(utf8_decode($namePDF), 'I');
 
 	$pdf->Output(utf8_decode($namePDF), 'I');
 }
-    public function caratulacf(){
+
+    public function caratulacf()
+    {
         setlocale(LC_MONETARY, 'en_US.UTF-8');
 
         $informacion_corrida = $this->Corrida_model->getinfoCorrida($this->uri->segment(3));
@@ -1292,13 +1294,13 @@ $pdf->Output(utf8_decode($namePDF), 'I');
             $informacion_vendedor = $this->Corrida_model->getGerenteCorrida($informacion_corrida->id_asesor, $informacion_corrida->id_gerente);
         }*/
 
-        if($informacion_corrida->id_asesor!=0){
+        if ($informacion_corrida->id_asesor != 0) {
             $data_asesor = $this->Corrida_model->getDataAsesorToPR($informacion_corrida->id_asesor);
         }
-        if($informacion_corrida->id_coordinador!=0){
+        if ($informacion_corrida->id_coordinador != 0) {
             $data_coord = $this->Corrida_model->getDataCoordToPR($informacion_corrida->id_coordinador);
         }
-        if($informacion_corrida->id_gerente!=0){
+        if ($informacion_corrida->id_gerente != 0) {
             $data_gerente = $this->Corrida_model->getDataGerToPR($informacion_corrida->id_gerente);
         }
 //        echo 'asesor:<br>';
@@ -1311,22 +1313,19 @@ $pdf->Output(utf8_decode($namePDF), 'I');
 //        print_r($data_gerente);
 //        echo '<br>';
         $informacion_vendedor = array(
-            "idAsesor" => ($data_asesor->idAsesor=="")?'NA':$data_asesor->idAsesor,
-            "nombreAsesor" => ($data_asesor->nombreAsesor=="")?'NA':$data_asesor->nombreAsesor,
-            "idCoordinador" => ($data_coord->idCoordinador=="")?'NA':$data_coord->idCoordinador,
-            "nombreCoordinador" => ($data_coord->nombreCoordinador=="")?'NA':$data_coord->nombreCoordinador,
-            "idGerente" => ($data_gerente->idGerente=="")?'NA':$data_gerente->idGerente,
-            "nombreGerente" => ($data_gerente->nombreGerente=="")?'NA':$data_gerente->nombreGerente
+            "idAsesor" => ($data_asesor->idAsesor == "") ? 'NA' : $data_asesor->idAsesor,
+            "nombreAsesor" => ($data_asesor->nombreAsesor == "") ? 'NA' : $data_asesor->nombreAsesor,
+            "idCoordinador" => ($data_coord->idCoordinador == "") ? 'NA' : $data_coord->idCoordinador,
+            "nombreCoordinador" => ($data_coord->nombreCoordinador == "") ? 'NA' : $data_coord->nombreCoordinador,
+            "idGerente" => ($data_gerente->idGerente == "") ? 'NA' : $data_gerente->idGerente,
+            "nombreGerente" => ($data_gerente->nombreGerente == "") ? 'NA' : $data_gerente->nombreGerente
         );
-        $informacion_vendedor = (object) $informacion_vendedor;
+        $informacion_vendedor = (object)$informacion_vendedor;
 
         $informacion_plan = $this->Corrida_model->getPlanCorrida($this->uri->segment(3));
         $informacion_plan = json_decode($informacion_plan[0]['corrida_dump']);
 
         $informacion_diferidos = array_slice($informacion_plan, 0, $informacion_corrida->meses_diferir);
-
-
-
 
 
         $pdf = new TCPDF('P', 'mm', 'LETTER', 'UTF-8', false);
@@ -1755,7 +1754,6 @@ legend {
 
 
         $pdf->Output(utf8_decode($namePDF), 'I');
-
 
 
     }
@@ -2700,8 +2698,6 @@ legend {
             "nombre" => 'LOTE TEST'
         );
         $data_corrida['data_corrida'] = $this -> Corrida_model -> getInfoCorridaByID($id_corrida);
-//        print_r($data_corrida);
-//        exit;
         $this->load->view("corrida/editar_corrida", $data_corrida);
     }
     function update_financialR(){

@@ -46,7 +46,7 @@ class Suma_model extends CI_Model
         }
     }
 
-    function getComisionesByStatus($estatus){
+    function getComisionesByStatus($estatus, $user){
         $query = $this->db->query("SELECT cs.id_cliente, cs.nombre_cliente, cs.id_pago,  cs.estatus, cs.referencia, ps.id_pago_suma, ps.id_usuario,
         CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) nombre_comisionista, se.nombre sede, oxc.nombre forma_pago, 
         us.forma_pago id_forma_pago, ps.total_comision, ps.porcentaje_comision, cs.total_venta,
@@ -56,7 +56,7 @@ class Suma_model extends CI_Model
         INNER JOIN usuarios us ON us.id_usuario = ps.id_usuario
         INNER JOIN sedes se ON se.id_sede = us.id_sede
         INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = us.forma_pago AND oxc.id_catalogo = 16
-        WHERE ps.estatus = $estatus");
+        WHERE ps.estatus = $estatus AND ps.id_usuario = $user");
 
         return $query->result_array();
     }

@@ -40,8 +40,8 @@
 
 				<div class="modal-footer"></div>
 				<div class="modal-footer">
-					<button type="button" id="enviarAContraloriaGuardar" onClick="preguntaRegCorr()" class="btn btn-success"><span class="material-icons" >send</span> </i> Registrar</button>
-                    <button type="button" class="btn btn-danger" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> Cancelar</button>
+                    <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                    <button type="button" id="enviarAContraloriaGuardar" onClick="preguntaRegCorr()" class="btn btn-primary">Registrar</button>
 				</div>
 			</div>
 		</div>
@@ -71,8 +71,8 @@
 
 				<div class="modal-footer"></div>
 				<div class="modal-footer">
-					<button type="button" id="guardar" class="btn btn-success"><span class="material-icons" >send</span> </i> Registrar</button>
-                    <button type="button" class="btn btn-danger" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> Cancelar</button>
+                    <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                    <button type="button" id="guardar" class="btn btn-primary">Registrar</button>
 				</div>
 			</div>
 		</div>
@@ -95,7 +95,7 @@
 				</div>
 				<div class="modal-footer"></div>
 				<div class="modal-footer">
-				    <button type="button" class="btn btn-success" data-dismiss="modal"><span class="material-icons">done</span> </i> Entendido</button>
+				    <button type="button" class="btn btn-primary" data-dismiss="modal">Entendido</button>
 				</div>
 			</div>
 		</div>

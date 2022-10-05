@@ -214,9 +214,9 @@
                                 case 6:
                                     return 'ASESOR(ES)';
                                 case 7:
-                                    return 'ESTATUS';
-                                case 8:
                                     return 'PROCESO CONTRATACIÓN';
+                                case 8:
+                                    return 'ESTATUS';
                                 case 9:
                                     return 'COMENTARIO';
                                 case 10:
@@ -282,6 +282,21 @@
 					}
 				},
                 {
+                    // data: 'procesoContratacion'
+                    data : function(data)
+                    {
+                        if(data.procesoContratacion==null || data.procesoContratacion=="")
+                        {
+                            return "N/A";
+                        }
+                        else
+                        {
+                            return data.procesoContratacion;
+                        }
+                    }
+                },
+				{
+
                     // data: 'status'
                     data : function(data)
                     {
@@ -294,20 +309,6 @@
                             return data.status;
                         }
                     }
-                },
-				{
-					// data: 'procesoContratacion'
-					data : function(data)
-					{
-						if(data.procesoContratacion==null || data.procesoContratacion=="")
-						{
-							return "N/A";
-						}
-						else
-						{
-							return data.procesoContratacion;
-						}
-					}
 				},
 				{data: 'comentario'},
 				{

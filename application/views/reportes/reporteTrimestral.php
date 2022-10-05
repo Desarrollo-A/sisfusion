@@ -4,7 +4,7 @@
         table.dataTable > thead > tr > th, table.dataTable > tbody > tr > th, table.dataTable > tfoot > tr > th, table.dataTable > thead > tr > td, table.dataTable > tbody > tr > td, table.dataTable > tfoot > tr > td {
         white-space: nowrap!important;
     }
-</style>
+    </style>
 <body>
     
     <div class="wrapper">
@@ -25,7 +25,7 @@
                                 <i class="material-icons">list</i>
                             </div>
                             <div class="card-content">
-                                <h3 class="card-title center-align">Reporte de ventas</h3>
+                                <h3 class="card-title center-align">Reporte Trimestal</h3>
                                 <div class="row">
                                     <div class="toolbar">
                                         <div class="col-md-8"></div>
@@ -41,28 +41,19 @@
                                     </div>
                                 </div>
                                 <div class="material-datatables">
-                                    <table class="table-striped table-hover" id="ventasRecision"name="ventasRecision">
+                                    <table class="table-striped table-hover" id="lotesTrimestral"name="lotesTrimestral">
                                         <thead>
                                             <tr>
-                                                <th>ID LOTE</th>
                                                 <th>RESIDENCIAL</th>
                                                 <th>CONDOMINIO</th>
                                                 <th>LOTE</th>
-                                                <th>CLIENTE</th>
-                                                <th>FECHA APARTADO</th>
-                                                <th>ASESOR</th>
-                                                <th>COORDINADOR</th>
-                                                <th>GERENTE</th>
-                                                <th>TIPO LOTE</th>
-                                                <th>CASA</th>
-                                                <th>ESTATUS ACTUAL</th>
-                                                <th>PLAZA VENTA</th>
-                                                <th>TIPO VENTA</th>
-                                                <th>REFERENCIA</th>
-                                                <th>COMPARTIDA</th>
                                                 <th>PRECIO FINAL</th>
-                                                <th>ESTATUS 9</th>
-                                                <th>ESTATUS 11</th>
+                                                <th>REFERENCIA</th>
+                                                <th>ASESOR</th>
+                                                <th>FECHA APARTADO</th>
+                                                <th>SEDE</th>
+                                                <th>TIPO VENTA</th>
+                                                <th>FECHA CONTRATACION</th>
                                             </tr>
                                         </thead>
                                     </table>
@@ -93,5 +84,5 @@
     <script src="<?= base_url() ?>dist/js/bootstrap-datetimepicker.js"></script>
     <!--  Full Calendar Plugin    -->
     <!-- MODAL WIZARD -->
-    <script src="<?=base_url()?>dist/js/controllers/reportes/reportesConResicion.js"></script>
+    <script src="<?=base_url()?>dist/js/controllers/contraloria/reportesTrimestrales.js"></script>
 </body>

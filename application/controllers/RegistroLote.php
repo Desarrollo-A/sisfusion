@@ -16117,24 +16117,41 @@ tr td:hover { background: #666; color: #FFF; }
 	{
 		$datos = array();
 		$data = $this->registrolote_modelo->reportLotesPost45();
-		for($i=0; $i<count($data);$i++) {
-			$datos[$i]['referencia'] = $data[$i]->referencia;
-			$datos[$i]['idLote'] = $data[$i]->idLote;
-            $datos[$i]['nombreSede'] = $data[$i]->nombreSede;
-			$datos[$i]['id_cliente'] = $data[$i]->id_cliente;
-			$datos[$i]['fechaApartado'] = ($data[$i]->fechaApartado!=null || $data[$i]->fechaApartado!="")?$data[$i]->fechaApartado : "N/A";
-			$datos[$i]['nombreLote'] = $data[$i]->nombreLote;
-			$datos[$i]['idStatusContratacion'] = $data[$i]->idStatusContratacion;
-			$datos[$i]['idMovimiento'] = $data[$i]->idMovimiento;
-			$datos[$i]['modificado'] = $data[$i]->modificado;
-			$datos[$i]['nombreCondominio'] = $data[$i]->nombreCondominio;
-			$datos[$i]['nombreResidencial'] = $data[$i]->nombreResidencial;
-			$datos[$i]['fechaVenc'] = $data[$i]->fechaVenc;
-			$datos[$i]['comentario'] = $data[$i]->comentario;
-			$datos[$i]['fechaSolicitudValidacion'] = $data[$i]->fechaSolicitudValidacion;
-			$datos[$i]['gerente'] = $data[$i]->gerente;
-			$datos[$i]['asesor'] = $data[$i]->asesor;
-			$datos[$i]['diasVencidos'] = $diff->days;
+//		print_r($data[0]);
+//		exit;
+		for($i=0; $i<count($data);$i++)
+		{
+			$date1 = new DateTime($data[$i]->fechaApartado);
+			$date2 = new DateTime(date('Y-m-d'));
+			$diff = $date1->diff($date2);
+
+			if ($diff->days>=45)
+			{
+					$datos[$i]['referencia'] = $data[$i]->referencia;
+					$datos[$i]['idLote'] = $data[$i]->idLote;
+                    $datos[$i]['nombreSede'] = $data[$i]->nombreSede;
+					$datos[$i]['id_cliente'] = $data[$i]->id_cliente;
+					$datos[$i]['fechaApartado'] = ($data[$i]->fechaApartado!=null || $data[$i]->fechaApartado!="")?$data[$i]->fechaApartado : "N/A";
+					$datos[$i]['nombreLote'] = $data[$i]->nombreLote;
+					$datos[$i]['idStatusContratacion'] = $data[$i]->idStatusContratacion;
+					$datos[$i]['idMovimiento'] = $data[$i]->idMovimiento;
+					$datos[$i]['modificado'] = $data[$i]->modificado;
+					$datos[$i]['nombreCondominio'] = $data[$i]->nombreCondominio;
+					$datos[$i]['nombreResidencial'] = $data[$i]->nombreResidencial;
+					$datos[$i]['fechaVenc'] = $data[$i]->fechaVenc;
+					$datos[$i]['comentario'] = $data[$i]->comentario;
+					$datos[$i]['fechaSolicitudValidacion'] = $data[$i]->fechaSolicitudValidacion;
+					$datos[$i]['gerente'] = $data[$i]->gerente;
+					/*$datos[$i]['gerente2'] = $data[$i]->gerente2;
+					$datos[$i]['gerente3'] = $data[$i]->gerente3;
+					$datos[$i]['gerente4'] = $data[$i]->gerente4;
+					$datos[$i]['gerente5'] = $data[$i]->gerente5;*/
+					$datos[$i]['asesor'] = $data[$i]->asesor;
+					/*$datos[$i]['asesor2'] = $data[$i]->asesor2;
+					$datos[$i]['asesor3'] = $data[$i]->asesor3;
+					$datos[$i]['asesor4'] = $data[$i]->asesor4;
+					$datos[$i]['asesor5'] = $data[$i]->asesor5;*/
+					$datos[$i]['diasVencidos'] = $diff->days;
 
 			/**procesoContratacion**/
 			if($data[$i]->idStatusContratacion == 1 AND $data[$i]->idMovimiento == 18 OR $data[$i]->idStatusContratacion == 1 AND $data[$i]->idMovimiento == 31 OR $data[$i]->idStatusContratacion == 1 AND $data[$i]->idMovimiento == 19 OR $data[$i]->idStatusContratacion == 1 AND $data[$i]->idMovimiento == 20  OR $data[$i]->idStatusContratacion == 1 AND $data[$i]->idMovimiento == 63) {$datos[$i]['procesoContratacion']="2. Integración de Expediente (Asistentes Elite)";}
