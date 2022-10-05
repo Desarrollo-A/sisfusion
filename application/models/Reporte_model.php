@@ -800,8 +800,91 @@ class Reporte_model extends CI_Model {
         CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno),
         cl.status, se.nombre, tv.tipo_venta, lo.referencia, vc.id_cliente,
         lo.total, lo.totalNeto2, cl.totalNeto2_cl, cl.fechaApartado, hlo3.modificado, hlo5.modificado,
-        CASE co.tipo_lote WHEN 1 THEN 'Comercial' ELSE 'Habitacional' END,
+        CASE co.tipo_lote WHEN 1 THEN 'COMERCIAL' ELSE 'HABITACIONAL' END,
         CASE lo.casa WHEN 1 THEN 'SÍ' ELSE 'NO' END"); 
         return $data;
+    }
+    public function getReporteTrimestral($beginDate, $endDate){
+        $query=$this->db->query("SELECT t.nombreResidencial as nombreResidencial, t.nombreCondominio as nombreCondominio, t.nombreLote as nombreLote, t.precioFinal as precioFinal, t.referencia as referencia,
+        t.nombreAsesor as nombreAsesor, t.fechaApartado as fechaApartado, t.nombreSede as nombreSede, t.tipo_venta as tipo_venta, t.fechaEstatus9 as fechaEstatus9
+        FROM (
+            SELECT re.descripcion nombreResidencial, UPPER(co.nombre) nombreCondominio, UPPER(lo.nombreLote) nombreLote,
+            lo.idLote, FORMAT(lo.totalNeto2, 'C') precioFinal, lo.referencia, 
+            CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) nombreAsesor,
+            cl.fechaApartado, se.nombre nombreSede, tv.tipo_venta, st.nombre estatus, hl.modificado fechaEstatus9,
+            sc.nombreStatus estatusActual, mo.descripcion movimiento
+            FROM lotes lo
+            INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
+            INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
+            INNER JOIN clientes cl ON cl.id_cliente = lo.idCliente AND cl.idLote = lo.idLote AND cl.status = 1
+            INNER JOIN usuarios us ON us.id_usuario = cl.id_asesor
+            INNER JOIN sedes se ON se.id_sede = cl.id_sede
+            INNER JOIN tipo_venta tv ON tv.id_tventa = lo.tipo_venta
+            INNER JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes 
+            WHERE idStatusContratacion = 9 AND idMovimiento = 39 AND status = 1 GROUP BY idLote, idCliente) 
+            hl ON hl.idLote = lo.idLote AND hl.idCliente = cl.id_cliente
+            INNER JOIN statuslote st ON st.idStatusLote = lo.idStatusLote
+            INNER JOIN statuscontratacion sc ON sc.idStatusContratacion = lo.idStatusContratacion
+            INNER JOIN movimientos mo ON mo.idMovimiento = lo.idMovimiento
+            WHERE lo.idStatusLote IN (2, 3) AND hl.modificado BETWEEN '$beginDate 00:00:00.000' AND '$endDate 23:59:59.999'
+            UNION ALL
+            SELECT re.descripcion nombreResidencial, UPPER(co.nombre) nombreCondominio, UPPER(lo.nombreLote) nombreLote,
+            lo.idLote, FORMAT(lo.totalNeto2, 'C') precioFinal, lo.referencia, 
+            CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) nombreAsesor,
+            cl.fechaApartado, se.nombre nombreSede, tv.tipo_venta, st.nombre estatus, hl.modificado fechaEstatus9,
+            sc.nombreStatus estatusActual, mo.descripcion movimiento
+            FROM lotes lo
+            INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
+            INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
+            INNER JOIN clientes cl ON cl.id_cliente = lo.idCliente AND cl.status = 1
+            INNER JOIN ventas_compartidas vc ON vc.id_cliente = cl.id_cliente AND vc.estatus = 1
+            INNER JOIN usuarios us ON us.id_usuario = vc.id_asesor
+            INNER JOIN sedes se ON se.id_sede = cl.id_sede
+            INNER JOIN tipo_venta tv ON tv.id_tventa = lo.tipo_venta
+            INNER JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes 
+            WHERE idStatusContratacion = 9 AND idMovimiento = 39 AND status = 1 GROUP BY idLote, idCliente) 
+            hl ON hl.idLote = lo.idLote AND hl.idCliente = cl.id_cliente 
+            INNER JOIN statuslote st ON st.idStatusLote = lo.idStatusLote
+            INNER JOIN statuscontratacion sc ON sc.idStatusContratacion = lo.idStatusContratacion
+            INNER JOIN movimientos mo ON mo.idMovimiento = lo.idMovimiento
+            WHERE lo.idStatusLote IN (2, 3) AND hl.modificado BETWEEN '$beginDate 00:00:00.000' AND '$endDate 23:59:59.999'
+            UNION ALL
+            SELECT re.descripcion nombreResidencial, UPPER(co.nombre) nombreCondominio, UPPER(lo.nombreLote) nombreLote,
+            lo.idLote, '$0.00' precioFinal, lo.referencia, 
+            CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) nombreAsesor,
+            cl.fechaApartado, se.nombre nombreSede, 'Sin especificar' tipo_venta, 'Cancelado' estatus, hl.modificado fechaEstatus9,
+            'NA' estatusActual, 'NA' movimiento
+            FROM lotes lo
+            INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
+            INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
+            INNER JOIN clientes cl ON cl.idLote = lo.idLote AND cl.status = 0
+            INNER JOIN usuarios us ON us.id_usuario = cl.id_asesor
+            INNER JOIN sedes se ON se.id_sede = cl.id_sede
+            INNER JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes 
+            WHERE idStatusContratacion = 9 AND idMovimiento = 39 AND status = 0 GROUP BY idLote, idCliente) 
+            hl ON hl.idLote = lo.idLote AND hl.idCliente = cl.id_cliente
+            INNER JOIN historial_liberacion hi ON hi.idLote = lo.idLote AND hi.modificado >= hl.modificado 
+            WHERE hl.modificado BETWEEN '$beginDate 00:00:00.000' AND '$endDate 23:59:59.999'
+            UNION ALL
+            SELECT re.descripcion nombreResidencial, UPPER(co.nombre) nombreCondominio, UPPER(lo.nombreLote) nombreLote,
+            lo.idLote, '$0.00' precioFinal, lo.referencia, 
+            CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) nombreAsesor,
+            cl.fechaApartado, se.nombre nombreSede, 'Sin especificar' tipo_venta, 'Cancelado' estatus, hl.modificado fechaEstatus9,
+            'NA' estatusActual, 'NA' movimiento
+            FROM lotes lo
+            INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
+            INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
+            INNER JOIN clientes cl ON cl.idLote = lo.idLote AND cl.status = 0
+            INNER JOIN ventas_compartidas vc ON vc.id_cliente = cl.id_cliente AND vc.estatus = 1
+            INNER JOIN usuarios us ON us.id_usuario = vc.id_asesor
+            INNER JOIN sedes se ON se.id_sede = cl.id_sede  
+            INNER JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes 
+            WHERE idStatusContratacion = 9 AND idMovimiento = 39 AND status = 0 GROUP BY idLote, idCliente) 
+            hl ON hl.idLote = lo.idLote AND hl.idCliente = cl.id_cliente
+            INNER JOIN historial_liberacion hi ON hi.idLote = lo.idLote AND hi.modificado >= hl.modificado
+            WHERE hl.modificado BETWEEN '$beginDate 00:00:00.000' AND '$endDate 23:59:59.999'
+        ) t
+        ORDER BY t.fechaApartado");
+        return $query;
     }
 }

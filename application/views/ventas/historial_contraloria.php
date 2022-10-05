@@ -101,67 +101,75 @@
             <div class="container-fluid">
                 <div class="row">
                     <div class="col xol-xs-12 col-sm-12 col-md-12 col-lg-12">
-                        <div class="card">
-                            <div class="card-header card-header-icon" data-background-color="goldMaderas">
-                                <i class="fas fa-wallet fa-2x"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="encabezadoBox">
-                                    <h3 class="card-title center-align">Historial general</h3>
-                                    <p class="card-title pl-1">(Listado de todos los pagos aplicados y en proceso)</p>
-                                </div>
-                                <div class="toolbar">
-                                    <div class="row">
- 
-
-                                        <div class="col-12 col-sm-12 col-md-12 col-lg-6">
-                                            <div class="form-group">
-                                                <label for="proyecto">Año</label>
-                                                <select name="filtro33" id="filtro33" class="selectpicker select-gral" data-style="btn " data-show-subtext="true" data-live-search="true" title="Selecciona año" data-size="7" required>
-                                                        <?php
-                                                        setlocale(LC_ALL, 'es_ES');
-                                                        for ($i = 2019; $i <= 2022; $i++) {
-                                                            $yearName  = $i;
-                                                            echo '<option value="' . $i . '">' . $yearName . '</option>';
-                                                        }
-                                                        ?>
-                                                    </select>
+                        <ul class="nav nav-tabs nav-tabs-cm">
+                            <li class="active">
+                                <a href="#solicitudesCRM" role="tab"  data-toggle="tab">Historial CRM</a>
+                            </li>
+                            <li>
+                                <a href="#solicitudesSUMA" role="tab"  data-toggle="tab">Historial SUMA</a>
+                            </li>
+                        </ul>
+                        <div class="card no-shadow m-0">
+                            <div class="card-content p-0">
+                                <div class="nav-tabs-custom">
+                                    <div class="tab-content p-2">
+                                        <div class="tab-pane active" id="solicitudesCRM">
+                                            <div class="encabezadoBox">
+                                                <h3 class="card-title center-align">Historial general</h3>
+                                                <p class="card-title pl-1">(Listado de todos los pagos aplicados y en proceso)</p>
+                                            </div>
+                                            <div class="toolbar">
+                                                <div class="row">
+                                                    <div class="col-12 col-sm-12 col-md-12 col-lg-6">
+                                                        <div class="form-group">
+                                                            <label for="proyecto">Año</label>
+                                                            <select name="filtro33" id="filtro33" class="selectpicker select-gral" data-style="btn " data-show-subtext="true" data-live-search="true" title="Selecciona año" data-size="7" required>
+                                                                <?php
+                                                                setlocale(LC_ALL, 'es_ES');
+                                                                    for ($i = 2019; $i <= 2022; $i++) {
+                                                                        $yearName  = $i;
+                                                                        echo '<option value="' . $i . '">' . $yearName . '</option>';
+                                                                    }
+                                                                ?>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12 col-sm-12 col-md-12 col-lg-6">
+                                                        <div class="form-group">
+                                                            <label for="proyecto">Proyecto</label>
+                                                            <select name="filtro44" id="filtro44" class="selectpicker select-gral" data-style="btn " data-show-subtext="true" data-live-search="true"  title="Selecciona un proyecto" data-size="7" required> <option value="0">Seleccione todo</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="material-datatables">
+                                                <div class="form-group">
+                                                    <div class="table-responsive">
+                                                        <table class="table-striped table-hover" id="tabla_historialGral" name="tabla_historialGral"><thead>
+                                                            <tr>
+                                                                <th>ID</th>
+                                                                <th>PROY.</th>
+                                                                <th>CONDOMINIO</th>
+                                                                <th>LOTE</th>
+                                                                <th>REF.</th>
+                                                                <th>PRECIO LOTE</th>
+                                                                <th>TOTAL COM.</th>
+                                                                <th>PAGO CLIENTE</th>
+                                                                <th>DISPERSADO</th>
+                                                                <th>PAGADO</th>
+                                                                <th>PENDIENTE</th>
+                                                                <th>USUARIO</th>
+                                                                <th>PUESTO</th>
+                                                                <th>DETALLE</th>
+                                                                <th>ESTATUS</th>
+                                                                <th>MÁS</th>
+                                                            </tr>
+                                                        </thead>
+                                                    </table>  
+                                                </div>
                                             </div>
                                         </div>
-                        
-                                        <div class="col-12 col-sm-12 col-md-12 col-lg-6">
-                                            <div class="form-group">
-                                                <label for="proyecto">Proyecto</label>
-                                                <select name="filtro44" id="filtro44" class="selectpicker select-gral" data-style="btn " data-show-subtext="true" data-live-search="true"  title="Selecciona un proyecto" data-size="7" required> <option value="0">Seleccione todo</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="material-datatables">
-                                    <div class="form-group">
-                                        <div class="table-responsive">
-                                            <table class="table-striped table-hover" id="tabla_historialGral" name="tabla_historialGral"><thead>
-                                                <tr>
-                                                    <th>ID</th>
-                                                    <th>PROY.</th>
-                                                    <th>CONDOMINIO</th>
-                                                    <th>LOTE</th>
-                                                    <th>REF.</th>
-                                                    <th>PRECIO LOTE</th>
-                                                    <th>TOTAL COM.</th>
-                                                    <th>PAGO CLIENTE</th>
-                                                    <th>DISPERSADO</th>
-                                                    <th>PAGADO</th>
-                                                    <th>PENDIENTE</th>
-                                                    <th>USUARIO</th>
-                                                    <th>PUESTO</th>
-                                                    <th>DETALLE</th>
-                                                    <th>ESTATUS</th>
-                                                    <th>MÁS</th>
-                                                </tr>
-                                            </thead>
-                                        </table>  
                                     </div>
                                 </div>
                             </div>
@@ -184,14 +192,10 @@
     <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
     <script>
-
-    
         $('#filtro33').change(function(ruta){
-                         
-
-        residencial = $('#filtro33').val();
-        param = $('#param').val();
-        $("#filtro44").empty().selectpicker('refresh');
+            residencial = $('#filtro33').val();
+            param = $('#param').val();
+            $("#filtro44").empty().selectpicker('refresh');
             $.ajax({
                 url: '<?=base_url()?>Contratacion/lista_proyecto_dos/',
                 type: 'post',

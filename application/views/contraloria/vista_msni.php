@@ -149,7 +149,7 @@
 				width: 'auto',
 				buttons: [{
 						className: 'btn buttons-excel',
-						text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
+						text: 'DESCARGAR PLANTILLA',
 						extend: 'csvHtml5',
 						titleAttr: 'CSV',
 						exportOptions: {

@@ -16204,13 +16204,10 @@ tr td:hover { background: #666; color: #FFF; }
 			}
 		}
 		$datos = array_values($datos);
-//		print_r($datos[0]['fechaApartado']);
-//		exit;
-		if($datos != null) {
+		if($datos != null)
 			echo json_encode($datos);
-		} else {
+		else
 			echo json_encode(array());
-		}
 		exit;
 	}
 

@@ -10,8 +10,8 @@
     public function __construct()
     {
       parent::__construct();
-      $this->load->model(array('Internomex_model', 'asesor/Asesor_model'));
-      $this->load->library(array('session','form_validation', 'get_menu', 'Jwt_actions'));
+      $this->load->model(array('Internomex_model', 'asesor/Asesor_model', 'General_model'));
+      $this->load->library(array('session','form_validation', 'get_menu', 'Jwt_actions', 'Formatter'));
       $this->load->helper(array('url', 'form'));
       $this->load->database('default');
     }
@@ -129,19 +129,59 @@
         if (in_array($decodedData, array('ALR001', 'ALR003', 'ALR004', 'ALR005', 'ALR006', 'ALR007', 'ALR008', 'ALR009', 'ALR010', 'ALR012', 'ALR013', 'ALR002', 'ALR011', 'ALR014')))
           echo json_encode(array("status" => 500, "message" => "No se logró decodificar la data."), JSON_UNESCAPED_UNICODE);
         else {
-          $insertAuditoriaData = array("fecha_creacion" => date("Y-m-d H:i:s"), "creado_por" => $this->session->userdata('id_usuario'));
-          for ($i = 0; $i < count($decodedData); $i++) { 
-            $commonData = array();
-            $commonData += (isset($decodedData[$i]->nombreUsuario) && !empty($decodedData[$i]->nombreUsuario)) ? array("nombreUsuario" => $decodedData[$i]->nombreUsuario) : array("nombreUsuario" => NULL);
-            $commonData += (isset($decodedData[$i]->montoSinDescuentos) && !empty($decodedData[$i]->montoSinDescuentos)) ? array("montoSinDescuentos" => $decodedData[$i]->montoSinDescuentos) : array("montoSinDescuentos" => NULL);
-            $commonData += (isset($decodedData[$i]->montoConDescuentosSede) && !empty($decodedData[$i]->montoConDescuentosSede)) ? array("montoConDescuentosSede" => $decodedData[$i]->montoConDescuentosSede) : array("montoConDescuentosSede" => NULL);
-            $commonData += (isset($decodedData[$i]->montoFinal) && !empty($decodedData[$i]->montoFinal)) ? array("montoFinal" => $decodedData[$i]->montoFinal) : array("montoFinal" => NULL);
-            array_push($insertArrayData, $commonData);
+          $insertArrayData = array();
+          $decodedData = json_decode($decodedData); // SE CONVIERTE A UN ARRAY
+          $insertAuditoriaData = array("fecha_creacion" => date("Y-m-d H:i:s"), "creado_por" => (int)$this->session->userdata('id_usuario')); // SE CREA ARREGLO CON DATOS BASE (QUE LLEVAN TODOS LOS REGISTROS)
+          if (count($decodedData) > 0) { // SE VALIDA QUE EL ARRAY AL MENOS TENGA DATOS
+            $id_usuario = array();
+            for ($i = 0; $i < count($decodedData); $i++) { // CICLO PARA VALIDACIÓN DE DATOS (CHECAR QUE LOS REGISTROS NOS SE HAYAN INSERTADO YA)
+              // SE VERIFICA QUE LA FILA DE DATOS CONTEGA LA INFORMACIÓN QUE SE VA A INSERTAR Y QUE NO VENGA VACÍA
+              if (isset($decodedData[$i]->id_usuario) && !empty($decodedData[$i]->id_usuario) && isset($decodedData[$i]->formaPago) && !empty($decodedData[$i]->formaPago) && isset($decodedData[$i]->montoSinDescuentos) && !empty($decodedData[$i]->montoSinDescuentos) &&
+              isset($decodedData[$i]->montoConDescuentosSede) && !empty($decodedData[$i]->montoConDescuentosSede) && isset($decodedData[$i]->montoFinal) && !empty($decodedData[$i]->montoFinal))
+                $id_usuario[$i] = (int)$decodedData[$i]->id_usuario;
+              else {
+                unset($decodedData[$i]); // SE ELIMINA LA POSICIÓN QUE YA SE INSERTÓ ANTERIORMENTE
+                $decodedData = array_values($decodedData); // SE REORDENA EL ARRAY
+              }
+            }
+            $verifiedData = array();
+            if (count($id_usuario) > 0) {
+              $id_usuario = implode(", ", $id_usuario); // SE CONVIERTE ARRAY DE ID DE USARIO A UN STRING SEPARADO POR COMMA PARA LA CONSULTA
+              $verifiedData = $this->Internomex_model->verifyData($id_usuario);
+            }
+            for ($i = 0; $i < count($decodedData); $i++) { // CICLO PARA RECORRER ARRAY DE DATOS Y ARMAR ARRAY PARA EL BATCH INSERT
+              $commonData = array();
+              if (count($verifiedData) > 0) { // SE ENCONTRARON REGISTROS YA INSERTADOS EN EL MES
+                for($e = 0; $e < count($verifiedData); $e++){
+                  if((int)$decodedData[$i]->id_usuario === (int)$verifiedData[$e]->id_usuario)
+                    unset($decodedData[$i]); // SE ELIMINA LA POSICIÓN QUE YA SE INSERTÓ ANTERIORMENTE
+                    $decodedData = array_values($decodedData); // SE REORDENA EL ARRAY
+                }
+              }
+              if (count($decodedData) > 0) {
+                $commonData += array("id_usuario" => (int)$decodedData[$i]->id_usuario, 
+                  "forma_pago" => $this->formatter->convertPaymentMethod($decodedData[$i]->formaPago), 
+                  "monto_sin_descuento" => (float)$this->formatter->removeNumberFormat($decodedData[$i]->montoSinDescuentos), 
+                  "monto_con_descuento" => (float)$this->formatter->removeNumberFormat($decodedData[$i]->montoConDescuentosSede), 
+                  "monto_internomex" => (float)$this->formatter->removeNumberFormat($decodedData[$i]->montoFinal));
+                $commonData += $insertAuditoriaData; // SE CONCATENA LA DATA BASE + LA DATA DEL ARRAY PRINCIPAL
+                array_push($insertArrayData, $commonData);
+              }
+              else
+                echo json_encode(array("status" => 500, "message" => "No hay información para procesar (vacío)."), JSON_UNESCAPED_UNICODE);
+            }
+            if (count($insertArrayData) > 0) { // AL TERMINAR EL CICLO SE EVALÚA SI EL ARRAY DE DATOS PARA EL BATCH INSERT TIENE DATA VA Y TIRA EL BATCH
+              $insertResponse = $this->General_model->insertBatch("pagos_internomex", $insertArrayData);
+              if ($insertResponse) // SE EVALÚA LA RESPUSTA DE LA TRANSACCIÓN OK
+                echo json_encode(array("status" => 200, "message" => "Todos los registros se han insertado con éxito."), JSON_UNESCAPED_UNICODE);
+              else // FALLÓ EL BATCH
+                echo json_encode(array("status" => 500, "message" => "No se logró procesar la petición."), JSON_UNESCAPED_UNICODE);
+            }
+            else
+              echo json_encode(array("status" => 500, "message" => "No hay información para procesar (intermedio)."), JSON_UNESCAPED_UNICODE);
           }
-          if (count($insertArrayData) > 0)
-            echo $insertAuditoriaData;
-          else
-            echo json_encode(array("status" => 500, "message" => "Alguno de los registros no tiene un valor establecido."), JSON_UNESCAPED_UNICODE);
+          else // ARRAY VACÍO
+            echo json_encode(array("status" => 500, "message" => "No hay información para procesar (inicio)."), JSON_UNESCAPED_UNICODE);
         }
       }
     }
