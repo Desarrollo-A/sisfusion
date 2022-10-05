@@ -865,4 +865,8 @@ function getAllFoldersPDF()
                 return $finalAnswer = 1;
             }
         }
+
+        function getFormaPago($id_factura){
+            return $this->db->query("select * from opcs_x_cats where id_catalogo=16 and id_opcion=$id_factura")->result_array();
+         }
 }
