@@ -159,11 +159,16 @@ class Internomex_model extends CI_Model {
         se.nombre, oxc0.nombre, oxc2.nombre, u0.rfc,oxc1.nombre, u0.forma_pago, se.impuesto, u0.id_rol
         ORDER BY CASE u0.id_rol WHEN 3 THEN 4 WHEN 9 THEN 5 WHEN 7 THEN 6 ELSE u0.id_rol END");
     }
-    public function existeUserPorMes($idUsu){
-        $cmd = "SELECT * from dbo.pagos_internomex where id_usuario = $idUsu  ";
-        $query = $this->db->query($cmd);
-        
-        return $query->num_rows() > 0 ? true : false;
+
+    public function verifyData($id_usuario) {
+        $month = date("m");
+        $year = date("Y");
+		$query = $this->db-> query("SELECT id_usuario/*, FORMAT(monto_sin_descuento, 'C') monto_sin_descuento, FORMAT(monto_con_descuento, 'C') monto_con_descuento, 
+        FORMAT(monto_internomex, 'C') monto_internomex, fecha_creacion*/ FROM pagos_internomex 
+        WHERE id_usuario IN ($id_usuario) AND YEAR(fecha_creacion) = $year AND MONTH(fecha_creacion) = $month")->result();
+		return $query;
+	}
+
     
         //return $this->db->count_all_results() > 0;
 
