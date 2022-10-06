@@ -320,8 +320,12 @@ class Usuarios extends CI_Controller
             if($usersCH == 0){
                 $response = $this->Usuarios_modelo->updateUser($data, $this->input->post("id_usuario"));
             }else {
-                print_r($resultadoCH);
-                $response = $this->Usuarios_modelo->updateUser($data, $this->input->post("id_usuario"));
+                $result = json_decode($resultadoCH);
+                if($result->resultado == 1){
+                    $response = $this->Usuarios_modelo->updateUser($data, $this->input->post("id_usuario"));
+                }else{
+                    $response = 0;
+                }
             }
         echo json_encode($response);
     }
