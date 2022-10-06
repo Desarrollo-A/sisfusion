@@ -73,6 +73,7 @@ class Login extends CI_Controller
 		  case '53': // ANALISTA COMISIONES
 		  case '61': // ANSESOR CONSULTA
 		  case '64': // ASISTENTE DIRECCIÓN ADMINISTRACIÓN
+		  case '65': // CONTABILIDAD (EXTERNO)
               redirect(base_url().'Administracion');
          break;
 
