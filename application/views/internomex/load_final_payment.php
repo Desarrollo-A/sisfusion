@@ -43,7 +43,7 @@
                                 <h3 class="card-title center-align">Asignación de monto final pagado</h3>
                                 <p class="center-align">A través de este panel podrás descargar una plantilla que agrupara por comisionista los n pagos enviados para cobro. De los cuales, se tendrá que ingresar el monto final pagado.</p>
                                 <div class="row aligned-row">
-                                    <div class="col col-xs-12 col-sm-12 col-md-3 col-lg-3">
+                                    <div class="form-group col col-xs-12 col-sm-12 col-md-4 col-lg-4">
                                         <div class="radio_container w-100">
                                             <input class="d-none generate" type="radio" name="radio" id="one">
                                             <label for="one" class="w-50">Cargar</label>
@@ -51,17 +51,26 @@
                                             <label for="two" class="w-50">Consultar</label>
                                         </div>
                                     </div>
-                                    <div class="col col-xs-12 col-sm-12 col-md-2 col-lg-2 d-flex align-center justify-evenly row-load hide">
-                                        <button class="btn-rounded btn-s-greenLight" id="downloadFile"
-                                                name="downloadFile" title="Download">
-                                            <i class="fas fa-download"></i>
-                                        </button> <!-- DOWNLOAD -->
-                                        <button class="btn-rounded btn-s-blueLight" name="uploadFile" id="uploadFile" title="Upload" data-toggle="modal" data-target="#uploadModal">
-                                            <i class="fas fa-upload"></i>
-                                        </button> <!-- UPLOAD -->
-                                    </div>
+                                    
+                                        <div class="col col-xs-12 col-sm-12 col-md-4 col-lg-4 d-flex align-center justify-evenly  row-load hide ">
+                                            <button class="btn-rounded btn-s-greenLight row-load hide "  id="downloadFile"
+                                                    name="downloadFile" title="Download">
+                                                <i class="fas fa-download"></i>
+                                            </button> <!-- DOWNLOAD -->
+                                            <button class="btn-rounded btn-s-blueLight row-load hide" name="uploadFile" id="uploadFile" title="Upload" data-toggle="modal" data-target="#uploadModal">
+                                                <i class="fas fa-upload"></i>
+                                            </button> <!-- UPLOAD -->
+                                        </div>
+                                        <div class=" form-group d-flex col col-xs-12 col-sm-12 col-md-4 col-lg-4 align-center justify-evenly  box-table hide">
+                                                        <input type="date" class="form-control datepicker beginDate box-table hide" name="startDate" id="startDate"/>
+                                                        <input type="date" class="form-control datepicker endDate box-table hide" name="endDate" id="endDate"/>
+                                                <button class="btn btn-success btn-round btn-fab btn-fab-mini searchByDateRange box-table hide" name="searchByDateRange" id="searchByDateRange">
+                                                    <span class="material-icons update-dataTable">search</span>
+                                                </button>
+                                             
+                                        </div>                    
                                 </div>
-
+                                
 
                                 <div class="row pt-2 hide">
                                     <div class="col col-xs-12 col-sm-12 col-md-10 col-lg-10">
@@ -71,22 +80,25 @@
                                         </div>
                                     </div>
                                 </div>
-
-
                             </div>
                             <div class="table-responsive box-table hide">
-                                <table id="tableLotificacion" name="tableLotificacion" class="table-striped table-hover">
-                                    <thead>
-                                    <tr>
-                                        <th>Nombre</th>                                     
-                                        <th>Monto s/n descuento</th>
-                                        <th>Monto con descuento</th>
-                                        <th>Monto internomex</th>
-                                        <th>Monto internomex</th>
-
-                                    </tr>
-                                    </thead>
-                                </table>
+                                         
+                                         <table id="tableLotificacion" name="tableLotificacion" class="table-striped table-hover">
+                                             <thead>
+                                             <tr>
+                                                 <th>Nombre</th>  
+                                                 <th>Rol</th>           
+                                                 <th>Forma de pago</th>
+                                                 <th>Sede </th>                        
+                                                 <th>Monto con descuento</th>
+                                                 <th>Monto s/n descuento</th>
+                                                 <th>Monto internomex</th>
+                                                 <th>Fecha</th>
+                                             </tr>
+                                             </thead>
+                                             <tbody>
+                                             </tbody>
+                                         </table>
                             </div>
                         </div>
                     </div>
@@ -109,6 +121,9 @@
 <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
 <!--<script type="text/javascript" src="//unpkg.com/xlsx/dist/xlsx.full.min.js"></script>-->
 <script type="text/javascript" src="<?= base_url() ?>dist/js/xlsx/xlsx.full.min.js"></script>
+<script src="<?= base_url() ?>dist/js/es.js"></script>
+    <!-- DateTimePicker Plugin -->
+    <script src="<?= base_url() ?>dist/js/bootstrap-datetimepicker.js"></script>
 <script src="<?= base_url() ?>dist/js/jwt/hmac-sha256.js"></script>
 <script src="<?= base_url() ?>dist/js/jwt/enc-base64-min.js"></script>
 <script src="<?= base_url() ?>dist/js/controllers/general/main_services.js"></script>

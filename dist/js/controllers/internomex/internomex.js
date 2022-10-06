@@ -5,6 +5,7 @@ $(document).ready(function () {
         var fileName = target[0].files[0].name;
         relatedTarget.val(fileName);
     });
+
 });
 $('#tableLotificacion thead tr:eq(0) th').each(function (i) {
     const title = $(this).text();
@@ -20,8 +21,8 @@ $('#tableLotificacion thead tr:eq(0) th').each(function (i) {
         });
     }
 });
-
-function fillTableLotificacion() {
+function fillTableLotificacion2(fechaInicio, fechaFin) {
+ 
     $(".box-table").removeClass('hide');
     generalDataTable = $('#tableLotificacion').dataTable({
         dom: 'Brt' + "<'row'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'i><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>",
@@ -33,21 +34,34 @@ function fillTableLotificacion() {
                 className: 'btn buttons-excel',
                 titleAttr: 'Descargar archivo de Excel',
                 exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5],
+                    columns: [0, 1, 2, 3,4,5,6,7],
                     format: {
                         header: function (d, columnIdx) {
+                    
                             switch (columnIdx) {
                                 case 0:
-                                    return "id_usuario";
+                                    return "Nombre";
                                     break;
                                 case 1:
-                                    return "monto_con_descuento";
+                                    return "Rol";
                                     break;
                                 case 2:
-                                    return "monto sin descuento"
+                                    return "Forma de pago"
                                 case 3:
-                                    return "monto internomex";
+                                    return "Sede";
                                     break;
+                                case 4:
+                                    return "Monto con descuento";
+                                break;
+                                case 5:
+                                    return "Monto sin descuento";
+                                break;
+                                case 6:
+                                    return "Monto internomex";
+                                break;
+                                case 7:
+                                    return "Fecha de creación";
+                                break;
                             }
                         }
                     }
@@ -73,7 +87,22 @@ function fillTableLotificacion() {
             {
                 data: function (d) {
                
-                    return d.id_usuario;
+                    return d.nombre;
+                }
+            },
+            { 
+                data: function (d) {
+                    return d.rol;
+                }
+            },
+            { 
+                data: function (d) {
+                    return d.forma_pago;
+                }
+            },
+            {
+                data: function (d) {
+                    return d.sede;
                 }
             },
             {
@@ -93,7 +122,7 @@ function fillTableLotificacion() {
             },
             {
                 data: function (d) {
-                    return d.nombre;
+                    return d.fecha_creacion   ;
                 }
             },
         ],
@@ -105,9 +134,149 @@ function fillTableLotificacion() {
             url: "getPagosFinal",
             type: "POST",
             cache: false,
+            data : {
+                fechaInicio : fechaInicio,
+                fechaFin     : fechaFin
+            }
         }
     });
 }
+
+function fillTableLotificacion(fechaInicio, fechaFin) {
+    $(".box-table").removeClass('hide');
+
+    generalDataTable = $('#tableLotificacion').dataTable({
+        dom: 'Brt' + "<'row'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'i><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>",
+        width: "auto",
+        buttons: [
+            {
+                extend: 'excelHtml5',
+                text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
+                className: 'btn buttons-excel',
+                titleAttr: 'Descargar archivo de Excel',
+                exportOptions: {
+                    columns: [0, 1, 2, 3,4,5,6,7],
+                    format: {
+                        header: function (d, columnIdx) {
+                    
+                            switch (columnIdx) {
+                                case 0:
+                                    return "Nombre";
+                                    break;
+                                case 1:
+                                    return "Rol";
+                                    break;
+                                case 2:
+                                    return "Forma de pago"
+                                case 3:
+                                    return "Sede";
+                                    break;
+                                case 4:
+                                    return "Monto con descuento";
+                                break;
+                                case 5:
+                                    return "Monto sin descuento";
+                                break;
+                                case 6:
+                                    return "Monto internomex";
+                                break;
+                                case 7:
+                                    return "Fecha de creación";
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        ],
+        pagingType: "full_numbers",
+        fixedHeader: true,
+        lengthMenu: [
+            [10, 25, 50, -1],
+            [10, 25, 50, "Todos"]
+        ],
+        language: {
+            url: "../static/spanishLoader_v2.json",
+            paginate: {
+                previous: "<i class='fa fa-angle-left'>",
+                next: "<i class='fa fa-angle-right'>"
+            }
+        },
+        destroy: true,
+        ordering: false,
+        columns: [
+            {
+                data: function (d) {
+               
+                    return d.nombre;
+                }
+            },
+            { 
+                data: function (d) {
+                    return d.rol;
+                }
+            },
+            { 
+                data: function (d) {
+                    return d.forma_pago;
+                }
+            },
+            {
+                data: function (d) {
+                    return d.sede;
+                }
+            },
+            {
+                data: function (d) {
+                    return d.monto_con_descuento;
+                }
+            },
+            {
+                data: function (d) {
+                    return d.monto_sin_descuento;
+                }
+            },
+            {
+                data: function (d) {
+                    return d.monto_internomex   ;
+                }
+            },
+            {
+                data: function (d) {
+                    return d.fecha_creacion   ;
+                }
+            },
+        ],
+        columnDefs: [{
+            visible: false,
+            searchable: false
+        }],
+        ajax: {
+            url: "getPagosFinal",
+            type: "POST",
+            cache: false,
+            data : {
+                fechaInicio : fechaInicio,
+                fechaFin     : fechaFin
+            }
+        }
+    });
+}
+
+
+$(document).on('click', '.searchByDateRange', function(){
+
+    var fechaStart = document.getElementById("startDate").value;
+    var fechaEnd = document.getElementById("endDate").value;
+ 
+    if(fechaStart <= fechaEnd ){
+   
+        fillTableLotificacion2(fechaStart , fechaEnd);
+
+    }else{
+        alerts.showNotification("top", "right", "Fecha inicial no puede ser mas mayor a la fecha final", "warning");
+    }
+});
 
 $(document).on('click', '.find-results', function () {
     $(".row-load").addClass("hide");
@@ -115,6 +284,8 @@ $(document).on('click', '.find-results', function () {
     $(".box-table").removeClass("hide");
     //fillTableLotificacion();
     fillTableLotificacion();
+    document.getElementById('startDate').valueAsDate = new Date();
+    document.getElementById('endDate').valueAsDate = new Date();
 });
 
 $(document).on('click', '.generate', function () {
