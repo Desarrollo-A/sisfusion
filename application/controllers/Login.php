@@ -39,6 +39,7 @@ class Login extends CI_Controller
 		case '7': // ASESOR
 		case '9': // COORDINADOR
 		case '18': // DIRECTOR MKTD
+		case '63': // CI AUDITORIA
             redirect(base_url().'Ventas');
         break;
 
@@ -71,8 +72,8 @@ class Login extends CI_Controller
 		  case '22': // MKTD
 		  case '53': // ANALISTA COMISIONES
 		  case '61': // ANSESOR CONSULTA
-		  case '63': // CI AUDITORIA
 		  case '64': // ASISTENTE DIRECCIÓN ADMINISTRACIÓN
+		  case '65': // CONTABILIDAD (EXTERNO)
               redirect(base_url().'Administracion');
          break;
 

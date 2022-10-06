@@ -234,49 +234,12 @@ class Usuarios extends CI_Controller
         $this->Usuarios_modelo->ServicePostCH($ruta,$dataCH);
         
         } else {
-
+            $usersCH=0;
             $sedeCH = 0;
             $sucursal = 0;
             if ($_POST['member_type'] == 3 || $_POST['member_type'] == 7 || $_POST['member_type'] == 9) {
+                $usersCH=1;
                 #actualizar los registros en caso de que haya modificado de lider o tipo de miembro
-                //$getLider = $this->Services_model->getLider($_POST['leader'],$_POST['member_type']);
-               /* switch ($_POST['member_type'] ){
-                    case 3;
-                        $data_update = array(
-                            'regional_id' => $getLider[0]['id_regional'],
-                            'subdirector_id' => $_POST['leader'],
-                            'gerente_id' => 0,
-                            'id_lider' => 0
-                        );
-                        break;
-                    case 7;
-                        $data_update = array(
-                            'regional_id' => $getLider[0]['id_regional'],
-                            'subdirector_id' => $getLider[0]['id_subdirector'],
-                            'gerente_id' => $getLider[0]['id_gerente'],
-                            'id_lider' => $_POST['leader']
-                        );
-                        break;
-                    case 9;
-                        $data_update = array(
-                            'regional_id' => $getLider[0]['id_regional'],
-                            'subdirector_id' => $getLider[0]['id_subdirector'],
-                            'gerente_id' => 0,
-                            'id_lider' => $_POST['leader']
-                        );
-                        break;
-                }*/
-
-                /*print_r($data_update);
-                echo 'data del post:<br><br>';
-                print_r($_POST);
-                exit;*/
-              //  $this->General_model->updateRecord('usuarios', $data_update, 'id_usuario', $_POST['id_usuario']);
-                #end of this part
-
-
-
-
                 /* 
                 SEDES CAPITAL HUMANO
                 9 -- cancun
@@ -301,7 +264,7 @@ class Usuarios extends CI_Controller
                                 "dcontrato" => array(),
                                 "idasesor" => $this->input->post("id_usuario")
                         );
-               $this->Usuarios_modelo->UpdateProspect($this->input->post("id_usuario"), $_POST['leader'], $_POST['member_type'], $_POST['rol_actual'], $sedeCH, $sucursal,$datosCH);
+            $resultadoCH = $this->Usuarios_modelo->UpdateProspect($this->input->post("id_usuario"), $_POST['leader'], $_POST['member_type'], $_POST['rol_actual'], $sedeCH, $sucursal,$datosCH);
             }
             $getLider = $this->Services_model->getLider($_POST['leader'],$_POST['member_type']);
             $id_lider = 0;
@@ -329,16 +292,16 @@ class Usuarios extends CI_Controller
             }
 
             $data = array(
-                "nombre" => $_POST['name'],
-                "apellido_paterno" => $_POST['last_name'],
-                "apellido_materno" => $_POST['mothers_last_name'],
-                "rfc" => $_POST['rfc'],
-                "correo" => $_POST['email'],
-                "telefono" => $_POST['phone_number'],
+                "nombre" => $this->formatter->eliminar_tildes(strtoupper(trim($_POST['name']))),
+                "apellido_paterno" => $this->formatter->eliminar_tildes(strtoupper(trim($_POST['last_name']))),
+                "apellido_materno" => $this->formatter->eliminar_tildes(strtoupper(trim($_POST['mothers_last_name']))),
+                "rfc" => strtoupper(trim($_POST['rfc'])),
+                "correo" => strtoupper(trim($_POST['email'])),
+                "telefono" => strtoupper(trim($_POST['phone_number'])),
                 "id_sede" => $_POST['headquarter'],
                 "id_rol" => $_POST['member_type'],
                 "id_lider" => $id_lider,
-                "usuario" => $_POST['username'],
+                "usuario" => trim($_POST['username']),
                 "contrasena" => encriptar($_POST['contrasena']),
                 "fecha_modificacion" => date("Y-m-d H:i:s"),
                 "modificado_por" => $this->session->userdata('id_usuario'),
@@ -352,8 +315,18 @@ class Usuarios extends CI_Controller
                 "tiene_hijos" => !empty($_POST['hijos']) ? $_POST['hijos'] : "NO" ,
                 "hijos_12" => !empty($_POST['noHijos']) ? $_POST['noHijos'] : 0   
                );
-                            }
-        $response = $this->Usuarios_modelo->updateUser($data, $this->input->post("id_usuario"));
+            }
+
+            if($usersCH == 0){
+                $response = $this->Usuarios_modelo->updateUser($data, $this->input->post("id_usuario"));
+            }else {
+                $result = json_decode($resultadoCH);
+                if($result->resultado == 1){
+                    $response = $this->Usuarios_modelo->updateUser($data, $this->input->post("id_usuario"));
+                }else{
+                    $response = 0;
+                }
+            }
         echo json_encode($response);
     }
 
