@@ -138,10 +138,25 @@ class Internomex_model extends CI_Model {
             $this->db->query("INSERT INTO historial_comisiones VALUES ($idsol, ".$this->session->userdata('id_usuario').", GETDATE(), 1, 'SE APLICÓ PAGO DE INTERNOMEX')");
             return $this->db->query("UPDATE pago_comision_ind SET estatus = 9 WHERE id_pago_i IN (".$idsol.")");
     }
-    public function getMFPagos( $year,$mes){
-        $cmd = "SELECT p.id_usuario,p.monto_con_descuento,p.monto_sin_descuento,p.monto_internomex,CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombre
-        FROM  pagos_internomex p  INNER JOIN usuarios u on u.id_usuario = p.id_usuario
-        WHERE YEAR(p.fecha_creacion) = $year and MONTH(p.fecha_creacion) = $mes";
+    public function getMFPagos( $fechainicio,$fechafin){
+        $cmd = "SELECT p.id_usuario,
+        FORMAT(p.monto_con_descuento,'C','En-Us') as 'monto_con_descuento',
+		FORMAT(p.monto_sin_descuento,'C','En-Us') as 'monto_sin_descuento',
+		FORMAT(p.monto_internomex,'C','En-Us') as 'monto_internomex'
+        ,c.nombre sede, g.nombre forma_pago,p.fecha_creacion ,
+        CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombre,
+        u.id_rol , d.nombre as rol 
+        FROM  pagos_internomex p
+        INNER JOIN usuarios u on u.id_usuario = p.id_usuario
+        INNER JOIN sedes c on c.id_sede = p.forma_pago 
+        INNER JOIN opcs_x_cats g on g.id_catalogo = 16 and g.id_opcion = p.forma_pago
+        INNER JOIN opcs_x_cats d on d.id_catalogo = 1 and d.id_opcion = u.id_rol
+        WHERE p.fecha_creacion  >= '$fechainicio' AND
+       p.fecha_creacion <= '$fechafin' ";
+        
+        //$cmd = "SELECT p.id_usuario,p.monto_con_descuento,p.monto_sin_descuento,p.monto_internomex,CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombre
+       // FROM  pagos_internomex p  INNER JOIN usuarios u on u.id_usuario = p.id_usuario
+       // WHERE YEAR(p.fecha_creacion) = $year and MONTH(p.fecha_creacion) = $mes";
        $query = $this->db->query($cmd);
         return $query  ;
     }
@@ -181,14 +196,7 @@ class Internomex_model extends CI_Model {
         // 
         //return $query->result() !== [];
         
-    }
-    public function getMFPagos( $year,$mes){
-        $cmd = "SELECT p.id_usuario,p.monto_con_descuento,p.monto_sin_descuento,p.monto_internomex,CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombre
-        FROM  pagos_internomex p  INNER JOIN usuarios u on u.id_usuario = p.id_usuario
-        WHERE YEAR(p.fecha_creacion) = $year and MONTH(p.fecha_creacion) = $mes";
-       $query = $this->db->query($cmd);
-        return $query  ;
-    }
+ 
     public function insertMontoFinalPago($data){
 
          $this->db->insert('dbo.pagos_internomex', $data);    

@@ -79,13 +79,7 @@
     $this->load->view('template/header');
     $this->load->view("internomex/historial", $datos);
   }
-  public function getPagosFinal(){
-    $year   = date("Y");
-    $mes    = date("m");
 
-    $data['data'] = $this->Internomex_model->getMFPagos($year ,$mes)->result_array();
-    echo json_encode($data);
-  }
   public function getDatosHistorialInternomex($proyecto,$condominio){
     $dat =  $this->Internomex_model->getDatosHistorialInternomex($proyecto,$condominio)->result_array();
     for( $i = 0; $i < count($dat); $i++ ){
@@ -114,7 +108,7 @@
   {
     $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
     $this->load->view('template/header');
-    $this->load->view("internomex/load_final_payment", $datos);
+    $this->load->view("internomex/load_final_payment", $datos); 
   }
 
   public function getPaymentsListByCommissionAgent()
@@ -125,8 +119,31 @@
   public function getPagosFinal(){
     $year   = date("Y");
     $mes    = date("m");
+    $Udia   = date("t");
+    //var_dump($fecha);
+    $fechaInicio = $this->input->post('fechaInicio');
+    $fechaFin = $this->input->post('fechaFin');
+   // var_dump($fechaFin);
+   // var_dump($fechaInicio);
+    if(!isset($fechaFin) and !isset($fechaInicio))
+    {
+      $mes = date("m");
+      $year = date("Y");
+      //var_dump($mes);
+      //var_dump($year);
+      //var_dump('mensaje de nulos');
+      $fechaInicio = $year.'-'.$mes.'-'.'1';
+      $fechaFin = date("Y-m-t");   
+      //var_dump($fechaFin);
+      // var_dump('mensaje de nulos');
 
-    $data['data'] = $this->Internomex_model->getMFPagos($year ,$mes)->result_array();
+    }
+    $fechaInicio = $fechaInicio ." 0:00:00"; 
+    $fechaFin = $fechaFin ." 23:59:59"; 
+
+    //var_dump($fechaFin);
+    //var_dump($fechaInicio);
+    $data['data'] = $this->Internomex_model->getMFPagos($fechaInicio ,$fechaFin)->result_array();
     echo json_encode($data);
   }
 
