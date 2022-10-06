@@ -38,21 +38,15 @@ function fillTableLotificacion() {
                         header: function (d, columnIdx) {
                             switch (columnIdx) {
                                 case 0:
-                                    return "NOMBRE CLIENTE";
+                                    return "id_usuario";
                                     break;
                                 case 1:
-                                    return "NOMBRE LOTE";
+                                    return "monto_con_descuento";
                                     break;
                                 case 2:
-                                    return "SUPERFICIE"
+                                    return "monto sin descuento"
                                 case 3:
-                                    return "PRECIO POR M2";
-                                    break;
-                                case 4:
-                                    return "TOTAL";
-                                    break;
-                                case 5:
-                                    return "MODIFICADO";
+                                    return "monto internomex";
                                     break;
                             }
                         }
@@ -78,55 +72,55 @@ function fillTableLotificacion() {
         columns: [
             {
                 data: function (d) {
-                    return d.nombreCliente;
+               
+                    return d.id_usuario;
                 }
             },
             {
                 data: function (d) {
-                    return d.nombreLote;
+                    return d.monto_con_descuento;
                 }
             },
             {
                 data: function (d) {
-                    return d.superficie;
+                    return d.monto_sin_descuento;
                 }
             },
             {
                 data: function (d) {
-                    return d.preciom2;
+                    return d.monto_internomex;
                 }
             },
             {
                 data: function (d) {
-                    return d.total;
+                    return d.nombre;
                 }
             },
-            {
-                data: function (d) {
-                    return d.modificado;
-                }
-            }
         ],
         columnDefs: [{
             visible: false,
             searchable: false
         }],
         ajax: {
-            url: "getInformation",
+            url: "getPagosFinal",
             type: "POST",
-            cache: false
+            cache: false,
         }
     });
 }
 
 $(document).on('click', '.find-results', function () {
     $(".row-load").addClass("hide");
+   // $(".row-load").removeClass("hide");
+    $(".box-table").removeClass("hide");
     //fillTableLotificacion();
+    fillTableLotificacion();
 });
 
 $(document).on('click', '.generate', function () {
     $(".row-load").removeClass("hide");
     $(".box-table").addClass("hide");
+    
 });
 
 $(document).on('click', '#downloadFile', function () {
