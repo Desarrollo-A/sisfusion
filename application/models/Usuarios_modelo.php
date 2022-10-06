@@ -712,7 +712,7 @@ function getAllFoldersPDF()
                  $resultado = $this->Usuarios_modelo->ServicePostCH($url,$datosCH);
              }
          }else{
-             $resultado=false;
+             //$resultado=false;
              $getLider = $this->db->query("SELECT u.id_usuario as lider,u2.id_usuario as lider2 FROM usuarios u inner join usuarios u2 on u.id_lider=u2.id_usuario WHERE u.id_usuario = ".$id_lider." ")->result_array();
 
              /* $getLider = $this->db->query("SELECT u.gerente_id as lider2 
@@ -807,13 +807,13 @@ function getAllFoldersPDF()
                  $datosCH['dcontrato']['idcoordinador'] =$id_usuario;
                  $datosCH['dcontrato']['idsedech'] = $sedeCH;
                  $datosCH['dcontrato']['idsucursalch'] = $sucursal;
-
+                 print_r($datosCH);
                  $resultado = $this->Usuarios_modelo->ServicePostCH($url,$datosCH);
              }
 
          }
 
-         //$someArray = json_decode($resultado, true);
+        return $resultado;
          }
 
         function getUsersListByLeader($idUsuario){
