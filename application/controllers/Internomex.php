@@ -147,6 +147,7 @@
     echo json_encode($data);
   }
 
+
   public function insertInformation() {
     if (!isset($_POST))
       echo json_encode(array("status" => 400, "message" => "Algún parámetro no viene informado."));

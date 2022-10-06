@@ -21,6 +21,7 @@ $('#tableLotificacion thead tr:eq(0) th').each(function (i) {
         });
     }
 });
+
 function fillTableLotificacion2(fechaInicio, fechaFin) {
  
     $(".box-table").removeClass('hide');

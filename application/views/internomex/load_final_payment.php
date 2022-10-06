@@ -39,7 +39,7 @@
                             <i class="fas fa-coins fa-2x"></i>
                         </div>
                         <div class="card-content">
-                            <div class="toolbar">
+                        <div class="toolbar">
                                 <h3 class="card-title center-align">Asignación de monto final pagado</h3>
                                 <p class="center-align">A través de este panel podrás descargar una plantilla que agrupara por comisionista los n pagos enviados para cobro. De los cuales, se tendrá que ingresar el monto final pagado.</p>
                                 <div class="row aligned-row">
