@@ -138,6 +138,7 @@ class Internomex_model extends CI_Model {
             $this->db->query("INSERT INTO historial_comisiones VALUES ($idsol, ".$this->session->userdata('id_usuario').", GETDATE(), 1, 'SE APLICÓ PAGO DE INTERNOMEX')");
             return $this->db->query("UPDATE pago_comision_ind SET estatus = 9 WHERE id_pago_i IN (".$idsol.")");
     }
+
     public function getMFPagos( $fechainicio,$fechafin){
         $cmd = "SELECT p.id_usuario,
         FORMAT(p.monto_con_descuento,'C','En-Us') as 'monto_con_descuento',
