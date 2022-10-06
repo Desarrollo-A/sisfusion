@@ -692,6 +692,29 @@ class Reporte_model extends CI_Model {
     }
 
     public function getVentasConSinRecision($beginDate, $endDate){
+        $filtro_query = "";
+        $id_rol = $this->session->userdata('id_rol');
+        $id_usu = $this->session->userdata('id_usuario');
+        $id_lid = $this->session->userdata('id_lider');
+        if( ($id_rol !== 1 || $id_rol !== 4) ){
+            if ($id_rol == 9) {
+                $filtro_query = "AND (u1.id_usuario = ".$id_usu." AND u1.id_rol = ".$id_rol.")";
+            }elseif($id_rol == 7){
+                $filtro_query = "AND (u0.id_usuario = ".$id_usu." AND u0.id_rol = ".$id_rol.")";
+            }elseif($id_rol == 3) {
+                $filtro_query = "AND (u2.id_usuario = ".$id_usu." AND u2.id_rol = ".$id_rol.")";
+            }elseif($id_rol == 2){
+                $filtro_query = "AND( ((u0.subdirector_id = ".$id_usu." OR u0.regional_id = ".$id_usu.") AND u0.id_rol = ".$id_rol.") OR
+                ((u1.subdirector_id = ".$id_usu." OR u1.regional_id = ".$id_usu.") AND u1.id_rol = ".$id_rol.") OR
+                ((u2.subdirector_id = ".$id_usu." OR u1.regional_id = ".$id_usu.") AND u2.id_rol = ".$id_rol.") )";
+            }elseif($id_rol == 6) {
+                $filtro_query = "AND (u2.id_lider = ".$id_lid." AND u2.id_rol = ".$id_rol.")";
+            }elseif($id_rol == 5){
+                $filtro_query = "AND( ((u0.subdirector_id = ".$id_lid." OR u0.regional_id = ".$id_lid.") AND u0.id_rol = ".$id_rol.") OR
+                ((u1.subdirector_id = ".$id_lid." OR u1.regional_id = ".$id_lid.") AND u1.id_rol = ".$id_rol.") OR
+                ((u2.subdirector_id = ".$id_lid." OR u1.regional_id = ".$id_lid.") AND u2.id_rol = ".$id_rol.") )";
+            }
+        }
         $data = $this->db->query("SELECT lo.idLote idLote, CAST(re.descripcion AS VARCHAR(150)) nombreResidencial, UPPER(co.nombre) nombreCondominio, UPPER(lo.nombreLote) nombreLote, 
         UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) nombreCliente,
         UPPER(CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno)) nombreAsesor,
@@ -717,7 +740,7 @@ class Reporte_model extends CI_Model {
         LEFT JOIN (SELECT id_cliente FROM ventas_compartidas WHERE estatus IN (1,2) GROUP BY id_cliente) vc ON vc.id_cliente = cl.id_cliente
         LEFT JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes WHERE idStatusContratacion = 9 AND idMovimiento = 39 AND status = 1 GROUP BY idLote, idCliente) hlo3 ON hlo3.idLote = lo.idLote AND hlo3.idCliente = cl.id_cliente
         LEFT JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes WHERE idStatusContratacion = 11 AND idMovimiento = 41 AND status = 1 GROUP BY idLote, idCliente) hlo5 ON hlo5.idLote = lo.idLote AND hlo5.idCliente = cl.id_cliente
-        WHERE isNULL(noRecibo, '') != 'CANCELADO' AND cl.fechaApartado BETWEEN '$beginDate 23:59:59.999' AND '$endDate 23:59:59.999' AND cl.status = 1
+        WHERE isNULL(noRecibo, '') != 'CANCELADO' AND cl.fechaApartado BETWEEN '$beginDate 23:59:59.999' AND '$endDate 23:59:59.999' AND cl.status = 1 $filtro_query
         GROUP BY lo.idLote, CAST(re.descripcion AS VARCHAR(150)), UPPER(co.nombre), UPPER(lo.nombreLote), 
         CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno),
         CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno),
@@ -754,7 +777,7 @@ class Reporte_model extends CI_Model {
         LEFT JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes WHERE idStatusContratacion = 9 AND idMovimiento = 39 AND status = 0 GROUP BY idLote, idCliente) hlo3 ON hlo3.idLote = lo.idLote AND hlo3.idCliente = cl.id_cliente
         LEFT JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes WHERE idStatusContratacion = 11 AND idMovimiento = 41 AND status = 0 GROUP BY idLote, idCliente) hlo5 ON hlo5.idLote = lo.idLote AND hlo5.idCliente = cl.id_cliente
         WHERE isNULL(noRecibo, '') != 'CANCELADO' AND cl.usuario NOT IN ('MARIA JOSE MARTINEZ MARTINEZ', 'DESARROLLO DESARROLLO DESARROLLO') AND cl.fechaApartado BETWEEN '$beginDate 23:59:59.999' AND '$endDate 23:59:59.999' AND cl.status = 0
-        AND isNULL(cl.tipo_venta_cl, 0) IN (0, 1, 2)
+        AND isNULL(cl.tipo_venta_cl, 0) IN (0, 1, 2) $filtro_query
         GROUP BY lo.idLote, CAST(re.descripcion AS VARCHAR(150)), UPPER(co.nombre), UPPER(lo.nombreLote), 
         CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno),
         CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno),
