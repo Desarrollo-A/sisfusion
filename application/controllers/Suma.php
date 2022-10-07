@@ -206,60 +206,60 @@ class Suma extends CI_Controller
         date_default_timezone_set('America/Mexico_City');       
         $fecha_actual = strtotime(date("d-m-Y H:i:00"));
   
-        //fecha inicio
-        // $fecha_entrada2 = strtotime("07-02-2022 00:00:00");
-        // $fecha_entrada3 = strtotime("07-03-2022 00:00:00");
-        // $fecha_entrada4 = strtotime("11-04-2022 00:00:00");
-        // $fecha_entrada5 = strtotime("09-05-2022 00:00:00");
-        // $fecha_entrada6 = strtotime("13-06-2022 00:00:00");
-        // $fecha_entrada7 = strtotime("11-07-2022 00:00:00");
-        // $fecha_entrada8 = strtotime("08-08-2022 00:00:00");
-        // $fecha_entrada9 = strtotime("12-09-2022 00:00:00");
-        // $fecha_entrada10 = strtotime("10-10-2022 00:00:00");
-        // $fecha_entrada11 = strtotime("07-11-2022 00:00:00");
-        // $fecha_entrada12 = strtotime("12-12-2022 00:00:00");
-        //fecha fin
+        // fecha inicio
+        $fecha_entrada2 = strtotime("07-02-2022 00:00:00");
+        $fecha_entrada3 = strtotime("07-03-2022 00:00:00");
+        $fecha_entrada4 = strtotime("11-04-2022 00:00:00");
+        $fecha_entrada5 = strtotime("09-05-2022 00:00:00");
+        $fecha_entrada6 = strtotime("13-06-2022 00:00:00");
+        $fecha_entrada7 = strtotime("11-07-2022 00:00:00");
+        $fecha_entrada8 = strtotime("08-08-2022 00:00:00");
+        $fecha_entrada9 = strtotime("12-09-2022 00:00:00");
+        $fecha_entrada10 = strtotime("10-10-2022 00:00:00");
+        $fecha_entrada11 = strtotime("07-11-2022 00:00:00");
+        $fecha_entrada12 = strtotime("12-12-2022 00:00:00");
+        // fecha fin
         
-        // if($validar_sede == 8){
-        //   $fecha_entrada22 = strtotime("08-02-2022 15:59:00");
-        //   $fecha_entrada33 = strtotime("08-03-2022 15:59:00");
-        //   $fecha_entrada44 = strtotime("12-04-2022 15:59:00");
-        //   $fecha_entrada55 = strtotime("10-05-2022 15:59:00");
-        //   $fecha_entrada66 = strtotime("14-06-2022 15:59:00");
-        //   $fecha_entrada77 = strtotime("12-07-2022 15:59:00");
-        //   $fecha_entrada88 = strtotime("09-08-2022 15:59:00");
-        //   $fecha_entrada99 = strtotime("13-09-2022 15:59:00");
-        //   $fecha_entrada100 = strtotime("11-10-2022 15:59:00");
-        //   $fecha_entrada111 = strtotime("08-11-2022 15:59:00");
-        //   $fecha_entrada122 = strtotime("13-12-2022 15:59:00");
-        // }else{
-        //   $fecha_entrada22 = strtotime("08-02-2022 13:59:00");
-        //   $fecha_entrada33 = strtotime("08-03-2022 13:59:00");
-        //   $fecha_entrada44 = strtotime("12-04-2022 13:59:00");
-        //   $fecha_entrada55 = strtotime("10-05-2022 13:59:00");
-        //   $fecha_entrada66 = strtotime("14-06-2022 13:59:00");
-        //   $fecha_entrada77 = strtotime("12-07-2022 13:59:00");
-        //   $fecha_entrada88 = strtotime("09-08-2022 13:59:00");
-        //   $fecha_entrada99 = strtotime("13-09-2022 13:59:00");
-        //   $fecha_entrada100 = strtotime("11-10-2022 13:59:00");
-        //   $fecha_entrada111 = strtotime("08-11-2022 13:59:00");
-        //   $fecha_entrada122 = strtotime("13-12-2022 13:59:00");
+        if($validar_sede == 8){
+          $fecha_entrada22 = strtotime("08-02-2022 15:59:00");
+          $fecha_entrada33 = strtotime("08-03-2022 15:59:00");
+          $fecha_entrada44 = strtotime("12-04-2022 15:59:00");
+          $fecha_entrada55 = strtotime("10-05-2022 15:59:00");
+          $fecha_entrada66 = strtotime("14-06-2022 15:59:00");
+          $fecha_entrada77 = strtotime("12-07-2022 15:59:00");
+          $fecha_entrada88 = strtotime("09-08-2022 15:59:00");
+          $fecha_entrada99 = strtotime("13-09-2022 15:59:00");
+          $fecha_entrada100 = strtotime("11-10-2022 15:59:00");
+          $fecha_entrada111 = strtotime("08-11-2022 15:59:00");
+          $fecha_entrada122 = strtotime("13-12-2022 15:59:00");
+        }else{
+          $fecha_entrada22 = strtotime("08-02-2022 13:59:00");
+          $fecha_entrada33 = strtotime("08-03-2022 13:59:00");
+          $fecha_entrada44 = strtotime("12-04-2022 13:59:00");
+          $fecha_entrada55 = strtotime("10-05-2022 13:59:00");
+          $fecha_entrada66 = strtotime("14-06-2022 13:59:00");
+          $fecha_entrada77 = strtotime("12-07-2022 13:59:00");
+          $fecha_entrada88 = strtotime("09-08-2022 13:59:00");
+          $fecha_entrada99 = strtotime("13-09-2022 13:59:00");
+          $fecha_entrada100 = strtotime("11-10-2022 13:59:00");
+          $fecha_entrada111 = strtotime("08-11-2022 13:59:00");
+          $fecha_entrada122 = strtotime("13-12-2022 13:59:00");
   
-        // }
+        }
   
-        // $resultado = array("resultado" => 3);
+        $resultado = array("resultado" => 3);
   
-        // if(($fecha_actual >= $fecha_entrada2 && $fecha_actual <= $fecha_entrada22) ||
-        //   ($fecha_actual >= $fecha_entrada3 && $fecha_actual <= $fecha_entrada33) ||
-        //   ($fecha_actual >= $fecha_entrada4 && $fecha_actual <= $fecha_entrada44) || 
-        //   ($fecha_actual >= $fecha_entrada5 && $fecha_actual <= $fecha_entrada55) ||
-        //   ($fecha_actual >= $fecha_entrada6 && $fecha_actual <= $fecha_entrada66) ||
-        //   ($fecha_actual >= $fecha_entrada7 && $fecha_actual <= $fecha_entrada77) ||
-        //   ($fecha_actual >= $fecha_entrada8 && $fecha_actual <= $fecha_entrada88) ||
-        //   ($fecha_actual >= $fecha_entrada9 && $fecha_actual <= $fecha_entrada99) || 
-        //   ($fecha_actual >= $fecha_entrada10 && $fecha_actual <=$fecha_entrada100) ||
-        //   ($fecha_actual >= $fecha_entrada11 && $fecha_actual <=$fecha_entrada111) ||
-        //   ($fecha_actual >= $fecha_entrada12 && $fecha_actual <=$fecha_entrada122) ){
+        if(($fecha_actual >= $fecha_entrada2 && $fecha_actual <= $fecha_entrada22) ||
+          ($fecha_actual >= $fecha_entrada3 && $fecha_actual <= $fecha_entrada33) ||
+          ($fecha_actual >= $fecha_entrada4 && $fecha_actual <= $fecha_entrada44) || 
+          ($fecha_actual >= $fecha_entrada5 && $fecha_actual <= $fecha_entrada55) ||
+          ($fecha_actual >= $fecha_entrada6 && $fecha_actual <= $fecha_entrada66) ||
+          ($fecha_actual >= $fecha_entrada7 && $fecha_actual <= $fecha_entrada77) ||
+          ($fecha_actual >= $fecha_entrada8 && $fecha_actual <= $fecha_entrada88) ||
+          ($fecha_actual >= $fecha_entrada9 && $fecha_actual <= $fecha_entrada99) || 
+          ($fecha_actual >= $fecha_entrada10 && $fecha_actual <=$fecha_entrada100) ||
+          ($fecha_actual >= $fecha_entrada11 && $fecha_actual <=$fecha_entrada111) ||
+          ($fecha_actual >= $fecha_entrada12 && $fecha_actual <=$fecha_entrada122) ){
             if($usuario != ''){
               $usuarioid = $usuario;
             }
@@ -326,11 +326,51 @@ class Suma extends CI_Controller
   
             $this->Usuarios_modelo->Update_OPN($this->session->userdata('id_usuario'));
             echo json_encode( $resultado );
-          // }
-          // else{
-          //   echo json_encode(3);
-          // }
+          }
+          else{
+            echo json_encode(3);
+          }
+    }
+
+    public function revision_asimilados(){
+        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
+        $datos['sub_menu'] = $this->get_menu->get_submenu_data($this->session->userdata('id_rol'), $this->session->userdata('id_usuario'));
+
+        $this->load->view('template/header');
+        $this->load->view("Ventas/revision_asimilados_suma", $datos);
+    }
+
+    public function revision_remanentes(){
+        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
+        $datos['sub_menu'] = $this->get_menu->get_submenu_data($this->session->userdata('id_rol'), $this->session->userdata('id_usuario'));
+
+        $this->load->view('template/header');
+        $this->load->view("Ventas/revision_remanentes_suma", $datos);
+    }
+
+    public function getAsimiladosRevision(){
+        echo json_encode($this->Suma_model->getAsimiladosRevision()->result_array());
+        
+    }
+
+    function despausar_solicitud(){
+        $respuesta = array( FALSE );
+        
+        if($this->input->post("value_pago")){
+            $validate = $this->input->post("value_pago");
+      
+            switch($validate){
+                case 1:
+                    $respuesta = array($this->Suma_model->update_estatus_pausa($this->input->post("id_pago_i"), $this->input->post("observaciones"), $this->input->post("estatus") ));
+                break;
+        
+                case 2:
+                    $respuesta = array($this->Suma_model->update_estatus_despausa($this->input->post("id_pago_i"), $this->input->post("observaciones"), $this->input->post("estatus")));
+                break;
+            }  
         }
+        echo json_encode( $respuesta );
+      }
 }
 
 

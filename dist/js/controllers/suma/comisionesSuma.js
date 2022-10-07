@@ -767,7 +767,7 @@ $(document).on("click", ".subir_factura_multiple", function() {
     var hora = hoy.getHours();
     var minuto = hoy.getMinutes();
 
-    // if (((mes == 10 && dia == 10) || (mes == 10 && dia == 11 && hora <= 13)) || ((mes == 11 && dia == 7) || (mes == 11 && dia == 8 && hora <= 13)) || ((mes == 12 && dia == 12) || (mes == 12 && dia == 13 && hora <= 13))){
+    if (((mes == 10 && dia == 10) || (mes == 10 && dia == 11 && hora <= 13)) || ((mes == 11 && dia == 7) || (mes == 11 && dia == 8 && hora <= 13)) || ((mes == 12 && dia == 12) || (mes == 12 && dia == 13 && hora <= 13))){
 
     $("#modal_multiples .modal-body").html("");
     $("#modal_multiples .modal-header").html("");
@@ -836,10 +836,10 @@ $(document).on("click", ".subir_factura_multiple", function() {
             backdrop: 'static',
             keyboard: false
         });
-    // }
-    // else{
-    //     alert("NO PUEDES SUBIR FACTURAS HASTA EL PRÓXIMO CORTE.");
-    // }
+    }
+    else{
+        alert("NO PUEDES SUBIR FACTURAS HASTA EL PRÓXIMO CORTE.");
+    }
 });
 
 //FUNCION PARA LIMPIAR EL FORMULARIO CON DE PAGOS A PROVEEDOR.

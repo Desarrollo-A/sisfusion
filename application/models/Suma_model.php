@@ -104,4 +104,17 @@ class Suma_model extends CI_Model
         
         return $this->db->insert("facturas_suma", $data);
     }
+
+    function getAsimiladosRevision(){
+        $datos = $this->db->query("SELECT ps.id_pago_suma, ps.referencia, CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) nombreComisionista,
+        se.nombre sede, oxc.nombre estatus, ps.total_comision, (CASE us.forma_pago WHEN 3 THEN (((100-se.impuesto)/100)* ps.total_comision) ELSE ps.total_comision END) impuesto,
+        ps.porcentaje_comision, us.id_usuario
+        FROM pagos_suma ps
+        INNER JOIN usuarios us ON us.id_usuario = ps.id_usuario
+        INNER JOIN sedes se ON se.id_sede = us.id_sede
+        INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = ps.estatus AND oxc.id_catalogo = 74
+        WHERE us.forma_pago = 3 AND ps.estatus IN (2, 4, 5)");
+
+        return $datos;
+    }
 }
