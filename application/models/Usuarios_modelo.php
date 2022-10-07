@@ -605,216 +605,227 @@ function getAllFoldersPDF()
         curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
         # Send request.
         $result = curl_exec($ch);
+      //  print_r($result);
         curl_close($ch);
          $row =base64_decode($result);
              return   $row;   
     }
 
     public function UpdateProspect($id_usuario,$id_lider,$rol_seleccionado,$rol_actual,$sedeCH,$sucursal,$datosCH){
-
-      //$url='https://prueba.gphsis.com/RHCV/index.php/WS/movimiento_interno_asesor';
-      //RUTA DE PRUEBAS
-      $url = "https://prueba.gphsis.com/RHCV/index.php/WS/movimiento_interno_asesor_v2";
-      //RUTA DE PRODUCCIÓN
-      //$url="https://rh.gphsis.com/index.php/WS/movimiento_interno_asesor";
-         if($rol_seleccionado == $rol_actual){
-             //ENTONCES NO HUBO UN CAMBIO DE ROL
-             $query = $this->db->query("SELECT * FROM usuarios WHERE id_usuario = ".$id_usuario." and id_lider=".$id_lider." ")->result_array();
-             if(count($query) == 0){
-                 //ENTONCES SI CAMBIO DE LIDER
-                /* $getLider = $this->db->query("SELECT u.gerente_id as lider2 
-                 FROM usuarios u 
-                 WHERE u.id_usuario = ".$id_lider." ")->result_array();*/
-                 $getLider = $this->db->query("SELECT u.id_usuario as lider,u2.id_usuario as lider2 FROM usuarios u inner join usuarios u2 on u.id_lider=u2.id_usuario WHERE u.id_usuario = ".$id_lider." ")->result_array();
-                             if($rol_actual == 7){
-                                     //ASESOR, CONSULTAR LOS PROSPECTOS QUE TIENE ASIGNADOS DE TIPO 0 
-                                  $data = array(
-                                         "id_coordinador" => $id_lider,
-                                         "id_gerente" => $getLider[0]['lider2'],
-                                         "fecha_modificacion" => date("Y-m-d H:i:s"),
-                                         "modificado_por" => $this->session->userdata('id_usuario')
-                                     );
-                                     /*$dataCH = array("idasesor" => $id_usuario,
-                                                  "idpuesto" => 7,
-                                                  "idgerente" => $getLider[0]['lider2'],
-                                                  "idcoordinador" => $id_lider,
-                                                  "idsedech" => $sedeCH,
-                                                  "idsucursalch" => $sucursal);*/
-                                                  $datosCH['dcontrato']['idpuesto'] = 7;
-                                                  $datosCH['dcontrato']['idgerente'] = $getLider[0]['lider2'];
-                                                  $datosCH['dcontrato']['idcoordinador'] = $id_lider;
-                                                  $datosCH['dcontrato']['idsedech'] = $sedeCH;
-                                                  $datosCH['dcontrato']['idsucursalch'] = $sucursal;
-
-                                                  
-                                   $resultado = $this->Usuarios_modelo->ServicePostCH($url,$datosCH);
-                             }else if($rol_actual == 9){
-                                 $data = array(
-                                     "id_coordinador" => $id_usuario,
-                                     "id_gerente" => $id_lider,
-                                     "fecha_modificacion" => date("Y-m-d H:i:s"),
-                                     "modificado_por" => $this->session->userdata('id_usuario')
-                                 );
-                                 $dataCH = array("idasesor" => $id_usuario,
-                                 "idpuesto" => 9,
-                                 "idgerente" => $id_lider,
-                                 "idcoordinador" => $id_usuario,
-                                 "idsedech" => $sedeCH,
-                                 "idsucursalch" => $sucursal);
-                               $resultado = $this->Usuarios_modelo->ServicePostCH($url,$datosCH);
-                            $datosCH['dcontrato']['idpuesto'] = 9;
-                            $datosCH['dcontrato']['idgerente'] = $id_lider;
-                            $datosCH['dcontrato']['idcoordinador'] = $id_usuario;
-                            $datosCH['dcontrato']['idsedech'] = $sedeCH;
-                            $datosCH['dcontrato']['idsucursalch'] = $sucursal;
-
-                             }else if($rol_actual == 3){
-                                 $data = array(
-                                     "id_coordinador" => $id_usuario,
-                                     "id_gerente" => $id_usuario,
-                                     "fecha_modificacion" => date("Y-m-d H:i:s"),
-                                     "modificado_por" => $this->session->userdata('id_usuario')
-                                 );
-                                 $dataCH = array("idasesor" => $id_usuario,
-                                 "idpuesto" => 3,
-                                 "idgerente" => $id_usuario,
-                                 "idcoordinador" => $id_usuario,
-                                 "idsedech" => $sedeCH,
-                                 "idsucursalch" => $sucursal);
-
-                                 $datosCH['dcontrato']['idpuesto'] = 3;
-                                 $datosCH['dcontrato']['idgerente'] = $id_usuario;
-                                 $datosCH['dcontrato']['idcoordinador'] = $id_usuario;
-                                 $datosCH['dcontrato']['idsedech'] = $sedeCH;
-                                 $datosCH['dcontrato']['idsucursalch'] = $sucursal;
-                                 $resultado = $this->Usuarios_modelo->ServicePostCH($url,$datosCH);
-     
-                             }
-             }else{
-                 //NO CAMBIO DE LIDER Y TERMINA EL PROCESO, (SOLO SE ACTUALIZA SU INFO)
-                 $getLider = $this->db->query("SELECT u.id_usuario as lider,u2.id_usuario as lider2 FROM usuarios u inner join usuarios u2 on u.id_lider=u2.id_usuario WHERE u.id_usuario = ".$id_lider." ")->result_array();
-
-              /*   $getLider = $this->db->query("SELECT u.gerente_id as lider2 
-                 FROM usuarios u 
-                 WHERE u.id_usuario = ".$id_lider." ")->result_array();*/
-                 $dataCH = array("idasesor" => $id_usuario,
-                 "idpuesto" => $rol_actual,
-                 "idgerente" => $getLider[0]['lider2'],
-                 "idcoordinador" => $id_lider,
-                 "idsedech" => $sedeCH,
-                 "idsucursalch" => $sucursal);
-
-                 $datosCH['dcontrato']['idpuesto'] = $rol_actual;
-                 $datosCH['dcontrato']['idgerente'] = $getLider[0]['lider2'];
-                 $datosCH['dcontrato']['idcoordinador'] = $id_lider;
-                 $datosCH['dcontrato']['idsedech'] = $sedeCH;
-                 $datosCH['dcontrato']['idsucursalch'] = $sucursal;
-                 $resultado = $this->Usuarios_modelo->ServicePostCH($url,$datosCH);
-             }
-         }else{
-             //$resultado=false;
-             $getLider = $this->db->query("SELECT u.id_usuario as lider,u2.id_usuario as lider2 FROM usuarios u inner join usuarios u2 on u.id_lider=u2.id_usuario WHERE u.id_usuario = ".$id_lider." ")->result_array();
-
-             /* $getLider = $this->db->query("SELECT u.gerente_id as lider2 
-             FROM usuarios u 
-             WHERE u.id_usuario = ".$id_lider." ")->result_array();*/
-             //SI HUBO UN CAMBIO DE ROL
-             if($rol_actual == 7 && $rol_seleccionado == 9){
-                     //SE CAMBIO DE ASESOR A COORDINADOR
-                     $data = array(
-                         "id_coordinador" => $id_usuario,
-                         "id_gerente" => $id_lider,
-                         "fecha_modificacion" => date("Y-m-d H:i:s"),
-                         "modificado_por" => $this->session->userdata('id_usuario')
-                     );
-                     $dataCH = array("idasesor" => $id_usuario,
-                     "idpuesto" => 9,
-                     "idgerente" => $id_lider,
-                     "idcoordinador" => $id_usuario,
-                     "idsedech" => $sedeCH,
-                     "idsucursalch" => $sucursal);
-
-                     $datosCH['dcontrato']['idpuesto'] = 9;
-                     $datosCH['dcontrato']['idgerente'] = $id_lider;
-                     $datosCH['dcontrato']['idcoordinador'] = $id_usuario;
-                     $datosCH['dcontrato']['idsedech'] = $sedeCH;
-                     $datosCH['dcontrato']['idsucursalch'] = $sucursal;
-
-                     $resultado = $this->Usuarios_modelo->ServicePostCH($url,$datosCH);
-             }else if($rol_actual == 9 && $rol_seleccionado == 7){
-                 //SE CAMBIO DE COORDINADOR A ASESOR
-                 $data = array(
-                     "id_coordinador" => $id_lider,
-                     "id_gerente" => $getLider[0]['lider2'],
-                     "fecha_modificacion" => date("Y-m-d H:i:s"),
-                     "modificado_por" => $this->session->userdata('id_usuario')
-                 );
-                 $dataCH = array("idasesor" => $id_usuario,
-                     "idpuesto" => 7,
-                     "idcoordinador" => $id_lider,
-                     "idgerente" => $getLider[0]['lider2'],
-                     "idsedech" => $sedeCH,
-                     "idsucursalch" => $sucursal);
-
-                     $datosCH['dcontrato']['idpuesto'] = 7;
-                     $datosCH['dcontrato']['idgerente'] = $getLider[0]['lider2'];
-                     $datosCH['dcontrato']['idcoordinador'] =$id_lider;
-                     $datosCH['dcontrato']['idsedech'] = $sedeCH;
-                     $datosCH['dcontrato']['idsucursalch'] = $sucursal;
-
-                     $resultado = $this->Usuarios_modelo->ServicePostCH($url,$datosCH);
-             }else if($rol_actual == 9 && $rol_seleccionado == 3){
-                 //SE CAMBIO DE COORDINADOR A GERENTE
-                 $data = array(
-                     "id_coordinador" => $id_usuario,
-                     "id_gerente" => $id_usuario,
-                     "fecha_modificacion" => date("Y-m-d H:i:s"),
-                     "modificado_por" => $this->session->userdata('id_usuario')
-                 );
-                 $dataCH = array("idasesor" => $id_usuario,
-                 "idpuesto" => 3,
-                 "idgerente" => $id_usuario,
-                 "idcoordinador" => $id_usuario,
-                 "idsedech" => $sedeCH,
-                 "idsucursalch" => $sucursal);
-
-                 $datosCH['dcontrato']['idpuesto'] = 3;
-                 $datosCH['dcontrato']['idgerente'] = $id_usuario;
-                 $datosCH['dcontrato']['idcoordinador'] =$id_usuario;
-                 $datosCH['dcontrato']['idsedech'] = $sedeCH;
-                 $datosCH['dcontrato']['idsucursalch'] = $sucursal;
-
-
-                 $resultado = $this->Usuarios_modelo->ServicePostCH($url,$datosCH);
-             }else if($rol_actual == 3 && $rol_seleccionado == 9){
-                 //SE CAMBIO DE GERENTE A COORDINADOR
-                 $data = array(
-                     "id_coordinador" => $id_usuario,
-                     "id_gerente" => $id_lider,
-                     "fecha_modificacion" => date("Y-m-d H:i:s"),
-                     "modificado_por" => $this->session->userdata('id_usuario')
-                 );
-                 $dataCH = array("idasesor" => $id_usuario,
-                 "idpuesto" => 9,
-                 "idgerente" => $id_lider,
-                 "idcoordinador" => $id_usuario,
-                 "idsedech" => $sedeCH,
-                 "idsucursalch" => $sucursal);
-
-
-                 $datosCH['dcontrato']['idpuesto'] = 9;
-                 $datosCH['dcontrato']['idgerente'] = $id_lider;
-                 $datosCH['dcontrato']['idcoordinador'] =$id_usuario;
-                 $datosCH['dcontrato']['idsedech'] = $sedeCH;
-                 $datosCH['dcontrato']['idsucursalch'] = $sucursal;
-                 print_r($datosCH);
-                 $resultado = $this->Usuarios_modelo->ServicePostCH($url,$datosCH);
-             }
-
-         }
-
-        return $resultado;
-         }
+        $resultado = 0;
+              //$url='https://prueba.gphsis.com/RHCV/index.php/WS/movimiento_interno_asesor';
+              //RUTA DE PRUEBAS
+              $url = "https://prueba.gphsis.com/RHCV/index.php/WS/movimiento_interno_asesor_v2";
+              //RUTA DE PRODUCCIÓN
+              //$url="https://rh.gphsis.com/index.php/WS/movimiento_interno_asesor";
+                 if($rol_seleccionado == $rol_actual){
+                     //ENTONCES NO HUBO UN CAMBIO DE ROL
+                     $query = $this->db->query("SELECT * FROM usuarios WHERE id_usuario = ".$id_usuario." and id_lider=".$id_lider." ")->result_array();
+                     if(count($query) == 0){
+                         //ENTONCES SI CAMBIO DE LIDER
+                        /* $getLider = $this->db->query("SELECT u.gerente_id as lider2 
+                         FROM usuarios u 
+                         WHERE u.id_usuario = ".$id_lider." ")->result_array();*/
+                         $getLider = $this->db->query("SELECT u.id_usuario as lider,u2.id_usuario as lider2 FROM usuarios u inner join usuarios u2 on u.id_lider=u2.id_usuario WHERE u.id_usuario = ".$id_lider." ")->result_array();
+                                     if($rol_actual == 7){
+                                             //ASESOR, CONSULTAR LOS PROSPECTOS QUE TIENE ASIGNADOS DE TIPO 0 
+                                          $data = array(
+                                                 "id_coordinador" => $id_lider,
+                                                 "id_gerente" => $getLider[0]['lider2'],
+                                                 "fecha_modificacion" => date("Y-m-d H:i:s"),
+                                                 "modificado_por" => $this->session->userdata('id_usuario')
+                                             );
+                                             /*$dataCH = array("idasesor" => $id_usuario,
+                                                          "idpuesto" => 7,
+                                                          "idgerente" => $getLider[0]['lider2'],
+                                                          "idcoordinador" => $id_lider,
+                                                          "idsedech" => $sedeCH,
+                                                          "idsucursalch" => $sucursal);*/
+                                                          $datosCH['dcontrato']['idpuesto'] = 7;
+                                                          $datosCH['dcontrato']['idgerente'] = $getLider[0]['lider2'];
+                                                          $datosCH['dcontrato']['idcoordinador'] = $id_lider;
+                                                          $datosCH['dcontrato']['idsedech'] = $sedeCH;
+                                                          $datosCH['dcontrato']['idsucursalch'] = $sucursal;
+        
+                                                          
+                                           $resultado = $this->Usuarios_modelo->ServicePostCH($url,$datosCH);
+                                     }else if($rol_actual == 9){
+                                         $data = array(
+                                             "id_coordinador" => $id_usuario,
+                                             "id_gerente" => $id_lider,
+                                             "fecha_modificacion" => date("Y-m-d H:i:s"),
+                                             "modificado_por" => $this->session->userdata('id_usuario')
+                                         );
+                                         $dataCH = array("idasesor" => $id_usuario,
+                                         "idpuesto" => 9,
+                                         "idgerente" => $id_lider,
+                                         "idcoordinador" => $id_usuario,
+                                         "idsedech" => $sedeCH,
+                                         "idsucursalch" => $sucursal);
+                                       $resultado = $this->Usuarios_modelo->ServicePostCH($url,$datosCH);
+                                    $datosCH['dcontrato']['idpuesto'] = 9;
+                                    $datosCH['dcontrato']['idgerente'] = $id_lider;
+                                    $datosCH['dcontrato']['idcoordinador'] = $id_usuario;
+                                    $datosCH['dcontrato']['idsedech'] = $sedeCH;
+                                    $datosCH['dcontrato']['idsucursalch'] = $sucursal;
+        
+                                     }else if($rol_actual == 3){
+                                         $data = array(
+                                             "id_coordinador" => $id_usuario,
+                                             "id_gerente" => $id_usuario,
+                                             "fecha_modificacion" => date("Y-m-d H:i:s"),
+                                             "modificado_por" => $this->session->userdata('id_usuario')
+                                         );
+                                         $dataCH = array("idasesor" => $id_usuario,
+                                         "idpuesto" => 3,
+                                         "idgerente" => $id_usuario,
+                                         "idcoordinador" => $id_usuario,
+                                         "idsedech" => $sedeCH,
+                                         "idsucursalch" => $sucursal);
+        
+                                         $datosCH['dcontrato']['idpuesto'] = 3;
+                                         $datosCH['dcontrato']['idgerente'] = $id_usuario;
+                                         $datosCH['dcontrato']['idcoordinador'] = $id_usuario;
+                                         $datosCH['dcontrato']['idsedech'] = $sedeCH;
+                                         $datosCH['dcontrato']['idsucursalch'] = $sucursal;
+                                         $resultado = $this->Usuarios_modelo->ServicePostCH($url,$datosCH);
+             
+                                     }
+                     }else{
+                         //NO CAMBIO DE LIDER Y TERMINA EL PROCESO, (SOLO SE ACTUALIZA SU INFO)
+                         $getLider = $this->db->query("SELECT u.id_usuario as lider,u2.id_usuario as lider2 FROM usuarios u inner join usuarios u2 on u.id_lider=u2.id_usuario WHERE u.id_usuario = ".$id_lider." ")->result_array();
+        
+                      /*   $getLider = $this->db->query("SELECT u.gerente_id as lider2 
+                         FROM usuarios u 
+                         WHERE u.id_usuario = ".$id_lider." ")->result_array();*/
+                         $dataCH = array("idasesor" => $id_usuario,
+                         "idpuesto" => $rol_actual,
+                         "idgerente" => $getLider[0]['lider2'],
+                         "idcoordinador" => $id_lider,
+                         "idsedech" => $sedeCH,
+                         "idsucursalch" => $sucursal);
+        
+                         $datosCH['dcontrato']['idpuesto'] = $rol_actual;
+                         $datosCH['dcontrato']['idgerente'] = $getLider[0]['lider2'];
+                         $datosCH['dcontrato']['idcoordinador'] = $id_lider;
+                         $datosCH['dcontrato']['idsedech'] = $sedeCH;
+                         $datosCH['dcontrato']['idsucursalch'] = $sucursal;
+                         //print_r(json_decode($datosCH,JSON_UNESCAPED_UNICODE));
+                         $resultado = $this->Usuarios_modelo->ServicePostCH($url,$datosCH);
+                     }
+                 }else{
+                     //$resultado=false;
+                     $getLider = $this->db->query("SELECT u.id_usuario as lider,u2.id_usuario as lider2 FROM usuarios u inner join usuarios u2 on u.id_lider=u2.id_usuario WHERE u.id_usuario = ".$id_lider." ")->result_array();
+        
+                     /* $getLider = $this->db->query("SELECT u.gerente_id as lider2 
+                     FROM usuarios u 
+                     WHERE u.id_usuario = ".$id_lider." ")->result_array();*/
+                     //SI HUBO UN CAMBIO DE ROL
+                     if($rol_actual == 7 && $rol_seleccionado == 9){
+                             //SE CAMBIO DE ASESOR A COORDINADOR
+                             $data = array(
+                                 "id_coordinador" => $id_usuario,
+                                 "id_gerente" => $id_lider,
+                                 "fecha_modificacion" => date("Y-m-d H:i:s"),
+                                 "modificado_por" => $this->session->userdata('id_usuario')
+                             );
+                             $dataCH = array("idasesor" => $id_usuario,
+                             "idpuesto" => 9,
+                             "idgerente" => $id_lider,
+                             "idcoordinador" => $id_usuario,
+                             "idsedech" => $sedeCH,
+                             "idsucursalch" => $sucursal);
+        
+                             $datosCH['dcontrato']['idpuesto'] = 9;
+                             $datosCH['dcontrato']['idgerente'] = $id_lider;
+                             $datosCH['dcontrato']['idcoordinador'] = $id_usuario;
+                             $datosCH['dcontrato']['idsedech'] = $sedeCH;
+                             $datosCH['dcontrato']['idsucursalch'] = $sucursal;
+        
+                             $resultado = $this->Usuarios_modelo->ServicePostCH($url,$datosCH);
+                     }else if($rol_actual == 9 && $rol_seleccionado == 7){
+                         //SE CAMBIO DE COORDINADOR A ASESOR
+                         $data = array(
+                             "id_coordinador" => $id_lider,
+                             "id_gerente" => $getLider[0]['lider2'],
+                             "fecha_modificacion" => date("Y-m-d H:i:s"),
+                             "modificado_por" => $this->session->userdata('id_usuario')
+                         );
+                         $dataCH = array("idasesor" => $id_usuario,
+                             "idpuesto" => 7,
+                             "idcoordinador" => $id_lider,
+                             "idgerente" => $getLider[0]['lider2'],
+                             "idsedech" => $sedeCH,
+                             "idsucursalch" => $sucursal);
+        
+                             $datosCH['dcontrato']['idpuesto'] = 7;
+                             $datosCH['dcontrato']['idgerente'] = $getLider[0]['lider2'];
+                             $datosCH['dcontrato']['idcoordinador'] =$id_lider;
+                             $datosCH['dcontrato']['idsedech'] = $sedeCH;
+                             $datosCH['dcontrato']['idsucursalch'] = $sucursal;
+        
+                             $resultado = $this->Usuarios_modelo->ServicePostCH($url,$datosCH);
+                     }else if($rol_actual == 9 && $rol_seleccionado == 3){
+                         //SE CAMBIO DE COORDINADOR A GERENTE
+                         $data = array(
+                             "id_coordinador" => $id_usuario,
+                             "id_gerente" => $id_usuario,
+                             "fecha_modificacion" => date("Y-m-d H:i:s"),
+                             "modificado_por" => $this->session->userdata('id_usuario')
+                         );
+                         $dataCH = array("idasesor" => $id_usuario,
+                         "idpuesto" => 3,
+                         "idgerente" => $id_usuario,
+                         "idcoordinador" => $id_usuario,
+                         "idsedech" => $sedeCH,
+                         "idsucursalch" => $sucursal);
+        
+                         $datosCH['dcontrato']['idpuesto'] = 3;
+                         $datosCH['dcontrato']['idgerente'] = $id_usuario;
+                         $datosCH['dcontrato']['idcoordinador'] =$id_usuario;
+                         $datosCH['dcontrato']['idsedech'] = $sedeCH;
+                         $datosCH['dcontrato']['idsucursalch'] = $sucursal;
+        
+        
+                         $resultado = $this->Usuarios_modelo->ServicePostCH($url,$datosCH);
+                     }else if($rol_actual == 3 && $rol_seleccionado == 9){
+                         //SE CAMBIO DE GERENTE A COORDINADOR
+                         $data = array(
+                             "id_coordinador" => $id_usuario,
+                             "id_gerente" => $id_lider,
+                             "fecha_modificacion" => date("Y-m-d H:i:s"),
+                             "modificado_por" => $this->session->userdata('id_usuario')
+                         );
+                         $dataCH = array("idasesor" => $id_usuario,
+                         "idpuesto" => 9,
+                         "idgerente" => $id_lider,
+                         "idcoordinador" => $id_usuario,
+                         "idsedech" => $sedeCH,
+                         "idsucursalch" => $sucursal);
+        
+        
+                         $datosCH['dcontrato']['idpuesto'] = 9;
+                         $datosCH['dcontrato']['idgerente'] = $id_lider;
+                         $datosCH['dcontrato']['idcoordinador'] =$id_usuario;
+                         $datosCH['dcontrato']['idsedech'] = $sedeCH;
+                         $datosCH['dcontrato']['idsucursalch'] = $sucursal;
+                         $resultado = $this->Usuarios_modelo->ServicePostCH($url,$datosCH);
+                     }
+        
+                 }
+               //  print_r($resultado);
+                 $r = json_decode($resultado);
+               //  print_r($r);
+                if(isset($r->resultado)){
+                    if($r->resultado == 1){
+                        return json_decode($r->resultado);
+                    }else{
+                        return json_decode(0);
+                    }
+                }else{
+                    return json_decode(0);
+                }
+                 }
 
         function getUsersListByLeader($idUsuario){
             $id_rol = $this->session->userdata('id_rol');
