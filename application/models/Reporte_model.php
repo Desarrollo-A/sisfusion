@@ -700,6 +700,11 @@ class Reporte_model extends CI_Model {
         $id_rol = $this->session->userdata('id_rol');
         $id_usu = $this->session->userdata('id_usuario');
         $id_lid = $this->session->userdata('id_lider');
+<<<<<<< Updated upstream
+        /*if( ($id_rol !== 1 || $id_rol !== 4) ){
+=======
+=======
+>>>>>>> Stashed changes
         if( ($id_rol !== 1 || $id_rol !== 4) ){
             if ($id_rol == 9) {
                 $filtro_query = "AND (u1.id_usuario = ".$id_usu." AND u1.id_rol = ".$id_rol.")";
@@ -718,6 +723,22 @@ class Reporte_model extends CI_Model {
                 ((u1.subdirector_id = ".$id_lid." OR u1.regional_id = ".$id_lid.") AND u1.id_rol = ".$id_rol.") OR
                 ((u2.subdirector_id = ".$id_lid." OR u1.regional_id = ".$id_lid.") AND u2.id_rol = ".$id_rol.") )";
             }
+<<<<<<< Updated upstream
+        }*/
+        if( ($id_rol !== 1 || $id_rol !== 4) ){
+            if ($id_rol == 9 || $id_rol == 7) { // COORDINADOR O ASESOR
+                $filtro_query = "AND cl.id_coordinador = $id_usu OR cl.id_asesor = $id_usu";
+            }elseif($id_rol == 3) { // GERENTE
+                $filtro_query = "AND cl.id_gerente = $id_usu";
+            }elseif($id_rol == 2){ //DIRECTORE REGIONAL O SUBDIRECTOR
+                $filtro_query = "AND cl.id_subdirector = $id_usu OR cl.id_regional = $id_usu";
+            }elseif($id_rol == 6) { // ASISNTENTE DE GERENTE
+                $filtro_query = "AND cl.id_gerente = $id_lid";
+            }elseif($id_rol == 5){ // ASISTENTE DE SUBDIRECCIÓN
+                $filtro_query = "AND cl.id_subdirector = $id_lid OR cl.id_regional = $id_lid";
+            }
+=======
+>>>>>>> Stashed changes
         }
         $data = $this->db->query("SELECT lo.idLote idLote, CAST(re.descripcion AS VARCHAR(150)) nombreResidencial, UPPER(co.nombre) nombreCondominio, UPPER(lo.nombreLote) nombreLote, 
         UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) nombreCliente,
@@ -790,7 +811,7 @@ class Reporte_model extends CI_Model {
         cl.status, se.nombre, tv.tipo_venta, lo.referencia, vc.id_cliente,
         lo.total, lo.totalNeto2, cl.totalNeto2_cl, cl.fechaApartado, hlo3.modificado, hlo5.modificado,
         CASE co.tipo_lote WHEN 1 THEN 'COMERCIAL' ELSE 'HABITACIONAL' END,
-        CASE lo.casa WHEN 1 THEN 'SÍ' ELSE 'NO' END"); 
+        CASE lo.casa WHEN 1 THEN 'SÍ' ELSE 'NO' END");
         return $data;
     }
     public function getReporteTrimestral($beginDate, $endDate){
