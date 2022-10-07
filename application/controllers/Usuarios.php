@@ -215,6 +215,7 @@ class Usuarios extends CI_Controller
     public function updateUser()
     {
         //RUTA DE PRUEBAS
+        $usersCH=0;
         $ruta = "https://prueba.gphsis.com/RHCV/index.php/WS/movimiento_interno_asesor_v2";
         //RUTA DE PRODUCCIÓN
         //$ruta="https://rh.gphsis.com/index.php/WS/movimiento_interno_asesor";
@@ -231,10 +232,13 @@ class Usuarios extends CI_Controller
                          "dcontrato" => array("forma_pagoch" => $formaPago[0]['nombre']),
                          "idasesor" => $this->input->post("id_usuario")
             );
-        $this->Usuarios_modelo->ServicePostCH($ruta,$dataCH);
+            $usersCH=1;
+            $resultadoCH  =  $this->Usuarios_modelo->ServicePostCH($ruta,$dataCH);
+            $res = json_decode($resultadoCH);
+            $resultadoCH = $res->resultado;
         
         } else {
-            $usersCH=0;
+            
             $sedeCH = 0;
             $sucursal = 0;
             if ($_POST['member_type'] == 3 || $_POST['member_type'] == 7 || $_POST['member_type'] == 9) {
@@ -259,11 +263,13 @@ class Usuarios extends CI_Controller
                             "apellido_materno_persona"=>$this->formatter->eliminar_tildes(strtoupper(trim($_POST['mothers_last_name']))),
                             "RFC"=>strtoupper(trim($_POST['rfc'])),
                             "telefono1"=>$_POST['phone_number'],
+                            //"paramPrueba"=>00,
                             "email_empresarial"=>strtoupper(trim($_POST['email']))
                                 ),
                                 "dcontrato" => array(),
                                 "idasesor" => $this->input->post("id_usuario")
                         );
+                        
             $resultadoCH = $this->Usuarios_modelo->UpdateProspect($this->input->post("id_usuario"), $_POST['leader'], $_POST['member_type'], $_POST['rol_actual'], $sedeCH, $sucursal,$datosCH);
             }
             $getLider = $this->Services_model->getLider($_POST['leader'],$_POST['member_type']);
@@ -321,7 +327,7 @@ class Usuarios extends CI_Controller
                 $response = $this->Usuarios_modelo->updateUser($data, $this->input->post("id_usuario"));
             }else {
                 $result = json_decode($resultadoCH);
-                if($result->resultado == 1){
+                if($result == 1){
                     $response = $this->Usuarios_modelo->updateUser($data, $this->input->post("id_usuario"));
                 }else{
                     $response = 0;
