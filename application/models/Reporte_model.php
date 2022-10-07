@@ -737,8 +737,9 @@ class Reporte_model extends CI_Model {
 <<<<<<< Updated upstream
         /*if( ($id_rol !== 1 || $id_rol !== 4) ){
 =======
-        if( ($id_rol !== 1 || $id_rol !== 4) ){
+=======
 >>>>>>> Stashed changes
+        if( ($id_rol !== 1 || $id_rol !== 4) ){
             if ($id_rol == 9) {
                 $filtro_query = "AND (u1.id_usuario = ".$id_usu." AND u1.id_rol = ".$id_rol.")";
             }elseif($id_rol == 7){
