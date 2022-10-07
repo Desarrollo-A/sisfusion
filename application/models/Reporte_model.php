@@ -790,7 +790,7 @@ class Reporte_model extends CI_Model {
         cl.status, se.nombre, tv.tipo_venta, lo.referencia, vc.id_cliente,
         lo.total, lo.totalNeto2, cl.totalNeto2_cl, cl.fechaApartado, hlo3.modificado, hlo5.modificado,
         CASE co.tipo_lote WHEN 1 THEN 'COMERCIAL' ELSE 'HABITACIONAL' END,
-        CASE lo.casa WHEN 1 THEN 'SÍ' ELSE 'NO' END"); 
+        CASE lo.casa WHEN 1 THEN 'SÍ' ELSE 'NO' END");
         return $data;
     }
     public function getReporteTrimestral($beginDate, $endDate){
