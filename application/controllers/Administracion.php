@@ -892,6 +892,21 @@ class Administracion extends CI_Controller{
         }
         echo json_encode($data);
     }
+
+	public function repAdministracion(){
+		$datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
+        /*-------------------------------------------------------------------------------*/
+        $this->load->view('template/header');
+        $this->load->view("administracion/vista_reporte_clientes", $datos);
+	}
+	public function getRepoAdmin(){
+		$data = $this->Administracion_model->getRepAdmon();
+        if($data != null) {
+            echo json_encode($data);
+        } else {
+            echo json_encode(array());
+        }
+	}
 }
 
 
