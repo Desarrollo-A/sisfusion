@@ -304,6 +304,25 @@ class Usuarios extends CI_Controller
                 "rfc" => strtoupper(trim($_POST['rfc'])),
                 "correo" => strtoupper(trim($_POST['email'])),
                 "telefono" => strtoupper(trim($_POST['phone_number'])),
+                "telefono" => $_POST['phone_number'],
+                "id_sede" => $_POST['headquarter'],
+                "id_rol" => $_POST['member_type'],
+                "id_lider" => $_POST['leader'],
+                "usuario" => trim($_POST['username']),
+                "contrasena" => encriptar($_POST['contrasena']),
+                "fecha_modificacion" => date("Y-m-d H:i:s"),
+                "modificado_por" => $this->session->userdata('id_usuario'),
+                "sedech" => $sedeCH,
+                "sucursalch" => $sucursal
+
+            );
+           /* $data = array(
+                "nombre" => $this->formatter->eliminar_tildes(strtoupper(trim($_POST['name']))),
+                "apellido_paterno" => $this->formatter->eliminar_tildes(strtoupper(trim($_POST['last_name']))),
+                "apellido_materno" => $this->formatter->eliminar_tildes(strtoupper(trim($_POST['mothers_last_name']))),
+                "rfc" => strtoupper(trim($_POST['rfc'])),
+                "correo" => strtoupper(trim($_POST['email'])),
+                "telefono" => strtoupper(trim($_POST['phone_number'])),
                 "id_sede" => $_POST['headquarter'],
                 "id_rol" => $_POST['member_type'],
                 "id_lider" => $id_lider,
@@ -320,7 +339,7 @@ class Usuarios extends CI_Controller
                 "sexo" => !empty($_POST['sexo']) ? $_POST['sexo'] : 'S',
                 "tiene_hijos" => !empty($_POST['hijos']) ? $_POST['hijos'] : "NO" ,
                 "hijos_12" => !empty($_POST['noHijos']) ? $_POST['noHijos'] : 0   
-               );
+               );*/
             }
 
             if($usersCH == 0){
