@@ -611,6 +611,10 @@ function fillFields (v) {
     $('#sexo').selectpicker('refresh');
     $('#hijos').selectpicker('refresh');
 
+    $('#payment_method').selectpicker('refresh');
+    $('#headquarter').selectpicker('refresh');
+    $('#member_type').selectpicker('refresh');
+
     if(v.id_rol == 7 || v.id_rol== 3 || v.id_rol == 9){
         $('#ch'). show();
         document.getElementById("sedech").removeAttribute("required");
