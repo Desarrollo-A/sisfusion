@@ -179,7 +179,6 @@ class Suma extends CI_Controller
         
             $up_b = $this->Suma_model->update_acepta_solicitante($id_pago_i);
             $ins_b = $this->Suma_model->insert_historial($data);
-            // $this->Comisiones_model->changeEstatusOpinion($id_user_Vl);
             if ($formaPagoUsuario == 5) {
                 $this->PagoInvoice_model->insertMany($pagoInvoice);
             }
@@ -191,7 +190,6 @@ class Suma extends CI_Controller
                 $data_response = 0;
                 echo json_encode($data_response);
             } 
-            
         }
         else{
             $data_response = 0;
@@ -350,27 +348,40 @@ class Suma extends CI_Controller
 
     public function getAsimiladosRevision(){
         echo json_encode($this->Suma_model->getAsimiladosRevision()->result_array());
-        
     }
 
-    function despausar_solicitud(){
-        $respuesta = array( FALSE );
-        
-        if($this->input->post("value_pago")){
-            $validate = $this->input->post("value_pago");
-      
-            switch($validate){
-                case 1:
-                    $respuesta = array($this->Suma_model->update_estatus_pausa($this->input->post("id_pago_i"), $this->input->post("observaciones"), $this->input->post("estatus") ));
-                break;
-        
-                case 2:
-                    $respuesta = array($this->Suma_model->update_estatus_despausa($this->input->post("id_pago_i"), $this->input->post("observaciones"), $this->input->post("estatus")));
-                break;
-            }  
-        }
+    public function setPausarDespausarComision(){
+        $idUsuario = $this->session->userdata('id_usuario');
+        $idRol= $this->session->userdata('id_rol');
+        $idPago = $this->input->post("id_pago");
+        $estatus = $this->input->post("estatus");
+        $obs = $this->input->post("observaciones");
+        $estatus = ( $estatus == 2 && $idRol == 65 ) ? 4 : ( $estatus == 2 && $idRol == 31 ) ? 5 : 2;
+        $respuesta = $this->Suma_model->setPausarDespausarComision($estatus, $idPago, $idUsuario, $obs);
+
         echo json_encode( $respuesta );
-      }
+    }
+
+    public function aceptoInternomexAsimilados(){
+        $idUsuario = $this->session->userdata('id_usuario');
+        $idsComisiones = explode(",",$this->input->post('idcomision'));
+
+        for ($i = 0; $i < count($idsComisiones); $i++) {
+            $updateArrayData[] = array(
+                'id_pago_suma' => $idsComisiones[$i],
+                'estatus' => 3
+            );
+
+            $insertArrayData[]=array(
+                'id_pago' => $idsComisiones[$i],
+                'id_usuario' =>  $idUsuario,
+                'fecha_movimiento' => date('Y-m-d H:i:s'),
+                'estatus' => 3,
+                'comentario' =>  'SOCIO MADERAS MANDA A INTERNOMEX' 
+            );
+        }
+
+        $reponse = $this->Suma_model->setAsimiladosInternomex($updateArrayData, $insertArrayData);
+        echo json_encode( $reponse );
+    }
 }
-
-

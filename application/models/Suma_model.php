@@ -40,7 +40,7 @@ class Suma_model extends CI_Model
         if ($this->db->trans_status() === FALSE) { // Hubo errores en la consulta, entonces se cancela la transacción.
             $this->db->trans_rollback();
             return false;
-        } else { // Se realize primer insert correctamente
+        } else { // Se realiza primer insert correctamente
             $this->db->trans_commit();
             return true;
         }
@@ -107,7 +107,7 @@ class Suma_model extends CI_Model
 
     function getAsimiladosRevision(){
         $datos = $this->db->query("SELECT ps.id_pago_suma, ps.referencia, CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) nombreComisionista,
-        se.nombre sede, oxc.nombre estatus, ps.total_comision, (CASE us.forma_pago WHEN 3 THEN (((100-se.impuesto)/100)* ps.total_comision) ELSE ps.total_comision END) impuesto,
+        se.nombre sede, oxc.nombre estatusString, ps.estatus, ps.total_comision, (CASE us.forma_pago WHEN 3 THEN (((100-se.impuesto)/100)* ps.total_comision) ELSE ps.total_comision END) impuesto,
         ps.porcentaje_comision, us.id_usuario
         FROM pagos_suma ps
         INNER JOIN usuarios us ON us.id_usuario = ps.id_usuario
@@ -116,5 +116,25 @@ class Suma_model extends CI_Model
         WHERE us.forma_pago = 3 AND ps.estatus IN (2, 4, 5)");
 
         return $datos;
+    }
+
+    function setPausarDespausarComision($estatus, $idPago, $idUsuario, $obs){
+        $leyendaStatus = ( $estatus == 5 || $estatus == 4 ) ? 'PAUSÓ' : 'ACTIVÓ';
+
+        $this->db->query("INSERT INTO historial_suma VALUES ($idPago, $idUsuario, GETDATE(), $estatus, 'SE ".$leyendaStatus." COMISIÓN, MOTIVO: ".strtoupper($obs)." ')");
+        return $this->db->query("UPDATE pagos_suma SET estatus = $estatus WHERE id_pago_suma = $idPago");
+    }
+
+    function setAsimiladosInternomex($updateArray, $insertArray){
+        $this->db->trans_begin();
+        $c = $this->db->update_batch('pagos_suma', $updateArray, 'id_pago_suma');
+        $b = $this->db->insert_batch('historial_suma', $insertArray);
+        if ($this->db->trans_status() === FALSE) { // Hubo errores en la consulta, entonces se cancela la transacción.
+            $this->db->trans_rollback();
+            return false;
+        } else { // Se realize primer insert correctamente
+            $this->db->trans_commit();
+            return true;
+        }
     }
 }
