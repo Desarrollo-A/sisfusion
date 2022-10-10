@@ -44,7 +44,7 @@
                                     <table class="table-striped table-hover" id="lotesTrimestral"name="lotesTrimestral">
                                         <thead>
                                             <tr>
-                                                <th>RESIDENCIAL</th>
+                                                <th>PROYECTO</th>
                                                 <th>CONDOMINIO</th>
                                                 <th>LOTE</th>
                                                 <th>PRECIO FINAL</th>

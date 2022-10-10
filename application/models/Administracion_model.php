@@ -156,7 +156,7 @@ class Administracion_model extends CI_Model {
         INNER JOIN condominios cn ON cn.idCondominio = lo.idCondominio
         INNER JOIN residenciales re ON re.idResidencial = cn.idResidencial
         INNER JOIN (SELECT idCliente, idLote, MAX(modificado) AS modificado FROM historial_lotes WHERE idStatusContratacion = 9 GROUP BY idCliente, idLote) AS hls ON hls.idCliente = cl.id_cliente AND HLS.idLote = lo.idLote
-        WHERE isNULL(noRecibo, '') != 'CANCELADO'  AND isNULL(isNULL(cl.tipo_venta_cl, lo.tipo_venta), 0) IN (0, 1, 2) AND cl.status = 0 AND hl.fechaLiberacion >= '2022-09-22 00:00:00.000'
+        WHERE isNULL(noRecibo, '') != 'CANCELADO'  AND isNULL(isNULL(cl.tipo_venta_cl, lo.tipo_venta), 0) IN (0, 1, 2) AND cl.status = 0 AND hl.fechaLiberacion >= '202-09-22 00:00:00.000'
         ORDER BY nombreCliente        
         ");
         return $query->result_array();

@@ -25,12 +25,13 @@
                                 <i class="material-icons">list</i>
                             </div>
                             <div class="card-content">
-                                <h3 class="card-title center-align">Reporte Administracion</h3>
+                                <h3 class="card-title center-align">Reporte de lotes Liberados</h3>
+                                <p class="center-align">Por medio de este panel podrás visualizar y descargar una plantilla en la cual se mostraran los lotes que ya se les haya asignado un estatus 9 y posteriormente fueron liberados.</p>
                                 <div class="material-datatables">
                                     <table class="table-striped table-hover" id="repAdministracion"name="repAdministracion">
                                         <thead>
                                             <tr>
-                                                <th>RESIDENCIAL</th>
+                                                <th>PROYECTO</th>
                                                 <th>CONDOMINIO</th>
                                                 <th>LOTE</th>
                                                 <th>ID LOTE</th>
