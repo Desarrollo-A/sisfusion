@@ -735,7 +735,6 @@ class Reporte_model extends CI_Model {
         $id_usu = $this->session->userdata('id_usuario');
         $id_lid = $this->session->userdata('id_lider');
         if( ($id_rol !== 1 || $id_rol !== 4) ){
-<<<<<<< Updated upstream
             if ($id_rol == 9 || $id_rol == 7) { // COORDINADOR O ASESOR
                 $filtro_query = "AND cl.id_coordinador = $id_usu OR cl.id_asesor = $id_usu";
             }elseif($id_rol == 3) { // GERENTE
@@ -746,24 +745,6 @@ class Reporte_model extends CI_Model {
                 $filtro_query = "AND cl.id_gerente = $id_lid";
             }elseif($id_rol == 5){ // ASISTENTE DE SUBDIRECCIÓN
                 $filtro_query = "AND cl.id_subdirector = $id_lid OR cl.id_regional = $id_lid";
-=======
-            if ($id_rol == 9) {
-                $filtro_query = "AND (u1.id_usuario = ".$id_usu." AND u1.id_rol = ".$id_rol.")";
-            }elseif($id_rol == 7){
-                $filtro_query = "AND (u0.id_usuario = ".$id_usu." AND u0.id_rol = ".$id_rol.")";
-            }elseif($id_rol == 3) {
-                $filtro_query = "AND (u2.id_usuario = ".$id_usu." AND u2.id_rol = ".$id_rol.")";
-            }elseif($id_rol == 2){
-                $filtro_query = "AND( ((u0.subdirector_id = ".$id_usu." OR u0.regional_id = ".$id_usu.") AND u0.id_rol = ".$id_rol.") OR
-                ((u1.subdirector_id = ".$id_usu." OR u1.regional_id = ".$id_usu.") AND u1.id_rol = ".$id_rol.") OR
-                ((u2.subdirector_id = ".$id_usu." OR u1.regional_id = ".$id_usu.") AND u2.id_rol = ".$id_rol.") )";
-            }elseif($id_rol == 6) {
-                $filtro_query = "AND (u2.id_lider = ".$id_lid." AND u2.id_rol = ".$id_rol.")";
-            }elseif($id_rol == 5){
-                $filtro_query = "AND( ((u0.subdirector_id = ".$id_lid." OR u0.regional_id = ".$id_lid.") AND u0.id_rol = ".$id_rol.") OR
-                ((u1.subdirector_id = ".$id_lid." OR u1.regional_id = ".$id_lid.") AND u1.id_rol = ".$id_rol.") OR
-                ((u2.subdirector_id = ".$id_lid." OR u1.regional_id = ".$id_lid.") AND u2.id_rol = ".$id_rol.") )";
->>>>>>> Stashed changes
             }
         }
         $data = $this->db->query("SELECT lo.idLote idLote, CAST(re.descripcion AS VARCHAR(150)) nombreResidencial, UPPER(co.nombre) nombreCondominio, UPPER(lo.nombreLote) nombreLote, 
