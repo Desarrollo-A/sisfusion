@@ -268,7 +268,7 @@
                                     <div class="modal fade" id="modalData" tabindex="-1" role="dialog"
                                         aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static"
                                         data-keyboard="false">
-                                        <div class="modal-dialog modal-lg">
+                                        <div class="modal-dialog modal-md">
                                             <div class="modal-content">
                                                 <div class="modal-header">
                                                     <button type="button" class="close" data-dismiss="modal"
@@ -282,14 +282,14 @@
                                                             <div class="form-group label-floating div_name">
                                                                 <label class="control-label" >Usuario : </label>
                                                             </div>
-                                                            <input  class="form-control" type="text" id="usuarioPC" name="usuarioPC" value=""></label>
+                                                            <input  class="form-control" readonly type="text" id="usuarioPC" name="usuarioPC" value=""></label>
                                                           
                                                         </div>
                                                         <div class="col-sm-6">
                                                             <div class="form-group label-floating div_name">
                                                                 <label class="control-label" >Contraseña:</label>
                                                             </div>
-                                                            <input  class="form-control" type="text" id="passPC" name="passPC" value="" ></label>
+                                                            <input  class="form-control" readonly type="text" id="passPC" name="passPC" value="" ></label>
                                                         </div>
                                                     </div>
                                                     <div class="modal-footer">
