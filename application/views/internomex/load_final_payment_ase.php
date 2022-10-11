@@ -48,7 +48,7 @@
                                           
                                             <input class="d-none generate1" type="rad io" name="radio" id="one">
                                             <label for="one" class="w-50">Cargar</label>
-                                            <input class="d-none find-results" type="radio" name="radio" id="two">
+                                            <input class="d-none find-results" type="radio" checked name="radio" id="two">
                                             <label for="two" class="w-50">Consultar</label>
                                         </div>
                                     </div>
@@ -82,7 +82,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="table-responsive box-table hide">
+                            <div class="table-responsive box-table ">
                                          
                                          <table id="tableLotificacion" name="tableLotificacion" class="table-striped table-hover">
                                              <thead>
