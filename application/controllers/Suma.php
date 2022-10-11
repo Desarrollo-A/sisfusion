@@ -346,8 +346,51 @@ class Suma extends CI_Controller
         $this->load->view("Ventas/revision_remanentes_suma", $datos);
     }
 
+    public function revision_facturas_xml(){
+        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
+        $datos['sub_menu'] = $this->get_menu->get_submenu_data($this->session->userdata('id_rol'), $this->session->userdata('id_usuario'));
+
+        $this->load->view('template/header');
+        $this->load->view("Ventas/revision_xml_suma", $datos);
+    }
+
+    public function revision_asimilados_intmex(){
+        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
+        $datos['sub_menu'] = $this->get_menu->get_submenu_data($this->session->userdata('id_rol'), $this->session->userdata('id_usuario'));
+
+        $this->load->view('template/header');
+        $this->load->view("Ventas/revision_INTMEXasimilados_suma", $datos);  
+    }
+
+    public function revision_remanentes_intmex(){
+        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
+        $datos['sub_menu'] = $this->get_menu->get_submenu_data($this->session->userdata('id_rol'), $this->session->userdata('id_usuario'));
+
+        $this->load->view('template/header');
+        $this->load->view("Ventas/revision_INTMEXremanente_suma", $datos);  
+    }
+
+    public function revision_XML_intmex(){
+        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
+        $datos['sub_menu'] = $this->get_menu->get_submenu_data($this->session->userdata('id_rol'), $this->session->userdata('id_usuario'));
+
+        $this->load->view('template/header');
+        $this->load->view("Ventas/revision_INTMEXxml_suma", $datos);  
+    }
+
     public function getAsimiladosRevision(){
         echo json_encode($this->Suma_model->getAsimiladosRevision()->result_array());
+    }
+
+    public function getAsimiladosRevisionIntMex(){
+        $idRol = $this->input->post("idRol");
+        $idUsuario = $this->input->post("idUsuario");
+
+        echo json_encode($this->Suma_model->getAsimiladosRevisionIntMex($idRol, $idUsuario)->result_array());
+    }
+
+    public function getRemanentesRevision(){
+        echo json_encode($this->Suma_model->getRemanentesRevision()->result_array());
     }
 
     public function setPausarDespausarComision(){
@@ -356,7 +399,7 @@ class Suma extends CI_Controller
         $idPago = $this->input->post("id_pago");
         $estatus = $this->input->post("estatus");
         $obs = $this->input->post("observaciones");
-        $estatus = ( $estatus == 2 && $idRol == 65 ) ? 4 : ( $estatus == 2 && $idRol == 31 ) ? 5 : 2;
+        $estatus = ( $estatus == 2 && $idRol == 65 ) ? 4 : ( $estatus == 3 && $idRol == 31 ) ? 5 : ( $estatus == 5 ) ? 3 : 2;
         $respuesta = $this->Suma_model->setPausarDespausarComision($estatus, $idPago, $idUsuario, $obs);
 
         echo json_encode( $respuesta );
@@ -383,5 +426,22 @@ class Suma extends CI_Controller
 
         $reponse = $this->Suma_model->setAsimiladosInternomex($updateArrayData, $insertArrayData);
         echo json_encode( $reponse );
+    }
+
+    public function pago_internomex(){
+        
+    }
+
+    public function getDatosNuevasXContraloria($proyecto,$condominio){
+    $datos =  $this->Comisiones_model->getDatosNuevasXContraloria()->result_array();
+       echo json_encode( array( "data" => $dat));
+    }
+
+    public function lista_roles(){
+      echo json_encode($this->Suma_model->get_lista_roles()->result_array());
+    }
+
+    public function lista_usuarios($rol,$forma_pago){
+      echo json_encode($this->Suma_model->get_lista_usuarios($rol, $forma_pago)->result_array());
     }
 }
