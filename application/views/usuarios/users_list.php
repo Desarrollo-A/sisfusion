@@ -275,21 +275,21 @@
                                                             aria-hidden="true">
                                                         <i class="material-icons">clear</i>
                                                     </button>
-                                                    <h4 class="modal-title">Usuario y password :</h4>
+                                                    <h4 class="modal-title">Usuario y Contraseña :</h4>
                                                 </div>
                                                     <div class="modal-body">
                                                         <div class="col-sm-6">
                                                             <div class="form-group label-floating div_name">
-                                                                <label class="control-label" >Usuario : </label>
+                                                            <label class="control-label">usuario</label>
                                                             </div>
-                                                            <input  class="form-control" readonly type="text" id="usuarioPC" name="usuarioPC" value=""></label>
+                                                            <input  class="form-control input-gral pl-1 pr-1" readonly type="text" id="usuarioPC" name="usuarioPC" value=""></label>
                                                           
                                                         </div>
                                                         <div class="col-sm-6">
                                                             <div class="form-group label-floating div_name">
-                                                                <label class="control-label" >Contraseña:</label>
+                                                            <label class="control-label">Contraseña</label>
                                                             </div>
-                                                            <input  class="form-control" readonly type="text" id="passPC" name="passPC" value="" ></label>
+                                                            <input  class="form-control input-gral pl-1 pr-1" readonly type="text" id="passPC" name="passPC" value="" ></label>
                                                         </div>
                                                     </div>
                                                     <div class="modal-footer">
