@@ -125,10 +125,15 @@ class Reporte_model extends CI_Model {
     }
 
     public function setFilters($id_rol, $render, $filtro, $leadersList, $comodin2, $id_usuario, $id_lider, $typeTransaction = null, $leader = null) {
+        $current_rol = $this->session->userdata('id_rol');
         if ($id_rol == 7) { // ASESOR
             if ($render == 1) {
-                if ($typeTransaction == null) // SE CONSULTA DESDE EL ROWDETAIL O LA MODAL QUE SE TRAE EL DETALLE DE LOS LOTES
-                    $filtro .= " AND cl.id_asesor = $id_usuario";
+                if ($typeTransaction == null) { // SE CONSULTA DESDE EL ROWDETAIL O LA MODAL QUE SE TRAE EL DETALLE DE LOS LOTES
+                    if ($current_rol == 9) // SE VALIAD EL ROL LOGUEADO SÍ ES COORDINADOR SE AGREGA AND
+                        $filtro .= " AND cl.id_asesor = $id_usuario AND cl.id_coordinador = $leader";
+                    else
+                        $filtro .= " AND cl.id_asesor = $id_usuario";
+                }
                 else // SE CONSULTA DESDE LA TABLA PAPÁ
                     $filtro .= " AND (cl.id_asesor = $id_usuario OR cl.id_coordinador = $id_usuario)";
             }
@@ -151,8 +156,8 @@ class Reporte_model extends CI_Model {
             if ($render == 1) {  // CONSULTADA POR ASISTENTE DE GERENCIA
                 if ($typeTransaction == null) // SE CONSULTA DESDE EL ROWDETAIL O LA MODAL QUE SE TRAE EL DETALLE DE LOS LOTES
                     $filtro .= " AND cl.id_coordinador = $leadersList[1] AND cl.id_gerente = $leadersList[2]";
-                else // SE CONSULTA DESDE LA TABLA PAPÁ
-                    $filtro .= " AND cl.id_gerente = $id_lider";                
+                else // SE CONSULTA DESDE LA TABLA PAPÁ ANTES TENIA ID_GERENTE = $ID_LIDER
+                    $filtro .= " AND cl.id_coordinador = $id_usuario";                 
                 $comodin = "id_asesor";
             } else { // CONSULTA DIRECTOR GENERAL, ASISTENTE DE DIRECCIÓN, FAB Y LIC. GASTÓN, SUBDIRECTOR REGIONAL, ASISTENTES DE SUBDIRECCIÓN REGIONAL
                 if ($typeTransaction == null) // SE CONSULTA DESDE EL ROWDETAIL O LA MODAL QUE SE TRAE EL DETALLE DE LOS LOTES
