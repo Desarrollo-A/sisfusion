@@ -71,7 +71,7 @@ class PaquetesCorrida extends CI_Controller
          * 1.-Mayor a
          * 2.-Rango
          * 3.-Cualquiera
-         */
+         */ 
         if($superficie == 1){ //Mayor a
           $query_superdicie = 'and sup >= '.$fin.' ';
         }else if($superficie == 2){ // Menor a
@@ -239,79 +239,8 @@ class PaquetesCorrida extends CI_Controller
         }
          $this->PaquetesCorrida_model->insertBatch('relaciones',$datosInsertar);
         $cadena_lotes = implode(",", $ArrPAquetes);
-       ///* echo $cadena_lotes;
-        //echo "<br>";
-        //print_r($ArrPAquetes);
-        //print_r($datosInsertar);
         $datosInsertar_x_condominio = array();
         $getPaquetesByLotes = $this->PaquetesCorrida_model->getPaquetesByLotes($desarrollos,$query_superdicie,$query_tipo_lote,$superficie,$inicio,$fin);
-        
-      /*  $arrayDatos = array();
-        for ($o=0; $o <count($getPaquetesByLotes) ; $o++) { 
-          $datosSeparados = explode(' | ',$getPaquetesByLotes[$o]['descuentos']);
-          //print_r($datosSeparados);
-          //echo 'ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc';
-          //echo '<br>';
-          $resultado = array_unique($datosSeparados);
-                          //for ($p=0; $p <count($datosSeparados) ; $p++) { 
-                          //  echo $datosSeparados[$p];
-                          //  echo '<br>';
-                //
-                          //}
-          //echo 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb';
-          //echo '<br>';
-          //print_r(array_values($resultado));
-          $Newresultado = array_values($resultado);
-          print_r($Newresultado);
-          $json = array();
-          for ($m=0; $m <count($Newresultado) ; $m++){ 
-            $jt = $m+1;
-            //array_push($json['paquete'.$jt], $Newresultado[$m]); 
-            array_push($json,array( "paquete".$jt => $Newresultado[$m],
-                                    "tipo_superficie" => array("tipo" => $superficie,
-                                    "sup1" => $inicio,
-                                    "sup2" => $fin) ));            
-          }
-          echo '<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<';
-          echo '<br>';
-          print_r($json);
-          echo '<br>';
-
-          $json = json_encode($json);
-          echo '<br>';
-
-          print_r($json);
-
-          echo '<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<';
-          echo '<br>';
-         // $a = implode(',',$json);
-              // $pieces = explode('|', (string) $json);
-              //$prefix = implode('|', array_slice($pieces, 0, 4));
-              //echo '<br>';
-              //echo 'wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww';
-              //echo $prefix;
-              //echo 'wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww';
-          //echo '<br>';
-            $array_x_condominio =array(
-              'id_condominio' => $getPaquetesByLotes[$o]['idCondominio'],
-              'id_paquete' => $json,
-              'nombre' => 'prueba',
-              'fecha_inicio' => $hoy,
-              'fecha_fin' =>  $hoy,
-              'estatus' => 1,
-              'fecha_creacion' =>  $hoy2,
-              'creado_por' => $this->session->userdata('id_usuario'),
-              'fecha_modificacion' =>  $hoy2,
-              'modificado_por' => $this->session->userdata('id_usuario'),
-            );
-            array_push($datosInsertar_x_condominio,$array_x_condominio);
-         // echo 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa';
-        }
-              $ins_b = $this->PaquetesCorrida_model->insertBatch('paquetes_x_condominios',$datosInsertar_x_condominio);
-*/
-        /* */
-
-
         
          $this->PaquetesCorrida_model->UpdateLotes($desarrollos,$cadena_lotes,$query_superdicie,$query_tipo_lote,$this->session->userdata('id_usuario'));
 
@@ -360,74 +289,6 @@ class PaquetesCorrida extends CI_Controller
             echo json_encode($response = $this->PaquetesCorrida_model->SaveNewDescuento($tdescuento,$id_condicion,$eng_top,$apply,$descuento));
           }
     }
-
-
-//     function kelFunction(){
-//       $this->db->query("SET LANGUAGE Español;");
-      
-//       $cuari1 =  $this->db->query("SELECT l.idCondominio
-//       FROM lotes l
-//       INNER JOIN condominios c ON c.idCondominio = l.idCondominio 
-//       INNER JOIN residenciales r ON r.idResidencial = c.idResidencial
-//       WHERE r.idResidencial IN (1) GROUP BY l.idCondominio")->result_array();
-//       //print_r($cuari1);
-      
-//       $imploded = array();
-//                     foreach($cuari1 as $array) {
-//                         $imploded[] = implode(',', $array);
-//                         // echo $imploded[];
-//                     }
-      
- 
-//    echo(sizeof($cuari1));
-//    $stack= array();
-
-//    for ($i=0; $i < sizeof($cuari1); $i++) { 
-//     # code...
-//     $arrCondominio= implode(",", $cuari1[$i]);
- 
-//     $queryRes =  $this->db->query("DECLARE @condominio varchar(200), @tags VARCHAR(MAX); 
-//     SET @condominio = ($arrCondominio) 
-    
-//     /*INICIO DEL PROCESO*/ 
-//     SET @tags = (SELECT STRING_AGG(CONVERT(VARCHAR(MAX),(id_descuento) ), ',') 
-//     FROM lotes l 
-//     INNER JOIN condominios c ON c.idCondominio = l.idCondominio 
-//     INNER JOIN residenciales r ON r.idResidencial = c.idResidencial 
-//     WHERE c.idCondominio IN (@condominio)) 
-    
-//     (SELECT 
-//     @condominio condominio, STRING_AGG(id_paquete, ',') paquetes, fecha_inicio, fecha_fin, 
-//     UPPER(CONCAT('PAQUETE ', DATENAME(MONTH, fecha_inicio), ' ', YEAR(fecha_inicio))) descripcion 
-//     FROM paquetes 
-//     WHERE id_paquete in (SELECT DISTINCT(value) FROM STRING_SPLIT(@tags, ',') WHERE RTRIM(value) <> '') 
-//     GROUP BY fecha_inicio, fecha_fin)");
-
-//     foreach ($queryRes->result() as  $valor) {
-
-//       array_push($stack, array($valor->condominio, $valor->paquetes, $valor->fecha_inicio, $valor->fecha_fin, $valor->descripcion));
-
-//   }
-
-// }
-     
-// print_r($stack);
-
-
-
-// }
-
-
-
- // $queryRes =  $this->db->query("SELECT l.idCondominio, l.id_descuento, p.id_paquete ,c.nombre, r.nombreResidencial, 
-  // p.descripcion, p.fecha_inicio, p.fecha_fin, 
-  // UPPER(CONCAT('PAQUETE ', DATENAME(MONTH, p.fecha_inicio), ' ', YEAR(p.fecha_inicio))) descripcion 
-  //  FROM lotes l
-  //  INNER JOIN condominios c ON c.idCondominio = l.idCondominio
-  //  INNER JOIN residenciales r ON r.idResidencial = c.idResidencial 
-  //  INNER JOIN paquetes p ON p.id_paquete = ".$cuari1[$i]['value']." AND l.id_descuento like '%".$cuari1[$i]['value']."%'
-  //  WHERE l.id_descuento is not null 
-  //  GROUP BY l.idCondominio, l.id_descuento, c.nombre, r.nombreResidencial, p.descripcion, p.id_paquete, p.fecha_inicio, p.fecha_fin");
 
 
 public function listaDescuentos(){
@@ -502,6 +363,69 @@ END) tipo_check,
 }
 echo json_encode(array("data"=>$stack));
 
+}
+
+public function getPaquetes(){
+  $index = $this->input->post("index");
+  $datos_sede = explode(",",$this->input->post("sede"));
+  $id_sede = $datos_sede[0];
+  $residenciales = $this->input->post("residencial[]");
+  $desarrollos = implode(",",$residenciales);
+  $superficie = $this->input->post("superficie");
+  /***/
+  $inicio = $this->input->post("inicio");
+  $fin = $this->input->post("fin");
+  $query_superdicie = '';
+  $query_tipo_lote = '';
+  //Superficie
+  /**
+   * 1.-Mayor a
+   * 2.-Rango
+   * 3.-Cualquiera
+   */ 
+  if($superficie == 1){ //Mayor a
+    $query_superdicie = 'and sup >= '.$fin.' ';
+  }else if($superficie == 2){ // Menor a
+    $query_superdicie = 'and sup < '.$fin.' ';
+  }else if($superficie == 3){ // Cualquiera
+    $query_superdicie = '';
+  }
+
+  /*
+  Tipo lote
+  1.-Habitacional
+  2.-Comercial
+  3.-Ambos
+  */  
+  $ArrPAquetes = array();
+  $TipoLote = $this->input->post("tipoLote");
+  if($TipoLote == 1){ //Habitacional
+    $query_tipo_lote = 'and c.tipo_lote = 0 ';
+  }else if($TipoLote == 2){ // Comercial
+    $query_tipo_lote = 'and c.tipo_lote = 1 ';
+
+  }else if($TipoLote == 3){ // Ambos
+    $query_tipo_lote = '';
+  }
+
+ $row = $this->PaquetesCorrida_model->getPaquetes($query_tipo_lote,$query_superdicie,$desarrollos);
+
+ $data = array();
+ if(count($row) == 0){
+
+ }else if(count($row) == 1){
+  $data = $this->PaquetesCorrida_model->getPaquetesById($row[0]['id_descuento']);
+ }else if(count($row) > 1 ){
+
+ }
+ echo json_encode(array(array("paquetes"=>$data)));
+}
+
+public function getDescuentosByPlan(){
+ $id_paquete =  $this->input->post("id_paquete");
+ $id_tcondicion =  $this->input->post("id_tcondicion");
+ $data = $this->PaquetesCorrida_model->getDescuentosByPlan($id_paquete,$id_tcondicion);
+ echo json_encode($data);
 }
 
  

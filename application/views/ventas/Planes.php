@@ -276,12 +276,13 @@
 																	<div class="form-group">
 																		<label class="mb-0">Tipo de lote (<b class="text-danger">*</b>):</label>
 																		<div class="radio-container boxTipoLote">
-																			<input type="radio" id="customRadioInline1" value="1" name="tipoLote" onchange="validateAllInForm()">
+																			<input type="radio" id="customRadioInline1" value="1" name="tipoLote" onclick="validateAllInForm(1,1)">
 																			<label class="custom-control-label" for="customRadioInline1">Habitacional</label>
-																			<input type="radio" id="customRadioInline2" value="2" name="tipoLote" onchange="validateAllInForm()">
+																			<input type="radio" id="customRadioInline2" value="2" name="tipoLote" onclick="validateAllInForm(2,1)">
 																			<label class="custom-control-label" for="customRadioInline2">Comercial</label>
-																			<input type="radio" id="customRadioInline3" value="3" name="tipoLote" onchange="validateAllInForm()">
+																			<input type="radio" id="customRadioInline3" value="3" name="tipoLote" onclick="validateAllInForm(3,1)">
 																			<label class="custom-control-label" for="customRadioInline3">Ambos</label>	
+																			<input type="hidden" id="tipo_l" name="tipo_l" >
 																		</div>
 																	</div>
 																</div>
@@ -296,12 +297,14 @@
 																				<label class="custom-control-label" for="customRadio2">Menor a</label>
 																				<input type="radio" id="customRadio3" value="3" name="superficie" onclick="selectSuperficie(3)" onchange="validateAllInForm()">
 																				<label class="custom-control-label" for="customRadio3">Cualquiera</label>
+																				<input type="hidden" id="super" name="super" value="0">
 																			</div>
 																			<div id="printSuperficie"></div>
 																		</div>
 																	</div>
 																</div>
 																<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 mt-2 boxActionsCards">
+																<button type="button" id="btn_consultar" class="btnAction d-none" onclick="ConsultarPlanes()" rel="tooltip" data-placement="top" title="Consultar planes"><p class="mb-0 mr-1">Consultar planes</p><i class="fas fa-database"></i></button>
 																	<button type="button" id="btn_generate" class="btnAction d-none" onclick="GenerarCard()" rel="tooltip" data-placement="top" title="Agregar plan"><p class="mb-0 mr-1">Agregar plan</p><i class="fas fa-plus"></i></button>
 																	<input type="hidden" value="0" name="index" id="index">
 																	<button type="submit" id="btn_save" class="btnAction d-none" rel="tooltip" data-placement="top" title="Guardar planes"><p class="mb-0 mr-1">Guardar todo</p><i class="fas fa-save"></i></button>
@@ -1209,6 +1212,233 @@ $("#table_planes").ready(function() {
 			$(".leyendItems").addClass('d-none');
 			$("#btn_save").addClass('d-none');
 		}
+/**--------------------------FUNCIONES PARA MEJORA DE CARGA DE PLANES, COSULTAR PLANES---------------------- */
+function ConsultarPlanes(){
+	
+	if($('#sede').val() != '' && $('#residencial').val() != '' && $('input[name="tipoLote"]').is(':checked') && $('#fechainicio').val() != '' && $('#fechafin').val() != '' && $('input[name="superficie"]').is(':checked') ){
+		let params = {'sede':$('#sede').val(),'residencial':$('#residencial').val(),'superficie':$('#super').val(),'fin':$('#fin').val(),'tipolote':$('#tipo_l').val()};
+		$.post('getPaquetes',params, function(data) {
+			let countPlanes = data.length;
+			if(countPlanes >1){
+
+			}else if(countPlanes == 1){
+				//MOSTRAR TODOS LOS PLANES EXISTENTES
+				 data[0].paquetes.unshift({});
+				let dataPaquetes = data[0].paquetes; //.id_descuento.split(',');
+				console.log(dataPaquetes);
+				for (let index = 1; index < dataPaquetes.length; index++){
+				let planes = {"id_plan":dataPaquetes[index].id_paquete}
+				var indexActual = document.getElementById('index');
+				var indexNext = (document.getElementById('index').value - 1) + 2;
+				indexActual.value = indexNext;
+				console.log(indexNext);
+				console.log(index);
+				$('#showPackage').append(`
+						<div class="col-xs-12 col-sm-6 col-md-6 col-lg-6" id="card_${indexNext}">
+							<div class="cardPlan dataTables_scrollBody">
+								<div class="container-fluid">
+									<div class="row">
+										<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+											<div class="title d-flex justify-center align-center">
+												<h3 class="card-title">Plan</h3>
+												<button type="button" class="btn-trash" data-toggle="tooltip" data-placement="left" title="Eliminar plan" id="btn_delete_${indexNext}" onclick="removeElementCard('card_${indexNext}')"><i class="fas fa-trash"></i></button>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+											<input type="text" class="inputPlan" required name="descripcion_${indexNext}" id="descripcion_${indexNext}" value="${dataPaquetes[index].descripcion}">
+											<div class="mt-1" id="checks_${indexNext}">
+												<div class="loadCard w-100">
+													<img src= '`+url+`dist/img/loadingMini.gif' alt="Icono gráfica" class="w-30">
+												</div>
+											</div>						
+											<div class="form-group col-md-12" id="tipo_descuento_select_${indexNext}" hidden>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>`);
+						llenarDiv(indexNext,dataPaquetes[index].id_paquete)
+						validateNonePlans();
+
+						$('[data-toggle="tooltip"]').tooltip();
+						
+
+				$('.popover-dismiss').popover({
+					trigger: 'focus'
+				});
+				
+
+				}
+				
+			}else if(countPlanes == 0){
+				alerts.showNotification("top", "right", "No se encontraron planes con los datos proporcionados", "warning");
+			}
+
+		}, 'json');
+	}else{
+		alerts.showNotification("top", "right", "Debe llenar todos los campos requeridos.", "warning");
+	}
+}
+
+
+function llenarDiv(indexNext,id_paquete){
+	console.log(id_paquete)
+	console.log(indexNext)
+	$.post('getTipoDescuento', function(data2) {
+						//	data2.unshift(0);
+					$("#checks_"+indexNext).html('');
+					$("#tipo_descuento_"+indexNext).append($('<option>').val("default").text("Seleccione una opción"));
+					var len = data2.length;
+
+					// $('#checks_'+indexNext).append(`<div class="w-100"><label class="mt-2">Descuento a</label></div>`);
+					
+					for( var i = 0; i<len; i++){
+						var id = data2[i]['id_tcondicion'];
+						var descripcion = data2[i]['descripcion'];
+						console.log(id);
+						$("#tipo_descuento_"+indexNext).append(`<option value='${id}'>${descripcion}</option>`);
+						$("#checks_"+indexNext).append(`
+						<div class="row boxAllDiscounts">
+							<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+								<div class="check__item" for="inlineCheckbox1">
+									<label>
+										<input type="checkbox" class="default__check d-none" id="inlineCheckbox1_${indexNext}_${i}" value="${id}" onclick="PrintSelectDesc(this, ${id},${i},${indexNext})">
+										${descripcion}
+										<span class="custom__check"></span>
+									</label>
+								</div>
+							</div>
+							<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+								<div class="boxDetailDiscount hidden">
+									<div class="w-100 mb-1" id="selectDescuentos_${indexNext}_${i}"></div>
+									<div class="container-fluid rowDetailDiscount hidden">
+										<div class="row">
+											<div class="col-xs-12 col-sm-12 col-md-8 col-lg-8"></div>
+											<div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 pr-0"><p class="m-0 txtMSI">msi</p></div>
+										</div>
+										<div class="container-flluid" id="listamsi_${indexNext}_${i}">
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>`);
+						llenarSelects(indexNext,id_paquete,i,id);
+					}
+					if(len<=0){
+						$("#tipo_descuento_"+indexNext).append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
+					}
+					$("#tipo_descuento_"+indexNext).selectpicker('refresh');
+				}, 'json');
+}
+
+function llenarSelects(indexNext,id_paquete,i,id){
+	console.log('i'+id);
+	let params = {'id_paquete':id_paquete,'id_tcondicion':id}
+	$.post('getDescuentosByPlan',params,function(data2) {
+		data2 = JSON.parse(data2);
+		console.log(data2);
+		if(data2.length > 0){
+			const check = document.getElementById(`inlineCheckbox1_${indexNext}_${i}`);
+			check.checked = true;
+			PrintSelectDesc(check, id,i,indexNext);
+
+			let arrayDesc = [];
+			for (let m = 0; m < data2.length; m++) {
+				console.log(data2[m].id_descuento);
+				if($(`#ListaDescuentosTotal_${indexNext}_${i}`)){
+					console.log('SI ESTA EL PERO');
+				}
+				console.log($(`#ListaDescuentosTotal_${indexNext}_${i}`));
+				console.log($(`#ListaDescuentosTotal_${indexNext}_${i}`).find("option[value='" + data2[m].id_descuento + "']"));
+				arrayDesc.push(data2[m].id_descuento);
+				console.log(arrayDesc);
+				console.log(data2[m].id_descuento);
+				//PrintSelectDesc(check, id,i,indexNext,1,data2[m].porcentaje);
+				$(`#ListaDescuentosTotal_${indexNext}_${i}`)
+    .val(data2[m].id_descuento)
+    .trigger('change')
+    .trigger({
+        type: 'select2:select',
+        params: {
+            data: {"id": data2[m].id_descuento,"label":data2[m].porcentaje+'%' ,"text": data2[m].porcentaje+'%',"disabled":false,"elements":{option:{"label":data2[m].porcentaje,"value":data2[m].id_descuento}}}
+        }
+     });
+				/*jQuery(`#ListaDescuentosTotal_${indexNext}_${i}`).val(38).trigger('change').trigger('select2:select',
+				{
+					data: $(`#ListaDescuentosTotal_${indexNext}_${i}`).find("option[value='" + data2[m].id_descuento + "']")
+				}
+				);*/
+				/*$(`#ListaDescuentosTotal_${indexNext}_${i}`)
+   .val('38')
+   .trigger('change')
+   .trigger('select2:select');*/
+//$(`#ListaDescuentosTotal_${indexNext}_${i}`).val([data2[m].id_descuento]); // Select the option with a value of '1'
+					//	$(`#ListaDescuentosTotal_${indexNext}_${i}`).trigger('select');
+				/*$(`#ListaDescuentosTotal_${indexNext}_${i}`).data('select2').trigger('select', {
+            data: {"id": data2[m].id_descuento,"label":data2[m].porcentaje+'%' ,"text": data2[m].porcentaje+'%',"disabled":false,"elements":{"label":data2[m].porcentaje,"value":data2[m].id_descuento}}
+        });*/
+				// changeSelect(`#ListaDescuentosTotal_${indexNext}_${i}`,arrayDesc);
+				//$(`#ListaDescuentosTotal_${indexNext}_${i}`).val(data2[m].id_descuento).trigger('change');
+			//	if ($(`#ListaDescuentosTotal_${indexNext}_${i}`).find("option[value='" + data2[m].id_descuento + "']").length) {
+				//		$(`#ListaDescuentosTotal_${indexNext}_${i}`).val(data2[m].id_descuento).trigger('change');
+				//		if($(`#ListaDescuentosTotal_${indexNext}_${i}`).find("option[value='" + data2[m].id_descuento + "']")){
+					//		console.log('ji esta')
+						//}
+						//$(`#ListaDescuentosTotal_${indexNext}_${i}`).val(data2[m].id_descuento); // Select the option with a value of '1'
+						//$(`#ListaDescuentosTotal_${indexNext}_${i}`).trigger('change');
+
+
+						/*$(`#ListaDescuentosTotal_${indexNext}_${i}`).on("select2:change", function (evt){
+						var element = evt.params.data.element;
+						var $element = $(element);
+						$element.detach();
+						$(this).append($element);
+						$(this).trigger("change");
+						crearBoxDetailDescuentos(indexNext,i,'ListaDescuentosTotal_',data2[m].id_descuento,data2[m].porcentaje);
+						
+						rowDetail.removeClass('hidden');
+					});*/
+			//		}else{
+						//console.log('NELSON')
+				//	}
+				/*$(`#ListaDescuentosTotal_${indexGral}_${index}`).on("select2:select", function (evt){
+						var element = evt.params.data.element;
+						var $element = $(element);
+						$element.detach();
+						$(this).append($element);
+						$(this).trigger("change");
+						crearBoxDetailDescuentos(indexGral,index,'ListaDescuentosTotal_',$element[0].value,$element[0].label);
+						rowDetail.removeClass('hidden');
+					});*/
+			}
+			
+
+
+		}
+	});
+	
+}
+
+async function changeSelect(nameSelect,arrayS){
+				console.log('ENTRA AQUI');
+				console.log(`${nameSelect}`);
+				jQuery(`${nameSelect}`).select2().val(arrayS).trigger('change');		
+}
+
+
+function defaultValuesSlect(origen){
+        let arrayLipo = [];
+        let arrayDetailAreas = identificarDetail(origen);
+        for(let x=0; x<arrayDetailAreas.length; x++){
+            if(arrayDetailAreas[x].id_area == "75"){
+                arrayLipo.push(arrayDetailAreas[x].id_area_lipo);
+            }
+        }
+        jQuery('#tbody-tratamientos'+origen+' .areaslipo').select2().val(38).trigger('change');
+    }
+/**********************************------------------------------------------------------------------------- */		
 	
 		function GenerarCard(){
 			if($('#sede').val() != '' && $('#residencial').val() != '' && $('input[name="tipoLote"]').is(':checked') && $('#fechainicio').val() != '' && $('#fechafin').val() != '' && $('input[name="superficie"]').is(':checked') ){
@@ -1243,7 +1473,7 @@ $("#table_planes").ready(function() {
 				</div>`);
 
 				$('[data-toggle="tooltip"]').tooltip();
-				$.post('getResidencialesList', function(data) {
+				/*$.post('getResidencialesList', function(data) {
 					$("#idResidencial_"+indexNext).append($('<option disabled>').val("default").text("Seleccione una opción"));
 					var len = data.length;
 			
@@ -1261,7 +1491,7 @@ $("#table_planes").ready(function() {
 				}, 'json');
 					
 				$("#idResidencial_"+indexNext).select2({containerCssClass: "select-gral",dropdownCssClass: "custom-dropdown",});
-
+						*/
 				/**-----------TIPO DESCUENTO------------------ */
 				$.post('getTipoDescuento', function(data) {
 					$("#checks_"+indexNext).html('');
@@ -1370,7 +1600,8 @@ $("#table_planes").ready(function() {
 			$('[data-toggle="tooltip"]').tooltip()
 		}
 
-		function PrintSelectDesc(e, id,index,indexGral){
+	async function PrintSelectDesc(e, id,index,indexGral, j = 0,msi=0){
+			console.log(e);
 			let tdescuento=0;
 			let id_condicion=0;
 			let eng_top=0;
@@ -1378,6 +1609,9 @@ $("#table_planes").ready(function() {
 			var boxDetail = $(e).closest( '.boxAllDiscounts' ).find( '.boxDetailDiscount');
 			boxDetail.removeClass('hidden');
 			let rowDetail = boxDetail.find( '.rowDetailDiscount');
+			console.log('id'+id)
+			console.log('index'+index)
+			console.log('indexGral'+indexGral)
 			if(id == 1){
 				if($(`#inlineCheckbox1_${indexGral}_${index}`).is(':checked')){
 					$(`#orden_${indexGral}_${index}`).prop( "disabled", false );
@@ -1391,7 +1625,7 @@ $("#table_planes").ready(function() {
 						<select id="ListaDescuentosTotal_${indexGral}_${index}" required name="${indexGral}_${index}_ListaDescuentosTotal_[]" multiple class="form-control" data-live-search="true">
 					</div>`);
 
-					$.post('getDescuentosPorTotal',{ tdescuento: tdescuento, id_condicion: id_condicion,eng_top:eng_top,apply:apply }, function(data) {
+					$.post('getDescuentosPorTotal',{ tdescuento: tdescuento, id_condicion: id_condicion,eng_top:eng_top,apply:apply }, function(data) { 
 						$(`#ListaDescuentosTotal_${indexGral}_${index}`).append($('<option disabled>').val("default").text("Seleccione una opción"));
 						var len = data.length;
 						for( var i = 0; i<len; i++){
@@ -1408,6 +1642,7 @@ $("#table_planes").ready(function() {
 					$(`#ListaDescuentosTotal_${indexGral}_${index}`).select2({containerCssClass: "select-gral", dropdownCssClass: "custom-dropdown", tags: false, tokenSeparators: [',', ' '], closeOnSelect : false, placeholder : "Seleccione una opción", allowHtml: true, allowClear: true});
 
 					$(`#ListaDescuentosTotal_${indexGral}_${index}`).on("select2:select", function (evt){
+						console.log(evt);
 						var element = evt.params.data.element;
 						var $element = $(element);
 						$element.detach();
@@ -1416,6 +1651,7 @@ $("#table_planes").ready(function() {
 						crearBoxDetailDescuentos(indexGral,index,'ListaDescuentosTotal_',$element[0].value,$element[0].label);
 						
 						rowDetail.removeClass('hidden');
+						console.log($(`#ListaDescuentosTotal_${indexGral}_${index}`).val());
 					});
 
 					$(`#ListaDescuentosTotal_${indexGral}_${index}`).on("select2:unselecting", function (evt){
@@ -1430,6 +1666,18 @@ $("#table_planes").ready(function() {
 							document.getElementById(`${indexGral}_${$element[0].value}_span`).outerHTML = "";
 						}
 					});
+					
+
+					/*if(j==1){
+							
+
+									console.log('carev');
+									$(`#ListaDescuentosTotal_${indexGral}_${index}`).select2().val(['38']).trigger('change');
+									crearBoxDetailDescuentos(indexGral,index,'ListaDescuentosTotal_',38,msi);
+
+									console.log($(`#ListaDescuentosTotal_${indexGral}_${index}`).val())
+							
+					}*/
 				}
 				else{
 					boxDetail.addClass('hidden');
@@ -1675,21 +1923,22 @@ $("#table_planes").ready(function() {
 		}
 
 		function selectSuperficie(tipoSup){
+			$('#super').val(tipoSup);
 			document.getElementById("printSuperficie").innerHTML ='';
 			if(tipoSup == 1){
 				$('#printSuperficie').append(`
-					<input type="number" class="form-control input-gral p-0 text-center h-100" name="fin" placeholder="Mayor a" data-toggle="tooltip" data-placement="top" title="Mayor que 200">
+					<input type="number" class="form-control input-gral p-0 text-center h-100" name="fin" id="fin" placeholder="Mayor a" data-toggle="tooltip" data-placement="top" title="Mayor que 200">
 					<input type="hidden" class="form-control" value="0" name="inicio">`);
 			}
 			else if(tipoSup == 2){
 				$('#printSuperficie').append(`
-					<input type="number" class="form-control input-gral p-0 text-center h-100" name="fin" placeholder="Menor a" data-toggle="tooltip" data-placement="top" title="Menor que 199.99">
+					<input type="number" class="form-control input-gral p-0 text-center h-100" name="fin" id="fin" placeholder="Menor a" data-toggle="tooltip" data-placement="top" title="Menor que 199.99">
 					<input type="hidden" class="form-control" value="0" name="inicio">`);
 			}
 			else if(tipoSup == 3){
 				$('#printSuperficie').append(`
 					<input type="hidden" class="form-control" name="inicio" value="0">
-					<input type="hidden" class="form-control" name="fin" value="0">`);
+					<input type="hidden" class="form-control" name="fin" id="fin" value="0">`);
 			}
 			$('[data-toggle="tooltip"]').tooltip();
 		}
@@ -1765,7 +2014,10 @@ $("#table_planes").ready(function() {
 			}
 		}
 
-		function validateAllInForm(){
+		function validateAllInForm( tipo_l = 0,origen = 0){
+			if(origen == 1){
+				$('#tipo_l').val(tipo_l);
+			}
 			var dinicio = $('#fechainicio').val();
 			var dfin = $('#fechafin').val();
 			var sede = $('#sede').val();
@@ -1777,9 +2029,11 @@ $("#table_planes").ready(function() {
 
 			if(dinicio != '' && dfin != '' && sede != '' && proyecto != '' && checkedTipoLote != 0 && checkedSuper != 0){
 				$("#btn_generate").removeClass('d-none');
+				$("#btn_consultar").removeClass('d-none');
 			}
 			else{
 				$("#btn_generate").addClass('d-none');
+				$("#btn_consultar").addClass('d-none');
 				$("#btn_save").addClass('d-none');
 			}
 		}
