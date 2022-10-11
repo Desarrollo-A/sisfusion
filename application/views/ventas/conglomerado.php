@@ -895,13 +895,13 @@
                     {
                         // Estatus
                         "data": function (d) {
-                            const primerDescuento = (d.no_descuentos == 1)
-                                ? '<br><div style="margin-top: 5px;"><span class="label" style="background:deepskyblue;">PRIMER DESCUENTO</span></div>'
-                                : '';
+                            const primerDescuento = (d.no_descuentos == 1) ? '<br><div style="margin-top: 5px;"><span class="label" style="background:deepskyblue;">PRIMER DESCUENTO</span></div>' : '';
 
-                            if ((d.status == 0 || d.status == 3) && (d.estatus != 2 && d.estatus != 3 && d.estatus != 4) ) {
-                                return `<span class="label" style="background:red;">BAJA</span>${primerDescuento}`;
-                            }
+                            const baja = (d.status == 0 || d.status == 3) ? '<br><div style="margin-top: 5px;"><span class="label" style="background:red;">BAJA</span></div>' : '';
+
+                            // if ((d.status == 0 || d.status == 3 ) && (d.estatus != 2 && d.estatus != 3 && d.estatus != 4) ) {
+                            //     const Baja = `<span class="label" style="background:red;">BAJA</span>`;
+                            // }
 
                             if (d.id_sede == 6) {
                                 if (d.abono_nuevo < 15000) {
@@ -918,32 +918,32 @@
                             switch (d.estatus) {
                                 case '0':
                                     if ($RES == 0) {
-                                        return `<span class="label" style="background:#7F8C8D;">SIN SALDO *</span>${primerDescuento}`;
+                                        return `<span class="label" style="background:#7F8C8D;">SIN SALDO *</span>${primerDescuento}${baja}`;
                                     }
                                     return `<span class="label" style="background:#9B59B6;">DISPONIBLE</span>${primerDescuento}`;
                                 case '1':
                                     if (d.pagos_activos == 0){
-                                        return `<span class="label" style="background:#7F8C8D;">REACTIVADO</span>${primerDescuento}`;
+                                        return `<span class="label" style="background:#7F8C8D;">REACTIVADO</span>${primerDescuento}${baja}`;
                                     }
                                     if ($RES == 0){
-                                        return `<span class="label" style="background:#7F8C8D;">SIN SALDO *</span>${primerDescuento}`;
+                                        return `<span class="label" style="background:#7F8C8D;">SIN SALDO *</span>${primerDescuento}${baja}`;
                                     }
-                                    return `<span class="label" style="background:#9B59B6;">DISPONIBLE</span>${primerDescuento}`;
+                                    return `<span class="label" style="background:#9B59B6;">DISPONIBLE</span>${primerDescuento}${baja}`;
 
                                 case '2':
-                                    return `<span class="label" style="background:green;">DESCUENTO APLICADO</span>${primerDescuento}`;
+                                    return `<span class="label" style="background:green;">DESCUENTO APLICADO</span>${primerDescuento}${baja}`;
 
                                 case '3':
-                                    return `<span class="label" style="background:#95A5A6;">LIQUIDADO EN CAJA</span>${primerDescuento}`;
+                                    return `<span class="label" style="background:#95A5A6;">LIQUIDADO EN CAJA</span>${primerDescuento}${baja}`;
 
                                 case '4':
-                                    return `<span class="label" style="background:#34495E;">LIQUIDADO</span>${primerDescuento}`;
+                                    return `<span class="label" style="background:#34495E;">LIQUIDADO</span>${primerDescuento}${baja}`;
 
                                 case '5':
-                                    return `<span class="label" style="background:#7F8C8D;">REACTIVADO</span>${primerDescuento}`;
+                                    return `<span class="label" style="background:#7F8C8D;">REACTIVADO</span>${primerDescuento}${baja}`;
 
                                 default:
-                                     return `<span class="label" style="background:#7F8C8D;">REACTIVADO</span>${primerDescuento}`;
+                                     return `<span class="label" style="background:#7F8C8D;">REACTIVADO</span>${primerDescuento}${baja}`;
                             }
                         }
                     },
@@ -980,6 +980,7 @@
 
                             if (OP2 < 1) {
                                 respuesta = 0;
+
                             } else if (d.id_sede == 6) {
                                 if (d.abono_nuevo < 15000) {
                                     respuesta = 0;
@@ -1006,7 +1007,13 @@
                                         respuesta = OP2;
                                     } else {
 
-                                        respuesta = (validar * d.pago_individual);
+                                        if((validar * d.pago_individual)>(d.monto - d.aply)){
+                                            respuesta = (d.monto - d.aply);
+                                        
+                                        }else{
+                                            respuesta = (validar * d.pago_individual);
+                                        
+                                    }
                                     }
 
                                 }
@@ -1158,7 +1165,12 @@
                                                 validar = d.pagos_activos;
                                                 pendiente = pend;
                                             } else {
-                                                pendiente = (validar * d.pago_individual);
+                                                // pendiente = (validar * d.pago_individual);
+                                                if((validar * d.pago_individual)>(d.monto - d.aply)){
+                                                    pendiente = (d.monto - d.aply);
+                                                }else{
+                                                    pendiente = (validar * d.pago_individual);
+                                                }
                                             }
                                             BOTON = 1;
                                         }
@@ -1203,8 +1215,9 @@
                                                 </button>${btnEliminarEditar}
                                             </div>`;
                                     } else {
-                                        <div class="d-flex justify-center">
-                                            <button value="${d.id_usuario}"
+                                        return `
+                                            <div class="d-flex justify-center">
+                                                <button value="${d.id_usuario}"
                                                     data-value="${pendiente}"
                                                     data-saldoCom="${d.abono_nuevo}"
                                                     data-sede="${d.id_sede}"
@@ -1212,16 +1225,16 @@
                                                     data-code="${d.cbbtton}"
                                                     class="btn-data btn-violetDeep agregar_nuevo_descuento"
                                                     title="Aplicar descuento">
-                                                <i class="fas fa-plus"></i>
-                                            </button>
-                                            <button value="${d.id_usuario}"
+                                                    <i class="fas fa-plus"></i>
+                                                </button>
+                                                <button value="${d.id_usuario}"
                                                     data-value="${d.nombre}"
                                                     data-code="${d.id_usuario}"
                                                     class="btn-data btn-gray consultar_historial_pagos"
                                                     title="Historial pagos">
-                                                <i class="fas fa-chart-bar"></i>
-                                            </button>${btnEliminarEditar}
-                                        </div>
+                                                    <i class="fas fa-chart-bar"></i>
+                                                </button>${btnEliminarEditar}
+                                            </div>`
                                     }
                                 }
                             }
@@ -1330,6 +1343,8 @@
                         var pago_neodata = data[i]['pago_neodata'];
                         let comtotal = parseFloat(data[i]['comision_total']) - parseFloat(data[i]['abono_pagado']);
                         sumaselected = sumaselected + parseFloat(data[i]['comision_total']);
+
+
 
                         console.log('suma lote ' + comtotal);
                         console.log('suma2 lote ' + sumaselected);
@@ -2135,6 +2150,10 @@
         });
 
     function verificar() {
+
+        
+
+
             // let d = $('#valor_comision').val();
             let d2 = replaceAll($('#idmontodisponible').val(), ',', '');
             let disponiblefinal = replaceAll(d2, '$', '');
@@ -2144,22 +2163,26 @@
 
             let disponible = parseFloat(disponiblefinal);
             let monto = parseFloat(montofinal);
+
+            console.log('disponiblefinal: ' + disponiblefinal);
+            console.log('montofinal: ' + montofinal);
             console.log('disponible: ' + disponible);
             console.log('monto: ' + monto);
+           
+
             if (monto < 1 || isNaN(monto)) {
                 alerts.showNotification("top", "right", "No hay saldo disponible para descontar.", "warning");
-                // document.getElementById('btn_abonar').disabled = true;
+
                 $('#btn_abonar').prop('disabled', true);
                 document.getElementById('btn_abonar').disabled = true;
 
             } else {
                 if (parseFloat(monto) <= parseFloat(disponible)) {
-                    // console.log('paso');
-                    let cantidad = parseFloat($('#numeroP').val());
+ 
+                     let cantidad = parseFloat($('#numeroP').val());
                     resultado = monto / cantidad;
                     $('#pago').val(formatMoney(resultado));
-                    // document.getElementById('btn_abonar').disabled = false;
-
+ 
                     $('#btn_abonar').prop('disabled', false);
                     document.getElementById('btn_abonar').disabled = false;
 
@@ -2171,6 +2194,8 @@
                         let datos = data[index].id;
                         let montoLote = datos.split(',');
                         let abono_neo = montoLote[1];
+                       console.log('abono_neo: ' + abono_neo);
+
                         if (parseFloat(abono_neo) > parseFloat(monto) && cuantos > 1) {
                             document.getElementById('msj2').innerHTML = "El monto ingresado se cubre con la comisión " + data[index].text;
                             // document.getElementById('btn_abonar').disabled = true;
@@ -2180,9 +2205,8 @@
 
                             break;
                         }
-                       // cadena = cadena + ' , ' + data[index].text;
-
-                    console.log(data[index].text);
+ 
+                    // console.log(data[index].text);
                     if(cuantos == 1){
                         let datosLote = data[index].text.split('-   $');
                         let nameLote = datosLote[0]
