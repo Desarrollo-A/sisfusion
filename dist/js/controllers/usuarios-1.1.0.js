@@ -1,6 +1,6 @@
 $(document).ready( function() {
-    $('[data-toggle="tooltip"]').tooltip();
-
+    $('[data-toggle="tooltip"]').tooltip(); 
+    code = '';
     $.getJSON("fillSelectsForUsers").done(function(data) {
         for (let i = 0; i < data.length; i++) {
             if (data[i]['id_catalogo'] == 16){ // PAYMENT METHOD SELECT
@@ -212,53 +212,71 @@ function fillUsersTable() {
             {
                 data: function (d) {
                     var id_rol = id_rol_global;
+                 
                     if(id_rol == 8 && d.estatus == 1){
-                        if (userId == 1297 || userId == 1) {
+
+                        if (userId == 1297 || userId == 1) { // filtro para soporte excluyendo ambos perfiles
                             return '<div class="d-flex justify-center"><button class="btn-data btn-blueMaderas edit-user-information" data-rol="'+d.id_rol+'" data-id-usuario="' + d.id_usuario +'"><i class="fas fa-pencil-alt"></i></button><button class="btn-data btn-orangeYellow  see-changes-log" data-id-usuario="' + d.id_usuario +'" ><i class="fas fa-eye"></i> </button>' +
-                                '<button class="btn-data btn-warning change-user-status" title="Dar de baja" id="' + d.id_usuario +'" data-estatus="0" data-id-usuario="' + d.id_usuario +'" data-name="'+d.nombre+'" data-rol="'+d.puesto+'"><i class="fas fa-lock"></i></button></div>';
-                        } else {
+                                '<button class="btn-data btn-warning change-user-status" title="Dar de baja" id="' + d.id_usuario +'" data-estatus="0" data-id-usuario="' + d.id_usuario +'" data-name="'+d.nombre+'" data-rol="'+d.puesto+'"><i class="fas fa-lock"></i></button>'+
+                                '</div>';
+                            } else  {
+                                //TODO SOPORTE  
                             return '<div class="d-flex justify-center"><button class="btn-data btn-orangeYellow  see-changes-log" data-id-usuario="' + d.id_usuario +'" ><i class="fas fa-eye"></i> </button>' +
-                                '<button class="btn-data btn-warning change-user-status" title="Dar de baja" id="' + d.id_usuario +'" data-estatus="0" data-id-usuario="' + d.id_usuario +'" data-name="'+d.nombre+'" data-rol="'+d.puesto+'"><i class="fas fa-lock"></i></button></div>';
+                                '<button class="btn-data btn-warning change-user-status" title="Dar de baja" id="' + d.id_usuario +'" data-estatus="0" data-id-usuario="' + d.id_usuario +'" data-name="'+d.nombre+'" data-rol="'+d.puesto+'"> <i class="fas fa-lock"></i></button>'+
+                                '<button class="btn-data btn-sky buscar-pass-user" title="Contraseña y usuario" data-id-usuario="' + d.id_usuario +'" data-name="'+d.nombre+'" data-rol="'+d.puesto+'"  id="buscar"> <span class="material-icons update-dataTable ">***</span></button>'+
+                                '</div>';
                         }
+
                     }else{
                         if (userId == 1297 || userId == 1) {
                             return '<div class="d-flex justify-center"><button class="btn-data btn-blueMaderas edit-user-information" data-rol="'+d.id_rol+'" data-id-usuario="' + d.id_usuario +'"><i class="fas fa-pencil-alt"></i></button><button class="btn-data btn-orangeYellow  see-changes-log" data-id-usuario="' + d.id_usuario +'" ><i class="fas fa-eye"></i> </button>' +
-                            '<button class="btn-data btn-green change-user-status" id="' + d.id_usuario +'" data-estatus="1" data-id-usuario="' + d.id_usuario +'" data-name="'+d.nombre+'" data-rol="'+d.puesto+'"><i class="fas fa-lock-open"></i></button></div>';
-                        } else {
+                              '<button class="btn-data btn-green change-user-status" id="' + d.id_usuario +'" data-estatus="1" data-id-usuario="' + d.id_usuario +'" data-name="'+d.nombre+'" data-rol="'+d.puesto+'"><i class="fas fa-lock-open"></i></button></div>';
+                        
+                            } else {
+                          //aqui mero vamos a poner el 
+                                if (id_rol == 8 && userId != 1297 || userId != 1  ) { 
+                                    return   '<div class="d-flex justify-center"><button class="btn-data btn-blueMaderas edit-user-information" data-rol="'+d.id_rol+'" data-id-usuario="' + d.id_usuario +'"><i class="fas fa-pencil-alt"></i></button>' +
+                                    '<button class="btn-data btn-orangeYellow  see-changes-log" data-id-usuario="' + d.id_usuario +'" ><i class="fas fa-eye"></i> </button>' +
+                                    '<button class="btn-data btn-green change-user-status" id="' + d.id_usuario +'" data-estatus="1" data-id-usuario="' + d.id_usuario +'" data-name="'+d.nombre+'" data-rol="'+d.puesto+'"><i class="fas fa-lock-open"></i></button>'+
+                                    '<button class="btn-data btn-sky btn-round btn-fab-mini btn-fab buscar-pass-user" title="Contraseña y usuario" data-id-usuario="' + d.id_usuario +'" data-name="'+d.nombre+'" data-rol="'+d.puesto+'"   id="buscar" ><span class="material-icons update-dataTable ">***</span></button>'+
+                                    '</div>';
+                                }
                             if(id_rol == 8 && userId != 1297 && d.puesto == 'Contraloría' && d.estatus == 0){
                                 return '<div class="d-flex justify-center"><button class="btn-data btn-orangeYellow  see-changes-log" data-id-usuario="' + d.id_usuario +'" ><i class="fas fa-eye"></i> </button>' +
-                                '<button class="btn-data btn-green change-user-status" id="' + d.id_usuario +'" data-estatus="1" data-id-usuario="' + d.id_usuario +'" data-name="'+d.nombre+'" data-rol="'+d.puesto+'"><i class="fas fa-lock-open"></i></button></div>';
+                                '<button class="btn-data btn-green change-user-status" id="' + d.id_usuario +'" data-estatus="1" data-id-usuario="' + d.id_usuario +'" data-name="'+d.nombre+'" data-rol="'+d.puesto+'"><i class="fas fa-lock-open"></i></button>'+
+                                '</div>';
+                            
                             }
                         }
                     }
-
                     if (id_rol == 53) {
                         return '<button class="btn-data btn-azure see-changes-log" data-id-usuario="' + d.id_usuario + '"><span class="material-icons">visibility</span> </button>';
                     } else if (id_rol == 41) {
                         return '<div class="d-flex justify-center"><button class="btn-data btn-blueMaderas edit-user-information" data-rol="' + d.id_rol + '" data-id-usuario="' + d.id_usuario + '"><i class="fas fa-pencil-alt"></i></button>' +
                             '<button class="btn-data btn-orangeYellow  see-changes-log" data-id-usuario="' + d.id_usuario + '" ><i class="fas fa-eye"></i> </button>' +
                             '</div>';
-                    } else {
+                  
+                        } else {
                         if (d.estatus == 1) {
                             return '<div class="d-flex justify-center"><button class="btn-data btn-blueMaderas edit-user-information" data-rol="' + d.id_rol + '" data-id-usuario="' + d.id_usuario + '"><i class="fas fa-pencil-alt"></i></button>' +
                                 '<button class="btn-data btn-orangeYellow  see-changes-log" data-id-usuario="' + d.id_usuario + '" ><i class="fas fa-eye"></i> </button>' +
-                                '<button class="btn-data btn-warning change-user-status" title="Dar de baja" id="' + d.id_usuario + '" data-estatus="0" data-id-usuario="' + d.id_usuario + '" data-name="' + d.nombre + '" data-rol="' + d.puesto + '"><i class="fas fa-lock"></i></button></div>';
-                        } else {
+                                '<button class="btn-data btn-warning change-user-status" title="Dar de baja" id="' + d.id_usuario + '" data-estatus="0" data-id-usuario="' + d.id_usuario + '" data-name="' + d.nombre + '" data-rol="' + d.puesto + '"><i class="fas fa-lock"></i></button>'+
+                                 
+                                '</div>';
+                            } else {
                             if (d.puesto == 'Asesor' || d.puesto == 'Coordinador de ventas' || d.puesto == 'Gerente') {
                                 return '<div class="d-flex justify-center"><button class="btn-data btn-blueMaderas  edit-user-information" data-rol="' + d.id_rol + '" data-id-usuario="' + d.id_usuario + '"><i class="fas fa-pencil-alt"></i></button>' +
                                     '<button class="btn-data btn-orangeYellow see-changes-log" data-id-usuario="' + d.id_usuario + '" ><i class="fas fa-eye"></i></button>' +
                                     '</div>';
-                            } else {
+                  
+                                } else {
                                 return '<div class="d-flex justify-center"><button class="btn-data btn-blueMaderas  edit-user-information" data-rol="' + d.id_rol + '" data-id-usuario="' + d.id_usuario + '"><i class="fas fa-pencil-alt"></i></button>' +
                                     '<button class="btn-data btn-orangeYellow see-changes-log" data-id-usuario="' + d.id_usuario + '" ><i class="fas fa-eye"></i></button>' +
                                     '<button class="btn-data btn-warning change-user-status" id="' + d.id_usuario + '" data-estatus="1" data-id-usuario="' + d.id_usuario + '" data-name="' + d.nombre + '" data-rol="' + d.puesto + '"><i class="fas fa-lock"></i></button>' +
                                     '</div>';
                             }
-
                         }
-
                     }
-
                 }
             }
         ],
@@ -435,6 +453,36 @@ $("#BajaUserForm").on('submit', function(e){
         }
     });
 });
+    $(document).on('click', '.buscar-pass-user', function(e)
+    {
+        id_usuario = $(this).attr("data-id-usuario");
+        console.log(id_usuario );
+
+        $.getJSON("getUserInformation/"+id_usuario).done( function( data ){
+            $.each( data, function(i, v){
+                console.log(v);
+                let leader;
+                var inputNombre = document.getElementById("usuarioPC");
+                inputNombre.value =  v.usuario;
+                var inputpass = document.getElementById("passPC");
+                inputpass.value =  v.contrasena;
+                //document.getElementById("passPC").value = v.contrasena;
+               if (v.id_rol == 9)
+                    leader = v.gerente_id
+               else if (v.id_rol == 3)
+                   leader = v.subdirector_id
+                else
+                   leader = v.id_lider;
+               // getLeadersListForEdit(v.id_sede, v.id_rol, leader);
+               // $("#editUserModal").modal();
+               // fillFields(v);
+               // validateEmptyFields(v);
+            });
+        });
+        $("#modalData").modal();
+       
+    });
+
 $("#BajaConfirmForm").on('submit', function(e){
     e.preventDefault();
     document.getElementById('btnSub').disabled = true;
@@ -610,6 +658,10 @@ function fillFields (v) {
     $('#member_type').selectpicker('refresh');
     $('#sexo').selectpicker('refresh');
     $('#hijos').selectpicker('refresh');
+
+    $('#payment_method').selectpicker('refresh');
+    $('#headquarter').selectpicker('refresh');
+    $('#member_type').selectpicker('refresh');
 
     if(v.id_rol == 7 || v.id_rol== 3 || v.id_rol == 9){
         $('#ch'). show();

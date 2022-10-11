@@ -23,8 +23,19 @@
                         </div>
                         <div class="card-content">
                             <h3 class="card-title center-align " id="showDate"> </h3>
-                            <div class="toolbar">
+							<div  class="toolbar">
                                 <div class="row">
+                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                        <div class="col-md-4 form-group">
+                                            <div class="form-group label-floating select-is-empty">
+                                                <label class="control-label">Sedes por proyecto</label>
+                                                <select name="sedes" id="sedes" class="selectpicker select-gral m-0"
+                                                        data-style="btn" data-show-subtext="true"  title="Selecciona una sede"
+                                                        data-size="7" data-live-search="true" required>
+                                                </select>
+                                            </div>
+                                        </div>                                        
+                                    </div>
                                 </div>
                             </div>
                             <div class="material-datatables">
@@ -63,66 +74,7 @@
             </div>
         </div>
     </div>
-
-
-	<!--Contenido de la página-->
-	<div class="content hide">
-		<div class="container-fluid">
-			<div class="row">
-				<div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
-					<!--Eltitulo se carga por un servicio-->
-<!--					<div id="showDate"></div>-->
-					<hr>
-					<br>
-				</div>
-			</div>
-			<div class="row">
-				<div class="col xol-xs-12 col-sm-12 col-md-12 col-lg-12">
-					<div class="card">
-						<div class="card-header card-header-icon" data-background-color="goldMaderas">
-							<i class="material-icons">reorder</i>
-						</div>
-						<div class="card-content">
-							<h4 class="card-title" id="showDate" style="text-align: center"></h4>
-							<div class="toolbar">
-								<!--        Here you can write extra buttons/actions for the toolbar              -->
-							</div>
-							<div class="material-datatables">
-								<div class="form-group">
-									<div class="table-responsive">
-										<table id="Jtabla" class="table table-bordered table-hover" width="100%"
-											   style="text-align:center;">
-											<thead>
-											<tr>
-												<th>PROYECTO</th>
-												<th>CONDOMINIO</th>
-												<th>LOTE</th>
-												<th>REFERENCIA</th>
-											    <th>SUP</th>
-												<th>GERENTE</th>
-												<th>ASESOR(ES)</th>
-												<th>PROCESO CONTRATACIÓN</th>
-												<th>ESTATUS</th>
-												<th>COMENTARIO</th>
-												<th>FECHA VENCIMIENTO</th>
-												<th>DÍAS RESTANTES</th>
-												<th>DÍAS VENCIDOS</th>
-												<th>ESTATUS FECHA</th>
-												<th>FECHA APARTADO</th>
-											</tr>
-											</thead>
-											<tbody>
-											</tbody>
-										</table>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+	
 	<?php $this->load->view('template/footer_legend');?>
 </div>
 </div>
@@ -159,25 +111,44 @@
 
 
 	$(document).ready(function() {
-		$.ajax(
-			{
-				post: "POST",
-				url: "<?=site_url() . '/registroLote/getDateToday/'?>"
-			}).done(function (data) {
-			$('#showDate').append('Status actual del terreno al: ' + data);
-		}).fail(function () {
-			// $('#showDate').append('<center><h3>Lotes contratados al: '+new Date().getDay()+new Date().getMonth()+new Date().getFullYear()'</h3></center>');
-		});
+		$.post(`${general_base_url}Contratacion/sedesPorDesarrollos`, function(data) {
+		var len = data.length;
+		for(var i = 0; i<len; i++)
+		{
+			var id = data[i]['id_sede'];
+			var name = data[i]['nombre'];
+			$("#sedes").append($('<option>').val(id).text(name.toUpperCase()));
+		}
+		$("#sedes").selectpicker('refresh');
+		}, 'json');
+		const [date, dateTime] = getFinalDate();
+		const hoy = new Date();
+		const options = {weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'};
+		$('#showDate').append('Estatus actual del terreno al ' + hoy.toLocaleDateString('es-ES', options));
+	});
 
-        var today = new Date();
+	$(document).on('change', "#sedes", function () {
+		fillTable($(this).val());
+	});
+
+	function getFinalDate(){
+		var today = new Date();
         var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
         var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
-        var dateTime = date+' '+time;
+        var dateTime = date + ' ' + time;
+		return [date, dateTime];
+	}
 
+	function fillTable(sede) {
+		const [date, dateTime] = getFinalDate();
 		$('#Jtabla').DataTable({
-			"ajax": {
-				"url": '<?=base_url()?>index.php/registroLote/getFinalStatus/',
-				"dataSrc": ""
+			ajax: {
+				url: '<?=base_url()?>index.php/registroLote/getFinalStatus/',
+				type: "POST",
+				cache: false,
+				data: {
+					"id_sede": sede
+				}
 			},
             dom: 'Brt'+ "<'row'<'col-12 col-sm-12 col-md-6 col-lg-6'i><'col-12 col-sm-12 col-md-6 col-lg-6'p>>",
             buttons: [{
@@ -248,7 +219,7 @@
             }],
             destroy: true,
             ordering: true,
-			"columns": [
+			columns: [
 				{data: 'nombreResidencial'},
 				{data: 'nombreCondominio'},
 				{data: 'nombreLote'},
@@ -361,6 +332,5 @@
 
 			]
 		});
-
-	});
+	}
 </script>

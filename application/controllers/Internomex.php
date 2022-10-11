@@ -195,26 +195,29 @@
                 for($e = 0; $e < count($verifiedData); $e++){
                   if((int)$decodedData[$i]->id_usuario === (int)$verifiedData[$e]->id_usuario)
                   {
+                  //  $reinsertArrayData[$i] =  (int)$decodedData[$i];
                     $flag = true;
-                    $flagB = true;
+                    $flagB = false;
+
                     //$reinsertArrayData = $decodedData[$e];
                     unset($decodedData[$i]); // SE ELIMINA LA POSICIÓN QUE YA SE INSERTÓ ANTERIO  RMENTE
                     $decodedData = array_values($decodedData); // SE REORDENA EL ARRAY
                   }
                 
                 }
+                //var_dump($reinsertArrayData);
               }
               //var_dump($reinsertArrayData);
               //var_dump('data del real insertada');
               if (count($decodedData) > 0) {
                 $commonData += array("id_usuario" => (int)$decodedData[$i]->id_usuario, 
-                // 
-                  "forma_pago" => $this->formatter->convertPaymentMethod($decodedData[$i]->formaPago),
+                //  $this->formatter->convertPaymentMethod($decodedData[$i]->formaPago)
+                  "forma_pago" => 1,
                   "monto_sin_descuento" => (float)$this->formatter->removeNumberFormat($decodedData[$i]->montoSinDescuentos), 
                   "monto_con_descuento" => (float)$this->formatter->removeNumberFormat($decodedData[$i]->montoConDescuentosSede), 
                   "monto_internomex" => (float)$this->formatter->removeNumberFormat($decodedData[$i]->montoFinal));
                 $commonData += $insertAuditoriaData; // SE CONCATENA LA DATA BASE + LA DATA DEL ARRAY PRINCIPAL
-                //array_push($insertArrayData, $commonData);
+                array_push($insertArrayData, $commonData);
          
               }
               else{
@@ -223,14 +226,16 @@
               }
             }
             if ($flag){
-              echo json_encode(array("status" => 500, "message" => "Es posible que más de un dato ya estuviera registrado en este mes"), JSON_UNESCAPED_UNICODE);
+              $flagB = false;
 
-            }else{
-              echo json_encode(array("status" => 500, "message" => "No hay información para procesar (vacío)."), JSON_UNESCAPED_UNICODE);            
+              echo json_encode(array("status" => 301, "message" => "Es posible que más de un dato ya estuviera registrado en este mes"), JSON_UNESCAPED_UNICODE);
+
             }
+           // if ($flag){
+           //   echo json_encode(array("status" => 500, "message" => "No hay información para procesar (vacío)."), JSON_UNESCAPED_UNICODE);            
+           // }
 
-
-            var_dump($insertArrayData);
+            
             if (count($insertArrayData) > 0) { // AL TERMINAR EL CICLO SE EVALÚA SI EL ARRAY DE DATOS PARA EL BATCH INSERT TIENE DATA VA Y TIRA EL BATCH
               $insertResponse = $this->General_model->insertBatch("pagos_internomex", $insertArrayData);
               if ($insertResponse) // SE EVALÚA LA RESPUSTA DE LA TRANSACCIÓN OK
@@ -241,10 +246,10 @@
             else
                  if($flag){
                     if ($flagB){
-                      echo json_encode(array("status" => 200, "message" => "Es posible que más de un dato ya estuviera registrado en este mes"), JSON_UNESCAPED_UNICODE);
+                      
+                      // echo json_encode(array("status" => 301, "message" => "Es posible que más de un dato ya estuviera registrado en este mes"), JSON_UNESCAPED_UNICODE);
                        }
-                
-                         
+            
                       }else{
                         echo json_encode(array("status" => 500, "message" => "No hay información para procesar (vacío)."), JSON_UNESCAPED_UNICODE);
                       }
