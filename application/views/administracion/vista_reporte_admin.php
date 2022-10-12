@@ -25,35 +25,20 @@
                                 <i class="material-icons">list</i>
                             </div>
                             <div class="card-content">
-                                <h3 class="card-title center-align">Reporte Trimestal</h3>
-                                <div class="row">
-                                    <div class="toolbar">
-                                        <div class="col-md-8"></div>
-                                        <div class="col-md-4 p-r">
-                                            <div class="form-group d-flex">
-                                                <input type="text" class="form-control datepicker beginDate" id="beginDate"/>
-                                                <input type="text" class="form-control datepicker endDate" id="endDate"/>
-                                                <button class="btn btn-success btn-round btn-fab btn-fab-mini" id="searchByDateRange">
-                                                    <span class="material-icons update-dataTable">search</span>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                                <h3 class="card-title center-align">Reporte de lotes Liberados</h3>
+                                <p class="center-align">Por medio de este panel podrás visualizar y descargar una plantilla en la cual se mostraran los lotes que ya se les haya asignado un estatus 9 y que posteriormente fueron liberados.</p>
                                 <div class="material-datatables">
-                                    <table class="table-striped table-hover" id="lotesTrimestral"name="lotesTrimestral">
+                                    <table class="table-striped table-hover" id="repAdministracion"name="repAdministracion">
                                         <thead>
                                             <tr>
                                                 <th>PROYECTO</th>
                                                 <th>CONDOMINIO</th>
                                                 <th>LOTE</th>
-                                                <th>PRECIO FINAL</th>
-                                                <th>REFERENCIA</th>
-                                                <th>ASESOR</th>
-                                                <th>FECHA APARTADO</th>
-                                                <th>SEDE</th>
-                                                <th>TIPO VENTA</th>
-                                                <th>FECHA CONTRATACION</th>
+                                                <th>ID LOTE</th>
+                                                <th>CLIENTE</th>
+                                                <th>FECHA 9</th>
+                                                <th>FECHA LIBERACION</th>
+                                                <th>MOTIVO LIBERACION</th>
                                             </tr>
                                         </thead>
                                     </table>
@@ -84,5 +69,5 @@
     <script src="<?= base_url() ?>dist/js/bootstrap-datetimepicker.js"></script>
     <!--  Full Calendar Plugin    -->
     <!-- MODAL WIZARD -->
-    <script src="<?=base_url()?>dist/js/controllers/contraloria/reportesTrimestrales.js"></script>
+    <script src="<?=base_url()?>dist/js/controllers/administracion/reporteAdministracion.js"></script>
 </body>
