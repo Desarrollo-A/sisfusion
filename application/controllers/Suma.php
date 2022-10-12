@@ -51,7 +51,7 @@ class Suma extends CI_Controller
         $datos["opn_cumplimiento"] = $this->Usuarios_modelo->Opn_cumplimiento($this->session->userdata('id_usuario'))->result_array();
 
         $this->load->view('template/header');
-        $this->load->view("Ventas/comisiones_suma", $datos);
+        $this->load->view("ventas/comisiones_suma", $datos);
     }
 
     public function getComisionesByStatus(){
