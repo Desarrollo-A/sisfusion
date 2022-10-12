@@ -41,4 +41,20 @@ class Ventas extends CI_Controller {
         }
 	}
 
+    public function repoVtasAsesor(){
+        $this->validateSession();
+        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
+        $this->load->view('template/header');
+        $this->load->view("ventas/vtas_periodo_asesor",$datos);
+    }
+
+    public function getLotesTrimestral(){
+        $data = $this->Reporte_model->getInfRepoVta()->result_array();
+        if($data != null) {
+            echo json_encode($data);
+        } else {
+            echo json_encode(array());
+        }
+    }
+
 }
