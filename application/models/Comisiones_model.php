@@ -1025,11 +1025,11 @@ WHERE oxc.id_catalogo = 1 AND pcm.estatus = 11 AND pcm.id_usuario =  ".$this->se
 
         function factura_comision( $uuid, $id_res){
             return $this->db->query("SELECT DISTINCT CAST(uuid AS VARCHAR(MAX)) AS uuid ,
-            u.nombre, u.apellido_paterno, u.apellido_materno, res.nombreResidencial as nombreLote, f.fecha_factura, f.folio_factura, f.metodo_pago, f.regimen, f.forma_pago, f.cfdi, f.unidad, f.claveProd, f.total, f.total as porcentaje_dinero, f.nombre_archivo, CAST(f.descripcion AS VARCHAR(MAX)) AS descrip
+            u.nombre, u.apellido_paterno, u.apellido_materno, res.nombreResidencial as nombreLote, f.fecha_factura, f.folio_factura, f.metodo_pago, f.regimen, f.forma_pago, f.cfdi, f.unidad, f.claveProd, f.total, f.total as porcentaje_dinero, f.nombre_archivo, CAST(f.descripcion AS VARCHAR(MAX)) AS descrip, f.fecha_ingreso
             FROM facturas f 
             INNER JOIN usuarios u ON u.id_usuario = f.id_usuario
             INNER JOIN pago_comision_ind pci ON pci.id_pago_i = f.id_comision
-            INNER JOIN comisiones com ON com.id_comision = pci.id_comision
+            INNER JOIN comisiones com ON com.id_comision = pci.id_comision 
             INNER JOIN lotes l ON l.idLote = com.id_lote
             INNER JOIN condominios con ON con.idCondominio = l.idCondominio
             INNER JOIN residenciales res ON res.idResidencial = con.idResidencial and res.idResidencial = $id_res
