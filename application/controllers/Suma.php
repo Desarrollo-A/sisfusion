@@ -406,7 +406,7 @@ class Suma extends CI_Controller
         $idPago = $this->input->post("id_pago");
         $estatus = $this->input->post("estatus");
         $obs = $this->input->post("observaciones");
-        if( $estatus == 2 && $idRol == 65 )
+        if( $estatus == 2 && $idRol == 68 )
             $estatus = 4;
         elseif( $estatus == 3 && $idRol == 31 )
             $estatus = 5;
