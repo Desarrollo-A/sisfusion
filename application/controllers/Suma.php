@@ -60,6 +60,13 @@ class Suma extends CI_Controller
         echo json_encode($data);
     }
 
+    public function getAllComisiones(){
+        $user = $this->session->userdata('id_usuario');
+        $year = $_POST['anio'];
+        $data = $this->Suma_model->getAllComisiones($user, $year);
+        echo json_encode($data);
+    }
+
     public function sumServ(){
         $data_json = json_decode((file_get_contents("php://input")));
         $request = array();
