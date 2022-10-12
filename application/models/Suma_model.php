@@ -179,6 +179,19 @@ class Suma_model extends CI_Model
         }
     }
 
+    function setPagosInternomex($updateArray, $insertArray){
+        $this->db->trans_begin();
+        $c = $this->db->update_batch('pagos_suma', $updateArray, 'id_pago_suma');
+        $b = $this->db->insert_batch('historial_suma', $insertArray);
+        if ($this->db->trans_status() === FALSE) { // Hubo errores en la consulta, entonces se cancela la transacción.
+            $this->db->trans_rollback();
+            return false;
+        } else { // Se realize primer insert correctamente
+            $this->db->trans_commit();
+            return true;
+        }
+    }
+
     function get_lista_roles(){
         return $this->db->query("SELECT id_opcion AS idRol, nombre AS descripcion FROM opcs_x_cats WHERE id_catalogo = 1 and id_opcion in (3,9,7) ORDER BY nombre");
     }

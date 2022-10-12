@@ -444,7 +444,26 @@ class Suma extends CI_Controller
     }
 
     public function pago_internomex(){
-        
+        $idUsuario = $this->session->userdata('id_usuario');
+        $idsComisiones = explode(",",$this->input->post('idcomision'));
+
+        for ($i = 0; $i < count($idsComisiones); $i++) {
+            $updateArrayData[] = array(
+                'id_pago_suma' => $idsComisiones[$i],
+                'estatus' => 6
+            );
+
+            $insertArrayData[]=array(
+                'id_pago' => $idsComisiones[$i],
+                'id_usuario' =>  $idUsuario,
+                'fecha_movimiento' => date('Y-m-d H:i:s'),
+                'estatus' => 6,
+                'comentario' =>  'INTERNOMEX APLICO PAGO' 
+            );
+        }
+
+        $reponse = $this->Suma_model->setPagosInternomex($updateArrayData, $insertArrayData);
+        echo json_encode( $reponse );
     }
 
     public function getDatosNuevasXContraloria($proyecto,$condominio){
