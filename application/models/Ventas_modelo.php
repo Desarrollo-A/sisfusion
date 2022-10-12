@@ -7,7 +7,7 @@ class Ventas_modelo extends CI_Model {
 	{
 		parent::__construct();
 	}
-	public function getInfRepoVta(){
+	public function getGralInfRepoVta(){
 		$query=$this->db->query("SELECT USU.id_usuario AS id_asesor, CONCAT(USU.nombre, ' ', USU.apellido_paterno, ' ', USU.apellido_materno) AS nombre_asesor, USU.fecha_creacion AS fecha_creacion, 
 		COUNT(LO.idLote) AS num_lotes, FORMAT(SUM(LO.total_lotes), 'C') AS total_ventas_lotes,
 		CASE 

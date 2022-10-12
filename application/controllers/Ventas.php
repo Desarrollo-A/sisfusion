@@ -1,6 +1,8 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+
 class Ventas extends CI_Controller {
 	public function __construct() {
+        
 		parent::__construct();
         $this->load->model(array('Ventas_modelo', 'Statistics_model', 'asesor/Asesor_model'));
         $this->load->library(array('get_menu', 'Jwt_actions'));
@@ -48,8 +50,9 @@ class Ventas extends CI_Controller {
         $this->load->view("ventas/vtas_periodo_asesor",$datos);
     }
 
-    public function getLotesTrimestral(){
-        $data = $this->Reporte_model->getInfRepoVta()->result_array();
+    public function getInfRepoVta(){
+        
+        $data = $this->Ventas_modelo->getGralInfRepoVta()->result_array();
         if($data != null) {
             echo json_encode($data);
         } else {

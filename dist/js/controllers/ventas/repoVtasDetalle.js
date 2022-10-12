@@ -129,7 +129,7 @@ function createAccordions(option, render, rol){
                         <i class="fas fa-angle-down"></i>
                     </div>
                     <div>
-                        <h4 class="p-0 accordion-title js-accordion-title">`+tittle+`</h4>
+                        <h4 class="p-0 accordion-title js-accordion-title center-align">`+tittle+`</h4>
                     </div>
                     <div>
                         ${render == 1 ? '': '<i class="fas fa-times deleteTable"></i>'}
@@ -143,7 +143,7 @@ function createAccordions(option, render, rol){
                             <th class="encabezado">NOMBRE DE `+option.toUpperCase()+`</th>
                             <th>FECHA CREACION</th>
                             <th>NUM LOTES</th>
-                            <thTOTAL DE VENTAS</th>
+                            <th>TOTAL DE VENTAS</th>
                             <th>PERIODO</th>
                         </tr>
                     </thead>
