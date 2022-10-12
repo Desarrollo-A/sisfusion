@@ -71,7 +71,7 @@ class Suma_model extends CI_Model
         INNER JOIN usuarios us ON us.id_usuario = ps.id_usuario
         INNER JOIN sedes se ON se.id_sede = us.id_sede
         INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = us.forma_pago AND oxc.id_catalogo = 16
-        INNER JOIN opcs_x_cats oxc2 ON oxc2.id_opcion = ps.estatus AND oxc2.id_catalogo = 73 
+        INNER JOIN opcs_x_cats oxc2 ON oxc2.id_opcion = ps.estatus AND oxc2.id_catalogo = 74 
         WHERE ps.id_usuario = $user AND year(ps.fecha_creacion) = $year");
 
         return $query->result_array();
