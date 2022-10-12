@@ -105,9 +105,11 @@
                             <li class="active">
                                 <a href="#solicitudesCRM" role="tab"  data-toggle="tab">Historial CRM</a>
                             </li>
-                            <li>
-                                <a href="#solicitudesSUMA" role="tab"  data-toggle="tab">Historial SUMA</a>
-                            </li>
+                            <?php if( $this->session->userdata('id_rol') == 1 || $this->session->userdata('id_rol') == 2 || $this->session->userdata('id_rol') == 3 || $this->session->userdata('id_rol') == 7 || $this->session->userdata('id_rol') == 9) { ?>
+                                <li>
+                                    <a href="#solicitudesSUMA" role="tab"  data-toggle="tab">Historial SUMA</a>
+                                </li>
+                            <?php }?>
                         </ul>
                         <div class="card no-shadow m-0">
                             <div class="card-content p-0">
@@ -172,6 +174,7 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        <?php if( $this->session->userdata('id_rol') == 1 || $this->session->userdata('id_rol') == 2 || $this->session->userdata('id_rol') == 3 || $this->session->userdata('id_rol') == 7 || $this->session->userdata('id_rol') == 9) { ?>
                                         <div class="tab-pane" id="solicitudesSUMA">
                                             <div class="encabezadoBox">
                                                 <h3 class="card-title center-align">Historial general SUMA</h3>
@@ -209,7 +212,8 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
+                                        </div><!-- End tab SUMA  validado solo para ventas-->
+                                        <?php }?>
                                     </div>
                                 </div>
                             </div>
