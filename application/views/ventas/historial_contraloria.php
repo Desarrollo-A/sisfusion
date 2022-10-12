@@ -174,6 +174,7 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        <?php if( $this->session->userdata('id_rol') == 1 || $this->session->userdata('id_rol') == 2 || $this->session->userdata('id_rol') == 3 || $this->session->userdata('id_rol') == 7 || $this->session->userdata('id_rol') == 9) { ?>
                                         <div class="tab-pane" id="solicitudesSUMA">
                                             <div class="encabezadoBox">
                                                 <h3 class="card-title center-align">Historial general SUMA</h3>
@@ -211,7 +212,8 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
+                                        </div><!-- End tab SUMA  validado solo para ventas-->
+                                        <?php }?>
                                     </div>
                                 </div>
                             </div>
