@@ -109,12 +109,42 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, dates=n
             }
         },
         columns: [
-            {data: 'id_asesor'},
-            {data: 'nombre_asesor'},
-            {data: 'fecha_creacion'},
-            {data: 'num_lotes'},
-            {data: 'total_ventas_lotes'},
-            {data: 'periodo'}
+            {
+                with: "20%",
+                data: function (d){
+                    return d.id_asesor;
+                }
+            },
+            {
+                with: "30%",
+                data: function (d){
+                    return d.nombre_asesor;
+                }
+            },
+            {
+                with: "30%",
+                data: function (d){
+                    return d.fecha_creacion;
+                }
+            },
+            {
+                with: "30%",
+                data: function (d){
+                    return d.num_lotes;
+                }
+            },
+            {
+                with: "30%",
+                data: function (d){
+                    return d.total_ventas_lotes;
+                }
+            },
+            {
+                with: "20%",
+                data: function (d){
+                    return d.periodo;
+                }
+            }
         ]
     });
     $('[data-toggle="tooltip"]').tooltip();
