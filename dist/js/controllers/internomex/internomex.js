@@ -398,7 +398,11 @@ $(document).on('click', '#cargaCoincidencias', function () {
                         $('#uploadModal').modal('toggle');
                     },
                     error: function(XMLHttpRequest, textStatus, errorThrown){
+                        console.log(XMLHttpRequest.status);
                         alerts.showNotification("top", "right", XMLHttpRequest.status == 500 ? 'Error en los datos ingresados':'Oops, algo salió mal. Inténtalode nuevo 009.', "danger");
+                        if (XMLHttpRequest.status == 301){
+                            alerts.showNotification("top", "right", 'intentas subir uno o varios regitros.' , "warning");
+                        }
                         $('#uploadModal').modal('toggle');
                     }
                 });
