@@ -909,7 +909,7 @@ $("#tabla_pausadas_comisiones").ready(function() {
         ajax: {
             url: general_base_url + "Suma/getComisionesByStatus",
             type: "POST",
-            data: {estatus: 5},
+            data: {estatus: 4},
             dataType: 'json',
             dataSrc: ""
         },
