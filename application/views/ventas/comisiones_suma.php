@@ -211,6 +211,9 @@
                             <li>
                                 <a href="#porPagar" role="tab"  data-toggle="tab">Por pagar</a>
                             </li>
+                            <li>
+                                <a href="#pausadas" role="tab"  data-toggle="tab">Pausadas</a>
+                            </li>
                         </ul>
                         <div class="card no-shadow m-0">
                             <div class="card-content p-0">
@@ -384,6 +387,41 @@
                                             </div>
                                             <div class="table-responsive">
                                                 <table class="table-striped table-hover" id="tabla_pagadas_comisiones" name="tabla_pagadas_comisiones">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>ID PAGO</th>
+                                                            <th>REFERENCIA</th>
+                                                            <th>NOMBRE</th>
+                                                            <th>SEDE</th>
+                                                            <th>FORMA PAGO</th>
+                                                            <th>TOTAL COMISION</th>
+                                                            <th>IMPUESTO</th>
+                                                            <th>% COMISION</th>
+                                                            <th>ESTATUS</th>
+                                                            <th>MÁS</th>
+                                                        </tr>
+                                                    </thead>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane" id="pausadas">
+                                            <div class="encabezadoBox">
+                                                <p class="card-title pl-1">Comisiones pausadas, para ver el motivo da clic el botón de información. Si requieres ver más detalles como lo pagado y lo pendiente, podrás consultarlo en el historial. <a href="https://maderascrm.gphsis.com/Comisiones/historial_colaborador"><b>clic para ir al historial</b></a>.</p>
+                                            </div>
+                                            <div class="toolbar">
+                                                <div class="container-fluid p-0">
+                                                    <div class="row">
+                                                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                                                            <div class="form-group d-flex justify-center align-center">
+                                                                <h4 class="title-tot center-align m-0">Total pausado:</h4>
+                                                                <p class="input-tot pl-1" name="myText_pausadas" id="myText_pausadas">$0.00</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="table-responsive">
+                                                <table class="table-striped table-hover" id="tabla_pausadas_comisiones" name="tabla_pausadas_comisiones">
                                                     <thead>
                                                         <tr>
                                                             <th>ID PAGO</th>

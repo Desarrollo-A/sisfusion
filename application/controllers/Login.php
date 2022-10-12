@@ -73,7 +73,7 @@ class Login extends CI_Controller
 		  case '53': // ANALISTA COMISIONES
 		  case '61': // ANSESOR CONSULTA
 		  case '64': // ASISTENTE DIRECCIÓN ADMINISTRACIÓN
-		  case '65': // CONTABILIDAD (EXTERNO)
+		  case '65':
               redirect(base_url().'Administracion');
          break;
 
@@ -240,6 +240,10 @@ class Login extends CI_Controller
 						elseif ($dataRol[0]->nombre=="Subdirección consulta")
 						{
 							$perfil = ($dataRol[0]->nombre=="Subdirección consulta") ? "subdireccionConsulta" : $dataRol[0]->nombre;
+						}
+						elseif ($dataRol[0]->nombre=="suma")
+						{
+							$perfil = ($dataRol[0]->nombre=="suma") ? "suma" : $dataRol[0]->nombre;
 						}
 
 					}

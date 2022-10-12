@@ -40,7 +40,7 @@ class Suma_model extends CI_Model
         if ($this->db->trans_status() === FALSE) { // Hubo errores en la consulta, entonces se cancela la transacción.
             $this->db->trans_rollback();
             return false;
-        } else { // Se realize primer insert correctamente
+        } else { // Se realiza primer insert correctamente
             $this->db->trans_commit();
             return true;
         }
@@ -119,5 +119,84 @@ class Suma_model extends CI_Model
         );
         
         return $this->db->insert("facturas_suma", $data);
+    }
+
+    function getAsimiladosRevision(){
+        $datos = $this->db->query("SELECT ps.id_pago_suma, ps.referencia, CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) nombreComisionista,
+        se.nombre sede, oxc.nombre estatusString, ps.estatus, ps.total_comision, (CASE us.forma_pago WHEN 3 THEN (((100-se.impuesto)/100)* ps.total_comision) ELSE ps.total_comision END) impuesto,
+        ps.porcentaje_comision, us.id_usuario
+        FROM pagos_suma ps
+        INNER JOIN usuarios us ON us.id_usuario = ps.id_usuario
+        INNER JOIN sedes se ON se.id_sede = us.id_sede
+        INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = ps.estatus AND oxc.id_catalogo = 74
+        WHERE us.forma_pago = 3 AND ps.estatus IN (2, 4, 5)");
+
+        return $datos;
+    }
+
+    function getAsimiladosRevisionIntMex($idRol, $idUsuario){
+        $datos = $this->db->query("SELECT ps.id_pago_suma, ps.referencia, CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) nombreComisionista, se.nombre sede, oxc.nombre estatusString, ps.estatus, ps.total_comision, (CASE us.forma_pago WHEN 3 THEN (((100-se.impuesto)/100)* ps.total_comision) ELSE ps.total_comision END) impuesto, ps.porcentaje_comision, us.id_usuario, oxc2.nombre puesto
+        FROM pagos_suma ps
+        INNER JOIN usuarios us ON us.id_usuario = ps.id_usuario
+        INNER JOIN sedes se ON se.id_sede = us.id_sede
+        INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = ps.estatus AND oxc.id_catalogo = 74
+        INNER JOIN opcs_x_cats oxc2 ON oxc2.id_opcion = us.id_rol AND oxc2.id_catalogo = 1
+        WHERE ps.id_usuario = $idUsuario AND us.id_rol = $idRol AND us.forma_pago = 3 AND ps.estatus IN (3, 5)");
+
+        return $datos;
+    }
+
+    function getRemanentesRevision(){
+        $datos = $this->db->query("SELECT ps.id_pago_suma, ps.referencia, CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) nombreComisionista,
+        se.nombre sede, oxc.nombre estatusString, ps.estatus, ps.total_comision, (CASE us.forma_pago WHEN 3 THEN (((100-se.impuesto)/100)* ps.total_comision) ELSE ps.total_comision END) impuesto,
+        ps.porcentaje_comision, us.id_usuario
+        FROM pagos_suma ps
+        INNER JOIN usuarios us ON us.id_usuario = ps.id_usuario
+        INNER JOIN sedes se ON se.id_sede = us.id_sede
+        INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = ps.estatus AND oxc.id_catalogo = 74
+        WHERE us.forma_pago = 4 AND ps.estatus IN (2, 4, 5)");
+
+        return $datos;
+    }
+
+    function setPausarDespausarComision($estatus, $idPago, $idUsuario, $obs){
+        $leyendaStatus = ( $estatus == 5 || $estatus == 4 ) ? 'PAUSÓ' : 'ACTIVÓ';
+
+        $this->db->query("INSERT INTO historial_suma VALUES ($idPago, $idUsuario, GETDATE(), $estatus, 'SE ".$leyendaStatus." COMISIÓN, MOTIVO: ".strtoupper($obs)." ')");
+        return $this->db->query("UPDATE pagos_suma SET estatus = $estatus WHERE id_pago_suma = $idPago");
+    }
+
+    function setAsimiladosInternomex($updateArray, $insertArray){
+        $this->db->trans_begin();
+        $c = $this->db->update_batch('pagos_suma', $updateArray, 'id_pago_suma');
+        $b = $this->db->insert_batch('historial_suma', $insertArray);
+        if ($this->db->trans_status() === FALSE) { // Hubo errores en la consulta, entonces se cancela la transacción.
+            $this->db->trans_rollback();
+            return false;
+        } else { // Se realize primer insert correctamente
+            $this->db->trans_commit();
+            return true;
+        }
+    }
+
+    function get_lista_roles(){
+        return $this->db->query("SELECT id_opcion AS idRol, nombre AS descripcion FROM opcs_x_cats WHERE id_catalogo = 1 and id_opcion in (3,9,7) ORDER BY nombre");
+    }
+
+    function get_lista_usuarios($rol, $forma_pago){
+        return $this->db->query("SELECT id_usuario, CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) AS nombre FROM usuarios WHERE id_usuario in (SELECT id_usuario FROM pagos_suma WHERE estatus in (3, 5)) AND id_rol = $rol AND forma_pago = $forma_pago ORDER BY nombre");
+    }
+
+    function getRemanentesRevisionInternomex(){
+        $datos = $this->db->query("SELECT ps.id_pago_suma, ps.referencia, CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) nombreComisionista,
+        se.nombre sede, oxc.nombre estatusString, ps.estatus, ps.total_comision, (CASE us.forma_pago WHEN 3 THEN (((100-se.impuesto)/100)* ps.total_comision) ELSE ps.total_comision END) impuesto,
+        ps.porcentaje_comision, us.id_usuario
+        FROM pagos_suma ps
+        INNER JOIN usuarios us ON us.id_usuario = ps.id_usuario
+        INNER JOIN sedes se ON se.id_sede = us.id_sede
+        INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = ps.estatus AND oxc.id_catalogo = 74
+        WHERE us.forma_pago = 4 AND ps.estatus IN (2, 4, 5)");
+
+        return $datos;
     }
 }
