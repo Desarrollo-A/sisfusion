@@ -335,7 +335,7 @@ class Suma extends CI_Controller
         $datos['sub_menu'] = $this->get_menu->get_submenu_data($this->session->userdata('id_rol'), $this->session->userdata('id_usuario'));
 
         $this->load->view('template/header');
-        $this->load->view("Ventas/revision_asimilados_suma", $datos);
+        $this->load->view("ventas/revision_asimilados_suma", $datos);
     }
 
     public function revision_remanentes(){
@@ -343,7 +343,7 @@ class Suma extends CI_Controller
         $datos['sub_menu'] = $this->get_menu->get_submenu_data($this->session->userdata('id_rol'), $this->session->userdata('id_usuario'));
 
         $this->load->view('template/header');
-        $this->load->view("Ventas/revision_remanentes_suma", $datos);
+        $this->load->view("ventas/revision_remanentes_suma", $datos);
     }
 
     public function revision_facturas_xml(){
@@ -351,7 +351,7 @@ class Suma extends CI_Controller
         $datos['sub_menu'] = $this->get_menu->get_submenu_data($this->session->userdata('id_rol'), $this->session->userdata('id_usuario'));
 
         $this->load->view('template/header');
-        $this->load->view("Ventas/revision_xml_suma", $datos);
+        $this->load->view("ventas/revision_xml_suma", $datos);
     }
 
     public function revision_asimilados_intmex(){
@@ -359,7 +359,7 @@ class Suma extends CI_Controller
         $datos['sub_menu'] = $this->get_menu->get_submenu_data($this->session->userdata('id_rol'), $this->session->userdata('id_usuario'));
 
         $this->load->view('template/header');
-        $this->load->view("Ventas/revision_INTMEXasimilados_suma", $datos);  
+        $this->load->view("ventas/revision_INTMEXasimilados_suma", $datos);  
     }
 
     public function revision_remanentes_intmex(){
@@ -367,7 +367,7 @@ class Suma extends CI_Controller
         $datos['sub_menu'] = $this->get_menu->get_submenu_data($this->session->userdata('id_rol'), $this->session->userdata('id_usuario'));
 
         $this->load->view('template/header');
-        $this->load->view("Ventas/revision_INTMEXremanente_suma", $datos);  
+        $this->load->view("ventas/revision_INTMEXremanente_suma", $datos);  
     }
 
     public function revision_XML_intmex(){
@@ -375,7 +375,7 @@ class Suma extends CI_Controller
         $datos['sub_menu'] = $this->get_menu->get_submenu_data($this->session->userdata('id_rol'), $this->session->userdata('id_usuario'));
 
         $this->load->view('template/header');
-        $this->load->view("Ventas/revision_INTMEXxml_suma", $datos);  
+        $this->load->view("ventas/revision_INTMEXxml_suma", $datos);  
     }
 
     public function getAsimiladosRevision(){
