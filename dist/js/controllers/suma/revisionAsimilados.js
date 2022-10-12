@@ -283,7 +283,7 @@ $("#tabla_asimilados tbody").on("click", ".cambiar_estatus", function(){
             success: function(data){
                 if(data){
                     $("#modal_nuevas").modal('toggle' );
-                    alerts.showNotification("top", "right", "Se ha pausado la comisión exitosamente", "success");
+                    alerts.showNotification("top", "right", "Se ha realizado el cambio de estatus de la comisión exitosamente", "success");
                     setTimeout(function() {
                         tabla_asimilados.ajax.reload();
                     }, 3000);

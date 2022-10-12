@@ -399,7 +399,15 @@ class Suma extends CI_Controller
         $idPago = $this->input->post("id_pago");
         $estatus = $this->input->post("estatus");
         $obs = $this->input->post("observaciones");
-        $estatus = ( $estatus == 2 && $idRol == 65 ) ? 4 : ( $estatus == 3 && $idRol == 31 ) ? 5 : ( $estatus == 5 ) ? 3 : 2;
+        if( $estatus == 2 && $idRol == 65 )
+            $estatus = 4;
+        elseif( $estatus == 3 && $idRol == 31 )
+            $estatus = 5;
+        elseif( $estatus == 5 )
+            $estatus = 3;
+        else
+            $estatus = 2;
+
         $respuesta = $this->Suma_model->setPausarDespausarComision($estatus, $idPago, $idUsuario, $obs);
 
         echo json_encode( $respuesta );
