@@ -1,25 +1,5 @@
 var dataMetros, dataDisponibilidad, dataLugarProspeccion, dataMedio, metrosChart, disponibilidadChart, lugarChart, medioChart, promedioMetrosChart, dataPromedio, dataSedes;
 
-sp = { // MJ: SELECT PICKER
-    initFormExtendedDatetimepickers: function () {
-        $('.datepicker').datetimepicker({
-            format: 'DD/MM/YYYY',
-            icons: {
-                time: "fa fa-clock-o",
-                date: "fa fa-calendar",
-                up: "fa fa-chevron-up",
-                down: "fa fa-chevron-down",
-                previous: 'fa fa-chevron-left',
-                next: 'fa fa-chevron-right',
-                today: 'fa fa-screenshot',
-                clear: 'fa fa-trash',
-                close: 'fa fa-remove',
-                inline: true
-            }
-        });
-    }
-}
-
 var optionBarInit = {
     series: [],
     chart: {
@@ -415,13 +395,13 @@ var optionsPromedio = {
   };
 
 
-$(document).ready(function () {
+function readyMetrics(){
     $('[data-toggle="tooltip"]').tooltip();
     sp.initFormExtendedDatetimepickers();
     $('.datepicker').datetimepicker({locale: 'es'});
-    setInitialValues();
+    setInitialValuesMetrics();
     initMetrics();
-});
+}
 
 $('#proyecto').off().on('change', function(){
     getCondominios($(this).val());
@@ -453,15 +433,15 @@ $('#searchByDateRangePromedio').off().on('click', function(){
 });
 
 
-$(document).on('click', '.btnModalDetails', function () {
+$(document).on('click', '.btnModalDetailsMetricas', function () {
     let dataObj = {
         sede_residencial: $('#sedes').val(),
         idResidencial: $('#proyecto2').val(),
         begin: formatDate($('#tableBegin_promedio').val()), 
         end: formatDate($('#tableEnd_promedio').val())
     }
-    fillTable(dataObj);
-    $("#seeLotesDetailModal").modal();
+    fillTableMetrics(dataObj);
+    $("#seeLotesDetailModalMetricas").modal();
 });
 
 
@@ -1210,7 +1190,7 @@ function getSedes(selected=null){
     });
 }
 
-function setInitialValues() {
+function setInitialValuesMetrics() {
     // BEGIN DATE
     const fechaInicio = new Date();
     // Iniciar en este año, este mes, en el día 1
@@ -1376,8 +1356,8 @@ function buildSelect(selected, dataSelect){
     $('#proyecto2').selectpicker('refresh');
 }
 
-function fillTable(dataObject) {
-    generalDataTable = $('#lotesDetailTable').dataTable({
+function fillTableMetrics(dataObject) {
+    generalDataTable = $('#lotesDetailTableMetricas').dataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: '100%',
    

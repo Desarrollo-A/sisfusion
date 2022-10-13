@@ -62,21 +62,22 @@
 
 							<div class="col col-xs-12 col-sm-12 col-md-6 col-lg-6">
 								<label id="tvLbl">Total a validar:</label>
-								<input type="text" class="form-control" name="totalNeto" id="totalNeto" oncopy="return false" onpaste="return false" readonly>
+								<input class="form-control" name="totalNeto" id="totalNeto" oncopy="return false" onpaste="return false" readonly
+                                       type="tel" pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" data-type="currency">
 							</div>
 
 
 							<div class="col col-xs-12 col-sm-12 col-md-6 col-lg-6">
 								<label id="tvLbl">Total validado:</label>
-								<input type="text" class="form-control" name="totalValidado" id="totalValidado" oncopy="return false" onpaste="return false" onkeypress="return SoloNumeros(event)">
+								<input type="tel" pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" data-type="currency" class="form-control" name="totalValidado" id="totalValidado" oncopy="return false" onpaste="return false" onkeypress="return SoloNumeros(event)">
 
 							</div>
 						</div>
 					</div>
 					<div class="modal-footer"></div>
 					<div class="modal-footer">
-						<button type="button" id="save1" class="btn btn-success"><span class="material-icons" >send</span> </i> Registrar</button>
-						<button type="button" class="btn btn-danger" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> Cancelar</button>
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal"> Cancelar</button>
+						<button type="button" id="save1" class="btn btn-primary"> Registrar</button>
 					</div>
 				</div>
 			</div>
@@ -117,8 +118,8 @@
 					</div>
 					<div class="modal-footer"></div>
 					<div class="modal-footer">
-					<button type="button" id="save3" class="btn btn-success"><span class="material-icons" >send</span> </i> Registrar</button>
-						<button type="button" class="btn btn-danger btn-simple" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span>Cancelar</button>
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                        <button type="button" id="save3" class="btn btn-primary">Registrar</button>
 					</div>
 				</div>
 			</div>
@@ -155,6 +156,7 @@
 														<th>FECHA REALIZADO</th>
 														<th>FECHA VENC</th>
 														<th>DÍAS TRANSC</th>
+														<th>ESTATUS ACTUAL</th>
 														<th></th>
 													</tr>
 												</thead>
@@ -190,7 +192,7 @@
 
 		$("#tabla_ingresar_11").ready( function(){
 			$('#tabla_ingresar_11 thead tr:eq(0) th').each( function (i) {
-				if(i != 0 && i != 11){
+				if(i != 0 && i != 12){
 					var title = $(this).text();
 					$(this).html('<input type="text" class="textoshead" placeholder="'+title+'"/>' );
 					$( 'input', this ).on('keyup change', function () {
@@ -222,7 +224,7 @@
                     className: 'btn buttons-excel',
                     titleAttr: 'Descargar archivo de Excel',
 					exportOptions: {
-						columns: [1,2,3,4,5,6,7,8,9,10],
+						columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
 						format: {
 							header:  function (d, columnIdx) {
 								if(columnIdx == 0){
@@ -270,8 +272,11 @@
 						else if(d.tipo_venta==5) {
 							lblStats ='<span class="label label-info">Intercambio</span>';
 						}
+						else if(d.tipo_venta==6) {
+							lblStats ='<span class="label label-secondary">Reubicación</span>';
+						}
 						else if(d.tipo_venta==7) {
-							lblStats ='<span class="label label-secondary">Intercambio</span>';
+							lblStats ='<span class="label label-secondary">Venta especial</span>';
 						}
 						else if(d.tipo_venta== null) {
 							lblStats ='<span class="label label-info"></span>';
@@ -308,7 +313,7 @@
 				{
 					"width": "12%",
 					"data": function( d ){
-						return '<p class="m-0">'+d.nombre+" "+d.apellido_paterno+" "+d.apellido_materno+'</p>';
+						return '<p class="m-0">'+d.nombreCliente+'</p>';
 					}
 				}, 
 				{
@@ -330,7 +335,10 @@
 					"data": function( d ){
 						var fechaVenc;
 						if (d.idStatusContratacion == 10 && d.idMovimiento == 40 || d.idStatusContratacion == 8 && d.idMovimiento == 67 ||
-							d.idStatusContratacion == 12 && d.idMovimiento == 42 ) {
+						d.idStatusContratacion == 12 && d.idMovimiento == 42 || d.idStatusContratacion == 7 && d.idMovimiento == 37 ||
+						d.idStatusContratacion == 7 && d.idMovimiento == 7 || d.idStatusContratacion == 7 && d.idMovimiento == 64 ||
+						d.idStatusContratacion == 7 && d.idMovimiento == 77 ||
+						d.idStatusContratacion == 8 && d.idMovimiento == 38 || d.idStatusContratacion == 8 && d.idMovimiento == 65) {
 							fechaVenc = d.fechaVenc2;
 						} 
 						else {
@@ -360,29 +368,40 @@
 						
 						return '<p class="m-0">'+ res +'</p>';*/
 
-						var dateFuture = new Date(d.fechaVenc2);
-					    var dateNow = new Date();
+                        if(d.fechaVenc2=='N/A'){
+                            return '<p class="m-0">N/A</p>';
+                        }else{
+                            var dateFuture = new Date(d.fechaVenc2);
+                            var dateNow = new Date();
 
-					    /*console.log("TF: " + dateFuture);
-					    console.log(dateNow);*/
+                            /*console.log("TF: " + dateFuture);
+                            console.log(dateNow);*/
 
-					    var seconds = Math.floor((dateFuture - (dateNow))/1000);
-					    var minutes = Math.floor(seconds/60);
-					    var hours = Math.floor(minutes/60);
-					    var days = Math.floor(hours/24);
+                            var seconds = Math.floor((dateFuture - (dateNow))/1000);
+                            var minutes = Math.floor(seconds/60);
+                            var hours = Math.floor(minutes/60);
+                            var days = Math.floor(hours/24);
 
-					    hours = hours-(days*24);
-					    minutes = minutes-(days*24*60)-(hours*60);
-					    seconds = seconds-(days*24*60*60)-(hours*60*60)-(minutes*60);
+                            hours = hours-(days*24);
+                            minutes = minutes-(days*24*60)-(hours*60);
+                            seconds = seconds-(days*24*60*60)-(hours*60*60)-(minutes*60);
 
-					    if(days < 0){
-					        return 'Vencido';
-					    }else{
-
-					        return '<p style="font-size: .9em">Vence en:' + days + ' día(s), ' + hours + ' hora(s), ' + minutes + ' minuto(s)</p>';
-					    }
+                            if(days < 0){
+                                return 'Vencido';
+                            }
+                            else{
+                                return '<p style="font-size: .9em">Vence en:' + days + ' día(s), ' + hours + ' hora(s), ' + minutes + ' minuto(s)</p>';
+                            }
+                        }
 					}
 				}, 
+				{
+					"width": "8%",
+					"data": function( d ){
+						return '<p class="m-0">'+d.descripcion+'</p>';
+
+					}
+				},
 				{ 
 					"width": "30%",
 					"orderable": false,
@@ -395,7 +414,14 @@
 						else {
 							if(data.idStatusContratacion == 10 && data.idMovimiento == 40 ||
 								data.idStatusContratacion == 8 && data.idMovimiento == 67 ||
-								data.idStatusContratacion == 12 && data.idMovimiento == 42){
+								data.idStatusContratacion == 12 && data.idMovimiento == 42 ||
+								data.idStatusContratacion == 7 && data.idMovimiento == 37 ||
+								data.idStatusContratacion == 7 && data.idMovimiento == 7 ||
+								data.idStatusContratacion == 7 && data.idMovimiento == 64 ||
+								data.idStatusContratacion == 7 && data.idMovimiento == 77 ||
+								data.idStatusContratacion == 8 && data.idMovimiento == 38 ||
+								data.idStatusContratacion == 8 && data.idMovimiento == 65
+								){
 									cntActions = '<button href="#" data-idLote="'+data.idLote+'" data-nomLote="'+data.nombreLote+'" data-idCond="'+data.idCondominio+'"' +
 									'data-idCliente="'+data.id_cliente+'" data-fecVen="'+data.fechaVenc+'" data-ubic="'+data.ubicacion+'" data-tot="'+data.totalNeto+'" ' +
 									'class="btn-data btn-green editReg" title="Registrar estatus">' +
@@ -441,21 +467,10 @@
 				else {
 					var status;
 					var fechaVenc;
-					if (row.data().idStatusContratacion == 10 && row.data().idMovimiento == 40) {
-						status = 'Status 10 listo (Contraloría)';
-					}
-					else if (row.data().idStatusContratacion == 8 && row.data().idMovimiento == 67 ) {
-						status = 'Status 11 enviado a Revisión (Asistentes de Gerentes)';
-					}
-					else if (row.data().idStatusContratacion == 12 && row.data().idMovimiento == 42 ) {
-						status = 'Status 12 Listo (Contraloría)';
-					}
-					else{
-						status='N/A';
-					}
+
+					status = row.data().descripcion;
 					
 					var informacion_adicional = '<div class="container subBoxDetail"><div class="row"><div class="col-12 col-sm-12 col-sm-12 col-lg-12" style="border-bottom: 2px solid #fff; color: #4b4b4b; margin-bottom: 7px"><label><b>Información colaboradores</b></label></div><div class="col-12 col-sm-12 col-md-12 col-lg-12"><label><b>Estatus: </b>' +status+ '</label></div><div class="col-12 col-sm-12 col-md-12 col-lg-12"><label><b>Comentario: </b>' + row.data().comentario + '</label></div><div class="col-12 col-sm-12 col-md-12 col-lg-12"><label><b>Coordinador: </b>' +row.data().coordinador+ '</label></div><div class="col-12 col-sm-12 col-md-12 col-lg-12"><label><b>Asesor: </b>' + row.data().asesor + '</label></div></div></div>';
-
 
 					row.child(informacion_adicional).show();
 					tr.addClass('shown');
@@ -482,8 +497,12 @@
 				nombreLote = $(this).data("nomlote");
 				$(".lote").html(nombreLote);
 
-				document.getElementById("totalNeto").value = getInfo1[7];
-
+				let val = getInfo1[7];
+				if(val=='.00' || val=='null'){
+                    val = 0;
+                }
+                document.getElementById("totalNeto").value = val;
+                $('#totalNeto').click();
 				$('#editReg').modal('show');
 
 				});
@@ -707,7 +726,7 @@
 		return true;
 		}
 		else{
-			alerts.showNotification("top", "left", "Solo Numeros.", "danger");
+			alerts.showNotification("top", "right", "Recuerda sólo ingresar números", "danger");
 		return false;
 		}
 	}
@@ -718,5 +737,88 @@
 		return '$'+ number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 	}
 
+        // Jquery Dependency
+        $("input[data-type='currency']").on({
+            keyup: function() {
+                formatCurrency($(this));
+            },
+            blur: function() {
+                formatCurrency($(this), "blur");
+            },
+            click: function() {
+                formatCurrency($(this));
+            },
+        });
+
+        function formatNumber(n) {
+            // format number 1000000 to 1,234,567
+            return n.replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+        }
+        function formatCurrency(input, blur) {
+            // appends $ to value, validates decimal side
+            // and puts cursor back in right position.
+
+            // get input value
+            var input_val = input.val();
+
+            // don't validate empty input
+            if (input_val === "") { return; }
+
+            // original length
+            var original_len = input_val.length;
+
+            // initial caret position
+            var caret_pos = input.prop("selectionStart");
+
+            // check for decimal
+            if (input_val.indexOf(".") >= 0) {
+
+                // get position of first decimal
+                // this prevents multiple decimals from
+                // being entered
+                var decimal_pos = input_val.indexOf(".");
+
+                // split number by decimal point
+                var left_side = input_val.substring(0, decimal_pos);
+                var right_side = input_val.substring(decimal_pos);
+
+                // add commas to left side of number
+                left_side = formatNumber(left_side);
+
+                // validate right side
+                right_side = formatNumber(right_side);
+
+                // On blur make sure 2 numbers after decimal
+                if (blur === "blur") {
+                    right_side += "00";
+                }
+
+                // Limit decimal to only 2 digits
+                right_side = right_side.substring(0, 2);
+
+                // join number by .
+                input_val = "$" + left_side + "." + right_side;
+
+            } else {
+                // no decimal entered
+                // add commas to number
+                // remove all non-digits
+                input_val = formatNumber(input_val);
+                input_val = "$" + input_val;
+
+                // final formatting
+                if (blur === "blur") {
+                    input_val += ".00";
+                }
+            }
+
+            // send updated string to input
+            input.val(input_val);
+
+            // put caret back in the right position
+            var updated_len = input_val.length;
+            caret_pos = updated_len - original_len + caret_pos;
+            input[0].setSelectionRange(caret_pos, caret_pos);
+        }
 	</script>
 </body>

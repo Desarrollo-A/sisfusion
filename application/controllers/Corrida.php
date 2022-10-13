@@ -1272,7 +1272,9 @@ $pdf->Output(utf8_decode($namePDF), 'I');
 
 	$pdf->Output(utf8_decode($namePDF), 'I');
 }
-    public function caratulacf(){
+
+    public function caratulacf()
+    {
         setlocale(LC_MONETARY, 'en_US.UTF-8');
 
         $informacion_corrida = $this->Corrida_model->getinfoCorrida($this->uri->segment(3));
@@ -1292,13 +1294,13 @@ $pdf->Output(utf8_decode($namePDF), 'I');
             $informacion_vendedor = $this->Corrida_model->getGerenteCorrida($informacion_corrida->id_asesor, $informacion_corrida->id_gerente);
         }*/
 
-        if($informacion_corrida->id_asesor!=0){
+        if ($informacion_corrida->id_asesor != 0) {
             $data_asesor = $this->Corrida_model->getDataAsesorToPR($informacion_corrida->id_asesor);
         }
-        if($informacion_corrida->id_coordinador!=0){
+        if ($informacion_corrida->id_coordinador != 0) {
             $data_coord = $this->Corrida_model->getDataCoordToPR($informacion_corrida->id_coordinador);
         }
-        if($informacion_corrida->id_gerente!=0){
+        if ($informacion_corrida->id_gerente != 0) {
             $data_gerente = $this->Corrida_model->getDataGerToPR($informacion_corrida->id_gerente);
         }
 //        echo 'asesor:<br>';
@@ -1311,22 +1313,19 @@ $pdf->Output(utf8_decode($namePDF), 'I');
 //        print_r($data_gerente);
 //        echo '<br>';
         $informacion_vendedor = array(
-            "idAsesor" => ($data_asesor->idAsesor=="")?'NA':$data_asesor->idAsesor,
-            "nombreAsesor" => ($data_asesor->nombreAsesor=="")?'NA':$data_asesor->nombreAsesor,
-            "idCoordinador" => ($data_coord->idCoordinador=="")?'NA':$data_coord->idCoordinador,
-            "nombreCoordinador" => ($data_coord->nombreCoordinador=="")?'NA':$data_coord->nombreCoordinador,
-            "idGerente" => ($data_gerente->idGerente=="")?'NA':$data_gerente->idGerente,
-            "nombreGerente" => ($data_gerente->nombreGerente=="")?'NA':$data_gerente->nombreGerente
+            "idAsesor" => ($data_asesor->idAsesor == "") ? 'NA' : $data_asesor->idAsesor,
+            "nombreAsesor" => ($data_asesor->nombreAsesor == "") ? 'NA' : $data_asesor->nombreAsesor,
+            "idCoordinador" => ($data_coord->idCoordinador == "") ? 'NA' : $data_coord->idCoordinador,
+            "nombreCoordinador" => ($data_coord->nombreCoordinador == "") ? 'NA' : $data_coord->nombreCoordinador,
+            "idGerente" => ($data_gerente->idGerente == "") ? 'NA' : $data_gerente->idGerente,
+            "nombreGerente" => ($data_gerente->nombreGerente == "") ? 'NA' : $data_gerente->nombreGerente
         );
-        $informacion_vendedor = (object) $informacion_vendedor;
+        $informacion_vendedor = (object)$informacion_vendedor;
 
         $informacion_plan = $this->Corrida_model->getPlanCorrida($this->uri->segment(3));
         $informacion_plan = json_decode($informacion_plan[0]['corrida_dump']);
 
         $informacion_diferidos = array_slice($informacion_plan, 0, $informacion_corrida->meses_diferir);
-
-
-
 
 
         $pdf = new TCPDF('P', 'mm', 'LETTER', 'UTF-8', false);
@@ -1755,7 +1754,6 @@ legend {
 
 
         $pdf->Output(utf8_decode($namePDF), 'I');
-
 
 
     }
@@ -2700,8 +2698,6 @@ legend {
             "nombre" => 'LOTE TEST'
         );
         $data_corrida['data_corrida'] = $this -> Corrida_model -> getInfoCorridaByID($id_corrida);
-        //print_r($data_corrida);
-        //exit;
         $this->load->view("corrida/editar_corrida", $data_corrida);
     }
     function update_financialR(){
@@ -2757,6 +2753,7 @@ legend {
         $arreglo["finalMesesp3"]= $objDatos->finalMesesp3;
         $arreglo["observaciones"]= $objDatos->observaciones;
         $arreglo["fecha_modificacion"] = date("Y-m-d H:i:s");
+        $arreglo["fechaApartado"] = $objDatos->fechaApartado;
 
         /*print_r($arreglo);
         exit;*/
@@ -3415,7 +3412,7 @@ legend {
 
         $sheet->setCellValue('D7', 'PLAZO');
         $sheet->setCellValue('E7', 'MSI');
-        $sheet->setCellValue('F7', 'INTERES MORATORIO');
+        $sheet->setCellValue('F7', 'INTERÉS MORATORIO');
         $sheet->setCellValue('G7', 'FECHA PAGO');
         $sheet->getStyle("D7:I7")->getFont()->setSize(10);
         $sheet->getStyle('D7:I7')->getFont()->getColor()->setARGB('4472C4');
@@ -3430,8 +3427,8 @@ legend {
         $sheet->setCellValue('G8',  $fecha_formateada->format('d-m-Y'));
 
 
-        $sheet->setCellValue('F10', 'INTERES MORATORIO ACUMULADO');
-        $sheet->setCellValue('G10', 'INTERES ORDINARIO ACUMULADO');
+        $sheet->setCellValue('F10', 'INTERÉS MORATORIO ACUMULADO');
+        $sheet->setCellValue('G10', 'INTERÉS ORDINARIO ACUMULADO');
         $sheet->getStyle("F10:G10")->getFont()->setSize(10);
         $sheet->getStyle("F10:G10")->getAlignment()->setWrapText(true);
         $sheet->getStyle('F10:G10')->getFont()->getColor()->setARGB('4472C4');
@@ -3441,6 +3438,20 @@ legend {
         $sheet->setCellValue('G11', $data_corrida['ioa']);
         $sheet->getStyle('F11:G11')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('D9D9D9');
         $sheet->getStyle('F11:G11')->getNumberFormat()->setFormatCode(PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_CURRENCY_USD_SIMPLE);
+
+        #leyenda....
+        $sheet->setCellValue('C13', '*Este sistema simula las operaciones de intereses moratorios e intereses ordinados, puede ser diferente al cálculo real');
+        $rangel = 'C13';
+        $rangel2 = 'I13';
+        $sheet->mergeCells("$rangel:$rangel2");
+        $sheet->getStyle("C13:I13")->getFont()->setSize(11);
+        $sheet->getStyle('C13')->getFont()->getColor()->setARGB('ddd');
+        $sheet->getStyle( 'C13:I13' )->getFont()->setName('Calibri');
+        $sheet->getStyle("C13:I13")->getAlignment()->setWrapText(true);
+        $sheet->getStyle( 'C13:I13' )->getFont()->setBold( true );
+        $sheet->getStyle('C13:I13')->getBorders()->getAllBorders()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+
+
 
 
 
@@ -3452,9 +3463,9 @@ legend {
         $sheet->setCellValue('F15', 'IMPORTE');
         $sheet->setCellValue('G15', 'FECHA PAGO');
         $sheet->setCellValue('H15', 'DÍAS DE RETRASO');
-        $sheet->setCellValue('I15', 'INTERES MORATORIO');
+        $sheet->setCellValue('I15', 'INTERÉS MORATORIO');
         $sheet->setCellValue('J15', 'TOTAL');
-        $sheet->setCellValue('K15', 'SALDO MORATORIO');
+        $sheet->setCellValue('K15', 'SALDO INSOLUTO');
         $sheet->setCellValue('L15', 'SALDO');
         $sheet->getStyle( 'B15:L15' )->getFont()->setBold( true );
         $sheet->getStyle('B15:L15')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('D9D9D9');

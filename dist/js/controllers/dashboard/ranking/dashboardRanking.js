@@ -1,36 +1,17 @@
 var dataApartados, dataContratados, dataConEnganche, dataSinEnganche, dataSedes, chartApartados, chartContratados, chartEnganche, chartSinenganche;
 
-sp = { // MJ: SELECT PICKER
-    initFormExtendedDatetimepickers: function () {
-        $('.datepicker').datetimepicker({
-            format: 'DD/MM/YYYY',
-            icons: {
-                time: "fa fa-clock-o",
-                date: "fa fa-calendar",
-                up: "fa fa-chevron-up",
-                down: "fa fa-chevron-down",
-                previous: 'fa fa-chevron-left',
-                next: 'fa fa-chevron-right',
-                today: 'fa fa-screenshot',
-                clear: 'fa fa-trash',
-                close: 'fa fa-remove',
-                inline: true
-            }
-        });
-    }
-}
-
-$(document).ready(function(){
+function readyRanking(){
     sp.initFormExtendedDatetimepickers();
     $('.datepicker').datetimepicker({locale: 'es'});
-    setInitialDates();
-    recreatApexChart(false);
+    $('[data-toggle="tooltip"]').tooltip();
+    setInitialDatesRanking();
+    recreatApexChartRanking(false);
     getRankings(true, 'general');
     getSedes().then( response => { 
         dataSedes = response 
         buildSelectSedes(dataSedes);
     });
-});
+}
 
 var options = {
     series: [],
@@ -97,21 +78,21 @@ var options = {
     },
 };
 
-function recreatApexChart(estado, opts){
+function recreatApexChartRanking(estado, opts){
     if(estado){
         $(".boxChartRanking").html('');
         buildChartsID();
       
-        chartApartados = new ApexCharts(document.querySelector('#chart'), setOptionsChart(opts.seriesA[0], opts.categoriesA));
+        chartApartados = new ApexCharts(document.querySelector('#chart'), setOptionsChartRanking(opts.seriesA[0], opts.categoriesA));
         chartApartados.render();
         
-        chartContratados = new ApexCharts(document.querySelector('#chart2'), setOptionsChart(opts.seriesC[0], opts.categoriesC));
+        chartContratados = new ApexCharts(document.querySelector('#chart2'), setOptionsChartRanking(opts.seriesC[0], opts.categoriesC));
         chartContratados.render();
         
-        chartEnganche = new ApexCharts(document.querySelector('#chart3'), setOptionsChart(opts.seriesE[0], opts.categoriesE));
+        chartEnganche = new ApexCharts(document.querySelector('#chart3'), setOptionsChartRanking(opts.seriesE[0], opts.categoriesE));
         chartEnganche.render();
         
-        chartSinenganche = new ApexCharts(document.querySelector('#chart4'), setOptionsChart(opts.seriesS[0], opts.categoriesS));
+        chartSinenganche = new ApexCharts(document.querySelector('#chart4'), setOptionsChartRanking(opts.seriesS[0], opts.categoriesS));
         chartSinenganche.render();
     }else{
         chartApartados = new ApexCharts(document.querySelector('#chart'), options);
@@ -213,7 +194,7 @@ function reorderColumns(){
 
     buildSelectSedes(dataSedes, selectsSede);
     buildDatePikcer(dates);
-    recreatApexChart(true,opts);
+    recreatApexChartRanking(true,opts);
 
     for( i = 1; i<=principalColumns.length; i++){
         (function(i){
@@ -658,22 +639,22 @@ function updateGraph(typeRanking, data, general){
     let series = formatData(data);
     switch (typeRanking) {
         case 'general':
-            chartApartados.updateOptions(setOptionsChart(series.apartados, series.apartadosLabel));
-            chartContratados.updateOptions(setOptionsChart(series.contratados, series.contratadosLabel));
-            chartEnganche.updateOptions(setOptionsChart(series.enganche, series.engancheLabel));
-            chartSinenganche.updateOptions(setOptionsChart(series.sinEnganche, series.sinEngancheLabel));
+            chartApartados.updateOptions(setOptionsChartRanking(series.apartados, series.apartadosLabel));
+            chartContratados.updateOptions(setOptionsChartRanking(series.contratados, series.contratadosLabel));
+            chartEnganche.updateOptions(setOptionsChartRanking(series.enganche, series.engancheLabel));
+            chartSinenganche.updateOptions(setOptionsChartRanking(series.sinEnganche, series.sinEngancheLabel));
             break;
         case 'Apartados':
-            chartApartados.updateOptions(setOptionsChart(series.apartados, series.apartadosLabel));
+            chartApartados.updateOptions(setOptionsChartRanking(series.apartados, series.apartadosLabel));
             break;
         case 'Contratados':
-            chartContratados.updateOptions(setOptionsChart(series.contratados, series.contratadosLabel));
+            chartContratados.updateOptions(setOptionsChartRanking(series.contratados, series.contratadosLabel));
             break;
         case 'ConEnganche':
-            chartEnganche.updateOptions(setOptionsChart(series.enganche, series.engancheLabel));
+            chartEnganche.updateOptions(setOptionsChartRanking(series.enganche, series.engancheLabel));
             break;
         case 'SinEnganche':
-            chartSinenganche.updateOptions(setOptionsChart(series.sinEnganche, series.sinEngancheLabel));
+            chartSinenganche.updateOptions(setOptionsChartRanking(series.sinEnganche, series.sinEngancheLabel));
             break;
 
         default:
@@ -681,7 +662,7 @@ function updateGraph(typeRanking, data, general){
     }
 }
 
-function setOptionsChart(series, categories){
+function setOptionsChartRanking(series, categories){
     let options = { 
         series: [series],
         chart: {
@@ -749,7 +730,7 @@ function setOptionsChart(series, categories){
     return options;
 }
 
-function setInitialDates() {
+function setInitialDatesRanking() {
     var beginDt = moment().startOf('year').format('DD/MM/YYYY');
     var endDt = moment().format('DD/MM/YYYY');
     $('.beginDate').val(beginDt);
@@ -971,8 +952,6 @@ function getSede(typeRanking){
     return sede;
 }
 
-$('[data-toggle="tooltip"]').tooltip();
-
 $(document).on('click', '.btnModalDetailsRanking', function () {
     let type = $(this).data("type");
     let dates = getDates(type == 1 ? 'Apartados' : type == 2 ? 'Contratados' : type == 3 ? 'ConEnganche' : 'SinEnganche');
@@ -985,7 +964,6 @@ $(document).on('click', '.btnModalDetailsRanking', function () {
         sede: sede
     }
     fillTable(dataObj);
-    console.log(dataObj);
     $("#seeInformationModalRanking").modal();
 });
 

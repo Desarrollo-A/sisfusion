@@ -82,6 +82,4 @@
     typeTransaction = 1;
     base_url = "<?=base_url()?>";
 </script>
-<script src="<?=base_url()?>dist/js/controllers/dashboard/agenda/general_calendar.js"></script>
-
-
+<!-- <script src="<?=base_url()?>dist/js/controllers/dashboard/agenda/general_calendar.js"></script> -->

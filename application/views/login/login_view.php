@@ -51,11 +51,11 @@
         {
             border-bottom: 1px solid red !important;
         }
-               #canvas {
+        #canvas {
            border: 1px solid black;
            position: absolute;
            z-index: 10000;
-       }
+        }
 
        #flake {
            color: #fff;
@@ -74,9 +74,9 @@
 <body>
 <nav class="navbar navbar-primary navbar-transparent navbar-absolute">
     <div class="container">
-        <div class="navbar-header">
+        <!-- <div class="navbar-header">
             <a class="navbar-brand" href="#">INICIAR SESIÓN</a>
-        </div>
+        </div> -->
         <div class="collapse navbar-collapse hide">
             <ul class="nav navbar-nav navbar-right">
 				<!--<li class=" active">
@@ -84,18 +84,21 @@
 						<i class="material-icons">lock_outline</i> Login
 					</a>
 				</li>
+
                 <li class="">
                     <a href="#">
                         <i class="material-icons">settings_backup_restore</i> Recuperar contraseña
                     </a>
                 </li>-->
+
+
             </ul>
         </div>
     </div>
 </nav>
 
     <div class="wrapper wrapper-full-page"  id="divSnow"><!--id="divSnow"-->
-        <div class="full-page login-page" filter-color="black" data-image="<?=base_url()?>dist/img/img_4.jpeg">
+        <div class="full-page login-page" filter-color="black" data-image="<?=base_url()?>dist/img/banner-principal-terrenos-ciudad-maderas.webp">
             <!--   you can change the color of the filter page using: data-color="blue | purple | green | orange | red | rose " -->
             
                 <div class="content">
@@ -187,7 +190,6 @@ if($this->input->get('error')) : ?>
 <!-- Material Dashboard DEMO methods, don't include it in your project! -->
 <script src="<?=base_url()?>dist/js/demo.js"></script>
 
-<!-- <script src="<?=base_url()?>dist/js/controllers/usuarios-1.1.0.js"></script> -->
 
 <script type="text/javascript">
     $(document).ready(function() {
@@ -340,6 +342,13 @@ if($this->input->get('error')) : ?>
 
                     }, 100);
             };
+
+                function showPassword() {
+                    if ($("#contrasena").attr("type") == "password") $("#contrasena").attr("type", "text");
+                    else $("#contrasena").attr("type", "password");
+
+                    $("#showPass i").toggle();
+                }
 </script>
 <!---->
 

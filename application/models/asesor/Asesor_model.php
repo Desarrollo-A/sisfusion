@@ -371,7 +371,7 @@ class Asesor_model extends CI_Model
             CASE lot.casa
             WHEN 0 THEN ''
             WHEN 1 THEN  casas.casasDetail
-            END) casasDetail, idStatusLote, cl.fechaApartado, cl.id_cliente
+            END) casasDetail, idStatusLote, cl.fechaApartado, cl.id_cliente, lot.idStatusContratacion, lot.idMovimiento
                                     FROM lotes lot LEFT JOIN condominios con ON lot.idCondominio = con.idCondominio LEFT JOIN residenciales res 
                                     ON con.idResidencial = res.idResidencial LEFT JOIN datosbancarios db ON con.idDBanco = db.idDBanco 
                                     LEFT JOIN (SELECT id_lote, CONCAT( '{''total_terreno'':''', total_terreno, ''',', tipo_casa, '}') casasDetail 
@@ -404,7 +404,7 @@ class Asesor_model extends CI_Model
                                     CASE lot.casa
                                     WHEN 0 THEN ''
                                     WHEN 1 THEN  casas.casasDetail
-                                    END) casasDetail, idStatusLote, cl.fechaApartado, cl.id_cliente
+                                    END) casasDetail, idStatusLote, cl.fechaApartado, cl.id_cliente, lot.idStatusContratacion, lot.idMovimiento
                                     FROM lotes lot LEFT JOIN condominios con ON lot.idCondominio = con.idCondominio LEFT JOIN residenciales res 
                                     ON con.idResidencial = res.idResidencial LEFT JOIN datosbancarios db ON con.idDBanco = db.idDBanco 
                                     LEFT JOIN (SELECT id_lote, CONCAT( '{''total_terreno'':''', total_terreno, ''',', tipo_casa, '}') casasDetail 
@@ -842,24 +842,26 @@ class Asesor_model extends CI_Model
     }
 
 
-    public function get_autorizaciones()
-    {
+    public function get_autorizaciones () {
         /*id_autorizacion, autorizaciones.fecha_creacion,autorizaciones.autorizacion,*/
-        $query = $this->db->query('		
-		SELECT  residencial.nombreResidencial, condominio.nombre as nombreCondominio, 
+        $query = $this->db->query("SELECT  residencial.nombreResidencial, condominio.nombre as nombreCondominio, 
 		lotes.nombreLote, MAX(autorizaciones.estatus) as estatus,  MAX(id_autorizacion) as id_autorizacion, MAX(autorizaciones.fecha_creacion) as fecha_creacion,
 		MAX(autorizaciones.autorizacion) as autorizacion, 
-		users.usuario as sol, users1.usuario as aut,  autorizaciones.idLote
+		UPPER(CONCAT(users.nombre, ' ', users.apellido_paterno, ' ', users.apellido_materno)) as sol, 
+        UPPER(CONCAT(users1.nombre, ' ', users1.apellido_paterno, ' ', users1.apellido_materno)) as aut,  
+        autorizaciones.idLote
 		FROM autorizaciones 
 		inner join lotes on lotes.idLote = autorizaciones.idLote 
 		inner join condominios as condominio on condominio.idCondominio = lotes.idCondominio 
 		inner join residenciales as residencial on residencial.idResidencial = condominio.idResidencial
 		inner join usuarios as users on autorizaciones.id_sol = users.id_usuario
 		inner join usuarios as users1 on autorizaciones.id_aut = users1.id_usuario
-		where autorizaciones.id_sol = ' . $this->session->userdata('id_usuario') . '  
+		where autorizaciones.id_sol = " . $this->session->userdata('id_usuario') . " 
 		GROUP BY residencial.nombreResidencial, condominio.nombre, 
 		lotes.nombreLote, 
-		users.usuario, users1.usuario, autorizaciones.idLote');
+		UPPER(CONCAT(users.nombre, ' ', users.apellido_paterno, ' ', users.apellido_materno)), 
+        UPPER(CONCAT(users1.nombre, ' ', users1.apellido_paterno, ' ', users1.apellido_materno)), 
+        autorizaciones.idLote");
         return $query->result();
     }
 
@@ -875,7 +877,7 @@ class Asesor_model extends CI_Model
     public function get_sol_aut()
     {
         $query = $this->db->query('SELECT cliente.id_cliente, nombreLote, cliente.rfc, nombreResidencial, condominio.nombre as nombreCondominio, 
-		cliente.status, cliente.id_asesor, condominio.idCondominio, lotes.idLote, cliente.autorizacion, cliente.fechaApartado 
+		cliente.status, cliente.id_asesor, condominio.idCondominio, lotes.idLote, cliente.autorizacion, cliente.fechaApartado,
 		lotes.idStatusContratacion, lotes.idMovimiento FROM clientes as cliente
 		INNER JOIN lotes ON cliente.idLote = lotes.idLote
 		INNER JOIN condominios as condominio ON lotes.idCondominio = condominio.idCondominio
@@ -902,7 +904,8 @@ class Asesor_model extends CI_Model
     public function registroClienteDS($id_condominio) {
         ini_set('max_execution_time', 300);
         set_time_limit(300);
-        if ($id_condominio != 0 && $this->session->userdata('id_usuario') == 9651)
+        $id_asesor = $this->session->userdata('id_usuario');
+        if ($id_condominio != 0 && $id_asesor == 9651)
             $where = "AND cond.idCondominio = $id_condominio";
         else
             $where = "";
@@ -917,8 +920,9 @@ class Asesor_model extends CI_Model
         INNER JOIN residenciales AS residencial ON cond.idResidencial=residencial.idResidencial
         INNER JOIN autorizaciones AS aut ON cl.id_cliente = aut.idCliente AND lotes.idLote = aut.idLote
         LEFT JOIN deposito_seriedad AS ds ON ds.id_cliente = cl.id_cliente	
-        WHERE cl.id_coordinador NOT IN(2562, 2541) AND idStatusContratacion IN (1, 2, 3) AND idMovimiento IN (31, 85, 20, 63, 73, 82, 92, 96) AND 
-        cl.status = 1 AND cl.id_asesor = ".$this->session->userdata('id_usuario')." AND cl.status = 1 ORDER BY cl.id_Cliente ASC");
+        WHERE ((cl.id_coordinador NOT IN (2562, 2541)) OR (cl.id_coordinador IN (2562, 2541) AND cl.id_asesor = 1908 AND cl.id_asesor = $id_asesor))
+        AND idStatusContratacion IN (1, 2, 3) AND idMovimiento IN (31, 85, 20, 63, 73, 82, 92, 96) AND 
+        cl.status = 1 AND cl.id_asesor = $id_asesor AND cl.status = 1 ORDER BY cl.id_Cliente ASC");
 		return $query->result_array();
 	}
 
@@ -1758,4 +1762,35 @@ class Asesor_model extends CI_Model
                                     FROM usuarios u WHERE id_usuario=".$id_asesor);
         return $query->row();
     }
+
+
+    function reporteAsesor(){
+        if ($this->session->userdata('id_rol') == 17 || $this->session->userdata('id_usuario') == 1875){ //Contraloria y Vicky 
+            $where = "";
+        } else if ($this->session->userdata('id_rol') == 3 || $this->session->userdata('id_rol') == 6){ //Gerente y Asistente
+            $where = "AND DATEDIFF(MONTH, ase.fecha_creacion, GETDATE()) <= 5";
+        } else if ($this->session->userdata('id_rol') == 2 || $this->session->userdata('id_rol') == 5 ){ //Subdirector y Asistente
+            $where = "AND DATEDIFF(MONTH, ase.fecha_creacion, GETDATE()) >= 6 AND DATEDIFF(MONTH, ase.fecha_creacion, GETDATE()) <= 8";
+        } else if ($this->session->userdata('id_rol') == 1 || $this->session->userdata('id_rol') == 4){ //Direccion Comercial y Asistentes
+            $where = "AND DATEDIFF(MONTH, ase.fecha_creacion, GETDATE()) >= 9";
+        }
+
+        return $this->db->query("SELECT CONCAT(ase.nombre,' ',ase.apellido_paterno,' ',ase.apellido_materno) AS asesor, ase.id_usuario, ase.fecha_creacion,
+                                        CASE WHEN SUM(lot.totalNeto2) = '0.00' THEN SUM(lot.total) WHEN SUM(lot.totalNeto2) IS NULL THEN SUM(lot.total) ELSE SUM(lot.totalNeto2) END AS monto_vendido,
+                                        DATEDIFF(MONTH, ase.fecha_creacion, GETDATE()) meses, ase.estatus
+                                   FROM lotes lot
+                                        INNER JOIN clientes cl ON cl.id_cliente = lot.idCliente AND cl.status = 1
+                                        INNER JOIN usuarios ase ON ase.id_usuario = cl.id_asesor
+                                    WHERE ase.fecha_creacion >= cl.fechaApartado $where
+                                    GROUP BY CONCAT(ase.nombre,' ',ase.apellido_paterno,' ',ase.apellido_materno), ase.id_usuario, ase.fecha_creacion, ase.estatus
+                                    HAVING SUM(CASE WHEN lot.totalNeto2 = '0.00' THEN lot.total WHEN lot.totalNeto2 IS NULL THEN lot.total ELSE lot.totalNeto2 END) <= '500000.00'");
+
+        
+    }
+    function getWstatus1($id_lote){
+        $query = $this->db->query("SELECT * FROM autorizaciones WHERE estatus=1 AND idLote=".$id_lote);
+        return $query->result_array();
+    }
 }
+    
+

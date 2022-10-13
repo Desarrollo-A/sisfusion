@@ -1183,7 +1183,13 @@ $('#condominio').change( function(){
                         $('#modal3').modal('hide');
                         $('#tabla_deposito_seriedad').DataTable().ajax.reload();
                         alerts.showNotification("top", "right", "Asegúrate de incluir los documentos; IDENTIFICACIÓN OFICIAL, COMPROBANTE DE DOMICILIO, RECIBOS DE APARTADO Y ENGANCHE y DEPÓSITO DE SERIEDAD antes de llevar a cabo el avance.", "danger");
-                    } else if(response.message == 'ERROR'){
+                    }else if(response.message == 'PENDIENT_AUTHORIZATION'){
+                        $('#save3').prop('disabled', false);
+                        $('#modal3').modal('hide');
+                        $('#tabla_deposito_seriedad').DataTable().ajax.reload();
+                        alerts.showNotification("top", "right", "Aún tienes una autorización pendiente para este lote, revisala para poder seguir el proceso", "danger");
+                    }
+                    else if(response.message == 'ERROR'){
                         $('#save3').prop('disabled', false);
                         $('#modal3').modal('hide');
                         $('#tabla_deposito_seriedad').DataTable().ajax.reload();
@@ -1562,14 +1568,14 @@ $('#condominio').change( function(){
         })
     })
 
-    function customButton(idMovimiento, estatus, nombreLote, id_cliente, nombreResidencial, nombreCondominio, idCondominio, idLote, fechaVenc,attBtn = ''){        
+    function customButton(dsType, idMovimiento, estatus, nombreLote, id_cliente, nombreResidencial, nombreCondominio, idCondominio, idLote, fechaVenc,attBtn = ''){        
         especialClass = idMovimiento == 31 ? 'getInfo2' : idMovimiento == 85 ? 'getInfo2_2'  : idMovimiento == 20 ? 'getInfo5' :  idMovimiento == 63 ? 'getInfo6' : idMovimiento == 73 ? 'getInfo2_3' : idMovimiento == 82 ? 'getInfo2_7' : idMovimiento == 92 ? 'getInfo5_2' : idMovimiento == 96 ? 'return1' : comentario;
 
         stringBtn = '<a href="#" '+attBtn+' data-estatus="'+estatus+'" data-nomLote="'+nombreLote+'" data-idCliente="'+id_cliente+'" data-nombreResidencial="'+nombreResidencial+'" data-nombreCondominio="'+nombreCondominio+'" data-nombreLote="'+nombreLote+'" data-idCondominio="'+idCondominio+'" data-idLote="'+idLote+'" data-fechavenc="'+fechaVenc+'" class="btn-data btn-green '+especialClass+'">  <i class="fas fa-check" title= "Enviar estatus"></i></a>';
 
-        if (d.dsType == 1){
+        if (dsType == 1){
             dsbutton = '<a class="btn-data btn-blueMaderas btn_ds'+id_cliente+'" '+attBtn+' id="btn_ds'+id_cliente+'" href="'+url_to_go+'" title= "Depósito de seriedad"><i class="fas fa-print"></i></a>';
-        } else if(d.dsType == 2) { // DATA FROM DEPOSITO_SERIEDAD_CONSULTA OLD VERSION
+        } else if(dsType == 2) { // DATA FROM DEPOSITO_SERIEDAD_CONSULTA OLD VERSION
             dsbutton = '<a class="btn-data btn-blueMaderas" href="<?=base_url()?>index.php/Asesor/deposito_seriedad_ds/'+id_cliente+'/0" title= "Depósito de seriedad"><i class="fas fa-print"></i></a>';
         }
 

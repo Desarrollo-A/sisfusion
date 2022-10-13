@@ -432,7 +432,7 @@
 					<div class="form-group">
 						<label for="plazoField">Plazo</label>
 						<input type="number" class="form-control" id="plazoField" aria-describedby="plazoHelp" placeholder="30"
-							   ng-model="plazoField" max="240">
+							   ng-model="plazoField" max="120">
 						<small id="plazoHelp" class="form-text text-muted">Ingresa el plazo en meses.</small>
 					</div>
 					<div class="form-group">
@@ -469,6 +469,7 @@
 					<div class="form-group" style="text-align: center">
 						<br>
 						<button class="btn btnCalcular" type="button" ng-click="showVals()">CALCULAR</button>
+						<button class="btn hide" type="button" ng-click="showArray()">PROVISIONAL</button>
 					</div>
 					<div class="form-group" style="padding-top: 15px;text-align: left" class="groupInputInteres">
 						<label>Interés Ordinario Acumulado</label><br>
@@ -477,6 +478,16 @@
 						<input type="hidden" id="acumuladoOrdinarioBruto">
 					</div>
 				</div>
+                <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <comment>
+                        <b><i>*Este sistema simula las operaciones de intereses moratorios e
+                                intereses ordinados, puede ser diferente al cálculo real<br>
+                            <small>- No ingresar pagos salteados</small><br>
+                            <small>- No ingresar pagos en posiciones anteriores al último pago que se ingreso</small><br>
+                            <small>- Cuando una mensualidad haya sido pagada en el dia establecido, se debe ingresar para
+                                que esa mensualidad descuente al saldo insoluto</small><br></i></b>
+                    </comment>
+                </div>
 			</div>
             <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12 hide" style="text-align: right">
                 <button class="buttons-excel" ng-click="exportc()"
@@ -600,6 +611,10 @@
 
         // $scope.dtoptions = DTOptionsBuilder;
         //Es que
+        $scope.showArray= function(){
+            console.log('Current array:')
+            console.log($scope.alphaNumeric);
+        }
         $scope.dtoptions = DTOptionsBuilder.newOptions().withOption('aaData', [])
             .withLanguage({"url": "https://cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"})
             .withOption("ordering", false)
@@ -627,6 +642,7 @@
 				.renderWith(
                 function(data, type, full, meta)
                 {
+
                     var inputCapital = '<input name="importe'+full["pago"]+'" id="idImporte'+full["pago"]+'"  type="tel" pattern="^\\$\\d{1,3}(,\\d{3})*(\\.\\d+)?$" value="" data-type="currency" placeholder="Importe" class="form-control">';//onchange="pagoCapChange('+full["pago"]+')"
                     var numberPay	 = '<input name="numberPay'+full["pago"]+'" type="hidden" id="payNum'+full["pago"]+'" value="'+full["pago"]+'">';
 
@@ -684,7 +700,7 @@
 			{return (data).toLocaleString('es-MX', {style: 'currency', currency: 'MXN'})} ),
             DTColumnBuilder.newColumn('total').withTitle('Total').renderWith(function (data, type, full)
             {return (data).toLocaleString('es-MX', {style: 'currency', currency: 'MXN'})} ),
-            DTColumnBuilder.newColumn('saldo').withTitle('Saldo Moratorio').renderWith(function (data, type, full)
+            DTColumnBuilder.newColumn('saldo').withTitle('Saldo Insoluto').renderWith(function (data, type, full)
             {
             	// var numberFix;
 				// if(full['saldo'] % 1 == 0)
@@ -1487,11 +1503,13 @@
 								$scope.total2 = saldoInsoluto;
 								console.log("FECHA DEL PAGO AQUI", fechaDelPago);
 								var posPay = PositionPago - 1;
+                                console.log("PositionPago:", PositionPago);
 								/*se hace el segundo calculo y se manipula la tabla*/
 								/*termina la edicion*/
 								<?php include("dist/js/controllers/calculoMoratorio.js"); ?>
-								calculoMoratorioII(IM, importeSaldoI, posPay, PositionPago, diasRetardo, saldoInsoluto, minVal, maxVal, arrayCheckAllPost, fechaDelPago);
-							}
+                                calculoMoratorioII(IM, importeSaldoI, posPay, PositionPago, diasRetardo, saldoInsoluto, minVal, maxVal, arrayCheckAllPost, fechaDelPago);
+
+                            }
                         }
                         //////////
                         $scope.p2 = ($scope.infoMoratorio.interes_p2 * Math.pow(1 + $scope.infoMoratorio.interes_p2, $scope.infoMoratorio.plazo - $scope.infoMoratorio.mesesSinInteresP1) * $scope.infoMoratorio.saldoNormal) / (Math.pow(1 + $scope.infoMoratorio.interes_p2, $scope.infoMoratorio.plazo - $scope.infoMoratorio.mesesSinInteresP1) - 1);

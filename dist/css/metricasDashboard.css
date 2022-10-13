@@ -76,6 +76,18 @@
   margin-left: 20px !important;
 }
 
+.ml-3 {
+  margin-left: 30px !important;
+}
+
+.ml-4 {
+  margin-left: 40px !important;
+}
+
+.ml-5 {
+  margin-left: 50px !important;
+}
+
 .p-0 {
   padding: 0 !important;
 }
@@ -353,7 +365,7 @@
 }
 
 .d-flex {
-  display: flex;
+  display: flex !important;
 }
 
 .align-start {
@@ -463,23 +475,23 @@
 }
 
 .fs-1 {
-  font-size: 1rem;
+  font-size: 1rem !important;
 }
 
 .fs-2 {
-  font-size: 2rem;
+  font-size: 2rem !important;
 }
 
 .fs-3 {
-  font-size: 3rem;
+  font-size: 3rem !important;
 }
 
 .fs-4 {
-  font-size: 4rem;
+  font-size: 4rem !important;
 }
 
 .fs-5 {
-  font-size: 5rem;
+  font-size: 5rem !important;
 }
 
 /* Text */
@@ -1191,7 +1203,7 @@
 }
 
 #metricas .card .col-chart .actions {
-  margin-top: 15px !important;
+  padding-top: 15px !important;
 }
 
 #metricas .card .col-chart .actions .selectMini button {

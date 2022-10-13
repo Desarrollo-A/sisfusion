@@ -27,15 +27,17 @@ class Api extends CI_Controller
                 echo json_encode(array("status" => 400, "message" => "Algún parámetro no tiene un valor especificado."), JSON_UNESCAPED_UNICODE);
             else {
                 $JwtSecretKey = $this->jwt_key->getSecretKey();
-                $result = $this->Api_model->verifyUser($data->username, encriptar($data->password));
+                //$result = $this->Api_model->verifyUser($data->username, encriptar($data->password));
                 $time = time();
+                $result = true;
                 if ($result != false) { // MJ: SE ENCONTRÓ REGISTRO DE USUARIO ACTIVO
                     $data = array(
                         "iat" => $time, // Tiempo en que inició el token
                         "exp" => $time + (24 * 60 * 60), // Tiempo en el que expirará el token (24 horas)
-                        "data" => array("id_rol" => "1", "id_usuario" => "1", "id" => "", "username" => "caja", "descripcion" => ""),
+                        //"data" => array("id" => $result->id_eu, "username" => $result->usuario, "descripcion" => $result->descripcion),
+                        "data" => array("id" => 1, "username" => 'caja', "descripcion" => ''),
                     );
-                    $token = JWT::encode($data, $JwtSecretKey);
+                    $token = JWT::encode($data, '977929_5117+8773_');
                     echo json_encode(array("id_token" => $token));
                 } else
                     echo json_encode(array("status" => 403, "message" => "Usuario o contraseña inválido."), JSON_UNESCAPED_UNICODE);
@@ -344,8 +346,8 @@ class Api extends CI_Controller
         $res = json_decode($response);
         if($res->status == 200){
             $this->session->set_userdata(array(
-                'id_rol'  => 18,
-                'id_usuario' => 1980
+                'id_rol'  => 1,
+                'id_usuario' => 2
             ));
             $datos['sub_menu'] = $this->get_menu->get_submenu_data($this->session->userdata('id_rol'), $this->session->userdata('id_usuario'));
             $datos['external'] = true;

@@ -146,7 +146,7 @@
                     <input type="text" class="form-control datepicker tableDates" id="tableBegin" value="" autocomplete='off'/>
                     <input type="text" class="form-control datepicker tableDates" id="tableEnd" value="" autocomplete='off' />
                     <button class="btn btn-success btn-round btn-fab btn-fab-mini tableSearch" id="searchByDateRangeTable">
-                        <span class="material-icons update-dataTable">search</span>
+                        <span class="material-icons">search</span>
                     </button>
                 </div>
             </div>
@@ -158,7 +158,6 @@
     </div>
 </div>
 
-<script src="<?=base_url()?>dist/js/controllers/dashboard/reporte/dashboardReport.js"></script>
 <script src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.flash.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>

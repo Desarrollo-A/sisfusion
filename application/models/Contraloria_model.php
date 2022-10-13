@@ -260,7 +260,10 @@ class Contraloria_model extends CI_Model {
 		LEFT JOIN usuarios asesor ON cl.id_asesor = asesor.id_usuario
 		LEFT JOIN usuarios coordinador ON cl.id_coordinador = coordinador.id_usuario
 		LEFT JOIN usuarios gerente ON cl.id_gerente = gerente.id_usuario
-		WHERE l.idStatusContratacion IN (8) AND l.idMovimiento IN (38, 65) AND cl.status = 1 $filtroSede
+		WHERE l.idStatusContratacion IN (8, 11) AND l.idMovimiento IN (38, 65, 41) 
+		AND l.status8Flag = 1 AND l.validacionEnganche != 'NULL' AND l.validacionEnganche IS NOT NULL
+		AND (l.totalNeto2 = 0.00 OR l.totalNeto2 = '0.00' OR l.totalNeto2 <= 0.00 OR l.totalNeto2 IS NULL)
+		AND cl.status = 1 $filtroSede
 		GROUP BY l.idLote, cl.id_cliente, cl.nombre, cl.apellido_paterno, cl.apellido_materno,
 		l.nombreLote, l.idStatusContratacion, l.idMovimiento, l.modificado, cl.rfc,
 		CAST(l.comentario AS varchar(MAX)), l.fechaVenc, l.perfil, cond.nombre, res.nombreResidencial, l.ubicacion,
@@ -275,7 +278,7 @@ class Contraloria_model extends CI_Model {
 	public function validateSt9($idLote){
         $this->db->where("idLote",$idLote);
 		$this->db->where_in('idStatusLote', 3);
-		$this->db->where("(idStatusContratacion IN (8) AND idMovimiento IN (38, 65))");	
+		$this->db->where("(idStatusContratacion IN (8, 11) AND idMovimiento IN (38, 65, 41))");	
 		$query = $this->db->get('lotes');
 		$valida = (empty($query->result())) ? 0 : 1;
 		return $valida;
@@ -373,7 +376,7 @@ class Contraloria_model extends CI_Model {
 		INNER JOIN clientes cl ON cl.idLote = l.idLote
 		INNER JOIN condominios cond ON l.idCondominio = cond.idCondominio
 		INNER JOIN residenciales res ON cond.idResidencial = res.idResidencial
-		WHERE l.idStatusContratacion IN (11, 10, 7, 8) AND l.idMovimiento IN (41, 40, 66, 67) AND (l.firmaRL = 'NULL' OR l.firmaRL=' ' OR l.firmaRL IS NULL) AND cl.status = 1 $filtroSede
+		WHERE l.idStatusContratacion IN (10) AND l.idMovimiento IN (40) AND (l.firmaRL = 'NULL' OR l.firmaRL=' ' OR l.firmaRL IS NULL) AND cl.status = 1 $filtroSede
 		GROUP BY l.idLote, cl.id_cliente, cl.nombre, cl.apellido_paterno, cl.apellido_materno, l.fechaSolicitudValidacion, l.nombreLote, l.idStatusContratacion,
 		l.idMovimiento, l.modificado, cl.rfc, CAST(l.comentario AS varchar(MAX)), l.fechaVenc, l.perfil, cond.nombre, 
 		res.nombreResidencial, l.numContrato, l.ubicacion, l.totalValidado, l.totalNeto, l.tipo_venta, l.observacionContratoUrgente;");
@@ -386,7 +389,7 @@ class Contraloria_model extends CI_Model {
 		l.fechaRL, l.idStatusContratacion, l.idMovimiento, l.firmaRL, cl.status, l.validacionEnganche");
 		$this->db->join('clientes cl', 'cl.idLote = l.idLote ');
 		$this->db->where("l.numContrato",$numContrato);
-		$this->db->where("(l.idStatusContratacion IN (11, 10) AND l.idMovimiento IN (41, 40) AND (l.firmaRL='NULL' OR l.firmaRL IS NULL))");
+		$this->db->where("(l.idStatusContratacion IN (10) AND l.idMovimiento IN (40) AND (l.firmaRL='NULL' OR l.firmaRL IS NULL))");
 		$query = $this->db->get('lotes l');
 		return $query->row();
 	}
@@ -442,7 +445,10 @@ class Contraloria_model extends CI_Model {
 			LEFT JOIN usuarios asesor ON cl.id_asesor = asesor.id_usuario
 			LEFT JOIN usuarios coordinador ON cl.id_coordinador = coordinador.id_usuario
 			LEFT JOIN usuarios gerente ON cl.id_gerente = gerente.id_usuario
-			WHERE l.idStatusContratacion IN (12, 11) AND l.idMovimiento IN (42, 41) AND cl.status = 1 $filtroSede
+			WHERE l.idStatusContratacion IN (12, 11, 10) AND l.idMovimiento IN (42, 41, 40) 
+			AND l.status8Flag = 1 AND l.validacionEnganche != 'NULL' AND l.validacionEnganche IS NOT NULL
+			AND l.totalNeto2 != 0.00 AND l.totalNeto2 != '0.00' AND l.totalNeto2 > 0.00
+			AND cl.status = 1 $filtroSede
 			GROUP BY l.idLote, cl.id_cliente, cl.nombre, cl.apellido_paterno, cl.apellido_materno,
 			l.nombreLote, l.idStatusContratacion, l.idMovimiento, l.modificado, cl.rfc,
 			CAST(l.comentario AS varchar(MAX)), l.fechaVenc, l.perfil, cond.nombre, res.nombreResidencial, l.ubicacion,
@@ -457,7 +463,7 @@ class Contraloria_model extends CI_Model {
 		public function validateSt13($idLote){
 			$this->db->where("idLote",$idLote);
 			$this->db->where_in('idStatusLote', 3);
-			$this->db->where("(idStatusContratacion IN (12, 11) AND idMovimiento IN (42, 41))");	
+			$this->db->where("(idStatusContratacion IN (12, 11, 10) AND idMovimiento IN (42, 41, 40))");	
 			$query = $this->db->get('lotes');
 			$valida = (empty($query->result())) ? 0 : 1;
 			return $valida;
@@ -714,7 +720,7 @@ class Contraloria_model extends CI_Model {
 	public function val_ub($idLote){
 		$this->db->select('ubicacion');
         $this->db->where("idLote",$idLote);
-		$this->db->where_in('ubicacion', array('2', '4'));
+		$this->db->where_in('ubicacion', array('1', '2', '4', '5'));
 		$query = $this->db->get('lotes');
 		$valida = (empty($query->result())) ? 0 : $query->result_array();
 		return $valida;
@@ -738,20 +744,19 @@ class Contraloria_model extends CI_Model {
 		return $query->row();
 	}
 
-	public function getLotesAllAssistant($idCondominio)
-		{
-			$query = $this->db-> query("SELECT l.* FROM lotes l 
-			INNER JOIN clientes c ON c.id_cliente = l.idCliente
-			INNER JOIN usuarios u ON u.id_usuario = c.id_asesor AND u.estatus IN (0,1,3)
-			WHERE l.status = 1 AND (l.idStatusContratacion = 1 OR l.idMovimiento = 82) AND c.status = 1 AND c.id_gerente = ". $this->session->userdata('id_lider') ." AND l.idCondominio = $idCondominio
-			UNION ALL
-            SELECT l.* FROM lotes l 
-			INNER JOIN clientes c ON c.id_cliente = l.idCliente AND c.id_coordinador IN (2562, 2541)
-			INNER JOIN usuarios u ON u.id_usuario = c.id_asesor
-			INNER JOIN usuarios uu ON uu.id_usuario = u.id_lider AND uu.id_lider = ". $this->session->userdata('id_lider') ."
-            WHERE l.status = 1 AND (l.idStatusContratacion = 1 OR l.idMovimiento = 82) AND c.status = 1 AND l.idCondominio = $idCondominio");
-			return $query->result_array();
-		}
+	public function getLotesAllAssistant($idCondominio){
+		$query = $this->db-> query("SELECT l.* FROM lotes l 
+		INNER JOIN clientes c ON c.id_cliente = l.idCliente
+		INNER JOIN usuarios u ON u.id_usuario = c.id_asesor AND u.estatus IN (0, 1, 3)
+		WHERE l.status = 1 AND l.idStatusContratacion IN (1, 2, 3) AND l.idMovimiento IN (31, 85, 20, 63, 73, 82, 92, 96) AND c.status = 1 AND c.id_gerente = ". $this->session->userdata('id_lider') ." AND l.idCondominio = $idCondominio
+		UNION ALL
+        SELECT l.* FROM lotes l 
+		INNER JOIN clientes c ON c.id_cliente = l.idCliente AND c.id_coordinador IN (2562, 2541) AND cl.id_asesor != 1908
+		INNER JOIN usuarios u ON u.id_usuario = c.id_asesor
+		INNER JOIN usuarios uu ON uu.id_usuario = u.id_lider AND uu.id_lider = ". $this->session->userdata('id_lider') ."
+        WHERE l.status = 1 AND l.idStatusContratacion IN (1, 2, 3) AND l.idMovimiento IN (31, 85, 20, 63, 73, 82, 92, 96) AND c.status = 1 AND l.idCondominio = $idCondominio");
+		return $query->result_array();
+	}
 
 	public function getLotesTwo($idCondominio)
 	{

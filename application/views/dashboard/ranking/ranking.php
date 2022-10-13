@@ -13,7 +13,7 @@
                                     <input type="text" class="form-control datepicker text-center pl-1 beginDate" id="beginDateApartados"/>
                                     <input type="text" class="form-control datepicker text-center endDate" id="endDateApartados"/>
                                     <button class="btn-search" id="searchByDateRangeRanking" onclick="getRankings(false, 'Apartados')">
-                                        <span class="material-icons update-dataTable">search</span>
+                                        <span class="material-icons">search</span>
                                     </button>
                                 </div>
                                 <button class="btn-charts" onclick="toggleDatatable(this)" rel="tooltip" data-placement="bottom" title="Mostrar tabla"><i class="far fa-list-alt"></i></button>
@@ -41,8 +41,8 @@
                                 <div class="form-group d-flex m-0 p-0 w-50">
                                     <input type="text" class="form-control datepicker text-center pl-1 beginDate" id="beginDateContratados"/>
                                     <input type="text" class="form-control datepicker text-center endDate" id="endDateContratados"/>
-                                    <button class="btn-search" id="searchByDateRangeRanking">
-                                        <span class="material-icons update-dataTable">search</span>
+                                    <button class="btn-search" id="searchByDateRangeRanking" onclick="getRankings(false, 'Contratados')">
+                                        <span class="material-icons">search</span>
                                     </button>
                                 </div>
                                 <button class="btn-charts" onclick="toggleDatatable(this)" rel="tooltip" data-placement="bottom" title="Mostrar tabla"><i class="far fa-list-alt"></i></button>
@@ -70,8 +70,8 @@
                                 <div class="form-group d-flex m-0 p-0 w-50">
                                     <input type="text" class="form-control datepicker text-center pl-1 beginDate" id="beginDateConEnganche"/>
                                     <input type="text" class="form-control datepicker text-center endDate" id="endDateConEnganche"/>
-                                    <button class="btn-search" id="searchByDateRangeRanking">
-                                        <span class="material-icons update-dataTable">search</span>
+                                    <button class="btn-search" id="searchByDateRangeRanking" onclick="getRankings(false, 'ConEnganche')">
+                                        <span class="material-icons">search</span>
                                     </button>
                                 </div>
                                 <button class="btn-charts" onclick="toggleDatatable(this)" rel="tooltip" data-placement="bottom" title="Mostrar tabla"><i class="far fa-list-alt"></i></button>
@@ -99,8 +99,8 @@
                                 <div class="form-group d-flex m-0 p-0 w-50">
                                     <input type="text" class="form-control datepicker text-center pl-1 beginDate" id="beginDateSinEnganche"/>
                                     <input type="text" class="form-control datepicker text-center endDate" id="endDateSinEnganche"/>
-                                    <button class="btn-search" id="searchByDateRangeRanking">
-                                        <span class="material-icons update-dataTable">search</span>
+                                    <button class="btn-search" id="searchByDateRangeRanking" onclick="getRankings(false, 'SinEnganche')">
+                                        <span class="material-icons">search</span>
                                     </button>
                                 </div>
                                 <button type="btn" class="btn-charts"  rel="tooltip" data-placement="bottom" title="Mostrar tabla" onclick="toggleDatatable(this)"><i class="far fa-list-alt"></i></button>
@@ -120,4 +120,3 @@
         </div>
     </div>
 </div>
-<script src="<?=base_url()?>dist/js/controllers/dashboard/ranking/dashboardRanking.js"></script>

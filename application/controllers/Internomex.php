@@ -1,4 +1,4 @@
-  <?php
+<?php
   defined('BASEPATH') or exit('No direct script access allowed');
 
   use PhpOffice\PhpSpreadsheet\Spreadsheet;
@@ -10,11 +10,8 @@
     public function __construct()
     {
       parent::__construct();
-      $this->load->model('Internomex_model');
-      $this->load->model('asesor/Asesor_model');
-  //LIBRERIA PARA LLAMAR OBTENER LAS CONSULTAS DE LAS  DEL MENÚ
-      $this->load->library(array('session','form_validation', 'get_menu'));
-      $this->load->library(array('session', 'form_validation'));
+      $this->load->model(array('Internomex_model', 'asesor/Asesor_model', 'General_model'));
+      $this->load->library(array('session','form_validation', 'get_menu', 'Jwt_actions', 'Formatter'));
       $this->load->helper(array('url', 'form'));
       $this->load->database('default');
     }
@@ -61,6 +58,7 @@
     $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
     /*-------------------------------------------------------------------------------*/
     $this->load->view('template/header');
+    
     $this->load->view("internomex/aplicados", $datos);
   }
 
@@ -105,11 +103,167 @@
   else{
    $consulta_comisiones = array();
   }
-  } 
-
-
-
-
-
-
   }
+
+  public function loadFinalPayment()
+  {
+    $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol') );
+    $this->load->view('template/header');
+      if($this->session->userdata('id_rol') != 31){
+        $this->load->view("internomex/load_final_payment_ase", $datos);
+      }else{
+        $this->load->view("internomex/load_final_payment", $datos);
+      }
+  }
+
+  public function getPaymentsListByCommissionAgent()
+  {
+    $data = $this->Internomex_model->getCommissions()->result_array();
+    echo json_encode($data);
+  }
+  public function getPagosFinal(){
+    $year   = date("Y");
+    $mes    = date("m");
+    $Udia   = date("t");
+    if($this->session->userdata('id_rol') != 31){
+      $clave_user = $this->session->userdata('id_usuario'); 
+      $clave_user = 9341;
+      $cmd = ' and u.id_usuario = '.$clave_user; 
+   
+    }else{
+      
+      $cmd = '';
+    }
+    $fechaInicio = $this->input->post('fechaInicio');
+    $fechaFin = $this->input->post('fechaFin');
+
+    if(!isset($fechaFin) and !isset($fechaInicio))
+    {
+      $mes = date("m");
+      $year = date("Y");
+      $fechaInicio = $year.'-'.$mes.'-'.'1';
+      $fechaFin = date("Y-m-t");   
+
+    }
+    $fechaInicio = $fechaInicio ." 0:00:00"; 
+    $fechaFin = $fechaFin ." 23:59:59"; 
+    $data['data'] = $this->Internomex_model->getMFPagos($fechaInicio ,$fechaFin, $cmd)->result_array();
+    echo json_encode($data);
+  }
+
+
+  public function insertInformation() {
+    if (!isset($_POST))
+      echo json_encode(array("status" => 400, "message" => "Algún parámetro no viene informado."));
+    else {
+      if ($this->input->post("data") == "")
+        echo json_encode(array("status" => 400, "message" => "Algún parámetro no tiene un valor especificado."), JSON_UNESCAPED_UNICODE);
+      else {
+        $data = $this->input->post("data");
+        $decodedData = $this->jwt_actions->decodeData('4582', $data);
+        if (in_array($decodedData, array('ALR001', 'ALR003', 'ALR004', 'ALR005', 'ALR006', 'ALR007', 'ALR008', 'ALR009', 'ALR010', 'ALR012', 'ALR013', 'ALR002', 'ALR011', 'ALR014')))
+          echo json_encode(array("status" => 500, "message" => "No se logró decodificar la data."), JSON_UNESCAPED_UNICODE);
+        else {
+          $insertArrayData = array();
+          $reinsertArrayData = array();
+          $flag = false;
+          $flagB = false; 
+          $decodedData = json_decode($decodedData); // SE CONVIERTE A UN ARRAY
+          $insertAuditoriaData = array("fecha_creacion" => date("Y-m-d H:i:s"), "creado_por" => (int)$this->session->userdata('id_usuario')); // SE CREA ARREGLO CON DATOS BASE (QUE LLEVAN TODOS LOS REGISTROS)
+          if (count($decodedData) > 0) { // SE VALIDA QUE EL ARRAY AL MENOS TENGA DATOS
+            $id_usuario = array();
+            for ($i = 0; $i < count($decodedData); $i++) { // CICLO PARA VALIDACIÓN DE DATOS (CHECAR QUE LOS REGISTROS NOS SE HAYAN INSERTADO YA)
+              // SE VERIFICA QUE LA FILA DE DATOS CONTEGA LA INFORMACIÓN QUE SE VA A INSERTAR Y QUE NO VENGA VACÍA
+              if (isset($decodedData[$i]->id_usuario) && !empty($decodedData[$i]->id_usuario) && isset($decodedData[$i]->formaPago) && !empty($decodedData[$i]->formaPago) && isset($decodedData[$i]->montoSinDescuentos) && !empty($decodedData[$i]->montoSinDescuentos) &&
+              isset($decodedData[$i]->montoConDescuentosSede) && !empty($decodedData[$i]->montoConDescuentosSede) && isset($decodedData[$i]->montoFinal) && !empty($decodedData[$i]->montoFinal))
+                $id_usuario[$i] = (int)$decodedData[$i]->id_usuario;
+              else {
+                unset($decodedData[$i]); // SE ELIMINA LA POSICIÓN QUE YA SE INSERTÓ ANTERIORMENTE
+                $decodedData = array_values($decodedData); // SE REORDENA EL ARRAY
+              }
+            }
+            $verifiedData = array();
+            if (count($id_usuario) > 0) {
+              $id_usuario = implode(", ", $id_usuario); // SE CONVIERTE ARRAY DE ID DE USARIO A UN STRING SEPARADO POR COMMA PARA LA CONSULTA
+              $verifiedData = $this->Internomex_model->verifyData($id_usuario);
+            }
+            for ($i = 0; $i < count($decodedData); $i++) { // CICLO PARA RECORRER ARRAY DE DATOS Y ARMAR ARRAY PARA EL BATCH INSERT
+              $commonData = array();
+              
+              //var_dump($verifiedData);              
+              if (count($verifiedData) > 0) { // SE ENCONTRARON REGISTROS YA INSERTADOS EN EL MES
+                for($e = 0; $e < count($verifiedData); $e++){
+                  if((int)$decodedData[$i]->id_usuario === (int)$verifiedData[$e]->id_usuario)
+                  {
+                  //  $reinsertArrayData[$i] =  (int)$decodedData[$i];
+                    $flag = true;
+                    $flagB = false;
+
+                    //$reinsertArrayData = $decodedData[$e];
+                    unset($decodedData[$i]); // SE ELIMINA LA POSICIÓN QUE YA SE INSERTÓ ANTERIO  RMENTE
+                    $decodedData = array_values($decodedData); // SE REORDENA EL ARRAY
+                  }
+                
+                }
+                //var_dump($reinsertArrayData);
+              }
+              //var_dump($reinsertArrayData);
+              //var_dump('data del real insertada');
+              if (count($decodedData) > 0) {
+                $commonData += array("id_usuario" => (int)$decodedData[$i]->id_usuario, 
+                //  $this->formatter->convertPaymentMethod($decodedData[$i]->formaPago)
+                  "forma_pago" => 1,
+                  "monto_sin_descuento" => (float)$this->formatter->removeNumberFormat($decodedData[$i]->montoSinDescuentos), 
+                  "monto_con_descuento" => (float)$this->formatter->removeNumberFormat($decodedData[$i]->montoConDescuentosSede), 
+                  "monto_internomex" => (float)$this->formatter->removeNumberFormat($decodedData[$i]->montoFinal));
+                $commonData += $insertAuditoriaData; // SE CONCATENA LA DATA BASE + LA DATA DEL ARRAY PRINCIPAL
+                array_push($insertArrayData, $commonData);
+         
+              }
+              else{
+                
+                
+              }
+            }
+            if ($flag){
+              $flagB = false;
+
+              echo json_encode(array("status" => 301, "message" => "Es posible que más de un dato ya estuviera registrado en este mes"), JSON_UNESCAPED_UNICODE);
+
+            }
+           // if ($flag){
+           //   echo json_encode(array("status" => 500, "message" => "No hay información para procesar (vacío)."), JSON_UNESCAPED_UNICODE);            
+           // }
+
+            
+            if (count($insertArrayData) > 0) { // AL TERMINAR EL CICLO SE EVALÚA SI EL ARRAY DE DATOS PARA EL BATCH INSERT TIENE DATA VA Y TIRA EL BATCH
+              $insertResponse = $this->General_model->insertBatch("pagos_internomex", $insertArrayData);
+              if ($insertResponse) // SE EVALÚA LA RESPUSTA DE LA TRANSACCIÓN OK
+                echo json_encode(array("status" => 200, "message" => "Todos los registros se han insertado con éxito."), JSON_UNESCAPED_UNICODE);
+              else // FALLÓ EL BATCH
+                echo json_encode(array("status" => 500, "message" => "No se logró procesar la petición."), JSON_UNESCAPED_UNICODE);
+            }
+            else
+                 if($flag){
+                    if ($flagB){
+                      
+                      // echo json_encode(array("status" => 301, "message" => "Es posible que más de un dato ya estuviera registrado en este mes"), JSON_UNESCAPED_UNICODE);
+                       }
+            
+                      }else{
+                        echo json_encode(array("status" => 500, "message" => "No hay información para procesar (vacío)."), JSON_UNESCAPED_UNICODE);
+                      }
+           }
+          else // ARRAY VACÍO
+            echo json_encode(array("status" => 500, "message" => "No hay información para procesar (inicio)."), JSON_UNESCAPED_UNICODE);
+        }
+      }
+    }
+ }
+
+
+
+
+
+
+}

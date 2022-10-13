@@ -1,10 +1,10 @@
-var calendar;
+var calendar, eventsTable;
 var appointment = '';
 var exists = 1;
-var eventsTable;
+
 $(document).ready(function() {
   arrayEvents = [];
-  getUsersAndEvents(userType,idUser, true);    
+  getUsersAndEvents(userType, idUser, true);    
 });
 
 $('[data-toggle="tooltip"]').tooltip();
@@ -176,8 +176,10 @@ document.querySelector('#insert_appointment_form').addEventListener('submit',asy
         $('#spiner-loader').removeClass('hide');
       },
       success: function(data) {
-        removeCRMEvents();
-        getUsersAndEvents(userType, idUser, false);
+        if ( document.getElementById('asesor') != null && document.getElementById('asesor').value != '' )
+          $('#asesor').trigger('change');
+        else getUsersAndEvents(userType, idUser, false);
+        
         data = JSON.parse(data);
         alerts.showNotification("top", "right", data["message"], (data["status" == 503]) ? "danger" : (data["status" == 400]) ? "warning" : "success");
         $('#agendaInsert').modal('toggle');
@@ -191,16 +193,37 @@ document.querySelector('#insert_appointment_form').addEventListener('submit',asy
 });
 
 $(document).on('submit', '#edit_appointment_form', function(e) {
-  e.preventDefault();
-  const dataF = Object.fromEntries(
-    new FormData(e.target)
-  );
-  updateGoogleEvent(dataF);
+    e.preventDefault();
+    const dataF = Object.fromEntries(
+      new FormData(e.target)
+    );
+    
+    rangeOfDates = validateDates(dataF);
+
+    if(!rangeOfDates)
+      alerts.showNotification("top", "right", "Rango de fechas inválido", "danger");
+    else 
+      updateEvent(dataF);
 });
 
-function deleteCita(e){
-  let idAgenda = $("#idAgenda2").val();
-  let idGoogle = $("#idGoogle").val();
+function backToEvent(){
+  $('#feedbackModal').modal('toggle');
+  $('#modalEvent').modal();
+}
+
+function backFromDelete(){
+  $('#modalDeleteEvt').modal('toggle');
+  $('#modalEvent').modal();
+}
+
+function confirmDelete(){
+  $('#modalDeleteEvt').modal();
+  $('#modalEvent').modal('toggle');
+}
+
+function deleteCita(){
+  let idAgenda = $(".idAgenda2").val();
+  let idGoogle = $(".idGoogle").val();
   deleteEvent(idAgenda,idGoogle);
 }
 
@@ -236,13 +259,16 @@ function getAppointmentData(idAgenda){
       $("#dateStart2").val(moment(appointment.fecha_cita).format().substring(0,19));
       $("#dateEnd2").val(moment(appointment.fecha_final).format().substring(0,19));
       $("#description2").val(appointment.descripcion);
-      $("#idAgenda2").val(idAgenda);
-      $("#idGoogle").val(appointment.idGoogle)
+      $(".idAgenda2").val(idAgenda);
+      $(".idGoogle").val(appointment.idGoogle)
+
       var medio = $("#estatus_recordatorio2").val();
       var box = $("#comodinDIV2");
+      
       validateNCreate(appointment, medio, box);
-      if(idUser != appointment.idOrganizador) disabledEditModal(true, appointment.estatus);
+      if(idUser != appointment.idOrganizador || appointment.estatus == 2 ) disabledEditModal(true, appointment.estatus);
       else disabledEditModal(false, appointment.estatus);
+
       $(".dotStatusAppointment").css('color', `${appointment.estatus == 1 ? '#06B025' : '#e52424'}`);
     },
     error: function() {
@@ -323,8 +349,8 @@ function getAppointmentSidebarCalendar(idAgenda){
       $("#dateStart2").val(moment(appointment.fecha_cita).format().substring(0,19));
       $("#dateEnd2").val(moment(appointment.fecha_final).format().substring(0,19));
       $("#description2").val(appointment.description);
-      $("#idAgenda2").val(idAgenda);
-      $("#idGoogle").val(appointment.idGoogle);
+      $(".idAgenda2").val(idAgenda);
+      $(".idGoogle").val(appointment.idGoogle);
 
       var medio = $("#estatus_recordatorio2").val();
       var box = $("comodinDIV2");
@@ -383,7 +409,7 @@ function insertEventGoogle(data){
   return id;
 }
 
-async function updateGoogleEvent(data){
+async function updateEvent(data){
   const {idGoogle} = data;
 
   if(idGoogle == ''){
@@ -408,8 +434,10 @@ async function updateGoogleEvent(data){
       $('#spiner-loader').removeClass('hide');
     },
     success: function(data) {
-      removeCRMEvents();
-      getUsersAndEvents(userType, idUser, false);
+      if ( document.getElementById('asesor') != null && document.getElementById('asesor').value != '' )
+        $('#asesor').trigger('change');
+      else getUsersAndEvents(userType, idUser, false);
+
       data = JSON.parse(data);
       alerts.showNotification("top", "right", data["message"], (data["status" == 503]) ? "danger" : (data["status" == 400]) ? "warning" : "success");
       $('#modalEvent').modal('toggle');
@@ -423,7 +451,6 @@ async function updateGoogleEvent(data){
 
 function editGoogleEvent(evento, data){
   const { dateEnd, dateStart, description, evtTitle, idGoogle} = data;
-
   evento.summary = evtTitle;
   evento.description = description;
   evento.start.dateTime = dateStart;
@@ -460,7 +487,7 @@ function disabledEditModal(value, estatus){
     $("#prospectoE").prop("disabled", true);
     $("#id_direccion").prop("disabled", true);
     $("#estatus_recordatorio2").prop("disabled", true);
-    $(".finishS").addClass("d-none");
+    $("#modalEvent .finishS").addClass("d-none");
   }
   else{
     var menuModal = $("#modalEvent #menuModal");
@@ -470,7 +497,7 @@ function disabledEditModal(value, estatus){
     $("#prospectoE").prop("disabled", false);
     $("#id_direccion").prop("disabled", false);
     $("#estatus_recordatorio2").prop("disabled", false);
-    var btnSave = $(".finishS");
+    var btnSave = $("#modalEvent .finishS");
     ( estatus == 1 ? btnSave.removeClass('d-none') : btnSave.addClass('d-none'));
   }
   $("#prospectoE").selectpicker('refresh');
@@ -490,10 +517,13 @@ async function deleteEvent(idAgenda, idGoogle){
     success: function(data) {
       $('#spiner-loader').addClass('hide');
         if (data == 1) {
-            $('#modalEvent').modal("hide");
-            removeCRMEvents();
-            getUsersAndEvents(userType, idUser, false);
-            alerts.showNotification("top", "right", "La actualización se ha llevado a cabo correctamente.", "success");
+            $('#modalDeleteEvt').modal("hide");
+            
+            if ( document.getElementById('asesor') != null && document.getElementById('asesor').value != '' )
+              $('#asesor').trigger('change');
+            else getUsersAndEvents(userType, idUser, false);
+            
+            alerts.showNotification("top", "right", "Se ha eliminado el registro de manera de exitosa.", "success");
             if(idGoogle != ''){
               deleteGoogleEvent(idGoogle);
             }
@@ -519,7 +549,7 @@ function deleteGoogleEvent(idGoogle){
 $(document).on('submit', '#feedback_form', function(e) {
   e.preventDefault();
   let data = new FormData($(this)[0]);
-  data.append("idAgenda", $("#idAgenda2").val());
+  data.append("idAgenda", $(".idAgenda2").val());
 });
 
 document.querySelector('#feedback_form').addEventListener('submit', e =>  {
@@ -527,7 +557,7 @@ document.querySelector('#feedback_form').addEventListener('submit', e =>  {
   const data = Object.fromEntries(
     new FormData(e.target)
   )
-  data['idAgenda'] = $("#idAgenda2").val();
+  data['idAgenda'] = $(".idAgenda2").val();
   $.ajax({
     type: 'POST',
     url: `${base_url}Calendar/setAppointmentRate`,

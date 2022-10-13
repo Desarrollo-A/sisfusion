@@ -3,23 +3,23 @@
  table.dataTable > thead > tr > th, #reporte table.dataTable > tbody > tr > th, #reporte table.dataTable > tfoot > tr > th, #reporte table.dataTable > thead > tr > td, #reporte table.dataTable > tbody > tr > td, #reporte table.dataTable > tfoot > tr > td {
   white-space: nowrap !important;
 }
-#seeInformationModal table.dataTable > tbody > tr > td{
+#seeInformationModalReport table.dataTable > tbody > tr > td{
   white-space: nowrap !important;
 }
 
-#seeInformationModal table.dataTable > thead > tr > th{
+#seeInformationModalReport table.dataTable > thead > tr > th{
   padding: 1px 0px!important;
 }
 
-#seeInformationModal table {
+#seeInformationModalReport table {
   text-align: center;
 }
 
-#seeInformationModal table thead tr {
+#seeInformationModalReport table thead tr {
   background-color: #143860;
 }
 
-#seeInformationModal table thead tr th input {
+#seeInformationModalReport table thead tr th input {
   margin: 4px;
   border: 1px solid transparent;
   border-radius: 5px;
@@ -32,20 +32,20 @@
   text-transform: uppercase;
 }
 
-#seeInformationModal table thead tr th input:active {
+#seeInformationModalReport table thead tr th input:active {
   border: 1px solid #fff;
 }
 
-#seeInformationModal table thead tr th input:focus {
+#seeInformationModalReport table thead tr th input:focus {
   border: 1px solid #fff;
 }
 
-#seeInformationModal table thead tr th input::placeholder {
+#seeInformationModalReport table thead tr th input::placeholder {
   color: #ffffff;
   text-transform: undercase;
 }
 
-#seeInformationModal table .update-dataTable:hover {
+#seeInformationModalReport table .update-dataTable:hover {
   background-color: #b5c2d0;
 }
 
@@ -55,6 +55,11 @@
 
 #seeInformationModalCancelados table.dataTable > thead > tr > th{
   padding: 1px 0px!important;
+    font-weight: lighter;
+    text-align: center;
+    font-size: 10px;
+    text-transform: uppercase;
+
 }
 
 #seeInformationModalCancelados table {
@@ -72,7 +77,7 @@
   color: #ffffff;
   text-align: center;
   font-weight: 300;
-  font-size: 10px!important;
+  font-size: 10px;
   background-color: #143860;
   width: 100%;
   text-transform: uppercase;
@@ -153,7 +158,7 @@
                             <span>-</span>
                             <input type="text" class="form-control datepicker text-center " id="endDate"/>
                             <button class="btn btn-success btn-round btn-fab btn-fab-mini" id="searchByDateRange">
-                                <span class="material-icons update-dataTable">search</span>
+                                <span class="material-icons">search</span>
                             </button>
                         </div>
                     </div>
@@ -174,7 +179,7 @@
 </div>
 
 <!-- Modals -->
-<div class="modal fade" id="seeInformationModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+<div class="modal fade" id="seeInformationModalReport" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
 	<div class="modal-dialog modal-lg">
 		<div class="modal-content">
 			<div class="modal-header">

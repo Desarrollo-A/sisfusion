@@ -229,8 +229,6 @@
 						$('#btnSubmit').prop('disabled', false);
 						$('#btnSubmit').css("opacity","1");
 						$('#solicitarAutorizacion').modal("hide");
-						$('#addExp').DataTable().ajax.reload();
-						$('#sol_aut').DataTable().ajax.reload();
 						alerts.showNotification('top', 'right', 'Se enviaron las autorizaciones correctamente', 'success');
 					} else {
 						$('#btnSubmit').prop('disabled', false);
@@ -241,7 +239,7 @@
 				error: function(){
 					$('#btnSubmit').prop('disabled', false);
 					$('#btnSubmit').css("opacity","1");
-					alerts.showNotification('top', 'right', '¡OPS!, ALGO SALIÓ MAL, INTÉNTALO DE NUEVO.', 'danger');
+					alerts.showNotification('top', 'right', 'Oops! Algo salió mal, inténtalo de nuevo.', 'danger');
 				}
 			});
 		});

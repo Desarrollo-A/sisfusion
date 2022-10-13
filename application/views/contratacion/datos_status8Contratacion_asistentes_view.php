@@ -27,8 +27,8 @@
                         <br>              
                     </div>
                     <div class="modal-footer">
-                        <button type="button" id="save1" class="btn btn-success"><span class="material-icons" >send</span> </i> Registrar</button>
-                        <button type="button" class="btn btn-danger" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> Cancelar</button>
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                        <button type="button" id="save1" class="btn btn-primary">Registrar</button>
                     </div>
                 </div>
             </div>
@@ -47,8 +47,8 @@
                         <br>              
                     </div>
                     <div class="modal-footer">
-                        <button type="button" id="save2" class="btn btn-success"><span class="material-icons" >send</span> </i> Registrar</button>
-                        <button type="button" class="btn btn-danger" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> Cancelar</button>
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                        <button type="button" id="save2" class="btn btn-primary">Registrar</button>
                     </div>
                 </div>
             </div>
@@ -67,8 +67,8 @@
                         <br>              
                     </div>
                     <div class="modal-footer">
-                        <button type="button" id="save3" class="btn btn-success"><span class="material-icons" >send</span> </i> Registrar</button>
-                        <button type="button" class="btn btn-danger" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> Cancelar</button>
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                        <button type="button" id="save3" class="btn btn-primary">Registrar</button>
                     </div>
                 </div>
             </div>
@@ -87,8 +87,8 @@
                         <br>              
                     </div>
                     <div class="modal-footer">
-                        <button type="button" id="save4" class="btn btn-success"><span class="material-icons" >send</span> </i> Registrar</button>
-                        <button type="button" class="btn btn-danger" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> Cancelar</button>
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                        <button type="button" id="save4" class="btn btn-primary">Registrar</button>
                     </div>
                 </div>
             </div>
@@ -107,8 +107,8 @@
                         <br>              
                     </div>
                     <div class="modal-footer">
-                        <button type="button" id="save5" class="btn btn-success"><span class="material-icons" >send</span> </i> Registrar</button>
-                        <button type="button" class="btn btn-danger" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> Cancelar</button>
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                        <button type="button" id="save5" class="btn btn-primary">Registrar</button>
                     </div>
                 </div>
             </div>
@@ -127,8 +127,8 @@
                         <br>              
                     </div>
                     <div class="modal-footer">
-                        <button type="button" id="save6" class="btn btn-success"><span class="material-icons" >send</span> </i> Registrar</button>
-                        <button type="button" class="btn btn-danger" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> Cancelar</button>
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                        <button type="button" id="save6" class="btn btn-primary">Registrar</button>
                     </div>
                 </div>
             </div>
@@ -162,6 +162,7 @@
                                                         <th>LOTE</th>
                                                         <th>GERENTE</th>
                                                         <th>CLIENTE</th>
+                                                        <th>ESTATUS ACTUAL</th>
                                                         <?php
                                                         if($this->session->userdata('id_rol')!=53){
                                                         ?>
@@ -194,7 +195,6 @@
     <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
     <script>
-
         var idlote_global = 0;
 
 
@@ -213,7 +213,7 @@
 
                 $('#Jtabla thead tr:eq(0) th').each( function (i) {
 
-                if(i != 0 && i != 7){
+                if(i != 0 && i != 8){
                     var title = $(this).text();
                     $(this).html('<input type="text" class="textoshead" placeholder="'+title+'"/>' );
                     $( 'input', this ).on('keyup change', function () {
@@ -244,7 +244,7 @@
                     className: 'btn buttons-excel',
                     titleAttr: 'Descargar archivo de Excel',
                     exportOptions: {
-                    columns: [1,2,3,4,5,6],
+                    columns: [1, 2, 3, 4, 5, 6, 7],
                     format: {
                         header:  function (d, columnIdx) {
                             if(columnIdx == 0){
@@ -333,7 +333,13 @@
                 {
                     "width": "20%",
                     "data": function( d ){
-                        return '<p class="m-0">'+d.nombre+" "+d.apellido_paterno+" "+d.apellido_materno+'</p>';
+                        return '<p class="m-0">'+d.nombreCliente+'</p>';
+                    }
+                },
+                {
+                    "width": "20%",
+                    "data": function( d ){
+                        return '<p class="m-0">'+d.descripcion+'</p>';
                     }
                 }
                 <?php
@@ -357,7 +363,7 @@
 
                                     cntActions += '<button href="#" data-idLote="'+data.idLote+'" data-nomLote="'+data.nombreLote+'" data-idCond="'+data.idCondominio+'"' +
                                     'data-idCliente="'+data.id_cliente+'" data-fecVen="'+data.fechaVenc+'" data-ubic="'+data.ubicacion+'" data-code="'+data.cbbtton+'"  ' +
-                                    'class="btn-data btn-warning cancelReg" title="Rechazo/regreso estatus (Juridico)">' +
+                                    'class="btn-data btn-warning cancelReg" title="Rechazo/regreso estatus (Jurídico)">' +
                                     '<i class="far fa-thumbs-down"></i></button>';
 
                                     cntActions += '<button href="#" data-idLote="'+data.idLote+'" data-nomLote="'+data.nombreLote+'" data-idCond="'+data.idCondominio+'"' +
@@ -365,7 +371,8 @@
                                     'class="btn-data btn-orangeYellow cancelAs" title="Rechazo/regreso estatus (Asesor)">' +
                                     '<i class="far fa-thumbs-down"></i></button>';              
                                 } 
-                                else if (data.idStatusContratacion == 7 && data.idMovimiento == 37 && data.perfil == 15 || data.idStatusContratacion == 7 && data.idMovimiento == 7 && data.perfil == 15 || data.idStatusContratacion == 7 && data.idMovimiento == 77 && data.perfil == 15) {
+                                else if ((data.idStatusContratacion == 7 && data.idMovimiento == 37 && data.perfil == 15 || data.idStatusContratacion == 7 && data.idMovimiento == 7 && data.perfil == 15 || data.idStatusContratacion == 7 && data.idMovimiento == 77 && data.perfil == 15)
+                                || (data.idStatusContratacion == 11 && data.idMovimiento == 41 && data.perfil == 11)) {
                                     cntActions = '<button href="#" data-idLote="'+data.idLote+'" data-nomLote="'+data.nombreLote+'" data-idCond="'+data.idCondominio+'"' +
                                     'data-idCliente="'+data.id_cliente+'" data-fecVen="'+data.fechaVenc+'" data-ubic="'+data.ubicacion+'" data-code="'+data.cbbtton+'" ' +
                                     'class="btn-data btn-green editReg" title="Registrar estatus">' +
@@ -373,7 +380,7 @@
 
                                     cntActions += '<button href="#" data-idLote="'+data.idLote+'" data-nomLote="'+data.nombreLote+'" data-idCond="'+data.idCondominio+'"' +
                                     'data-idCliente="'+data.id_cliente+'" data-fecVen="'+data.fechaVenc+'" data-ubic="'+data.ubicacion+'" data-code="'+data.cbbtton+'"  ' +
-                                    'class="btn-data btn-warning cancelReg" title="Rechazo/regreso estatus (Juridico)">' +
+                                    'class="btn-data btn-warning cancelReg" title="Rechazo/regreso estatus (Jurídico)">' +
                                     '<i class="far fa-thumbs-down"></i></button>';
 
                                     cntActions += '<button href="#" data-idLote="'+data.idLote+'" data-nomLote="'+data.nombreLote+'" data-idCond="'+data.idCondominio+'"' +
@@ -384,8 +391,18 @@
                                 else if (data.idStatusContratacion == 7 && data.idMovimiento == 66 && data.perfil == 11) {
                                     cntActions = '<button href="#" data-idLote="'+data.idLote+'" data-nomLote="'+data.nombreLote+'" data-idCond="'+data.idCondominio+'"' +
                                     'data-idCliente="'+data.id_cliente+'" data-fecVen="'+data.fechaVenc+'" data-ubic="'+data.ubicacion+'" data-code="'+data.cbbtton+'" ' +
-                                    'class="btn-data btn-warning editLoteTo8" title="Registrar estatus">' +
+                                    'class="btn-data btn-violetBoots editLoteTo8" title="Registrar estatus">' +
                                     '<i class="far fa-thumbs-up"></i></button>';
+
+                                    cntActions += '<button href="#" data-idLote="'+data.idLote+'" data-nomLote="'+data.nombreLote+'" data-idCond="'+data.idCondominio+'"' +
+                                        'data-idCliente="'+data.id_cliente+'" data-fecVen="'+data.fechaVenc+'" data-ubic="'+data.ubicacion+'" data-code="'+data.cbbtton+'"  ' +
+                                        'class="btn-data btn-warning cancelReg" title="Rechazo/regreso estatus (Jurídico)">' +
+                                        '<i class="far fa-thumbs-down"></i></button>';
+
+                                    cntActions += '<button href="#" data-idLote="'+data.idLote+'" data-nomLote="'+data.nombreLote+'" data-idCond="'+data.idCondominio+'"' +
+                                        'data-idCliente="'+data.id_cliente+'" data-fecVen="'+data.fechaVenc+'" data-ubic="'+data.ubicacion+'" data-code="'+data.cbbtton+'" ' +
+                                        'class="btn-data btn-orangeYellow cancelAs" title="Rechazo/regreso estatus (Asesor)">' +
+                                        '<i class="far fa-thumbs-down"></i></button>';
                                 } 
                                 else {
                                     cntActions = 'N/A';

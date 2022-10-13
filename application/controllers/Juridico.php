@@ -73,6 +73,7 @@ class Juridico extends CI_Controller
   			$dataPer[$i]['etapa']=$data[$i]->etapa;
 			$dataPer[$i]['user']=$this->session->userdata('id_usuario');
 			$dataPer[$i]['juridico']=$data[$i]->juridico;
+			$dataPer[$i]['nombreSede']=$data[$i]->nombreSede;
 
 			$proyecto = str_replace(' ', '',$data[$i]->nombreResidencial);
 			$cluster = strtoupper($data[$i]->nombreCondominio);
@@ -297,6 +298,7 @@ class Juridico extends CI_Controller
 		$arreglo["perfil"]=$this->session->userdata('id_rol');
 		$arreglo["modificado"]=date("Y-m-d H:i:s");
 		$arreglo["numContrato"]=$numContrato;
+		$arreglo["fechaSolicitudValidacion"] = date('Y-m-d H:i:s');
 	
 	
 	$horaActual = date('H:i:s');
@@ -477,7 +479,7 @@ public function editar_registro_loteRevision_juridico_proceceso7(){
     $comentario=$this->input->post('comentario');
     $modificado=date("Y-m-d H:i:s");
     $fechaVenc=$this->input->post('fechaVenc');
-
+	$arreglo["status8Flag"] = 0;
 
     $arreglo=array();
     $arreglo["idStatusContratacion"]= 7;
@@ -894,6 +896,7 @@ public function editar_registro_loteRevision_juridico_proceceso7(){
     $arreglo["usuario"]=$this->session->userdata('id_usuario');
     $arreglo["perfil"]=$this->session->userdata('id_rol');
     $arreglo["modificado"]=date("Y-m-d H:i:s");
+	$arreglo["status8Flag"] = 0;
 
     $arreglo2=array();
     $arreglo2["idStatusContratacion"]=7;

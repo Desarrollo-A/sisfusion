@@ -114,17 +114,19 @@ function buildTableDetail(data) {
     solicitudes += '<td>' + '<b>' + 'AREA' + '</b></td>';
     solicitudes += '<td>' + '<b>' + 'FECHA INICIAL ESTATUS' + '</b></td>';
     solicitudes += '<td>' + '<b>' + 'FECHA FINAL ESTATUS' + '</b></td>';
+    solicitudes += '<td>' + '<b>' + 'COMENTARIOS' + '</b></td>';
     solicitudes += '<td>' + '<b>' + 'VIGENCIA ' + '</b></td>';
     solicitudes += '<td>' + '<b>' + 'DÍAS DE ATRASO ' + '</b></td>';
     solicitudes += '</tr>';
     $.each(data, function (i, v) {
         //i es el indice y v son los valores de cada fila
         solicitudes += '<tr>';
-        solicitudes += '<td> ' + i + ' </td>';
+        solicitudes += '<td> ' + v.idStatus + ' </td>';
         solicitudes += '<td> ' + v.estatus + ' </td>';
         solicitudes += '<td> ' + v.area + ' </td>';
         solicitudes += '<td> ' + v.fechados + ' </td>';
         solicitudes += '<td> ' + v.fecha_creacion + ' </td>';
+        solicitudes += '<td> ' + v.comentarios + ' </td>';
         solicitudes += '<td> ' + v.atrasado + '</td>';
         solicitudes += '<td> ' + v.diferencia + '</td>';
     });

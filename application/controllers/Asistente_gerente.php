@@ -211,6 +211,7 @@ class Asistente_gerente extends CI_Controller {
 		$arreglo["usuario"]=$this->session->userdata('id_usuario');
 		$arreglo["perfil"]=$this->session->userdata('id_rol');
 		$arreglo["modificado"]=date("Y-m-d H:i:s");
+		$arreglo["status8Flag"] = 1;
 	
 		$arreglo2=array();
 		$arreglo2["idStatusContratacion"]=8;
@@ -243,62 +244,53 @@ class Asistente_gerente extends CI_Controller {
 }
 	
 public function editar_registro_loteRechazo_asistentes_proceceso8(){
-
-    $idLote=$this->input->post('idLote');
-    $idCondominio=$this->input->post('idCondominio');
-    $nombreLote=$this->input->post('nombreLote');
-    $idCliente=$this->input->post('idCliente');
-    $comentario=$this->input->post('comentario');
+  $idLote=$this->input->post('idLote');
+  $idCondominio=$this->input->post('idCondominio');
+  $nombreLote=$this->input->post('nombreLote');
+  $idCliente=$this->input->post('idCliente');
+  $comentario=$this->input->post('comentario');
 	$modificado=date("Y-m-d H:i:s");
-	
 
-    $arreglo=array();
-    $arreglo["idStatusContratacion"]= 6;
-    $arreglo["idMovimiento"]=23; 
-    $arreglo["comentario"]=$comentario;
-    $arreglo["usuario"]=$this->session->userdata('id_usuario');
-    $arreglo["perfil"]=$this->session->userdata('id_rol');
-    $arreglo["modificado"]=date("Y-m-d H:i:s");
+  $arreglo=array();
+  $arreglo["idStatusContratacion"]= 6;
+  $arreglo["idMovimiento"]=23; 
+  $arreglo["comentario"]=$comentario;
+  $arreglo["usuario"]=$this->session->userdata('id_usuario');
+  $arreglo["perfil"]=$this->session->userdata('id_rol');
+  $arreglo["modificado"]=date("Y-m-d H:i:s");
+  $arreglo["status8Flag"] = 0;
 
-
-    $arreglo2=array();
-    $arreglo2["idStatusContratacion"]=6;
-    $arreglo2["idMovimiento"]=23;
-    $arreglo2["nombreLote"]=$nombreLote;
-    $arreglo2["comentario"]=$comentario;
-    $arreglo2["usuario"]=$this->session->userdata('id_usuario');
-    $arreglo2["perfil"]=$this->session->userdata('id_rol');
-    $arreglo2["modificado"]=date("Y-m-d H:i:s");
-    $arreglo2["fechaVenc"]= $modificado;
-    $arreglo2["idLote"]= $idLote;  
-    $arreglo2["idCondominio"]= $idCondominio;          
-    $arreglo2["idCliente"]= $idCliente;    
-
+  $arreglo2=array();
+  $arreglo2["idStatusContratacion"]=6;
+  $arreglo2["idMovimiento"]=23;
+  $arreglo2["nombreLote"]=$nombreLote;
+  $arreglo2["comentario"]=$comentario;
+  $arreglo2["usuario"]=$this->session->userdata('id_usuario');
+  $arreglo2["perfil"]=$this->session->userdata('id_rol');
+  $arreglo2["modificado"]=date("Y-m-d H:i:s");
+  $arreglo2["fechaVenc"]= $modificado;
+  $arreglo2["idLote"]= $idLote;  
+  $arreglo2["idCondominio"]= $idCondominio;          
+  $arreglo2["idCliente"]= $idCliente;    
 
 	$validate = $this->VentasAsistentes_model->validateSt8($idLote);
 
-	if($validate == 1){
-
-	if ($this->VentasAsistentes_model->updateSt($idLote,$arreglo,$arreglo2) == TRUE){ 
-		$data['message'] = 'OK';
-		echo json_encode($data);
-
-		}else{
-			$data['message'] = 'ERROR';
-			echo json_encode($data);
-		}
-
-	}else {
+	if($validate == 1) {
+    if ($this->VentasAsistentes_model->updateSt($idLote,$arreglo,$arreglo2) == TRUE) { 
+      $data['message'] = 'OK';
+      echo json_encode($data);
+    } else {
+      $data['message'] = 'ERROR';
+      echo json_encode($data);
+    }
+	} else {
 		$data['message'] = 'FALSE';
 		echo json_encode($data);
 	}
+}
 
 
-  }
-
-
-  public function editar_registro_loteRechazoAstatus2_asistentes_proceceso8(){
-
+  public function editar_registro_loteRechazoAstatus2_asistentes_proceceso8() {
     $idLote=$this->input->post('idLote');
     $idCondominio=$this->input->post('idCondominio');
     $nombreLote=$this->input->post('nombreLote');
@@ -313,7 +305,7 @@ public function editar_registro_loteRechazo_asistentes_proceceso8(){
     $arreglo["usuario"]=$this->session->userdata('id_usuario');
     $arreglo["perfil"]=$this->session->userdata('id_rol');
     $arreglo["modificado"]=date("Y-m-d H:i:s");
-
+    $arreglo["status8Flag"] = 0;
 
     $arreglo2=array();
     $arreglo2["idStatusContratacion"]=1;
@@ -328,9 +320,7 @@ public function editar_registro_loteRechazo_asistentes_proceceso8(){
     $arreglo2["idCondominio"]= $idCondominio;          
     $arreglo2["idCliente"]= $idCliente;    
 
-
-
-	$datos= $this->VentasAsistentes_model->getCorreoSt($idCliente);
+	  $datos= $this->VentasAsistentes_model->getCorreoSt($idCliente);
 
 	$lp = $this->VentasAsistentes_model->get_lp($idLote);
 
@@ -477,7 +467,7 @@ public function editar_registro_loteRechazo_asistentes_proceceso8(){
     $arreglo["perfil"]=$this->session->userdata('id_rol');
     $arreglo["modificado"]=date("Y-m-d H:i:s");
     $arreglo["fechaSolicitudValidacion"]=$modificado;
-
+    $arreglo["status8Flag"] = 1;
 
 $horaActual = date('H:i:s');
 $horaInicio = date("08:00:00");
@@ -1048,7 +1038,8 @@ public function editar_registro_loteRevision_asistentes_proceceso8(){
     $arreglo["usuario"]=$this->session->userdata('id_usuario');
     $arreglo["perfil"]=$this->session->userdata('id_rol');
     $arreglo["modificado"]=date("Y-m-d H:i:s");
-
+    $arreglo["status8Flag"] = 1;
+    
     $arreglo2=array();
     $arreglo2["idStatusContratacion"]=8;
     $arreglo2["idMovimiento"]=65;

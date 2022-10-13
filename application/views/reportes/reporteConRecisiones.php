@@ -4,7 +4,7 @@
         table.dataTable > thead > tr > th, table.dataTable > tbody > tr > th, table.dataTable > tfoot > tr > th, table.dataTable > thead > tr > td, table.dataTable > tbody > tr > td, table.dataTable > tfoot > tr > td {
         white-space: nowrap!important;
     }
-    </style>
+</style>
 <body>
     
     <div class="wrapper">
@@ -53,7 +53,8 @@
                                                 <th>ASESOR</th>
                                                 <th>COORDINADOR</th>
                                                 <th>GERENTE</th>
-                                                <th>ÚLTIMO ESTATUS</th>
+                                                <th>TIPO LOTE</th>
+                                                <th>CASA</th>
                                                 <th>ESTATUS ACTUAL</th>
                                                 <th>PLAZA VENTA</th>
                                                 <th>TIPO VENTA</th>

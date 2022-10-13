@@ -25,7 +25,11 @@
 							<textarea class="form-control" name="comentario" id="comentarioregCor" rows="3"></textarea>
                              <br>
 						</div>
-				
+                        <div class="col col-xs-12 col-sm-12 col-md-6 col-lg-12">
+                            <label id="tvLbl">Enganche:</label>
+                            <input class="form-control" name="totalNeto" id="totalNeto" oncopy="return false"
+                                   onpaste="return false" onkeypress="return SoloNumeros(event)" type="tel" pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" data-type="currency" >
+                        </div>
 						<input type="hidden" name="idLote" id="idLoteregCor" >
 						<input type="hidden" name="idCliente" id="idClienteregCor" >
 						<input type="hidden" name="idCondominio" id="idCondominioregCor" >
@@ -36,8 +40,8 @@
 
 				<div class="modal-footer"></div>
 				<div class="modal-footer">
-					<button type="button" id="enviarAContraloriaGuardar" onClick="preguntaRegCorr()" class="btn btn-success"><span class="material-icons" >send</span> </i> Registrar</button>
-                    <button type="button" class="btn btn-danger" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> Cancelar</button>
+                    <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                    <button type="button" id="enviarAContraloriaGuardar" onClick="preguntaRegCorr()" class="btn btn-primary">Registrar</button>
 				</div>
 			</div>
 		</div>
@@ -67,8 +71,8 @@
 
 				<div class="modal-footer"></div>
 				<div class="modal-footer">
-					<button type="button" id="guardar" class="btn btn-success"><span class="material-icons" >send</span> </i> Registrar</button>
-                    <button type="button" class="btn btn-danger" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> Cancelar</button>
+                    <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                    <button type="button" id="guardar" class="btn btn-primary">Registrar</button>
 				</div>
 			</div>
 		</div>
@@ -91,7 +95,7 @@
 				</div>
 				<div class="modal-footer"></div>
 				<div class="modal-footer">
-				    <button type="button" class="btn btn-success" data-dismiss="modal"><span class="material-icons">done</span> </i> Entendido</button>
+				    <button type="button" class="btn btn-primary" data-dismiss="modal">Entendido</button>
 				</div>
 			</div>
 		</div>
@@ -298,53 +302,6 @@
                                             </tr>
                                         </thead>
                                     </table>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-    <div class="content hide">
-        <div class="container-fluid">
-            <!--<h5 style="text-align: center">REGISTRO ESTATUS 6 (Corrida elaborada)</h5>-->
-            <div class="row">
-                <div class="col xol-xs-12 col-sm-12 col-md-12 col-lg-12">
-                    <div class="card">
-                        <div class="card-header card-header-icon" data-background-color="goldMaderas">
-                            <i class="material-icons">reorder</i>
-                        </div>
-                        <div class="card-content">
-                            <h4 class="card-title center-align">Registro estatus 6 (corrida elaborada)</h4>
-                            <div class="toolbar">
-                             </div>
-                            <div class="material-datatables"> 
-
-                                <div class="form-group">
-                                    <div class="table-responsive">
-									<table class="table table-responsive table-bordered table-striped table-hover"
-                                           id="tabla_ingresar_6" name="tabla_ingresar_6" style="text-align:center;">
-                                        <thead>
-                                            <tr>
-                                                <th></th>
-                                                <th></th>
-												<th style="font-size: .9em;">PROYECTO</th>
-												<th style="font-size: .9em;">CONDOMINIO</th>
-                                                <th style="font-size: .9em;">LOTE</th>
-                                                <th style="font-size: .9em;">GERENTE</th>
-                                                <th style="font-size: .9em;">CLIENTE</th>
-                                                <th style="font-size: .9em;">F.MOD</th>
-                                                <th style="font-size: .9em;">F.VENC</th>
-												<th style="font-size: .9em;">UC</th>
-                                                <th style="font-size: .9em;"></th>
-                                            </tr>
-                                        </thead>
-                                    </table>
-
-                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -898,7 +855,8 @@ columnDefs: [
 		var idCliente = $("#idClienteregCor").val();
 		var fechaVenc = $("#fechaVencregCor").val();
 		var comentario = $("#comentarioregCor").val();
-
+		var enganche = $("#enganche").val();
+        var totalNeto = $("#totalNeto").val();
 
 		var parametros = {
 			"idLote": idLote,
@@ -907,16 +865,14 @@ columnDefs: [
 			"idStatusContratacion": idStatusContratacion,
 			"idCliente": idCliente,
 			"fechaVenc": fechaVenc,
-			"comentario": comentario
+			"comentario": comentario,
+			"totalNeto": totalNeto
 		};
 
 
-		if (comentario.length <= 0 ) {
-
-			alerts.showNotification('top', 'right', 'Ingresa un comentario.', 'danger');
-
-		} else if (comentario.length > 0) {
-
+		if (comentario.length <= 0 || $("#totalNeto").val().length == 0)
+			alerts.showNotification('top', 'right', 'Los campos Comentario y Enganche son requeridos.', 'danger');
+		else if (comentario.length > 0) {
 		     	$('#enviarAContraloriaGuardar').prop('disabled', true);
 				$.ajax({
 					data: parametros,
@@ -1331,7 +1287,103 @@ jQuery(document).ready(function(){
 	
 })
 
+function SoloNumeros(evt){
+    if(window.event)
+        keynum = evt.keyCode; 
+    else
+        keynum = evt.which;
 
+    if((keynum > 47 && keynum < 58) || keynum == 8 || keynum == 13 || keynum == 6 || keynum == 46 )
+        return true;
+    else {
+        alerts.showNotification("top", "right", "Recuerda sólo ingresar números.", "danger");
+        return false;
+    }
+}
+
+// Jquery Dependency
+$("input[data-type='currency']").on({
+    keyup: function() {
+        formatCurrency($(this));
+    },
+    blur: function() {
+        formatCurrency($(this), "blur");
+    },
+    click: function() {
+        formatCurrency($(this));
+    },
+});
+
+function formatNumber(n) {
+    // format number 1000000 to 1,234,567
+    return n.replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+}
+function formatCurrency(input, blur) {
+    // appends $ to value, validates decimal side
+    // and puts cursor back in right position.
+
+    // get input value
+    var input_val = input.val();
+
+    // don't validate empty input
+    if (input_val === "") { return; }
+
+    // original length
+    var original_len = input_val.length;
+
+    // initial caret position
+    var caret_pos = input.prop("selectionStart");
+
+    // check for decimal
+    if (input_val.indexOf(".") >= 0) {
+
+        // get position of first decimal
+        // this prevents multiple decimals from
+        // being entered
+        var decimal_pos = input_val.indexOf(".");
+
+        // split number by decimal point
+        var left_side = input_val.substring(0, decimal_pos);
+        var right_side = input_val.substring(decimal_pos);
+
+        // add commas to left side of number
+        left_side = formatNumber(left_side);
+
+        // validate right side
+        right_side = formatNumber(right_side);
+
+        // On blur make sure 2 numbers after decimal
+        if (blur === "blur") {
+            right_side += "00";
+        }
+
+        // Limit decimal to only 2 digits
+        right_side = right_side.substring(0, 2);
+
+        // join number by .
+        input_val = "$" + left_side + "." + right_side;
+
+    } else {
+        // no decimal entered
+        // add commas to number
+        // remove all non-digits
+        input_val = formatNumber(input_val);
+        input_val = "$" + input_val;
+
+        // final formatting
+        if (blur === "blur") {
+            input_val += ".00";
+        }
+    }
+
+    // send updated string to input
+    input.val(input_val);
+
+    // put caret back in the right position
+    var updated_len = input_val.length;
+    caret_pos = updated_len - original_len + caret_pos;
+    input[0].setSelectionRange(caret_pos, caret_pos);
+}
 
 </script>
 

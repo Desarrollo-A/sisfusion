@@ -58,57 +58,6 @@
     </div>
 
 
-
-
-    <div class="content hide">
-        <div class="container-fluid">
- 
-            <div class="row">
-                <div class="col xol-xs-12 col-sm-12 col-md-12 col-lg-12">
-                    <div class="card">
-                        <div class="card-header card-header-icon" data-background-color="goldMaderas">
-                            <i class="material-icons">reorder</i>
-                        </div>
-                        <div class="card-content">
-                            <h4 class="card-title center-align">Registro estatus 9 (contrato recibido con firma del cliente)</h4>
-                            <div class="toolbar">
-                             </div>
-                            <div class="material-datatables"> 
-
-                                <div class="form-group">
-                                    <div class="table-responsive">
- 
-                                    <table class="table table-responsive table-bordered table-striped table-hover"
-                                           id="tabla_ingresar_9" name="tabla_ingresar_9">
-
-                                        <thead>
-                                            <tr>
-                                                <th></th>
-                                                <th></th>
-                                                <th style="font-size: .9em;">PROYECTO</th>
-                                                <th style="font-size: .9em;">CONDOMINIO</th>
-                                                <th style="font-size: .9em;">LOTE</th>
-                                                <th style="font-size: .9em;">GERENTE</th>
-                                                <th style="font-size: .9em;">CLIENTE</th>
-                                                <th style="font-size: .9em;"></th>
-                                            </tr>
-                                        </thead>
-                                    </table>
-
- 
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-
-
 <!-- modal  ENVIA A CONTRALORIA 7-->
 <div class="modal fade" id="editReg" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog">
@@ -123,32 +72,19 @@
                             <textarea class="form-control" id="comentario" rows="3"></textarea>
                              <br>
                         </div>
-
-                        <div class="col col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                            <label id="tvLbl">Enganche:</label>
-                            <input type="text" class="form-control" name="totalNeto" id="totalNeto" oncopy="return false" onpaste="return false" onkeypress="return SoloNumeros(event)">
-                        </div>
-
-
-                        <div class="col col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                        <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
                             <label id="tvLbl">Total Neto:</label>
-                            <input type="text" class="form-control" name="totalNeto2" id="totalNeto2" oncopy="return false" onpaste="return false" onkeypress="return SoloNumeros(event)">
+                            <input class="form-control" name="totalNeto2" id="totalNeto2"
+                                   oncopy="return false" onpaste="return false" onkeypress="return SoloNumeros(event)"
+                                   type="tel" pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" data-type="currency">
                         </div>
                     </div>
-
-                    <!-- ADDED DIV WITH COMMISSION PLAN -->
-                    <div class="col col-xs-12 col-sm-12 col-md-6 col-lg-12">
-                        <label>Plan de comisión</label>
-                        <select class="selectpicker" name="commission_plan" id="commission_plan" data-style="select-with-transition" data-live-search="true" title="Seleccione una opción" data-size="7" required></select>
-                        <br>
-                    </div>
-
                 </div>
 
                 <div class="modal-footer"></div>
                 <div class="modal-footer">
-                    <button type="button" id="save1" class="btn btn-success"><span class="material-icons" >send</span> </i> Registrar</button>
-                    <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="cleanSelects()"><span class="glyphicon glyphicon-remove"></span> Cancelar</button>
+                    <button type="button" class="btn btn-danger btn-simple btn-simple" data-dismiss="modal">Cancelar</button>
+                    <button type="button" id="save1" class="btn btn-primary">Registrar</button>
                 </div>
         </div>
     </div>
@@ -170,8 +106,8 @@
                       <br>              
                 </div>
                 <div class="modal-footer">
-                    <button type="button" id="save3" class="btn btn-success"><span class="material-icons" >send</span> </i> Registrar</button>
-                    <button type="button" class="btn btn-danger" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> Cancelar</button>
+                    <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                    <button type="button" id="save3" class="btn btn-primary">Registrar</button>
                 </div>
         </div>
     </div>
@@ -196,7 +132,6 @@
 <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
 <script>
-
     $('#tabla_ingresar_9 thead tr:eq(0) th').each( function (i) {
     if(i!=0 && i!=1 && i!=10){
         var title = $(this).text();
@@ -209,29 +144,6 @@
     }
 
 });
-    
-
-    function cleanSelects() {
-        $('#commission_plan').val("");
-        $("#commission_plan").selectpicker("refresh");
-    }
-
-    // ADDED COMMISSION POST TO GET DATA FROM OPCS_X_CATS
-    $.post('getCommissionPlans', function(data) {
-        $("#commission_plan").append($('<option disabled selected>').val("0").text("Seleccione una opción"));
-        var len = data.length;
-        for( var i = 0; i<len; i++)
-        {
-            var id = data[i]['id_opcion'];
-            var name = data[i]['nombre'];
-            $("#commission_plan").append($('<option>').val(id).text(name));
-        }
-        if(len<=0)
-        {
-            $("#commission_plan").append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
-        }
-        $("#commission_plan").selectpicker('refresh');
-    }, 'json');
 
 var url = "<?=base_url()?>";
 var url2 = "<?=base_url()?>index.php/";
@@ -359,6 +271,12 @@ tabla_9 = $("#tabla_ingresar_9").DataTable({
             else if(d.tipo_venta==5) {
                 lblStats ='<span class="label label-info">Intercambio</span>';
             }
+            else if(d.tipo_venta==6) {
+                lblStats ='<span class="label label-info">Reubicación</span>';
+            }
+            else if(d.tipo_venta==7) {
+                lblStats ='<span class="label label-info">Venta especial</span>';
+            }
             else if(d.tipo_venta== null) {
                     lblStats ='<span class="label label-info"></span>';
             }
@@ -410,7 +328,7 @@ if(data.vl == '1') {
 
 } else {
     
-    if(data.idStatusContratacion == 8 && data.idMovimiento == 38 || data.idStatusContratacion == 8 && data.idMovimiento == 65 ) {
+    if(data.idStatusContratacion == 8 && data.idMovimiento == 38 || data.idStatusContratacion == 8 && data.idMovimiento == 65 || data.idStatusContratacion == 11 && data.idMovimiento == 41) {
 
             cntActions = '<button href="#" data-idLote="'+data.idLote+'" data-nomLote="'+data.nombreLote+'" data-idCond="'+data.idCondominio+'"' +
              'data-idCliente="'+data.id_cliente+'" data-fecVen="'+data.fechaVenc+'" data-ubic="'+data.ubicacion+'" data-code="'+data.cbbtton+'" ' +
@@ -577,15 +495,10 @@ $(document).on('click', '#save1', function(e) {
 e.preventDefault();
 
     var comentario = $("#comentario").val();
-    var totalNeto = $("#totalNeto").val();
     var totalNeto2 = $("#totalNeto2").val();
-    var commissionPlan = $("#commission_plan").val();
-
+    
     var validaComent = ($("#comentario").val().length == 0) ? 0 : 1;
-    var validatn = ($("#totalNeto").val().length == 0) ? 0 : 1;
-    var validatn2 = ($("#totalNeto2").val().length == 0) ? 0 : 1;
-    var validateCommissionPlan = ($("#commission_plan").val() == null) ? 0 : 1;
-
+    var validatn = ($("#totalNeto2").val().length == 0) ? 0 : 1;
 
     var dataExp1 = new FormData();
 
@@ -597,17 +510,12 @@ e.preventDefault();
     dataExp1.append("idLote", getInfo1[5]);
     dataExp1.append("comentario", comentario);
     dataExp1.append("fechaVenc", getInfo1[6]);
-    dataExp1.append("totalNeto", totalNeto);
     dataExp1.append("totalNeto2", totalNeto2);
-    dataExp1.append("commissionPlan", commissionPlan);
 
-
-      if (validaComent == 0 || validatn == 0 || validatn2 == 0 || validateCommissionPlan == 0) {
-                alerts.showNotification("top", "right", "Todos los campos son obligatorios.", "danger");
+      if (validaComent == 0 || validatn == 0) {
+        alerts.showNotification("top", "right", "Todos los campos son obligatorios.", "danger");
       }
-      
-      if (validaComent == 1 && validatn == 1 && validatn2 == 1 && validateCommissionPlan == 1) {
-
+      if (validaComent == 1 && validatn == 1) {
         $('#save1').prop('disabled', true);
             $.ajax({
               url : '<?=base_url()?>index.php/Contraloria/editar_registro_lote_contraloria_proceceso9/',
@@ -623,7 +531,6 @@ e.preventDefault();
                     $('#save1').prop('disabled', false);
                     $('#editReg').modal('hide');
                     $('#tabla_ingresar_9').DataTable().ajax.reload();
-                    cleanSelects();
                     alerts.showNotification("top", "right", "Estatus enviado.", "success");
                 } else if(response.message == 'FALSE'){
                     $('#save1').prop('disabled', false);
@@ -747,11 +654,94 @@ function SoloNumeros(evt){
     return true;
     }
     else{
-        alerts.showNotification("top", "left", "Solo Numeros.", "danger");
+        alerts.showNotification("top", "right", "Recuerda sólo ingresar números.", "danger");
     return false;
     }
 }
 
+    // Jquery Dependency
+    $("input[data-type='currency']").on({
+        keyup: function() {
+            formatCurrency($(this));
+        },
+        blur: function() {
+            formatCurrency($(this), "blur");
+        },
+        click: function() {
+            formatCurrency($(this));
+        },
+    });
+
+    function formatNumber(n) {
+        // format number 1000000 to 1,234,567
+        return n.replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+    }
+    function formatCurrency(input, blur) {
+        // appends $ to value, validates decimal side
+        // and puts cursor back in right position.
+
+        // get input value
+        var input_val = input.val();
+
+        // don't validate empty input
+        if (input_val === "") { return; }
+
+        // original length
+        var original_len = input_val.length;
+
+        // initial caret position
+        var caret_pos = input.prop("selectionStart");
+
+        // check for decimal
+        if (input_val.indexOf(".") >= 0) {
+
+            // get position of first decimal
+            // this prevents multiple decimals from
+            // being entered
+            var decimal_pos = input_val.indexOf(".");
+
+            // split number by decimal point
+            var left_side = input_val.substring(0, decimal_pos);
+            var right_side = input_val.substring(decimal_pos);
+
+            // add commas to left side of number
+            left_side = formatNumber(left_side);
+
+            // validate right side
+            right_side = formatNumber(right_side);
+
+            // On blur make sure 2 numbers after decimal
+            if (blur === "blur") {
+                right_side += "00";
+            }
+
+            // Limit decimal to only 2 digits
+            right_side = right_side.substring(0, 2);
+
+            // join number by .
+            input_val = "$" + left_side + "." + right_side;
+
+        } else {
+            // no decimal entered
+            // add commas to number
+            // remove all non-digits
+            input_val = formatNumber(input_val);
+            input_val = "$" + input_val;
+
+            // final formatting
+            if (blur === "blur") {
+                input_val += ".00";
+            }
+        }
+
+        // send updated string to input
+        input.val(input_val);
+
+        // put caret back in the right position
+        var updated_len = input_val.length;
+        caret_pos = updated_len - original_len + caret_pos;
+        input[0].setSelectionRange(caret_pos, caret_pos);
+    }
 
 
 </script>

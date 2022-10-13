@@ -37,8 +37,8 @@
                                                 <th>REFERENCIA</th>
                                                 <th>GERENTE</th>
                                                 <th>ASESOR(ES)</th>
-                                                <th>PROCESO CONTRATACIÓN</th>
                                                 <th>ESTATUS</th>
+                                                <th>PROCESO CONTRATACIÓN</th>
                                                 <th>COMENTARIO</th>
                                                 <th>FECHA APARTADO</th>
                                                 <th>DÍAS VENCIDOS</th>
@@ -281,33 +281,34 @@
 						return as1;
 					}
 				},
+                {
+                    // data: 'procesoContratacion'
+                    data : function(data)
+                    {
+                        if(data.procesoContratacion==null || data.procesoContratacion=="")
+                        {
+                            return "N/A";
+                        }
+                        else
+                        {
+                            return data.procesoContratacion;
+                        }
+                    }
+                },
 				{
-					// data: 'procesoContratacion'
-					data : function(data)
-					{
-						if(data.procesoContratacion==null || data.procesoContratacion=="")
-						{
-							return "N/A";
-						}
-						else
-						{
-							return data.procesoContratacion;
-						}
-					}
-				},
-				{
-					// data: 'status'
-					data : function(data)
-					{
-						if(data.status==null || data.status=="")
-						{
-							return "N/A";
-						}
-						else
-						{
-							return data.status;
-						}
-					}
+
+                    // data: 'status'
+                    data : function(data)
+                    {
+                        if(data.status==null || data.status=="")
+                        {
+                            return "N/A";
+                        }
+                        else
+                        {
+                            return data.status;
+                        }
+                    }
 				},
 				{data: 'comentario'},
 				{

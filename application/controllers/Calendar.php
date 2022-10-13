@@ -43,7 +43,7 @@ class Calendar extends CI_Controller {
         $objDatos = json_decode(file_get_contents("php://input"));
         $data = array(
             "medio" => $objDatos->estatus_recordatorio2,
-            "fecha_cita" => $objDatos->dateStart,
+            "fecha_cita" => str_replace("T", " ", $objDatos->dateStart),
             "titulo" => $objDatos->evtTitle,
             "fecha_final" => str_replace("T", " ", $objDatos->dateEnd),
             "id_direccion" => isset($objDatos->id_direccion) ? $objDatos->id_direccion :null,
@@ -115,7 +115,7 @@ class Calendar extends CI_Controller {
             $responseN = $this->General_model->updateRecord('prospectos', $dataN, 'id_prospecto', $this->input->post("id_prospecto_estatus_particular"));
 
             if ($responseN)
-                echo json_encode(array("status" => 200, "message" => "El registro se ha actualizado de manera exitosa."));
+                echo json_encode(array("status" => 200, "message" => "Se ha registrado el evento de manera exitosa."));
             else 
                 echo json_encode(array("status" => 400, "message" => "Oops, algo salió mal. No se ha podido actualizar el estatus del prospecto"));
         } else 
@@ -211,9 +211,9 @@ class Calendar extends CI_Controller {
         }
     }
 
-    public function side_bar_calendar(){
-        $this->load->view('template/calendar_sidebar');
-    }
+    // public function side_bar_calendar(){
+    //     $this->load->view('template/calendar_sidebar');
+    // }
 
     public function updateNFinishAppointments(){
         $response = $this->General_model->updateBatch("agenda", json_decode(file_get_contents("php://input")), "id_cita"); // MJ: SE MANDA CORRER EL UPDATE BATCH

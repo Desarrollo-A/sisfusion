@@ -188,7 +188,10 @@ $(document).on("click", "#preview", function () {
             break;
         case '22':
             folder = 'COPIA_CERTIFICADA';
-       break;
+        break;
+        case '23':
+            folder = 'PRESUPUESTO_NOTARIA_EXTERNA';
+            break;
         default:
             break;
     }
@@ -736,19 +739,22 @@ $(document).on('click', '.approve', function(){
     });
 })
 $(document).on('change', '.selectpicker.notaria-select', async function(e){
-    let descripcion = {};
-    let iconSave = $(this).parent().next().find('.icon-save');
-    iconSave.removeClass('inactive');
-    iconSave.addClass('active');
-    descripcion= await getDescriptionNotaria($(this).val());
-    $(this).parent().parent().next().text(descripcion.direccion);
-    console.log($(this).parent().parent());
+    if ($(this).val()) {
+        let descripcion = {};
+        let iconSave = $(this).parent().next().find('.icon-save');
+        iconSave.removeClass('inactive');
+        iconSave.addClass('active');
+        descripcion = await getDescriptionNotaria($(this).val());
+        $(this).parent().parent().next().text(descripcion.direccion);
+    }
 })
 
-$(document).on('click', '.saveNotaria', function(){
+$(document).on('click', '.saveNotaria', function() {
     let tr = $(this).closest('tr');
     let select = tr.find('select').val();
-    saveNotaria($(this).attr('data-idSolicitud'), select, $(this));
+    if (tr.find('select').val()) {
+        saveNotaria($(this).attr('data-idSolicitud'), select, $(this));
+    }
 })
 
 $(document).on('click', '.modalPresupuestos', function(){
@@ -1022,7 +1028,7 @@ function fillTable(beginDate, endDate, estatus) {
                             group_buttons += permisos(d.permisos, 1, d.idDocumento, d.tipo_documento, d.idSolicitud, 1, newBtn);
                             break;
                         case 16://13
-                        newBtn += `<button id="observacionesButton" data-idSolicitud=${d.idSolicitud} data-action="3" class="btn-data btn-violetBoots" data-id-prospecto="" data-toggle="tooltip" data-placement="top" title="Envió Observaciones"><i class="far fa-comment"></i></button><button id="reject" class="btn-data btn-warning" data-toggle="tooltip" data-placement="top" title="Rechazar"><i class="fas fa-ban"></i></button>`;
+                            newBtn += `<button id="observacionesButton" data-idSolicitud=${d.idSolicitud} data-action="3" class="btn-data btn-violetBoots" data-id-prospecto="" data-toggle="tooltip" data-placement="top" title="Envió Observaciones"><i class="far fa-comment"></i></button><button id="reject" class="btn-data btn-warning" data-toggle="tooltip" data-placement="top" title="Rechazar"><i class="fas fa-ban"></i></button>`;
                             group_buttons += permisos(d.permisos, d.expediente, d.idDocumento, d.tipo_documento, d.idSolicitud, 1, newBtn);
                             break;
                         case 17:
@@ -2018,14 +2024,18 @@ function saveNotaria(idSolicitud, idNotaria, thisVar){
         type: 'POST',
         dataType:'json',
         success: function (response) {
-            var tr = $(`#treePresupuesto${idSolicitud}`).closest('tr');
-            var row = prospectsTable.row(tr);
-            console.log('tr', tr);
-            console.log('rowSave2', row.data());
+            if (response.message) {
+                alerts.showNotification("top", "right", response.message, "danger");
+                $('#spiner-loader').addClass('hide');
+            } else {
+                const tr = $(`#treePresupuesto${idSolicitud}`).closest('tr');
+                const row = prospectsTable.row(tr);
+                console.log('tr', tr);
+                console.log('rowSave2', row.data());
 
-            createRowNotarias(row, tr, $(`#trees${idSolicitud}`), idSolicitud);
-          $('#spiner-loader').addClass('hide');
-
+                createRowNotarias(row, tr, $(`#trees${idSolicitud}`), idSolicitud);
+                $('#spiner-loader').addClass('hide');
+            }
         }
     });
 }

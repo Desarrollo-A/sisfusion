@@ -2,12 +2,10 @@
   $(document).on('change','#gerente', function(e){
     let id = $("#gerente").val();
     getCoordinators(id);
-    $("#labelCoord").show();
     $("#coordinador").empty().selectpicker('refresh');
   });
 
   $(document).on('change', '#coordinador', function(e){
-    removeEvents();
     var idCoordinador = $("#coordinador").val();
     getAsesores(idCoordinador, true).then( response => {
       var arrayId = idCoordinador;
@@ -15,12 +13,11 @@
         setSourceEventCRM(response);
       }).catch( error => { alerts.showNotification("top", "right", "Oops, algo salió mal. "+error, "danger"); });
     }).catch( error => { alerts.showNotification("top", "right", "Oops, algo salió mal. "+error, "danger"); });
-    $("#labelAses").show();
+    
     $("#asesor").empty().selectpicker('refresh');
   });
 
   $(document).on('change','#asesor', function(e){
-    removeEvents();
     if(userType == 9) var arrayId = idUser + ', ' + $("#asesor").val();
     else var arrayId = $("#coordinador").val() + ', ' +$("#asesor").val();
     
@@ -33,19 +30,20 @@
   function getCoordinators(id){
     $('#spiner-loader').removeClass('hide');
     $.post(`${base_url}Calendar/getCoordinators`, {id: id}, function(data) {
-        $('#spiner-loader').addClass('hide');
-        var len = data.length;
-        for (var i = 0; i < len; i++) {
-            var id = data[i]['id_usuario'];
-            var nombre = data[i]['nombre'];
-            $("#coordinador").append($('<option>').val(id).text(nombre));
-        }
-        if (len <= 0) {
-        $("#coordinador").append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
-        }
-        $("#coordinador").selectpicker('refresh');
+      $("#labelCoord").show();
+      $('#spiner-loader').addClass('hide');
+      var len = data.length;
+      for (var i = 0; i < len; i++) {
+          var id = data[i]['id_usuario'];
+          var nombre = data[i]['nombre'];
+          $("#coordinador").append($('<option>').val(id).text(nombre));
+      }
+      if (len <= 0) {
+      $("#coordinador").append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
+      }
+      $("#coordinador").selectpicker('refresh');
 
-        return data;
+      return data;
     }, 'json');
   }
 
@@ -60,6 +58,7 @@
         $('#spiner-loader').removeClass('hide');
       },
       success: function(data) {
+        $("#labelAses").show();
         $('#spiner-loader').addClass('hide');
         if(firstLoad){
           var len = data.length;

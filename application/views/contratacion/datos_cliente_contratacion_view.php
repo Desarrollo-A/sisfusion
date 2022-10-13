@@ -99,79 +99,17 @@
                                                 <th>PROYECTO</th>
                                                 <th>CONDOMINIO</th>
                                                 <th>LOTE</th>
-                                                <th>CLIENTE</th>
+                                                <th>NOMBRE</th>
+                                                <th>APELLIDO PATERNO</th>
+                                                <th>APELLIDO MATERNO</th>
                                                 <th>NO. RECIBO</th>
+                                                <th>REFERENCIA</th>
                                                 <th>TIPO PAGO</th>
                                                 <th>FECHA APARTADO</th>
                                                 <th>ENGANCHE</th>
                                                 <th>FECHA ENGANCHE</th>
                                                 <th>ACCIONES</th>
                                             </tr>
-                                            </thead>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-    <div class="content hide">
-        <div class="container-fluid">
-
-            <div class="row">
-                <div class="col xol-xs-12 col-sm-12 col-md-12 col-lg-12">
-                    <div class="card">
-
-                        <div class="card-header card-header-icon" data-background-color="goldMaderas">
-                            <i class="material-icons">reorder</i>
-                        </div>
-                        <div class="card-content">
-                            <h4 class="card-title ">Registro clientes</h4>
-                            <div class="row">
-                                <div class="col-md-4 form-group">
-                                    <label for="proyecto">Proyecto: </label>
-                                    <select name="proyecto" id="proyecto" class="selectpicker"
-                                            data-style="btn btn-second" data-show-subtext="true" data-live-search="true"
-                                            title="Selecciona un proyecto" data-size="7" required>
-                                        <option value="0">Seleccionar todo</option>
-                                    </select>
-                                </div>
-
-                                <div class="col-md-4 form-group">
-                                    <label for="condominio">Condominio: </label>
-                                    <select name="condominio" id="condominio" class="selectpicker"
-                                            data-style="btn btn-second" data-show-subtext="true" data-live-search="true"
-                                            title="" data-size="7" required>
-                                        <option disabled selected>Selecciona un condominio</option>
-                                    </select>
-                                </div>
-                            </div>                            
-                            <div class="material-datatables">
-                                <div class="form-group">
-                                    <div class="table-responsive">
-                                        <!--     Registro de todos los clientes con y sin expediente.  -->
-                                        <table class="table-striped table-hover"
-                                               id="tabla_clientes" name="tabla_clientes">
-                                            <thead>
-                                                <tr>
-                                                    <th></th>
-                                                    <th>ID</th>
-                                                    <th>PROYECTO</th>
-                                                    <th>CONDOMINIO</th>
-                                                    <th>LOTE</th>
-                                                    <th>CLIENTE</th>
-                                                    <th>NO. RECIBO</th>
-                                                    <th>TIPO PAGO</th>
-                                                    <th>FECHA APARTADO</th>
-                                                    <th>ENGANCHE</th>
-                                                    <th>FECHA ENGANCHE</th>
-                                                    <th>ACCIONES</th>
-                                                </tr>
                                             </thead>
                                         </table>
                                     </div>
@@ -285,7 +223,7 @@
                     titleAttr: 'Registro de clientes',
                     title:'Registro de clientes',
                     exportOptions: {
-                        columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+                        columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
                         format: {
                             header: function (d, columnIdx) {
                                 switch (columnIdx) {
@@ -301,21 +239,30 @@
                                         return 'LOTE';
                                         break;
                                     case 5:
-                                        return 'CLIENTE';
+                                        return 'NOMBRE';
                                         break;
                                     case 6:
-                                        return 'NO. RECIBO';
+                                        return 'APELLIDO PATERNO';
                                         break;
                                     case 7:
-                                        return 'TIPO PAGO';
+                                        return 'APELLIDO MATERNO';
                                         break;
                                     case 8:
-                                        return 'FECHA APARTADO';
+                                        return 'NO. RECIBO';
                                         break;
                                     case 9:
-                                        return 'ENGANCHE';
+                                        return 'REFERENCIA';
                                         break;
                                     case 10:
+                                        return 'TIPO PAGO';
+                                        break;
+                                    case 11:
+                                        return 'FECHA APARTADO';
+                                        break;
+                                    case 12:
+                                        return 'ENGANCHE';
+                                        break;
+                                    case 13:
                                         return 'FECHA ENGANCHE';
                                         break;
                                 }
@@ -382,7 +329,21 @@
                 {
                     "width": "10%",
                     "data": function (d) {
-                        return '<p class="m-0">' + d.nombre + " " + d.apellido_paterno + " " + d.apellido_materno + '</p>';
+                        return '<p class="m-0">' + d.nombre + '</p>';
+                    }
+                },
+
+                {
+                    "width": "10%",
+                    "data": function (d) {
+                        return '<p class="m-0">'+ d.apellido_paterno + '</p>';
+                    }
+                },
+
+                {
+                    "width": "10%",
+                    "data": function (d) {
+                        return '<p class="m-0">' + d.apellido_materno + '</p>';
                     }
                 },
 
@@ -390,6 +351,13 @@
                     "width": "10%",
                     "data": function (d) {
                         return '<p class="m-0">' + d.noRecibo + '</p>';
+                    }
+                },
+
+                {
+                    "width": "10%",
+                    "data": function (d) {
+                        return '<p class="m-0">' + d.referencia + '</p>';
                     }
                 },
 

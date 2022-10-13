@@ -5887,7 +5887,7 @@
 		$arregloFechas2 = array();
 		$arregloFechas = array();
 
-		$data = $this->registrolote_modelo->finalStatus();
+		$data = $this->registrolote_modelo->finalStatus($this->input->post("id_sede"));
 //		print_r($data[0]->idLote);
 //		exit;
 		for($i=0;$i<count($data);$i++)
@@ -6542,7 +6542,8 @@
 
 		if ($datos != null)
 		{
-			echo json_encode($datos);
+			$data['data'] = $datos;
+			echo json_encode($data);
 		}
 		else
 		{
@@ -16124,6 +16125,7 @@ tr td:hover { background: #666; color: #FFF; }
 			$date1 = new DateTime($data[$i]->fechaApartado);
 			$date2 = new DateTime(date('Y-m-d'));
 			$diff = $date1->diff($date2);
+
 			if ($diff->days>=45)
 			{
 					$datos[$i]['referencia'] = $data[$i]->referencia;
@@ -16203,13 +16205,10 @@ tr td:hover { background: #666; color: #FFF; }
 			}
 		}
 		$datos = array_values($datos);
-//		print_r($datos[0]['fechaApartado']);
-//		exit;
-		if($datos != null) {
+		if($datos != null)
 			echo json_encode($datos);
-		} else {
+		else
 			echo json_encode(array());
-		}
 		exit;
 	}
 

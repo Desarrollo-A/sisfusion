@@ -12,7 +12,7 @@ class Administracion extends CI_Controller{
 		$this->load->model('asesor/Asesor_model'); //EN ESTE MODELO SE ENCUENTRAN LAS CONSULTAS DEL MENU
 
                      //LIBRERIA PARA LLAMAR OBTENER LAS CONSULTAS DE LAS  DEL MENÚ
-                     $this->load->library(array('session','form_validation', 'get_menu'));
+         $this->load->library(array('session','form_validation', 'get_menu'));
 		$this->load->helper(array('url', 'form'));
 		$this->load->database('default');
         $this->load->library('phpmailer_lib');
@@ -37,7 +37,10 @@ class Administracion extends CI_Controller{
             $this->session->userdata('id_rol') != '30' && $this->session->userdata('id_rol') != '36' &&
             $this->session->userdata('id_rol') != '22' && $this->session->userdata('id_rol') != '53' &&
             $this->session->userdata('id_rol') != '8' && $this->session->userdata('id_rol') != '23' &&
-            $this->session->userdata('id_rol') != '12' && $this->session->userdata('id_rol') != '61'
+            $this->session->userdata('id_rol') != '12' && $this->session->userdata('id_rol') != '61' &&
+			$this->session->userdata('id_rol') != '63' && $this->session->userdata('id_rol') != '64' && 
+			$this->session->userdata('id_rol') != '65' && $this->session->userdata('id_rol') != '66' && 
+			$this->session->userdata('id_rol') != '67' && $this->session->userdata('id_rol') != '68'
         ) {
 			redirect(base_url() . 'login');
 		}
@@ -77,9 +80,7 @@ class Administracion extends CI_Controller{
 		  $dataPer[$i]['idLote']=$data[$i]->idLote;
 		  $dataPer[$i]['idCondominio']=$data[$i]->idCondominio;
 		  $dataPer[$i]['id_cliente']=$data[$i]->id_cliente;
-		  $dataPer[$i]['nombre']=$data[$i]->nombre;
-		  $dataPer[$i]['apellido_paterno']=$data[$i]->apellido_paterno;
-		  $dataPer[$i]['apellido_materno']=$data[$i]->apellido_materno;
+		  $dataPer[$i]['nombreCliente']=$data[$i]->nombreCliente;
 		  $dataPer[$i]['nombreLote']=$data[$i]->nombreLote;
 		  $dataPer[$i]['idStatusContratacion']=$data[$i]->idStatusContratacion;
 		  $dataPer[$i]['idMovimiento']=$data[$i]->idMovimiento;
@@ -95,6 +96,7 @@ class Administracion extends CI_Controller{
 		  $dataPer[$i]['asesor']=$data[$i]->asesor;
 		  $dataPer[$i]['coordinador']=$data[$i]->coordinador;
 		  $dataPer[$i]['tipo_venta']=$data[$i]->tipo_venta;
+		  $dataPer[$i]['descripcion']=$data[$i]->descripcion;
 		  $dataPer[$i]['totalNeto']=$data[$i]->totalNeto;
 		  $dataPer[$i]['vl']=$data[$i]->vl;
 		  $horaInicio = date("08:00:00");
@@ -106,136 +108,146 @@ class Administracion extends CI_Controller{
 		  $sig_fecha_feriado2 = date('d-m', $hoy_strtotime2);
 		  $time = date('H:i:s', $hoy_strtotime2);
 		  
-		
-		  if ($time > $horaInicio and $time < $horaFin) {
 
-		  if($sig_fecha_dia2 == "Sat" || $sig_fecha_dia2 == "Sun" || 
-			   $sig_fecha_feriado2 == "01-01" || $sig_fecha_feriado2 == "06-02" ||
-			   $sig_fecha_feriado2 == "20-03" || $sig_fecha_feriado2 == "01-05" ||
-			   $sig_fecha_feriado2 == "16-09" || $sig_fecha_feriado2 == "20-11" || $sig_fecha_feriado2 == "19-11" ||
-			   $sig_fecha_feriado2 == "25-12" ) {
-		  
-		  $fecha = $fechaAccion;
-		  
-		  $z = 0;
-			  while($z <= 1) {
-			$hoy_strtotime = strtotime($fecha);
-			$sig_strtotime = strtotime('+1 days', $hoy_strtotime);
-			$sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
-			$sig_fecha_dia = date('D', $sig_strtotime);
-			  $sig_fecha_feriado = date('d-m', $sig_strtotime);
 
-			if( $sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" || 
-			   $sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
-			   $sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
-			   $sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" || $sig_fecha_feriado == "19-11" ||
-			   $sig_fecha_feriado == "25-12") {
-				 }
-				   else {
-						   $arregloFechas[$z] = $sig_fecha;
-						   $z++;
-						} 
-			  $fecha = $sig_fecha;
-					 }
-		  
-				$d= end($arregloFechas);
-				$dataPer[$i]['fechaVenc2']=$d;
 
-				 }else{
+          if($data[$i]->fechaSolicitudValidacion=='' || empty($data[$i]->fechaSolicitudValidacion)){
+              $dataPer[$i]['fechaVenc2'] = 'N/A';
+          }else{
+              if ($time > $horaInicio and $time < $horaFin) {
+                  if ($sig_fecha_dia2 == "Sat" || $sig_fecha_dia2 == "Sun" ||
+                      $sig_fecha_feriado2 == "01-01" || $sig_fecha_feriado2 == "06-02" ||
+                      $sig_fecha_feriado2 == "20-03" || $sig_fecha_feriado2 == "01-05" ||
+                      $sig_fecha_feriado2 == "16-09" || $sig_fecha_feriado2 == "20-11" || $sig_fecha_feriado2 == "19-11" ||
+                      $sig_fecha_feriado2 == "25-12") {
 
-		  $fecha = $fechaAccion;
-		  $z = 0;
-			  while($z <= 0) {
-			$hoy_strtotime = strtotime($fecha);
-			$sig_strtotime = strtotime('+1 days', $hoy_strtotime);
-			$sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
-			$sig_fecha_dia = date('D', $sig_strtotime);
-			  $sig_fecha_feriado = date('d-m', $sig_strtotime);
-		  
+                      $fecha = $fechaAccion;
 
-			if( $sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" || 
-			   $sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
-			   $sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
-			   $sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" || $sig_fecha_feriado == "19-11" ||
-			   $sig_fecha_feriado == "25-12") {
-				 }
-				   else {
-						   $arregloFechas[$z] = $sig_fecha;
-						   $z++;
-						} 
-			  $fecha = $sig_fecha;
-					 }
+                      $z = 0;
+                      while ($z <= 1) {
+                          $hoy_strtotime = strtotime($fecha);
+                          $sig_strtotime = strtotime('+1 days', $hoy_strtotime);
+                          $sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
+                          $sig_fecha_dia = date('D', $sig_strtotime);
+                          $sig_fecha_feriado = date('d-m', $sig_strtotime);
 
-					 $d= end($arregloFechas);
-					 $dataPer[$i]['fechaVenc2']=$d;
+                          if ($sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" ||
+                              $sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
+                              $sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
+                              $sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" || $sig_fecha_feriado == "19-11" ||
+                              $sig_fecha_feriado == "25-12") {
+                          } else {
+                              $arregloFechas[$z] = $sig_fecha;
+                              $z++;
+                          }
+                          $fecha = $sig_fecha;
+                      }
 
-				 }
-		  }
+                      $d = end($arregloFechas);
+                      $dataPer[$i]['fechaVenc2'] = $d;
 
-			elseif ($time < $horaInicio || $time > $horaFin) {
+                  } else {
 
-		  if($sig_fecha_dia2 == "Sat" || $sig_fecha_dia2 == "Sun" || 
-			   $sig_fecha_feriado2 == "01-01" || $sig_fecha_feriado2 == "06-02" ||
-			   $sig_fecha_feriado2 == "20-03" || $sig_fecha_feriado2 == "01-05" ||
-			   $sig_fecha_feriado2 == "16-09" || $sig_fecha_feriado2 == "20-11" || $sig_fecha_feriado2 == "19-11" ||
-			   $sig_fecha_feriado2 == "25-12" ) {
+                      $fecha = $fechaAccion;
+                      $z = 0;
+                      while ($z <= 0) {
+                          $hoy_strtotime = strtotime($fecha);
+                          $sig_strtotime = strtotime('+1 days', $hoy_strtotime);
+                          $sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
+                          $sig_fecha_dia = date('D', $sig_strtotime);
+                          $sig_fecha_feriado = date('d-m', $sig_strtotime);
 
-		  $fecha = $fechaAccion;
 
-		  $z = 0;
-			  while($z <= 1) {
-			$hoy_strtotime = strtotime($fecha);
-			$sig_strtotime = strtotime('+1 days', $hoy_strtotime);
-			$sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
-			$sig_fecha_dia = date('D', $sig_strtotime);
-			  $sig_fecha_feriado = date('d-m', $sig_strtotime);
+                          if ($sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" ||
+                              $sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
+                              $sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
+                              $sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" || $sig_fecha_feriado == "19-11" ||
+                              $sig_fecha_feriado == "25-12") {
+                          } else {
+                              $arregloFechas[$z] = $sig_fecha;
+                              $z++;
+                          }
+                          $fecha = $sig_fecha;
+                      }
 
-			if( $sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" || 
-			   $sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
-			   $sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
-			   $sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" || $sig_fecha_feriado == "19-11" ||
-			   $sig_fecha_feriado == "25-12") {
-				 }
-				   else {
-						   $arregloFechas[$z] = $sig_fecha;
-						   $z++;
-						} 
-			  $fecha = $sig_fecha;
-					 }
+                      $d = end($arregloFechas);
+                      $dataPer[$i]['fechaVenc2'] = $d;
 
-				$d= end($arregloFechas);
-				$dataPer[$i]['fechaVenc2']=$d;		  
-				 }else{
-		  
-		  $fecha = $fechaAccion;
+                  }
+              }
+              elseif ($time < $horaInicio || $time > $horaFin) {
 
-		  $z = 0;
-			  while($z <= 1) {
-			$hoy_strtotime = strtotime($fecha);
-			$sig_strtotime = strtotime('+1 days', $hoy_strtotime);
-			$sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
-			$sig_fecha_dia = date('D', $sig_strtotime);
-			  $sig_fecha_feriado = date('d-m', $sig_strtotime);
+                  if ($sig_fecha_dia2 == "Sat" || $sig_fecha_dia2 == "Sun" ||
+                      $sig_fecha_feriado2 == "01-01" || $sig_fecha_feriado2 == "06-02" ||
+                      $sig_fecha_feriado2 == "20-03" || $sig_fecha_feriado2 == "01-05" ||
+                      $sig_fecha_feriado2 == "16-09" || $sig_fecha_feriado2 == "20-11" || $sig_fecha_feriado2 == "19-11" ||
+                      $sig_fecha_feriado2 == "25-12")
+                  {
 
-			if( $sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" || 
-			   $sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
-			   $sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
-			   $sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" || $sig_fecha_feriado == "19-11" ||
-			   $sig_fecha_feriado == "25-12") {
-				 }
-				   else {
-						   $arregloFechas[$z] = $sig_fecha;
-						   $z++;
-						} 
-			  $fecha = $sig_fecha;
-					 }
+                      $fecha = $fechaAccion;
 
-					 $d= end($arregloFechas);
-					 $dataPer[$i]['fechaVenc2']=$d;		  
-					}
-		  
-				 }
+                      $z = 0;
+                      while ($z <= 1) {
+                          $hoy_strtotime = strtotime($fecha);
+                          $sig_strtotime = strtotime('+1 days', $hoy_strtotime);
+                          $sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
+                          $sig_fecha_dia = date('D', $sig_strtotime);
+                          $sig_fecha_feriado = date('d-m', $sig_strtotime);
+
+                          if ($sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" ||
+                              $sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
+                              $sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
+                              $sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" || $sig_fecha_feriado == "19-11" ||
+                              $sig_fecha_feriado == "25-12") {
+                          } else {
+                              $arregloFechas[$z] = $sig_fecha;
+                              $z++;
+                          }
+                          $fecha = $sig_fecha;
+                      }
+
+                      $d = end($arregloFechas);
+                      $dataPer[$i]['fechaVenc2'] = $d;
+                      echo 'aqui<br>';
+
+                  }
+                  else {
+
+                      $fecha = $fechaAccion;
+
+                      $z = 0;
+                      while ($z <= 1) {
+                          $hoy_strtotime = strtotime($fecha);
+                          $sig_strtotime = strtotime('+1 days', $hoy_strtotime);
+                          $sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
+                          $sig_fecha_dia = date('D', $sig_strtotime);
+                          $sig_fecha_feriado = date('d-m', $sig_strtotime);
+
+                          if ($sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" ||
+                              $sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
+                              $sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
+                              $sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" || $sig_fecha_feriado == "19-11" ||
+                              $sig_fecha_feriado == "25-12") {
+
+                          } else {
+                              $arregloFechas[$z] = $sig_fecha;
+                              $z++;
+                          }
+                          $fecha = $sig_fecha;
+                      }
+
+                      $d = end($arregloFechas);
+                      $dataPer[$i]['fechaVenc2'] = $d;
+                  }
+
+              }
+          }
+
 	  }
+
+
+
+
 		  if($dataPer != null) {
 			  echo json_encode($dataPer);
 		  } else {
@@ -276,8 +288,7 @@ class Administracion extends CI_Controller{
 		$arreglo["perfil"]=$this->session->userdata('id_rol');
 		$arreglo["modificado"]=date("Y-m-d H:i:s");	
 		$arreglo["validacionEnganche"]= "VALIDADO";
-		$arreglo["totalValidado"]= $totalValidado;
-	
+		$arreglo["totalValidado"]= str_replace(array('$', ','),'', $totalValidado);
 	
 	$horaActual = date('H:i:s');
 	$horaInicio = date("08:00:00");
@@ -436,6 +447,7 @@ class Administracion extends CI_Controller{
 
 		$validate = $this->Administracion_model->validateSt11($idLote);
 
+
 		if($validate == 1){
 
 		if ($this->Administracion_model->updateSt($idLote,$arreglo,$arreglo2) == TRUE){ 
@@ -481,7 +493,7 @@ class Administracion extends CI_Controller{
 		 $arreglo["perfil"]=$this->session->userdata('id_rol');
 		 $arreglo["modificado"]=date("Y-m-d H:i:s");
 		 $arreglo["fechaVenc"]=date("Y-m-d H:i:s");
-
+		 $arreglo["status8Flag"] = 0;
 	 
 		 $arreglo2=array();
 		 $arreglo2["idStatusContratacion"]=7;
@@ -543,10 +555,9 @@ class Administracion extends CI_Controller{
         //print_r($data_eviRec['comentario']);
           #PROVICIONAL TESTING
 
+//          print_r($correos_submit);
+//          exit;
 
-
-          /*$data_enviar_mail = $this->notifyRejEv($correos_submit, $data_eviRec, $data_mail);
-          exit;*/
 
 
           $validate = $this->Administracion_model->validateSt11($idLote);
@@ -631,7 +642,7 @@ class Administracion extends CI_Controller{
 
     public function notifyRejEv($data_correo, $data_eviRec, $data_send)
     {
-        //$correo_new = 'programador.analista8@ciudadmaderas.com, mariadejesus.garduno@ciudadmaderas.com';/*se coloca el correo de testeo para desarrollo*/
+        $correo_new = 'programador.analista8@ciudadmaderas.com';/*se coloca el correo de testeo para desarrollo*/
         //$correoDir = $data_eviRec['correo_a_enviar'];
 
         $mail = $this->phpmailer_lib->load();
@@ -643,103 +654,219 @@ class Administracion extends CI_Controller{
             $mail->addAddress($item);
         }
 
-//        $mail->addAddress($correo_new);
-        // $mail->addCC('erick_eternal@live.com.mx'); #copia oculta
+        $mail->addAddress($correo_new);
+         $mail->addCC('erick_eternal@live.com.mx'); #copia oculta
 
         $mail->Subject = utf8_decode('[RECHAZO ADMINISTRACIÓN] '.$data_eviRec['comentario']);
         $mail->isHTML(true);
 
-        $mailContent = "<html><head>
-          <meta http-equiv='Content-Type' content='text/html; charset=utf-8'>
-          <meta name='viewport' content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no'>
-          <link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css' integrity='sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO' crossorigin='anonymous'> 
-          <style media='all' type='text/css'>
-              .encabezados{
-                  text-align: center;
-                  padding-top:  1.5%;
-                  padding-bottom: 1.5%;
-              }
-              .encabezados a{
-                  color: #234e7f;
-                  font-weight: bold;
-              }
-              
-              .fondo{
-                  background-color: #234e7f;
-                  color: #fff;
-              }
-              
-              h4{
-                  text-align: center;
-              }
-              p{
-                  text-align: right;
-              }
-              strong{
-                  color: #234e7f;
-              }
-          </style>
-        </head>
-        <body>
-          <img src='" . base_url() . "static/images/mailER/header9@4x.png' width='100%'>
-          <table align='center' cellspacing='0' cellpadding='0' border='0' width='100%'>
-              <tr colspan='3'>
-                <td class='navbar navbar-inverse' align='center'>
-                  <table width='750px' cellspacing='0' cellpadding='3' class='container'>
-                      <tr class='navbar navbar-inverse encabezados'><td>
-                          <p><a href='https://maderascrm.gphsis.com/' target='_blank'>CMR CIUDAD MADERAS</a></p>
-                      </td></tr>
-                  </table>
+//        $mailContent = "<html><head>
+//          <meta http-equiv='Content-Type' content='text/html; charset=utf-8'>
+//          <meta name='viewport' content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no'>
+//          <link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css' integrity='sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO' crossorigin='anonymous'>
+//          <style media='all' type='text/css'>
+//              .encabezados{
+//                  text-align: center;
+//                  padding-top:  1.5%;
+//                  padding-bottom: 1.5%;
+//              }
+//              .encabezados a{
+//                  color: #234e7f;
+//                  font-weight: bold;
+//              }
+//
+//              .fondo{
+//                  background-color: #234e7f;
+//                  color: #fff;
+//              }
+//
+//              h4{
+//                  text-align: center;
+//              }
+//              p{
+//                  text-align: right;
+//              }
+//              strong{
+//                  color: #234e7f;
+//              }
+//          </style>
+//        </head>
+//        <body>
+//          <img src='" . base_url() . "static/images/mailER/header9@4x.png' width='100%'>
+//          <table align='center' cellspacing='0' cellpadding='0' border='0' width='100%'>
+//              <tr colspan='3'>
+//                <td class='navbar navbar-inverse' align='center'>
+//                  <table width='750px' cellspacing='0' cellpadding='3' class='container'>
+//                      <tr class='navbar navbar-inverse encabezados'><td>
+//                          <p><a href='https://maderascrm.gphsis.com/' target='_blank'>CMR CIUDAD MADERAS</a></p>
+//                      </td></tr>
+//                  </table>
+//                </td>
+//              </tr>
+//              <tr>
+//                <td border=1 bgcolor='#FFFFFF' align='center'>
+//                <!--rechazo administración-->
+//                    <h3>¡Buenos días!</h3><br> <br>
+//
+//                    <p style='padding: 10px 90px;text-align: center;font-size: 1.5em'>
+//                    Hemos registrado un rechazo de administración.
+//                    </p><br><br>
+//
+//
+//                </td>
+//              </tr>
+//              <tr>
+//                <td border=1 bgcolor='#FFFFFF' align='center'>
+//                    <h3 style='font-size: 2em'>Comentario: <b>".$data_eviRec['comentario']."</b></h3>
+//                    <br><br>
+//                  <table id='reporyt' cellpadding='0' cellspacing='0' border='1' width ='100%' style class='darkheader'>
+//                    <tr class='active' style='text-align: center'>
+//                      <th>Proyecto</th>
+//                      <th>Condominio</th>
+//                      <th>Lote</th>
+//                      <th>Cliente</th>
+//                      <th>Usuario</th>
+//                      <th>Fecha Apartado</th>
+//                      <th>Fecha Rechazo</th>
+//                    </tr>
+//                        <tr>";
+//                            foreach ($data_send as $index=>$item){
+//                                $mailContent .= '    <td><center>' . $item['proyecto'] . '</center></td>';
+//                                $mailContent .= '    <td><center>' . $item['condominio'] . '</center></td>';
+//                                $mailContent .= '    <td><center>' . $item['lote'] . '</center></td>';
+//                                $mailContent .= '    <td><center>' . $item['cliente'] . '</center></td>';
+//                                $mailContent .= '    <td><center>' . $item['quien_rechaza'] . '</center></td>';
+//                                $mailContent .= '    <td><center>' . $item['fecha_apartado'] . '</center></td>';
+//                                $mailContent .= '    <td><center>' . $item['fecha_rechazo'] . '</center></td>';
+//                            }
+//                        $mailContent .= "
+//                        </tr>
+//                    </table></center>
+//                    <br><br>
+//                </td>
+//              </tr>
+//          </table>
+//                </td>
+//              </tr>
+//          </table>
+//          <img src='" . base_url() . "static/images/mailER/footer@4x.png' width='100%'>
+//          </body></html>";
+
+        $mailContent = '<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+          integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+</head>
+<body>
+<div bgcolor="#EFEEEA">
+    <center>
+        <table id="m_-4107947934748351806bodyTable" width="100%" height="100%" cellspacing="0" cellpadding="0"
+               border="0" bgcolor="#EFEEEA" align="center">
+            <tbody>
+            <tr>
+                <td id="m_-4107947934748351806bodyCell" style="padding-bottom:60px" valign="top" align="center">
+                    <table width="100%" cellspacing="0" cellpadding="0" border="0" align="center">
+                        <tbody>
+                        <tr>
+                            <td style="background-color:#00538b" valign="top" bgcolor="#00538b" align="center">
+                                <table style="max-width:640px;" width="100%" cellspacing="0" cellpadding="0" border="0"
+                                       align="center">
+                                    <tbody>
+                                    <tr>
+                                        <td style="padding:40px" valign="top" align="center"></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="background-color:#ffffff;padding-top:40px">&nbsp;</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td valign="top" align="center" style="background-color: #EFEEEA;">
+                                <table style="background-color:#ffffff;max-width:640px; margin-top: -60px" width="100%"
+                                       cellspacing="0" cellpadding="0" border="0" bgcolor="#000000" align="center">
+                                    <tbody>
+                                    <tr>
+                                        <td valign="top" bgcolor="#FFFFFF" align="center">
+                                            <img style="width:60%;padding-top: 40px;"
+                                                 src="https://maderascrm.gphsis.com/static/images/Logo_CM&TP_1.png">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding-right:40px;padding-left:40px;padding-top:20px;" valign="top" align="left">
+                                            <p>Estimado usuario:</p>
+                                            <p>Hemos registrado un un rechazo de administración</p>
+                                            <p><b>Comentario:</b>'.$data_eviRec['comentario'].' <br>
+                                            <i></i>
+                                            </p>
+                                            <table id=\'reporyt\' cellpadding=\'0\' cellspacing=\'0\' border=\'1\' width =\'100%\' style class=\'darkheader\'>
+                                                <tr class=\'active\' style=\'text-align: center\'>
+                                                  <th>Proyecto</th>   
+                                                  <th>Condominio</th>   
+                                                  <th>Lote</th>   
+                                                  <th>Cliente</th>   
+                                                  <th>Usuario</th>   
+                                                  <th>Fecha Apartado</th>   
+                                                  <th>Fecha Rechazo</th>   
+                                                </tr>
+                                                    <tr>';
+                                                            foreach ($data_send as $index=>$item){
+                                                                $mailContent .= '    <td><center>' . $item['proyecto'] . '</center></td>';
+                                                                $mailContent .= '    <td><center>' . $item['condominio'] . '</center></td>';
+                                                                $mailContent .= '    <td><center>' . $item['lote'] . '</center></td>';
+                                                                $mailContent .= '    <td><center>' . $item['cliente'] . '</center></td>';
+                                                                $mailContent .= '    <td><center>' . $item['quien_rechaza'] . '</center></td>';
+                                                                $mailContent .= '    <td><center>' . $item['fecha_apartado'] . '</center></td>';
+                                                                $mailContent .= '    <td><center>' . $item['fecha_rechazo'] . '</center></td>';
+                                                            }
+
+                                            $mailContent .= '
+                                                            </tr>   
+                                                        </table>
+                                            <br><br>
+                                            <p>Saludos, Ciudad Maderas.</p>
+                                            <p style="font-size:10px;">Este correo fue generado de manera automática, te pedimos no respondas este correo, para cualquier duda o aclaración envía un correo a soporte@ciudadmaderas.com</p>
+                                            <p style="font-size:10px;">Al ingresar tus datos aceptas la política de privacidad, términos y condiciones las cuales pueden ser consultadas en nuestro sitio www.ciudadmaderas.com/legal</p>
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td style="border-top:2px solid #efeeea;color:#6a655f;font-family:\'Helvetica Neue, Helvetica,Arial,Verdana,sans-serif\';font-size:12px;font-weight:400;line-height:24px;padding-top:40px;padding-bottom:40px;text-align:center"
+                                            valign="top" align="center">
+                                            <p style="color:#6a655f;font-family:\'Helvetica Neue,Helvetica,Arial,Verdana,sans-serif\';font-size:12px;font-weight:400;line-height:24px;padding:0 20px;margin:0;text-align:center">
+                                                Departamento de TI</p>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
                 </td>
-              </tr>
-              <tr>
-                <td border=1 bgcolor='#FFFFFF' align='center'> 
-                <!--rechazo administración-->
-                    <h3>¡Buenos días!</h3><br> <br>
-                    
-                    <p style='padding: 10px 90px;text-align: center;font-size: 1.5em'>
-                    Hemos registrado un rechazo de administración.
-                    </p><br><br>
-                    
-                    
-                </td>
-              </tr>
-              <tr>
-                <td border=1 bgcolor='#FFFFFF' align='center'>  
-                    <h3 style='font-size: 2em'>Comentario: <b>".$data_eviRec['comentario']."</b></h3>
-                    <br><br>
-                  <table id='reporyt' cellpadding='0' cellspacing='0' border='1' width ='100%' style class='darkheader'>
-                    <tr class='active' style='text-align: center'>
-                      <th>Proyecto</th>   
-                      <th>Condominio</th>   
-                      <th>Lote</th>   
-                      <th>Cliente</th>   
-                      <th>Usuario</th>   
-                      <th>Fecha Apartado</th>   
-                      <th>Fecha Rechazo</th>   
-                    </tr>
-                        <tr>";
-                            foreach ($data_send as $index=>$item){
-                                $mailContent .= '    <td><center>' . $item['proyecto'] . '</center></td>';
-                                $mailContent .= '    <td><center>' . $item['condominio'] . '</center></td>';
-                                $mailContent .= '    <td><center>' . $item['lote'] . '</center></td>';
-                                $mailContent .= '    <td><center>' . $item['cliente'] . '</center></td>';
-                                $mailContent .= '    <td><center>' . $item['quien_rechaza'] . '</center></td>';
-                                $mailContent .= '    <td><center>' . $item['fecha_apartado'] . '</center></td>';
-                                $mailContent .= '    <td><center>' . $item['fecha_rechazo'] . '</center></td>';
-                            }
-                        $mailContent .= "
-                        </tr>   
-                    </table></center>
-                    <br><br>
-                </td>
-              </tr>
-          </table>
-                </td>
-              </tr>
-          </table>
-          <img src='" . base_url() . "static/images/mailER/footer@4x.png' width='100%'>
-          </body></html>";
+            </tr>
+            </tbody>
+        </table>
+    </center>
+    <div class="yj6qo"></div>
+    <div class="adL">
+    </div>
+</div>
+<div class="adL">
+</div>
+</div></div>
+<div id=":nx" class="ii gt" style="display:none">
+    <div id=":ny" class="a3s aiL undefined"></div>
+</div>
+<div class="hi"></div>
+</div></div>
+<div class="ajx"></div>
+</div>
+</body>
+</html>';
 
         $mail->Body = utf8_decode($mailContent);
         if ($mail->send()) {
@@ -748,6 +875,38 @@ class Administracion extends CI_Controller{
             return $mail->ErrorInfo;
         }
     }
+
+    public function status11Validado(){
+        /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/
+        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
+        /*-------------------------------------------------------------------------------*/
+        $this->load->view('template/header');
+        $this->load->view("administracion/validadoStatus11", $datos);
+    }
+
+    public function getDateStatus11(){
+	    $data = $this->Administracion_model->getDateStatus11();
+	    if($data == TRUE){
+            $response['message'] = 'OK';
+        }else{
+            $response['message'] = 'ERROR';
+        }
+        echo json_encode($data);
+    }
+
+	public function repAdministracion(){
+		$datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
+        $this->load->view('template/header');
+        $this->load->view("administracion/vista_reporte_admin", $datos);
+	}
+	public function getRepoAdmin(){
+		$data = $this->Administracion_model->getRepAdmon();
+        if($data != null) {
+            echo json_encode($data);
+        } else {
+            echo json_encode(array());
+        }
+	}
 }
 
 

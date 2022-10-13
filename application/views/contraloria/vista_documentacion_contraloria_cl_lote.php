@@ -4,7 +4,7 @@
 	<div class="wrapper">
 		<?php
 			//se debe validar que tipo de perfil esta sesionado para poder asignarle el tipo de sidebar
-			if($this->session->userdata('id_rol')=="16" || $this->session->userdata('id_rol')=="6" || $this->session->userdata('id_rol')=="11"  || $this->session->userdata('id_rol')=="13" || $this->session->userdata('id_rol')=="32" || $this->session->userdata('id_rol')=="17" || $this->session->userdata('id_rol')=="47" || $this->session->userdata('id_rol')=="15" || $this->session->userdata('id_rol')=="7" || $this->session->userdata('id_rol')=="12")//contratacion
+			if($this->session->userdata('id_rol')=="16" || $this->session->userdata('id_rol')=="6" || $this->session->userdata('id_rol')=="11"  || $this->session->userdata('id_rol')=="13" || $this->session->userdata('id_rol')=="32" || $this->session->userdata('id_rol')=="17" || $this->session->userdata('id_rol')=="47" || $this->session->userdata('id_rol')=="15" || $this->session->userdata('id_rol')=="7" || $this->session->userdata('id_rol')=="12" || $this->session->userdata('id_rol')=="18")//contratacion
 				{
 					
 					$datos = array();
@@ -121,7 +121,7 @@
 													<?php
 													if($residencial != NULL) :
 														foreach($residencial as $fila) : ?>
-															<option value= <?=$fila['idResidencial']?> > <?=$fila['nombreResidencial']?> </option>
+															<option value= <?=$fila['idResidencial']?> > <?=$fila['nombreResidencial']?> - <?=$fila['descripcion']?></option>
 														<?php endforeach;
 													endif;
 													?>
@@ -142,7 +142,7 @@
 										</div>
 										<div class="col-12 col-sm-12 col-md-6 col-lg-3">
                                             <div class="form-group">
-                                                <label className="m-0" for="filtro6">Condominio</label>
+                                                <label className="m-0" for="filtro6">Cliente</label>
 												<select id="filtro6" name="filtro6" class="selectpicker select-gral" data-show-subtext="true" data-live-search="true"  data-style="btn" title="Selecciona un cliente" data-size="7"></select>
 											</div>
 										</div>
@@ -265,15 +265,26 @@
 					dataType: 'json',
 					success:function(response){
 						var len = response.length;
-						for( var i = 0; i<len; i++)
-						{
-							var id = response[i]['id_cliente'];
-							var name = response[i]['nombre']+' '+response[i]['apellido_paterno']+' '+response[i]['apellido_materno'] ;
-							$("#filtro6").append($('<option>').val(id).text(name));
-						}
-						$("#filtro6").selectpicker('refresh');
+						if(len>0){
+                            for( var i = 0; i<len; i++)
+                            {
+                                var id = response[i]['id_cliente'];
+                                var name = response[i]['nombre']+' '+response[i]['apellido_paterno']+' '+response[i]['apellido_materno'] ;
+                                let status = response[i]['status'];
+                                let labelStatus='';
 
-					}
+                                if(status==1){
+                                    labelStatus=' [ACTIVO]'
+                                }
+                                $("#filtro6").append($('<option>').val(id).text(name+labelStatus));
+                            }
+                        }else{
+                                $("#filtro6").append($('<option selected>').val(0).text('SIN CLIENTE'));
+
+                        }
+                        $("#filtro6").selectpicker('refresh');
+
+                    }
 				});
 			});
 

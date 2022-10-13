@@ -619,7 +619,16 @@ class Postventa extends CI_Controller
         $dataFiscal = base64_encode(json_encode($dataFiscal));
         $responseInsert = $this->insertPostventaDF($dataFiscal);
         if($responseInsert->resultado == 1){
-            $informacion = $this->Postventa_model->setEscrituracion( $personalidad, $idLote,$idCliente, $idPostventa, $resDecode->data[0]);
+            $usuarioJuridico = $this->Postventa_model->obtenerJuridicoAsignacion();
+            if (!$usuarioJuridico) {
+                $this->Postventa_model->restablecerJuridicosAsignados();
+                $usuarioJuridico = $this->Postventa_model->obtenerJuridicoAsignacion();
+            }
+
+            $this->Postventa_model->asignarJuridicoActivo($usuarioJuridico->id_usuario);
+
+            $informacion = $this->Postventa_model->setEscrituracion( $personalidad, $idLote,$idCliente, $idPostventa,
+                $resDecode->data[0], $usuarioJuridico->id_usuario);
             echo json_encode($informacion);
         }else{
             echo json_encode(false);
@@ -771,6 +780,9 @@ class Postventa extends CI_Controller
             case 22:
                 $folder = "static/documentos/postventa/escrituracion/COPIA_CERTIFICADA/";
                 break;
+            case 23:
+                $folder = "static/documentos/postventa/escrituracion/PRESUPUESTO_NOTARIA_EXTERNA/";
+                break;
         }
         return $folder;
     }
@@ -877,7 +889,8 @@ class Postventa extends CI_Controller
     {
         $idEscritura = $_POST['idEscritura'];
         $idEstatus = $_POST['idEstatus'];
-        $data = $this->Postventa_model->getDocumentsClient($idEscritura, $idEstatus);
+        $notariaExterna = $this->Postventa_model->existNotariaExterna($idEscritura);
+        $data = $this->Postventa_model->getDocumentsClient($idEscritura, $idEstatus, $notariaExterna);
         if ($data != null)
             echo json_encode($data);
         else
@@ -2040,6 +2053,13 @@ function getNotariasXUsuario(){
 function saveNotaria(){
     $idSolicitud = $_POST['idSolicitud'];
     $idNotaria = $_POST['idNotaria'];
+
+    $result = $this->Postventa_model->existeNotariaSolicitud($idSolicitud, $idNotaria);
+    if ($result) {
+        echo json_encode(array('message' => 'Notaría ya registrada. Favor de seleccionar otra'));
+        return;
+    }
+
     $arrayData = array(
         "id_solicitud" => $idSolicitud,
         "id_notaria" => $idNotaria,

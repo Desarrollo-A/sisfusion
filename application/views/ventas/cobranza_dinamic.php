@@ -3,7 +3,7 @@
 <body>
     <div class="wrapper">
         <?php
-            if($this->session->userdata('id_rol')=="28" ||$this->session->userdata('id_rol')=="18"||$this->session->userdata('id_rol')=="19")//contraloria
+            if($this->session->userdata('id_rol')=="28" ||$this->session->userdata('id_rol')=="18"||$this->session->userdata('id_rol')=="19"||$this->session->userdata('id_rol')=="63")//contraloria
 
         {/*-------------------------------------------------------*/
             $datos = array();
@@ -26,7 +26,7 @@
                             </div>
                             <div class="card-content">
                                 <div class="encabezadoBox">
-                                    <h3 class="card-title center-align" >Reporte dinámico mktd</h3>
+                                    <h3 class="card-title center-align" >Reporte dinámico</h3>
                                     <p class="card-title pl-1">(Concentrado de lotes con apartado por fecha, gerencias y plazas)</p>
                                 </div>
                                 <div class="toolbar">
@@ -93,6 +93,8 @@
                                                     <th>GERENTE</th>
                                                     <th>FECHA APARTADO</th>
                                                     <th>PLAZA</th>
+                                                    <th>LUGAR PROSPECCIÓN</th>
+                                                    <th>FECHA PROSPECCIÓN</th>
                                                     <th>ESTATUS</th>
                                                 </tr>
                                             </thead>
@@ -295,7 +297,7 @@
                     titleAttr: 'Descargar archivo de Excel',
                     title: 'DINAMIC COBRANZA APARTADOS',
                     exportOptions: {
-                        columns: [1,2,3,4,5,6,7],
+                        columns: [1,2,3,4,5,6,7,8,9],
                         format: {
                             header:  function (d, columnIdx) {
                                 if(columnIdx == 0){
@@ -314,7 +316,11 @@
                                     return 'PLAZA VENTA';
                                 }else if(columnIdx == 7){
                                     return 'ESTATUS VENTA';
-                                }else if(columnIdx != 8 && columnIdx !=0){
+                                }else if(columnIdx == 8){
+                                    return 'LUGAR PROSPECCIÓN';
+                                }else if(columnIdx == 9){
+                                    return 'FECHA PROSPECCIÓN';
+                                }else if(columnIdx != 10 && columnIdx !=0){
                                     return ' '+titulos[columnIdx-1] +' ';
                                 }
                             }
@@ -349,7 +355,7 @@
                     }
                 },
                 {
-                    "width": "15%",
+                    "width": "10%",
                     "data": function( d ){
                         if(d.status == 0)
                             return '<p class="m-0" style="color:crimson;">$'+formatMoney(d.monto_vendido)+'</p>';
@@ -376,7 +382,7 @@
                     }
                 },
                 {
-                    "width": "15%",
+                    "width": "10%",
                     "data": function( d ){
                         if(d.status == 0)
                             return '<p class="m-0" style="color:crimson;">'+($('select[name="mes"] option:selected').text()).toUpperCase()+'</p>';
@@ -385,7 +391,7 @@
                     }
                 },
                 {
-                    "width": "15%",
+                    "width": "10%",
                     "data": function( d ){
                         if(d.status == 0)
                             return '<p class="m-0" style="color:crimson;">'+(d.nombre).toUpperCase()+' </p>';
@@ -395,6 +401,24 @@
                 },
                 {
                     "width": "10%",
+                    "data": function( d ){
+                        if(d.status == 0)
+                            return '<p class="m-0" style="color:crimson;">'+(d.lugar_prospeccion).toUpperCase()+'</p>';
+                        else 
+                            return '<p class="m-0">'+(d.lugar_prospeccion).toUpperCase()+'</p>';
+                    }
+                },
+                {
+                    "width": "10%",
+                    "data": function( d ){
+                        if(d.status == 0)
+                            return '<p class="m-0" style="color:crimson;">'+(d.fecha_prospeccion)+'</p>';
+                        else 
+                            return '<p class="m-0">'+(d.fecha_prospeccion)+'</p>';
+                    }
+                },
+                {
+                    "width": "15%",
                     "data": function( d ){
                         if(d.status == 0)
                             return '<p class="m-0"><span class="label" style="background: crimson;">CANCELADO</span></p>';

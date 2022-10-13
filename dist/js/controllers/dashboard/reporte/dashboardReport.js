@@ -1,7 +1,5 @@
 // AA: Obtener fecha inicial y cuatro meses atrás para mini charts.
-var endDate = moment().format("YYYY-MM-DD");
-var beginDate = moment(endDate).subtract(4, 'months').format("YYYY-MM-DD");
-var chart, datesMonths;
+var chart;
 var initialOptions = {
     series: [],
     chart: {
@@ -64,41 +62,33 @@ var initialOptions = {
     }
 }
 
-sp = { // MJ: SELECT PICKER
-    initFormExtendedDatetimepickers: function () {
-        $('.datepicker').datetimepicker({
-            format: 'DD/MM/YYYY',
-            icons: {
-                time: "fa fa-clock-o",
-                date: "fa fa-calendar",
-                up: "fa fa-chevron-up",
-                down: "fa fa-chevron-down",
-                previous: 'fa fa-chevron-left',
-                next: 'fa fa-chevron-right',
-                today: 'fa fa-screenshot',
-                clear: 'fa fa-trash',
-                close: 'fa fa-remove',
-                inline: true
-            }
-        });
-    }
-}
-
-$(document).ready(function(){
+function readyReport(){
     sp.initFormExtendedDatetimepickers();
     $('.datepicker').datetimepicker({locale: 'es'});
-    init();
-    setInitialValues();
+    initReport();
+    setInitialValuesReporte();
     chart = new ApexCharts(document.querySelector("#boxModalChart"), initialOptions);
     chart.render();
-});
 
-$('[data-toggle="tooltip"]').tooltip();
+    $('[data-toggle="tooltip"]').tooltip();
+}
 
-async function init(){
+async function initReport(){
     getLastSales(null, null);
     let rol = userType == 2 ? await getRolDR(idUser): userType;
-    fillBoxAccordions(rol == '1' || rol == '18' ? 'director_regional': rol == '2' ? 'gerente' : rol == '3' ? 'coordinador' : rol == '59' ? 'subdirector':'asesor', rol == 18 || rol == '18' ? 1:rol, idUser, 1, 1, null, [0, null, null, null, null, null]);
+    let rolString;
+    if ( rol == '1' || rol == '18' || rol == '4' || rol == '63' )
+        rolString = 'director_regional';
+    else if ( rol == '2' || (rol == '5' && ( idUser != '28' || idUser != '30' )))
+        rolString = 'gerente';
+    else if ( rol == '3' || rol == '6' )
+        rolString = 'coordinador';
+    else if ( rol == '59' || (rol == '5' && ( idUser == '28' || idUser == '30' )))
+        rolString = 'subdirector';
+    else 
+        rolString = 'asesor';
+        
+    fillBoxAccordions(rolString, rol == 18 || rol == '18' ? 1 : rol, idUser, 1, 1, null, [0, null, null, null, null, null, rol]);
 }
 
 function createAccordions(option, render, rol){
@@ -142,13 +132,24 @@ function createAccordions(option, render, rol){
 }
 
 function fillBoxAccordions(option, rol, id_usuario, render, transaction, dates=null, leadersList){
-    createAccordions(option, render, rol);
+    if( rol == 5 && (idUser == 28 && idUser == 30) )
+        rolEspecial = 59;
+    else if( rol == 5 && (idUser != 28 && idUser != 30) )
+        rolEspecial = 2;
+    else if( rol == 6 )
+        rolEspecial = 3;
+    else if( rol == 4 || rol == 63 )
+        rolEspecial = 2
+    else rolEspecial = rol;
+
+    createAccordions(option, render, rolEspecial);
     let newRol = newRoles(option);
     $(".js-accordion-title").addClass('open');
     $(".accordion-content").css("display", "block");
     if(render == 1){
         $("#chartButton").data('option', option);
     }
+
     $('#table'+option+' thead tr:eq(0) th').each(function (i) {
         const title = $(this).text();
         $(this).html('<input type="text" class="w-100 textoshead"  placeholder="' + title + '"/>');
@@ -168,7 +169,6 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, dates=n
 
     generalDataTable = $("#table"+option).DataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
-        //dom: 'rt'+ "<'container-fluid pt-1 pb-1'<'row d-flex align-center'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'i><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>>",
         width: '100%',
         buttons: [
             {
@@ -239,7 +239,7 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, dates=n
             {
                 width: "2%",
                 data: function(d){
-                    let leaders = getLeadersLine(leadersList, d.userID, d.id_usuario); 
+                    let leaders = getLeadersLine(leadersList, d.userID, id_usuario); 
                     return `<button type="btn" data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-idUser="${d.userID}" id="details-${d.userID}" data-leader="${id_usuario}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-dr="${leaders[5]}" class="btnSub"><i class="fas fa-sitemap" data-toggle="tooltip" data-placement="bottom" title="Desglose a detalle"></i></button>`;
                 }
             },
@@ -252,8 +252,8 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, dates=n
             {
                 width: "26%",
                 data: function (d) {
-                    let leaders = getLeadersLine(leadersList, d.userID, d.id_usuario); 
-                    return `<button style="background-color: #d8dde2; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="5" data-sede = 0 data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-idUser="${d.userID}" id="details-${d.userID}" data-leader="${id_usuario}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-dr="${leaders[5]}" class="btnModalDetails">${(d.totalAT + d.totalConT).toLocaleString('es-MX')}</button>`; //# APARTADOS;
+                    let leaders = getLeadersLine(leadersList, d.userID, id_usuario); 
+                    return `<button style="background-color: #d8dde2; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="5" data-sede = 0 data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-idUser="${d.userID}" id="details-${d.userID}" data-leader="${id_usuario}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-dr="${leaders[5]}" class="btnModalDetails">${(d.totalAT + d.totalConT).toLocaleString('es-MX')}</button>`;
                 }
             },
             {
@@ -265,9 +265,8 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, dates=n
             {
                 width: "8%",
                 data: function (d) {
-                    let leaders = getLeadersLine(leadersList, d.userID, d.id_usuario); 
-                    return `<button style="background-color: #d8dde2; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="1" data-sede = 0 data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-idUser="${d.userID}" id="details-${d.userID}" data-leader="${id_usuario}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-dr="${leaders[5]}" class="btnModalDetails">${(d.totalAT).toLocaleString('es-MX')}</button>`; //# GRAN TOTAL;
-                    //return ((d.totalAT + d.totalCanA)).toLocaleString('es-MX'); //# APARTADOS
+                    let leaders = getLeadersLine(leadersList, d.userID, id_usuario); 
+                    return `<button style="background-color: #d8dde2; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="1" data-sede = 0 data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-idUser="${d.userID}" id="details-${d.userID}" data-leader="${id_usuario}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-dr="${leaders[5]}" class="btnModalDetails">${(d.totalAT).toLocaleString('es-MX')}</button>`;
                 }
             },
             {
@@ -279,9 +278,8 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, dates=n
             {
                 width: "8%",
                 data: function (d) {
-                    let leaders = getLeadersLine(leadersList, d.userID, d.id_usuario); 
+                    let leaders = getLeadersLine(leadersList, d.userID, id_usuario); 
                     return `<button style="background-color: #d8dde2; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="4" data-sede = 0 data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-idUser="${d.userID}" id="details-${d.userID}" data-leader="${id_usuario}" data-leader="${id_usuario}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-dr="${leaders[5]}" class="btnModalDetails">${(d.totalCanA).toLocaleString('es-MX')}</button>`; //# CANCELADOS APARTADOS;
-                    //return (d.totalCanA).toLocaleString('es-MX'); //# CANCELADOS APARTADOS
                 }
             },
             {
@@ -293,9 +291,8 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, dates=n
             {
                 width: "8%",
                 data: function (d) {
-                    let leaders = getLeadersLine(leadersList, d.userID, d.id_usuario); 
+                    let leaders = getLeadersLine(leadersList, d.userID, id_usuario); 
                     return `<button style="background-color: #d8dde2; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="2" data-sede = 0 data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-idUser="${d.userID}" id="details-${d.userID}" data-leader="${id_usuario}" data-leader="${id_usuario}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-dr="${leaders[5]}" class="btnModalDetails">${(d.totalConT).toLocaleString('es-MX')}</button>`; //# CONTRATADOS;
-                    //return ((d.totalConT)).toLocaleString('es-MX'); //# CONTRATADOS
                 }
             },
             {
@@ -307,9 +304,8 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, dates=n
             {
                 width: "8%",
                 data: function (d) {
-                    let leaders = getLeadersLine(leadersList, d.userID, d.id_usuario); 
+                    let leaders = getLeadersLine(leadersList, d.userID, id_usuario); 
                     return `<button style="background-color: #d8dde2; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-sede = 0 data-type="3" data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-idUser="${d.userID}" id="details-${d.userID}" data-leader="${id_usuario}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-dr="${leaders[5]}" class="btnModalDetails">${(d.totalCanC).toLocaleString('es-MX')}</button>`; //# CANCELADOS CONTRATADOS;
-                    //return (d.totalCanC).toLocaleString('es-MX'); //# CANCELADOS CONTRATADOS
                 }
             },
             {
@@ -321,7 +317,7 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, dates=n
             {
                 width: "8%",
                 data: function (d) {
-                    let leaders = getLeadersLine(leadersList, d.userID, d.id_usuario);                    
+                    let leaders = getLeadersLine(leadersList, d.userID, id_usuario);                    
                     return  rol == 7 || (rol == 9 && render == 1) ? '' : `<div class="d-flex justify-center"><button class="btn-data btn-blueMaderas update-dataTable" data-transaction="${transaction}" data-type="${rol}" data-render="${render}" value="${d.userID}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-dr="${leaders[5]}"><i class="fas fa-sign-in-alt"></i></button></div>`;
                 }
             },
@@ -356,22 +352,64 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, dates=n
     $('[data-toggle="tooltip"]').tooltip();
 }
 
-function getLeadersLine (leadersList, id_usuario, id_lider) {
-    if (leadersList[0] == 0) // PRIMER NIVEL: SÓLO TENEMOS EL ID REGIONAL
+// 0: Lo que ve a setear
+// 1:  Asesor
+// 2: Corrdinador
+// 3: Gerente
+// 4: Subirector
+// 5: Director regional
+// 6: Rol
+function getLeadersLine (leadersList, id_usuario, id_lider) {  
+    if (leadersList[0] == 0 && (leadersList[6] == 1 || leadersList[6] == 4 || leadersList[6] == 63)){ // PRIMER NIVEL: SÓLO TENEMOS EL ID REGIONAL
         leadersList[5] = id_usuario;
-    else if (leadersList[0] == 2) // SEGUNDO NIVEL: TENEMOS EL ID SUBDIRECTOR
+    }
+    else if (leadersList[0] == 2){ // SEGUNDO NIVEL: TENEMOS EL ID SUBDIRECTOR
         leadersList[4] = id_usuario;
-    else if (leadersList[0] == 3) // TERCER NIVEL: TENEMOS EL ID GERENTE
+    }
+    else if (leadersList[0] == 3){ // TERCER NIVEL: TENEMOS EL ID GERENTE
         leadersList[3] = id_usuario;
-    else if (leadersList[0] == 9) // CUARTO NIVEL: TENEMOS EL ID COORDINADOR
+    }
+    else if (leadersList[0] == 9){ // CUARTO NIVEL: TENEMOS EL ID COORDINADOR
         leadersList[2] = id_usuario;
-    else if (leadersList[0] == 7) // 5 NIVEL: TENEMOS EL ID COORDINADOR
+    }
+    else if (leadersList[0] == 7){ // 5 NIVEL: TENEMOS EL ID COORDINADOR
         leadersList[1] = id_usuario;
-    else if (leadersList[0] == 59) { // PRIMER NIVEL: TENEMOS ID REGIONAL Y ID SUBDIRECTOR
-        leadersList[5] = id_lider;
+    }
+    else if (leadersList[0] == 0 && (leadersList[6] == 59 || (leadersList[6] == 5 && (idUser == 28 || idUser == 30)))) { // PRIMER NIVEL: TENEMOS ID REGIONAL Y ID SUBDIRECTOR
+        if(id_usuario == 3 || id_usuario == 607)
+            leadersList[5] = 0;
+        else
+            leadersList[5] = leadersList[6] == 59 ? id_lider : idLider;
         leadersList[4] = id_usuario;
-    } else if (leadersList[0] == 593) { // PRIMER NIVEL: TENEMOS ID REGIONAL Y ID SUBDIRECTOR
+    }
+    else if (leadersList[6] == 5 && (idUser != 28 || idUser != 30)) { 
+        // PRIMER NIVEL: TENEMOS ID REGIONAL Y ID SUBDIRECTOR
+        if( idLider == 7092 )
+            leadersList[5] = 3;
+        else if ( idLider == 681 || idLider == 9471 )
+            leadersList[5] = 607;
+        else leadersList[5] = 0;
+
+        leadersList[4] = idLider;
         leadersList[3] = id_usuario;
+    }
+    else if (leadersList[0] == 0 && leadersList[6] == 2 ) {
+        leadersList[5] = ( idLider == 3 || idLider == 607 ) ? idLider : 0;
+        leadersList[4] = id_lider;
+        leadersList[3] = id_usuario;
+    }
+    else if (leadersList[0] == 0 && leadersList[6] == 3 ) { // PRIMER NIVEL: TENEMOS ID REGIONAL Y ID SUBDIRECTOR
+        leadersList[5] = 0;
+        leadersList[4] = 0;
+        leadersList[3] = id_lider;
+        leadersList[2] = id_usuario;
+    }
+    else if (leadersList[0] == 0 && leadersList[6] == 6  ){
+        //Asistente de gerente
+        leadersList[5] = 0;
+        leadersList[4] = 0;
+        leadersList[3] = idLider;
+        leadersList[2] = id_usuario;
     }
     return leadersList;
 }
@@ -393,49 +431,63 @@ $(document).on('click', '.update-dataTable', function (e) {
     closestChild.nextAll().remove();
     let dates = transaction == 2 ?  {begin: $('#tableBegin').val(), end: $('#tableEnd').val()}:null;
 
-    if (type == 2) { // MJ: #sub->ger->coord
+    if (type == 2 ) { // MJ: #sub->ger->coord
         if (render == 1) {
             const table = "coordinador";
-            fillBoxAccordions(table, 9, $(this).val(), 2, transaction, dates);
+            fillBoxAccordions(table, 9, $(this).val(), 2, transaction, dates, [9, asesor, coordinador, gerente, subdirector, regional, type]); 
         } else {
             const table = "gerente";
-            fillBoxAccordions(table, 3, $(this).val(), 2, transaction, dates, [3, asesor, coordinador, gerente, subdirector, regional]); // VA POR LOS GERENTES
+            fillBoxAccordions(table, 3, $(this).val(), 2, transaction, dates, [3, asesor, coordinador, gerente, subdirector, regional, type]); // VA POR LOS GERENTES
         }
-    } else if (type == 3) { // MJ: #gerente->coord->asesor
+    } else if (type == 3 || type == 6 ) { // MJ: #gerente->coord->asesor
         if (render == 1) {
             const table = "asesor";
-            fillBoxAccordions(table, 7, $(this).val(), 2, transaction, dates);
+            fillBoxAccordions(table, 7, $(this).val(), 2, transaction, dates, [7, asesor, coordinador, gerente, subdirector, regional, type]);
         } else {
             const table = "coordinador";
-            fillBoxAccordions(table, 9, $(this).val(), 2, transaction, dates, [9, asesor, coordinador, gerente, subdirector, regional]); // VA POR LOS COORDINADORES
+            fillBoxAccordions(table, 9, $(this).val(), 2, transaction, dates, [9, asesor, coordinador, gerente, subdirector, regional, type]); // VA POR LOS COORDINADORES
         }
     } else if (type == 9) { // MJ: #coordinatorTable -> asesor
         if (render == 1) {
         } else {
             const table = "asesor";
-            fillBoxAccordions(table, 7, $(this).val(), 2, transaction, dates, [7, asesor, coordinador, gerente, subdirector, regional]); // VA POR LOS ASESORES
+            fillBoxAccordions(table, 7, $(this).val(), 2, transaction, dates, [7, asesor, coordinador, gerente, subdirector, regional, type]); // VA POR LOS ASESORES
         }
     } else if (type == 59) { // MJ: #DirRegional->subdir->ger
         if (render == 1) {
             const table = "gerente";
-            fillBoxAccordions(table, 3, $(this).val(), 2, transaction, dates, [593, asesor, coordinador, gerente, subdirector, regional]);
+            fillBoxAccordions(table, 3, $(this).val(), 2, transaction, dates, [3, asesor, coordinador, gerente, subdirector, regional, type]);
         } else {
             const table = "subdirector";
-            fillBoxAccordions(table, 2, $(this).val(), 2, transaction, dates, [59, asesor, coordinador, gerente, subdirector, regional]); // VA POR LOS SUBDIRECTORES: CONSULTA REGIONAL
+            fillBoxAccordions(table, 2, $(this).val(), 2, transaction, dates, [59, asesor, coordinador, gerente, subdirector, regional, type]); // VA POR LOS SUBDIRECTORES: CONSULTA REGIONAL
         }
-    } else if (type == 1) {
+    } else if (type == 1 || type == 4 || type == 63 ) {
         if (render == 1) {
             const table = "subdirector";
-            fillBoxAccordions(table, 2, $(this).val(), 2, transaction, dates, [2, asesor, coordinador, gerente, subdirector, regional]); // VA POR LOS SUBDIRECTORES
+            fillBoxAccordions(table, 2, $(this).val(), 2, transaction, dates, [2, asesor, coordinador, gerente, subdirector, regional, type]); // VA POR LOS SUBDIRECTORES
         } else {
             const table = "regional";
             fillBoxAccordions(table, 59, $(this).val(), 2, transaction, dates);
         }
     }
+    else if (type == 5) { // MJ: #subdirector
+        if (render == 1) {
+            if( idUser == 28 || idUser == 30 ){
+                const table = "gerente";
+                fillBoxAccordions(table, 2, $(this).val(), 2, transaction, dates, [3, asesor, coordinador, gerente, subdirector, regional, type]); // VA POR LOS SUBDIRECTORES: CONSULTA REGIONAL
+            }
+            else{
+                const table = "coordinador";
+                fillBoxAccordions(table, 9, $(this).val(), 2, transaction, dates, [9, asesor, coordinador, gerente, subdirector, regional, type]); // VA POR LOS COORDINADORES
+            }
+        } 
+    }
 });
 
-function setOptionsChart(series, categories, miniChart, type= null){
+
+function setOptionsChartReport(series, categories, miniChart, type= null){
     (series.length > 1 && type == 1) ? colors=  ['#0089B7','#C25E5E', '#00CDA3', '#EB7B90']:(series.length > 1 && (type == 0 || type == null)) ? colors = ["#2C93E7", "#d9c07b"]:colors = ["#2C93E7"]
+
     var optionsMiniChart = {
         series: series,
         chart: {
@@ -561,8 +613,19 @@ $(document).on('click', '#searchByDateRangeTable', async function (e) {
     let dates = {begin: $('#tableBegin').val(), end: $('#tableEnd').val()};
     let rol = userType == 2 ? await getRolDR(idUser): userType;
 
-    fillBoxAccordions(rol == '1' || rol == '18' ? 'director_regional': rol == '2' ? 'gerente' : rol == '3' ? 'coordinador' : rol == '59' ? 'subdirector':'asesor', rol == 18 || rol == '18' ? 1:rol, idUser, 1, 2, dates, [0, null, null, null, null, null]);
+    let rolString;
+    if ( rol == '1' || rol == '18' || rol == '4' || rol == '63')
+        rolString = 'director_regional';
+    else if ( rol == '2' || (rol == '5' && ( idUser != '28' || idUser != '30' )))
+        rolString = 'gerente';
+    else if ( rol == '3' || rol == '6' )
+        rolString = 'coordinador';
+    else if ( rol == '59' || (rol == '5' && ( idUser == '28' || idUser == '30' )))
+        rolString = 'subdirector';
+    else 
+        rolString = 'asesor';
 
+    fillBoxAccordions(rolString, rol, idUser, 1, 2, dates, [0, null, null, null, null, null, rol]);
 });
 
 $(document).on('click', '.chartButton', function () {
@@ -578,7 +641,6 @@ $(document).on('click', '.chartButton', function () {
     generalChart(tableData);
 });
 
-
 async function chartDetail(e, tipoChart){
     $(".datesModal").show();
     $("#modalChart").modal();
@@ -588,18 +650,18 @@ async function chartDetail(e, tipoChart){
 
     var nameChart = (titleCase($(e).data("name").replace(/_/g, " "))).split(" ");
     $(".boxModalTitle .title").append('<p class="mb-1">' + nameChart[0] + '<span class="enfatize"> '+ nameChart[1] +'</span></p>');
-    // let datesMonths = await get4Months();
+
     const fechaInicio = new Date();
      // Iniciar en este año, este mes, en el día 1
      const beginDate = new Date(fechaInicio.getFullYear(), fechaInicio.getMonth(), 1);
      // END DATE
      const fechaFin = new Date();
      // Iniciar en este año, el siguiente mes, en el día 0 (así que así nos regresamos un día)
-     const endDate = new Date(fechaFin.getFullYear(), fechaFin.getMonth() + 1, fechaFin.getDate());
+     const endDate = new Date(fechaFin.getFullYear(), fechaFin.getMonth() + 1, 0);
      finalBeginDate = [beginDate.getFullYear(), ('0' + (beginDate.getMonth() + 1)).slice(-2), ('0' + beginDate.getDate()).slice(-2)].join('-');
      finalEndDate = [endDate.getFullYear(), ('0' + (endDate.getMonth() + 1)).slice(-2), ('0' + endDate.getDate()).slice(-2)].join('-');
      finalBeginDate2 = ['01', '01', beginDate.getFullYear()].join('/');
-     finalEndDate2 = [('0' + endDate.getDate()).slice(-2), ('0' + (endDate.getMonth())).slice(-2), endDate.getFullYear()].join('/');
+     finalEndDate2 = [('0' + endDate.getDate()).slice(-2), ('0' + (endDate.getMonth() + 1)).slice(-2), endDate.getFullYear()].join('/');
 
 
     $("#modalChart #beginDate").val(finalBeginDate2);
@@ -628,13 +690,12 @@ function getSpecificChart(type, beginDate, endDate){
             $("#modalChart .boxModalTitle .total").html('');
             $("#modalChart .boxModalTitle .total").append('<p>$'+formatMoney(total)+'</p>');
             if ( total != 0 ){
-                chart.updateOptions(setOptionsChart(series, categories, miniChart));
+                chart.updateOptions(setOptionsChartReport(series, categories, miniChart));
             }
             else{
                 $("#boxModalChart").html('');
                 $("#boxModalChart").addClass('d-flex justify-center');
                 $("#boxModalChart").append('<img src="'+base_url+'dist/img/emptyCharts.png" alt="Icono gráfica" class="h-70 w-auto">');
-                // chart.updateOptions(setOptionsChart([], [], miniChart));
             }
         },
         error: function() {
@@ -667,7 +728,7 @@ function getLastSales(beginDate, endDate){
                 if ( total != 0 ){
                     $("#"+chart+"").html('');
                     $("#"+chart+"").removeClass('d-flex justify-center');
-                    var miniChartApex = new ApexCharts(document.querySelector("#"+chart+""), setOptionsChart(series, categories, miniChart));
+                    var miniChartApex = new ApexCharts(document.querySelector("#"+chart+""), setOptionsChartReport(series, categories, miniChart));
                     miniChartApex.render();
                 }
                 else $("#"+chart+"").addClass('d-flex justify-center');
@@ -742,16 +803,6 @@ function buildAllDataChart(allData, nameTypeChart, series, meses){
         categories : meses
     });
 }
-
-function formatMoney(n) {
-    var c = isNaN(c = Math.abs(c)) ? 2 : c,
-        d = d == undefined ? "." : d,
-        t = t == undefined ? "," : t,
-        s = n < 0 ? "-" : "",
-        i = String(parseInt(n = Math.abs(Number(n) || 0).toFixed(c))),
-        j = (j = i.length) > 3 ? j % 3 : 0;
-    return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
-};
 
 function monthName(mon){
     var monthName = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'][mon - 1];
@@ -870,7 +921,15 @@ function accordionToRemove(rol){
             $(".boxAccordions").find(`[data-rol='${9}']`).remove();
             $(".boxAccordions").find(`[data-rol='${7}']`).remove();
             break; 
+        case 63:// Control interno
+            $(".boxAccordions").find(`[data-rol='${59}']`).remove();
+            $(".boxAccordions").find(`[data-rol='${2}']`).remove();
+            $(".boxAccordions").find(`[data-rol='${3}']`).remove();
+            $(".boxAccordions").find(`[data-rol='${9}']`).remove();
+            $(".boxAccordions").find(`[data-rol='${7}']`).remove();
+            break; 
         case 59://dir regional
+        case 5://dir regional
             $(".boxAccordions").find(`[data-rol='${2}']`).remove();
             $(".boxAccordions").find(`[data-rol='${3}']`).remove();
             $(".boxAccordions").find(`[data-rol='${9}']`).remove();
@@ -977,7 +1036,7 @@ function buildTableDetail(data, dataObj) {
     return sedes += '</table>';
 }
 
-async function setInitialValues() {
+async function setInitialValuesReporte() {
     // BEGIN DATE
      // BEGIN DATE
      const fechaInicio = new Date();
@@ -986,11 +1045,11 @@ async function setInitialValues() {
      // END DATE
      const fechaFin = new Date();
      // Iniciar en este año, el siguiente mes, en el día 0 (así que así nos regresamos un día)
-     const endDate = new Date(fechaFin.getFullYear(), fechaFin.getMonth() + 1, fechaFin.getDate());
+     const endDate = new Date(fechaFin.getFullYear(), fechaFin.getMonth() + 1, 0);
      finalBeginDate = [beginDate.getFullYear(), ('0' + (beginDate.getMonth() + 1)).slice(-2), ('0' + beginDate.getDate()).slice(-2)].join('-');
      finalEndDate = [endDate.getFullYear(), ('0' + (endDate.getMonth() + 1)).slice(-2), ('0' + endDate.getDate()).slice(-2)].join('-');
      finalBeginDate2 = ['01', '01', beginDate.getFullYear()].join('/');
-     finalEndDate2 = [('0' + endDate.getDate()).slice(-2), ('0' + (endDate.getMonth())).slice(-2), endDate.getFullYear()].join('/');
+     finalEndDate2 = [('0' + endDate.getDate()).slice(-2), ('0' + (endDate.getMonth() + 1)).slice(-2), endDate.getFullYear()].join('/');
 
     $('#tableBegin').val(finalBeginDate2);
     $('#tableEnd').val(finalEndDate2);
@@ -1041,31 +1100,8 @@ function generalChart(data){
             data: contratadosC
         }
     ];
-    chart.updateOptions(setOptionsChart(series, x, 0, 1));
+    chart.updateOptions(setOptionsChartReport(series, x, 0, 1));
     $('.loadChartModal').addClass('d-none');
-}
-
-
-function get4Months() {
-    return new Promise(resolve => {
-        $.ajax({
-            type: "POST",
-            url: `${base_url}Reporte/get4MonthsRequest`,
-            dataType: 'json',
-            cache: false,
-            beforeSend: function() {
-                $('#spiner-loader').removeClass('hide');
-            },
-            success: function(data){
-                $('#spiner-loader').addClass('hide');
-                resolve(data);
-            },
-            error: function() {
-                $('#spiner-loader').addClass('hide');
-                alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
-            }
-        });
-    });
 }
 
 function newRoles(option) {
@@ -1110,28 +1146,28 @@ $(document).on('click', '.btnModalDetails', function () {
         subdirector: $(this).data("su"),
         regional: $(this).data("dr")
     }
-    fillTable(dataObject);
+    fillTableReport(dataObject);
     if (dataObject.type != 3 && dataObject.type != 33 && dataObject.type != 4 && dataObject.type != 4)
-        $("#seeInformationModal").modal();
+        $("#seeInformationModalReport").modal();
     else
         $("#seeInformationModalCancelados").modal();
 });
 
-$('#lotesInformationTable thead tr:eq(0) th').each(function (i) {
-    const title = $(this).text();
-    $(this).html('<input type="text" class="textoshead"  placeholder="' + title + '"/>');
-    $('input', this).on('keyup change', function () {
-        if(i != 0){
-            if ($("#lotesInformationTable").DataTable().column(i).search() !== this.value) {
-                $("#lotesInformationTable").DataTable().column(i)
-                    .search(this.value).draw();
-            }
-        }
-    });
-});
-
-function fillTable(dataObject) {
+function fillTableReport(dataObject) {
     if (dataObject.type != 3 && dataObject.type != 33 && dataObject.type != 4 && dataObject.type != 4) {
+        $('#lotesInformationTable thead tr:eq(0) th').each(function (i) {
+            const title = $(this).text();
+            $(this).html('<input type="text" class="textoshead"  placeholder="' + title + '"/>');
+            $('input', this).on('keyup change', function () {
+                if(i != 0){
+                    if ($("#lotesInformationTable").DataTable().column(i).search() !== this.value) {
+                        $("#lotesInformationTable").DataTable().column(i)
+                            .search(this.value).draw();
+                    }
+                }
+            });
+        });
+
         generalDataTable = $('#lotesInformationTable').dataTable({
             dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
             width: '100%',
@@ -1296,6 +1332,20 @@ function fillTable(dataObject) {
             }
         });
     } else{
+
+        $('#lotesInformationTableCancelados thead tr:eq(0) th').each(function (i) {
+            const title = $(this).text();
+            $(this).html('<input type="text" class="textoshead"  placeholder="' + title + '"/>');
+            $('input', this).on('keyup change', function () {
+                if(i != 0){
+                    if ($("#lotesInformationTableCancelados").DataTable().column(i).search() !== this.value) {
+                        $("#lotesInformationTableCancelados").DataTable().column(i)
+                            .search(this.value).draw();
+                    }
+                }
+            });
+        });
+
         generalDataTable = $('#lotesInformationTableCancelados').dataTable({
             dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
             width: '100%',

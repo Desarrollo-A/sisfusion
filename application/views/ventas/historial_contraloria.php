@@ -1,9 +1,12 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
 <link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet"/>
+<meta http-equiv='cache-control' content='no-cache'>
+<meta http-equiv='expires' content='0'>
+<meta http-equiv='pragma' content='no-cache'>
 <body>
     <div class="wrapper">
         <?php
-        if($this->session->userdata('id_rol')=="13" || $this->session->userdata('id_rol')=="17"  || $this->session->userdata('id_rol')=="28" || $this->session->userdata('id_rol')=="32"|| $this->session->userdata('id_rol')=="18"|| $this->session->userdata('id_rol')=="1"|| $this->session->userdata('id_rol')=="2"|| $this->session->userdata('id_rol')=="3"|| $this->session->userdata('id_rol')=="7" || $this->session->userdata('id_rol')=="9" || $this->session->userdata('id_rol')=="31" )//contraloria
+        if($this->session->userdata('id_rol')=="63" || $this->session->userdata('id_rol')=="17"  || $this->session->userdata('id_rol')=="28" || $this->session->userdata('id_rol')=="32"|| $this->session->userdata('id_rol')=="18"|| $this->session->userdata('id_rol')=="1"|| $this->session->userdata('id_rol')=="2"|| $this->session->userdata('id_rol')=="3"|| $this->session->userdata('id_rol')=="7" || $this->session->userdata('id_rol')=="9" || $this->session->userdata('id_rol')=="31" )//contraloria
         {/*-------------------------------------------------------*/
             $datos = array();
             $datos = $datos4;
@@ -15,8 +18,7 @@
         }
         ?>
 
-        <div class="modal fade" id="seeInformationModalAsimilados" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-             aria-hidden="true" data-backdrop="static" data-keyboard="false">
+        <div class="modal fade" id="seeInformationModalAsimilados" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog modal-md modal-dialog-scrollable" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -51,7 +53,7 @@
             </div>
         </div>
 
-        <!--<div class="modal fade modal-alertas" id="modal_nuevas" role="dialog">
+        <div class="modal fade modal-alertas" id="modal_nuevas" role="dialog">
             <div class="modal-dialog">
                 <div class="modal-content">
 
@@ -60,7 +62,8 @@
                     </form>
                 </div>
             </div>
-        </div>-->
+        </div>
+
 
         <div class="modal fade modal-alertas" id="modal_informacion" role="dialog">
             <div class="modal-dialog modal-lg">
@@ -98,68 +101,119 @@
             <div class="container-fluid">
                 <div class="row">
                     <div class="col xol-xs-12 col-sm-12 col-md-12 col-lg-12">
-                        <div class="card">
-                            <div class="card-header card-header-icon" data-background-color="goldMaderas">
-                                <i class="fas fa-wallet fa-2x"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="encabezadoBox">
-                                    <h3 class="card-title center-align">Historial general</h3>
-                                    <p class="card-title pl-1">(Listado de todos los pagos aplicados y en proceso)</p>
-                                </div>
-                                <div class="toolbar">
-                                    <div class="row">
-                                        <div class="col-12 col-sm-12 col-md-12 col-lg-6">
-                                            <div class="form-group">
-                                                <label for="proyecto">Proyecto</label>
-                                                <select name="filtro33" id="filtro33" class="selectpicker select-gral" data-style="btn " data-show-subtext="true" data-live-search="true"  title="Selecciona un proyecto" data-size="7" required> <option value="0">Seleccione todo</option>
-                                                </select>
+                        <ul class="nav nav-tabs nav-tabs-cm">
+                            <li class="active">
+                                <a href="#solicitudesCRM" role="tab"  data-toggle="tab">Historial CRM</a>
+                            </li>
+                            <?php if( $this->session->userdata('id_rol') == 1 || $this->session->userdata('id_rol') == 2 || $this->session->userdata('id_rol') == 3 || $this->session->userdata('id_rol') == 7 || $this->session->userdata('id_rol') == 9) { ?>
+                                <li>
+                                    <a href="#solicitudesSUMA" role="tab"  data-toggle="tab">Historial SUMA</a>
+                                </li>
+                            <?php }?>
+                        </ul>
+                        <div class="card no-shadow m-0">
+                            <div class="card-content p-0">
+                                <div class="nav-tabs-custom">
+                                    <div class="tab-content p-2">
+                                        <div class="tab-pane active" id="solicitudesCRM">
+                                            <div class="encabezadoBox">
+                                                <h3 class="card-title center-align">Historial general</h3>
+                                                <p class="card-title pl-1">(Listado de todos los pagos aplicados y en proceso)</p>
+                                            </div>
+                                            <div class="toolbar">
+                                                <div class="row">
+                                                    <div class="col-12 col-sm-12 col-md-12 col-lg-6">
+                                                        <div class="form-group">
+                                                            <label for="proyecto">Año</label>
+                                                            <select name="filtro33" id="filtro33" class="selectpicker select-gral" data-style="btn " data-show-subtext="true" data-live-search="true" title="Selecciona año" data-size="7" required>
+                                                                <?php
+                                                                setlocale(LC_ALL, 'es_ES');
+                                                                    for ($i = 2019; $i <= 2022; $i++) {
+                                                                        $yearName  = $i;
+                                                                        echo '<option value="' . $i . '">' . $yearName . '</option>';
+                                                                    }
+                                                                ?>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12 col-sm-12 col-md-12 col-lg-6">
+                                                        <div class="form-group">
+                                                            <label for="proyecto">Proyecto</label>
+                                                            <select name="filtro44" id="filtro44" class="selectpicker select-gral" data-style="btn " data-show-subtext="true" data-live-search="true"  title="Selecciona un proyecto" data-size="7" required> <option value="0">Seleccione todo</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="material-datatables">
+                                                <div class="form-group">
+                                                    <div class="table-responsive">
+                                                        <table class="table-striped table-hover" id="tabla_historialGral" name="tabla_historialGral">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>ID</th>
+                                                                    <th>PROY.</th>
+                                                                    <th>CONDOMINIO</th>
+                                                                    <th>LOTE</th>
+                                                                    <th>REF.</th>
+                                                                    <th>PRECIO LOTE</th>
+                                                                    <th>TOTAL COM.</th>
+                                                                    <th>PAGO CLIENTE</th>
+                                                                    <th>DISPERSADO</th>
+                                                                    <th>PAGADO</th>
+                                                                    <th>PENDIENTE</th>
+                                                                    <th>USUARIO</th>
+                                                                    <th>PUESTO</th>
+                                                                    <th>DETALLE</th>
+                                                                    <th>ESTATUS</th>
+                                                                    <th>MÁS</th>
+                                                                </tr>
+                                                            </thead>
+                                                        </table>  
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
-                                        <?php
-                                            if($this->session->userdata('id_rol') == 13 || $this->session->userdata('id_rol') == 32 || $this->session->userdata('id_rol') == 17){
-                                                ?>
-                                                <input type="hidden" id="param" name="param" value="0"> 
-                                                <?php 
-                                            }else{
-                                                ?>
-                                                <input type="hidden" id="param" name="param" value="1">
-                                                <?php
-                                            }
-                                        ?>
-                                        <div class="col-12 col-sm-12 col-md-12 col-lg-6">
-                                            <div class="form-group">
-                                                <label>Condominio</label>
-                                                <select class="selectpicker select-gral" id="filtro44" name="filtro44[]" data-style="btn " data-show-subtext="true" data-live-search="true" title="Selecciona un condominio" data-size="7" required/>
-                                                </select>
+                                        <?php if( $this->session->userdata('id_rol') == 1 || $this->session->userdata('id_rol') == 2 || $this->session->userdata('id_rol') == 3 || $this->session->userdata('id_rol') == 7 || $this->session->userdata('id_rol') == 9) { ?>
+                                        <div class="tab-pane" id="solicitudesSUMA">
+                                            <div class="encabezadoBox">
+                                                <h3 class="card-title center-align">Historial general SUMA</h3>
                                             </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="material-datatables">
-                                    <div class="form-group">
-                                        <div class="table-responsive">
-                                            <table class="table-striped table-hover" id="tabla_historialGral" name="tabla_historialGral"><thead>
-                                                <tr>
-                                                    <th>ID</th>
-                                                    <th>PROY.</th>
-                                                    <th>CONDOMINIO</th>
-                                                    <th>LOTE</th>
-                                                    <th>REF.</th>
-                                                    <th>PRECIO LOTE</th>
-                                                    <th>TOTAL COM.</th>
-                                                    <th>PAGO CLIENTE</th>
-                                                    <th>DISPERSADO</th>
-                                                    <th>PAGADO</th>
-                                                    <th>PENDIENTE</th>
-                                                    <th>USUARIO</th>
-                                                    <th>PUESTO</th>
-                                                    <th>DETALLE</th>
-                                                    <th>ESTATUS</th>
-                                                    <th>MÁS</th>
-                                                </tr>
-                                            </thead>
-                                        </table>  
+                                            <div class="toolbar">
+                                                <div class="row">
+                                                    <div class="col-12 col-sm-12 col-md-12 col-lg-6">
+                                                        <div class="form-group">
+                                                            <label for="anio">Año</label>
+                                                            <select name="anio" id="anio" class="selectpicker select-gral" data-style="btn" data-live-search="true" title="Selecciona año" data-size="7" required>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="material-datatables">
+                                                <div class="form-group">
+                                                    <div class="table-responsive">
+                                                        <table class="table-striped table-hover" id="tabla_comisiones_suma" name="tabla_comisiones_suma">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>ID PAGO</th>
+                                                                    <th>REFERENCIA</th>
+                                                                    <th>NOMBRE</th>
+                                                                    <th>SEDE</th>
+                                                                    <th>FORMA PAGO</th>
+                                                                    <th>TOTAL COMISION</th>
+                                                                    <th>IMPUESTO</th>
+                                                                    <th>% COMISION</th>
+                                                                    <th>ESTATUS</th>
+                                                                    <th>MÁS</th>
+                                                                </tr>
+                                                            </thead>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div><!-- End tab SUMA  validado solo para ventas-->
+                                        <?php }?>
                                     </div>
                                 </div>
                             </div>
@@ -182,53 +236,26 @@
     <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
     <script>
-        $(document).ready(function() {
-            $("#tabla_historialGral").prop("hidden", true);
-            var url = "<?=base_url()?>/index.php/";
-            $.post("<?=base_url()?>index.php/Contratacion/lista_proyecto_dos", function (data) {
-                var len = data.length;
-                for (var i = 0; i < len; i++) {
-                    var id = data[i]['idResidencial'];
-                    var name = data[i]['descripcion'];
-                    $("#filtro33").append($('<option>').val(id).text(name.toUpperCase()));
-                }
-                $("#filtro33").selectpicker('refresh');
-            }, 'json');       
-        });
-    
         $('#filtro33').change(function(ruta){
-        residencial = $('#filtro33').val();
-        param = $('#param').val();
-        $("#filtro44").empty().selectpicker('refresh');
+            residencial = $('#filtro33').val();
+            param = $('#param').val();
+            $("#filtro44").empty().selectpicker('refresh');
             $.ajax({
-                url: '<?=base_url()?>Contratacion/lista_condominio_dos/'+residencial,
+                url: '<?=base_url()?>Contratacion/lista_proyecto_dos/',
                 type: 'post',
                 dataType: 'json',
                 success:function(response){
                     var len = response.length;
                     for( var i = 0; i<len; i++){
-                        var id = response[i]['idCondominio'];
-                        var name = response[i]['nombre'];
-                        $("#filtro44").append($('<option>').val(id).text(name));
+                        var id = response[i]['idResidencial'];
+                        var name = response[i]['descripcion'];
+                        $("#filtro44").append($('<option>').val(id).text(name.toUpperCase()));
                     }
                     $("#filtro44").selectpicker('refresh');
                 }
             });
         });
 
-        $('#filtro33').change(function(ruta){
-            proyecto = $('#filtro33').val();
-            condominio = $('#filtro44').val();
-            if(condominio == '' || condominio == null || condominio == undefined){
-                condominio = 0;
-            }
-            if(proyecto == 11 || proyecto == 12){
-                console.log(proyecto);
-            }
-            else{
-                getAssimilatedCommissions(proyecto, condominio);
-            }
-        });
 
         $('#filtro44').change(function(ruta){
             proyecto = $('#filtro33').val();
@@ -236,7 +263,12 @@
             if(condominio == '' || condominio == null || condominio == undefined){
                 condominio = 0;
             }
+            if(tabla_historialGral2){
+                 tabla_historialGral2.destroy();
+            }
+
             getAssimilatedCommissions(proyecto, condominio);
+            // 
         });
 
         function cleanCommentsAsimilados() {
@@ -280,19 +312,19 @@
             $("#tabla_historialGral").prop("hidden", false);
             tabla_historialGral2 = $("#tabla_historialGral").DataTable({
                 dom: 'Brt'+ "<'row'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'i><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>",
-                width: 'auto',
+                width: 'auto',                
                 buttons: [
-                    {
-                        text: '<i class="fa fa-table" aria-hidden="true"></i>',
-                        className: 'btn buttons-general-dt ver-info-asesor',
-                        titleAttr: 'Reporte pagos UM',
-                    },
-                    {
+                // {
+                //     text: '<i class="fa fa-table" aria-hidden="true"></i>',
+                //     className: 'btn buttons-general-dt ver-info-asesor',
+                //     titleAttr: 'Reporte pagos UM',
+                // },
+                {
                     extend: 'excelHtml5',
                     text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
-                    className: 'btn buttons-excel ',
+                    className: 'btn buttons-excel',
                     titleAttr: 'Descargar archivo de Excel',
-                    title: 'HISTORIAL_GENERAL_SISTEMA_COMISIONES',
+                    title: 'HISTORIAL_GENERAL_COMISIONES',
                     exportOptions: {
                         columns: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14],
                         format: {
@@ -345,7 +377,8 @@
                     }
                 },
                 destroy: true,
-                ordering: false,
+                deferRender: true,
+
                 columns: [{
                     "width": "5%",
                     "data": function( d ){
@@ -418,7 +451,7 @@
                             return '<p class="m-0">$'+formatMoney(d.restante)+'</p>';
                         }
                     }
-                },
+                }, 
                 {
                     "width": "7%",
                     "data": function( d ){
@@ -439,138 +472,45 @@
                 {
                     "width": "7%",
                     "data": function( d ){
+                        var lblPenalizacion = '';
+
+                        if (d.penalizacion == 1){
+                            lblPenalizacion ='<p class="m-0" title="Penalización + 90 días"><span class="label" style="background:orange;">Penalización + 90 días</span></p>';
+                        }
+
                         if(d.bonificacion >= 1){
-                            p1 = '<p class="m-0"><span class="label" style="background:pink;color: black;">Bonificación $'+formatMoney(d.bonificacion)+'</span></p>';
+                            p1 = '<p class="m-0" title="Lote con bonificación en NEODATA"><span class="label" style="background:pink;color: black;">Bon. $'+formatMoney(d.bonificacion)+'</span></p>';
                         }
                         else{
                             p1 = '';
                         }
 
                         if(d.lugar_prospeccion == 0){
-                            p2 = '<p class="m-0"><span class="label" style="background:RED;">Recisión de contrato</span></p>';
+                            p2 = '<p class="m-0" title="Lote con cancelación de CONTRATO"><span class="label" style="background:RED;">Recisión</span></p>';
                         }
                         else{
                             p2 = '';
                         }
-
-                        return p1 + p2;;
+                        
+                        return p1 + p2 + lblPenalizacion;
                     }
                 },
                 {
                     "width": "7%",
                     "data": function( d ){
                         var etiqueta;
-
-                        if((d.id_estatus_actual == 11) && d.descuento_aplicado == 1 ){
-                            etiqueta = '<p><span class="label" style="background:#ED7D72;">DESCUENTO</span></p>';
-                        }else if((d.id_estatus_actual == 12) && d.descuento_aplicado == 1 ){
-                            etiqueta = '<p><span class="label" style="background:#EDB172;">DESCUENTO RESGUARDO</span></p>';
-                        }else if((d.id_estatus_actual == 0) && d.descuento_aplicado == 1 ){
-                            etiqueta = '<p><span class="label" style="background:#ED8172;">DESCUENTO EN PROCESO</span></p>';
-                        }else if((d.id_estatus_actual == 16) && d.descuento_aplicado == 1 ){
-                            etiqueta = '<p><span class="label" style="background:#ED8172;">DESCUENTO DE PAGO</span></p>';
-                        }else if((d.id_estatus_actual == 17) && d.descuento_aplicado == 1 ){
-                            etiqueta = '<p><span class="label" style="background:#ED72B9;">DESCUENTO UNIVERSIDAD</span></p>';
-                        }else if((d.id_estatus_actual == 18) && d.descuento_aplicado == 1 ){
-                            etiqueta = '<p><span class="label" style="background:#89C86C;">DESCUENTO PRÉSTAMO</span></p>';
-                        }else if((d.id_estatus_actual == 19) && d.descuento_aplicado == 1 ){
-                            etiqueta = '<p><span class="label" style="background:#72EDD6;">DESCUENTO SCIO</span></p>';
-                        }else if((d.id_estatus_actual == 20) && d.descuento_aplicado == 1 ){
-                            etiqueta = '<p><span class="label" style="background:#72CBED;">DESCUENTO PLAZA</span></p>';
-                        }else if((d.id_estatus_actual == 21) && d.descuento_aplicado == 1 ){
-                            etiqueta = '<p><span class="label" style="background:#7282ED;">DESCUENTO LINEA TELEFÓNICA</span></p>';
-                        }else if((d.id_estatus_actual == 22) && d.descuento_aplicado == 1 ){
-                            etiqueta = '<p><span class="label" style="background:#CA72ED;">DESCUENTO MANTENIMIENTO</span></p>';
-                        }else if((d.id_estatus_actual == 23) && d.descuento_aplicado == 1 ){
-                            etiqueta = '<p><span class="label" style="background:#CA72ED;">DESCUENTO NÓMINA</span></p>';
-                        }else{
-
-                            switch(d.id_estatus_actual){
-                                case '1':
-                                case 1:
-                                case '2':
-                                case 2:
-                                case '12':
-                                case 12:
-                                case '14':
-                                case 14:
-                                case '13':
-                                case 13:
-                                case '14':
-                                case 14:
-                                case '51':
-                                case 51:
-                                case '52':
-                                case 52:
-                                    etiqueta = '<p><span class="label" style="background:#29A2CC;">'+d.estatus_actual+'</span></p>';
-                                break;
-
-                                case '3':
-                                case 3:
-                                    etiqueta = '<p><span class="label" style="background:#CC6C29;">'+d.estatus_actual+'</span></p>';
-                                break;
-
-                                case '4':
-                                case 4:
-                                    etiqueta = '<p><span class="label" style="background:#9129CC;">'+d.estatus_actual+'</span></p>';
-                                break;
-
-                                case '5':
-                                case 5:
-                                    etiqueta = '<p><span class="label" style="background:#CC2976;">'+d.estatus_actual+'</span></p>';
-                                break;
-
-                                case '6':
-                                case 6:
-                                    etiqueta = '<p><span class="label" style="background:#81BFBE;">'+d.estatus_actual+'</span></p>';
-                                break;
-
-                                case '7':
-                                case 7:
-                                    etiqueta = '<p><span class="label" style="background:#28A255;">'+d.estatus_actual+'</span></p>';
-                                break;
-
-                                case '8':
-                                case 8:
-                                    etiqueta = '<p><span class="label" style="background:#4D7FA1;">'+d.estatus_actual+'</span></p>';
-                                break;
-
-                                case '9':
-                                case 9:
-                                    etiqueta = '<p><span class="label" style="background:#E86606;">'+d.estatus_actual+'</span></p>';
-                                break;
-
-                                case '10':
-                                case 10:
-                                    etiqueta = '<p><span class="label" style="background:#E89606;">'+d.estatus_actual+'</span></p>';
-                                break;
-
-                                case '11':
-                                case 11:
-
+     
                                 if(d.pago_neodata < 1){
-                                    etiqueta = '<p><span class="label" style="background:#05A134;">'+d.estatus_actual+'</span></p><p><span class="label" style="background:#5FD482;">IMPORTACIÓN</span></p>';
+                                    etiqueta = '<p class="m-0"><span class="label" style="background:'+d.color+';">'+d.estatus_actual+'</span></p><p class="m-0"><span class="label" style="background:#5FD482;">IMPORTACIÓN</span></p>';
                                 }else{
 
-                                    etiqueta = '<p><span class="label" style="background:#05A134;">'+d.estatus_actual+'</span></p>';
+                                    etiqueta = '<p class="m-0"><span class="label" style="background:'+d.color+';">'+d.estatus_actual+'</span></p>';
                                 }
-                                break;
-
-                                case '88':
-                                case 88:
-                                    etiqueta = '<p><span class="label" style="background:#A1055A;">'+d.estatus_actual+'</span></p>';
-                                break;
-
-                                default:
-                                    etiqueta = '';
-                                break;
-                            }
-                        }
-
+ 
                         return etiqueta;
                     }
                 },
-                {
+                { 
                     "width": "2%",
                     "orderable": false,
                     "data": function( data ){
@@ -594,6 +534,7 @@
                     },
                 }],
                 ajax: {
+
                     "url": url2 + "Comisiones/getDatosHistorialPago/" + proyecto + "/" + condominio,
                     "type": "POST",
                     cache: false,
@@ -617,34 +558,6 @@
                     });
                 });
             });
-
-            /*$("#tabla_historialGral tbody").on("click", ".actualizar_pago", function(){
-                var tr = $(this).closest('tr');
-                var row = tabla_historialGral2.row( tr );
-
-                id_pago_i = $(this).val();
-
-                $("#modal_nuevas .modal-body").html("");
-                $("#modal_nuevas .modal-body").append('<div class="row"><div class="col-lg-12"><p> Actualizar pago <b>'+row.data().nombreLote+'</b> para el <b>'+(row.data().puesto).toUpperCase()+':</b> <i>'+row.data().user_names+'</i>?</p></div></div>');
-                $("#modal_nuevas .modal-body").append('<div class="row"><div class="col-lg-12"><input type="hidden" name="value_pago" value="2"><input type="number" class="form-control observaciones" name="observaciones" required placeholder="Monto a editar"></input></div></div>');
-                $("#modal_nuevas .modal-body").append('<input type="hidden" name="id_pago" value="'+row.data().id_pago_i+'">');
-                $("#modal_nuevas .modal-body").append('<div class="row"><div class="col-md-6"></div><div class="col-md-3"><input type="submit" class="btn btn-primary" value="ACTIVAR"></div><div class="col-md-3"><button type="button" class="btn btn-danger" data-dismiss="modal">CANCELAR</button></div></div>');
-                $("#modal_nuevas").modal();
-            });*/
-
-            /*$("#tabla_historialGral tbody").on("click", ".agregar_pago", function(){
-                var tr = $(this).closest('tr');
-                var row = tabla_historialGral2.row( tr );
-
-                id_pago_i = $(this).val();
-
-                $("#modal_nuevas .modal-body").html("");
-                $("#modal_nuevas .modal-body").append('<div class="row"><div class="col-lg-12"><p>Agregar nuevo pago a <b>'+row.data().nombreLote+'</b> para el <b>'+(row.data().puesto).toUpperCase()+':</b> <i>'+row.data().user_names+'</i>?</p></div></div>');
-                $("#modal_nuevas .modal-body").append('<div class="row"><div class="col-lg-12"><input type="hidden" name="value_pago" value="3"><input type="number" class="form-control observaciones" name="observaciones" required placeholder="Monto a agregar"></input></div></div>');
-                $("#modal_nuevas .modal-body").append('<input type="hidden" name="id_pago" value="'+row.data().id_pago_i+'">');
-                $("#modal_nuevas .modal-body").append('<div class="row"><div class="col-md-6"></div><div class="col-md-3"><input type="submit" class="btn btn-primary" value="ACTIVAR"></div><div class="col-md-3"><button type="button" class="btn btn-danger" data-dismiss="modal">CANCELAR</button></div></div>');
-                $("#modal_nuevas").modal();
-            });*/
         }
 
         //FIN TABLA  ****************************************************************************************
@@ -662,12 +575,12 @@
             return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
         };
 
-        /*function cancela(){
+        function cancela(){
             $("#modal_nuevas").modal('toggle');
-        }*/
+        }
 
         //Función para pausar la solicitud
-        /*$("#form_interes").submit( function(e) {
+        $("#form_interes").submit( function(e) {
             e.preventDefault();
         }).validate({
             submitHandler: function( form ) {
@@ -699,20 +612,15 @@
                     }
                 });
             }
-        });*/
+        });
 
-        /*$(document).on("click", ".btn-historial-lo", function(){
-            window.open(url+"Comisiones/getHistorialEmpresa", "_blank");
-        });*/
-
-        /*function cleanComments(){
+        function cleanComments(){
             var myCommentsList = document.getElementById('documents');
             myCommentsList.innerHTML = '';
 
             var myFactura = document.getElementById('facturaInfo');
             myFactura.innerHTML = '';
-        }*/
-
+        }
 
         $(document).on('click', '.ver-info-asesor', function(){
            $('#modal_informacion').modal();
@@ -721,14 +629,13 @@
             $("#tabla_modal").DataTable({
                 dom: 'Brt'+ "<'row'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'i><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>",
                 width: 'auto',
-                buttons: [
-                    {
-                        extend: 'excelHtml5',
-                        text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
-                        className: 'btn buttons-excel ',
-                        titleAttr: 'Descargar archivo de Excel',
-                        title: 'HISTORIAL',
-                    }],
+                buttons: [{
+                    extend: 'excelHtml5',
+                    text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
+                    className: 'btn buttons-excel ',
+                    titleAttr: 'Descargar archivo de Excel',
+                    title: 'HISTORIAL',
+                }],
                 pagingType: "full_numbers",
                 fixedHeader: true,
                 language: {
@@ -785,6 +692,7 @@
                     targets:   0,
                     'searchable':false,
                     'className': 'dt-body-center',
+
                     select: {
                         style:    'os',
                         selector: 'td:first-child'
@@ -802,7 +710,180 @@
         });
 
 
+        function tableComisionesSuma(anio){
+            $('#tabla_comisiones_suma thead tr:eq(0) th').each( function (i) {
+                if( i != 9 ){
+                    var title = $(this).text();  
+                    $(this).html('<input type="text" class="textoshead" placeholder="' + title + '"/>');
+                    $('input', this).on('keyup change', function() {
+                        if (tabla_suma.column(i).search() !== this.value) {
+                            tabla_suma.column(i).search(this.value).draw();
+                        }
+                    });
+                }
+            });
 
+            $('#tabla_comisiones_suma').on('xhr.dt', function(e, settings, json, xhr) {
+                var total = 0;
+                $.each(json, function(i, v) {
+                    total += parseFloat(v.total_comision);
+                });
+                var to = formatMoney(total);
+                
+            });
 
+            tabla_suma = $("#tabla_comisiones_suma").DataTable({
+                dom: 'Brt'+ "<'row'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'i><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>",
+                buttons: [{
+                    extend: 'excelHtml5',
+                    text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
+                    className: 'btn buttons-excel',
+                    titleAttr: 'Descargar archivo de Excel',
+                    title: 'REPORTE COMISIONES SUMA PAGADAS',
+                    exportOptions: {
+                        columns: [0,1,2,3,4,5,6,7,8],
+                        format: {
+                            header:  function (d, columnIdx) {
+                                if(columnIdx == 0){
+                                    return 'ID PAGO';
+                                }else if(columnIdx == 1){
+                                    return 'REFERENCIA';
+                                }else if(columnIdx == 2){
+                                    return 'NOMBRE COMISIONISTA';
+                                }else if(columnIdx == 3){
+                                    return 'SEDE';
+                                }else if(columnIdx == 4){
+                                    return 'FORMA PAGO';
+                                }else if(columnIdx == 5){
+                                    return 'TOTAL COMISIÓN';
+                                }else if(columnIdx == 6){
+                                    return 'IMPUESTO';
+                                }else if(columnIdx == 7){
+                                    return '% COMISIÓN';
+                                }else if(columnIdx == 8){
+                                    return 'ESTATUS';
+                                }
+                            }
+                        }
+                    },
+                }],
+                pagingType: "full_numbers",
+                fixedHeader: true,
+                language: {
+                    url: `${general_base_url}static/spanishLoader_v2.json`,
+                    paginate: {
+                        previous: "<i class='fa fa-angle-left'>",
+                        next: "<i class='fa fa-angle-right'>"
+                    }
+                },
+                destroy: true,
+                ordering: false,
+                columns: [{
+                    "width": "5%",
+                    "data": function(d) {
+                        return '<p class="m-0">' + d.id_pago_suma + '</p>';
+                    }
+                },
+                {
+                    "width": "5%",
+                    "data": function(d) {
+                        return '<p class="m-0">' + d.referencia + '</p>';
+                    }
+                },
+                {
+                    "width": "9%",
+                    "data": function(d) {
+                        return '<p class="m-0"><b>' + d.nombre_comisionista + '</b></p>';
+                    }
+                },
+                {
+                    "width": "5%",
+                    "data": function(d) {
+                        return '<p class="m-0"><b>' + d.sede + '</b></p>';
+                    }
+                },
+                {
+                    "width": "5%",
+                    "data": function(d) {
+                        return '<p class="m-0"><b>' + d.forma_pago + '</b></p>';
+                    }
+                },
+                {
+                    "width": "9%",
+                    "data": function(d) {
+                        return '<p class="m-0">$' + formatMoney(d.total_comision) + '</p>';
+                    }
+                },
+                {
+                    "width": "9%",
+                    "data": function(d) {
+                        return '<p class="m-0">$' + formatMoney(d.impuesto) + '</p>';
+                    }
+                },
+                {
+                    "width": "5%",
+                    "data": function(d) {
+                        return '<p class="m-0"><b>' + d.porcentaje_comision + '%</b></p>';
+                    }
+                },
+                {
+                    "width": "9%",
+                    "data": function(d) {
+                        return `${d.estatus}`;
+                    }
+                },
+                {
+                    "width": "5%",
+                    "orderable": false,
+                    "data": function(data) {
+                        return '<button href="#" value="'+data.id_pago_suma+'"  data-referencia="'+data.referencia+'" ' +'class="btn-data btn-blueMaderas consultar_history" title="Detalles">' +'<i class="fas fa-info"></i></button>';
+
+                    }
+                }],
+                ajax: {
+                    url: general_base_url + "Suma/getAllComisiones",
+                    type: "POST",
+                    data: {anio : anio},
+                    dataType: 'json',
+                    dataSrc: ""
+                },
+            });
+
+            $("#tabla_comisiones_suma tbody").on("click", ".consultar_history", function(e){
+                console.log("cloc");
+                e.preventDefault();
+                e.stopImmediatePropagation();
+                id_pago = $(this).val();
+                referencia = $(this).attr("data-referencia");
+
+                $("#seeInformationModalAsimilados").modal();
+                $("#nameLote").html("");
+                $("#comments-list-asimilados").html("");
+                $("#nameLote").append('<p><h5 style="color: white;">HISTORIAL DE PAGO DE LA REFERENCIA <b style="color:#39A1C0; text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;">'+referencia+'</b></h5></p>');
+                $.getJSON(general_base_url+"Suma/getHistorial/"+id_pago).done( function( data ){
+                    $.each( data, function(i, v){
+                        $("#comments-list-asimilados").append('<div class="col-lg-12"><p><i style="color:39A1C0;">'+v.comentario+'</i><br><b style="color:#39A1C0">'+v.fecha_movimiento+'</b><b style="color:gray;"> - '+v.modificado_por+'</b></p></div>');
+                    });
+                });
+            });
+        }
+            
+
+        $("#anio").ready( function(){
+            let yearBegin = 2019;
+            let currentYear = moment().year()
+            while( yearBegin <= currentYear ){
+                $("#anio").append(`<option value="${yearBegin}">${yearBegin}</option>`);
+                yearBegin++;
+            }
+            $("#anio").val(currentYear);
+            $("#anio").selectpicker('refresh');
+
+            tableComisionesSuma(currentYear);
+        });
+
+        $("#anio").on("change", function(){
+            tableComisionesSuma(this.value);
+        })
     </script>
 </body>
