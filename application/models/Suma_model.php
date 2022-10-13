@@ -134,14 +134,14 @@ class Suma_model extends CI_Model
         return $datos;
     }
 
-    function getAsimiladosRevisionIntMex($idRol, $idUsuario){
+    function getRevisionIntMex($idRol, $idUsuario, $formaPago){
         $datos = $this->db->query("SELECT ps.id_pago_suma, ps.referencia, CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) nombreComisionista, se.nombre sede, oxc.nombre estatusString, ps.estatus, ps.total_comision, (CASE us.forma_pago WHEN 3 THEN (((100-se.impuesto)/100)* ps.total_comision) ELSE ps.total_comision END) impuesto, ps.porcentaje_comision, us.id_usuario, oxc2.nombre puesto
         FROM pagos_suma ps
         INNER JOIN usuarios us ON us.id_usuario = ps.id_usuario
         INNER JOIN sedes se ON se.id_sede = us.id_sede
         INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = ps.estatus AND oxc.id_catalogo = 74
         INNER JOIN opcs_x_cats oxc2 ON oxc2.id_opcion = us.id_rol AND oxc2.id_catalogo = 1
-        WHERE ps.id_usuario = $idUsuario AND us.id_rol = $idRol AND us.forma_pago = 3 AND ps.estatus IN (3, 5)");
+        WHERE ps.id_usuario = $idUsuario AND us.id_rol = $idRol AND us.forma_pago = $formaPago AND ps.estatus IN (3, 5)");
 
         return $datos;
     }

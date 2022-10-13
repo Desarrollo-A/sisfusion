@@ -389,11 +389,12 @@ class Suma extends CI_Controller
         echo json_encode($this->Suma_model->getAsimiladosRevision()->result_array());
     }
 
-    public function getAsimiladosRevisionIntMex(){
+    public function getRevisionIntMex(){
         $idRol = $this->input->post("idRol");
         $idUsuario = $this->input->post("idUsuario");
+        $formaPago = $this->input->post("formaPago");
 
-        echo json_encode($this->Suma_model->getAsimiladosRevisionIntMex($idRol, $idUsuario)->result_array());
+        echo json_encode($this->Suma_model->getRevisionIntMex($idRol, $idUsuario, $formaPago)->result_array());
     }
 
     public function getRemanentesRevision(){
