@@ -44,6 +44,11 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, dates=n
     $('#table'+option+' thead tr:eq(0) th').each(function (i) {
         const title = $(this).text();
         $(this).html('<input type="text" class="w-100 textoshead"  placeholder="' + title + '"/>');
+        $( 'input', this ).on('keyup change', function () {
+            if ($('#table'+option).DataTable().column(i).search() !== this.value ) {
+                $('#table'+option).DataTable().column(i).search(this.value).draw();
+            }
+        });
     });
     
     $('#table'+option).DataTable({
@@ -292,6 +297,11 @@ function fillTableReport(dataObject) {
     $('#lotesInfoTableVtas thead tr:eq(0) th').each(function (i) {
         const title = $(this).text();
         $(this).html('<input type="text" class="w-100 textoshead"  placeholder="' + title + '"/>');
+        $( 'input', this ).on('keyup change', function () {
+            if ($('#lotesInfoTableVtas').DataTable().column(i).search() !== this.value ) {
+                $('#lotesInfoTableVtas').DataTable().column(i).search(this.value).draw();
+            }
+        });
     });
     $("#lotesInfoTableVtas").DataTable({
         destroy: true,
