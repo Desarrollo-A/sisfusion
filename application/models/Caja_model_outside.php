@@ -1397,4 +1397,9 @@
         WHERE lo.idLote IN ($idLote)");
     }
 
+    public function getTipoLote()
+    {
+        return $this->db->query("SELECT id_opcion, id_catalogo, nombre FROM opcs_x_cats WHERE id_catalogo = 27 AND estatus = 1")->result_array();
+    }
+
 }
