@@ -10,6 +10,7 @@
 			case '28': // EJECUTIVO ADMINISTRATIVO MKTD
 			case '50': // GENERALISTA MKTD
 			case '58': // ANALISTA DE DATOS CI
+			case '54': // ANALISTA DE DATOS CI
 				$datos = array();
 				$datos = $datos4;
 				$datos = $datos2;
@@ -142,152 +143,159 @@
 
 			$(".find_doc").click( function() {
 				var idLote = $('#inp_lote').val();
-				$('#tableDoct').DataTable({
-					destroy: true,
-					width: "auto",
-					"ajax":
-						{
-							"url": '<?=base_url()?>index.php/registroCliente/expedientesWS/'+idLote,
-							"dataSrc": ""
-						},
-					dom: 'Brt'+ "<'row'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'i><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>",
-					"ordering": false,
-					"buttons": [
-						{
-							extend: 'excelHtml5',
-							text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
-							className: 'btn buttons-excel',
-							titleAttr: 'Descargar archivo de Excel',
-							title:"Documentación del lote",
-							exportOptions: {
-								columns: [ 0, 1, 2, 3,4,5, 7, 8 ]
-							},
-						}
-					],
-					pagingType: "full_numbers",
-					language: {
-						url: "<?=base_url()?>/static/spanishLoader_v2.json",
-						paginate: {
-							previous: "<i class='fa fa-angle-left'>",
-							next: "<i class='fa fa-angle-right'>"
-						}
-					},
-					columnDefs: [{
-						visible: false,
-						searchable: false
-					}],
-					columns:
-						[
+				if(idLote=='' || idLote == undefined || idLote == null){
+                    console.log('ALABERGAAAAAA');
+                    alerts.showNotification('top', 'right', 'Ingresa el ID de lote', 'danger');
+                }else{
+                    $('#tableDoct').DataTable({
+                        destroy: true,
+                        width: "auto",
+                        "ajax":
+                            {
+                                "url": '<?=base_url()?>index.php/registroCliente/expedientesWS/'+idLote,
+                                "dataSrc": ""
+                            },
+                        dom: 'Brt'+ "<'row'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'i><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>",
+                        "ordering": false,
+                        "buttons": [
+                            {
+                                extend: 'excelHtml5',
+                                text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
+                                className: 'btn buttons-excel',
+                                titleAttr: 'Descargar archivo de Excel',
+                                title:"Documentación del lote",
+                                exportOptions: {
+                                    columns: [ 0, 1, 2, 3,4,5, 7, 8 ]
+                                },
+                            }
+                        ],
+                        pagingType: "full_numbers",
+                        language: {
+                            url: "<?=base_url()?>/static/spanishLoader_v2.json",
+                            paginate: {
+                                previous: "<i class='fa fa-angle-left'>",
+                                next: "<i class='fa fa-angle-right'>"
+                            }
+                        },
+                        columnDefs: [{
+                            visible: false,
+                            searchable: false
+                        }],
+                        columns:
+                            [
 
-							{data: 'nombreResidencial'},
-							{data: 'nombre'},
-							{data: 'nombreLote'},
-							{data: 'idLote'},
-							{
-								data: null,
-								render: function ( data, type, row )
-								{
-									return data.nomCliente +' ' +data.apellido_paterno+' '+data.apellido_materno;
-								},
-							},
-							{data: 'movimiento'},
-							{data: 'modificado'},
-							{
-								data: null,
-								render: function ( data, type, row )
-								{
-									datos = data.id_asesor;
+                                {data: 'nombreResidencial'},
+                                {data: 'nombre'},
+                                {data: 'nombreLote'},
+                                {data: 'idLote'},
+                                {
+                                    data: null,
+                                    render: function ( data, type, row )
+                                    {
+                                        return data.nomCliente +' ' +data.apellido_paterno+' '+data.apellido_materno;
+                                    },
+                                },
+                                {data: 'movimiento'},
+                                {data: 'modificado'},
+                                {
+                                    data: null,
+                                    render: function ( data, type, row )
+                                    {
+                                        datos = data.id_asesor;
 
-									if (getFileExtension(data.expediente) == "pdf") {
-										if(data.tipo_doc == 8){
-											file = '<a class="pdfLink3 btn-data btn-warning" data-Pdf="'+data.expediente+'" title= "Ver archivo" style="cursor:pointer;" data-nomExp="'+data.expediente+'"><i class="fas fa-file-pdf"></i></a>';
-										}else if(data.tipo_doc == 66){
-											file = '<a class="verEVMKTD  btn-data btn-warning" data-expediente="'+data.expediente+'" title= "Ver archivo" style="cursor:pointer;" data-nomExp="'+data.movimiento+'" data-nombreCliente="'+data.primerNom+'"><i class="fas fa-file-pdf"></i></a>';
-										} 
-										else {
-											<?php if($this->session->userdata('id_rol') == 7 || $this->session->userdata('id_rol') == 9 || $this->session->userdata('id_rol') == 3){?>
-											if(data.idMovimiento == 31 || data.idMovimiento == 85 || data.idMovimiento == 20 || data.idMovimiento == 63 || data.idMovimiento == 73 || data.idMovimiento == 82 || data.idMovimiento == 92 || data.idMovimiento == 96 && (id_rol_current==7 || id_rol_current==9 || id_rol_current==3) ){
-												file = '<a class="pdfLink btn-data btn-warning" data-Pdf="'+data.expediente+'" title= "Ver archivo" style="cursor:pointer;" data-nomExp="'+data.expediente+'"><i class="fas fa-file-pdf"></i></a><button type="button" title= "Eliminar archivo" id="deleteDoc" class="btn-data btn-warning delete" data-tipodoc="'+data.movimiento+'" data-iddoc="'+data.idDocumento+'" ><i class="fas fa-trash"></i></button>';
-											} else {
-												file = '<a class="pdfLink btn-data btn-warning" data-Pdf="'+data.expediente+'" title= "Ver archivo" style="cursor:pointer;" data-nomExp="'+data.expediente+'"><i class="fas fa-file-pdf"></i></a>';
-											}
-											<?php } else {?>file = '<a class="pdfLink btn-data btn-warning" data-Pdf="'+data.expediente+'" title= "Ver archivo" style="cursor:pointer;" data-nomExp="'+data.expediente+'"><i class="fas fa-file-pdf"></i></a>';<?php } ?>
-										}
-									}
-									else if (getFileExtension(data.expediente) == "xlsx" || getFileExtension(data.expediente) == "XLSX") {
-										file = "<a type='button' href='../../static/documentos/cliente/corrida/" + data.expediente + "' class='btn-data btn-green-excel'><i class='fas fa-file-excel'></i><src='../../static/documentos/cliente/corrida/" + data.expediente + "'> </a> ";
-									}
-									else if (getFileExtension(data.expediente) == "NULL" || getFileExtension(data.expediente) == 'null' || getFileExtension(data.expediente) == "") {
-										if(data.tipo_doc == 7){
-											file = '<button type="button" title= "Corrida inhabilitada" class="btn-data btn-orangeYellow disabled"><i class="fas fa-th"></i></button>';
-										} else if(data.tipo_doc == 8){
-											file = '<button type="button" title= "Contrato inhabilitado" class="btn-data btn-orangeYellow disabled"><i class="fas fa-th"></i></button>';
-										} else {
-											<?php if($this->session->userdata('id_rol') == 7 || $this->session->userdata('id_rol') == 9 || $this->session->userdata('id_rol') == 3){?>
-											if(data.idMovimiento == 31 || data.idMovimiento == 85 || data.idMovimiento == 20 || data.idMovimiento == 63 || data.idMovimiento == 73 || data.idMovimiento == 82 || data.idMovimiento == 92 || data.idMovimiento == 96 && (id_rol_current==7 || id_rol_current==9 || id_rol_current==3) ){
-												file = '<button type="button" id="updateDoc" title= "Adjuntar archivo" class="btn-data btn-green update" data-iddoc="'+data.idDocumento+'" data-tipodoc="'+data.tipo_doc+'" data-descdoc="'+data.movimiento+'" data-idCliente="'+data.idCliente+'" data-nombreResidencial="'+data.nombreResidencial+'" data-nombreCondominio="'+data.nombre+'" data-nombreLote="'+data.nombreLote+'" data-idCondominio="'+data.idCondominio+'" data-idLote="'+data.idLote+'"><i class="fas fa-cloud-upload-alt"></i></button>';
-											} else {
-												file = '<button type="button" id="updateDoc" title= "No se permite adjuntar archivos" class="btn-data btn-green" disabled><i class="fas fa-cloud-upload-alt"></i></button>';
-											}
-											<?php } else {?> file = '<button type="button" id="updateDoc" title= "No se permite adjuntar archivos" class="btn-data btn-green disabled" disabled><i class="fas fa-cloud-upload-alt"></i></button>'; <?php } ?>
-										}
-									}
-									else if (getFileExtension(data.expediente) == "Depósito de seriedad") {
-										file = '<button class="btn-data btn-blueMaderas pdfLink2" data-idc="'+data.id_cliente+'" data-nomExp="'+data.expediente+'" title= "Depósito de seriedad"><i class="fas fa-file"></i></button>';
-									}
-									else if (getFileExtension(data.expediente) == "Depósito de seriedad versión anterior") {
-										file = '<a class="btn-data btn-blueMaderas pdfLink22" data-idc="'+data.id_cliente+'" data-nomExp="'+data.expediente+'" title= "Depósito de seriedad"><i class="fas fa-file"></i></a>';
-									}
-									else if (getFileExtension(data.expediente) == "Autorizaciones") {
-										file = '<a href="#" class="btn-data btn-warning seeAuts" title= "Autorizaciones" data-idCliente="'+data.idCliente+'" data-id_autorizacion="'+data.id_autorizacion+'" data-idLote="'+data.idLote+'"><i class="fas fa-key"></i></a>';
-									}
-									else if (getFileExtension(data.expediente) == "Prospecto") {
-										file = '<a href="#" class="btn-data btn-blueMaderas verProspectos" title= "Prospección" data-id-prospeccion="'+data.id_prospecto+'" data-lp="'+ data.lugar_prospeccion +'" data-nombreProspecto="'+data.nomCliente+' '+data.apellido_paterno+' '+data.apellido_materno+'"><i class="fas fa-user-check"></i></a>';
-									}
-									else
-									{
-										<?php if($this->session->userdata('id_rol') == 7 || $this->session->userdata('id_rol') == 9 || $this->session->userdata('id_rol') == 3){?>
-										if(data.idMovimiento == 31 || data.idMovimiento == 85 || data.idMovimiento == 20 || data.idMovimiento == 63 || data.idMovimiento == 73 || data.idMovimiento == 82 || data.idMovimiento == 92 || data.idMovimiento == 96 && (id_rol_current==7 || id_rol_current==9 || id_rol_current==3) ){
+                                        if (getFileExtension(data.expediente) == "pdf") {
+                                            if(data.tipo_doc == 8){
+                                                file = '<a class="pdfLink3 btn-data btn-warning" data-Pdf="'+data.expediente+'" title= "Ver archivo" style="cursor:pointer;" data-nomExp="'+data.expediente+'"><i class="fas fa-file-pdf"></i></a>';
+                                            }else if(data.tipo_doc == 66){
+                                                file = '<a class="verEVMKTD  btn-data btn-warning" data-expediente="'+data.expediente+'" title= "Ver archivo" style="cursor:pointer;" data-nomExp="'+data.movimiento+'" data-nombreCliente="'+data.primerNom+'"><i class="fas fa-file-pdf"></i></a>';
+                                            }
+                                            else {
+                                                <?php if($this->session->userdata('id_rol') == 7 || $this->session->userdata('id_rol') == 9 || $this->session->userdata('id_rol') == 3){?>
+                                                if(data.idMovimiento == 31 || data.idMovimiento == 85 || data.idMovimiento == 20 || data.idMovimiento == 63 || data.idMovimiento == 73 || data.idMovimiento == 82 || data.idMovimiento == 92 || data.idMovimiento == 96 && (id_rol_current==7 || id_rol_current==9 || id_rol_current==3) ){
+                                                    file = '<a class="pdfLink btn-data btn-warning" data-Pdf="'+data.expediente+'" title= "Ver archivo" style="cursor:pointer;" data-nomExp="'+data.expediente+'"><i class="fas fa-file-pdf"></i></a><button type="button" title= "Eliminar archivo" id="deleteDoc" class="btn-data btn-warning delete" data-tipodoc="'+data.movimiento+'" data-iddoc="'+data.idDocumento+'" ><i class="fas fa-trash"></i></button>';
+                                                } else {
+                                                    file = '<a class="pdfLink btn-data btn-warning" data-Pdf="'+data.expediente+'" title= "Ver archivo" style="cursor:pointer;" data-nomExp="'+data.expediente+'"><i class="fas fa-file-pdf"></i></a>';
+                                                }
+                                                <?php } else {?>file = '<a class="pdfLink btn-data btn-warning" data-Pdf="'+data.expediente+'" title= "Ver archivo" style="cursor:pointer;" data-nomExp="'+data.expediente+'"><i class="fas fa-file-pdf"></i></a>';<?php } ?>
+                                            }
+                                        }
+                                        else if (getFileExtension(data.expediente) == "xlsx" || getFileExtension(data.expediente) == "XLSX") {
+                                            file = "<a type='button' href='../../static/documentos/cliente/corrida/" + data.expediente + "' class='btn-data btn-green-excel'><i class='fas fa-file-excel'></i><src='../../static/documentos/cliente/corrida/" + data.expediente + "'> </a> ";
+                                        }
+                                        else if (getFileExtension(data.expediente) == "NULL" || getFileExtension(data.expediente) == 'null' || getFileExtension(data.expediente) == "") {
+                                            if(data.tipo_doc == 7){
+                                                file = '<button type="button" title= "Corrida inhabilitada" class="btn-data btn-orangeYellow disabled"><i class="fas fa-th"></i></button>';
+                                            } else if(data.tipo_doc == 8){
+                                                file = '<button type="button" title= "Contrato inhabilitado" class="btn-data btn-orangeYellow disabled"><i class="fas fa-th"></i></button>';
+                                            } else {
+                                                <?php if($this->session->userdata('id_rol') == 7 || $this->session->userdata('id_rol') == 9 || $this->session->userdata('id_rol') == 3){?>
+                                                if(data.idMovimiento == 31 || data.idMovimiento == 85 || data.idMovimiento == 20 || data.idMovimiento == 63 || data.idMovimiento == 73 || data.idMovimiento == 82 || data.idMovimiento == 92 || data.idMovimiento == 96 && (id_rol_current==7 || id_rol_current==9 || id_rol_current==3) ){
+                                                    file = '<button type="button" id="updateDoc" title= "Adjuntar archivo" class="btn-data btn-green update" data-iddoc="'+data.idDocumento+'" data-tipodoc="'+data.tipo_doc+'" data-descdoc="'+data.movimiento+'" data-idCliente="'+data.idCliente+'" data-nombreResidencial="'+data.nombreResidencial+'" data-nombreCondominio="'+data.nombre+'" data-nombreLote="'+data.nombreLote+'" data-idCondominio="'+data.idCondominio+'" data-idLote="'+data.idLote+'"><i class="fas fa-cloud-upload-alt"></i></button>';
+                                                } else {
+                                                    file = '<button type="button" id="updateDoc" title= "No se permite adjuntar archivos" class="btn-data btn-green" disabled><i class="fas fa-cloud-upload-alt"></i></button>';
+                                                }
+                                                <?php } else {?> file = '<button type="button" id="updateDoc" title= "No se permite adjuntar archivos" class="btn-data btn-green disabled" disabled><i class="fas fa-cloud-upload-alt"></i></button>'; <?php } ?>
+                                            }
+                                        }
+                                        else if (getFileExtension(data.expediente) == "Depósito de seriedad") {
+                                            file = '<button class="btn-data btn-blueMaderas pdfLink2" data-idc="'+data.id_cliente+'" data-nomExp="'+data.expediente+'" title= "Depósito de seriedad"><i class="fas fa-file"></i></button>';
+                                        }
+                                        else if (getFileExtension(data.expediente) == "Depósito de seriedad versión anterior") {
+                                            file = '<a class="btn-data btn-blueMaderas pdfLink22" data-idc="'+data.id_cliente+'" data-nomExp="'+data.expediente+'" title= "Depósito de seriedad"><i class="fas fa-file"></i></a>';
+                                        }
+                                        else if (getFileExtension(data.expediente) == "Autorizaciones") {
+                                            file = '<a href="#" class="btn-data btn-warning seeAuts" title= "Autorizaciones" data-idCliente="'+data.idCliente+'" data-id_autorizacion="'+data.id_autorizacion+'" data-idLote="'+data.idLote+'"><i class="fas fa-key"></i></a>';
+                                        }
+                                        else if (getFileExtension(data.expediente) == "Prospecto") {
+                                            file = '<a href="#" class="btn-data btn-blueMaderas verProspectos" title= "Prospección" data-id-prospeccion="'+data.id_prospecto+'" data-lp="'+ data.lugar_prospeccion +'" data-nombreProspecto="'+data.nomCliente+' '+data.apellido_paterno+' '+data.apellido_materno+'"><i class="fas fa-user-check"></i></a>';
+                                        }
+                                        else
+                                        {
+                                            <?php if($this->session->userdata('id_rol') == 7 || $this->session->userdata('id_rol') == 9 || $this->session->userdata('id_rol') == 3){?>
+                                            if(data.idMovimiento == 31 || data.idMovimiento == 85 || data.idMovimiento == 20 || data.idMovimiento == 63 || data.idMovimiento == 73 || data.idMovimiento == 82 || data.idMovimiento == 92 || data.idMovimiento == 96 && (id_rol_current==7 || id_rol_current==9 || id_rol_current==3) ){
 
-											if(data.tipo_doc == 66){
-											file = '<a class="verEVMKTD" data-expediente="'+data.expediente+'" title= "Ver archivo" style="cursor:pointer;" data-nomExp="'+data.movimiento+'" data-nombreCliente="'+data.primerNom+'"><img src="<?=base_url()?>static/images/image-file.png" style="cursor:pointer;width:42px"/></a>';
-											}else{
-												file = '<a class="pdfLink" data-Pdf="'+data.expediente+'" data-nomExp="'+data.expediente+'"><img src="<?=base_url()?>static/documentos/cliente/expediente/'+data.expediente+'" style="cursor:pointer;" width="25" height="23"/></a><button type="button" title= "Eliminar archivo" id="deleteDoc" class="btn-data btn-warning delete" data-tipodoc="'+data.movimiento+'" data-iddoc="'+data.idDocumento+'" ><i class="fas fa-trash"></i></button>';
-											}
-											
-										} else {
-											if(data.tipo_doc == 66){
-											file = '<a class="verEVMKTD" data-expediente="'+data.expediente+'" title= "Ver archivo" style="cursor:pointer;" data-nomExp="'+data.movimiento+'" data-nombreCliente="'+data.primerNom+'"><img src="<?=base_url()?>static/images/image-file.png" style="cursor:pointer;width:42px"/></a>';
-											}else{
-												file = '<a class="pdfLink" data-Pdf="'+data.expediente+'" data-nomExp="'+data.expediente+'"><img src="<?=base_url()?>static/documentos/cliente/expediente/'+data.expediente+'" style="cursor:pointer;" width="25" height="23"/></a>';
-											}
+                                                if(data.tipo_doc == 66){
+                                                    file = '<a class="verEVMKTD" data-expediente="'+data.expediente+'" title= "Ver archivo" style="cursor:pointer;" data-nomExp="'+data.movimiento+'" data-nombreCliente="'+data.primerNom+'"><img src="<?=base_url()?>static/images/image-file.png" style="cursor:pointer;width:42px"/></a>';
+                                                }else{
+                                                    file = '<a class="pdfLink" data-Pdf="'+data.expediente+'" data-nomExp="'+data.expediente+'"><img src="<?=base_url()?>static/documentos/cliente/expediente/'+data.expediente+'" style="cursor:pointer;" width="25" height="23"/></a><button type="button" title= "Eliminar archivo" id="deleteDoc" class="btn-data btn-warning delete" data-tipodoc="'+data.movimiento+'" data-iddoc="'+data.idDocumento+'" ><i class="fas fa-trash"></i></button>';
+                                                }
 
-											
-										}
-										<?php } else {?> 
-											if(data.tipo_doc == 66){
-											file = '<a class="verEVMKTD" data-expediente="'+data.expediente+'" title= "Ver archivo" style="cursor:pointer;" data-nomExp="'+data.movimiento+'" data-nombreCliente="'+data.primerNom+'"><img src="<?=base_url()?>static/images/image-file.png" style="cursor:pointer;width:42px"/></a>';
-											}else{
-												file = '<a class="pdfLink btn-data btn-acidGreen" data-Pdf="'+data.expediente+'" data-nomExp="'+data.expediente+'"><i class="fas fa-image"></i></a>';
-		
-											}
-											
-										<?php }?>
+                                            } else {
+                                                if(data.tipo_doc == 66){
+                                                    file = '<a class="verEVMKTD" data-expediente="'+data.expediente+'" title= "Ver archivo" style="cursor:pointer;" data-nomExp="'+data.movimiento+'" data-nombreCliente="'+data.primerNom+'"><img src="<?=base_url()?>static/images/image-file.png" style="cursor:pointer;width:42px"/></a>';
+                                                }else{
+                                                    file = '<a class="pdfLink" data-Pdf="'+data.expediente+'" data-nomExp="'+data.expediente+'"><img src="<?=base_url()?>static/documentos/cliente/expediente/'+data.expediente+'" style="cursor:pointer;" width="25" height="23"/></a>';
+                                                }
 
-									}
-									return '<div class="d-flex justify-center">'+file+'</div>';
-								}
-							},
-							{
-								data: null,
-								render: function ( data, type, row )
-								{
-									return myFunctions.validateEmptyFieldDocs(data.primerNom) +' '+myFunctions.validateEmptyFieldDocs(data.apellidoPa)+' '+myFunctions.validateEmptyFieldDocs(data.apellidoMa);
-								},
-							},
-							{data: 'ubic'},
-						]
-				});
+
+                                            }
+                                            <?php } else {?>
+                                            if(data.tipo_doc == 66){
+                                                file = '<a class="verEVMKTD" data-expediente="'+data.expediente+'" title= "Ver archivo" style="cursor:pointer;" data-nomExp="'+data.movimiento+'" data-nombreCliente="'+data.primerNom+'"><img src="<?=base_url()?>static/images/image-file.png" style="cursor:pointer;width:42px"/></a>';
+                                            }else{
+                                                file = '<a class="pdfLink btn-data btn-acidGreen" data-Pdf="'+data.expediente+'" data-nomExp="'+data.expediente+'"><i class="fas fa-image"></i></a>';
+
+                                            }
+
+                                            <?php }?>
+
+                                        }
+                                        return '<div class="d-flex justify-center">'+file+'</div>';
+                                    }
+                                },
+                                {
+                                    data: null,
+                                    render: function ( data, type, row )
+                                    {
+                                        return myFunctions.validateEmptyFieldDocs(data.primerNom) +' '+myFunctions.validateEmptyFieldDocs(data.apellidoPa)+' '+myFunctions.validateEmptyFieldDocs(data.apellidoMa);
+                                    },
+                                },
+                                {data: 'ubic'},
+                            ]
+                    });
+                }
+
+
 
 				<?php #$this->session->unset_userdata('datauserjava'); ?>
 

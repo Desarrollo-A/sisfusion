@@ -1,5 +1,5 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
-    <link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet"/>
+<link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet"/>
 
     <style>
         .boxIcon{
@@ -76,6 +76,7 @@
                                                         <th class="disabled-sorting">REINGRESO</th>
                                                         <th class="disabled-sorting">BAJA</th>
                                                         <th class="disabled-sorting">ACCIONES</th>
+
                                                     </tr>
                                                 </thead>
                                             </table>
@@ -400,6 +401,10 @@
     <script type="text/javascript" src="<?= base_url() ?>dist/js/controllers/datatables/datatables.min.js"></script>-->
 
     <script src="<?= base_url() ?>dist/js/controllers/usuarios-1.1.0.js"></script>
-    <script>userId = <?= $this->session->userdata('id_usuario') ?>;</script>
+    <script>
+        userId = <?= $this->session->userdata('id_usuario') ?>;
+        rolId = <?= $this->session->userdata('id_rol') ?>;
+
+    </script>
 
     </html>

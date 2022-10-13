@@ -8204,7 +8204,7 @@
             echo json_encode(array());
         }
         exit;
-	}
+  }
 
 
 	public function addFileCorrida(){
@@ -8496,8 +8496,7 @@
       $id_cliente = $this->input->post("id_cliente");
       $response['data'] = $this->registrolote_modelo->getcop($id_cliente);
       echo json_encode($response);
-   }	
-	
+   }
 	
     function getResultsClientsSerch()
     {

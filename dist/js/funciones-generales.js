@@ -49,7 +49,21 @@ $().ready(function() {
 				} else {
 					return field;
 				}
+			},
+			convertDateYMDHMS(inputFormat){
+				//revuelve la fecha sin los microsegundos YYYY-MM-DD HH:MM
+				let fecha_cruda = new Date(inputFormat);
+
+				let year = fecha_cruda.getFullYear();
+				let month = ((fecha_cruda.getMonth()+1)<10) ? '0'+(fecha_cruda.getMonth()+1) : (fecha_cruda.getMonth()+1);
+				let day = (fecha_cruda.getDate()<10) ? '0'+fecha_cruda.getDate() : fecha_cruda.getDate();
+				let hour = (fecha_cruda.getHours()<10) ? '0'+fecha_cruda.getHours() : fecha_cruda.getHours();
+				let minutes = (fecha_cruda.getMinutes()<10) ? '0'+fecha_cruda.getMinutes() : fecha_cruda.getMinutes();
+				let seconds = (fecha_cruda.getSeconds()<10) ? '0'+fecha_cruda.getSeconds() : fecha_cruda.getSeconds();
+
+				return year+'-'+month+'-'+day+' '+hour+':'+minutes+':'+seconds;
 			}
+
 
 		}
 });
@@ -98,3 +112,4 @@ function convertDate(inputFormat) {
 	var formated = date.replace(/(..)\/(..)\/(....)/, "$2/$1/$3");
 	return formated;
 }
+

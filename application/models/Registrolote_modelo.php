@@ -4881,6 +4881,7 @@ WHERE idLote IN ('".$row['idLote']."') and nombreLote = '".$insert_csv['nombreLo
 	// filtro de lote por condominios y residencial DOCUMENTACION ASESOR INICIO
 
     public function getLotesAsesor($condominio,$residencial){
+        $where_sede='';
         switch ($this->session->userdata('id_rol')) {
 			case '2':
 				$sede =  $this->session->userdata('id_sede');
@@ -4932,21 +4933,24 @@ WHERE idLote IN ('".$row['idLote']."') and nombreLote = '".$insert_csv['nombreLo
 				if ($this->session->userdata('id_usuario') == 30) // MJ: VALERIA PALACIOS VERÁ LO DE SLP + TIJUANA
 				$where = "(SELECT id_usuario FROM usuarios WHERE id_rol = 3 AND id_sede IN ('".$this->session->userdata('id_sede')."', '8'))";
 				else if ($this->session->userdata('id_usuario') == 7096 || $this->session->userdata('id_usuario') == 7097) // MJ: EDGAR Y GRISELL VERÁN LO DE CDMX + SMA
-					$where = "(SELECT id_usuario FROM usuarios WHERE (id_rol = 3 AND id_sede IN ('".$this->session->userdata('id_sede')."', '9')) OR id_usuario = 7092)";
+                   {
+                       $where_sede = ' AND clientes.id_sede IN(4,9)';
+                       $where = "(SELECT id_usuario FROM usuarios WHERE (id_rol = 3 AND id_sede IN ('".$this->session->userdata('id_sede')."', '9')) OR id_usuario IN (7092, 690))";
+                   }
 				else if ($this->session->userdata('id_usuario') == 29) // MJ: FERNANDA MONJARAZ VE CINTHYA TANDAZO
 					$where = "(SELECT id_usuario FROM usuarios WHERE id_rol = 3 AND id_sede IN ('".$this->session->userdata('id_sede')."') OR id_usuario = 666)";
 				else
 					$where = ($this->session->userdata('id_sede') == 3 || $this->session->userdata('id_sede') == 6) ? "(SELECT id_usuario FROM usuarios WHERE id_rol = 3 AND id_sede IN ('3', '6'))" : "(SELECT id_usuario FROM usuarios WHERE id_rol = 3 AND id_sede IN ('".$this->session->userdata('id_sede')."'))";
 
-				$query = $this->db->query("SELECT lotes.idLote, nombreLote, idStatusLote, clientes.id_asesor, '1' venta_compartida  FROM lotes
-				INNER JOIN clientes ON clientes.idLote = lotes.idLote WHERE clientes.id_gerente IN $where
-				AND lotes.status = 1 AND clientes.status = 1 AND lotes.idCondominio = $condominio
-				UNION ALL
-				SELECT lotes.idLote, nombreLote, idStatusLote, vc.id_asesor, '2' venta_compartida FROM lotes
-				INNER JOIN clientes ON clientes.idLote = lotes.idLote 
-				INNER JOIN ventas_compartidas vc ON vc.id_cliente = clientes.id_cliente
-				WHERE vc.id_gerente IN $where AND vc.estatus = 1 AND 
-				clientes.status = 1 AND lotes.status = 1 AND lotes.idCondominio = $condominio ORDER BY lotes.idLote");
+                $query = $this->db->query("SELECT lotes.idLote, nombreLote, idStatusLote, clientes.id_asesor, '1' venta_compartida  FROM lotes
+                INNER JOIN clientes ON clientes.idLote = lotes.idLote WHERE clientes.id_gerente IN $where
+                AND lotes.status = 1 AND clientes.status = 1 AND lotes.idCondominio = $condominio
+                UNION ALL
+                SELECT lotes.idLote, nombreLote, idStatusLote, vc.id_asesor, '2' venta_compartida FROM lotes
+                INNER JOIN clientes ON clientes.idLote = lotes.idLote $where_sede
+                INNER JOIN ventas_compartidas vc ON vc.id_cliente = clientes.id_cliente
+                WHERE vc.id_gerente IN $where AND vc.estatus = 1 AND 
+                clientes.status = 1 AND lotes.status = 1 AND lotes.idCondominio = $condominio ORDER BY lotes.idLote");
 				break;
             case '6': // ASISTENTE GERENTE
                 $query = $this->db->query("SELECT lotes.idLote, nombreLote, idStatusLote, clientes.id_asesor, '1' venta_compartida  FROM lotes
@@ -5113,6 +5117,13 @@ WHERE idLote IN ('".$row['idLote']."') and nombreLote = '".$insert_csv['nombreLo
 	// filtro de lote por condominios y residencial DOCUMENTACION INICIO
 
 	public function getExpedienteAll($lotes, $cliente = '') {
+        $id_rol = $this->session->userdata('id_rol');
+        $extraInner = '';
+        $extraWhere = '';
+        if($id_rol==54){
+            $extraInner = 'INNER JOIN prospectos pr ON cl.id_prospecto=pr.id_prospecto';
+            $extraWhere = " AND pr.source='DragonCEM'";
+        }
 		$where = '';
 		if($cliente != ''){
 			$where= "hd.idLote = $lotes AND cl.id_cliente = $cliente";
@@ -5135,7 +5146,8 @@ WHERE idLote IN ('".$row['idLote']."') and nombreLote = '".$insert_csv['nombreLo
 		LEFT JOIN usuarios u2 ON u2.id_usuario = cl.id_gerente
 		LEFT JOIN usuarios u3 ON u3.id_usuario = cl.id_subdirector
 		LEFT JOIN usuarios u4 ON u4.id_usuario = cl.id_regional
-		WHERE $where");
+		".$extraInner."
+		WHERE ". $where.$extraWhere);
 		return $query->result_array();
 	}
 	//public function getExpedienteAll($lotes) {
@@ -5173,7 +5185,15 @@ WHERE idLote IN ('".$row['idLote']."') and nombreLote = '".$insert_csv['nombreLo
 
 
 	public function getdp($lotes,$cliente = ''){
+	    $id_rol = $this->session->userdata('id_rol');
+        $extraInner = '';
+        $extraWhere = '';
+	    if($id_rol==54){
+            $extraInner = 'INNER JOIN prospectos pr ON cl.id_prospecto=pr.id_prospecto';
+            $extraWhere = " AND pr.source='DragonCEM'";
+        }
 		$where = '';
+
 		if($cliente != ''){
 			$where = "l.status = 1 AND ds.desarrollo IS NOT NULL AND cl.idLote = $lotes AND cl.id_cliente = $cliente";
 		} else {
@@ -5194,13 +5214,23 @@ WHERE idLote IN ('".$row['idLote']."') and nombreLote = '".$insert_csv['nombreLo
 		LEFT JOIN usuarios u2 ON u2.id_usuario = cl.id_gerente
 		LEFT JOIN usuarios u3 ON u3.id_usuario = cl.id_subdirector
 		LEFT JOIN usuarios u4 ON u4.id_usuario = cl.id_regional
-		WHERE $where");
+		".$extraInner."
+		WHERE ".$where.$extraWhere);
 		return $query->result_array();
 
 	}
 
 
 	public function get_auts_by_loteAll($idLote, $cliente= ''){
+        $id_rol = $this->session->userdata('id_rol');
+        $extraInner = '';
+        $extraWhere = '';
+        if($id_rol==54){
+            $extraInner = 'INNER JOIN prospectos pr ON cl.id_prospecto=pr.id_prospecto';
+            $extraWhere = " AND pr.source='DragonCEM'";
+        }
+
+
 		$where = '';
 		if($cliente != ''){
 			$where = "l.idLote = $idLote AND cl.id_cliente = $cliente";
@@ -5227,12 +5257,21 @@ WHERE idLote IN ('".$row['idLote']."') and nombreLote = '".$insert_csv['nombreLo
 		LEFT JOIN usuarios u2 ON u2.id_usuario = cl.id_gerente
 		LEFT JOIN usuarios u3 ON u3.id_usuario = cl.id_subdirector
 		LEFT JOIN usuarios u4 ON u4.id_usuario = cl.id_regional
-		WHERE $where");
+		".$extraInner."
+		WHERE ".$where.$extraWhere);
 		return $query->result_array();
 	}
 
 	public function getsProspeccionData($idLote,$cliente='')
 	{
+        $id_rol = $this->session->userdata('id_rol');
+        $extraInner = '';
+        $extraWhere = '';
+        if($id_rol==54){
+            $extraInner = 'INNER JOIN prospectos pr ON cl.id_prospecto=pr.id_prospecto';
+            $extraWhere = " AND pr.source='DragonCEM'";
+        }
+
 		$where = '';
 		if($cliente != ''){
 			$where = "l.status = 1 AND cl.idLote = $idLote AND cl.id_cliente = $cliente";
@@ -5256,13 +5295,22 @@ WHERE idLote IN ('".$row['idLote']."') and nombreLote = '".$insert_csv['nombreLo
 		LEFT JOIN usuarios u2 ON u2.id_usuario = cl.id_gerente
 		LEFT JOIN usuarios u3 ON u3.id_usuario = cl.id_subdirector
 		LEFT JOIN usuarios u4 ON u4.id_usuario = cl.id_regional
-		WHERE $where");
+		".$extraInner."
+		WHERE ". $where.$extraWhere);
 		return $query->result_array();
 
 	}
 
     public function getEVMTKTD($idLote,$cliente = '')
     {
+        $id_rol = $this->session->userdata('id_rol');
+        $extraInner = '';
+        $extraWhere = '';
+        if($id_rol==54){
+            $extraInner = 'INNER JOIN prospectos pr ON cl.id_prospecto=pr.id_prospecto';
+            $extraWhere = " AND pr.source='DragonCEM'";
+        }
+
 
 		$complemento = '';
 		if($cliente != ''){
@@ -5289,7 +5337,8 @@ WHERE idLote IN ('".$row['idLote']."') and nombreLote = '".$insert_csv['nombreLo
 		LEFT JOIN usuarios u2 ON u2.id_usuario = cl.id_gerente
 		LEFT JOIN usuarios u3 ON u3.id_usuario = cl.id_subdirector
 		LEFT JOIN usuarios u4 ON u4.id_usuario = cl.id_regional
-        WHERE cl.status=1 AND l.status=1 AND ec.estatus=3 AND cl.idLote=".$idLote. $complemento);
+		".$extraInner."
+        WHERE cl.status=1 AND l.status=1 AND ec.estatus=3 AND cl.idLote=".$idLote. $complemento.$extraWhere  );
         return $query->result_array();
     }
 
