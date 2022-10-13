@@ -367,11 +367,31 @@ function fillTableReport(dataObject) {
             [10, 25, 50, "Todos"]
         ],
         columns: [
-           {data: "proyecto"},
-           {data: "condominio"},
-           {data: "nombreLote"},
-           {data: "idLote"},
-           {data: "total_lotes"}
+            {
+                data: function (d) {
+                    return d.proyecto;
+                }
+            },
+            {
+                data: function (d) {
+                    return d.condominio;
+                }
+            },
+            {
+                data: function (d) {
+                    return d.nombreLote;
+                }
+            },
+            {
+                data: function (d) {
+                    return d.idLote;
+                }
+            },
+            {
+                data: function (d) {
+                    return d.total_lotes;
+                }
+            }
         ]
     });
 }
