@@ -151,7 +151,7 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, dates=n
 }
 
 function createAccordions(option, render, rol){
-    let tittle = "En la presente vista se podra visualizar un reporte de ventas agrupadas por periodo y asesor"
+    let tittle = "En la presente vista se podrá visualizar un reporte de ventas agrupadas por periodo y asesor."
     let html = '';
     html = `<div data-rol="${rol}" class="bk ${render == 1 ? 'parentTable': 'childTable'}">
                 <div class="d-flex justify-between align-center">   
