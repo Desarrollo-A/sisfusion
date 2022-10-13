@@ -452,6 +452,7 @@ class Reporte_model extends CI_Model {
         ISNULL(CAST((f.totalCanA * 100) / NULLIF(a.totalVentas,0) AS decimal(16,2)), 0) porcentajeTotalCanA, 
         --ISNULL(CAST(((ISNULL(b.totalCT, 0) - ISNULL(e.totalCanC, 0)) * 100) / NULLIF(a.totalVentas,0) AS decimal(16,2)), 0) porcentajeTotalCanA,
         a.id_sede,
+        
         a.sede
         FROM (
         --SUMA TOTAL
