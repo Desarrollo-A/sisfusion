@@ -56,27 +56,19 @@
                                     <h3 class="card-title center-align">Lista de usuarios</h3>
                                     <div class="table-responsive">
                                         <div class="material-datatables">
-                                            <table id="all_users_datatable" class="table-striped table-hover text-center">
+                                        <table id="all_users_datatable" class="table-striped table-hover text-center">
                                                 <thead>
-                                                    <tr>
-                                                        <th class="disabled-sorting">ESTATUS</th>
-                                                        <th class="disabled-sorting">ID</th>
-                                                        <th class="disabled-sorting">NOMBRE</th>
-                                                        <th class="disabled-sorting">CORREO</th>
-                                                        <th class="disabled-sorting">TELÉFONO</th>
-                                                        <th class="disabled-sorting">TIPO</th>
-                                                        <th class="disabled-sorting">SEDE</th>
-                                                        <th class="disabled-sorting">COORDINADOR</th>
-                                                        <th class="disabled-sorting">GERENTE</th>
-                                                        <th class="disabled-sorting">SUBDIRECTOR</th>
-                                                        <th class="disabled-sorting">DIRECTOR REGIONAL</th>
-                                                        <th class="disabled-sorting">TALLA</th>
-                                                        <th class="disabled-sorting">GÉNERO</th>
-                                                        <th class="disabled-sorting">HIJOS + 12</th>
-                                                        <th class="disabled-sorting">REINGRESO</th>
-                                                        <th class="disabled-sorting">BAJA</th>
-                                                        <th class="disabled-sorting">ACCIONES</th>
-                                                    </tr>
+                                                <tr>
+                                                    <th class="disabled-sorting text-right">ESTATUS</th>
+                                                    <th class="disabled-sorting text-right">ID</th>
+                                                    <th class="disabled-sorting text-right">NOMBRE</th>
+                                                    <th class="disabled-sorting text-right">CORREO</th>
+                                                    <th class="disabled-sorting text-right">TELÉFONO</th>
+                                                    <th class="disabled-sorting text-right">TIPO</th>
+                                                    <th class="disabled-sorting text-right">SEDE</th>
+                                                    <th class="disabled-sorting text-right">JEFE DIRECTO</th>
+                                                    <th class="disabled-sorting text-right">ACCIONES</th>
+                                                </tr>
                                                 </thead>
                                             </table>
                                         </div>
@@ -99,19 +91,19 @@
                                                                 <div class="col-sm-4">
                                                                     <div class="form-group label-floating div_name">
                                                                         <label class="control-label"><span class="isRequired">*</span>Nombre</label>
-                                                                        <input id="name" name="name" type="text" class="form-control input-gral" required>
+                                                                        <input id="name" name="name" onkeyup="javascript:this.value=this.value.toUpperCase();" onchange="validateInputs(this);" type="text" class="form-control input-gral" required>
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-sm-4">
                                                                     <div class="form-group label-floating div_last_name">
                                                                         <label class="control-label"><small class="isRequired"></small>Apellido paterno</label>
-                                                                        <input id="last_name" name="last_name" type="text" class="form-control input-gral" required>
+                                                                        <input id="last_name" onkeyup="javascript:this.value=this.value.toUpperCase();" onchange="validateInputs(this);" name="last_name" type="text" class="form-control input-gral" required>
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-sm-4">
                                                                     <div class="form-group label-floating div_mothers_last_name">
                                                                         <label class="control-label">Apellido materno</label>
-                                                                        <input id="mothers_last_name" name="mothers_last_name" type="text" class="form-control input-gral">
+                                                                        <input id="mothers_last_name" onkeyup="javascript:this.value=this.value.toUpperCase();" onchange="validateInputs(this);" name="mothers_last_name" type="text" class="form-control input-gral">
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -119,7 +111,7 @@
                                                                 <div class="col-sm-3">
                                                                     <div class="form-group label-floating div_rfc">
                                                                         <label class="control-label"><small class="isRequired">*</small>RFC</label>
-                                                                        <input id="rfc" name="rfc" type="text" class="form-control input-gral" required maxlength="13" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
+                                                                        <input id="rfc" name="rfc" onkeyup="javascript:this.value=this.value.toUpperCase();" onchange="validateInputs(this);" type="text" class="form-control input-gral" required maxlength="13" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-sm-3">
@@ -132,7 +124,7 @@
                                                                 <div class="col-sm-3">
                                                                     <div class="form-group label-floating div_email">
                                                                         <label class="control-label"><small class="isRequired">*</small>Correo electrónico </label>
-                                                                        <input id="email" name="email" type="email" class="form-control input-gral pl-1 pr-1" required>
+                                                                        <input id="email" name="email" type="email" onkeyup="javascript:this.value=this.value.toUpperCase();" onchange="validateInputs(this);" class="form-control input-gral pl-1 pr-1" required>
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-sm-3">
@@ -165,41 +157,7 @@
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                            <div class="row">
-                                                                <div class="col-sm-3">
-                                                                    <div class="form-group label-floating select-is-empty div_talla">
-                                                                        <label class="control-label">Talla</label>
-                                                                        <input id="talla" name="talla" type="numeric" class="form-control input-gral pl-1 pr-1">
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-sm-3">
-                                                                    <div class="form-group label-floating">
-                                                                        <label class="control-label">Sexo</label>
-                                                                        <select class="selectpicker select-gral m-0" id="sexo" name="sexo" data-style="btn" data-show-subtext="true" data-live-search="true" title="Seleccione una opción" data-size="7" data-container="body" required>
-                                                                            <option value="S">Sin especificar</option>
-                                                                            <option value="H">Masculino</option>
-                                                                            <option value="M">Femenino</option>
-                                                                        </select>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-sm-3">
-                                                                    <div class="form-group label-floating select-is-empty div_leader">
-                                                                        <label class="control-label">¿Hijos?</label>
-                                                                        <select class="selectpicker select-gral m-0" id="hijos" name="hijos" data-style="btn" data-show-subtext="true" data-live-search="true" title="Seleccione una opción" data-size="7" data-container="body" required>
-                                                                            <option value="SI">Sí</option>
-                                                                            <option value="NO">No</option>
-                                                                        </select>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-sm-3">
-                                                                    <div class="form-group label-floating select-is-empty div_nohijos">
-                                                                        <label class="control-label">No. hijos</label>
-                                                                        <input id="noHijos" name="noHijos" type="numeric" class="form-control input-gral pl-1 pr-1">
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="container-fluid mt-1" id="ch">
+                                                            <div class="container-fluid mt-1" id="ch">
                                                             <div class="row">
                                                                 <div class="col-md-12 d-flex justify-end">
                                                                     <div class="boxIcon" data-html="true" data-toggle="tooltip" data-placement="bottom" title="Sede capital humano y sucursal capital humano.<br/><br/>Son información que se solicita de manera adicional para mantener actualizado tanto el sistema de Capital Humano como CRM actualizados.">
@@ -249,9 +207,9 @@
                                                                 </div>
                                                                 <div class="row">
                                                                     <div class="col-md-12 d-flex justify-end">
-                                                                        <button type="submit" class="btn btn-primary mt-1">Aceptar</button>
-                                                                        <button type="button" class="btn btn-danger btn-simple mt-1" data-dismiss="modal">Cancelar
+                                                                    <button type="button" class="btn btn-danger btn-simple mt-1" data-dismiss="modal">Cancelar
                                                                         </button>
+                                                                        <button type="submit" class="btn btn-primary mt-1">Aceptar</button>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -287,10 +245,10 @@
                                                         </div>
                                                     </div>
                                                     <div class="modal-footer">
-                                                        <button type="submit" class="btn btn-primary" id="btnS">Aceptar
-                                                        </button>
-                                                        <button type="button" class="btn btn-danger btn-simple"
+                                                    <button type="button" class="btn btn-danger btn-simple"
                                                                 onclick="CloseModalBaja()">Cancelar
+                                                        </button>
+                                                        <button type="submit" class="btn btn-primary" id="btnS">Aceptar
                                                         </button>
                                                     </div>
                                                 </form>
@@ -316,10 +274,11 @@
                                                         <input type="hidden" name="status" id="status">
                                                     </div>
                                                     <div class="modal-footer">
-                                                        <button type="submit" class="btn btn-primary" id="btnSub">Aceptar
-                                                        </button>
+                                                        
                                                         <button type="button" class="btn btn-danger btn-simple"
                                                                 onclick="BajaConfirmM()">Cancelar
+                                                        </button>
+                                                        <button type="submit" class="btn btn-primary" id="btnSub">Aceptar
                                                         </button>
                                                     </div>
                                                 </form>
