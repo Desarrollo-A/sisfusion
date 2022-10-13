@@ -54,7 +54,7 @@ $("#tabla_nuevas_comisiones").ready(function() {
                     var hora = hoy.getHours();
                     var minuto = hoy.getMinutes();
 
-                    if (((mes == 10 && dia == 10) || (mes == 10 && dia == 11 && hora <= 13)) ||
+                    if (((mes == 10 && dia == 12) || (mes == 10 && dia == 12 && hora <= 20)) ||
                     ((mes == 11 && dia == 7) || (mes == 11 && dia == 8 && hora <= 13)) ||
                     ((mes == 12 && dia == 12) || (mes == 12 && dia == 13 && hora <= 13))){
 
@@ -268,7 +268,7 @@ $("#tabla_nuevas_comisiones").ready(function() {
 
 
 
-                if (((mes == 10 && dia == 10) || (mes == 10 && dia == 11 && hora <= 13)) ||
+                if (((mes == 10 && dia == 12) || (mes == 10 && dia == 12 && hora <= 20)) ||
                 ((mes == 11 && dia == 7) || (mes == 11 && dia == 8 && hora <= 13)) ||
                 ((mes == 12 && dia == 12) || (mes == 12 && dia == 13 && hora <= 13)))
                 {
@@ -909,7 +909,7 @@ $("#tabla_pausadas_comisiones").ready(function() {
         ajax: {
             url: general_base_url + "Suma/getComisionesByStatus",
             type: "POST",
-            data: {estatus: 5},
+            data: {estatus: 4},
             dataType: 'json',
             dataSrc: ""
         },
@@ -967,7 +967,7 @@ $(document).on("click", ".subir_factura_multiple", function() {
     var hora = hoy.getHours();
     var minuto = hoy.getMinutes();
 
-    if (((mes == 10 && dia == 10) || (mes == 10 && dia == 11 && hora <= 13)) || ((mes == 11 && dia == 7) || (mes == 11 && dia == 8 && hora <= 13)) || ((mes == 12 && dia == 12) || (mes == 12 && dia == 13 && hora <= 13))){
+    if (((mes == 10 && dia == 12) || (mes == 10 && dia == 12 && hora <= 20)) || ((mes == 11 && dia == 7) || (mes == 11 && dia == 8 && hora <= 13)) || ((mes == 12 && dia == 12) || (mes == 12 && dia == 13 && hora <= 13))){
 
     $("#modal_multiples .modal-body").html("");
     $("#modal_multiples .modal-header").html("");
