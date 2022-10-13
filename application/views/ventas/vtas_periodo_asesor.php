@@ -54,7 +54,7 @@
 			<div class="modal-body" style="padding-botom:0px">
                 <div class="row">
                     <div class="col-md-12">
-                        <table id="lotesInfoTableVtas"  class="table-striped table-hover">
+                        <table id = "lotesInfoTableVtas" name = "lotesInfoTableVtas" class="table-striped table-hover">
                             <thead>
                                 <tr>
                                     <th>Proyecto</th>

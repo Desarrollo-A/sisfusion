@@ -289,6 +289,10 @@ $(document).on('click', '.btnModalDetails', function () {
 });
 
 function fillTableReport(dataObject) {
+    $('#lotesInfoTableVtas thead tr:eq(0) th').each(function (i) {
+        const title = $(this).text();
+        $(this).html('<input type="text" class="w-100 textoshead"  placeholder="' + title + '"/>');
+    });
     $("#lotesInfoTableVtas").DataTable({
         destroy: true,
         ajax: {
