@@ -791,6 +791,7 @@ class Reporte_model extends CI_Model {
         CASE co.tipo_lote WHEN 1 THEN 'COMERCIAL' ELSE 'HABITACIONAL' END,
         CASE lo.casa WHEN 1 THEN 'SÍ' ELSE 'NO' END");
         return $data;
+        
     }
     public function getReporteTrimestral($beginDate, $endDate){
         $query=$this->db->query("SELECT t.nombreResidencial as nombreResidencial, t.nombreCondominio as nombreCondominio, t.nombreLote as nombreLote, t.precioFinal as precioFinal, t.referencia as referencia,
