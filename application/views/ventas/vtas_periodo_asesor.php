@@ -1,11 +1,8 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
+<link href="<?= base_url() ?>dist/css/commonModals.css" rel="stylesheet"/>
 <link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet"/>
 <link href="<?= base_url() ?>dist/css/reportDasboard.css" rel="stylesheet"/>
-<style>
-        table.dataTable > thead > tr > th, table.dataTable > tbody > tr > th, table.dataTable > tfoot > tr > th, table.dataTable > thead > tr > td, table.dataTable > tbody > tr > td, table.dataTable > tfoot > tr > td {
-        white-space: nowrap!important;
-    }
-    </style>
+<link href="<?= base_url() ?>dist/css/common_modals_vtas/modals_vtas.css" rel="stylesheet"/>
 <body>
     
     <div class="wrapper">
@@ -43,9 +40,44 @@
     </div>
     </div><!-- main-panel close -->
 
-    <?php $this->load->view('template/footer');?>
+
 </body>
 
+<!-- Modals -->
+<div class="modal fade" id="seeInfoModalRepoVtas" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title">Lotes Vendidos por Asesor</h4>
+			</div>
+			<div class="modal-body" style="padding-botom:0px">
+                <div class="row">
+                    <div class="col-md-12">
+                        <table id = "lotesInfoTableVtas" name = "lotesInfoTableVtas" class="table-striped table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Proyecto</th>
+                                    <th>Condominio</th>
+                                    <th>Lote</th>
+                                    <th>ID Lote</th>
+                                    <th>Total de Lote</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cerrar</button>
+			</div>
+	    </div>
+	</div>
+</div>
+<!-- END Modals -->
+
+
+<?php $this->load->view('template/footer');?>
 <!--DATATABLE BUTTONS DATA EXPORT-->
 <script src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.flash.min.js"></script>
@@ -60,3 +92,4 @@
 <!--  Full Calendar Plugin    -->
 <!-- MODAL WIZARD -->
 <script src="<?=base_url()?>dist/js/controllers/ventas/repoVtasDetalle.js"></script>
+

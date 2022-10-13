@@ -794,6 +794,7 @@ class Reporte_model extends CI_Model {
         return $data;
         
     }
+    
     public function getReporteTrimestral($beginDate, $endDate){
         $query=$this->db->query("SELECT t.nombreResidencial as nombreResidencial, t.nombreCondominio as nombreCondominio, t.nombreLote as nombreLote, t.precioFinal as precioFinal, t.referencia as referencia,
         t.nombreAsesor as nombreAsesor, t.fechaApartado as fechaApartado, t.nombreSede as nombreSede, t.tipo_venta as tipo_venta, t.fechaEstatus9 as fechaEstatus9
