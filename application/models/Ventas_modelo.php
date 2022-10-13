@@ -69,7 +69,7 @@ class Ventas_modelo extends CI_Model {
 		ON LO.idCondominio = CO.idCondominio
 		INNER JOIN residenciales AS RE
 		ON CO.idResidencial = RE.idResidencial
-		WHERE CL.id_asesor = $id_asesor ");
+		WHERE CL.id_asesor = $id_asesor AND CL.status = 1");
 		return $query;
 	}
 }
