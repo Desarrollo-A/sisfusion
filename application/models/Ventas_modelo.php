@@ -52,5 +52,24 @@ class Ventas_modelo extends CI_Model {
 		ORDER BY periodo");
 		return $query;
 	}
-
+	public function GetInfoDetalleVta($id_asesor){
+		$query = $this->db->query("SELECT CAST(RE.descripcion AS varchar) AS proyecto, CO.nombre AS condominio, 
+		LO.nombreLote AS nombreLote, LO.idLote AS idLote, FORMAT(LO.total_lotes, 'C') AS total_lotes
+		FROM clientes AS CL
+		INNER JOIN (SELECT idLote, idCliente, idCondominio, nombre_lote, nombreLote,
+					CASE 
+						WHEN totalNeto2 IS NULL OR totalNeto2 = 0 THEN
+							total
+						ELSE
+							totalNeto2
+					END AS total_lotes
+					FROM lotes) AS LO
+		ON CL.idLote = LO.idLote
+		INNER JOIN condominios AS CO
+		ON LO.idCondominio = CO.idCondominio
+		INNER JOIN residenciales AS RE
+		ON CO.idResidencial = RE.idResidencial
+		WHERE CL.id_asesor = $id_asesor ");
+		return $query;
+	}
 }

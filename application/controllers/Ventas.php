@@ -51,11 +51,24 @@ class Ventas extends CI_Controller {
     }
 
     public function getInfRepoVta(){
-        
         $data = $this->Ventas_modelo->getGralInfRepoVta()->result_array();
         if($data != null) {
             echo json_encode($data);
         } else {
+            echo json_encode(array());
+        }
+    }
+    
+    public function getInfDetVta(){
+        if (isset($_POST) && !empty($_POST)) {
+            $id_asesor = $this->input->post("user");
+            $data = $this->Ventas_modelo->GetInfoDetalleVta($id_asesor)->result_array();
+            if($data != null) {
+                echo json_encode($data);
+            } else {
+                echo json_encode(array());
+            }
+        }else{
             echo json_encode(array());
         }
     }

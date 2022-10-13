@@ -6,7 +6,6 @@ $(document).ready(function(){
 });
 function repoVtas(){
     initRepoVtas();
-    $('[data-toggle="tooltip"]').tooltip();
 }
 async function initRepoVtas(){
     let rol = userType == 2 ? await getRolDR(idUser): userType;
@@ -99,8 +98,10 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, dates=n
                 }
             }
         ],
-        pagingType: "full_numbers",
-          
+        lengthMenu: [
+            [10, 25, 50, -1],
+            [10, 25, 50, "Todos"]
+        ],
         language: {
             url: `${base_url}static/spanishLoader_v2.json`,
             paginate: {
@@ -130,7 +131,7 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, dates=n
             {
                 with: "30%",
                 data: function (d){
-                    return d.num_lotes;
+                    return `<button style="background-color: #d8dde2; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="5" data-idUser="${d.id_asesor}" class="btnModalDetails">${d.num_lotes}</button>`;
                 }
             },
             {
@@ -147,7 +148,6 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, dates=n
             }
         ]
     });
-    $('[data-toggle="tooltip"]').tooltip();
 }
 
 function createAccordions(option, render, rol){
@@ -278,3 +278,86 @@ $(document).off('click', '.js-accordion-title').on('click', '.js-accordion-title
 $(document).on('click', '.deleteTable', function () {
     accordionToRemove($(this).parent().parent().parent().data( "rol" ));
 });
+
+$(document).on('click', '.btnModalDetails', function () {
+    let dataObject = {
+        user: $(this).data("iduser")
+    }
+    //console.log(dataObject);
+    fillTableReport(dataObject);
+    $("#seeInfoModalRepoVtas").modal();
+});
+
+function fillTableReport(dataObject) {
+    $("#lotesInfoTableVtas").DataTable({
+        destroy: true,
+        ajax: {
+            url: 'getInfDetVta',
+            dataSrc: "",
+            type: "POST",
+            cache: false,
+            data: {
+                "user": dataObject.user
+            }
+        },
+        dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
+        width: "auto",
+        ordering: false,
+        pagingType: "full_numbers",
+        scrollX: true,
+        columnDefs: [{
+            visible: false,
+            searchable: false
+        }],
+        buttons: [
+            {
+                extend: 'excelHtml5',
+                text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
+                className: 'btn buttons-excel',
+                titleAttr: 'Descargar archivo de Excel',
+                exportOptions: {
+                    columns: [0, 1, 2, 3, 4],
+                    format: {
+                        header: function (d, columnIdx) {
+                            switch (columnIdx) {
+                                case 0:
+                                    return 'Proyecto';
+                                    break;
+                                case 1:
+                                    return 'Condominio';
+                                    break;
+                                case 2:
+                                    return 'Lote'
+                                    break;
+                                case 3:
+                                    return 'ID Lote';
+                                    break;
+                                case 4:
+                                    return 'Total de Lote';
+                                    break;
+                            }
+                        }
+                    }
+                }
+            }
+        ],
+        language: {
+            url: `${base_url}static/spanishLoader_v2.json`,
+            paginate: {
+                previous: "<i class='fa fa-angle-left'>",
+                next: "<i class='fa fa-angle-right'>"
+            }
+        },
+        lengthMenu: [
+            [10, 25, 50, -1],
+            [10, 25, 50, "Todos"]
+        ],
+        columns: [
+           {data: "proyecto"},
+           {data: "condominio"},
+           {data: "nombreLote"},
+           {data: "idLote"},
+           {data: "total_lotes"}
+        ]
+    });
+}
