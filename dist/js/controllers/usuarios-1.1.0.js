@@ -131,54 +131,6 @@ $(document).ready( function() {
                     return d.jefe_directo;
                 }
             },
-<<<<<<< HEAD
-            { data: function (d) {
-
-                var id_rol = id_rol_global;
-                // localStorage.getItem('id_rol');
-                if(id_rol == 8 && d.estatus == 1){
-                    if (userId == 1297 || userId == 1) {
-                        return '<div class="d-flex justify-center"><button class="btn-data btn-blueMaderas edit-user-information" data-rol="'+d.id_rol+'" data-id-usuario="' + d.id_usuario +'"><i class="fas fa-pencil-alt"></i></button><button class="btn-data btn-orangeYellow  see-changes-log" data-id-usuario="' + d.id_usuario +'" ><i class="fas fa-eye"></i> </button>' +
-                            '<button class="btn-data btn-warning change-user-status" title="Dar de baja" id="' + d.id_usuario +'" data-estatus="0" data-id-usuario="' + d.id_usuario +'" data-name="'+d.nombre+'" data-rol="'+d.puesto+'"><i class="fas fa-lock"></i></button></div>';
-                    } else {
-                        return '<div class="d-flex justify-center"><button class="btn-data btn-orangeYellow  see-changes-log" data-id-usuario="' + d.id_usuario +'" ><i class="fas fa-eye"></i> </button>' +
-                            '<button class="btn-data btn-warning change-user-status" title="Dar de baja" id="' + d.id_usuario +'" data-estatus="0" data-id-usuario="' + d.id_usuario +'" data-name="'+d.nombre+'" data-rol="'+d.puesto+'"><i class="fas fa-lock"></i></button></div>';
-                    }
-                }else{
-                    if (userId == 1297 || userId == 1) {
-                        return '<div class="d-flex justify-center"><button class="btn-data btn-blueMaderas edit-user-information" data-rol="'+d.id_rol+'" data-id-usuario="' + d.id_usuario +'"><i class="fas fa-pencil-alt"></i></button><button class="btn-data btn-orangeYellow  see-changes-log" data-id-usuario="' + d.id_usuario +'" ><i class="fas fa-eye"></i> </button>' +
-                        '<button class="btn-data btn-green change-user-status" id="' + d.id_usuario +'" data-estatus="1" data-id-usuario="' + d.id_usuario +'" data-name="'+d.nombre+'" data-rol="'+d.puesto+'"><i class="fas fa-lock-open"></i></button></div>';
-                    } else {
-                        if(id_rol == 8 && userId != 1297 && d.puesto == 'Contraloría' && d.estatus == 0){
-                            return '<div class="d-flex justify-center"><button class="btn-data btn-orangeYellow  see-changes-log" data-id-usuario="' + d.id_usuario +'" ><i class="fas fa-eye"></i> </button>' +
-                            '<button class="btn-data btn-green change-user-status" id="' + d.id_usuario +'" data-estatus="1" data-id-usuario="' + d.id_usuario +'" data-name="'+d.nombre+'" data-rol="'+d.puesto+'"><i class="fas fa-lock-open"></i></button></div>';
-                        }
-                    }
-                }
-
-                if(id_rol==53){
-                    return '<button class="btn-data btn-azure see-changes-log" data-id-usuario="' + d.id_usuario +'"><span class="material-icons">visibility</span> </button>';
-                }else if(id_rol == 41){
-                    return '<div class="d-flex justify-center"><button class="btn-data btn-blueMaderas edit-user-information" data-rol="'+d.id_rol+'" data-id-usuario="' + d.id_usuario +'"><i class="fas fa-pencil-alt"></i></button>' +
-                    '<button class="btn-data btn-orangeYellow  see-changes-log" data-id-usuario="' + d.id_usuario +'" ><i class="fas fa-eye"></i> </button>' +
-                        '</div>';
-                }
-                else{
-                    if (d.estatus == 1) {
-                        return '<div class="d-flex justify-center"><button class="btn-data btn-blueMaderas edit-user-information" data-rol="'+d.id_rol+'" data-id-usuario="' + d.id_usuario +'"><i class="fas fa-pencil-alt"></i></button>' +
-                        '<button class="btn-data btn-orangeYellow  see-changes-log" data-id-usuario="' + d.id_usuario +'" ><i class="fas fa-eye"></i> </button>' +
-                            '<button class="btn-data btn-warning change-user-status" title="Dar de baja" id="' + d.id_usuario +'" data-estatus="0" data-id-usuario="' + d.id_usuario +'" data-name="'+d.nombre+'" data-rol="'+d.puesto+'"><i class="fas fa-lock"></i></button></div>';
-                    } else {
-                        if(d.puesto == 'Asesor' || d.puesto == 'Coordinador de ventas' || d.puesto == 'Gerente'){
-                            return '<div class="d-flex justify-center"><button class="btn-data btn-blueMaderas  edit-user-information" data-rol="'+d.id_rol+'" data-id-usuario="' + d.id_usuario +'"><i class="fas fa-pencil-alt"></i></button>' +
-                            '<button class="btn-data btn-orangeYellow see-changes-log" data-id-usuario="' + d.id_usuario +'" ><i class="fas fa-eye"></i></button>' +
-                                '</div>';
-                        }else{
-                            return '<div class="d-flex justify-center"><button class="btn-data btn-blueMaderas  edit-user-information" data-rol="'+d.id_rol+'" data-id-usuario="' + d.id_usuario +'"><i class="fas fa-pencil-alt"></i></button>' +
-                            '<button class="btn-data btn-orangeYellow see-changes-log" data-id-usuario="' + d.id_usuario +'" ><i class="fas fa-eye"></i></button>' +
-                            '<button class="btn-data btn-warning change-user-status" id="' + d.id_usuario +'" data-estatus="1" data-id-usuario="' + d.id_usuario +'" data-name="'+d.nombre+'" data-rol="'+d.puesto+'"><i class="fas fa-lock"></i></button>'+
-                            '</div>';
-=======
             {
                 data: function (d) {
                     return d.gerente == '  ' ? 'NO APLICA' : d.gerente;
@@ -285,15 +237,8 @@ $(document).ready( function() {
                                     '<button class="btn-data btn-warning change-user-status" id="' + d.id_usuario + '" data-estatus="1" data-id-usuario="' + d.id_usuario + '" data-name="' + d.nombre + '" data-rol="' + d.puesto + '"><i class="fas fa-lock"></i></button>' +
                                     '</div>';
                             }
->>>>>>> 14370a1bb7ea135523227214d2b90f2629d4ff44
                         }
                     }
-<<<<<<< HEAD
-                    
-                }
-
-=======
->>>>>>> 14370a1bb7ea135523227214d2b90f2629d4ff44
                 }
             }
         ],
