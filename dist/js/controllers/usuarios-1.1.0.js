@@ -20,7 +20,7 @@ $(document).ready( function() {
     $(".select-is-empty").removeClass("is-empty");
 
     $('#all_users_datatable thead tr:eq(0) th').each(function (i) {
-        if (i != 8) {
+        if (i != 16) {
             var title = $(this).text();
             $(this).html('<input type="text" style="width:100%; background:#003D82; color:white; border: 0; font-weight: 500;" class="textoshead"  placeholder="' + title + '"/>');
             $('input', this).on('keyup change', function () {
@@ -34,17 +34,22 @@ $(document).ready( function() {
         }
     });
 
+    // MJ: EJECUTAR FUNCIÓN PARA EL LLENADO DE LA DT
+    fillUsersTable();
+});
+
+function fillUsersTable() {
     $allUsersTable = $('#all_users_datatable').DataTable({
-        dom: 'Brt'+ "<'row'<'col-12 col-sm-12 col-md-6 col-lg-6'i><'col-12 col-sm-12 col-md-6 col-lg-6'p>>",
-        "buttons": [
+        dom: 'Brt' + "<'row'<'col-12 col-sm-12 col-md-6 col-lg-6'i><'col-12 col-sm-12 col-md-6 col-lg-6'p>>",
+        buttons: [
             {
                 extend: 'excelHtml5',
                 text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
                 className: 'btn buttons-excel',
                 titleAttr: 'Listado de usuarios',
-                title:'Listado de usuarios',
+                title: 'Listado de usuarios',
                 exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5, 6, 7],
+                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
                     format: {
                         header: function (d, columnIdx) {
                             switch (columnIdx) {
@@ -69,7 +74,31 @@ $(document).ready( function() {
                                     return 'SEDE';
                                     break;
                                 case 7:
-                                    return 'JEFE DIRECTO';
+                                    return 'COORDINADOR';
+                                    break;
+                                case 8:
+                                    return 'GERENTE';
+                                    break;
+                                case 9:
+                                    return 'SUBDIRECTOR';
+                                    break;
+                                case 10:
+                                    return 'DIRECTOR REGIONAL';
+                                    break;
+                                case 11:
+                                    return 'TALLA';
+                                    break;
+                                case 12:
+                                    return 'GÉNERO';
+                                    break;
+                                case 13:
+                                    return 'HIJOS + 12';
+                                    break;
+                                case 14:
+                                    return 'REINGRESO';
+                                    break;
+                                case 15:
+                                    return 'BAJA';
                                     break;
                             }
                         }
@@ -79,6 +108,7 @@ $(document).ready( function() {
         ],
         ordering: false,
         paging: true,
+        scrollX: true,
         pagingType: "full_numbers",
         lengthMenu: [
             [10, 25, 50, -1],
@@ -93,42 +123,50 @@ $(document).ready( function() {
         },
         destroy: true,
         columns: [
-            { data: function (d) {
-                if (d.estatus == 1) {
-                    return '<center><span class="label label-danger" style="background:#27AE60">Activo</span><center>';
-                } else if (d.estatus == 3) {
-                    return '<center><span class="label label-danger" style="background:#FF7C00">Inactivo comisionando</span><center>';
-                } else {
-                    return '<center><span class="label label-danger" style="background:#E74C3C">Inactivo</span><center>';
+            {
+                data: function (d) {
+                    if (d.estatus == 1) {
+                        return '<center><span class="label label-danger" style="background:#27AE60">Activo</span><center>';
+                    } else if (d.estatus == 3) {
+                        return '<center><span class="label label-danger" style="background:#FF7C00">Inactivo comisionando</span><center>';
+                    } else {
+                        return '<center><span class="label label-danger" style="background:#E74C3C">Inactivo</span><center>';
+                    }
                 }
-            }
-        },
-            { data: function (d) {
+            },
+            {
+                data: function (d) {
                     return d.id_usuario;
                 }
             },
-            { data: function (d) {
+            {
+                data: function (d) {
                     return d.nombre;
                 }
             },
-            { data: function (d) {
+            {
+                data: function (d) {
                     return d.correo;
                 }
             },
-            { data: function (d) {
+            {
+                data: function (d) {
                     return d.telefono;
                 }
             },
-            { data: function (d) {
+            {
+                data: function (d) {
                     return d.puesto;
                 }
             },
-            { data: function (d) {
+            {
+                data: function (d) {
                     return d.sede;
                 }
             },
-            { data: function (d) {
-                    return d.jefe_directo;
+            {
+                data: function (d) {
+                    return d.coordinador == '  ' ? 'NO APLICA' : d.coordinador;
                 }
             },
             {
@@ -185,7 +223,7 @@ $(document).ready( function() {
                                 //TODO SOPORTE  
                             return '<div class="d-flex justify-center"><button class="btn-data btn-orangeYellow  see-changes-log" data-id-usuario="' + d.id_usuario +'" ><i class="fas fa-eye"></i> </button>' +
                                 '<button class="btn-data btn-warning change-user-status" title="Dar de baja" id="' + d.id_usuario +'" data-estatus="0" data-id-usuario="' + d.id_usuario +'" data-name="'+d.nombre+'" data-rol="'+d.puesto+'"> <i class="fas fa-lock"></i></button>'+
-                                '<button class="btn-data btn-sky buscar-pass-user" title="Contraseña y usuario" data-id-usuario="' + d.id_usuario +'" data-name="'+d.nombre+'" data-rol="'+d.puesto+'"  id="buscar"> <span class="material-icons update-dataTable ">***</span></button>'+
+                                '<button class="btn-data btn-violetBoots buscar-pass-user" title="Contraseña y usuario" data-id-usuario="' + d.id_usuario +'" data-name="'+d.nombre+'" data-rol="'+d.puesto+'"  id="buscar"><i class="fas fa-user-cog"></i></button>'+
                                 '</div>';
                         }
 
@@ -200,14 +238,13 @@ $(document).ready( function() {
                                     return   '<div class="d-flex justify-center"><button class="btn-data btn-blueMaderas edit-user-information" data-rol="'+d.id_rol+'" data-id-usuario="' + d.id_usuario +'"><i class="fas fa-pencil-alt"></i></button>' +
                                     '<button class="btn-data btn-orangeYellow  see-changes-log" data-id-usuario="' + d.id_usuario +'" ><i class="fas fa-eye"></i> </button>' +
                                     '<button class="btn-data btn-green change-user-status" id="' + d.id_usuario +'" data-estatus="1" data-id-usuario="' + d.id_usuario +'" data-name="'+d.nombre+'" data-rol="'+d.puesto+'"><i class="fas fa-lock-open"></i></button>'+
-                                    '<button class="btn-data btn-sky btn-round btn-fab-mini btn-fab buscar-pass-user" title="Contraseña y usuario" data-id-usuario="' + d.id_usuario +'" data-name="'+d.nombre+'" data-rol="'+d.puesto+'"   id="buscar" ><span class="material-icons update-dataTable ">***</span></button>'+
+                                    '<button class="btn-data btn-violetBoots btn-round btn-fab-mini btn-fab buscar-pass-user" title="Contraseña y usuario" data-id-usuario="' + d.id_usuario +'" data-name="'+d.nombre+'" data-rol="'+d.puesto+'"   id="buscar" ><i class="fas fa-user-cog"></i></button>'+
                                     '</div>';
                                 }
                             if(id_rol == 8 && userId != 1297 && d.puesto == 'Contraloría' && d.estatus == 0){
                                 return '<div class="d-flex justify-center"><button class="btn-data btn-orangeYellow  see-changes-log" data-id-usuario="' + d.id_usuario +'" ><i class="fas fa-eye"></i> </button>' +
                                 '<button class="btn-data btn-green change-user-status" id="' + d.id_usuario +'" data-estatus="1" data-id-usuario="' + d.id_usuario +'" data-name="'+d.nombre+'" data-rol="'+d.puesto+'"><i class="fas fa-lock-open"></i></button>'+
                                 '</div>';
-                            
                             }
                         }
                     }
@@ -230,7 +267,6 @@ $(document).ready( function() {
                                 return '<div class="d-flex justify-center"><button class="btn-data btn-blueMaderas  edit-user-information" data-rol="' + d.id_rol + '" data-id-usuario="' + d.id_usuario + '"><i class="fas fa-pencil-alt"></i></button>' +
                                     '<button class="btn-data btn-orangeYellow see-changes-log" data-id-usuario="' + d.id_usuario + '" ><i class="fas fa-eye"></i></button>' +
                                     '</div>';
-                  
                                 } else {
                                 return '<div class="d-flex justify-center"><button class="btn-data btn-blueMaderas  edit-user-information" data-rol="' + d.id_rol + '" data-id-usuario="' + d.id_usuario + '"><i class="fas fa-pencil-alt"></i></button>' +
                                     '<button class="btn-data btn-orangeYellow see-changes-log" data-id-usuario="' + d.id_usuario + '" ><i class="fas fa-eye"></i></button>' +
@@ -250,8 +286,7 @@ $(document).ready( function() {
             }
         }
     });
-
-});
+}
 
 function showPassword() {
     if ($("#contrasena").attr("type") == "password") $("#contrasena").attr("type", "text");
@@ -527,7 +562,14 @@ $(document).on('click', '.edit-user-information', function(e){
     id_usuario = $(this).attr("data-id-usuario");
     $.getJSON("getUserInformation/"+id_usuario).done( function( data ){
         $.each( data, function(i, v){
-            getLeadersListForEdit(v.id_sede, v.id_rol, v.id_lider);
+            let leader;
+            if (v.id_rol == 9)
+                leader = v.gerente_id
+            else if (v.id_rol == 3)
+                leader = v.subdirector_id
+            else
+                leader = v.id_lider;
+            getLeadersListForEdit(v.id_sede, v.id_rol, leader);
             $("#editUserModal").modal();
             fillFields(v);
             validateEmptyFields(v);
@@ -568,26 +610,26 @@ function getSedesCH(sede = 0,sucursal = 0){
         var select = document.getElementsByName('sedech')[0];
         $.each( data.data, function(i, v){
             if(v.idsede != 7){
-                    var option = document.createElement("option");
-                    option.text = v.nom_sede;
-                    option.value = v.idsede;
-                    select.add(option);
-                    if(v.idsede == sede){
-                        $('#sedech').val(v.idsede);
-                        $.getJSON("getSucursalCH/"+sede).done( function( data2 ){
-                            var select = document.getElementsByName('sucursal')[0];
-                            $.each( data2.data, function(i, v){
-                                    var option = document.createElement("option");
-                                    option.text = v.nom_oficina;
-                                    option.value = v.idsucursal;
-                                    select.add(option);
-                                    if(v.idsucursal == sucursal){
-                                        $('#sucursal').selectpicker('refresh');
-                                        $('#sucursal').selectpicker('val',v.idsucursal);
-                                    }
-                            });
+                var option = document.createElement("option");
+                option.text = v.nom_sede;
+                option.value = v.idsede;
+                select.add(option);
+                if(v.idsede == sede){
+                    $('#sedech').val(v.idsede);
+                    $.getJSON("getSucursalCH/"+sede).done( function( data2 ){
+                        var select = document.getElementsByName('sucursal')[0];
+                        $.each( data2.data, function(i, v){
+                                var option = document.createElement("option");
+                                option.text = v.nom_oficina;
+                                option.value = v.idsucursal;
+                                select.add(option);
+                                if(v.idsucursal == sucursal){
+                                    $('#sucursal').selectpicker('refresh');
+                                $('#sucursal').selectpicker('val',v.idsucursal);
+                                }
                         });
-                    }
+                    });
+                }
             }
         });
         $('#sedech').selectpicker('refresh');
@@ -605,6 +647,15 @@ function fillFields (v) {
     $("#headquarter").val(v.id_sede);
     $("#member_type").val(v.id_rol);
     $("#lastTM").val(v.id_rol);
+    $("#talla").val(v.talla == null ? 0 : v.talla);
+    $("#sexo").val(v.sexo == null ? 'S' : v.sexo);
+    $("#hijos").val(v.tiene_hijos == null ? 'NO' : v.tiene_hijos);
+    $("#noHijos").val(v.hijos_12 == null ? 0 : v.hijos_12);
+    $('#payment_method').selectpicker('refresh');
+    $('#headquarter').selectpicker('refresh');
+    $('#member_type').selectpicker('refresh');
+    $('#sexo').selectpicker('refresh');
+    $('#hijos').selectpicker('refresh');
 
     $('#payment_method').selectpicker('refresh');
     $('#headquarter').selectpicker('refresh');
@@ -656,6 +707,10 @@ function validateEmptyFields (v) {
         $(".div_membertype").removeClass("is-empty");
     if (v.id_lider != '')
         $(".div_leader").removeClass("is-empty");
+    if (v.hijos_12 == '')
+        $(".div_nohijos").removeClass("is-empty");
+    if (v.talla != '')
+        $(".div_talla").removeClass("is-empty");
 }
 
 $("#editUserForm").on('submit', function(e){
@@ -762,10 +817,4 @@ function fillChangelogUsers(v) {
         '        </h6>\n' +
         '    </div>\n' +
         '</li>');
-}
-
-
-function validateInputs(t){
-    let id_input = t.id;
-    let value = t.value;
 }
