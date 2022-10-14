@@ -873,7 +873,7 @@
                         var hora = hoy.getHours();
                         var minuto = hoy.getMinutes();
 
-                         if (((mes == 10 && dia == 10) || (mes == 10 && dia == 11 && hora <= 13)) ||
+                         if (((mes == 09 && dia == 30) || (mes == 10 && dia == 11 && hora <= 13)) ||
                         ((mes == 11 && dia == 7) || (mes == 11 && dia == 8 && hora <= 13)) ||
                         ((mes == 12 && dia == 12) || (mes == 12 && dia == 13 && hora <= 13))){
 
@@ -1130,7 +1130,7 @@
     
 
 
-                        if (((mes == 10 && dia == 10) || (mes == 10 && dia == 11 && hora <= 13)) ||
+                        if (((mes == 09 && dia == 30) || (mes == 10 && dia == 11 && hora <= 13)) ||
                         ((mes == 11 && dia == 7) || (mes == 11 && dia == 8 && hora <= 13)) ||
                         ((mes == 12 && dia == 12) || (mes == 12 && dia == 13 && hora <= 13)))
                         {
@@ -2161,7 +2161,7 @@
             var hora = hoy.getHours();
             var minuto = hoy.getMinutes();
     
-             if (((mes == 10 && dia == 10) || (mes == 10 && dia == 11 && hora <= 13)) ||
+             if (((mes == 09 && dia == 30) || (mes == 10 && dia == 11 && hora <= 13)) ||
                 ((mes == 11 && dia == 7) || (mes == 11 && dia == 8 && hora <= 13)) ||
                 ((mes == 12 && dia == 12) || (mes == 12 && dia == 13 && hora <= 13)))
             {

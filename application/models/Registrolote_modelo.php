@@ -1213,38 +1213,7 @@ gerente2.nombreGerente as gerente2, gerente3.nombreGerente as gerente3, gerente4
 
 	}
 
-	public function finalStatus(){
-		/*$query = $this->db-> query('SELECT lotes.idLote, cliente.idCliente, lotes.nombreLote, lotes.idStatusContratacion, lotes.idMovimiento,
-			lotes.modificado, lotes.perfil, condominio.nombre as nombreCondominio, residencial.nombreResidencial, fechaVenc, comentario,
-			fechaSolicitudValidacion, gerente1.nombreGerente as gerente1, gerente2.nombreGerente as gerente2, gerente3.nombreGerente as gerente3,
-			 gerente4.nombreGerente as gerente4, gerente5.nombreGerente as gerente5, asesor1.nombreAsesor as asesor, asesor2.nombreAsesor as asesor2,
-			 asesor3.nombreAsesor as asesor3, asesor4.nombreAsesor as asesor4, asesor5.nombreAsesor as asesor5, lotes.firmaRL,
-			 lotes.validacionEnganche
-	        FROM lotes
-	        inner join cliente on getReportPost45.idLote = lotes.idLote
-	        INNER JOIN condominio ON lotes.idCondominio = condominio.idCondominio
-            INNER JOIN residencial ON condominio.idResidencial = residencial.idResidencial
-            inner join asesor on cliente.idAsesor = asesor.idAsesor
-			left JOIN asesor as asesor1 ON asesor1.idAsesor = cliente.idAsesor
-            left JOIN asesor as asesor2 ON asesor2.idAsesor = cliente.idAsesor2
-            left JOIN asesor as asesor3 ON asesor3.idAsesor = cliente.idAsesor3
-            left JOIN asesor as asesor4 ON asesor4.idAsesor = cliente.idAsesor4
-            left JOIN asesor as asesor5 ON asesor5.idAsesor = cliente.idAsesor5
-            INNER JOIN gerente on asesor.idGerente = gerente.idGerente
-		    left JOIN gerente as gerente1 ON asesor1.idGerente = gerente1.idGerente
-			left JOIN gerente as gerente2 ON asesor2.idGerente = gerente2.idGerente
-            left JOIN gerente as gerente3 ON asesor3.idGerente = gerente3.idGerente
-            LEFT JOIN gerente as gerente4 ON asesor4.idGerente = gerente4.idGerente
-            left JOIN gerente as gerente5 ON asesor5.idGerente = gerente5.idGerente
-	        where cliente.status = 1 and idStatusContratacion <> 15 and idMovimiento <> 45 group by lotes.idLote ');
-		return $query->result();*/
-
-
-        /*$this->db->join('clientes as cl', 'lotes.idLote=cl.idLote', 'INNER');
-        $this->db->join('condominios as cond', 'lotes.idCondominio=cond.idCondominio', 'INNER');
-        $this->db->join('residenciales as residencial', 'cond.idResidencial=residencial.idResidencial', 'INNER');
-        $this->db->join('usuarios as us', 'cl.id_asesor=us.id_usuario', 'INNER');
-        $this->db->join('usuarios as ge', 'ge.id_usuario=us.id_lider ', 'INNER');*/
+	public function finalStatus($id_sede){
 		$query = $this->db-> query("SELECT lotes.idLote, s.nombre as nombreSede, cl.id_cliente, cl.nombre, cl.apellido_paterno, cl.apellido_materno, lotes.nombreLote, 
         lotes.idStatusContratacion, lotes.idMovimiento, lotes.modificado, CAST(lotes.comentario AS varchar(MAX)) as comentario, 
         fechaVenc, lotes.perfil, residencial.nombreResidencial, cond.nombre as nombreCondominio, lotes.ubicacion, lotes.tipo_venta,
@@ -1254,7 +1223,7 @@ gerente2.nombreGerente as gerente2, gerente3.nombreGerente as gerente3, gerente4
         INNER JOIN clientes as cl ON lotes.idLote=cl.idLote
         LEFT JOIN sedes AS s ON s.id_sede = lotes.ubicacion
         INNER JOIN condominios as cond ON lotes.idCondominio=cond.idCondominio
-        INNER JOIN residenciales as residencial ON cond.idResidencial=residencial.idResidencial
+        INNER JOIN residenciales as residencial ON cond.idResidencial=residencial.idResidencial AND residencial.sede_residencial = $id_sede
         LEFT JOIN usuarios us ON cl.id_asesor=us.id_usuario
         LEFT JOIN usuarios coord ON cl.id_coordinador=coord.id_usuario
         LEFT JOIN usuarios as ge ON cl.id_gerente=ge.id_usuario 

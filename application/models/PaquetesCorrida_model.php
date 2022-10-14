@@ -13,7 +13,7 @@ class PaquetesCorrida_model extends CI_Model
 
     public function getTipoDescuento()
     {
-        return $this->db->query("select * from tipos_condiciones where id_tcondicion in(1,2,5,12,13)")->result_array();
+        return $this->db->query("select * from tipos_condiciones where id_tcondicion in(1,2,4,12,13)")->result_array();
     }
     public  function get_lista_sedes(){
     return $this->db->query("SELECT * FROM sedes where id_sede in(1,2,3,4,5,6,9) ORDER BY nombre");
@@ -32,12 +32,12 @@ class PaquetesCorrida_model extends CI_Model
     }
 
     public function UpdateLotes($desarrollos,$cadena_lotes,$query_superdicie,$query_tipo_lote,$usuario){
-        $this->db->query("UPDATE  l  
+        $this->db->query("UPDATE  l 
         set l.id_descuento = '$cadena_lotes',usuario='$usuario'
         from lotes l
         inner join condominios c on c.idCondominio=l.idCondominio 
         inner join residenciales r on r.idResidencial=c.idResidencial
-        where r.idResidencial in($desarrollos) 
+        where r.idResidencial in($desarrollos)  and l.idStatusLote!=2
         $query_superdicie
         $query_tipo_lote"); 
     }
@@ -176,7 +176,7 @@ public function getPaquetesByLotes($desarrollos,$query_superdicie,$query_tipo_lo
         from lotes l
         inner join condominios c on c.idCondominio=l.idCondominio 
         inner join residenciales r on r.idResidencial=c.idResidencial
-        where r.idResidencial in($desarrollos) AND id_descuento is not null
+        where l.idStatusLote!=2 and r.idResidencial in($desarrollos) AND id_descuento is not null
         $query_superdicie
         $query_tipo_lote")->result_array();
     }
@@ -190,7 +190,7 @@ public function getPaquetesByLotes($desarrollos,$query_superdicie,$query_tipo_lo
         inner join descuentos d on d.id_descuento=r.id_descuento
         inner join condiciones c on c.id_condicion = d.id_condicion
         inner join tipos_condiciones tc on tc.id_tcondicion=c.id_tcondicion
-        where r.id_paquete in ($id_paquete) and c.id_tcondicion=$id_tcondicion  order by tc.id_tcondicion asc")->result_array();
+        where r.id_paquete in ($id_paquete) and c.id_condicion=$id_tcondicion  order by r.prioridad asc")->result_array();
     }
     
 

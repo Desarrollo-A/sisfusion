@@ -1452,12 +1452,19 @@ public function get_sede(){
 		  $id_sede_jur = 2;
 		  $data_asig = $this->Contraloria_model->get_id_asig($assigned_location);
 		  $id_asig = $data_asig->contador;
-		  $arreglo["asig_jur"] = $id_asig == 2765 ? 2776 : ($id_asig == 2776 ? 10463 : 2765);
+		  $arreglo["asig_jur"] = $id_asig == 2765 ? 2876 : ($id_asig == 2876 ? 10463 : 2765);
 	  } else if ($assigned_location == 4) { // EXPEDIENTES CIUDAD DE MÉXICO
 		  $id_sede_jur = 4;
 		  $data_asig = $this->Contraloria_model->get_id_asig($assigned_location);
 		  $id_asig = $data_asig->contador;
-		  $arreglo["asig_jur"] = $id_asig == 2820 ? 10437 : ($id_asig == 10437 ? 2876 : 2820);
+
+		  if ($id_asig == 2820)
+			$assigned_user = 10437;
+		  else if ($id_asig == 10437)
+			$assigned_user = 2820;
+
+		  $arreglo["asig_jur"] = $assigned_user;
+
 		} else if ($assigned_location == 1) { // EXPEDIENTES SAN LUIS POTOSÍ
 			$id_sede_jur = 1;
 			$data_asig = $this->Contraloria_model->get_id_asig($assigned_location);

@@ -72,44 +72,6 @@ class Reporte_model extends CI_Model {
         GROUP BY MONTH(cl.fechaApartado), YEAR(cl.fechaApartado)) qu ON qu.mes = month(cte.DateValue) AND qu.año = year(cte.DateValue)
         GROUP BY Month(DateValue), YEAR(DateValue), cantidad, total";
 
-        /*$canceladasApartadas = "SELECT 
-            FORMAT(ISNULL(a.sumaCT, 0) - ISNULL(b.sumaCanC, 0), 'C') total,
-            ISNULL(a.totalCT, 0) - ISNULL(b.totalCanC, 0) cantidad,
-            MONTH(DateValue) mes, YEAR(DateValue) año, 'ca' tipo, '$rol' rol FROM cte
-            LEFT JOIN(
-                SELECT SUM(
-                    CASE 
-                        WHEN tempCT.totalNeto2 IS NULL THEN tempCT.total 
-                        WHEN tempCT.totalNeto2 = 0 THEN tempCT.total 
-                        ELSE tempCT.totalNeto2 
-                    END) sumaCT, COUNT(*) totalCT, tempCT.mes, tempCT.año FROM (
-                        SELECT MONTH(cl.fechaApartado) mes , YEAR(cl.fechaApartado) año, isNULL(cl.totalNeto2_cl, lo.totalNeto2) totalNeto2, isNull(cl.total_cl, lo.total) total FROM clientes cl
-                        INNER JOIN lotes lo ON lo.idLote = cl.idLote
-                        LEFT JOIN historial_liberacion hl ON hl.idLote = lo.idLote AND hl.tipo NOT IN (2, 5, 6) AND hl.idLote = lo.idLote AND hl.id_cliente = cl.id_cliente
-                        WHERE isNULL(noRecibo, '') != 'CANCELADO'  AND isNULL(isNULL(cl.tipo_venta_cl, lo.tipo_venta), 0) IN (0, 1, 2) AND cl.status = 0 AND cl.fechaApartado BETWEEN '$beginDate 00:00:00.000' AND '$endDate 23:59:00.000'  
-                        $condicion_x_rol
-                        GROUP BY MONTH(cl.fechaApartado), YEAR(cl.fechaApartado), isNull(cl.totalNeto2_cl, lo.totalNeto2), isNull(cl.total_cl, lo.total)
-                    ) tempCT GROUP BY tempCT.mes, tempCT.año
-                ) a ON a.mes = month(cte.DateValue) AND a.año =  year(cte.DateValue)
-                LEFT JOIN (
-                    SELECT SUM(
-                        CASE 
-                            WHEN tmpCC.totalNeto2 IS NULL THEN tmpCC.total 
-                            WHEN tmpCC.totalNeto2 = 0 THEN tmpCC.total 
-                            ELSE tmpCC.totalNeto2 
-                        END) sumaCanC, COUNT(*) totalCanC, tmpCC.mes, tmpCC.año FROM (
-                            SELECT  MONTH(cl.fechaApartado) mes , YEAR(cl.fechaApartado) año, isNULL(cl.totalNeto2_cl, lo.totalNeto2) totalNeto2, isNull(cl.total_cl, lo.total) total  FROM clientes cl
-                            INNER JOIN lotes lo ON lo.idLote = cl.idLote
-                            LEFT JOIN historial_liberacion hl ON hl.idLote = lo.idLote AND hl.tipo NOT IN (2, 5, 6) AND hl.id_cliente = cl.id_cliente
-                            INNER JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes WHERE idStatusContratacion = 11 AND idMovimiento = 41
-                            GROUP BY idLote, idCliente) hlo ON hlo.idLote = lo.idLote AND hlo.idCliente = cl.id_cliente
-                            WHERE isNULL(noRecibo, '') != 'CANCELADO'  AND isNULL(isNULL(cl.tipo_venta_cl, lo.tipo_venta), 0) IN (0, 1, 2) AND cl.status = 0  AND cl.fechaApartado BETWEEN '$beginDate 00:00:00.000' AND '$endDate 23:59:00.000' 
-                            $condicion_x_rol
-                            GROUP BY MONTH(cl.fechaApartado), YEAR(cl.fechaApartado), isNull(cl.totalNeto2_cl, lo.totalNeto2), isNull(cl.total_cl, lo.total)
-                    ) tmpCC GROUP BY tmpCC.mes, tmpCC.año
-                ) b ON b.mes = month(cte.DateValue) AND b.año =  year(cte.DateValue) 
-            GROUP BY Month(DateValue), YEAR(DateValue), a.sumaCT, b.sumaCanC, a.totalCT, b.totalCanC";*/
-
         if($coordinador){
             $ventasContratadas = $ventasContratadas . " UNION ALL " . $coordinadorVC;
 
@@ -163,10 +125,15 @@ class Reporte_model extends CI_Model {
     }
 
     public function setFilters($id_rol, $render, $filtro, $leadersList, $comodin2, $id_usuario, $id_lider, $typeTransaction = null, $leader = null) {
+        $current_rol = $this->session->userdata('id_rol');
         if ($id_rol == 7) { // ASESOR
             if ($render == 1) {
-                if ($typeTransaction == null) // SE CONSULTA DESDE EL ROWDETAIL O LA MODAL QUE SE TRAE EL DETALLE DE LOS LOTES
-                    $filtro .= " AND cl.id_asesor = $id_usuario";
+                if ($typeTransaction == null) { // SE CONSULTA DESDE EL ROWDETAIL O LA MODAL QUE SE TRAE EL DETALLE DE LOS LOTES
+                    if ($current_rol == 9) // SE VALIAD EL ROL LOGUEADO SÍ ES COORDINADOR SE AGREGA AND
+                        $filtro .= " AND cl.id_asesor = $id_usuario AND cl.id_coordinador = $leader";
+                    else
+                        $filtro .= " AND cl.id_asesor = $id_usuario";
+                }
                 else // SE CONSULTA DESDE LA TABLA PAPÁ
                     $filtro .= " AND (cl.id_asesor = $id_usuario OR cl.id_coordinador = $id_usuario)";
             }
@@ -189,10 +156,10 @@ class Reporte_model extends CI_Model {
             if ($render == 1) {  // CONSULTADA POR ASISTENTE DE GERENCIA
                 if ($typeTransaction == null) // SE CONSULTA DESDE EL ROWDETAIL O LA MODAL QUE SE TRAE EL DETALLE DE LOS LOTES
                     $filtro .= " AND cl.id_coordinador = $leadersList[1] AND cl.id_gerente = $leadersList[2]";
-                else // SE CONSULTA DESDE LA TABLA PAPÁ
-                    $filtro .= " AND cl.id_gerente = $id_lider";                
+                else // SE CONSULTA DESDE LA TABLA PAPÁ ANTES TENIA ID_GERENTE = $ID_LIDER
+                    $filtro .= " AND cl.id_coordinador = $id_usuario";                 
                 $comodin = "id_asesor";
-            } else { // CONSULTA DIRECTOR GENERAL, ASISTENTE DE DIRECCIÓN, FAB Y ABUELITO, SUBDIRECTOR REGIONAL, ASISTENTES DE SUBDIRECCIÓN REGIONAL
+            } else { // CONSULTA DIRECTOR GENERAL, ASISTENTE DE DIRECCIÓN, FAB Y LIC. GASTÓN, SUBDIRECTOR REGIONAL, ASISTENTES DE SUBDIRECCIÓN REGIONAL
                 if ($typeTransaction == null) // SE CONSULTA DESDE EL ROWDETAIL O LA MODAL QUE SE TRAE EL DETALLE DE LOS LOTES
                     $filtro .= " AND cl.id_coordinador = $leadersList[1] AND cl.id_gerente = $leadersList[2] AND cl.id_subdirector = $leadersList[3] AND cl.id_regional = $leadersList[4]";
                 else // SE CONSULTA DESDE LA TABLA PAPÁ
@@ -204,7 +171,7 @@ class Reporte_model extends CI_Model {
             if ($render == 1) {
                 $filtro .= " AND cl.id_gerente = $id_usuario";
                 $comodin = "id_coordinador";
-            } else {  // CONSULTA DIRECTOR GENERAL, ASISTENTE DE DIRECCIÓN, FAB Y ABUELITO, SUBDIRECTOR REGIONAL, ASISTENTES DE SUBDIRECCIÓN REGIONAL
+            } else {  // CONSULTA DIRECTOR GENERAL, ASISTENTE DE DIRECCIÓN, FAB Y LIC. GASTÓN, SUBDIRECTOR REGIONAL, ASISTENTES DE SUBDIRECCIÓN REGIONAL
                 if ($typeTransaction == null) // SE CONSULTA DESDE EL ROWDETAIL O LA MODAL QUE SE TRAE EL DETALLE DE LOS LOTES
                     $filtro .= " AND cl.id_gerente = $leadersList[2] AND cl.id_subdirector = $leadersList[3] AND cl.id_regional = $leadersList[4]";
                 else // SE CONSULTA DESDE LA TABLA PAPÁ
@@ -226,7 +193,10 @@ class Reporte_model extends CI_Model {
                 $filtro .= " AND cl.id_subdirector = $id_usuario";
                 $comodin = "id_gerente";
             } else { // CONSULTA NIVEL MÁS ALTO DIRECTOR GENERAL, ASISTENTE DE DIRECCIÓN, FAB Y ABUELITO
-                $filtro .= " AND cl.id_regional = $leadersList[4]"; // CON BASE EN UN REGIONAL SE TRAE LAS SUBDIRECCIONES
+                if ($typeTransaction == null) // SE CONSULTA DESDE EL ROWDETAIL O LA MODAL QUE SE TRAE EL DETALLE DE LOS LOTES
+                    $filtro .= " AND cl.id_subdirector = $leadersList[3] AND cl.id_regional = $leadersList[4]"; // CON BASE EN UN REGIONAL SE TRAE LAS SUBDIRECCIONES
+                else // SE CONSULTA DESDE LA TABLA PAPÁ
+                    $filtro .= " AND cl.id_regional = $leadersList[4]"; // CON BASE EN UN REGIONAL SE TRAE LAS SUBDIRECCIONES
                 $comodin = "id_subdirector";
             }
         }
@@ -250,12 +220,13 @@ class Reporte_model extends CI_Model {
         }
         else if ($id_rol == 59) { // CONSULTA UN DIRECTOR REGIONAL Y VA POR LOS SUBDIRECTORES
             if ($render == 1) { // CONSULTA LO DE SU REGION Y SI ES SUBDIRECTOR DE UNA SEDE TAMBIÉN TRAE LOS REGISTROS
-                $filtro .= " AND (cl.id_regional = $id_usuario /*OR cl.id_subdirector = $id_usuario*/)";
+                // SE DESCOMENTÓ EL OR DE SUBDIRECTOR PORQUE NO MOSTRABA ASÍ MISMO A CHUCHO
+                $filtro .= " AND (cl.id_regional = $id_usuario OR cl.id_subdirector = $id_usuario)";
                 $comodin = "id_subdirector";
             } else
                 $filtro .= "";
         }
-        else if ($id_rol == 1 || $id_rol == 4 || $id_rol == 18) { // CONSULTA DIRECTOR, ASISTENTE DE DIRECCIÓN, FAB Y ABUELITO
+        else if ($id_rol == 1 || $id_rol == 4 || $id_rol == 18 || $id_rol == 63) { // CONSULTA DIRECTOR, ASISTENTE DE DIRECCIÓN, FAB Y LIC. GASTÓN
             $comodin2 = 'LEFT';
             if ($render == 1) { // PRIMERA CARGA
                 $filtro .= "";
@@ -481,6 +452,7 @@ class Reporte_model extends CI_Model {
         ISNULL(CAST((f.totalCanA * 100) / NULLIF(a.totalVentas,0) AS decimal(16,2)), 0) porcentajeTotalCanA, 
         --ISNULL(CAST(((ISNULL(b.totalCT, 0) - ISNULL(e.totalCanC, 0)) * 100) / NULLIF(a.totalVentas,0) AS decimal(16,2)), 0) porcentajeTotalCanA,
         a.id_sede,
+        
         a.sede
         FROM (
         --SUMA TOTAL
@@ -730,6 +702,23 @@ class Reporte_model extends CI_Model {
     }
 
     public function getVentasConSinRecision($beginDate, $endDate){
+        $filtro_query = "";
+        $id_rol = $this->session->userdata('id_rol');
+        $id_usu = $this->session->userdata('id_usuario');
+        $id_lid = $this->session->userdata('id_lider');
+        if( ($id_rol !== 1 || $id_rol !== 4) ){
+            if ($id_rol == 9 || $id_rol == 7) { // COORDINADOR O ASESOR
+                $filtro_query = "AND cl.id_coordinador = $id_usu OR cl.id_asesor = $id_usu";
+            }elseif($id_rol == 3) { // GERENTE
+                $filtro_query = "AND cl.id_gerente = $id_usu";
+            }elseif($id_rol == 2){ //DIRECTORE REGIONAL O SUBDIRECTOR
+                $filtro_query = "AND cl.id_subdirector = $id_usu OR cl.id_regional = $id_usu";
+            }elseif($id_rol == 6) { // ASISNTENTE DE GERENTE
+                $filtro_query = "AND cl.id_gerente = $id_lid";
+            }elseif($id_rol == 5){ // ASISTENTE DE SUBDIRECCIÓN
+                $filtro_query = "AND cl.id_subdirector = $id_lid OR cl.id_regional = $id_lid";
+            }
+        }
         $data = $this->db->query("SELECT lo.idLote idLote, CAST(re.descripcion AS VARCHAR(150)) nombreResidencial, UPPER(co.nombre) nombreCondominio, UPPER(lo.nombreLote) nombreLote, 
         UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) nombreCliente,
         UPPER(CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno)) nombreAsesor,
@@ -755,7 +744,7 @@ class Reporte_model extends CI_Model {
         LEFT JOIN (SELECT id_cliente FROM ventas_compartidas WHERE estatus IN (1,2) GROUP BY id_cliente) vc ON vc.id_cliente = cl.id_cliente
         LEFT JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes WHERE idStatusContratacion = 9 AND idMovimiento = 39 AND status = 1 GROUP BY idLote, idCliente) hlo3 ON hlo3.idLote = lo.idLote AND hlo3.idCliente = cl.id_cliente
         LEFT JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes WHERE idStatusContratacion = 11 AND idMovimiento = 41 AND status = 1 GROUP BY idLote, idCliente) hlo5 ON hlo5.idLote = lo.idLote AND hlo5.idCliente = cl.id_cliente
-        WHERE isNULL(noRecibo, '') != 'CANCELADO' AND cl.fechaApartado BETWEEN '$beginDate 23:59:59.999' AND '$endDate 23:59:59.999' AND cl.status = 1
+        WHERE isNULL(noRecibo, '') != 'CANCELADO' AND cl.fechaApartado BETWEEN '$beginDate 23:59:59.999' AND '$endDate 23:59:59.999' AND cl.status = 1 $filtro_query
         GROUP BY lo.idLote, CAST(re.descripcion AS VARCHAR(150)), UPPER(co.nombre), UPPER(lo.nombreLote), 
         CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno),
         CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno),
@@ -792,7 +781,7 @@ class Reporte_model extends CI_Model {
         LEFT JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes WHERE idStatusContratacion = 9 AND idMovimiento = 39 AND status = 0 GROUP BY idLote, idCliente) hlo3 ON hlo3.idLote = lo.idLote AND hlo3.idCliente = cl.id_cliente
         LEFT JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes WHERE idStatusContratacion = 11 AND idMovimiento = 41 AND status = 0 GROUP BY idLote, idCliente) hlo5 ON hlo5.idLote = lo.idLote AND hlo5.idCliente = cl.id_cliente
         WHERE isNULL(noRecibo, '') != 'CANCELADO' AND cl.usuario NOT IN ('MARIA JOSE MARTINEZ MARTINEZ', 'DESARROLLO DESARROLLO DESARROLLO') AND cl.fechaApartado BETWEEN '$beginDate 23:59:59.999' AND '$endDate 23:59:59.999' AND cl.status = 0
-        AND isNULL(cl.tipo_venta_cl, 0) IN (0, 1, 2)
+        AND isNULL(cl.tipo_venta_cl, 0) IN (0, 1, 2) $filtro_query
         GROUP BY lo.idLote, CAST(re.descripcion AS VARCHAR(150)), UPPER(co.nombre), UPPER(lo.nombreLote), 
         CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno),
         CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno),
@@ -801,9 +790,11 @@ class Reporte_model extends CI_Model {
         cl.status, se.nombre, tv.tipo_venta, lo.referencia, vc.id_cliente,
         lo.total, lo.totalNeto2, cl.totalNeto2_cl, cl.fechaApartado, hlo3.modificado, hlo5.modificado,
         CASE co.tipo_lote WHEN 1 THEN 'COMERCIAL' ELSE 'HABITACIONAL' END,
-        CASE lo.casa WHEN 1 THEN 'SÍ' ELSE 'NO' END"); 
+        CASE lo.casa WHEN 1 THEN 'SÍ' ELSE 'NO' END");
         return $data;
+        
     }
+    
     public function getReporteTrimestral($beginDate, $endDate){
         $query=$this->db->query("SELECT t.nombreResidencial as nombreResidencial, t.nombreCondominio as nombreCondominio, t.nombreLote as nombreLote, t.precioFinal as precioFinal, t.referencia as referencia,
         t.nombreAsesor as nombreAsesor, t.fechaApartado as fechaApartado, t.nombreSede as nombreSede, t.tipo_venta as tipo_venta, t.fechaEstatus9 as fechaEstatus9

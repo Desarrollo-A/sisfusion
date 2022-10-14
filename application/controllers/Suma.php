@@ -51,12 +51,19 @@ class Suma extends CI_Controller
         $datos["opn_cumplimiento"] = $this->Usuarios_modelo->Opn_cumplimiento($this->session->userdata('id_usuario'))->result_array();
 
         $this->load->view('template/header');
-        $this->load->view("Ventas/comisiones_suma", $datos);
+        $this->load->view("ventas/comisiones_suma", $datos);
     }
 
     public function getComisionesByStatus(){
         $user = $this->session->userdata('id_usuario');
         $data = $this->Suma_model->getComisionesByStatus($_POST['estatus'], $user);
+        echo json_encode($data);
+    }
+
+    public function getAllComisiones(){
+        $user = $this->session->userdata('id_usuario');
+        $year = $_POST['anio'];
+        $data = $this->Suma_model->getAllComisiones($user, $year);
         echo json_encode($data);
     }
 
@@ -179,7 +186,6 @@ class Suma extends CI_Controller
         
             $up_b = $this->Suma_model->update_acepta_solicitante($id_pago_i);
             $ins_b = $this->Suma_model->insert_historial($data);
-            // $this->Comisiones_model->changeEstatusOpinion($id_user_Vl);
             if ($formaPagoUsuario == 5) {
                 $this->PagoInvoice_model->insertMany($pagoInvoice);
             }
@@ -191,7 +197,6 @@ class Suma extends CI_Controller
                 $data_response = 0;
                 echo json_encode($data_response);
             } 
-            
         }
         else{
             $data_response = 0;
@@ -206,19 +211,19 @@ class Suma extends CI_Controller
         date_default_timezone_set('America/Mexico_City');       
         $fecha_actual = strtotime(date("d-m-Y H:i:00"));
   
-        //fecha inicio
-        // $fecha_entrada2 = strtotime("07-02-2022 00:00:00");
-        // $fecha_entrada3 = strtotime("07-03-2022 00:00:00");
-        // $fecha_entrada4 = strtotime("11-04-2022 00:00:00");
-        // $fecha_entrada5 = strtotime("09-05-2022 00:00:00");
-        // $fecha_entrada6 = strtotime("13-06-2022 00:00:00");
-        // $fecha_entrada7 = strtotime("11-07-2022 00:00:00");
-        // $fecha_entrada8 = strtotime("08-08-2022 00:00:00");
-        // $fecha_entrada9 = strtotime("12-09-2022 00:00:00");
-        // $fecha_entrada10 = strtotime("10-10-2022 00:00:00");
-        // $fecha_entrada11 = strtotime("07-11-2022 00:00:00");
-        // $fecha_entrada12 = strtotime("12-12-2022 00:00:00");
-        //fecha fin
+        // fecha inicio
+        $fecha_entrada2 = strtotime("07-02-2022 00:00:00");
+        $fecha_entrada3 = strtotime("07-03-2022 00:00:00");
+        $fecha_entrada4 = strtotime("11-04-2022 00:00:00");
+        $fecha_entrada5 = strtotime("09-05-2022 00:00:00");
+        $fecha_entrada6 = strtotime("13-06-2022 00:00:00");
+        $fecha_entrada7 = strtotime("11-07-2022 00:00:00");
+        $fecha_entrada8 = strtotime("08-08-2022 00:00:00");
+        $fecha_entrada9 = strtotime("12-09-2022 00:00:00");
+        $fecha_entrada10 = strtotime("10-10-2022 00:00:00");
+        $fecha_entrada11 = strtotime("07-11-2022 00:00:00");
+        $fecha_entrada12 = strtotime("12-12-2022 00:00:00");
+        // fecha fin
         
         // if($validar_sede == 8){
         //   $fecha_entrada22 = strtotime("08-02-2022 15:59:00");
@@ -326,11 +331,151 @@ class Suma extends CI_Controller
   
             $this->Usuarios_modelo->Update_OPN($this->session->userdata('id_usuario'));
             echo json_encode( $resultado );
-          // }
-          // else{
-          //   echo json_encode(3);
-          // }
+        //   }
+        //   else{
+        //     echo json_encode(3);
+        //   }
+    }
+
+    public function revision_asimilados(){
+        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
+        $datos['sub_menu'] = $this->get_menu->get_submenu_data($this->session->userdata('id_rol'), $this->session->userdata('id_usuario'));
+
+        $this->load->view('template/header');
+        $this->load->view("ventas/revision_asimilados_suma", $datos);
+    }
+
+    public function revision_remanentes(){
+        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
+        $datos['sub_menu'] = $this->get_menu->get_submenu_data($this->session->userdata('id_rol'), $this->session->userdata('id_usuario'));
+
+        $this->load->view('template/header');
+        $this->load->view("ventas/revision_remanentes_suma", $datos);
+    }
+
+    public function revision_facturas_xml(){
+        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
+        $datos['sub_menu'] = $this->get_menu->get_submenu_data($this->session->userdata('id_rol'), $this->session->userdata('id_usuario'));
+
+        $this->load->view('template/header');
+        $this->load->view("ventas/revision_xml_suma", $datos);
+    }
+
+    public function revision_asimilados_intmex(){
+        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
+        $datos['sub_menu'] = $this->get_menu->get_submenu_data($this->session->userdata('id_rol'), $this->session->userdata('id_usuario'));
+
+        $this->load->view('template/header');
+        $this->load->view("ventas/revision_INTMEXasimilados_suma", $datos);  
+    }
+
+    public function revision_remanentes_intmex(){
+        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
+        $datos['sub_menu'] = $this->get_menu->get_submenu_data($this->session->userdata('id_rol'), $this->session->userdata('id_usuario'));
+
+        $this->load->view('template/header');
+        $this->load->view("ventas/revision_INTMEXremanente_suma", $datos);  
+    }
+
+    public function revision_XML_intmex(){
+        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
+        $datos['sub_menu'] = $this->get_menu->get_submenu_data($this->session->userdata('id_rol'), $this->session->userdata('id_usuario'));
+
+        $this->load->view('template/header');
+        $this->load->view("ventas/revision_INTMEXxml_suma", $datos);  
+    }
+
+    public function getAsimiladosRevision(){
+        echo json_encode($this->Suma_model->getAsimiladosRevision()->result_array());
+    }
+
+    public function getAsimiladosRevisionIntMex(){
+        $idRol = $this->input->post("idRol");
+        $idUsuario = $this->input->post("idUsuario");
+
+        echo json_encode($this->Suma_model->getAsimiladosRevisionIntMex($idRol, $idUsuario)->result_array());
+    }
+
+    public function getRemanentesRevision(){
+        echo json_encode($this->Suma_model->getRemanentesRevision()->result_array());
+    }
+
+    public function setPausarDespausarComision(){
+        $idUsuario = $this->session->userdata('id_usuario');
+        $idRol= $this->session->userdata('id_rol');
+        $idPago = $this->input->post("id_pago");
+        $estatus = $this->input->post("estatus");
+        $obs = $this->input->post("observaciones");
+        if( $estatus == 2 && $idRol == 68 )
+            $estatus = 4;
+        elseif( $estatus == 3 && $idRol == 31 )
+            $estatus = 5;
+        elseif( $estatus == 5 )
+            $estatus = 3;
+        else
+            $estatus = 2;
+
+        $respuesta = $this->Suma_model->setPausarDespausarComision($estatus, $idPago, $idUsuario, $obs);
+
+        echo json_encode( $respuesta );
+    }
+
+    public function aceptoInternomexAsimilados(){
+        $idUsuario = $this->session->userdata('id_usuario');
+        $idsComisiones = explode(",",$this->input->post('idcomision'));
+
+        for ($i = 0; $i < count($idsComisiones); $i++) {
+            $updateArrayData[] = array(
+                'id_pago_suma' => $idsComisiones[$i],
+                'estatus' => 3
+            );
+
+            $insertArrayData[]=array(
+                'id_pago' => $idsComisiones[$i],
+                'id_usuario' =>  $idUsuario,
+                'fecha_movimiento' => date('Y-m-d H:i:s'),
+                'estatus' => 3,
+                'comentario' =>  'SOCIO MADERAS MANDA A INTERNOMEX' 
+            );
         }
+
+        $reponse = $this->Suma_model->setAsimiladosInternomex($updateArrayData, $insertArrayData);
+        echo json_encode( $reponse );
+    }
+
+    public function pago_internomex(){
+        $idUsuario = $this->session->userdata('id_usuario');
+        $idsComisiones = explode(",",$this->input->post('idcomision'));
+
+        for ($i = 0; $i < count($idsComisiones); $i++) {
+            $updateArrayData[] = array(
+                'id_pago_suma' => $idsComisiones[$i],
+                'estatus' => 6
+            );
+
+            $insertArrayData[]=array(
+                'id_pago' => $idsComisiones[$i],
+                'id_usuario' =>  $idUsuario,
+                'fecha_movimiento' => date('Y-m-d H:i:s'),
+                'estatus' => 6,
+                'comentario' =>  'INTERNOMEX APLICO PAGO' 
+            );
+        }
+
+        $reponse = $this->Suma_model->setPagosInternomex($updateArrayData, $insertArrayData);
+        echo json_encode( $reponse );
+    }
+
+    public function getDatosNuevasXContraloria($proyecto,$condominio){
+    $datos =  $this->Comisiones_model->getDatosNuevasXContraloria()->result_array();
+       echo json_encode( array( "data" => $dat));
+    }
+
+    public function lista_roles(){
+      echo json_encode($this->Suma_model->get_lista_roles()->result_array());
+    }
+
+    public function lista_usuarios($rol,$forma_pago){
+      echo json_encode($this->Suma_model->get_lista_usuarios($rol, $forma_pago)->result_array());
+    }
 }
-
-

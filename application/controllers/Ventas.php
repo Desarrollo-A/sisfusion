@@ -1,6 +1,8 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+
 class Ventas extends CI_Controller {
 	public function __construct() {
+        
 		parent::__construct();
         $this->load->model(array('Ventas_modelo', 'Statistics_model', 'asesor/Asesor_model'));
         $this->load->library(array('get_menu', 'Jwt_actions'));
@@ -18,7 +20,7 @@ class Ventas extends CI_Controller {
 	public function index() {
         $id_rol = $this->session->userdata('id_rol');
 		if($id_rol == FALSE || ($id_rol != '1' && $id_rol != '2' && $id_rol != '3' && $id_rol != '4' && $id_rol != '5'
-                && $id_rol != '7' && $id_rol != '9' && $id_rol != '6' && $id_rol != '18')) {
+                && $id_rol != '7' && $id_rol != '9' && $id_rol != '6' && $id_rol != '18' && $id_rol != '63')) {
 			redirect(base_url().'login');
 		}
         $datos = $this->get_menu->get_menu_data($id_rol);
@@ -33,6 +35,7 @@ class Ventas extends CI_Controller {
             case '7': // ASESOR
             case '9': // COORDINADOR
             case '18': // DIRECTOR TI
+            case '63': // CONTROL INTERNO
             default: // POR DEFECTO
                 $this->load->view('template/header');
                 $this->load->view("template/home", $datos);
@@ -40,5 +43,35 @@ class Ventas extends CI_Controller {
             break;
         }
 	}
+
+    public function repoVtasAsesor(){
+        $this->validateSession();
+        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
+        $this->load->view('template/header');
+        $this->load->view("ventas/vtas_periodo_asesor",$datos);
+    }
+
+    public function getInfRepoVta(){
+        $data = $this->Ventas_modelo->getGralInfRepoVta()->result_array();
+        if($data != null) {
+            echo json_encode($data);
+        } else {
+            echo json_encode(array());
+        }
+    }
+    
+    public function getInfDetVta(){
+        if (isset($_POST) && !empty($_POST)) {
+            $id_asesor = $this->input->post("user");
+            $data = $this->Ventas_modelo->GetInfoDetalleVta($id_asesor)->result_array();
+            if($data != null) {
+                echo json_encode($data);
+            } else {
+                echo json_encode(array());
+            }
+        }else{
+            echo json_encode(array());
+        }
+    }
 
 }

@@ -139,6 +139,28 @@ class Internomex_model extends CI_Model {
             return $this->db->query("UPDATE pago_comision_ind SET estatus = 9 WHERE id_pago_i IN (".$idsol.")");
     }
 
+    public function getMFPagos( $fechainicio,$fechafin,$instrucciones){
+        $cmd = "SELECT p.id_usuario,
+        FORMAT(p.monto_con_descuento,'C','En-Us') as 'monto_con_descuento',
+		FORMAT(p.monto_sin_descuento,'C','En-Us') as 'monto_sin_descuento',
+		FORMAT(p.monto_internomex,'C','En-Us') as 'monto_internomex'
+        ,c.nombre sede, g.nombre forma_pago,p.fecha_creacion ,
+        CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombre,
+        u.id_rol , d.nombre as rol 
+        FROM  pagos_internomex p
+        INNER JOIN usuarios u on u.id_usuario = p.id_usuario $instrucciones
+        INNER JOIN sedes c on c.id_sede = p.forma_pago 
+        INNER JOIN opcs_x_cats g on g.id_catalogo = 16 and g.id_opcion = p.forma_pago
+        INNER JOIN opcs_x_cats d on d.id_catalogo = 1 and d.id_opcion = u.id_rol
+        WHERE p.fecha_creacion  >= '$fechainicio' AND
+       p.fecha_creacion <= '$fechafin' ";
+        
+        //$cmd = "SELECT p.id_usuario,p.monto_con_descuento,p.monto_sin_descuento,p.monto_internomex,CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombre
+       // FROM  pagos_internomex p  INNER JOIN usuarios u on u.id_usuario = p.id_usuario
+       // WHERE YEAR(p.fecha_creacion) = $year and MONTH(p.fecha_creacion) = $mes";
+       $query = $this->db->query($cmd);
+        return $query  ;
+    }
     public function getCommissions()
     {
         return $this->db->query("SELECT u0.id_usuario, UPPER(CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno)) nombreUsuario, 
@@ -170,5 +192,33 @@ class Internomex_model extends CI_Model {
 	}
 
     
+        //return $this->db->count_all_results() > 0;
+
+        // 
+        //return $query->result() !== [];
+        
+ 
+    public function insertMontoFinalPago($data){
+
+         $this->db->insert('dbo.pagos_internomex', $data);    
+        return $this->db->affected_rows();
+
+        //  $this->db->where('id_comida', $id_comida);
+      //  $this->db->set("status", 2);
+      //  $this->db->update('menu');
+      //  return $this->db->affected_rows();
+    }
+    public function getuser($claves,$mes,$fecha){
+        //claves es necesario para barrer todos los numeros
+        $cmd("SELECT * FROM auditoria WHERE id_parametro IN $claves AND YEAR(fecha_creacion) = $mes AND MONTH(fecha_creacion) = $fecha");
+        $query = $this->db->query($cmd);
+
+
+    }
+    public function formaDePago($filtro){
+        $cmd = ("SELECT * FROM opcs_x_cats WHERE id_catalogo = 16 and opcs_x_cats.nombre =  '$filtro' ");
+        $query = $this->db->query($cmd);
+        return $query->num_rows() > 0 ? $query->row() : false; 
+    }
 
 }

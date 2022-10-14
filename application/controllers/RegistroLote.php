@@ -5887,7 +5887,7 @@
 		$arregloFechas2 = array();
 		$arregloFechas = array();
 
-		$data = $this->registrolote_modelo->finalStatus();
+		$data = $this->registrolote_modelo->finalStatus($this->input->post("id_sede"));
 //		print_r($data[0]->idLote);
 //		exit;
 		for($i=0;$i<count($data);$i++)
@@ -6542,7 +6542,8 @@
 
 		if ($datos != null)
 		{
-			echo json_encode($datos);
+			$data['data'] = $datos;
+			echo json_encode($data);
 		}
 		else
 		{
