@@ -798,7 +798,11 @@ $tv                 : "(min-width: 1280px)";
     border-radius: 27px !important;
     background-image: none !important;
     padding-left: 20px;
+    ::placeholder{
+        margin-left: 20px;
+    }
 }
+
 .isRequired{
     color: $redGoogle;
     margin: 0 3px;

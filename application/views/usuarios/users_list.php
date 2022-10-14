@@ -1,5 +1,5 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
-    <link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet"/>
+<link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet"/>
 
     <style>
         .boxIcon{
@@ -66,17 +66,26 @@
                                         <div class="material-datatables">
                                         <table id="all_users_datatable" class="table-striped table-hover text-center">
                                                 <thead>
-                                                <tr>
-                                                    <th class="disabled-sorting text-right">ESTATUS</th>
-                                                    <th class="disabled-sorting text-right">ID</th>
-                                                    <th class="disabled-sorting text-right">NOMBRE</th>
-                                                    <th class="disabled-sorting text-right">CORREO</th>
-                                                    <th class="disabled-sorting text-right">TELÉFONO</th>
-                                                    <th class="disabled-sorting text-right">TIPO</th>
-                                                    <th class="disabled-sorting text-right">SEDE</th>
-                                                    <th class="disabled-sorting text-right">JEFE DIRECTO</th>
-                                                    <th class="disabled-sorting text-right">ACCIONES</th>
-                                                </tr>
+                                                    <tr>
+                                                        <th class="disabled-sorting">ESTATUS</th>
+                                                        <th class="disabled-sorting">ID</th>
+                                                        <th class="disabled-sorting">NOMBRE</th>
+                                                        <th class="disabled-sorting">CORREO</th>
+                                                        <th class="disabled-sorting">TELÉFONO</th>
+                                                        <th class="disabled-sorting">TIPO</th>
+                                                        <th class="disabled-sorting">SEDE</th>
+                                                        <th class="disabled-sorting">COORDINADOR</th>
+                                                        <th class="disabled-sorting">GERENTE</th>
+                                                        <th class="disabled-sorting">SUBDIRECTOR</th>
+                                                        <th class="disabled-sorting">DIRECTOR REGIONAL</th>
+                                                        <th class="disabled-sorting">TALLA</th>
+                                                        <th class="disabled-sorting">GÉNERO</th>
+                                                        <th class="disabled-sorting">HIJOS + 12</th>
+                                                        <th class="disabled-sorting">REINGRESO</th>
+                                                        <th class="disabled-sorting">BAJA</th>
+                                                        <th class="disabled-sorting">ACCIONES</th>
+
+                                                    </tr>
                                                 </thead>
                                             </table>
                                         </div>
@@ -402,6 +411,10 @@
     <script type="text/javascript" src="<?= base_url() ?>dist/js/controllers/datatables/datatables.min.js"></script>-->
 
     <script src="<?= base_url() ?>dist/js/controllers/usuarios-1.1.0.js"></script>
-    <script>userId = <?= $this->session->userdata('id_usuario') ?>;</script>
+    <script>
+        userId = <?= $this->session->userdata('id_usuario') ?>;
+        rolId = <?= $this->session->userdata('id_rol') ?>;
+
+    </script>
 
     </html>
