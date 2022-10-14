@@ -24,12 +24,12 @@ class Login extends CI_Controller
 
      switch ($this->session->userdata('id_rol')) {
 		case '':
-		$data['token'] = $this->token();
-		$data['titulo'] = 'Login con roles de usuario en codeigniter';
-		$this->load->view('login/login_view',$data);
-		//  $this->load->view('login/maintenance',$data);
-		// $this->load->view('errors/404not-found');
-		break;
+			$data['token'] = $this->token();
+			$data['titulo'] = 'Login con roles de usuario en codeigniter';
+			$this->load->view('login/login_view',$data);
+			//  $this->load->view('login/maintenance',$data);
+			// $this->load->view('errors/404not-found');
+			break;
 		case '1': // DIRECTOR
 		case '2': // SUBDIRECTOR
 		case '3': // GERENTE
@@ -40,80 +40,83 @@ class Login extends CI_Controller
 		case '9': // COORDINADOR
 		case '18': // DIRECTOR MKTD
 		case '63': // CI AUDITORIA
-            redirect(base_url().'Ventas');
+			redirect(base_url().'Ventas');
         break;
 
-          case '11': // ADMINISTRACIÓN
-		  case '12': // CAJA
-		  case '23': // SUBDIRECTOR CLUB MADERAS
-          case '34': // FACTURACIÓN
-          case '35': // ATENCIÓN A CLIENTES
-          case '26': // MERCADÓLOGO
-          case '41': // GENERALISTA
-          case '39': // CONTABILIDAD
-          case '31': // INTERNOMEX
-          case '49': // CAPITAL HUMANO
-          case '50': // GENERALISTA MKTD
-          case '40': // COBRANZA
-          case '54': // SUBDIRECCIÓN CONSULTA
-          case '58': // ANALISTA DE DATOS CI
-          case '8': // SOPORTE
-		  case '10': // EJECTUTIVO ADMINISTRATIVO MKTD
-          case '19': // SUBDIRECTOR MKTD
-          case '20': // GERENTE MKTD
-          case '21': // CLIENTE
-          case '23': // SUBDIRECTOR CLUB MADERAS
-		  case '28': // EJECUTIVO ADMINISTRATIVO
-		  case '33': // CONSULTA
-		  case '25': // MKTD
-		  case '27': // MKTD
-		  case '30': // MKTD
-		  case '36': // MKTD
-		  case '22': // MKTD
-		  case '53': // ANALISTA COMISIONES
-		  case '61': // ANSESOR CONSULTA
-		  case '64': // ASISTENTE DIRECCIÓN ADMINISTRACIÓN
-		  case '65': // CONTABILIDAD (EXTERNO)
-              redirect(base_url().'Administracion');
-         break;
+		case '11': // ADMINISTRACIÓN
+		case '12': // CAJA
+		case '23': // SUBDIRECTOR CLUB MADERAS
+		case '34': // FACTURACIÓN
+		case '35': // ATENCIÓN A CLIENTES
+		case '26': // MERCADÓLOGO
+		case '41': // GENERALISTA
+		case '39': // CONTABILIDAD
+		case '31': // INTERNOMEX
+		case '49': // CAPITAL HUMANO
+		case '50': // GENERALISTA MKTD
+		case '40': // COBRANZA
+		case '54': // SUBDIRECCIÓN CONSULTA
+		case '58': // ANALISTA DE DATOS CI
+		case '8': // SOPORTE
+		case '10': // EJECTUTIVO ADMINISTRATIVO MKTD
+		case '19': // SUBDIRECTOR MKTD
+		case '20': // GERENTE MKTD
+		case '21': // CLIENTE
+		case '23': // SUBDIRECTOR CLUB MADERAS
+		case '28': // EJECUTIVO ADMINISTRATIVO
+		case '33': // CONSULTA
+		case '25': // MKTD
+		case '27': // MKTD
+		case '30': // MKTD
+		case '36': // MKTD
+		case '22': // MKTD
+		case '53': // ANALISTA COMISIONES
+		case '61': // ANSESOR CONSULTA
+		case '64': // ASISTENTE DIRECCIÓN ADMINISTRACIÓN
+		case '65':
+		case '66':
+		case '67':
+		case '68':
+            redirect(base_url().'Administracion');
+        break;
 
-         case '12':
-             redirect(base_url().'Caja');
-         break;
+        case '12':
+            redirect(base_url().'Caja');
+        break;
 
-         case '13': // CONTRALORÍA
-         case '17': // SUBDIRECTOR CONTRALORÍA
-         case '32': // CONTRALORÍA CORPORATIVA
-         case '47': // SUBDIRECCIÓN FINANZAS
-         redirect(base_url().'Contraloria');
-         break;
+		case '13': // CONTRALORÍA
+		case '17': // SUBDIRECTOR CONTRALORÍA
+		case '32': // CONTRALORÍA CORPORATIVA
+		case '47': // SUBDIRECCIÓN FINANZAS
+         	redirect(base_url().'Contraloria');
+        break;
 
-         case '14':
-             redirect(base_url().'Direccion_administracion');
-         break;
+        case '14':
+            redirect(base_url().'Direccion_administracion');
+        break;
 
-         case '15':
-             redirect(base_url().'Juridico');
-         break;
+        case '15':
+            redirect(base_url().'Juridico');
+        break;
 
-         case '16':
-             redirect(base_url().'Contratacion');
-         break;
+        case '16':
+            redirect(base_url().'Contratacion');
+        break;
 
-         case '31':
-             redirect(base_url().'Internomex');
-         break;
+        case '31':
+            redirect(base_url().'Internomex');
+        break;
 		case '55': // POSTVENTA
 		case '56': // COMITÉ TÉCNICO
 		case '57': // TITULACIÓN
 		case '62': //PROYECTOS
 			redirect(base_url() . 'Postventa');
 		break;
-         default:
-             $data['titulo'] = 'Login con roles de usuario en codeigniter';
-             $this->load->view('login/login_view',$data);
+        default:
+            $data['titulo'] = 'Login con roles de usuario en codeigniter';
+    	    $this->load->view('login/login_view',$data);
             //  $this->load->view('login/maintenance',$data);
-         break;
+        break;
      }
 }
 
@@ -240,6 +243,10 @@ class Login extends CI_Controller
 						elseif ($dataRol[0]->nombre=="Subdirección consulta")
 						{
 							$perfil = ($dataRol[0]->nombre=="Subdirección consulta") ? "subdireccionConsulta" : $dataRol[0]->nombre;
+						}
+						elseif ($dataRol[0]->nombre=="Director SUMA")
+						{
+							$perfil = ($dataRol[0]->nombre=="Director SUMA") ? "directorSUMA" : $dataRol[0]->nombre;
 						}
 
 					}

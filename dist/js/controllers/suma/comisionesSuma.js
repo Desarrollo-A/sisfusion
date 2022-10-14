@@ -54,7 +54,7 @@ $("#tabla_nuevas_comisiones").ready(function() {
                     var hora = hoy.getHours();
                     var minuto = hoy.getMinutes();
 
-                    if (((mes == 10 && dia == 10) || (mes == 10 && dia == 11 && hora <= 13)) ||
+                    if (((mes == 10 && dia == 12) || (mes == 10 && dia == 12 && hora <= 20)) ||
                     ((mes == 11 && dia == 7) || (mes == 11 && dia == 8 && hora <= 13)) ||
                     ((mes == 12 && dia == 12) || (mes == 12 && dia == 13 && hora <= 13))){
 
@@ -268,7 +268,7 @@ $("#tabla_nuevas_comisiones").ready(function() {
 
 
 
-                if (((mes == 10 && dia == 10) || (mes == 10 && dia == 11 && hora <= 13)) ||
+                if (((mes == 10 && dia == 12) || (mes == 10 && dia == 12 && hora <= 20)) ||
                 ((mes == 11 && dia == 7) || (mes == 11 && dia == 8 && hora <= 13)) ||
                 ((mes == 12 && dia == 12) || (mes == 12 && dia == 13 && hora <= 13)))
                 {
@@ -733,6 +733,206 @@ $("#tabla_pagadas_comisiones").ready(function() {
         });
     });
 });
+/* END pagadas */
+
+$("#tabla_pausadas_comisiones").ready(function() {
+
+    $('#tabla_pausadas_comisiones thead tr:eq(0) th').each( function (i) {
+        if( i != 9 ){
+            var title = $(this).text();  
+            $(this).html('<input type="text" class="textoshead" placeholder="' + title + '"/>');
+            $('input', this).on('keyup change', function() {
+                if (tabla_pausadas.column(i).search() !== this.value) {
+                    tabla_pausadas.column(i).search(this.value).draw();
+                    var total = 0;
+
+                    var index = tabla_pausadas.rows({
+                        selected: true,
+                        search: 'applied'
+                    }).indexes();
+
+                    var data = tabla_pausadas.rows(index).data();
+
+                    $.each(data, function(i, v) {
+                        total += parseFloat(v.total_comision);
+                    });
+                    
+                    document.getElementById("myText_pausadas").textContent = '$' + formatMoney(total);
+                }
+            });
+        }
+    });
+
+    $('#tabla_pausadas_comisiones').on('xhr.dt', function(e, settings, json, xhr) {
+        var total = 0;
+        $.each(json, function(i, v) {
+            total += parseFloat(v.total_comision);
+        });
+        var to = formatMoney(total);
+        document.getElementById("myText_pausadas").textContent = '$' + to;
+    });
+
+    tabla_pausadas = $("#tabla_pausadas_comisiones").DataTable({
+        dom: 'Brt'+ "<'row'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'i><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>",
+        buttons: [{
+            extend: 'excelHtml5',
+            text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
+            className: 'btn buttons-excel',
+            titleAttr: 'Descargar archivo de Excel',
+            title: 'REPORTE COMISIONES SUMA EN PAUSA',
+            exportOptions: {
+                columns: [0,1,2,3,4,5,6,7,8],
+                format: {
+                    header:  function (d, columnIdx) {
+                        if(columnIdx == 0){
+                            return 'ID PAGO';
+                        }else if(columnIdx == 1){
+                            return 'REFERENCIA';
+                        }else if(columnIdx == 2){
+                            return 'NOMBRE COMISIONISTA';
+                        }else if(columnIdx == 3){
+                            return 'SEDE';
+                        }else if(columnIdx == 4){
+                            return 'FORMA PAGO';
+                        }else if(columnIdx == 5){
+                            return 'TOTAL COMISIÓN';
+                        }else if(columnIdx == 6){
+                            return 'IMPUESTO';
+                        }else if(columnIdx == 7){
+                            return '% COMISIÓN';
+                        }else if(columnIdx == 8){
+                            return 'ESTATUS';
+                        }
+                    }
+                }
+            },
+        }],
+        pagingType: "full_numbers",
+        fixedHeader: true,
+        language: {
+            url: `${general_base_url}static/spanishLoader_v2.json`,
+            paginate: {
+                previous: "<i class='fa fa-angle-left'>",
+                next: "<i class='fa fa-angle-right'>"
+            }
+        },
+        destroy: true,
+        ordering: false,
+        columns: [{
+            "width": "5%",
+            "data": function(d) {
+                return '<p class="m-0">' + d.id_pago_suma + '</p>';
+            }
+        },
+        {
+            "width": "5%",
+            "data": function(d) {
+                return '<p class="m-0">' + d.referencia + '</p>';
+            }
+        },
+        {
+            "width": "9%",
+            "data": function(d) {
+                return '<p class="m-0"><b>' + d.nombre_comisionista + '</b></p>';
+            }
+        },
+        {
+            "width": "5%",
+            "data": function(d) {
+                return '<p class="m-0"><b>' + d.sede + '</b></p>';
+            }
+        },
+        {
+            "width": "5%",
+            "data": function(d) {
+                return '<p class="m-0"><b>' + d.forma_pago + '</b></p>';
+            }
+        },
+        {
+            "width": "9%",
+            "data": function(d) {
+                return '<p class="m-0">$' + formatMoney(d.total_comision) + '</p>';
+            }
+        },
+        {
+            "width": "9%",
+            "data": function(d) {
+                return '<p class="m-0">$' + formatMoney(d.impuesto) + '</p>';
+            }
+        },
+        {
+            "width": "5%",
+            "data": function(d) {
+                return '<p class="m-0"><b>' + d.porcentaje_comision + '%</b></p>';
+            }
+        },
+        {
+            "width": "9%",
+            "data": function(d) {
+                switch (d.id_forma_pago) {
+                    case '1': //SIN DEFINIR
+                    case 1: //SIN DEFINIr
+                        return '<p class="mb-1"><span class="label" style="background:#B3B4B4;">SIN DEFINIR FORMA DE PAGO</span><br><span class="label" style="background:#EED943; color:black;">REVISAR CON RH</span></p>';
+
+                    case '2': //FACTURA
+                    case 2: //FACTURA
+                        return '<p class="mb-1"><span class="label" style="background:#806AB7;">FACTURA</span></p><p style="font-size: .5em"><span class="label" style="background:#EB6969;">SUBIR XML</span></p>';
+
+                    case '3': //ASIMILADOS
+                    case 3: //ASIMILADOS
+                        return '<p class="mb-1"><span class="label" style="background:#4B94CC;">ASIMILADOS</span></p><p style="font-size: .5em"><span class="label" style="background:#00B397;">LISTA PARA APROBAR</span></p>';
+
+                    case '4': //RD
+                    case 4: //RD
+                        return '<p class="mb-1"><span class="label" style="background:#6D527E;">REMANENTE DIST.</span></p><p style="font-size: .5em"><span class="label" style="background:#00B397;">LISTA PARA APROBAR</span></p>';
+
+                    case '5':
+                    case 5:
+                        return `
+                            <p class="mb-1">
+                                <span class="label" style="background:#0080FF;">FACTURA EXTRANJERO</span>
+                            </p>
+                        `;
+                    default:
+                        return '<p class="mb-1"><span class="label" style="background:#B3B4B4;">DOCUMENTACIÓN FALTANTE</span><br><span class="label" style="background:#EED943; color:black;">REVISAR CON RH</span></p>';
+                }
+            }
+        },
+        {
+            "width": "5%",
+            "orderable": false,
+            "data": function(data) {
+                return '<button href="#" value="'+data.id_pago_suma+'"  data-referencia="'+data.referencia+'" ' +'class="btn-data btn-blueMaderas consultar_history" title="Detalles">' +'<i class="fas fa-info"></i></button>';
+
+            }
+        }],
+        ajax: {
+            url: general_base_url + "Suma/getComisionesByStatus",
+            type: "POST",
+            data: {estatus: 4},
+            dataType: 'json',
+            dataSrc: ""
+        },
+    });
+
+    $("#tabla_pausadas_comisiones tbody").on("click", ".consultar_history", function(e){
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        id_pago = $(this).val();
+        referencia = $(this).attr("data-referencia");
+
+        $("#seeInformationModalAsimilados").modal();
+        $("#nameLote").html("");
+        $("#comments-list-asimilados").html("");
+        $("#nameLote").append('<p><h5 style="color: white;">HISTORIAL DE PAGO DE LA REFERENCIA <b style="color:#39A1C0; text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;">'+referencia+'</b></h5></p>');
+        $.getJSON("getHistorial/"+id_pago).done( function( data ){
+            $.each( data, function(i, v){
+                $("#comments-list-asimilados").append('<div class="col-lg-12"><p><i style="color:39A1C0;">'+v.comentario+'</i><br><b style="color:#39A1C0">'+v.fecha_movimiento+'</b><b style="color:gray;"> - '+v.modificado_por+'</b></p></div>');
+            });
+        });
+    });
+});
+/* End table pausadas */ 
 
 function mandarFacturas() {
     document.getElementById('btng').disabled=true;
@@ -767,7 +967,7 @@ $(document).on("click", ".subir_factura_multiple", function() {
     var hora = hoy.getHours();
     var minuto = hoy.getMinutes();
 
-    // if (((mes == 10 && dia == 10) || (mes == 10 && dia == 11 && hora <= 13)) || ((mes == 11 && dia == 7) || (mes == 11 && dia == 8 && hora <= 13)) || ((mes == 12 && dia == 12) || (mes == 12 && dia == 13 && hora <= 13))){
+    if (((mes == 10 && dia == 12) || (mes == 10 && dia == 12 && hora <= 20)) || ((mes == 11 && dia == 7) || (mes == 11 && dia == 8 && hora <= 13)) || ((mes == 12 && dia == 12) || (mes == 12 && dia == 13 && hora <= 13))){
 
     $("#modal_multiples .modal-body").html("");
     $("#modal_multiples .modal-header").html("");
@@ -836,10 +1036,10 @@ $(document).on("click", ".subir_factura_multiple", function() {
             backdrop: 'static',
             keyboard: false
         });
-    // }
-    // else{
-    //     alert("NO PUEDES SUBIR FACTURAS HASTA EL PRÓXIMO CORTE.");
-    // }
+    }
+    else{
+        alert("NO PUEDES SUBIR FACTURAS HASTA EL PRÓXIMO CORTE.");
+    }
 });
 
 //FUNCION PARA LIMPIAR EL FORMULARIO CON DE PAGOS A PROVEEDOR.

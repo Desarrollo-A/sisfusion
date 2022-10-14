@@ -452,6 +452,7 @@ class Reporte_model extends CI_Model {
         ISNULL(CAST((f.totalCanA * 100) / NULLIF(a.totalVentas,0) AS decimal(16,2)), 0) porcentajeTotalCanA, 
         --ISNULL(CAST(((ISNULL(b.totalCT, 0) - ISNULL(e.totalCanC, 0)) * 100) / NULLIF(a.totalVentas,0) AS decimal(16,2)), 0) porcentajeTotalCanA,
         a.id_sede,
+        
         a.sede
         FROM (
         --SUMA TOTAL
@@ -791,7 +792,9 @@ class Reporte_model extends CI_Model {
         CASE co.tipo_lote WHEN 1 THEN 'COMERCIAL' ELSE 'HABITACIONAL' END,
         CASE lo.casa WHEN 1 THEN 'SÍ' ELSE 'NO' END");
         return $data;
+        
     }
+    
     public function getReporteTrimestral($beginDate, $endDate){
         $query=$this->db->query("SELECT t.nombreResidencial as nombreResidencial, t.nombreCondominio as nombreCondominio, t.nombreLote as nombreLote, t.precioFinal as precioFinal, t.referencia as referencia,
         t.nombreAsesor as nombreAsesor, t.fechaApartado as fechaApartado, t.nombreSede as nombreSede, t.tipo_venta as tipo_venta, t.fechaEstatus9 as fechaEstatus9

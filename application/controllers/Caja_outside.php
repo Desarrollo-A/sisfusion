@@ -2627,4 +2627,8 @@ class Caja_outside extends CI_Controller
             }
         }
     }
+
+    public function getTipoLote() {
+        echo json_encode($this->caja_model_outside->getTipoLote());
+    }
 }

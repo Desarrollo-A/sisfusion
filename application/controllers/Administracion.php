@@ -39,7 +39,8 @@ class Administracion extends CI_Controller{
             $this->session->userdata('id_rol') != '8' && $this->session->userdata('id_rol') != '23' &&
             $this->session->userdata('id_rol') != '12' && $this->session->userdata('id_rol') != '61' &&
 			$this->session->userdata('id_rol') != '63' && $this->session->userdata('id_rol') != '64' && 
-			$this->session->userdata('id_rol') != '65'
+			$this->session->userdata('id_rol') != '65' && $this->session->userdata('id_rol') != '66' && 
+			$this->session->userdata('id_rol') != '67' && $this->session->userdata('id_rol') != '68'
         ) {
 			redirect(base_url() . 'login');
 		}
@@ -895,9 +896,8 @@ class Administracion extends CI_Controller{
 
 	public function repAdministracion(){
 		$datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-        /*-------------------------------------------------------------------------------*/
         $this->load->view('template/header');
-        $this->load->view("administracion/vista_reporte_clientes", $datos);
+        $this->load->view("administracion/vista_reporte_admin", $datos);
 	}
 	public function getRepoAdmin(){
 		$data = $this->Administracion_model->getRepAdmon();
