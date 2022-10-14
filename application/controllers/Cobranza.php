@@ -30,10 +30,41 @@ class Cobranza extends CI_Controller
         if ($this->session->userdata('id_rol') == FALSE) {
             redirect(base_url());
         }
+
         $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-        $this->load->view('template/header');
-        $this->load->view("cobranza/masterCobranza", $datos);
+            $this->load->view('template/header');
+           // $this->load->view("cobranza/cobranza_reporte_master_historico", $datos);
+             $this->load->view("cobranza/masterCobranza", $datos);
+   
     }
+
+    public function masterCobranzaHistorial()
+    {
+        if ($this->session->userdata('id_rol') == FALSE) {
+            redirect(base_url());
+        }
+
+        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
+       
+        $this->load->view('template/header');
+        $this->load->view("cobranza/cobranza_reporte_master_historico", $datos);
+    }
+    public function informationMasterCobranzaHistorial(){
+        var_dump('menanio ekqaekeq qejqeq e');
+      
+
+            $idLote = $this->input->post("idLote");
+            var_dump($idLote);
+           
+            $beginDate = date("Y-m-d", strtotime($this->input->post("beginDate")));
+            $endDate = date("Y-m-d", strtotime($this->input->post("endDate")));
+            var_dump($beginDate);
+            $data['data'] = $this->Cobranza_model->informationMasterCobranzaHistorial($idLote, $beginDate, $endDate)->result_array();
+            echo json_encode($data);
+        
+    
+    }
+
 
     public function getInformation()
     {
