@@ -1,23 +1,23 @@
-$('#tabla_remanente thead tr:eq(0) th').each( function (i) {
+$('#tabla_factura thead tr:eq(0) th').each( function (i) {
     if(i != 0){
         var title = $(this).text();
         $(this).html('<input type="text" class="textoshead" placeholder="'+title+'"/>');
         $('input', this).on('keyup change', function() {
-            if (tabla_remanente.column(i).search() !== this.value) {
-                tabla_remanente.column(i).search(this.value).draw();
+            if (tabla_factura.column(i).search() !== this.value) {
+                tabla_factura.column(i).search(this.value).draw();
 
                 var total = 0;
-                var index = tabla_remanente.rows({
+                var index = tabla_factura.rows({
                 selected: true,
                 search: 'applied'
             }).indexes();
 
-                var data = tabla_remanente.rows(index).data();
+                var data = tabla_factura.rows(index).data();
                 $.each(data, function(i, v) {
                     total += parseFloat(v.impuesto);
                 });
 
-                document.getElementById("totpagarremanente").textContent = '$' + formatMoney(total);
+                document.getElementById("totpagarfactura").textContent = '$' + formatMoney(total);
             }
         });
     } 
@@ -26,16 +26,16 @@ $('#tabla_remanente thead tr:eq(0) th').each( function (i) {
     }
 });
 
-$('#tabla_remanente').on('xhr.dt', function(e, settings, json, xhr) {
+$('#tabla_factura').on('xhr.dt', function(e, settings, json, xhr) {
     var total = 0;
     $.each(json, function(i, v) {
         total += parseFloat(v.impuesto);
     });
     var to = formatMoney(total);
-    document.getElementById("totpagarremanente").textContent = '$' + to;
+    document.getElementById("totpagarfactura").textContent = '$' + to;
 });
 
-tabla_remanente = $("#tabla_remanente").DataTable({
+tabla_factura = $("#tabla_factura").DataTable({
     dom: 'Brt'+ "<'row'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'i><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>",
     width: 'auto',
     buttons: [{
@@ -44,7 +44,7 @@ tabla_remanente = $("#tabla_remanente").DataTable({
             if ($('input[name="idTQ[]"]:checked').length > 0) {
                 
                 $('#spiner-loader').removeClass('hide');
-                var idcomision = $(tabla_remanente.$('input[name="idTQ[]"]:checked')).map(function() {
+                var idcomision = $(tabla_factura.$('input[name="idTQ[]"]:checked')).map(function() {
                     return this.value;
                 }).get();
                 
@@ -65,10 +65,10 @@ tabla_remanente = $("#tabla_remanente").DataTable({
                             $("#all").prop('checked', false);
                             var fecha = new Date();
                             $("#myModalEnviadas").modal('toggle');
-                            tabla_remanente.ajax.reload();
+                            tabla_factura.ajax.reload();
                             $("#myModalEnviadas .modal-body").html("");
                             $("#myModalEnviadas").modal();
-                            $("#myModalEnviadas .modal-body").append("<center><img style='width: 75%; height: 75%;' src='"+general_base_url+"dist/img/send_intmex.gif'><p style='color:#676767;'>Comisiones de esquema <b>remanente</b>, fueron enviadas a <b>INTERNOMEX</b> correctamente.</p></center>");
+                            $("#myModalEnviadas .modal-body").append("<center><img style='width: 75%; height: 75%;' src='"+general_base_url+"dist/img/send_intmex.gif'><p style='color:#676767;'>Comisiones de esquema <b>factura</b>, fueron enviadas a <b>INTERNOMEX</b> correctamente.</p></center>");
                         }
                         else {
                             $('#spiner-loader').addClass('hide');
@@ -98,7 +98,7 @@ tabla_remanente = $("#tabla_remanente").DataTable({
         text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
         className: 'btn buttons-excel',
         titleAttr: 'Descargar archivo de Excel',
-        title: 'REMANENTES COMISIONES',
+        title: 'FACTURAS COMISIONES',
         exportOptions: {
             columns: [1,2,3,4,5,6,7,8],
             format: {
@@ -226,33 +226,33 @@ tabla_remanente = $("#tabla_remanente").DataTable({
         },
     }],
     ajax: {
-        url: general_base_url + "Suma/getRemanentesRevision",
+        url: general_base_url + "Suma/getFacturaRevision",
         type: "POST",
         dataType: 'json',
         dataSrc: ""
     },
 });
 
-$("#tabla_remanente tbody").on("click", ".consultar_logs", function(e){
+$("#tabla_factura tbody").on("click", ".consultar_logs", function(e){
     e.preventDefault();
     e.stopImmediatePropagation();
     id_pago = $(this).val();
     referencia = $(this).attr("data-referencia");
 
-    $("#seeInformationModalremanente").modal();
+    $("#seeInformationModalfactura").modal();
     $("#nameLote").html("");
-    $("#comments-list-remanente").html("");
+    $("#comments-list-factura").html("");
     $("#nameLote").append('<p><h5 style="color: white;">HISTORIAL DE PAGO DE LA REFERENCIA <b style="color:#39A1C0; text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;">'+referencia+'</b></h5></p>');
     $.getJSON("getHistorial/"+id_pago).done( function( data ){
         $.each( data, function(i, v){
-            $("#comments-list-remanente").append('<div class="col-lg-12"><p><i style="color:39A1C0;">'+v.comentario+'</i><br><b style="color:#39A1C0">'+v.fecha_movimiento+'</b><b style="color:gray;"> - '+v.modificado_por+'</b></p></div>');
+            $("#comments-list-factura").append('<div class="col-lg-12"><p><i style="color:39A1C0;">'+v.comentario+'</i><br><b style="color:#39A1C0">'+v.fecha_movimiento+'</b><b style="color:gray;"> - '+v.modificado_por+'</b></p></div>');
         });
     });
 });
 
-$("#tabla_remanente tbody").on("click", ".cambiar_estatus", function(){
+$("#tabla_factura tbody").on("click", ".cambiar_estatus", function(){
     var tr = $(this).closest('tr');
-    var row = tabla_remanente.row( tr );
+    var row = tabla_factura.row( tr );
     id_pago_i = $(this).val();
 
     $("#modal_nuevas .modal-body").html("");
@@ -284,7 +284,7 @@ $("#tabla_remanente tbody").on("click", ".cambiar_estatus", function(){
                     $("#modal_nuevas").modal('toggle' );
                     alerts.showNotification("top", "right", "Se ha pausado la comisión exitosamente", "success");
                     setTimeout(function() {
-                        tabla_remanente.ajax.reload();
+                        tabla_factura.ajax.reload();
                     }, 3000);
                 }
                 else{
