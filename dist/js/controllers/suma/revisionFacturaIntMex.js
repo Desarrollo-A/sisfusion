@@ -68,7 +68,7 @@ tabla_remanente = $("#tabla_remanente").DataTable({
                             tabla_remanente.ajax.reload();
                             $("#myModalEnviadas .modal-body").html("");
                             $("#myModalEnviadas").modal();
-                            $("#myModalEnviadas .modal-body").append("<center><img style='width: 75%; height: 75%;' src='"+general_base_url+"dist/img/send_intmex.gif'><p style='color:#676767;'>Comisiones de esquema <b>remanente</b>, fueron enviadas a <b>INTERNOMEX</b> correctamente.</p></center>");
+                            $("#myModalEnviadas .modal-body").append("<center><img style='width: 75%; height: 75%;' src='"+general_base_url+"dist/img/send_intmex.gif'><p style='color:#676767;'>Comisiones de esquema <b>factura</b>, fueron enviadas a <b>INTERNOMEX</b> correctamente.</p></center>");
                         }
                         else {
                             $('#spiner-loader').addClass('hide');

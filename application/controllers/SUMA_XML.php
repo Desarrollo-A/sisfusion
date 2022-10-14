@@ -4,7 +4,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 
 
-class Kel_XML extends CI_Controller
+class SUMA_XML extends CI_Controller
 {
   public function __construct()
   {
@@ -23,17 +23,17 @@ class Kel_XML extends CI_Controller
     public function descargar_XML(){
 
         if( $this->session->userdata('id_rol') == 31 ){
-        $filtro = " pci.estatus IN (8) ";
+        $filtro = " pci.estatus IN (3,5) ";
       }
       else{
-        $filtro = " pci.estatus IN (4,8) ";
+        $filtro = " pci.estatus IN (2,4) ";
       }
 
 
           $facturas_disponibles = array(); ;
 
-                  $facturas_disponibles = $this->db->query("SELECT DISTINCT(fa.nombre_archivo) from facturas fa
-                  INNER JOIN pago_comision_ind pci ON fa.id_comision = pci.id_pago_i
+                  $facturas_disponibles = $this->db->query("SELECT DISTINCT(fa.nombre_archivo) from facturas_suma fa
+                  INNER JOIN pagos_suma pci ON fa.id_pago_suma = pci.id_pago_suma
                   WHERE $filtro
                   GROUP BY fa.nombre_archivo
                   ORDER BY fa.nombre_archivo");
@@ -60,7 +60,9 @@ class Kel_XML extends CI_Controller
     public function descargar_PDF(){
           $facturas_disponibles = array(); ;
 
-                  $facturas_disponibles = $this->db->query("SELECT DISTINCT(opn.archivo_name) from opinion_cumplimiento opn WHERE opn.estatus in (1,2) ORDER BY opn.archivo_name");
+                  $facturas_disponibles = $this->db->query("SELECT DISTINCT(opn.archivo_name) from opinion_cumplimiento opn 
+                  inner join facturas_suma fs ON fs.id_usuario = opn.id_usuario
+                  WHERE opn.estatus in (1,2) ORDER BY opn.archivo_name");
                    
           if( $facturas_disponibles->num_rows() > 0 ){
               $this->load->library('zip');

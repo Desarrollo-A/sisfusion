@@ -6,13 +6,13 @@
     }
     </style>
 <body>
-    
+
     <div class="wrapper">
-        <?php 
+        <?php
         $datos = array();
         $datos = $datos4;
         $datos = $datos2;
-        $datos = $datos3;  
+        $datos = $datos3;
         $this->load->view('template/sidebar', $datos);
         ?>
 
@@ -26,7 +26,20 @@
                             </div>
                             <div class="card-content">
                                 <h3 class="card-title center-align">Reporte de lotes Liberados</h3>
-                                <p class="center-align">Por medio de este panel podrás visualizar y descargar una plantilla en la cual se mostraran los lotes que ya se les haya asignado un estatus 9 y que posteriormente fueron liberados.</p>
+                                <p class="center-align">Por medio de este panel podrás visualizar y descargar un reporte de lotes, los cuales tienen como característica haber pasado por el estatus 9 y que posteriormente fueron liberados.</p>
+                                <div  class="toolbar">
+                                    <div class="row">
+                                            <div class="col-md-4 form-group">
+                                                <div class="form-group label-floating select-is-empty">
+                                                    <label class="control-label">PROYECTO</label>
+                                                    <select name="proyecto" id="proyecto" class="selectpicker select-gral m-0"
+                                                            data-style="btn" data-show-subtext="true"  title="Selecciona proyecto"
+                                                            data-size="7" data-live-search="true" required>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                    </div>
+                                </div>
                                 <div class="material-datatables">
                                     <table class="table-striped table-hover" id="repAdministracion"name="repAdministracion">
                                         <thead>
@@ -50,7 +63,7 @@
             </div>
         </div>
         <?php $this->load->view('template/footer_legend');
-       
+
         ?>
     </div>
     </div><!-- main-panel close -->
@@ -70,4 +83,9 @@
     <!--  Full Calendar Plugin    -->
     <!-- MODAL WIZARD -->
     <script src="<?=base_url()?>dist/js/controllers/administracion/reporteAdministracion.js"></script>
+    <script>
+        var url = "<?=base_url()?>";
+        var url2 = "<?=base_url()?>/index.php/";
+    </script>
+
 </body>

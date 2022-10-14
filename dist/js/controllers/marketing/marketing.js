@@ -754,3 +754,64 @@ $("#tabla_clientes").ready(function () {
 		}
 	});
 });
+
+
+
+var id_cliente_global = 0;
+
+$(document).on('click', '.cop', function (e) {
+	e.preventDefault();
+	var $itself = $(this);
+	var id_cliente = $itself.attr('data-idcliente');
+
+	id_cliente_global = id_cliente;
+	// tableHistorial.ajax.reload();
+
+
+	tableHistorial = $('#verDet').DataTable({
+		responsive: true,
+		"autoWidth": 'true',
+		dom: 'Brt'+ "<'row'<'col-12 col-sm-12 col-md-6 col-lg-6'i><'col-12 col-sm-12 col-md-6 col-lg-6'p>>",
+		buttons: [
+			{
+				extend: 'excelHtml5',
+				text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
+				className: 'btn buttons-excel',
+				titleAttr: 'Reporte ventas compartidas',
+				title:'Reporte ventas compartidas',
+			}
+		],
+		"scrollX": true,
+		"pageLength": 10,
+		language: {
+			url: "<?=base_url()?>/static/spanishLoader_v2.json",
+			paginate: {
+				previous: "<i class='fa fa-angle-left'>",
+				next: "<i class='fa fa-angle-right'>"
+			}
+		},
+		columns: [
+			{"data": "nombreGerente"},
+			{"data": "nombreCoordinador"},
+			{"data": "nombreAsesor"}
+		],
+		"processing": true,
+		"destroy": true,
+		"bAutoWidth": false,
+		"bLengthChange": false,
+		"bInfo": true,
+		"ordering": false,
+		"fixedColumns": true,
+		"ajax": {
+			"url": url2+"registroCliente/getcop/",
+			"type": "POST",
+			cache: false,
+			"data": function (d) {
+				d.id_cliente = id_cliente_global;
+			}
+		},
+	});
+	$('#verDetalles').modal('show');
+});
+
+

@@ -542,7 +542,8 @@
 
     public function table_condominio($idResidencial)
     {
-        $this->db->select('condominios.idCondominio, residenciales.nombreResidencial, condominios.nombre as nombreCluster, etapas.descripcion, datosbancarios.empresa, tipo_lote');
+        $this->db->select('condominios.idCondominio, residenciales.nombreResidencial, condominios.nombre as nombreCluster, 
+        etapas.descripcion, datosbancarios.empresa, tipo_lote, residenciales.abreviatura as abreviatura, condominios.idEtapa as etapa, tipo_lote as tipo, condominios.idDBanco cuenta');
         $this->db->join('residenciales', 'condominios.idResidencial = residenciales.idResidencial');
 
         $this->db->join('etapas', 'condominios.idEtapa = etapas.idEtapa', 'LEFT');
