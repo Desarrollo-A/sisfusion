@@ -274,8 +274,7 @@ class Suma_model extends CI_Model
 		WHERE f.uuid = '".$uuid."' ");
         }
     
-
-    
+ 
 
   
 }

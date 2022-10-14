@@ -548,4 +548,32 @@ class Suma extends CI_Controller
         $arr[4]=  $cadena;
         echo json_encode($arr);
       }
+
+
+
+
+ public function updateClientName()
+    {
+        $data = json_decode((file_get_contents("php://input")));
+
+        if (!isset($data->id_cliente))
+            echo json_encode(array("status" => 400, "message" => "Algún parámetro no tiene un valor especificado o no viene informado."), JSON_UNESCAPED_UNICODE);
+        else {
+            if ($data->nombre_cliente=="")
+                   echo json_encode(array("status" => 400, "message" => "Algún parámetro no tiene un valor especificado o no viene informado..."), JSON_UNESCAPED_UNICODE);
+            else {
+                $updateData = array(
+                    "id_cliente" => $data->id_cliente,
+                    "nombre_cliente" => $data->nombre_cliente
+                );
+
+                $result = $this->General_model->updateRecord("comisiones_suma", $updateData, "id_cliente", $data->id_cliente);
+                if ($result == true)
+                    echo json_encode(array("status" => 200, "message" => "El registro se ha actualizado de manera exitosa."), JSON_UNESCAPED_UNICODE);
+                else
+                    echo json_encode(array("status" => 400, "message" => "Oops, algo salió mal. Inténtalo más tarde."), JSON_UNESCAPED_UNICODE);
+            }
+        }
+    }
+
 }
