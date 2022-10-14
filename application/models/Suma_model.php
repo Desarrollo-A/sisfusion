@@ -129,7 +129,7 @@ class Suma_model extends CI_Model
         INNER JOIN usuarios us ON us.id_usuario = ps.id_usuario
         INNER JOIN sedes se ON se.id_sede = us.id_sede
         INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = ps.estatus AND oxc.id_catalogo = 74
-        WHERE us.forma_pago = 3 AND ps.estatus IN (2, 4, 5)");
+        WHERE us.forma_pago = 3 AND ps.estatus IN (2, 4)");
 
         return $datos;
     }
@@ -155,6 +155,32 @@ class Suma_model extends CI_Model
         INNER JOIN sedes se ON se.id_sede = us.id_sede
         INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = ps.estatus AND oxc.id_catalogo = 74
         WHERE us.forma_pago = 4 AND ps.estatus IN (2, 4)");
+
+        return $datos;
+    }
+
+    function getFacturaRevision(){
+        $datos = $this->db->query("SELECT ps.id_pago_suma, ps.referencia, CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) nombreComisionista,
+        se.nombre sede, oxc.nombre estatusString, ps.estatus, ps.total_comision, (CASE us.forma_pago WHEN 3 THEN (((100-se.impuesto)/100)* ps.total_comision) ELSE ps.total_comision END) impuesto,
+        ps.porcentaje_comision, us.id_usuario
+        FROM pagos_suma ps
+        INNER JOIN usuarios us ON us.id_usuario = ps.id_usuario
+        INNER JOIN sedes se ON se.id_sede = us.id_sede
+        INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = ps.estatus AND oxc.id_catalogo = 74
+        WHERE us.forma_pago = 2 AND ps.estatus IN (2, 4)");
+
+        return $datos;
+    }
+
+    function getFacturaExtranjeroRevision(){
+        $datos = $this->db->query("SELECT ps.id_pago_suma, ps.referencia, CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) nombreComisionista,
+        se.nombre sede, oxc.nombre estatusString, ps.estatus, ps.total_comision, (CASE us.forma_pago WHEN 3 THEN (((100-se.impuesto)/100)* ps.total_comision) ELSE ps.total_comision END) impuesto,
+        ps.porcentaje_comision, us.id_usuario
+        FROM pagos_suma ps
+        INNER JOIN usuarios us ON us.id_usuario = ps.id_usuario
+        INNER JOIN sedes se ON se.id_sede = us.id_sede
+        INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = ps.estatus AND oxc.id_catalogo = 74
+        WHERE us.forma_pago = 5 AND ps.estatus IN (2, 4)");
 
         return $datos;
     }
@@ -212,4 +238,44 @@ class Suma_model extends CI_Model
 
         return $datos;
     }
+
+    function getDatosNuevasXSuma(){
+        return $this->db->query("SELECT SUM(pci1.total_comision) total,  CONCAT(u.nombre, ' ',u.apellido_paterno, ' ', u.apellido_materno) usuario, u.forma_pago, 0 as factura, oxcest.id_opcion id_estatus_actual, opn.estatus estatus_opinion, opn.archivo_name, fa.uuid,fa.nombre_archivo as xmla, fa.bandera, u.rfc, pci1.id_usuario
+        FROM pagos_suma pci1 
+        INNER JOIN comisiones_suma com ON pci1.referencia = com.referencia  
+        INNER JOIN usuarios u ON u.id_usuario = pci1.id_usuario  
+        INNER JOIN opcs_x_cats oxcest ON oxcest.id_opcion = pci1.estatus AND oxcest.id_catalogo = 74 
+        INNER JOIN opinion_cumplimiento opn ON opn.id_usuario = u.id_usuario  and opn.estatus IN (2) 
+        INNER JOIN facturas_suma fa ON fa.id_pago_suma = pci1.id_pago_suma
+        GROUP BY  u.nombre, u.apellido_paterno, u.apellido_materno, u.forma_pago, oxcest.id_opcion, opn.estatus, opn.archivo_name, fa.uuid,fa.nombre_archivo,fa.bandera, u.rfc, pci1.id_usuario
+        ORDER BY u.nombre");
+    }
+
+    function get_solicitudes_factura($usuario){
+        return $this->db->query("SELECT ps.total_comision, cm.referencia, ps.id_pago_suma
+        FROM pagos_suma ps 
+        INNER JOIN comisiones_suma cm ON ps.referencia = cm.referencia  
+        INNER JOIN usuarios u ON u.id_usuario = ps.id_usuario AND u.id_usuario = $usuario
+        INNER JOIN opcs_x_cats oxcest ON oxcest.id_opcion = ps.estatus AND oxcest.id_catalogo = 74 
+        INNER JOIN opinion_cumplimiento opn ON opn.id_usuario = u.id_usuario AND opn.estatus IN (2) 
+        INNER JOIN facturas_suma fa ON fa.id_pago_suma = ps.id_pago_suma
+        GROUP BY ps.total_comision, cm.referencia, ps.id_pago_suma")->result_array();
+    }
+
+    
+    function factura_comision( $uuid){
+        return $this->db->query("SELECT DISTINCT(CAST(f.uuid AS VARCHAR(MAX))) AS uuid, u.nombre, u.apellido_paterno, u.apellido_materno, f.fecha_factura, f.folio_factura, 
+		f.metodo_pago, f.regimen, f.forma_pago, f.cfdi, f.unidad, f.claveProd, f.total, f.total as porcentaje_dinero, f.nombre_archivo, 
+		CAST(f.descripcion AS VARCHAR(MAX)) AS descrip, f.fecha_ingreso
+
+        FROM facturas_suma f
+        INNER JOIN pagos_suma p ON p.id_pago_suma = f.id_pago_suma  
+        INNER JOIN usuarios u ON u.id_usuario = p.id_usuario --AND u.id_usuario = 896
+		WHERE f.uuid = '".$uuid."' ");
+        }
+    
+
+    
+
+  
 }
