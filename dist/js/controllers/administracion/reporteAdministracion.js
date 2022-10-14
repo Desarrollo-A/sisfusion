@@ -1,11 +1,33 @@
 $(document).ready(function () {
-	setInitialValues();
-});
-function setInitialValues(){
-	repAdmon();
-}
 
-function repAdmon() {   
+    $.post(url + "Contratacion/lista_proyecto", function(data) {
+        var len = data.length;
+        for(var i = 0; i<len; i++)
+        {
+            var id = data[i]['idResidencial'];
+            var name = data[i]['descripcion'];
+            $("#proyecto").append($('<option>').val(id).text(name.toUpperCase()));
+        }
+
+        $("#proyecto").selectpicker('refresh');
+    }, 'json');
+
+});
+
+
+$(document).on('change','#proyecto', function() {
+    ix_proyecto = $("#proyecto").val();
+
+    repAdmon(ix_proyecto);
+
+
+    $(window).resize(function(){
+        tabla_inventario.columns.adjust();
+    });
+});
+
+
+function repAdmon(idResidencial) {
     $('#repAdministracion thead tr:eq(0) th').each( function (i) {
         var title = $(this).text();
         $(this).html('<input class="textoshead"  placeholder="'+title+'"/>' );
@@ -19,7 +41,7 @@ function repAdmon() {
         destroy: true,
         ajax:
             {
-                url: 'getRepoAdmin',
+                url: 'getRepoAdmin/'+idResidencial,
                 dataSrc: "",
                 type: "POST",
                 cache: false
@@ -87,7 +109,11 @@ function repAdmon() {
                 {data: 'idLote'},
                 {data: 'nombreCliente'},
                 {data: 'fecha9'},
-                {data: 'fechaLiberacion'},
+                {
+                    "data": function(d){
+                        return '<p>'+myFunctions.convertDateYMDHMS(d.fechaLiberacion)+'</p>';
+                    }
+                },
                 {data: 'nombre'}
             ]
     });
