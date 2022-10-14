@@ -2988,7 +2988,7 @@ public function getStatusMktdPreventa(){
         );
 
         $result['data'] = $this->Clientes_model->searchData($data_search);
-        print_r(json_encode($result));
+        print_r(json_encode($result, JSON_NUMERIC_CHECK));
         exit;
     }
 

@@ -15,7 +15,36 @@
         $datos = $datos3;  
         $this->load->view('template/sidebar', $datos);
         ?>
-
+        <div class="modal fade" id="verDetalles" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+             aria-hidden="true" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <center><b><h4 class="card-title ">Ventas compartidas</h4></b></center>
+                        <div class="material-datatables">
+                            <div class="form-group">
+                                <div class="table-responsive">
+                                    <table id="verDet" class="table table-bordered table-hover" width="100%" style="text-align:center;">
+                                        <thead>
+                                        <tr>
+                                            <th>Gerente</th>
+                                            <th>Coordinador</th>
+                                            <th>Asesor</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal"> CERRAR</button>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="content boxContent">
             <div class="container-fluid">
                 <div class="row">
