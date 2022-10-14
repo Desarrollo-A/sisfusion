@@ -1409,7 +1409,6 @@ function defaultValuesSlect(origen){
 /**********************************------------------------------------------------------------------------- */		
 	
 		function GenerarCard(){
-			document.getElementById('showPackage').innerHTML = '';
 			if($('#sede').val() != '' && $('#residencial').val() != '' && $('input[name="tipoLote"]').is(':checked') && $('#fechainicio').val() != '' && $('#fechafin').val() != '' && $('input[name="superficie"]').is(':checked') ){
 				var indexActual = document.getElementById('index');
 				var indexNext = (document.getElementById('index').value - 1) + 2;
