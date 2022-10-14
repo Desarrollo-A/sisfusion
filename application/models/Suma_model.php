@@ -212,4 +212,10 @@ class Suma_model extends CI_Model
 
         return $datos;
     }
+
+    function duplicateReference($stringReferencias){
+        $datos = $this->db->query("SELECT referencia FROM comisiones_suma WHERE referencia IN ('$stringReferencias')");
+
+        return $datos;
+    }
 }
