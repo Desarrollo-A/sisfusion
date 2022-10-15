@@ -76,7 +76,7 @@ class Suma extends CI_Controller
         foreach ($data_json as &$data) {
             if (!isset($data->id_cliente) || !isset($data->total_venta) || !isset($data->comisionistas) || !isset($data->nombre_cliente) || !isset($data->id_pago) || !isset($data->referencia)){
                 $errorLeyend = 'No viene algún parametro ';
-                $errors[] = (object) ['idPagoSuma' => $idPago, 'idComisionCRM' => 0, 'status' => $errorLeyend, 'referencia' => $referencia ];
+                $detalle[] = (object) ['idPagoSuma' => $idPago, 'idComisionCRM' => 0, 'status' => $errorLeyend, 'referencia' => $referencia ];
             }
             else {
                 //Evaluar SI SOLO contiene espacios en blanco
@@ -89,26 +89,26 @@ class Suma extends CI_Controller
                 
                 if ($idCliente == "" || $totalVenta == "" || $nombreCliente == "" || $idPago == ""|| $referencia == ""){
                     $errorLeyend = 'Algún parámetro en la comisión de la referencia ' . $referencia . " viene vacio";
-                    $errors[] = (object) ['idPagoSuma' => $idPago, 'idComisionCRM' => 0, 'status' => $errorLeyend, 'referencia' => $referencia ];
+                    $detalle[] = (object) ['idPagoSuma' => $idPago, 'idComisionCRM' => 0, 'status' => $errorLeyend, 'referencia' => $referencia ];
                 }
                 else {
                     if( count($comisionistas) == 0 ){
                         $errorLeyend = 'El array de pagos viene vacio para la referencia' . $referencia;
-                        $errors[] = (object) ['idPagoSuma' => $idPago, 'idComisionCRM' => 0, 'status' => $errorLeyend, 'referencia' => $referencia ];
+                        $detalle[] = (object) ['idPagoSuma' => $idPago, 'idComisionCRM' => 0, 'status' => $errorLeyend, 'referencia' => $referencia ];
                     }
                     else{
-                        // $arrayComisiones[] = array(
-                        //     'total_venta' => $totalVenta,
-                        //     'id_cliente' => $idCliente,
-                        //     'nombre_cliente' => $nombreCliente,
-                        //     'id_pago' => $idPago,
-                        //     'referencia' => $referencia
-                        // );
+                        $arrayComisiones[] = array(
+                            'total_venta' => $totalVenta,
+                            'id_cliente' => $idCliente,
+                            'nombre_cliente' => $nombreCliente,
+                            'id_pago' => $idPago,
+                            'referencia' => $referencia
+                        );
                         
                         foreach ($comisionistas as $comisionista) {
                             if ( !isset($comisionista->id_rol) || !isset($comisionista->id_usuario) || !isset($comisionista->porcentaje_comision) || !isset($comisionista->total_comision) ){
                                 $errorLeyend = 'No viene algún parámetro en el pago de la ref.' . $referencia . ' del rol ' . $comisionista->id_rol;
-                                $errors[] = (object) ['idPagoSuma' => $idPago, 'idComisionCRM' => 0, 'status' => $errorLeyend, 'referencia' => $referencia ];
+                                $detalle[] = (object) ['idPagoSuma' => $idPago, 'idComisionCRM' => 0, 'status' => $errorLeyend, 'referencia' => $referencia ];
                             }
                             else{
                                 $idRol = trim($comisionista->id_rol);
@@ -118,22 +118,22 @@ class Suma extends CI_Controller
                                 
                                 if ($idRol == "" || $idUsuario == "" || $porcentaje == "" || $totalComision == "" ){
                                     $errorLeyend = 'Algún parámetro en uno de los pagos de la ref.' . $referencia . ' del rol ' . $comisionista->id_rol . ', viene vacio';
-                                    $errors[] = (object) ['idPagoSuma' => $idPago, 'idComisionCRM' => 0, 'status' => $errorLeyend, 'referencia' => $referencia ];
+                                    $detalle[] = (object) ['idPagoSuma' => $idPago, 'idComisionCRM' => 0, 'status' => $errorLeyend, 'referencia' => $referencia ];
                                 }
                                 else{
                                     $primerFiltro = true;
-                                    // $arrayPagos[] = array(
-                                    //     'id_rol' => $idRol,
-                                    //     'id_usuario' => $idUsuario,
-                                    //     'porcentaje_comision' => $porcentaje,
-                                    //     'total_comision' => $totalComision,
-                                    //     'referencia' => $referencia
-                                    // );
+                                    $arrayPagos[] = array(
+                                        'id_rol' => $idRol,
+                                        'id_usuario' => $idUsuario,
+                                        'porcentaje_comision' => $porcentaje,
+                                        'total_comision' => $totalComision,
+                                        'referencia' => $referencia
+                                    );
                                 }
                             }
                         }
                         if($primerFiltro){
-                            $stringReferencias .= $referencia . ', ';
+                            $stringReferencias .= "'" . $referencia . "', ";
                         }
                     }
                 }
@@ -143,19 +143,54 @@ class Suma extends CI_Controller
         //Obtenemos todas las referencias de las comisiones mandadas en el array
         if ($stringReferencias != '' ){
             $stringReferencias = substr($stringReferencias, 0, -2);
-            $datos = $this->Suma_model->duplicateReference($stringReferencias)->result_array();
-        }
+            $dataDuplicados = $this->Suma_model->duplicateReference($stringReferencias)->result_array();
+            foreach ($dataDuplicados as $objDuplicado ){
+                $refDup = $objDuplicado['referencia'];
 
-        if($valido){
-            $result = $this->Suma_model->setComisionesPagos($arrayComisiones, $arrayPagos);
-            if($result){
-                array_push($request, array("status" => 200, "message" => "Los registros se han ingresado de manera exitosa."));
+                $filteredArrayComisiones = 
+                    array_filter($arrayComisiones, function($element) use($refDup){
+                    return $element['referencia'] == $refDup;
+                });
+                $filteredArrayPagos =
+                    array_filter($arrayPagos, function($element) use($refDup){
+                    return $element['referencia'] == $refDup;
+                });
+
+                
+                foreach ($filteredArrayComisiones as $key => $posicion) {
+                    $errorLeyend = 'La referencia ' . $refDup . ' está duplicada';
+                    $detalle[] = (object) ['idPagoSuma' => $posicion['id_pago'], 'idComisionCRM' => 0, 'status' => $errorLeyend, 'referencia' => $refDup ];
+                    unset($arrayComisiones[$key]);
+                }
+                foreach ($filteredArrayPagos as $key => $posicion) {
+                    unset($arrayPagos[$key]);
+                }
             }
-            else
-                array_push($request, array("status" => 400, "message" => "Oops, ocurrió un error al insertar los registros"));
 
-            echo(json_encode($request, JSON_UNESCAPED_UNICODE));
+            $arrayComisiones = array_values($arrayComisiones); 
+            $arrayPagos = array_values($arrayPagos); 
         }
+
+        if(count($arrayComisiones) > 0) {
+            list($result, $ids) = $this->Suma_model->setComisionesPagos($arrayComisiones, $arrayPagos);
+            if($result){
+                $errorLeyend = "Comisión insertada con éxito.";
+                foreach($arrayComisiones as $objComision){
+                    $detalle[] = (object) ['idPagoSuma' => $objComision['id_pago'], 'idComisionCRM' => $ids, 'status' => $errorLeyend, 'referencia' => $objComision['referencia']];
+                    $ids += 1;
+                }
+                echo(json_encode(array("status" => 402, "mensaje" => "Todo exitoso.", "detalle" => $detalle), JSON_UNESCAPED_UNICODE));
+            }
+            else {
+                $errorLeyend = "Error al insertar.";
+                foreach($arrayComisiones as $objComision){
+                    $detalle[] = (object) ['idPagoSuma' => $objComision['id_pago'], 'idComisionCRM' => 0, 'status' => $errorLeyend, 'referencia' => $objComision['referencia']];
+                }
+                echo(json_encode(array("status" => 403, "mensaje" => "Hubo algún error.", "detalle" => $detalle), JSON_UNESCAPED_UNICODE));
+            }
+        }
+        else
+            echo(json_encode(array("status" => 403, "mensaje" => "Hubo algún error.", "detalle" => $detalle), JSON_UNESCAPED_UNICODE));
     }
 
     public function getHistorial($pago){

@@ -36,13 +36,14 @@ class Suma_model extends CI_Model
     function setComisionesPagos($dataComisiones, $dataPagos){
         $this->db->trans_begin();
         $c = $this->db->insert_batch('comisiones_suma', $dataComisiones);
+        $ids= $this->db->insert_id();
         $b = $this->db->insert_batch('pagos_suma', $dataPagos);
         if ($this->db->trans_status() === FALSE) { // Hubo errores en la consulta, entonces se cancela la transacción.
             $this->db->trans_rollback();
-            return false;
+            return [false, $ids];
         } else { // Se realiza primer insert correctamente
             $this->db->trans_commit();
-            return true;
+            return [true, $ids];
         }
     }
 
@@ -214,7 +215,7 @@ class Suma_model extends CI_Model
     }
 
     function duplicateReference($stringReferencias){
-        $datos = $this->db->query("SELECT referencia FROM comisiones_suma WHERE referencia IN ('$stringReferencias')");
+        $datos = $this->db->query("SELECT referencia FROM comisiones_suma WHERE referencia IN ($stringReferencias)");
 
         return $datos;
     }
