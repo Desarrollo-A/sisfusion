@@ -542,7 +542,8 @@
 
     public function table_condominio($idResidencial)
     {
-        $this->db->select('condominios.idCondominio, residenciales.nombreResidencial, condominios.nombre as nombreCluster, etapas.descripcion, datosbancarios.empresa, tipo_lote');
+        $this->db->select('condominios.idCondominio, residenciales.nombreResidencial, condominios.nombre as nombreCluster, 
+        etapas.descripcion, datosbancarios.empresa, tipo_lote, residenciales.abreviatura as abreviatura, condominios.idEtapa as etapa, tipo_lote as tipo, condominios.idDBanco cuenta');
         $this->db->join('residenciales', 'condominios.idResidencial = residenciales.idResidencial');
 
         $this->db->join('etapas', 'condominios.idEtapa = etapas.idEtapa', 'LEFT');
@@ -1395,6 +1396,11 @@
         LEFT JOIN statuscontratacion sc ON sc.idStatusContratacion = lo.idStatusContratacion
         LEFT JOIN statuslote st ON st.idStatusLote = lo.idStatusLote
         WHERE lo.idLote IN ($idLote)");
+    }
+
+    public function getTipoLote()
+    {
+        return $this->db->query("SELECT id_opcion, id_catalogo, nombre FROM opcs_x_cats WHERE id_catalogo = 27 AND estatus = 1")->result_array();
     }
 
 }

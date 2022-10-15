@@ -406,7 +406,23 @@ class Suma extends CI_Controller
         $this->load->view("ventas/revision_remanentes_suma", $datos);
     }
 
-    public function revision_facturas_xml(){
+    public function revision_facturas(){
+        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
+        $datos['sub_menu'] = $this->get_menu->get_submenu_data($this->session->userdata('id_rol'), $this->session->userdata('id_usuario'));
+
+        $this->load->view('template/header');
+        $this->load->view("ventas/revision_factura_suma", $datos);
+    }
+
+    public function revision_extranjero(){
+        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
+        $datos['sub_menu'] = $this->get_menu->get_submenu_data($this->session->userdata('id_rol'), $this->session->userdata('id_usuario'));
+
+        $this->load->view('template/header');
+        $this->load->view("ventas/revision_extranjero_suma", $datos);
+    }
+
+    public function revision_xml(){
         $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
         $datos['sub_menu'] = $this->get_menu->get_submenu_data($this->session->userdata('id_rol'), $this->session->userdata('id_usuario'));
 
@@ -430,7 +446,7 @@ class Suma extends CI_Controller
         $this->load->view("ventas/revision_INTMEXremanente_suma", $datos);  
     }
 
-    public function revision_XML_intmex(){
+    public function revision_factura_intmex(){
         $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
         $datos['sub_menu'] = $this->get_menu->get_submenu_data($this->session->userdata('id_rol'), $this->session->userdata('id_usuario'));
 
@@ -452,6 +468,13 @@ class Suma extends CI_Controller
 
     public function getRemanentesRevision(){
         echo json_encode($this->Suma_model->getRemanentesRevision()->result_array());
+    }
+
+    public function getFacturaRevision(){
+        echo json_encode($this->Suma_model->getFacturaRevision()->result_array());
+    }
+    public function getFacturaExtranjeroRevision(){
+        echo json_encode($this->Suma_model->getFacturaExtranjeroRevision()->result_array());
     }
 
     public function setPausarDespausarComision(){
@@ -489,7 +512,7 @@ class Suma extends CI_Controller
                 'id_usuario' =>  $idUsuario,
                 'fecha_movimiento' => date('Y-m-d H:i:s'),
                 'estatus' => 3,
-                'comentario' =>  'SOCIO MADERAS MANDA A INTERNOMEX' 
+                'comentario' =>  'SUMA ENVÍO A INTERNOMEX' 
             );
         }
 
@@ -512,7 +535,7 @@ class Suma extends CI_Controller
                 'id_usuario' =>  $idUsuario,
                 'fecha_movimiento' => date('Y-m-d H:i:s'),
                 'estatus' => 6,
-                'comentario' =>  'INTERNOMEX APLICO PAGO' 
+                'comentario' =>  'INTERNOMEX APLICÓ PAGO' 
             );
         }
 
@@ -520,9 +543,9 @@ class Suma extends CI_Controller
         echo json_encode( $reponse );
     }
 
-    public function getDatosNuevasXContraloria($proyecto,$condominio){
-    $datos =  $this->Comisiones_model->getDatosNuevasXContraloria()->result_array();
-       echo json_encode( array( "data" => $dat));
+    public function getDatosNuevasXSuma(){
+    $datos =  $this->Suma_model->getDatosNuevasXSuma()->result_array();
+       echo json_encode( array( "data" => $datos));
     }
 
     public function lista_roles(){
@@ -532,4 +555,79 @@ class Suma extends CI_Controller
     public function lista_usuarios($rol,$forma_pago){
       echo json_encode($this->Suma_model->get_lista_usuarios($rol, $forma_pago)->result_array());
     }
+
+    public function carga_listado_factura(){
+        // echo 'sdsdfs'.$this->input->post("id_usuario");
+        echo json_encode( $this->Suma_model->get_solicitudes_factura($this->input->post("id_usuario") ) );
+    }
+
+    public function getDatosFactura($uuid, $id_res){
+        if($uuid){
+             $consulta_sol = $this->Suma_model->factura_comision($uuid, $id_res)->row();
+             if (!empty($consulta_sol)) {
+                $datos['datos_solicitud'] = $this->Suma_model->factura_comision($uuid, $id_res)->row(); 
+            }
+            else {
+                $datos['datos_solicitud'] = array('0', FALSE);
+            } 
+        }
+        else{
+            $datos['datos_solicitud'] = array('0', FALSE);
+        }
+        echo json_encode( $datos );
+      }
+
+
+      public function GetDescripcionXML($xml){
+        error_reporting(0);
+    
+        $xml=simplexml_load_file("".base_url()."UPLOADS/XMLS/".$xml."") or die("Error: Cannot create object");
+    
+        $cuantos = count($xml-> xpath('//cfdi:Concepto'));
+        $UUID = $xml->xpath('//@UUID')[0];
+        $fecha = $xml -> xpath('//cfdi:Comprobante')[0]['Fecha'];
+        $folio = $xml -> xpath('//cfdi:Comprobante')[0]['Folio'];
+        if($folio[0] == null){
+          $folio = '*';
+        }
+        $total = $xml -> xpath('//cfdi:Comprobante')[0]['Total'];
+        $cadena = '';
+        for($i=0;$i< $cuantos; $i++ ){
+          $cadena = $cadena .' '. $xml -> xpath('//cfdi:Concepto')[$i]['Descripcion']; 
+        }
+        $arr[0]= $UUID[0];
+        $arr[1]=  $fecha[0];
+        $arr[2]=  $folio[0];
+        $arr[3]=  $total;
+        $arr[4]=  $cadena;
+        echo json_encode($arr);
+      }
+
+
+
+
+ public function updateClientName()
+    {
+        $data = json_decode((file_get_contents("php://input")));
+
+        if (!isset($data->id_cliente))
+            echo json_encode(array("status" => 400, "message" => "Algún parámetro no tiene un valor especificado o no viene informado."), JSON_UNESCAPED_UNICODE);
+        else {
+            if ($data->nombre_cliente=="")
+                   echo json_encode(array("status" => 400, "message" => "Algún parámetro no tiene un valor especificado o no viene informado..."), JSON_UNESCAPED_UNICODE);
+            else {
+                $updateData = array(
+                    "id_cliente" => $data->id_cliente,
+                    "nombre_cliente" => $data->nombre_cliente
+                );
+
+                $result = $this->General_model->updateRecord("comisiones_suma", $updateData, "id_cliente", $data->id_cliente);
+                if ($result == true)
+                    echo json_encode(array("status" => 200, "message" => "El registro se ha actualizado de manera exitosa."), JSON_UNESCAPED_UNICODE);
+                else
+                    echo json_encode(array("status" => 400, "message" => "Oops, algo salió mal. Inténtalo más tarde."), JSON_UNESCAPED_UNICODE);
+            }
+        }
+    }
+
 }

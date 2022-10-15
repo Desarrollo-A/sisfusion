@@ -52,7 +52,7 @@
                             </div>
                             <div class="card-content">
                                 <div class="encabezadoBox">
-                                    <h3 class="card-title center-align" >Comisiones nuevas <b>factura</b></h3>
+                                    <h3 class="card-title center-align" >Comisiones nuevas <b>XML Y OC</b></h3>
                                     <p class="card-title pl-1">(Comisiones nuevas, solicitadas para proceder a pago en esquema de factura)</p>
                                 </div>
                                 <div class="toolbar">
@@ -80,9 +80,10 @@
                                                 <thead>
                                                     <tr>
                                                         <th></th>
+                                                        <th>ID</th>
                                                         <th>USUARIO</th>
                                                         <th>MONTO</th>
-                                                        <th>EMPRESA</th>
+                                                        <!-- <th>EMPRESA</th> -->
                                                         <th>OPINIÓN CUMPLIMIENTO</th>
                                                         <th>MÁS</th>
                                                     </tr>
@@ -213,8 +214,8 @@
                 buttons: [{
                     text: 'XMLS',
                     action: function(){
-                        if(rol == 17 || rol == 13 || rol == 31 || rol== 32){
-                            window.location = url+'Kel_XML/descargar_XML';
+                        if(rol == 68 || rol == 31 || rol== 32){
+                            window.location = url+'SUMA_XML/descargar_XML';
                         }
                         else{
                             alerts.showNotification("top", "right", "No tienes permisos para descargar archivos.", "warning");
@@ -228,8 +229,8 @@
                 {
                     text: 'OPINIONES CUMPLIMIENTO',
                     action: function(){
-                        if(rol == 17 || rol == 13 || rol == 31 || rol== 32){
-                            window.location = url+'Kel_XML/descargar_PDF';
+                        if(rol == 68 || rol == 31 || rol== 32){
+                            window.location = url+'SUMA_XML/descargar_PDF';
                         }
                         else{
                             alerts.showNotification("top", "right", "No tienes permisos para descargar archivos.", "warning");
@@ -283,6 +284,13 @@
                     "data" : null,
                     "defaultContent": '<div class="toggle-subTable"><i class="animacion fas fa-chevron-down fa-lg"></i>'
                 },
+
+                {
+                    "width": "15%",
+                    "data": function( d ){
+                        return '<p class="m-0">'+d.id_usuario+'</p>';
+                    }
+                },
                 {
                     "width": "15%",
                     "data": function( d ){
@@ -295,12 +303,12 @@
                         return '<p class="m-0"><b> $'+formatMoney(d.total)+'</b></p>';
                     }
                 },
-                {
-                    "width": "15%",
-                    "data": function( d ){
-                        return '<p class="m-0"><b>'+d.empresa+'</b></p>';
-                    }
-                },
+                // {
+                //     "width": "15%",
+                //     "data": function( d ){
+                //         return '<p class="m-0"><b>'+d.empresa+'</b></p>';
+                //     }
+                // },
                 {
                     "width": "15%",
                     "data": function( d ){
@@ -322,25 +330,15 @@
                         if(data.estatus_opinion == 1 || data.estatus_opinion == 2){
                             if(rol == 2 || rol == 3 || rol == 7 || rol==9){
                                 let namefile2 = data.xmla.split('.');
-                                if(data.bandera != 3 ){
-                                    btnpdf = '<button value="'+data.uuid+'" data-userfactura="'+data.usuario+'" data-file="'+data.xmla+'" class="btn-data btn-green subirPDF" title="Subir PDF">' +'<i class="fas fa-upload"></i></button>';
-                                }
-                                else{
-                                    btnpdf = '<a class="btn-data btn-warning verPDF2" title= "Ver pdf" data-usuario="'+namefile2[0]+'" ><i class="fas fa-file-pdf"></i></a>';
-                                }
+                                
                             }
                             else{
-                                BtnStats = '<button href="#" value="'+data.uuid+'" data-value="'+data.idResidencial+'" data-userfactura="'+data.usuario+'" data-code="'+data.cbbtton+'" ' +'class="btn-data btn-blueMaderas consultar_documentos" title="Detalle de factura">' +'<i class="fas fa-info"></i></button><a href="#" class="btn-data btn-warning verPDF" title= "Ver opinión de cumplimiento" data-usuario="'+data.archivo_name+'" ><i class="material-icons">description</i></a>';
+                                BtnStats = '<button href="#" value="'+data.uuid+'" data-value="'+data.id_usuario+'" data-userfactura="'+data.usuario+'" data-code="'+data.cbbtton+'" ' +'class="btn-data btn-blueMaderas consultar_documentos" title="Detalle de factura">' +'<i class="fas fa-info"></i></button><a href="#" class="btn-data btn-warning verPDF" title= "Ver opinión de cumplimiento" data-usuario="'+data.archivo_name+'" ><i class="material-icons">description</i></a>';
                     
                                 let namefile = data.xmla.split('.');
-                                if(data.bandera != 3 ){
-                                    btnpdf = '<button value="'+data.uuid+'" data-userfactura="'+data.usuario+'" data-file="'+data.xmla+'" class="btn-data btn-blueMaderas subirPDF" title="Subir PDF">' +'<i class="fas fa-upload"></i></button>';
-                                }
-                                else{
-                                    btnpdf = '<a class="btn-data btn-warning verPDF2" title= "Ver pdf" data-usuario="'+namefile[0]+'" ><i class="fas fa-file-pdf"></i></a>';
-                                }
+                                
 
-                                btnpausar = '<button value="'+data.uuid+'" data-id_user="'+data.id_usuario+'" data-userfactura="'+data.usuario+'" data-total="'+data.total+'" class="btn-data btn-violetChin regresar" title="Refacturar">' +'<span class="material-icons">autorenew</span></button>';
+                                // btnpausar = '<button value="'+data.uuid+'" data-id_user="'+data.id_usuario+'" data-userfactura="'+data.usuario+'" data-total="'+data.total+'" class="btn-data btn-violetChin regresar" title="Refacturar">' +'<span class="material-icons">autorenew</span></button>';
                             }
                         }
                         else{
@@ -356,7 +354,7 @@
                     "targets": 0
                 }],
                 ajax: {
-                    "url": general_base_url + "Suma/getDatosNuevasXContraloria/",
+                    "url": general_base_url + "Suma/getDatosNuevasXSuma/",
                     "type": "POST",
                     cache: false,
                     "data": function( d ){
@@ -376,7 +374,8 @@
                 }
                 else {
                     if( row.data().solicitudes == null || row.data().solicitudes == "null" ){
-                        $.post( url + "Comisiones/carga_listado_factura" , { "idResidencial" : row.data().idResidencial, "id_usuario" : row.data().id_usuario } ).done( function( data ){
+                        // alert(row.data().id_usuario);
+                        $.post( url + "Suma/carga_listado_factura" , { "id_usuario" : row.data().id_usuario } ).done( function( data ){
                             row.data().solicitudes = JSON.parse( data );
                             tabla_factura.row( tr ).data( row.data() );
                             row = tabla_factura.row( tr );
@@ -399,13 +398,13 @@
                 $.each( data, function( i, v){ 
                     solicitudes += '<tr>';
                     solicitudes += '<td><b>'+(i+1)+'</b></td>';
-                    solicitudes += '<td>'+'<b>'+'ID: '+'</b> '+v.id_pago_i+'</td>';
-                    solicitudes += '<td>'+'<b>'+'CONDOMINIO: '+'</b> '+v.condominio+'</td>';
-                    solicitudes += '<td>'+'<b>'+'LOTE: '+'</b> '+v.lote+'</td>';
-                    solicitudes += '<td>'+'<b>'+'MONTO: '+'</b> $'+formatMoney(v.pago_cliente)+'</td>';
-                    solicitudes += '<td>'+'<b>'+'USUARIO: '+'</b> '+v.usuario+'</td>';
+                    solicitudes += '<td>'+'<b>'+'ID PAGO: '+'</b> '+v.id_pago_suma+'</td>';
+                    solicitudes += '<td>'+'<b>'+'REFERENCIA: '+'</b> '+v.referencia+'</td>';
+                    solicitudes += '<td>'+'<b>'+'MONTO: '+'</b> $'+formatMoney(v.total_comision)+'</td>';
                     solicitudes += '</tr>';
-                });          
+                });     
+                
+                
 
                 return solicitudes += '</table>';
             }
@@ -502,14 +501,14 @@
                 e.stopImmediatePropagation();
 
                 uuid = $(this).val();
-                id_residencial = $(this).attr("data-value");
+                id_usuario = $(this).attr("data-value");
                 user_factura = $(this).attr("data-userfactura");
                 $("#seeInformationModalfactura").modal();
-                $.getJSON( url + "Comisiones/getDatosFactura/"+uuid+"/"+id_residencial).done( function( data ){
+                $.getJSON( url + "Suma/getDatosFactura/"+uuid+"/"+id_usuario).done( function( data ){
                     $("#seeInformationModalfactura .modal-body").append('<div class="row">');
                     let uuid,fecha,folio,tot,descripcion;
                     if (!data.datos_solicitud['uuid'] == '' && !data.datos_solicitud['uuid'] == '0'){
-                        $.get(url+"Comisiones/GetDescripcionXML/"+data.datos_solicitud['nombre_archivo']).done(function (dat) {
+                        $.get(url+"Suma/GetDescripcionXML/"+data.datos_solicitud['nombre_archivo']).done(function (dat) {
                             let datos = JSON.parse(dat);
                             uuid = datos[0][0];
                             fecha = datos[1][0];
@@ -519,12 +518,11 @@
                             descripcion = datos[4];
 
                             $("#seeInformationModalfactura .modal-body").append('<BR><div class="col-md-12"><label style="font-size:14px; margin:0; color:gray;"><b>NOMBRE EMISOR</b></label><br><label style="font-size:12px; margin:0; color:gray;">'+data.datos_solicitud['nombre']+' '+data.datos_solicitud['apellido_paterno']+' '+data.datos_solicitud['apellido_materno']+'</label><br><label style="font-size:12px; margin:0; color:gray;"> </label></div>');
+ 
 
-                            $("#seeInformationModalfactura .modal-body").append('<div class="col-md-4"><label style="font-size:14px; margin:0; color:gray;"><b> PROYECTO</b></label><br><label style="font-size:12px; margin:0; color:gray;">'+data.datos_solicitud['nombreLote']+'</label><br><label style="font-size:12px; margin:0; color:gray;"> </label></div>');
+                            $("#seeInformationModalfactura .modal-body").append('<div class="col-md-6"><label style="font-size:14px; margin:0; color:gray;"><b>TOTAL FACT.</b></label><br><label style="font-size:12px; margin:0; color:gray;">$ '+tot+'</label><br><label style="font-size:12px; margin:0; color:gray;"> </label></div>');
 
-                            $("#seeInformationModalfactura .modal-body").append('<div class="col-md-4"><label style="font-size:14px; margin:0; color:gray;"><b>TOTAL FACT.</b></label><br><label style="font-size:12px; margin:0; color:gray;">$ '+tot+'</label><br><label style="font-size:12px; margin:0; color:gray;"> </label></div>');
-
-                            $("#seeInformationModalfactura .modal-body").append('<div class="col-md-4"><label style="font-size:14px; margin:0; color:gray;"><b>MONTO COMISIÓN.</b></label><br><label style="font-size:12px; margin:0; color:gray;">$ '+data.datos_solicitud['porcentaje_dinero']+'</label><br><label style="font-size:12px; margin:0; color:gray;"> </label></div>');
+                            $("#seeInformationModalfactura .modal-body").append('<div class="col-md-6"><label style="font-size:14px; margin:0; color:gray;"><b>MONTO COMISIÓN.</b></label><br><label style="font-size:12px; margin:0; color:gray;">$ '+data.datos_solicitud['porcentaje_dinero']+'</label><br><label style="font-size:12px; margin:0; color:gray;"> </label></div>');
 
                             $("#seeInformationModalfactura .modal-body").append('<div class="col-md-4"><label style="font-size:14px; margin:0; color:gray;"><b>FECHA FACTURA</b></label><br><label style="font-size:12px; margin:0; color:gray;">'+fecha+'</label><br><label style="font-size:12px; margin:0; color:gray;"> </label></div>');
 

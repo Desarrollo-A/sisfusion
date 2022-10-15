@@ -25,6 +25,26 @@ class Usuarios_modelo extends CI_Model {
         $id_rol = $this->session->userdata('id_rol');
         $id_lider = $this->session->userdata('id_lider');
         switch ($id_rol) {
+            case '54': // POPEA
+                    $where = "us.id_rol IN (7) AND us.rfc NOT LIKE '%TSTDD%' AND ISNULL(us.correo, '') NOT LIKE '%test_%' AND ISNULL(us.correo, '') NOT LIKE '%OOAM%' AND ISNULL(us.correo, '') NOT LIKE '%CASA%'";
+                return $this->db->query("SELECT us.id_usuario, us.id_rol, oxc.nombre AS puesto, 
+                UPPER(CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)) nombre, 
+                UPPER(CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno)) coordinador, 
+                UPPER(CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno)) gerente, 
+                UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)) subdirector, 
+                UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)) regional, 
+                us.telefono, us.correo, us.estatus, 0 nuevo, us.fecha_creacion, se.nombre sede,
+                us.talla, us.sexo, us.hijos_12, us.fecha_reingreso, us.fecha_baja
+                FROM usuarios us
+                INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = us.id_rol AND oxc.id_catalogo = 1
+                LEFT JOIN sedes se ON CAST(se.id_sede AS VARCHAR(45)) = CAST(us.id_sede AS VARCHAR(45))
+                LEFT JOIN usuarios u1 ON u1.id_usuario = us.id_lider
+                LEFT JOIN usuarios u2 ON u2.id_usuario = us.gerente_id
+                LEFT JOIN usuarios u3 ON u3.id_usuario = us.subdirector_id
+                LEFT JOIN usuarios u4 ON u4.id_usuario = us.regional_id
+                WHERE $where 
+                ORDER BY nombre");
+                break;
             case '19': // SUBDIRECTOR MKTD
             case '20': // GERENTE MKTD
                 return $this->db->query("SELECT usuarios.id_usuario, id_rol, opcs_x_cats.nombre AS puesto, CONCAT(usuarios.nombre, ' ', apellido_paterno, ' ', apellido_materno) AS nombre, 
@@ -128,7 +148,9 @@ class Usuarios_modelo extends CI_Model {
             case '8': //SOPORTE
                 if($this->session->userdata('id_usuario') != 1297)
                     $id_rol = "AND u.id_rol NOT IN ('18', '19', '20', '2', '1', '28')";
-                else 
+                elseif($this->session->userdata('id_rol') == '54')
+                    $id_rol = "AND u.id_rol=7";
+                else
                     $id_rol = "";  
                 return $this->db->query("SELECT u.estatus, u.id_usuario, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombre, u.correo,
                 u.telefono, oxc.nombre puesto, 

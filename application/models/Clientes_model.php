@@ -4301,4 +4301,111 @@ function getStatusMktdPreventa(){
             ORDER BY pr.fecha_creacion");
         }
     }
+
+    public function searchData($data_search){
+        $flag_where=0;
+        $condicion_dinamica = '';
+        $prefix = ($data_search['tipo_busqueda']==1) ? 'cl' : 'pr';
+
+        if(!empty($data_search['nombre'])){
+            $flag_where = $flag_where+1;
+            if($flag_where==1){
+                $condicion_dinamica = ' WHERE ';
+            }elseif($flag_where>1){
+                $condicion_dinamica = ' OR ';
+            }
+            $condition_nombre = $condicion_dinamica." ($prefix.nombre LIKE '%".$data_search['nombre']."%' OR $prefix.apellido_paterno LIKE '%".$data_search['nombre']."%' OR $prefix.apellido_materno LIKE '%".$data_search['nombre']."%')";
+        }else{
+            $condition_nombre = "";
+        }
+
+        if(!empty($data_search['idLote'])){
+            $flag_where = $flag_where+1;
+            if($flag_where==1){
+                $condicion_dinamica = ' WHERE ';
+            }elseif($flag_where>1){
+                $condicion_dinamica = ' OR ';
+            }
+            $condition_idlote = $condicion_dinamica." cl.idLote=".$data_search['idLote'];
+        }else{
+            $condition_idlote = "";
+        }
+
+        if(!empty($data_search['correo'])){
+            $flag_where = $flag_where+1;
+            if($flag_where==1){
+                $condicion_dinamica = ' WHERE ';
+            }elseif($flag_where>1){
+                $condicion_dinamica = ' OR ';
+            }
+            $condition_correo = $condicion_dinamica." $prefix.correo LIKE '%".$data_search['correo']."%'";
+        }else{
+            $condition_correo = "";
+        }
+
+        if(!empty($data_search['telefono'])){
+            $flag_where = $flag_where+1;
+            if($flag_where==1){
+                $condicion_dinamica = ' WHERE ';
+            }elseif($flag_where>1){
+                $condicion_dinamica = ' OR ';
+            }
+            if($data_search['tipo_busqueda']==1){
+
+                $condition_telefono = $condicion_dinamica." (cl.telefono1 ='".$data_search['telefono']."' OR cl.telefono2='".$data_search['telefono']."' OR cl.telefono3='".$data_search['telefono']."')";
+            }elseif($data_search['tipo_busqueda']==2){
+                $condition_telefono = $condicion_dinamica." $prefix.telefono ='".$data_search['telefono']."' OR $prefix.telefono_2='".$data_search['telefono']."'";
+            }
+        }else {
+            $condition_telefono = "";
+        }
+
+
+        if(!empty($data_search['sede'])){
+            $flag_where = $flag_where+1;
+            if($flag_where==1){
+                $condicion_dinamica = ' WHERE ';
+            }elseif($flag_where>1){
+                $condicion_dinamica = ' OR ';
+            }
+            $condition_sedes = $condicion_dinamica." $prefix.id_sede IN(".$data_search['sede'].")";
+        }else {
+            $condition_sedes = "";
+        }
+
+        switch ($data_search['tipo_busqueda']){
+            case 1://clientes
+                $query = $this->db->query("SELECT cl.idLote,  l.idStatusContratacion, r.descripcion as nombreProyecto,
+                c.nombre as nombreCondominio, l.nombreLote, CONCAT(cl.nombre,' ', cl.apellido_paterno, ' ', cl.apellido_materno) as nombreCliente,
+                cl.noRecibo, l.referencia, cl.fechaApartado, cl.engancheCliente, cl.fechaEnganche, pr.fecha_creacion as fechaCreacionProspecto,
+                sc.nombreStatus as nombreStatusContratacion, l.idStatusContratacion, cl.id_cliente
+                FROM clientes cl 
+                INNER JOIN lotes l ON cl.idLote = l.idLote 
+                INNER JOIN condominios c ON c.idCondominio = l.idCondominio
+                INNER JOIN residenciales r ON r.idResidencial=c.idResidencial
+                INNER JOIN prospectos pr ON pr.id_prospecto=cl.id_prospecto 
+                INNER JOIN statuscontratacion sc ON sc.idStatusContratacion=l.idStatusContratacion ".$condition_nombre." ".$condition_idlote." ".$condition_correo." ".$condition_telefono." ".$condition_sedes. " AND pr.source='DragonCEM' AND cl.status=1");
+                break;
+            case 2:    //prospectos
+                $query = $this->db->query("SELECT concat(pr.nombre,' ', pr.apellido_paterno, ' ', pr.apellido_materno) as nombre_prospecto,
+                pr.telefono, pr.telefono_2, pr.correo, pr.lugar_prospeccion, CONCAT(asesor.nombre,' ', asesor.apellido_paterno, ' ', asesor.apellido_materno) as nombre_asesor,
+                CONCAT(coord.nombre, ' ', coord.apellido_materno, ' ', coord.apellido_paterno) as nombre_coordinador, 
+                CONCAT(ger.nombre,' ', ger.apellido_paterno, ' ', ger.apellido_materno) as nombre_gerente, pr.fecha_creacion, 0 as id_dragon, sedes.nombre as sede_nombre,
+                sedes.abreviacion as abreviacion_sedes, pr.source, opc.nombre as lugar_prospeccion
+                FROM prospectos pr
+                INNER JOIN usuarios as asesor ON pr.id_asesor=asesor.id_usuario
+                LEFT JOIN usuarios as coord ON pr.id_coordinador=coord.id_usuario
+                LEFT JOIN usuarios as ger ON pr.id_gerente=ger.id_usuario
+                INNER JOIN opcs_x_cats opc ON opc.id_opcion=pr.lugar_prospeccion
+                INNER JOIN sedes ON pr.id_sede=sedes.id_sede ".$condition_nombre." ".$condition_idlote." ".$condition_correo." ".$condition_sedes. " AND pr.source='DragonCEM' AND opc.id_catalogo=9");
+                break;
+        }
+
+
+
+
+
+        return $query->result_array();
+
+    }
 }

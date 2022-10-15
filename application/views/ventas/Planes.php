@@ -304,8 +304,8 @@
 																	</div>
 																</div>
 																<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 mt-2 boxActionsCards">
-																<button type="button" id="btn_consultar" class="btnAction d-none" onclick="ConsultarPlanes()" rel="tooltip" data-placement="top" title="Consultar planes"><p class="mb-0 mr-1">Consultar planes</p><i class="fas fa-database"></i></button>
-																	<button type="button" id="btn_generate" class="btnAction d-none" onclick="GenerarCard()" rel="tooltip" data-placement="top" title="Agregar plan"><p class="mb-0 mr-1">Agregar plan</p><i class="fas fa-plus"></i></button>
+																<button type="button" id="btn_consultar" class="btnAction d-none" onclick="ConsultarPlanes()" rel="tooltip" data-placement="top" title="Consultar planes"><p class="mb-0 mr-1">Consultar</p><i class="fas fa-database"></i></button>
+																	<button type="button" id="btn_generate" class="btnAction d-none" onclick="GenerarCard()" rel="tooltip" data-placement="top" title="Agregar plan"><p class="mb-0 mr-1">Agregar</p><i class="fas fa-plus"></i></button>
 																	<input type="hidden" value="0" name="index" id="index">
 																	<button type="submit" id="btn_save" class="btnAction d-none" rel="tooltip" data-placement="top" title="Guardar planes"><p class="mb-0 mr-1">Guardar todo</p><i class="fas fa-save"></i></button>
 																</div>
@@ -1200,6 +1200,14 @@ $("#table_planes").ready(function() {
 			$("#ModalAlert").modal();
 		});
 
+		function ClearAll2(){
+			document.getElementById('showPackage').innerHTML = '';
+			$('#index').val(0);	
+			setInitialValues();
+			//noCreatedCards();
+			$(".leyendItems").addClass('d-none');
+			$("#btn_save").addClass('d-none');
+		}
 		function ClearAll(){
 			$("#ModalAlert").modal('toggle');
 			document.getElementById('form-paquetes').reset();
@@ -1214,25 +1222,23 @@ $("#table_planes").ready(function() {
 		}
 /**--------------------------FUNCIONES PARA MEJORA DE CARGA DE PLANES, COSULTAR PLANES---------------------- */
 function ConsultarPlanes(){
-	
+	ClearAll2();
 	if($('#sede').val() != '' && $('#residencial').val() != '' && $('input[name="tipoLote"]').is(':checked') && $('#fechainicio').val() != '' && $('#fechafin').val() != '' && $('input[name="superficie"]').is(':checked') ){
 		let params = {'sede':$('#sede').val(),'residencial':$('#residencial').val(),'superficie':$('#super').val(),'fin':$('#fin').val(),'tipolote':$('#tipo_l').val()};
 		$.post('getPaquetes',params, function(data) {
 			let countPlanes = data.length;
 			if(countPlanes >1){
+				//MOSTRAR MODAL CON LOS PLANES, DAR OPCIÓN PARA SELECCIONAR ALGUN PAQUETE DE PLANES
 
 			}else if(countPlanes == 1){
 				//MOSTRAR TODOS LOS PLANES EXISTENTES
 				 data[0].paquetes.unshift({});
 				let dataPaquetes = data[0].paquetes; //.id_descuento.split(',');
-				console.log(dataPaquetes);
 				for (let index = 1; index < dataPaquetes.length; index++){
 				let planes = {"id_plan":dataPaquetes[index].id_paquete}
 				var indexActual = document.getElementById('index');
 				var indexNext = (document.getElementById('index').value - 1) + 2;
 				indexActual.value = indexNext;
-				console.log(indexNext);
-				console.log(index);
 				$('#showPackage').append(`
 						<div class="col-xs-12 col-sm-6 col-md-6 col-lg-6" id="card_${indexNext}">
 							<div class="cardPlan dataTables_scrollBody">
@@ -1283,9 +1289,7 @@ function ConsultarPlanes(){
 }
 
 
-function llenarDiv(indexNext,id_paquete){
-	console.log(id_paquete)
-	console.log(indexNext)
+async function llenarDiv(indexNext,id_paquete){
 	$.post('getTipoDescuento', function(data2) {
 						//	data2.unshift(0);
 					$("#checks_"+indexNext).html('');
@@ -1297,7 +1301,6 @@ function llenarDiv(indexNext,id_paquete){
 					for( var i = 0; i<len; i++){
 						var id = data2[i]['id_tcondicion'];
 						var descripcion = data2[i]['descripcion'];
-						console.log(id);
 						$("#tipo_descuento_"+indexNext).append(`<option value='${id}'>${descripcion}</option>`);
 						$("#checks_"+indexNext).append(`
 						<div class="row boxAllDiscounts">
@@ -1325,7 +1328,9 @@ function llenarDiv(indexNext,id_paquete){
 							</div>
 						</div>`);
 						llenarSelects(indexNext,id_paquete,i,id);
+
 					}
+
 					if(len<=0){
 						$("#tipo_descuento_"+indexNext).append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
 					}
@@ -1333,97 +1338,60 @@ function llenarDiv(indexNext,id_paquete){
 				}, 'json');
 }
 
-function llenarSelects(indexNext,id_paquete,i,id){
-	console.log('i'+id);
+async function llenarSelects(indexNext,id_paquete,i,id){
+	
 	let params = {'id_paquete':id_paquete,'id_tcondicion':id}
-	$.post('getDescuentosByPlan',params,function(data2) {
+	console.log('PARAMS');
+	console.log(params);
+	console.log('PARAMS');
+ $.ajax({
+	async: true,
+    url: 'getDescuentosByPlan',
+    type: 'POST',
+    data: params,
+	success: function (data2) {
+      //Las locas respuestas de las peticiones anidadas van aquí
+	  data2 = JSON.parse(data2);
+		console.log(data2);
+		if(data2.length > 0){
+			const check =  document.getElementById(`inlineCheckbox1_${indexNext}_${i}`);
+			check.checked = true;
+			const a = PrintSelectDesc(check, id,i,indexNext,1,data2);
+			/*for (let m = 0; m < data2.length; m++) {
+					console.log($(`#ListaDescuentosTotal_${indexNext}_${i}`).val());
+					console.log("termina el chido");
+			}*/
+	
+		}
+    },
+  })
+
+
+/*$.post('getDescuentosByPlan',params, function(data2) {
 		data2 = JSON.parse(data2);
 		console.log(data2);
 		if(data2.length > 0){
 			const check = document.getElementById(`inlineCheckbox1_${indexNext}_${i}`);
 			check.checked = true;
-			PrintSelectDesc(check, id,i,indexNext);
-
+			const a = PrintSelectDesc(check, id,i,indexNext);
+			console.log(a);
 			let arrayDesc = [];
 			for (let m = 0; m < data2.length; m++) {
-				console.log(data2[m].id_descuento);
 				if($(`#ListaDescuentosTotal_${indexNext}_${i}`)){
-					console.log('SI ESTA EL PERO');
 				}
-				console.log($(`#ListaDescuentosTotal_${indexNext}_${i}`));
-				console.log($(`#ListaDescuentosTotal_${indexNext}_${i}`).find(`option[value="${data2[m].id_descuento}"]`));
 				arrayDesc.push(data2[m].id_descuento);
-				console.log(arrayDesc);
-				console.log(data2[m].id_descuento);
-				//PrintSelectDesc(check, id,i,indexNext,1,data2[m].porcentaje);
-				$(`#ListaDescuentosTotal_${indexNext}_${i}`)
-				.val(data2[m].id_descuento)
-				.trigger('change')
-				.trigger({
-					type: 'select2:select',
-					params: {
-						data: {"id": data2[m].id_descuento,"label":data2[m].porcentaje+'%' ,"text": data2[m].porcentaje+'%',"disabled":false,"element":{option:{"label":data2[m].porcentaje,"value":data2[m].id_descuento}}}
-					}
-				});
-				/*jQuery(`#ListaDescuentosTotal_${indexNext}_${i}`).val(38).trigger('change').trigger('select2:select',
-				{
-					data: $(`#ListaDescuentosTotal_${indexNext}_${i}`).find("option[value='" + data2[m].id_descuento + "']")
-				}
-				);*/
-				/*$(`#ListaDescuentosTotal_${indexNext}_${i}`)
-   .val('38')
-   .trigger('change')
-   .trigger('select2:select');*/
-//$(`#ListaDescuentosTotal_${indexNext}_${i}`).val([data2[m].id_descuento]); // Select the option with a value of '1'
-					//	$(`#ListaDescuentosTotal_${indexNext}_${i}`).trigger('select');
-				/*$(`#ListaDescuentosTotal_${indexNext}_${i}`).data('select2').trigger('select', {
-            data: {"id": data2[m].id_descuento,"label":data2[m].porcentaje+'%' ,"text": data2[m].porcentaje+'%',"disabled":false,"elements":{"label":data2[m].porcentaje,"value":data2[m].id_descuento}}
-        });*/
-				// changeSelect(`#ListaDescuentosTotal_${indexNext}_${i}`,arrayDesc);
-				//$(`#ListaDescuentosTotal_${indexNext}_${i}`).val(data2[m].id_descuento).trigger('change');
-			//	if ($(`#ListaDescuentosTotal_${indexNext}_${i}`).find("option[value='" + data2[m].id_descuento + "']").length) {
-				//		$(`#ListaDescuentosTotal_${indexNext}_${i}`).val(data2[m].id_descuento).trigger('change');
-				//		if($(`#ListaDescuentosTotal_${indexNext}_${i}`).find("option[value='" + data2[m].id_descuento + "']")){
-					//		console.log('ji esta')
-						//}
-						//$(`#ListaDescuentosTotal_${indexNext}_${i}`).val(data2[m].id_descuento); // Select the option with a value of '1'
-						//$(`#ListaDescuentosTotal_${indexNext}_${i}`).trigger('change');
-
-
-						/*$(`#ListaDescuentosTotal_${indexNext}_${i}`).on("select2:change", function (evt){
-						var element = evt.params.data.element;
-						var $element = $(element);
-						$element.detach();
-						$(this).append($element);
-						$(this).trigger("change");
-						crearBoxDetailDescuentos(indexNext,i,'ListaDescuentosTotal_',data2[m].id_descuento,data2[m].porcentaje);
-						
-						rowDetail.removeClass('hidden');
-					});*/
-			//		}else{
-						//console.log('NELSON')
-				//	}
-				/*$(`#ListaDescuentosTotal_${indexGral}_${index}`).on("select2:select", function (evt){
-						var element = evt.params.data.element;
-						var $element = $(element);
-						$element.detach();
-						$(this).append($element);
-						$(this).trigger("change");
-						crearBoxDetailDescuentos(indexGral,index,'ListaDescuentosTotal_',$element[0].value,$element[0].label);
-						rowDetail.removeClass('hidden');
-					});*/
+					$(`#ListaDescuentosTotal_${indexNext}_${i}`).select2().val('38').trigger('change');
+					console.log("es este el chido");
+					console.log($(`#ListaDescuentosTotal_${indexNext}_${i}`).val());
+					console.log("termina el chido");
 			}
-			
-
-
+	
 		}
-	});
+	});*/
 	
 }
 
 async function changeSelect(nameSelect,arrayS){
-				console.log('ENTRA AQUI');
-				console.log(`${nameSelect}`);
 				jQuery(`${nameSelect}`).select2().val(arrayS).trigger('change');		
 }
 
@@ -1600,20 +1568,65 @@ function defaultValuesSlect(origen){
 			$('[data-toggle="tooltip"]').tooltip()
 		}
 
-	async function PrintSelectDesc(e, id,index,indexGral, j = 0,msi=0){
-			console.log(e);
+		function llenar(e,indexGral,index,datos,id_select,id){
+			var boxDetail = $(e).closest('.boxAllDiscounts' ).find('.boxDetailDiscount');
+			boxDetail.removeClass('hidden');
+			let rowDetail = boxDetail.find( '.rowDetailDiscount');
+			console.log('FUNCION LLENAR');
+			console.log('ID:'+id);
+			console.log(datos);
+			let tipo = 0;
+			if(id == 4 || id == 12){
+				tipo=1;
+			}
+
+			if(id != 13){
+				rowDetail.removeClass('hidden');
+			}
+			let descuentosSelected = [];
+			for (let m = 0; m < datos.length; m++) {
+				
+				if(id != 13){
+					crearBoxDetailDescuentos(indexGral,index,id_select,datos[m].id_descuento,datos[m].porcentaje,tipo);
+					console.log(datos[m].id_descuento);
+					descuentosSelected.push(datos[m].id_descuento);
+						if(datos[m].msi_descuento != 0){
+							var miCheckbox = document.getElementById(`${indexGral}_${datos[m].id_descuento}_msiC`);
+							miCheckbox.checked = true;
+							document.getElementById(`${indexGral}_${datos[m].id_descuento}_msi`).removeAttribute("readonly");
+							$(`#${indexGral}_${datos[m].id_descuento}_msi`).val(datos[m].msi_descuento);
+						}
+					}else{
+						//var id = datos[m]['id_descuento']+','+datos[m]['porcentaje'];
+						descuentosSelected.push(datos[m]['id_descuento']+','+datos[m]['porcentaje']);
+					}
+				}
+			
+			console.log('--------------------LLENAR SELECT---------------------------');
+			console.log(descuentosSelected);
+			$(`#${id_select}${indexGral}_${index}`).select2().val(descuentosSelected).trigger('change');
+			console.log('--------------------LLENAR SELECT---------------------------');
+
+
+					console.log("es este el chido");
+		}
+		async function PrintSelectDesc(e, id,index,indexGral, j = 0,datos = []){
+		//	return new Promise(resolve => {
 			let tdescuento=0;
 			let id_condicion=0;
 			let eng_top=0;
 			let apply=0;
-			var boxDetail = $(e).closest( '.boxAllDiscounts' ).find( '.boxDetailDiscount');
+			let id_con = id;
+			var boxDetail = $(e).closest('.boxAllDiscounts' ).find('.boxDetailDiscount');
 			boxDetail.removeClass('hidden');
 			let rowDetail = boxDetail.find( '.rowDetailDiscount');
-			console.log('id'+id)
-			console.log('index'+index)
-			console.log('indexGral'+indexGral)
+			console.log('LLEGO A LA FUNCION PrintSelectDesc');
+			console.log('ID: '+id);
+			console.log('index: '+index);
+			console.log('INDEXGRAL: '+indexGral);
 			if(id == 1){
 				if($(`#inlineCheckbox1_${indexGral}_${index}`).is(':checked')){
+					console.log('LLEGO AL CHECK');
 					$(`#orden_${indexGral}_${index}`).prop( "disabled", false );
 					tdescuento=1;
 					id_condicion=1;
@@ -1625,7 +1638,8 @@ function defaultValuesSlect(origen){
 						<select id="ListaDescuentosTotal_${indexGral}_${index}" required name="${indexGral}_${index}_ListaDescuentosTotal_[]" multiple class="form-control" data-live-search="true">
 					</div>`);
 
-					$.post('getDescuentosPorTotal',{ tdescuento: tdescuento, id_condicion: id_condicion,eng_top:eng_top,apply:apply }, function(data) { 
+					$.post('getDescuentosPorTotal',{ tdescuento: tdescuento, id_condicion: id_condicion,eng_top:eng_top,apply:apply }, function(data) {
+						console.log("%",data); 
 						$(`#ListaDescuentosTotal_${indexGral}_${index}`).append($('<option disabled>').val("default").text("Seleccione una opción"));
 						var len = data.length;
 						for( var i = 0; i<len; i++){
@@ -1636,13 +1650,17 @@ function defaultValuesSlect(origen){
 						if(len<=0){
 							$(`#ListaDescuentosTotal_${indexGral}_${index}`).append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
 						}
+						if(j == 1){
+							llenar(e,indexGral,index,datos,`ListaDescuentosTotal_`,id_con);
+						}
+						
 						$(`#ListaDescuentosTotal_${indexGral}_${index}`).selectpicker('refresh');
+						
 					}, 'json');
 
-					$(`#ListaDescuentosTotal_${indexGral}_${index}`).select2({containerCssClass: "select-gral", dropdownCssClass: "custom-dropdown", tags: false, tokenSeparators: [',', ' '], closeOnSelect : false, placeholder : "Seleccione una opción", allowHtml: true, allowClear: true});
+					$(`#ListaDescuentosTotal_${indexGral}_${index}`).select2({allow_single_deselect: false,containerCssClass: "select-gral", dropdownCssClass: "custom-dropdown", tags: false, tokenSeparators: [',', ' '], closeOnSelect : false, placeholder : "Seleccione una opción", allowHtml: true, allowClear: true});
 
 					$(`#ListaDescuentosTotal_${indexGral}_${index}`).on("select2:select", function (evt){
-						console.log(evt);
 						var element = evt.params.data.element;
 						var $element = $(element);
 						$element.detach();
@@ -1651,8 +1669,8 @@ function defaultValuesSlect(origen){
 						crearBoxDetailDescuentos(indexGral,index,'ListaDescuentosTotal_',$element[0].value,$element[0].label);
 						
 						rowDetail.removeClass('hidden');
-						console.log($(`#ListaDescuentosTotal_${indexGral}_${index}`).val());
 					});
+					//consule.log($(`#ListaDescuentosTotal_${indexGral}_${index}`).val());
 
 					$(`#ListaDescuentosTotal_${indexGral}_${index}`).on("select2:unselecting", function (evt){
 						var element = evt.params.args.data.element;
@@ -1713,6 +1731,10 @@ function defaultValuesSlect(origen){
 						if(len<=0){
 							$(`#ListaDescuentosEnganche_${indexGral}_${index}`).append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
 						}
+						if(j == 1){
+							llenar(e,indexGral,index,datos,`ListaDescuentosEnganche_`,id_con);
+						}
+					
 						$(`#ListaDescuentosEnganche_${indexGral}_${index}`).selectpicker('refresh');
 					}, 'json');
 				
@@ -1740,6 +1762,8 @@ function defaultValuesSlect(origen){
 							document.getElementById(`${indexGral}_${$element[0].value}_span`).outerHTML = "";
 						}
 					});
+
+				
 				}
 				else{
 					boxDetail.addClass('hidden');
@@ -1750,7 +1774,7 @@ function defaultValuesSlect(origen){
 					document.getElementById(`selectDescuentos_${indexGral}_${index}`).innerHTML = "";
 					document.getElementById(`listamsi_${indexGral}_${index}`).innerHTML = "";
 				}
-			}else if(id == 5){
+			}else if(id == 4){
 				//Descuentos m2
 				if( $(`#inlineCheckbox1_${indexGral}_${index}`).is(':checked') ) {
 					$(`#orden_${indexGral}_${index}`).prop( "disabled", false );
@@ -1775,7 +1799,11 @@ function defaultValuesSlect(origen){
 						if(len<=0){
 							$(`#ListaDescuentosM2_${indexGral}_${index}`).append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
 						}
+						if(j == 1){
+							llenar(e,indexGral,index,datos,`ListaDescuentosM2_`,id_con);
+						}
 						$(`#ListaDescuentosM2_${indexGral}_${index}`).selectpicker('refresh');
+						
 					}, 'json');
 
 					$(`#ListaDescuentosM2_${indexGral}_${index}`).select2({containerCssClass: "select-gral", dropdownCssClass: "custom-dropdown", closeOnSelect : false, placeholder : "Seleccione una opción", allowHtml: true, allowClear: true, tags: false});
@@ -1837,6 +1865,9 @@ function defaultValuesSlect(origen){
 						}
 						if(len<=0){
 							$(`#ListaDescuentosBono_${indexGral}_${index}`).append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
+						}
+						if(j == 1){
+							llenar(e,indexGral,index,datos,`ListaDescuentosBono_`,id_con);
 						}
 						$(`#ListaDescuentosBono_${indexGral}_${index}`).selectpicker('refresh');
 					}, 'json');
@@ -1900,6 +1931,9 @@ function defaultValuesSlect(origen){
 						if(len<=0){
 							$(`#ListaDescuentosMSI_${indexGral}_${index}`).append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
 						}
+						if(j == 1){
+							llenar(e,indexGral,index,datos,`ListaDescuentosMSI_`,id_con);
+						}
 						$(`#ListaDescuentosMSI_${indexGral}_${index}`).selectpicker('refresh');
 					}, 'json');
 					$(`#ListaDescuentosMSI_${indexGral}_${index}`).select2({containerCssClass: "select-gral",dropdownCssClass: "custom-dropdown", closeOnSelect : false, placeholder : "Seleccione una opción", allowHtml: true, allowClear: true, tags: false	});
@@ -1920,6 +1954,10 @@ function defaultValuesSlect(origen){
 					document.getElementById(`listamsi_${indexGral}_${index}`).innerHTML = "";
 				}
 			}
+          //  resolve({a:1});
+
+		//});
+			
 		}
 
 		function selectSuperficie(tipoSup){
@@ -1956,7 +1994,6 @@ function defaultValuesSlect(origen){
 			$('#iddiv').val(divNum);
 			$('#ModalRemove').modal('show');
 		}
-
 		function crearBoxDetailDescuentos(indexN,i,select,id,text,pesos = 0){
 			let texto = pesos == 2 ? text : (pesos == 1 ? '$'+formatMoney(text) : text + '%');
 			$(`#listamsi_${indexN}_${i}`).append(`

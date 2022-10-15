@@ -1184,6 +1184,10 @@
   padding-left: 20px;
 }
 
+.input-gral ::placeholder {
+  margin-left: 20px;
+}
+
 .isRequired {
   color: #EA4335;
   margin: 0 3px;

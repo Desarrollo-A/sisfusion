@@ -2959,6 +2959,51 @@ public function getStatusMktdPreventa(){
             echo json_encode($data);
         } else
             json_encode(array());
-    } 
+    }
+
+    public function listadoClientes(){//vista clientes DRAGON POPEA
+        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
+        $this->load->view('template/header');
+        $this->load->view("clientes/clientesViewDR",$datos);
+    }
+
+    function searchData(){
+        //este metodo se usa para la busqueda de clientes y prospectos USER POPEA
+        //se diferencias por la bandera TB
+        //1: clientes   2: Prospectos
+        $idLote = $this->input->post("idLote");
+        $name = $this->input->post("name");
+        $mail = $this->input->post("mail");
+        $telephone = $this->input->post("telephone");
+        $sede = $this->input->post("sede");
+        $tipo_busqueda = $this->input->post("TB");
+
+        $data_search = array(
+            'idLote' => $idLote,
+            'nombre' => $name,
+            'correo' => $mail,
+            'telefono' => $telephone,
+            'sede' => $sede,
+            'tipo_busqueda' => $tipo_busqueda
+        );
+
+        $result['data'] = $this->Clientes_model->searchData($data_search);
+        print_r(json_encode($result, JSON_NUMERIC_CHECK));
+        exit;
+    }
+
+
+    public function documentacionDR(){//vista documentos DRAGON POPEA
+        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
+        $this->load->view('template/header');
+        $this->load->view("clientes/documentacionDR",$datos);
+    }
+
+    public function prospectosDR(){//vista prospectos DRAGON POPEA
+        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
+        $this->load->view('template/header');
+        $this->load->view("clientes/prospectosDR",$datos);
+    }
+
 }
 

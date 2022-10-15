@@ -6271,13 +6271,16 @@ for ($d=0; $d <count($dos) ; $d++) {
 
     public function changeLoteToPenalizacion()
     {
-        $response = $this->Comisiones_model->insertHistorialLog($_POST['id_lote'], $this->session->userdata('id_usuario'), 1, 'SE ACEPTÓ PENALIZACIÓN',
-                'penalizaciones', 'NULL');
-        if ($response) {
-          $response = $this->Comisiones_model->updatePenalizacion($_POST['id_lote'], $_POST['id_cliente']);
-        }
+      echo $_POST['id_lote'];
+      echo $_POST['id_cliente'];
+      
+        // $response = $this->Comisiones_model->insertHistorialLog($_POST['id_lote'], $this->session->userdata('id_usuario'), 1, 'SE ACEPTÓ PENALIZACIÓN',
+        //         'penalizaciones', 'NULL');
+        // if ($response) {
+        //   $response = $this->Comisiones_model->updatePenalizacion($_POST['id_lote'], $_POST['id_cliente']);
+        // }
 
-         echo json_encode($response);
+        //  echo json_encode($response);
     }
 
     public function changeLoteToPenalizacionCuatro()

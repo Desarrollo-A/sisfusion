@@ -162,12 +162,8 @@
                           id="penalizacion4-form"
                           autocomplete="off">
                         <div class="modal-body">
-                             <input type="hidden"
-                                   name="id_lote4"
-                                   id="id-lote-penalizacionC">
-                                   <input type="hidden"
-                                   name="id_cliente4"
-                                   id="id-cliente-penalizacionC">
+                            <input type="hidden" name="id_lote" id="id-lote-penalizacion4">
+                            <input type="hidden" name="id_cliente" id="id-cliente-penalizacion4">
   
 
                             <div class="col-lg-4">
@@ -244,12 +240,8 @@
                           id="penalizacion-form"
                           autocomplete="off">
                         <div class="modal-body">
-                            <input type="hidden"
-                                   name="id_lote"
-                                   id="id-lote-penalizacion">
-                                   <input type="hidden"
-                                   name="id_cliente"
-                                   id="id-cliente-penalizacion">
+                        <input type="hidden" name="id_lote" id="id_lote_penalizacion">
+                        <input type="hidden" name="id_cliente" id="id_cliente_penalizacion">
  
                         </div>
 
@@ -716,9 +708,9 @@
                     var lblStats;
                     var lblPenalizacion = '';
 
-if (d.penalizacion == 1){
-    lblPenalizacion ='<br><span class="label label-warning" style="color:red;">+ 90 días</span>';
-}
+                if (d.penalizacion == 1){
+                    lblPenalizacion ='<br><span class="label label-warning" style="color:red;">+ 90 días</span>';
+                }
 
                     if(d.totalNeto2==null) {
                         lblStats ='<span class="label label-danger">Sin precio lote</span>';
@@ -889,9 +881,12 @@ if (d.penalizacion == 1){
                 const idLote = $(this).val();
                 const nombreLote = $(this).attr("data-value");
                 const idCliente = $(this).attr("data-cliente");
+                // alert(idCliente);
 
-                $('#id-lote-penalizacion').val(idLote);
-                $('#id-cliente-penalizacion').val(idCliente);
+                $('#id_lote_penalizacion').val(idLote);
+                $('#id_cliente_penalizacion').val(idCliente);
+
+                alert($('#id_cliente_penalizacion').val());
 
                 $("#penalizacion-modal .modal-header").html("");
                 $("#penalizacion-modal .modal-header").append('<h4 class="modal-title">Penalización + 90 días, al lote <b>'+nombreLote+'</b></h4><BR><P>Al aprobar esta penalización no se podrán revertir los descuentos y se dispersara el pago de comisiones con los porcentajes correspondientes.</P>');
@@ -905,8 +900,8 @@ if (d.penalizacion == 1){
                 const nombreLote = $(this).attr("data-value");
                 const idCliente = $(this).attr("data-cliente");
 
-                $('#id-lote-penalizacionC').val(idLote);
-                $('#id-cliente-penalizacionC').val(idCliente);
+                $('#id-lote-penalizacion4').val(idLote);
+                $('#id-cliente-penalizacion4').val(idCliente);
 
                 $("#penalizacion4-modal .modal-header").html("");
                 $("#penalizacion4-modal .modal-header").append('<h4 class="modal-title">Penalización + 160 días, al lote <b>'+nombreLote+'</b></h4><BR><P>Al aprobar esta penalización no se podrán revertir los descuentos y se dispersara el pago de comisiones con los porcentajes asignados.</P>');
@@ -1305,8 +1300,8 @@ if (d.penalizacion == 1){
                 success: function (data) {
                     if (data) {
                         $('#penalizacion-modal').modal("hide");
-                        $("#id-lote-penalizacion").val("");
-                        $("#id-cliente-penalizacion").val("");
+                        $("#id_lote_penalizacion").val("");
+                        $("#id_cliente_penalizacion").val("");
                         alerts.showNotification("top", "right", "El registro se ha actualizado exitosamente.", "success");
                         tabla_1.ajax.reload();
                     } else {

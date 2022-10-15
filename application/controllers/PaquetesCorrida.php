@@ -51,6 +51,7 @@ class PaquetesCorrida extends CI_Controller
         else
             echo json_encode(array());
     }
+    
 
     public function SavePaquete()
     {
@@ -416,7 +417,7 @@ public function getPaquetes(){
  }else if(count($row) == 1){
   $data = $this->PaquetesCorrida_model->getPaquetesById($row[0]['id_descuento']);
  }else if(count($row) > 1 ){
-
+  $data = $this->PaquetesCorrida_model->getPaquetesById($row[count($row) -1]['id_descuento']);
  }
  echo json_encode(array(array("paquetes"=>$data)));
 }

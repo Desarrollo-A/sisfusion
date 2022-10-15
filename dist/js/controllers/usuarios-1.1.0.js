@@ -49,7 +49,8 @@ function fillUsersTable() {
                 titleAttr: 'Listado de usuarios',
                 title: 'Listado de usuarios',
                 exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
+
+                    columns:  (rolId==54) ? [0, 1, 2, 3, 4, 5, 6, 7] : [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
                     format: {
                         header: function (d, columnIdx) {
                             switch (columnIdx) {
@@ -210,6 +211,7 @@ function fillUsersTable() {
                 }
             },
             {
+
                 data: function (d) {
                     var id_rol = id_rol_global;
                  
@@ -223,11 +225,11 @@ function fillUsersTable() {
                                 //TODO SOPORTE  
                             return '<div class="d-flex justify-center"><button class="btn-data btn-orangeYellow  see-changes-log" data-id-usuario="' + d.id_usuario +'" ><i class="fas fa-eye"></i> </button>' +
                                 '<button class="btn-data btn-warning change-user-status" title="Dar de baja" id="' + d.id_usuario +'" data-estatus="0" data-id-usuario="' + d.id_usuario +'" data-name="'+d.nombre+'" data-rol="'+d.puesto+'"> <i class="fas fa-lock"></i></button>'+
-                                '<button class="btn-data btn-sky buscar-pass-user" title="Contraseña y usuario" data-id-usuario="' + d.id_usuario +'" data-name="'+d.nombre+'" data-rol="'+d.puesto+'"  id="buscar"> <span class="material-icons update-dataTable ">***</span></button>'+
+                                '<button class="btn-data btn-violetBoots buscar-pass-user" title="Contraseña y usuario" data-id-usuario="' + d.id_usuario +'" data-name="'+d.nombre+'" data-rol="'+d.puesto+'"  id="buscar"><i class="fas fa-user-cog"></i></button>'+
                                 '</div>';
                         }
-
-                    }else{
+                    }
+                    else {
                         if (userId == 1297 || userId == 1) {
                             return '<div class="d-flex justify-center"><button class="btn-data btn-blueMaderas edit-user-information" data-rol="'+d.id_rol+'" data-id-usuario="' + d.id_usuario +'"><i class="fas fa-pencil-alt"></i></button><button class="btn-data btn-orangeYellow  see-changes-log" data-id-usuario="' + d.id_usuario +'" ><i class="fas fa-eye"></i> </button>' +
                               '<button class="btn-data btn-green change-user-status" id="' + d.id_usuario +'" data-estatus="1" data-id-usuario="' + d.id_usuario +'" data-name="'+d.nombre+'" data-rol="'+d.puesto+'"><i class="fas fa-lock-open"></i></button></div>';
@@ -238,14 +240,13 @@ function fillUsersTable() {
                                     return   '<div class="d-flex justify-center"><button class="btn-data btn-blueMaderas edit-user-information" data-rol="'+d.id_rol+'" data-id-usuario="' + d.id_usuario +'"><i class="fas fa-pencil-alt"></i></button>' +
                                     '<button class="btn-data btn-orangeYellow  see-changes-log" data-id-usuario="' + d.id_usuario +'" ><i class="fas fa-eye"></i> </button>' +
                                     '<button class="btn-data btn-green change-user-status" id="' + d.id_usuario +'" data-estatus="1" data-id-usuario="' + d.id_usuario +'" data-name="'+d.nombre+'" data-rol="'+d.puesto+'"><i class="fas fa-lock-open"></i></button>'+
-                                    '<button class="btn-data btn-sky btn-round btn-fab-mini btn-fab buscar-pass-user" title="Contraseña y usuario" data-id-usuario="' + d.id_usuario +'" data-name="'+d.nombre+'" data-rol="'+d.puesto+'"   id="buscar" ><span class="material-icons update-dataTable ">***</span></button>'+
+                                    '<button class="btn-data btn-violetBoots btn-round btn-fab-mini btn-fab buscar-pass-user" title="Contraseña y usuario" data-id-usuario="' + d.id_usuario +'" data-name="'+d.nombre+'" data-rol="'+d.puesto+'"   id="buscar" ><i class="fas fa-user-cog"></i></button>'+
                                     '</div>';
                                 }
                             if(id_rol == 8 && userId != 1297 && d.puesto == 'Contraloría' && d.estatus == 0){
                                 return '<div class="d-flex justify-center"><button class="btn-data btn-orangeYellow  see-changes-log" data-id-usuario="' + d.id_usuario +'" ><i class="fas fa-eye"></i> </button>' +
                                 '<button class="btn-data btn-green change-user-status" id="' + d.id_usuario +'" data-estatus="1" data-id-usuario="' + d.id_usuario +'" data-name="'+d.nombre+'" data-rol="'+d.puesto+'"><i class="fas fa-lock-open"></i></button>'+
                                 '</div>';
-                            
                             }
                         }
                     }
@@ -255,8 +256,10 @@ function fillUsersTable() {
                         return '<div class="d-flex justify-center"><button class="btn-data btn-blueMaderas edit-user-information" data-rol="' + d.id_rol + '" data-id-usuario="' + d.id_usuario + '"><i class="fas fa-pencil-alt"></i></button>' +
                             '<button class="btn-data btn-orangeYellow  see-changes-log" data-id-usuario="' + d.id_usuario + '" ><i class="fas fa-eye"></i> </button>' +
                             '</div>';
-                  
-                        } else {
+                    } else if(rolId==25){
+                        return '';
+                    }
+                    else{
                         if (d.estatus == 1) {
                             return '<div class="d-flex justify-center"><button class="btn-data btn-blueMaderas edit-user-information" data-rol="' + d.id_rol + '" data-id-usuario="' + d.id_usuario + '"><i class="fas fa-pencil-alt"></i></button>' +
                                 '<button class="btn-data btn-orangeYellow  see-changes-log" data-id-usuario="' + d.id_usuario + '" ><i class="fas fa-eye"></i> </button>' +
@@ -268,7 +271,6 @@ function fillUsersTable() {
                                 return '<div class="d-flex justify-center"><button class="btn-data btn-blueMaderas  edit-user-information" data-rol="' + d.id_rol + '" data-id-usuario="' + d.id_usuario + '"><i class="fas fa-pencil-alt"></i></button>' +
                                     '<button class="btn-data btn-orangeYellow see-changes-log" data-id-usuario="' + d.id_usuario + '" ><i class="fas fa-eye"></i></button>' +
                                     '</div>';
-                  
                                 } else {
                                 return '<div class="d-flex justify-center"><button class="btn-data btn-blueMaderas  edit-user-information" data-rol="' + d.id_rol + '" data-id-usuario="' + d.id_usuario + '"><i class="fas fa-pencil-alt"></i></button>' +
                                     '<button class="btn-data btn-orangeYellow see-changes-log" data-id-usuario="' + d.id_usuario + '" ><i class="fas fa-eye"></i></button>' +
@@ -288,6 +290,10 @@ function fillUsersTable() {
             }
         }
     });
+    if(rolId==54){//validacion para no mostrarle acciones a usuario POPEA
+        let arrayNOView = [8,9,10,11,12,13,14,15,16];
+        $allUsersTable.columns(arrayNOView).visible(false);
+    }
 }
 
 function showPassword() {
