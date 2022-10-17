@@ -70,74 +70,127 @@ class Suma extends CI_Controller
     public function sumServ(){
         $data_json = json_decode((file_get_contents("php://input")));
         $request = array();
-        $valido = true;
+        $primerFiltro = false;
+        $stringReferencias = '';
+
         foreach ($data_json as &$data) {
             if (!isset($data->id_cliente) || !isset($data->total_venta) || !isset($data->comisionistas) || !isset($data->nombre_cliente) || !isset($data->id_pago) || !isset($data->referencia)){
-                echo json_encode(array("status" => 402, "message" => "Algún parámetro no viene en el array general."), JSON_UNESCAPED_UNICODE);
-                $valido = false;
-                break;
+                $errorLeyend = 'No viene algún parametro ';
+                $detalle[] = (object) ['idPagoSuma' => $idPago, 'idComisionCRM' => 0, 'status' => $errorLeyend, 'referencia' => $referencia ];
             }
             else {
-                if ($data->id_cliente == "" || $data->total_venta == "" || $data->comisionistas == "" || $data->nombre_cliente == "" || $data->id_pago == ""|| $data->referencia == ""){
-                    echo json_encode(array("status" => 402, "message" => "Algún parámetro no tiene un valor en el array general."), JSON_UNESCAPED_UNICODE);
-                    $valido = false;
-                    break;
+                //Evaluar SI SOLO contiene espacios en blanco
+                $idCliente = trim($data->id_cliente);
+                $totalVenta = trim($data->total_venta);
+                $nombreCliente = trim($data->nombre_cliente);
+                $idPago = trim($data->id_pago);
+                $referencia = trim($data->referencia);
+                $comisionistas = $data->comisionistas;
+                
+                if ($idCliente == "" || $totalVenta == "" || $nombreCliente == "" || $idPago == ""|| $referencia == ""){
+                    $errorLeyend = 'Algún parámetro en la comisión de la referencia ' . $referencia . " viene vacio";
+                    $detalle[] = (object) ['idPagoSuma' => $idPago, 'idComisionCRM' => 0, 'status' => $errorLeyend, 'referencia' => $referencia ];
                 }
                 else {
-                    if( count( $data->comisionistas )==0 ){
-                        echo json_encode(array("status" => 402, "message" => "Debe de venir al menos un comisionista."), JSON_UNESCAPED_UNICODE);
-                        $valido = false;
-                        break;
+                    if( count($comisionistas) == 0 ){
+                        $errorLeyend = 'El array de pagos viene vacio para la referencia' . $referencia;
+                        $detalle[] = (object) ['idPagoSuma' => $idPago, 'idComisionCRM' => 0, 'status' => $errorLeyend, 'referencia' => $referencia ];
                     }
                     else{
                         $arrayComisiones[] = array(
-                            'total_venta' => $data->total_venta,
-                            'id_cliente' => $data->id_cliente,
-                            'nombre_cliente' => $data->nombre_cliente,
-                            'id_pago' => $data->id_pago,
-                            'referencia' => $data->referencia
+                            'total_venta' => $totalVenta,
+                            'id_cliente' => $idCliente,
+                            'nombre_cliente' => $nombreCliente,
+                            'id_pago' => $idPago,
+                            'referencia' => $referencia
                         );
                         
-                        foreach ($data->comisionistas as &$valor) {
-                            if ( !isset($valor->id_rol) || !isset($valor->id_usuario) || !isset($valor->porcentaje_comision) || !isset($valor->total_comision) || !isset($data->referencia) ){
-                                echo json_encode(array("status" => 402, "message" => "Algún parámetro no viene en el array del comisionista."), JSON_UNESCAPED_UNICODE);
-                                $valido = false;
-                                break;
-
+                        foreach ($comisionistas as $comisionista) {
+                            if ( !isset($comisionista->id_rol) || !isset($comisionista->id_usuario) || !isset($comisionista->porcentaje_comision) || !isset($comisionista->total_comision) ){
+                                $errorLeyend = 'No viene algún parámetro en el pago de la ref.' . $referencia . ' del rol ' . $comisionista->id_rol;
+                                $detalle[] = (object) ['idPagoSuma' => $idPago, 'idComisionCRM' => 0, 'status' => $errorLeyend, 'referencia' => $referencia ];
                             }
                             else{
-                                if ($valor->id_rol == "" || $valor->id_usuario == "" || $valor->porcentaje_comision == "" || $data->nombre_cliente == "" || $data->id_pago == ""|| $valor->total_comision == "" || $data->referencia == "" ){
-                                    echo json_encode(array("status" => 402, "message" => "Algún parámetro no tiene un valor en el array del comisionista."), JSON_UNESCAPED_UNICODE);
-                                    $valido = false;
-                                    break;
+                                $idRol = trim($comisionista->id_rol);
+                                $idUsuario = trim($comisionista->id_usuario);
+                                $porcentaje = trim($comisionista->porcentaje_comision);
+                                $totalComision = trim( $comisionista->total_comision);
+                                
+                                if ($idRol == "" || $idUsuario == "" || $porcentaje == "" || $totalComision == "" ){
+                                    $errorLeyend = 'Algún parámetro en uno de los pagos de la ref.' . $referencia . ' del rol ' . $comisionista->id_rol . ', viene vacio';
+                                    $detalle[] = (object) ['idPagoSuma' => $idPago, 'idComisionCRM' => 0, 'status' => $errorLeyend, 'referencia' => $referencia ];
                                 }
                                 else{
+                                    $primerFiltro = true;
                                     $arrayPagos[] = array(
-                                        'id_rol' => $valor->id_rol,
-                                        'id_usuario' => $valor->id_usuario,
-                                        'porcentaje_comision' => $valor->porcentaje_comision,
-                                        'total_comision' => $valor->total_comision,
-                                        'referencia' => $data->referencia
+                                        'id_rol' => $idRol,
+                                        'id_usuario' => $idUsuario,
+                                        'porcentaje_comision' => $porcentaje,
+                                        'total_comision' => $totalComision,
+                                        'referencia' => $referencia
                                     );
                                 }
-                                
                             }
+                        }
+                        if($primerFiltro){
+                            $stringReferencias .= "'" . $referencia . "', ";
                         }
                     }
                 }
             }
         }
-        
-        if($valido){
-            $result = $this->Suma_model->setComisionesPagos($arrayComisiones, $arrayPagos);
-            if($result){
-                array_push($request, array("status" => 200, "message" => "Los registros se han ingresado de manera exitosa."));
-            }
-            else
-                array_push($request, array("status" => 400, "message" => "Oops, ocurrió un error al insertar los registros"));
 
-            echo(json_encode($request, JSON_UNESCAPED_UNICODE));
+        //Obtenemos todas las referencias de las comisiones mandadas en el array
+        if ($stringReferencias != '' ){
+            $stringReferencias = substr($stringReferencias, 0, -2);
+            $dataDuplicados = $this->Suma_model->duplicateReference($stringReferencias)->result_array();
+            foreach ($dataDuplicados as $objDuplicado ){
+                $refDup = $objDuplicado['referencia'];
+
+                $filteredArrayComisiones = 
+                    array_filter($arrayComisiones, function($element) use($refDup){
+                    return $element['referencia'] == $refDup;
+                });
+                $filteredArrayPagos =
+                    array_filter($arrayPagos, function($element) use($refDup){
+                    return $element['referencia'] == $refDup;
+                });
+
+                
+                foreach ($filteredArrayComisiones as $key => $posicion) {
+                    $errorLeyend = 'La referencia ' . $refDup . ' está duplicada';
+                    $detalle[] = (object) ['idPagoSuma' => $posicion['id_pago'], 'idComisionCRM' => 0, 'status' => $errorLeyend, 'referencia' => $refDup ];
+                    unset($arrayComisiones[$key]);
+                }
+                foreach ($filteredArrayPagos as $key => $posicion) {
+                    unset($arrayPagos[$key]);
+                }
+            }
+
+            $arrayComisiones = array_values($arrayComisiones); 
+            $arrayPagos = array_values($arrayPagos); 
         }
+
+        if(count($arrayComisiones) > 0) {
+            list($result, $ids) = $this->Suma_model->setComisionesPagos($arrayComisiones, $arrayPagos);
+            if($result){
+                $errorLeyend = "Comisión insertada con éxito.";
+                foreach($arrayComisiones as $objComision){
+                    $detalle[] = (object) ['idPagoSuma' => $objComision['id_pago'], 'idComisionCRM' => $ids, 'status' => $errorLeyend, 'referencia' => $objComision['referencia']];
+                    $ids += 1;
+                }
+                echo(json_encode(array("status" => 402, "mensaje" => "Todo exitoso.", "detalle" => $detalle), JSON_UNESCAPED_UNICODE));
+            }
+            else {
+                $errorLeyend = "Error al insertar.";
+                foreach($arrayComisiones as $objComision){
+                    $detalle[] = (object) ['idPagoSuma' => $objComision['id_pago'], 'idComisionCRM' => 0, 'status' => $errorLeyend, 'referencia' => $objComision['referencia']];
+                }
+                echo(json_encode(array("status" => 403, "mensaje" => "Hubo algún error.", "detalle" => $detalle), JSON_UNESCAPED_UNICODE));
+            }
+        }
+        else
+            echo(json_encode(array("status" => 403, "mensaje" => "Hubo algún error.", "detalle" => $detalle), JSON_UNESCAPED_UNICODE));
     }
 
     public function getHistorial($pago){
@@ -405,11 +458,12 @@ class Suma extends CI_Controller
         echo json_encode($this->Suma_model->getAsimiladosRevision()->result_array());
     }
 
-    public function getAsimiladosRevisionIntMex(){
+    public function getRevisionIntMex(){
         $idRol = $this->input->post("idRol");
         $idUsuario = $this->input->post("idUsuario");
+        $formaPago = $this->input->post("formaPago");
 
-        echo json_encode($this->Suma_model->getAsimiladosRevisionIntMex($idRol, $idUsuario)->result_array());
+        echo json_encode($this->Suma_model->getRevisionIntMex($idRol, $idUsuario, $formaPago)->result_array());
     }
 
     public function getRemanentesRevision(){

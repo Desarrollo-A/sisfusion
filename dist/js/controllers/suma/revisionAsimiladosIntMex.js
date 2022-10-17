@@ -1,10 +1,11 @@
+var totaPen = 0;
+
 function cleanCommentsAsimilados() {
     var myCommentsList = document.getElementById('comments-list-asimilados');
     var myCommentsLote = document.getElementById('nameLote');
     myCommentsList.innerHTML = '';
     myCommentsLote.innerHTML = '';
 }
-
 
 $(document).ready(function() {
     $("#tabla_asimilados").prop("hidden", true);
@@ -279,9 +280,9 @@ function getAssimilatedCommissions(idRol, idUsuario){
             },
         }],
         ajax: {
-            url: general_base_url + "Suma/getAsimiladosRevisionIntMex",
+            url: general_base_url + "Suma/getRevisionIntMex",
             type: "POST",
-            data: { idRol: idRol, idUsuario: idUsuario},
+            data: { idRol: idRol, idUsuario: idUsuario, formaPago: '3'},
             dataType: 'json',
             dataSrc: ""
         }
@@ -315,6 +316,16 @@ function getAssimilatedCommissions(idRol, idUsuario){
         $("#modal_nuevas .modal-body").append('<input type="hidden" name="id_pago" value="'+id_pago_i+'">');
         $("#modal_nuevas .modal-body").append('<div class="row mt-3"><div class="col-md-6"></div><div class="col-md-3"><button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">CANCELAR</button></div><div class="col-md-3"><input type="submit" class="btn btn-primary"></div></div>');
         $("#modal_nuevas").modal();
+    });
+
+    $('#tabla_asimilados').on('click', 'input', function() {
+        tr = $(this).closest('tr');
+        var row = tabla_asimilados.row(tr).data();
+
+        if ($(this).prop('checked')) totaPen += row.impuesto;
+        else totaPen -= row.impuesto;
+
+        $("#totpagarPen").html('$ ' + formatMoney(totaPen));
     });
 }
 
