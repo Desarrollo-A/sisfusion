@@ -75,8 +75,7 @@ class Suma extends CI_Controller
 
         foreach ($data_json as &$data) {
             if (!isset($data->id_cliente) || !isset($data->total_venta) || !isset($data->comisionistas) || !isset($data->nombre_cliente) || !isset($data->id_pago) || !isset($data->referencia)){
-                $errorLeyend = 'No viene algún parametro ';
-                $detalle[] = (object) ['idPagoSuma' => $idPago, 'idComisionCRM' => 0, 'status' => $errorLeyend, 'referencia' => $referencia ];
+                $detalle[] = (object) ['idPagoSuma' => $idPago, 'idComisionCRM' => 0, 'status' => 404, 'referencia' => $referencia ];
             }
             else {
                 //Evaluar SI SOLO contiene espacios en blanco
@@ -88,13 +87,11 @@ class Suma extends CI_Controller
                 $comisionistas = $data->comisionistas;
                 
                 if ($idCliente == "" || $totalVenta == "" || $nombreCliente == "" || $idPago == ""|| $referencia == ""){
-                    $errorLeyend = 'Algún parámetro en la comisión de la referencia ' . $referencia . " viene vacio";
-                    $detalle[] = (object) ['idPagoSuma' => $idPago, 'idComisionCRM' => 0, 'status' => $errorLeyend, 'referencia' => $referencia ];
+                    $detalle[] = (object) ['idPagoSuma' => $idPago, 'idComisionCRM' => 0, 'status' => 405, 'referencia' => $referencia ];
                 }
                 else {
                     if( count($comisionistas) == 0 ){
-                        $errorLeyend = 'El array de pagos viene vacio para la referencia' . $referencia;
-                        $detalle[] = (object) ['idPagoSuma' => $idPago, 'idComisionCRM' => 0, 'status' => $errorLeyend, 'referencia' => $referencia ];
+                        $detalle[] = (object) ['idPagoSuma' => $idPago, 'idComisionCRM' => 0, 'status' => 406, 'referencia' => $referencia ];
                     }
                     else{
                         $arrayComisiones[] = array(
@@ -107,8 +104,7 @@ class Suma extends CI_Controller
                         
                         foreach ($comisionistas as $comisionista) {
                             if ( !isset($comisionista->id_rol) || !isset($comisionista->id_usuario) || !isset($comisionista->porcentaje_comision) || !isset($comisionista->total_comision) ){
-                                $errorLeyend = 'No viene algún parámetro en el pago de la ref.' . $referencia . ' del rol ' . $comisionista->id_rol;
-                                $detalle[] = (object) ['idPagoSuma' => $idPago, 'idComisionCRM' => 0, 'status' => $errorLeyend, 'referencia' => $referencia ];
+                                $detalle[] = (object) ['idPagoSuma' => $idPago, 'idComisionCRM' => 0, 'status' => 407, 'referencia' => $referencia ];
                             }
                             else{
                                 $idRol = trim($comisionista->id_rol);
@@ -117,8 +113,7 @@ class Suma extends CI_Controller
                                 $totalComision = trim( $comisionista->total_comision);
                                 
                                 if ($idRol == "" || $idUsuario == "" || $porcentaje == "" || $totalComision == "" ){
-                                    $errorLeyend = 'Algún parámetro en uno de los pagos de la ref.' . $referencia . ' del rol ' . $comisionista->id_rol . ', viene vacio';
-                                    $detalle[] = (object) ['idPagoSuma' => $idPago, 'idComisionCRM' => 0, 'status' => $errorLeyend, 'referencia' => $referencia ];
+                                    $detalle[] = (object) ['idPagoSuma' => $idPago, 'idComisionCRM' => 0, 'status' => 408, 'referencia' => $referencia ];
                                 }
                                 else{
                                     $primerFiltro = true;
@@ -156,10 +151,8 @@ class Suma extends CI_Controller
                     return $element['referencia'] == $refDup;
                 });
 
-                
                 foreach ($filteredArrayComisiones as $key => $posicion) {
-                    $errorLeyend = 'La referencia ' . $refDup . ' está duplicada';
-                    $detalle[] = (object) ['idPagoSuma' => $posicion['id_pago'], 'idComisionCRM' => 0, 'status' => $errorLeyend, 'referencia' => $refDup ];
+                    $detalle[] = (object) ['idPagoSuma' => $posicion['id_pago'], 'idComisionCRM' => 0, 'status' => 409, 'referencia' => $refDup ];
                     unset($arrayComisiones[$key]);
                 }
                 foreach ($filteredArrayPagos as $key => $posicion) {
@@ -174,17 +167,15 @@ class Suma extends CI_Controller
         if(count($arrayComisiones) > 0) {
             list($result, $ids) = $this->Suma_model->setComisionesPagos($arrayComisiones, $arrayPagos);
             if($result){
-                $errorLeyend = "Comisión insertada con éxito.";
                 foreach($arrayComisiones as $objComision){
-                    $detalle[] = (object) ['idPagoSuma' => $objComision['id_pago'], 'idComisionCRM' => $ids, 'status' => $errorLeyend, 'referencia' => $objComision['referencia']];
+                    $detalle[] = (object) ['idPagoSuma' => $objComision['id_pago'], 'idComisionCRM' => $ids, 'status' => 402, 'referencia' => $objComision['referencia']];
                     $ids += 1;
                 }
                 echo(json_encode(array("status" => 402, "mensaje" => "Todo exitoso.", "detalle" => $detalle), JSON_UNESCAPED_UNICODE));
             }
             else {
-                $errorLeyend = "Error al insertar.";
                 foreach($arrayComisiones as $objComision){
-                    $detalle[] = (object) ['idPagoSuma' => $objComision['id_pago'], 'idComisionCRM' => 0, 'status' => $errorLeyend, 'referencia' => $objComision['referencia']];
+                    $detalle[] = (object) ['idPagoSuma' => $objComision['id_pago'], 'idComisionCRM' => 0, 'status' => 403, 'referencia' => $objComision['referencia']];
                 }
                 echo(json_encode(array("status" => 403, "mensaje" => "Hubo algún error.", "detalle" => $detalle), JSON_UNESCAPED_UNICODE));
             }
