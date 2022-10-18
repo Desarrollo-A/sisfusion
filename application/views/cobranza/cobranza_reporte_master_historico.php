@@ -3,12 +3,18 @@
 <body>
     <div class="wrapper ">
      
-
+    <?php
+        $datos = array();
+        $datos = $datos4;
+        $datos = $datos2;
+        $datos = $datos3;  
+        $this->load->view('template/sidebar', $datos);
+        ?>
   
 
         <div class="modal fade " id="modalConfirmRequest" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog modal-sm">
-                <div class="modal-content">
+                <div class="modal-content"> 
                     <div class="modal-body">
                         <div class="modal-body text-center">
                             <h5>¿Estás segura de hacer este movimiento? </h5>
@@ -24,6 +30,40 @@
             </div>
         </div>
 
+        <div class="modal fade" id="seeInformationModalAsimilados" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog modal-md modal-dialog-scrollable" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                            <i class="material-icons" onclick="cleanCommentsAsimilados()">clear</i>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div role="tabpanel">
+                            <ul class="nav nav-tabs" role="tablist" style="background: #949494;">
+                                <div id="nameLote"></div>
+                            </ul>
+                            <div class="tab-content">
+                                <div role="tabpanel" class="tab-pane active" id="changelogTab">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="card card-plain">
+                                                <div class="card-content">
+                                                    <ul class="timeline timeline-simple" id="comments-list-asimilados"></ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                    <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" onclick="cleanCommentsAsimilados()"><b>Cerrar</b></button>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="content boxContent">
             <div class="container-fluid">
                 <div class="row">
