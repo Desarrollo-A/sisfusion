@@ -243,7 +243,7 @@ $("#tabla_nuevas_comisiones").ready(function() {
             "width": "5%",
             "orderable": false,
             "data": function(data) {
-                return '<button href="#" value="'+data.id_pago_suma+'"  data-referencia="'+data.referencia+'" ' +'class="btn-data btn-blueMaderas consultar_history" title="Detalles">' +'<i class="fas fa-info"></i></button>';
+                return '<button href="#" value="'+data.id_pago_suma+'"  data-referencia="'+data.referencia+'" ' +'class="btn-data btn-blueMaderas consultar_history m-auto" title="Detalles">' +'<i class="fas fa-info"></i></button>';
 
             }
         }],
@@ -506,7 +506,7 @@ $("#tabla_revision_comisiones").ready(function() {
             "width": "5%",
             "orderable": false,
             "data": function(data) {
-                return '<button href="#" value="'+data.id_pago_suma+'"  data-referencia="'+data.referencia+'" ' +'class="btn-data btn-blueMaderas consultar_history" title="Detalles">' +'<i class="fas fa-info"></i></button>';
+                return '<button href="#" value="'+data.id_pago_suma+'"  data-referencia="'+data.referencia+'" ' +'class="btn-data btn-blueMaderas consultar_history m-auto" title="Detalles">' +'<i class="fas fa-info"></i></button>';
 
             }
         }],
@@ -703,7 +703,7 @@ $("#tabla_pagadas_comisiones").ready(function() {
             "width": "5%",
             "orderable": false,
             "data": function(data) {
-                return '<button href="#" value="'+data.id_pago_suma+'"  data-referencia="'+data.referencia+'" ' +'class="btn-data btn-blueMaderas consultar_history" title="Detalles">' +'<i class="fas fa-info"></i></button>';
+                return '<button href="#" value="'+data.id_pago_suma+'"  data-referencia="'+data.referencia+'" ' +'class="btn-data btn-blueMaderas consultar_history m-auto" title="Detalles">' +'<i class="fas fa-info"></i></button>';
 
             }
         }],
@@ -902,7 +902,7 @@ $("#tabla_pausadas_comisiones").ready(function() {
             "width": "5%",
             "orderable": false,
             "data": function(data) {
-                return '<button href="#" value="'+data.id_pago_suma+'"  data-referencia="'+data.referencia+'" ' +'class="btn-data btn-blueMaderas consultar_history" title="Detalles">' +'<i class="fas fa-info"></i></button>';
+                return '<button href="#" value="'+data.id_pago_suma+'"  data-referencia="'+data.referencia+'" ' +'class="btn-data btn-blueMaderas consultar_history m-auto" title="Detalles">' +'<i class="fas fa-info"></i></button>';
 
             }
         }],
