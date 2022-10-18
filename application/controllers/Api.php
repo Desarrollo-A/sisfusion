@@ -60,7 +60,16 @@ class Api extends CI_Controller
                     echo json_encode($valida_token);
                 }else {
                     $result = JWT::decode($token, $JwtSecretKey, array('HS256'));
-                    if(!empty($result->data) && $result->data->username !== '' && $result->data->password !== ''){
+                    $valida_token = Null;
+                    foreach ($result->data as $key => $value) {
+                        if(($key == "username" || $key == "password") && (is_null($value) || str_replace(" ","",$value) == '' || empty($value)))
+                            $valida_token = false;
+                    }
+                    if(is_null($valida_token))
+                        $valida_token = true;
+                    else
+                        echo $valida_token;
+                    if(!empty($result->data) && $valida_token){
                         $checkSingup = $this->jwt_actions->validateUserPass($result->data->username, $result->data->password);
                     }else{
                         $checkSingup = null;
