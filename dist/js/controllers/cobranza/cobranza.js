@@ -4,6 +4,22 @@ $(document).ready(function () {
   
     sp.initFormExtendedDatetimepickers();
     $('.datepicker').datetimepicker({locale: 'es'});
+        // BEGIN DATE
+        const fechaInicio = new Date();
+        // Iniciar en este año, este mes, en el día 1
+        const beginDate = new Date(fechaInicio.getFullYear(), fechaInicio.getMonth(), 1);
+        // END DATE
+      
+
+        const fechaFin = new Date(fechaInicio.getFullYear(), fechaInicio.getMonth(), 1);
+        // Iniciar en este año, el siguiente mes, en el día 0 (así que así nos regresamos un día)
+        const endDate = new Date(fechaFin.getFullYear(), fechaFin.getMonth() + 1, 0);
+
+    
+        $("#beginDate").val('01/10/2022');
+      
+        $("#endDate").val('01/10/2022');
+      
     /*
     fillTable(typeTransaction, beginDate, endDate, where) PARAMS;
         typeTransaction:
@@ -17,7 +33,7 @@ $(document).ready(function () {
         where
             ID LOTE (WHEN typeTransaction VALUE IS 2 WE SEND ID LOTE VALUE)
     */
-
+            fillTable();
     setInitialValues();
 });
 
@@ -58,6 +74,9 @@ $('#cobranzaHistorial thead tr:eq(0) th').each(function (i) {
 
 function fillTable(idLote, beginDate, endDate) {
         console.log(idLote);
+        console.log(beginDate);
+        console.log(endDate);
+
     let encabezado = (document.querySelector('#cobranzaHistorial .encabezado .textoshead').placeholder).toUpperCase();
     generalDataTable = $('#cobranzaHistorial').dataTable({
         dom: 'Brt'+ "<'row'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'i><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>",
@@ -69,69 +88,70 @@ function fillTable(idLote, beginDate, endDate) {
                 className: 'btn buttons-excel',
                 titleAttr: 'Descargar archivo de Excel',
                 exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14,15,16,17,18,19],
+                    columns: [ 0, 1, 2, 3, 4 ,5, 6,7, 8, 9, 10, 11, 12, 13, 14, 15 , 16, 17,18,19],
                     format: {
-                        header: function (d, columnIdx) {
+                        header: function ( data , columnIdx) {
                             switch (columnIdx) {
                                 case 0:
                                     return 'ID PAGO';
                                     break;
                                 case 1:
-                                    return 'ID LOTE'
-                                case 2:
-                                    return 'REFERENCIA LOTE';
+                                    return 'ID LOTE';
                                     break;
-                                case 3:
+                                case 2:
+                                    return 'LOTE';
+                                    break;
+                                case 3 :
+                                    return 'REFERENCIA LOTE';
+                                    break;   
+                                 case 4 :
                                     return 'PRECIO LOTE';
                                     break;
-                                case 4:
-                                    return 'TOTAL COMISIÓN';
+                                 case 5 : 
+                                    return 'Total comisión';
                                     break;
-                                case 5:
-                                    return 'PAGO CLIENTE';
+                                case 6 : 
+                                    return 'Pago cliente';
                                     break;
-                                case 6:
-                                    return 'FECHA DE APARTADO';
+                                case 7 :
+                                    return 'Fecha de apartado';
+                                    break;  
+                                case 8 :
+                                    return 'Estatus contratacion';
+                                break; 
+                                case 9 :
+                                    return 'Estatus comision';
                                     break;
-                                case 7:
-                                    return 'ESTATUS CONTRATACIÓN';
+                                case 10 :
+                                    return 'Estatus venta';
                                     break;
-                                case 8:
-                                    return 'ESTATUS COMISIÓN';
-                                    break;
-                                case 9:
-                                    return 'ESTATUS VENTA/LOTE';
-                                    break;
-                                case 10:
-                                    return 'ESTATUS PAGO';
-                                    break;
-                                case 11:
-                                    return 'DISPERSADO POR MES';
+                                case 11: 
+                                    return 'Estatus pago comision';
                                     break;
                                 case 12:
-                                    return 'PAGO HISTORICO';
+                                    return 'Dispersado del mes';
                                     break;
                                 case 13:
-                                    return 'PAGO HISTORICO';
+                                    return 'Pago historico';
                                     break;
                                 case 14:
-                                    return 'USUARIO';
+                                    return 'Pendiente';
                                     break;
-                                case 15:
-                                    return 'PUESTO';
-                                     break;
-                                case 16:
-                                    return 'PLAZA';
-                                    break;           
-                                case 17:
-                                     return 'LUGAR DE PROSPECCION';
-                                     break;      
-                                case 18:
-                                     return 'DETALLE';
-                                     break;                                                 
-                                case 19:
-                                     return 'MÁS';
-                                     break;      
+                                case 15 :
+                                    return 'Usuario / Puesto';
+                                    break;
+                                case 16 :
+                                    return 'Plaza';
+                                    break;
+                                case 17: 
+                                    return 'Lugar de prospección';
+                                    break;
+                                case 18: 
+                                    return 'Detalle';
+                                    break;
+                                case 19: 
+                                    return 'Más';
+                                    break;
                             }
                             
                         }
@@ -161,67 +181,110 @@ function fillTable(idLote, beginDate, endDate) {
         ordering: false,
         columns: [
             {
-                data: function (d) {
-                    return d.id_pago_i;
+                data: function (data) {
+
+                    return data.id_pago_i;
+                
                 },
-                data: function (d) {
-                    return d.ud;
+            },{
+                data: function (data) {
+                
+                    return data.idLote;
+                
                 },
-                data: function (d) {
-                    return d.idLote;
+            },{
+                data: function (data) {
+
+                    return data.nombreLote;
+                
                 },
-                data: function (d) {
-                    return d.idLote;
+            },{
+                data: function (data) {
+
+                    return data.referencia;
+                
                 },
-                data: function (d) {
-                    return d.idLote;
-                },
-                data: function (d) {
-                    return d.idLote;
-                },
-                data: function (d) {
-                    return d.idLote;
-                },
-                data: function (d) {
-                    return d.idLote;
-                },
-                data: function (d) {
-                    return d.idLote;
-                },
-                data: function (d) {
-                    return d.idLote;
-                },
-                data: function (d) {
-                    return d.idLote;
-                },
-                data: function (d) {
-                    return d.idLote;
-                },
-                data: function (d) {
-                    return d.idLote;
-                },
-                data: function (d) {
-                    return d.idLote;
-                },
-                data: function (d) {
-                    return d.idLote;
-                },
-                data: function (d) {
-                    return d.idLote;
-                },
-                data: function (d) {
-                    return d.idLote;
-                },
-                data: function (d) {
-                    return d.idLote;
-                },
-                data: function (d) {
-                    return d.idLote;
-                },
-                data: function (d) {
-                    return d.idLote;
-                },
+            },
+            {
+                data: function(data){
+                    return data.precio_lote;
+                }
+            }, {
+                data: function(data){
+                    return data.allComision;
+                }
+            }, {
+                data: function(data){
+                    return data.pago_cliente;
+                }
+            },
+            {
+                data: function(data){
+                    return data.fechaApartado;
+                }
+            }, 
+            {
+                data: function(data){
+                    return data.idStatusContratacion;
+                }
+            }, {
+                data: function (data){
+                    return data.estatus_actual;
+                }
+            }, {
+                data: function (data){
+                    return data.estatus_actual;
+                }
+            },{
+                data: function (data){
+                    return data.estatus_actual;
+                }
+            },{
+                data: function  (data){
+                    return data.pago_neodata;
+                }
+            },{
+                data : function (data){
+                    return data.pagado;
+                }
+            },
+            {
+                data : function (data){
+                    return data.restante;
+                }
+            }, {
+                data : function (data ){
+                    return data.user_names;
+                }
+            },{
+                data : function (data){
+                    return data.puesto;
+                }
+            }, {
+                data: function (data ){
+                    return data.sede;
+                }
+            }, {
+                data: function (data ){
+                    return data.lugar_prospeccion;
+                }
+            }, {
+                data: function (data){
+                    return data.estatus_usuario;
+                }
+            }, {
+                data: function(data ){
+                    var BtnStats;
+
+                    BtnStats = '<button href="#" value=""class="btn-data btn-blueMaderas consultar_logs_asimilados"  title="Detalles">' +'<i class="fas fa-info"></i></button>';
+                    return '<div class="d-flex justify-center">'+BtnStats+'</div>';
+                }
             }
+             
+                
+             
+              
+          
            
         ],
         columnDefs: [{
@@ -241,6 +304,21 @@ function fillTable(idLote, beginDate, endDate) {
         }
     });
 
+    $("#tabla_historialGral tbody").on("click", ".consultar_logs_asimilados", function(e){
+        e.preventDefault();
+        e.stopImmediatePropagation();
+
+        id_pago = $(this).val();
+        lote = $(this).attr("data-value");
+
+        $("#seeInformationModalAsimilados").modal();
+        $("#nameLote").append('<p><h5 style="color: white;">HISTORIAL DEL PAGO DE: <b>'+lote+'</b></h5></p>');
+        $.getJSON("getComments/"+id_pago).done( function( data ){
+            $.each( data, function(i, v){
+                $("#comments-list-asimilados").append('<div class="col-lg-12"><p><i style="color:gray;">'+v.comentario+'</i><br><b style="color:#3982C0">'+v.fecha_movimiento+'</b><b style="color:gray;"> - '+v.nombre_usuario+'</b></p></div>');
+            });
+        });
+    });
     $("#cobranzaHistorial tbody").on("click", "#verifyNeodataStatus", function (e) {
         e.preventDefault();
         e.stopImmediatePropagation();
@@ -329,7 +407,7 @@ $(document).on("click", "#searchByLote", function () {
     }else {
    
     
-        alert('el id que buscas =: '+idLote);
+  
         fillTable(idLote, finalBeginDate, finalEndDate);
     }
    
@@ -368,12 +446,12 @@ function setInitialValues() {
     // Iniciar en este año, este mes, en el día 1
     const beginDate = new Date(fechaInicio.getFullYear(), fechaInicio.getMonth(), 1);
     // END DATE
-    const fechaFin = new Date();
+    const fechaFin = new Date(fechaInicio.getFullYear(), fechaInicio.getMonth(), 1);
     // Iniciar en este año, el siguiente mes, en el día 0 (así que así nos regresamos un día)
     const endDate = new Date(fechaFin.getFullYear(), fechaFin.getMonth() + 1, 0);
     finalBeginDate = [beginDate.getFullYear(), ('0' + (beginDate.getMonth() + 1)).slice(-2), ('0' + beginDate.getDate()).slice(-2)].join('-');
     finalEndDate = [endDate.getFullYear(), ('0' + (endDate.getMonth() + 1)).slice(-2), ('0' + endDate.getDate()).slice(-2)].join('-');
-    fillTable(1, finalBeginDate, finalEndDate, 0);
+  //  fillTable(1, finalBeginDate, finalEndDate, 0);
 }
 
 $(document).on("click", ".reset-initial-values", function () {
