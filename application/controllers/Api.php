@@ -67,8 +67,6 @@ class Api extends CI_Controller
                     }
                     if(is_null($valida_token))
                         $valida_token = true;
-                    else
-                        echo $valida_token;
                     if(!empty($result->data) && $valida_token){
                         $checkSingup = $this->jwt_actions->validateUserPass($result->data->username, $result->data->password);
                     }else{
