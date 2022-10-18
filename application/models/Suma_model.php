@@ -62,11 +62,11 @@ class Suma_model extends CI_Model
         return $query->result_array();
     }
 
-    function getAllComisiones($user, $year){
+    function getAllComisionesByUser($user, $year){
         $query = $this->db->query("SELECT cs.id_cliente, cs.nombre_cliente, cs.id_pago,  cs.estatus, cs.referencia, ps.id_pago_suma, ps.id_usuario,
         CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) nombre_comisionista, se.nombre sede, oxc.nombre forma_pago, 
         us.forma_pago id_forma_pago, ps.total_comision, ps.porcentaje_comision, cs.total_venta,
-        (CASE us.forma_pago WHEN 3 THEN (((100-se.impuesto)/100)* ps.total_comision) ELSE ps.total_comision END) impuesto, oxc2.nombre estatus
+        (CASE us.forma_pago WHEN 3 THEN (((100-se.impuesto)/100)* ps.total_comision) ELSE ps.total_comision END) impuesto, oxc2.nombre estatus, oxc2.color color_estatus
         FROM comisiones_suma cs
         INNER JOIN pagos_suma ps ON ps.referencia = cs.referencia
         INNER JOIN usuarios us ON us.id_usuario = ps.id_usuario
@@ -74,6 +74,22 @@ class Suma_model extends CI_Model
         INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = us.forma_pago AND oxc.id_catalogo = 16
         INNER JOIN opcs_x_cats oxc2 ON oxc2.id_opcion = ps.estatus AND oxc2.id_catalogo = 74 
         WHERE ps.id_usuario = $user AND year(ps.fecha_creacion) = $year");
+
+        return $query->result_array();
+    }
+
+    function getAllComisiones($year){
+        $query = $this->db->query("SELECT cs.id_cliente, cs.nombre_cliente, cs.id_pago,  cs.estatus, cs.referencia, ps.id_pago_suma, ps.id_usuario,
+        CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) nombre_comisionista, oxc.nombre forma_pago, 
+        us.forma_pago id_forma_pago, ps.total_comision, ps.porcentaje_comision, cs.total_venta, oxc2.nombre estatus, 
+		oxc2.color color_estatus, oxc3.nombre puesto
+        FROM comisiones_suma cs
+        INNER JOIN pagos_suma ps ON ps.referencia = cs.referencia
+        INNER JOIN usuarios us ON us.id_usuario = ps.id_usuario
+        INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = us.forma_pago AND oxc.id_catalogo = 16
+        INNER JOIN opcs_x_cats oxc2 ON oxc2.id_opcion = ps.estatus AND oxc2.id_catalogo = 74
+		INNER JOIN opcs_x_cats oxc3 ON oxc3.id_opcion = us.id_rol AND oxc3.id_catalogo = 1
+        WHERE  year(ps.fecha_creacion) = $year");
 
         return $query->result_array();
     }
