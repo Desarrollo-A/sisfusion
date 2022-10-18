@@ -50,15 +50,13 @@ class Cobranza extends CI_Controller
         $this->load->view("cobranza/cobranza_reporte_master_historico", $datos);
     }
     public function informationMasterCobranzaHistorial(){
-        var_dump('menanio ekqaekeq qejqeq e');
-      
 
             $idLote = $this->input->post("idLote");
-            var_dump($idLote);
+            //var_dump($idLote);
            
             $beginDate = date("Y-m-d", strtotime($this->input->post("beginDate")));
             $endDate = date("Y-m-d", strtotime($this->input->post("endDate")));
-            var_dump($beginDate);
+            //var_dump($beginDate);
             $data['data'] = $this->Cobranza_model->informationMasterCobranzaHistorial($idLote, $beginDate, $endDate)->result_array();
             echo json_encode($data);
         
