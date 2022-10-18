@@ -36,13 +36,14 @@ class Suma_model extends CI_Model
     function setComisionesPagos($dataComisiones, $dataPagos){
         $this->db->trans_begin();
         $c = $this->db->insert_batch('comisiones_suma', $dataComisiones);
+        $ids= $this->db->insert_id();
         $b = $this->db->insert_batch('pagos_suma', $dataPagos);
         if ($this->db->trans_status() === FALSE) { // Hubo errores en la consulta, entonces se cancela la transacción.
             $this->db->trans_rollback();
-            return false;
+            return [false, $ids];
         } else { // Se realiza primer insert correctamente
             $this->db->trans_commit();
-            return true;
+            return [true, $ids];
         }
     }
 
@@ -54,7 +55,19 @@ class Suma_model extends CI_Model
         FROM comisiones_suma cs
         INNER JOIN pagos_suma ps ON ps.referencia = cs.referencia
         INNER JOIN usuarios us ON us.id_usuario = ps.id_usuario
-        INNER JOIN sedes se ON se.id_sede = us.id_sede
+        INNER JOIN sedes se ON se.id_sede = (CASE us.id_usuario 
+                 WHEN 2 THEN 2 
+                 WHEN 3 THEN 2 
+                 WHEN 1980 THEN 2 
+                 WHEN 1981 THEN 2 
+                 WHEN 1982 THEN 2 
+                 WHEN 1988 THEN 2 
+                 WHEN 4 THEN 5
+                 WHEN 5 THEN 3
+                 WHEN 607 THEN 1 
+                 WHEN 7092 THEN 4
+                     WHEN 9629 THEN 2
+                 ELSE us.id_sede END)
         INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = us.forma_pago AND oxc.id_catalogo = 16
         WHERE ps.estatus = $estatus AND ps.id_usuario = $user");
 
@@ -69,7 +82,19 @@ class Suma_model extends CI_Model
         FROM comisiones_suma cs
         INNER JOIN pagos_suma ps ON ps.referencia = cs.referencia
         INNER JOIN usuarios us ON us.id_usuario = ps.id_usuario
-        INNER JOIN sedes se ON se.id_sede = us.id_sede
+        INNER JOIN sedes se ON se.id_sede = (CASE us.id_usuario 
+                 WHEN 2 THEN 2 
+                 WHEN 3 THEN 2 
+                 WHEN 1980 THEN 2 
+                 WHEN 1981 THEN 2 
+                 WHEN 1982 THEN 2 
+                 WHEN 1988 THEN 2 
+                 WHEN 4 THEN 5
+                 WHEN 5 THEN 3
+                 WHEN 607 THEN 1 
+                 WHEN 7092 THEN 4
+                     WHEN 9629 THEN 2
+                 ELSE us.id_sede END)
         INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = us.forma_pago AND oxc.id_catalogo = 16
         INNER JOIN opcs_x_cats oxc2 ON oxc2.id_opcion = ps.estatus AND oxc2.id_catalogo = 74 
         WHERE ps.id_usuario = $user AND year(ps.fecha_creacion) = $year");
@@ -127,21 +152,45 @@ class Suma_model extends CI_Model
         ps.porcentaje_comision, us.id_usuario
         FROM pagos_suma ps
         INNER JOIN usuarios us ON us.id_usuario = ps.id_usuario
-        INNER JOIN sedes se ON se.id_sede = us.id_sede
+        INNER JOIN sedes se ON se.id_sede = (CASE us.id_usuario 
+                 WHEN 2 THEN 2 
+                 WHEN 3 THEN 2 
+                 WHEN 1980 THEN 2 
+                 WHEN 1981 THEN 2 
+                 WHEN 1982 THEN 2 
+                 WHEN 1988 THEN 2 
+                 WHEN 4 THEN 5
+                 WHEN 5 THEN 3
+                 WHEN 607 THEN 1 
+                 WHEN 7092 THEN 4
+                     WHEN 9629 THEN 2
+                 ELSE us.id_sede END)
         INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = ps.estatus AND oxc.id_catalogo = 74
         WHERE us.forma_pago = 3 AND ps.estatus IN (2, 4)");
 
         return $datos;
     }
 
-    function getAsimiladosRevisionIntMex($idRol, $idUsuario){
+    function getRevisionIntMex($idRol, $idUsuario, $formaPago){
         $datos = $this->db->query("SELECT ps.id_pago_suma, ps.referencia, CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) nombreComisionista, se.nombre sede, oxc.nombre estatusString, ps.estatus, ps.total_comision, (CASE us.forma_pago WHEN 3 THEN (((100-se.impuesto)/100)* ps.total_comision) ELSE ps.total_comision END) impuesto, ps.porcentaje_comision, us.id_usuario, oxc2.nombre puesto
         FROM pagos_suma ps
         INNER JOIN usuarios us ON us.id_usuario = ps.id_usuario
-        INNER JOIN sedes se ON se.id_sede = us.id_sede
+        INNER JOIN sedes se ON se.id_sede = (CASE us.id_usuario 
+                 WHEN 2 THEN 2 
+                 WHEN 3 THEN 2 
+                 WHEN 1980 THEN 2 
+                 WHEN 1981 THEN 2 
+                 WHEN 1982 THEN 2 
+                 WHEN 1988 THEN 2 
+                 WHEN 4 THEN 5
+                 WHEN 5 THEN 3
+                 WHEN 607 THEN 1 
+                 WHEN 7092 THEN 4
+                     WHEN 9629 THEN 2
+                 ELSE us.id_sede END)
         INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = ps.estatus AND oxc.id_catalogo = 74
         INNER JOIN opcs_x_cats oxc2 ON oxc2.id_opcion = us.id_rol AND oxc2.id_catalogo = 1
-        WHERE ps.id_usuario = $idUsuario AND us.id_rol = $idRol AND us.forma_pago = 3 AND ps.estatus IN (3, 5)");
+        WHERE ps.id_usuario = $idUsuario AND us.id_rol = $idRol AND us.forma_pago = $formaPago AND ps.estatus IN (3, 5)");
 
         return $datos;
     }
@@ -152,7 +201,19 @@ class Suma_model extends CI_Model
         ps.porcentaje_comision, us.id_usuario
         FROM pagos_suma ps
         INNER JOIN usuarios us ON us.id_usuario = ps.id_usuario
-        INNER JOIN sedes se ON se.id_sede = us.id_sede
+        INNER JOIN sedes se ON se.id_sede = (CASE us.id_usuario 
+                 WHEN 2 THEN 2 
+                 WHEN 3 THEN 2 
+                 WHEN 1980 THEN 2 
+                 WHEN 1981 THEN 2 
+                 WHEN 1982 THEN 2 
+                 WHEN 1988 THEN 2 
+                 WHEN 4 THEN 5
+                 WHEN 5 THEN 3
+                 WHEN 607 THEN 1 
+                 WHEN 7092 THEN 4
+                     WHEN 9629 THEN 2
+                 ELSE us.id_sede END)
         INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = ps.estatus AND oxc.id_catalogo = 74
         WHERE us.forma_pago = 4 AND ps.estatus IN (2, 4)");
 
@@ -165,7 +226,19 @@ class Suma_model extends CI_Model
         ps.porcentaje_comision, us.id_usuario
         FROM pagos_suma ps
         INNER JOIN usuarios us ON us.id_usuario = ps.id_usuario
-        INNER JOIN sedes se ON se.id_sede = us.id_sede
+        INNER JOIN sedes se ON se.id_sede = (CASE us.id_usuario 
+                 WHEN 2 THEN 2 
+                 WHEN 3 THEN 2 
+                 WHEN 1980 THEN 2 
+                 WHEN 1981 THEN 2 
+                 WHEN 1982 THEN 2 
+                 WHEN 1988 THEN 2 
+                 WHEN 4 THEN 5
+                 WHEN 5 THEN 3
+                 WHEN 607 THEN 1 
+                 WHEN 7092 THEN 4
+                     WHEN 9629 THEN 2
+                 ELSE us.id_sede END)
         INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = ps.estatus AND oxc.id_catalogo = 74
         WHERE us.forma_pago = 2 AND ps.estatus IN (2, 4)");
 
@@ -178,7 +251,19 @@ class Suma_model extends CI_Model
         ps.porcentaje_comision, us.id_usuario
         FROM pagos_suma ps
         INNER JOIN usuarios us ON us.id_usuario = ps.id_usuario
-        INNER JOIN sedes se ON se.id_sede = us.id_sede
+        INNER JOIN sedes se ON se.id_sede = (CASE us.id_usuario 
+                 WHEN 2 THEN 2 
+                 WHEN 3 THEN 2 
+                 WHEN 1980 THEN 2 
+                 WHEN 1981 THEN 2 
+                 WHEN 1982 THEN 2 
+                 WHEN 1988 THEN 2 
+                 WHEN 4 THEN 5
+                 WHEN 5 THEN 3
+                 WHEN 607 THEN 1 
+                 WHEN 7092 THEN 4
+                     WHEN 9629 THEN 2
+                 ELSE us.id_sede END)
         INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = ps.estatus AND oxc.id_catalogo = 74
         WHERE us.forma_pago = 5 AND ps.estatus IN (2, 4)");
 
@@ -232,13 +317,30 @@ class Suma_model extends CI_Model
         ps.porcentaje_comision, us.id_usuario
         FROM pagos_suma ps
         INNER JOIN usuarios us ON us.id_usuario = ps.id_usuario
-        INNER JOIN sedes se ON se.id_sede = us.id_sede
+        INNER JOIN sedes se ON se.id_sede = (CASE us.id_usuario 
+                 WHEN 2 THEN 2 
+                 WHEN 3 THEN 2 
+                 WHEN 1980 THEN 2 
+                 WHEN 1981 THEN 2 
+                 WHEN 1982 THEN 2 
+                 WHEN 1988 THEN 2 
+                 WHEN 4 THEN 5
+                 WHEN 5 THEN 3
+                 WHEN 607 THEN 1 
+                 WHEN 7092 THEN 4
+                     WHEN 9629 THEN 2
+                 ELSE us.id_sede END)
         INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = ps.estatus AND oxc.id_catalogo = 74
         WHERE us.forma_pago = 4 AND ps.estatus IN (2, 4, 5)");
 
         return $datos;
     }
 
+    function duplicateReference($stringReferencias){
+        $datos = $this->db->query("SELECT referencia FROM comisiones_suma WHERE referencia IN ($stringReferencias)");
+
+        return $datos;
+    }
     function getDatosNuevasXSuma(){
         return $this->db->query("SELECT SUM(pci1.total_comision) total,  CONCAT(u.nombre, ' ',u.apellido_paterno, ' ', u.apellido_materno) usuario, u.forma_pago, 0 as factura, oxcest.id_opcion id_estatus_actual, opn.estatus estatus_opinion, opn.archivo_name, fa.uuid,fa.nombre_archivo as xmla, fa.bandera, u.rfc, pci1.id_usuario
         FROM pagos_suma pci1 
