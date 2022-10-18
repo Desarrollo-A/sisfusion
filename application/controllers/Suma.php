@@ -60,10 +60,16 @@ class Suma extends CI_Controller
         echo json_encode($data);
     }
 
-    public function getAllComisiones(){
+    public function getAllComisionesByUser(){
         $user = $this->session->userdata('id_usuario');
         $year = $_POST['anio'];
-        $data = $this->Suma_model->getAllComisiones($user, $year);
+        $data = $this->Suma_model->getAllComisionesByUser($user, $year);
+        echo json_encode($data);
+    }
+
+    public function getAllComisiones(){
+        $year = $_POST['anio'];
+        $data = $this->Suma_model->getAllComisiones($year);
         echo json_encode($data);
     }
 
@@ -375,10 +381,6 @@ class Suma extends CI_Controller
   
             $this->Usuarios_modelo->Update_OPN($this->session->userdata('id_usuario'));
             echo json_encode( $resultado );
-        //   }
-        //   else{
-        //     echo json_encode(3);
-        //   }
     }
 
     public function revision_asimilados(){
@@ -443,6 +445,14 @@ class Suma extends CI_Controller
 
         $this->load->view('template/header');
         $this->load->view("ventas/revision_INTMEXxml_suma", $datos);  
+    }
+
+    public function historial_comisiones(){
+        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
+        $datos['sub_menu'] = $this->get_menu->get_submenu_data($this->session->userdata('id_rol'), $this->session->userdata('id_usuario'));
+
+        $this->load->view('template/header');
+        $this->load->view("ventas/historial_comisiones_suma", $datos);  
     }
 
     public function getAsimiladosRevision(){
@@ -548,7 +558,6 @@ class Suma extends CI_Controller
     }
 
     public function carga_listado_factura(){
-        // echo 'sdsdfs'.$this->input->post("id_usuario");
         echo json_encode( $this->Suma_model->get_solicitudes_factura($this->input->post("id_usuario") ) );
     }
 
@@ -569,7 +578,7 @@ class Suma extends CI_Controller
       }
 
 
-      public function GetDescripcionXML($xml){
+    public function GetDescripcionXML($xml){
         error_reporting(0);
     
         $xml=simplexml_load_file("".base_url()."UPLOADS/XMLS/".$xml."") or die("Error: Cannot create object");
@@ -592,13 +601,9 @@ class Suma extends CI_Controller
         $arr[3]=  $total;
         $arr[4]=  $cadena;
         echo json_encode($arr);
-      }
+    }
 
-
-
-
- public function updateClientName()
-    {
+    public function updateClientName(){
         $data = json_decode((file_get_contents("php://input")));
 
         if (!isset($data->id_cliente))
@@ -620,5 +625,4 @@ class Suma extends CI_Controller
             }
         }
     }
-
 }
