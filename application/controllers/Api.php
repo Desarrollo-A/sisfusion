@@ -109,7 +109,8 @@ class Api extends CI_Controller
                                         "observaciones" => $data->Comments,
                                         "desarrollo" => $data->ProductID,
                                         "score" => $data->iScore,
-                                        "source" => $data->Source
+                                        "source" => $data->Source,
+                                        "id_dragon" => $data->IdDragon
                                     );
                                     $dbTransaction = $this->General_model->addRecord("prospectos", $data); // MJ: LLEVA 2 PARÁMETROS $table, $data
                                     if ($dbTransaction) // SUCCESS TRANSACTION
