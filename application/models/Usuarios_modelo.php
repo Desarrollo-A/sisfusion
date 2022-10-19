@@ -213,8 +213,12 @@ class Usuarios_modelo extends CI_Model {
                                         id_rol = 1 AND estatus = 1 ORDER BY nombre");
                 break;
             case '3':// GERENTE
+                $sede = '';
+                     if($headquarter == 11){
+                        $sede = " OR id_sede='3'";
+                     }
                 return $this->db->query("SELECT id_usuario, CONCAT(nombre, ' ', apellido_paterno, ' ', ISNULL(apellido_materno, '')) nombre, id_sede FROM usuarios WHERE 
-                                        id_rol = 2 AND id_sede LIKE '%".$headquarter."%' AND estatus = 1 ORDER BY nombre");
+                                        id_rol = 2 AND (id_sede LIKE '%".$headquarter."%' $sede)  AND estatus = 1 ORDER BY nombre");
                 break;
             case '4':// ASISTENTE DIRECTOR
                 return $this->db->query("SELECT id_usuario, CONCAT(nombre, ' ', apellido_paterno, ' ', ISNULL(apellido_materno, '')) nombre, id_sede FROM usuarios WHERE 
