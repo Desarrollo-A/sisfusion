@@ -75,7 +75,7 @@ class Api extends CI_Controller
                     }
                     if(!empty($checkSingup) && json_decode($checkSingup)->status == 200){
                         $data = json_decode(file_get_contents("php://input"));
-                        if (!isset($data->Name) || !isset($data->Mail) || !isset($data->Phone) || !isset($data->Comments) || !isset($data->iScore) || !isset($data->ProductID) || !isset($data->CampaignID) || !isset($data->Source) || !isset($data->Owner))
+                        if (!isset($data->Name) || !isset($data->Mail) || !isset($data->Phone) || !isset($data->Comments) || !isset($data->iScore) || !isset($data->ProductID) || !isset($data->CampaignID) || !isset($data->Source) || !isset($data->Owner) || !isset($data->IdDragon))
                             echo json_encode(array("status" => 400, "message" => "Algún parámetro no viene informado. Verifique que todos los parámetros requeridos se incluyan en la petición."), JSON_UNESCAPED_UNICODE);
                         else {
                             if ($data->Name == '' || $data->Mail == '' || $data->Phone == '' || $data->Comments == '' || $data->iScore == '' || $data->ProductID == '' || $data->CampaignID == '' || $data->Source == '' || $data->Owner == '')
@@ -109,11 +109,12 @@ class Api extends CI_Controller
                                         "observaciones" => $data->Comments,
                                         "desarrollo" => $data->ProductID,
                                         "score" => $data->iScore,
-                                        "source" => $data->Source
+                                        "source" => $data->Source,
+                                        "id_dragon" => $data->IdDragon
                                     );
                                     $dbTransaction = $this->General_model->addRecord("prospectos", $data); // MJ: LLEVA 2 PARÁMETROS $table, $data
                                     if ($dbTransaction) // SUCCESS TRANSACTION
-                                        echo json_encode(array("status" => 200, "message" => "Registro guardado con éxito.", "resultado" => $result), JSON_UNESCAPED_UNICODE);
+                                        echo json_encode(array("status" => 200, "message" => "Registro guardado con éxito."), JSON_UNESCAPED_UNICODE);
                                     else // ERROR TRANSACTION
                                         echo json_encode(array("status" => 503, "message" => "Servicio no disponible. El servidor no está listo para manejar la solicitud. Por favor, inténtelo de nuevo más tarde."), JSON_UNESCAPED_UNICODE);
                                 }
