@@ -72,10 +72,8 @@ $('#cobranzaHistorial thead tr:eq(0) th').each(function (i) {
     }
 });
 
-function fillTable(idLote, beginDate, endDate) {
-        console.log(idLote);
-        console.log(beginDate);
-        console.log(endDate);
+function fillTable(idLote, beginDate, endDate, bandera ) {
+   
 
     let encabezado = (document.querySelector('#cobranzaHistorial .encabezado .textoshead').placeholder).toUpperCase();
     generalDataTable = $('#cobranzaHistorial').dataTable({
@@ -229,7 +227,7 @@ function fillTable(idLote, beginDate, endDate) {
                 }
             }, {
                 data: function (data){
-                    return data.estatus_actual;
+                    return data.estatusComision;
                 }
             }, {
                 data: function (data){
@@ -250,29 +248,22 @@ function fillTable(idLote, beginDate, endDate) {
             },
             {
                 data : function (data){
-                    return data.restante;
-                }
+                    return data.restantes;
+                } 
+
             }, {
                 data : function (data ){
-                    return data.user_names;
-                }
-            },{
-                data : function (data){
-                    return data.puesto;
+                    return data.user_names +'/'+ data.puesto;
                 }
             }, {
                 data: function (data ){
-                    return data.sede;
+                    return data.plaza;
                 }
             }, {
                 data: function (data ){
                     return data.lugar_prospeccion;
                 }
-            }, {
-                data: function (data){
-                    return data.estatus_usuario;
-                }
-            }, {
+            },{
                 data: function(data ){
                     var BtnStats;
 
@@ -281,11 +272,6 @@ function fillTable(idLote, beginDate, endDate) {
                 }
             }
              
-                
-             
-              
-          
-           
         ],
         columnDefs: [{
             visible: false,
@@ -299,6 +285,8 @@ function fillTable(idLote, beginDate, endDate) {
                 "idLote": idLote,
                 "beginDate": beginDate,
                 "endDate": endDate,
+                "bandera": bandera,
+             
              
             }
         }
@@ -398,33 +386,38 @@ function fillTable(idLote, beginDate, endDate) {
     });
 }
 
+
 $(document).on("click", "#searchByLote", function () {
     let idLote = $("#idLote").val();
     let finalBeginDate = $("#beginDate").val();
     let finalEndDate = $("#endDate").val();
+    let bandera = 1 ;
     if (idLote == ''){
         alerts.showNotification("top", "right", "Oops, faltan valores para consultar.", "warning");
     }else {
    
     
   
-        fillTable(idLote, finalBeginDate, finalEndDate);
+        fillTable(idLote, finalBeginDate, finalEndDate, bandera);
     }
    
     
     
 });
 
+
 $(document).on("click", "#searchByDateRange", function () {
     console.log('mensaje de buscar fecha');
     let finalBeginDate = $("#beginDate").val();
     let finalEndDate = $("#endDate").val();
+    let bandera = 2;
+    let lote = 0;
     if (finalBeginDate == '' || finalBeginDate == '')
     {
         alerts.showNotification("top", "right", "Oops, faltan valores para consultar.", "warning");
     }else{
 
-        fillTable( finalBeginDate, finalEndDate);
+        fillTable(lote , finalBeginDate, finalEndDate, bandera);
     }
     
  

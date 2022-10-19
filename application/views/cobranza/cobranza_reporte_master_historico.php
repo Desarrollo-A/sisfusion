@@ -114,7 +114,7 @@
                                                 id="cobranzaHistorial" name="cobranzaHistorial">
                                                 <thead>
                                                 <tr>
-                                                    <th title="ID PAGO" class="encabezado">ID PAGO</th>
+                                                     <th title="ID PAGO" class="encabezado">ID PAGO</th>
                                                     <th title="ID LOTE">ID LOTE</th>
                                                     <th title="LOTE">LOTE</th>
                                                     <th title="REFERENCIA LOTE">REFERENCIA LOTE</th>
@@ -130,10 +130,10 @@
                                                     <th title="PAGO HISTORICO">PAGO HISTORICO</th>
                                                     <th title="PENDIENTE">PENDIENTE</th>
                                                     <th title="USUARIO">USUARIO</th>
-                                                    <th title="PUESTO">PUESTO</th>
+                                                  
                                                     <th title="PLAZA">PLAZA</th>
                                                     <th title="LUGAR DE PROSPECCION">LUGAR DE PROSPECCION</th>
-                                                    <th title="DETALLE">DETALLE</th>
+                                                   
                                                     <th title="MÁS">MÁS</th>
                                                 </tr>
                                                 </thead>
