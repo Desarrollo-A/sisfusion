@@ -130,10 +130,10 @@
                                                     <th title="PAGO HISTORICO">PAGO HISTORICO</th>
                                                     <th title="PENDIENTE">PENDIENTE</th>
                                                     <th title="USUARIO">USUARIO</th>
-                                                    <th title="PUESTO">PUESTO</th>
+                                                  
                                                     <th title="PLAZA">PLAZA</th>
                                                     <th title="LUGAR DE PROSPECCION">LUGAR DE PROSPECCION</th>
-                                                    <th title="DETALLE">DETALLE</th>
+                                                   
                                                     <th title="MÁS">MÁS</th>
                                                 </tr>
                                                 </thead>

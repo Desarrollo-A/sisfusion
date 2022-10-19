@@ -52,12 +52,21 @@ class Cobranza extends CI_Controller
     public function informationMasterCobranzaHistorial(){
 
             $idLote = $this->input->post("idLote");
-            //var_dump($idLote);
-           
+            $bandera = $this->input->post("bandera");
             $beginDate = date("Y-m-d", strtotime($this->input->post("beginDate")));
             $endDate = date("Y-m-d", strtotime($this->input->post("endDate")));
             //var_dump($beginDate);
+            //var_dump($idLote);
+           if($bandera = 1 )
+           {
+            $endDate = '';
+            $beginDate = '';
+           }else {
+            $idLote = '';
+           }
+          
             $data['data'] = $this->Cobranza_model->informationMasterCobranzaHistorial($idLote, $beginDate, $endDate)->result_array();
+            
             echo json_encode($data);
         
     
