@@ -152,9 +152,9 @@
                                                         <th>PUESTO</th>
                                                         <th>NOMBRE</th>
                                                         <th>SEDE</th>
-                                                        <th>TOTAL COMISION</th>
+                                                        <th>TOTAL COMISIÓN</th>
                                                         <th>IMPUESTO</th>
-                                                        <th>% COMISION</th>
+                                                        <th>% COMISIÓN</th>
                                                         <th>ESTATUS</th>
                                                         <th>MÁS</th>
                                                     </tr>
