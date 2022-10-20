@@ -87,7 +87,7 @@ function fillTable(idLote, beginDate, endDate, bandera ) {
                 className: 'btn buttons-excel',
                 titleAttr: 'Descargar archivo de Excel',
                 exportOptions: {
-                    columns: [ 0, 1, 2, 3, 4 ,5, 6,7, 8, 9, 10, 11, 12, 13, 14, 15 , 16, 17,18,19],
+                    columns: [ 0, 1, 2, 3, 4 ,5, 6,7, 8, 9, 10, 11, 12, 13, 14, 15 , 16, 17,18],
                     format: {
                         header: function ( data , columnIdx) {
                             switch (columnIdx) {
@@ -148,9 +148,7 @@ function fillTable(idLote, beginDate, endDate, bandera ) {
                                 case 18: 
                                     return 'Detalle';
                                     break;
-                                case 19: 
-                                    return 'Más';
-                                    break;
+                              
                             }
                             
                         }
@@ -228,15 +226,15 @@ function fillTable(idLote, beginDate, endDate, bandera ) {
                 }
             }, {
                 data: function (data){
-                    return data.estatusComision;
+                    labelStatus = '<span class="label" style="background:'+data.color+';"> '+data.estatus_actual_comision+'</span>';
+                    return labelStatus;
+                  
                 }
             }, {
                 data: function (data){
-                    return data.estatus_actual;
-                }
-            },{
-                data: function (data){
-                    return data.estatus_actual;
+                    labelStatus = '<span class="label" style="background:#'+data.color_lote+';"> '+data.estatus_lote+'</span>';
+                    return labelStatus;
+                    
                 }
             },{
                 data: function  (data){
@@ -263,13 +261,6 @@ function fillTable(idLote, beginDate, endDate, bandera ) {
             }, {
                 data: function (data ){
                     return data.lugar_prospeccion;
-                }
-            },{
-                data: function(data ){
-                    var BtnStats;
-
-                    BtnStats = '<button href="#" value=""class="btn-data btn-blueMaderas consultar_logs_asimilados"  title="Detalles">' +'<i class="fas fa-info"></i></button>';
-                    return '<div class="d-flex justify-center">'+BtnStats+'</div>';
                 }
             }
              
