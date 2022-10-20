@@ -33,7 +33,7 @@ $(document).ready(function () {
         where
             ID LOTE (WHEN typeTransaction VALUE IS 2 WE SEND ID LOTE VALUE)
     */
-            fillTable();
+        //    fillTable();
     setInitialValues();
 });
 
@@ -74,7 +74,8 @@ $('#cobranzaHistorial thead tr:eq(0) th').each(function (i) {
 
 function fillTable(idLote, beginDate, endDate, bandera ) {
    
-
+    console.log(beginDate);
+    console.log(endDate);
     let encabezado = (document.querySelector('#cobranzaHistorial .encabezado .textoshead').placeholder).toUpperCase();
     generalDataTable = $('#cobranzaHistorial').dataTable({
         dom: 'Brt'+ "<'row'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'i><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>",
@@ -416,7 +417,8 @@ $(document).on("click", "#searchByDateRange", function () {
     {
         alerts.showNotification("top", "right", "Oops, faltan valores para consultar.", "warning");
     }else{
-
+        console.log(finalBeginDate);
+        console.log( finalEndDate);
         fillTable(lote , finalBeginDate, finalEndDate, bandera);
     }
     

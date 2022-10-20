@@ -16,15 +16,16 @@ class Cobranza_model extends CI_Model {
             
             $query = ' AND lo.idLote = '.$idLote;
         }
-        
+      
         if( $beginDate != ''){
-            $query2  = " WHERE  pci1.fecha_abono > '$beginDate' and pci1.fecha_abono < '$endDate'";
+            $query2  = " WHERE  pci1.fecha_abono > '$beginDate'   AND pci1.fecha_abono < '$endDate'" ;
+            $query3  =  " ";
 
         }else{
             $query2 = '';
+            $query3  =  '';
         }
-        
-        return $this->db->query("  SELECT pci1.id_pago_i, pci1.id_comision, lo.idLote ,lo.nombreLote , lo.referencia,  co.nombre as condominio,
+        $cmd="  SELECT pci1.id_pago_i, pci1.id_comision, lo.idLote ,lo.nombreLote , lo.referencia,  co.nombre as condominio,
         FORMAT(ISNULL(lo.totalNeto2 , '0.00'), 'C') precio_lote,
         FORMAT(ISNULL(com.comision_total , '0.00'), 'C') comision_total, 
         FORMAT(ISNULL(pci1.abono_neodata ,'0.00'),'C') pago_cliente , 
@@ -63,12 +64,14 @@ WHEN '13' THEN '13' WHEN '14' THEN '14' WHEN '15' THEN '15' END)  contratacion ,
       LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = cl.lugar_prospeccion AND oxc.id_catalogo = 9
 
       INNER JOIN sedes s ON lo.ubicacion_dos = s.id_sede 
-      $query2
+      $query2 
 
       GROUP BY pci1.id_comision, lo.idLote ,lo.nombreLote, co.nombre, lo.totalNeto2, com.comision_total,pac.bandera ,
       com.porcentaje_decimal, pci1.abono_neodata, pci1.pago_neodata, pci2.abono_pagado, pci1.estatus, cl.fechaApartado ,  pci1.fecha_abono,
       pci1.id_usuario, pci1.id_pago_i, u.nombre, u.apellido_paterno, u.apellido_materno, oprol.nombre, oxcest.nombre, oxcest.id_opcion, 
-      pci1.descuento_aplicado, lo.idStatusContratacion,oxc.nombre , lo.referencia, com.estatus, u.estatus,pac.total_comision, oxcest.color ,s.nombre ORDER BY lo.nombreLote");
+      pci1.descuento_aplicado, lo.idStatusContratacion,oxc.nombre , lo.referencia, com.estatus, u.estatus,pac.total_comision, oxcest.color ,s.nombre ORDER BY lo.nombreLote";
+     // var_dump($cmd);
+      return $this->db->query($cmd);
 
     }
     
