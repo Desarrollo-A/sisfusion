@@ -11,7 +11,6 @@ $('#tabla_factura thead tr:eq(0) th').each( function (i) {
                 selected: true,
                 search: 'applied'
             }).indexes();
-
                 var data = tabla_factura.rows(index).data();
                 $.each(data, function(i, v) {
                     total += parseFloat(v.impuesto);
@@ -228,7 +227,7 @@ tabla_factura = $("#tabla_factura").DataTable({
     ajax: {
         url: general_base_url + "Suma/getRevision",
         type: "POST",
-        data: { formaPago: '2'},
+        data: { formaPago: '5'},
         dataType: 'json',
         dataSrc: ""
     },

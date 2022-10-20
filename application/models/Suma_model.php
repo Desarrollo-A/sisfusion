@@ -94,6 +94,13 @@ class Suma_model extends CI_Model
         return $query->result_array();
     }
 
+    public function getTotalComisionAsesor($idUsuario){
+        $query = $this->db->query("SELECT SUM(ps.total_comision) AS total
+        FROM pagos_suma ps
+        WHERE ps.estatus = 1 AND ps.id_usuario = $idUsuario");
+        return $query->row();
+    }
+
     function getHistorial($idPago){
         $result = $this->db->query("SELECT hs.fecha_movimiento, hs.comentario, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) modificado_por
         FROM historial_suma hs
@@ -138,7 +145,7 @@ class Suma_model extends CI_Model
         return $this->db->insert("facturas_suma", $data);
     }
 
-    function getAsimiladosRevision(){
+    function getRevision($formaPago){
         $datos = $this->db->query("SELECT ps.id_pago_suma, ps.referencia, CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) nombreComisionista,
         se.nombre sede, oxc.nombre estatusString, ps.estatus, ps.total_comision, (CASE us.forma_pago WHEN 3 THEN (((100-se.impuesto)/100)* ps.total_comision) ELSE ps.total_comision END) impuesto,
         ps.porcentaje_comision, us.id_usuario
@@ -146,7 +153,7 @@ class Suma_model extends CI_Model
         INNER JOIN usuarios us ON us.id_usuario = ps.id_usuario
         INNER JOIN sedes se ON se.id_sede = us.id_sede
         INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = ps.estatus AND oxc.id_catalogo = 74
-        WHERE us.forma_pago = 3 AND ps.estatus IN (2, 4)");
+        WHERE us.forma_pago = $formaPago AND ps.estatus IN (2, 4)");
 
         return $datos;
     }
@@ -163,44 +170,6 @@ class Suma_model extends CI_Model
         return $datos;
     }
 
-    function getRemanentesRevision(){
-        $datos = $this->db->query("SELECT ps.id_pago_suma, ps.referencia, CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) nombreComisionista,
-        se.nombre sede, oxc.nombre estatusString, ps.estatus, ps.total_comision, (CASE us.forma_pago WHEN 3 THEN (((100-se.impuesto)/100)* ps.total_comision) ELSE ps.total_comision END) impuesto,
-        ps.porcentaje_comision, us.id_usuario
-        FROM pagos_suma ps
-        INNER JOIN usuarios us ON us.id_usuario = ps.id_usuario
-        INNER JOIN sedes se ON se.id_sede = us.id_sede
-        INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = ps.estatus AND oxc.id_catalogo = 74
-        WHERE us.forma_pago = 4 AND ps.estatus IN (2, 4)");
-
-        return $datos;
-    }
-
-    function getFacturaRevision(){
-        $datos = $this->db->query("SELECT ps.id_pago_suma, ps.referencia, CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) nombreComisionista,
-        se.nombre sede, oxc.nombre estatusString, ps.estatus, ps.total_comision, (CASE us.forma_pago WHEN 3 THEN (((100-se.impuesto)/100)* ps.total_comision) ELSE ps.total_comision END) impuesto,
-        ps.porcentaje_comision, us.id_usuario
-        FROM pagos_suma ps
-        INNER JOIN usuarios us ON us.id_usuario = ps.id_usuario
-        INNER JOIN sedes se ON se.id_sede = us.id_sede
-        INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = ps.estatus AND oxc.id_catalogo = 74
-        WHERE us.forma_pago = 2 AND ps.estatus IN (2, 4)");
-
-        return $datos;
-    }
-
-    function getFacturaExtranjeroRevision(){
-        $datos = $this->db->query("SELECT ps.id_pago_suma, ps.referencia, CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) nombreComisionista,
-        se.nombre sede, oxc.nombre estatusString, ps.estatus, ps.total_comision, (CASE us.forma_pago WHEN 3 THEN (((100-se.impuesto)/100)* ps.total_comision) ELSE ps.total_comision END) impuesto,
-        ps.porcentaje_comision, us.id_usuario
-        FROM pagos_suma ps
-        INNER JOIN usuarios us ON us.id_usuario = ps.id_usuario
-        INNER JOIN sedes se ON se.id_sede = us.id_sede
-        INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = ps.estatus AND oxc.id_catalogo = 74
-        WHERE us.forma_pago = 5 AND ps.estatus IN (2, 4)");
-
-        return $datos;
-    }
 
     function setPausarDespausarComision($estatus, $idPago, $idUsuario, $obs){
         $leyendaStatus = ( $estatus == 5 || $estatus == 4 ) ? 'PAUSÓ' : 'ACTIVÓ';

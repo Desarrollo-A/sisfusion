@@ -84,8 +84,8 @@
                                                         <th>NOMBRE</th>
                                                         <th>PUESTO</th>
                                                         <th>FORMA PAGO</th>
-                                                        <th>TOTAL COMISION</th>
-                                                        <th>% COMISION</th>
+                                                        <th>TOTAL COMISIÓN</th>
+                                                        <th>% COMISIÓN</th>
                                                         <th>ESTATUS</th>
                                                         <th>MÁS</th>
                                                     </tr>
