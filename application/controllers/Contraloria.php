@@ -1484,6 +1484,8 @@ public function get_sede(){
 			if ($id_asig == 6856)
 				$assigned_user = 2800;
 			else if ($id_asig == 2800)
+				$assigned_user = 11129;
+			else if ($id_asig == 11129)
 				$assigned_user = 6856;
 			
 			$arreglo["asig_jur"] = $assigned_user;
