@@ -73,7 +73,8 @@ $('#cobranzaHistorial thead tr:eq(0) th').each(function (i) {
 });
 
 function fillTable(idLote, beginDate, endDate, bandera ) {
-    
+   
+
     let encabezado = (document.querySelector('#cobranzaHistorial .encabezado .textoshead').placeholder).toUpperCase();
     generalDataTable = $('#cobranzaHistorial').dataTable({
         dom: 'Brt'+ "<'row'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'i><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>",
@@ -269,11 +270,6 @@ function fillTable(idLote, beginDate, endDate, bandera ) {
                 }
             }
              
-                
-             
-              
-          
-           
         ],
         columnDefs: [{
             visible: false,
@@ -288,6 +284,7 @@ function fillTable(idLote, beginDate, endDate, bandera ) {
                 "beginDate": beginDate,
                 "endDate": endDate,
                 "bandera": bandera,
+             
              
             }
         }
@@ -387,6 +384,7 @@ function fillTable(idLote, beginDate, endDate, bandera ) {
     });
 }
 
+
 $(document).on("click", "#searchByLote", function () {
     let idLote = $("#idLote").val();
     let finalBeginDate = $("#beginDate").val();
@@ -404,6 +402,7 @@ $(document).on("click", "#searchByLote", function () {
     
     
 });
+
 
 $(document).on("click", "#searchByDateRange", function () {
     console.log('mensaje de buscar fecha');

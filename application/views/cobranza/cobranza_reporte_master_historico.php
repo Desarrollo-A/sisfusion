@@ -114,7 +114,7 @@
                                                 id="cobranzaHistorial" name="cobranzaHistorial">
                                                 <thead>
                                                 <tr>
-                                                    <th title="ID PAGO" class="encabezado">ID PAGO</th>
+                                                     <th title="ID PAGO" class="encabezado">ID PAGO</th>
                                                     <th title="ID LOTE">ID LOTE</th>
                                                     <th title="LOTE">LOTE</th>
                                                     <th title="REFERENCIA LOTE">REFERENCIA LOTE</th>
