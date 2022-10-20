@@ -33,7 +33,7 @@ $(document).ready(function () {
         where
             ID LOTE (WHEN typeTransaction VALUE IS 2 WE SEND ID LOTE VALUE)
     */
-      //      fillTable();
+        //    fillTable();
     setInitialValues();
 });
 
@@ -74,7 +74,8 @@ $('#cobranzaHistorial thead tr:eq(0) th').each(function (i) {
 
 function fillTable(idLote, beginDate, endDate, bandera ) {
    
-
+    console.log(beginDate);
+    console.log(endDate);
     let encabezado = (document.querySelector('#cobranzaHistorial .encabezado .textoshead').placeholder).toUpperCase();
     generalDataTable = $('#cobranzaHistorial').dataTable({
         dom: 'Brt'+ "<'row'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'i><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>",
@@ -86,7 +87,7 @@ function fillTable(idLote, beginDate, endDate, bandera ) {
                 className: 'btn buttons-excel',
                 titleAttr: 'Descargar archivo de Excel',
                 exportOptions: {
-                    columns: [ 0, 1, 2, 3, 4 ,5, 6,7, 8, 9, 10, 11, 12, 13, 14, 15 , 16, 17,18,19],
+                    columns: [ 0, 1, 2, 3, 4 ,5, 6,7, 8, 9, 10, 11, 12, 13, 14, 15 , 16, 17,18],
                     format: {
                         header: function ( data , columnIdx) {
                             switch (columnIdx) {
@@ -144,10 +145,10 @@ function fillTable(idLote, beginDate, endDate, bandera ) {
                                 case 17: 
                                     return 'Lugar de prospección';
                                     break;
-                             
-                                case 19: 
-                                    return 'Más';
+                                case 18: 
+                                    return 'Detalle';
                                     break;
+                              
                             }
                             
                         }
@@ -225,15 +226,15 @@ function fillTable(idLote, beginDate, endDate, bandera ) {
                 }
             }, {
                 data: function (data){
-                    return data.estatusComision;
+                    labelStatus = '<span class="label" style="background:'+data.color+';"> '+data.estatus_actual_comision+'</span>';
+                    return labelStatus;
+                  
                 }
             }, {
                 data: function (data){
-                    return data.estatus_actual;
-                }
-            },{
-                data: function (data){
-                    return data.estatus_actual;
+                    labelStatus = '<span class="label" style="background:#'+data.color_lote+';"> '+data.estatus_lote+'</span>';
+                    return labelStatus;
+                    
                 }
             },{
                 data: function  (data){
@@ -260,13 +261,6 @@ function fillTable(idLote, beginDate, endDate, bandera ) {
             }, {
                 data: function (data ){
                     return data.lugar_prospeccion;
-                }
-            },{
-                data: function(data ){
-                    var BtnStats;
-
-                    BtnStats = '<button href="#" value=""class="btn-data btn-blueMaderas consultar_logs_asimilados"  title="Detalles">' +'<i class="fas fa-info"></i></button>';
-                    return '<div class="d-flex justify-center">'+BtnStats+'</div>';
                 }
             }
              
@@ -414,7 +408,8 @@ $(document).on("click", "#searchByDateRange", function () {
     {
         alerts.showNotification("top", "right", "Oops, faltan valores para consultar.", "warning");
     }else{
-
+        console.log(finalBeginDate);
+        console.log( finalEndDate);
         fillTable(lote , finalBeginDate, finalEndDate, bandera);
     }
     

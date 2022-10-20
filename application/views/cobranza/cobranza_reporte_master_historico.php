@@ -125,7 +125,7 @@
                                                     <th title="ESTATUS CONTRATACIÓN">ESTATUS CONTRATACIÓN</th>
                                                     <th title="ESTATUS COMISIÓN">ESTATUS COMISIÓN</th>
                                                     <th title="ESTATUS VENTA/LOTE">ESTATUS VENTA/LOTE</th>
-                                                    <th title="ESTATUS PAGO">ESTATUS PAGO</th>
+                                                   
                                                     <th title="DISPERSADO POR MES">DISPERSADO POR MES</th>
                                                     <th title="PAGO HISTORICO">PAGO HISTORICO</th>
                                                     <th title="PENDIENTE">PENDIENTE</th>
@@ -133,8 +133,6 @@
                                                   
                                                     <th title="PLAZA">PLAZA</th>
                                                     <th title="LUGAR DE PROSPECCION">LUGAR DE PROSPECCION</th>
-                                                   
-                                                    <th title="MÁS">MÁS</th>
                                                 </tr>
                                                 </thead>
                                             </table>
