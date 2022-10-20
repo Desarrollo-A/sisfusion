@@ -56,7 +56,7 @@ class Cobranza extends CI_Controller
         $beginDate = date("Y-m-d", strtotime($this->input->post("beginDate")));
         $endDate = date("Y-m-d", strtotime($this->input->post("endDate")));
            
-        if($bandera = 1 )
+        if($bandera == 1 )
         {
          $endDate = '';
          $beginDate = '';
