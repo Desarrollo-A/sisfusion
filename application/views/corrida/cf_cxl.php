@@ -1210,7 +1210,6 @@
 
             function calcularCF(){
 
-
 ///////////////////////////////////////
 
 
@@ -1659,6 +1658,7 @@
                 }else{
                     condicion_mes = 0;
                 }
+                console.log("$scope.fechaApartado: ", $scope.fechaApartado);
                 var month = (new Date($scope.fechaApartado).getMonth() + (1 + condicion_mes));
                 var yearc;
                 if(month>12){
@@ -8463,11 +8463,17 @@
                         $scope.clabe = response.data[0].clabe;
                         $scope.referencia = response.data[0].referencia;
                         $scope.msni = response.data[0].msni;
-                        let fecha_pre = new Date(response.data[0].fechaApartado);
-                        let dia_final = (fecha_pre.getDate() < 10 ) ? '0'+fecha_pre.getDate() : fecha_pre.getDate();
-                        let mes_final = ((fecha_pre.getMonth()-1) < 10) ? '0'+(fecha_pre.getMonth()-1) : (fecha_pre.getMonth()-1);
-                        let fecha_final = fecha_pre.getFullYear()+'-'+ mes_final +'-'+ dia_final;
-                        $scope.fechaApartado = fecha_pre;
+                        if(response.data[0].idStatusLote==3){
+                            let fecha_pre = new Date(response.data[0].fechaApartado);
+                            let dia_final = (fecha_pre.getDate() < 10 ) ? '0'+fecha_pre.getDate() : fecha_pre.getDate();
+                            let mes_final = ((fecha_pre.getMonth()-1) < 10) ? '0'+(fecha_pre.getMonth()-1) : (fecha_pre.getMonth()-1);
+                            let fecha_final = fecha_pre.getFullYear()+'-'+ mes_final +'-'+ dia_final;
+                            $scope.fechaApartado = fecha_pre;
+                            // console.log("$scope.fechaApartado: ", $scope.fechaApartado);
+                            // console.log("fecha_final: ", fecha_final);
+                        }else{
+                            $scope.fechaApartado = new Date();
+                        }
                         // console.log("$scope.fechaApartado: ", $scope.fechaApartado);
                         // console.log("fecha_final: ", fecha_final);
                         calcularCF();

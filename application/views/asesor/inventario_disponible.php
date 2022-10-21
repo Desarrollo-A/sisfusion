@@ -361,7 +361,8 @@
 
 					}
 				});
-			} else if (residencial > 0){
+			}
+			else if (residencial > 0){
 				$("#filtro4").empty().selectpicker('refresh');
 				$.ajax({
 					url: '<?=base_url()?>Asesor/getCondominioDesc/'+residencial,
@@ -432,9 +433,9 @@
 
 					}
 				});
-				$("#filtro9").empty().selectpicker('refresh');
+				/**/$("#filtro9").empty().selectpicker('refresh');
 				$.ajax({
-					url: '<?=base_url()?>Asesor/getMeses/'+residencial,
+					url: '<?=base_url()?>Asesor/getMeses/'+residencial+'/'+1,
 					type: 'post',
 					dataType: 'json',
 					success:function(response){
@@ -453,7 +454,31 @@
 			}
 
 		});
+        $('#filtro4').change(function(ruta){
+            let condominio = $('#filtro4').val();
+            $("#filtro9").empty().selectpicker('refresh');
+            console.log('condominio', condominio);
+            if(condominio.length>0){
+                $.ajax({
+                    url: '<?=base_url()?>Asesor/getMeses/'+condominio+'/'+2,
+                    type: 'post',
+                    dataType: 'json',
+                    success:function(response){
+                        var len = response.length;
+                        for( var i = 0; i<len; i++)
+                        {
+                            var id = response[i]['msni'];
+                            var name = response[i]['msni'];
+                            $("#filtro9").append($('<option>').val(id).text(name + " MSI"));
+                        }
+                        $("#filtro9").selectpicker('refresh');
 
+                    }
+                });
+            }
+
+
+        });
 
 		$('.selectpicker').on('change', function(event){
 			var form = $(this).closest('form');
