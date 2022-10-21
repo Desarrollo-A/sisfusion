@@ -48,6 +48,19 @@ $('#tabla_asimilados').on('xhr.dt', function(e, settings, json, xhr) {
     document.getElementById("totpagarAsimilados").textContent = '$' + to;
 });
 
+function selectAll(e) {
+    tota2 = 0;
+    $(tabla_asimilados.$('input[type="checkbox"]')).each(function (i, v) {
+        if (!$(this).prop("checked")) {
+            $(this).prop("checked", true);
+            tota2 += parseFloat(tabla_asimilados.row($(this).closest('tr')).data().impuesto);
+        } else {
+            $(this).prop("checked", false);
+        }
+        $("#totpagarPen").html('$' + formatMoney(tota2));
+    });
+}
+
 $(document).on("click", ".individualCheck", function() {
     tr = $(this).closest('tr');
     var row = tabla_asimilados.row(tr).data();
