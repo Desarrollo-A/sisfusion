@@ -1,4 +1,3 @@
-
 var totaPen = 0;
 
 function selectAll(e) {

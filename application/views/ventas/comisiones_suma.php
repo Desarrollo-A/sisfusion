@@ -19,7 +19,7 @@
                 $forma_pago = $row->forma_pago;
                 if( $forma_pago  == 2 ||  $forma_pago == '2'){
                     if(count($opn_cumplimiento) == 0){
-                        $cadena = '<a href="https://maderascrm.gphsis.com/index.php/Usuarios/configureProfile"> <span class="label label-danger" style="background:red;">  SIN OPINIÓN DE CUMPLIMIENTO, CLIC AQUI PARA SUBIRLA ></span> </a>';
+                        $cadena = '<a href="https://maderascrm.gphsis.com/index.php/Usuarios/configureProfile"> <span class="label label-danger" style="background:red;">SIN OPINIÓN DE CUMPLIMIENTO, CLIC AQUI PARA SUBIRLA</span> </a>';
                     } 
                     else{
                         if($opn_cumplimiento[0]['estatus'] == 1){
