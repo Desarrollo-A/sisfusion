@@ -143,7 +143,7 @@ $("#tabla_nuevas_comisiones").ready(function() {
                     var hora = hoy.getHours();
                     var minuto = hoy.getMinutes();
 
-                    if (((mes == 10 && dia == 20) || (mes == 10 && dia == 20 && hora <= 20)) ||
+                    if (((mes == 10 && dia == 21) || (mes == 10 && dia == 21 && hora <= 20)) ||
                     ((mes == 11 && dia == 7) || (mes == 11 && dia == 8 && hora <= 13)) ||
                     ((mes == 12 && dia == 12) || (mes == 12 && dia == 13 && hora <= 13))){
 
@@ -356,7 +356,7 @@ $("#tabla_nuevas_comisiones").ready(function() {
 
 
 
-                if (((mes == 10 && dia == 20) || (mes == 10 && dia == 20 && hora <= 20)) ||
+                if (((mes == 10 && dia == 21) || (mes == 10 && dia == 21 && hora <= 20)) ||
                 ((mes == 11 && dia == 7) || (mes == 11 && dia == 8 && hora <= 13)) ||
                 ((mes == 12 && dia == 12) || (mes == 12 && dia == 13 && hora <= 13)))
                 {
@@ -429,10 +429,9 @@ $("#tabla_nuevas_comisiones").ready(function() {
 $(document).on("click", ".individualCheck", function() {
     tr = $(this).closest('tr');
     var row = tabla_nuevas.row(tr).data();
-    var impuesto = Math.round(row.impuesto * 10) / 10
 
-    if ($(this).prop('checked')) totaPen += row.impuesto;
-    else totaPen -= impuesto;
+    if ($(this).prop('checked')) totaPen += parseFloat(row.impuesto);
+    else totaPen -= parseFloat(row.impuesto);
 
     $("#totpagarPen").html('$ ' + formatMoney(totaPen));
 });
@@ -1068,7 +1067,7 @@ $(document).on("click", ".subir_factura_multiple", function() {
     var hora = hoy.getHours();
     var minuto = hoy.getMinutes();
 
-    if (((mes == 10 && dia == 20) || (mes == 10 && dia == 20 && hora <= 20)) || ((mes == 11 && dia == 7) || (mes == 11 && dia == 8 && hora <= 13)) || ((mes == 12 && dia == 12) || (mes == 12 && dia == 13 && hora <= 13))){
+    if (((mes == 10 && dia == 21) || (mes == 10 && dia == 21 && hora <= 20)) || ((mes == 11 && dia == 7) || (mes == 11 && dia == 8 && hora <= 13)) || ((mes == 12 && dia == 12) || (mes == 12 && dia == 13 && hora <= 13))){
 
     $("#modal_multiples .modal-body").html("");
     $("#modal_multiples .modal-header").html("");
