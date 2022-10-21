@@ -218,17 +218,17 @@ class Suma extends CI_Controller
                     'id_usuario' =>  $id_user_Vl,
                     'fecha_movimiento' => date('Y-m-d H:i:s'),
                     'estatus' => 2,
-                    'comentario' =>  'COLABORADOR ENVÍO A CONTRALORÍA' 
+                    'comentario' =>  'COLABORADOR ENVÍO A DTO. SUMA' 
                 );
                 array_push($data,$row_arr);
 
                 if ($formaPagoUsuario == 5) { // Pago extranjero
                     $pagoInvoice[] = array(
-                    'id_pago_i' => $row['id_pago_suma'],
-                    'nombre_archivo' => $opinionCumplimiento->archivo_name,
-                    'estatus' => 2,
-                    'modificado_por' => $id_user_Vl,
-                    'fecha_registro' => date('Y-m-d H:i:s')
+                        'id_pago_suma' => $row['id_pago_suma'],
+                        'nombre_archivo' => $opinionCumplimiento->archivo_name,
+                        'estatus' => 1,
+                        'modificado_por' => $id_user_Vl,
+                        'fecha_registro' => date('Y-m-d H:i:s')
                     );
                 }
             }
@@ -237,7 +237,7 @@ class Suma extends CI_Controller
             $up_b = $this->Suma_model->update_acepta_solicitante($id_pago_i);
             $ins_b = $this->Suma_model->insert_historial($data);
             if ($formaPagoUsuario == 5) {
-                $this->PagoInvoice_model->insertMany($pagoInvoice);
+                $this->PagoInvoice_model->insertManySuma($pagoInvoice);
             }
           
             if($up_b == true && $ins_b == true){
@@ -444,7 +444,15 @@ class Suma extends CI_Controller
         $datos['sub_menu'] = $this->get_menu->get_submenu_data($this->session->userdata('id_rol'), $this->session->userdata('id_usuario'));
 
         $this->load->view('template/header');
-        $this->load->view("ventas/revision_INTMEXxml_suma", $datos);  
+        $this->load->view("ventas/revision_INTMEXfactura_suma", $datos);  
+    }
+
+    public function revision_extranjeros_intmex(){
+        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
+        $datos['sub_menu'] = $this->get_menu->get_submenu_data($this->session->userdata('id_rol'), $this->session->userdata('id_usuario'));
+
+        $this->load->view('template/header');
+        $this->load->view("ventas/revision_INTMEXextranjero_suma", $datos);  
     }
 
     public function historial_comisiones(){
@@ -467,8 +475,9 @@ class Suma extends CI_Controller
         echo json_encode($this->Suma_model->getRevisionIntMex($idRol, $idUsuario, $formaPago)->result_array());
     }
 
-    public function getRemanentesRevision(){
-        echo json_encode($this->Suma_model->getRemanentesRevision()->result_array());
+    public function getRevision(){
+        $formaPago = $this->input->post("formaPago");
+        echo json_encode($this->Suma_model->getRevision($formaPago)->result_array());
     }
 
     public function getFacturaRevision(){
@@ -624,5 +633,12 @@ class Suma extends CI_Controller
                     echo json_encode(array("status" => 400, "message" => "Oops, algo salió mal. Inténtalo más tarde."), JSON_UNESCAPED_UNICODE);
             }
         }
+    }
+
+    public function getTotalComisionAsesor()
+    {
+        $idUsuario = $this->session->userdata('id_usuario');
+        $data = $this->Suma_model->getTotalComisionAsesor($idUsuario);
+        echo json_encode($data);
     }
 }

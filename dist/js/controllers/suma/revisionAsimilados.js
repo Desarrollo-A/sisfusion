@@ -1,5 +1,15 @@
 var totaPen = 0;
 
+$('#tabla_remanentes').on('click', 'input', function() {
+    tr = $(this).closest('tr');
+    var row = tabla_remanentes.row(tr).data();
+
+    if ($(this).prop('checked')) totaPen += row.impuesto;
+    else totaPen -= row.impuesto;
+
+    $("#totpagarPen").html('$ ' + formatMoney(totaPen));
+});
+
 $('#tabla_asimilados thead tr:eq(0) th').each( function (i) {
     if(i != 0){
         var title = $(this).text();

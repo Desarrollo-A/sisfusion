@@ -12,4 +12,8 @@ class PagoInvoice_model extends CI_Model
     {
         $this->db->insert_batch('pagos_invoice', $data);
     }
+    public function insertManySuma($data)
+    {
+        $this->db->insert_batch('pagos_invoice_suma', $data);
+    }
 }

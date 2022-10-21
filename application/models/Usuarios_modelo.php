@@ -493,12 +493,11 @@ function getAllFoldersPDF()
         function SaveCumplimiento($user,$pdf,$opc){
             $estatus = 1;
             if ($opc == 1) {
-    $estatus=2;            
+                $estatus=2;    
             }
      
-        $respuesta = $this->db->query("INSERT INTO opinion_cumplimiento VALUES ($user,'$pdf',$estatus,GETDATE(),'NULL')");
-    
-            if (! $respuesta ) {
+            $respuesta = $this->db->query("INSERT INTO opinion_cumplimiento VALUES ($user,'$pdf',$estatus,GETDATE(),'NULL')");
+            if (! $respuesta ){
                 return 0;
             } else {
                 return 1;
@@ -506,32 +505,28 @@ function getAllFoldersPDF()
         }
     
         function updatePDF($id){
-     
             $respuesta = $this->db->query("UPDATE opinion_cumplimiento set estatus=0 WHERE id_opn=$id");
         
-                if (! $respuesta ) {
-                    return 0;
-                } else {
-                    return 1;
-                }
+            if (! $respuesta ) {
+                return 0;
+            } else {
+                return 1;
             }
-            function Update_OPN($usuario){
-     
-                $respuesta = $this->db->query("UPDATE opinion_cumplimiento set estatus=2 WHERE id_usuario=$usuario and estatus=1;");
-            
-                    if (! $respuesta ) {
-                        return 0;
-                    } else {
-                        return 1;
-                    }
-                }
-    
-                function getPersonalInformation2($id){
-                    return $this->db->query("SELECT id_usuario, nombre, apellido_paterno, apellido_materno, correo, usuario, telefono, rfc, usuario, contrasena, forma_pago FROM usuarios WHERE id_usuario = ".$id."");
-                }   
-    
+        }
 
-    /** */
+        function Update_OPN($usuario){    
+            $respuesta = $this->db->query("UPDATE opinion_cumplimiento set estatus=2 WHERE id_usuario=$usuario and estatus=1;");
+        
+            if (! $respuesta ) {
+                return 0;
+            } else {
+                return 1;
+            }
+        }
+    
+        function getPersonalInformation2($id){
+            return $this->db->query("SELECT id_usuario, nombre, apellido_paterno, apellido_materno, correo, usuario, telefono, rfc, usuario, contrasena, forma_pago FROM usuarios WHERE id_usuario = ".$id."");
+        }
 
         public function getChangeLogUsers($id_usuario){
             /*return "MODEL: ".$id_usuario;*/

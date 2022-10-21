@@ -25,7 +25,7 @@ $('#filtro33').change(function(){
     idRol = $('#filtro33').val();
     $("#filtro44").empty().selectpicker('refresh');
     $.ajax({
-        url: general_base_url + `Suma/lista_usuarios/${idRol}/2`,
+        url: general_base_url + `Suma/lista_usuarios/${idRol}/5`,
         type: 'post',
         dataType: 'json',
         success:function(response){
@@ -148,7 +148,7 @@ function getAssimilatedCommissions(idRol, idUsuario){
             text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
             className: 'btn buttons-excel',
             titleAttr: 'Descargar archivo de Excel',
-            title: 'FACTURAS INTERNOMEX COMISIONES SUMA',
+            title: 'FACTURAS EXTRANJERO INTERNOMEX COMISIONES SUMA',
             exportOptions: {
                 columns: [1,2,3,4,5,6,7,8,9],
                 format: {
@@ -282,7 +282,7 @@ function getAssimilatedCommissions(idRol, idUsuario){
         ajax: {
             url: general_base_url + "Suma/getRevisionIntMex",
             type: "POST",
-            data: { idRol: idRol, idUsuario: idUsuario, formaPago: '2'},
+            data: { idRol: idRol, idUsuario: idUsuario, formaPago: '5'},
             dataType: 'json',
             dataSrc: ""
         }
@@ -448,46 +448,6 @@ $(document).on("click", ".Pagar", function() {
     });
 });
 
-//Función para regresar a estatus 7 la solicitud
-$("#form_refresh").submit( function(e) {
-    e.preventDefault();
-}).validate({
-    submitHandler: function( form ) {
-        var data = new FormData( $(form)[0] );
-        data.append("id_pago_i", id_pago_i);
-        $.ajax({
-            url: general_base_url + "Comisiones/refresh_solicitud/",
-            data: data,
-            cache: false,
-            contentType: false,
-            processData: false,
-            dataType: 'json',
-            method: 'POST',
-            type: 'POST', // For jQuery < 1.9
-            success: function(data){
-                if( data[0] ){
-                    $("#modal_refresh").modal('toggle' );
-                    alerts.showNotification("top", "right", "Se ha procesado la solicitud exitosamente", "success");
-                    setTimeout(function() {
-                        tabla_factura.ajax.reload();
-                    }, 3000);
-                }
-                else{
-                    alerts.showNotification("top", "right", "No se ha procesado tu solicitud", "danger");
-
-                }
-            },error: function( ){
-                alert("ERROR EN EL SISTEMA");
-            }
-        });
-    }
-});
-
-$(document).on("click", ".btn-historial-lo", function(){
-    window.open(general_base_url+"Comisiones/getHistorialEmpresa", "_blank");
-});
-
-
 function cleanComments(){
     var myCommentsList = document.getElementById('documents');
     myCommentsList.innerHTML = '';
@@ -509,20 +469,10 @@ function selectAll(e) {
     });
 }
 
-$(document).ready( function(){
-    $.getJSON( general_base_url + "Comisiones/getReporteEmpresa").done( function( data ){
-        $(".report_empresa").html();
-        $.each( data, function( i, v){
-            $(".report_empresa").append('<div class="col xol-xs-3 col-sm-3 col-md-3 col-lg-3"><label style="color: #00B397;">&nbsp;'+v.empresa+': $<input style="border-bottom: none; border-top: none; border-right: none;  border-left: none; background: white; color: #00B397; font-weight: bold;" value="'+formatMoney(v.porc_empresa)+'" disabled="disabled" readonly="readonly" type="text"  name="myText_FRO" id="myText_FRO"></label></div>');
-        });
-    });
-});
-
 $("#form_multiples").submit( function(e) {
     $('#spiner-loader').removeClass('hidden');
     e.preventDefault();
 }).validate({
-
     submitHandler: function( form ) {
         var data = new FormData( $(form)[0] );
         $.ajax({
