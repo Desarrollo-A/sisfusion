@@ -675,8 +675,8 @@ class Caja_outside extends CI_Controller
         //$val_tl = $datosView->lotes[0]->tipo_lote;
         if (!isset($val_tl)) {
         } else {
-            $casasDetail = $this->db->query("SELECT (l.sup * l.precio) total_terreno, c.casasDetail FROM lotes l 
-                INNER JOIN (SELECT id_lote, CONCAT( '{''total_terreno'':''', total_terreno, ''',', tipo_casa, '}') casasDetail  
+            $casasDetail = $this->db->query("SELECT (l.sup * l.precio) total_terreno, c.casasDetail, c.aditivas_extra FROM lotes l 
+                INNER JOIN (SELECT id_lote, CONCAT( '{''total_terreno'':''', total_terreno, ''',', tipo_casa, '}') casasDetail, aditivas_extra
                 FROM casas WHERE estatus = 1) c ON c.id_lote = l.idLote WHERE l.idLote = $id_lote AND l.status = 1")->result_array();
             $cd = json_decode(str_replace("'", '"', $casasDetail[0]['casasDetail']));
             $info = $this->caja_model_outside->getDatosLote($id_lote);
@@ -686,8 +686,10 @@ class Caja_outside extends CI_Controller
                 foreach ($cd->tipo_casa as $value) {
                     if ($value->nombre == 'Stella') {
                         $total_construccion = $value->total_const;
-                        foreach ($value->extras as $v) { // MJ: SE LEEN LAS CARACTERÍSTICAS EXTRAS QUE LLEGUE A TENER LA CASA
-                            $total_construccion += $v->techado;
+                        if($casasDetail[0]['aditivas_extra'] == 1){
+                            foreach ($value->extras as $v) { // MJ: SE LEEN LAS CARACTERÍSTICAS EXTRAS QUE LLEGUE A TENER LA CASA
+                                $total_construccion += $v->techado;
+                            }
                         }
                     }
                 }
@@ -704,8 +706,10 @@ class Caja_outside extends CI_Controller
                 foreach ($cd->tipo_casa as $value) {
                     if ($value->nombre == 'Aura') {
                         $total_construccion = $value->total_const;
-                        foreach ($value->extras as $v) { // MJ: SE LEEN LAS CARACTERÍSTICAS EXTRAS QUE LLEGUE A TENER LA CASA
-                            $total_construccion += $v->techado;
+                        if($casasDetail[0]['aditivas_extra'] == 1){
+                            foreach ($value->extras as $v) { // MJ: SE LEEN LAS CARACTERÍSTICAS EXTRAS QUE LLEGUE A TENER LA CASA
+                                $total_construccion += $v->techado;
+                            }
                         }
                     }
                 }
