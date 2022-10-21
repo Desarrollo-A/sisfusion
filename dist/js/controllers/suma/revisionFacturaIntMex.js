@@ -76,6 +76,16 @@ $('#tabla_factura thead tr:eq(0) th').each( function (i) {
     }
 });
 
+$(document).on("click", ".individualCheck", function() {
+    tr = $(this).closest('tr');
+    var row = tabla_factura.row(tr).data();
+
+    if ($(this).prop('checked')) totaPen += parseFloat(row.impuesto);
+    else totaPen -= parseFloat(row.impuesto);
+
+    $("#totpagarPen").html('$ ' + formatMoney(totaPen));
+});
+
 function getAssimilatedCommissions(idRol, idUsuario){
     $('#tabla_factura').on('xhr.dt', function(e, settings, json, xhr) {
         var total = 0;
@@ -265,7 +275,7 @@ function getAssimilatedCommissions(idRol, idUsuario){
             render: function (d, type, full, meta){
                 if(full.estatus == 3){
                     if(full.referencia){
-                        return '<input type="checkbox" name="idTQ[]" style="width:20px;height:20px;"  value="' + full.id_pago_suma + '">';
+                        return '<input type="checkbox" name="idTQ[]" style="width:20px;height:20px;"  class="individualCheck" value="' + full.id_pago_suma + '">';
                     }else{
                         return '';
                     }
@@ -316,16 +326,6 @@ function getAssimilatedCommissions(idRol, idUsuario){
         $("#modal_nuevas .modal-body").append('<input type="hidden" name="id_pago" value="'+id_pago_i+'">');
         $("#modal_nuevas .modal-body").append('<div class="row mt-3"><div class="col-md-6"></div><div class="col-md-3"><button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">CANCELAR</button></div><div class="col-md-3"><input type="submit" class="btn btn-primary"></div></div>');
         $("#modal_nuevas").modal();
-    });
-
-    $('#tabla_factura').on('click', 'input', function() {
-        tr = $(this).closest('tr');
-        var row = tabla_factura.row(tr).data();
-
-        if ($(this).prop('checked')) totaPen += row.impuesto;
-        else totaPen -= row.impuesto;
-
-        $("#totpagarPen").html('$ ' + formatMoney(totaPen));
     });
 }
 
