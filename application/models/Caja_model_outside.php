@@ -1144,8 +1144,8 @@
         if (empty($array_casas)) {
 
         } else {
-            $casasDetail = $this->db->query("SELECT (l.sup * l.precio) total_terreno, c.casasDetail FROM lotes l 
-                INNER JOIN (SELECT id_lote, CONCAT( '{''total_terreno'':''', total_terreno, ''',', tipo_casa, '}') casasDetail  
+            $casasDetail = $this->db->query("SELECT (l.sup * l.precio) total_terreno, c.casasDetail, c.aditivas_extra FROM lotes l 
+                INNER JOIN (SELECT id_lote, CONCAT( '{''total_terreno'':''', total_terreno, ''',', tipo_casa, '}') casasDetail, aditivas_extra  
                 FROM casas WHERE estatus = 1) c ON c.id_lote = l.idLote WHERE l.idLote = $idLote AND l.status = 1")->result_array();
             $cd = json_decode(str_replace("'", '"', $casasDetail[0]['casasDetail']));
 
@@ -1160,8 +1160,10 @@
                     foreach ($cd->tipo_casa as $value) {
                         if ($value->nombre == 'Stella') {
                             $total_construccion = $value->total_const;
-                            foreach ($value->extras as $v) {
-                                $total_construccion += $v->techado;
+                            if($casasDetail[0]['aditivas_extra'] == 1){
+                                foreach ($value->extras as $v) {
+                                    $total_construccion += $v->techado;
+                                }
                             }
                         }
                     }
@@ -1176,8 +1178,10 @@
                     foreach ($cd->tipo_casa as $value) {
                         if ($value->nombre == 'Aura') {
                             $total_construccion = $value->total_const; // MJ: SE EXTRAE EL TOTAL DE LA CONSTRUCCIÓN POR TIPO DE CASA
-                            foreach ($value->extras as $v) {
-                                $total_construccion += $v->techado;
+                            if($casasDetail[0]['aditivas_extra'] == 1){
+                                foreach ($value->extras as $v) {
+                                    $total_construccion += $v->techado;
+                                }
                             }
                         }
                     }
