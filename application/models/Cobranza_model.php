@@ -8,7 +8,74 @@ class Cobranza_model extends CI_Model {
     {
         parent::__construct();
     }
+    public function informationMasterCobranzaHistorial ($idLote , $beginDate, $endDate){
+        if ($idLote == '' || $idLote ==  0)
+        {
+            $query = '';
+        } else {
+            
+            $query = ' AND lo.idLote = '.$idLote;
+        }
+      
+        if( $beginDate != ''){
+            $query2  = " WHERE  pci1.fecha_abono > '$beginDate'   AND pci1.fecha_abono < '$endDate'" ;
+            $query3  =  " ";
 
+        }else{
+            $query2 = '';
+            $query3  =  '';
+        }
+        $cmd="  SELECT pci1.id_pago_i, pci1.id_comision, lo.idLote ,lo.nombreLote , lo.referencia,  co.nombre as condominio,
+        FORMAT(ISNULL(lo.totalNeto2 , '0.00'), 'C') precio_lote,
+        FORMAT(ISNULL(com.comision_total , '0.00'), 'C') comision_total, 
+        FORMAT(ISNULL(pci1.abono_neodata ,'0.00'),'C') pago_cliente , 
+        FORMAT(ISNULL(pci1.pago_neodata, '0.00'), 'C') pago_neodata , 
+        FORMAT(ISNULL( pci2.abono_pagado , '0.00'), 'C') pagado ,
+         FORMAT(ISNULL(com.comision_total-pci2.abono_pagado , '0.00'),'C') restantes, 
+        com.porcentaje_decimal,  UPPER(s.nombre) plaza,
+        pci1.estatus,  cl.fechaApartado  , pci1.fecha_abono fecha_abono,
+        CONCAT(u.nombre, ' ',u.apellido_paterno, ' ', u.apellido_materno) user_names ,pci1.id_usuario, oprol.nombre as puesto, u.estatus as estatus_usuario, 
+        oxcest.nombre as estatus_actual_comision,slo.nombre as estatus_lote,slo.color as color_lote , oxcest.id_opcion id_estatus_actual,
+        pci1.descuento_aplicado,
+        --s.nombre as sede, 
+        lo.idStatusContratacion , pac.total_comision as totalComision,
+      FORMAT(ISNULL( pac.total_comision , '0.00'),'C') allComision,
+      REPLACE(oxc.nombre, ' (especificar)', '') lugar_prospeccion, oxcest.color   ,
+      (CASE lo.idStatusContratacion WHEN '1' THEN '01' WHEN '2' THEN '02' WHEN '3' THEN '03' WHEN '4' THEN '04' WHEN '5' THEN '05' WHEN '6' THEN '06' 
+WHEN '7' THEN '07' WHEN '8' THEN '08' WHEN '9' THEN '09' WHEN '10' THEN '10' WHEN '11' THEN '11' WHEN '12' THEN '12' 
+WHEN '13' THEN '13' WHEN '14' THEN '14' WHEN '15' THEN '15' END)  contratacion , pac.bandera estatusComision   ,
+        oxcest.color                 
+      FROM pago_comision_ind pci1 
+      LEFT JOIN (SELECT SUM(abono_neodata) abono_pagado, id_comision 
+      FROM pago_comision_ind WHERE (estatus in (11,3) OR descuento_aplicado = 1) 
+      GROUP BY id_comision) pci2 ON pci1.id_comision = pci2.id_comision
+      INNER JOIN comisiones com ON pci1.id_comision = com.id_comision
+      INNER JOIN lotes lo ON lo.idLote = com.id_lote AND lo.status = 1 $query
+      INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
+      INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
+      INNER JOIN usuarios u ON u.id_usuario = com.id_usuario
+
+      LEFT JOIN clientes cl ON cl.idLote = lo.idLote AND cl.status = 1 AND lo.idStatusContratacion > 8 AND com.estatus = 1
+      INNER JOIN opcs_x_cats oprol ON oprol.id_opcion = com.rol_generado AND oprol.id_catalogo = 1
+      INNER JOIN pago_comision pac ON pac.id_lote = com.id_lote
+
+      LEFT JOIN evidencia_cliente ec ON ec.idLote = lo.idLote AND ec.idCliente = lo.idCliente
+      INNER JOIN opcs_x_cats oxcest ON oxcest.id_opcion = pci1.estatus AND oxcest.id_catalogo = 23
+      LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = cl.lugar_prospeccion AND oxc.id_catalogo = 9
+
+      INNER JOIN sedes s ON lo.ubicacion_dos = s.id_sede 
+        LEFT JOIN statuslote slo ON slo.idStatusLote = lo.idStatusLote
+      $query2 
+
+      GROUP BY pci1.id_comision, lo.idLote ,lo.nombreLote, co.nombre, lo.totalNeto2, com.comision_total,pac.bandera ,
+      com.porcentaje_decimal, pci1.abono_neodata, pci1.pago_neodata, pci2.abono_pagado, pci1.estatus, cl.fechaApartado ,  pci1.fecha_abono,
+      pci1.id_usuario, pci1.id_pago_i, u.nombre, u.apellido_paterno, u.apellido_materno, oprol.nombre, oxcest.nombre, oxcest.id_opcion, 
+      pci1.descuento_aplicado, lo.idStatusContratacion,oxc.nombre , lo.referencia, com.estatus, u.estatus,pac.total_comision, oxcest.color ,slo.nombre ,slo.color,s.nombre ORDER BY lo.nombreLote";
+     // var_dump($cmd);
+      return $this->db->query($cmd);
+
+    }
+    
     public function getInformation($typeTransaction, $beginDate, $endDate, $where) {
         if ($typeTransaction == 1 || $typeTransaction == 3) {  // FIRST LOAD || SEARCH BY DATE RANGE
             $filter = " AND cl.fechaApartado BETWEEN '$beginDate 00:00:00' AND '$endDate 23:59:59'";

@@ -3600,6 +3600,7 @@ class Asesor extends CI_Controller
 
         $idLote = $this->input->post('idLote');
         $nombreLote = $this->input->post('nombreLote');
+        $id_cliente = $this->input->post('idCliente');
 
         $arreglo = array();
         $arreglo["idStatusContratacion"] = 2;
@@ -3616,7 +3617,7 @@ class Asesor extends CI_Controller
         
         $dataClient = $this->Asesor_model->getLegalPersonalityByLote($idLote);
         $documentsValidation = $this->Asesor_model->validateDocumentation($idLote, $dataClient[0]['personalidad_juridica']);
-        $validacion = $this->Asesor_model->getAutorizaciones($idLote);
+        $validacion = $this->Asesor_model->getAutorizaciones($idLote, $id_cliente);
 
         if ((COUNT($documentsValidation) < $documentsNumber) && ($validacion)) {
             $data['message'] = 'MISSING_DOCUMENTS';

@@ -1629,8 +1629,8 @@ class Asesor_model extends CI_Model
 
     }
 
-    public function getAutorizaciones($idLote){
-        return $this->db->query("SELECT * FROM autorizaciones WHERE idLote = ".$idLote." AND estatus=1;")->result_array();
+    public function getAutorizaciones($idLote, $id_cliente){
+        return $this->db->query("SELECT * FROM autorizaciones WHERE idLote = ".$idLote." AND estatus=1 AND idCliente=".$id_cliente)->result_array();
         //return $query->result_array();
     }
     function getlotesRechazados(){

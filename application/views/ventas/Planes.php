@@ -1204,7 +1204,7 @@ $("#table_planes").ready(function() {
 			document.getElementById('showPackage').innerHTML = '';
 			$('#index').val(0);	
 			setInitialValues();
-			noCreatedCards();
+			//noCreatedCards();
 			$(".leyendItems").addClass('d-none');
 			$("#btn_save").addClass('d-none');
 		}
@@ -1586,7 +1586,6 @@ function defaultValuesSlect(origen){
 			let descuentosSelected = [];
 			for (let m = 0; m < datos.length; m++) {
 				
-				
 				if(id != 13){
 					crearBoxDetailDescuentos(indexGral,index,id_select,datos[m].id_descuento,datos[m].porcentaje,tipo);
 					console.log(datos[m].id_descuento);
@@ -1605,7 +1604,7 @@ function defaultValuesSlect(origen){
 			
 			console.log('--------------------LLENAR SELECT---------------------------');
 			console.log(descuentosSelected);
-			$(`#${id_select}${indexGral}_${index}`).select2({tags: false}).val(descuentosSelected).trigger('change');
+			$(`#${id_select}${indexGral}_${index}`).select2().val(descuentosSelected).trigger('change');
 			console.log('--------------------LLENAR SELECT---------------------------');
 
 

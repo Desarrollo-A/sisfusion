@@ -15,7 +15,36 @@
         $datos = $datos3;  
         $this->load->view('template/sidebar', $datos);
         ?>
-
+        <div class="modal fade" id="verDetalles" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+             aria-hidden="true" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <center><b><h4 class="card-title ">Ventas compartidas</h4></b></center>
+                        <div class="material-datatables">
+                            <div class="form-group">
+                                <div class="table-responsive">
+                                    <table id="verDet" class="table table-bordered table-hover" width="100%" style="text-align:center;">
+                                        <thead>
+                                        <tr>
+                                            <th>Gerente</th>
+                                            <th>Coordinador</th>
+                                            <th>Asesor</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal"> CERRAR</button>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="content boxContent">
             <div class="container-fluid">
                 <div class="row">
@@ -35,37 +64,58 @@
                                             <div class="toolbar">
                                                 <div class="container-fluid">
                                                     <div class="row">
-                                                        <div class="col-md-8"></div>
-                                                        <div class="col-md-4 p-r">
-                                                            <div class="form-group d-flex">
-                                                                <input type="text" class="form-control datepicker beginDates" id="beginDate" value="" autocomplete='off'/>
-                                                                <input type="text" class="form-control datepicker endDates" id="endDate" value="" autocomplete='off' />
-                                                                <button class="btn btn-success btn-round btn-fab btn-fab-mini" id="searchByDateRangeCP">
-                                                                    <span class="material-icons update-dataTable">search</span>
-                                                                </button>
+                                                        <div class="row">
+                                                            <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                                                                <div class="form-group label-floating div_name">
+                                                                    <label class="control-label">NOMBRE</label>
+                                                                    <input id="name" name="name" type="text" class="form-control input-gral" required>
+                                                                </div>
                                                             </div>
+                                                            <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                                                                <div class="form-group label-floating div_last_name">
+                                                                    <label class="control-label">CORREO</label>
+                                                                    <input id="mail" name="mail" type="text" class="form-control input-gral" required>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                                                                <div class="form-group label-floating div_last_name">
+                                                                    <label class="control-label">TELÉFONO</label>
+                                                                    <input id="telephone" name="telephone" type="text" class="form-control input-gral" required>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                                                                <div class="form-group label-floating div_last_name">
+                                                                    <!--<label class="control-label">TELÉFONO</label>-->
+                                                                    <select class="selectpicker select-gral m-0" id="sede" name="sede[]" data-style="btn btn-primary " data-show-subtext="true" data-live-search="true" title="Selecciona sede" data-size="7" required="" multiple="" tabindex="-98">
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                            <div class=" col col-xs-12 col-sm-12 col-md-4 col-lg-4 center-align centered">
+                                                                <div class="form-group label-floating div_last_name">
+                                                                    <button type="button" class="btn btn-primary" id="searchButton">BUSCAR</button>
+                                                                </div>
+                                                            </div>
+
                                                         </div>
                                                     </div>
                                                     <div class="material-datatables">
-                                                        <table id="prospectosTable" class="table-striped table-hover">
+                                                        <table class="table-striped table-hover"
+                                                               id="tabla_prospectos" name="tabla_prospectos">
                                                             <thead>
-                                                                <tr>
-                                                                    <th>NOMBRE</th>
-                                                                    <th>FECHA NACIMIENTO</th>
-                                                                    <th>TELÉFONO</th>
-                                                                    <th>CORREO</th>
-                                                                    <th>LUGAR PROSPECCIÓN</th>
-                                                                    <th>ASESOR</th>
-                                                                    <th>COORDINADOR</th>
-                                                                    <th>GERENTE</th>
-                                                                    <th>SUBDIRECTOR</th>
-                                                                    <th>DIRECTOR REGIONAL</th>
-                                                                    <th>FECHA CREACIÓN</th>
-                                                                    <th>DIRECCIÓN</th>
-                                                                </tr>
+                                                            <tr>
+                                                                <!--<th></th>-->
+                                                                <th>NOMBRE</th>
+                                                                <th>TELÉFONO</th>
+                                                                <th>CORREO</th>
+                                                                <th>LUGAR PROSPECCIÓN</th>
+                                                                <th>ASESOR</th>
+                                                                <th>COORDINADOR</th>
+                                                                <th>GERENTE</th>
+                                                                <th>FECHA CREACIÓN</th>
+                                                                <th>ID DRAGON</th>
+                                                                <th>SEDE</th>
+                                                            </tr>
                                                             </thead>
-                                                            <tbody>
-                                                            </tbody>
                                                         </table>
                                                     </div>
                                                 </div>
@@ -78,44 +128,70 @@
                                             <div class="toolbar">
                                                 <div class="container-fluid">
                                                     <div class="row">
-                                                        <div class="col-md-8"></div>
-                                                        <div class="col-md-4 p-r">
-                                                            <div class="form-group d-flex">
-                                                                <input type="text" class="form-control datepicker beginDate"
-                                                                    id="beginDateD"/>
-                                                                <input type="text" class="form-control datepicker endDate" id="endDateD"/>
-                                                                <button class="btn btn-success btn-round btn-fab btn-fab-mini" id="searchByDateRangeClientes">
-                                                                    <span class="material-icons update-dataTable">search</span>
-                                                                </button>
+                                                        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                                                            <div class="form-group label-floating div_name">
+                                                                <label class="control-label">ID LOTE</label>
+                                                                <input id="idLotteC" name="idLotteC" type="text" class="form-control input-gral" required>
                                                             </div>
                                                         </div>
+                                                        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                                                            <div class="form-group label-floating div_name">
+                                                                <label class="control-label">NOMBRE</label>
+                                                                <input id="nameC" name="nameC" type="text" class="form-control input-gral" required>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                                                            <div class="form-group label-floating div_last_name">
+                                                                <label class="control-label">CORREO</label>
+                                                                <input id="mailC" name="mailC" type="text" class="form-control input-gral" required>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                                                            <div class="form-group label-floating div_last_name">
+                                                                <label class="control-label">TELÉFONO</label>
+                                                                <input id="telephoneC" name="telephoneC" type="text" class="form-control input-gral" required>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                                                            <div class="form-group label-floating div_last_name">
+                                                                <!--<label class="control-label">TELÉFONO</label>-->
+                                                                <select class="selectpicker select-gral m-0" id="sedeC" name="sedeC[]" data-style="btn btn-primary " data-show-subtext="true" data-live-search="true" title="Selecciona sede" data-size="7" required="" multiple="" tabindex="-98">
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class=" col col-xs-12 col-sm-12 col-md-4 col-lg-4 center-align centered">
+                                                            <div class="form-group label-floating div_last_name">
+                                                                <button type="button" class="btn btn-primary" id="searchButtonC">BUSCAR</button>
+                                                            </div>
+                                                        </div>
+
                                                     </div>
                                                     <div class="material-datatables">
-                                                        <table id="clientesTable" class="table-striped table-hover">
-                                                            <thead>
-                                                                <tr>
-                                                                    <th>NOMBRE</th>
-                                                                    <th>FECHA NACIMIENTO</th>
-                                                                    <th>TELÉFONO</th>
-                                                                    <th>CORREO</th>
-                                                                    <th>LUGAR PROSPECCIÓN</th>
-                                                                    <th>FECHA APARTADO</th>
-                                                                    <th>ASESOR</th>
-                                                                    <th>COORDINADOR</th>
-                                                                    <th>GERENTE</th>
-                                                                    <th>SUBDIRECTOR</th>
-                                                                    <th>DIRECTOR REGIONAL</th>
-                                                                    <th>RESIDENCIAL</th>
-                                                                    <th>CONDOMINIO</th>
-                                                                    <th>LOTE</th>
-                                                                    <th>FECHA CREACIÓN</th>
-                                                                    <th>DÍAS CIERRE</th>
-                                                                    <th>DIRECCIÓN</th>
-                                                                </tr>
-                                                            </thead>
-                                                            <tbody>
-                                                            </tbody>
-                                                        </table>
+                                                        <div class="form-group">
+                                                            <div class="table-responsive">
+                                                                <table class="table-striped table-hover"
+                                                                       id="tabla_clientes" name="tabla_clientes">
+                                                                    <thead>
+                                                                    <tr>
+                                                                        <!--<th></th>-->
+                                                                        <th>ID LOTE</th>
+                                                                        <th>PROYECTO</th>
+                                                                        <th>CONDOMINIO</th>
+                                                                        <th>LOTE</th>
+                                                                        <th>NOMBRE CLIENTE</th>
+                                                                        <th>NO. RECIBO</th>
+                                                                        <th>REFERENCIA</th>
+                                                                        <th>FECHA APARTADO</th>
+                                                                        <th>ENGANCHE</th>
+                                                                        <th>FECHA ENGANCHE</th>
+                                                                        <th>FECHA CREACIÓN PROSPECTO</th>
+                                                                        <th>ESTATUS LOTE</th>
+                                                                        <th>ACCIONES</th>
+                                                                    </tr>
+                                                                    </thead>
+                                                                </table>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -151,6 +227,8 @@
         userType = <?= $this->session->userdata('id_rol') ?> ;
         idUser = <?= $this->session->userdata('id_usuario') ?> ;
         typeTransaction = 1;
+        var url = "<?=base_url()?>";
+        var url2 = "<?=base_url()?>index.php/";
     </script>
     <!-- MODAL WIZARD -->
     <script src="<?=base_url()?>dist/js/controllers/marketing/marketing.js"></script>

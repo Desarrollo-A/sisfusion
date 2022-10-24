@@ -547,8 +547,7 @@ return $query->result();
             $filtro_02 = ' '.$filtro_00;
              break;
          }
-
-         return $this->db->query("SELECT pci1.id_pago_i, pci1.id_comision, lo.nombreLote, re.nombreResidencial as proyecto, co.nombre as condominio,lo.totalNeto2 precio_lote, com.comision_total, com.porcentaje_decimal, pci1.abono_neodata pago_cliente, pci1.pago_neodata, pci2.abono_pagado pagado, com.comision_total-pci2.abono_pagado restante, pci1.estatus, pci1.fecha_abono fecha_creacion, CONCAT(u.nombre, ' ',u.apellido_paterno, ' ', u.apellido_materno) user_names ,pci1.id_usuario, oprol.nombre as puesto, oxcest.nombre as estatus_actual, oxcest.id_opcion id_estatus_actual, pci1.descuento_aplicado, cl.lugar_prospeccion, lo.referencia, pac.bonificacion, u.estatus as activo, (CASE WHEN pe.id_penalizacion IS NOT NULL THEN 1 ELSE 0 END) penalizacion, color
+          return $this->db->query("SELECT pci1.id_pago_i, pci1.id_comision, lo.nombreLote, re.nombreResidencial as proyecto, co.nombre as condominio,lo.totalNeto2 precio_lote, com.comision_total, com.porcentaje_decimal, pci1.abono_neodata pago_cliente, pci1.pago_neodata, pci2.abono_pagado pagado, com.comision_total-pci2.abono_pagado restante, pci1.estatus, pci1.fecha_abono fecha_creacion, CONCAT(u.nombre, ' ',u.apellido_paterno, ' ', u.apellido_materno) user_names ,pci1.id_usuario, oprol.nombre as puesto, oxcest.nombre as estatus_actual, oxcest.id_opcion id_estatus_actual, pci1.descuento_aplicado, cl.lugar_prospeccion, lo.referencia, pac.bonificacion, u.estatus as activo, (CASE WHEN pe.id_penalizacion IS NOT NULL THEN 1 ELSE 0 END) penalizacion, color
                   FROM pago_comision_ind pci1 
                   LEFT JOIN (SELECT SUM(abono_neodata) abono_pagado, id_comision 
                   FROM pago_comision_ind WHERE (estatus in (11,3) OR descuento_aplicado = 1) 
@@ -558,7 +557,7 @@ return $query->result();
                   INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
                   INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
                   INNER JOIN usuarios u ON u.id_usuario = com.id_usuario
-                  LEFT JOIN clientes cl ON cl.idLote = lo.idLote AND cl.status = 1 AND lo.idStatusContratacion > 8
+                  LEFT JOIN clientes cl ON cl.id_cliente = lo.idCliente AND cl.status = 1 AND lo.idStatusContratacion > 8 AND com.estatus = 1
                   INNER JOIN opcs_x_cats oprol ON oprol.id_opcion = com.rol_generado AND oprol.id_catalogo = 1
                   INNER JOIN pago_comision pac ON pac.id_lote = com.id_lote
                   INNER JOIN opcs_x_cats oxcest ON oxcest.id_opcion = pci1.estatus AND oxcest.id_catalogo = 23
@@ -7131,7 +7130,7 @@ SELECT 7 AS idEstatus, 'PAGADAS' as nombre ");
          INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
          INNER JOIN residenciales re ON re.idResidencial = co.idResidencial $filtro_00
          INNER JOIN usuarios u ON u.id_usuario = com.id_usuario
-         LEFT JOIN clientes cl ON cl.idLote = lo.idLote AND cl.status = 1 AND lo.idStatusContratacion > 8
+         LEFT JOIN clientes cl ON cl.id_cliente = lo.idCliente AND cl.status = 1 AND lo.idStatusContratacion > 8 AND com.estatus = 1         
          INNER JOIN opcs_x_cats oprol ON oprol.id_opcion = com.rol_generado AND oprol.id_catalogo = 1
          INNER JOIN pago_comision pac ON pac.id_lote = com.id_lote
          INNER JOIN opcs_x_cats oxcest ON oxcest.id_opcion = pci1.estatus AND oxcest.id_catalogo = 23

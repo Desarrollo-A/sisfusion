@@ -78,49 +78,6 @@ class Kel_XML extends CI_Controller
           }
           
   }
-    // public function verificacion(){
-    // $datos = $this->Comisiones_model->getLotesPagados()->result_array();
     
-    // if(count($datos) > 0)
-    // {
-    // $data = array();
-    // $final_data = array();
-    // $contador = 0;
-    
-    // for($i = 0; $i < COUNT($datos); $i++){
-    // // print_r ($datos[$i]['referencia']);
-    // //print_r ($datos[$i]['referencia']);
-    
-    // $data[$i] = $this->Comisiones_model->getGeneralStatusFromNeodata($datos[$i]['referencia'], $datos[$i]['idResidencial']);
-    // if(!empty($data)){
-    
-    // if($data[$i]->Marca == 1){
-    
-    // //print_r ("aplicado".$data[$i]->Aplicado);
-    // //print_r ("ultimo".$datos[$i]['ultimo_pago']);
-    // if($data[$i]->Aplicado > $datos[$i]['ultimo_pago']){
-    // //$final_data[$contador] = $this->Comisiones_model->getLoteInformation($datos[$i]['idLote']);
-    // //ACTUALIZAR
-    // echo $datos[$i]['id_lote'];
-    // $this->Comisiones_model->UpdateBanderaPagoComision($datos[$i]['id_lote']);
-    // $contador ++;
-    
-    
-    // }else{
-    // echo "NO";
-    // }
-    // }
-    
-    
-    
-    // }
-    
-    // }
-    // }
-    
-    // }
-
-
-
 
 }

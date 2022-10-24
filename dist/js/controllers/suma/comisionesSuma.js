@@ -1,3 +1,92 @@
+
+var totaPen = 0;
+
+function selectAll(e) {
+    tota2 = 0;
+    $(tabla_nuevas.$('input[type="checkbox"]')).each(function (i, v) {
+        if (!$(this).prop("checked")) {
+            $(this).prop("checked", true);
+            console.log(tabla_nuevas.row($(this).closest('tr')).data());
+            tota2 += parseFloat(tabla_nuevas.row($(this).closest('tr')).data().impuesto);
+        } else {
+            $(this).prop("checked", false);
+        }
+        $("#totpagarPen").html('$' + formatMoney(tota2));
+    });
+}
+
+$("#file-upload-extranjero").on('change', function() {
+    $('#archivo-extranjero').val('');
+
+    v2 = document.getElementById("file-upload-extranjero").files[0].name;
+    document.getElementById("archivo-extranjero").innerHTML = v2;
+
+    const src = URL.createObjectURL(document.getElementById("file-upload-extranjero").files[0]);
+    $('#preview-div').html("");
+    $('#preview-div').append(`<embed src="${src}" width="500" height="200">`);
+});
+
+$(document).on("click", ".subir-archivo", function(e) {
+    e.preventDefault();
+    $('#archivo-extranjero').val('');
+
+    $.ajax({
+        url: 'getTotalComisionAsesor',
+        type: 'GET',
+        dataType: 'JSON',
+        success: function (data) {
+            $('#total-comision').html("");
+            $('#total-comision').append(`Total: $${formatMoney(data.total)}`);
+            $('#addFileExtranjero').modal('show');
+        }
+    });
+});
+
+$("#EditarPerfilExtranjeroForm").one('submit', function(e){
+    document.getElementById('sendFileExtranjero').disabled =true;
+    $("#sendFileExtranjero").prop("disabled", true);
+    e.preventDefault();
+
+    const formData = new FormData(document.getElementById("EditarPerfilExtranjeroForm"));
+    formData.append("dato", "valor");
+
+    $.ajax({
+        type: 'POST',
+        url: general_base_url+'Usuarios/SubirPDFExtranjero',
+        data: formData,
+        contentType: false,
+        cache: false,
+        processData:false,
+        success: function(data) {
+            document.getElementById('sendFileExtranjero').disabled =false;
+            $("#sendFileExtranjero").prop("disabled", false);
+            if (data == 1) {
+                $("#addFileExtranjero").modal('hide');
+                setTimeout('document.location.reload()',100);
+            } else {
+                $("#addFileExtranjero").modal('hide');
+                alerts.showNotification("top", "right", "Error al subir el archivo.", "warning");
+            }
+        },
+        error: function(){
+            $("#addFileExtranjero").modal('hide');
+            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+        }
+    });
+});
+
+$(document).on('click', '.verPDFExtranjero', function () {
+    console.log('clic');
+    const $itself = $(this);
+    Shadowbox.open({
+        content: '<div><iframe style="overflow:hidden;width: 100%;height: 100%;position:absolute;" src="<?=base_url()?>static/documentos/extranjero/'+$itself.attr('data-usuario')+'"></iframe></div>',
+        player: "html",
+        title: "Visualizando documento fiscal: " + $itself.attr('data-usuario'),
+        width: 985,
+        height: 660
+    });
+});
+
 $("#tabla_nuevas_comisiones").ready(function() {
     $('#tabla_nuevas_comisiones thead tr:eq(0) th').each( function (i) {
         if( i != 0 ){
@@ -54,7 +143,7 @@ $("#tabla_nuevas_comisiones").ready(function() {
                     var hora = hoy.getHours();
                     var minuto = hoy.getMinutes();
 
-                    if (((mes == 10 && dia == 12) || (mes == 10 && dia == 12 && hora <= 20)) ||
+                    if (((mes == 10 && dia == 21) || (mes == 10 && dia == 21 && hora <= 20)) ||
                     ((mes == 11 && dia == 7) || (mes == 11 && dia == 8 && hora <= 13)) ||
                     ((mes == 12 && dia == 12) || (mes == 12 && dia == 13 && hora <= 13))){
 
@@ -83,7 +172,7 @@ $("#tabla_nuevas_comisiones").ready(function() {
                                         $("#all").prop('checked', false);
                                         var fecha = new Date();
 
-                                        alerts.showNotification("top", "right", "Las comisiones se han enviado exitosamente a Contraloría.", "success");
+                                        alerts.showNotification("top", "right", "Las comisiones se han enviado exitosamente a revisión.", "success");
 
                                         tabla_nuevas.ajax.reload();
                                         tabla_revision.ajax.reload();
@@ -109,7 +198,6 @@ $("#tabla_nuevas_comisiones").ready(function() {
                     style: 'position:relative; float:right'
                 }
             }, 
-        
         {
             extend: 'excelHtml5',
             text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
@@ -243,7 +331,7 @@ $("#tabla_nuevas_comisiones").ready(function() {
             "width": "5%",
             "orderable": false,
             "data": function(data) {
-                return '<button href="#" value="'+data.id_pago_suma+'"  data-referencia="'+data.referencia+'" ' +'class="btn-data btn-blueMaderas consultar_history" title="Detalles">' +'<i class="fas fa-info"></i></button>';
+                return '<button href="#" value="'+data.id_pago_suma+'"  data-referencia="'+data.referencia+'" ' +'class="btn-data btn-blueMaderas consultar_history m-auto" title="Detalles">' +'<i class="fas fa-info"></i></button>';
 
             }
         }],
@@ -268,7 +356,7 @@ $("#tabla_nuevas_comisiones").ready(function() {
 
 
 
-                if (((mes == 10 && dia == 12) || (mes == 10 && dia == 12 && hora <= 20)) ||
+                if (((mes == 10 && dia == 21) || (mes == 10 && dia == 21 && hora <= 20)) ||
                 ((mes == 11 && dia == 7) || (mes == 11 && dia == 8 && hora <= 13)) ||
                 ((mes == 12 && dia == 12) || (mes == 12 && dia == 13 && hora <= 13)))
                 {
@@ -290,7 +378,7 @@ $("#tabla_nuevas_comisiones").ready(function() {
                                     return '<span class="material-icons" style="color: #DCDCDC;">block</span>';
                                 }
                             }
-                            return '<input type="checkbox" name="idT[]" style="width:20px;height:20px;"  value="' + full.id_pago_suma + '">';
+                            return '<input type="checkbox" name="idT[]" class="individualCheck" style="width:20px;height:20px;"  value="' + full.id_pago_suma + '">';
 
                         case '3': //ASIMILADOS
                         case 3: //ASIMILADOS
@@ -302,7 +390,7 @@ $("#tabla_nuevas_comisiones").ready(function() {
                             return '<span class="material-icons" style="color: #DCDCDC;">block</span>';
 
                         } else {
-                            return '<input type="checkbox" name="idT[]" style="width:20px;height:20px;"  value="' + full.id_pago_suma + '">';
+                            return '<input type="checkbox" name="idT[]" class="individualCheck" style="width:20px;height:20px;"  value="' + full.id_pago_suma + '">';
                         }
                         break;
                     }
@@ -337,6 +425,18 @@ $("#tabla_nuevas_comisiones").ready(function() {
         });
     });
 });
+
+$(document).on("click", ".individualCheck", function() {
+    tr = $(this).closest('tr');
+    var row = tabla_nuevas.row(tr).data();
+
+    if ($(this).prop('checked')) totaPen += parseFloat(row.impuesto);
+    else totaPen -= parseFloat(row.impuesto);
+
+    $("#totpagarPen").html('$ ' + formatMoney(totaPen));
+});
+
+
 /* End table nuevas */ 
 
 /* Table revisión */
@@ -506,7 +606,7 @@ $("#tabla_revision_comisiones").ready(function() {
             "width": "5%",
             "orderable": false,
             "data": function(data) {
-                return '<button href="#" value="'+data.id_pago_suma+'"  data-referencia="'+data.referencia+'" ' +'class="btn-data btn-blueMaderas consultar_history" title="Detalles">' +'<i class="fas fa-info"></i></button>';
+                return '<button href="#" value="'+data.id_pago_suma+'"  data-referencia="'+data.referencia+'" ' +'class="btn-data btn-blueMaderas consultar_history m-auto" title="Detalles">' +'<i class="fas fa-info"></i></button>';
 
             }
         }],
@@ -703,7 +803,7 @@ $("#tabla_pagadas_comisiones").ready(function() {
             "width": "5%",
             "orderable": false,
             "data": function(data) {
-                return '<button href="#" value="'+data.id_pago_suma+'"  data-referencia="'+data.referencia+'" ' +'class="btn-data btn-blueMaderas consultar_history" title="Detalles">' +'<i class="fas fa-info"></i></button>';
+                return '<button href="#" value="'+data.id_pago_suma+'"  data-referencia="'+data.referencia+'" ' +'class="btn-data btn-blueMaderas consultar_history m-auto" title="Detalles">' +'<i class="fas fa-info"></i></button>';
 
             }
         }],
@@ -902,7 +1002,7 @@ $("#tabla_pausadas_comisiones").ready(function() {
             "width": "5%",
             "orderable": false,
             "data": function(data) {
-                return '<button href="#" value="'+data.id_pago_suma+'"  data-referencia="'+data.referencia+'" ' +'class="btn-data btn-blueMaderas consultar_history" title="Detalles">' +'<i class="fas fa-info"></i></button>';
+                return '<button href="#" value="'+data.id_pago_suma+'"  data-referencia="'+data.referencia+'" ' +'class="btn-data btn-blueMaderas consultar_history m-auto" title="Detalles">' +'<i class="fas fa-info"></i></button>';
 
             }
         }],
@@ -967,7 +1067,7 @@ $(document).on("click", ".subir_factura_multiple", function() {
     var hora = hoy.getHours();
     var minuto = hoy.getMinutes();
 
-    if (((mes == 10 && dia == 12) || (mes == 10 && dia == 12 && hora <= 20)) || ((mes == 11 && dia == 7) || (mes == 11 && dia == 8 && hora <= 13)) || ((mes == 12 && dia == 12) || (mes == 12 && dia == 13 && hora <= 13))){
+    if (((mes == 10 && dia == 21) || (mes == 10 && dia == 21 && hora <= 20)) || ((mes == 11 && dia == 7) || (mes == 11 && dia == 8 && hora <= 13)) || ((mes == 12 && dia == 12) || (mes == 12 && dia == 13 && hora <= 13))){
 
     $("#modal_multiples .modal-body").html("");
     $("#modal_multiples .modal-header").html("");
@@ -1005,7 +1105,7 @@ $(document).on("click", ".subir_factura_multiple", function() {
 
                     abono_asesor = (v.total_comision);
                     $("#modal_multiples .modal-body").append('<div class="row">'+
-                    '<div class="col-md-1"><input type="checkbox" class="form-control ng-invalid ng-invalid-required data1 checkdata1" onclick="sumCheck()" id="comisiones_facura_mult' + i + '" name="comisiones_facura_mult"></div><div class="col-md-4"><input id="data1' + i + '" name="data1' + i + '" value="' + v.id_pago_suma + '" class="form-control data1 ng-invalid ng-invalid-required" required placeholder="%"></div><div class="col-md-4"><input type="hidden" id="idpago-' + i + '" name="idpago-' + i + '" value="' + v.id_pago_suma + '"><input id="data2' + i + '" name="data2' + i + '" value="' + "" + parseFloat(abono_asesor).toFixed(2) + '" class="form-control data1 ng-invalid ng-invalid-required" readonly="" required placeholder="%"></div></div>');
+                    '<div class="col-md-1"><input type="checkbox" class="form-control ng-invalid ng-invalid-required data1 checkdata1" onclick="sumCheck()" id="comisiones_facura_mult' + i + '" name="comisiones_facura_mult"></div><div class="col-md-4"><input id="data1' + i + '" name="data1' + i + '" value="' + v.referencia + '" class="form-control data1 ng-invalid ng-invalid-required" required placeholder="%"></div><div class="col-md-4"><input type="hidden" id="idpago-' + i + '" name="idpago-' + i + '" value="' + v.id_pago_suma + '"><input id="data2' + i + '" name="data2' + i + '" value="' + "" + parseFloat(abono_asesor).toFixed(2) + '" class="form-control data1 ng-invalid ng-invalid-required" readonly="" required placeholder="%"></div></div>');
                 });
 
                 $("#modal_multiples .modal-body").append('<div class="row"><div class="col-md-12 text-left"><b style="color:green;" class="text-left" id="sumacheck"> Suma seleccionada: 0</b></div><div class="col-lg-5"><div class="fileinput fileinput-new text-center" data-provides="fileinput"><div><br><span class="fileinput-new">Selecciona archivo</span><input type="file" name="xmlfile2" id="xmlfile2" accept="application/xml"></div></div></div><div class="col-lg-7"><center><button class="btn btn-warning" type="button" onclick="xml2()" id="cargar_xml2"><i class="fa fa-upload"></i> VERIFICAR Y CARGAR</button></center></div></div>');

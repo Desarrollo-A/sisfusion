@@ -54,6 +54,54 @@
             }
         ?>
 
+        <div class="modal fade modal-alertas" id="addFileExtranjero" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header bg-red">
+                        <h4 class="card-title"><b>Cargar documento fiscal</b></h4>
+                    </div>
+                    <form id="EditarPerfilExtranjeroForm"
+                          name="EditarPerfilExtranjeroForm"
+                          method="post">
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-lg-12 text-center">
+                                    <p style="text-align: justify; text-justify: inter-word;"><b>Nota:</b> Recuerda que tu documento fiscal debe corresponder al total exacto de las
+                                        comisiones a solicitar, una vez solicitados tus pagos ya no podrás remplazar
+                                        este archivo.</p>
+                                    <div class="input-group">
+                                        <label  class="input-group-btn"></label>
+                                        <span class="btn btn-info btn-file">
+                                    <i class="fa fa-upload"></i> Subir archivo
+                                    <input id="file-upload-extranjero"
+                                           name="file-upload-extranjero"
+                                           required
+                                           accept="application/pdf"
+                                           type="file" />
+                                </span>
+                                        <p id="archivo-extranjero"></p>
+
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-12 text-center">
+                                            <h3 id="total-comision"></h3>
+                                        </div>
+                                        <div class="col-lg-12"
+                                             id="preview-div">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <button type="submit" id="sendFileExtranjero" class="btn btn-primary">GUARDAR</button>
+                                        <button class="btn btn-danger" type="button" data-dismiss="modal" >CANCELAR</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
         <div class="modal fade modal-alertas" id="modal_multiples" role="dialog">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
@@ -223,7 +271,7 @@
                                             <div class="encabezadoBox">
                                                 <div class="row">
                                                     <div class="col-md-12 pb-2">
-                                                        <p class="card-title">Comisiones nuevas disponibles para solicitar tu pago, para ver más detalles podrás consultarlo en el historial. <a href="https://maderascrm.gphsis.com/Comisiones/historial_colaborador"><b>clic para ir al historial</b></a>.</p>
+                                                        <p class="card-title">Comisiones nuevas disponibles para solicitar tu pago, para ver más detalles podrás consultarlo en el historial. <a href="<?=base_url()?>Comisiones/historial_colaborador"><b>clic para ir al historial</b></a>.</p>
                                                     </div>
                                                     <?php if($this->session->userdata('forma_pago') == 3){ ?>
                                                         <div class="col-md-6">
@@ -336,7 +384,7 @@
                                         </div>
                                         <div class="tab-pane" id="revision">
                                             <div class="encabezadoBox">
-                                                <p class="card-title pl-1">Comisiones enviadas a contraloría para su revisión antes de aplicar tu pago, si requieres ver más detalles como lo pagado y lo pendiente podrás consultarlo en el historial. <a href="https://maderascrm.gphsis.com/Comisiones/historial_colaborador"><b>clic para ir al historial</b></a>.</p>
+                                                <p class="card-title pl-1">Comisiones enviadas a contraloría para su revisión antes de aplicar tu pago, si requieres ver más detalles como lo pagado y lo pendiente podrás consultarlo en el historial. <a href="<?=base_url()?>Comisiones/historial_colaborador"><b>clic para ir al historial</b></a>.</p>
                                             </div>
                                             <div class="toolbar">
                                                 <div class="container-fluid p-0">
@@ -371,7 +419,7 @@
                                         </div>
                                         <div class="tab-pane" id="porPagar">
                                             <div class="encabezadoBox">
-                                                <p class="card-title pl-1">Comisiones en proceso de pago por parte de INTERNOMEX. Si requieres ver más detalles como lo pagado y lo pendiente, podrás consultarlo en el historial. <a href="https://maderascrm.gphsis.com/Comisiones/historial_colaborador"><b>clic para ir al historial</b></a>.</p>
+                                                <p class="card-title pl-1">Comisiones en proceso de pago por parte de INTERNOMEX. Si requieres ver más detalles como lo pagado y lo pendiente, podrás consultarlo en el historial. <a href="<?=base_url()?>Comisiones/historial_colaborador"><b>clic para ir al historial</b></a>.</p>
                                             </div>
                                             <div class="toolbar">
                                                 <div class="container-fluid p-0">
@@ -406,7 +454,7 @@
                                         </div>
                                         <div class="tab-pane" id="pausadas">
                                             <div class="encabezadoBox">
-                                                <p class="card-title pl-1">Comisiones pausadas, para ver el motivo da clic el botón de información. Si requieres ver más detalles como lo pagado y lo pendiente, podrás consultarlo en el historial. <a href="https://maderascrm.gphsis.com/Comisiones/historial_colaborador"><b>clic para ir al historial</b></a>.</p>
+                                                <p class="card-title pl-1">Comisiones pausadas, para ver el motivo da clic el botón de información. Si requieres ver más detalles como lo pagado y lo pendiente, podrás consultarlo en el historial. <a href="<?=base_url()?>Comisiones/historial_colaborador"><b>clic para ir al historial</b></a>.</p>
                                             </div>
                                             <div class="toolbar">
                                                 <div class="container-fluid p-0">
@@ -459,9 +507,11 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
+    <script type="text/javascript" src="<?=base_url()?>dist/js/shadowbox.js"></script>
     <script>
         userType = <?= $this->session->userdata('id_rol') ?>;
         userSede = <?= $this->session->userdata('id_sede') ?>;
+        Shadowbox.init();
     </script>
     <script src="<?=base_url()?>dist/js/controllers/suma/comisionesSuma.js"></script>
 </body>
