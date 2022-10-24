@@ -75,6 +75,12 @@ class Api extends CI_Controller
                     }
                     if(!empty($checkSingup) && json_decode($checkSingup)->status == 200){
                         $data = json_decode(file_get_contents("php://input"));
+                        if(!isset($data->APELLIDOPATERNO)){
+                            $data->APELLIDOPATERNO = '';
+                        }
+                        if (!isset($data->APELLIDOMATERNO)) {
+                            $data->APELLIDOMATERNO = ''; 
+                        }
                         if (!isset($data->NOMBRE) || !isset($data->Mail) || !isset($data->Phone) || !isset($data->Comments) || !isset($data->iScore) || !isset($data->ProductID) || !isset($data->CampaignID) || !isset($data->Source) || !isset($data->Owner) || !isset($data->IDDRAGON))
                             echo json_encode(array("status" => 400, "message" => "Algún parámetro no viene informado. Verifique que todos los parámetros requeridos se incluyan en la petición."), JSON_UNESCAPED_UNICODE);
                         else {
@@ -95,7 +101,7 @@ class Api extends CI_Controller
                                         "personalidad_juridica" => 2,
                                         "nombre" => $data->NOMBRE,
                                         "apellido_paterno" => $data->APELLIDOPATERNO,
-                                        "apellido_materno" => '',
+                                        "apellido_materno" => $data->APELLIDOMATERNO,
                                         "correo" => $data->Mail,
                                         "telefono" => $data->Phone,
                                         "lugar_prospeccion" => $data->CampaignID,
