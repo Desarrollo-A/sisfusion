@@ -20,7 +20,7 @@ class Api extends CI_Controller
     function authenticate()
     {
         $data = json_decode(file_get_contents("php://input"));
-        if (!isset($data->username) || !isset($data->password))
+        if (!isset($data->username) || !isset($data->password))// contraseña antes de ser encriptada: I2503^831NQqHWxr, usuario : ojqd58DY3@
             echo json_encode(array("status" => 400, "message" => "Algún parámetro no viene informado."), JSON_UNESCAPED_UNICODE);
         else {
             if ($data->username == "" || $data->password == "")
