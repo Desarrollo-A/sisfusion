@@ -120,17 +120,19 @@
                                                     <th title="REFERENCIA LOTE">REFERENCIA LOTE</th>
                                                     <th title="PRECIO LOTE">PRECIO LOTE</th>
                                                     <th title="TOTAL COMISIÓN">TOTAL COMISIÓN</th>
-                                                    <th title="PAGO CLIENTE">PAGO CLIENTE</th>
+                                            
                                                     <th title="FECHA DE APARTADO">FECHA DE APARTADO</th>
                                                     <th title="ESTATUS CONTRATACIÓN">ESTATUS CONTRATACIÓN</th>
                                                     <th title="ESTATUS COMISIÓN">ESTATUS COMISIÓN</th>
                                                     <th title="ESTATUS VENTA/LOTE">ESTATUS VENTA/LOTE</th>
                                                    
-                                                    <th title="DISPERSADO POR MES">DISPERSADO POR MES</th>
-                                                    <th title="PAGO HISTORICO">PAGO HISTORICO</th>
+                                                    <th title="DISPERSADO POR MES">PAGO DEL MES</th>
+                                                    <th title="DISPERSADO">DISPERSADO</th>
+                                                    <th title="PAGO HISTÓRICO">PAGO HISTÓRICO </th>
+                                                    
                                                     <th title="PENDIENTE">PENDIENTE</th>
                                                     <th title="USUARIO">USUARIO</th>
-                                                  
+                                                    <th title="PUESTO">PUESTO</th>
                                                     <th title="PLAZA">PLAZA</th>
                                                     <th title="LUGAR DE PROSPECCION">LUGAR DE PROSPECCION</th>
                                                 </tr>

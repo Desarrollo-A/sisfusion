@@ -87,7 +87,7 @@ function fillTable(idLote, beginDate, endDate, bandera ) {
                 className: 'btn buttons-excel',
                 titleAttr: 'Descargar archivo de Excel',
                 exportOptions: {
-                    columns: [ 0, 1, 2, 3, 4 ,5, 6,7, 8, 9, 10, 11, 12, 13, 14, 15 , 16, 17,18],
+                    columns: [ 0, 1, 2, 3, 4 ,5, 6,7, 8, 9, 10, 11, 12, 13, 14, 15 , 16, 17,18,19,20],
                     format: {
                         header: function ( data , columnIdx) {
                             switch (columnIdx) {
@@ -137,15 +137,18 @@ function fillTable(idLote, beginDate, endDate, bandera ) {
                                     return 'Pendiente';
                                     break;
                                 case 15 :
-                                    return 'Usuario / Puesto';
+                                    return 'Usuario ';
                                     break;
                                 case 16 :
+                                        return ' Puesto';
+                                    break;
+                                case 17 :
                                     return 'Plaza';
                                     break;
-                                case 17: 
+                                case 18: 
                                     return 'Lugar de prospección';
                                     break;
-                                case 18: 
+                                case 19: 
                                     return 'Detalle';
                                     break;
                               
@@ -210,10 +213,6 @@ function fillTable(idLote, beginDate, endDate, bandera ) {
                 data: function(data){
                     return data.allComision;
                 }
-            }, {
-                data: function(data){
-                    return data.pago_cliente;
-                }
             },
             {
                 data: function(data){
@@ -238,6 +237,10 @@ function fillTable(idLote, beginDate, endDate, bandera ) {
                 }
             },{
                 data: function  (data){
+                    return data.pago_cliente;
+                }
+            },{
+                data: function  (data){
                     return data.pago_neodata;
                 }
             },{
@@ -252,7 +255,11 @@ function fillTable(idLote, beginDate, endDate, bandera ) {
 
             }, {
                 data : function (data ){
-                    return data.user_names +'/'+ data.puesto;
+                    return data.user_names ;
+                }
+            },{
+                data: function (data){
+                    return  data.puesto;
                 }
             }, {
                 data: function (data ){
