@@ -1358,9 +1358,13 @@
 
     public function getLider($id_gerente){
         return $this->db->query("SELECT id_lider as id_subdirector, 
-        (CASE WHEN u.id_lider = 7092 THEN 3 WHEN (u.id_lider = 9471 OR u.id_lider = 681) THEN 607 ELSE 0 END) id_regional
-        FROM usuarios u
-        WHERE u.id_usuario = $id_gerente")->result_array();
+        (CASE 
+        WHEN us.id_lider = 7092 THEN 3 
+        WHEN (us.id_lider = 9471 OR us.id_lider = 681 OR us.id_lider = 609) THEN 607 
+        WHEN (us.id_lider = 5 AND us.id_sede = '11') THEN 5 
+        ELSE 0 END) id_regional
+        FROM usuarios us
+        WHERE us.id_usuario IN ($id_gerente)")->result_array();
     }
 
     public function getEmpresasList()
