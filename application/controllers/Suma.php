@@ -463,9 +463,9 @@ class Suma extends CI_Controller
         $this->load->view("ventas/historial_comisiones_suma", $datos);  
     }
 
-    public function getAsimiladosRevision(){
-        echo json_encode($this->Suma_model->getAsimiladosRevision()->result_array());
-    }
+    // public function getAsimiladosRevision(){
+    //     echo json_encode($this->Suma_model->getAsimiladosRevision()->result_array());
+    // }
 
     public function getRevisionIntMex(){
         $idRol = $this->input->post("idRol");

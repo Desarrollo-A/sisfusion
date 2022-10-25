@@ -251,7 +251,8 @@ tabla_remanente = $("#tabla_remanente").DataTable({
         },
     }],
     ajax: {
-        url: general_base_url + "Suma/getRemanentesRevision",
+        url: general_base_url + "Suma/getRevision",
+        data: {formaPago:4},
         type: "POST",
         dataType: 'json',
         dataSrc: ""

@@ -5,7 +5,6 @@ function selectAll(e) {
     $(tabla_nuevas.$('input[type="checkbox"]')).each(function (i, v) {
         if (!$(this).prop("checked")) {
             $(this).prop("checked", true);
-            console.log(tabla_nuevas.row($(this).closest('tr')).data());
             tota2 += parseFloat(tabla_nuevas.row($(this).closest('tr')).data().impuesto);
         } else {
             $(this).prop("checked", false);
@@ -75,14 +74,43 @@ $("#EditarPerfilExtranjeroForm").one('submit', function(e){
 });
 
 $(document).on('click', '.verPDFExtranjero', function () {
-    console.log('clic');
     const $itself = $(this);
     Shadowbox.open({
-        content: '<div><iframe style="overflow:hidden;width: 100%;height: 100%;position:absolute;" src="<?=base_url()?>static/documentos/extranjero/'+$itself.attr('data-usuario')+'"></iframe></div>',
+        content: '<div><iframe style="overflow:hidden;width: 100%;height: 100%;position:absolute;" src="'+general_base_url+'static/documentos/extranjero/'+$itself.attr('data-usuario')+'"></iframe></div>',
         player: "html",
         title: "Visualizando documento fiscal: " + $itself.attr('data-usuario'),
         width: 985,
         height: 660
+    });
+});
+
+$(document).on('click', '.cuestionDelete', function () {
+    const idDocumento = $(this).attr('data-idDocumento');
+    $('.fileToDelete').val(idDocumento);
+});
+
+$("#deleteDocumentoExtranjero").one('submit', function(e){
+    e.preventDefault();
+    const idDocumento = $('.fileToDelete').val();
+    $.ajax({
+        type: 'POST',
+        url: general_base_url+'Usuarios/deleteDocumentoExtranjero',
+        data: {idDocumento: idDocumento},
+        dataType: 'json',
+        cache: false,
+        beforeSend: function() {
+            $('#spiner-loader').removeClass('hide');
+        },
+        success: function(data) {
+            $('#spiner-loader').addClass('hide');
+            alerts.showNotification("top", "right", data["message"], (data["status" == 503]) ? "danger" : (data["status" == 400]) ? "warning" : "success");
+            $("#deleteModal").modal('hide');
+        },
+        error: function(){
+            $('#spiner-loader').addClass('hide');
+            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+            $("#deleteModal").modal('hide');
+        }
     });
 });
 
@@ -142,7 +170,7 @@ $("#tabla_nuevas_comisiones").ready(function() {
                     var hora = hoy.getHours();
                     var minuto = hoy.getMinutes();
 
-                    if (((mes == 10 && dia == 21) || (mes == 10 && dia == 21 && hora <= 20)) ||
+                    if (((mes == 10 && dia == 25) || (mes == 10 && dia == 25 && hora <= 20)) ||
                     ((mes == 11 && dia == 7) || (mes == 11 && dia == 8 && hora <= 13)) ||
                     ((mes == 12 && dia == 12) || (mes == 12 && dia == 13 && hora <= 13))){
 
@@ -355,7 +383,7 @@ $("#tabla_nuevas_comisiones").ready(function() {
 
 
 
-                if (((mes == 10 && dia == 21) || (mes == 10 && dia == 21 && hora <= 20)) ||
+                if (((mes == 10 && dia == 25) || (mes == 10 && dia == 25 && hora <= 20)) ||
                 ((mes == 11 && dia == 7) || (mes == 11 && dia == 8 && hora <= 13)) ||
                 ((mes == 12 && dia == 12) || (mes == 12 && dia == 13 && hora <= 13)))
                 {
@@ -1066,7 +1094,7 @@ $(document).on("click", ".subir_factura_multiple", function() {
     var hora = hoy.getHours();
     var minuto = hoy.getMinutes();
 
-    if (((mes == 10 && dia == 21) || (mes == 10 && dia == 21 && hora <= 20)) || ((mes == 11 && dia == 7) || (mes == 11 && dia == 8 && hora <= 13)) || ((mes == 12 && dia == 12) || (mes == 12 && dia == 13 && hora <= 13))){
+    if (((mes == 10 && dia == 25) || (mes == 10 && dia == 25 && hora <= 20)) || ((mes == 11 && dia == 7) || (mes == 11 && dia == 8 && hora <= 13)) || ((mes == 12 && dia == 12) || (mes == 12 && dia == 13 && hora <= 13))){
 
     $("#modal_multiples .modal-body").html("");
     $("#modal_multiples .modal-header").html("");
@@ -1339,12 +1367,9 @@ function cargar_info_xml2(informacion_factura) {
     myCommentsList.setAttribute('style', 'color:green;');
     myCommentsList.innerHTML = 'Cantidad correcta';
 
-    console.log('suma:'+suma);
-    console.log('xml:'+cantidadXml);
     if (((suma + .50).toFixed(2) >= cantidadXml.toFixed(2) && cantidadXml.toFixed(2) >= (suma - .50).toFixed(2) ) ||  (cantidadXml.toFixed(2) == (suma).toFixed(2))) {
         alerts.showNotification("top", "right", "Cantidad correcta.", "success abc");
         document.getElementById('btng').disabled = false;
-        console.log("Cantidad correcta");
         disabled();
     } 
     else {
@@ -1355,7 +1380,6 @@ function cargar_info_xml2(informacion_factura) {
         myCommentsList.setAttribute('style', 'color:red;');
         myCommentsList.innerHTML = 'Cantidad incorrecta';
         alerts.showNotification("top", "right", "Cantidad incorrecta.", "warning");
-        console.log("cantidad incorrecta");
     }
 
     $("#emisor").val((informacion_factura.nameEmisor ? informacion_factura.nameEmisor[0] : '')).attr('readonly', true);
