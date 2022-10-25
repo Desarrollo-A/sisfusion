@@ -6344,6 +6344,31 @@ for ($d=0; $d <count($dos) ; $d++) {
       }
       echo json_encode( array( "data" => $dat));
     }
+    public function UpdateDescuent(){
+            $id_descuento       = $this->input->post('id_descuento');
+            $monto              = $this->input->post('monto');
+            $pago_individual    = $this->input->post('pago_individual');
+            $comentario         = 'Descuento aplicado';
+                                $arr_update = array(                      
+                                  
+                                    "monto"           =>  $monto,
+                                    "pago_individual" =>  $pago_individual,
+                                    "detalles"      =>  $comentario
+                                          );
+            $update = $this->Comisiones_model->descuentos_universidad($id_descuento,$arr_update);                           
+            if($update){
+              $d=  array(
+                "response_code" => 200, 
+                "response_type" => 'success',
+                "message" => "Descuento actualizado satisfactoriamente");
+            }else{
+              $d=  array(
+                "response_code" => 400, 
+                "response_type" => 'error',
+                "message" => "Descuento no actualizado ");
+            }
+            echo json_encode ($d);
+          } 
 
     public function getDataConglomerado($tipoDescuento)
     {
