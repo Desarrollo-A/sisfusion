@@ -139,7 +139,6 @@ tabla_asimilados = $("#tabla_asimilados").DataTable({
             columns: [1,2,3,4,5,6,7,8],
             format: {
                 header:  function (d, columnIdx) {
-                    console.log(d);
                     if(columnIdx == 0){
                         return ' '+d +' ';
                     }else if(columnIdx == 1){
@@ -262,7 +261,8 @@ tabla_asimilados = $("#tabla_asimilados").DataTable({
         },
     }],
     ajax: {
-        url: general_base_url + "Suma/getAsimiladosRevision",
+        url: general_base_url + "Suma/getRevision",
+        data: {formaPago:3},
         type: "POST",
         dataType: 'json',
         dataSrc: ""

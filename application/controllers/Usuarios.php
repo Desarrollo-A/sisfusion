@@ -583,17 +583,20 @@ class Usuarios extends CI_Controller
         $this->load->view("asesor/viewUser", $datos);   
     }
 
-    public function getUsersListAsesor()
-    {
+    public function getUsersListAsesor(){
         $data['data'] = $this->Usuarios_modelo->getUserPassword()->result_array();
-        //print_r($data['data'][0]['contrasena']);
-
-        //exit;
         $data['data'][0]['contrasena'] = desencriptar($data['data'][0]['contrasena']);
         echo json_encode($data);
     }
 
+    public function deleteDocumentoExtranjero(){
+        $a=0;
+        $idDocumento = $this->input->post("idDocumento");
+        $response = $this->Usuarios_modelo->deleteDocumentoExtranjero($idDocumento);
+        if ($response)
+            echo json_encode(array("status" => 200, "message" => "Se ha realizado la acción de manera exitosa"));
+        else 
+            echo json_encode(array("status" => 503, "message" => "Oops, algo salió mal. No se ha podido realizar la acción solicitada."));
 
-
-
+    }
 }
