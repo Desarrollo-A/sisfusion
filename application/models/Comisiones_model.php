@@ -8932,7 +8932,16 @@ return $query->result();
             }
         }
     }
-
+    function descuentos_universidad($clave , $data){
+        try {
+            $this->db->where('id_descuento', $clave);
+            $this->db->update('descuentos_universidad', $data);
+            return TRUE;
+        }
+        catch(Exception $e) {
+            return $e->getMessage();
+        }
+    } 
     function fusionAcLi($estatus='3'){
         
         switch($estatus) {

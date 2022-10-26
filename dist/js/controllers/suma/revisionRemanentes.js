@@ -37,6 +37,29 @@ $('#tabla_remanente').on('xhr.dt', function(e, settings, json, xhr) {
     document.getElementById("totpagarremanente").textContent = '$' + to;
 });
 
+function selectAll(e) {
+    tota2 = 0;
+    $(tabla_remanente.$('input[type="checkbox"]')).each(function (i, v) {
+        if (!$(this).prop("checked")) {
+            $(this).prop("checked", true);
+            tota2 += parseFloat(tabla_remanente.row($(this).closest('tr')).data().impuesto);
+        } else {
+            $(this).prop("checked", false);
+        }
+        $("#totpagarPen").html('$' + formatMoney(tota2));
+    });
+}
+
+$(document).on("click", ".individualCheck", function() {
+    tr = $(this).closest('tr');
+    var row = tabla_remanente.row(tr).data();
+
+    if ($(this).prop('checked')) totaPen += parseFloat(row.impuesto);
+    else totaPen -= parseFloat(row.impuesto);
+
+    $("#totpagarPen").html('$ ' + formatMoney(totaPen));
+});
+
 tabla_remanente = $("#tabla_remanente").DataTable({
     dom: 'Brt'+ "<'row'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'i><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>",
     width: 'auto',
@@ -212,7 +235,7 @@ tabla_remanente = $("#tabla_remanente").DataTable({
         render: function (d, type, full, meta){
             if(full.estatus == 2){
                 if(full.referencia){
-                    return '<input type="checkbox" name="idTQ[]" style="width:20px;height:20px;"  value="' + full.id_pago_suma + '">';
+                    return '<input type="checkbox" name="idTQ[]" class="individualCheck" style="width:20px;height:20px;"  value="' + full.id_pago_suma + '">';
                 }
                 else{
                     return '';
@@ -228,7 +251,8 @@ tabla_remanente = $("#tabla_remanente").DataTable({
         },
     }],
     ajax: {
-        url: general_base_url + "Suma/getRemanentesRevision",
+        url: general_base_url + "Suma/getRevision",
+        data: {formaPago:4},
         type: "POST",
         dataType: 'json',
         dataSrc: ""
@@ -265,16 +289,6 @@ $("#tabla_remanente tbody").on("click", ".cambiar_estatus", function(){
     $("#modal_nuevas").modal();
 });
 
-$('#tabla_remanente').on('click', 'input', function() {
-    tr = $(this).closest('tr');
-    var row = tabla_remanente.row(tr).data();
-
-    if ($(this).prop('checked')) totaPen += row.impuesto;
-    else totaPen -= row.impuesto;
-
-    $("#totpagarPen").html('$ ' + formatMoney(totaPen));
-});
-
  //Función para pausar la solicitud
  $("#form_interes").submit( function(e) {
     e.preventDefault();
@@ -294,7 +308,7 @@ $('#tabla_remanente').on('click', 'input', function() {
             success: function(data){
                 if(data){
                     $("#modal_nuevas").modal('toggle' );
-                    alerts.showNotification("top", "right", "Se ha pausado la comisión exitosamente", "success");
+                    alerts.showNotification("top", "right", "Se ha procesado la solicitud exitosamente", "success");
                     setTimeout(function() {
                         tabla_remanente.ajax.reload();
                     }, 3000);

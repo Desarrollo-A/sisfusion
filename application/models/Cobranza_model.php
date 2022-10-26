@@ -44,7 +44,7 @@ class Cobranza_model extends CI_Model {
       (CASE lo.idStatusContratacion WHEN '1' THEN '01' WHEN '2' THEN '02' WHEN '3' THEN '03' WHEN '4' THEN '04' WHEN '5' THEN '05' WHEN '6' THEN '06' 
 WHEN '7' THEN '07' WHEN '8' THEN '08' WHEN '9' THEN '09' WHEN '10' THEN '10' WHEN '11' THEN '11' WHEN '12' THEN '12' 
 WHEN '13' THEN '13' WHEN '14' THEN '14' WHEN '15' THEN '15' END)  contratacion , pac.bandera estatusComision   ,
-        oxcest.color                 
+        oxcest.color                  
       FROM pago_comision_ind pci1 
       LEFT JOIN (SELECT SUM(abono_neodata) abono_pagado, id_comision 
       FROM pago_comision_ind WHERE (estatus in (11,3) OR descuento_aplicado = 1) 

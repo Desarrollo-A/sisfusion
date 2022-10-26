@@ -407,6 +407,8 @@ function getLeadersListForEdit(headquarter, type, leader){
 function cleadFieldsHeadquarterChange(){
     $("#leader").find("option").remove();
     $("#member_type").val("");
+    $('#member_type').selectpicker('refresh');
+    $('#leader').selectpicker('refresh');
 }
 function CloseModalBaja(){
     document.getElementById('nameUs').innerHTML = '';
