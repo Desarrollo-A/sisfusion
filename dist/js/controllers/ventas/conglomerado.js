@@ -625,6 +625,7 @@ function loadTable(tipoDescuento) {
             descuento = Math.round(descuento);
             pago_mensual = Math.round(pago_mensual);
             cantidad_de_pagos = descuento / pago_mensual;//para saber en cuanto se dividieron los pagos
+
             document.getElementById("mensualidad").value = pago_mensual;
             document.getElementById("descuento_id").value = id_descuento;
             document.getElementById("total_pagos").value = cantidad_de_pagos;
@@ -639,12 +640,33 @@ function loadTable(tipoDescuento) {
             console.log('pendiente pendiente pendiente pendiente');
             console.log(total);
             console.log('total total total total');
-            mensualidadesFaltantes = pendiente / pago_mensual ;
-            console.log(Math.round(mensualidadesFaltantes));
+            mensualidadesFaltantes = descuento / pago_mensual ;
+            mensualidadesFaltantesMostrar = pendiente / pago_mensual ;
+            console.log(Math.round(cantidad_de_pagos));
             console.log('mensualidadesFaltantes');
-            document.getElementById("descuento1").value = pendiente;
+            document.getElementById("descuento1").value = descuento;
             
-            
+            if ((mensualidadesFaltantesMostrar % 1)  == 0 ){
+                console.log(mensualidadesFaltantesMostrar);
+                console.log('1');
+            }else{
+                if( 0 == Math.trunc(mensualidadesFaltantesMostrar))
+                {
+                    if((mensualidadesFaltantesMostrar/mensualidadesFaltantesMostrar ) == 1)
+                    {
+                        console.log('33');
+                        mensualidadesFaltantesMostrar = 1;
+                    }else{
+                        console.log('22');  
+                    }
+                    console.log('44');
+                }else{
+
+                    console.log('54');
+                    mensualidadesFaltantesMostrar =  Math.trunc(mensualidadesFaltantesMostrar);
+                }
+               // mensualidadesFaltantes
+            }
             if ((mensualidadesFaltantes % 1)  == 0 ){
                 console.log(mensualidadesFaltantes);
                 console.log('1');
@@ -667,7 +689,7 @@ function loadTable(tipoDescuento) {
                // mensualidadesFaltantes
             }
             console.log(mensualidadesFaltantes);
-            document.getElementById("numeroPagos1").value = Math.trunc( mensualidadesFaltantes);
+            document.getElementById("numeroPagos1").value = Math.trunc( mensualidadesFaltantesMostrar);
             
             Total_a_pagar = mensualidadesFaltantes * pago_mensual;
             console.log(Total_a_pagar);
@@ -680,23 +702,21 @@ function loadTable(tipoDescuento) {
             //faltantes = mensualidadesFaltantes/mensual;
             
         });
-        $('#numero-pagos-update').change(function () {
-            const monto1 = replaceAll($('#descuento-update').val(), ',', '');
-            const monto = replaceAll(monto1, '$', '');
-            const cantidad = parseFloat($('#numero-pagos-update').val());
-            let resultado = 0;
+        $('#numeroPagos1').change(function () {
+            total_pagos = document.getElementById("total_pagos").value ;
+            actualess = document.getElementById("actualess").value ;
+            totalmeses = document.getElementById("totalmeses").value ;
+            cuanto = document.getElementById("cuanto").value ;
+            mensualidad = document.getElementById("mensualidad").value ;
+
+            loQueSedebe  = document.getElementById("descuento1").value ;
+            pagos  = document.getElementById("numeroPagos1").value ;
+            NuevasMensualidades = loQueSedebe / pagos;
+
+            document.getElementById("pago_ind011").value = Math.trunc( NuevasMensualidades);
+            
+
         
-            if (isNaN(monto)) {
-                alerts.showNotification("top", "right", "Debe ingresar un monto valido.", "warning");
-                $('#pago-ind-update').val(resultado);
-            } else {
-                resultado = monto / cantidad;
-                if (resultado > 0) {
-                    $('#pago-ind-update').val(formatMoney(resultado));
-                } else {
-                    $('#pago-ind-update').val(formatMoney(0));
-                }
-            }
         });
 
         $(document).on('input', '.descuento1', function(){

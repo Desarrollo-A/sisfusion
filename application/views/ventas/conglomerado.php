@@ -106,7 +106,7 @@
 
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label class="label">Número de Pagos *</label>
+                                    <label class="label">Número de Pagos Restantes*</label>
                                     <select class="form-control" name="numeroPagos1" id="numeroPagos1" >
                                         <option value="" disabled="true" selected="selected">- Selecciona opción -</option>
                                         <option value="1">1</option>
