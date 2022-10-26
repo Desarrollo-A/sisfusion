@@ -152,10 +152,7 @@
                     
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal"
-                            onclick="cleanCommentsAsimilados()"><b>Cerrar</b></button>
-                </div>
+             
             </div>
         </div>
     </div>
