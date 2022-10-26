@@ -77,7 +77,7 @@ async function initReport(){
     getLastSales(null, null);
     let rol = userType == 2 ? await getRolDR(idUser): userType;
     let rolString;
-    if ( rol == '1' || rol == '18' || rol == '4' || rol == '63' )
+    if ( rol == '1' || rol == '18' || rol == '4' || rol == '63' || rol == '33' || rol == '58' || rol == '69' )
         rolString = 'director_regional';
     else if ( rol == '2' || (rol == '5' && ( idUser != '28' || idUser != '30' )))
         rolString = 'gerente';
@@ -138,7 +138,7 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, dates=n
         rolEspecial = 2;
     else if( rol == 6 )
         rolEspecial = 3;
-    else if( rol == 4 || rol == 63 )
+    else if( rol == 4 || rol == 33 || rol == 58 || rol == 63 || rol == 69)
         rolEspecial = 2
     else rolEspecial = rol;
 
@@ -360,7 +360,7 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, dates=n
 // 5: Director regional
 // 6: Rol
 function getLeadersLine (leadersList, id_usuario, id_lider) {  
-    if (leadersList[0] == 0 && (leadersList[6] == 1 || leadersList[6] == 4 || leadersList[6] == 63)){ // PRIMER NIVEL: SÓLO TENEMOS EL ID REGIONAL
+    if (leadersList[0] == 0 && (leadersList[6] == 1 || leadersList[6] == 4 || leadersList[6] == 33 || leadersList[6] == 58 || leadersList[6] == 63 || leadersList[6] == 69)){ // PRIMER NIVEL: SÓLO TENEMOS EL ID REGIONAL
         leadersList[5] = id_usuario;
     }
     else if (leadersList[0] == 2){ // SEGUNDO NIVEL: TENEMOS EL ID SUBDIRECTOR
@@ -461,7 +461,7 @@ $(document).on('click', '.update-dataTable', function (e) {
             const table = "subdirector";
             fillBoxAccordions(table, 2, $(this).val(), 2, transaction, dates, [59, asesor, coordinador, gerente, subdirector, regional, type]); // VA POR LOS SUBDIRECTORES: CONSULTA REGIONAL
         }
-    } else if (type == 1 || type == 4 || type == 63 ) {
+    } else if (type == 1 || type == 4 || type == 33 || type == 58 || type == 63 || type == 69) {
         if (render == 1) {
             const table = "subdirector";
             fillBoxAccordions(table, 2, $(this).val(), 2, transaction, dates, [2, asesor, coordinador, gerente, subdirector, regional, type]); // VA POR LOS SUBDIRECTORES
@@ -614,7 +614,7 @@ $(document).on('click', '#searchByDateRangeTable', async function (e) {
     let rol = userType == 2 ? await getRolDR(idUser): userType;
 
     let rolString;
-    if ( rol == '1' || rol == '18' || rol == '4' || rol == '63')
+    if ( rol == '1' || rol == '18' || rol == '4' || rol == '63' || rol == '33' || rol == '58' || rol == '69')
         rolString = 'director_regional';
     else if ( rol == '2' || (rol == '5' && ( idUser != '28' || idUser != '30' )))
         rolString = 'gerente';
@@ -914,20 +914,17 @@ function accordionToRemove(rol){
             $(".boxAccordions").find(`[data-rol='${9}']`).remove();
             $(".boxAccordions").find(`[data-rol='${7}']`).remove();
             break;
-        case 18://dir
+        case 18: // Dir
+        case 33: // Consulta (Yola)
+        case 58: // Asistente dirección general
+        case 63: // Control interno
+        case 69: // Dirección general
             $(".boxAccordions").find(`[data-rol='${59}']`).remove();
             $(".boxAccordions").find(`[data-rol='${2}']`).remove();
             $(".boxAccordions").find(`[data-rol='${3}']`).remove();
             $(".boxAccordions").find(`[data-rol='${9}']`).remove();
             $(".boxAccordions").find(`[data-rol='${7}']`).remove();
-            break; 
-        case 63:// Control interno
-            $(".boxAccordions").find(`[data-rol='${59}']`).remove();
-            $(".boxAccordions").find(`[data-rol='${2}']`).remove();
-            $(".boxAccordions").find(`[data-rol='${3}']`).remove();
-            $(".boxAccordions").find(`[data-rol='${9}']`).remove();
-            $(".boxAccordions").find(`[data-rol='${7}']`).remove();
-            break; 
+            break;
         case 59://dir regional
         case 5://dir regional
             $(".boxAccordions").find(`[data-rol='${2}']`).remove();
