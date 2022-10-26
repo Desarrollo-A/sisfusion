@@ -306,8 +306,8 @@ public function editar_registro_loteRechazo_asistentes_proceceso8(){
     $arreglo["perfil"]=$this->session->userdata('id_rol');
     $arreglo["modificado"]=date("Y-m-d H:i:s");
     $arreglo["status8Flag"] = 0;
-    $arreglo["totalValidado"] = null;
-    $arreglo["validacionEnganche"] = null;
+    $arreglo["totalValidado"] = NULL;
+    $arreglo["validacionEnganche"] = NULL;
 
     $arreglo2=array();
     $arreglo2["idStatusContratacion"]=1;
