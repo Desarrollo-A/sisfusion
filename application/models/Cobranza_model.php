@@ -14,7 +14,7 @@ class Cobranza_model extends CI_Model {
             $query = '';
         } else {
             
-            $query = ' AND lo.idLote = '.$idLote;
+            $query = "AND lo.idLote = $idLote";
         }
       
         if( $beginDate != ''){
@@ -37,7 +37,7 @@ class Cobranza_model extends CI_Model {
         CONCAT(u.nombre, ' ',u.apellido_paterno, ' ', u.apellido_materno) user_names ,pci1.id_usuario, oprol.nombre as puesto, u.estatus as estatus_usuario, 
         oxcest.nombre as estatus_actual_comision,slo.nombre as estatus_lote,slo.color as color_lote , oxcest.id_opcion id_estatus_actual,
         pci1.descuento_aplicado,
-        --s.nombre as sede, 
+       
         lo.idStatusContratacion , pac.total_comision as totalComision,
       FORMAT(ISNULL( pac.total_comision , '0.00'),'C') allComision,
       REPLACE(oxc.nombre, ' (especificar)', '') lugar_prospeccion, oxcest.color   ,
@@ -71,7 +71,7 @@ WHEN '13' THEN '13' WHEN '14' THEN '14' WHEN '15' THEN '15' END)  contratacion ,
       com.porcentaje_decimal, pci1.abono_neodata, pci1.pago_neodata, pci2.abono_pagado, pci1.estatus, cl.fechaApartado ,  pci1.fecha_abono,
       pci1.id_usuario, pci1.id_pago_i, u.nombre, u.apellido_paterno, u.apellido_materno, oprol.nombre, oxcest.nombre, oxcest.id_opcion, 
       pci1.descuento_aplicado, lo.idStatusContratacion,oxc.nombre , lo.referencia, com.estatus, u.estatus,pac.total_comision, oxcest.color ,slo.nombre ,slo.color,s.nombre ORDER BY lo.nombreLote";
-     // var_dump($cmd);
+      //var_dump($cmd);
       return $this->db->query($cmd);
 
     }
