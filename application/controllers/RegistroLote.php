@@ -5881,15 +5881,69 @@
 		$this->load->view("contratacion/datos_finalStatus_view",$datos);
 	}
 
+	public function Procesos_Status ($idMov){
+        $ProcContr = array(
+            '31' => "2. Recepción de Expediente (ventas-asesor)",
+            '85' => "2. Recepción de Expediente (ventas-asesor)",
+            '82' => "2. Recepción de Expediente (ventas-asesor)",
+            '83' => "7. Contrato elaborado (Jurídico)",
+            '18' => "2. Integración de Expediente (Contraloría)",
+            '19' => "2. Integración de Expediente (Contraloría)",
+            '20' => "2. Integración de Expediente (Contraloría)",
+            '63' => "2. Integración de Expediente (Contraloría)",
+            '84' => "2. Integración de Expediente (Contraloría)",
+            '2' => "3. Revisión Jurídico (Jurídico)",
+            '32' => "3. Revisión Jurídico (Jurídico)",
+            '33' => "4. Datos Verificados (Postventa)",
+            '3' => "4. Datos Verificados (Postventa)",
+            '34' => "5. Revisión 100% (Contraloria)",
+            '4' => "5. Revisión 100% (Contraloria)",
+            '35' => "6. Corrida elaborada (Contraloría)",
+            '22' => "6. Corrida elaborada (Contraloría)",
+            '62' => "6. Corrida elaborada (Contraloría)",
+            '75' => "6. Corrida elaborada (Contraloría)",
+            '36' => "7. Contrato elaborado (Jurídico)",
+            '6' => "7. Contrato elaborado (Jurídico)",
+            '76' => "7. Contrato elaborado (Jurídico)",
+            '23' => "7. Elaboración de Contrato (Jurídico)",
+            '37' => "8. Contrato entregado al asesor para firma del cliente (Asistentes de Gerentes)",
+            '7' => "8. Contrato entregado al asesor para firma del cliente (Asistentes de Gerentes)",
+            '77' => "8. Contrato entregado al asesor para firma del cliente (Asistentes de Gerentes)",
+            '38' => "9. Contrato recibido con firma de cliente (Contraloría)",
+            '65' => "9. Contrato recibido con firma de cliente (Contraloría)",
+            '39' => "10. Solicitud de validación de enganche y envio de contrato a RL (Contraloría)",
+            '26' => "10. Solicitud de validación de enganche y envio de contrato a RL (Contraloría)",
+            '40' => "11. Validación de enganche (Administración)",
+            '10' => "11. Validación de enganche (Administración)",
+            '41' => "12. Contrato firmado (Representante Legal)",
+            '42' => "13. Contrato listo y entregado asesores (Contraloría)",
+            '43' => "14. Firma Acuse cliente (Asistentes Gerentes)",
+            '44' => "15. Acuse entregado (Contraloría)",
+            '69' => "15. Acuse entregado (Contraloría)",
+            '64' => "8. Contrato entregado al asesor para firma del cliente (Asistentes de Gerentes)",
+            '73' => "2. Integración de Expediente (Contraloría)",
+            '66' => "8. Contrato entregado al asesor para firma del cliente (Asistentes de Gerentes)",
+            '67' => "11. Validación de enganche (Administración)",
+            '68' => "14. Firma Acuse cliente (Asistentes Gerentes)",
+			'711' => "8. Contrato entregado al asesor para firma del cliente (Asistentes de Gerentes) <br> 11. Validación de enganche (Administración)",
+			'011' => "11. Validación de enganche (Administración)",
+			'700' => "8. Contrato entregado al asesor para firma del cliente (Asistentes de Gerentes)");
+			if(!isset($ProcContr[$idMov])){
+				return('Not Set: '.$idMov);
+			}
+			else{
+				return $ProcContr[$idMov];
+			}
+    }
+
 	public function getFinalStatus()
 	{
 		$datos = array();
 		$arregloFechas2 = array();
 		$arregloFechas = array();
-
 		$data = $this->registrolote_modelo->finalStatus($this->input->post("id_sede"));
-//		print_r($data[0]->idLote);
-//		exit;
+		/*print_r($data);
+		exit;*/
 		for($i=0;$i<count($data);$i++)
 		{
 			$datos[$i]['referencia'] = $data[$i]->referencia;
@@ -5921,10 +5975,26 @@
 			$datos[$i]['validacionEnganche'] = $data[$i]->validacionEnganche;
 			$datos[$i]['sup'] = $data[$i]->sup;
 			$datos[$i]['fechaApartado'] = $data[$i]->fechaApartado;
+			$datos[$i]['descripcion'] = $data[$i]->descripcion;
+			//$datos[$i]['procesoContratacion'] = $data[$i]->procesoContratacion;
+			if($data[$i]->idStatusContratacion == 7 && $data[$i]->status8Flag == 0 && (IS_NULL($data[$i]->totalValidado) || $data[$i]->totalValidado == 0 || $data[$i]->totalValidado == '')){
+				$datos[$i]['procesoContratacion'] = $this->Procesos_Status('711');
+			}elseif($data[$i]->idStatusContratacion == 7 && $data[$i]->status8Flag == 1 && (IS_NULL($data[$i]->totalValidado) || $data[$i]->totalValidado == 0 || $data[$i]->totalValidado == '')){
+				$datos[$i]['procesoContratacion'] = $this->Procesos_Status('011');
+			}elseif ($data[$i]->idStatusContratacion == 7 && $data[$i]->status8Flag == 0 && (!IS_NULL($data[$i]->totalValidado) || $data[$i]->totalValidado != 0 || $data[$i]->totalValidado != '')) {
+				$datos[$i]['procesoContratacion'] = $this->Procesos_Status('700');
+			}else {
+				$datos[$i]['procesoContratacion'] = $this->Procesos_Status($data[$i]->idMovimiento);
+			}
+
+			/*echo "status->".$data[$i]->descripcion."==>".(strrpos($data[$i]->descripcion, 'status'))."\n";
+			preg_match("/[0-9]/", $data[$i]->descripcion,$matches);
+			//preg_match_all("/\d/", $data[$i]->descripcion, $matches, PREG_PATTERN_ORDER);
+			echo "numero->".$data[$i]->descripcion."==>".strrpos($data[$i]->descripcion, $matches[0][0])."\n";*/
 
 
-			/**procesoContratacion**/
-			if ($data[$i]->idStatusContratacion == 1 AND $data[$i]->idMovimiento == 31) {$datos[$i]['procesoContratacion']="2. Recepción de Expediente (ventas-asesor)";}
+			/**procesoContratacion*/
+			/*if ($data[$i]->idStatusContratacion == 1 AND $data[$i]->idMovimiento == 31) {$datos[$i]['procesoContratacion']="2. Recepción de Expediente (ventas-asesor)";}
 
 			if ($data[$i]->idStatusContratacion == 2 AND $data[$i]->idMovimiento == 85){$datos[$i]['procesoContratacion']="2. Recepción de Expediente (ventas-asesor)";}
 
@@ -5976,8 +6046,8 @@
 			if ($data[$i]->idStatusContratacion == 8 AND $data[$i]->idMovimiento == 67){$datos[$i]['procesoContratacion']="11. Validación de enganche (Administración)";}
 
 			if ($data[$i]->idStatusContratacion == 13 AND $data[$i]->idMovimiento == 68) {	$datos[$i]['procesoContratacion']="14. Firma Acuse cliente (Asistentes Gerentes)";}
-
-			/**status**/
+			*/
+			/**status
 			if ($data[$i]->idStatusContratacion == 1 AND $data[$i]->idMovimiento == 31) {
 				$datos[$i]['status'] = "Status 1 listo (Caja)";
 			}
@@ -6141,7 +6211,7 @@
 
 			if ($data[$i]->idStatusContratacion == 7 AND $data[$i]->idMovimiento == 83) {
 				$datos[$i]['status'] = "Revisión de ventas 3 a (Status 7 jurídico)";
-			}
+			}*/
 
 			/***fechavencimiento***/
 			if ($data[$i]->idStatusContratacion == 9 AND $data[$i]->idMovimiento == 26 OR $data[$i]->idStatusContratacion == 6 AND $data[$i]->idMovimiento == 23
