@@ -584,14 +584,20 @@
                                             <label>Enganche (%): </label>
                                             <div class="input-group">
                                                 <span class="input-group-addon" id="basic-addon1">%</span>
-                                                <input type="number" ng-model="porcentaje" max="100" id="porcentajeEnganche" min="0" class="form-control" ng-change="selectPorcentajeEnganche()" string-to-number limit-to-max>
+                                                <input type="number" ng-model="porcentaje" max="100" id="porcentajeEnganche"
+                                                       min="0" class="form-control" ng-blur="selectPorcentajeEnganche()"
+                                                       string-to-number limit-to-max ng-keyup="onChangeProcentaje()">
                                             </div>
                                         </div>
                                         <div class="col-md-12 form-group" >
                                             <label>Enganche cantidad ($): </label>
                                             <div class="input-group">
                                                 <span class="input-group-addon" id="basic-addon1">$</span>
-                                                <input ng-model="cantidad" id="cantidadEnganche" type="number" class="form-control" min="0" ng-change="resultCantidad()" string-to-number>
+                                                <input ng-model="cantidad2" id="cantidadEnganche" type="number"
+                                                       class="form-control" min="0"
+                                                       string-to-number ng-blur="blurResultCantidad()">
+                                                <!-- ng-change="resultCantidad()"-->
+                                                <input type="hidden" ng-model="cantidad">
                                             </div>
                                         </div>
                                     </div>
@@ -785,7 +791,7 @@
                                             <span ng-if="i.id_condicion == 12" style="font-weight: 600"> </span>
                                             <span ng-if="i.id_condicion == 13" style="font-weight: 600"> </span>
 
-                                        </b>
+                                        </  b>
                                     </td>
 
                                     <td style="color:#27AE60" class="text-center">
@@ -1158,19 +1164,12 @@
 
             $scope.mesesdiferir = 0;
 
-            $scope.resultCantidad = function () {
-                $scope.uno = parseFloat($scope.cantidad);
-                $scope.dos =  ($scope.uno / $scope.total);
-                $scope.result =  ($scope.dos * parseFloat(100));
-                $scope.cantidadFR = parseFloat($scope.result.toFixed(6));
-                $scope.porcentajeEng = $scope.cantidadFR;
-
-                //comienza nueva funcion
+            $scope.blurResultCantidad = ()=>{
                 var porcentajeEnganche = angular.element(document.querySelector('#porcentajeEnganche'));
                 var cantidadEnganche  =  angular.element(document.querySelector('#cantidadEnganche'));
                 var r1 = $scope.total;
-                var cantidadToGetP = (( 100 * cantidadEnganche.val())/r1);
-                porcentajeEnganche.val(parseFloat(cantidadToGetP).toFixed(2));
+
+
                 //termina nueva sección
 
                 if(porcentajeEnganche.val() >= 10 || porcentajeEnganche.val() == 5){/**/
@@ -1182,7 +1181,85 @@
                     document.getElementById("aptdo").disabled = true;
                     document.getElementById("msdif").disabled = true;
                 }
+                if(r1>=500000){
+                    console.log('DIABLSODK');
+                    $('#porcentajeEnganche').attr('min', 1);
+                    let porcetaje = 0.01;
+                    let porcentajeDanero = (porcetaje*r1);
+                    $('#cantidadEnganche').attr('min', porcentajeDanero);
+                    if(porcentajeEnganche.val()<1){
+                        porcentajeEnganche.val(1);
+                        cantidadEnganche.val(porcentajeDanero);
+                        $scope.cantidad = porcentajeDanero;
+                    }else if(cantidadEnganche.val()<porcentajeDanero){
+                        cantidadEnganche.val(porcentajeDanero);
+                        $scope.cantidad = porcentajeDanero;
+                    }else{
+                        $scope.engancheFinal = cantidadEnganche.val();
+                        $scope.cantidad = cantidadEnganche.val();
+
+                    }
+                }
+                else{
+                    $('#cantidadEnganche').attr('min', 5000);
+                    console.log('antes:', $('#cantidadEnganche').val());
+                    let totalTerreno = r1;
+                    let porcetajeMin = 100*5000/totalTerreno;
+                    $('#porcentajeEnganche').attr('min', porcetajeMin.toFixed(2));
+
+
+                        if(cantidadEnganche.val()<5000){
+                            $('#porcentajeEnganche').val(porcetajeMin.toFixed(2));
+                            $scope.engancheFinal = 5000;
+                            $scope.cantidad = 5000;
+                            cantidadEnganche.val(5000);
+                            console.log('>');
+                        }else{
+                            var cantidadToGetP = (( 100 * cantidadEnganche.val())/r1);
+                            porcentajeEnganche.val(parseFloat(cantidadToGetP).toFixed(2));
+
+                            $scope.engancheFinal = cantidadEnganche.val();
+                            $scope.cantidad = cantidadEnganche.val();
+                            console.log('*');
+                        }
+                    // $scope.cantidad = parseInt(cantidadEnganche.val());
+
+
+                }
                 calcularCF();
+                console.log('despues:', cantidadEnganche.val());
+            };
+
+
+            $scope.resultCantidad = function () {
+                $scope.uno = parseFloat($scope.cantidad);
+                $scope.dos =  ($scope.uno / $scope.total);
+                $scope.result =  ($scope.dos * parseFloat(100));
+                $scope.cantidadFR = parseFloat($scope.result.toFixed(6));
+                // $scope.porcentajeEng = $scope.cantidadFR;/
+
+                //comienza nueva funcion
+                var porcentajeEnganche = angular.element(document.querySelector('#porcentajeEnganche'));
+                var cantidadEnganche  =  angular.element(document.querySelector('#cantidadEnganche'));
+                var r1 = $scope.total;
+                // var cantidadToGetP = (( 100 * cantidadEnganche.val())/r1);
+                // porcentajeEnganche.val(parseFloat(cantidadToGetP).toFixed(2));
+                //termina nueva sección
+
+                if(porcentajeEnganche.val() >= 10 || porcentajeEnganche.val() == 5){/**/
+                    document.getElementById("day").disabled = false;
+                    document.getElementById("aptdo").disabled = false;
+                    document.getElementById("msdif").disabled = false;
+                }else{
+                    document.getElementById("day").disabled = true;
+                    document.getElementById("aptdo").disabled = true;
+                    document.getElementById("msdif").disabled = true;
+                }
+
+
+                // $scope.blurResultCantidad();
+                    calcularCF();
+
             };
 
 
@@ -1190,7 +1267,7 @@
 
             };
 
-            $scope.porcentaje = $scope.porcentajeEng = 0;
+            // $scope.porcentaje = $scope.porcentajeEng = 0;
 
             $scope.selectDescuentos = function(descuento, checked){
                 var idx = descuentosAplicados.indexOf(descuento);
@@ -1211,7 +1288,8 @@
             function calcularCF(){
 
 ///////////////////////////////////////
-
+                console.log('Cantidad enganche', $scope.cantidad);
+                console.log('Cantidad enganche porcentaje', $scope.porcentaje);
 
                 var applyTotal = descuentosAplicados.filter(function(condicion) {
 
@@ -1243,11 +1321,13 @@
                 var porcentaje1 = 0;
                 var porcentaje2 = 0;
                 var porcentajeDeEnganche = $scope.porcentajeEng;
+                var cantidadEnganche = $scope.cantidad;
                 var r1 = $scope.total;
                 var descEng = 0;
                 var enganche = 0;
                 var supLote = $scope.superficie;
                 var msi = parseInt($scope.msni);
+
                 // console.log("msi: ", msi);
 
 
@@ -1280,14 +1360,16 @@
                     console.log('AREA 2');
                     $scope.decFin = [];
 
-                    enganche = (r1 * (porcentajeDeEnganche / 100));
+                    // enganche = (r1 * (porcentajeDeEnganche / 100));
+                    enganche = parseFloat(cantidadEnganche);
                     r1 = (r1 - enganche);
 
 
                 }
                 else if(porcentajeDeEnganche != 0 && orderEnganche.length > 0 && orderTotal.length === 0){
                     //aqui entra cuando solo hay descuento al enganche
-                    enganche = (r1 * (porcentajeDeEnganche / 100));
+                    // enganche = (r1 * (porcentajeDeEnganche / 100));
+                    enganche = parseFloat(cantidadEnganche);
                     r1= (r1 - enganche);
 
                     angular.forEach(orderEnganche, function(item, index) {
@@ -1491,7 +1573,7 @@
                         && $scope.cinco_milLM == 0 && $scope.veinticinco_milLM == 0 && $scope.ceroQ1 == 0 && $scope.ceroQ2 == 0
                         && $scope.ceroQ3 == 0 && $scope.ceroQ4 == 0 && $scope.cyd_slp1 == 0 && $scope.cyd_slp2 == 0 && $scope.cincoCSLP == 0
                         && $scope.veinticinco_milLM2 == 0 && $scope.cincoCL == 0) {
-                        enganche = (r1 * (porcentajeDeEnganche / 100));
+                        enganche = parseFloat(cantidadEnganche);
                         r1= (r1 - enganche);
                     }
 
@@ -1585,7 +1667,7 @@
                     });
 
 
-                    enganche = (r1 * (porcentajeDeEnganche / 100));
+                    enganche = parseFloat(cantidadEnganche);
                     r1 = (r1 - enganche);
 
                     angular.forEach(orderEnganche, function (item, index) {
@@ -5247,7 +5329,7 @@
 
             // $scope.diasEnganche = [{day: 7}, {day: 25}, {day: 'Diferido'}, {day:'Limpiar'}];
             $scope.diasEnganche = [{day: 15}, {day: 30}, {day: 'Diferido'}, {day:'Limpiar'}];
-            $scope.porcentaje = $('#porcentajeEnganche').val();
+            // $scope.porcentaje = $('#porcentajeEnganche').val();
 
 
 
@@ -5497,24 +5579,92 @@
                 var porcentajeEnganche = angular.element( document.querySelector('#porcentajeEnganche') );
                 var cantidadEnganche  =  angular.element(document.querySelector('#cantidadEnganche'));
                 var r1 = $scope.total;
-                if(porcentajeEnganche.val() >= 0 && porcentajeEnganche.val()<=100)
+
+                 if(porcentajeEnganche.val() >= 0 && porcentajeEnganche.val()<=100)
                 {
+                    let porcetajeMin = 100*5000/r1;
                     var engToShow  =   (r1 * (porcentajeEnganche.val() / 100));
-                    cantidadEnganche.val(parseFloat(engToShow).toFixed(2));
+                    if(engToShow<5000){
+                        console.log('KK1', porcentajeEnganche.val());
+                        cantidadEnganche.val(5000);
+                        $scope.cantidad = 5000;
+                        $scope.engancheFinal = 5000;
+                        $scope.porcentaje = porcetajeMin.toFixed(2);
+                        porcentajeEnganche.val(porcetajeMin.toFixed(2));
+                        calcularCF();
+
+                    }
+                    else{
+                        console.log('KK2', porcentajeEnganche.val());
+                        cantidadEnganche.val(parseFloat(engToShow).toFixed(2));
+                        $scope.cantidad = parseFloat(engToShow).toFixed(2);
+                        $scope.engancheFinal = parseFloat(engToShow).toFixed(2);
+                        $scope.porcentaje = porcentajeEnganche.val();
+                        calcularCF();
+                    }
                 }
-                /*termina nuevo*/
+               /*termina nuevo*/
 
                 if(porcentajeEnganche.val() >= 5){/* || porcentajeEnganche.val() == 5*/
                     // document.getElementById("day").disabled = false;
                     // document.getElementById("aptdo").disabled = false;
                     // document.getElementById("msdif").disabled = false;
                     $scope.diasEnganche = [{day: 15}, {day: 30}, {day: 'Diferido'}, {day:'Limpiar'}];
-
+                    calcularCF();
                 }else{
                     $scope.diasEnganche = [{day: 15}, {day: 30}, {day:'Limpiar'}];
+                    calcularCF();
                 }
-                calcularCF();
+
+
+
+
+
+
+                // if(r1>=500000){
+                //     $('#porcentajeEnganche').attr('min', 1);
+                //     let porcetaje = 0.01;
+                //     let porcentajeDanero = (porcetaje*r1);
+                //     $('#cantidadEnganche').attr('min', porcentajeDanero);
+                //     if(porcentajeEnganche.val()<1){
+                //         porcentajeEnganche.value=1;
+                //         cantidadEnganche.val(porcentajeDanero);
+                //         $scope.engancheFinal = porcentajeDanero;
+                //     }else if(cantidadEnganche.val()<porcentajeDanero){
+                //         cantidadEnganche.val(porcentajeDanero);
+                //         $scope.engancheFinal = porcentajeDanero;
+                //     }
+                // }else{
+                //     $('#cantidadEnganche').attr('min', 5000);
+                //     let totalTerreno = r1;
+                //     let porcetajeMin = 100*5000/totalTerreno;
+                //     $('#porcentajeEnganche').attr('min', porcetajeMin);
+                //
+                //     if(porcentajeEnganche.val()<porcetajeMin){
+                //         porcentajeEnganche.val(porcetajeMin.toFixed(2));
+                //         cantidadEnganche.val(5000);
+                //         $scope.engancheFinal = 5000;
+                //         $scope.cantidad = 5000;
+                //     }else if(cantidadEnganche.val()<5000){
+                //         cantidadEnganche.val(5000);
+                //         $scope.engancheFinal = 5000;
+                //         $scope.cantidad = 5000;
+                //     }
+                // }
+                // calcularCF();
             };
+
+            $scope.onChangeProcentaje=()=>{
+                var porcentajeEnganche = angular.element( document.querySelector('#porcentajeEnganche') );
+                var cantidadEnganche  =  angular.element(document.querySelector('#cantidadEnganche'));
+                var r1 = $scope.total;
+                let porcetajeMin = 100*5000/r1;
+                if(porcentajeEnganche.val()<porcetajeMin.toFixed(2)){
+                    porcentajeEnganche.val(porcetajeMin.toFixed(2));
+                }
+
+            };
+
 
 
             $http.get("<?=base_url()?>index.php/Corrida/getResidencialDisponible").then(
@@ -7077,6 +7227,7 @@
                         $scope.superficie = response.data[0].sup;
                         $scope.preciom2 = response.data[0].precio;
                         $scope.total = response.data[0].total;
+
                         $scope.casaFlag = (response.data[0].casa==1) ? 1 : 0;
                         $scope.porcentajeInv = response.data[0].porcentaje;
                         $scope.enganche = response.data[0].enganche;
@@ -7120,10 +7271,27 @@
                         $scope.cantidad="";
                         porcentajeEnganche.val('10');
                         apartado.val('0');
-                        $scope.porcentajeEng = "10";
+                        $scope.porcentajeEng = 10;
                         cantidadEnganche.val(response.data[0].enganche);
-                        mesesdiferidos.val('[1, 2, 3, 4, 5, 6]');
+                        $scope.cantidad = response.data[0].enganche;
 
+                        mesesdiferidos.val('[1, 2, 3, 4, 5, 6]');
+                        if(response.data[0].total>500000){
+                            $('#porcentajeEnganche').attr('min', 1);
+                            let porcetaje = 0.01;
+                            let porcentajeDanero = (porcetaje*response.data[0].total);
+                            let porcentajeAprox = (porcentajeDanero*100/response.data[0].total)
+                            $('#cantidadEnganche').attr('min', porcentajeDanero);
+                            $('#porcentajeEnganche').val(porcentajeAprox);
+
+                        }else{
+                            $('#cantidadEnganche').attr('min', 5000);
+                            let totalTerreno = response.data[0].total;
+                            let porcetajeMin = 100*5000/totalTerreno;
+                            $('#porcentajeEnganche').attr('min', porcetajeMin.toFixed(2));
+                        }
+                        console.log('Este es el total, total alv');
+                        console.log(response.data[0].total);
 
                         calcularCF();
 
