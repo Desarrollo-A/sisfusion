@@ -158,11 +158,7 @@ function fillTable(idLote, beginDate, endDate, bandera ) {
                     }
                 }
             },
-            {
-                text: "<i class='fa fa-refresh' aria-hidden='true'></i>",
-                titleAttr: 'Cargar vista inicial',
-                className: "btn btn-azure reset-initial-values",
-            }
+           
         ],
         pagingType: "full_numbers",
         fixedHeader: true,
