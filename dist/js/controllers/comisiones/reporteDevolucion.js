@@ -12,7 +12,7 @@ $('#filtro33').change(function(){
     let tipo_usuario = $(this).val();
     console.log(tipo_usuario);
     
-    query  = " AND u.id_rol = "+ tipo_usuario +" " ;
+    query  = " AND com.rol_generado = "+ tipo_usuario +" " ;
     getAssimilatedCommissions(query);
 });
 
@@ -104,18 +104,14 @@ function getAssimilatedCommissions(query ){
                                 return 'SEDE';
                                 break;
                             case 9 :
-                                return 'CREADO';
+                                return 'MOTIVO';
                                 break ;                                                             
                         }
                     }
                 }
             }
         },
-        {
-            text: "<i class='fa fa-refresh' aria-hidden='true'></i>",
-            titleAttr: 'Cargar vista inicial',
-            className: "btn btn-azure reset-initial-values",
-        }
+      
         ],
         pagingType: "full_numbers",
         fixedHeader: true,
