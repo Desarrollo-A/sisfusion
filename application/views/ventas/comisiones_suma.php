@@ -39,14 +39,15 @@
                     } else if($opn_cumplimiento[0]['estatus'] == 0) {
                         $cadena = '<button type="button" class="btn btn-info subir-archivo">SUBIR DOCUMENTO FISCAL</button>';
                     } else if ($opn_cumplimiento[0]['estatus'] == 1) {
-                        $cadena = '<p><b>Documento fiscal cargado con éxito</b>
-                                    <a href="#" class="verPDFExtranjero" 
-                                        title="Documento fiscal"
-                                        data-usuario="'.$opn_cumplimiento[0]["archivo_name"].'" 
-                                        style="cursor: pointer;">
-                                        <u>Ver documento</u>
-                                    </a>
-                                </p>';
+                        $cadena = '<label style="background-color: #b8ae84; padding: 5px 10px; border-radius: 25px; color: #fff">
+                                        <b>Documento fiscal cargado con éxito</b>
+                                        <a href="#" class="verPDFExtranjero" title="Documento fiscal" data-usuario="'.$opn_cumplimiento[0]["archivo_name"].'" style="color:#fff">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                        <button type="button" class="cuestionDelete" data-toggle="modal" data-target="#deleteModal" title="Eliminar documento fiscal" data-idDocumento="'.$opn_cumplimiento[0]["id_opn"].'" style="background-color: transparent; border:none;">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </label>';
                     } else if($opn_cumplimiento[0]['estatus'] == 2) {
                         $cadena = '<p style="color: #02B50C;">Documento fiscal bloqueado, hay comisiones asociadas.</p>';
                     }
@@ -241,6 +242,34 @@
                     <div class="modal-footer">
                         <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal"><b>Cerrar</b></button>
                     </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="deleteModal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form id="deleteDocumentoExtranjero" method="post">
+                        <div class="modal-header">
+                            <h3 class="modal-title">Eliminar archivo seleccionado</h3>
+                        </div>
+                        <div class="modal-body">
+                            <div class="container-fluid">
+                                <div class="row centered center-align">
+                                    <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-10">
+                                        <p class="modal-title">¿Está seguro de querer eliminar definivamente este archivo?</p>
+                                        <input type="text" class="fileToDelete" hidden/>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <br><br>
+                            <button type="submit" class="btn btn-primary">Si, borrar</button>
+                            <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal"> Cancelar </button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>

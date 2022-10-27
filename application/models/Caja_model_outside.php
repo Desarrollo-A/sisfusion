@@ -1361,8 +1361,11 @@
         (CASE 
         WHEN us.id_lider = 7092 THEN 3 
         WHEN (us.id_lider = 9471 OR us.id_lider = 681 OR us.id_lider = 609) THEN 607 
-        WHEN (us.id_lider = 5 AND us.id_sede = '11') THEN 5 
-        ELSE 0 END) id_regional
+        --WHEN (us.id_lider = 5 AND us.id_sede = '11') THEN 5 
+        ELSE 0 END) id_regional,
+		CASE us.id_sede WHEN '11' 
+		THEN (CASE us.id_lider WHEN 5 THEN 607 ELSE 5 END)
+		ELSE 0 END id_regional_2
         FROM usuarios us
         WHERE us.id_usuario IN ($id_gerente)")->result_array();
     }
