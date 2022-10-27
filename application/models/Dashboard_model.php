@@ -626,7 +626,7 @@ class Dashboard_model extends CI_Model {
                 $filtro .= " AND p.id_subdirector = $id_lider AND YEAR(p.fecha_creacion) = $year";
             }
         }
-        else if ($id_rol == 1 || $id_rol == 4 || $id_rol == 18 || $id_rol == 33 || $id_rol == 58 || $id_rol == 63 || || $id_rol == 69) // MJ: Director comercial
+        else if ($id_rol == 1 || $id_rol == 4 || $id_rol == 18 || $id_rol == 33 || $id_rol == 58 || $id_rol == 63 || $id_rol == 69) // MJ: Director comercial
 
             $filtro .= " AND YEAR(p.fecha_creacion) = $year";
         $query = $this->db->query("SELECT
