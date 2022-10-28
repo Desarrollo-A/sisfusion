@@ -747,7 +747,18 @@ function getAllFoldersPDF()
                              $datosCH['dcontrato']['idsucursalch'] = $sucursal;
         
                              $resultado = $this->Usuarios_modelo->ServicePostCH($url,$datosCH);
-                     }else if($rol_actual == 9 && $rol_seleccionado == 7){
+                     }else if($rol_actual == 7 && $rol_seleccionado == 3){
+                        //SE CAMBIO DE ASESOR A GERENTE
+
+
+                        $datosCH['dcontrato']['idpuesto'] = 3;
+                        $datosCH['dcontrato']['idgerente'] = $id_usuario;
+                        $datosCH['dcontrato']['idcoordinador'] = $id_usuario;
+                        $datosCH['dcontrato']['idsedech'] = $sedeCH;
+                        $datosCH['dcontrato']['idsucursalch'] = $sucursal;
+   
+                        $resultado = $this->Usuarios_modelo->ServicePostCH($url,$datosCH);
+                }else if($rol_actual == 9 && $rol_seleccionado == 7){
                          //SE CAMBIO DE COORDINADOR A ASESOR
                          $data = array(
                              "id_coordinador" => $id_lider,
