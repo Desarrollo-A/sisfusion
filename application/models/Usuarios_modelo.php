@@ -235,8 +235,12 @@ class Usuarios_modelo extends CI_Model {
                                         id_rol = 1 AND estatus = 1 ORDER BY nombre");
                 break;
             case '3':// GERENTE
+                $sede = '';
+                     if($headquarter == 11){
+                        $sede = " OR id_sede='3'";
+                     }
                 return $this->db->query("SELECT id_usuario, CONCAT(nombre, ' ', apellido_paterno, ' ', ISNULL(apellido_materno, '')) nombre, id_sede FROM usuarios WHERE 
-                                        id_rol = 2 AND id_sede LIKE '%".$headquarter."%' AND estatus = 1 ORDER BY nombre");
+                                        id_rol = 2 AND (id_sede LIKE '%".$headquarter."%' $sede)  AND estatus = 1 ORDER BY nombre");
                 break;
             case '4':// ASISTENTE DIRECTOR
                 return $this->db->query("SELECT id_usuario, CONCAT(nombre, ' ', apellido_paterno, ' ', ISNULL(apellido_materno, '')) nombre, id_sede FROM usuarios WHERE 
@@ -760,7 +764,18 @@ function getAllFoldersPDF()
                              $datosCH['dcontrato']['idsucursalch'] = $sucursal;
         
                              $resultado = $this->Usuarios_modelo->ServicePostCH($url,$datosCH);
-                     }else if($rol_actual == 9 && $rol_seleccionado == 7){
+                     }else if($rol_actual == 7 && $rol_seleccionado == 3){
+                        //SE CAMBIO DE ASESOR A GERENTE
+
+
+                        $datosCH['dcontrato']['idpuesto'] = 3;
+                        $datosCH['dcontrato']['idgerente'] = $id_usuario;
+                        $datosCH['dcontrato']['idcoordinador'] = $id_usuario;
+                        $datosCH['dcontrato']['idsedech'] = $sedeCH;
+                        $datosCH['dcontrato']['idsucursalch'] = $sucursal;
+   
+                        $resultado = $this->Usuarios_modelo->ServicePostCH($url,$datosCH);
+                }else if($rol_actual == 9 && $rol_seleccionado == 7){
                          //SE CAMBIO DE COORDINADOR A ASESOR
                          $data = array(
                              "id_coordinador" => $id_lider,
