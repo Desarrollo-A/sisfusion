@@ -185,7 +185,7 @@ public function getPaquetesByLotes($desarrollos,$query_superdicie,$query_tipo_lo
         inner join residenciales r on r.idResidencial=c.idResidencial
         where l.idStatusLote!=2 and r.idResidencial in($desarrollos) AND id_descuento is not null
         $query_superdicie
-        $query_tipo_lote")->result_array();
+        $query_tipo_lote ORDER BY l.id_descuento ASC")->result_array();
     }
 
     public function getPaquetesById($id_paquete){
