@@ -191,6 +191,9 @@ class Cobranza extends CI_Controller
         $this->load->view("cobranza/cobranza_reporte_master_historico", $datos);
     }
 
+    public function getComments($pago){
+        echo json_encode($this->Cobranza_model->getComments($pago)->result_array());
+    }
     public function informationMasterCobranzaHistorial() {
         $idLote = $this->input->post("idLote");
         $bandera = $this->input->post("bandera");

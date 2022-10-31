@@ -34,9 +34,7 @@
             <div class="modal-dialog modal-md modal-dialog-scrollable" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-                            <i class="material-icons" onclick="cleanCommentsAsimilados()">clear</i>
-                        </button>
+                   
                     </div>
                     <div class="modal-body">
                         <div role="tabpanel">
@@ -49,7 +47,7 @@
                                         <div class="col-md-12">
                                             <div class="card card-plain">
                                                 <div class="card-content">
-                                                    <ul class="timeline timeline-simple" id="comments-list-asimilados"></ul>
+                                                    <ul class="timeli1ne timeline-simple" id="comments-list-asimilados"></ul>
                                                 </div>
                                             </div>
                                         </div>
@@ -118,14 +116,14 @@
                                                     <th title="ID LOTE">ID LOTE</th>
                                                     <th title="LOTE">LOTE</th>
                                                     <th title="REFERENCIA LOTE">REFERENCIA LOTE</th>
+
                                                     <th title="PRECIO LOTE">PRECIO LOTE</th>
                                                     <th title="TOTAL COMISIÓN">TOTAL COMISIÓN</th>
-                                            
                                                     <th title="FECHA DE APARTADO">FECHA DE APARTADO</th>
                                                     <th title="ESTATUS CONTRATACIÓN">ESTATUS CONTRATACIÓN</th>
                                                     <th title="ESTATUS COMISIÓN">ESTATUS COMISIÓN</th>
+
                                                     <th title="ESTATUS VENTA/LOTE">ESTATUS VENTA/LOTE</th>
-                                                   
                                                     <th title="DISPERSADO POR MES">PAGO DEL MES</th>
                                                     <th title="DISPERSADO">DISPERSADO</th>
                                                     <th title="PAGO HISTÓRICO">PAGO HISTÓRICO </th>
@@ -134,7 +132,9 @@
                                                     <th title="USUARIO">USUARIO</th>
                                                     <th title="PUESTO">PUESTO</th>
                                                     <th title="PLAZA">PLAZA</th>
+
                                                     <th title="LUGAR DE PROSPECCION">LUGAR DE PROSPECCION</th>
+                                                    <th title="MAS">MÁS</th>
                                                 </tr>
                                                 </thead>
                                             </table>

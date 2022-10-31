@@ -226,7 +226,7 @@ class Cobranza_model extends CI_Model {
         FORMAT(ISNULL(pci1.pago_neodata, '0.00'), 'C') pago_neodata , 
         FORMAT(ISNULL( pci2.abono_pagado , '0.00'), 'C') pagado ,
          FORMAT(ISNULL(com.comision_total-pci2.abono_pagado , '0.00'),'C') restantes, 
-        com.porcentaje_decimal,  UPPER(s.nombre) plaza,
+        com.porcentaje_decimal,  UPPER(s.nombre) plaza, UPPER(s3.nombre) plazaB,
         pci1.estatus,  cl.fechaApartado  , pci1.fecha_abono fecha_abono,
         CONCAT(u.nombre, ' ',u.apellido_paterno, ' ', u.apellido_materno) user_names ,pci1.id_usuario, oprol.nombre as puesto, u.estatus as estatus_usuario, 
         oxcest.nombre as estatus_actual_comision,slo.nombre as estatus_lote,slo.color as color_lote , oxcest.id_opcion id_estatus_actual,
@@ -253,15 +253,39 @@ class Cobranza_model extends CI_Model {
         LEFT JOIN evidencia_cliente ec ON ec.idLote = lo.idLote AND ec.idCliente = lo.idCliente
         INNER JOIN opcs_x_cats oxcest ON oxcest.id_opcion = pci1.estatus AND oxcest.id_catalogo = 23
         LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = cl.lugar_prospeccion AND oxc.id_catalogo = 9
-        LEFT JOIN sedes s ON lo.ubicacion_dos = s.id_sede 
+        LEFT JOIN sedes s ON lo.ubicacion  = s.id_sede 
+        LEFT JOIN sedes s3 ON lo.ubicacion = s3.id_sede 
         LEFT JOIN statuslote slo ON slo.idStatusLote = lo.idStatusLote
         $query2 
         GROUP BY pci1.id_comision, lo.idLote ,lo.nombreLote, co.nombre, lo.totalNeto2, com.comision_total,pac.bandera ,
         com.porcentaje_decimal, pci1.abono_neodata, pci1.pago_neodata, pci2.abono_pagado, pci1.estatus, cl.fechaApartado ,  pci1.fecha_abono,
         pci1.id_usuario, pci1.id_pago_i, u.nombre, u.apellido_paterno, u.apellido_materno, oprol.nombre, oxcest.nombre, oxcest.id_opcion, 
-        pci1.descuento_aplicado, lo.idStatusContratacion,oxc.nombre , lo.referencia, com.estatus, u.estatus,pac.total_comision, oxcest.color ,slo.nombre ,slo.color,s.nombre ORDER BY lo.nombreLote";
+        pci1.descuento_aplicado, lo.idStatusContratacion,oxc.nombre , lo.referencia, com.estatus, u.estatus,pac.total_comision, oxcest.color ,slo.nombre ,slo.color,s.nombre, s3.nombre  ORDER BY lo.nombreLote";
 
         return $this->db->query($cmd);
     }
+    
+     function getComments($pago){
+    //     return $this->db->query("SELECT DISTINCT(hc.comentario), hc.id_pago_i, hc.id_usuario, hc.fecha_movimiento,
+    // CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombre_usuario
+    // FROM historial_comisiones hc 
+    // INNER JOIN pago_comision_ind pci ON pci.id_pago_i = hc.id_pago_i
+    // INNER JOIN usuarios u ON u.id_usuario = hc.id_usuario 
+    // WHERE hc.id_pago_i = $pago  
+    // ORDER BY hc.fecha_movimiento DESC");
+    $this->db->query("SET LANGUAGE Español;");
+    return $this->db->query("SELECT DISTINCT(hc.comentario), hc.id_pago_i, hc.id_usuario, 
+    convert(nvarchar(20), hc.fecha_movimiento, 113) date_final,
+    hc.fecha_movimiento,
+    CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombre_usuario
+    FROM historial_comisiones hc 
+    INNER JOIN pago_comision_ind pci ON pci.id_pago_i = hc.id_pago_i
+    INNER JOIN usuarios u ON u.id_usuario = hc.id_usuario 
+    WHERE hc.id_pago_i = $pago
+    ORDER BY hc.fecha_movimiento DESC");
+    
+    
+    }
+    
 
 }
