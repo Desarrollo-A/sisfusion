@@ -1297,8 +1297,8 @@ gerente2.nombreGerente as gerente2, gerente3.nombreGerente as gerente3, gerente4
         lotes.modificado, CAST(lotes.comentario AS varchar(MAX)), lotes.fechaVenc, lotes.perfil,
         residencial.nombreResidencial, cond.nombre, lotes.ubicacion, lotes.tipo_venta,
         cl.id_gerente, cl.id_coordinador, concat(us.nombre,' ', us.apellido_paterno, ' ', us.apellido_materno),
-        concat(ge.nombre,' ', ge.apellido_paterno,' ', ge.apellido_materno), idAsesor, lotes.fechaSolicitudValidacion, lotes.firmaRL, lotes.validacionEnganche, lotes.referencia");
-		
+        concat(ge.nombre,' ', ge.apellido_paterno,' ', ge.apellido_materno), idAsesor, lotes.fechaSolicitudValidacion, lotes.firmaRL, lotes.validacionEnganche, lotes.referencia
+		ORDER BY lotes.nombreLote");
 		return $query->result();
 	}
 

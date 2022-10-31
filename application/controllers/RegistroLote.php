@@ -5909,13 +5909,13 @@
             '37' => "8. Contrato entregado al asesor para firma del cliente (Asistentes de Gerentes)",
             '7' => "8. Contrato entregado al asesor para firma del cliente (Asistentes de Gerentes)",
             '77' => "8. Contrato entregado al asesor para firma del cliente (Asistentes de Gerentes)",
-            '38' => "9. Contrato recibido con firma de cliente (Contraloría)",
+            '38' => "9. Contrato recibido con firma de cliente (Contraloría)",//
             '65' => "9. Contrato recibido con firma de cliente (Contraloría)",
             '39' => "10. Solicitud de validación de enganche y envio de contrato a RL (Contraloría)",
             '26' => "10. Solicitud de validación de enganche y envio de contrato a RL (Contraloría)",
             '40' => "11. Validación de enganche (Administración)",
             '10' => "11. Validación de enganche (Administración)",
-            '41' => "12. Contrato firmado (Representante Legal)",
+            '41' => "12. Contrato firmado (Representante Legal)",//vista 8 y 11
             '42' => "13. Contrato listo y entregado asesores (Contraloría)",
             '43' => "14. Firma Acuse cliente (Asistentes Gerentes)",
             '44' => "15. Acuse entregado (Contraloría)",
@@ -5925,9 +5925,7 @@
             '66' => "8. Contrato entregado al asesor para firma del cliente (Asistentes de Gerentes)",
             '67' => "11. Validación de enganche (Administración)",
             '68' => "14. Firma Acuse cliente (Asistentes Gerentes)",
-			'711' => "8. Contrato entregado al asesor para firma del cliente (Asistentes de Gerentes) <br> 11. Validación de enganche (Administración)",
-			'011' => "11. Validación de enganche (Administración)",
-			'700' => "8. Contrato entregado al asesor para firma del cliente (Asistentes de Gerentes)");
+			'711' => "8. Contrato entregado al asesor para firma del cliente (Asistentes de Gerentes) <br> 11. Validación de enganche (Administración)");
 			if(!isset($ProcContr[$idMov])){
 				return('Not Set: '.$idMov);
 			}
@@ -5977,12 +5975,16 @@
 			$datos[$i]['fechaApartado'] = $data[$i]->fechaApartado;
 			$datos[$i]['descripcion'] = $data[$i]->descripcion;
 			//$datos[$i]['procesoContratacion'] = $data[$i]->procesoContratacion;
-			if($data[$i]->idStatusContratacion == 7 && $data[$i]->status8Flag == 0 && (IS_NULL($data[$i]->totalValidado) || $data[$i]->totalValidado == 0 || $data[$i]->totalValidado == '')){
+			
+			//Status 7 que podria pasar a status 8 u 11.
+			if($data[$i]->idStatusContratacion == 7 && $data[$i]->status8Flag == 0 && (IS_NULL($data[$i]->validacionEnganche) || $data[$i]->validacionEnganche == 'NULL' || $data[$i]->validacionEnganche == '')){
 				$datos[$i]['procesoContratacion'] = $this->Procesos_Status('711');
-			}elseif($data[$i]->idStatusContratacion == 7 && $data[$i]->status8Flag == 1 && (IS_NULL($data[$i]->totalValidado) || $data[$i]->totalValidado == 0 || $data[$i]->totalValidado == '')){
-				$datos[$i]['procesoContratacion'] = $this->Procesos_Status('011');
-			}elseif ($data[$i]->idStatusContratacion == 7 && $data[$i]->status8Flag == 0 && (!IS_NULL($data[$i]->totalValidado) || $data[$i]->totalValidado != 0 || $data[$i]->totalValidado != '')) {
-				$datos[$i]['procesoContratacion'] = $this->Procesos_Status('700');
+			//Status 7 u 11 que pudieran pasar a un status 8.
+			}elseif( ($data[$i]->idStatusContratacion == 7 || $data[$i]->idStatusContratacion == 11) && (in_array($data[$i]->idMovimiento, array("37","7","64","66", "77", "41"))) && ($data[$i]->status8Flag == 0)){
+				$datos[$i]['procesoContratacion'] = $this->Procesos_Status('37');
+			//Status 8, 10, 12, 7 que pudieran pasar a un status 11
+			}elseif( (in_array($data[$i]->idStatusContratacion, array("8", "10", "12", "7"))) && (in_array($data[$i]->idMovimiento, array("40", "10", "67", "42", "37", "7", "64", "77", "38", "65", "67"))) && ($data[$i]->validacionEnganche == 'NULL' || IS_NULL($data[$i]->validacionEnganche)) ){
+				$datos[$i]['procesoContratacion'] = $this->Procesos_Status('40');
 			}else {
 				$datos[$i]['procesoContratacion'] = $this->Procesos_Status($data[$i]->idMovimiento);
 			}
