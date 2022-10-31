@@ -87,7 +87,7 @@ function fillTable(idLote, beginDate, endDate, bandera ) {
                 className: 'btn buttons-excel',
                 titleAttr: 'Descargar archivo de Excel',
                 exportOptions: {
-                    columns: [ 0, 1, 2, 3, 4 ,5, 6,7, 8, 9, 10, 11, 12, 13, 14, 15 , 16, 17,18,19,20],
+                    columns: [ 0, 1, 2, 3, 4 ,5, 6,7, 8, 9, 10, 11, 12, 13, 14, 15 , 16, 17],
                     format: {
                         header: function ( data , columnIdx) {
                             switch (columnIdx) {
@@ -109,47 +109,41 @@ function fillTable(idLote, beginDate, endDate, bandera ) {
                                  case 5 : 
                                     return 'Total comisión';
                                     break;
-                                case 6 : 
-                                    return 'Pago cliente';
-                                    break;
-                                case 7 :
+                                case 6 :
                                     return 'Fecha de apartado';
                                     break;  
-                                case 8 :
+                                case 7 :
                                     return 'Estatus contratacion';
                                 break; 
-                                case 9 :
+                                case 8 :
                                     return 'Estatus comision';
                                     break;
-                                case 10 :
+                                case 9 :
                                     return 'Estatus venta';
                                     break;
-                                case 11: 
-                                    return 'Estatus pago comision';
+                                case 10: 
+                                    return 'Pago mes';
                                     break;
-                                case 12:
+                                case 11:
                                     return 'Dispersado del mes';
                                     break;
-                                case 13:
+                                case 12:
                                     return 'Pago historico';
                                     break;
-                                case 14:
+                                case 13:
                                     return 'Pendiente';
                                     break;
-                                case 15 :
+                                case 14 :
                                     return 'Usuario ';
                                     break;
-                                case 16 :
+                                case 15 :
                                         return ' Puesto';
                                     break;
-                                case 17 :
+                                case 16 :
                                     return 'Plaza';
                                     break;
-                                case 18: 
+                                case 17: 
                                     return 'Lugar de prospección';
-                                    break;
-                                case 19: 
-                                    return 'Detalle';
                                     break;
                               
                             }
