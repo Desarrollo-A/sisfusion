@@ -76,7 +76,7 @@
                             </div>
                             <div class="toolbar">
                                 <div class="row">
-                                    <div class="col-12 col-sm-12 col-md-12 col-lg-6">
+                                    <div class="col-12 col-sm-12 col-md-12 col-lg-12">
                                         <div class="form-group">
                                             <label for="proyecto">Puesto:</label>
                                             <select name="filtro33" id="filtro33" class="selectpicker select-gral" data-style="btn " data-show-subtext="true" data-live-search="true"  title="Selecciona puesto" data-size="7" required> <option value="0">Seleccione todo</option>
@@ -106,7 +106,7 @@
                                                 <th>ABONO </th>
                                                 <th>SEDE</th>
                                                 
-                                                <th>CREADO</th>
+                                                <th>MOTIVO</th>
                                             </tr>
                                             </thead>
                                         </table>
