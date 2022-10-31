@@ -253,7 +253,7 @@ class Cobranza_model extends CI_Model {
         LEFT JOIN evidencia_cliente ec ON ec.idLote = lo.idLote AND ec.idCliente = lo.idCliente
         INNER JOIN opcs_x_cats oxcest ON oxcest.id_opcion = pci1.estatus AND oxcest.id_catalogo = 23
         LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = cl.lugar_prospeccion AND oxc.id_catalogo = 9
-        INNER JOIN sedes s ON lo.ubicacion_dos = s.id_sede 
+        LEFT JOIN sedes s ON lo.ubicacion_dos = s.id_sede 
         LEFT JOIN statuslote slo ON slo.idStatusLote = lo.idStatusLote
         $query2 
         GROUP BY pci1.id_comision, lo.idLote ,lo.nombreLote, co.nombre, lo.totalNeto2, com.comision_total,pac.bandera ,
