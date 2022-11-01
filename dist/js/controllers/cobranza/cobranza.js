@@ -59,7 +59,7 @@ sp = { // MJ: SELECT PICKER
 
 $('#cobranzaHistorial thead tr:eq(0) th').each(function (i) {
     const title = $(this).text();
-    if ( i != 18 ){
+    if ( i != 20 ){
         $(this).html('<input type="text" class="textoshead"  placeholder="' + title + '"/>');
         $('input', this).on('keyup change', function () {
             if ($("#cobranzaHistorial").DataTable().column(i).search() !== this.value) {
@@ -74,7 +74,7 @@ $('#cobranzaHistorial thead tr:eq(0) th').each(function (i) {
 
 function fillTable(idLote, beginDate, endDate, bandera ) {
 
-   // let encabezado = (document.querySelector('#cobranzaHistorial .encabezado .textoshead').placeholder).toUpperCase();
+     let encabezado = (document.querySelector('#cobranzaHistorial .encabezado .textoshead').placeholder).toUpperCase();
     generalDataTable = $('#cobranzaHistorial').dataTable({
         dom: 'Brt'+ "<'row'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'i><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>",
         width: "auto",
@@ -85,7 +85,7 @@ function fillTable(idLote, beginDate, endDate, bandera ) {
                 className: 'btn buttons-excel',
                 titleAttr: 'Descargar archivo de Excel',
                 exportOptions: {
-                    columns: [ 0, 1, 2, 3, 4 ,5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16,17,18],
+                    columns: [ 0, 1, 2, 3, 4 ,5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16,17,18,19 ],
                     format: {
                         header: function ( data , columnIdx) {
                             switch (columnIdx) {
@@ -143,7 +143,12 @@ function fillTable(idLote, beginDate, endDate, bandera ) {
                                 case 17: 
                                     return 'Lugar de prospección';
                                     break;
-                              
+                                case 18: 
+                                    return 'Lugar de prospección';
+                                    break;
+                                case 19: 
+                                    return 'Lugar de prospección';
+                                    break;
                             }
                             
                         }
@@ -206,85 +211,139 @@ function fillTable(idLote, beginDate, endDate, bandera ) {
             },
             {
                 data: function(data){
-                    return data.fechaApartado;
+                    return data.pago_neodata;
          //6
                 }
             }, 
             {
                 data: function(data){
-            //7
+                    return data.fechaApartado;
+         //7
+                }
+            }, 
+        //     {
+        //         data: function(data){
+        //             return data.fecha_abono;
+        //  //8
+        //         }
+        //     },
+
+            {
+                data: function(data){
+            //9
                     return data.idStatusContratacion;
                 }
             }, {
                 data: function (data){
-             //8
+             //10//estatus comision
                     labelStatus = '<span class="label" style="background:'+data.color+';"> '+data.estatus_actual_comision+'</span>';
                     return labelStatus;
                   
                 }
             }, {
+                //11
+                data: function (d) {
+                    var labelStatus;
+                    if(d.rec == 8){
+                            labelStatus = '<span class="label" style="background:#3498DB;">RECISIÓN DE CONTRATO</span>';
+                    }else{
+
+                    switch (d.registroComision) {
+                        case 0:
+                        case '0':
+                        case 2:
+                        case '2':
+                            labelStatus = '<span class="label" style="background:#27AE60;">SIN DISPERSAR</span>';
+                            break;
+                        case 7:
+                        case '7':
+                            labelStatus = '<span class="label" style="background:#CD6155;">LIQUIDADA</span>';
+                            break;
+                        case 8:
+                        case '8':
+                        case 88:
+                        case '88':
+                            labelStatus = '<span class="label" style="background:#3498DB;">RECISIÓN DE CONTRATO</span>';
+                            break;
+                        case 1:
+                        case '1':
+                        default:
+                            labelStatus = '<span class="label" style="background:#AE2798FF;">ACTIVA</span>';
+                            break;
+                    }
+                }
+                    return labelStatus;
+                }
+            }, {
                 data: function (data){
-                //9
+                //12
                     labelStatus = '<span class="label" style="background:#'+data.color_lote+';"> '+data.estatus_lote+'</span>';
                     return labelStatus;
                     
                 }
             },{
-                //10
+                //13
                 data: function  (data){
                     return data.pago_cliente;
                 }
             },{
-                //11
-                data: function  (data){
-                    return data.pago_neodata;
-                }
-            },{
-                //12
+                //14
                 data: function (data){
                     return data.pagado;
                 }
             },
             {
-                //13
-                data : function (data){
-                    return data.restantes;
-                } 
+                //15
+                data: function( data ){
+                    if(data.restante==null||data.restante==''){
+                        return '<p class="m-0">$'+formatMoney(data.comision_total)+'</p>';
+                    }
+                    else{
+                        return '<p class="m-0">$'+formatMoney(data.restante)+'</p>';
+                    }
+                }
 
             }, 
             {
                 data: function (data ){
                     return data.user_names;
-                //14
+                //16
                 }
             },
             {
                 data: function (data ){
                     return  data.puesto;
-                //15
+                //17
                 }
             }, {
                 data: function (data ){
                     let  respuesta = '' ; 
                     if(data.plaza != null){
                         respuesta = data.plaza;
-                    }else if(data.plazaB != NULL) {
+                    }else if(data.plazaB != null) {
                         respuesta = data.plazaB;
                     }else{
-                        respuesta = 'No definido';
+                        respuesta = 'No definidos';
                     }
                     return respuesta;
-                //16
+                //18
                 }
             }, {
                 data: function (data ){
-                    
-                    return data.lugar_prospeccion;
-                //17
+                    let respuesta ='';
+                    if(data.lugar_prospeccion != null){
+                         
+                        respuesta  = data.lugar_prospeccion;
+
+                    }else {
+                        respuesta  = 'No definido';
+                    }
+                    return respuesta;
+                //19
                 }
             },
             {
-                //18
+                //20
                 data: function (data){
                     return '<button value="'+data.id_pago_i+'" data-value="'+data.nombreLote+'"  class="btn-data btn-blueMaderas m-auto consultar_history " title="Detalles">' +'<i class="fas fa-info"></i></button>';
  
