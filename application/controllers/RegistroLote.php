@@ -5881,9 +5881,9 @@
 		$this->load->view("contratacion/datos_finalStatus_view",$datos);
 	}
 
-	public function Procesos_Status ($idMov){
-        $ProcContr = array(
-            '31' => "2. Recepción de Expediente (ventas-asesor)",
+	public function Procesos_Status($idStatus, $idMov){
+        /*$ProcContr = array(
+            /*'31' => "2. Recepción de Expediente (ventas-asesor)",
             '85' => "2. Recepción de Expediente (ventas-asesor)",
             '82' => "2. Recepción de Expediente (ventas-asesor)",
             '83' => "7. Contrato elaborado (Jurídico)",
@@ -5924,16 +5924,93 @@
             '73' => "2. Integración de Expediente (Contraloría)",
             '66' => "8. Contrato entregado al asesor para firma del cliente (Asistentes de Gerentes)",
             '67' => "11. Validación de enganche (Administración)",
-            '68' => "14. Firma Acuse cliente (Asistentes Gerentes)",
-			'711' => "8. Contrato entregado al asesor para firma del cliente (Asistentes de Gerentes) <br> 11. Validación de enganche (Administración)");
-			if(!isset($ProcContr[$idMov])){
-				return('Not Set: '.$idMov);
+            '68' => "14. Firma Acuse cliente (Asistentes Gerentes)",*/
+			/*
+			'37,7,64,66,77,41' => '8.Contratoentregadoalasesorparafirmadelcliente(AsistentesdeGerentes)',
+			'40,10,67' => '11.Validacióndeenganche(Administración)',
+			'37,7,67,77' => '11.Validacióndeenganche(Administración)',
+			'38,65,67' => '11.Validacióndeenganche(Administración)',
+			'42' => '11.Validacióndeenganche(Administración)',
+			'4,74,84,93' => '5.Revisión100%(Contraloria)',
+			'35,22,62,75,94' => '6.Corridaelaborada(Contraloría)',
+			'36,6,76,83,95,97' => '7.Contratoelaborado(Jurídico)',
+			'23' => '7.ElaboracióndeContrato(Jurídico)',
+			'38,65,41' => '9.Contratorecibidoconfirmadecliente(Contraloría)',
+			'39' => '10.SolicituddevalidacióndeengancheyenviodecontratoaRL(Contraloría)',
+			'40' => '12.Contratofirmado(RepresentanteLegal)//vista8y11',
+			'42,41,40' => '13.Contratolistoyentregadoasesores(Contraloría)',
+			'43,68' => '14.FirmaAcusecliente(AsistentesGerentes)',
+			'44,69,80' => '15.Acuseentregado(Contraloría)',
+			'711' => "8. Contrato entregado al asesor para firma del cliente (Asistentes de Gerentes) <br> 11. Validación de enganche (Administración)");*/
+		$Control_Pro = array(
+			"IdStatusContratacion"	=>	array(
+				'1,2,3',
+				'1,2',
+				'2',
+				'3,2',
+				'2',
+				'5,2',
+				'6,7',
+				'6,7',
+				'8,11',
+				'9',
+				'10',
+				'12,11,10',
+				'13',
+				'14',
+				'15', 
+				'711',
+				'700',
+				'011'),
+			"IdMovimineto"			=>	array(
+				'31,85,82',
+				'18,20,84,19,63,73',
+				'2,32',
+				'33,3',
+				'4,74,84,93',
+				'35,22,62,75,94',
+				'36,6,76,83,95,97',
+				'23',
+				'38,65,41',
+				'39',
+				'40',
+				'42,41,40',
+				'43,68',
+				'44,69,80',
+				'45',
+				'37,7,64,66,77,41,40,10,67,38,65,42',
+				'37,7,64,66,77,41',
+				'40,10,37,7,38,65,67,42'),
+			"ProcContra"			=>	array(
+				'2. Recepción de Expediente (ventas-asesor)',
+				'2. Integración de Expediente (Contraloría)',
+				'3. Revisión Jurídico (Jurídico)',
+				'4. Datos Verificados (Postventa)',
+				'5.Revisión100%(Contraloria)',
+				'6.Corridaelaborada(Contraloría)',
+				'7.Contratoelaborado(Jurídico)',
+				'7.ElaboracióndeContrato(Jurídico)',
+				'9.Contratorecibidoconfirmadecliente(Contraloría)',
+				'10.SolicituddevalidacióndeengancheyenviodecontratoaRL(Contraloría)',
+				'12.Contratofirmado(RepresentanteLegal)//vista8y11',
+				'13.Contratolistoyentregadoasesores(Contraloría)',
+				'14.FirmaAcusecliente(AsistentesGerentes)',
+				'15.Acuseentregado(Contraloría)',
+				'LOTE CONTRATADO',
+				'8. Contrato entregado al asesor para firma del cliente (Asistentes de Gerentes) <br> 11. Validación de enganche (Administración)',
+				'8.Contratoentregadoalasesorparafirmadelcliente(AsistentesdeGerentes)',
+				'11.Validacióndeenganche(Administración)')
+		);
+		for ($i=0; $i < count($Control_Pro["IdStatusContratacion"]); $i++) { 
+			if(preg_match("/\b".(string)$idStatus."\b/", $Control_Pro["IdStatusContratacion"][$i])){//(strpos($Control_Pro["IdStatusContratacion"][$i], (string)$prueba) !== false){
+				if(preg_match("/\b".(string)$idMov."\b/", $Control_Pro["IdMovimineto"][$i])){
+					return $Control_Pro["ProcContra"][$i];
+				}
 			}
-			else{
-				return $ProcContr[$idMov];
-			}
-    }
-
+		}
+		return('Not Set: '.$idMov);
+		
+	}
 	public function getFinalStatus()
 	{
 		$datos = array();
@@ -5974,10 +6051,46 @@
 			$datos[$i]['sup'] = $data[$i]->sup;
 			$datos[$i]['fechaApartado'] = $data[$i]->fechaApartado;
 			$datos[$i]['descripcion'] = $data[$i]->descripcion;
-			//$datos[$i]['procesoContratacion'] = $data[$i]->procesoContratacion;
-			
-			//Status 7 que podria pasar a status 8 u 11.
 			if($data[$i]->idStatusContratacion == 7 && $data[$i]->status8Flag == 0 && (IS_NULL($data[$i]->validacionEnganche) || $data[$i]->validacionEnganche == 'NULL' || $data[$i]->validacionEnganche == '')){
+				$datos[$i]['procesoContratacion'] = $this->Procesos_Status('711', $data[$i]->idMovimiento);
+			}elseif ((in_array($data[$i]->idStatusContratacion, array("7","11"))) && $data[$i]->status8Flag == 0 && (!IS_NULL($data[$i]->validacionEnganche) || $data[$i]->validacionEnganche != 'NULL' || $data[$i]->validacionEnganche != '')) {
+				$datos[$i]['procesoContratacion'] = $this->Procesos_Status('700', $data[$i]->idMovimiento);
+			}elseif ((in_array($data[$i]->idStatusContratacion, array("8","10","7","12"))) && $data[$i]->status8Flag != 0 && (IS_NULL($data[$i]->validacionEnganche) || $data[$i]->validacionEnganche == 'NULL' || $data[$i]->validacionEnganche == '')) {
+				$datos[$i]['procesoContratacion'] = $this->Procesos_Status('011', $data[$i]->idMovimiento);
+			}else{
+				$datos[$i]['procesoContratacion'] = $this->Procesos_Status($data[$i]->idStatusContratacion, $data[$i]->idMovimiento);
+			}
+			//$datos[$i]['procesoContratacion'] = $data[$i]->procesoContratacion;
+			/*if(in_array($data[$i]->idStatusContratacion, array("2")) && (in_array($data[$i]->idMovimiento, array("4", "74", "84", "93"))) ){
+				$datos[$i]['procesoContratacion'] = '5. Revisión 100% (Contraloria)';
+			}elseif( (in_array($data[$i]->idStatusContratacion, array("5", "2"))) && (in_array($data[$i]->idMovimiento, array("35", "22", "62", "75", "94")))){
+				$datos[$i]['procesoContratacion'] = '6. Corrida elaborada (Contraloría)';
+			}elseif( (in_array($data[$i]->idStatusContratacion, array("6", "7"))) && (in_array($data[$i]->idMovimiento, array("36", "6", "76", "83", "95", "97"))) ){
+				$datos[$i]['procesoContratacion'] = '7. Contrato elaborado (Jurídico)';
+			}elseif( (in_array($data[$i]->idStatusContratacion, array("6", "7"))) && (in_array($data[$i]->idMovimiento, array("23") )) ){
+				$datos[$i]['procesoContratacion'] = '7. Elaboración de Contrato (Jurídico)';
+			}elseif( (in_array($data[$i]->idStatusContratacion, array("7","11", "8", "10", "12"))) && (in_array($data[$i]->idMovimiento, array("37", "7", "64", "66", "77", "41", "40", "10", "67", "38", "65", "42"))) && $data[$i]->status8Flag == 0 && (IS_NULL($data[$i]->validacionEnganche) || $data[$i]->validacionEnganche == 'NULL' || $data[$i]->validacionEnganche == '')){//Status 7 que podria pasar a status 8 u 11.
+				$datos[$i]['procesoContratacion'] = '8. Contrato entregado al asesor para firma del cliente (Asistentes de Gerentes) <br> 11. Validación de enganche (Administración)';
+			}elseif ( (in_array($data[$i]->idStatusContratacion, array("7","11"))) && (in_array($data[$i]->idMovimiento, array("37", "7", "64", "66", "77", "41"))) && ($data[$i]->status8Flag == 0) && (!IS_NULL($data[$i]->validacionEnganche) || $data[$i]->validacionEnganche != 'NULL') ){
+				$datos[$i]['procesoContratacion'] = '8. Contrato entregado al asesor para firma del cliente (Asistentes de Gerentes)';
+			}elseif ( (in_array($data[$i]->idStatusContratacion, array("8", "10", "7", "12"))) && (in_array($data[$i]->idMovimiento, array("40", "10", "67", "37", "7", "67", "77", "38", "65", "67", "42"))) && ($data[$i]->status8Flag != 0) && (IS_NULL($data[$i]->validacionEnganche) || $data[$i]->validacionEnganche == 'NULL' || $data[$i]->validacionEnganche == '')) {
+				$datos[$i]['procesoContratacion'] = '11. Validación de enganche (Administración)';
+			}elseif ( (in_array($data[$i]->idStatusContratacion, array("8", "11"))) && (in_array($data[$i]->idMovimiento, array("38", "65", "41"))) && ($data[$i]->status8Flag != 0) && (!IS_NULL($data[$i]->validacionEnganche) || $data[$i]->validacionEnganche != 'NULL') ) {
+				$datos[$i]['procesoContratacion'] = '9. Contrato recibido con firma de cliente (Contraloría)';
+			}elseif ( (in_array($data[$i]->idStatusContratacion, array("9"))) && (in_array($data[$i]->idMovimiento, array("39"))) ) {
+				$datos[$i]['procesoContratacion'] = '10. Solicitud de validación de enganche y envio de contrato a RL (Contraloría)';
+			}elseif ( (in_array($data[$i]->idStatusContratacion, array("10"))) && (in_array($data[$i]->idMovimiento, array("40"))) ) {
+				$datos[$i]['procesoContratacion'] = '12. Contrato firmado (Representante Legal)';
+			}elseif ((in_array($data[$i]->idStatusContratacion, array("12", "11", "10"))) && (in_array($data[$i]->idMovimiento, array("42", "41", "40")))) {
+				$datos[$i]['procesoContratacion'] = '13. Contrato listo y entregado asesores (Contraloría)';
+			}elseif ( (in_array($data[$i]->idStatusContratacion, array("13"))) && (in_array($data[$i]->idMovimiento, array("43", "68"))) ) {
+				$datos[$i]['procesoContratacion'] = '14. Firma Acuse cliente (Asistentes Gerentes)';
+			}elseif ( (in_array($data[$i]->idStatusContratacion, array("14"))) && (in_array($data[$i]->idMovimiento, array("44", "69", "80"))) ) {
+				$datos[$i]['procesoContratacion'] = '15. Acuse entregado (Contraloría)';
+			}else{
+				$datos[$i]['procesoContratacion'] = $this->Procesos_Status($data[$i]->idMovimiento);
+			}*/
+			/*if($data[$i]->idStatusContratacion == 7 && $data[$i]->status8Flag == 0 && (IS_NULL($data[$i]->validacionEnganche) || $data[$i]->validacionEnganche == 'NULL' || $data[$i]->validacionEnganche == '')){
 				$datos[$i]['procesoContratacion'] = $this->Procesos_Status('711');
 			//Status 7 u 11 que pudieran pasar a un status 8.
 			}elseif( ($data[$i]->idStatusContratacion == 7 || $data[$i]->idStatusContratacion == 11) && (in_array($data[$i]->idMovimiento, array("37","7","64","66", "77", "41"))) && ($data[$i]->status8Flag == 0)){
@@ -5987,7 +6100,7 @@
 				$datos[$i]['procesoContratacion'] = $this->Procesos_Status('40');
 			}else {
 				$datos[$i]['procesoContratacion'] = $this->Procesos_Status($data[$i]->idMovimiento);
-			}
+			}*/
 
 			/*echo "status->".$data[$i]->descripcion."==>".(strrpos($data[$i]->descripcion, 'status'))."\n";
 			preg_match("/[0-9]/", $data[$i]->descripcion,$matches);

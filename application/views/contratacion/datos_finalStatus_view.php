@@ -253,7 +253,7 @@
 					}
 				},
 				{
-					width:'35%',
+					width:'5%',
 					data: 'procesoContratacion',
 					defaultContent: '<i>Not set</i>'
 
