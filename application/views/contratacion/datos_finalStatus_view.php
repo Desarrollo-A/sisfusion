@@ -253,6 +253,7 @@
 					}
 				},
 				{
+					width:'5%',
 					data: 'procesoContratacion',
 					defaultContent: '<i>Not set</i>'
 
@@ -274,6 +275,7 @@
 				{data: 'comentario'},
 				{
 					// data: 'fechaVencimiento'
+					width:'15%',
 					data : function(data)
 					{
 						if(data.fechaVencimiento==null || data.fechaVencimiento=="")
