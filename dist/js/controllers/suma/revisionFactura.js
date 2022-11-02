@@ -1,3 +1,5 @@
+var totaPen = 0;
+
 $('#tabla_factura thead tr:eq(0) th').each( function (i) {
     if(i != 0){
         var title = $(this).text();
@@ -34,6 +36,29 @@ $('#tabla_factura').on('xhr.dt', function(e, settings, json, xhr) {
     var to = formatMoney(total);
     document.getElementById("totpagarfactura").textContent = '$' + to;
 });
+
+$(document).on("click", ".individualCheck", function() {
+    tr = $(this).closest('tr');
+    var row = tabla_factura.row(tr).data();
+
+    if ($(this).prop('checked')) totaPen += parseFloat(row.impuesto);
+    else totaPen -= parseFloat(row.impuesto);
+
+    $("#totpagarPen").html('$ ' + formatMoney(totaPen));
+});
+
+function selectAll(e) {
+    tota2 = 0;
+    $(tabla_factura.$('input[type="checkbox"]')).each(function (i, v) {
+        if (!$(this).prop("checked")) {
+            $(this).prop("checked", true);
+            tota2 += parseFloat(tabla_factura.row($(this).closest('tr')).data().impuesto);
+        } else {
+            $(this).prop("checked", false);
+        }
+        $("#totpagarPen").html('$' + formatMoney(tota2));
+    });
+}
 
 tabla_factura = $("#tabla_factura").DataTable({
     dom: 'Brt'+ "<'row'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'i><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>",
@@ -210,7 +235,7 @@ tabla_factura = $("#tabla_factura").DataTable({
         render: function (d, type, full, meta){
             if(full.estatus == 2){
                 if(full.referencia){
-                    return '<input type="checkbox" name="idTQ[]" style="width:20px;height:20px;"  value="' + full.id_pago_suma + '">';
+                    return '<input type="checkbox" name="idTQ[]" class="individualCheck" style="width:20px;height:20px;"  value="' + full.id_pago_suma + '">';
                 }
                 else{
                     return '';
@@ -226,8 +251,9 @@ tabla_factura = $("#tabla_factura").DataTable({
         },
     }],
     ajax: {
-        url: general_base_url + "Suma/getFacturaRevision",
+        url: general_base_url + "Suma/getRevision",
         type: "POST",
+        data: { formaPago: '2'},
         dataType: 'json',
         dataSrc: ""
     },
@@ -282,7 +308,7 @@ $("#tabla_factura tbody").on("click", ".cambiar_estatus", function(){
             success: function(data){
                 if(data){
                     $("#modal_nuevas").modal('toggle' );
-                    alerts.showNotification("top", "right", "Se ha pausado la comisión exitosamente", "success");
+                    alerts.showNotification("top", "right", "Se ha procesado la solicitud exitosamente", "success");
                     setTimeout(function() {
                         tabla_factura.ajax.reload();
                     }, 3000);

@@ -627,8 +627,12 @@ class Contraloria_model extends CI_Model {
         return $this->db->query("SELECT id_opcion, nombre FROM opcs_x_cats WHERE id_catalogo = 39 AND estatus = 1 ORDER BY id_opcion, nombre");
     }
 		
-	public function getMsni($idProyecto){
-		$query = $this->db-> query("SELECT * FROM condominios WHERE status = 1 AND idResidencial =".$idProyecto);
+	public function getMsni($typeTransaction, $key){
+        if($typeTransaction==1){
+            $query = $this->db-> query("SELECT *, idCondominio as ID FROM condominios WHERE status = 1 AND idResidencial =".$key);
+        }else if($typeTransaction==2){
+            $query = $this->db-> query("SELECT *, idLote as ID, nombreLote as nombre, msi as msni FROM lotes WHERE status = 1 AND idCondominio =".$key);
+        }
 		return $query->result_array();
 	}
 

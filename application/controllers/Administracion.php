@@ -900,8 +900,8 @@ class Administracion extends CI_Controller{
         $this->load->view('template/header');
         $this->load->view("administracion/vista_reporte_admin", $datos);
 	}
-	public function getRepoAdmin(){
-		$data = $this->Administracion_model->getRepAdmon();
+	public function getRepoAdmin($idResidencial){
+		$data = $this->Administracion_model->getRepAdmon($idResidencial);
         if($data != null) {
             echo json_encode($data);
         } else {

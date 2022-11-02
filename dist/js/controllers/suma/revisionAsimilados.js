@@ -1,3 +1,15 @@
+var totaPen = 0;
+
+$('#tabla_remanentes').on('click', 'input', function() {
+    tr = $(this).closest('tr');
+    var row = tabla_remanentes.row(tr).data();
+
+    if ($(this).prop('checked')) totaPen += row.impuesto;
+    else totaPen -= row.impuesto;
+
+    $("#totpagarPen").html('$ ' + formatMoney(totaPen));
+});
+
 $('#tabla_asimilados thead tr:eq(0) th').each( function (i) {
     if(i != 0){
         var title = $(this).text();
@@ -34,6 +46,29 @@ $('#tabla_asimilados').on('xhr.dt', function(e, settings, json, xhr) {
     });
     var to = formatMoney(total);
     document.getElementById("totpagarAsimilados").textContent = '$' + to;
+});
+
+function selectAll(e) {
+    tota2 = 0;
+    $(tabla_asimilados.$('input[type="checkbox"]')).each(function (i, v) {
+        if (!$(this).prop("checked")) {
+            $(this).prop("checked", true);
+            tota2 += parseFloat(tabla_asimilados.row($(this).closest('tr')).data().impuesto);
+        } else {
+            $(this).prop("checked", false);
+        }
+        $("#totpagarPen").html('$' + formatMoney(tota2));
+    });
+}
+
+$(document).on("click", ".individualCheck", function() {
+    tr = $(this).closest('tr');
+    var row = tabla_asimilados.row(tr).data();
+
+    if ($(this).prop('checked')) totaPen += parseFloat(row.impuesto);
+    else totaPen -= parseFloat(row.impuesto);
+
+    $("#totpagarPen").html('$ ' + formatMoney(totaPen));
 });
 
 tabla_asimilados = $("#tabla_asimilados").DataTable({
@@ -104,7 +139,6 @@ tabla_asimilados = $("#tabla_asimilados").DataTable({
             columns: [1,2,3,4,5,6,7,8],
             format: {
                 header:  function (d, columnIdx) {
-                    console.log(d);
                     if(columnIdx == 0){
                         return ' '+d +' ';
                     }else if(columnIdx == 1){
@@ -211,7 +245,7 @@ tabla_asimilados = $("#tabla_asimilados").DataTable({
         render: function (d, type, full, meta){
             if(full.estatus == 2){
                 if(full.referencia){
-                    return '<input type="checkbox" name="idTQ[]" style="width:20px;height:20px;"  value="' + full.id_pago_suma + '">';
+                    return '<input type="checkbox" name="idTQ[]" class="individualCheck" style="width:20px;height:20px;"  value="' + full.id_pago_suma + '">';
                 }
                 else{
                     return '';
@@ -227,7 +261,8 @@ tabla_asimilados = $("#tabla_asimilados").DataTable({
         },
     }],
     ajax: {
-        url: general_base_url + "Suma/getAsimiladosRevision",
+        url: general_base_url + "Suma/getRevision",
+        data: {formaPago:3},
         type: "POST",
         dataType: 'json',
         dataSrc: ""
@@ -283,7 +318,7 @@ $("#tabla_asimilados tbody").on("click", ".cambiar_estatus", function(){
             success: function(data){
                 if(data){
                     $("#modal_nuevas").modal('toggle' );
-                    alerts.showNotification("top", "right", "Se ha realizado el cambio de estatus de la comisión exitosamente", "success");
+                    alerts.showNotification("top", "right", "Se ha procesado la solicitud exitosamente", "success");
                     setTimeout(function() {
                         tabla_asimilados.ajax.reload();
                     }, 3000);

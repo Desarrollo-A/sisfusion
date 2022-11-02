@@ -516,6 +516,7 @@ class Caja_outside extends CI_Controller
             'fecha_modificacion' => date('Y-m-d H:i:s'),
             'id_subdirector' => $data['lider'][0]['id_subdirector'],
             'id_regional' => $data['lider'][0]['id_regional'],
+            'id_regional_2' => $data['lider'][0]['id_regional_2'],
             'flag_compartida' =>$datosView->flag_compartida
         );
         /*Inserta cliente*/
@@ -675,8 +676,8 @@ class Caja_outside extends CI_Controller
         //$val_tl = $datosView->lotes[0]->tipo_lote;
         if (!isset($val_tl)) {
         } else {
-            $casasDetail = $this->db->query("SELECT (l.sup * l.precio) total_terreno, c.casasDetail FROM lotes l 
-                INNER JOIN (SELECT id_lote, CONCAT( '{''total_terreno'':''', total_terreno, ''',', tipo_casa, '}') casasDetail  
+            $casasDetail = $this->db->query("SELECT (l.sup * l.precio) total_terreno, c.casasDetail, c.aditivas_extra FROM lotes l 
+                INNER JOIN (SELECT id_lote, CONCAT( '{''total_terreno'':''', total_terreno, ''',', tipo_casa, '}') casasDetail, aditivas_extra
                 FROM casas WHERE estatus = 1) c ON c.id_lote = l.idLote WHERE l.idLote = $id_lote AND l.status = 1")->result_array();
             $cd = json_decode(str_replace("'", '"', $casasDetail[0]['casasDetail']));
             $info = $this->caja_model_outside->getDatosLote($id_lote);
@@ -686,8 +687,10 @@ class Caja_outside extends CI_Controller
                 foreach ($cd->tipo_casa as $value) {
                     if ($value->nombre == 'Stella') {
                         $total_construccion = $value->total_const;
-                        foreach ($value->extras as $v) { // MJ: SE LEEN LAS CARACTERÍSTICAS EXTRAS QUE LLEGUE A TENER LA CASA
-                            $total_construccion += $v->techado;
+                        if($casasDetail[0]['aditivas_extra'] == 1){
+                            foreach ($value->extras as $v) { // MJ: SE LEEN LAS CARACTERÍSTICAS EXTRAS QUE LLEGUE A TENER LA CASA
+                                $total_construccion += $v->techado;
+                            }
                         }
                     }
                 }
@@ -704,8 +707,10 @@ class Caja_outside extends CI_Controller
                 foreach ($cd->tipo_casa as $value) {
                     if ($value->nombre == 'Aura') {
                         $total_construccion = $value->total_const;
-                        foreach ($value->extras as $v) { // MJ: SE LEEN LAS CARACTERÍSTICAS EXTRAS QUE LLEGUE A TENER LA CASA
-                            $total_construccion += $v->techado;
+                        if($casasDetail[0]['aditivas_extra'] == 1){
+                            foreach ($value->extras as $v) { // MJ: SE LEEN LAS CARACTERÍSTICAS EXTRAS QUE LLEGUE A TENER LA CASA
+                                $total_construccion += $v->techado;
+                            }
                         }
                     }
                 }
@@ -1891,6 +1896,7 @@ class Caja_outside extends CI_Controller
                         $arreglo["id_sede"] = 0;
                         $arreglo['id_subdirector'] = $dataLider[0]['id_subdirector'];
                         $arreglo['id_regional'] = $dataLider[0]['id_regional'];
+                        $arreglo['id_regional_2'] = $dataLider[0]['id_regional_2'];
 
                         //SE OBTIENEN LAS FECHAS PARA EL TIEMPO QUE TIENE PARA CUMPLIR LOS ESTATUS EN CADA FASE EN EL SISTEMA
                         $fechaAccion = date("Y-m-d H:i:s");
@@ -2244,8 +2250,8 @@ class Caja_outside extends CI_Controller
             "creado_por" => $data->id_usuario,
             "fecha_modificacion" => date("Y-m-d H:i:s"),
             "modificado_por" => $data->id_usuario,
-
-            "id_regional" => $dataLider[0]['id_regional']
+            "id_regional" => $dataLider[0]['id_regional'],
+            "id_regional_2" => $dataLider[0]['id_regional_2']
         );
 
         $clientInformation = $this->caja_model_outside->getClientInformation($data->id_cliente)->row();

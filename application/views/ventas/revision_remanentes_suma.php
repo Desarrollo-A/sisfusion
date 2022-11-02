@@ -68,51 +68,50 @@
             <div class="container-fluid">
                 <div class="row">
                     <div class="col xol-xs-12 col-sm-12 col-md-12 col-lg-12">
-                            <div class="card">
-                                <div class="card-header card-header-icon" data-background-color="goldMaderas">
-                                    <i class="fas fa-dollar-sign fa-2x"></i>
+                        <div class="card">
+                            <div class="card-header card-header-icon" data-background-color="goldMaderas">
+                                <i class="fas fa-dollar-sign fa-2x"></i>
+                            </div>
+                            <div class="card-content">
+                                <div class="encabezadoBox">
+                                    <h3 class="card-title center-align" >Comisiones nuevas <b>remanente</b></h3>
+                                    <p class="card-title pl-1">(Comisiones nuevas, solicitadas para proceder a pago en esquema de remanente distribuible)</p>
                                 </div>
-                                 <div class="card-content">
-                                    <div class="encabezadoBox">
-                                        <h3 class="card-title center-align" >Comisiones nuevas <b>remanente</b></h3>
-                                        <p class="card-title pl-1">(Comisiones nuevas, solicitadas para proceder a pago en esquema de remanente distribuible)</p>
-                                    </div>
-                                    <div class="toolbar">
-                                        <div class="row">
-                                            <div class="col-12 col-sm-12 col-md-12 col-lg-6">
-                                                <div class="form-group d-flex justify-center align-center">
-                                                    <h4 class="title-tot center-align m-0">Disponible:</h4>
-                                                    <p class="input-tot pl-1" name="totpagarremanente" id="totpagarremanente">$0.00</p>
-                                                </div>
+                                <div class="toolbar">
+                                    <div class="row">
+                                        <div class="col-12 col-sm-12 col-md-12 col-lg-6">
+                                            <div class="form-group d-flex justify-center align-center">
+                                                <h4 class="title-tot center-align m-0">Disponible:</h4>
+                                                <p class="input-tot pl-1" name="totpagarremanente" id="totpagarremanente">$0.00</p>
                                             </div>
-                                            <div class="col-12 col-sm-12 col-md-12 col-lg-6">
-                                                <div class="form-group d-flex justify-center align-center">
-                                                    <h4 class="title-tot center-align m-0">Autorizar:</h4>
-                                                    <p class="input-tot pl-1" name="totpagarPen" id="totpagarPen">$0.00</p>
-                                                </div>
+                                        </div>
+                                        <div class="col-12 col-sm-12 col-md-12 col-lg-6">
+                                            <div class="form-group d-flex justify-center align-center">
+                                                <h4 class="title-tot center-align m-0">Autorizar:</h4>
+                                                <p class="input-tot pl-1" name="totpagarPen" id="totpagarPen">$0.00</p>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="material-datatables">
-                                        <div class="form-group">
-                                            <div class="table-responsive">
-                                                <table class="table-striped table-hover" id="tabla_remanente" name="tabla_remanente">
-                                                    <thead>
-                                                        <tr>
-                                                            <th></th>
-                                                            <th>ID PAGO</th>
-                                                            <th>REFERENCIA</th>
-                                                            <th>NOMBRE</th>
-                                                            <th>SEDE</th>
-                                                            <th>TOTAL COMISION</th>
-                                                            <th>IMPUESTO</th>
-                                                            <th>% COMISION</th>
-                                                            <th>ESTATUS</th>
-                                                            <th>MÁS</th>
-                                                        </tr>
-                                                    </thead>
-                                                </table>
-                                            </div>
+                                </div>
+                                <div class="material-datatables">
+                                    <div class="form-group">
+                                        <div class="table-responsive">
+                                            <table class="table-striped table-hover" id="tabla_remanente" name="tabla_remanente">
+                                                <thead>
+                                                    <tr>
+                                                        <th></th>
+                                                        <th>ID PAGO</th>
+                                                        <th>REFERENCIA</th>
+                                                        <th>NOMBRE</th>
+                                                        <th>SEDE</th>
+                                                        <th>TOTAL COMISIÓN</th>
+                                                        <th>IMPUESTO</th>
+                                                        <th>% COMISIÓN</th>
+                                                        <th>ESTATUS</th>
+                                                        <th>MÁS</th>
+                                                    </tr>
+                                                </thead>
+                                            </table>
                                         </div>
                                     </div>
                                 </div>
@@ -126,7 +125,6 @@
     </div>
     </div><!--main-panel close-->
     
-
     <?php $this->load->view('template/footer');?>
     <!--DATATABLE BUTTONS DATA EXPORT-->
     <script src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>
