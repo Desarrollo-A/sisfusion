@@ -727,7 +727,8 @@ function loadTable(tipoDescuento) {
         });
       
         $(document).on("click", ".updateDescuento", function () {
-           let validation = true;
+            document.getElementById('updateDescuento').disabled = true;
+            let validation = true;
            mensualidades = document.getElementById("pago_ind011").value;
             
            pago = document.getElementById("descuento1").value ;
@@ -752,9 +753,12 @@ function loadTable(tipoDescuento) {
                  
                       }, 
                     success : response => {
+                        document.getElementById('updateDescuento').disabled = false;
                         alerts.showNotification("top", "right", "Descuento actualizado satisfactoriamente.", "success");
-                        $('#editDescuento').modal('toggle');
+                     
+                   
                         // toastr[response.response_type](response.message);
+                        $('#editDescuento').modal('toggle');
                     },
                     error : (a, b, c) => {
                         alerts.showNotification("top", "right", "Descuento No actualizado .", "error");
