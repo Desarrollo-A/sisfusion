@@ -1201,6 +1201,44 @@
   white-space: nowrap !important;
 }
 
+#reporte .back {
+  width: fit-content;
+  background-color: #ffffff;
+  padding: 8px 2px;
+  border-radius: 5px;
+}
+
+#reporte .back .checkBox {
+  cursor: pointer;
+  user-select: none;
+  display: block;
+  line-height: inherit;
+}
+
+#reporte .back .checkBox span {
+  font-size: 12px;
+  border-radius: 5px;
+  transition: 0.4s;
+  padding: 8px 15px;
+  color: #929292;
+  background-color: #ffffff;
+  margin: 0 2px;
+}
+
+#reporte .back .checkBox span:hover {
+  box-shadow: none;
+}
+
+#reporte .back .checkBox input {
+  pointer-events: none;
+  display: none;
+}
+
+#reporte .back .checkBox input:checked + span {
+  color: #ffffff;
+  background-color: #163960;
+}
+
 #reporte .cardMiniChart {
   background-color: #143860;
   box-shadow: none !important;

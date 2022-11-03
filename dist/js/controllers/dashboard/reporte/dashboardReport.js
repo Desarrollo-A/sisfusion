@@ -62,6 +62,28 @@ var initialOptions = {
     }
 }
 
+$('.infoMainSelector').unbind().on('click', function(e){
+    let c= $('input:checkbox.infoMainSelector:checked').length;
+    var checkboxSelected = $(this);
+    if (!checkboxSelected.is(":checked") && c<1) {
+        // do the confirmation thing here
+        e.preventDefault();
+        return false;
+    }
+
+    let selector1 = $('#typeSale1')[0];
+    let selector2 = $('#typeSale2')[0];
+    if( !selector1.checked && !selector2.checked ){
+        if(checkboxSelected[0] != selector1)
+            selector1.checked = true;
+        else selector2.checked = true;
+    }
+
+    $(".boxAccordions").html('');
+    loaderCharts();
+    initReport();
+});
+
 function readyReport(){
     $('[data-toggle="tooltip"]').tooltip();
     sp.initFormExtendedDatetimepickers();
@@ -75,7 +97,8 @@ function readyReport(){
 }
 
 async function initReport(){
-    getLastSales(null, null);
+    typeSale = validateTypeSale();
+    getLastSales(typeSale);
     let rol = userType == 2 ? await getRolDR(idUser): userType;
     let rolString;
     if ( rol == '1' || rol == '18' || rol == '4' || rol == '63' || rol == '33' || rol == '58' || rol == '69' )
@@ -90,6 +113,24 @@ async function initReport(){
         rolString = 'asesor';
         
     fillBoxAccordions(rolString, rol == 18 || rol == '18' ? 1 : rol, idUser, 1, 1, null, [0, null, null, null, null, null, rol]);
+}
+
+function validateTypeSale(){
+    let selector1 = $('#typeSale1')[0];
+    let selector2 = $('#typeSale2')[0];
+    let transaction = '';
+
+    if(selector1.checked && !selector2.checked){
+        transaction = selector1.value;
+    }else if(selector2.checked && !selector1.checked){
+        transaction = selector2.value;
+    }else if(selector1.checked && selector2.checked){
+        transaction = 3;
+    }else{
+        transaction = 0;
+    }
+
+    return transaction;
 }
 
 function createAccordions(option, render, rol){
@@ -133,6 +174,7 @@ function createAccordions(option, render, rol){
 }
 
 function fillBoxAccordions(option, rol, id_usuario, render, transaction, dates=null, leadersList){
+    typeSale = validateTypeSale();
     if( rol == 5 && (idUser == 28 && idUser == 30) )
         rolEspecial = 59;
     else if( rol == 5 && (idUser != 28 && idUser != 30) )
@@ -346,7 +388,8 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, dates=n
                 "coordinador": leadersList[2],
                 "gerente": leadersList[3],
                 "subdirector": leadersList[4],
-                "regional": leadersList[5]
+                "regional": leadersList[5],
+                "typeSale" : typeSale
             }
         }
     });
@@ -611,12 +654,7 @@ $(document).on('click', '#searchByDateRangeTable', async function (e) {
     e.preventDefault();
     e.stopImmediatePropagation();
     $(".boxAccordions").html('');
-
-    /**********************/
-
     loaderCharts();
-    $("#modalChart .boxModalTitle .total").html('');
-    /**********************/
 
     let dates = {begin: $('#tableBegin').val(), end: $('#tableEnd').val()};
     let rol = userType == 2 ? await getRolDR(idUser): userType;
@@ -632,10 +670,10 @@ $(document).on('click', '#searchByDateRangeTable', async function (e) {
         rolString = 'subdirector';
     else 
         rolString = 'asesor';
-    // getSpecificChart('na', formatDate($('#tableBegin').val()), formatDate($('#tableEnd').val()));
-    getLastSales($('#tableBegin').val(), $('#tableEnd').val());
-    fillBoxAccordions(rolString, rol, idUser, 1, 2, dates, [0, null, null, null, null, null, rol]);
 
+    typeSale = validateTypeSale();
+    getLastSales(typeSale);
+    fillBoxAccordions(rolString, rol, idUser, 1, 2, dates, [0, null, null, null, null, null, rol]);
 });
 
 $(document).on('click', '.chartButton', function () {
@@ -676,26 +714,25 @@ async function chartDetail(e, tipoChart){
         finalEndDate = [endDate.getFullYear(), ('0' + (endDate.getMonth() + 1)).slice(-2), ('0' + endDate.getDate()).slice(-2)].join('-');
         finalBeginDate2 = ['01', '01', beginDate.getFullYear()].join('/');
         finalEndDate2 = [('0' + endDate.getDate()).slice(-2), ('0' + (endDate.getMonth() + 1)).slice(-2), endDate.getFullYear()].join('/');
-    }else{
+    }
+    else{
         finalBeginDate2 = fecha_inicio;
         finalEndDate2 = fecha_fin;
     }
 
-
-
-
     $("#modalChart #beginDate").val(finalBeginDate2);
     $("#modalChart #endDate").val(finalEndDate2);
     $("#modalChart #type").val(tipoChart);
-    getSpecificChart(tipoChart, formatDate(finalBeginDate2), formatDate(finalEndDate2));
+    typeSale = validateTypeSale();
+    getSpecificChart(tipoChart, formatDate(finalBeginDate2), formatDate(finalEndDate2), typeSale);
 }
 
-function getSpecificChart(type, beginDate, endDate){
+function getSpecificChart(type, beginDate, endDate, typeSale){
     $('.loadChartModal').removeClass('d-none');
     $.ajax({
         type: "POST",
         url: `${base_url}Reporte/getDataChart`,
-        data: {general: 0, tipoChart: type, beginDate: beginDate, endDate: endDate},
+        data: {general: 0, tipoChart: type, beginDate: beginDate, endDate: endDate, typeSale: typeSale},
         dataType: 'json',
         cache: false,
         success: function(data){
@@ -725,17 +762,26 @@ function getSpecificChart(type, beginDate, endDate){
     });
 }
 
-function getLastSales(beginDate, endDate){
+function getLastSales(typeSale){
+    let beginDate = $('#tableBegin').val()
+    let endDate = $('#tableEnd').val()
     $('.loadChartMini').removeClass('d-none');
 
     $.ajax({
         type: "POST",
         url: `${base_url}Reporte/getDataChart`,
-        data: {general: 1, tipoChart:'na', beginDate: beginDate, endDate: endDate},
+        data: {
+            general: 1, 
+            tipoChart:'na', 
+            beginDate: beginDate, 
+            endDate: endDate,
+            typeSale: typeSale
+        },
         dataType: 'json',
         cache: false,
         success: function(data){
             $('.loadChartMini').addClass('d-none');
+            $('.money').removeClass('d-none');
             let miniChart = 1, total = 0;
             let orderedArray = orderedDataChart(data);
             for ( i=0; i<orderedArray.length; i++ ){
@@ -775,46 +821,29 @@ $(document).on("click", "#searchByDateRange", function () {
 });
 
 function loaderCharts(){
+    $("#modalChart .boxModalTitle .total").html('');
     $('.appliedFilter').removeAttr('data-toggle');
-    // $('.appliedFilter').removeAttr('title');
     $('.appliedFilter').removeAttr('data-original-title');
     let fechaInicio= $('#tableBegin').val();
     let fechaTermino= $('#tableEnd').val();
-    // console.log('fechaInicio', fechaInicio);
-    // console.log('fechaTermino', fechaTermino);
-   $('.appliedFilter .selectMini').html('');
-   $('.appliedFilter .selectMini').append('Del: '+fechaInicio+' al: '+fechaTermino+'');
+    $('.appliedFilter .selectMini').html('');
+    $('.appliedFilter .selectMini').append('Del: '+fechaInicio+' al: '+fechaTermino+'');
     $('.appliedFilter').attr('data-toggle', 'tooltip');
-    // $('.appliedFilter').attr('title', 'Del: '+$('#tableBegin').val()+' al: '+$('#tableEnd').val());
     $('.appliedFilter').attr('data-original-title', 'Del: '+$('#tableBegin').val()+' al: '+$('#tableEnd').val());
-    //<label style="font-size: 0.5em">Al: '+fechaTermino+'</label>
 
-    $('#totventasContratadas').addClass('subtitle_skeleton');
-    $('#totventasContratadas').text('');
-
-    $('#totventasApartadas').addClass('subtitle_skeleton');
-    $('#totventasApartadas').text('');
-
-    $('#totcanceladasContratadas').addClass('subtitle_skeleton');
-    $('#totcanceladasContratadas').text('');
-
-    $('#totcanceladasApartadas').addClass('subtitle_skeleton');
-    $('#totcanceladasApartadas').text('');
-
-
+    $('.money').addClass('d-none');
     $('.boxMiniCharts').html('');
     let cargador = '<div class="loadChartMini w-100 h-100">'+
                         '<img src="'+base_url+'dist/img/miniChartLoading.gif" alt="Icono gráfica" class="h-100 w-auto">'+
                      '</div>';
-    // $('.boxMiniCharts').append('<div class="col-xs-12 pdt-20"><center><span class="loader center-align"></span></center></div>');
+    $('.boxMiniCharts').append('<div class="col-xs-12 pdt-20"><center><span class="loader center-align"></span></center></div>');
     $('.boxMiniCharts').append(cargador);
 
     //add attr al miniboton para que al abrir tenga la fecha seteada
     $('.moreMiniChart').attr('data-fi', fechaInicio);
     $('.moreMiniChart').attr('data-ft', fechaTermino);
-
-
 };
+
 function orderedDataChart(data){
     let allData = [], totalMes = [], meses = [], series = [];
     for( i=0; i<data.length; i++){
@@ -1217,6 +1246,7 @@ $(document).on('click', '.btnModalDetails', function () {
 });
 
 function fillTableReport(dataObject) {
+    typeSale = validateTypeSale();
     if (dataObject.type != 3 && dataObject.type != 33 && dataObject.type != 4 && dataObject.type != 4) {
         $('#lotesInformationTable thead tr:eq(0) th').each(function (i) {
             const title = $(this).text();
@@ -1390,7 +1420,8 @@ function fillTableReport(dataObject) {
                     "coordinador": dataObject.coordinador,
                     "gerente": dataObject.gerente,
                     "subdirector": dataObject.subdirector,
-                    "regional": dataObject.regional
+                    "regional": dataObject.regional,
+                    "typeSale" : typeSale
                 }
             }
         });
@@ -1584,7 +1615,8 @@ function fillTableReport(dataObject) {
                     "coordinador": dataObject.coordinador,
                     "gerente": dataObject.gerente,
                     "subdirector": dataObject.subdirector,
-                    "regional": dataObject.regional
+                    "regional": dataObject.regional,
+                    "typeSale" : typeSale
                 }
             }
         });

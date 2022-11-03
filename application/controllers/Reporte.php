@@ -43,8 +43,9 @@ class Reporte extends CI_Controller {
             $gerente = $this->input->post("gerente");
             $subdirector = $this->input->post("subdirector");
             $regional = $this->input->post("regional");
+            $typeSale = $this->input->post("typeSale");
             $currentYear = date("Y");
-            $data['data'] = $this->Reporte_model->getGeneralInformation($beginDate, $endDate, $rol, $id_usuario, $render, [$asesor, $coordinador, $gerente, $subdirector, $regional], $typeTransaction)->result_array();
+            $data['data'] = $this->Reporte_model->getGeneralInformation($beginDate, $endDate, $rol, $id_usuario, $render, [$asesor, $coordinador, $gerente, $subdirector, $regional], $typeTransaction, $typeSale)->result_array();
             echo json_encode($data, JSON_NUMERIC_CHECK);
         } else {
             json_encode(array());
@@ -57,6 +58,8 @@ class Reporte extends CI_Controller {
         $coordinadorVC = ''; $coordinadorVA = ''; $coordinadorCC = ''; $coordinadorCA = ''; $coordinador = false;
         $general = $this->input->post('general');
         $tipoChart = $this->input->post('tipoChart');
+        $typeSale = $this->input->post('typeSale');
+
         if( $this->input->post("beginDate")==null && $this->input->post("endDate") == null){
             $beginDate = "$currentYear-01-01";
             $endDate = date("Y-m-d");
@@ -66,25 +69,8 @@ class Reporte extends CI_Controller {
             $endDate = date("Y-m-d", strtotime(str_replace('/', '-', $this->input->post("endDate"))));
         }
 
-//        $nueva = str_replace('/', '-', $this->input->post("beginDate"));
-//        $nueva2 = str_replace('/', '-', $this->input->post("endDate"));
-//        print_r($nueva);
-//        echo '<br>';
-//        print_r($nueva2);
-//        exit;
-//        var_dump( $this->validateDate($beginDate));
-//        var_dump( $this->validateDate($endDate));
-//        exit;
-//        echo 'Inicio:<br>';
-//        print_r($this->input->post("beginDate"));
-//        echo '<br>';
-//        echo 'Fin:<br>';
-//        print_r($this->input->post("endDate"));
-//        echo '<br>';
         $id = $this->session->userdata('id_usuario');
         $rol = $this->session->userdata('id_rol');
-        
-
         if( $rol == 2 || $rol == 5){
             if ( $rol == 5 ) $id = $this->session->userdata('id_lider'); //Se asignara id de su lider (para asistentes de dirección y subdirección)
 
@@ -128,7 +114,7 @@ class Reporte extends CI_Controller {
             $condicion_x_rol = '';
         }
 
-        $data = $this->Reporte_model->getDataChart($general, $tipoChart, $rol, $condicion_x_rol, $coordinador, $coordinadorVC, $coordinadorVA, $coordinadorCC, $coordinadorCA, $beginDate, $endDate);
+        $data = $this->Reporte_model->getDataChart($general, $tipoChart, $rol, $condicion_x_rol, $coordinador, $coordinadorVC, $coordinadorVA, $coordinadorCC, $coordinadorCA, $beginDate, $endDate, $typeSale);
         
         if($data != null) {
             echo json_encode($data);
@@ -327,7 +313,9 @@ class Reporte extends CI_Controller {
             $gerente = $this->input->post("gerente");
             $subdirector = $this->input->post("subdirector");
             $regional = $this->input->post("regional");
-            $data['data'] = $this->Reporte_model->getGeneralLotesInformation($beginDate, $endDate, $rol, $id_usuario, $render, $type, $sede, $leader, [$asesor, $coordinador, $gerente, $subdirector, $regional])->result_array();
+            $typeSale = $this->input->post("typeSale");
+
+            $data['data'] = $this->Reporte_model->getGeneralLotesInformation($typeSale, $beginDate, $endDate, $rol, $id_usuario, $render, $type, $sede, $leader, [$asesor, $coordinador, $gerente, $subdirector, $regional])->result_array();
             echo json_encode($data, JSON_NUMERIC_CHECK);
         } else
             echo json_encode(array());
