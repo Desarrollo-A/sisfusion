@@ -68,7 +68,7 @@ class Usuarios_modelo extends CI_Model {
                 else
                     $where = "us.gerente_id = $id_lider OR us.id_usuario = $id_lider";
                 
-                return $this->db->query("SELECT us.id_usuario, us.id_rol, oxc.nombre AS puesto, 
+                return $this->db->query("SELECT us.id_usuario, us.id_rol, CASE WHEN us.id_usuario IN (3, 5, 607) THEN 'Director regional' ELSE oxc.nombre END AS puesto, 
                 UPPER(CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)) nombre, 
                 UPPER(CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno)) coordinador, 
                 UPPER(CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno)) gerente, 
@@ -89,7 +89,7 @@ class Usuarios_modelo extends CI_Model {
             case '17': // CONTRALORÍA
                 return $this->db->query("SELECT pci2.abono_pendiente ,CONVERT(varchar,u.fechaIngreso,103) fechaIngreso, u.estatus, u.id_usuario, 
                 CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombre, u.correo,
-                u.telefono, oxc.nombre puesto, 
+                u.telefono, CASE WHEN u.id_usuario IN (3, 5, 607) THEN 'Director regional' ELSE oxc.nombre END puesto, 
                 
                 UPPER(CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno)) coordinador, 
                 UPPER(CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno)) gerente, 
@@ -118,7 +118,7 @@ class Usuarios_modelo extends CI_Model {
                 break;
             case '49': // CONSULTA (CAPITAL HUMANO DESCUENTOS UNIVERSIDAD)
                 return $this->db->query("SELECT CONVERT(varchar,u.fechaIngreso,103) fechaIngreso, u.estatus, u.id_usuario, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombre, u.correo,
-                u.telefono, oxc.nombre puesto, 
+                u.telefono, CASE WHEN u.id_usuario IN (3, 5, 607) THEN 'Director regional' ELSE oxc.nombre END puesto, 
                 
                 UPPER(CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno)) coordinador, 
                 UPPER(CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno)) gerente, 
@@ -153,7 +153,7 @@ class Usuarios_modelo extends CI_Model {
                 else
                     $id_rol = "";  
                 return $this->db->query("SELECT u.estatus, u.id_usuario, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombre, u.correo,
-                u.telefono, oxc.nombre puesto, 
+                u.telefono, CASE WHEN u.id_usuario IN (3, 5, 607) THEN 'Director regional' ELSE oxc.nombre END puesto, 
                 UPPER(CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno)) coordinador, 
                 UPPER(CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno)) gerente, 
                 UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)) subdirector, 
@@ -175,7 +175,7 @@ class Usuarios_modelo extends CI_Model {
             else
                 $id_rol = "";
             return $this->db->query("SELECT u.estatus, u.id_usuario, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombre, u.correo,
-            u.telefono, oxc.nombre puesto, 
+            u.telefono, CASE WHEN u.id_usuario IN (3, 5, 607) THEN 'Director regional' ELSE oxc.nombre END puesto, 
             UPPER(CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno)) coordinador, 
             UPPER(CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno)) gerente, 
             UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)) subdirector, 

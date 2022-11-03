@@ -38,44 +38,10 @@ class Cobranza extends CI_Controller
    
     }
 
-    public function masterCobranzaHistorial()
-    {
-        if ($this->session->userdata('id_rol') == FALSE) {
-            redirect(base_url());
-        }
-
-        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-       
-        $this->load->view('template/header');
-        $this->load->view("cobranza/cobranza_reporte_master_historico", $datos);
-    }
-    public function informationMasterCobranzaHistorial(){
-
-        $idLote = $this->input->post("idLote");
-        $bandera = $this->input->post("bandera");
-        $beginDate = date("Y-m-d", strtotime($this->input->post("beginDate")));
-        $endDate = date("Y-m-d", strtotime($this->input->post("endDate")));
-           
-        if($bandera == 1 )
-        {
-         $endDate = '';
-         $beginDate = '';
-        }else {
-         $idLote = '';
-        }
-       
-         $data['data'] = $this->Cobranza_model->informationMasterCobranzaHistorial($idLote, $beginDate, $endDate)->result_array();
-         
-         echo json_encode($data);
-     
-    
-    }
-
-
     public function getInformation()
     {
         if (isset($_POST) && !empty($_POST)) {
-            $typeTransaction = $this->input->post("typeTransaction");
+            $typeTransaction = $this->input->post("typeTransaction");       
             $beginDate = date("Y-m-d", strtotime($this->input->post("beginDate")));
             $endDate = date("Y-m-d", strtotime($this->input->post("endDate")));
             $where = $this->input->post("where");
@@ -211,10 +177,36 @@ class Cobranza extends CI_Controller
         $this->load->view("cobranza/reporteLiberaciones", $datos);
     }
 
-    public function getReporteLiberaciones()
-    {
+    public function getReporteLiberaciones() {
         $data['data'] = $this->Cobranza_model->getReporteLiberaciones()->result_array();
         echo json_encode($data);
+    }
+
+    public function masterCobranzaHistorial() {
+        if ($this->session->userdata('id_rol') == FALSE)
+            redirect(base_url());
+        
+        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
+        $this->load->view('template/header');
+        $this->load->view("cobranza/cobranza_reporte_master_historico", $datos);
+    }
+
+    public function getComments($pago){
+        echo json_encode($this->Cobranza_model->getComments($pago)->result_array());
+    }
+    public function informationMasterCobranzaHistorial() {
+        $idLote = $this->input->post("idLote");
+        $bandera = $this->input->post("bandera");
+        $beginDate = date("Y-m-d", strtotime($this->input->post("beginDate")));
+        $endDate = date("Y-m-d", strtotime($this->input->post("endDate")));
+        if($bandera == 1) {
+            $endDate = '';
+            $beginDate = '';
+        } else
+            $idLote = '';
+       
+        $data['data'] = $this->Cobranza_model->informationMasterCobranzaHistorial($idLote, $beginDate, $endDate)->result_array();
+         echo json_encode($data);
     }
 
 }

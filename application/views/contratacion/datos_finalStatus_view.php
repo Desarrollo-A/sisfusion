@@ -253,6 +253,7 @@
 					}
 				},
 				{
+					width:'5%',
 					data: 'procesoContratacion',
 					defaultContent: '<i>Not set</i>'
 
@@ -261,19 +262,20 @@
 					// data: 'status'
 					data : function(data)
 					{
-						if(data.status==null || data.status=="")
+						if(data.descripcion==null || data.descripcion=="")
 						{
 							return "N/A";
 						}
 						else
 						{
-							return data.status;
+							return data.descripcion;
 						}
 					}
 				},
 				{data: 'comentario'},
 				{
 					// data: 'fechaVencimiento'
+					width:'15%',
 					data : function(data)
 					{
 						if(data.fechaVencimiento==null || data.fechaVencimiento=="")
