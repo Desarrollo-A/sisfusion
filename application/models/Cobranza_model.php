@@ -235,7 +235,7 @@ class Cobranza_model extends CI_Model {
         com.porcentaje_decimal,  UPPER(s.nombre) plaza, UPPER(s3.nombre) plazaB,
         pci1.estatus,  cl.fechaApartado fecha_apartado  , pci1.fecha_abono fecha_abono,
         CONCAT(u.nombre, ' ',u.apellido_paterno, ' ', u.apellido_materno) user_names ,pci1.id_usuario, oprol.nombre as puesto, u.estatus as estatus_usuario, 
-        oxcest.nombre as estatus_actual_comision,slo.nombre as estatus_lote,slo.color as color_lote , oxcest.id_opcion id_estatus_actual,
+        oxcest.nombre as estatus_actual_comision,slo.nombre as estatus_lote,slo.color as color_lote , oxcest.id_opcion id_estatus_actual,  pr.source as source,
         pci1.descuento_aplicado,
         lo.idStatusContratacion , pac.total_comision as totalComision,
         FORMAT(ISNULL( pac.total_comision , '0.00'),'C') allComision,
