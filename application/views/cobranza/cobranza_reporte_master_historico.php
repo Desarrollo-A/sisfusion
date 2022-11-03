@@ -124,8 +124,9 @@
                                                     <!-- <th title="FECHA DE ABONO">FECHA DE ABONO</th> -->
                                                  
                                                     <th title="ESTATUS CONTRATACIÓN">ESTATUS CONTRATACIÓN</th>
-                                                    <th title="ESTATUS COMISIÓN">ESTATUS COMISIÓN</th>
                                                     <th title="ESTATUS PAGO COMISIÓN">ESTATUS PAGO COMISIÓN</th>
+                                                    <th title="ESTATUS COMISIÓN">ESTATUS COMISIÓN</th>
+                                              
 
                                                     <th title="ESTATUS VENTA/LOTE">ESTATUS LOTE/VENTA</th>
                                                     <th title="DISPERSADO POR MES">DISPERSADO</th>
