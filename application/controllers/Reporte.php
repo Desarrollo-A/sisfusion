@@ -129,7 +129,31 @@ class Reporte extends CI_Controller {
         }
 
         $data = $this->Reporte_model->getDataChart($general, $tipoChart, $rol, $condicion_x_rol, $coordinador, $coordinadorVC, $coordinadorVA, $coordinadorCC, $coordinadorCA, $beginDate, $endDate);
-        
+
+//        print_r($data);
+//        exit;
+        $sumatoria=0;
+        foreach ($data as $resultado){
+            if($resultado['tipo'] =='vc' || $resultado['tipo'] =='va'){
+//                $resultado['total'] = str_replace(array(',', '$'), '',  $resultado['total']);
+//                print_r(str_replace(array(',', '$'), '',  $resultado['total']));
+//                echo '<br>';
+                $sumatoria=$sumatoria + str_replace(array(',', '$'), '',  $resultado['total']);
+            }
+        }
+        $nuevoarray[] = array(
+            'total' => "$sumatoria",
+            'cantidad' => 10,
+            'mes' => 1,
+            'año' => 2022,
+            'tipo' => 'vg',
+            'rol' => 1
+        );
+        $data = array_merge($data, $nuevoarray);
+//        print_r(array_values($data));
+//        exit;
+//        print_r($data);
+//        exit;
         if($data != null) {
             echo json_encode($data);
         } else {
