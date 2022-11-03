@@ -41,7 +41,7 @@ class Cobranza extends CI_Controller
     public function getInformation()
     {
         if (isset($_POST) && !empty($_POST)) {
-            $typeTransaction = $this->input->post("typeTransaction");
+            $typeTransaction = $this->input->post("typeTransaction");       
             $beginDate = date("Y-m-d", strtotime($this->input->post("beginDate")));
             $endDate = date("Y-m-d", strtotime($this->input->post("endDate")));
             $where = $this->input->post("where");

@@ -227,6 +227,10 @@ class Cobranza_model extends CI_Model {
         FORMAT(ISNULL(pci1.abono_neodata ,'0.00'),'C') pago_cliente , 
         FORMAT(ISNULL(pci1.pago_neodata, '0.00'), 'C') pago_neodata , 
         FORMAT(ISNULL( pci2.abono_pagado , '0.00'), 'C') pagado ,
+        FORMAT(ISNULL( pci3.abono_neodata , '0.00'), 'C') pagado3 ,
+        FORMAT(ISNULL( pc14.abono_pagado2  , '0.00'), 'C') pago_neodata4,
+			FORMAT(ISNULL( pci3.pago_neodata , '0.00'), 'C') pago_neodata3,
+			FORMAT(ISNULL(pci3.pago_neodata - pci3.abono_neodata , '0.00'),'C') restantes3, 
          FORMAT(ISNULL(com.comision_total-pci2.abono_pagado , '0.00'),'C') restantes, 
         com.porcentaje_decimal,  UPPER(s.nombre) plaza, UPPER(s3.nombre) plazaB,
         pci1.estatus,  cl.fechaApartado fecha_apartado  , pci1.fecha_abono fecha_abono,
@@ -244,6 +248,10 @@ class Cobranza_model extends CI_Model {
         LEFT JOIN (SELECT SUM(abono_neodata) abono_pagado, id_comision 
         FROM pago_comision_ind WHERE (estatus in (11,3) OR descuento_aplicado = 1) 
         GROUP BY id_comision) pci2 ON pci1.id_comision = pci2.id_comision
+        LEFT JOIN (SELECT SUM(abono_neodata) abono_pagado2, id_usuario ,id_comision
+			FROM pago_comision_ind 
+			GROUP BY id_usuario,id_comision) pc14 ON pci1.id_usuario = pc14.id_usuario AND pc14.id_comision =  pci1.id_comision 
+		INNER JOIN pago_comision_ind pci3 on pci1.id_pago_i = pci3.id_pago_i
         INNER JOIN comisiones com ON pci1.id_comision = com.id_comision
         INNER JOIN lotes lo ON lo.idLote = com.id_lote AND lo.status = 1 $query
         INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
@@ -260,7 +268,7 @@ class Cobranza_model extends CI_Model {
         LEFT JOIN statuslote slo ON slo.idStatusLote = lo.idStatusLote
         $query2 
         GROUP BY pci1.id_comision, lo.idLote ,lo.nombreLote, co.nombre, lo.totalNeto2, com.comision_total,pac.bandera ,
-        com.porcentaje_decimal, pci1.abono_neodata, pci1.pago_neodata, pci2.abono_pagado, pci1.estatus, cl.fechaApartado ,  pci1.fecha_abono,  pci1.fecha_abono,
+        com.porcentaje_decimal, pci1.abono_neodata, pci1.pago_neodata, pci2.abono_pagado,pc14.abono_pagado2,pci3.abono_neodata,pci3.pago_neodata,  pci1.estatus, cl.fechaApartado ,  pci1.fecha_abono,  pci1.fecha_abono,
         pci1.id_usuario, pci1.id_pago_i, u.nombre, u.apellido_paterno, u.apellido_materno, oprol.nombre, oxcest.nombre, oxcest.id_opcion, 
         pci1.descuento_aplicado, lo.idStatusContratacion,oxc.nombre , lo.referencia, com.estatus, u.estatus,pac.total_comision, oxcest.color ,slo.nombre ,slo.color,s.nombre, s3.nombre  ORDER BY lo.nombreLote";
 

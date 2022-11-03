@@ -117,10 +117,11 @@ function fillTable(idLote, beginDate, endDate, bandera ) {
                                     return 'Estatus contratacion';
                                 break; 
                                 case 9 :
-                                    return 'Estatus comision';
+                                    return 'Estatus venta';
                                     break;
                                 case 10 :
-                                    return 'Estatus venta';
+                                    return 'Estatus comision';
+                                    
                                     break;
                                 case 11: 
                                     return 'Pago mes';
@@ -208,13 +209,13 @@ function fillTable(idLote, beginDate, endDate, bandera ) {
                 }
             }, {
                 data: function(data){
-                    return data.allComision;
+                    return data.pago_neodata3;
                 //5//5
                 }
             },
             {
                 data: function(data){
-                    return data.pago_neodata;
+                    return data.pagado3;
          //6
                 }
             }, 
@@ -298,18 +299,15 @@ function fillTable(idLote, beginDate, endDate, bandera ) {
             },{
                 //13
                 data: function (data){
-                    return data.pagado;
+                    return data.pagado3;
                 }
             },
             {
                 //14
                 data: function( data ){
-                    if(data.restante==null||data.restante==''){
-                        return '<p class="m-0">$'+formatMoney(data.comision_total)+'</p>';
-                    }
-                    else{
-                        return '<p class="m-0">$'+formatMoney(data.restante)+'</p>';
-                    }
+                   
+                        return '<p class="m-0">'+data.restantes3+'</p>';
+                    
                 }
 
             }, 
