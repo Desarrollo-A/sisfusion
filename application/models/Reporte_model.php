@@ -192,7 +192,7 @@ class Reporte_model extends CI_Model {
             if ($render == 1) { // SE TRAE LOS GERENTES
                 $filtro .= " AND cl.id_subdirector = $id_usuario";
                 $comodin = "id_gerente";
-            } else { // CONSULTA NIVEL MÁS ALTO DIRECTOR GENERAL, ASISTENTE DE DIRECCIÓN, FAB Y ABUELITO
+            } else { // CONSULTA NIVEL MÁS ALTO DIRECTOR GENERAL, ASISTENTE DE DIRECCIÓN, FAB Y LIC. GASTÓN
                 if ($typeTransaction == null) // SE CONSULTA DESDE EL ROWDETAIL O LA MODAL QUE SE TRAE EL DETALLE DE LOS LOTES
                     $filtro .= " AND cl.id_subdirector = $leadersList[3] AND cl.id_regional = $leadersList[4]"; // CON BASE EN UN REGIONAL SE TRAE LAS SUBDIRECCIONES
                 else // SE CONSULTA DESDE LA TABLA PAPÁ
@@ -226,7 +226,7 @@ class Reporte_model extends CI_Model {
             } else
                 $filtro .= "";
         }
-        else if ($id_rol == 1 || $id_rol == 4 || $id_rol == 18 || $id_rol == 63) { // CONSULTA DIRECTOR, ASISTENTE DE DIRECCIÓN, FAB Y LIC. GASTÓN
+        else if ($id_rol == 1 || $id_rol == 4 || $id_rol == 18 || $id_rol == 33 || $id_rol == 58 || $id_rol == 63 || $id_rol == 69) { // CONSULTA DIRECTOR, ASISTENTE DE DIRECCIÓN, FAB Y LIC. GASTÓN
             $comodin2 = 'LEFT';
             if ($render == 1) { // PRIMERA CARGA
                 $filtro .= "";
@@ -452,7 +452,6 @@ class Reporte_model extends CI_Model {
         ISNULL(CAST((f.totalCanA * 100) / NULLIF(a.totalVentas,0) AS decimal(16,2)), 0) porcentajeTotalCanA, 
         --ISNULL(CAST(((ISNULL(b.totalCT, 0) - ISNULL(e.totalCanC, 0)) * 100) / NULLIF(a.totalVentas,0) AS decimal(16,2)), 0) porcentajeTotalCanA,
         a.id_sede,
-        
         a.sede
         FROM (
         --SUMA TOTAL
