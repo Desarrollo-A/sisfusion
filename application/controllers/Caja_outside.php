@@ -178,6 +178,7 @@ class Caja_outside extends CI_Controller
                 $datos["idStatusContratacion"] = 0;
                 $datos["idMovimiento"] = 0;
                 $datos["ubicacion"] = 0;
+                $datos["msi"] = 36; //se asignan los msi por defecto al dar de alta el lote
 
 
                 if ($value->idStatusLote == 'DISPONIBLE') {

@@ -74,7 +74,7 @@
 													<?php
 													if($residencial != NULL) :
 														foreach($residencial as $fila) : ?>
-															<option value= <?=$fila['idResidencial']?> data-nombre='<?=$fila['nombreResidencial']?>'> <?=$fila['nombreResidencial']?> </option>
+															<option value= <?=$fila['idResidencial']?> data-nombre='<?=$fila['nombreResidencial']?>' style="text-transform: uppercase"> <?=$fila['descripcion']?> </option>
 														<?php endforeach;
 													endif;
 													?>
