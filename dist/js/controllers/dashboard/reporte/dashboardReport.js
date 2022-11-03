@@ -63,6 +63,7 @@ var initialOptions = {
 }
 
 function readyReport(){
+    $('[data-toggle="tooltip"]').tooltip();
     sp.initFormExtendedDatetimepickers();
     $('.datepicker').datetimepicker({locale: 'es'});
     initReport();
@@ -610,6 +611,13 @@ $(document).on('click', '#searchByDateRangeTable', async function (e) {
     e.preventDefault();
     e.stopImmediatePropagation();
     $(".boxAccordions").html('');
+
+    /**********************/
+
+    loaderCharts();
+    $("#modalChart .boxModalTitle .total").html('');
+    /**********************/
+
     let dates = {begin: $('#tableBegin').val(), end: $('#tableEnd').val()};
     let rol = userType == 2 ? await getRolDR(idUser): userType;
 
@@ -624,8 +632,10 @@ $(document).on('click', '#searchByDateRangeTable', async function (e) {
         rolString = 'subdirector';
     else 
         rolString = 'asesor';
-
+    // getSpecificChart('na', formatDate($('#tableBegin').val()), formatDate($('#tableEnd').val()));
+    getLastSales($('#tableBegin').val(), $('#tableEnd').val());
     fillBoxAccordions(rolString, rol, idUser, 1, 2, dates, [0, null, null, null, null, null, rol]);
+
 });
 
 $(document).on('click', '.chartButton', function () {
@@ -648,20 +658,30 @@ async function chartDetail(e, tipoChart){
     $("#modalChart .boxModalTitle .total").html('');
     $("#modalChart #type").val('');
 
+
     var nameChart = (titleCase($(e).data("name").replace(/_/g, " "))).split(" ");
     $(".boxModalTitle .title").append('<p class="mb-1">' + nameChart[0] + '<span class="enfatize"> '+ nameChart[1] +'</span></p>');
 
-    const fechaInicio = new Date();
-     // Iniciar en este año, este mes, en el día 1
-     const beginDate = new Date(fechaInicio.getFullYear(), fechaInicio.getMonth(), 1);
-     // END DATE
-     const fechaFin = new Date();
-     // Iniciar en este año, el siguiente mes, en el día 0 (así que así nos regresamos un día)
-     const endDate = new Date(fechaFin.getFullYear(), fechaFin.getMonth() + 1, 0);
-     finalBeginDate = [beginDate.getFullYear(), ('0' + (beginDate.getMonth() + 1)).slice(-2), ('0' + beginDate.getDate()).slice(-2)].join('-');
-     finalEndDate = [endDate.getFullYear(), ('0' + (endDate.getMonth() + 1)).slice(-2), ('0' + endDate.getDate()).slice(-2)].join('-');
-     finalBeginDate2 = ['01', '01', beginDate.getFullYear()].join('/');
-     finalEndDate2 = [('0' + endDate.getDate()).slice(-2), ('0' + (endDate.getMonth() + 1)).slice(-2), endDate.getFullYear()].join('/');
+    let fecha_inicio = $('.moreMiniChart ').attr('data-fi');
+    let fecha_fin    = $('.moreMiniChart ').attr('data-ft');
+    if(fecha_inicio == undefined || fecha_fin==undefined){
+        const fechaInicio = new Date();
+        // Iniciar en este año, este mes, en el día 1
+        const beginDate = new Date(fechaInicio.getFullYear(), fechaInicio.getMonth(), 1);
+        // END DATE
+        const fechaFin = new Date();
+        // Iniciar en este año, el siguiente mes, en el día 0 (así que así nos regresamos un día)
+        const endDate = new Date(fechaFin.getFullYear(), fechaFin.getMonth() + 1, 0);
+        finalBeginDate = [beginDate.getFullYear(), ('0' + (beginDate.getMonth() + 1)).slice(-2), ('0' + beginDate.getDate()).slice(-2)].join('-');
+        finalEndDate = [endDate.getFullYear(), ('0' + (endDate.getMonth() + 1)).slice(-2), ('0' + endDate.getDate()).slice(-2)].join('-');
+        finalBeginDate2 = ['01', '01', beginDate.getFullYear()].join('/');
+        finalEndDate2 = [('0' + endDate.getDate()).slice(-2), ('0' + (endDate.getMonth() + 1)).slice(-2), endDate.getFullYear()].join('/');
+    }else{
+        finalBeginDate2 = fecha_inicio;
+        finalEndDate2 = fecha_fin;
+    }
+
+
 
 
     $("#modalChart #beginDate").val(finalBeginDate2);
@@ -707,6 +727,7 @@ function getSpecificChart(type, beginDate, endDate){
 
 function getLastSales(beginDate, endDate){
     $('.loadChartMini').removeClass('d-none');
+
     $.ajax({
         type: "POST",
         url: `${base_url}Reporte/getDataChart`,
@@ -731,7 +752,11 @@ function getLastSales(beginDate, endDate){
                     var miniChartApex = new ApexCharts(document.querySelector("#"+chart+""), setOptionsChartReport(series, categories, miniChart));
                     miniChartApex.render();
                 }
-                else $("#"+chart+"").addClass('d-flex justify-center');
+                else {
+                    $("#"+chart+"").html('');
+                    $("#"+chart+"").addClass('d-flex justify-center');
+                    $('#'+chart+"").append( "<img src='"+base_url+"/dist/img/emptyCharts.png' alt='Icono gráfica' class='h-70 w-auto'>");
+                }
             }
         },
         error: function() {
@@ -749,6 +774,47 @@ $(document).on("click", "#searchByDateRange", function () {
     getSpecificChart(type, formatDate(beginDate), formatDate(endDate));
 });
 
+function loaderCharts(){
+    $('.appliedFilter').removeAttr('data-toggle');
+    // $('.appliedFilter').removeAttr('title');
+    $('.appliedFilter').removeAttr('data-original-title');
+    let fechaInicio= $('#tableBegin').val();
+    let fechaTermino= $('#tableEnd').val();
+    // console.log('fechaInicio', fechaInicio);
+    // console.log('fechaTermino', fechaTermino);
+   $('.appliedFilter .selectMini').html('');
+   $('.appliedFilter .selectMini').append('Del: '+fechaInicio+' al: '+fechaTermino+'');
+    $('.appliedFilter').attr('data-toggle', 'tooltip');
+    // $('.appliedFilter').attr('title', 'Del: '+$('#tableBegin').val()+' al: '+$('#tableEnd').val());
+    $('.appliedFilter').attr('data-original-title', 'Del: '+$('#tableBegin').val()+' al: '+$('#tableEnd').val());
+    //<label style="font-size: 0.5em">Al: '+fechaTermino+'</label>
+
+    $('#totventasContratadas').addClass('subtitle_skeleton');
+    $('#totventasContratadas').text('');
+
+    $('#totventasApartadas').addClass('subtitle_skeleton');
+    $('#totventasApartadas').text('');
+
+    $('#totcanceladasContratadas').addClass('subtitle_skeleton');
+    $('#totcanceladasContratadas').text('');
+
+    $('#totcanceladasApartadas').addClass('subtitle_skeleton');
+    $('#totcanceladasApartadas').text('');
+
+
+    $('.boxMiniCharts').html('');
+    let cargador = '<div class="loadChartMini w-100 h-100">'+
+                        '<img src="'+base_url+'dist/img/miniChartLoading.gif" alt="Icono gráfica" class="h-100 w-auto">'+
+                     '</div>';
+    // $('.boxMiniCharts').append('<div class="col-xs-12 pdt-20"><center><span class="loader center-align"></span></center></div>');
+    $('.boxMiniCharts').append(cargador);
+
+    //add attr al miniboton para que al abrir tenga la fecha seteada
+    $('.moreMiniChart').attr('data-fi', fechaInicio);
+    $('.moreMiniChart').attr('data-ft', fechaTermino);
+
+
+};
 function orderedDataChart(data){
     let allData = [], totalMes = [], meses = [], series = [];
     for( i=0; i<data.length; i++){

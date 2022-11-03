@@ -61,9 +61,26 @@ class Reporte extends CI_Controller {
             $beginDate = "$currentYear-01-01";
             $endDate = date("Y-m-d");
         }else{
-            $beginDate = date("Y-m-d", strtotime($this->input->post("beginDate")));
-            $endDate = date("Y-m-d", strtotime($this->input->post("endDate")));
+
+            $beginDate = date("Y-m-d", strtotime(str_replace('/', '-', $this->input->post("beginDate"))));
+            $endDate = date("Y-m-d", strtotime(str_replace('/', '-', $this->input->post("endDate"))));
         }
+
+//        $nueva = str_replace('/', '-', $this->input->post("beginDate"));
+//        $nueva2 = str_replace('/', '-', $this->input->post("endDate"));
+//        print_r($nueva);
+//        echo '<br>';
+//        print_r($nueva2);
+//        exit;
+//        var_dump( $this->validateDate($beginDate));
+//        var_dump( $this->validateDate($endDate));
+//        exit;
+//        echo 'Inicio:<br>';
+//        print_r($this->input->post("beginDate"));
+//        echo '<br>';
+//        echo 'Fin:<br>';
+//        print_r($this->input->post("endDate"));
+//        echo '<br>';
         $id = $this->session->userdata('id_usuario');
         $rol = $this->session->userdata('id_rol');
         
@@ -112,12 +129,42 @@ class Reporte extends CI_Controller {
         }
 
         $data = $this->Reporte_model->getDataChart($general, $tipoChart, $rol, $condicion_x_rol, $coordinador, $coordinadorVC, $coordinadorVA, $coordinadorCC, $coordinadorCA, $beginDate, $endDate);
-        
+
+//        print_r($data);
+//        exit;
+        $sumatoria=0;
+        foreach ($data as $resultado){
+            if($resultado['tipo'] =='vc' || $resultado['tipo'] =='va'){
+//                $resultado['total'] = str_replace(array(',', '$'), '',  $resultado['total']);
+//                print_r(str_replace(array(',', '$'), '',  $resultado['total']));
+//                echo '<br>';
+                $sumatoria=$sumatoria + str_replace(array(',', '$'), '',  $resultado['total']);
+            }
+        }
+        $nuevoarray[] = array(
+            'total' => "$sumatoria",
+            'cantidad' => 10,
+            'mes' => 1,
+            'año' => 2022,
+            'tipo' => 'vg',
+            'rol' => 1
+        );
+        $data = array_merge($data, $nuevoarray);
+//        print_r(array_values($data));
+//        exit;
+//        print_r($data);
+//        exit;
         if($data != null) {
             echo json_encode($data);
         } else {
             echo json_encode(array());
         }
+    }
+    function validateDate($date, $format = 'Y-m-d')
+    {
+        $d = DateTime::createFromFormat($format, $date);
+        // The Y ( 4 digits year ) returns TRUE for any integer with any number of digits so changing the comparison from == to === fixes the issue.
+        return $d && $d->format($format) === $date;
     }
     public function chartCoordinator($id, $beginDate, $endDate){
         $coordinadorAll = [];

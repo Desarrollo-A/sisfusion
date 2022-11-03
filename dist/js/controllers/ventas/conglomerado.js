@@ -631,19 +631,10 @@ function loadTable(tipoDescuento) {
             document.getElementById("total_pagos").value = cantidad_de_pagos;
             valor = 0;
             valor1 = 0;
-            console.log(total);
-            console.log('total');
-
-            console.log(Math.round(pago_mensual));
-            console.log('pago menssual');
-            console.log(Math.round(pendiente));
-            console.log('pendiente pendiente pendiente pendiente');
-            console.log(total);
-            console.log('total total total total');
+       
             mensualidadesFaltantes = descuento / pago_mensual ;
             mensualidadesFaltantesMostrar = pendiente / pago_mensual ;
-            console.log(Math.round(cantidad_de_pagos));
-            console.log('mensualidadesFaltantes');
+           
             document.getElementById("descuento1").value = descuento;
             
             if ((mensualidadesFaltantesMostrar % 1)  == 0 ){
@@ -688,7 +679,7 @@ function loadTable(tipoDescuento) {
                 }
                // mensualidadesFaltantes
             }
-            console.log(mensualidadesFaltantes);
+         
             document.getElementById("numeroPagos1").value = Math.trunc( mensualidadesFaltantesMostrar);
             
             Total_a_pagar = mensualidadesFaltantes * pago_mensual;
@@ -698,7 +689,6 @@ function loadTable(tipoDescuento) {
 
             document.getElementById("pago_ind011").value = Math.trunc( NuevasMensualidades);
 
-            console.log('pagos nuevos');
             //faltantes = mensualidadesFaltantes/mensual;
             
         });
@@ -737,7 +727,8 @@ function loadTable(tipoDescuento) {
         });
       
         $(document).on("click", ".updateDescuento", function () {
-           let validation = true;
+            document.getElementById('updateDescuento').disabled = true;
+            let validation = true;
            mensualidades = document.getElementById("pago_ind011").value;
             
            pago = document.getElementById("descuento1").value ;
@@ -762,9 +753,12 @@ function loadTable(tipoDescuento) {
                  
                       }, 
                     success : response => {
+                        document.getElementById('updateDescuento').disabled = false;
                         alerts.showNotification("top", "right", "Descuento actualizado satisfactoriamente.", "success");
-                       
+                     
+                   
                         // toastr[response.response_type](response.message);
+                        $('#editDescuento').modal('toggle');
                     },
                     error : (a, b, c) => {
                         alerts.showNotification("top", "right", "Descuento No actualizado .", "error");

@@ -197,25 +197,16 @@
 	// }
 
 	public function interesMenos(){
-		$query = $this->db->query("SELECT idCondominio, idResidencial, msni, nombre, create_at FROM condominios 
-		WHERE idResidencial NOT IN (3, 13, 22) 
-		AND msni > 0 
-		AND create_at < DATEADD(DAY, -15, GETDATE()) 
-		UNION ALL
-		SELECT idCondominio, idResidencial, msni, nombre, create_at 
-		FROM condominios 
-		WHERE idResidencial NOT IN (3, 13, 22) 
-		AND msni > 0 
-		AND create_at IS NULL 
-		ORDER BY create_at;")->result_array();
+		$query = $this->db->query("SELECT idLote, c.idCondominio, idResidencial, msi as msni, nombre, l.fecha_creacion as create_at
+        FROM lotes l 
+        INNER JOIN condominios c ON c.idCondominio=l.idCondominio
+        WHERE c.idResidencial NOT IN (3, 13, 22) 
+        AND msni > 0 
+        AND (l.fecha_creacion < DATEADD(DAY, -15, GETDATE()) OR l.fecha_creacion IS NULL) ");
 
-		for ($i = 0; $i < count($query); $i++) {
-			$updateArrayData[] = array(
-				'idCondominio' => $query[$i]['idCondominio'],
-				'msni' => $query[$i]['msni'] - 1
-			);
-		}
-		return $updateArrayData;
+
+//		return $updateArrayData;
+        return $query->result_array();
 	}
 
 	public function SessionDestroy(){
