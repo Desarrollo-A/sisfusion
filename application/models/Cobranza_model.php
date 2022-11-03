@@ -230,7 +230,7 @@ class Cobranza_model extends CI_Model {
         FORMAT(ISNULL( pci3.abono_neodata , '0.00'), 'C') pagado3 ,
         FORMAT(ISNULL( pc14.abono_pagado2  , '0.00'), 'C') pago_neodata4,
 			FORMAT(ISNULL( pci3.pago_neodata , '0.00'), 'C') pago_neodata3,
-			FORMAT(ISNULL(pci3.pago_neodata - pci3.abono_neodata , '0.00'),'C') restantes3, 
+			FORMAT(ISNULL(com.comision_total - pci3.abono_neodata , '0.00'),'C') restantes3, 
          FORMAT(ISNULL(com.comision_total-pci2.abono_pagado , '0.00'),'C') restantes, 
         com.porcentaje_decimal,  UPPER(s.nombre) plaza, UPPER(s3.nombre) plazaB,
         pci1.estatus,  cl.fechaApartado fecha_apartado  , pci1.fecha_abono fecha_abono,
