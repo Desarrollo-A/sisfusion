@@ -299,14 +299,14 @@ function fillTable(idLote, beginDate, endDate, bandera ) {
             },{
                 //13
                 data: function (data){
-                    return data.pagado3;
+                    return data.pagado;
                 }
             },
             {
                 //14
                 data: function( data ){
                    
-                        return '<p class="m-0">'+data.restantes3+'</p>';
+                        return '<p class="m-0">'+data.restantes+'</p>';
                     
                 }
 
@@ -338,9 +338,15 @@ function fillTable(idLote, beginDate, endDate, bandera ) {
             }, {
                 data: function (data ){
                     let respuesta ='';
+                    let respuesta2 ='';
+                    if(data.source != null && data.source != 0){
+                         respuesta2 = "-  DragonCEM";
+                    }else{
+                        respuesta2 = ""
+                    }
                     if(data.lugar_prospeccion != null){
                          
-                        respuesta  = data.lugar_prospeccion;
+                        respuesta  = data.lugar_prospeccion + respuesta2;
 
                     }else {
                         respuesta  = 'No definido';
