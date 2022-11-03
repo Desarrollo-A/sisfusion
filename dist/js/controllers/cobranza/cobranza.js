@@ -209,7 +209,7 @@ function fillTable(idLote, beginDate, endDate, bandera ) {
                 }
             }, {
                 data: function(data){
-                    return data.pago_neodata3;
+                    return data.comision_total;
                 //5//5
                 }
             },
