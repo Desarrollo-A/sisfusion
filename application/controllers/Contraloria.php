@@ -3194,15 +3194,15 @@ public function return1(){
 	public function update_msni(){
 	    $typeTranscation = $this->input->post('typeTransaction');
         $arrayMsi = json_decode($this->input->post('file_msni'));
-//	    print_r($this->input->post('idResidencial'));
-//	    echo '<br>';
-//	    echo '<br>';
-//	    print_r(json_decode($this->input->post('typeTransaction')));
-//        echo'<br>';
+        //print_r($this->input->post('idResidencial'));
+        //echo '<br>';
+        //echo '<br>';
+        //print_r(json_decode($this->input->post('typeTransaction')));
+        //echo'<br>';
         //si es tipo de transaccion es = a 1
         //quiere decir que la actualizacion es por condominios
         //si es 0: quiere decir que es por los lotes subidos
-//        echo 'lotes a actualizar<br>';
+        //echo 'lotes a actualizar<br>';
         $array_update = array();
         switch ($typeTranscation){
             case 1:
