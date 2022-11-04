@@ -797,7 +797,7 @@ $('#condominio').change( function(){
                     orientation: 'landscape',
                     pageSize: 'LEGAL',
                     exportOptions: {
-                        columns: [0,1,2,3,4,5,6,9],
+                        columns: [0,1,2,3,4,5,6,7],
                         format: {
                             header: function (d, columnIdx) {
                                 switch (columnIdx) {
@@ -821,7 +821,7 @@ $('#condominio').change( function(){
                                     case 6:
                                         return 'COMENTARIO';
                                         break;
-                                    case 9:
+                                    case 7:
                                         return 'PROSPECTO';
                                         break;
                                 }
@@ -882,11 +882,11 @@ $('#condominio').change( function(){
                 },
                 {
                     "data": function( d ){
-                        var buttonst, dsbutton;
+                        var buttonst = '', dsbutton = '';
                         var especialClass = '';
                         var atributo_button ='';
                         var url_to_go  = '';
-
+                        console.log(d);
                         if(d.vl == '1') {
                             buttonst = 'En proceso de Liberación';
                         }
@@ -918,7 +918,7 @@ $('#condominio').change( function(){
                                 atributo_button = '';
                                 url_to_go  = '<?=base_url()?>index.php/Asesor/deposito_seriedad/'+d.id_cliente+'/0';
 
-                                buttonst = customButton(d.dsType, d.idMovimiento, d.estatus, d.nombreLote, d.id_cliente, d.nombreResidencial, d.nombreCondominio, d.idCondominio, d.idLote, d.fechaVenc);
+                                buttonst = customButton(d.dsType, d.idMovimiento, d.estatus, d.nombreLote, d.id_cliente, d.nombreResidencial, d.nombreCondominio, d.idCondominio, d.idLote, d.fechaVenc, url_to_go);
                             }
                         }
 
@@ -1568,7 +1568,7 @@ $('#condominio').change( function(){
         })
     })
 
-    function customButton(dsType, idMovimiento, estatus, nombreLote, id_cliente, nombreResidencial, nombreCondominio, idCondominio, idLote, fechaVenc,attBtn = ''){        
+    function customButton(dsType, idMovimiento, estatus, nombreLote, id_cliente, nombreResidencial, nombreCondominio, idCondominio, idLote, fechaVenc, url_to_go, attBtn = ''){        
         especialClass = idMovimiento == 31 ? 'getInfo2' : idMovimiento == 85 ? 'getInfo2_2'  : idMovimiento == 20 ? 'getInfo5' :  idMovimiento == 63 ? 'getInfo6' : idMovimiento == 73 ? 'getInfo2_3' : idMovimiento == 82 ? 'getInfo2_7' : idMovimiento == 92 ? 'getInfo5_2' : idMovimiento == 96 ? 'return1' : comentario;
 
         stringBtn = '<a href="#" '+attBtn+' data-estatus="'+estatus+'" data-nomLote="'+nombreLote+'" data-idCliente="'+id_cliente+'" data-nombreResidencial="'+nombreResidencial+'" data-nombreCondominio="'+nombreCondominio+'" data-nombreLote="'+nombreLote+'" data-idCondominio="'+idCondominio+'" data-idLote="'+idLote+'" data-fechavenc="'+fechaVenc+'" class="btn-data btn-green '+especialClass+'">  <i class="fas fa-check" title= "Enviar estatus"></i></a>';

@@ -547,7 +547,7 @@ return $query->result();
             $filtro_02 = ' '.$filtro_00;
              break;
          }
-          return $this->db->query("SELECT pci1.id_pago_i, pci1.id_comision, lo.nombreLote, re.nombreResidencial as proyecto, co.nombre as condominio,lo.totalNeto2 precio_lote, com.comision_total, com.porcentaje_decimal, pci1.abono_neodata pago_cliente, pci1.pago_neodata, pci2.abono_pagado pagado, com.comision_total-pci2.abono_pagado restante, pci1.estatus, pci1.fecha_abono fecha_creacion, CONCAT(u.nombre, ' ',u.apellido_paterno, ' ', u.apellido_materno) user_names ,pci1.id_usuario, oprol.nombre as puesto, oxcest.nombre as estatus_actual, oxcest.id_opcion id_estatus_actual, pci1.descuento_aplicado, cl.lugar_prospeccion, lo.referencia, pac.bonificacion, u.estatus as activo, (CASE WHEN pe.id_penalizacion IS NOT NULL THEN 1 ELSE 0 END) penalizacion
+          return $this->db->query("SELECT pci1.id_pago_i, pci1.id_comision, lo.nombreLote, re.nombreResidencial as proyecto, co.nombre as condominio,lo.totalNeto2 precio_lote, com.comision_total, com.porcentaje_decimal, pci1.abono_neodata pago_cliente, pci1.pago_neodata, pci2.abono_pagado pagado, com.comision_total-pci2.abono_pagado restante, pci1.estatus, pci1.fecha_abono fecha_creacion, CONCAT(u.nombre, ' ',u.apellido_paterno, ' ', u.apellido_materno) user_names ,pci1.id_usuario, oprol.nombre as puesto, oxcest.nombre as estatus_actual, oxcest.id_opcion id_estatus_actual, pci1.descuento_aplicado, cl.lugar_prospeccion, lo.referencia, pac.bonificacion, u.estatus as activo, (CASE WHEN pe.id_penalizacion IS NOT NULL THEN 1 ELSE 0 END) penalizacion, color
                   FROM pago_comision_ind pci1 
                   LEFT JOIN (SELECT SUM(abono_neodata) abono_pagado, id_comision 
                   FROM pago_comision_ind WHERE (estatus in (11,3) OR descuento_aplicado = 1) 
@@ -8932,43 +8932,7 @@ return $query->result();
             }
         }
     }
-    function getInfoReportePagos($query2){
 
-        $cmd = "SELECT pci1.id_pago_i, lo.nombreLote, re.empresa, CONCAT(u.nombre, ' ',u.apellido_paterno, ' ', u.apellido_materno) user_names, 
-        pci1.fecha_pago_intmex, pci1.id_usuario, oprol.nombre as puesto, se.nombre, 
-        his.comentario as creado,   FORMAT(ISNULL(pci1.abono_neodata , '0.00'), 'C') abono
-        FROM pago_comision_ind pci1
-        INNER JOIN comisiones com ON pci1.id_comision = com.id_comision
-        INNER JOIN lotes lo ON lo.idLote = com.id_lote AND lo.status = 1 
-        INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
-        INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
-        INNER JOIN usuarios u ON u.id_usuario = com.id_usuario $query2
-        INNER JOIN usuarios cr ON cr.id_usuario = pci1.modificado_por
-        INNER JOIN opcs_x_cats oprol ON oprol.id_opcion = com.rol_generado AND oprol.id_catalogo = 1
-        INNER JOIN historial_comisiones his ON his.id_pago_i = pci1.id_pago_i 
-        AND his.comentario like '%CAPITAL HUMANO CANCELÓ DESCUENTO%'
-        LEFT JOIN sedes se   
-        ON se.id_sede = (CASE u.id_usuario 
-                         WHEN 2 THEN 2 WHEN 3 THEN 2 WHEN 1980 THEN 2 
-                         WHEN 1981 THEN 2 WHEN 1982 THEN 2 WHEN 1988 THEN 2 
-                         WHEN 4 THEN 5 WHEN 5 THEN 3 WHEN 607 THEN 1 
-                         WHEN 7092 THEN 4 WHEN 9629 THEN 2
-                         ELSE u.id_sede END) and se.estatus = 1";
-
-          $query = $this->db->query($cmd);
-          return $query->result_array();
-
-    }
-    function descuentos_universidad($clave , $data){
-        try {
-            $this->db->where('id_descuento', $clave);
-            $this->db->update('descuentos_universidad', $data);
-            return TRUE;
-        }
-        catch(Exception $e) {
-            return $e->getMessage();
-        }
-    } 
     function fusionAcLi($estatus='3'){
         
         switch($estatus) {

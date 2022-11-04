@@ -281,10 +281,15 @@
                                     <div class="input-group">
                                         <label  class="input-group-btn"></label>
                                         <span class="btn btn-info btn-file">
-                                            <i class="fa fa-upload"></i> Subir archivo
-                                            <input id="file-upload-extranjero" name="file-upload-extranjero" required accept="application/pdf" type="file"/>
-                                        </span>
+                                    <i class="fa fa-upload"></i> Subir archivo
+                                    <input id="file-upload-extranjero"
+                                           name="file-upload-extranjero"
+                                           required
+                                           accept="application/pdf"
+                                           type="file" />
+                                </span>
                                         <p id="archivo-extranjero"></p>
+
                                     </div>
                                     <div class="row">
                                         <div class="col-lg-12 text-center">

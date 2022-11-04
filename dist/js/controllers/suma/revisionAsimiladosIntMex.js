@@ -1,11 +1,10 @@
-var totaPen = 0;
-
 function cleanCommentsAsimilados() {
     var myCommentsList = document.getElementById('comments-list-asimilados');
     var myCommentsLote = document.getElementById('nameLote');
     myCommentsList.innerHTML = '';
     myCommentsLote.innerHTML = '';
 }
+
 
 $(document).ready(function() {
     $("#tabla_asimilados").prop("hidden", true);
@@ -74,16 +73,6 @@ $('#tabla_asimilados thead tr:eq(0) th').each( function (i) {
     else {
         $(this).html('<input id="all" type="checkbox" style="width:20px; height:20px;" onchange="selectAll(this)"/>');
     }
-});
-
-$(document).on("click", ".individualCheck", function() {
-    tr = $(this).closest('tr');
-    var row = tabla_asimilados.row(tr).data();
-
-    if ($(this).prop('checked')) totaPen += parseFloat(row.impuesto);
-    else totaPen -= parseFloat(row.impuesto);
-
-    $("#totpagarPen").html('$ ' + formatMoney(totaPen));
 });
 
 function getAssimilatedCommissions(idRol, idUsuario){
@@ -275,7 +264,7 @@ function getAssimilatedCommissions(idRol, idUsuario){
             render: function (d, type, full, meta){
                 if(full.estatus == 3){
                     if(full.referencia){
-                        return '<input type="checkbox" name="idTQ[]" class="individualCheck" style="width:20px;height:20px;"  value="' + full.id_pago_suma + '">';
+                        return '<input type="checkbox" name="idTQ[]" style="width:20px;height:20px;"  value="' + full.id_pago_suma + '">';
                     }else{
                         return '';
                     }
@@ -290,9 +279,9 @@ function getAssimilatedCommissions(idRol, idUsuario){
             },
         }],
         ajax: {
-            url: general_base_url + "Suma/getRevisionIntMex",
+            url: general_base_url + "Suma/getAsimiladosRevisionIntMex",
             type: "POST",
-            data: { idRol: idRol, idUsuario: idUsuario, formaPago: '3'},
+            data: { idRol: idRol, idUsuario: idUsuario},
             dataType: 'json',
             dataSrc: ""
         }

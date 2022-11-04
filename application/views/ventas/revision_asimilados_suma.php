@@ -8,6 +8,7 @@
             $datos = $datos2;
             $datos = $datos3;
             $this->load->view('template/sidebar', $datos);
+        
         ?>
 
         <!-- Modals -->
@@ -104,9 +105,9 @@
                                                                 <th>REFERENCIA</th>
                                                                 <th>NOMBRE</th>
                                                                 <th>SEDE</th>
-                                                                <th>TOTAL COMISIÓN</th>
+                                                                <th>TOTAL COMISION</th>
                                                                 <th>IMPUESTO</th>
-                                                                <th>% COMISIÓN</th>
+                                                                <th>% COMISION</th>
                                                                 <th>ESTATUS</th>
                                                                 <th>MÁS</th>
                                                             </tr>

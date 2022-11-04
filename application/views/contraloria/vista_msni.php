@@ -52,42 +52,19 @@
 								<h3 class="card-title center-align" >Meses sin intereses</h3>
 								<div class="toolbar">
 									<div class="container-fluid p-0">
-                                        <div class="row aligned-row d-flex align-end">
-                                                <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                                                    <label style="font-size: small">Elije el modo para subir los meses sin interés:</label>
-                                                </div>
-                                            <div class="col col-xs-12 col-sm-12 col-md-4 col-lg-4 pb-3">
-                                                <div class="radio_container w-100">
-                                                    <input class="d-none generate" type="radio" name="modoSubida" id="condominioM" checked value="1">
-                                                    <label for="condominioM" class="w-50">Por Condominio</label>
-                                                    <input class="d-none find-results" type="radio" name="modoSubida" id="loteM" value="0">
-                                                    <label for="loteM" class="w-50">Por lote</label>
-                                                </div>
-                                            </div>
-                                        </div>
 										<div class="row aligned-row d-flex align-end">
 											<div class="col col-xs-12 col-sm-4 col-md-4 col-lg-4">
 												<label class="m-0" for="filtro3">Proyecto</label>
-												<select name="filtro3" id="filtro3" class="selectpicker select-gral mb-0"
-                                                        data-show-subtext="true" data-live-search="true"  data-style="btn"
-                                                        onchange="changeCondominio()" title="Selecciona Proyecto" data-size="7" required>
+												<select name="filtro3" id="filtro3" class="selectpicker select-gral mb-0" data-show-subtext="true" data-live-search="true"  data-style="btn" title="Selecciona Proyecto" data-size="7" required>
 													<?php
 													if($residencial != NULL) :
 														foreach($residencial as $fila) : ?>
-															<option value= <?=$fila['idResidencial']?> data-nombre='<?=$fila['nombreResidencial']?>'> <?=$fila['nombreResidencial']?> </option>
+															<option value= <?=$fila['idResidencial']?> > <?=$fila['nombreResidencial']?> </option>
 														<?php endforeach;
 													endif;
 													?>
 												</select>
 											</div>
-                                            <div class="col col-xs-12 col-sm-4 col-md-4 col-lg-4 hide" id="contenedor-condominio">
-                                                <label class="m-0" for="filtro4">Condominio</label>
-                                                <select name="filtro4" id="filtro4" class="selectpicker select-gral mb-0"
-                                                        data-show-subtext="true" data-live-search="true"  data-style="btn"
-                                                        title="Selecciona Proyecto" data-size="7" required onChange="loadLotes()">
-                                                </select>
-                                            </div>
-                                            <input id="typeTransaction" type="hidden" value="1">
 											<div class="col col-xs-12 col-sm-4 col-md-4 col-lg-4 mt-2">
 												<button type="button" id="loadFile" class="btn-data-gral btn-success d-flex justify-center align-center">Cargar información<i class="fas fa-paper-plane pl-1"></i>
 												</button>
@@ -101,8 +78,7 @@
 											<table class="table-striped table-hover" id="tabla_msni" name="tabla_msni_name">
 												<thead>
 													<tr>
-														<th>ID</th>
-														<th>NOMBRE</th>
+														<th>CONDOMINIO</th>
 														<th>MSNI</th>
 													</tr>
 												</thead>
@@ -128,11 +104,9 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
 	<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
 	<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
-    <script type="text/javascript" src="//unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
 
 	<script>
 
-        var tablaMsi;
 		$(document).ready (function() {
 				$(document).on('fileselect', '.btn-file :file', function(event, numFiles, label) {
 					var input = $(this).closest('.input-group').find(':text'),
@@ -152,76 +126,9 @@
 					console.log('triggered');
 				});
 
-            $('input[type=radio][name=modoSubida]').change(function() {
-                if (this.value == 1) {
-                    //se queda asi ta cual
-                    //se debe mostrar el proyecto nomás
-                    $('#contenedor-condominio').addClass('hide');
-                    $('#filtro3').attr('onChange', 'changeCondominio()');
-                    $('#filtro3').val('default').selectpicker('deselectAll');
-                    $('#filtro3').selectpicker('refresh');
-                    $('#filtro4').empty();
-                    $('#filtro4').selectpicker('refresh');
-                    $('#tabla_msni').DataTable().clear().destroy();
-                    $('#typeTransaction').val(this.value);
-                }
-                else if (this.value == 0) {
-                    //se debe mostrar el proyecto y condominio nomás
-                    $('#contenedor-condominio').removeClass('hide');
-                    $('#filtro3').attr('onChange', 'changeLote()');
-                    $('#filtro3').val('default').selectpicker('deselectAll');
-                    $('#filtro3').selectpicker('refresh');
-                    $('#tabla_msni').DataTable().clear().destroy();
-                    $('#typeTransaction').val(this.value);
-
-                }
-            });
-
-
-
-
-
 
 		});
 
-        //cosas del archivo
-        async function processFile(selectedFile) {
-            try {
-                let arrayBuffer = await readFileAsync(selectedFile);
-                return arrayBuffer;
-            } catch (err) {
-                console.log(err);
-            }
-        }
-
-        function readFileAsync(selectedFile) {
-            return new Promise((resolve, reject) => {
-                let fileReader = new FileReader();
-                fileReader.onload = function (event) {
-                    var data = event.target.result;
-                    var workbook = XLSX.read(data, {
-                        type: "binary",
-                        cellDates:true,
-                    });
-                    workbook.SheetNames.forEach(sheet => {
-                        rowObject = XLSX.utils.sheet_to_row_object_array(workbook.Sheets[sheet], {defval: '', blankrows: true});
-                        jsonProspectos = JSON.stringify(rowObject, null);
-                    });
-                    resolve(jsonProspectos);
-                };
-                fileReader.onerror = reject;
-                fileReader.readAsArrayBuffer(selectedFile);
-            })
-        }
-        function validateExtension(extension, allowedExtensions) {
-            let allowedExtensionsArray = allowedExtensions.split(", ");
-            let flag = false;
-            for (let i = 0; i < allowedExtensionsArray.length; i++) {
-                if (allowedExtensionsArray[i] == extension)
-                    flag = true;
-            }
-            return flag;
-        }
 		$('#tabla_msni thead tr:eq(0) th').each( function (i) {
 			var title = $(this).text();
 			$(this).html('<input type="text" class="textoshead"  placeholder="'+title+'"/>' );
@@ -234,6 +141,53 @@
 				}
 			}); 
         });
+
+		$('#filtro3').change(function(){
+			var idProyecto = $(this).val();
+			$('#tabla_msni').DataTable({
+				dom: 'Brt'+ "<'row'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'i><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>",
+				width: 'auto',
+				buttons: [{
+						className: 'btn buttons-excel',
+						text: 'DESCARGAR PLANTILLA',
+						extend: 'csvHtml5',
+						titleAttr: 'CSV',
+						exportOptions: {
+                        columns: [0, 1],
+                        format: {
+                            header:  function (d, columnIdx) {
+                                if(columnIdx == 0){
+                                    return 'CONDOMINIO';
+                                }else if(columnIdx == 1){
+                                    return 'MSNI';
+                                }
+                            }
+                        }
+                    },
+					}],
+				ajax: {
+					"url": '<?=base_url()?>index.php/Contraloria/getMsni/'+idProyecto,
+					"dataSrc": ""
+				},
+				pagingType: "full_numbers",
+                fixedHeader: true,
+                language: {
+                    url: "<?=base_url()?>/static/spanishLoader_v2.json",
+                    paginate: {
+                        previous: "<i class='fa fa-angle-left'>",
+                        next: "<i class='fa fa-angle-right'>"
+                    }
+                },
+                destroy: true,
+                ordering: false,
+				columns: [{
+					data: 'nombre'
+				},
+				{
+					data: 'msni'
+				}]
+			})
+		});
 
 		var getInfo3 = new Array(1);
 		$(document).on("click", "#loadFile", function(e){
@@ -250,184 +204,50 @@
 
 
 		$(document).on('click', '#sendFile', function(e) {
+			e.preventDefault();
 			var idproy = getInfo3[0];
 
 			var file_msni = $("#file_msni")[0].files[0];
-            fileElm = document.getElementById("file_msni");
-            file = fileElm.value;
-
-            console.log('file:', file);
-
 			var validaFile = (file_msni == undefined) ? 0 : 1;
 			var dataFile = new FormData();
 
-
-
-
+			dataFile.append("idResidencial", idproy);
+			dataFile.append("file_msni", file_msni);
 
 			if (validaFile == 0) {
 				alerts.showNotification('top', 'right', 'Debes seleccionar un archivo', 'danger');
 			}
 
 			if (validaFile == 1) {
-                let extension = file.substring(file.lastIndexOf("."));
-                let statusValidateExtension = validateExtension(extension, ".xlsx");
-                let statusValidateExtension2 = validateExtension(extension, ".csv");
-                if (statusValidateExtension == true || statusValidateExtension2==true) { // MJ: ARCHIVO VÁLIDO PARA CARGAR
-                    processFile(fileElm.files[0]).then(jsonInfo => {
-                        dataFile.append("idResidencial", idproy);
-                        dataFile.append("file_msni", jsonInfo);
-                        dataFile.append("typeTransaction", $('#typeTransaction').val());
-                        console.log('process data: ', jsonInfo);
-                        $('#sendFile').prop('disabled', true);
-                        $.ajax({
-                            url: "<?=base_url()?>index.php/Contraloria/update_msni",
-                            data: dataFile,
-                            cache: false,
-                            contentType: false,
-                            processData: false,
-                            type: 'POST',
-                            success : function (response) {
-                                response = JSON.parse(response);
-                                if(response.message == 'OK') {
-                                    alerts.showNotification('top', 'right', '¡Información registrada!', 'success');
-                                    $('#sendFile').prop('disabled', false);
-                                    $('#addFile').modal('hide');
-                                    $("#filtro3").selectpicker('refresh');
-                                    $('#tabla_msni').DataTable().ajax.reload();
-                                } else if(response.message == 'FALSE'){
-                                    alerts.showNotification('top', 'right', '¡Error al enviar la solicitud!', 'danger');
-                                    $('#sendFile').prop('disabled', false);
-                                    $('#addFile').modal('hide');
-                                    $("#filtro3").selectpicker('refresh');
-                                    $('#tabla_msni').DataTable().ajax.reload();
-                                }
-                            }
-                        });
-                    });
-                }
-
-
+				$('#sendFile').prop('disabled', true);
+				$.ajax({
+					url: "<?=base_url()?>index.php/Contraloria/update_msni",
+					data: dataFile,
+					cache: false,
+					contentType: false,
+					processData: false,
+					type: 'POST',
+					success : function (response) {
+						response = JSON.parse(response);
+						if(response.message == 'OK') {
+							alerts.showNotification('top', 'right', '¡Información registrada!', 'success');
+							$('#sendFile').prop('disabled', false);
+							$('#addFile').modal('hide');
+							$("#filtro3").selectpicker('refresh');
+							$('#tabla_msni').DataTable().ajax.reload();
+						} else if(response.message == 'FALSE'){
+							alerts.showNotification('top', 'right', '¡Error al enviar la solicitud!', 'danger');
+							$('#sendFile').prop('disabled', false);
+							$('#addFile').modal('hide');
+							$("#filtro3").selectpicker('refresh');
+							$('#tabla_msni').DataTable().ajax.reload();
+						}
+					}
+				});
 			}
 		});
 
-		function changeCondominio(){
-            var idProyecto = $('#filtro3').val();
-            var data = new Array();
-            var nombreProyecto = $('#filtro3 option:selected').attr('data-nombre');
-            //1: busqueda por proyecto
-            //2: busqueda por lote
-            let typeBusqueda = 1;
-            data["tb"] = 1;
-            data["url"] = '<?=base_url()?>index.php/Contraloria/getMsni/'+typeBusqueda+'/'+idProyecto;
-            data["tituloArchivo"] = 'Plantilla del residencial-'+nombreProyecto;
-            loadTable(data);
-        }
-        function changeLote(){
-            $('#filtro4').empty();
-            $('#filtro4').selectpicker('refresh');
-            console.log('se deben cargar los condominios');
-            var idProyecto = $('#filtro3').val();
-            console.log('idProyecto', idProyecto);
-            $.ajax({
-                url: '<?=base_url()?>General/getCondominiosList',
-                type: 'post',
-                dataType: 'json',
-                data: {"idResidencial": idProyecto},
-                success: function(data) {
-                    console.log('success', data);
-                    data.map((element, index)=>{
-                        $("#filtro4").append($('<option data-nombre="'+element.nombre+'">').val(element.idCondominio).text(element.nombre));
-                        $("#filtro4").selectpicker('refresh');
-                    });
-                },
-                error: function() {
-                    alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
-                }
-            });
-        }
-        function loadLotes(){
-		    console.log('load lotes');
-            var idCondominio = $('#filtro4').val();
-            var data = new Array();
-            //1: busqueda por proyecto
-            //2: busqueda por lote
-            var nombreCondominio = $('#filtro4 option:selected').attr('data-nombre');
-            let typeBusqueda = 2;
-            data["tb"] = 2;
-            data["url"] = '<?=base_url()?>index.php/Contraloria/getMsni/'+typeBusqueda+'/'+idCondominio;
-            data["tituloArchivo"] = 'Plantilla del condominio-'+nombreCondominio;
-            loadTable(data);
-        }
-        function loadTable(dataVariable){
-            tablaMsi = $('#tabla_msni').DataTable({
-                dom: 'Brt'+ "<'row'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'i><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>",
-                width: 'auto',
-                buttons: [{
-                    className: 'btn buttons-excel',
-                    text: 'DESCARGAR PLANTILLA',
-                    extend: 'csvHtml5',
-                    titleAttr: 'CSV',
-                    title:dataVariable['tituloArchivo'],
-                    exportOptions: {
-                        columns: [0, 1, 2],
-                        format: {
-                            header:  function (d, columnIdx) {
 
-                                if(dataVariable['tb']==1){
-                                    if(columnIdx == 0) {
-                                        return 'ID';
-                                    } else if(columnIdx == 1){
-                                        return 'CONDOMINIO';
-                                    }else if(columnIdx == 2){
-                                        return 'MSNI';
-                                    }
-                                }else if(dataVariable['tb']==2){
-                                    if(columnIdx == 0){
-                                        return 'ID';
-                                    }else if(columnIdx == 1){
-                                        return 'LOTE';
-                                    }else if(columnIdx == 2){
-                                        return 'MSNI';
-                                    }
-                                }
-
-                            }
-                        }
-                    },
-                }],
-                ajax: {
-                    "url": dataVariable['url'],
-                    "dataSrc": ""
-                },
-                pagingType: "full_numbers",
-                fixedHeader: true,
-                language: {
-                    url: "<?=base_url()?>/static/spanishLoader_v2.json",
-                    paginate: {
-                        previous: "<i class='fa fa-angle-left'>",
-                        next: "<i class='fa fa-angle-right'>"
-                    }
-                },
-                destroy: true,
-                ordering: false,
-                columns: [
-                    {
-                        data: 'ID'
-                    },
-                    {
-                        data: 'nombre'
-                    },
-                    {
-                        data: 'msni'
-                    }
-                ]
-            })
-
-            if(dataVariable['tb']==1){
-                tablaMsi.columns([2]).visible(false);
-            }
-        }
 
 	jQuery(document).ready(function(){
 		jQuery('#addFile').on('hidden.bs.modal', function (e) {

@@ -1484,8 +1484,6 @@ public function get_sede(){
 			if ($id_asig == 6856)
 				$assigned_user = 2800;
 			else if ($id_asig == 2800)
-				$assigned_user = 11129;
-			else if ($id_asig == 11129)
 				$assigned_user = 6856;
 			
 			$arreglo["asig_jur"] = $assigned_user;
@@ -3182,8 +3180,8 @@ public function return1(){
 	}
 
 
-	public function getMsni($typeTransaction, $key){
-		$msni = $this->Contraloria_model->getMsni($typeTransaction, $key);
+	public function getMsni($idProyecto){
+		$msni = $this->Contraloria_model->getMsni($idProyecto);
 		if ($msni != NULL){
 			echo json_encode($msni);
 		}else{
@@ -3192,49 +3190,8 @@ public function return1(){
 	}
 
 	public function update_msni(){
-	    $typeTranscation = $this->input->post('typeTransaction');
-        $arrayMsi = json_decode($this->input->post('file_msni'));
-//	    print_r($this->input->post('idResidencial'));
-//	    echo '<br>';
-//	    echo '<br>';
-//	    print_r(json_decode($this->input->post('typeTransaction')));
-//        echo'<br>';
-        //si es tipo de transaccion es = a 1
-        //quiere decir que la actualizacion es por condominios
-        //si es 0: quiere decir que es por los lotes subidos
-//        echo 'lotes a actualizar<br>';
-        $array_update = array();
-        switch ($typeTranscation){
-            case 1:
-                foreach ($arrayMsi as $index => $result){
-                    $data = $this->Contraloria_model->getLotes($arrayMsi[$index]->ID);
-                    foreach ($data as $resultado){
-                        $array_push=array(
-                            'idLote' => $resultado['idLote'],
-                            'msi' => $result->MSNI
-                        );
-                        array_push($array_update, $array_push);
-                    }
-                }
-                break;
-            case 0:
-                foreach ($arrayMsi as $result){
-                    $array_push=array(
-                        'idLote' => $result->ID,
-                        'msi' => $result->MSNI
-                    );
-                    array_push($array_update, $array_push);
-                }
-                break;
-        }
-
-       $resultado = $this->General_model->updateBatch("lotes", $array_update, "idLote"); // MJ: SE MANDA CORRER EL UPDATE BATCH
-
-        if($resultado){
-            $data['message'] = 'OK';
-        }else{
-            $data['message'] = 'ERROR';
-        }
+		$res =  $this->Contraloria_model->update_msni($this->input->post('idResidencial'));  
+		$data['message'] = 'OK';
 		echo json_encode($data);
 	}
 

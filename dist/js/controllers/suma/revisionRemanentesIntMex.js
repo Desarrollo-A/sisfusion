@@ -1,11 +1,10 @@
-var totaPen = 0;
-
 function cleanCommentsAsimilados() {
     var myCommentsList = document.getElementById('comments-list-remanentes');
     var myCommentsLote = document.getElementById('nameLote');
     myCommentsList.innerHTML = '';
     myCommentsLote.innerHTML = '';
 }
+
 
 $(document).ready(function() {
     $("#tabla_remanentes").prop("hidden", true);
@@ -67,23 +66,13 @@ $('#tabla_remanentes thead tr:eq(0) th').each( function (i) {
                     total += parseFloat(v.impuesto);
                 });
 
-                document.getElementById("totpagarRemanentes").textContent = '$' + formatMoney(total);
+                document.getElementById("totpagarremanente").textContent = '$' + formatMoney(total);
             }
         });
     } 
     else {
         $(this).html('<input id="all" type="checkbox" style="width:20px; height:20px;" onchange="selectAll(this)"/>');
     }
-});
-
-$(document).on("click", ".individualCheck", function() {
-    tr = $(this).closest('tr');
-    var row = tabla_remanentes.row(tr).data();
-
-    if ($(this).prop('checked')) totaPen += parseFloat(row.impuesto);
-    else totaPen -= parseFloat(row.impuesto);
-
-    $("#totpagarPen").html('$ ' + formatMoney(totaPen));
 });
 
 function getRemanentesCommissions(idRol, idUsuario){
@@ -93,7 +82,7 @@ function getRemanentesCommissions(idRol, idUsuario){
             total += parseFloat(v.impuesto);
         });
         var to = formatMoney(total);
-        document.getElementById("totpagarRemanentes").textContent = '$' + to;
+        document.getElementById("totpagarremanente").textContent = '$' + to;
     });
 
     $("#tabla_remanentes").prop("hidden", false);
@@ -275,7 +264,7 @@ function getRemanentesCommissions(idRol, idUsuario){
             render: function (d, type, full, meta){
                 if(full.estatus == 3){
                     if(full.referencia){
-                        return '<input type="checkbox" name="idTQ[]" class="individualCheck" style="width:20px;height:20px;"  value="' + full.id_pago_suma + '">';
+                        return '<input type="checkbox" name="idTQ[]" style="width:20px;height:20px;"  value="' + full.id_pago_suma + '">';
                     }else{
                         return '';
                     }
@@ -290,9 +279,9 @@ function getRemanentesCommissions(idRol, idUsuario){
             },
         }],
         ajax: {
-            url: general_base_url + "Suma/getRevisionIntMex",
+            url: general_base_url + "Suma/getAsimiladosRevisionIntMex",
             type: "POST",
-            data: { idRol: idRol, idUsuario: idUsuario, formaPago: '4'},
+            data: { idRol: idRol, idUsuario: idUsuario},
             dataType: 'json',
             dataSrc: ""
         }

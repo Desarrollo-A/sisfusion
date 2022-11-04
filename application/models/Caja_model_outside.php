@@ -349,9 +349,7 @@
     {
         $query = $this->db->query("SELECT p.id_prospecto, CONCAT(p.nombre, ' ', p.apellido_paterno, ' ', p.apellido_materno, ' (', (CASE oxc.nombre WHEN 'Evento (especificar)' THEN 'Evento' 
         WHEN 'MKT digital (especificar)' THEN 'MKT digital'WHEN 'Pase (especificar)' THEN 'Pase' WHEN 'Visita a empresas (especificar)' THEN 'Visita a empresas' 
-        WHEN 'Recomendado (especificar)' THEN 'Recomendado' WHEN 'Otro (especificar)' THEN 'Otro' ELSE oxc.nombre END), ')') nombre,
-        p.nombre nombre_cliente, p.apellido_paterno, p.apellido_materno, p.source
-         FROM prospectos p 
+        WHEN 'Recomendado (especificar)' THEN 'Recomendado' WHEN 'Otro (especificar)' THEN 'Otro' ELSE oxc.nombre END), ')') nombre FROM prospectos p 
         INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = p.lugar_prospeccion AND oxc.id_catalogo = 9 WHERE p.id_asesor = $idAsesor AND p.estatus = 1");
         return $query->result();
     }
@@ -1357,17 +1355,11 @@
     }
 
     public function getLider($id_gerente){
-        return $this->db->query("SELECT id_lider as id_subdirector, 
-        (CASE 
-        WHEN us.id_lider = 7092 THEN 3 
-        WHEN (us.id_lider = 9471 OR us.id_lider = 681 OR us.id_lider = 609) THEN 607 
-        --WHEN (us.id_lider = 5 AND us.id_sede = '11') THEN 5 
-        ELSE 0 END) id_regional,
-		CASE us.id_sede WHEN '11' 
-		THEN (CASE us.id_lider WHEN 5 THEN 607 ELSE 5 END)
-		ELSE 0 END id_regional_2
-        FROM usuarios us
-        WHERE us.id_usuario IN ($id_gerente)")->result_array();
+        $this->db->select('id_lider as id_subdirector, (CASE WHEN u.id_lider = 7092 THEN 3 WHEN (u.id_lider = 9471 OR u.id_lider = 681) THEN 607 ELSE 0 END) id_regional');
+        $this->db->from('usuarios u');
+        $this->db->where("u.id_usuario",$id_gerente);
+        $query = $this->db->get();
+        return $query->result_array();
     }
 
     public function getEmpresasList()
