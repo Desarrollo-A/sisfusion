@@ -232,7 +232,11 @@ class Reporte_model extends CI_Model {
         else if ($id_rol == 59) { // CONSULTA UN DIRECTOR REGIONAL Y VA POR LOS SUBDIRECTORES
             if ($render == 1) { // CONSULTA LO DE SU REGION Y SI ES SUBDIRECTOR DE UNA SEDE TAMBIÉN TRAE LOS REGISTROS
                 // SE DESCOMENTÓ EL OR DE SUBDIRECTOR PORQUE NO MOSTRABA ASÍ MISMO A CHUCHO
-                $filtro .= " AND (cl.id_regional = $id_usuario OR cl.id_subdirector = $id_usuario)";
+                // $filtro .= " AND (cl.id_regional = $id_usuario OR cl.id_subdirector = $id_usuario)";
+                if ($typeTransaction == null) // SE CONSULTA DESDE EL ROWDETAIL O LA MODAL QUE SE TRAE EL DETALLE DE LOS LOTES
+                    $filtro .= " AND cl.id_regional = $leadersList[4]"; // CON BASE EN UN REGIONAL SE TRAE LAS SUBDIRECCIONES
+                else // SE CONSULTA DESDE LA TABLA PAPÁ
+                    $filtro .= " AND (cl.id_regional = $id_usuario OR cl.id_subdirector = $id_usuario)"; // CON BASE EN UN REGIONAL SE TRAE LAS SUBDIRECCIONES
                 $comodin = "id_subdirector";
             } else
                 $filtro .= "";
@@ -440,7 +444,7 @@ class Reporte_model extends CI_Model {
         return $data->result_array();    
     }
 
-    public function getDetails($beginDate, $endDate, $id_rol, $id_usuario, $render, $leader, $leadersList) {
+    public function getDetails($typeSale, $beginDate, $endDate, $id_rol, $id_usuario, $render, $leader, $leadersList) {
         $id_lider = $this->session->userdata('id_lider'); // PARA ASISTENTES
         $comodin2 = 'LEFT';
         $filtro=" AND cl.fechaApartado BETWEEN '$beginDate 00:00:00.000' AND '$endDate 23:59:00.000'";

@@ -1,4 +1,3 @@
-// AA: Obtener fecha inicial y cuatro meses atrás para mini charts.
 var chart;
 var initialOptions = {
     series: [],
@@ -12,7 +11,25 @@ var initialOptions = {
         }
     },
     colors: [],
-    grid: { show: false},
+    grid: {
+        show: true,
+        borderColor: '#f3f3f3',
+        strokeDashArray: 0,
+        position: 'back',
+        yaxis: {
+            lines: {
+                show: true
+            }
+        },
+        row: {
+            colors: undefined,
+            opacity: 0.5
+        },
+        column: {
+            colors: undefined,
+            opacity: 0.5
+        },
+    },
     dataLabels: { enabled: false },
     legend: { show: false },
     stroke: {
@@ -36,7 +53,7 @@ var initialOptions = {
         axisTicks: {show:false},
     },
     fill: {
-        opacity: 1,
+        opacity: 0,
         type: 'gradient',
         gradient: {
             shade: 'light',
@@ -50,7 +67,7 @@ var initialOptions = {
             colorStops: []
         }
     },
-    tooltip: { enabled: true},
+    tooltip: { enabled: false},
     markers: {
         size: `5`,
         colors: '#143860',
@@ -849,10 +866,10 @@ function orderedDataChart(data){
     for( i=0; i<data.length; i++){
         let { tipo, rol, total, mes, año } = data[i];
 
-        nameTypeChart = `${ (tipo == 'vc') ? 'ventasContratadas' : (tipo == 'va') ? 'ventasApartadas' : (tipo == 'cc') ? 'canceladasContratadas' : 'canceladasApartadas' }`;
+        nameTypeChart = `${ (tipo == 'vc') ? 'ventasContratadas' : (tipo == 'va') ? 'ventasApartadas' : (tipo == 'cc') ? 'canceladasContratadas' : (tipo == 'ca') ? 'canceladasApartadas' : 'ventasTotales' }`;
 
-        nameSerie = `${ (rol == '9') ? 'Coordinador' : (rol == '7') ? 'Asesor' : (tipo == 'vc') ? 'ventasContratadas' : (tipo == 'va') ? 'ventasApartadas' : (tipo == 'cc') ? 'canceladasContratadas' : 'canceladasApartadas' }`;
-        
+        nameSerie = `${ (rol == '9') ? 'Coordinador' : (rol == '7') ? 'Asesor' : (tipo == 'vc') ? 'ventasContratadas' : (tipo == 'va') ? 'ventasApartadas' : (tipo == 'cc') ? 'canceladasContratadas' : (tipo == 'ca' ) ? 'canceladasApartadas' : 'ventasTotales' }`;
+
         totalMes.push( (total != null) ? parseFloat(total.replace(/[^0-9.-]+/g,"")) : 0 );
         if( (i+1) < data.length ){
             if(tipo == data[i + 1].tipo){
@@ -1063,6 +1080,7 @@ function initDetailRow(dataObj){
 }
 
 function createDetailRow(row, tr, dataObj){
+    typeSale = validateTypeSale();
     $.post(`${base_url}Reporte/getDetails`, {
         id_usuario: dataObj.user,
         rol: dataObj.rol,
@@ -1075,7 +1093,8 @@ function createDetailRow(row, tr, dataObj){
         coordinador: dataObj.coordinador,
         gerente: dataObj.gerente,
         subdirector: dataObj.subdirector,
-        regional: dataObj.regional
+        regional: dataObj.regional,
+        typeSale: typeSale
     }).done(function (response) {
         row.data().sedesData = JSON.parse(response);
         
