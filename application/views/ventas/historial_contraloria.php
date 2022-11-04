@@ -829,19 +829,19 @@
                 {
                     "width": "9%",
                     "data": function(d) {
-                        return `${d.estatus}`;
+                        return `<span style="background-color:${d.color_estatus}40; padding: 7px 10px; border-radius: 20px;"><label class="m-0 fs-125"><b style="color:${d.color_estatus}">${d.estatus}</b></label><span>`;
                     }
                 },
                 {
                     "width": "5%",
                     "orderable": false,
                     "data": function(data) {
-                        return '<button href="#" value="'+data.id_pago_suma+'"  data-referencia="'+data.referencia+'" ' +'class="btn-data btn-blueMaderas consultar_history" title="Detalles">' +'<i class="fas fa-info"></i></button>';
+                        return '<button href="#" value="'+data.id_pago_suma+'"  data-referencia="'+data.referencia+'" ' +'class="btn-data btn-blueMaderas consultar_history m-auto" title="Detalles">' +'<i class="fas fa-info"></i></button>';
 
                     }
                 }],
                 ajax: {
-                    url: general_base_url + "Suma/getAllComisiones",
+                    url: general_base_url + "Suma/getAllComisionesByUser",
                     type: "POST",
                     data: {anio : anio},
                     dataType: 'json',
@@ -850,7 +850,6 @@
             });
 
             $("#tabla_comisiones_suma tbody").on("click", ".consultar_history", function(e){
-                console.log("cloc");
                 e.preventDefault();
                 e.stopImmediatePropagation();
                 id_pago = $(this).val();

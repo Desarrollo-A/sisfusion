@@ -73,10 +73,11 @@ class Login extends CI_Controller
 		case '53': // ANALISTA COMISIONES
 		case '61': // ANSESOR CONSULTA
 		case '64': // ASISTENTE DIRECCIÓN ADMINISTRACIÓN
-		case '65':
-		case '66':
-		case '67':
-		case '68':
+		case '65': // CONTABILIDAD (EXTERNO)
+		case '66': // OPERATIVO
+		case '67': // LEXINTEL
+		case '68': // DIRECTOR SUMA
+		case '69': // DIRECTOR GENERAL
             redirect(base_url().'Administracion');
         break;
 
@@ -281,6 +282,7 @@ class Login extends CI_Controller
 							'id_lider_3' 		    => 		$check_user[0]->id_lider_3,
 							'id_lider_4' 		    => 		$check_user[0]->id_lider_4,
 							'id_lider_5' 		    => 		$check_user[0]->id_lider_5,
+							'id_regional_2' 		=> 		$check_user[0]->id_regional_2,
 							'imagen_perfil' 		=> 		$check_user[0]->imagen_perfil,
 							'jerarquia_user' 		=> 		$check_user[0]->jerarquia_user,
 							'ubicacion'			    =>	    $dataUbicacion[0]->abreviacion,

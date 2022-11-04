@@ -68,7 +68,7 @@ class Usuarios_modelo extends CI_Model {
                 else
                     $where = "us.gerente_id = $id_lider OR us.id_usuario = $id_lider";
                 
-                return $this->db->query("SELECT us.id_usuario, us.id_rol, oxc.nombre AS puesto, 
+                return $this->db->query("SELECT us.id_usuario, us.id_rol, CASE WHEN us.id_usuario IN (3, 5, 607) THEN 'Director regional' ELSE oxc.nombre END AS puesto, 
                 UPPER(CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)) nombre, 
                 UPPER(CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno)) coordinador, 
                 UPPER(CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno)) gerente, 
@@ -89,7 +89,7 @@ class Usuarios_modelo extends CI_Model {
             case '17': // CONTRALORÍA
                 return $this->db->query("SELECT pci2.abono_pendiente ,CONVERT(varchar,u.fechaIngreso,103) fechaIngreso, u.estatus, u.id_usuario, 
                 CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombre, u.correo,
-                u.telefono, oxc.nombre puesto, 
+                u.telefono, CASE WHEN u.id_usuario IN (3, 5, 607) THEN 'Director regional' ELSE oxc.nombre END puesto, 
                 
                 UPPER(CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno)) coordinador, 
                 UPPER(CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno)) gerente, 
@@ -118,7 +118,7 @@ class Usuarios_modelo extends CI_Model {
                 break;
             case '49': // CONSULTA (CAPITAL HUMANO DESCUENTOS UNIVERSIDAD)
                 return $this->db->query("SELECT CONVERT(varchar,u.fechaIngreso,103) fechaIngreso, u.estatus, u.id_usuario, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombre, u.correo,
-                u.telefono, oxc.nombre puesto, 
+                u.telefono, CASE WHEN u.id_usuario IN (3, 5, 607) THEN 'Director regional' ELSE oxc.nombre END puesto, 
                 
                 UPPER(CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno)) coordinador, 
                 UPPER(CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno)) gerente, 
@@ -153,7 +153,7 @@ class Usuarios_modelo extends CI_Model {
                 else
                     $id_rol = "";  
                 return $this->db->query("SELECT u.estatus, u.id_usuario, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombre, u.correo,
-                u.telefono, oxc.nombre puesto, 
+                u.telefono, CASE WHEN u.id_usuario IN (3, 5, 607) THEN 'Director regional' ELSE oxc.nombre END puesto, 
                 UPPER(CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno)) coordinador, 
                 UPPER(CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno)) gerente, 
                 UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)) subdirector, 
@@ -175,7 +175,7 @@ class Usuarios_modelo extends CI_Model {
             else
                 $id_rol = "";
             return $this->db->query("SELECT u.estatus, u.id_usuario, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombre, u.correo,
-            u.telefono, oxc.nombre puesto, 
+            u.telefono, CASE WHEN u.id_usuario IN (3, 5, 607) THEN 'Director regional' ELSE oxc.nombre END puesto, 
             UPPER(CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno)) coordinador, 
             UPPER(CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno)) gerente, 
             UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)) subdirector, 
@@ -235,8 +235,12 @@ class Usuarios_modelo extends CI_Model {
                                         id_rol = 1 AND estatus = 1 ORDER BY nombre");
                 break;
             case '3':// GERENTE
+                $sede = '';
+                     if($headquarter == 11){
+                        $sede = " OR id_sede='3'";
+                     }
                 return $this->db->query("SELECT id_usuario, CONCAT(nombre, ' ', apellido_paterno, ' ', ISNULL(apellido_materno, '')) nombre, id_sede FROM usuarios WHERE 
-                                        id_rol = 2 AND id_sede LIKE '%".$headquarter."%' AND estatus = 1 ORDER BY nombre");
+                                        id_rol = 2 AND (id_sede LIKE '%".$headquarter."%' $sede)  AND estatus = 1 ORDER BY nombre");
                 break;
             case '4':// ASISTENTE DIRECTOR
                 return $this->db->query("SELECT id_usuario, CONCAT(nombre, ' ', apellido_paterno, ' ', ISNULL(apellido_materno, '')) nombre, id_sede FROM usuarios WHERE 
@@ -493,12 +497,11 @@ function getAllFoldersPDF()
         function SaveCumplimiento($user,$pdf,$opc){
             $estatus = 1;
             if ($opc == 1) {
-    $estatus=2;            
+                $estatus=2;    
             }
      
-        $respuesta = $this->db->query("INSERT INTO opinion_cumplimiento VALUES ($user,'$pdf',$estatus,GETDATE(),'NULL')");
-    
-            if (! $respuesta ) {
+            $respuesta = $this->db->query("INSERT INTO opinion_cumplimiento VALUES ($user,'$pdf',$estatus,GETDATE(),'NULL')");
+            if (! $respuesta ){
                 return 0;
             } else {
                 return 1;
@@ -506,32 +509,28 @@ function getAllFoldersPDF()
         }
     
         function updatePDF($id){
-     
             $respuesta = $this->db->query("UPDATE opinion_cumplimiento set estatus=0 WHERE id_opn=$id");
         
-                if (! $respuesta ) {
-                    return 0;
-                } else {
-                    return 1;
-                }
+            if (! $respuesta ) {
+                return 0;
+            } else {
+                return 1;
             }
-            function Update_OPN($usuario){
-     
-                $respuesta = $this->db->query("UPDATE opinion_cumplimiento set estatus=2 WHERE id_usuario=$usuario and estatus=1;");
-            
-                    if (! $respuesta ) {
-                        return 0;
-                    } else {
-                        return 1;
-                    }
-                }
-    
-                function getPersonalInformation2($id){
-                    return $this->db->query("SELECT id_usuario, nombre, apellido_paterno, apellido_materno, correo, usuario, telefono, rfc, usuario, contrasena, forma_pago FROM usuarios WHERE id_usuario = ".$id."");
-                }   
-    
+        }
 
-    /** */
+        function Update_OPN($usuario){    
+            $respuesta = $this->db->query("UPDATE opinion_cumplimiento set estatus=2 WHERE id_usuario=$usuario and estatus=1;");
+        
+            if (! $respuesta ) {
+                return 0;
+            } else {
+                return 1;
+            }
+        }
+    
+        function getPersonalInformation2($id){
+            return $this->db->query("SELECT id_usuario, nombre, apellido_paterno, apellido_materno, correo, usuario, telefono, rfc, usuario, contrasena, forma_pago FROM usuarios WHERE id_usuario = ".$id."");
+        }
 
         public function getChangeLogUsers($id_usuario){
             /*return "MODEL: ".$id_usuario;*/
@@ -765,7 +764,18 @@ function getAllFoldersPDF()
                              $datosCH['dcontrato']['idsucursalch'] = $sucursal;
         
                              $resultado = $this->Usuarios_modelo->ServicePostCH($url,$datosCH);
-                     }else if($rol_actual == 9 && $rol_seleccionado == 7){
+                     }else if($rol_actual == 7 && $rol_seleccionado == 3){
+                        //SE CAMBIO DE ASESOR A GERENTE
+
+
+                        $datosCH['dcontrato']['idpuesto'] = 3;
+                        $datosCH['dcontrato']['idgerente'] = $id_usuario;
+                        $datosCH['dcontrato']['idcoordinador'] = $id_usuario;
+                        $datosCH['dcontrato']['idsedech'] = $sedeCH;
+                        $datosCH['dcontrato']['idsucursalch'] = $sucursal;
+   
+                        $resultado = $this->Usuarios_modelo->ServicePostCH($url,$datosCH);
+                }else if($rol_actual == 9 && $rol_seleccionado == 7){
                          //SE CAMBIO DE COORDINADOR A ASESOR
                          $data = array(
                              "id_coordinador" => $id_lider,
@@ -902,4 +912,12 @@ function getAllFoldersPDF()
         function getFormaPago($id_factura){
             return $this->db->query("select * from opcs_x_cats where id_catalogo=16 and id_opcion=$id_factura")->result_array();
          }
+        
+        function deleteDocumentoExtranjero($idDocumento){
+            $response = $this->db->query("UPDATE opinion_cumplimiento SET estatus = 0 WHERE id_opn = $idDocumento");
+
+            return $response;
+        }
+
+        
 }

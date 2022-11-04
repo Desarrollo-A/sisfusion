@@ -24,7 +24,7 @@ elseif ($rol == 55 || $rol == 56 || $rol == 57) {
 }
 elseif ($rol == 11 || $rol == 23 || $rol == 26 || $rol == 34 || $rol == 35 || $rol == 38 || $rol == 41 || $rol == 49 || $rol == 50 || $rol == 40 || $rol == 54 || $rol == 58
 || $rol == 8 || $rol == 10 || $rol == 19 || $rol == 20 || $rol == 21 || $rol == 23 || $rol == 28 || $rol == 33 || $rol == 25 || $rol == 27 || $rol == 30
- || $rol == 36 || $rol == 22 || $rol == 53 || $rol == 8 || $rol == 12 || $rol == 61 || $rol == 31 || $rol == 63 || $rol == 64 || $rol == 65 || $rol == 39) {
+ || $rol == 36 || $rol == 22 || $rol == 53 || $rol == 8 || $rol == 12 || $rol == 61 || $rol == 31 || $rol == 63 || $rol == 64 || $rol == 65 || $rol == 39 || $rol == 66 || $rol == 67 || $rol == 68 || $rol == 69 ) {
     $url2 = base_url()."Administracion";
 }
 elseif ($rol == 12) {
