@@ -1,7 +1,19 @@
 <link href="<?= base_url() ?>dist/css/reportDasboard.css" rel="stylesheet"/>
 <div class="container-fluid">
     <div class="row pdt-40">
-        <div class="col-md-12 d-flex align-center justify-end mb-1" id="tableFilters">
+        <div class="col-3 col-sm-3 col-md-3 col-lg-3">
+            <div class="back d-flex">
+                <label class="m-0 checkBox" >
+                    <input type="checkbox" class="d-none infoMainSelector" value="1" name="infoMainSelector" id="typeSale1" checked>
+                    <span class="mr-1">Con enganche</span>
+                </label>
+                <label class="m-0 checkBox" >
+                    <input type="checkbox" class="d-none infoMainSelector" value="2" name="infoMainSelector" id="typeSale2">
+                    <span>Sin enganche</span>
+                </label>
+            </div>
+        </div>
+        <div class="col-9 col-sm-9 col-md-9 col-lg-9 d-flex align-center justify-end" id="tableFilters">
             <div class="col-12 col-sm-1 col-md-1 col-lg-1 h-100 d-flex justify-center iconHover">
                 <i class="fas fa-chart-line chartButton" id="chartButton" ></i>
             </div>
@@ -22,7 +34,7 @@
                 <div class="container-fluid">
                     <div class="row pl-2 pt-2 pr-2">
                         <div class="col-xs-7 col-sm-7 col-md-7 col-lg-7 p-0 info">
-                            <p class="m-0">Ventas<br> <span class="str">contratadas</span></p>
+                            <p class="m-0">Ventas <span class="str">totales</span></p>
                         </div>
                         <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5 p-0 d-flex align-center justify-end appliedFilter" >
                             <label class="selectMini m-0 overflow-text">Año en curso <span class="material-icons">show_chart</span></label>
@@ -30,19 +42,19 @@
                     </div>
                     <div class="row pl-2 pr-2">
                         <div class="col-12 col-sm-12 col-md-12 col-lg-12 p-0">
-                            <p class="mt-1 money" id="totventasContratadas"></p>
+                            <p class="mt-1 money" id="totventasTotales"></p>
                         </div>
                     </div>
                     <div class="row">
                         <div class="p-0 col-12 col-sm-12 col-md-12 col-lg-12">
-                            <div class="boxMiniCharts d-flex justify-center align-start" id="ventasContratadas" style="height: 340px !important;">
+                            <div class="boxMiniCharts d-flex justify-center align-start" id="ventasTotales" style="height: 340px !important;">
                                 <img src= '<?=base_url('dist/img/emptyCharts.png')?>' alt="Icono gráfica" class="h-70 w-auto">
                                 <div class="loadChartMini w-100 h-100">
                                     <img src='<?=base_url('dist/img/miniChartLoading.gif')?>' alt="Icono gráfica" class="h-100 w-auto">
                                 </div>
                             </div>
                         </div>
-                        <button type="btn" class="moreMiniChart d-flex justify-center align-center" data-toggle="tooltip" data-placement="bottom" title="Más detalle" onclick="chartDetail(this, 'vc')" data-name ="ventas_contratadas">
+                        <button type="btn" class="moreMiniChart d-flex justify-center align-center" data-toggle="tooltip" data-placement="bottom" title="Más detalle" onclick="chartDetail(this, 'vt')" data-name ="ventas_totales">
                             <i class="fas fa-expand-alt"></i>
                         </button>
 
