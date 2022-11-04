@@ -407,6 +407,8 @@ function getLeadersListForEdit(headquarter, type, leader){
 function cleadFieldsHeadquarterChange(){
     $("#leader").find("option").remove();
     $("#member_type").val("");
+    $('#member_type').selectpicker('refresh');
+    $('#leader').selectpicker('refresh');
 }
 function CloseModalBaja(){
     document.getElementById('nameUs').innerHTML = '';
@@ -654,6 +656,12 @@ function fillFields (v) {
     $("#phone_number").val(v.telefono);
     $("#headquarter").val(v.id_sede);
     $("#member_type").val(v.id_rol);
+
+    if (v.id_rol == 2 && (v.id_usuario == 3 || v.id_usuario == 5 || v.id_usuario == 607))
+        $("#member_type option[value=2]").text("DIRECTOR REGIONAL");
+    else if (v.id_rol == 2 && (v.id_usuario != 3 || v.id_usuario != 5 || v.id_usuario != 607))
+        $("#member_type option[value=2]").text("SUBDIRECTOR");
+        
     $("#lastTM").val(v.id_rol);
     $("#talla").val(v.talla == null ? 0 : v.talla);
     $("#sexo").val(v.sexo == null ? 'S' : v.sexo);

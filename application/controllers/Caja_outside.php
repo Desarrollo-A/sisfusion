@@ -178,6 +178,7 @@ class Caja_outside extends CI_Controller
                 $datos["idStatusContratacion"] = 0;
                 $datos["idMovimiento"] = 0;
                 $datos["ubicacion"] = 0;
+                $datos["msi"] = 36; //se asignan los msi por defecto al dar de alta el lote
 
 
                 if ($value->idStatusLote == 'DISPONIBLE') {
@@ -516,6 +517,7 @@ class Caja_outside extends CI_Controller
             'fecha_modificacion' => date('Y-m-d H:i:s'),
             'id_subdirector' => $data['lider'][0]['id_subdirector'],
             'id_regional' => $data['lider'][0]['id_regional'],
+            'id_regional_2' => $data['lider'][0]['id_regional_2'],
             'flag_compartida' =>$datosView->flag_compartida
         );
         /*Inserta cliente*/
@@ -1895,6 +1897,7 @@ class Caja_outside extends CI_Controller
                         $arreglo["id_sede"] = 0;
                         $arreglo['id_subdirector'] = $dataLider[0]['id_subdirector'];
                         $arreglo['id_regional'] = $dataLider[0]['id_regional'];
+                        $arreglo['id_regional_2'] = $dataLider[0]['id_regional_2'];
 
                         //SE OBTIENEN LAS FECHAS PARA EL TIEMPO QUE TIENE PARA CUMPLIR LOS ESTATUS EN CADA FASE EN EL SISTEMA
                         $fechaAccion = date("Y-m-d H:i:s");
@@ -2248,8 +2251,8 @@ class Caja_outside extends CI_Controller
             "creado_por" => $data->id_usuario,
             "fecha_modificacion" => date("Y-m-d H:i:s"),
             "modificado_por" => $data->id_usuario,
-
-            "id_regional" => $dataLider[0]['id_regional']
+            "id_regional" => $dataLider[0]['id_regional'],
+            "id_regional_2" => $dataLider[0]['id_regional_2']
         );
 
         $clientInformation = $this->caja_model_outside->getClientInformation($data->id_cliente)->row();

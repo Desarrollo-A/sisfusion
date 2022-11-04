@@ -1,5 +1,5 @@
 <?php
-//    require_once 'static/autoload.php';
+    require_once 'static/autoload.php';
     use PhpOffice\PhpSpreadsheet\Spreadsheet;
     use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
@@ -96,7 +96,7 @@ class Corrida extends CI_Controller {
 
 
 		$idLote = (int)$objDatos->id_lote;
-		$id_asesor = (int)$objDatos->asesor;
+		$id_asesor = ($objDatos->asesor!='')?(int)$objDatos->asesor : $objDatos->asesor;
 		$id_gerente = (int)$objDatos->gerente;
 		$id_coordinador = (int)$objDatos->coordinador;
 		$cantidad_enganche = (int)$objDatos->cantidad_enganche;

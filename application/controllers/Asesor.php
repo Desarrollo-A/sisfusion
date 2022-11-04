@@ -952,9 +952,9 @@ class Asesor extends CI_Controller
         exit;
     }
 
-    public function getMeses($residencial)
+    public function getMeses($id, $type)
     {
-        $data = $this->Asesor_model->getMeses($residencial);
+        $data = $this->Asesor_model->getMeses($id, $type);
         if ($data != null) {
             echo json_encode($data);
         } else {

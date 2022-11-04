@@ -1414,7 +1414,17 @@ public function select_gph_maderas_64(){ //HACER INSERT DE LOS LOTES EN 0 Y PASA
     public function interesMenos(){
       $data = $this->scheduleTasks_model->interesMenos();
 
-      $response = $this->db->update_batch('condominios', $data, 'idCondominio');
+
+        for ($i = 0; $i < count($data); $i++) {
+            $updateArrayData[] = array(
+                'idLote' => $data[$i]['idLote'],
+                'msi' => $data[$i]['msni'] - 1
+            );
+        }
+
+
+
+      $response = $this->db->update_batch('lotes', $updateArrayData, 'idLote');
       echo json_encode($response);
     }
 

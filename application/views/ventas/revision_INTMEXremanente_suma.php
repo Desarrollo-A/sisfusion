@@ -12,12 +12,12 @@
         ?>
 
         <!-- Modals -->
-        <div class="modal fade" id="seeInformationModalAsimilados" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+        <div class="modal fade" id="seeInformationModalRemanentes" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog modal-md modal-dialog-scrollable" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-                            <i class="material-icons" onclick="cleanCommentsAsimilados()">clear</i>
+                            <i class="material-icons" onclick="cleanCommentsRemanentes()">clear</i>
                         </button>
                     </div>
                     <div class="modal-body">
@@ -41,7 +41,7 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" onclick="cleanCommentsAsimilados()"><b>Cerrar</b></button>
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" onclick="cleanCommentsRemanentes()"><b>Cerrar</b></button>
                     </div>
                 </div>
             </div>
@@ -104,9 +104,10 @@
                                 <div class="toolbar">
                                     <div class="container-fluid p-0">
                                         <div class="row">
-                                            <div class="form-group d-flex justify-center align-center">
+                                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                                                <div class="form-group d-flex justify-center align-center">
                                                     <h4 class="title-tot center-align m-0">Disponible:</h4>
-                                                    <p class="input-tot pl-1" name="totpagarremanente" id="totpagarremanente">$0.00</p>
+                                                    <p class="input-tot pl-1" name="totpagarRemanentes" id="totpagarRemanentes">$0.00</p>
                                                 </div>
                                             </div>
                                             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
@@ -151,9 +152,9 @@
                                                         <th>PUESTO</th>
                                                         <th>NOMBRE</th>
                                                         <th>SEDE</th>
-                                                        <th>TOTAL COMISION</th>
+                                                        <th>TOTAL COMISIÓN</th>
                                                         <th>IMPUESTO</th>
-                                                        <th>% COMISION</th>
+                                                        <th>% COMISIÓN</th>
                                                         <th>ESTATUS</th>
                                                         <th>MÁS</th>
                                                     </tr>

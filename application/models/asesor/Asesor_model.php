@@ -366,7 +366,7 @@ class Asesor_model extends CI_Model
             						WHERE lot.idLote = " . $lote . " AND idStatusLote IN(1,3)");
         } else {
 
-            $query = $this->db->query("SELECT lot.idLote, nombreLote, total, sup, precio, porcentaje, enganche, con.msni, 
+            $query = $this->db->query("SELECT lot.idLote, nombreLote, total, sup, precio, porcentaje, enganche, lot.msi as msni, 
             descSup1, descSup2, referencia, db.banco, db.cuenta, db.empresa, db.clabe, lot.casa, (
             CASE lot.casa
             WHEN 0 THEN ''
@@ -783,27 +783,34 @@ class Asesor_model extends CI_Model
         return $query->result();
     }
 
-    public function getMeses($residencial)
+    public function getMeses($id, $type)
     {
-        $query = $this->db->query("SELECT DISTINCT(con.msni), res.idResidencial, res.nombreResidencial, CAST(res.descripcion AS NVARCHAR(100)) descripcion   
+        //$type 1: residencial
+        //$type 2: condominio
+        if($type == 1){
+            $condicion = "AND res.idResidencial in(" . $id . ")";
+        }else if($type == 2){
+            $condicion = "AND con.idCondominio in(" . $id . ")";
+        }
+        $query = $this->db->query("SELECT DISTINCT(lot.msi) as msni
             FROM residenciales res
             JOIN condominios con ON con.idResidencial = res.idResidencial
             JOIN lotes lot ON lot.idCondominio = con.idCondominio
-            WHERE lot.idStatusLote in(1) AND lot.status in(1) AND res.idResidencial in(" . $residencial . ")
+            WHERE lot.idStatusLote in(1) AND lot.status in(1) ".$condicion."
            
-            ORDER BY con.msni ASC");
+            ORDER BY lot.msi ASC");
         return $query->result();
     }
 
     public function getMesesTodos()
     {
-        $query = $this->db->query("SELECT DISTINCT(con.msni), res.idResidencial, res.nombreResidencial, CAST(res.descripcion AS NVARCHAR(100)) descripcion
+        $query = $this->db->query("SELECT DISTINCT(lot.msi) as msni
             FROM residenciales res
             JOIN condominios con ON con.idResidencial = res.idResidencial
             JOIN lotes lot ON lot.idCondominio = con.idCondominio
             WHERE lot.idStatusLote in(1) AND lot.status in(1)
 
-            ORDER BY con.msni ASC");
+            ORDER BY lot.msi ASC");
         return $query->result();
     }
 
@@ -912,16 +919,17 @@ class Asesor_model extends CI_Model
 		$query = $this->db-> query("SELECT cl.id_cliente, id_asesor, id_coordinador, id_gerente, cl.id_sede, cl.nombre, cl.apellido_paterno, 
         cl.apellido_materno, cl.status ,cl.idLote, fechaApartado ,fechaVencimiento , cl.usuario, cond.idCondominio, cl.fecha_creacion, 
         cl.creado_por, cl.fecha_modificacion, cl.modificado_por, cond.nombre as nombreCondominio, residencial.nombreResidencial as nombreResidencial,
-        cl.status, nombreLote, lotes.comentario, lotes.idMovimiento, lotes.fechaVenc, lotes.modificado
+        cl.status, nombreLote, lotes.comentario, lotes.idMovimiento, lotes.fechaVenc, lotes.modificado, aut.estatus 
         FROM clientes AS cl			
         INNER JOIN usuarios AS us ON cl.id_asesor = us.id_usuario
         INNER JOIN lotes AS lotes ON lotes.idLote = cl.idLote AND lotes.idCliente = cl.id_cliente AND lotes.idStatusLote = 3
         INNER JOIN condominios AS cond ON lotes.idCondominio = cond.idCondominio $where
         INNER JOIN residenciales AS residencial ON cond.idResidencial=residencial.idResidencial
+        INNER JOIN autorizaciones AS aut ON cl.id_cliente = aut.idCliente AND lotes.idLote = aut.idLote
         LEFT JOIN deposito_seriedad AS ds ON ds.id_cliente = cl.id_cliente	
-        WHERE cl.id_coordinador NOT IN (2562, 2541) AND cl.id_asesor = $id_asesor
-        AND idStatusContratacion IN (1, 2, 3) AND idMovimiento IN (31, 85, 20, 63, 73, 82, 92, 96) AND cl.status = 1
-        ORDER BY cl.id_Cliente ASC");
+        WHERE ((cl.id_coordinador NOT IN (2562, 2541)) OR (cl.id_coordinador IN (2562, 2541) AND cl.id_asesor = 1908 AND cl.id_asesor = $id_asesor))
+        AND idStatusContratacion IN (1, 2, 3) AND idMovimiento IN (31, 85, 20, 63, 73, 82, 92, 96) AND 
+        cl.status = 1 AND cl.id_asesor = $id_asesor AND cl.status = 1 ORDER BY cl.id_Cliente ASC");
 		return $query->result_array();
 	}
 
@@ -1066,7 +1074,7 @@ class Asesor_model extends CI_Model
                 unset($datos[$x]['filtro8']);
             }
             if (isset($datos[$x]['filtro9'])) {
-                $datos[$x]['co.msni'] = $datos[$x]['filtro9'];
+                $datos[$x]['lo.msi'] = $datos[$x]['filtro9'];
                 unset($datos[$x]['filtro9']);
             }
         }
@@ -1100,7 +1108,7 @@ class Asesor_model extends CI_Model
             }
         }
         $query = $this->db->query("SELECT res.idResidencial, res.nombreResidencial, CAST(res.descripcion AS NVARCHAR(100)) descripcion,
-	co.nombre as nombreCondominio, lo.nombreLote, lo.sup, co.msni as mesesn,
+	co.nombre as nombreCondominio, lo.nombreLote, lo.sup, lo.msi as mesesn,
 	precio, total, porcentaje, enganche, saldo, lo.tipo_venta, lo.idLote
 	FROM residenciales res
 	JOIN condominios co ON co.idResidencial = res.idResidencial

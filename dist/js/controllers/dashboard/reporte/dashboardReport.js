@@ -63,6 +63,7 @@ var initialOptions = {
 }
 
 function readyReport(){
+    $('[data-toggle="tooltip"]').tooltip();
     sp.initFormExtendedDatetimepickers();
     $('.datepicker').datetimepicker({locale: 'es'});
     initReport();
@@ -77,7 +78,7 @@ async function initReport(){
     getLastSales(null, null);
     let rol = userType == 2 ? await getRolDR(idUser): userType;
     let rolString;
-    if ( rol == '1' || rol == '18' || rol == '4' || rol == '63' )
+    if ( rol == '1' || rol == '18' || rol == '4' || rol == '63' || rol == '33' || rol == '58' || rol == '69' )
         rolString = 'director_regional';
     else if ( rol == '2' || (rol == '5' && ( idUser != '28' || idUser != '30' )))
         rolString = 'gerente';
@@ -138,7 +139,7 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, dates=n
         rolEspecial = 2;
     else if( rol == 6 )
         rolEspecial = 3;
-    else if( rol == 4 || rol == 63 )
+    else if( rol == 4 || rol == 33 || rol == 58 || rol == 63 || rol == 69)
         rolEspecial = 2
     else rolEspecial = rol;
 
@@ -360,7 +361,7 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, dates=n
 // 5: Director regional
 // 6: Rol
 function getLeadersLine (leadersList, id_usuario, id_lider) {  
-    if (leadersList[0] == 0 && (leadersList[6] == 1 || leadersList[6] == 4 || leadersList[6] == 63)){ // PRIMER NIVEL: SÓLO TENEMOS EL ID REGIONAL
+    if (leadersList[0] == 0 && (leadersList[6] == 1 || leadersList[6] == 4 || leadersList[6] == 33 || leadersList[6] == 58 || leadersList[6] == 63 || leadersList[6] == 69)){ // PRIMER NIVEL: SÓLO TENEMOS EL ID REGIONAL
         leadersList[5] = id_usuario;
     }
     else if (leadersList[0] == 2){ // SEGUNDO NIVEL: TENEMOS EL ID SUBDIRECTOR
@@ -461,7 +462,7 @@ $(document).on('click', '.update-dataTable', function (e) {
             const table = "subdirector";
             fillBoxAccordions(table, 2, $(this).val(), 2, transaction, dates, [59, asesor, coordinador, gerente, subdirector, regional, type]); // VA POR LOS SUBDIRECTORES: CONSULTA REGIONAL
         }
-    } else if (type == 1 || type == 4 || type == 63 ) {
+    } else if (type == 1 || type == 4 || type == 33 || type == 58 || type == 63 || type == 69) {
         if (render == 1) {
             const table = "subdirector";
             fillBoxAccordions(table, 2, $(this).val(), 2, transaction, dates, [2, asesor, coordinador, gerente, subdirector, regional, type]); // VA POR LOS SUBDIRECTORES
@@ -610,11 +611,18 @@ $(document).on('click', '#searchByDateRangeTable', async function (e) {
     e.preventDefault();
     e.stopImmediatePropagation();
     $(".boxAccordions").html('');
+
+    /**********************/
+
+    loaderCharts();
+    $("#modalChart .boxModalTitle .total").html('');
+    /**********************/
+
     let dates = {begin: $('#tableBegin').val(), end: $('#tableEnd').val()};
     let rol = userType == 2 ? await getRolDR(idUser): userType;
 
     let rolString;
-    if ( rol == '1' || rol == '18' || rol == '4' || rol == '63')
+    if ( rol == '1' || rol == '18' || rol == '4' || rol == '63' || rol == '33' || rol == '58' || rol == '69')
         rolString = 'director_regional';
     else if ( rol == '2' || (rol == '5' && ( idUser != '28' || idUser != '30' )))
         rolString = 'gerente';
@@ -624,8 +632,10 @@ $(document).on('click', '#searchByDateRangeTable', async function (e) {
         rolString = 'subdirector';
     else 
         rolString = 'asesor';
-
+    // getSpecificChart('na', formatDate($('#tableBegin').val()), formatDate($('#tableEnd').val()));
+    getLastSales($('#tableBegin').val(), $('#tableEnd').val());
     fillBoxAccordions(rolString, rol, idUser, 1, 2, dates, [0, null, null, null, null, null, rol]);
+
 });
 
 $(document).on('click', '.chartButton', function () {
@@ -648,20 +658,30 @@ async function chartDetail(e, tipoChart){
     $("#modalChart .boxModalTitle .total").html('');
     $("#modalChart #type").val('');
 
+
     var nameChart = (titleCase($(e).data("name").replace(/_/g, " "))).split(" ");
     $(".boxModalTitle .title").append('<p class="mb-1">' + nameChart[0] + '<span class="enfatize"> '+ nameChart[1] +'</span></p>');
 
-    const fechaInicio = new Date();
-     // Iniciar en este año, este mes, en el día 1
-     const beginDate = new Date(fechaInicio.getFullYear(), fechaInicio.getMonth(), 1);
-     // END DATE
-     const fechaFin = new Date();
-     // Iniciar en este año, el siguiente mes, en el día 0 (así que así nos regresamos un día)
-     const endDate = new Date(fechaFin.getFullYear(), fechaFin.getMonth() + 1, 0);
-     finalBeginDate = [beginDate.getFullYear(), ('0' + (beginDate.getMonth() + 1)).slice(-2), ('0' + beginDate.getDate()).slice(-2)].join('-');
-     finalEndDate = [endDate.getFullYear(), ('0' + (endDate.getMonth() + 1)).slice(-2), ('0' + endDate.getDate()).slice(-2)].join('-');
-     finalBeginDate2 = ['01', '01', beginDate.getFullYear()].join('/');
-     finalEndDate2 = [('0' + endDate.getDate()).slice(-2), ('0' + (endDate.getMonth() + 1)).slice(-2), endDate.getFullYear()].join('/');
+    let fecha_inicio = $('.moreMiniChart ').attr('data-fi');
+    let fecha_fin    = $('.moreMiniChart ').attr('data-ft');
+    if(fecha_inicio == undefined || fecha_fin==undefined){
+        const fechaInicio = new Date();
+        // Iniciar en este año, este mes, en el día 1
+        const beginDate = new Date(fechaInicio.getFullYear(), fechaInicio.getMonth(), 1);
+        // END DATE
+        const fechaFin = new Date();
+        // Iniciar en este año, el siguiente mes, en el día 0 (así que así nos regresamos un día)
+        const endDate = new Date(fechaFin.getFullYear(), fechaFin.getMonth() + 1, 0);
+        finalBeginDate = [beginDate.getFullYear(), ('0' + (beginDate.getMonth() + 1)).slice(-2), ('0' + beginDate.getDate()).slice(-2)].join('-');
+        finalEndDate = [endDate.getFullYear(), ('0' + (endDate.getMonth() + 1)).slice(-2), ('0' + endDate.getDate()).slice(-2)].join('-');
+        finalBeginDate2 = ['01', '01', beginDate.getFullYear()].join('/');
+        finalEndDate2 = [('0' + endDate.getDate()).slice(-2), ('0' + (endDate.getMonth() + 1)).slice(-2), endDate.getFullYear()].join('/');
+    }else{
+        finalBeginDate2 = fecha_inicio;
+        finalEndDate2 = fecha_fin;
+    }
+
+
 
 
     $("#modalChart #beginDate").val(finalBeginDate2);
@@ -707,6 +727,7 @@ function getSpecificChart(type, beginDate, endDate){
 
 function getLastSales(beginDate, endDate){
     $('.loadChartMini').removeClass('d-none');
+
     $.ajax({
         type: "POST",
         url: `${base_url}Reporte/getDataChart`,
@@ -731,7 +752,11 @@ function getLastSales(beginDate, endDate){
                     var miniChartApex = new ApexCharts(document.querySelector("#"+chart+""), setOptionsChartReport(series, categories, miniChart));
                     miniChartApex.render();
                 }
-                else $("#"+chart+"").addClass('d-flex justify-center');
+                else {
+                    $("#"+chart+"").html('');
+                    $("#"+chart+"").addClass('d-flex justify-center');
+                    $('#'+chart+"").append( "<img src='"+base_url+"/dist/img/emptyCharts.png' alt='Icono gráfica' class='h-70 w-auto'>");
+                }
             }
         },
         error: function() {
@@ -749,6 +774,47 @@ $(document).on("click", "#searchByDateRange", function () {
     getSpecificChart(type, formatDate(beginDate), formatDate(endDate));
 });
 
+function loaderCharts(){
+    $('.appliedFilter').removeAttr('data-toggle');
+    // $('.appliedFilter').removeAttr('title');
+    $('.appliedFilter').removeAttr('data-original-title');
+    let fechaInicio= $('#tableBegin').val();
+    let fechaTermino= $('#tableEnd').val();
+    // console.log('fechaInicio', fechaInicio);
+    // console.log('fechaTermino', fechaTermino);
+   $('.appliedFilter .selectMini').html('');
+   $('.appliedFilter .selectMini').append('Del: '+fechaInicio+' al: '+fechaTermino+'');
+    $('.appliedFilter').attr('data-toggle', 'tooltip');
+    // $('.appliedFilter').attr('title', 'Del: '+$('#tableBegin').val()+' al: '+$('#tableEnd').val());
+    $('.appliedFilter').attr('data-original-title', 'Del: '+$('#tableBegin').val()+' al: '+$('#tableEnd').val());
+    //<label style="font-size: 0.5em">Al: '+fechaTermino+'</label>
+
+    $('#totventasContratadas').addClass('subtitle_skeleton');
+    $('#totventasContratadas').text('');
+
+    $('#totventasApartadas').addClass('subtitle_skeleton');
+    $('#totventasApartadas').text('');
+
+    $('#totcanceladasContratadas').addClass('subtitle_skeleton');
+    $('#totcanceladasContratadas').text('');
+
+    $('#totcanceladasApartadas').addClass('subtitle_skeleton');
+    $('#totcanceladasApartadas').text('');
+
+
+    $('.boxMiniCharts').html('');
+    let cargador = '<div class="loadChartMini w-100 h-100">'+
+                        '<img src="'+base_url+'dist/img/miniChartLoading.gif" alt="Icono gráfica" class="h-100 w-auto">'+
+                     '</div>';
+    // $('.boxMiniCharts').append('<div class="col-xs-12 pdt-20"><center><span class="loader center-align"></span></center></div>');
+    $('.boxMiniCharts').append(cargador);
+
+    //add attr al miniboton para que al abrir tenga la fecha seteada
+    $('.moreMiniChart').attr('data-fi', fechaInicio);
+    $('.moreMiniChart').attr('data-ft', fechaTermino);
+
+
+};
 function orderedDataChart(data){
     let allData = [], totalMes = [], meses = [], series = [];
     for( i=0; i<data.length; i++){
@@ -914,20 +980,17 @@ function accordionToRemove(rol){
             $(".boxAccordions").find(`[data-rol='${9}']`).remove();
             $(".boxAccordions").find(`[data-rol='${7}']`).remove();
             break;
-        case 18://dir
+        case 18: // Dir
+        case 33: // Consulta (Yola)
+        case 58: // Asistente dirección general
+        case 63: // Control interno
+        case 69: // Dirección general
             $(".boxAccordions").find(`[data-rol='${59}']`).remove();
             $(".boxAccordions").find(`[data-rol='${2}']`).remove();
             $(".boxAccordions").find(`[data-rol='${3}']`).remove();
             $(".boxAccordions").find(`[data-rol='${9}']`).remove();
             $(".boxAccordions").find(`[data-rol='${7}']`).remove();
-            break; 
-        case 63:// Control interno
-            $(".boxAccordions").find(`[data-rol='${59}']`).remove();
-            $(".boxAccordions").find(`[data-rol='${2}']`).remove();
-            $(".boxAccordions").find(`[data-rol='${3}']`).remove();
-            $(".boxAccordions").find(`[data-rol='${9}']`).remove();
-            $(".boxAccordions").find(`[data-rol='${7}']`).remove();
-            break; 
+            break;
         case 59://dir regional
         case 5://dir regional
             $(".boxAccordions").find(`[data-rol='${2}']`).remove();
