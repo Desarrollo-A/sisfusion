@@ -78,6 +78,16 @@
                                    oncopy="return false" onpaste="return false" onkeypress="return SoloNumeros(event)"
                                    type="tel" pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" data-type="currency">
                         </div>
+                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                        <div class="form-group">
+                                            <label class="m-0" for="proyecto">Representante Legal:</label>
+                                            <select name="rl" id="rl"  class="selectpicker select-gral m-0"
+                                                    data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona RL" data-size="7" required>
+                                                <option value="0">Seleccionar todo</option>
+                                            </select>
+                                        </div>
+                        </div>
+                    
                     </div>
                 </div>
 
