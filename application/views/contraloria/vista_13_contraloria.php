@@ -124,7 +124,7 @@
 
         $('#tabla_ingresar_13 thead tr:eq(0) th').each(function (i) {
 
-            if (i != 0 && i != 7 && i != 1) {
+            if (i != 0 && i != 8 && i != 1) {
                 var title = $(this).text();
                 $(this).html('<input type="text" class="textoshead"  placeholder="' + title + '"/>');
                 $('input', this).on('keyup change', function () {
@@ -149,7 +149,7 @@
                     titleAttr: 'Registro estatus 13',
                     title:"Registro estatus 13",
                     exportOptions: {
-                        columns: [1,2,3,4,5,6],
+                        columns: [1,2,3,4,5,6,7],
                         format: {
                             header: function (d, columnIdx) {
                                 switch (columnIdx) {
@@ -186,7 +186,7 @@
                     orientation: 'landscape',
                     pageSize: 'LEGAL',
                     exportOptions: {
-                        columns: [1,2,3,4,5,6],
+                        columns: [1,2,3,4,5,6,7],
                         format: {
                             header: function (d, columnIdx) {
                                 switch (columnIdx) {
@@ -297,7 +297,6 @@
                         return '<p class="m-0">' + d.nombre + " " + d.apellido_paterno + " " + d.apellido_materno + '</p>';
                     }
                 },
-                ,
                 {
                     "width": "15%",
                     "data": function (d) {
