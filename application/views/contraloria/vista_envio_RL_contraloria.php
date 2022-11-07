@@ -56,6 +56,7 @@
                                                 <th>LOTE</th>
                                                 <th>CLIENTE</th>
                                                 <th>CÓDIGO</th>
+                                                <th>RL</th>
                                             </tr>
                                         </thead>
                                     </table>
@@ -137,6 +138,7 @@
                                                 <th style="font-size: .9em;">LOTE</th>
                                                 <th style="font-size: .9em;">CLIENTE</th>
                                                 <th style="font-size: .9em;">CÓDIGO</th>
+                                                <th style="font-size: .9em;">RL</th>
                                             </tr>
                                         </thead>
                                     </table>
@@ -204,7 +206,7 @@
                     titleAttr: 'Envío contrato a RL',
                     title:"Envío contrato a RL",
                     exportOptions: {
-                        columns: [0, 1, 2, 3, 4, 5],
+                        columns: [0, 1, 2, 3, 4, 5,6],
                         format: {
                             header: function (d, columnIdx) {
                                 switch (columnIdx) {
@@ -222,8 +224,12 @@
                                     case 4:
                                         return 'CLIENTE';
                                         break;
+                                        
                                     case 5:
                                         return 'CÓDIGO';
+                                        break;
+                                        case 6:
+                                        return 'RL';
                                         break;
                                 }
                             }
@@ -239,7 +245,7 @@
                     orientation: 'landscape',
                     pageSize: 'LEGAL',
                     exportOptions: {
-                        columns: [0, 1, 2, 3, 4, 5],
+                        columns: [0, 1, 2, 3, 4, 5,6],
                         format: {
                             header: function (d, columnIdx) {
                                 switch (columnIdx) {
@@ -260,6 +266,9 @@
                                     case 5:
                                         return 'CÓDIGO';
                                         break;
+                                    case 6:
+                                        return 'RL';
+                                    break;
                                 }
                             }
                         }
@@ -351,6 +360,17 @@
                         return numeroContrato;
                     }
                 },
+                {
+                    "width": "15%",
+                    "data": function (d) {
+                        if (d.RL == null || d.RL == ''  ){
+                            return '<p class="m-0"> No definido  </p>';
+                        }else{
+                            return '<p class="m-0">' + d.RL + '</p>';
+                        }
+                    
+                    }
+                }
             ],
 
             columnDefs: [
