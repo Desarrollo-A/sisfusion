@@ -106,8 +106,13 @@ class Contraloria extends CI_Controller {
     }
     
 	public function estatus_9_contraloria(){
-		/*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/           
+		/*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/   
+		
+
 		$datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
+		$datos['rl'] = $this->Contraloria_model->getRL();
+
+		  
         /*-------------------------------------------------------------------------------*/
 		$this->load->view('template/header');
 	 	$this->load->view("contraloria/vista_9_contraloria",$datos);
@@ -2145,6 +2150,7 @@ $i = 0;
     $modificado=date("Y-m-d H:i:s");
     $fechaVenc=$this->input->post('fechaVenc');
     $totalNeto2=$this->input->post('totalNeto2');
+	$rl=$this->input->post('rl');
     $charactersNoPermit = array('$',',');
     $totalNeto2 = str_replace($charactersNoPermit, '', $totalNeto2);
 
@@ -2157,6 +2163,7 @@ $i = 0;
     $arreglo["modificado"]=date("Y-m-d H:i:s");
     $arreglo["fechaVenc"]= $modificado;
     $arreglo["totalNeto2"]=$totalNeto2;
+	$arreglo["rl"]=$rl;
 
     $arreglo2=array();
     $arreglo2["idStatusContratacion"]=9;
@@ -2170,11 +2177,11 @@ $i = 0;
     $arreglo2["idLote"]= $idLote;  
     $arreglo2["idCondominio"]= $idCondominio;         
     $arreglo2["idCliente"]= $idCliente;          
-
+	// $arreglo2["rl"]=$rl;
 
 	$validate = $this->Contraloria_model->validateSt9($idLote);
 
-	$this->Contraloria_model->validate90Dias($idLote,$idCliente,$this->session->userdata('id_usuario'));
+	//$this->Contraloria_model->validate90Dias($idLote,$idCliente,$this->session->userdata('id_usuario'));
 
 	if($validate == 1){
 		if ($this->Contraloria_model->updateSt($idLote,$arreglo,$arreglo2) == TRUE){ 
@@ -3194,15 +3201,15 @@ public function return1(){
 	public function update_msni(){
 	    $typeTranscation = $this->input->post('typeTransaction');
         $arrayMsi = json_decode($this->input->post('file_msni'));
-//	    print_r($this->input->post('idResidencial'));
-//	    echo '<br>';
-//	    echo '<br>';
-//	    print_r(json_decode($this->input->post('typeTransaction')));
-//        echo'<br>';
+        //print_r($this->input->post('idResidencial'));
+        //echo '<br>';
+        //echo '<br>';
+        //print_r(json_decode($this->input->post('typeTransaction')));
+        //echo'<br>';
         //si es tipo de transaccion es = a 1
         //quiere decir que la actualizacion es por condominios
         //si es 0: quiere decir que es por los lotes subidos
-//        echo 'lotes a actualizar<br>';
+        //echo 'lotes a actualizar<br>';
         $array_update = array();
         switch ($typeTranscation){
             case 1:
@@ -3636,4 +3643,9 @@ public function return1(){
 			echo json_encode(array());
 		}
 	}
+	public function getRL (){
+		$data = $this->Contraloria_model->getRL();
+		echo json_encode($data);
+	}
+	
 }

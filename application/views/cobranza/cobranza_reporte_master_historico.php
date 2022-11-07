@@ -71,7 +71,7 @@
                                 <i class="fas fa-wallet fa-2x"></i>
                             </div>
                             <div class="card-content">
-                                <h3 class="card-title center-align">Cobranza master</h3>
+                                <h3 class="card-title center-align">Cobranza master v2</h3>
                                 <div class="toolbar">
                                     <div class="row">
                                         <div class="col-12 col-sm-6 col-md-6 col-lg-6">
@@ -138,6 +138,8 @@
                                                     <th title="PUESTO">PUESTO</th>
                                                     <th title="PLAZA">PLAZA</th>
                                                     <th title="LUGAR DE PROSPECCION">LUGAR DE PROSPECCION</th>
+                                                    
+                                                    <th title="DETALLE">DETALLE</th>
                                                     <th title="MAS">MÁS</th>
                                                 </tr>
                                                 </thead>

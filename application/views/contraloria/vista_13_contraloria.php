@@ -41,6 +41,7 @@
                                                 <th>LOTE</th>
                                                 <th>GERENTE</th>
                                                 <th>CLIENTE</th>
+                                                <th>RL</th>
                                                 <th>ACCIONES</th>
                                             </tr>
                                         </thead>
@@ -168,6 +169,9 @@
                                     case 6:
                                         return 'CLIENTE';
                                         break;
+                                    case 7:
+                                        return 'RL';
+                                    break;
                                 }
                             }
                         }
@@ -202,6 +206,9 @@
                                     case 6:
                                         return 'CLIENTE';
                                         break;
+                                    case 7:
+                                        return 'RL';
+                                    break;
                                 }
                             }
                         }
@@ -288,6 +295,18 @@
                     "width": "20%",
                     "data": function (d) {
                         return '<p class="m-0">' + d.nombre + " " + d.apellido_paterno + " " + d.apellido_materno + '</p>';
+                    }
+                },
+                ,
+                {
+                    "width": "15%",
+                    "data": function (d) {
+                        if (d.RL == null || d.RL == ''  ){
+                            return '<p class="m-0"> No definido  </p>';
+                        }else{
+                            return '<p class="m-0">' + d.RL + '</p>';
+                        }
+                    
                     }
                 },
                 {
