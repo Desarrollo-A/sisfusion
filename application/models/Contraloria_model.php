@@ -440,7 +440,7 @@ class Contraloria_model extends CI_Model {
 			l.ubicacion, l.tipo_venta, l.firmaRL, l.validacionEnganche, 
 			concat(asesor.nombre,' ', asesor.apellido_paterno, ' ', asesor.apellido_materno) as asesor,
 			concat(coordinador.nombre,' ', coordinador.apellido_paterno, ' ', coordinador.apellido_materno) as coordinador,
-			concat(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno) as gerente,opx.nombre RL,
+			concat(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno) as gerente,opx.nombre as RL,
 			cond.idCondominio, l.observacionContratoUrgente as vl
 			FROM lotes l
 			INNER JOIN clientes cl ON l.idLote=cl.idLote

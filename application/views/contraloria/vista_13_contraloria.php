@@ -124,7 +124,7 @@
 
         $('#tabla_ingresar_13 thead tr:eq(0) th').each(function (i) {
 
-            if (i != 0 && i != 7 && i != 1) {
+            if (i != 0 && i != 8 && i != 1) {
                 var title = $(this).text();
                 $(this).html('<input type="text" class="textoshead"  placeholder="' + title + '"/>');
                 $('input', this).on('keyup change', function () {
@@ -149,7 +149,7 @@
                     titleAttr: 'Registro estatus 13',
                     title:"Registro estatus 13",
                     exportOptions: {
-                        columns: [1,2,3,4,5,6],
+                        columns: [1,2,3,4,5,6,7],
                         format: {
                             header: function (d, columnIdx) {
                                 switch (columnIdx) {
@@ -186,7 +186,7 @@
                     orientation: 'landscape',
                     pageSize: 'LEGAL',
                     exportOptions: {
-                        columns: [1,2,3,4,5,6],
+                        columns: [1,2,3,4,5,6,7],
                         format: {
                             header: function (d, columnIdx) {
                                 switch (columnIdx) {
@@ -231,7 +231,7 @@
             "fixedColumns": true,
             "ordering": false,
             "columns": [
-                {
+                {//0
                     "width": "3%",
                     "className": 'details-control',
                     "orderable": false,
@@ -239,7 +239,7 @@
                     "defaultContent": '<div class="toggle-subTable"><i class="animacion fas fa-chevron-down fa-lg"></i>'
                 },
                 {
-
+//1
                     "data": function (d) {
                         var lblStats;
 
@@ -266,12 +266,14 @@
                     }
                 },
                 {
+   //2
                     "width": "10%",
                     "data": function (d) {
                         return '<p class="m-0">' + d.nombreResidencial + '</p>';
                     }
                 },
                 {
+      //3
                     "width": "10%",
                     "data": function (d) {
                         return '<p class="m-0">' + (d.nombreCondominio).toUpperCase();
@@ -279,6 +281,7 @@
                     }
                 },
                 {
+         //4
                     "width": "15%",
                     "data": function (d) {
                         return '<p class="m-0">' + d.nombreLote + '</p>';
@@ -286,19 +289,21 @@
                     }
                 },
                 {
+            //5
                     "width": "20%",
                     "data": function (d) {
                         return '<p class="m-0">' + d.gerente + '</p>';
                     }
                 },
                 {
+               //6
                     "width": "20%",
                     "data": function (d) {
                         return '<p class="m-0">' + d.nombre + " " + d.apellido_paterno + " " + d.apellido_materno + '</p>';
                     }
                 },
-                ,
                 {
+                  //7
                     "width": "15%",
                     "data": function (d) {
                         if (d.RL == null || d.RL == ''  ){
@@ -310,6 +315,7 @@
                     }
                 },
                 {
+                    //8
                     "width": "40%",
                     "orderable": false,
                     "data": function (data) {
