@@ -41,6 +41,7 @@
                                                 <th>LOTE</th>
                                                 <th>GERENTE</th>
                                                 <th>CLIENTE</th>
+                                                <th>RL</th>
                                                 <th>ACCIONES</th>
                                             </tr>
                                         </thead>
@@ -123,7 +124,7 @@
 
         $('#tabla_ingresar_13 thead tr:eq(0) th').each(function (i) {
 
-            if (i != 0 && i != 7 && i != 1) {
+            if (i != 0 && i != 8 && i != 1) {
                 var title = $(this).text();
                 $(this).html('<input type="text" class="textoshead"  placeholder="' + title + '"/>');
                 $('input', this).on('keyup change', function () {
@@ -148,7 +149,7 @@
                     titleAttr: 'Registro estatus 13',
                     title:"Registro estatus 13",
                     exportOptions: {
-                        columns: [1,2,3,4,5,6],
+                        columns: [1,2,3,4,5,6,7],
                         format: {
                             header: function (d, columnIdx) {
                                 switch (columnIdx) {
@@ -168,6 +169,9 @@
                                     case 6:
                                         return 'CLIENTE';
                                         break;
+                                    case 7:
+                                        return 'RL';
+                                    break;
                                 }
                             }
                         }
@@ -182,7 +186,7 @@
                     orientation: 'landscape',
                     pageSize: 'LEGAL',
                     exportOptions: {
-                        columns: [1,2,3,4,5,6],
+                        columns: [1,2,3,4,5,6,7],
                         format: {
                             header: function (d, columnIdx) {
                                 switch (columnIdx) {
@@ -202,6 +206,9 @@
                                     case 6:
                                         return 'CLIENTE';
                                         break;
+                                    case 7:
+                                        return 'RL';
+                                    break;
                                 }
                             }
                         }
@@ -288,6 +295,17 @@
                     "width": "20%",
                     "data": function (d) {
                         return '<p class="m-0">' + d.nombre + " " + d.apellido_paterno + " " + d.apellido_materno + '</p>';
+                    }
+                },
+                {
+                    "width": "15%",
+                    "data": function (d) {
+                        if (d.RL == null || d.RL == ''  ){
+                            return '<p class="m-0"> No definido  </p>';
+                        }else{
+                            return '<p class="m-0">' + d.RL + '</p>';
+                        }
+                    
                     }
                 },
                 {

@@ -22,7 +22,7 @@
     public function getResidencialDis2($rol)
     {
 
-        $val_idStatusLote = ($rol == 8 || $rol == 4) ? ('1,101,102') : ('1');
+        $val_idStatusLote = ($rol == 8 || $rol == 4 || $rol == 11) ? ('1,101,102') : ('1');
 
 
         return $this->db->query("SELECT residenciales.idResidencial, residenciales.nombreResidencial, CAST(residenciales.descripcion AS varchar(MAX)) as descripcion FROM residenciales
@@ -48,7 +48,7 @@
     public function getCondominioDis2($residencial, $rol)
     {
 
-        $val_idStatusLote = ($rol == 8 || $rol == 4) ? ('1,101,102') : ('1');
+        $val_idStatusLote = ($rol == 8 || $rol == 4 || $rol == 11) ? ('1,101,102') : ('1');
 
 
         return $this->db->query("SELECT condominios.idCondominio, condominios.nombre FROM condominios
@@ -87,7 +87,7 @@
     }
 
     public function getLotesDis2($condominio, $rol) {
-        $val_idStatusLote = ($rol == 8 || $rol == 4) ? ('1, 101, 102') : ('1');
+        $val_idStatusLote = ($rol == 8 || $rol == 4 || $rol == 11) ? ('1, 101, 102') : ('1');
         return $query = $this->db->query("SELECT lotes.idLote, lotes.nombreLote, lotes.precio, lotes.total, lotes.sup, condominios.tipo_lote, lotes.referencia, lotes.casa, (
         CASE lotes.casa WHEN 0 THEN '' WHEN 1 THEN  casas.casasDetail END) casasDetail, re.empresa
         FROM lotes

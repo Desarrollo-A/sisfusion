@@ -249,23 +249,24 @@
 
                     "data": function (d) {
                         var lblStats;
-
-                        if (d.tipo_venta == 1) {
+                        if (d.tipo_venta == 1)
                             lblStats = '<span class="label label-danger">Venta Particular</span>';
-                        } else if (d.tipo_venta == 2) {
+                        else if (d.tipo_venta == 2)
                             lblStats = '<span class="label label-success">Venta normal</span>';
-                        } else if (d.tipo_venta == 3) {
+                        else if (d.tipo_venta == 3)
                             lblStats = '<span class="label label-warning">Bono</span>';
-                        } else if (d.tipo_venta == 4) {
+                        else if (d.tipo_venta == 4)
                             lblStats = '<span class="label label-primary">Donación</span>';
-                        } else if (d.tipo_venta == 5) {
+                        else if (d.tipo_venta == 5)
                             lblStats = '<span class="label label-info">Intercambio</span>';
-                        } else if (d.tipo_venta == null) {
+                        else if(d.tipo_venta==6)
+                            lblStats ='<span class="label label-info">Reubicación</span>';
+                        else if(d.tipo_venta==7)
+                            lblStats ='<span class="label label-info">Venta especial</span>';
+                        else if (d.tipo_venta == null)
+                            lblStats = '<span class="label label-info">Sin especificar</span>';   
+                        else
                             lblStats = '<span class="label label-info">Sin especificar</span>';
-                        } else{
-                         lblStats = '<span class="label label-info">Sin especificar</span>';   
-                        }
-
                         return lblStats;
                     }
                 },
