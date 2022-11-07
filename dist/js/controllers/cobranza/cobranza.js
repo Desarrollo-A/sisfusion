@@ -85,7 +85,7 @@ function fillTable(idLote, beginDate, endDate, bandera ) {
                 className: 'btn buttons-excel',
                 titleAttr: 'Descargar archivo de Excel',
                 exportOptions: {
-                    columns: [ 0, 1, 2, 3, 4 ,5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16,17,18],
+                    columns: [ 0, 1, 2, 3, 4 ,5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16,17,18,19],
                     format: {
                         header: function ( data , columnIdx) {
                             switch (columnIdx) {
@@ -105,53 +105,50 @@ function fillTable(idLote, beginDate, endDate, bandera ) {
                                     return 'PRECIO LOTE';
                                     break;
                                  case 5 : 
-                                    return 'Total comisión';
+                                    return 'TOTAL COMISIÓN';
                                     break;
                                 case 6 : 
-                                    return 'Total comisión';
+                                    return 'PAGO CLIENTE';
                                     break;
                                 case 7 :
-                                    return 'Fecha de apartado';
+                                    return 'FECHA APARTADO';
                                     break;  
                                 case 8 :
-                                    return 'Estatus contratacion';
+                                    return 'ESTATUS CONTRATACIÓN';
                                 break; 
                                 case 9 :
-                                    return 'Estatus venta';
+                                    return 'ESTATUS PAGO COMISIÓN';
                                     break;
                                 case 10 :
-                                    return 'Estatus comision';
+                                    return 'ESTATUS COMISIÓN';
                                     
                                     break;
                                 case 11: 
-                                    return 'Pago mes';
+                                    return 'ESTATUS VENTA/LOTE';
                                     break;
                                 case 12:
-                                    return 'Dispersado del mes';
+                                    return 'DISPERSADO';
                                     break;
                                 case 13:
-                                    return 'Pago historico';
+                                    return 'PAGO HISTÓRICO';
                                     break;
                                 case 14:
-                                    return 'Pendiente';
+                                    return 'PENDIENTE';
                                     break;
                                 case 15 :
-                                    return 'Usuario';
+                                    return 'USUARIO';
                                     break;
                                 case 16 :
-                                    return ' Puesto';
+                                    return 'PUESTO';
                                     break;
                                 case 17 :
-                                    return 'Plaza';
+                                    return 'PLAZA';
                                     break;
                                 case 18: 
-                                    return 'Lugar de prospección';
+                                    return 'LUGAR DE PROSPECCIÓN';
                                     break;
                                 case 19: 
-                                    return 'Lugar de prospección';
-                                    break;
-                                case 20: 
-                                    return 'Lugar de prospección';
+                                    return 'DETALLE';
                                     break;
                             }
                             
@@ -215,7 +212,7 @@ function fillTable(idLote, beginDate, endDate, bandera ) {
             },
             {
                 data: function(data){
-                    return data.pagado3;
+                    return data.pago_neodata;
          //6
                 }
             }, 
@@ -297,7 +294,7 @@ function fillTable(idLote, beginDate, endDate, bandera ) {
                     return data.pago_cliente;
                 }
             },{
-                //13
+                //13 
                 data: function (data){
                     return data.pagado;
                 }
@@ -305,8 +302,11 @@ function fillTable(idLote, beginDate, endDate, bandera ) {
             {
                 //14
                 data: function( data ){
-                   
-                        return '<p class="m-0">'+data.restantes+'</p>';
+                  
+                    labelStatus = '<p class="m-0">'+data.restantes+'</p>';
+                    
+              
+                   return labelStatus;
                     
                 }
 
@@ -322,7 +322,8 @@ function fillTable(idLote, beginDate, endDate, bandera ) {
                     return  data.puesto;
                 //16
                 }
-            }, {
+            }, 
+           {
                 data: function (data ){
                     let  respuesta = '' ; 
                     if(data.plaza != null){
@@ -353,6 +354,35 @@ function fillTable(idLote, beginDate, endDate, bandera ) {
                     }
                     return respuesta;
                 //18
+                }
+            },
+            {
+                "width": "7%",
+                "data": function( data ){
+
+                    //detalle
+                    var lblPenalizacion = '';
+
+                    if (data.penalizacion == 1){
+                        lblPenalizacion ='<p class="m-0" title="Penalización + 90 días"><span class="label" style="background:orange;">Penalización + 90 días</span></p>';
+                    }
+
+                    if(data.bonificacion >= 1){
+                        p1 = '<p class="m-0" title="Lote con bonificación en NEODATA"><span class="label" style="background:pink;color: black;">Bon. $'+formatMoney(d.bonificacion)+'</span></p>';
+                    }
+                    else{
+                        p1 = '';
+                    }
+   
+                         
+                    if(data.lugar_prospeccion  != null || data.lugar_prospeccion  == 0 ){
+                        p2 = '<p class="m-0" title="Lote con cancelación de CONTRATO"><span class="label" style="background:RED;">Recisión </span></p>';
+                    }
+                    else{
+                        p2 = '';
+                    }
+                    
+                    return p1 + p2 + lblPenalizacion;
                 }
             },
             {
