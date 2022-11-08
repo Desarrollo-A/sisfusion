@@ -1201,8 +1201,20 @@
   margin: 0 3px;
 }
 
+#reporte .scrollCharts {
+  display: flex;
+  overflow: auto;
+}
+
 #reporte .scrollCharts::-webkit-scrollbar {
   display: none;
+}
+
+@media (min-device-width: 320px) and (max-device-width: 480px) {
+  #reporte .scrollCharts {
+    display: block !important;
+    overflow: hidden !important;
+  }
 }
 
 #reporte table.dataTable > thead > tr > th, #reporte table.dataTable > tbody > tr > th, #reporte table.dataTable > tfoot > tr > th, #reporte table.dataTable > thead > tr > td, #reporte table.dataTable > tbody > tr > td, #reporte table.dataTable > tfoot > tr > td {
@@ -1235,7 +1247,7 @@
 
 @media (min-device-width: 320px) and (max-device-width: 480px) {
   #reporte .back .checkBox span {
-    padding: 8px 48px;
+    padding: 8px 35px;
   }
 }
 
@@ -1256,7 +1268,7 @@
 @media (min-device-width: 320px) and (max-device-width: 480px) {
   #reporte .back {
     width: 98% !important;
-    margin-bottom: 10px;
+    margin-bottom: 20px;
   }
 }
 
@@ -1281,10 +1293,16 @@
 @media (min-device-width: 320px) and (max-device-width: 480px) {
   #reporte .gradientRight {
     width: 12%;
+    display: none;
   }
 }
 
-#reporte .cardMiniChart {
+#reporte .rowCarousel {
+  position: relative;
+  padding-right: 20px;
+}
+
+#reporte .rowCarousel .cardMiniChart {
   background-color: #143860;
   box-shadow: none !important;
   min-width: 25%;
@@ -1292,30 +1310,37 @@
 }
 
 @media (min-width: 480px) and (max-width: 991px) {
-  #reporte .cardMiniChart {
+  #reporte .rowCarousel .cardMiniChart {
     min-width: 43%;
   }
 }
 
 @media (min-device-width: 320px) and (max-device-width: 480px) {
-  #reporte .cardMiniChart {
+  #reporte .rowCarousel .cardMiniChart {
     min-width: 80%;
+    margin-right: 0 !important;
   }
 }
 
-#reporte .card {
+#reporte .rowCarousel .card {
   border-radius: 10px;
 }
 
 @media (min-device-width: 320px) and (max-device-width: 480px), (min-width: 480px) and (max-width: 991px) {
-  #reporte .card {
+  #reporte .rowCarousel .card {
     margin-bottom: 0 !important;
   }
 }
 
 @media (min-device-width: 320px) and (max-device-width: 480px) {
-  #reporte .card {
+  #reporte .rowCarousel .card {
     width: 98%;
+  }
+}
+
+@media (min-device-width: 320px) and (max-device-width: 480px) {
+  #reporte .rowCarousel {
+    padding-right: 0px;
   }
 }
 

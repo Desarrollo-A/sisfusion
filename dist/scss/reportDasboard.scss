@@ -1,8 +1,16 @@
 @import "_base";
 
 #reporte{
-    .scrollCharts::-webkit-scrollbar {
-        display: none;
+    .scrollCharts{
+        display: flex;
+        overflow: auto;
+        &::-webkit-scrollbar {
+            display: none;
+        }
+        @media #{$smartphone}{
+            display: block!important;
+            overflow: hidden!important;
+        }
     }
     table.dataTable > thead > tr > th, table.dataTable > tbody > tr > th, table.dataTable > tfoot > tr > th, table.dataTable > thead > tr > td, table.dataTable > tbody > tr > td, table.dataTable > tfoot > tr > td {
         white-space: nowrap!important;
@@ -26,7 +34,7 @@
             background-color: $white;
             margin: 0 2px;
             @media #{$smartphone} {
-                padding: 8px 48px;
+                padding: 8px 35px;
             }
           }
           span:hover{
@@ -43,7 +51,7 @@
         }
         @media #{$smartphone}{
             width: 98%!important;
-            margin-bottom: 10px;
+            margin-bottom: 20px;
         }
     }
     .gradientLeft{
@@ -63,24 +71,33 @@
         background: linear-gradient(90deg, RGBA(238, 238, 238, 0) 10%, RGB(238 238 238/100%) 100%, RGB(238 238 238/29%) 51%, RGBA(238, 238, 238, 0.68391) 88%, $platinumLight 75%);
         @media #{$smartphone}{
             width: 12%;
+            display: none;
         }
     }
-    .cardMiniChart{
-        background-color: $blueIndigoDeep;
-        box-shadow: none!important;
-        min-width: 25%;
-        margin-right: 20px;
-        @media #{$tablets}{
-            min-width: 43%;
+    .rowCarousel{
+        position:relative; 
+        padding-right:20px;
+        .cardMiniChart{
+            background-color: $blueIndigoDeep;
+            box-shadow: none!important;
+            min-width: 25%;
+            margin-right: 20px;
+            @media #{$tablets}{
+                min-width: 43%;
+            }
+            @media #{$smartphone}{
+                min-width: 80%;
+                margin-right: 0!important;
+            }
+        }
+        .card{
+            border-radius: 10px;
+            @media #{$smartphone}, #{$tablets}{ margin-bottom: 0!important; }
+            @media #{$smartphone}{ width: 98%; }
         }
         @media #{$smartphone}{
-            min-width: 80%;
+            padding-right: 0px;
         }
-    }
-    .card{
-        border-radius: 10px;
-        @media #{$smartphone}, #{$tablets}{ margin-bottom: 0!important; }
-        @media #{$smartphone}{ width: 98%; }
     }
     .info{
         line-height: 1;

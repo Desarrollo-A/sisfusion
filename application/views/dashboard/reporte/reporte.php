@@ -2,7 +2,7 @@
 
 <div class="container-fluid">
     <div class="row pdt-40">
-        <div class="col-12 col-sm-5 col-md-3 col-lg-3">
+        <div class="col-12 col-sm-5 col-md-6 col-lg-3">
             <div class="back d-flex">
                 <label class="m-0 checkBox" >
                     <input type="checkbox" class="d-none infoMainSelector" value="1" name="infoMainSelector" id="typeSale1" checked>
@@ -14,11 +14,11 @@
                 </label>
             </div>
         </div>
-        <div class="col-12 col-sm-7 col-md-9 col-lg-9 d-flex align-center justify-end" id="tableFilters">
+        <div class="col-12 col-sm-7 col-md-6 col-lg-9 d-flex align-center justify-end" id="tableFilters">
             <div class="col-12 col-sm-1 col-md-1 col-lg-1 h-100 d-flex justify-center iconHover">
                 <i class="fas fa-chart-line chartButton" id="chartButton" ></i>
             </div>
-            <div class="col-12 col-sm-8 col-md-4 col-lg-4 h-100 pr-0">
+            <div class="col-12 col-sm-11 col-md-11 col-lg-4 h-100 pr-0">
                 <div class="form-group d-flex m-0 datesTable">
                     <input type="text" class="form-control datepicker tableDates" id="tableBegin" value="" autocomplete='off'/>
                     <input type="text" class="form-control datepicker tableDates" id="tableEnd" value="" autocomplete='off' />
@@ -29,13 +29,13 @@
             </div>
         </div>
     </div>
-    <div class="row w-100 m-auto" style="position:relative; padding-right:20px">
-        <div class="w-100 d-flex overflow-auto scrollCharts" id="scrollCharts">
+    <div class="row w-100 m-auto rowCarousel">
+        <div class="w-100 scrollCharts">
             <div class="card p-0 cardMiniChart" id="cardMiniChart">
                 <div class="container-fluid">
                     <div class="row pl-2 pt-2 pr-2">
                         <div class="col-xs-7 col-sm-7 col-md-7 col-lg-7 p-0 info">
-                            <p class="m-0">Ventas<br><span class="str">totales</span></p>
+                            <p class="m-0">Ventas<br> <span class="str">totales</span></p>
                         </div>
                         <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5 p-0 d-flex align-center justify-end appliedFilter">
                             <label class="selectMini m-0 overflow-text">Año en curso <span class="material-icons">show_chart</span></label>
@@ -96,7 +96,7 @@
                 <div class="container-fluid">
                     <div class="row pl-2 pt-2 pr-2">
                         <div class="col-xs-7 col-sm-7 col-md-7 col-lg-7 p-0 info">
-                            <p class="m-0">Ventas<br><span class="str">apartadas</span></p>
+                            <p class="m-0">Ventas<br> <span class="str">apartadas</span></p>
                         </div>
                         <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5 p-0 d-flex align-center justify-end appliedFilter">
                             <label class="selectMini m-0 overflow-text">Año en curso <span class="material-icons">show_chart</span></label>
