@@ -1641,3 +1641,15 @@ function fillTableReport(dataObject) {
         });
     }
 }
+
+$(".scrollCharts").scroll(function() {
+    var scrollDiv = $(".scrollCharts").scrollLeft();
+
+    if (scrollDiv > 0){
+        $(".gradientLeft").removeClass("d-none");
+        $(".gradientLeft").addClass("fading");
+    }
+    else{
+        $(".gradientLeft").addClass("d-none");
+    }
+});

@@ -1,6 +1,9 @@
 @import "_base";
 
 #reporte{
+    .scrollCharts::-webkit-scrollbar {
+        display: none;
+    }
     table.dataTable > thead > tr > th, table.dataTable > tbody > tr > th, table.dataTable > tfoot > tr > th, table.dataTable > thead > tr > td, table.dataTable > tbody > tr > td, table.dataTable > tfoot > tr > td {
         white-space: nowrap!important;
     }
@@ -22,6 +25,9 @@
             color: $deepGray;
             background-color: $white;
             margin: 0 2px;
+            @media #{$smartphone} {
+                padding: 8px 48px;
+            }
           }
           span:hover{
             box-shadow: none;
@@ -35,10 +41,41 @@
             background-color: $indigo;
           }
         }
-    }    
+        @media #{$smartphone}{
+            width: 98%!important;
+            margin-bottom: 10px;
+        }
+    }
+    .gradientLeft{
+        height: 100%;
+        width: 5%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        background: linear-gradient(270deg, RGBA(238, 238, 238, 0) 10%, RGB(238 238 238/100%) 100%, RGB(238 238 238/29%) 51%, RGBA(238, 238, 238, 0.68391) 88%, $platinumLight 75%);
+    }
+    .gradientRight{
+        height: 100%;
+        width: 5%;
+        position: absolute;
+        top: 0;
+        right: 0;
+        background: linear-gradient(90deg, RGBA(238, 238, 238, 0) 10%, RGB(238 238 238/100%) 100%, RGB(238 238 238/29%) 51%, RGBA(238, 238, 238, 0.68391) 88%, $platinumLight 75%);
+        @media #{$smartphone}{
+            width: 12%;
+        }
+    }
     .cardMiniChart{
         background-color: $blueIndigoDeep;
         box-shadow: none!important;
+        min-width: 25%;
+        margin-right: 20px;
+        @media #{$tablets}{
+            min-width: 43%;
+        }
+        @media #{$smartphone}{
+            min-width: 80%;
+        }
     }
     .card{
         border-radius: 10px;
@@ -322,9 +359,12 @@
         border-radius: 27px;
         border: 2px solid $platinumScroll;
         padding: 0;
+        align-items: center!important;
         .tableDates{
             text-align: center;
             background-image: none;
+            padding: 0;
+            height: fit-content!important;
         }
         .tableSearch{
             background-color: transparent!important;
@@ -352,8 +392,21 @@
         }
     }
     @media #{$smartphone}, #{$tablets}{
-        margin-top: 30px;
         padding-right: 20px;
     }
 }
 
+.fading {
+    font: 900 2rem sans-serif;
+    text-align: center;
+    animation-name: fade-in;
+    animation-duration: 1s;
+}
+@keyframes fade-in {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
