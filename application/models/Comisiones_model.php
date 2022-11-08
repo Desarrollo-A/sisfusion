@@ -5076,14 +5076,14 @@ function TieneAbonos($id){
         if($beginDate != '' && $endDate != '' && $estatus == 0){
             $query = $this->db-> query("SELECT op.nombre,pcm.id_usuario, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) 
             nombre_comisionista, SUM(abono_marketing) total_dispersado, 
-            CONVERT(char(10), pcm.fecha_abono , 111) fecha, oxc.nombre rol, us.rfc FROM pago_comision_mktd pcm 
+            CONVERT(char(10), pcm.fecha_abono , 111) fecha, oxc.nombre rol, u.rfc FROM pago_comision_mktd pcm 
             LEFT JOIN usuarios u ON u.id_usuario = pcm.id_usuario
             LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = u.id_rol AND oxc.id_catalogo = 1
             INNER JOIN opcs_x_cats op ON op.id_opcion=pcm.estatus 
             WHERE op.id_catalogo= 23
             ".$filter."
             GROUP BY op.nombre,pcm.id_usuario, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno),
-            CONVERT(char(10), pcm.fecha_abono , 111), oxc.nombre, us.rfc ORDER BY nombre_comisionista;");
+            CONVERT(char(10), pcm.fecha_abono , 111), oxc.nombre, u.rfc ORDER BY nombre_comisionista;");
             return $query;
         }
         else if($beginDate != '' && $endDate != '' && $estatus != 0){

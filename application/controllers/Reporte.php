@@ -131,19 +131,24 @@ class Reporte extends CI_Controller {
         $vaArray = array_values($vaArray);
 
         //Recorremos uno de los arrays obtenido anteriormente y sumamos en cada uno de los puntos para obtener cantidad y total
-        foreach( $vcArray as $key => $elemento ){
-            $tot1 = floatval(preg_replace('/[^\d\.]/', '', $elemento['total']));
-            $tot2 = floatval(preg_replace('/[^\d\.]/', '', $vaArray[$key]['total']));
-            
-            //Hacemos push a nuevo array de ventas generales ya con la sumatoria de va y vc por mes. 
-            $data[] = array(
-                'total' => "$" . number_format(($tot1 + $tot2), 2),
-                'cantidad' => $elemento['cantidad'] + $vaArray[$key]['cantidad'],
-                'mes' => $elemento['mes'],
-                'año' => $elemento['año'],
-                'tipo' => 'vt',
-                'rol' => $elemento['rol']
-            );
+        if( $general == "1" || $tipoChart == "vt"){
+            if($tipoChart == "vt"){
+                $data = array();
+            }
+            foreach( $vcArray as $key => $elemento ){
+                $tot1 = floatval(preg_replace('/[^\d\.]/', '', $elemento['total']));
+                $tot2 = floatval(preg_replace('/[^\d\.]/', '', $vaArray[$key]['total']));
+                
+                //Hacemos push a nuevo array de ventas generales ya con la sumatoria de va y vc por mes.
+                $data[] = array(
+                    'total' => "$" . number_format(($tot1 + $tot2), 2),
+                    'cantidad' => $elemento['cantidad'] + $vaArray[$key]['cantidad'],
+                    'mes' => $elemento['mes'],
+                    'año' => $elemento['año'],
+                    'tipo' => 'vt',
+                    'rol' => $elemento['rol']
+                ); 
+            }
         }
 
         if($data != null) {
