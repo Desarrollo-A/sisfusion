@@ -231,7 +231,7 @@
             "fixedColumns": true,
             "ordering": false,
             "columns": [
-                {
+                {//0
                     "width": "3%",
                     "className": 'details-control',
                     "orderable": false,
@@ -239,7 +239,7 @@
                     "defaultContent": '<div class="toggle-subTable"><i class="animacion fas fa-chevron-down fa-lg"></i>'
                 },
                 {
-
+//1
                     "data": function (d) {
                         var lblStats;
 
@@ -266,12 +266,14 @@
                     }
                 },
                 {
+   //2
                     "width": "10%",
                     "data": function (d) {
                         return '<p class="m-0">' + d.nombreResidencial + '</p>';
                     }
                 },
                 {
+      //3
                     "width": "10%",
                     "data": function (d) {
                         return '<p class="m-0">' + (d.nombreCondominio).toUpperCase();
@@ -279,6 +281,7 @@
                     }
                 },
                 {
+         //4
                     "width": "15%",
                     "data": function (d) {
                         return '<p class="m-0">' + d.nombreLote + '</p>';
@@ -286,18 +289,21 @@
                     }
                 },
                 {
+            //5
                     "width": "20%",
                     "data": function (d) {
                         return '<p class="m-0">' + d.gerente + '</p>';
                     }
                 },
                 {
+               //6
                     "width": "20%",
                     "data": function (d) {
                         return '<p class="m-0">' + d.nombre + " " + d.apellido_paterno + " " + d.apellido_materno + '</p>';
                     }
                 },
                 {
+                  //7
                     "width": "15%",
                     "data": function (d) {
                         if (d.RL == null || d.RL == ''  ){
@@ -309,6 +315,7 @@
                     }
                 },
                 {
+                    //8
                     "width": "40%",
                     "orderable": false,
                     "data": function (data) {
