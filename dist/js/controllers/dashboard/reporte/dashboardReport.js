@@ -846,6 +846,7 @@ function loaderCharts(){
     $('.appliedFilter .selectMini').html('');
     $('.appliedFilter .selectMini').append('Del: '+fechaInicio+' al: '+fechaTermino+'');
     $('.appliedFilter').attr('data-toggle', 'tooltip');
+    $('.appliedFilter').attr('data-placement', 'bottom');
     $('.appliedFilter').attr('data-original-title', 'Del: '+$('#tableBegin').val()+' al: '+$('#tableEnd').val());
 
     $('.money').addClass('d-none');
