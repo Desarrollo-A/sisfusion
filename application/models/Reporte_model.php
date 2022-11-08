@@ -99,6 +99,14 @@ class Reporte_model extends CI_Model {
             OPTION (MAXRECURSION 0)");
         }
         //Si general 0 traemos un tipo vc, va, cc o ca para evaluar el chart especifico al que se le hizo clic
+        else if ($tipoChart == 'vt'){
+            $data = $this->db->query("$defaultColumns
+            $ventasContratadas
+            UNION ALL
+            $ventasApartadas
+            ORDER BY tipo DESC, rol, año, mes
+            OPTION (MAXRECURSION 0)");
+        }
         else if ($tipoChart == 'vc'){
             $data = $this->db->query("$defaultColumns
             $ventasContratadas
