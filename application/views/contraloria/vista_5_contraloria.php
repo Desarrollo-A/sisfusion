@@ -180,7 +180,7 @@ $datos = array();
                                                 <th>F.MOD</th>
                                                 <th>F.VENC</th>
                                                 <th>UC</th>
-                                                <th>SEDE RESIDENCIAL</th>
+                                                <th>SEDE</th>
                                                 <th>ACCIONES</th>
                                             </tr>
                                         </thead>
