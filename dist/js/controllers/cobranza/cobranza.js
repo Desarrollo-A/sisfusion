@@ -506,6 +506,7 @@ function fillTable(idLote, beginDate, endDate, bandera ) {
                         break;
                     case 1:
                         if (registro_status == 0 || registro_status == 8) { //COMISION NUEVA
+                            console.log('entra 509');
                             let total0 = parseFloat(data[0].Aplicado);
                             let total = 0;
                             if (total0 > 0) {
@@ -522,7 +523,8 @@ function fillTable(idLote, beginDate, endDate, bandera ) {
                                 $("#modal_NEODATA .modal-body").append(`<input type="hidden" name="bonificacion" id="bonificacion" value="0">`);
                             }
                         } else if (registro_status == 1) {
-                            $.getJSON(url + "Comisiones/getDatosAbonadoSuma11/" + idLote).done(function (data1) {
+                            console.log('entra 526');
+                            $.getJSON("./../Comisiones/getDatosAbonadoSuma11/" + idLote).done(function (data1) {
                                 let total0 = parseFloat((data[0].Aplicado));
                                 let total = 0;
                                 if (total0 > 0) {
@@ -561,6 +563,7 @@ function fillTable(idLote, beginDate, endDate, bandera ) {
                 $("#modal_NEODATA .modal-body").append('<div class="row"><div class="col-md-12" style="text-align: center;"><h3><b>No se encontró esta referencia en NEODATA de ' + row.data().nombreLote + '.</b></h3><br><h5>Revisar con Administración.</h5></div> <div class="col-md-12"><center><img src="' + url + 'static/images/robot.gif" width="320" height="300"></center></div> </div>');
             }
         });
+        console.log('entra 526');
         $("#modal_NEODATA").modal();
     });
 }

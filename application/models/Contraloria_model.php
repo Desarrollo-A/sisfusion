@@ -76,10 +76,11 @@ class Contraloria_model extends CI_Model {
         INNER JOIN clientes cl ON l.idLote=cl.idLote
         INNER JOIN condominios cond ON l.idCondominio=cond.idCondominio
         INNER JOIN residenciales res ON cond.idResidencial = res.idResidencial
-		LEFT JOIN sedes s ON gerente.id_sede = s.id_sede 
+	
 		LEFT JOIN usuarios asesor ON cl.id_asesor = asesor.id_usuario
 		LEFT JOIN usuarios coordinador ON cl.id_coordinador = coordinador.id_usuario
 		LEFT JOIN usuarios gerente ON cl.id_gerente = gerente.id_usuario
+		LEFT JOIN sedes s ON gerente.id_sede = s.id_sede 
 		WHERE l.idStatusContratacion IN (2) AND l.idMovimiento IN (4, 74, 84, 93) AND cl.status = 1
         GROUP BY l.idLote, l.referencia, cl.id_cliente, cl.nombre, cl.apellido_paterno, cl.apellido_materno,
         l.nombreLote, l.idStatusContratacion, l.idMovimiento, l.modificado, cl.rfc,
