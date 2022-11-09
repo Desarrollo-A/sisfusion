@@ -6,7 +6,7 @@ $(document).ready(function () {
     $('.datepicker').datetimepicker({locale: 'es'});
         // BEGIN DATE
         const fechaInicio = new Date();
-        // Iniciar en este año, este mes, en el día 1
+        // Iniciar en este año, este mes, en el día 1   
         const beginDate = new Date(fechaInicio.getFullYear(), fechaInicio.getMonth(), 1);
         // END DATE
       
@@ -352,7 +352,13 @@ function fillTable(idLote, beginDate, endDate, bandera ) {
                     }else {
                         respuesta  = 'No definido';
                     }
+                    let btns = '';
+
+                  
+                // btns += '<button class="btn-data btn-green" data-idLote="' + data.idLote + '" id="requestCommissionPayment" title="Solicitar pago"><i class="fas fa-money-bill-wave"></i></button>';
+
                     return respuesta;
+                    // return;
                 //18
                 }
             },
@@ -388,7 +394,26 @@ function fillTable(idLote, beginDate, endDate, bandera ) {
             {
                 //19
                 data: function (data){
-                    return '<button value="'+data.id_pago_i+'" data-value="'+data.nombreLote+'"  class="btn-data btn-blueMaderas m-auto consultar_history " title="Detalles">' +'<i class="fas fa-info"></i></button>';
+                    let btns = '';
+                    let btns2 = ''; 
+                    if(data.rec == 8){
+                        btns = '';
+                            // labelStatus = '<span class="label" style="background:#3498DB;">RECISIÓN DE CONTRATO</span>';
+                    }else{
+                    // if (data.estatusEvidencia == 3 && (data.registroComision == 0 /*|| d.registroComision == 8*/) && (data.idStatusContratacion == 11 || data.idStatusContratacion == 15))
+                    // {
+                    //     btns += '<button class="btn-data btn-green" data-idLote="' + data.idLote + '" id="requestCommissionPayment" title="Solicitar pago"><i class="fas fa-money-bill-wave"></i></button>';
+                    // }else{
+
+                    // }
+
+                    }
+
+                     btns = '<button class="btn-data btn-green consultar_historys" data-idLote="' + data.idLote + '" data-registroComision="' + data.registroComision + '" id="verifyNeodataStatus" title="Ver más"></body><i class="fas fa-money-bill-wave" ></i></button>';
+                      btns2 += '<button value="'+data.id_pago_i+'" data-value="'+data.nombreLote+'"  class="btn-data btn-blueMaderas m-auto consultar_history " title="Detalles">' +'<i class="fas fa-info"></i></button>';
+                   return '<div class="d-flex">'+btns+btns2 +'</div>'; 
+                 //  return btns2 ;
+                   
  
                 }
             }
@@ -414,6 +439,10 @@ function fillTable(idLote, beginDate, endDate, bandera ) {
         }
     });
 
+    // $(document).on("click", ".consultar_historyss", function(){
+    
+
+    // });
     $(document).on("click", ".consultar_history", function(){
         var myCommentsList = document.getElementById('comments-list-asimilados');
         myCommentsList.innerHTML = '';
@@ -458,16 +487,18 @@ function fillTable(idLote, beginDate, endDate, bandera ) {
     $("#cobranzaHistorial tbody").on("click", "#verifyNeodataStatus", function (e) {
         e.preventDefault();
         e.stopImmediatePropagation();
+
         let tr = $(this).closest('tr');
-        let row = $("#masterCobranzaTable").DataTable().row(tr);
+        let row = $("#cobranzaHistorial").DataTable().row(tr);
         let idLote = $(this).attr("data-idLote");
         let registro_status = $(this).attr("data-registroComision");
         let cadena = '';
 
         $("#modal_NEODATA .modal-body").html("");
         $("#modal_NEODATA .modal-footer").html("");
-
-        $.getJSON(url + "ComisionesNeo/getStatusNeodata/" + idLote).done(function (data) {
+  
+        $.getJSON("./../ComisionesNeo/getStatusNeodata/" + idLote).done(function (data) {
+    
             if (data.length > 0) {
                 switch (data[0].Marca) {
                     case 0:
