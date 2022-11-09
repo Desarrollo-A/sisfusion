@@ -326,6 +326,10 @@
   overflow: hidden;
 }
 
+.overflow-auto {
+  overflow: auto;
+}
+
 .t-0 {
   top: 0;
 }
@@ -1197,6 +1201,22 @@
   margin: 0 3px;
 }
 
+#reporte .scrollCharts {
+  display: flex;
+  overflow: auto;
+}
+
+#reporte .scrollCharts::-webkit-scrollbar {
+  display: none;
+}
+
+@media (min-device-width: 320px) and (max-device-width: 480px) {
+  #reporte .scrollCharts {
+    display: block !important;
+    overflow: hidden !important;
+  }
+}
+
 #reporte table.dataTable > thead > tr > th, #reporte table.dataTable > tbody > tr > th, #reporte table.dataTable > tfoot > tr > th, #reporte table.dataTable > thead > tr > td, #reporte table.dataTable > tbody > tr > td, #reporte table.dataTable > tfoot > tr > td {
   white-space: nowrap !important;
 }
@@ -1225,6 +1245,12 @@
   margin: 0 2px;
 }
 
+@media (min-device-width: 320px) and (max-device-width: 480px) {
+  #reporte .back .checkBox span {
+    padding: 8px 35px;
+  }
+}
+
 #reporte .back .checkBox span:hover {
   box-shadow: none;
 }
@@ -1239,24 +1265,82 @@
   background-color: #163960;
 }
 
-#reporte .cardMiniChart {
-  background-color: #143860;
-  box-shadow: none !important;
+@media (min-device-width: 320px) and (max-device-width: 480px) {
+  #reporte .back {
+    width: 98% !important;
+    margin-bottom: 20px;
+  }
 }
 
-#reporte .card {
+#reporte .gradientLeft {
+  height: 100%;
+  width: 5%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: linear-gradient(270deg, RGBA(238, 238, 238, 0) 10%, RGB(238 238 238/100%) 100%, RGB(238 238 238/29%) 51%, RGBA(238, 238, 238, 0.68391) 88%, #eeeeee 75%);
+}
+
+#reporte .gradientRight {
+  height: 100%;
+  width: 5%;
+  position: absolute;
+  top: 0;
+  right: 0;
+  background: linear-gradient(90deg, RGBA(238, 238, 238, 0) 10%, RGB(238 238 238/100%) 100%, RGB(238 238 238/29%) 51%, RGBA(238, 238, 238, 0.68391) 88%, #eeeeee 75%);
+}
+
+@media (min-device-width: 320px) and (max-device-width: 480px) {
+  #reporte .gradientRight {
+    width: 12%;
+    display: none;
+  }
+}
+
+#reporte .rowCarousel {
+  position: relative;
+  padding-right: 20px;
+}
+
+#reporte .rowCarousel .cardMiniChart {
+  background-color: #143860;
+  box-shadow: none !important;
+  min-width: 25%;
+  margin-right: 20px;
+}
+
+@media (min-width: 480px) and (max-width: 991px) {
+  #reporte .rowCarousel .cardMiniChart {
+    min-width: 43%;
+  }
+}
+
+@media (min-device-width: 320px) and (max-device-width: 480px) {
+  #reporte .rowCarousel .cardMiniChart {
+    min-width: 80%;
+    margin-right: 0 !important;
+  }
+}
+
+#reporte .rowCarousel .card {
   border-radius: 10px;
 }
 
 @media (min-device-width: 320px) and (max-device-width: 480px), (min-width: 480px) and (max-width: 991px) {
-  #reporte .card {
+  #reporte .rowCarousel .card {
     margin-bottom: 0 !important;
   }
 }
 
 @media (min-device-width: 320px) and (max-device-width: 480px) {
-  #reporte .card {
+  #reporte .rowCarousel .card {
     width: 98%;
+  }
+}
+
+@media (min-device-width: 320px) and (max-device-width: 480px) {
+  #reporte .rowCarousel {
+    padding-right: 0px;
   }
 }
 
@@ -1616,11 +1700,14 @@
   border-radius: 27px;
   border: 2px solid #c1c1c1;
   padding: 0;
+  align-items: center !important;
 }
 
 #tableFilters .datesTable .tableDates {
   text-align: center;
   background-image: none;
+  padding: 0;
+  height: fit-content !important;
 }
 
 #tableFilters .datesTable .tableSearch {
@@ -1654,7 +1741,22 @@
 
 @media (min-device-width: 320px) and (max-device-width: 480px), (min-width: 480px) and (max-width: 991px) {
   #tableFilters {
-    margin-top: 30px;
     padding-right: 20px;
+  }
+}
+
+.fading {
+  font: 900 2rem sans-serif;
+  text-align: center;
+  animation-name: fade-in;
+  animation-duration: 1s;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
   }
 }

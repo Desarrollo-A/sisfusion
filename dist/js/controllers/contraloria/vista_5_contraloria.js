@@ -85,7 +85,7 @@ tabla_5 = $("#tabla_ingresar_5").DataTable({
                                 case 10:
                                     return 'UC';
                                 case 11:
-                                    return 'SEDE RESIDENCIAL';
+                                    return 'SEDE';
                             }
                         }
                     }
@@ -125,7 +125,7 @@ tabla_5 = $("#tabla_ingresar_5").DataTable({
                                 case 10:
                                     return 'UC';
                                 case 11:
-                                    return 'SEDE RESIDENCIAL'; 
+                                    return 'SEDE'; 
                             }
                         }
                     }

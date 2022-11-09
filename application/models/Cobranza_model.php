@@ -63,7 +63,8 @@ class Cobranza_model extends CI_Model {
         idStatusContratacion, idStatusLote, pc.bandera estatusComision,
         FORMAT(ISNULL(cm.comision_total, '0.00'), 'C') comisionTotal, 
         FORMAT(ISNULL(pci3.abonoDispersado, '0.00'), 'C') abonoDispersado, 
-        FORMAT(ISNULL(pci2.abonoPagado, '0.00'), 'C') abonoPagado, l.registro_comision registroComision, cm.estatus as rec, cl.descuento_mdb,
+        FORMAT(ISNULL(pci2.abonoPagado, '0.00'), 'C') abonoPagado,
+         l.registro_comision registroComision, cm.estatus as rec, cl.descuento_mdb,
         REPLACE(oxc.nombre, ' (especificar)', '') lugar_prospeccion
         FROM lotes l
         INNER JOIN condominios cn ON cn.idCondominio = l.idCondominio
@@ -221,7 +222,7 @@ class Cobranza_model extends CI_Model {
             $query3  =  '';
         }
 
-        $cmd = "SELECT pci1.id_pago_i, pci1.id_comision, lo.idLote ,lo.nombreLote , lo.referencia,  co.nombre as condominio,
+        $cmd = "SELECT pci1.id_pago_i, pci1.id_comision, lo.idLote ,lo.nombreLote , lo.referencia,  co.nombre as condominio,com.estatus as rec,
         FORMAT(ISNULL(lo.totalNeto2 , '0.00'), 'C') precio_lote,
         FORMAT(ISNULL(com.comision_total , '0.00'), 'C') comision_total, 
         FORMAT(ISNULL(pci1.abono_neodata ,'0.00'),'C') pago_cliente , 
@@ -231,13 +232,14 @@ class Cobranza_model extends CI_Model {
         FORMAT(ISNULL( pc14.abono_pagado2  , '0.00'), 'C') pago_neodata4,
 			FORMAT(ISNULL( pci3.pago_neodata , '0.00'), 'C') pago_neodata3,
 			FORMAT(ISNULL(com.comision_total-pc14.abono_pagado2, '0.00'),'C') restantes3, 
-         FORMAT(ISNULL(com.comision_total-pci2.abono_pagado , '0.00'),'C') restantes, 
+         FORMAT(ISNULL(com.comision_total-pci2.abono_pagado , '0.00'),'C') restantes,
+		 ISNULL(ec.estatus, 0) estatusEvidencia, 
         com.porcentaje_decimal,  UPPER(s.nombre) plaza, UPPER(s3.nombre) plazaB,
         pci1.estatus,  cl.fechaApartado fecha_apartado  , pci1.fecha_abono fecha_abono,
         (CASE WHEN pe.id_penalizacion IS NOT NULL THEN 1 ELSE 0 END) penalizacion,
         CONCAT(u.nombre, ' ',u.apellido_paterno, ' ', u.apellido_materno) user_names ,pci1.id_usuario, oprol.nombre as puesto, u.estatus as estatus_usuario, 
         oxcest.nombre as estatus_actual_comision,slo.nombre as estatus_lote,slo.color as color_lote , oxcest.id_opcion id_estatus_actual,  pr.source as source,
-        pci1.descuento_aplicado,
+        pci1.descuento_aplicado,lo.registro_comision registroComision,
         lo.idStatusContratacion , pac.total_comision as totalComision,
         
         FORMAT(ISNULL( pac.total_comision , '0.00'),'C') allComision,
@@ -259,7 +261,7 @@ class Cobranza_model extends CI_Model {
         INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
         INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
         INNER JOIN usuarios u ON u.id_usuario = com.id_usuario
-        
+		
         LEFT JOIN clientes cl ON cl.idLote = lo.idLote AND cl.status = 1 AND lo.idStatusContratacion > 8 AND com.estatus = 1
         INNER JOIN opcs_x_cats oprol ON oprol.id_opcion = com.rol_generado AND oprol.id_catalogo = 1
         LEFT JOIN pago_comision pac ON pac.id_lote = com.id_lote
@@ -271,11 +273,12 @@ class Cobranza_model extends CI_Model {
         LEFT JOIN sedes s3 ON lo.ubicacion = s3.id_sede 
         LEFT JOIN statuslote slo ON slo.idStatusLote = lo.idStatusLote
         LEFT JOIN penalizaciones pe ON pe.id_lote = lo.idLote AND pe.id_cliente = lo.idCliente
-        $query2 
+      $query2 
         GROUP BY pci1.id_comision, lo.idLote ,lo.nombreLote, co.nombre, lo.totalNeto2, com.comision_total,pac.bandera , pac.bonificacion ,
         com.porcentaje_decimal, pci1.abono_neodata, pci1.pago_neodata, pci2.abono_pagado,pc14.abono_pagado2,pci3.abono_neodata,pci3.pago_neodata,  pci1.estatus, cl.fechaApartado ,  pci1.fecha_abono,  pci1.fecha_abono,
         pci1.id_usuario, pci1.id_pago_i, u.nombre, u.apellido_paterno, u.apellido_materno, oprol.nombre, oxcest.nombre, oxcest.id_opcion, 
-        pci1.descuento_aplicado, lo.idStatusContratacion,oxc.nombre , lo.referencia, com.estatus, u.estatus,pac.total_comision, oxcest.color ,slo.nombre ,slo.color,s.nombre, s3.nombre ,  pr.source ,pe.id_penalizacion ORDER BY lo.nombreLote";
+        pci1.descuento_aplicado, lo.idStatusContratacion,oxc.nombre , com.estatus, lo.referencia, com.estatus, u.estatus,pac.total_comision, oxcest.color
+		,slo.nombre ,slo.color,s.nombre, s3.nombre ,registro_comision ,ec.estatus,   pr.source ,pe.id_penalizacion ORDER BY lo.nombreLote";
 
         return $this->db->query($cmd);
     }

@@ -326,6 +326,10 @@
   overflow: hidden;
 }
 
+.overflow-auto {
+  overflow: auto;
+}
+
 .t-0 {
   top: 0;
 }
