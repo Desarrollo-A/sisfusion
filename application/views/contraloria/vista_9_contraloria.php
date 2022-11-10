@@ -548,6 +548,11 @@ e.preventDefault();
     dataExp1.append("fechaVenc", getInfo1[6]);
     dataExp1.append("totalNeto2", totalNeto2);
     dataExp1.append("rl", rl );
+    if( rl == 'opciones'){
+        alerts.showNotification("top", "right", "Selecciona un RL para poder continuar.", "warning");
+    }else{
+
+    
       if (validaComent == 0 || validatn == 0) {
         alerts.showNotification("top", "right", "Todos los campos son obligatorios.", "danger");
       }
@@ -589,7 +594,7 @@ e.preventDefault();
             });
         
       }
-
+    }
 });
 
 
