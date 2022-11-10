@@ -883,24 +883,32 @@ class Asesor_model extends CI_Model
 
     public function get_sol_aut()
     {
-        $query = $this->db->query('SELECT cliente.id_cliente, nombreLote, cliente.rfc, nombreResidencial, condominio.nombre as nombreCondominio, 
+        if( $this->session->userdata('id_rol') == 6 ){
+            $filterByRol =  'AND cliente.id_gerente = '. $this->session->userdata('id_lider');
+            $filterInner = 'INNER JOIN usuarios us ON us.id_usuario = cliente.id_asesor AND us.estatus IN (0,3)';
+        }
+        else{
+            $filterByRol = 'AND cliente.id_asesor = ' . $this->session->userdata('id_usuario');
+            $filterInner = '';
+        }
+
+        $query = $this->db->query("SELECT cliente.id_cliente, nombreLote, cliente.rfc, nombreResidencial, condominio.nombre as nombreCondominio, 
 		cliente.status, cliente.id_asesor, condominio.idCondominio, lotes.idLote, cliente.autorizacion, cliente.fechaApartado,
 		lotes.idStatusContratacion, lotes.idMovimiento FROM clientes as cliente
 		INNER JOIN lotes ON cliente.idLote = lotes.idLote
 		INNER JOIN condominios as condominio ON lotes.idCondominio = condominio.idCondominio
 		INNER JOIN residenciales as residencial ON condominio.idResidencial = residencial.idResidencial
 		INNER JOIN deposito_seriedad ON deposito_seriedad.id_cliente = cliente.id_cliente
-		WHERE cliente.status = 1 AND cliente.id_asesor = ' . $this->session->userdata('id_usuario') . ' 
+        $filterInner
+		WHERE cliente.status = 1 $filterByRol
 		GROUP BY lotes.idLote,
 		cliente.id_cliente, nombreLote, cliente.rfc, nombreResidencial, condominio.nombre, 
 		cliente.status, cliente.id_asesor, condominio.idCondominio, lotes.idLote, cliente.autorizacion, cliente.fechaApartado,
         lotes.idStatusContratacion, lotes.idMovimiento
-		ORDER BY cliente.fechaApartado DESC');
+		ORDER BY cliente.fechaApartado DESC");
         return $query->result_array();
     }
 
-
-    /*nuevo 150620*/
     public function insertAutorizacion($data)
     {
         $this->db->insert('autorizaciones', $data);

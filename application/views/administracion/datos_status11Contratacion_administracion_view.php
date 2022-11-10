@@ -63,7 +63,7 @@
 							<div class="col col-xs-12 col-sm-12 col-md-6 col-lg-6">
 								<label id="tvLbl">Total a validar:</label>
 								<input class="form-control" name="totalNeto" id="totalNeto" oncopy="return false" onpaste="return false" readonly
-                                       type="tel" pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" data-type="currency">
+								type="tel" pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" data-type="currency">
 							</div>
 
 
@@ -146,7 +146,7 @@
 												<thead>
 													<tr>
 														<th></th>
-														<th></th>
+														<th>TIPO DE VENTA</th>
 														<th>PROYECTO</th>
 														<th>CONDOMINIO</th>
 														<th>LOTE</th>
@@ -192,7 +192,7 @@
 
 		$("#tabla_ingresar_11").ready( function(){
 			$('#tabla_ingresar_11 thead tr:eq(0) th').each( function (i) {
-				if(i != 0 && i != 12){
+				if(i != 0 ){
 					var title = $(this).text();
 					$(this).html('<input type="text" class="textoshead" placeholder="'+title+'"/>' );
 					$( 'input', this ).on('keyup change', function () {
@@ -208,7 +208,7 @@
 
 			let titulos = [];
 			$('#tabla_ingresar_11 thead tr:eq(0) th').each( function (i) {
-				if( i!=0 && i!=13){
+				if( i!=0 ){
 				var title = $(this).text();
 
 				titulos.push(title);
@@ -224,17 +224,49 @@
                     className: 'btn buttons-excel',
                     titleAttr: 'Descargar archivo de Excel',
 					exportOptions: {
-						columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
-						format: {
-							header:  function (d, columnIdx) {
-								if(columnIdx == 0){
-									return ' '+d +' ';
-								}
-								return ' '+titulos[columnIdx-1] +' ';
-									
-							}
-						}
-					}
+                        columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+                        format: {
+                            header: function (d, columnIdx) {
+                                switch (columnIdx) {
+                                    case 1:
+                                        return "TIPO DE VENTA";
+                                        break;
+                                    case 2:
+                                        return "PROYECTO"
+                                    case 3:
+                                        return "CONDOMINIO";
+                                        break;
+                                    case 4:
+                                        return "LOTE";
+                                        break;
+                                    case 5:
+                                        return "GERENTE";
+                                        break;
+                                    case 6:
+                                        return "CLIENTE";
+                                        break;
+                                    case 7:
+                                        return "TOTAL NETO";
+                                        break;
+                                    case 8:
+                                        return "FECHA REALIZADO";
+                                        break;
+                                    case 9:
+                                        return "FECHA VENC";
+                                        break;
+                                    case 10:
+                                        return "DÍAS TRANSC";
+                                        break;
+                                    case 11:
+                                        return "ESTATUS ACTUAL";
+                                        break;
+									case 12:
+                                    	return "MÁS";
+                                        break;
+                                }
+                            }
+                        }
+                    }
 				}],
 				pagingType: "full_numbers",
                 fixedHeader: true,
@@ -351,32 +383,24 @@
 				{
 					"width": "8%",
 					"data": function( d ){
-						
-						/*var date_r =  new Date();
-						var hoy= date_r.toISOString().substring(0, 10);
-						var dateH =  new Date(hoy);
-						
-						var date_fv= new Date(d.fechaVenc2);
-						var venc= date_fv.toISOString().substring(0, 10);
-						var dateV = new Date(venc);
+						var dateFuture = new Date(d.fechaVenc2);
+					    var dateNow = new Date();
+					    var seconds = Math.floor((dateFuture - (dateNow))/1000);
+					    var minutes = Math.floor(seconds/60);
+					    var hours = Math.floor(minutes/60);
+					    var days = Math.floor(hours/24);
 
-						var diasasml = 86400000;
-						var difinml = dateV - dateH;
-						var dif_dias = difinml / diasasml;
-						
-						var res = (dif_dias < 1) ? 'Vencido' : dif_dias;
-						
-						return '<p class="m-0">'+ res +'</p>';*/
+					    hours = hours-(days*24);
+					    minutes = minutes-(days*24*60)-(hours*60);
+					    seconds = seconds-(days*24*60*60)-(hours*60*60)-(minutes*60);
 
-                        if(d.fechaVenc2=='N/A'){
+					    if(d.fechaVenc2=='N/A')
+					    {
                             return '<p class="m-0">N/A</p>';
-                        }else{
+                        }
+                        else{
                             var dateFuture = new Date(d.fechaVenc2);
                             var dateNow = new Date();
-
-                            /*console.log("TF: " + dateFuture);
-                            console.log(dateNow);*/
-
                             var seconds = Math.floor((dateFuture - (dateNow))/1000);
                             var minutes = Math.floor(seconds/60);
                             var hours = Math.floor(minutes/60);
@@ -478,10 +502,6 @@
 				}
 			});
 
-
-
-
-
 		$("#tabla_ingresar_11 tbody").on("click", ".editReg", function(e){
 				e.preventDefault();
 
@@ -503,6 +523,7 @@
                 }
                 document.getElementById("totalNeto").value = val;
                 $('#totalNeto').click();
+
 				$('#editReg').modal('show');
 
 				});
@@ -526,9 +547,6 @@
 				$('#rechReg').modal('show');
 
 				});
-
-
-
 	});
 
 
@@ -606,24 +624,15 @@
 
 
 	$(document).on('click', '#save3', function(e) {
-	e.preventDefault();
-
-			var comentario = $("#comentario3").val();
-
+		e.preventDefault();
+		var comentario = $("#comentario3").val();
 		if(comentario != 'Otro'){
-			
 			var comentario = $("#comentario3").val();
 			var validaComent = ($("#comentario3").val() == 0) ? 0 : 1;
-
-			
 		} else {
-			
 			var comentario = $("#observaciones").val();
 			var validaComent = ($("#observaciones").val().length == 0) ? 0 : 1;
-			
 		}
-
-
 
 	var dataExp3 = new FormData();
 
@@ -726,7 +735,7 @@
 		return true;
 		}
 		else{
-			alerts.showNotification("top", "right", "Recuerda sólo ingresar números", "danger");
+			alerts.showNotification("top", "left", "Solo Numeros.", "danger");
 		return false;
 		}
 	}
