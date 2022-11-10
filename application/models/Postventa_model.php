@@ -10,7 +10,7 @@ class Postventa_model extends CI_Model
     {
         parent::__construct();
     }
-
+    
     function getProyectos()
     {
         return $this->db->query("SELECT * FROM residenciales WHERE status = 1");
@@ -30,14 +30,19 @@ class Postventa_model extends CI_Model
 
     function getClient($idLote)
     {
-        return $this->db->query("SELECT c.id_cliente, CONCAT(c.nombre, ' ', c.apellido_paterno, ' ', c.apellido_materno) nombre, c.ocupacion,
-        oxc.nombre nacionalidad, oxc2.nombre estado_civil, oxc3.nombre regimen_matrimonial, c.correo, c.domicilio_particular, c.rfc, c.telefono1, c.telefono2, c.personalidad_juridica
-        FROM lotes l 
-        INNER JOIN clientes c ON c.id_cliente = l.idCliente 
-        INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = c.nacionalidad AND oxc.id_catalogo = 11
-        INNER JOIN opcs_x_cats oxc2 ON oxc2.id_opcion = c.estado_civil AND oxc2.id_catalogo = 18
-        INNER JOIN opcs_x_cats oxc3 ON oxc3.id_opcion = c.regimen_matrimonial AND oxc3.id_catalogo = 19
-        WHERE l.idLote = $idLote");
+        $num_cli = $this->db->query("SELECT COUNT(idCliente) AS num_cli FROM lotes WHERE idLote = $idLote AND (idCliente IS NOT NULL AND idCliente <> 0 AND idCliente <> '0' AND idCliente<>'')");
+        if($num_cli->row()->num_cli < 1){
+            return $num_cli;
+        }else{
+            return $this->db->query("SELECT c.id_cliente, CONCAT(c.nombre, ' ', c.apellido_paterno, ' ', c.apellido_materno) nombre, c.ocupacion, 1 as num_cli,
+            oxc.nombre nacionalidad, oxc2.nombre estado_civil, oxc3.nombre regimen_matrimonial, c.correo, c.domicilio_particular, c.rfc, c.telefono1, c.telefono2, c.personalidad_juridica
+            FROM lotes l 
+            INNER JOIN clientes c ON c.id_cliente = l.idCliente 
+            LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = c.nacionalidad AND oxc.id_catalogo = 11
+            LEFT JOIN opcs_x_cats oxc2 ON oxc2.id_opcion = c.estado_civil AND oxc2.id_catalogo = 18
+            LEFT JOIN opcs_x_cats oxc3 ON oxc3.id_opcion = c.regimen_matrimonial AND oxc3.id_catalogo = 19
+            WHERE l.idLote = $idLote");
+        }
     }
 
     function getEmpRef($idLote){
@@ -52,13 +57,13 @@ class Postventa_model extends CI_Model
     {
         $idUsuario = $this->session->userdata('id_usuario');
         $rol = $this->session->userdata('id_rol');
-        $nombre = $data->ncliente;
-        $idConst = $data->idECons;
-        $idEstatus = $data->idEstatus == 8 ? 1:2;
-        $claveCat = $data->ClaveCat;
-        $clienteAnterior = $data->ult_ncliente != null ? 1:2;
-        $nombreClienteAnterior = $clienteAnterior == 1 ? $data->ult_ncliente: NULL;
-        $rfcAnterior =  $clienteAnterior == 1 ? $data->ult_rfc: NULL;
+        $nombre = (!isset($data['ncliente']) || $data['ncliente'] = '') ? 'NULL' : $data['ncliente'];
+        $idConst = (!isset($data['idECons']) || $data['idECons'] = '') ? 'NULL' : $data['idECons'];
+        $idEstatus = (isset($data['idEstatus']) || $data['idEstatus'] != '') && $data['idEstatus'] == 8 ? 1:2;
+        $claveCat = (!isset($data['ClaveCat']) || $data['ClaveCat'] = '') ? 'NULL' : $data['ClaveCat'];
+        $clienteAnterior = $data['ult_ncliente'] != null ? 1:2;
+        $nombreClienteAnterior = $clienteAnterior == 1 ? $data['ult_ncliente']: NULL;
+        $rfcAnterior =  $clienteAnterior == 1 ? $data['ult_rfc']: NULL;
       
         $this->db->query("INSERT INTO solicitud_escrituracion (idLote, idCliente, estatus, fecha_creacion
         , creado_por, fecha_modificacion, modificado_por, idArea, idPostventa, estatus_pago, clave_catastral, cliente_anterior,
@@ -908,5 +913,83 @@ function checkBudgetInfo($idSolicitud){
         $query = $this->db->query("SELECT idNxS FROM notarias_x_usuario 
              WHERE id_solicitud = $idSolicitud AND id_notaria = $idNotaria");
         return $query->row();
+    }
+
+    function getOpcCat($id_cat){
+        return $this->db->query("SELECT id_opcion, nombre FROM opcs_x_cats WHERE id_catalogo = $id_cat and estatus = 1");
+    }
+
+    public function InsertCli($datos){
+        $user = $this->session->userdata;
+        $id_usuario = $user['id_usuario'];
+        $idGerente = ($user['idGerente'] == '' || !empty($user['idGerente']) ) ? 'NULL' : $user['idGerente'];
+        $id_sede = $user['id_sede'];
+        $nombre2 = $datos['nombre2'];
+        $ape1 = $datos['ape1'];
+        $ape2 = $datos['ape2'];
+        $rfc = $datos['rfc'];
+        $correo = $datos['correo'];
+        $telefono = $datos['telefono'];
+        $cel = $datos['cel'];
+        $ecivil = $datos['ecivil'];
+        $rconyugal = $datos['rconyugal'];
+        $direccion = $datos['direccion'];
+        $origen = $datos['origen'];
+        $ocupacion = $datos['ocupacion'];
+        $idLote = $datos['idLote'];
+        $usuario = $user['usuario'];
+        $idCondominio = $datos['idCondominio'];
+        $usuario = $user['usuario'];
+        $usuario = $user['usuario'];
+        $usuario = $user['usuario'];
+
+        $this->db->query("INSERT INTO clientes (id_asesor
+                ,id_coordinador
+                ,id_gerente
+                ,id_sede
+                ,nombre
+                ,apellido_paterno
+                ,apellido_materno
+                ,rfc
+                ,correo
+                ,telefono1
+                ,telefono2
+                ,estado_civil
+                ,regimen_matrimonial
+                ,domicilio_particular
+                ,originario_de
+                ,ocupacion
+                ,status
+                ,idLote
+                ,usuario
+                ,idCondominio
+                ,fecha_creacion
+                ,creado_por
+                ,fecha_modificacion
+)
+        VALUES  ($id_usuario,
+                $id_usuario,
+                $idGerente,
+                $id_sede,
+                '$nombre2',
+                '$ape1',
+                '$ape2',
+                '$rfc',
+                '$correo',
+                $telefono,
+                $cel,
+                $ecivil,
+                $rconyugal,
+                '$direccion',
+                '$origen',
+                '$ocupacion',
+                1,
+                $idLote,
+                '$usuario',
+                $idCondominio,
+                GetDate(),
+                1,
+                GetDate())");
+        return  $this->db->query("SELECT SCOPE_IDENTITY() as ult_reg");
     }
 }
