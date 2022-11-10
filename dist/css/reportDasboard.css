@@ -326,6 +326,10 @@
   overflow: hidden;
 }
 
+.overflow-auto {
+  overflow: auto;
+}
+
 .t-0 {
   top: 0;
 }
@@ -1197,28 +1201,146 @@
   margin: 0 3px;
 }
 
+#reporte .scrollCharts {
+  display: flex;
+  overflow: auto;
+}
+
+#reporte .scrollCharts::-webkit-scrollbar {
+  display: none;
+}
+
+@media (min-device-width: 320px) and (max-device-width: 480px) {
+  #reporte .scrollCharts {
+    display: block !important;
+    overflow: hidden !important;
+  }
+}
+
 #reporte table.dataTable > thead > tr > th, #reporte table.dataTable > tbody > tr > th, #reporte table.dataTable > tfoot > tr > th, #reporte table.dataTable > thead > tr > td, #reporte table.dataTable > tbody > tr > td, #reporte table.dataTable > tfoot > tr > td {
   white-space: nowrap !important;
 }
 
-#reporte .cardMiniChart {
-  background-color: #143860;
-  box-shadow: none !important;
+#reporte .back {
+  width: fit-content;
+  background-color: #ffffff;
+  padding: 8px 2px;
+  border-radius: 5px;
 }
 
-#reporte .card {
+#reporte .back .checkBox {
+  cursor: pointer;
+  user-select: none;
+  display: block;
+  line-height: inherit;
+}
+
+#reporte .back .checkBox span {
+  font-size: 12px;
+  border-radius: 5px;
+  transition: 0.4s;
+  padding: 8px 15px;
+  color: #929292;
+  background-color: #ffffff;
+  margin: 0 2px;
+}
+
+@media (min-device-width: 320px) and (max-device-width: 480px) {
+  #reporte .back .checkBox span {
+    padding: 8px 35px;
+  }
+}
+
+#reporte .back .checkBox span:hover {
+  box-shadow: none;
+}
+
+#reporte .back .checkBox input {
+  pointer-events: none;
+  display: none;
+}
+
+#reporte .back .checkBox input:checked + span {
+  color: #ffffff;
+  background-color: #163960;
+}
+
+@media (min-device-width: 320px) and (max-device-width: 480px) {
+  #reporte .back {
+    width: 98% !important;
+    margin-bottom: 20px;
+  }
+}
+
+#reporte .gradientLeft {
+  height: 100%;
+  width: 5%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: linear-gradient(270deg, RGBA(238, 238, 238, 0) 10%, RGB(238 238 238/100%) 100%, RGB(238 238 238/29%) 51%, RGBA(238, 238, 238, 0.68391) 88%, #eeeeee 75%);
+}
+
+#reporte .gradientRight {
+  height: 100%;
+  width: 5%;
+  position: absolute;
+  top: 0;
+  right: 0;
+  background: linear-gradient(90deg, RGBA(238, 238, 238, 0) 10%, RGB(238 238 238/100%) 100%, RGB(238 238 238/29%) 51%, RGBA(238, 238, 238, 0.68391) 88%, #eeeeee 75%);
+}
+
+@media (min-device-width: 320px) and (max-device-width: 480px) {
+  #reporte .gradientRight {
+    width: 12%;
+    display: none;
+  }
+}
+
+#reporte .rowCarousel {
+  position: relative;
+  padding-right: 20px;
+}
+
+#reporte .rowCarousel .cardMiniChart {
+  background-color: #143860;
+  box-shadow: none !important;
+  min-width: 25%;
+  margin-right: 20px;
+}
+
+@media (min-width: 480px) and (max-width: 991px) {
+  #reporte .rowCarousel .cardMiniChart {
+    min-width: 43%;
+  }
+}
+
+@media (min-device-width: 320px) and (max-device-width: 480px) {
+  #reporte .rowCarousel .cardMiniChart {
+    min-width: 80%;
+    margin-right: 0 !important;
+  }
+}
+
+#reporte .rowCarousel .card {
   border-radius: 10px;
 }
 
 @media (min-device-width: 320px) and (max-device-width: 480px), (min-width: 480px) and (max-width: 991px) {
-  #reporte .card {
+  #reporte .rowCarousel .card {
     margin-bottom: 0 !important;
   }
 }
 
 @media (min-device-width: 320px) and (max-device-width: 480px) {
-  #reporte .card {
+  #reporte .rowCarousel .card {
     width: 98%;
+  }
+}
+
+@media (min-device-width: 320px) and (max-device-width: 480px) {
+  #reporte .rowCarousel {
+    padding-right: 0px;
   }
 }
 
@@ -1497,68 +1619,6 @@
   -moz-appearance: textfield !important;
 }
 
-#reporte head-section:empty, #reporte .profile-img-section:empty, #reporte .text1:empty, #reporte .text2:empty, #reporte .text3:empty, #reporte .text4:empty, #reporte .desc_container_title:empty,
-#reporte .subtitle_skeleton:empty, #reporte .disccount:empty {
-  animation: loading 1.1s infinite linear;
-  background: #154f7a;
-  background-image: -webkit-linear-gradient(to right, #154f7a 25%, #15638e 50%, #155D88 75%, #154f7a 100%);
-  background-image: linear-gradient(to right, #154f7a 25%, #15638e 50%, #15638e 75%, #154f7a 100%);
-  background-repeat: no-repeat;
-}
-
-#reporte .subtitle_skeleton {
-  height: 20px;
-  width: 85%;
-  /*margin-bottom: 20px;*/
-}
-
-@keyframes loading {
-  0% {
-    background-position: -100px;
-  }
-  100% {
-    background-position: 200px;
-  }
-}
-
-#reporte .loader {
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  display: inline-block;
-  position: relative;
-  background: linear-gradient(0deg, rgba(20, 56, 96, 0.2) 33%, #2C93E7 100%);
-  box-sizing: border-box;
-  animation: rotation 1s linear infinite;
-}
-
-#reporte .loader::after {
-  content: '';
-  box-sizing: border-box;
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  background: #143860;
-}
-
-@keyframes rotation {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
-}
-
-#reporte .appliedFilter {
-  overflow: hidden;
-  white-space: nowrap;
-}
-
 #modalChart .modal-dialog {
   -webkit-transform: translate(0, -50%);
   -o-transform: translate(0, -50%);
@@ -1640,11 +1700,14 @@
   border-radius: 27px;
   border: 2px solid #c1c1c1;
   padding: 0;
+  align-items: center !important;
 }
 
 #tableFilters .datesTable .tableDates {
   text-align: center;
   background-image: none;
+  padding: 0;
+  height: fit-content !important;
 }
 
 #tableFilters .datesTable .tableSearch {
@@ -1678,7 +1741,22 @@
 
 @media (min-device-width: 320px) and (max-device-width: 480px), (min-width: 480px) and (max-width: 991px) {
   #tableFilters {
-    margin-top: 30px;
     padding-right: 20px;
+  }
+}
+
+.fading {
+  font: 900 2rem sans-serif;
+  text-align: center;
+  animation-name: fade-in;
+  animation-duration: 1s;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
   }
 }

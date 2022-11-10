@@ -1183,17 +1183,16 @@
                     document.getElementById("msdif").disabled = true;
                 }
                 if(r1>=500000){
-                    console.log('DIABLSODK');
                     $('#porcentajeEnganche').attr('min', 1);
                     let porcetaje = 0.01;
                     let porcentajeDanero = (porcetaje*r1);
                     $('#cantidadEnganche').attr('min', porcentajeDanero);
                     if(porcentajeEnganche.val()<1){
                         porcentajeEnganche.val(1);
-                        cantidadEnganche.val(porcentajeDanero);
+                        cantidadEnganche.val(porcentajeDanero.toFixed(2));
                         $scope.cantidad = porcentajeDanero;
                     }else if(cantidadEnganche.val()<porcentajeDanero){
-                        cantidadEnganche.val(porcentajeDanero);
+                        cantidadEnganche.val(porcentajeDanero.toFixed(2));
                         $scope.cantidad = porcentajeDanero;
                     }else{
                         $scope.engancheFinal = cantidadEnganche.val();
@@ -1216,11 +1215,13 @@
                             cantidadEnganche.val(5000);
                             console.log('>');
                         }else{
-                            var cantidadToGetP = (( 100 * cantidadEnganche.val())/r1);
+                            console.log( cantidadEnganche.val());
+                            let ef = cantidadEnganche.val();
+                            var cantidadToGetP = (( 100 * ef)/r1);
                             porcentajeEnganche.val(parseFloat(cantidadToGetP).toFixed(2));
 
-                            $scope.engancheFinal = cantidadEnganche.val();
-                            $scope.cantidad = cantidadEnganche.val();
+                            $scope.engancheFinal = ef;
+                            $scope.cantidad = ef;
                             console.log('*');
                         }
                     // $scope.cantidad = parseInt(cantidadEnganche.val());
@@ -2032,17 +2033,19 @@
                     }else{
                         //se queda normal
                         $scope.engancheFinal = $scope.infoLote.engancheF;
-                        console.log('blablabla', $scope.engancheFinal);
                     }
                 }else{
                     //para menores de 500,000
                     console.log('entre a menor de 5000 enganche');
-                    if($scope.infoLote.engancheF<5000){
+                    if($scope.cantidad<=5000){
                         //debe ser min 5000 en cantidad
-                        $scope.engancheFinal = 5000;
+                        $scope.engancheFinal = $scope.infoLote.engancheF = 5000;
+                        // console.log('SIDD');
                     }else{
                         //se queda normal
                         $scope.engancheFinal = $scope.infoLote.engancheF;
+                        // console.log('HARTHA');
+
                     }
                 }
                 // $scope.engancheFinal = ($scope.infoLote.r1>500000) ? $scope.infoLote.engancheF : ;

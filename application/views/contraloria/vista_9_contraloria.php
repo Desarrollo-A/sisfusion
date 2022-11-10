@@ -36,6 +36,7 @@
                                     <table id="tabla_ingresar_9" name="tabla_ingresar_9"
                                             class="table-striped table-hover">
                                         <thead>
+                                            
                                             <tr>
                                                 <th></th>
                                                 <th></th>
@@ -66,18 +67,29 @@
                     <center><h4 class="modal-title"><label>Registro estatus 9 - <b><span class="lote"></span></b></label></h4></center>
                 </div>
                 <div class="modal-body">
-                <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                        <div class="col col-xs-12 col-sm-12 col-md-6 col-lg-12">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-12">
                             <label>Comentario:</label>
                             <textarea class="form-control" id="comentario" rows="3"></textarea>
                              <br>
                         </div>
-                        <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                             <label id="tvLbl">Total Neto:</label>
                             <input class="form-control" name="totalNeto2" id="totalNeto2"
                                    oncopy="return false" onpaste="return false" onkeypress="return SoloNumeros(event)"
                                    type="tel" pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" data-type="currency">
                         </div>
+                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                        <div class="form-group">
+                                            <label class="m-0" for="proyecto">Representante Legal:</label>
+                                            <select name="rl" id="rl"  class="selectpicker select-gral m-0 rl" data-default-value="opciones"
+                                                    data-style="btn" data-show-subtext="true" data-live-search="true" 
+                                                    title="Selecciona RL" data-size="7" required>
+                                                    <option value="opciones" selected="selected">OPCIONES</option>
+                                            </select>
+                                        </div>
+                        </div>
+                    
                     </div>
                 </div>
 
@@ -361,7 +373,7 @@ if(data.vl == '1') {
     }],
 
 "ajax": {
-"url": '<?=base_url()?>index.php/Contraloria/getregistroStatus9ContratacionContraloria',
+"url": '<?=base_url()?>/Contraloria/getregistroStatus9ContratacionContraloria',
 "dataSrc": "",
 "type": "POST",
 cache: false,
@@ -444,7 +456,8 @@ $('#tabla_ingresar_9 tbody').on('click', 'td.details-control', function () {
 
      $("#tabla_ingresar_9 tbody").on("click", ".editReg", function(e){
             e.preventDefault();
-
+            
+        //    getRL();
             getInfo1[0] = $(this).attr("data-idCliente");
             getInfo1[1] = $(this).attr("data-nombreResidencial");
             getInfo1[2] = $(this).attr("data-nombreCondominio");
@@ -456,9 +469,31 @@ $('#tabla_ingresar_9 tbody').on('click', 'td.details-control', function () {
 
             nombreLote = $(this).data("nomlote");
             $(".lote").html(nombreLote);
+            console.log('444444444');
+            // $("#rl").selectpicker('refresh');
+            
+             $('#editReg').modal('show');
+            console.log('78787878');
+            // document.getElementById("rl").value = 'opciones';
+            $("#rl").selectpicker('refresh');
+            console.log('77788');
+            $("#rl").val('opciones');
+             console.log('99999');
+               // $("#rl").val($("#rl").data("default-value"));
 
-            $('#editReg').modal('show');
-
+            // $('#rl option').prop('selected', function() {
+            //          return this.defaultSelected;
+            //      });
+            //$("#rl").data("default-value",$("#rl").val());
+  
+        
+           
+           // $("#rl").val('opciones');//Setting the value as 'b'
+            // $('#rl option').prop('selected', function() {
+            //         return this.defaultSelected;
+            //   });
+            console.log('544445555');
+       
             });
 
 
@@ -496,7 +531,8 @@ e.preventDefault();
 
     var comentario = $("#comentario").val();
     var totalNeto2 = $("#totalNeto2").val();
-    
+    var rl = $("#rl").val();  
+    //  me quede aqui para guaradar el nuevo dato porfavor que se guarde 
     var validaComent = ($("#comentario").val().length == 0) ? 0 : 1;
     var validatn = ($("#totalNeto2").val().length == 0) ? 0 : 1;
 
@@ -511,7 +547,12 @@ e.preventDefault();
     dataExp1.append("comentario", comentario);
     dataExp1.append("fechaVenc", getInfo1[6]);
     dataExp1.append("totalNeto2", totalNeto2);
+    dataExp1.append("rl", rl );
+    if( rl == 'opciones'){
+        alerts.showNotification("top", "right", "Selecciona un RL para poder continuar.", "warning");
+    }else{
 
+    
       if (validaComent == 0 || validatn == 0) {
         alerts.showNotification("top", "right", "Todos los campos son obligatorios.", "danger");
       }
@@ -553,7 +594,7 @@ e.preventDefault();
             });
         
       }
-
+    }
 });
 
 
@@ -626,6 +667,7 @@ dataExp3.append("fechaVenc", getInfo3[6]);
 
 jQuery(document).ready(function(){
 
+    getRL();
     jQuery('#editReg').on('hidden.bs.modal', function (e) {
     jQuery(this).removeData('bs.modal');
     jQuery(this).find('#comentario').val('');
@@ -637,8 +679,24 @@ jQuery(document).ready(function(){
     jQuery(this).removeData('bs.modal');
     jQuery(this).find('#comentario3').val('');
     })
-
+    let info =  [];
+   
 })
+function getRL(){
+    $.post(url + "Contraloria/getRL", function(data) {
+                info = data;
+
+                var len = data.length;
+				 for(var i = 0; i<len; i++){
+                    var id = data[i]['id_opcion'];
+					var name = data[i]['nombre'];
+					$("#rl").append($('<option>').val(id).text(name.toUpperCase()));
+				}
+
+				 $("#rl").selectpicker('refresh');
+				
+			}, 'json');
+}
 
 
 

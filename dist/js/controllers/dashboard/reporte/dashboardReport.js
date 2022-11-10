@@ -1,4 +1,3 @@
-// AA: Obtener fecha inicial y cuatro meses atrás para mini charts.
 var chart;
 var initialOptions = {
     series: [],
@@ -12,7 +11,25 @@ var initialOptions = {
         }
     },
     colors: [],
-    grid: { show: false},
+    grid: {
+        show: true,
+        borderColor: '#f3f3f3',
+        strokeDashArray: 0,
+        position: 'back',
+        yaxis: {
+            lines: {
+                show: true
+            }
+        },
+        row: {
+            colors: undefined,
+            opacity: 0.5
+        },
+        column: {
+            colors: undefined,
+            opacity: 0.5
+        },
+    },
     dataLabels: { enabled: false },
     legend: { show: false },
     stroke: {
@@ -36,7 +53,7 @@ var initialOptions = {
         axisTicks: {show:false},
     },
     fill: {
-        opacity: 1,
+        opacity: 0,
         type: 'gradient',
         gradient: {
             shade: 'light',
@@ -50,7 +67,7 @@ var initialOptions = {
             colorStops: []
         }
     },
-    tooltip: { enabled: true},
+    tooltip: { enabled: false},
     markers: {
         size: `5`,
         colors: '#143860',
@@ -61,6 +78,28 @@ var initialOptions = {
         }
     }
 }
+
+$('.infoMainSelector').unbind().on('click', function(e){
+    let c= $('input:checkbox.infoMainSelector:checked').length;
+    var checkboxSelected = $(this);
+    if (!checkboxSelected.is(":checked") && c<1) {
+        // do the confirmation thing here
+        e.preventDefault();
+        return false;
+    }
+
+    let selector1 = $('#typeSale1')[0];
+    let selector2 = $('#typeSale2')[0];
+    if( !selector1.checked && !selector2.checked ){
+        if(checkboxSelected[0] != selector1)
+            selector1.checked = true;
+        else selector2.checked = true;
+    }
+
+    $(".boxAccordions").html('');
+    loaderCharts();
+    initReport();
+});
 
 function readyReport(){
     $('[data-toggle="tooltip"]').tooltip();
@@ -75,7 +114,8 @@ function readyReport(){
 }
 
 async function initReport(){
-    getLastSales(null, null);
+    typeSale = validateTypeSale();
+    getLastSales(typeSale);
     let rol = userType == 2 ? await getRolDR(idUser): userType;
     let rolString;
     if ( rol == '1' || rol == '18' || rol == '4' || rol == '63' || rol == '33' || rol == '58' || rol == '69' )
@@ -90,6 +130,24 @@ async function initReport(){
         rolString = 'asesor';
         
     fillBoxAccordions(rolString, rol == 18 || rol == '18' ? 1 : rol, idUser, 1, 1, null, [0, null, null, null, null, null, rol]);
+}
+
+function validateTypeSale(){
+    let selector1 = $('#typeSale1')[0];
+    let selector2 = $('#typeSale2')[0];
+    let transaction = '';
+
+    if(selector1.checked && !selector2.checked){
+        transaction = selector1.value;
+    }else if(selector2.checked && !selector1.checked){
+        transaction = selector2.value;
+    }else if(selector1.checked && selector2.checked){
+        transaction = 3;
+    }else{
+        transaction = 0;
+    }
+
+    return transaction;
 }
 
 function createAccordions(option, render, rol){
@@ -133,6 +191,7 @@ function createAccordions(option, render, rol){
 }
 
 function fillBoxAccordions(option, rol, id_usuario, render, transaction, dates=null, leadersList){
+    typeSale = validateTypeSale();
     if( rol == 5 && (idUser == 28 && idUser == 30) )
         rolEspecial = 59;
     else if( rol == 5 && (idUser != 28 && idUser != 30) )
@@ -346,7 +405,8 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, dates=n
                 "coordinador": leadersList[2],
                 "gerente": leadersList[3],
                 "subdirector": leadersList[4],
-                "regional": leadersList[5]
+                "regional": leadersList[5],
+                "typeSale" : typeSale
             }
         }
     });
@@ -611,12 +671,7 @@ $(document).on('click', '#searchByDateRangeTable', async function (e) {
     e.preventDefault();
     e.stopImmediatePropagation();
     $(".boxAccordions").html('');
-
-    /**********************/
-
     loaderCharts();
-    $("#modalChart .boxModalTitle .total").html('');
-    /**********************/
 
     let dates = {begin: $('#tableBegin').val(), end: $('#tableEnd').val()};
     let rol = userType == 2 ? await getRolDR(idUser): userType;
@@ -632,10 +687,10 @@ $(document).on('click', '#searchByDateRangeTable', async function (e) {
         rolString = 'subdirector';
     else 
         rolString = 'asesor';
-    // getSpecificChart('na', formatDate($('#tableBegin').val()), formatDate($('#tableEnd').val()));
-    getLastSales($('#tableBegin').val(), $('#tableEnd').val());
-    fillBoxAccordions(rolString, rol, idUser, 1, 2, dates, [0, null, null, null, null, null, rol]);
 
+    typeSale = validateTypeSale();
+    getLastSales(typeSale);
+    fillBoxAccordions(rolString, rol, idUser, 1, 2, dates, [0, null, null, null, null, null, rol]);
 });
 
 $(document).on('click', '.chartButton', function () {
@@ -676,26 +731,25 @@ async function chartDetail(e, tipoChart){
         finalEndDate = [endDate.getFullYear(), ('0' + (endDate.getMonth() + 1)).slice(-2), ('0' + endDate.getDate()).slice(-2)].join('-');
         finalBeginDate2 = ['01', '01', beginDate.getFullYear()].join('/');
         finalEndDate2 = [('0' + endDate.getDate()).slice(-2), ('0' + (endDate.getMonth() + 1)).slice(-2), endDate.getFullYear()].join('/');
-    }else{
+    }
+    else{
         finalBeginDate2 = fecha_inicio;
         finalEndDate2 = fecha_fin;
     }
 
-
-
-
     $("#modalChart #beginDate").val(finalBeginDate2);
     $("#modalChart #endDate").val(finalEndDate2);
     $("#modalChart #type").val(tipoChart);
-    getSpecificChart(tipoChart, formatDate(finalBeginDate2), formatDate(finalEndDate2));
+    typeSale = validateTypeSale();
+    getSpecificChart(tipoChart, formatDate(finalBeginDate2), formatDate(finalEndDate2), typeSale);
 }
 
-function getSpecificChart(type, beginDate, endDate){
+function getSpecificChart(type, beginDate, endDate, typeSale){
     $('.loadChartModal').removeClass('d-none');
     $.ajax({
         type: "POST",
         url: `${base_url}Reporte/getDataChart`,
-        data: {general: 0, tipoChart: type, beginDate: beginDate, endDate: endDate},
+        data: {general: 0, tipoChart: type, beginDate: beginDate, endDate: endDate, typeSale: typeSale},
         dataType: 'json',
         cache: false,
         success: function(data){
@@ -725,17 +779,26 @@ function getSpecificChart(type, beginDate, endDate){
     });
 }
 
-function getLastSales(beginDate, endDate){
+function getLastSales(typeSale){
+    let beginDate = $('#tableBegin').val()
+    let endDate = $('#tableEnd').val()
     $('.loadChartMini').removeClass('d-none');
 
     $.ajax({
         type: "POST",
         url: `${base_url}Reporte/getDataChart`,
-        data: {general: 1, tipoChart:'na', beginDate: beginDate, endDate: endDate},
+        data: {
+            general: 1, 
+            tipoChart:'na', 
+            beginDate: beginDate, 
+            endDate: endDate,
+            typeSale: typeSale
+        },
         dataType: 'json',
         cache: false,
         success: function(data){
             $('.loadChartMini').addClass('d-none');
+            $('.money').removeClass('d-none');
             let miniChart = 1, total = 0;
             let orderedArray = orderedDataChart(data);
             for ( i=0; i<orderedArray.length; i++ ){
@@ -775,55 +838,39 @@ $(document).on("click", "#searchByDateRange", function () {
 });
 
 function loaderCharts(){
+    $("#modalChart .boxModalTitle .total").html('');
     $('.appliedFilter').removeAttr('data-toggle');
-    // $('.appliedFilter').removeAttr('title');
     $('.appliedFilter').removeAttr('data-original-title');
     let fechaInicio= $('#tableBegin').val();
     let fechaTermino= $('#tableEnd').val();
-    // console.log('fechaInicio', fechaInicio);
-    // console.log('fechaTermino', fechaTermino);
-   $('.appliedFilter .selectMini').html('');
-   $('.appliedFilter .selectMini').append('Del: '+fechaInicio+' al: '+fechaTermino+'');
+    $('.appliedFilter .selectMini').html('');
+    $('.appliedFilter .selectMini').append('Del: '+fechaInicio+' al: '+fechaTermino+'');
     $('.appliedFilter').attr('data-toggle', 'tooltip');
-    // $('.appliedFilter').attr('title', 'Del: '+$('#tableBegin').val()+' al: '+$('#tableEnd').val());
+    $('.appliedFilter').attr('data-placement', 'bottom');
     $('.appliedFilter').attr('data-original-title', 'Del: '+$('#tableBegin').val()+' al: '+$('#tableEnd').val());
-    //<label style="font-size: 0.5em">Al: '+fechaTermino+'</label>
 
-    $('#totventasContratadas').addClass('subtitle_skeleton');
-    $('#totventasContratadas').text('');
-
-    $('#totventasApartadas').addClass('subtitle_skeleton');
-    $('#totventasApartadas').text('');
-
-    $('#totcanceladasContratadas').addClass('subtitle_skeleton');
-    $('#totcanceladasContratadas').text('');
-
-    $('#totcanceladasApartadas').addClass('subtitle_skeleton');
-    $('#totcanceladasApartadas').text('');
-
-
+    $('.money').addClass('d-none');
     $('.boxMiniCharts').html('');
     let cargador = '<div class="loadChartMini w-100 h-100">'+
                         '<img src="'+base_url+'dist/img/miniChartLoading.gif" alt="Icono gráfica" class="h-100 w-auto">'+
                      '</div>';
-    // $('.boxMiniCharts').append('<div class="col-xs-12 pdt-20"><center><span class="loader center-align"></span></center></div>');
+    $('.boxMiniCharts').append('<div class="col-xs-12 pdt-20"><center><span class="loader center-align"></span></center></div>');
     $('.boxMiniCharts').append(cargador);
 
     //add attr al miniboton para que al abrir tenga la fecha seteada
     $('.moreMiniChart').attr('data-fi', fechaInicio);
     $('.moreMiniChart').attr('data-ft', fechaTermino);
-
-
 };
+
 function orderedDataChart(data){
     let allData = [], totalMes = [], meses = [], series = [];
     for( i=0; i<data.length; i++){
         let { tipo, rol, total, mes, año } = data[i];
 
-        nameTypeChart = `${ (tipo == 'vc') ? 'ventasContratadas' : (tipo == 'va') ? 'ventasApartadas' : (tipo == 'cc') ? 'canceladasContratadas' : 'canceladasApartadas' }`;
+        nameTypeChart = `${ (tipo == 'vc') ? 'ventasContratadas' : (tipo == 'va') ? 'ventasApartadas' : (tipo == 'cc') ? 'canceladasContratadas' : (tipo == 'ca') ? 'canceladasApartadas' : 'ventasTotales' }`;
 
-        nameSerie = `${ (rol == '9') ? 'Coordinador' : (rol == '7') ? 'Asesor' : (tipo == 'vc') ? 'ventasContratadas' : (tipo == 'va') ? 'ventasApartadas' : (tipo == 'cc') ? 'canceladasContratadas' : 'canceladasApartadas' }`;
-        
+        nameSerie = `${ (rol == '9') ? 'Coordinador' : (rol == '7') ? 'Asesor' : (tipo == 'vc') ? 'ventasContratadas' : (tipo == 'va') ? 'ventasApartadas' : (tipo == 'cc') ? 'canceladasContratadas' : (tipo == 'ca' ) ? 'canceladasApartadas' : 'ventasTotales' }`;
+
         totalMes.push( (total != null) ? parseFloat(total.replace(/[^0-9.-]+/g,"")) : 0 );
         if( (i+1) < data.length ){
             if(tipo == data[i + 1].tipo){
@@ -1034,6 +1081,7 @@ function initDetailRow(dataObj){
 }
 
 function createDetailRow(row, tr, dataObj){
+    typeSale = validateTypeSale();
     $.post(`${base_url}Reporte/getDetails`, {
         id_usuario: dataObj.user,
         rol: dataObj.rol,
@@ -1046,7 +1094,8 @@ function createDetailRow(row, tr, dataObj){
         coordinador: dataObj.coordinador,
         gerente: dataObj.gerente,
         subdirector: dataObj.subdirector,
-        regional: dataObj.regional
+        regional: dataObj.regional,
+        typeSale: typeSale
     }).done(function (response) {
         row.data().sedesData = JSON.parse(response);
         
@@ -1217,6 +1266,7 @@ $(document).on('click', '.btnModalDetails', function () {
 });
 
 function fillTableReport(dataObject) {
+    typeSale = validateTypeSale();
     if (dataObject.type != 3 && dataObject.type != 33 && dataObject.type != 4 && dataObject.type != 4) {
         $('#lotesInformationTable thead tr:eq(0) th').each(function (i) {
             const title = $(this).text();
@@ -1390,7 +1440,8 @@ function fillTableReport(dataObject) {
                     "coordinador": dataObject.coordinador,
                     "gerente": dataObject.gerente,
                     "subdirector": dataObject.subdirector,
-                    "regional": dataObject.regional
+                    "regional": dataObject.regional,
+                    "typeSale" : typeSale
                 }
             }
         });
@@ -1584,9 +1635,22 @@ function fillTableReport(dataObject) {
                     "coordinador": dataObject.coordinador,
                     "gerente": dataObject.gerente,
                     "subdirector": dataObject.subdirector,
-                    "regional": dataObject.regional
+                    "regional": dataObject.regional,
+                    "typeSale" : typeSale
                 }
             }
         });
     }
 }
+
+$(".scrollCharts").scroll(function() {
+    var scrollDiv = $(".scrollCharts").scrollLeft();
+
+    if (scrollDiv > 0){
+        $(".gradientLeft").removeClass("d-none");
+        $(".gradientLeft").addClass("fading");
+    }
+    else{
+        $(".gradientLeft").addClass("d-none");
+    }
+});

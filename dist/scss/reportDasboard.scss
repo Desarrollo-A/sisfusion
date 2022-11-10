@@ -1,17 +1,103 @@
 @import "_base";
 
 #reporte{
+    .scrollCharts{
+        display: flex;
+        overflow: auto;
+        &::-webkit-scrollbar {
+            display: none;
+        }
+        @media #{$smartphone}{
+            display: block!important;
+            overflow: hidden!important;
+        }
+    }
     table.dataTable > thead > tr > th, table.dataTable > tbody > tr > th, table.dataTable > tfoot > tr > th, table.dataTable > thead > tr > td, table.dataTable > tbody > tr > td, table.dataTable > tfoot > tr > td {
         white-space: nowrap!important;
     }
-    .cardMiniChart{
-        background-color: $blueIndigoDeep;
-        box-shadow: none!important;
+    .back{
+        width: fit-content;
+        background-color: $white;
+        padding: 8px 2px;
+        border-radius: 5px;
+        .checkBox{
+          cursor: pointer;
+          user-select: none;
+          display: block;
+          line-height: inherit;
+          span{
+            font-size: 12px;
+            border-radius: 5px;
+            transition: 0.4s;
+            padding: 8px 15px;
+            color: $deepGray;
+            background-color: $white;
+            margin: 0 2px;
+            @media #{$smartphone} {
+                padding: 8px 35px;
+            }
+          }
+          span:hover{
+            box-shadow: none;
+          }
+          input{
+            pointer-events: none;
+            display: none;
+          }
+          input:checked + span{
+            color: $white;
+            background-color: $indigo;
+          }
+        }
+        @media #{$smartphone}{
+            width: 98%!important;
+            margin-bottom: 20px;
+        }
     }
-    .card{
-        border-radius: 10px;
-        @media #{$smartphone}, #{$tablets}{ margin-bottom: 0!important; }
-        @media #{$smartphone}{ width: 98%; }
+    .gradientLeft{
+        height: 100%;
+        width: 5%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        background: linear-gradient(270deg, RGBA(238, 238, 238, 0) 10%, RGB(238 238 238/100%) 100%, RGB(238 238 238/29%) 51%, RGBA(238, 238, 238, 0.68391) 88%, $platinumLight 75%);
+    }
+    .gradientRight{
+        height: 100%;
+        width: 5%;
+        position: absolute;
+        top: 0;
+        right: 0;
+        background: linear-gradient(90deg, RGBA(238, 238, 238, 0) 10%, RGB(238 238 238/100%) 100%, RGB(238 238 238/29%) 51%, RGBA(238, 238, 238, 0.68391) 88%, $platinumLight 75%);
+        @media #{$smartphone}{
+            width: 12%;
+            display: none;
+        }
+    }
+    .rowCarousel{
+        position:relative; 
+        padding-right:20px;
+        .cardMiniChart{
+            background-color: $blueIndigoDeep;
+            box-shadow: none!important;
+            min-width: 25%;
+            margin-right: 20px;
+            @media #{$tablets}{
+                min-width: 43%;
+            }
+            @media #{$smartphone}{
+                min-width: 80%;
+                margin-right: 0!important;
+            }
+        }
+        .card{
+            border-radius: 10px;
+            @media #{$smartphone}, #{$tablets}{ margin-bottom: 0!important; }
+            @media #{$smartphone}{ width: 98%; }
+        }
+        @media #{$smartphone}{
+            padding-right: 0px;
+        }
     }
     .info{
         line-height: 1;
@@ -219,69 +305,6 @@
     .no-spin {
         -moz-appearance:textfield !important;
     }
-
-    head-section:empty, .profile-img-section:empty, .text1:empty, .text2:empty, .text3:empty, .text4:empty, .desc_container_title:empty,
-    .subtitle_skeleton:empty, .disccount:empty{
-        animation: loading 1.1s infinite linear;
-        background: #154f7a;
-        background-image: -webkit-linear-gradient(to right, #154f7a 25%, #15638e 50%, #155D88 75%, #154f7a 100%);
-        background-image: linear-gradient(to right, #154f7a 25%, #15638e 50%, #15638e 75%, #154f7a 100%);
-        background-repeat: no-repeat;
-    }
-    .subtitle_skeleton{
-        height: 20px;
-        width: 85%;
-        /*margin-bottom: 20px;*/
-    }
-    @keyframes loading {
-
-        0% {
-
-            background-position: -100px;
-
-        }
-
-        100% {
-
-            background-position: 200px;
-
-        }
-
-    }
-
-    .loader {
-        width: 48px;
-        height: 48px;
-        border-radius: 50%;
-        display: inline-block;
-        position: relative;
-        background: linear-gradient(0deg, rgba(20, 56, 96, 0.2) 33%, #2C93E7 100%);
-        box-sizing: border-box;
-        animation: rotation 1s linear infinite;
-    }
-    .loader::after {
-        content: '';
-        box-sizing: border-box;
-        position: absolute;
-        left: 50%;
-        top: 50%;
-        transform: translate(-50%, -50%);
-        width: 44px;
-        height: 44px;
-        border-radius: 50%;
-        background: #143860;
-    }
-    @keyframes rotation {
-        0% { transform: rotate(0deg) }
-        100% { transform: rotate(360deg)}
-    }
-
-
-
-    .appliedFilter{
-        overflow: hidden;white-space: nowrap
-    }
-
 }
 
 #modalChart{
@@ -353,9 +376,12 @@
         border-radius: 27px;
         border: 2px solid $platinumScroll;
         padding: 0;
+        align-items: center!important;
         .tableDates{
             text-align: center;
             background-image: none;
+            padding: 0;
+            height: fit-content!important;
         }
         .tableSearch{
             background-color: transparent!important;
@@ -383,8 +409,21 @@
         }
     }
     @media #{$smartphone}, #{$tablets}{
-        margin-top: 30px;
         padding-right: 20px;
     }
 }
 
+.fading {
+    font: 900 2rem sans-serif;
+    text-align: center;
+    animation-name: fade-in;
+    animation-duration: 1s;
+}
+@keyframes fade-in {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}

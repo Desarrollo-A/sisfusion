@@ -43,8 +43,9 @@ class Reporte extends CI_Controller {
             $gerente = $this->input->post("gerente");
             $subdirector = $this->input->post("subdirector");
             $regional = $this->input->post("regional");
+            $typeSale = $this->input->post("typeSale");
             $currentYear = date("Y");
-            $data['data'] = $this->Reporte_model->getGeneralInformation($beginDate, $endDate, $rol, $id_usuario, $render, [$asesor, $coordinador, $gerente, $subdirector, $regional], $typeTransaction)->result_array();
+            $data['data'] = $this->Reporte_model->getGeneralInformation($beginDate, $endDate, $rol, $id_usuario, $render, [$asesor, $coordinador, $gerente, $subdirector, $regional], $typeTransaction, $typeSale)->result_array();
             echo json_encode($data, JSON_NUMERIC_CHECK);
         } else {
             json_encode(array());
@@ -57,34 +58,19 @@ class Reporte extends CI_Controller {
         $coordinadorVC = ''; $coordinadorVA = ''; $coordinadorCC = ''; $coordinadorCA = ''; $coordinador = false;
         $general = $this->input->post('general');
         $tipoChart = $this->input->post('tipoChart');
+        $typeSale = $this->input->post('typeSale');
+
         if( $this->input->post("beginDate")==null && $this->input->post("endDate") == null){
             $beginDate = "$currentYear-01-01";
             $endDate = date("Y-m-d");
-        }else{
-
+        }
+        else{
             $beginDate = date("Y-m-d", strtotime(str_replace('/', '-', $this->input->post("beginDate"))));
             $endDate = date("Y-m-d", strtotime(str_replace('/', '-', $this->input->post("endDate"))));
         }
 
-//        $nueva = str_replace('/', '-', $this->input->post("beginDate"));
-//        $nueva2 = str_replace('/', '-', $this->input->post("endDate"));
-//        print_r($nueva);
-//        echo '<br>';
-//        print_r($nueva2);
-//        exit;
-//        var_dump( $this->validateDate($beginDate));
-//        var_dump( $this->validateDate($endDate));
-//        exit;
-//        echo 'Inicio:<br>';
-//        print_r($this->input->post("beginDate"));
-//        echo '<br>';
-//        echo 'Fin:<br>';
-//        print_r($this->input->post("endDate"));
-//        echo '<br>';
         $id = $this->session->userdata('id_usuario');
         $rol = $this->session->userdata('id_rol');
-        
-
         if( $rol == 2 || $rol == 5){
             if ( $rol == 5 ) $id = $this->session->userdata('id_lider'); //Se asignara id de su lider (para asistentes de dirección y subdirección)
 
@@ -128,44 +114,55 @@ class Reporte extends CI_Controller {
             $condicion_x_rol = '';
         }
 
-        $data = $this->Reporte_model->getDataChart($general, $tipoChart, $rol, $condicion_x_rol, $coordinador, $coordinadorVC, $coordinadorVA, $coordinadorCC, $coordinadorCA, $beginDate, $endDate);
+        $data = $this->Reporte_model->getDataChart($general, $tipoChart, $rol, $condicion_x_rol, $coordinador, $coordinadorVC, $coordinadorVA, $coordinadorCC, $coordinadorCA, $beginDate, $endDate, $typeSale);
 
-//        print_r($data);
-//        exit;
-        $sumatoria=0;
-        foreach ($data as $resultado){
-            if($resultado['tipo'] =='vc' || $resultado['tipo'] =='va'){
-//                $resultado['total'] = str_replace(array(',', '$'), '',  $resultado['total']);
-//                print_r(str_replace(array(',', '$'), '',  $resultado['total']));
-//                echo '<br>';
-                $sumatoria=$sumatoria + str_replace(array(',', '$'), '',  $resultado['total']);
+        //Obtenemos solo array de ventas contratadas
+        $vcArray = array_filter($data, function($element){
+            return $element['tipo'] == 'vc';
+        });
+
+        //Obtenemos solo array de ventas apartadas
+        $vaArray = array_filter($data, function($element){
+            return $element['tipo'] == 'va';
+        });
+
+        //Reindexamos el filtro obtenido anteriormente
+        $vcArray = array_values($vcArray);
+        $vaArray = array_values($vaArray);
+
+        //Recorremos uno de los arrays obtenido anteriormente y sumamos en cada uno de los puntos para obtener cantidad y total
+        if( $general == "1" || $tipoChart == "vt"){
+            if($tipoChart == "vt"){
+                $data = array();
+            }
+            foreach( $vcArray as $key => $elemento ){
+                $tot1 = floatval(preg_replace('/[^\d\.]/', '', $elemento['total']));
+                $tot2 = floatval(preg_replace('/[^\d\.]/', '', $vaArray[$key]['total']));
+                
+                //Hacemos push a nuevo array de ventas generales ya con la sumatoria de va y vc por mes.
+                $data[] = array(
+                    'total' => "$" . number_format(($tot1 + $tot2), 2),
+                    'cantidad' => $elemento['cantidad'] + $vaArray[$key]['cantidad'],
+                    'mes' => $elemento['mes'],
+                    'año' => $elemento['año'],
+                    'tipo' => 'vt',
+                    'rol' => $elemento['rol']
+                ); 
             }
         }
-        $nuevoarray[] = array(
-            'total' => "$sumatoria",
-            'cantidad' => 10,
-            'mes' => 1,
-            'año' => 2022,
-            'tipo' => 'vg',
-            'rol' => 1
-        );
-        $data = array_merge($data, $nuevoarray);
-//        print_r(array_values($data));
-//        exit;
-//        print_r($data);
-//        exit;
+
         if($data != null) {
             echo json_encode($data);
         } else {
             echo json_encode(array());
         }
     }
-    function validateDate($date, $format = 'Y-m-d')
-    {
+    function validateDate($date, $format = 'Y-m-d'){
         $d = DateTime::createFromFormat($format, $date);
         // The Y ( 4 digits year ) returns TRUE for any integer with any number of digits so changing the comparison from == to === fixes the issue.
         return $d && $d->format($format) === $date;
     }
+
     public function chartCoordinator($id, $beginDate, $endDate){
         $coordinadorAll = [];
         $coordinadorVC = "SELECT ISNULL(total, 0) total, ISNULL(cantidad, 0) cantidad, MONTH(DateValue) mes, YEAR(DateValue) año, 'vc' tipo, '9' rol FROM cte
@@ -320,8 +317,9 @@ class Reporte extends CI_Controller {
         $gerente = $this->input->post("gerente");
         $subdirector = $this->input->post("subdirector");
         $regional = $this->input->post("regional");
+        $typeSale = $this->input->post("typeSale");
 
-        $data = $this->Reporte_model->getDetails($beginDate, $endDate, $rol, $id_usuario, $render, $leader, [$asesor, $coordinador, $gerente, $subdirector, $regional])->result_array();
+        $data = $this->Reporte_model->getDetails($typeSale, $beginDate, $endDate, $rol, $id_usuario, $render, $leader, [$asesor, $coordinador, $gerente, $subdirector, $regional])->result_array();
         if($data != null) {
             echo json_encode($data, JSON_NUMERIC_CHECK);
         } else {
@@ -351,7 +349,9 @@ class Reporte extends CI_Controller {
             $gerente = $this->input->post("gerente");
             $subdirector = $this->input->post("subdirector");
             $regional = $this->input->post("regional");
-            $data['data'] = $this->Reporte_model->getGeneralLotesInformation($beginDate, $endDate, $rol, $id_usuario, $render, $type, $sede, $leader, [$asesor, $coordinador, $gerente, $subdirector, $regional])->result_array();
+            $typeSale = $this->input->post("typeSale");
+
+            $data['data'] = $this->Reporte_model->getGeneralLotesInformation($typeSale, $beginDate, $endDate, $rol, $id_usuario, $render, $type, $sede, $leader, [$asesor, $coordinador, $gerente, $subdirector, $regional])->result_array();
             echo json_encode($data, JSON_NUMERIC_CHECK);
         } else
             echo json_encode(array());
