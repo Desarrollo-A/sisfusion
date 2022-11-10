@@ -18,7 +18,7 @@ sp = { // MJ: SELECT PICKER
             }
         });
     }
-}
+};
 
 $(document).ready(function(){
     changePill('inicioOption');
@@ -34,6 +34,7 @@ function changePill(element){
     if(element == 'inicioOption'){
         contInicio++;
         $('#inicio').html("");
+        console.log(`${base_url}Inicio/index`);
         $('#inicio').load(`${base_url}Inicio/index`, function(){
             if(contInicio <= 1 )
                 $.getScript(base_url+"dist/js/controllers/dashboard/inicio/dashboardHome.js", function(){
