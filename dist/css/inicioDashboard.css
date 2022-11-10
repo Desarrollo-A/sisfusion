@@ -1434,3 +1434,122 @@
   justify-content: center;
   align-items: center;
 }
+
+#inicio #prospects-section {
+  visibility: hidden;
+  transition: visibility .5s, max-height .5s;
+  max-height: 0;
+  /* additional style */
+  background: transparent;
+  padding: 0px 12px;
+  margin-bottom: 8px;
+}
+
+#inicio #prospects-section .table-dinamic .bk {
+  /* El background del scroll (border)*/
+  /* Color de la barra de desplazamiento */
+  /* Color del HOVER de barra de desplazamiento */
+}
+
+#inicio #prospects-section .table-dinamic .bk table {
+  text-align: center;
+  width: 100%;
+}
+
+#inicio #prospects-section .table-dinamic .bk table thead tr {
+  background-color: #143860;
+}
+
+#inicio #prospects-section .table-dinamic .bk table thead tr th {
+  padding: 0px !important;
+}
+
+#inicio #prospects-section .table-dinamic .bk table thead tr th input {
+  margin: 4px;
+  border: 1px solid transparent;
+  border-radius: 5px;
+  color: #ffffff;
+  text-align: center;
+  font-weight: 300;
+  font-size: 10px !important;
+  background-color: #143860;
+  text-transform: uppercase;
+}
+
+#inicio #prospects-section .table-dinamic .bk table thead tr th input:active {
+  border: 1px solid #ffffff;
+}
+
+#inicio #prospects-section .table-dinamic .bk table thead tr th input:focus {
+  border: 1px solid #ffffff;
+}
+
+#inicio #prospects-section .table-dinamic .bk table thead tr th input::placeholder {
+  color: #ffffff;
+}
+
+#inicio #prospects-section .table-dinamic .bk table td.delimetter {
+  border-right: solid #eaeaea6b !important;
+}
+
+#inicio #prospects-section .table-dinamic .bk table th.delimetter {
+  border-right: solid #284e78 !important;
+}
+
+#inicio #prospects-section .table-dinamic .bk table .update-dataTable {
+  border: 0;
+  background-color: #D8DDE2;
+  color: #103f75;
+}
+
+#inicio #prospects-section .table-dinamic .bk table .update-dataTable:hover {
+  background-color: #b5c2d0;
+}
+
+#inicio #prospects-section .table-dinamic .bk table .btnSub {
+  border: none;
+  background-color: #D8DDE2;
+  border-radius: 20px;
+  width: 30px;
+  height: 30px;
+  color: #103f75;
+}
+
+#inicio #prospects-section .table-dinamic .bk table .btnSub:hover {
+  background-color: #b5c2d0;
+}
+
+#inicio #prospects-section .table-dinamic .bk .dataTables_scroll .container-fluid {
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
+#inicio #prospects-section .table-dinamic .bk .dataTables_scrollBody::-webkit-scrollbar-track {
+  border-radius: 10px;
+  background-color: transparent;
+}
+
+#inicio #prospects-section .table-dinamic .bk .dataTables_scrollBody::-webkit-scrollbar {
+  width: 2px;
+  height: 5px;
+  background-color: transparent;
+}
+
+#inicio #prospects-section .table-dinamic .bk .dataTables_scrollBody::-webkit-scrollbar-thumb {
+  border-radius: 0px;
+  background-color: #c1c1c1;
+}
+
+#inicio #prospects-section .table-dinamic .bk .dataTables_scrollBody::-webkit-scrollbar-thumb:hover {
+  background-color: #929292;
+}
+
+#inicio #prospects-section .deleteTable {
+  cursor: pointer;
+}
+
+#inicio .openDiv {
+  visibility: visible !important;
+  /* Set max-height to something bigger than the box could ever be */
+  max-height: 100% !important;
+}

@@ -1977,6 +1977,23 @@ public function getStatusMktdPreventa(){
             $beginDate = date("Y-m-d", strtotime($this->input->post("beginDate")));
             $endDate = date("Y-m-d", strtotime($this->input->post("endDate")));
             $where = $this->input->post("where");
+//            print_r($this->input->post("endDate"));
+//            echo'<br>';
+//            print_r(strtotime($this->input->post("endDate")));
+//            echo'<br>';
+//            exit;
+
+//
+//            print_r($typeTransaction);
+//            echo'<br>';
+//            print_r($beginDate);
+//            echo'<br>';
+//            print_r($endDate);
+//            echo'<br>';
+//            print_r($where);
+//            echo'<br>';
+//            exit;
+
             $data = $this->Clientes_model->getProspectsListByGerente($id_gerente, $typeTransaction, $beginDate, $endDate, $where);
         }
 

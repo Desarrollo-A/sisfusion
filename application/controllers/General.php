@@ -60,8 +60,11 @@ class General extends CI_Controller
             echo json_encode(array());
     }
 
-    public function multirol(){ //chriscrosspapas
-        $usuario = $this->session->userdata('id_usuario');
+    public function multirol(){
+        $usuario = ($this->session->userdata('id_rol') == 5 || $this->session->userdata('id_rol') == 4 ) ? $this->session->userdata('id_lider') : $this->session->userdata('id_usuario');#$this->session->userdata('id_usuario')
+//        print_r($usuario);
+//        echo '<script>console.log("$usuario", '.$usuario.');</script>';
+//        exit;
         $data = $this->General_model->getMultirol($usuario)->result_array();
         if ($data != null)
             echo json_encode($data,  JSON_NUMERIC_CHECK);
