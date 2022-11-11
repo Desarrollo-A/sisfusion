@@ -785,7 +785,7 @@ function getRolDR(idUser){
     });
 }
 
-function createAccordionsPR(option, render, rol, titleDinamic){
+function createAccordionsPR(option, render, rol){
     let tittle = getTitle(option);
     let html = '';
     html = `<div data-rol="${rol}" class="bk ${render == 1 ? 'parentTable': 'childTable'}">
@@ -795,7 +795,7 @@ function createAccordionsPR(option, render, rol, titleDinamic){
                             <i class="fas fa-angle-down"></i>
                         </div>
                         <div>
-                            <h4 class="p-0 accordion-title js-accordion-title">`+tittle+` (`+titleDinamic+`)</h4>
+                            <h4 class="p-0 accordion-title js-accordion-title">`+tittle+`</h4>
                         </div>
                         <div class="cursor-point">
                             ${render == 1 ? '': '<i class="fas fa-times deleteTable"></i>'}
@@ -1040,11 +1040,9 @@ function getFirstFilter(rol, secondRol){
         }
         $(`#${rol == 59 ? 'subdirector':'gerente'}`).selectpicker('refresh');
     }, 'json');
-
-
 }
 
-function fillBoxAccordionsPR(option, rol, render, titleDinamic) {
+function fillBoxAccordionsPR(option, rol, render) {
     if (rol == 5 && (idUser == 28 && idUser == 30))
         rolEspecial = 59;
     else if (rol == 5 && (idUser != 28 && idUser != 30))
@@ -1055,7 +1053,7 @@ function fillBoxAccordionsPR(option, rol, render, titleDinamic) {
         rolEspecial = 2
     else rolEspecial = rol;
 
-    createAccordionsPR(option, render, rolEspecial, titleDinamic);
+    createAccordionsPR(option, render, rolEspecial);
     multirol();
 }
 
