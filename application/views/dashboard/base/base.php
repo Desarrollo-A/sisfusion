@@ -106,5 +106,4 @@
         userType = 59;
         idUser = idLider;
     }
-
 </script>
