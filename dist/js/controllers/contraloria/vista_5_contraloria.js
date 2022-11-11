@@ -1,5 +1,5 @@
 $('#tabla_ingresar_5 thead tr:eq(0) th').each( function (i) {
-    if(i!=0 && i!=1 && i!=11){
+    if(i!=0 && i!=1 && i!=12){
     var title = $(this).text();
     $(this).html('<input type="text" class="textoshead"  placeholder="'+title+'"/>' );
     $( 'input', this ).on('keyup change', function () {
