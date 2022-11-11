@@ -6030,7 +6030,7 @@
 			$datos[$i]['nombreCondominio'] = $data[$i]->nombreCondominio;
 			$datos[$i]['nombreResidencial'] = $data[$i]->nombreResidencial;
 			$datos[$i]['fechaVenc'] = $data[$i]->fechaVenc;
-
+			$datos[$i]['nombreCliente'] = $data[$i]->nombreCliente;
 			$datos[$i]['comentario'] = $data[$i]->comentario;
 			$datos[$i]['fechaSolicitudValidacion'] = $data[$i]->fechaSolicitudValidacion;
 			$datos[$i]['gerente'] = ($data[$i]->gerente ==" ")?"N/A":$data[$i]->gerente;
