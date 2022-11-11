@@ -31,7 +31,7 @@ var optionsTotalVentas = {
                     offsetY: 120,
                     formatter: function (w) {
                         // By default this function returns the average of all series. The below is just an example to show the use of custom formatter function
-                        // let val = parseInt((w.globals.labels[0]).split(": ")[1]);
+                        
                         let val = w.globals.labels[0];
                         return `${val.toLocaleString('es-MX')}`;
                     }
@@ -263,6 +263,7 @@ var optionsFunnel = {
         },
     }
 };
+
 function readyHome(){
     userType != 9 ? $('#buttonsCoord').hide():'';
     sp.initFormExtendedDatetimepickers();
@@ -703,16 +704,12 @@ function setInitialValues2() {
     const fechaFin2 = new Date();
     // Iniciar en este año, el siguiente mes, en el día 0 (así que así nos regresamos un día)
     const endDate = new Date(fechaFin2.getFullYear(), fechaFin2.getMonth() + 1, 0);
-    //finalBeginDate = [beginDate.getFullYear(), ('0' + (beginDate.getMonth() + 1)).slice(-2), ('0' + beginDate.getDate()).slice(-2)].join('-');
-    //finalEndDate = [endDate.getFullYear(), ('0' + (endDate.getMonth() + 1)).slice(-2), ('0' + endDate.getDate()).slice(-2)].join('-');
     finalBeginDate3 = ['01', '01', beginDate.getFullYear()].join('/');
     finalEndDate3 = [('0' + endDate.getDate()).slice(-2), ('0' + (endDate.getMonth() + 1)).slice(-2), endDate.getFullYear()].join('/');
-    // console.log('Fecha inicio: ', finalBeginDate);
-    // console.log('Fecha final: ', finalEndDate);
     $('#beginDate3').val(finalBeginDate3);
     $('#endDate3').val(finalEndDate3);
-    // updateTable(1, finalBeginDate, finalEndDate, 0);
 }
+
 function formatDate(date) {
     var dateParts = date.split("/");
     var d = new Date(+dateParts[2], dateParts[1] - 1, +dateParts[0]),
@@ -729,7 +726,6 @@ function formatDate(date) {
 
 async function prospectsTable(){
     $('.table-dinamic').empty();
-    // console.log('Ya ando hasta el js alv');
     let rol = userType == 2 ? await getRolDR(idUser): userType;
     let rolString;
     if ( rol == '1' || rol == '18' || rol == '4' || rol == '63' || rol == '33' || rol == '58' || rol == '69' )
@@ -743,26 +739,17 @@ async function prospectsTable(){
     else
         rolString = 'asesor';
 
-
-
-
     const div = document.getElementById('prospects-section');
 
     if (div.classList.contains('openDiv')) {
-        console.log('enter1');
         div.classList.remove('openDiv')
     } else {
-        // console.log('enter2');
-
-
         div.classList.add('openDiv');
         fillBoxAccordionsPR(rolString, rol == 18 || rol == '18' ? 1 : rol, idUser, 1, 1, null, [0, null, null, null, null, null, rol], nombreUser);
         sp.initFormExtendedDatetimepickers();
         $('.datepicker').datetimepicker({locale: 'es'});
         setInitialValues2();
     }
-
-
 
     $('#tablePR thead tr:eq(0) th').each( function (i) {
         var title = $(this).text();
@@ -773,10 +760,6 @@ async function prospectsTable(){
             }
         });
     });
-    // prospects-section
-    // let container_html = '<div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12 h-100 center-align"><h3>'+rolString+'</h3></div>';
-    // $('#prospects-section').append(container_html);
-    // $('#prospects-section').toggleClass('hide');
 }
 
 function getRolDR(idUser){
@@ -803,8 +786,6 @@ function getRolDR(idUser){
 }
 
 function createAccordionsPR(option, render, rol, titleDinamic){
-    // console.log('llegué al createAccordionsPR');
-
     let tittle = getTitle(option);
     let html = '';
     html = `<div data-rol="${rol}" class="bk ${render == 1 ? 'parentTable': 'childTable'}">
@@ -819,58 +800,54 @@ function createAccordionsPR(option, render, rol, titleDinamic){
                         <div class="cursor-point">
                             ${render == 1 ? '': '<i class="fas fa-times deleteTable"></i>'}
                         </div>
-
                     </div>
-                        <div class="toolbar">
-                            <div class="row">
-                                    <div id="filterContainer" class="col-xs-12 col-sm-12 col-md-12 col-lg-12 pb-3">
-                                    </div>
-                                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-lg-offset-6 col-md-offset-6 col-sm-offset-6 pb-3">
-                                        <div class="container-fluid p-0">
-                                            <div class="row">
-                                                <div class="col-md-12 p-r">
-                                                    <div class="form-group d-flex">
-                                                        <input type="text" class="form-control datepicker beginDates" id="beginDate3"  />
-                                                        <input type="text" class="form-control datepicker endDates" id="endDate3"  />
-                                                        <button class="btn btn-success btn-round btn-fab btn-fab-mini" id="searchByDateRangePR">
-                                                            <span class="material-icons">search</span>
-                                                        </button>
-                                                    </div>
+                    <div class="toolbar">
+                        <div class="row">
+                            <div id="filterContainer" class="col-xs-12 col-sm-12 col-md-12 col-lg-12 pb-3"></div>
+                                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-lg-offset-6 col-md-offset-6 col-sm-offset-6 pb-3">
+                                    <div class="container-fluid p-0">
+                                        <div class="row">
+                                            <div class="col-md-12 p-r">
+                                                <div class="form-group d-flex">
+                                                    <input type="text" class="form-control datepicker beginDates" id="beginDate3"  />
+                                                    <input type="text" class="form-control datepicker endDates" id="endDate3"  />
+                                                    <button class="btn btn-success btn-round btn-fab btn-fab-mini" id="searchByDateRangePR">
+                                                        <span class="material-icons">search</span>
+                                                    </button>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
+                                </div>
                             </div>
                         </div>
-                    <div class="accordion-content pb-3">
-                        <div class="material-datatables">
-                            <div class="form-group">
-                                <div class="table-responsive">
-                                    <table class="table-responsive table-striped table-hover" id="tablePR" name="table`+option+`"><!--anterior:tablePR + option + -->
-                                        <thead>
-                                            <tr>
-                                                <th>ESTADO</th>
-                                                <th>ETAPA</th>
-                                                <th>TIPO</th>
-                                                <th>PROSPECTO</th>
-                                                <th>ASESOR</th>
-                                                <th>COORDINADOR</th>
-                                                <th>GERENTE</th>
-                                                <th>LP</th>
-                                                <th>CREACIÓN</th>
-                                                <th>VENCIMIENTO</th>
-            <!--                                    <th class="disabled-sorting text-right">ACCIONES</th>-->
-                                            </tr>
-                                        </thead>
-                                    </table>
+                        <div class="accordion-content pb-3">
+                            <div class="material-datatables">
+                                <div class="form-group">
+                                    <div class="table-responsive">
+                                        <table class="table-responsive table-striped table-hover" id="tablePR" name="table`+option+`"><!--anterior:tablePR + option + -->
+                                            <thead>
+                                                <tr>
+                                                    <th>ESTADO</th>
+                                                    <th>ETAPA</th>
+                                                    <th>TIPO</th>
+                                                    <th>PROSPECTO</th>
+                                                    <th>ASESOR</th>
+                                                    <th>COORDINADOR</th>
+                                                    <th>GERENTE</th>
+                                                    <th>LP</th>
+                                                    <th>CREACIÓN</th>
+                                                    <th>VENCIMIENTO</th>
+                                                </tr>
+                                            </thead>
+                                        </table>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-        </div>`;
+                </div>`;
     $(".table-dinamic").append(html);
-    // console.log('se finaliza el iner de HTML');
 }
 function multirol(){
     //validar que tipo de usuario es el que está actualmente sesionado
@@ -891,10 +868,7 @@ function multirol(){
         case 2:
         case 5:
         case 59:
-            console.log('cámara mis perross');
             $.post('../General/multirol', function(data){
-
-                console.log(data);
                 let unique = [...new Set(data.map(item => item.idRol))]; //los roles unicos del usuario
                 if(unique.includes(59) || unique.includes(60)){
                     items_activos.push('subdirector');
@@ -927,7 +901,6 @@ function multirol(){
         case 7:
             setInitialValues2();
             var url = "../Clientes/getProspectsListByAsesor/"+idUser;
-            console.log("TypeTRans: " + typeTransaction);
             let finalBeginDate = $("#beginDate3").val();
             let finalEndDate = $("#endDate3").val();
             $('#tablePR thead tr:eq(0) th').each( function (i) {
@@ -942,9 +915,8 @@ function multirol(){
             updateTable(url, 1, finalBeginDate, finalEndDate, 0);
             break;
     }
-
-
 }
+
 function loadSbdir(){
     $("#subdirector").empty().selectpicker('refresh');
     $.post('../Clientes/getSubdirs/', function(data) {
@@ -963,6 +935,7 @@ function loadSbdir(){
         $("#subdirector").selectpicker('refresh');
     }, 'json');
 }
+
 function loadCoord(){
     $("#coordinadors").empty().selectpicker('refresh');
     let id_usuario;
@@ -973,47 +946,41 @@ function loadCoord(){
     }
     $.post('../Clientes/getCoordsByGrs/'+id_usuario, function(data) {
         var len = data.length;
-        if(len<=0)
-        {
+        if(len<=0){
             $("#coordinadors").append('<option selected="selected" disabled>NINGUN COORDINADOR</option>');
         }{
             $("#coordinadors").append('<option selected="selected">SELECCIONA COORDINADOR</option>');
         }
-        for( var i = 0; i<len; i++)
-        {
+
+        for( var i = 0; i<len; i++){
             var id = data[i]['id_usuario'];
             var name = data[i]['nombre'] + ' ' + data[i]['apellido_paterno'] + ' ' + data[i]['apellido_materno'];
             $("#coordinadors").append($('<option>').val(id).text(name));
         }
-
         $("#coordinadors").selectpicker('refresh');
-
-
     }, 'json');
 }
+
 function loadAsesores(){
     $("#asesor").empty().selectpicker('refresh');
-
     $.post('../Clientes/getAsesorByCoords/'+idUser, function(data) {
         var len = data.length;
-        if(len<=0)
-        {
+        if(len<=0){
             $("#asesors").append('<option selected="selected" disabled>NINGUN COORDINADOR</option>');
-        }else{
+        }
+        else{
             $("#asesors").append('<option selected="selected">SELECCIONA ASESOR</option>');
         }
-        for( var i = 0; i<len; i++)
-        {
+        for( var i = 0; i<len; i++){
             var id = data[i]['id_usuario'];
             var name = data[i]['nombre'] + ' ' + data[i]['apellido_paterno'] + ' ' + data[i]['apellido_materno'];
             $("#asesors").append($('<option>').val(id).text(name));
         }
 
         $("#asesors").selectpicker('refresh');
-        // $('#spiner-loader').addClass('hide');
-
     }, 'json');
 }
+
 function createSelect(dataDinamic){
     let nombreID = "div_"+dataDinamic;
     let dataMaks;
@@ -1025,6 +992,7 @@ function createSelect(dataDinamic){
     }else{
         dataMaks = dataDinamic;
     }
+
     let html_select ='<div class="col-md-3 form-group"><div id="'+nombreID+'" class="form-group label-floating select-is-empty"><label class="control-label">'+dataMaks+'</label></div></div>';
     var $selectSub = $('<select/>', {
         'class':"selectpicker select-gral m-0",
@@ -1039,140 +1007,19 @@ function createSelect(dataDinamic){
         'selected': true,
         'disabled': true
     }));
-    // $selectSub.appendTo('#'+nombreID).selectpicker('refresh');
         $('#filterContainer').append(html_select);
     return $selectSub;
 }
+
 function createFilters(rol, selects){
-        // console.log('rol', rol);
-        // console.log('selects', selects);
     selects.map((element, index)=>{
         let options_select = createSelect(element);
         options_select.appendTo("#div_"+element).selectpicker('refresh');
     });
-
-    // if(rol == 1){
-    //
-    // }
-    // else if(rol == 59){
-    //     let div = '<div class="col-md-3 form-group"><div id="div1" class="form-group label-floating select-is-empty"><label class="control-label">SUBDIRECTOR</label></div></div>';
-    //     div += '<div class="col-md-3 form-group"><div id="div2" class="form-group label-floating select-is-empty"><label class="control-label">GERENTE</label></div></div>';
-    //     div += '<div class="col-md-3 form-group"><div id="div3" class="form-group label-floating select-is-empty"><label class="control-label">COORDINADOR</label></div></div>';
-    //     div += '<div class="col-md-3 form-group"><div id="div4" class="form-group label-floating select-is-empty"><label class="control-label">ASESOR</label></div></div>';
-    //     var $selectSub = $('<select/>', {
-    //         'class':"selectpicker select-gral m-0",
-    //         'id': 'subdirector',
-    //         'name': 'subdirector',
-    //         'data-style':"btn",
-    //         'data-show-subtext':"true",
-    //         'data-live-search':"true"
-    //     }).append($('<option/>',{
-    //         'value': 'default',
-    //         'text': 'Selecciona el subdirector',
-    //         'selected': true,
-    //         'disabled': true
-    //     }));
-    //     var $selectGer = $('<select/>', {
-    //         'class':"selectpicker select-gral m-0",
-    //         'id': 'gerente',
-    //         'name': 'gerente',
-    //         'data-style':"btn",
-    //         'data-show-subtext':"true",
-    //         'data-live-search':"true"
-    //     }).append($('<option/>',{
-    //         'value': 'default',
-    //         'text': 'Selecciona el gerente',
-    //         'selected': true,
-    //         'disabled': true
-    //     }));
-    //     var $selectCoord = $('<select/>', {
-    //         'class':"selectpicker select-gral m-0",
-    //         'id': 'coordinador',
-    //         'name': 'coordinador',
-    //         'data-style':"btn",
-    //         'data-show-subtext':"true",
-    //         'data-live-search':"true"
-    //     }).append($('<option/>',{
-    //         'value': 'default',
-    //         'text': 'Selecciona el coordinador',
-    //         'selected': true,
-    //         'disabled': true
-    //     }));
-    //     var $selectAse = $('<select/>', {
-    //         'class':"selectpicker select-gral m-0",
-    //         'id': 'asesores',
-    //         'name': 'asesores',
-    //         'data-style':"btn",
-    //         'data-show-subtext':"true",
-    //         'data-live-search':"true"
-    //     }).append($('<option/>',{
-    //         'value': 'default',
-    //         'text': 'Selecciona el asesor',
-    //         'selected': true,
-    //         'disabled': true
-    //     }));
-    //     $('#filterContainer').append(div);
-    //     $selectSub.appendTo('#div1').selectpicker('refresh');
-    //     $selectGer.appendTo('#div2').selectpicker('refresh');
-    //     $selectCoord.appendTo('#div3').selectpicker('refresh');
-    //     $selectAse.appendTo('#div4').selectpicker('refresh');
-    //     // $option.appendTo('#asesores');
-    //
-    // }
-    // else if(2){
-    //     let div = '<div class="col-md-3 form-group"><div id="div2" class="form-group label-floating select-is-empty"><label class="control-label">GERENTE</label></div></div>';
-    //     div += '<div class="col-md-3 form-group"><div id="div3" class="form-group label-floating select-is-empty"><label class="control-label">COORDINADOR</label></div></div>';
-    //     div += '<div class="col-md-3 form-group"><div id="div4" class="form-group label-floating select-is-empty"><label class="control-label">ASESOR</label></div></div>';
-    //
-    //     var $selectGer = $('<select/>', {
-    //         'class':"selectpicker select-gral m-0",
-    //         'id': 'gerente',
-    //         'name': 'gerente',
-    //         'data-style':"btn",
-    //         'data-show-subtext':"true",
-    //         'data-live-search':"true"
-    //     }).append($('<option/>',{
-    //         'value': 'default',
-    //         'text': 'Selecciona el gerente',
-    //         'selected': true,
-    //         'disabled': true
-    //     }));
-    //     var $selectCoord = $('<select/>', {
-    //         'class':"selectpicker select-gral m-0",
-    //         'id': 'coordinador',
-    //         'name': 'coordinador',
-    //         'data-style':"btn",
-    //         'data-show-subtext':"true",
-    //         'data-live-search':"true"
-    //     }).append($('<option/>',{
-    //         'value': 'default',
-    //         'text': 'Selecciona el coordinador',
-    //         'selected': true,
-    //         'disabled': true
-    //     }));
-    //     var $selectAse = $('<select/>', {
-    //         'class':"selectpicker select-gral m-0",
-    //         'id': 'asesores',
-    //         'name': 'asesores',
-    //         'data-style':"btn",
-    //         'data-show-subtext':"true",
-    //         'data-live-search':"true"
-    //     }).append($('<option/>',{
-    //         'value': 'default',
-    //         'text': 'Selecciona el asesor',
-    //         'selected': true,
-    //         'disabled': true
-    //     }));
-    //     $('#filterContainer').append(div);
-    //     $selectGer.appendTo('#div2').selectpicker('refresh');
-    //     $selectCoord.appendTo('#div3').selectpicker('refresh');
-    //     $selectAse.appendTo('#div4').selectpicker('refresh');
-    // }
 }
 
 function getFirstFilter(rol, secondRol){
     $(`#${rol == 59 ? 'subdirector':'gerente'}`).empty().selectpicker('refresh');
-    // rol == 59 ? `Clientes/getGerentesBySubdir/${idUsuario}` : `General`
     var $option = $('<option/>',{
         'value': 'default',
         'text': 'Selecciona el subdirector',
@@ -1182,15 +1029,11 @@ function getFirstFilter(rol, secondRol){
     $(`#${rol == 59 ? 'subdirector':'gerente'}`).append($option);
     $.post('../General/getUsersByLeader', {rol: rol, secondRol:secondRol},function(data) {
         var len = data.length;
-        // console.log('users', data);
         for( var i = 0; i<len; i++)
         {
             var id = data[i]['id_usuario'];
             var name = data[i]['nombre'] + ' ' + data[i]['apellido_paterno'] + ' ' + data[i]['apellido_materno'];
             $(`#${rol == 59 ? 'subdirector':'gerente'}`).append($('<option>').val(id).text(name));
-            // console.log(name);
-            // console.log(rol);
-            // console.log(`#${rol == 59 ? 'subdirector':'gerente'}`);
         }
         if(len<=0){
             $(`#${rol == 59 ? 'subdirector':'gerente'}`).append('<option selected="selected" disabled>NINGÚN GERENTE</option>');
@@ -1200,8 +1043,8 @@ function getFirstFilter(rol, secondRol){
 
 
 }
-function fillBoxAccordionsPR(option, rol, id_usuario, render, transaction, dates=null, leadersList, titleDinamic) {
-    // console.log('llegué al fill de fillBoxAccordionsPR');
+
+function fillBoxAccordionsPR(option, rol, render, titleDinamic) {
     if (rol == 5 && (idUser == 28 && idUser == 30))
         rolEspecial = 59;
     else if (rol == 5 && (idUser != 28 && idUser != 30))
@@ -1214,214 +1057,7 @@ function fillBoxAccordionsPR(option, rol, id_usuario, render, transaction, dates
 
     createAccordionsPR(option, render, rolEspecial, titleDinamic);
     multirol();
-
-    /*let newRol = newRoles(option);
-    $('#tablePR'+option+' thead tr:eq(0) th').each(function (i) {
-        const title = $(this).text();
-        $(this).html('<input type="text" class="w-100 textoshead"  placeholder="' + title + '"/>');
-        if(i > 1 && i <10){
-            $('input', this)[0].type = 'number';
-            $('input', this).addClass('no-spin');
-        }
-        $('input', this).on('keyup change', function () {
-            if(i != 0){
-                if ($("#table"+option+"").DataTable().column(i).search() !== this.value) {
-                    $("#table"+option+"").DataTable().column(i)
-                        .search(this.value).draw();
-                }
-            }
-        });
-    });
-
-    generalDataTable = $("#tablePR"+option).DataTable({
-        dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
-        width: '100%',
-        buttons: [
-            {
-                extend: 'excelHtml5',
-                text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
-                className: 'btn buttons-excel',
-                titleAttr: 'Descargar archivo de Excel',
-                exportOptions: {
-                    columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
-                    format: {
-                        header: function (d, columnIdx) {
-                            switch (columnIdx) {
-                                case 1:
-                                    return option;
-                                    break;
-                                case 2:
-                                    return 'Gran total'
-                                    break;
-                                case 3:
-                                    return 'Monto';
-                                    break;
-                                case 4:
-                                    return '# lotes apartados';
-                                    break;
-                                case 5:
-                                    return 'Apartado';
-                                    break;
-                                case 6:
-                                    return 'Cancelados';
-                                    break;
-                                case 7:
-                                    return '% cancelados';
-                                    break;
-                                case 8:
-                                    return '# lotes contratados';
-                                    break;
-                                case 9:
-                                    return 'Contratados';
-                                    break;
-                                case 10:
-                                    return 'Cancelados';
-                                    break;
-                                case 11:
-                                    return '% cancelados';
-                                    break;
-                            }
-                        }
-                    }
-                }
-            }
-        ],
-        pagingType: "full_numbers",
-        lengthMenu: [
-            [10, 25, 50, -1],
-            [10, 25, 50, "Todos"]
-        ],
-        destroy: true,
-        ordering: false,
-        scrollX: true,
-        language: {
-            url: `${base_url}static/spanishLoader_v2.json`,
-            paginate: {
-                previous: "<i class='fa fa-angle-left'>",
-                next: "<i class='fa fa-angle-right'>"
-            }
-        },
-        columns: [
-            {
-                width: "2%",
-                data: function(d){
-                    let leaders = getLeadersLine(leadersList, d.userID, id_usuario);
-                    return `<button type="btn" data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-idUser="${d.userID}" id="details-${d.userID}" data-leader="${id_usuario}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-dr="${leaders[5]}" class="btnSub"><i class="fas fa-sitemap" data-toggle="tooltip" data-placement="bottom" title="Desglose a detalle"></i></button>`;
-                }
-            },
-            {
-                width: "26%",
-                data: function (d) {
-                    return d.nombreUsuario;
-                }
-            },
-            {
-                width: "26%",
-                data: function (d) {
-                    let leaders = getLeadersLine(leadersList, d.userID, id_usuario);
-                    return `<button style="background-color: #d8dde2; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="5" data-sede = 0 data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-idUser="${d.userID}" id="details-${d.userID}" data-leader="${id_usuario}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-dr="${leaders[5]}" class="btnModalDetails">${(d.totalAT + d.totalConT).toLocaleString('es-MX')}</button>`;
-                }
-            },
-            {
-                width: "8%",
-                data: function (d) {
-                    return "<b>" + d.gran_total +"</b>"; // MJ: SUMA GRAN TOTAL
-                }
-            },
-            {
-                width: "8%",
-                data: function (d) {
-                    let leaders = getLeadersLine(leadersList, d.userID, id_usuario);
-                    return `<button style="background-color: #d8dde2; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="1" data-sede = 0 data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-idUser="${d.userID}" id="details-${d.userID}" data-leader="${id_usuario}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-dr="${leaders[5]}" class="btnModalDetails">${(d.totalAT).toLocaleString('es-MX')}</button>`;
-                }
-            },
-            {
-                width: "8%",
-                data: function (d) {
-                    return "<b>" + d.sumaAT+"</b>"; //SUMA APARTADOS
-                }
-            },
-            {
-                width: "8%",
-                data: function (d) {
-                    let leaders = getLeadersLine(leadersList, d.userID, id_usuario);
-                    return `<button style="background-color: #d8dde2; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="4" data-sede = 0 data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-idUser="${d.userID}" id="details-${d.userID}" data-leader="${id_usuario}" data-leader="${id_usuario}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-dr="${leaders[5]}" class="btnModalDetails">${(d.totalCanA).toLocaleString('es-MX')}</button>`; //# CANCELADOS APARTADOS;
-                }
-            },
-            {
-                width: "8%",
-                data: function (d) {
-                    return d.porcentajeTotalCanA + "%"; //PORCENTAJE CANCELADOS APARTADOS
-                }
-            },
-            {
-                width: "8%",
-                data: function (d) {
-                    let leaders = getLeadersLine(leadersList, d.userID, id_usuario);
-                    return `<button style="background-color: #d8dde2; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="2" data-sede = 0 data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-idUser="${d.userID}" id="details-${d.userID}" data-leader="${id_usuario}" data-leader="${id_usuario}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-dr="${leaders[5]}" class="btnModalDetails">${(d.totalConT).toLocaleString('es-MX')}</button>`; //# CONTRATADOS;
-                }
-            },
-            {
-                width: "8%",
-                data: function (d) {
-                    return "<b>" + d.sumaConT +"</b>"; //SUMA CONTRATADOS
-                }
-            },
-            {
-                width: "8%",
-                data: function (d) {
-                    let leaders = getLeadersLine(leadersList, d.userID, id_usuario);
-                    return `<button style="background-color: #d8dde2; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-sede = 0 data-type="3" data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-idUser="${d.userID}" id="details-${d.userID}" data-leader="${id_usuario}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-dr="${leaders[5]}" class="btnModalDetails">${(d.totalCanC).toLocaleString('es-MX')}</button>`; //# CANCELADOS CONTRATADOS;
-                }
-            },
-            {
-                width: "8%",
-                data: function (d) {
-                    return d.porcentajeTotalCanC + "%"; //PORCENTAJE CANCELADOS CONTRATADOS
-                }
-            },
-            {
-                width: "8%",
-                data: function (d) {
-                    let leaders = getLeadersLine(leadersList, d.userID, id_usuario);
-                    return  rol == 7 || (rol == 9 && render == 1) ? '' : `<div class="d-flex justify-center">
-                        <button class="btn-data btn-blueMaderas update-dataTable" data-transaction="${transaction}" 
-                        data-type="${rol}" data-render="${render}" value="${d.userID}" data-as="${leaders[1]}" 
-                        data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-dr="${leaders[5]}" data-nombreTitle="`+d.nombreUsuario+`">
-                        <i class="fas fa-sign-in-alt"></i></button></div>`;
-                }
-            },
-        ],
-        columnDefs: [{
-            className: "delimetter", "targets": [ 3, 7 ],
-        },{
-
-            visible: false,
-            searchable: false
-        }],
-        ajax: {
-            url: `${base_url}Reporte/getInformation`,
-            type: "POST",
-            cache: false,
-            data: {
-                "typeTransaction": transaction,
-                "beginDate": dates != null ? formatDate(dates.begin): '',
-                "endDate":  dates != null ? formatDate(dates.end): '',
-                "where": '1',
-                "type": rol,
-                "id_usuario": id_usuario,
-                "render": render,
-                "asesor": leadersList[1],
-                "coordinador": leadersList[2],
-                "gerente": leadersList[3],
-                "subdirector": leadersList[4],
-                "regional": leadersList[5]
-            }
-        }
-    });*/
 }
-
-
 
 function getTitle(option){
     var title;
@@ -1446,132 +1082,7 @@ function getTitle(option){
     }
     return title;
 };
-function getLeadersLine (leadersList, id_usuario, id_lider) {
-    if (leadersList[0] == 0 && (leadersList[6] == 1 || leadersList[6] == 4 || leadersList[6] == 33 || leadersList[6] == 58 || leadersList[6] == 63 || leadersList[6] == 69)){ // PRIMER NIVEL: SÓLO TENEMOS EL ID REGIONAL
-        leadersList[5] = id_usuario;
-    }
-    else if (leadersList[0] == 2){ // SEGUNDO NIVEL: TENEMOS EL ID SUBDIRECTOR
-        leadersList[4] = id_usuario;
-    }
-    else if (leadersList[0] == 3){ // TERCER NIVEL: TENEMOS EL ID GERENTE
-        leadersList[3] = id_usuario;
-    }
-    else if (leadersList[0] == 9){ // CUARTO NIVEL: TENEMOS EL ID COORDINADOR
-        leadersList[2] = id_usuario;
-    }
-    else if (leadersList[0] == 7){ // 5 NIVEL: TENEMOS EL ID COORDINADOR
-        leadersList[1] = id_usuario;
-    }
-    else if (leadersList[0] == 0 && (leadersList[6] == 59 || (leadersList[6] == 5 && (idUser == 28 || idUser == 30)))) { // PRIMER NIVEL: TENEMOS ID REGIONAL Y ID SUBDIRECTOR
-        if(id_usuario == 3 || id_usuario == 607)
-            leadersList[5] = 0;
-        else
-            leadersList[5] = leadersList[6] == 59 ? id_lider : idLider;
-        leadersList[4] = id_usuario;
-    }
-    else if (leadersList[6] == 5 && (idUser != 28 || idUser != 30)) {
-        // PRIMER NIVEL: TENEMOS ID REGIONAL Y ID SUBDIRECTOR
-        if( idLider == 7092 )
-            leadersList[5] = 3;
-        else if ( idLider == 681 || idLider == 9471 )
-            leadersList[5] = 607;
-        else leadersList[5] = 0;
 
-        leadersList[4] = idLider;
-        leadersList[3] = id_usuario;
-    }
-    else if (leadersList[0] == 0 && leadersList[6] == 2 ) {
-        leadersList[5] = ( idLider == 3 || idLider == 607 ) ? idLider : 0;
-        leadersList[4] = id_lider;
-        leadersList[3] = id_usuario;
-    }
-    else if (leadersList[0] == 0 && leadersList[6] == 3 ) { // PRIMER NIVEL: TENEMOS ID REGIONAL Y ID SUBDIRECTOR
-        leadersList[5] = 0;
-        leadersList[4] = 0;
-        leadersList[3] = id_lider;
-        leadersList[2] = id_usuario;
-    }
-    else if (leadersList[0] == 0 && leadersList[6] == 6  ){
-        //Asistente de gerente
-        leadersList[5] = 0;
-        leadersList[4] = 0;
-        leadersList[3] = idLider;
-        leadersList[2] = id_usuario;
-    }
-    return leadersList;
-}
-
-$(document).on('click', '.update-dataTable', function (e) {
-    e.preventDefault();
-    e.stopImmediatePropagation();
-    let closestChild;
-    const asesor = $(this).attr("data-as");
-    const coordinador = $(this).attr("data-co");
-    const gerente = $(this).attr("data-ge");
-    const subdirector = $(this).attr("data-su");
-    const regional = $(this).attr("data-dr");
-    const type = $(this).attr("data-type");
-    const render = $(this).data("render");
-    const transaction = $(this).data("transaction");
-    const nombreTitleCR = $(this).attr("data-nombretitle");
-    console.log('nombreTitleCR', nombreTitleCR);
-    closestChild = $(this).closest('.childTable');
-    closestChild = closestChild.length == 0 ?  $(this).closest('.parentTable'):$(this).closest('.childTable');
-    closestChild.nextAll().remove();
-    let dates = transaction == 2 ?  {begin: $('#tableBegin').val(), end: $('#tableEnd').val()}:null;
-
-    if (type == 2 ) { // MJ: #sub->ger->coord
-        if (render == 1) {
-            const table = "coordinador";
-            fillBoxAccordionsPR(table, 9, $(this).val(), 2, transaction, dates, [9, asesor, coordinador, gerente, subdirector, regional, type], nombreTitleCR);
-        } else {
-            const table = "gerente";
-            fillBoxAccordionsPR(table, 3, $(this).val(), 2, transaction, dates, [3, asesor, coordinador, gerente, subdirector, regional, type], nombreTitleCR); // VA POR LOS GERENTES
-        }
-    } else if (type == 3 || type == 6 ) { // MJ: #gerente->coord->asesor
-        if (render == 1) {
-            const table = "asesor";
-            fillBoxAccordionsPR(table, 7, $(this).val(), 2, transaction, dates, [7, asesor, coordinador, gerente, subdirector, regional, type], nombreTitleCR);
-        } else {
-            const table = "coordinador";
-            fillBoxAccordionsPR(table, 9, $(this).val(), 2, transaction, dates, [9, asesor, coordinador, gerente, subdirector, regional, type], nombreTitleCR); // VA POR LOS COORDINADORES
-        }
-    } else if (type == 9) { // MJ: #coordinatorTable -> asesor
-        if (render == 1) {
-        } else {
-            const table = "asesor";
-            fillBoxAccordionsPR(table, 7, $(this).val(), 2, transaction, dates, [7, asesor, coordinador, gerente, subdirector, regional, type], nombreTitleCR); // VA POR LOS ASESORES
-        }
-    } else if (type == 59) { // MJ: #DirRegional->subdir->ger
-        if (render == 1) {
-            const table = "gerente";
-            fillBoxAccordionsPR(table, 3, $(this).val(), 2, transaction, dates, [3, asesor, coordinador, gerente, subdirector, regional, type], nombreTitleCR);
-        } else {
-            const table = "subdirector";
-            fillBoxAccordionsPR(table, 2, $(this).val(), 2, transaction, dates, [59, asesor, coordinador, gerente, subdirector, regional, type], nombreTitleCR); // VA POR LOS SUBDIRECTORES: CONSULTA REGIONAL
-        }
-    } else if (type == 1 || type == 4 || type == 33 || type == 58 || type == 63 || type == 69) {
-        if (render == 1) {
-            const table = "subdirector";
-            fillBoxAccordionsPR(table, 2, $(this).val(), 2, transaction, dates, [2, asesor, coordinador, gerente, subdirector, regional, type], nombreTitleCR); // VA POR LOS SUBDIRECTORES
-        } else {
-            const table = "regional";
-            fillBoxAccordionsPR(table, 59, $(this).val(), 2, transaction, dates);
-        }
-    }
-    else if (type == 5) { // MJ: #subdirector
-        if (render == 1) {
-            if( idUser == 28 || idUser == 30 ){
-                const table = "gerente";
-                fillBoxAccordionsPR(table, 2, $(this).val(), 2, transaction, dates, [3, asesor, coordinador, gerente, subdirector, regional, type], nombreTitleCR); // VA POR LOS SUBDIRECTORES: CONSULTA REGIONAL
-            }
-            else{
-                const table = "coordinador";
-                fillBoxAccordionsPR(table, 9, $(this).val(), 2, transaction, dates, [9, asesor, coordinador, gerente, subdirector, regional, type], nombreTitleCR); // VA POR LOS COORDINADORES
-            }
-        }
-    }
-});
 function newRoles(option) {
     var rol;
     switch (option) {
@@ -1595,86 +1106,8 @@ function newRoles(option) {
     }
     return rol;
 }
-$(document).on('click', '.deleteTable', function () {
-    accordionToRemovePR($(this).parent().parent().parent().parent().data( "rol" ));
-});
-
-function accordionToRemovePR(rol){
-    $(".table-dinamic").find(`[data-rol='${rol}']`).remove();
-    switch (rol) {
-        case 7://asesor
-            //solo se borra asesor
-            break;
-        case 9://coordinador
-            $(".table-dinamic").find(`[data-rol='${7}']`).remove();
-            break;
-        case 3://gerente
-            $(".table-dinamic").find(`[data-rol='${9}']`).remove();
-            $(".table-dinamic").find(`[data-rol='${7}']`).remove();
-            break;
-        case 6://asistente gerente
-            $(".table-dinamic").find(`[data-rol='${3}']`).remove();
-            $(".table-dinamic").find(`[data-rol='${9}']`).remove();
-            $(".table-dinamic").find(`[data-rol='${7}']`).remove();
-            break;
-        case 2://subdir
-            $(".table-dinamic").find(`[data-rol='${3}']`).remove();
-            $(".table-dinamic").find(`[data-rol='${9}']`).remove();
-            $(".table-dinamic").find(`[data-rol='${7}']`).remove();
-            break;
-        case 5://asistente subdir
-            $(".table-dinamic").find(`[data-rol='${2}']`).remove();
-            $(".table-dinamic").find(`[data-rol='${3}']`).remove();
-            $(".table-dinamic").find(`[data-rol='${9}']`).remove();
-            $(".table-dinamic").find(`[data-rol='${7}']`).remove();
-            break;
-        case 1://dir
-            $(".table-dinamic").find(`[data-rol='${59}']`).remove();
-            $(".table-dinamic").find(`[data-rol='${2}']`).remove();
-            $(".table-dinamic").find(`[data-rol='${3}']`).remove();
-            $(".table-dinamic").find(`[data-rol='${9}']`).remove();
-            $(".table-dinamic").find(`[data-rol='${7}']`).remove();
-            break;
-        case 4://asistente dir
-            $(".table-dinamic").find(`[data-rol='${1}']`).remove();
-            $(".table-dinamic").find(`[data-rol='${59}']`).remove();
-            $(".table-dinamic").find(`[data-rol='${2}']`).remove();
-            $(".table-dinamic").find(`[data-rol='${3}']`).remove();
-            $(".table-dinamic").find(`[data-rol='${9}']`).remove();
-            $(".table-dinamic").find(`[data-rol='${7}']`).remove();
-            break;
-        case 18: // Dir
-        case 33: // Consulta (Yola)
-        case 58: // Asistente dirección general
-        case 63: // Control interno
-        case 69: // Dirección general
-            $(".table-dinamic").find(`[data-rol='${59}']`).remove();
-            $(".table-dinamic").find(`[data-rol='${2}']`).remove();
-            $(".table-dinamic").find(`[data-rol='${3}']`).remove();
-            $(".table-dinamic").find(`[data-rol='${9}']`).remove();
-            $(".table-dinamic").find(`[data-rol='${7}']`).remove();
-            break;
-        case 59://dir regional
-        case 5://dir regional
-            $(".table-dinamic").find(`[data-rol='${2}']`).remove();
-            $(".table-dinamic").find(`[data-rol='${3}']`).remove();
-            $(".table-dinamic").find(`[data-rol='${9}']`).remove();
-            $(".table-dinamic").find(`[data-rol='${7}']`).remove();
-            break;
-        case 60://asistente dir regional
-            $(".table-dinamic").find(`[data-rol='${59}']`).remove();
-            $(".table-dinamic").find(`[data-rol='${2}']`).remove();
-            $(".table-dinamic").find(`[data-rol='${3}']`).remove();
-            $(".table-dinamic").find(`[data-rol='${9}']`).remove();
-            $(".table-dinamic").find(`[data-rol='${7}']`).remove();
-            break;
-        default:
-            break;
-    }
-}
 
 $(document).off('click', '.accordionToggle').on('click', '.accordionToggle', function () {
-    // $(this).parent().parent().next().slideToggle(200);
     $(this).parent().next().slideToggle(200);
     $(this).toggleClass('open', 200);
 });
@@ -1682,10 +1115,8 @@ $(document).off('click', '.accordionToggle').on('click', '.accordionToggle', fun
 
 $(document).on('change','#subdirector', function () {
     var subdir = $("#subdirector").val();
-    console.log('Elegiste: ' + subdir);
 
     //gerente
-
     $("#gerente").empty().selectpicker('refresh');
     $("#coordinadors").empty().selectpicker('refresh');
     $("#asesor").empty().selectpicker('refresh');
@@ -1716,37 +1147,30 @@ var coordinador;
 var asesor;
 $(document).on('change', '#gerente', function () {
     $('#filter_date').removeClass('hide');
-    /**/gerente = $("#gerente").val();
-    console.log('Elegiste: ' + gerente);
-
+    gerente = $("#gerente").val();
     $("#coordinadors").empty().selectpicker('refresh');
     $("#asesor").empty().selectpicker('refresh');
     $('#spiner-loader').removeClass('hide');
     $.post('../Clientes/getCoordsByGrs/'+gerente, function(data) {
         var len = data.length;
-        if(len<=0)
-        {
+        if(len<=0){
             $("#coordinadors").append('<option selected="selected" disabled>NINGUN COORDINADOR</option>');
-        }{
+        }
+        {
             $("#coordinadors").append('<option selected="selected">SELECCIONA COORDINADOR</option>');
         }
-        for( var i = 0; i<len; i++)
-        {
+        for( var i = 0; i<len; i++){
             var id = data[i]['id_usuario'];
             var name = data[i]['nombre'] + ' ' + data[i]['apellido_paterno'] + ' ' + data[i]['apellido_materno'];
             $("#coordinadors").append($('<option>').val(id).text(name));
         }
-
         $("#coordinadors").selectpicker('refresh');
-
-
     }, 'json');
 
 
 
     /**///carga tabla
     var url = general_base_url+"Clientes/getProspectsListByGerente/"+gerente;
-    console.log("TypeTRans: " + typeTransaction);
     let finalBeginDate = $("#beginDate3").val();
     let finalEndDate = $("#endDate3").val();
     updateTable(url, 1, finalBeginDate, finalEndDate, 0);
@@ -1755,10 +1179,7 @@ $(document).on('change', '#gerente', function () {
 $(document).on('change', '#coordinadors', function () {
     $('#spiner-loader').removeClass('hide');
     coordinador = $("#coordinadors").val();
-    console.log('Elegiste: ' + coordinador);
     $('#filter_date').removeClass('hide');
-
-    //gerente
     $("#asesor").empty().selectpicker('refresh');
 
     $.post('../Clientes/getAsesorByCoords/'+coordinador, function(data) {
@@ -1769,23 +1190,19 @@ $(document).on('change', '#coordinadors', function () {
         }else{
             $("#asesors").append('<option selected="selected">SELECCIONA ASESOR</option>');
         }
-        for( var i = 0; i<len; i++)
-        {
+
+        for( var i = 0; i<len; i++){
             var id = data[i]['id_usuario'];
             var name = data[i]['nombre'] + ' ' + data[i]['apellido_paterno'] + ' ' + data[i]['apellido_materno'];
             $("#asesors").append($('<option>').val(id).text(name));
         }
 
         $("#asesors").selectpicker('refresh');
-        // $('#spiner-loader').addClass('hide');
-
     }, 'json');
 
 
     /**///carga tabla
     var url = "../Clientes/getProspectsListByCoord/"+coordinador;
-    console.log("TypeTRans: " + typeTransaction);
-    // updateTable(url, typeTransaction);
     let finalBeginDate = $("#beginDate3").val();
     let finalEndDate = $("#endDate3").val();
     updateTable(url, 1, finalBeginDate, finalEndDate, 0);
@@ -1794,11 +1211,8 @@ $(document).on('change', '#coordinadors', function () {
 //asesor
 $(document).on('change', '#asesors', function () {
     asesor = $("#asesors").val();
-    console.log('Elegiste: ' + asesor);
 
-    /**///carga tabla
     var url = "../Clientes/getProspectsListByAsesor/"+asesor;
-    console.log("TypeTRans: " + typeTransaction);
     let finalBeginDate = $("#beginDate3").val();
     let finalEndDate = $("#endDate3").val();
     updateTable(url, 1, finalBeginDate, finalEndDate, 0);
@@ -1806,44 +1220,23 @@ $(document).on('change', '#asesors', function () {
 
 
 var prospectsTables;
-function updateTable(url, typeTransaction, beginDate, endDate, where)
-{
-    console.log('url: ', url);
-    console.log('typeTransaction: ', typeTransaction);
-    console.log('beginDate: ', beginDate);
-    console.log('endDate: ', endDate);
-    console.log('where: ', where);
-
+function updateTable(url, typeTransaction, beginDate, endDate, where){
     let oldDate = beginDate.split('/');
     let newDate = new Date(oldDate[1]+'-'+oldDate[0]+'-'+oldDate[2]).toISOString();
     newDate = new Date(newDate);
-    // console.log('newDate Begin', newDate);
     let yearP = newDate.getFullYear();
     let monthP = ((newDate.getMonth()+1)<10) ? '0'+(newDate.getMonth()+1) : (newDate.getMonth()+1);
     let dayP = (newDate.getDate()<10) ? '0'+ newDate.getDate() : newDate.getDate();
 
     beginDate = dayP+'-'+monthP+'-'+yearP;
-    // console.log('dia inicio', beginDate);
 
     let oldDateend = endDate.split('/');
-    console.log('endDate',oldDateend[0]+'-'+oldDateend[1]+'-'+oldDateend[2]);
     let newDateEnd = new Date(oldDateend[1]+'-'+oldDateend[0]+'-'+oldDateend[2]).toISOString();
     newDateEnd = new Date(newDateEnd);
     let yearPE = newDateEnd.getFullYear();
     let monthPE = ((newDateEnd.getMonth()+1)<10) ? '0'+(newDateEnd.getMonth()+1) : (newDateEnd.getMonth()+1);
     let dayPE = (newDateEnd.getDate()<10) ? '0'+ newDateEnd.getDate() : newDateEnd.getDate();
-    // console.log('dia fin', dayPE);
-
     endDate = dayPE+'-'+monthPE+'-'+yearPE;
-
-
-
-    // console.log('url: ', url);
-    // console.log('typeTransaction: ', typeTransaction);
-    // console.log('beginDate: ', beginDate);
-    // console.log('endDate: ', endDate);
-    // console.log('where: ', where);
-
 
     prospectsTables = $('#tablePR').dataTable({
         dom: 'Brt'+ "<'row'<'col-12 col-sm-12 col-md-6 col-lg-6'i><'col-12 col-sm-12 col-md-6 col-lg-6'p>>",
@@ -1984,22 +1377,7 @@ function updateTable(url, typeTransaction, beginDate, endDate, where)
                 "where": where
             }
         }
-    })/*.yadcf(
-            [
-                {
-                    column_number: 6,
-                    filter_container_id: 'external_filter_container7',
-                    filter_type: 'range_date',
-                    datepicker_type: 'bootstrap-datetimepicker',
-                    filter_default_label: ['Desde', 'Hasta'],
-                    date_format: 'YYYY-MM-DD',
-                    filter_plugin_options: {
-                        format: 'YYYY-MM-DD',
-                        showClear: true,
-                    }
-                },
-            ]
-        )*/
+    })
     $('#spiner-loader').addClass('hide');
 }
 
@@ -2007,19 +1385,13 @@ $(document).on("click", "#searchByDateRangePR", function () {
     let finalBeginDate = $("#beginDate3").val();
     let finalEndDate = $("#endDate3").val();
     var url_inter;
-    console.log(gerente);
-    console.log(coordinador);
-    console.log(asesor);
 
     if(gerente != undefined && coordinador==undefined && asesor==undefined){
         url_inter = "../Clientes/getProspectsListByGerente/"+gerente;
-        console.log('Sólo tiene gerente');
     }else if(gerente != undefined && coordinador!=undefined && asesor==undefined){
         url_inter = "../Clientes/getProspectsListByCoord/"+coordinador;
-        console.log('Tiene Gerente y coordinador');
     }else if(gerente != undefined && coordinador!=undefined && asesor!=undefined){
         url_inter = "../Clientes/getProspectsListByAsesor/"+asesor;
-        console.log('Tiene Gerente, coordinador y asesor');
     }else if(gerente == undefined && coordinador==undefined && asesor!=undefined){
         url_inter = "../Clientes/getProspectsListByAsesor/"+asesor;
     }else if(gerente == undefined && coordinador==undefined && asesor==undefined){
@@ -2027,8 +1399,6 @@ $(document).on("click", "#searchByDateRangePR", function () {
     }else if(gerente == undefined && coordinador!=undefined && asesor!=undefined){
         url_inter = "../Clientes/getProspectsListByAsesor/"+asesor;
     }
-
-
 
     updateTable(url_inter, 3, finalBeginDate, finalEndDate, 0);
 });
