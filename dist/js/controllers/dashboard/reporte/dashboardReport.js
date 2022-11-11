@@ -199,7 +199,7 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, dates=n
     else if( rol == 6 )
         rolEspecial = 3;
     else if( rol == 4 || rol == 33 || rol == 58 || rol == 63 || rol == 69)
-        rolEspecial = 2
+        rolEspecial = 2;
     else rolEspecial = rol;
 
     createAccordions(option, render, rolEspecial);
