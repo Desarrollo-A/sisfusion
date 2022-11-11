@@ -26,7 +26,7 @@
                             </div>
                             <div class="card-content">
                                 <h3 class="card-title center-align">Reporte de lotes Liberados</h3>
-                                <p class="center-align">Por medio de este panel podrás visualizar y descargar un reporte de lotes, los cuales tienen como característica haber pasado por el estatus 9 y que posteriormente fueron liberados.</p>
+                                <p class="center-align">Por medio de este panel podrás visualizar y descargar un reporte de lotes, los cuales tienen como característica haber pasado por el estatus 11 y que posteriormente fueron liberados.</p>
                                 <div  class="toolbar">
                                     <div class="row">
                                             <div class="col-md-4 form-group">
@@ -49,9 +49,10 @@
                                                 <th>LOTE</th>
                                                 <th>ID LOTE</th>
                                                 <th>CLIENTE</th>
-                                                <th>FECHA 9</th>
-                                                <th>FECHA LIBERACION</th>
-                                                <th>MOTIVO LIBERACION</th>
+                                                <th>FECHA 11</th>
+                                                <th>FECHA LIBERACIÓN</th>
+                                                <th>MOTIVO LIBERACIÓN</th>
+                                                <th>ÚLTIMO ESTATUS</th>
                                             </tr>
                                         </thead>
                                     </table>
