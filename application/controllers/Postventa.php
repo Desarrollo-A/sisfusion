@@ -108,10 +108,10 @@ class Postventa extends CI_Controller
     {
         $idLote = $this->input->post("idLote");
         $data1 = $this->Postventa_model->getEmpRef($idLote)->result_array();
-        $idClient = $this->Postventa_model->getClient($idLote)->row();
+        $idClient = !empty($this->Postventa_model->getClient($idLote)) ? -1 : $this->Postventa_model->getClient($idLote)->row()->num_cli;
         $resDecode = $this->servicioPostventa($data1[0]['referencia'], $data1[0]['empresa']);
-        if($idClient->num_cli > 0){
-            $resDecode = $this->servicioPostventa($data1[0]['referencia'], $data1[0]['empresa']);
+        if($idClient > 0){
+            //$resDecode = $this->servicioPostventa($data1[0]['referencia'], $data1[0]['empresa']);
             if (count($resDecode->data) > 0) {
                 $resDecode->data[0]->id_cliente = $idClient->id_cliente;
                 $resDecode->data[0]->referencia = $data1[0]['referencia'];
@@ -124,7 +124,7 @@ class Postventa extends CI_Controller
             } else {
                 echo json_encode(false);
             }
-        }else{
+        }elseif($idClient <= 0) {
             echo json_encode(false);
         }
     }
@@ -601,7 +601,6 @@ class Postventa extends CI_Controller
 
     public function aportaciones()
     {
-        print_r($_POST); exit;
         $idLote = $_POST['idLote'];
         $idCliente = $_POST['idCliente'];
         $idPostventa = $_POST['idPostventa'];
@@ -642,11 +641,10 @@ class Postventa extends CI_Controller
     }
 
     public function AltaCli(){
-        print_r($_POST);
         $data1 = $this->Postventa_model->getEmpRef($_POST['idLote'])->result_array();
         $_POST['referencia'] = $data1[0]['referencia'];
         $_POST['empresa'] = $data1[0]['empresa'];
-        $result = $this->Postventa_model->InsertCli($_POST)->row();
+        $result = $this->Postventa_model->InsertCli($_POST);
         $idLote = $_POST['idLote'];
         $idCliente = $result->ult_reg;
         $idPostventa = $_POST['idPostventa'];
@@ -665,7 +663,6 @@ class Postventa extends CI_Controller
         ($_POST['municipiof'] == '' || $_POST['municipiof'] == null) ? '': $dataFiscal['municipio'] =  $_POST['municipiof'];
         ($_POST['estadof'] == '' || $_POST['estadof'] == null) ? '': $dataFiscal['estado'] =  $_POST['estadof'];
         ($_POST['cpf'] == '' || $_POST['cpf'] == null) ? '': $dataFiscal['cp'] =  $_POST['cpf'];
-
         $dataFiscal = base64_encode(json_encode($dataFiscal));
         $responseInsert = $this->insertPostventaDF($dataFiscal);
         if($responseInsert->resultado == 1){
@@ -2139,18 +2136,18 @@ function saveNotaria(){
         echo json_encode(array());
 }
 
-function getPresupuestosUpload(){
-    $idNxS = $_POST['idNxS'];
-    $data = $this->Postventa_model->getPresupuestosUpload($idNxS);
-    if ($data != null)
-        echo json_encode($data);
-    else
-        echo json_encode(array());
-}
+    function getPresupuestosUpload(){
+        $idNxS = $_POST['idNxS'];
+        $data = $this->Postventa_model->getPresupuestosUpload($idNxS);
+        if ($data != null)
+            echo json_encode($data);
+        else
+            echo json_encode(array());
+    }
 
-function updatePresupuestosNXU($idSolicitud, $idNotaria){
-    $data = $this->Postventa_model->updatePresupuestosNXU($idSolicitud, $idNotaria);
-}
+    function updatePresupuestosNXU($idSolicitud, $idNotaria){
+        $data = $this->Postventa_model->updatePresupuestosNXU($idSolicitud, $idNotaria);
+    }
     public function getOpcCat(){
         $id_cat = $this->input->post("id_cat");
         $data = $this->Postventa_model->getOpcCat($id_cat)->result_array();

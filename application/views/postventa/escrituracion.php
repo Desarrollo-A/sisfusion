@@ -150,7 +150,7 @@
                                                         <div class="col-md-8 pl-0">
                                                             <div class="form-group label-floating is-focused">
                                                                 <label class="control-label label-gral">Correo Electrónico</label>
-                                                                <input id="correo" name="correo" class="form-control input-gral" type="mail" disabled>
+                                                                <input id="correo" name="correo" class="form-control input-gral" type="mail" placeholder="UserExample@dominioExample.com" pattern="^[a-zA-Z0-9.!#$%&’*+=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$" disabled>
                                                             </div>
                                                         </div>
                                                         <div class="col-md-12 pl-0">
