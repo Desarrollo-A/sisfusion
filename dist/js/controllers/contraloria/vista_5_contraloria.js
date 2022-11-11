@@ -10,8 +10,7 @@ $('#tabla_ingresar_5 thead tr:eq(0) th').each( function (i) {
     }
 });
 
-var url = "<?=base_url()?>";
-var url2 = "<?=base_url()?>index.php/";
+
 var getInfo1 = new Array(6);
 var getInfo2 = new Array(6);
 
@@ -133,7 +132,7 @@ tabla_5 = $("#tabla_ingresar_5").DataTable({
             }
         ],
     language: {
-        url: "./..//static/spanishLoader_v2.json",
+        url: `${base_url}static/spanishLoader_v2.json`,
         paginate: {
             previous: "<i class='fa fa-angle-left'>",
             next: "<i class='fa fa-angle-right'>"
@@ -143,6 +142,7 @@ tabla_5 = $("#tabla_ingresar_5").DataTable({
 "bAutoWidth": false,
 "fixedColumns": true,
 "ordering": false,
+scrollX: true,
 "columns": [
 {
 "width": "3%",
