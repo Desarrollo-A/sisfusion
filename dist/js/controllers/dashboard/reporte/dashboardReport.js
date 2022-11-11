@@ -1,7 +1,6 @@
 let chart, rolOnReport, idUserOnReport;
 
 function asDirector(userType){
-    debugger;
     // 18: Fabián
     //  4: Asistente dirección administración
     // 63: Control interno
