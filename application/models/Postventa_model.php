@@ -30,7 +30,13 @@ class Postventa_model extends CI_Model
 
     function getClient($idLote)
     {
-        $num_cli = $this->db->query("SELECT COUNT(idCliente) AS num_cli FROM lotes WHERE idLote = $idLote AND (idCliente IS NOT NULL AND idCliente <> 0 AND idCliente <> '0' AND idCliente<>'')");
+        $num_cli = $this->db->query("SELECT CASE
+                                                WHEN idCliente IS NULL THEN 0
+                                                WHEN idCliente = '' THEN 0 
+                                                ELSE idCliente
+                                            END AS num_cli 
+                                    FROM lotes
+                                    WHERE idLote = $idLote");
         if($num_cli->row()->num_cli < 1){
             return $num_cli;
         }else{
@@ -55,6 +61,7 @@ class Postventa_model extends CI_Model
 
     function setEscrituracion( $personalidad, $idLote,$idCliente, $idPostventa, $data, $idJuridico)
     {
+        print_r($data['ncliente']);exit;
         $idUsuario = $this->session->userdata('id_usuario');
         $rol = $this->session->userdata('id_rol');
         $nombre = (!isset($data['ncliente']) || $data['ncliente'] = '') ? 'NULL' : $data['ncliente'];
@@ -916,7 +923,12 @@ function checkBudgetInfo($idSolicitud){
     }
 
     function getOpcCat($id_cat){
-        return $this->db->query("SELECT id_opcion, nombre FROM opcs_x_cats WHERE id_catalogo = $id_cat and estatus = 1");
+        return $this->db->query("SELECT OPCAT.id_opcion, OPCAT.nombre, CASE WHEN CAT.nombre = 'Estado civil' THEN 'ecivil' WHEN CAT.nombre = 'Régimen matrimonial' THEN 'rconyugal' END AS etq
+                                FROM opcs_x_cats AS OPCAT
+                                INNER JOIN catalogos AS CAT
+                                ON OPCAT.id_catalogo = CAT.id_catalogo
+                                WHERE OPCAT.id_catalogo IN ($id_cat) AND OPCAT.estatus = 1
+                                ORDER BY OPCAT.id_catalogo");
     }
 
     public function InsertCli($datos){
@@ -929,10 +941,10 @@ function checkBudgetInfo($idSolicitud){
         $ape2 = $datos['ape2'];
         $rfc = $datos['rfc'];
         $correo = $datos['correo'];
-        $telefono = $datos['telefono'];
-        $cel = $datos['cel'];
-        $ecivil = $datos['ecivil'];
-        $rconyugal = $datos['rconyugal'];
+        $telefono = ( !empty($datos['telefono']) || $datos['telefono'] == '') ? 'NULL' : $datos['telefono'];
+        $cel = (!empty($datos['cel']) || $datos['cel'] == '') ? 'NULL' : $datos['cel'];
+        $ecivil = (!array_key_exists('ecivil', $datos) || !empty($datos['ecivil']) || $datos['ecivil'] == '') ? 'NULL' : $datos['ecivil'];
+        $rconyugal = (!array_key_exists('rconyugal', $datos) || !empty($datos['rconyugal']) || $datos['rconyugal'] == '') ? 'NULL' : $datos['rconyugal'];
         $direccion = $datos['direccion'];
         $origen = $datos['origen'];
         $ocupacion = $datos['ocupacion'];
@@ -940,9 +952,6 @@ function checkBudgetInfo($idSolicitud){
         $usuario = $user['usuario'];
         $idCondominio = $datos['idCondominio'];
         $usuario = $user['usuario'];
-        $usuario = $user['usuario'];
-        $usuario = $user['usuario'];
-
         $this->db->query("INSERT INTO clientes (id_asesor
                 ,id_coordinador
                 ,id_gerente
@@ -990,6 +999,8 @@ function checkBudgetInfo($idSolicitud){
                 GetDate(),
                 1,
                 GetDate())");
-        return  $this->db->query("SELECT SCOPE_IDENTITY() as ult_reg");
+        $ult_insert = $this->db->query("SELECT SCOPE_IDENTITY() as ult_reg")->row();
+        $this->db->query("UPDATE lotes SET idCliente = $ult_insert->ult_reg WHERE idLote = $idLote");
+        return  $ult_insert;
     }
 }
