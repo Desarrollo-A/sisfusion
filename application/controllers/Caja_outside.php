@@ -453,9 +453,9 @@ class Caja_outside extends CI_Controller
         }
 
 
-        if ($datosView->id_coordinador == $datosView->id_asesor) {
+        if ($datosView->id_coordinador == $datosView->id_asesor && $datosView->id_asesor != 7092) {
             $voBoCoord = 0;
-        } else if ($datosView->id_coordinador == $datosView->id_gerente) {
+        } else if ($datosView->id_coordinador == $datosView->id_gerente && $datosView->id_asesor != 7092) {
             $voBoCoord = 0;
         } else {
             $voBoCoord = $datosView->id_coordinador;
@@ -1840,7 +1840,7 @@ class Caja_outside extends CI_Controller
                 $token_data[0]['existe'] = 1;
                 $token_data[0]['token'] = $data->token;
 
-            }
+            } 
 
             //VERIFICAMOS LA IDENTIDAD DEL ASESOR
             if ($this->db->query("SELECT * FROM usuarios WHERE id_usuario = " . $data->idAsesor . " AND contrasena = '" . encriptar($data->name) . "'")->num_rows() > 0) {
